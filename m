@@ -1,96 +1,67 @@
-Return-Path: <linux-nfs+bounces-7302-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7306-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 911949A4B49
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2024 07:23:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D21FD9A4BCC
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2024 09:18:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 077172839F6
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2024 05:23:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B0B8B22C52
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Oct 2024 07:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395051CC8A3;
-	Sat, 19 Oct 2024 05:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YmjwPFxs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iwiKaTZ9"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2101DC19E;
+	Sat, 19 Oct 2024 07:17:56 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7EF29AF
-	for <linux-nfs@vger.kernel.org>; Sat, 19 Oct 2024 05:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745901D7E5B;
+	Sat, 19 Oct 2024 07:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729315430; cv=none; b=nNxY4+gLMJBNT5F0QG6gZ6nSIVo2gToHKjclhg6uypnnRwKkabTI4ZPcwkCvx5cKlPoodGwhhhXpoaaaYjJ1hKqaN4VlyOYEcwSzUrmOIHQznNleKf/Q7gOitHRMmd0QKcAIvdSU1gfB9W1uMpToev3MjA1ApaBQUyk7zlM6QAE=
+	t=1729322276; cv=none; b=JFmvLf3Usq3LocFYsDBYf2P//3wbytklJr944VaBa27XAQF8uePs+m3GZcz3ZyBKRiMwpq3KAdIKYh2p07HhHBPE5amzXmoE4dM17Z0BQeB0JCfQ/xDdXuNCRcDdlQr9Gu8lmvFJH0ZffGCcgQuc86PD9I1N6Y8+TmP14KR8rxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729315430; c=relaxed/simple;
-	bh=HPwQR+8u4Y+R1iiMk1pNO7fgsGZySKT9Y56Lv2WFNa0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cPGDqZjEyLhexPtZOGVIr0OFe7FraYwhCALXCwr+t1BEAJ4nJZuHyYoh7T+u9nI3jya2Qpja+P84NVpKahNpgqOzgK9GV2tVXCJgb4AJN8Dw1S49BYRxO4mHVeMdqOUkkfsLNYZc37Q8+yGKxW+5GOIUHTbYnJHkKWeiRmwANCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net; spf=pass smtp.mailfrom=themaw.net; dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b=YmjwPFxs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iwiKaTZ9; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=themaw.net
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4D5DA11401A1;
-	Sat, 19 Oct 2024 01:23:46 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Sat, 19 Oct 2024 01:23:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm1; t=1729315426; x=1729401826; bh=xUVE0NgXMBmiceTMebckt
-	nxXXRgxBqOlLraiu55hJJk=; b=YmjwPFxsLV1CRP98dZVEX9giyLAFOHOfUDwJY
-	03v7LA2inHmi+Tku6BBB5DpDGhut2OnHA+C9wfi56TzSbYG/32h86wWqdOU8PAcz
-	s1LMsE/u+TiBgEBMbPdFmokzwvm/3w7dcTdjFcr1FEDGYK8SAV1czjg9XrUhqc/z
-	V8wLouGZjIaL9p8JAgB17RSYUafd9KIB6BLgErpsQmYDYjCEuVMcoIpqJnFPQDPK
-	DbpJLBJjidBd8yZqJ57cqFK1GVXaAwIXVn9q2AxMy7QAaZjrCleUGjCKO2M0RVkc
-	xTmEpmhHTey3Vo1/ZBDqEAwB6mi0fbVL61+rb3NEjJfbRdkNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1729315426; x=1729401826; bh=xUVE0NgXMBmiceTMebcktnxXXRgx
-	BqOlLraiu55hJJk=; b=iwiKaTZ9LWkGJjHnmrOOOGgDtuUCfBssXePLgYirooXC
-	kVggyMQvDUUsYtMNggoVG6KNsIi8bl0MbIpGyn7N39Xn1PKE6H+y7dNDavYHQoyu
-	5AvH2hTJZ6LQDo+T//+T/qEzi7Ha2Hx9DYL3L7YSlHpj3FU02GOYNpdJKRejDFxm
-	IDL6iqcPW6urbEdWw3EHAKA9G7QaP7xIl263ERkqzUqHR+w9imVgXNqNwRPvojGA
-	Q2DmqFWbOikjCeo8JI4DX5ngQvTYPoRBCEhnnEtvu0Q1Se6OMVR7qwkDQJeUwEmz
-	y7sVbiJnr66Z+U3Xs2pd/AojtHFqNTS5mWxEMboMcg==
-X-ME-Sender: <xms:YkITZ0UgKl1nG3mhNUnzewtl0kmMfIcGjp7QMTxCB9rykNoNPnZXVQ>
-    <xme:YkITZ4nXf2HDxLxITplMLryfB7JuI5GRuXLxNHdUyA1qzFN39HwdoirvEi5h3pdY0
-    ZVTKW5qE7fj>
-X-ME-Received: <xmr:YkITZ4YzwNYdGK0zjNDTDCjWv60QS0hpLU-nigUz8mjAwcxXUACuj8TNNSKPrCBwUx3HebhVdM0JOs7j5Rs-BgzqU3ablMRngeN61rxlWpXiI5LbFK_qQC6idg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdehgedgleeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfh
-    rhhomhepkfgrnhcumfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtf
-    frrghtthgvrhhnpedutdfhveehuefhjefgffegieduhefhtdejkefhvdekteeihfehtddt
-    gffgheduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehrrghvvghnsehthhgvmhgrfidrnhgvthdpnhgspghrtghpthhtohepgedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehrrghvvghnsehthhgvmhgrfidrnhgvthdprhgtphht
-    thhopehhvggurhhitghksehruhhtghgvrhhsrdgvughupdhrtghpthhtohepshhtvghvvg
-    gusehrvgguhhgrthdrtghomh
-X-ME-Proxy: <xmx:YkITZzXAixbu1nWMyM0R4up6qGwSHqgNd9pIfLnWLjj2k3Md68ySZg>
-    <xmx:YkITZ-k4UIvygXHYoZ_LSzdfzW4WZOXx8U1-OvNxTNzmSI63oRx9ew>
-    <xmx:YkITZ4ct_Gl4UXJG6eCz9xhjWh0JnwfOyxUVo6UglvuXpCkEeCckWQ>
-    <xmx:YkITZwE-WC40guBmxai79TSSPwD-arGmF8icY7yzfBU7lGAvZJgi9A>
-    <xmx:YkITZ_Ar-bHJ7sUa63ekXDqRgZKVKBMjdDOa6R4NEEGVr5TSUB_EOuvB>
-Feedback-ID: i31e841b0:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 19 Oct 2024 01:23:44 -0400 (EDT)
-From: Ian Kent <raven@themaw.net>
-To: linux-nfs@vger.kernel.org
-Cc: Ian Kent <raven@themaw.net>,
-	Charles Hedrick <hedrick@rutgers.edu>,
-	Steve Dickson <steved@redhat.com>
-Subject: [PATCH] nfs-utils: use getpwuid_r() and getpwnam_r() in gssd
-Date: Sat, 19 Oct 2024 13:23:35 +0800
-Message-ID: <20241019052340.28225-1-raven@themaw.net>
-X-Mailer: git-send-email 2.46.2
+	s=arc-20240116; t=1729322276; c=relaxed/simple;
+	bh=8Ci7FKbEJ8wfLsbm3P5p52CFIcHLE48XvNrbxWMT8WY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oomx9dtlasPNtkOkdTcw88DPhfKARnR+SsFW6hTTzXkzWpDCQIcZTqAPTrkX7rRidDG9HI1b4SYDSapRJiwYHI3443LA9YPycKn7K6Sc7gdSwn3wxRtDBv2MFG3Wk2GrMr/Xd55zbEJl0GKlfmgh2tFz3Y1b/QtGlNYzaxbDbp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: bizesmtpsz10t1729322145t2gcni
+X-QQ-Originating-IP: MmLkSV7nZrQb/cnEymHleci7bWjXBsTzQKwQIpxawNo=
+Received: from sonvhi-TianYi510S-07IMB.. ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 19 Oct 2024 15:15:42 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 11545662678210868571
+From: chenxiaosong@chenxiaosong.com
+To: corbet@lwn.net,
+	dhowells@redhat.com,
+	jlayton@kernel.org,
+	brauner@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	trondmy@kernel.org,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ChenXiaoSong <chenxiaosong@kylinos.cn>
+Subject: [PATCH 0/3] Documentation: update nfs idmapper doc and fix compile issues
+Date: Sat, 19 Oct 2024 15:15:36 +0800
+Message-Id: <20241019071539.125934-1-chenxiaosong@chenxiaosong.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -98,81 +69,43 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: OKKvvo6f47/b1g/xBdGInirOOSnzX73ova/Cc+PhSJRh8qb6o/WAzm9v
+	WdLadKDKmeCNlr8RML8LFmu5f7yYvLo2gHbO4eKUozQ62gRBk+cZbSuVUF2MwzU9yDuS+CD
+	m2WfHLaRHHKDgDniy26yYiL+rZuqGo2djT4Hiu+94aTNXezOSxO/StiCzVTckYFcis8VSIu
+	23RMYKjNGZSlGJQ7+s9BqgMAn9zoFmPepY9yweqebdmuD82AyPVO+Hmp1+iBHX5n/jW4oQt
+	rQmjD4DT9NcDRNr5D+PRPw5AfQN+itV4OHNG9sPPMZgHfioZsxEfs31DcS6boOYtFntDSDd
+	KT2o+FyU0WBbgXfqBXnAL7zaw9pPF9sYXjj8tvZ93tSDg7GvIwFLrtMTEFWuPV/qcxZqP7U
+	rYKwgQsjhg+oxYGuz98UzZIsfmo8YSlvBJQRQfSsdDZw4mizA3Cyoyf0He4q/Tup36AijtM
+	usHJ04uSW7c7k6xRZOWkCsBg3bTNHFFUgjsILG2tzTALz4Qx/dzGj4XzkGzl8O0gxsXISCE
+	uOs06MoswGU0MuX54c5mVbRLrs6j1ZL7OeaFuGNPcbnTi5gy177LUvN8tq8JSrJKhUvfbU8
+	ihpfcLK3VM9GwU/WReMvn6ZNsNEKAIyPwADzgAoaQF1HKEk33iCEub48SP9Jtg6y/dvuKni
+	0+4qiX9aqL/pc0j+uw/WQJWSpw4Tn9MTPVJMbq4Cs7RP0JKMpRLjESAX7oZZbgCaSimw7W8
+	L9TWfCjEFk+2CaEMTrWd5LsIAhME+ovclfsOOnB+irm/zrtNF5atwikRssyhCjjjUGunfp3
+	JrDJ6phh9s8E39O9gQZcKT06W3OGbeYzYQTobXVXCwilFOiVg+/KEzgVZDnyf4sk0m8H1GW
+	HrkHhd1UNWzkxdqUxBFrkvBcE7rMk5TDpDeBonYT0dPUrIuC53bgz3QFCXjH0LJDrVUcVjy
+	lytU=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-gssd uses getpwuid(3) and getpwnam(3) in a pthreads context but
-these functions are not thread safe.
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-Signed-off-by: Ian Kent <raven@themaw.net>
----
- utils/gssd/gssd_proc.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+Keep usage of `nfsidmap` consistent with nfsidmap manual.
 
-diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-index 2ad84c59..01331485 100644
---- a/utils/gssd/gssd_proc.c
-+++ b/utils/gssd/gssd_proc.c
-@@ -489,7 +489,10 @@ success:
- static int
- change_identity(uid_t uid)
- {
--	struct passwd	*pw;
-+	struct passwd  pw;
-+	struct passwd *ppw;
-+	char *pw_tmp;
-+	long tmplen;
- 	int res;
- 
- 	/* drop list of supplimentary groups first */
-@@ -502,15 +505,25 @@ change_identity(uid_t uid)
- 		return errno;
- 	}
- 
-+	tmplen = sysconf(_SC_GETPW_R_SIZE_MAX);
-+	if (tmplen < 0)
-+		tmplen = 16384;
-+
-+	pw_tmp = malloc(tmplen);
-+	if (!pw_tmp) {
-+		printerr(0, "WARNING: unable to allocate passwd buffer\n");
-+		return errno ? errno : ENOMEM;
-+	}
-+
- 	/* try to get pwent for user */
--	pw = getpwuid(uid);
--	if (!pw) {
-+	res = getpwuid_r(uid, &pw, pw_tmp, tmplen, &ppw);
-+	if (!ppw) {
- 		/* if that doesn't work, try to get one for "nobody" */
--		errno = 0;
--		pw = getpwnam("nobody");
--		if (!pw) {
-+		res = getpwnam_r("nobody", &pw, pw_tmp, tmplen, &ppw);
-+		if (!ppw) {
- 			printerr(0, "WARNING: unable to determine gid for uid %u\n", uid);
--			return errno ? errno : ENOENT;
-+			free(pw_tmp);
-+			return res ? res : ENOENT;
- 		}
- 	}
- 
-@@ -521,12 +534,13 @@ change_identity(uid_t uid)
- 	 * other threads. To bypass this, we have to call syscall() directly.
- 	 */
- #ifdef __NR_setresgid32
--	res = syscall(SYS_setresgid32, pw->pw_gid, pw->pw_gid, pw->pw_gid);
-+	res = syscall(SYS_setresgid32, pw.pw_gid, pw.pw_gid, pw.pw_gid);
- #else 
--	res = syscall(SYS_setresgid, pw->pw_gid, pw->pw_gid, pw->pw_gid);
-+	res = syscall(SYS_setresgid, pw.pw_gid, pw.pw_gid, pw.pw_gid);
- #endif
-+	free(pw_tmp);
- 	if (res != 0) {
--		printerr(0, "WARNING: failed to set gid to %u!\n", pw->pw_gid);
-+		printerr(0, "WARNING: failed to set gid to %u!\n", pw.pw_gid);
- 		return errno;
- 	}
- 
+Additionally, fix compile error and warning when running `make htmldocs`.
+
+ChenXiaoSong (3):
+  Documentation: nfs: idmapper: keep consistent with nfsidmap manual
+  docs: filesystems: fix compile error in netfs_library.rst
+  tracing/Documentation: fix compile warning in debugging.rst
+
+ Documentation/admin-guide/nfs/nfs-idmapper.rst | 59 ++++++++++++++++++++++++++++++++---------------------------
+ Documentation/filesystems/netfs_library.rst    |  1 -
+ Documentation/trace/index.rst                  |  1 +
+ 3 files changed, 33 insertions(+), 28 deletions(-)
+
 -- 
-2.46.2
+2.34.1
 
 
