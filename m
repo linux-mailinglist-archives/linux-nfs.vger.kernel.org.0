@@ -1,135 +1,134 @@
-Return-Path: <linux-nfs+bounces-7313-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7314-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 636279A5487
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Oct 2024 16:37:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EEF09A5771
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 01:09:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B18E2821B1
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Oct 2024 14:37:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 065E6280A48
+	for <lists+linux-nfs@lfdr.de>; Sun, 20 Oct 2024 23:09:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9279A192B62;
-	Sun, 20 Oct 2024 14:37:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 862E418EFED;
+	Sun, 20 Oct 2024 23:09:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YK7a2R3Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByfMJIPg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEC0191F6F
-	for <linux-nfs@vger.kernel.org>; Sun, 20 Oct 2024 14:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520DB745F4
+	for <linux-nfs@vger.kernel.org>; Sun, 20 Oct 2024 23:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729435037; cv=none; b=nopPGo5N5Jlnd2/w0UjHLtpEbf97Qh9jzji7TE/80kQ2NAKyzx/6gBDtzzWRBjHOlfEkc0C9Imr6rAOy89Z7ZyGiaxe2Z4g2Kpv2HUYNbw4nE1W9iTAoW9Jw4A+2S6TiXHGU+iS5F1XVWAu5Ac9KJatC6mSNIoEwg4EAXmsbUfQ=
+	t=1729465783; cv=none; b=m4DZITH0JD4elhiLMnA1qGW6DpM/TU0RfNLpqDMxy/7ClLi2WamDXmhORERt6F9DQP635RSShQMhC5qgWuXXqJ7UwVSRKP/UtSrlvRjHtkxMlCK5WdFJlLP+Nhmej9efG1+1ji/w0tT55lojK9lOreX0ZnpPOAMfDDCcoxhN3xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729435037; c=relaxed/simple;
-	bh=ySSzI7QCVcvU/R839ZYvwTIcKsazaRzDO64Xv9Z0wug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=joivuNHuNBFNtiT/iH4ti9FMZwWoo2RlftJN/4kfmD/yUI/RoaxUlWmynymyXFkcNG/JS2DYfj97+N1KpOFrFjH01befxdzTFQL0f3/x4u8CzOakFL6TXUqHWaAJwmgNSlN3NbhvOeahmw65sshskE8gr3Xjx5b2UtB78pxDPSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YK7a2R3Y; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1729465783; c=relaxed/simple;
+	bh=Rq9d6NDu0aTgSdUzBdmOdLcL5k1Ar1YjiBbptiHm3D4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=eI6WiCqgADqI+8yZMKFxGiaFgcxFw1GudUweNav9gry5GgZRQw0GtBtTMAp/ZjkHsYjEvaFRbpKjXMOSF9TH8Aqa6mxjA7GSCP/FlNS2LzgoOBW38FIi/fxZirMpDr1nurMsovDTqQ73JUjS+kvOztg1Ledd18PL3Wd+FKoRgps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ByfMJIPg; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a93c1cc74fdso541076666b.3
-        for <linux-nfs@vger.kernel.org>; Sun, 20 Oct 2024 07:37:15 -0700 (PDT)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5cacb76e924so1263703a12.0
+        for <linux-nfs@vger.kernel.org>; Sun, 20 Oct 2024 16:09:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729435033; x=1730039833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iu88pPuFWYWtQzm6D1/LR4u0smMSQF42C+nFgTHjjHo=;
-        b=YK7a2R3YU2TbR1wb3ywuwiUYOTB93ydolf+6D7sGsfdTav+EZzJpGIm6wQCtUafhqL
-         xh20QYFNEbSdK267eje0QPckJz2KZzJ0t8scAJGS2iYcWtDhIhQzMo1C6pIVNTALLPp6
-         3iEUVbJ0ucmGvHR7CcyteaMuehKnX2wilr9MjcAENGMQj1HZENCkRM3rlD2pZn2s+aiO
-         tHdGy62PUrKpa+FPAFBdwKDf/VEo15CGx3vHHoBjB6ADAfBPfMi54lJAmLj7gAm7k26o
-         i6U8BEMcLEYbTv8ezfcSYkOCNYv/soyNmQR+yLugUF1lTDGF/nQ547KFsxrgKm9ezX9w
-         puOA==
+        d=gmail.com; s=20230601; t=1729465779; x=1730070579; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YWTMimHXsYLDAgNP13K22FdpYQ7If7d/WSH0YZRdtsI=;
+        b=ByfMJIPgtRi0uDwbIj4auP1OjBMv+46K/aopMiI8iTFVwMIDFfgQCxQOtcex5k1Or7
+         8OmiF5fI4rFvMQlPvso6BNWKE8zhwb3ONJqpdMOB4ixeIqxhWDvARunpYj++0BKBbcLC
+         Y5HOR6ZVpb0gIujlHfrcDSADDGArQbdQAJyX0mf6sL18HkKmp09vU7/iwhDGrudQ5NRO
+         C9iblGxqU5cF6MvYRH8SG14Wbok6jBLgwUQjZVANd6EIB9vyLNmk1KPKLUYe+LSIFXAR
+         N/wsNLGFfcpmaH8fwNqq5+QwI7uFokx3HAqW6wzaMJEBQ8fxWhPhWpcSSYPeAO/Vr5bA
+         diWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729435033; x=1730039833;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iu88pPuFWYWtQzm6D1/LR4u0smMSQF42C+nFgTHjjHo=;
-        b=SrY8YF0FlCrHiUztxyN40FlCKPk99dLBKfxV6uuvlvOWHw7QfE/wSPK2g14FBs2iw0
-         Y5wVH3QzAY7P5ynxHPGCDpCxdYhY9MBzOrz2BlLo5LKgJnXo4kiWhnFFcdJSxVCoskPT
-         mDD8xOPdPDAPmpGfpdGO6eopz6c3oN+mNMqmVaYCCDHpG6z6bDBgydpFk6+gWsSI+KhY
-         pv+JzhHZW8cHvf1umC3cO+bFFu9ZjW6iIe/16ntq0xf9G4P6F+EGyPc1AkD4Siq+wXzv
-         6XV+QieVDee+tW5Jxuyqtb9ZaQgkbU8DqpAIN9P3R30UVvTgh3m1lvhcUoioVVz1g+bj
-         vy0w==
-X-Gm-Message-State: AOJu0YwE6XD4euOnUEIg2cUMPcpLZRd5575mNOVMur+3n5hu+1C62kVQ
-	FL1AQev4Xh5Cps10+fjm4v2Wo2wmJXl5/8tWgU9QVeERWPjpTE5K
-X-Google-Smtp-Source: AGHT+IFL/BBl+DzMUYLFQovB76dX71sq97aSBNpiVfh4CLDGcYMOusGD+jitQo5tCNkZEOd25wTqPw==
-X-Received: by 2002:a17:907:7e90:b0:a9a:4a1f:c97d with SMTP id a640c23a62f3a-a9a69a635b8mr923881366b.7.1729435033162;
-        Sun, 20 Oct 2024 07:37:13 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a9159a27bsm95728366b.211.2024.10.20.07.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Oct 2024 07:37:11 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 6A751BE2DE0; Sun, 20 Oct 2024 16:37:10 +0200 (CEST)
-Date: Sun, 20 Oct 2024 16:37:10 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>
-Subject: Re: NFSv4 referrals broken when not enabling junction support
-Message-ID: <ZxUVlpd0Ec5NaWF1@eldamar.lan>
-References: <Zv7NRNXeUtzpfbJg@eldamar.lan>
- <e7341203-c53c-4005-9d70-239073352b2b@redhat.com>
+        d=1e100.net; s=20230601; t=1729465779; x=1730070579;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YWTMimHXsYLDAgNP13K22FdpYQ7If7d/WSH0YZRdtsI=;
+        b=PM6lcKqm0EG74+tQkTrOCHCyJEGXsxzTf6Nu3KVXNjPpNYR89xfuu4Sf4raO22W+vY
+         0I9xfu1ybZ05Xgm9DwrAxvcc5gP7QHwzkg5kGlDc9VJjC6MxyerSK7wEeg0Exmuw0egz
+         ZMoN1WxjtV1dS/VFSbSQy0/eoNeAqL+ows0aN98+TF7IYGeTjA7F/a9b7uG2i5DcYjAc
+         YD+/Bm9GqwiV3VgTxWzLI8d1Ngsr4X8ogWKomoCIEezi0JCT9q14Zfyn60G0fTyfG6TB
+         khdmfWJgt1n2r2TAkS0Ibhb8RUMZrmLmHnnoj839SJD7XjkOodiJy44RfNcslyLlHsh6
+         lLMg==
+X-Gm-Message-State: AOJu0YxYSgLPPumXRfql8uH5JX5dbImX1dn6eQ2JqqD5amvmVSCE1bn6
+	H4Uua+DbYtqkK432Jne7Cztr5f+yvtRoPHu/Rw1XeV7w/QeS1Oglduap5yMzvbeP1FkGnDVlA5s
+	tlLESlGWiASPSAUGKTCaCWhnxtAkB0XsKzQ==
+X-Google-Smtp-Source: AGHT+IFD2yv2kNN9OC9qpKnPlp1eHCD25gBW9mQt2yBLB6G8zF5gE2YKJLSPrhWDC/H4ik7em+BdD6Uu1wENwUy92EY=
+X-Received: by 2002:a05:6402:26ce:b0:5c9:87a0:4fcc with SMTP id
+ 4fb4d7f45d1cf-5ca0ac62747mr8638133a12.16.1729465779192; Sun, 20 Oct 2024
+ 16:09:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e7341203-c53c-4005-9d70-239073352b2b@redhat.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Sun, 20 Oct 2024 16:09:29 -0700
+Message-ID: <CAM5tNy4S0O28CcDGV43BWXegSZSPVEYgFKpaLxLSNSgjti_L5Q@mail.gmail.com>
+Subject: RFC: Dealing with large POSIX draft ACLs for NFSv4.2
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Steve,
+Hi,
 
-On Tue, Oct 08, 2024 at 06:12:58AM -0400, Steve Dickson wrote:
-> 
-> 
-> On 10/3/24 12:58 PM, Salvatore Bonaccorso wrote:
-> > Hi Steve, hi linux-nfs people,
-> > 
-> > it got reported twice in Debian that  NFSv4 referrals are broken when
-> > junction support is disabled. The two reports are at:
-> > 
-> > https://bugs.debian.org/1035908
-> > https://bugs.debian.org/1083098
-> > 
-> > While arguably having junction support seems to be the preferred
-> > option, the bug (or maybe unintended behaviour) arises when junction
-> > support is not enabled (this for instance is the case in the Debian
-> > stable/bookworm version, as we cannot simply do such changes in a
-> > stable release; note later relases will have it enabled).
-> > 
-> > The "breakage" seems to be introduced with 15dc0bead10d ("exportd:
-> > Moved cache upcalls routines  into libexport.a"), so
-> > nfs-utils-2-5-3-rc6 as this will mask behind the #ifdef
-> > HAVE_JUNCTION_SUPPORT's code which seems needed to support the refer=
-> > in /etc/exports.
-> > 
-> > I had a quick conversation with Cuck offliste about this, and I can
-> > hopefully state with his word, that yes, while nfsref is the direction
-> > we want to go, we do not want to actually disable refer= in
-> > /etc/exports.
-> +1
-> 
-> > 
-> > Steve, what do you think? I'm not sure on the best patch for this,
-> > maybe reverting the parts masking behind #ifdef HAVE_JUNCTION_SUPPORT
-> > which are touched in 15dc0bead10d would be enough?
-> Yeah there is a lot of change with 15dc0bead10d
-> 
-> Let me look into this... At the up coming Bake-a-ton [1]
+As some of you will already know, I have been working on patches
+that add support for POSIX draft ACLs to NFSv4.2.
+The internet draft can be found here, if you are interested.
+https://datatracker.ietf.org/doc/draft-rmacklem-nfsv4-posix-acls/
 
-Thanks a lot for that, looking forward then to a fix which we might
-backport in Debian to the older version as well.
+The patches now basically work, but handling of large POSIX
+draft ACLs for the server side is not done yet.
 
-Regards,
-Salvatore
+A POSIX draft ACL can have 1024 aces and since a "who" field
+can be 128 bytes, a POSIX draft ACL can end up being about 140Kbytes
+of XDR. Do both the default and access ACLs for a directory and it
+could be 280Kbytes. (Of course, they usually end up much smaller.)
+
+For the client side, to handle large ACLs for SETATTR (which never
+sets other attributes in the same SETATTR), I came up with some
+simple functions (called nfs_xdr_putpage_bytes(), nfs_xdr_putpage_word()
+and nfs_xdr_putpage_cleanup() in the current client.patch) which
+fill the large ACL into pages. Then xdr_write_pages() is called to
+put them in the xdr stream.
+--> Whether this is the right approach is a good question, but at
+      least it seems to work.
+
+For the server, the problem is more difficult, since a GETATTR reply
+might include encodings of other attributes. (At this time, the proposed
+POSIX draft ACL attributes are at the end, since they have the highest
+attribute #s, but that will not last long.)
+
+The same technique as for the client could be used, but only if there
+are no attributes that come after the POSIX draft ACL ones in the XDR
+for GETATTR's reply.
+
+This brings me to one question...
+- What do others think w.r.t. restricting the POSIX draft ACLs to only
+  GETATTR (and not a READDIR reply) and only with a limited set
+  of other attributes, which will all be lower #s, so they come before
+  POSIX draft ACL ones?
+  --> Since it is only a personal draft at this time, this requirement
+        could easily be added and may make sense to limit the size
+         of most GETATTRs.
+This restriction should be ok for both the LInux and FreeBSD clients,
+since they only ask for acl attributes when a getfacl(1) command is
+done and do not need a lot of other attributes for the GETATTR.
+
+Alternately, there needs to be a way to build 280Kbytes or more
+of XDR for an arbitrary GETATTR/READDIR reply.
+
+Btw, I have not tested to see what happens if a large POSIX draft
+ACL is set for a file (locally on the server, for example) and then
+a client does a GETATTR of the acl attribute (which replies with
+a NFSv4 ACL created by mapping from the POSIX draft ACL).
+--> I have a hunch it will fail, but I need to test to be sure?
+
+Thanks in advance for any comments w.r.t. this issue, rick
+ps; In particular, I'd like to know what others think about adding
+      the restriction on acquisition of the POSIX draft ACLs by GETATTR.
 
