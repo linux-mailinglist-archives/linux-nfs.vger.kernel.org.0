@@ -1,274 +1,243 @@
-Return-Path: <linux-nfs+bounces-7332-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7328-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 130009A6C14
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 16:26:35 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92A8B9A6C0F
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 16:26:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 839151F21431
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 14:26:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF26DB20CE5
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 14:26:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE4D1F9A8E;
-	Mon, 21 Oct 2024 14:26:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 627EC1EF942;
+	Mon, 21 Oct 2024 14:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MxTdzfYe";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WsoPI9yC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BDA1F5830
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 14:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729520785; cv=none; b=QHmOZANiWNIAGkBxpT9Wvzxy23pJx9KvSchjwBwRub7l5LbrlrgBHc/argsfzS30oQ3p2jWrd4Z+BkL4BEB42fGModFDvdxZ/LasoqHFFs6GcUvCJcTnqPjrI3kf3xmH18GDuJH3pN14oh2/gppEsqlNSOKmz93vW0iepHaOjHE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729520785; c=relaxed/simple;
-	bh=QfZprb2nBBdI/vOD2wkFopvrMphKxTZ3wwC+SMwcl2Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WvgGAcRw32h5KvrCYBvQkBTJ/07kUfHJxOzjDKvc6bX/v4fiNbnPRB6/vUSVFvec4uCHGxz2b2omHHgzibz/JU+vN8m4LNFIqMc8BFGpGgvFFQH5GVHX2f46IRsNv0Ys3mvo0wHu++zc9tj0QpsdRZf6aa01c9Z6P5UOnNgmJQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4XXHfd5Dbwz4f3jXn
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 22:26:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 185261A0568
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 22:26:19 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHXIiFZBZnUg5KEg--.16803S7;
-	Mon, 21 Oct 2024 22:26:18 +0800 (CST)
-From: Yang Erkun <yangerkun@huaweicloud.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: linux-nfs@vger.kernel.org,
-	yangerkun@huawei.com,
-	yangerkun@huaweicloud.com,
-	yi.zhang@huawei.com
-Subject: [PATCH 3/3] nfsd: release svc_expkey/svc_export with rcu_work
-Date: Mon, 21 Oct 2024 22:23:43 +0800
-Message-Id: <20241021142343.3857891-4-yangerkun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241021142343.3857891-1-yangerkun@huaweicloud.com>
-References: <20241021142343.3857891-1-yangerkun@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD7E1E0B96
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 14:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729520764; cv=fail; b=O5U0C7N3fs/20ID52KSjtpImd73Xm8X0+nXlDxxfT2yjjfy59LNvUW1tYuqnzBpdJ2OiDrmZESSqTB7oNy1Ck4v/dNepAayEFncmewN5y9gKGLaxFXz0w9PIDXgpt0UtF+xAiC55q0jZcKVZ9dlFGD9tYVH7PvR1xBLJev8H85Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729520764; c=relaxed/simple;
+	bh=SqLintLxO3asdg88f4Gg5WLeNyM2VQRB4YdxJp4jyhE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dUhy+wS4FnrOElIDwTfvEYnqqacmHjEU3nyecv5CMsSKxnytQvYCwllBo46H1Uej6qe1BbZr1TJ7k4VazsQp69orohesD0BZ6cuzagW/OvT/hTBzfQrvv2kLEDB73E9XGu2aOfxUmfcxDXV3vZBcVo/qIhrlj7OT6vljIHIBUeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=MxTdzfYe; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WsoPI9yC; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49L96YMN002713;
+	Mon, 21 Oct 2024 14:25:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=SqLintLxO3asdg88f4Gg5WLeNyM2VQRB4YdxJp4jyhE=; b=
+	MxTdzfYeSNSUM8cKbuxF/L804Z9YbnsTC5czq4xDGviSN+BEdaRgMEqM3xWPNxgi
+	R7kd+eSXZu942uSyROdhOiYrbgVAcH6+5y8ZVyod/U0EEB6rz2CtkaZBe2C9lKsR
+	GVjUw50R9yrJ1m436UcFmDPKWL6Fz5ucQJkYu1ohl6YeZlvSjyBxDgTVK+9IFed/
+	YzVio4f8m/fwEKc4FjqmPnbEwLul1VnkXz6Xzgw09qVKQPhHM4fFDVatS/WcCO+/
+	QIJEA5nw52OMqMhOcgpFgTFO2I74p7v15IUtiW11EmzJiHz+nRlElCWgGi6PqLNY
+	4+em0G1UdCYZvA8vhZPrDg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42c54538jn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Oct 2024 14:25:35 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 49LD6b2U019683;
+	Mon, 21 Oct 2024 14:25:35 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42c37chccf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Oct 2024 14:25:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xt0lJsI9oxKF0GEYJbvPVUmQY7b0KGVy9X5bSPIgWseJpdhYI47RONr2C9W6wnwN5+iRr0rvwMkatNMs0WTKJNqi6m+lwRgO5tY1lwmO9TLMhEed0/GtK7r6Ru7Uf+o7eh7mECZfBZmVDw+WQ2+CWQ+OTYxZFWLqmjmkNylgXkBqajlC0uT59uYOEfbK1RZ7ooVJc2rdGLMhuseqP+T7Q2NVdif1UF+m8RJ9je0Xj4DBv595XiiXaaCIXK64LzFKkCoz7c1VmK8SAOja9w90vyZ0cFCjdm699qFH4uCBAIDIAqxsM2cgH4QtWVPalfDsIsqdY3QZQiB9guQ5iZ9Rkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SqLintLxO3asdg88f4Gg5WLeNyM2VQRB4YdxJp4jyhE=;
+ b=EOH1pkm6ct1xgf8Js9FTYfKIPuGUVG8P+FtScrHUd6NjTckD9VwZ46G7qyNXRZo5GSus1X7YuB3iCkN0mDuxZw7hgEHWBwyfbivmbn3j7mdU3yI6dTEVV4NoB3i763Kk88wBipbhGqb2aDU75P2SDnoizlZtKnC8Gh/7OWjr9K2M9kr8Lfymt7uvBWkrQd9Wzg1VbO2k7P0csBNdMCvX6q5njCEcH32MGE/FE7E6GiEsyTZnOFpuAp3+m40u8aqAmD+36qwkTLAXpyu808IfQDEAqOK1Xj8E6icEKnzj2HZ59Vb3NT5JrSXJcNv9XvgVtASpfTXJPKutJIMjgq27dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SqLintLxO3asdg88f4Gg5WLeNyM2VQRB4YdxJp4jyhE=;
+ b=WsoPI9yCbz+74Kt6n6YNMWUV0n/0iRCTxipwgbtECpnLT+8l/rgh0GkiIQ3W2gjFVIBKNau/iQsab5Uo7zupR871Mjj4XXCvpcYF6gK+cCeECN1X+Ir125ZgBjCy3niP3tb8hGJdnIJrQYsVK7qe9laLFSN3h3nDX7FdqSMmc2c=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB5734.namprd10.prod.outlook.com (2603:10b6:806:23f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.24; Mon, 21 Oct
+ 2024 14:25:31 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8069.027; Mon, 21 Oct 2024
+ 14:25:31 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: yangerkun <yangerkun@huawei.com>
+CC: Yang Erkun <yangerkun@huaweicloud.com>, Jeff Layton <jlayton@kernel.org>,
+        Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+        Dai Ngo
+	<dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Linux NFS Mailing List
+	<linux-nfs@vger.kernel.org>,
+        "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+Subject: Re: [PATCH] nfsd: cancel nfsd_shrinker_work using sync mode in
+ nfs4_state_shutdown_net
+Thread-Topic: [PATCH] nfsd: cancel nfsd_shrinker_work using sync mode in
+ nfs4_state_shutdown_net
+Thread-Index: AQHbI5M5ORcVR5t6gEij87LMrVDn5LKRO+cAgAAFAwCAAAIMAA==
+Date: Mon, 21 Oct 2024 14:25:31 +0000
+Message-ID: <7FA40B59-C5FC-4393-82DD-BB8CE44F4AC0@oracle.com>
+References: <20241021082540.2885014-1-yangerkun@huaweicloud.com>
+ <ZxZeZB51iwVgVZt6@tissot.1015granger.net>
+ <2e5c039a-fde0-de3c-c15f-5405a5507c8b@huawei.com>
+In-Reply-To: <2e5c039a-fde0-de3c-c15f-5405a5507c8b@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Apple Mail (2.3776.700.51)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA1PR10MB5734:EE_
+x-ms-office365-filtering-correlation-id: 8c37bd24-d6f5-417d-f168-08dcf1dc3818
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?a29ybDhWQzUra1RpUktYVDB6R1Y3Zmd0S2pqSmxKN0JRQlBYcUhhK1BLTzdn?=
+ =?utf-8?B?akd5NE1ucDZrZURRMExSOW5Pa2sxMm9uUjdVU3pkVEhNZEVsaFNJem4xTlBY?=
+ =?utf-8?B?eTl2Z3RVNk1VY3gwSUE1OTQ0cUQ2RzAwQkpUNVh2QjRldUtKTGxISS9WRVRx?=
+ =?utf-8?B?Z1ZHMzQ1R2JYQkVDdVQzTEp6TzVIV3hRM013Sm8rSWhuZXB5Y1A1WHdMczZh?=
+ =?utf-8?B?Nml0eXp4SVRXUUFSaWpvRzVFOTBCUVNzNDUrZVpLTHROWGRqWFNxTFc3UXdR?=
+ =?utf-8?B?STZta0RDOVlVRUJLcEUyckNEWURLT2VoR2lYREowRE9WcE5QWS9UbXpnNnp4?=
+ =?utf-8?B?eGdkVUtGaXNXVmtTa0VzRmsvSkJQREozRDNWMnZ6Y1Rwc3pocG9lR1BtU2NZ?=
+ =?utf-8?B?YlR4M2dnUVhnbG84bzJRckFidmFPbHAreU4rVy9kZ2ZPbk91dStheTI4QlJz?=
+ =?utf-8?B?TzBsU1oza2phWlpwYWpBUWNwazZUT1B0V1ZWY2JMZ1pUaXdYcnpZQkJtR0Q4?=
+ =?utf-8?B?UUsyZDVwUjBKL1djQWE5Mkk3UkVjL1JCcnp0VTFFOTErVTRZSCtCRlpxZ2RN?=
+ =?utf-8?B?OWgvMnpnWDRNM2lFL1prdmYrSEJ4R2ludjU0anM1M1JGTHVqMXNJcEpTVnNw?=
+ =?utf-8?B?elVuRWxOVmZ5R1lxa1h4RVlseVZnakpVb3NxM3hoRTZCbHBHNGZxYzVzRXpa?=
+ =?utf-8?B?Zzc1Z1EySkN4SCsvY1UvS3QxYlNoUVY0UUMwY1FpYURMZGF4c0hZZWFaRERw?=
+ =?utf-8?B?eHRlNGdpR2VLeng2eVZ1cmkxUUQ5L2RYMWRYYUlUb0lRZFZmYXFOWTBPSmwz?=
+ =?utf-8?B?R0tjRUZib2Q4cGhLZ3RHa1R3c1ZPVi9LRWFwZ3I1bU9WOGlJSnJSeld1aVdM?=
+ =?utf-8?B?UUwxanM4Vmk4c0wyZzVGYUowR0lxd24xRjlmaGZ4ZkJhSlhQSDJ1TytESDB6?=
+ =?utf-8?B?QUFVTURFMFYxVmlya2NYTWp3ZzZFVE8vK3Q5QUNUdVhJOW5OZ0pLUmZqNnhE?=
+ =?utf-8?B?NGFyNlJLRmtUdkNTRWVVK3pNaFB3KyswWmdPN2dUeXJ5eC8zVk4rSGEwanNU?=
+ =?utf-8?B?Y01FT21QRlZkRVFuOUwyWDZGOCtOdzB0aHZncXJSSXB6MjdrV2dUYmNsU2h5?=
+ =?utf-8?B?UzM0elZOTEF3WHpFc2M4QUpHdm9CYkhLOHVTMGZJUWpJUWdQK0NZZCtHaVRB?=
+ =?utf-8?B?M2FYWlpmV2Z5cUJCc0U1Z0kxUTdXazBEaVFCdTR0bG5CWFJLZ1NhVHlRczZZ?=
+ =?utf-8?B?RzZMd3h6a0oxZHFRYk0wTWpRZ2R4Yk1FcWc2VG9mWlNiRk9kb2o2TDg4a3dN?=
+ =?utf-8?B?bnVNL2NwZTRlQi9MSEp1Zzh5Qlp5aFVhcjdlM3FCTmt6bmkxZWE4OTdReVJR?=
+ =?utf-8?B?UGp6RVd6aW9Vb0xhWWJFT0c5NkIzRm9zZnErSmJONXlkaEQ1V2pOTnVGUWpE?=
+ =?utf-8?B?VHBOSDg5L0lyMGV6eFg3NUkwV3JpNzc4ZTJSS1lUT0llRjhjRVZmeDBCcHZK?=
+ =?utf-8?B?eFdjVW01RUM3TXJ4SGRFUDRJdWUwWWVjOWdxN2xmenFaaUVYTFJpbDFZZHdI?=
+ =?utf-8?B?bkZua2ZtYW41L24rbUsrb3FJVWFIeWRQZSs4RUhPeWdWZUhLYXhBWk8vTGsw?=
+ =?utf-8?B?THZlMnpsVFZOakp6bmlZVXpDRnd5b3crWWIxQVZzbkRMVEhUV0NvVFhTMmh2?=
+ =?utf-8?B?d0xaNjBjRGpUcTJKcXh0VUtuVk1BMXZaeVhhc29zSGJCVks1UTg5aTVpT1Fy?=
+ =?utf-8?B?SFpBOVlTb0xzZVlSWVRyL0FyTmx0YzhGdHBWZGVSck9uKzB6VU5oUmozRm0v?=
+ =?utf-8?Q?jjFAhS8ccttWzAe23pV3y40yyg3l8wKtUEWKE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?K0FMZ2ZjNFpXSFVNUldYdWVHeXJkeGRFOXJ4ZlVHeWwvTzZFbUlEQUpSV2pl?=
+ =?utf-8?B?TXNmZUxXU1Qzd2tDRkcxMGpuK0IyNGxjMFRjbWhaeWxjdUFXT2c5bVZVcGRm?=
+ =?utf-8?B?VVZ6ODlST01LSS81ZEVjZUVrbzFQNjkrbFA5c3dsVXI3ZmsvK2FDcmZHSm14?=
+ =?utf-8?B?cmIzZlNDdFdrQlFiMyttUXE5QnZXdmEzNXEyMEwwK1Zua3gwN2tITE10bGRj?=
+ =?utf-8?B?TDlPTHZ4VVF2YVV2ZUlyYXJ5RFRrc1FKU2M3NHRVRmwxTFgwL0lkKzkrNTBL?=
+ =?utf-8?B?N2NSVjhuUGhFRW1ZWG1OcXpNOHh2bGliYS9WMTBjZEhVdDZPbWlIMW5BZmky?=
+ =?utf-8?B?R0JGRko1WUtGV3BlcVhyUFg5MGVUQVlLbmVhblF2TjRtb2swS094Ym5nc2Fy?=
+ =?utf-8?B?TjlBdGo4KzY0OUpiNUVqMEpjSkdXSTh6RTg2VktyV2tsM0dPU3U3bUlYSmdx?=
+ =?utf-8?B?aE5jaU1PSXNMOWkrZURJTlVFNlgrOTZ5TVBmbGQvSitxc1phaERqeWJrS28w?=
+ =?utf-8?B?b3NOTTNDU0wzV3BKaFM4Z2tGdFdiUEtqNmR6ckVzMUpoenJnbzBxbUdmQ2xJ?=
+ =?utf-8?B?TWlva2FhOXpqeWZMZmNUVW9IckpNOGVSTVh3aGx0N2NVcWNjNitMT0Z6NTY4?=
+ =?utf-8?B?aERTVldMRU9RMmJGVkt1RkpUL3E0aC81NzlUWFd4aHdPNk0zb3dRRnExbEhE?=
+ =?utf-8?B?ZkNXdlZRK2tDVjdBSzdjeE1KTmNmR1YvRnhMUS9UcFpha1FxSHpVODZ6Rno4?=
+ =?utf-8?B?MXpWVThwRThNQmQzNURBYjZBc3IxNi9jcVBOSDBxTGcxd0JPWFNmUHZORVhM?=
+ =?utf-8?B?WXU4YXlGR1BBdUhRTUJmSlBMZ1NrR3c1cS9oWUtIajRDSWtxdENuS0swWjFx?=
+ =?utf-8?B?RUhObzI3MTFWalRsQm1ITHNnTDFyUSs2b1hnRzB5N09WTnNEMllROGFXYzNV?=
+ =?utf-8?B?V2FGT3UxSHBEU2g4c2lYSmpFb2lQcTN2UkpMNkhRczF0ZU8rb2VpUC9yeFdL?=
+ =?utf-8?B?aCtRQlhhUWhWVWp1Sm03eS9CNk9QYk53Y2JJUGpiWWxPVVk5L250TEEydmtF?=
+ =?utf-8?B?TkNDdVZDazFVTFRDci9zOXNSekVzY3VlOE9zcDczUTdKTnNGYml4NnBWTmMz?=
+ =?utf-8?B?RHo0Q2daaU9iNGxTTlpRaWlGWjVkUWdxbkZ6blJSaGo4aEJOZkU3L1lXRHRh?=
+ =?utf-8?B?UC9rbFlVcGJiYWVFRktYc3dDMTVMOE9UakhUaDhzNmh4dEpGTkM1UTBkOTFo?=
+ =?utf-8?B?aWlFUmVRUElDbEEvaGt5THJ5Q0pnWUlEWXdQQXgyUHNvNkE3ZkdqYUR1MW55?=
+ =?utf-8?B?MUpXWDArbW5QdDZ5NWp5Skt5OGRkeFlWRWt1RmQrVlNrOGhqVFpzRktvNkNz?=
+ =?utf-8?B?aWZBTWNjbWZDR1JPTnZveHVyRFlWOGVKQUlEQVNTQmZlcjRSM1A3VTVlKzJP?=
+ =?utf-8?B?TldVY1VNZDdMUXUrdUk1T0hOTHV5TzNRT29kMzJ5akZ4UnVaNVVkVzBUd3la?=
+ =?utf-8?B?MXJWajJiTGROMlVOYW9VU2JxNTdTT09NQUZRNkdpNG9WY280UmFyZ2k3aGhX?=
+ =?utf-8?B?a2ovRW5HR0xMVklPcHozQ2ltQzUyRWdGV215UTBiU05IZ3lScHpNdm4vLzdD?=
+ =?utf-8?B?N0lpVVV0SzdUZmNNdld6ZTExeE04Y010eC9MQk9OSktJL2MyaEdqN1lyVUF3?=
+ =?utf-8?B?dTU0bjRTNjhCdXBFTmYxaU1sQlFiR2FmSkM3cks1dGliUmQ2NkdIU1V0Q3Vm?=
+ =?utf-8?B?MWVPYTdlQng1bzlFWVR4SzBwT093ZExjUFhQWHpXM2hpeW1BOThvNi9hNFZv?=
+ =?utf-8?B?ZkhtME41dXFldU1ubVNEemtSd1N5bTFEb05SeXR2UmNReU5OZUMrelpCd29D?=
+ =?utf-8?B?RHVYTEZkRWFQWElmV2R0Q3hyaUdxMkVqeUIrWm1QUE1sbXlmUzhpeVpLWml5?=
+ =?utf-8?B?TW9ic3V2dkZZcUNHOFBnSVVWZktJdFg2cWRxV1UxUGRFUmVycVI3QW9EekJY?=
+ =?utf-8?B?Q0txcU5JN1BxbFNIZktBTDNCWEtWbmFRRVpMTEd5MUhTM0RoYTJkWVJuSDV2?=
+ =?utf-8?B?V0ZYVmxiVE16MkpCcmM4aWdjM21RanZJb01LRTVBTWpvNTlSaWZ0aGRSSlRS?=
+ =?utf-8?B?cGRIUzluTkNsdmZJdmZZKys4ZWttU0VNdXJMVkk0WndVTXBqRmx2Y2R6T0Rs?=
+ =?utf-8?B?UUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <172030FDC4AC034E88FC7F3B98162E5B@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHXIiFZBZnUg5KEg--.16803S7
-X-Coremail-Antispam: 1UD129KBjvJXoWxtr1kGr1UCF1fAFyxGFykKrg_yoWxJw13pa
-	s3Ga4fKaykJFyj9r4DJa1jvwnxtanavryxCr92kw4avF13tr1UJF18Zryj9ryYkrW8ua97
-	uF4UtF4DGw18Za7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVW8ZVWrXwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUUo7KUUUUU
-X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	ivW0BJZM373WQbFKmZ88K4oBzsDuTiYqZA9DqdWN2jkyZ6+tPz9Ut3R78KlBT2zu/hFhS2206vT0dw3sGf8jAGPT80YIHEzPNnCbA3dPdd9flKd66NJoY0Os1zTtrEeAOCMaKQ5/AfnR0Kj1BQMVNek9fHe38hQYumnhtCZ2rTAmyWgji2uC1HDA5CPGx2nnsjhr/wd+eFpAwZeppvUk4XiX/MHVXyfh1dAU9v7r4V7DpxbNlxDfWecNlfiv0jjscrJUj3PqZ6YFGxpXu9evmVkccEu9WuWEs+qkD+yjc6/DV44AFzmyViggfS9nGq1cTBuD79KWTYyQ5hFiZ+u8uZXxOMdygUebfgVy8TxOVWhGz6/uTljplayLqFGUg4k6Vd/oPCakqKeGYcIzBQsC0JKLBBWLXfpOPjX94Z0DJJXpt9gi1gwbttar46sSJFvvdmrIoVvPtRnk0z47tFaGFKBnOd8rr4QY1Q7PPWlaX9/GGCqXTPACHo2BmWVGLV784hSoaqh8zGEabHF7wfx0WoUVCcNOOl9TEgbJZ+HWtditPDmOB891SsyH1XQkzLurgSKwJ5ZfpAkO+6JLY5M3mcF1A1VoFcBAk+JXAPWEbW4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c37bd24-d6f5-417d-f168-08dcf1dc3818
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2024 14:25:31.5463
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4lKYA5kFnBzhWXFBz6DgAJiP+DiVv9zCLGy87S/g+v23RQfQkwa1gZTn/V/6V9cD6rck1kncmqauqRxffAuJnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5734
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-21_11,2024-10-21_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2410210103
+X-Proofpoint-ORIG-GUID: xX_Q1NtYAUEeigZ9XnSiU-hylM26aQm4
+X-Proofpoint-GUID: xX_Q1NtYAUEeigZ9XnSiU-hylM26aQm4
 
-From: Yang Erkun <yangerkun@huawei.com>
-
-The last reference for `cache_head` can be reduced to zero in `c_show`
-and `e_show`(using `rcu_read_lock` and `rcu_read_unlock`). Consequently,
-`svc_export_put` and `expkey_put` will be invoked, leading to two
-issues:
-
-1. The `svc_export_put` will directly free ex_uuid. However,
-   `e_show`/`c_show` will access `ex_uuid` after `cache_put`, which can
-   trigger a use-after-free issue, shown below.
-
-   ==================================================================
-   BUG: KASAN: slab-use-after-free in svc_export_show+0x362/0x430 [nfsd]
-   Read of size 1 at addr ff11000010fdc120 by task cat/870
-
-   CPU: 1 UID: 0 PID: 870 Comm: cat Not tainted 6.12.0-rc3+ #1
-   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-   1.16.1-2.fc37 04/01/2014
-   Call Trace:
-    <TASK>
-    dump_stack_lvl+0x53/0x70
-    print_address_description.constprop.0+0x2c/0x3a0
-    print_report+0xb9/0x280
-    kasan_report+0xae/0xe0
-    svc_export_show+0x362/0x430 [nfsd]
-    c_show+0x161/0x390 [sunrpc]
-    seq_read_iter+0x589/0x770
-    seq_read+0x1e5/0x270
-    proc_reg_read+0xe1/0x140
-    vfs_read+0x125/0x530
-    ksys_read+0xc1/0x160
-    do_syscall_64+0x5f/0x170
-    entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-   Allocated by task 830:
-    kasan_save_stack+0x20/0x40
-    kasan_save_track+0x14/0x30
-    __kasan_kmalloc+0x8f/0xa0
-    __kmalloc_node_track_caller_noprof+0x1bc/0x400
-    kmemdup_noprof+0x22/0x50
-    svc_export_parse+0x8a9/0xb80 [nfsd]
-    cache_do_downcall+0x71/0xa0 [sunrpc]
-    cache_write_procfs+0x8e/0xd0 [sunrpc]
-    proc_reg_write+0xe1/0x140
-    vfs_write+0x1a5/0x6d0
-    ksys_write+0xc1/0x160
-    do_syscall_64+0x5f/0x170
-    entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-   Freed by task 868:
-    kasan_save_stack+0x20/0x40
-    kasan_save_track+0x14/0x30
-    kasan_save_free_info+0x3b/0x60
-    __kasan_slab_free+0x37/0x50
-    kfree+0xf3/0x3e0
-    svc_export_put+0x87/0xb0 [nfsd]
-    cache_purge+0x17f/0x1f0 [sunrpc]
-    nfsd_destroy_serv+0x226/0x2d0 [nfsd]
-    nfsd_svc+0x125/0x1e0 [nfsd]
-    write_threads+0x16a/0x2a0 [nfsd]
-    nfsctl_transaction_write+0x74/0xa0 [nfsd]
-    vfs_write+0x1a5/0x6d0
-    ksys_write+0xc1/0x160
-    do_syscall_64+0x5f/0x170
-    entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
-2. We cannot sleep while using `rcu_read_lock`/`rcu_read_unlock`.
-   However, `svc_export_put`/`expkey_put` will call path_put, which
-   subsequently triggers a sleeping operation due to the following
-   `dput`.
-
-   =============================
-   WARNING: suspicious RCU usage
-   5.10.0-dirty #141 Not tainted
-   -----------------------------
-   ...
-   Call Trace:
-   dump_stack+0x9a/0xd0
-   ___might_sleep+0x231/0x240
-   dput+0x39/0x600
-   path_put+0x1b/0x30
-   svc_export_put+0x17/0x80
-   e_show+0x1c9/0x200
-   seq_read_iter+0x63f/0x7c0
-   seq_read+0x226/0x2d0
-   vfs_read+0x113/0x2c0
-   ksys_read+0xc9/0x170
-   do_syscall_64+0x33/0x40
-   entry_SYSCALL_64_after_hwframe+0x67/0xd1
-
-Fix these issues by using `rcu_work` to help release
-`svc_expkey`/`svc_export`. This approach allows for an asynchronous
-context to invoke `path_put` and also facilitates the freeing of
-`uuid/exp/key` after an RCU grace period.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Yang Erkun <yangerkun@huawei.com>
----
- fs/nfsd/export.c | 31 +++++++++++++++++++++++++------
- fs/nfsd/export.h |  4 ++--
- 2 files changed, 27 insertions(+), 8 deletions(-)
-
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 49aede376d86..6d0455973d64 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -40,15 +40,24 @@
- #define	EXPKEY_HASHMAX		(1 << EXPKEY_HASHBITS)
- #define	EXPKEY_HASHMASK		(EXPKEY_HASHMAX -1)
- 
--static void expkey_put(struct kref *ref)
-+static void expkey_put_work(struct work_struct *work)
- {
--	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
-+	struct svc_expkey *key =
-+		container_of(to_rcu_work(work), struct svc_expkey, ek_rcu_work);
- 
- 	if (test_bit(CACHE_VALID, &key->h.flags) &&
- 	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
- 		path_put(&key->ek_path);
- 	auth_domain_put(key->ek_client);
--	kfree_rcu(key, ek_rcu);
-+	kfree(key);
-+}
-+
-+static void expkey_put(struct kref *ref)
-+{
-+	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
-+
-+	INIT_RCU_WORK(&key->ek_rcu_work, expkey_put_work);
-+	queue_rcu_work(system_wq, &key->ek_rcu_work);
- }
- 
- static int expkey_upcall(struct cache_detail *cd, struct cache_head *h)
-@@ -355,16 +364,26 @@ static void export_stats_destroy(struct export_stats *stats)
- 					    EXP_STATS_COUNTERS_NUM);
- }
- 
--static void svc_export_put(struct kref *ref)
-+static void svc_export_put_work(struct work_struct *work)
- {
--	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
-+	struct svc_export *exp =
-+		container_of(to_rcu_work(work), struct svc_export, ex_rcu_work);
-+
- 	path_put(&exp->ex_path);
- 	auth_domain_put(exp->ex_client);
- 	nfsd4_fslocs_free(&exp->ex_fslocs);
- 	export_stats_destroy(exp->ex_stats);
- 	kfree(exp->ex_stats);
- 	kfree(exp->ex_uuid);
--	kfree_rcu(exp, ex_rcu);
-+	kfree(exp);
-+}
-+
-+static void svc_export_put(struct kref *ref)
-+{
-+	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
-+
-+	INIT_RCU_WORK(&exp->ex_rcu_work, svc_export_put_work);
-+	queue_rcu_work(system_wq, &exp->ex_rcu_work);
- }
- 
- static int svc_export_upcall(struct cache_detail *cd, struct cache_head *h)
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index 3794ae253a70..081afb68681e 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -75,7 +75,7 @@ struct svc_export {
- 	u32			ex_layout_types;
- 	struct nfsd4_deviceid_map *ex_devid_map;
- 	struct cache_detail	*cd;
--	struct rcu_head		ex_rcu;
-+	struct rcu_work		ex_rcu_work;
- 	unsigned long		ex_xprtsec_modes;
- 	struct export_stats	*ex_stats;
- };
-@@ -92,7 +92,7 @@ struct svc_expkey {
- 	u32			ek_fsid[6];
- 
- 	struct path		ek_path;
--	struct rcu_head		ek_rcu;
-+	struct rcu_work		ek_rcu_work;
- };
- 
- #define EX_ISSYNC(exp)		(!((exp)->ex_flags & NFSEXP_ASYNC))
--- 
-2.39.2
-
+DQoNCj4gT24gT2N0IDIxLCAyMDI0LCBhdCAxMDoxOOKAr0FNLCB5YW5nZXJrdW4gPHlhbmdlcmt1
+bkBodWF3ZWkuY29tPiB3cm90ZToNCj4gDQo+IA0KPiANCj4g5ZyoIDIwMjQvMTAvMjEgMjI6MDAs
+IENodWNrIExldmVyIOWGmemBkzoNCj4+IE9uIE1vbiwgT2N0IDIxLCAyMDI0IGF0IDA0OjI1OjQw
+UE0gKzA4MDAsIFlhbmcgRXJrdW4gd3JvdGU6DQo+Pj4gDQo+Pj4gRml4ZXM6IDc3NDZiMzJmNDY3
+YiAoIk5GU0Q6IGFkZCBzaHJpbmtlciB0byByZWFwIGNvdXJ0ZXN5IGNsaWVudHMgb24gbG93IG1l
+bW9yeSBjb25kaXRpb24iKQ0KPj4gSSB0aGluayBsaWtlOg0KPj4gRml4ZXM6IDdjMjRmYTIyNTA4
+MSAoIk5GU0Q6IHJlcGxhY2UgZGVsYXllZF93b3JrIHdpdGggd29ya19zdHJ1Y3QgZm9yIG5mc2Rf
+Y2xpZW50X3Nocmlua2VyIikNCj4gDQo+IEhpLA0KPiANCj4gVGhhbmtzIGEgbG90IGZvciB5b3Vy
+IHJldmlldyEgQmVmb3JlIHRoaXMsIHdpbGwgdGhpcyBwcm9ibGVtIGV4aXN0IHRvbw0KPiBzaW5j
+ZSB0aGUgY29uY3VycmVudGx5IHJ1biBiZXR3ZWVuIHVwcGVyIHR3byB0aHJlYWRzIGNhbiBoYXBw
+ZW4gdG9vPw0KDQpZZXMsIHRoZSByYWNlIGNhbiBoYXBwZW4gYmVmb3JlIDdjMjRmYSwgYnV0IHlv
+dXIgcGF0Y2gNCndvbid0IGFwcGx5IHRvIGtlcm5lbHMgdGhhdCBkb24ndCBoYXZlIDdjMjRmYSBh
+cHBsaWVkLg0KDQpUaGUgYXV0b21hdGlvbiBzaG91bGQgcHVsbCBib3RoIG9mIHRoZXNlIGludG8g
+TFRTIGNvcnJlY3RseS4NCklmIGl0IGRvZXNuJ3QgaGFwcGVuIGFzIHdlIGV4cGVjdCwgd2UgY2Fu
+IGZpeCBpdCB1cCBieSBoYW5kLg0KDQpJIHBsYW4gdG8gYXBwbHkgdGhpcyB0byBuZnNkLWZpeGVz
+IChmb3IgdjYuMTItcmMpLg0KDQoNCj4+IGEgbGl0dGxlIGJldHRlci4NCj4+IEknbSB2ZXJ5IGN1
+cmlvdXMgaG93IHlvdSBzdHVtYmxlZCBhY3Jvc3MgdGhpcyBvbmUhDQo+IA0KPiBPdXIgZXhjZWxs
+ZW50IHRlc3QgdGVhbSBoYXMgcmVjZW50bHkgcGVyZm9ybWVkIGEgbG90IG9mIGZhdWx0IGluamVj
+dGlvbg0KPiB0ZXN0cyBvbiBuZnMvbmZzZCwgd2hpY2ggaGVscHMgdXMgZmluZCBtYW55IG5mcy9u
+ZnNkIHByb2JsZW1zLiBUaGlzDQo+IHByb2JsZW0gaXMgb25seSBvbmUgb2YgdGhlbS4gVGhlcmUg
+d2lsbCBiZSBzb21lIGJ1Z2ZpeGVzIGZvciBvdGhlcg0KPiBwcm9ibGVtcyBsYXRlci4NCg0KRXhj
+ZWxsZW50LCBsb29raW5nIGZvcndhcmQgdG8gc2VlaW5nIHRob3NlLg0KDQoNCi0tDQpDaHVjayBM
+ZXZlcg0KDQoNCg==
 
