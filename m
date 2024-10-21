@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-7333-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7334-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF6419A6C1B
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 16:29:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D2CD9A6C6F
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 16:42:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 377511F20F8B
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 14:29:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE0CE1F200F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Oct 2024 14:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6811EB9FD;
-	Mon, 21 Oct 2024 14:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF4A91F9434;
+	Mon, 21 Oct 2024 14:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFQ39O0D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2Aa4ZDc"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E361D1F4D
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 14:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840E11F7092
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Oct 2024 14:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729520984; cv=none; b=KzfMEzmVGpgf0sKSGTkOlbKvC0tPhPP72e7aVb96XDcaUATQ66S+cCy58hoB200SuSClox5IqjlNQFLQ+61nBSmhcXsoVdGrwnZo87Vq4Bhc2XXcLKYcpKjFhVS20jekKuGtviMG4peR7XxAwtWJhFo7NmP9H9u4udF2Bo1pw74=
+	t=1729521758; cv=none; b=XllzdkaK+g0P9QNcSqUTMnXX1gxnNc1knWA6akOLya1pE9I9ukY9YkcZn6Ty66ztLO+KK9sJMrFW1gncRH7U6y3d97NesapDRzx0owGoESc13lCWnRQg9ZpitPWSjLfINccMRhklMlOZdaqVRwl5AY9GFGv+b57JoGVAIU73LYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729520984; c=relaxed/simple;
-	bh=fZ/45Ohs8cURnAbn2nXRwS/pdOl0O9x4+I1lVhshw8M=;
+	s=arc-20240116; t=1729521758; c=relaxed/simple;
+	bh=MeqNJalkg4zhC13RXqZPNvgLn9bXJmtI7Fu3lrMVwV0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RnteZlWQiLow3w4fd0sEV8t47Op4E6sqa3BRiZVh525AQT6eRBHp9aE+R2Cz4u3ieP9W4Eq3rC/CuCi/e49v3dKbfGs83ZqQSZLV/LgQqJ2whWLh0yBuDzRf4gf4AkKy4qMpWVwNQxLBrcfuWLpMpmvz+vI4xKW81JuLdBtvWbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFQ39O0D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58BDDC4CEC3;
-	Mon, 21 Oct 2024 14:29:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=cxv0OywJ5svrkingCaZfdo2TzMNmaFp7Yo8Y6nGBl5eRWyrIyBlDQpv0H/aje6AjpQbqKS3pIIvCQzFKXp/BwhvUg4hEOaG+BgGcTDy9G04yvOhYEWNVgYAV/HYRubIWkWAp/VYOW+O32Gjc0Qd3RKh493fG3ecNfJ371atu92Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2Aa4ZDc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48269C4CEC3;
+	Mon, 21 Oct 2024 14:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729520983;
-	bh=fZ/45Ohs8cURnAbn2nXRwS/pdOl0O9x4+I1lVhshw8M=;
+	s=k20201202; t=1729521758;
+	bh=MeqNJalkg4zhC13RXqZPNvgLn9bXJmtI7Fu3lrMVwV0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XFQ39O0DzrGBmV2KWDbpS5wYaSAfBWbCjl8SUcPCmHOBBhy6ywpVpCWVYu1nvgoZJ
-	 suVmhM4aqyptD4PpQ/IOtBICF5frXxzB863t0eQoApIE1u4+HhHDj6vl6g2nAR2bQb
-	 3m5C9kzrGgCRMVWP7WNVsQFlOXL32yQzHAukdcHdy1D3mnsMYfgiUGdzNT0f2wd6gD
-	 iwLujSwSU2QZTMorMAZQF9lHGJ8vAUieebTbBpc1f3JdKlIknOWcXayx8zqG3kUJPQ
-	 ChajnWh2f4XJaayxic1CWfoZMiLVAwbIAwNoYmjlokxr98Gky9Pj0sru6o/sW9/J+8
-	 E/4DndsuRI9Mw==
-Message-ID: <bf4c7b07b542c2f7c4ce692e4f0bd908c60a2796.camel@kernel.org>
-Subject: Re: [PATCH v2] nfs: avoid i_lock contention in
- nfs_clear_invalid_mapping
+	b=S2Aa4ZDcbPkBpoFzjJP1jA0oF7/piaNVYajH5zRFUGeX+KhGcEurRq0InMsCWl7Iv
+	 c27hX1Yjmd7iKSOZfeZI2QxSXA3IdVhShfj68BjrXxIer9lo8f/Ke5yocbqc30R4bV
+	 MiEfZgYccfB5T/cDiH66x24pAvosCZbqcj+a/9jUvu2H3AicHnjhJKmTKPOyS1UPUr
+	 5BOcduc5a/I0dVequ7Ak2NAOyyb3bXN1CFsLS0VmGFKqiRWoLnuEF2oq6XyK9UevIb
+	 WUZN6h5coEasgrfVSfxtM4OPlJn4ajJAObwroi12EIjpuIw3tyg0mr02O+ymyUhe14
+	 /m90Gzc9pOLtg==
+Message-ID: <20ab72b19ff1a63e948c6379cefce900fc02ee1d.camel@kernel.org>
+Subject: Re: [PATCH 0/3] bugfix for c_show/e_show
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
-Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
- <trondmy@hammerspace.com>
-Date: Mon, 21 Oct 2024 10:29:42 -0400
-In-Reply-To: <20241018211541.42705-1-snitzer@kernel.org>
-References: <20241018211541.42705-1-snitzer@kernel.org>
+To: Yang Erkun <yangerkun@huaweicloud.com>, chuck.lever@oracle.com, 
+	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
+Date: Mon, 21 Oct 2024 10:42:35 -0400
+In-Reply-To: <20241021142343.3857891-1-yangerkun@huaweicloud.com>
+References: <20241021142343.3857891-1-yangerkun@huaweicloud.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,77 +134,26 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-10-18 at 17:15 -0400, Mike Snitzer wrote:
-> Multi-threaded buffered reads to the same file exposed significant
-> inode spinlock contention in nfs_clear_invalid_mapping().
+On Mon, 2024-10-21 at 22:23 +0800, Yang Erkun wrote:
+> Yang Erkun (3):
+>   nfsd: make sure exp active before svc_export_show
+>   SUNRPC: make sure cache entry active before cache_show
+>   nfsd: release svc_expkey/svc_export with rcu_work
 >=20
-> Eliminate this spinlock contention by checking flags without locking,
-> instead using smp_rmb and smp_load_acquire accordingly, but then take
-> spinlock and double-check these inode flags.
+>  fs/nfsd/export.c   | 36 +++++++++++++++++++++++++++++-------
+>  fs/nfsd/export.h   |  4 ++--
+>  net/sunrpc/cache.c |  4 +++-
+>  3 files changed, 34 insertions(+), 10 deletions(-)
 >=20
-> Also refactor nfs_set_cache_invalid() slightly to use
-> smp_store_release() to pair with nfs_clear_invalid_mapping()'s
-> smp_load_acquire().
->=20
-> While this fix is beneficial for all multi-threaded buffered reads
-> issued by an NFS client, this issue was identified in the context of
-> surprisingly low LOCALIO performance with 4K multi-threaded buffered
-> read IO.  This fix dramatically speeds up LOCALIO performance:
->=20
-> before: read: IOPS=3D1583k, BW=3D6182MiB/s (6482MB/s)(121GiB/20002msec)
-> after:  read: IOPS=3D3046k, BW=3D11.6GiB/s (12.5GB/s)(232GiB/20001msec)
->=20
-> Fixes: 17dfeb911339 ("NFS: Fix races in nfs_revalidate_mapping")
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs/inode.c | 20 +++++++++++++++-----
->  1 file changed, 15 insertions(+), 5 deletions(-)
->=20
-> v2: fix issue Jeff Layton raised, need: flags |=3D nfsi->cache_validity;
->=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 542c7d97b235..cc7a32b32676 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -205,12 +205,15 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
-igned long flags)
->  		nfs_fscache_invalidate(inode, 0);
->  	flags &=3D ~NFS_INO_REVAL_FORCED;
-> =20
-> -	nfsi->cache_validity |=3D flags;
-> +	flags |=3D nfsi->cache_validity;
-> +	if (inode->i_mapping->nrpages =3D=3D 0)
-> +		flags &=3D ~NFS_INO_INVALID_DATA;
-> =20
-> -	if (inode->i_mapping->nrpages =3D=3D 0) {
-> -		nfsi->cache_validity &=3D ~NFS_INO_INVALID_DATA;
-> -		nfs_ooo_clear(nfsi);
-> -	} else if (nfsi->cache_validity & NFS_INO_INVALID_DATA) {
-> +	/* pairs with nfs_clear_invalid_mapping()'s smp_load_acquire() */
-> +	smp_store_release(&nfsi->cache_validity, flags);
-> +
-> +	if (inode->i_mapping->nrpages =3D=3D 0 ||
-> +	    nfsi->cache_validity & NFS_INO_INVALID_DATA) {
->  		nfs_ooo_clear(nfsi);
->  	}
->  	trace_nfs_set_cache_invalid(inode, 0);
-> @@ -1408,6 +1411,13 @@ int nfs_clear_invalid_mapping(struct address_space=
- *mapping)
->  					 TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
->  		if (ret)
->  			goto out;
-> +		smp_rmb(); /* pairs with smp_wmb() below */
-> +		if (test_bit(NFS_INO_INVALIDATING, bitlock))
-> +			continue;
-> +		/* pairs with nfs_set_cache_invalid()'s smp_store_release() */
-> +		if (!(smp_load_acquire(&nfsi->cache_validity) & NFS_INO_INVALID_DATA))
-> +			goto out;
-> +		/* Slow-path that double-checks with spinlock held */
->  		spin_lock(&inode->i_lock);
->  		if (test_bit(NFS_INO_INVALIDATING, bitlock)) {
->  			spin_unlock(&inode->i_lock);
 
-LGTM!
+TIL about rcu_work! That seems like a nice clean solution for #3. All 3
+patches look fine to me. You can add:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+One thing though. We had very little RCU in nfsd in 2012, so these
+problems likely got introduced much later than 2.6.12. cache_get_rcu()
+got added in 2018, for instance. We may want a more reasonable Fixes:
+tag.
+
 
