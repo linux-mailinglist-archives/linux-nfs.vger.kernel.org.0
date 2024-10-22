@@ -1,183 +1,138 @@
-Return-Path: <linux-nfs+bounces-7346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7347-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A3C9A94A1
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 02:18:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFFE59A953E
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 03:06:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F194B22152
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 00:18:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A13E1F23234
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 01:06:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44F414C80;
-	Tue, 22 Oct 2024 00:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="p1GefdVD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 848992E822;
+	Tue, 22 Oct 2024 01:06:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic316-20.consmr.mail.bf2.yahoo.com (sonic316-20.consmr.mail.bf2.yahoo.com [74.6.130.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC87F4C62
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 00:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.6.130.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93444A35
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 01:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729556310; cv=none; b=S2fKKt0p4YzsOSHw2jh5sDdyFpTu8J43W49rpyIO5STml+AJCrgdf85NiZJJ9dk25+uhND1aDB0hR7qvTjvH1lckQq8bgqcm2pGkF//Iz+u+TolKNP3Nc34G9dyxAaM/fbwAFIvL8n0xPZTOe0lB7LIFfBAdllYUPjdhltqPjpo=
+	t=1729559190; cv=none; b=joN2Tu0G3xOtKduNNmU/Ba834T6EgtZ2SfHTYusdJ2xBVxaJkrN1pNESLSpYEwt9t48ZV6o7qcmT09TW/3mV2b++b5aalYlGKG7iaRDlVCwTOzmjucwKlktZUeWaj8Dwn7X6/C8CZPT+wULzx5UX2zMQC38Jt80SGLHsswTovbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729556310; c=relaxed/simple;
-	bh=z181btsfxt9PDb/yCV5oeTIzDXg22ExnqXko3wxsUyw=;
+	s=arc-20240116; t=1729559190; c=relaxed/simple;
+	bh=zgcBSLgbsTUpGGaoDTjKgWIpWzladovIeZtje4ndhAM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JIfgda7y5fw7SzFiB93ULnPsf5hPFdd80Hdp9TVJ3YhaPFhDU/Hc17mwLN56WnyWiLYEqsEMZpxC+QGuyaM9XwykOv4pz4JbcybL8AIdp4XL1vwP/pFXDtg2U+ClBy/t3moE7VASgcIZRSj3XRkSbmVMMdPQl8+zf5FNuct/r/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=p1GefdVD; arc=none smtp.client-ip=74.6.130.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1729556305; bh=jDj5CXvHcjdpLFA63d1hBsH/DNQTd4LCrH9oYp0BA9k=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=p1GefdVDrEnCj6qg8mk3e+4y/2HQxV9+lNkrRCQbPikmEsM4pb/Uy/XJ+Q6J4VqQn2Zkdkc6tqFY+KR/6Eh0V+qysnZhs9xGqiv4x+LLJ9k4Ved9qhZHfaS75QtVt9izWErsTxF+gEwanqCMdsLTojrT6jTaaiKkKvHt5NKPLc7Tc3WggUvZ8/rmLQQ9IQtX73jsUQKtW36EGgP+rO+/9URloWB6xwZWILO18J/TL3ZOWXTmRRS6il+uOYIlRyaX/opF0Ily1BOfAtSXJ8eBnABvC8FvMojmDJ74mhUQeyy7Qzv9GfLF99nxBfoL5kTlyydgLo8epOxZO9EIj5sZ5w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1729556305; bh=MSibLBA/JAWhL8Mrc4FRbODZV3fTrdebBmLCST84DJm=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Y5EyCF1sCo2ohtKOnyA47o/Prb1Gq5ZcQxGa1UNQrQL+k4Nk4IitNqgB9MCJJqHnzZlIgg4glElLoo2kUPSgnoSQKjTo9ZFAFEElmWHTKlehAbuW+IoOx6A+XOtJJvblBqUn2hXRM02wlaNEOLYhLVgiTZ/15aPZlkrHHpazSAQRSMSmvCR9KgeDOZHSFAK6000qja3i3mqmBz4sjvFhd/RzHqcyWexagK9fPCcMeBtUhUcDogCxIXanrF2jtzj4EZuyan0Ca4dxdrVa90I1J83Czz/sC9FPAvD7KxztOpwyiX7tAAhAOq9Xw6YJnZxp60R0bJSiM/50Ls088VgLzg==
-X-YMail-OSG: b2yzTPoVM1kqh1.EwrToqFS8bYbeVZJNIjI.Kk2vyBkUxMzHeh2OGEfb.5M_G8a
- caYx0blk.h1r1bV4YN_OAoE.IRzvTTXTSnzCQcSU4gtvFBzTeaIXywdXu3HJvLOkV6XCtldVVxMw
- dgZgB0Znesy6Kk7kvD3MqKSrrIyiwQ3cJ4kna6ET5IenSIlkAFwnUvqJylv8Y8A4172ukwZRHIDP
- O8kjM_UFJDE.dIcxB2sq24l4kwFCQjsHBscxni9ro49CXe_pSgqLY.UJs5y8lqrcdG6qT.8oIDt3
- bd60la9XrBPhj6d2wxs1AOnmDmU6Hw7eJlaT4fwZsg6bYnBVFMZgaHwfuZapCOcgGQHItOw.s6z9
- xPCRVh_QEWMzImhe3Sgl.AW2izuJOCcL7kWi7cFmChg9QvKK5XHEmkG1rCKZcvr.vm_bFUvpxSci
- OZdSXuuiXCBLAsrOfNu5aMCjKOqAisnoh8h7lSl2quSXTG9cr9rloQk_CkZFZvQOmNakT2Kw7osG
- P62ZFlIXjRNZy7fAv7NOAZtv3MMRzoPrF5quf6WMkB2yIOX6c8zdba8ntmtAYMHazHV3VHXF5U3k
- TBMgF4OWBKzt4qpHwdrr_C6Z5lose0Kn9KqWcQCnj79YQISGUare7Lo8Lj.RoPpg5QEQISK.zHt3
- Ealo9KLhdGrO0HOTinQPZw0.HMFDoWc7Co6II5n7MzACbpfkP1SPTHZqdDLl4SpdvbaM6TYcIvor
- raXui3x0PS71vF8wCCjqdP4uQqvXy5uOtOB.wyGMRm67OBWTbimO6ICTnn2EbYfjx5cpNs0My9G.
- 3faeKmhxtcoczYAlsQK3a.DKLnwzXH2gNSRtSJb6rfxriY8umm48IZyuEEFFvZeFGDmIEyFck_pl
- PdDlIg5zg0Lkr8LqRj_lvaYVwQU6CQHP1zQ_InT9vh8q9VmVuLNS_9TVDICqdTllwzHMAx4HBkVG
- 3yrf2gaoX3s2PkG_f.CwCU.nYqpuzAqLDoopDjuW45swdLM3DKLXZIe_mzxNIorFwglH2.umXl8c
- mJ4mkmzdb0ZgWLiL8jDSfvkwpO7avdLs_EZ.943h8W4k_n2PZtMZYIEB7qwkyrRaadyTGhFFknMs
- URDcXkqTv5SvQXHgQNdz2UNoghYU4DUIMp2dkvazE51Scp5aAOxUSH0ORelHdxkPu4DufgDoBa.o
- a_kNSxDe2Lp4VuxlcCSnvYR4E6wp5RvxtV.Mikmd86gJaJIRs8nUbHOHiCyHekqeCICgsQddoHHA
- gd1K.AsqyVYWOeb7BhqoOd3ZuLhVIOCCvvqwKME9zQ.STxPA7OV7T43W1w7HIrwwaGZe7JiWnawQ
- Qf2R.v.EaagLQKnXMmwp5uWv1u0kh2dXVRjxhj6t8QLRb8zo._P2CaZ8uD_4TZu9Qk72aioNrWS2
- 5tzPDjDQs1bXUdHGhvswSIE7djPKNymNXwNoM46ACuK0iF2ppF_DH.y_q_J6nPDiXQNmZeEMAYjL
- 2Z58Dg.KGOX.p_FOsGyfY8Gh07TZpmGo5UPapi6zkiAX4seqINgb3uOc7MkrrXAECitfBInCkl0R
- rXHPhhFYvcMqpz0I4qMb9CoXhHI7uQOliNHhVlYL4yHzxN65qMToiUmXtH0pVgKr7VowTtKKwsOY
- OzoFXMrsdUfwTRaU52Ysas4nBYQKAIp6vHDIUkdd9kDRXC2VxcJ5De_IWKvGJmkpW4nK0RoSL_K6
- JMggscSlleLiK5xRebHR7MkrF2igdFjl5ZvS5heKDjJbd1RHVxO0_xMLSx.yjhyaJh_hZvLGn0lv
- dhQy8ZEDKaKL_QmZZY41yzgqqWM1nKs0iW2Cx_GLMM6jg4Gw11KEXx_J4GA6QhAFx32m9UCkttRF
- naUnX8zIROEMipfwIhxc281.PAW3jWAkJ6Dd2vPtZv7weIlzC_DWv_H6dKUuKGxDNDcc9WSeApAX
- KRt46ho9Ab9_BikIZBuhgOvCVPk3wllK_c1z8zofi8DjYTWVe2SgR0yY5IwGwB9tzKHzRXxSTBU3
- ezmeEKMQUB0EyCFORAkAlIvFW3uUWKjGvILbXUMCIzvNOBO4h_uCKx5JeMkr4By_ARrcO6p3vBas
- 5K.ZVQV5CV8RouHp1aOSwKFnIxEtGqE0lcvyLMpt5v9kzB1sdOEXTEGj8jtmQZ1dCEfKZLqT3tGy
- RRsWhT5xtuMj1lvqhpMGUcQ7quw5.wa.0m5Tr54JbUrJash0lGewbia0MKOph4atefNKA6yoILiM
- 9mnk.K7PwUuQskT01Azw8gox3.k1FXnJ1GAvd3.8NzBKBPUqR9OxLCBoCXp5kqaii5fIjiGkkVbB
- U.5Ict_X.wZNL6_d6IqPOaA--
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 566483e5-b146-4668-90c8-890eb38b538e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.bf2.yahoo.com with HTTP; Tue, 22 Oct 2024 00:18:25 +0000
-Received: by hermes--production-gq1-5dd4b47f46-wrqn7 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID c72af3b73ce19b5992080d7cc4add89a;
-          Mon, 21 Oct 2024 23:58:10 +0000 (UTC)
-Message-ID: <bab1de2e-0205-40dd-af3e-5956ff349948@schaufler-ca.com>
-Date: Mon, 21 Oct 2024 16:58:08 -0700
+	 In-Reply-To:Content-Type; b=tG3oCj2/yGMTPhjuB2d7H55RESqdM7d8NdZPfQzASghFB6jwE8ScItj7xz+7YWQSXM/zRmxc0Buqqq/zS3WQs3S02eqd1H9ZQtcvvZPwsGGHZZFsiQwROOFZdQJSL4v37sQYywhBbeCoEgpmLLq5OClCJOTtJ1qFiY/EKb/P9yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4XXYsB4pB4z4f3jJD
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 09:06:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 0D9CA1A018D
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 09:06:24 +0800 (CST)
+Received: from [10.174.177.210] (unknown [10.174.177.210])
+	by APP4 (Coremail) with SMTP id gCh0CgD3LMmO+hZnLdQNEw--.30187S3;
+	Tue, 22 Oct 2024 09:06:23 +0800 (CST)
+Message-ID: <7eb2c989-0b78-9a6c-46d7-f3d47685adb1@huaweicloud.com>
+Date: Tue, 22 Oct 2024 09:06:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] LSM: Ensure the correct LSM context releaser
-To: Paul Moore <paul@paul-moore.com>, linux-security-module@vger.kernel.org
-Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
- john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp,
- stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
- selinux@vger.kernel.org, mic@digikod.net, linux-integrity@vger.kernel.org,
- netdev@vger.kernel.org, audit@vger.kernel.org,
- netfilter-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
- Todd Kjos <tkjos@google.com>, Casey Schaufler <casey@schaufler-ca.com>
-References: <20241014151450.73674-2-casey@schaufler-ca.com>
- <dad74779768e7c00d2a3c9bf8c60045d@paul-moore.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <dad74779768e7c00d2a3c9bf8c60045d@paul-moore.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.22806 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] nfsd: cancel nfsd_shrinker_work using sync mode in
+ nfs4_state_shutdown_net
+To: Chuck Lever III <chuck.lever@oracle.com>, yangerkun <yangerkun@huawei.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+References: <20241021082540.2885014-1-yangerkun@huaweicloud.com>
+ <ZxZeZB51iwVgVZt6@tissot.1015granger.net>
+ <2e5c039a-fde0-de3c-c15f-5405a5507c8b@huawei.com>
+ <7FA40B59-C5FC-4393-82DD-BB8CE44F4AC0@oracle.com>
+From: yangerkun <yangerkun@huaweicloud.com>
+In-Reply-To: <7FA40B59-C5FC-4393-82DD-BB8CE44F4AC0@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3LMmO+hZnLdQNEw--.30187S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF45Ww15uF48GFWftF43Jrb_yoW8Gr4xpF
+	W3AFn0yw1vyrZFk3ZFqayUtFy3twsakw17ur95Zr48trZ093sxtr18KFWY9Fy8Xr4kWw1j
+	qa1aga98X34DZ3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
+	DUUUUU=
+X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
 
-On 10/21/2024 4:39 PM, Paul Moore wrote:
-> On Oct 14, 2024 Casey Schaufler <casey@schaufler-ca.com> wrote:
->> Add a new lsm_context data structure to hold all the information about a
->> "security context", including the string, its size and which LSM allocated
->> the string. The allocation information is necessary because LSMs have
->> different policies regarding the lifecycle of these strings. SELinux
->> allocates and destroys them on each use, whereas Smack provides a pointer
->> to an entry in a list that never goes away.
->>
->> Update security_release_secctx() to use the lsm_context instead of a
->> (char *, len) pair. Change its callers to do likewise.  The LSMs
->> supporting this hook have had comments added to remind the developer
->> that there is more work to be done.
->>
->> The BPF security module provides all LSM hooks. While there has yet to
->> be a known instance of a BPF configuration that uses security contexts,
->> the possibility is real. In the existing implementation there is
->> potential for multiple frees in that case.
->>
->> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
->> Cc: linux-integrity@vger.kernel.org
->> Cc: netdev@vger.kernel.org
->> Cc: audit@vger.kernel.org
->> Cc: netfilter-devel@vger.kernel.org
->> To: Pablo Neira Ayuso <pablo@netfilter.org>
->> Cc: linux-nfs@vger.kernel.org
->> Cc: Todd Kjos <tkjos@google.com>
->> Reviewed-by: Serge Hallyn <sergeh@kernel.org>
->> ---
->>  drivers/android/binder.c                | 24 ++++++-------
->>  fs/ceph/xattr.c                         |  6 +++-
->>  fs/nfs/nfs4proc.c                       |  8 +++--
->>  fs/nfsd/nfs4xdr.c                       |  8 +++--
->>  include/linux/lsm_hook_defs.h           |  2 +-
->>  include/linux/security.h                | 35 +++++++++++++++++--
->>  include/net/scm.h                       | 11 +++---
->>  kernel/audit.c                          | 30 ++++++++---------
->>  kernel/auditsc.c                        | 23 +++++++------
->>  net/ipv4/ip_sockglue.c                  | 10 +++---
->>  net/netfilter/nf_conntrack_netlink.c    | 10 +++---
->>  net/netfilter/nf_conntrack_standalone.c |  9 +++--
->>  net/netfilter/nfnetlink_queue.c         | 13 ++++---
->>  net/netlabel/netlabel_unlabeled.c       | 45 +++++++++++--------------
->>  net/netlabel/netlabel_user.c            | 11 +++---
->>  security/apparmor/include/secid.h       |  2 +-
->>  security/apparmor/secid.c               | 11 ++++--
->>  security/security.c                     |  8 ++---
->>  security/selinux/hooks.c                | 11 ++++--
->>  19 files changed, 167 insertions(+), 110 deletions(-)
-> ..
->
->> diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
->> index 1bc2d0890a9f..8303bbcfc543 100644
->> --- a/net/netlabel/netlabel_unlabeled.c
->> +++ b/net/netlabel/netlabel_unlabeled.c
->> @@ -1127,14 +1122,14 @@ static int netlbl_unlabel_staticlist_gen(u32 cmd,
->>  		secid = addr6->secid;
->>  	}
->>  
->> -	ret_val = security_secid_to_secctx(secid, &secctx, &secctx_len);
->> +	ret_val = security_secid_to_secctx(secid, &ctx.context, &ctx.len);
->>  	if (ret_val != 0)
->>  		goto list_cb_failure;
->>  	ret_val = nla_put(cb_arg->skb,
->>  			  NLBL_UNLABEL_A_SECCTX,
->> -			  secctx_len,
->> -			  secctx);
->> -	security_release_secctx(secctx, secctx_len);
->> +			  ctx.len,
->> +			  ctx.context);
-> Nitpicky alignment issue; please keep the arguments aligned as they
-> are currently.
 
-Not a problem, although it looks like it's correct to me. I'll check to make sure.
 
->
->> +	security_release_secctx(&ctx);
->>  	if (ret_val != 0)
->>  		goto list_cb_failure;
->>  
+在 2024/10/21 22:25, Chuck Lever III 写道:
+> 
+> 
+>> On Oct 21, 2024, at 10:18 AM, yangerkun <yangerkun@huawei.com> wrote:
+>>
+>>
+>>
+>> 在 2024/10/21 22:00, Chuck Lever 写道:
+>>> On Mon, Oct 21, 2024 at 04:25:40PM +0800, Yang Erkun wrote:
+>>>>
+>>>> Fixes: 7746b32f467b ("NFSD: add shrinker to reap courtesy clients on low memory condition")
+>>> I think like:
+>>> Fixes: 7c24fa225081 ("NFSD: replace delayed_work with work_struct for nfsd_client_shrinker")
+>>
+>> Hi,
+>>
+>> Thanks a lot for your review! Before this, will this problem exist too
+>> since the concurrently run between upper two threads can happen too?
+> 
+> Yes, the race can happen before 7c24fa, but your patch
+> won't apply to kernels that don't have 7c24fa applied.
+> 
+> The automation should pull both of these into LTS correctly.
+> If it doesn't happen as we expect, we can fix it up by hand.
+
+Thanks for explaining. Agree with you.
+
+> 
+> I plan to apply this to nfsd-fixes (for v6.12-rc).
+
+Thanks!
+
+> 
+> 
+>>> a little better.
+>>> I'm very curious how you stumbled across this one!
+>>
+>> Our excellent test team has recently performed a lot of fault injection
+>> tests on nfs/nfsd, which helps us find many nfs/nfsd problems. This
+>> problem is only one of them. There will be some bugfixes for other
+>> problems later.
+> 
+> Excellent, looking forward to seeing those.
+> 
+> 
 > --
-> paul-moore.com
->
+> Chuck Lever
+> 
+> 
+
 
