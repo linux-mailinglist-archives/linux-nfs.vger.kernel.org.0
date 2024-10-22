@@ -1,106 +1,79 @@
-Return-Path: <linux-nfs+bounces-7350-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7351-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A42E9A9736
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 05:42:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8135B9AA034
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 12:40:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7A398B21645
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 03:42:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C6B41F2198E
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 10:40:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC3478B60;
-	Tue, 22 Oct 2024 03:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC9515574F;
+	Tue, 22 Oct 2024 10:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZUS9/Qi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from nucleus.ldx.ca (nucleus.ldx.ca [192.234.197.243])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1650E256D
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 03:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.234.197.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850E6199E8D
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 10:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729568547; cv=none; b=qEiZBIPnSkcs6k5aX7oyP5jNAJlNXJpGHLDMB2iOZ4S2/7Kuz5jESdcZNQL5ObMN+govuT4E8J+NPYQAZJefs+fEOsIhicso3N+iP7kQgLDSZsDvZ6Lmv/Fli3tVDdZgeW48QJ7BsyvDf/yO0rM60TySRoNDCFHcJl8dhzLwV5g=
+	t=1729593602; cv=none; b=U8gz9/4kEXq722/Mgm3C0LImhEL1EtFccFzj6L3NO2TrAVKKp6VXCWnVscsHrp7vHqSObhw7ygDG47ZxYST1bxqxWHmgro7thibrwPcjo3zGr5DltWPuQofQ8yq5yFw/Q7l65mzdNT/ELtzNYDVagX9+vT7smUfAyyU8i7IrAhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729568547; c=relaxed/simple;
-	bh=QwxZpxIlTEFy7obvuAGjjIazG4QkdgF5ps7fZ25gNNk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LR5oNFN8S2goErJsxJO+EomggFt84l5QWJW9ixyUPc1JZhK1NEsim1jLR4LGVxFIPSskYYMrlwGmnO8vpPe6RJkeIUl7UI0f8fBiVrF6FNLVnTjRTkFwa2/mEwgbJtg0JAYpaATdBvNALQkAp5weXKeW9orIWjA69Uq5ANsnlLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ldx.ca; spf=pass smtp.mailfrom=ldx.ca; arc=none smtp.client-ip=192.234.197.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ldx.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ldx.ca
-Received: by nucleus.ldx.ca (Postfix, from userid 1000)
-	id 79DE95F743; Mon, 21 Oct 2024 20:42:24 -0700 (PDT)
-Date: Mon, 21 Oct 2024 20:42:24 -0700
-From: Tyler Mitchell <fission@ldx.ca>
-To: linux-nfs@vger.kernel.org
-Subject: /proc/fs/nfsd/clients/*/info TCP port not updating after reconnect
-Message-ID: <20241022034224.GE2515022@ldx.ca>
+	s=arc-20240116; t=1729593602; c=relaxed/simple;
+	bh=8R/MMq6V9ckkfIhiRkSX6J05NLbTXzrznaj5h0GL+vg=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=rgelzAC+XuehNhhpbBT91VP1Vlx6CsEmDdFNANSVSB97E0CvhzjpJz+V5ktewVohHuoS3x5Gm+NbIEaWnPA5NwocHBJ1HjX/Z+RGY9TjyG4A27hRf/MuRXeQrb+5Ub+903QXrmT3A7dginBF7hvj3XftZ6NoTA+2fD2v+4+YbMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZUS9/Qi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BEEEC4CEC3;
+	Tue, 22 Oct 2024 10:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729593602;
+	bh=8R/MMq6V9ckkfIhiRkSX6J05NLbTXzrznaj5h0GL+vg=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=EZUS9/Qi5hgxsg47VclkBb1+e5xyOB66S/X79TB+747XMRa7swbaIftYUGqRnHMxk
+	 Z9DVUw6CmkmsZQxF2how7EoipLCz6kuKdOFpvfWQe6y0KXDHUc+XwxpgjhFyEAjy+G
+	 e6H6DbkZ4ZpXVWblTCUCdejwLNrf0PjL8M4MFkVd1LoLmKKlnRqg9ZFm8JV81HQdof
+	 uyCI7JOKJ6pJp7NjG43RHVsSUrF9YofVUbmmgd/wkGWwmxpGOr6AQXnETspP1kC7/k
+	 aNM4tq16zXDNVECcOq8VV2Xs5F2XwWQwYT/YZb/syuSOXayaLmINXfQmDpE/0GTOQC
+	 //xJ1bVdk4m8g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 39B153809A8A;
+	Tue, 22 Oct 2024 10:40:09 +0000 (UTC)
+From: "The Linux kernel's regression tracker (Thorsten Leemhuis) via Bugspray Bot" <bugbot@kernel.org>
+Date: Tue, 22 Oct 2024 10:40:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: jlayton@kernel.org, linux-nfs@vger.kernel.org, cel@kernel.org, 
+ trondmy@kernel.org, anna@kernel.org
+Message-ID: <20241022-b219370c4-87086f1d9b96@bugzilla.kernel.org>
+In-Reply-To: <20241010-b219370c0-bd6df2a482ac@bugzilla.kernel.org>
+References: <20241010-b219370c0-bd6df2a482ac@bugzilla.kernel.org>
+Subject: Re: link error while compiling localio.c
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-Hi,
+The Linux kernel's regression tracker (Thorsten Leemhuis) writes via Kernel.org Bugzilla:
 
-I have an NFS server running on Alpine Linux:
+Was the problem resolved in between? 
 
-# uname -a
-Linux charm 6.6.54-0-lts #1-Alpine SMP PREEMPT_DYNAMIC 2024-10-04 16:47:58 x86_64 Linux
+And can I CC you on a lkml mail? This would expose your email address to the public.
 
-I wrote some very simple shell scripts to track & report NFS client
-usage. But I noticed that after some time, the TCP port reported in
-the "address" field of /proc/fs/nfsd/clients/*/info doesn't match
-the actual TCP port in use by the client.
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219370#c4
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
-An example from the server side:
-
-# cat /proc/fs/nfsd/clients/4/info
-clientid: 0xdf43354e670522ab
-address: "192.168.93.218:752"
-status: confirmed
-seconds from last renew: 60
-name: "Linux NFSv4.2 raspberrypi"
-minor version: 2
-Implementation domain: "kernel.org"
-Implementation name: "Linux 6.1.21-v7+ #1642 SMP Mon Apr  3 17:20:52 BST 2023 armv7l"
-Implementation time: [0, 0]
-callback state: UP
-callback address: 192.168.93.218:0
-# netstat -n | egrep '(Foreign|:2049)'
-Proto Recv-Q Send-Q Local Address           Foreign Address         State
-tcp        0      0 192.168.93.82:2049      192.168.93.218:776      ESTABLISHED
-tcp        0      0 192.168.93.82:2049      192.168.93.218:752      ESTABLISHED
-
-And on the client:
-
-% netstat -4n
-Active Internet connections (w/o servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State
-tcp        0      0 192.168.93.218:776      192.168.93.82:2049      ESTABLISHED
-
-
-When the NFS connection was first established, it was using 752 (I
-had checked), but it seems that it got disconnected at some point
-and reconnected from port 776. (In this case I was actually doing
-some rewiring and the NFS server was temporarily disconnected from
-the network.)
-
-The client_info_show() function seems to be just reading the state
-data from a struct nfs4_client. And I see this gets populated in
-create_client() but I don't see it being updated anywhere. In this
-case, it would have to happen after the client reconnects following
-a transient error.
-
-Anyhow, I don't have an immediate solution, but wanted to mention
-this in case it wasn't already a known issue. Ideally the port
-could be updated when it changes so that it's possible to better
-track active clients.
-
-Many thanks,
-Tyler
 
