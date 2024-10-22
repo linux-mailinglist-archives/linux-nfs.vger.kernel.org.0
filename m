@@ -1,240 +1,186 @@
-Return-Path: <linux-nfs+bounces-7362-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7363-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 811549AB19B
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 17:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E7409AB3EA
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 18:26:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CD7B3B21278
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 15:04:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB8BBB23396
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Oct 2024 16:25:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 650151A0AF2;
-	Tue, 22 Oct 2024 15:04:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 591A21BC06E;
+	Tue, 22 Oct 2024 16:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ll67hQw/"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Sm/BRd7m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3B985C5E
-	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 15:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7904A1BB6B3
+	for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 16:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729609441; cv=none; b=c62rHCfcv1e5/QeD+1p3aRlkQOxTXmGgsjwx7N5rLp73n65AhkxwjdeRFabhRuY84iJQ4zgAKCUBd8lT3kqTVR+5Rpnrkgz5xVmdeHn1ulreXIJ/MwqeWRYgF+EnwZmPa+LabrKxM0dgpxzSeGpRsw0W3dRWrsniuekYVvnp4zk=
+	t=1729614350; cv=none; b=QuWSphm1OyR8ghT+gPZR70y4OPQBfTpz4kU4Pq3WGPxnHhBo0hIFUUKGyJa7jz5e/oUaAearSVYzbaZG8pT3rG/bjW6cQl4vLjjxGDpGVc6KvSVb1OljmEKolpxDV2PtZJ8G9AMzcE8RazIVrLEWvu+LZrGvejKW0L9rLAuMKTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729609441; c=relaxed/simple;
-	bh=gjNf2XRWzRa8byTPrOjJkMdXhxplpSBH8d50Pt/ZlGY=;
+	s=arc-20240116; t=1729614350; c=relaxed/simple;
+	bh=x/EpTFWcpafdx4yQZpuOCX0QNjRr/XNDp+88mspQTb4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CuAUu2EaUWlrwJ4XFIW8DoFItXNrLQAas0kx401uqAh7yqjxTWaP611Vzy7eB6ipOBTftdaLZ/5e3mfXbYhuSRMjv/eG6pgrXYRRyODyuZcKDed8wjnyiB3SplzKxNGfbTOdj65OSP8OXFuoBgOjIzDHLofMRZi9zxC+IiHo5xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ll67hQw/; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5c903f5bd0eso2455101a12.3
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 08:03:59 -0700 (PDT)
+	 To:Cc:Content-Type; b=nyrCkWqMoVMwVxpAouzcx787i68J5GsFDrFl9XChscVjlTWmyXB1n82h4nrNi8yE/RuE6nHghgfoCtr2WzcuUWr5mWvBkx9+yKwg1f6OmEB/uLG6NaSAKatkMzgsY7XKxhEUKrxtJZn7uVyLUdz6YeZ/5oR9VTN3diuXoEgiPto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Sm/BRd7m; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e28fe3b02ffso5477306276.3
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Oct 2024 09:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729609438; x=1730214238; darn=vger.kernel.org;
+        d=paul-moore.com; s=google; t=1729614346; x=1730219146; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dgnp8t5btTOm3DzEXyljMRpZGDxCiLmTYSEDvjHlaBs=;
-        b=ll67hQw/8uu6OQxUrkmLyS4RH8LKa23RzwqSLXjyCmQ+Gp+KrtUVAszOiZPb+kS20L
-         MiP3k3aa9xlqyk7QCzqXoDs/TmLyB63IOb/fIJzvRHthlQ2aUSLfvZVpHOzpNoCi84s6
-         Dkwu65X/BEVaYJpHonvy+UdIf1wVJwTeBpiG0SqMNy/GTqPe8bE4lBB0v/CLMGnOouFM
-         5VG7rpHlsYDMNfiA8CUup9Y5kjDl8TaCgSfG+OvPS7mhGFCu6plPV4LGmcr4IFzpNpQU
-         GHg1G0SPNnUgyhhhX0g6gLMSrvkn4h9hMqcPTa5azv3+nCF311G+H159C5N2G6mWg/yD
-         Y29A==
+        bh=/FcFULehhwAxlgpbjAQH5GvQbdOX1Yt9+//ukehIaF4=;
+        b=Sm/BRd7mkh6HX69sr8olD+37sceM+80v6PrS5EcixOUU4a2KrTmJLi8DNJWSaQbDrz
+         s/qt43XcXrFCV1qws3+Me8WMWnv38bMJDU5osONzZSMte+FicqIxbDlgZuj8wG8P+ow9
+         b7I3Gjg9B5548gxue+hXFQ1TE1hNJ0f3YlSKG1A/K0InLhxyJ47C3oMertlGIipoiHK0
+         FB5Yqk/upwwqdyQIbYwLr/UzzzJ9f47VMYFd8PRHjqkVxzNg1/PbbILBtXNcdht7xLsO
+         RX3l04zioRt8zZa4MhTRybqfw6l92WMtcvRGBFSYb3jHfTQETBw//8qDBeqv2hv6M7bZ
+         c3UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729609438; x=1730214238;
+        d=1e100.net; s=20230601; t=1729614346; x=1730219146;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dgnp8t5btTOm3DzEXyljMRpZGDxCiLmTYSEDvjHlaBs=;
-        b=rPxiGBumBPGmtdtL/EKhHBrwx8E5cuLlUoUQ5omA7+ebtJz8VstR8fPp3ItYydBuZB
-         iSi6ZHT/jfRo/7Fp0hcknqe0efEo00Cn5bOHeoqTY11uJyqosRJ6XDHiIWMW6BzecTec
-         G5fKXtaGA/10KfQFeQGjkxW7k999lfz4z0a1iN/cahH+SeV9fyN6klZx2qfzlxsQppfR
-         TMQXqDJt12WDtL7WOvNPtwAi2iRIS9/6B+oZtOwAQHWsbRSTEdVIi1BCFv7YsrRhGC3s
-         SR2yAyo00kZg/zhtw4SCtRylQ/TuchoRZk+QRazNNIAl+LB030+MEO8diHy0hStlHnjy
-         OXyQ==
-X-Gm-Message-State: AOJu0YwXI5mhzsu89KF2Zn0H5k4As0idaACXy8iK06ORyN1QAKKZ224F
-	ceQO7GQt8tfMbnSlzTPW+UFFL99fUUNrRbBOkXoQ6CZ2ghmKiM+q0R6EUY/G8BgC5Q2Xge9UIj7
-	3jZHWHbizF6YZzurRZHWPelKPvqUynoY=
-X-Google-Smtp-Source: AGHT+IGggCsSiv8bfk3Eh5KMaesk4ZUY39nW4CsFuoUoS4QuVs6N8TbFKrzUubFI+CmiywJmzDy60F71GnCENjiUnk4=
-X-Received: by 2002:a05:6402:2551:b0:5c9:5a96:2869 with SMTP id
- 4fb4d7f45d1cf-5cb7fcdbfaamr2798474a12.10.1729609437611; Tue, 22 Oct 2024
- 08:03:57 -0700 (PDT)
+        bh=/FcFULehhwAxlgpbjAQH5GvQbdOX1Yt9+//ukehIaF4=;
+        b=a4S+Yp2C/XNCnhH81MMz0LvZxyaRlp7EbGIB/rP5bYZMsW7qOhaPojqIs4G2txEs/Q
+         P+9CLfvcKb2HR0lBAFSb3SzzdtNHvFOGgL8gVDAAFkKfTWufsctykkrlzmwzf5rjeY/P
+         4HF3RJPo/iM+ncEiOqzDAHH1Xl9QfpqY9uueyTZy9HpfOJGKqJNbBuPjUuIOUyO6U9i3
+         qqpNRjnK1xWNML4HLebn7kBMIuQnxvbQTCpZqLI6DwIql0mVfYEQSbhcasNEUHz8w7NM
+         nczQdf8l2rf65jQOqlin2W/y+FJxZrOK+QSOD7oa6t94yBNO+7NNO+4IwP3a9YoSG4oB
+         5Z1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUPRz51A/1ZaD1BYabW9CQZod/RgYloANvykL7PqEFRm22keo5M606gfeBFQ8BSHwXHW8PuHkUowYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHsZSJfDgJtmbW+V32gutbWt+2dY8eUwcBxkEOEMic9COf+LgJ
+	4WNDU/0jNhSIPQRYm0+5MSrJ8RiEerqqQWUqHdt9dvPtdcoIgjMDHDFvTOMZaKsNd2/UtmHSSW4
+	hw0bEA6GX5gAi5S2XtWgh8IK8pIUcpngKhu8B
+X-Google-Smtp-Source: AGHT+IHmXg9dtHAkm/7oEMwvTrSAmrcx0Tkk5Vpql4w7fIuSXGrdcLHvVQoR+ZoH/iPhezQ76TFTXoN23QB1mIW32CM=
+X-Received: by 2002:a05:6902:2603:b0:e29:2ab7:6c03 with SMTP id
+ 3f1490d57ef6-e2e271bb480mr2927136276.33.1729614346507; Tue, 22 Oct 2024
+ 09:25:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy4S0O28CcDGV43BWXegSZSPVEYgFKpaLxLSNSgjti_L5Q@mail.gmail.com>
- <0A2D2441-712D-4EE5-BFDB-E77108BB1A1F@oracle.com> <CAM5tNy4jsSeAWQX43K9+6n=byvuGJF0o4enySTmdY-j=Y8BvvQ@mail.gmail.com>
- <DD0FDD16-B48A-40BA-B231-C6139DCCD130@oracle.com>
-In-Reply-To: <DD0FDD16-B48A-40BA-B231-C6139DCCD130@oracle.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Tue, 22 Oct 2024 08:03:46 -0700
-Message-ID: <CAM5tNy6YEs9qOPvNRgE6A7c1VjCs4yEK84MUn4Cp2OSk-HE-Bg@mail.gmail.com>
-Subject: Re: RFC: Dealing with large POSIX draft ACLs for NFSv4.2
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20241014151450.73674-2-casey@schaufler-ca.com>
+ <dad74779768e7c00d2a3c9bf8c60045d@paul-moore.com> <bab1de2e-0205-40dd-af3e-5956ff349948@schaufler-ca.com>
+In-Reply-To: <bab1de2e-0205-40dd-af3e-5956ff349948@schaufler-ca.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 22 Oct 2024 12:25:35 -0400
+Message-ID: <CAHC9VhQ0mBKz-y33+xV-de+hjA-wMbcv9+VmBXWiPjk5Ygz2eQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] LSM: Ensure the correct LSM context releaser
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: linux-security-module@vger.kernel.org, jmorris@namei.org, serge@hallyn.com, 
+	keescook@chromium.org, john.johansen@canonical.com, 
+	penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, 
+	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, mic@digikod.net, 
+	linux-integrity@vger.kernel.org, netdev@vger.kernel.org, 
+	audit@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, Todd Kjos <tkjos@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 5:28=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
+On Mon, Oct 21, 2024 at 7:58=E2=80=AFPM Casey Schaufler <casey@schaufler-ca=
 .com> wrote:
->
->
->
-> > On Oct 21, 2024, at 6:33=E2=80=AFPM, Rick Macklem <rick.macklem@gmail.c=
-om> wrote:
+> On 10/21/2024 4:39 PM, Paul Moore wrote:
+> > On Oct 14, 2024 Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >> Add a new lsm_context data structure to hold all the information about=
+ a
+> >> "security context", including the string, its size and which LSM alloc=
+ated
+> >> the string. The allocation information is necessary because LSMs have
+> >> different policies regarding the lifecycle of these strings. SELinux
+> >> allocates and destroys them on each use, whereas Smack provides a poin=
+ter
+> >> to an entry in a list that never goes away.
+> >>
+> >> Update security_release_secctx() to use the lsm_context instead of a
+> >> (char *, len) pair. Change its callers to do likewise.  The LSMs
+> >> supporting this hook have had comments added to remind the developer
+> >> that there is more work to be done.
+> >>
+> >> The BPF security module provides all LSM hooks. While there has yet to
+> >> be a known instance of a BPF configuration that uses security contexts=
+,
+> >> the possibility is real. In the existing implementation there is
+> >> potential for multiple frees in that case.
+> >>
+> >> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+> >> Cc: linux-integrity@vger.kernel.org
+> >> Cc: netdev@vger.kernel.org
+> >> Cc: audit@vger.kernel.org
+> >> Cc: netfilter-devel@vger.kernel.org
+> >> To: Pablo Neira Ayuso <pablo@netfilter.org>
+> >> Cc: linux-nfs@vger.kernel.org
+> >> Cc: Todd Kjos <tkjos@google.com>
+> >> Reviewed-by: Serge Hallyn <sergeh@kernel.org>
+> >> ---
+> >>  drivers/android/binder.c                | 24 ++++++-------
+> >>  fs/ceph/xattr.c                         |  6 +++-
+> >>  fs/nfs/nfs4proc.c                       |  8 +++--
+> >>  fs/nfsd/nfs4xdr.c                       |  8 +++--
+> >>  include/linux/lsm_hook_defs.h           |  2 +-
+> >>  include/linux/security.h                | 35 +++++++++++++++++--
+> >>  include/net/scm.h                       | 11 +++---
+> >>  kernel/audit.c                          | 30 ++++++++---------
+> >>  kernel/auditsc.c                        | 23 +++++++------
+> >>  net/ipv4/ip_sockglue.c                  | 10 +++---
+> >>  net/netfilter/nf_conntrack_netlink.c    | 10 +++---
+> >>  net/netfilter/nf_conntrack_standalone.c |  9 +++--
+> >>  net/netfilter/nfnetlink_queue.c         | 13 ++++---
+> >>  net/netlabel/netlabel_unlabeled.c       | 45 +++++++++++-------------=
+-
+> >>  net/netlabel/netlabel_user.c            | 11 +++---
+> >>  security/apparmor/include/secid.h       |  2 +-
+> >>  security/apparmor/secid.c               | 11 ++++--
+> >>  security/security.c                     |  8 ++---
+> >>  security/selinux/hooks.c                | 11 ++++--
+> >>  19 files changed, 167 insertions(+), 110 deletions(-)
+> > ..
 > >
-> > On Mon, Oct 21, 2024 at 7:45=E2=80=AFAM Chuck Lever III <chuck.lever@or=
-acle.com> wrote:
+> >> diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel=
+_unlabeled.c
+> >> index 1bc2d0890a9f..8303bbcfc543 100644
+> >> --- a/net/netlabel/netlabel_unlabeled.c
+> >> +++ b/net/netlabel/netlabel_unlabeled.c
+> >> @@ -1127,14 +1122,14 @@ static int netlbl_unlabel_staticlist_gen(u32 c=
+md,
+> >>              secid =3D addr6->secid;
+> >>      }
 > >>
-> >>
-> >>
-> >>> On Oct 20, 2024, at 7:09=E2=80=AFPM, Rick Macklem <rick.macklem@gmail=
-.com> wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> As some of you will already know, I have been working on patches
-> >>> that add support for POSIX draft ACLs to NFSv4.2.
-> >>> The internet draft can be found here, if you are interested.
-> >>> https://datatracker.ietf.org/doc/draft-rmacklem-nfsv4-posix-acls/
-> >>>
-> >>> The patches now basically work, but handling of large POSIX
-> >>> draft ACLs for the server side is not done yet.
-> >>>
-> >>> A POSIX draft ACL can have 1024 aces and since a "who" field
-> >>> can be 128 bytes, a POSIX draft ACL can end up being about 140Kbytes
-> >>> of XDR. Do both the default and access ACLs for a directory and it
-> >>> could be 280Kbytes. (Of course, they usually end up much smaller.)
-> >>>
-> >>> For the client side, to handle large ACLs for SETATTR (which never
-> >>> sets other attributes in the same SETATTR), I came up with some
-> >>> simple functions (called nfs_xdr_putpage_bytes(), nfs_xdr_putpage_wor=
-d()
-> >>> and nfs_xdr_putpage_cleanup() in the current client.patch) which
-> >>> fill the large ACL into pages. Then xdr_write_pages() is called to
-> >>> put them in the xdr stream.
-> >>> --> Whether this is the right approach is a good question, but at
-> >>>     least it seems to work.
-> >>>
-> >>> For the server, the problem is more difficult, since a GETATTR reply
-> >>> might include encodings of other attributes. (At this time, the propo=
-sed
-> >>> POSIX draft ACL attributes are at the end, since they have the highes=
-t
-> >>> attribute #s, but that will not last long.)
-> >>>
-> >>> The same technique as for the client could be used, but only if there
-> >>> are no attributes that come after the POSIX draft ACL ones in the XDR
-> >>> for GETATTR's reply.
-> >>>
-> >>> This brings me to one question...
-> >>> - What do others think w.r.t. restricting the POSIX draft ACLs to onl=
-y
-> >>> GETATTR (and not a READDIR reply) and only with a limited set
-> >>> of other attributes, which will all be lower #s, so they come before
-> >>> POSIX draft ACL ones?
-> >>> --> Since it is only a personal draft at this time, this requirement
-> >>>       could easily be added and may make sense to limit the size
-> >>>        of most GETATTRs.
-> >>> This restriction should be ok for both the LInux and FreeBSD clients,
-> >>> since they only ask for acl attributes when a getfacl(1) command is
-> >>> done and do not need a lot of other attributes for the GETATTR.
-> >>
-> >> Generally, I don't immediately see why POSIX ACLs need a restriction
-> >> that the protocol doesn't already have for NFSv4 ACLs.
-> >>
-> >>
-> >>> Alternately, there needs to be a way to build 280Kbytes or more
-> >>> of XDR for an arbitrary GETATTR/READDIR reply.
-> >>
-> >> IIUC, NFSD already handles this for both READDIR and NFSv4 ACLs
-> >> (and perhaps also GETXATTR / LISTXATTR).
-> >>
-> >> So I'll have to have a look at your specific implementation,
-> >> maybe sometime this week. I can't think of a reason that our
-> >> current XDR and NFSD implementation wouldn't handle this, but
-> >> haven't thought deeply about it.
-> >>
-> >> It might not be efficient for large ACLs, but does it need
-> >> to be?
-> > Nope, it doesn't need to be...
-> > Well, this in embarrassing (blush!).
-> > It turns out it works fine for GETATTR of a large ACL (either the
-> > acl attribute or the new ones added by the patch).
-> >
-> > For the client side, I could have sworn I needed to do the
-> > "fill in the page stuff" to get the large one to work for SETATTR,
-> > but for the knfsd, it figures it out.
-> >
-> > Btw, I was only able to get to about 60K, because the ext4 fs
-> > I have on the server wouldn't allow an ACL with 1000 entries to
-> > be set (replied with out of space on device).
-> > --> I did get one with 455 entries to work and most of those entries
-> >      were for 110 byte group names.
+> >> -    ret_val =3D security_secid_to_secctx(secid, &secctx, &secctx_len)=
+;
+> >> +    ret_val =3D security_secid_to_secctx(secid, &ctx.context, &ctx.le=
+n);
+> >>      if (ret_val !=3D 0)
+> >>              goto list_cb_failure;
+> >>      ret_val =3D nla_put(cb_arg->skb,
+> >>                        NLBL_UNLABEL_A_SECCTX,
+> >> -                      secctx_len,
+> >> -                      secctx);
+> >> -    security_release_secctx(secctx, secctx_len);
+> >> +                      ctx.len,
+> >> +                      ctx.context);
+> > Nitpicky alignment issue; please keep the arguments aligned as they
+> > are currently.
 >
-> IIRC the Linux file systems have a 64KB length limit on extended
-> attributes, where ACLs are stored.
->
-> ENOSPC is a little strange.
-Well, when I did this, it had nothing to do with NFS. (I did the setfacl
-locally on the server.)
-I will try a test doing the same setfacl over NFSv4 sometime to-day
-to see what happens.
+> Not a problem, although it looks like it's correct to me. I'll check to m=
+ake sure.
 
-The good news is that the "hard problem" I thought existed doesn't
-exist. I will try the client without the "use pages code" and see if
-the client really needs the change or not.
+Thanks.  It's likely just an oddity due to tabs rendering a bit odd in
+the diff, I usually check that but maybe I didn't/forgot here.  Not a
+major problem either way, I only mentioned it because I was commenting
+on other patches in the series.
 
-If you are interested in trying it, I left two files "groups" and "bigacl"
-on the nfsv4-newlap server. All you do is put "groups" in your group
-database and then "setfacl -M bigacl <file>".
-(Oh, and I usually "echo N > /sys/module/nfsd/parameters/nfs4_disable_idmap=
-ping"
-so it uses names instead of #s for the groups, but you can try both ways.)
---> I think the ENOSPC failure occurs either way.
-
-Anyhow, thanks for pointing out that big acls already worked
-and sorry for the noise, rick
-
->
->
-> > So, what can I say, except I should have tried it before I posted.
-> > (One gotcha is that FreeBSD only handles 32 ACE ACLs, but
-> > when you look at the packet trace, you can see they are all in
-> > the GETATTR reply. Not an excuse, but...)
-> >
-> > Thanks for the reply Chuck, rick
-> >
-> >>
-> >>
-> >>> Btw, I have not tested to see what happens if a large POSIX draft
-> >>> ACL is set for a file (locally on the server, for example) and then
-> >>> a client does a GETATTR of the acl attribute (which replies with
-> >>> a NFSv4 ACL created by mapping from the POSIX draft ACL).
-> >>> --> I have a hunch it will fail, but I need to test to be sure?
-> >>>
-> >>> Thanks in advance for any comments w.r.t. this issue, rick
-> >>> ps; In particular, I'd like to know what others think about adding
-> >>>     the restriction on acquisition of the POSIX draft ACLs by GETATTR=
-.
-> >>
-> >>
-> >>
-> >>
-> >> --
-> >> Chuck Lever
->
->
-> --
-> Chuck Lever
->
->
+--=20
+paul-moore.com
 
