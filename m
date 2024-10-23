@@ -1,55 +1,51 @@
-Return-Path: <linux-nfs+bounces-7399-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7400-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75D099AD58F
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 22:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 043549AD656
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 23:08:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 31AAD28473D
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 20:34:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C04822807AB
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 21:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 436BB1C9EAF;
-	Wed, 23 Oct 2024 20:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACEB3158868;
+	Wed, 23 Oct 2024 21:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGa3gwzY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWhWPsNz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE0975809
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 20:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8819A155757
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 21:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729715684; cv=none; b=cWuszIFtFXjEIH/A2M4YwDP9s4SGFeNogrpnPHXaBqEyEFCEw3t3/FUEU40t+1Ph8RW0vQpyjpozXLVyTAfGZN48LGryYKqXUu/oCXv5d9FNvhY0g9tC65178oF9HW1E8bZVaknhm3znllTTmuB5gfWiBOjhfT41ZAnJgopmahw=
+	t=1729717680; cv=none; b=UhkW7Us46MkbYULnV4nEE8LTSv9wa6kK76cWYYyHcTdNYuuSm6fCOi1DSdoR8evo+ol8EmIWCHJpT7vsrUBWY9gpTSFR3whsfEfb0obNkmvbhhXXdtqcWnrS8mPJTfE7540PcKT7+n5pe+l9BwDlGmklLosDQ+skCtueWVbXjHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729715684; c=relaxed/simple;
-	bh=uEpB9YB0HHTQR+OegmQLYn5DwzBkFN+T6UVcBmVqTKo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BaV3IM9mQqUwHfFniicMfP20oasvnKzRYecUWe7L2TxjIrl3L0VPIrw0IUww7nYKs+PYftSANbftSJ6MM+0g+tU4hBjVID7G4rk/OLooguX9cWtlJpxRsZeUeMRIW5aX6oLrtdb/duMpeSeULQv2NXyr5LY/TUCe5IyEGanb3rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGa3gwzY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79921C4CEC6;
-	Wed, 23 Oct 2024 20:34:43 +0000 (UTC)
+	s=arc-20240116; t=1729717680; c=relaxed/simple;
+	bh=NzYEzfxLXukmLpTUQLyr3Gb3xnox7NS67izDNqt2gDM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=D/OnRhnqL6Lp6aLJZQywneT8v6xJtFJTqstpjasyG5p9ACEi0SR2ySf699+G+GhTOQuSl+WbMPFIsHNRms4l55jenEusb/snhU8dl5CxgL7pE4qkvxRT9Pp7FJV0kZzDQM0gJJ1c1eGfX+5Mh/Yv1TH3rLy9wmtIuezdx1LA+S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWhWPsNz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40DEC4CEC6
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 21:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729715683;
-	bh=uEpB9YB0HHTQR+OegmQLYn5DwzBkFN+T6UVcBmVqTKo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aGa3gwzYB9s+BnF3HSEK7bHqq+QY/KvSzlaGzYy4gVZwn0oYtScdX2vZuby8Ujv5l
-	 ypHH5KsCrOeGucTg+TT+Hth/TeckTDoZrbVD5qFqaeRLHNztU53oxjQ25JqcGp4tvH
-	 ThpfX3TPjsHBg3DOajPJl5A1qyafkYTFjjloq4jIGT6WTHa2Qi5Qqosk2X/LurtHyT
-	 QMgmL478OOyt3KAzygTTErKwTWxViUSQhPx6GMj52nQB7z1jCpg/ipzjpOKb7NeP8v
-	 t/N8sTrQj/2zCrXvfwXHjXLefecN/6OU/vhA/7NdHRJ2C5D5h+WUiA3TJYzlI9xsS9
-	 l5MKO9iXgTVVA==
-From: Mike Snitzer <snitzer@kernel.org>
+	s=k20201202; t=1729717680;
+	bh=NzYEzfxLXukmLpTUQLyr3Gb3xnox7NS67izDNqt2gDM=;
+	h=From:To:Subject:Date:From;
+	b=sWhWPsNzxIIXg387uL2f7ovYGvgdVb27z1InWmJoQd7WCcklmaxZoBwupOyzBQCXy
+	 eMz8curef0z2hzQ1nROpWismR9p+dQQ3EAmP/0fZx5AJw53Ivbb4BjMw8FENKZXw3W
+	 /O6Pw6jRgq3RgfIdrXKOH0SJWGzhtDgDFUzqxhhIKYk0HvgrJlGW6y181M1AuKtB/X
+	 9QNsShaekavb7lUffoxeyEuXeIF7GOcdLMhA6MJAyPnsklwxQS+pxbL8qod5mfSjpI
+	 8D5AvUujuqKQzXQcAnlcTfLeAmu1Y2y5XICX8DS3Zp91dPus/7jkNxvwW+LvH7OG7U
+	 jouko1NlwFL1A==
+From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
-Cc: Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH] nfs_common: fix localio to cope with racing nfs_local_probe()
-Date: Wed, 23 Oct 2024 16:34:42 -0400
-Message-ID: <20241023203442.73903-1-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
+Subject: [PATCH] NFS: Further fixes to attribute delegation a/mtime changes
+Date: Wed, 23 Oct 2024 17:05:48 -0400
+Message-ID: <ffad960d3b76af5dff9f3f4e1c7152423b7ae30e.1729717515.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,129 +54,94 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix the possibility of racing nfs_local_probe() resulting in:
-  list_add double add: new=ffff8b99707f9f58, prev=ffff8b99707f9f58, next=ffffffffc0f30000.
-  ------------[ cut here ]------------
-  kernel BUG at lib/list_debug.c:35!
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Add nfs_uuid_init() to properly initialize all nfs_uuid_t members
-(particularly its list_head).
+When asked to set both an atime and an mtime to the current system time,
+ensure that the setting is atomic by calling inode_update_timestamps()
+only once with the appropriate flags.
 
-Switch to returning bool from nfs_uuid_begin(), returns false if
-nfs_uuid_t is already in-use (its list_head is on a list). Update
-nfs_local_probe() to return early if the nfs_client's cl_uuid
-(nfs_uuid_t) is in-use.
-
-Also, switch nfs_uuid_begin() from using list_add_tail_rcu() to
-list_add_tail() -- rculist was used in an earlier version of the
-localio code that had a lockless nfs_uuid_lookup interface.
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Fixes: e12912d94137 ("NFSv4: Add support for delegated atime and mtime attributes")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/client.c            |  3 +--
- fs/nfs/localio.c           |  3 ++-
- fs/nfs_common/nfslocalio.c | 25 +++++++++++++++++++------
- include/linux/nfslocalio.h |  3 ++-
- 4 files changed, 24 insertions(+), 10 deletions(-)
+ fs/nfs/inode.c | 49 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 114282398716..03ecc7765615 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -181,8 +181,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- 	seqlock_init(&clp->cl_boot_lock);
- 	ktime_get_real_ts64(&clp->cl_nfssvc_boot);
--	clp->cl_uuid.net = NULL;
--	clp->cl_uuid.dom = NULL;
-+	nfs_uuid_init(&clp->cl_uuid);
- 	spin_lock_init(&clp->cl_localio_lock);
- #endif /* CONFIG_NFS_LOCALIO */
- 
-diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-index d0aa680ec816..8f0ce82a677e 100644
---- a/fs/nfs/localio.c
-+++ b/fs/nfs/localio.c
-@@ -205,7 +205,8 @@ void nfs_local_probe(struct nfs_client *clp)
- 		nfs_local_disable(clp);
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 542c7d97b235..55acbd5f9399 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -628,23 +628,35 @@ nfs_fattr_fixup_delegated(struct inode *inode, struct nfs_fattr *fattr)
  	}
+ }
  
--	nfs_uuid_begin(&clp->cl_uuid);
-+	if (!nfs_uuid_begin(&clp->cl_uuid))
-+		return;
- 	if (nfs_server_uuid_is_local(clp))
- 		nfs_local_enable(clp);
- 	nfs_uuid_end(&clp->cl_uuid);
-diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-index 5c8ce5066c16..09404d142d1a 100644
---- a/fs/nfs_common/nfslocalio.c
-+++ b/fs/nfs_common/nfslocalio.c
-@@ -5,7 +5,7 @@
-  */
- 
- #include <linux/module.h>
--#include <linux/rculist.h>
-+#include <linux/list.h>
- #include <linux/nfslocalio.h>
- #include <net/netns/generic.h>
- 
-@@ -20,15 +20,27 @@ static DEFINE_SPINLOCK(nfs_uuid_lock);
-  */
- static LIST_HEAD(nfs_uuids);
- 
--void nfs_uuid_begin(nfs_uuid_t *nfs_uuid)
-+void nfs_uuid_init(nfs_uuid_t *nfs_uuid)
- {
- 	nfs_uuid->net = NULL;
- 	nfs_uuid->dom = NULL;
-+	INIT_LIST_HEAD(&nfs_uuid->list);
-+}
-+EXPORT_SYMBOL_GPL(nfs_uuid_init);
-+
-+bool nfs_uuid_begin(nfs_uuid_t *nfs_uuid)
++static void nfs_update_timestamps(struct inode *inode, unsigned int ia_valid)
 +{
-+	spin_lock(&nfs_uuid_lock);
-+	/* Is this nfs_uuid already in use? */
-+	if (!list_empty(&nfs_uuid->list)) {
-+		spin_unlock(&nfs_uuid_lock);
-+		return false;
-+	}
- 	uuid_gen(&nfs_uuid->uuid);
--
--	spin_lock(&nfs_uuid_lock);
--	list_add_tail_rcu(&nfs_uuid->list, &nfs_uuids);
-+	list_add_tail(&nfs_uuid->list, &nfs_uuids);
- 	spin_unlock(&nfs_uuid_lock);
++	enum file_time_flags time_flags = 0;
++	unsigned int cache_flags = 0;
 +
-+	return true;
- }
- EXPORT_SYMBOL_GPL(nfs_uuid_begin);
- 
-@@ -36,7 +48,8 @@ void nfs_uuid_end(nfs_uuid_t *nfs_uuid)
++	if (ia_valid & ATTR_MTIME) {
++		time_flags |= S_MTIME | S_CTIME;
++		cache_flags |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
++	}
++	if (ia_valid & ATTR_ATIME) {
++		time_flags |= S_ATIME;
++		cache_flags |= NFS_INO_INVALID_ATIME;
++	}
++	inode_update_timestamps(inode, time_flags);
++	NFS_I(inode)->cache_validity &= ~cache_flags;
++}
++
+ void nfs_update_delegated_atime(struct inode *inode)
  {
- 	if (nfs_uuid->net == NULL) {
- 		spin_lock(&nfs_uuid_lock);
--		list_del_init(&nfs_uuid->list);
-+		if (nfs_uuid->net == NULL)
-+			list_del_init(&nfs_uuid->list);
- 		spin_unlock(&nfs_uuid_lock);
- 	}
+ 	spin_lock(&inode->i_lock);
+-	if (nfs_have_delegated_atime(inode)) {
+-		inode_update_timestamps(inode, S_ATIME);
+-		NFS_I(inode)->cache_validity &= ~NFS_INO_INVALID_ATIME;
+-	}
++	if (nfs_have_delegated_atime(inode))
++		nfs_update_timestamps(inode, ATTR_ATIME);
+ 	spin_unlock(&inode->i_lock);
  }
-diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-index b0dd9b1eef4f..3982fea79919 100644
---- a/include/linux/nfslocalio.h
-+++ b/include/linux/nfslocalio.h
-@@ -32,7 +32,8 @@ typedef struct {
- 	struct auth_domain *dom; /* auth_domain for localio */
- } nfs_uuid_t;
  
--void nfs_uuid_begin(nfs_uuid_t *);
-+void nfs_uuid_init(nfs_uuid_t *);
-+bool nfs_uuid_begin(nfs_uuid_t *);
- void nfs_uuid_end(nfs_uuid_t *);
- void nfs_uuid_is_local(const uuid_t *, struct list_head *,
- 		       struct net *, struct auth_domain *, struct module *);
+ void nfs_update_delegated_mtime_locked(struct inode *inode)
+ {
+-	if (nfs_have_delegated_mtime(inode)) {
+-		inode_update_timestamps(inode, S_CTIME | S_MTIME);
+-		NFS_I(inode)->cache_validity &= ~(NFS_INO_INVALID_CTIME |
+-						  NFS_INO_INVALID_MTIME);
+-	}
++	if (nfs_have_delegated_mtime(inode))
++		nfs_update_timestamps(inode, ATTR_MTIME);
+ }
+ 
+ void nfs_update_delegated_mtime(struct inode *inode)
+@@ -682,15 +694,16 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			attr->ia_valid &= ~ATTR_SIZE;
+ 	}
+ 
+-	if (nfs_have_delegated_mtime(inode)) {
+-		if (attr->ia_valid & ATTR_MTIME) {
+-			nfs_update_delegated_mtime(inode);
+-			attr->ia_valid &= ~ATTR_MTIME;
+-		}
+-		if (attr->ia_valid & ATTR_ATIME) {
+-			nfs_update_delegated_atime(inode);
+-			attr->ia_valid &= ~ATTR_ATIME;
+-		}
++	if (nfs_have_delegated_mtime(inode) && attr->ia_valid & ATTR_MTIME) {
++		spin_lock(&inode->i_lock);
++		nfs_update_timestamps(inode, attr->ia_valid);
++		spin_unlock(&inode->i_lock);
++		attr->ia_valid &= ~(ATTR_MTIME | ATTR_ATIME);
++	} else if (nfs_have_delegated_atime(inode) &&
++		   attr->ia_valid & ATTR_ATIME &&
++		   !(attr->ia_valid & ATTR_MTIME)) {
++		nfs_update_delegated_atime(inode);
++		attr->ia_valid &= ~ATTR_ATIME;
+ 	}
+ 
+ 	/* Optimization: if the end result is no change, don't RPC */
 -- 
-2.44.0
+2.47.0
 
 
