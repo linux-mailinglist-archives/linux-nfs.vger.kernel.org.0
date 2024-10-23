@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-7377-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7378-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AFD29ABBB7
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 04:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DDD059ABBB8
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 04:43:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DDA0283BF6
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 02:43:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 907C62837E0
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 02:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36E949659;
-	Wed, 23 Oct 2024 02:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA6443AB9;
+	Wed, 23 Oct 2024 02:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Xlxra0Oc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5gBGc6ZS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Xlxra0Oc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5gBGc6ZS"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iJ7+22FU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FbIEeER9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iJ7+22FU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FbIEeER9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE22B847B
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 02:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0A4847B
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 02:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729651387; cv=none; b=YsaY6uxucmLr/3Tu/8N/xvAPdkgsqNh8Dc4kYhFDmTkRpvxyk2Z2OVQc8GQnJQGlNILaT6dtmSSvf1aKhaa0+yW7veXQEbK1qbGnqhAep8BtTCnP8M59eHQI8oHQ4JOLkhA/rEU/LDTw+7q6UoBe2iGwsB1frhJrdY2oBVPIzkg=
+	t=1729651393; cv=none; b=uYuPU4WrhmH+LQ/CJefo7uzVPZ1WYLLTNgahsXjFMpM0FXnrQ8QPtKWthWqzeqRmAqbLsaa9SEyhzkT8v0bEpMeQvzb3tfqhpnwhyJVi/BXafNLyEg8XzoRZSClcVoxtmA2fkM5dzNxJHchMn8wzKjcBiHFdJZ6BtRu16HYJFsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729651387; c=relaxed/simple;
-	bh=mBcDz/zY761U9LuZ38gL5yJcQRFp/LsDvrN9xgEXYjw=;
+	s=arc-20240116; t=1729651393; c=relaxed/simple;
+	bh=Hf2lh8gPchUA5ZuvI1/v/TQLy/uYvyGzWfS9HUwsxyA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kLk0w5ByZHBRzL57SNB6Ju3e/vGhmGwJX2zkzZeQb0m1S4wRELYau7BaM9ETY0ZaSGdZ5BJSs0ayYMLDNNzwTWoNCaDUyIdpO3ZsGLn6glnWel4ZaNUnvDNPv1yclJM0N03Ce3FEnI301fugfdFjQ73O802FuhwR5Dxvavzw5eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Xlxra0Oc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5gBGc6ZS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Xlxra0Oc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5gBGc6ZS; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=NRxmXRQkrGejxwMkpXru1C3pd/W1UVVC6u22Y8IUgV04Haw3JgT8K4kdxEUtR2DCLnMT+ECtjeVXac7r+AXy2H3TYuwMWdDWgmD0/25JMUFzO7R9oHOtVvRvEVHzw+QlHauj9qohZ55PdfwzwB516YAe7N/FE55fTf6QCTglkgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iJ7+22FU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FbIEeER9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iJ7+22FU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FbIEeER9; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B99021DB6;
-	Wed, 23 Oct 2024 02:43:04 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CBB101F83F;
+	Wed, 23 Oct 2024 02:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729651384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1729651389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+yza3dYffB0Jg/yZQs/BbmPTa484s0Y8qNnmEwQJGZM=;
-	b=Xlxra0Ocr0PRSjfNUFrd8rJldXdh7xvjvEShIFxsP++XMCdWVW9OAx4mrLu446cUbe9me3
-	O+wNFnpW7XNrCnpHDWckXLd7O9rCZBjUtuEUPlFAkf9iGtzlnZulAoeSQHmYfs4zrvkmQk
-	PbL4czGLt1ivD7eOR3/h4qirvwD1DNE=
+	bh=Z7q8pw9d8BhjkTU/EPZvKyv6t8TQLrHQQsLfVtRA+Gg=;
+	b=iJ7+22FURCfaW0F3KbtmWOsrV/8QIvNc46VHTwuAwf9Ia1pdt0N+XlIzp1pOhWXuYl2RAT
+	fKveVhzDqqQF3iVPOBcP8yJA+2zLzyKl3EnXMmZZioayHblQ+0OWJDRpoREgc3kPlvTg0V
+	Qj2vNoBvXzX9sPQjk4i8aJIuN2V+2tM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729651384;
+	s=susede2_ed25519; t=1729651389;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+yza3dYffB0Jg/yZQs/BbmPTa484s0Y8qNnmEwQJGZM=;
-	b=5gBGc6ZSW4ivIEAFnI4YknyLJ3FqQEmnbBL8GkhNLUpQlvw38opBUPRP8xCj5CxHqUqbWw
-	6RqoygVy44q20nDw==
-Authentication-Results: smtp-out1.suse.de;
+	bh=Z7q8pw9d8BhjkTU/EPZvKyv6t8TQLrHQQsLfVtRA+Gg=;
+	b=FbIEeER96lXfj/ZWUq70W9QMhZeLDjuoR88EvlPNcGLGqi68pmgXPybgqUTHEwUUmxM4vX
+	/oqWbc06+MsotjAw==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729651384; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1729651389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+yza3dYffB0Jg/yZQs/BbmPTa484s0Y8qNnmEwQJGZM=;
-	b=Xlxra0Ocr0PRSjfNUFrd8rJldXdh7xvjvEShIFxsP++XMCdWVW9OAx4mrLu446cUbe9me3
-	O+wNFnpW7XNrCnpHDWckXLd7O9rCZBjUtuEUPlFAkf9iGtzlnZulAoeSQHmYfs4zrvkmQk
-	PbL4czGLt1ivD7eOR3/h4qirvwD1DNE=
+	bh=Z7q8pw9d8BhjkTU/EPZvKyv6t8TQLrHQQsLfVtRA+Gg=;
+	b=iJ7+22FURCfaW0F3KbtmWOsrV/8QIvNc46VHTwuAwf9Ia1pdt0N+XlIzp1pOhWXuYl2RAT
+	fKveVhzDqqQF3iVPOBcP8yJA+2zLzyKl3EnXMmZZioayHblQ+0OWJDRpoREgc3kPlvTg0V
+	Qj2vNoBvXzX9sPQjk4i8aJIuN2V+2tM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729651384;
+	s=susede2_ed25519; t=1729651389;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+yza3dYffB0Jg/yZQs/BbmPTa484s0Y8qNnmEwQJGZM=;
-	b=5gBGc6ZSW4ivIEAFnI4YknyLJ3FqQEmnbBL8GkhNLUpQlvw38opBUPRP8xCj5CxHqUqbWw
-	6RqoygVy44q20nDw==
+	bh=Z7q8pw9d8BhjkTU/EPZvKyv6t8TQLrHQQsLfVtRA+Gg=;
+	b=FbIEeER96lXfj/ZWUq70W9QMhZeLDjuoR88EvlPNcGLGqi68pmgXPybgqUTHEwUUmxM4vX
+	/oqWbc06+MsotjAw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 249DA13A63;
-	Wed, 23 Oct 2024 02:43:01 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B47CF13A63;
+	Wed, 23 Oct 2024 02:43:07 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Hx/zMrViGGc1OgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 23 Oct 2024 02:43:01 +0000
+	id POd1GrtiGGc+OgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 23 Oct 2024 02:43:07 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -95,9 +95,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 3/6] nfs: dynamically adjust per-client DRC slot limits.
-Date: Wed, 23 Oct 2024 13:37:03 +1100
-Message-ID: <20241023024222.691745-4-neilb@suse.de>
+Subject: [PATCH 4/6] nfsd: don't use sv_nrthreads in connection limiting calculations.
+Date: Wed, 23 Oct 2024 13:37:04 +1100
+Message-ID: <20241023024222.691745-5-neilb@suse.de>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20241023024222.691745-1-neilb@suse.de>
 References: <20241023024222.691745-1-neilb@suse.de>
@@ -133,250 +133,205 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-Currently per-client DRC slot limits (for v4.1+) are calculated when the
-client connects, and they are left unchanged.  So earlier clients can
-get a larger share when memory is tight.
+The heuristic for limiting the number of incoming connections to nfsd
+currently uses sv_nrthreads - allowing more connections if more threads
+were configured.
 
-The heuristic for choosing a number includes the number of configured
-server threads.  This is problematic for 2 reasons.
-1/ sv_nrthreads is different in different net namespaces, but the
-   memory allocation is global across all namespaces.  So different
-   namespaces get treated differently without good reason.
-2/ a future patch will auto-configure number of threads based on
-   load so that there will be no need to preconfigure a number.  This will
-   make the current heuristic even more arbitrary.
+A future patch will allow number of threads to grow dynamically so that
+there will be no need to configure sv_nrthreads.  So we need a different
+solution for limiting connections.
 
-NFSv4.1 allows the number of slots to be varied dynamically - in the
-reply to each SEQUENCE op.  With this patch we provide a provisional
-upper limit in the EXCHANGE_ID reply which might end up being too big,
-and adjust it with each SEQUENCE reply.
+It isn't clear what problem is solved by limiting connections (as
+mentioned in a code comment) but the most likely problem is a connection
+storm - many connections that are not doing productive work.  These will
+be closed after about 6 minutes already but it might help to slow down a
+storm.
 
-The goal for when memory is tight is to allow each client to have a
-similar number of slots.  So clients that ask for larger slots get more
-memory.   This may not be ideal.  It could be changed later.
+This patch adds a per-connection flag XPT_PEER_VALID which indicates
+that the peer has presented a filehandle for which it has some sort of
+access.  i.e the peer is known to be trusted in some way.  We now only
+count connections which have NOT been determined to be valid.  There
+should be relative few of these at any given time.
 
-So we track the sum of the slot sizes of all active clients, and share
-memory out based on the ratio of the slot size for a given client with
-the sum of slot sizes.  We never allow more in a SEQUENCE reply than we
-did in the EXCHANGE_ID reply.
+If the number of non-validated peer exceed a limit - currently 64 - we
+close the oldest non-validated peer to avoid having too many of these
+useless connections.
+
+Note that this patch significantly changes the meaning of the various
+configuration parameters for "max connections".  The next patch will
+remove all of these.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 81 ++++++++++++++++++++++++---------------------
- fs/nfsd/nfs4xdr.c   |  2 +-
- fs/nfsd/nfsd.h      |  6 +++-
- fs/nfsd/nfssvc.c    |  7 ++--
- fs/nfsd/state.h     |  2 +-
- fs/nfsd/xdr4.h      |  2 --
- 6 files changed, 56 insertions(+), 44 deletions(-)
+ fs/nfs/callback.c               |  4 ----
+ fs/nfs/callback_xdr.c           |  1 +
+ fs/nfsd/netns.h                 |  4 ++--
+ fs/nfsd/nfsfh.c                 |  2 ++
+ include/linux/sunrpc/svc.h      |  2 +-
+ include/linux/sunrpc/svc_xprt.h | 15 +++++++++++++++
+ net/sunrpc/svc_xprt.c           | 33 +++++++++++++++++----------------
+ 7 files changed, 38 insertions(+), 23 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ca6b5b52f77d..834e9aa12b82 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1909,44 +1909,26 @@ static inline u32 slot_bytes(struct nfsd4_channel_attrs *ca)
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index 6cf92498a5ac..86bdc7d23fb9 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -211,10 +211,6 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 	cb_info->serv = serv;
+-	/* As there is only one thread we need to over-ride the
+-	 * default maximum of 80 connections
+-	 */
+-	serv->sv_maxconn = 1024;
+ 	dprintk("nfs_callback_create_svc: service created\n");
+ 	return serv;
+ }
+diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+index fdeb0b34a3d3..4254ba3ee7c5 100644
+--- a/fs/nfs/callback_xdr.c
++++ b/fs/nfs/callback_xdr.c
+@@ -984,6 +984,7 @@ static __be32 nfs4_callback_compound(struct svc_rqst *rqstp)
+ 			nfs_put_client(cps.clp);
+ 			goto out_invalidcred;
+ 		}
++		svc_xprt_set_valid(rqstp->rq_xprt);
+ 	}
+ 
+ 	cps.minorversion = hdr_arg.minorversion;
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 26f7b34d1a03..a05a45bb1978 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -129,8 +129,8 @@ struct nfsd_net {
+ 	unsigned char writeverf[8];
+ 
+ 	/*
+-	 * Max number of connections this nfsd container will allow. Defaults
+-	 * to '0' which is means that it bases this on the number of threads.
++	 * Max number of non-validated connections this nfsd container
++	 * will allow.  Defaults to '0' gets mapped to 64.
+ 	 */
+ 	unsigned int max_connections;
+ 
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 40ad58a6a036..2f44de99f709 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -383,6 +383,8 @@ __fh_verify(struct svc_rqst *rqstp,
+ 		goto out;
+ 
+ skip_pseudoflavor_check:
++	svc_xprt_set_valid(rqstp->rq_xprt);
++
+ 	/* Finally, check access permissions. */
+ 	error = nfsd_permission(cred, exp, dentry, access);
+ out:
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index e68fecf6eab5..617ebfff2f30 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -81,7 +81,7 @@ struct svc_serv {
+ 	unsigned int		sv_xdrsize;	/* XDR buffer size */
+ 	struct list_head	sv_permsocks;	/* all permanent sockets */
+ 	struct list_head	sv_tempsocks;	/* all temporary sockets */
+-	int			sv_tmpcnt;	/* count of temporary sockets */
++	int			sv_tmpcnt;	/* count of temporary "valid" sockets */
+ 	struct timer_list	sv_temptimer;	/* timer for aging temporary sockets */
+ 
+ 	char *			sv_name;	/* service name */
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index 0981e35a9fed..35929a7727c7 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -99,8 +99,23 @@ enum {
+ 	XPT_HANDSHAKE,		/* xprt requests a handshake */
+ 	XPT_TLS_SESSION,	/* transport-layer security established */
+ 	XPT_PEER_AUTH,		/* peer has been authenticated */
++	XPT_PEER_VALID,		/* peer has presented a filehandle that
++				 * it has access to.  It is NOT counted
++				 * in ->sv_tmpcnt.
++				 */
+ };
+ 
++static inline void svc_xprt_set_valid(struct svc_xprt *xpt)
++{
++	if (test_bit(XPT_TEMP, &xpt->xpt_flags) &&
++	    !test_and_set_bit(XPT_PEER_VALID, &xpt->xpt_flags)) {
++		struct svc_serv *serv = xpt->xpt_server;
++		spin_lock(&serv->sv_lock);
++		serv->sv_tmpcnt -= 1;
++		spin_unlock(&serv->sv_lock);
++	}
++}
++
+ static inline void unregister_xpt_user(struct svc_xprt *xpt, struct svc_xpt_user *u)
+ {
+ 	spin_lock(&xpt->xpt_lock);
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 43c57124de52..ff5b8bb8a88f 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -606,7 +606,8 @@ int svc_port_is_privileged(struct sockaddr *sin)
  }
  
  /*
-- * XXX: If we run out of reserved DRC memory we could (up to a point)
-- * re-negotiate active sessions and reduce their slot usage to make
-- * room for new connections. For now we just fail the create session.
-+ * When a client connects it gets a max_requests number that would allow
-+ * it to use 1/8 of the memory we think can reasonably be used for the DRC.
-+ * Later in response to SEQUENCE operations we further limit that when there
-+ * are more than 8 concurrent clients.
+- * Make sure that we don't have too many active connections. If we have,
++ * Make sure that we don't have too many connections that have not yet
++ * demonstrated that they have access the the NFS server. If we have,
+  * something must be dropped. It's not clear what will happen if we allow
+  * "too many" connections, but when dealing with network-facing software,
+  * we have to code defensively. Here we do that by imposing hard limits.
+@@ -625,27 +626,26 @@ int svc_port_is_privileged(struct sockaddr *sin)
   */
--static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn)
-+static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+ static void svc_check_conn_limits(struct svc_serv *serv)
  {
- 	u32 slotsize = slot_bytes(ca);
- 	u32 num = ca->maxreqs;
--	unsigned long avail, total_avail;
--	unsigned int scale_factor;
-+	unsigned long avail;
+-	unsigned int limit = serv->sv_maxconn ? serv->sv_maxconn :
+-				(serv->sv_nrthreads+3) * 20;
++	unsigned int limit = serv->sv_maxconn ? serv->sv_maxconn : 64;
  
- 	spin_lock(&nfsd_drc_lock);
--	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
--		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
--	else
--		/* We have handed out more space than we chose in
--		 * set_max_drc() to allow.  That isn't really a
--		 * problem as long as that doesn't make us think we
--		 * have lots more due to integer overflow.
--		 */
--		total_avail = 0;
--	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
--	/*
--	 * Never use more than a fraction of the remaining memory,
--	 * unless it's the only way to give this client a slot.
--	 * The chosen fraction is either 1/8 or 1/number of threads,
--	 * whichever is smaller.  This ensures there are adequate
--	 * slots to support multiple clients per thread.
--	 * Give the client one slot even if that would require
--	 * over-allocation--it is better than failure.
--	 */
--	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+ 	if (serv->sv_tmpcnt > limit) {
+-		struct svc_xprt *xprt = NULL;
++		struct svc_xprt *xprt = NULL, *xprti;
+ 		spin_lock_bh(&serv->sv_lock);
+ 		if (!list_empty(&serv->sv_tempsocks)) {
+-			/* Try to help the admin */
+-			net_notice_ratelimited("%s: too many open connections, consider increasing the %s\n",
+-					       serv->sv_name, serv->sv_maxconn ?
+-					       "max number of connections" :
+-					       "number of threads");
+ 			/*
+ 			 * Always select the oldest connection. It's not fair,
+-			 * but so is life
++			 * but nor is life.
+ 			 */
+-			xprt = list_entry(serv->sv_tempsocks.prev,
+-					  struct svc_xprt,
+-					  xpt_list);
+-			set_bit(XPT_CLOSE, &xprt->xpt_flags);
+-			svc_xprt_get(xprt);
++			list_for_each_entry_reverse(xprti, &serv->sv_tempsocks,
++						    xpt_list)
++			{
++				if (!test_bit(XPT_PEER_VALID, &xprti->xpt_flags)) {
++					xprt = xprti;
++					set_bit(XPT_CLOSE, &xprt->xpt_flags);
++					svc_xprt_get(xprt);
++					break;
++				}
++			}
+ 		}
+ 		spin_unlock_bh(&serv->sv_lock);
  
--	avail = clamp_t(unsigned long, avail, slotsize,
--			total_avail/scale_factor);
--	num = min_t(int, num, avail / slotsize);
--	num = max_t(int, num, 1);
--	nfsd_drc_mem_used += num * slotsize;
-+	avail = min(NFSD_MAX_MEM_PER_SESSION,
-+		    nfsd_drc_max_mem / 8);
-+
-+	num = clamp_t(int, num, 1, avail / slotsize);
-+
-+	nfsd_drc_slotsize_sum += slotsize;
-+
- 	spin_unlock(&nfsd_drc_lock);
+@@ -1039,7 +1039,8 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
  
- 	return num;
-@@ -1957,10 +1939,33 @@ static void nfsd4_put_drc_mem(struct nfsd4_channel_attrs *ca)
- 	int slotsize = slot_bytes(ca);
- 
- 	spin_lock(&nfsd_drc_lock);
--	nfsd_drc_mem_used -= slotsize * ca->maxreqs;
-+	nfsd_drc_slotsize_sum -= slotsize;
- 	spin_unlock(&nfsd_drc_lock);
- }
- 
-+/*
-+ * Report the number of slots that we would like the client to limit
-+ * itself to.  When the number of clients is large, we start sharing
-+ * memory so all clients get the same number of slots.
-+ */
-+static unsigned int nfsd4_get_drc_slots(struct nfsd4_session *session)
-+{
-+	u32 slotsize = slot_bytes(&session->se_fchannel);
-+	unsigned long avail;
-+	unsigned long slotsize_sum = READ_ONCE(nfsd_drc_slotsize_sum);
-+
-+	if (slotsize_sum < slotsize)
-+		slotsize_sum = slotsize;
-+
-+	/* Find our share of avail mem across all active clients,
-+	 * then limit to 1/8 of total, and configured max
-+	 */
-+	avail = min3(nfsd_drc_max_mem * slotsize / slotsize_sum,
-+		     nfsd_drc_max_mem / 8,
-+		     NFSD_MAX_MEM_PER_SESSION);
-+	return max3(1UL, avail / slotsize, session->se_fchannel.maxreqs);
-+}
-+
- static struct nfsd4_session *alloc_session(struct nfsd4_channel_attrs *fattrs,
- 					   struct nfsd4_channel_attrs *battrs)
- {
-@@ -3735,7 +3740,7 @@ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfs
- 	 * Note that we always allow at least one slot, because our
- 	 * accounting is soft and provides no guarantees either way.
- 	 */
--	ca->maxreqs = nfsd4_get_drc_mem(ca, nn);
-+	ca->maxreqs = nfsd4_get_drc_mem(ca);
- 
- 	return nfs_ok;
- }
-@@ -4229,10 +4234,12 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	slot = session->se_slots[seq->slotid];
- 	dprintk("%s: slotid %d\n", __func__, seq->slotid);
- 
--	/* We do not negotiate the number of slots yet, so set the
--	 * maxslots to the session maxreqs which is used to encode
--	 * sr_highest_slotid and the sr_target_slot id to maxslots */
--	seq->maxslots = session->se_fchannel.maxreqs;
-+	/* Negotiate number of slots: set the target, and use the
-+	 * same for max as long as it doesn't decrease the max
-+	 * (that isn't allowed).
-+	 */
-+	seq->target_maxslots = nfsd4_get_drc_slots(session);
-+	seq->maxslots = max(seq->maxslots, seq->target_maxslots);
- 
- 	trace_nfsd_slot_seqid_sequence(clp, seq, slot);
- 	status = check_slot_seqid(seq->seqid, slot->sl_seqid,
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index f118921250c3..e4e706872e54 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -4955,7 +4955,7 @@ nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	if (nfserr != nfs_ok)
- 		return nfserr;
- 	/* sr_target_highest_slotid */
--	nfserr = nfsd4_encode_slotid4(xdr, seq->maxslots - 1);
-+	nfserr = nfsd4_encode_slotid4(xdr, seq->target_maxslots - 1);
- 	if (nfserr != nfs_ok)
- 		return nfserr;
- 	/* sr_status_flags */
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 4b56ba1e8e48..33c9db3ee8b6 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -90,7 +90,11 @@ extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
- extern struct mutex		nfsd_mutex;
- extern spinlock_t		nfsd_drc_lock;
- extern unsigned long		nfsd_drc_max_mem;
--extern unsigned long		nfsd_drc_mem_used;
-+/* Storing the sum of the slot sizes for all active clients (across
-+ * all net-namespaces) allows a share of total available memory to
-+ * be allocaed to each client based on its slot size.
-+ */
-+extern unsigned long		nfsd_drc_slotsize_sum;
- extern atomic_t			nfsd_th_cnt;		/* number of available threads */
- 
- extern const struct seq_operations nfs_exports_op;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 49e2f32102ab..e596eb5d10db 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -78,7 +78,7 @@ DEFINE_MUTEX(nfsd_mutex);
-  */
- DEFINE_SPINLOCK(nfsd_drc_lock);
- unsigned long	nfsd_drc_max_mem;
--unsigned long	nfsd_drc_mem_used;
-+unsigned long	nfsd_drc_slotsize_sum;
- 
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- static const struct svc_version *localio_versions[] = {
-@@ -589,10 +589,13 @@ void nfsd_reset_versions(struct nfsd_net *nn)
-  */
- static void set_max_drc(void)
- {
-+	if (nfsd_drc_max_mem)
-+		return;
-+
- 	#define NFSD_DRC_SIZE_SHIFT	7
- 	nfsd_drc_max_mem = (nr_free_buffer_pages()
- 					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
--	nfsd_drc_mem_used = 0;
-+	nfsd_drc_slotsize_sum = 0;
- 	dprintk("%s nfsd_drc_max_mem %lu \n", __func__, nfsd_drc_max_mem);
- }
- 
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 79c743c01a47..fe71ae3c577b 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -214,7 +214,7 @@ static inline struct nfs4_delegation *delegstateid(struct nfs4_stid *s)
- /* Maximum number of slots per session. 160 is useful for long haul TCP */
- #define NFSD_MAX_SLOTS_PER_SESSION     160
- /* Maximum  session per slot cache size */
--#define NFSD_SLOT_CACHE_SIZE		2048
-+#define NFSD_SLOT_CACHE_SIZE		2048UL
- /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
- #define NFSD_CACHE_SIZE_SLOTS_PER_SESSION	32
- #define NFSD_MAX_MEM_PER_SESSION  \
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 2a21a7662e03..71b87190a4a6 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -575,9 +575,7 @@ struct nfsd4_sequence {
- 	u32			slotid;			/* request/response */
- 	u32			maxslots;		/* request/response */
- 	u32			cachethis;		/* request */
--#if 0
- 	u32			target_maxslots;	/* response */
--#endif /* not yet */
- 	u32			status_flags;		/* response */
- };
+ 	spin_lock_bh(&serv->sv_lock);
+ 	list_del_init(&xprt->xpt_list);
+-	if (test_bit(XPT_TEMP, &xprt->xpt_flags))
++	if (test_bit(XPT_TEMP, &xprt->xpt_flags) &&
++	    !test_bit(XPT_PEER_VALID, &xprt->xpt_flags))
+ 		serv->sv_tmpcnt--;
+ 	spin_unlock_bh(&serv->sv_lock);
  
 -- 
 2.46.0
