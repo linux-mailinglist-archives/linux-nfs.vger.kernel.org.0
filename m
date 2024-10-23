@@ -1,256 +1,163 @@
-Return-Path: <linux-nfs+bounces-7380-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7381-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B86219ABBBA
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 04:43:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304E09AC32C
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 11:12:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06BE7B21BE0
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 02:43:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3EE3282059
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 09:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BFEC45C1C;
-	Wed, 23 Oct 2024 02:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3E07156F3A;
+	Wed, 23 Oct 2024 09:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Reb+8l4h";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g+7vtrqy";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Reb+8l4h";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="g+7vtrqy"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="lwhkPsZb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884B543AB9
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 02:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9ED4174A
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 09:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729651408; cv=none; b=BeOmqj9EeSwtUr3TRIKVXa46jCfunCGhtB2yc+f7WJw0zATrVh8DXoD90ICKIygzdHqrCQMBEjFxlXUwM+SSQuaBfIp9QzxgdYsgZH/MDB2l2fvakjlLAtIgaKXv1kvnLX9C0SOrGCY6UGk9yrVVnl0Okfb1jgDnWDzxwMmxA4o=
+	t=1729674723; cv=none; b=R6Dph2w9a5Vcm4UVyf5PLOhgArABVVsHZZkEnlidfeJdfHQhxk2XRfyKtpd9YA7fncMN46NdJBktjp4Vu1A2pVcBKlj137ulgYK9tbXc5w+6YE0+kbCmFvXEWsr5G1/NbhIfNZeH/5u1xO8d8yn6PPfnQ4yY1/kc1KCUdAyO+bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729651408; c=relaxed/simple;
-	bh=RLkKmu7UbbwjjBlkUh0fXZrdQdGhUfIsOQSIMhyehCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qtxgugrJbUre9jNOPc10gXOhSRV0kAFSAleyhMygODaWscIWowIt/+3yH+rMCUwBz9WaiZqJyis1lbOISK6bPHDQV24KchLcmSJn7QOl8nZqqs2yYDFRAsuHzVy8tOgjjTkFTc7KK1lDuBWwkb2AmDNBqYSxsdXmv6yqJSJsQPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Reb+8l4h; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g+7vtrqy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Reb+8l4h; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=g+7vtrqy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CBBE41FD6C;
-	Wed, 23 Oct 2024 02:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729651404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MrjqwMdeSgI+QnmJd87IgiWz2gslumvoKMQSlvZtT4=;
-	b=Reb+8l4hd+q5dAVR6oZLhUx/IvxdxawHsILXpSg7uzoxej4SEQPTDZ6NznpFTz4IIIFyuH
-	WeUxLKYbk4uLIjcxY+R/zH6U80/it5F9p6nNtZVAfvE/a6jJf4T/FhBdB/XIpGEk9aWvG/
-	bGZqbsRCpZEUx/49kLO9wuGR0ZRQm9A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729651404;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MrjqwMdeSgI+QnmJd87IgiWz2gslumvoKMQSlvZtT4=;
-	b=g+7vtrqy0MIa9v9vuLhWEgthk8/nLCTyj4+gSKRHy7aPgNL3B5kfYKdK7yieO7M9ejSi55
-	h8H5Cb7S9/P0HyDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729651404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MrjqwMdeSgI+QnmJd87IgiWz2gslumvoKMQSlvZtT4=;
-	b=Reb+8l4hd+q5dAVR6oZLhUx/IvxdxawHsILXpSg7uzoxej4SEQPTDZ6NznpFTz4IIIFyuH
-	WeUxLKYbk4uLIjcxY+R/zH6U80/it5F9p6nNtZVAfvE/a6jJf4T/FhBdB/XIpGEk9aWvG/
-	bGZqbsRCpZEUx/49kLO9wuGR0ZRQm9A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729651404;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MrjqwMdeSgI+QnmJd87IgiWz2gslumvoKMQSlvZtT4=;
-	b=g+7vtrqy0MIa9v9vuLhWEgthk8/nLCTyj4+gSKRHy7aPgNL3B5kfYKdK7yieO7M9ejSi55
-	h8H5Cb7S9/P0HyDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B5CF413A63;
-	Wed, 23 Oct 2024 02:43:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YzvUGspiGGdNOgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 23 Oct 2024 02:43:22 +0000
-From: NeilBrown <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 6/6] sunrpc: introduce possibility that requested number of threads is different from actual
-Date: Wed, 23 Oct 2024 13:37:06 +1100
-Message-ID: <20241023024222.691745-7-neilb@suse.de>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20241023024222.691745-1-neilb@suse.de>
-References: <20241023024222.691745-1-neilb@suse.de>
+	s=arc-20240116; t=1729674723; c=relaxed/simple;
+	bh=C8sMvkt7udgzyq/M95QqIAUM0lQ2YfIMoc8i1xfXpCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SfS+j4JVUzhPsIClJvxx8fQ6ixRrWHix3iZQeFrfztIZKjHBd+SFddZa595IlgTDjIaM7AKualGI7I/+Bemuj2e9raEX8hu8ZQmTZjYYao10x9w0efrwlAiGQbOBkVJ5qHQiflu2Wapi72sKWKEDb+YF1TEUh0Y/WzMLVRrz+UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=lwhkPsZb; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 3A18D240101
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 11:11:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1729674713; bh=C8sMvkt7udgzyq/M95QqIAUM0lQ2YfIMoc8i1xfXpCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=lwhkPsZbPANmdBvVmWbAQ+Gy+6zlyBEWNJq1sRwL+mU96AZPrTv1fMz9e1wLoQ8T6
+	 wUUsu+sQfLkak1W8avTWfanB72jXchOYc8m/xKwyB/2n3GAcWaE/8UJY3548ZzAlhF
+	 BWICn2clYFnF8XdBOuT2hbvJR2PPEeF0zeBTyWBSzdlVDxssIGcT8dx18SqBQZkrRA
+	 8NoTDLFIwl3M9lLCkYwuepQajhf9NPcmNhdQjW9H/MHtHVh06I8kwjADg1zXKBcA9W
+	 /Z9DEH+Iecg+L+2DZvbYTPXEWhQYsG+pkt0KU4PKF/ADosaP+AWCVu+qHefME5BsMf
+	 +k2WtIfEBIv4Q==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4XYNbD3bG0z6txY;
+	Wed, 23 Oct 2024 11:11:52 +0200 (CEST)
+Date: Wed, 23 Oct 2024 09:11:51 +0000
+From: "Patrick M." <patrick-muench@posteo.de>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: nfs xprtsec conflicting with squashing
+Message-ID: <20241023111146.3659e2e3@jen>
+In-Reply-To: <20241022163621.29890b64@jen>
+References: <20241022155047.0b73b6b3@jen>
+	<1294ABC2-CFCB-4984-B286-A973627E70EB@oracle.com>
+	<20241022163621.29890b64@jen>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-New fields sp_nractual and sv_nractual track how many actual threads are
-running.  sp_nrhtreads and sv_nrthreads will be the number that were
-explicitly request.  Currently nractually == nrthreads.
+Nevermind this - did further testing today and it boiled down to a inconsis=
+tency between updating exports, adapting fstab and exportfs -ra and restart=
+ing nfs services.
+Apparently i somehow made things consistent and inconsistent when switching=
+ squashin on/off.
 
-sv_nractual is used for sizing UDP incoming socket space - in the rare
-case that UDP is used.  This is because each thread might need to keep a
-request in the skbs.
+Now i can use mtls in all used combinations of squashing/mapping.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- include/linux/sunrpc/svc.h |  6 ++++--
- net/sunrpc/svc.c           | 22 +++++++++++++++-------
- net/sunrpc/svcsock.c       |  2 +-
- 3 files changed, 20 insertions(+), 10 deletions(-)
+Sorry for the confusion and thanks again
+Patrick
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 9d288a673705..3f2c90061b4a 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -36,7 +36,8 @@
- struct svc_pool {
- 	unsigned int		sp_id;		/* pool id; also node id on NUMA */
- 	struct lwq		sp_xprts;	/* pending transports */
--	unsigned int		sp_nrthreads;	/* # of threads in pool */
-+	unsigned int		sp_nrthreads;	/* # of threads requested for pool */
-+	unsigned int		sp_nractual;	/* # of threads running */
- 	struct list_head	sp_all_threads;	/* all server threads */
- 	struct llist_head	sp_idle_threads; /* idle server threads */
- 
-@@ -71,7 +72,8 @@ struct svc_serv {
- 	struct svc_stat *	sv_stats;	/* RPC statistics */
- 	spinlock_t		sv_lock;
- 	unsigned int		sv_nprogs;	/* Number of sv_programs */
--	unsigned int		sv_nrthreads;	/* # of server threads */
-+	unsigned int		sv_nrthreads;	/* # of server threads requested*/
-+	unsigned int		sv_nractual;	/* # of running threads */
- 	unsigned int		sv_max_payload;	/* datagram payload size */
- 	unsigned int		sv_max_mesg;	/* max_payload + 1 page for overheads */
- 	unsigned int		sv_xdrsize;	/* XDR buffer size */
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index bd4f02b34f44..d332f9d3d875 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -781,8 +781,12 @@ svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
- 	}
- 
- 	if (pool && pool->sp_nrthreads) {
--		set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
--		set_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+		if (pool->sp_nrthreads <= pool->sp_nractual) {
-+			set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-+			set_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+			pool->sp_nractual -= 1;
-+			serv->sv_nractual -= 1;
-+		}
- 		return pool;
- 	}
- 	return NULL;
-@@ -803,6 +807,12 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 		chosen_pool = svc_pool_next(serv, pool, &state);
- 		node = svc_pool_map_get_node(chosen_pool->sp_id);
- 
-+		serv->sv_nrthreads += 1;
-+		chosen_pool->sp_nrthreads += 1;
-+
-+		if (chosen_pool->sp_nrthreads <= chosen_pool->sp_nractual)
-+			continue;
-+
- 		rqstp = svc_prepare_thread(serv, chosen_pool, node);
- 		if (!rqstp)
- 			return -ENOMEM;
-@@ -812,8 +822,8 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 			svc_exit_thread(rqstp);
- 			return PTR_ERR(task);
- 		}
--		serv->sv_nrthreads += 1;
--		chosen_pool->sp_nrthreads += 1;
-+		serv->sv_nractual += 1;
-+		chosen_pool->sp_nractual += 1;
- 
- 		rqstp->rq_task = task;
- 		if (serv->sv_nrpools > 1)
-@@ -850,6 +860,7 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 			    TASK_IDLE);
- 		nrservs++;
- 	} while (nrservs < 0);
-+	svc_sock_update_bufs(serv);
- 	return 0;
- }
- 
-@@ -955,13 +966,10 @@ void svc_rqst_release_pages(struct svc_rqst *rqstp)
- void
- svc_exit_thread(struct svc_rqst *rqstp)
- {
--	struct svc_serv	*serv = rqstp->rq_server;
- 	struct svc_pool	*pool = rqstp->rq_pool;
- 
- 	list_del_rcu(&rqstp->rq_all);
- 
--	svc_sock_update_bufs(serv);
--
- 	svc_rqst_free(rqstp);
- 
- 	clear_and_wake_up_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 825ec5357691..191dbc648bd0 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -588,7 +588,7 @@ static int svc_udp_recvfrom(struct svc_rqst *rqstp)
- 	     * provides an upper bound on the number of threads
- 	     * which will access the socket.
- 	     */
--	    svc_sock_setbufsize(svsk, serv->sv_nrthreads + 3);
-+	    svc_sock_setbufsize(svsk, serv->sv_nractual + 3);
- 
- 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
- 	err = kernel_recvmsg(svsk->sk_sock, &msg, NULL,
--- 
-2.46.0
+On Tue, 22 Oct 2024 16:36:21 +0200
+"Patrick M." <s7mon@web.de> wrote:
 
+> Hello,=20
+>=20
+> will give it a try on 6.11 server side and raise a bug if it does not - w=
+ill most likely not happen before tomorrow.
+> Thanks for the fast reply
+>=20
+>=20
+> On Tue, 22 Oct 2024 14:17:18 +0000
+> Chuck Lever III <chuck.lever@oracle.com> wrote:
+>=20
+> > > On Oct 22, 2024, at 9:50=E2=80=AFAM, Patrick M. <s7mon@web.de> wrote:
+> > >=20
+> > >=20
+> > > Hi there,
+> > >=20
+> > > tried switching to nfs with kernel TLS (mTLS to be specific).
+> > > Without xprtsec i was able to use the following options on exports
+> > >=20
+> > > "rw,async,all_squash,no_subtree_check,anonuid=3D1000,anongid=3D100,fs=
+id=3D6,sec=3Dsys"
+> > >=20
+> > > but both the squashing/mapping-ids seems to conflict with TLS and i w=
+anted to understand if this is by intention or a bug. =20
+> >=20
+> > I don't expect breakage like this, so at least some further
+> > triage is needed. Can you open a bug on bugzilla.kernel.org
+> > under the Filesystem/NFSD component?
+> >=20
+> > You can also verify that this behavior recurs with a 6.11 (or
+> > later) kernel on your NFS server.
+> >=20
+> >=20
+> > > And if it is by intention of course why - because in my understanding=
+ auth and encryption of the mount itself would not contradict with the mapp=
+ing functionality.
+> > >=20
+> > > I now use "rw,async,no_subtree_check,fsid=3D6,sec=3Dsys,xprtsec=3Dmtl=
+s" and it is working. Using no_root_squash also seems to conflict.
+> > >=20
+> > > Keeping ID-Mapping i get this on client side
+> > >=20
+> > > mount.nfs: Operation not permitted for server:/mnt/target on /mnt/tar=
+get
+> > >=20
+> > > And nothing i could relate as cause on server side (happy to provide =
+specific logs if needed, even with nfsd or rpc flags with rpcdump i could n=
+ot see a cause).
+> > > Tlshd showed also succes in both scenarios (handshake successfull) an=
+d i can use all options as well if i remove the xprtsec on server side.
+> > >=20
+> > > Client:
+> > > Linux 6.11.
+> > > nfs-utils-2.7.1
+> > >=20
+> > > Server:
+> > > Linux 6.5.52
+> > > nfs-utils-2.7.1
+> > >=20
+> > > Sorry if i missed this in documentation, if so i'd appreciate the hin=
+t where i should look in detail
+> > > and thanks for this feature!
+> > >=20
+> > >=20
+> > > --
+> > > best regards
+> > > Patrick M.
+> > >  =20
+> >=20
+> > --
+> > Chuck Lever
+> >=20
+> >=20
+>=20
+>=20
+>=20
+
+
+
+--=20
+Patrick M=C3=BCnch <patrick-muench@gmx.net>
 
