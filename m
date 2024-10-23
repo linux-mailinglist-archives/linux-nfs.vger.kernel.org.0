@@ -1,79 +1,71 @@
-Return-Path: <linux-nfs+bounces-7395-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7396-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E6309ACFA8
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 18:03:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE60B9AD112
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 18:35:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E3B41C20BEC
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 16:03:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EF2E61C20E4A
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 16:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345481CBEBA;
-	Wed, 23 Oct 2024 16:02:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C38E1C3306;
+	Wed, 23 Oct 2024 16:34:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020096.outbound.protection.outlook.com [52.101.85.96])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2109.outbound.protection.outlook.com [40.107.92.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12F61CBE8F;
-	Wed, 23 Oct 2024 16:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02131CACEF
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 16:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.109
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729699379; cv=fail; b=koWT2oxJVTtFCTntzmyw7EAq8+aJ632R4I2mj/7dLSl62ID1tT2AxTYDfkaYtggopofxbJXL06+uRCwVTsFekHe/FOB7FfCtZAAWNgGLKzOaA9nBVUCr1wf1mnSEELvFXhEIeNDtMhkGhr8Y2ZYA3027At6uAsYIXsz52l3GTD8=
+	t=1729701297; cv=fail; b=W3bY57jLvuMXBbh8GatOMyOH5Tw+GkPwxqS/fzYavrJimxKdiIwyERpPoaNiAblyLJtMTnTPHCY2Jfxgc0YVeDb2sEa2hkJX7Zan+/nsaIVrtNHI+x1PzLAMaAdpm+3JfW01IUIUzCQ1hCKlfmJqiGIO3/kmhITUxE0pgjnrsGU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729699379; c=relaxed/simple;
-	bh=WzUuarTnH9iTGoGzZYf5qR82291JGrazJTU3o6+v8JM=;
+	s=arc-20240116; t=1729701297; c=relaxed/simple;
+	bh=5ymisoFKsUOihCc4q7RqoTvJ0+KUIOz/LmXtehDbFmk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FeAX8oCm3Cf3u2py4lL30qwglPFSc1QyhlnAhuYfRbU8wUs7hBrQqnqB7xK5oj0vha0YYjMgcNl9Kk17bZRyQg1rKrSS7jc00HXpTKcN3AsbWZMBiJG55tu577rMkqFwLRecsy5tPOWEXrN+KnvgsZeVdWzs6R4HxoxC7Xii8zI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=52.101.85.96
+	 Content-Type:MIME-Version; b=BZCVF+Si9P+/iP/VwaOUF+eyoqwqpC4Wt937aqfL6EXOJ1NWth4RX5Pb9baX4QZtzjTDaHlTkkcDMhainHQ5zVkTCt5YkyhShzQXRTJcV5/GJVpCBY8lo2onQgnGt+VhECwuivNpcqg7riBosB0k4AWo3nCX3LX5ctiMwiOKaRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.92.109
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gOlSOOXCTDZS7SRneW6azIektqX3FJWl3aP4fsSYmTGF1l2JQR2yVaMl764uyBforKk6VdXWxxZgSWMyynaFLXnh6R9/5e7pD2XXN4NEYr1BxcZ/ifTWCNOmyqJOMtabeCS3J8bBH3kKUdNIJWGKy2yVrlZJ4/ryZ3BWxxzqy5ljCKwzusIe5N/PhHRZoqGxEBAKOekNWS8Qh4OlIuxXSHGBgMtyz9woh0YRxNvL2tXUeojwbti3QlHaWIKUWoE/8wuOdNcWU99UoztUZfV+TYS1mT1E7CCrT/he+6erxLnZDcr0rzdxD/LnEJF94QyO/P6lL4car5Opfa9OPOEdsw==
+ b=RxHUt43TaLrYbxgFKI2wbATtFXpGsDysKFy6qjy0iWKMsU2ydrSpaJrDdU+hVVt+GXBsN09hoDagZez5b1ptcRV1rOksORP5eYpybZCYrNEQO7zRkeM5K6VasUhK4vWOTNqdCpCrhCpXgke632L1ZPHy/dHycDrNzto/wslwFSIFiNwPbZqhHvBH1oEIFzQswYQflk0+WZFNtlNs0C5gKw2J5q3weNaGNeZ9crbWI93/DytaQYAGK/4HPuK98rapn7vcxcZAjCEvnOk/6qA6gF6XgwXEa44sychkvHG0Ge/XEgwJD+QYlBmHcVwCieV24lf2ku8ct2QhgzasGLH8jw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e71v7Qrmd4B/z5z9TeWMRR9UooVYZIVS+BT6iRg7bH8=;
- b=oyubgd03sTfPSk+91uDIXmH2pDETzfy/rw5V9ydn0RGBuwk9X3kf6RAgmMxmpLuRJWtvA/zzHWiR88xstS1DfvZDR96ETbZ3dHjHwUIRXmExAdvXbGVO38UaykfiTEaC5KEiIHd3FxzqDkdy5FgbuPS4Al/L7+t2Tttpx44b1U6Os2hAh2pR399QCshLY0YVHT51JMf82gdOsI8LtQo3iLu79ejzrL0+dUFblJ3vhYMH2DJ1Xys2YQ/T+i9rjvSNkgYI1vNDQPt5YPXIFQXrUS3w8I6QXhWXE9Hy4Oij+iNSISBaF6P76ahGTbyL8gJgjD3tlgRWRh7UER1Dw8+U6A==
+ bh=W9X8jBhhjkWuFEDXTCjdU5uZncWG2+x9em1kZDI1hx4=;
+ b=mh00znFyGH7/qMEznFm70C6GWXpSGcs3h8Ia1h0yH1gnTBpsD0hcbv4i+nPrWrPODbweTIoPZ5F+J4D14eYyC76/cuLetrb03280PrpCdBJgeWdTyE6ApeUDOTXv6M9CpKspxhQeHo/6KxxfvXsPqNPB8wbDF/sr30cB6wqu9wTY5/Nhg/XiNqYMjL8KEJlvxOVD3k9Es0YP95erOW1H+y4Xlv9y2Ft0V6QErdDbHvoMDPHXfG7qpx8dmnFgEI9M11aqCQAbmCPWZBD2ulebpqTPCg4tHR41nMpjoAbuKIoL11g1gL272xcoAjhqRk8zOjVG5mpJpW5M1kVdDaniDQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
  dkim=pass header.d=talpey.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=talpey.com;
 Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- LV3PR01MB8486.prod.exchangelabs.com (2603:10b6:408:19d::20) with Microsoft
+ SJ0PR01MB7396.prod.exchangelabs.com (2603:10b6:a03:3fb::14) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8093.17; Wed, 23 Oct 2024 16:02:53 +0000
+ 15.20.7982.34; Wed, 23 Oct 2024 16:34:51 +0000
 Received: from SN6PR01MB5246.prod.exchangelabs.com
  ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
  ([fe80::cf18:495f:c6c:ec90%3]) with mapi id 15.20.8069.019; Wed, 23 Oct 2024
- 16:02:52 +0000
-Message-ID: <6eb46c99-d410-4090-8832-394e7aa69adc@talpey.com>
-Date: Wed, 23 Oct 2024 12:02:48 -0400
+ 16:34:50 +0000
+Message-ID: <c020595b-82c6-4521-8ada-0220eb6aeaf0@talpey.com>
+Date: Wed, 23 Oct 2024 12:34:48 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] SUNRPC: support resvport and reuseport for
- rpcrdma
-To: Chuck Lever III <chuck.lever@oracle.com>,
- Kinglong Mee <kinglongmee@gmail.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-References: <1a765211-2d1e-48ef-a5ca-a6b39b833d5a@gmail.com>
- <Zw/GUeIymfw+2upD@tissot.1015granger.net>
- <a4dc7417-1d0c-4700-9102-0ecc2c9e81ab@gmail.com>
- <ZxEP/zBCaSgxbJU7@tissot.1015granger.net>
- <c04e7270-1415-4c6a-8bca-a77cc0403287@gmail.com>
- <ZxJvZqmKsPTtOFUR@tissot.1015granger.net>
- <290d18f3-befe-44b4-b79b-983983f1418f@gmail.com>
- <3225E57B-40A4-4CF6-BDF1-3A90BC313D22@oracle.com>
+Subject: Re: [PATCH 3/6] nfs: dynamically adjust per-client DRC slot limits.
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.de>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>
+References: <20241023024222.691745-1-neilb@suse.de>
+ <20241023024222.691745-4-neilb@suse.de>
+ <ZxkARHvnShXOQM+/@tissot.1015granger.net>
 Content-Language: en-US
 From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <3225E57B-40A4-4CF6-BDF1-3A90BC313D22@oracle.com>
+In-Reply-To: <ZxkARHvnShXOQM+/@tissot.1015granger.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL0PR02CA0057.namprd02.prod.outlook.com
- (2603:10b6:207:3d::34) To SN6PR01MB5246.prod.exchangelabs.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0324.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::29) To SN6PR01MB5246.prod.exchangelabs.com
  (2603:10b6:805:d8::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -82,486 +74,370 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|LV3PR01MB8486:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8304d10-f142-4707-41f6-08dcf37c2572
+X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|SJ0PR01MB7396:EE_
+X-MS-Office365-Filtering-Correlation-Id: a07c2e33-9075-4d32-b80f-08dcf3809d8b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bVI4NmVnZjhzT1NvWFQrbXd2USthSkpoMHE5NnZtTytHSktOMEY0WmVEYW5u?=
- =?utf-8?B?M3JTaG56SkZPZUZ0amZqaHcwYVdPOGlsLzJVNmpaaVVsWHpxR0NTeHArekFZ?=
- =?utf-8?B?b0I0YVVVSHY0M1ZmRnJzUThSRjYvK214ZEk4NGNRUlltSDFzRm5sNGxvQS9B?=
- =?utf-8?B?VFQ2UFJxUDNzOTV4cXVSN3RFY3JuNUJpYk15R21mTjR4QXJrQmt3TXI1M2dm?=
- =?utf-8?B?SENMWVg2UzRtaDAzYTJUc0tRZjYzQ3F6MGhJb0tKaEFyclpnQjRFQjZreFVS?=
- =?utf-8?B?SDB6eWxLcy9rOU93eWRVald6bUJtU1NaQ3lWQ0dncDlmUTFjY0F3SEhualdx?=
- =?utf-8?B?UE5IMkYwakdBaFgydVNBRkhNRVdoMUxyTnBhczFZaDd4T1NVOTNZZE1zNnF5?=
- =?utf-8?B?T3RjVWtnYnE0a2JWbG5lRFprUU42N3RyQkt5NjlVT3VjN0pSck1XaWd6N1o5?=
- =?utf-8?B?SWNwVWZvOGVxMXM5NFMyL0tpaGxIQ2pHL29xdUdTYkgxSVcvS01kTXEybTJh?=
- =?utf-8?B?WUZORDdOTnRVVXRHL3lLKzB0bzBhc2tJalUzYjNMTDhYcVNndGdkV3ZQWnRX?=
- =?utf-8?B?bEorcEVITitMNTAxSWNMUkMzUGgxMUZhWUlWNVRNMk1GcmFXMXFYZGpIaWVV?=
- =?utf-8?B?VEk1TG9OSkgyUHArWnVnZVEveTdnWU5nejRaemcvcjhzcThlZTlhV013L3JF?=
- =?utf-8?B?cmRpa0NKVCtSSGZuTDNhRGZPcHZheWRXbmtaY3pOMjRkczltZTczWmNsUlRs?=
- =?utf-8?B?c3I2aDlWOTQ0a0tCeHRiLzNISktqZHBkZVFLUVdHUSt3QjU2ZzM1M3FLTnZJ?=
- =?utf-8?B?bGN5YWJKNWswZXdhNXdOT0lGN2RRWHN1eHAyWERGM2ttQ1MzNEtYNDBjc3pi?=
- =?utf-8?B?UXRraG9LamJOM1NuUkUrdEVZai9NRDdOQmtiV1JYT0QwNytpQUpMK3lEdTRP?=
- =?utf-8?B?NDJycFV2UUVZV0U0aUpWeDdxWVdwaDAyaG5jTHBPSkh3cTE0dEtUMCt5VHBq?=
- =?utf-8?B?SnlFQ0ZOQ3dGcjNIcUc2SUpxUUhxemh2eUkxdnVjbzVwNXQxNzRvVTJ2T04r?=
- =?utf-8?B?alYyWU9KdGh2dFREajdUVkNmNmZydTNnVWZ3bEdVdVcvY3ZrZmNoS1BVRDVS?=
- =?utf-8?B?WWY3akFORHpGTUFGdkNRVG1IaHVQcUE3VkMyckxTa0tmWXY1c2V6ZlpBOUNp?=
- =?utf-8?B?b3NWQ0toNWZKK3NxZVc2bENqK2FmZ3VMOWplNURISk5lMXZkUzFjRXNSOTg1?=
- =?utf-8?B?WlplbkpzQys4QnFYWGp4aFg3WXE4Y3FOL1ZKOFhKaE5mR1o0QjluYUwwc01W?=
- =?utf-8?B?L2ZVQjV0UzkwbWtyTzdDVjl0a2N4UEZFbFNua3ZXelUrdmtXVjk5djArcUJM?=
- =?utf-8?B?OG5nTEN0NTdLZU85K2dOdlhDNW5sYnJucXIvNWRmaGZZY0hmWjJLVk9CNFVx?=
- =?utf-8?B?RWMxZzJBUTBDWnRHZXBzWWN3MlYxNVBMYmhNcEppL3RSVURoQW1RK2RzY1BL?=
- =?utf-8?B?dXNNUm5Zb2lwN2JBQzJsVWt0a1FUYWlRRHRjTkNwREFvaE5EZjZJeHMyZHdn?=
- =?utf-8?B?dUxJeFd6clFWbmM4cTFPNkN6UlFIaVFTMlNqNHNpWWpWMGg5R04zaEExMTJ5?=
- =?utf-8?B?dGM3ZllIcFZtVHg0dkN4WDVCS1drbUJIRmRTNVdYdURFZG1rZStYMUZVcm1M?=
- =?utf-8?B?eUhHazFnVEF2enhPSkJrRkNWeWJxQW02aVN5NlZxOU9DbXcwYjhOK0FEOG1Q?=
- =?utf-8?Q?tUmn68xbVUUCM3IoAWafu+Mc9KC0dSvlkRtalip?=
+	=?utf-8?B?ZytKTUNHMllXbldRMStaVjlmZGFoUDdoRlVmb3crbWEyZWM5REtuU3gzK1F6?=
+ =?utf-8?B?ZW9WNVE4RGZaM2hQSURIdUpuc2gyWjRUZjgzMnlORG9mUjNGRnFSS1ZNSVht?=
+ =?utf-8?B?aFlHNnJZZTlaM1NGc0w1YUxLd0YwYlRHMXQzWHdSdmg3NEFsc21POXFpYmI5?=
+ =?utf-8?B?QW9PRVZzbUtHeEZIbjJOUytTZGQzeTZxS2k5eGNRNEhKdGdPN2xIWWd4empm?=
+ =?utf-8?B?aHhvanJMMWk5QUFjQmIwUVJKeXgzcnYvclQ4eVZUWndGMnR0SkFiU1EwMW9M?=
+ =?utf-8?B?a2ZOMjhOWDF4cldLMHBQTkM0RjhvMWlEQWdpaTFUQ0ZVeFphZVdWTkJQYXBQ?=
+ =?utf-8?B?YXU0Uk9wdGNGdElTelcrSHF2ZjRTRU9BTThwc1ZUemptUm9pRjk1UDQ5VmVw?=
+ =?utf-8?B?bkJUc3M4WGl3cXBWUENwQUl0cnZENGI2clM4bU9IM1FZTVI2dGZoeW1zY2Uy?=
+ =?utf-8?B?eS9ldGYyRnNWTGRqU0FKZXJ6TXprZFFrNkM5eXBlODl6RGxZZzhlYzJXU0VV?=
+ =?utf-8?B?bVF4ay9zckc5djBPREFPbWozY1FpTUl1K1ltN042RlBXMDg2eVhVeWFwSCsw?=
+ =?utf-8?B?TllVNlBCcDduM0MxdldyNnVQb3NRcFpsVXNlRWFyaDVZNktKMHVqN0ZLci90?=
+ =?utf-8?B?ak5OMmdRbmF1NzRpYXF4eXcrWHdVWVlGOHlVTm9jOUZncWJSTlRLcEtFYWtI?=
+ =?utf-8?B?aEI2S2ZBRXkwSkVJYVFSOVRkc0tlUVgvTXNqL2MwTXphQ0lhNGtpczRHR0Fu?=
+ =?utf-8?B?clE0ckhkaEpSa3BSeW1seVl3Sm0ra0Vmb1drSUtVK01KZDA2b2QydmlJekw5?=
+ =?utf-8?B?OEdFTFNENnVRYklqdWdYcGlTMkdmdlNCNjh0S3hhWit4Q0hid3NUdDA4N2R1?=
+ =?utf-8?B?OWNCUXRSUExsYm5qaDNCcFNBUXZLb2R1RmEyTHpNL0F6Q2dqRjJLYkRpVmFj?=
+ =?utf-8?B?d0QxeldnMld0Wml2dTEyQnFzZm40UWZMT2tzNk5qNW9PLzRtVUNsZ1g4RkVF?=
+ =?utf-8?B?VkVteEdDSTNDUWVDTm1GYW90WE4wemxOMjNOYUN1Y3pWWG5qdG4rUlNIY25V?=
+ =?utf-8?B?VytHcjRoV0M0Y051Q3ROeXV2ZDZZZlRxMHI4eWJUclYrWVEyRWV3ckozcG5Z?=
+ =?utf-8?B?VWxGY2xscUs3d1h6TFBwVkkwYWdmdE44dG5lRlZRbHltQ1F2WjVXOG5NajhC?=
+ =?utf-8?B?S1ZGVnVRcHB1RnBNYXZWQUZoczRQSWxOQ01BVkpwdW1ZY1MxeVVzdlhucXo0?=
+ =?utf-8?B?ZHlNVWZyRVZOL2JldkQvTngyZG1IMUNYRFJGRXRad1RLY3c3SDZkc2NYTHZh?=
+ =?utf-8?B?ZGMrK3F0MitSWSs5UGdYWnhET0tweUlHTkNFRk4zM3FwQ21UVWtHYTlGeVdP?=
+ =?utf-8?B?am13ZGYyN1FtdGgvUk9RaWZEbklGRngwSkVKVDd2MHhQZFVydzdOTEJhMjd2?=
+ =?utf-8?B?aXN3QUp5QkpCc3ltTExMN2dIUHI4dTM0UVBhTVF2OWM0bEQvSk9lYjRGaXNr?=
+ =?utf-8?B?YmhqN05JUlVVYm5Xd3VWeDZLZktqRzVOalZLUTZ0WjltOWIxSU1QMFE4NzJY?=
+ =?utf-8?B?NkpabURuM2EyM1IxM1VPSkQ3bmxDMC80N1pxWFMzVlp5Y25SSkVoY0FsdUNB?=
+ =?utf-8?B?bkRtNkMwNThMeWRXY0V5RkxNYjFjNG5GdzJ1MndOUllzcGkrR2UxS0M4NVk2?=
+ =?utf-8?B?TE9OWnFzNm5xOGo1SlphUFg1RTYzYll1ZzRKcXhuRkhYcE43VDRTRFVhSHZv?=
+ =?utf-8?Q?Pc1Vz7R2lblJUlMh1r4lwmba0qWY6Kz4oKoqDWr?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q2hLS0xyZnJuRnhTelBBbHdrY2tQaGRjcG1qbnZhUHpnOGR0TjNUYVhKY1hV?=
- =?utf-8?B?ZnFYUko4QVhxZjF0OHFtTzZVWXg4WU00WlBqTmtrSVVLNEVHcy8rM1NEdjE2?=
- =?utf-8?B?TjEwSlNZaXBVc01tMlhpNERZU09kMk5LSFVuRmt5UWQ2Q3VuVEFldzRib1hl?=
- =?utf-8?B?dGYrM3l1NzJDYU4zcjVQeUdGc3ljeG9Gcy9JamVUaFFkanJlR3p3M2tMb3BJ?=
- =?utf-8?B?cCtCYnVodjdaUVNEMDUycTRacDlCa0FsdjhnOGV2dDV5TWJsbGJuZVZpNHln?=
- =?utf-8?B?Mm1xWUh0S3lSZ1BvU0JkWjk3YXVVcWFhcWI5bElQYzJCdE1zdHlpTXJkSXUz?=
- =?utf-8?B?bzlvVDh0OFV0MjVCYzVCMmNiWVplME9FWFdNUzdKSGwvUjFWdll6N3NKRUlO?=
- =?utf-8?B?RStHZHdpb093K3hKeFBiaElpd2owamZ5UkQ4NEY1WWNrYWVJZ0lIaWpZY2pj?=
- =?utf-8?B?RUZzeS96MjBWWXdnL3l4RTZRN2tnS0NzVFVzbnFCWmI4d2pTYi9vVjd3eHht?=
- =?utf-8?B?UTBvdjZEczBCdWdlSkV6MXJzcmN0WmozajBNaXdaVzB6UWF1SEtqd0l6Z1dF?=
- =?utf-8?B?cWM2QXFxUno1ZG44a1pCaUMxWXpGYkNIVDRoV3J5Qm9oZ3ZxVm1EYVE4WHp5?=
- =?utf-8?B?dWo3RkN0OW02YUdjVGY5cU5jK1BLMm9yNmRiS0FwSkp0RVpJRWd5SGpZWVBC?=
- =?utf-8?B?Q1BiMkpUREV2QmpBbG1XdGZMWk1UYmdTdkVaOHlHWTR3OUpTcE1IMStXQzlo?=
- =?utf-8?B?dmg2U21FNHJnYzg1OGEzd1I2VlJldDV2RlJPakl5K05FakJMdU51Y1FHMUNZ?=
- =?utf-8?B?Q0YzUFN2ZVhuYXloYjY1eEdlcG1OSHFGclVwSDhiQnRUUDByN1ZCQVFGbVVi?=
- =?utf-8?B?bTNXYkxRWlYzMDVFM2VpcklEcXB6RForQ2h3WndvUlc0MVQvbVMvQStSY1pL?=
- =?utf-8?B?RjNkUTJ6dFlja2hYZUJjRU1PVHV1SXhiVU5RbU0vbHRZNmdGYzRkeEM4N3Rh?=
- =?utf-8?B?aEVBdlE5NXRiZkhRZUJBNlh1alBMUjd5OEltbTRBVmhYT1p2d0pvNG02d2V4?=
- =?utf-8?B?a0VycnluQlc5cWZ0cHhnMHdYV3RYY1lnaSs0Qk50WDArb1FYMXZrSGRBM2NY?=
- =?utf-8?B?Y05kNk1wUkJ4Tm14bERQblNDT1dtM3hpZGxkQjlFQnlLZldielUydE1VcEV6?=
- =?utf-8?B?VWVHUFh2ZmNGb090L2pBeVg3ajJLOXh1OXE4RFNDZ2t3bExyNVJGTjdrK1B6?=
- =?utf-8?B?bUZWdlA3T0JXY0xBZlZIOUJhM20vdk1XMG1JWnc0bGtaSG11ZkNNYmRFdkNX?=
- =?utf-8?B?WnJjcUtZOWFDV0E0WnFJcnNyV01ONEp2Qm9KMlVROTVld2Q2UlBFN2ZFY0pm?=
- =?utf-8?B?TTU1NUFhSDRQMUlpanhLRFk0aHQxdTdva0ZYdkdTbXFxRTMyMHpQUnFiWm1i?=
- =?utf-8?B?MUNSU0dVakpUTVJKb2J2RDNwZEdBaUxUYklrbnZPdS85L1htc1cvRjZKbmxw?=
- =?utf-8?B?dUw4MkhHUndQY2Z0eEM2UmczVlMrckhRdmV5RG5LVys2bm5WTWxFOWREVlZ1?=
- =?utf-8?B?TVp6T3BXZlljaVNqZXRqdkNLZmcxT1JRckhaa1hFR3oxTVI2dUtncWFSQlJ1?=
- =?utf-8?B?NXVCanYxOU9MaWxsQUxQOEVJc1p4VHYxZ3liUnN2b0MwempmSlR3bllXZzE4?=
- =?utf-8?B?ODlrQlNxalU0WUh5ZE1KOFBVVmtuWmE1VVNBMXlINTgzSTVzbmxTVmxiUGFZ?=
- =?utf-8?B?cFVwOU5JSmI1Y2ZLMXJFUzBzdmNSdEc5VThRN2pXcWNZQ3Nzang5aTYwMVJm?=
- =?utf-8?B?RjhkZTdPRzJpV1VkK2JqOXBNSlRHZGlpOGxUT0tGaVA1bVUwT21yMUJlRUZX?=
- =?utf-8?B?MzVXTXpPelF0M0VuRmV6aGtpQzl4UkFMR3FkRWlNRHdTTjlKNDQ2SUNaeXlP?=
- =?utf-8?B?R3JRc3ZuYXg1YUNpeFdZQUZmYkV5V0gwMmJHM1FHa3lnZ0VkT3E1MlgwQ1h4?=
- =?utf-8?B?VktMVHEyZWJ0dWVaSXNrSDJEVzlaRW00b0dTU090d21lTndxOUFpQjZkbVRU?=
- =?utf-8?B?a3ZJUGgrWHBQeDF5OGRJSGVBek1OL05OdTdsbnlSNDdDK1ZEdHZsNlhhMXNK?=
- =?utf-8?Q?UKk0=3D?=
+	=?utf-8?B?OGdPSG9FNUlERnBkQmdKSDNTRVMvdVNubDFpcE5LVWUyQWRGbTBaaHI1QXVq?=
+ =?utf-8?B?U3dyNHJxMHcyRi90OXdtNTVFemtzMmt1bmordmo4cHFNbk44QzUvbVBSb3lm?=
+ =?utf-8?B?aG5kVTZ1bEdyanMyODhjbGtQVURMSlM0OXRqKzlpRzFod1ViRG5NUnAya2wx?=
+ =?utf-8?B?UmFDVjVuYkpwalh3ZTdoREJmeFFFQlAydEdBWGZ2QVZxYlQ5OVV0bE11WEFn?=
+ =?utf-8?B?cnhMN2c2KzBQQXFxVXNYYkVsQUFiU1MwWjgrSkxCbTdVYlNDeVdqK1ZEVFhP?=
+ =?utf-8?B?aFlXV0JxWVpqc1Rud2p2MCs1K0M0TENOQnErc3NXZlBNWVlxaXFWYll2VE5U?=
+ =?utf-8?B?STJNalhhSm5uNWJhNHpDS3pSZjVocnZkZitHN2FBRlkxZVRacGZkaVRobTRn?=
+ =?utf-8?B?MHN6VlZoZGF1STE0dXdBbVRYOUxwemo4ckliU093UkVCT1pVbDhRMWJNTnJa?=
+ =?utf-8?B?SGlsaDNZeXRtcndjMFF5ZHl3azdFaEpVSUQvWXlwN3YxVWhhNnZ3MlVqM2dO?=
+ =?utf-8?B?UDllS3ZaV3dSQkhXMjF1UmMzTnhsL0QzdlhieUNtWnk2SCtSVTJCaWtvUllq?=
+ =?utf-8?B?NExpNGhvcWg4bFJHdmVoYUdPaktMUnZuMHphaDI3YVNNbkREdmliUkVDV2ZI?=
+ =?utf-8?B?TmJITkpubmV6cTVZWXM4SFB2bXJOY2RsT2xWaTBWQm9JeUxvUmtoaTlTV240?=
+ =?utf-8?B?clV0UWRrYzRUS3oxNkp4b2xxYXc3VEZnOGpGQjBUTkFYb2grd3pwWGVrTm0w?=
+ =?utf-8?B?V2RkNmI5UkRmVVFiL0tTRjIxS0FQUVhONTR6L1pLT0dFTnRWRi9icFoyUERX?=
+ =?utf-8?B?NWJJV2g2TVhDalluL1ZpMnE0dzR3aS9HWi9HY1JKcTFEL2ZJZDlFRm01ZUh2?=
+ =?utf-8?B?b2g2RU9tQ0xORkx0OGE2ODhuMnhFeTJxa3JjakhUSVJlSTNySWl0SDEwQjdI?=
+ =?utf-8?B?Y0RzcUFwdE1ZaDljK0JsQm11YVNXMGhnNEJ2U1J3SFQ1d2lSL2RDL0hnd0Qw?=
+ =?utf-8?B?aHVncTMvSGFYOWRSWVh6Z1Y2LzRMZlA3MnQza3hPdU96L0NPUUI5KzlEYndz?=
+ =?utf-8?B?bTFDNlRzb0dCbC9ERTJKK0xuc0NuVVprVUpVc21VVHlzUUY0NklLT1RlWmhq?=
+ =?utf-8?B?T3ZOTEJ0OUJOVk9YaUhKaUUvTXcrZXJLVktPRlJjNmxRTlViNkZOOTJBTXg5?=
+ =?utf-8?B?RzNqVGFUNndaVzh0eThScDZNeVAwaklaalA3VEVzNXpkbStVZFlSVGJOa1N2?=
+ =?utf-8?B?WkZZWWNGb1VUNW9kSDcrdm84bVY1azdaMXlkakkzQWJBeGlhdkd1Q3N5ZWtD?=
+ =?utf-8?B?ZDd6cFRGa282MlBPWmIzTFRQa0QxeXRlb3NiRFVTbG5jV2hUQ0k3REcvWjVM?=
+ =?utf-8?B?SHEvaktFVHlOanJ3clRtMkIyNmdmWmpucW9YNXlaeVZYSldLK0NZRXBjeC95?=
+ =?utf-8?B?cjNYTkFQZ3F2VXBhWHRVWGRSYU15aXRld2FQcGRVVHZBSjVlUGZRbDAxSEph?=
+ =?utf-8?B?YXphNm9SYy9OTEc1OXU3OTNrU2RUem1BcUZ2RmlodnRjZ3lEaEZIUllTeDNU?=
+ =?utf-8?B?eDRYNCtJYmlxUkNyM0lVVEJka01qN2c1NmcwZUpUbWZ0UFpZY09WWkNUK0pr?=
+ =?utf-8?B?V3IyTnJBZ2JoQXRZR2hPM0Y1NE1FZkl6TnNrRWY5QkxGeFNDdG5Md0h6NHAy?=
+ =?utf-8?B?VldYVnV1WnVXbHVPVTZ5YjduZXNwbWJlNWNSRDBIeHVBOG93YUg3Mi9PMW5a?=
+ =?utf-8?B?ZGNjZFV0YWJXWnI3UVY3bFR4bGgwSGFkaU52cjd4Q1JSVEg3cjZGNURBd3kv?=
+ =?utf-8?B?c0g5RlRLMVhtZDhaRVd3ZE5YVFBFYkdZUUt3Rk9yTGJiWkVjTlBTZDNKU0R4?=
+ =?utf-8?B?anArdnUybmF1bTRqY1craEphNStUOWhoYis5V05pWFY1eUhvUEoyWWxTQXBL?=
+ =?utf-8?B?blE2c3VpMUVNRXVnTUFTZ0VtM2JsR04rNWRJYXlRWnE4TGJpTENwSjBybkV6?=
+ =?utf-8?B?d3V3QzQxVmlJZFpUbXVlb0JBcHNUcXhCYlJlVE5mZnhTcFhEM0ZrcktFYUNh?=
+ =?utf-8?B?MEpBOVVKTXA2U3VKekMvU1A4cUdnR3Z0a1BPU3hsZmJRV3MxMnc4RFI1RmFM?=
+ =?utf-8?Q?FXJg=3D?=
 X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8304d10-f142-4707-41f6-08dcf37c2572
+X-MS-Exchange-CrossTenant-Network-Message-Id: a07c2e33-9075-4d32-b80f-08dcf3809d8b
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 16:02:52.2527
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Oct 2024 16:34:50.7004
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nd0bMB6lYEbZZLDfHozL5qT0s+d6An8XmGLa0KmAACOLwEw0SO/xhP7R3FR/ecQe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR01MB8486
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8whBLm9Kx1gTyzGDDf8qId8ALPLPPA2Bj3IS+UeZUQcLBldAkL5jl+FWMXsWVZuv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB7396
 
-
-
-On 10/19/2024 2:51 PM, Chuck Lever III wrote:
+On 10/23/2024 9:55 AM, Chuck Lever wrote:
+> On Wed, Oct 23, 2024 at 01:37:03PM +1100, NeilBrown wrote:
+>> Currently per-client DRC slot limits (for v4.1+) are calculated when the
+>> client connects, and they are left unchanged.  So earlier clients can
+>> get a larger share when memory is tight.
+>>
+>> The heuristic for choosing a number includes the number of configured
+>> server threads.  This is problematic for 2 reasons.
+>> 1/ sv_nrthreads is different in different net namespaces, but the
+>>     memory allocation is global across all namespaces.  So different
+>>     namespaces get treated differently without good reason.
+>> 2/ a future patch will auto-configure number of threads based on
+>>     load so that there will be no need to preconfigure a number.  This will
+>>     make the current heuristic even more arbitrary.
+>>
+>> NFSv4.1 allows the number of slots to be varied dynamically - in the
+>> reply to each SEQUENCE op.  With this patch we provide a provisional
+>> upper limit in the EXCHANGE_ID reply which might end up being too big,
+>> and adjust it with each SEQUENCE reply.
+>>
+>> The goal for when memory is tight is to allow each client to have a
+>> similar number of slots.  So clients that ask for larger slots get more
+>> memory.   This may not be ideal.  It could be changed later.
+>>
+>> So we track the sum of the slot sizes of all active clients, and share
+>> memory out based on the ratio of the slot size for a given client with
+>> the sum of slot sizes.  We never allow more in a SEQUENCE reply than we
+>> did in the EXCHANGE_ID reply.
+>>
+>> Signed-off-by: NeilBrown <neilb@suse.de>
 > 
-> 
->> On Oct 19, 2024, at 6:21 AM, Kinglong Mee <kinglongmee@gmail.com> wrote:
->>
->> Hi Chuck,
->>
->> On 2024/10/18 10:23 PM, Chuck Lever wrote:
->>> On Fri, Oct 18, 2024 at 05:23:29PM +0800, Kinglong Mee wrote:
->>>> Hi Chuck,
->>>>
->>>> On 2024/10/17 9:24 PM, Chuck Lever wrote:
->>>>> On Thu, Oct 17, 2024 at 10:52:19AM +0800, Kinglong Mee wrote:
->>>>>> Hi Chuck,
->>>>>>
->>>>>> On 2024/10/16 9:57 PM, Chuck Lever wrote:
->>>>>>> On Wed, Oct 16, 2024 at 07:48:25PM +0800, Kinglong Mee wrote:
->>>>>>>> NFSd's DRC key contains peer port, but rpcrdma does't support port resue now.
->>>>>>>> This patch supports resvport and resueport as tcp/udp for rpcrdma.
->>>>>>>
->>>>>>> An RDMA consumer is not in control of the "source port" in an RDMA
->>>>>>> connection, thus the port number is meaningless. This is why the
->>>>>>> Linux NFS client does not already support setting the source port on
->>>>>>> RDMA mounts, and why NFSD sets the source port value to zero on
->>>>>>> incoming connections; the DRC then always sees a zero port value in
->>>>>>> its lookup key tuple.
->>>>>>>
->>>>>>> See net/sunrpc/xprtrdma/svc_rdma_transport.c :: handle_connect_req() :
->>>>>>>
->>>>>>> 259         /* The remote port is arbitrary and not under the control of the
->>>>>>> 260          * client ULP. Set it to a fixed value so that the DRC continues
->>>>>>> 261          * to be effective after a reconnect.
->>>>>>> 262          */
->>>>>>> 263         rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
->>>>>>>
->>>>>>>
->>>>>>> As a general comment, your patch descriptions need to explain /why/
->>>>>>> each change is being made. For example, the initial patches in this
->>>>>>> series, although they properly split the changes into clean easily
->>>>>>> digestible hunks, are somewhat baffling until the reader gets to
->>>>>>> this one. This patch jumps right to announcing a solution.
->>>>>>
->>>>>> Thanks for your comment.
->>>>>>
->>>>>>>
->>>>>>> There's no cover letter tying these changes together with a problem
->>>>>>> statement. What problematic behavior did you see that motivated this
->>>>>>> approach?
->>>>>>
->>>>>> We have a private nfs server, it's DRC checks the src port, but rpcrdma doesnot
->>>>>> support resueport now, so we try to add it as tcp/udp.
->>>>>
->>>>> Thank you for clarifying!
->>>>>
->>>>> It's common for a DRC to key on the source port. Unfortunately,
->>>>> IIRC, the Linux RDMA Connection Manager does not provide an API for
->>>>> an RDMA consumer (such as the Linux NFS client) to set an arbitrary
->>>>> source port value on the active side. rdma_bind_addr() works on the
->>>>> listen side only.
->>>>
->>>> rdma_bind_addr() also works on client before rdma_resolve_addr.
->>>>  From man rdma_bind_addr,
->>>> "
->>>>    NOTES
->>>>        Typically,  this routine is called before calling rdma_listen to bind to
->>>>        a specific port number, but it may also be called on the active side of
->>>>        a connection before calling rdma_resolve_addr to bind to a specific address.
->>>> "
->>>> And 9P uses rdma_bind_addr() to bind to a privileged port at p9_rdma_bind_privport().
->>>>
->>>> Librdmacm supports rdma_get_local_addr(),rdma_get_peer_addr(),rdma_get_src_port() and
->>>> rdma_get_dst_port() at userspace.
->>>> So if needed, it's easy to support them in linux kernel.
->>>>
->>>> Rpcrdma and nvme use the src_addr/dst_addr directly as
->>>> (struct sockaddr *)&cma_xprt->sc_cm_id->route.addr.src_addr or
->>>> (struct sockaddr *)&queue->cm_id->route.addr.dst_addr.
->>>> Call helpers may be better then directly access.
->>>>
->>>> I think, there is a key question for rpcrdma.
->>>> Is the port in rpcrdma connect the same meaning as tcp/udp port?
->>>
->>> My recollection is they aren't the same. I can check into the
->>> semantic equivalency a little more.
->>>
->>> However, on RDMA connections, NFSD ignores the source port value for
->>> the purposes of evaluating the "secure" export option. Solaris, the
->>> other reference implementation of RPC/RDMA, does not even bother
->>> with this check on any transport.
->>>
->>> Reusing the source port is very fraught (ie, it has been the source
->>> of many TCP bugs) and privileged ports offer little real security.
->>> I'd rather not add this behavior for RDMA if we can get away with
->>> it. It's an antique.
->>>
->>>> If it is, we need support the reuseport.
->>>
->>> I'm not following you. If an NFS server ignores the source port
->>> value for the DRC and the secure port setting, why does the client
->>> need to reuse the port value when reconnecting?
->>
->> Yes, that's unnecessary.
->>
->>>
->>> Or, are you saying that you are not able to alter the behavior of
->>> your private NFS server implementation to ignore the client's source
->>> port?
->>
->> No, if the rdma port at client side is indeed meaningless,
->> I will modify our private NFS server.
->>
->> I just wanna known the meaning of port in rdma connection.
->> When mounting nfs export with rpcrdma, it connects an ip with port 20049 implicitly,
->> if the port in client side is meaningless, why is the server side meaningful?
->>
->> As I known, rdma_cm designs those APIs based on sockets,
->> initially, I think the rdma port is the same as tcp/udp port.
-> 
-> IIRC the 20049 port is needed for NFS/RDMA on iWARP. On
-> IB and RoCE, it's actually unnecessary.
+> Dynamic session slot table sizing is one of our major "to-do" items
+> for NFSD, and it seems to have potential for breaking things if we
+> don't get it right. I'd prefer to prioritize getting this one merged
+> into nfsd-next first, it seems like an important change to have.
 
-Right, the _destination_ port 20049 is IANA-registered because iWARP
-uses TCP and the server is already listening for NFS/TCP on port 2049.
-The NFSv4.1 spec allows dynamic negotiation over a single port, but
-to my knowledge no client or server implements that. And of course,
-NFSv3 and v4.0 are naive so they require an rdma-specific port.
+I agree but I do have one comment:
 
-IB and RoCE use the "port" number to create a service ID and have no
-conflict, so while it's technically unnecessary they have to listen
-on something, and the server defaults to 20049 anyway for consistency.
++ * Report the number of slots that we would like the client to limit
++ * itself to.  When the number of clients is large, we start sharing
++ * memory so all clients get the same number of slots.
 
-OTOH the _source_ port is a relic of the NFS/UDP days, where the
-UDP socket was kept over the life of the mountpoint and its source
-port never changed. The NFS DRC took advantage of this, in, like, 1989.
+That second sentence is a policy that is undoubtedly going to change
+someday. Also, the "number of clients is large" is not exactly what's
+being checked here, it's only looking at the current demand on whatever
+the shared pool it. I'd just delete the second sentence.
 
-For TCP, SO_REUSEPORT was used to retain the semantic, but it's not
-guaranteed to work (the port could be claimed by another socket, and
-even if not, the network might still deliver old packets and cause
-it to fail). Because the DRC is attempting to provide correctness,
-it's IMO very unwise for a new server implementation to require
-the source port to match.
-
-So, even if rdmacm now supports it, I don't think it's advisable to
-implement port reuse for NFS/RDMA.
+Don't forget that the v4.1+ DRC doesn't have to be preallocated. By
+design it's dynamic, for example if the client never performs any
+non-idempotent operations, it can be completely null. Personally
+I'd love to see that implemented someday.
 
 Tom.
 
-> I'll continue to sniff around and see if there's more to
-> find out.
 > 
 > 
->> Thanks,
->> Kinglong Mee
+>> ---
+>>   fs/nfsd/nfs4state.c | 81 ++++++++++++++++++++++++---------------------
+>>   fs/nfsd/nfs4xdr.c   |  2 +-
+>>   fs/nfsd/nfsd.h      |  6 +++-
+>>   fs/nfsd/nfssvc.c    |  7 ++--
+>>   fs/nfsd/state.h     |  2 +-
+>>   fs/nfsd/xdr4.h      |  2 --
+>>   6 files changed, 56 insertions(+), 44 deletions(-)
 >>
->>>>
->>>>>
->>>>> But perhaps my recollection is stale.
->>>>>
->>>>>
->>>>>> Maybe someone needs the src port at rpcrdma connect, I made those patches.
->>>>>>
->>>>>> For the knfsd and nfs client, I don't meet any problem.
->>>>>>
->>>>>> Thanks,
->>>>>> Kinglong Mee
->>>>>>>
->>>>>>>
->>>>>>>> Signed-off-by: Kinglong Mee <kinglongmee@gmail.com>
->>>>>>>> ---
->>>>>>>> net/sunrpc/xprtrdma/transport.c |  36 ++++++++++++
->>>>>>>> net/sunrpc/xprtrdma/verbs.c     | 100 ++++++++++++++++++++++++++++++++
->>>>>>>> net/sunrpc/xprtrdma/xprt_rdma.h |   5 ++
->>>>>>>> 3 files changed, 141 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
->>>>>>>> index 9a8ce5df83ca..fee3b562932b 100644
->>>>>>>> --- a/net/sunrpc/xprtrdma/transport.c
->>>>>>>> +++ b/net/sunrpc/xprtrdma/transport.c
->>>>>>>> @@ -70,6 +70,10 @@ unsigned int xprt_rdma_max_inline_write = RPCRDMA_DEF_INLINE;
->>>>>>>> unsigned int xprt_rdma_memreg_strategy = RPCRDMA_FRWR;
->>>>>>>> int xprt_rdma_pad_optimize;
->>>>>>>> static struct xprt_class xprt_rdma;
->>>>>>>> +static unsigned int xprt_rdma_min_resvport_limit = RPC_MIN_RESVPORT;
->>>>>>>> +static unsigned int xprt_rdma_max_resvport_limit = RPC_MAX_RESVPORT;
->>>>>>>> +unsigned int xprt_rdma_min_resvport = RPC_DEF_MIN_RESVPORT;
->>>>>>>> +unsigned int xprt_rdma_max_resvport = RPC_DEF_MAX_RESVPORT;
->>>>>>>>
->>>>>>>> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
->>>>>>>>
->>>>>>>> @@ -137,6 +141,24 @@ static struct ctl_table xr_tunables_table[] = {
->>>>>>>> .mode = 0644,
->>>>>>>> .proc_handler = proc_dointvec,
->>>>>>>> },
->>>>>>>> + {
->>>>>>>> + .procname = "rdma_min_resvport",
->>>>>>>> + .data = &xprt_rdma_min_resvport,
->>>>>>>> + .maxlen = sizeof(unsigned int),
->>>>>>>> + .mode = 0644,
->>>>>>>> + .proc_handler = proc_dointvec_minmax,
->>>>>>>> + .extra1 = &xprt_rdma_min_resvport_limit,
->>>>>>>> + .extra2 = &xprt_rdma_max_resvport_limit
->>>>>>>> + },
->>>>>>>> + {
->>>>>>>> + .procname = "rdma_max_resvport",
->>>>>>>> + .data = &xprt_rdma_max_resvport,
->>>>>>>> + .maxlen = sizeof(unsigned int),
->>>>>>>> + .mode = 0644,
->>>>>>>> + .proc_handler = proc_dointvec_minmax,
->>>>>>>> + .extra1 = &xprt_rdma_min_resvport_limit,
->>>>>>>> + .extra2 = &xprt_rdma_max_resvport_limit
->>>>>>>> + },
->>>>>>>> };
->>>>>>>>
->>>>>>>> #endif
->>>>>>>> @@ -346,6 +368,20 @@ xprt_setup_rdma(struct xprt_create *args)
->>>>>>>> xprt_rdma_format_addresses(xprt, sap);
->>>>>>>>
->>>>>>>> new_xprt = rpcx_to_rdmax(xprt);
->>>>>>>> +
->>>>>>>> + if (args->srcaddr)
->>>>>>>> + memcpy(&new_xprt->rx_srcaddr, args->srcaddr, args->addrlen);
->>>>>>>> + else {
->>>>>>>> + rc = rpc_init_anyaddr(args->dstaddr->sa_family,
->>>>>>>> + (struct sockaddr *)&new_xprt->rx_srcaddr);
->>>>>>>> + if (rc != 0) {
->>>>>>>> + xprt_rdma_free_addresses(xprt);
->>>>>>>> + xprt_free(xprt);
->>>>>>>> + module_put(THIS_MODULE);
->>>>>>>> + return ERR_PTR(rc);
->>>>>>>> + }
->>>>>>>> + }
->>>>>>>> +
->>>>>>>> rc = rpcrdma_buffer_create(new_xprt);
->>>>>>>> if (rc) {
->>>>>>>> xprt_rdma_free_addresses(xprt);
->>>>>>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->>>>>>>> index 63262ef0c2e3..0ce5123d799b 100644
->>>>>>>> --- a/net/sunrpc/xprtrdma/verbs.c
->>>>>>>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>>>>>>> @@ -285,6 +285,98 @@ static void rpcrdma_ep_removal_done(struct rpcrdma_notification *rn)
->>>>>>>> xprt_force_disconnect(ep->re_xprt);
->>>>>>>> }
->>>>>>>>
->>>>>>>> +static int rpcrdma_get_random_port(void)
->>>>>>>> +{
->>>>>>>> + unsigned short min = xprt_rdma_min_resvport, max = xprt_rdma_max_resvport;
->>>>>>>> + unsigned short range;
->>>>>>>> + unsigned short rand;
->>>>>>>> +
->>>>>>>> + if (max < min)
->>>>>>>> + return -EADDRINUSE;
->>>>>>>> + range = max - min + 1;
->>>>>>>> + rand = get_random_u32_below(range);
->>>>>>>> + return rand + min;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static void rpcrdma_set_srcport(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
->>>>>>>> +{
->>>>>>>> +        struct sockaddr *sap = (struct sockaddr *)&id->route.addr.src_addr;
->>>>>>>> +
->>>>>>>> + if (r_xprt->rx_srcport == 0 && r_xprt->rx_xprt.reuseport) {
->>>>>>>> + switch (sap->sa_family) {
->>>>>>>> + case AF_INET6:
->>>>>>>> + r_xprt->rx_srcport = ntohs(((struct sockaddr_in6 *)sap)->sin6_port);
->>>>>>>> + break;
->>>>>>>> + case AF_INET:
->>>>>>>> + r_xprt->rx_srcport = ntohs(((struct sockaddr_in *)sap)->sin_port);
->>>>>>>> + break;
->>>>>>>> + }
->>>>>>>> + }
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int rpcrdma_get_srcport(struct rpcrdma_xprt *r_xprt)
->>>>>>>> +{
->>>>>>>> + int port = r_xprt->rx_srcport;
->>>>>>>> +
->>>>>>>> + if (port == 0 && r_xprt->rx_xprt.resvport)
->>>>>>>> + port = rpcrdma_get_random_port();
->>>>>>>> + return port;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static unsigned short rpcrdma_next_srcport(struct rpcrdma_xprt *r_xprt, unsigned short port)
->>>>>>>> +{
->>>>>>>> + if (r_xprt->rx_srcport != 0)
->>>>>>>> + r_xprt->rx_srcport = 0;
->>>>>>>> + if (!r_xprt->rx_xprt.resvport)
->>>>>>>> + return 0;
->>>>>>>> + if (port <= xprt_rdma_min_resvport || port > xprt_rdma_max_resvport)
->>>>>>>> + return xprt_rdma_max_resvport;
->>>>>>>> + return --port;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static int rpcrdma_bind(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
->>>>>>>> +{
->>>>>>>> + struct sockaddr_storage myaddr;
->>>>>>>> + int err, nloop = 0;
->>>>>>>> + int port = rpcrdma_get_srcport(r_xprt);
->>>>>>>> + unsigned short last;
->>>>>>>> +
->>>>>>>> + /*
->>>>>>>> +  * If we are asking for any ephemeral port (i.e. port == 0 &&
->>>>>>>> +  * r_xprt->rx_xprt.resvport == 0), don't bind.  Let the local
->>>>>>>> +  * port selection happen implicitly when the socket is used
->>>>>>>> +  * (for example at connect time).
->>>>>>>> +  *
->>>>>>>> +  * This ensures that we can continue to establish TCP
->>>>>>>> +  * connections even when all local ephemeral ports are already
->>>>>>>> +  * a part of some TCP connection.  This makes no difference
->>>>>>>> +  * for UDP sockets, but also doesn't harm them.
->>>>>>>> +  *
->>>>>>>> +  * If we're asking for any reserved port (i.e. port == 0 &&
->>>>>>>> +  * r_xprt->rx_xprt.resvport == 1) rpcrdma_get_srcport above will
->>>>>>>> +  * ensure that port is non-zero and we will bind as needed.
->>>>>>>> +  */
->>>>>>>> + if (port <= 0)
->>>>>>>> + return port;
->>>>>>>> +
->>>>>>>> + memcpy(&myaddr, &r_xprt->rx_srcaddr, r_xprt->rx_xprt.addrlen);
->>>>>>>> + do {
->>>>>>>> + rpc_set_port((struct sockaddr *)&myaddr, port);
->>>>>>>> + err = rdma_bind_addr(id, (struct sockaddr *)&myaddr);
->>>>>>>> + if (err == 0) {
->>>>>>>> + if (r_xprt->rx_xprt.reuseport)
->>>>>>>> + r_xprt->rx_srcport = port;
->>>>>>>> + break;
->>>>>>>> + }
->>>>>>>> + last = port;
->>>>>>>> + port = rpcrdma_next_srcport(r_xprt, port);
->>>>>>>> + if (port > last)
->>>>>>>> + nloop++;
->>>>>>>> + } while (err == -EADDRINUSE && nloop != 2);
->>>>>>>> +
->>>>>>>> + return err;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>>>>>      struct rpcrdma_ep *ep)
->>>>>>>> {
->>>>>>>> @@ -300,6 +392,12 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>>>>> if (IS_ERR(id))
->>>>>>>> return id;
->>>>>>>>
->>>>>>>> + rc = rpcrdma_bind(r_xprt, id);
->>>>>>>> + if (rc) {
->>>>>>>> + rc = -ENOTCONN;
->>>>>>>> + goto out;
->>>>>>>> + }
->>>>>>>> +
->>>>>>>> ep->re_async_rc = -ETIMEDOUT;
->>>>>>>> rc = rdma_resolve_addr(id, NULL, (struct sockaddr *)&xprt->addr,
->>>>>>>>         RDMA_RESOLVE_TIMEOUT);
->>>>>>>> @@ -328,6 +426,8 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
->>>>>>>> if (rc)
->>>>>>>> goto out;
->>>>>>>>
->>>>>>>> + rpcrdma_set_srcport(r_xprt, id);
->>>>>>>> +
->>>>>>>> return id;
->>>>>>>>
->>>>>>>> out:
->>>>>>>> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
->>>>>>>> index 8147d2b41494..9c7bcb541267 100644
->>>>>>>> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
->>>>>>>> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
->>>>>>>> @@ -433,6 +433,9 @@ struct rpcrdma_xprt {
->>>>>>>> struct delayed_work rx_connect_worker;
->>>>>>>> struct rpc_timeout rx_timeout;
->>>>>>>> struct rpcrdma_stats rx_stats;
->>>>>>>> +
->>>>>>>> + struct sockaddr_storage rx_srcaddr;
->>>>>>>> + unsigned short rx_srcport;
->>>>>>>> };
->>>>>>>>
->>>>>>>> #define rpcx_to_rdmax(x) container_of(x, struct rpcrdma_xprt, rx_xprt)
->>>>>>>> @@ -581,6 +584,8 @@ static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
->>>>>>>>   */
->>>>>>>> extern unsigned int xprt_rdma_max_inline_read;
->>>>>>>> extern unsigned int xprt_rdma_max_inline_write;
->>>>>>>> +extern unsigned int xprt_rdma_min_resvport;
->>>>>>>> +extern unsigned int xprt_rdma_max_resvport;
->>>>>>>> void xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap);
->>>>>>>> void xprt_rdma_free_addresses(struct rpc_xprt *xprt);
->>>>>>>> void xprt_rdma_close(struct rpc_xprt *xprt);
->>>>>>>> -- 
->>>>>>>> 2.47.0
-> 
-> 
-> --
-> Chuck Lever
-> 
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index ca6b5b52f77d..834e9aa12b82 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -1909,44 +1909,26 @@ static inline u32 slot_bytes(struct nfsd4_channel_attrs *ca)
+>>   }
+>>   
+>>   /*
+>> - * XXX: If we run out of reserved DRC memory we could (up to a point)
+>> - * re-negotiate active sessions and reduce their slot usage to make
+>> - * room for new connections. For now we just fail the create session.
+>> + * When a client connects it gets a max_requests number that would allow
+>> + * it to use 1/8 of the memory we think can reasonably be used for the DRC.
+>> + * Later in response to SEQUENCE operations we further limit that when there
+>> + * are more than 8 concurrent clients.
+>>    */
+>> -static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca, struct nfsd_net *nn)
+>> +static u32 nfsd4_get_drc_mem(struct nfsd4_channel_attrs *ca)
+>>   {
+>>   	u32 slotsize = slot_bytes(ca);
+>>   	u32 num = ca->maxreqs;
+>> -	unsigned long avail, total_avail;
+>> -	unsigned int scale_factor;
+>> +	unsigned long avail;
+>>   
+>>   	spin_lock(&nfsd_drc_lock);
+>> -	if (nfsd_drc_max_mem > nfsd_drc_mem_used)
+>> -		total_avail = nfsd_drc_max_mem - nfsd_drc_mem_used;
+>> -	else
+>> -		/* We have handed out more space than we chose in
+>> -		 * set_max_drc() to allow.  That isn't really a
+>> -		 * problem as long as that doesn't make us think we
+>> -		 * have lots more due to integer overflow.
+>> -		 */
+>> -		total_avail = 0;
+>> -	avail = min((unsigned long)NFSD_MAX_MEM_PER_SESSION, total_avail);
+>> -	/*
+>> -	 * Never use more than a fraction of the remaining memory,
+>> -	 * unless it's the only way to give this client a slot.
+>> -	 * The chosen fraction is either 1/8 or 1/number of threads,
+>> -	 * whichever is smaller.  This ensures there are adequate
+>> -	 * slots to support multiple clients per thread.
+>> -	 * Give the client one slot even if that would require
+>> -	 * over-allocation--it is better than failure.
+>> -	 */
+>> -	scale_factor = max_t(unsigned int, 8, nn->nfsd_serv->sv_nrthreads);
+>>   
+>> -	avail = clamp_t(unsigned long, avail, slotsize,
+>> -			total_avail/scale_factor);
+>> -	num = min_t(int, num, avail / slotsize);
+>> -	num = max_t(int, num, 1);
+>> -	nfsd_drc_mem_used += num * slotsize;
+>> +	avail = min(NFSD_MAX_MEM_PER_SESSION,
+>> +		    nfsd_drc_max_mem / 8);
+>> +
+>> +	num = clamp_t(int, num, 1, avail / slotsize);
+>> +
+>> +	nfsd_drc_slotsize_sum += slotsize;
+>> +
+>>   	spin_unlock(&nfsd_drc_lock);
+>>   
+>>   	return num;
+>> @@ -1957,10 +1939,33 @@ static void nfsd4_put_drc_mem(struct nfsd4_channel_attrs *ca)
+>>   	int slotsize = slot_bytes(ca);
+>>   
+>>   	spin_lock(&nfsd_drc_lock);
+>> -	nfsd_drc_mem_used -= slotsize * ca->maxreqs;
+>> +	nfsd_drc_slotsize_sum -= slotsize;
+>>   	spin_unlock(&nfsd_drc_lock);
+>>   }
+>>   
+>> +/*
+>> + * Report the number of slots that we would like the client to limit
+>> + * itself to.  When the number of clients is large, we start sharing
+>> + * memory so all clients get the same number of slots.
+>> + */
+>> +static unsigned int nfsd4_get_drc_slots(struct nfsd4_session *session)
+>> +{
+>> +	u32 slotsize = slot_bytes(&session->se_fchannel);
+>> +	unsigned long avail;
+>> +	unsigned long slotsize_sum = READ_ONCE(nfsd_drc_slotsize_sum);
+>> +
+>> +	if (slotsize_sum < slotsize)
+>> +		slotsize_sum = slotsize;
+>> +
+>> +	/* Find our share of avail mem across all active clients,
+>> +	 * then limit to 1/8 of total, and configured max
+>> +	 */
+>> +	avail = min3(nfsd_drc_max_mem * slotsize / slotsize_sum,
+>> +		     nfsd_drc_max_mem / 8,
+>> +		     NFSD_MAX_MEM_PER_SESSION);
+>> +	return max3(1UL, avail / slotsize, session->se_fchannel.maxreqs);
+>> +}
+>> +
+>>   static struct nfsd4_session *alloc_session(struct nfsd4_channel_attrs *fattrs,
+>>   					   struct nfsd4_channel_attrs *battrs)
+>>   {
+>> @@ -3735,7 +3740,7 @@ static __be32 check_forechannel_attrs(struct nfsd4_channel_attrs *ca, struct nfs
+>>   	 * Note that we always allow at least one slot, because our
+>>   	 * accounting is soft and provides no guarantees either way.
+>>   	 */
+>> -	ca->maxreqs = nfsd4_get_drc_mem(ca, nn);
+>> +	ca->maxreqs = nfsd4_get_drc_mem(ca);
+>>   
+>>   	return nfs_ok;
+>>   }
+>> @@ -4229,10 +4234,12 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>>   	slot = session->se_slots[seq->slotid];
+>>   	dprintk("%s: slotid %d\n", __func__, seq->slotid);
+>>   
+>> -	/* We do not negotiate the number of slots yet, so set the
+>> -	 * maxslots to the session maxreqs which is used to encode
+>> -	 * sr_highest_slotid and the sr_target_slot id to maxslots */
+>> -	seq->maxslots = session->se_fchannel.maxreqs;
+>> +	/* Negotiate number of slots: set the target, and use the
+>> +	 * same for max as long as it doesn't decrease the max
+>> +	 * (that isn't allowed).
+>> +	 */
+>> +	seq->target_maxslots = nfsd4_get_drc_slots(session);
+>> +	seq->maxslots = max(seq->maxslots, seq->target_maxslots);
+>>   
+>>   	trace_nfsd_slot_seqid_sequence(clp, seq, slot);
+>>   	status = check_slot_seqid(seq->seqid, slot->sl_seqid,
+>> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+>> index f118921250c3..e4e706872e54 100644
+>> --- a/fs/nfsd/nfs4xdr.c
+>> +++ b/fs/nfsd/nfs4xdr.c
+>> @@ -4955,7 +4955,7 @@ nfsd4_encode_sequence(struct nfsd4_compoundres *resp, __be32 nfserr,
+>>   	if (nfserr != nfs_ok)
+>>   		return nfserr;
+>>   	/* sr_target_highest_slotid */
+>> -	nfserr = nfsd4_encode_slotid4(xdr, seq->maxslots - 1);
+>> +	nfserr = nfsd4_encode_slotid4(xdr, seq->target_maxslots - 1);
+>>   	if (nfserr != nfs_ok)
+>>   		return nfserr;
+>>   	/* sr_status_flags */
+>> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+>> index 4b56ba1e8e48..33c9db3ee8b6 100644
+>> --- a/fs/nfsd/nfsd.h
+>> +++ b/fs/nfsd/nfsd.h
+>> @@ -90,7 +90,11 @@ extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
+>>   extern struct mutex		nfsd_mutex;
+>>   extern spinlock_t		nfsd_drc_lock;
+>>   extern unsigned long		nfsd_drc_max_mem;
+>> -extern unsigned long		nfsd_drc_mem_used;
+>> +/* Storing the sum of the slot sizes for all active clients (across
+>> + * all net-namespaces) allows a share of total available memory to
+>> + * be allocaed to each client based on its slot size.
+>> + */
+>> +extern unsigned long		nfsd_drc_slotsize_sum;
+>>   extern atomic_t			nfsd_th_cnt;		/* number of available threads */
+>>   
+>>   extern const struct seq_operations nfs_exports_op;
+>> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+>> index 49e2f32102ab..e596eb5d10db 100644
+>> --- a/fs/nfsd/nfssvc.c
+>> +++ b/fs/nfsd/nfssvc.c
+>> @@ -78,7 +78,7 @@ DEFINE_MUTEX(nfsd_mutex);
+>>    */
+>>   DEFINE_SPINLOCK(nfsd_drc_lock);
+>>   unsigned long	nfsd_drc_max_mem;
+>> -unsigned long	nfsd_drc_mem_used;
+>> +unsigned long	nfsd_drc_slotsize_sum;
+>>   
+>>   #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>>   static const struct svc_version *localio_versions[] = {
+>> @@ -589,10 +589,13 @@ void nfsd_reset_versions(struct nfsd_net *nn)
+>>    */
+>>   static void set_max_drc(void)
+>>   {
+>> +	if (nfsd_drc_max_mem)
+>> +		return;
+>> +
+>>   	#define NFSD_DRC_SIZE_SHIFT	7
+>>   	nfsd_drc_max_mem = (nr_free_buffer_pages()
+>>   					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
+>> -	nfsd_drc_mem_used = 0;
+>> +	nfsd_drc_slotsize_sum = 0;
+>>   	dprintk("%s nfsd_drc_max_mem %lu \n", __func__, nfsd_drc_max_mem);
+>>   }
+>>   
+>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>> index 79c743c01a47..fe71ae3c577b 100644
+>> --- a/fs/nfsd/state.h
+>> +++ b/fs/nfsd/state.h
+>> @@ -214,7 +214,7 @@ static inline struct nfs4_delegation *delegstateid(struct nfs4_stid *s)
+>>   /* Maximum number of slots per session. 160 is useful for long haul TCP */
+>>   #define NFSD_MAX_SLOTS_PER_SESSION     160
+>>   /* Maximum  session per slot cache size */
+>> -#define NFSD_SLOT_CACHE_SIZE		2048
+>> +#define NFSD_SLOT_CACHE_SIZE		2048UL
+>>   /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
+>>   #define NFSD_CACHE_SIZE_SLOTS_PER_SESSION	32
+>>   #define NFSD_MAX_MEM_PER_SESSION  \
+>> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+>> index 2a21a7662e03..71b87190a4a6 100644
+>> --- a/fs/nfsd/xdr4.h
+>> +++ b/fs/nfsd/xdr4.h
+>> @@ -575,9 +575,7 @@ struct nfsd4_sequence {
+>>   	u32			slotid;			/* request/response */
+>>   	u32			maxslots;		/* request/response */
+>>   	u32			cachethis;		/* request */
+>> -#if 0
+>>   	u32			target_maxslots;	/* response */
+>> -#endif /* not yet */
+>>   	u32			status_flags;		/* response */
+>>   };
+>>   
+>> -- 
+>> 2.46.0
+>>
 > 
 
 
