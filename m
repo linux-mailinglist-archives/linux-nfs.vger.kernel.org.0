@@ -1,177 +1,225 @@
-Return-Path: <linux-nfs+bounces-7415-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7416-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 441819ADE74
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 10:07:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 143D99ADF00
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 10:21:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 406821C21777
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 08:07:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 94C3528A3D4
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 08:21:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628281AF0BC;
-	Thu, 24 Oct 2024 08:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A174D1AF0CB;
+	Thu, 24 Oct 2024 08:18:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mta06-relay.cloud.vadesecure.com (mta06-relay.cloud.vadesecure.com [163.172.55.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560D819F104;
-	Thu, 24 Oct 2024 08:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945751AE005
+	for <linux-nfs@vger.kernel.org>; Thu, 24 Oct 2024 08:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.55.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729757242; cv=none; b=lXBx968ig4F+2uTpSjEKET9iVZ0Yfc1FZ2htkZNNNMzTF+yOFD4OavpGFkBemlmbvHXsypc8ZDtFvtPQH8go6A/Hrut5bCA545nrWtwD7tNdPsz5Skv3Pqce65CwfEcC3IkPdKvebRruX5kMBru9RrccwzVaqGw6ko8phiCByEQ=
+	t=1729757887; cv=none; b=ic9A4/hqonpYQtRbl05+PXJ3x3B7uAUJmM7eb3+vUdJtskCcsCQnMKa/YnuRDWMOAwz1FZssdb3OGkx7rjwF0DqEJzDJefq5Do2JeCPMUwXCvs8hhK1MVEpeSHcboGPTPBiW+NZMpjqTdoMKvi/cFNTU10dOmbnfpHz984h8enc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729757242; c=relaxed/simple;
-	bh=KBY3Xq32mH8OhQWVjBV/Bq8SdNGCd36z6O+Nh0qKmDQ=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ehn7treRhPiyNJlmiSIwgNY/U9Ipmih4TKg45PfBUMHDQOQVHU+OpEoz9TBIVht/X8JJ8Zynu0aJd/03LXAE+z3ScDJNd06v3LUrwhsnl/ZCqWyzBzapn6m30dMSojcIqvqEVZ/9UxujjbXVhzFT6Xpd69BL31AK1iN3q88wIwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XYz193blfz1HLRk;
-	Thu, 24 Oct 2024 16:02:53 +0800 (CST)
-Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id 603111A016C;
-	Thu, 24 Oct 2024 16:07:15 +0800 (CST)
-Received: from [10.174.179.93] (10.174.179.93) by
- kwepemh100016.china.huawei.com (7.202.181.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 24 Oct 2024 16:07:11 +0800
-Subject: Re: [PATCH v3 -next 00/15] sysctl: move sysctls from vm_table into
- its own files
-To: Joel Granados <j.granados@samsung.com>
-References: <CGME20241010141133eucas1p1999f17c74198d3880cbd345276bcd3bd@eucas1p1.samsung.com>
- <20241010152215.3025842-1-yukaixiong@huawei.com>
- <ngknhtecptqk56gtiikvb5mdujhtxdyngzndiaz7ifslzrki7q@4wcykosdnsna>
-CC: <akpm@linux-foundation.org>, <mcgrof@kernel.org>, <ysato@users.osdn.me>,
-	<dalias@libc.org>, <glaubitz@physik.fu-berlin.de>, <luto@kernel.org>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <viro@zeniv.linux.org.uk>,
-	<brauner@kernel.org>, <jack@suse.cz>, <kees@kernel.org>,
-	<willy@infradead.org>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
-	<lorenzo.stoakes@oracle.com>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <paul@paul-moore.com>, <jmorris@namei.org>,
-	<linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>, <dhowells@redhat.com>,
-	<haifeng.xu@shopee.com>, <baolin.wang@linux.alibaba.com>,
-	<shikemeng@huaweicloud.com>, <dchinner@redhat.com>, <bfoster@redhat.com>,
-	<souravpanda@google.com>, <hannes@cmpxchg.org>, <rientjes@google.com>,
-	<pasha.tatashin@soleen.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
-	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
-	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
-	<wangkefeng.wang@huawei.com>, <sunnanyong@huawei.com>
-From: yukaixiong <yukaixiong@huawei.com>
-Message-ID: <79b33640-fc81-b4c1-4967-30189d9a4b23@huawei.com>
-Date: Thu, 24 Oct 2024 16:07:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1729757887; c=relaxed/simple;
+	bh=NsTlMUAUHvIqwKHlgFXtuYyFWQ3uraiHvuucoHrlVWU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XdWxf1z9+sjyiRp95ZsSZqn8hXVLuXHQGl+tlD6UB/srSHz2f9bRkluVf21UQVsKsYNbqatGMIhLzBbVtjSdITjeCoDPLCwi+V2lmeCu8+qTakBJwKoC2eKFd/0fYqfBtjfUKP85Tixsrw2z6q+CiTBKwXkhtguUMP09sFbqolI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu; spf=pass smtp.mailfrom=minesparis.psl.eu; arc=none smtp.client-ip=163.172.55.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minesparis.psl.eu
+Received: from smtp-out-1.mines-paristech.fr (smtp-out-1.mines-paristech.fr [77.158.173.156])
+	by mta06-relay.cloud.vadesecure.com (vceu3mtao02p) with ESMTP id 4XYz73327Wz5yjp;
+	Thu, 24 Oct 2024 10:07:59 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
+	by smtp-out-1.mines-paristech.fr (Postfix) with ESMTP id 5F10AC16AA;
+	Thu, 24 Oct 2024 10:07:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 5A4591C00DD;
+	Thu, 24 Oct 2024 10:07:59 +0200 (CEST)
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id yGhuSYyWKJra; Thu, 24 Oct 2024 10:07:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id E2A891C00EE;
+	Thu, 24 Oct 2024 10:07:58 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr E2A891C00EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=minesparis.psl.eu;
+	s=9f5ccecf-24a0-4eb3-a015-b6ac3b07c299; t=1729757278;
+	bh=NsTlMUAUHvIqwKHlgFXtuYyFWQ3uraiHvuucoHrlVWU=;
+	h=Message-ID:From:To:Date:MIME-Version;
+	b=rd5N0t9M+CRKrvdyY2TXmVf8pT3RepqAIX1asKRHOG+WWeWF3lFWPnnpjDmPDHcXO
+	 +c6m4XT39HbsdgdWlqaKbRof3WHE5OgqpD4KR7+0c7UBqZNfx85raWGpicSBWIJDAC
+	 wdAeiM47J5DNSD4YhcN83Oqjntus6miRZZnfjmpzvez5LXwhW5oblGJnSZ/4HZuhca
+	 B+9tcu6F4eKMYyPMJrh+DFoIc0MNIRqs830QEe/B/M6B+pvHmgcMETJoT2wa9AuhAH
+	 qL5kdNDbPIesTcwPRM0Y6d0AUVJYBYmbUBw/kNXseoLKVy334E2mxp7VK7GRQU+jRQ
+	 wjNp/KCU7iulw==
+X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id LomSgyYYH3Jl; Thu, 24 Oct 2024 10:07:58 +0200 (CEST)
+Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id 696561C00DD;
+	Thu, 24 Oct 2024 10:07:58 +0200 (CEST)
+Message-ID: <bef86fe9904bde857ab734bebbfa2e9e60ccba37.camel@minesparis.psl.eu>
+Subject: Re: nfsd stuck in D (disk sleep) state
+From: =?ISO-8859-1?Q?Beno=EEt?= Gschwind <benoit.gschwind@minesparis.psl.eu>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date: Thu, 24 Oct 2024 10:07:58 +0200
+In-Reply-To: <4A9BFCA9-7A15-4CA7-B198-0A15C3A24D11@oracle.com>
+References: 
+	<1cbdfe5e604d1e39a12bc5cca098684500f6a509.camel@minesparis.psl.eu>
+	 <4A9BFCA9-7A15-4CA7-B198-0A15C3A24D11@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ngknhtecptqk56gtiikvb5mdujhtxdyngzndiaz7ifslzrki7q@4wcykosdnsna>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggpeml500026.china.huawei.com (7.185.36.106) To
- kwepemh100016.china.huawei.com (7.202.181.102)
+X-VRC-SPAM-STATUS: 0,-100,gggruggvucftvghtrhhoucdtuddrgeeftddrvdeikedguddvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfevpdfqfgfvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredttderjeenucfhrhhomhepuegvnhhofphtucfishgthhifihhnugcuoegsvghnohhithdrghhstghhfihinhgusehmihhnvghsphgrrhhishdrphhslhdrvghuqeenucggtffrrghtthgvrhhnpeekudfggeeuleejjeffieehueelueeffeelveekffduudekhfefveehtedtfefggfenucfkphepjeejrdduheekrddujeefrdduheeipdejjedrudehkedrudekuddrvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhmrgigmhhsghhsihiivgepuddtgeekheejiedpihhnvghtpeejjedrudehkedrudejfedrudehiedphhgvlhhopehsmhhtphdqohhuthdquddrmhhinhgvshdqphgrrhhishhtvggthhdrfhhrpdhmrghilhhfrhhomhepsggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshhprghrihhsrdhpshhlrdgvuhdpnhgspghrtghpthhtohepvddprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-VRC-SPAM-STATE: legit
+X-VRC-POLICY-STATUS: t=1,a=1,l=0
 
+Hello,
 
+I will do it next time I get the issue, thanks by advance.
 
-On 2024/10/21 15:22, Joel Granados wrote:
-> On Thu, Oct 10, 2024 at 11:22:00PM +0800, Kaixiong Yu wrote:
->> This patch series moves sysctls of vm_table in kernel/sysctl.c to
->> places where they actually belong, and do some related code clean-ups.
->> After this patch series, all sysctls in vm_table have been moved into its
->> own files, meanwhile, delete vm_table.
->>
->> All the modifications of this patch series base on
->> linux-next(tags/next-20241010). To test this patch series, the code was
->> compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
->> x86_64 architectures. After this patch series is applied, all files
->> under /proc/sys/vm can be read or written normally.
->>
->> Changes in v3:
->>   - change patch1~10, patch14 title suggested by Joel Granados
->>   - change sysctl_stat_interval to static type in patch1
->>   - add acked-by from Paul Moore in patch7
->>   - change dirtytime_expire_interval to static type in patch9
->>   - add acked-by from Anna Schumaker in patch11
->>
->> Changes in v2:
->>   - fix sysctl_max_map_count undeclared issue in mm/nommu.c for patch6
->>   - update changelog for patch7/12, suggested by Kees/Paul
->>   - fix patch8, sorry for wrong changes and forget to built with NOMMU
->>   - add reviewed-by from Kees except patch8 since patch8 is wrong in v1
->>   - add reviewed-by from Jan Kara, Christian Brauner in patch12
->>
->> Kaixiong Yu (15):
->>    mm: vmstat: move sysctls to mm/vmstat.c
->>    mm: filemap: move sysctl to mm/filemap.c
->>    mm: swap: move sysctl to mm/swap.c
->>    mm: vmscan: move vmscan sysctls to mm/vmscan.c
->>    mm: util: move sysctls to mm/util.c
->>    mm: mmap: move sysctl to mm/mmap.c
->>    security: min_addr: move sysctl to security/min_addr.c
->>    mm: nommu: move sysctl to mm/nommu.c
->>    fs: fs-writeback: move sysctl to fs/fs-writeback.c
->>    fs: drop_caches: move sysctl to fs/drop_caches.c
->>    sunrpc: use vfs_pressure_ratio() helper
->>    fs: dcache: move the sysctl to fs/dcache.c
->>    x86: vdso: move the sysctl to arch/x86/entry/vdso/vdso32-setup.c
->>    sh: vdso: move the sysctl to arch/sh/kernel/vsyscall/vsyscall.c
->>    sysctl: remove unneeded include
->>
->>   arch/sh/kernel/vsyscall/vsyscall.c |  14 ++
->>   arch/x86/entry/vdso/vdso32-setup.c |  16 ++-
->>   fs/dcache.c                        |  21 ++-
->>   fs/drop_caches.c                   |  23 ++-
->>   fs/fs-writeback.c                  |  30 ++--
->>   include/linux/dcache.h             |   7 +-
->>   include/linux/mm.h                 |  23 ---
->>   include/linux/mman.h               |   2 -
->>   include/linux/swap.h               |   9 --
->>   include/linux/vmstat.h             |  11 --
->>   include/linux/writeback.h          |   4 -
->>   kernel/sysctl.c                    | 221 -----------------------------
->>   mm/filemap.c                       |  18 ++-
->>   mm/internal.h                      |  10 ++
->>   mm/mmap.c                          |  54 +++++++
->>   mm/nommu.c                         |  15 +-
->>   mm/swap.c                          |  16 ++-
->>   mm/swap.h                          |   1 +
->>   mm/util.c                          |  67 +++++++--
->>   mm/vmscan.c                        |  23 +++
->>   mm/vmstat.c                        |  44 +++++-
->>   net/sunrpc/auth.c                  |   2 +-
->>   security/min_addr.c                |  11 ++
->>   23 files changed, 330 insertions(+), 312 deletions(-)
->>
->> -- 
->> 2.34.1
->>
-> General comment for the patchset in general. I would consider making the
-> new sysctl tables const. There is an effort for doing this and it has
-> already lanted in linux-next. So if you base your patch from a recent
-> next release, then it should just work. If you *do* decide to add a
-> const qualifier, then note that you will create a dependency with the
-> sysctl patchset currently in next and that will have to go in before.
->
-> Best
->
+Best regards
 
-Sorry,  I don't understand what is the meaning of "create a dependency 
-with the sysctl patchset".
-
-Do you just want me to change all "static struct ctl_table" type table 
-into "static const struct ctl_table" type in my patchset?
+Le mercredi 23 octobre 2024 =C3=A0 19:38 +0000, Chuck Lever III a =C3=A9cri=
+t=C2=A0:
+>=20
+>=20
+> > On Oct 23, 2024, at 3:27=E2=80=AFPM, Beno=C3=AEt Gschwind
+> > <benoit.gschwind@minesparis.psl.eu> wrote:
+> >=20
+> > Hello,
+> >=20
+> > I have a nfs server using debian 11 (Linux hostname 6.1.0-25-amd64
+> > #1
+> > SMP PREEMPT_DYNAMIC Debian 6.1.106-3 (2024-08-26) x86_64 GNU/Linux)
+> >=20
+> > In some heavy workload some nfsd goes in D state and seems to never
+> > leave this state. I did a python script to monitor how long a
+> > process
+> > stay in particular state and I use it to monitor nfsd state. I get
+> > the
+> > following result :
+> >=20
+> > [...]
+> > 178056 I (idle) 0:25:24.475 [nfsd]
+> > 178057 I (idle) 0:25:24.475 [nfsd]
+> > 178058 I (idle) 0:25:24.475 [nfsd]
+> > 178059 I (idle) 0:25:24.475 [nfsd]
+> > 178060 I (idle) 0:25:24.475 [nfsd]
+> > 178061 I (idle) 0:25:24.475 [nfsd]
+> > 178062 I (idle) 0:24:15.638 [nfsd]
+> > 178063 I (idle) 0:24:13.488 [nfsd]
+> > 178064 I (idle) 0:24:13.488 [nfsd]
+> > 178065 I (idle) 0:00:00.000 [nfsd]
+> > 178066 I (idle) 0:00:00.000 [nfsd]
+> > 178067 I (idle) 0:00:00.000 [nfsd]
+> > 178068 I (idle) 0:00:00.000 [nfsd]
+> > 178069 S (sleeping) 0:00:02.147 [nfsd]
+> > 178070 S (sleeping) 0:00:02.147 [nfsd]
+> > 178071 S (sleeping) 0:00:02.147 [nfsd]
+> > 178072 S (sleeping) 0:00:02.147 [nfsd]
+> > 178073 S (sleeping) 0:00:02.147 [nfsd]
+> > 178074 D (disk sleep) 1:29:25.809 [nfsd]
+> > 178075 S (sleeping) 0:00:02.147 [nfsd]
+> > 178076 S (sleeping) 0:00:02.147 [nfsd]
+> > 178077 S (sleeping) 0:00:02.147 [nfsd]
+> > 178078 S (sleeping) 0:00:02.147 [nfsd]
+> > 178079 S (sleeping) 0:00:02.147 [nfsd]
+> > 178080 D (disk sleep) 1:29:25.809 [nfsd]
+> > 178081 D (disk sleep) 1:29:25.809 [nfsd]
+> > 178082 D (disk sleep) 0:28:04.444 [nfsd]
+> >=20
+> > All process not shown are in idle state. Columns are the following:
+> > PID, state, state name, amoung of time the state did not changed
+> > and
+> > the process was not interrupted, and /proc/PID/status Name entry.
+> >=20
+> > As you can read some nfsd process are in disk sleep state since
+> > more
+> > than 1 hour, but looking at the disk activity, there is almost no
+> > I/O.
+> >=20
+> > I tried to restart nfs-server but I get the following error from
+> > the
+> > kernel:
+> >=20
+> > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 12:00:10 hostname kernel: rpc-srv/tcp: nfsd: got error -32
+> > when sending 20 bytes - shutting down socket
+> > oct. 23 12:00:10 hostname kernel: rpc-srv/tcp: nfsd: got error -32
+> > when sending 20 bytes - shutting down socket
+> >=20
+> > The only way to recover seems to reboot the kernel. I guess because
+> > the
+> > kernel force the reboot after a given timeout.
+> >=20
+> > My setup involve in order :
+> > - scsi driver
+> > - mdraid on top of scsi (raid6)
+> > - btrfs ontop of mdraid
+> > - nfsd ontop of btrfs
+> >=20
+> >=20
+> > The setup is not very fast as expected, but it seems that in some
+> > situation nfsd never leave the disk sleep state. the exports
+> > options
+> > are: gss/krb5i(rw,sync,no_wdelay,no_subtree_check,fsid=3DXXXXX). The
+> > situation is not commun but it's always happen at some point. For
+> > instance in the case I report here, my server booted the 2024-10-01
+> > and
+> > was stuck about the 2024-10-23. I did reduced by a large amount the
+> > frequency of issue by using no_wdelay (I did thought that I did
+> > solved
+> > the issue when I started to use this option).
+> >=20
+> > My guess is hadware bug, scsi bug, btrfs bug or nfsd bug ?
+> >=20
+> > Any clue on this topic or any advice is wellcome.
+>=20
+> Generate stack traces for each process on the system
+> using "sudo echo t > /proc/sysrq-trigger" and then
+> examine the output in the system journal. Note the
+> stack contents for the processes that look stuck.
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
 
