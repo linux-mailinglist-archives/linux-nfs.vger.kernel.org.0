@@ -1,203 +1,627 @@
-Return-Path: <linux-nfs+bounces-7457-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7458-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8749F9AEAA3
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 17:34:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E11B09AEE97
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 19:50:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15CCC1F23630
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 15:34:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C97A1F21A63
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 17:50:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D87D1EF09C;
-	Thu, 24 Oct 2024 15:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4GyaQ23"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BCA1FBF78;
+	Thu, 24 Oct 2024 17:50:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazon11023092.outbound.protection.outlook.com [52.101.44.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2771E1C728E
-	for <linux-nfs@vger.kernel.org>; Thu, 24 Oct 2024 15:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729784081; cv=none; b=jevX2jrBiJPAu7tww2BXDva4yBzUD/2Mc+LI0+rLUDWfwLIodS1RMVeg5As1a1xKPj08/bxjPRZFL3YcKPtDHK1O4qWKh+ExepqThJ0hAarID08ar0TBtUF9GXq5inA4eY0myc/SVIcWeevx6L3zbNfJXxcxp+DwADQkN9drokI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729784081; c=relaxed/simple;
-	bh=EEJVnXxV4VQl5yPKBdp4U+4InSl6Grsgo42KdpMbZUQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gwIV+Th+ZgIYGmTd27VhobC6upA8MJ6qDyFskOFHhBh00InAZXbpthM5VtzTemcOP65293lIvnBJSaxMETaxzbgpsA4KVZsCfyM/oCAqV6OStc2Km9FjAXsK9tPfAqRI6pz/PpYAM7s0w1yU6gIbuBwg5KmBUF/UPLsVmTLfkOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4GyaQ23; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85748C4CEC7;
-	Thu, 24 Oct 2024 15:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729784080;
-	bh=EEJVnXxV4VQl5yPKBdp4U+4InSl6Grsgo42KdpMbZUQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=P4GyaQ23t0cZGGRH2GqxiT3sjEv2buInBGybhSBv+s6BE/bZSU/tG1V32IcNaJ2vM
-	 AnPv5rXqEzouRB3KGWdEhUcflCArpK6Nc7NNv6gOXM5pD0VcGwKF8V247holZZgq/A
-	 7WTXazhWcw9pHn9ZUHXwXN/fsmD0vZLvE4PBmPTa1mQ/HixbYZJ2f4ywARjF5VzbSu
-	 AtOcI4fJ38x3dccsX66v9E2kr88NrRnQ6tWwwkFmsBHLComOTZc7O+ktY0mTyvUk3L
-	 2a/uv9RI64Qg6ulhXpVyYHCLBNkL34gWY3XdPMuOIhbgqYIJMJzA3YZUswbdKTi+3Q
-	 CeBp45CNCfJOg==
-Message-ID: <30f62ce7f3a6aa0d02f07bfd1be71b3f82f83961.camel@kernel.org>
-Subject: Re: [PATCH v2] nfsd: Don't fail OP_SETCLIENTID when there are too
- many clients.
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, okorniev@redhat.com, Dai Ngo
- <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>
-Date: Thu, 24 Oct 2024 11:34:37 -0400
-In-Reply-To: <172972144286.81717.3023946721770566532@noble.neil.brown.name>
-References: <172972144286.81717.3023946721770566532@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5C54738;
+	Thu, 24 Oct 2024 17:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.44.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729792224; cv=fail; b=k6kSRxEVGGB8F0gCiZNuEXvA8gmI4jwqePyvctiEPyc2HuIPo9SBghHYG8xc/5skf/C7iK5XlWjt4d3VIUAoup6osqP3bShJru2JZZOSMuA8mKgU8MKrVLYAA1U/WczQLrLLAj3NCkTb/ui7G+/JUrGnBRSmxOtKmv995/rnxpg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729792224; c=relaxed/simple;
+	bh=3JRxiPX6TaBnWGZZ+NEnZ4Mrdcrx4Tkz+zdClg1rG3w=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=o8KsDPfkxmiMFXlVUNokRmAXuctuSrUy+WrS4S2FfchA2xGbu2FY+x7BEjm/KUftt9b1aufC6ezud0NyjvcP90wU3dgwTnYrXdW/MqDxEJ75Xuw0Pa32nUU24zsufbuAZdR1rip0soSG2KiF0S9cngGBc2bcaAy0xHpGYhv3Lfw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=52.101.44.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UZ09mxnBwtpG11M46WQo1It9CFw7jLBQaS2LmWOJTU0rOo6EjfneGE8XpaT9+qLDKOu6sbqcV8bQ0/I9p5Vl0iMpsxuv7BkTZKumAhb40JasuVT+OWCTEflqfhDbwWTYhKV6Je1L9SF/PVkOEiCjcCPz2opZhAaw2ugyYhJKzjyI+Retiz07ysU849oV6jX3TX/obaHzaUHRblZafEX2TkUTlWLLzCc3RbZWq4T7pfFIKhzPbLw0P1+7I5oECHL/FTU9bCGk57/1xgr5RhqcoGFGEMLRfqT6ophxvvhR8v+RAHGLUch0vx4OiHX4kk86K38aHEOzBlu3o/CfzqrOqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NYkb/FkCeeILJBWwYfXPhQfnZOCU8qku+kw6BXATuEU=;
+ b=iSrKnhy9RObsx9S8U8ot6XLlO3EJCp4OoYTq+Aj8D0TY2VRHOeHZlXIcMl4ZLc010Ha4Y+6TqxZpcP00Gp+nxr2PNStEzv5NJwnd3ne5/8Y6wJfZ4eG71UPc2/XypWXX7sVasEoWmYtSWq+G7jo7kp+xvUed9kXIu0Wfz47044WydauKCuKunyEuSx5BOA4zpMvfkajcEXUp3b1t1VmVVLDmXwootDXjPFien/GAtsdRRVXVx66tyweglk9Q1W7E0byodQisa7psD42IqWA71NgBbgRcwv4YK9V0IQq5o+ychAfVUL5FLDsr4n07UdMMpwiX4+tu3/zqfHK8mqPX4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
+ SN4PR01MB7408.prod.exchangelabs.com (2603:10b6:806:1eb::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7982.34; Thu, 24 Oct 2024 17:50:17 +0000
+Received: from SN6PR01MB5246.prod.exchangelabs.com
+ ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
+ ([fe80::cf18:495f:c6c:ec90%3]) with mapi id 15.20.8069.019; Thu, 24 Oct 2024
+ 17:50:17 +0000
+Message-ID: <6aa37253-8a0f-4323-911d-7281c4a0f14d@talpey.com>
+Date: Thu, 24 Oct 2024 13:50:15 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/5] SUNRPC: support resvport and reuseport for
+ rpcrdma
+To: Kinglong Mee <kinglongmee@gmail.com>,
+ Chuck Lever III <chuck.lever@oracle.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <1a765211-2d1e-48ef-a5ca-a6b39b833d5a@gmail.com>
+ <Zw/GUeIymfw+2upD@tissot.1015granger.net>
+ <a4dc7417-1d0c-4700-9102-0ecc2c9e81ab@gmail.com>
+ <ZxEP/zBCaSgxbJU7@tissot.1015granger.net>
+ <c04e7270-1415-4c6a-8bca-a77cc0403287@gmail.com>
+ <ZxJvZqmKsPTtOFUR@tissot.1015granger.net>
+ <290d18f3-befe-44b4-b79b-983983f1418f@gmail.com>
+ <3225E57B-40A4-4CF6-BDF1-3A90BC313D22@oracle.com>
+ <6eb46c99-d410-4090-8832-394e7aa69adc@talpey.com>
+ <6c9b31e6-efb8-4b84-9af8-1dc6ed768d1f@gmail.com>
+Content-Language: en-US
+From: Tom Talpey <tom@talpey.com>
+In-Reply-To: <6c9b31e6-efb8-4b84-9af8-1dc6ed768d1f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MN2PR05CA0046.namprd05.prod.outlook.com
+ (2603:10b6:208:236::15) To SN6PR01MB5246.prod.exchangelabs.com
+ (2603:10b6:805:d8::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|SN4PR01MB7408:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55a9e855-7b99-479a-4fa2-08dcf45451d9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RVI2RVJXWTBEV0F1UmprR0hCZjRvVk9xMWhHRkdQZDNLUDVTankxcThweThH?=
+ =?utf-8?B?VVMrc3BOVEZxUU42WXdKS1VHK2FwR0NHWkE5UFlTWGRybHNaU0JhTm9QTEZs?=
+ =?utf-8?B?aXR0bW12QlRJL1hsVFBCK1g2UTdEMXI5ZEoxODMwcDBGbkovdnR0NmxYMStO?=
+ =?utf-8?B?THdjNDVtM2Z4NGkxNjJuRk9kbHA4eEQxWW9CWk1mMXM4UHNNdExBWFZBU2tk?=
+ =?utf-8?B?TEs3cVduYzMraDhTZEROMXJOQmdSZEpTSXc5amhhVHBsSVNFam9SUHFBRm1Y?=
+ =?utf-8?B?a2FveTVsN2FJM205T3VKSHdVUzJ3cXp6YUptUE4yWjFtV3h0UG5QTnE4WDlS?=
+ =?utf-8?B?dTU0R2lZWGk4NlN1d3dhZWdHdXdkSytzelVtREQyU2cxSDZMcmd2VC92Lzhz?=
+ =?utf-8?B?UTVZS3FtVS9zOUwreVFRd0lSWHZ3WGZ1UzhEVHhVSWljdVZJS1IwU2lSajBM?=
+ =?utf-8?B?ZFN4VmREZnY0bU1ldUwremhMZ2tYYklKNzI3RkZ2SXdib3plbEhGWlJHVEFL?=
+ =?utf-8?B?ZFJJb3I3RkY0a0hTZUg5R3pvK1lKZ0haWjBOakFFeTZJekNVNU12VXVGM2Vz?=
+ =?utf-8?B?MjE1TjcrOUQ5L2pWb1VhYnRha0haSWRPYWhCRDk0NU15OFFvRGV1dVp4bVdM?=
+ =?utf-8?B?dmI3Rnd2MnZydkQzYi9SZkJGOEZKQWN3UUNLLzZYaTE5T2x2NisvS3V0SVRy?=
+ =?utf-8?B?NHZadjFLdUtzNGlORk8rRjJTbWY4Vy9xbGMzRmNIWnNaSUlCZUZvalJEKzd6?=
+ =?utf-8?B?Z3dGcCtxQkFBbnlldHRWZUw0U3ZGR09GNEd0SXB2QTc3SkFXNm53YUYrSVRj?=
+ =?utf-8?B?clZkYnNyNlQ1N2Y5ejZtcHRRdy9XeFZOTDZBWVF3UmlKTXgwOCtsWS9pUnFp?=
+ =?utf-8?B?MURaWWhaZUFjbGZySTdGRnltQ1d4VTJ2R3Q3Rk5ibkhpTGNjTk9FYWcydEF6?=
+ =?utf-8?B?V240R1BFdHN1OUhkUkNrZlRDSXI1bTVDOVYxUkRmMmdyU3NSc0U5czlxM1NL?=
+ =?utf-8?B?WEwxenVGdGEvWWJWNnQrb3JHMlBaQjdOSkpuRTdyZ2VqOGVIUTVZclRGSmpR?=
+ =?utf-8?B?TVkzNU9uUWxUL2UyNGRXTUtNQXBNWnJYTnFWMmp1VmFFcjU5VEV4ZDlGcFlY?=
+ =?utf-8?B?NDl0M0FnZ1MzaWFnS2NpekRTZTF3S2lyZy96ejJhU24rMWFGUkhKWDJOREZJ?=
+ =?utf-8?B?N2tKQUFvYk0xblhhZlh5QW1jT1VhYzZkOG5pRmt2TWZKZWtWQVJ2bUV4TUs3?=
+ =?utf-8?B?ZWtHQ0o1UmJlSVZVQjBSc2YxTm5GSXhzeUFNemttZjlNN1dXYVU5MmpCR0FZ?=
+ =?utf-8?B?OFl1YW5vdkZiZEtkSkdyckxzNXY1ejNudzJxaGQzRnM2SWtncWF6K09TR04v?=
+ =?utf-8?B?YTNsdGQwUDBhM1ZUMHYzVkhaeGVjMk9MSjJ3YVZoUFpLQkJmMFJRYU1LbVZt?=
+ =?utf-8?B?UFV2UHhKalJWVXFweFo1Sk5OUEo2NG5McWVLUE1sekI4SUtqRFpjTEpaeTBv?=
+ =?utf-8?B?TUVJRzJmY1ZFZmFFc2Q4QzN3ZHV5SkxNM0VSQm5Qdk16ZTNqU0Vadk5zQVRm?=
+ =?utf-8?B?bnRJdDFQOG5TZ04xcHJ4dzZmQzY0K3dObkhIMVZuRWZaeUs0cUI3SmFKbE5Y?=
+ =?utf-8?B?ODczUEpEUzVJK2QwSmhXeXUzUUgzeDlMd1I0aGNMMys4T05LdnBDcG9XaThi?=
+ =?utf-8?Q?IcaAyLctjttz/2H8R0iY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WkRXSC9BcGhSRXoxSThVb0tTWUxlYU5LU0txRjBtWXAwU3ZicGh3S2R6NTNI?=
+ =?utf-8?B?TStnYmprS25HT250SVp6aEZjUjFMbTM1eGJFSUFrUjU2aHFESXVoTldDVmNO?=
+ =?utf-8?B?MDhuMCtPM0lGOGUrOXFYWUFQWTAxOGkvb29QRDBqcjFWeEk5RWNyelNWYlEr?=
+ =?utf-8?B?ckJ1WXRzUHlBSUZUR2xDMHptem9YdFM4Y0xERXI2R2RwQjZPNkNiTWIrN2Zu?=
+ =?utf-8?B?QmxxaW5ZVHhsRndFY2lGZGxuOCtPVFlaY2xHRDRwTmI1NnNLRTNwTS9wWHN2?=
+ =?utf-8?B?RFBjbnY5VU1HN2RkdnRHQ0ZBWm9GcDRvUnlqYWhpTUhkNmpQb0NNV1g0OGFx?=
+ =?utf-8?B?UGVSVkR0RlZKUGllV2pIb0NLczVCOVhuUmdJeW1MRVd1MnZhcmw3WW15clJD?=
+ =?utf-8?B?ZEx1c1NZTEFMOG4zT255ajZjaWFWb2dickJqZGZoNWdWc3ZmMlJwazJWYWtG?=
+ =?utf-8?B?N0dENmcxcDZSUFovcUEvVzJ6RWliRHdmKzFudHNiOXRkSEJwcXhia0RoMmdi?=
+ =?utf-8?B?ODVNVEE0S2ZvL1RQcDd6Z1BucXNlcU91eitHclNBRGdDUWNodFh4WStMK2xn?=
+ =?utf-8?B?S0lrck1EWXlHWjZ4TzhiclZoRGp5dDVNdmdxaWs1RUVrVG9zREdJVUhRUVVG?=
+ =?utf-8?B?ZnIvNWdxUXg0bDcwMUF6RFhYMEZ5Tkp0eHk4MlNzTE4yQkllOE5VYWFyVVZH?=
+ =?utf-8?B?dHVzbnZyd3pKcFpHYWN6WWFROVgzcjlzR0J1TXlkZFFoeGNDbi8xNXNPVEU2?=
+ =?utf-8?B?eW9JQXZ0UTJkNnFjZUYyMFBaREgra21aaWpQazlVbnpVVm8wVVNrWUJTMEcz?=
+ =?utf-8?B?a2Y5MlVoUEs2bDVLa0t4SnhiM0QvMmxpTExRTXhMdWxTOC9tWHRDMGxuUlFU?=
+ =?utf-8?B?MTlVTEhVWDF2Z2laNGczczhFUlRQTExaT1YxdE10R3g4bXZzTWFsaHJEUHNj?=
+ =?utf-8?B?M2hWZUhuTExJSVhLOGp4VTFzNVdqS0dHQnhZbThrVlphWVgzVGQ4VEVva1pX?=
+ =?utf-8?B?SmhmdktnNkZGSDVPdytNWFlEcElRaVBhWVpvWW9WcUI5SlVMcENGdy9NRk9j?=
+ =?utf-8?B?OXF4V08xbExvK1p4bXJJd1BOTk5QS0lsRWFiVG1pWjY5MzZPczlub2xSVDE1?=
+ =?utf-8?B?amFXUStJUFhKRTQzSnJsQ3B6Lzc2Qy9BM2t6K1BlOHZTSjRUNlArU0RlL0w2?=
+ =?utf-8?B?VEkrelo4NUZaaFlXMHpsOGdrYUdoVVVVQ3FadzhJRU1ZWVhENnRWR2N2eXIv?=
+ =?utf-8?B?QTZvdWcvTC9FY2JIZTl0MDQzcmltTVpRV09vcThpSzlyRUZUTnpZSHNmaXVv?=
+ =?utf-8?B?WnlCSGpETGhVN3pzaHEyclpvbUxZaHJKcHZzTUNHM285SGw3ZThBWlNaeEo2?=
+ =?utf-8?B?aDd0UXhsRmVkWTNHMEJWaTlpaHlTTkluOW1XZTFTSDNHdUJaZ2U3TitJMVRZ?=
+ =?utf-8?B?OHBob1JHa25uL0t5ai9jc1poMmVMeXZQTi8rNnQ4NFlYck9pdGhCcUZzQWNl?=
+ =?utf-8?B?Z0U0WjROT1RTaG0veDdaZld2SE03ZDdETTlyRnpBcHcxWm9ibmNZZC81QTVW?=
+ =?utf-8?B?bGVadkt0a1ZQNFJvYU53bW55QjlKa0xQMWpYbHllR1BSWUxJcUx6NUxwNmF4?=
+ =?utf-8?B?a0NPSkVWL1pTRHdoZ0swQWd6a3FlbWFKb1EzTXdLeUdLVGUzU05STFkrWS9Y?=
+ =?utf-8?B?TWJlRDJLeWFtNUp1MHp1VGY5TXNGbFd6VWRQV0hmWlB3bHNYc3UybUE0cWsw?=
+ =?utf-8?B?ZDNYQ3p2bmYzWXZRQzhpUjhnSjZIZDUvbFFMcEpRMlRFakNYZ0wzYU1zL3Aw?=
+ =?utf-8?B?RkVJMjhFelpCSUNIZGRUbU5QWHBxdTZWR1lhR1RnRzJYS0dUUml3ZHk5UXh0?=
+ =?utf-8?B?dm41UEpWejREbDRXVlBTUmNqK2Jmd1Z0SnJjZ1NLbVJoVmM2NGhlb0t4TXNw?=
+ =?utf-8?B?N202b0JzMStsWnBUVy9BYzNOTVlLZ0ZTbHFuQmF2cnFubjNSRzJKYXcvdmlW?=
+ =?utf-8?B?ckVQTUZYR0tsVGJBblQ3VVVNd2xOWG1TZFI2Rll0ckV5V1dkSm5SN1FLTnVz?=
+ =?utf-8?B?dkNDcnYyc000cTBtVE5BcFVkd010cHU4dEVCUWFINkxndDlIaWExZWcxbk83?=
+ =?utf-8?Q?t11w=3D?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55a9e855-7b99-479a-4fa2-08dcf45451d9
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2024 17:50:16.9699
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8MUG6eqUtMJ+DB8/9asL2ZY/qy2FwzTqgBa6kZ6MT8attmhd9Sz1o1qbO0o1xKVJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR01MB7408
 
-On Thu, 2024-10-24 at 09:10 +1100, NeilBrown wrote:
-> Failing OP_SETCLIENTID or OP_EXCHANGE_ID should only happen if there is
-> memory allocation failure.  Putting a hard limit on the number of
-> clients is really helpful as it will either happen too early and prevent
+On 10/23/2024 11:10 PM, Kinglong Mee wrote:
+> On 2024/10/24 12:02 AM, Tom Talpey wrote:
+>> On 10/19/2024 2:51 PM, Chuck Lever III wrote:
+>>>> On Oct 19, 2024, at 6:21 AM, Kinglong Mee <kinglongmee@gmail.com> wrote:
+>>>> Hi Chuck,
+>>>> On 2024/10/18 10:23 PM, Chuck Lever wrote:
+>>>>> On Fri, Oct 18, 2024 at 05:23:29PM +0800, Kinglong Mee wrote:
+>>>>>> Hi Chuck,
+>>>>>> On 2024/10/17 9:24 PM, Chuck Lever wrote:
+>>>>>>> On Thu, Oct 17, 2024 at 10:52:19AM +0800, Kinglong Mee wrote:
+>>>>>>>> Hi Chuck,
+>>>>>>>> On 2024/10/16 9:57 PM, Chuck Lever wrote:
+>>>>>>>>> On Wed, Oct 16, 2024 at 07:48:25PM +0800, Kinglong Mee wrote:
+>>>>>>>>>> NFSd's DRC key contains peer port, but rpcrdma does't support port resue now.
+>>>>>>>>>> This patch supports resvport and resueport as tcp/udp for rpcrdma.
+>>>>>>>>>
+>>>>>>>>> An RDMA consumer is not in control of the "source port" in an RDMA
+>>>>>>>>> connection, thus the port number is meaningless. This is why the
+>>>>>>>>> Linux NFS client does not already support setting the source port on
+>>>>>>>>> RDMA mounts, and why NFSD sets the source port value to zero on
+>>>>>>>>> incoming connections; the DRC then always sees a zero port value in
+>>>>>>>>> its lookup key tuple.
+>>>>>>>>>
+>>>>>>>>> See net/sunrpc/xprtrdma/svc_rdma_transport.c :: handle_connect_req() :
+>>>>>>>>>
+>>>>>>>>> 259         /* The remote port is arbitrary and not under the control of the
+>>>>>>>>> 260          * client ULP. Set it to a fixed value so that the DRC continues
+>>>>>>>>> 261          * to be effective after a reconnect.
+>>>>>>>>> 262          */
+>>>>>>>>> 263         rpc_set_port((struct sockaddr *)&newxprt->sc_xprt.xpt_remote, 0);
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> As a general comment, your patch descriptions need to explain /why/
+>>>>>>>>> each change is being made. For example, the initial patches in this
+>>>>>>>>> series, although they properly split the changes into clean easily
+>>>>>>>>> digestible hunks, are somewhat baffling until the reader gets to
+>>>>>>>>> this one. This patch jumps right to announcing a solution.
+>>>>>>>>
+>>>>>>>> Thanks for your comment.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> There's no cover letter tying these changes together with a problem
+>>>>>>>>> statement. What problematic behavior did you see that motivated this
+>>>>>>>>> approach?
+>>>>>>>>
+>>>>>>>> We have a private nfs server, it's DRC checks the src port, but rpcrdma doesnot
+>>>>>>>> support resueport now, so we try to add it as tcp/udp.
+>>>>>>>
+>>>>>>> Thank you for clarifying!
+>>>>>>>
+>>>>>>> It's common for a DRC to key on the source port. Unfortunately,
+>>>>>>> IIRC, the Linux RDMA Connection Manager does not provide an API for
+>>>>>>> an RDMA consumer (such as the Linux NFS client) to set an arbitrary
+>>>>>>> source port value on the active side. rdma_bind_addr() works on the
+>>>>>>> listen side only.
+>>>>>>
+>>>>>> rdma_bind_addr() also works on client before rdma_resolve_addr.
+>>>>>>   From man rdma_bind_addr,
+>>>>>> "
+>>>>>>     NOTES
+>>>>>>         Typically,  this routine is called before calling rdma_listen to bind to
+>>>>>>         a specific port number, but it may also be called on the active side of
+>>>>>>         a connection before calling rdma_resolve_addr to bind to a specific address.
+>>>>>> "
+>>>>>> And 9P uses rdma_bind_addr() to bind to a privileged port at p9_rdma_bind_privport().
+>>>>>>
+>>>>>> Librdmacm supports rdma_get_local_addr(),rdma_get_peer_addr(),rdma_get_src_port() and
+>>>>>> rdma_get_dst_port() at userspace.
+>>>>>> So if needed, it's easy to support them in linux kernel.
+>>>>>>
+>>>>>> Rpcrdma and nvme use the src_addr/dst_addr directly as
+>>>>>> (struct sockaddr *)&cma_xprt->sc_cm_id->route.addr.src_addr or
+>>>>>> (struct sockaddr *)&queue->cm_id->route.addr.dst_addr.
+>>>>>> Call helpers may be better then directly access.
+>>>>>>
+>>>>>> I think, there is a key question for rpcrdma.
+>>>>>> Is the port in rpcrdma connect the same meaning as tcp/udp port?
+>>>>>
+>>>>> My recollection is they aren't the same. I can check into the
+>>>>> semantic equivalency a little more.
+>>>>>
+>>>>> However, on RDMA connections, NFSD ignores the source port value for
+>>>>> the purposes of evaluating the "secure" export option. Solaris, the
+>>>>> other reference implementation of RPC/RDMA, does not even bother
+>>>>> with this check on any transport.
+>>>>>
+>>>>> Reusing the source port is very fraught (ie, it has been the source
+>>>>> of many TCP bugs) and privileged ports offer little real security.
+>>>>> I'd rather not add this behavior for RDMA if we can get away with
+>>>>> it. It's an antique.
+>>>>>
+>>>>>> If it is, we need support the reuseport.
+>>>>>
+>>>>> I'm not following you. If an NFS server ignores the source port
+>>>>> value for the DRC and the secure port setting, why does the client
+>>>>> need to reuse the port value when reconnecting?
+>>>>
+>>>> Yes, that's unnecessary.
+>>>>
+>>>>>
+>>>>> Or, are you saying that you are not able to alter the behavior of
+>>>>> your private NFS server implementation to ignore the client's source
+>>>>> port?
+>>>>
+>>>> No, if the rdma port at client side is indeed meaningless,
+>>>> I will modify our private NFS server.
+>>>>
+>>>> I just wanna known the meaning of port in rdma connection.
+>>>> When mounting nfs export with rpcrdma, it connects an ip with port 20049 implicitly,
+>>>> if the port in client side is meaningless, why is the server side meaningful?
+>>>>
+>>>> As I known, rdma_cm designs those APIs based on sockets,
+>>>> initially, I think the rdma port is the same as tcp/udp port.
+>>>
+>>> IIRC the 20049 port is needed for NFS/RDMA on iWARP. On
+>>> IB and RoCE, it's actually unnecessary.
+>>
+>> Right, the _destination_ port 20049 is IANA-registered because iWARP
+>> uses TCP and the server is already listening for NFS/TCP on port 2049.
+>> The NFSv4.1 spec allows dynamic negotiation over a single port, but
+>> to my knowledge no client or server implements that. And of course,
+>> NFSv3 and v4.0 are naive so they require an rdma-specific port.
+>>
+>> IB and RoCE use the "port" number to create a service ID and have no
+>> conflict, so while it's technically unnecessary they have to listen
+>> on something, and the server defaults to 20049 anyway for consistency.
+>>
+>> OTOH the _source_ port is a relic of the NFS/UDP days, where the
+>> UDP socket was kept over the life of the mountpoint and its source
+>> port never changed. The NFS DRC took advantage of this, in, like, 1989.
+>>
+>> For TCP, SO_REUSEPORT was used to retain the semantic, but it's not
+>> guaranteed to work (the port could be claimed by another socket, and
+>> even if not, the network might still deliver old packets and cause
+>> it to fail). Because the DRC is attempting to provide correctness,
+>> it's IMO very unwise for a new server implementation to require
+>> the source port to match.
+>>
+>> So, even if rdmacm now supports it, I don't think it's advisable to
+>> implement port reuse for NFS/RDMA.
+> 
+> Nfscache uses following data for duplicate request match,
+>          struct {
+>                  /* Keep often-read xid, csum in the same cache line: */
+>                  __be32                  k_xid;
+>                  __wsum                  k_csum;
+>                  u32                     k_proc;
+>                  u32                     k_prot;
+>                  u32                     k_vers;
+>                  unsigned int            k_len;
+>                  struct sockaddr_in6     k_addr;
+>          } c_key;
+> 
+> Nfs-ganesha uses address(conatins port), xid, and a 256bytes checksum
+> (libntirpc's rdma set it to zero now) for duplicate request match.
+> 
+> At nfs client, a xprt connect generate xid value for a rpc requst based on
+> its own random number(xprt->xid = get_random_u32(); and xprt->xid++;).
 
-"unhelpful" ?
+The problem with the traditional DRC is that it's completely unspecified
+and has been implemented in numerous different ways. And it's frequently
+implemented with an LRU eviction policy, which is basically the opposite
+of what's needed.
 
-> clients that the server can easily handle, or too late and allow clients
-> when the server is swamped.
->=20
-> The calculated limit is still useful for expiring courtesy clients where
-> there are "too many" clients, but it shouldn't prevent the creation of
-> active clients.
->=20
-> Testing of lots of clients against small-mem servers reports repeated
-> NFS4ERR_DELAY responses which doesn't seem helpful.  There may have been
-> reports of similar problems in production use.
->=20
-> Also remove an outdated comment - we do use a slab cache.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4state.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d585c267731b..0791a43b19e6 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2218,21 +2218,16 @@ STALE_CLIENTID(clientid_t *clid, struct nfsd_net =
-*nn)
->  	return 1;
->  }
-> =20
-> -/*=20
-> - * XXX Should we use a slab cache ?
-> - * This type of memory management is somewhat inefficient, but we use it
-> - * anyway since SETCLIENTID is not a common operation.
-> - */
->  static struct nfs4_client *alloc_client(struct xdr_netobj name,
->  				struct nfsd_net *nn)
->  {
->  	struct nfs4_client *clp;
->  	int i;
-> =20
-> -	if (atomic_read(&nn->nfs4_client_count) >=3D nn->nfs4_max_clients) {
-> +	if (atomic_read(&nn->nfs4_client_count) >=3D nn->nfs4_max_clients &&
-> +	    atomic_read(&nn->nfsd_courtesy_clients) > 0)
->  		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> -		return NULL;
-> -	}
-> +
->  	clp =3D kmem_cache_zalloc(client_slab, GFP_KERNEL);
->  	if (clp =3D=3D NULL)
->  		return NULL;
+Then on top of that nobody really tests it. The "nfsidem" test that I
+wrote for Connectathon performs a series of non-idempotent tests, but
+it requires error injection to cause connection failures while it's
+running.
 
-Do we even need to check nn->nfs4_max_clients at all?
+I'd encourage you to try that. I predict you'll find many, many issues
+in pre-NFSv4.1 servers.
 
-Maybe we should just kick the laundromat whenever=20
-nfsd_courtesy_clients > 0. I would suggest just removing
-nfs4_max_clients altogether, but it looks like
-nfs4_get_client_reaplist() uses it and it's not clear to me what would
-better replace it.
---=20
-Jeff Layton <jlayton@kernel.org>
+https://git.linux-nfs.org/?p=steved/cthon04.git;a=summary
+
+https://git.linux-nfs.org/?p=steved/cthon04.git;a=blob;f=special/nfsidem.c
+
+BTW, thanks for mentioning nconnect. That's another good reason for not
+looking at the source port - in addition to the source address!
+
+Tom.
+
+> 
+> Like that, a NFS mount with single xprt connet can run correctly,
+> two requests from the single xprt never contains a conflict xid;
+> but for with more xprts (nconnect > 1), two requests from different xprt may
+> contain the same xid from the same address(different port).
+> 
+> If port reuse is not guaranteed to work, we remove the use of the port from
+> the server's DRC（like svcrdma set it to 0, or a new implementation）.
+> 
+> Like nfs-ganesha or some private DRC, they implements a drc pool for
+> each client base on address, and match other keys(xid,checksum).
+> Different xprts(same address, different port) shares a drc pool,
+> unlucky, they check xid and a zero checksum.
+> 
+> If we agree with the meaningless of nfs client's port,
+> and remove it from server's drc, xid generation should be modified
+> to per client, not per xprt.
+> 
+> Thanks,
+> Kinglong Mee
+> 
+>>
+>> Tom.
+>>
+>>> I'll continue to sniff around and see if there's more to
+>>> find out.
+>>>
+>>>
+>>>> Thanks,
+>>>> Kinglong Mee
+>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> But perhaps my recollection is stale.
+>>>>>>>
+>>>>>>>
+>>>>>>>> Maybe someone needs the src port at rpcrdma connect, I made those patches.
+>>>>>>>>
+>>>>>>>> For the knfsd and nfs client, I don't meet any problem.
+>>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Kinglong Mee
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Kinglong Mee <kinglongmee@gmail.com>
+>>>>>>>>>> ---
+>>>>>>>>>> net/sunrpc/xprtrdma/transport.c |  36 ++++++++++++
+>>>>>>>>>> net/sunrpc/xprtrdma/verbs.c     | 100 ++++++++++++++++++++++++++++++++
+>>>>>>>>>> net/sunrpc/xprtrdma/xprt_rdma.h |   5 ++
+>>>>>>>>>> 3 files changed, 141 insertions(+)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+>>>>>>>>>> index 9a8ce5df83ca..fee3b562932b 100644
+>>>>>>>>>> --- a/net/sunrpc/xprtrdma/transport.c
+>>>>>>>>>> +++ b/net/sunrpc/xprtrdma/transport.c
+>>>>>>>>>> @@ -70,6 +70,10 @@ unsigned int xprt_rdma_max_inline_write = RPCRDMA_DEF_INLINE;
+>>>>>>>>>> unsigned int xprt_rdma_memreg_strategy = RPCRDMA_FRWR;
+>>>>>>>>>> int xprt_rdma_pad_optimize;
+>>>>>>>>>> static struct xprt_class xprt_rdma;
+>>>>>>>>>> +static unsigned int xprt_rdma_min_resvport_limit = RPC_MIN_RESVPORT;
+>>>>>>>>>> +static unsigned int xprt_rdma_max_resvport_limit = RPC_MAX_RESVPORT;
+>>>>>>>>>> +unsigned int xprt_rdma_min_resvport = RPC_DEF_MIN_RESVPORT;
+>>>>>>>>>> +unsigned int xprt_rdma_max_resvport = RPC_DEF_MAX_RESVPORT;
+>>>>>>>>>>
+>>>>>>>>>> #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>>>>>>>>>>
+>>>>>>>>>> @@ -137,6 +141,24 @@ static struct ctl_table xr_tunables_table[] = {
+>>>>>>>>>> .mode = 0644,
+>>>>>>>>>> .proc_handler = proc_dointvec,
+>>>>>>>>>> },
+>>>>>>>>>> + {
+>>>>>>>>>> + .procname = "rdma_min_resvport",
+>>>>>>>>>> + .data = &xprt_rdma_min_resvport,
+>>>>>>>>>> + .maxlen = sizeof(unsigned int),
+>>>>>>>>>> + .mode = 0644,
+>>>>>>>>>> + .proc_handler = proc_dointvec_minmax,
+>>>>>>>>>> + .extra1 = &xprt_rdma_min_resvport_limit,
+>>>>>>>>>> + .extra2 = &xprt_rdma_max_resvport_limit
+>>>>>>>>>> + },
+>>>>>>>>>> + {
+>>>>>>>>>> + .procname = "rdma_max_resvport",
+>>>>>>>>>> + .data = &xprt_rdma_max_resvport,
+>>>>>>>>>> + .maxlen = sizeof(unsigned int),
+>>>>>>>>>> + .mode = 0644,
+>>>>>>>>>> + .proc_handler = proc_dointvec_minmax,
+>>>>>>>>>> + .extra1 = &xprt_rdma_min_resvport_limit,
+>>>>>>>>>> + .extra2 = &xprt_rdma_max_resvport_limit
+>>>>>>>>>> + },
+>>>>>>>>>> };
+>>>>>>>>>>
+>>>>>>>>>> #endif
+>>>>>>>>>> @@ -346,6 +368,20 @@ xprt_setup_rdma(struct xprt_create *args)
+>>>>>>>>>> xprt_rdma_format_addresses(xprt, sap);
+>>>>>>>>>>
+>>>>>>>>>> new_xprt = rpcx_to_rdmax(xprt);
+>>>>>>>>>> +
+>>>>>>>>>> + if (args->srcaddr)
+>>>>>>>>>> + memcpy(&new_xprt->rx_srcaddr, args->srcaddr, args->addrlen);
+>>>>>>>>>> + else {
+>>>>>>>>>> + rc = rpc_init_anyaddr(args->dstaddr->sa_family,
+>>>>>>>>>> + (struct sockaddr *)&new_xprt->rx_srcaddr);
+>>>>>>>>>> + if (rc != 0) {
+>>>>>>>>>> + xprt_rdma_free_addresses(xprt);
+>>>>>>>>>> + xprt_free(xprt);
+>>>>>>>>>> + module_put(THIS_MODULE);
+>>>>>>>>>> + return ERR_PTR(rc);
+>>>>>>>>>> + }
+>>>>>>>>>> + }
+>>>>>>>>>> +
+>>>>>>>>>> rc = rpcrdma_buffer_create(new_xprt);
+>>>>>>>>>> if (rc) {
+>>>>>>>>>> xprt_rdma_free_addresses(xprt);
+>>>>>>>>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+>>>>>>>>>> index 63262ef0c2e3..0ce5123d799b 100644
+>>>>>>>>>> --- a/net/sunrpc/xprtrdma/verbs.c
+>>>>>>>>>> +++ b/net/sunrpc/xprtrdma/verbs.c
+>>>>>>>>>> @@ -285,6 +285,98 @@ static void rpcrdma_ep_removal_done(struct rpcrdma_notification *rn)
+>>>>>>>>>> xprt_force_disconnect(ep->re_xprt);
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> +static int rpcrdma_get_random_port(void)
+>>>>>>>>>> +{
+>>>>>>>>>> + unsigned short min = xprt_rdma_min_resvport, max = xprt_rdma_max_resvport;
+>>>>>>>>>> + unsigned short range;
+>>>>>>>>>> + unsigned short rand;
+>>>>>>>>>> +
+>>>>>>>>>> + if (max < min)
+>>>>>>>>>> + return -EADDRINUSE;
+>>>>>>>>>> + range = max - min + 1;
+>>>>>>>>>> + rand = get_random_u32_below(range);
+>>>>>>>>>> + return rand + min;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static void rpcrdma_set_srcport(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
+>>>>>>>>>> +{
+>>>>>>>>>> +        struct sockaddr *sap = (struct sockaddr *)&id->route.addr.src_addr;
+>>>>>>>>>> +
+>>>>>>>>>> + if (r_xprt->rx_srcport == 0 && r_xprt->rx_xprt.reuseport) {
+>>>>>>>>>> + switch (sap->sa_family) {
+>>>>>>>>>> + case AF_INET6:
+>>>>>>>>>> + r_xprt->rx_srcport = ntohs(((struct sockaddr_in6 *)sap)->sin6_port);
+>>>>>>>>>> + break;
+>>>>>>>>>> + case AF_INET:
+>>>>>>>>>> + r_xprt->rx_srcport = ntohs(((struct sockaddr_in *)sap)->sin_port);
+>>>>>>>>>> + break;
+>>>>>>>>>> + }
+>>>>>>>>>> + }
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int rpcrdma_get_srcport(struct rpcrdma_xprt *r_xprt)
+>>>>>>>>>> +{
+>>>>>>>>>> + int port = r_xprt->rx_srcport;
+>>>>>>>>>> +
+>>>>>>>>>> + if (port == 0 && r_xprt->rx_xprt.resvport)
+>>>>>>>>>> + port = rpcrdma_get_random_port();
+>>>>>>>>>> + return port;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static unsigned short rpcrdma_next_srcport(struct rpcrdma_xprt *r_xprt, unsigned short port)
+>>>>>>>>>> +{
+>>>>>>>>>> + if (r_xprt->rx_srcport != 0)
+>>>>>>>>>> + r_xprt->rx_srcport = 0;
+>>>>>>>>>> + if (!r_xprt->rx_xprt.resvport)
+>>>>>>>>>> + return 0;
+>>>>>>>>>> + if (port <= xprt_rdma_min_resvport || port > xprt_rdma_max_resvport)
+>>>>>>>>>> + return xprt_rdma_max_resvport;
+>>>>>>>>>> + return --port;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static int rpcrdma_bind(struct rpcrdma_xprt *r_xprt, struct rdma_cm_id *id)
+>>>>>>>>>> +{
+>>>>>>>>>> + struct sockaddr_storage myaddr;
+>>>>>>>>>> + int err, nloop = 0;
+>>>>>>>>>> + int port = rpcrdma_get_srcport(r_xprt);
+>>>>>>>>>> + unsigned short last;
+>>>>>>>>>> +
+>>>>>>>>>> + /*
+>>>>>>>>>> +  * If we are asking for any ephemeral port (i.e. port == 0 &&
+>>>>>>>>>> +  * r_xprt->rx_xprt.resvport == 0), don't bind.  Let the local
+>>>>>>>>>> +  * port selection happen implicitly when the socket is used
+>>>>>>>>>> +  * (for example at connect time).
+>>>>>>>>>> +  *
+>>>>>>>>>> +  * This ensures that we can continue to establish TCP
+>>>>>>>>>> +  * connections even when all local ephemeral ports are already
+>>>>>>>>>> +  * a part of some TCP connection.  This makes no difference
+>>>>>>>>>> +  * for UDP sockets, but also doesn't harm them.
+>>>>>>>>>> +  *
+>>>>>>>>>> +  * If we're asking for any reserved port (i.e. port == 0 &&
+>>>>>>>>>> +  * r_xprt->rx_xprt.resvport == 1) rpcrdma_get_srcport above will
+>>>>>>>>>> +  * ensure that port is non-zero and we will bind as needed.
+>>>>>>>>>> +  */
+>>>>>>>>>> + if (port <= 0)
+>>>>>>>>>> + return port;
+>>>>>>>>>> +
+>>>>>>>>>> + memcpy(&myaddr, &r_xprt->rx_srcaddr, r_xprt->rx_xprt.addrlen);
+>>>>>>>>>> + do {
+>>>>>>>>>> + rpc_set_port((struct sockaddr *)&myaddr, port);
+>>>>>>>>>> + err = rdma_bind_addr(id, (struct sockaddr *)&myaddr);
+>>>>>>>>>> + if (err == 0) {
+>>>>>>>>>> + if (r_xprt->rx_xprt.reuseport)
+>>>>>>>>>> + r_xprt->rx_srcport = port;
+>>>>>>>>>> + break;
+>>>>>>>>>> + }
+>>>>>>>>>> + last = port;
+>>>>>>>>>> + port = rpcrdma_next_srcport(r_xprt, port);
+>>>>>>>>>> + if (port > last)
+>>>>>>>>>> + nloop++;
+>>>>>>>>>> + } while (err == -EADDRINUSE && nloop != 2);
+>>>>>>>>>> +
+>>>>>>>>>> + return err;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+>>>>>>>>>>       struct rpcrdma_ep *ep)
+>>>>>>>>>> {
+>>>>>>>>>> @@ -300,6 +392,12 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+>>>>>>>>>> if (IS_ERR(id))
+>>>>>>>>>> return id;
+>>>>>>>>>>
+>>>>>>>>>> + rc = rpcrdma_bind(r_xprt, id);
+>>>>>>>>>> + if (rc) {
+>>>>>>>>>> + rc = -ENOTCONN;
+>>>>>>>>>> + goto out;
+>>>>>>>>>> + }
+>>>>>>>>>> +
+>>>>>>>>>> ep->re_async_rc = -ETIMEDOUT;
+>>>>>>>>>> rc = rdma_resolve_addr(id, NULL, (struct sockaddr *)&xprt->addr,
+>>>>>>>>>>          RDMA_RESOLVE_TIMEOUT);
+>>>>>>>>>> @@ -328,6 +426,8 @@ static struct rdma_cm_id *rpcrdma_create_id(struct rpcrdma_xprt *r_xprt,
+>>>>>>>>>> if (rc)
+>>>>>>>>>> goto out;
+>>>>>>>>>>
+>>>>>>>>>> + rpcrdma_set_srcport(r_xprt, id);
+>>>>>>>>>> +
+>>>>>>>>>> return id;
+>>>>>>>>>>
+>>>>>>>>>> out:
+>>>>>>>>>> diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+>>>>>>>>>> index 8147d2b41494..9c7bcb541267 100644
+>>>>>>>>>> --- a/net/sunrpc/xprtrdma/xprt_rdma.h
+>>>>>>>>>> +++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+>>>>>>>>>> @@ -433,6 +433,9 @@ struct rpcrdma_xprt {
+>>>>>>>>>> struct delayed_work rx_connect_worker;
+>>>>>>>>>> struct rpc_timeout rx_timeout;
+>>>>>>>>>> struct rpcrdma_stats rx_stats;
+>>>>>>>>>> +
+>>>>>>>>>> + struct sockaddr_storage rx_srcaddr;
+>>>>>>>>>> + unsigned short rx_srcport;
+>>>>>>>>>> };
+>>>>>>>>>>
+>>>>>>>>>> #define rpcx_to_rdmax(x) container_of(x, struct rpcrdma_xprt, rx_xprt)
+>>>>>>>>>> @@ -581,6 +584,8 @@ static inline void rpcrdma_set_xdrlen(struct xdr_buf *xdr, size_t len)
+>>>>>>>>>>    */
+>>>>>>>>>> extern unsigned int xprt_rdma_max_inline_read;
+>>>>>>>>>> extern unsigned int xprt_rdma_max_inline_write;
+>>>>>>>>>> +extern unsigned int xprt_rdma_min_resvport;
+>>>>>>>>>> +extern unsigned int xprt_rdma_max_resvport;
+>>>>>>>>>> void xprt_rdma_format_addresses(struct rpc_xprt *xprt, struct sockaddr *sap);
+>>>>>>>>>> void xprt_rdma_free_addresses(struct rpc_xprt *xprt);
+>>>>>>>>>> void xprt_rdma_close(struct rpc_xprt *xprt);
+>>>>>>>>>> -- 
+>>>>>>>>>> 2.47.0
+>>>
+>>>
+>>> -- 
+>>> Chuck Lever
+>>>
+>>>
+>>
+> 
+> 
+
 
