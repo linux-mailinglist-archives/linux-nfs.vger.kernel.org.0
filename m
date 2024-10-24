@@ -1,180 +1,180 @@
-Return-Path: <linux-nfs+bounces-7409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7411-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 391149AD75B
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 00:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8538D9AD978
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 03:55:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B95E11F233B9
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Oct 2024 22:10:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3B6A61F21E5E
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Oct 2024 01:55:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C835D1E1311;
-	Wed, 23 Oct 2024 22:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WWBaAy7i";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LgDZ2Noq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="WWBaAy7i";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LgDZ2Noq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920CC54279;
+	Thu, 24 Oct 2024 01:55:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B301513B7BE
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Oct 2024 22:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278C71BDDF;
+	Thu, 24 Oct 2024 01:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729721455; cv=none; b=lwp7orh/QPsL3BD95DW4j1gJ/Y9SE32UG14mjGf2Pxp6EB+TjGn8UpsJjhbfnjJLC0ZO2FTnHzecadQb2GpLlzeGLqm4yl7kr1pH4KniopKL9mMEddR2smDi+leh1hhhW9yXrcjsqJNbqdaxfPiDvdFaxJRj7A0Gx4JcCYUKyng=
+	t=1729734932; cv=none; b=XBWAZ4jJLD5hx/7WHueH27WElU+glUTsFS64/wRYlqE+5yq9P+vUtNYj1EXXrnvRbZoATxtRZBvR5pEC+3eoixU1cfHoS5hCIhSI1N3o8B2nGs9KcJjrZo/velURBgJlKqXuWd59eYR8pZDP7h2btZ50jhiBEw1PqLBZRsZpwbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729721455; c=relaxed/simple;
-	bh=alL2Cv4Hl+ZEYVzGiS/M4OzbiV/lEZskfpw2qNbgxgk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=Vwk8xhhqz8X7rbc77Ka2wlU9H/hdPLTLBqyO4hsWIVK0upc6kCqB/cnA3De2f1u51qeGr4maCFWznMuVuarOzKA/vceCul3b4N4krXDDAmwTPh3izjzjPnKjDV2w9pDZ7h25fizJSJZw5w1YwtYzpZBpraaOBzq9OqZqosnA2kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WWBaAy7i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LgDZ2Noq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=WWBaAy7i; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LgDZ2Noq; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E04DA21C1B;
-	Wed, 23 Oct 2024 22:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729721451; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sN6yLlFNJDr+xeexiS/wv7nX6gmXjqreE33xqvnlPGU=;
-	b=WWBaAy7icGKDZHbkJUwt41iSBX+Qe0GL5PzhAzu6j3pheFMQYshTDV5SCJ5ckQ6qVm4aKf
-	UzUfRi9+hhE2lNXfELZvbd+AtEJajgK3S6aO/JDU1SfSGvXgdRWkXJQCp+EUQGI4L43OMF
-	Y/YaiPrBKL2piAy5fe/DA+ZOXRN2a/M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729721451;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sN6yLlFNJDr+xeexiS/wv7nX6gmXjqreE33xqvnlPGU=;
-	b=LgDZ2NoqA9rWYNDdWtUzQ5rbBFUGWunGZndeYoxa2U34Rlabx/Ws5KNPIF0udNYhTKXyQ0
-	QKoRU1Mujy133WCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1729721451; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sN6yLlFNJDr+xeexiS/wv7nX6gmXjqreE33xqvnlPGU=;
-	b=WWBaAy7icGKDZHbkJUwt41iSBX+Qe0GL5PzhAzu6j3pheFMQYshTDV5SCJ5ckQ6qVm4aKf
-	UzUfRi9+hhE2lNXfELZvbd+AtEJajgK3S6aO/JDU1SfSGvXgdRWkXJQCp+EUQGI4L43OMF
-	Y/YaiPrBKL2piAy5fe/DA+ZOXRN2a/M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1729721451;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sN6yLlFNJDr+xeexiS/wv7nX6gmXjqreE33xqvnlPGU=;
-	b=LgDZ2NoqA9rWYNDdWtUzQ5rbBFUGWunGZndeYoxa2U34Rlabx/Ws5KNPIF0udNYhTKXyQ0
-	QKoRU1Mujy133WCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C747113AD3;
-	Wed, 23 Oct 2024 22:10:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hf6gHml0GWfTFwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 23 Oct 2024 22:10:49 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1729734932; c=relaxed/simple;
+	bh=ZFj4mUEuOcX5w4DA8ts0g9WAnUKoJnphHg4JubR5mow=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cK1qukDpnGhS4YktW+XjmOltcXmDzVRCFaSJelxJG1OkjMXmlqtxzAm2Vxfm5DKH59NkJYO8axQgVzMKT80Ez3OfadkG4oeJ0bZe7R7SlMJ6tg+5rFUXAxGXPe40uTrcgoklGJwh83laRCIFMK+Dw2vF8mnPXb/mgCQoS284hjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4XYprm6kXkz4f3lfk;
+	Thu, 24 Oct 2024 09:55:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 35C1B1A07BA;
+	Thu, 24 Oct 2024 09:55:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.107])
+	by APP4 (Coremail) with SMTP id gCh0CgDHR8QIqRlnEnfNEw--.48608S4;
+	Thu, 24 Oct 2024 09:55:22 +0800 (CST)
+From: Ye Bin <yebin@huaweicloud.com>
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	joel.granados@kernel.org,
+	linux@weissschuh.net,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: yebin10@huawei.com,
+	zhangxiaoxu5@huawei.com
+Subject: [PATCH] svcrdma: fix miss destroy percpu_counter in svc_rdma_proc_init()
+Date: Thu, 24 Oct 2024 09:55:20 +0800
+Message-Id: <20241024015520.1448198-1-yebin@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- okorniev@redhat.com, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>
-Subject:
- [PATCH v2] nfsd: Don't fail OP_SETCLIENTID when there are too many clients.
-Date: Thu, 24 Oct 2024 09:10:42 +1100
-Message-id: <172972144286.81717.3023946721770566532@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,noble.neil.brown.name:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHR8QIqRlnEnfNEw--.48608S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr43ZF43CFy5CFy3Jw4UXFb_yoW5Ary3pa
+	43Kry5Jrs0krnakr43tws7uFyUAa18WF4Fg3Z7Cr1fZa1qkr98t3W0gayrJF97WrWfXryI
+	qr1UW3Z8Ca98A3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
+	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0s2-5UUUUU==
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
+From: Ye Bin <yebin10@huawei.com>
 
-Failing OP_SETCLIENTID or OP_EXCHANGE_ID should only happen if there is
-memory allocation failure.  Putting a hard limit on the number of
-clients is really helpful as it will either happen too early and prevent
-clients that the server can easily handle, or too late and allow clients
-when the server is swamped.
+There's issue as follows:
+RPC: Registered rdma transport module.
+RPC: Registered rdma backchannel transport module.
+RPC: Unregistered rdma transport module.
+RPC: Unregistered rdma backchannel transport module.
+BUG: unable to handle page fault for address: fffffbfff80c609a
+PGD 123fee067 P4D 123fee067 PUD 123fea067 PMD 10c624067 PTE 0
+Oops: Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
+RIP: 0010:percpu_counter_destroy_many+0xf7/0x2a0
+Call Trace:
+ <TASK>
+ __die+0x1f/0x70
+ page_fault_oops+0x2cd/0x860
+ spurious_kernel_fault+0x36/0x450
+ do_kern_addr_fault+0xca/0x100
+ exc_page_fault+0x128/0x150
+ asm_exc_page_fault+0x26/0x30
+ percpu_counter_destroy_many+0xf7/0x2a0
+ mmdrop+0x209/0x350
+ finish_task_switch.isra.0+0x481/0x840
+ schedule_tail+0xe/0xd0
+ ret_from_fork+0x23/0x80
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
 
-The calculated limit is still useful for expiring courtesy clients where
-there are "too many" clients, but it shouldn't prevent the creation of
-active clients.
+If register_sysctl() return NULL, then svc_rdma_proc_cleanup() will not
+destroy the percpu counters which init in svc_rdma_proc_init().
+If CONFIG_HOTPLUG_CPU is enabled, residual nodes may be in the
+'percpu_counters' list. The above issue may occur once the module is
+removed. If the CONFIG_HOTPLUG_CPU configuration is not enabled, memory
+leakage occurs.
+To solve above issue just destroy all percpu counters when
+register_sysctl() return NULL.
 
-Testing of lots of clients against small-mem servers reports repeated
-NFS4ERR_DELAY responses which doesn't seem helpful.  There may have been
-reports of similar problems in production use.
-
-Also remove an outdated comment - we do use a slab cache.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
+Fixes: 1e7e55731628 ("svcrdma: Restore read and write stats")
+Fixes: 22df5a22462e ("svcrdma: Convert rdma_stat_sq_starve to a per-CPU counter")
+Fixes: df971cd853c0 ("svcrdma: Convert rdma_stat_recv to a per-CPU counter")
+Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- fs/nfsd/nfs4state.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d585c267731b..0791a43b19e6 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2218,21 +2218,16 @@ STALE_CLIENTID(clientid_t *clid, struct nfsd_net *nn)
- 	return 1;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
+index 58ae6ec4f25b..11dff4d58195 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma.c
++++ b/net/sunrpc/xprtrdma/svc_rdma.c
+@@ -233,25 +233,33 @@ static int svc_rdma_proc_init(void)
+ 
+ 	rc = percpu_counter_init(&svcrdma_stat_read, 0, GFP_KERNEL);
+ 	if (rc)
+-		goto out_err;
++		goto err;
+ 	rc = percpu_counter_init(&svcrdma_stat_recv, 0, GFP_KERNEL);
+ 	if (rc)
+-		goto out_err;
++		goto err_read;
+ 	rc = percpu_counter_init(&svcrdma_stat_sq_starve, 0, GFP_KERNEL);
+ 	if (rc)
+-		goto out_err;
++		goto err_recv;
+ 	rc = percpu_counter_init(&svcrdma_stat_write, 0, GFP_KERNEL);
+ 	if (rc)
+-		goto out_err;
++		goto err_sq;
+ 
+ 	svcrdma_table_header = register_sysctl("sunrpc/svc_rdma",
+ 					       svcrdma_parm_table);
++	if (!svcrdma_table_header)
++		goto err_write;
++
+ 	return 0;
+ 
+-out_err:
++err_write:
++	percpu_counter_destroy(&svcrdma_stat_write);
++err_sq:
+ 	percpu_counter_destroy(&svcrdma_stat_sq_starve);
++err_recv:
+ 	percpu_counter_destroy(&svcrdma_stat_recv);
++err_read:
+ 	percpu_counter_destroy(&svcrdma_stat_read);
++err:
+ 	return rc;
  }
  
--/* 
-- * XXX Should we use a slab cache ?
-- * This type of memory management is somewhat inefficient, but we use it
-- * anyway since SETCLIENTID is not a common operation.
-- */
- static struct nfs4_client *alloc_client(struct xdr_netobj name,
- 				struct nfsd_net *nn)
- {
- 	struct nfs4_client *clp;
- 	int i;
- 
--	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) {
-+	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients &&
-+	    atomic_read(&nn->nfsd_courtesy_clients) > 0)
- 		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
--		return NULL;
--	}
-+
- 	clp = kmem_cache_zalloc(client_slab, GFP_KERNEL);
- 	if (clp == NULL)
- 		return NULL;
 -- 
-2.46.0
+2.34.1
 
 
