@@ -1,93 +1,76 @@
-Return-Path: <linux-nfs+bounces-7505-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7506-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 719579B10EE
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 22:55:55 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57A639B1191
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 23:21:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B2A72820AE
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 20:55:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF06FB2112D
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 21:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62037218937;
-	Fri, 25 Oct 2024 20:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F70E18BB90;
+	Fri, 25 Oct 2024 21:20:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4ne3AtH"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LvFV05bh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426D1218925
-	for <linux-nfs@vger.kernel.org>; Fri, 25 Oct 2024 20:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6776217F26;
+	Fri, 25 Oct 2024 21:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729889032; cv=none; b=c0/FprwJw8LILZKxAF2wVVMkjNSBYDpR0tZvCkgH4WYEI34HPfVtG+sREIQCSYLYV0Z1CbSiDuhf4eNtQjc9bA6k5hh/GD/NVXGp5IWRjHpQnsJNX4Dlc1jWwc1ovA3Lm8lVg/Hcm5Z6cKU1d1RL//2tMtL7jhYpHfu8OYoSYk0=
+	t=1729891259; cv=none; b=oyJJPxONKdZd4/kRk7gr9iFNAhyETUFrprUMDGR/igmD7MqK0FYCB1cJJAPojN96Kui8x1V1RxN6mj3+1HzfzGXOF44j+1k3GcUTDmsUVWWCvsRI3oFC5XPR/P2cNLN0Wolksf2hF/RO0Nv+1DALuooD2LrIyjkkQuFkYHf4FEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729889032; c=relaxed/simple;
-	bh=YfHQHHklQqGthguUT+hofehz3Evx2ahQywNsAF+2OGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VgG878vwUHpWg8Vi1G/t0gtoaXDytITXziusWXzPXXT7CxWklFjNuaSHKkcRIPHwj17mwe1AzNBO7eW16ZXPuWnsIwCCDPBbAIJAB2Cs6+XFt93BmILIrcy3yy+HT9QO48pssuTuPTyFNEPkxluHb4SEil3GI4iZGwHOUDozdpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U4ne3AtH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729889028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jlfv2ApsSBgn//KdBsSlx8BkotK5+tCpg2808yZLllw=;
-	b=U4ne3AtHIEV/4H8+XCiF+5OSpc2dXCK1eRVzxH6QfzpWmDXV0fLTJJXh97I7VTUu1P6EPn
-	Y4+kg/C+6lf29tt0k/6Pq4+OlRE0Lkb0H3wAIIVHbTm2c5mstSoJKx9ARYNKonrjavjzHz
-	zxdl4XOSQYQh6SMW1RFeQQT3Av/nHgk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-228-u5Lv1EpXN9KW8rs1n0j3Wg-1; Fri,
- 25 Oct 2024 16:43:45 -0400
-X-MC-Unique: u5Lv1EpXN9KW8rs1n0j3Wg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6E6719560A7;
-	Fri, 25 Oct 2024 20:43:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9ADD73000198;
-	Fri, 25 Oct 2024 20:43:36 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com,
-	Chang Yu <marcus.yu.56@gmail.com>
-Subject: [PATCH v2 31/31] netfs: Report on NULL folioq in netfs_writeback_unlock_folios()
-Date: Fri, 25 Oct 2024 21:39:58 +0100
-Message-ID: <20241025204008.4076565-32-dhowells@redhat.com>
-In-Reply-To: <20241025204008.4076565-1-dhowells@redhat.com>
-References: <20241025204008.4076565-1-dhowells@redhat.com>
+	s=arc-20240116; t=1729891259; c=relaxed/simple;
+	bh=57vOctAD49NrQhDt8l1YUqfvpP3ziCUAVIMrtEA3ITs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H5G/hk2aomggqEneVTE7iB0V7VNtWpdtUDWBmTc4tFlsUnzmXCvzfJ6zB7D/w5JcCxBt/7+1uB2/5YIwagFSUriLayoSOs+Eng4ZfQRsXEL4JFv6FmdYCT5iomVHf8JnjS5u8Ejx6F5iMIXUs7FhTeL/HczouVJaSvnEIGREqow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LvFV05bh; arc=none smtp.client-ip=52.119.213.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1729891257; x=1761427257;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xJucfPW8gqHovBbo1lxqZGoM9KaBpI/dnGHVCNGQC/4=;
+  b=LvFV05bhi3bGFq3ndil5rgPVZym2MWuDAoGfyBfNd0TxU7F7IPcH7eQH
+   eBF2YkQgqaBg7IF3i9L0QN41fDIfk2xMBBvnVfgtHTzTyU2+plNYytF3n
+   NLzUK4/LyQfNsRml+dNriT7Ptyn0ppZHtlckfHHo+JoWHL1huFheuD3Oj
+   4=;
+X-IronPort-AV: E=Sophos;i="6.11,233,1725321600"; 
+   d="scan'208";a="242466256"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 21:20:52 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:36367]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.37:2525] with esmtp (Farcaster)
+ id dc60af94-3e76-4c67-b1bf-1a0cea511b81; Fri, 25 Oct 2024 21:20:51 +0000 (UTC)
+X-Farcaster-Flow-ID: dc60af94-3e76-4c67-b1bf-1a0cea511b81
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Fri, 25 Oct 2024 21:20:51 +0000
+Received: from 6c7e67c6786f.amazon.com (10.143.64.59) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Fri, 25 Oct 2024 21:20:43 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <liujian56@huawei.com>
+CC: <Dai.Ngo@oracle.com>, <anna@kernel.org>, <chuck.lever@oracle.com>,
+	<davem@davemloft.net>, <ebiederm@xmission.com>, <edumazet@google.com>,
+	<jlayton@kernel.org>, <kuba@kernel.org>, <linux-nfs@vger.kernel.org>,
+	<neilb@suse.de>, <netdev@vger.kernel.org>, <okorniev@redhat.com>,
+	<pabeni@redhat.com>, <tom@talpey.com>, <trondmy@hammerspace.com>,
+	<kuniyu@amazon.com>
+Subject: Re: [PATCH net] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
+Date: Fri, 25 Oct 2024 14:20:38 -0700
+Message-ID: <20241025212038.31584-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <d340cd68-f08b-41e6-9202-a13225c744a9@huawei.com>
+References: <d340cd68-f08b-41e6-9202-a13225c744a9@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -95,96 +78,144 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-It seems that it's possible to get to netfs_writeback_unlock_folios() with
-an empty rolling buffer during buffered writes.  This should not be
-possible as the rolling buffer is initialised as the write request is set
-up and thereafter maintains at least one folio_queue struct therein until
-it gets destroyed.  This allows lockless addition and removal of
-folio_queue structs in the buffer because, unlike with a ring buffer, the
-producer and consumer each only need to look at and alter one pointer into
-the buffer.
+From: "liujian (CE)" <liujian56@huawei.com>
+Date: Fri, 25 Oct 2024 11:32:52 +0800
+> >>> If not, then what prevents it from happening?
+> >> The socket created by the userspace program obtains the reference
+> >> counting of the namespace, but the kernel socket does not.
+> >>
+> >> There's some discussion here:
+> >> https://lore.kernel.org/all/CANn89iJE5anTbyLJ0TdGAqGsE+GichY3YzQECjNUVMz=G3bcQg@mail.gmail.com/
+> > OK... So then it looks to me as if NFS, SMB, AFS, and any other
+> > networked filesystem that can be started from inside a container is
+> > going to need to do the same thing that rds appears to be doing.
 
-Now, the rolling buffer is only used for buffered I/O operations as
-netfs_collect_write_results() should only call
-netfs_writeback_unlock_folios() if the request is of origin type
-NETFS_WRITEBACK, NETFS_WRITETHROUGH or NETFS_PGPRIV2_COPY_TO_CACHE.
+FWIW, recently we saw a similar UAF on CIFS.
 
-So it would seem that one of the following occurred: (1) I/O started before
-the request was fully initialised, (2) the origin got switched mid-flow or
-(3) the request has already been freed and this is a UAF error.  I think the
-last is the most likely.
 
-Make netfs_writeback_unlock_folios() report information about the request
-and subrequests if folioq is seen to be NULL to try and help debug this,
-throw a warning and return.
+> >
+> > Should there perhaps be a helper function in the networking layer for
+> > this?
+> 
+> There should be no such helper function at present, right?.
+> 
+> If get net's reference to fix this problem, the following test is 
+> performed. There's nothing wrong with this case. I don't know if there's 
+> anything else to consider.
+> 
+> I don't have any other ideas other than these two methods. Do you have 
+> any suggestions on this problem? @Eric @Jakub ... @All
 
-Note that this does not try to fix the problem.
+The netns lifetime should be managed by the upper layer rather than
+the networking layer.  If the netns is already dead, the upper layer
+must discard the net pointer anyway.
 
-Reported-by: syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=af5c06208fa71bf31b16
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Chang Yu <marcus.yu.56@gmail.com>
-Link: https://lore.kernel.org/r/ZxshMEW4U7MTgQYa@gmail.com/
-cc: Jeff Layton <jlayton@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/write_collect.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+I suggest checking maybe_get_net() in NFS, CIFS, etc and then calling
+__sock_create() with kern 0.
 
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 3d8b87c8e6a6..4a1499167770 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -21,6 +21,34 @@
- #define NEED_RETRY		0x10	/* A front op requests retrying */
- #define SAW_FAILURE		0x20	/* One stream or hit a permanent failure */
- 
-+static void netfs_dump_request(const struct netfs_io_request *rreq)
-+{
-+	pr_err("Request R=%08x r=%d fl=%lx or=%x e=%ld\n",
-+	       rreq->debug_id, refcount_read(&rreq->ref), rreq->flags,
-+	       rreq->origin, rreq->error);
-+	pr_err("  st=%llx tsl=%zx/%llx/%llx\n",
-+	       rreq->start, rreq->transferred, rreq->submitted, rreq->len);
-+	pr_err("  cci=%llx/%llx/%llx\n",
-+	       rreq->cleaned_to, rreq->collected_to, atomic64_read(&rreq->issued_to));
-+	pr_err("  iw=%pSR\n", rreq->netfs_ops->issue_write);
-+	for (int i = 0; i < NR_IO_STREAMS; i++) {
-+		const struct netfs_io_subrequest *sreq;
-+		const struct netfs_io_stream *s = &rreq->io_streams[i];
-+
-+		pr_err("  str[%x] s=%x e=%d acnf=%u,%u,%u,%u\n",
-+		       s->stream_nr, s->source, s->error,
-+		       s->avail, s->active, s->need_retry, s->failed);
-+		pr_err("  str[%x] ct=%llx t=%zx\n",
-+		       s->stream_nr, s->collected_to, s->transferred);
-+		list_for_each_entry(sreq, &s->subrequests, rreq_link) {
-+			pr_err("  sreq[%x:%x] sc=%u s=%llx t=%zx/%zx r=%d f=%lx\n",
-+			       sreq->stream_nr, sreq->debug_index, sreq->source,
-+			       sreq->start, sreq->transferred, sreq->len,
-+			       refcount_read(&sreq->ref), sreq->flags);
-+		}
-+	}
-+}
-+
- /*
-  * Successful completion of write of a folio to the server and/or cache.  Note
-  * that we are not allowed to lock the folio here on pain of deadlocking with
-@@ -87,6 +115,12 @@ static void netfs_writeback_unlock_folios(struct netfs_io_request *wreq,
- 	unsigned long long collected_to = wreq->collected_to;
- 	unsigned int slot = wreq->buffer.first_tail_slot;
- 
-+	if (WARN_ON_ONCE(!folioq)) {
-+		pr_err("[!] Writeback unlock found empty rolling buffer!\n");
-+		netfs_dump_request(wreq);
-+		return;
-+	}
-+
- 	if (wreq->origin == NETFS_PGPRIV2_COPY_TO_CACHE) {
- 		if (netfs_pgpriv2_unlock_copied_folios(wreq))
- 			*notes |= MADE_PROGRESS;
 
+> 
+> diff --git a/include/linux/net.h b/include/linux/net.h
+> index b75bc534c1b3..58216da3b62c 100644
+> --- a/include/linux/net.h
+> +++ b/include/linux/net.h
+> @@ -255,6 +255,7 @@ int __sock_create(struct net *net, int family, int 
+> type, int proto,
+>                    struct socket **res, int kern);
+>   int sock_create(int family, int type, int proto, struct socket **res);
+>   int sock_create_kern(struct net *net, int family, int type, int proto, 
+> struct socket **res);
+> +int sock_create_kern_getnet(struct net *net, int family, int type, int 
+> proto, struct socket **res);
+>   int sock_create_lite(int family, int type, int proto, struct socket 
+> **res);
+>   struct socket *sock_alloc(void);
+>   void sock_release(struct socket *sock);
+> diff --git a/net/socket.c b/net/socket.c
+> index 042451f01c65..e64a02445b1a 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -1651,6 +1651,34 @@ int sock_create_kern(struct net *net, int family, 
+> int type, int protocol, struct
+>   }
+>   EXPORT_SYMBOL(sock_create_kern);
+> 
+> +int sock_create_kern_getnet(struct net *net, int family, int type, int 
+> proto, struct socket **res)
+> +{
+> +       struct sock *sk;
+> +       int ret;
+> +
+> +       if (!maybe_get_net(net))
+> +               return -EINVAL;
+> +
+> +       ret = sock_create_kern(net, family, type, proto, res);
+> +       if (ret < 0) {
+> +               put_net(net);
+> +               return ret;
+> +       }
+> +
+> +       sk = (*res)->sk;
+> +       lock_sock(sk);
+> +       /* Update ns_tracker to current stack trace and refcounted 
+> tracker */
+> +       __netns_tracker_free(net, &sk->ns_tracker, false);
+> +
+> +       sk->sk_net_refcnt = 1;
+> +       netns_tracker_alloc(net, &sk->ns_tracker, GFP_KERNEL);
+> +       sock_inuse_add(net, 1);
+> +       release_sock(sk);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(sock_create_kern_getnet);
+> +
+>   static struct socket *__sys_socket_create(int family, int type, int 
+> protocol)
+>   {
+>          struct socket *sock;
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 825ec5357691..31dc291446fb 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1526,7 +1526,10 @@ static struct svc_xprt *svc_create_socket(struct 
+> svc_serv *serv,
+>                  return ERR_PTR(-EINVAL);
+>          }
+> 
+> -       error = __sock_create(net, family, type, protocol, &sock, 1);
+> +       if (protocol == IPPROTO_TCP)
+> +               error = sock_create_kern_getnet(net, family, type, 
+> protocol, &sock);
+> +       else
+> +               error = sock_create_kern(net, family, type, protocol, 
+> &sock);
+>          if (error < 0)
+>                  return ERR_PTR(error);
+> 
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index 0e1691316f42..d2304010daeb 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -1922,7 +1922,10 @@ static struct socket *xs_create_sock(struct 
+> rpc_xprt *xprt,
+>          struct socket *sock;
+>          int err;
+> 
+> -       err = __sock_create(xprt->xprt_net, family, type, protocol, 
+> &sock, 1);
+> +       if (protocol == IPPROTO_TCP)
+> +               err = sock_create_kern_getnet(xprt->xprt_net, family, 
+> type, protocol, &sock);
+> +       else
+> +               err = sock_create_kern(xprt->xprt_net, family, type, 
+> protocol, &sock);
+>          if (err < 0) {
+>                  dprintk("RPC:       can't create %d transport socket 
+> (%d).\n",
+>                                  protocol, -err);
 
