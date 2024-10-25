@@ -1,221 +1,105 @@
-Return-Path: <linux-nfs+bounces-7506-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7507-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57A639B1191
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 23:21:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13A2A9B12F8
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Oct 2024 00:47:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EF06FB2112D
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 21:21:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2729282EF2
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Oct 2024 22:47:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F70E18BB90;
-	Fri, 25 Oct 2024 21:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D711AB536;
+	Fri, 25 Oct 2024 22:47:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LvFV05bh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYjTqXwd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-fw-52004.amazon.com (smtp-fw-52004.amazon.com [52.119.213.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6776217F26;
-	Fri, 25 Oct 2024 21:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D34217F27
+	for <linux-nfs@vger.kernel.org>; Fri, 25 Oct 2024 22:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729891259; cv=none; b=oyJJPxONKdZd4/kRk7gr9iFNAhyETUFrprUMDGR/igmD7MqK0FYCB1cJJAPojN96Kui8x1V1RxN6mj3+1HzfzGXOF44j+1k3GcUTDmsUVWWCvsRI3oFC5XPR/P2cNLN0Wolksf2hF/RO0Nv+1DALuooD2LrIyjkkQuFkYHf4FEU=
+	t=1729896451; cv=none; b=ZMqMNgI9yf0g5CA8OtCl9qt14rqEU1Qsz1a0ggwUxHZRjaOBBSpfxge7GVmzd34MszOV53sqnIy74LRUHD8jqtAuUdgZd25x33/obtF3cUPA9+L8FQA6eXOhexuuDZWoAFAtoo55pDaTcCr106p++Fm4RQF2S+myopK2HFfjwio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729891259; c=relaxed/simple;
-	bh=57vOctAD49NrQhDt8l1YUqfvpP3ziCUAVIMrtEA3ITs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H5G/hk2aomggqEneVTE7iB0V7VNtWpdtUDWBmTc4tFlsUnzmXCvzfJ6zB7D/w5JcCxBt/7+1uB2/5YIwagFSUriLayoSOs+Eng4ZfQRsXEL4JFv6FmdYCT5iomVHf8JnjS5u8Ejx6F5iMIXUs7FhTeL/HczouVJaSvnEIGREqow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LvFV05bh; arc=none smtp.client-ip=52.119.213.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1729896451; c=relaxed/simple;
+	bh=fjOjHgIcwEZo3YErAQy+EZFgL4PXs4Rwe+nnPldqWBA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ZSSNAldJKEitL1eXdYDqYw/urd396kJVnMlDVBX3r+v8GRGyMCop14LLJxdLQn860jYlgpRVf5w2K7udEL6JktjLPHtS5aR2cxZI5jVuWkfQRxj2ZyTPw9CdRsoLrxKYNGk024Iogr4thQiSpCdursmHUdJR1d4rAaqxGAULdd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BYjTqXwd; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5c935d99dc5so3002663a12.1
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Oct 2024 15:47:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1729891257; x=1761427257;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xJucfPW8gqHovBbo1lxqZGoM9KaBpI/dnGHVCNGQC/4=;
-  b=LvFV05bhi3bGFq3ndil5rgPVZym2MWuDAoGfyBfNd0TxU7F7IPcH7eQH
-   eBF2YkQgqaBg7IF3i9L0QN41fDIfk2xMBBvnVfgtHTzTyU2+plNYytF3n
-   NLzUK4/LyQfNsRml+dNriT7Ptyn0ppZHtlckfHHo+JoWHL1huFheuD3Oj
-   4=;
-X-IronPort-AV: E=Sophos;i="6.11,233,1725321600"; 
-   d="scan'208";a="242466256"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2024 21:20:52 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:36367]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.37:2525] with esmtp (Farcaster)
- id dc60af94-3e76-4c67-b1bf-1a0cea511b81; Fri, 25 Oct 2024 21:20:51 +0000 (UTC)
-X-Farcaster-Flow-ID: dc60af94-3e76-4c67-b1bf-1a0cea511b81
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 25 Oct 2024 21:20:51 +0000
-Received: from 6c7e67c6786f.amazon.com (10.143.64.59) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Fri, 25 Oct 2024 21:20:43 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <liujian56@huawei.com>
-CC: <Dai.Ngo@oracle.com>, <anna@kernel.org>, <chuck.lever@oracle.com>,
-	<davem@davemloft.net>, <ebiederm@xmission.com>, <edumazet@google.com>,
-	<jlayton@kernel.org>, <kuba@kernel.org>, <linux-nfs@vger.kernel.org>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>, <okorniev@redhat.com>,
-	<pabeni@redhat.com>, <tom@talpey.com>, <trondmy@hammerspace.com>,
-	<kuniyu@amazon.com>
-Subject: Re: [PATCH net] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
-Date: Fri, 25 Oct 2024 14:20:38 -0700
-Message-ID: <20241025212038.31584-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <d340cd68-f08b-41e6-9202-a13225c744a9@huawei.com>
-References: <d340cd68-f08b-41e6-9202-a13225c744a9@huawei.com>
+        d=gmail.com; s=20230601; t=1729896448; x=1730501248; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=58IW3zy0i1Z/WJCBZuyLCDZbNvYR62JfAjBJehckpRg=;
+        b=BYjTqXwdq1qzttfYFVqrrLCjz2y4O0oUfujOt2YtQWcN9JFJMq1fjg7lIObkU+9wSJ
+         rFgdyQ0vPIQ7Gir26jhX6V/s8r7rnPGMmbI4V6I3svnDlsnNQ1pOuiH8sPeHuY1Oc1PZ
+         bUlvedixQs9ZhaKoauPBNT5xMaYTGPAFo19GjEgW/Rf2NKpSBktKBBCVU7G0rj6xXqMj
+         tD7UPtNi254+Iw4BkPMMxoRz81RX5Kug5Cu4uoFKREiMWxbn2f+LBRpJjuhecOfnn3Xd
+         kAZGZJu7w5EYZTKJ3GXISgsx1hFfwtjTaPXcfDprscLzMGgedW9mRSBQ5SUhxgI3IBtJ
+         FuHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729896448; x=1730501248;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=58IW3zy0i1Z/WJCBZuyLCDZbNvYR62JfAjBJehckpRg=;
+        b=i/yQ6GL8wD7y1XhLGeeErGCwercBwB9xd0K2SRvDdkC3dZTdUx4W10nhP9BKxEALpx
+         PkcG71QBk5so4LSnqFoamlKL+eKCY1IFhs2pVZovM+obATbVQA9Ci774Fz+bfAZrOF7s
+         voR1AmDCA2LvcgnF4uQfFEBZmIylYpk6bjrql8OTB+fJWsVZ3g7mfnhQ5Weh9NF+Uc+B
+         d1riVj4rp2gq6mSJ+/gRfHblWH3KPw1M7ofJw36bIHDHGYZgob3b47yKoWb9QVmWwINc
+         iCvcSAEQib623ykdiPV57DVRi+rrD4fNDuA+iA68KcF438uoLFXyS8OKqySOYwlxOr2s
+         y2uw==
+X-Gm-Message-State: AOJu0YxQ467aQ1uFx7nQLA4TD5PrlXYWPJXZBptgEwqD2HbbF0/lIx3K
+	4S5RQrHi32iOYHHZJ0dW+pGeT3pJz2cHjNPn9TVQtUEIjiBPGHAPsbQSSFINhwvhnuzDn9WcrLb
+	qtaCVdGCDniIlf+xeCpKh5TFysLCLTURHCw==
+X-Google-Smtp-Source: AGHT+IHlDfF+n9cwxMcl4D1y8T2RI6GrZEe/b3VkjMU+1KYNc1kVPWn4FoUSuyEyRMEmaFSLMdVQ1vr+cmwEtJbhN8E=
+X-Received: by 2002:a05:6402:4312:b0:5c5:b90a:5b78 with SMTP id
+ 4fb4d7f45d1cf-5cbbf879525mr639540a12.5.1729896447596; Fri, 25 Oct 2024
+ 15:47:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWB002.ant.amazon.com (10.13.139.188) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Fri, 25 Oct 2024 15:47:17 -0700
+Message-ID: <CAM5tNy4RY-vMZU5zP=-X4F9ahPYHbAAyLkWKBbJc01jB_LD2jA@mail.gmail.com>
+Subject: posting POSIX draft ACL patches
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: "liujian (CE)" <liujian56@huawei.com>
-Date: Fri, 25 Oct 2024 11:32:52 +0800
-> >>> If not, then what prevents it from happening?
-> >> The socket created by the userspace program obtains the reference
-> >> counting of the namespace, but the kernel socket does not.
-> >>
-> >> There's some discussion here:
-> >> https://lore.kernel.org/all/CANn89iJE5anTbyLJ0TdGAqGsE+GichY3YzQECjNUVMz=G3bcQg@mail.gmail.com/
-> > OK... So then it looks to me as if NFS, SMB, AFS, and any other
-> > networked filesystem that can be started from inside a container is
-> > going to need to do the same thing that rds appears to be doing.
+So, I've finally figured out how to use git format-patch. It took
+me a lot of tries before I discovered all you do is specify "master.."
+to make it work. (I still haven't tried to email them via gmail, but
+I've found the doc for that.)
 
-FWIW, recently we saw a similar UAF on CIFS.
+At this point, the patches are still in need of testing (I have yet to
+test the nfsd case where file object creation specifies a POSIX draft
+ACL, since neither FreeBSD nor Linux clients do that.)
 
+Is it time to post the patch sets for others to try or should I wait a while?
 
-> >
-> > Should there perhaps be a helper function in the networking layer for
-> > this?
-> 
-> There should be no such helper function at present, right?.
-> 
-> If get net's reference to fix this problem, the following test is 
-> performed. There's nothing wrong with this case. I don't know if there's 
-> anything else to consider.
-> 
-> I don't have any other ideas other than these two methods. Do you have 
-> any suggestions on this problem? @Eric @Jakub ... @All
+A couple of questions...
+The patches currently have a lot of dprintk()s I used for testing.
+Should those be removed before posting or left in for now?
 
-The netns lifetime should be managed by the upper layer rather than
-the networking layer.  If the netns is already dead, the upper layer
-must discard the net pointer anyway.
+They are currently based on linux-6.11.0-rc6 (linux-next of a few
+weeks ago). What do you guys do w.r.t. rebasing them?
 
-I suggest checking maybe_get_net() in NFS, CIFS, etc and then calling
-__sock_create() with kern 0.
+There are three sets: common, client and server (common is
+needed by both the others.
+The other two sets implement client and server side for handling
+the new attributes proposed in
+https://datatracker.ietf.org/doc/draft-rmacklem-nfsv4-posix-acls/
 
-
-> 
-> diff --git a/include/linux/net.h b/include/linux/net.h
-> index b75bc534c1b3..58216da3b62c 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -255,6 +255,7 @@ int __sock_create(struct net *net, int family, int 
-> type, int proto,
->                    struct socket **res, int kern);
->   int sock_create(int family, int type, int proto, struct socket **res);
->   int sock_create_kern(struct net *net, int family, int type, int proto, 
-> struct socket **res);
-> +int sock_create_kern_getnet(struct net *net, int family, int type, int 
-> proto, struct socket **res);
->   int sock_create_lite(int family, int type, int proto, struct socket 
-> **res);
->   struct socket *sock_alloc(void);
->   void sock_release(struct socket *sock);
-> diff --git a/net/socket.c b/net/socket.c
-> index 042451f01c65..e64a02445b1a 100644
-> --- a/net/socket.c
-> +++ b/net/socket.c
-> @@ -1651,6 +1651,34 @@ int sock_create_kern(struct net *net, int family, 
-> int type, int protocol, struct
->   }
->   EXPORT_SYMBOL(sock_create_kern);
-> 
-> +int sock_create_kern_getnet(struct net *net, int family, int type, int 
-> proto, struct socket **res)
-> +{
-> +       struct sock *sk;
-> +       int ret;
-> +
-> +       if (!maybe_get_net(net))
-> +               return -EINVAL;
-> +
-> +       ret = sock_create_kern(net, family, type, proto, res);
-> +       if (ret < 0) {
-> +               put_net(net);
-> +               return ret;
-> +       }
-> +
-> +       sk = (*res)->sk;
-> +       lock_sock(sk);
-> +       /* Update ns_tracker to current stack trace and refcounted 
-> tracker */
-> +       __netns_tracker_free(net, &sk->ns_tracker, false);
-> +
-> +       sk->sk_net_refcnt = 1;
-> +       netns_tracker_alloc(net, &sk->ns_tracker, GFP_KERNEL);
-> +       sock_inuse_add(net, 1);
-> +       release_sock(sk);
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL(sock_create_kern_getnet);
-> +
->   static struct socket *__sys_socket_create(int family, int type, int 
-> protocol)
->   {
->          struct socket *sock;
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 825ec5357691..31dc291446fb 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -1526,7 +1526,10 @@ static struct svc_xprt *svc_create_socket(struct 
-> svc_serv *serv,
->                  return ERR_PTR(-EINVAL);
->          }
-> 
-> -       error = __sock_create(net, family, type, protocol, &sock, 1);
-> +       if (protocol == IPPROTO_TCP)
-> +               error = sock_create_kern_getnet(net, family, type, 
-> protocol, &sock);
-> +       else
-> +               error = sock_create_kern(net, family, type, protocol, 
-> &sock);
->          if (error < 0)
->                  return ERR_PTR(error);
-> 
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index 0e1691316f42..d2304010daeb 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -1922,7 +1922,10 @@ static struct socket *xs_create_sock(struct 
-> rpc_xprt *xprt,
->          struct socket *sock;
->          int err;
-> 
-> -       err = __sock_create(xprt->xprt_net, family, type, protocol, 
-> &sock, 1);
-> +       if (protocol == IPPROTO_TCP)
-> +               err = sock_create_kern_getnet(xprt->xprt_net, family, 
-> type, protocol, &sock);
-> +       else
-> +               err = sock_create_kern(xprt->xprt_net, family, type, 
-> protocol, &sock);
->          if (err < 0) {
->                  dprintk("RPC:       can't create %d transport socket 
-> (%d).\n",
->                                  protocol, -err);
+Thanks in advance for any help, rick
+ps: The problem I thought I had w.r.t. server side large ACLs does
+      not appear to be a problem. It also appears that the nfsd always
+       sets up a scratch buffer, so the server code doesn't do that, either.
 
