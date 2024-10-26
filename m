@@ -1,46 +1,79 @@
-Return-Path: <linux-nfs+bounces-7510-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7511-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3F6D9B1404
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Oct 2024 03:32:06 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D686F9B1866
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Oct 2024 15:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBCE01C213C0
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Oct 2024 01:32:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5782BB210FB
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Oct 2024 13:04:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56615AD2F;
-	Sat, 26 Oct 2024 01:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72BDA217F47;
+	Sat, 26 Oct 2024 13:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dcui9sqQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2F5661;
-	Sat, 26 Oct 2024 01:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C2C1D363B
+	for <linux-nfs@vger.kernel.org>; Sat, 26 Oct 2024 13:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729906322; cv=none; b=DEuuHOG8bNrSDBQmZ73+kvEGZBjzBYGmCW3hThhy1bYDS97CdwixvoTFKRJCKzeCdRRzVAmnAIPaiuGpONpT9ms1kU2BP7LMswy8UmXF9qJuQHoJuBQlUhfxQyBKFhfLj1Gt2DIF2h8Q+tQxW2cVWgumenqmBwSW3NrO6PJVCs0=
+	t=1729947850; cv=none; b=oB2QcHkEw9i8GTH/YEawz28Ewt996+WsFAxKB6Po8P+FysvBDdgBWviXNWfSr08L1BeDJYSvQXNtRP3hwe4ob60bFSAqd0KvU2ePqJ9B5Wt3Dodv/Kv4fKRsP5fvv9BBHCyI83tVUJWQbCkT3YdV2dftoFFnob5oxGU6xeNDCCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729906322; c=relaxed/simple;
-	bh=/R2YWndKMuTsGPtKPr5ksGflR0iw39i3JlMtvf+tlpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gGp8Sacgpu3N0ICvDMNEhEsecUYMGymEQGY0IHlIXCGa/6HxQyRjAyKvfephOevk3x+JJbURWhZBMBTVeuGiCaXDgqut639L8vtU6WZCjOZ0n87pEHRumBLnKn9GupvdBvokOH9No1wbSZI/09AUSukGOxnCBYSQMB44423IZmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Xb2CT22kwz2DcST;
-	Sat, 26 Oct 2024 09:30:29 +0800 (CST)
-Received: from kwepemg200003.china.huawei.com (unknown [7.202.181.30])
-	by mail.maildlp.com (Postfix) with ESMTPS id C52981A016C;
-	Sat, 26 Oct 2024 09:31:55 +0800 (CST)
-Received: from [10.174.176.93] (10.174.176.93) by
- kwepemg200003.china.huawei.com (7.202.181.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 26 Oct 2024 09:31:54 +0800
-Message-ID: <c9e2009c-6e10-45df-b681-df81da2ced2b@huawei.com>
-Date: Sat, 26 Oct 2024 09:31:54 +0800
+	s=arc-20240116; t=1729947850; c=relaxed/simple;
+	bh=pSKFteR4BLroUjrL6+YVAa0bMPnOgLe+O9Sq0/bofKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HsjPRSeAHNkFxAZ4PPo9l/qUxJMz+9N7SpCQSus/K+izJtoK1MJ6qvW2A2Y2t3YdLCxb/bFVlQTHl0D6DcJxC0ABb/5W9O9wpelZMKaABahjCpWbz2Obw580q0TZWXQ/Vjhucet4kPa4eRvUrfGzJXXR01rQcsE3ugzRTH2SPZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dcui9sqQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729947846;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oP5qh+2LMA7a60ZaSKTVi4dOBgz3urbmbQ3HXtyem6o=;
+	b=dcui9sqQnVWnLja2y88QIQd+7/dc/MwaPtHnwEjQN3rYciJHUq99MAhd6yr4rHDboxiGfR
+	BQZBLmyq88BfPLBEaUlKW2two3I5Kpysj5rPEez3P6Kjz5o7aeO7KysNQMMyyTmYGSaAwF
+	AVDkf7ZLqOTUjMQzQ0/cpVLY8AZ1fqQ=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-435-A2tLaInrM_6j7wB3H8_LFA-1; Sat, 26 Oct 2024 09:04:05 -0400
+X-MC-Unique: A2tLaInrM_6j7wB3H8_LFA-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6cbf054c552so43282086d6.1
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Oct 2024 06:04:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729947844; x=1730552644;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oP5qh+2LMA7a60ZaSKTVi4dOBgz3urbmbQ3HXtyem6o=;
+        b=MA7lnFATdG4U3kb0lQJXNvhgbQnglZicmKS6OxCGpPWfqk6z3Fl1gu2PzO2fMdf2Jf
+         avGic8mTb9+B1fS2oFGtihG4XVNb5DdI8fgNpjEacQ4jnePFdBO+KkkRNK9r33Y27ay2
+         0MuWfKuMDMudO027e+XSPOh6OLjX3WDMBVpS2pH30PMOpWvXySpn9SehE+b0px8siYhi
+         yihpd365x1MJ16TdgIHaNVk+BjGzNYoLhKnJHvlGjzJsJca6QADkg/gvNA9IoO+x0Lh1
+         CVunVjYPyWg7JhnE7W6kloLIUQ48ZrZwI7Dp6+d50JF5/jc82vCImM6MbJiPC2QOoSfa
+         lG/Q==
+X-Gm-Message-State: AOJu0Yw4umPtJLEoBxYGoigND+x94klhQyVm23viTZNJbB0V66IDpYM6
+	UDgGmEXzKVPKUm5oSgLRUgQznPw3qOWebii7cdVnI739kURacFyCsFzxBNKzU3fFjYlKkFZm5ZB
+	lIDZ8czhIcF0tfet3tL6gY/LH6XojnBzM8WpDf0sGM6S0SkVLkxP4cMdidw==
+X-Received: by 2002:a05:6214:5710:b0:6cb:c905:f380 with SMTP id 6a1803df08f44-6d1856747f8mr45469936d6.2.1729947844475;
+        Sat, 26 Oct 2024 06:04:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGOr7q+FyP5hVzimjQTuBDZI2U3QLGmIw03Lea12ADlLfLZkF/2c5bPvkXfaAtHENLRaDn4hQ==
+X-Received: by 2002:a05:6214:5710:b0:6cb:c905:f380 with SMTP id 6a1803df08f44-6d1856747f8mr45469426d6.2.1729947844105;
+        Sat, 26 Oct 2024 06:04:04 -0700 (PDT)
+Received: from [172.31.1.136] ([70.109.134.69])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d179a068d1sm15101956d6.101.2024.10.26.06.04.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 26 Oct 2024 06:04:02 -0700 (PDT)
+Message-ID: <1fc7de18-eaf0-4a1e-bd41-e6072b0f3d7f@redhat.com>
+Date: Sat, 26 Oct 2024 09:04:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -48,85 +81,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] sunrpc: fix one UAF issue caused by sunrpc kernel tcp
- socket
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, <trondmy@hammerspace.com>
-CC: <Dai.Ngo@oracle.com>, <anna@kernel.org>, <chuck.lever@oracle.com>,
-	<davem@davemloft.net>, <ebiederm@xmission.com>, <edumazet@google.com>,
-	<jlayton@kernel.org>, <kuba@kernel.org>, <linux-nfs@vger.kernel.org>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>, <okorniev@redhat.com>,
-	<pabeni@redhat.com>, <tom@talpey.com>
-References: <0e434c61120b5b4a530731260c0f2c72ad02fa6f.camel@hammerspace.com>
- <20241026004837.57278-1-kuniyu@amazon.com>
-From: "liujian (CE)" <liujian56@huawei.com>
-In-Reply-To: <20241026004837.57278-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200003.china.huawei.com (7.202.181.30)
+Subject: Re: NFSv4 referrals broken when not enabling junction support
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever III <chuck.lever@oracle.com>
+References: <Zv7NRNXeUtzpfbJg@eldamar.lan>
+ <e7341203-c53c-4005-9d70-239073352b2b@redhat.com>
+ <ZxUVlpd0Ec5NaWF1@eldamar.lan> <Zxv8GLvNT2sjB2Pn@eldamar.lan>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <Zxv8GLvNT2sjB2Pn@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2024/10/26 8:48, Kuniyuki Iwashima 写道:
-> From: Trond Myklebust <trondmy@hammerspace.com>
-> Date: Sat, 26 Oct 2024 00:35:30 +0000
->> On Fri, 2024-10-25 at 14:20 -0700, Kuniyuki Iwashima wrote:
->>> From: "liujian (CE)" <liujian56@huawei.com>
->>> Date: Fri, 25 Oct 2024 11:32:52 +0800
->>>>>>> If not, then what prevents it from happening?
->>>>>> The socket created by the userspace program obtains the
->>>>>> reference
->>>>>> counting of the namespace, but the kernel socket does not.
->>>>>>
->>>>>> There's some discussion here:
->>>>>> https://lore.kernel.org/all/CANn89iJE5anTbyLJ0TdGAqGsE+GichY3YzQECjNUVMz=G3bcQg@mail.gmail.com/
->>>>> OK... So then it looks to me as if NFS, SMB, AFS, and any other
->>>>> networked filesystem that can be started from inside a container
->>>>> is
->>>>> going to need to do the same thing that rds appears to be doing.
->>>
->>> FWIW, recently we saw a similar UAF on CIFS.
->>>
->>>
->>>>>
->>>>> Should there perhaps be a helper function in the networking layer
->>>>> for
->>>>> this?
->>>>
->>>> There should be no such helper function at present, right?.
->>>>
->>>> If get net's reference to fix this problem, the following test is
->>>> performed. There's nothing wrong with this case. I don't know if
->>>> there's
->>>> anything else to consider.
->>>>
->>>> I don't have any other ideas other than these two methods. Do you
->>>> have
->>>> any suggestions on this problem? @Eric @Jakub ... @All
->>>
->>> The netns lifetime should be managed by the upper layer rather than
->>> the networking layer.  If the netns is already dead, the upper layer
->>> must discard the net pointer anyway.
->>>
->>> I suggest checking maybe_get_net() in NFS, CIFS, etc and then calling
->>> __sock_create() with kern 0.
-Only maybe_get_net() is enough. sk_kern_sock also needs to identify 
-whether it is a kernel socket.
->>>
->>
->> Thanks for the suggestion, but we already manage the netns lifetime in
->> the RPC layer. A reference is taken when the filesystem is being
->> mounted. It is dropped when the filesystem is being unmounted.
->>
->> The problem is the TCP timer races on shutdown. There is no interest in
->> having to manage that in the RPC layer.
+On 10/25/24 4:14 PM, Salvatore Bonaccorso wrote:
+> Hi Steve,
 > 
-> Does that mean netns is always alive when the socket is created
-> in svc_create_socket() or xs_create_sock() ?  If so, you can just
-> use __sock_create(kern=0) there to prevent net from being freed
-> before the socket.
+> On Sun, Oct 20, 2024 at 04:37:10PM +0200, Salvatore Bonaccorso wrote:
+>> Hi Steve,
+>>
+>> On Tue, Oct 08, 2024 at 06:12:58AM -0400, Steve Dickson wrote:
+>>>
+>>>
+>>> On 10/3/24 12:58 PM, Salvatore Bonaccorso wrote:
+>>>> Hi Steve, hi linux-nfs people,
+>>>>
+>>>> it got reported twice in Debian that  NFSv4 referrals are broken when
+>>>> junction support is disabled. The two reports are at:
+>>>>
+>>>> https://bugs.debian.org/1035908
+>>>> https://bugs.debian.org/1083098
+>>>>
+>>>> While arguably having junction support seems to be the preferred
+>>>> option, the bug (or maybe unintended behaviour) arises when junction
+>>>> support is not enabled (this for instance is the case in the Debian
+>>>> stable/bookworm version, as we cannot simply do such changes in a
+>>>> stable release; note later relases will have it enabled).
+>>>>
+>>>> The "breakage" seems to be introduced with 15dc0bead10d ("exportd:
+>>>> Moved cache upcalls routines  into libexport.a"), so
+>>>> nfs-utils-2-5-3-rc6 as this will mask behind the #ifdef
+>>>> HAVE_JUNCTION_SUPPORT's code which seems needed to support the refer=
+>>>> in /etc/exports.
+>>>>
+>>>> I had a quick conversation with Cuck offliste about this, and I can
+>>>> hopefully state with his word, that yes, while nfsref is the direction
+>>>> we want to go, we do not want to actually disable refer= in
+>>>> /etc/exports.
+>>> +1
+>>>
+>>>>
+>>>> Steve, what do you think? I'm not sure on the best patch for this,
+>>>> maybe reverting the parts masking behind #ifdef HAVE_JUNCTION_SUPPORT
+>>>> which are touched in 15dc0bead10d would be enough?
+>>> Yeah there is a lot of change with 15dc0bead10d
+>>>
+>>> Let me look into this... At the up coming Bake-a-ton [1]
+>>
+>> Thanks a lot for that, looking forward then to a fix which we might
+>> backport in Debian to the older version as well.
 > 
-> sock_create_kern() and kern@ are confusing, and we had similar issues
-> in other kernel TCP socket users SMC/RDS, so I'll rename them to
-> sock_create_noref() and no_net_ref@ or something.
+> Hope the Bake-a-ton was productive :)
+> 
+> Did you had a chance to look at this issue beeing there?
+Yes I did... and we did talk about the problem.... still looking into it.
+
+steved.
+> 
+> Regards,
+> Salvatore
+> 
+
 
