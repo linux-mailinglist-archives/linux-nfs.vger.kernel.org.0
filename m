@@ -1,60 +1,56 @@
-Return-Path: <linux-nfs+bounces-7538-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7539-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46E229B379C
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Oct 2024 18:27:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AABB69B37A5
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Oct 2024 18:30:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 072F0282405
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Oct 2024 17:27:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCF181C218D3
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Oct 2024 17:30:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ECF41DF254;
-	Mon, 28 Oct 2024 17:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39A118BC3D;
+	Mon, 28 Oct 2024 17:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1b3QSbc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/CEVui5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C101DF24B
-	for <linux-nfs@vger.kernel.org>; Mon, 28 Oct 2024 17:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC2126AD9
+	for <linux-nfs@vger.kernel.org>; Mon, 28 Oct 2024 17:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730136433; cv=none; b=MyxzsXx3A0YCWfrtIp5puZCMKuUg5CMVNMoksyMpF1jP0M+piFWHmHXEVoDRwLSouLiqfYZlUAjM4xHtnM/DQMrRlehP7GP/YNBrpDHZz9c5OzI4qFxmWUdx7deQFEsRlEHtpCTFQhQSHdlSnPS7Ow6+CVWrVlzWduvK5aluArI=
+	t=1730136639; cv=none; b=S3hMl5iexRkiEAiT8oqeXv6jXSSZ031LqdFIRa14PXK2TN/t4/kL5RenfkhL1FU2YjxrdraQmEbbjQlVxVe99teK1h9HH2wTNHOWv/oQ3C8VBhn7b1rdRVZhWfI+0s+G4tyAdwGua9c3qu0/xgxwDT37LB704Rb90XR7E6Qcjsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730136433; c=relaxed/simple;
-	bh=403o8Qb7BZKXK+sxqPRoP/UmCIhm4NavYhQSPxD2fX0=;
+	s=arc-20240116; t=1730136639; c=relaxed/simple;
+	bh=TpkipsftLdXeyynBiQvBO4/2NQrK7lvqeJJIA6Ge4rY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JN+Cmch4RxaAdWkMiw6Xf8mp+Rlc4d/VoUouodnNH9ryX4HDpRFumBRX04uaVEoI/eq3v0uS4SsJLwdOmF0Cjahaf35G544gktZ+AUwhZ1KVF13HHj7NixaNKakMxPrWxE5XyPK/B9bBAymKhTagbPRk/i/JmpAWioDS+dSRgLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1b3QSbc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB35C4CEE4;
-	Mon, 28 Oct 2024 17:27:12 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IHc1q79wV9dnb6JMENbsYj78qkRMt7IBQfrE19BBWA2dfsaY021+dzVI8fxHzaYPTCtnpJXjlmtZPtIaYQOib3SHMBp7kQM5+wul7r/fiHO0YUaX4pzgN2ABhD7r3xEu6v+jHFCApF6WLUqQSk2qlVVwuFopDL7OTodnQ9DmKoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/CEVui5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926CAC4CEC3;
+	Mon, 28 Oct 2024 17:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730136433;
-	bh=403o8Qb7BZKXK+sxqPRoP/UmCIhm4NavYhQSPxD2fX0=;
+	s=k20201202; t=1730136639;
+	bh=TpkipsftLdXeyynBiQvBO4/2NQrK7lvqeJJIA6Ge4rY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=j1b3QSbcGoICHjSI8atHYmG1LnDtrq/mCsH/0SETMi5XXKT9LVPMzSjtSasiEqAQX
-	 vQR7V1mLemdiJClrcq79IKhPmcmGR3UkqZtxlMdxwVYY3WQfook+zMgYHl1i6A6y6J
-	 sxXkN01Av05Ez7n3uaY+hv73mKmyIz0GZe7Z/hjlc/gPCVaOPAVuVLXrsbwAI3xrEA
-	 HdZCiWgWrpl5qiu0HF4Wn8kPWsIJOa69lFoCE70n4fVl30ForPgH6yOEGUQ6pgAEpG
-	 N7SFoJGQrTqaqsGEPFZtDSww2iBLyugzZX2mUiqyTfq4xG9bcuOxwrok3SLNnjEe4y
-	 sLY9WzhJloB2w==
-Message-ID: <3301c899e4d57f5a988373d76fdceb9ec2bee8af.camel@kernel.org>
-Subject: Re: nfsd stuck in D (disk sleep) state
+	b=K/CEVui5x0mwNAJuOOheVGz1RGajE7FVKYqpSXrvvyLaZkkkUiEuuFRbMsJl1nJrs
+	 0pErdg1MMQhjI8c4j9rnSzAVkT5SY24IlXqIE3lCzB55YonMekUoWtxj2J6O1AgPEn
+	 24Q5yhJQ4Hvy9AhwKcHfTT6DfmUDzq5YmzE60+HmF8R8in6caS5kZtRXDozNJ64CcZ
+	 e+QnNHOm+0g4lepLa/lAbRgo05fqEbErgYflrdvnmjsOqBp7DsE3dS502bwRorcAtV
+	 8+hmcKnhBbsmvbG7lhUjQtqExaf9MnayUSvwuSoTcPm3mEo9hCmyzZTJkm/K4R+2lU
+	 A+P387FlZ6BLQ==
+Message-ID: <844c0483ad7c1266d6e744b48846d619a4efe828.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: make use of warning provided by refcount_t
 From: Jeff Layton <jlayton@kernel.org>
-To: Tom Talpey <tom@talpey.com>, =?ISO-8859-1?Q?Beno=EEt?= Gschwind
- <benoit.gschwind@minesparis.psl.eu>, Chuck Lever III
- <chuck.lever@oracle.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date: Mon, 28 Oct 2024 13:27:11 -0400
-In-Reply-To: <509abdda-9143-40da-bbf2-9bfdf8044d4c@talpey.com>
-References: 
-	<1cbdfe5e604d1e39a12bc5cca098684500f6a509.camel@minesparis.psl.eu>
-	 <4A9BFCA9-7A15-4CA7-B198-0A15C3A24D11@oracle.com>
-	 <f7aec65eab6180cf5e97bbfd3fad2a6b633d4613.camel@minesparis.psl.eu>
-	 <509abdda-9143-40da-bbf2-9bfdf8044d4c@talpey.com>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, Mike Snitzer
+ <snitzer@kernel.org>
+Date: Mon, 28 Oct 2024 13:30:37 -0400
+In-Reply-To: <173006668387.81717.13494809143579612819@noble.neil.brown.name>
+References: <173006668387.81717.13494809143579612819@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,251 +135,46 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-10-28 at 08:46 -0400, Tom Talpey wrote:
-> On 10/28/2024 5:18 AM, Beno=C3=AEt Gschwind wrote:
-> > Hello,
-> >=20
-> > The issue trigger again, I attached the result of:
-> >=20
-> > # dmesg -W | tee dmesg.txt
-> >=20
-> > using:
-> >=20
-> > # echo t > /proc/sysrq-trigger
-> >=20
-> > I have the following PID stuck:
-> >=20
-> >      1474 D (disk sleep)       0:54:58.602 [nfsd]
-> >      1475 D (disk sleep)       0:54:58.602 [nfsd]
-> >      1484 D (disk sleep)       0:54:58.602 [nfsd]
-> >      1495 D (disk sleep)       0:54:58.602 [nfsd]
+On Mon, 2024-10-28 at 09:04 +1100, NeilBrown wrote:
+> refcount_t, by design, checks for unwanted situations and provides
+> warnings.  It is rarely useful to have explicit warnings with refcount
+> usage.
 >=20
-> Hmm, 1495 is stuck in nfsd4_create_session
+> In this case we have an explicit warning if a refcount_t reaches zero
+> when decremented.  Simply using refcount_dec() will provide a similar
+> warning and also mark the refcount_t as saturated to avoid any possible
+> use-after-free.
 >=20
->  > [427468.304955] task:nfsd            state:D stack:0     pid:1495=20
-> ppid:2      flags:0x00004000
->  > [427468.304962] Call Trace:
->  > [427468.304965]  <TASK>
->  > [427468.304971]  __schedule+0x34d/0x9e0
->  > [427468.304983]  schedule+0x5a/0xd0
->  > [427468.304991]  schedule_timeout+0x118/0x150
->  > [427468.305003]  wait_for_completion+0x86/0x160
->  > [427468.305015]  __flush_workqueue+0x152/0x420
->  > [427468.305031]  nfsd4_create_session+0x79f/0xba0 [nfsd]
->  > [427468.305092]  nfsd4_proc_compound+0x34c/0x660 [nfsd]
->  > [427468.305147]  nfsd_dispatch+0x1a1/0x2b0 [nfsd]
->  > [427468.305199]  svc_process_common+0x295/0x610 [sunrpc]
->  > [427468.305269]  ? svc_recv+0x491/0x810 [sunrpc]
->  > [427468.305337]  ? nfsd_svc+0x370/0x370 [nfsd]
->  > [427468.305389]  ? nfsd_shutdown_threads+0x90/0x90 [nfsd]
->  > [427468.305437]  svc_process+0xad/0x100 [sunrpc]
->  > [427468.305505]  nfsd+0x99/0x140 [nfsd]
->  > [427468.305555]  kthread+0xda/0x100
->  > [427468.305562]  ? kthread_complete_and_exit+0x20/0x20
->  > [427468.305572]  ret_from_fork+0x22/0x30
+> This patch drops the warning and uses refcount_dec() instead of
+> refcount_dec_and_test().
 >=20
-> and the other three are stuck in nfsd4_destroy_session
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfsd/filecache.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 1408166222c5..c16671135d17 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1050,7 +1050,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ net *net,
+>  		 * the last one however, since we should hold another.
+>  		 */
+>  		if (nfsd_file_lru_remove(nf))
+> -			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
+> +			refcount_dec(&nf->nf_ref);
 
-All 4 processes are stuck waiting on a flush_workqueue call. It's
-probably one of these:
+The existing code threw a warning when the counter reached 0. Your
+change will make the potential warning fire later, after we try to put
+the last reference and the counter goes to -1. That's probably fine as
+it should happen later in this function either way.
 
-    flush_workqueue(clp->cl_callback_wq);
+>  		goto wait_for_construction;
+>  	}
+> =20
+>=20
+> base-commit: 7fa861d5df402b2327f45e0240c1b842f71fec11
 
-So the question here is really -- why are the callback workqueue jobs
-stuck? I do see this:
-
-[427468.316839] Workqueue: nfsd4_callbacks nfsd4_run_cb_work [nfsd]
-[427468.316899] Call Trace:
-[427468.316902]  <TASK>
-[427468.316908]  __schedule+0x34d/0x9e0
-[427468.316919]  schedule+0x5a/0xd0
-[427468.316927]  schedule_timeout+0x94/0x150
-[427468.316937]  ? __bpf_trace_tick_stop+0x10/0x10
-[427468.316947]  rpc_shutdown_client+0xf2/0x150 [sunrpc]
-[427468.317015]  ? cpuusage_read+0x10/0x10
-[427468.317026]  nfsd4_process_cb_update+0x4c/0x270 [nfsd]
-[427468.317097]  nfsd4_run_cb_work+0x9f/0x150 [nfsd]
-[427468.317146]  process_one_work+0x1c7/0x380
-[427468.317158]  worker_thread+0x4d/0x380
-[427468.317170]  ? rescuer_thread+0x3a0/0x3a0
-[427468.317177]  kthread+0xda/0x100
-[427468.317185]  ? kthread_complete_and_exit+0x20/0x20
-[427468.317195]  ret_from_fork+0x22/0x30
-[427468.317213]  </TASK>
-
-Maybe the RPC client is having trouble clearing clnt->cl_tasks ?=20
-
->  > [427468.298315] task:nfsd            state:D stack:0     pid:1474=20
-> ppid:2      flags:0x00004000
->  > [427468.298322] Call Trace:
->  > [427468.298326]  <TASK>
->  > [427468.298332]  __schedule+0x34d/0x9e0
->  > [427468.298343]  schedule+0x5a/0xd0
->  > [427468.298350]  schedule_timeout+0x118/0x150
->  > [427468.298362]  wait_for_completion+0x86/0x160
->  > [427468.298375]  __flush_workqueue+0x152/0x420
->  > [427468.298392]  nfsd4_destroy_session+0x1b6/0x250 [nfsd]
->  > [427468.298456]  nfsd4_proc_compound+0x34c/0x660 [nfsd]
->  > [427468.298515]  nfsd_dispatch+0x1a1/0x2b0 [nfsd]
->  > [427468.298568]  svc_process_common+0x295/0x610 [sunrpc]
->  > [427468.298643]  ? svc_recv+0x491/0x810 [sunrpc]
->  > [427468.298711]  ? nfsd_svc+0x370/0x370 [nfsd]
->  > [427468.298776]  ? nfsd_shutdown_threads+0x90/0x90 [nfsd]
->  > [427468.298825]  svc_process+0xad/0x100 [sunrpc]
->  > [427468.298896]  nfsd+0x99/0x140 [nfsd]
->  > [427468.298946]  kthread+0xda/0x100
->  > [427468.298954]  ? kthread_complete_and_exit+0x20/0x20
->  > [427468.298963]  ret_from_fork+0x22/0x30
->=20
-> There aren't a lot of 6.1-era changes in either of these, but there
-> are some interesting behavior updates around session create replay
-> from early this year. I wonder if the 6.1 server is mishandling an
-> nfserr_jukebox situation in nfsd4_session_create.
->=20
-> Was the client actually attempting to mount or unmount?
->=20
-> Tom.
->=20
-> >=20
-> > Thank by advance,
-> > Best regards
-> >=20
-> > Le mercredi 23 octobre 2024 =C3=A0 19:38 +0000, Chuck Lever III a =C3=
-=A9crit=C2=A0:
-> > >=20
-> > >=20
-> > > > On Oct 23, 2024, at 3:27=E2=80=AFPM, Beno=C3=AEt Gschwind
-> > > > <benoit.gschwind@minesparis.psl.eu> wrote:
-> > > >=20
-> > > > Hello,
-> > > >=20
-> > > > I have a nfs server using debian 11 (Linux hostname 6.1.0-25-amd64
-> > > > #1
-> > > > SMP PREEMPT_DYNAMIC Debian 6.1.106-3 (2024-08-26) x86_64 GNU/Linux)
-> > > >=20
-> > > > In some heavy workload some nfsd goes in D state and seems to never
-> > > > leave this state. I did a python script to monitor how long a
-> > > > process
-> > > > stay in particular state and I use it to monitor nfsd state. I get
-> > > > the
-> > > > following result :
-> > > >=20
-> > > > [...]
-> > > > 178056 I (idle) 0:25:24.475 [nfsd]
-> > > > 178057 I (idle) 0:25:24.475 [nfsd]
-> > > > 178058 I (idle) 0:25:24.475 [nfsd]
-> > > > 178059 I (idle) 0:25:24.475 [nfsd]
-> > > > 178060 I (idle) 0:25:24.475 [nfsd]
-> > > > 178061 I (idle) 0:25:24.475 [nfsd]
-> > > > 178062 I (idle) 0:24:15.638 [nfsd]
-> > > > 178063 I (idle) 0:24:13.488 [nfsd]
-> > > > 178064 I (idle) 0:24:13.488 [nfsd]
-> > > > 178065 I (idle) 0:00:00.000 [nfsd]
-> > > > 178066 I (idle) 0:00:00.000 [nfsd]
-> > > > 178067 I (idle) 0:00:00.000 [nfsd]
-> > > > 178068 I (idle) 0:00:00.000 [nfsd]
-> > > > 178069 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178070 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178071 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178072 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178073 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178074 D (disk sleep) 1:29:25.809 [nfsd]
-> > > > 178075 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178076 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178077 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178078 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178079 S (sleeping) 0:00:02.147 [nfsd]
-> > > > 178080 D (disk sleep) 1:29:25.809 [nfsd]
-> > > > 178081 D (disk sleep) 1:29:25.809 [nfsd]
-> > > > 178082 D (disk sleep) 0:28:04.444 [nfsd]
-> > > >=20
-> > > > All process not shown are in idle state. Columns are the following:
-> > > > PID, state, state name, amoung of time the state did not changed
-> > > > and
-> > > > the process was not interrupted, and /proc/PID/status Name entry.
-> > > >=20
-> > > > As you can read some nfsd process are in disk sleep state since
-> > > > more
-> > > > than 1 hour, but looking at the disk activity, there is almost no
-> > > > I/O.
-> > > >=20
-> > > > I tried to restart nfs-server but I get the following error from
-> > > > the
-> > > > kernel:
-> > > >=20
-> > > > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:49 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 11:59:59 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 12:00:09 hostname kernel: rpc-srv/tcp: nfsd: got error -104
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 12:00:10 hostname kernel: rpc-srv/tcp: nfsd: got error -32
-> > > > when sending 20 bytes - shutting down socket
-> > > > oct. 23 12:00:10 hostname kernel: rpc-srv/tcp: nfsd: got error -32
-> > > > when sending 20 bytes - shutting down socket
-> > > >=20
-> > > > The only way to recover seems to reboot the kernel. I guess because
-> > > > the
-> > > > kernel force the reboot after a given timeout.
-> > > >=20
-> > > > My setup involve in order :
-> > > > - scsi driver
-> > > > - mdraid on top of scsi (raid6)
-> > > > - btrfs ontop of mdraid
-> > > > - nfsd ontop of btrfs
-> > > >=20
-> > > >=20
-> > > > The setup is not very fast as expected, but it seems that in some
-> > > > situation nfsd never leave the disk sleep state. the exports
-> > > > options
-> > > > are: gss/krb5i(rw,sync,no_wdelay,no_subtree_check,fsid=3DXXXXX). Th=
-e
-> > > > situation is not commun but it's always happen at some point. For
-> > > > instance in the case I report here, my server booted the 2024-10-01
-> > > > and
-> > > > was stuck about the 2024-10-23. I did reduced by a large amount the
-> > > > frequency of issue by using no_wdelay (I did thought that I did
-> > > > solved
-> > > > the issue when I started to use this option).
-> > > >=20
-> > > > My guess is hadware bug, scsi bug, btrfs bug or nfsd bug ?
-> > > >=20
-> > > > Any clue on this topic or any advice is wellcome.
-> > >=20
-> > > Generate stack traces for each process on the system
-> > > using "sudo echo t > /proc/sysrq-trigger" and then
-> > > examine the output in the system journal. Note the
-> > > stack contents for the processes that look stuck.
-> > >=20
-> > > --
-> > > Chuck Lever
-> > >=20
-> > >=20
-> >=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
