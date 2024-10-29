@@ -1,123 +1,91 @@
-Return-Path: <linux-nfs+bounces-7558-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7559-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBF619B52A9
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 20:22:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6103C9B52AE
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 20:27:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 732541F251D8
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 19:22:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 929B21C2108C
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 19:27:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785F62071EA;
-	Tue, 29 Oct 2024 19:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26F420697E;
+	Tue, 29 Oct 2024 19:27:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOmX2+dS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vMryc/QP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B51206979;
-	Tue, 29 Oct 2024 19:21:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6B41FF7C2
+	for <linux-nfs@vger.kernel.org>; Tue, 29 Oct 2024 19:27:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730229719; cv=none; b=vAO68GRRhgtO8XrNn6aJrgzsKDF9MYfPmbUP8r6M5b0uzM2CGAcVIzUbBZ/nc3o3d+8XZYF7IU+GlYhHXopPn6Uiogdn/bR0NRe5IaWNXOMyKuo8uTfEjYG0hsd+LvTPMhIKAhIOOH+A6uMxORMpU4psbd32rBSleql751mr8vQ=
+	t=1730230048; cv=none; b=mGbsyvKj1RAYZmWDeRhd1pxd1PEIbvR9DpwX+3X3qkCLjmtKIhn1wcuC+rb5SemfXtC8jcq6AUQeYEwCwioytVX5McPam3BUVoguiXkiHy2RptGF/LIXKFxeT19vlXN4a9UDqeVHx6mOvCUhkUuWbcWIG4jL8WEnJSt6p1p3vuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730229719; c=relaxed/simple;
-	bh=gQwj26AXbStfJzPa5fSOAVsCpDjxEpQ9CKNHrOAQ6sE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OMz2S6RzpEf3AfTBFxy/cy84OhLf+Fu/TBj7sFk2FlsVoi0j2CmGMp+EtdpVOGGNxwdon30NHwCmpkUYZnX9jFUoC2imbvzbcAgL3t+NgCofYfjv5aqJV06GAZ1Dz3X2QvQRtn7V3kAW//sE1FV/0GWIcRfoYIzZiADbZWO+zi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOmX2+dS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0581C4CECD;
-	Tue, 29 Oct 2024 19:21:57 +0000 (UTC)
+	s=arc-20240116; t=1730230048; c=relaxed/simple;
+	bh=LirewynzsXTSX/vn5KqNnbE1rEVYJnJbz+kM7dsS2MI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrLUb98fiu8kwlYidDlDMBBv3Fp4fMhvxcfwNGxeJixn4kP4ZDr/H55HAy+Rz06grw8xAAHzXaoz4SzQuAOLSsfdIK355veBXcbuCl6ZSxjJ77zXP603O+hnowtuZxL0k4aEbskxy1PJUAr+Yr/q9+m8wCROgWPz7XLuUw5UNtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vMryc/QP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0179DC4CECD;
+	Tue, 29 Oct 2024 19:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730229718;
-	bh=gQwj26AXbStfJzPa5fSOAVsCpDjxEpQ9CKNHrOAQ6sE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=LOmX2+dSdZ3QX/j9g7pPQ/ZRO5t7Slg2xj3ERaBbrFwbwS7zZ2VXDLkZIyiezhXFE
-	 dr81JBuTrMAKhj8CxRHWHcoLczebVeh7VAl4NjJTGj6v0RVhKdB3ijGddFbN+zDWXU
-	 r4Xo6Z6ik18XTvbD0WhzKyXdj64AjwvGxQK13/hdsb49fSPZZLNNJT3cPiMzSSqCHA
-	 fy1v7Jr9FcvRMM5Em1UXvYgZ+gn5v8VdiwI1R/lzU9EZHskDfDCk4OlIBjweTNI7Vl
-	 4dGM/YlTGg/uhcjWuGY+ggNBWK+t+Fb/NaMwyaQrc1MYtMRXzxu3BC9qHtXjX9dKGW
-	 Kq3FI0dth1GvA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 29 Oct 2024 15:21:43 -0400
-Subject: [PATCH] sunrpc: remove newlines from tracepoints
+	s=k20201202; t=1730230047;
+	bh=LirewynzsXTSX/vn5KqNnbE1rEVYJnJbz+kM7dsS2MI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vMryc/QP5hDEg9DSmpfG/MtgLLfPNvwnIuTxUIMf7m+rAXVK3VkAva/POC/59B1/2
+	 THWffA+vRfzko6X8a43jM9MGgdKqMrCqtP4t7HW3ixjnHx2OulUlLdExzSPvp4wO67
+	 ZDiDkewvPScL4U/NFzbM++Rb39/1KyJpareNriN9pa61oy47WaCinlekpOO1i8q/gQ
+	 yAyXnlFzIXwNhSk/fnU1WrFxwGIW5gku9+78t+LkA7ip5rRMNOGzJn0BgOhkCBm2Je
+	 atDUkS5nIFhbYnt9bnjBci07lwNExFOJ9D2avQHXKuL1aHpbNpoAmnpLLhK8mroqJq
+	 p2/3iUWNZUEuQ==
+From: cel@kernel.org
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH] NFSD: Never decrement pending_async_copies on error
+Date: Tue, 29 Oct 2024 15:27:19 -0400
+Message-ID: <20241029192718.34954-2-cel@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241029-tpfix-v1-1-19f69fcf915a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAMY1IWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxNDAyNL3ZKCtMwKXSNTo1TDNAtTo8RUEyWg2oKiVKAw2Jzo2NpaALqvNg9
- XAAAA
-X-Change-ID: 20241029-tpfix-252e1f852ae4
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1426; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=gQwj26AXbStfJzPa5fSOAVsCpDjxEpQ9CKNHrOAQ6sE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnITXPT/LqGoAQrhKGhjRnaJs5U8gY4kh+gfrUy
- h21JL6kRqeJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZyE1zwAKCRAADmhBGVaC
- FfghD/9u9kZzjdI8OJBMO79l1i9cgclz6/Z1/OmHbb7i2DfxOu2Jxw2cxeIE5fS+l+NAqvhFxaZ
- tXGPXmSCPknzwGHLGJFdWMyRKkN4hdfQy1vfTTmOaR1j3D4amf98bu9ssmS9jgiqz6fudqZ9J+e
- ep6KetyJwe1v0EVaap8pkdUcNSQau2j49CcxomQsLSGQp8Y9/dOOKVoOZlqIsTTDGsSaT3YeAxT
- cTywba2biOrJOuxX1RA1GV8BwqmLvkQAFAsBOf2uFHRiU3CRZ/zkN/cWE5OiaThpDXzkNj5z02D
- V5acD7eLJ6e+jw9rTti0oTDZRei4jvWLOodyXXo4fetNBg6YEwdsStXP0B9dbuVTl0UP6sQ9JwN
- PA5tXhOPY3wUKiQDsL64z0/dtVXGjhZ1v8WwZK56AsxwxTIuG/D1Dgsfu4zZ/GbkqMlTfhAlW7Q
- RbBFT5Uv5e3PVXK3zS3rlszcbNQ6Fsoxc5QxSmzYoQGj2c1KhgM1/xlVVCi4HLojsTAjAPCetc4
- O92mB3Uo7NDJt0nen/DZ4NEKjf0DEz/kOdt341GnK1R4Nf6lcUuoCr/3DHHZ3veltFKbgo3+eqa
- y2KqTWP124bYsKNhcA/Tf0G1nX/QF2Ic2y8mKzmKtHoSplzvjRXvxT6lbgRwIN0tgVDF8uzsYKR
- yaPd/HZ5HMcFyHg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1039; i=chuck.lever@oracle.com; h=from:subject; bh=U1W2OF84MFpLbISZ0HYEozSLQkYapQoEy3xkTSm+U/Y=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnITcWxX8pKi4ZyFS4r+pidqZrNc87PdBceDCaP Le1M2UYeYOJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZyE3FgAKCRAzarMzb2Z/ l3FbEACOV68OJlxf/FiLn7HxhpRDbfaIPL6UY+hNerIqXlYUurMD2jj0Iyo5hReUoyxkAD6hQd+ +qrL9jeUcv1N8OF7Q+HWpa9s2XzZvgIqR3l6XKFV9tr6T7KmsEy82wQ0TPdbvFv1pirdBDZxy4O kCPYnQYrSQED/nwNMM+xxEsCLkmYikN+c0t9s/0bNm/nw9iC+MGWIrZaL9yRPdm+tJFnRQmaRwG JUHsVAXw2Zkdm+/ZFqSZ6jFdFybCfPdRSv8QiYIk1v1E8iHeCQaI1yXFGPR65KnOXoUGLBYXLCc +RpqRYMYqp5UWmzdCwtncyqvQ5s2W2bv2SuNCfe1aomHEiD1cwRDHGb63uIkKH72jWzeHdFmQN7 5tuo0nY/OM0Fo95dznYf5YdLnYo99pTqe12qTSKmDmrrTus9x3tCg+2f8RoRICUsciiJ5uP9/NR aLdPgXGJXiuCAY1ZMIqjEGN6CY6b3UKKMqAuxvIsLYGvV5EqWbrNE6lbkMzW9TC8XZlxc+z5fX6 tLrC/Kc9xDBIcnQ6Kuv/ebqekyk/o/f8b4SBjOvWJpmsnGKC+E4lS0Oc85/KOJwdk6cJB15P7bh jiwrtVJdIa4hyCe2zS1avxH/SsqWPvOSApSMPQ5gABlCbkwJZoZtZD1sOV64tLETb+e0GRKPhnr gVVC5drdXTdCbIg==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 
-Tracepoint strings don't require newlines (and in fact, they are
-undesirable).
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+The error flow in nfsd4_copy() calls cleanup_async_copy(), which
+already decrements nn->pending_async_copies.
+
+Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent async COPY operations")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4proc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 5e8495216689549f1c0bb377911eac4a7bb7b1a8..b13dc275ef4a79940a940dd463b7a3eef5ca428b 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -719,7 +719,7 @@ TRACE_EVENT(rpc_xdr_overflow,
- 	),
- 
- 	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
--		  " %sv%d %s requested=%zu p=%p end=%p xdr=[%p,%zu]/%u/[%p,%zu]/%u\n",
-+		  " %sv%d %s requested=%zu p=%p end=%p xdr=[%p,%zu]/%u/[%p,%zu]/%u",
- 		__entry->task_id, __entry->client_id,
- 		__get_str(progname), __entry->version, __get_str(procedure),
- 		__entry->requested, __entry->p, __entry->end,
-@@ -777,7 +777,7 @@ TRACE_EVENT(rpc_xdr_alignment,
- 	),
- 
- 	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
--		  " %sv%d %s offset=%zu copied=%u xdr=[%p,%zu]/%u/[%p,%zu]/%u\n",
-+		  " %sv%d %s offset=%zu copied=%u xdr=[%p,%zu]/%u/[%p,%zu]/%u",
- 		__entry->task_id, __entry->client_id,
- 		__get_str(progname), __entry->version, __get_str(procedure),
- 		__entry->offset, __entry->copied,
-
----
-base-commit: 9c9cb4242c49bbadd010e8f0a9e7daf4b392ff6b
-change-id: 20241029-tpfix-252e1f852ae4
-
-Best regards,
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 3c89eca35208..130155dfcc1e 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1923,10 +1923,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		async_copy->cp_ttl = NFSD_COPY_INITIAL_TTL;
+ 		/* Arbitrary cap on number of pending async copy operations */
+ 		if (atomic_inc_return(&nn->pending_async_copies) >
+-				(int)rqstp->rq_pool->sp_nrthreads) {
+-			atomic_dec(&nn->pending_async_copies);
++				(int)rqstp->rq_pool->sp_nrthreads)
+ 			goto out_err;
+-		}
+ 		async_copy->cp_src = kmalloc(sizeof(*async_copy->cp_src), GFP_KERNEL);
+ 		if (!async_copy->cp_src)
+ 			goto out_err;
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.47.0
 
 
