@@ -1,205 +1,192 @@
-Return-Path: <linux-nfs+bounces-7545-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7546-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3E2D9B3F06
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 01:21:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 748D09B43AD
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 09:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53DDF1F231AD
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 00:21:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 986131C21369
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Oct 2024 08:03:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BC8E8BEA;
-	Tue, 29 Oct 2024 00:21:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8EED202F78;
+	Tue, 29 Oct 2024 08:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNiKxpqT"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="crIUykRg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5138BE8
-	for <linux-nfs@vger.kernel.org>; Tue, 29 Oct 2024 00:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04582200BA5
+	for <linux-nfs@vger.kernel.org>; Tue, 29 Oct 2024 08:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730161284; cv=none; b=LRU33feywk/+L7tGPW/23OFumIMP+pVrR/Puwu4SnZxZl7X1dapxkmeuteGyRB37DaQbEGNRzTfgyJArKW7M2HvyTb8G/9KaIarwqKVxICIauJ7gqAJa1NQXZeJSWYYFRmzvVSz+qq1vReXpoh5x4TfQeE76OD7k5n8Of8YVUuw=
+	t=1730188979; cv=none; b=rC0A2FsPPorpHb61rJHKNgKfc6j47Sa8u6ft90DYd2cpkjU0Asp7OnLdWqiAjZWg5bp/NSJrjY8FQT3Ro/+Fl4iehLcTHAphT4lYCFNDYc4ET+URLrnKHJfp4QGAbf+jLFJPuSFD3sfen3vSc5rqwoZPSxGnfMkMcxvcn79hX14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730161284; c=relaxed/simple;
-	bh=52ms/mUbdVmuX7krvJk9Di9evBquIdoddYrQ8dGGNPg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r60YTgs25CIGr3v18w05u4Y/5vTKBnfsSQ7hiwKYMgsyoEbrDrGzrhibk8ww7k809BALbA8VqH9ebeCA5JXXQloMmNUG1uOWL9BWbu/1j3k4isEwzr2x8ODHKH1Pj/hr1/6uuaYLWbTZP0UCmpj3iiFhKZC0MJ2T6+L01BJGchw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNiKxpqT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD2B9C4CEC3;
-	Tue, 29 Oct 2024 00:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730161283;
-	bh=52ms/mUbdVmuX7krvJk9Di9evBquIdoddYrQ8dGGNPg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pNiKxpqTTcahCbS18zl9rM8UAEzU9BUrC6v7AXYJnN/xma/vkMfFsX/B3+FxejRrz
-	 yYslRot9j4Ows+GBoXnAQfw/OC7uC3V9W/7nRYnAecZ0U0galp/RPVMEJil2gO3uID
-	 2S38Ecbk1W1bU65KlhtK07gbwJTSPotK9ETn4mHzDT5hRo98OCkHlCFiHFZQBK0trB
-	 8W0Y/vpHNkuula4rKdZRQSKuCFtKe4KWkEpdbCsJpkeHQV70GuvIMnXScWBqTv60Oe
-	 X0mL04RNEmEEV3F4jcJaQ7jgbcyG3QGF+LWVY9n9taH8HYENVbaj4M287dFvXTfKD7
-	 49Ys+OLu1xJJw==
-Message-ID: <273a2aab881fa0ae9220791580042a60961e8fc1.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: make use of warning provided by refcount_t
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  linux-nfs@vger.kernel.org, Mike Snitzer
- <snitzer@kernel.org>
-Date: Mon, 28 Oct 2024 20:21:21 -0400
-In-Reply-To: <173014844936.81717.17897683464355424644@noble.neil.brown.name>
-References: <173006668387.81717.13494809143579612819@noble.neil.brown.name>
-	, <844c0483ad7c1266d6e744b48846d619a4efe828.camel@kernel.org>
-	 <173014844936.81717.17897683464355424644@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
+	s=arc-20240116; t=1730188979; c=relaxed/simple;
+	bh=VUedAv/Vm0ig6g+H6A9FqmCfMSKGESVF3W8HefGSG4E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=I4zqWYDA9feKyioSD76Un83PtU92Rq8uA66+sZ6FNEP9frvrOLpqij1k3UWi0LQGYm1azeVY8we12PudHqCZt4O9Q3qinCLAh+kxS5WbgsKK0Sggr6RkraU0JJm8IbFlWZx8FGxW9mSBvcdRrTEkV+qP9SBi9H2KdB/pbvo+tgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=crIUykRg; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a9a3dc089d8so758643566b.3
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Oct 2024 01:02:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1730188975; x=1730793775; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=McIeLxc/I8ZCOijPmuvx5G6a3Z9JrJHkQQNqaaLpR/s=;
+        b=crIUykRg7I0IOaxjj+k7aU5+oBKlXh8Q/5v4xodCJS9Jk0/lRiKltUZYANuM14w14X
+         k5D2DWZ6ET6p4rdaomMuAoOuWfcIS4Uvb+5U4Sh25ndTc/i1pgkMily1IRoHSe5IZyEr
+         xGSGwNZHwFutoOq80yDPZ72dEWZqYjvokr1LY77P4g7UBvC0t8J9iHmp/JQi91VY5jIJ
+         Egq7FWlFNSu7X26sv4tXv8Ij93UBDxyydjoLLhXpyWuhvHxw/APv2r/Sd2lLu7TzbtV/
+         IR3yRohwD0jpQRQG92JFRTwul75dE1x3yWuzatBgbfWcAMbZMCzaLPXcW6TqNJwq5t/4
+         0FCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730188975; x=1730793775;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=McIeLxc/I8ZCOijPmuvx5G6a3Z9JrJHkQQNqaaLpR/s=;
+        b=vBgbfHidojdQseJa8PkNhNNb+vEJR3Yd0wYZXclZEZ/tCRSHi0qa5Jxn1/Dv+1isb4
+         jT97Xv6ubI1EEYn+hboq9gbJQQzQuFk/D7p6Eqt3gxCFEYNh06/1FrrCA0Vg1ZwyL+IG
+         NqrSmmlKf8hggpEJ7Rlzy24/FCcDBVBNrhWPh65T7JLmjSPGh9JfAVsYM4fIsgoI/y19
+         CHD8hLuJKEAIZ13c5VXeX9YomO2nG09b8xFuYdAQCOlMdNZxGbnPusw/XAkO/R/p0Wbv
+         mvdyZmxq/mplZRBlEGDKMQlzrowgq8EcNLqrfJ32hgf20yj2ff3daK+sSr/OeyRlFemZ
+         zncw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTfh+yVPpWZhu3OHk0WkmZfVm67NVNetVrAz4ODIGKZj7VD6bW4LnXVdM3TNoco+rDHJoTIvm4pPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA2VJuSNjlUFRni5PdQy1hw7018DCe4nrCqAKY8wXkUZDkRHje
+	jduxSxdLoIF2uboZExpeJ3kn2KaauJieM/XkrnChVlMsfKqfeFQQSiHWrx2L86uplOipml6oF4R
+	Wf2vN3dMOveX/1T6L63T1S9VptcVzn8cMDVd2uX16y4H65HfsDMk=
+X-Google-Smtp-Source: AGHT+IFezQjqaoM6cFT+taUuHTrTbswQpDSP0bXqMBfH/ImJxymn05/BoWrJCAQmg8UKRqW79Rou5DUp0G0OhPPsqaM=
+X-Received: by 2002:a17:907:60c8:b0:a9a:dfa5:47d2 with SMTP id
+ a640c23a62f3a-a9de61f5a6emr1001801466b.59.1730188975265; Tue, 29 Oct 2024
+ 01:02:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Tue, 29 Oct 2024 09:02:44 +0100
+Message-ID: <CAKPOu+9DyMbKLhyJb7aMLDTb=Fh0T8Teb9sjuf_pze+XWT1VaQ@mail.gmail.com>
+Subject: Oops in netfs_rreq_unlock_folios_pgpriv2
+To: David Howells <dhowells@redhat.com>, netfs@lists.linux.dev, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2024-10-29 at 07:47 +1100, NeilBrown wrote:
-> On Tue, 29 Oct 2024, Jeff Layton wrote:
-> > On Mon, 2024-10-28 at 09:04 +1100, NeilBrown wrote:
-> > > refcount_t, by design, checks for unwanted situations and provides
-> > > warnings.  It is rarely useful to have explicit warnings with refcoun=
-t
-> > > usage.
-> > >=20
-> > > In this case we have an explicit warning if a refcount_t reaches zero
-> > > when decremented.  Simply using refcount_dec() will provide a similar
-> > > warning and also mark the refcount_t as saturated to avoid any possib=
-le
-> > > use-after-free.
-> > >=20
-> > > This patch drops the warning and uses refcount_dec() instead of
-> > > refcount_dec_and_test().
-> > >=20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  fs/nfsd/filecache.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > index 1408166222c5..c16671135d17 100644
-> > > --- a/fs/nfsd/filecache.c
-> > > +++ b/fs/nfsd/filecache.c
-> > > @@ -1050,7 +1050,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, st=
-ruct net *net,
-> > >  		 * the last one however, since we should hold another.
-> > >  		 */
-> > >  		if (nfsd_file_lru_remove(nf))
-> > > -			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
-> > > +			refcount_dec(&nf->nf_ref);
-> >=20
-> > The existing code threw a warning when the counter reached 0. Your
-> > change will make the potential warning fire later, after we try to put
-> > the last reference and the counter goes to -1. That's probably fine as
-> > it should happen later in this function either way.
->=20
-> The code in refcount_dec() contains:
->=20
-> 	if (unlikely(old <=3D 1))
-> 		refcount_warn_saturate(r, REFCOUNT_DEC_LEAK);
->=20
->=20
+Hi David,
 
-I stand corrected! I thought it only fired once it went below 0, but I
-guess in this case, it does it on a 0->1 transition since this is a
-refcount_dec() (sans "test").
+maybe this crash is related to your recent netfs refactoring work; it is on
+a server with heavy NFS traffic (with fscache enabled). The kernel is
+6.11.5 plus a dozen patches that are not relevant for NFS/netfs/fscache.
+
+ BUG: unable to handle page fault for address: 0000025882015121
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: Oops: 0000 [#1] SMP PTI
+ CPU: 11 UID: 0 PID: 247837 Comm: kworker/u193:32 Not tainted
+6.11.5-cm4all1-hp+ #219
+ Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89
+10/17/2018
+ Workqueue: nfsiod rpc_async_release
+ RIP: 0010:netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+ Code: 4c 8b 04 24 48 85 c0 49 89 c5 0f 84 38 01 00 00 49 81 fd 06 04 00 00
+0f 84 f2 00 00 00 49 81 fd 02 04 00 00 0f 84 35 02 00 00 <49> 8b 45 20 ba
+00 10 00 00 49 8b 4d 00 48 c1 e0 0c 83 e1 40 74 08
+ RSP: 0018:ffffb0056373fc90 EFLAGS: 00010216
+ RAX: 000000000000002d RBX: ffff89de0d2a6780 RCX: 0000000000000001
+ RDX: 00000000000000ad RSI: 0000000000000001 RDI: ffff89deb02e7b50
+ RBP: 0000000000000000 R08: ffff89de3c9e9400 R09: 000000000000002c
+ R10: 0000000000000008 R11: 0000000000000001 R12: 00000000000000b7
+ R13: 0000025882015101 R14: 0000000000000000 R15: ffffb0056373fd28
+ FS:  0000000000000000(0000) GS:ffff89f51fac0000(0000)
+knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000025882015121 CR3: 000000005942e006 CR4: 00000000001706f0
+ Call Trace:
+  <TASK>
+  ? __die+0x1f/0x60
+  ? page_fault_oops+0x15c/0x450
+  ? search_extable+0x22/0x30
+  ? netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+  ? search_module_extables+0xe/0x40
+  ? exc_page_fault+0x5e/0x100
+  ? asm_exc_page_fault+0x22/0x30
+  ? netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+  ? select_task_rq_fair+0x1ed/0x1370
+  netfs_rreq_unlock_folios+0x40c/0x4b0
+  netfs_rreq_assess+0x348/0x580
+  netfs_subreq_terminated+0x193/0x2a0
+  nfs_netfs_read_completion+0x97/0xb0
+  nfs_read_completion+0x12e/0x200
+  rpc_free_task+0x39/0x60
+  rpc_async_release+0x2b/0x40
+  process_one_work+0x134/0x2e0
+  worker_thread+0x299/0x3a0
+  ? __pfx_worker_thread+0x10/0x10
+  kthread+0xba/0xe0
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x30/0x50
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
+ Modules linked in:
+ CR2: 0000025882015121
+ ---[ end trace 0000000000000000 ]---
+ ERST: [Firmware Warn]: Firmware does not respond in time.
+ pstore: backend (erst) writing error (-5)
+ RIP: 0010:netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+ Code: 4c 8b 04 24 48 85 c0 49 89 c5 0f 84 38 01 00 00 49 81 fd 06 04 00 00
+0f 84 f2 00 00 00 49 81 fd 02 04 00 00 0f 84 35 02 00 00 <49> 8b 45 20 ba
+00 10 00 00 49 8b 4d 00 48 c1 e0 0c 83 e1 40 74 08
+ RSP: 0018:ffffb0056373fc90 EFLAGS: 00010216
+ RAX: 000000000000002d RBX: ffff89de0d2a6780 RCX: 0000000000000001
+ RDX: 00000000000000ad RSI: 0000000000000001 RDI: ffff89deb02e7b50
+ RBP: 0000000000000000 R08: ffff89de3c9e9400 R09: 000000000000002c
+ R10: 0000000000000008 R11: 0000000000000001 R12: 00000000000000b7
+ R13: 0000025882015101 R14: 0000000000000000 R15: ffffb0056373fd28
+ FS:  0000000000000000(0000) GS:ffff89f51fac0000(0000)
+knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000025882015121 CR3: 000000005942e006 CR4: 00000000001706f0
+ note: kworker/u193:32[247837] exited with irqs disabled
+
+ (gdb) p netfs_rreq_unlock_folios_pgpriv2+0xd2
+ $1 = (void (*)(struct netfs_io_request *, size_t *)) 0xffffffff813d80c2
+<netfs_rreq_unlock_folios_pgpriv2+210>
+ (gdb) disassemble netfs_rreq_unlock_folios_pgpriv2+0xd2
+ Dump of assembler code for function netfs_rreq_unlock_folios_pgpriv2:
+ [...]
+   0xffffffff813d8093 <+163>: call   0xffffffff81f0ec70 <xas_find>
+   0xffffffff813d8098 <+168>: mov    (%rsp),%r8
+   0xffffffff813d809c <+172>: test   %rax,%rax
+   0xffffffff813d809f <+175>: mov    %rax,%r13
+   0xffffffff813d80a2 <+178>: je     0xffffffff813d81e0
+<netfs_rreq_unlock_folios_pgpriv2+496>
+   0xffffffff813d80a8 <+184>: cmp    $0x406,%r13
+   0xffffffff813d80af <+191>: je     0xffffffff813d81a7
+<netfs_rreq_unlock_folios_pgpriv2+439>
+   0xffffffff813d80b5 <+197>: cmp    $0x402,%r13
+   0xffffffff813d80bc <+204>: je     0xffffffff813d82f7
+<netfs_rreq_unlock_folios_pgpriv2+775>
+   0xffffffff813d80c2 <+210>: mov    0x20(%r13),%rax
+   0xffffffff813d80c6 <+214>: mov    $0x1000,%edx
+   0xffffffff813d80cb <+219>: mov    0x0(%r13),%rcx
+   0xffffffff813d80cf <+223>: shl    $0xc,%rax
+   0xffffffff813d80d3 <+227>: and    $0x40,%ecx
+   0xffffffff813d80d6 <+230>: je     0xffffffff813d80e0
+<netfs_rreq_unlock_folios_pgpriv2+240>
+   0xffffffff813d80d8 <+232>: movzbl 0x40(%r13),%ecx
+   0xffffffff813d80dd <+237>: shl    %cl,%rdx
 
 
-> >=20
-> > >  		goto wait_for_construction;
-> > >  	}
-> > > =20
-> > >=20
-> > > base-commit: 7fa861d5df402b2327f45e0240c1b842f71fec11
-> >=20
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >=20
->=20
+Right now, the machine is running and I have an unstripped kernel, just in
+case you need more information from /proc/kcore.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Max
+
+[resent as text/plain only - damn you, gmail!]
 
