@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-7576-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7577-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2846F9B666F
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 15:50:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 362C79B6671
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 15:50:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CED3B1F21B08
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 14:50:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C78D6B208B2
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 14:50:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B843F1F4FDD;
-	Wed, 30 Oct 2024 14:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9872A1F8922;
+	Wed, 30 Oct 2024 14:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VX4YR7Mn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOVjwJv0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCF41F4FDA;
-	Wed, 30 Oct 2024 14:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704261F891B;
+	Wed, 30 Oct 2024 14:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730299734; cv=none; b=NavMl9rSinXUXXy6Mdfc4wBvu5AN4KW8V2Ey0Pc0TVs7389iQXhg6Z0taxoGvJRY4eG8N/fjoEIYUmXsklcFFz9aj5dUzZyODTonNNmJ9ERDUfZI/kpBEM50zzJ0rU5L1WEcofgd6ZT4nEY3avCN4zI6w0YO22T6lTSWKrlZJvo=
+	t=1730299735; cv=none; b=G7ik2OdBvH5UF0g4Ius0canHsgs9UGATFo9RY6+y/+peeVxXRCIdx2j2K5l5W8IOQJNRKKRnys0IGMbgbUjAkvMadV+GpNUy16Sb3HUsfQ99ECzqeqB6xOsc3d1CXnjYDatL0kDP2oR8HKEb4GE7rAGTMiXeUmaRGImJAjUyT8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730299734; c=relaxed/simple;
-	bh=+fvXUWE8BMuCsxYuxzEUcmsJ0iKlRSPEARJz3kBuGHg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z9Fqq4Tl38mgefd6UmRKoEOwPSeOaY21cDZSmeqhEsOw32MSUqQHUPM6/S2YzCA+xCE6R4s3qQs/qjzeyXVwAQAag6i5yPT4ZINWrcd+VOcXE08D4pvENNuqH7wu08KiKKWENTgxaed+oxhjVU8yJjQuppUQhGhJQW2op7hyilc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VX4YR7Mn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69801C4CECF;
-	Wed, 30 Oct 2024 14:48:53 +0000 (UTC)
+	s=arc-20240116; t=1730299735; c=relaxed/simple;
+	bh=ND+jUVY/H99W1KDWElXuaUVHgqZKFGP8SPN/SEl+CqI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jOrtF/1h0g91ZhKenpS+ItuzukymgtCbNBYrcntR7k0tbVmuyWgQcGoxvk+SZ66bY2Lw28FMC5vmmSS/6JZj4eCXycTKtS6FWJBwrivR81g2t/8ql8ndZoImpxHpKpFAJ5nEe/OawC6+VkuexXynJFO+tPwAZwGyJuvHPCp+JDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOVjwJv0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F5F3C4CED1;
+	Wed, 30 Oct 2024 14:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730299734;
-	bh=+fvXUWE8BMuCsxYuxzEUcmsJ0iKlRSPEARJz3kBuGHg=;
-	h=From:Subject:Date:To:Cc:From;
-	b=VX4YR7MnQuykdu9PXGXXIX2pfyuBZS7JDePlHsvSJ6IbaK7EzY8979ZGLOmZrd6EH
-	 ot/o8Y0efT0Bbbi4AwEKUep5wiaNi8Q8CfHGPemjbOpQNFbq+2MqQ4NUkic7zVgfK/
-	 MrV+1cRcQYfiyf+07LJAhlnOMYoPLk3+24kLjJbahioeNTtMD1GCMDNaoEoKxQDQbm
-	 KSc0/xApc8UFmM7pyM9APGCFkN99d0W1ZgCljalyFR7L8JGIh2t2qbs4+A8XVfMYso
-	 ghkJD5ZhzUmOj8lqgvuZamW6/gyVWSNDyQTFOpyu3UiZcrKtG27I564vFgnbIFchAA
-	 V/8Q3nWMhUm1g==
+	s=k20201202; t=1730299735;
+	bh=ND+jUVY/H99W1KDWElXuaUVHgqZKFGP8SPN/SEl+CqI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YOVjwJv06iUM4iLoMbeklBk6W/L+SL2it48plpRnO0ME4w2MT1QJ1h01cYqIk71Bd
+	 PzXenmi4HwDuBKKmZJInSjHRPOZUanSD8/AiiYjFqP59BzYdyxFClglCokL9mBinFE
+	 yu76pTj6KvFDB0fDeWWswtxDW58CYA1AZfwoIvQoqWwC8tmgXD8OXmSdHXqWcuuUlI
+	 ImwgeYYMb6ZuCZ7Jz9EsppgXVsf3QO8EdJrhVK8gDVptoAQpe2wwndVIvB870TSNwW
+	 BYsQjjUqj6HEi4YjFzaxVL+9tqtQPylpzuvRe4KvFM41wrRBk1y9nvMHmCeoqL1Yid
+	 4zZuhKRkUEY9w==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v3 0/2] nfsd: allow the use of multiple backchannel slots
-Date: Wed, 30 Oct 2024 10:48:45 -0400
-Message-Id: <20241030-bcwide-v3-0-c2df49a26c45@kernel.org>
+Date: Wed, 30 Oct 2024 10:48:46 -0400
+Subject: [PATCH v3 1/2] nfsd: make nfsd4_session->se_flags a bool
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,69 +52,90 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAE1HImcC/2WNyw6CMBREf4V0bc3thfJw5X8YF7S9QKMB0pqqI
- fy7hRgDcTmTM2cm5slZ8uyUTMxRsN4OfQzpIWG6q/uWuDUxMwTMBKDkSj+tIZ4rU1Cm8tQoZBE
- eHTX2tYou15g76x+De6/eIJb2TxEEB24QIC1IZlDr841cT/fj4NpF+eXLHQ9UyLpEURkNW375D
- Lj9qX475IJTBQJUTo2UZreb5/kDub39qwUBAAA=
-X-Change-ID: 20241025-bcwide-6bd7e4b63db2
+Message-Id: <20241030-bcwide-v3-1-c2df49a26c45@kernel.org>
+References: <20241030-bcwide-v3-0-c2df49a26c45@kernel.org>
+In-Reply-To: <20241030-bcwide-v3-0-c2df49a26c45@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
 Cc: Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1375; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+fvXUWE8BMuCsxYuxzEUcmsJ0iKlRSPEARJz3kBuGHg=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnIkdQ1Vp3A4Enbm1pIJQmxWXgplGgmpi/ASHL/
- keRwJ66yCaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZyJHUAAKCRAADmhBGVaC
- FWLXEACIq0POZXJRBbbrbvPC1J7WbM/+Zd2iqnWTavr2UgRCy3CS+sgVMJJJvxxdEQSbDRF3ek1
- //OO4ozbpb2vwyk+8WjhwtuK6EpQG1Hxu6PWdCtP28XXIwrCl0fAhIOCRlwR9A/oJUJutzMrMUc
- dtl0jq9RbtLlJQY7RcmWObgXDRyI62+rYeM9fzRvfXU/x7KKkqv7ogTh8Rt+1HIhz/BuIrTpLnZ
- kh2RBmRFdR8axT6qRkX+LAzu3kbNDTD+qcnXtVQJ6zpEp3xx2PMYtM6rL2fKbgZtsXDXVFr1GnG
- 6TAeKzSHmVns1+SNDUrwnyCVKyC6HliazMwdOH+zar4L3qNdyUgISmH6BHz+wpifXO43dOWaGZe
- 5RS8T3G5uHMA0g16T4wggVyWhl2Gsig94zVWqPs3I675bcDdjNVVzsCjhhPLtYilGb/OVTaxvGq
- gdiwRCbbduG/oInQe8LP98bHBDhsFo5ULAH3mlW6dsqkPhHmOJLRDU0421VtSC2vYuw4vJgLxYk
- Xkj0CLti7kVUKTi2BIAxWH0Vm2x/FviCJSeRXP+ZlyrMnNTjUyOGDAvG2PxVHqk83yN0LcYjPOZ
- ogOSo+aO/rC9QU+8mBdPupzesooR7MmtaT7ol8o0/WDk/UbBwBYK1AlGUHyoHFp4EL7gkYzBHqn
- 5itQOabWGV8yaEg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1984; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ND+jUVY/H99W1KDWElXuaUVHgqZKFGP8SPN/SEl+CqI=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnIkdUjo1KIuow7ywDvAeltmoiy5J8bF7Ep7ixP
+ EW/HSoEVvqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZyJHVAAKCRAADmhBGVaC
+ Fa5jD/9HNlX/TST/JP2RhLgFo0WhsxnjzI/vfUR2NyWAIV1k3QGWYENoqr/vI0Onybi9rQheS7Y
+ RKpExtqZHiWkC+NK/FO5lhcfPBlPWB0inWb2TzFDT3jworXQ+Q2RswDXDoU7RA09TaV0uWgDcBA
+ wj0Yp3snu/SpeHTYgjN/2IagqZH/ZySV1oT7ljbIcgLyg1KFEA7H7cA7IxjrvPAHB30/kPrcUnk
+ LpnU+d9bx3Al0on9v8+d93Eiu5ajk+nnCbhNGceM/Rcq03918gYR23QboKfz6PhZFZQnGH5uTq7
+ 48g4iyQx4TMkXUDh5XoMOt987c+12kx3zeK3XjwJpBXpUrw51rvxYZbr6yNGy2Z0rD7o8s7Fkkn
+ UVtiudGQwmbn02xPDgKZyC5qdyNz3BWQNymggJ6IbCsvvl1SpWtudscYBaGUmRuEdCOTaOslgc5
+ 6oqjAFePxcjSei+gH8g6q00LJvqFrDWh9sJLpi3+MEUJ+Pu2zUjliGsDH5adyn9BeYXj8QwSJnR
+ 6Va1xjvF5ID/pABkSO+bDRrcvzddtIWHx155lzZl0c/ByAOtWY2L4bRm2WhrvHPrH2XJU7iR8Jf
+ tTFdsPhcr30W4KuVAxQKm4bfozWm3YV0oAbuv2bEB58H5Pm8vaq1jooPJLEo+HaMypoluFR626d
+ HMpjtQapyoIJnWA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-A few more minor updates to the set to fix some small-ish bugs, and do a
-bit of cleanup. This seems to test OK for me so far.
+While this holds the flags from the CREATE_SESSION request, nothing
+ever consults them. The only flag used is NFS4_SESSION_DEAD. Make it a
+simple bool instead.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v3:
-- add patch to convert se_flags to single se_dead bool
-- fix off-by-one bug in handling of NFSD_BC_SLOT_TABLE_MAX
-- don't reject target highest slot value of 0
-- Link to v2: https://lore.kernel.org/r/20241029-bcwide-v2-1-e9010b6ef55d@kernel.org
+ fs/nfsd/nfs4state.c | 6 +++---
+ fs/nfsd/state.h     | 4 +---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-Changes in v2:
-- take cl_lock when fetching fields from session to be encoded
-- use fls() instead of bespoke highest_unset_index()
-- rename variables in several functions with more descriptive names
-- clamp limit of for loop in update_cb_slot_table()
-- re-add missing rpc_wake_up_queued_task() call
-- fix slotid check in decode_cb_sequence4resok()
-- add new per-session spinlock
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 5b718b349396f1aecd0ad4c63b2f43342841bbd4..baf7994131fe1b0a4715174ba943fd2a9882aa12 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -149,14 +149,14 @@ void nfsd4_destroy_laundry_wq(void)
+ 
+ static bool is_session_dead(struct nfsd4_session *ses)
+ {
+-	return ses->se_flags & NFS4_SESSION_DEAD;
++	return ses->se_dead;
+ }
+ 
+ static __be32 mark_session_dead_locked(struct nfsd4_session *ses, int ref_held_by_me)
+ {
+ 	if (atomic_read(&ses->se_ref) > ref_held_by_me)
+ 		return nfserr_jukebox;
+-	ses->se_flags |= NFS4_SESSION_DEAD;
++	ses->se_dead = true;
+ 	return nfs_ok;
+ }
+ 
+@@ -2133,7 +2133,7 @@ static void init_session(struct svc_rqst *rqstp, struct nfsd4_session *new, stru
+ 	INIT_LIST_HEAD(&new->se_conns);
+ 
+ 	new->se_cb_seq_nr = 1;
+-	new->se_flags = cses->flags;
++	new->se_dead = false;
+ 	new->se_cb_prog = cses->callback_prog;
+ 	new->se_cb_sec = cses->cb_sec;
+ 	atomic_set(&new->se_ref, 0);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 41cda86fea1f6166a0fd0215d3d458c93ced3e6a..d22e4f2c9039324a0953a9e15a3c255fb8ee1a44 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -314,11 +314,9 @@ struct nfsd4_conn {
+  */
+ struct nfsd4_session {
+ 	atomic_t		se_ref;
++	bool			se_dead;
+ 	struct list_head	se_hash;	/* hash by sessionid */
+ 	struct list_head	se_perclnt;
+-/* See SESSION4_PERSIST, etc. for standard flags; this is internal-only: */
+-#define NFS4_SESSION_DEAD	0x010
+-	u32			se_flags;
+ 	struct nfs4_client	*se_client;
+ 	struct nfs4_sessionid	se_sessionid;
+ 	struct nfsd4_channel_attrs se_fchannel;
 
----
-Jeff Layton (2):
-      nfsd: make nfsd4_session->se_flags a bool
-      nfsd: allow for up to 32 callback session slots
-
- fs/nfsd/nfs4callback.c | 108 ++++++++++++++++++++++++++++++++++---------------
- fs/nfsd/nfs4state.c    |  17 +++++---
- fs/nfsd/state.h        |  19 ++++-----
- fs/nfsd/trace.h        |   2 +-
- 4 files changed, 98 insertions(+), 48 deletions(-)
----
-base-commit: 06c049d2a81a81f01ff072c6519d0c38b646b550
-change-id: 20241025-bcwide-6bd7e4b63db2
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.47.0
 
 
