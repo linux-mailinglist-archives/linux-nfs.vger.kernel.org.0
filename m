@@ -1,262 +1,225 @@
-Return-Path: <linux-nfs+bounces-7567-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7568-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A798B9B5EE2
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 10:32:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 544529B6002
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 11:24:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6AEAE283D41
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 09:32:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DFBF28138D
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 10:24:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25FBD1E201C;
-	Wed, 30 Oct 2024 09:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA621E2834;
+	Wed, 30 Oct 2024 10:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="CDXsIuyZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DBB1E1A2B;
-	Wed, 30 Oct 2024 09:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CAD1E0E12
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Oct 2024 10:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730280763; cv=none; b=Rr1jvs4q7BA3e3Wo/vSr1JAnSh5U+Kbc1edG7Hd/bASaYrjXFYSdYgYO0S4o5ciwbnxERONhgtqrYMaR1Oxtr+tUjYpSi+ezaHcSie9RxjjKg1IWSRXXayAyCZmrs0nFLRmSDk9/fgeSvUN5tjb3IUiASOWwHv0B55Ops2HdhUY=
+	t=1730283838; cv=none; b=oQetqpzJ7fKBGtkfTlu2POGWVKjVb3zmUC7KZ34lJohKUCfymKrJ/zdQ24NSaBP9tV22/beL9Hrxkq3FpQKyrymhzC2pvDAJOTUoLPSJt+0JWmojaTN2e8LMWl/tE0Ixr6a+trrqypOp37+kBlUHNvb3RW3x1tPfLKvT7P09XDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730280763; c=relaxed/simple;
-	bh=Vz1zeao+5C1Aan/4lWHPC555V7hRfONpgEaV3FUEcZg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qwdsns8RkhioFWb/88rTGK8qel8IORo7SR2TrZSnFfZOzX9zvSG6lnXlFXf55eSyZEdHynIsHr1y9Pp1uuIB6UrtPrv/PfiQrWnfYIgitzZV4/xBA5ZpNvN51PLkW4y4qkMLOUKvOGMSnRf9yC1eYrPESBCml+V0CecNfOhIqUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Xdhhm5r80zQsLr;
-	Wed, 30 Oct 2024 17:31:36 +0800 (CST)
-Received: from kwepemg200003.china.huawei.com (unknown [7.202.181.30])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4D9C21400E3;
-	Wed, 30 Oct 2024 17:32:36 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200003.china.huawei.com
- (7.202.181.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 30 Oct
- 2024 17:32:35 +0800
-From: Liu Jian <liujian56@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<ofir.gal@volumez.com>, <geert+renesas@glider.be>, <ebiederm@xmission.com>
-CC: <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH net v2] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
-Date: Wed, 30 Oct 2024 17:49:53 +0800
-Message-ID: <20241030094953.1921574-1-liujian56@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1730283838; c=relaxed/simple;
+	bh=lA//qZesgyraKynZBmuWjZqo2zD+sf15KS0VwoKI/nc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Xkk9wji27vRdL3/SOBlhGjYNqG/odSNAVxRz52dVlhKhR+A5CO0v9B+DCchFxA+qEtaUnbQyaWJJ9fAh1SKUJ9EaCdF9LatKA9810KYbWUezw2Y9p/ZKY6W9ah/gZ1BvCklPBiHq7OmAwbwn7wE45Co/wuRqI5g4ugSYC7/HLH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=CDXsIuyZ; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c95a962c2bso7835138a12.2
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Oct 2024 03:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1730283834; x=1730888634; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uua1tstVo1jiKYBlbaHaBo0WmGm8rt33M09fbm0Vnlo=;
+        b=CDXsIuyZCFffmxgTcELD5U8tVxsb5hBe0PtXmbivo4tOcpJVvfhGwO6AUIlJtd1cXB
+         OOLZcCu1HuMIBRg8dXrCxRctf9+CBnKtOsy8fTXsJm2kaiTInJWYgmMoxsVlzguR34vc
+         8iNKP49Cr26+49BobEy65EvKBvosGLa1lv0Ekn8n0GP5YZ2c60NxydfhBqp6vNu8gvjS
+         dZeQx02v3KMdw9d6rtVTAH0/KGj0ZNY7Mmic8Iytja0PS8DN/QE6jj5hstHN6TGT2Yj4
+         ceTa65FKQMRdP/Si7c1LpN/MYgU5g8ZXsRnysY2pHwiswq+/SHVCoZy6DleRnu/uL5pN
+         5YtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730283834; x=1730888634;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uua1tstVo1jiKYBlbaHaBo0WmGm8rt33M09fbm0Vnlo=;
+        b=ONnj2k31Ito07/nqjwkEKYKVc61bgj3K+V4Am+BC5vx2yoI9vL6oUDcJ6ItP77ABQb
+         NU42JFdIZUivsiycsxJ2U8XRc/u2pfWPTtAFulYQwVxzZqKHcgBRtJ02iWK9j9G7OYnx
+         ynvyCYGHpIqzBzWP/viz4Tycg5SPIzKrmvNbc7zgc5c9HctgNdvgaVrfw/5BE42/2RQv
+         QWlpV+sZkVhq/dN75SB2fGy2RNBHrUDWGxleXCy5bYv6KaipQ77dAOrSC302mBOFq8Ww
+         5K/1u0+at++vVLseeSVwJpvergmRW/wmdXF16LsVTXa0L6vHq++KmAEugDP+3VTWMAd7
+         OFWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVi7SjU5CXYTeq3IQMPJr8TgbyL86XtltXHcShaH1FeRTRlRSG4Am0sFAVeKRbrRjMJrsi7AmnH4NA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQVwV+AxnQHR+Zzje1gCIW9N/k91G37Ho8e0pzQBI1fmnvx9my
+	97yEja4atrcPmzfttf+HG5VIw0UjmilKFQJ1KHfqrpvvUr+maLpVLq6/FEfKRohjkwrTwlS4JnA
+	mZAslcGzTZ5MYue9OQNIAd1nUa/8y0I5f4IoUTeiZbe5gx0Oe60A=
+X-Google-Smtp-Source: AGHT+IFxuUwla/JZ0vPuZemP9dHRo1Gp2NZw4PQe1YoUlDO9XgRUKXEOFqWt8VNPv7t+1tnVBdcaGzRdNUy7wsmH0GY=
+X-Received: by 2002:a17:907:724a:b0:a9a:345a:6873 with SMTP id
+ a640c23a62f3a-a9de5d0aeb1mr1475360466b.24.1730283833954; Wed, 30 Oct 2024
+ 03:23:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg200003.china.huawei.com (7.202.181.30)
+References: <CAKPOu+9DyMbKLhyJb7aMLDTb=Fh0T8Teb9sjuf_pze+XWT1VaQ@mail.gmail.com>
+In-Reply-To: <CAKPOu+9DyMbKLhyJb7aMLDTb=Fh0T8Teb9sjuf_pze+XWT1VaQ@mail.gmail.com>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Wed, 30 Oct 2024 11:23:42 +0100
+Message-ID: <CAKPOu+_XVhgg7Gq=izU9QDFyaVpZTSyNWOWLi5N8S6wSYdbf3A@mail.gmail.com>
+Subject: Re: Oops in netfs_rreq_unlock_folios_pgpriv2
+To: David Howells <dhowells@redhat.com>, netfs@lists.linux.dev, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
-Read of size 1 at addr ffff888111f322cd by task swapper/0/0
+David,
 
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x68/0xa0
- print_address_description.constprop.0+0x2c/0x3d0
- print_report+0xb4/0x270
- kasan_report+0xbd/0xf0
- tcp_write_timer_handler+0x156/0x3e0
- tcp_write_timer+0x66/0x170
- call_timer_fn+0xfb/0x1d0
- __run_timers+0x3f8/0x480
- run_timer_softirq+0x9b/0x100
- handle_softirqs+0x153/0x390
- __irq_exit_rcu+0x103/0x120
- irq_exit_rcu+0xe/0x20
- sysvec_apic_timer_interrupt+0x76/0x90
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20
-RIP: 0010:default_idle+0xf/0x20
-Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
- 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
- cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
-RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
-R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
-R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
- default_idle_call+0x6b/0xa0
- cpuidle_idle_call+0x1af/0x1f0
- do_idle+0xbc/0x130
- cpu_startup_entry+0x33/0x40
- rest_init+0x11f/0x210
- start_kernel+0x39a/0x420
- x86_64_start_reservations+0x18/0x30
- x86_64_start_kernel+0x97/0xa0
- common_startup_64+0x13e/0x141
- </TASK>
+Meanwhile, our servers crash many times a day due to this bug.
 
-Allocated by task 595:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- __kasan_slab_alloc+0x87/0x90
- kmem_cache_alloc_noprof+0x12b/0x3f0
- copy_net_ns+0x94/0x380
- create_new_namespaces+0x24c/0x500
- unshare_nsproxy_namespaces+0x75/0xf0
- ksys_unshare+0x24e/0x4f0
- __x64_sys_unshare+0x1f/0x30
- do_syscall_64+0x70/0x180
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+The code was added by your commit 7b589a9b45a ("netfs: Fix handling of
+USE_PGPRIV2 and WRITE_TO_CACHE flags") after I found Ceph-related bugs
+in your commit 2ff1e97587f4 ("netfs: Replace PG_fscache by setting
+folio->private and marking dirty"). Since this fix, the Ceph problems
+were gone, but yesterday, out of the blue, the NFS-using server
+started crashing (after running stable with 6.11.5 for 5 days).
 
-Freed by task 100:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- kasan_save_free_info+0x3b/0x60
- __kasan_slab_free+0x54/0x70
- kmem_cache_free+0x156/0x5d0
- cleanup_net+0x5d3/0x670
- process_one_work+0x776/0xa90
- worker_thread+0x2e2/0x560
- kthread+0x1a8/0x1f0
- ret_from_fork+0x34/0x60
- ret_from_fork_asm+0x1a/0x30
+We can't go back to 6.10 (EOL); the newest kernel prior to your
+refactoring was 6.9 which has been EOL since July, leaving a downgrade
+to 6.6 LTS as the only remaining option.
 
-Reproduction script:
+Max
 
-mkdir -p /mnt/nfsshare
-mkdir -p /mnt/nfs/netns_1
-mkfs.ext4 /dev/sdb
-mount /dev/sdb /mnt/nfsshare
-systemctl restart nfs-server
-chmod 777 /mnt/nfsshare
-exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
 
-ip netns add netns_1
-ip link add name veth_1_peer type veth peer veth_1
-ifconfig veth_1_peer 11.11.0.254 up
-ip link set veth_1 netns netns_1
-ip netns exec netns_1 ifconfig veth_1 11.11.0.1
 
-ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
-	--tcp-flags FIN FIN  -j DROP
-
-(note: In my environment, a DESTROY_CLIENTID operation is always sent
- immediately, breaking the nfs tcp connection.)
-ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
-	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
-
-ip netns del netns_1
-
-The reason here is that the tcp socket in netns_1 (nfs side) has been
-shutdown and closed (done in xs_destroy), but the FIN message (with ack)
-is discarded, and the nfsd side keeps sending retransmission messages.
-As a result, when the tcp sock in netns_1 processes the received message,
-it sends the message (FIN message) in the sending queue, and the tcp timer
-is re-established. When the network namespace is deleted, the net structure
-accessed by tcp's timer handler function causes problems.
-
-To fix this problem:
-Add the sock_create_kern_getnet() helper function, add the get_net()
- operation for the kernel socket.
-
-Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
----
-v1: https://lore.kernel.org/all/20241024015543.568476-1-liujian56@huawei.com/
-v1->v2: change to get netns reference count.
- include/linux/net.h   |  1 +
- net/socket.c          | 28 ++++++++++++++++++++++++++++
- net/sunrpc/svcsock.c  |  2 +-
- net/sunrpc/xprtsock.c |  2 +-
- 4 files changed, 31 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/net.h b/include/linux/net.h
-index b75bc534c1b3..58216da3b62c 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -255,6 +255,7 @@ int __sock_create(struct net *net, int family, int type, int proto,
- 		  struct socket **res, int kern);
- int sock_create(int family, int type, int proto, struct socket **res);
- int sock_create_kern(struct net *net, int family, int type, int proto, struct socket **res);
-+int sock_create_kern_getnet(struct net *net, int family, int type, int proto, struct socket **res);
- int sock_create_lite(int family, int type, int proto, struct socket **res);
- struct socket *sock_alloc(void);
- void sock_release(struct socket *sock);
-diff --git a/net/socket.c b/net/socket.c
-index 042451f01c65..e64a02445b1a 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1651,6 +1651,34 @@ int sock_create_kern(struct net *net, int family, int type, int protocol, struct
- }
- EXPORT_SYMBOL(sock_create_kern);
- 
-+int sock_create_kern_getnet(struct net *net, int family, int type, int proto, struct socket **res)
-+{
-+	struct sock *sk;
-+	int ret;
-+
-+	if (!maybe_get_net(net))
-+		return -EINVAL;
-+
-+	ret = sock_create_kern(net, family, type, proto, res);
-+	if (ret < 0) {
-+		put_net(net);
-+		return ret;
-+	}
-+
-+	sk = (*res)->sk;
-+	lock_sock(sk);
-+	/* Update ns_tracker to current stack trace and refcounted tracker */
-+	__netns_tracker_free(net, &sk->ns_tracker, false);
-+
-+	sk->sk_net_refcnt = 1;
-+	netns_tracker_alloc(net, &sk->ns_tracker, GFP_KERNEL);
-+	sock_inuse_add(net, 1);
-+	release_sock(sk);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(sock_create_kern_getnet);
-+
- static struct socket *__sys_socket_create(int family, int type, int protocol)
- {
- 	struct socket *sock;
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 825ec5357691..6f272013fd9b 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1526,7 +1526,7 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	error = __sock_create(net, family, type, protocol, &sock, 1);
-+	error = sock_create_kern_getnet(net, family, type, protocol, &sock);
- 	if (error < 0)
- 		return ERR_PTR(error);
- 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 110749b85040..f7734ce5eec9 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1925,7 +1925,7 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
- 	struct socket *sock;
- 	int err;
- 
--	err = __sock_create(xprt->xprt_net, family, type, protocol, &sock, 1);
-+	err = sock_create_kern_getnet(xprt->xprt_net, family, type, protocol, &sock);
- 	if (err < 0) {
- 		dprintk("RPC:       can't create %d transport socket (%d).\n",
- 				protocol, -err);
--- 
-2.34.1
-
+On Tue, Oct 29, 2024 at 9:02=E2=80=AFAM Max Kellermann <max.kellermann@iono=
+s.com> wrote:
+>
+> Hi David,
+>
+> maybe this crash is related to your recent netfs refactoring work; it is =
+on
+> a server with heavy NFS traffic (with fscache enabled). The kernel is
+> 6.11.5 plus a dozen patches that are not relevant for NFS/netfs/fscache.
+>
+>  BUG: unable to handle page fault for address: 0000025882015121
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 0 P4D 0
+>  Oops: Oops: 0000 [#1] SMP PTI
+>  CPU: 11 UID: 0 PID: 247837 Comm: kworker/u193:32 Not tainted
+> 6.11.5-cm4all1-hp+ #219
+>  Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89
+> 10/17/2018
+>  Workqueue: nfsiod rpc_async_release
+>  RIP: 0010:netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+>  Code: 4c 8b 04 24 48 85 c0 49 89 c5 0f 84 38 01 00 00 49 81 fd 06 04 00 =
+00
+> 0f 84 f2 00 00 00 49 81 fd 02 04 00 00 0f 84 35 02 00 00 <49> 8b 45 20 ba
+> 00 10 00 00 49 8b 4d 00 48 c1 e0 0c 83 e1 40 74 08
+>  RSP: 0018:ffffb0056373fc90 EFLAGS: 00010216
+>  RAX: 000000000000002d RBX: ffff89de0d2a6780 RCX: 0000000000000001
+>  RDX: 00000000000000ad RSI: 0000000000000001 RDI: ffff89deb02e7b50
+>  RBP: 0000000000000000 R08: ffff89de3c9e9400 R09: 000000000000002c
+>  R10: 0000000000000008 R11: 0000000000000001 R12: 00000000000000b7
+>  R13: 0000025882015101 R14: 0000000000000000 R15: ffffb0056373fd28
+>  FS:  0000000000000000(0000) GS:ffff89f51fac0000(0000)
+> knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000025882015121 CR3: 000000005942e006 CR4: 00000000001706f0
+>  Call Trace:
+>   <TASK>
+>   ? __die+0x1f/0x60
+>   ? page_fault_oops+0x15c/0x450
+>   ? search_extable+0x22/0x30
+>   ? netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+>   ? search_module_extables+0xe/0x40
+>   ? exc_page_fault+0x5e/0x100
+>   ? asm_exc_page_fault+0x22/0x30
+>   ? netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+>   ? select_task_rq_fair+0x1ed/0x1370
+>   netfs_rreq_unlock_folios+0x40c/0x4b0
+>   netfs_rreq_assess+0x348/0x580
+>   netfs_subreq_terminated+0x193/0x2a0
+>   nfs_netfs_read_completion+0x97/0xb0
+>   nfs_read_completion+0x12e/0x200
+>   rpc_free_task+0x39/0x60
+>   rpc_async_release+0x2b/0x40
+>   process_one_work+0x134/0x2e0
+>   worker_thread+0x299/0x3a0
+>   ? __pfx_worker_thread+0x10/0x10
+>   kthread+0xba/0xe0
+>   ? __pfx_kthread+0x10/0x10
+>   ret_from_fork+0x30/0x50
+>   ? __pfx_kthread+0x10/0x10
+>   ret_from_fork_asm+0x1a/0x30
+>   </TASK>
+>  Modules linked in:
+>  CR2: 0000025882015121
+>  ---[ end trace 0000000000000000 ]---
+>  ERST: [Firmware Warn]: Firmware does not respond in time.
+>  pstore: backend (erst) writing error (-5)
+>  RIP: 0010:netfs_rreq_unlock_folios_pgpriv2+0xd2/0x360
+>  Code: 4c 8b 04 24 48 85 c0 49 89 c5 0f 84 38 01 00 00 49 81 fd 06 04 00 =
+00
+> 0f 84 f2 00 00 00 49 81 fd 02 04 00 00 0f 84 35 02 00 00 <49> 8b 45 20 ba
+> 00 10 00 00 49 8b 4d 00 48 c1 e0 0c 83 e1 40 74 08
+>  RSP: 0018:ffffb0056373fc90 EFLAGS: 00010216
+>  RAX: 000000000000002d RBX: ffff89de0d2a6780 RCX: 0000000000000001
+>  RDX: 00000000000000ad RSI: 0000000000000001 RDI: ffff89deb02e7b50
+>  RBP: 0000000000000000 R08: ffff89de3c9e9400 R09: 000000000000002c
+>  R10: 0000000000000008 R11: 0000000000000001 R12: 00000000000000b7
+>  R13: 0000025882015101 R14: 0000000000000000 R15: ffffb0056373fd28
+>  FS:  0000000000000000(0000) GS:ffff89f51fac0000(0000)
+> knlGS:0000000000000000
+>  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>  CR2: 0000025882015121 CR3: 000000005942e006 CR4: 00000000001706f0
+>  note: kworker/u193:32[247837] exited with irqs disabled
+>
+>  (gdb) p netfs_rreq_unlock_folios_pgpriv2+0xd2
+>  $1 =3D (void (*)(struct netfs_io_request *, size_t *)) 0xffffffff813d80c=
+2
+> <netfs_rreq_unlock_folios_pgpriv2+210>
+>  (gdb) disassemble netfs_rreq_unlock_folios_pgpriv2+0xd2
+>  Dump of assembler code for function netfs_rreq_unlock_folios_pgpriv2:
+>  [...]
+>    0xffffffff813d8093 <+163>: call   0xffffffff81f0ec70 <xas_find>
+>    0xffffffff813d8098 <+168>: mov    (%rsp),%r8
+>    0xffffffff813d809c <+172>: test   %rax,%rax
+>    0xffffffff813d809f <+175>: mov    %rax,%r13
+>    0xffffffff813d80a2 <+178>: je     0xffffffff813d81e0
+> <netfs_rreq_unlock_folios_pgpriv2+496>
+>    0xffffffff813d80a8 <+184>: cmp    $0x406,%r13
+>    0xffffffff813d80af <+191>: je     0xffffffff813d81a7
+> <netfs_rreq_unlock_folios_pgpriv2+439>
+>    0xffffffff813d80b5 <+197>: cmp    $0x402,%r13
+>    0xffffffff813d80bc <+204>: je     0xffffffff813d82f7
+> <netfs_rreq_unlock_folios_pgpriv2+775>
+>    0xffffffff813d80c2 <+210>: mov    0x20(%r13),%rax
+>    0xffffffff813d80c6 <+214>: mov    $0x1000,%edx
+>    0xffffffff813d80cb <+219>: mov    0x0(%r13),%rcx
+>    0xffffffff813d80cf <+223>: shl    $0xc,%rax
+>    0xffffffff813d80d3 <+227>: and    $0x40,%ecx
+>    0xffffffff813d80d6 <+230>: je     0xffffffff813d80e0
+> <netfs_rreq_unlock_folios_pgpriv2+240>
+>    0xffffffff813d80d8 <+232>: movzbl 0x40(%r13),%ecx
+>    0xffffffff813d80dd <+237>: shl    %cl,%rdx
+>
+>
+> Right now, the machine is running and I have an unstripped kernel, just i=
+n
+> case you need more information from /proc/kcore.
+>
+> Max
+>
+> [resent as text/plain only - damn you, gmail!]
 
