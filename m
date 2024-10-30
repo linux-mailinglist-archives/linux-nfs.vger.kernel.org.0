@@ -1,61 +1,60 @@
-Return-Path: <linux-nfs+bounces-7583-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7584-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8F8D9B6BEE
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38FE59B6BED
 	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 19:15:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6399EB20FA5
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 18:15:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6A391F21826
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Oct 2024 18:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A36B1B373A;
-	Wed, 30 Oct 2024 18:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 332021C9EDA;
+	Wed, 30 Oct 2024 18:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5F5S9Qo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LU28lu4t"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4561A19E99F
-	for <linux-nfs@vger.kernel.org>; Wed, 30 Oct 2024 18:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1991BD9DB
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Oct 2024 18:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730312101; cv=none; b=omhzpF35WDs5+uYPlHXwdafezKVMzftMLW4nfQoXtatltEzJSXAgHGlFVG4jxD4sdXNt6gqlvSwv7CrIZNd0X5xOk3ea+6uqvWjUdY2lGtO3wDKgRvZdxGZ0cRccfR/k3+8bgYRLa+0YRcWG3uXOdgdHwR64N4AOvhIHBisTuF4=
+	t=1730312102; cv=none; b=S4yClYgaWCvewZS0yetWcNCsEsP+6Z01HhiWQf7sHWF4Dattua5ZaoaDGdJREoYkQ+xNKrQiX7ihtudJwTGILS/DnK3qT0ZCDUGKAu2qXKEqV9fJQzID3529clKhISd0zp6M+HuVDaFYME2Bcz253B1v7KE2yT6iJ/UQLJgkTmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730312101; c=relaxed/simple;
-	bh=OCEBhHsZqW6ftciMoGrthBjzqeAM1Osoq7QhffWfja4=;
+	s=arc-20240116; t=1730312102; c=relaxed/simple;
+	bh=OvUPBoxLoTIT3x+YfiLXWa9hvNs46MHDvGR0+KhOXgk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b3wc7Alu/fABPeoxJXwL+NHHb40gc2YtoxiNihAomix6fdTNiSYRTY/Dax+FY6CP5IphTlbFjYw9Wu6BVlVtPckbntA2F/bd4iGl2pzXDE6xkigbWvLzvtIDuRvuE5Aov1FXmadTAHwxi3rg58iPD+D3iQCem9ZTwsUjCuuj0ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5F5S9Qo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18AE0C4CECE;
-	Wed, 30 Oct 2024 18:14:59 +0000 (UTC)
+	 MIME-Version:Content-Type; b=OwqnbWK+zZltRtNbNCxsKkQW3da3q11S00i3Z+A6Jcr51oBygZ7vPxbAqSSti7ocaHjFDrztN4g5eZKcx1Vy8Y+BywV4nMn0uH62HnfpRmAYw9UQwuI4vVzEDxQwuJHkO60BX2RK94MZZ1JmHCH2Nq63MaZgdsvekpD4S5tflaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LU28lu4t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B66C4CED5;
+	Wed, 30 Oct 2024 18:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730312100;
-	bh=OCEBhHsZqW6ftciMoGrthBjzqeAM1Osoq7QhffWfja4=;
+	s=k20201202; t=1730312101;
+	bh=OvUPBoxLoTIT3x+YfiLXWa9hvNs46MHDvGR0+KhOXgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J5F5S9QorYCPVutr47HXoG3aErgpNRqVgjc44Zq66/4QwwtwMeKdZiIdQONGN4fBw
-	 17Bd/bgI4/mmY5oU5UeeHqXZpj3KRJcYMVA0c0HmlCERO0j4OIsuL2ovODI0Y71Sv+
-	 to7wsJe/QXTT8yzKhGTWIP3F2rtw+wZBWIiPMvlYiqiOy7X50/qCBPZbFNxByILkwk
-	 Tr6mcQIrQF6WR2KNb6fBj2k8S07vnCUjzDI2NmULWOsJ1HdsFhQBYZ84spvPzip6TL
-	 dwyzwLvUpDhuUNlakyxBzDaMZyJoYQjqLueipo1UhGAj0C+7jXBerhDjHFpq/effAz
-	 7OR7+h6UEzQBA==
+	b=LU28lu4t9wYdd8rG7iGJUfclMkQii1DWGtMXOzZyeTAyI7Vg88/tQ2D1JJrT1av6y
+	 q9fKcqZbJBHaq5Yo3uqnPa79nCsVl/bIP5BJJgnQfWJphhSSZtYO5SOkcgBeHZ0lLo
+	 NL9D61aN47+/kM10KNF9Zd1CXetYxTu2VdMJxK/IlqxuyZYG1/kaEVFdDdSiQHhWrc
+	 ECBnYlfouq0b2j/IP3XKOREHmcQcBq2Q2ZKzyyL3Yh8W9dQIwHIRZTyGN4hCns3YDv
+	 H5GETfvaV29QxpWzIZlhNin6PmBcP0Mhv5oK33QkJgO/vWouFaMR751WleykIe4Gaq
+	 paKkt6t2r2JAw==
 From: cel@kernel.org
-To: Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neilb@suse.de>
+To: NeilBrown <neilb@suse.de>
 Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
+	Jeff Layton <jlayton@kernel.org>,
 	linux-nfs@vger.kernel.org,
-	Mike Snitzer <snitzer@kernel.org>
-Subject: Re: [PATCH] nfsd: make use of warning provided by refcount_t
-Date: Wed, 30 Oct 2024 14:14:49 -0400
-Message-ID: <173031204295.44815.16993980065300726219.b4-ty@oracle.com>
+	okorniev@redhat.com,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Subject: Re: [PATCH v2] nfsd: Don't fail OP_SETCLIENTID when there are too many clients.
+Date: Wed, 30 Oct 2024 14:14:50 -0400
+Message-ID: <173031204294.44815.10771845400873129613.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <173006668387.81717.13494809143579612819@noble.neil.brown.name>
-References: <173006668387.81717.13494809143579612819@noble.neil.brown.name>
+In-Reply-To: <172972144286.81717.3023946721770566532@noble.neil.brown.name>
+References: <172972144286.81717.3023946721770566532@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -63,29 +62,30 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=971; i=chuck.lever@oracle.com; h=from:subject:message-id; bh=D/2RLf21vlMygPjqd8AuNGZg7mykoh3we2KuaQI+um4=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnIneaNPwLYMYlUBkjRJCZT9qr/jiSKHg/gOBx6 DLhHPgAMeuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZyJ3mgAKCRAzarMzb2Z/ l5h6D/9J6tWBukl6/VyU9bgv3dHuJ/CfcRB87gS9iU6JkJhHvYq0DcJgkRH875LIAt7kSo8b7Vz 1QBPMr1wJWNDmt2uSIRI4yJzAerJZvoh3fUZB722RAyQfaLESyH7IPwBHgjzqQOyTWSRYqsfC9Q sRT/kEx9uV/EVaUtdMab7NieUbEXfBOHPsdoGrrkrF7dZDxmUXmARGuqKip0HF7tUskiPjGsF+B sszBoexyY8NLSaEfaY/HOO7H/kvPt+40qijVutVwJWOoK+MBQb4nd4DAKLbVZCxPFiGc0/+GyBc PJXYktnArkJRc3G00oyBWjzgtjgmyfmxBXHt2YZNY6W5buOuAKLKFObrrXsiG7LS1jlo+oG1NbC bNbN0E3zrM33NX/Pfa6uQV9ALPr0010lqBAOIliLvpsJsWlTRK8fRNmKbAjZQX6pkLU6vOkq8Vy yWNXmpZ15kDepTOR13dDeShH1cYB+5+lZ3t3sVBD7pCaHV/X6GJTq4xZsoeGDT3I1CB5/Sti4vm Hfgg3QuKKxVRecHp8nSjfR6EBYf9cU0RRKF2extgUoEgEgHjvTCLqzP/zC+vYH/xTB/UlwT7jze 0X7W+HMosxY8pTJRhVQLXY1qb+enIeN5YxbNRbDA8FmT7IFqfQajUrzP+VhLKNXObEuKlVFTx7k G1Mtt2B
- IeTyYw5Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1089; i=chuck.lever@oracle.com; h=from:subject:message-id; bh=SxqTmj1F9ij0AjnV1MdesE53VYe7057G4HSpgst/AJ0=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnIneht1fPBQwCn5ejtfQRBAzhcBnq43QdRtdIb zMFvLRQlhmJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZyJ3oQAKCRAzarMzb2Z/ l9k4D/9AYOIOjKOty6l1eVh1qNGwd3KpermsyUYg15IVBz7oJwLyu9pj9ITdwmg+VM6UpC5TWse RgO2yF+QyrkrU0IDChp/AeuYkC1XSXsUI3Vy/VqBX1/J6H2p8VqIH/YvmKd5d6QQYuWUtUjRW7T FD8MtEzOIgEacYt0Ec8jwCDMHmPn/EVYNuvUAgSqNqf5bJzkCXL+hx7WlYvtUaM0gC4G685dGS9 IdtW+AJDOZfjbqTZexqBp9slzW9Vzv6I7FQ169dShO+migQ1p/GwpUvAZaKjdBAeBdmi/d8vfrJ bl6lEtaE2W4vxo5uw4WbFhtU/gz9yq3cNHVPQNVjGBnIoXrOm6aKENfpIQHLMGkybXQZUScUyv3 e3Wieu63xEKGZehZFbG75t3Vjfzhxr2PdfkTJVDvFKE3o1ukQN07BSG+MLJaZ2Y0/xOLmta3Pt/ 72X0P263KMJU24ZqicC18LGADRNSunPm1XKqL7NxSJAamThgQnw3tRcdTjICfwMTVwl1WxwVdCr 98vNCkhTa4F9xL9iZbhdYHAbMqBHSJ8QKBYPO3sFSxADsGE+hLf9jT2KGEd1UaYc4TAoE+K1IqX qbhasF3kkf+hFs9r4MsF0vsC3QwcLkxKtXD0pA/sDrMFlFqysc+odJkzvuO0BSADX4hU/OZwgSH 2ZqgiU
+ p2xm2H8eA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Mon, 28 Oct 2024 09:04:43 +1100, NeilBrown wrote:                                              
-> refcount_t, by design, checks for unwanted situations and provides
-> warnings.  It is rarely useful to have explicit warnings with refcount
-> usage.
+On Thu, 24 Oct 2024 09:10:42 +1100, NeilBrown wrote:                                              
+> Failing OP_SETCLIENTID or OP_EXCHANGE_ID should only happen if there is
+> memory allocation failure.  Putting a hard limit on the number of
+> clients is really helpful as it will either happen too early and prevent
+> clients that the server can easily handle, or too late and allow clients
+> when the server is swamped.
 > 
-> In this case we have an explicit warning if a refcount_t reaches zero
-> when decremented.  Simply using refcount_dec() will provide a similar
-> warning and also mark the refcount_t as saturated to avoid any possible
-> use-after-free.
+> The calculated limit is still useful for expiring courtesy clients where
+> there are "too many" clients, but it shouldn't prevent the creation of
+> active clients.
 > 
 > [...]                                                                        
 
 Applied to nfsd-next for v6.13, thanks!                                                                
 
-[1/1] nfsd: make use of warning provided by refcount_t
-      commit: 74ca1dc05e0448b248ae3f2be07d716f4938d0fc                                                                      
+[1/1] nfsd: Don't fail OP_SETCLIENTID when there are too many clients.
+      commit: c7b8826b41906db1c930cbb10abb94eb24247f20                                                                      
 
 --                                                                              
 Chuck Lever
