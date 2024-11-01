@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-7618-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7620-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 430989B917B
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 14:05:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7BD19B917F
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 14:06:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7E191F228AD
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 13:05:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9648F2817B9
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 13:06:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FDA714A60C;
-	Fri,  1 Nov 2024 13:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0467E19CC04;
+	Fri,  1 Nov 2024 13:06:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5XCGakZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLpLAZa0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D6487A7
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Nov 2024 13:05:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EFC487A7
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Nov 2024 13:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730466309; cv=none; b=Ft4lpDFXHp1HhjxRoaq85VV3U9lqAYRoxW0WB7B+Poz4yB/OyDJDRoiHRFiG1mPsb3PFejlSXP7au1JInuO30sQ+2TTDV97LW2wkipQNZsVtXDgNkQ82KazfxuTglCW+th/rfOoPpq3hXM63jOObb6tZOEd0wHEhIaicGACMNbg=
+	t=1730466404; cv=none; b=QOptCBjIHQ0G37sypPKm+2VWU54q+ER2exBV794ExPfvyzmljdo7/U0fwp0L2t6P5OjQ9VbqI+iwnVqzkOIMwPDw/W/zkumnmj+oCdCAV0OxJoZ4bybhRFl3bwMDQLYcbRKtseam6V1qql4xYsA7sm+ADoy/7j20CihTkjL9/Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730466309; c=relaxed/simple;
-	bh=NeqFM8+pRx4BanU+xWxtmgkMRgkqPdTK0aOdkPr8vH4=;
+	s=arc-20240116; t=1730466404; c=relaxed/simple;
+	bh=bb27bDPw1TsA+n/inrAlZw2/YD/584A6DvqzjAWOJCs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z3nqtSu4ai0Bt+hitEBlxutULddQ1TXgY/mnJsMc0z5YxTVZxVxAnHErpLI6lW+AC5vX64eYe36K1MWaeJBx4i/1D3DbcojDSU/9VrHbqR31+EIDVWCLoex3PatMUALNwqCfgRV/Nrt9ZnXq+k8W+nCg+S1bwDHyO78x/HFtfIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5XCGakZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A6E3C4CECD;
-	Fri,  1 Nov 2024 13:05:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=EwQwFJIpGbzhQuZCbdiDv0ktUkeKjifzmqqU+o7DC4s6hdTUD5yLSzHt6ERzwmzoekidXjApxJ8ec/WhNlbHyKEwKVxvlezpeozlDn/oCWgeXX8GjsBRsvhiDt8kCJnWG9JAl38q4rD5R5h2Lin7QSRjSeFiiRNXnqQElfI9iEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLpLAZa0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6565C4CECD;
+	Fri,  1 Nov 2024 13:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730466309;
-	bh=NeqFM8+pRx4BanU+xWxtmgkMRgkqPdTK0aOdkPr8vH4=;
+	s=k20201202; t=1730466403;
+	bh=bb27bDPw1TsA+n/inrAlZw2/YD/584A6DvqzjAWOJCs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=g5XCGakZFJ86Gtr1591fsf2i4voDtIK98wJDd9rLkNcyUlfLy7AmsWqnLzXWadOBt
-	 Do3po3JNzdDEPUJQf8qqNFUHcPagHdAdpkLwtpvYHRXt4lpjmsZuEN09QvCY31BPQS
-	 n4kmF4Q+CIWOUNHrxDBPXrlvPKpXZnc59/QlkxZvLIhE0l7/HpQ8uo1kbi7G2m3RLU
-	 lE3ARZKu2lZ8OzkF1dIh2vYJ7X8UvWrzTGVeQDScBxjrJ+liTr+3EL58h79MUatU/r
-	 WFN5p+k6rkwaKqS/xQJSqVPS7tnVksSx4+JN2kQ0KgZ0Awp7EjZ04YavRfHStOc4IR
-	 QkwKUfqy8Qw5g==
-Message-ID: <aafc9341224f4649daa44c15a1abaa62d442e604.camel@kernel.org>
-Subject: Re: [PATCH v3 8/8] NFSD: Send CB_OFFLOAD on graceful shutdown
+	b=nLpLAZa0liU7aJ+v3IYwSFpsOeS4QLcQWbC7YgAKSnFeOvAvmsXrbweZ2FubNCCKi
+	 Z5OLLLPzubM5JUb3kSqlXzeIFAEKzeQscx7GfgYsobzZJKs8ktQADI+NBLyKRmNTK1
+	 GwbowH0W++sL1/gE8lLmaRGAUdnv+DDdLHowftio4K50kOva8Qpty9sIzE3bXCh62n
+	 h1q0frEbxq+XTVl8WHRNaGesG4VgwTBmIeZNfKOsFZYLOimbkvDELQfePwXylv3AR9
+	 TRj1x5omNfIiqmnndav8cqkoQH38G/LYrkcgdR6vmJgrdlEGTsGc12ELeIk5ytZPeN
+	 lswHlW4ixrj9w==
+Message-ID: <490ea18ca7022a2716ba76b689ce7114a84051fb.camel@kernel.org>
+Subject: Re: [PATCH v3 0/8] async COPY fixes for NFSD
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Fri, 01 Nov 2024 09:05:07 -0400
-In-Reply-To: <20241031134000.53396-18-cel@kernel.org>
+Date: Fri, 01 Nov 2024 09:06:41 -0400
+In-Reply-To: <20241031134000.53396-10-cel@kernel.org>
 References: <20241031134000.53396-10-cel@kernel.org>
-	 <20241031134000.53396-18-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,50 +138,45 @@ MIME-Version: 1.0
 On Thu, 2024-10-31 at 09:40 -0400, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> If an async COPY operation happens to be running when the server is
-> shut down, notify the requesting client that the copy has completed.
+> Extend the life of async COPY state IDs so that clients get
+> actionable OFFLOAD_STATUS results after COPY operations complete.
+> This lifetime extension comports with RFC 7862, although does not
+> bring NFSD fully into compliance.
 >=20
-> Since the nfs4_client is going away, seems like this could introduce
-> some UAFs.
+> There are a number of other small fixes to improve observability,
+> behavior during temporary resource shortages, and behavior during
+> client shutdown.
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4proc.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> Async COPY remains disabled in NFSD until the Linux client has grown
+> support for OFFLOAD_STATUS. Patches for that are available in the
+> "fix-async-copy" branch of:
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 4c964bce6bd7..51b3f85f3791 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -68,6 +68,8 @@ MODULE_PARM_DESC(nfsd4_ssc_umount_timeout,
-> =20
->  #define NFSDDBG_FACILITY		NFSDDBG_PROC
-> =20
-> +static void nfsd4_send_cb_offload(struct nfsd4_copy *copy);
-> +
->  static u32 nfsd_attrmask[] =3D {
->  	NFSD_WRITEABLE_ATTRS_WORD0,
->  	NFSD_WRITEABLE_ATTRS_WORD1,
-> @@ -1381,8 +1383,10 @@ void nfsd4_shutdown_copy(struct nfs4_client *clp)
->  {
->  	struct nfsd4_copy *copy;
-> =20
-> -	while ((copy =3D nfsd4_get_copy(clp)) !=3D NULL)
-> +	while ((copy =3D nfsd4_get_copy(clp)) !=3D NULL) {
->  		nfsd4_stop_copy(copy);
-> +		nfsd4_send_cb_offload(copy);
-> +	}
+>   https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>=20
+> Changes since previous versions:
+> - Loads of testing, improvements, and re-organization
+>=20
+> Chuck Lever (8):
+>   NFSD: Add a tracepoint to record canceled async COPY operations
+>   NFSD: Fix nfsd4_shutdown_copy()
+>   NFSD: Free async copy information in nfsd4_cb_offload_release()
+>   NFSD: Handle an NFS4ERR_DELAY response to CB_OFFLOAD
+>   NFSD: Block DESTROY_CLIENTID only when there are ongoing async COPY
+>     operations
+>   NFSD: Add a laundromat reaper for async copy state
+>   NFSD: Add nfsd4_copy time-to-live
+>   NFSD: Send CB_OFFLOAD on graceful shutdown
+>=20
+>  fs/nfsd/nfs4proc.c  | 101 ++++++++++++++++++++++++++++++++++++++++----
+>  fs/nfsd/nfs4state.c |   3 +-
+>  fs/nfsd/state.h     |  17 ++++++++
+>  fs/nfsd/trace.h     |  11 ++++-
+>  fs/nfsd/xdr4.h      |   6 +++
+>  5 files changed, 128 insertions(+), 10 deletions(-)
+>=20
 
-Not sure about a UAF, but  it seems like NFS4ERR_DELAY returns might
-delay the client destruction for quite a while. Maybe this CB_OFFLOAD
-shouldn't retry on DELAY?
+This looks fine to me overall. Most of my comments were pretty minor
+and can be addressed after the fact.
 
-
->  }
->  #ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> =20
-
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
