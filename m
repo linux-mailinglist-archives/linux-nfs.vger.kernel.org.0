@@ -1,104 +1,104 @@
-Return-Path: <linux-nfs+bounces-7625-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7626-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 235049B9576
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 17:33:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D7F69B9723
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 19:11:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7750CB2138F
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 16:33:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0780282911
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Nov 2024 18:11:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C577A1A2643;
-	Fri,  1 Nov 2024 16:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8801A14F132;
+	Fri,  1 Nov 2024 18:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UpkUgC/3";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="k9ewc3K9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h4S3r/Sw";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="OlxRtgdl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4208A81741;
-	Fri,  1 Nov 2024 16:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F40413B7A3
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Nov 2024 18:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730478775; cv=fail; b=PGJKqAOYIhgv1epFz1pCEEvKl7YPPKj5eRfJfOIRiKJXyGsnNVDPgfWoulKHAthK9BqWDwWKNb/E8aa5MvETkqW6ofzEBK55BMfK3iW7jZjk1Ycc9oL9xW+WogyqNasxz9pF8Ma6JCt1p8GhstoOE5feldlsCXDVcD0zgPL63Ro=
+	t=1730484661; cv=fail; b=r34Wz9eKW7m4mBxOD5yUlWXcVuPVR/u6UB9VZrWkpKQaknQdzRTbUYPrHgdNR/SA4F+tPkqVyOWMDgOCubGUBuXuRYfVTq1XrbUNVnu4FN5lp9fM31ocLsQPwtCR63IZ9mxrb9v5c4MtSaaQEXtqNG1dbeb3sOQnKpfsIs4xFCw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730478775; c=relaxed/simple;
-	bh=c+DlgEAEUJpxwysHfbxOEtLLuKkR/j5I4ynYkn+nJj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ryTI1/GRMNq2z1K0VrKpcrS6wOjEVRB7FEGhYSgnfqukd5fSjTnYKGao0OuGRL6T7x8Gu51oHU4///hYpxlQVPVAn2qPLA8h3uoiClGJ4qNEETS9Jrf8GVjdnkqSu3DNHs6Sk5TyyrqPoN0cbq82JNtR5QTpvei8lyyAnSmi/Zw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UpkUgC/3; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=k9ewc3K9; arc=fail smtp.client-ip=205.220.177.32
+	s=arc-20240116; t=1730484661; c=relaxed/simple;
+	bh=0jAIY2pZRqHrSM+OAK+Awl1e30XnBWzWKvVhN99mQ7A=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xg6kJpMuMfXanAXxZjflJNiLFcqEQnvso0II9Q0y0pP6ifbTcDDjcihWrF8i3NIrUrxvDOrehr5itFwwrHDL8mwGMSSgl5jJkFHZXbJX65lbPEq7PAsK6kp9d899i3c3U9qH39MKw03NVtFNVY79pCr51a+UwOsNzoAV8mYOZco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=h4S3r/Sw; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=OlxRtgdl; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A1GBoQc019754;
-	Fri, 1 Nov 2024 16:27:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=TseTCXAMulraY17I6x
-	VZDelZMEqtsNl9fVjn1LojDLY=; b=UpkUgC/3+4GPo7z/XTPEcQIsh+TO7urCjZ
-	93C1RDZ1LPCPlCCNjWUzANlZa70fDCPDT44Fg2S+SU3vanNSkiyvKlofCABa+H8B
-	7ZSLURVV00/biv9BTQcQRXLjBdcLQ3KhYglEBdmchDLLRXfNFvP7zV1S0YLHz6Tt
-	nxGEV0+F3Rf3HS7ZIMAo0uDdp4ULwIAy88o/KHkmZ47TQ9jZ/2r6hpANrj+btb5g
-	LXlyss6B16Om4EMB+p906sQvYpsTYr1zjnOGzHWAh0/1vv9XiVJIZF9kawwXQ8a/
-	dYToGhDUESm+uIo8xkvg7n31G5WMTbfPuD/mf5gJAapGwPLuBTyw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42grdpcm7n-1
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A1GBdji012963;
+	Fri, 1 Nov 2024 18:10:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=pmyf+Tv5DPxMMnxVUTiOQnoQKQLk04TAR3djDFfuu0E=; b=
+	h4S3r/SwLm64L8O05EwBhyze4hWrbdLMAa+iE5r4EKZG6UQB4+t4TV+Woxq5oLjA
+	03Li8aaylZcRbcx2/Ed01723j67jgFjDQRZkHZXrlF3WYR8jMDJHJPc1vEmKLKuF
+	4UQ1pvtn143neUUAQzIe9qnsoY382MfwxSE1kEOLd5vBM0qeUGxFzVvjrNa+O+Ef
+	DH4BYsMmbx/lDUzCuwINuiXNjMbeVSdvDFS5k5HBmXh5J7IEd46SolMFEII8Hr4P
+	GSqbh/atCvd0TRhSVHH1H54SXBOQusoWzXyh2BbgSVdhLXgpbmQjJyqg+fwq23r5
+	22XpjbMkkjLlz21C1go3wA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42grdqmpq5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 01 Nov 2024 16:27:22 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A1Fua90034748;
-	Fri, 1 Nov 2024 16:27:21 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42hndbq9v5-1
+	Fri, 01 Nov 2024 18:10:52 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A1GPGnv008537;
+	Fri, 1 Nov 2024 18:10:52 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2176.outbound.protection.outlook.com [104.47.57.176])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42hnedskn8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 01 Nov 2024 16:27:21 +0000
+	Fri, 01 Nov 2024 18:10:52 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uq+5ddi0Hwz0zR46KpeD8Q2lYRjhM+EPoJs1c2ZyRvFpx61icldE9BoNQEiPsADR0ZxPNFzRmpyhcM4jV8zRBZqaMJLdLVmAKP9ugduuLqgTWQ+W9e3LfzNlcvuklV4KkvfPXVxYhR5u9QSRYnsV7JeCX4E/PZwTKUPum6m/94uWcvixUF2EBwJHa5wDFOjY8lpvulv5zt7X8ZlOIQIwfpRPbzBt5Q0uPsh1Sqtz8jGwjK1jNYsiYPVB2tcy6EHiPZd1Jp1dAcdtKpN0OLpvp+t6ZLWqNiSnSeevsgAc0WyU1dy3BA9KJhzny1XIxk3bf2ilJbKo25fj2etBzLrIsw==
+ b=wP/hYas/b6MpDGZyvRNA+jjb4VX2U54Co+qu3IBQUNTGb6uvZNgiC+aMGm6yf6riQNYIR6goLYWNBGGe62RGWhSDqWVKQqsvNRtcckxy96j/meivImGoBmxL8M9GXgFZtpdwj/C5WzTITm1oBHEZmWkYXQf49U5CAlgW01mQY7WETrgmol6pdFnHhAFknhcslYtd25Qjul1umREsN+TnEcdpyVtMHBgfzCj4jPxl21BkNja8MCWHs5Xkrsj/7RCIZ2g49IECRCprJlQhPbpicfmRQc9PepTzVVbPi76xDIfRX/HtWz0sOJq+d1IaUSHMP0DRURwVaKUuuncKO6NitQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TseTCXAMulraY17I6xVZDelZMEqtsNl9fVjn1LojDLY=;
- b=NDqtgjKhGvuurx/gwG3KoKwJUg8xhu3/OX5YUZi0JzljOEk8/uLllU4NeRgZZyb0xxYuG4SJTU7OaCLDxBhBrncAwV2pQgEo1BcpP1NDRNtzXDe6hcYY3LcipRDh0OKxZD/GFVKPSSKnUU+eBvWiu4ei98mE2DQH0gzjrWjIFdt146DKhDEWcmAaqG/2/11kqCii/a0FnNUWlZiQTzfNE8cyNfPlagggNZI+57FKE4CMB0ANDhapbtmrsjokG+Mma1idc8xHuoSXC+iPZjjoPOmf4oCzZmysXrkqvzTsiMzz3CW7NUSHqJU5yy6N/Gj7mqiXzGlyDRrJvOUuBDieLA==
+ bh=pmyf+Tv5DPxMMnxVUTiOQnoQKQLk04TAR3djDFfuu0E=;
+ b=yUw0y1MOkosDHiDh9exCW1FzQdoFnkxymDigEox5lMJ3Sx/p2aSIzA2LV3PK9CT29nGE+vSSYI73ss8C9UEVMnSe+h1mB7KdunS9bFVdArx7fXpUc6HJAljAVAaA/NPYYSKgLGGpv+zNC369xuNNVuMbKN4tP3a/7Eo/q7NXw2GM5L+2mBUpIgAlJlortZnuPLyJeyMn/CBpT1gr127SfiWe2aRmxyfpquxdPTbbezvNbcTU0U+uv6a4Hzshf5J/IKYq1OXRPW49ISZQUpGJhtkB+X7YNJsvxhQqfB1Wfk8qOc+gRNdDc3Ta+ufAmA//hW8DO+uc+momZT+t0GOUpQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TseTCXAMulraY17I6xVZDelZMEqtsNl9fVjn1LojDLY=;
- b=k9ewc3K9bUBq1HtVTCLxlpVhPziPTNzVOTxNKPZtYZ4oF/9TcwNH3y9Y2OKfl4ds8cw8NzRsSyjXwEPi7WiG+SdnFaaG3tnZ40dlnUp/EpqL7lXktSEKyVmSPmBNXUd9Y4WWSFtL4vBivx71fEujxd+e1bQ/jTeREuu3oP7PmGc=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM4PR10MB6256.namprd10.prod.outlook.com (2603:10b6:8:b5::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8114.20; Fri, 1 Nov 2024 16:27:18 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8114.023; Fri, 1 Nov 2024
- 16:27:18 +0000
-Date: Fri, 1 Nov 2024 12:27:14 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Simon Horman <horms@kernel.org>
-Cc: Ye Bin <yebin@huaweicloud.com>, trondmy@kernel.org, anna@kernel.org,
-        jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        joel.granados@kernel.org, linux@weissschuh.net,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org, yebin10@huawei.com,
-        zhangxiaoxu5@huawei.com
-Subject: Re: [PATCH] svcrdma: fix miss destroy percpu_counter in
- svc_rdma_proc_init()
-Message-ID: <ZyUBYpOuHHHc2NoZ@tissot.1015granger.net>
-References: <20241024015520.1448198-1-yebin@huaweicloud.com>
- <20241101115511.GA1845794@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241101115511.GA1845794@kernel.org>
-X-ClientProxiedBy: CH2PR17CA0018.namprd17.prod.outlook.com
- (2603:10b6:610:53::28) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+ bh=pmyf+Tv5DPxMMnxVUTiOQnoQKQLk04TAR3djDFfuu0E=;
+ b=OlxRtgdl+TLXMmwYZwPowtdTSGWMOr75X7c5Otnu1SvFSxMHHGGpznw3a8MDQfS/RhZeDMHAGrz9I1J5udCVFvRQKddTA7HwbFcKuiT7jlMxk1192gp9y2DKfMtCnMdBauLrxd2cYwclW1WaRVyanYk08y9gb1IfmcfcmF36j/A=
+Received: from BY5PR10MB4290.namprd10.prod.outlook.com (2603:10b6:a03:203::15)
+ by SN7PR10MB6306.namprd10.prod.outlook.com (2603:10b6:806:272::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8093.29; Fri, 1 Nov
+ 2024 18:10:49 +0000
+Received: from BY5PR10MB4290.namprd10.prod.outlook.com
+ ([fe80::8c24:37e7:b737:8ba5]) by BY5PR10MB4290.namprd10.prod.outlook.com
+ ([fe80::8c24:37e7:b737:8ba5%4]) with mapi id 15.20.8114.020; Fri, 1 Nov 2024
+ 18:10:49 +0000
+Message-ID: <882dca95-f619-4469-be14-c35776c2d182@oracle.com>
+Date: Fri, 1 Nov 2024 14:10:47 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: NFS Client crash during migration scenario
+To: Bharath SM <bharathsm.hsk@gmail.com>, linux-nfs@vger.kernel.org,
+        kolga@netapp.com, trond.myklebust@hammerspace.com,
+        chuck.lever@oracle.com, Shyam Prasad N <nspmangalore@gmail.com>,
+        Bharath S M <bharathsm@microsoft.com>,
+        Steve French <smfrench@gmail.com>, bill.baker@oracle.com
+References: <CAGypqWyVW+W-mm51HUsGO2WT76YckFT_uwr4tySsEE8gwHGxVA@mail.gmail.com>
+Content-Language: en-US
+From: Anna Schumaker <anna.schumaker@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <CAGypqWyVW+W-mm51HUsGO2WT76YckFT_uwr4tySsEE8gwHGxVA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR04CA0064.namprd04.prod.outlook.com
+ (2603:10b6:610:74::9) To BY5PR10MB4290.namprd10.prod.outlook.com
+ (2603:10b6:a03:203::15)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -106,194 +106,329 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB6256:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4799cde8-3901-4e06-7417-08dcfa920da5
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4290:EE_|SN7PR10MB6306:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94dd7c5c-8ff5-47c6-fffc-08dcfaa083d4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|10070799003|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0ZCxtdVo0fKqPG9cewsAfk8e3trMMZ0JneO8yNeAv4z/spR2xD1C1Rj+J6ar?=
- =?us-ascii?Q?XLPDQf1t242TO/1VbcFb99jcfFhs8YRxP23CPPiiHQHMZl8zvQ65P3TwZWJr?=
- =?us-ascii?Q?IisFoh11MVBcV8tuYMBvUJninl9ClZlhqf96017vnukc+20H3gMmLlTbYktn?=
- =?us-ascii?Q?Ijpl8W1PRK5sO+Wc6q6gOas9BU5z+paLBCxY0ajdx/g7nF9UXLyXXAyZzTUK?=
- =?us-ascii?Q?kPRImCaWNNc/oS88Th4tSkd6J+BxaT5XuQR0ffDG0q1msuoZBZxO6vNusRqw?=
- =?us-ascii?Q?5HT286TDLlBGNQDWCy5BTeCmzAvOgc6Wr8KgpJsoGOUUwPHW7VpfRykkSABG?=
- =?us-ascii?Q?a3N+7zBOHG77rPAfnaUlL7K0IibS7PEUMB3Ty2XB3/bTpRpQrbswH5XQ80nP?=
- =?us-ascii?Q?NI9VEnrA6LjEhkkO217vAkwoxY0EpDIOfmPEKMlde8IZA2ZMKE2tANY8eeC/?=
- =?us-ascii?Q?BxPirjMUF2OMFHh9YUpSL0A4OsFh4qTJXqCkhLMCz59jVwIjdBxxQriySi9m?=
- =?us-ascii?Q?dPjAqFeIAkwyqKAPW0ckQHCdNTNCdaJjO5y7N1ydu/26d/mvP1Zq8do5GXFQ?=
- =?us-ascii?Q?JLbHfAnyQg6kjUu0E+rQp2hWFtT4Q/LB7np580IUrFvu6wNdzwH+EusFe+X0?=
- =?us-ascii?Q?69FjMkMsAacjKkbsWZe9Jd7wM1KNeL/lNpIIW5SJsNi0efNmm8IfY+rx3bds?=
- =?us-ascii?Q?5FB5wYGfrYhIzU5Lm+O3K+ahOblApFduOKVVmI3vcKSkdVtpMc2BhueUTWSh?=
- =?us-ascii?Q?ywrUtghTzNBmjA45qWF56AsRNm1oFi/APpzAO7sICIc72G92ueCGDGvrzoH1?=
- =?us-ascii?Q?lKYWR9LHx040FhFydNIqgydOF3t6lhjd1eKTo+6UcMTtZtBoRQiznbWiVxlh?=
- =?us-ascii?Q?ZYiAtvyqgrXkA5KDkW7N+PheJI7VP1/Ml8OdWDoF8bNDcFl5GGRSV8NO0Usy?=
- =?us-ascii?Q?RmDXcqZZWB1UelssheYEaNwB+oXeRNNPFQ+u8C/knVhFayuStxMiusW7YTD0?=
- =?us-ascii?Q?WKnidNFXYGru5WUH/sCnJ16RlehldlLY18oAPaoMFh74EnslWUq3x1SPNWi2?=
- =?us-ascii?Q?UZ22aeSaRkjAqlODNXk3eNyZtDiFa26NgQpauOcXPhQoymEEz51T2PUZtK5W?=
- =?us-ascii?Q?tkbHQCTvEXjQau80IVg/I3jUe4QQQBL7c3peRYQs/7FB0+4May4QnXyjcHAR?=
- =?us-ascii?Q?/QojZOm7jmHz9LKahUD9ZLjx6CuBJPtFIEFpbKV61paKAwnl3o3fDBq+HhfV?=
- =?us-ascii?Q?B4mFPSYqubZSo5Ll6q7nVoGiLRtBWuy31tDEUjmN2mvFZ5Xnyf0EOxvX6ppT?=
- =?us-ascii?Q?5qq1zZluzchUNY/E7dcbrjUa?=
+	=?utf-8?B?NEV4bDJhTmNEM04xckg3enpuM0VRU3hiR08za043cGVtc085UHB1V0Zrb2JD?=
+ =?utf-8?B?OVlvdTRjQk80ejV2Y3FQelhMU2UrcFQ5eDNvS1hQS05oS253NDYrcUJNb2Ns?=
+ =?utf-8?B?dWZXNEVIVTlQQTRNS2VBdHVLT3VIUXA5eUJVWlhaR3dpcTFlLzd2cHZtY2Ru?=
+ =?utf-8?B?T2tkTVhjaFpBcVNLS2VtSnBMcndQS2VjWjdoQ1N1alQ5MG5wYVNVNkoxMk9r?=
+ =?utf-8?B?WjA1TDBkWjJqOXRLTFpGZkVxSytCemd2RzM3WGdJazBwamdsYlBMU21mUnd6?=
+ =?utf-8?B?NW1Ia2wzamErNm1Bd0pDUElaS1dETmVDZkFyZmFSZDZMNFdQWXNjaElLc3FB?=
+ =?utf-8?B?eGFHcTJLdnVjbElRZHZMSDFsNTlPa2E2cCtvbE9KbDRSaXMrL1E4d2R5R05S?=
+ =?utf-8?B?V3hqK05sMjZxb1lJMnBmbDJNeHhPaXUzNUpEUTRVaWdpbEJ2SXZMdzdOR2dm?=
+ =?utf-8?B?U1RLUStLZjAvb1pvVnQrMTdRS2lGeHVOdXpqYzlucmxnZjdwWVhkeGhuYzZZ?=
+ =?utf-8?B?anlKN1pyRm5WMUl6NE9XQ1NFdklTcDlSNVJ2cTlicWJvYmwvQ1kvUmE5VExQ?=
+ =?utf-8?B?TlR5UXJrNUxmOHFNN1UrSzgyMmdpaDEweGx6VEFFeGRYbWFRSnA1Y09hTVhE?=
+ =?utf-8?B?cFc3OXg4cHRqVTIrSG80OXNzWGd4dEQ5TEtkY2FUMU02TTJEejFCOGpTZ3RT?=
+ =?utf-8?B?TG9pR2tBSXpXWXJobmVaQzgvKzlSMjRhWFV1SlNaVkdrZWVjekNkZjl6QkVn?=
+ =?utf-8?B?a2lmY3QwODFCODBUNTJNUWRwd0ptdWZ3QndISElMc1NTall1WElXSWNrdCt1?=
+ =?utf-8?B?cTliY0Y4UzNRdlpXSXE4dC9WTXkzbWdZN2lMUjI3TllkeFMwZk5paXVhZ1NJ?=
+ =?utf-8?B?ZkxBbnpKcHRnaldqUjNSUUloQWorRHppckNZQkxYc1dGZ0FSVjlwUmFPYnB3?=
+ =?utf-8?B?MXkvTkhVM2E3dGVVeWkveE1MZlltVTQvZlowVzg0Rks4MHVLSXMwVWJwbU50?=
+ =?utf-8?B?V0JvNzhIWmN6REk0VVBuZGxETFV5Z3l1Zy96MGJHNkhqUm1ZUlRTZlh5N3JL?=
+ =?utf-8?B?bDl1SUd6TUtkYjhBQ2xpcWQzWldHdTJLYmxVd1d6UUZQTDJlc3BhcTkwSHRo?=
+ =?utf-8?B?eE54T1dWdjdPM1FsSjlEQVpKVFQxWmpVZXJ0enVmeHhnR1pMYzJGbUdUTUc1?=
+ =?utf-8?B?RlhlcFB2OTBtRnFNWndsdHJINThFK3JJQnZQYnh2bklmRTJZQ1F1N0hmMTNt?=
+ =?utf-8?B?eHMwSG0xVzdOaEYyZE9JR1E1cWpkSWQ1ZUlBMXZyVnkxeUlSMWk2TE41NUVx?=
+ =?utf-8?B?bUxPdGNRcHZUL2YyVWNrZS9VOXQ4V1NTWXlFc3Y0YXY4bVJRTkU4L1NqamVB?=
+ =?utf-8?B?TExLNEx3UTRTU2pnVHg5V1I0V2RqbWdLbFNRdGViUWF1VkxPUUlhRXJNS2RC?=
+ =?utf-8?B?bTMzNDJYbDg1YzI5ZnVWUmZlNjgyNEIremZ5Y0c2S3Z6cU1zWVRPU0ROZ3FQ?=
+ =?utf-8?B?OGNmV2N5NUJiaXFteG14WGN1dEhTeE5sSCtxbDB6TUhGaGM1R0lDUTV0TjJJ?=
+ =?utf-8?B?aUNGZWdySTJlWDJXRVNzazZYaS9zLy8zZ0x2VkRwUytGVUh5dWt0alhTclZR?=
+ =?utf-8?B?YU0ydFNZck5rcmdEZlJyNFNlbUxiUVNnR2hxOXBtNTJJQ1k3dGJtL0hvdkpY?=
+ =?utf-8?B?aUpSN05aSGFBbDIvUWZjU1NoemMzNmUyL1paQXUwVCttYlFDdjRobVNYcFdH?=
+ =?utf-8?Q?VbDomtTeod500TXu2dj7RZHwuIMRTA2lPYFyl8E?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(10070799003)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?rPD1aSXmtvwWnvX4dL/XPGZ7azTwEoLUh1rt3Gkb2cpUq62oWb2E+Iu80F60?=
- =?us-ascii?Q?/80gA9eZbJ0GrIXoKE0Y9SWRx+SkpnOM9QOdc30fs2ORTaIr9ibuHrSO7QJt?=
- =?us-ascii?Q?CJqdLQ9bwN5fyuIWKB0MgOKjjKfzV5wU++H8bHweYaQ3i+uF93pM4tlAaoZG?=
- =?us-ascii?Q?IZbDf3bE9FYuutpZdrJeCFAoQGZfiskVFYeMc6tUM5BUwT4PNui2gVZ4rXcU?=
- =?us-ascii?Q?GRYzUJwIZGuMgqphLMcNa1X9XMgcOEgnIKyTVvrt9OOs6bMKfvBODHMtkWD1?=
- =?us-ascii?Q?yGONhnGSyzp849gYe6IBIkdd1Ilegs7SeMqV5R1w7n3ojg4ijwg8h/kSUq+W?=
- =?us-ascii?Q?VoC67aiMYPMB2QUXbPvvh33/YK+AQ8XB7CsgU09iQVAb2iXkGN+DU7XhB/0x?=
- =?us-ascii?Q?2dwPDIbdHZQXftLMgWNFaxdSQojEZHJ2eDTUlbirukkOV75O34kMzqgKbTVk?=
- =?us-ascii?Q?PdJqD1OAnhsK0MXBYxNuIwXoFzQHHzyRDRYEfd0tc2VnlWf9OBZoxZpG+XVu?=
- =?us-ascii?Q?5cOzEFCyI+dKBlpMJm42Ps1ZS5HHKWZ2y62p7QudnRAba9z+akA60bayw7Pf?=
- =?us-ascii?Q?lnYZthT/lLfWq8nqiZGND+pihS2S+WGeCZr3Oa6oJkIQJwPD0YSD4G0EWlas?=
- =?us-ascii?Q?+c33U3401yuxqSrFftf8CbHso5i15o7fP8+Hw3K7Fyi7EMkprW4YyL5Cup4v?=
- =?us-ascii?Q?JxoqrSmXJ/uSlR7Ws4eKakidFtTEzm3sg9zUaJ/J34XpB+HZXvpZ/1iKMSTh?=
- =?us-ascii?Q?42o4wdSHpgs21a3DSHdQzxLNKqISkKuFSPOWkfELHMLN6KetHIIjJh1TQlwN?=
- =?us-ascii?Q?YAWq5NvdvSyc+ge7YnjeNepLXg5imgxWJDKERoAmFfGCh4Az45R27A7Z3kE0?=
- =?us-ascii?Q?6iteiyLQFLyH2kvwBkHO5ewQH2pyEP4lrxcXslepvoE0t1RsDQJzQ82rdwu4?=
- =?us-ascii?Q?QE7W8v9leMgfDAPCHbuHhOhs4RQdFhr+unAd7pNpPQOhB7DCBNaNFw/9IZC5?=
- =?us-ascii?Q?PZtx7MBe4f/Os2LkFQYXkmK0rWcURGrh6uFxttIaPnC72e5vTIuijlbZ3J73?=
- =?us-ascii?Q?Pge8A3mbqSxNL9EiDwRaAXyiuRLyoxlIBKVxgsEdnh1lVuElPTF+xJeB2ehM?=
- =?us-ascii?Q?1iSROQZfPANPdRGQHKrPahraXObHjnj52pwW01cz33WZyPcwtY8D0fpzC3fk?=
- =?us-ascii?Q?e5U4rL2YZZd6pDYr7BrMnS28GNoWmj+7nBWyogbnRekaBSpEYYl6nXaPaTLV?=
- =?us-ascii?Q?zz4vHY9k4grrJi5T/ID0oYGfNGSWZWuVfx9rEgdlPm/9x72zhNPwIA5WtiAB?=
- =?us-ascii?Q?0EBvIndywxP16O/oJZe3nGHekShc8ZPggwFnkSEvZLNe/hKtz/6xvzlDsfVI?=
- =?us-ascii?Q?QidTCCao11r8oUy4dninJq2jwrxgzWPrOVpEvGHrFHmNilZQ68KGVsONTcgG?=
- =?us-ascii?Q?XTK6UPc/PFljr46wNmmaRdfGo8JWJi8/49BgBdGF2NDxW9MTIPLtgH1MwBKx?=
- =?us-ascii?Q?nyKXBqUDVSZai2OVKZ3kszuR7A0IakyEv3kEe5hU9Y6MfwkS43KqmTkSjUn/?=
- =?us-ascii?Q?a3mvHzGiJ05C9YTX8w1B5I8muNfil8MryyKjVSeO?=
+	=?utf-8?B?Ti9Vc21pV04yWFZxNVl4S082UGswS1g0RktMbU1DKzlPZkZMQyswWlR1WDdB?=
+ =?utf-8?B?dzVyME5pTWo0U2RUM1lzWm9GbktoNnZXbGtyL3Zxd3cvNFU5OVBlMWMrSTR1?=
+ =?utf-8?B?SnVlaUhxVmVPbG55NWhKMUZuVi9HaFpwVE9FUkxRZEUxcWVGY2hPWGt2a3Zy?=
+ =?utf-8?B?NEFkTkppcTV1bEsySFU2YlpDTDZUSFd1RnpGZkFnZjlvTHdqM0FkODI1VUo1?=
+ =?utf-8?B?V3h3N1FoeGFJak1kWXNuVWFEaHJreVZpdHBMSWpLKzNrYzdGc21GZmJuY3ZP?=
+ =?utf-8?B?RGhLb0o3NklHMW9nMFhxTjhVR2ZNNEVqVTVKTEI4U3pMazQ2bTFXTUNGL1dq?=
+ =?utf-8?B?QktvYzF1bFlrWGY3eTVtR2JJNU1YZkNraG51RmlFVUowK3FUM1lQdTIzdzV1?=
+ =?utf-8?B?M0t1Sm9WbDZIbGhBQXJBZTlIV0h5dUZOSzlaR3dsN0NERW16amx2VWpiOGQr?=
+ =?utf-8?B?UDMzR0JOY283djhyWXUxdk9lRGYzem1ZL2cvZVZKZG8wbUd6TzB3b3lqd0dR?=
+ =?utf-8?B?STFIUnR4dU1TOGIwdDYrUnl4SGtmZU0vcGpqczZvZmRyamFMY0IvVkxuam1R?=
+ =?utf-8?B?MmdyT09rbDhKeWFrVFIwVFFMWkxkU2o4aGV2K0xudzJKN1Y3cG0yVVpmTkEw?=
+ =?utf-8?B?RUVjVUFucWExZEJmeWVpK3llVnNMcGl3aENCeFkyNXdnNEtSc1VzWFJCVTMr?=
+ =?utf-8?B?VW5YbStsZy9uVURIKys4ZEFVdHI4SXMwZ0hCMzVjVmw5K3ZWRE1icU42d296?=
+ =?utf-8?B?SHUrS1R5S3JNRXdrRURwQlR1TTNNL1RyRlYrNXNFemFxWWtnSHVrLysxQWZB?=
+ =?utf-8?B?c0NnR2NzQmplVS9lYlNCa25GdDhEaDJJVWlCUHhxdFVXaDFXRThkZzJOcG80?=
+ =?utf-8?B?L3k1UTF0Tm91WUI3dkk4cFZQc2pZUURJbCtyN0UzRXdHN21KSjdzcUE1NHpy?=
+ =?utf-8?B?OG1yOEJPSmZQMzM4MXl6cU5UVmNmcFMwblFOalhvWGQvUFNVZjVHT0JyQkJN?=
+ =?utf-8?B?d1lYYzBNRHJyMTNmNFhNT0tPenB1eXR2Zk5CNXdxSFovRFlDTFdCKzhyZDhm?=
+ =?utf-8?B?YVU1OENPNjg5SUdUZ3BUa3hxa1lsWnFlNGVuSTlJRDFXVnZsL0djZ3A0cnQ5?=
+ =?utf-8?B?Rm9jVENKdmpxeTdKTEhmN2U4UTdYMjFtTTliN1NQWUQ0Nk9jZEVmc3NMRnZh?=
+ =?utf-8?B?R1pmWUhSa25uNk9tQ3dqT0wweG5adTVxaFRPQjNZSW9SSDhicFRBcXIrS052?=
+ =?utf-8?B?Nm1KbmZ1ajkwNE9tQ3FLVmNIUUNDbGxkbEZUTmF2NW9NVFYyd0FLOXdhUW9w?=
+ =?utf-8?B?TCtHVHVSR2ZRanBMdUk4NXRJK2p1OHhObVhHMFZWTnhyNCs1VnVqZ1RWK3NK?=
+ =?utf-8?B?eUIyRVN6N2JkWUg5empsb1FRVmNJcTgrR0k5aUFkdTQ5Q0FnRDhGOTU2clI1?=
+ =?utf-8?B?NUl6RjRGRTg1RWluN3dxY2wydWNGQTJ1TW1VZ25RTGFoYjJudTR5bWRWaVlz?=
+ =?utf-8?B?QW45SzRsamR4Qmk5dUdITnJncDZ0QWhwRVZjbHJnRnRvaEM1azZGbHZvOW1O?=
+ =?utf-8?B?ZVVEOGJsYWwxMGlieHVuMklpd2s2bHBPM3FNSVduYlQzcDg1UExVenlWZXRr?=
+ =?utf-8?B?d1pWbHVBYm1pd2tpT1A2NFpnMENWNnhkNFB3a1dzcnJyN1lhT2RseVk4M0ZS?=
+ =?utf-8?B?QnJkTExwUVFVZFphNEtCM1p2Y1dzdU5vSGtHeWhoVy94VTNtYkI1MGVpTmZN?=
+ =?utf-8?B?MVJ6ekRJYk01OXBkR2RJS3JlOXNIeEV0cGpwcGNYVkJPNEtQc3ZYV3VkRXo3?=
+ =?utf-8?B?VzBCR0RkcmZVY1VRczl2ZXhyUk1UUkJ1TVMyc3VKWFlLMXkrWC8yaE5Qc1Jw?=
+ =?utf-8?B?cEFVWVpPeWtjcXRMVHBtdXZVTEJJTmVJUEk4aE9uNEdWVnN2eGt1K0htSEFN?=
+ =?utf-8?B?NTY5Vm1pcGljd01OcUVKNXRJN1pFTjRKNkxlcVNWSlRSRUJZK2JoMGlldlo3?=
+ =?utf-8?B?YkhkaGxZYlpZd2Q3d0xoVE04ckJoZTRqZ2xONUtMSlB6dU01UVBZUmdKWlRO?=
+ =?utf-8?B?RndjRE9zaVRJd3prcktFa3FocHpMRUF1NDQxdTZKSVNNMWNPV2dLSkNIdHB5?=
+ =?utf-8?B?L0FPdjY0YjByMTlyTmNIUG9mQXV0eEIzZThLZTAxSjFuRkk3MUMvTThncmdl?=
+ =?utf-8?B?WDFlNVVaOTU3SURLZWNFci9TUmU4OUR1UStPVHhRQ2JpUTdhSCtFbS9RSldL?=
+ =?utf-8?B?YUJuRDBYaU0wazExb0VPcHJoS1NBPT0=?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	aaXcQzLRfz0Z3xQfMEPbUGdmXKMWY4UpvtP7CJraF0gGorF+sVsAMyVOd16S0SbNVQYsREDuRgxryU+rOFal3c0rfQTtZ48dp261h3f+5yZVvW5xCQ3NyJSjGArlmWzH+G1qidhygX+FwPouRV9pbH6NxTo1m8dkPh00/k8bH0Rn/HNAjxm/bpB7DFbG9NnUi+VOojGo5B5bXyK/8aEyH5iQw9fhbS/X6GKeBstEkjWzbhyAIZILhi2SyjIZkbfVW5VY0rw/0JzJ7hUF9Y9LYJuFH2CqcW14aLeflOEz0E5rW9GpV0GsvEIe4uLbo9CknnGsQVi0aHWuODIcLRf73PUbPb/5uEhTMVHPb8DPc9bDbe+qQbUw7ikLviLIpZdEEy/e27f9L6UuU0k7tXomMiEl7F6Vk5GS1NUv0qUHEnQuHD3iidwAxiLpAFdBZ9IO0fnK7ER2/J8mwMFQlaa8N7Y4e3kqAr3qufAv9anfzVleRHfUVKF/olZ+T38q9dJDR2hBkjRjjS2GSf1z11Cz1cTeJbLv1YGAt3benRtcN+RMoT6VBa0kY/833qAMkjBOXZYViXbDSgdawd221jwNk0HLp/jmdeJefoZD/7j4W7Q=
+	6Ek7Rs73R88WfZxsh6HjuVsYnjDn0C/Iywp1YFKNMYOs57QgYYlzQThh9RmYtqu8N7tv4ScuDjmisQoC+QcTNd6aN+YI3sqAEg0yngfatK5tt/+GdDZ1CIGWua7/Y+Xa4IKWFBtCrJN928ewQTIHozNeMjDnMmXuH1HjWTS+zXigxih+8qss+CcS3/1JclrOU0yPsh4JWbXvblCDuWbTUbSalAYIgHvJ/m/iE1Jl188yAtECSBsucm/jJKo4smIQyDRo0953RWp5eDmqVf0gU0qUDBRShrUlmglay9uFhC9Nor4cHRWP5juhpYOkiUpl+uB1rjzy74CMvrsl9rDgIItW6MTPBCMTXByMgXW/So4JxOWXQ0p8c8duXBkUn8BZ28fZ0mi0xPwqvbtzDW5tqWjc0b7/cAPJFioer1KnRt05T2dh4Rxje5kTpGTZ+WrHq2XLvft1K4Uvoo5HE6b8H6zchmS5vbFz39P3sOm/T48CpZW7l3E3ZHZkh6Rdu8t/Lz9Vf7Spb2w/e/4hKnh52E68gwSZoD/h52srsijGE+gkocFVGIkiKFwR5tue/yvVaxIfmPyf+cWhsBwUZQsu/jNkDHjMF0Y9znIO4NrsHU8=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4799cde8-3901-4e06-7417-08dcfa920da5
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94dd7c5c-8ff5-47c6-fffc-08dcfaa083d4
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4290.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 16:27:18.3363
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 18:10:49.5064
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4lU9K3M0hvOvocmbAQeivTtinD4d5m9zHqvLRZFUumR1oa/j+YFZJ0yKyNJ99gsgF1phbFDOLW0Xtz9kBTZ4rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6256
+X-MS-Exchange-CrossTenant-UserPrincipalName: Wq9brFZ6qEZFfUaq9/BLwHOKTzfn03xLxc7ZLRLRS+SHbBvCbxv9cyDhaN7MP7/nedl4OPtK2IMLW5R1wSrpnKEwnnJWuQ/NxXF/eL6HEZk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6306
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-11-01_11,2024-11-01_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 spamscore=0
- phishscore=0 mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+ definitions=2024-11-01_12,2024-11-01_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2411010119
-X-Proofpoint-ORIG-GUID: XaYvWJo_OuyybAmTTp_bWLqD0vzNuqPh
-X-Proofpoint-GUID: XaYvWJo_OuyybAmTTp_bWLqD0vzNuqPh
+ definitions=main-2411010130
+X-Proofpoint-GUID: rzsNlYPMrl6fgruRUmmKuMr8I1bzBWel
+X-Proofpoint-ORIG-GUID: rzsNlYPMrl6fgruRUmmKuMr8I1bzBWel
 
-On Fri, Nov 01, 2024 at 11:55:11AM +0000, Simon Horman wrote:
-> On Thu, Oct 24, 2024 at 09:55:20AM +0800, Ye Bin wrote:
-> > From: Ye Bin <yebin10@huawei.com>
-> > 
-> > There's issue as follows:
-> > RPC: Registered rdma transport module.
-> > RPC: Registered rdma backchannel transport module.
-> > RPC: Unregistered rdma transport module.
-> > RPC: Unregistered rdma backchannel transport module.
-> > BUG: unable to handle page fault for address: fffffbfff80c609a
-> > PGD 123fee067 P4D 123fee067 PUD 123fea067 PMD 10c624067 PTE 0
-> > Oops: Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> > RIP: 0010:percpu_counter_destroy_many+0xf7/0x2a0
-> > Call Trace:
-> >  <TASK>
-> >  __die+0x1f/0x70
-> >  page_fault_oops+0x2cd/0x860
-> >  spurious_kernel_fault+0x36/0x450
-> >  do_kern_addr_fault+0xca/0x100
-> >  exc_page_fault+0x128/0x150
-> >  asm_exc_page_fault+0x26/0x30
-> >  percpu_counter_destroy_many+0xf7/0x2a0
-> >  mmdrop+0x209/0x350
-> >  finish_task_switch.isra.0+0x481/0x840
-> >  schedule_tail+0xe/0xd0
-> >  ret_from_fork+0x23/0x80
-> >  ret_from_fork_asm+0x1a/0x30
-> >  </TASK>
-> > 
-> > If register_sysctl() return NULL, then svc_rdma_proc_cleanup() will not
-> > destroy the percpu counters which init in svc_rdma_proc_init().
-> > If CONFIG_HOTPLUG_CPU is enabled, residual nodes may be in the
-> > 'percpu_counters' list. The above issue may occur once the module is
-> > removed. If the CONFIG_HOTPLUG_CPU configuration is not enabled, memory
-> > leakage occurs.
-> > To solve above issue just destroy all percpu counters when
-> > register_sysctl() return NULL.
-> > 
-> > Fixes: 1e7e55731628 ("svcrdma: Restore read and write stats")
-> > Fixes: 22df5a22462e ("svcrdma: Convert rdma_stat_sq_starve to a per-CPU counter")
-> > Fixes: df971cd853c0 ("svcrdma: Convert rdma_stat_recv to a per-CPU counter")
-> > Signed-off-by: Ye Bin <yebin10@huawei.com>
-> > ---
-> >  net/sunrpc/xprtrdma/svc_rdma.c | 18 +++++++++++++-----
-> >  1 file changed, 13 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
-> > index 58ae6ec4f25b..11dff4d58195 100644
-> > --- a/net/sunrpc/xprtrdma/svc_rdma.c
-> > +++ b/net/sunrpc/xprtrdma/svc_rdma.c
-> > @@ -233,25 +233,33 @@ static int svc_rdma_proc_init(void)
-> >  
-> >  	rc = percpu_counter_init(&svcrdma_stat_read, 0, GFP_KERNEL);
-> >  	if (rc)
-> > -		goto out_err;
-> > +		goto err;
-> >  	rc = percpu_counter_init(&svcrdma_stat_recv, 0, GFP_KERNEL);
-> >  	if (rc)
-> > -		goto out_err;
-> > +		goto err_read;
-> >  	rc = percpu_counter_init(&svcrdma_stat_sq_starve, 0, GFP_KERNEL);
-> >  	if (rc)
-> > -		goto out_err;
-> > +		goto err_recv;
-> >  	rc = percpu_counter_init(&svcrdma_stat_write, 0, GFP_KERNEL);
-> >  	if (rc)
-> > -		goto out_err;
-> > +		goto err_sq;
-> >  
-> >  	svcrdma_table_header = register_sysctl("sunrpc/svc_rdma",
-> >  					       svcrdma_parm_table);
-> > +	if (!svcrdma_table_header)
+Hi Bharath,
+
+On 10/21/24 2:26 AM, Bharath SM wrote:
+> We are working on a prototype of NFS v4.1 server migration and during
+> our testing we are noticing the following crashes with NFS clients
+> during the movement of traffic from Server-1 to Server-2.
+> Tested on Ubuntu distro with 5.15, 6.5 and 6.8 Linux kernel versions
+> and observed following crashes while accessing invalid xprt
+> structures. Can you please take a look at the issue and my findings so
+> far and suggest next steps?
+> Also please let me know if you would need additional information.
 > 
-> Hi Ye Bin,
+> 1.  Crash call stack:
 > 
-> Should rc be set to a negative error value here,
-> as is the case for other error cases above?
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253541] RIP:
+> 0010:xprt_reserve+0x3c/0xd0 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253601] Code: bf b8 00 00
+> 00 00 c7 47 04 00 00 00 00 4c 8b af a8 00 00 00 74 0d 5b 41 5c 41 5d
+> 41 5e 5d c3 cc cc cc cc c7 47 04 f5 ff ff ff <49> 8b 85 08 04 00 00 49
+> 89 fc f6 c4 02 75 28 49 8b
+> 45 08 4c 89 e6
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253603] RSP:
+> 0018:ff5d77a18d147b58 EFLAGS: 00010246
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253606] RAX:
+> 0000000000000000 RBX: ff1ef854fc4b0000 RCX: 0000000000000000
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253607] RDX:
+> 0000000000000000 RSI: 0000000000000000 RDI: ff1ef854d2191d00
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253608] RBP:
+> ff5d77a18d147b78 R08: ff1ef854d2191d30 R09: ffffffff8fa071a0
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253609] R10:
+> ff1ef854d2191d00 R11: 0000000000000076 R12: ff1ef854d2191d00
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253611] R13:
+> 0000000000000000 R14: 0000000000000000 R15: ffffffffc0d2e5e0
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253613] FS:
+> 0000000000000000(0000) GS:ff1ef8586fc40000(0000)
+> knlGS:0000000000000000
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253615] CS:  0010 DS: 0000
+> ES: 0000 CR0: 0000000080050033
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253617] CR2:
+> 0000000000000408 CR3: 00000003ce43a005 CR4: 0000000000371ee0
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253618] DR0:
+> 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253619] DR3:
+> 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253620] Call Trace:
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253621]  <TASK>
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253623]  ? show_regs+0x6a/0x80
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253628]  ? __die+0x25/0x70
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253630]  ?
+> page_fault_oops+0x79/0x180
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253634]  ?
+> do_user_addr_fault+0x320/0x660
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253636]  ? vsnprintf+0x37d/0x550
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253640]  ? exc_page_fault+0x74/0x160
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253644]  ?
+> asm_exc_page_fault+0x27/0x30
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253648]  ?
+> __pfx_call_reserve+0x10/0x10 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253688]  ?
+> xprt_reserve+0x3c/0xd0 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253730]
+> call_reserve+0x1d/0x30 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253773]
+> __rpc_execute+0xc1/0x2e0 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253830]
+> rpc_execute+0xbb/0xf0 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253885]
+> rpc_run_task+0x12e/0x190 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253926]
+> rpc_call_sync+0x51/0xb0 [sunrpc]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.253968]
+> _nfs4_proc_create_session+0x17a/0x370 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254020]  ? vprintk_default+0x1d/0x30
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254024]  ? vprintk+0x3c/0x70
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254026]  ? _printk+0x58/0x80
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254029]
+> nfs4_proc_create_session+0x67/0x130 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254065]  ?
+> nfs4_proc_create_session+0x67/0x130 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254100]  ?
+> __pfx_nfs4_test_session_trunk+0x10/0x10 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254133]
+> nfs4_reset_session+0xb2/0x1a0 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254170]
+> nfs4_state_manager+0x3cc/0x950 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254206]  ?
+> kernel_sigaction+0x79/0x110
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254209]  ?
+> __pfx_nfs4_run_state_manager+0x10/0x10 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254244]
+> nfs4_run_state_manager+0x64/0x170 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254280]  ?
+> __pfx_nfs4_run_state_manager+0x10/0x10 [nfsv4]
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254314]  kthread+0xd6/0x100
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254317]  ? __pfx_kthread+0x10/0x10
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254320]  ret_from_fork+0x3c/0x60
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254325]  ? __pfx_kthread+0x10/0x10
+> Jul  8 19:35:38 Ubuntu2204-1 kernel: [ 4453.254328]  ret_from_fork_asm
 > 
-> Flagged by Smatch.
+> I looked at this crash and noticed following:
+> 
+> During NFS migration, when traffic starts going to server 2, we do see
+> BAD SESSION errors and the reason for the bad session is that the
+> client sends an old session ID to server-2 for some of the requests
+> even though the same session has been destroyed in server-1 along with
+> its client ID just few 100's milliseconds back. (Not sure if there is
+> some caching playing a role here or if session draining is not
+> happening cleanly).
+> Crash is happening on the client because, in response to a BAD SESSION
+> error from the server, the client tries to attempt the session
+> recovery and fails to get the transport for a rpc request, resulting
+> in a crash. (accessing already freed up structures?)
+> 
+> Snippet from trace-cmd logs:
+> 
+> Client ID was being released here:
+>    lxfilesstress-3416  [005]  5154.980981: rpc_clnt_shutdown:    client=00000000
+>    lxfilesstress-3416  [005]  5154.980982: rpc_clnt_release:     client=00000000
+> 
+> Just after a few ms, the same client ID is being used here for session
+> recovery operation after it has been freed up earlier:
+> 20.150.9ß/I\^L;l-22349 [006]  5155.042037: rpc_request:
+> task:00000011@00000000 nfsv4 CREATE_SESSION (sync)
+> 20.150.9ß/I\^L;l-22349 [006]  5155.042040: rpc_task_run_action:
+> task:00000011@00000000
+> flags=DYNAMIC|NO_ROUND_ROBIN|SOFT|TIMEOUT|NORTO|CRED_NOREF
+> runstate=RUNNING|ACTIVE status=0 action=call_reserve ------> Crash
+> after this in call_reserve.
 
-I can add "rc = -ENOMEM;" to the applied patch.
+So, the first thing that's sticking out to me in looking through nfs4state.c is that we're setting, testing, and clearing the various state recovery bits outside of a spinlock (and taking the lock right after). This seems like it could potentially open up races, which could be what you're seeing (how often does the crash happen for you, is it every time or only sometimes?).
+
+> 
+> 
+> Client code:
+> 
+> void xprt_reserve(struct rpc_task *task)
+> {
+>         struct rpc_xprt *xprt = task->tk_xprt;
+> --------------------<<<<<<<<<<<<<<<< tk_xprt pointer is NULL
+>         task->tk_status = 0;
+>         if (task->tk_rqstp != NULL)
+>                 return;
+>         task->tk_status = -EAGAIN;
+>         if (!xprt_throttle_congested(xprt, task)) {
+>                 xprt_do_reserve(xprt, task);
+>         }
+> }
+> 
+> tk_xprt is NULL in above function because, during session recovery rpc
+> request, sunrpc module tries to get xprt using
+> ‘rpc_task_get_first_xprt(clnt)’ for a given client but it this
+> function returns NULL.
+> 
+> static void rpc_task_set_transport(struct rpc_task *task, struct rpc_clnt *clnt)
+> {
+>     if (task->tk_xprt) {
+>         if (!(test_bit(XPRT_OFFLINE, &task->tk_xprt->state) &&
+>               (task->tk_flags & RPC_TASK_MOVEABLE)))
+>             return;
+>         xprt_release(task);
+>         xprt_put(task->tk_xprt);
+>     }
+> 
+>     if (task->tk_flags & RPC_TASK_NO_ROUND_ROBIN)
+>         task->tk_xprt = rpc_task_get_first_xprt(clnt);
+> ------------------------------- Returns NULL
+>     else
+>         task->tk_xprt = rpc_task_get_next_xprt(clnt);
+> 
+> }
+> 
+> 
+> We also noticed that, In nfs4_update_server after nfs4_set_client
+> call, we aren't calling nfs_init_server_rpcclient() whereas in all
+> other cases, after nfs4_set_clien we always called
+> nfs_init_server_rpcclient(). Can you please let me know if this is
+> expected.?
+
+From my reading of the code, this is expected. nfs4_update_server() uses rpc_switch_client_transport() instead to swap out the transport for the underlying rpc_client. This lets us reuse the current rpc_client, rather than creating a new one with nfs_init_server_rpcclient().
 
 
-> > +		goto err_write;
-> > +
-> >  	return 0;
-> >  
-> > -out_err:
-> > +err_write:
-> > +	percpu_counter_destroy(&svcrdma_stat_write);
-> > +err_sq:
-> >  	percpu_counter_destroy(&svcrdma_stat_sq_starve);
-> > +err_recv:
-> >  	percpu_counter_destroy(&svcrdma_stat_recv);
-> > +err_read:
-> >  	percpu_counter_destroy(&svcrdma_stat_read);
-> > +err:
-> >  	return rc;
-> >  }
-> >  
-> > -- 
-> > 2.34.1
-> > 
+> 
+> 
+> 2. Another crash call stack with xprt structures being NULL just after
+> migration.
+> 
+> PID: 306169  TASK: ff4a4584198c8000  CPU: 6   COMMAND: "kworker/u16:0"
+>  #0 [ff5630b9cb397a10] machine_kexec at ffffffffb9e95ac2
+>  #1 [ff5630b9cb397a70] __crash_kexec at ffffffffb9fe022f
+>  #2 [ff5630b9cb397b38] panic at ffffffffb9ed62ce
+>  #3 [ff5630b9cb397bb8] oops_end at ffffffffb9e405a7
+>  #4 [ff5630b9cb397be0] page_fault_oops at ffffffffb9eaa482
+>  #5 [ff5630b9cb397c68] do_user_addr_fault at ffffffffb9eab090
+>  #6 [ff5630b9cb397cb0] exc_page_fault at ffffffffbadb1884
+>  #7 [ff5630b9cb397ce0] asm_exc_page_fault at ffffffffbae00bc7
+>     [exception RIP: xprt_release+317]
+>     RIP: ffffffffc0522afd  RSP: ff5630b9cb397d98  RFLAGS: 00010286
+>     RAX: 0000000000000045  RBX: ff4a4584198c8000  RCX: 0000000000000027
+>     RDX: 0000000000000000  RSI: 0000000000000001  RDI: ff4a45840a573d00
+>     RBP: ff5630b9cb397db8   R8: 000000007867a738   R9: 0000000000000020
+>     R10: 0000000000ffff10  R11: 000000000000000f  R12: ff4a45840a573d00
+>     R13: 0000000000000000  R14: 0000000000000000  R15: 0000000000000000
+>     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+>  #8 [ff5630b9cb397dc0] rpc_release_resources_task at ffffffffc0533593 [sunrpc]
+>  #9 [ff5630b9cb397dd8] __rpc_execute at ffffffffc053d3ff [sunrpc]
+> #10 [ff5630b9cb397e38] rpc_async_schedule at ffffffffc053d830 [sunrpc]
+> #11 [ff5630b9cb397e58] process_one_work at ffffffffb9efd14e
+> #12 [ff5630b9cb397ea0] worker_thread at ffffffffb9efd3a0
+> #13 [ff5630b9cb397ee8] kthread at ffffffffb9f06dd6
+> #14 [ff5630b9cb397f28] ret_from_fork at ffffffffb9e4c62c
+> #15 [ff5630b9cb397f50] ret_from_fork_asm at ffffffffb9e038db
 
--- 
-Chuck Lever
+I would be curious to hear if doing the test / set / clear bit operations mentioned above inside the spin lock region makes a difference here.
+
+I hope this helps!
+Anna
+
+> 
+> 
+> Thanks,
+> Bharath
+> 
+
 
