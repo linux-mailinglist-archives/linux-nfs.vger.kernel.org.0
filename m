@@ -1,94 +1,94 @@
-Return-Path: <linux-nfs+bounces-7637-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7638-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F370D9BAC3F
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 06:51:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 490349BAC41
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 06:52:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D7B0281A4B
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 05:51:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3D7B281A5B
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 05:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF98017D341;
-	Mon,  4 Nov 2024 05:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E1E17D341;
+	Mon,  4 Nov 2024 05:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nWq9D+r1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LNFYOZ7c";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gk3m8sJV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JuQnbuES"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wGhnZJsd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ajz2oum6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y+5XAJCn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VEGr6nr6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9AE14E2FD
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Nov 2024 05:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3108E14E2FD
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Nov 2024 05:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730699512; cv=none; b=l1mHmy/X1Rc/fsRTgYJ6LH2K24jfa/jARnkI7sPr1dXxsAzgNsDG7IvaH0WSTBnjE2t9l0Iwd+JOBt20laZe14/KMeHL4RsOnsUlu/vIoik+monhOqC7SOI/JRAS9jujoJ6gFS4S1yWFGO0TMqXmdRfkPnwRqReCbxrlln8EcDw=
+	t=1730699571; cv=none; b=FjeBWKwBzA7RJQ/IQXEVV2Uzuw2hLURx2KHzdu2hNpLTxNWYNbxXYTyxE7zglu6JnCzWjSPW4Fh9WKmGbv2vGkH9LQ0YTuVkzq6XsoDQeUO4a19wh0pDCOyb1WEHQd8Xp7ceX0Z+cNvbKs2XCxHsDt0bPsn6Yh32usNxdiO9rTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730699512; c=relaxed/simple;
-	bh=gskBtadH3UOZpHm5NyeNWCyDrcyrX6o1cQiMX8hdMKA=;
+	s=arc-20240116; t=1730699571; c=relaxed/simple;
+	bh=UUWRD+6FZ7e/LV2YbViD887XzmR65bx+kbOM76fezlY=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=LeIG2wMvuisJN1WjBI+mv8hYV/Y9a8oox0a9JBHoDDNX3NHnaPFOfZxFXUPpK9eLL5xeCwqaJYt3UBEpkM1a+x5v05AlrkkfitvvSPFXWgBgwDg3M1wn1Wx4dvOvUVH4CRn1hU1euygxQ1IlldGijX4VKacq4cU9ELPouHrCQyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nWq9D+r1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LNFYOZ7c; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gk3m8sJV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JuQnbuES; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=K/k0yjpVJB7ORIAlM8gQe1SNIRDTgVz8F2vlh7e2XMEMXVZ324hY/7C9hXcSjk2SW26SVe/i1Zt51dc3m3MgirG53ygRvR41Infu0BLVP+86NluGxOYzssxnVWs2mvDoRazYD+pVVD7AQpG/GsaOBujQOXRfna24F17vTwlDaY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wGhnZJsd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ajz2oum6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y+5XAJCn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VEGr6nr6; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C40B31F7B3;
-	Mon,  4 Nov 2024 05:51:48 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 01C4221F4C;
+	Mon,  4 Nov 2024 05:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730699509; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1730699568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e+JmAdL9uVQLoqu/d3C/lLBPe0bC+/TXuMuElibE0MM=;
-	b=nWq9D+r1Qq+Z3SIwUMkBw7BSpuVIDDwGG8D5BOjUgwM7k4wwXhq+Cmr7AJV0jHKmpQTNyI
-	QEbzG5aVyVrIe3RD0A1S4QjZunZItRkrK1b/YTMjPe2LkJZ4J+6oCn1En8csHnYbzdFa9R
-	wynhobmF+hwYGr7NuV70cMHhVFAFHD0=
+	bh=hfYhDqSBjSMTzmy6tz0ZfG8qwCesOVfZ/H6OAk0oW+w=;
+	b=wGhnZJsd9vWDaLEXSTmGqSSdBGiICENiqlKLqEBPVTTPT+oGbyU4Ar/Nerw1wcCxtV/osm
+	m6Qtaz3gUAt7ywOl9nbgkAeOPpdJBCUxCEfiX0MfGdhKwnbDk6lZqd7IsBkt+7Q5p2dUrA
+	MfV0uQi1qvMr3viQCEVLWaHmZUPfKrc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730699509;
+	s=susede2_ed25519; t=1730699568;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e+JmAdL9uVQLoqu/d3C/lLBPe0bC+/TXuMuElibE0MM=;
-	b=LNFYOZ7cJ05ahO8MqdNAR61S2wUghTlH3L5G3zXYzGDyEG5JC15bzUYru67wJ8+IlDjoIb
-	TZYvQat5eSAcR5Cg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=gk3m8sJV;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JuQnbuES
+	bh=hfYhDqSBjSMTzmy6tz0ZfG8qwCesOVfZ/H6OAk0oW+w=;
+	b=Ajz2oum6NJIW9JB20lB4CN2BO5lpeVGbOdUmU6E5wg/7iqfpOlx3MmVWGSor8BsGHiJ8tP
+	xkvREs9vkQw2BNAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Y+5XAJCn;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VEGr6nr6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730699508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1730699567; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e+JmAdL9uVQLoqu/d3C/lLBPe0bC+/TXuMuElibE0MM=;
-	b=gk3m8sJVxXENW4COWeNV+M1WSlmjO0O4z5iuj4QvMKSUkmoicrXT/gCkB3cAH7ItF+7r2m
-	1pMSguTk3yAZuVhmS9vWHp07UcrROVHQ96JMkdmRGS+vCGBIZB4wyeBpVRT7p8fvCG1EZi
-	1EOKDaMnYOFE6Y2WxOtTZM61IMo3UXY=
+	bh=hfYhDqSBjSMTzmy6tz0ZfG8qwCesOVfZ/H6OAk0oW+w=;
+	b=Y+5XAJCn4yVH4lccp/MKh33Mo5J4m4r46ynNY1m+nERd+Rwa0swGYOndaZgKtiMXQ3sYWs
+	K+troMPJDBM6XU9VBNTppPewkkxK6Jj9nh6wKjP9TnhbRI3K/FEHu8bllPgNMsOX9UrumF
+	EQ+IqAxNjL1xt1C1F3ak5jHbc/bvApE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730699508;
+	s=susede2_ed25519; t=1730699567;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=e+JmAdL9uVQLoqu/d3C/lLBPe0bC+/TXuMuElibE0MM=;
-	b=JuQnbuESMJ/jO/CiJTzBr+1/Zj6r94KDCnQ/yxiYhVkirEPe4sLijERaleOp8AroX80XrR
-	AVWTnIsiWgWNkmBQ==
+	bh=hfYhDqSBjSMTzmy6tz0ZfG8qwCesOVfZ/H6OAk0oW+w=;
+	b=VEGr6nr6Wap5PYzRhIQ2iZr3JGWjQChq3k4r96R7SnHSDVwZJce7tA7KoAJY8dW6vo/4qS
+	umc1HR4ZADpQ5nBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 460CE136D9;
-	Mon,  4 Nov 2024 05:51:46 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 774EF136D9;
+	Mon,  4 Nov 2024 05:52:45 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RBXBOvJgKGcrXgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 04 Nov 2024 05:51:46 +0000
+	id caVnCy1hKGdoXgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 04 Nov 2024 05:52:45 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -98,18 +98,17 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Benjamin Coddington" <bcodding@redhat.com>
-Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] sunrpc: handle -ENOTCONN in xs_tcp_setup_socket()
-In-reply-to: <CB9F2E14-F4E8-46B7-9AE1-669C1DCC605A@redhat.com>
-References: <172845168634.444407.8582369591049332159@noble.neil.brown.name>,
- <CB9F2E14-F4E8-46B7-9AE1-669C1DCC605A@redhat.com>
-Date: Mon, 04 Nov 2024 16:51:44 +1100
-Message-id: <173069950400.81717.12745863761363405487@noble.neil.brown.name>
-X-Rspamd-Queue-Id: C40B31F7B3
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
+To: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Eryu Guan" <eguan@linux.alibaba.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSv3: only use NFS timeout for MOUNT when protocols are
+ compatible
+In-reply-to: <172800404387.1692160.2013457390996721241@noble.neil.brown.name>
+References: <172800404387.1692160.2013457390996721241@noble.neil.brown.name>
+Date: Mon, 04 Nov 2024 16:52:34 +1100
+Message-id: <173069955424.81717.4793602480386734333@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 01C4221F4C
+X-Spam-Level: 
 X-Spamd-Result: default: False [-4.51 / 50.00];
 	BAYES_HAM(-3.00)[99.99%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
@@ -130,39 +129,69 @@ X-Spamd-Result: default: False [-4.51 / 50.00];
 	RCPT_COUNT_THREE(0.00)[4];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:email,suse.de:dkim];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
 	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 X-Spam-Flag: NO
-X-Spam-Level: 
 
-On Wed, 09 Oct 2024, Benjamin Coddington wrote:
-> On 9 Oct 2024, at 1:28, NeilBrown wrote:
+On Fri, 04 Oct 2024, NeilBrown wrote:
+> If a timeout is specified in the mount options, it currently applies to
+> both the NFS protocol and (with v3) the MOUNT protocol.  This is
+> sensible when they both use the same underlying protocol, or those
+> protocols are compatible w.r.t timeouts as RDMA and TCP are.
 >=20
-> > xs_tcp_finish_connecting() can return -ENOTCONN but the switch statement
-> > in xs_tcp_setup_socket() treats that as an unhandled error.
-> >
-> > If we treat it as a known error it would propagate back to
-> > call_connect_status() which does handle that error code.  This appears
-> > to be the intention of the commit (given below) which added -ENOTCONN as
-> > a return status for xs_tcp_finish_connecting().
-> >
-> > So add -ENOTCONN to the switch statement as an error to pass through to
-> > the caller.
-> >
-> > Link: https://bugzilla.suse.com/show_bug.cgi?id=3D1231050
-> > Link: https://access.redhat.com/discussions/3434091
-> > Fixes: 01d37c428ae0 ("SUNRPC: xprt_connect() don't abort the task if the =
-transport isn't bound")
-> > Signed-off-by: NeilBrown <neilb@suse.de>
+> However if, for example, NFS is using TCP and MOUNT is using UDP then
+> using the same timeout doesn't make much sense.
 >=20
-> Thanks!  We should have chased this down ages ago..
+> If you
+>    mount -o vers=3D3,proto=3Dtcp,mountproto=3Dudp,timeo=3D600,retrans=3D5 \
+>       server:/path /mountpoint
 >=20
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+> then the timeo=3D600 which was intended for the NFS/TCP request will
+> apply to the MOUNT/UDP requests with the result that there will only be
+> one request sent (because UDP has a maximum timeout of 60 seconds).
+> This is not what a reasonable person might expect.
+>=20
+> This patch disables the sharing of timeout information in cases where
+> the underlying protocols are not compatible.
+>=20
+> Fixes: c9301cb35b59 ("nfs: hornor timeo and retrans option when mounting NF=
+Sv3")
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfs/super.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index 9723b6c53397..ae5c5e39afa0 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -885,7 +885,15 @@ static int nfs_request_mount(struct fs_context *fc,
+>  	 * Now ask the mount server to map our export path
+>  	 * to a file handle.
+>  	 */
+> -	status =3D nfs_mount(&request, ctx->timeo, ctx->retrans);
+> +	if ((request.protocol =3D=3D XPRT_TRANSPORT_UDP) =3D=3D
+> +	    !(ctx->flags & NFS_MOUNT_TCP))
+> +		/*
+> +		 * NFS protocol and mount protocol are both UDP or neither UDP
+> +		 * so timeouts are compatible.  Use NFS timeouts for MOUNT
+> +		 */
+> +		status =3D nfs_mount(&request, ctx->timeo, ctx->retrans);
+> +	else
+> +		status =3D nfs_mount(&request, NFS_UNSPEC_TIMEO, NFS_UNSPEC_RETRANS);
+>  	if (status !=3D 0) {
+>  		dfprintk(MOUNT, "NFS: unable to mount server %s, error %d\n",
+>  				request.hostname, status);
+> --=20
+> 2.46.0
+>=20
+>=20
+>=20
 
-Thanks Ben.
-
-Trond, Anna: have you had a chance to look at this yet?
+Anna, Trond: have you had a chance to look at this yet?
 
 Thanks,
 NeilBrown
