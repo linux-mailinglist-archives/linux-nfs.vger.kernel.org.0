@@ -1,55 +1,56 @@
-Return-Path: <linux-nfs+bounces-7645-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7646-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B95179BB560
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 14:05:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B9769BB596
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 14:17:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15F6DB22D61
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 13:05:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 06EA71F219D9
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Nov 2024 13:17:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937901B85D0;
-	Mon,  4 Nov 2024 13:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B89E079C0;
+	Mon,  4 Nov 2024 13:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7B0ua2L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dnb4rwJt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C13F1B6CFB
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Nov 2024 13:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD8C33FE;
+	Mon,  4 Nov 2024 13:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730725529; cv=none; b=TrDLhPoqtPm3n/k3j9iwDKcownfS2gP7e3b6V9cK/XlA4Ni1wNMcLkk9U49SDnQiG+UWNQGIwGDTzuEAdPWFg4m3Ti1drPUONq3WhF385Fz4DcSxMfX+OItG5EhiRJY2x6jUNZCk1TbVsNd3ncfeyoGQO0bGdCxM+mXVSHhGtmU=
+	t=1730726263; cv=none; b=ssDsUZbWx2CCuYBZaJcSbMtNO/z7zRKiEFbW+seqIz3RsXf9XJ60Ur3WiJD5Rabb8ZVlKPPpNAmDFIAYp1ODTgKrX6856D7//k3w7plzOVzrQ0cuOg9SbYDK10oWo2ExTkj39puT7wDfnFVJz8jSq+DK5wOHjqnFMCbVt300Qb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730725529; c=relaxed/simple;
-	bh=MzZFzfRNEoG2dCS+RgG7Gv4fM6Uyj4uLwA/2Ob0NBzU=;
+	s=arc-20240116; t=1730726263; c=relaxed/simple;
+	bh=LyvbPRbYAyuTTPMqfNPJqMB/Gc+IfOe8Pb1o34HAxPM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OiS1tlsrduuaSKvhclC0AmuXOZs2Z2g64N8nGYCjivsAaFGNUGHLekJuLRaM6b1jhLOaedKQFTyVI/Avb0p1Qe9XBdfBxQ3qY6fjw2hisTHdTjmIdrWXs8DBK8Ih4sWSBO38EMRxNp31ASF45lSz85Dizf2skqXBFq/rRN2nr0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7B0ua2L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB46C4CECE;
-	Mon,  4 Nov 2024 13:05:28 +0000 (UTC)
+	 Content-Type:MIME-Version; b=cmIqpHCXXi76kJ7BO7NSn1l/oYi8cQbaes6NyBxo2delVbU1SQAIFJpsbwZ46GuohjvVavNCCySIot177B4pPIG/DWSIdLn332H85PTqcs6OjzGNHcjHxobxvZd/Xhn1jSB3PyVfhEFdeUL2QNvV+l4lCU3DfUamEQYPCwn41wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dnb4rwJt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DB5C4CECE;
+	Mon,  4 Nov 2024 13:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730725528;
-	bh=MzZFzfRNEoG2dCS+RgG7Gv4fM6Uyj4uLwA/2Ob0NBzU=;
+	s=k20201202; t=1730726263;
+	bh=LyvbPRbYAyuTTPMqfNPJqMB/Gc+IfOe8Pb1o34HAxPM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=a7B0ua2LiKOWr0qlb8XdEFTBwZ+WhnPx34cura5SLirVis7lgvr17IFF4oYyH+f/7
-	 uCvpuXDLs3V4pXEiQRD6B2iOiQOdNCi6ETnGM7QujMakVpaVoLRXzwvRcTFpfWqXCI
-	 bPQ88rV04foT1wBxicenxarP1xuWdoMIr8xuSXJ1srNmPShm9DPA8EHP2deZvoEcfW
-	 D9pXPHVLE2rCC6RsXzyp77wZYf6LIFK3SP+Zv9OURdPrt8+7ff8UNnTd316HiEj6LP
-	 L3cEu0pFmfkvVhAOg/bvmKsBi2Oqx8tSwnMm1f1In22PuDWIazbIY2Vb0pssXT68jU
-	 k4TsVbaEX+Zjg==
-Message-ID: <f4d2c708aafac0174f6f7da22ceccac72bf93119.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
+	b=Dnb4rwJtrrh5tbxUbG87cd9Bqv536vHFVPLqvnvXHVoDjmbJ+IRPzA0qPC6hQQ/6v
+	 9iyhpC4Cod5BNOMog21SLJG4Gch9ff4xGWNaugtTVWt/w1k/fU0m/0x7ozxhW+V7gp
+	 PxlacE0Rmdvt8CS/AXmKQBmhf1byFT/+dF89MtvRCz4zK1iKMWSJ75h6K0raBWLhjv
+	 tGyMb+eRGwd+BTn0wQxQMs4qOcTg91QnD2bhpBPc6XqTJt3MUjvNkc0H2enOglzC5G
+	 xVBZHSgH9ftMmp9LGKe2J7P6vZsrMkuNwHE5d5M13Sq35VNoQp/kVE5rtFWxl+rD9f
+	 +eqZUZ6iGfPKw==
+Message-ID: <f3623b64109a021ce6b7b732f24632f0b2782144.camel@kernel.org>
+Subject: Re: [PATCH -next] fs/nfsd: Remove the unused variable sb
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org
-Date: Mon, 04 Nov 2024 08:05:27 -0500
-In-Reply-To: <173069566284.81717.2360317209010090007@noble.neil.brown.name>
-References: <173069566284.81717.2360317209010090007@noble.neil.brown.name>
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, chuck.lever@oracle.com
+Cc: neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Abaci Robot
+	 <abaci@linux.alibaba.com>, Mike Snitzer <snitzer@kernel.org>
+Date: Mon, 04 Nov 2024 08:17:41 -0500
+In-Reply-To: <20241104082109.49986-1-jiapeng.chong@linux.alibaba.com>
+References: <20241104082109.49986-1-jiapeng.chong@linux.alibaba.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,68 +135,46 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-11-04 at 15:47 +1100, NeilBrown wrote:
-> An NFSv4.2 COPY request can explicitly request a synchronous copy.  If
-> that is not requested then the server is free to perform the copy
-> synchronously or asynchronously.
+On Mon, 2024-11-04 at 16:21 +0800, Jiapeng Chong wrote:
+> Variable sb is not effectively used, so delete it.
 >=20
-> In the Linux implementation an async copy requires more resources than a
-> sync copy.  If nfsd cannot allocate these resources, the best response
-> is to simply perform the copy (or the first 4MB of it) synchronously.
+> fs/nfsd/nfs4state.c:7988:22: warning: variable =E2=80=98sb=E2=80=99 set b=
+ut not used.
 >=20
-
-Where does the copy get clamped at 4MB?
-
-> This choice may be debatable if the unavailable resource was due to
-> memory allocation failure - when memalloc fails it might be best to
-> simply give up as the server is clearly under load.  However in the case
-> that policy prevents another kthread being created there is no benefit
-> and much cost is failing with NFS4ERR_DELAY.  In that case it seems
-> reasonable to avoid that error in all circumstances.
->=20
-> So change the out_err case to retry as a sync copy.
->=20
-> Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent async COPY ope=
-rations")
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D11648
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 > ---
->  fs/nfsd/nfs4proc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/nfsd/nfs4state.c | 2 --
+>  1 file changed, 2 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index fea171ffed62..06e0d9153ca9 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1972,6 +1972,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_com=
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 5d47a28ef62d..45e487bf0582 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7986,7 +7986,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
 pound_state *cstate,
->  		wake_up_process(async_copy->copy_task);
->  		status =3D nfs_ok;
->  	} else {
-> +	retry_sync:
->  		status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
->  				       copy->nf_dst->nf_file, true);
->  	}
-> @@ -1990,8 +1991,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_com=
+>  	struct nfsd4_blocked_lock *nbl =3D NULL;
+>  	struct file_lock *file_lock =3D NULL;
+>  	struct file_lock *conflock =3D NULL;
+> -	struct super_block *sb;
+>  	__be32 status =3D 0;
+>  	int lkflg;
+>  	int err;
+> @@ -8006,7 +8005,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
 pound_state *cstate,
->  	}
->  	if (async_copy)
->  		cleanup_async_copy(async_copy);
-> -	status =3D nfserr_jukebox;
-> -	goto out;
-> +	goto retry_sync;
->  }
+>  	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0);
+>  	if (status !=3D nfs_ok)
+>  		return status;
+> -	sb =3D cstate->current_fh.fh_dentry->d_sb;
 > =20
->  static struct nfsd4_copy *
->=20
-> base-commit: 26e6e693936986309c01e8bb80e318d63fda4a44
+>  	if (lock->lk_is_new) {
+>  		if (nfsd4_has_session(cstate))
 
 
-You're probably right that attempting to do this synchronously is
-probably best. That should avoid another RPC, though at the cost of
-having to shovel the data into the pagecache.
-
-If memory is very tight, I suppose the synchronous copy might also fail
-with NFS4ERR_DELAY, in which case we're no worse off.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I would be fine with this, but there are some patches queued for v6.13
+in Chuck's tree that start making use of this variable. I suggest that
+we don't take this one for now.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
