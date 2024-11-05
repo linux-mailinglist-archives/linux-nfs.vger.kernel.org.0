@@ -1,456 +1,232 @@
-Return-Path: <linux-nfs+bounces-7674-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7675-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 367609BD76E
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 22:06:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C10F9BD799
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 22:28:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6BA01F23C0C
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 21:06:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DDFC1C20B7E
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 21:28:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CB6215C6C;
-	Tue,  5 Nov 2024 21:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 843581E0B65;
+	Tue,  5 Nov 2024 21:28:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yHBHeN4c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o2Z4A2oQ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yHBHeN4c";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="o2Z4A2oQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hP6ayixy";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FGROuRNH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595361D9A48
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 21:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730840811; cv=none; b=pphFUY/wqvhgsUdfwoTvTg06Yatar/KZPYTWDwlIgCbOLwnLMpX6RxqlPbdr3BKYgQLjBJtBWBl1ChFeqtUGx5VCSU5I1vUOg447/1rQbsp6/cSzJK78pzD0i4LbjekbdVcGz9Lgx26WXf7nsWacgwc9V3pC3PnVYcUIGhOhb7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730840811; c=relaxed/simple;
-	bh=qmtlzHZqNmuSDSICW9Mc54UeSKcOeRYgOjMeebXkwaA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=QalQhVCkbc9xr6lLaWUf36c2IbU25eyFzhM5IzuuU/blSFzQuAzeZKTy3uz0rtYIQiAcGHoNepGXDzULI1HSwOtBKL3SZ0hhlgqfiFo1lmlsTNC1RXvwgGCWV44AcCkEyhWq89GOiIx0jPIPGIxtwzkdDpVD+5miZx3Eg5huQE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yHBHeN4c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o2Z4A2oQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yHBHeN4c; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=o2Z4A2oQ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E8401F8AE;
-	Tue,  5 Nov 2024 21:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730840807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/LYmUKqSxup08IDQPlsUS3OUgY2jvbcZ0p0xccDPis=;
-	b=yHBHeN4cMp+TpwhxVL8Zpil7TmvZ6WXEDd4dCdBSfdZPbBdyXnxC2VuNpGUh71aKUibLei
-	yDHd9DejjuoZoPrAp+GZ5qFJO5IH534ncESHzudZIi+PooFKmlQVi7oM0cOjHE37Pv1GSQ
-	zkwVx5crQSZxpvfvXSnEQ0duA36tjH0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730840807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/LYmUKqSxup08IDQPlsUS3OUgY2jvbcZ0p0xccDPis=;
-	b=o2Z4A2oQ37j+E8U2taPympj9QZZ4tygzJKntucMmfV7uvEQLOJygAyy8hGPddC586PKahx
-	Ugq70BJ2VVPHRBCg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yHBHeN4c;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=o2Z4A2oQ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730840807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/LYmUKqSxup08IDQPlsUS3OUgY2jvbcZ0p0xccDPis=;
-	b=yHBHeN4cMp+TpwhxVL8Zpil7TmvZ6WXEDd4dCdBSfdZPbBdyXnxC2VuNpGUh71aKUibLei
-	yDHd9DejjuoZoPrAp+GZ5qFJO5IH534ncESHzudZIi+PooFKmlQVi7oM0cOjHE37Pv1GSQ
-	zkwVx5crQSZxpvfvXSnEQ0duA36tjH0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730840807;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I/LYmUKqSxup08IDQPlsUS3OUgY2jvbcZ0p0xccDPis=;
-	b=o2Z4A2oQ37j+E8U2taPympj9QZZ4tygzJKntucMmfV7uvEQLOJygAyy8hGPddC586PKahx
-	Ugq70BJ2VVPHRBCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4DEC513A39;
-	Tue,  5 Nov 2024 21:06:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lPSzAeWIKmfvFQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 05 Nov 2024 21:06:45 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973C9216204
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 21:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730842126; cv=fail; b=lBsFV2pd9VuHBpyGfuwT9XJLnNUWferakxQsbfr5pHuqmG9XYfQnUgjAFKbHdkf+sqqTSa6s7FQlRw1F70AKKy0hyY9fah7hk+VDUjY0K+BDqd71deso2XlbKQwBlX/WSgal86D/YJKriOU4XVRrOBTFSgLvoG6PrwEShL4I0Wk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730842126; c=relaxed/simple;
+	bh=SxuVldkzhQ8Ep6CpRSKy/foOH279BcudtRxFJiUPQhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uvxMhjV0dmEt3NzTm0kE0KNVpTssnOR0qQO55uyQeBWbbIljiydGPA2dEiWFKVhizj6TwLP7P3AbMxANdQuYh/5p5MRqq+eLFxWd3j7S6dxCKOKfNg9wsYL9dHoaRe8zhaOT1PWadJUj6XLN22l7zBTjnA8gQr8kZ8weuXF+1+8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hP6ayixy; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FGROuRNH; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5KfZaa007096;
+	Tue, 5 Nov 2024 21:28:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=VQj/FxgTebQ73bvVMH
+	TxVxYdeA8FjZY1F6LI9wLSpP8=; b=hP6ayixyYfczXs+mOh7Gu0pEtxczI6cpgC
+	jV4TuANmSvBB1bb7x4/tbMcILn0UvYblGcnX88U/g2DU0JgdP/yPIEP5RohoezDL
+	BQX/CSZHSxoCMtzWX1qS6YpEGuZhvDC0EN2OdBnNuQA6vsqoH9Fqa84NvJMMawp5
+	CYObQUjTrKUB99e6c4pf5DYvEr/D+rbMy6nLO7Gke5R/ZOnoGdBlVC9LTpu1h4sl
+	Rpj23NFmXEUniSQMqyNDZ4Pr+eW/EC5dkOHct2DOblSNlY20DVmDbZ2rh45WwR1Y
+	+G5b6uSgkAhSn1zGAKu9akFoFUB98oY30m8TQVMKArpRsxUV3lxw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42nbpspfs2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 05 Nov 2024 21:28:34 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5LIG1h037339;
+	Tue, 5 Nov 2024 21:28:33 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42nah7pm3c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 05 Nov 2024 21:28:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XXPpDXLqiTmE23tAk+U07vjykloLplEjfWso0bQ/ZBbY8Hg0jSxYOEE4t1lUcKmQkjo9tleoaqPHKMpDkRjsCrTd1WG6edCa4CZEdoAod3eX24JVVdyBBN1TY5ju9CrXU/8R2pox1E2kO/IYQRsIz+4mEnCM0xUgcCK4OfXOdwSEU1Uef5opEcDcjRUc82XaG2InSzjDOaUyj8VT+XQZMvlRO1loByfNig1RJSC55olUwkEGb43zH2DWTenUh8NJp8gIRhai7HDy3tlbodkqOhMBUgbvAc524KSOmEgR3OV+1go97+m5NMqf9wkcsuIPrzvaqxKwQUlco4oq87+Lfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VQj/FxgTebQ73bvVMHTxVxYdeA8FjZY1F6LI9wLSpP8=;
+ b=NtIPcGxxghCvoGcQsRvoyx+4Pvtx6US50eMr6GNP2fgF8wZjUdEzwwBOOGYgjGj40NmuPWb01xbssMF0pROnQztKJ4Zo0uHnSUePL5fpj33OIasXMY4omrKNx7QbTW/U93fC2ZPsftVbiIeewxvkx9jrAmYiArXmUs6YSaWIin9fRlbLw1f0t6dW9Mo3r7PLHOiBUtXX6c1+FjeIzICqPRceqJv72qv3PF+Hnbgm2uVL/+v3n5lNhYqJW/EhQ1nN0kEBe578zAUQNVjdvC5lKInn9iTyOFVgekYJ9qPQ5BkEFaxO2184CKxtQMtKD/pFwY/2ZDfEE4zsys+6iN2ZaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VQj/FxgTebQ73bvVMHTxVxYdeA8FjZY1F6LI9wLSpP8=;
+ b=FGROuRNHrwie6TOdH4TGvr8hiK0N82+g04DauFNI2fwKw377Mb55cNiPZBKdDJ9aLfTqQVRwtIEAqnJ1XM45TiAIQPU/Ksqg0GHrItqs/g2aRZstWOK8w5WvSWD2hD9okONfbSPGobqLwoJ/NlemX4yZm4UMDReIWK4I3JttfRQ=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH8PR10MB6504.namprd10.prod.outlook.com (2603:10b6:510:228::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Tue, 5 Nov
+ 2024 21:28:27 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8114.031; Tue, 5 Nov 2024
+ 21:28:27 +0000
+Date: Tue, 5 Nov 2024 16:28:24 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
+Message-ID: <ZyqN+DSQydG84DNe@tissot.1015granger.net>
+References: <>
+ <ZyovsQBNlmoSLWED@tissot.1015granger.net>
+ <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
+X-ClientProxiedBy: CH0PR03CA0111.namprd03.prod.outlook.com
+ (2603:10b6:610:cd::26) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
-In-reply-to: <ZyovsQBNlmoSLWED@tissot.1015granger.net>
-References: <>, <ZyovsQBNlmoSLWED@tissot.1015granger.net>
-Date: Wed, 06 Nov 2024 08:06:40 +1100
-Message-id: <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 5E8401F8AE
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH8PR10MB6504:EE_
+X-MS-Office365-Filtering-Correlation-Id: eab9ef0a-4460-4bd6-1172-08dcfde0c92f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?r52o4IFx83RPIPUyf0lnm8zkUuZ9Yne2qPg+d5KV/1Puyk7gBcRgJSuFRgsQ?=
+ =?us-ascii?Q?HTIef3FuGzqTwJ8JMJVU6G4TbbVPf+VZ5ft5RZnW2ZVT1inPtmA5IvxcUSjM?=
+ =?us-ascii?Q?YPpu+Gkai4TcgCxV9Tfb2gG8+fSgd+EYdFiIqjFKrETEEOgUYlupGOk+PZfI?=
+ =?us-ascii?Q?H9ONa0k65CoQQOd0iMkSSkr5rc//tTb+4gAguxujrImcH974XGjAdh+h2aJo?=
+ =?us-ascii?Q?vn9UFL2Vy2keOQ44h0EcazkMQxaCHQIN6Xx0/WwUaAR+DP+CGE5c7b/cPQSx?=
+ =?us-ascii?Q?6CuJ6w0z5KW12JprjVGYwIe+02y8GpJpIBL5yMEsHETRJD1F10dRNGOEGEa9?=
+ =?us-ascii?Q?9zZ5VfAlEnyi1NV0h20T6l/Xzx4K9YeQ4o33BkxQJaDPjN8NlG9nsQHRDab1?=
+ =?us-ascii?Q?hV7xIhgPyT4uRlISt82WgFxRlb9YR2hWNe6tad/5+2RQe/SuXBsmQUSDjHRj?=
+ =?us-ascii?Q?mYjKxbbMziPZVV/aJEsShI4t84xx4am6rY+ciNv22bJekAYt4TG+mSASmrIi?=
+ =?us-ascii?Q?97wJIOOyuGKg7PjUQrjs4G/ekpOHZGT9AxoCOwSakO1b1NXW9XdTJyrQumFh?=
+ =?us-ascii?Q?KfJDTZPQtTE7SmbPgH5e/Q6GAprzCbDuoa8fN1mj9VMQncfC2dHwBoy+4gHH?=
+ =?us-ascii?Q?AD93PwPPJob3WYvKrKWqYakH+ps0ccBN6MnWIzEgdRn+PLfi0v5OBSA2H9OZ?=
+ =?us-ascii?Q?cJfIrymQ6W0GMtDWVsYJjqVBuMKxBxuwZHsuqx25SPSpFENTIviUUQLDqPlh?=
+ =?us-ascii?Q?ui1z5vypRJdr9N1x4qW/jubd4EtrEqTCV4SSFazcssXELFphM8CQ8Diopl/6?=
+ =?us-ascii?Q?MGA/PTSGroRXoT5svDG40H5A/ySqhZ+kuKQcUjHyr41l8KECdj4GRLKRVOdV?=
+ =?us-ascii?Q?v/o0bmpdo7QVjfguuU27JA+tgnzm/c0Ajbie8HNUnYsoXqGIgRvbCZWqQkW1?=
+ =?us-ascii?Q?WCmcgbbUWTlCitFy+UE+IY+VsxISd4uRmTRBNOfgj8gSwlwGkHeIF5dbq3eL?=
+ =?us-ascii?Q?A6R7fADetIezcegvuJn4lC31jOJpFyjMHlkaxV596xolvQnx5oDY/jnTGBKl?=
+ =?us-ascii?Q?vH3F34OqC7F1ikQnIDRWg6yMTCWPFmq8+P0vamR3Dhk00xLmqIfcHeBnDzyt?=
+ =?us-ascii?Q?wUg0sY4UgRbWdAXxWNMrdoiRffXInRnw3MSVIHk6CintL3v2cT3V/aJJzx6B?=
+ =?us-ascii?Q?d/jZRSDLCApZ9/T7lUs7g9cFGxHHzq/VZqr9EYB7mfSTNuud+naQHByqWEMF?=
+ =?us-ascii?Q?7EaqDs+i4tUlQRWpyVeAr7gh46Q79cGz1hLDmT2cwtRDx/EkedW+JJl7gVjl?=
+ =?us-ascii?Q?qhOl2cKrpmCds3W2vWj2wSOm?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8f3gS75BNHgMOPJ+EmdD9MqTMzx4dxVS0IVOOsQUURR3PZWPHh4xfKuYswE3?=
+ =?us-ascii?Q?j8+IjBhPJXG/ApLtcPC/255OAKhx3in1bFsd5NPMKHDwac9NGM4HnKTMa4cr?=
+ =?us-ascii?Q?KfzHKaYavc+iH9ZEQu49dC9bNXm7m4VIC3feDb6m6VX+Hrqeq8+7bESS60NV?=
+ =?us-ascii?Q?Ynw0BlF3yLgKMJy+gjkaKiIFBP499LurQfY2xlAHXCXREVtkZKmoI6WsFCeX?=
+ =?us-ascii?Q?MEr05YeIB7UhRGrntfRjOQUCHrGhJqrLJjT/dCPTq8HBw4SGVg8e+eQif+f7?=
+ =?us-ascii?Q?7w71e3Z4sNK0fEvlapHHAF+yYo2DtKbbHpkS46Eay+UxGidnM1iVXwhVo0Hp?=
+ =?us-ascii?Q?xTq4bwh2aDPrOl+twkGr4+NhgwgkTHEC8dC5kbp2bYcMLirJjaxylKdu9vt2?=
+ =?us-ascii?Q?8+U3BPak66ya4yYXRUM+IkOhaFRNX5zg1mEQZteTZQ85zOa6Pgxrx469ld5f?=
+ =?us-ascii?Q?1i2Pv8JvUE3WqRu55LOtUQmronIGlBLC0roFe6mS1LvCCQvhgvu3d8U1p6OQ?=
+ =?us-ascii?Q?bxW+B9dqQ3D+EJmy5PVIGvAIdDem+b3oz8kFrIpM989dRgtHVrLjnWgBC5p2?=
+ =?us-ascii?Q?4nop6mGq1AKMtowDPeFS2m2EHl2yqtaVES1zLaNm0QG+uYq5EQtI5uRNTuZI?=
+ =?us-ascii?Q?voKoIxI65vmAwBG+FNCyxf+gq6vaav2o2N3AdDGqo6coXTseYA17OB7xniFw?=
+ =?us-ascii?Q?VP+l4VmERPo371t8CtTSJTofMaSIll2gLCosT0IPsJBUBPM14yA8bEzHM1en?=
+ =?us-ascii?Q?JSDP1MqF1P/fZVMKvkzZs5KeeT3akfDU7Una4liUxmV3d5OWq2zXWGxxgudG?=
+ =?us-ascii?Q?IGU508n8z+tcVgtUs/f+5w2Hu2R0c4GzuNwHw22WasdBdO0Wh33+/NCZKKs1?=
+ =?us-ascii?Q?aQK0ewopSVaD+7N/Kdun69Pb+uxiWNms2gO76+afmtDnalA1pYI6CSw9GXQ7?=
+ =?us-ascii?Q?XT/FNhHdOTjpl+biWQKdEcQvmlJC5wP34GktGXaeG7xVTLQXZo8OBr9jCJGh?=
+ =?us-ascii?Q?KpSG2Jh54NtvRLqdlXo0lMPPfu1yI8+4QUsv3kyE0vUz/xdwwGJHjI1xmGpw?=
+ =?us-ascii?Q?jbY7gHOoGWiPoS/0t8cNOnYxmAF/bVw6u3JZuTGm8CxF7OP5ioLlHuYuxpAZ?=
+ =?us-ascii?Q?cUzGHyn0g5Ljw+yUQvNKBL3iuy+8Gm5R3NrSk46L3+r3Cs5K7IqrIi+WT1Hq?=
+ =?us-ascii?Q?DmsdB0VvLLwL8dwmPSjPn3WucovX5Q1kZTlBJQXTKtCfqcUx0YZf/VJzhk9w?=
+ =?us-ascii?Q?xaGI3jna81duCZr22eq/XBfH6/zIrB3tK/QxY8czOxfKXsc0nWbJIC5poAsW?=
+ =?us-ascii?Q?o3T0tdoPfdaW1r5GJohsIIt8u5oO3xrEcqm771L8JhMyLpU1kgtTS9vq7Hd5?=
+ =?us-ascii?Q?+X24bs4/VLMjdvnCDmfPhHd5VeFLf+kz+80VApaUP3mETqWtcI59JJETUlyH?=
+ =?us-ascii?Q?Z+BR+p6H5MCZp9nLLf++UacKSLBjlieyhkXzn9h9MtQpCiL1DtCx8wCrl3az?=
+ =?us-ascii?Q?bb/y8ou6c67Dnpjpz/JwlXecJFdNr+sx+BbURQtJsvFVz36NhPcwbb4wshxT?=
+ =?us-ascii?Q?89MtE7tqJSww3lTGq8WuCXjwlHVItowu1/yPoaUd?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	8R5NN4Cw2Wf9jdci6/g8kUIL/AhO+5GxoRG0yKAKHcGosp1dVzviyi/EkhPIjAkxeBJePqTAy4cZblCfeX4ue6SyGxAMafPVdKLS1tYVkkfP1i9sgE3i5iXayGeNiAWM+71pFf6T/sRBcMZWLjHpTCqdZKDo7SYF85jBTgU+hRI5vJ0eszlujoNmguS+fTYI3msN1eHzepmrVnSsHv2bSRy5PC9iErPiTBBoYUvJ04wAMfZ6dxQtVxfZCriKrrkdZmaROzGOapPaegMpd5UYfTlAW4YglzsILpfpYtkesiw+FKLCXCjX48CIABFzorNBH4RMY0zZABd413OKBi3zzqKgUMVAvvPwBXUerafl85AmR7qiAmf7bg9LlYjOSgSEIivaeQTl36OltUFhFvMcj9wyfemJ1/ixprToYz/EgnkQct+7miinmx9UiCtkqj+8qb/g5aQJSaVhS9ke98V7XmJzzobXA5JGErIPidzedOj1yA0XZpjblO+BirqwUve/5uRS60ECIbCibWxVuSO3mkgA8JhjH2bkQB76jyO2OPHD0AAAMAdM/L9x1OfLF7fGv0JPicuvwc1CVeZUnhbpwRP4wIVooeMS07SfWuGiWUs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eab9ef0a-4460-4bd6-1172-08dcfde0c92f
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 21:28:27.1323
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BvqRNYdkkRAUBEZbteAtus4Giw6HOY50rl8St2WG/0/SWQP5JQD+vb7C884/8pohmsMF3LaMYWdt+ZHZskv4aA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6504
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-05_06,2024-11-05_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2411050166
+X-Proofpoint-ORIG-GUID: l7eSmSWeLE0lOOExkA7kihH5p4vb_pAx
+X-Proofpoint-GUID: l7eSmSWeLE0lOOExkA7kihH5p4vb_pAx
 
-On Wed, 06 Nov 2024, Chuck Lever wrote:
-> On Tue, Nov 05, 2024 at 11:32:48AM +1100, NeilBrown wrote:
-> > On Tue, 05 Nov 2024, Chuck Lever wrote:
-> > > On Tue, Nov 05, 2024 at 07:30:03AM +1100, NeilBrown wrote:
-> > > > On Tue, 05 Nov 2024, Chuck Lever wrote:
-> > > > > On Mon, Nov 04, 2024 at 03:47:42PM +1100, NeilBrown wrote:
-> > > > > >=20
-> > > > > > An NFSv4.2 COPY request can explicitly request a synchronous copy=
-.  If
-> > > > > > that is not requested then the server is free to perform the copy
-> > > > > > synchronously or asynchronously.
-> > > > > >=20
-> > > > > > In the Linux implementation an async copy requires more resources=
- than a
-> > > > > > sync copy.  If nfsd cannot allocate these resources, the best res=
-ponse
-> > > > > > is to simply perform the copy (or the first 4MB of it) synchronou=
-sly.
-> > > > > >=20
-> > > > > > This choice may be debatable if the unavailable resource was due =
-to
-> > > > > > memory allocation failure - when memalloc fails it might be best =
-to
-> > > > > > simply give up as the server is clearly under load.  However in t=
-he case
-> > > > > > that policy prevents another kthread being created there is no be=
-nefit
-> > > > > > and much cost is failing with NFS4ERR_DELAY.  In that case it see=
-ms
-> > > > > > reasonable to avoid that error in all circumstances.
-> > > > > >=20
-> > > > > > So change the out_err case to retry as a sync copy.
-> > > > > >=20
-> > > > > > Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent async =
-COPY operations")
-> > > > >=20
-> > > > > Hi Neil,
-> > > > >=20
-> > > > > Why is a Fixes: tag necessary?
-> > > > >=20
-> > > > > And why that commit? async copies can fail due to lack of resources
-> > > > > on kernels that don't have aadc3bbea163, AFAICT.
-> > > >=20
-> > > > I had hoped my commit message would have explained that, though I acc=
-ept
-> > > > it was not as explicit as it could be.
-> > >=20
-> > > The problem might be that you and I have different understandings of
-> > > what exactly aadc3bbea163 does.
-> >=20
-> > It might be.
-> > My understanding is that it limits the number of concurrent async
-> > COPY requests to ->sp_nrthreads and once that limit in reached
-> > any further COPY requests that don't explicitly request "synchronous"
-> > are refused with NFS4ERR_DELAY.
-> >=20
-> > > > kmalloc(GFP_KERNEL) allocation failures aren't interesting.  They nev=
-er
-> > > > happen for smallish sizes, and if they do then the server is so borked
-> > > > that it hardly matter what we do.
-> > > >=20
-> > > > The fixed commit introduces a new failure mode that COULD easily be h=
-it
-> > > > in practice.  It causes the N+1st COPY to wait indefinitely until at
-> > > > least one other copy completes which, as you observed in that commit,
-> > > > could "run for a long time".  I don't think that behaviour is necessa=
-ry
-> > > > or appropriate.
-> > >=20
-> > > The waiting happens on the client. An async COPY operation always
-> > > completes quickly on the server, in this case with NFS4ERR_DELAY. It
-> > > does not tie up an nfsd thread.
-> >=20
-> > Agreed that it doesn't tie up an nfsd thread.  It does tie up a separate
-> > kthread for which there is a limit matching the number of nfsd threads
-> > (in the pool).
-> >=20
-> > Agreed that the waiting happens on the client, but why should there be
-> > any waiting at all?  The client doesn't know what it is waiting for, so
-> > will typically wait a few seconds.  In that time many megabytes of sync
-> > COPY could have been processed.
->=20
-> The Linux NFS client's usual delay is, IIRC, 100 msec with
-> exponential backoff.
+On Wed, Nov 06, 2024 at 08:06:40AM +1100, NeilBrown wrote:
+> On Wed, 06 Nov 2024, Chuck Lever wrote:
+> > But more importantly, the problem with the automatic backport
+> > mechanism is that marked patches are taken /immediately/ into
+> > stable. They don't get the kind of soak time that a normally-merged
+> > unmarked patch gets. The only way to ensure they get any real-world
+> > test experience at all is to not mark them, and then come back to
+> > them later and explicitly request a backport.
+> > 
+> > And, generally, we want to know that a patch destined for LTS
+> > kernels has actually been applied to and tested on LTS first.
+> > Automatically backported patches don't get that verification at all.
+> 
+> I thought it was possible to mark patches to tell the stable team
+> exactly what you want.  Greg certainly seems eager to give maintainers as
+> much control as they ask for - without requiring them to do anything
+> they don't want to do.
 
-Yep, up to 15seconds.
+Yes, Greg and Sasha want to do something constructive. I see
+suggestions flying by from time to time. The last specific one I
+think was rejected by Linus. It appears to be an ongoing
+conversation.
 
->=20
-> It's possible that the number of async copies is large because they
-> are running on a slow export. Adding more copy work is going to make
-> the situation worse -- and by handling the work with a synchronous
-> COPY, it will tie up threads that should be available for other
-> work.
 
-Should be available for "work" yes, but why "other work"?  Is COPY work
-not as important as READ or WRITE or GETATTR work?
-READ/WRITE are limited to 1MB, sync-COPY to 4MB so a small difference
-that, but it doesn't seem substantial.
+> If you have a clear idea of what you want, it
+> might be good to spell that out and ask how to achieve it.
 
->=20
-> The feedback loop here should result in reducing server workload,
-> not increasing it.
+Perhaps having a separate review process, where each patch in
+nfsd-next is audited just before the merge window to see whether it
+should be marked for stable, would help. Keeping written notes on
+these decisions would also be helpful; Greg asks when an explicit
+backport request comes by why it wasn't marked when it went into
+Linus' branch.
 
-I agree with not increasing it.  I don't see the rational for reducing
-workload, only for limiting it.
+Making it easier / more automated to test-apply such patches to LTS
+kernels is also something to think about. I have nightly CI for
+those branches, but it tests what is already in the LTS queue rather
+than testing NFSD-specific patches.
 
->=20
->=20
-> > > By the way, there are two fixes in this area that now appear in
-> > > v6.12-rc6 that you should check out.
-> >=20
-> > I'll try to schedule time to have a look - thanks.
-> >=20
-> > > > Changing the handling for kmalloc failure was just an irrelevant
-> > > > side-effect for changing the behaviour when then number of COPY reque=
-sts
-> > > > exceeded the number of configured threads.
-> > >=20
-> > > aadc3bbea163 checks the number of concurrent /async/ COPY requests,
-> > > which do not tie up nfsd threads, and thus are not limited by the
-> > > svc_thread count, as synchronous COPY operations are by definition.
-> >=20
-> > They are PRECISELY limited by the svc_thread count.  ->sp_nrthreads.
->=20
-> I was describing the situation /before/ aadc3bbea163 , when there
-> was no limit at all.
->=20
-> Note that is an arbitrary limit. We could pick something else if
-> this limit interferes with the dynamic thread count changes.
->=20
->=20
-> > My current thinking is that we should not start extra threads for
-> > handling async copies.  We should create a queue of pending copies and
-> > any nfsd thread can dequeue a copy and process 4MB each time through
-> > "The main request loop" just like it calls nfsd_file_net_dispose() to do
-> > a little bit of work.
->=20
-> Having nfsd threads handle this workload again invites a DoS vector.
 
-Any more so that having nfsd thread handling a WRITE workload?
-
->=20
-> The 4MB chunk limit is there precisely to prevent synchronous COPY
-> operations from tying up nfsd threads for too long. On a slow export,
-> this is still not going to work, so I'd rather see a timer for this
-> protection; say, 30ms, rather than a byte count. If more than 4MB
-> can be handled quickly, that will be good for throughput.
-
-That sounds like a good goal.  Ideally we would need a way to negotiate
-a window with write-back throttling so that we don't bother reading
-until we know that writing to the page-cache won't block.  Certainly
-worth exploring.
-
->=20
-> Note that we still want to limit the number of background copy
-> operations going on. I don't want a mechanism where a client can
-> start an unbounded amount of work on the server.
-
-This isn't obvious to me.  The server makes no promise concerning the
-throughput it will provide.  Having a list of COPY requests that add up
-to many terabytes isn't intrinsically a problem.  Having millions of
-COPY requests in the list *might* be a little bit of a burden.  Using
-__GFP_NORETRY might help put a natural limit on that.
-
->=20
->=20
-> > > > This came up because CVE-2024-49974 was created so I had to do someth=
-ing
-> > > > about the theoretical DoS vector in SLE kernels.  I didn't like the
-> > > > patch so I backported
-> > > >=20
-> > > > Commit 8d915bbf3926 ("NFSD: Force all NFSv4.2 COPY requests to be syn=
-chronous")
-> > > >=20
-> > > > instead (and wondered why it hadn't gone to stable).
-> > >=20
-> > > I was conservative about requesting a backport here. However, if a
-> > > CVE has been filed, and if there is no automation behind that
-> > > process, you can explicitly request aadc3bbea163 be backported.
-> > >=20
-> > > The problem, to me, was less about server resource depletion and
-> > > more about client hangs.
-> >=20
-> > And yet the patch that dealt with the less important server resource
-> > depletion was marked for stable, and the patch that dealt with client
-> > hangs wasn't??
-> >=20
-> > The CVE was for that less important patch, probably because it contained
-> > the magic word "DoS".
->=20
-> Quite likely. I wasn't consulted before the CVE was opened, nor was
-> I notified that it had been created.
->=20
-> Note that distributions are encouraged to evaluate whether a CVE is
-> serious enough to address, rather than simply backporting the fixes
-> automatically. But I know some customers want every CVE handled, so
-> that is sometimes difficult.
-
-Yes, it needs to be handled.  Declaring it invalid is certainly an
-option for handling it.  I didn't quite feel I could justify that in
-this case.
-
->=20
->=20
-> > I think 8d915bbf3926 should go to stable but I would like to understand
-> > why you felt the need to be conservative.
->=20
-> First, I'm told that LTS generally avoids taking backports that
-> overtly change user-visible behavior like disabling server-to-server
-> copy (which requires async COPY to work). That was the main reason
-> for my hesitance.
-
-Why does server-to-server require async COPY?
-RFC 7862 section 4.5.  Inter-Server Copy says
-  The destination server may perform the copy synchronously or
-  asynchronously.
-but I see that nfsd4_copy() returns nfs4err_notsupp if the inter-server
-copy_is_sync(), but it isn't immediately obvious to me why.  The patch
-which landed this functionality doesn't explain the restriction.
-
-I guess that with multiple 4MB sync COPY requests the server would need
-to repeatedly mount and unmount the source server which could be
-unnecessary work - or would need to cache the mount and know when to
-unmount it....
-
-On the other hand, changing the user-visible behaviour of the client
-unexpected hanging waiting for a server-side copy completion
-notification that it will never get seems like a user-visible change
-that would be desirable.
-
-I'm starting to see why this is awkward.
-
->=20
-> But more importantly, the problem with the automatic backport
-> mechanism is that marked patches are taken /immediately/ into
-> stable. They don't get the kind of soak time that a normally-merged
-> unmarked patch gets. The only way to ensure they get any real-world
-> test experience at all is to not mark them, and then come back to
-> them later and explicitly request a backport.
->=20
-> And, generally, we want to know that a patch destined for LTS
-> kernels has actually been applied to and tested on LTS first.
-> Automatically backported patches don't get that verification at all.
-
-I thought it was possible to mark patches to tell the stable team
-exactly what you want.  Greg certainly seems eager to give maintainers as
-much control as they ask for - without requiring them to do anything
-they don't want to do.  If you have a clear idea of what you want, it
-might be good to spell that out and ask how to achieve it.
-
->=20
-> My overall preference is that Fixed: patches should be ignored by
-> the automation, and that we have a designated NFSD LTS maintainer
-> who will test patches on each LTS kernel and request their backport.
-> I haven't found anyone to do that work, so we are limping along with
-> the current situation. I recognize, however, that this needs to
-> improve somehow with only the maintainer resources we have.
-
-:-)
-
-Thanks,
-NeilBrown
-
->=20
->=20
-> > > > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > > > ---
-> > > > > >  fs/nfsd/nfs4proc.c | 4 ++--
-> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > >=20
-> > > > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > > > > index fea171ffed62..06e0d9153ca9 100644
-> > > > > > --- a/fs/nfsd/nfs4proc.c
-> > > > > > +++ b/fs/nfsd/nfs4proc.c
-> > > > > > @@ -1972,6 +1972,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct n=
-fsd4_compound_state *cstate,
-> > > > > >  		wake_up_process(async_copy->copy_task);
-> > > > > >  		status =3D nfs_ok;
-> > > > > >  	} else {
-> > > > > > +	retry_sync:
-> > > > > >  		status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
-> > > > > >  				       copy->nf_dst->nf_file, true);
-> > > > > >  	}
-> > > > > > @@ -1990,8 +1991,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct n=
-fsd4_compound_state *cstate,
-> > > > > >  	}
-> > > > > >  	if (async_copy)
-> > > > > >  		cleanup_async_copy(async_copy);
-> > > > > > -	status =3D nfserr_jukebox;
-> > > > > > -	goto out;
-> > > > > > +	goto retry_sync;
-> > > > > >  }
-> > > > > > =20
-> > > > > >  static struct nfsd4_copy *
-> > > > > >=20
-> > > > > > base-commit: 26e6e693936986309c01e8bb80e318d63fda4a44
-> > > > > > --=20
-> > > > > > 2.47.0
-> > > > > >=20
-> > > > >=20
-> > > > > --=20
-> > > > > Chuck Lever
-> > > > >=20
-> > > >=20
-> > >=20
-> > > --=20
-> > > Chuck Lever
-> > >=20
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+-- 
+Chuck Lever
 
