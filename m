@@ -1,331 +1,283 @@
-Return-Path: <linux-nfs+bounces-7662-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7663-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 861B29BC20A
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 01:33:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A7999BC257
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 02:10:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 158AF1F22788
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 00:33:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F160B21CF4
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 01:10:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8D7AD51;
-	Tue,  5 Nov 2024 00:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B3Tb264u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wlCmbsV/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B3Tb264u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wlCmbsV/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33E6B125B9;
+	Tue,  5 Nov 2024 01:10:19 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FA2AD39
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 00:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D00B65C
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 01:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730766792; cv=none; b=i/tqgHDwvb2ALsUSOE3kQd61c8/2spVYgIvHGv10EqdABWGTBnJsCYhoh1hzG7FWavdwqT+euZRELNq1CGMov3usW2LWk4EbPxuxWkF43FhDovL/C2gLNcB1gE9Kp1FF4l4XtCSh2NMtdQ6yOXaiGKCb+N0Dxv2n2qAdlIaU5bk=
+	t=1730769019; cv=none; b=bPXeeGcUMBE5fmAnmGnhLnf1qpyNv9PTswFp2/TT0YAt/lKkkC9O856qXoocnBkHb62mzN+FyHSDjp0nk0v/hgg/z4eIX/zlb3JhhftEwUhLJCqYhKt0EKO0TTn/g4WPpO3Jit5ILJ7GnZ9Zv5msuJaxJZPjRDhfx0eN2QcVVbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730766792; c=relaxed/simple;
-	bh=X8OdkSedHoEKbSInQ3X+efokhw5XtNIEBkcRNwQ6vZ4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=t40+dvnzi2FpHm6HZo6hBF6jHX3UL/CqU30HyVyzAUWHunrwux31IVoJpZcjWxhd0K4jqKRhRj3EQsG62VwxGE6/3xKQEJ/Jr7NqgaTNGWEJCpTC/uc0qxA2xhhgMbn7F/nujwkFgpeXma+inBBPVj4iu7q+/xhzqTCpoJoBSBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B3Tb264u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wlCmbsV/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B3Tb264u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wlCmbsV/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E8431FBA3;
-	Tue,  5 Nov 2024 00:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730766783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WGwBDySvxvwxRlBiFvW1vC5ad5yZRoyVbRIv1PQpt9M=;
-	b=B3Tb264ui1VuHxdo01sclnlWzc2Evg9Na+aG/QUZLFTfXIMfSyIsA1rGWANqXMDM4NFFSx
-	onQB5XRrh19IiNvcP5tkO5Ysg/Bh1jYwQDqHJfbF/BAANNrsBAeZ4u59LcdM2axEcx8rJW
-	n6fXRBBcabiu71e6sD2U3WuBTpkJR80=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730766783;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WGwBDySvxvwxRlBiFvW1vC5ad5yZRoyVbRIv1PQpt9M=;
-	b=wlCmbsV/Z/+Jxjqta/4ViqIWdWwGH7cnJlq7aY/t6De/P0mCEFtgmzd7gunsv5Nv3RHEvt
-	NlqeXXphgLKXjiDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1730766783; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WGwBDySvxvwxRlBiFvW1vC5ad5yZRoyVbRIv1PQpt9M=;
-	b=B3Tb264ui1VuHxdo01sclnlWzc2Evg9Na+aG/QUZLFTfXIMfSyIsA1rGWANqXMDM4NFFSx
-	onQB5XRrh19IiNvcP5tkO5Ysg/Bh1jYwQDqHJfbF/BAANNrsBAeZ4u59LcdM2axEcx8rJW
-	n6fXRBBcabiu71e6sD2U3WuBTpkJR80=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1730766783;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WGwBDySvxvwxRlBiFvW1vC5ad5yZRoyVbRIv1PQpt9M=;
-	b=wlCmbsV/Z/+Jxjqta/4ViqIWdWwGH7cnJlq7aY/t6De/P0mCEFtgmzd7gunsv5Nv3RHEvt
-	NlqeXXphgLKXjiDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 29DBE137FE;
-	Tue,  5 Nov 2024 00:33:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id m0Z+M7xnKWfULwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 05 Nov 2024 00:33:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1730769019; c=relaxed/simple;
+	bh=6uQyvi04cU69CWzmgc8L1gwRBJEqBPKP9VdNYQywFvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ns8+SU1HxR0/WLid60AdtJPKiY4tFSdWDnZtRnlLuHlchgiWgYOdP8cm4H9BgTaZ5f5vxGKE33cWSbzvQ0xMdcjSDJtSjTd0Glj8IfYgFi4WF4F57g6DLBF0R0RZN79+JMv6uoHKm4LGo+VnVhx5PS6qqcnnaXEYxLd9oQpzrGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xj9H44gwvz4f3lfk
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 09:09:52 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6FD5E1A0194
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 09:10:11 +0800 (CST)
+Received: from [10.174.177.210] (unknown [10.174.177.210])
+	by APP4 (Coremail) with SMTP id gCh0CgDHo4dxcClnlTSEAw--.50968S3;
+	Tue, 05 Nov 2024 09:10:11 +0800 (CST)
+Message-ID: <8a41a675-0a24-91c0-bfdc-ec63fb3deda5@huaweicloud.com>
+Date: Tue, 5 Nov 2024 09:10:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
-In-reply-to: <Zykz8j7kTJd/CuF6@tissot.1015granger.net>
-References: <>, <Zykz8j7kTJd/CuF6@tissot.1015granger.net>
-Date: Tue, 05 Nov 2024 11:32:48 +1100
-Message-id: <173076676896.81717.10653275466233824521@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
-
-On Tue, 05 Nov 2024, Chuck Lever wrote:
-> On Tue, Nov 05, 2024 at 07:30:03AM +1100, NeilBrown wrote:
-> > On Tue, 05 Nov 2024, Chuck Lever wrote:
-> > > On Mon, Nov 04, 2024 at 03:47:42PM +1100, NeilBrown wrote:
-> > > >=20
-> > > > An NFSv4.2 COPY request can explicitly request a synchronous copy.  If
-> > > > that is not requested then the server is free to perform the copy
-> > > > synchronously or asynchronously.
-> > > >=20
-> > > > In the Linux implementation an async copy requires more resources tha=
-n a
-> > > > sync copy.  If nfsd cannot allocate these resources, the best response
-> > > > is to simply perform the copy (or the first 4MB of it) synchronously.
-> > > >=20
-> > > > This choice may be debatable if the unavailable resource was due to
-> > > > memory allocation failure - when memalloc fails it might be best to
-> > > > simply give up as the server is clearly under load.  However in the c=
-ase
-> > > > that policy prevents another kthread being created there is no benefit
-> > > > and much cost is failing with NFS4ERR_DELAY.  In that case it seems
-> > > > reasonable to avoid that error in all circumstances.
-> > > >=20
-> > > > So change the out_err case to retry as a sync copy.
-> > > >=20
-> > > > Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent async COPY=
- operations")
-> > >=20
-> > > Hi Neil,
-> > >=20
-> > > Why is a Fixes: tag necessary?
-> > >=20
-> > > And why that commit? async copies can fail due to lack of resources
-> > > on kernels that don't have aadc3bbea163, AFAICT.
-> >=20
-> > I had hoped my commit message would have explained that, though I accept
-> > it was not as explicit as it could be.
->=20
-> The problem might be that you and I have different understandings of
-> what exactly aadc3bbea163 does.
-
-It might be.
-My understanding is that it limits the number of concurrent async
-COPY requests to ->sp_nrthreads and once that limit in reached
-any further COPY requests that don't explicitly request "synchronous"
-are refused with NFS4ERR_DELAY.
-
->=20
->=20
-> > kmalloc(GFP_KERNEL) allocation failures aren't interesting.  They never
-> > happen for smallish sizes, and if they do then the server is so borked
-> > that it hardly matter what we do.
-> >=20
-> > The fixed commit introduces a new failure mode that COULD easily be hit
-> > in practice.  It causes the N+1st COPY to wait indefinitely until at
-> > least one other copy completes which, as you observed in that commit,
-> > could "run for a long time".  I don't think that behaviour is necessary
-> > or appropriate.
->=20
-> The waiting happens on the client. An async COPY operation always
-> completes quickly on the server, in this case with NFS4ERR_DELAY. It
-> does not tie up an nfsd thread.
-
-Agreed that it doesn't tie up an nfsd thread.  It does tie up a separate
-kthread for which there is a limit matching the number of nfsd threads
-(in the pool).
-
-Agreed that the waiting happens on the client, but why should there be
-any waiting at all?  The client doesn't know what it is waiting for, so
-will typically wait a few seconds.  In that time many megabytes of sync
-COPY could have been processed.
-
->=20
-> By the way, there are two fixes in this area that now appear in
-> v6.12-rc6 that you should check out.
-
-I'll try to schedule time to have a look - thanks.
-
->=20
->=20
-> > Changing the handling for kmalloc failure was just an irrelevant
-> > side-effect for changing the behaviour when then number of COPY requests
-> > exceeded the number of configured threads.
->=20
-> aadc3bbea163 checks the number of concurrent /async/ COPY requests,
-> which do not tie up nfsd threads, and thus are not limited by the
-> svc_thread count, as synchronous COPY operations are by definition.
-
-They are PRECISELY limited by the svc_thread count.  ->sp_nrthreads.
-
-+               if (atomic_inc_return(&nn->pending_async_copies) >
-+                               (int)rqstp->rq_pool->sp_nrthreads) {
-
->=20
-> I'm still thinking about the ramifications of converting an async
-> COPY to a sync COPY in this case. We want to reduce the server
-> workload in this case, rather than accommodate an aggressive client.
-
-We are not "converting" an async COPY to a sync COPY.  There is no such
-thing as an "async COPY" in terms of what the client requests.
-The client can request "COPY" which there server may perform sync or
-async, or the client can request "COPY synchronous" which the server
-must perform synchronously, or refuse to perform.
-
-By tying up a thread temporarily with a sync COPY we do reduce server
-workload by potentially increasing latency to the client.  I don't
-think that "aggressive" is a fair description of the client.
-"opportunistic" might be reasonable.
-
-My current thinking is that we should not start extra threads for
-handling async copies.  We should create a queue of pending copies and
-any nfsd thread can dequeue a copy and process 4MB each time through
-"The main request loop" just like it calls nfsd_file_net_dispose() to do
-a little bit of work.  That isn't needed now but I'll need something
-like that before my dynamic thread pool work can land.
-
->=20
->=20
-> > This came up because CVE-2024-49974 was created so I had to do something
-> > about the theoretical DoS vector in SLE kernels.  I didn't like the
-> > patch so I backported
-> >=20
-> > Commit 8d915bbf3926 ("NFSD: Force all NFSv4.2 COPY requests to be synchro=
-nous")
-> >=20
-> > instead (and wondered why it hadn't gone to stable).
->=20
-> I was conservative about requesting a backport here. However, if a
-> CVE has been filed, and if there is no automation behind that
-> process, you can explicitly request aadc3bbea163 be backported.
->=20
-> The problem, to me, was less about server resource depletion and
-> more about client hangs.
-
-And yet the patch that dealt with the less important server resource
-depletion was marked for stable, and the patch that dealt with client
-hangs wasn't??
-
-The CVE was for that less important patch, probably because it contained
-the magic word "DoS".
-
-I think 8d915bbf3926 should go to stable but I would like to understand
-why you felt the need to be conservative.
-
-Thanks,
-NeilBrown
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v2] nfsd: fix nfs4_openowner leak when concurrent
+ nfsd4_open occur
+To: Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com, neilb@suse.de,
+ okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org
+Cc: linux-nfs@vger.kernel.org, yangerkun@huawei.com, yi.zhang@huawei.com
+References: <20241104121843.1589284-1-yangerkun@huaweicloud.com>
+ <d0278add82aec4d5b660cf76df6dd3ce061302b4.camel@kernel.org>
+From: yangerkun <yangerkun@huaweicloud.com>
+In-Reply-To: <d0278add82aec4d5b660cf76df6dd3ce061302b4.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHo4dxcClnlTSEAw--.50968S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Wr43WF18Ary5Kr45uFyxAFb_yoWxGFW3pF
+	Z3ta4fGF1rX3srtrW7Ca1jka4UKrsYqr1UXrn5trWSvF40vrn5XF1jgryFvrWDGrWrAr4x
+	X3WDta42qw4rAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYx
+	BIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
+X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
 
 
->=20
->=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> > >=20
-> > >=20
-> > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > ---
-> > > >  fs/nfsd/nfs4proc.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > > index fea171ffed62..06e0d9153ca9 100644
-> > > > --- a/fs/nfsd/nfs4proc.c
-> > > > +++ b/fs/nfsd/nfs4proc.c
-> > > > @@ -1972,6 +1972,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
-> > > >  		wake_up_process(async_copy->copy_task);
-> > > >  		status =3D nfs_ok;
-> > > >  	} else {
-> > > > +	retry_sync:
-> > > >  		status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
-> > > >  				       copy->nf_dst->nf_file, true);
-> > > >  	}
-> > > > @@ -1990,8 +1991,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
-> > > >  	}
-> > > >  	if (async_copy)
-> > > >  		cleanup_async_copy(async_copy);
-> > > > -	status =3D nfserr_jukebox;
-> > > > -	goto out;
-> > > > +	goto retry_sync;
-> > > >  }
-> > > > =20
-> > > >  static struct nfsd4_copy *
-> > > >=20
-> > > > base-commit: 26e6e693936986309c01e8bb80e318d63fda4a44
-> > > > --=20
-> > > > 2.47.0
-> > > >=20
-> > >=20
-> > > --=20
-> > > Chuck Lever
-> > >=20
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
+
+在 2024/11/4 22:23, Jeff Layton 写道:
+> On Mon, 2024-11-04 at 20:18 +0800, Yang Erkun wrote:
+>> From: Yang Erkun <yangerkun@huawei.com>
+>>
+>> The action force umount(umount -f) will attempt to kill all rpc_task even
+>> umount operation may ultimately fail if some files remain open.
+>> Consequently, if an action attempts to open a file, it can potentially
+>> send two rpc_task to nfs server.
+>>
+>>                     NFS CLIENT
+>> thread1                             thread2
+>> open("file")
+>> ...
+>> nfs4_do_open
+>>   _nfs4_do_open
+>>    _nfs4_open_and_get_state
+>>     _nfs4_proc_open
+>>      nfs4_run_open_task
+>>       /* rpc_task1 */
+>>       rpc_run_task
+>>       rpc_wait_for_completion_task
+>>
+>>                                      umount -f
+>>                                      nfs_umount_begin
+>>                                       rpc_killall_tasks
+>>                                        rpc_signal_task
+>>       rpc_task1 been wakeup
+>>       and return -512
+>>   _nfs4_do_open // while loop
+>>      ...
+>>      nfs4_run_open_task
+>>       /* rpc_task2 */
+>>       rpc_run_task
+>>       rpc_wait_for_completion_task
+>>
+>> While processing an open request, nfsd will first attempt to find or
+>> allocate an nfs4_openowner. If it finds an nfs4_openowner that is not
+>> marked as NFS4_OO_CONFIRMED, this nfs4_openowner will released. Since
+>> two rpc_task can attempt to open the same file simultaneously from the
+>> client to server, and because two instances of nfsd can run
+>> concurrently, this situation can lead to lots of memory leak.
+>> Additionally, when we echo 0 to /proc/fs/nfsd/threads, warning will be
+>> triggered.
+>>
+>>                      NFS SERVER
+>> nfsd1                  nfsd2       echo 0 > /proc/fs/nfsd/threads
+>>
+>> nfsd4_open
+>>   nfsd4_process_open1
+>>    find_or_alloc_open_stateowner
+>>     // alloc oo1, stateid1
+>>                         nfsd4_open
+>>                          nfsd4_process_open1
+>>                          find_or_alloc_open_stateowner
+>>                          // find oo1, without NFS4_OO_CONFIRMED
+>>                           release_openowner
+>>                            unhash_openowner_locked
+>>                            list_del_init(&oo->oo_perclient)
+>>                            // cannot find this oo
+>>                            // from client, LEAK!!!
+>>                           alloc_stateowner // alloc oo2
+>>
+>>   nfsd4_process_open2
+>>    init_open_stateid
+>>    // associate oo1
+>>    // with stateid1, stateid1 LEAK!!!
+>>    nfs4_get_vfs_file
+>>    // alloc nfsd_file1 and nfsd_file_mark1
+>>    // all LEAK!!!
+>>
+>>                           nfsd4_process_open2
+>>                           ...
+>>
+>>                                      write_threads
+>>                                       ...
+>>                                       nfsd_destroy_serv
+>>                                        nfsd_shutdown_net
+>>                                         nfs4_state_shutdown_net
+>>                                          nfs4_state_destroy_net
+>>                                           destroy_client
+>>                                            __destroy_client
+>>                                            // won't find oo1!!!
+>>                                       nfsd_shutdown_generic
+>>                                        nfsd_file_cache_shutdown
+>>                                         kmem_cache_destroy
+>>                                         for nfsd_file_slab
+>>                                         and nfsd_file_mark_slab
+>>                                         // bark since nfsd_file1
+>>                                         // and nfsd_file_mark1
+>>                                         // still alive
+>>
+>> =======================================================================
+>> BUG nfsd_file (Not tainted): Objects remaining in nfsd_file on
+>> __kmem_cache_shutdown()
+>> -----------------------------------------------------------------------
+>>
+>> Slab 0xffd4000004438a80 objects=34 used=1 fp=0xff11000110e2ad28
+>> flags=0x17ffffc0000240(workingset|head|node=0|zone=2|lastcpupid=0x1fffff)
+>> CPU: 4 UID: 0 PID: 757 Comm: sh Not tainted 6.12.0-rc6+ #19
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+>> 1.16.1-2.fc37 04/01/2014
+>> Call Trace:
+>>   <TASK>
+>>   dump_stack_lvl+0x53/0x70
+>>   slab_err+0xb0/0xf0
+>>   __kmem_cache_shutdown+0x15c/0x310
+>>   kmem_cache_destroy+0x66/0x160
+>>   nfsd_file_cache_shutdown+0xac/0x210 [nfsd]
+>>   nfsd_destroy_serv+0x251/0x2a0 [nfsd]
+>>   nfsd_svc+0x125/0x1e0 [nfsd]
+>>   write_threads+0x16a/0x2a0 [nfsd]
+>>   nfsctl_transaction_write+0x74/0xa0 [nfsd]
+>>   vfs_write+0x1ae/0x6d0
+>>   ksys_write+0xc1/0x160
+>>   do_syscall_64+0x5f/0x170
+>>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>
+>> Disabling lock debugging due to kernel taint
+>> Object 0xff11000110e2ac38 @offset=3128
+>> Allocated in nfsd_file_do_acquire+0x20f/0xa30 [nfsd] age=1635 cpu=3
+>> pid=800
+>>   nfsd_file_do_acquire+0x20f/0xa30 [nfsd]
+>>   nfsd_file_acquire_opened+0x5f/0x90 [nfsd]
+>>   nfs4_get_vfs_file+0x4c9/0x570 [nfsd]
+>>   nfsd4_process_open2+0x713/0x1070 [nfsd]
+>>   nfsd4_open+0x74b/0x8b0 [nfsd]
+>>   nfsd4_proc_compound+0x70b/0xc20 [nfsd]
+>>   nfsd_dispatch+0x1b4/0x3a0 [nfsd]
+>>   svc_process_common+0x5b8/0xc50 [sunrpc]
+>>   svc_process+0x2ab/0x3b0 [sunrpc]
+>>   svc_handle_xprt+0x681/0xa20 [sunrpc]
+>>   nfsd+0x183/0x220 [nfsd]
+>>   kthread+0x199/0x1e0
+>>   ret_from_fork+0x31/0x60
+>>   ret_from_fork_asm+0x1a/0x30
+>>
+>> Add nfs4_openowner_unhashed to help found unhashed nfs4_openowner, and
+>> break nfsd4_open process to fix this problem.
+>>
+>> Cc: stable@vger.kernel.org # 2.6
+>> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
+>> ---
+>>   fs/nfsd/nfs4state.c | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> v1->v2: fix mistake in nfs4_openowner_unhashed
+>>
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index 551d2958ec29..bc175bafc4d7 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -1660,6 +1660,12 @@ static void release_open_stateid(struct nfs4_ol_stateid *stp)
+>>   	free_ol_stateid_reaplist(&reaplist);
+>>   }
+>>   
+>> +static bool nfs4_openowner_unhashed(struct nfs4_openowner *oo)
+>> +{
+> 
+> Can we add a lockdep_assert_held() for the cl_lock here?
+
+Yeah, this function should be protected by cl_lock.
+
+> 
+>> +	return list_empty(&oo->oo_owner.so_strhash) &&
+>> +		list_empty(&oo->oo_perclient);
+>> +}
+>> +
+>>   static void unhash_openowner_locked(struct nfs4_openowner *oo)
+>>   {
+>>   	struct nfs4_client *clp = oo->oo_owner.so_client;
+>> @@ -4975,6 +4981,12 @@ init_open_stateid(struct nfs4_file *fp, struct nfsd4_open *open)
+>>   	spin_lock(&oo->oo_owner.so_client->cl_lock);
+>>   	spin_lock(&fp->fi_lock);
+>>   
+>> +	if (nfs4_openowner_unhashed(oo)) {
+>> +		mutex_unlock(&stp->st_mutex);
+>> +		stp = NULL;
+>> +		goto out_unlock;
+>> +	}
+>> +
+>>   	retstp = nfsd4_find_existing_open(fp, open);
+>>   	if (retstp)
+>>   		goto out_unlock;
+>> @@ -6127,6 +6139,11 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
+>>   
+>>   	if (!stp) {
+>>   		stp = init_open_stateid(fp, open);
+>> +		if (!stp) {
+>> +			status = nfserr_jukebox;
+>> +			goto out;
+>> +		}
+>> +
+>>   		if (!open->op_stp)
+>>   			new_stp = true;
+>>   	}
+> 
+> Nice analysis!
+> 
+> Reviewed-by: Jeff Layton <jlayton@kernel.org
 
 
