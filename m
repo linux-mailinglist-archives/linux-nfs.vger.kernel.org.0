@@ -1,232 +1,233 @@
-Return-Path: <linux-nfs+bounces-7675-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7676-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C10F9BD799
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 22:28:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39BAF9BD827
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 23:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DDFC1C20B7E
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 21:28:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C013F1F22CE6
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 22:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 843581E0B65;
-	Tue,  5 Nov 2024 21:28:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 949A8215C7D;
+	Tue,  5 Nov 2024 22:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hP6ayixy";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FGROuRNH"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="Tgds+Bxz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973C9216204
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 21:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730842126; cv=fail; b=lBsFV2pd9VuHBpyGfuwT9XJLnNUWferakxQsbfr5pHuqmG9XYfQnUgjAFKbHdkf+sqqTSa6s7FQlRw1F70AKKy0hyY9fah7hk+VDUjY0K+BDqd71deso2XlbKQwBlX/WSgal86D/YJKriOU4XVRrOBTFSgLvoG6PrwEShL4I0Wk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730842126; c=relaxed/simple;
-	bh=SxuVldkzhQ8Ep6CpRSKy/foOH279BcudtRxFJiUPQhY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=uvxMhjV0dmEt3NzTm0kE0KNVpTssnOR0qQO55uyQeBWbbIljiydGPA2dEiWFKVhizj6TwLP7P3AbMxANdQuYh/5p5MRqq+eLFxWd3j7S6dxCKOKfNg9wsYL9dHoaRe8zhaOT1PWadJUj6XLN22l7zBTjnA8gQr8kZ8weuXF+1+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hP6ayixy; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FGROuRNH; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5KfZaa007096;
-	Tue, 5 Nov 2024 21:28:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=VQj/FxgTebQ73bvVMH
-	TxVxYdeA8FjZY1F6LI9wLSpP8=; b=hP6ayixyYfczXs+mOh7Gu0pEtxczI6cpgC
-	jV4TuANmSvBB1bb7x4/tbMcILn0UvYblGcnX88U/g2DU0JgdP/yPIEP5RohoezDL
-	BQX/CSZHSxoCMtzWX1qS6YpEGuZhvDC0EN2OdBnNuQA6vsqoH9Fqa84NvJMMawp5
-	CYObQUjTrKUB99e6c4pf5DYvEr/D+rbMy6nLO7Gke5R/ZOnoGdBlVC9LTpu1h4sl
-	Rpj23NFmXEUniSQMqyNDZ4Pr+eW/EC5dkOHct2DOblSNlY20DVmDbZ2rh45WwR1Y
-	+G5b6uSgkAhSn1zGAKu9akFoFUB98oY30m8TQVMKArpRsxUV3lxw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42nbpspfs2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 05 Nov 2024 21:28:34 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A5LIG1h037339;
-	Tue, 5 Nov 2024 21:28:33 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42nah7pm3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 05 Nov 2024 21:28:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XXPpDXLqiTmE23tAk+U07vjykloLplEjfWso0bQ/ZBbY8Hg0jSxYOEE4t1lUcKmQkjo9tleoaqPHKMpDkRjsCrTd1WG6edCa4CZEdoAod3eX24JVVdyBBN1TY5ju9CrXU/8R2pox1E2kO/IYQRsIz+4mEnCM0xUgcCK4OfXOdwSEU1Uef5opEcDcjRUc82XaG2InSzjDOaUyj8VT+XQZMvlRO1loByfNig1RJSC55olUwkEGb43zH2DWTenUh8NJp8gIRhai7HDy3tlbodkqOhMBUgbvAc524KSOmEgR3OV+1go97+m5NMqf9wkcsuIPrzvaqxKwQUlco4oq87+Lfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VQj/FxgTebQ73bvVMHTxVxYdeA8FjZY1F6LI9wLSpP8=;
- b=NtIPcGxxghCvoGcQsRvoyx+4Pvtx6US50eMr6GNP2fgF8wZjUdEzwwBOOGYgjGj40NmuPWb01xbssMF0pROnQztKJ4Zo0uHnSUePL5fpj33OIasXMY4omrKNx7QbTW/U93fC2ZPsftVbiIeewxvkx9jrAmYiArXmUs6YSaWIin9fRlbLw1f0t6dW9Mo3r7PLHOiBUtXX6c1+FjeIzICqPRceqJv72qv3PF+Hnbgm2uVL/+v3n5lNhYqJW/EhQ1nN0kEBe578zAUQNVjdvC5lKInn9iTyOFVgekYJ9qPQ5BkEFaxO2184CKxtQMtKD/pFwY/2ZDfEE4zsys+6iN2ZaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB901FF7AF;
+	Tue,  5 Nov 2024 22:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730844531; cv=none; b=SDevTvc5Zw+WZdkObOMSI9X+y3xH0Eg8ulv0NxgL2hClcFQHGidqddsHLAk85X6xg5xoQNUmxUobFwMs098dPDbLX+iayNOmbaCLJE+vNTyijVcAEOTYqnaYnQEiCohICtefz3GUxGruqg2LoKwmFtprVINjcxPSZUY2WA0UG/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730844531; c=relaxed/simple;
+	bh=6TO+FoIIgq6vXRmjpzfQ+D69ImfxB3k9M4fCgSxTJss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WmTgMVuLYjw7VVWnvyyDq9+SkCAQz3O2kg+eoPvjK69SIEAVfj5Jtx83CRqNvv6ZMenhb0oF546uSqvQ7VFa14N1L7tqQEURJACUYgJAl1c/GW83VUX3a9ae5aCv7C1DlBFr4XNtmEFdw2T4yPqjKf/CiTko+ZQEUsm6U88eN7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=Tgds+Bxz; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2fb4fa17044so63732561fa.3;
+        Tue, 05 Nov 2024 14:08:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VQj/FxgTebQ73bvVMHTxVxYdeA8FjZY1F6LI9wLSpP8=;
- b=FGROuRNHrwie6TOdH4TGvr8hiK0N82+g04DauFNI2fwKw377Mb55cNiPZBKdDJ9aLfTqQVRwtIEAqnJ1XM45TiAIQPU/Ksqg0GHrItqs/g2aRZstWOK8w5WvSWD2hD9okONfbSPGobqLwoJ/NlemX4yZm4UMDReIWK4I3JttfRQ=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH8PR10MB6504.namprd10.prod.outlook.com (2603:10b6:510:228::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30; Tue, 5 Nov
- 2024 21:28:27 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8114.031; Tue, 5 Nov 2024
- 21:28:27 +0000
-Date: Tue, 5 Nov 2024 16:28:24 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
-Message-ID: <ZyqN+DSQydG84DNe@tissot.1015granger.net>
-References: <>
- <ZyovsQBNlmoSLWED@tissot.1015granger.net>
- <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
-X-ClientProxiedBy: CH0PR03CA0111.namprd03.prod.outlook.com
- (2603:10b6:610:cd::26) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=umich.edu; s=google-2016-06-03; t=1730844527; x=1731449327; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0MZzQalBV2oxf552tg+17LTUObNw5fIUejHa0NEC7ZQ=;
+        b=Tgds+Bxz3A4jxA6rfWWTWiEqVqFvHFLkky1/+22UpIULhctwxhYTrh6+ZnsM8k761I
+         ufceU9wYKs6ciiAzXgzalOXCCCDyl6zh7wJeXk/WhOldooREbK6nSFeapxIbHE7r3O5o
+         BqFG8z9gNmbrSvbv3pc1O/qbAuK2yHUJGPy3buKgxMjvCQKEdqUzDFKegTJkOI0b2FG1
+         o5JnKX3MY+w0SORi4aPXxV3u9KB4sXN+Pvt1KiMdmAsG4NrksKkhteoTRpjCWHJNF95z
+         s4kdnEYJJ5f53sTUa5BwPT9c2aXetf9N32nun4/B5imyKxlJOq86Zj3FQNudF5nwrnFm
+         WCrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730844527; x=1731449327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0MZzQalBV2oxf552tg+17LTUObNw5fIUejHa0NEC7ZQ=;
+        b=p+mHqLROE5BTwYZ0N6RKrNh2XMUCYQ+dL/wDU6RnJXnQbMT05OQse996Bsp7LdQqTh
+         VjRHOSwtqlZHZ1GPozLc57XXXJK/QY/a92ayOvKRLEh9t6YP2Sb9vMu7MHmZKBI0XDqh
+         gLmTI3M1xvwcoHdHIlNObqYZgxui90Tu+x555I4b36JN3zBl/I+g1ouxDOD9uafF7aKk
+         PZJqY9S7QSisuqul4DfIbK6erqDtFqWhh5sK/GqJ5nCazeU+qWewXIgWDxJmezWeoPon
+         A0XSAy+ycrHdu6DIhi047iAbrq2L/f3pZZvcGVx4k++6FCL10hFUFpP9yrqExAI2di4D
+         hTYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGeQTilc6uaOZVEwgjsMYbAKcdkCNhM4vGSUHfvWrV51nLNJ2URqLt6ZbqioWG2tj3FNsqLG9aL7n2klg=@vger.kernel.org, AJvYcCVB3ymI49QD0iDfO/v4By3YC5C3j4KgQ0psqpzQ4PrEaJaPLRwO90bukc3aIN9UHtbbJEa0dSmAQpIj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHQM5HtzMqc6jBoaS8Gr3G/qzYzrQ1IgcWG9jKiw67J/Fm0Iss
+	1uCi6qZdRy1Gwl+UDIWHwVVlS2HWs1D5LYIqGPx/hvq7a+kXgd7mZKloHC2tuuAKNmbMA3xP0kb
+	ehQ9HF6fz2bHnaIe7jCRrrJHipDc=
+X-Google-Smtp-Source: AGHT+IHTex7oWkQE6+7IIQRRVadmTMB8R1JcvDz+gZTmXAU2CJJznF9zocRudSlI++LozCH3qNey0N/b6W0DftpOMYI=
+X-Received: by 2002:a2e:bc0e:0:b0:2fb:61c0:103 with SMTP id
+ 38308e7fff4ca-2fedb757a88mr88168011fa.4.1730844526759; Tue, 05 Nov 2024
+ 14:08:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH8PR10MB6504:EE_
-X-MS-Office365-Filtering-Correlation-Id: eab9ef0a-4460-4bd6-1172-08dcfde0c92f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?r52o4IFx83RPIPUyf0lnm8zkUuZ9Yne2qPg+d5KV/1Puyk7gBcRgJSuFRgsQ?=
- =?us-ascii?Q?HTIef3FuGzqTwJ8JMJVU6G4TbbVPf+VZ5ft5RZnW2ZVT1inPtmA5IvxcUSjM?=
- =?us-ascii?Q?YPpu+Gkai4TcgCxV9Tfb2gG8+fSgd+EYdFiIqjFKrETEEOgUYlupGOk+PZfI?=
- =?us-ascii?Q?H9ONa0k65CoQQOd0iMkSSkr5rc//tTb+4gAguxujrImcH974XGjAdh+h2aJo?=
- =?us-ascii?Q?vn9UFL2Vy2keOQ44h0EcazkMQxaCHQIN6Xx0/WwUaAR+DP+CGE5c7b/cPQSx?=
- =?us-ascii?Q?6CuJ6w0z5KW12JprjVGYwIe+02y8GpJpIBL5yMEsHETRJD1F10dRNGOEGEa9?=
- =?us-ascii?Q?9zZ5VfAlEnyi1NV0h20T6l/Xzx4K9YeQ4o33BkxQJaDPjN8NlG9nsQHRDab1?=
- =?us-ascii?Q?hV7xIhgPyT4uRlISt82WgFxRlb9YR2hWNe6tad/5+2RQe/SuXBsmQUSDjHRj?=
- =?us-ascii?Q?mYjKxbbMziPZVV/aJEsShI4t84xx4am6rY+ciNv22bJekAYt4TG+mSASmrIi?=
- =?us-ascii?Q?97wJIOOyuGKg7PjUQrjs4G/ekpOHZGT9AxoCOwSakO1b1NXW9XdTJyrQumFh?=
- =?us-ascii?Q?KfJDTZPQtTE7SmbPgH5e/Q6GAprzCbDuoa8fN1mj9VMQncfC2dHwBoy+4gHH?=
- =?us-ascii?Q?AD93PwPPJob3WYvKrKWqYakH+ps0ccBN6MnWIzEgdRn+PLfi0v5OBSA2H9OZ?=
- =?us-ascii?Q?cJfIrymQ6W0GMtDWVsYJjqVBuMKxBxuwZHsuqx25SPSpFENTIviUUQLDqPlh?=
- =?us-ascii?Q?ui1z5vypRJdr9N1x4qW/jubd4EtrEqTCV4SSFazcssXELFphM8CQ8Diopl/6?=
- =?us-ascii?Q?MGA/PTSGroRXoT5svDG40H5A/ySqhZ+kuKQcUjHyr41l8KECdj4GRLKRVOdV?=
- =?us-ascii?Q?v/o0bmpdo7QVjfguuU27JA+tgnzm/c0Ajbie8HNUnYsoXqGIgRvbCZWqQkW1?=
- =?us-ascii?Q?WCmcgbbUWTlCitFy+UE+IY+VsxISd4uRmTRBNOfgj8gSwlwGkHeIF5dbq3eL?=
- =?us-ascii?Q?A6R7fADetIezcegvuJn4lC31jOJpFyjMHlkaxV596xolvQnx5oDY/jnTGBKl?=
- =?us-ascii?Q?vH3F34OqC7F1ikQnIDRWg6yMTCWPFmq8+P0vamR3Dhk00xLmqIfcHeBnDzyt?=
- =?us-ascii?Q?wUg0sY4UgRbWdAXxWNMrdoiRffXInRnw3MSVIHk6CintL3v2cT3V/aJJzx6B?=
- =?us-ascii?Q?d/jZRSDLCApZ9/T7lUs7g9cFGxHHzq/VZqr9EYB7mfSTNuud+naQHByqWEMF?=
- =?us-ascii?Q?7EaqDs+i4tUlQRWpyVeAr7gh46Q79cGz1hLDmT2cwtRDx/EkedW+JJl7gVjl?=
- =?us-ascii?Q?qhOl2cKrpmCds3W2vWj2wSOm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8f3gS75BNHgMOPJ+EmdD9MqTMzx4dxVS0IVOOsQUURR3PZWPHh4xfKuYswE3?=
- =?us-ascii?Q?j8+IjBhPJXG/ApLtcPC/255OAKhx3in1bFsd5NPMKHDwac9NGM4HnKTMa4cr?=
- =?us-ascii?Q?KfzHKaYavc+iH9ZEQu49dC9bNXm7m4VIC3feDb6m6VX+Hrqeq8+7bESS60NV?=
- =?us-ascii?Q?Ynw0BlF3yLgKMJy+gjkaKiIFBP499LurQfY2xlAHXCXREVtkZKmoI6WsFCeX?=
- =?us-ascii?Q?MEr05YeIB7UhRGrntfRjOQUCHrGhJqrLJjT/dCPTq8HBw4SGVg8e+eQif+f7?=
- =?us-ascii?Q?7w71e3Z4sNK0fEvlapHHAF+yYo2DtKbbHpkS46Eay+UxGidnM1iVXwhVo0Hp?=
- =?us-ascii?Q?xTq4bwh2aDPrOl+twkGr4+NhgwgkTHEC8dC5kbp2bYcMLirJjaxylKdu9vt2?=
- =?us-ascii?Q?8+U3BPak66ya4yYXRUM+IkOhaFRNX5zg1mEQZteTZQ85zOa6Pgxrx469ld5f?=
- =?us-ascii?Q?1i2Pv8JvUE3WqRu55LOtUQmronIGlBLC0roFe6mS1LvCCQvhgvu3d8U1p6OQ?=
- =?us-ascii?Q?bxW+B9dqQ3D+EJmy5PVIGvAIdDem+b3oz8kFrIpM989dRgtHVrLjnWgBC5p2?=
- =?us-ascii?Q?4nop6mGq1AKMtowDPeFS2m2EHl2yqtaVES1zLaNm0QG+uYq5EQtI5uRNTuZI?=
- =?us-ascii?Q?voKoIxI65vmAwBG+FNCyxf+gq6vaav2o2N3AdDGqo6coXTseYA17OB7xniFw?=
- =?us-ascii?Q?VP+l4VmERPo371t8CtTSJTofMaSIll2gLCosT0IPsJBUBPM14yA8bEzHM1en?=
- =?us-ascii?Q?JSDP1MqF1P/fZVMKvkzZs5KeeT3akfDU7Una4liUxmV3d5OWq2zXWGxxgudG?=
- =?us-ascii?Q?IGU508n8z+tcVgtUs/f+5w2Hu2R0c4GzuNwHw22WasdBdO0Wh33+/NCZKKs1?=
- =?us-ascii?Q?aQK0ewopSVaD+7N/Kdun69Pb+uxiWNms2gO76+afmtDnalA1pYI6CSw9GXQ7?=
- =?us-ascii?Q?XT/FNhHdOTjpl+biWQKdEcQvmlJC5wP34GktGXaeG7xVTLQXZo8OBr9jCJGh?=
- =?us-ascii?Q?KpSG2Jh54NtvRLqdlXo0lMPPfu1yI8+4QUsv3kyE0vUz/xdwwGJHjI1xmGpw?=
- =?us-ascii?Q?jbY7gHOoGWiPoS/0t8cNOnYxmAF/bVw6u3JZuTGm8CxF7OP5ioLlHuYuxpAZ?=
- =?us-ascii?Q?cUzGHyn0g5Ljw+yUQvNKBL3iuy+8Gm5R3NrSk46L3+r3Cs5K7IqrIi+WT1Hq?=
- =?us-ascii?Q?DmsdB0VvLLwL8dwmPSjPn3WucovX5Q1kZTlBJQXTKtCfqcUx0YZf/VJzhk9w?=
- =?us-ascii?Q?xaGI3jna81duCZr22eq/XBfH6/zIrB3tK/QxY8czOxfKXsc0nWbJIC5poAsW?=
- =?us-ascii?Q?o3T0tdoPfdaW1r5GJohsIIt8u5oO3xrEcqm771L8JhMyLpU1kgtTS9vq7Hd5?=
- =?us-ascii?Q?+X24bs4/VLMjdvnCDmfPhHd5VeFLf+kz+80VApaUP3mETqWtcI59JJETUlyH?=
- =?us-ascii?Q?Z+BR+p6H5MCZp9nLLf++UacKSLBjlieyhkXzn9h9MtQpCiL1DtCx8wCrl3az?=
- =?us-ascii?Q?bb/y8ou6c67Dnpjpz/JwlXecJFdNr+sx+BbURQtJsvFVz36NhPcwbb4wshxT?=
- =?us-ascii?Q?89MtE7tqJSww3lTGq8WuCXjwlHVItowu1/yPoaUd?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	8R5NN4Cw2Wf9jdci6/g8kUIL/AhO+5GxoRG0yKAKHcGosp1dVzviyi/EkhPIjAkxeBJePqTAy4cZblCfeX4ue6SyGxAMafPVdKLS1tYVkkfP1i9sgE3i5iXayGeNiAWM+71pFf6T/sRBcMZWLjHpTCqdZKDo7SYF85jBTgU+hRI5vJ0eszlujoNmguS+fTYI3msN1eHzepmrVnSsHv2bSRy5PC9iErPiTBBoYUvJ04wAMfZ6dxQtVxfZCriKrrkdZmaROzGOapPaegMpd5UYfTlAW4YglzsILpfpYtkesiw+FKLCXCjX48CIABFzorNBH4RMY0zZABd413OKBi3zzqKgUMVAvvPwBXUerafl85AmR7qiAmf7bg9LlYjOSgSEIivaeQTl36OltUFhFvMcj9wyfemJ1/ixprToYz/EgnkQct+7miinmx9UiCtkqj+8qb/g5aQJSaVhS9ke98V7XmJzzobXA5JGErIPidzedOj1yA0XZpjblO+BirqwUve/5uRS60ECIbCibWxVuSO3mkgA8JhjH2bkQB76jyO2OPHD0AAAMAdM/L9x1OfLF7fGv0JPicuvwc1CVeZUnhbpwRP4wIVooeMS07SfWuGiWUs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eab9ef0a-4460-4bd6-1172-08dcfde0c92f
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2024 21:28:27.1323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BvqRNYdkkRAUBEZbteAtus4Giw6HOY50rl8St2WG/0/SWQP5JQD+vb7C884/8pohmsMF3LaMYWdt+ZHZskv4aA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6504
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-11-05_06,2024-11-05_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2411050166
-X-Proofpoint-ORIG-GUID: l7eSmSWeLE0lOOExkA7kihH5p4vb_pAx
-X-Proofpoint-GUID: l7eSmSWeLE0lOOExkA7kihH5p4vb_pAx
+References: <20241030-bcwide-v3-0-c2df49a26c45@kernel.org> <173032010891.47979.16372737966948328031.b4-ty@oracle.com>
+In-Reply-To: <173032010891.47979.16372737966948328031.b4-ty@oracle.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Tue, 5 Nov 2024 17:08:35 -0500
+Message-ID: <CAN-5tyEtZbD8TDMbyxutf_LCT1-aoG_BUF2gjBiMJ0HG9eLMMg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] nfsd: allow the use of multiple backchannel slots
+To: cel@kernel.org, Jeff Layton <jlayton@kernel.org>
+Cc: Neil Brown <neilb@suse.de>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 06, 2024 at 08:06:40AM +1100, NeilBrown wrote:
-> On Wed, 06 Nov 2024, Chuck Lever wrote:
-> > But more importantly, the problem with the automatic backport
-> > mechanism is that marked patches are taken /immediately/ into
-> > stable. They don't get the kind of soak time that a normally-merged
-> > unmarked patch gets. The only way to ensure they get any real-world
-> > test experience at all is to not mark them, and then come back to
-> > them later and explicitly request a backport.
-> > 
-> > And, generally, we want to know that a patch destined for LTS
-> > kernels has actually been applied to and tested on LTS first.
-> > Automatically backported patches don't get that verification at all.
-> 
-> I thought it was possible to mark patches to tell the stable team
-> exactly what you want.  Greg certainly seems eager to give maintainers as
-> much control as they ask for - without requiring them to do anything
-> they don't want to do.
+Hi Jeff/Chuck,
 
-Yes, Greg and Sasha want to do something constructive. I see
-suggestions flying by from time to time. The last specific one I
-think was rejected by Linus. It appears to be an ongoing
-conversation.
+Hitting the following softlockup when running using nfsd-next code.
+testing is same open bunch of file get delegations, do local
+conflicting operation. Network trace shows a few cb_recalls occurring
+successfully before the soft lockup (I can confirm that more than 1
+slot was used. But I also see that the server isn't trying to use the
+lowest available slot but instead just bumps the number and uses the
+next one. By that I mean, say slot 0 was used and a reply came back
+but the next callback would use slot 1 instead of slot 0).
 
+[  344.045843] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
+[kworker/u24:28:205]
+[  344.047669] Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core
+nfsd auth_rpcgss nfs_acl lockd grace uinput isofs snd_seq_dummy
+snd_hrtimer vsock_loopback vmw_vsock_virtio_transport_common qrtr
+rfkill vmw_vsock_vmci_transport vsock sunrpc vfat fat uvcvideo
+snd_hda_codec_generic snd_hda_intel videobuf2_vmalloc snd_intel_dspcfg
+videobuf2_memops uvc snd_hda_codec videobuf2_v4l2 snd_hda_core
+snd_hwdep videodev snd_seq snd_seq_device videobuf2_common snd_pcm mc
+snd_timer snd vmw_vmci soundcore xfs libcrc32c vmwgfx nvme
+drm_ttm_helper ttm crct10dif_ce ghash_ce sha2_ce sha256_arm64
+drm_kms_helper nvme_core sha1_ce sr_mod e1000e nvme_auth cdrom drm sg
+fuse
+[  344.050421] CPU: 0 UID: 0 PID: 205 Comm: kworker/u24:28 Kdump:
+loaded Not tainted 6.12.0-rc4+ #42
+[  344.050821] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS
+VMW201.00V.21805430.BA64.2305221830 05/22/2023
+[  344.051248] Workqueue: rpciod rpc_async_schedule [sunrpc]
+[  344.051513] pstate: 11400005 (nzcV daif +PAN -UAO -TCO +DIT -SSBS BTYPE=
+=3D--)
+[  344.051821] pc : kasan_check_range+0x0/0x188
+[  344.052011] lr : __kasan_check_write+0x1c/0x28
+[  344.052208] sp : ffff800087027920
+[  344.052352] x29: ffff800087027920 x28: 0000000000040000 x27: ffff0000a52=
+0f170
+[  344.052710] x26: 0000000000000000 x25: 1fffe00014a41e2e x24: ffff0002841=
+692c0
+[  344.053159] x23: ffff0002841692c8 x22: 0000000000000000 x21: 1ffff00010e=
+04f2a
+[  344.053612] x20: ffff0002841692c0 x19: ffff80008318c2c0 x18: 00000000000=
+00000
+[  344.054054] x17: 0000006800000000 x16: 1fffe0000010fd60 x15: 0a0d3730373=
+6205d
+[  344.054501] x14: 3136335b0a0d3630 x13: 1ffff000104751c9 x12: ffff600014a=
+41e2f
+[  344.054952] x11: 1fffe00014a41e2e x10: ffff600014a41e2e x9 : dfff8000000=
+00000
+[  344.055402] x8 : 00009fffeb5be1d2 x7 : ffff0000a520f173 x6 : 00000000000=
+00001
+[  344.055735] x5 : ffff0000a520f170 x4 : 0000000000000000 x3 : ffff8000823=
+129fc
+[  344.056058] x2 : 0000000000000001 x1 : 0000000000000002 x0 : ffff0000a52=
+0f172
+[  344.056479] Call trace:
+[  344.056636]  kasan_check_range+0x0/0x188
+[  344.056886]  queued_spin_lock_slowpath+0x5f4/0xaa0
+[  344.057192]  _raw_spin_lock+0x180/0x1a8
+[  344.057436]  rpc_sleep_on+0x78/0xe8 [sunrpc]
+[  344.057700]  nfsd4_cb_prepare+0x15c/0x468 [nfsd]
+[  344.057935]  rpc_prepare_task+0x70/0xa0 [sunrpc]
+[  344.058165]  __rpc_execute+0x1e8/0xa48 [sunrpc]
+[  344.058388]  rpc_async_schedule+0x90/0x100 [sunrpc]
+[  344.058623]  process_one_work+0x598/0x1100
+[  344.058818]  worker_thread+0x6c0/0xa58
+[  344.058992]  kthread+0x288/0x310
+[  344.059145]  ret_from_fork+0x10/0x20
+[  344.075846] watchdog: BUG: soft lockup - CPU#1 stuck for 26s!
+[kworker/u24:27:204]
+[  344.076295] Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core
+nfsd auth_rpcgss nfs_acl lockd grace uinput isofs snd_seq_dummy
+snd_hrtimer vsock_loopback vmw_vsock_virtio_transport_common qrtr
+rfkill vmw_vsock_vmci_transport vsock sunrpc vfat fat uvcvideo
+snd_hda_codec_generic snd_hda_intel videobuf2_vmalloc snd_intel_dspcfg
+videobuf2_memops uvc snd_hda_codec videobuf2_v4l2 snd_hda_core
+snd_hwdep videodev snd_seq snd_seq_device videobuf2_common snd_pcm mc
+snd_timer snd vmw_vmci soundcore xfs libcrc32c vmwgfx nvme
+drm_ttm_helper ttm crct10dif_ce ghash_ce sha2_ce sha256_arm64
+drm_kms_helper nvme_core sha1_ce sr_mod e1000e nvme_auth cdrom drm sg
+fuse
+[  344.079648] CPU: 1 UID: 0 PID: 204 Comm: kworker/u24:27 Kdump:
+loaded Tainted: G             L     6.12.0-rc4+ #42
+[  344.080290] Tainted: [L]=3DSOFTLOCKUP
+[  344.080495] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS
+VMW201.00V.21805430.BA64.2305221830 05/22/2023
+[  344.080930] Workqueue: rpciod rpc_async_schedule [sunrpc]
+[  344.081212] pstate: 21400005 (nzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=
+=3D--)
+[  344.081630] pc : _raw_spin_lock+0x108/0x1a8
+[  344.081815] lr : _raw_spin_lock+0xf4/0x1a8
+[  344.081998] sp : ffff800087017a30
+[  344.082146] x29: ffff800087017a90 x28: ffff0000a520f170 x27: ffff6000148=
+a1081
+[  344.082467] x26: 1fffe000148a1081 x25: ffff0000a450840c x24: ffff0000a52=
+0ed40
+[  344.082892] x23: ffff0000a4508404 x22: ffff0002e9028000 x21: ffff8000870=
+17a50
+[  344.083338] x20: 1ffff00010e02f46 x19: ffff0000a520f170 x18: 00000000000=
+00000
+[  344.083775] x17: 0000000000000000 x16: 0000000000000000 x15: 0000aaab024=
+bdd10
+[  344.084217] x14: 0000000000000000 x13: 0000000000000000 x12: ffff700010e=
+02f4b
+[  344.084625] x11: 1ffff00010e02f4a x10: ffff700010e02f4a x9 : dfff8000000=
+00000
+[  344.084945] x8 : 0000000000000004 x7 : 0000000000000003 x6 : 00000000000=
+00001
+[  344.085264] x5 : ffff800087017a50 x4 : ffff700010e02f4a x3 : ffff8000823=
+11154
+[  344.085587] x2 : 0000000000000001 x1 : 0000000000000000 x0 : 00000000000=
+00000
+[  344.085915] Call trace:
+[  344.086028]  _raw_spin_lock+0x108/0x1a8
+[  344.086210]  rpc_wake_up_queued_task+0x5c/0xf8 [sunrpc]
+[  344.086465]  nfsd4_cb_prepare+0x168/0x468 [nfsd]
+[  344.086694]  rpc_prepare_task+0x70/0xa0 [sunrpc]
+[  344.086922]  __rpc_execute+0x1e8/0xa48 [sunrpc]
+[  344.087148]  rpc_async_schedule+0x90/0x100 [sunrpc]
+[  344.087389]  process_one_work+0x598/0x1100
+[  344.087584]  worker_thread+0x6c0/0xa58
+[  344.087758]  kthread+0x288/0x310
+[  344.087909]  ret_from_fork+0x10/0x20
 
-> If you have a clear idea of what you want, it
-> might be good to spell that out and ask how to achieve it.
-
-Perhaps having a separate review process, where each patch in
-nfsd-next is audited just before the merge window to see whether it
-should be marked for stable, would help. Keeping written notes on
-these decisions would also be helpful; Greg asks when an explicit
-backport request comes by why it wasn't marked when it went into
-Linus' branch.
-
-Making it easier / more automated to test-apply such patches to LTS
-kernels is also something to think about. I have nightly CI for
-those branches, but it tests what is already in the LTS queue rather
-than testing NFSD-specific patches.
-
-
--- 
-Chuck Lever
+On Wed, Oct 30, 2024 at 4:30=E2=80=AFPM <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> On Wed, 30 Oct 2024 10:48:45 -0400, Jeff Layton wrote:
+> > A few more minor updates to the set to fix some small-ish bugs, and do =
+a
+> > bit of cleanup. This seems to test OK for me so far.
+> >
+> >
+>
+> Applied to nfsd-next for v6.13, thanks! Still open for comments and
+> test results.
+>
+> [1/2] nfsd: make nfsd4_session->se_flags a bool
+>       commit: d10f8b7deb4e8a3a0c75855fdad7aae9c1943816
+> [2/2] nfsd: allow for up to 32 callback session slots
+>       commit: 6c8910ac1cd360ea01136d707158690b5159a1d0
+>
+> --
+> Chuck Lever
+>
+>
 
