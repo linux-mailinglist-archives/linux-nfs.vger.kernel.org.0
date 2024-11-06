@@ -1,443 +1,476 @@
-Return-Path: <linux-nfs+bounces-7680-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7681-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6001B9BD9E0
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2024 00:47:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD0629BDA57
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2024 01:31:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F39C280EEA
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Nov 2024 23:47:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D7491F23F66
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Nov 2024 00:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12ACA149C53;
-	Tue,  5 Nov 2024 23:47:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD0143AAE;
+	Wed,  6 Nov 2024 00:31:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="LGYgun6l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkq8GE4E"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C794D1D1748
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Nov 2024 23:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A358E38396;
+	Wed,  6 Nov 2024 00:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730850465; cv=none; b=GHh/778iQmyL86/VvMl+bDzFaAb/c76rx8Rnp+c2Vjisd9FLGetY5Vufs7AefexBvV2Gwo82vLHmYMyrGiCe2fpHrAkG6rKSilXLccgQFm7LKSUitjANZ3um+fFXdvhK4f+05bRf9hEHdbh4uecgSdSUt1aeHSbiD0wpDjODkiU=
+	t=1730853080; cv=none; b=I9wP8+Jk5cnLwyzOoCCaJPMd15cVXqIRy9D0SB0Z8DHpktzhXgcx7bGRrPLorwSGranhoy+vfjzrYyHnAof1sn7V3Sjfw8QMsWLRhnZKs2BkuGkjxE+P37xLqntOqdBBycaOnMDMewNRzCxNFHVEipQIXq3/gUlv/hr+FtbTR3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730850465; c=relaxed/simple;
-	bh=ipEHxIf0KGbqpupSkcxl5THWHzbZLAXv3hYqAg9/fKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H39TWiCwZgYaGuy9IKnJWcWvHrqWrVkA7jpPiuUBvsObvhhJXLeZZxTmVmPF2kyZuP5ZXVbirQsRLRJAE1s+/u2nCGFjoN1pyERPb23W0VhNlASF17LVR3UjDH6dfpU5SF4fl3p88R++yC3QYJoKE+Mo++icdJtx4UVXXCkLbZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=LGYgun6l; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2fb561f273eso48633641fa.2
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Nov 2024 15:47:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1730850461; x=1731455261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iv84x5tVWCBQFO5uiddCswZzNhGWGga42jMqiBy5IdQ=;
-        b=LGYgun6lk2U41nGOcYj7wQJA9L5Pb98v2y75kwHSyyThkZ2rbfJV6pjJ1Cvw6Amwl8
-         frzdiMSqqwgE3nIFmkkosm1yhBv9luK0zeGt3Y39j5wBj4P39NgF3Cg67Gf9sPCrF6sr
-         vTMcc78RSTBMM8cRzN5fqFSzHWLCBO5MblrNNnQVnPN3oRME5Zch8ce2q/+WAbv+Vwdr
-         KwUJf0QMh1GTOoE5eXAUhudnsU6NfUE9hEuKN6Vo0ArkUgFo0AQtH8yPhOILTJAxmZMd
-         dcU+GfzDabTcrb+qNXVVSaYwmVSSvaTxE+ZkxExKXlk0WSLS7fA8QzQ3eXav1y3kIkMY
-         5qWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730850461; x=1731455261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iv84x5tVWCBQFO5uiddCswZzNhGWGga42jMqiBy5IdQ=;
-        b=bI3Au0Vtscpt3uBTyxmVqDcrwdHZeG5cnaRQXUUZRjLRucDrE/njNYISY5G2GIrp0n
-         KJgVyZIeOMMBF2IKFuwbV71XpmxTlidnyySHN4CdxP/F3ggwrHWdkIXbRJOrTDIGiItL
-         swRV1tQHns+raXD+5eSbYj5/v0Ylz8vJ6ygXg+G9ONpAAhm8K1TO17n0QlaAItSygU1K
-         +4ix7FhWzEroVwm1RSdlgb/CUr2PJUqHAaDrPNjXHVqdKhsV5rGF8ncyrbBoSFJanvYn
-         9KQuAgU9oTI/naDo2/U5lDjCrsJC+wYUQgg8oG1Dfdfl62BVq8L7W5OSV9HRrmVvF1cT
-         yj/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWnMbCGROdIZik59zfyyQsNKjT7N0dBHMHrRa88WGPf+OAod/bv/H9E2GXzSocb5kIeFTUs2uq02Go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqQT4U4ZT2kJE9tlhf8xI9IU7FksdQTueAd2tJx91yFPcWXMkq
-	7bX5/Qaa9CZABr+zrOzAfjHcrDgL1HMCvjIwDGeJndnZFwLlTpsZO5Nk8IfswXY4qTJaLW1s1e/
-	Sz1prRfi0pPrEfWPPESi5FnipPMk=
-X-Google-Smtp-Source: AGHT+IGD+e1j/BKrmEPpS815fXYJXmEvx37zwub6UBPv6sLigTxFBOAPhJtPH4zhP7NkA0B3jXxOfPtFNF/CYZUj9vg=
-X-Received: by 2002:a05:651c:502:b0:2fb:5c20:43e0 with SMTP id
- 38308e7fff4ca-2fd05924b47mr145770851fa.15.1730850460529; Tue, 05 Nov 2024
- 15:47:40 -0800 (PST)
+	s=arc-20240116; t=1730853080; c=relaxed/simple;
+	bh=rt62tUQ2aV36JPPxoQGECZUKe3zl2CU1Mys8w+ZHQi4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZPu4cus7TCoe5VwDRgwA902MJPvPntO5MzduEqdhoOhWmL7shiMOMq6Zw8uMi0ePtVmWf+xAU0uKBdpeQtBFXZJM82C66v7C3DOR0y1W31q+Vhbn875w26C3eHLzO+MgqFU4+AvLW3vhs2ZP677K/xoo1241VgDysMQ0VsBkOQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkq8GE4E; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6785CC4CECF;
+	Wed,  6 Nov 2024 00:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730853080;
+	bh=rt62tUQ2aV36JPPxoQGECZUKe3zl2CU1Mys8w+ZHQi4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=gkq8GE4E/dmnYhex7L6Sd7I0XFTyeM1Q+PZIWRo69Mxqm48FLp7xaf4laj3F7gTAL
+	 DZQPIScGyWhVdq05chgaa05yXr50BY0TELFE+H91iX4JrUzsMhW4LQJembx3nzpW39
+	 U5w0y3uxCK94fNd04JYS8RkhlJusYw5++VXenHcr1Ixkpad9y4uWmcTjQN5Qb4BYO1
+	 JWQeiniA2DMYEHt4ig86DURHE5FfrtU0cYvl5S9vHbEy1xKb26bd5W4ItT3bmQh10a
+	 0iJtRwDK47zsiiTC089GKsGXdYWvoamCSAfkUwCvkTPc7OvyS9MJ+eObGSwXeQW8LC
+	 O7CqP/Fth17gw==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Tue, 05 Nov 2024 19:31:06 -0500
+Subject: [PATCH v4] nfsd: allow for up to 32 callback session slots
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZyovsQBNlmoSLWED@tissot.1015granger.net> <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
-In-Reply-To: <173084080089.1734440.10665206263775584488@noble.neil.brown.name>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 5 Nov 2024 18:47:29 -0500
-Message-ID: <CAN-5tyF+FbsxSDEb79FQucM7fRDqw1wa7iegx9t=RvSLgr2nHQ@mail.gmail.com>
-Subject: Re: [PATCH] nfsd: fallback to sync COPY if async not possible
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241105-bcwide-v4-1-48f52ee0fb0c@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMm4KmcC/2WNyw6CMBREf8V0bc3tbcvDlf9hXND2Ao0GTDGoI
+ fy7hRgCYTmTOWcG1lHw1LHzYWCBet/5tolBHQ/M1kVTEfcuZoaASgBqbuzbO+KJcSkpk0hnkMX
+ xM1DpP7Poeou59t2rDd/Z24up3Sl6wYE7BJApaQWFvdwpNPQ4taGalP99ttkDpbrIUOTOwno/f
+ fa4/skXDrnglIMAk1CptdtxcsVJWDgZ/yy6UuUFJlbpDTeO4w884aP9PQEAAA==
+X-Change-ID: 20241025-bcwide-6bd7e4b63db2
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13412; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=rt62tUQ2aV36JPPxoQGECZUKe3zl2CU1Mys8w+ZHQi4=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnKrjXwzwI5R73VknrWPoJSlOtISr4C3Q4BSMj/
+ y8DC5kQK3mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZyq41wAKCRAADmhBGVaC
+ FfQPEAChZ3h1h2socpBGSh/sVXr8i00Wh03c/R9LtkMholGWwnZA4Iiz6O/M5AlcJRkBVjKhw8i
+ 0lIDZO8U7utvufWE/LGYp/KKl3O9WXadqBiuvJvPaXz1rhqSO5cRBjJgXds9RRunXhJZVQjN6mj
+ R6MiPU7hwfC9tqbtWz3IULDrsr9wD0gfkef+rMfMfxC6v6bVeVgo9eAUDm6nEfCdI1mDmlhtmvx
+ VfTrJT3C9Yhhz2tCtMI9oB4Zp4dhx2ZVPDZ+wDg4TI/SPDjmfZlhsLJImRnY7RvfBqvbnSkewdb
+ RChPOcJuW0cXddK2fd5zTiMSJmL/ozQ9lqwCUewm7khcuULNbVBruI4pp9SvHkZWIUUgasVYXG0
+ NejaBbY32YjsbIWnPN+vyLZrNjBBWuNtHXxmNHL+vSBxUx/JPktiBQqOom0IExdx1Bji2Sso2MO
+ A/IyDwkW5KE1A7MX7Zc5nlyqJ2eyeoqqEaoYXKF/u6bYIK4UlgfNRs1PxYmGMbskvOSi8Fk0dGn
+ +ddQEXk9UtMbeCMvskFXkfICFtIJ0OTihm4/d6yHa0h+V6m2v9x3bbnzoA5RdTyeaLv8ABx17mt
+ WJC+L7pBdFvcvmr/S1KvQ1bro8aZ95xNW7MU5f3BstKnj2HPy2fsrowTsglWvZtfKb8TEqXJOI5
+ xuE1HOu4FkjKf7g==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Nov 5, 2024 at 4:06=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> On Wed, 06 Nov 2024, Chuck Lever wrote:
-> > On Tue, Nov 05, 2024 at 11:32:48AM +1100, NeilBrown wrote:
-> > > On Tue, 05 Nov 2024, Chuck Lever wrote:
-> > > > On Tue, Nov 05, 2024 at 07:30:03AM +1100, NeilBrown wrote:
-> > > > > On Tue, 05 Nov 2024, Chuck Lever wrote:
-> > > > > > On Mon, Nov 04, 2024 at 03:47:42PM +1100, NeilBrown wrote:
-> > > > > > >
-> > > > > > > An NFSv4.2 COPY request can explicitly request a synchronous =
-copy.  If
-> > > > > > > that is not requested then the server is free to perform the =
-copy
-> > > > > > > synchronously or asynchronously.
-> > > > > > >
-> > > > > > > In the Linux implementation an async copy requires more resou=
-rces than a
-> > > > > > > sync copy.  If nfsd cannot allocate these resources, the best=
- response
-> > > > > > > is to simply perform the copy (or the first 4MB of it) synchr=
-onously.
-> > > > > > >
-> > > > > > > This choice may be debatable if the unavailable resource was =
-due to
-> > > > > > > memory allocation failure - when memalloc fails it might be b=
-est to
-> > > > > > > simply give up as the server is clearly under load.  However =
-in the case
-> > > > > > > that policy prevents another kthread being created there is n=
-o benefit
-> > > > > > > and much cost is failing with NFS4ERR_DELAY.  In that case it=
- seems
-> > > > > > > reasonable to avoid that error in all circumstances.
-> > > > > > >
-> > > > > > > So change the out_err case to retry as a sync copy.
-> > > > > > >
-> > > > > > > Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent as=
-ync COPY operations")
-> > > > > >
-> > > > > > Hi Neil,
-> > > > > >
-> > > > > > Why is a Fixes: tag necessary?
-> > > > > >
-> > > > > > And why that commit? async copies can fail due to lack of resou=
-rces
-> > > > > > on kernels that don't have aadc3bbea163, AFAICT.
-> > > > >
-> > > > > I had hoped my commit message would have explained that, though I=
- accept
-> > > > > it was not as explicit as it could be.
-> > > >
-> > > > The problem might be that you and I have different understandings o=
-f
-> > > > what exactly aadc3bbea163 does.
-> > >
-> > > It might be.
-> > > My understanding is that it limits the number of concurrent async
-> > > COPY requests to ->sp_nrthreads and once that limit in reached
-> > > any further COPY requests that don't explicitly request "synchronous"
-> > > are refused with NFS4ERR_DELAY.
-> > >
-> > > > > kmalloc(GFP_KERNEL) allocation failures aren't interesting.  They=
- never
-> > > > > happen for smallish sizes, and if they do then the server is so b=
-orked
-> > > > > that it hardly matter what we do.
-> > > > >
-> > > > > The fixed commit introduces a new failure mode that COULD easily =
-be hit
-> > > > > in practice.  It causes the N+1st COPY to wait indefinitely until=
- at
-> > > > > least one other copy completes which, as you observed in that com=
-mit,
-> > > > > could "run for a long time".  I don't think that behaviour is nec=
-essary
-> > > > > or appropriate.
-> > > >
-> > > > The waiting happens on the client. An async COPY operation always
-> > > > completes quickly on the server, in this case with NFS4ERR_DELAY. I=
-t
-> > > > does not tie up an nfsd thread.
-> > >
-> > > Agreed that it doesn't tie up an nfsd thread.  It does tie up a separ=
-ate
-> > > kthread for which there is a limit matching the number of nfsd thread=
-s
-> > > (in the pool).
-> > >
-> > > Agreed that the waiting happens on the client, but why should there b=
-e
-> > > any waiting at all?  The client doesn't know what it is waiting for, =
-so
-> > > will typically wait a few seconds.  In that time many megabytes of sy=
-nc
-> > > COPY could have been processed.
-> >
-> > The Linux NFS client's usual delay is, IIRC, 100 msec with
-> > exponential backoff.
->
-> Yep, up to 15seconds.
->
-> >
-> > It's possible that the number of async copies is large because they
-> > are running on a slow export. Adding more copy work is going to make
-> > the situation worse -- and by handling the work with a synchronous
-> > COPY, it will tie up threads that should be available for other
-> > work.
->
-> Should be available for "work" yes, but why "other work"?  Is COPY work
-> not as important as READ or WRITE or GETATTR work?
-> READ/WRITE are limited to 1MB, sync-COPY to 4MB so a small difference
-> that, but it doesn't seem substantial.
->
-> >
-> > The feedback loop here should result in reducing server workload,
-> > not increasing it.
->
-> I agree with not increasing it.  I don't see the rational for reducing
-> workload, only for limiting it.
->
-> >
-> >
-> > > > By the way, there are two fixes in this area that now appear in
-> > > > v6.12-rc6 that you should check out.
-> > >
-> > > I'll try to schedule time to have a look - thanks.
-> > >
-> > > > > Changing the handling for kmalloc failure was just an irrelevant
-> > > > > side-effect for changing the behaviour when then number of COPY r=
-equests
-> > > > > exceeded the number of configured threads.
-> > > >
-> > > > aadc3bbea163 checks the number of concurrent /async/ COPY requests,
-> > > > which do not tie up nfsd threads, and thus are not limited by the
-> > > > svc_thread count, as synchronous COPY operations are by definition.
-> > >
-> > > They are PRECISELY limited by the svc_thread count.  ->sp_nrthreads.
-> >
-> > I was describing the situation /before/ aadc3bbea163 , when there
-> > was no limit at all.
-> >
-> > Note that is an arbitrary limit. We could pick something else if
-> > this limit interferes with the dynamic thread count changes.
-> >
-> >
-> > > My current thinking is that we should not start extra threads for
-> > > handling async copies.  We should create a queue of pending copies an=
-d
-> > > any nfsd thread can dequeue a copy and process 4MB each time through
-> > > "The main request loop" just like it calls nfsd_file_net_dispose() to=
- do
-> > > a little bit of work.
-> >
-> > Having nfsd threads handle this workload again invites a DoS vector.
->
-> Any more so that having nfsd thread handling a WRITE workload?
+nfsd currently only uses a single slot in the callback channel, which is
+proving to be a bottleneck in some cases. Widen the callback channel to
+a max of 32 slots (subject to the client's target_maxreqs value).
 
-Isn't a difference between a COPY and a WRITE the fact that the server
-has the ability to restrict the TCP window of the client sending the
-bytes. And for simplicity's sake, if we assume client/server has a
-single TCP stream when the window size is limited then other WRITEs
-are also prevented from sending more data. But a COPY operation
-doesn't require much to be sent and preventing the client from sending
-another COPY can't be achieved thru TCP window size.
+Change the cb_holds_slot boolean to an integer that tracks the current
+slot number (with -1 meaning "unassigned").  Move the callback slot
+tracking info into the session. Add a new u32 that acts as a bitmap to
+track which slots are in use, and a u32 to track the latest callback
+target_slotid that the client reports. To protect the new fields, add
+a new per-session spinlock (the se_lock). Fix nfsd41_cb_get_slot to always
+search for the lowest slotid (using ffs()).
 
-> > The 4MB chunk limit is there precisely to prevent synchronous COPY
-> > operations from tying up nfsd threads for too long. On a slow export,
-> > this is still not going to work, so I'd rather see a timer for this
-> > protection; say, 30ms, rather than a byte count. If more than 4MB
-> > can be handled quickly, that will be good for throughput.
->
-> That sounds like a good goal.  Ideally we would need a way to negotiate
-> a window with write-back throttling so that we don't bother reading
-> until we know that writing to the page-cache won't block.  Certainly
-> worth exploring.
->
-> >
-> > Note that we still want to limit the number of background copy
-> > operations going on. I don't want a mechanism where a client can
-> > start an unbounded amount of work on the server.
->
-> This isn't obvious to me.  The server makes no promise concerning the
-> throughput it will provide.  Having a list of COPY requests that add up
-> to many terabytes isn't intrinsically a problem.  Having millions of
-> COPY requests in the list *might* be a little bit of a burden.  Using
-> __GFP_NORETRY might help put a natural limit on that.
->
-> >
-> >
-> > > > > This came up because CVE-2024-49974 was created so I had to do so=
-mething
-> > > > > about the theoretical DoS vector in SLE kernels.  I didn't like t=
-he
-> > > > > patch so I backported
-> > > > >
-> > > > > Commit 8d915bbf3926 ("NFSD: Force all NFSv4.2 COPY requests to be=
- synchronous")
+Finally, convert the session->se_cb_seq_nr field into an array of
+counters and add the necessary handling to ensure that the seqids get
+reset at the appropriate times.
 
-I'm doing the same for RHEL. But the fact that CVE was created seems
-like a flaw of the CVE creation process in this case. It should have
-never been made a CVE.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+v3 has a bug that Olga hit in testing. This version should fix the wait
+when the slot table is full. Olga, if you're able to test this one, it
+would be much appreciated.
+---
+Changes in v4:
+- Fix the wait for a slot in nfsd41_cb_get_slot()
+- Link to v3: https://lore.kernel.org/r/20241030-bcwide-v3-0-c2df49a26c45@kernel.org
 
-> > > > >
-> > > > > instead (and wondered why it hadn't gone to stable).
-> > > >
-> > > > I was conservative about requesting a backport here. However, if a
-> > > > CVE has been filed, and if there is no automation behind that
-> > > > process, you can explicitly request aadc3bbea163 be backported.
-> > > >
-> > > > The problem, to me, was less about server resource depletion and
-> > > > more about client hangs.
-> > >
-> > > And yet the patch that dealt with the less important server resource
-> > > depletion was marked for stable, and the patch that dealt with client
-> > > hangs wasn't??
-> > >
-> > > The CVE was for that less important patch, probably because it contai=
-ned
-> > > the magic word "DoS".
-> >
-> > Quite likely. I wasn't consulted before the CVE was opened, nor was
-> > I notified that it had been created.
-> >
-> > Note that distributions are encouraged to evaluate whether a CVE is
-> > serious enough to address, rather than simply backporting the fixes
-> > automatically. But I know some customers want every CVE handled, so
-> > that is sometimes difficult.
->
-> Yes, it needs to be handled.  Declaring it invalid is certainly an
-> option for handling it.  I didn't quite feel I could justify that in
-> this case.
->
-> >
-> >
-> > > I think 8d915bbf3926 should go to stable but I would like to understa=
-nd
-> > > why you felt the need to be conservative.
-> >
-> > First, I'm told that LTS generally avoids taking backports that
-> > overtly change user-visible behavior like disabling server-to-server
-> > copy (which requires async COPY to work). That was the main reason
-> > for my hesitance.
->
-> Why does server-to-server require async COPY?
-> RFC 7862 section 4.5.  Inter-Server Copy says
->   The destination server may perform the copy synchronously or
->   asynchronously.
-> but I see that nfsd4_copy() returns nfs4err_notsupp if the inter-server
-> copy_is_sync(), but it isn't immediately obvious to me why.  The patch
-> which landed this functionality doesn't explain the restriction.
+Changes in v3:
+- add patch to convert se_flags to single se_dead bool
+- fix off-by-one bug in handling of NFSD_BC_SLOT_TABLE_MAX
+- don't reject target highest slot value of 0
+- Link to v2: https://lore.kernel.org/r/20241029-bcwide-v2-1-e9010b6ef55d@kernel.org
 
-The choice (my choice) for not implementing a synchronous inter-server
-copy was from my understanding that such operation would be taking too
-much time and tie up a knfsd thread.
+Changes in v2:
+- take cl_lock when fetching fields from session to be encoded
+- use fls() instead of bespoke highest_unset_index()
+- rename variables in several functions with more descriptive names
+- clamp limit of for loop in update_cb_slot_table()
+- re-add missing rpc_wake_up_queued_task() call
+- fix slotid check in decode_cb_sequence4resok()
+- add new per-session spinlock
+---
+ fs/nfsd/nfs4callback.c | 113 ++++++++++++++++++++++++++++++++++++-------------
+ fs/nfsd/nfs4state.c    |  11 +++--
+ fs/nfsd/state.h        |  15 ++++---
+ fs/nfsd/trace.h        |   2 +-
+ 4 files changed, 101 insertions(+), 40 deletions(-)
 
-> I guess that with multiple 4MB sync COPY requests the server would need
-> to repeatedly mount and unmount the source server which could be
-> unnecessary work - or would need to cache the mount and know when to
-> unmount it....
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index e38fa834b3d91333acf1425eb14c644e5d5f2601..47a678333907eaa92db305dada503704c34c15b2 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -406,6 +406,19 @@ encode_cb_getattr4args(struct xdr_stream *xdr, struct nfs4_cb_compound_hdr *hdr,
+ 	hdr->nops++;
+ }
+ 
++static u32 highest_slotid(struct nfsd4_session *ses)
++{
++	u32 idx;
++
++	spin_lock(&ses->se_lock);
++	idx = fls(~ses->se_cb_slot_avail);
++	if (idx > 0)
++		--idx;
++	idx = max(idx, ses->se_cb_highest_slot);
++	spin_unlock(&ses->se_lock);
++	return idx;
++}
++
+ /*
+  * CB_SEQUENCE4args
+  *
+@@ -432,15 +445,35 @@ static void encode_cb_sequence4args(struct xdr_stream *xdr,
+ 	encode_sessionid4(xdr, session);
+ 
+ 	p = xdr_reserve_space(xdr, 4 + 4 + 4 + 4 + 4);
+-	*p++ = cpu_to_be32(session->se_cb_seq_nr);	/* csa_sequenceid */
+-	*p++ = xdr_zero;			/* csa_slotid */
+-	*p++ = xdr_zero;			/* csa_highest_slotid */
++	*p++ = cpu_to_be32(session->se_cb_seq_nr[cb->cb_held_slot]);	/* csa_sequenceid */
++	*p++ = cpu_to_be32(cb->cb_held_slot);		/* csa_slotid */
++	*p++ = cpu_to_be32(highest_slotid(session)); /* csa_highest_slotid */
+ 	*p++ = xdr_zero;			/* csa_cachethis */
+ 	xdr_encode_empty_array(p);		/* csa_referring_call_lists */
+ 
+ 	hdr->nops++;
+ }
+ 
++static void update_cb_slot_table(struct nfsd4_session *ses, u32 target)
++{
++	/* No need to do anything if nothing changed */
++	if (likely(target == READ_ONCE(ses->se_cb_highest_slot)))
++		return;
++
++	spin_lock(&ses->se_lock);
++	if (target > ses->se_cb_highest_slot) {
++		int i;
++
++		target = min(target, NFSD_BC_SLOT_TABLE_MAX);
++
++		/* Growing the slot table. Reset any new sequences to 1 */
++		for (i = ses->se_cb_highest_slot + 1; i <= target; ++i)
++			ses->se_cb_seq_nr[i] = 1;
++	}
++	ses->se_cb_highest_slot = target;
++	spin_unlock(&ses->se_lock);
++}
++
+ /*
+  * CB_SEQUENCE4resok
+  *
+@@ -468,7 +501,7 @@ static int decode_cb_sequence4resok(struct xdr_stream *xdr,
+ 	struct nfsd4_session *session = cb->cb_clp->cl_cb_session;
+ 	int status = -ESERVERFAULT;
+ 	__be32 *p;
+-	u32 dummy;
++	u32 seqid, slotid, target;
+ 
+ 	/*
+ 	 * If the server returns different values for sessionID, slotID or
+@@ -484,21 +517,22 @@ static int decode_cb_sequence4resok(struct xdr_stream *xdr,
+ 	}
+ 	p += XDR_QUADLEN(NFS4_MAX_SESSIONID_LEN);
+ 
+-	dummy = be32_to_cpup(p++);
+-	if (dummy != session->se_cb_seq_nr) {
++	seqid = be32_to_cpup(p++);
++	if (seqid != session->se_cb_seq_nr[cb->cb_held_slot]) {
+ 		dprintk("NFS: %s Invalid sequence number\n", __func__);
+ 		goto out;
+ 	}
+ 
+-	dummy = be32_to_cpup(p++);
+-	if (dummy != 0) {
++	slotid = be32_to_cpup(p++);
++	if (slotid != cb->cb_held_slot) {
+ 		dprintk("NFS: %s Invalid slotid\n", __func__);
+ 		goto out;
+ 	}
+ 
+-	/*
+-	 * FIXME: process highest slotid and target highest slotid
+-	 */
++	p++; // ignore current highest slot value
++
++	target = be32_to_cpup(p++);
++	update_cb_slot_table(session, target);
+ 	status = 0;
+ out:
+ 	cb->cb_seq_status = status;
+@@ -1203,6 +1237,22 @@ void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *conn)
+ 	spin_unlock(&clp->cl_lock);
+ }
+ 
++static int grab_slot(struct nfsd4_session *ses)
++{
++	int idx;
++
++	spin_lock(&ses->se_lock);
++	idx = ffs(ses->se_cb_slot_avail) - 1;
++	if (idx < 0 || idx > ses->se_cb_highest_slot) {
++		spin_unlock(&ses->se_lock);
++		return -1;
++	}
++	/* clear the bit for the slot */
++	ses->se_cb_slot_avail &= ~BIT(idx);
++	spin_unlock(&ses->se_lock);
++	return idx;
++}
++
+ /*
+  * There's currently a single callback channel slot.
+  * If the slot is available, then mark it busy.  Otherwise, set the
+@@ -1211,28 +1261,32 @@ void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *conn)
+ static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct rpc_task *task)
+ {
+ 	struct nfs4_client *clp = cb->cb_clp;
++	struct nfsd4_session *ses = clp->cl_cb_session;
+ 
+-	if (!cb->cb_holds_slot &&
+-	    test_and_set_bit(0, &clp->cl_cb_slot_busy) != 0) {
++	if (cb->cb_held_slot >= 0)
++		return true;
++	cb->cb_held_slot = grab_slot(ses);
++	if (cb->cb_held_slot < 0) {
+ 		rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
+ 		/* Race breaker */
+-		if (test_and_set_bit(0, &clp->cl_cb_slot_busy) != 0) {
+-			dprintk("%s slot is busy\n", __func__);
++		cb->cb_held_slot = grab_slot(ses);
++		if (cb->cb_held_slot < 0)
+ 			return false;
+-		}
+ 		rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
+ 	}
+-	cb->cb_holds_slot = true;
+ 	return true;
+ }
+ 
+ static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
+ {
+ 	struct nfs4_client *clp = cb->cb_clp;
++	struct nfsd4_session *ses = clp->cl_cb_session;
+ 
+-	if (cb->cb_holds_slot) {
+-		cb->cb_holds_slot = false;
+-		clear_bit(0, &clp->cl_cb_slot_busy);
++	if (cb->cb_held_slot >= 0) {
++		spin_lock(&ses->se_lock);
++		ses->se_cb_slot_avail |= BIT(cb->cb_held_slot);
++		spin_unlock(&ses->se_lock);
++		cb->cb_held_slot = -1;
+ 		rpc_wake_up_next(&clp->cl_cb_waitq);
+ 	}
+ }
+@@ -1249,8 +1303,8 @@ static void nfsd41_destroy_cb(struct nfsd4_callback *cb)
+ }
+ 
+ /*
+- * TODO: cb_sequence should support referring call lists, cachethis, multiple
+- * slots, and mark callback channel down on communication errors.
++ * TODO: cb_sequence should support referring call lists, cachethis,
++ * and mark callback channel down on communication errors.
+  */
+ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
+ {
+@@ -1292,7 +1346,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		return true;
+ 	}
+ 
+-	if (!cb->cb_holds_slot)
++	if (cb->cb_held_slot < 0)
+ 		goto need_restart;
+ 
+ 	/* This is the operation status code for CB_SEQUENCE */
+@@ -1306,10 +1360,10 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 * If CB_SEQUENCE returns an error, then the state of the slot
+ 		 * (sequence ID, cached reply) MUST NOT change.
+ 		 */
+-		++session->se_cb_seq_nr;
++		++session->se_cb_seq_nr[cb->cb_held_slot];
+ 		break;
+ 	case -ESERVERFAULT:
+-		++session->se_cb_seq_nr;
++		++session->se_cb_seq_nr[cb->cb_held_slot];
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+ 		ret = false;
+ 		break;
+@@ -1335,17 +1389,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 	case -NFS4ERR_BADSLOT:
+ 		goto retry_nowait;
+ 	case -NFS4ERR_SEQ_MISORDERED:
+-		if (session->se_cb_seq_nr != 1) {
+-			session->se_cb_seq_nr = 1;
++		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
++			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
+ 			goto retry_nowait;
+ 		}
+ 		break;
+ 	default:
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+ 	}
+-	nfsd41_cb_release_slot(cb);
+-
+ 	trace_nfsd_cb_free_slot(task, cb);
++	nfsd41_cb_release_slot(cb);
+ 
+ 	if (RPC_SIGNALLED(task))
+ 		goto need_restart;
+@@ -1565,7 +1618,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+ 	INIT_WORK(&cb->cb_work, nfsd4_run_cb_work);
+ 	cb->cb_status = 0;
+ 	cb->cb_need_restart = false;
+-	cb->cb_holds_slot = false;
++	cb->cb_held_slot = -1;
+ }
+ 
+ /**
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index baf7994131fe1b0a4715174ba943fd2a9882aa12..75557e7cc9265517f51952563beaa4cfe8adcc3f 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2002,6 +2002,9 @@ static struct nfsd4_session *alloc_session(struct nfsd4_channel_attrs *fattrs,
+ 	}
+ 
+ 	memcpy(&new->se_fchannel, fattrs, sizeof(struct nfsd4_channel_attrs));
++	new->se_cb_slot_avail = ~0U;
++	new->se_cb_highest_slot = battrs->maxreqs - 1;
++	spin_lock_init(&new->se_lock);
+ 	return new;
+ out_free:
+ 	while (i--)
+@@ -2132,11 +2135,14 @@ static void init_session(struct svc_rqst *rqstp, struct nfsd4_session *new, stru
+ 
+ 	INIT_LIST_HEAD(&new->se_conns);
+ 
+-	new->se_cb_seq_nr = 1;
++	atomic_set(&new->se_ref, 0);
+ 	new->se_dead = false;
+ 	new->se_cb_prog = cses->callback_prog;
+ 	new->se_cb_sec = cses->cb_sec;
+-	atomic_set(&new->se_ref, 0);
++
++	for (idx = 0; idx < NFSD_BC_SLOT_TABLE_MAX; ++idx)
++		new->se_cb_seq_nr[idx] = 1;
++
+ 	idx = hash_sessionid(&new->se_sessionid);
+ 	list_add(&new->se_hash, &nn->sessionid_hashtbl[idx]);
+ 	spin_lock(&clp->cl_lock);
+@@ -3159,7 +3165,6 @@ static struct nfs4_client *create_client(struct xdr_netobj name,
+ 	kref_init(&clp->cl_nfsdfs.cl_ref);
+ 	nfsd4_init_cb(&clp->cl_cb_null, clp, NULL, NFSPROC4_CLNT_CB_NULL);
+ 	clp->cl_time = ktime_get_boottime_seconds();
+-	clear_bit(0, &clp->cl_cb_slot_busy);
+ 	copy_verf(clp, verf);
+ 	memcpy(&clp->cl_addr, sa, sizeof(struct sockaddr_storage));
+ 	clp->cl_cb_session = NULL;
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index d22e4f2c9039324a0953a9e15a3c255fb8ee1a44..848d023cb308f0b69916c4ee34b09075708f0de3 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -71,8 +71,8 @@ struct nfsd4_callback {
+ 	struct work_struct cb_work;
+ 	int cb_seq_status;
+ 	int cb_status;
++	int cb_held_slot;
+ 	bool cb_need_restart;
+-	bool cb_holds_slot;
+ };
+ 
+ struct nfsd4_callback_ops {
+@@ -307,6 +307,9 @@ struct nfsd4_conn {
+ 	unsigned char cn_flags;
+ };
+ 
++/* Highest slot index that nfsd implements in NFSv4.1+ backchannel */
++#define NFSD_BC_SLOT_TABLE_MAX	(sizeof(u32) * 8 - 1)
++
+ /*
+  * Representation of a v4.1+ session. These are refcounted in a similar fashion
+  * to the nfs4_client. References are only taken when the server is actively
+@@ -314,6 +317,10 @@ struct nfsd4_conn {
+  */
+ struct nfsd4_session {
+ 	atomic_t		se_ref;
++	spinlock_t		se_lock;
++	u32			se_cb_slot_avail; /* bitmap of available slots */
++	u32			se_cb_highest_slot;	/* highest slot client wants */
++	u32			se_cb_prog;
+ 	bool			se_dead;
+ 	struct list_head	se_hash;	/* hash by sessionid */
+ 	struct list_head	se_perclnt;
+@@ -322,8 +329,7 @@ struct nfsd4_session {
+ 	struct nfsd4_channel_attrs se_fchannel;
+ 	struct nfsd4_cb_sec	se_cb_sec;
+ 	struct list_head	se_conns;
+-	u32			se_cb_prog;
+-	u32			se_cb_seq_nr;
++	u32			se_cb_seq_nr[NFSD_BC_SLOT_TABLE_MAX + 1];
+ 	struct nfsd4_slot	*se_slots[];	/* forward channel slots */
+ };
+ 
+@@ -457,9 +463,6 @@ struct nfs4_client {
+ 	 */
+ 	struct dentry		*cl_nfsd_info_dentry;
+ 
+-	/* for nfs41 callbacks */
+-	/* We currently support a single back channel with a single slot */
+-	unsigned long		cl_cb_slot_busy;
+ 	struct rpc_wait_queue	cl_cb_waitq;	/* backchannel callers may */
+ 						/* wait here for slots */
+ 	struct net		*net;
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index f318898cfc31614b5a84a4867e18c2b3a07122c9..a9c17186b6892f1df8d7f7b90e250c2913ab23fe 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -1697,7 +1697,7 @@ TRACE_EVENT(nfsd_cb_free_slot,
+ 		__entry->cl_id = sid->clientid.cl_id;
+ 		__entry->seqno = sid->sequence;
+ 		__entry->reserved = sid->reserved;
+-		__entry->slot_seqno = session->se_cb_seq_nr;
++		__entry->slot_seqno = session->se_cb_seq_nr[cb->cb_held_slot];
+ 	),
+ 	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
+ 		" sessionid=%08x:%08x:%08x:%08x new slot seqno=%u",
 
-The implementation caches the (source server) mount for a period of
-time. But needing to issue multiple COPY can eventually impact
-performance.
+---
+base-commit: 3c16aac09d20f9005fbb0e737b3ec520bbb5badd
+change-id: 20241025-bcwide-6bd7e4b63db2
 
-> On the other hand, changing the user-visible behaviour of the client
-> unexpected hanging waiting for a server-side copy completion
-> notification that it will never get seems like a user-visible change
-> that would be desirable.
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-> I'm starting to see why this is awkward.
->
-> >
-> > But more importantly, the problem with the automatic backport
-> > mechanism is that marked patches are taken /immediately/ into
-> > stable. They don't get the kind of soak time that a normally-merged
-> > unmarked patch gets. The only way to ensure they get any real-world
-> > test experience at all is to not mark them, and then come back to
-> > them later and explicitly request a backport.
-> >
-> > And, generally, we want to know that a patch destined for LTS
-> > kernels has actually been applied to and tested on LTS first.
-> > Automatically backported patches don't get that verification at all.
->
-> I thought it was possible to mark patches to tell the stable team
-> exactly what you want.  Greg certainly seems eager to give maintainers as
-> much control as they ask for - without requiring them to do anything
-> they don't want to do.  If you have a clear idea of what you want, it
-> might be good to spell that out and ask how to achieve it.
->
-> >
-> > My overall preference is that Fixed: patches should be ignored by
-> > the automation, and that we have a designated NFSD LTS maintainer
-> > who will test patches on each LTS kernel and request their backport.
-> > I haven't found anyone to do that work, so we are limping along with
-> > the current situation. I recognize, however, that this needs to
-> > improve somehow with only the maintainer resources we have.
->
-> :-)
->
-> Thanks,
-> NeilBrown
->
-> >
-> >
-> > > > > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > > > > ---
-> > > > > > >  fs/nfsd/nfs4proc.c | 4 ++--
-> > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> > > > > > > index fea171ffed62..06e0d9153ca9 100644
-> > > > > > > --- a/fs/nfsd/nfs4proc.c
-> > > > > > > +++ b/fs/nfsd/nfs4proc.c
-> > > > > > > @@ -1972,6 +1972,7 @@ nfsd4_copy(struct svc_rqst *rqstp, stru=
-ct nfsd4_compound_state *cstate,
-> > > > > > >             wake_up_process(async_copy->copy_task);
-> > > > > > >             status =3D nfs_ok;
-> > > > > > >     } else {
-> > > > > > > +   retry_sync:
-> > > > > > >             status =3D nfsd4_do_copy(copy, copy->nf_src->nf_f=
-ile,
-> > > > > > >                                    copy->nf_dst->nf_file, tru=
-e);
-> > > > > > >     }
-> > > > > > > @@ -1990,8 +1991,7 @@ nfsd4_copy(struct svc_rqst *rqstp, stru=
-ct nfsd4_compound_state *cstate,
-> > > > > > >     }
-> > > > > > >     if (async_copy)
-> > > > > > >             cleanup_async_copy(async_copy);
-> > > > > > > -   status =3D nfserr_jukebox;
-> > > > > > > -   goto out;
-> > > > > > > +   goto retry_sync;
-> > > > > > >  }
-> > > > > > >
-> > > > > > >  static struct nfsd4_copy *
-> > > > > > >
-> > > > > > > base-commit: 26e6e693936986309c01e8bb80e318d63fda4a44
-> > > > > > > --
-> > > > > > > 2.47.0
-> > > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Chuck Lever
-> > > > > >
-> > > > >
-> > > >
-> > > > --
-> > > > Chuck Lever
-> > > >
-> > >
-> >
-> > --
-> > Chuck Lever
-> >
->
->
 
