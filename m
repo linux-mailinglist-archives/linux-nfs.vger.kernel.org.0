@@ -1,303 +1,257 @@
-Return-Path: <linux-nfs+bounces-7739-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7740-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D08419C052A
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2024 13:04:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E5609C08F6
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2024 15:33:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5FEEB1F21CFA
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2024 12:04:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F49B1F24310
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Nov 2024 14:33:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6888201010;
-	Thu,  7 Nov 2024 12:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E4A21265B;
+	Thu,  7 Nov 2024 14:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kB1lgsu4";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="F102L+0z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657AE20F5A1;
-	Thu,  7 Nov 2024 12:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730981029; cv=none; b=S/xYkwwpZv/aBKzX8mCY3nGsBGrtLCYBu2Q1O7D66gUj3Dvpx3vw/ICxV6LlyvgCstNBKIHlc/P9YoDmLie1qkV4OlwqOzuTwkAcXE14QzvsCf9PNAHPKhf2w/uYRgQprHo2JAkO/5U4jIPDAJ0vV+NP6FuakBpphTqd5Gcndzk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730981029; c=relaxed/simple;
-	bh=GsKKzT0TtJ/5qU/TSpL+WL6De5Vx3ZESg0GYPxRtMdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TSznMaHbHpMXcIb8xglf//VQDpJGNyzvR6hPU3Z4D9oq34YGU+fLM14CwFvt8LhEqOul3Sdh0f4fIuHJ2DvIJr3IPq7+1g1Z5lNQeaAHe+RPG92bLj0FyAPh5GDH8YG9EI3vrO4Qnm2sJ5pHtbkF+6hiMfVQZkI7h/tbHMh63Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Xkgfb2sVMz1SFmx;
-	Thu,  7 Nov 2024 20:01:59 +0800 (CST)
-Received: from kwepemg200003.china.huawei.com (unknown [7.202.181.30])
-	by mail.maildlp.com (Postfix) with ESMTPS id 619D61A0188;
-	Thu,  7 Nov 2024 20:03:42 +0800 (CST)
-Received: from [10.174.176.93] (10.174.176.93) by
- kwepemg200003.china.huawei.com (7.202.181.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 7 Nov 2024 20:03:41 +0800
-Message-ID: <78efbd6e-31e5-4e67-a046-2736747b291d@huawei.com>
-Date: Thu, 7 Nov 2024 20:03:40 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6639C20FAB0
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Nov 2024 14:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730989985; cv=fail; b=JAd6S3N7K+dp5HYaby+Hrf9B9PCtT1yxNTGTpqCqfr4OKt7kjXaqnb0Pqlk2amPsLt2jS/NhsyzBImndAO4qeYcvzoiFk+pOeDFaJiQ4rRWnLuSknruzTnNDHx9wqJ+cJbeaekNVSKPiOSS0+43Hbcl/P9lA0fwLvUYLbY7d6CA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730989985; c=relaxed/simple;
+	bh=Ay30VHOVKzCBKd2P31Oi6wDNe6mIdMc+iS3rQeN1/6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=hfZU2+xnloFSrd0ymzOzMWwzAKcMCCKkkqQv2Bxd0c90D7ZyW6jb+mhFtvWCXB1Zad2qCpluK243GHLNTcK3sm/KQePlleki/1BQ9ZN5Y3gMB6dWxcnPR1HaJEHdLRCcJ/byQ6YSWfuFMOs/XOe4F+5089EeD9c4S7fJDfvZg1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kB1lgsu4; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=F102L+0z; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7D0wTX022083;
+	Thu, 7 Nov 2024 14:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=vejgLXMxc80uvrf8oU87jHBuhzjQG+W2rHuNzyzvDJ0=; b=
+	kB1lgsu4QZO5RKl0DdZ7Eu9G34Gs3LIsfWYy8V+QtmUEZifTK3cGpNm4W30yyIM7
+	qSuuqPc6LfQ5U1Dr/BXmITl2+82lxzNOI0kjSjzdN9SwRVK4qWydbsRy3u19caHP
+	1108/MXtcpUvBzBoBHA3/NSZ+VEK2AvrsEFfpWqjjI2qMDno7QNld72Ce1QPpBtE
+	Z6APKs9Rn0d0Fdmwp0JmdTwHh10yx3vUYV5Jg23U7bwHMVZF0c3wMHU6jovD9Rgm
+	plBoblJDSnSsUGCqNb1FE9BIdeSZJ3AXwbeVDNcJDatEMXzbKYWJkSxoH4Q00Tzx
+	ykihYyoPuJbHtIWapuF6rQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42nbpstm18-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 07 Nov 2024 14:32:30 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A7E8GmC036767;
+	Thu, 7 Nov 2024 14:32:30 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42naha6juv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 07 Nov 2024 14:32:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IaRymyMGjACuJyKBrtqCcJr68VbNvivCTouAvThvAnZtENqbcOeHQzQR2Btf1ULow/1ovjqU2QjU/piLhOt4b63MDTFC9vlSwifTc2kCT4FY+l0nbyOYpBnequlKxynYVJ3FlWUV2+zyHwHtelHS2T71q2bqavF7b16iG6hBSNFDyt5uit6Y5cxwVnZ4mycvb8lnQM0Y3SctNSSjA9O7DQdgQrCcDUaVqMJcbLd8wd7e50VNcQYxxPD/by+Jn0lMxk1iGZ/qscfNI70kSxGISqlTlyQo1KW7zvUXRRtErRtO+Iw55LH1WaqS0vGuBbUlntVioVbTtfky7GLw4gZhjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vejgLXMxc80uvrf8oU87jHBuhzjQG+W2rHuNzyzvDJ0=;
+ b=xN91c8vKmg78LG+3GjwAZvKMvyQuf3aG6UqPH42W2z6I6ApjA6RXG44u7rdYw2bT5wcQa4HxK29Y5u3HbVl61hxmq1LSJqgZJHkY/CAEz3+UAITxVSVjgvAz/+fsgaXi9U6zV3zkHpYt3EDemn36hpSsKiFU6gompGTIjAfRUE9bg8qx1n/tyNBgQ+r35jcfcWREoUEFY/Eq1WOWdS3LgE1syBQi26Cy1Uv6uAJ/nacCd7kMxNFkzs1DkQYPToA8/pbY7U3hSeMMa5pG8LbCdbaPSRhGYpV/vImgWQO92vpu8qiPeTZdkx+j0/7VMCHBlqcldbKPn0aPdRW5lApytw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vejgLXMxc80uvrf8oU87jHBuhzjQG+W2rHuNzyzvDJ0=;
+ b=F102L+0zByzbwuUjtyiF5LYdEPu9gr9dpLGgTWeOzZR/hD5MWD6aswJu+qW5ZjhcrNLP0AnWtZyDDaf3k6QUXb/PbGvp7MFLRz9LsdxTmy0wfycCVde5Nf3n6UC3yfXrkc0jCOHkASkwv7ALxTYehlP91rHQ7/Zjd2NcW6L5LcM=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CY5PR10MB6238.namprd10.prod.outlook.com (2603:10b6:930:42::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.18; Thu, 7 Nov
+ 2024 14:32:27 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8137.019; Thu, 7 Nov 2024
+ 14:32:25 +0000
+Date: Thu, 7 Nov 2024 09:32:22 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: yangerkun <yangerkun@huaweicloud.com>
+Cc: jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com,
+        tom@talpey.com, trondmy@kernel.org, linux-nfs@vger.kernel.org,
+        yi.zhang@huawei.com
+Subject: Re: [PATCH v3] nfsd: fix nfs4_openowner leak when concurrent
+ nfsd4_open occur
+Message-ID: <ZyzPdsmYTMx+iT48@tissot.1015granger.net>
+References: <20241105110314.2122967-1-yangerkun@huaweicloud.com>
+ <Zytwhv08T2lKhGwv@tissot.1015granger.net>
+ <101f5657-99d7-1813-05d4-7829c48f9865@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <101f5657-99d7-1813-05d4-7829c48f9865@huaweicloud.com>
+X-ClientProxiedBy: CH0P220CA0023.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:610:ef::25) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] sunrpc: fix one UAF issue caused by sunrpc kernel
- tcp socket
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <Dai.Ngo@oracle.com>, <anna@kernel.org>, <chuck.lever@oracle.com>,
-	<davem@davemloft.net>, <ebiederm@xmission.com>, <edumazet@google.com>,
-	<geert+renesas@glider.be>, <jlayton@kernel.org>, <kuba@kernel.org>,
-	<linux-nfs@vger.kernel.org>, <neilb@suse.de>, <netdev@vger.kernel.org>,
-	<ofir.gal@volumez.com>, <okorniev@redhat.com>, <pabeni@redhat.com>,
-	<tom@talpey.com>, <trondmy@kernel.org>
-References: <20241030094953.1921574-1-liujian56@huawei.com>
- <20241103040934.13958-1-kuniyu@amazon.com>
-From: "liujian (CE)" <liujian56@huawei.com>
-In-Reply-To: <20241103040934.13958-1-kuniyu@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg200003.china.huawei.com (7.202.181.30)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CY5PR10MB6238:EE_
+X-MS-Office365-Filtering-Correlation-Id: c3ff17b8-8187-4760-24b8-08dcff38ffe6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R0tlMk9nZXppZDlneTU1RS96WXlIVnZZWjYzT0VqYnl4TFF4cjQ4QnZjMElM?=
+ =?utf-8?B?SEZlUlZQR09sdWpNU2FuNTcvQmJKcGIzaVl4anovYmcrVld4T1phb1FScXZJ?=
+ =?utf-8?B?cER6WlVKUkQxTmJnOXJpbUVCaEswckIvakZQU3F4Y0VOTzJ6Mk5aWE9IcS9h?=
+ =?utf-8?B?T08ycldDWjVuR2xybHNNTHc1T1cySUpqNU81bERRaGNWdXVYaVU4K1l3OHVw?=
+ =?utf-8?B?c1l5MVllNE03MzVhdmNLem5teFR3MzZ5NGFVMGFucnI1YWhDdENkQ0UvbFRn?=
+ =?utf-8?B?MXJwaGVad1BFY2Q3NkMxWlczcWNIZE40ZldTcDBvck5OclI5eUlFS3czNy9O?=
+ =?utf-8?B?NUMycU16bUZqQTNidnBvWkVxVUxRdW55c0NFcm93b0NhY01kZmZOM0t0QVl5?=
+ =?utf-8?B?UXI5dk1oY09wSGdoSitZN2s3OTU1WE4vU2VaK3c0SkErNkdpYmxKQmhWaDNP?=
+ =?utf-8?B?NW1YNi9lUWNZKzZINHVkN0FLWS96NHBOczl0YUl4VjJFQ21ySW16WDdreUFk?=
+ =?utf-8?B?YjlWWVdXekhDTGJZSDZnemtjOG1kNURITm5BVzVneGRHUWtCblFVY0hsWTdx?=
+ =?utf-8?B?Q2tEVUI4VkhWS25ZVVdjSDVIS3YrNGFOMURvcjRwN3R5SXRkOHZVTkRwMStq?=
+ =?utf-8?B?ZjNQRWc1Ui8vZlQyczlOTllxelJyMlRrZ3JKRjZtZHVjT3RRbk4xMVJaN25i?=
+ =?utf-8?B?aSt4c0RjSGcrSzkxcklqZXExaU82d3puSDdRRUgxQnplZFM0RklFYXVQSUJx?=
+ =?utf-8?B?Qkk1cU1rVW83eW1PRkwwMjhYcjdmR282TktCZVplYjdFdEh5TEFFVWtVOEFI?=
+ =?utf-8?B?QWw1dG1LSEoyNzJHUWFKZC9Pb1VIWmk3REFHMU1yLzI1MmIvdlJDTFRtMlBs?=
+ =?utf-8?B?M2RsT2RHUVRsQmFhUVRMR3c5U2JZdlhFdFFPQzBtRGU4U09jTElZMnp0UUlu?=
+ =?utf-8?B?a2FjNnc1bUlySFd3QTdjQ3g3TStKYVJWaytEWjVmTzNOdzBwMTJBWDhxVHZx?=
+ =?utf-8?B?eXdiRG9BN0VMYmh4VDJaUzhaQkpLdzJpRHA5dUx4RUFUQ09OY04yR2x4ckVy?=
+ =?utf-8?B?SWhkOThkY24rcy8vcjAvcjN0Z2JsdVdWRi9oaXJHaE5ERUFmeUI3NGhIN1Vw?=
+ =?utf-8?B?NEV0ejFpOUErUStUZVl2YWpzTmRnNE92WVhEOUQ1bm1ZbC9UMEhlUWMrb1Zj?=
+ =?utf-8?B?d3YxcTNnVjFJRFo5T2QvaGNIT2ZlWFBKNVVXYTZiTjRTRVk5QmM2ZG5qRU1a?=
+ =?utf-8?B?SWM2TmhxWU9PMUNwalRLQ0o3eVN6MUkzQTJoRkhrL1dEU09IZFNnQnRldjVM?=
+ =?utf-8?B?LzBsUFM2dnRIVklCV2t5MXJiK2FJTE40MFRsa3cxbVBoM0ZERWtmeEROcTdJ?=
+ =?utf-8?B?NkN1NnN6ZnA1Wlo2YVNuYzcwdmp2NXpSUnlONHQzc3VGY3htbHdkazFuTFN0?=
+ =?utf-8?B?VytSVmhkTTVjMy9hU0g2b1JQTHU2bHRucmwxWHJBckRDaG10VG1mSHBvZ3FZ?=
+ =?utf-8?B?dndXb2dWRmtzUTRCVjY0WHRLaUVQT2FxSG1aZEpHSkcySDBQS1R5ZHc0ZWFI?=
+ =?utf-8?B?QmR2ZVNtQUtJa1E4ajZ5WUVVcU0wM1RYdEdVc1drT2VIcjVSV0kwMzE4eFVw?=
+ =?utf-8?B?eGR2WDhubENDcFFLakM4MW5yYkVhVlROUGlNajJ3eTNTV1dKUjVhU1J6aGYv?=
+ =?utf-8?B?NC96cDYzTCtLVk1GZlFpOXpKV3kvUTNpaU92RFpYbDJrYm40OUgyRWRBeU9T?=
+ =?utf-8?Q?MRFMj4t4aDWkZ8wYHbK6Tb/WZDuvCiWmFcmjeXE?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dkJ2ZmhQb1FYanlNNkduS0N3ZEFTcEdKNmgwNXBmUGZNREk3S2Nkbzljb0da?=
+ =?utf-8?B?ZnJpMVpwT1dPQ1BwVjZ2R1h0MFBFOWFabTdrT2d3dnNycW11V01XdHNINTFJ?=
+ =?utf-8?B?bWlKN3AydlFwK2FNK0sybFY1TFpBeDRpbml1SDl5R1VYdjZIYkk2eHdSUDh1?=
+ =?utf-8?B?eTBWODh5ZHQ4b29IcGlGQzdVKzJWS3o1V3lCbzM1Qk9BbzZqYmVqRVppYThM?=
+ =?utf-8?B?MDUveEdFbUt1RUZUV0ZEZWk2ZVAwSi9DRjBuWXJpZU1vRmlmbWZNMEVGVDhj?=
+ =?utf-8?B?TGw1QWVWekNLc09wUFhrenVoUnBWblpROEpjRFI4OGtUeisyUmxpTkJ1UHNM?=
+ =?utf-8?B?eTVLc2IybU56R3FjbE5kYUhZUDFpaC9Tb1h3QjNidlVEakdGS0kzd3E2K1hh?=
+ =?utf-8?B?ZjdVd0xxbktMZ0RBT2dUdThLYUErVTJvaFBlbkxSZTJ3VEMrNnRSWkJSaTNY?=
+ =?utf-8?B?N1FlNG1RVXpqQk5lWE1rT3VhT1JCQnc1Y0ZFUW1zQmxJQ0dHd0VVWUlhbm81?=
+ =?utf-8?B?di9MamZlY0tFUVU0S3p3MkFCTEtOemZMSHpPdWhEQzExM2tCbXJUNWtlZlUv?=
+ =?utf-8?B?cHBqcjMxQ2xNY096d0c0c2hEbm52bi9sSzd3MXU1UTZRMENQNVpFS1Q1Ryt0?=
+ =?utf-8?B?d2lSV3o3Z0VXSDROUEtQbm8rTUFPcHlaM0grcERxWjN5OGwxb0p5SVEvNCt6?=
+ =?utf-8?B?R09ZNEUyTk5WQW12NWZMN3JaellMcmVSR3JDb2NVM3U1RUxpdlZwNytKeERY?=
+ =?utf-8?B?dkx0NFJ3bXozeXBONGN5NURDRTVGMTdSd1Z1d2NhQmpHVUNiOVcybGlKR3pO?=
+ =?utf-8?B?UEhhYUo2Z1RYU2N3TUtnR2JNZVNwSko1bUhiRFJkRHFKd0tLOENxQ0wyUFI1?=
+ =?utf-8?B?cUNRd0VOYWRHTTlSazhmVDNUNFFDNWRJcEoyUG5iVTVkUUVlR1A1U2hVR0F1?=
+ =?utf-8?B?TE5NZFRIZitJQm9oYzUrcW5GN2V2L1AvZi95bHdLRTBtNmNDbEh6WHJOcURi?=
+ =?utf-8?B?VSswL25KY0pSR3B5UVBHd0F2Y25lenFtWmxtMWJhaWZ6U3dIOWpOZis2Q2ts?=
+ =?utf-8?B?dUpHYTJOUjdXcVRQUnZNZ0lCdFczaTk4WmV6aWN2Q3kwdFN5SDFRSkxzVE1P?=
+ =?utf-8?B?MnpueUhYeUZWK29QTnpyMWFiV2VrbUJlMVBVREJyMENQVVVvUTBTUEg4amM3?=
+ =?utf-8?B?bjRFMExWZnRYUjR3M21jeEFRcDV4RzBvQXJ6aHZkbFpFWUU2MHhPMFYrYStp?=
+ =?utf-8?B?dzAxS1dhaFRDN3owM29BRlAvTCtPVlFqZWo5ODZIYURPbDkrY0E2SzBiUTQ3?=
+ =?utf-8?B?Y29ueEpDSWFJMXNrMzVVakxZeCtIdFhlWm1sdllnM2dFQU9QU2s1cG8xamFT?=
+ =?utf-8?B?U1RNWjRsR0QxZHYxSi9ONlUwZjc3UVowV3BPbDBvY2IweUZ2K04ybFFyNUxK?=
+ =?utf-8?B?N01pMW1LTlA5M0Z4aUFWck0wZDFFMjMxWEpFZnpIMURmc2FRNG1qZzNsYWE0?=
+ =?utf-8?B?bjJQM3c1WDc4NzV3VjNCT2ZBWlYxNk9hSStWYitiditQZTBKa0RSbGNjSktU?=
+ =?utf-8?B?dHBWU21xNFhQYVBmTDhCUGtSNUJOVzJKWm5sVGpsY3hKS1Bvb200NGlvOHpp?=
+ =?utf-8?B?eVpMM3h0cUZpcldpZ0dkcDQyNXVqS1J4NUE3NnllNDhxeG5qaUZLR0QzdXdX?=
+ =?utf-8?B?enR0b3p0alZObXhaOGFUcGNXenNtNHdDaEtiRnJCWE5qU2ZXRFlFSEZEcmFv?=
+ =?utf-8?B?SEFvUC9hanlIUnpqUmxKQ0pkZ0hQd0VUdlFLOVkxd0hscW1WSzZCTXo1cFo0?=
+ =?utf-8?B?K3ZROW9veHhpRFFQVTIxTldIMm1QK2xZWGpZMndxcnlPOVZuOFdrY0xYeXFQ?=
+ =?utf-8?B?UUpWV2g1QjdoSjVzN21KUHpPbjhUbkFta2RkeHFkSHl2M1lUalNkaUFxaUE0?=
+ =?utf-8?B?b2RvQXhkMTBKRVNNMlBlcGZZYVZCZTBicVBkcHd0dUJ5a2NEdkJvT1ByR3hs?=
+ =?utf-8?B?bFFCY1pjTVJmVnBtQWp6NjFzcVUvQkpiUDNxVFp3dzlCSjJ4M1JZUzI2elRs?=
+ =?utf-8?B?V051V0JxTU9hWldaSmEzcGV2UTZQN3RnSnVnL0JqZEdnampCR3FMeUZYOUxH?=
+ =?utf-8?Q?v1xrfYKWrLWV5lflo+Hlcyiaj?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	2Dw/9kV2usFN/2evljhyslhwNMDxdMfPzmi1nhXzM3U/Zmyesno+dEHyA7sLF2gbf4Gn1RqSoZJsNW5xWR/pXuSaXQ5qSoz1VcOuvGI6dYq9bvZ3EHV6Plz228Ls2hb87bpixglozTLe1Npp8Rfz2BaApKSq63bq5pQ6NxyIM+dJ45gV/vYUCTx7ntlBtzpVbAYdVVhqw9SmQBhytjjl3smrHzjRSL8+egQBIJn7I7bq6GccPlqLpeq/9rUO8iDOXxVTyeiFJuoNPvOXHnGg/0B2DEj0nDw1WZ3Qalx7oyTPqXXDNwxDRG5u68EDSfRyxYdDRi4uOVeLIBvgEDxyqiFsl6SzJ1fwPyM3nz/vdpvCuduYwHYyGoGItVoVJStWPe2BjUXkuWDWE5aECQxAZCPyEfP+uYLj+oIPuXlrD8267ggSMWe10eTFeW14To9PqDIVcq6ff46ioTeq6ivHMxNNAIdwdfH7i8iDTiOG29DGxlm7bSBEa7a3e1Gxk/yh4rQZSXIbGebR36Ioi09AjM14motTDXpjbH+zFbqjPwjwpUg1pOmVL+HrLyxrNe/h3uhBCVgDEowW7xPHI1BUiiI4EgnnwD8UGtEwoUqSZHA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3ff17b8-8187-4760-24b8-08dcff38ffe6
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2024 14:32:25.9382
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jl6JkNW7skNMx5ZmAMeCPS3fAy+/6CPGw2mrWgjAUiPTX4zR+gsf6Gq2PcjZ8gDCOCFGebX2SBlu6oH3luwLmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6238
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-07_05,2024-11-07_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=977
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2411070113
+X-Proofpoint-ORIG-GUID: LjB5GRIStnZJq-jvSHFlTCN3LFXUoHOa
+X-Proofpoint-GUID: LjB5GRIStnZJq-jvSHFlTCN3LFXUoHOa
+
+On Thu, Nov 07, 2024 at 09:22:39AM +0800, yangerkun wrote:
+> 
+> 
+> 在 2024/11/6 21:35, Chuck Lever 写道:
+> > On Tue, Nov 05, 2024 at 07:03:14PM +0800, Yang Erkun wrote:
+> > > From: Yang Erkun <yangerkun@huawei.com>
+
+> > > Add nfs4_openowner_unhashed to help found unhashed nfs4_openowner, and
+> > > break nfsd4_open process to fix this problem.
+> > > 
+> > > Cc: stable@vger.kernel.org # 2.6
+> > 
+> > Hi -
+> > 
+> > Questions about the "stable@" tag:
+> > 
+> >   - You refer above to a leak of nfsd_file objects, but the nfsd_file
+> >     cache was added in v5.4. Any thoughts about what might be leaked,
+> >     if anything, in kernels earlier than v5.4?
+> 
+> From the above analysis, actually openowner is leaked, and all object
+> associated with it has been leaked too, include nfsd_file, and openowner
+> seems already been there since 2.6....
+
+Before v5.4, openowners are leaked. After, openowners and nfsd_file
+objects are leaked. Got it.
 
 
+> >   - Have you tried applying this patch to LTS kernels?
+> 
+> I have not try to apply this to LTS, what I think is all kernel after 2.6
+> has this bug...
 
-在 2024/11/3 12:09, Kuniyuki Iwashima 写道:
-> From: Liu Jian <liujian56@huawei.com>
-> Date: Wed, 30 Oct 2024 17:49:53 +0800
->> BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
->> Read of size 1 at addr ffff888111f322cd by task swapper/0/0
->>
->> CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
->> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
->> Call Trace:
->>   <IRQ>
->>   dump_stack_lvl+0x68/0xa0
->>   print_address_description.constprop.0+0x2c/0x3d0
->>   print_report+0xb4/0x270
->>   kasan_report+0xbd/0xf0
->>   tcp_write_timer_handler+0x156/0x3e0
->>   tcp_write_timer+0x66/0x170
->>   call_timer_fn+0xfb/0x1d0
->>   __run_timers+0x3f8/0x480
->>   run_timer_softirq+0x9b/0x100
->>   handle_softirqs+0x153/0x390
->>   __irq_exit_rcu+0x103/0x120
->>   irq_exit_rcu+0xe/0x20
->>   sysvec_apic_timer_interrupt+0x76/0x90
->>   </IRQ>
->>   <TASK>
->>   asm_sysvec_apic_timer_interrupt+0x1a/0x20
->> RIP: 0010:default_idle+0xf/0x20
->> Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
->>   90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
->>   cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
->> RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
->> RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
->> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
->> RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
->> R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
->> R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
->>   default_idle_call+0x6b/0xa0
->>   cpuidle_idle_call+0x1af/0x1f0
->>   do_idle+0xbc/0x130
->>   cpu_startup_entry+0x33/0x40
->>   rest_init+0x11f/0x210
->>   start_kernel+0x39a/0x420
->>   x86_64_start_reservations+0x18/0x30
->>   x86_64_start_kernel+0x97/0xa0
->>   common_startup_64+0x13e/0x141
->>   </TASK>
->>
->> Allocated by task 595:
->>   kasan_save_stack+0x24/0x50
->>   kasan_save_track+0x14/0x30
->>   __kasan_slab_alloc+0x87/0x90
->>   kmem_cache_alloc_noprof+0x12b/0x3f0
->>   copy_net_ns+0x94/0x380
->>   create_new_namespaces+0x24c/0x500
->>   unshare_nsproxy_namespaces+0x75/0xf0
->>   ksys_unshare+0x24e/0x4f0
->>   __x64_sys_unshare+0x1f/0x30
->>   do_syscall_64+0x70/0x180
->>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> Freed by task 100:
->>   kasan_save_stack+0x24/0x50
->>   kasan_save_track+0x14/0x30
->>   kasan_save_free_info+0x3b/0x60
->>   __kasan_slab_free+0x54/0x70
->>   kmem_cache_free+0x156/0x5d0
->>   cleanup_net+0x5d3/0x670
->>   process_one_work+0x776/0xa90
->>   worker_thread+0x2e2/0x560
->>   kthread+0x1a8/0x1f0
->>   ret_from_fork+0x34/0x60
->>   ret_from_fork_asm+0x1a/0x30
->>
->> Reproduction script:
->>
->> mkdir -p /mnt/nfsshare
->> mkdir -p /mnt/nfs/netns_1
->> mkfs.ext4 /dev/sdb
->> mount /dev/sdb /mnt/nfsshare
->> systemctl restart nfs-server
->> chmod 777 /mnt/nfsshare
->> exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
->>
->> ip netns add netns_1
->> ip link add name veth_1_peer type veth peer veth_1
->> ifconfig veth_1_peer 11.11.0.254 up
->> ip link set veth_1 netns netns_1
->> ip netns exec netns_1 ifconfig veth_1 11.11.0.1
->>
->> ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
->> 	--tcp-flags FIN FIN  -j DROP
->>
->> (note: In my environment, a DESTROY_CLIENTID operation is always sent
->>   immediately, breaking the nfs tcp connection.)
->> ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
->> 	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
->>
->> ip netns del netns_1
->>
->> The reason here is that the tcp socket in netns_1 (nfs side) has been
->> shutdown and closed (done in xs_destroy), but the FIN message (with ack)
->> is discarded, and the nfsd side keeps sending retransmission messages.
->> As a result, when the tcp sock in netns_1 processes the received message,
->> it sends the message (FIN message) in the sending queue, and the tcp timer
->> is re-established. When the network namespace is deleted, the net structure
->> accessed by tcp's timer handler function causes problems.
->>
->> To fix this problem:
->> Add the sock_create_kern_getnet() helper function, add the get_net()
->>   operation for the kernel socket.
->>
->> Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
->> Signed-off-by: Liu Jian <liujian56@huawei.com>
->> ---
->> v1: https://lore.kernel.org/all/20241024015543.568476-1-liujian56@huawei.com/
->> v1->v2: change to get netns reference count.
->>   include/linux/net.h   |  1 +
->>   net/socket.c          | 28 ++++++++++++++++++++++++++++
->>   net/sunrpc/svcsock.c  |  2 +-
->>   net/sunrpc/xprtsock.c |  2 +-
->>   4 files changed, 31 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/net.h b/include/linux/net.h
->> index b75bc534c1b3..58216da3b62c 100644
->> --- a/include/linux/net.h
->> +++ b/include/linux/net.h
->> @@ -255,6 +255,7 @@ int __sock_create(struct net *net, int family, int type, int proto,
->>   		  struct socket **res, int kern);
->>   int sock_create(int family, int type, int proto, struct socket **res);
->>   int sock_create_kern(struct net *net, int family, int type, int proto, struct socket **res);
->> +int sock_create_kern_getnet(struct net *net, int family, int type, int proto, struct socket **res);
->>   int sock_create_lite(int family, int type, int proto, struct socket **res);
->>   struct socket *sock_alloc(void);
->>   void sock_release(struct socket *sock);
->> diff --git a/net/socket.c b/net/socket.c
->> index 042451f01c65..e64a02445b1a 100644
->> --- a/net/socket.c
->> +++ b/net/socket.c
->> @@ -1651,6 +1651,34 @@ int sock_create_kern(struct net *net, int family, int type, int protocol, struct
->>   }
->>   EXPORT_SYMBOL(sock_create_kern);
->>   
->> +int sock_create_kern_getnet(struct net *net, int family, int type, int proto, struct socket **res)
->> +{
->> +	struct sock *sk;
->> +	int ret;
->> +
->> +	if (!maybe_get_net(net))
->> +		return -EINVAL;
-> 
-> Is this really safe ?
-> 
-> IIUC, maybe_get_net() is safe for a net only when it is fetched under
-> RCU, then rcu_read_lock() prevents cleanup_net() from reusing the net
-> by rcu_barrier().
-> 
-> Otherwise, there should be a small chance that the same slab object is
-> reused for another netns between fetching the net and reaching here.
-> 
-> svc_create_socket() is called much later after the netns is fetched,
-> and _svc_xprt_create() calls try_module_get() before ->xpo_create().
-> So, it seems the path is not under RCU and maybe_get_net() must be
-> called much earlier by each call site.
-> 
-> For this reason, when I write a patch for the same issue in CIFS,
-> I delayed put_net() to cifsd kthread so that the netns refcnt taken
-> for each CIFS server info lives until the last __sock_create() attempt
-> from cifsd.
-> 
-> https://lore.kernel.org/linux-cifs/20241102212438.76691-1-kuniyu@amazon.com/
-> 
-Okay, got it. thank you.
-Looking at the nfs and nfsd processing flow, it seems that the call to 
-__sock_create() to create a TCP socket is always after the mount 
-operation get_net(). So it should be fine to use get_net() directly. So 
-here I'm going to change may_get_net() to get_net(), move 
-sock_create_kern_getnet() to the sunrpc module, and rename it to 
-something more appropriate. Is that okay?
-> 
->> +
->> +	ret = sock_create_kern(net, family, type, proto, res);
->> +	if (ret < 0) {
->> +		put_net(net);
->> +		return ret;
->> +	}
->> +
->> +	sk = (*res)->sk;
->> +	lock_sock(sk);
->> +	/* Update ns_tracker to current stack trace and refcounted tracker */
->> +	__netns_tracker_free(net, &sk->ns_tracker, false);
->> +
->> +	sk->sk_net_refcnt = 1;
->> +	netns_tracker_alloc(net, &sk->ns_tracker, GFP_KERNEL);
->> +	sock_inuse_add(net, 1);
->> +	release_sock(sk);
->> +
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(sock_create_kern_getnet);
->> +
->>   static struct socket *__sys_socket_create(int family, int type, int protocol)
->>   {
->>   	struct socket *sock;
->> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
->> index 825ec5357691..6f272013fd9b 100644
->> --- a/net/sunrpc/svcsock.c
->> +++ b/net/sunrpc/svcsock.c
->> @@ -1526,7 +1526,7 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
->>   		return ERR_PTR(-EINVAL);
->>   	}
->>   
->> -	error = __sock_create(net, family, type, protocol, &sock, 1);
->> +	error = sock_create_kern_getnet(net, family, type, protocol, &sock);
->>   	if (error < 0)
->>   		return ERR_PTR(error);
->>   
->> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
->> index 110749b85040..f7734ce5eec9 100644
->> --- a/net/sunrpc/xprtsock.c
->> +++ b/net/sunrpc/xprtsock.c
->> @@ -1925,7 +1925,7 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
->>   	struct socket *sock;
->>   	int err;
->>   
->> -	err = __sock_create(xprt->xprt_net, family, type, protocol, &sock, 1);
->> +	err = sock_create_kern_getnet(xprt->xprt_net, family, type, protocol, &sock);
->>   	if (err < 0) {
->>   		dprintk("RPC:       can't create %d transport socket (%d).\n",
->>   				protocol, -err);
->> -- 
->> 2.34.1
-> 
+Understood.
+
+Is "2.6" a guess, or do you know of a specific kernel version where
+this problem started to appear? Generally if a problem goes back far
+enough or there isn't sufficient evidence about where the problem
+started, we don't want a "# xx.yy" annotation.
+
+I expect the stable folks will pull this fix into LTS kernels
+automatically, and I have nightly CI running on all of those. That
+can catch problems with applying recent fixes to old code bases, but
+it ain't perfect.
+
+
+-- 
+Chuck Lever
 
