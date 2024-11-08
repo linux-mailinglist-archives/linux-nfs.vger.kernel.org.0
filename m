@@ -1,141 +1,96 @@
-Return-Path: <linux-nfs+bounces-7743-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7744-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E46A9C13B5
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 02:35:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EE4C9C1666
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 07:16:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B31631F21393
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 01:35:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70A781C22A7B
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 06:16:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3085E208A9;
-	Fri,  8 Nov 2024 01:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 421AB80C0C;
+	Fri,  8 Nov 2024 06:16:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3481C17BBF
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 01:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B361C3F00
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 06:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731029701; cv=none; b=QvGt4DM5IX9rQ47oGADRVd0COsGBPf9OgTbVfhj5gogmBlViNjHni1tqwSsR19aICdLFzr9slHmJodZy6xnWsYuG6TAl1xBaC6bsjj9FaOZaeTCamMqusKWlODbit2PfQ1mzqT4xJ2bfwb5CkDD13f1jMudU5v08GqknRAfzauU=
+	t=1731046564; cv=none; b=Is5UAJkiIOX08i65qGTj6SnTUpfncUWbZI/A65sXDM06bjQ1Urei9Ttx/a5sTXfPtRzcmg2QDoeWKMB8DqMqXL/U5sEPZQ9C/Y9PCB4ElhCto+kXLEUK+qJIvKOdydbhDwVQIbItPPGDyt6MHNw7+5R/Y2lKYAtcTbrOXJpqVrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731029701; c=relaxed/simple;
-	bh=/uyclyW+GjVUeNJnoiCNBWHhyP7DtmIIxSsiOs870S0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bHSGzJhlcPK4IgzFfYbzUuthOAEnpK7WJItojO9G1+/dxuY5MJNn7+HnwYLJCTkpcVaoqa9lH1r6+/tKKkmcy4j6A0g5wyk3VbMlwl519Z+fxJ4E6h/I3imLF4U6xuSBkUNPJLXk9SVLdIq+iNc8VIFoy/0KzgLfvTZgycal9mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Xl1hF0YC9z4f3mHZ
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 09:34:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 005631A018D
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 09:34:55 +0800 (CST)
-Received: from [10.174.177.210] (unknown [10.174.177.210])
-	by APP4 (Coremail) with SMTP id gCh0CgCHYoa+ai1nmUilBA--.26277S3;
-	Fri, 08 Nov 2024 09:34:55 +0800 (CST)
-Message-ID: <9d0d20cd-ec92-cf35-04f6-3162c481add9@huaweicloud.com>
-Date: Fri, 8 Nov 2024 09:34:54 +0800
+	s=arc-20240116; t=1731046564; c=relaxed/simple;
+	bh=RqQv4WbQIDXLj2sNH9vALbQ1ytIJgGwZWi4pqnDoTb0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YYijf6lo3JNhPOBTbMiCV4NamOFKRWruq3add0FNI0QahVFAdCQhqvbzcoeNoiNyrVNE4cGlpUjHs9UjYBDmDmA6ZLWpAjgSdQYKJ9v76MOkG5l1mC2gEAE+LuYvuEtq7BhjKmY0S46Oexn5Vk/gOBrsgqshFta/A1lC6aer25w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a6bf539ceaso25528055ab.1
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Nov 2024 22:16:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731046562; x=1731651362;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dkOBb3SQFXPdGZ4MSv67wsI4Fh7AbjyXh8AbjtZKa0=;
+        b=kyv43/gIr/NMKHgL2m64ZEPbxFJkpBHAufcO+pFXC5RiHA7mr/B6j5fPsQScIQ+AdN
+         5rG0EppLPzmrnfYrTa21z2lCkZBfXAmnlQuGWDAsrQSB7sMZCbAi7LpHA34Zw5G4nXMZ
+         IgcLckzYmWiMI9GtknrBpqCndocoOHotqwO1QGhTe//sWKmjKo2nQlutD+8MPw9oPsB0
+         2qKG1tjQnQeQk3Rmv0zchBwywPl4XHiq9K4wR8260oV40RbYtEjEPafLI9YsjOv1paFt
+         VGhfSps+b/NNqCTgw38tvpF+18dyQAPhyahuNDshilm9d6fLKKpcKTKjazZesV0TcG1s
+         m1eA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1yrnxMhwsOTKWVwNkG6kQbpbhZK+++ca7dCSD6dYNloVQpLmgwyXkVkMzK7C2rCTDUGng6rIqVto=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcA7+au1v/ekF3wb1OqqSLFE5Hu1DGNohpfVDinojFp3bXiIxW
+	zTt3qNlylgzzhht1QVMfTSvzWBf17bnehkctTDkaK6guWdzqePjfZ2MfCVm3D9f4dm0N+0ODAaY
+	BgbANbcnyW+rGMyv1Yv61y2weDeoH+SXLWjLjaViDOeh4ED+uvjlC22g=
+X-Google-Smtp-Source: AGHT+IH7zdDwIblFzHkND/X2fTq2H+dE0aDfkmw2UPK2nlcDwZijZwh8JJxdtJ5qbwrVvbF3AnslsHUH7uN168EqXAwhEtJ/g/sC
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v3] nfsd: fix nfs4_openowner leak when concurrent
- nfsd4_open occur
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: jlayton@kernel.org, neilb@suse.de, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org,
- linux-nfs@vger.kernel.org, yi.zhang@huawei.com
-References: <20241105110314.2122967-1-yangerkun@huaweicloud.com>
- <Zytwhv08T2lKhGwv@tissot.1015granger.net>
- <101f5657-99d7-1813-05d4-7829c48f9865@huaweicloud.com>
- <ZyzPdsmYTMx+iT48@tissot.1015granger.net>
-From: yangerkun <yangerkun@huaweicloud.com>
-In-Reply-To: <ZyzPdsmYTMx+iT48@tissot.1015granger.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCHYoa+ai1nmUilBA--.26277S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww18uF1Duw1xuFy7Ww1UGFg_yoW8AF4kpF
-	Z3Kas8CF1ktr1Skwn2g3W0ka4Yy39FyryrWwn5XrW3AFZ093Wa9w12grWY9ryqqrykKF48
-	Zr12qry3X3ykZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
-	DUUUUU=
-X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
+X-Received: by 2002:a92:ca85:0:b0:3a6:bafd:5650 with SMTP id
+ e9e14a558f8ab-3a6f11d49f5mr20784055ab.10.1731046561872; Thu, 07 Nov 2024
+ 22:16:01 -0800 (PST)
+Date: Thu, 07 Nov 2024 22:16:01 -0800
+In-Reply-To: <6706d42c.050a0220.1139e6.000b.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <672daca1.050a0220.0db4.01bf.GAE@google.com>
+Subject: Re: [syzbot] [nfs?] INFO: task hung in nfsd_nl_threads_set_doit
+From: syzbot <syzbot+e7baeb70aa00c22ed45e@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, anna@kernel.org, chuck.lever@oracle.com, 
+	dai.ngo@oracle.com, davem@davemloft.net, edumazet@google.com, 
+	jlayton@kernel.org, kolga@netapp.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
+	netdev@vger.kernel.org, okorniev@redhat.com, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tom@talpey.com, trondmy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+syzbot has bisected this issue to:
 
+commit b4d8f228915f98f09974ef84ec028cbfe7a84273
+Author: Jeff Layton <jlayton@kernel.org>
+Date:   Thu Jun 13 18:34:31 2024 +0000
 
-在 2024/11/7 22:32, Chuck Lever 写道:
-> On Thu, Nov 07, 2024 at 09:22:39AM +0800, yangerkun wrote:
->>
->>
->> 在 2024/11/6 21:35, Chuck Lever 写道:
->>> On Tue, Nov 05, 2024 at 07:03:14PM +0800, Yang Erkun wrote:
->>>> From: Yang Erkun <yangerkun@huawei.com>
-> 
->>>> Add nfs4_openowner_unhashed to help found unhashed nfs4_openowner, and
->>>> break nfsd4_open process to fix this problem.
->>>>
->>>> Cc: stable@vger.kernel.org # 2.6
->>>
->>> Hi -
->>>
->>> Questions about the "stable@" tag:
->>>
->>>    - You refer above to a leak of nfsd_file objects, but the nfsd_file
->>>      cache was added in v5.4. Any thoughts about what might be leaked,
->>>      if anything, in kernels earlier than v5.4?
->>
->>  From the above analysis, actually openowner is leaked, and all object
->> associated with it has been leaked too, include nfsd_file, and openowner
->> seems already been there since 2.6....
-> 
-> Before v5.4, openowners are leaked. After, openowners and nfsd_file
-> objects are leaked. Got it.
+    nfsd: make nfsd_svc take an array of thread counts
 
-Yes
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b8c0c0580000
+start commit:   5ccdcdf186ae net: xilinx: axienet: Enqueue Tx packets in d..
+git tree:       net
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13b8c0c0580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b8c0c0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=672325e7ab17fdf7
+dashboard link: https://syzkaller.appspot.com/bug?extid=e7baeb70aa00c22ed45e
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13526d5f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1654a740580000
 
-> 
-> 
->>>    - Have you tried applying this patch to LTS kernels?
->>
->> I have not try to apply this to LTS, what I think is all kernel after 2.6
->> has this bug...
-> 
-> Understood.
-> 
-> Is "2.6" a guess, or do you know of a specific kernel version where
-> this problem started to appear? Generally if a problem goes back far
-> enough or there isn't sufficient evidence about where the problem
-> started, we don't want a "# xx.yy" annotation.
+Reported-by: syzbot+e7baeb70aa00c22ed45e@syzkaller.appspotmail.com
+Fixes: b4d8f228915f ("nfsd: make nfsd_svc take an array of thread counts")
 
-Thanks for pointing that out! Yes, 2.6 is just a guess, and it's really 
-not appropriate to say that 2.6 is involved in the beginning.
-
-> 
-> I expect the stable folks will pull this fix into LTS kernels
-> automatically, and I have nightly CI running on all of those. That
-> can catch problems with applying recent fixes to old code bases, but
-> it ain't perfect.
-> 
-> 
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
