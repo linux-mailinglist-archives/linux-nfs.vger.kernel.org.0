@@ -1,105 +1,108 @@
-Return-Path: <linux-nfs+bounces-7748-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7749-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D6F99C1E30
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 14:34:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D92869C1F0B
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 15:19:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B0431C210B2
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 13:34:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 879291F2413A
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 14:19:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7325F1EB9F5;
-	Fri,  8 Nov 2024 13:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EEC61F12EE;
+	Fri,  8 Nov 2024 14:19:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PK59P0rR"
+	dkim=pass (2048-bit key) header.d=ipp-cas-cz.20230601.gappssmtp.com header.i=@ipp-cas-cz.20230601.gappssmtp.com header.b="QCku9CL5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9E61E907A
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 13:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852881E1312
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 14:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731072882; cv=none; b=EdrtHJKl8aDUI119Iwrr97ALo67fRoVoBj+Sh39SspbITwOPNSHOWULtxwzf5/+r3uU4NowKcpIlw3XcUe5jgb3rRG3ra6eVP5Cem8zV/FkfQs1iwVhdZXVjC/tFVLT0Sy/9LngO1BVQZq/o3QNTBndPkiCQpVuJHiRzA8drR3c=
+	t=1731075571; cv=none; b=ggsoxy9mz2KFMdpH/rtc1GXu7q4DcdEDVP//I/+08XNKl5tDtZ3/7r3qzuNir6hmvmAzyKqHIRU2XXkLAyCJYo84H2QlmIfhhRx5GR4fUFj7i8I4JEOI3VbEMgIRaZVNjO8/DOz5rejWYQ9HKIej9+B5PxBI4AoUQsghBHecrKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731072882; c=relaxed/simple;
-	bh=VUxl82bl58ZjrW4h+yriFgmQuuGfaIRJEZRRi1SpZSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2i+qL08W1DdqEN2rQaLPog/8edT27doZvZKrDv37FXVczHIiBDwDqvXQx9c2m0aa81vqXu9gATDsrLE6WQAEaBF8AupwWnan0IXVX24oaMQ5hoN7kZWHogqTyiJxIrDjcYX+SlspfLbdYDbn8hbxTfaP12rudBR/zfDiiHk0tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PK59P0rR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4024C4CECD;
-	Fri,  8 Nov 2024 13:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731072881;
-	bh=VUxl82bl58ZjrW4h+yriFgmQuuGfaIRJEZRRi1SpZSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PK59P0rRfA1Ho1hFbOIMG7awqYVHRhijSj6dw0a46VnM1NVoe9VQfO+x/asDPu17N
-	 bPDz+K1+9clVeikbZv5e8O9OaTz4KARKqdl9gvLcvowOsJ/zL6Wuiwrov24FeCtjR+
-	 WrWNVaRuPmhUIoe7pih1VhEJTLkoChY+vua+wJS8NmFRGWeVyye27M5NSXgJ8K+4Ad
-	 SWZrhn5/aWDLxKy00LtNZz6GSu8uir7cWbJmvbh3ZiUoKbGSOb4wWKVN44FfFw98VJ
-	 /qju5jMufTKWK5XbCbbmkLFIOvrXDux6z6sjXJXk0KzN5mq+cFX39rYqMcuPeKQyuF
-	 OAMGGm3u5IkCA==
-From: cel@kernel.org
-To: jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	trondmy@kernel.org,
-	Yang Erkun <yangerkun@huaweicloud.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	yangerkun@huawei.com,
-	yi.zhang@huawei.com
-Subject: Re: [PATCH v3] nfsd: fix nfs4_openowner leak when concurrent nfsd4_open occur
-Date: Fri,  8 Nov 2024 08:34:30 -0500
-Message-ID: <173107266299.128364.12910305911313577633.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241105110314.2122967-1-yangerkun@huaweicloud.com>
-References: <20241105110314.2122967-1-yangerkun@huaweicloud.com>
+	s=arc-20240116; t=1731075571; c=relaxed/simple;
+	bh=ZOBBKhCAgQfZypE9Qev019A6ejzlc5LfsY+ZQZYp/tI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=p9f5wItULxj8V3/4aML2RfOKfZBZ4RsD+DzFDPVbnMmSBu11H/jQaPNDX8enfztE23Wqol+gcUqOHkCBmWYcprhvV+BQAjng8dFDp+yomnzZnD2csUwRAi2uxKP6bSnQwnoe2/Zx2yI9XAAwDNQGiFE4aBj5Ctug8iz5bKTQijE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipp.cas.cz; spf=pass smtp.mailfrom=ipp.cas.cz; dkim=pass (2048-bit key) header.d=ipp-cas-cz.20230601.gappssmtp.com header.i=@ipp-cas-cz.20230601.gappssmtp.com header.b=QCku9CL5; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipp.cas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipp.cas.cz
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3a6bcbd23c9so7923885ab.3
+        for <linux-nfs@vger.kernel.org>; Fri, 08 Nov 2024 06:19:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ipp-cas-cz.20230601.gappssmtp.com; s=20230601; t=1731075567; x=1731680367; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+evRfRsjvv1GQoQC/uvCokIwFNB2EPVrtC3/4qmwMQQ=;
+        b=QCku9CL56znxzAlLq1b140XmoOuceASPqe/fspXMqMUi2GHfFsuzvcIo6lXoM3kYDN
+         2frTEX8Ms9LsinzP5QiW5FozkqDL/0FKOMV6pLWufY5zkeA/JQXNEqm2ZzpzyzJQHqcS
+         /4Hjm6OICGTxVKm/Vbaw1g7kxI1wVfjKhh8RCPqepqBx9o4jVNnzllarB3e8IqMD1nV8
+         CkBAWBq9e3naRdzOoTwbVyyEk2/S7Al8nLer8qsjc21jMNsoZ6UtHN9mx8F4JDSOIJxA
+         /UsRP4T5s0odSQD/h3l7ADDC3B9xj62pXemfG8qC6P/Q0K0PTXI3DSwqWQW9IylgUYMN
+         jDYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731075567; x=1731680367;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+evRfRsjvv1GQoQC/uvCokIwFNB2EPVrtC3/4qmwMQQ=;
+        b=jOwdUdnoKyHQDcANRaM+WrdtCcrXSGogBVDzJEDYwBw8C3B5hsggU6lHsiERm9L+Mf
+         v+/ZnEJbmDRQZMuVpboUHdRpJ6wpwHuMqsLsYdvXW5Y6wdBXiJV69wmMdmrRTxWdfmJd
+         zOplzuP9Da5TzxfqKKownRKqpybtk8qK0/tYrq0AhjO85o+bVcr+A6rTMQUcFPsBvObQ
+         T5Ye7DAPzvbyGQNS4HWParuQhHN4lCKu7rDkFchYjculo1S3WDgobumx7vyaWO8R/cJG
+         bT7C9uFcqigbavUMlFB+AGZFWv6gSq/8808elYFrLtcRPIudvSD672XMNYE48DicsTn1
+         b9Rw==
+X-Gm-Message-State: AOJu0Yw6Z4apIM9ehqQYWkMrOihxGCyCwvSBgjiajSQefBsEBARYUKwB
+	4ISzHgm7RUarN/GeHH8AOidRgeRNMkUv0zhiTMU1D6itjYDSpxLglnwK0ZKxsePZX5b9HYvsNJL
+	pg2yp0CYtzidu2m7BFzOJusm1+k5ofgnZm7mxwCUaK8Nd1GfHJag=
+X-Google-Smtp-Source: AGHT+IG1GQXgs+LseVUg2Ld5IxEmXCRojKJXiFg9009wVgz0mAD0EA+rw1fLSwP9yf98v1e/3harXC55KaVapksFXnc=
+X-Received: by 2002:a92:d8c8:0:b0:3a4:e99a:cffc with SMTP id
+ e9e14a558f8ab-3a6f1a481a8mr31441805ab.20.1731075567402; Fri, 08 Nov 2024
+ 06:19:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1143; i=chuck.lever@oracle.com; h=from:subject:message-id; bh=uhmWmQJugE4/pEA51rXyX64Rw0mHr6qUKONjrGUG8lY=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnLhNoOrrLSv6Qw6c6XfekVOBN7PKI/bIJyZmc8 QKkbznhY0+JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZy4TaAAKCRAzarMzb2Z/ ly4pD/9xFhyVKJAVfF/9qIFXS8O06ExFVNWoMlGhXXCktznwbCz5nGLd8lal9RHsyLu6TuMlXW6 byrtTfVjPdKb2k3OB320ShqzB4LntHT1bP2+TYceQ/oFhXxFhq05EXXGuw+vVBm7C/zzSJ6Xvi7 /A4dKHwUparAHcsLTioKWwZQXT88aofm/Yy0DdLvR8CiNcSdNds2Xlu6uwydx3RvfmLxXz1gyq4 qeeeSMOO8XWYHwuI/L7E7ZLWmiMmncLcbSKQolPHGYuv7NsjqKPrwG0Y4ySJg8rdaDDeOcMn1Sg 7xKfEi4ju0Y6T5cgJATQCZk/7ec1wo4JROozLelc34++vNs2ryYuuc8pr4cCt+8TIDrxD4MnMWp Gc/inxLtjK94cKDIZJHdLhWdqe2zatw6dEKjvZmuEcQdYjHGwjLmOBjwu/cfvvK6q6biF3EO3c4 cyH1fxByBzLZPe/eXrHQRRP9pjLiRP+TJqyCwnWdKP0zm7ueX4OUDrj/pyQiLAZUR1cKiMTxjEX MIBO/uLjmTK1NMjUClVky5NAx0FSqx7ffavZiEV4m6Wh56nJufhS52CiWXQwqXlWEdjtDMSq/fR ttBBbIXmEUYhD46LDTpOyicJ9JSbBp6ZNsDnX4bNvv5hGcJdGnzc0zR8FcvBGrV6taOQswpPx+J 1sGEAS
- SJaIWehlw==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+References: <CAMRTLeLopcFCVUE0-PLf7i066JF4oY4dcN+6hp5WwQi9P06khw@mail.gmail.com>
+In-Reply-To: <CAMRTLeLopcFCVUE0-PLf7i066JF4oY4dcN+6hp5WwQi9P06khw@mail.gmail.com>
+From: David Komanek <komanek@ipp.cas.cz>
+Date: Fri, 8 Nov 2024 15:19:15 +0100
+Message-ID: <CAMRTLeLRnEzYV=OQT3np49R4rA1-sXWzGrxxc4UX3muHiu3jmg@mail.gmail.com>
+Subject: question to bug 93891 - NFS access not revoked on kdestroy
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Dear all,
 
-On Tue, 05 Nov 2024 19:03:14 +0800, Yang Erkun wrote:                                              
-> The action force umount(umount -f) will attempt to kill all rpc_task even
-> umount operation may ultimately fail if some files remain open.
-> Consequently, if an action attempts to open a file, it can potentially
-> send two rpc_task to nfs server.
-> 
->                    NFS CLIENT
-> thread1                             thread2
-> open("file")
-> ...
-> nfs4_do_open
->  _nfs4_do_open
->   _nfs4_open_and_get_state
->    _nfs4_proc_open
->     nfs4_run_open_task
->      /* rpc_task1 */
->      rpc_run_task
->      rpc_wait_for_completion_task
-> 
-> [...]                                                                        
+I am encountering problems which seems to be the description of bug
+93891 - NFS access not revoked on kdestroy,
+https://bugzilla.kernel.org/show_bug.cgi?id=93891
 
-Applied to nfsd-next for v6.13, thanks!                                                                
+Data shared over NFS in kerberos security mode are still accessible
+after kdestroy is issued or kerberos ticket expires. Only
+unmount+mount or server client reboot are working, which is not an
+option in our environment (tons of shares, people sharing computers
+etc.). Strangely, the bug seems to be very old and important, so I
+would suppose it is already resolved and there is some configuration
+option to solve this, which I am missing.
 
-[1/1] nfsd: fix nfs4_openowner leak when concurrent nfsd4_open occur
-      commit: 519cdbfe501ddf4a29b9c72b6961c58a33afb041                                                                      
+Host servers are Proxmox (equals roughly to Debian 12 for now, but
+they have its own kernel versions) and Ubuntu 22/24 LTS, clients are
+mostly Ubuntu 20/22/24 LTS, but tested also on Fedora 40, all have the
+same problem. It makes no difference if I use gssproxy or the more
+traditional way of kerberos support in NFS, if the kerberos cache is
+in KCM or in files on disk, still the same.
 
---                                                                              
-Chuck Lever
+Is there any recommendation how to overcome this ?
 
+Thank you for any advice.
+
+Sincerely,
+
+  David Komanek
 
