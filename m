@@ -1,361 +1,239 @@
-Return-Path: <linux-nfs+bounces-7750-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7751-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD4939C2053
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 16:28:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 593049C2087
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 16:35:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97A81285506
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 15:28:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 787911C23672
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Nov 2024 15:35:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C956205145;
-	Fri,  8 Nov 2024 15:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F70021A710;
+	Fri,  8 Nov 2024 15:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="kBbGVy68"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XOcR5mo7";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tF4EaF4O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A5F206E7D
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 15:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731079692; cv=none; b=G18dYQk9IvBVmLoBSoPlUkWSuj31RJPBaSZ3rBdjeskTFzPLjCqtObyOAAzmm2YSu44O4HhJfZZ46mFO3IfuTJsIp9uhseLgFGioLI6MwSfSbiN59D7EdqVnIpvrpYieTqrdbL+9jNlQBIk8ZOaHXmkIMhV90No1zSBnWHEp/ow=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731079692; c=relaxed/simple;
-	bh=Fo4GnBXj1I8MBym8FEQUIo6ssABU2t6am7yThkGeG8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Gz27wJYTdjwa5FmsUpetY3YKjmuiK4n4LAWgGGOTThwoh9nNefPTpd2BK4cyPZa9lg6MoyprXKFH/KR1/ULUQKx+63XS3Ko+pO/O9U5FAutfBj7f7iLnhnaTi7p3+BWQW/wWLYMW0VDIUrg9jUcuRD/5o/BZHr3ye8E5AMLrSt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=kBbGVy68; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-539f58c68c5so4104622e87.3
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Nov 2024 07:28:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7CE1F1308
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Nov 2024 15:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731080100; cv=fail; b=CF7z0kUC6NoYrera9yTC+rNry1XtwKsTDE6vnK/haQG57oZzLsmnK43hOJEbdSzOHHfvnDwfgOg/gT9BkXo5PFbnWlOS3vgVq3Ksd03QgkJufGnMHkb+4MeZM12aucxMCumPn7BaqIvc/R8YjYw+KFbiM0GeAcs/6ipEqiTogn0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731080100; c=relaxed/simple;
+	bh=OGjMX43eIdxKdi3G7U5U/C0EFiWvkqEMuf5RJpQcg/U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=g/hbS2oJCwjrpJRYe/6GcswZrSXd4sFAscMkhqCAcq/nhLB2v5JGMFRF30ZnGZz5LM+iZ79vwd2rXjzLXObFTkvxOlgg0acdFd+VSCoREZmNns0vOSNpgSG7LRuWbuq+9OwswyWrfrxHhRR/2xSkpSlRB+xEnpafq8p9WvmmBcs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XOcR5mo7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tF4EaF4O; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A8EfZeD006882;
+	Fri, 8 Nov 2024 15:34:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=OGjMX43eIdxKdi3G7U5U/C0EFiWvkqEMuf5RJpQcg/U=; b=
+	XOcR5mo7jPkHzsAT+2zLH8XVJnigNJZHhiApE+6wr0v1VKCAQbNcAE/h4DSk9LWx
+	X6LBhq8n1UzeFiZgH3s+BZiMJElRT5N6m1cWDFQzSxoIG40Wgp9wjJSBsILNyuO1
+	ge55Fvxxi1j5SVhBxHxx2RxQ5ati7EbMTBdG+bprLt6EripVHz9iCkWicfZTcc0t
+	dWhWoEVEXzy5fCvZ/dIncEA0X18QPSHnIuLkj0XP0uyrhKOj0qG6MalR1jSnAup/
+	FYgCBomb/sr48vW005c29gMWTqvC1fBnLc0jL1btzRbhnCbNP9kiCgtwyQZMCwgX
+	lnHMkIeyPcWZsM4GweDCSg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42s6gkhs7a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 08 Nov 2024 15:34:50 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4A8FGjhC033584;
+	Fri, 8 Nov 2024 15:34:50 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 42nahhw8af-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 08 Nov 2024 15:34:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GR9KqyZUEuDhSzGhxolwpC8sIG1W7K429tOgEzWpvjHuyiv/WjxJlsFcsMuwxtUOQfpWGtxsl57H8V34X6qMDftU6a/Qfj6QjWbgn3H6Ail1ka6YbVOuKvwnHIloOmuRCHL+xKDVpdjSR72XvCk8qYX7RQYci/ecCmpYlTGkD5Qj8zSwdNUz6dl0fG3z0tXA+opTEf+tgrcRxcLcy/dV032cADsgeazdPW1jTZjYIg2l38ghrfQl1udHPrGOLLNWKh5mdDfEm/l+DJZhtvegcnf0eq/0uD3+g4ZJ/LJCyMOshNQibJFFngphiOAWMIZAD6Jo3+JjmEVjLCKFFirmAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OGjMX43eIdxKdi3G7U5U/C0EFiWvkqEMuf5RJpQcg/U=;
+ b=LEaSYFhcQLSgBJyyEi7Z0txBY0OiAPNlF/Vynq3TUk6QWtHn+XYjo1AP1TkkFpHxeYYUNEY9I6KHa7ehcV0S7YtAfFAppugnVJAL8RsBy96uJqDea/KGLBjGX6pIYq4bYqnYT4aSiUVXHXtm8V0x1ouIVp6au+5foPc8EKVIjK4LFyKnrDBp0aXqhBhEPXlGycr7J7mEkpBk7XeSEluU0GEEWJbj7ibi4oRGbYiTCWPhggs0Ol3pyEcQCvwD4dlbvzioBAzdsBkMPImJM6AjWKfdKYnKrpmY4I/wImn6IUPUL7sZUI/R9TmJC2xBRHQqsAbfvYGCdFB1NHO8Wb2H4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1731079689; x=1731684489; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7oPGNPBYTR46g0m2knzptg9RK1LWV4fhxcplIjm3fsk=;
-        b=kBbGVy684uG06DmOo2SUqoeZzltsyos4Kj0DUF/29z1rqm8Y5wbOm6OHVfMJemr0gP
-         NiBWSkVHpXLuGqshci9EzZgx7aqZdatj+jwgtX9kNj3Jz0KsstSiFjhW5e7z/AABTEG7
-         TjoDo1Bsbh6fOxZYinFrvjMNXiAcRAa8jZVzJYuviFXFl4QdUou5nnBsn7CEN3N2jvWw
-         bB0uUuq3uR+QVYZjQjntPzJ5S4Pj0YZyvhfyWR1U5K8kqYIPWmV7N3sV7ImVBK9w8BE+
-         K21UzysF6gsCU8Wb5Hg7zwlN29caKIoxbvupQ5wp18a/Up+zTsFd5h1jBWpWokcOjmgy
-         PGEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731079689; x=1731684489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7oPGNPBYTR46g0m2knzptg9RK1LWV4fhxcplIjm3fsk=;
-        b=KXmQ/hzUTqLuCU0A3Nmsvz7tw17Hx7wv6QNhQYnUOzkTHOeKpJI78zRuB0SQ3aNrO3
-         WWHh2nbAXRcLJljqLBdbr6WNAJAV7rF6kF08ohPHK0boEUHJJeyZLjVPUtxpCZC73Wfn
-         zePMrPb6StVRn5uZ5F8wSEuqw16mmrhJPXZEhVPQ1RNaJuBex0UTXg5ZWQthHdEnUDEY
-         +JhOtfYhVJPSej18TB4gfaaE0dvHmO7l8nCl7obDUZmES46u5Wqt0fLXs65x9B85NE67
-         RB9lysCOnwHLmJSNQjdfIyWyUjQr/ATX0vJ1KtpILJW1hrUPPyvEIqiorGViJ4E90m51
-         ae5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVtS1q/GOTizZj+bxAyQQg8S7bRzQVhEYz+SVwhHW2zFImz9A05FHfHd4p41Am7llV6omug10kkkdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7BZGrE0WvKNQWYrXvtr1TWuOAEqkvOX2zp1lqo5KbDn84wM6E
-	1CGRVlsdzr2AqsOD+ZOEr5mYuqr7OZ/4Z2Yv0iBUvqwsJf5a6G7dtfGU5YNo71KhxDL9CFWvvOp
-	2AcrnezHbjkokHT1SHKPTzYfzeHo=
-X-Google-Smtp-Source: AGHT+IEMOgClRZwuFOfzU6/6zt3nPktrlNmWpimQBpog1200kJb6/sR434EphylqtJmMvrob4fvOkgBSET46w+CkIDs=
-X-Received: by 2002:a2e:bc87:0:b0:2fb:61c0:137 with SMTP id
- 38308e7fff4ca-2ff202c1281mr25914851fa.40.1731079688363; Fri, 08 Nov 2024
- 07:28:08 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OGjMX43eIdxKdi3G7U5U/C0EFiWvkqEMuf5RJpQcg/U=;
+ b=tF4EaF4O+OlzYIq7r4Se6fh/2ZZKehNmV4P+evwwVxo1Fwul0WL2sqZhKyZGt2bieQSITKq654J9d/TcLzbQDt7LtWuKUB/2YWKKNZWjmHcDHYjU9NAiAjrNsEPNnIwAXyqG7xE6TgAxu65YEecD8GEaV7Q6ohhaVGD6nQct2fE=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH0PR10MB7025.namprd10.prod.outlook.com (2603:10b6:510:283::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.19; Fri, 8 Nov
+ 2024 15:34:47 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8137.019; Fri, 8 Nov 2024
+ 15:34:46 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Olga Kornievskaia <aglo@umich.edu>
+CC: NeilBrown <neilb@suse.com>, Olga Kornievskaia <okorniev@redhat.com>,
+        Linux
+ NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: FAILED: patch "[PATCH] nfsd: fix race between laundromat and
+ free_stateid" failed to apply to 6.6-stable tree
+Thread-Topic: FAILED: patch "[PATCH] nfsd: fix race between laundromat and
+ free_stateid" failed to apply to 6.6-stable tree
+Thread-Index: AQHbKNJAPJroocR06UmGvOIRe6tPqbKtk+0AgAAB3QA=
+Date: Fri, 8 Nov 2024 15:34:46 +0000
+Message-ID: <570FB8EB-C52A-4168-BA63-58DD0C4DFBB4@oracle.com>
+References: <2024102832-murky-pasty-feca@gregkh>
+ <25BB7B46-50A1-45BC-A10D-70CAB6F2F500@oracle.com>
+ <CAN-5tyG5zwdo8O8ewoPidAZp_FJCpQz=KRPsgsZYa+U5bMkm8g@mail.gmail.com>
+In-Reply-To:
+ <CAN-5tyG5zwdo8O8ewoPidAZp_FJCpQz=KRPsgsZYa+U5bMkm8g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Apple Mail (2.3776.700.51.11.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB7025:EE_
+x-ms-office365-filtering-correlation-id: cde298da-4b95-4fcc-7028-08dd000ae050
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?L01MTDZhQ1MrRjhEWHlncW1qQ3lBaUltRCt6MXc4NE1LU3ROSWMrRUdsZklN?=
+ =?utf-8?B?aHZCdmhuYjAyQVBaTlpDQUh6SHVvRThsT0NBZ29ZdFdPRjhtVDRCS2tFeTRK?=
+ =?utf-8?B?dE5OWGVzUFJxYmo2SmJRR1JoVGU2NHVtT213V0FFcHN6ZnFYa093NFZHbUNP?=
+ =?utf-8?B?bU1KUlZOWkkzZEtIc0VweElobU04bGt0M2FlV0hOZXN5MnBQTnZuT0ZtSDRP?=
+ =?utf-8?B?QWdWR3g3Ulgrc3RCSXdTOFBDc3RWN1NhZ2xtVk0rK1A3bFFCNHdsSHEzVGZ6?=
+ =?utf-8?B?R1h1dGhCM0FUd2R4R2F3N0FhTmxrdFdLVWQxN1JJSm9yenBYRkpHanhUQUMr?=
+ =?utf-8?B?cTdJQ1Y1b08vSzJyWXIvSnR4KzRsVUdTSTM3VHpmeFg3ck9vd2t1eDFwQStr?=
+ =?utf-8?B?ZXZDRDlHRmQ3eUFpd0JzbEpRaHg0bG1HR05iYk1pSENvMk4yOE5uQzhNekQ2?=
+ =?utf-8?B?V3VWY0lLZzkxMnljOUEvYW1xSFV5N2hxLzlNenRNTmd6ekViYm5WNFNEbEdJ?=
+ =?utf-8?B?VVBaclRnWkVXSkFOOE94MURZUUYxeXVlSERCc0piZkdFQU1EQXBuQVV1RHFa?=
+ =?utf-8?B?K3IycE5SbjhTNGRYQklnWjFYYlh4RHVtWHYrK2NZOWpycG00cmZBMXpsZ05t?=
+ =?utf-8?B?N0J3bnRLMmNSTlQxakJEU1ZTM05vOVRRejdRbC9HaWt0Y3dGa3IzaDB3Y1pv?=
+ =?utf-8?B?enVRQitmZC8yYTl0MjhDYXRhSVpWOEZWVGRibDZSOEtFTWRvT3h4WnY5aFg5?=
+ =?utf-8?B?a0lFcC9ma1JISUxrN3Y0V2xGZHN3aE5SMkx1VDdYbEdYeEdjQkhwWi80MkhO?=
+ =?utf-8?B?d05YS3oyM2p6blJzcm1MTDVreE02NkU3SW5CUjNVeWNXU3I3ZkZwcENUelo4?=
+ =?utf-8?B?a1pnbEc5dG1NeTQxL2lvaE9XWDB1NE50YzBHWFhIRFZvQ3BJTHg0c1hXRm1a?=
+ =?utf-8?B?eUZ4WGtRcTRwOGl5bGdSN0lZQWZBbEdzR3dRK1dEOHozWlQ2M2RnZHIzeVk1?=
+ =?utf-8?B?SmpsaHB4My9wQlZsL2dKUjdwOGV6MzlnV004Ly9rcFFDWFY1QVl6N0VIZ1VD?=
+ =?utf-8?B?MGJ2VG5aTlhiSUlOamJiYTQyTnBsVUpKQkI2NlBzUitTckJacHp3bmpOWUFT?=
+ =?utf-8?B?WjV6ZnlielRod0xGUXBLSUplZHF5SVp5eng5U3ZtYlpMT2U5YTB1Q0hobnNJ?=
+ =?utf-8?B?R0dYeHpVNHo2UTd3MDMyZlBaQ2dUYTA5RVZWU1ZZOTFZMXVDK01QSDJlODAr?=
+ =?utf-8?B?T0gyWFJ1bDdoQzdqbnBQYnR3Ky9laDNuY0RrZTZCMmordkZLV2h4MDIvV3d6?=
+ =?utf-8?B?N1FiZ2c2VGw2U0crMzBNNTkrRXU1U3BLWVZFOHdRWVBpd3JlUEhweW43UXV4?=
+ =?utf-8?B?YUNkWFdmcWtiWVpKRDBhb2JzdnJrUHQyNlU2bUw4MVdIRXZYLzhQMTlGV2Ro?=
+ =?utf-8?B?bncxTUs5c2JOcDZUNXhrTnh1MmdlYXJCSS9pcjF6dWFlQkhkOFpFTlM2Umxy?=
+ =?utf-8?B?UTFWUkN5SVZkUlhMZTkwNzJhSHVyMUVqc2FzTG9zSytYVFFQYnZNbmx6TFdU?=
+ =?utf-8?B?eXo4c0FISFlyYTVxQlBVZmY4WmdOWmliQUdIZmVsZTlBbUZtcTJkaXpZbDZJ?=
+ =?utf-8?B?bFNGdjJtdUdSMllPOFk3TjhKZVRVSldXTkZFNVJhWk1aT0UxaHpjN0JRczM0?=
+ =?utf-8?B?Nkg5NXN5L0RmSXNVa2JZWXY4M2FDK0VSRVFMOWlVZUp4VTZUbnVyWnoxYWZO?=
+ =?utf-8?B?bDhJbk83UGtVem0rMS96SUdUSlZtelN5MkpiVmJJVVdaVzJVZmQyVCtMY0g4?=
+ =?utf-8?Q?rVaTTyNyz6NcDe595+ETbItKAKm70zR76Q5nE=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Wm9VUUhGeGJsTlp1THJnZTNmVnU3R25KWDV5T1l6T1drQU1kK3RtU0FKOVBB?=
+ =?utf-8?B?c1p4ZmR1OWNhcldLblZrc2xRZEdIWXl2MitZaTlFWmZaM01FSFM3ODVlc2ow?=
+ =?utf-8?B?UWNjUzFienlKWW5XcTJNRGE4Mm81THJkUFQwSzMrRVBob1dFR0J3YlJMZHRC?=
+ =?utf-8?B?U2VLaHlJVlYxMUtUOExuQ29vSnhhWlA2RUlsMkVzdEdDR2RHR0RRc1RkQkZ0?=
+ =?utf-8?B?Mk96dDVHbkdyUElNS3QvMFhHNzhBVDhkL20wTUp6anp5TGVYbUNscDNnVWh3?=
+ =?utf-8?B?Y3F4RE1rV0ZtdmFiTHRtTElEd3dVdFFVS3VwV21kU0x5WExwTVJGYmwxRTBn?=
+ =?utf-8?B?Qjd4aVFvdkhsaWJsUVdCdGVUVDI0MHlBSFZmVmdqZ0Q5akc3MVJxYTJ1N2pX?=
+ =?utf-8?B?bm15VDdpeXhKM3JNRStPRmxrdGlicW9GQWtVN05Kb2tNdGIwTm5PUlJnVWp3?=
+ =?utf-8?B?Q0pxUGdnWEtIS3FsRThubW9XemhpMmM0aC8zY2VONmxZbVJEWDk1aEtnVTJX?=
+ =?utf-8?B?YmhnYkVOQmdPRXcxQTRvZjVrZkI1dHUyK0hnUEgvZDRGRG5GMkxlSmxJandw?=
+ =?utf-8?B?L1JSSHJKd0VLS0srRFhlK0kyMG0vcGRBbTZuSlltc0dod3BBNmpqL0hGSFlh?=
+ =?utf-8?B?MWI5dGVTek4yUmt0djRPMGtzdTNiS0RxSi9yU1l5NUxRRGhGSENEL0tiSVFH?=
+ =?utf-8?B?VzJOdm9aVW5iaFlGc3pNYWM3YkMzUzVXSjFSblR1Nnd2Z3FFbFNBYzRKem13?=
+ =?utf-8?B?blIya0Q0R0hmZ25VL0dnUHFwL3RBZDE4S0p2eTNkQWZ3dERsMHZZdUVVT0ND?=
+ =?utf-8?B?N1hadUx4UCt0UVdBME4vOXQ4RWROemIzY1dYRjY2L3E2VUJrWndxc3BjM2Mw?=
+ =?utf-8?B?bTFqNU5yQjVLaVRTQS80TjdEcGdQN1ZDV3puSGZrRnFPY2JrWWhKMCt0ejdM?=
+ =?utf-8?B?VWtsNnI1bEUyYzZkVkkwZ2Rkd1VqK1lZdGI2ME9WRzNmZjRLWE9pMzdEbDl5?=
+ =?utf-8?B?ODg4L2R3bVQ3dWJXQU5PaDdzWmZCcEhDTFU0S3VsNExFYTdmWUtGak5YM3Mz?=
+ =?utf-8?B?RnNqM0RvdnN0bkJIRCtJMnlHTTc0RFhPR1hkSDgzOFdteW16WGwrRGtkY3hn?=
+ =?utf-8?B?U1d5MllkaXUxa1R3TmNtNTNLNFRzZURsT3ZYa3Zwc0g0NzNTbE9TM2xuQUxs?=
+ =?utf-8?B?Rldod0ZDNEdJR3RYZDc5YkU2a1p1d2RSSnE2TTNsNkFUYW5sblpkM2FwUnpp?=
+ =?utf-8?B?MU9mN2w1WklHbHhYZ1JZZ2czSkt2a0g5dGpKU0ZjK3YxeE5Nb25QNVhpcEN3?=
+ =?utf-8?B?Wm5XOVhobWRKOSsyRVo2NEplRTZBVXZwWG5pbXJBa0ZvM0hidHFUczUvUkdX?=
+ =?utf-8?B?MTAzWnZ3T3plR0ZqUXpNUjhkSVBJVWVPYWxJTFF0ck5rcDZEWFFOOXpxQkVL?=
+ =?utf-8?B?QU1jd0tOWitvK3JSczZLaDdnVGtUYVl4QUJnbTYzRHp0Q0FMSVZ2NmFyeVN1?=
+ =?utf-8?B?NnU3cHk0c2l1Q0UvdnU0WWo5R2VSTFI2dk1OWStmb2VScGp5a1JJQzVxVXhH?=
+ =?utf-8?B?RU1WcExyMEFKTGUxRU15QmpBaEE3dU4vYzhwQmY4aFhmTk8valZzckhmUkkw?=
+ =?utf-8?B?WlFwcGhBK3NLd1ZjTG9wWXlOTWdNVXA0VXhpdDNDQVdKU25iSFYrZzRGbGk4?=
+ =?utf-8?B?bUpHSXB6ejNXWTBMMG5rWE9JN1czNEtPQm50LytjQ1dGWmJzVVBNVlpDSXRE?=
+ =?utf-8?B?UmRueGhBaFNIdDlscEF3clB5bEs1ZGRHaDVlcjJpRlZiNUlQRGhENFZQL1F1?=
+ =?utf-8?B?WFhmNExEQTd1dkRUSTIvQ3lUVVpib0t5eWQ5NU5CcllsRlBxbm5ReXhaR1dT?=
+ =?utf-8?B?MzhTc05LYnpNbnorMEZ6T01XRHhWbTZsSUphTE45cFl4bnlidmhaSmxyM3N4?=
+ =?utf-8?B?ZFNmVUljQTJMSkpFOUlvdDRPYW5vZzNvT2cwWXpUZTRoZFpONU9TT0JqWnZ5?=
+ =?utf-8?B?SHhzclBNVytQVDNnWXlibkZiWmpXZ2duSkpQMDBGNVZNaXlGbFJzUWZMZlo3?=
+ =?utf-8?B?UE4vc2FpcklzandvMDh5MW1aaWo2czh4VUd2bnJjQ00vcTZiV2p4SzB0djYw?=
+ =?utf-8?B?NVNIRkxTanZZQTYvUk1lOStyek5NWnhQcno4eGZITDQ0RXRrQXBqbitER0Ru?=
+ =?utf-8?B?RUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4CA7782856B9AA40995C0FE058A046FF@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2024102832-murky-pasty-feca@gregkh> <25BB7B46-50A1-45BC-A10D-70CAB6F2F500@oracle.com>
-In-Reply-To: <25BB7B46-50A1-45BC-A10D-70CAB6F2F500@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Fri, 8 Nov 2024 10:27:56 -0500
-Message-ID: <CAN-5tyG5zwdo8O8ewoPidAZp_FJCpQz=KRPsgsZYa+U5bMkm8g@mail.gmail.com>
-Subject: Re: FAILED: patch "[PATCH] nfsd: fix race between laundromat and
- free_stateid" failed to apply to 6.6-stable tree
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: NeilBrown <neilb@suse.com>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0lBd8Bi5arJu2aJmxfKq3Sn6zQAdt93nIbICPtAOS9kKfnhVhs6PQm7/hRi5peqW3L7IQ7qHI+RpFBK2G0Cy0e6G6fTzKzl0PY08KYZYhO7vZWzGc0v7WhPlPWxAZ76exhSx0BYToB4TLhsK00auKzyQNhf6bhhH28yezGAyrLxv2uuQveT8TzBodd8Rj4j7xIeiGQrlrKJB/IaDB22suWvw72fX+d6V+TqAl28U79Xgab2M2k5gCzFKdOkRjP/dhcUG8cx80nQ5B+lXV7OoAboeA+StEmscZMx3Wbvi+MNwLtkl0W8+Kr4tiqN0/nD5PRBYe0DtiaJjXaVmzxIEjMWdye0ejUQdYiBKpNuH7KhhymvEfIdxR5bsZIKwoSfGRFl28rNfevD8medLNEN/Bb1T+pN7xt0lZwB5IbNw+2Ayd4jJ+CApCeqmYsRLFg2Ezte8LPxfLeQzI1AmrZ8VUaT8oMI/B8CW4yDcdUPl7uzoEBORRbf9xx2VpuuWBBwGEp6dNnl/5BxoX0nLXIpbV3hBE8DgcUlNfkBMyHRMqC5WCJbcOR/0MujPLut++9g31blTwFxTaRna/thu+3HM5uxbmyh92g4qd/dr+iQZQ7g=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cde298da-4b95-4fcc-7028-08dd000ae050
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2024 15:34:46.8978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 05oN+VXkWY7H+bjCqCpAT64jvRRN7KNSg+CUOGajxnV4hLPrpjwX2PNpFrrgClwVOogfPNx/cvE6qkYj2NRj5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB7025
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-08_13,2024-11-08_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ spamscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2409260000 definitions=main-2411080130
+X-Proofpoint-GUID: 2_PxZnyXqM846tcJjx68zYxLs1VAC-R0
+X-Proofpoint-ORIG-GUID: 2_PxZnyXqM846tcJjx68zYxLs1VAC-R0
 
-On Fri, Nov 8, 2024 at 8:35=E2=80=AFAM Chuck Lever III <chuck.lever@oracle.=
-com> wrote:
->
-> Hi-
->
-> I recall we wanted to see this fix in all LTS kernels,
-> so this commit was marked "Cc: stable". Unfortunately
-> it applied cleanly only to linux-6.11.y.
->
-> What is the plan for getting this fix into LTS kernels?
-
-I'm not sure what are the options here? Is it acceptable to write the
-same functionality patch (but different) that would apply to earlier
-versions?
-
-Just as a side note, it was only reported on the 6.11 kernel.
-Personally, I was only able to reproduce it on 6.10 (not before).
-
-> > Begin forwarded message:
-> >
-> > From: <gregkh@linuxfoundation.org>
-> > Subject: FAILED: patch "[PATCH] nfsd: fix race between laundromat and f=
-ree_stateid" failed to apply to 6.6-stable tree
-> > Date: October 27, 2024 at 8:41:32=E2=80=AFPM EDT
-> > To: okorniev@redhat.com, chuck.lever@oracle.com
-> > Cc: <stable@vger.kernel.org>
-> >
-> >
-> > The patch below does not apply to the 6.6-stable tree.
-> > If someone wants it applied there, or to any other stable or longterm
-> > tree, then please email the backport, including the original git commit
-> > id to <stable@vger.kernel.org>.
-> >
-> > To reproduce the conflict and resubmit, you may use the following comma=
-nds:
-> >
-> > git fetch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.=
-git/ linux-6.6.y
-> > git checkout FETCH_HEAD
-> > git cherry-pick -x 8dd91e8d31febf4d9cca3ae1bb4771d33ae7ee5a
-> > # <resolve conflicts, build, test, etc.>
-> > git commit -s
-> > git send-email --to '<stable@vger.kernel.org>' --in-reply-to '202410283=
-2-murky-pasty-feca@gregkh' --subject-prefix 'PATCH 6.6.y' HEAD^..
-> >
-> > Possible dependencies:
-> >
-> >
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> > ------------------ original commit in Linus's tree ------------------
-> >
-> > From 8dd91e8d31febf4d9cca3ae1bb4771d33ae7ee5a Mon Sep 17 00:00:00 2001
-> > From: Olga Kornievskaia <okorniev@redhat.com>
-> > Date: Fri, 18 Oct 2024 15:24:58 -0400
-> > Subject: [PATCH] nfsd: fix race between laundromat and free_stateid
-> >
-> > There is a race between laundromat handling of revoked delegations
-> > and a client sending free_stateid operation. Laundromat thread
-> > finds that delegation has expired and needs to be revoked so it
-> > marks the delegation stid revoked and it puts it on a reaper list
-> > but then it unlock the state lock and the actual delegation revocation
-> > happens without the lock. Once the stid is marked revoked a racing
-> > free_stateid processing thread does the following (1) it calls
-> > list_del_init() which removes it from the reaper list and (2) frees
-> > the delegation stid structure. The laundromat thread ends up not
-> > calling the revoke_delegation() function for this particular delegation
-> > but that means it will no release the lock lease that exists on
-> > the file.
-> >
-> > Now, a new open for this file comes in and ends up finding that
-> > lease list isn't empty and calls nfsd_breaker_owns_lease() which ends
-> > up trying to derefence a freed delegation stateid. Leading to the
-> > followint use-after-free KASAN warning:
-> >
-> > kernel: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > kernel: BUG: KASAN: slab-use-after-free in nfsd_breaker_owns_lease+0x14=
-0/0x160 [nfsd]
-> > kernel: Read of size 8 at addr ffff0000e73cd0c8 by task nfsd/6205
-> > kernel:
-> > kernel: CPU: 2 UID: 0 PID: 6205 Comm: nfsd Kdump: loaded Not tainted 6.=
-11.0-rc7+ #9
-> > kernel: Hardware name: Apple Inc. Apple Virtualization Generic Platform=
-, BIOS 2069.0.0.0.0 08/03/2024
-> > kernel: Call trace:
-> > kernel: dump_backtrace+0x98/0x120
-> > kernel: show_stack+0x1c/0x30
-> > kernel: dump_stack_lvl+0x80/0xe8
-> > kernel: print_address_description.constprop.0+0x84/0x390
-> > kernel: print_report+0xa4/0x268
-> > kernel: kasan_report+0xb4/0xf8
-> > kernel: __asan_report_load8_noabort+0x1c/0x28
-> > kernel: nfsd_breaker_owns_lease+0x140/0x160 [nfsd]
-> > kernel: nfsd_file_do_acquire+0xb3c/0x11d0 [nfsd]
-> > kernel: nfsd_file_acquire_opened+0x84/0x110 [nfsd]
-> > kernel: nfs4_get_vfs_file+0x634/0x958 [nfsd]
-> > kernel: nfsd4_process_open2+0xa40/0x1a40 [nfsd]
-> > kernel: nfsd4_open+0xa08/0xe80 [nfsd]
-> > kernel: nfsd4_proc_compound+0xb8c/0x2130 [nfsd]
-> > kernel: nfsd_dispatch+0x22c/0x718 [nfsd]
-> > kernel: svc_process_common+0x8e8/0x1960 [sunrpc]
-> > kernel: svc_process+0x3d4/0x7e0 [sunrpc]
-> > kernel: svc_handle_xprt+0x828/0xe10 [sunrpc]
-> > kernel: svc_recv+0x2cc/0x6a8 [sunrpc]
-> > kernel: nfsd+0x270/0x400 [nfsd]
-> > kernel: kthread+0x288/0x310
-> > kernel: ret_from_fork+0x10/0x20
-> >
-> > This patch proposes a fixed that's based on adding 2 new additional
-> > stid's sc_status values that help coordinate between the laundromat
-> > and other operations (nfsd4_free_stateid() and nfsd4_delegreturn()).
-> >
-> > First to make sure, that once the stid is marked revoked, it is not
-> > removed by the nfsd4_free_stateid(), the laundromat take a reference
-> > on the stateid. Then, coordinating whether the stid has been put
-> > on the cl_revoked list or we are processing FREE_STATEID and need to
-> > make sure to remove it from the list, each check that state and act
-> > accordingly. If laundromat has added to the cl_revoke list before
-> > the arrival of FREE_STATEID, then nfsd4_free_stateid() knows to remove
-> > it from the list. If nfsd4_free_stateid() finds that operations arrived
-> > before laundromat has placed it on cl_revoke list, it marks the state
-> > freed and then laundromat will no longer add it to the list.
-> >
-> > Also, for nfsd4_delegreturn() when looking for the specified stid,
-> > we need to access stid that are marked removed or freeable, it means
-> > the laundromat has started processing it but hasn't finished and this
-> > delegreturn needs to return nfserr_deleg_revoked and not
-> > nfserr_bad_stateid. The latter will not trigger a FREE_STATEID and the
-> > lack of it will leave this stid on the cl_revoked list indefinitely.
-> >
-> > Fixes: 2d4a532d385f ("nfsd: ensure that clp->cl_revoked list is protect=
-ed by clp->cl_lock")
-> > CC: stable@vger.kernel.org
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 56b261608af4..d1a2c677be7e 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -1359,21 +1359,47 @@ static void destroy_delegation(struct nfs4_dele=
-gation *dp)
-> > destroy_unhashed_deleg(dp);
-> > }
-> >
-> > +/**
-> > + * revoke_delegation - perform nfs4 delegation structure cleanup
-> > + * @dp: pointer to the delegation
-> > + *
-> > + * This function assumes that it's called either from the administrati=
-ve
-> > + * interface (nfsd4_revoke_states()) that's revoking a specific delega=
-tion
-> > + * stateid or it's called from a laundromat thread (nfsd4_landromat())=
- that
-> > + * determined that this specific state has expired and needs to be rev=
-oked
-> > + * (both mark state with the appropriate stid sc_status mode). It is a=
-lso
-> > + * assumed that a reference was taken on the @dp state.
-> > + *
-> > + * If this function finds that the @dp state is SC_STATUS_FREED it mea=
-ns
-> > + * that a FREE_STATEID operation for this stateid has been processed a=
-nd
-> > + * we can proceed to removing it from recalled list. However, if @dp s=
-tate
-> > + * isn't marked SC_STATUS_FREED, it means we need place it on the cl_r=
-evoked
-> > + * list and wait for the FREE_STATEID to arrive from the client. At th=
-e same
-> > + * time, we need to mark it as SC_STATUS_FREEABLE to indicate to the
-> > + * nfsd4_free_stateid() function that this stateid has already been ad=
-ded
-> > + * to the cl_revoked list and that nfsd4_free_stateid() is now respons=
-ible
-> > + * for removing it from the list. Inspection of where the delegation s=
-tate
-> > + * in the revocation process is protected by the clp->cl_lock.
-> > + */
-> > static void revoke_delegation(struct nfs4_delegation *dp)
-> > {
-> > struct nfs4_client *clp =3D dp->dl_stid.sc_client;
-> >
-> > WARN_ON(!list_empty(&dp->dl_recall_lru));
-> > + WARN_ON_ONCE(!(dp->dl_stid.sc_status &
-> > +     (SC_STATUS_REVOKED | SC_STATUS_ADMIN_REVOKED)));
-> >
-> > trace_nfsd_stid_revoke(&dp->dl_stid);
-> >
-> > - if (dp->dl_stid.sc_status &
-> > -    (SC_STATUS_REVOKED | SC_STATUS_ADMIN_REVOKED)) {
-> > - spin_lock(&clp->cl_lock);
-> > - refcount_inc(&dp->dl_stid.sc_count);
-> > - list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> > - spin_unlock(&clp->cl_lock);
-> > + spin_lock(&clp->cl_lock);
-> > + if (dp->dl_stid.sc_status & SC_STATUS_FREED) {
-> > + list_del_init(&dp->dl_recall_lru);
-> > + goto out;
-> > }
-> > + list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> > + dp->dl_stid.sc_status |=3D SC_STATUS_FREEABLE;
-> > +out:
-> > + spin_unlock(&clp->cl_lock);
-> > destroy_unhashed_deleg(dp);
-> > }
-> >
-> > @@ -1780,6 +1806,7 @@ void nfsd4_revoke_states(struct net *net, struct =
-super_block *sb)
-> > mutex_unlock(&stp->st_mutex);
-> > break;
-> > case SC_TYPE_DELEG:
-> > + refcount_inc(&stid->sc_count);
-> > dp =3D delegstateid(stid);
-> > spin_lock(&state_lock);
-> > if (!unhash_delegation_locked(
-> > @@ -6545,6 +6572,7 @@ nfs4_laundromat(struct nfsd_net *nn)
-> > dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> > if (!state_expired(&lt, dp->dl_time))
-> > break;
-> > + refcount_inc(&dp->dl_stid.sc_count);
-> > unhash_delegation_locked(dp, SC_STATUS_REVOKED);
-> > list_add(&dp->dl_recall_lru, &reaplist);
-> > }
-> > @@ -7157,7 +7185,9 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct=
- nfsd4_compound_state *cstate,
-> > s->sc_status |=3D SC_STATUS_CLOSED;
-> > spin_unlock(&s->sc_lock);
-> > dp =3D delegstateid(s);
-> > - list_del_init(&dp->dl_recall_lru);
-> > + if (s->sc_status & SC_STATUS_FREEABLE)
-> > + list_del_init(&dp->dl_recall_lru);
-> > + s->sc_status |=3D SC_STATUS_FREED;
-> > spin_unlock(&cl->cl_lock);
-> > nfs4_put_stid(s);
-> > ret =3D nfs_ok;
-> > @@ -7487,7 +7517,9 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> > if ((status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
-> > return status;
-> >
-> > - status =3D nfsd4_lookup_stateid(cstate, stateid, SC_TYPE_DELEG, 0, &s=
-, nn);
-> > + status =3D nfsd4_lookup_stateid(cstate, stateid, SC_TYPE_DELEG,
-> > +      SC_STATUS_REVOKED | SC_STATUS_FREEABLE,
-> > +      &s, nn);
-> > if (status)
-> > goto out;
-> > dp =3D delegstateid(s);
-> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > index 79c743c01a47..35b3564c065f 100644
-> > --- a/fs/nfsd/state.h
-> > +++ b/fs/nfsd/state.h
-> > @@ -114,6 +114,8 @@ struct nfs4_stid {
-> > /* For a deleg stateid kept around only to process free_stateid's: */
-> > #define SC_STATUS_REVOKED BIT(1)
-> > #define SC_STATUS_ADMIN_REVOKED BIT(2)
-> > +#define SC_STATUS_FREEABLE BIT(3)
-> > +#define SC_STATUS_FREED BIT(4)
-> > unsigned short sc_status;
-> >
-> > struct list_head sc_cp_list;
-> >
->
-> --
-> Chuck Lever
->
->
+DQoNCj4gT24gTm92IDgsIDIwMjQsIGF0IDEwOjI34oCvQU0sIE9sZ2EgS29ybmlldnNrYWlhIDxh
+Z2xvQHVtaWNoLmVkdT4gd3JvdGU6DQo+IA0KPiBPbiBGcmksIE5vdiA4LCAyMDI0IGF0IDg6MzXi
+gK9BTSBDaHVjayBMZXZlciBJSUkgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+IHdyb3RlOg0KPj4g
+DQo+PiBIaS0NCj4+IA0KPj4gSSByZWNhbGwgd2Ugd2FudGVkIHRvIHNlZSB0aGlzIGZpeCBpbiBh
+bGwgTFRTIGtlcm5lbHMsDQo+PiBzbyB0aGlzIGNvbW1pdCB3YXMgbWFya2VkICJDYzogc3RhYmxl
+Ii4gVW5mb3J0dW5hdGVseQ0KPj4gaXQgYXBwbGllZCBjbGVhbmx5IG9ubHkgdG8gbGludXgtNi4x
+MS55Lg0KPj4gDQo+PiBXaGF0IGlzIHRoZSBwbGFuIGZvciBnZXR0aW5nIHRoaXMgZml4IGludG8g
+TFRTIGtlcm5lbHM/DQo+IA0KPiBJJ20gbm90IHN1cmUgd2hhdCBhcmUgdGhlIG9wdGlvbnMgaGVy
+ZT8gSXMgaXQgYWNjZXB0YWJsZSB0byB3cml0ZSB0aGUNCj4gc2FtZSBmdW5jdGlvbmFsaXR5IHBh
+dGNoIChidXQgZGlmZmVyZW50KSB0aGF0IHdvdWxkIGFwcGx5IHRvIGVhcmxpZXINCj4gdmVyc2lv
+bnM/DQoNClRoZSBwcmVmZXJlbmNlIGlzIHRvIGJhY2twb3J0IGFuIHVwc3RyZWFtIHBhdGNoLiBC
+dXQgTmVpbCBoYXMNCmhhZCBzdWNjZXNzIHNlbmRpbmcgY2hhbmdlcyBzcGVjaWZpYyB0byBwYXJ0
+aWN1bGFyIExUUyBrZXJuZWxzLg0KDQpJJ2QgcmF0aGVyIG5vdCBlbWJhcmsgb24gYW4gZWZmb3J0
+IHRvIGJhY2twb3J0IHRoZSBwcmUtcmVxdWlzaXRlDQpjbGVhbi11cCBwYXRjaGVzIGluIHRoYXQg
+YXJlYSB1bmxlc3MgaXQgaXMgYWJzb2x1dGVseSBuZWNlc3NhcnkuDQoNCg0KPiBKdXN0IGFzIGEg
+c2lkZSBub3RlLCBpdCB3YXMgb25seSByZXBvcnRlZCBvbiB0aGUgNi4xMSBrZXJuZWwuDQo+IFBl
+cnNvbmFsbHksIEkgd2FzIG9ubHkgYWJsZSB0byByZXByb2R1Y2UgaXQgb24gNi4xMCAobm90IGJl
+Zm9yZSkuDQoNClRoZW4gcGVyaGFwcyB3ZSBzaG91bGQgaGF2ZSBhbm5vdGF0ZWQgdGhlICJjYzog
+c3RhYmxlIiB0YWcgdG8NCmV4Y2x1ZGUgdGhlIGVhcmxpZXIgTFRTIGtlcm5lbHMuDQoNCklmIHdl
+IGJlbGlldmUgdGhhdCB0aGUgcHJvYmxlbSB3aWxsIG5vdCBhcHBlYXIgaW4gZWFybGllciBMVFMN
+Cmtlcm5lbHMsIEknbSBoYXBweSB0byBsZWF2ZSB0aGlzIGZpeCBvdXQgb2YgdGhlbSBmb3Igbm93
+Lg0KDQoNCi0tDQpDaHVjayBMZXZlcg0KDQoNCg==
 
