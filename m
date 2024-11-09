@@ -1,71 +1,61 @@
-Return-Path: <linux-nfs+bounces-7819-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7820-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85B589C2C2E
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Nov 2024 12:29:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F7989C2C6C
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Nov 2024 13:02:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35F091F21DBD
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Nov 2024 11:29:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E88EA282F02
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Nov 2024 12:02:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359D7156236;
-	Sat,  9 Nov 2024 11:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCF73188704;
+	Sat,  9 Nov 2024 12:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Siey6pF7"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="mi83kdju"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040CF154BE9
-	for <linux-nfs@vger.kernel.org>; Sat,  9 Nov 2024 11:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011E1171066
+	for <linux-nfs@vger.kernel.org>; Sat,  9 Nov 2024 12:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731151739; cv=none; b=b4Ndca/7nOF0/Hzh/vy8u6yKjZLX+Ymc/R3TZqv/HQ2i32aVeVqez920llxlr8h14CiPJKgoacBHrWrP4lTl/RyrlC//GprVR/xdbX6m0HAAV2BP9jDQVncZmBPGBEJmQihqzmEKo3zJJwnu9rSe5rh664mlfin4A6Q9ghyKdLU=
+	t=1731153755; cv=none; b=s4quUbjcInb8WXtE9IClu0JO6AA3+yiwMicSXabIYxXbvBAh9QHgb6ttlsX9sjj7UqpyHPstx0cs2digckcoj4a86Mstiu4floENhtrrVQp7sOuHYM17Tt7cT0+QKDm8Y2M5RVBLWb4PQEQM8zC9pzF6KXhDqffJ1jCjOAG0Ow4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731151739; c=relaxed/simple;
-	bh=zBQUkF3mr5u6Z/v/AXOYl5E26nW21vRGwX/grdg05bY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uLW2Mjzt0XjO5WbFnFUOE4mLQVi1EN8Wv1BAjXtVJ5vhTDjzeDIOT9mYW/MoSk/xILC7LBv4OMCK3qVnG8BY6yftV7AlRAHnUSFJ0uStnR7vzjc0O58lO+UU55b//oVDHGprW+ARgN2wr3uhN/FjXCQasOeDQnKx3+jTwpBSOcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Siey6pF7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731151736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CRuuRov2tfd3XM0hFi42t8RoGExTUNXwhCOPImNSph8=;
-	b=Siey6pF7ACcyd8mZsehEbP0gCBo03SfiE5kZlb3FikHwwWFGqV3fjV+9wyzn2ex09onC3t
-	54gE5gVfJFFXjvdclDQZBSjYFiaoKvCyXOoLvChE6x4OOafQW5X5ahCvs6OxQiOazbHXZG
-	owdeNL3G3ZwHQ5E3GOPGtwyWbz4zmn8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-wmCrGq76PRaVpGJAOT11RQ-1; Sat,
- 09 Nov 2024 06:28:52 -0500
-X-MC-Unique: wmCrGq76PRaVpGJAOT11RQ-1
-X-Mimecast-MFC-AGG-ID: wmCrGq76PRaVpGJAOT11RQ
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E11819560AD;
-	Sat,  9 Nov 2024 11:28:51 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.17])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B4F8F300019E;
-	Sat,  9 Nov 2024 11:28:50 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
+	s=arc-20240116; t=1731153755; c=relaxed/simple;
+	bh=+08JvFNeEsK5PmW58qIM7105T4UsvFE17eF7xR1RALw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DFcG5NnJSYlwJutnN6QK22GdRkqlYMWVtxzEvF/9We2Y6nEyZEDDKMUDMve7mBjeArK6dPG8YWqKr/4/JtB/mt3Ys3G0q9t8U3a4h4Z3v+JWS1LhrV3oCh2/8ankLaq4aAOdiddSwuEJQYY7pikmTGUD4YVBoUsyQQjLophkcVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=mi83kdju; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from macsyma.thunk.org (pool-173-48-82-224.bstnma.fios.verizon.net [173.48.82.224])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4A9C2QTQ021141
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 9 Nov 2024 07:02:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1731153748; bh=JvM0XHBkVVM/umaSi0Ow4veRrWWW9z1pzmC6b2z3ZTM=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=mi83kdjuChn2EFhOJYsz5QmthqwqR2enQ2St8ukR53APiUt/seyfISfTZleeeXRY3
+	 8/oNNFQJ6kGoBh8TpGt7snQF55fAhYZ/awa/WfQ9qeFs7DbOFW2arUkd+MduBKkBEa
+	 jvh4bUO5u1Ds48z4KWtHQMFyJksf8YmHU0pA9qrn1jajsW2qpkw2NngvZoDjuSx2ab
+	 YXYZbiUA5IliBbFfooI5RfIzPnd6tpbxuS7oeRCgWegT5R5O1S2onZRDH/Tjuq2rig
+	 G8dIWK5ZxpBAzP4Xe3X/JcahpjWvAT0AMtn1ImDY2aW73139SG1tl1BCOSMMnEKUCY
+	 aQeFk67rbddcQ==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id C534B340242; Sat, 09 Nov 2024 07:01:18 -0500 (EST)
+Date: Sat, 9 Nov 2024 07:01:18 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
 To: Sebastian Feld <sebastian.n.feld@gmail.com>
 Cc: open list <linux-kernel@vger.kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Subject: Re: Kernel strscpy() should be renamed to kstrscpy() Re: [PATCH]
  nfs_sysfs_link_rpc_client(): Replace strcpy with strscpy
-Date: Sat, 09 Nov 2024 06:28:48 -0500
-Message-ID: <91B9DC8F-6C6C-4F47-922A-D01DF1079959@redhat.com>
-In-Reply-To: <CAHnbEGKRKrw-9_wnrASVHniZ1RggP+b-YzvwPYM7ScsMvmpCGA@mail.gmail.com>
+Message-ID: <20241109120118.GA1805018@mit.edu>
 References: <20241106024952.494718-1-danielyangkang@gmail.com>
  <CAKAoaQnOfAU2LgLRwNNHion=-iHB1fSfPnfSFUQMmUyyEzu6LQ@mail.gmail.com>
  <283409A8-6FD1-461C-8490-0E81B266EF9D@redhat.com>
@@ -76,52 +66,33 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHnbEGKRKrw-9_wnrASVHniZ1RggP+b-YzvwPYM7ScsMvmpCGA@mail.gmail.com>
 
-On 9 Nov 2024, at 6:11, Sebastian Feld wrote:
-
-> On Wed, Nov 6, 2024 at 9:40 PM Benjamin Coddington <bcodding@redhat.com> wrote:
->>
->> On 6 Nov 2024, at 15:20, Roland Mainz wrote:
->>
->>> On Wed, Nov 6, 2024 at 3:49 AM Daniel Yang <danielyangkang@gmail.com> wrote:
->>>>
->>>> The function strcpy is deprecated due to lack of bounds checking. The
->>>> recommended replacement is strscpy.
->>>>
->>>> Signed-off-by: Daniel Yang <danielyangkang@gmail.com>
->>>> ---
->>>>  fs/nfs/sysfs.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
->>>> index bf378ecd5..f3d0b2ef9 100644
->>>> --- a/fs/nfs/sysfs.c
->>>> +++ b/fs/nfs/sysfs.c
->>>> @@ -280,7 +280,7 @@ void nfs_sysfs_link_rpc_client(struct nfs_server *server,
->>>>         char name[RPC_CLIENT_NAME_SIZE];
->>>>         int ret;
->>>>
->>>> -       strcpy(name, clnt->cl_program->name);
->>>> +       strscpy(name, clnt->cl_program->name);
->>>
->>> How should the "bounds checking" work in this case if you only pass
->>> two arguments ?
->>
->> The linux kernel strscpy() checks the sizeof the destination.
->
+On Sat, Nov 09, 2024 at 12:11:02PM +0100, Sebastian Feld wrote:
+> > > How should the "bounds checking" work in this case if you only pass
+> > > two arguments ?
+> >
+> > The linux kernel strscpy() checks the sizeof the destination.
+> 
 > Then the kernel strscpy() should be renamed accordingly, and not
 > confuse people. Suggested name would be kstrscpy().
 > Otherwise this would disqualify strscpy() ever from being adopted as a
 > POSIX standard, as there are two - kernel and glibc - conflicting
 > implementations
 
-I should have said the linux kernel strscpy() can accept only two args if
-the destination is a statically-defined array.  Most uses are the three arg
-version.
+If POSIX decided that this meant they couldn't adopt strscpy(), that
+is ANSI / ISO's problem, not ours.  Note that strscpy() supports the 3
+argument version of glibc, and POSIX has always been willing to
+standardize a subset of a particullar interface.
 
-Ben
+Otherwise, any Legacy Unix system which added some one or more flags
+to some particular interface could potentially disqualify anything
+with the same name of that interface from ever being standardized,
+which is (a) stupid, and (b) not what has been done in historical
+practice.
+
+					- Ted
 
 
