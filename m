@@ -1,94 +1,93 @@
-Return-Path: <linux-nfs+bounces-7837-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7838-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19E969C35CD
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 02:09:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 057D69C35D5
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 02:15:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAFD31C20AB7
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 01:09:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A9EA1F211BF
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 01:15:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C26749A;
-	Mon, 11 Nov 2024 01:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F6D4C9D;
+	Mon, 11 Nov 2024 01:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ztS4Fuhy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zXy9wlmt";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ztS4Fuhy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="zXy9wlmt"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pv9G0IVu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0eqdxHuI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pv9G0IVu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0eqdxHuI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155DA8468
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 01:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346F3A29
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 01:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731287380; cv=none; b=N6YLuEEVRqoheOawc3Rjddg+iSADu9NGtMsuO8FmIvr4qlNI9PLqml5F9uNaj4muD/8ThBPPE7TPK6osMAsohgABjLqpFdp1WX+zqxzXTfnyF1bdLPN/ANQLR8hUhWfRdR+0PFHH8dK+Cmj2lc6UeNlxG5iRyfg4+XrduNtwCQw=
+	t=1731287722; cv=none; b=Rfl6jNfZJPNy3Uw6ZSd54a3pBGOYNLykvSK56fHFf6G9azLjAAKaNuCF5E/zlOa6WboAyru25bCiXMQTWLLXqHU79CJi9RGqt1RyolvF65DwLVc4mXQ4deSDmt3jd7xtUH5HsVqFSCWLeq9oZJdNmNrgxW0VA9Dus//1nIgDJak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731287380; c=relaxed/simple;
-	bh=0eP2jvr56srMht+auMUU9NLZ+taYlmNkunuvGxuwPGc=;
+	s=arc-20240116; t=1731287722; c=relaxed/simple;
+	bh=EA/dLA2WjK7wGaD8MHMkar2DkJAxcayHDwJMG6lM5Tk=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ctAArqd5NlWL3Vmxb+vChDW5gssDGzMwW5KVBQJR14ujQsnFGhLOzwr8J/tieinnzsqYFh66DAa1bEcxnZWfGcGlaLPRd1v0w0hk7AUjwpNRdrtoamDllTlP1e8U0TUxzME9VYjoAoX6zcAsrrUIeixcuhdehN+zgZgcoQxEDhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ztS4Fuhy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zXy9wlmt; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ztS4Fuhy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=zXy9wlmt; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=qHixsbprZhfR5yzDzqdedaMZPWEdXmx1cb/TrdYKUkQHUJhSjIhmygRWmsAJzHTGCHWiWdNuNxfjzhvs2ybUI6IaMecGDJDexNkhrZ6etFg2afuZ6o3RsxWyN0f8Pm0N9F0OKaqI3fR8Cn7kxQhNo49NefLegNNC9KKn7OjSSCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pv9G0IVu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0eqdxHuI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pv9G0IVu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0eqdxHuI; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1CD521F38E;
-	Mon, 11 Nov 2024 01:09:37 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 54448219C6;
+	Mon, 11 Nov 2024 01:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731287377; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731287718; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cxMQj3qAqCam0QAxTyY08xzeuDYoGmao/lSr/ZNLsa8=;
-	b=ztS4FuhyYeaVoiovtJzRv7qz5NOHZoSWf+2bqEhKTA3q0Irjt91GQLRu3rB9w4mDhnQGT3
-	Ko04I1XQgF7JuPGplufOonTP1GAxFHT1YxOnKXWBhdQHtY5U9Ks7OlEuOJZJ72acuyCyXh
-	H41nFmSqtCzQxuh/WHtwDA5T7IBsSsw=
+	bh=3H/YixkjFxES4W0gc+T2Efhmp0c82QptcIgs9pZmhPU=;
+	b=pv9G0IVu6EvX/Y/U+sgVZDp9mVgpOH9n0lxOiPkU4+h36bZwe6hm2TSWDwW9cTkS6lWcOA
+	Kd4bSOWMXn0G3zx7Jos/Sj0yy9h2odjTVch+J4ny6BvvA26LG84uWGWPonmUe03Lm6koC/
+	KHdpS2A7dH2CUTU4p8fH541BsQQzxn8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731287377;
+	s=susede2_ed25519; t=1731287718;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cxMQj3qAqCam0QAxTyY08xzeuDYoGmao/lSr/ZNLsa8=;
-	b=zXy9wlmt5NSwU7sl2InpzpEVq4EQz3aBBAY+Af3BFKgFhSgCb5z8VgxlGUNkGmALSOo201
-	SzZhae8q8KIfmdAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ztS4Fuhy;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=zXy9wlmt
+	bh=3H/YixkjFxES4W0gc+T2Efhmp0c82QptcIgs9pZmhPU=;
+	b=0eqdxHuIauETuNjES9gFKMV/cR0eSw5R0MNIXPIHERfiwV6lSRf/Dem+wOIPHIrv/L4/BD
+	gxvl3dRA4nq4qvDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731287377; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731287718; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cxMQj3qAqCam0QAxTyY08xzeuDYoGmao/lSr/ZNLsa8=;
-	b=ztS4FuhyYeaVoiovtJzRv7qz5NOHZoSWf+2bqEhKTA3q0Irjt91GQLRu3rB9w4mDhnQGT3
-	Ko04I1XQgF7JuPGplufOonTP1GAxFHT1YxOnKXWBhdQHtY5U9Ks7OlEuOJZJ72acuyCyXh
-	H41nFmSqtCzQxuh/WHtwDA5T7IBsSsw=
+	bh=3H/YixkjFxES4W0gc+T2Efhmp0c82QptcIgs9pZmhPU=;
+	b=pv9G0IVu6EvX/Y/U+sgVZDp9mVgpOH9n0lxOiPkU4+h36bZwe6hm2TSWDwW9cTkS6lWcOA
+	Kd4bSOWMXn0G3zx7Jos/Sj0yy9h2odjTVch+J4ny6BvvA26LG84uWGWPonmUe03Lm6koC/
+	KHdpS2A7dH2CUTU4p8fH541BsQQzxn8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731287377;
+	s=susede2_ed25519; t=1731287718;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cxMQj3qAqCam0QAxTyY08xzeuDYoGmao/lSr/ZNLsa8=;
-	b=zXy9wlmt5NSwU7sl2InpzpEVq4EQz3aBBAY+Af3BFKgFhSgCb5z8VgxlGUNkGmALSOo201
-	SzZhae8q8KIfmdAw==
+	bh=3H/YixkjFxES4W0gc+T2Efhmp0c82QptcIgs9pZmhPU=;
+	b=0eqdxHuIauETuNjES9gFKMV/cR0eSw5R0MNIXPIHERfiwV6lSRf/Dem+wOIPHIrv/L4/BD
+	gxvl3dRA4nq4qvDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0EC07137FB;
-	Mon, 11 Nov 2024 01:09:34 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C424137FB;
+	Mon, 11 Nov 2024 01:15:16 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7mvxLU5ZMWc2dwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 01:09:34 +0000
+	id R3aPAaRaMWeyeAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 01:15:16 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -102,91 +101,113 @@ To: "Mike Snitzer" <snitzer@kernel.org>
 Cc: linux-nfs@vger.kernel.org, "Anna Schumaker" <anna@kernel.org>,
  "Trond Myklebust" <trondmy@hammerspace.com>,
  "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [for-6.13 PATCH 03/19] nfs/localio: remove redundant suid/sgid handling
-In-reply-to: <20241108234002.16392-4-snitzer@kernel.org>
+Subject: Re: [for-6.13 PATCH 04/19] nfs/localio: eliminate unnecessary kref in
+ nfs_local_fsync_ctx
+In-reply-to: <20241108234002.16392-5-snitzer@kernel.org>
 References: <20241108234002.16392-1-snitzer@kernel.org>,
- <20241108234002.16392-4-snitzer@kernel.org>
-Date: Mon, 11 Nov 2024 12:09:31 +1100
-Message-id: <173128737184.1734440.5770202798702410278@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 1CD521F38E
+ <20241108234002.16392-5-snitzer@kernel.org>
+Date: Mon, 11 Nov 2024 12:15:13 +1100
+Message-id: <173128771343.1734440.12075190560950327666@noble.neil.brown.name>
 X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Score: -4.30
 X-Spam-Flag: NO
 
 On Sat, 09 Nov 2024, Mike Snitzer wrote:
-> From: Mike Snitzer <snitzer@hammerspace.com>
+> nfs_local_commit() doesn't need async cleanup of nfs_local_fsync_ctx,
+> so there is no need to use a kref.
 >=20
-> nfs_writeback_done() will take care of suid/sgid corner case.
-
-The code removed is from nfs_local_write_done().
-That is called only in nfs_local_call_write() and nfs_local_pgio_release
-is called shortly afterwards.  That calls nfs_local_hdr_release() which
-calls ->rpc_call_done which will be nfs_pgio_result (or something that
-eventually calls nfs_pgio_result via some other ->rpc_call_done)
-nfs_pgio_result calls ->rw_done which will be nfs_writeback_done which,
-as you say, already contains that code.
-
-So it looks good.
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 
 Reviewed-by: NeilBrown <neilb@suse.de>
 
-Thanks,
+thanks,
 NeilBrown
 
->=20
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfs/localio.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+>  fs/nfs/localio.c | 20 +++-----------------
+>  1 file changed, 3 insertions(+), 17 deletions(-)
 >=20
 > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 637528e6368e..4b24933093b6 100644
+> index 4b24933093b6..a7eb83a604d0 100644
 > --- a/fs/nfs/localio.c
 > +++ b/fs/nfs/localio.c
-> @@ -527,12 +527,7 @@ nfs_local_write_done(struct nfs_local_kiocb *iocb, lon=
-g status)
+> @@ -42,7 +42,6 @@ struct nfs_local_fsync_ctx {
+>  	struct nfsd_file	*localio;
+>  	struct nfs_commit_data	*data;
+>  	struct work_struct	work;
+> -	struct kref		kref;
+>  	struct completion	*done;
+>  };
+>  static void nfs_local_fsync_work(struct work_struct *work);
+> @@ -689,30 +688,17 @@ nfs_local_fsync_ctx_alloc(struct nfs_commit_data *dat=
+a,
+>  		ctx->localio =3D localio;
+>  		ctx->data =3D data;
+>  		INIT_WORK(&ctx->work, nfs_local_fsync_work);
+> -		kref_init(&ctx->kref);
+>  		ctx->done =3D NULL;
 >  	}
->  	if (status < 0)
->  		nfs_reset_boot_verifier(inode);
-> -	else if (nfs_should_remove_suid(inode)) {
-> -		/* Deal with the suid/sgid bit corner case */
-> -		spin_lock(&inode->i_lock);
-> -		nfs_set_cache_invalid(inode, NFS_INO_INVALID_MODE);
-> -		spin_unlock(&inode->i_lock);
-> -	}
-> +
->  	nfs_local_pgio_done(hdr, status);
+>  	return ctx;
 >  }
 > =20
+> -static void
+> -nfs_local_fsync_ctx_kref_free(struct kref *kref)
+> -{
+> -	kfree(container_of(kref, struct nfs_local_fsync_ctx, kref));
+> -}
+> -
+> -static void
+> -nfs_local_fsync_ctx_put(struct nfs_local_fsync_ctx *ctx)
+> -{
+> -	kref_put(&ctx->kref, nfs_local_fsync_ctx_kref_free);
+> -}
+> -
+>  static void
+>  nfs_local_fsync_ctx_free(struct nfs_local_fsync_ctx *ctx)
+>  {
+>  	nfs_local_release_commit_data(ctx->localio, ctx->data,
+>  				      ctx->data->task.tk_ops);
+> -	nfs_local_fsync_ctx_put(ctx);
+> +	kfree(ctx);
+>  }
+> =20
+>  static void
+> @@ -745,7 +731,7 @@ int nfs_local_commit(struct nfsd_file *localio,
+>  	}
+> =20
+>  	nfs_local_init_commit(data, call_ops);
+> -	kref_get(&ctx->kref);
+> +
+>  	if (how & FLUSH_SYNC) {
+>  		DECLARE_COMPLETION_ONSTACK(done);
+>  		ctx->done =3D &done;
+> @@ -753,6 +739,6 @@ int nfs_local_commit(struct nfsd_file *localio,
+>  		wait_for_completion(&done);
+>  	} else
+>  		queue_work(nfsiod_workqueue, &ctx->work);
+> -	nfs_local_fsync_ctx_put(ctx);
+> +
+>  	return 0;
+>  }
 > --=20
 > 2.44.0
 >=20
