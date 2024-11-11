@@ -1,60 +1,56 @@
-Return-Path: <linux-nfs+bounces-7853-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7854-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 112939C3F72
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 14:22:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D7D89C4027
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 15:02:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 343661C2040D
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 13:22:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 037F1B21B01
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 14:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8AAA193092;
-	Mon, 11 Nov 2024 13:22:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA4B19E97E;
+	Mon, 11 Nov 2024 14:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwFPwFGS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpylOUx3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC8F15575E;
-	Mon, 11 Nov 2024 13:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874EC19E960
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 14:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731331330; cv=none; b=rYxfXM1svrcov1A+n5MZNyknkGQ2Fjr02cCONQxz2B4hsMft3KBZIEbAvYP+le0Kg0bpjU7skSXjeqqDNgMzj3bmyK2oa5j0N16HRUF59893g94i9qj/BSdG53bgYuF0LCuJuzFb/XIlbl0VGtp2gOOkBT7sDjeYGj3ZA1x9Gtg=
+	t=1731333760; cv=none; b=G3zUhVvfzYn+BfJ3kWhrXHAZkS2O/z2tyOZYSQfNL6CvQf47fwPq/O4mWdGVx7Y7XX4/WFqMVGjF7TdsHdfn32KCULTz8UvVlfiEBFKX8nKT9StTQdUbuh08ywnODE6YAdY/OM3squcE2JINjnqxrNbIfBO1YedQA/kMhDd7laU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731331330; c=relaxed/simple;
-	bh=oHFWAinMtasVMdCElNjM5uZ++VX0EJZmuqfPTIZP2vg=;
+	s=arc-20240116; t=1731333760; c=relaxed/simple;
+	bh=Fk37S/b79nqM2vPZIaVy3Rq+19MyVKOv1VY35YwQvW8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=pX2+pjRrACH0yFO18p0/V6baZZef8dMGCGHWH2/yVCw26MACdrxFFXay2eJiSMGgWf6KUERfSFC8IY5oL4FqOeJRWWVlSd4XxtAqE3hfCancE+3a2wyKgfGVD4W2HaGuBRyGQ5Cyc8mnKFwfmpzS1XCPaDk9ybybV1XTBEfEpdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwFPwFGS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8265DC4CECF;
-	Mon, 11 Nov 2024 13:22:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=uopSQg8oe7HCxFhwHdqujTdERgOoS7W1otfyzhzfOiy2b/deUDgD0aKihws/NIFunfWx89t0oYg8Pv8t357012o9OspP1j47t52MoWQgjZJGfstkdQkV0CBbLziTY3Xt+0KwWdWmlOaQb9cA/ww653Ci6Tg3S3w5jqa4k2sD12k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpylOUx3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98381C4CED7;
+	Mon, 11 Nov 2024 14:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731331329;
-	bh=oHFWAinMtasVMdCElNjM5uZ++VX0EJZmuqfPTIZP2vg=;
+	s=k20201202; t=1731333760;
+	bh=Fk37S/b79nqM2vPZIaVy3Rq+19MyVKOv1VY35YwQvW8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rwFPwFGS/wIlCkzINIyzjIk/JkPUXBpGDzCj1coRxc51bkyFJ6tIq//xBpR1HLDtE
-	 cdmWMCMAdY1PSL/KHIpAtRKYfKBJXC58c7GVsfMU8OqHqij7toV3VxXG0X42BlE5Jx
-	 1bqROC5dmPBlWHCnvKqgSIyrr1BYhlYfPrq9vqgbf6I+xw/TDFC1BIIpURh5bNUGkc
-	 81ovZIlHZMosw16EDyyjN6E1M1JFCx7eoznIHeMO7U8KFkS2d5P1swWLUIKXmE8yR2
-	 k07JgFzVDXUWaqPrAI1gU9dq6g7LTExxj+t6zBt7jC+NNf4Z1+C5W+OO9ehDALWeW8
-	 5qSeFEu/tZRMw==
-Message-ID: <b7f6454176746f5e7a8d75ba41be71e46590a08c.camel@kernel.org>
-Subject: Re: [PATCH v4] nfsd: allow for up to 32 callback session slots
+	b=mpylOUx3D7TYZ2C1mI8Fb8hxWgNPauFGB+TCc+KBDk+Zh3UfDFztqENsyvqJBCm0S
+	 z9lFp94iK+p9QRR6sqflfuYsTY8hsSOHUaLSyT7BC0I1qlNMxLGUoWAhy9EyLfAE6R
+	 618b+kQ1EI9hBHP9zjaSWQ7AewOdm3Udkalb+K3Ner5XToxtlPq3d49isDlta1f322
+	 GF1Ay0xRU0FXRS4YfUX/mzg6Q7gU5WZLJ6dTUPIqJ/fChvbQe7cLlED0rj2fu1dok3
+	 aH6HhD5XqCMCS5lDZVcTpHGjedr2cPqksERPhOcKSoZgVs1O2a3m4nIs5I5UJyti0R
+	 9YBEk78AsCvJQ==
+Message-ID: <d6dcf462ab4cb1fa3fd8393bb607ad2205d4ff09.camel@kernel.org>
+Subject: Re: [bug report from fstests] BUG: sleeping function called from
+ invalid context at fs/nfsd/filecache.c:360
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <aglo@umich.edu>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Dai
- Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 11 Nov 2024 08:22:07 -0500
-In-Reply-To: <CAN-5tyH8xw6XtpnXELJfrxibN3P=xRax31pCexcuOtBMZhooxw@mail.gmail.com>
-References: <20241105-bcwide-v4-1-48f52ee0fb0c@kernel.org>
-	 <CAN-5tyEEfJ5p=NUaj+ubzCijq+d9vxT9EBVHvwQYgF=CMtrNTw@mail.gmail.com>
-	 <59e803abae0b7441c1440ebd4657e573b1c02dd2.camel@kernel.org>
-	 <CAN-5tyH8xw6XtpnXELJfrxibN3P=xRax31pCexcuOtBMZhooxw@mail.gmail.com>
+To: Zorro Lang <zlang@redhat.com>, linux-nfs@vger.kernel.org
+Cc: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 11 Nov 2024 09:02:38 -0500
+In-Reply-To: <20241111125711.7ux6eywuk7nxo5hl@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: 
+	<20241111125711.7ux6eywuk7nxo5hl@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,521 +135,285 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2024-11-10 at 21:19 -0500, Olga Kornievskaia wrote:
-> On Sat, Nov 9, 2024 at 2:26=E2=80=AFPM Jeff Layton <jlayton@kernel.org> w=
-rote:
-> >=20
-> > On Sat, 2024-11-09 at 13:50 -0500, Olga Kornievskaia wrote:
-> > > On Tue, Nov 5, 2024 at 7:31=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > > >=20
-> > > > nfsd currently only uses a single slot in the callback channel, whi=
-ch is
-> > > > proving to be a bottleneck in some cases. Widen the callback channe=
-l to
-> > > > a max of 32 slots (subject to the client's target_maxreqs value).
-> > > >=20
-> > > > Change the cb_holds_slot boolean to an integer that tracks the curr=
-ent
-> > > > slot number (with -1 meaning "unassigned").  Move the callback slot
-> > > > tracking info into the session. Add a new u32 that acts as a bitmap=
- to
-> > > > track which slots are in use, and a u32 to track the latest callbac=
-k
-> > > > target_slotid that the client reports. To protect the new fields, a=
-dd
-> > > > a new per-session spinlock (the se_lock). Fix nfsd41_cb_get_slot to=
- always
-> > > > search for the lowest slotid (using ffs()).
-> > > >=20
-> > > > Finally, convert the session->se_cb_seq_nr field into an array of
-> > > > counters and add the necessary handling to ensure that the seqids g=
-et
-> > > > reset at the appropriate times.
-> > > >=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > > ---
-> > > > v3 has a bug that Olga hit in testing. This version should fix the =
-wait
-> > > > when the slot table is full. Olga, if you're able to test this one,=
- it
-> > > > would be much appreciated.
-> > > > ---
-> > > > Changes in v4:
-> > > > - Fix the wait for a slot in nfsd41_cb_get_slot()
-> > > > - Link to v3: https://lore.kernel.org/r/20241030-bcwide-v3-0-c2df49=
-a26c45@kernel.org
-> > > >=20
-> > > > Changes in v3:
-> > > > - add patch to convert se_flags to single se_dead bool
-> > > > - fix off-by-one bug in handling of NFSD_BC_SLOT_TABLE_MAX
-> > > > - don't reject target highest slot value of 0
-> > > > - Link to v2: https://lore.kernel.org/r/20241029-bcwide-v2-1-e9010b=
-6ef55d@kernel.org
-> > > >=20
-> > > > Changes in v2:
-> > > > - take cl_lock when fetching fields from session to be encoded
-> > > > - use fls() instead of bespoke highest_unset_index()
-> > > > - rename variables in several functions with more descriptive names
-> > > > - clamp limit of for loop in update_cb_slot_table()
-> > > > - re-add missing rpc_wake_up_queued_task() call
-> > > > - fix slotid check in decode_cb_sequence4resok()
-> > > > - add new per-session spinlock
-> > > > ---
-> > > >  fs/nfsd/nfs4callback.c | 113 ++++++++++++++++++++++++++++++++++++-=
-------------
-> > > >  fs/nfsd/nfs4state.c    |  11 +++--
-> > > >  fs/nfsd/state.h        |  15 ++++---
-> > > >  fs/nfsd/trace.h        |   2 +-
-> > > >  4 files changed, 101 insertions(+), 40 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > > > index e38fa834b3d91333acf1425eb14c644e5d5f2601..47a678333907eaa92db=
-305dada503704c34c15b2 100644
-> > > > --- a/fs/nfsd/nfs4callback.c
-> > > > +++ b/fs/nfsd/nfs4callback.c
-> > > > @@ -406,6 +406,19 @@ encode_cb_getattr4args(struct xdr_stream *xdr,=
- struct nfs4_cb_compound_hdr *hdr,
-> > > >         hdr->nops++;
-> > > >  }
-> > > >=20
-> > > > +static u32 highest_slotid(struct nfsd4_session *ses)
-> > > > +{
-> > > > +       u32 idx;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       idx =3D fls(~ses->se_cb_slot_avail);
-> > > > +       if (idx > 0)
-> > > > +               --idx;
-> > > > +       idx =3D max(idx, ses->se_cb_highest_slot);
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +       return idx;
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * CB_SEQUENCE4args
-> > > >   *
-> > > > @@ -432,15 +445,35 @@ static void encode_cb_sequence4args(struct xd=
-r_stream *xdr,
-> > > >         encode_sessionid4(xdr, session);
-> > > >=20
-> > > >         p =3D xdr_reserve_space(xdr, 4 + 4 + 4 + 4 + 4);
-> > > > -       *p++ =3D cpu_to_be32(session->se_cb_seq_nr);      /* csa_se=
-quenceid */
-> > > > -       *p++ =3D xdr_zero;                        /* csa_slotid */
-> > > > -       *p++ =3D xdr_zero;                        /* csa_highest_sl=
-otid */
-> > > > +       *p++ =3D cpu_to_be32(session->se_cb_seq_nr[cb->cb_held_slot=
-]);    /* csa_sequenceid */
-> > > > +       *p++ =3D cpu_to_be32(cb->cb_held_slot);           /* csa_sl=
-otid */
-> > > > +       *p++ =3D cpu_to_be32(highest_slotid(session)); /* csa_highe=
-st_slotid */
-> > > >         *p++ =3D xdr_zero;                        /* csa_cachethis =
-*/
-> > > >         xdr_encode_empty_array(p);              /* csa_referring_ca=
-ll_lists */
-> > > >=20
-> > > >         hdr->nops++;
-> > > >  }
-> > > >=20
-> > > > +static void update_cb_slot_table(struct nfsd4_session *ses, u32 ta=
-rget)
-> > > > +{
-> > > > +       /* No need to do anything if nothing changed */
-> > > > +       if (likely(target =3D=3D READ_ONCE(ses->se_cb_highest_slot)=
-))
-> > > > +               return;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       if (target > ses->se_cb_highest_slot) {
-> > > > +               int i;
-> > > > +
-> > > > +               target =3D min(target, NFSD_BC_SLOT_TABLE_MAX);
-> > > > +
-> > > > +               /* Growing the slot table. Reset any new sequences =
-to 1 */
-> > > > +               for (i =3D ses->se_cb_highest_slot + 1; i <=3D targ=
-et; ++i)
-> > > > +                       ses->se_cb_seq_nr[i] =3D 1;
-> > > > +       }
-> > > > +       ses->se_cb_highest_slot =3D target;
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * CB_SEQUENCE4resok
-> > > >   *
-> > > > @@ -468,7 +501,7 @@ static int decode_cb_sequence4resok(struct xdr_=
-stream *xdr,
-> > > >         struct nfsd4_session *session =3D cb->cb_clp->cl_cb_session=
-;
-> > > >         int status =3D -ESERVERFAULT;
-> > > >         __be32 *p;
-> > > > -       u32 dummy;
-> > > > +       u32 seqid, slotid, target;
-> > > >=20
-> > > >         /*
-> > > >          * If the server returns different values for sessionID, sl=
-otID or
-> > > > @@ -484,21 +517,22 @@ static int decode_cb_sequence4resok(struct xd=
-r_stream *xdr,
-> > > >         }
-> > > >         p +=3D XDR_QUADLEN(NFS4_MAX_SESSIONID_LEN);
-> > > >=20
-> > > > -       dummy =3D be32_to_cpup(p++);
-> > > > -       if (dummy !=3D session->se_cb_seq_nr) {
-> > > > +       seqid =3D be32_to_cpup(p++);
-> > > > +       if (seqid !=3D session->se_cb_seq_nr[cb->cb_held_slot]) {
-> > > >                 dprintk("NFS: %s Invalid sequence number\n", __func=
-__);
-> > > >                 goto out;
-> > > >         }
-> > > >=20
-> > > > -       dummy =3D be32_to_cpup(p++);
-> > > > -       if (dummy !=3D 0) {
-> > > > +       slotid =3D be32_to_cpup(p++);
-> > > > +       if (slotid !=3D cb->cb_held_slot) {
-> > > >                 dprintk("NFS: %s Invalid slotid\n", __func__);
-> > > >                 goto out;
-> > > >         }
-> > > >=20
-> > > > -       /*
-> > > > -        * FIXME: process highest slotid and target highest slotid
-> > > > -        */
-> > > > +       p++; // ignore current highest slot value
-> > > > +
-> > > > +       target =3D be32_to_cpup(p++);
-> > > > +       update_cb_slot_table(session, target);
-> > > >         status =3D 0;
-> > > >  out:
-> > > >         cb->cb_seq_status =3D status;
-> > > > @@ -1203,6 +1237,22 @@ void nfsd4_change_callback(struct nfs4_clien=
-t *clp, struct nfs4_cb_conn *conn)
-> > > >         spin_unlock(&clp->cl_lock);
-> > > >  }
-> > > >=20
-> > > > +static int grab_slot(struct nfsd4_session *ses)
-> > > > +{
-> > > > +       int idx;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       idx =3D ffs(ses->se_cb_slot_avail) - 1;
-> > > > +       if (idx < 0 || idx > ses->se_cb_highest_slot) {
-> > > > +               spin_unlock(&ses->se_lock);
-> > > > +               return -1;
-> > > > +       }
-> > > > +       /* clear the bit for the slot */
-> > > > +       ses->se_cb_slot_avail &=3D ~BIT(idx);
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +       return idx;
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * There's currently a single callback channel slot.
-> > > >   * If the slot is available, then mark it busy.  Otherwise, set th=
-e
-> > > > @@ -1211,28 +1261,32 @@ void nfsd4_change_callback(struct nfs4_clie=
-nt *clp, struct nfs4_cb_conn *conn)
-> > > >  static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct r=
-pc_task *task)
-> > > >  {
-> > > >         struct nfs4_client *clp =3D cb->cb_clp;
-> > > > +       struct nfsd4_session *ses =3D clp->cl_cb_session;
-> > > >=20
-> > > > -       if (!cb->cb_holds_slot &&
-> > > > -           test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D 0) {
-> > > > +       if (cb->cb_held_slot >=3D 0)
-> > > > +               return true;
-> > > > +       cb->cb_held_slot =3D grab_slot(ses);
-> > > > +       if (cb->cb_held_slot < 0) {
-> > > >                 rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
-> > > >                 /* Race breaker */
-> > > > -               if (test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D=
- 0) {
-> > > > -                       dprintk("%s slot is busy\n", __func__);
-> > > > +               cb->cb_held_slot =3D grab_slot(ses);
-> > > > +               if (cb->cb_held_slot < 0)
-> > > >                         return false;
-> > > > -               }
-> > > >                 rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
-> > > >         }
-> > > > -       cb->cb_holds_slot =3D true;
-> > > >         return true;
-> > > >  }
-> > > >=20
-> > > >  static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
-> > > >  {
-> > > >         struct nfs4_client *clp =3D cb->cb_clp;
-> > > > +       struct nfsd4_session *ses =3D clp->cl_cb_session;
-> > > >=20
-> > > > -       if (cb->cb_holds_slot) {
-> > > > -               cb->cb_holds_slot =3D false;
-> > > > -               clear_bit(0, &clp->cl_cb_slot_busy);
-> > > > +       if (cb->cb_held_slot >=3D 0) {
-> > > > +               spin_lock(&ses->se_lock);
-> > > > +               ses->se_cb_slot_avail |=3D BIT(cb->cb_held_slot);
-> > > > +               spin_unlock(&ses->se_lock);
-> > > > +               cb->cb_held_slot =3D -1;
-> > > >                 rpc_wake_up_next(&clp->cl_cb_waitq);
-> > > >         }
-> > > >  }
-> > > > @@ -1249,8 +1303,8 @@ static void nfsd41_destroy_cb(struct nfsd4_ca=
-llback *cb)
-> > > >  }
-> > > >=20
-> > > >  /*
-> > > > - * TODO: cb_sequence should support referring call lists, cachethi=
-s, multiple
-> > > > - * slots, and mark callback channel down on communication errors.
-> > > > + * TODO: cb_sequence should support referring call lists, cachethi=
-s,
-> > > > + * and mark callback channel down on communication errors.
-> > > >   */
-> > > >  static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata=
-)
-> > > >  {
-> > > > @@ -1292,7 +1346,7 @@ static bool nfsd4_cb_sequence_done(struct rpc=
-_task *task, struct nfsd4_callback
-> > > >                 return true;
-> > > >         }
-> > > >=20
-> > > > -       if (!cb->cb_holds_slot)
-> > > > +       if (cb->cb_held_slot < 0)
-> > > >                 goto need_restart;
-> > > >=20
-> > > >         /* This is the operation status code for CB_SEQUENCE */
-> > > > @@ -1306,10 +1360,10 @@ static bool nfsd4_cb_sequence_done(struct r=
-pc_task *task, struct nfsd4_callback
-> > > >                  * If CB_SEQUENCE returns an error, then the state =
-of the slot
-> > > >                  * (sequence ID, cached reply) MUST NOT change.
-> > > >                  */
-> > > > -               ++session->se_cb_seq_nr;
-> > > > +               ++session->se_cb_seq_nr[cb->cb_held_slot];
-> > > >                 break;
-> > > >         case -ESERVERFAULT:
-> > > > -               ++session->se_cb_seq_nr;
-> > > > +               ++session->se_cb_seq_nr[cb->cb_held_slot];
-> > > >                 nfsd4_mark_cb_fault(cb->cb_clp);
-> > > >                 ret =3D false;
-> > > >                 break;
-> > > > @@ -1335,17 +1389,16 @@ static bool nfsd4_cb_sequence_done(struct r=
-pc_task *task, struct nfsd4_callback
-> > > >         case -NFS4ERR_BADSLOT:
-> > > >                 goto retry_nowait;
-> > > >         case -NFS4ERR_SEQ_MISORDERED:
-> > > > -               if (session->se_cb_seq_nr !=3D 1) {
-> > > > -                       session->se_cb_seq_nr =3D 1;
-> > > > +               if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1)=
- {
-> > > > +                       session->se_cb_seq_nr[cb->cb_held_slot] =3D=
- 1;
-> > > >                         goto retry_nowait;
-> > > >                 }
-> > > >                 break;
-> > > >         default:
-> > > >                 nfsd4_mark_cb_fault(cb->cb_clp);
-> > > >         }
-> > > > -       nfsd41_cb_release_slot(cb);
-> > > > -
-> > > >         trace_nfsd_cb_free_slot(task, cb);
-> > > > +       nfsd41_cb_release_slot(cb);
-> > > >=20
-> > > >         if (RPC_SIGNALLED(task))
-> > > >                 goto need_restart;
-> > > > @@ -1565,7 +1618,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb,=
- struct nfs4_client *clp,
-> > > >         INIT_WORK(&cb->cb_work, nfsd4_run_cb_work);
-> > > >         cb->cb_status =3D 0;
-> > > >         cb->cb_need_restart =3D false;
-> > > > -       cb->cb_holds_slot =3D false;
-> > > > +       cb->cb_held_slot =3D -1;
-> > > >  }
-> > > >=20
-> > > >  /**
-> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > index baf7994131fe1b0a4715174ba943fd2a9882aa12..75557e7cc9265517f51=
-952563beaa4cfe8adcc3f 100644
-> > > > --- a/fs/nfsd/nfs4state.c
-> > > > +++ b/fs/nfsd/nfs4state.c
-> > > > @@ -2002,6 +2002,9 @@ static struct nfsd4_session *alloc_session(st=
-ruct nfsd4_channel_attrs *fattrs,
-> > > >         }
-> > > >=20
-> > > >         memcpy(&new->se_fchannel, fattrs, sizeof(struct nfsd4_chann=
-el_attrs));
-> > > > +       new->se_cb_slot_avail =3D ~0U;
-> > > > +       new->se_cb_highest_slot =3D battrs->maxreqs - 1;
-> > > > +       spin_lock_init(&new->se_lock);
-> > > >         return new;
-> > > >  out_free:
-> > > >         while (i--)
-> > > > @@ -2132,11 +2135,14 @@ static void init_session(struct svc_rqst *r=
-qstp, struct nfsd4_session *new, stru
-> > > >=20
-> > > >         INIT_LIST_HEAD(&new->se_conns);
-> > > >=20
-> > > > -       new->se_cb_seq_nr =3D 1;
-> > > > +       atomic_set(&new->se_ref, 0);
-> > > >         new->se_dead =3D false;
-> > > >         new->se_cb_prog =3D cses->callback_prog;
-> > > >         new->se_cb_sec =3D cses->cb_sec;
-> > > > -       atomic_set(&new->se_ref, 0);
-> > > > +
-> > > > +       for (idx =3D 0; idx < NFSD_BC_SLOT_TABLE_MAX; ++idx)
-> > > > +               new->se_cb_seq_nr[idx] =3D 1;
-> > > > +
-> > > >         idx =3D hash_sessionid(&new->se_sessionid);
-> > > >         list_add(&new->se_hash, &nn->sessionid_hashtbl[idx]);
-> > > >         spin_lock(&clp->cl_lock);
-> > > > @@ -3159,7 +3165,6 @@ static struct nfs4_client *create_client(stru=
-ct xdr_netobj name,
-> > > >         kref_init(&clp->cl_nfsdfs.cl_ref);
-> > > >         nfsd4_init_cb(&clp->cl_cb_null, clp, NULL, NFSPROC4_CLNT_CB=
-_NULL);
-> > > >         clp->cl_time =3D ktime_get_boottime_seconds();
-> > > > -       clear_bit(0, &clp->cl_cb_slot_busy);
-> > > >         copy_verf(clp, verf);
-> > > >         memcpy(&clp->cl_addr, sa, sizeof(struct sockaddr_storage));
-> > > >         clp->cl_cb_session =3D NULL;
-> > > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > > > index d22e4f2c9039324a0953a9e15a3c255fb8ee1a44..848d023cb308f0b6991=
-6c4ee34b09075708f0de3 100644
-> > > > --- a/fs/nfsd/state.h
-> > > > +++ b/fs/nfsd/state.h
-> > > > @@ -71,8 +71,8 @@ struct nfsd4_callback {
-> > > >         struct work_struct cb_work;
-> > > >         int cb_seq_status;
-> > > >         int cb_status;
-> > > > +       int cb_held_slot;
-> > > >         bool cb_need_restart;
-> > > > -       bool cb_holds_slot;
-> > > >  };
-> > > >=20
-> > > >  struct nfsd4_callback_ops {
-> > > > @@ -307,6 +307,9 @@ struct nfsd4_conn {
-> > > >         unsigned char cn_flags;
-> > > >  };
-> > > >=20
-> > > > +/* Highest slot index that nfsd implements in NFSv4.1+ backchannel=
- */
-> > > > +#define NFSD_BC_SLOT_TABLE_MAX (sizeof(u32) * 8 - 1)
-> > >=20
-> > > Are there some values that are known not to work? I was experimenting
-> > > with values and set it to 2 and 4 and the kernel oopsed. I understand
-> > > it's not a configurable value but it would still be good to know the
-> > > expectations...
-> > >=20
-> > > [  198.625021] Unable to handle kernel paging request at virtual
-> > > address dfff800020000000
-> > > [  198.625870] KASAN: probably user-memory-access in range
-> > > [0x0000000100000000-0x0000000100000007]
-> > > [  198.626444] Mem abort info:
-> > > [  198.626630]   ESR =3D 0x0000000096000005
-> > > [  198.626882]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-> > > [  198.627234]   SET =3D 0, FnV =3D 0
-> > > [  198.627441]   EA =3D 0, S1PTW =3D 0
-> > > [  198.627627]   FSC =3D 0x05: level 1 translation fault
-> > > [  198.627859] Data abort info:
-> > > [  198.628000]   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
-> > > [  198.628272]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
-> > > [  198.628619]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
-> > > [  198.628967] [dfff800020000000] address between user and kernel add=
-ress ranges
-> > > [  198.629438] Internal error: Oops: 0000000096000005 [#1] SMP
-> > > [  198.629806] Modules linked in: rpcsec_gss_krb5 nfsv4 dns_resolver
-> > > nfs netfs nfnetlink_queue nfnetlink_log nfnetlink bluetooth cfg80211
-> > > rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd
-> > > grace isofs uinput snd_seq_dummy snd_hrtimer vsock_loopback
-> > > vmw_vsock_virtio_transport_common qrtr rfkill vmw_vsock_vmci_transpor=
-t
-> > > vsock sunrpc vfat fat snd_hda_codec_generic snd_hda_intel
-> > > snd_intel_dspcfg snd_hda_codec snd_hda_core snd_hwdep snd_seq uvcvide=
-o
-> > > videobuf2_vmalloc snd_seq_device videobuf2_memops uvc videobuf2_v4l2
-> > > videodev snd_pcm videobuf2_common mc snd_timer snd vmw_vmci soundcore
-> > > xfs libcrc32c vmwgfx drm_ttm_helper ttm nvme drm_kms_helper
-> > > crct10dif_ce nvme_core ghash_ce sha2_ce sha256_arm64 sha1_ce drm
-> > > nvme_auth sr_mod cdrom e1000e sg fuse
-> > > [  198.633799] CPU: 5 UID: 0 PID: 6081 Comm: nfsd Kdump: loaded Not
-> > > tainted 6.12.0-rc6+ #47
-> > > [  198.634345] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS
-> > > VMW201.00V.21805430.BA64.2305221830 05/22/2023
-> > > [  198.635014] pstate: 11400005 (nzcV daif +PAN -UAO -TCO +DIT -SSBS =
-BTYPE=3D--)
-> > > [  198.635492] pc : nfsd4_sequence+0x5a0/0x1f60 [nfsd]
-> > > [  198.635798] lr : nfsd4_sequence+0x340/0x1f60 [nfsd]
-> > > [  198.636065] sp : ffff8000884977e0
-> > > [  198.636234] x29: ffff800088497910 x28: ffff0000b1b39280 x27: ffff0=
-000ab508128
-> > > [  198.636624] x26: ffff0000b1b39298 x25: ffff0000b1b39290 x24: ffff0=
-000a65e1c64
-> > > [  198.637049] x23: 1fffe000212e6804 x22: ffff000109734024 x21: 1ffff=
-00011092f16
-> > > [  198.637472] x20: ffff00010aed8000 x19: ffff000109734000 x18: 1fffe=
-0002de20c8b
-> > > [  198.637883] x17: 0100000000000000 x16: 1ffff0000fcef234 x15: 1fffe=
-000212e600f
-> > > [  198.638286] x14: ffff80007e779000 x13: ffff80007e7791a0 x12: 00000=
-00000000000
-> > > [  198.638697] x11: ffff0000a65e1c38 x10: ffff00010aedaca0 x9 : 1fffe=
-000215db594
-> > > [  198.639110] x8 : 1fffe00014cbc387 x7 : ffff0000a65e1c03 x6 : ffff0=
-000a65e1c00
-> > > [  198.639541] x5 : ffff0000a65e1c00 x4 : 0000000020000000 x3 : 00000=
-00100000001
-> > > [  198.639962] x2 : ffff000109730060 x1 : 0000000000000003 x0 : dfff8=
-00000000000
-> > > [  198.640332] Call trace:
-> > > [  198.640460]  nfsd4_sequence+0x5a0/0x1f60 [nfsd]
-> > > [  198.640715]  nfsd4_proc_compound+0xb94/0x23b0 [nfsd]
-> > > [  198.640997]  nfsd_dispatch+0x22c/0x718 [nfsd]
-> > > [  198.641260]  svc_process_common+0x8e8/0x1968 [sunrpc]
-> > > [  198.641566]  svc_process+0x3d4/0x7e0 [sunrpc]
-> > > [  198.641827]  svc_handle_xprt+0x828/0xe10 [sunrpc]
-> > > [  198.642108]  svc_recv+0x2cc/0x6a8 [sunrpc]
-> > > [  198.642346]  nfsd+0x270/0x400 [nfsd]
-> > > [  198.642562]  kthread+0x288/0x310
-> > > [  198.642745]  ret_from_fork+0x10/0x20
-> > > [  198.642937] Code: f2fbffe0 f9003be4 f94007e2 52800061 (38e06880)
-> > > [  198.643267] SMP: stopping secondary CPUs
-> > >=20
-> > >=20
-> > >=20
-> >=20
-> >=20
-> > Good catch. I think the problem here is that we don't currently cap the
-> > initial value of se_cb_highest_slot at NFSD_BC_SLOT_TABLE_MAX. Does
-> > this patch prevent the panic?
-> >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 3afe56ab9e0a..839be4ba765a 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -2011,7 +2011,7 @@ static struct nfsd4_session *alloc_session(struct=
- nfsd4_channel_attrs *fattrs,
-> >=20
-> >         memcpy(&new->se_fchannel, fattrs, sizeof(struct nfsd4_channel_a=
-ttrs));
-> >         new->se_cb_slot_avail =3D ~0U;
-> > -       new->se_cb_highest_slot =3D battrs->maxreqs - 1;
-> > +       new->se_cb_highest_slot =3D min(battrs->maxreqs - 1, NFSD_BC_SL=
-OT_TABLE_MAX);
-> >         spin_lock_init(&new->se_lock);
-> >         return new;
-> >  out_free:
+On Mon, 2024-11-11 at 20:57 +0800, Zorro Lang wrote:
+> Lots of fstests cases fail on nfs, e.g. [1]. The dmesg output as [2].
+> I tested on linux v6.12-rc6+, with HEAD=3Dda4373fbcf006deda90e5e6a87c499e=
+0ff747572
 >=20
-> It does help. I thought that the CREATE_SESSION reply for the
-> backchannel would be guided by the NFSD_BC_SLOT_TABLE_MAX value but
-> instead it seems like it's not. But yes I can see that the highest
-> slot used by the server is capped by the NFSD_BC_SLOT_TABLE_MAX value.
+> Thanks,
+> Zorro
+>=20
 
-Thanks for testing it, Olga.
+This looks wrong:
 
-Chuck, would you be OK with folding the above delta into 9ab4c4077de9,
-or would you rather I resend the patch?
+static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)   =
+                        =20
+{                                                                          =
+                        =20
+        /*                                                                 =
+                        =20
+         * Once reference to nfsd_serv is dropped, NFSD could be           =
+                        =20
+         * unloaded, so ensure safe return from nfsd_file_put_local()      =
+                        =20
+         * by always taking RCU.                                           =
+                        =20
+         */                                                                =
+                        =20
+        rcu_read_lock();                                                   =
+                        =20
+        nfs_to->nfsd_file_put_local(localio);                              =
+                        =20
+        rcu_read_unlock();                                                 =
+                        =20
+}   =20
+
+nfsd_file_put_local() calls nfsd_file_put, which can sleep. What
+exactly is the scenario that you're guarding against with the RCU read
+lock?
+
+
+>=20
+> [1]
+> FSTYP         -- nfs
+> PLATFORM      -- Linux/aarch64 hpe-apollo-cn99xx-14-vm-04 6.12.0-rc6+ #1 =
+SMP PREEMPT_DYNAMIC Sat Nov  9 16:18:01 EST 2024
+> MKFS_OPTIONS  -- hpe-apollo-cn99xx-14-vm-04.khw.eng.rdu2.dc.redhat.com:/m=
+nt/xfstests/scratch/nfs-server
+> MOUNT_OPTIONS -- -o vers=3D4.2 -o context=3Dsystem_u:object_r:root_t:s0 h=
+pe-apollo-cn99xx-14-vm-04.khw.eng.rdu2.dc.redhat.com:/mnt/xfstests/scratch/=
+nfs-server /mnt/xfstests/scratch/nfs-client
+>=20
+> generic/001       _check_dmesg: something found in dmesg (see /var/lib/xf=
+stests/results//generic/001.dmesg)
+>=20
+> Ran: generic/001
+> Failures: generic/001
+> Failed 1 of 1 tests
+>=20
+> [2]
+> #cat /var/lib/xfstests/results//generic/001.dmesg
+> [  637.512336] run fstests generic/001 at 2024-11-09 13:32:14
+> [  638.266054] BUG: sleeping function called from invalid context at fs/n=
+fsd/filecache.c:360
+> [  638.274310] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 233=
+, name: kworker/u128:23
+> [  638.282860] preempt_count: 0, expected: 0
+> [  638.286897] RCU nest depth: 1, expected: 0
+> [  638.291023] 3 locks held by kworker/u128:23/233:
+> [  638.295666]  #0: ff110001a2e64958 ((wq_completion)nfslocaliod){+.+.}-{=
+0:0}, at: process_one_work+0x7f0/0x1340
+> [  638.305619]  #1: ffa000000161fd90 ((work_completion)(&iocb->work)){+.+=
+.}-{0:0}, at: process_one_work+0xd27/0x1340
+> [  638.315901]  #2: ffffffff9c935ec0 (rcu_read_lock){....}-{1:2}, at: nfs=
+_local_pgio_release+0x6e/0x2c0 [nfs]
+> [  638.325645] CPU: 13 UID: 0 PID: 233 Comm: kworker/u128:23 Kdump: loade=
+d Not tainted 6.12.0-rc6+ #1
+> [  638.334615] Hardware name: Dell Inc. PowerEdge R660/0R5JJC, BIOS 2.1.5=
+ 03/14/2024
+> [  638.342113] Workqueue: nfslocaliod nfs_local_call_write [nfs]
+> [  638.347909] Call Trace:
+> [  638.350364]  <TASK>
+> [  638.352490]  ? nfs_local_call_write+0x649/0xd90 [nfs]
+> [  638.357589]  dump_stack_lvl+0x6f/0xb0
+> [  638.361277]  __might_resched.cold+0x1ec/0x232
+> [  638.365651]  ? __pfx___might_resched+0x10/0x10
+> [  638.370123]  nfsd_file_put+0x27/0x220 [nfsd]
+> [  638.374476]  nfsd_file_put_local+0x35/0x50 [nfsd]
+> [  638.379244]  nfs_local_pgio_release+0xe0/0x2c0 [nfs]
+> [  638.384261]  nfs_local_call_write+0x572/0xd90 [nfs]
+> [  638.389189]  ? __pfx_nfs_local_call_write+0x10/0x10 [nfs]
+> [  638.394635]  ? trace_lock_acquire+0x1b9/0x280
+> [  638.399016]  ? rcu_is_watching+0x15/0xb0
+> [  638.402967]  process_one_work+0xd70/0x1340
+> [  638.407098]  ? __pfx_process_one_work+0x10/0x10
+> [  638.411655]  ? assign_work+0x16c/0x240
+> [  638.415428]  worker_thread+0x5e6/0xfc0
+> [  638.419207]  ? __pfx_worker_thread+0x10/0x10
+> [  638.423492]  kthread+0x2d2/0x3a0
+> [  638.426744]  ? _raw_spin_unlock_irq+0x28/0x50
+> [  638.431119]  ? __pfx_kthread+0x10/0x10
+> [  638.434894]  ret_from_fork+0x31/0x70
+> [  638.438487]  ? __pfx_kthread+0x10/0x10
+> [  638.442258]  ret_from_fork_asm+0x1a/0x30
+> [  638.446206]  </TASK>
+> [  639.282949] BUG: sleeping function called from invalid context at fs/n=
+fsd/filecache.c:360
+> [  639.291169] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 233=
+, name: kworker/u128:23
+> [  639.299722] preempt_count: 0, expected: 0
+> [  639.303764] RCU nest depth: 1, expected: 0
+> [  639.307889] 3 locks held by kworker/u128:23/233:
+> [  639.312533]  #0: ff110001a2e64958 ((wq_completion)nfslocaliod){+.+.}-{=
+0:0}, at: process_one_work+0x7f0/0x1340
+> [  639.322500]  #1: ffa000000161fd90 ((work_completion)(&iocb->work)){+.+=
+.}-{0:0}, at: process_one_work+0xd27/0x1340
+> [  639.332797]  #2: ffffffff9c935ec0 (rcu_read_lock){....}-{1:2}, at: nfs=
+_local_pgio_release+0x6e/0x2c0 [nfs]
+> [  639.342546] CPU: 14 UID: 0 PID: 233 Comm: kworker/u128:23 Kdump: loade=
+d Tainted: G        W          6.12.0-rc6+ #1
+> [  639.352989] Tainted: [W]=3DWARN
+> [  639.355979] Hardware name: Dell Inc. PowerEdge R660/0R5JJC, BIOS 2.1.5=
+ 03/14/2024
+> [  639.363477] Workqueue: nfslocaliod nfs_local_call_write [nfs]
+> [  639.369273] Call Trace:
+> [  639.371746]  <TASK>
+> [  639.373869]  ? nfs_local_call_write+0x649/0xd90 [nfs]
+> [  639.378964]  dump_stack_lvl+0x6f/0xb0
+> [  639.382650]  __might_resched.cold+0x1ec/0x232
+> [  639.387025]  ? __pfx___might_resched+0x10/0x10
+> [  639.391497]  nfsd_file_put+0x27/0x220 [nfsd]
+> [  639.395851]  nfsd_file_put_local+0x35/0x50 [nfsd]
+> [  639.400615]  nfs_local_pgio_release+0xe0/0x2c0 [nfs]
+> [  639.405636]  nfs_local_call_write+0x572/0xd90 [nfs]
+> [  639.410569]  ? __pfx_nfs_local_call_write+0x10/0x10 [nfs]
+> [  639.416017]  ? trace_lock_acquire+0x1b9/0x280
+> [  639.420398]  ? rcu_is_watching+0x15/0xb0
+> [  639.424349]  process_one_work+0xd70/0x1340
+> [  639.428470]  ? __pfx_process_one_work+0x10/0x10
+> [  639.433028]  ? assign_work+0x16c/0x240
+> [  639.436804]  worker_thread+0x5e6/0xfc0
+> [  639.440589]  ? __pfx_worker_thread+0x10/0x10
+> [  639.444876]  kthread+0x2d2/0x3a0
+> [  639.448126]  ? _raw_spin_unlock_irq+0x28/0x50
+> [  639.452503]  ? __pfx_kthread+0x10/0x10
+> [  639.456275]  ret_from_fork+0x31/0x70
+> [  639.459868]  ? __pfx_kthread+0x10/0x10
+> [  639.463641]  ret_from_fork_asm+0x1a/0x30
+> [  639.467596]  </TASK>
+> [  642.895946] BUG: sleeping function called from invalid context at fs/n=
+fsd/filecache.c:360
+> [  642.904217] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 219=
+, name: kworker/u128:9
+> [  642.912679] preempt_count: 0, expected: 0
+> [  642.916715] RCU nest depth: 1, expected: 0
+> [  642.920840] 3 locks held by kworker/u128:9/219:
+> [  642.925400]  #0: ff110001a2e64958 ((wq_completion)nfslocaliod){+.+.}-{=
+0:0}, at: process_one_work+0x7f0/0x1340
+> [  642.935350]  #1: ffa000000153fd90 ((work_completion)(&iocb->work)#2){+=
+.+.}-{0:0}, at: process_one_work+0xd27/0x1340
+> [  642.945809]  #2: ffffffff9c935ec0 (rcu_read_lock){....}-{1:2}, at: nfs=
+_local_pgio_release+0x6e/0x2c0 [nfs]
+> [  642.955555] CPU: 15 UID: 0 PID: 219 Comm: kworker/u128:9 Kdump: loaded=
+ Tainted: G        W          6.12.0-rc6+ #1
+> [  642.965909] Tainted: [W]=3DWARN
+> [  642.968897] Hardware name: Dell Inc. PowerEdge R660/0R5JJC, BIOS 2.1.5=
+ 03/14/2024
+> [  642.976395] Workqueue: nfslocaliod nfs_local_call_read [nfs]
+> [  642.982107] Call Trace:
+> [  642.984577]  <TASK>
+> [  642.986702]  ? __up_read+0x111/0x730
+> [  642.990296]  dump_stack_lvl+0x6f/0xb0
+> [  642.993983]  __might_resched.cold+0x1ec/0x232
+> [  642.998358]  ? __pfx___might_resched+0x10/0x10
+> [  643.002822]  ? trace_xfs_iunlock+0x185/0x200 [xfs]
+> [  643.007929]  nfsd_file_put+0x27/0x220 [nfsd]
+> [  643.012296]  nfsd_file_put_local+0x35/0x50 [nfsd]
+> [  643.017063]  nfs_local_pgio_release+0xe0/0x2c0 [nfs]
+> [  643.022090]  nfs_local_call_read+0x427/0x770 [nfs]
+> [  643.026937]  ? __pfx_nfs_local_call_read+0x10/0x10 [nfs]
+> [  643.032297]  ? trace_lock_acquire+0x1b9/0x280
+> [  643.036679]  ? rcu_is_watching+0x15/0xb0
+> [  643.040630]  process_one_work+0xd70/0x1340
+> [  643.044753]  ? __pfx_process_one_work+0x10/0x10
+> [  643.049308]  ? assign_work+0x16c/0x240
+> [  643.053084]  worker_thread+0x5e6/0xfc0
+> [  643.056861]  ? __pfx_worker_thread+0x10/0x10
+> [  643.061149]  kthread+0x2d2/0x3a0
+> [  643.064398]  ? _raw_spin_unlock_irq+0x28/0x50
+> [  643.068768]  ? __pfx_kthread+0x10/0x10
+> [  643.072539]  ret_from_fork+0x31/0x70
+> [  643.076142]  ? __pfx_kthread+0x10/0x10
+> [  643.079913]  ret_from_fork_asm+0x1a/0x30
+> [  643.083871]  </TASK>
+> [  646.734835] BUG: sleeping function called from invalid context at fs/n=
+fsd/filecache.c:360
+> [  646.743060] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 235=
+, name: kworker/u128:25
+> [  646.751615] preempt_count: 0, expected: 0
+> [  646.755655] RCU nest depth: 1, expected: 0
+> [  646.759779] 3 locks held by kworker/u128:25/235:
+> [  646.764424]  #0: ff110001a2e64958 ((wq_completion)nfslocaliod){+.+.}-{=
+0:0}, at: process_one_work+0x7f0/0x1340
+> [  646.774374]  #1: ffa000000163fd90 ((work_completion)(&iocb->work)#2){+=
+.+.}-{0:0}, at: process_one_work+0xd27/0x1340
+> [  646.784837]  #2: ffffffff9c935ec0 (rcu_read_lock){....}-{1:2}, at: nfs=
+_local_pgio_release+0x6e/0x2c0 [nfs]
+> [  646.794592] CPU: 19 UID: 0 PID: 235 Comm: kworker/u128:25 Kdump: loade=
+d Tainted: G        W          6.12.0-rc6+ #1
+> [  646.805039] Tainted: [W]=3DWARN
+> [  646.808028] Hardware name: Dell Inc. PowerEdge R660/0R5JJC, BIOS 2.1.5=
+ 03/14/2024
+> [  646.815508] Workqueue: nfslocaliod nfs_local_call_read [nfs]
+> [  646.821220] Call Trace:
+> [  646.823691]  <TASK>
+> [  646.825799]  ? __up_read+0x111/0x730
+> [  646.829402]  dump_stack_lvl+0x6f/0xb0
+> [  646.833088]  __might_resched.cold+0x1ec/0x232
+> [  646.837462]  ? __pfx___might_resched+0x10/0x10
+> [  646.841928]  ? trace_xfs_iunlock+0x185/0x200 [xfs]
+> [  646.847072]  nfsd_file_put+0x27/0x220 [nfsd]
+> [  646.851445]  nfsd_file_put_local+0x35/0x50 [nfsd]
+> [  646.856220]  nfs_local_pgio_release+0xe0/0x2c0 [nfs]
+> [  646.861254]  nfs_local_call_read+0x427/0x770 [nfs]
+> [  646.866103]  ? __pfx_nfs_local_call_read+0x10/0x10 [nfs]
+> [  646.871464]  ? trace_lock_acquire+0x1b9/0x280
+> [  646.875847]  ? rcu_is_watching+0x15/0xb0
+> [  646.879795]  process_one_work+0xd70/0x1340
+> [  646.883929]  ? __pfx_process_one_work+0x10/0x10
+> [  646.888485]  ? assign_work+0x16c/0x240
+> [  646.892260]  worker_thread+0x5e6/0xfc0
+> [  646.896046]  ? __pfx_worker_thread+0x10/0x10
+> [  646.900332]  kthread+0x2d2/0x3a0
+> [  646.903579]  ? _raw_spin_unlock_irq+0x28/0x50
+> [  646.907957]  ? __pfx_kthread+0x10/0x10
+> [  646.911731]  ret_from_fork+0x31/0x70
+> [  646.915334]  ? __pfx_kthread+0x10/0x10
+> [  646.919105]  ret_from_fork_asm+0x1a/0x30
+> [  646.923066]  </TASK>
+> [  650.538851] BUG: sleeping function called from invalid context at fs/n=
+fsd/filecache.c:360
+> [  650.547069] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 235=
+, name: kworker/u128:25
+> [  650.555616] preempt_count: 0, expected: 0
+> [  650.559649] RCU nest depth: 1, expected: 0
+> [  650.563775] 3 locks held by kworker/u128:25/235:
+> [  650.568425]  #0: ff110001a2e64958 ((wq_completion)nfslocaliod){+.+.}-{=
+0:0}, at: process_one_work+0x7f0/0x1340
+> [  650.578372]  #1: ffa000000163fd90 ((work_completion)(&iocb->work)#2){+=
+.+.}-{0:0}, at: process_one_work+0xd27/0x1340
+> [  650.588832]  #2: ffffffff9c935ec0 (rcu_read_lock){....}-{1:2}, at: nfs=
+_local_pgio_release+0x6e/0x2c0 [nfs]
+> [  650.598579] CPU: 19 UID: 0 PID: 235 Comm: kworker/u128:25 Kdump: loade=
+d Tainted: G        W          6.12.0-rc6+ #1
+> [  650.609026] Tainted: [W]=3DWARN
+> [  650.612015] Hardware name: Dell Inc. PowerEdge R660/0R5JJC, BIOS 2.1.5=
+ 03/14/2024
+> [  650.619513] Workqueue: nfslocaliod nfs_local_call_read [nfs]
+> [  650.625233] Call Trace:
+> [  650.627702]  <TASK>
+> [  650.629830]  ? __up_read+0x111/0x730
+> [  650.633432]  dump_stack_lvl+0x6f/0xb0
+> [  650.637117]  __might_resched.cold+0x1ec/0x232
+> [  650.641494]  ? __pfx___might_resched+0x10/0x10
+> [  650.645957]  ? trace_xfs_iunlock+0x185/0x200 [xfs]
+> [  650.651032]  nfsd_file_put+0x27/0x220 [nfsd]
+> [  650.655388]  nfsd_file_put_local+0x35/0x50 [nfsd]
+> [  650.660153]  nfs_local_pgio_release+0xe0/0x2c0 [nfs]
+> [  650.665182]  nfs_local_call_read+0x427/0x770 [nfs]
+> [  650.670029]  ? __pfx_nfs_local_call_read+0x10/0x10 [nfs]
+> [  650.675388]  ? trace_lock_acquire+0x1b9/0x280
+> [  650.679774]  ? rcu_is_watching+0x15/0xb0
+> [  650.683725]  process_one_work+0xd70/0x1340
+> [  650.687854]  ? __pfx_process_one_work+0x10/0x10
+> [  650.692409]  ? assign_work+0x16c/0x240
+> [  650.696184]  worker_thread+0x5e6/0xfc0
+> [  650.699961]  ? __pfx_worker_thread+0x10/0x10
+> [  650.704247]  kthread+0x2d2/0x3a0
+> [  650.707499]  ? _raw_spin_unlock_irq+0x28/0x50
+>=20
+>=20
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
