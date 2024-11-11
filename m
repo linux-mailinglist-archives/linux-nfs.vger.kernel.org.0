@@ -1,341 +1,189 @@
-Return-Path: <linux-nfs+bounces-7846-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7847-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9071C9C36DA
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 04:06:37 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D9A59C36F0
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 04:18:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF18C1C2082F
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 03:06:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F89EB207A8
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 03:18:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C03E913D619;
-	Mon, 11 Nov 2024 03:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="L/tgSJD/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YNMzkSw/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V1ezF6PJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TwSzT0BX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40CBEEA6;
+	Mon, 11 Nov 2024 03:18:41 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11022122.outbound.protection.outlook.com [40.107.200.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE42C79CD
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 03:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731294393; cv=none; b=U/eUDHXAZIOmmdvfV1kSy7TwZNlojpfsr1e/9HXRXUl0dSSTNUSSV7WWqjWCa8zTRscBIh8ei+xHTJO9QgeOQZevvnxc09gBy1L9Rr8Q/Md7mla1TnFBNsv5kYlkkqxxgEPr+o52ei/PKRZM+WS7LytW4aQaNRpkzFgbeYoURDk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731294393; c=relaxed/simple;
-	bh=4Zxq05GleDJ78hCivYnOeUR2Am5JHMrlognUA+T6TXU=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=iNPJ+3d63jOe9grvOCcBzoD1gBVicJmp5oV6oTNIqSWqQF/r2bTPHy5Wl5Sg99/sPED7TcB1QptatX7yvq8xF+miLbN8H+zJPnyrh01krrHMbdPM8YoZ+ff8ykHzZVv3VfX+ymRgQhZbl79JguC45lXiEo74bS6kisiZoFAZle8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=L/tgSJD/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YNMzkSw/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V1ezF6PJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TwSzT0BX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EB1A0219EA;
-	Mon, 11 Nov 2024 03:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731294390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZUOC10Z5sIPlwOBuHtJ0gegxagkUSXOLsreKk6sodI=;
-	b=L/tgSJD/JeCGqqnJQcmz5G0AWNMYoUumRb7/LfdqTbhjst2Spwi5eoBWUB+I+rcKYo8hdz
-	DZCfxNBVhACM5CcjOkDY887zXrLUu8EXN9LWJPx07Q3GiCL5bnRxLsyp2HB/TCby57eMGH
-	Vo5uq9AiA9N4Z1OerEIBPbpnrK3cj84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731294390;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZUOC10Z5sIPlwOBuHtJ0gegxagkUSXOLsreKk6sodI=;
-	b=YNMzkSw/v4MNJQIIR6PfWaoK+S6mqwhDatD0tUpbJT66ZemBYIeQ+eOiVr3Xn8ch25BzNC
-	Sc7wLXluKhTQ53DQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=V1ezF6PJ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TwSzT0BX
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731294389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZUOC10Z5sIPlwOBuHtJ0gegxagkUSXOLsreKk6sodI=;
-	b=V1ezF6PJe/uQa/lavDyooMfJcJTcKO3IYDG9018ftSoiFg43StGS5isNxpvAn0iU9TFH/H
-	3B/GaCh2TMuBOCuEajNHWULOVjMYmMNJf7EZBgvZ0QaKvHtqZgmvaYQy/bp2u2LyY7jUaP
-	iFUQG5MYF5BDSy+oFRwQUCJ7nXlvyWo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731294389;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZUOC10Z5sIPlwOBuHtJ0gegxagkUSXOLsreKk6sodI=;
-	b=TwSzT0BXKWaRBtBn/hjI2zwGzSCl5uvFBPd7hpQM/YDybUMNSwQ1LWa0ii6RUGTOOgg6/c
-	MxTy0qvmqX2M+ZDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DE541137FB;
-	Mon, 11 Nov 2024 03:06:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yAe9JLN0MWeUGQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 03:06:27 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38772595;
+	Mon, 11 Nov 2024 03:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1731295121; cv=fail; b=pks0qpP5/la81x7c13mxZCHfAHMXBmSAAXPa8+2FbuOh+/Ho6B2wc/ECiFaNGxU++HBq2GH+7I0wCDM3ol4/iEtZ21iYMnSesjWWXvRVFIqdgeJ/KMWy2OpCMRXu8mLQU0I9rLtB2XCpT2c+cp/Fjl6lldrS50G6dZJrLODo9XI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1731295121; c=relaxed/simple;
+	bh=R5Os5KkKEu/McVsXusNjzzW48BomyY+DX6z0Fcn4S4k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TqH9ZwxXrhObJ/HP2FNgDbaTdteBpPcpvA1679bwy4fJF/W4ocYWisWMrTAhGwKGiG7JJwzutQ+wZh8pSFNfQJGO13h22OwvTO4Tt6a5tAfgj6nmDSR+RUy8qGf22PIQCx7j2L9FY5v4897xtOspOO96gSIEpDt5d4xRuniub8o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.200.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lw793b640PJOjZ/C3tgaErJYPmctjeMhjVU/kbltp3eyPiOBJBxuWA9MQ9c80U6Di3VjEKVRQPR4urmzB/ptr0IlZFalJor0OTjT8g3vYy70mlpyKoxACxkE9WgG829htTxplo0uQmEFX41M0iAIyoYWUxCNyj9WatJHpqDQpxhBYhOrexCcdw/eQRmobwnUSf8IeUy2H1bM4GeVIoPNn+XepDlmlL1dHOKB4i+RXkaoJ11C3g/z/DQBpPuTpjfoRt7+nBlin3XGcBtOdul4SdAtuwwvMvxKGVTwlAnsmXOM2zAmG+ZNdmx872iTNkyrxnF64MbPdfxDu0NSPPouyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pguS1pS7f7ba5unp9/haI4ynQ9qCV2Ood3CphxSfWHE=;
+ b=K2vJcCF/qH9WhPKJrvRKmN5raLmLYd0sIk2N89LBE3Y2TvnzoabhQE35mCmFUF/tiTNxR6qMSmeKA1B/bfSp/Is6y40BIACSVU+1ZBLWXnSNldOuCk5P1PfHnB2hfJupuvwWSTTpPNrDIpxSkFmyWp6o9cKsTfxnHojheonyF6lXBwztZ/W0JQxmmtwFliL8uoHa0vz93nw1Grb4vSq8uN6crg2Vp7Zno6yCFDR1ZtwfSZDaVc7pqZ+x/Q38msuaJanDJeTpFVOHGgIyJl6U8s4i+WURven835r+BMbF5G9jwWhL+Ci7OOI7JJnyZ00wNzO5OHdsRPqL+khjal5Y+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
+ DS0PR01MB8009.prod.exchangelabs.com (2603:10b6:8:149::18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8158.12; Mon, 11 Nov 2024 03:18:35 +0000
+Received: from SN6PR01MB5246.prod.exchangelabs.com
+ ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
+ ([fe80::cf18:495f:c6c:ec90%3]) with mapi id 15.20.8158.013; Mon, 11 Nov 2024
+ 03:18:35 +0000
+Message-ID: <c60e636f-8d69-4ec5-84d7-58cf72bbd0e8@talpey.com>
+Date: Sun, 10 Nov 2024 22:18:33 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] nfsd: allow for up to 32 callback session slots
+To: Olga Kornievskaia <aglo@umich.edu>, Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241105-bcwide-v4-1-48f52ee0fb0c@kernel.org>
+ <CAN-5tyHqDNRm-O+NKNXGG_J91M3vCgz8LVZWUjePpYUyy6Pmsg@mail.gmail.com>
+ <CAN-5tyHGgtBv6u4TBtx8+0nQy26fbqBE0ic_orGHUihNoHNa4g@mail.gmail.com>
+ <ec6f82804aac6fa2b75e35c39977703bde38f507.camel@kernel.org>
+ <CAN-5tyFmEUyZS-hXURdhhETwC-0MPPz0Vnu6oRW6dbZdWanpjA@mail.gmail.com>
+Content-Language: en-US
+From: Tom Talpey <tom@talpey.com>
+In-Reply-To: <CAN-5tyFmEUyZS-hXURdhhETwC-0MPPz0Vnu6oRW6dbZdWanpjA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BN0PR04CA0078.namprd04.prod.outlook.com
+ (2603:10b6:408:ea::23) To SN6PR01MB5246.prod.exchangelabs.com
+ (2603:10b6:805:d8::14)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Mike Snitzer" <snitzer@kernel.org>
-Cc: linux-nfs@vger.kernel.org, "Anna Schumaker" <anna@kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [for-6.13 PATCH 19/19] nfs: probe for LOCALIO when v3 client
- reconnects to server
-In-reply-to: <20241108234002.16392-20-snitzer@kernel.org>
-References: <20241108234002.16392-1-snitzer@kernel.org>,
- <20241108234002.16392-20-snitzer@kernel.org>
-Date: Mon, 11 Nov 2024 14:06:17 +1100
-Message-id: <173129437701.1734440.15421867470403487809@noble.neil.brown.name>
-X-Rspamd-Queue-Id: EB1A0219EA
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|DS0PR01MB8009:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c53bc75-879a-4681-1454-08dd01ff8729
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bC9ma2hIY0dNTDJZNFhBUk5nSEpOTVVyU3BXOUhBV3lwVnpzRlFaV2ExdDJS?=
+ =?utf-8?B?V3lZUXA2VHFIaFl4Mk4vVVRGdGNGWjc5dG16NG53ZEk4YmJSY3M2RnE0bVNH?=
+ =?utf-8?B?MmwvdlltSC9KcDYwNmlqRFVGNlJkZHplZmFuV3N3REMyWVQ3Yk5FT2ZhTEJq?=
+ =?utf-8?B?WmkxL3hNWWltQ0lEYzdrc1ZHZitkMjFtc2JyYUpoQXBYbWRZMnB2WlhPaU9P?=
+ =?utf-8?B?N2FLaXo0SUIrOWpMNy9vZGordWdKNmVjaUpWdkNqSm1HMjVwYy84aC8wRk9v?=
+ =?utf-8?B?MHh0L3YwK0V0dEh4aTRFdDVsNWkxTlVtUjlSQ3pXZXJQbHZJVlhHUTdYemhQ?=
+ =?utf-8?B?M3dITXZmYVZyOVlYQjNNajRweis5VGIvTmh6NzI2bSttcUhFZ284c2hER29X?=
+ =?utf-8?B?OUc4eHRWTnRCYUloS09tbXNxUDg0VUdGUDNMSHNIOW9HQkU1T054c25ZeXFh?=
+ =?utf-8?B?NUhMR2xzYVhPUE5Vb29ZMkNpTkVlVEpNbElIb1lBMThCMUpCbmc3WnAwOTl6?=
+ =?utf-8?B?VFdmbjJRdm5UVVlLeDQxMjJ0ckZTd214RG0zNHAybHpqVit3MXVhY00vQzFB?=
+ =?utf-8?B?UFNlQ2tqdktMeWtZR3BmbzdyNzdvUkRZRDkrUnJaS0c5YUxiYWpaYjhiZWVs?=
+ =?utf-8?B?eDNDbHhxUnFOTUFydlJnWjBRRGc1WXlvcjFTR3JHa253Y0FLMERuTHljMmli?=
+ =?utf-8?B?ekJnbEVXWTg2OEI3cGVOZGkwenBjbGZocVQvdGYyZVFrVUVPaHcrMFRhd2Z1?=
+ =?utf-8?B?K2ZRS1cyV1BkN1FNdzhYbkZmZTNYNkp6RTZkTlB5OHMvdXlxTE4vdFNZM1hJ?=
+ =?utf-8?B?enliVTU5Vmg5TzVtQklpQ2o3d0FmaVkwR3R0eENDdkNCK0F6dmlNbkNKTjl0?=
+ =?utf-8?B?REdsSDlzc0FnSDMrRnJ2RzRJMlZYV2cyTE9pSFduaURnU2x6ZVBQVVlXZjFF?=
+ =?utf-8?B?eXA1UlU5NHlQYVFEY210L2FXbFl4S0RYMm44QnBEUnUwa3pOdWtMR0dPZ2Vt?=
+ =?utf-8?B?K3B3c1R1b2Z5NFFxdEwvWkJTMWJ4Nm5nbXQ2aTFYVGVnMVJNbUNib1RmVnhU?=
+ =?utf-8?B?RzUzNnpEZ250Z0g4MXBnQk4xSnFyL2dOdUwreEN4aGUzVGZZdWR6Znp4cTJB?=
+ =?utf-8?B?UEVqL09SY3VJR2g3VU1lWEVGVDNJaFJLU2VJRGJyNEY1QXZUcVBQaDJEMWFt?=
+ =?utf-8?B?Wk42aVJHdlZMVFUzaTBEV1JJRDgwOWtjQUNhc3hDYjJmdmV6RnVQYmgyZ2Iz?=
+ =?utf-8?B?VDVjTXAvZHJwUnFuNWg1Y203UWs5M0lZYXVBNTFKRldjU08xVitBNVltOG41?=
+ =?utf-8?B?ekh4MXRiNkxkcG5sWHVLYTJZWTcvYkh0cFZuVTJLbDl2RHBiS2FGV2xybkxI?=
+ =?utf-8?B?QkJiTVVaMUVpNEZTODdTK0krMGcwVEtuY3o4Qm5zWmZucm1PektTOEVHbFpO?=
+ =?utf-8?B?QW5TcngzMURkT0lkaHFocThpcktyNXRHZHRPWE01bnR6SnlWMkxwOEF1NnNI?=
+ =?utf-8?B?ME1UTkxxWjh2T0ZKTUxDNlBnaDZvaGN2N1A0SXZnSUowWkd1ZW5ETzl5UHdH?=
+ =?utf-8?B?akhGOWRjZnRXdkFXdzlRek1aM3BxWkpuTVp5Qk9Rb3ZEeGZubGpPc2paN0o5?=
+ =?utf-8?B?OEFKMFFTZjNYUnFkdWM4bUYyazNFM1NrbXo0OEdRZ1VsK0JhRmdSUWQ1V2Zv?=
+ =?utf-8?B?UW1SVjl5bmhPelcvRTl5WmxxL2Zvcnc2eWdUVmFPNmk3R3ppY20ySGFCZTBw?=
+ =?utf-8?Q?B8T7ko8e64OcWLvqfuSfcbX2WGqNxqQvQBVCnMv?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?LytqNFZIWVpaT0xOR3puVjU1WENqeU9HUzVyK3BlMW0rSTl4RTcwUFh1a3BI?=
+ =?utf-8?B?YWM3aVJLVXA1cVpLamptVU9VdzAvdmJtVW9kYit5dHhpUWtnemdueERvUk4x?=
+ =?utf-8?B?R1d2ZDlMaTB2cW9wNFBMcWFOV3hhczJqVUtuVXBlYTg2Vnp0OW81bWREQTFC?=
+ =?utf-8?B?VEhLekt0SGFWUCtDWTQ2eGNWOU5yNXdObFdJUnF2WGxmOU5sQi9GTE5ZRk9l?=
+ =?utf-8?B?RTlpaFRrSzNYdUVQZlIzWCtsbkt1M1dkL0pGc0tRMmMyUWhDTmJFOVBuZnda?=
+ =?utf-8?B?azByQzYyOTFnTUxkbTVPRjByb1pPNWRVREgvc3VRc0FUZEV1SmpRUTVGLzBE?=
+ =?utf-8?B?M3U2T2JQNjRIOUJQc0hrUmZzZllMeUxyQWsrSWUvWWxrSUVjTGc4aFlTb3ZT?=
+ =?utf-8?B?VnhGWU9ueGpka281SEtIa2dVdUZBQ3RvNWRTeEw4eXJQNDRheFZwemVHZDQ1?=
+ =?utf-8?B?NkdFVEZVV2kySGxuUEIrNFlaV2l0blB3V2R0Y2xDeU1BSjIzcmxUQkFJVFBF?=
+ =?utf-8?B?eEZmeWMzS0I2YVJydS9HRmxVU3d2a1Vuc0phU1diMHdYUk52YVVFMWJ5ZDJ4?=
+ =?utf-8?B?U3B5UW9ZWmJ2c3R3eHYzR1JVUGpaTzZhSUtBellRVmFVUk5YQldMYWpkcmx2?=
+ =?utf-8?B?SnByNStTQXpBZGdQSG83Z1I5a1Q1Y2xLN0YybUs2Y1J3clRCWWs1TDlscVZO?=
+ =?utf-8?B?Y2NXQ3dDelkydDFFWTdjVCt5N1FONU4wcVg5TGNSNno2ZkdDM2NlR2IyRGxz?=
+ =?utf-8?B?aUttWUVZbkI3N0FIYmFKcWNjc0xCK2M0T2gvcjFSakhMRmcweDJYQlBnQllT?=
+ =?utf-8?B?NC9xWEQ1aVNBS051bi9ZNVJWV3lMZTFDbE54RU1pV3VnZ3ZoelVleFo2K0pp?=
+ =?utf-8?B?ay9ncnNld2xFbjZXdUIzSld6WndTT1VMNElHa2plMGVzSlliODBCUEdwWXJ0?=
+ =?utf-8?B?MVJ6ZzM1OHkyeWF2Y0NFK2xSTExiQk1ZUWQrem1US3YveTZNUHJrdmJwT0dm?=
+ =?utf-8?B?Q2RkQ3A3V3l5ZnV6ZWJtK05wQ01kMWo2OTJka0pwTnlSVkNPZm5JOWRaTXVP?=
+ =?utf-8?B?VVJQa2VYUUJvb2RyWkV2d1Q1YVprek5QTHIxOW1abVF4NVVOaXRYZDQ3Tk9k?=
+ =?utf-8?B?dFg5V3VOb2dnT0NnOHNxQjZBbFBUc2ppbDNOMVlkYmlqNmNQY3ZPTmQ5dnlB?=
+ =?utf-8?B?K3VTZDBvYXBQNW8wOFpPZjREZ1l1VDg5a2JtNjdpMmJkbzRyTWNuVm1sUFhi?=
+ =?utf-8?B?ZDhYejlOSUltOVFqVDB6T1d2V0cyMWFXOU5Kd0ZsNDJjc29kU2RJaDBDL25Z?=
+ =?utf-8?B?V3EwTk5tcUtkaGZOa21uemkvYzd4WnNhMzhHNnRDOUJHMnBXdDRpc0JaZWcw?=
+ =?utf-8?B?aEdMdDRESTU0TnVrZjd4bitJalFVMFVRdUxhbDZvZnhqTEJYSjVBeEo5aUwr?=
+ =?utf-8?B?NythQ2V2c0hsMnErMWhQNktzT2dYLy9pN29xckZUbFBkS1VtakdEUmxrYlF6?=
+ =?utf-8?B?cWtNSVNEYVc3NDlhd0xKd3B3TmdJdWhCOC9hVXV0N3owT1YyZnRZWENtOW5F?=
+ =?utf-8?B?YVY1QjVYcDdPNjZQaU5ZekpsRytoMTlXTzREN2gwT1orSTVjY0czaHVMdWIy?=
+ =?utf-8?B?SmdmVlFYRzhobTFYSjdDQXVBdW5xUnorOXdlMTIyaFJkZjRJRFNlZllwMGx3?=
+ =?utf-8?B?c2JLQmNlaDl1d3NZV3hpMVFLK0VpVHgxc3ExeVk4aVY4TXorcmVmc054UllR?=
+ =?utf-8?B?bnhWWGVtYzFuRVk3MG5nTlR5SzA0V0F5SzNxWU1wSUFyeHY5eGFPWnlhdUdm?=
+ =?utf-8?B?UndIdTEzbDNZMzlGK3JrWWdWcC9HU1Q4YU0zakFHL2VhK2lEeUkraE5zN3Nl?=
+ =?utf-8?B?aWthZmdjTmEyeDdUWnNvVnZwSTlrQWppSTNrYUVPa2pRR0FwSjY2Q3RPMW8z?=
+ =?utf-8?B?elpRNkJJb0RtbXdwZzhxYWxmRGJMOSt0VGc4STdYbHkzUVgvRCtCNUVzd3RP?=
+ =?utf-8?B?U3NPbHlOTFZiQWdqQlZ0dzJjMExvdyt0S0s5blhNUEpEZkYxUmNNVW53dGxG?=
+ =?utf-8?B?YlVjdzM4S3VHZGlaM2RzbEZCcXJ2UGxMdkZIYS9PL2c5VUJpZ3F3Und4Uysx?=
+ =?utf-8?Q?743M=3D?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c53bc75-879a-4681-1454-08dd01ff8729
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Nov 2024 03:18:35.3789
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n5LOppdMUnH9Tm3RhB3aLfPpm/6mWI0JBV2mX0r/gKXTGI9b1BZ9HnMrqZ8NIawu
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR01MB8009
 
-On Sat, 09 Nov 2024, Mike Snitzer wrote:
-> Re-enabling NFSv3 LOCALIO is made more complex (than NFSv4) because v3
-> is stateless.  As such, the hueristic used to identify a LOCALIO probe
-> point is more adhoc by nature: if/when NFSv3 client IO begins to
-> complete again in terms of normal RPC-based NFSv3 server IO, attempt
-> nfs_local_probe_async().
->=20
-> Care is taken to throttle the frequency of nfs_local_probe_async(),
-> otherwise there could be a flood of repeat calls to
-> nfs_local_probe_async().
+On 11/10/2024 9:24 PM, Olga Kornievskaia wrote:
+> On Sat, Nov 9, 2024 at 4:10 PM Jeff Layton <jlayton@kernel.org> wrote:
+>> Sounds like a client-side capacity issue? nfs4_callback_recall()
+>> returns NFS4ERR_DELAY when nfs_delegation_find_inode() returns -EAGAIN.
+>> Maybe there is something weird going on there? Eventually the server
+>> has no choice but to revoke an unreturned delegation.
+> 
+> I'm not trying to imply in any matter that there is a problem with
+> either server or client side. I'm simply trying to state that there
+> was a theory that having multiple cb_table slots would help in the
+> case of having a lot of recalled/revoked state.  What I'm finding is
+> that it doesn't seem so (and possibly makes things just slightly
+> slower. But no measures were taken so my focus is elsewhere).
 
-I think it would be good to limit this to only probing when the network
-connection is reestablished - assuming we can ignore connectionless
-protocols like UDP.
+We should definitely understand this! I'd say that supporting multiple 
+slots is worthwhile and should be merged if stable.
 
-I think you can stash rpc_clnt->cl_xprt->connect_cookie and check if
-that has changed or not.  If not, then there is no point probing again.
+But if they're no better performance-wise, we're missing something. 
+There's got to be something else serializing them.
 
-Thanks,
-NeilBrown
-
-
->=20
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs/internal.h          |  5 +++++
->  fs/nfs/localio.c           | 11 +++++++++++
->  fs/nfs/nfs3proc.c          | 34 +++++++++++++++++++++++++++++++---
->  fs/nfs_common/nfslocalio.c |  4 ++++
->  include/linux/nfs_fs_sb.h  |  1 +
->  include/linux/nfslocalio.h |  4 +++-
->  6 files changed, 55 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index efd42efd9405..fb1ab7cee6b9 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -470,6 +470,7 @@ extern int nfs_local_commit(struct nfsd_file *,
->  			    struct nfs_commit_data *,
->  			    const struct rpc_call_ops *, int);
->  extern bool nfs_server_is_local(const struct nfs_client *clp);
-> +extern bool nfs_server_was_local(const struct nfs_client *clp);
-> =20
->  #else /* CONFIG_NFS_LOCALIO */
->  static inline void nfs_local_disable(struct nfs_client *clp) {}
-> @@ -499,6 +500,10 @@ static inline bool nfs_server_is_local(const struct nf=
-s_client *clp)
->  {
->  	return false;
->  }
-> +static inline bool nfs_server_was_local(const struct nfs_client *clp)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_NFS_LOCALIO */
-> =20
->  /* super.c */
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 710e537b3402..1559dc2f1850 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -64,6 +64,17 @@ bool nfs_server_is_local(const struct nfs_client *clp)
->  }
->  EXPORT_SYMBOL_GPL(nfs_server_is_local);
-> =20
-> +static inline bool nfs_client_was_local(const struct nfs_client *clp)
-> +{
-> +	return !!test_bit(NFS_CS_LOCAL_IO_CAPABLE, &clp->cl_flags);
-> +}
-> +
-> +bool nfs_server_was_local(const struct nfs_client *clp)
-> +{
-> +	return nfs_client_was_local(clp) && localio_enabled;
-> +}
-> +EXPORT_SYMBOL_GPL(nfs_server_was_local);
-> +
->  /*
->   * UUID_IS_LOCAL XDR functions
->   */
-> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-> index 1566163c6d85..4d2018760e9b 100644
-> --- a/fs/nfs/nfs3proc.c
-> +++ b/fs/nfs/nfs3proc.c
-> @@ -844,6 +844,29 @@ nfs3_proc_pathconf(struct nfs_server *server, struct n=
-fs_fh *fhandle,
->  	return status;
->  }
-> =20
-> +static void nfs3_local_probe(struct nfs_server *server)
-> +{
-> +#if IS_ENABLED(CONFIG_NFS_LOCALIO)
-> +	struct nfs_client *clp =3D server->nfs_client;
-> +	nfs_uuid_t *nfs_uuid =3D &clp->cl_uuid;
-> +
-> +	if (likely(!nfs_server_was_local(clp)))
-> +		return;
-> +	/*
-> +	 * Try re-enabling LOCALIO if it was previously enabled, but
-> +	 * was disabled due to server restart, and IO has successfully
-> +	 * completed in terms of normal RPC.
-> +	 */
-> +	mutex_lock(&nfs_uuid->local_probe_mutex);
-> +	/* Arbitrary throttle to reduce nfs_local_probe_async() frequency */
-> +	if ((nfs_uuid->local_probe_count++ & 255) =3D=3D 0) {
-> +		if (unlikely(!nfs_server_is_local(clp) && nfs_server_was_local(clp)))
-> +			nfs_local_probe_async(clp);
-> +	}
-> +	mutex_unlock(&nfs_uuid->local_probe_mutex);
-> +#endif
-> +}
-> +
->  static int nfs3_read_done(struct rpc_task *task, struct nfs_pgio_header *h=
-dr)
->  {
->  	struct inode *inode =3D hdr->inode;
-> @@ -855,8 +878,11 @@ static int nfs3_read_done(struct rpc_task *task, struc=
-t nfs_pgio_header *hdr)
->  	if (nfs3_async_handle_jukebox(task, inode))
->  		return -EAGAIN;
-> =20
-> -	if (task->tk_status >=3D 0 && !server->read_hdrsize)
-> -		cmpxchg(&server->read_hdrsize, 0, hdr->res.replen);
-> +	if (task->tk_status >=3D 0) {
-> +		if (!server->read_hdrsize)
-> +			cmpxchg(&server->read_hdrsize, 0, hdr->res.replen);
-> +		nfs3_local_probe(server);
-> +	}
-> =20
->  	nfs_invalidate_atime(inode);
->  	nfs_refresh_inode(inode, &hdr->fattr);
-> @@ -886,8 +912,10 @@ static int nfs3_write_done(struct rpc_task *task, stru=
-ct nfs_pgio_header *hdr)
-> =20
->  	if (nfs3_async_handle_jukebox(task, inode))
->  		return -EAGAIN;
-> -	if (task->tk_status >=3D 0)
-> +	if (task->tk_status >=3D 0) {
->  		nfs_writeback_update_inode(hdr);
-> +		nfs3_local_probe(NFS_SERVER(inode));
-> +	}
->  	return 0;
->  }
-> =20
-> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-> index fb376d38ac9a..852ba8fd73f3 100644
-> --- a/fs/nfs_common/nfslocalio.c
-> +++ b/fs/nfs_common/nfslocalio.c
-> @@ -43,6 +43,8 @@ void nfs_uuid_init(nfs_uuid_t *nfs_uuid)
->  	INIT_LIST_HEAD(&nfs_uuid->list);
->  	INIT_LIST_HEAD(&nfs_uuid->files);
->  	spin_lock_init(&nfs_uuid->lock);
-> +	mutex_init(&nfs_uuid->local_probe_mutex);
-> +	nfs_uuid->local_probe_count =3D 0;
->  }
->  EXPORT_SYMBOL_GPL(nfs_uuid_init);
-> =20
-> @@ -143,6 +145,8 @@ void nfs_localio_enable_client(struct nfs_client *clp)
-> =20
->  	spin_lock(&nfs_uuid->lock);
->  	set_bit(NFS_CS_LOCAL_IO, &clp->cl_flags);
-> +	/* Also set hint that client and server are LOCALIO capable */
-> +	set_bit(NFS_CS_LOCAL_IO_CAPABLE, &clp->cl_flags);
->  	trace_nfs_localio_enable_client(clp);
->  	spin_unlock(&nfs_uuid->lock);
->  }
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index 63d7e0f478d8..45906c402c98 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -51,6 +51,7 @@ struct nfs_client {
->  #define NFS_CS_REUSEPORT	8		/* - reuse src port on reconnect */
->  #define NFS_CS_PNFS		9		/* - Server used for pnfs */
->  #define NFS_CS_LOCAL_IO		10		/* - client is local */
-> +#define NFS_CS_LOCAL_IO_CAPABLE		11	/* - client was previously local */
->  	struct sockaddr_storage	cl_addr;	/* server identifier */
->  	size_t			cl_addrlen;
->  	char *			cl_hostname;	/* hostname of server */
-> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-> index c68a529230c1..3dfef0bb18fe 100644
-> --- a/include/linux/nfslocalio.h
-> +++ b/include/linux/nfslocalio.h
-> @@ -27,7 +27,9 @@ struct nfs_file_localio;
->   */
->  typedef struct {
->  	uuid_t uuid;
-> -	/* sadly this struct is just over a cacheline, avoid bouncing */
-> +	struct mutex local_probe_mutex;
-> +	unsigned local_probe_count;
-> +	/* sadly this struct is over a cacheline, avoid bouncing */
->  	spinlock_t ____cacheline_aligned lock;
->  	struct list_head list;
->  	spinlock_t *list_lock; /* nn->local_clients_lock */
-> --=20
-> 2.44.0
->=20
->=20
->=20
-
+Tom.
 
