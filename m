@@ -1,638 +1,316 @@
-Return-Path: <linux-nfs+bounces-7884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 297289C49BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 00:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A0169C4A3A
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 00:59:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AED7C1F224CC
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 23:32:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 906011F22191
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 23:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED7B15887C;
-	Mon, 11 Nov 2024 23:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBE6C1C3F3B;
+	Mon, 11 Nov 2024 23:52:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="DMaxJFUD"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0lFOnrEm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cvxJLqQi";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LadVx3rQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4Jrez/a5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2812C16F0D0;
-	Mon, 11 Nov 2024 23:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD00F1C1AB3;
+	Mon, 11 Nov 2024 23:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731367952; cv=none; b=OCP5XVKHhTcDCRvpS2RujAQe0afoqLX40JGLpRyNZQ+sE42IG1cfeycDBsb3lNasC8SdCn4t02flweeptOsirZgNBhJmDyWBb3bVK6EEHxJ/aUjJTNRbG/UY7NA3VseL89I7PBGBbbcZSAS0fIEXQZr8wYpCbFXB56oMl6Ah1Yw=
+	t=1731369171; cv=none; b=t8wHZZ31mD1hu0UxrdRZRwIo6c1dvaZS12oZuvXjkWHV/xFU3oH0KVWsYTPw9FS4KRJEGNe3rRn+KFOhuY/isLLjr6svUYJ7jlnY9i4zPQ56Ve41AxX5OW4UwcTjpgRn6CCWWaQixLYcT3UMcBXu7iMCONZRp/wltbQ/oP4G1kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731367952; c=relaxed/simple;
-	bh=XCV4sXlE2e/s4FZLsnwEwVQY12tKOeBUGbv/eQQG8vM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xoaoax2EffksNiwgGIHdm6Xu9YZ3kkWuiBT/cyn7eLUVO5fuiWr0uQUbbwxLiWm4auiXelV+mDknTzlyiFmRZ6cXpB3OXY5THhJxBNBR9EKzsmHUa4oT6hMr64RieV9wJbi2DKaMmXH51I0h4i0sxOraj0xlduRCv95YH5v1Uc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=DMaxJFUD; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fb57f97d75so47000771fa.2;
-        Mon, 11 Nov 2024 15:32:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1731367946; x=1731972746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pycxPqk1WMxuptgEcCMZ9h2wycz0gdrNf6o7bPYWn+Y=;
-        b=DMaxJFUDrdQzSUoecdYbsm5chQTe2+7NkSf/N3+haFGTPiP6yRSYsJAg3lUvioS+Rv
-         tYmGDW72OkYva1svP7Dz7VJKRQP1+iXQMtN1h90BL0ksTuXMcC16L3tgBoNaIVOqlzIE
-         VnnNva2QLBX0rmMAHGCRKB7EPqHzh0Zrhy0z/3eIFRlC+KF/lrFKpUFn5Zahc3+iQljk
-         t67oILNSZWsmK9x6Fq/iicA2hThDj+ENc7fo3tL2QIDc0ggVMXfIpK0D+R/xjpPOn0ZL
-         zo6LkjOKRe8nXs0g3LE/MRr0e2UakFeXEEyl/SfdzapocQ6vQKjMIjb+XpQ//1SP74V2
-         CTww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731367946; x=1731972746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pycxPqk1WMxuptgEcCMZ9h2wycz0gdrNf6o7bPYWn+Y=;
-        b=s/8xx/PkxJywRrbKZxUScNnZNOcCgL0Mnnkf08WTBeazoacwgM+08/gXxeBWpJv4I0
-         N4ug3qFU0LPaS/chNxEcNHKzIkdqnvERIfo32BT6wJ8wlgrcINYu6GbsMgqHwJUGWYZM
-         uzTJXa5wg7KLD8kw7u2etFxr8M87t3tGH3WvbNsMjwui+QImo/IM1zQxKZ1CL/bPoE2p
-         FDwC8amwzsYkME6QADfZy/v64gCIJwH9UR0pqVSIAxJWVI/n2lSALXvYs6Ln4gADlyh6
-         vqvlyjXv+HHa2DBqgWZyiMpQgtbzRbPgh822KCTdoSyh1YaA/P3mk1ay1MNwC7zXgTDH
-         RGOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJMhOexM6/amdO1V9zcoYIOkE133ivsqDteJgiSrALHaSbMe3pKdD5cFwxrMD9uwlDDgFbFDiKsX5l@vger.kernel.org, AJvYcCXHFCw/vGxi+CLMeRzhuRTFwthq3HqgJgNA9RCfngLZ2byCVw3SzUcgnBx5BBJAu1O1hEWkqaDqPR7aEwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHmL60HTSz3f0fpHnpJL1Hio8zf6+3YIJSQIyZ71RJRwMJg77r
-	NllZ3uku9fLh8aAHmTN4iahSJUqNM5aG+6FBuAd2m/fuo3KJfpCMTxg7Htqk3JTtyDZG0tNuiHa
-	HaayorlIWTd/j5C6k2IXMYOhKmUo=
-X-Google-Smtp-Source: AGHT+IEEhj6GRQP0PJ+Ba5Bm5MYcH9qvCHUpJ91hfmNHOXKSPphNUk4ngXIrrPI3vL6WLmxDINyQnm+V3LV0LxYjfmU=
-X-Received: by 2002:a05:651c:211f:b0:2fb:3a78:190a with SMTP id
- 38308e7fff4ca-2ff2025944emr69319201fa.29.1731367945670; Mon, 11 Nov 2024
- 15:32:25 -0800 (PST)
+	s=arc-20240116; t=1731369171; c=relaxed/simple;
+	bh=wf3H3AZiqnd1FZifssDVJXriFhcaS3gMlszZkGcTj/8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=AGhwdF7+40WkbG/v4BBr9POOxc5EJ7AOP0PNWHmJsMFqBylh92omGVFcC26ucAHj6pk5YEOmTLTocQXpKBPr4tO2wSlXBwNc10EZMMBuFB/Xxbdy2103Y2irAfX+5/4X5zkIR5KhEM2XJvAHELED6xvupen7dmbjn+wm7WzClng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0lFOnrEm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cvxJLqQi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LadVx3rQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4Jrez/a5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B7443218F3;
+	Mon, 11 Nov 2024 23:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731369168; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arm6/5otLCXFSC3XfaGbYtm7lxMpE0J/5xKdVAHe/tg=;
+	b=0lFOnrEmgSCxevbKwauPzTfNHCqmXvv/kaR/SfZ+dMxcsD3ht0XndlLOqdR2GXQ1KBWF+c
+	uCm3pxF9GOzfBrO+gx6BjkjKmukiYGkuUG/0bbFWON+Zn2ZrJjJELO4nvaslJ6RtOvlLl/
+	uhwyPTu+OgCcUzkdeWhXyLHklP3/+K8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731369168;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arm6/5otLCXFSC3XfaGbYtm7lxMpE0J/5xKdVAHe/tg=;
+	b=cvxJLqQipx1H0teq7t5D4V0Y92ko1FgRPY7lnqbFPad9nFbTwcwjEECOZ6xrIrFNf0Jj4j
+	r7hCS0n2qzW9cfBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731369166; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arm6/5otLCXFSC3XfaGbYtm7lxMpE0J/5xKdVAHe/tg=;
+	b=LadVx3rQFB+XMzECDfT0iq9ot8WpyCzHLc4mvoe+oLPFFgDuaew2/f8GqO7M6M21SWZ/tm
+	6+c2MTUnHQcCV9OYT7+a85EyWUSWG9e29Kl0YnRUvmyfgQHmjWP67UcuRf9GQiNOXDsl7b
+	y3Bf1q68ad74HAeNii9Zb1U2ZXHNFAc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731369166;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arm6/5otLCXFSC3XfaGbYtm7lxMpE0J/5xKdVAHe/tg=;
+	b=4Jrez/a5BNkV7FJO8TbT/PAmPJ/ojaUNfpazmWkexp6+rb3pZJGg5Xl5milAdBZSf94H81
+	XBGQ26RgJtFhPVDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 767E1137FB;
+	Mon, 11 Nov 2024 23:52:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xH9SC8mYMme0AQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 23:52:41 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241105-bcwide-v4-1-48f52ee0fb0c@kernel.org> <CAN-5tyHqDNRm-O+NKNXGG_J91M3vCgz8LVZWUjePpYUyy6Pmsg@mail.gmail.com>
- <CAN-5tyE7Cq-1iqdeoT8T0MTjwOqGc01j+murfqR0HxpahMpGRw@mail.gmail.com> <01cf85e3093f03193d6422a3cfca7427a387058d.camel@kernel.org>
-In-Reply-To: <01cf85e3093f03193d6422a3cfca7427a387058d.camel@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Mon, 11 Nov 2024 18:32:14 -0500
-Message-ID: <CAN-5tyHvjg0RyVJ5weOT+dRVveMkP0dYV3f5_uMct5Y90qGUgg@mail.gmail.com>
-Subject: Re: [PATCH v4] nfsd: allow for up to 32 callback session slots
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Olga Kornievskaia <okorniev@redhat.com>, linux-nfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neilb@suse.de>
+To: "Liu Jian" <liujian56@huawei.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, trondmy@kernel.org, anna@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, ebiederm@xmission.com, kuniyu@amazon.com,
+ liujian56@huawei.com, linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net v3] sunrpc: fix one UAF issue caused by sunrpc kernel
+ tcp socket
+In-reply-to: <20241111081736.526093-1-liujian56@huawei.com>
+References: <20241111081736.526093-1-liujian56@huawei.com>
+Date: Tue, 12 Nov 2024 10:52:34 +1100
+Message-id: <173136915454.1734440.13584866019725922631@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.979];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,imap1.dmz-prg2.suse.org:helo,noble.neil.brown.name:mid]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Mon, Nov 11, 2024 at 5:26=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Mon, 2024-11-11 at 16:56 -0500, Olga Kornievskaia wrote:
-> > On Wed, Nov 6, 2024 at 11:44=E2=80=AFAM Olga Kornievskaia <aglo@umich.e=
-du> wrote:
-> > >
-> > > On Tue, Nov 5, 2024 at 7:31=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > > >
-> > > > nfsd currently only uses a single slot in the callback channel, whi=
-ch is
-> > > > proving to be a bottleneck in some cases. Widen the callback channe=
-l to
-> > > > a max of 32 slots (subject to the client's target_maxreqs value).
-> > > >
-> > > > Change the cb_holds_slot boolean to an integer that tracks the curr=
-ent
-> > > > slot number (with -1 meaning "unassigned").  Move the callback slot
-> > > > tracking info into the session. Add a new u32 that acts as a bitmap=
- to
-> > > > track which slots are in use, and a u32 to track the latest callbac=
-k
-> > > > target_slotid that the client reports. To protect the new fields, a=
-dd
-> > > > a new per-session spinlock (the se_lock). Fix nfsd41_cb_get_slot to=
- always
-> > > > search for the lowest slotid (using ffs()).
-> > > >
-> > > > Finally, convert the session->se_cb_seq_nr field into an array of
-> > > > counters and add the necessary handling to ensure that the seqids g=
-et
-> > > > reset at the appropriate times.
-> > > >
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > > ---
-> > > > v3 has a bug that Olga hit in testing. This version should fix the =
-wait
-> > > > when the slot table is full. Olga, if you're able to test this one,=
- it
-> > > > would be much appreciated.
-> > >
-> > > I have tested this version. I can confirm that I'm not seeing the
-> > > softlockup. But the server still does not use the lowest available
-> > > slot. It is hard for me to describe the algorithm of picking the slot
-> > > number (in general it still seems to be picking the next slot value,
-> > > even though slots have been replied to). I have seen slot 0 re-used
-> > > eventually but it seemed to be when the server came to using slot=3D1=
-3.
-> > >
-> > > The other unfortunate thing that's happening when I use these patches
-> > > is my test case that recalling delegations and making sure that the
-> > > state management gets handled properly (ie., the patch that I've
-> > > submitted to fix a race between the laundromat thread and free_state)
-> > > is not working. After all the recalls, the server still thinks it has
-> > > revoked state. I have to debug more to figure out what's going on.
-> >
-> > I have finally been able to consistently hit the problem and it's not
-> > a server issue but I can't decide who's at fault here -- client or
-> > server. While handling the fact that state is revoked the client sends
-> > what now is a SETATTR (for deleg attributes)+DELEGRETURN (previously
-> > just a DELEGRETURN). SETATTR fails with BAD_STATEID. Client doesn't do
-> > anything. Previously (before the deleg attr support) client would sent
-> > DELEGRETURN and server would fail with DELEG_REVOKED or BAD_STATEID
-> > and the client would follow up with FREE_STATEID. But now the client
-> > doesn't send a FREE_STATEID and thus the server is left with "revoked
-> > state which never was freed".
-> > Now, if the server returned DELEG_REVOKED instead of BAD_STATEID for
-> > the SETATTR then the problem doesn't happen.
-> >
-> > Question: is the server incorrect here or is the client incorrect and
-> > should have (1) either also resent the delegreturn on its own which
-> > was not processed before and that should have still triggered the
-> > free_stateid or (2) should have treated bad_stateid error of setattr
-> > in the delegreturn compound such that it freed the state there.
-> >
-> >
->
-> That bit does sound like a server bug. DELEG_REVOKED is a valid return
-> code for SETATTR. It looks like nfsd4_lookup_stateid() should be
-> returning DELEG_REVOKED in this situation, so I'm not sure why that's
-> not working right.
+On Mon, 11 Nov 2024, Liu Jian wrote:
+> BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
+> Read of size 1 at addr ffff888111f322cd by task swapper/0/0
+>=20
+> CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
+> Call Trace:
+>  <IRQ>
+>  dump_stack_lvl+0x68/0xa0
+>  print_address_description.constprop.0+0x2c/0x3d0
+>  print_report+0xb4/0x270
+>  kasan_report+0xbd/0xf0
+>  tcp_write_timer_handler+0x156/0x3e0
+>  tcp_write_timer+0x66/0x170
+>  call_timer_fn+0xfb/0x1d0
+>  __run_timers+0x3f8/0x480
+>  run_timer_softirq+0x9b/0x100
+>  handle_softirqs+0x153/0x390
+>  __irq_exit_rcu+0x103/0x120
+>  irq_exit_rcu+0xe/0x20
+>  sysvec_apic_timer_interrupt+0x76/0x90
+>  </IRQ>
+>  <TASK>
+>  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> RIP: 0010:default_idle+0xf/0x20
+> Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
+>  90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
+>  cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
+> RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
+> RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
+> RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
+> R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
+> R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
+>  default_idle_call+0x6b/0xa0
+>  cpuidle_idle_call+0x1af/0x1f0
+>  do_idle+0xbc/0x130
+>  cpu_startup_entry+0x33/0x40
+>  rest_init+0x11f/0x210
+>  start_kernel+0x39a/0x420
+>  x86_64_start_reservations+0x18/0x30
+>  x86_64_start_kernel+0x97/0xa0
+>  common_startup_64+0x13e/0x141
+>  </TASK>
+>=20
+> Allocated by task 595:
+>  kasan_save_stack+0x24/0x50
+>  kasan_save_track+0x14/0x30
+>  __kasan_slab_alloc+0x87/0x90
+>  kmem_cache_alloc_noprof+0x12b/0x3f0
+>  copy_net_ns+0x94/0x380
+>  create_new_namespaces+0x24c/0x500
+>  unshare_nsproxy_namespaces+0x75/0xf0
+>  ksys_unshare+0x24e/0x4f0
+>  __x64_sys_unshare+0x1f/0x30
+>  do_syscall_64+0x70/0x180
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>=20
+> Freed by task 100:
+>  kasan_save_stack+0x24/0x50
+>  kasan_save_track+0x14/0x30
+>  kasan_save_free_info+0x3b/0x60
+>  __kasan_slab_free+0x54/0x70
+>  kmem_cache_free+0x156/0x5d0
+>  cleanup_net+0x5d3/0x670
+>  process_one_work+0x776/0xa90
+>  worker_thread+0x2e2/0x560
+>  kthread+0x1a8/0x1f0
+>  ret_from_fork+0x34/0x60
+>  ret_from_fork_asm+0x1a/0x30
+>=20
+> Reproduction script:
+>=20
+> mkdir -p /mnt/nfsshare
+> mkdir -p /mnt/nfs/netns_1
+> mkfs.ext4 /dev/sdb
+> mount /dev/sdb /mnt/nfsshare
+> systemctl restart nfs-server
+> chmod 777 /mnt/nfsshare
+> exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
+>=20
+> ip netns add netns_1
+> ip link add name veth_1_peer type veth peer veth_1
+> ifconfig veth_1_peer 11.11.0.254 up
+> ip link set veth_1 netns netns_1
+> ip netns exec netns_1 ifconfig veth_1 11.11.0.1
+>=20
+> ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
+> 	--tcp-flags FIN FIN  -j DROP
+>=20
+> (note: In my environment, a DESTROY_CLIENTID operation is always sent
+>  immediately, breaking the nfs tcp connection.)
+> ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=3Dtcp,vers=3D4=
+.1 \
+> 	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
+>=20
+> ip netns del netns_1
+>=20
+> The reason here is that the tcp socket in netns_1 (nfs side) has been
+> shutdown and closed (done in xs_destroy), but the FIN message (with ack)
+> is discarded, and the nfsd side keeps sending retransmission messages.
+> As a result, when the tcp sock in netns_1 processes the received message,
+> it sends the message (FIN message) in the sending queue, and the tcp timer
+> is re-established. When the network namespace is deleted, the net structure
+> accessed by tcp's timer handler function causes problems.
+>=20
+> To fix this problem, let's hold netns refcnt for the tcp kernel socket as
+>  done in other modules.
+>=20
+> Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns=
+ of kernel sockets.")
+> Signed-off-by: Liu Jian <liujian56@huawei.com>
+> ---
+>  net/sunrpc/svcsock.c  | 4 ++++
+>  net/sunrpc/xprtsock.c | 6 ++++++
+>  2 files changed, 10 insertions(+)
+>=20
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 6f272013fd9b..d4330aaadc23 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1551,6 +1551,10 @@ static struct svc_xprt *svc_create_socket(struct svc=
+_serv *serv,
+>  	newlen =3D error;
+> =20
+>  	if (protocol =3D=3D IPPROTO_TCP) {
+> +		__netns_tracker_free(net, &sock->sk->ns_tracker, false);
+> +		sock->sk->sk_net_refcnt =3D 1;
+> +		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
+> +		sock_inuse_add(net, 1);
 
-nfsd4_lookup_stateid() only returns DELEG_REVOKED for delegreturn is
-it?. It needs statusmask to set acceptable states and nfsd4_setattr()
-calls generic nfs4_preprocess_stateid_op function which call
-nfsd4_lookup_stateid() passing 0 for okstates. In setattr's case it's
-the call into find_stateid_by_type() with 0 statusmask which does't
-allow for stateid flags as revoked to be "found", generating
-bad_stateid error instead. If we wanted to make sure SETATTR to return
-revoked then we need to re-write nfsd4_setattr not to call
-nfs4_preprocess_stateid_op()... but if we are going down that rabbit
-hole, the OPEN (with DELEG_CUR_FH) on stateid which was revoked ends
-with BAD_STATEID error (not DELEG_REVOKED error). It doesn't hurt the
-client there. The client proceeds to test the stateid and free it. But
-technically, OPEN should have returned DELEG_REVOKED error. So should
-we be changing that too?
+This is really ugly.  These internal details of the network layer have
+no place in sunrpc code. There must be a better way.
 
-I'm not so sure the server is at (totally) fault. I'm questioning why
-receiving BAD_STATEID on the client for SETATTR of a DELEGRETURN
-compound doesn't lead to either FREE_STATEID or retry of a DELEGRETURN
-(which treats both types of errors as a reason to trigger
-FREE_STATEID).
+Can we pass '0' for the kern arg to __sock_create()?  That should fix
+the refcounting issues, but might mess up security labelling.
 
-> That said, I'm also interested in why delegations are ending up revoked
-> in the first place.
+Can we wait for something before we call put_net() to release the net.
 
-Again that's normal. The test case is we have a large number of opened
-files that are being recalled. As the server keeps sending cb_recalls
-the laundromat thread kicks in and determines that state has been
-marked recalled for longer than the lease period so revokes it.
+Maybe we want to split the "kern" arg t __sock_create() and have
+"kern" which affects labeling and "refnet" with affects refcounting the
+net.
 
->
-> > >
-> > > > ---
-> > > > Changes in v4:
-> > > > - Fix the wait for a slot in nfsd41_cb_get_slot()
-> > > > - Link to v3: https://lore.kernel.org/r/20241030-bcwide-v3-0-c2df49=
-a26c45@kernel.org
-> > > >
-> > > > Changes in v3:
-> > > > - add patch to convert se_flags to single se_dead bool
-> > > > - fix off-by-one bug in handling of NFSD_BC_SLOT_TABLE_MAX
-> > > > - don't reject target highest slot value of 0
-> > > > - Link to v2: https://lore.kernel.org/r/20241029-bcwide-v2-1-e9010b=
-6ef55d@kernel.org
-> > > >
-> > > > Changes in v2:
-> > > > - take cl_lock when fetching fields from session to be encoded
-> > > > - use fls() instead of bespoke highest_unset_index()
-> > > > - rename variables in several functions with more descriptive names
-> > > > - clamp limit of for loop in update_cb_slot_table()
-> > > > - re-add missing rpc_wake_up_queued_task() call
-> > > > - fix slotid check in decode_cb_sequence4resok()
-> > > > - add new per-session spinlock
-> > > > ---
-> > > >  fs/nfsd/nfs4callback.c | 113 ++++++++++++++++++++++++++++++++++++-=
-------------
-> > > >  fs/nfsd/nfs4state.c    |  11 +++--
-> > > >  fs/nfsd/state.h        |  15 ++++---
-> > > >  fs/nfsd/trace.h        |   2 +-
-> > > >  4 files changed, 101 insertions(+), 40 deletions(-)
-> > > >
-> > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > > > index e38fa834b3d91333acf1425eb14c644e5d5f2601..47a678333907eaa92db=
-305dada503704c34c15b2 100644
-> > > > --- a/fs/nfsd/nfs4callback.c
-> > > > +++ b/fs/nfsd/nfs4callback.c
-> > > > @@ -406,6 +406,19 @@ encode_cb_getattr4args(struct xdr_stream *xdr,=
- struct nfs4_cb_compound_hdr *hdr,
-> > > >         hdr->nops++;
-> > > >  }
-> > > >
-> > > > +static u32 highest_slotid(struct nfsd4_session *ses)
-> > > > +{
-> > > > +       u32 idx;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       idx =3D fls(~ses->se_cb_slot_avail);
-> > > > +       if (idx > 0)
-> > > > +               --idx;
-> > > > +       idx =3D max(idx, ses->se_cb_highest_slot);
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +       return idx;
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * CB_SEQUENCE4args
-> > > >   *
-> > > > @@ -432,15 +445,35 @@ static void encode_cb_sequence4args(struct xd=
-r_stream *xdr,
-> > > >         encode_sessionid4(xdr, session);
-> > > >
-> > > >         p =3D xdr_reserve_space(xdr, 4 + 4 + 4 + 4 + 4);
-> > > > -       *p++ =3D cpu_to_be32(session->se_cb_seq_nr);      /* csa_se=
-quenceid */
-> > > > -       *p++ =3D xdr_zero;                        /* csa_slotid */
-> > > > -       *p++ =3D xdr_zero;                        /* csa_highest_sl=
-otid */
-> > > > +       *p++ =3D cpu_to_be32(session->se_cb_seq_nr[cb->cb_held_slot=
-]);    /* csa_sequenceid */
-> > > > +       *p++ =3D cpu_to_be32(cb->cb_held_slot);           /* csa_sl=
-otid */
-> > > > +       *p++ =3D cpu_to_be32(highest_slotid(session)); /* csa_highe=
-st_slotid */
-> > > >         *p++ =3D xdr_zero;                        /* csa_cachethis =
-*/
-> > > >         xdr_encode_empty_array(p);              /* csa_referring_ca=
-ll_lists */
-> > > >
-> > > >         hdr->nops++;
-> > > >  }
-> > > >
-> > > > +static void update_cb_slot_table(struct nfsd4_session *ses, u32 ta=
-rget)
-> > > > +{
-> > > > +       /* No need to do anything if nothing changed */
-> > > > +       if (likely(target =3D=3D READ_ONCE(ses->se_cb_highest_slot)=
-))
-> > > > +               return;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       if (target > ses->se_cb_highest_slot) {
-> > > > +               int i;
-> > > > +
-> > > > +               target =3D min(target, NFSD_BC_SLOT_TABLE_MAX);
-> > > > +
-> > > > +               /* Growing the slot table. Reset any new sequences =
-to 1 */
-> > > > +               for (i =3D ses->se_cb_highest_slot + 1; i <=3D targ=
-et; ++i)
-> > > > +                       ses->se_cb_seq_nr[i] =3D 1;
-> > > > +       }
-> > > > +       ses->se_cb_highest_slot =3D target;
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * CB_SEQUENCE4resok
-> > > >   *
-> > > > @@ -468,7 +501,7 @@ static int decode_cb_sequence4resok(struct xdr_=
-stream *xdr,
-> > > >         struct nfsd4_session *session =3D cb->cb_clp->cl_cb_session=
-;
-> > > >         int status =3D -ESERVERFAULT;
-> > > >         __be32 *p;
-> > > > -       u32 dummy;
-> > > > +       u32 seqid, slotid, target;
-> > > >
-> > > >         /*
-> > > >          * If the server returns different values for sessionID, sl=
-otID or
-> > > > @@ -484,21 +517,22 @@ static int decode_cb_sequence4resok(struct xd=
-r_stream *xdr,
-> > > >         }
-> > > >         p +=3D XDR_QUADLEN(NFS4_MAX_SESSIONID_LEN);
-> > > >
-> > > > -       dummy =3D be32_to_cpup(p++);
-> > > > -       if (dummy !=3D session->se_cb_seq_nr) {
-> > > > +       seqid =3D be32_to_cpup(p++);
-> > > > +       if (seqid !=3D session->se_cb_seq_nr[cb->cb_held_slot]) {
-> > > >                 dprintk("NFS: %s Invalid sequence number\n", __func=
-__);
-> > > >                 goto out;
-> > > >         }
-> > > >
-> > > > -       dummy =3D be32_to_cpup(p++);
-> > > > -       if (dummy !=3D 0) {
-> > > > +       slotid =3D be32_to_cpup(p++);
-> > > > +       if (slotid !=3D cb->cb_held_slot) {
-> > > >                 dprintk("NFS: %s Invalid slotid\n", __func__);
-> > > >                 goto out;
-> > > >         }
-> > > >
-> > > > -       /*
-> > > > -        * FIXME: process highest slotid and target highest slotid
-> > > > -        */
-> > > > +       p++; // ignore current highest slot value
-> > > > +
-> > > > +       target =3D be32_to_cpup(p++);
-> > > > +       update_cb_slot_table(session, target);
-> > > >         status =3D 0;
-> > > >  out:
-> > > >         cb->cb_seq_status =3D status;
-> > > > @@ -1203,6 +1237,22 @@ void nfsd4_change_callback(struct nfs4_clien=
-t *clp, struct nfs4_cb_conn *conn)
-> > > >         spin_unlock(&clp->cl_lock);
-> > > >  }
-> > > >
-> > > > +static int grab_slot(struct nfsd4_session *ses)
-> > > > +{
-> > > > +       int idx;
-> > > > +
-> > > > +       spin_lock(&ses->se_lock);
-> > > > +       idx =3D ffs(ses->se_cb_slot_avail) - 1;
-> > > > +       if (idx < 0 || idx > ses->se_cb_highest_slot) {
-> > > > +               spin_unlock(&ses->se_lock);
-> > > > +               return -1;
-> > > > +       }
-> > > > +       /* clear the bit for the slot */
-> > > > +       ses->se_cb_slot_avail &=3D ~BIT(idx);
-> > > > +       spin_unlock(&ses->se_lock);
-> > > > +       return idx;
-> > > > +}
-> > > > +
-> > > >  /*
-> > > >   * There's currently a single callback channel slot.
-> > > >   * If the slot is available, then mark it busy.  Otherwise, set th=
-e
-> > > > @@ -1211,28 +1261,32 @@ void nfsd4_change_callback(struct nfs4_clie=
-nt *clp, struct nfs4_cb_conn *conn)
-> > > >  static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct r=
-pc_task *task)
-> > > >  {
-> > > >         struct nfs4_client *clp =3D cb->cb_clp;
-> > > > +       struct nfsd4_session *ses =3D clp->cl_cb_session;
-> > > >
-> > > > -       if (!cb->cb_holds_slot &&
-> > > > -           test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D 0) {
-> > > > +       if (cb->cb_held_slot >=3D 0)
-> > > > +               return true;
-> > > > +       cb->cb_held_slot =3D grab_slot(ses);
-> > > > +       if (cb->cb_held_slot < 0) {
-> > > >                 rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
-> > > >                 /* Race breaker */
-> > > > -               if (test_and_set_bit(0, &clp->cl_cb_slot_busy) !=3D=
- 0) {
-> > > > -                       dprintk("%s slot is busy\n", __func__);
-> > > > +               cb->cb_held_slot =3D grab_slot(ses);
-> > > > +               if (cb->cb_held_slot < 0)
-> > > >                         return false;
-> > > > -               }
-> > > >                 rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
-> > > >         }
-> > > > -       cb->cb_holds_slot =3D true;
-> > > >         return true;
-> > > >  }
-> > > >
-> > > >  static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
-> > > >  {
-> > > >         struct nfs4_client *clp =3D cb->cb_clp;
-> > > > +       struct nfsd4_session *ses =3D clp->cl_cb_session;
-> > > >
-> > > > -       if (cb->cb_holds_slot) {
-> > > > -               cb->cb_holds_slot =3D false;
-> > > > -               clear_bit(0, &clp->cl_cb_slot_busy);
-> > > > +       if (cb->cb_held_slot >=3D 0) {
-> > > > +               spin_lock(&ses->se_lock);
-> > > > +               ses->se_cb_slot_avail |=3D BIT(cb->cb_held_slot);
-> > > > +               spin_unlock(&ses->se_lock);
-> > > > +               cb->cb_held_slot =3D -1;
-> > > >                 rpc_wake_up_next(&clp->cl_cb_waitq);
-> > > >         }
-> > > >  }
-> > > > @@ -1249,8 +1303,8 @@ static void nfsd41_destroy_cb(struct nfsd4_ca=
-llback *cb)
-> > > >  }
-> > > >
-> > > >  /*
-> > > > - * TODO: cb_sequence should support referring call lists, cachethi=
-s, multiple
-> > > > - * slots, and mark callback channel down on communication errors.
-> > > > + * TODO: cb_sequence should support referring call lists, cachethi=
-s,
-> > > > + * and mark callback channel down on communication errors.
-> > > >   */
-> > > >  static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata=
-)
-> > > >  {
-> > > > @@ -1292,7 +1346,7 @@ static bool nfsd4_cb_sequence_done(struct rpc=
-_task *task, struct nfsd4_callback
-> > > >                 return true;
-> > > >         }
-> > > >
-> > > > -       if (!cb->cb_holds_slot)
-> > > > +       if (cb->cb_held_slot < 0)
-> > > >                 goto need_restart;
-> > > >
-> > > >         /* This is the operation status code for CB_SEQUENCE */
-> > > > @@ -1306,10 +1360,10 @@ static bool nfsd4_cb_sequence_done(struct r=
-pc_task *task, struct nfsd4_callback
-> > > >                  * If CB_SEQUENCE returns an error, then the state =
-of the slot
-> > > >                  * (sequence ID, cached reply) MUST NOT change.
-> > > >                  */
-> > > > -               ++session->se_cb_seq_nr;
-> > > > +               ++session->se_cb_seq_nr[cb->cb_held_slot];
-> > > >                 break;
-> > > >         case -ESERVERFAULT:
-> > > > -               ++session->se_cb_seq_nr;
-> > > > +               ++session->se_cb_seq_nr[cb->cb_held_slot];
-> > > >                 nfsd4_mark_cb_fault(cb->cb_clp);
-> > > >                 ret =3D false;
-> > > >                 break;
-> > > > @@ -1335,17 +1389,16 @@ static bool nfsd4_cb_sequence_done(struct r=
-pc_task *task, struct nfsd4_callback
-> > > >         case -NFS4ERR_BADSLOT:
-> > > >                 goto retry_nowait;
-> > > >         case -NFS4ERR_SEQ_MISORDERED:
-> > > > -               if (session->se_cb_seq_nr !=3D 1) {
-> > > > -                       session->se_cb_seq_nr =3D 1;
-> > > > +               if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1)=
- {
-> > > > +                       session->se_cb_seq_nr[cb->cb_held_slot] =3D=
- 1;
-> > > >                         goto retry_nowait;
-> > > >                 }
-> > > >                 break;
-> > > >         default:
-> > > >                 nfsd4_mark_cb_fault(cb->cb_clp);
-> > > >         }
-> > > > -       nfsd41_cb_release_slot(cb);
-> > > > -
-> > > >         trace_nfsd_cb_free_slot(task, cb);
-> > > > +       nfsd41_cb_release_slot(cb);
-> > > >
-> > > >         if (RPC_SIGNALLED(task))
-> > > >                 goto need_restart;
-> > > > @@ -1565,7 +1618,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb,=
- struct nfs4_client *clp,
-> > > >         INIT_WORK(&cb->cb_work, nfsd4_run_cb_work);
-> > > >         cb->cb_status =3D 0;
-> > > >         cb->cb_need_restart =3D false;
-> > > > -       cb->cb_holds_slot =3D false;
-> > > > +       cb->cb_held_slot =3D -1;
-> > > >  }
-> > > >
-> > > >  /**
-> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > index baf7994131fe1b0a4715174ba943fd2a9882aa12..75557e7cc9265517f51=
-952563beaa4cfe8adcc3f 100644
-> > > > --- a/fs/nfsd/nfs4state.c
-> > > > +++ b/fs/nfsd/nfs4state.c
-> > > > @@ -2002,6 +2002,9 @@ static struct nfsd4_session *alloc_session(st=
-ruct nfsd4_channel_attrs *fattrs,
-> > > >         }
-> > > >
-> > > >         memcpy(&new->se_fchannel, fattrs, sizeof(struct nfsd4_chann=
-el_attrs));
-> > > > +       new->se_cb_slot_avail =3D ~0U;
-> > > > +       new->se_cb_highest_slot =3D battrs->maxreqs - 1;
-> > > > +       spin_lock_init(&new->se_lock);
-> > > >         return new;
-> > > >  out_free:
-> > > >         while (i--)
-> > > > @@ -2132,11 +2135,14 @@ static void init_session(struct svc_rqst *r=
-qstp, struct nfsd4_session *new, stru
-> > > >
-> > > >         INIT_LIST_HEAD(&new->se_conns);
-> > > >
-> > > > -       new->se_cb_seq_nr =3D 1;
-> > > > +       atomic_set(&new->se_ref, 0);
-> > > >         new->se_dead =3D false;
-> > > >         new->se_cb_prog =3D cses->callback_prog;
-> > > >         new->se_cb_sec =3D cses->cb_sec;
-> > > > -       atomic_set(&new->se_ref, 0);
-> > > > +
-> > > > +       for (idx =3D 0; idx < NFSD_BC_SLOT_TABLE_MAX; ++idx)
-> > > > +               new->se_cb_seq_nr[idx] =3D 1;
-> > > > +
-> > > >         idx =3D hash_sessionid(&new->se_sessionid);
-> > > >         list_add(&new->se_hash, &nn->sessionid_hashtbl[idx]);
-> > > >         spin_lock(&clp->cl_lock);
-> > > > @@ -3159,7 +3165,6 @@ static struct nfs4_client *create_client(stru=
-ct xdr_netobj name,
-> > > >         kref_init(&clp->cl_nfsdfs.cl_ref);
-> > > >         nfsd4_init_cb(&clp->cl_cb_null, clp, NULL, NFSPROC4_CLNT_CB=
-_NULL);
-> > > >         clp->cl_time =3D ktime_get_boottime_seconds();
-> > > > -       clear_bit(0, &clp->cl_cb_slot_busy);
-> > > >         copy_verf(clp, verf);
-> > > >         memcpy(&clp->cl_addr, sa, sizeof(struct sockaddr_storage));
-> > > >         clp->cl_cb_session =3D NULL;
-> > > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > > > index d22e4f2c9039324a0953a9e15a3c255fb8ee1a44..848d023cb308f0b6991=
-6c4ee34b09075708f0de3 100644
-> > > > --- a/fs/nfsd/state.h
-> > > > +++ b/fs/nfsd/state.h
-> > > > @@ -71,8 +71,8 @@ struct nfsd4_callback {
-> > > >         struct work_struct cb_work;
-> > > >         int cb_seq_status;
-> > > >         int cb_status;
-> > > > +       int cb_held_slot;
-> > > >         bool cb_need_restart;
-> > > > -       bool cb_holds_slot;
-> > > >  };
-> > > >
-> > > >  struct nfsd4_callback_ops {
-> > > > @@ -307,6 +307,9 @@ struct nfsd4_conn {
-> > > >         unsigned char cn_flags;
-> > > >  };
-> > > >
-> > > > +/* Highest slot index that nfsd implements in NFSv4.1+ backchannel=
- */
-> > > > +#define NFSD_BC_SLOT_TABLE_MAX (sizeof(u32) * 8 - 1)
-> > > > +
-> > > >  /*
-> > > >   * Representation of a v4.1+ session. These are refcounted in a si=
-milar fashion
-> > > >   * to the nfs4_client. References are only taken when the server i=
-s actively
-> > > > @@ -314,6 +317,10 @@ struct nfsd4_conn {
-> > > >   */
-> > > >  struct nfsd4_session {
-> > > >         atomic_t                se_ref;
-> > > > +       spinlock_t              se_lock;
-> > > > +       u32                     se_cb_slot_avail; /* bitmap of avai=
-lable slots */
-> > > > +       u32                     se_cb_highest_slot;     /* highest =
-slot client wants */
-> > > > +       u32                     se_cb_prog;
-> > > >         bool                    se_dead;
-> > > >         struct list_head        se_hash;        /* hash by sessioni=
-d */
-> > > >         struct list_head        se_perclnt;
-> > > > @@ -322,8 +329,7 @@ struct nfsd4_session {
-> > > >         struct nfsd4_channel_attrs se_fchannel;
-> > > >         struct nfsd4_cb_sec     se_cb_sec;
-> > > >         struct list_head        se_conns;
-> > > > -       u32                     se_cb_prog;
-> > > > -       u32                     se_cb_seq_nr;
-> > > > +       u32                     se_cb_seq_nr[NFSD_BC_SLOT_TABLE_MAX=
- + 1];
-> > > >         struct nfsd4_slot       *se_slots[];    /* forward channel =
-slots */
-> > > >  };
-> > > >
-> > > > @@ -457,9 +463,6 @@ struct nfs4_client {
-> > > >          */
-> > > >         struct dentry           *cl_nfsd_info_dentry;
-> > > >
-> > > > -       /* for nfs41 callbacks */
-> > > > -       /* We currently support a single back channel with a single=
- slot */
-> > > > -       unsigned long           cl_cb_slot_busy;
-> > > >         struct rpc_wait_queue   cl_cb_waitq;    /* backchannel call=
-ers may */
-> > > >                                                 /* wait here for sl=
-ots */
-> > > >         struct net              *net;
-> > > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > > > index f318898cfc31614b5a84a4867e18c2b3a07122c9..a9c17186b6892f1df8d=
-7f7b90e250c2913ab23fe 100644
-> > > > --- a/fs/nfsd/trace.h
-> > > > +++ b/fs/nfsd/trace.h
-> > > > @@ -1697,7 +1697,7 @@ TRACE_EVENT(nfsd_cb_free_slot,
-> > > >                 __entry->cl_id =3D sid->clientid.cl_id;
-> > > >                 __entry->seqno =3D sid->sequence;
-> > > >                 __entry->reserved =3D sid->reserved;
-> > > > -               __entry->slot_seqno =3D session->se_cb_seq_nr;
-> > > > +               __entry->slot_seqno =3D session->se_cb_seq_nr[cb->c=
-b_held_slot];
-> > > >         ),
-> > > >         TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
-> > > >                 " sessionid=3D%08x:%08x:%08x:%08x new slot seqno=3D=
-%u",
-> > > >
-> > > > ---
-> > > > base-commit: 3c16aac09d20f9005fbb0e737b3ec520bbb5badd
-> > > > change-id: 20241025-bcwide-6bd7e4b63db2
-> > > >
-> > > > Best regards,
-> > > > --
-> > > > Jeff Layton <jlayton@kernel.org>
-> > > >
-> > > >
->
-> --
-> Jeff Layton <jlayton@kernel.org>
+I had a quick look and very nearly every caller of __sock_create()
+outside of net/core really does want refcount.  Many callers of
+sock_create_kern() possibly don't.
+
+So I really think this needs to be cleaned up in net/core, not in all
+the different network clients in the kernel.
+
+Thanks,
+NeilBrown
+
+
+>  		if ((error =3D kernel_listen(sock, 64)) < 0)
+>  			goto bummer;
+>  	}
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index d2f31b59457b..0f0b9f9283d9 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -1942,6 +1942,12 @@ static struct socket *xs_create_sock(struct rpc_xprt=
+ *xprt,
+>  		goto out;
+>  	}
+> =20
+> +	if (protocol =3D=3D IPPROTO_TCP) {
+> +		__netns_tracker_free(xprt->xprt_net, &sock->sk->ns_tracker, false);
+> +		sock->sk->sk_net_refcnt =3D 1;
+> +		get_net_track(xprt->xprt_net, &sock->sk->ns_tracker, GFP_KERNEL);
+> +		sock_inuse_add(xprt->xprt_net, 1);
+> +	}
+>  	filp =3D sock_alloc_file(sock, O_NONBLOCK, NULL);
+>  	if (IS_ERR(filp))
+>  		return ERR_CAST(filp);
+> --=20
+> 2.34.1
+>=20
+>=20
+
 
