@@ -1,140 +1,117 @@
-Return-Path: <linux-nfs+bounces-7881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537BE9C4953
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 23:50:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 648949C496E
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 00:01:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0A7DD1F238CE
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 22:50:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 216E128828C
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 23:01:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F3EF156F5E;
-	Mon, 11 Nov 2024 22:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67C72158D8B;
+	Mon, 11 Nov 2024 23:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dimebar.com header.i=@dimebar.com header.b="g34y6U/s";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NfjWUALO"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oCd5qown"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FB48468
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 22:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B716224FD;
+	Mon, 11 Nov 2024 23:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731365412; cv=none; b=W/VbzTOqOV5buAEYCdjjXQzEDE39IS7mQC7Ndv/FCGZgu5hYDb5Y1Bl25LfFH67y+eDxq4rnT1HpkT6USzjhRizGd5TJWxWufuLQyqXh19gXCJ1fa3AgMO+3extJVt6cbLcYfYELDvOdYNKjso/wzO3Cn13xOmhgA2ssnBzb4Ps=
+	t=1731366065; cv=none; b=lbqj2Gfr6SRj+JMxWXhfDHi+m7Sg6ajbd8HEjj4l8bsq/JiZO4JK+yzfzKyn8oC41DTdSPGtjsZd6vaQpOGogx0uSC8sJNuTmbGuHtmdIbD5ArEXhQhad6ylF1XzGNdbr9wNqO1r4q+LJKvfnlGF6ixTiX3J9cbEpzHNmsgzqgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731365412; c=relaxed/simple;
-	bh=K+Wo7HOhlHz/l1/p6b6lmDl3lsVLZtlcjkkqebao0yE=;
-	h=MIME-Version:Date:From:To:Message-Id:Subject:Content-Type; b=gg791d4OcRFF+85rYIqWvsg4+FSHXUuM+3E6X4Fw78IY1vRruNPvaQHqSE1i+/KWQ39eTdxwcYTZBhQF3OBIFluLY8aeDQ+AgALdlKPgdd6BUExezgbOyNuhecVfjB1QeI9VAd/550FpVu94dVgL/dB5cqs38Nk0WyYPyaBdhPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dimebar.com; spf=none smtp.mailfrom=dimebar.com; dkim=pass (2048-bit key) header.d=dimebar.com header.i=@dimebar.com header.b=g34y6U/s; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NfjWUALO; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dimebar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dimebar.com
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 76B7825401D9
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 17:50:08 -0500 (EST)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-10.internal (MEProxy); Mon, 11 Nov 2024 17:50:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dimebar.com; h=
-	cc:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm2; t=1731365408; x=1731451808; bh=K+Wo7HOhlH
-	z/l1/p6b6lmDl3lsVLZtlcjkkqebao0yE=; b=g34y6U/sBsExnOtg3mcGZtzeEk
-	GjQvN2qWvw9Y2od+qUJ/CLeTCkFfH+1Nm87hlS8w/9dvbkVfafbMpwekMCQrIa6l
-	uWvKhdypi2pn/XPnIWj/kMe8JfI3xIpnpTQDJujFzS4UZtovspVCCBHPdNEsn8kc
-	DnoVhBUFHxzribLSRZiTXxB/jHKYCF6KaULLQn0iGRqYNgjxyqjanE/P7tvtqDVz
-	7rKjzj1vqDdXvQcNHBogvJ9CN1CvODMB0yURZjAyrmYF+sJAP3nQb6YmpYn+Knv1
-	S1BnxuLtPNP+LYBZawyEyCD+Uf3eRxO/qLVEWiuZ8O1R3c2IKZvT6tUmwZng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1731365408; x=1731451808; bh=K+Wo7HOhlHz/l1/p6b6lmDl3lsVLZtlcjkk
-	qebao0yE=; b=NfjWUALOvj1R+7ZCwyAga0yS5MMNTGCBHIiQxfg6kAogze+jpT7
-	f0FO5XtxEL2r6cqt9dx74/B4AlXLGIwmd096mZXgrjmK4jZqYmkQprvxIpaSsRwX
-	EKJJVal+D+mwPUt7gUBbfQ5AA7F7xSpNxDfEhxzZn/4LBABF69Nf+Nlvw7O5HVi+
-	9jcahJKBgd+gdejNmtB1d+us/3D1Rq/HylOln/t8fp+CJtcIUSfzqV9wMoc6jG3V
-	zNjawmXHbfYDtBmLuGABP8lcvvBMdMnVA4r6vjPwIzRZozLHzU8E90bd1wobxOfb
-	wOsvMf3iuglofjr0W0fbye4Da7Bk0nIom0A==
-X-ME-Sender: <xms:IIoyZyPuSRISuT0pWywEUy-LWrzHjYqaCZj04haSl4u9Gpod9skF4A>
-    <xme:IIoyZw_zp1-H-A_QbDYimg6Aq59rAYNiYMim2n2C1eVi7IBpCdkwup0VtSQl8e_IM
-    TGMYKnSkasmwzyB>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepofggfffhvf
-    fkufgtgfesthejredtredttdenucfhrhhomhepfdfrhhhilhhiphcutfhofihlrghnughs
-    fdcuoehlihhnuhigqdhnfhhsseguihhmvggsrghrrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeeiieeuleeggfduteffffdtudekveevgefggfefheejudfgueeguddvgefgudethfen
-    ucffohhmrghinheptghomhdrnhgvfienucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehlihhnuhigqdhnfhhsseguihhmvggsrghrrdgtohhmpdhn
-    sggprhgtphhtthhopedupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuh
-    igqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:IIoyZ5RPFqoquYinWSgVu7DWhgjvRtl4BhDUv_WYy9u0ysSJXkj5fQ>
-    <xmx:IIoyZytGUnB1NOPVxGC_zy1vkoU9Jisn0OHnyxwqroJpIthR3InpGQ>
-    <xmx:IIoyZ6dG-vPTxNcKiDqulNnMlmdccZfcmiX2dOCAu9gS4VauvPDPFQ>
-    <xmx:IIoyZ2275DHua6ELheIyHJ4zG_4TXvedhEUk0eMk8yX-9LbYwBglOQ>
-    <xmx:IIoyZ8rYi4YqzPwFoUq3I8S7iExd4Kx6YiyaTDyXd6YN0D7vqdxRKG4J>
-Feedback-ID: id0b949ab:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0EA9618A0068; Mon, 11 Nov 2024 17:50:08 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1731366065; c=relaxed/simple;
+	bh=qDZkqTdAT5YURqPfR8TG4+JsVxiTK/oTrV1y2mYdmBw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o8sMJxeXuV+L8zh6lAsWPtpWb6OEVBsCluybrDyR0OmpGN8rkn2ug1AMIvjSko5ardacOfXhF8BHX6vr91lObW20yN+sVceY8GFAPAt25/NrDrBnGlcgkKxvOx4sfnVB/jqyXmhiaEXeU8G8ipwzXAMy9ZYHoeRVoxEKaqsPwCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=oCd5qown; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1731366063; x=1762902063;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=tptZj49XWdeiJ62/CwMkCF81VQcbIFs0dp/76ot3M/M=;
+  b=oCd5qownUTZg94JM3zkIaScVTP5qtoquuJq0a8uNzTIjivcLnIxnIkyZ
+   SgjHInmZef7iDblc89PkrYmMjl0XkKBTboJz8pEuo0RVO4NGwJ0S6kXlb
+   pJyT0sFnXYf/LwI14BqtLPeKggfNz2zExjQBH1xr/GSjL27jFqyv042P5
+   4=;
+X-IronPort-AV: E=Sophos;i="6.12,146,1728950400"; 
+   d="scan'208";a="673162477"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.124.125.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2024 23:00:59 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:28519]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.224:2525] with esmtp (Farcaster)
+ id a35a08d3-1b23-45cb-a986-a3d7f5484b74; Mon, 11 Nov 2024 23:00:59 +0000 (UTC)
+X-Farcaster-Flow-ID: a35a08d3-1b23-45cb-a986-a3d7f5484b74
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Mon, 11 Nov 2024 23:00:58 +0000
+Received: from 6c7e67c6786f.amazon.com (10.187.170.36) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Mon, 11 Nov 2024 23:00:55 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <chuck.lever@oracle.com>
+CC: <Dai.Ngo@oracle.com>, <anna@kernel.org>, <davem@davemloft.net>,
+	<ebiederm@xmission.com>, <edumazet@google.com>, <horms@kernel.org>,
+	<jlayton@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-nfs@vger.kernel.org>, <liujian56@huawei.com>, <neilb@suse.de>,
+	<netdev@vger.kernel.org>, <okorniev@redhat.com>, <pabeni@redhat.com>,
+	<tom@talpey.com>, <trondmy@kernel.org>
+Subject: Re: [PATCH net v3] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
+Date: Mon, 11 Nov 2024 15:00:52 -0800
+Message-ID: <20241111230052.50577-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <ZzIejAHeZYTqOqeH@tissot.1015granger.net>
+References: <ZzIejAHeZYTqOqeH@tissot.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 11 Nov 2024 22:49:47 +0000
-From: "Philip Rowlands" <linux-nfs@dimebar.com>
-To: linux-nfs@vger.kernel.org
-Message-Id: <6296a7d4-64de-4df0-893e-8895e8ec36d0@app.fastmail.com>
-Subject: Insecure hostname in nsm_make_temp_pathname
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D040UWA001.ant.amazon.com (10.13.139.22) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-If a host dies after nsm_make_temp_pathname but before rename(temp, path) we may be left with paths resembling .../server.example.com.new
+From: Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 11 Nov 2024 10:11:08 -0500
+> > diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> > index 6f272013fd9b..d4330aaadc23 100644
+> > --- a/net/sunrpc/svcsock.c
+> > +++ b/net/sunrpc/svcsock.c
+> > @@ -1551,6 +1551,10 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
+> >  	newlen = error;
+> >  
+> >  	if (protocol == IPPROTO_TCP) {
+> > +		__netns_tracker_free(net, &sock->sk->ns_tracker, false);
+> > +		sock->sk->sk_net_refcnt = 1;
+> > +		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
+> > +		sock_inuse_add(net, 1);
+> 
+> I'm not as familiar with net tracking as perhaps I should be. Can
+> you tell me where this reference count is released, or does it not
+> need to be?
 
-Some clever person has registered and installed a wildcard DNS record for *.com.new.
-
-$ host server.example.com.new
-server.example.com.new has address 104.21.68.132
-server.example.com.new has address 172.67.195.202
-
-You can see where this is going...
-
-Our firewall scanners tripped on outbound access to this address, port 111, I assume due to NSM reboot notifications.
-
-Suggested workarounds include:
-* explicitly skip over paths matching the expect tempname pattern in nsm_load_dir()
-* use a different tmp suffix than .new, e.g. one which won't work in DNS
-
-Steps to reproduce:
-
-# cat /var/lib/nfs/statd/sm/server.example.com.new
-0100007f 000186b5 00000003 00000010 89ae3382e989d91800000000dc00ed000000ffff 1.2.3.4 my-client-name
-# sm-notify -d -f -n
-sm-notify: Version 2.7.1 starting
-sm-notify: Retired record for mon_name server.example.com.new
-sm-notify: Added host server.example.com.new to notify list
-sm-notify: Initializing NSM state
-sm-notify: Failed to open /proc/sys/fs/nfs/nsm_local_state: No such file or directory
-sm-notify: Effective UID, GID: 29, 29
-sm-notify: Sending PMAP_GETPORT for 100024, 1, udp
-sm-notify: Added host server.example.com.new to notify list
-sm-notify: Host server.example.com.new due in 2 seconds
-sm-notify: Sending PMAP_GETPORT for 100024, 1, udp
-# etc.
-
-tcpdump shows the outbound traffic:
-22:42:31.940208 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, length 56
-22:42:33.942440 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, length 56
-22:42:37.946903 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, length 56
-
-The client statd was artificially placed for the purposes of showing the problem, but I hope it's close enough to make sense.
+It's decremented when the socket is destroyed in __sk_free().
 
 
-Cheers,
-Phil
+> 
+> Does the net reference count get carried over to sockets created
+> by accept() ?
+
+Yes, sk_clone_lock() creates a child socket that inherits the
+listener's sk->sk_net_refcnt, then the child will call get_net_track().
+
+  tcp_create_openreq_child
+    inet_csk_clone_lock
+      sk_clone_lock
 
