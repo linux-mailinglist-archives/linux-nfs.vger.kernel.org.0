@@ -1,213 +1,178 @@
-Return-Path: <linux-nfs+bounces-7849-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7850-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B54DA9C3955
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 09:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 230B09C3A9B
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 10:13:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3AD681F22101
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 08:01:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A139F1F22522
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 09:13:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C0C0139578;
-	Mon, 11 Nov 2024 08:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4941016F0D0;
+	Mon, 11 Nov 2024 09:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgPSPhwK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA0620B22;
-	Mon, 11 Nov 2024 08:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F011016A959;
+	Mon, 11 Nov 2024 09:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731312066; cv=none; b=SWpIdQI4yqKC038D2um7nPM/zlfYcbibxSXhK0YpMVKnDU8yKLv2wtlcraexJ1YVA8qarSzTDOFMG6VhaDIpHJlBqPyIIlsExQE55R0ZY7kLWoRKOZTXxj8mCHmopQ3MnxoNDIl4OyjQN9QNE7RkJjFNKYU9/eYN92dX9ITs1fI=
+	t=1731316379; cv=none; b=hb4dNgDtEt1pzeC+FsijQ8uLvQsRo7zkF1/dQcTIDGdj3MbXr6A+HfcEnxqnfp7osEgZqDaidC7wvpGo+WDXgMSl5pGJH1oJz/qiEB4ybcaRSs7anMyWS5qrklr4JPBWqT7jrY78nsbRrg/1H9EgCo9S33Mfs/mN0YdPsuPKTHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731312066; c=relaxed/simple;
-	bh=D4fxEffkdD+TzHlLOXdHYFcAXrCaBK85rwbWQ8pFt2Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NCIOMkJBPdKi1Txh+LlGMCes8PcFoqNF0xq6A1RhSMlBScDbz1qgWSLzSY3ALbjfRJfMhKUZIxiYrQNImYwzxSs/4qz/dHAZAMe8wcCBcMoIuUYXPQSvcKSFLLMRnSPKfhQRxJuW3SY3diK7f/LGFV0rrfYw/psv0UZePI+7pqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Xn24N5RtLz10V7P;
-	Mon, 11 Nov 2024 15:59:00 +0800 (CST)
-Received: from kwepemg200003.china.huawei.com (unknown [7.202.181.30])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7515140257;
-	Mon, 11 Nov 2024 16:00:52 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200003.china.huawei.com
- (7.202.181.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 11 Nov
- 2024 16:00:51 +0800
-From: Liu Jian <liujian56@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<trondmy@kernel.org>, <anna@kernel.org>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>, <ebiederm@xmission.com>, <kuniyu@amazon.com>,
-	<liujian56@huawei.com>
-CC: <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH net v3] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
-Date: Mon, 11 Nov 2024 16:17:36 +0800
-Message-ID: <20241111081736.526093-1-liujian56@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1731316379; c=relaxed/simple;
+	bh=eLegIPzm6kl+o1xbtiBt0w/Vn129KLVaIrdkjfKYWaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ACjyU5n7k2nOg9QueFtI6LYwdN8HtxLJhGJjoYSxR6XO6idLkWoAYYnD1pP5q1+TDcMLhkkC4pr+HZqBxd36ceJWFY3zkxwvCB2X9lZ8RRmozU3leoSy2J//PSIEdWT7pkSzGYxv7uYsKW0/4gj9jpk5fkiY/xxhRG38nOa912E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgPSPhwK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D85C4CED0;
+	Mon, 11 Nov 2024 09:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731316378;
+	bh=eLegIPzm6kl+o1xbtiBt0w/Vn129KLVaIrdkjfKYWaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fgPSPhwKVCoHhP5ZUhqFPaUA3BckikO442jgj8GZjtPjAiQvZy2Zt8UJaqx4sZ4cn
+	 tLQLnuNp8PDWRuevwPEyIHOAmeXYlFpVSIX3s7ozITJY1rKstBsCZlFlksJ0gw6tmS
+	 kdvvTwHsIdFewza2NlXVyqYUKM9MykIn/gCPy6V7rfKaE5bePR/WM3+hqBWYTt+baE
+	 ElCEQ+0slDPOh3YKguR0LIEL0eNaL2YyYEX/vSMtnmZZUKcDhQynA4VIMn0yTrjVZ3
+	 fE5fwQWPiTHePSimVwb1JplWrql7brpCmIVXRpE7c1XmVUtvAeONSspLa67X4zbXJl
+	 sD6sd7jx8WGRQ==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Gao Xiang <xiang@kernel.org>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v4 00/33] netfs: Read performance improvements and "single-blob" support
+Date: Mon, 11 Nov 2024 10:12:33 +0100
+Message-ID: <20241111-kochkunst-kroll-f8386db7f273@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241108173236.1382366-1-dhowells@redhat.com>
+References: <20241108173236.1382366-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4915; i=brauner@kernel.org; h=from:subject:message-id; bh=eLegIPzm6kl+o1xbtiBt0w/Vn129KLVaIrdkjfKYWaA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQbnuoTcJer1I9iZPy/KXnXkR3yzUvPeSUdKhatyKkPP 1/h4qTTUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMJHXyowMJ73NZvvz71XzWu/R kX/O6mpbvrbzAbX0naeF5dI9IzTqGRmeOOw/3D7HYsVKm7tHJ/g+THnPZ3IgVWj+mYxQHlHHyPM MAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg200003.china.huawei.com (7.202.181.30)
 
-BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
-Read of size 1 at addr ffff888111f322cd by task swapper/0/0
+On Fri, 08 Nov 2024 17:32:01 +0000, David Howells wrote:
+> This set of patches is primarily about two things: improving read
+> performance and supporting monolithic single-blob objects that have to be
+> read/written as such (e.g. AFS directory contents).  The implementation of
+> the two parts is interwoven as each makes the other possible.
+> 
+> READ PERFORMANCE
+> ================
+> 
+> [...]
 
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x68/0xa0
- print_address_description.constprop.0+0x2c/0x3d0
- print_report+0xb4/0x270
- kasan_report+0xbd/0xf0
- tcp_write_timer_handler+0x156/0x3e0
- tcp_write_timer+0x66/0x170
- call_timer_fn+0xfb/0x1d0
- __run_timers+0x3f8/0x480
- run_timer_softirq+0x9b/0x100
- handle_softirqs+0x153/0x390
- __irq_exit_rcu+0x103/0x120
- irq_exit_rcu+0xe/0x20
- sysvec_apic_timer_interrupt+0x76/0x90
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20
-RIP: 0010:default_idle+0xf/0x20
-Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
- 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
- cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
-RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
-R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
-R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
- default_idle_call+0x6b/0xa0
- cpuidle_idle_call+0x1af/0x1f0
- do_idle+0xbc/0x130
- cpu_startup_entry+0x33/0x40
- rest_init+0x11f/0x210
- start_kernel+0x39a/0x420
- x86_64_start_reservations+0x18/0x30
- x86_64_start_kernel+0x97/0xa0
- common_startup_64+0x13e/0x141
- </TASK>
+Applied to the vfs-6.14.netfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.14.netfs branch should appear in linux-next soon.
 
-Allocated by task 595:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- __kasan_slab_alloc+0x87/0x90
- kmem_cache_alloc_noprof+0x12b/0x3f0
- copy_net_ns+0x94/0x380
- create_new_namespaces+0x24c/0x500
- unshare_nsproxy_namespaces+0x75/0xf0
- ksys_unshare+0x24e/0x4f0
- __x64_sys_unshare+0x1f/0x30
- do_syscall_64+0x70/0x180
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Freed by task 100:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- kasan_save_free_info+0x3b/0x60
- __kasan_slab_free+0x54/0x70
- kmem_cache_free+0x156/0x5d0
- cleanup_net+0x5d3/0x670
- process_one_work+0x776/0xa90
- worker_thread+0x2e2/0x560
- kthread+0x1a8/0x1f0
- ret_from_fork+0x34/0x60
- ret_from_fork_asm+0x1a/0x30
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Reproduction script:
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-mkdir -p /mnt/nfsshare
-mkdir -p /mnt/nfs/netns_1
-mkfs.ext4 /dev/sdb
-mount /dev/sdb /mnt/nfsshare
-systemctl restart nfs-server
-chmod 777 /mnt/nfsshare
-exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.14.netfs
 
-ip netns add netns_1
-ip link add name veth_1_peer type veth peer veth_1
-ifconfig veth_1_peer 11.11.0.254 up
-ip link set veth_1 netns netns_1
-ip netns exec netns_1 ifconfig veth_1 11.11.0.1
-
-ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
-	--tcp-flags FIN FIN  -j DROP
-
-(note: In my environment, a DESTROY_CLIENTID operation is always sent
- immediately, breaking the nfs tcp connection.)
-ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
-	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
-
-ip netns del netns_1
-
-The reason here is that the tcp socket in netns_1 (nfs side) has been
-shutdown and closed (done in xs_destroy), but the FIN message (with ack)
-is discarded, and the nfsd side keeps sending retransmission messages.
-As a result, when the tcp sock in netns_1 processes the received message,
-it sends the message (FIN message) in the sending queue, and the tcp timer
-is re-established. When the network namespace is deleted, the net structure
-accessed by tcp's timer handler function causes problems.
-
-To fix this problem, let's hold netns refcnt for the tcp kernel socket as
- done in other modules.
-
-Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
----
- net/sunrpc/svcsock.c  | 4 ++++
- net/sunrpc/xprtsock.c | 6 ++++++
- 2 files changed, 10 insertions(+)
-
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 6f272013fd9b..d4330aaadc23 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1551,6 +1551,10 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
- 	newlen = error;
- 
- 	if (protocol == IPPROTO_TCP) {
-+		__netns_tracker_free(net, &sock->sk->ns_tracker, false);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(net, 1);
- 		if ((error = kernel_listen(sock, 64)) < 0)
- 			goto bummer;
- 	}
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index d2f31b59457b..0f0b9f9283d9 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1942,6 +1942,12 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
- 		goto out;
- 	}
- 
-+	if (protocol == IPPROTO_TCP) {
-+		__netns_tracker_free(xprt->xprt_net, &sock->sk->ns_tracker, false);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(xprt->xprt_net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(xprt->xprt_net, 1);
-+	}
- 	filp = sock_alloc_file(sock, O_NONBLOCK, NULL);
- 	if (IS_ERR(filp))
- 		return ERR_CAST(filp);
--- 
-2.34.1
-
+[01/33] kheaders: Ignore silly-rename files
+        https://git.kernel.org/vfs/vfs/c/3033d243b97c
+[02/33] netfs: Remove call to folio_index()
+        https://git.kernel.org/vfs/vfs/c/f709cec9dc52
+[03/33] netfs: Fix a few minor bugs in netfs_page_mkwrite()
+        https://git.kernel.org/vfs/vfs/c/07a80742a52b
+[04/33] netfs: Remove unnecessary references to pages
+        https://git.kernel.org/vfs/vfs/c/53f5f31a1549
+[05/33] netfs: Use a folio_queue allocation and free functions
+        https://git.kernel.org/vfs/vfs/c/1d044b4cb3e9
+[06/33] netfs: Add a tracepoint to log the lifespan of folio_queue structs
+        https://git.kernel.org/vfs/vfs/c/7583f643f714
+[07/33] netfs: Abstract out a rolling folio buffer implementation
+        https://git.kernel.org/vfs/vfs/c/2029a747a14d
+[08/33] netfs: Make netfs_advance_write() return size_t
+        https://git.kernel.org/vfs/vfs/c/34961bbe07a5
+[09/33] netfs: Split retry code out of fs/netfs/write_collect.c
+        https://git.kernel.org/vfs/vfs/c/8816207a3e26
+[10/33] netfs: Drop the error arg from netfs_read_subreq_terminated()
+        https://git.kernel.org/vfs/vfs/c/44c5114bb155
+[11/33] netfs: Drop the was_async arg from netfs_read_subreq_terminated()
+        https://git.kernel.org/vfs/vfs/c/3c8a83f74e0e
+[12/33] netfs: Don't use bh spinlock
+        https://git.kernel.org/vfs/vfs/c/5c962f9982cd
+[13/33] afs: Don't use mutex for I/O operation lock
+        https://git.kernel.org/vfs/vfs/c/244059f6472c
+[14/33] afs: Fix EEXIST error returned from afs_rmdir() to be ENOTEMPTY
+        https://git.kernel.org/vfs/vfs/c/10e890507ed5
+[15/33] afs: Fix directory format encoding struct
+        https://git.kernel.org/vfs/vfs/c/c8f34615191c
+[16/33] netfs: Remove some extraneous directory invalidations
+        https://git.kernel.org/vfs/vfs/c/ab143ef48b3b
+[17/33] cachefiles: Add some subrequest tracepoints
+        https://git.kernel.org/vfs/vfs/c/46599823a281
+[18/33] cachefiles: Add auxiliary data trace
+        https://git.kernel.org/vfs/vfs/c/499c9d489d7b
+[19/33] afs: Add more tracepoints to do with tracking validity
+        https://git.kernel.org/vfs/vfs/c/606d920396fd
+[20/33] netfs: Add functions to build/clean a buffer in a folio_queue
+        https://git.kernel.org/vfs/vfs/c/823f8d570db5
+[21/33] netfs: Add support for caching single monolithic objects such as AFS dirs
+        https://git.kernel.org/vfs/vfs/c/5ae8e69c119a
+[22/33] afs: Make afs_init_request() get a key if not given a file
+        https://git.kernel.org/vfs/vfs/c/bfeb953ddf0b
+[23/33] afs: Use netfslib for directories
+        https://git.kernel.org/vfs/vfs/c/2b6bae4ca558
+[24/33] afs: Use netfslib for symlinks, allowing them to be cached
+        https://git.kernel.org/vfs/vfs/c/a16c68c66f52
+[25/33] afs: Eliminate afs_read
+        https://git.kernel.org/vfs/vfs/c/b84e275b6da2
+[26/33] afs: Fix cleanup of immediately failed async calls
+        https://git.kernel.org/vfs/vfs/c/355d07737082
+[27/33] afs: Make {Y,}FS.FetchData an asynchronous operation
+        https://git.kernel.org/vfs/vfs/c/e31fb01515da
+[28/33] netfs: Change the read result collector to only use one work item
+        https://git.kernel.org/vfs/vfs/c/1bd9011ee163
+[29/33] afs: Make afs_mkdir() locally initialise a new directory's content
+        https://git.kernel.org/vfs/vfs/c/4e93a341aec1
+[30/33] afs: Use the contained hashtable to search a directory
+        https://git.kernel.org/vfs/vfs/c/08890740b1d7
+[31/33] afs: Locally initialise the contents of a new symlink on creation
+        https://git.kernel.org/vfs/vfs/c/d4f4a6bde676
+[32/33] afs: Add a tracepoint for afs_read_receive()
+        https://git.kernel.org/vfs/vfs/c/f06ba511d8d5
+[33/33] netfs: Report on NULL folioq in netfs_writeback_unlock_folios()
+        https://git.kernel.org/vfs/vfs/c/19375843912f
 
