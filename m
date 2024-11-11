@@ -1,94 +1,93 @@
-Return-Path: <linux-nfs+bounces-7841-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7842-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 226409C361B
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 02:34:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 528C59C3625
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 02:35:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43DA41C226BE
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 01:34:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 117B6280EF2
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Nov 2024 01:35:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E1B07641E;
-	Mon, 11 Nov 2024 01:31:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C002B67F;
+	Mon, 11 Nov 2024 01:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQvPPOtO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="09enohJY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQvPPOtO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="09enohJY"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Whx5jILn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="B0uYZBB7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Whx5jILn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="B0uYZBB7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4FA12C54B
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 01:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D55422F11
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Nov 2024 01:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731288687; cv=none; b=T4A+11kowfWHoGUKs/xG0dQsY4EeRqFqRuyxfGvObvEfVEhQslGjlWRn+F/v6C5lvy6EKNTok7vxfy8idKj/GY2dYaJBs+N1qDN/fe6lQqlNqlZrzOFI3jcn9fp8geXcCTM+BtuYWMqs5etVg/qegAJYdaUnD59Nomxip72lArk=
+	t=1731288783; cv=none; b=FslxjN2OfTMhHO/xH6xp4AoTo4C8CMDtZa4AaymePTbVnM57gRX0H3ps0C/109lol5/V6lDJiaA/LLApULD5zfj1Z4WNZPK/BXtrKkjpDAEumecNFb8VGeFCVarAOUwQ0E9k8PG+Y49Voi/e27/aE2fk9Ts1Qn7nqpndHR/lPjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731288687; c=relaxed/simple;
-	bh=b4SGvWXzLLHu3YJfbeUJ403SJRRSY7i0VXbqJhrs+Qs=;
+	s=arc-20240116; t=1731288783; c=relaxed/simple;
+	bh=d3YrWhOyiWsBCyy2G95Mw+iPJO7gWYaV5yExRCcTZYY=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=H0DLYVwmjjlgEujhiyoZlBVglFfGCyW9IOCxt5m92MwR/Eqi3Sog43fsZaFNyJXaw96jDVsr2dxlDgd+8qiI2FjIy/+TxSTXUBLi1vZa1UEWchO5wN7HeEuOHpSLtEozwTXkhwa6NWEGXj3J0t/JfzsBaLZ8ml+dyw1B3ZaIwJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQvPPOtO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=09enohJY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQvPPOtO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=09enohJY; arc=none smtp.client-ip=195.135.223.130
+	 References:Date:Message-id; b=C1zV6dXaMW2RXQemXkPC+riiI/kbvRruDUu2EytvxXkAHKXB4sMr0R1xBVSpjCDRjYHXIfxxcgfJMbc1KZ1haq64XAqPU3xHckCRS51gFpXiLw3SQU1HEqjc7+BqSnbssxhAekXow6gGZhbA8ZOd1yQYDKB+YDhLlp65tmq7b5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Whx5jILn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=B0uYZBB7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Whx5jILn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=B0uYZBB7; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3B161219EA;
-	Mon, 11 Nov 2024 01:31:23 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B28CF1F38E;
+	Mon, 11 Nov 2024 01:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731288683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731288779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w7ef1EX7wAGkTQMrgYV3jQAlW0NlI4+X2HcbO4ZI78g=;
-	b=QQvPPOtODI9fI8PlerZeSur49327sSARfszansn42Jvqmfrf8d8kkfMNcVeKmJt8Zx3eS2
-	1hbPVFWcrraC35GI8vByUo29W+lgWc1hpXKNNfns8Yj2G6sZt7ziUM92RxOX7d9ruIiUPN
-	IeWPPoaZp6sxT9tNXlzjGaXQhmmNFeI=
+	bh=cgHLEH5JwpcthPiJNZX2Iy3BHnJabfYe6fdSX6WcM4k=;
+	b=Whx5jILnotxYCJCtOA8WyY+V99E4qStYwdLYt1s0ch1qmcDrzlsCOn/ihz+i5Rn1B/yrJ7
+	mPZfsVOdvtGHOUvZ/38uV2l6PvhPrsHG4LS5+os5pwZW5E3jG1trDEwy5kIn6r18cZilL2
+	DAOWnHU41Ib5tfD4Onn02aMiO3d3yGA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731288683;
+	s=susede2_ed25519; t=1731288779;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w7ef1EX7wAGkTQMrgYV3jQAlW0NlI4+X2HcbO4ZI78g=;
-	b=09enohJYj0EQ14U3dqFwIDUyVQRkDAkCzwf3K0U9epCAJ8jmzO5NFV5330q9pbCbYiqTEO
-	jQDtO9ndA7Il3tDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=QQvPPOtO;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=09enohJY
+	bh=cgHLEH5JwpcthPiJNZX2Iy3BHnJabfYe6fdSX6WcM4k=;
+	b=B0uYZBB7PAZZhMXmm/FqcI0l/r9tKJcKpRRvNzPELnNC5UpEBCdGymYI3GZsq/nRQUAaMd
+	SARixA32aFmicjCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731288683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731288779; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w7ef1EX7wAGkTQMrgYV3jQAlW0NlI4+X2HcbO4ZI78g=;
-	b=QQvPPOtODI9fI8PlerZeSur49327sSARfszansn42Jvqmfrf8d8kkfMNcVeKmJt8Zx3eS2
-	1hbPVFWcrraC35GI8vByUo29W+lgWc1hpXKNNfns8Yj2G6sZt7ziUM92RxOX7d9ruIiUPN
-	IeWPPoaZp6sxT9tNXlzjGaXQhmmNFeI=
+	bh=cgHLEH5JwpcthPiJNZX2Iy3BHnJabfYe6fdSX6WcM4k=;
+	b=Whx5jILnotxYCJCtOA8WyY+V99E4qStYwdLYt1s0ch1qmcDrzlsCOn/ihz+i5Rn1B/yrJ7
+	mPZfsVOdvtGHOUvZ/38uV2l6PvhPrsHG4LS5+os5pwZW5E3jG1trDEwy5kIn6r18cZilL2
+	DAOWnHU41Ib5tfD4Onn02aMiO3d3yGA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731288683;
+	s=susede2_ed25519; t=1731288779;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=w7ef1EX7wAGkTQMrgYV3jQAlW0NlI4+X2HcbO4ZI78g=;
-	b=09enohJYj0EQ14U3dqFwIDUyVQRkDAkCzwf3K0U9epCAJ8jmzO5NFV5330q9pbCbYiqTEO
-	jQDtO9ndA7Il3tDQ==
+	bh=cgHLEH5JwpcthPiJNZX2Iy3BHnJabfYe6fdSX6WcM4k=;
+	b=B0uYZBB7PAZZhMXmm/FqcI0l/r9tKJcKpRRvNzPELnNC5UpEBCdGymYI3GZsq/nRQUAaMd
+	SARixA32aFmicjCw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30C69137FB;
-	Mon, 11 Nov 2024 01:31:20 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A9AE6137FB;
+	Mon, 11 Nov 2024 01:32:57 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id npFiNmheMWeXfAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 01:31:20 +0000
+	id XFNQGMleMWcXfQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 11 Nov 2024 01:32:57 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -102,295 +101,142 @@ To: "Mike Snitzer" <snitzer@kernel.org>
 Cc: linux-nfs@vger.kernel.org, "Anna Schumaker" <anna@kernel.org>,
  "Trond Myklebust" <trondmy@hammerspace.com>,
  "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [for-6.13 PATCH 07/19] nfs/localio: add direct IO enablement with
- sync and async IO support
-In-reply-to: <20241108234002.16392-8-snitzer@kernel.org>
+Subject: Re: [for-6.13 PATCH 09/19] nfs_common: rename functions that
+ invalidate LOCALIO nfs_clients
+In-reply-to: <20241108234002.16392-10-snitzer@kernel.org>
 References: <20241108234002.16392-1-snitzer@kernel.org>,
- <20241108234002.16392-8-snitzer@kernel.org>
-Date: Mon, 11 Nov 2024 12:31:14 +1100
-Message-id: <173128867427.1734440.11627053372464152311@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 3B161219EA
+ <20241108234002.16392-10-snitzer@kernel.org>
+Date: Mon, 11 Nov 2024 12:32:50 +1100
+Message-id: <173128877080.1734440.4855614018882617409@noble.neil.brown.name>
 X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
+X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
 	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Score: -4.30
 X-Spam-Flag: NO
 
 On Sat, 09 Nov 2024, Mike Snitzer wrote:
-> This commit simply adds the required O_DIRECT plumbing.  It doesn't
-> address the fact that NFS doesn't ensure all writes are page aligned
-> (nor device logical block size aligned as required by O_DIRECT).
->=20
-> Because NFS will read-modify-write for IO that isn't aligned, LOCALIO
-> will not use O_DIRECT semantics by default if/when an application
-> requests the use of O_DIRECT.  Allow the use of O_DIRECT semantics by:
-> 1: Adding a flag to the nfs_pgio_header struct to allow the NFS
->    O_DIRECT layer to signal that O_DIRECT was used by the application
-> 2: Adding a 'localio_O_DIRECT_semantics' NFS module parameter that
->    when enabled will cause LOCALIO to use O_DIRECT semantics (this may
->    cause IO to fail if applications do not properly align their IO).
->=20
-> Adding Direct IO support helps side-step the problem that LOCALIO
-> currently double buffers buffered IO (by using page cache in both NFS
-> and the underlying filesystem).  More care is needed to craft a proper
-> solution for LOCALIO's redundant use of page cache for buffered IO,
-> e.g.: https://marc.info/?l=3Dlinux-nfs&m=3D171996211625151&w=3D2
->=20
-> This commit is derived from code developed by Weston Andros Adamson.
->=20
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs/direct.c         |  1 +
->  fs/nfs/localio.c        | 92 ++++++++++++++++++++++++++++++++++++-----
->  include/linux/nfs_xdr.h |  1 +
->  3 files changed, 84 insertions(+), 10 deletions(-)
->=20
-> diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-> index 90079ca134dd..4b92493d6ff0 100644
-> --- a/fs/nfs/direct.c
-> +++ b/fs/nfs/direct.c
-> @@ -303,6 +303,7 @@ static void nfs_read_sync_pgio_error(struct list_head *=
-head, int error)
->  static void nfs_direct_pgio_init(struct nfs_pgio_header *hdr)
->  {
->  	get_dreq(hdr->dreq);
-> +	set_bit(NFS_IOHDR_ODIRECT, &hdr->flags);
->  }
-> =20
->  static const struct nfs_pgio_completion_ops nfs_direct_read_completion_ops=
- =3D {
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 4b8618cf114c..de0dcd76d84d 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -35,6 +35,7 @@ struct nfs_local_kiocb {
->  	struct bio_vec		*bvec;
->  	struct nfs_pgio_header	*hdr;
->  	struct work_struct	work;
-> +	void (*aio_complete_work)(struct work_struct *);
->  	struct nfsd_file	*localio;
->  };
-> =20
-> @@ -48,6 +49,10 @@ struct nfs_local_fsync_ctx {
->  static bool localio_enabled __read_mostly =3D true;
->  module_param(localio_enabled, bool, 0644);
-> =20
-> +static bool localio_O_DIRECT_semantics __read_mostly =3D false;
-> +module_param(localio_O_DIRECT_semantics, bool, 0644);
-> +MODULE_PARM_DESC(localio_O_DIRECT_semantics, "Use O_DIRECT semantics");
+> Rename nfs_uuid_invalidate_one_client to nfs_localio_disable_client.
+> Rename nfs_uuid_invalidate_clients to nfs_localio_invalidate_clients.
 
-Should the text mention localio??
+I agree that is an improvement.
 
-
-> +
->  static inline bool nfs_client_is_local(const struct nfs_client *clp)
->  {
->  	return !!test_bit(NFS_CS_LOCAL_IO, &clp->cl_flags);
-> @@ -285,10 +290,19 @@ nfs_local_iocb_alloc(struct nfs_pgio_header *hdr,
->  		kfree(iocb);
->  		return NULL;
->  	}
-> -	init_sync_kiocb(&iocb->kiocb, file);
-> +
-> +	if (localio_O_DIRECT_semantics &&
-> +	    test_bit(NFS_IOHDR_ODIRECT, &hdr->flags)) {
-> +		iocb->kiocb.ki_filp =3D file;
-> +		iocb->kiocb.ki_flags =3D IOCB_DIRECT;
-
-why isn't ki_ioprio initialised??
-
-The rest I am not able to review as I'm that that familiar with iocb
-code.
+Reviewed-by: NeilBrown <neilb@suse.de>
 
 Thanks,
 NeilBrown
 
 
-> +	} else
-> +		init_sync_kiocb(&iocb->kiocb, file);
-> +
->  	iocb->kiocb.ki_pos =3D hdr->args.offset;
->  	iocb->hdr =3D hdr;
->  	iocb->kiocb.ki_flags &=3D ~IOCB_APPEND;
-> +	iocb->aio_complete_work =3D NULL;
-> +
->  	return iocb;
->  }
-> =20
-> @@ -343,6 +357,18 @@ nfs_local_pgio_release(struct nfs_local_kiocb *iocb)
->  	nfs_local_hdr_release(hdr, hdr->task.tk_ops);
->  }
-> =20
-> +/*
-> + * Complete the I/O from iocb->kiocb.ki_complete()
-> + *
-> + * Note that this function can be called from a bottom half context,
-> + * hence we need to queue the rpc_call_done() etc to a workqueue
-> + */
-> +static inline void nfs_local_pgio_aio_complete(struct nfs_local_kiocb *ioc=
-b)
-> +{
-> +	INIT_WORK(&iocb->work, iocb->aio_complete_work);
-> +	queue_work(nfsiod_workqueue, &iocb->work);
-> +}
-> +
->  static void
->  nfs_local_read_done(struct nfs_local_kiocb *iocb, long status)
->  {
-> @@ -365,6 +391,23 @@ nfs_local_read_done(struct nfs_local_kiocb *iocb, long=
- status)
->  			status > 0 ? status : 0, hdr->res.eof);
->  }
-> =20
-> +static void nfs_local_read_aio_complete_work(struct work_struct *work)
-> +{
-> +	struct nfs_local_kiocb *iocb =3D
-> +		container_of(work, struct nfs_local_kiocb, work);
-> +
-> +	nfs_local_pgio_release(iocb);
-> +}
-> +
-> +static void nfs_local_read_aio_complete(struct kiocb *kiocb, long ret)
-> +{
-> +	struct nfs_local_kiocb *iocb =3D
-> +		container_of(kiocb, struct nfs_local_kiocb, kiocb);
-> +
-> +	nfs_local_read_done(iocb, ret);
-> +	nfs_local_pgio_aio_complete(iocb); /* Calls nfs_local_read_aio_complete_w=
-ork */
-> +}
-> +
->  static void nfs_local_call_read(struct work_struct *work)
->  {
->  	struct nfs_local_kiocb *iocb =3D
-> @@ -379,10 +422,10 @@ static void nfs_local_call_read(struct work_struct *w=
-ork)
->  	nfs_local_iter_init(&iter, iocb, READ);
-> =20
->  	status =3D filp->f_op->read_iter(&iocb->kiocb, &iter);
-> -	WARN_ON_ONCE(status =3D=3D -EIOCBQUEUED);
-> -
-> -	nfs_local_read_done(iocb, status);
-> -	nfs_local_pgio_release(iocb);
-> +	if (status !=3D -EIOCBQUEUED) {
-> +		nfs_local_read_done(iocb, status);
-> +		nfs_local_pgio_release(iocb);
-> +	}
-> =20
->  	revert_creds(save_cred);
->  }
-> @@ -410,6 +453,11 @@ nfs_do_local_read(struct nfs_pgio_header *hdr,
->  	nfs_local_pgio_init(hdr, call_ops);
->  	hdr->res.eof =3D false;
-> =20
-> +	if (iocb->kiocb.ki_flags & IOCB_DIRECT) {
-> +		iocb->kiocb.ki_complete =3D nfs_local_read_aio_complete;
-> +		iocb->aio_complete_work =3D nfs_local_read_aio_complete_work;
-> +	}
-> +
->  	INIT_WORK(&iocb->work, nfs_local_call_read);
->  	queue_work(nfslocaliod_workqueue, &iocb->work);
-> =20
-> @@ -534,6 +582,24 @@ nfs_local_write_done(struct nfs_local_kiocb *iocb, lon=
-g status)
->  	nfs_local_pgio_done(hdr, status);
->  }
-> =20
-> +static void nfs_local_write_aio_complete_work(struct work_struct *work)
-> +{
-> +	struct nfs_local_kiocb *iocb =3D
-> +		container_of(work, struct nfs_local_kiocb, work);
-> +
-> +	nfs_local_vfs_getattr(iocb);
-> +	nfs_local_pgio_release(iocb);
-> +}
-> +
-> +static void nfs_local_write_aio_complete(struct kiocb *kiocb, long ret)
-> +{
-> +	struct nfs_local_kiocb *iocb =3D
-> +		container_of(kiocb, struct nfs_local_kiocb, kiocb);
-> +
-> +	nfs_local_write_done(iocb, ret);
-> +	nfs_local_pgio_aio_complete(iocb); /* Calls nfs_local_write_aio_complete_=
-work */
-> +}
-> +
->  static void nfs_local_call_write(struct work_struct *work)
->  {
->  	struct nfs_local_kiocb *iocb =3D
-> @@ -552,11 +618,11 @@ static void nfs_local_call_write(struct work_struct *=
-work)
->  	file_start_write(filp);
->  	status =3D filp->f_op->write_iter(&iocb->kiocb, &iter);
->  	file_end_write(filp);
-> -	WARN_ON_ONCE(status =3D=3D -EIOCBQUEUED);
-> -
-> -	nfs_local_write_done(iocb, status);
-> -	nfs_local_vfs_getattr(iocb);
-> -	nfs_local_pgio_release(iocb);
-> +	if (status !=3D -EIOCBQUEUED) {
-> +		nfs_local_write_done(iocb, status);
-> +		nfs_local_vfs_getattr(iocb);
-> +		nfs_local_pgio_release(iocb);
-> +	}
-> =20
->  	revert_creds(save_cred);
->  	current->flags =3D old_flags;
-> @@ -592,10 +658,16 @@ nfs_do_local_write(struct nfs_pgio_header *hdr,
->  	case NFS_FILE_SYNC:
->  		iocb->kiocb.ki_flags |=3D IOCB_DSYNC|IOCB_SYNC;
+>=20
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  fs/nfs/localio.c           | 2 +-
+>  fs/nfs_common/nfslocalio.c | 8 ++++----
+>  fs/nfsd/nfsctl.c           | 4 ++--
+>  include/linux/nfslocalio.h | 5 +++--
+>  4 files changed, 10 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> index de0dcd76d84d..cab2a8819259 100644
+> --- a/fs/nfs/localio.c
+> +++ b/fs/nfs/localio.c
+> @@ -139,7 +139,7 @@ void nfs_local_disable(struct nfs_client *clp)
+>  	spin_lock(&clp->cl_localio_lock);
+>  	if (test_and_clear_bit(NFS_CS_LOCAL_IO, &clp->cl_flags)) {
+>  		trace_nfs_local_disable(clp);
+> -		nfs_uuid_invalidate_one_client(&clp->cl_uuid);
+> +		nfs_localio_disable_client(&clp->cl_uuid);
 >  	}
+>  	spin_unlock(&clp->cl_localio_lock);
+>  }
+> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+> index a74ec08f6c96..904439e4bb85 100644
+> --- a/fs/nfs_common/nfslocalio.c
+> +++ b/fs/nfs_common/nfslocalio.c
+> @@ -107,7 +107,7 @@ static void nfs_uuid_put_locked(nfs_uuid_t *nfs_uuid)
+>  	list_del_init(&nfs_uuid->list);
+>  }
+> =20
+> -void nfs_uuid_invalidate_clients(struct list_head *list)
+> +void nfs_localio_invalidate_clients(struct list_head *list)
+>  {
+>  	nfs_uuid_t *nfs_uuid, *tmp;
+> =20
+> @@ -116,9 +116,9 @@ void nfs_uuid_invalidate_clients(struct list_head *list)
+>  		nfs_uuid_put_locked(nfs_uuid);
+>  	spin_unlock(&nfs_uuid_lock);
+>  }
+> -EXPORT_SYMBOL_GPL(nfs_uuid_invalidate_clients);
+> +EXPORT_SYMBOL_GPL(nfs_localio_invalidate_clients);
+> =20
+> -void nfs_uuid_invalidate_one_client(nfs_uuid_t *nfs_uuid)
+> +void nfs_localio_disable_client(nfs_uuid_t *nfs_uuid)
+>  {
+>  	if (nfs_uuid->net) {
+>  		spin_lock(&nfs_uuid_lock);
+> @@ -126,7 +126,7 @@ void nfs_uuid_invalidate_one_client(nfs_uuid_t *nfs_uui=
+d)
+>  		spin_unlock(&nfs_uuid_lock);
+>  	}
+>  }
+> -EXPORT_SYMBOL_GPL(nfs_uuid_invalidate_one_client);
+> +EXPORT_SYMBOL_GPL(nfs_localio_disable_client);
+> =20
+>  struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid,
+>  		   struct rpc_clnt *rpc_clnt, const struct cred *cred,
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 3adbc05ebaac..727904d8a4d0 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2276,14 +2276,14 @@ static __net_init int nfsd_net_init(struct net *net)
+>   * nfsd_net_pre_exit - Disconnect localio clients from net namespace
+>   * @net: a network namespace that is about to be destroyed
+>   *
+> - * This invalidated ->net pointers held by localio clients
+> + * This invalidates ->net pointers held by localio clients
+>   * while they can still safely access nn->counter.
+>   */
+>  static __net_exit void nfsd_net_pre_exit(struct net *net)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+> -	nfs_uuid_invalidate_clients(&nn->local_clients);
+> +	nfs_localio_invalidate_clients(&nn->local_clients);
+>  }
+>  #endif
+> =20
+> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+> index ab6a2a53f505..a05d1043f2b0 100644
+> --- a/include/linux/nfslocalio.h
+> +++ b/include/linux/nfslocalio.h
+> @@ -37,8 +37,9 @@ bool nfs_uuid_begin(nfs_uuid_t *);
+>  void nfs_uuid_end(nfs_uuid_t *);
+>  void nfs_uuid_is_local(const uuid_t *, struct list_head *,
+>  		       struct net *, struct auth_domain *, struct module *);
+> -void nfs_uuid_invalidate_clients(struct list_head *list);
+> -void nfs_uuid_invalidate_one_client(nfs_uuid_t *nfs_uuid);
 > +
->  	nfs_local_pgio_init(hdr, call_ops);
+> +void nfs_localio_disable_client(nfs_uuid_t *nfs_uuid);
+> +void nfs_localio_invalidate_clients(struct list_head *list);
 > =20
->  	nfs_set_local_verifier(hdr->inode, hdr->res.verf, hdr->args.stable);
-> =20
-> +	if (iocb->kiocb.ki_flags & IOCB_DIRECT) {
-> +		iocb->kiocb.ki_complete =3D nfs_local_write_aio_complete;
-> +		iocb->aio_complete_work =3D nfs_local_write_aio_complete_work;
-> +	}
-> +
->  	INIT_WORK(&iocb->work, nfs_local_call_write);
->  	queue_work(nfslocaliod_workqueue, &iocb->work);
-> =20
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index e0ae0a14257f..f30e94d105b7 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -1632,6 +1632,7 @@ enum {
->  	NFS_IOHDR_RESEND_PNFS,
->  	NFS_IOHDR_RESEND_MDS,
->  	NFS_IOHDR_UNSTABLE_WRITES,
-> +	NFS_IOHDR_ODIRECT,
->  };
-> =20
->  struct nfs_io_completion;
+>  /* localio needs to map filehandle -> struct nfsd_file */
+>  extern struct nfsd_file *
 > --=20
 > 2.44.0
 >=20
