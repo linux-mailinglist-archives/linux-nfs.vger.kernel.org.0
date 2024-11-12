@@ -1,130 +1,126 @@
-Return-Path: <linux-nfs+bounces-7898-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7899-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4A209C59E9
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 15:07:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A11459C5A23
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 15:21:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 99642280FFC
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 14:07:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64E22284C58
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 14:21:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABD61BD9EC;
-	Tue, 12 Nov 2024 14:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D017F477;
+	Tue, 12 Nov 2024 14:21:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAx7zGUi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FMc/qS9s"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1BB1C9DD8
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 14:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10C04DA04
+	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 14:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731420424; cv=none; b=pmSpcghrey/xsnC/V9ynFFS0KXTsVjxhrp2ZK9sWaDeQRQJCiOexWf3vPsrFLRbUVDWgxBj2jRuZXJsvz3Kre/PcOXkZBLUpGoZgpvW413oAqcnmy2NTLH/rZS7j+2JVg2FFxvL8jqnI2BMLfhrzYOHO1AyXyYtBhn1G3gs4Tqc=
+	t=1731421277; cv=none; b=XXmaMlh4xGmNl4ci6hmJTGvVoTB0gdEd7rd6c3eM4FcCReuREmxCw6cSrDRITV3DxeqbovgQKhNCKoCMYXmGyi92uFtzJfikkQun2VF0SyuaEGZ9XYWINMmg19yZ2lydIT/O634VTw+Ea6FzTxjX5NJmUD29MihvMUfMd8YYWV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731420424; c=relaxed/simple;
-	bh=513wM/h6sjFkJ2FBZpLnK0AHYESeihoRAeMqQIwKpuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=M94cC3G0vk/utNNbx67XJ1imEs6vzhmQQ5QDe6BL9JDuNIeJ8IB4C4MEvqIL9DAycgTo2J1LZJI4Hznj6X5GQIsFKrBZNRDb50NWeVQOOyxCkrOw/l3F1k8X9Jp97uZEdPSWg8FAnpGq1LKnGGer0i4ADwlRXDxF6VPWSYxdWkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iAx7zGUi; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aa15ede48e0so157462966b.0
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 06:07:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731420420; x=1732025220; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FrMO38+0FbPx1Gr/fLRxp4UhzyO4jODGxDVGnUuhm8k=;
-        b=iAx7zGUiv4t1frWPWdLUBtY89SDXbM6ZDxVuKA4cMQ2DXS7LgUAgy97s7Iql2U63Iv
-         aJybjjaRv/UkTJql0Yw5AWbAcB87OE4e6WWg9u7U88KKI0BWRtUuCk1TIvyesxR8b2o+
-         Ieg4/egmMiWrqCC/48YV67aZ7F8N7jWL+uYE8FSvrEKxCKtfYkakgi6p5gmPYuyf0shR
-         9cz7XQwctHWyBZRNQUz/++HpOH9MaoFhyUpNV0pWak2NMV75JdPEg9ly0Jhi/TZrHTml
-         OGxdNAOqACCELt+lz9oLnFQHfWv/QcCvwYaLuivIXFb+REASUo/+FZ3QD9ZLNvr55Rz8
-         wRxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731420420; x=1732025220;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FrMO38+0FbPx1Gr/fLRxp4UhzyO4jODGxDVGnUuhm8k=;
-        b=BTuc+u9uCJC2y4MeWMw50cFXvMJ1KoMiN824B+3Mk7zpSOfsKtAzHAxoZVVqGE7XjR
-         eDbY7PU4XFfPQCcwwE2nvIrUbiWNbhwNpDW0MV85blLZRWHy7YOuuTQNBO6LTu//E658
-         /4EPDUlIcysslzpo/TKaURC1lA6rzSDcuc9JwdCEoRwVBlQFeabnuL7V84N9I1XOgbqh
-         KjdGjvJymK16R0jpPQU0plx7TXRDUDX/e6NMn422SviTGchRKG6Yib1wmY53nPkJTBMt
-         WVwty/azUkOu4YHPvnaEekz59IYVn/nxrS8JF7jajWEcjaQEqKrXC9s2HzPh1XftRzIi
-         h51A==
-X-Gm-Message-State: AOJu0Ywuyj8LwYxRSwKSPRAB7x8Qgw8PRJYnUbnlvMGlgtrp9WZF6PCg
-	Yaq1aSTBir1gIb+XVjoyHmO/+ZCMPJd40aQV3hzu2Aw6V3niAg5ArF7LIbExZbWJnQKUW9uearv
-	dLpJm0cvpYJpzzz6c8QS5BqWNyw3Bgg==
-X-Google-Smtp-Source: AGHT+IH6OvF7SxxQGPQAVYcEBLNVxSMZZ/wBczu0FZ9WX538Goxmk2vCGvXsgbe1UNJXbTTAMR1c2MpeD90V4nYkmwI=
-X-Received: by 2002:a17:907:3fa2:b0:a99:5f16:3539 with SMTP id
- a640c23a62f3a-a9eefcebbd5mr1763351966b.0.1731420420300; Tue, 12 Nov 2024
- 06:07:00 -0800 (PST)
+	s=arc-20240116; t=1731421277; c=relaxed/simple;
+	bh=EVdCNJqaDec7ixPsu1H/L6LLbrmAdh5rFCfd26vq7B8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bzJf6aPlH6P7wj+iUAJ0neq3QLgOU+neDNXKrplOW/QHX54xt/eh3k5a49WiQG3ah5rTr2BK//1kpN1ysXkE32fWkVYgWQJZrvxXXJqe3sBWE0OIMQBBsUySdwPwMekGJOXAZ8Y5rHNbXCuDJStbIjZ9/ALRva8QfVhHUVQeDn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FMc/qS9s; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731421274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ES+eNizqGJozquYfZtu3QScYO00PO3CnA3+YP4S2Xc=;
+	b=FMc/qS9s0HfA8iMGbXB93x2aR+yOESi2UtNeIz05lmXzGtJ5w+jJSLHs1/eudlxVZrTa51
+	NMxkpq82kF0g0SWOxQDwCJKcdUo7z2K2UxOD3l62pJ1CK6p+vAPSzt7biC8cGBjlAOXy2z
+	KBSYz7Uw6BWX8QSyGqUDZ6bHPIdJCPA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-jClB2VfLPEyv4dM5Mt-oqA-1; Tue,
+ 12 Nov 2024 09:21:13 -0500
+X-MC-Unique: jClB2VfLPEyv4dM5Mt-oqA-1
+X-Mimecast-MFC-AGG-ID: jClB2VfLPEyv4dM5Mt-oqA
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 75CCA1944A8D;
+	Tue, 12 Nov 2024 14:21:12 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.7])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E71A01956052;
+	Tue, 12 Nov 2024 14:21:11 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Sebastian Feld <sebastian.n.feld@gmail.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: rsize/wsize chaos in heterogeneous environments Re: [PATCH]
+ nfs(5): Update rsize/wsize options
+Date: Tue, 12 Nov 2024 09:21:09 -0500
+Message-ID: <8F936203-8576-4309-B089-E8F38B477E7B@redhat.com>
+In-Reply-To: <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
+References: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
+ <CAHnbEGKJ+=gn4F5tuy+2dY58VS7wOyhyxEqsBQ5xdzXMs-C7cw@mail.gmail.com>
+ <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com>
+ <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
- <CAHnbEGKJ+=gn4F5tuy+2dY58VS7wOyhyxEqsBQ5xdzXMs-C7cw@mail.gmail.com> <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com>
-In-Reply-To: <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com>
-From: Sebastian Feld <sebastian.n.feld@gmail.com>
-Date: Tue, 12 Nov 2024 15:06:23 +0100
-Message-ID: <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
-Subject: Re: rsize/wsize chaos in heterogeneous environments Re: [PATCH]
- nfs(5): Update rsize/wsize options
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Nov 12, 2024 at 2:56=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
+On 12 Nov 2024, at 9:06, Sebastian Feld wrote:
+
+> On Tue, Nov 12, 2024 at 2:56 PM Benjamin Coddington <bcodding@redhat.com> wrote:
+>>
+>> On 12 Nov 2024, at 6:27, Sebastian Feld wrote:
+>>
+>>> On Mon, Nov 11, 2024 at 8:25 AM Seiichi Ikarashi (Fujitsu)
+>>> <s.ikarashi@fujitsu.com> wrote:
+>>>>
+>>>> The rsize/wsize values are not multiples of 1024 but multiples of PAGE_SIZE
+>>>> or powers of 2 if < PAGE_SIZE as defined in fs/nfs/internal.h:nfs_io_size().
+>>>
+>>> *facepalm*
+>>>
+>>> How should this work at all in a heterogeneous environment where
+>>> pagesizes can be 4k or 64k (ARM)?
+>>>
+>>> IMHO this is a BIG, rsize and wsize should count in 1024 bytes, and
+>>> warn if there is no exact match to a page size. Otherwise non-portable
+>>> chaos rules.
+>>
+>>
+>> I'm not following you - is "BIG" an acronym?
 >
-> On 12 Nov 2024, at 6:27, Sebastian Feld wrote:
+> I hit the wrong key. I wanted to write "BUG"
 >
-> > On Mon, Nov 11, 2024 at 8:25=E2=80=AFAM Seiichi Ikarashi (Fujitsu)
-> > <s.ikarashi@fujitsu.com> wrote:
-> >>
-> >> The rsize/wsize values are not multiples of 1024 but multiples of PAGE=
-_SIZE
-> >> or powers of 2 if < PAGE_SIZE as defined in fs/nfs/internal.h:nfs_io_s=
-ize().
-> >
-> > *facepalm*
-> >
-> > How should this work at all in a heterogeneous environment where
-> > pagesizes can be 4k or 64k (ARM)?
-> >
-> > IMHO this is a BIG, rsize and wsize should count in 1024 bytes, and
-> > warn if there is no exact match to a page size. Otherwise non-portable
-> > chaos rules.
+>>
+>> Can you explain what you mean by non-portable chaos?  I'm having trouble
+>> seeing the problem.
 >
->
-> I'm not following you - is "BIG" an acronym?
+> x86-only-world-view: There are other platforms like PowerPC or ARM
+> which can have other page sizes, and even the default page size for a
+> platform can vary. ARM can do 4k, 64k defaults, servers default to
+> 64k, IOT machines to 4k.
+> So this is NOT a documentation bug, it's a bug in the code which
+> should do what the doc says. Not the other way around.
 
-I hit the wrong key. I wanted to write "BUG"
+What's the bug in the code again?  I'm still not seeing the bug.
 
->
-> Can you explain what you mean by non-portable chaos?  I'm having trouble
-> seeing the problem.
+Why should the code set the max io read/write size to a multiple of 1024
+instead of a multiple of the page size?
 
-x86-only-world-view: There are other platforms like PowerPC or ARM
-which can have other page sizes, and even the default page size for a
-platform can vary. ARM can do 4k, 64k defaults, servers default to
-64k, IOT machines to 4k.
-So this is NOT a documentation bug, it's a bug in the code which
-should do what the doc says. Not the other way around.
+Ben
 
-This is a common design problem if engineers only think about
-x86-only, and then surprises admins if things go haywire because their
-assumption about page size is wrong.
-
-Sebi
---=20
-Sebastian Feld - IT secruity expert
 
