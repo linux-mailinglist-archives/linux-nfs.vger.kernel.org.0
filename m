@@ -1,67 +1,67 @@
-Return-Path: <linux-nfs+bounces-7909-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7910-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F93B9C60DA
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 19:53:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE28A9C60DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 19:54:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 65001283FD1
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 18:53:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73F8C283DD0
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 18:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7879A217F2A;
-	Tue, 12 Nov 2024 18:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CB1205E24;
+	Tue, 12 Nov 2024 18:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/8lzLTB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf4YihvL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60202178EE
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 18:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72A217455
+	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 18:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731437609; cv=none; b=N6PKvaYwe0cV7tD3k+BHiPNxiOcnbE0OikNOf86WUvHgoQETc5wz/g+OhF1Y/Jf7Qx4nRpQy/J4COkpaAtOO8rDUCQMdWUsWvS/hZb7HoO6ckJjcdpyPFv5hmGq3Sgxj5mIO83CtmZUXJKCtjD+WnkqejV4o8+DVLeRUQgqRfL4=
+	t=1731437641; cv=none; b=HHHmSXQV5a+8/yJOEfldvQ8U/4qiK+xm45DYQCRdoxUKh9OZt9M/kg9YAF3jY1OMIJieSkwYP92fwb8V8sl5OqcPS/0H7xoanQXpedderuPNUqP/OVf9F4wrVliPo7ugqnmXvMZr40LKcpxRI5V69fpZvsJbnB2Gn4jZgUWuQbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731437609; c=relaxed/simple;
-	bh=DuxultC2nqdYyI88YsUtrbHYZEt17o+8RlXCGbmwT+0=;
+	s=arc-20240116; t=1731437641; c=relaxed/simple;
+	bh=lFlxFcxUSwTCSYw4Eqr812WUL6cAAkuj1iMYhb3/BFM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GLrE2KGCzBjB98N/wqUr68jHgO6sVGn6Dd5ZNRuGEb97I/NdDxMjOpsiXk8QcmPXHPmrwE9AEHECGlCzvdvYms4YhqElr/NMosIqQecfbsW/OBEhjPwu5zUSaUp0Ow2mYRzqHVEHvhSIAWZOu1Dlxjjgrp90yrETchABq1YOp0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/8lzLTB; arc=none smtp.client-ip=209.85.218.49
+	 To:Content-Type; b=gwxSDltiGzxbLuZ32McDkC2GXwKDbWU1ZE2IRDKdkGxr1vjaFg/hDcE5PtViSV2jaX5bt+HI12VTBXbKBhjRYXd+tS+o+JkyXHJoR0Xw5b66Fd2z04xjRLo0iIBb6UdS/32/mFqir3hOULAKisx+G2WdxZjCdfK44CPT8IizLdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kf4YihvL; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a9ee097a478so404101666b.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 10:53:26 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5ceccffadfdso8274642a12.2
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 10:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731437604; x=1732042404; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731437636; x=1732042436; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=OErAQy/YKBwWfQDki7kljFFUivEkeIWk2VVxKCMujTc=;
-        b=F/8lzLTBOSGTBKwnE88QY2KN2BW23SRfXF9kmIvKlpctdA3WhGEWQDJhEpyTWqr9e/
-         ogVhiCAapURUVbnfi8IkNkd/1ZYMWdCnRTG7NWEjqScb/+PhnZGcbePfUgfI6BhPIbnx
-         Yh6aAQAH1qf9rUkWNFv8U3qPtjZAJtn2I5UrzdCyVCR8xi2+2fvinR4+mEUcH+OV5Ir2
-         yT6AarA1eRotb4lg9EZwhKSv+wGJAsVLVU/wDUS9Qhqu7/oIDvuNli+UlCa/pTV+1cNW
-         qSpaKosCRmgziWneJansHpaLm/+3l+K6VPKnMSEHvD5+e2d+b2KoeO83LCGt8Amdtu6a
-         Vu2g==
+        bh=nOnCddqFyPz7c1FwLHlHgkYJE0DASs40HG6lK01v0B4=;
+        b=kf4YihvLZUNcldOqqCDQZ/QlRd+3tpd1yo3EmGGw7iyaKTHVEVFzHZLSxrUCZqND+g
+         8o1/N+F/vMbNCvFUASoG8G2XvH29fIKUrEjZeRCmKXvj8T7yS+S/XyQd+Tdia1FTNvlF
+         lGLyWypcRP9MRDRerehvFESA7CB1F63TdRG7jnUDZUopfCW9mIRuNvoD8mQmSF2+0d/F
+         qixgFLRJKyoIj2rfLKTf41kT0tL8Z+Yecquu4MIE0SWLPTe0enuBGe9Utcw1Rd/GQA4f
+         6tQ/LJvuv2hM8J+Pd25PQBtB7esw6GkNId6lxy/yFkInQBewRsuHQPzRhGaRjhtc33E9
+         70yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731437604; x=1732042404;
+        d=1e100.net; s=20230601; t=1731437636; x=1732042436;
         h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OErAQy/YKBwWfQDki7kljFFUivEkeIWk2VVxKCMujTc=;
-        b=RVo3eEljELw9hI8pZJPuduW/3dWO+p7kOuYUmOeRJZPCpql2d/fPKauSbLtjk6uE4n
-         l1FYHBqWU/QGVKLwM6rH9uHZPzr0d+s2+Jp7G5qztASeG73a1WiKK3w8Uqc6Wbg7RWxc
-         R+Kc6yaaShREPElG4IAd1849L3jptMZlC6YEvbJ1xyc4azIjRSCyOkH6DIVj+h+3bx2e
-         CKUnIC0pQnvVSyLfo2a/VH/+SnrMeSKdVIT/P6/q6VB3upFkJT4yrIzQW0hyI+QsVKZP
-         suVncatGsiNTLiBUu8dyr3qAniQFKA6JYCfNNvnRRyCoFKt7AFY/NGCe/SDr6g+jsyIQ
-         MCEw==
-X-Gm-Message-State: AOJu0YwrliaqgUqxah4hepdEwCy6yqS1TwcAiir55OSbgjxRYEZNfQqH
-	d1tpoVgJ1n6PNzCRh48igVn6CcGved8wsP5uu+yMhla7JN/sphQ7K2F6u9+FU3XMrtkyI22vNcQ
-	/76obTe8oRjbgyCfNYnies+BpXe5UcA==
-X-Google-Smtp-Source: AGHT+IEK9AgRCKCFp4OPVvLuvrDS3ZIj1qZpvgRIAfvzyr3PpHvnk2NKvJdavgNHnOmr5Sn2RavonqdGarNQdYeKaBI=
-X-Received: by 2002:a05:6402:845:b0:5ce:de19:472a with SMTP id
- 4fb4d7f45d1cf-5cf0a31ffc8mr20135275a12.16.1731437604370; Tue, 12 Nov 2024
- 10:53:24 -0800 (PST)
+        bh=nOnCddqFyPz7c1FwLHlHgkYJE0DASs40HG6lK01v0B4=;
+        b=itDSQIbO1ZZw7hGiRi33MHNQvOtMyYmqLqprRfHOcizUkhXvFYaNNuiy28hM/Tu6Gk
+         gZ3VIT4vtGITvXVQHenFmOAdF6DtE7fyAIZzAQ0vvtQ5Zz5BiVWpaSuibUbX0QZ2zBY8
+         OI4WBblP+gu75E74/7r2stTS1NZdWxeCbSZbhvdxRwFTjXvKeJuA8MzFAonrWnk/nn+x
+         2u9Vs0n4l/YOvk8yUqDHhOg65ofGwCprlBritCFmKP9bXRNgZC5lF1LJDp+AbOxSSgER
+         cKELM+St3g9/NHT4t68rMxgW+RiRhr6YRUJF+xFGYu+GWzARdPCM+CM9xA+VdfS5TRrF
+         dLtw==
+X-Gm-Message-State: AOJu0YwZ3ymIvEu2aSbjuvnTllJVmi18+5rgv380/ZUGQYn4XJDxoeNe
+	oBZzkRzoAxBaV5KMUQkLHeZ7y6vaHs3kLh7drd4A9es7MD0ouTrrQKRnohVm6/hb/Z15ZAuhDNO
+	uxa4gcRG43R5kzz9nLa5fAK5l5Kmdiw==
+X-Google-Smtp-Source: AGHT+IEh8bDqFL0WuIz3TxKVfzHA2SWkJ8ZaEZiQz3r3Y1C//QdN5RazBisBRkmo4EkDGT5c1QPzrEmyzYrlei65bKg=
+X-Received: by 2002:a05:6402:1ecd:b0:5ce:c9d3:9fdc with SMTP id
+ 4fb4d7f45d1cf-5cf630c4941mr260554a12.16.1731437635673; Tue, 12 Nov 2024
+ 10:53:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -69,103 +69,38 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
+ <CAHnbEGKJ+=gn4F5tuy+2dY58VS7wOyhyxEqsBQ5xdzXMs-C7cw@mail.gmail.com>
+ <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com> <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
+ <8F936203-8576-4309-B089-E8F38B477E7B@redhat.com> <CAHnbEGL1FVT+dfeSK=UUohNzRpvUZFnrM4dD1mwiYHCHeQUHLw@mail.gmail.com>
+ <E358D8BB-3DCB-4784-A05F-35BF43A2CA6C@redhat.com>
+In-Reply-To: <E358D8BB-3DCB-4784-A05F-35BF43A2CA6C@redhat.com>
 From: Cedric Blancher <cedric.blancher@gmail.com>
 Date: Tue, 12 Nov 2024 19:52:00 +0100
-Message-ID: <CALXu0UfwT89owXiGPaGnBKfJcVsgY9mx7BB1XZM_aCczwt7Ofw@mail.gmail.com>
-Subject: Re: [PATCH] nfs(5): Update rsize/wsize options
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Message-ID: <CALXu0UdpPpM2GHX6cWr+YbYqCqb8eEuLhPJa+oKVr6GfuZGKsA@mail.gmail.com>
+Subject: Re: rsize/wsize chaos in heterogeneous environments Re: [PATCH]
+ nfs(5): Update rsize/wsize options
+To: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 11 Nov 2024 at 08:25, Seiichi Ikarashi (Fujitsu)
-<s.ikarashi@fujitsu.com> wrote:
+On Tue, 12 Nov 2024 at 15:40, Benjamin Coddington <bcodding@redhat.com> wrote:
 >
-> The rsize/wsize values are not multiples of 1024 but multiples of PAGE_SIZE
-> or powers of 2 if < PAGE_SIZE as defined in fs/nfs/internal.h:nfs_io_size().
-
-This is an implementation bug, NOT a documentation bug.
-
+> On 12 Nov 2024, at 9:25, Sebastian Feld wrote:
 >
-> Signed-off-by: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
+> > Because "pagesize" is a non-portable per-platform value?
+>
+> ah.  The code we're talking about is the linux kernel which is compiled for
+> the architecture and yes - not portable anyway.
 
-r- (patch rejected)
+It has to be portable for an Administrator. NFS rsize and wsize should
+not depend on a machine's page size.
 
-The rsize/wsize value must not depend on a variable, per-machine
-value. For example SPARCv9 can use 8k, 32k, 512k and so on.
-AARCH64/ARM64 can use 4k or 64, all selectable at boot parameters.
-Better we fix the kernel code to count in 1k for rsize and wsize options.
-Only question is whether we "round up", or "round down" to the
-machine's page size.
-
-I shudder already at this stupid scenario: Entries in /etc/fstab can
-no longer be deployed via puppet, because a script must always use
-/usr/bin/pagesize to peel our the machine's default page size, do some
-calculations with /bin/bc and do a mount via script.
-Sarcastic bonus points go to the person who decided to put
-/usr/bin/pagesize into a separate package which is not installed by
-default in Debian+RH.
+Otherwise you cannot have such entries in /etc/fstab, instead an
+Administrator has to rely on /usr/bin/pagesize, /bin/bc and manual
+mount script just to pass the rsize+wsize in a portable manner. 100%
+not compatible to puppet and common cluster software, and even less
+portable for people using nfsroot.
 
 Ced
-
-> ---
-> utils/mount/nfs.man | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
->
-> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> index 233a717..01fa22c 100644
-> --- a/utils/mount/nfs.man
-> +++ b/utils/mount/nfs.man
-> @@ -215,15 +215,18 @@ or smaller than the
->  setting. The largest read payload supported by the Linux NFS client
->  is 1,048,576 bytes (one megabyte).
->  .IP
-> -The
-> +The allowed
->  .B rsize
-> -value is a positive integral multiple of 1024.
-> +value is a positive integral multiple of
-> +.BR PAGE_SIZE ,
-> +or a power of two if it is less than
-> +.BR PAGE_SIZE .
->  Specified
->  .B rsize
->  values lower than 1024 are replaced with 4096; values larger than
->  1048576 are replaced with 1048576. If a specified value is within the supported
-> -range but not a multiple of 1024, it is rounded down to the nearest
-> -multiple of 1024.
-> +range but not such an allowed value, it is rounded down to the nearest
-> +allowed value.
->  .IP
->  If an
->  .B rsize
-> @@ -257,16 +260,19 @@ setting. The largest write payload supported by the Linux NFS client
->  is 1,048,576 bytes (one megabyte).
->  .IP
->  Similar to
-> -.B rsize
-> -, the
-> +.BR rsize ,
-> +the allowed
->  .B wsize
-> -value is a positive integral multiple of 1024.
-> +value is a positive integral multiple of
-> +.BR PAGE_SIZE ,
-> +or a power of two if it is less than
-> +.BR PAGE_SIZE .
->  Specified
->  .B wsize
->  values lower than 1024 are replaced with 4096; values larger than
->  1048576 are replaced with 1048576. If a specified value is within the supported
-> -range but not a multiple of 1024, it is rounded down to the nearest
-> -multiple of 1024.
-> +range but not such an allowed value, it is rounded down to the nearest
-> +allowed value.
->  .IP
->  If a
->  .B wsize
->
-
-
 -- 
 Cedric Blancher <cedric.blancher@gmail.com>
 [https://plus.google.com/u/0/+CedricBlancher/]
