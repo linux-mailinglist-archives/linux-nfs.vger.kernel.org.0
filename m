@@ -1,142 +1,164 @@
-Return-Path: <linux-nfs+bounces-7900-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7901-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FA3C9C5A4C
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 15:30:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 380EE9C5A59
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 15:31:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4BC01F23370
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 14:30:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1C6A284272
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 14:31:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B28D1FCF6B;
-	Tue, 12 Nov 2024 14:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A851E1FE11C;
+	Tue, 12 Nov 2024 14:27:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akTXZvS5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+0wVCWK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4321FF5F8
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 14:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83C41FE0EE
+	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 14:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731421544; cv=none; b=RavcLlfrVjuEmcG3RF55Fcwcy59hMD6w7C1isiOojZzwGF9RsS/1rTw6JsYy5AC3c1AvgfNrw3xIoYvFkSNNZVhkykfXmXogfHOeBUhaQsM8lOBaSIF7TlrkrmYtg3xVOK3uGKFG+WzAps9waGKSxmYlQO/6kCUFlQm5xcNjgtM=
+	t=1731421674; cv=none; b=Ds7INC8dmJyL5x1GvGALJ97j9hgu8x9qtn7KcZM5e7XdWTe7yKVTDhkYezu0DBUQgFRdprQ8784OkItUFu1zg+VqaqSkfmxx8RB8rUx2KeDvXlL/vOGAwwdEVRBEMDmGqg6235FhVzsw1IcBy5GKARkcoSRBPU/t44+BAGGlCqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731421544; c=relaxed/simple;
-	bh=2hM4NHmeeVjMZl/jyM6OsjEHV72o1YxyNVOjyLm16oE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=KGkKV+MERYg9UUBnA3jf6d2tPzIDbhNdAi+eTmxJhw26LwXl7lQgekjsQwyocNTTMY49qq9PFsxsKgk5epG4qaLq1VxBU5EgfmFPdJTLI9MV0wzFyi7xmqa1e3NeoUfexVJEIqxX04zyfudnflqiFxG/RKQ43wuxdGsEoYuf88k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akTXZvS5; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a9a628b68a7so1018091366b.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 06:25:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731421540; x=1732026340; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ANiGOX07gK9MaY28/DZGBitUFlG9ew8AJLUXob3HM3M=;
-        b=akTXZvS5JEt2Do4gOLmofJ8JORFQoOaSrveAXx87GXkuvPNfZb9V7zHhvkc8o3Q/cS
-         mdT3csp6+ihmoALvbhX1qa7XcHLyDGDuWRH54SkTZQz8vp+fHDM21AycwCapySwPXkSV
-         Ky7g06dhT5bgu/jPUxdmYnI8JSf+fgM5FUkDqx1PiBs1hWXIiwKHQhmr+6b9voglcYww
-         FiE+w3RTqEJowLnalclR5GcJ9QBD7E7ZOPMFHTmtRDHPX4WuzQXD/tKQQBIizcZ1Cu4S
-         zU3Ol/sZzfr/FYdRoQjOe71qp6HxRqwTS37lb/icoXVJB47jQDvpCdxA7sM5JA8/yZ9v
-         4T8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731421540; x=1732026340;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ANiGOX07gK9MaY28/DZGBitUFlG9ew8AJLUXob3HM3M=;
-        b=h7pEf6QmuuRwMESQZe16KlX8X2uT9jXaxsGY7DDeNmogC42toiALSgp3Laj2OneIs9
-         MMb1HVFLExbx8G2CO4hiuCRtQhEHYRnusL1NF06dBLjUPnFa4vOtrPDQAu0f0ah9tgix
-         O6Qsg0G9BFZsF9QMOeL+GzafmX2IUUHZs9u8XNK2evJXvbGhDHa8T6NmDz346weRGPb+
-         WuafK/JvUcNDUS+y+AWOHnQ9WWia3VMdvju2r33o/WVlZkdqViF/HYDcqr8bHnDHnc1t
-         vfvXMtjgO0Dw7atAL3DREVEYD1nlb3wcMvCwcUqeinvul7AHQ17yRydvs5kdCCFxc4h4
-         f7SA==
-X-Gm-Message-State: AOJu0YycOu1nTOZLBhsxz6N+u2iNxZzTSMNdOrle5xZK6MRdDQbUKdvp
-	/1G4aomdNyyAu5pGwaRYv5dwMZe5lZrpbRhGWe8kKftYwSxLKPGaSBB07yb3+jz3WJM8UtK9wDw
-	afLyCNT0X6RQ8pl0l9Se4IYcR7/3FPQ==
-X-Google-Smtp-Source: AGHT+IF2+gWZRK52kf0bpju7UtOVHW9OTGQ8c9GHEXVfSPIcJRWgjP4fzl0m1VXe6bpKucCMFjrZ4AWsGBN9rkTi7vU=
-X-Received: by 2002:a17:907:6d0f:b0:a7a:9f0f:ab18 with SMTP id
- a640c23a62f3a-a9eefeec9f4mr1477482766b.20.1731421539943; Tue, 12 Nov 2024
- 06:25:39 -0800 (PST)
+	s=arc-20240116; t=1731421674; c=relaxed/simple;
+	bh=y3P/6r6sEGeznZVIZp/oPHOO1KyKu/mTAYtictLspAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZW6LjS9H9wO9sKYvD/EB3k/TBqsVe/nlxiosrjRMVERMnLtOvswtz+5wc2strZ9UKuIwrAdnQq8U7mk/96ywrmCqzXMET99AEZMnubbsTxmcSFEOdwehlyL3fg7ncqkjcsfq+tvk3s2Sc7tPjJl4c1xnUphYZO8DU77kOm+LopE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z+0wVCWK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731421671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LOQEfq/vX4Q3hU0hBhJbj/jmxhIvNDRob3OXkZQ60HM=;
+	b=Z+0wVCWKGvhQgfCYNqjl1aitVhmKs24tDIafaci4CcHsMhFMwFjgT8ae97JtwjAZB0T6Ic
+	Y7o/GcO4zWzjJuyPSkdHXpPJGdUPCzT0bjEJwtSnMLH7TQFcrxtblGQS1FtEMsVZVXtTvn
+	AOC7mKNb4FP3QND7fxnrzLB2wCfAnK8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-576-t_YcUos8Nn-218Lj_51wmQ-1; Tue,
+ 12 Nov 2024 09:27:50 -0500
+X-MC-Unique: t_YcUos8Nn-218Lj_51wmQ-1
+X-Mimecast-MFC-AGG-ID: t_YcUos8Nn-218Lj_51wmQ
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 22C06195419D;
+	Tue, 12 Nov 2024 14:27:49 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.7])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 44E4630000DF;
+	Tue, 12 Nov 2024 14:27:48 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Philip Rowlands <linux-nfs@dimebar.com>,
+ Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: Insecure hostname in nsm_make_temp_pathname
+Date: Tue, 12 Nov 2024 09:27:45 -0500
+Message-ID: <192D38BE-BC46-4C8F-8C01-89EED779E77B@redhat.com>
+In-Reply-To: <6296a7d4-64de-4df0-893e-8895e8ec36d0@app.fastmail.com>
+References: <6296a7d4-64de-4df0-893e-8895e8ec36d0@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
- <CAHnbEGKJ+=gn4F5tuy+2dY58VS7wOyhyxEqsBQ5xdzXMs-C7cw@mail.gmail.com>
- <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com> <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
- <8F936203-8576-4309-B089-E8F38B477E7B@redhat.com>
-In-Reply-To: <8F936203-8576-4309-B089-E8F38B477E7B@redhat.com>
-From: Sebastian Feld <sebastian.n.feld@gmail.com>
-Date: Tue, 12 Nov 2024 15:25:03 +0100
-Message-ID: <CAHnbEGL1FVT+dfeSK=UUohNzRpvUZFnrM4dD1mwiYHCHeQUHLw@mail.gmail.com>
-Subject: Re: rsize/wsize chaos in heterogeneous environments Re: [PATCH]
- nfs(5): Update rsize/wsize options
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Nov 12, 2024 at 3:21=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> On 12 Nov 2024, at 9:06, Sebastian Feld wrote:
->
-> > On Tue, Nov 12, 2024 at 2:56=E2=80=AFPM Benjamin Coddington <bcodding@r=
-edhat.com> wrote:
-> >>
-> >> On 12 Nov 2024, at 6:27, Sebastian Feld wrote:
-> >>
-> >>> On Mon, Nov 11, 2024 at 8:25=E2=80=AFAM Seiichi Ikarashi (Fujitsu)
-> >>> <s.ikarashi@fujitsu.com> wrote:
-> >>>>
-> >>>> The rsize/wsize values are not multiples of 1024 but multiples of PA=
-GE_SIZE
-> >>>> or powers of 2 if < PAGE_SIZE as defined in fs/nfs/internal.h:nfs_io=
-_size().
-> >>>
-> >>> *facepalm*
-> >>>
-> >>> How should this work at all in a heterogeneous environment where
-> >>> pagesizes can be 4k or 64k (ARM)?
-> >>>
-> >>> IMHO this is a BIG, rsize and wsize should count in 1024 bytes, and
-> >>> warn if there is no exact match to a page size. Otherwise non-portabl=
-e
-> >>> chaos rules.
-> >>
-> >>
-> >> I'm not following you - is "BIG" an acronym?
-> >
-> > I hit the wrong key. I wanted to write "BUG"
-> >
-> >>
-> >> Can you explain what you mean by non-portable chaos?  I'm having troub=
-le
-> >> seeing the problem.
-> >
-> > x86-only-world-view: There are other platforms like PowerPC or ARM
-> > which can have other page sizes, and even the default page size for a
-> > platform can vary. ARM can do 4k, 64k defaults, servers default to
-> > 64k, IOT machines to 4k.
-> > So this is NOT a documentation bug, it's a bug in the code which
-> > should do what the doc says. Not the other way around.
->
-> What's the bug in the code again?  I'm still not seeing the bug.
->
-> Why should the code set the max io read/write size to a multiple of 1024
-> instead of a multiple of the page size?
+On 11 Nov 2024, at 17:49, Philip Rowlands wrote:
 
-Because "pagesize" is a non-portable per-platform value?
+> If a host dies after nsm_make_temp_pathname but before rename(temp, pat=
+h) we may be left with paths resembling .../server.example.com.new
+>
+> Some clever person has registered and installed a wildcard DNS record f=
+or *.com.new.
+>
+> $ host server.example.com.new
+> server.example.com.new has address 104.21.68.132
+> server.example.com.new has address 172.67.195.202
+>
+> You can see where this is going...
+>
+> Our firewall scanners tripped on outbound access to this address, port =
+111, I assume due to NSM reboot notifications.
+>
+> Suggested workarounds include:
+> * explicitly skip over paths matching the expect tempname pattern in ns=
+m_load_dir()
+> * use a different tmp suffix than .new, e.g. one which won't work in DN=
+S
+>
+> Steps to reproduce:
+>
+> # cat /var/lib/nfs/statd/sm/server.example.com.new
+> 0100007f 000186b5 00000003 00000010 89ae3382e989d91800000000dc00ed00000=
+0ffff 1.2.3.4 my-client-name
+> # sm-notify -d -f -n
+> sm-notify: Version 2.7.1 starting
+> sm-notify: Retired record for mon_name server.example.com.new
+> sm-notify: Added host server.example.com.new to notify list
+> sm-notify: Initializing NSM state
+> sm-notify: Failed to open /proc/sys/fs/nfs/nsm_local_state: No such fil=
+e or directory
+> sm-notify: Effective UID, GID: 29, 29
+> sm-notify: Sending PMAP_GETPORT for 100024, 1, udp
+> sm-notify: Added host server.example.com.new to notify list
+> sm-notify: Host server.example.com.new due in 2 seconds
+> sm-notify: Sending PMAP_GETPORT for 100024, 1, udp
+> # etc.
+>
+> tcpdump shows the outbound traffic:
+> 22:42:31.940208 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, leng=
+th 56
+> 22:42:33.942440 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, leng=
+th 56
+> 22:42:37.946903 IP 192.168.0.131.819 > 172.67.195.202.sunrpc: UDP, leng=
+th 56
+>
+> The client statd was artificially placed for the purposes of showing th=
+e problem, but I hope it's close enough to make sense.
 
-Sebi
---=20
-Sebastian Feld - IT secruity expert
+Makes sense.. yikes!
+
+Maybe we could just prepend '.' since nsm_load_dir() ignores those - Chuc=
+k, you were in here last any thoughts?
+
+
+diff --git a/support/nsm/file.c b/support/nsm/file.c
+index f5b448015751..eaf19cd4963e 100644
+--- a/support/nsm/file.c
++++ b/support/nsm/file.c
+@@ -185,9 +185,9 @@ nsm_make_temp_pathname(const char *pathname)
+ {
+        size_t size;
+        char *path;
+-       int len;
++       int le;
+
+-       size =3D strlen(pathname) + sizeof(".new") + 2;
++       size =3D strlen(pathname) + sizeof(".new") + 3;
+        if (size > PATH_MAX)
+                return NULL;
+
+@@ -195,7 +195,7 @@ nsm_make_temp_pathname(const char *pathname)
+        if (path =3D=3D NULL)
+                return NULL;
+
+-       len =3D snprintf(path, size, "%s.new", pathname);
++       len =3D snprintf(path, size, ".%s.new", pathname);
+        if (error_check(len, size)) {
+                free(path);
+                return NULL;
+
 
