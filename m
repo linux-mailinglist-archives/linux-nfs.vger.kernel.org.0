@@ -1,108 +1,90 @@
-Return-Path: <linux-nfs+bounces-7910-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7911-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE28A9C60DC
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 19:54:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17B719C637C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 22:35:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73F8C283DD0
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 18:54:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 833201F236B7
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Nov 2024 21:35:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CB1205E24;
-	Tue, 12 Nov 2024 18:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4089C2170DF;
+	Tue, 12 Nov 2024 21:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf4YihvL"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="QULZpPQM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72A217455
-	for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 18:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25C720C460;
+	Tue, 12 Nov 2024 21:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731437641; cv=none; b=HHHmSXQV5a+8/yJOEfldvQ8U/4qiK+xm45DYQCRdoxUKh9OZt9M/kg9YAF3jY1OMIJieSkwYP92fwb8V8sl5OqcPS/0H7xoanQXpedderuPNUqP/OVf9F4wrVliPo7ugqnmXvMZr40LKcpxRI5V69fpZvsJbnB2Gn4jZgUWuQbk=
+	t=1731447331; cv=none; b=hIjg7Ed2dUugg0BMY9e38fQSU6u152wPBHUSPgTrjm15CHhtAw1+ko22e5sBCYL3aEdhgNDWY4ijefiVzE42Wtn46eW46HiQK0P3GH67h5TjATFAVOdDj4OSnqPgAZuvBwZk5+f3++KYZHVNhhet3ZFYVy6nG/ZI+UaQ3on3Gcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731437641; c=relaxed/simple;
-	bh=lFlxFcxUSwTCSYw4Eqr812WUL6cAAkuj1iMYhb3/BFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=gwxSDltiGzxbLuZ32McDkC2GXwKDbWU1ZE2IRDKdkGxr1vjaFg/hDcE5PtViSV2jaX5bt+HI12VTBXbKBhjRYXd+tS+o+JkyXHJoR0Xw5b66Fd2z04xjRLo0iIBb6UdS/32/mFqir3hOULAKisx+G2WdxZjCdfK44CPT8IizLdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kf4YihvL; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5ceccffadfdso8274642a12.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Nov 2024 10:53:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731437636; x=1732042436; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nOnCddqFyPz7c1FwLHlHgkYJE0DASs40HG6lK01v0B4=;
-        b=kf4YihvLZUNcldOqqCDQZ/QlRd+3tpd1yo3EmGGw7iyaKTHVEVFzHZLSxrUCZqND+g
-         8o1/N+F/vMbNCvFUASoG8G2XvH29fIKUrEjZeRCmKXvj8T7yS+S/XyQd+Tdia1FTNvlF
-         lGLyWypcRP9MRDRerehvFESA7CB1F63TdRG7jnUDZUopfCW9mIRuNvoD8mQmSF2+0d/F
-         qixgFLRJKyoIj2rfLKTf41kT0tL8Z+Yecquu4MIE0SWLPTe0enuBGe9Utcw1Rd/GQA4f
-         6tQ/LJvuv2hM8J+Pd25PQBtB7esw6GkNId6lxy/yFkInQBewRsuHQPzRhGaRjhtc33E9
-         70yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731437636; x=1732042436;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nOnCddqFyPz7c1FwLHlHgkYJE0DASs40HG6lK01v0B4=;
-        b=itDSQIbO1ZZw7hGiRi33MHNQvOtMyYmqLqprRfHOcizUkhXvFYaNNuiy28hM/Tu6Gk
-         gZ3VIT4vtGITvXVQHenFmOAdF6DtE7fyAIZzAQ0vvtQ5Zz5BiVWpaSuibUbX0QZ2zBY8
-         OI4WBblP+gu75E74/7r2stTS1NZdWxeCbSZbhvdxRwFTjXvKeJuA8MzFAonrWnk/nn+x
-         2u9Vs0n4l/YOvk8yUqDHhOg65ofGwCprlBritCFmKP9bXRNgZC5lF1LJDp+AbOxSSgER
-         cKELM+St3g9/NHT4t68rMxgW+RiRhr6YRUJF+xFGYu+GWzARdPCM+CM9xA+VdfS5TRrF
-         dLtw==
-X-Gm-Message-State: AOJu0YwZ3ymIvEu2aSbjuvnTllJVmi18+5rgv380/ZUGQYn4XJDxoeNe
-	oBZzkRzoAxBaV5KMUQkLHeZ7y6vaHs3kLh7drd4A9es7MD0ouTrrQKRnohVm6/hb/Z15ZAuhDNO
-	uxa4gcRG43R5kzz9nLa5fAK5l5Kmdiw==
-X-Google-Smtp-Source: AGHT+IEh8bDqFL0WuIz3TxKVfzHA2SWkJ8ZaEZiQz3r3Y1C//QdN5RazBisBRkmo4EkDGT5c1QPzrEmyzYrlei65bKg=
-X-Received: by 2002:a05:6402:1ecd:b0:5ce:c9d3:9fdc with SMTP id
- 4fb4d7f45d1cf-5cf630c4941mr260554a12.16.1731437635673; Tue, 12 Nov 2024
- 10:53:55 -0800 (PST)
+	s=arc-20240116; t=1731447331; c=relaxed/simple;
+	bh=T+jMI6+eAbrAo+uy7XLNAisi2jYzNP+6eAI9rthHNJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JWJo15pIGROl8VmtbqBJcpwwLZ1AG5mNIKgg8/csgBtPZxbfMiKFVgwV0GlIJgNvW4wMH4GBbxvwauh5Tord+Zx+zbSLI0nlm8EpxnZnqdw+ydp47fTwa/eTG8xLMR84Jji9kQfFz2GaZ2xbdy/rUUaMIAHYChjL/sgHpqkWet4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=QULZpPQM; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=EGYcJKWF9kLJOyRbrp+CVIxufIHX8fsp0Gk+GWXeJ/Q=; b=QULZpPQMQ7NbzSMf2TV+ZsNKz/
+	waWZuAQOFljDua3zuUxEwnAk6E/E8hFBlec04DhOcvc/OiMG6yvqmqs1smY0qm8uI9Fww8UmVlpzN
+	l3Hmx/3j6t+6taA2/rMzxVeJpp81nuJGrg2t4EIsXGf+YhBS75502htQM6Zs9Evokh24XVLuQ1EWX
+	JKrNTsg8/cGrJlD1Uwl23fDSAN94cSTvT0X2IM92gImcS0HbRt/i2qU/2BDLv+ytMsHzjAUK/LcwP
+	twKogIO5ZgabCLtDHiKOtAWUKMyrV/MeK+a2FD95UdGI/FQlg4D0UQ001i/UDlZYwntUxJQ1tyEN9
+	egjwDD1g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tAyXk-0000000EFeP-49mE;
+	Tue, 12 Nov 2024 21:35:25 +0000
+Date: Tue, 12 Nov 2024 21:35:24 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: linux-fsdevel@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH] nfsd: get rid of include ../internal.h
+Message-ID: <20241112213524.GB3387508@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <OSZPR01MB7772841F20140ACC90AA433B88582@OSZPR01MB7772.jpnprd01.prod.outlook.com>
- <CAHnbEGKJ+=gn4F5tuy+2dY58VS7wOyhyxEqsBQ5xdzXMs-C7cw@mail.gmail.com>
- <B74B2995-94D8-4E45-B2D7-3F7361D1A386@redhat.com> <CAHnbEGL_WD1M2FSQbNkCuZyUSMo8ktUsWRLYFjZ-NKKe1aoLAw@mail.gmail.com>
- <8F936203-8576-4309-B089-E8F38B477E7B@redhat.com> <CAHnbEGL1FVT+dfeSK=UUohNzRpvUZFnrM4dD1mwiYHCHeQUHLw@mail.gmail.com>
- <E358D8BB-3DCB-4784-A05F-35BF43A2CA6C@redhat.com>
-In-Reply-To: <E358D8BB-3DCB-4784-A05F-35BF43A2CA6C@redhat.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Tue, 12 Nov 2024 19:52:00 +0100
-Message-ID: <CALXu0UdpPpM2GHX6cWr+YbYqCqb8eEuLhPJa+oKVr6GfuZGKsA@mail.gmail.com>
-Subject: Re: rsize/wsize chaos in heterogeneous environments Re: [PATCH]
- nfs(5): Update rsize/wsize options
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, 12 Nov 2024 at 15:40, Benjamin Coddington <bcodding@redhat.com> wrote:
->
-> On 12 Nov 2024, at 9:25, Sebastian Feld wrote:
->
-> > Because "pagesize" is a non-portable per-platform value?
->
-> ah.  The code we're talking about is the linux kernel which is compiled for
-> the architecture and yes - not portable anyway.
+added back in 2015 for the sake of vfs_clone_file_range(),
+which is in linux/fs.h these days
 
-It has to be portable for an Administrator. NFS rsize and wsize should
-not depend on a machine's page size.
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+[I don't care which tree does that go in - if nfs folks pick it, great,
+if not - viro/vfs.git#work.misc or vfs/vfs.git#vfs.misc would do just
+fine]
+ fs/nfsd/vfs.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Otherwise you cannot have such entries in /etc/fstab, instead an
-Administrator has to rely on /usr/bin/pagesize, /bin/bc and manual
-mount script just to pass the rsize+wsize in a portable manner. 100%
-not compatible to puppet and common cluster software, and even less
-portable for people using nfsroot.
-
-Ced
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 22325b590e17..f59c8ada322b 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -35,7 +35,6 @@
+ #include "xdr3.h"
+ 
+ #ifdef CONFIG_NFSD_V4
+-#include "../internal.h"
+ #include "acl.h"
+ #include "idmap.h"
+ #include "xdr4.h"
 -- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+2.39.5
+
 
