@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-7924-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7925-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3FD09C68E9
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 06:54:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF2C99C68EA
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 06:54:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 741661F23431
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 05:54:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6D3031F251D6
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 05:54:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79B61527A7;
-	Wed, 13 Nov 2024 05:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188172309AE;
+	Wed, 13 Nov 2024 05:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EWYDWOnC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jXedBEZw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EWYDWOnC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jXedBEZw"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vGBFws1Q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Irv7UYsI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="w1B8l8c1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L6mjnozM"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0008E2309AE
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Nov 2024 05:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691A51714A8
+	for <linux-nfs@vger.kernel.org>; Wed, 13 Nov 2024 05:54:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731477250; cv=none; b=MLxPAliEO+Npl1JcoyxBXi9c/pkGSR3kxboJJJtdp7WhBRHOSrxDAUAs7/4Ns0OPAH/dM2mS6IR9lmOOWt5d6QHwv/8KMGjsD8InSfHAwPtEQM30I2cT0mGrom9U5NtTj687PCkcEBexUIwTjPY/PKV+9ikk+O6oSDZ64GGHSw4=
+	t=1731477257; cv=none; b=ORmwx3/jbDv+1OWKP+5PWjvk60u16GTQJwzZp4omCrwe4BSChlipLVaJ98jf21Aavc+4BnpsQ6MvSwm2JlPKjSNZpGgQaU3PyP5S7LeIwvKKYGHBwl9Pln7WsoTH0H4/W03oxedNkdScLAQMSZc/X2uiywmiLxj82fGVfQe2IKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731477250; c=relaxed/simple;
-	bh=bvbhobzw/zRzH4V2Hi5D+LejyrLlBvNh1CnPdazMw38=;
+	s=arc-20240116; t=1731477257; c=relaxed/simple;
+	bh=CLtreox0NRnKElIsQB+6pPr7emiNOIuz5JRiVVirs+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jzekodJ8rfz5dIMWAF0OYoxNT7/ArWrqU14WTerboAq7eNGGHWfgiOHxoutuEE1i1DYAf7zU2ZI/7eoED8PI3UUBMQqdNOy6eRoy+yALgxjPqwgc/lW62mBolpScXB/BJAGE448vWAaFOIzOwJ9Rlc1qWIzJ+Lu0vL6VEj/GZUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EWYDWOnC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jXedBEZw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EWYDWOnC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jXedBEZw; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=U26UzCHQavDb/uMIrb4GD+QS8Rm1BWhcGW2ItkynReRSVIS8FFooTboDu6aMOHP1sbD4OUSuJbGsiY/oCnVJuFhCMN42wRsP7NdE2aKq1Z8myJEZW2CoXEo3JwUhFL2ECOptmYS3yMsxdv18Kh0UDj2lWZXH8VRDo6WRI77GiVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vGBFws1Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Irv7UYsI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=w1B8l8c1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L6mjnozM; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 333CF1F37C;
-	Wed, 13 Nov 2024 05:54:07 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9FAE61F365;
+	Wed, 13 Nov 2024 05:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731477247; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731477253; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lzX+qC534JJcA9uid6IS+aRdRdskaikQAuxnrYz8eDA=;
-	b=EWYDWOnCTORUAoaY1vIGhVIiLQoiNd/l5lpEClX/JRCYjmZFaIbxzivObNcNhLUoQJLpr6
-	Tdlibnh+9DCCdBRIjR9Ih1ZAvUnxD3xcIKxCC/JpmVh35yZ7zUT0T35gEP+7EpYRryqq4i
-	T84dC9OiPe0tWdyrM2ieFJ47tV86hug=
+	bh=RIqMQ61JhhGJ1qI1S9DraRk8NA5yvbgGVN70rWkZk68=;
+	b=vGBFws1QQ2sK9x3L9Z9iL8utM1qrNZNQfR38KeIS9hB61updek3XCvzYHvoLPIn+DrBavO
+	NtbMzCUDFdBLkYLBF4/HkJB7opwhvIsEwDz2VUbapVxdpQfU29/lE+gU/UTxTt+94wGUvx
+	cdnS5owUJb2CchQS9mME2Z67D1uGgDI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731477247;
+	s=susede2_ed25519; t=1731477253;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lzX+qC534JJcA9uid6IS+aRdRdskaikQAuxnrYz8eDA=;
-	b=jXedBEZwqKLhzGeB/d5MaQj4e8ruSXQ821Z44YI+Vfj/ZbEvUtGNNC6WXlusJ1DeMMsjJ8
-	6DsrQIuB2RNTQoBQ==
+	bh=RIqMQ61JhhGJ1qI1S9DraRk8NA5yvbgGVN70rWkZk68=;
+	b=Irv7UYsI5/co9fBsFrL2K40ElHnYrKH3zaf16jIt4k5A2Q7Ay65p6Bk3gJEBcb+56OndA4
+	zbTLtS4D+yBmhJAg==
 Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731477247; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1731477252; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lzX+qC534JJcA9uid6IS+aRdRdskaikQAuxnrYz8eDA=;
-	b=EWYDWOnCTORUAoaY1vIGhVIiLQoiNd/l5lpEClX/JRCYjmZFaIbxzivObNcNhLUoQJLpr6
-	Tdlibnh+9DCCdBRIjR9Ih1ZAvUnxD3xcIKxCC/JpmVh35yZ7zUT0T35gEP+7EpYRryqq4i
-	T84dC9OiPe0tWdyrM2ieFJ47tV86hug=
+	bh=RIqMQ61JhhGJ1qI1S9DraRk8NA5yvbgGVN70rWkZk68=;
+	b=w1B8l8c1d3tFrgZcsPnQdj0AGQeHuOk7upEiF8xUJlFer7X/9yHgpOn68MFgv3UY5Asw2c
+	9kwYbpn6cwLISgXOc7gInm6F+iJ5oh/sWqvUzH6jl8JZnOWhH4397ucXFoyhE1//QtP+Vr
+	eHJTnb2V/bNs80O6a5597pkyPl9yEi4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731477247;
+	s=susede2_ed25519; t=1731477252;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lzX+qC534JJcA9uid6IS+aRdRdskaikQAuxnrYz8eDA=;
-	b=jXedBEZwqKLhzGeB/d5MaQj4e8ruSXQ821Z44YI+Vfj/ZbEvUtGNNC6WXlusJ1DeMMsjJ8
-	6DsrQIuB2RNTQoBQ==
+	bh=RIqMQ61JhhGJ1qI1S9DraRk8NA5yvbgGVN70rWkZk68=;
+	b=L6mjnozMjpIvtPqL5aSuI2UurvdjJCV9Zfc9BKXKhwp5Qb69MpQcjbdVPXtzMdZJ5/Sl7y
+	ex5xEFj6IFVPcZAA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 25EFD13890;
-	Wed, 13 Nov 2024 05:54:04 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87AE713890;
+	Wed, 13 Nov 2024 05:54:10 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id afyZM/w+NGeSfQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 13 Nov 2024 05:54:04 +0000
+	id p6LUDwI/NGeXfQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 13 Nov 2024 05:54:10 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -95,9 +95,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 2/4] nfsd: allocate new session-based DRC slots on demand.
-Date: Wed, 13 Nov 2024 16:38:35 +1100
-Message-ID: <20241113055345.494856-3-neilb@suse.de>
+Subject: [PATCH 3/4] nfsd: free unused session-DRC slots
+Date: Wed, 13 Nov 2024 16:38:36 +1100
+Message-ID: <20241113055345.494856-4-neilb@suse.de>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241113055345.494856-1-neilb@suse.de>
 References: <20241113055345.494856-1-neilb@suse.de>
@@ -108,7 +108,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
+X-Spam-Level: 
 X-Spamd-Result: default: False [-2.80 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
@@ -128,90 +128,108 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 	RCPT_COUNT_FIVE(0.00)[6];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid];
 	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.80
 X-Spam-Flag: NO
-X-Spam-Level: 
 
-If a client ever uses the highest available slot for a given session,
-attempt to allocate another slot so there is room for the client to use
-more slots if wanted.  GFP_NOWAIT is used so if there is not plenty of
-free memory, failure is expected - which is what we want.  It also
-allows the allocation while holding a spinlock.
+When the client confirms that some currently allocated DRC slots are not
+used, free some.  We currently keep 6 (NFSD_MAX_UNUSED_SLOTS) unused
+slots to support bursts of client activity.  This could be tuned with a
+shrinker.
 
-We would expect to stablise with one more slot available than the client
-actually uses.
+When we free a slot we store the seqid in the slot pointer so that it can
+be restored when we reactivate the slot.  The RFC requires the seqid for
+each slot to increment on each request and does not permit it ever to be
+reset.
 
-Now that we grow the slot table on demand we can start with a smaller
-allocation.  Define NFSD_MAX_UNUSED_SLOTS and allocate at most that many
-when session is created.
+We decoding sa_highest_slotid into maxslots we need to add 1 - this
+matches how it is encoded for the reply.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 22 ++++++++++++++++------
- fs/nfsd/state.h     |  2 ++
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ fs/nfsd/nfs4state.c | 25 +++++++++++++++++++------
+ fs/nfsd/nfs4xdr.c   |  3 ++-
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2dcba0c83c10..683bb908039b 100644
+index 683bb908039b..15de62416243 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1953,7 +1953,7 @@ static struct nfsd4_session *alloc_session(struct nfsd4_channel_attrs *fattrs,
- 	if (!new->se_slots[0])
- 		goto out_free;
+@@ -1910,14 +1910,21 @@ gen_sessionid(struct nfsd4_session *ses)
+ #define NFSD_MIN_HDR_SEQ_SZ  (24 + 12 + 44)
  
--	for (i = 1; i < numslots; i++) {
-+	for (i = 1; i < numslots && i < NFSD_MAX_UNUSED_SLOTS; i++) {
- 		new->se_slots[i] = kzalloc(slotsize, GFP_KERNEL | __GFP_NORETRY);
- 		if (!new->se_slots[i])
- 			break;
-@@ -4187,11 +4187,6 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	slot = session->se_slots[seq->slotid];
- 	dprintk("%s: slotid %d\n", __func__, seq->slotid);
+ static void
+-free_session_slots(struct nfsd4_session *ses)
++free_session_slots(struct nfsd4_session *ses, int from)
+ {
+ 	int i;
  
--	/* We do not negotiate the number of slots yet, so set the
--	 * maxslots to the session maxreqs which is used to encode
--	 * sr_highest_slotid and the sr_target_slot id to maxslots */
--	seq->maxslots = session->se_fchannel.maxreqs;
--
- 	trace_nfsd_slot_seqid_sequence(clp, seq, slot);
- 	status = check_slot_seqid(seq->seqid, slot->sl_seqid,
- 					slot->sl_flags & NFSD4_SLOT_INUSE);
-@@ -4241,6 +4236,21 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	cstate->session = session;
- 	cstate->clp = clp;
- 
-+	/*
-+	 * If the client ever uses the highest available slot,
-+	 * gently try to allocate another one.
-+	 */
-+	if (seq->slotid == session->se_fchannel.maxreqs - 1 &&
-+	    session->se_fchannel.maxreqs < NFSD_MAX_SLOTS_PER_SESSION) {
-+		int s = session->se_fchannel.maxreqs;
+-	for (i = 0; i < ses->se_fchannel.maxreqs; i++) {
++	if (from >= ses->se_fchannel.maxreqs)
++		return;
 +
-+		session->se_slots[s] = kzalloc(slot_bytes(&session->se_fchannel),
-+					       GFP_NOWAIT);
-+		if (session->se_slots[s])
-+			session->se_fchannel.maxreqs += 1;
-+	}
-+	seq->maxslots = session->se_fchannel.maxreqs;
-+
- out:
- 	switch (clp->cl_cb_state) {
- 	case NFSD4_CB_DOWN:
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index c052e9eea81b..012b68a0bafa 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -215,6 +215,8 @@ static inline struct nfs4_delegation *delegstateid(struct nfs4_stid *s)
++	for (i = from; i < ses->se_fchannel.maxreqs; i++) {
++		uintptr_t seqid = ses->se_slots[i]->sl_seqid;
+ 		free_svc_cred(&ses->se_slots[i]->sl_cred);
+ 		kfree(ses->se_slots[i]);
++		/* Save the seqid in case we reactivate this slot */
++		ses->se_slots[i] = (void *)seqid;
+ 	}
++	ses->se_fchannel.maxreqs = from;
+ }
  
- /* Maximum number of slots per session. 160 is useful for long haul TCP */
- #define NFSD_MAX_SLOTS_PER_SESSION     160
-+/* Maximum number of slots per session that are allocated by unused */
-+#define NFSD_MAX_UNUSED_SLOTS		6
- /* Maximum  session per slot cache size */
- #define NFSD_SLOT_CACHE_SIZE		2048
- /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
+ /*
+@@ -2069,7 +2076,7 @@ static void nfsd4_del_conns(struct nfsd4_session *s)
+ 
+ static void __free_session(struct nfsd4_session *ses)
+ {
+-	free_session_slots(ses);
++	free_session_slots(ses, 0);
+ 	kfree(ses);
+ }
+ 
+@@ -4214,6 +4221,9 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		goto out_put_session;
+ 
++	/* If there are lots of unused slots, free some */
++	free_session_slots(session, seq->maxslots + NFSD_MAX_UNUSED_SLOTS);
++
+ 	buflen = (seq->cachethis) ?
+ 			session->se_fchannel.maxresp_cached :
+ 			session->se_fchannel.maxresp_sz;
+@@ -4244,10 +4254,13 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	    session->se_fchannel.maxreqs < NFSD_MAX_SLOTS_PER_SESSION) {
+ 		int s = session->se_fchannel.maxreqs;
+ 
+-		session->se_slots[s] = kzalloc(slot_bytes(&session->se_fchannel),
+-					       GFP_NOWAIT);
+-		if (session->se_slots[s])
++		struct nfsd4_slot *slot = kzalloc(slot_bytes(&session->se_fchannel),
++						  GFP_NOWAIT);
++		if (slot) {
++			slot->sl_seqid = (uintptr_t)session->se_slots[s];
++			session->se_slots[s] = slot;
+ 			session->se_fchannel.maxreqs += 1;
++		}
+ 	}
+ 	seq->maxslots = session->se_fchannel.maxreqs;
+ 
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index f118921250c3..846ed52fdaf5 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -1884,7 +1884,8 @@ nfsd4_decode_sequence(struct nfsd4_compoundargs *argp,
+ 		return nfserr_bad_xdr;
+ 	seq->seqid = be32_to_cpup(p++);
+ 	seq->slotid = be32_to_cpup(p++);
+-	seq->maxslots = be32_to_cpup(p++);
++	/* sa_highest_slotid counts from 0 but maxslots  counts from 1 ... */
++	seq->maxslots = be32_to_cpup(p++) + 1;
+ 	seq->cachethis = be32_to_cpup(p);
+ 
+ 	seq->status_flags = 0;
 -- 
 2.47.0
 
