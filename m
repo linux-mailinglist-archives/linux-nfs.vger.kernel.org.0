@@ -1,56 +1,65 @@
-Return-Path: <linux-nfs+bounces-7940-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7941-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4FC79C79E2
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 18:24:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6289B9C7A4A
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 18:51:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29E08B2398F
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 16:52:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D52AAB2AF54
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 17:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACB61632E5;
-	Wed, 13 Nov 2024 16:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCFF02003DF;
+	Wed, 13 Nov 2024 17:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mwSh2htN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MeSwlbMJ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A613139D19
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Nov 2024 16:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5FE7083F;
+	Wed, 13 Nov 2024 17:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731516761; cv=none; b=I2LnmYvU23WVYH+vjj8yeGWyEEV5bJbJeccivV/gnkx1lGD5AZThYjO2oMeVoLrgFFlZDcy0JPmwa/4o3KK3STQxOYUNRB9cEXFx97Bj2tbdWLUx8j9xUu4O1tKlQYVoJKmK5FNTkp5Pm31Zqx/cf5f5iza4b0EYR0kkSVpOacc=
+	t=1731517361; cv=none; b=olB1n335L5SBQSuYVFKA5rQKg5GNpYAqiIJPoIfMKUN3/EWM8TBKP6whMS8rwx3R2GxYBI7z3jV+/sI6J/WO9B5NnGeXzuq8P7sApq51987jR5RAFxDB3DeUIFXDR4o5JJzQVoh74IGIyEJXg44bo4tkXoCwkpBsVeiAY0WiRL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731516761; c=relaxed/simple;
-	bh=chZ5WDgPqkQc8h+JZtnODLxDReu/WO8kkBeo9MhQKWQ=;
+	s=arc-20240116; t=1731517361; c=relaxed/simple;
+	bh=hUzsV5dfW8+myzSG+550fwEiED6lhGPOgQG9wWgzPH4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G2+Z9qLvgxWShstlO3D+Q/F0JpQlmWBe4FS9N90aiLI40pQ4A+KvOXgLIYfJwWDEPTYSBLklkPZCFP6MaBR/nl455Yr0wFSfxYpL+3wjkRqgtRNJa6Vk0ZJlzNFNYS+GBDOlRATTDmmA+obLsgfFmTQS5aOA1HWFRNgD8PiTnCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mwSh2htN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8230C4CEC3;
-	Wed, 13 Nov 2024 16:52:39 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iEwlrF5fmkUMuMSt7vpAQ1aItaxGlRZGhebpc5hMlv2aPxQV2/eWVbNf3nPavsx0iimaXs+I+hkyHhq672GaZ1LCDtqCm5o0crS2J8KcgUR16V7TkNh7N9k0TgfYL6rta5IrC1qRzjGaTLIYZZo7k4F6mLs9Y9VuX8cBGBpc3e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MeSwlbMJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54802C4CECF;
+	Wed, 13 Nov 2024 17:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731516760;
-	bh=chZ5WDgPqkQc8h+JZtnODLxDReu/WO8kkBeo9MhQKWQ=;
+	s=k20201202; t=1731517361;
+	bh=hUzsV5dfW8+myzSG+550fwEiED6lhGPOgQG9wWgzPH4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mwSh2htN68Jhku9yckjEsN4koIfM8ZfXuGFMfyGsyiOQIZ9R+gzIpAd1wJ3r53soy
-	 NLSTCQ9jMTj6WIy0boid6UigZrGNiehPMBv57eXEAJNPza2r4BgKEN5VxBomqfKTuV
-	 I87GFohIdNMUG5RP9wZfi8EScG8lAskpMp2eSS2eymzJHqVUEDtM4jzmcPluzgkty/
-	 kv3Ap0PikqS6qSLiyS9jo0oIGPwYnw1n2NUGS0AQhlJDf5hfaHub2QA04b+JX/HrTW
-	 R9s43ZKGdDRA/+caYIxUwAzoPlDRZxKoZnuzq3Gz57FLGorvCl7qXQOqRjCQwXFOVn
-	 H1D6mj943inqA==
-Message-ID: <1fe0918a2cb4a13613acf2a47ec5c1bd222dec10.camel@kernel.org>
-Subject: Re: [PATCH 3/4] nfsd: free unused session-DRC slots
+	b=MeSwlbMJB45QWIkPEPafwISLSKpfr62v2xvvVoCcSkqLsf/0CW8XA4LPjD0VsZEiU
+	 hwsl2xxRo8rdeBNGtbdneGF12otxEwTobbAP0uXqXh5hiBzjffIq2nHSBDcBTUZvBk
+	 NLRIopgFDyr2csl3uo2sRIwEZlXy8/jCLt/Zyc2Iq0aaiDZBlnEsubqLgVKpmZbydk
+	 RIFNce878Eur9FtkrvvMwv3xN9jWKK67W3xwkbqIimQdk7Gq3F3CRZeTI302OG5hY6
+	 5GO4DJRgYecxIA0e9FTvXALLmpF/nxTRkPhR5gChQsDsOmsBwsyC2mxb4YDc1F+pbO
+	 Np+FujBGnm2xw==
+Message-ID: <0c209627e0bf5ce0933bb87c1b3e989fda38db3a.camel@kernel.org>
+Subject: Re: [snitzer:cel-nfsd-next-6.12-rc5] [nfsd]  b4be3ccf1c:
+ fsmark.app_overhead 92.0% regression
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Wed, 13 Nov 2024 11:52:38 -0500
-In-Reply-To: <20241113055345.494856-4-neilb@suse.de>
-References: <20241113055345.494856-1-neilb@suse.de>
-	 <20241113055345.494856-4-neilb@suse.de>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: kernel test robot <oliver.sang@intel.com>, Mike Snitzer
+ <snitzer@redhat.com>,  "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
+ kernel test robot <lkp@intel.com>, Anna Schumaker <anna@kernel.org>, Trond
+ Myklebust <trond.myklebust@primarydata.com>, Tom Haynes <loghyr@gmail.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date: Wed, 13 Nov 2024 12:02:39 -0500
+In-Reply-To: <00A9E843-767A-40B6-9963-41C8508A655A@oracle.com>
+References: <202411071017.ddd9e9e2-oliver.sang@intel.com>
+	 <4d5d966b2efc0b5b8c59ef179e99f3f8fbf792f8.camel@kernel.org>
+	 <ZzTKQGYJFh7PH4Fw@tissot.1015granger.net>
+	 <48ad2574e14c35aca27c10e68f2a1069ccb646df.camel@kernel.org>
+	 <ZzTQd5NKe5WXkLlA@tissot.1015granger.net>
+	 <79e94b2225fa8e4a4723b8941eea79111f77c55f.camel@kernel.org>
+	 <00A9E843-767A-40B6-9963-41C8508A655A@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,116 +144,285 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2024-11-13 at 16:38 +1100, NeilBrown wrote:
-> When the client confirms that some currently allocated DRC slots are not
-> used, free some.  We currently keep 6 (NFSD_MAX_UNUSED_SLOTS) unused
-> slots to support bursts of client activity.  This could be tuned with a
-> shrinker.
+On Wed, 2024-11-13 at 16:37 +0000, Chuck Lever III wrote:
 >=20
-> When we free a slot we store the seqid in the slot pointer so that it can
-> be restored when we reactivate the slot.  The RFC requires the seqid for
-> each slot to increment on each request and does not permit it ever to be
-> reset.
+> > On Nov 13, 2024, at 11:20=E2=80=AFAM, Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >=20
+> > On Wed, 2024-11-13 at 11:14 -0500, Chuck Lever wrote:
+> > > On Wed, Nov 13, 2024 at 11:10:35AM -0500, Jeff Layton wrote:
+> > > > On Wed, 2024-11-13 at 10:48 -0500, Chuck Lever wrote:
+> > > > > On Thu, Nov 07, 2024 at 06:35:11AM -0500, Jeff Layton wrote:
+> > > > > > On Thu, 2024-11-07 at 12:55 +0800, kernel test robot wrote:
+> > > > > > > hi, Jeff Layton,
+> > > > > > >=20
+> > > > > > > in commit message, it is mentioned the change is expected to =
+solve the
+> > > > > > > "App Overhead" on the fs_mark test we reported in
+> > > > > > > https://lore.kernel.org/oe-lkp/202409161645.d44bced5-oliver.s=
+ang@intel.com/
+> > > > > > >=20
+> > > > > > > however, in our tests, there is sill similar regression. at t=
+he same
+> > > > > > > time, there is still no performance difference for fsmark.fil=
+es_per_sec
+> > > > > > >=20
+> > > > > > >   2015880 =C2=B1  3%     +92.0%    3870164        fsmark.app_=
+overhead
+> > > > > > >     18.57            +0.0%      18.57        fsmark.files_per=
+_sec
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > another thing is our bot bisect to this commit in repo/branch=
+ as below detail
+> > > > > > > information. if there is a more porper repo/branch to test th=
+e patch, could
+> > > > > > > you let us know? thanks a lot!
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Hello,
+> > > > > > >=20
+> > > > > > > kernel test robot noticed a 92.0% regression of fsmark.app_ov=
+erhead on:
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > commit: b4be3ccf1c251cbd3a3cf5391a80fe3a5f6f075e ("nfsd: impl=
+ement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION")
+> > > > > > > https://git.kernel.org/cgit/linux/kernel/git/snitzer/linux.gi=
+t cel-nfsd-next-6.12-rc5
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > testcase: fsmark
+> > > > > > > config: x86_64-rhel-8.3
+> > > > > > > compiler: gcc-12
+> > > > > > > test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum=
+ 8358 CPU @ 2.60GHz (Ice Lake) with 128G memory
+> > > > > > > parameters:
+> > > > > > >=20
+> > > > > > > iterations: 1x
+> > > > > > > nr_threads: 1t
+> > > > > > > disk: 1HDD
+> > > > > > > fs: btrfs
+> > > > > > > fs2: nfsv4
+> > > > > > > filesize: 4K
+> > > > > > > test_size: 40M
+> > > > > > > sync_method: fsyncBeforeClose
+> > > > > > > nr_files_per_directory: 1fpd
+> > > > > > > cpufreq_governor: performance
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > If you fix the issue in a separate patch/commit (i.e. not jus=
+t a new version of
+> > > > > > > the same patch/commit), kindly add following tags
+> > > > > > > > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > > > > > > > Closes: https://lore.kernel.org/oe-lkp/202411071017.ddd9e9e=
+2-oliver.sang@intel.com
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Details are as below:
+> > > > > > > -------------------------------------------------------------=
+------------------------------------->
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > The kernel config and materials to reproduce are available at=
+:
+> > > > > > > https://download.01.org/0day-ci/archive/20241107/202411071017=
+.ddd9e9e2-oliver.sang@intel.com
+> > > > > > >=20
+> > > > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > > > compiler/cpufreq_governor/disk/filesize/fs2/fs/iterations/kco=
+nfig/nr_files_per_directory/nr_threads/rootfs/sync_method/tbox_group/test_s=
+ize/testcase:
+> > > > > > >  gcc-12/performance/1HDD/4K/nfsv4/btrfs/1x/x86_64-rhel-8.3/1f=
+pd/1t/debian-12-x86_64-20240206.cgz/fsyncBeforeClose/lkp-icl-2sp6/40M/fsmar=
+k
+> > > > > > >=20
+> > > > > > > commit:=20
+> > > > > > >  37f27b20cd ("nfsd: add support for FATTR4_OPEN_ARGUMENTS")
+> > > > > > >  b4be3ccf1c ("nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPE=
+N_XOR_DELEGATION")
+> > > > > > >=20
+> > > > > > > 37f27b20cd64e2e0 b4be3ccf1c251cbd3a3cf5391a8=20
+> > > > > > > ---------------- ---------------------------=20
+> > > > > > >         %stddev     %change         %stddev
+> > > > > > >             \          |                \ =20
+> > > > > > >     97.33 =C2=B1  9%     -16.3%      81.50 =C2=B1  9%  perf-c=
+2c.HITM.local
+> > > > > > >      3788 =C2=B1101%    +147.5%       9377 =C2=B1  6%  sched_=
+debug.cfs_rq:/.load_avg.max
+> > > > > > >      2936            -6.2%       2755        vmstat.system.cs
+> > > > > > >   2015880 =C2=B1  3%     +92.0%    3870164        fsmark.app_=
+overhead
+> > > > > > >     18.57            +0.0%      18.57        fsmark.files_per=
+_sec
+> > > > > > >     53420           -17.3%      44185        fsmark.time.volu=
+ntary_context_switches
+> > > > > > >      1.50 =C2=B1  7%     +13.4%       1.70 =C2=B1  3%  perf-s=
+ched.wait_time.avg.ms.devkmsg_read.vfs_read.ksys_read.do_syscall_64
+> > > > > > >      3.00 =C2=B1  7%     +13.4%       3.40 =C2=B1  3%  perf-s=
+ched.wait_time.max.ms.devkmsg_read.vfs_read.ksys_read.do_syscall_64
+> > > > > > >   1756957            -2.1%    1720536        proc-vmstat.numa=
+_hit
+> > > > > > >   1624496            -2.2%    1588039        proc-vmstat.numa=
+_local
+> > > > > > >      1.28 =C2=B1  4%      -8.2%       1.17 =C2=B1  3%  perf-s=
+tat.i.MPKI
+> > > > > > >      2916            -6.2%       2735        perf-stat.i.cont=
+ext-switches
+> > > > > > >      1529 =C2=B1  4%      +8.2%       1655 =C2=B1  3%  perf-s=
+tat.i.cycles-between-cache-misses
+> > > > > > >      2910            -6.2%       2729        perf-stat.ps.con=
+text-switches
+> > > > > > >      0.67 =C2=B1 15%      -0.4        0.27 =C2=B1100%  perf-p=
+rofile.calltrace.cycles-pp._Fork
+> > > > > > >      0.95 =C2=B1 15%      +0.3        1.26 =C2=B1 11%  perf-p=
+rofile.calltrace.cycles-pp.__sched_setaffinity.sched_setaffinity.__x64_sys_=
+sched_setaffinity.do_syscall_64.entry_SYSCALL_64_after_hwframe
+> > > > > > >      0.70 =C2=B1 47%      +0.3        1.04 =C2=B1  9%  perf-p=
+rofile.calltrace.cycles-pp._nohz_idle_balance.do_idle.cpu_startup_entry.sta=
+rt_secondary.common_startup_64
+> > > > > > >      0.52 =C2=B1 45%      +0.3        0.86 =C2=B1 15%  perf-p=
+rofile.calltrace.cycles-pp.seq_read_iter.vfs_read.ksys_read.do_syscall_64.e=
+ntry_SYSCALL_64_after_hwframe
+> > > > > > >      0.72 =C2=B1 50%      +0.4        1.12 =C2=B1 18%  perf-p=
+rofile.calltrace.cycles-pp.link_path_walk.path_openat.do_filp_open.do_sys_o=
+penat2.__x64_sys_openat
+> > > > > > >      1.22 =C2=B1 26%      +0.4        1.67 =C2=B1 12%  perf-p=
+rofile.calltrace.cycles-pp.sched_setaffinity.evlist_cpu_iterator__next.read=
+_counters.process_interval.dispatch_events
+> > > > > > >      2.20 =C2=B1 11%      +0.6        2.78 =C2=B1 13%  perf-p=
+rofile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.rea=
+d
+> > > > > > >      2.20 =C2=B1 11%      +0.6        2.82 =C2=B1 12%  perf-p=
+rofile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.read
+> > > > > > >      2.03 =C2=B1 13%      +0.6        2.67 =C2=B1 13%  perf-p=
+rofile.calltrace.cycles-pp.ksys_read.do_syscall_64.entry_SYSCALL_64_after_h=
+wframe.read
+> > > > > > >      0.68 =C2=B1 15%      -0.2        0.47 =C2=B1 19%  perf-p=
+rofile.children.cycles-pp._Fork
+> > > > > > >      0.56 =C2=B1 15%      -0.1        0.42 =C2=B1 16%  perf-p=
+rofile.children.cycles-pp.tcp_v6_do_rcv
+> > > > > > >      0.46 =C2=B1 13%      -0.1        0.35 =C2=B1 16%  perf-p=
+rofile.children.cycles-pp.alloc_pages_mpol_noprof
+> > > > > > >      0.10 =C2=B1 75%      +0.2        0.29 =C2=B1 19%  perf-p=
+rofile.children.cycles-pp.refresh_cpu_vm_stats
+> > > > > > >      0.28 =C2=B1 33%      +0.2        0.47 =C2=B1 16%  perf-p=
+rofile.children.cycles-pp.show_stat
+> > > > > > >      0.34 =C2=B1 32%      +0.2        0.54 =C2=B1 16%  perf-p=
+rofile.children.cycles-pp.fold_vm_numa_events
+> > > > > > >      0.37 =C2=B1 11%      +0.3        0.63 =C2=B1 23%  perf-p=
+rofile.children.cycles-pp.setup_items_for_insert
+> > > > > > >      0.88 =C2=B1 15%      +0.3        1.16 =C2=B1 12%  perf-p=
+rofile.children.cycles-pp.__set_cpus_allowed_ptr
+> > > > > > >      0.37 =C2=B1 14%      +0.3        0.67 =C2=B1 61%  perf-p=
+rofile.children.cycles-pp.btrfs_writepages
+> > > > > > >      0.37 =C2=B1 14%      +0.3        0.67 =C2=B1 61%  perf-p=
+rofile.children.cycles-pp.extent_write_cache_pages
+> > > > > > >      0.64 =C2=B1 19%      +0.3        0.94 =C2=B1 15%  perf-p=
+rofile.children.cycles-pp.btrfs_insert_empty_items
+> > > > > > >      0.38 =C2=B1 12%      +0.3        0.68 =C2=B1 58%  perf-p=
+rofile.children.cycles-pp.btrfs_fdatawrite_range
+> > > > > > >      0.32 =C2=B1 23%      +0.3        0.63 =C2=B1 64%  perf-p=
+rofile.children.cycles-pp.extent_writepage
+> > > > > > >      0.97 =C2=B1 14%      +0.3        1.31 =C2=B1 10%  perf-p=
+rofile.children.cycles-pp.__sched_setaffinity
+> > > > > > >      1.07 =C2=B1 16%      +0.4        1.44 =C2=B1 10%  perf-p=
+rofile.children.cycles-pp.__x64_sys_sched_setaffinity
+> > > > > > >      1.39 =C2=B1 18%      +0.5        1.90 =C2=B1 12%  perf-p=
+rofile.children.cycles-pp.seq_read_iter
+> > > > > > >      0.34 =C2=B1 30%      +0.2        0.52 =C2=B1 16%  perf-p=
+rofile.self.cycles-pp.fold_vm_numa_events
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Disclaimer:
+> > > > > > > Results have been estimated based on internal Intel analysis =
+and are provided
+> > > > > > > for informational purposes only. Any difference in system har=
+dware or software
+> > > > > > > design or configuration may affect actual performance.
+> > > > > > >=20
+> > > > > > >=20
+> > > > > >=20
+> > > > > > This patch (b4be3ccf1c) is exceedingly simple, so I doubt it's =
+causing
+> > > > > > a performance regression in the server. The only thing I can fi=
+gure
+> > > > > > here is that this test is causing the server to recall the dele=
+gation
+> > > > > > that it hands out, and then the client has to go and establish =
+a new
+> > > > > > open stateid in order to return it. That would likely be slower=
+ than
+> > > > > > just handing out both an open and delegation stateid in the fir=
+st
+> > > > > > place.
+> > > > > >=20
+> > > > > > I don't think there is anything we can do about that though, si=
+nce the
+> > > > > > feature seems to is working as designed.
+> > > > >=20
+> > > > > We seem to have hit this problem before. That makes me wonder
+> > > > > whether it is actually worth supporting the XOR flag at all. Afte=
+r
+> > > > > all, the client sends the CLOSE asynchronously; applications are =
+not
+> > > > > being held up while the unneeded state ID is returned.
+> > > > >=20
+> > > > > Can XOR support be disabled for now? I don't want to add an
+> > > > > administrative interface for that, but also, "no regressions" is
+> > > > > ringing in my ears, and 92% is a mighty noticeable one.
+> > > >=20
+> > > > To be clear, this increase is for the "App Overhead" which is all o=
+f
+> > > > the operations between the stuff that is being measured in this tes=
+t. I
+> > > > did run this test for a bit and got similar results, but was never =
+able
+> > > > to nail down where the overhead came from. My speculation is that i=
+t's
+> > > > the recall and reestablishment of an open stateid that slows things
+> > > > down, but I never could fully confirm it.
+> > > >=20
+> > > > My issue with disabling this is that the decision of whether to set
+> > > > OPEN_XOR_DELEGATION is up to the client. The server in this case is
+> > > > just doing what the client asks. ISTM that if we were going to disa=
+ble
+> > > > (or throttle) this anywhere, that should be done by the client.
+> > >=20
+> > > If the client sets the XOR flag, NFSD could simply return only an
+> > > OPEN stateid, for instance.
+> >=20
+> > Sure, but then it's disabled for everyone, for every workload. There
+> > may be workloads the benefit too.
+>=20
+> It doesn't impact NFSv4.[01] mounts, nor will it impact any
+> workload on a client that does not now support XOR.
+>=20
+> I don't think we need bad press around this feature, nor do we
+> want complaints about "why didn't you add a switch to disable
+> this?". I'd also like to avoid a bug filed for this regression
+> if it gets merged.
+>=20
+> Can you test to see if returning only the OPEN stateid makes the
+> regression go away? The behavior would be in place only until
+> there is a root cause and a way to avoid the regression.
 >=20
 
-I think we need to get some clarification on the above.=C2=A0
+I don't have a test rig set up for this at the moment as this sort of
+testing requires real hw. I also don't have anything automated for
+doing this.
 
-IMO, once you free a slot, it's gone and its seqid should also be
-forgotten. A reactivated slot, IOW, is effectively "new" and its seqid
-should start again at 1. I don't think the spec intended to require
-that both ends to remember seqids for defunct slots.
-
-> We decoding sa_highest_slotid into maxslots we need to add 1 - this
-> matches how it is encoded for the reply.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4state.c | 25 +++++++++++++++++++------
->  fs/nfsd/nfs4xdr.c   |  3 ++-
->  2 files changed, 21 insertions(+), 7 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 683bb908039b..15de62416243 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1910,14 +1910,21 @@ gen_sessionid(struct nfsd4_session *ses)
->  #define NFSD_MIN_HDR_SEQ_SZ  (24 + 12 + 44)
-> =20
->  static void
-> -free_session_slots(struct nfsd4_session *ses)
-> +free_session_slots(struct nfsd4_session *ses, int from)
->  {
->  	int i;
-> =20
-> -	for (i =3D 0; i < ses->se_fchannel.maxreqs; i++) {
-> +	if (from >=3D ses->se_fchannel.maxreqs)
-> +		return;
-> +
-> +	for (i =3D from; i < ses->se_fchannel.maxreqs; i++) {
-> +		uintptr_t seqid =3D ses->se_slots[i]->sl_seqid;
->  		free_svc_cred(&ses->se_slots[i]->sl_cred);
->  		kfree(ses->se_slots[i]);
-> +		/* Save the seqid in case we reactivate this slot */
-> +		ses->se_slots[i] =3D (void *)seqid;
->  	}
-> +	ses->se_fchannel.maxreqs =3D from;
->  }
-> =20
->  /*
-> @@ -2069,7 +2076,7 @@ static void nfsd4_del_conns(struct nfsd4_session *s=
-)
-> =20
->  static void __free_session(struct nfsd4_session *ses)
->  {
-> -	free_session_slots(ses);
-> +	free_session_slots(ses, 0);
->  	kfree(ses);
->  }
-> =20
-> @@ -4214,6 +4221,9 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
->  	if (status)
->  		goto out_put_session;
-> =20
-> +	/* If there are lots of unused slots, free some */
-> +	free_session_slots(session, seq->maxslots + NFSD_MAX_UNUSED_SLOTS);
-> +
->  	buflen =3D (seq->cachethis) ?
->  			session->se_fchannel.maxresp_cached :
->  			session->se_fchannel.maxresp_sz;
-> @@ -4244,10 +4254,13 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfs=
-d4_compound_state *cstate,
->  	    session->se_fchannel.maxreqs < NFSD_MAX_SLOTS_PER_SESSION) {
->  		int s =3D session->se_fchannel.maxreqs;
-> =20
-> -		session->se_slots[s] =3D kzalloc(slot_bytes(&session->se_fchannel),
-> -					       GFP_NOWAIT);
-> -		if (session->se_slots[s])
-> +		struct nfsd4_slot *slot =3D kzalloc(slot_bytes(&session->se_fchannel),
-> +						  GFP_NOWAIT);
-> +		if (slot) {
-> +			slot->sl_seqid =3D (uintptr_t)session->se_slots[s];
-> +			session->se_slots[s] =3D slot;
->  			session->se_fchannel.maxreqs +=3D 1;
-> +		}
->  	}
->  	seq->maxslots =3D session->se_fchannel.maxreqs;
-> =20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index f118921250c3..846ed52fdaf5 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -1884,7 +1884,8 @@ nfsd4_decode_sequence(struct nfsd4_compoundargs *ar=
-gp,
->  		return nfserr_bad_xdr;
->  	seq->seqid =3D be32_to_cpup(p++);
->  	seq->slotid =3D be32_to_cpup(p++);
-> -	seq->maxslots =3D be32_to_cpup(p++);
-> +	/* sa_highest_slotid counts from 0 but maxslots  counts from 1 ... */
-> +	seq->maxslots =3D be32_to_cpup(p++) + 1;
->  	seq->cachethis =3D be32_to_cpup(p);
-> =20
->  	seq->status_flags =3D 0;
+That will probably take a while, so if you're that concerned, then just
+drop the patch. Maybe we'll get a datapoint from the hammerspace folks
+that will help clarify the problem in the meantime.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
