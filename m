@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-7929-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7930-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A29879C74E8
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 15:59:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29E319C7603
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 16:20:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2FB381F2474F
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 14:59:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D885628BD95
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Nov 2024 15:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264977E111;
-	Wed, 13 Nov 2024 14:58:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66AEC70823;
+	Wed, 13 Nov 2024 15:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9o267Nv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5xlsYOK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0053D1C695
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Nov 2024 14:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA4A22612;
+	Wed, 13 Nov 2024 15:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731509911; cv=none; b=pO3slXDekco7Fn0JWv3og8Geo34e4eZtFz+g39rWBJrwgM01A52ro/PFht5YuS7b0Sn7e2MUxTTfndiXTeEDacy00PM+RA6z75xVYtWOPH3eGxMdpseKR43wsZluV0BIrcp4t6mmEZokGHO1sbxuv9EirYMAHmd8+7sB0LdG/FE=
+	t=1731510951; cv=none; b=DXp25CE32hvU5U+edyYyF1CkjQnXCpZyPgqPkNtpJMn25MiGUcHLbprK0UBCVSYJHTC4pqp7WeQq5iB5J/cKDY3kNY5pGSkLF/dpzGv6XOsH100NxQ8jzMdJUD8eXTa3Qx6OYE+zQmqxJ/aqM9yQWi/lRR1PmeRxXt3GCNjmObc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731509911; c=relaxed/simple;
-	bh=KUu/1dKRUS00xs6sbRp+49ZBe8/NY7Z5le+k22qdmcc=;
+	s=arc-20240116; t=1731510951; c=relaxed/simple;
+	bh=Ww3dsg15SARZD9rgznxPTxMUQ2/7NxusnUi4KwK2Ig4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kcPYcWNP8qRFGL0LO8sEv8qMXbQngtH8dtu2oD8vkQuPSDpoIPwp+MYdSyGQVk4R+T1JeTCM4HNpvAI1Xexi4LU/RaHbX9iwsMi/3vZgLgUmBPl141+y4sxS85feh4Rg0sbj3lk5l5N2gGQ7FwgVwQB4JBY6HuG1Cbd9qAggtvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9o267Nv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC41BC4CEC3;
-	Wed, 13 Nov 2024 14:58:29 +0000 (UTC)
+	 Content-Type:MIME-Version; b=lcIqOls831sXQjtOctkZZrwNpVSVUo6Jfa1lr6sIdo4tbytscXaQoFv4b9UgGVA47RUnOmreoEh/gqGEFkQzxw4db9T1GkHd2NlQ5Y3lJ0Z58S1Bo4So/DogZ7OSrf77DmF0JTNBqasnDRRXyD45EHxtv81nRSsqEo0J78iWtbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5xlsYOK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20519C4CEC3;
+	Wed, 13 Nov 2024 15:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731509910;
-	bh=KUu/1dKRUS00xs6sbRp+49ZBe8/NY7Z5le+k22qdmcc=;
+	s=k20201202; t=1731510950;
+	bh=Ww3dsg15SARZD9rgznxPTxMUQ2/7NxusnUi4KwK2Ig4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=c9o267NvG9tFWlDgFL4HyI/mvfJPH+bfJfYYMjoKrSjJe9NuK12kkayw+2C161r3b
-	 DsD3aykixbLU85R4rF9iYrjhMmDdcSgj9v4NFLQuKEdnxYqfOuGQ4gbVbwPfMSDYjm
-	 Kp09q57qeJ1XAIw9rKa6FgnzRkaxvSe+5fMXUp+KYHT25goY8MYvOw5FwQwBhNbNtN
-	 THvOc4V5OY9HxCcFIdOTNAKppwo8CCHHR8c2NlBO+A4gVdfnBWuia0inI36XeXhauS
-	 72ZD0c2Ser6JGu/+qXb2aCzYNvKabv/S0CYoMzxmCrEwh9ye8AKbEUV5XkQzXIdEDG
-	 pi6iDavdvHDuA==
-Message-ID: <c184b8e3e62595714fbcee993011951616ee3a1a.camel@kernel.org>
-Subject: Re: [for-6.13 PATCH 02/19] nfs_common: must not hold RCU while
- calling nfsd_file_put_local
+	b=q5xlsYOKHpg200ZsqYuE+o23I/j6JfZodEfU6UKkminlLPvD99TDg4tE7yvO7mYiV
+	 K9V4L2lU+smIJ/8Tl7rvvsk44JR+WlOcsz26AiaWj0o8fQaY+dOFkBX9jFXMi3gwtT
+	 nyiOVWbc7pXrUYpBJ4uA98nd7dFHy9FaS1T0PvXHSCp9oPkTbcHakCF/Ak4rmVl8nn
+	 O15R2+Jjkl8Qzfq9ZHEhKqJgaJ8ltnW51S56UnWHWKQME/7Rzyuvu91eZgzjcNPYbd
+	 568e/BFIWh2cApGHhqZmaTKJLlZtfsMLf/gY6qNYsGraZsdjVGNdp9aKjAkjjzwA+F
+	 9f1NzoilmaNUA==
+Message-ID: <acf8d86338c881b6837d85399bfca406f1e1c0a3.camel@kernel.org>
+Subject: Re: [PATCH v4] nfsd: allow for up to 32 callback session slots
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
-Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
- <trondmy@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>, NeilBrown
- <neilb@suse.de>
-Date: Wed, 13 Nov 2024 09:58:28 -0500
-In-Reply-To: <20241108234002.16392-3-snitzer@kernel.org>
-References: <20241108234002.16392-1-snitzer@kernel.org>
-	 <20241108234002.16392-3-snitzer@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Olga Kornievskaia <okorniev@redhat.com>,
+ linux-nfs@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Wed, 13 Nov 2024 10:15:49 -0500
+In-Reply-To: <173146150119.1734440.9442770423620311274@noble.neil.brown.name>
+References: <>, <a572abe16d1e186dbb2b6ea66a1de8bafb967dcd.camel@kernel.org>
+	 <173146150119.1734440.9442770423620311274@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,197 +136,189 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-11-08 at 18:39 -0500, Mike Snitzer wrote:
-> Move holding the RCU from nfs_to_nfsd_file_put_local to
-> nfs_to_nfsd_net_put.  It is the call to nfs_to->nfsd_serv_put that
-> requires the RCU anyway (the puts for nfsd_file and netns were
-> combined to avoid an extra indirect reference but that
-> micro-optimization isn't possible now).
+On Wed, 2024-11-13 at 12:31 +1100, NeilBrown wrote:
+> On Wed, 13 Nov 2024, Jeff Layton wrote:
+> > On Wed, 2024-11-13 at 11:07 +1100, NeilBrown wrote:
+> > > On Wed, 06 Nov 2024, Jeff Layton wrote:
+> > > > +	spin_lock(&ses->se_lock);
+> > > > +	if (target > ses->se_cb_highest_slot) {
+> > > > +		int i;
+> > > > +
+> > > > +		target =3D min(target, NFSD_BC_SLOT_TABLE_MAX);
+> > > > +
+> > > > +		/* Growing the slot table. Reset any new sequences to 1 */
+> > > > +		for (i =3D ses->se_cb_highest_slot + 1; i <=3D target; ++i)
+> > > > +			ses->se_cb_seq_nr[i] =3D 1;
+> > >=20
+> > > Where is the justification in the RFC for resetting the sequence
+> > > numbers?
+> > >=20
+> >=20
+> > RFC 8881, 18.36:
+> >=20
+> >=20
+> >=20
+> > [...]
+> >=20
+> > Once the session is created, the first SEQUENCE or CB_SEQUENCE received
+> > on a slot MUST have a sequence ID equal to 1; if not, the replier MUST
+> > return NFS4ERR_SEQ_MISORDERED.
 >=20
-> This fixes xfstests generic/013 and it triggering:
+> So initialising them all to 1 when the session is created, as you do in
+> init_session(), is clearly correct.  Reinitialising them after
+> target_highest_slot_id has been reduced and then increased is not
+> justified by the above.
 >=20
-> "Voluntary context switch within RCU read-side critical section!"
->=20
-> [  143.545738] Call Trace:
-> [  143.546206]  <TASK>
-> [  143.546625]  ? show_regs+0x6d/0x80
-> [  143.547267]  ? __warn+0x91/0x140
-> [  143.547951]  ? rcu_note_context_switch+0x496/0x5d0
-> [  143.548856]  ? report_bug+0x193/0x1a0
-> [  143.549557]  ? handle_bug+0x63/0xa0
-> [  143.550214]  ? exc_invalid_op+0x1d/0x80
-> [  143.550938]  ? asm_exc_invalid_op+0x1f/0x30
-> [  143.551736]  ? rcu_note_context_switch+0x496/0x5d0
-> [  143.552634]  ? wakeup_preempt+0x62/0x70
-> [  143.553358]  __schedule+0xaa/0x1380
-> [  143.554025]  ? _raw_spin_unlock_irqrestore+0x12/0x40
-> [  143.554958]  ? try_to_wake_up+0x1fe/0x6b0
-> [  143.555715]  ? wake_up_process+0x19/0x20
-> [  143.556452]  schedule+0x2e/0x120
-> [  143.557066]  schedule_preempt_disabled+0x19/0x30
-> [  143.557933]  rwsem_down_read_slowpath+0x24d/0x4a0
-> [  143.558818]  ? xfs_efi_item_format+0x50/0xc0 [xfs]
-> [  143.559894]  down_read+0x4e/0xb0
-> [  143.560519]  xlog_cil_commit+0x1b2/0xbc0 [xfs]
-> [  143.561460]  ? _raw_spin_unlock+0x12/0x30
-> [  143.562212]  ? xfs_inode_item_precommit+0xc7/0x220 [xfs]
-> [  143.563309]  ? xfs_trans_run_precommits+0x69/0xd0 [xfs]
-> [  143.564394]  __xfs_trans_commit+0xb5/0x330 [xfs]
-> [  143.565367]  xfs_trans_roll+0x48/0xc0 [xfs]
-> [  143.566262]  xfs_defer_trans_roll+0x57/0x100 [xfs]
-> [  143.567278]  xfs_defer_finish_noroll+0x27a/0x490 [xfs]
-> [  143.568342]  xfs_defer_finish+0x1a/0x80 [xfs]
-> [  143.569267]  xfs_bunmapi_range+0x4d/0xb0 [xfs]
-> [  143.570208]  xfs_itruncate_extents_flags+0x13d/0x230 [xfs]
-> [  143.571353]  xfs_free_eofblocks+0x12e/0x190 [xfs]
-> [  143.572359]  xfs_file_release+0x12d/0x140 [xfs]
-> [  143.573324]  __fput+0xe8/0x2d0
-> [  143.573922]  __fput_sync+0x1d/0x30
-> [  143.574574]  nfsd_filp_close+0x33/0x60 [nfsd]
-> [  143.575430]  nfsd_file_free+0x96/0x150 [nfsd]
-> [  143.576274]  nfsd_file_put+0xf7/0x1a0 [nfsd]
-> [  143.577104]  nfsd_file_put_local+0x18/0x30 [nfsd]
-> [  143.578070]  nfs_close_local_fh+0x101/0x110 [nfs_localio]
-> [  143.579079]  __put_nfs_open_context+0xc9/0x180 [nfs]
-> [  143.580031]  nfs_file_clear_open_context+0x4a/0x60 [nfs]
-> [  143.581038]  nfs_file_release+0x3e/0x60 [nfs]
-> [  143.581879]  __fput+0xe8/0x2d0
-> [  143.582464]  __fput_sync+0x1d/0x30
-> [  143.583108]  __x64_sys_close+0x41/0x80
-> [  143.583823]  x64_sys_call+0x189a/0x20d0
-> [  143.584552]  do_syscall_64+0x64/0x170
-> [  143.585240]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [  143.586185] RIP: 0033:0x7f3c5153efd7
->=20
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs_common/nfslocalio.c |  8 +++-----
->  fs/nfsd/filecache.c        | 14 +++++++-------
->  fs/nfsd/filecache.h        |  2 +-
->  include/linux/nfslocalio.h | 18 +++++++++++++++---
->  4 files changed, 26 insertions(+), 16 deletions(-)
->=20
-> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-> index 09404d142d1a..a74ec08f6c96 100644
-> --- a/fs/nfs_common/nfslocalio.c
-> +++ b/fs/nfs_common/nfslocalio.c
-> @@ -155,11 +155,9 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid=
-,
->  	/* We have an implied reference to net thanks to nfsd_serv_try_get */
->  	localio =3D nfs_to->nfsd_open_local_fh(net, uuid->dom, rpc_clnt,
->  					     cred, nfs_fh, fmode);
-> -	if (IS_ERR(localio)) {
-> -		rcu_read_lock();
-> -		nfs_to->nfsd_serv_put(net);
-> -		rcu_read_unlock();
-> -	}
-> +	if (IS_ERR(localio))
-> +		nfs_to_nfsd_net_put(net);
-> +
->  	return localio;
->  }
->  EXPORT_SYMBOL_GPL(nfs_open_local_fh);
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index c16671135d17..9a62b4da89bb 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -391,19 +391,19 @@ nfsd_file_put(struct nfsd_file *nf)
->  }
-> =20
->  /**
-> - * nfsd_file_put_local - put the reference to nfsd_file and local nfsd_s=
-erv
-> - * @nf: nfsd_file of which to put the references
-> + * nfsd_file_put_local - put nfsd_file reference and arm nfsd_serv_put i=
-n caller
-> + * @nf: nfsd_file of which to put the reference
->   *
-> - * First put the reference of the nfsd_file and then put the
-> - * reference to the associated nn->nfsd_serv.
-> + * First save the associated net to return to caller, then put
-> + * the reference of the nfsd_file.
->   */
-> -void
-> -nfsd_file_put_local(struct nfsd_file *nf) __must_hold(rcu)
-> +struct net *
-> +nfsd_file_put_local(struct nfsd_file *nf)
->  {
->  	struct net *net =3D nf->nf_net;
-> =20
->  	nfsd_file_put(nf);
-> -	nfsd_serv_put(net);
-> +	return net;
->  }
-> =20
->  /**
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index cadf3c2689c4..d5db6b34ba30 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -55,7 +55,7 @@ void nfsd_file_cache_shutdown(void);
->  int nfsd_file_cache_start_net(struct net *net);
->  void nfsd_file_cache_shutdown_net(struct net *net);
->  void nfsd_file_put(struct nfsd_file *nf);
-> -void nfsd_file_put_local(struct nfsd_file *nf);
-> +struct net *nfsd_file_put_local(struct nfsd_file *nf);
->  struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
->  struct file *nfsd_file_file(struct nfsd_file *nf);
->  void nfsd_file_close_inode_sync(struct inode *inode);
-> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
-> index 3982fea79919..9202f4b24343 100644
-> --- a/include/linux/nfslocalio.h
-> +++ b/include/linux/nfslocalio.h
-> @@ -55,7 +55,7 @@ struct nfsd_localio_operations {
->  						const struct cred *,
->  						const struct nfs_fh *,
->  						const fmode_t);
-> -	void (*nfsd_file_put_local)(struct nfsd_file *);
-> +	struct net *(*nfsd_file_put_local)(struct nfsd_file *);
->  	struct file *(*nfsd_file_file)(struct nfsd_file *);
->  } ____cacheline_aligned;
-> =20
-> @@ -66,7 +66,7 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *,
->  		   struct rpc_clnt *, const struct cred *,
->  		   const struct nfs_fh *, const fmode_t);
-> =20
-> -static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
-> +static inline void nfs_to_nfsd_net_put(struct net *net)
->  {
->  	/*
->  	 * Once reference to nfsd_serv is dropped, NFSD could be
-> @@ -74,10 +74,22 @@ static inline void nfs_to_nfsd_file_put_local(struct =
-nfsd_file *localio)
->  	 * by always taking RCU.
->  	 */
->  	rcu_read_lock();
-> -	nfs_to->nfsd_file_put_local(localio);
-> +	nfs_to->nfsd_serv_put(net);
->  	rcu_read_unlock();
->  }
-> =20
-> +static inline void nfs_to_nfsd_file_put_local(struct nfsd_file *localio)
-> +{
-> +	/*
-> +	 * Must not hold RCU otherwise nfsd_file_put() can easily trigger:
-> +	 * "Voluntary context switch within RCU read-side critical section!"
-> +	 * by scheduling deep in underlying filesystem (e.g. XFS).
-> +	 */
-> +	struct net *net =3D nfs_to->nfsd_file_put_local(localio);
-> +
-> +	nfs_to_nfsd_net_put(net);
-> +}
-> +
->  #else   /* CONFIG_NFS_LOCALIO */
->  static inline void nfsd_localio_ops_init(void)
->  {
 
-I think this probably needs to go into v6.12 (or very early into v6.13
-and backported). It should also probably get:
+But, once the client and server have forgotten about those slots after
+shrinking the slot table, aren't they effectively new? IOW, once you've
+shrunk the slot table, the slots are effectively "freed". Growing it
+means that you have to allocate new ones. The fact that this patch just
+keeps them around is an implementation detail.
 
-    Fixes: 65f2a5c36635 ("nfs_common: fix race in NFS calls to nfsd_file_pu=
-t_local() and nfsd_serv_put()")
+=20
+> >=20
+> > There is also some verbiage in 20.10.6.1.
+>=20
+> 2.10.6.1 ??
+>=20
+> I cannot find anything in there that justifies discarding seq ids from
+> slots that have been used.  Discarding cached data and allocated memory
+> to cache future data is certainly justified, but there is no clear
+> protocol by which the client and server can agree that it is time to
+> reset the seqid for a particular slot (or range of slots).
+>=20
+> Can you point me to what you can find?
+>
 
-You can also add:
+I guess I'm stuck on this idea that shrinking the slot table
+effectively frees those slots, so if you grow it again later, you have
+to consider those slots to be new.
 
-    Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > > The csr_target_highest_slotid from the client - which is the value pa=
+ssed as
+> > > 'target' is defined as:
+> > >=20
+> > >    the highest slot ID the client would prefer the server use on a
+> > >    future CB_SEQUENCE operation.=20
+> > >=20
+> > > This is not "the highest slot ID for which the client is remembering
+> > > sequence numbers".
+> > >=20
+> > > If we can get rid of this, then I think the need for se_lock evaporat=
+es.
+> > > Allocating a new slow would be
+> > >=20
+> > > do {
+> > >  idx =3D ffs(ses->se_cb_slot_avail) - 1;
+> > > } while (is_valid(idx) && test_and_set_bit(idx, &ses->se_sb_slot_avai=
+l));
+> > > =20
+> > > where is_valid(idX) is idx >=3D 0 && idx <=3D ses->se_sb_highest_slot
+> > >=20
+> >=20
+> > That certainly would be better.
+> >=20
+> > Maybe it's not required to start the seqid for a new slot at 1? If a
+> > new slot can start its sequence counter at an arbitrary value then we
+> > should be able to do this.
+>=20
+> A new slot MUST start with a seqid of 1 when the session is created.  So
+> the first time a slot is used in a session the seqid must be 1.  The
+> second time it must be 2.  etc.  But I don't see how that relates to the
+> code for managing se_sb_slot_avail ....
+>=20
+
+It doesn't. The se_lock was just a simple way to deal with the table
+resizing.
+
+> > > >  	case -NFS4ERR_SEQ_MISORDERED:
+> > > > -		if (session->se_cb_seq_nr !=3D 1) {
+> > > > -			session->se_cb_seq_nr =3D 1;
+> > > > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > >=20
+> > > This is weird ...  why do we reset the seq_nr to 1 when we get
+> > > SEQ_MISORDERED??  Git logs don't shed any light :-(
+> > >=20
+> >=20
+> >=20
+> > The above verbiage from 18.36 might hint that this is the right thing
+> > to do, but it's a little vague.
+>=20
+> Maybe this code is useful for buggy clients that choose to reset the
+> seqid for slots that have been unused for a while...  It looks like the
+> Linux NFS client will reset seqids.  nfs41_set_client_slotid_locked()
+> records a new target bumping ->generation and
+> nfs41_set_server_slotid_locked() may then call nfs4_shrink_slot_table()
+> which discards seqid information.
+>=20
+> I still cannot see how it is justified.=20
+>=20
+
+Fair enough. I'm fine with doing this locklessly if the starting seqid
+values truly don't matter. I fear they do though.
+
+
+> > > > @@ -2132,11 +2135,14 @@ static void init_session(struct svc_rqst *r=
+qstp, struct nfsd4_session *new, stru
+> > > > =20
+> > > >  	INIT_LIST_HEAD(&new->se_conns);
+> > > > =20
+> > > > -	new->se_cb_seq_nr =3D 1;
+> > > > +	atomic_set(&new->se_ref, 0);
+> > > >  	new->se_dead =3D false;
+> > > >  	new->se_cb_prog =3D cses->callback_prog;
+> > > >  	new->se_cb_sec =3D cses->cb_sec;
+> > > > -	atomic_set(&new->se_ref, 0);
+> > > > +
+> > > > +	for (idx =3D 0; idx < NFSD_BC_SLOT_TABLE_MAX; ++idx)
+> > > > +		new->se_cb_seq_nr[idx] =3D 1;
+> > >=20
+> > > That should be "<=3D NFSD_BC_SLOT_TABLE_MAX"
+> >=20
+> > MAX in this case is the maximum slot index, so this is correct for the
+> > code as it stands today. I'm fine with redefining the constant to track
+> > the size of the slot table instead. We could also make the existing
+> > code more clear by just renaming the existing constant to
+> > NFSD_BC_SLOT_INDEX_MAX.
+>=20
+> What do you mean by "this" in "this is correct for.."??  The code as it
+> stands today is incorrect as it initialises the se_cb_seq_nr for slots
+> 0..30 but not for slot 31.
+>=20
+
+My bad, you're correct. I'll plan to fix that up once I'm a little
+clearer on what the next iteration needs to look like.
+
+> >=20
+> > >=20
+> > > I don't think *_MAX is a good choice of name.  It is the maximum numb=
+er
+> > > of slots (no) or the maximum slot number (yes).
+> > > I think *_SIZE would be a better name - the size of the table that we
+> > > allocate. 32.
+> > > Looking at where the const is used in current nfsd-next:
+> > >=20
+> > > 		target =3D min(target, NFSD_BC_SLOT_TABLE_SIZE - 1
+> > >=20
+> > > 	new->se_cb_highest_slot =3D min(battrs->maxreqs,
+> > > 				      NFSD_BC_SLOT_TABLE_SIZE) - 1;
+> > >=20
+> > > 	for (idx =3D 0; idx < NFSD_BC_SLOT_TABLE_SIZE; ++idx)
+> > >=20
+> > > #define NFSD_BC_SLOT_TABLE_SIZE	(sizeof(u32) * 8)
+> > >=20
+> > > 	u32			se_cb_seq_nr[NFSD_BC_SLOT_TABLE_SIZE];
+> > >=20
+> > > which is a slight reduction in the number of "+/-1" adjustments.
+> > >=20
+> > >=20
+>=20
+> Thanks,
+> NeilBrown
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
