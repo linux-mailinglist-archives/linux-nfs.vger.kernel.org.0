@@ -1,131 +1,201 @@
-Return-Path: <linux-nfs+bounces-7969-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7970-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A82E9C820B
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 05:39:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A38069C833C
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 07:38:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CF7B284D1B
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 04:39:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64109283915
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 06:38:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE171632FA;
-	Thu, 14 Nov 2024 04:39:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00CB1EB9ED;
+	Thu, 14 Nov 2024 06:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEttJNDx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C9646BF;
-	Thu, 14 Nov 2024 04:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2821EBA13;
+	Thu, 14 Nov 2024 06:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731559162; cv=none; b=Ofazm9PSAtFEnr/DgtZBaeT4BG1J30PPtfcvciz9HTZuuPWu+TvoRXlSP5X7LO71sJKHUckXOL6S1k63V/Ln1A8DaUwDHI5AMNSz6dZvtD0z94Npf97bSTjH57+M8n1sxhFUVdLdilUUKvhyQ3G8sywBBzpg2TU4B/IncYDexyI=
+	t=1731566253; cv=none; b=BVRtdzLouscKmYNKyRty2ZEkLmshh3JIa/MoFCzy/+vFnxAt8cXPEvf8zNtfVUlYxTLsFl7rLCyWQrb/VRC4tL6s24tg1lkwoQiTi2dXFZJHymhygk3j2myW0wwT3AvA/Fxvl4oznhEkbNlQtDojNUgaFxXouXcNPcc+Pn1PWgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731559162; c=relaxed/simple;
-	bh=a6ihnAJMsmQA4bJwi3YIzR7akdrJSZ9vvE9hB/0OA2Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SWm4TGsm6Qoa1F0mtzOTwhUSTrFamqOLGGRT2o28Thqb7xAk3UabLJbDMJIJqWwEmYy+hh4PcKGVAowiayv0KLaxZW6GFthXtqTpCy0me6f9/8e421GJ7poQeMXQ/2N49Cg35I3ues3DExHAYggS5vKJyTBuYF9wS/CbyhjzPu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XpnSG4PwQz1T4k4;
-	Thu, 14 Nov 2024 12:37:18 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 29D88140259;
-	Thu, 14 Nov 2024 12:39:10 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 14 Nov
- 2024 12:39:09 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>
-CC: <trond.myklebust@hammerspace.com>, <jlayton@kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfs: ignore SB_RDONLY when mounting nfs
-Date: Thu, 14 Nov 2024 12:53:03 +0800
-Message-ID: <20241114045303.1656426-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1731566253; c=relaxed/simple;
+	bh=t0fAVzOYyF5qw89A/dIpuz1Zzf7e7o3ntxpTY6PixW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C3whceerDfb4iXYY2ZLkaHutz3tl8JZhsz1K1rhUZRvM0Dq/sI4Ws+mZUMzWr8zXPpjWsoa00FGG3Gdr4ly4r8quzYLwwiAwFPHJCPEvUlPHoM8M4WbndMmxu6jNWZuyd7Yjf98VTN4OjtiewBlCnJb42vDCQEvlrr2j6bc1nP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEttJNDx; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-84fc21ac668so110540241.1;
+        Wed, 13 Nov 2024 22:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731566251; x=1732171051; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=txC1n0omKiC4TZQQxbVecT/EBICb8M4xgYoqoUnU1Mg=;
+        b=LEttJNDx/G/gPaoQGuMd/YktT0ZvOVfClixcFLjHNVYZTvK3lZTJ04eLBEFlxjAIg+
+         /5Qe+sx41YIKmAJOQjuTcemjQVNMZ2Hqs5qhtoFzI/sjSFRXcIy3vV7HiIRt+Ly5sxBt
+         vUzR2rBChZR/f4GIIXvCY0MYsbBUeg16pDIVFcTlnOcIxIGN/RMsQwyNeRfA3ODLjvn+
+         lr5YHqBixewoVJPEDnBNrNIE8aDOGr3QpfrL8CXwas8PNuASSfT5omsdtNkamfeaKh+/
+         uMB0hI0o1IYmI9CzSRTJ62rYs+e7zyT1Faf81NKyA72xNdYQguT9nWDBmzmgtXF+m7Sr
+         RS8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731566251; x=1732171051;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=txC1n0omKiC4TZQQxbVecT/EBICb8M4xgYoqoUnU1Mg=;
+        b=TKWgHskmg0LBtdBz8KVidEWsDl6VvgoswqTaZ5Xq9WC4yvyn9BWZzRPeiOVpO87LTu
+         U3pnzjovQjq29GgMKRowTLbQYTmnphUz17+oeKA8Tf7qh/erOSE6tIS8UK4kNCgjz/PG
+         wCrRIGQHsoxtVzqnjvhrVwn0+DTXE+uPjqOrmh4pE4qlinJoif4aasH6qkTyCRm4nXvY
+         +/3AbD089+fXIScAxscADynQznzsGDJb6prLqGbh/wk+cbC1UaWe3FsW+VpYF3Lp57mi
+         6qmTeAfdCzHeWprN6HHuYLTtMjQcCOIgcUN5pg2kkyOht6EyEv9gc99YstZHASv6TVTQ
+         /5ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz+yOc2opKOebZluGtACBPIjotg3AWtqbObZunyEqOyXCDZ5G0rWVRKQKWUO5pQaWbQubUnBCnHlMQvVZc@vger.kernel.org, AJvYcCVQifhG2GXBCf4pVFUCNnUHyqA7vYNy2huZ95u1C87o1XBd4VByE+DWLzBg1Z3Ck+zL1baGL1aHGDR2@vger.kernel.org, AJvYcCWwGIWCm0hxzKya/HNTJC+rmFmC1C+Du2XT0fmbHl3PxLvDEXoqsEYdF+CSDgd7HwgDxEIYHbXET6f77BlD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE02utyn6uv7+nqwl1q87hOlcBYC0DHOAUTtsT1l4b56Go5lyx
+	R7wVgVLPaVVLEmT/5ro7kanedfnzeZDJ6B4tlKDniG3aHZhBNkO4VNm57dlN2hvQtFuYbJWMQ3N
+	UN0Rs6x7EXjZJ0tJAbpsTQjSSOaU=
+X-Google-Smtp-Source: AGHT+IEkeFjbjONhEwNPEZyUsptP7QvNoOjs9BpAGNrb8Y/Eyr40baQALWAfEmTfjMIUTgrNqTUirj1PGigU3Ik4Y7U=
+X-Received: by 2002:a05:6102:38d0:b0:498:f38a:2c80 with SMTP id
+ ada2fe7eead31-4aae13cf756mr23396170137.10.1731566250589; Wed, 13 Nov 2024
+ 22:37:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+References: <20241113-pidfs_fh-v2-0-9a4d28155a37@e43.eu> <20241113-pidfs_fh-v2-2-9a4d28155a37@e43.eu>
+In-Reply-To: <20241113-pidfs_fh-v2-2-9a4d28155a37@e43.eu>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 14 Nov 2024 07:37:19 +0100
+Message-ID: <CAOQ4uxgoT34WXFYncvPCZHwd2y3viaXjR=j08jM9c3x20Ar8Tg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] exportfs: allow fs to disable CAP_DAC_READ_SEARCH check
+To: Erin Shepherd <erin.shepherd@e43.eu>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When exporting only one file system with fsid=0 on the server side, the
-client alternately uses the ro/rw mount options to perform the mount
-operation, and a new vfsmount is generated each time.
+On Wed, Nov 13, 2024 at 8:11=E2=80=AFPM Erin Shepherd <erin.shepherd@e43.eu=
+> wrote:
+>
+> For pidfs, there is no reason to restrict file handle decoding by
+> CAP_DAC_READ_SEARCH. Introduce an export_ops flag that can indicate
+> this
+>
+> Signed-off-by: Erin Shepherd <erin.shepherd@e43.eu>
+> ---
+>  fs/fhandle.c             | 36 +++++++++++++++++++++---------------
+>  include/linux/exportfs.h |  3 +++
+>  2 files changed, 24 insertions(+), 15 deletions(-)
+>
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 82df28d45cd70a7df525f50bbb398d646110cd99..056116e58f43983bc7bb86da1=
+70fb554c7a2fac7 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -235,26 +235,32 @@ static int do_handle_to_path(struct file_handle *ha=
+ndle, struct path *path,
+>         return 0;
+>  }
+>
+> -/*
+> - * Allow relaxed permissions of file handles if the caller has the
+> - * ability to mount the filesystem or create a bind-mount of the
+> - * provided @mountdirfd.
+> - *
+> - * In both cases the caller may be able to get an unobstructed way to
+> - * the encoded file handle. If the caller is only able to create a
+> - * bind-mount we need to verify that there are no locked mounts on top
+> - * of it that could prevent us from getting to the encoded file.
+> - *
+> - * In principle, locked mounts can prevent the caller from mounting the
+> - * filesystem but that only applies to procfs and sysfs neither of which
+> - * support decoding file handles.
+> - */
+>  static inline bool may_decode_fh(struct handle_to_path_ctx *ctx,
+>                                  unsigned int o_flags)
+>  {
+>         struct path *root =3D &ctx->root;
+> +       struct export_operations *nop =3D root->mnt->mnt_sb->s_export_op;
+> +
+> +       if (nop && nop->flags & EXPORT_OP_UNRESTRICTED_OPEN)
+> +               return true;
+> +
+> +       if (capable(CAP_DAC_READ_SEARCH))
+> +               return true;
+>
+>         /*
+> +        * Allow relaxed permissions of file handles if the caller has th=
+e
+> +        * ability to mount the filesystem or create a bind-mount of the
+> +        * provided @mountdirfd.
+> +        *
+> +        * In both cases the caller may be able to get an unobstructed wa=
+y to
+> +        * the encoded file handle. If the caller is only able to create =
+a
+> +        * bind-mount we need to verify that there are no locked mounts o=
+n top
+> +        * of it that could prevent us from getting to the encoded file.
+> +        *
+> +        * In principle, locked mounts can prevent the caller from mounti=
+ng the
+> +        * filesystem but that only applies to procfs and sysfs neither o=
+f which
+> +        * support decoding file handles.
+> +        *
+>          * Restrict to O_DIRECTORY to provide a deterministic API that av=
+oids a
+>          * confusing api in the face of disconnected non-dir dentries.
+>          *
+> @@ -293,7 +299,7 @@ static int handle_to_path(int mountdirfd, struct file=
+_handle __user *ufh,
+>         if (retval)
+>                 goto out_err;
+>
+> -       if (!capable(CAP_DAC_READ_SEARCH) && !may_decode_fh(&ctx, o_flags=
+)) {
+> +       if (!may_decode_fh(&ctx, o_flags)) {
+>                 retval =3D -EPERM;
+>                 goto out_path;
+>         }
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 893a1d21dc1c4abc7e52325d7a4cf0adb407f039..459508b53e77ed0597cee217f=
+fe3d82cc7cc11a4 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -247,6 +247,9 @@ struct export_operations {
+>                                                 */
+>  #define EXPORT_OP_FLUSH_ON_CLOSE       (0x20) /* fs flushes file data on=
+ close */
+>  #define EXPORT_OP_ASYNC_LOCK           (0x40) /* fs can do async lock re=
+quest */
+> +#define EXPORT_OP_UNRESTRICTED_OPEN    (0x80) /* FS allows open_by_handl=
+e_at
+> +                                                 without CAP_DAC_READ_SE=
+ARCH
+> +                                               */
 
-It can be reproduced as follows:
-[root@localhost ~]# mount /dev/sda /mnt2
-[root@localhost ~]# echo "/mnt2 *(rw,no_root_squash,fsid=0)" >/etc/exports
-[root@localhost ~]# systemctl restart nfs-server
-[root@localhost ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
-[root@localhost ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
-[root@localhost ~]# mount -t nfs -o ro,vers=4 127.0.0.1:/ /mnt/sdaa
-[root@localhost ~]# mount -t nfs -o rw,vers=4 127.0.0.1:/ /mnt/sdaa
-[root@localhost ~]# mount | grep nfs4
-127.0.0.1:/ on /mnt/sdaa type nfs4 (ro,relatime,vers=4.2,rsize=1048576,...
-127.0.0.1:/ on /mnt/sdaa type nfs4 (rw,relatime,vers=4.2,rsize=1048576,...
-127.0.0.1:/ on /mnt/sdaa type nfs4 (ro,relatime,vers=4.2,rsize=1048576,...
-127.0.0.1:/ on /mnt/sdaa type nfs4 (rw,relatime,vers=4.2,rsize=1048576,...
-[root@localhost ~]#
+Don't love the name, but I wonder, isn't SB_NOUSER already a good
+enough indication that CAP_DAC_READ_SEARCH is irrelevant?
 
-We expected that after mounting with the ro option, using the rw option to
-mount again would return EBUSY, but the actual situation was not the case.
+Essentially, mnt_fd is the user's proof that they can access the mount
+and CAP_DAC_READ_SEARCH is the legacy "proof" that the user can
+reach from mount the inode by path lookup.
 
-As shown above, when mounting for the first time, a superblock with the ro
-flag will be generated, and at the same time, in do_new_mount_fc -->
-do_add_mount, it detects that the superblock corresponding to the current
-target directory is inconsistent with the currently generated one
-(path->mnt->mnt_sb != newmnt->mnt.mnt_sb), and a new vfsmount will be
-generated.
+Which reminds me, what is the mnt_fd expected for opening a pidfd
+file by handle?
 
-When mounting with the rw option for the second time, since no matching
-superblock can be found in the fs_supers list, a new superblock with the
-rw flag will be generated again. The superblock in use (ro) is different
-from the newly generated superblock (rw), and a new vfsmount will be
-generated again.
-
-When mounting with the ro option for the third time, the superblock (ro)
-is found in fs_supers, the superblock in use (rw) is different from the
-found superblock (ro), and a new vfsmount will be generated again.
-
-We can switch between ro/rw through remount, and only one superblock needs
-to be generated, thus avoiding the problem of repeated generation of
-vfsmount caused by switching superblocks.
-
-Furthermore, This can also resolve the issue described in the link.
-
-Fixes: 275a5d24bf56 ("NFS: Error when mounting the same filesystem with different options")
-Link: https://lore.kernel.org/all/20240604112636.236517-3-lilingfeng@huaweicloud.com/
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfs/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 430733e3eff2..6bcc4b0e00ab 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -12,7 +12,7 @@
- #include <linux/nfslocalio.h>
- #include <linux/wait_bit.h>
- 
--#define NFS_SB_MASK (SB_RDONLY|SB_NOSUID|SB_NODEV|SB_NOEXEC|SB_SYNCHRONOUS)
-+#define NFS_SB_MASK (SB_NOSUID|SB_NODEV|SB_NOEXEC|SB_SYNCHRONOUS)
- 
- extern const struct export_operations nfs_export_ops;
- 
--- 
-2.31.1
-
+Thanks,
+Amir.
 
