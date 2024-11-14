@@ -1,82 +1,82 @@
-Return-Path: <linux-nfs+bounces-7970-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7971-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A38069C833C
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 07:38:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 137629C839E
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 08:03:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64109283915
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 06:38:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44836B27D05
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Nov 2024 07:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A00CB1EB9ED;
-	Thu, 14 Nov 2024 06:37:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E7191EBA0F;
+	Thu, 14 Nov 2024 07:02:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEttJNDx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esufXvow"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2821EBA13;
-	Thu, 14 Nov 2024 06:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58589163A97;
+	Thu, 14 Nov 2024 07:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731566253; cv=none; b=BVRtdzLouscKmYNKyRty2ZEkLmshh3JIa/MoFCzy/+vFnxAt8cXPEvf8zNtfVUlYxTLsFl7rLCyWQrb/VRC4tL6s24tg1lkwoQiTi2dXFZJHymhygk3j2myW0wwT3AvA/Fxvl4oznhEkbNlQtDojNUgaFxXouXcNPcc+Pn1PWgw=
+	t=1731567760; cv=none; b=QnKGCXPmXvif5CX4su89RRH8BV45lGb5ZXAaj3nvS8n4M6O1+gb2Dn+xPOz56ppPHOTy+MUV465Xadf7hcQkxAA9zSLfuyctHaeSPMsu0roTqhSKaGYutf01x23Lo1ImggTvJFqM4ZfA3E3VCVVDgRp5Xl+MuDhMz3tI7yChLdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731566253; c=relaxed/simple;
-	bh=t0fAVzOYyF5qw89A/dIpuz1Zzf7e7o3ntxpTY6PixW0=;
+	s=arc-20240116; t=1731567760; c=relaxed/simple;
+	bh=5k87BJrsuqGfoYky9N4Z8TwX+i8nHpnJX4NyHG1Ze2Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C3whceerDfb4iXYY2ZLkaHutz3tl8JZhsz1K1rhUZRvM0Dq/sI4Ws+mZUMzWr8zXPpjWsoa00FGG3Gdr4ly4r8quzYLwwiAwFPHJCPEvUlPHoM8M4WbndMmxu6jNWZuyd7Yjf98VTN4OjtiewBlCnJb42vDCQEvlrr2j6bc1nP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEttJNDx; arc=none smtp.client-ip=209.85.222.54
+	 To:Cc:Content-Type; b=FgX2/JfSs+i26NGBoB12fgyNqTGfZgHDa59DmOP0t/efdaNgHUUjc8NNG4NVJeqHaieiSYG/LZpu5fdk5Bcbc9EDvL3Oy+Q829VbpopOfSDN9h7WRudOVPVxZU1JIdl9ApUv0E36ohF+TJ+cjEAC2vn9/YF5CpIZwG7vUYt7y2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esufXvow; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-84fc21ac668so110540241.1;
-        Wed, 13 Nov 2024 22:37:31 -0800 (PST)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6d3f3925f57so617786d6.2;
+        Wed, 13 Nov 2024 23:02:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731566251; x=1732171051; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731567758; x=1732172558; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=txC1n0omKiC4TZQQxbVecT/EBICb8M4xgYoqoUnU1Mg=;
-        b=LEttJNDx/G/gPaoQGuMd/YktT0ZvOVfClixcFLjHNVYZTvK3lZTJ04eLBEFlxjAIg+
-         /5Qe+sx41YIKmAJOQjuTcemjQVNMZ2Hqs5qhtoFzI/sjSFRXcIy3vV7HiIRt+Ly5sxBt
-         vUzR2rBChZR/f4GIIXvCY0MYsbBUeg16pDIVFcTlnOcIxIGN/RMsQwyNeRfA3ODLjvn+
-         lr5YHqBixewoVJPEDnBNrNIE8aDOGr3QpfrL8CXwas8PNuASSfT5omsdtNkamfeaKh+/
-         uMB0hI0o1IYmI9CzSRTJ62rYs+e7zyT1Faf81NKyA72xNdYQguT9nWDBmzmgtXF+m7Sr
-         RS8Q==
+        bh=LaQLOyvMlaZPfOmJIeYskTzRF5rdE6NW7wBfpWJVfco=;
+        b=esufXvowouO8CYVEQS7l+6Tjnsf8lZ6iNbNNAkVyjcuQQtcOsNz2qK7oEwEkdNTAM3
+         YCj8j1W+30Lwx8SXDFHN3FNC3EgKogiGcEv5b7Iycdc1uRA8tsaA/nTxISidUqt37lDJ
+         xGY7N+WshRLJkrkrNTEdggGnaSR1aS5S4xONzXWCZuBp3+eA94dNPa+Vo7gL1JRdSEBR
+         T2BfY1SQKYnYMH5f3vo9hgTw/w5V/xngVAzovSu7xpMw8f1yVnO3IuBZbi8fTHcxZHQ6
+         O4skLlvlphj5zcCcoDLvmJ06vAqqCMksjrbI/hNUtYaq2l6ZJL0Jv+fV8DLBCS0rOEKI
+         btBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731566251; x=1732171051;
+        d=1e100.net; s=20230601; t=1731567758; x=1732172558;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=txC1n0omKiC4TZQQxbVecT/EBICb8M4xgYoqoUnU1Mg=;
-        b=TKWgHskmg0LBtdBz8KVidEWsDl6VvgoswqTaZ5Xq9WC4yvyn9BWZzRPeiOVpO87LTu
-         U3pnzjovQjq29GgMKRowTLbQYTmnphUz17+oeKA8Tf7qh/erOSE6tIS8UK4kNCgjz/PG
-         wCrRIGQHsoxtVzqnjvhrVwn0+DTXE+uPjqOrmh4pE4qlinJoif4aasH6qkTyCRm4nXvY
-         +/3AbD089+fXIScAxscADynQznzsGDJb6prLqGbh/wk+cbC1UaWe3FsW+VpYF3Lp57mi
-         6qmTeAfdCzHeWprN6HHuYLTtMjQcCOIgcUN5pg2kkyOht6EyEv9gc99YstZHASv6TVTQ
-         /5ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz+yOc2opKOebZluGtACBPIjotg3AWtqbObZunyEqOyXCDZ5G0rWVRKQKWUO5pQaWbQubUnBCnHlMQvVZc@vger.kernel.org, AJvYcCVQifhG2GXBCf4pVFUCNnUHyqA7vYNy2huZ95u1C87o1XBd4VByE+DWLzBg1Z3Ck+zL1baGL1aHGDR2@vger.kernel.org, AJvYcCWwGIWCm0hxzKya/HNTJC+rmFmC1C+Du2XT0fmbHl3PxLvDEXoqsEYdF+CSDgd7HwgDxEIYHbXET6f77BlD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE02utyn6uv7+nqwl1q87hOlcBYC0DHOAUTtsT1l4b56Go5lyx
-	R7wVgVLPaVVLEmT/5ro7kanedfnzeZDJ6B4tlKDniG3aHZhBNkO4VNm57dlN2hvQtFuYbJWMQ3N
-	UN0Rs6x7EXjZJ0tJAbpsTQjSSOaU=
-X-Google-Smtp-Source: AGHT+IEkeFjbjONhEwNPEZyUsptP7QvNoOjs9BpAGNrb8Y/Eyr40baQALWAfEmTfjMIUTgrNqTUirj1PGigU3Ik4Y7U=
-X-Received: by 2002:a05:6102:38d0:b0:498:f38a:2c80 with SMTP id
- ada2fe7eead31-4aae13cf756mr23396170137.10.1731566250589; Wed, 13 Nov 2024
- 22:37:30 -0800 (PST)
+        bh=LaQLOyvMlaZPfOmJIeYskTzRF5rdE6NW7wBfpWJVfco=;
+        b=Te9guG0gO6w822PDx+Kcl61UgQZMSZdR+l/UTMh9nCDRhQquZj8hLL6gPw5DQXCHIj
+         tGG9FBiyMI6djwKHJB+K9+r928ayilMxRJpeM3p/iCCka9qyuRIV+bVeSIXC40u0qpiU
+         n5b7EGSpYB/UThFWGbzXujfuCRyHuJfz2BpisMdf6/bdF14mPVfkMgMFeiJTO47eMfu6
+         g/IlKngUH91A3k6huyaBPsZKRdB5PM8YAVn5eHCbEPzziwqwdSnZ0cX5TugJIHblCd69
+         DN7JN3FwkFEKO0Sma7TqhPncthg7TkV55uwICv2idZn24AAZ6xTy6/vce9aDvL0mZuTa
+         8zRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWf3tCqBNFT40kfgHjt6cTCPvl8TOzQUoIbgoTZnU4ft2yJeKcqlLdgFsIB6tpHP/pDZbn3992Sp/s1@vger.kernel.org, AJvYcCXCmNOwFxpNritNRj9E6hjvjgtRn9pMAJSkadZ4YhwYAb6cQ7HZwpbkCO1KzekyJB8rXBfTujDQajkCe2KV@vger.kernel.org, AJvYcCXebGOoFXdL8H84PmcPYIxgCtQXWsro9aKjfDH2e7IBQMKYhpNFObhwi8Oi8gOAQGEHrgJpIM+jhMSUCS6q@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6CcE0mN1TF3F7qzgeMJD9nrZtfCvql/aevIrlBYnOaxWtQc6J
+	QPfpLKNDPgErbjeJHjQFuZVQXbxS8PUI0TFYIi9u2JtTYMk8zycyL03mfFiSAZBKfhZuPAcwtkZ
+	E5hlRe939kcY4Hi3mXFZ3P3iYkLKckUav
+X-Google-Smtp-Source: AGHT+IEqWEblVL7jQPRJEvw5AOInXXrSLmcl0RUUq+mtq19C5T5Ege1Jc7JnaJpPfxvnq3Ms+c4X0B9uX1Qtg/t1/dI=
+X-Received: by 2002:a05:6214:3d89:b0:6cb:c9d0:df32 with SMTP id
+ 6a1803df08f44-6d39e17c2b6mr327856426d6.11.1731567758276; Wed, 13 Nov 2024
+ 23:02:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241113-pidfs_fh-v2-0-9a4d28155a37@e43.eu> <20241113-pidfs_fh-v2-2-9a4d28155a37@e43.eu>
-In-Reply-To: <20241113-pidfs_fh-v2-2-9a4d28155a37@e43.eu>
+References: <2aa94713-c12a-4344-a45c-a01f26e16a0d@e43.eu> <20241113-pidfs_fh-v2-0-9a4d28155a37@e43.eu>
+In-Reply-To: <20241113-pidfs_fh-v2-0-9a4d28155a37@e43.eu>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 14 Nov 2024 07:37:19 +0100
-Message-ID: <CAOQ4uxgoT34WXFYncvPCZHwd2y3viaXjR=j08jM9c3x20Ar8Tg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] exportfs: allow fs to disable CAP_DAC_READ_SEARCH check
+Date: Thu, 14 Nov 2024 08:02:27 +0100
+Message-ID: <CAOQ4uxg4Gu2CWM0O2bs93h_9jS+nm6x=P2yu4fZSL_ahaSqHSQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] pidfs: implement file handle support
 To: Erin Shepherd <erin.shepherd@e43.eu>
 Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
 	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
@@ -85,116 +85,52 @@ Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 13, 2024 at 8:11=E2=80=AFPM Erin Shepherd <erin.shepherd@e43.eu=
+On Wed, Nov 13, 2024 at 7:01=E2=80=AFPM Erin Shepherd <erin.shepherd@e43.eu=
 > wrote:
 >
-> For pidfs, there is no reason to restrict file handle decoding by
-> CAP_DAC_READ_SEARCH. Introduce an export_ops flag that can indicate
-> this
+> Since the introduction of pidfs, we have had 64-bit process identifiers
+> that will not be reused for the entire uptime of the system. This greatly
+> facilitates process tracking in userspace.
+>
+> There are two limitations at present:
+>
+>  * These identifiers are currently only exposed to processes on 64-bit
+>    systems. On 32-bit systems, inode space is also limited to 32 bits and
+>    therefore is subject to the same reuse issues.
+>  * There is no way to go from one of these unique identifiers to a pid or
+>    pidfd.
+>
+> This patch implements fh_export and fh_to_dentry which enables userspace =
+to
+> convert PIDs to and from PID file handles. A process can convert a pidfd =
+into
+> a file handle using name_to_handle_at, store it (in memory, on disk, or
+> elsewhere) and then convert it back into a pidfd suing open_by_handle_at.
+>
+> To support us going from a file handle to a pidfd, we have to store a pid
+> inside the file handle. To ensure file handles are invariant and can move
+> between pid namespaces, we stash a pid from the initial namespace inside
+> the file handle.
+>
+>   (There has been some discussion as to whether or not it is OK to includ=
+e
+>   the PID in the initial pid namespace, but so far there hasn't been any
+>   conclusive reason given as to why this would be a bad idea)
+
+IIUC, this is already exposed as st_ino on a 64bit arch?
+If that is the case, then there is certainly no new info leak in this patch=
+.
+
 >
 > Signed-off-by: Erin Shepherd <erin.shepherd@e43.eu>
 > ---
->  fs/fhandle.c             | 36 +++++++++++++++++++++---------------
->  include/linux/exportfs.h |  3 +++
->  2 files changed, 24 insertions(+), 15 deletions(-)
->
-> diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 82df28d45cd70a7df525f50bbb398d646110cd99..056116e58f43983bc7bb86da1=
-70fb554c7a2fac7 100644
-> --- a/fs/fhandle.c
-> +++ b/fs/fhandle.c
-> @@ -235,26 +235,32 @@ static int do_handle_to_path(struct file_handle *ha=
-ndle, struct path *path,
->         return 0;
->  }
->
-> -/*
-> - * Allow relaxed permissions of file handles if the caller has the
-> - * ability to mount the filesystem or create a bind-mount of the
-> - * provided @mountdirfd.
-> - *
-> - * In both cases the caller may be able to get an unobstructed way to
-> - * the encoded file handle. If the caller is only able to create a
-> - * bind-mount we need to verify that there are no locked mounts on top
-> - * of it that could prevent us from getting to the encoded file.
-> - *
-> - * In principle, locked mounts can prevent the caller from mounting the
-> - * filesystem but that only applies to procfs and sysfs neither of which
-> - * support decoding file handles.
-> - */
->  static inline bool may_decode_fh(struct handle_to_path_ctx *ctx,
->                                  unsigned int o_flags)
->  {
->         struct path *root =3D &ctx->root;
-> +       struct export_operations *nop =3D root->mnt->mnt_sb->s_export_op;
-> +
-> +       if (nop && nop->flags & EXPORT_OP_UNRESTRICTED_OPEN)
-> +               return true;
-> +
-> +       if (capable(CAP_DAC_READ_SEARCH))
-> +               return true;
->
->         /*
-> +        * Allow relaxed permissions of file handles if the caller has th=
-e
-> +        * ability to mount the filesystem or create a bind-mount of the
-> +        * provided @mountdirfd.
-> +        *
-> +        * In both cases the caller may be able to get an unobstructed wa=
-y to
-> +        * the encoded file handle. If the caller is only able to create =
-a
-> +        * bind-mount we need to verify that there are no locked mounts o=
-n top
-> +        * of it that could prevent us from getting to the encoded file.
-> +        *
-> +        * In principle, locked mounts can prevent the caller from mounti=
-ng the
-> +        * filesystem but that only applies to procfs and sysfs neither o=
-f which
-> +        * support decoding file handles.
-> +        *
->          * Restrict to O_DIRECTORY to provide a deterministic API that av=
-oids a
->          * confusing api in the face of disconnected non-dir dentries.
->          *
-> @@ -293,7 +299,7 @@ static int handle_to_path(int mountdirfd, struct file=
-_handle __user *ufh,
->         if (retval)
->                 goto out_err;
->
-> -       if (!capable(CAP_DAC_READ_SEARCH) && !may_decode_fh(&ctx, o_flags=
-)) {
-> +       if (!may_decode_fh(&ctx, o_flags)) {
->                 retval =3D -EPERM;
->                 goto out_path;
->         }
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 893a1d21dc1c4abc7e52325d7a4cf0adb407f039..459508b53e77ed0597cee217f=
-fe3d82cc7cc11a4 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -247,6 +247,9 @@ struct export_operations {
->                                                 */
->  #define EXPORT_OP_FLUSH_ON_CLOSE       (0x20) /* fs flushes file data on=
- close */
->  #define EXPORT_OP_ASYNC_LOCK           (0x40) /* fs can do async lock re=
-quest */
-> +#define EXPORT_OP_UNRESTRICTED_OPEN    (0x80) /* FS allows open_by_handl=
-e_at
-> +                                                 without CAP_DAC_READ_SE=
-ARCH
-> +                                               */
+> Changes in v2:
+> - Permit filesystems to opt out of CAP_DAC_READ_SEARCH
+> - Inline find_pid_ns/get_pid logic; remove unnecessary put_pid
+> - Squash fh_export & fh_to_dentry into one commit
 
-Don't love the name, but I wonder, isn't SB_NOUSER already a good
-enough indication that CAP_DAC_READ_SEARCH is irrelevant?
-
-Essentially, mnt_fd is the user's proof that they can access the mount
-and CAP_DAC_READ_SEARCH is the legacy "proof" that the user can
-reach from mount the inode by path lookup.
-
-Which reminds me, what is the mnt_fd expected for opening a pidfd
-file by handle?
+Not sure why you did that.
+It was pretty nice as separate commits if you ask me. Whatever.
 
 Thanks,
 Amir.
