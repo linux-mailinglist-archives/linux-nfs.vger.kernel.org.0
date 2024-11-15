@@ -1,91 +1,107 @@
-Return-Path: <linux-nfs+bounces-7999-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8000-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F549CDB73
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 10:21:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F7F19CDBF1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 10:55:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B8FA2832B9
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 09:21:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C075B223D1
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 09:55:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BAC18DF93;
-	Fri, 15 Nov 2024 09:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57741192D67;
+	Fri, 15 Nov 2024 09:55:37 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mx01-out.cloud.vadesecure.com (mx01-out.cloud.vadesecure.com [217.74.103.251])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0990E18785D;
-	Fri, 15 Nov 2024 09:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE9D18F2DB
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 09:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.74.103.251
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731662504; cv=none; b=fQBVw6toINyE0fq3kL1JQ+Ks2CZpyOdMfsGH0uM7inSSkjQiohxIBg1W/rON2IADR6CKgiE8IwYowSgyS16TN17tkJkgPwodumOXsJnLvI9jxgManwCaiyhz+HazBQxHUOR7iPpDXCm2ZPD6oX7Gu9BTXupS4yvtWHQMV3oGnLw=
+	t=1731664537; cv=none; b=b0bdl7PNP/2orZwMqjKRPFd4AVkFw7tVzIJYgyE5c32hfljEi4DISyVlRgUCikNa72awyJzhX7crXj1TTsQM+9MeNw7ZAH0l7Md9UP+qh22ce4Jf6jPOCaMEHAoyS0mpRsZXwCv6+NcDMqZOQmcF1/F5zG/o0eQHDLBW4E4e9l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731662504; c=relaxed/simple;
-	bh=4mL2KcxRoDYVRV/FTNeMeIO34Rqn6F5VHmFisLPKuY4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r4edjcHRBon5dEtQfEwPR7GVRWCeHHZhCmpN/l4NImKiuFtaDNw2//MN96aow+ils7R+Wzyv6DlbRfhh5puYUpWn0VI4ZaJVe0G9aXs1v9ZPgP4cH0Bs2GUfep4+LSfpZThfPJLFESV217al3mk+6uj/Oz7xVU0t+QqiES/Fl/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XqWfg3LJYz926T;
-	Fri, 15 Nov 2024 17:18:51 +0800 (CST)
-Received: from kwepemg200003.china.huawei.com (unknown [7.202.181.30])
-	by mail.maildlp.com (Postfix) with ESMTPS id 79087180102;
-	Fri, 15 Nov 2024 17:21:32 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200003.china.huawei.com
- (7.202.181.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 15 Nov
- 2024 17:21:31 +0800
-From: Liu Jian <liujian56@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>, <chuck.lever@oracle.com>,
-	<jlayton@kernel.org>, <neilb@suse.de>, <okorniev@redhat.com>,
-	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>
-CC: <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<liujian56@huawei.com>
-Subject: [PATCH] sunrpc: clear XPRT_SOCK_UPD_TIMEOUT when reset transport
-Date: Fri, 15 Nov 2024 17:38:04 +0800
-Message-ID: <20241115093804.1634328-1-liujian56@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1731664537; c=relaxed/simple;
+	bh=2BCehiVWkj39nsARlSLWzfwQ8ZFEYIFjJdsw2axTGgE=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=evDqqEBTUKjBBfmU+fim7/6kLSNtQn13RzBuwk4CvLvSzyfv4QtAF7/cRsujy553UX7JrLOm+w8gymiQRtn1cy26FidoUJaYHbCRayMbZJacJPFo13JVaU7Gt55ube5wr6BoD+DCks2RW1Ysa+0J9iY8VHfPCauEip0DQr9aEMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu; spf=pass smtp.mailfrom=minesparis.psl.eu; arc=none smtp.client-ip=217.74.103.251
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minesparis.psl.eu
+Received: from smtp-out-1.mines-paristech.fr (smtp-out-1.mines-paristech.fr [77.158.173.156])
+	by mx01-out.cloud.vadesecure.com (vcfr1mtao01p) with ESMTP id 4XqXGr2ttpz1wV1
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:44 +0100 (CET)
+Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
+	by smtp-out-1.mines-paristech.fr (Postfix) with ESMTP id DFB5BC0FA2
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id D44151C0074
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id fg0Vnlz8FfL7 for <linux-nfs@vger.kernel.org>;
+	Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 7D7891C00E1
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr 7D7891C00E1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=minesparis.psl.eu;
+	s=9f5ccecf-24a0-4eb3-a015-b6ac3b07c299; t=1731664003;
+	bh=2BCehiVWkj39nsARlSLWzfwQ8ZFEYIFjJdsw2axTGgE=;
+	h=Message-ID:From:To:Date:MIME-Version;
+	b=eKEnY5YDlWBvHyKlpZvJuV12Hjl7SLPRTEzSeSSEEfP4cDK0L0CFvRRsLkHsRM7Nn
+	 BNbsaTk/mQl7vNtbKKYMzWcso1ze/Pl3e8PkiihKpWUpUiCqNuJCIMl4ygfvqI5bK1
+	 G+PkthuvrQ3xh6wb6Hgvhc/31r+solR60CvvcmSp7jU/dttXW9jT/5/YDto24gpODJ
+	 XR9W50vHbpH9B4PZOEccrEPmE4gcMRKFRmVC2utfWm4s3d6aJ4iucJxFx0a0nc7LK4
+	 7N4bSf+yXLG+QEufuC258eHTEkt2ygKC2jcRs6GXZKpVJrHZdnzMmoaZNGlFQE+gvN
+	 uZyHvFR7butyg==
+X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
+Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
+	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id y8rIV8xq1z_a for <linux-nfs@vger.kernel.org>;
+	Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
+	by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id 427391C0074
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
+Message-ID: <926432c774f2e03711783265ebb0fae0b94d7122.camel@minesparis.psl.eu>
+Subject: Some users permision denied with kerberos+gssproxy+nfs 4.2+winbind
+From: =?ISO-8859-1?Q?Beno=EEt?= Gschwind <benoit.gschwind@minesparis.psl.eu>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Date: Fri, 15 Nov 2024 10:46:41 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200003.china.huawei.com (7.202.181.30)
+X-VRC-SPAM-STATUS: 0,0,gggruggvucftvghtrhhoucdtuddrgeefuddrvdeggddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfevpdfqfgfvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepkffuhffvffgtgfgfggesthhqredttderjeenucfhrhhomhepuegvnhhofphtucfishgthhifihhnugcuoegsvghnohhithdrghhstghhfihinhgusehmihhnvghsphgrrhhishdrphhslhdrvghuqeenucggtffrrghtthgvrhhnpeethfevveeigffghfeutddvgeeiffdvhefghfegvdehffdtgfehudeuvedtheeuvdenucfkphepjeejrdduheekrddujeefrdduheeipdejjedrudehkedrudekuddrvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhmrgigmhhsghhsihiivgepuddtgeekheejiedpihhnvghtpeejjedrudehkedrudejfedrudehiedphhgvlhhopehsmhhtphdqohhuthdquddrmhhinhgvshdqphgrrhhishhtvggthhdrfhhrpdhmrghilhhfrhhomhepsggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshhprghrihhsrdhpshhlrdgvuhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-VRC-SPAM-STATE: legit
+X-VRC-POLICY-STATUS: t=1,a=1,l=0
 
-Since transport->sock has been set to NULL during reset transport,
-XPRT_SOCK_UPD_TIMEOUT also needs to be cleared. Otherwise, the
-xs_tcp_set_socket_timeouts() may be triggered in xs_tcp_send_request()
-to dereference the transport->sock that has been set to NULL.
+Hello,
 
-Fixes: 7196dbb02ea0 ("SUNRPC: Allow changing of the TCP timeout parameters on the fly")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-Signed-off-by: Liu Jian <liujian56@huawei.com>
----
- net/sunrpc/xprtsock.c | 1 +
- 1 file changed, 1 insertion(+)
+Usually after few days, some of my user get permission revoked to where
+they have the permission. The issue does not affect all users and all
+clients at the same time. As instance an user can have access granted
+on host1 but permission denied on host2, Moreover an user1 can have all
+his permission working properly, while another user2 get his permission
+revoked on the same host.
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 906a1b563aee..2a7e33abe151 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1198,6 +1198,7 @@ static void xs_sock_reset_state_flags(struct rpc_xprt *xprt)
- 	clear_bit(XPRT_SOCK_WAKE_WRITE, &transport->sock_state);
- 	clear_bit(XPRT_SOCK_WAKE_DISCONNECT, &transport->sock_state);
- 	clear_bit(XPRT_SOCK_NOSPACE, &transport->sock_state);
-+	clear_bit(XPRT_SOCK_UPD_TIMEOUT, &transport->sock_state);
- }
- 
- static void xs_run_error_worker(struct sock_xprt *transport, unsigned int nr)
--- 
-2.34.1
+After a reboot usually everything work fine for all users.
 
+It seems that the user are not map anymore to the right one because,
+the user can read directory with "755 but not private one, i.e. with
+700. Moreover he still have write permission on at less some directory
+with "755".
+
+What I can do to fix this issue without annoying user that have correct
+permission ?
+
+I tried to restart nfs-client, nfs-server, rpc-nfsidmap, winbind,
+gssproxy without success.
+
+Thanks by advance
 
