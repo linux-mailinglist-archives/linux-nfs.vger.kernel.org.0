@@ -1,107 +1,129 @@
-Return-Path: <linux-nfs+bounces-8000-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8001-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F7F19CDBF1
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 10:55:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86DE39CE0D0
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 15:00:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C075B223D1
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 09:55:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 626B51F21C12
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 14:00:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57741192D67;
-	Fri, 15 Nov 2024 09:55:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720451CD20F;
+	Fri, 15 Nov 2024 13:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y5hkpF4z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx01-out.cloud.vadesecure.com (mx01-out.cloud.vadesecure.com [217.74.103.251])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE9D18F2DB
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 09:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.74.103.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6E51CDA01
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 13:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731664537; cv=none; b=b0bdl7PNP/2orZwMqjKRPFd4AVkFw7tVzIJYgyE5c32hfljEi4DISyVlRgUCikNa72awyJzhX7crXj1TTsQM+9MeNw7ZAH0l7Md9UP+qh22ce4Jf6jPOCaMEHAoyS0mpRsZXwCv6+NcDMqZOQmcF1/F5zG/o0eQHDLBW4E4e9l4=
+	t=1731679193; cv=none; b=NCXxbI1937d8E73ZmXbYtL0t5kYjXb+j+RFoVOZ9gZi5g58vkm5zVvbZFWXhaB3fUFBxLb+rjRUjdEtJaDRUdyk0sR4PXOkdVKGfKEGRJRXbOqaxH0zvRqJCCsMRzSTam8N2ZV0f71aKoiKw0RHC006tVTPEoYnMuZJfTNguLIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731664537; c=relaxed/simple;
-	bh=2BCehiVWkj39nsARlSLWzfwQ8ZFEYIFjJdsw2axTGgE=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=evDqqEBTUKjBBfmU+fim7/6kLSNtQn13RzBuwk4CvLvSzyfv4QtAF7/cRsujy553UX7JrLOm+w8gymiQRtn1cy26FidoUJaYHbCRayMbZJacJPFo13JVaU7Gt55ube5wr6BoD+DCks2RW1Ysa+0J9iY8VHfPCauEip0DQr9aEMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu; spf=pass smtp.mailfrom=minesparis.psl.eu; arc=none smtp.client-ip=217.74.103.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=minesparis.psl.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=minesparis.psl.eu
-Received: from smtp-out-1.mines-paristech.fr (smtp-out-1.mines-paristech.fr [77.158.173.156])
-	by mx01-out.cloud.vadesecure.com (vcfr1mtao01p) with ESMTP id 4XqXGr2ttpz1wV1
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:44 +0100 (CET)
-Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
-	by smtp-out-1.mines-paristech.fr (Postfix) with ESMTP id DFB5BC0FA2
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id D44151C0074
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
-	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id fg0Vnlz8FfL7 for <linux-nfs@vger.kernel.org>;
-	Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 7D7891C00E1
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr 7D7891C00E1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=minesparis.psl.eu;
-	s=9f5ccecf-24a0-4eb3-a015-b6ac3b07c299; t=1731664003;
-	bh=2BCehiVWkj39nsARlSLWzfwQ8ZFEYIFjJdsw2axTGgE=;
-	h=Message-ID:From:To:Date:MIME-Version;
-	b=eKEnY5YDlWBvHyKlpZvJuV12Hjl7SLPRTEzSeSSEEfP4cDK0L0CFvRRsLkHsRM7Nn
-	 BNbsaTk/mQl7vNtbKKYMzWcso1ze/Pl3e8PkiihKpWUpUiCqNuJCIMl4ygfvqI5bK1
-	 G+PkthuvrQ3xh6wb6Hgvhc/31r+solR60CvvcmSp7jU/dttXW9jT/5/YDto24gpODJ
-	 XR9W50vHbpH9B4PZOEccrEPmE4gcMRKFRmVC2utfWm4s3d6aJ4iucJxFx0a0nc7LK4
-	 7N4bSf+yXLG+QEufuC258eHTEkt2ygKC2jcRs6GXZKpVJrHZdnzMmoaZNGlFQE+gvN
-	 uZyHvFR7butyg==
-X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
-Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
-	by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id y8rIV8xq1z_a for <linux-nfs@vger.kernel.org>;
-	Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
-	by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id 427391C0074
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 10:46:43 +0100 (CET)
-Message-ID: <926432c774f2e03711783265ebb0fae0b94d7122.camel@minesparis.psl.eu>
-Subject: Some users permision denied with kerberos+gssproxy+nfs 4.2+winbind
-From: =?ISO-8859-1?Q?Beno=EEt?= Gschwind <benoit.gschwind@minesparis.psl.eu>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date: Fri, 15 Nov 2024 10:46:41 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1731679193; c=relaxed/simple;
+	bh=Hbk4G+p+XBUkLdFeQDGLNEGtIRngQWxS3btzm3A8L+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sypcSOtxqE1oKAuGsSV7KEGSx/jxBIGox/L2Bu7/u6hh3LacBRcen3cSqqK9UUE5A43gU6qzYMR/NvuvZUJdPpVybOpPZnFA2lurhN9nbS0sDcDoRURpYtUDNBPlhn/KNZx7xjT2yN4kmAZPo/PJa9o55tkX5ny75BA4UVKHSqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y5hkpF4z; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731679190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HrpURNc3s1+sOKqNJ75eMn2RRnYZdy4xSGq8FIqJePo=;
+	b=Y5hkpF4zUm1Nz+pje/Littyi5cHix7TeTUKjT19yKtn+BIfy69hCqMpexC2n7CKXpZaEPV
+	HG6PnZToSHgJCO2JCw9lTWZ8FqenBpidOTrbMb2gxH95vEgjr+jQsHtr+WZRiIQefrKk7A
+	+wlRJ1Qcwx5dDEQgpUWmyI3/QT4PI6c=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-401-xKA4yg8cN8m6ffypOTUycQ-1; Fri,
+ 15 Nov 2024 08:59:45 -0500
+X-MC-Unique: xKA4yg8cN8m6ffypOTUycQ-1
+X-Mimecast-MFC-AGG-ID: xKA4yg8cN8m6ffypOTUycQ
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 238731955F41;
+	Fri, 15 Nov 2024 13:59:44 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (unknown [10.22.74.7])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA0D61953880;
+	Fri, 15 Nov 2024 13:59:42 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: timeout and cancel TLS handshake with -ETIMEDOUT
+Date: Fri, 15 Nov 2024 08:59:36 -0500
+Message-ID: <ee226061afc4152fb8c6a829565dc5af390842ec.1731678901.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-VRC-SPAM-STATUS: 0,0,gggruggvucftvghtrhhoucdtuddrgeefuddrvdeggddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucggtfevpdfqfgfvnecuuegrihhlohhuthemuceftddtnecunecujfgurhepkffuhffvffgtgfgfggesthhqredttderjeenucfhrhhomhepuegvnhhofphtucfishgthhifihhnugcuoegsvghnohhithdrghhstghhfihinhgusehmihhnvghsphgrrhhishdrphhslhdrvghuqeenucggtffrrghtthgvrhhnpeethfevveeigffghfeutddvgeeiffdvhefghfegvdehffdtgfehudeuvedtheeuvdenucfkphepjeejrdduheekrddujeefrdduheeipdejjedrudehkedrudekuddrvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphhouhhtpdhmrgigmhhsghhsihiivgepuddtgeekheejiedpihhnvghtpeejjedrudehkedrudejfedrudehiedphhgvlhhopehsmhhtphdqohhuthdquddrmhhinhgvshdqphgrrhhishhtvggthhdrfhhrpdhmrghilhhfrhhomhepsggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshhprghrihhsrdhpshhlrdgvuhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-VRC-SPAM-STATE: legit
-X-VRC-POLICY-STATUS: t=1,a=1,l=0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hello,
+We've noticed a situation where an unstable TCP connection can cause the
+TLS handshake to timeout waiting for userspace to complete it.  When this
+happens, we don't want to return from xs_tls_handshake_sync() with zero, as
+this will cause the upper xprt to be set CONNECTED, and subsequent attempts
+to transmit will be returned with -EPIPE.  The sunrpc machine does not
+recover from this situation and will spin attempting to transmit.
 
-Usually after few days, some of my user get permission revoked to where
-they have the permission. The issue does not affect all users and all
-clients at the same time. As instance an user can have access granted
-on host1 but permission denied on host2, Moreover an user1 can have all
-his permission working properly, while another user2 get his permission
-revoked on the same host.
+The return value of tls_handshake_cancel() can be used to detect a race
+with completion:
 
-After a reboot usually everything work fine for all users.
+ * tls_handshake_cancel - cancel a pending handshake
+ * Return values:
+ *   %true - Uncompleted handshake request was canceled
+ *   %false - Handshake request already completed or not found
 
-It seems that the user are not map anymore to the right one because,
-the user can read directory with "755 but not private one, i.e. with
-700. Moreover he still have write permission on at less some directory
-with "755".
+If true, we do not want the upper xprt to be connected, so return
+-ETIMEDOUT.  If false, its possible the handshake request was lost and
+that may be the reason for our timeout.  Again we do not want the upper
+xprt to be connected, so return -ETIMEDOUT.
 
-What I can do to fix this issue without annoying user that have correct
-permission ?
+Ensure that we alway return an error from xs_tls_handshake_sync() if we
+call tls_handshake_cancel().
 
-I tried to restart nfs-client, nfs-server, rpc-nfsidmap, winbind,
-gssproxy without success.
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ net/sunrpc/xprtsock.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Thanks by advance
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 1326fbf45a34..95161a8cd138 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2614,11 +2614,10 @@ static int xs_tls_handshake_sync(struct rpc_xprt *lower_xprt, struct xprtsec_par
+ 	rc = wait_for_completion_interruptible_timeout(&lower_transport->handshake_done,
+ 						       XS_TLS_HANDSHAKE_TO);
+ 	if (rc <= 0) {
+-		if (!tls_handshake_cancel(sk)) {
+-			if (rc == 0)
+-				rc = -ETIMEDOUT;
+-			goto out_put_xprt;
+-		}
++		tls_handshake_cancel(sk);
++		if (rc == 0)
++			rc = -ETIMEDOUT;
++		goto out_put_xprt;
+ 	}
+ 
+ 	rc = lower_transport->xprt_err;
+
+base-commit: a9cda7c0ffedb47b23002e109bd26ab2a2ab99c9
+-- 
+2.47.0
+
 
