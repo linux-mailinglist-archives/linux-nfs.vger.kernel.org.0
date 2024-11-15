@@ -1,236 +1,137 @@
-Return-Path: <linux-nfs+bounces-7995-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-7996-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0FC49CD64F
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 05:56:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 671539CD82A
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 07:48:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 495D428318B
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 04:56:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ECDBFB2657D
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 06:48:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7248861FEB;
-	Fri, 15 Nov 2024 04:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03BDF187FE8;
+	Fri, 15 Nov 2024 06:48:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="re5vjSth";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mdsZR53t";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="re5vjSth";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mdsZR53t"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KakwhxgE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A62B17B439
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 04:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B20185924;
+	Fri, 15 Nov 2024 06:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731646580; cv=none; b=YpxuvENsk/FxRRmGbGy17bE4rlQxPuOarrCbEzHKZFSOBVv+LDXcm468Z5Gf4XSPcLcYN3BxRV7rqvankglCCZk9IJKAELNji9P9gHnrnA9lJ8D3SWuaoNMFZHEiGakGcNC1h4lH2WPMCtPdPQuMo+gr42PSX1t4GNLyRm0paT0=
+	t=1731653289; cv=none; b=tLbMG9DFd9ITTVANdEGLaAnUJEbCSQKCPwLZCJV1465W+/V8C0c+qqJ8S6nn3K4uUOfu6cwn3ykECrPIa5Y3fWx3QGFhSZ6bbLzdOzzAbWj4Bjik2xy6pjh59wOLOd60bUcKkiWIklDM60RER0Pmcg20PT9op/voUa2RlJrPClw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731646580; c=relaxed/simple;
-	bh=sHQmyJ0RkkCYf1NzsK5WP04PnBTkp+NbeeX/MQ2vyA4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=C2Wa0hG9BFFDLqJae8k+OXapJwM8T4cQgv7rGhIu8wM+X5eVD8w1rQ3N64nQBggm4/ly+AoaYrZgerTiiBTpcRGH9cAVCWgPK7J09Uwno45V0ZzuGXePgu7V4gSsGxFQ2LpXY+NKYFX2mws//rkYPmeqAjBJ1V2exgrZbmQMG9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=re5vjSth; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mdsZR53t; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=re5vjSth; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mdsZR53t; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 663FB21195;
-	Fri, 15 Nov 2024 04:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731646576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vuQE5MnpBk70EBkNiK4D/xccIUwk5EF22mWiYD06dOY=;
-	b=re5vjSthWor1AHHdXO7/m87WuPZ82SPbBtpaSxM54WBD82nAOrabJQA29N5HUDHYDcBPJx
-	OFg9ffpoXJ3Uobj3fXBAc9yu/a6vYfbL+Q7+uNkoXQ/TQU9XeJ+xp/Xx7CQUaEdEjGfkuw
-	Y/9WtUX7LXCICGbpSZRqYgET6tMjMz4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731646576;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vuQE5MnpBk70EBkNiK4D/xccIUwk5EF22mWiYD06dOY=;
-	b=mdsZR53t2ubBmUNRJYSeH6DpWAdru5wrpg7ZGzt+XCWJO8bNHGeqH+PAgRNhEjUQZF/qpK
-	bI03L8KsbF1D5hDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=re5vjSth;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=mdsZR53t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1731646576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vuQE5MnpBk70EBkNiK4D/xccIUwk5EF22mWiYD06dOY=;
-	b=re5vjSthWor1AHHdXO7/m87WuPZ82SPbBtpaSxM54WBD82nAOrabJQA29N5HUDHYDcBPJx
-	OFg9ffpoXJ3Uobj3fXBAc9yu/a6vYfbL+Q7+uNkoXQ/TQU9XeJ+xp/Xx7CQUaEdEjGfkuw
-	Y/9WtUX7LXCICGbpSZRqYgET6tMjMz4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1731646576;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vuQE5MnpBk70EBkNiK4D/xccIUwk5EF22mWiYD06dOY=;
-	b=mdsZR53t2ubBmUNRJYSeH6DpWAdru5wrpg7ZGzt+XCWJO8bNHGeqH+PAgRNhEjUQZF/qpK
-	bI03L8KsbF1D5hDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 034DD13485;
-	Fri, 15 Nov 2024 04:56:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id SN1CKm3UNmekcgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 15 Nov 2024 04:56:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1731653289; c=relaxed/simple;
+	bh=zakHiXayz7SY1jBhcUhQzU+JONzAKDRAo+HlUYF2IG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KWpRt1p19H2ZBgpCW/AgsSQ63dM+hMT0dYOO7aoctqFSEvNrPR1fvaodXkMuiA5PJ7hu4M4ON8bSET5AVFkVcqpkd0l4Ay+sIu+HZEt6CELZwnOl+87eZmcLfDun6X3QvnCLc8xh0Vgx9ld9LA6H/hzkThp1Px7eVHBnfkD0jdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KakwhxgE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2930C4CECF;
+	Fri, 15 Nov 2024 06:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1731653289;
+	bh=zakHiXayz7SY1jBhcUhQzU+JONzAKDRAo+HlUYF2IG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KakwhxgEMiiEj8EoCeF2MovKQ2iMqLxkH7LfuwYoHDFWFGkYU8BSmQhq8gFwVs+tQ
+	 stcsqn/E3dHjgKMjhRvmvSbk7u44zDuJsxyBhMYRdExaylL8ahs0qJl6ilZnWTTFeE
+	 4df1ZD6KSPqvkkGZzekrLZcjYJedkyrlNTVm5+FM=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	David Howells <dhowells@redhat.com>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	netfs@lists.linux.dev,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.11 43/63] netfs: Downgrade i_rwsem for a buffered write
+Date: Fri, 15 Nov 2024 07:38:06 +0100
+Message-ID: <20241115063727.469260672@linuxfoundation.org>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241115063725.892410236@linuxfoundation.org>
+References: <20241115063725.892410236@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Daire Byrne" <daire@dneg.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject:
- Re: [PATCH 0/4 RFC] nfsd: allocate/free session-based DRC slots on demand
-In-reply-to:
- <CAPt2mGN7is0xOqBxy62WwJ_iPXQ0fjvpv2MVEEwYqxvZSFY30w@mail.gmail.com>
-References: <20241113055345.494856-1-neilb@suse.de>,
- <CAPt2mGN7is0xOqBxy62WwJ_iPXQ0fjvpv2MVEEwYqxvZSFY30w@mail.gmail.com>
-Date: Fri, 15 Nov 2024 15:56:08 +1100
-Message-id: <173164656863.1734440.5228838461812970848@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 663FB21195
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	URIBL_BLOCKED(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,linux-nfs.org:url,noble.neil.brown.name:mid];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Wed, 13 Nov 2024, Daire Byrne wrote:
-> Neil,
->=20
-> I'm curious if this work relates to:
->=20
-> https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D375
-> https://lore.kernel.org/all/CAPt2mGMZh9=3DVwcqjh0J4XoTu3stOnKwswdzApL4wCA_u=
-sOFV_g@mail.gmail.com
+6.11-stable review patch.  If anyone has any objections, please let me know.
 
-Yes, it could possibly help with that - though more work would be
-needed.
-nfsd currently has a hard limit of 160 slots per session.  That wouldn't
-be enough I suspect.  The Linux client has a hard limit of 1024.  That
-might be enough.
-Allowed nfsd to have 1024 (or more) shouldn't be too hard...
+------------------
 
->=20
-> As my thread described, we currently use NFSv3 for our high latency
-> NFS re-export cases simply because it performs way better for parallel
-> client operations. You see, when you use re-exporting serving many
-> clients, you are in effect taking all those client operations and
-> stuffing them through a single client (the re-export server) which
-> then becomes a bottleneck. Add any kind of latency on top (>10ms) and
-> the NFSD_CACHE_SIZE_SLOTS_PER_SESSION (32) for NFSv4 becomes a major
-> bottleneck for a single client (re-export server).
->=20
-> We also used your "VFS: support parallel updates in the one directory"
-> patches for similar reasons up until I couldn't port it to newer
-> kernels anymore (my kernel code munging skills are not sufficient!).
+From: David Howells <dhowells@redhat.com>
 
-Yeah - I really should get back to that.  Al and Linus suggested some
-changes and I just never got around to making them.
+[ Upstream commit d6a77668a708f0b5ca6713b39c178c9d9563c35b ]
 
-Thanks,
-NeilBrown
+In the I/O locking code borrowed from NFS into netfslib, i_rwsem is held
+locked across a buffered write - but this causes a performance regression
+in cifs as it excludes buffered reads for the duration (cifs didn't use any
+locking for buffered reads).
+
+Mitigate this somewhat by downgrading the i_rwsem to a read lock across the
+buffered write.  This at least allows parallel reads to occur whilst
+excluding other writes, DIO, truncate and setattr.
+
+Note that this shouldn't be a problem for a buffered write as a read
+through an mmap can circumvent i_rwsem anyway.
+
+Also note that we might want to make this change in NFS also.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/1317958.1729096113@warthog.procyon.org.uk
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Trond Myklebust <trondmy@kernel.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-cifs@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/netfs/locking.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/netfs/locking.c b/fs/netfs/locking.c
+index 75dc52a49b3a4..709a6aa101028 100644
+--- a/fs/netfs/locking.c
++++ b/fs/netfs/locking.c
+@@ -121,6 +121,7 @@ int netfs_start_io_write(struct inode *inode)
+ 		up_write(&inode->i_rwsem);
+ 		return -ERESTARTSYS;
+ 	}
++	downgrade_write(&inode->i_rwsem);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(netfs_start_io_write);
+@@ -135,7 +136,7 @@ EXPORT_SYMBOL(netfs_start_io_write);
+ void netfs_end_io_write(struct inode *inode)
+ 	__releases(inode->i_rwsem)
+ {
+-	up_write(&inode->i_rwsem);
++	up_read(&inode->i_rwsem);
+ }
+ EXPORT_SYMBOL(netfs_end_io_write);
+ 
+-- 
+2.43.0
 
 
->=20
-> Sorry to spam the thread if I am misinterpreting what this patch set
-> is all about.
->=20
-> Daire
->=20
->=20
-> On Wed, 13 Nov 2024 at 05:54, NeilBrown <neilb@suse.de> wrote:
-> >
-> > This patch set aims to allocate session-based DRC slots on demand, and
-> > free them when not in use, or when memory is tight.
-> >
-> > I've tested with NFSD_MAX_UNUSED_SLOTS set to 1 so that freeing is
-> > overly agreesive, and with lots of printks, and it seems to do the right
-> > thing, though memory pressure has never freed anything - I think you
-> > need several clients with a non-trivial number of slots allocated before
-> > the thresholds in the shrinker code will trigger any freeing.
-> >
-> > I haven't made use of the CB_RECALL_SLOT callback.  I'm not sure how
-> > useful that is.  There are certainly cases where simply setting the
-> > target in a SEQUENCE reply might not be enough, but I doubt they are
-> > very common.  You would need a session to be completely idle, with the
-> > last request received on it indicating that lots of slots were still in
-> > use.
-> >
-> > Currently we allocate slots one at a time when the last available slot
-> > was used by the client, and only if a NOWAIT allocation can succeed.  It
-> > is possible that this isn't quite agreesive enough.  When performing a
-> > lot of writeback it can be useful to have lots of slots, but memory
-> > pressure is also likely to build up on the server so GFP_NOWAIT is likely
-> > to fail.  Maybe occasionally using a firmer request (outside the
-> > spinlock) would be justified.
-> >
-> > We free slots when the number of unused slots passes some threshold -
-> > currently 6 (because ...  why not).  Possible a hysteresis should be
-> > added so we don't free unused slots for a least N seconds.
-> >
-> > When the shrinker wants to apply presure we remove slots equally from
-> > all sessions.  Maybe there should be some proportionality but that would
-> > be more complex and I'm not sure it would gain much.  Slot 0 can never
-> > be freed of course.
-> >
-> > I'm very interested to see what people think of the over-all approach,
-> > and of the specifics of the code.
-> >
-> > Thanks,
-> > NeilBrown
-> >
-> >
-> >  [PATCH 1/4] nfsd: remove artificial limits on the session-based DRC
-> >  [PATCH 2/4] nfsd: allocate new session-based DRC slots on demand.
-> >  [PATCH 3/4] nfsd: free unused session-DRC slots
-> >  [PATCH 4/4] nfsd: add shrinker to reduce number of slots allocated
-> >
->=20
 
 
