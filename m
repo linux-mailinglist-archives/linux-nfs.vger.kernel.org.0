@@ -1,120 +1,129 @@
-Return-Path: <linux-nfs+bounces-8016-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8017-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D2E79CFC08
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 02:31:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABF639CFC3A
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 02:41:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1502CB20DC2
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 01:31:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BBABB2771A
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 01:41:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C2B26AC1;
-	Sat, 16 Nov 2024 01:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F7A5161;
+	Sat, 16 Nov 2024 01:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DJotF72q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T18X3Cz8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674204C8F
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 01:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1285D4C8F
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 01:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731720703; cv=none; b=HVGC12EdVpQgt/rSYMZfNPrm6zREq76UB7EmHi6Z1noYmXDGBhZKr9XDP781y0yQIZ7babDPDxc+DBespHVwhDkTxK78stwFc1kWwUaYlMHvH55DJzcKxEckGKaht9hQvPFJxtHaOPFoAMvZUx0aHc+3yB565F6I4GubboWTs68=
+	t=1731721268; cv=none; b=j0m7T4k19/fGp1IUeiQ6PlkWD2EPKp6Gg1d1Wdpg4xOPXRlxTAE/HOUXSKs1iJ1PPciSysVLXjqluChV/uluvMCeZOSZu8ac4+cbHAtOoICb6lKbwhS7BV4sAGdpomaarNqzHPADb5tLKwGbf8FGNUbASdBirVPn0g+l4AskX5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731720703; c=relaxed/simple;
-	bh=UyhC43pZiyPSP9M0LAH70oO3s1X/Nxzx97WWOngNUN8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bX26rCjMyaECkxQINzB8c0vcp+fuXCOJO2HnaDWO18AVWSJgPpdIR5S2ebcEEagFY5Wk1d02u+QP5M8LC0FZ9T02ovMEf+d7Er2dF99r9cJlzP82K5tVI2b6Ai4zpJbY5Mr8QIwHMdWMcUHmcAsXmzplISARTUJ5qrcwYUY0my4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DJotF72q; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3e600ae1664so1190739b6e.2
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 17:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731720701; x=1732325501; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5G9v5idvngpVVbVWYeTOgnhwaczVG7ZO7E+ci5v9gPk=;
-        b=DJotF72qlPjlAo9DcrcdSIYEKApMwfNe4QC7KghldQrTxyXSn1Hjwh1h2iJJ+2IYhw
-         4Jl+/OhMF5fNOgLha9+DBRaoCpr24SQgg7P30aOixT80nLZW9wdMzJ6/3alrfmIdmNDm
-         oF9Rmk1MC2T6++8obPvweRCfE24JFFoavx2JaYDBg96Nupa9fShl7PaGl2BJvjbf/RVT
-         PP+jVaZPo5pX9syNsxK1Ag58Q8bW5rmxOi5CZMiVSAjWVDx5MJYtOZ0/T+ufSY6qvP3Q
-         cye6LKd0QrHp2CjYxloD41VfY4BWks2dxVhSZjjN3S3SYGwFaOoPmBor6fWJd1SkeCK+
-         /r9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731720701; x=1732325501;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5G9v5idvngpVVbVWYeTOgnhwaczVG7ZO7E+ci5v9gPk=;
-        b=ppGDZgzEcRs2JMq8T/VmAxrDwZ4o3pqdD/xC4dYpAq9l1hyWr7IdiyWtMfv1QpWaKJ
-         KJDLZLUmRRa1NAoUellz2ij3PM7Yq8TG2RvniBFws8mhIoxFTj2t3xqrMpPEGmr8A+4/
-         wNOGZ2LV7ULbVnu+ZYMjlZGRScN3jqoq7n/YvQ+OtGCf3cX5JTeQ1/UnKBCj87yfe7P2
-         UhCkYz+HZJWJASQUQc6DT5oduITwLKwalLRfYd1r5nfgWTgh8kmZk8eLhjNjyqoyKaXP
-         Dl2l8q9eTZR0thsKYhKgiVKpefDRgjSj9XnDjoDeDRTal/kDCX7ACcpxxO5UQzw323A5
-         oWfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFjrTyh7+Equl+k3stVJ2Al+6r5UqCQz6xV8+/qXBSulFzlAll6X3/CZkZ0WyparnxOSL3TLgqqAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/wCvaRNfrIlz0eg37hVPRRbKF+q7XaeNszpGSLiUGQGI9PzT7
-	O0MnobuvpRQ6JmMXv3GZGPeWO3+Kf5sSMEddFQub+rA+eQUptlvscDg0fz6g6Q==
-X-Google-Smtp-Source: AGHT+IEWc+wlunTzrsI5c65XXRyz//87jPEgvtqfK7vhTML3CHq0ByVXCrQTL8TaORbfZcuR68uHxw==
-X-Received: by 2002:a05:6808:1b99:b0:3e5:e72e:17c8 with SMTP id 5614622812f47-3e7bc7d31e3mr5511067b6e.21.1731720701418;
-        Fri, 15 Nov 2024 17:31:41 -0800 (PST)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eeabdbdb0dsm1006415eaf.42.2024.11.15.17.31.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2024 17:31:40 -0800 (PST)
-Date: Fri, 15 Nov 2024 17:31:38 -0800 (PST)
-From: Hugh Dickins <hughd@google.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-cc: Jeongjun Park <aha310510@gmail.com>, akpm@linux-foundation.org, 
-    stable@vger.kernel.org, regressions@lists.linux.dev, 
-    linux-nfs@vger.kernel.org, hughd@google.com, yuzhao@google.com
-Subject: Re: tmpfs hang after v6.12-rc6
-In-Reply-To: <ZzeQ1m3xIjrbUMDv@tissot.1015granger.net>
-Message-ID: <b40e7156-7500-5268-4c3d-c61a6382d1f0@google.com>
-References: <ZzdxKF39VEmXSSyN@tissot.1015granger.net> <Zzd12OGPDnZTMZ6t@tissot.1015granger.net> <CAO9qdTGLn6QWJg71Ad2xcobiTHE5ovoUxSqvrDDrE_i1+uqUQw@mail.gmail.com> <Zzd5YaI99+hieQV+@tissot.1015granger.net> <CAO9qdTEaYa639ebHX8Qd0_FqOZUZLc_JvYNyxepUthGyDqw_Bw@mail.gmail.com>
- <ZzeQ1m3xIjrbUMDv@tissot.1015granger.net>
+	s=arc-20240116; t=1731721268; c=relaxed/simple;
+	bh=8zskGgLOdkwtsjH4Pb8r7R3MjVmfL40r2MBOYJ6yCD4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vexwxmm8z4joYQgaonS+faxJH5hSjX0XU7eycyikMVks/7MaxorZbTXTagKaT88Ak7maDfyPHsxqN9h67qQB2dMyHWQVg1KyJcC9lrU5ec9iSO7ATBPrYFPYCGlV5kwZgHyqmD+e12cBwUjzcCPG2LSSHAkQ9MbnEtaX4qTjZf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T18X3Cz8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D9EC4CECF;
+	Sat, 16 Nov 2024 01:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731721267;
+	bh=8zskGgLOdkwtsjH4Pb8r7R3MjVmfL40r2MBOYJ6yCD4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=T18X3Cz81u0DR+AbX2tdzcSQWjqdCzoHRuu32u7PLsjD5rnwPzsyoNgjHExJmnn+R
+	 N3m9cwgirdfljhDjU226OFCJBdWv209W+lXL+cInJlHNLCOQd7frVcJK4HPo8fbOyD
+	 82EhNZcUzlZjIsm3jcg7KeXN7Ip48bsTD6SNBfJvijp08zwZal1LoKOb0nIRP/jKLI
+	 PqhbPhggFvEBo6pMzHhv7DgykXmoNpDQpRpU6DBw7VTdxc8jx22z119BiCImcnBy3Q
+	 MyqaCwB5b9w3mP4XLhkm+v3yKK3XshUixTc74kKJBpmcf8W/Ctyz/oHOG7cy8kwF6o
+	 hxoSgQxRVKAjA==
+From: Mike Snitzer <snitzer@kernel.org>
+To: linux-nfs@vger.kernel.org
+Cc: Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neilb@suse.de>
+Subject: [for-6.13 PATCH v3 00/14] nfs/nfsd: improvements for LOCALIO
+Date: Fri, 15 Nov 2024 20:40:52 -0500
+Message-ID: <20241116014106.25456-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Fri, 15 Nov 2024, Chuck Lever wrote:
-> 
-> As I said before, I've failed to find any file system getattr method
-> that explicitly takes the inode's semaphore around a
-> generic_fillattr() call. My understanding is that these methods
-> assume that their caller handles appropriate serialization.
-> Therefore, taking the inode semaphore at all in shmem_getattr()
-> seems to me to be the wrong approach entirely.
-> 
-> The point of reverting immediately is that any fix can't possibly
-> get the review and testing it deserves three days before v6.12
-> becomes final. Also, it's not clear what the rush to fix the
-> KCSAN splat is; according to the Fixes: tag, this issue has been
-> present for years without causing overt problems. It doesn't feel
-> like this change belongs in an -rc in the first place.
-> 
-> Please revert d949d1d14fa2, then let's discuss a proper fix in a
-> separate thread. Thanks!
+Hi,
 
-Thanks so much for reporting this issue, Chuck: just in time.
+All available here:
+https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
 
-I agree abso-lutely with you: I was just preparing a revert,
-when I saw that akpm is already on it: great, thanks Andrew.
+Changes since v2:
+- switched from rcu_assign_pointer to RCU_INIT_POINTER when setting to
+  NULL.
+- removed some unnecessary #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+- revised the NFS v3 probe patch to use a new nfsv3.ko modparam
+  'nfs3_localio_probe_throttle' to control if NFSv3 will probe for
+  LOCALIO. Avoids use of NFS_CS_LOCAL_IO and will probe every
+  'nfs3_localio_probe_throttle' IO requests (defaults to 0, disabled).
+- added "Module Parameters" section to localio.rst
 
-I was not very keen to see that locking added, just to silence a syzbot
-sanitizer splat: added where there has never been any practical problem
-(and the result of any stat immediately stale anyway).  I was hoping we
-might get a performance regression reported, but a hang serves better!
+All review appreciated, thanks.
+Mike
 
-If there's a "data_race"-like annotation that can be added to silence
-the sanitizer, okay.  But more locking?  I don't think so.
+Mike Snitzer (14):
+  nfs/localio: add direct IO enablement with sync and async IO support
+  nfsd: add nfsd_file_{get,put} to 'nfs_to' nfsd_localio_operations
+  nfs_common: rename functions that invalidate LOCALIO nfs_clients
+  nfs_common: move localio_lock to new lock member of nfs_uuid_t
+  nfs: cache all open LOCALIO nfsd_file(s) in client
+  nfsd: update percpu_ref to manage references on nfsd_net
+  nfsd: rename nfsd_serv_ prefixed methods and variables with nfsd_net_
+  nfsd: nfsd_file_acquire_local no longer returns GC'd nfsd_file
+  nfs_common: rename nfslocalio nfs_uuid_lock to nfs_uuids_lock
+  nfs_common: track all open nfsd_files per LOCALIO nfs_client
+  nfs_common: add nfs_localio trace events
+  nfs/localio: remove redundant code and simplify LOCALIO enablement
+  nfs: probe for LOCALIO when v4 client reconnects to server
+  nfs: probe for LOCALIO when v3 client reconnects to server
 
-Hugh
+ Documentation/filesystems/nfs/localio.rst |  98 +++++----
+ fs/nfs/client.c                           |   6 +-
+ fs/nfs/direct.c                           |   1 +
+ fs/nfs/flexfilelayout/flexfilelayout.c    |  25 +--
+ fs/nfs/flexfilelayout/flexfilelayout.h    |   1 +
+ fs/nfs/inode.c                            |   3 +
+ fs/nfs/internal.h                         |   9 +-
+ fs/nfs/localio.c                          | 232 +++++++++++++++-----
+ fs/nfs/nfs3proc.c                         |  46 +++-
+ fs/nfs/nfs4state.c                        |   1 +
+ fs/nfs/nfstrace.h                         |  32 ---
+ fs/nfs/pagelist.c                         |   5 +-
+ fs/nfs/write.c                            |   3 +-
+ fs/nfs_common/Makefile                    |   3 +-
+ fs/nfs_common/localio_trace.c             |  10 +
+ fs/nfs_common/localio_trace.h             |  56 +++++
+ fs/nfs_common/nfslocalio.c                | 250 +++++++++++++++++-----
+ fs/nfsd/filecache.c                       |  20 +-
+ fs/nfsd/localio.c                         |   9 +-
+ fs/nfsd/netns.h                           |  12 +-
+ fs/nfsd/nfsctl.c                          |   6 +-
+ fs/nfsd/nfssvc.c                          |  40 ++--
+ include/linux/nfs_fs.h                    |  22 +-
+ include/linux/nfs_fs_sb.h                 |   3 +-
+ include/linux/nfs_xdr.h                   |   1 +
+ include/linux/nfslocalio.h                |  48 +++--
+ 26 files changed, 674 insertions(+), 268 deletions(-)
+ create mode 100644 fs/nfs_common/localio_trace.c
+ create mode 100644 fs/nfs_common/localio_trace.h
+
+-- 
+2.44.0
+
 
