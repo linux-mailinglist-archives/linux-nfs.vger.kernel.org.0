@@ -1,213 +1,120 @@
-Return-Path: <linux-nfs+bounces-8015-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8016-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8D129CF62C
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 21:33:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2E79CFC08
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 02:31:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94D85B2D5C2
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Nov 2024 20:32:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1502CB20DC2
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 01:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 465A31D9346;
-	Fri, 15 Nov 2024 20:32:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9C2B26AC1;
+	Sat, 16 Nov 2024 01:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="QeHMhT4Z"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DJotF72q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313621B6D1A;
-	Fri, 15 Nov 2024 20:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674204C8F
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 01:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731702731; cv=none; b=WW8Bq5ox8XMAvkL8eyHZFm/DGwMVAu9V1PCeTeHzW1/vbAYMKKszeTOTAx8ei7Ok+ha+zWLBEOWFrUK5dt100l9SxBhTMBBcci6gNx0J8ZJGEvX/zqXGr9u8O0njcBNgfdLX/eisEApKcQdTufeAtx0pEmEOYKpP9+L4lgizN7A=
+	t=1731720703; cv=none; b=HVGC12EdVpQgt/rSYMZfNPrm6zREq76UB7EmHi6Z1noYmXDGBhZKr9XDP781y0yQIZ7babDPDxc+DBespHVwhDkTxK78stwFc1kWwUaYlMHvH55DJzcKxEckGKaht9hQvPFJxtHaOPFoAMvZUx0aHc+3yB565F6I4GubboWTs68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731702731; c=relaxed/simple;
-	bh=aW0kZXCjwMJkAvO9eGrMTuU564xR45DjHMlx+V4e670=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hyjlswXoYki45WxyZc8QkAs3T86Qh1/ud60S6pDMGHznzbbOxKnb6uuMHaR5JdYb4kLO6lMJjLUpyKUOGg6JUcwuCQ57I/KYZgM20M0aDI4+BOzS2Fpq6lpM2sMAJTs53CzzEt90yZMXQ4JC2fLrxwaNGF3ST0HIgQNv3CnBfh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=QeHMhT4Z; arc=none smtp.client-ip=136.144.140.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
-	t=1731702725; bh=aW0kZXCjwMJkAvO9eGrMTuU564xR45DjHMlx+V4e670=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QeHMhT4Zs6fgL1xTGbR5gC4hQqUmKKeyRJFxO6CGGf7WsIf7m4fxhFOcKeoK0KrMa
-	 HWuLBlIm2hXivW4vyOHHsZ2R8gfLbGyax+8HF4AMY+G+vp0ly7uX4qMLmxVMNdIfsw
-	 GN3/MV1yHiHGsVhiAly54eawmHiD1EC1TV5rvt3zKe3oSvjRgqbiMGzox+AgYKiICK
-	 p/pa8VsdyE7qHc4SiqawWHBxzK89GtQsK12xNh+Y3ZriJNsJ/LyH3dI9kHt7bau2uJ
-	 VlIJ5dQncKjSE9lG+ShI7oYB7LmpwL1zbScAmtVxtPMd1SQxtKSJ7zUavRnC1kWV+/
-	 j0lhNwUHsLyQKY0k8s/okKEBXRAoP2rr0D09L0WvH+hO+0ERvYy/SWvKzYsPFz8VX8
-	 s/mKq4LASMQ8xdNuxbwaMkuJ12rn8YpFb1iSSd8giG5FP/5jm5c918mouNSkD2/91Q
-	 OcLS182MwxzqpojOVoINTZ5JXbG/tl5qMcKIfPKlvMCAy0myE6EC3Q5FZKzvpXhZyX
-	 i8O8Q47umz52anLbdpycCdz7+f5pd4+Egishgq9vRBTJCK4CKl8BX1nIYlVJh1IYCT
-	 D6tQyiAKznHrv/y2Bjui8nj+WkPgHsSkEyGN7GNJEtc1Z09bFtiJg0VUioI3mV8Eq8
-	 UFg72HmB4pDw9/qKIJBxNRiE=
-Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
-	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id D88A216029D;
-	Fri, 15 Nov 2024 21:32:04 +0100 (CET)
-Message-ID: <17eb79fc-ccd9-4c85-bd23-e08380825c41@ijzerbout.nl>
-Date: Fri, 15 Nov 2024 21:32:02 +0100
+	s=arc-20240116; t=1731720703; c=relaxed/simple;
+	bh=UyhC43pZiyPSP9M0LAH70oO3s1X/Nxzx97WWOngNUN8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bX26rCjMyaECkxQINzB8c0vcp+fuXCOJO2HnaDWO18AVWSJgPpdIR5S2ebcEEagFY5Wk1d02u+QP5M8LC0FZ9T02ovMEf+d7Er2dF99r9cJlzP82K5tVI2b6Ai4zpJbY5Mr8QIwHMdWMcUHmcAsXmzplISARTUJ5qrcwYUY0my4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DJotF72q; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3e600ae1664so1190739b6e.2
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Nov 2024 17:31:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731720701; x=1732325501; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5G9v5idvngpVVbVWYeTOgnhwaczVG7ZO7E+ci5v9gPk=;
+        b=DJotF72qlPjlAo9DcrcdSIYEKApMwfNe4QC7KghldQrTxyXSn1Hjwh1h2iJJ+2IYhw
+         4Jl+/OhMF5fNOgLha9+DBRaoCpr24SQgg7P30aOixT80nLZW9wdMzJ6/3alrfmIdmNDm
+         oF9Rmk1MC2T6++8obPvweRCfE24JFFoavx2JaYDBg96Nupa9fShl7PaGl2BJvjbf/RVT
+         PP+jVaZPo5pX9syNsxK1Ag58Q8bW5rmxOi5CZMiVSAjWVDx5MJYtOZ0/T+ufSY6qvP3Q
+         cye6LKd0QrHp2CjYxloD41VfY4BWks2dxVhSZjjN3S3SYGwFaOoPmBor6fWJd1SkeCK+
+         /r9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731720701; x=1732325501;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5G9v5idvngpVVbVWYeTOgnhwaczVG7ZO7E+ci5v9gPk=;
+        b=ppGDZgzEcRs2JMq8T/VmAxrDwZ4o3pqdD/xC4dYpAq9l1hyWr7IdiyWtMfv1QpWaKJ
+         KJDLZLUmRRa1NAoUellz2ij3PM7Yq8TG2RvniBFws8mhIoxFTj2t3xqrMpPEGmr8A+4/
+         wNOGZ2LV7ULbVnu+ZYMjlZGRScN3jqoq7n/YvQ+OtGCf3cX5JTeQ1/UnKBCj87yfe7P2
+         UhCkYz+HZJWJASQUQc6DT5oduITwLKwalLRfYd1r5nfgWTgh8kmZk8eLhjNjyqoyKaXP
+         Dl2l8q9eTZR0thsKYhKgiVKpefDRgjSj9XnDjoDeDRTal/kDCX7ACcpxxO5UQzw323A5
+         oWfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFjrTyh7+Equl+k3stVJ2Al+6r5UqCQz6xV8+/qXBSulFzlAll6X3/CZkZ0WyparnxOSL3TLgqqAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/wCvaRNfrIlz0eg37hVPRRbKF+q7XaeNszpGSLiUGQGI9PzT7
+	O0MnobuvpRQ6JmMXv3GZGPeWO3+Kf5sSMEddFQub+rA+eQUptlvscDg0fz6g6Q==
+X-Google-Smtp-Source: AGHT+IEWc+wlunTzrsI5c65XXRyz//87jPEgvtqfK7vhTML3CHq0ByVXCrQTL8TaORbfZcuR68uHxw==
+X-Received: by 2002:a05:6808:1b99:b0:3e5:e72e:17c8 with SMTP id 5614622812f47-3e7bc7d31e3mr5511067b6e.21.1731720701418;
+        Fri, 15 Nov 2024 17:31:41 -0800 (PST)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5eeabdbdb0dsm1006415eaf.42.2024.11.15.17.31.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Nov 2024 17:31:40 -0800 (PST)
+Date: Fri, 15 Nov 2024 17:31:38 -0800 (PST)
+From: Hugh Dickins <hughd@google.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+cc: Jeongjun Park <aha310510@gmail.com>, akpm@linux-foundation.org, 
+    stable@vger.kernel.org, regressions@lists.linux.dev, 
+    linux-nfs@vger.kernel.org, hughd@google.com, yuzhao@google.com
+Subject: Re: tmpfs hang after v6.12-rc6
+In-Reply-To: <ZzeQ1m3xIjrbUMDv@tissot.1015granger.net>
+Message-ID: <b40e7156-7500-5268-4c3d-c61a6382d1f0@google.com>
+References: <ZzdxKF39VEmXSSyN@tissot.1015granger.net> <Zzd12OGPDnZTMZ6t@tissot.1015granger.net> <CAO9qdTGLn6QWJg71Ad2xcobiTHE5ovoUxSqvrDDrE_i1+uqUQw@mail.gmail.com> <Zzd5YaI99+hieQV+@tissot.1015granger.net> <CAO9qdTEaYa639ebHX8Qd0_FqOZUZLc_JvYNyxepUthGyDqw_Bw@mail.gmail.com>
+ <ZzeQ1m3xIjrbUMDv@tissot.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 23/33] afs: Use netfslib for directories
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>, Steve French <smfrench@gmail.com>,
- Matthew Wilcox <willy@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Gao Xiang
- <hsiangkao@linux.alibaba.com>, Dominique Martinet <asmadeus@codewreck.org>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- netfs@lists.linux.dev, linux-afs@lists.infradead.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241108173236.1382366-1-dhowells@redhat.com>
- <20241108173236.1382366-24-dhowells@redhat.com>
-Content-Language: en-US
-From: Kees Bakker <kees@ijzerbout.nl>
-In-Reply-To: <20241108173236.1382366-24-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Op 08-11-2024 om 18:32 schreef David Howells:
-> In the AFS ecosystem, directories are just a special type of file that is
-> downloaded and parsed locally.  Download is done by the same mechanism as
-> ordinary files and the data can be cached.  There is one important semantic
-> restriction on directories over files: the client must download the entire
-> directory in one go because, for example, the server could fabricate the
-> contents of the blob on the fly with each download and give a different
-> image each time.
->
-> So that we can cache the directory download, switch AFS directory support
-> over to using the netfslib single-object API, thereby allowing directory
-> content to be stored in the local cache.
->
-> To make this work, the following changes are made:
->
->   (1) A directory's contents are now stored in a folio_queue chain attached
->       to the afs_vnode (inode) struct rather than its associated pagecache,
->       though multipage folios are still used to hold the data.  The folio
->       queue is discarded when the directory inode is evicted.
->
->       This also helps with the phasing out of ITER_XARRAY.
->
->   (2) Various directory operations are made to use and unuse the cache
->       cookie.
->
->   (3) The content checking, content dumping and content iteration are now
->       performed with a standard iov_iter iterator over the contents of the
->       folio queue.
->
->   (4) Iteration and modification must be done with the vnode's validate_lock
->       held.  In conjunction with (1), this means that the iteration can be
->       done without the need to lock pages or take extra refs on them, unlike
->       when accessing ->i_pages.
->
->   (5) Convert to using netfs_read_single() to read data.
->
->   (6) Provide a ->writepages() to call netfs_writeback_single() to save the
->       data to the cache according to the VM's scheduling whilst holding the
->       validate_lock read-locked as (4).
->
->   (7) Change local directory image editing functions:
->
->       (a) Provide a function to get a specific block by number from the
->       	 folio_queue as we can no longer use the i_pages xarray to locate
->       	 folios by index.  This uses a cursor to remember the current
->       	 position as we need to iterate through the directory contents.
->       	 The block is kmapped before being returned.
->
->       (b) Make the function in (a) extend the directory by an extra folio if
->       	 we run out of space.
->
->       (c) Raise the check of the block free space counter, for those blocks
->       	 that have one, higher in the function to eliminate a call to get a
->       	 block.
->
->       (d) Remove the page unlocking and putting done during the editing
->       	 loops.  This is no longer necessary as the folio_queue holds the
->       	 references and the pages are no longer in the pagecache.
->
->       (e) Mark the inode dirty and pin the cache usage till writeback at the
->       	 end of a successful edit.
->
->   (8) Don't set the large_folios flag on the inode as we do the allocation
->       ourselves rather than the VM doing it automatically.
->
->   (9) Mark the inode as being a single object that isn't uploaded to the
->       server.
->
-> (10) Enable caching on directories.
->
-> (11) Only set the upload key for writeback for regular files.
->
-> Notes:
->
->   (*) We keep the ->release_folio(), ->invalidate_folio() and
->       ->migrate_folio() ops as we set the mapping pointer on the folio.
->
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Marc Dionne <marc.dionne@auristor.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-afs@lists.infradead.org
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->   fs/afs/dir.c               | 742 +++++++++++++++++++------------------
->   fs/afs/dir_edit.c          | 183 ++++-----
->   fs/afs/file.c              |   8 +
->   fs/afs/inode.c             |  21 +-
->   fs/afs/internal.h          |  16 +
->   fs/afs/super.c             |   2 +
->   fs/afs/write.c             |   4 +-
->   include/trace/events/afs.h |   6 +-
->   8 files changed, 512 insertions(+), 470 deletions(-)
->
-> [...]
-> +/*
-> + * Iterate through the directory folios under RCU conditions.
-> + */
-> +static int afs_dir_iterate_contents(struct inode *dir, struct dir_context *ctx)
-> +{
-> +	struct afs_vnode *dvnode = AFS_FS_I(dir);
-> +	struct iov_iter iter;
-> +	unsigned long long i_size = i_size_read(dir);
-> +	int ret = 0;
->   
-> -		do {
-> -			dblock = kmap_local_folio(folio, offset);
-> -			ret = afs_dir_iterate_block(dvnode, ctx, dblock,
-> -						    folio_pos(folio) + offset);
-> -			kunmap_local(dblock);
-> -			if (ret != 1)
-> -				goto out;
-> +	/* Round the file position up to the next entry boundary */
-> +	ctx->pos = round_up(ctx->pos, sizeof(union afs_xdr_dirent));
->   
-> -		} while (offset += sizeof(*dblock), offset < size);
-> +	if (i_size <= 0 || ctx->pos >= i_size)
-> +		return 0;
->   
-> -		ret = 0;
-> -	}
-> +	iov_iter_folio_queue(&iter, ITER_SOURCE, dvnode->directory, 0, 0, i_size);
-> +	iov_iter_advance(&iter, round_down(ctx->pos, AFS_DIR_BLOCK_SIZE));
-> +
-> +	iterate_folioq(&iter, iov_iter_count(&iter), dvnode, ctx,
-> +		       afs_dir_iterate_step);
-> +
-> +	if (ret == -ESTALE)
-This is dead code because `ret` is set to 0 and never changed.
-> +		afs_invalidate_dir(dvnode, afs_dir_invalid_iter_stale);
-> +	return ret;
-> +}
-> [...]
+On Fri, 15 Nov 2024, Chuck Lever wrote:
+> 
+> As I said before, I've failed to find any file system getattr method
+> that explicitly takes the inode's semaphore around a
+> generic_fillattr() call. My understanding is that these methods
+> assume that their caller handles appropriate serialization.
+> Therefore, taking the inode semaphore at all in shmem_getattr()
+> seems to me to be the wrong approach entirely.
+> 
+> The point of reverting immediately is that any fix can't possibly
+> get the review and testing it deserves three days before v6.12
+> becomes final. Also, it's not clear what the rush to fix the
+> KCSAN splat is; according to the Fixes: tag, this issue has been
+> present for years without causing overt problems. It doesn't feel
+> like this change belongs in an -rc in the first place.
+> 
+> Please revert d949d1d14fa2, then let's discuss a proper fix in a
+> separate thread. Thanks!
+
+Thanks so much for reporting this issue, Chuck: just in time.
+
+I agree abso-lutely with you: I was just preparing a revert,
+when I saw that akpm is already on it: great, thanks Andrew.
+
+I was not very keen to see that locking added, just to silence a syzbot
+sanitizer splat: added where there has never been any practical problem
+(and the result of any stat immediately stale anyway).  I was hoping we
+might get a performance regression reported, but a hang serves better!
+
+If there's a "data_race"-like annotation that can be added to silence
+the sanitizer, okay.  But more locking?  I don't think so.
+
+Hugh
 
