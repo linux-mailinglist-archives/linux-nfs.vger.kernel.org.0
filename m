@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-8025-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8026-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AE3A9CFC43
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 02:41:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 821BE9CFC42
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 02:41:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7F58B279D7
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 01:41:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2DF171F244D0
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Nov 2024 01:41:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9357619007E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9893E19048F;
 	Sat, 16 Nov 2024 01:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGS+I+m5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RR3RpDXf"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F256190063
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 01:41:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FB6190067
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 01:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731721280; cv=none; b=jv8OJw16DxmEB85LEAuQl3jP/AkUVZEY4CGdzJ16L50rnEha7d5NAJsMbRAlR/s9SdChZMlX3JoH7wNgyj0o1ZgbqmumI2vtr+J4wBVP3NITVq36Y3V8TJuxeuALZ2Hqf9xzoCMKYcQftL9ibTZPZikPXjwbKE5x3ipu2JpUWj4=
+	t=1731721280; cv=none; b=SNkahrWHuCIWksdFYW96/VQv5muTgBoSFOLilulFT99vODQO4F3Q0l9/wf3bH1yhAJou9xunOvJFprfIR/islZxP60n3I/XbwA1PMCY6RVWcOSPQQ5RmyJiCZcrAW5ZABPnbNxNufpnFCekIejTC9dQXSX0wFDNB29JKKm+O7UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1731721280; c=relaxed/simple;
-	bh=/UuCYvOSvt7cCffPKdRRc7N08KwkO0534EhYAUum0oE=;
+	bh=Rg44joD30DU58lNMqd9vzqalbE/nDnh5v3G/nwCffaE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kGLWW2BqwKpAcm2fiZqBY7EBFTuQLaqTD8lmYpyUWafyTIJBGo/QFrNirz6rFUaXBagIkm3yhAYeP6eTBXMAFLb8/usdSE8FsbvmR+gkXM4wTRhn61PAE+cL1jzpY3sNN9D9KQ/WFug6FunmzGrGXAHDlXav2ogzWmfpoARAZQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGS+I+m5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0DDBC4CED6;
-	Sat, 16 Nov 2024 01:41:18 +0000 (UTC)
+	 MIME-Version; b=tKMgRDLFPJtH4YXszK27tcGM7BBA/UvgzkTH9ATJhYRALsFIxym5elgE1Ew3Qd1faaW5wDdZGJmw+V6sguiWEseAIktLSQ+B8PElf5oca62j9ap1TDxaq97O967oUXHlv7bg5EWr40aBgrKsRDc6Ko8PMYJ6C6bo181fBw/k6ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RR3RpDXf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3D0C4CECF;
+	Sat, 16 Nov 2024 01:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731721278;
-	bh=/UuCYvOSvt7cCffPKdRRc7N08KwkO0534EhYAUum0oE=;
+	s=k20201202; t=1731721280;
+	bh=Rg44joD30DU58lNMqd9vzqalbE/nDnh5v3G/nwCffaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tGS+I+m5yjJOtNMEtdHXndeSWmDN2GPV2Tr/gHO6O1eYqlbgpbUjB8Bmc0HkmLeCn
-	 lq3lh9+SPeAxIJBi2lFdLN89d1I3B8szhByVf2RRDAer1KGGQAkwQ+2tCUZT2V38rW
-	 hq1KzOEr7OzUItSeJefwkiLz80QtpTEnZVoIOXDTdIlq2JNliB/WqnliQjHQ9e27Au
-	 ikXB0iIToIyMe4RNOaHE9dRPgP0vBTgTxNYkftUV0JjmIMDqwDxNjoXeiyZ01Cnivf
-	 gfu7/Pom5Gdyr2keNc95lnebp8YGg+VzbzeNoShHNJX+qcIi8F9BTmU6H/smvXg+qE
-	 rYoFVYM6WkAPg==
+	b=RR3RpDXfvHVeFlVvz5Iv3wR3rs/8C5vXaER0lMQBix4PRsiQ+nGzXbA7PsNN/+QaQ
+	 o498WVDF7uPX7FWX/yMolGaLPjiolTjjueFIz8Mpr2uTm5OSReuIHagzwwcoxWQt2x
+	 QTpNVq4Rxeyain7D78nadHSyopb8B2S1KEJfm/UclwJPGc07NaF37bnQK4xAt3hW6D
+	 /CngW9O4Svl5MW4LJtEOGE0mtvstfie+/VYtnHX6ZzkYbTGPR3p+Fa9EdGpinlN19J
+	 //UUpEoST9QQi7gfatAC2s+FyySeBhKSk0J2F0roeaegS3Ud4A12fhBY6wfOE5tXaQ
+	 gZsUoZ65NPdzg==
 From: Mike Snitzer <snitzer@kernel.org>
 To: linux-nfs@vger.kernel.org
 Cc: Anna Schumaker <anna@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Anna Schumaker <anna@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	NeilBrown <neilb@suse.de>
-Subject: [for-6.13 PATCH v3 08/14] nfsd: nfsd_file_acquire_local no longer returns GC'd nfsd_file
-Date: Fri, 15 Nov 2024 20:41:00 -0500
-Message-ID: <20241116014106.25456-9-snitzer@kernel.org>
+Subject: [for-6.13 PATCH v3 09/14] nfs_common: rename nfslocalio nfs_uuid_lock to nfs_uuids_lock
+Date: Fri, 15 Nov 2024 20:41:01 -0500
+Message-ID: <20241116014106.25456-10-snitzer@kernel.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20241116014106.25456-1-snitzer@kernel.org>
 References: <20241116014106.25456-1-snitzer@kernel.org>
@@ -62,43 +62,154 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that LOCALIO no longer leans on NFSD's filecache for caching open
-files (and instead uses NFS client-side open nfsd_file caching) there
-is no need to use NFSD filecache's GC feature.  Avoiding GC will speed
-up nfsd_file initial opens.
+This global spinlock protects all nfs_uuid_t relative to the global
+nfs_uuids list.  A later commit will split this global spinlock so
+prepare by renaming this lock to reflect its intended narrow scope.
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 ---
- fs/nfsd/filecache.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/nfs_common/nfslocalio.c | 34 +++++++++++++++++-----------------
+ fs/nfsd/localio.c          |  2 +-
+ 2 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index fac98b2cb463a..ab9942e420543 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1225,10 +1225,9 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * a file.  The security implications of this should be carefully
-  * considered before use.
-  *
-- * The nfsd_file object returned by this API is reference-counted
-- * and garbage-collected. The object is retained for a few
-- * seconds after the final nfsd_file_put() in case the caller
-- * wants to re-use it.
-+ * The nfsd_file_object returned by this API is reference-counted
-+ * but not garbage-collected. The object is unhashed after the
-+ * final nfsd_file_put().
-  *
-  * Return values:
-  *   %nfs_ok - @pnf points to an nfsd_file with its reference
-@@ -1250,7 +1249,7 @@ nfsd_file_acquire_local(struct net *net, struct svc_cred *cred,
- 	__be32 beres;
+diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+index e75cd21f4c8bc..5fa3f47b442e9 100644
+--- a/fs/nfs_common/nfslocalio.c
++++ b/fs/nfs_common/nfslocalio.c
+@@ -15,11 +15,11 @@
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("NFS localio protocol bypass support");
  
- 	beres = nfsd_file_do_acquire(NULL, net, cred, client,
--				     fhp, may_flags, NULL, pnf, true);
-+				     fhp, may_flags, NULL, pnf, false);
- 	revert_creds(save_cred);
- 	return beres;
+-static DEFINE_SPINLOCK(nfs_uuid_lock);
++static DEFINE_SPINLOCK(nfs_uuids_lock);
+ 
+ /*
+  * Global list of nfs_uuid_t instances
+- * that is protected by nfs_uuid_lock.
++ * that is protected by nfs_uuids_lock.
+  */
+ static LIST_HEAD(nfs_uuids);
+ 
+@@ -34,15 +34,15 @@ EXPORT_SYMBOL_GPL(nfs_uuid_init);
+ 
+ bool nfs_uuid_begin(nfs_uuid_t *nfs_uuid)
+ {
+-	spin_lock(&nfs_uuid_lock);
++	spin_lock(&nfs_uuids_lock);
+ 	/* Is this nfs_uuid already in use? */
+ 	if (!list_empty(&nfs_uuid->list)) {
+-		spin_unlock(&nfs_uuid_lock);
++		spin_unlock(&nfs_uuids_lock);
+ 		return false;
+ 	}
+ 	uuid_gen(&nfs_uuid->uuid);
+ 	list_add_tail(&nfs_uuid->list, &nfs_uuids);
+-	spin_unlock(&nfs_uuid_lock);
++	spin_unlock(&nfs_uuids_lock);
+ 
+ 	return true;
  }
+@@ -51,10 +51,10 @@ EXPORT_SYMBOL_GPL(nfs_uuid_begin);
+ void nfs_uuid_end(nfs_uuid_t *nfs_uuid)
+ {
+ 	if (nfs_uuid->net == NULL) {
+-		spin_lock(&nfs_uuid_lock);
++		spin_lock(&nfs_uuids_lock);
+ 		if (nfs_uuid->net == NULL)
+ 			list_del_init(&nfs_uuid->list);
+-		spin_unlock(&nfs_uuid_lock);
++		spin_unlock(&nfs_uuids_lock);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(nfs_uuid_end);
+@@ -78,7 +78,7 @@ void nfs_uuid_is_local(const uuid_t *uuid, struct list_head *list,
+ {
+ 	nfs_uuid_t *nfs_uuid;
+ 
+-	spin_lock(&nfs_uuid_lock);
++	spin_lock(&nfs_uuids_lock);
+ 	nfs_uuid = nfs_uuid_lookup_locked(uuid);
+ 	if (nfs_uuid) {
+ 		kref_get(&dom->ref);
+@@ -94,7 +94,7 @@ void nfs_uuid_is_local(const uuid_t *uuid, struct list_head *list,
+ 		__module_get(mod);
+ 		nfsd_mod = mod;
+ 	}
+-	spin_unlock(&nfs_uuid_lock);
++	spin_unlock(&nfs_uuids_lock);
+ }
+ EXPORT_SYMBOL_GPL(nfs_uuid_is_local);
+ 
+@@ -128,9 +128,9 @@ void nfs_localio_disable_client(struct nfs_client *clp)
+ 
+ 	spin_lock(&nfs_uuid->lock);
+ 	if (test_and_clear_bit(NFS_CS_LOCAL_IO, &clp->cl_flags)) {
+-		spin_lock(&nfs_uuid_lock);
++		spin_lock(&nfs_uuids_lock);
+ 		nfs_uuid_put_locked(nfs_uuid);
+-		spin_unlock(&nfs_uuid_lock);
++		spin_unlock(&nfs_uuids_lock);
+ 	}
+ 	spin_unlock(&nfs_uuid->lock);
+ }
+@@ -140,23 +140,23 @@ void nfs_localio_invalidate_clients(struct list_head *cl_uuid_list)
+ {
+ 	nfs_uuid_t *nfs_uuid, *tmp;
+ 
+-	spin_lock(&nfs_uuid_lock);
++	spin_lock(&nfs_uuids_lock);
+ 	list_for_each_entry_safe(nfs_uuid, tmp, cl_uuid_list, list) {
+ 		struct nfs_client *clp =
+ 			container_of(nfs_uuid, struct nfs_client, cl_uuid);
+ 
+ 		nfs_localio_disable_client(clp);
+ 	}
+-	spin_unlock(&nfs_uuid_lock);
++	spin_unlock(&nfs_uuids_lock);
+ }
+ EXPORT_SYMBOL_GPL(nfs_localio_invalidate_clients);
+ 
+ static void nfs_uuid_add_file(nfs_uuid_t *nfs_uuid, struct nfs_file_localio *nfl)
+ {
+-	spin_lock(&nfs_uuid_lock);
++	spin_lock(&nfs_uuids_lock);
+ 	if (!nfl->nfs_uuid)
+ 		rcu_assign_pointer(nfl->nfs_uuid, nfs_uuid);
+-	spin_unlock(&nfs_uuid_lock);
++	spin_unlock(&nfs_uuids_lock);
+ }
+ 
+ /*
+@@ -217,14 +217,14 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
+ 	ro_nf = rcu_access_pointer(nfl->ro_file);
+ 	rw_nf = rcu_access_pointer(nfl->rw_file);
+ 	if (ro_nf || rw_nf) {
+-		spin_lock(&nfs_uuid_lock);
++		spin_lock(&nfs_uuids_lock);
+ 		if (ro_nf)
+ 			ro_nf = rcu_dereference_protected(xchg(&nfl->ro_file, NULL), 1);
+ 		if (rw_nf)
+ 			rw_nf = rcu_dereference_protected(xchg(&nfl->rw_file, NULL), 1);
+ 
+ 		rcu_assign_pointer(nfl->nfs_uuid, NULL);
+-		spin_unlock(&nfs_uuid_lock);
++		spin_unlock(&nfs_uuids_lock);
+ 		rcu_read_unlock();
+ 
+ 		if (ro_nf)
+diff --git a/fs/nfsd/localio.c b/fs/nfsd/localio.c
+index f9a91cd3b5ec7..2ae07161b9195 100644
+--- a/fs/nfsd/localio.c
++++ b/fs/nfsd/localio.c
+@@ -54,7 +54,7 @@ void nfsd_localio_ops_init(void)
+  * avoid all the NFS overhead with reads, writes and commits.
+  *
+  * On successful return, returned nfsd_file will have its nf_net member
+- * set. Caller (NFS client) is responsible for calling nfsd_serv_put and
++ * set. Caller (NFS client) is responsible for calling nfsd_net_put and
+  * nfsd_file_put (via nfs_to_nfsd_file_put_local).
+  */
+ struct nfsd_file *
 -- 
 2.44.0
 
