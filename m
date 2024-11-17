@@ -1,124 +1,85 @@
-Return-Path: <linux-nfs+bounces-8033-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8034-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08D9D9D0233
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2024 07:10:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB539D036F
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2024 13:05:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 760ADB220F7
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2024 06:10:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96B751F21489
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Nov 2024 12:05:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB7217BA0;
-	Sun, 17 Nov 2024 06:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665FE191F78;
+	Sun, 17 Nov 2024 12:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWj0FUKk"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bHCwnzmC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034F533E7
-	for <linux-nfs@vger.kernel.org>; Sun, 17 Nov 2024 06:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE3C1885A5;
+	Sun, 17 Nov 2024 12:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731823802; cv=none; b=XD9FL9FhZF7cZLIFH+pYiIZn4L+A8h+q7Ry1gZ8/SABNuPknzt7iuFBCnCAZy1gpeCcmbg/k7Cud6OC7tY6a9JLeWHMVJv9LIlkeLMll4HcFFFMBhVePYoXEzzEsjAIK9FXmeOrdyzmsvyMdy/rn8I9v/JD9i0qlvdOiG6Vw57E=
+	t=1731845066; cv=none; b=E3OUlUdEmIDEBQYnBYNErJoDcOQ/LN7pCV2xioLDnSwdNh/aGYb1Dwjm4fykRt9CT5JXO+hyfn3xi0B0USD97BB0Fxn+sEyuXmFVQFEtdtJ6tX//EjpJKFG5i9TLnRBb0Ul/weencjIKbEfef26z77dHQHRW7cPjRGnLkR4jOGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731823802; c=relaxed/simple;
-	bh=jT4jz3tQQHtYCHlHSQGveC8rQSe+5+kNf9o9LffreMU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qJULMqIX8fZW32SSgMUd/mYlI/l/jvFzc0UpRDiIOTSYdBZ3I+WoFOUXcvNab7a+2mzg/AfWnlIBj/j1HVqKG+NfsjmpIppRfnGOhmX6z8faXnS3MQYoXGuUfEGcfCU5yR9UzrJ7jWkucpnilNNAyGkitxGwkpVHvsY+xCK4LDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WWj0FUKk; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aa4833e9c44so284861266b.2
-        for <linux-nfs@vger.kernel.org>; Sat, 16 Nov 2024 22:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731823798; x=1732428598; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jT4jz3tQQHtYCHlHSQGveC8rQSe+5+kNf9o9LffreMU=;
-        b=WWj0FUKk3kVT20TlhbKGIfMWsldPZuBHR2LMIsMbrc5LKZDBW9V1o4RL8SZa9CDqAh
-         k7gumJH58opc0LMzcfhYT/F33K+PSZYdq3/DiP0zvI6qBGqWwHX+7g00d4f7c4MFzHMG
-         pqEt4hNzwNRjKQQkjfKJ3GHYvryto84lSD27hq5V40RnD/BPyCNuRX2Q+y7cJErite4B
-         DFjHLFDdP7EErVhaKrxAzsE45g1MT8+8A8K+8AjDPYFVaFjQ9fmJyKJgpMZ+yPKeuVWj
-         qZPuYirCroGObQwkDO3WdUOt+/HvLbuWWosvVEUuPvpGYLZ5yj2oImyIlbkWOeRDJkdu
-         X+NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731823798; x=1732428598;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jT4jz3tQQHtYCHlHSQGveC8rQSe+5+kNf9o9LffreMU=;
-        b=hRWyCAlH2akedvYwkgBOynfFEc6lb6aD4j16uqOtfYo9YZ5gSErvJmjaukmMPrJF4P
-         UXhNVaJCENC0mCsD+N31gs3qjNY4+pa4S2gG3FbCJETPdQIZYRwKxv70dzUM/zc36PWY
-         BnT3/FopWA7NlXR6fyXNqzvkpegHYFij6ALSuMb0cFQGDYs607wY4N1BrVHVJD5t0an/
-         rp9uG1M5adHONWcGlThzrCsRvZ0lZSnDV5IalCPYjOnnS58l7iLmBavp9UV/2xbuQry9
-         3OM25MbeB6rwTTYUIMwZ5gwHI/5WqG8gvGcYAWivULmu1ckbAzq6LvmvSkTw/IHtayIb
-         GyDQ==
-X-Gm-Message-State: AOJu0Yzx+/vPpSID9AqFg/mVeI4HQJjWTWYB9Vnox7fn6AjwQNyCn82P
-	f2HfYeNS5K6fdWxigPf9j91rz9lkf8Bg/k7bYu/7+pVdBMkI+rbNopTSmAbHI30nMkRSrFS8KDd
-	niRzA2UFWiEaF6CeqIWKqIgYKlralkRQV
-X-Google-Smtp-Source: AGHT+IFR+6JNzFa/TV59IovBWw4fum1FiZZmm3a4jTX7wirh7dD3YQtT++KFPBKykZvFKmc+yZbGw4BkFGaYjQCardE=
-X-Received: by 2002:a17:907:9604:b0:a9a:cee1:3cf3 with SMTP id
- a640c23a62f3a-aa483556d3emr741128766b.53.1731823797936; Sat, 16 Nov 2024
- 22:09:57 -0800 (PST)
+	s=arc-20240116; t=1731845066; c=relaxed/simple;
+	bh=H6Q/+kkZnvVk8G0hRNlWD8uGHYHGc/V8PwsN7PfAurg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=MhpWE9ng4LFFDiXR/Vmz3mkdbN4ryriW4f33Pnxur91l8rG2j6tiJGZBGjFPi9Ne4+eWX8URrXuVhuNQSABixFpbbXFO3n9tC/0gWmdPJB/v2lgC8grPBjfKm6zuafnN46DXVg8qGtv2rMSZnqKWAV1nPE6VCjxdFhbBie2n5ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=bHCwnzmC; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1731845059;
+	bh=tllPr++YWNmN/ICehcrJsGBTpJU5ev+6G1o94E8aVEA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=bHCwnzmC4Wn699TTaIvMmA7oqAQUCB0vBZAcYQFnrPziGiTbunbYU+CXdS38yDvH6
+	 YU112WNOjKnnI7JSMJzmw/a0svprG00zS9a6LPP4NJJT/jjzlFbVdAm/RM/h/U+tns
+	 TsykHb5IN7FOSJM573KL+qqNfifuTL8r1hG6UNvh5joUZD+KBNkc1Fn7IYJrs5Ptwk
+	 QPaqtA4agDbcLESUFhw4fys+mFWvc6kPxuKH/D9lsAIxlZt3ypiZTruEU9Mv61lufm
+	 a1hIO9QaUkphJcq/soI8cLFSVRrGlaI+MEFOmOa7tMCM3TlCNsxG9p8p3+SqPMR261
+	 Neh+mkXQjvunQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4XrqDc2cRjz4xdS;
+	Sun, 17 Nov 2024 23:04:16 +1100 (AEDT)
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+To: linux-nfs@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
+Cc: kernel-janitors@vger.kernel.org, vbabka@suse.cz, paulmck@kernel.org, Tom Talpey <tom@talpey.com>, Dai Ngo <Dai.Ngo@oracle.com>, Olga Kornievskaia <okorniev@redhat.com>, Neil Brown <neilb@suse.de>, linux-can@vger.kernel.org, bridge@lists.linux.dev, b.a.t.m.a.n@lists.open-mesh.org, linux-kernel@vger.kernel.org, wireguard@lists.zx2c4.com, netdev@vger.kernel.org, ecryptfs@vger.kernel.org, linux-block@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+In-Reply-To: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+References: <20241013201704.49576-1-Julia.Lawall@inria.fr>
+Subject: Re: (subset) [PATCH 00/17] replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+Message-Id: <173184457524.887714.2708612402334434298.b4-ty@ellerman.id.au>
+Date: Sun, 17 Nov 2024 22:56:15 +1100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Leo <lijianze98@gmail.com>
-Date: Sun, 17 Nov 2024 14:09:46 +0800
-Message-ID: <CAH5FnXXZO3uUtJOndsf-LfwPiS8ug_oBnbj-VoYVG0CeFx8ejA@mail.gmail.com>
-Subject: [nfs-utils] dependency issue with rpc.idmapd systemd unit file
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi there,
+On Sun, 13 Oct 2024 22:16:47 +0200, Julia Lawall wrote:
+> Since SLOB was removed and since
+> commit 6c6c47b063b5 ("mm, slab: call kvfree_rcu_barrier() from kmem_cache_destroy()"),
+> it is not necessary to use call_rcu when the callback only performs
+> kmem_cache_free. Use kfree_rcu() directly.
+> 
+> The changes were done using the following Coccinelle semantic patch.
+> This semantic patch is designed to ignore cases where the callback
+> function is used in another way.
+> 
+> [...]
 
-I would like to report a bug with nfs-utils.
+Applied to powerpc/topic/ppc-kvm.
 
-The package provides a file, nfs-idmapd.service, which is a systemd
-unit file contains contents below:
+[13/17] KVM: PPC: replace call_rcu by kfree_rcu for simple kmem_cache_free callback
+        https://git.kernel.org/powerpc/c/1db6a4e8a3fc8ccaa4690272935e02831dc6d40d
 
-[Unit]
-Description=NFSv4 ID-name mapping service
-Documentation=man:idmapd(8)
-DefaultDependencies=no
-Requires=rpc_pipefs.target
-After=rpc_pipefs.target local-fs.target network-online.target
-Wants=network-online.target
-
-BindsTo=nfs-server.service
-
-[Service]
-Type=forking
-ExecStart=/usr/sbin/rpc.idmapd
-
-This systemd unit declares a strong dependency to another unit,
-nfs-server.service, which is for NFSv3, while idmapd is dedicated for
-NFSv4.
-
-In case the user wants to set up a NFSv4-only server,
-nfs-server.service and rpcbind.service shall be masked, while
-nfsv4-server.service should be enabled and started, which renders
-nfs-idmapd.service unable to be started.
-
-I would suggest such a patch to have this issue fixed:
-
---- a/nfs-idmapd.service 2024-10-20 15:17:42.000000000 +0800
-+++ b/nfs-idmapd.service 2024-11-17 14:06:18.028380419 +0800
-@@ -6,7 +6,7 @@
- After=rpc_pipefs.target local-fs.target network-online.target
- Wants=network-online.target
-
--BindsTo=nfs-server.service
-+BindsTo=nfsv4-server.service
-
- [Service]
- Type=forking
-
-Best Regards
-
-Jianze
+cheers
 
