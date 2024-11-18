@@ -1,58 +1,69 @@
-Return-Path: <linux-nfs+bounces-8086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2286C9D1A8E
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 22:24:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 55B6F9D1B2E
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 23:41:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD28D280EFF
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 21:24:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F284BB22932
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 22:40:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8D31E7C3A;
-	Mon, 18 Nov 2024 21:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A61F1E8856;
+	Mon, 18 Nov 2024 22:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VarhFoo+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EmN6t28H"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375F61E5722;
-	Mon, 18 Nov 2024 21:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93C11E8821
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Nov 2024 22:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731965030; cv=none; b=FypkAYIQ1cCFXq6afbNTmoj9uDAwrQff7timhxXvwqR14x8yI4O+f/i0QWod0p6Z5r4Iv9nfIcHSRrnpDvUwDn1s/6M7qT1z4hiE92wvvCY6GgtDccjdvg77PbSQLFLrUTEatmHEScm4KrmwAOBH2ZuaUURWrNvvyOrNaHRnhbU=
+	t=1731969651; cv=none; b=MkIZlLTao7nTXjvn2ktfq5Q/Ldbxnrv2yP2ZLzBEcz3f+56xemcMVRGjsiZl5pNvJcEdScFE++y5i+I5ad4q8UywouEMaROJEnFduB2qVyLVNGs6ly2FfYZkulEFI3guNzRFDTDr7LizrDpeu+N4Wx8JsOlrmpRwCVJ4GVFfc7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731965030; c=relaxed/simple;
-	bh=MmNZW2BO6/hZLJY2y2H8eprKc3nS4nEdDPVPe3ok95Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dUCuWITOZX+K4PB7LazHlBDY2sifRXuz+XML5SOoc/TXDDDFom0GFvNv9N6Je1D1b0GbqC4aAnmVHvmi0MB+TciApERxSIam0w5r+9HgCX1I/zdvMIsyKIvL9VFmrHvW+oR0Y8J5O5Hdb73WcqEBRkHPTqHfJGys505sgxfOYlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VarhFoo+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52FAEC4CECF;
-	Mon, 18 Nov 2024 21:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731965029;
-	bh=MmNZW2BO6/hZLJY2y2H8eprKc3nS4nEdDPVPe3ok95Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VarhFoo+bD8EV4vtfjsTHb0hnuw4tCK+DmR3lb9c/HeiGKg6BWpsdPbFJtWY94LOP
-	 F5z6NYHv7PtcxG2QcP7Dw3C/eK9thRLNkmGC3TR+V1IpjmL6czqFU3xaNcESMVLk8z
-	 V8OIrSheu4sAvxM+yJjhsx4laFjvwZFwo04Y5yVbEKwmHaxrTtyfE1LyqnFToGUzqs
-	 O5dtXpFO8mnOljyQegW4eZvIfBMWDoLAtXvwAMc/Psp7T/O6AaTHFF/bn8ovakHfE1
-	 JragYNmIxGHKhVlFW35C0G1nnlfguHYQHyimhVMuwin4o8y/YyEHNtNZB3DVdGIfQP
-	 BFVpIA/VWyhZA==
-From: cel@kernel.org
-To: <stable@vger.kernel.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH 5.15 5/5] NFSD: Never decrement pending_async_copies on error
-Date: Mon, 18 Nov 2024 16:23:43 -0500
-Message-ID: <20241118212343.3935-6-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241118212343.3935-1-cel@kernel.org>
-References: <20241118212343.3935-1-cel@kernel.org>
+	s=arc-20240116; t=1731969651; c=relaxed/simple;
+	bh=IwvWeYwJTMOuB9zMw8pWHnpFQi44jYl76g5qw5BujXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a7miqW8xdf6C8MvD4M/eyTLeO7UkUOViznEH/F/RCBfFFEFSOVpejPTS6RtfUq2+9SOTtglPvcf0SyB0rguGZGkf+NP7d84vuiC00UgCLrCnqC/UWd/EgZx13ixDBZ/uf6eZqwKVSDOqPKHefvWqgV3k3I7V8DLkz63AdHrYtrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EmN6t28H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1731969648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1O230Jlxlah/OjRxFvR7zagjddCyf3ntg587u1hFFis=;
+	b=EmN6t28HtfnMC0unZ3bHthDg0421foxCFyHI5p15HIhD8n1lcDSUtq9hBI0tCqKvRjVV8X
+	affA8PUhfW4ZDlnNglZTc6MS8WDIMDmrTYwGgu216nSkUOwUfShLkaKMsiTUdm1J4A6WAr
+	5IiOdYdaSqdZy3v8iaBwUf0vvFPuMjg=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-267-7gXCOA-SMRCEMaK5SVFpSg-1; Mon,
+ 18 Nov 2024 17:40:45 -0500
+X-MC-Unique: 7gXCOA-SMRCEMaK5SVFpSg-1
+X-Mimecast-MFC-AGG-ID: 7gXCOA-SMRCEMaK5SVFpSg
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDD9A1978F59;
+	Mon, 18 Nov 2024 22:40:43 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (unknown [10.22.74.7])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C3FB71955F43;
+	Mon, 18 Nov 2024 22:40:42 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] two fixes for pNFS SCSI device handling
+Date: Mon, 18 Nov 2024 17:40:39 -0500
+Message-ID: <cover.1731969260.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,37 +71,21 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-From: Chuck Lever <chuck.lever@oracle.com>
+A bit late for v6.13 perhaps, but here are two fresh corrections for pNFS
+SCSI device handling, and some comments as requeted by Christoph.
 
-[ Upstream commit 8286f8b622990194207df9ab852e0f87c60d35e9 ]
+Benjamin Coddington (2):
+  nfs/blocklayout: Don't attempt unregister for invalid block device
+  nfs/blocklayout: Limit repeat device registration on failure
 
-The error flow in nfsd4_copy() calls cleanup_async_copy(), which
-already decrements nn->pending_async_copies.
+ fs/nfs/blocklayout/blocklayout.c | 12 +++++++++++-
+ fs/nfs/blocklayout/dev.c         |  7 +++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-Reported-by: Olga Kornievskaia <okorniev@redhat.com>
-Fixes: aadc3bbea163 ("NFSD: Limit the number of concurrent async COPY operations")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4proc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 6267a41092ae..0b698e25826f 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1791,10 +1791,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		refcount_set(&async_copy->refcount, 1);
- 		/* Arbitrary cap on number of pending async copy operations */
- 		if (atomic_inc_return(&nn->pending_async_copies) >
--				(int)rqstp->rq_pool->sp_nrthreads) {
--			atomic_dec(&nn->pending_async_copies);
-+				(int)rqstp->rq_pool->sp_nrthreads)
- 			goto out_err;
--		}
- 		async_copy->cp_src = kmalloc(sizeof(*async_copy->cp_src), GFP_KERNEL);
- 		if (!async_copy->cp_src)
- 			goto out_err;
+base-commit: adc218676eef25575469234709c2d87185ca223a
 -- 
 2.47.0
 
