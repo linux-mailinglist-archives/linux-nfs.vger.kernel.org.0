@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-8051-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8052-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 864EC9D1A36
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 22:14:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73ED9D1A3C
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 22:14:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B9EE282462
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 21:14:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CEDBB21D7E
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Nov 2024 21:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B1E51E7C0B;
-	Mon, 18 Nov 2024 21:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29091E7C1E;
+	Mon, 18 Nov 2024 21:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+vaeMoS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjtGb1Tt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1327D1E7676;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7AC17BA3;
 	Mon, 18 Nov 2024 21:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731964458; cv=none; b=hKMXX2b4USkXtthlB2FpuJZw1nkmyI2nAT0uQcDalmMxajd1Eo81r1D9PBlVQp8aLhN2kv5LnPGuc93wqtVjuFihJJxCwdsMAvOwwRCUkRVzvBH/6QdL/iUu8Tb2eB9LEjrNPbpSZCRVh52pZiLsKpXM1P+ykKWMJNjCGEDLuoU=
+	t=1731964459; cv=none; b=WDNBjpNEoKtH3bb4Oj2G7Dn1RL2ZInzSUNbnb6cVhOrDb1evO3TxmCgVX6DnoayY0UeB+JAd9hzx8wXNCN748NmWnXhdMgMv8umqQ+ZAjVJ99fh/XdT+d4wT3UhMrAokkmRZ+qD6DTYpv6jHgnbIuu76UEOjdlnHVsGEKioUqWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731964458; c=relaxed/simple;
-	bh=1+cKXlrxG78idpFwYOPnLVoKqMYbOO+bQajpAJsA1V4=;
+	s=arc-20240116; t=1731964459; c=relaxed/simple;
+	bh=fjth7eJ85x+57Dt8eoiP4qsUJ5JgoZqFh3BE5VLR67k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X/HZxjkTf+YAgORoj0wqLBIrgZbCldNK8kCcQhszQ8RbUa6OjwRJfxIbZyocDnquYiXmmoGMF4HSf/hfBPOpN58mbTj423FiZ2W7cxmBMePHqXxVA0XxOlyU7Mt3tHKe1AqKu6ETH9/weyHdVBIEaB+fOStvVGUkH7UyF3JGASU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+vaeMoS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78CC6C4CED0;
-	Mon, 18 Nov 2024 21:14:17 +0000 (UTC)
+	 MIME-Version; b=QbBruIvVEncVRh/fRnvPrN9nIjXGBQJRTNsFMzYHxPhErcnusr0y8DLnVA1QMW8y7GllsiI0NKUKlfe/rYATtkqJ/U/mGmpwULtQXILP5OA3hXrayqHzp+tgBSc+5Hiq0wJWQvlaQm5HEOKXS0Xofsgl1iXVhZ4MMUtHO/wR8Pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjtGb1Tt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D49C4CED7;
+	Mon, 18 Nov 2024 21:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731964457;
-	bh=1+cKXlrxG78idpFwYOPnLVoKqMYbOO+bQajpAJsA1V4=;
+	s=k20201202; t=1731964458;
+	bh=fjth7eJ85x+57Dt8eoiP4qsUJ5JgoZqFh3BE5VLR67k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X+vaeMoSy55AOIFBJLqmyr4VXlfEq/fUkS1Bag7I5nm+PSxL0yN0eykXw3ugnSQza
-	 9QVJ3IdgBqBhZ8p+oyVLI3Kap0wOxvL/KQ+SEg3E3JTBisC1afnQu+fCP6sneN1Qtk
-	 BvVNrubE5frdYqwa8m5xtcYM69GQJ+TWicfmGcD7tr9eMQkdKoeCELeZcfX8Yzek8j
-	 P8RWzoEcpjJLyY/OUVc9tBCxb4J9rBvLLGnPvM0ZkKnlPIElyft9WYTEgwIERAcyfj
-	 GmEWRHFP6PehmM+92FgvKMhNdZb8bou1cyP22Jxp473umE8ce8ut8f6NjwYL4qKENG
-	 hGmmzQe38WETw==
+	b=LjtGb1TtlI8Ne/e4k1+XSNz7R4/NmS7D4CPoMfU55bobeorDyf/t7wslTdxQZ6hHx
+	 yxcECg2uLQu0LEOT7S9yh+IDqVlK7st3mUTGD8LAUTWZqsOmdvKtX3vpYWNuOV4oAi
+	 D43BdY5zGlY55q8s5u3/WDarXHYtNOm6YT9qGZ8zEOtgzJndzFcWmolwgI8fgLJNrL
+	 Iy3iG2+AHjfuN4I+DLB53FsgpmWZfZ85kXmD73a4wC2J2CYZeSjN5hfVtm613MbPi2
+	 sr2Ti/+lQrtiQwpT9OLPMo1/Gf9hoYyOt44zHXAtT19+mTWdnHb45bN6CYQoR7iT8K
+	 YWV3fugFIcjrw==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Jeff Layton <jlayton@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 6.6 2/5] NFSD: Async COPY result needs to return a write verifier
-Date: Mon, 18 Nov 2024 16:14:10 -0500
-Message-ID: <20241118211413.3756-3-cel@kernel.org>
+Subject: [PATCH 6.6 3/5] NFSD: Limit the number of concurrent async COPY operations
+Date: Mon, 18 Nov 2024 16:14:11 -0500
+Message-ID: <20241118211413.3756-4-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241118211413.3756-1-cel@kernel.org>
 References: <20241118211413.3756-1-cel@kernel.org>
@@ -62,106 +62,111 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 9ed666eba4e0a2bb8ffaa3739d830b64d4f2aaad ]
+[ Upstream commit aadc3bbea163b6caaaebfdd2b6c4667fbc726752 ]
 
-Currently, when NFSD handles an asynchronous COPY, it returns a
-zero write verifier, relying on the subsequent CB_OFFLOAD callback
-to pass the write verifier and a stable_how4 value to the client.
+Nothing appears to limit the number of concurrent async COPY
+operations that clients can start. In addition, AFAICT each async
+COPY can copy an unlimited number of 4MB chunks, so can run for a
+long time. Thus IMO async COPY can become a DoS vector.
 
-However, if the CB_OFFLOAD never arrives at the client (for example,
-if a network partition occurs just as the server sends the
-CB_OFFLOAD operation), the client will never receive this verifier.
-Thus, if the client sends a follow-up COMMIT, there is no way for
-the client to assess the COMMIT result.
+Add a restriction mechanism that bounds the number of concurrent
+background COPY operations. Start simple and try to be fair -- this
+patch implements a per-namespace limit.
 
-The usual recovery for a missing CB_OFFLOAD is for the client to
-send an OFFLOAD_STATUS operation, but that operation does not carry
-a write verifier in its result. Neither does it carry a stable_how4
-value, so the client /must/ send a COMMIT in this case -- which will
-always fail because currently there's still no write verifier in the
-COPY result.
+An async COPY request that occurs while this limit is exceeded gets
+NFS4ERR_DELAY. The requesting client can choose to send the request
+again after a delay or fall back to a traditional read/write style
+copy.
 
-Thus the server needs to return a normal write verifier in its COPY
-result even if the COPY operation is to be performed asynchronously.
+If there is need to make the mechanism more sophisticated, we can
+visit that in future patches.
 
-If the server recognizes the callback stateid in subsequent
-OFFLOAD_STATUS operations, then obviously it has not restarted, and
-the write verifier the client received in the COPY result is still
-valid and can be used to assess a COMMIT of the copied data, if one
-is needed.
-
+Cc: stable@vger.kernel.org
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
-[ cel: adjusted to apply to origin/linux-6.6.y ]
+Link: https://nvd.nist.gov/vuln/detail/CVE-2024-49974
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ fs/nfsd/netns.h     |  1 +
+ fs/nfsd/nfs4proc.c  | 11 +++++++++--
+ fs/nfsd/nfs4state.c |  1 +
+ fs/nfsd/xdr4.h      |  1 +
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 9bfca3dda63d..77d4f82096c9 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -153,6 +153,7 @@ struct nfsd_net {
+ 	u32		s2s_cp_cl_id;
+ 	struct idr	s2s_cp_stateids;
+ 	spinlock_t	s2s_cp_lock;
++	atomic_t	pending_async_copies;
+ 
+ 	/*
+ 	 * Version information
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index a378dcb2ceb2..3e35f8688426 100644
+index 3e35f8688426..e74462fb480f 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -751,15 +751,6 @@ nfsd4_access(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			   &access->ac_supported);
- }
- 
--static void gen_boot_verifier(nfs4_verifier *verifier, struct net *net)
--{
--	__be32 *verf = (__be32 *)verifier->data;
--
--	BUILD_BUG_ON(2*sizeof(*verf) != sizeof(verifier->data));
--
--	nfsd_copy_write_verifier(verf, net_generic(net, nfsd_net_id));
--}
--
- static __be32
- nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	     union nfsd4_op_u *u)
-@@ -1623,7 +1614,6 @@ static void nfsd4_init_copy_res(struct nfsd4_copy *copy, bool sync)
- 		test_bit(NFSD4_COPY_F_COMMITTED, &copy->cp_flags) ?
- 			NFS_FILE_SYNC : NFS_UNSTABLE;
- 	nfsd4_copy_set_sync(copy, sync);
--	gen_boot_verifier(&copy->cp_res.wr_verifier, copy->cp_clp->net);
- }
- 
- static ssize_t _nfsd_copy_file_range(struct nfsd4_copy *copy,
-@@ -1794,9 +1784,14 @@ static __be32
- nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		union nfsd4_op_u *u)
+@@ -1273,6 +1273,7 @@ static void nfs4_put_copy(struct nfsd4_copy *copy)
  {
--	struct nfsd4_copy *copy = &u->copy;
--	__be32 status;
-+	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
- 	struct nfsd4_copy *async_copy = NULL;
-+	struct nfsd4_copy *copy = &u->copy;
-+	struct nfsd42_write_res *result;
-+	__be32 status;
-+
-+	result = &copy->cp_res;
-+	nfsd_copy_write_verifier((__be32 *)&result->wr_verifier.data, nn);
- 
- 	copy->cp_clp = cstate->clp;
- 	if (nfsd4_ssc_is_inter(copy)) {
-@@ -1816,8 +1811,6 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (!refcount_dec_and_test(&copy->refcount))
+ 		return;
++	atomic_dec(&copy->cp_nn->pending_async_copies);
+ 	kfree(copy->cp_src);
+ 	kfree(copy);
+ }
+@@ -1811,10 +1812,16 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  	memcpy(&copy->fh, &cstate->current_fh.fh_handle,
  		sizeof(struct knfsd_fh));
  	if (nfsd4_copy_is_async(copy)) {
--		struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
--
- 		status = nfserrno(-ENOMEM);
+-		status = nfserrno(-ENOMEM);
  		async_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
  		if (!async_copy)
-@@ -1829,8 +1822,8 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  			goto out_err;
- 		if (!nfs4_init_copy_state(nn, copy))
- 			goto out_err;
--		memcpy(&copy->cp_res.cb_stateid, &copy->cp_stateid.cs_stid,
--			sizeof(copy->cp_res.cb_stateid));
-+		memcpy(&result->cb_stateid, &copy->cp_stateid.cs_stid,
-+			sizeof(result->cb_stateid));
- 		dup_copy_fields(copy, async_copy);
- 		async_copy->copy_task = kthread_create(nfsd4_do_async_copy,
- 				async_copy, "%s", "copy thread");
++		async_copy->cp_nn = nn;
++		/* Arbitrary cap on number of pending async copy operations */
++		if (atomic_inc_return(&nn->pending_async_copies) >
++				(int)rqstp->rq_pool->sp_nrthreads) {
++			atomic_dec(&nn->pending_async_copies);
++			goto out_err;
++		}
+ 		INIT_LIST_HEAD(&async_copy->copies);
+ 		refcount_set(&async_copy->refcount, 1);
+ 		async_copy->cp_src = kmalloc(sizeof(*async_copy->cp_src), GFP_KERNEL);
+@@ -1853,7 +1860,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	}
+ 	if (async_copy)
+ 		cleanup_async_copy(async_copy);
+-	status = nfserrno(-ENOMEM);
++	status = nfserr_jukebox;
+ 	goto out;
+ }
+ 
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 975dd74a7a4d..901fc68636cd 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -8142,6 +8142,7 @@ static int nfs4_state_create_net(struct net *net)
+ 	spin_lock_init(&nn->client_lock);
+ 	spin_lock_init(&nn->s2s_cp_lock);
+ 	idr_init(&nn->s2s_cp_stateids);
++	atomic_set(&nn->pending_async_copies, 0);
+ 
+ 	spin_lock_init(&nn->blocked_locks_lock);
+ 	INIT_LIST_HEAD(&nn->blocked_locks_lru);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 9d918a79dc16..144e05efd14c 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -574,6 +574,7 @@ struct nfsd4_copy {
+ 	struct nfsd4_ssc_umount_item *ss_nsui;
+ 	struct nfs_fh		c_fh;
+ 	nfs4_stateid		stateid;
++	struct nfsd_net		*cp_nn;
+ };
+ 
+ static inline void nfsd4_copy_set_sync(struct nfsd4_copy *copy, bool sync)
 -- 
 2.47.0
 
