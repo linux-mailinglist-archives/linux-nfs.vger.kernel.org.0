@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-8131-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8132-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD8F19D2FF2
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:17:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDEEA9D300B
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:31:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EF461F23605
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 21:17:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE7212839B3
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 21:31:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA7F1D14F3;
-	Tue, 19 Nov 2024 21:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2931CF7A0;
+	Tue, 19 Nov 2024 21:31:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpccpaMM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsGhHUp6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6901A9B2A
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 21:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142A81D043F
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 21:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732051028; cv=none; b=oJTz7cg+WBq3S3gG+vWSRhmCzYwH/X561QXT9dF1Z5654/2JY0qy6lJJCWUlWd5QniWuRbfiMPNJHzgF7FhbTuE7eRdSV7SKKey1s4vnzLL234rObel/a7M4bgJYclrE3YyRMh5UvGAoS++cH2d0S0/DpxQI9HuxxcJWsGdN4o0=
+	t=1732051865; cv=none; b=W0w3SPu2CVAEMiVTSRANTa5bf8WlhU6GrDHpGAj9+qcwSEdW8KOE7axDnsPWLl8VQLqrHlh+2SnSwFTXZYYLGqv7mvi0pbXlU78P+URXc0dK28pyvlqVL1vOv6R86MLkz/4CYODK5xo/ZiycEm+7wDiE1zJFX6h8sk952/6TLoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732051028; c=relaxed/simple;
-	bh=ccD0uaW0LQIHYV5MrHIaH9gBjR35IrAXl1aZY+pQQ6I=;
+	s=arc-20240116; t=1732051865; c=relaxed/simple;
+	bh=rNl54X2KeVPegYGN0g/W6vLcmhzer3Xdtut/VEriF0s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gl0YFiwDQFyEtwJ05OE+cPL+uovK3bhk6PIQEsuxehL7fQoQlJkfY5ykPsnvY1yOxNwpewpgYlH65LUI0JMsTYkJVE7xLkpdbTocIYXugdZAZYxGBa0qdjNiMB9Cgt1u2xh6wUNfPDmcKjDq8xB1upQYwmoEiIix1oZj6BiDxuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpccpaMM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15ECDC4CECF;
-	Tue, 19 Nov 2024 21:17:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=bzBnuPgN3gnsh+HU/iGG8FJ0/PuQb9cJgYF49ziVBjSYXOvjnRpfOedWSS+R5q/NL9M/jz30zA6PTCUKnVIBINkzSVW0P6TYcrlCaAkFRd+8wAZs0P1WRau3tjJafSEe/keWbaoW8E079U4O+uLwxeCCHlqbAg+rzOPsB/EaOOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsGhHUp6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3BAC4CECF;
+	Tue, 19 Nov 2024 21:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732051028;
-	bh=ccD0uaW0LQIHYV5MrHIaH9gBjR35IrAXl1aZY+pQQ6I=;
+	s=k20201202; t=1732051864;
+	bh=rNl54X2KeVPegYGN0g/W6vLcmhzer3Xdtut/VEriF0s=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EpccpaMMHhU+VHq/xhpG81qhYVq88fiMumdIi8asiYuqz16ga2uxnc+kAi3szWx8E
-	 0MXxwiNYfxF4I4PK2MZSeG0CVADLpUcfSh1XNkzNrsd+IXzk/M6f0dw4SriVRaQxtM
-	 agHIAH2op+KuasRKqcP9bujG/88Zrpc0bRUI5ARCwTK+bKEWRllVxl84Vf+0+lJhTR
-	 oldTCaZyhvjjwAfYMS8Y91Lc0WgwjZcFrzBoxRRDxO0f+MP3FwpaBqfkPAnC6BbvKY
-	 FH0Vk091L1RxiaPH+AEuexz973APJ/h3Cc7VjDwFzIhBHHYr84oSjhJnexkBJRau5w
-	 KRSv77C4e0YXA==
-Message-ID: <468675e119863804dfe585c08cd87c9510af5afa.camel@kernel.org>
-Subject: Re: [PATCH 6/6] nfsd: add shrinker to reduce number of slots
- allocated per session
+	b=YsGhHUp6tn7CfwLN5aK425AaqpXljIbhu2AFSquTO/8UuHVhcT8H7yANjB6irggV1
+	 bCWUoyPwlxSwrPIgcBRySeW2qfr9T0qZznm3MPXOjJGDJhWzWS0/MPGmACrf/kbtIN
+	 i/sv+CNZrRbYzQPu63y8DmYc2SpyK7YFrIlC1o+3iUI3y/8QeZN6khCkMjVpJg/hIl
+	 AL3DGYA3JHLevwm3eVhVc45TIBhWrpV8/x7IwbXXhTc6jhtuf4ppSq9AbOWdxshz+C
+	 lvJ5x+VoMuHwTjCEfWg2RzF2FNv992PhLOUo9aAyHAQom/BPjo/OAJI9jcv23liADw
+	 EsIFCsqTUgfuw==
+Message-ID: <2424176e3b8463abbfd532e05101329b2301f287.camel@kernel.org>
+Subject: Re: [PATCH 0/6 RFC v2] nfsd: allocate/free session-based DRC slots
+ on demand
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Tue, 19 Nov 2024 16:17:06 -0500
-In-Reply-To: <20241119004928.3245873-7-neilb@suse.de>
+Date: Tue, 19 Nov 2024 16:31:02 -0500
+In-Reply-To: <20241119004928.3245873-1-neilb@suse.de>
 References: <20241119004928.3245873-1-neilb@suse.de>
-	 <20241119004928.3245873-7-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,221 +136,48 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2024-11-19 at 11:41 +1100, NeilBrown wrote:
-> Add a shrinker which frees unused slots and may ask the clients to use
-> fewer slots on each session.
+> Here is v2 of my series for on-demand allocation and freeing of session D=
+RC slots.
 >=20
-> Each session now tracks se_client_maxreqs which is the most recent
-> max-requests-in-use reported by the client, and se_target_maxreqs which
-> is a target number of requests which is reduced by the shrinker.
+> - Now uses an xarray to store slots, and the limit is raised to 2048
+> - delays retiring a slot until the client has confirmed that it isn't
+>   using it as described in RFC:
 >=20
-> The shrinker iterates over all sessions on all client in all
-> net-namespaces and reduces the target by 1 for each.  The shrinker may
-> get called multiple times to reduce by more than 1 each.
+>       The replier SHOULD retain the slots it wants to retire until the
+>       requester sends a request with a highest_slotid less than or equal
+>       to the replier's new enforced highest_slotid.
 >=20
-> If se_target_maxreqs is above se_client_maxreqs, those slots can be
-> freed immediately.  If not the client will be ask to reduce its usage
-> and as the usage goes down slots will be freed.
+> - When a retired slot is used, allow the seqid to be the next in sequence
+>   as required by the RFC:
 >=20
-> Once the usage has dropped to match the target, the target can be
-> increased if the client uses all available slots and if a GFP_NOWAIT
-> allocation succeeds.
+>          Each time a slot is reused, the request MUST specify a sequence
+>          ID that is one greater than that of the previous request on the
+>          slot.
+>
+>   or "1" as (arguably) allowed by the RFC:
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4state.c | 72 ++++++++++++++++++++++++++++++++++++++++++---
->  fs/nfsd/state.h     |  1 +
->  2 files changed, 69 insertions(+), 4 deletions(-)
+>          The first time a slot is used, the requester MUST specify a
+>          sequence ID of one
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 0625b0aec6b8..ac49c3bd0dcb 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1909,6 +1909,16 @@ gen_sessionid(struct nfsd4_session *ses)
->   */
->  #define NFSD_MIN_HDR_SEQ_SZ  (24 + 12 + 44)
-> =20
-> +static struct shrinker *nfsd_slot_shrinker;
-> +static DEFINE_SPINLOCK(nfsd_session_list_lock);
-> +static LIST_HEAD(nfsd_session_list);
-> +/* The sum of "target_slots-1" on every session.  The shrinker can push =
-this
-> + * down, though it can take a little while for the memory to actually
-> + * be freed.  The "-1" is because we can never free slot 0 while the
-> + * session is active.
-> + */
-> +static atomic_t nfsd_total_target_slots =3D ATOMIC_INIT(0);
-> +
->  static void
->  free_session_slots(struct nfsd4_session *ses, int from)
->  {
-> @@ -1931,11 +1941,14 @@ free_session_slots(struct nfsd4_session *ses, int=
- from)
->  		kfree(slot);
->  	}
->  	ses->se_fchannel.maxreqs =3D from;
-> -	if (ses->se_target_maxslots > from)
-> -		ses->se_target_maxslots =3D from;
-> +	if (ses->se_target_maxslots > from) {
-> +		int new_target =3D from ?: 1;
 
-Let's make that "from ? from : 1". The above is a non-standard gcc-ism
-(AIUI).
+I thought that the conclusion of the IETF discussion was that we should
+reset this to 1. It'd be ideal to just do that, as then we wouldn't
+need NFSD4_SLOT_REUSED.
 
-> +		atomic_sub(ses->se_target_maxslots - new_target, &nfsd_total_target_sl=
-ots);
-> +		ses->se_target_maxslots =3D new_target;
-> +	}
->  }
-> =20
-> -static int __maybe_unused
-> +static int
->  reduce_session_slots(struct nfsd4_session *ses, int dec)
->  {
->  	struct nfsd_net *nn =3D net_generic(ses->se_client->net,
-> @@ -1948,6 +1961,7 @@ reduce_session_slots(struct nfsd4_session *ses, int=
- dec)
->  		return ret;
->  	ret =3D min(dec, ses->se_target_maxslots-1);
->  	ses->se_target_maxslots -=3D ret;
-> +	atomic_sub(ret, &nfsd_total_target_slots);
->  	ses->se_slot_gen +=3D 1;
->  	if (ses->se_slot_gen =3D=3D 0) {
->  		int i;
-> @@ -2006,6 +2020,7 @@ static struct nfsd4_session *alloc_session(struct n=
-fsd4_channel_attrs *fattrs,
->  	fattrs->maxreqs =3D i;
->  	memcpy(&new->se_fchannel, fattrs, sizeof(struct nfsd4_channel_attrs));
->  	new->se_target_maxslots =3D i;
-> +	atomic_add(i - 1, &nfsd_total_target_slots);
->  	new->se_cb_slot_avail =3D ~0U;
->  	new->se_cb_highest_slot =3D min(battrs->maxreqs - 1,
->  				      NFSD_BC_SLOT_TABLE_SIZE - 1);
-> @@ -2130,6 +2145,36 @@ static void free_session(struct nfsd4_session *ses=
-)
->  	__free_session(ses);
->  }
-> =20
-> +static unsigned long
-> +nfsd_slot_count(struct shrinker *s, struct shrink_control *sc)
-> +{
-> +	unsigned long cnt =3D atomic_read(&nfsd_total_target_slots);
-> +
-> +	return cnt ? cnt : SHRINK_EMPTY;
-> +}
-> +
-> +static unsigned long
-> +nfsd_slot_scan(struct shrinker *s, struct shrink_control *sc)
-> +{
-> +	struct nfsd4_session *ses;
-> +	unsigned long scanned =3D 0;
-> +	unsigned long freed =3D 0;
-> +
-> +	spin_lock(&nfsd_session_list_lock);
-> +	list_for_each_entry(ses, &nfsd_session_list, se_all_sessions) {
-> +		freed +=3D reduce_session_slots(ses, 1);
-> +		scanned +=3D 1;
-> +		if (scanned >=3D sc->nr_to_scan) {
-> +			/* Move starting point for next scan */
-> +			list_move(&nfsd_session_list, &ses->se_all_sessions);
-> +			break;
-> +		}
-> +	}
-> +	spin_unlock(&nfsd_session_list_lock);
-> +	sc->nr_scanned =3D scanned;
-> +	return freed;
-> +}
-> +
->  static void init_session(struct svc_rqst *rqstp, struct nfsd4_session *n=
-ew, struct nfs4_client *clp, struct nfsd4_create_session *cses)
->  {
->  	int idx;
-> @@ -2154,6 +2199,10 @@ static void init_session(struct svc_rqst *rqstp, s=
-truct nfsd4_session *new, stru
->  	list_add(&new->se_perclnt, &clp->cl_sessions);
->  	spin_unlock(&clp->cl_lock);
-> =20
-> +	spin_lock(&nfsd_session_list_lock);
-> +	list_add_tail(&new->se_all_sessions, &nfsd_session_list);
-> +	spin_unlock(&nfsd_session_list_lock);
-> +
->  	{
->  		struct sockaddr *sa =3D svc_addr(rqstp);
->  		/*
-> @@ -2223,6 +2272,9 @@ unhash_session(struct nfsd4_session *ses)
->  	spin_lock(&ses->se_client->cl_lock);
->  	list_del(&ses->se_perclnt);
->  	spin_unlock(&ses->se_client->cl_lock);
-> +	spin_lock(&nfsd_session_list_lock);
-> +	list_del(&ses->se_all_sessions);
-> +	spin_unlock(&nfsd_session_list_lock);
->  }
-> =20
->  /* SETCLIENTID and SETCLIENTID_CONFIRM Helper functions */
-> @@ -4335,6 +4387,7 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
->  	slot->sl_seqid =3D seq->seqid;
->  	slot->sl_flags &=3D ~NFSD4_SLOT_REUSED;
->  	slot->sl_flags |=3D NFSD4_SLOT_INUSE;
-> +	slot->sl_generation =3D session->se_slot_gen;
->  	if (seq->cachethis)
->  		slot->sl_flags |=3D NFSD4_SLOT_CACHETHIS;
->  	else
-> @@ -4371,6 +4424,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
->  		if (slot && !xa_is_err(xa_store(&session->se_slots, s, slot,
->  						GFP_ATOMIC))) {
->  			session->se_fchannel.maxreqs +=3D 1;
-> +			atomic_add(session->se_fchannel.maxreqs - session->se_target_maxslots=
-,
-> +				   &nfsd_total_target_slots);
->  			session->se_target_maxslots =3D session->se_fchannel.maxreqs;
->  		} else {
->  			kfree(slot);
-> @@ -8779,7 +8834,6 @@ nfs4_state_start_net(struct net *net)
->  }
-> =20
->  /* initialization to perform when the nfsd service is started: */
-> -
->  int
->  nfs4_state_start(void)
->  {
-> @@ -8789,6 +8843,15 @@ nfs4_state_start(void)
->  	if (ret)
->  		return ret;
-> =20
-> +	nfsd_slot_shrinker =3D shrinker_alloc(0, "nfsd-DRC-slot");
-> +	if (!nfsd_slot_shrinker) {
-> +		rhltable_destroy(&nfs4_file_rhltable);
-> +		return -ENOMEM;
-> +	}
-> +	nfsd_slot_shrinker->count_objects =3D nfsd_slot_count;
-> +	nfsd_slot_shrinker->scan_objects =3D nfsd_slot_scan;
-> +	shrinker_register(nfsd_slot_shrinker);
-> +
->  	set_max_delegations();
->  	return 0;
->  }
-> @@ -8830,6 +8893,7 @@ void
->  nfs4_state_shutdown(void)
->  {
->  	rhltable_destroy(&nfs4_file_rhltable);
-> +	shrinker_free(nfsd_slot_shrinker);
->  }
-> =20
->  static void
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index ea6659d52be2..0e320ba097f2 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -345,6 +345,7 @@ struct nfsd4_session {
->  	bool			se_dead;
->  	struct list_head	se_hash;	/* hash by sessionid */
->  	struct list_head	se_perclnt;
-> +	struct list_head	se_all_sessions;/* global list of sessions */
->  	struct nfs4_client	*se_client;
->  	struct nfs4_sessionid	se_sessionid;
->  	struct nfsd4_channel_attrs se_fchannel;
+Are there any clients that expect to reuse the old seqid in this
+situation? I know the Linux client doesn't. Do Solaris or FreeBSD?
 
---=20
+> - current slot allocation is now reported in /proc/fs/nfsd/clients/*/info
+>=20
+> This has been tested with highly aggressive shrinker settings:
+> 	nfsd_slot_shrinker->seeks =3D 0;
+> 	nfsd_slot_shrinker->batch =3D 2;
+>=20
+> and with periodic "echo 3 > drop_caches".  The slot count drops as
+> expected and then increases again.
+>=20
+
+This is really great work, Neil!
+--
 Jeff Layton <jlayton@kernel.org>
 
