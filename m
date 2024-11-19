@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-8122-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8123-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8099D9D2D01
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 18:52:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19A009D2C19
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 18:07:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C3ABAB28E3F
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 17:05:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A317B1F22EAF
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 17:07:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEEF01CCB4E;
-	Tue, 19 Nov 2024 17:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA7C1D042D;
+	Tue, 19 Nov 2024 17:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C0lNlcLA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8IrrHYN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9672E25763
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 17:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B11B14A639
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 17:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732035902; cv=none; b=sEE6QP1n3OuZMZVYqNZbLd8z1GUs2opj12PLhv+LC5AEncySNIfKSlUaiSY4Hr8PK+DlzJBHlaRBDt3uDsVBQJVixOHQkCPaVTIo5GMoin0poYnVVXzBIIfYKPg5HmDyww7cOZHZCOVjzAgQe8IfM6dBLuOS1ikWaiZQebIBSEY=
+	t=1732036035; cv=none; b=C0jjIs+kFgFlyi7H11lTvyBKi40wdeVpMQ0eCtyxLbFApVl6+zSbYuXz0Qwun2Ed9tq9oX49BU8Cazdz9BcWAOV6hHh8VsGFohZGDbrFU6f1Z8LIki6kWehT5TSSGzUSQbbqqApalnUm5DYiozGPZclTzwjtz5+NqPCf8Mo4gtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732035902; c=relaxed/simple;
-	bh=mHeqW7GsOB8YaOJqHcqwblzUWQHiREyVuQTFhFXN2kE=;
+	s=arc-20240116; t=1732036035; c=relaxed/simple;
+	bh=GaDFTzf0Kr+tg38Pyo2pqtsv0C03n0zkLychI11g2GA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GnZN4YFFJTiJmTG0mMIObZsQ3MpUUf4fUmMWq+KOhRBhrJCNqa8C8CxBw1WLxe8P+U322N+2u9Blbmar9jD73g3M8q2QxS9PyuHuK6b7Yf3HKJHMfIXeqdbHqGMGuv/i3U7A+mwGSWutWnX8lCZ8nMy+aB5UwT+VsZb4Nc60sFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C0lNlcLA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DDB4C4CECF;
-	Tue, 19 Nov 2024 17:05:02 +0000 (UTC)
+	 Content-Type:MIME-Version; b=k7tlkRQYeneLrzA2adhgGtI9dLI5QTYOVUdn9s7pQLC0Zzg0rLb3vbJ53RH7l7oK875WCVyRr95fMutstJsHTm2jP7JZ3BExf3wuQPpdcTS8c8Gv8GqytTrVYBv87QYJ9e2pFb1yGz6skMxV2LpWvSyii91Rr3l7paPH0if+01U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8IrrHYN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61E8C4CECF;
+	Tue, 19 Nov 2024 17:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732035902;
-	bh=mHeqW7GsOB8YaOJqHcqwblzUWQHiREyVuQTFhFXN2kE=;
+	s=k20201202; t=1732036035;
+	bh=GaDFTzf0Kr+tg38Pyo2pqtsv0C03n0zkLychI11g2GA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=C0lNlcLAuLUn6Hcgzf3XUCB9Eu1Xo0/pUUlFFgwCiYF1SZOV2ZF7XyBw2oVv8pgKm
-	 Osyl3fv/xcdFBOH5o1uS+1UNd8FjHAnjGNPBsq3gzNLJ5WlKiqjPsEaNxW4jnVnWbu
-	 7dWB2LSDoFYSbsl7XkTF6O0uOTV4tgnPMlA1umskrFIgp0oe+3TfoiTFWakz7T4bV9
-	 Jia7StNvEr02PTERMwS5hQJlQWwUMpydqpvPEPMaDAzCEBEYni0MKPXMKKSBtCVHSk
-	 5sGNedxU6p8bJPuQXN0p0cy1dXZUPsIYR7Jm19gD8JytKSCz9XC9lKz0MIm18yymXf
-	 OjT1Sc1TGazdA==
-Message-ID: <a8d7fa6f678dcb8e851f7297051208ab6d8f8497.camel@kernel.org>
-Subject: Re: [nfs-utils PATCH 0/2] nfsdctl fixes
+	b=Y8IrrHYNu1jYnDmyuhFWgAFJgVKBs6QW2nhoFcDRTUGo3q0hMJ15bNrv3sOOuO6q6
+	 klzKCV+3lk2GPYaDK1S3rMV/sbzwXcrnAs9IUWU+5UbPAX6ZYAkz10klkF4o/v2agX
+	 cBZs78mvWQG8Akbx1+bsB3Mz3gM6B5RXJf4Z+eBd/AbQO5qLqsmgpOWI5TBdRqdVeh
+	 yEmnEHqrafU33kDlg2vZtfPD3GMVP4YtVOfQD4M9UJVVX3NV0GDnnH0c79H0tAfx6S
+	 0KQCbOmS6ix4+gQBYcOH6/2+6ygsDBm7gRiHcvrHEm63Yh0peEp9kpVIy2uElc+mhH
+	 Nf9xFup1AksMg==
+Message-ID: <5ccdef393e1bea17eddc53cda2a135088c292a33.camel@kernel.org>
+Subject: Re: [nfs-utils PATCH] nfsd: dump default number of threads to 16
 From: Jeff Layton <jlayton@kernel.org>
 To: Scott Mayhew <smayhew@redhat.com>, steved@redhat.com
 Cc: linux-nfs@vger.kernel.org
-Date: Tue, 19 Nov 2024 12:05:00 -0500
-In-Reply-To: <20241118201902.1115861-1-smayhew@redhat.com>
-References: <20241118201902.1115861-1-smayhew@redhat.com>
+Date: Tue, 19 Nov 2024 12:07:13 -0500
+In-Reply-To: <20241118202011.1115968-1-smayhew@redhat.com>
+References: <20241118202011.1115968-1-smayhew@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,20 +133,48 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-11-18 at 15:19 -0500, Scott Mayhew wrote:
-> Two minor fixes for things I noticed while experimenting with nfsdctl.
+On Mon, 2024-11-18 at 15:20 -0500, Scott Mayhew wrote:
+> nfsdctl defaults to 16 threads.  Since the nfs-server.service file first
+> tries nfsdctl and then falls back to rpc.nfsd, it would probably be wise
+> to make the default in rpc.nfsd and nfs.conf 16, for the sake of
+> consistency and to avoid surprises.
 >=20
-> Scott Mayhew (2):
->   nfsdctl: fix up the help text in version_usage()
->   nfsdctl: clarify when versions can be set on the man page
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  nfs.conf          | 2 +-
+>  utils/nfsd/nfsd.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >=20
->  utils/nfsdctl/nfsdctl.8    | 12 ++++++++++--
->  utils/nfsdctl/nfsdctl.adoc |  2 ++
->  utils/nfsdctl/nfsdctl.c    |  4 ++--
->  3 files changed, 14 insertions(+), 4 deletions(-)
->=20
+> diff --git a/nfs.conf b/nfs.conf
+> index 23b5f7d4..087d7372 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -66,7 +66,7 @@
+>  #
+>  [nfsd]
+>  # debug=3D0
+> -# threads=3D8
+> +# threads=3D16
+>  # host=3D
+>  # port=3D0
+>  # grace-time=3D90
+> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+> index 249df00b..f787583e 100644
+> --- a/utils/nfsd/nfsd.c
+> +++ b/utils/nfsd/nfsd.c
+> @@ -32,7 +32,7 @@
+>  #include "xcommon.h"
+> =20
+>  #ifndef NFSD_NPROC
+> -#define NFSD_NPROC 8
+> +#define NFSD_NPROC 16
+>  #endif
+> =20
+>  static void	usage(const char *);
 
-You can add this to both:
+I sort of consider rpc.nfsd to be legacy code and think we shouldn't
+touch it, but I don't have a strong technical reason to oppose this.
+I'm fine with this if it's the consensus.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Jeff Layton <jlayton@kernel.org>
 
