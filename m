@@ -1,138 +1,161 @@
-Return-Path: <linux-nfs+bounces-8133-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8135-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 210579D301B
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:44:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31B099D306F
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 23:24:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82591F23246
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 21:43:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1255B2222D
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:24:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C145B1D2715;
-	Tue, 19 Nov 2024 21:43:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9111D7989;
+	Tue, 19 Nov 2024 22:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KrZZVL33"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="of4NIBPJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="keRNz2f2";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="of4NIBPJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="keRNz2f2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077E813E03E
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 21:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3F1D2794
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 22:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732052635; cv=none; b=YXNmR4oZGcaxzXwZk0bae4tJqE9KUqEvpscgTZVrUj+S+kkVWsjm/HmWn4xMpUm04O1altRofK6081Lesn/G2vxhj/AzLRvn20ui7GAgMkV6mLoHEgE6eLwAIiHPxyEv01CtjfkllrgQOOGqBc4M7XP7AsLKdt4kw4ym7tOfKuQ=
+	t=1732054989; cv=none; b=OQOfNtUnNAx1Be4PED8MjYm9GvGIIU6+KOGuEfRQBAmoyeLEF4dW8ev8n7xKumUoHndBFrieO0paQDBLJ43Rkb1Rp5dPeT+03OwHXksSKDuy+x58L87nP9mEqHxYS3rw2IzJK8RCivVP+1FQc+wTQ5/tAYNJSEWufIpYhueTQYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732052635; c=relaxed/simple;
-	bh=Yz8I6QjoKne6LUyPqIdDwzhmlzAbVZgvXk42TZOaqnQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=UgTp1mA9qFgnXmhy9mLU1X5Gnz00HuZRgntH831C/Ff13EGdrp/1OalPx7y6MTJexYG6lVhvTc606xHaZkuvnaUddXdlyz3xjny9nUgdoiXIt082lavozjbyRVR63u76waJXYDfB/7skb8oONj/RRKY1kWRxTFcPBEKEJZX6a6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KrZZVL33; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AJLYkRR023719;
-	Tue, 19 Nov 2024 21:43:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:date:from:in-reply-to:message-id:references:subject:to; s=
-	corp-2023-11-20; bh=mww2/Pb2jYyvwWlz8IPDSfSH5j2edBcptS16AROd1+I=; b=
-	KrZZVL33cm3wHGO18eKAvoRzmhPdmSsYnlZZCgqrWL3E1MbGZZi58g3v3lfSM+3r
-	k1xvdXs4N5/+dAegkqfY/JjyEwJ2HwWZ1qIHCUCOj+3lbKv02sPFJHX/SWPQn7uT
-	tvH63mjSN6+WMzcMm7XqJOSsUcDan+hmcwWSN5srVAhdautUu3RdCTAFiI4dPTXh
-	ssOjmE0PNekponYrlk2lG7mQ2SRU1itd67wOJvOCcy1T7VB+YHArI//wFe+JSOKp
-	FiNK/TVef8zd2rYrJWh3gOvGTsCHSTiWvvWMdU37bysK+7a1oxTWX19VqA7s9Teq
-	5DsMVJl53yDBb0nzyQoCmQ==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42xhyye3k8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Nov 2024 21:43:45 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4AJLIZGf037914;
-	Tue, 19 Nov 2024 21:43:44 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42xhu9bxrd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Nov 2024 21:43:44 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4AJLg8Tg036080;
-	Tue, 19 Nov 2024 21:43:44 GMT
-Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 42xhu9bxr4-2;
-	Tue, 19 Nov 2024 21:43:44 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: trondmy@hammerspace.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] SUNRPC: display total RPC tasks for RPC client
-Date: Tue, 19 Nov 2024 13:43:23 -0800
-Message-Id: <1732052603-28539-2-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1732052603-28539-1-git-send-email-dai.ngo@oracle.com>
-References: <1732052603-28539-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-11-19_13,2024-11-18_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
- definitions=main-2411190157
-X-Proofpoint-ORIG-GUID: foXNU6WQ8FyTSjLF-tQoAJPVt-lCqO6z
-X-Proofpoint-GUID: foXNU6WQ8FyTSjLF-tQoAJPVt-lCqO6z
+	s=arc-20240116; t=1732054989; c=relaxed/simple;
+	bh=sJ4Eb6f4G6h5BqeTg//DhrirkGiqD78whSAlV63Cmfc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=PaTaAaw8iEii896n0d1jRtHNXygfuWSonQ5t27Y9O9S9bjKCP2Vn0NlYm/an/Og+aY1IfcIcabNaLyqQHXEZ0T748fKXHhX9BCp4yi64nh0DiqxTfQRhiAdyXRWbdtWXwGsYLPJQ+ktc6MbL2uGM7/rdscVsginMj+PRQ5R6DWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=of4NIBPJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=keRNz2f2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=of4NIBPJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=keRNz2f2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4BD811F395;
+	Tue, 19 Nov 2024 22:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732054986; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IURETQq4fS6uu3RdgGEmD/POGw8hY+widdNLuMeCiRo=;
+	b=of4NIBPJX9JbvRmqq0QN1Biap/I8tUh5q7vtPL7+/UcvxusCu2UBWGl7NnWGoHqoOxHmYR
+	dLso88hXBt9UKy3xwcZPoCj5mQHGaXdqMdOGdM+JWWKrsNIm1F11W7wbA9Ntffmbg6ZO1n
+	miegcBvopXpgmI3RjxDfZiHQGS8KXh4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732054986;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IURETQq4fS6uu3RdgGEmD/POGw8hY+widdNLuMeCiRo=;
+	b=keRNz2f2s3X3mwRSD4bjy5LAH1PCr/RgNke4WRa4pi4wEvYDWtu+kolySlJ8HGuP9ux23r
+	xcfrY/HlozmFyWBg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1732054986; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IURETQq4fS6uu3RdgGEmD/POGw8hY+widdNLuMeCiRo=;
+	b=of4NIBPJX9JbvRmqq0QN1Biap/I8tUh5q7vtPL7+/UcvxusCu2UBWGl7NnWGoHqoOxHmYR
+	dLso88hXBt9UKy3xwcZPoCj5mQHGaXdqMdOGdM+JWWKrsNIm1F11W7wbA9Ntffmbg6ZO1n
+	miegcBvopXpgmI3RjxDfZiHQGS8KXh4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1732054986;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IURETQq4fS6uu3RdgGEmD/POGw8hY+widdNLuMeCiRo=;
+	b=keRNz2f2s3X3mwRSD4bjy5LAH1PCr/RgNke4WRa4pi4wEvYDWtu+kolySlJ8HGuP9ux23r
+	xcfrY/HlozmFyWBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46EBB13736;
+	Tue, 19 Nov 2024 22:23:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WbCKO8cPPWcBHAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 19 Nov 2024 22:23:03 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>
+Subject:
+ Re: [PATCH 3/6] nfsd: add session slot count to /proc/fs/nfsd/clients/*/info
+In-reply-to: <Zzzjjln34sdtnEkI@tissot.1015granger.net>
+References: <>, <Zzzjjln34sdtnEkI@tissot.1015granger.net>
+Date: Wed, 20 Nov 2024 09:22:59 +1100
+Message-id: <173205497998.1734440.4810487064683118888@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.993];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Display the total number of RPC tasks, including tasks waiting
-on workqueue and wait queues, for rpc_clnt.
+On Wed, 20 Nov 2024, Chuck Lever wrote:
+> On Tue, Nov 19, 2024 at 11:41:30AM +1100, NeilBrown wrote:
+> > Each client now reports the number of slots allocated in each session.
+> 
+> Can this file also report the target slot count? Ie, is the server
+> matching the client's requested slot count, or is it over or under
+> by some number?
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- net/sunrpc/clnt.c    | 7 +++++--
- net/sunrpc/debugfs.c | 3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+I could.  Would you like to suggest a syntax?
+Usually the numbers would be the same except for short transition
+periods, so I'm not convinced of the value.
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index cc5014b58e3b..79956948ae9d 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -3327,8 +3327,11 @@ bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt *clnt,
- EXPORT_SYMBOL_GPL(rpc_clnt_xprt_switch_has_addr);
- 
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--static void rpc_show_header(void)
-+static void rpc_show_header(struct rpc_clnt *clnt)
- {
-+	printk(KERN_INFO "clnt[%pISpc] RPC tasks[%d]\n",
-+	       (struct sockaddr *)&clnt->cl_xprt->addr,
-+	       atomic_read(&clnt->cl_task_count));
- 	printk(KERN_INFO "-pid- flgs status -client- --rqstp- "
- 		"-timeout ---ops--\n");
- }
-@@ -3360,7 +3363,7 @@ void rpc_show_tasks(struct net *net)
- 		spin_lock(&clnt->cl_lock);
- 		list_for_each_entry(task, &clnt->cl_tasks, tk_task) {
- 			if (!header) {
--				rpc_show_header();
-+				rpc_show_header(clnt);
- 				header++;
- 			}
- 			rpc_show_task(clnt, task);
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index a176d5a0b0ee..e4a4c547c70c 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -74,6 +74,9 @@ tasks_stop(struct seq_file *f, void *v)
- {
- 	struct rpc_clnt *clnt = f->private;
- 	spin_unlock(&clnt->cl_lock);
-+	seq_printf(f, "clnt[%pISpc] RPC tasks[%d]\n",
-+		   (struct sockaddr *)&clnt->cl_xprt->addr,
-+		   atomic_read(&clnt->cl_task_count));
- }
- 
- static const struct seq_operations tasks_seq_operations = {
--- 
-2.43.5
+Currently if the target is reduced while the client is idle there can be
+a longer delay before the slots are actually freed, but I think 2
+lease-renewal SEQUENCE ops would do it.  If/when we add use of the
+CB_RECALL_SLOT callback the delay should disappear.
+
+> 
+> Would it be useful for a server tester or administrator to poke a
+> target slot count value into this file and watch the machinery
+> adjust?
+
+Maybe.  By echo 3 > drop_caches does a pretty good job.  I don't see
+that we need more.
+
+Thanks,
+NeilBrown
 
 
