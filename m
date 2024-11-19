@@ -1,183 +1,185 @@
-Return-Path: <linux-nfs+bounces-8132-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8134-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDEEA9D300B
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:31:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F188D9D301C
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 22:44:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE7212839B3
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 21:31:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 868BF1F232E6
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 21:44:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2931CF7A0;
-	Tue, 19 Nov 2024 21:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB90F1D31B6;
+	Tue, 19 Nov 2024 21:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsGhHUp6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IyczYam3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142A81D043F
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 21:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0784A1D27A0
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 21:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732051865; cv=none; b=W0w3SPu2CVAEMiVTSRANTa5bf8WlhU6GrDHpGAj9+qcwSEdW8KOE7axDnsPWLl8VQLqrHlh+2SnSwFTXZYYLGqv7mvi0pbXlU78P+URXc0dK28pyvlqVL1vOv6R86MLkz/4CYODK5xo/ZiycEm+7wDiE1zJFX6h8sk952/6TLoQ=
+	t=1732052635; cv=none; b=W5FmA91v8nBvOaWcQO7Vnks0Hc9AMeVOF5AfJ34AI4ROzPXwQYFe20NCcZlWn2Vf7PRWDZ5TgE/8ZHt7l4BD9rnrSKFFtEk8fN+vn1ae6Ntxuw10g1nigUUj8TNOk2x0bIYodE9pDugeKMxMrOZqv1hQjL/Jevm2QjJ+I/ohT58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732051865; c=relaxed/simple;
-	bh=rNl54X2KeVPegYGN0g/W6vLcmhzer3Xdtut/VEriF0s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bzBnuPgN3gnsh+HU/iGG8FJ0/PuQb9cJgYF49ziVBjSYXOvjnRpfOedWSS+R5q/NL9M/jz30zA6PTCUKnVIBINkzSVW0P6TYcrlCaAkFRd+8wAZs0P1WRau3tjJafSEe/keWbaoW8E079U4O+uLwxeCCHlqbAg+rzOPsB/EaOOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsGhHUp6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3BAC4CECF;
-	Tue, 19 Nov 2024 21:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732051864;
-	bh=rNl54X2KeVPegYGN0g/W6vLcmhzer3Xdtut/VEriF0s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YsGhHUp6tn7CfwLN5aK425AaqpXljIbhu2AFSquTO/8UuHVhcT8H7yANjB6irggV1
-	 bCWUoyPwlxSwrPIgcBRySeW2qfr9T0qZznm3MPXOjJGDJhWzWS0/MPGmACrf/kbtIN
-	 i/sv+CNZrRbYzQPu63y8DmYc2SpyK7YFrIlC1o+3iUI3y/8QeZN6khCkMjVpJg/hIl
-	 AL3DGYA3JHLevwm3eVhVc45TIBhWrpV8/x7IwbXXhTc6jhtuf4ppSq9AbOWdxshz+C
-	 lvJ5x+VoMuHwTjCEfWg2RzF2FNv992PhLOUo9aAyHAQom/BPjo/OAJI9jcv23liADw
-	 EsIFCsqTUgfuw==
-Message-ID: <2424176e3b8463abbfd532e05101329b2301f287.camel@kernel.org>
-Subject: Re: [PATCH 0/6 RFC v2] nfsd: allocate/free session-based DRC slots
- on demand
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Tue, 19 Nov 2024 16:31:02 -0500
-In-Reply-To: <20241119004928.3245873-1-neilb@suse.de>
-References: <20241119004928.3245873-1-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1732052635; c=relaxed/simple;
+	bh=DTqq/iZ6LwOjnSnTyGIhtGPKzpcDdVfpKJsXYdKY8ss=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=mHmWIOqoIbOHEjhTqOLyXeNPfiMMoZAKTwnt4pYbBUy8txVvLtKfEzyAFdcv6n3+8aPybZc7FSM3gKzRBJjh5PeXXx1SLPlmCTmAJ7WROPIjMfPm3stoemBUiqJCqnHY5bqEWEWkrRT7R322xk/DGpyjMdpbJT2GsqqttZNbci8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IyczYam3; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4AJLYov9014636;
+	Tue, 19 Nov 2024 21:43:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=ABXyU6KE
+	pTAFnIF5ILTWBdjm2/BLOIH8YcHBbopH22g=; b=IyczYam3SPhDXzlrelRKjShs
+	uVtoDccqJB4SV9amPjxuN3G6S+mZflJR/pYDv40gnGrsooZ7H5Zs0rN1tSPsVBVY
+	vDgB4VRhNoHwnSNvU5Xp7oD7Uoz4agRsIetNY9P+OJYSTlI0Qrf30J16vDY3tSOu
+	sVNIUHNz5kmGT8BsoHhN9vnyzJccokZqgWOLxV9dB4osy4FvyDG09TUruhRH8MhC
+	cxRYaK2Rtlr2TGP+SJ+1icpq5OvB2wPSrjSSovqONv7Iujv0nMUjJZXFOPFO/rk/
+	rtbeFfWVGc2e/CEb1JoA/EZlT4TQ6wdABz6u9q0YYW6jFBSb5IBiZDPBcNA99g==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 42xjaa64df-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Nov 2024 21:43:44 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4AJLHiKo037247;
+	Tue, 19 Nov 2024 21:43:44 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 42xhu9bxr8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Nov 2024 21:43:44 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4AJLg8Te036080;
+	Tue, 19 Nov 2024 21:43:43 GMT
+Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 42xhu9bxr4-1;
+	Tue, 19 Nov 2024 21:43:43 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: trondmy@hammerspace.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] SUNRPC: only put task on cl_tasks list after the RPC call slot is reserved.
+Date: Tue, 19 Nov 2024 13:43:22 -0800
+Message-Id: <1732052603-28539-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-19_13,2024-11-18_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2409260000
+ definitions=main-2411190157
+X-Proofpoint-ORIG-GUID: dgUHUW7X6hY7lyswK_VmMSC1J1_zt2rP
+X-Proofpoint-GUID: dgUHUW7X6hY7lyswK_VmMSC1J1_zt2rP
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-On Tue, 2024-11-19 at 11:41 +1100, NeilBrown wrote:
-> Here is v2 of my series for on-demand allocation and freeing of session D=
-RC slots.
->=20
-> - Now uses an xarray to store slots, and the limit is raised to 2048
-> - delays retiring a slot until the client has confirmed that it isn't
->   using it as described in RFC:
->=20
->       The replier SHOULD retain the slots it wants to retire until the
->       requester sends a request with a highest_slotid less than or equal
->       to the replier's new enforced highest_slotid.
->=20
-> - When a retired slot is used, allow the seqid to be the next in sequence
->   as required by the RFC:
->=20
->          Each time a slot is reused, the request MUST specify a sequence
->          ID that is one greater than that of the previous request on the
->          slot.
->
->   or "1" as (arguably) allowed by the RFC:
->=20
->          The first time a slot is used, the requester MUST specify a
->          sequence ID of one
->=20
+Under heavy write load, we've seen the cl_tasks list grows to
+millions of entries. Even though the list is extremely long,
+the system still runs fine until the user wants to get the
+information of all active RPC tasks by doing:
 
-I thought that the conclusion of the IETF discussion was that we should
-reset this to 1. It'd be ideal to just do that, as then we wouldn't
-need NFSD4_SLOT_REUSED.
+When this happens, tasks_start acquires the cl_lock to walk the
+cl_tasks list, returning one entry at a time to the caller. The
+cl_lock is held until all tasks on this list have been processed.
 
-Are there any clients that expect to reuse the old seqid in this
-situation? I know the Linux client doesn't. Do Solaris or FreeBSD?
+While the cl_lock is held, completed RPC tasks have to spin wait
+in rpc_task_release_client for the cl_lock. If there are millions
+of entries in the cl_tasks list it will take a long time before
+tasks_stop is called and the cl_lock is released.
 
-> - current slot allocation is now reported in /proc/fs/nfsd/clients/*/info
->=20
-> This has been tested with highly aggressive shrinker settings:
-> 	nfsd_slot_shrinker->seeks =3D 0;
-> 	nfsd_slot_shrinker->batch =3D 2;
->=20
-> and with periodic "echo 3 > drop_caches".  The slot count drops as
-> expected and then increases again.
->=20
+The spin wait tasks can use up all the available CPUs in the system,
+preventing other jobs to run, this causes the system to temporarily
+lock up.
 
-This is really great work, Neil!
---
-Jeff Layton <jlayton@kernel.org>
+This patch fixes this problem by delaying inserting the RPC
+task on the cl_tasks list until the RPC call slot is reserved.
+This limits the length of the cl_tasks to the number of call
+slots available in the system.
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ include/linux/sunrpc/clnt.h |  1 +
+ net/sunrpc/clnt.c           | 18 +++++++++++++-----
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 5321585c778f..fec976e58174 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -93,6 +93,7 @@ struct rpc_clnt {
+ 	const struct cred	*cl_cred;
+ 	unsigned int		cl_max_connect; /* max number of transports not to the same IP */
+ 	struct super_block *pipefs_sb;
++	atomic_t		cl_task_count;
+ };
+ 
+ /*
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 0090162ee8c3..cc5014b58e3b 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -958,12 +958,17 @@ void rpc_shutdown_client(struct rpc_clnt *clnt)
+ 
+ 	trace_rpc_clnt_shutdown(clnt);
+ 
++	clnt->cl_shutdown = 1;
+ 	while (!list_empty(&clnt->cl_tasks)) {
+ 		rpc_killall_tasks(clnt);
+ 		wait_event_timeout(destroy_wait,
+ 			list_empty(&clnt->cl_tasks), 1*HZ);
+ 	}
+ 
++	/* wait for tasks still in workqueue or waitqueue */
++	wait_event_timeout(destroy_wait,
++			   atomic_read(&clnt->cl_task_count) == 0, 1 * HZ);
++
+ 	rpc_release_client(clnt);
+ }
+ EXPORT_SYMBOL_GPL(rpc_shutdown_client);
+@@ -1139,6 +1144,7 @@ void rpc_task_release_client(struct rpc_task *task)
+ 		list_del(&task->tk_task);
+ 		spin_unlock(&clnt->cl_lock);
+ 		task->tk_client = NULL;
++		atomic_dec(&clnt->cl_task_count);
+ 
+ 		rpc_release_client(clnt);
+ 	}
+@@ -1189,10 +1195,7 @@ void rpc_task_set_client(struct rpc_task *task, struct rpc_clnt *clnt)
+ 		task->tk_flags |= RPC_TASK_TIMEOUT;
+ 	if (clnt->cl_noretranstimeo)
+ 		task->tk_flags |= RPC_TASK_NO_RETRANS_TIMEOUT;
+-	/* Add to the client's list of all tasks */
+-	spin_lock(&clnt->cl_lock);
+-	list_add_tail(&task->tk_task, &clnt->cl_tasks);
+-	spin_unlock(&clnt->cl_lock);
++	atomic_inc(&clnt->cl_task_count);
+ }
+ 
+ static void
+@@ -1787,9 +1790,14 @@ call_reserveresult(struct rpc_task *task)
+ 	if (status >= 0) {
+ 		if (task->tk_rqstp) {
+ 			task->tk_action = call_refresh;
++
++			/* Add to the client's list of all tasks */
++			spin_lock(&task->tk_client->cl_lock);
++			if (list_empty(&task->tk_task))
++				list_add_tail(&task->tk_task, &task->tk_client->cl_tasks);
++			spin_unlock(&task->tk_client->cl_lock);
+ 			return;
+ 		}
+-
+ 		rpc_call_rpcerror(task, -EIO);
+ 		return;
+ 	}
+-- 
+2.43.5
+
 
