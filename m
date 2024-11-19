@@ -1,272 +1,165 @@
-Return-Path: <linux-nfs+bounces-8090-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8097-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C6849D1C9B
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 01:38:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89F2F9D1CC6
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 01:49:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1BFD328247D
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 00:38:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 449AF1F21C8C
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Nov 2024 00:49:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A69C149;
-	Tue, 19 Nov 2024 00:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A4DA22067;
+	Tue, 19 Nov 2024 00:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b="fvHgE0CP"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UIoPmkve";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AejGQVa1";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LYdqiXNj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QyeQT7oX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5818825
-	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 00:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA76D1F941
+	for <linux-nfs@vger.kernel.org>; Tue, 19 Nov 2024 00:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731976717; cv=none; b=OTX2ohvD6t+FsIaCzvxZA2yzCDsiN93ywtmyqAdTx1TJxZTWmy9nLTtlRj/rKtBDX4vSr5ZjAfYi5nemGX+zWGdZg/hkrUzfQTQNJGJNo/Mn8zBOMbQBlo5AU2YIsGwbPzBq0T4Wq/HN4TmHLOrXvA7OpFxVCXsfW4LVSi3D7wQ=
+	t=1731977385; cv=none; b=L2aDlUg7c0tbc6sS8QMCSs3Y/mf2enJbGmTA7FV81Wyv9uy6Zn26X2uprws3KxEpRMQJuxnVDDWFiiyqrEZxoVADKI7V9Zw6Et67l83gBXIwee/dupJNcN/cjUv2m58NuNpgB6n3+1+VScWxvU4WiM2A2mfEcORKaY63C7hmkZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731976717; c=relaxed/simple;
-	bh=0S8kmrnVglmr3hKRQAZzgVzPZdWviSDu8FL08KM3xv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aw9zpiZKgWj0fsbjMHyMNoOb0+Jen1QX+nm5YTp2483mj7bzDKzGeVqnHeh8KFdox5BTapVrjYXbAkHBNyNz8v14WkzFzeeWyblSuRPFkIWyebke9W35YVRZDPdD4Kf5wgpV5zu0KFF43c2XTmk0gefMOqYWSwa3j1MNQ7CS4Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dneg.com; spf=pass smtp.mailfrom=dneg.com; dkim=pass (2048-bit key) header.d=dneg.com header.i=@dneg.com header.b=fvHgE0CP; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dneg.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dneg.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5cf6f367f97so5343638a12.0
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Nov 2024 16:38:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1731976713; x=1732581513; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NV+b0+gbDb+5A13HgAhpJrlIDwPaHZ7ljPk0cgsk4uk=;
-        b=fvHgE0CPkdkXwbyvCAajjwFJziULhYdw0oAwFxZ9sfib8HMt9OmUFYep/zlVPZ2Jk+
-         oe71ego8TrcbXlEaEhQtVRwztqZ7c5iOQTCjLOGSrx2dw+YPnqZGhVIl+5WX9KULZqqI
-         5UDIEh27EhjUj9Mghu10VcndPvid7hw0D2Ut6bhhTdGiR1jSYqWoN5NaTqqG8drAbCU6
-         vlOjqziXIzTIcJJxF/82cRQeX8WYetynXrK6ug714q+kG3C6nO9VaqSS4F7fTYGj2yGx
-         oFi3N+JhuK0SzE0m4N3fPw5xtefcIYGa9RAWaUmm4lP3NGMavc8xfA85CUmwjnai3JvY
-         OTZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731976713; x=1732581513;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NV+b0+gbDb+5A13HgAhpJrlIDwPaHZ7ljPk0cgsk4uk=;
-        b=D5XrqqL63YrZTdLyJ3HudfuG5Ce2/K2jWpUNnIzZ9vYhbNd3Fgl9g0ghmr+lkXX0+p
-         cUwvv6GennDQhQJs+ONzM8AvBI3qah8IOo4pM0aYhliwV42ChoFQyHDk/xSxzG1HnEgz
-         9kuEFY0ohEmz7yQNsmXGkqOjQng1RaeE9m79+/EIbKud1ts+XoDtzoPOqmaS6LMKk1Jv
-         Sdj2c+uhnsSagQCQShCF9+wrmqS5itY5uhWUporSGfBy8mCJk2poSeJmzkJkMcgY08mr
-         l5ni12nE0nkvMcAyN9fMhIO1r1BBuouzwBDX4Zr6H0Q2Sp+7mzvuUEvo65uTL/gKBhba
-         Lqmw==
-X-Gm-Message-State: AOJu0Yxdb8fOKyMlCEsfj1S7YwZM3bOVW89ZnLi3OZqnRhpdjqofQa8c
-	+2bdjfOW1l+ktUiU2gK+BX/Ps0ohyuprfWkFt1bICjSfFAicbdg5sSLDFYpbPnbci+hlivx9j9j
-	WG3HrOSOE3LMGTnIslRctqbW9SO5/r2VD2zVfJw==
-X-Google-Smtp-Source: AGHT+IGYba/PyxzCZBY8lNbuTfwGaucJWL+kdJhNz+YnOa++zoaxY2LaPDl5LckYXEIWoMQR16v+05FIEwgFkqMLv4I=
-X-Received: by 2002:a05:6402:210f:b0:5cf:a20:527c with SMTP id
- 4fb4d7f45d1cf-5cf8fceab92mr8997036a12.21.1731976712983; Mon, 18 Nov 2024
- 16:38:32 -0800 (PST)
+	s=arc-20240116; t=1731977385; c=relaxed/simple;
+	bh=9ztYrp/Z/F7bAM5xw3hXou1jXm20twfg3ZbTcPcuRrs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ix8gqoSUd9ssuALo03ORfXVsXzTGXU+4vuqza9IYHItT1J/ZjAEzXkFbUOXoA69Em8xJIsXOoxH45v3+isYIiXznspkES5jSzmECjxd9m4d5tXUx3k+RQPZi+3jP0YCZboADa78eEiBKRfnu/ren6KMgDSSARV4JxAkDlw6CE2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UIoPmkve; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AejGQVa1; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LYdqiXNj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QyeQT7oX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E22AD1F365;
+	Tue, 19 Nov 2024 00:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731977382; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=K5yIs+Lu/OSYGa1fKi38zZvlq894PZc4Rmuz8jT4EU4=;
+	b=UIoPmkveOxnn1VHX9E4vlwkeqfunIJXbpyzL/8C94ga9i180TrrKLtN26zRpFkx2pMkVRv
+	0Kfvj3cIGmZsjOP+3ROEy4bBHMBnJ2a9Pawh9VyXMMwHA/jx6TMgMyXwo+6+BRO7sjBCLJ
+	GTZYvEDirMKgTs08s9NDdLPvZ2Gw7WE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731977382;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=K5yIs+Lu/OSYGa1fKi38zZvlq894PZc4Rmuz8jT4EU4=;
+	b=AejGQVa1/B67H5q5XWOQhwtKb7aVCcqfqJtjGMD4sZZVaFHD/7JnIv0PyJodEkK9OkX6w0
+	pk8P5IWd3Yiz6gCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LYdqiXNj;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QyeQT7oX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1731977381; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=K5yIs+Lu/OSYGa1fKi38zZvlq894PZc4Rmuz8jT4EU4=;
+	b=LYdqiXNj+dFypyufcQuLZOa8VH6iHw3hp27tIGExvJ2vAsmCAvFrQ6n8fLODMDb5idzxRi
+	SPHVcJU84Az2A7qQhmJ2Nw01Yejnp/kWUPqBMdzvuAu/0TFVonktpeIGxQEenIOp9bjoJD
+	rC36tDXjvQU55Y9uSAVeWzDqXmhJ/O8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1731977381;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=K5yIs+Lu/OSYGa1fKi38zZvlq894PZc4Rmuz8jT4EU4=;
+	b=QyeQT7oXrYdaOaVcIuAxrUeUXLCOeTCV1M+vhjNx+KO3qiYOLX9pboKP0WLZ6SOo5mYTBx
+	gJQIFrbJJOfS/hBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA7EB1376E;
+	Tue, 19 Nov 2024 00:49:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2NXKI6PgO2eQJgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 19 Nov 2024 00:49:39 +0000
+From: NeilBrown <neilb@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Subject: [PATCH 0/6 RFC v2] nfsd: allocate/free session-based DRC slots on demand
+Date: Tue, 19 Nov 2024 11:41:27 +1100
+Message-ID: <20241119004928.3245873-1-neilb@suse.de>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241023152940.63479-1-snitzer@kernel.org> <20241023155846.63621-1-snitzer@kernel.org>
- <ZyOe66m0BbAOWOyI@tissot.1015granger.net> <ZzuOEt/JjwmROMBb@tissot.1015granger.net>
-In-Reply-To: <ZzuOEt/JjwmROMBb@tissot.1015granger.net>
-From: Daire Byrne <daire@dneg.com>
-Date: Tue, 19 Nov 2024 00:37:56 +0000
-Message-ID: <CAPt2mGOTiNhcMLCcYFAQNwtn0ON5Q8RG7+Ku-dZGb11o_mVOFQ@mail.gmail.com>
-Subject: Re: [PATCH v3] nfsd: disallow file locking and delegations for NFSv4 reexport
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@hammerspace.com>, 
-	Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: E22AD1F365
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, 18 Nov 2024 at 18:57, Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> On Thu, Oct 31, 2024 at 11:14:51AM -0400, Chuck Lever wrote:
-> > On Wed, Oct 23, 2024 at 11:58:46AM -0400, Mike Snitzer wrote:
-> > > We do not and cannot support file locking with NFS reexport over
-> > > NFSv4.x for the same reason we don't do it for NFSv3: NFS reexport
->
->  [ ... patch snipped ... ]
->
-> > > diff --git a/Documentation/filesystems/nfs/reexport.rst b/Documentation/filesystems/nfs/reexport.rst
-> > > index ff9ae4a46530..044be965d75e 100644
-> > > --- a/Documentation/filesystems/nfs/reexport.rst
-> > > +++ b/Documentation/filesystems/nfs/reexport.rst
-> > > @@ -26,9 +26,13 @@ Reboot recovery
-> > >  ---------------
-> > >
-> > >  The NFS protocol's normal reboot recovery mechanisms don't work for the
-> > > -case when the reexport server reboots.  Clients will lose any locks
-> > > -they held before the reboot, and further IO will result in errors.
-> > > -Closing and reopening files should clear the errors.
-> > > +case when the reexport server reboots because the source server has not
-> > > +rebooted, and so it is not in grace.  Since the source server is not in
-> > > +grace, it cannot offer any guarantees that the file won't have been
-> > > +changed between the locks getting lost and any attempt to recover them.
-> > > +The same applies to delegations and any associated locks.  Clients are
-> > > +not allowed to get file locks or delegations from a reexport server, any
-> > > +attempts will fail with operation not supported.
-> > >
-> > >  Filehandle limits
-> > >  -----------------
->
-> Note for Mike:
->
-> Last sentence "Clients are not allowed to get ... delegations from a
-> reexport server" -- IIUC it's up to the re-export server to not hand
-> out delegations to its clients. Still, it's important to note that
-> NFSv4 delegation would not be available for re-exports.
->
-> See below for more: I'd like this paragraph to continue to discuss
-> the issue of OPEN and I/O behavior when the re-export server
-> restarts. The patch seems to redact that bit of detail.
->
-> Following is general discussion:
->
->
-> > There seems to be some controversy about this approach.
-> >
-> > Also I think it would be nicer all around if we followed the usual
-> > process for changes that introduce possible behavior regressions:
-> >
-> >  - add the new behavior, make it optional, default old behavior
-> >  - wait a few releases
-> >  - change the default to new behavior
-> >
-> > Lastly, there haven't been any user complaints about the current
-> > situation of no lock recovery in the re-export case.
-> >
-> > Jeff and I discussed this, and we plan to drop this one for 6.13 but
-> > let the conversation continue. Mike, no action needed on your part
-> > for the moment, but please stay tuned!
-> >
-> > IMO having an export option (along the lines of "async/sync") that
-> > is documented in a man page is going to be a better plan. But if we
-> > find a way to deal with this situation without a new administrative
-> > control, that would be even better.
->
-> Proposed solutions so far:
->
-> - Disable NFS locking entirely on NFS re-export
->
-> - Implement full state pass-through for re-export
->
-> Some history of the NFSD design and the re-export issue is provided
-> here:
->
->   http://wiki.linux-nfs.org/wiki/index.php/NFS_re-export#reboot_recovery
->
-> Certain usage scenarios require that lock state be globally visible,
-> so disabling NFS locking on re-export mounts will need to be
-> considered carefully.
->
-> Assuming that NFSv4 LOCK operations are proliferated to the back-end
-> server in today's NFSD, does it make sense to avoid code changes at
-> the moment, but more carefully document the configuration options
-> and their risks?
->
-> +++ In all following configurations, no state recovery occurs when
-> the re-export server restarts, as explained in
-> Documentation/filesystems/nfs/reexport.rst.
->
-> Mount options on the re-export server and clients:
->
-> * All default: open and lock state is proliferated to the back-end
->   server and is visible to all NFS clients.
->
-> * local_lock=all on the re-export server's mount of the back-end
->   server: clients of that server all see the same set of locks, but
->   these locks are not visible to the back-end server or any of its
->   clients. Open state is visible everywhere.
->
-> * local_lock=all on the NFS mounts on client mounts of the re-export
->   server: applications on NFS clients do not see locks set by
->   applications on any other NFS clients. Open state is visible
->   everywhere.
->
-> When an NFS client of the re-export server OPENs a file, currently
-> that creates OPEN state on the re-export server, and I assume also
-> on the back-end server. That state cannot be recovered if the
-> re-export server restarts, but it also cannot be blocked by a mount
-> option.
->
-> Likewise, I assume the back-end server can hand out delegations to
-> the re-export server. If the re-export server restarts, how does it
-> recover those delegations? The re-export server could disable
-> delegation by blocking off its callback service, but should it?
->
-> What, if anything, is being done to further develop and regularly
-> test NFS re-export in upstream kernels?
->
-> The reexport.rst file: This still reads more like design notes than
-> administrative documentation.  IMHO it should instead have a more
-> detailed description and disclaimer regarding what kind of manual
-> recovery is needed after a re-export server restart. That seems like
-> important information for administrators who think they might want
-> to deploy this solution. Maybe Documentation/ isn't the right place
-> for administrative documentation?
->
-> It might be prudent to (temporarily) label NFS re-export as
-> experimental use only, given its incompleteness and the long list
-> of caveats.
+Here is v2 of my series for on-demand allocation and freeing of session DRC slots.
 
-As someone who uses NFSv3 re-export extensively in production, I can't
-comment much on the "correctness" of the current locking, but it is
-"good enough" for us (we don't explicitly mount with local locks atm).
+- Now uses an xarray to store slots, and the limit is raised to 2048
+- delays retiring a slot until the client has confirmed that it isn't
+  using it as described in RFC:
 
-The unique thing about our workloads though is that other than maybe
-the odd log file or home directory shell history file, a single
-process always writes a new unique file and we never overwrite. We
-have an asset management DB that determines the file paths to be
-written and a batch system to run processes (i.e. a production
-pipeline + render farm).
+      The replier SHOULD retain the slots it wants to retire until the
+      requester sends a request with a highest_slotid less than or equal
+      to the replier's new enforced highest_slotid.
 
-We also really try to avoid having either the origin backend server or
-re-export server crash/reboot. But even when once a year something
-does invariably go wrong, we are willing to take the hit on broken
-mounts, processes or corrupted files (just re-run the batch jobs).
+- When a retired slot is used, allow the seqid to be the next in sequence
+  as required by the RFC:
 
-Basically the upsides outweigh the downsides for our specific workloads.
+         Each time a slot is reused, the request MUST specify a sequence
+         ID that is one greater than that of the previous request on the
+         slot.
 
-Coupled with FS-Cache and a few TBs of storage, using a re-export
-server is a very efficient way to serve files to many clients over a
-bandwidth constrained and/or high latency WAN link. In the case of
-high latency (e.g. global offices), we even do things like increase
-actimeo and disable CTO to reduce repeat metadata round-trips to the
-absolute minimum. Again, I think we have a unique workload that allows
-for this.
+  or "1" as (arguably) allowed by the RFC:
 
-If the locks will eventually be passed through to the backend server,
-then I suspect we would still want a way to opt out to reduce WAN
-latency overhead at the expense of locking correctness (maybe just
-using local locks).
+         The first time a slot is used, the requester MUST specify a
+         sequence ID of one
 
-I think others with similar workloads are using it in this way too and
-I know Google were maintaining a howto to help customers migrate
-workloads to their cloud:
+- current slot allocation is now reported in /proc/fs/nfsd/clients/*/info
 
-https://github.com/GoogleCloudPlatform/knfsd-cache-utils
-https://cloud.google.com/architecture/deploy-nfs-caching-proxy-compute-engine
+This has been tested with highly aggressive shrinker settings:
+	nfsd_slot_shrinker->seeks = 0;
+	nfsd_slot_shrinker->batch = 2;
 
-Although it seems like that specific project has gone a bit quiet of
-late. They also helped get the reexport/crossmount fsidd helper merged
-into nfs-utils.
+and with periodic "echo 3 > drop_caches".  The slot count drops as
+expected and then increases again.
 
-I have also heard others say reexports are useful for "converting"
-NFSv4 storage to NFSv3 (or vice-versa) for older non-NFSv4 clients or
-servers, but I'm not sure how big a thing that is in this day and age.
+NeilBrown
 
-I guess Netapp's "FlexCache" product is a doing a similar thing to
-reexporting and seems to lean heavily on NFSv4 and delegations to
-achieve that? The latest version can even do write-back caching on
-files (get lock first, write back later).
 
-I could probably write a whole (longish) thread about the different
-ways we currently use NFS re-exporting and some of the remaining
-pitfalls if there is any interest in that...
-
-Daire
 
