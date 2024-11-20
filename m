@@ -1,66 +1,66 @@
-Return-Path: <linux-nfs+bounces-8168-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8169-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D95239D4463
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 00:19:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9EA79D4493
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 00:34:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C664B24A88
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 23:19:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFAD62832F8
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 23:34:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4AF1C304F;
-	Wed, 20 Nov 2024 23:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E661197A68;
+	Wed, 20 Nov 2024 23:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7TyH4Cm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZflk9w7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE4727447
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 23:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA25213BAF1
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 23:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732144737; cv=none; b=WhnbdJRLllp6d9Vs2b4n/z6NDQ0zw61Dg3rXfqExzLaKyStjeLVr82m52P/q8N6ua7RGdVCvrHbm+N54Vouy7G3WZ2c9IE0wjWYA/GMu2pzo7jS000O59B8UnANd+OkIsWhgvBCuZGA0EdhbtUZvHlyQVM0s2a09FOVN/gs7eRs=
+	t=1732145690; cv=none; b=Yi/QheSE3q/QgHX8BHytuV5vjCwE7XuAg/FM0Aqowbm1HuzeaGMEV7FPQyJ2lYo82CS6rnMh9V9Ec2zJDOzc+s26QSBxu0xUeLV/E/dbVuQIZUQoOA9BSMHBZ043msn4RcXfUKu+kZYE/74JkUjo4fkYlSL3fAqgtRkYFCt6xdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732144737; c=relaxed/simple;
-	bh=bivmfpS8Cg5z3U+Z0LQltGaj/qZSqMcKs1Bhp1Nu5fI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ObQwysqGhOG+2b2U1qQbtzHxKyEoj5Ii6Hb4X4IJ4mWON17Nxdg99VhNx9KvA79eWcrNGf9PzjZh+wdoUV/V7Tu5nN0vBi8MVh0ssAWG4Y1oRm/DyR8ygVIt4ayXOo5kWNzdSbMIXaEFN3UGuTI0yjeKJMiTcnKbCE67yVYvVjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7TyH4Cm; arc=none smtp.client-ip=209.85.167.171
+	s=arc-20240116; t=1732145690; c=relaxed/simple;
+	bh=90OO0roAq1vSKDIou5DJAW6i1mX1sVXgL72EFojSkfA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=kBqC+AnGl1MDQueb/SVTZ3oDDaVbBWsQwunGFvEz65HIzFHIV2SCBmQ41A71IS9FONvXNSxsaBuEpvewnZT4QLLvV8HkkCaM1i0PoOBns7R32H8u5bTh+ozNOo/mpFkpq3sDkS8ypOYSfjxo8GimPihuRC8FKcemqtOmerOsgDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZflk9w7; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3e601b6a33aso249364b6e.0
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 15:18:56 -0800 (PST)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3e5fa17a79dso236026b6e.1
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 15:34:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732144735; x=1732749535; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732145687; x=1732750487; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=W2Vow3MMqNnx3kypCC8Uiau1FuJyAasLyx2kjniL95Y=;
-        b=O7TyH4CmWJo/Ivawc+hl/Hn3A115rRH9IraLZHRWQSOeWwWRYILcTyqfU7jx9QpWzf
-         DzYSEBnbQ7bmn4PWLwXDwyTiu0Qply9c+KjyUkeciRMt+ca3Y3O9EMPySA94zH3LeEeN
-         0R5YkH3TcFecVdVzgukhFrbgf7HbrOcTX8tgY601W4jpJPocskUV8DmZZJBdQe/luwFp
-         2sLBbFgxJZCvIxErSJ6bG0eyULhKIaer1MAmhjyVzMyRx+pZsTeMgEcABmhMjGQfeR/2
-         xJ/6oelbBvyfkcQZGFKifAQ34RedR5I0K57v/SDlJWCFyDlnRvZ1Z2k7I8zM4hEnZKpA
-         6sGQ==
+        bh=e88PnxIjnvAMjYS7C909Z2P1bWhFo8k2X+rqxAuGSJc=;
+        b=cZflk9w72fOtvWE1pMtPSpJfoGu9SHpRsp/+/+zrswvZq8JRKdbauaIRlzQa5ojM49
+         Rxg27Ygy/cmfvOTnQe3HnBWO89p0ObYL+pnmZGWk7e2I0XWm2HY4W1QOWXqi6T9ieH1q
+         xNZnIBCdiGJjJZVhsbYy72nYU+HGJMN0CiPEUy+H8ZKXh0fklw1FBtpXuvXeapQBNY2U
+         DZl/uqrfkGbJbc7v0S6wDwMu1n8oKnXS5KlbFOl3lI2EUDyUboJIJpbaCdgguOgMZxyX
+         DCNvoNPsE3DTOcTmXGb75YH8hATfVU4TGqvnWb8zV+S3ZEE2weDMzr362XYbpq/xaF0j
+         kj+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732144735; x=1732749535;
+        d=1e100.net; s=20230601; t=1732145687; x=1732750487;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=W2Vow3MMqNnx3kypCC8Uiau1FuJyAasLyx2kjniL95Y=;
-        b=V4bAgc+p37/xUIamP8aBo8PPPSZsP3xIanN8AzC03QCTFOn6FXSxn2/YGBY/EeN0bv
-         nMbObJo+5WM9m88IZB7FvdeZB3H9HSRiDcacKa51ooYVWZR5NqnTIZZi6Oy8V1pEp3d5
-         QRJn63Gd2jd8y9DFWg1neDkkTvBZiG5cfLbHxhQ2jPp25mNm4J/go8WLU3eJHTftf8Fm
-         h1ttbZ1JPqbfJ8eL8yqIQWwcx/gM8PHs+1gIubRrbAdepkUEkXWeLiVIZDsthBtTKCZx
-         8rEcewzs4hrvIwIKQjxwLHSjfQlfjmPu1/SzUK5nee/ozI8+ilFjxumlnf0+fE2HuU2q
-         /h7A==
-X-Gm-Message-State: AOJu0YyCENOmv/ea4OUN3PRo3wA5DFUoBFdTADJq5vGPuaGLUOB03cOq
-	P6M9tImgfuEROu5QvGX4YsB+jJjbzXf0lH6fXCS5155y2ArvCgjsTgHmVIWDEvlvBmT14xDFkfb
-	IFZuAWOKLtDzn3J9Y46B/E21OnzVsQw==
-X-Google-Smtp-Source: AGHT+IFPp2niZTGpFKDrNsS7CI+ap+ZWijvSAa7tsQf23IyXH70abibRkZtQqq/cbVV6ywd7OGcKdOiVdovpm0P4dOg=
-X-Received: by 2002:a05:6808:158c:b0:3e6:2408:6117 with SMTP id
- 5614622812f47-3e7eb6d1494mr4926802b6e.13.1732144735198; Wed, 20 Nov 2024
- 15:18:55 -0800 (PST)
+        bh=e88PnxIjnvAMjYS7C909Z2P1bWhFo8k2X+rqxAuGSJc=;
+        b=bKgOfMJIP1jsnRu1sIQjXX1ab9aMh8beq9nw2vPwnFTD3WYAuOeYOUVzis0SUEGAS/
+         limJMyg7G/irjs8VDuf11oxUihkBiqXZCgSDa7j46erMD6YrhBBX3Hu+LI2RaCCyG3KO
+         zwjLIAb31aj6mi26Prp6Xa/5xWLqSiUfNy0HPqjaXKVulR0PblNozzZsQswcBR/9oa3Z
+         ZjIg1UAxqe4qx5jl357vjPAFNHt1RHCTM2itCwK8CygJ6yyvGXWP96YzIbekYZ/8o9Zc
+         oWNc3n3Mtg6st+FIlLt2cG2KmJO6GiqX3KUKsUJwdl1yTiv2sHnmw4S1wYoXgD4vMOop
+         HLgg==
+X-Gm-Message-State: AOJu0Yw5Ku001oN0qcXQYzidtXVXwZGSTdYnpe3abbF+ZZ3o771OigHv
+	onv5j2TpUIIHX0ELHt0gyCGEln13qBOpbOC2838klAB7b8kts1mosDccD8wla3VND7yRnMcJes7
+	J4CvcsgsZx2gNrry9kAmeZ5N6G1JL4w==
+X-Google-Smtp-Source: AGHT+IEGwKaytFnETfFo4b7EDJqrAyUnONrL2z3NsMvhkGFLRmYCsLRffX4JW6hVBbPqliYL61JTvg9itHs7MF706Rc=
+X-Received: by 2002:a05:6808:244e:b0:3e5:f534:ddc4 with SMTP id
+ 5614622812f47-3e7eb71f764mr5024582b6e.13.1732145687627; Wed, 20 Nov 2024
+ 15:34:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -68,15 +68,18 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Thu, 21 Nov 2024 00:18:19 +0100
-Message-ID: <CAAvCNcDv9sts+bueJg0iTMjwTHrA8B2HDr4GRDpcOfFyrU=F9Q@mail.gmail.com>
-Subject: NFSD server side COPY with sparse files?
+Date: Thu, 21 Nov 2024 00:34:11 +0100
+Message-ID: <CAAvCNcDm_Nbx2xSC6ev-hy6mJaztb9=SUOPb3n=KpXqyzvkFMw@mail.gmail.com>
+Subject: NFSv4.2 client: Just using ls(1), find(1) to detect sparse files?
 To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
 Hello!
 
-What will a NFSD server side COPY do with sparse files? Are holes preserved?
+Is it possible to detect sparse files on a NFSV4.2 filesystem by just
+using ls -l -s, or other options of ls(1) or find(1)?
+
+The goal is to find sparse files without opening each file.
 
 Dan
 -- 
