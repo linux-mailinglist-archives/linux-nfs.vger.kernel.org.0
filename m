@@ -1,80 +1,80 @@
-Return-Path: <linux-nfs+bounces-8163-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8164-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3448E9D4346
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 21:52:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1AC99D4347
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 21:53:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0B481F22384
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 20:52:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B75E4283DA7
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 20:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F9171BD4EB;
-	Wed, 20 Nov 2024 20:52:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B56C185920;
+	Wed, 20 Nov 2024 20:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKdWxCaH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhyj7Qiy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4531A487A7
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 20:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9F513C695
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 20:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732135944; cv=none; b=q0bRzEylSELJW/4VV9zpz7PxbT8iZCmEth1766Zgh+XzlWvwZDXo+W4SMj0uG9ePtnzoDPO5+RhDXlc/qEszbHPSyPHV0Fhgr1nSmel1YZfBm3VzVBhqzLPGSv3/pJb8MRIhSWbuKpUHw/5FWEqeh27Bv4wa6ZXS3p8kZ2r/gQY=
+	t=1732135979; cv=none; b=s+BL3jlZ7kOL6DQKF2TFTLoaB3RHRERyedzowYfyiQnVsK4EI6XpeKo2WlHaJ5H4Ph0oHNfZqHkvUubRMOwqdP59zhntgSbt5bkK64kRXTT+te3SPMqBNbHDc7mqGQWhdMcP4DDnkTFqpK9vEPyLN0ySIfnokAGJ5btIXtVx7Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732135944; c=relaxed/simple;
-	bh=JcpfvoEAlS7CYA2ieJV8bKKxjf0Tu7dEzlhqeFMEsjs=;
+	s=arc-20240116; t=1732135979; c=relaxed/simple;
+	bh=wIGPB82w7AHQ9l6CgKBj1kfQ0D9bem8I2zr+ha7jdNg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DLklW4NRxRlDuR9t9hEieg/06dU3atEfM1HPPjE6xys0hKeCwxV2d0NoDTW8UHN4Jg/T1EaYNde9u9+TamlGHchJFkyTx8vDqPyLJOGo78b/NJ3uenVyOvP6eRKgYvRbqUCv0hNyy2/NMo8URz9tghTAA7HeLkSFF5i2d+6uh38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VKdWxCaH; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=j7loESJ8qXrBoNgH2dSe63rSKoIOZZFORuExcmymA+SSpgPSgVcrR5i/yHx4fAu26cIfeIrLq48uPj1nG9MXtgTOZt2uLx0KAq91T2yZSZtVHievHtCpr0B7CIYAfxOyYUOWQfEaNjLj43doFzRrLq9GYRL0PhsKgsVXf2973Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fhyj7Qiy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732135942;
+	s=mimecast20190719; t=1732135976;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hM95Hzjl7XpW6zUw6Ut8UFECmOIVbyMwTlMhoUfnJeo=;
-	b=VKdWxCaHoHPXBihrM1g0LJ2Zkp/A3XsD4AorqUoJzjLZJtzs48jU17cmozmxvGUdx1HqEq
-	1SdWuKshBeXkKZSDQOoHJSoD9ro8khV/i7ENo/TO09fLWuGU61lwX5fzMKLT8yef+nBXGg
-	uQi1UmieoYHR4f/uiOqEf+oBzrGb3v8=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9IhNrrRz1Y0rIG2VcuOVcCOVkM8oPj+5uLuuvKvf5N0=;
+	b=fhyj7Qiys+GyoT9eC1CrB8NDbqKH0Q2DryfocVyXXEd9bFSW8icaziO84KZBtBwVdHTyo0
+	8lBgWz5bu5Oix23B5zzJGQQ+o3Ol+D1sPXYWFz5NzYeuh//8e9FBLMldaZ2Afbqklw6UC9
+	607cwDPvSWbczbsrGuiFc+grs5pGDuU=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-iBDS9kwTPD6bd8_IkkpOwg-1; Wed, 20 Nov 2024 15:52:20 -0500
-X-MC-Unique: iBDS9kwTPD6bd8_IkkpOwg-1
-X-Mimecast-MFC-AGG-ID: iBDS9kwTPD6bd8_IkkpOwg
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a7642d452dso12848625ab.1
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 12:52:20 -0800 (PST)
+ us-mta-62-0BkXwualMCSYB-9Am86yQA-1; Wed, 20 Nov 2024 15:52:55 -0500
+X-MC-Unique: 0BkXwualMCSYB-9Am86yQA-1
+X-Mimecast-MFC-AGG-ID: 0BkXwualMCSYB-9Am86yQA
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-83e5dd390bfso117249239f.1
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 12:52:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732135939; x=1732740739;
+        d=1e100.net; s=20230601; t=1732135973; x=1732740773;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hM95Hzjl7XpW6zUw6Ut8UFECmOIVbyMwTlMhoUfnJeo=;
-        b=ZjXFCBv2Lt+4QBQWo4TNdnWmBc6P4MJDXPP7dEnjt9KyOpcbJ3dD5WWQIe2TX0T2n1
-         6p9HwMeymU0a5mxyw72Bv41rOTysMHFiAPqKvKCtdyC+BjuaGLglgwUx3+M6ZSfgOtmN
-         CqwFY6bwTy1j9KqRpoFjTpZ6JtYqO/u4mBDicmnqrIM61OUUx7cA9/lm2VEkUnzh4VAI
-         XPtdpKeoEtCdvhiV89yrBEhLY9Zm+dY/KBOHLAWjXCO0BM6f7o24vYzhXLJE4fkb9ruj
-         LJdzTm1WcqlksYosH4oc4vmTGdlxUvdI7xbwcIPacNRpen5XHswiwDXuelR2XjnVRQbU
-         708g==
-X-Gm-Message-State: AOJu0YyeK370qCO75X7fIIAU7I5D9ukTu8ZSNHIOm+Zr7h2zY5mFnCVO
-	1L+t8SgFmn510yAiVqFM7+AoUs+KRr/ru8t4Jl0ra4/G3c3izzUlYybLO1678iwWrLh8RJI8gTI
-	9VuqQbg1AXzglqvyXQAUhWsuKqHIasOWgmGddx9TXxMl0bVHbzvue24GDNzxktbc4Rw==
-X-Received: by 2002:a05:6e02:1fe3:b0:3a7:90da:7105 with SMTP id e9e14a558f8ab-3a790da7113mr3692885ab.12.1732135939393;
-        Wed, 20 Nov 2024 12:52:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFBR0IDK8p86RCtqwRnDkjBCOjvza+I+ucsMf9xYpY7GR5+Ghq3tFvEgtE6+IAVjAy5em8xfQ==
-X-Received: by 2002:a05:6e02:1fe3:b0:3a7:90da:7105 with SMTP id e9e14a558f8ab-3a790da7113mr3692745ab.12.1732135939102;
-        Wed, 20 Nov 2024 12:52:19 -0800 (PST)
+        bh=9IhNrrRz1Y0rIG2VcuOVcCOVkM8oPj+5uLuuvKvf5N0=;
+        b=eQ9C4F0NkfRQPdDTb+LttIjwK4V4UuuddHnNy9whvW/aPeusyEyiOdMOVJxscNco6H
+         cLPJsHsGDV2dQLAUvvryJP1QnF7wayYewuz03QuRfxisxsnXp8zLZROnsijAhveuQ/yL
+         dWO+dqTKCndoVCC3EGozPRWv2lJdhxHFsAte2QL0ecxHtdNoq3q8yGbZxqL4cx1iOt4X
+         lgj40FM/Z64snDYfpFv/Mb51Hn2Dm9g6GlhMZFaQw6I63PTi0RATATuiRTU1dnm7VZfo
+         mBY0qiUuRZPyjUCzQymoFxjQFQxf1B1XUbln3KGaqHwwY93L/xXB47XRq0JzWIj+hicV
+         7RGA==
+X-Gm-Message-State: AOJu0YyS/FeM543TkX6UHJnpbSCmYsJeA0dvitPJi5tqwQGlmXwrRC11
+	WuakI/mW1AHZfgRs7xKIawyA57dplbWvn2HZlffqgme1BDVhffcOmLBrkVr25x5liKSg/ZBJLgR
+	0wG63LSwJjQqZI03udgc3y8L8Nkppt+eWQS0g5caRGt3qyD60yNrOh/sdJEz2kF4C5g==
+X-Received: by 2002:a05:6602:2b14:b0:83a:a8d8:4fca with SMTP id ca18e2360f4ac-83ec1a04a54mr108954639f.4.1732135973593;
+        Wed, 20 Nov 2024 12:52:53 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFOdHQFWuvomjsn2gVcTZpBziNJfjddkHaFXj4V66ZY5XG6VZ0YIWb8RY9y5BY4LQcOOeLHcg==
+X-Received: by 2002:a05:6602:2b14:b0:83a:a8d8:4fca with SMTP id ca18e2360f4ac-83ec1a04a54mr108952839f.4.1732135973310;
+        Wed, 20 Nov 2024 12:52:53 -0800 (PST)
 Received: from [172.31.1.12] ([70.105.249.243])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3a77df148b2sm8738025ab.50.2024.11.20.12.52.16
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-83e6dfc825esm303004239f.11.2024.11.20.12.52.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2024 12:52:18 -0800 (PST)
-Message-ID: <9d0efef9-f2c4-4017-8367-c636d3d0f7a6@redhat.com>
-Date: Wed, 20 Nov 2024 15:52:16 -0500
+        Wed, 20 Nov 2024 12:52:52 -0800 (PST)
+Message-ID: <3586ddab-9a09-49c1-b6f8-04906d593b97@redhat.com>
+Date: Wed, 20 Nov 2024 15:52:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,67 +82,48 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] libnsm: safer atomic filenames
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Philip Rowlands <linux-nfs@dimebar.com>,
- Chuck Lever III <chuck.lever@oracle.com>
-References: <95b7c243dae00ef4fd745f2b6d2cd0c979779237.1731514115.git.bcodding@redhat.com>
+Subject: Re: [nfs-utils PATCH 1/2] nfsdctl: fix up the help text in
+ version_usage()
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20241118201902.1115861-1-smayhew@redhat.com>
+ <20241118201902.1115861-2-smayhew@redhat.com>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <95b7c243dae00ef4fd745f2b6d2cd0c979779237.1731514115.git.bcodding@redhat.com>
+In-Reply-To: <20241118201902.1115861-2-smayhew@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 11/13/24 11:11 AM, Benjamin Coddington wrote:
-> We've gotten a report of reboot notifications being sent to domains that
-> end in '.new', which can happen if the NSM temporary pathname code leaves a
-> file behind.  Let's fix this up by prepending a single '.' to the temp path
-> which will never be resolvable as a DNS record.
+On 11/18/24 3:19 PM, Scott Mayhew wrote:
+> The help text in version_usage() has examples with a 'v' character in
+> the version string, but the format string in the sscanf() call in
+> version_func() doesn't contain a 'v' character.
 > 
-> https://lore.kernel.org/linux-nfs/04D30B5A-C53E-4920-ADCB-C77F5577669E@oracle.com/T/#t
-> 
-> Reported-by: Philip Rowlands <linux-nfs@dimebar.com>
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 Committed... (tag: nfs-utils-2-8-2-rc2)
 
 steved.
 > ---
->   support/nsm/file.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
+>   utils/nfsdctl/nfsdctl.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/support/nsm/file.c b/support/nsm/file.c
-> index f5b448015751..e0804136ccbe 100644
-> --- a/support/nsm/file.c
-> +++ b/support/nsm/file.c
-> @@ -184,10 +184,10 @@ static char *
->   nsm_make_temp_pathname(const char *pathname)
->   {
->   	size_t size;
-> -	char *path;
-> +	char *path, *base;
->   	int len;
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index f7c27632..ef917ff0 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -764,9 +764,9 @@ static void version_usage(void)
+>   	printf("    Display currently enabled and disabled versions:\n");
+>   	printf("        version\n");
+>   	printf("    Disable NFSv4.0:\n");
+> -	printf("        version -v4.0\n");
+> +	printf("        version -4.0\n");
+>   	printf("    Enable v4.1, v4.2, disable v2, v3 and v4.0:\n");
+> -	printf("        version -2 -3 -v4.0 +4.1 +v4.2\n");
+> +	printf("        version -2 -3 -4.0 +4.1 +4.2\n");
+>   }
 >   
-> -	size = strlen(pathname) + sizeof(".new") + 2;
-> +	size = strlen(pathname) + sizeof(".new") + 3;
->   	if (size > PATH_MAX)
->   		return NULL;
->   
-> @@ -195,7 +195,11 @@ nsm_make_temp_pathname(const char *pathname)
->   	if (path == NULL)
->   		return NULL;
->   
-> -	len = snprintf(path, size, "%s.new", pathname);
-> +	base = strrchr(pathname, '/');
-> +	strcpy(path, pathname);
-> +
-> +	len = base - pathname;
-> +	len += snprintf(path + len + 1, size-len, ".%s.new", base+1);
->   	if (error_check(len, size)) {
->   		free(path);
->   		return NULL;
-> 
-> base-commit: 38b46cb1f28737069d7887b5ccf7001ba4a4ff59
+>   static int version_func(struct nl_sock *sock, int argc, char ** argv)
 
 
