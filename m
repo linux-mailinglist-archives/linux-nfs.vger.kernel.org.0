@@ -1,112 +1,82 @@
-Return-Path: <linux-nfs+bounces-8167-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8168-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEF3A9D444D
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 00:05:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D95239D4463
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 00:19:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B6281F2101E
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 23:05:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4C664B24A88
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 23:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA9842048;
-	Wed, 20 Nov 2024 23:05:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB4AF1C304F;
+	Wed, 20 Nov 2024 23:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef1lGVYn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7TyH4Cm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D0818A944
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 23:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE4727447
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 23:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732143931; cv=none; b=ttJqEA3jlgMaxVgLjujX/ySQOmNwTZHr6qozYZwxnoxahtdGTA0wL06X+JoSuk7TiDMzPjS6p7Vqmf0ULtgXoVORzfQarUOneFW2mdGgLV11AO61Zxa6U2HFgg4LK0BBJRxBup7I4/2+gGRfe3uHuHMNEgctYfJ/nUBBjlkYt2w=
+	t=1732144737; cv=none; b=WhnbdJRLllp6d9Vs2b4n/z6NDQ0zw61Dg3rXfqExzLaKyStjeLVr82m52P/q8N6ua7RGdVCvrHbm+N54Vouy7G3WZ2c9IE0wjWYA/GMu2pzo7jS000O59B8UnANd+OkIsWhgvBCuZGA0EdhbtUZvHlyQVM0s2a09FOVN/gs7eRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732143931; c=relaxed/simple;
-	bh=mmNRVudXsDDtGfU0zM/4DhYsYG09vMLKh8/T4iWzRDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Yd5oEFrHA7WeYyr1EIirWjBrWpALj+yeRcdhVgEkJ/6D2SheuMoFD3SHjP26Ujyia8xXeAjOcfZO77CmYMhuD8wlFREsXtn9lAnj48s58k5xcR+SBz4waLkOWrlwhjwmHOyJU1+qx/3C1pyIup5yt/t7lTJmZcrA4qeDgYBR++Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef1lGVYn; arc=none smtp.client-ip=209.85.167.182
+	s=arc-20240116; t=1732144737; c=relaxed/simple;
+	bh=bivmfpS8Cg5z3U+Z0LQltGaj/qZSqMcKs1Bhp1Nu5fI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ObQwysqGhOG+2b2U1qQbtzHxKyEoj5Ii6Hb4X4IJ4mWON17Nxdg99VhNx9KvA79eWcrNGf9PzjZh+wdoUV/V7Tu5nN0vBi8MVh0ssAWG4Y1oRm/DyR8ygVIt4ayXOo5kWNzdSbMIXaEFN3UGuTI0yjeKJMiTcnKbCE67yVYvVjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7TyH4Cm; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3e5ffbc6acbso256064b6e.3
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 15:05:29 -0800 (PST)
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3e601b6a33aso249364b6e.0
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 15:18:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732143928; x=1732748728; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BUhJhxYvPmKTydNIy6IhCrujrfQVDMYtFSsE5pxa99k=;
-        b=Ef1lGVYndYPACR8PLBRMVLgIe07f9igRRlv5cgea0q0J3TU4J2PX41XzWwVVk52Ge5
-         +Lulqu4yCQrt1QbvktiwzJWAyPV0zaCW6PFZXigr6jZDFE5PMrvytAs+QPwx7tz0yVAQ
-         l/Axy2JJA+hTTziWYydHi/zsXUIauXmfJQDku+qjirWgnqKqXtrpxA8IQ6xjxmpHU6Cx
-         nSTK6q8lGlsRK49aUpx8l2WqZQMHE4xPXJnl1awDc0J0NZJf2M8PrHibVIevnoT4Nyhr
-         GC6VNzjXTPjZ4XfRDZJk+m1/mywUw3Io7Ej3vThfjeyjY9pIOnmadEGWa39I0/wBxCQa
-         DhKw==
+        d=gmail.com; s=20230601; t=1732144735; x=1732749535; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W2Vow3MMqNnx3kypCC8Uiau1FuJyAasLyx2kjniL95Y=;
+        b=O7TyH4CmWJo/Ivawc+hl/Hn3A115rRH9IraLZHRWQSOeWwWRYILcTyqfU7jx9QpWzf
+         DzYSEBnbQ7bmn4PWLwXDwyTiu0Qply9c+KjyUkeciRMt+ca3Y3O9EMPySA94zH3LeEeN
+         0R5YkH3TcFecVdVzgukhFrbgf7HbrOcTX8tgY601W4jpJPocskUV8DmZZJBdQe/luwFp
+         2sLBbFgxJZCvIxErSJ6bG0eyULhKIaer1MAmhjyVzMyRx+pZsTeMgEcABmhMjGQfeR/2
+         xJ/6oelbBvyfkcQZGFKifAQ34RedR5I0K57v/SDlJWCFyDlnRvZ1Z2k7I8zM4hEnZKpA
+         6sGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732143928; x=1732748728;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUhJhxYvPmKTydNIy6IhCrujrfQVDMYtFSsE5pxa99k=;
-        b=AYIlsyH1PwsA8bwrcQ0WpBMArYUnd/5YnhkFzvanOMYoJIYPUeJiDnKCksr0z9Lo8i
-         rb+aSiCiXHWwmQXb1zsUtON6EW9r7a9s8p358dbGUPYVL+0qcGNQAy1V4tYYgiB4dxgs
-         FccFtgLQKxc6M07HPhoNT6GdPONztXeQvnHIlcWXUSnzGKKrFilgSwObneDHu3BCHIM+
-         N4r04vkpVoRjSIgQLVWYr1Pp+fSB6gHdTcLv6mXTxBuK8ARmz6BDtNZJSoSzvL8/FI8L
-         PeroeV/PNvBq5b0KCkGsuJ+K6DCmmAwJ547TYeOAIwM2c67WOBDIZPEvc1i8y9kCP2S1
-         3cbA==
-X-Gm-Message-State: AOJu0Yz2umNYm0GfBzp0may1p4Xl9z/wG0F9hey6iQPDeSImjPD9jPF/
-	XePM5kqWJbnKWRKMtrsydgApO3PI5nYKHlpDXT6HKwT96kGZtIgkFyV/v4vBVoVIAfuzpkrRoYE
-	5vhy0Ad3EcnwAWF43R2tmZ+BvLdbnYg==
-X-Google-Smtp-Source: AGHT+IGI+ooV2AjAzGlGwIv/LPh+HxFHULIFQUuDhmKeDBqhbAj/uMwHMpCCXusZ8tgu7P2X0L3e7AsGgG0E43RvRmw=
-X-Received: by 2002:a05:6808:238c:b0:3e3:cd42:58b0 with SMTP id
- 5614622812f47-3e7eb7f11f3mr3634351b6e.43.1732143928546; Wed, 20 Nov 2024
- 15:05:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732144735; x=1732749535;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W2Vow3MMqNnx3kypCC8Uiau1FuJyAasLyx2kjniL95Y=;
+        b=V4bAgc+p37/xUIamP8aBo8PPPSZsP3xIanN8AzC03QCTFOn6FXSxn2/YGBY/EeN0bv
+         nMbObJo+5WM9m88IZB7FvdeZB3H9HSRiDcacKa51ooYVWZR5NqnTIZZi6Oy8V1pEp3d5
+         QRJn63Gd2jd8y9DFWg1neDkkTvBZiG5cfLbHxhQ2jPp25mNm4J/go8WLU3eJHTftf8Fm
+         h1ttbZ1JPqbfJ8eL8yqIQWwcx/gM8PHs+1gIubRrbAdepkUEkXWeLiVIZDsthBtTKCZx
+         8rEcewzs4hrvIwIKQjxwLHSjfQlfjmPu1/SzUK5nee/ozI8+ilFjxumlnf0+fE2HuU2q
+         /h7A==
+X-Gm-Message-State: AOJu0YyCENOmv/ea4OUN3PRo3wA5DFUoBFdTADJq5vGPuaGLUOB03cOq
+	P6M9tImgfuEROu5QvGX4YsB+jJjbzXf0lH6fXCS5155y2ArvCgjsTgHmVIWDEvlvBmT14xDFkfb
+	IFZuAWOKLtDzn3J9Y46B/E21OnzVsQw==
+X-Google-Smtp-Source: AGHT+IFPp2niZTGpFKDrNsS7CI+ap+ZWijvSAa7tsQf23IyXH70abibRkZtQqq/cbVV6ywd7OGcKdOiVdovpm0P4dOg=
+X-Received: by 2002:a05:6808:158c:b0:3e6:2408:6117 with SMTP id
+ 5614622812f47-3e7eb6d1494mr4926802b6e.13.1732144735198; Wed, 20 Nov 2024
+ 15:18:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241119165942.213409-1-steved@redhat.com> <59ca2dd7-583f-4141-aef9-4acff857c957@redhat.com>
-In-Reply-To: <59ca2dd7-583f-4141-aef9-4acff857c957@redhat.com>
 From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Thu, 21 Nov 2024 00:04:51 +0100
-Message-ID: <CAAvCNcByu8MAmBRMw6U2a0pHiYQKrp361R9NpCnFp8A3om5hUQ@mail.gmail.com>
-Subject: Re: [PATCH V2] nfs(5): Update rsize/wsize options
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Date: Thu, 21 Nov 2024 00:18:19 +0100
+Message-ID: <CAAvCNcDv9sts+bueJg0iTMjwTHrA8B2HDr4GRDpcOfFyrU=F9Q@mail.gmail.com>
+Subject: NFSD server side COPY with sparse files?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 20 Nov 2024 at 21:56, Steve Dickson <steved@redhat.com> wrote:
->
->
->
-> On 11/19/24 11:59 AM, Steve Dickson wrote:
-> > From: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
-> >
-> > The rsize/wsize values are not multiples of 1024 but multiples of the
-> > system's page size or powers of 2 if < system's page size as defined
-> > in fs/nfs/internal.h:nfs_io_size().
-> >
-> > Signed-off-by: Steve Dickson <steved@redhat.com>
-> Committed... (tag: nfs-utils-2-8-2-rc2)
->
-> I know we are still discussing this but I think
-> this version is better than what we have.
+Hello!
 
-Nope. The code is IMO wrong, and the docs are buggy too.
-
->
-> So update patches are welcome!
-
-Solaris, HPUX, FreeBSD and Windows NFSv3/v4 implementations all count in bytes.
-
-Why does Linux again have to be the oddball of the family and count in
-pages? Not-invented-here-syndrome,
-need-reason-why-companies-have-to-pay-for-Linux-admin-training?
-My recommendation would be to fix the code to count in bytes, rounded
-to the page size, and being a minimum of one page size. Will bite of
-course if someone chooses 2M pages as default on x86-64.
+What will a NFSD server side COPY do with sparse files? Are holes preserved?
 
 Dan
 -- 
