@@ -1,173 +1,114 @@
-Return-Path: <linux-nfs+bounces-8166-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8167-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 563B09D434B
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 21:56:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEF3A9D444D
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 00:05:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DE161F2180F
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 20:56:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B6281F2101E
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Nov 2024 23:05:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9479413C695;
-	Wed, 20 Nov 2024 20:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA9842048;
+	Wed, 20 Nov 2024 23:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bJNjaHN/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ef1lGVYn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA02716DED2
-	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 20:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D0818A944
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 23:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732136178; cv=none; b=j3Dz3nTqjo2djB3uwLCdIwlknYtVha3mFW9SJjyvx4X2SrrWN9WOR1RGvo093DHocZqx+HXXTLqZA3+NT1fAZ9CQRThmxsg483PbT0qNF0DeGohZUzqHqKGW5K+mIyg9gny7UujZF240d8CW94UOHTmzrE1QOntLQvq1vWM2dPI=
+	t=1732143931; cv=none; b=ttJqEA3jlgMaxVgLjujX/ySQOmNwTZHr6qozYZwxnoxahtdGTA0wL06X+JoSuk7TiDMzPjS6p7Vqmf0ULtgXoVORzfQarUOneFW2mdGgLV11AO61Zxa6U2HFgg4LK0BBJRxBup7I4/2+gGRfe3uHuHMNEgctYfJ/nUBBjlkYt2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732136178; c=relaxed/simple;
-	bh=CNfaBOoLSnr9vncx7NT8aWW9K0aISwHgyFLMpuNKe94=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=HYY/UEWB/tC4C8/PvqBY0nvA616vZVLVTLu95Q/g2029B/jkE7wTr5wk+qwimfGz4LYSwLVW6o3RlsGZ6gt/gSEo1Y17aBD049YWDH0vftqBhIsDjAeSfjuhTwooFHEEPxn2WlLOJdyykLLCaAOG/P9ZZ9O87VbVexzWMTUKm2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bJNjaHN/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732136175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A9r4Y5Ro7EwjenHPs525itthvfiyqpyE3ePj0hb1Fws=;
-	b=bJNjaHN/wAPEElvBJ0RpMoD1g8pZuM+3l1T1bhZCA/Lq4cTU4D9Gvuqihmqlajx1aEKVuI
-	J3NUPomgqoj6Akg8ljeki6QjnzgunlDA+xSr2Wp16dndVSPWIOVnrGnV2VbSazxeOj0eaH
-	G8n+COquPMqLCflkewwLcEAIKGvrw6c=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-SIG-M-O2MEqHk9iXnczxaw-1; Wed, 20 Nov 2024 15:56:14 -0500
-X-MC-Unique: SIG-M-O2MEqHk9iXnczxaw-1
-X-Mimecast-MFC-AGG-ID: SIG-M-O2MEqHk9iXnczxaw
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a763f42b35so1017275ab.1
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 12:56:14 -0800 (PST)
+	s=arc-20240116; t=1732143931; c=relaxed/simple;
+	bh=mmNRVudXsDDtGfU0zM/4DhYsYG09vMLKh8/T4iWzRDc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Yd5oEFrHA7WeYyr1EIirWjBrWpALj+yeRcdhVgEkJ/6D2SheuMoFD3SHjP26Ujyia8xXeAjOcfZO77CmYMhuD8wlFREsXtn9lAnj48s58k5xcR+SBz4waLkOWrlwhjwmHOyJU1+qx/3C1pyIup5yt/t7lTJmZcrA4qeDgYBR++Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ef1lGVYn; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3e5ffbc6acbso256064b6e.3
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Nov 2024 15:05:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732143928; x=1732748728; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BUhJhxYvPmKTydNIy6IhCrujrfQVDMYtFSsE5pxa99k=;
+        b=Ef1lGVYndYPACR8PLBRMVLgIe07f9igRRlv5cgea0q0J3TU4J2PX41XzWwVVk52Ge5
+         +Lulqu4yCQrt1QbvktiwzJWAyPV0zaCW6PFZXigr6jZDFE5PMrvytAs+QPwx7tz0yVAQ
+         l/Axy2JJA+hTTziWYydHi/zsXUIauXmfJQDku+qjirWgnqKqXtrpxA8IQ6xjxmpHU6Cx
+         nSTK6q8lGlsRK49aUpx8l2WqZQMHE4xPXJnl1awDc0J0NZJf2M8PrHibVIevnoT4Nyhr
+         GC6VNzjXTPjZ4XfRDZJk+m1/mywUw3Io7Ej3vThfjeyjY9pIOnmadEGWa39I0/wBxCQa
+         DhKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732136172; x=1732740972;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1732143928; x=1732748728;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A9r4Y5Ro7EwjenHPs525itthvfiyqpyE3ePj0hb1Fws=;
-        b=XLTZRaVDnCPfHYk4mq5We6kC778ygg1iXGguWNHDYHmyRO/yiwZrXd3wrdZLJbmrUs
-         hyZwGbB+TCzBh1eNfLvsSk4yKmg+FapjqfImhELOc7w1uUwG56hC0PZrvFC9pxCitOTZ
-         +3IZSZtX9JhXsL/tSSEQ+2lOae23XOnhzVxg1vS4025ge8KI0yxvW7UGfkP0TF6TOzKL
-         soXcfzs4wX4rk2D7/6bi6nj9WDM+pz5bp34f8wpDSWYurvD+C1uBkjU5iEU2k8DBW1Yu
-         uHS2/dV3wg77/D5eZ413LzIBDLoEGII482kT8umGzt2ns82coKdoCwXywshmFXZZ838o
-         MUQg==
-X-Gm-Message-State: AOJu0Yw6UbBrWy2zzGfvpJrr160pXiVr77BB3k4jPvw5tFpi6BbyfKRl
-	GJOKAwWVSyFpLQTegmsEwR6JfN+qDtMvTq3J66Er0czXeZ/uQSTkw+2xASNlbuXQBLepcGp8hmU
-	GMJhuNw2/amdfLS8IQk5nRL2nryi6D0apsczByGn8QbnvkEHx4feuLZEFjKp/akmPk5n+uPy/yN
-	ZQgdNLqgCuJBlC7d1YCD1IF+JqM6TM/1yq287HrJQ=
-X-Received: by 2002:a92:c24d:0:b0:3a7:776e:93fb with SMTP id e9e14a558f8ab-3a7864a9067mr54616375ab.8.1732136172732;
-        Wed, 20 Nov 2024 12:56:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGRYImp8g6M7NWWggQ+LBEM6jeC8n5kKMGSxkXBEFpDvvg7Q7LBqSzffKJQCQa8JcGbYHj1kw==
-X-Received: by 2002:a92:c24d:0:b0:3a7:776e:93fb with SMTP id e9e14a558f8ab-3a7864a9067mr54616125ab.8.1732136172406;
-        Wed, 20 Nov 2024 12:56:12 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.249.243])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3a777efbfc7sm11012075ab.52.2024.11.20.12.56.09
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2024 12:56:11 -0800 (PST)
-Message-ID: <59ca2dd7-583f-4141-aef9-4acff857c957@redhat.com>
-Date: Wed, 20 Nov 2024 15:56:09 -0500
+        bh=BUhJhxYvPmKTydNIy6IhCrujrfQVDMYtFSsE5pxa99k=;
+        b=AYIlsyH1PwsA8bwrcQ0WpBMArYUnd/5YnhkFzvanOMYoJIYPUeJiDnKCksr0z9Lo8i
+         rb+aSiCiXHWwmQXb1zsUtON6EW9r7a9s8p358dbGUPYVL+0qcGNQAy1V4tYYgiB4dxgs
+         FccFtgLQKxc6M07HPhoNT6GdPONztXeQvnHIlcWXUSnzGKKrFilgSwObneDHu3BCHIM+
+         N4r04vkpVoRjSIgQLVWYr1Pp+fSB6gHdTcLv6mXTxBuK8ARmz6BDtNZJSoSzvL8/FI8L
+         PeroeV/PNvBq5b0KCkGsuJ+K6DCmmAwJ547TYeOAIwM2c67WOBDIZPEvc1i8y9kCP2S1
+         3cbA==
+X-Gm-Message-State: AOJu0Yz2umNYm0GfBzp0may1p4Xl9z/wG0F9hey6iQPDeSImjPD9jPF/
+	XePM5kqWJbnKWRKMtrsydgApO3PI5nYKHlpDXT6HKwT96kGZtIgkFyV/v4vBVoVIAfuzpkrRoYE
+	5vhy0Ad3EcnwAWF43R2tmZ+BvLdbnYg==
+X-Google-Smtp-Source: AGHT+IGI+ooV2AjAzGlGwIv/LPh+HxFHULIFQUuDhmKeDBqhbAj/uMwHMpCCXusZ8tgu7P2X0L3e7AsGgG0E43RvRmw=
+X-Received: by 2002:a05:6808:238c:b0:3e3:cd42:58b0 with SMTP id
+ 5614622812f47-3e7eb7f11f3mr3634351b6e.43.1732143928546; Wed, 20 Nov 2024
+ 15:05:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20241119165942.213409-1-steved@redhat.com> <59ca2dd7-583f-4141-aef9-4acff857c957@redhat.com>
+In-Reply-To: <59ca2dd7-583f-4141-aef9-4acff857c957@redhat.com>
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Thu, 21 Nov 2024 00:04:51 +0100
+Message-ID: <CAAvCNcByu8MAmBRMw6U2a0pHiYQKrp361R9NpCnFp8A3om5hUQ@mail.gmail.com>
 Subject: Re: [PATCH V2] nfs(5): Update rsize/wsize options
-From: Steve Dickson <steved@redhat.com>
 To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20241119165942.213409-1-steved@redhat.com>
-Content-Language: en-US
-In-Reply-To: <20241119165942.213409-1-steved@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 
+On Wed, 20 Nov 2024 at 21:56, Steve Dickson <steved@redhat.com> wrote:
+>
+>
+>
+> On 11/19/24 11:59 AM, Steve Dickson wrote:
+> > From: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
+> >
+> > The rsize/wsize values are not multiples of 1024 but multiples of the
+> > system's page size or powers of 2 if < system's page size as defined
+> > in fs/nfs/internal.h:nfs_io_size().
+> >
+> > Signed-off-by: Steve Dickson <steved@redhat.com>
+> Committed... (tag: nfs-utils-2-8-2-rc2)
+>
+> I know we are still discussing this but I think
+> this version is better than what we have.
 
+Nope. The code is IMO wrong, and the docs are buggy too.
 
-On 11/19/24 11:59 AM, Steve Dickson wrote:
-> From: Seiichi Ikarashi <s.ikarashi@fujitsu.com>
-> 
-> The rsize/wsize values are not multiples of 1024 but multiples of the
-> system's page size or powers of 2 if < system's page size as defined
-> in fs/nfs/internal.h:nfs_io_size().
-> 
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... (tag: nfs-utils-2-8-2-rc2)
+>
+> So update patches are welcome!
 
-I know we are still discussing this but I think
-this version is better than what we have.
+Solaris, HPUX, FreeBSD and Windows NFSv3/v4 implementations all count in bytes.
 
-So update patches are welcome!
+Why does Linux again have to be the oddball of the family and count in
+pages? Not-invented-here-syndrome,
+need-reason-why-companies-have-to-pay-for-Linux-admin-training?
+My recommendation would be to fix the code to count in bytes, rounded
+to the page size, and being a minimum of one page size. Will bite of
+course if someone chooses 2M pages as default on x86-64.
 
-steved.
-> ---
->   utils/mount/nfs.man | 24 +++++++++++++++---------
->   1 file changed, 15 insertions(+), 9 deletions(-)
-> 
-> V2: Replaced PAGE_SIZE with "system's page size"
-> 
-> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> index 233a7177..eab4692a 100644
-> --- a/utils/mount/nfs.man
-> +++ b/utils/mount/nfs.man
-> @@ -215,15 +215,18 @@ or smaller than the
->   setting. The largest read payload supported by the Linux NFS client
->   is 1,048,576 bytes (one megabyte).
->   .IP
-> -The
-> +The allowed
->   .B rsize
-> -value is a positive integral multiple of 1024.
-> +value is a positive integral multiple of
-> +system's page size
-> +or a power of two if it is less than
-> +system's page size.
->   Specified
->   .B rsize
->   values lower than 1024 are replaced with 4096; values larger than
->   1048576 are replaced with 1048576. If a specified value is within the supported
-> -range but not a multiple of 1024, it is rounded down to the nearest
-> -multiple of 1024.
-> +range but not such an allowed value, it is rounded down to the nearest
-> +allowed value.
->   .IP
->   If an
->   .B rsize
-> @@ -257,16 +260,19 @@ setting. The largest write payload supported by the Linux NFS client
->   is 1,048,576 bytes (one megabyte).
->   .IP
->   Similar to
-> -.B rsize
-> -, the
-> +.BR rsize ,
-> +the allowed
->   .B wsize
-> -value is a positive integral multiple of 1024.
-> +value is a positive integral multiple of
-> +system's page size
-> +or a power of two if it is less than
-> +system's page size.
->   Specified
->   .B wsize
->   values lower than 1024 are replaced with 4096; values larger than
->   1048576 are replaced with 1048576. If a specified value is within the supported
-> -range but not a multiple of 1024, it is rounded down to the nearest
-> -multiple of 1024.
-> +range but not such an allowed value, it is rounded down to the nearest
-> +allowed value.
->   .IP
->   If a
->   .B wsize
-
+Dan
+-- 
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
