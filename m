@@ -1,93 +1,94 @@
-Return-Path: <linux-nfs+bounces-8186-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8187-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0A409D5471
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 22:03:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A25629D54A3
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 22:20:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 48FDDB2374A
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 21:03:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25E771F2190F
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Nov 2024 21:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7737F1C07D3;
-	Thu, 21 Nov 2024 21:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3812D4502F;
+	Thu, 21 Nov 2024 21:20:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LJW8nkaV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KbfdJqrX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LJW8nkaV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KbfdJqrX"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iBeannph";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+a3opeRF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UP0wa5UO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JNZH+/lk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477B41AB512
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Nov 2024 21:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281F71C8FCF
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Nov 2024 21:20:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732223013; cv=none; b=s4MsP1iCsSyQcDauRVjwDZqjC9cldyjE6a4DlAQZ9HIIve46cpbqW2HlQheIwjPQ3R2pumoH+c4zeKRQ08R8CS4wmS//9JbCSMKowLxLM3LZCAPbnoapMhk1UnGdhm5lYQBz53Py3tOsFkOivX1jSm/HY3ZNRPHEmrv5yNpfTKA=
+	t=1732224022; cv=none; b=VxVUp6dxj1a6P55AtLeZHiG0kRcTfHCVduug2rSvSjoGV3Mik+lnb7x/B1hH9KJTDskYrUUYmwBztzSOLWkgSTkY3xoTulzHOqSGTYuh2PInLnM25AQ5JbbgWHy9Q46/44au7OD7tH3TpwqqmDMiaXtnhJmceDJdUD/7zT7KVmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732223013; c=relaxed/simple;
-	bh=xxpfWWw8+1QpIRa8gzjdyr0IBO2d0lSsSnAEsurWxRM=;
+	s=arc-20240116; t=1732224022; c=relaxed/simple;
+	bh=qUcVfwKeq4VObfXxXOz5I3sRgOgL4tJ1y8maFSZ12FM=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=qPTL6S8nHZPrioEI/YaGd0xN1wkBcEpFYUaCByX33eNUfa2PxNRhOpJQRxWuYv6LAGqjwwaW4bw+t7vuEkoZl89jwJju6yk4s+Ou1WGuCLbFnknG83uTQcnIU6822mF664WNT0UfIMDJb7paP3r5gXXlKrPa4MuqPAmoBvXfW7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LJW8nkaV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KbfdJqrX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LJW8nkaV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KbfdJqrX; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=ZiLstLk0hpOKwViW3ix+UI0wZsriqu92m67LCBN51S081c9QKy7y3aHEZljcmdgHue3+dMktJVqKg5nGs/DLwyZQgEZnREFfcrlanmT++WgSyAbKMrzUjlhysVQOKmlx68vXnq8rjaQ1sPG2QaLYy14U76nuL8dHy+5bU4wcw0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iBeannph; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+a3opeRF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UP0wa5UO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JNZH+/lk; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E49A1F7FE;
-	Thu, 21 Nov 2024 21:03:29 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ED1111F82D;
+	Thu, 21 Nov 2024 21:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1732223009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1732224018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ylJRb2VCOqRJfpoqjfPAhoFalvS5/UlduLsUK5hJ+E=;
-	b=LJW8nkaVNg2B7gcUcDrBzJA0osVbBltpsoORLzXZ5Of8A3YYmS9pYvkjW3U7l9Cjtap6yF
-	zJkPN0ACnbuLZQ2eJFc/S0e5YUSfVkeFXgznGwekBC9sc85a9D7XP5IApQmiDZ2mncWads
-	PtphGgJBVEVxEycb3JmRqHfy9ZR7sBA=
+	bh=cYTpIl5DtwllPPguV60jerFQ4A/Ltw6QZwuUu7ZI358=;
+	b=iBeannpha5rgIvXXuE2IVEV90jy/05Fglm7L4kwJ+Q0iOg4qO7fn2GBxhxHbCrMF/xzwI2
+	eRr/HYwKsrMZ9iEglZFJWFnu5JveTPNbtEr5IUOMefjpjVTUWC4hGuhvcnnaJzkVEWw/VU
+	EmcLZoTUpyTPiVVP4G266dq3JCez3TI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1732223009;
+	s=susede2_ed25519; t=1732224018;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ylJRb2VCOqRJfpoqjfPAhoFalvS5/UlduLsUK5hJ+E=;
-	b=KbfdJqrXR64SyPpIagVmMSbDwLWtvybtrGhSgQiHKLjatyMe31sCMaSVkdpxotxBomV5nM
-	LWzwAnNbO/K+USBg==
+	bh=cYTpIl5DtwllPPguV60jerFQ4A/Ltw6QZwuUu7ZI358=;
+	b=+a3opeRFZ2sn2ttUeB8XTtVNzX1BUVAZvZEuAH9/czEp0UkFbUEvb8XvYQ3TQ+6/dxnEUp
+	tH+g3ycWgqyXIhAA==
 Authentication-Results: smtp-out2.suse.de;
-	none
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=UP0wa5UO;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="JNZH+/lk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1732223009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1732224017; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ylJRb2VCOqRJfpoqjfPAhoFalvS5/UlduLsUK5hJ+E=;
-	b=LJW8nkaVNg2B7gcUcDrBzJA0osVbBltpsoORLzXZ5Of8A3YYmS9pYvkjW3U7l9Cjtap6yF
-	zJkPN0ACnbuLZQ2eJFc/S0e5YUSfVkeFXgznGwekBC9sc85a9D7XP5IApQmiDZ2mncWads
-	PtphGgJBVEVxEycb3JmRqHfy9ZR7sBA=
+	bh=cYTpIl5DtwllPPguV60jerFQ4A/Ltw6QZwuUu7ZI358=;
+	b=UP0wa5UOGAL3r5PqlxFVuzWmJjE6pM/C3AXpgFAYy5+bxIn4E+Zi/vJAWATD3rvnMSAx/S
+	z2PImSPesY+SXqlcizmaxPX/V4loeqjuAEq7gjozXNVRZ+orFhBHpK9AuPRIJPVZpBdUON
+	slVk6ErU7wGOtqfHpWfayg1e4Rf1E3E=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1732223009;
+	s=susede2_ed25519; t=1732224017;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1ylJRb2VCOqRJfpoqjfPAhoFalvS5/UlduLsUK5hJ+E=;
-	b=KbfdJqrXR64SyPpIagVmMSbDwLWtvybtrGhSgQiHKLjatyMe31sCMaSVkdpxotxBomV5nM
-	LWzwAnNbO/K+USBg==
+	bh=cYTpIl5DtwllPPguV60jerFQ4A/Ltw6QZwuUu7ZI358=;
+	b=JNZH+/lkR04eO379GHTrs+ZPZqgelijblfj0q8h4RAtmdTh41RFHG0n6SNW5Zn3jI62y4b
+	ybi3wO1gn5yCxpCg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C0F3F137CF;
-	Thu, 21 Nov 2024 21:03:26 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 66908137CF;
+	Thu, 21 Nov 2024 21:20:15 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wo8oGR6gP2c6LAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 21 Nov 2024 21:03:26 +0000
+	id eg/+Ag+kP2eFMAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 21 Nov 2024 21:20:15 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -101,116 +102,133 @@ To: "Chuck Lever" <chuck.lever@oracle.com>
 Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
  "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
  "Tom Talpey" <tom@talpey.com>
-Subject:
- Re: [PATCH 3/6] nfsd: add session slot count to /proc/fs/nfsd/clients/*/info
-In-reply-to: <Zz0sbK49PELT7HpN@tissot.1015granger.net>
-References: <>, <Zz0sbK49PELT7HpN@tissot.1015granger.net>
-Date: Fri, 22 Nov 2024 08:03:22 +1100
-Message-id: <173222300252.1734440.30767813440263840@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
+Subject: Re: [PATCH 4/6] nfsd: allocate new session-based DRC slots on demand.
+In-reply-to: <Zz0uAZQpR4LG/gvi@tissot.1015granger.net>
+References: <>, <Zz0uAZQpR4LG/gvi@tissot.1015granger.net>
+Date: Fri, 22 Nov 2024 08:20:11 +1100
+Message-id: <173222401180.1734440.2984878938745010890@noble.neil.brown.name>
+X-Rspamd-Queue-Id: ED1111F82D
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
+	MX_GOOD(-0.01)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
 	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	RCPT_COUNT_FIVE(0.00)[6];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
 	FROM_EQ_ENVFROM(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
 X-Spam-Level: 
 
 On Wed, 20 Nov 2024, Chuck Lever wrote:
-> On Wed, Nov 20, 2024 at 09:24:52AM +1100, NeilBrown wrote:
+> On Wed, Nov 20, 2024 at 09:27:51AM +1100, NeilBrown wrote:
 > > On Wed, 20 Nov 2024, Chuck Lever wrote:
-> > > On Tue, Nov 19, 2024 at 11:41:30AM +1100, NeilBrown wrote:
-> > > > Each client now reports the number of slots allocated in each session.
+> > > On Tue, Nov 19, 2024 at 11:41:31AM +1100, NeilBrown wrote:
+> > > > If a client ever uses the highest available slot for a given session,
+> > > > attempt to allocate another slot so there is room for the client to u=
+se
+> > > > more slots if wanted.  GFP_NOWAIT is used so if there is not plenty of
+> > > > free memory, failure is expected - which is what we want.  It also
+> > > > allows the allocation while holding a spinlock.
 > > > >=20
-> > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > ---
-> > > >  fs/nfsd/nfs4state.c | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >=20
-> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > index 3889ba1c653f..31ff9f92a895 100644
-> > > > --- a/fs/nfsd/nfs4state.c
-> > > > +++ b/fs/nfsd/nfs4state.c
-> > > > @@ -2642,6 +2642,7 @@ static const char *cb_state2str(int state)
-> > > >  static int client_info_show(struct seq_file *m, void *v)
-> > > >  {
-> > > >  	struct inode *inode =3D file_inode(m->file);
-> > > > +	struct nfsd4_session *ses;
-> > > >  	struct nfs4_client *clp;
-> > > >  	u64 clid;
-> > > > =20
-> > > > @@ -2678,6 +2679,13 @@ static int client_info_show(struct seq_file *m=
-, void *v)
-> > > >  	seq_printf(m, "callback address: \"%pISpc\"\n", &clp->cl_cb_conn.cb=
-_addr);
-> > > >  	seq_printf(m, "admin-revoked states: %d\n",
-> > > >  		   atomic_read(&clp->cl_admin_revoked));
-> > > > +	seq_printf(m, "session slots:");
-> > > > +	spin_lock(&clp->cl_lock);
-> > > > +	list_for_each_entry(ses, &clp->cl_sessions, se_perclnt)
-> > > > +		seq_printf(m, " %u", ses->se_fchannel.maxreqs);
-> > > > +	spin_unlock(&clp->cl_lock);
-> > > > +	seq_puts(m, "\n");
-> > > > +
+> > > > We would expect to stablise with one more slot available than the cli=
+ent
+> > > > actually uses.
 > > >=20
-> > > Also, I wonder if information about the backchannel session can be
-> > > surfaced in this way?
+> > > Which begs the question "why have a 2048 slot maximum session slot
+> > > table size?" 1025 might work too. But is there a need for any
+> > > maximum at all, or is this just a sanity check?
+> >=20
+> > Linux NFS presumably isn't the only client, and it might change in the
+> > future.  Maybe there is no need for a maximum.  It was mostly as a
+> > sanity check.
+> >=20
+> > It wouldn't take much to convince me to remove the limit.
+>=20
+> What's the worse that might happen if there is no cap? Can this be
+> used as a DoS vector?
+
+It depends on how much you trust the clients that you have decided to
+trust.  Probably we want the option of a "public" NFS server (read only
+probably) so we cannot assume much trust in the implementation of the
+client.
+
+Certainly a client could only ever use the highest slot number available
+- though the RFC prefers lowest - and that could push allocating through
+the roof.  We could defend against that in more subtle ways, but a hard
+upper limit is easy.
+
+>=20
+> If a maximum should be necessary, its value should be clearly
+> labeled as "not an architectural limit -- for sanity checking only".
+
+That is certainly sensible.
+
+>=20
+>=20
+> > > > Now that we grow the slot table on demand we can start with a smaller
+> > > > allocation.  Define NFSD_MAX_INITIAL_SLOTS and allocate at most that
+> > > > many when session is created.
 > > >=20
+> > > Maybe NFSD_DEFAULT_INITIAL_SLOTS is more descriptive?
 > >=20
-> > Probably make sense.  Maybe we should invent a syntax for reporting
-> > arbitrary info about each session.
-> >=20
-> >    session %d slots: %d
-> >    session %d cb-slots: %d
-> >    ...
-> >=20
-> > ???
+> > I don't think "DEFAULT" is the right word.  The client requests a number
+> > of slots.  That is the "Default".  The server can impose a limit - a
+> > maximum.
+> > Maybe we don't need a limit here either?
 >=20
-> If each client has a directory, then it should have a subdirectory
-> called "sessions". Each subdirectory of "sessions" should be one
-> session, named by its hex session ID (as it is presented by
-> Wireshark). Each session directory could have a file for the forward
-> channel, one for the backchannel, and maybe one for generic
-> information like when the session was created and how many
-> connections it has.
+> I see. Well I don't think there needs to be a "maximum" number of
+> initial slots. NFSD can try to allocate the number the client
+> requested as best it can, until it hits our sane maximum above.
+
+Given that we have a shrinker to discard them if they ever become a
+problem, that makes sense.
+
 >=20
-> We don't need all of that in this patch set, but whatever is
-> introduced here should be extensible to allow us to add more over
-> time.
+> I think sessions should have a minimum number of slots to guarantee
+> forward progress (or IOW prevent a deadlock). I would say that
+> number should be larger than 1 -- perhaps 2 or even 4.
 
-I cannot say I'm excited about the proliferation of tiny files.  Your
-suggestion isn't quite as bad as sysfs which claims to want one file per
-value, but I think the sysfs approach provided more pain than gain and
-you seem to be heading that way.  As evidence I present the rise of
-netlink.  Netlink's main advantage is that it allows you to access a
-collection of data in a single syscall (or maybe pair of syscalls).  If
-we had a standard format for doing that with open/read/close, the
-filesystem would be a much nicer interface.  But the sysfs rules prevent
-that, so people who care avoid it.
+I think one is enough to ensure forward progress.  Otherwise the RFC
+would have something to say about this.
 
-We don't need to impose those same rules on nfsd-fs.
+>=20
+> The problem with a small initial slot count is that means the
+> session has a slow start heuristic. That might or might not be
+> desirable here.
 
-Having separate dirs for the clients makes some sense as the clients are
-quite independent.  Sessions aren't - they are just part of the client.=20
-The *only* way session information is different from other client
-information is that there is more structure - an array of sessions each
-with detail.  I don't think that justifies a new directory.  I does
-justify a carefully designed (or chosen) format for representing
-structured data.
+The question of how quickly to increase slot count can be relevant at
+any time, not just at session creation time.  If there is a bust of
+activity after a quite time during which the shrinker discarded a lot of
+slots - how quickly should we rebuild?
+My current approach is effectively one new slot per requests round-trip.
+So there might be 1 request in flight.  Then 2.  Then 3. etc.
+
+We could aim for exponential rather than linear growth.  Maybe when the
+highest slot is used, add 20% of the current number of slots - rounded
+up.
+So 1,2,3,4,5,6,8,10,12,15,18,22,26,31,37,44,52,62,74,88,105,126,
+
+??
 
 Thanks,
 NeilBrown
