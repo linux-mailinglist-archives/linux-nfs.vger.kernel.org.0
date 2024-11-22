@@ -1,141 +1,217 @@
-Return-Path: <linux-nfs+bounces-8200-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8201-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4642F9D6124
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2024 16:12:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 546C59D6305
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2024 18:26:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 65C97B22DFB
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2024 15:11:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17684282965
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Nov 2024 17:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A8A912C484;
-	Fri, 22 Nov 2024 15:11:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5582E148FE8;
+	Fri, 22 Nov 2024 17:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ggmZ988A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzoK9q5A"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68D61DED45
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Nov 2024 15:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD021CD3F
+	for <linux-nfs@vger.kernel.org>; Fri, 22 Nov 2024 17:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732288288; cv=none; b=XfpsotVk9RJbESlahfJQuT5sTvBjXVr9TP8VDb6FMpr6wEdHwWqdY5fxftPvrqqprlDT7RljBfXo6f/8GOPaon3gKacDdOerwzkvMKDL+WelLolPCbjhvITv8zToBqXpTjjFmP7dMfYl9+CEpwWF7NA0VULraVS8Vacin2ZJKuw=
+	t=1732296402; cv=none; b=p8FiBXVehzUPNkdhNV12g3GGoUi3PUEG70vuwTMmr/CA/MIcTjApVi9o7Brwa22zsTlqgnXxm5eKxFM3Jd/0Xa+wWns3mwGykoWzEhbL5/pOn3hWhwKxPMUgEkAfooR9KhRs5V8jzwFAOijKgLwCItY/4f5BgVpcgUwA11ZHFdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732288288; c=relaxed/simple;
-	bh=Pn9mI/dQRJTaJqS3r4xCnRL05yuMMT3XBgLbATZWtGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LnlP7zBRY5nhQTqH4RSoxyFuT83NXMfBMwTtxuyBnn1kiYswrSKEJjp+uUwTo0ZUzx9ueJM3xSsDYMY3s4mSdjf8cbY+j2xc7/ttzRMAHaR7GctH+FVOK9RBYLsno8EkjLpjTAGZb7gHuxjERFaH+/v9AyzW00CqNih7NUBFV1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ggmZ988A; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732288285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qNb3xWwgY1tmNqWYiqE8zMLxs0w6BlPv0Y++bDq5l+E=;
-	b=ggmZ988A6n3DPNSBFqv75bppceGaEVNayUVtT22wiK2+d3xbl4HMwNwPWmRu1kJl+4ubcy
-	6E1QFhVX8G7e27Ym4cch96rqzurwgNWcADEw/0sJsrnIxQZsOLBJ2VgQNPWcvsplmPD+hE
-	MXsLkPnWtGgM+zBmAqDIzIBqj3MEoIU=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-208-4gHOWNWnMuKkjr1N8XK0oQ-1; Fri,
- 22 Nov 2024 10:11:22 -0500
-X-MC-Unique: 4gHOWNWnMuKkjr1N8XK0oQ-1
-X-Mimecast-MFC-AGG-ID: 4gHOWNWnMuKkjr1N8XK0oQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 111071955E91;
-	Fri, 22 Nov 2024 15:11:18 +0000 (UTC)
-Received: from bcodding.csb.redhat.com (unknown [10.22.74.7])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4905195E481;
-	Fri, 22 Nov 2024 15:11:16 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v4 2/2] nfs/blocklayout: Limit repeat device registration on failure
-Date: Fri, 22 Nov 2024 10:11:12 -0500
-Message-ID: <015eaf84cc15050f8ef461777c59753ef5deb521.1732288202.git.bcodding@redhat.com>
-In-Reply-To: <cover.1732288202.git.bcodding@redhat.com>
-References: <cover.1732288202.git.bcodding@redhat.com>
+	s=arc-20240116; t=1732296402; c=relaxed/simple;
+	bh=8+PQJpN9vCul3tlZfoAgZe+C8FxeQp0G/S7Qze4jaL0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pp6APfdMPCkweKP4KELnTX8Npu5KGQxfy9BtmDq0hUuIucHMqn+GbgbJ5z0zydgOyRQb2fdic9pLmIF0Gl6HSaHc+CH5JcGKR/laTqjakxiBbMQ1P+Jf+Q5WonMTmwDx2KF4tjVB6gY1EEiktmU0JxOee+mDXavw7Z+O/yaxjes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzoK9q5A; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B98FC4CECE;
+	Fri, 22 Nov 2024 17:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732296401;
+	bh=8+PQJpN9vCul3tlZfoAgZe+C8FxeQp0G/S7Qze4jaL0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=bzoK9q5AoFRIkC8fxsXrOmtI/+LdaKhC6Zryf4I1fbAmT5X3wA+0L0+Am9HA0irBG
+	 j597/81w6ISS4S0spbzYiYOgLTZAoEZeirIGIBt3HT4qMSaUQ68EwFf61t6CSIDl1J
+	 RYXM/deaUSD6bT93lHEycFOnHXNRpkOjDLrZ9NL9zFB87BQxTjvZK0CRP2mY5Jld22
+	 glG9Zi2mEOzmqPdKlHbCzWyQq/AGHHIkiilvBE7ZL6zw4EogjhFUB0SiF36X4795EY
+	 HWeAhvRsKrWqW221+0J6Ol8kd2Zovs1ta5nK8Wp/yfbvT1Z+hfsASMC2xYyBQGvg+N
+	 bFpjzCOFBcR5g==
+Message-ID: <754757a44ac96f894c82338ec3212cf7202d540a.camel@kernel.org>
+Subject: Re: [for-6.13 PATCH v3 00/14] nfs/nfsd: improvements for LOCALIO
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org
+Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
+ <trondmy@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>, NeilBrown
+ <neilb@suse.de>
+Date: Fri, 22 Nov 2024 12:26:39 -0500
+In-Reply-To: <20241116014106.25456-1-snitzer@kernel.org>
+References: <20241116014106.25456-1-snitzer@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Every pNFS SCSI IO wants to do LAYOUTGET, then within the layout find the
-device which can drive GETDEVINFO, then finally may need to prep the device
-with a reservation.  This slow work makes a mess of IO latencies if one of
-the later steps is going to fail for awhile.
+On Fri, 2024-11-15 at 20:40 -0500, Mike Snitzer wrote:
+> Hi,
+>=20
+> All available here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=
+=3Dnfs-localio-for-next
+>=20
+> Changes since v2:
+> - switched from rcu_assign_pointer to RCU_INIT_POINTER when setting to
+>   NULL.
+> - removed some unnecessary #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+> - revised the NFS v3 probe patch to use a new nfsv3.ko modparam
+>   'nfs3_localio_probe_throttle' to control if NFSv3 will probe for
+>   LOCALIO. Avoids use of NFS_CS_LOCAL_IO and will probe every
+>   'nfs3_localio_probe_throttle' IO requests (defaults to 0, disabled).
+> - added "Module Parameters" section to localio.rst
+>=20
+> All review appreciated, thanks.
+> Mike
+>=20
+> Mike Snitzer (14):
+>   nfs/localio: add direct IO enablement with sync and async IO support
+>   nfsd: add nfsd_file_{get,put} to 'nfs_to' nfsd_localio_operations
+>   nfs_common: rename functions that invalidate LOCALIO nfs_clients
+>   nfs_common: move localio_lock to new lock member of nfs_uuid_t
+>   nfs: cache all open LOCALIO nfsd_file(s) in client
+>   nfsd: update percpu_ref to manage references on nfsd_net
+>   nfsd: rename nfsd_serv_ prefixed methods and variables with nfsd_net_
+>   nfsd: nfsd_file_acquire_local no longer returns GC'd nfsd_file
+>   nfs_common: rename nfslocalio nfs_uuid_lock to nfs_uuids_lock
+>   nfs_common: track all open nfsd_files per LOCALIO nfs_client
+>   nfs_common: add nfs_localio trace events
+>   nfs/localio: remove redundant code and simplify LOCALIO enablement
+>   nfs: probe for LOCALIO when v4 client reconnects to server
+>   nfs: probe for LOCALIO when v3 client reconnects to server
+>=20
+>  Documentation/filesystems/nfs/localio.rst |  98 +++++----
+>  fs/nfs/client.c                           |   6 +-
+>  fs/nfs/direct.c                           |   1 +
+>  fs/nfs/flexfilelayout/flexfilelayout.c    |  25 +--
+>  fs/nfs/flexfilelayout/flexfilelayout.h    |   1 +
+>  fs/nfs/inode.c                            |   3 +
+>  fs/nfs/internal.h                         |   9 +-
+>  fs/nfs/localio.c                          | 232 +++++++++++++++-----
+>  fs/nfs/nfs3proc.c                         |  46 +++-
+>  fs/nfs/nfs4state.c                        |   1 +
+>  fs/nfs/nfstrace.h                         |  32 ---
+>  fs/nfs/pagelist.c                         |   5 +-
+>  fs/nfs/write.c                            |   3 +-
+>  fs/nfs_common/Makefile                    |   3 +-
+>  fs/nfs_common/localio_trace.c             |  10 +
+>  fs/nfs_common/localio_trace.h             |  56 +++++
+>  fs/nfs_common/nfslocalio.c                | 250 +++++++++++++++++-----
+>  fs/nfsd/filecache.c                       |  20 +-
+>  fs/nfsd/localio.c                         |   9 +-
+>  fs/nfsd/netns.h                           |  12 +-
+>  fs/nfsd/nfsctl.c                          |   6 +-
+>  fs/nfsd/nfssvc.c                          |  40 ++--
+>  include/linux/nfs_fs.h                    |  22 +-
+>  include/linux/nfs_fs_sb.h                 |   3 +-
+>  include/linux/nfs_xdr.h                   |   1 +
+>  include/linux/nfslocalio.h                |  48 +++--
+>  26 files changed, 674 insertions(+), 268 deletions(-)
+>  create mode 100644 fs/nfs_common/localio_trace.c
+>  create mode 100644 fs/nfs_common/localio_trace.h
+>=20
 
-If we're unable to register a SCSI device, ensure we mark the device as
-unavailable so that it will timeout and be re-added via GETDEVINFO.  This
-avoids repeated doomed attempts to register a device in the IO path.
+I went through the set and it looks mostly sane to me. The one concern
+I have is that you have the client set up to start caching nfsd files
+before there is a mechanism to call it and ask them to return them. You
+might see some weird behavior there on a bisect, but it looks like it
+all gets resolved in the end.
 
-Add some clarifying comments as well.
+How do you intend for this to go in? Since most of this is client side,
+will this be going in via Trond/Anna's tree?
 
-Fixes: d869da91cccb ("nfs/blocklayout: Fix premature PR key unregistration")
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/blocklayout/blocklayout.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+You can add:
 
-diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
-index 0becdec12970..47189476b553 100644
---- a/fs/nfs/blocklayout/blocklayout.c
-+++ b/fs/nfs/blocklayout/blocklayout.c
-@@ -571,19 +571,32 @@ bl_find_get_deviceid(struct nfs_server *server,
- 	if (!node)
- 		return ERR_PTR(-ENODEV);
- 
-+	/*
-+	 * Devices that are marked unavailable are left in the cache with a
-+	 * timeout to avoid sending GETDEVINFO after every LAYOUTGET, or
-+	 * constantly attempting to register the device.  Once marked as
-+	 * unavailable they must be deleted and never reused.
-+	 */
- 	if (test_bit(NFS_DEVICEID_UNAVAILABLE, &node->flags)) {
- 		unsigned long end = jiffies;
- 		unsigned long start = end - PNFS_DEVICE_RETRY_TIMEOUT;
- 
- 		if (!time_in_range(node->timestamp_unavailable, start, end)) {
-+			/* Uncork subsequent GETDEVINFO operations for this device */
- 			nfs4_delete_deviceid(node->ld, node->nfs_client, id);
- 			goto retry;
- 		}
- 		goto out_put;
- 	}
- 
--	if (!bl_register_dev(container_of(node, struct pnfs_block_dev, node)))
-+	if (!bl_register_dev(container_of(node, struct pnfs_block_dev, node))) {
-+		/*
-+		 * If we cannot register, treat this device as transient:
-+		 * Make a negative cache entry for the device
-+		 */
-+		nfs4_mark_deviceid_unavailable(node);
- 		goto out_put;
-+	}
- 
- 	return node;
- 
--- 
-2.47.0
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
