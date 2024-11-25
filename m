@@ -1,143 +1,119 @@
-Return-Path: <linux-nfs+bounces-8209-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8210-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74D6A9D6B48
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Nov 2024 20:53:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B73FD9D83A0
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 11:42:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFDAFB21D6E
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Nov 2024 19:53:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CBCB2860E2
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 10:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B9216DEB3;
-	Sat, 23 Nov 2024 19:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4BC19D062;
+	Mon, 25 Nov 2024 10:40:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WYc+D9Rn"
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="hlpyVRYU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F35E34545
-	for <linux-nfs@vger.kernel.org>; Sat, 23 Nov 2024 19:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225CC193070;
+	Mon, 25 Nov 2024 10:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732391616; cv=none; b=eBPy+pgNIgYiu5K1Vm8vLYx8ORn+SpB4AeEEV2zz28OvhdSxztosrEyRANW2pOwX9hh/2pEhJev2QaoTtdKdH2wu+Sc4KoOmptOZXpXzr8WDZ75VF9NEynI5SyTM9oz1f+rGoeiQesJamVhnw0V9ruLjPNDnXb9RVmkQG0zjiZI=
+	t=1732531239; cv=none; b=lgKFQd3fQkMrIbSftYXbDAhpveMrL4yfiiCxzcrE6l0eFH9QUT95IPaHlbkrs8RND9/RbaSpY59yUPaCXG2/2tsLYEl4otVSQtiYshtM6VPb4ClXLihnkL8IeEdNmVpvg2P3/zO/6vp4H2+sudDG8NE/in/9gZuJKv7w4CcPXJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732391616; c=relaxed/simple;
-	bh=AtBtUcaWrAFFfMBybDLCI9URxUlIqFTX1nPrKvq7UaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AGtmhzcBtWpqMaV6DnhqWQhjMMpvUszqZt2eq09OpyusiYgYCA/oMmeaCgukVA9I/16cJHN+in/D5F8398t4om80ROGpnLCmoYhnWda5HgQGyecGQUDSZHDKl+RCK9lG5+3/6B96LGOhyji4fL3Xc42N/h4+pAm1+ZNQABHplB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WYc+D9Rn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732391613;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1732531239; c=relaxed/simple;
+	bh=iQFabzcbeyd0VMqCL1uH7Fo+292SfpJATJ4pnluwUxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lz+PXjHnGcK+Rm5P+ugxqgCq2LdBXzZ6QRzubhw0PKu11sq23w5EtQ7LNqkPFGnMsRNaEvu0gdGq2gGkJfzmK5he9fAHa5982bdyLygmpUmLh7hENb6jklxUaFo7h5nrgLJEgnUbQE+MlEDvWM1O1jjAJ4xxbBjauzjyW8KHa+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=hlpyVRYU; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1732531234;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g3nTrOgyK/jMcmO7eCNjZf6pnyPtWmLex07ZZ5YL3nM=;
-	b=WYc+D9RniBAtsm9d23ezimua0P2Uus20/zXloxGlpJQ86XhgW7iensM2d24GcvkWRYhIvV
-	QgYa0wg2F1WBGztq2c5zYghXbdOU/Ehq78kVQV9WCfkNKauRgmcWCP3TyHmV2esQkE0XOb
-	t+4xLKHzvhNqek+LGTAfPI1EOkqhuAg=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-455-gMiBISzoMGqyoHvLtlJ9hA-1; Sat, 23 Nov 2024 14:53:31 -0500
-X-MC-Unique: gMiBISzoMGqyoHvLtlJ9hA-1
-X-Mimecast-MFC-AGG-ID: gMiBISzoMGqyoHvLtlJ9hA
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6d425b9dedeso40564326d6.3
-        for <linux-nfs@vger.kernel.org>; Sat, 23 Nov 2024 11:53:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732391610; x=1732996410;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3nTrOgyK/jMcmO7eCNjZf6pnyPtWmLex07ZZ5YL3nM=;
-        b=atv6BV3xHlcewsX9gdsZ/kU6Ti3iuJxI1i8sr46vfw09kWCNMtOP6vHzSPrKy7CTs0
-         UwxW4UfxaNO374jHbzRtLqb57koZoRqi5psf6LNkp7PYQnUeAjPIwMlsPzKlGbY03NKr
-         lYHLj7e0w9kaj3DzCtVRwQSAmOybCWjNTPXdr+Sr6xJ1JeBUSuczpHHANZjcUcQaidaR
-         0T7mImlrIFwIQ4OX593a5bTngMjso8WLWJd5xZAdyq90wZ4zuFKHxifJR/LiIviTIRU4
-         BZMlZw7Dwx/wKH2dinj9cvp4q/7CU+oats9nb3iQMA4JvJH/mu8CaNFmx6Ihtsw3bQPg
-         kcTA==
-X-Gm-Message-State: AOJu0YwYTn9KAryiwc3n/vbpTy29VFIPKFrQAxSFIqj1FC0fWnekTply
-	GsKEQj0X1on5E8dYiftLvpMlmHyJtpk5CIIzu4lKjrU32WX5ZLCumgCw6ksj2ce5lknrWVs0J3R
-	Go61Ng7ygarEUs/FWChJATjbhIEvxanhS6/BpzicBUuiIPmffLRbWs564lURN9ADdWQ==
-X-Gm-Gg: ASbGncv7jx2KnoONCCzpn0Y0nenNMyDOJplKbVMzNyfGg1ixkUzs5IrrfUqP2YFc8mw
-	T/bW7hgD8My7WK8wltqEDWiac0rE49vpBs4tgmGA8L1uUVu9SQLGailzhJ6EPTBbttLvozEGN+a
-	+sR12FDgwIngspEKK6l4tsnIBoEyCpaU2rNhrlGlaztjT0JE+KWBLjb8Yig/w1V1nI4NZQAsxg/
-	QNbcAF3CoQzwJQURM9L/JZYh+oKwAAcNt59lTEKp0ltG7gkbA==
-X-Received: by 2002:a05:6214:c6b:b0:6cb:ef1f:d1ab with SMTP id 6a1803df08f44-6d45112fc0dmr114023956d6.30.1732391609859;
-        Sat, 23 Nov 2024 11:53:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9qOsLkjCNIyVKm6SBBJX8YkAP/quZLE6zIWvB8EPn5k963cj5FhhYolXLvcFmHyaUVGRJSA==
-X-Received: by 2002:a05:6214:c6b:b0:6cb:ef1f:d1ab with SMTP id 6a1803df08f44-6d45112fc0dmr114023806d6.30.1732391609623;
-        Sat, 23 Nov 2024 11:53:29 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.249.243])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d451a85d9fsm24821346d6.18.2024.11.23.11.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Nov 2024 11:53:28 -0800 (PST)
-Message-ID: <3ecdde1f-b92a-4675-b0f9-3ed120827461@redhat.com>
-Date: Sat, 23 Nov 2024 14:53:26 -0500
+	bh=z8toJKTqYgiOm8yX0/nayZUss8l7ma5sqSjl7KCBpF0=;
+	b=hlpyVRYUw1z9xdZYuJDetCTFRs3+Z1lxqLniLK0tn8ZkmcWiAL0wZ78aQGq5CBamzi3BHV
+	9ieNcRpM7AGfB0BdD6l6XEGEzBKC9k8riy5y0h8JJXkaR+hA4W0RSz2SHOGCNm/utmsRAu
+	6scALFYJ6L6f4jz72hqrt5zCGRec5vFh8cJ8r+g/FidQPHC401sojwGuGwasJDZtsSuTG+
+	MFk4OzmeTYuB9D47W/amQTcxAHVR44Kd0A40nLT+O6oXPtDHrzLhNB9/rGRLHRQDFjf6nC
+	uDUoXOqRx5fDWxJ10epkJwqkfBoBKMtSxMC4LcDFdEjqZI1nPZhmdSi/iwslTA==
+To: linux-security-module@vger.kernel.org
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Serge Hallyn <serge@hallyn.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	cocci@inria.fr
+Subject: [PATCH 09/11] fs: reorder capability check last
+Date: Mon, 25 Nov 2024 11:40:01 +0100
+Message-ID: <20241125104011.36552-8-cgoettsche@seltendoof.de>
+In-Reply-To: <20241125104011.36552-1-cgoettsche@seltendoof.de>
+References: <20241125104011.36552-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH] nfsd: dump default number of threads to 16
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-References: <20241118202011.1115968-1-smayhew@redhat.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20241118202011.1115968-1-smayhew@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Christian Göttsche <cgzones@googlemail.com>
 
+capable() calls refer to enabled LSMs whether to permit or deny the
+request.  This is relevant in connection with SELinux, where a
+capability check results in a policy decision and by default a denial
+message on insufficient permission is issued.
+It can lead to three undesired cases:
+  1. A denial message is generated, even in case the operation was an
+     unprivileged one and thus the syscall succeeded, creating noise.
+  2. To avoid the noise from 1. the policy writer adds a rule to ignore
+     those denial messages, hiding future syscalls, where the task
+     performs an actual privileged operation, leading to hidden limited
+     functionality of that task.
+  3. To avoid the noise from 1. the policy writer adds a rule to permit
+     the task the requested capability, while it does not need it,
+     violating the principle of least privilege.
 
-On 11/18/24 3:20 PM, Scott Mayhew wrote:
-> nfsdctl defaults to 16 threads.  Since the nfs-server.service file first
-> tries nfsdctl and then falls back to rpc.nfsd, it would probably be wise
-> to make the default in rpc.nfsd and nfs.conf 16, for the sake of
-> consistency and to avoid surprises.
-> 
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Committed... (tag: nfs-utils-2-8-2-rc3)
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ fs/fhandle.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-steved.
-> ---
->   nfs.conf          | 2 +-
->   utils/nfsd/nfsd.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/nfs.conf b/nfs.conf
-> index 23b5f7d4..087d7372 100644
-> --- a/nfs.conf
-> +++ b/nfs.conf
-> @@ -66,7 +66,7 @@
->   #
->   [nfsd]
->   # debug=0
-> -# threads=8
-> +# threads=16
->   # host=
->   # port=0
->   # grace-time=90
-> diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-> index 249df00b..f787583e 100644
-> --- a/utils/nfsd/nfsd.c
-> +++ b/utils/nfsd/nfsd.c
-> @@ -32,7 +32,7 @@
->   #include "xcommon.h"
->   
->   #ifndef NFSD_NPROC
-> -#define NFSD_NPROC 8
-> +#define NFSD_NPROC 16
->   #endif
->   
->   static void	usage(const char *);
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 5f801139358e..01b3e14e07de 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -265,9 +265,9 @@ static inline bool may_decode_fh(struct handle_to_path_ctx *ctx,
+ 	if (ns_capable(root->mnt->mnt_sb->s_user_ns, CAP_SYS_ADMIN))
+ 		ctx->flags = HANDLE_CHECK_PERMS;
+ 	else if (is_mounted(root->mnt) &&
++		 !has_locked_children(real_mount(root->mnt), root->dentry) &&
+ 		 ns_capable(real_mount(root->mnt)->mnt_ns->user_ns,
+-			    CAP_SYS_ADMIN) &&
+-		 !has_locked_children(real_mount(root->mnt), root->dentry))
++			    CAP_SYS_ADMIN))
+ 		ctx->flags = HANDLE_CHECK_PERMS | HANDLE_CHECK_SUBTREE;
+ 	else
+ 		return false;
+-- 
+2.45.2
 
 
