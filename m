@@ -1,91 +1,125 @@
-Return-Path: <linux-nfs+bounces-8212-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8213-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4482D9D853D
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 13:17:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F18FF9D8B3D
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 18:22:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7D56166904
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 12:17:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85E87160EDD
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 17:22:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1388717BEC5;
-	Mon, 25 Nov 2024 12:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 377E2192D6C;
+	Mon, 25 Nov 2024 17:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/fnt1gz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DF3QIOfh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CC41547C3;
-	Mon, 25 Nov 2024 12:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCD31B3954
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Nov 2024 17:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732537059; cv=none; b=pa2XoPm+cZkPY6Umq2mj9Rfj6ddD2VNLWm/ennV7MhIougUTTqGEMNnO8/R3m9Cv1mMbulha4v28Rquo4YCUBHI+5UDOIyNZHdtw42VS0Iw2wvxp5Xi749X51AHSd9DVtV+gfpW709ED9fLezohYHoerzWzdC0moBo/NyY8OctA=
+	t=1732555324; cv=none; b=uVviyWmP06saTBgrmH9/yPAjr615IQBX8Xr4J5tUQwu/MBYRNHoVvh5X3LyKaxFkHKO2MlC/7G5bEVGhVkGypmRzGeaQlymwpHD/BurctEXhmBkMEmM8ZdogX4pTmJ8LACY24tXoHzTDBGNzuK8cLsBYFgqNToobb6NlZh3ibcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732537059; c=relaxed/simple;
-	bh=+7vDUrAhXkZwpMtioGZjKPSdyrBSkJx5f8rdlaWzKqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BmizU6fTbKTc6C12gpNqwGmGOCPQpqBdi5GZkzL9oJ/Varo2q1V93p7Khl+xbEZSE/MAKAewuFZaKB/3mxAf2I/CeyP2HaWaI7v71C1ts/cM46kpEJOINrrP0HsjPq7wT+9vT/Nt2OUUIdDap0gjSWmj97q1P0y87kTnrzynAvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/fnt1gz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B355C4CECE;
-	Mon, 25 Nov 2024 12:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732537058;
-	bh=+7vDUrAhXkZwpMtioGZjKPSdyrBSkJx5f8rdlaWzKqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M/fnt1gzSJFvvynlbkEPVDSLjaw+oZU7IipYcAijkJHf4XfYnLxPXBQ1HDk9D1edo
-	 7OKhKUB71YBuCa2eKLOzqEzorUdc3EV9pPRQ+Z0xLBiP84soL4+alum4itV/9NS8MD
-	 sDfwyph0x8DH+hy0h7nPRRl7JABfkVqrT71QwIOuZe/k8cVPW1LNdlsSbCQOspl/hW
-	 PnRfRbfuOFhoxTrY8geZS/H6j+5DBPr6aAzGOFZzX+gmJ2OoAhizscyLDPuQz0JXhT
-	 Vf9lxx86Kpw8v8OxFB2VhNxElc7MN1C+iun2Ac2NE4D5hVEBE4WuVRH6Gotlsm+oow
-	 FQYo04vX5eARg==
-Date: Mon, 25 Nov 2024 13:17:31 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: cgzones@googlemail.com
-Cc: linux-security-module@vger.kernel.org, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Serge Hallyn <serge@hallyn.com>, 
-	Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	cocci@inria.fr
-Subject: Re: [PATCH 09/11] fs: reorder capability check last
-Message-ID: <20241125-rausch-sprossen-2570a6fe045a@brauner>
-References: <20241125104011.36552-1-cgoettsche@seltendoof.de>
- <20241125104011.36552-8-cgoettsche@seltendoof.de>
+	s=arc-20240116; t=1732555324; c=relaxed/simple;
+	bh=uhmwajgfLJy93FGbaCgPk8b9rd0DCS0mP5rJQeroXwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=m0f5eLgN6ZSaPjXAoKXPLNdLxEDPR/Wi8EE8m0eC1PUsbxdaU76OWbxcX1E6S3Owlk+Ad2MnBV40imC03a83ODwrsFWGNRPaaIB5zMSTLsL2pWqs7483Tzrp2n3z9Y4XkWGQawg5g3d3fCNvnjM2r8ZEQ31eToXJjBSW3vSaZpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DF3QIOfh; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ed91d2a245so2140705a91.3
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Nov 2024 09:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732555321; x=1733160121; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3XHRsn40oEsp78FRQe6HItfLjbDOuKntV5p5pcwuhqw=;
+        b=DF3QIOfhH09yDnS+7nAaivFqjO8iKM50teyhOuKIxKuIzPRmcEj78/LIfBNq/K6aE8
+         qbDT1BbRbzqOV+Xd/jW6poPWKY34GqYGcJ90/lbQQof3dG+KayUPwkjXNmMJaMlsZa8i
+         fa0OXZI1rqJ2h1oCgImP1jNY/N8wX5BQm35wjlpH8FeveZn9GyYJFaN8EzP9F+jU7Uy0
+         JIxxo/66EB51mh98Lp4vGQFBm5UTfa7/LEnNAchmlwUWLEBrLqlTSJ3fe4DC9eVZt/aL
+         UJNW6MkcyVfnWbP20hRPm8OLdvAXVwqfdpVe+DMmR/yJwpToZCBsl7S/MYU9hdODWlyp
+         oWog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732555321; x=1733160121;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3XHRsn40oEsp78FRQe6HItfLjbDOuKntV5p5pcwuhqw=;
+        b=B0rXAD3hbdSumN2FeEkWSUdjakgqC875xu5hRxSLyGj2tFfnD7UBZrvFr4O6w04o5z
+         lNfYnO6cvPj2aIzfSKGrJI/26L3LoC3JMoMLla0HMZwzCEHcSl14AV76/kjNGgksRqiJ
+         /j0xKlOm61+wOo6cYTnwhJolzYq+XBJbClFdYLZRagjcv7QfY/5TrVD3JKdOYjAjHNMg
+         drYJserPUrP4a7uxyP9wJ69hiWA60/Sj6GSVeipQ/1JF6+m12Q4pFwi4lvuJ+u2UMWRS
+         SLgCED/sXMFEBPGPq1KEIm+8qCIflYQvxEWcvGAhw8mY+10944F8F3ZHfqEIln0KyljK
+         eL5w==
+X-Gm-Message-State: AOJu0YyhLr9ifblFEIcFon9B+Hz8NzcFIsvTdS1m9OtHTdq/e+xNH6VC
+	4WngPKmUQF7eySo44a9wKC0oa+Utka3JxSVeNFSm1FchzwiriJVdsJFoGH5FFgiIgBQvzjmU19p
+	QeYMn5vl3rrqSFU4q0/yNJsPAAP6vFw==
+X-Gm-Gg: ASbGnctr57YNFhVaP/PGK6lFVumdO4Hd7j0LNt4S8sH4YHI1+VznJrVBKUCxLF4wc2G
+	3ZjeWU+5MZciavSWTcHQ9K0ppMF5DQi4=
+X-Google-Smtp-Source: AGHT+IGjPmEMCiSS0UU3psQ/KaZphZw+J8XOmsQyZYT4DXJ6MMfv4F0sXYbv1QmCnFvZRZ2oR6u0uePMVtZvT8E3MrA=
+X-Received: by 2002:a17:90b:17ce:b0:2ea:4633:1a62 with SMTP id
+ 98e67ed59e1d1-2eb0e867627mr15652953a91.25.1732555321436; Mon, 25 Nov 2024
+ 09:22:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241125104011.36552-8-cgoettsche@seltendoof.de>
+References: <CAN0SSYyAf51Vdeg9yVGD7isZfT+PcvbC8RcUGzgkH9MUB1QjgQ@mail.gmail.com>
+ <CAN0SSYxVUiiupuu-8DPq1tMRrOBuO49bwaLik0KmoQ3r2pqnxg@mail.gmail.com>
+In-Reply-To: <CAN0SSYxVUiiupuu-8DPq1tMRrOBuO49bwaLik0KmoQ3r2pqnxg@mail.gmail.com>
+From: Mark Liam Brown <brownmarkliam@gmail.com>
+Date: Mon, 25 Nov 2024 18:21:00 +0100
+Message-ID: <CAN0SSYw-eDXnG=QMuaJTsx5KXbusZ8SO3ER5Udg=5_ipi4A7Pg@mail.gmail.com>
+Subject: Re: IPV6 localhost (::1) in /etc/exports?
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 25, 2024 at 11:40:01AM +0100, Christian Göttsche wrote:
-> From: Christian Göttsche <cgzones@googlemail.com>
-> 
-> capable() calls refer to enabled LSMs whether to permit or deny the
-> request.  This is relevant in connection with SELinux, where a
-> capability check results in a policy decision and by default a denial
-> message on insufficient permission is issued.
-> It can lead to three undesired cases:
->   1. A denial message is generated, even in case the operation was an
->      unprivileged one and thus the syscall succeeded, creating noise.
->   2. To avoid the noise from 1. the policy writer adds a rule to ignore
->      those denial messages, hiding future syscalls, where the task
->      performs an actual privileged operation, leading to hidden limited
->      functionality of that task.
->   3. To avoid the noise from 1. the policy writer adds a rule to permit
->      the task the requested capability, while it does not need it,
->      violating the principle of least privilege.
-> 
-> Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
-> ---
+On Mon, Sep 30, 2024 at 4:58=E2=80=AFPM Mark Liam Brown <brownmarkliam@gmai=
+l.com> wrote:
+>
+> On Tue, Sep 3, 2024 at 1:16=E2=80=AFPM Mark Liam Brown <brownmarkliam@gma=
+il.com> wrote:
+> >
+> > Greetings!
+> >
+> > How can I add IPV6 localhost to /etc/export, to access a nfs4 share
+> > via ssh? I tried, but in wireshark I get this error:
+> >     1 0.000000000          ::1 =E2=86=92 ::1          NFS 278 V4 Call l=
+ookup
+> > LOOKUP test14
+> >    2 0.000076041          ::1 =E2=86=92 ::1          NFS 214 V4 Reply (=
+Call In
+> > 1) lookup PUTROOTFH | GETATTR Status: NFS4ERR_PERM
+> >
+> > for this entry in /etc/exports:
+> > /test14 ::1/64(rw,async,insecure,no_subtree_check,no_root_squash)
+> >
+> > The same mount attempt works if I replace the entry in /etc/exports wit=
+h this:
+> > /test14 *(rw,async,insecure,no_subtree_check,no_root_squash)
+>
+> So far "::1/128", "::1/64", "::1" do not work, which makes me wonder
+> if there is a BUG in nfsd which prevents the use of ::1 at all.
+>
+> Also, our IT department made it clear that the "total
+> underdocumenation" of IPv6 in exports(5) is "literally worth a CVE",
+> as many people use IPv6 masks which make exports world-wide
+> accessible.
 
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+So is this a bug, or not?
+
+
+Mark
+--
+IT Infrastructure Consultant
+Windows, Linux
 
