@@ -1,116 +1,79 @@
-Return-Path: <linux-nfs+bounces-8225-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8226-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 542159D9C41
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 18:16:51 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6DDF9D9EA6
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 22:05:18 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED57AB284B3
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 17:15:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 506A8168A3D
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 21:05:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 127B01DB37A;
-	Tue, 26 Nov 2024 17:14:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E27FF1DFD9F;
+	Tue, 26 Nov 2024 21:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8Xa5aTh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IN1yAbfU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254451DA612
-	for <linux-nfs@vger.kernel.org>; Tue, 26 Nov 2024 17:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBF61DF99D;
+	Tue, 26 Nov 2024 21:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732641294; cv=none; b=Ni9C1CLAU/qTSPmywjBqyRVECsK1fPvcR6RdkCbddqfi2EkQADb7fjd9krasQafvc3QcvpDfapYHEGTIPSnnL6chvSNz4XerK8u9Bn8LK7mgdGM9KrIBK10/rAjPeBrFbFd2MJHpBNWkVrmGSpH/z6/ELJsdz4jsOe4JAIU4moU=
+	t=1732655102; cv=none; b=KCpfV6ITS8xw1UJx0QgCcFWGP0PcsG5hSf8HHA9r+jFPgLVvTsuZR8OAdI0I/6pOw+Q61WfEW4kLdJ5BEe/8QgMJaKMLBZT1Ymqxpo0hxIj4Mp6nYukvMqz4pEYJzB4nbLz13qmVgXAX2RcySNEG1r35mLZhE75P81TnxhroTbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732641294; c=relaxed/simple;
-	bh=wqhKDuEd3dg6DtnA3TTsuXqmBNJnqyjJ81rzJ58s+CU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QnugoRDN+QjyPnMxVQ5bKUvj1HmQVHJALVxRLNeZkdqbMGE+H3QPCzNUp0fana2Dkd3yKoMhkHNZ55N0X6VbKIrN9Nmuy0TAY2fa8vrs0ak5GNb7P9/cKqetOj/VMa4eJTNWMo76iD6McHNyLpdJulsh//hnFoHWtKHpenTZB0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8Xa5aTh; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1732641293; x=1764177293;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wqhKDuEd3dg6DtnA3TTsuXqmBNJnqyjJ81rzJ58s+CU=;
-  b=i8Xa5aThKa6ro9HP474gaSZodlXyl1SOm0z00TGJhspkc8YHYeeRv43h
-   95EwJgHBdhwPHIINmyyWQWxl5echV9Ld6v6BN+v3CQLui6fmcD4DxZB7M
-   gAZBS9RbWd7S+IkFWdOtrVhXzjBGVmEl/uIuhOTy3i1kk+lEvtw8Z6O2B
-   8X3EE2yU+I9ngnDc6ZBRmDUrx/yLsj4jwfl4iHLROZnyZHrlHvgKCcXpb
-   GtYgS+/WFUkvPnB+L5PNvIt6l3j9oUNhmu/zHPw4+xenez7dGvsmV3hFW
-   0rw08wcL39rP0rFBJBvdhawFvG8PDoZ0o3KriiSzGfDwtIQfcbsbF8HQM
-   w==;
-X-CSE-ConnectionGUID: zZwaY1R3RGeoD8A4Y4ZGnw==
-X-CSE-MsgGUID: Ih2fVrZ1S7q41geoTK0X6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11268"; a="32672232"
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="32672232"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2024 09:14:52 -0800
-X-CSE-ConnectionGUID: FRJboDS+RZycq3xod1ULDw==
-X-CSE-MsgGUID: 1Lu4+XCeSLGBfo5+etDcJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,186,1728975600"; 
-   d="scan'208";a="91566366"
-Received: from lkp-server01.sh.intel.com (HELO 8122d2fc1967) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 26 Nov 2024 09:14:48 -0800
-Received: from kbuild by 8122d2fc1967 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tFz99-0007RT-0O;
-	Tue, 26 Nov 2024 17:14:43 +0000
-Date: Wed, 27 Nov 2024 01:14:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
-	Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [trondmy-nfs:testing 27/29] net/sunrpc/debugfs.c:78:21: sparse:
- sparse: cast removes address space '__rcu' of expression
-Message-ID: <202411270142.dpt7kOPF-lkp@intel.com>
+	s=arc-20240116; t=1732655102; c=relaxed/simple;
+	bh=i0LxOvfK28Z52U25B2ST3QcbhpVu57HLMVODFi7SE0c=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Rgd5gdYD7eVsCaIl2FaByhNMrJqWoXBFsxXJTLSN/LECB6UENQ2gvrwWj/rvzgu5rb2oAHYcmmwkk+juTGlZrlhFgYjp1Wh+/dM+IrceBH6qTOXXzfD1j9PEHjLQ13miuIrH/1/NXOwlEzEk2I5TX0OHBEz81E1UirLfm7V29kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IN1yAbfU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D229C4CED0;
+	Tue, 26 Nov 2024 21:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732655102;
+	bh=i0LxOvfK28Z52U25B2ST3QcbhpVu57HLMVODFi7SE0c=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=IN1yAbfUrrFe741mGXvG0efCCqtCCuyxeDVBRMbLvdHQEQMKh6NOADyLvDbdbptW0
+	 vbmSZ0OdzWOVXDeCn4oJifJv7UKEW48t/08KUCX57wgxCnBcY3eFOxUEowSv+2szsL
+	 v9gKikfngQv48IolTb1ImeX9nsTG0cNTHsG3yjS1Pah7RCKbzOn6sBBdO8AI7PGOYV
+	 Uv9BXT9AtBGngwAD5+ORYPeBRzoAZcvC4Oz7S7jVq/5bBdFhurVk0FOetxuS1j8buq
+	 aEX6KQH4q14NKOeJLvCytxCzZfLLCHEsulMZhWkYRfkUY1KYuoMErGCPPtaL/sO6lA
+	 nMDMCQtg8xwOg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1203809A00;
+	Tue, 26 Nov 2024 21:05:16 +0000 (UTC)
+Subject: Re: [GIT PULL] NFSD changes for v6.13
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Z0Xg7A1J/CkYiENR@tissot.1015granger.net>
+References: <Z0Xg7A1J/CkYiENR@tissot.1015granger.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Z0Xg7A1J/CkYiENR@tissot.1015granger.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.13
+X-PR-Tracked-Commit-Id: 583772eec7b0096516a8ee8b1cc31401894f1e3a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 445d9f05fa149556422f7fdd52dacf487cc8e7be
+Message-Id: <173265511521.539328.8368166461221509113.pr-tracker-bot@kernel.org>
+Date: Tue, 26 Nov 2024 21:05:15 +0000
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-tree:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git testing
-head:   0c72d16cb63da4589029e2e60b0be86ab4def2c4
-commit: 47f2d22f3ba33173238cf7e009b931602983157c [27/29] SUNRPC: display total RPC tasks for RPC client
-config: i386-randconfig-r133-20241126 (https://download.01.org/0day-ci/archive/20241127/202411270142.dpt7kOPF-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241127/202411270142.dpt7kOPF-lkp@intel.com/reproduce)
+The pull request you sent on Tue, 26 Nov 2024 09:53:32 -0500:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202411270142.dpt7kOPF-lkp@intel.com/
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.13
 
-sparse warnings: (new ones prefixed by >>)
->> net/sunrpc/debugfs.c:78:21: sparse: sparse: cast removes address space '__rcu' of expression
---
->> net/sunrpc/clnt.c:3332:9: sparse: sparse: cast removes address space '__rcu' of expression
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/445d9f05fa149556422f7fdd52dacf487cc8e7be
 
-vim +/__rcu +78 net/sunrpc/debugfs.c
-
-    70	
-    71	static void
-    72	tasks_stop(struct seq_file *f, void *v)
-    73		__releases(&clnt->cl_lock)
-    74	{
-    75		struct rpc_clnt *clnt = f->private;
-    76		spin_unlock(&clnt->cl_lock);
-    77		seq_printf(f, "clnt[%pISpc] RPC tasks[%d]\n",
-  > 78			   (struct sockaddr *)&clnt->cl_xprt->addr,
-    79			   atomic_read(&clnt->cl_task_count));
-    80	}
-    81	
+Thank you!
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
