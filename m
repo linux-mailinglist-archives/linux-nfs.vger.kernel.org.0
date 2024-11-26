@@ -1,131 +1,102 @@
-Return-Path: <linux-nfs+bounces-8217-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8218-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C2A29D8E95
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 23:35:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 015AE9D8F9B
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 01:51:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15AEF282407
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Nov 2024 22:35:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86CC7B21ED3
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Nov 2024 00:51:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 602FF1CD210;
-	Mon, 25 Nov 2024 22:34:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C772546B5;
+	Tue, 26 Nov 2024 00:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+grX5aI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/Uz0g2U"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B3F1CD1ED;
-	Mon, 25 Nov 2024 22:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA4B2C95
+	for <linux-nfs@vger.kernel.org>; Tue, 26 Nov 2024 00:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732574098; cv=none; b=Z4yLPZR7cBPbr7bqUyY81WJxgQUiSUnFAVFxtqkQUotWK+WNkZkQo/7Bh+LaeF3NLr1dVRss3KNWHWA5ehW1V/MBlspR8hDcFylwiw3ThK0qukMGqcL+LP0/u5TNH373q62UJ5MrdkhnYa1xjI1iWdIq+HHXkQ8nFXZBJIqs4mA=
+	t=1732582287; cv=none; b=hydqGNpnzolalSOI3cqX+dHUYnbAz90uxL5rR+fVgjiyF9WBII38pIAgyyKCMKN7ln31E+pz2sxP5fpPuwQTz2dju92eg38tjEuTC8y2ozlVaHV/8QHijzNAe0IOJu5+FO9CIV/E9K25UJD/24NCpqpDuRXVYdiiFYz8wNmRSPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732574098; c=relaxed/simple;
-	bh=FiSm9WBCzxkq0A/hq9Ci1EsLOI4cPirhbpTA0DEwLWQ=;
+	s=arc-20240116; t=1732582287; c=relaxed/simple;
+	bh=RhpfRjmHqZlemLzAcQjMr7IwdCVN3RNKrg6kWcUUvQM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X6Naw2fBpLQO3IVjnNuJsHe5dljS5tKU7HDRMbBkxbt4f+eYe/Fiwsic6NEEpLEyG1B1TeF9vDcFl8Zb/jj7E4cAOqTY38+KP1KenCQSKp4LD1Nc3EYKF/tpMqAJoxj+8w4TJv04b7sRcXSs8MhpbOIL53/d65WiS38Z9fqe/Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+grX5aI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41A5C4CED3;
-	Mon, 25 Nov 2024 22:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732574097;
-	bh=FiSm9WBCzxkq0A/hq9Ci1EsLOI4cPirhbpTA0DEwLWQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=k+grX5aIWjli7FbPdzcFfAmtxHt91rqk301PetereRimqqv2G4kJ8yNRcG2aQ8GyQ
-	 rqqu4JlllaNMnrejyaD1106xnV5uNVUf7lzBYQJsEBUyvzuIH6/5/nPnDAv5Y1Ou4t
-	 ITfVvvhDLBvMMeRMYNXgopPnIZaShcFNJhYap8Z80itUTIegaPP0YhCKjcKuCkxcQ2
-	 9/ayolNjivEZiGXyPxUu1c+u999A4d+KiurKAUuzn4t/VBaOy7jhKLjX9nA5kSZIiI
-	 2H8Il+RWhKMPsL0VrfcYOaZp0igKdmGGdXHwO6M604Siwz585eGA8eT5Vih2mjodaN
-	 3+WPZOlUnNJZw==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aa55171d73cso256314266b.0;
-        Mon, 25 Nov 2024 14:34:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUfCe0Ydo6QG1jvb4onZEz+qYoWpUMTHVcFNRPusFGW7HK9wqvzoLPa+eUwZXUWje3DEw2N7FCZYS0A@vger.kernel.org, AJvYcCWC4XfXcaXvbNOD0nWeTxBE8NouRVANvmQTQt84PGYB+lhdyaZLch+XREUsxXH3Trg1rESsdi4+xSEK8iA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPYo8aQ7Mka35UVBkuutxgYTrQTmYlK1qVJ6rKStVKWyuYKnun
-	bczB7CBy1mJEEIXARnMpjosIxRbh0tAmYoSlomgAteIeYMmwG2qFkfL7hvdoYTlfQlxqwVmP2o6
-	Ncn0NNVr4FmeFTuzv6wn7jNxfg04=
-X-Google-Smtp-Source: AGHT+IEUOH03m8h9V7j3CooRTEb+zPHZIGEPbyjCO9OPXDEU9jw3coAf0/zDkf43Dm7AUniHLyvpASwc9yKZ0TCHcx8=
-X-Received: by 2002:a17:907:c992:b0:aa5:3663:64c5 with SMTP id
- a640c23a62f3a-aa5648b831emr98944766b.22.1732574096589; Mon, 25 Nov 2024
- 14:34:56 -0800 (PST)
+	 To:Content-Type; b=QX0KBe3atXHUvEufzAAiIqvAV55QtOqUM0WTrGMgzrZGCEqqXgUGl1SLB0WrSDolZw3zHKNXk81qTsf4q4UnJangLcK5Qi88Bqo+/jYjoQU5Gb05SfcEu23QTXsnbFA8S6xdgNn6uc5mDKwqXaz3LSink9uPeDzVXJTHGuGWMNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M/Uz0g2U; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-71d59d86ba7so415020a34.2
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Nov 2024 16:51:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732582285; x=1733187085; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RhpfRjmHqZlemLzAcQjMr7IwdCVN3RNKrg6kWcUUvQM=;
+        b=M/Uz0g2UAEYL70ievwxp8vzwelQqbFiBUTuc2az0PBFxo5JyLQnvjSBcMbT27uxJkm
+         QNhjviWxDtRwf4D/5CXEQYNp+gudHGAFses26s6rL4UpkjNQgnq69+lAw4UhloQhvPR/
+         uBqWnlrder9r5CXuctnreNFoa+qPqQ+3YLbFyQYE4woUqY8GfuTc+TeFJ6ZK6J2GlDwA
+         pNaAf9z5FhyPxy28bjmkSrAR9KshFGVaRhuy5cRgG5TReDlUhu6aiMA+wkIqNwFSFYNM
+         ZhoySrSFWE3WostKTb71j45YPrJlq9qDm61Ys2lphkWZxliE8OcvfsoTioGzFL14cn5F
+         6ofQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732582285; x=1733187085;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RhpfRjmHqZlemLzAcQjMr7IwdCVN3RNKrg6kWcUUvQM=;
+        b=tfwhBpzPILR+4nCbiykbGUmK4OPUcvVLQdWsxO24Iqi6FJdkfFcaAVaccQLwtKtQhF
+         br9zvjV1wI1QXYFGLdENtXrR4/lb4ntoQwh+2AuBVlPR21kCmjr+kMhpHxdSSBvT652B
+         x6S710MqROtf0DH8rWnxlekXoV/xqz12KUz/g6bM03qdIN/9zUGBEL1pM7xg5RESDQcn
+         fHHBsQooZuU+yCFEjQmDSvTKRZyZJdeBxFymaPFasFXOoUhdispkKiUYI8jevLLOK25O
+         Oj68Z0d7UstGnc09bFVihg7/pz3SwJGc5+MG80BM37s9Ue6ZqSFK6LsTJVZx+6fu8+6O
+         MXog==
+X-Gm-Message-State: AOJu0Yyx8kL9noTzK6x5L88yd32cAEG6IHVGN0xQQTrLn98L2GOnP2/7
+	PXtLQdGgydmlSgwakpYKQsHpnksjBPan+vfVfhuSXiJXtzs20GvJACFqUNmSbACu+NOHOWMJp3C
+	cfhpsSdHyeXETvhJ5XAjxCxXH0IEc1k4Z7RQ=
+X-Gm-Gg: ASbGncuXIkHx3NEtocnbb+yBwWHDozwp+GsQBA+Nu2/FX9VmXiDUZHHsKS43+6QC0RF
+	Gg317M7TsBAN7tPbKmFdRpxLp/fBprgC6
+X-Google-Smtp-Source: AGHT+IGkVzWyfj/UEoRrGvhg3z7haiubbJyplips4mLWYvplUb7mlevZk6wTfgTsHu1aBgd0CnOVYngRjp/XXCUQPSk=
+X-Received: by 2002:a05:6830:7301:b0:71d:5c89:e505 with SMTP id
+ 46e09a7af769-71d5c89e7d7mr520425a34.9.1732582285232; Mon, 25 Nov 2024
+ 16:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241114044738.1582373-1-lilingfeng3@huawei.com>
-In-Reply-To: <20241114044738.1582373-1-lilingfeng3@huawei.com>
-From: Anna Schumaker <anna@kernel.org>
-Date: Mon, 25 Nov 2024 17:34:39 -0500
-X-Gmail-Original-Message-ID: <CAFX2Jfk=FUNYecYT15_FQSKv6ajcWuM-724hUeryTJc7auhCHg@mail.gmail.com>
-Message-ID: <CAFX2Jfk=FUNYecYT15_FQSKv6ajcWuM-724hUeryTJc7auhCHg@mail.gmail.com>
-Subject: Re: [PATCH] nfs: pass flags to second superblock
-To: Li Lingfeng <lilingfeng3@huawei.com>
-Cc: trondmy@kernel.org, trond.myklebust@hammerspace.com, jlayton@kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+References: <CALWcw=GXke+r7OFM03vEfJUDuw=UVE2P5TSXt+_m+LP9XD_EEw@mail.gmail.com>
+In-Reply-To: <CALWcw=GXke+r7OFM03vEfJUDuw=UVE2P5TSXt+_m+LP9XD_EEw@mail.gmail.com>
+From: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
+Date: Tue, 26 Nov 2024 01:50:49 +0100
+Message-ID: <CALWcw=Gyi_+JmuUWL3v494pb9GJizJWS0QbjMGKMdt3pBAX2fA@mail.gmail.com>
+Subject: Re: iocharset= mount option for NFSv4 mount?
+To: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Li,
+On Tue, Nov 26, 2024 at 1:19=E2=80=AFAM Takeshi Nishimura
+<takeshi.nishimura.linux@gmail.com> wrote:
+>
+> Dear list,
+>
+> I am investigating the options on how we can change the encoding for file=
+ names. mount.cifs has iocharset=3D for that purpose.
+>
+> Does mount.nfs have a similar option?
 
-On Wed, Nov 13, 2024 at 11:33=E2=80=AFPM Li Lingfeng <lilingfeng3@huawei.co=
-m> wrote:
->
-> During the process of mounting an NFSv4 client, two superblocks will be
-> created in sequence. The first superblock corresponds to the root
-> directory exported by the server, and the second superblock corresponds t=
-o
-> the directory that will be actually mounted. The first superblock will
-> eventually be destroyed.
-> The flag passed from user mode will only be passed to the first
-> superblock, resulting in the actual used superblock not carrying the flag
-> passed from user mode(fs_context_for_submount() will set sb_flags as 0).
->
-> Since the superblock of NFS does not carry the ro tag, the file system
-> status displayed by /proc/self/mountstats shows that NFS is always in the
-> rw state, which may mislead users.
->
-> Pass sb_flags of the fc which carry flags passed by user to second
-> superblock to fix it.
->
-> Fixes: 281cad46b34d ("NFS: Create a submount rpc_op")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->  fs/nfs/nfs4super.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-> index b29a26923ce0..9a3b73a33fbf 100644
-> --- a/fs/nfs/nfs4super.c
-> +++ b/fs/nfs/nfs4super.c
-> @@ -233,6 +233,7 @@ static int do_nfs4_mount(struct nfs_server *server,
->         if (IS_ERR(dentry))
->                 return PTR_ERR(dentry);
->
-> +       dentry->d_sb->s_flags =3D fc->sb_flags;
-
-I'm seeing a handful of new xfstests failures that I bisected to this
-patch: generic/157, generic/184, generic/306, generic/564, and
-generic/598.
-
-I'm seeing this on NFS v4.1 and v4.2, and it looks like each one of
-these failures is due to a new -EIO error being generated. Any
-thoughts about what could be causing this?
-
-Thanks,
-Anna
-
-
->         fc->root =3D dentry;
->         return 0;
->  }
-> --
-> 2.31.1
->
+It seems the option was renamed nls=3D a while ago, but does it work for
+mount.nfs?
+--=20
+Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
+=A6
+Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
+Seems
 
