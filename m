@@ -1,96 +1,93 @@
-Return-Path: <linux-nfs+bounces-8238-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8239-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44DC19DA70A
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2024 12:46:14 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51A26166091
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2024 11:46:02 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D62AE1F8EFA;
-	Wed, 27 Nov 2024 11:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EH8C+l0F"
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B62C39DACF8
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2024 19:23:05 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32531F942C
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Nov 2024 11:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732707922; cv=none; b=e8BBmypvGPRT0IbGJYoOanufUPrmnUQcUpY9veUJo/S+Ck4QOrJhWH6t3JeXvo2coVl58B6D+YoeBautlEYMpE8xsOH9WGRF1sbFrT5K6DdINKOOY5MdMKQrQBxyyfrv7vRvsf1u/ds/WN/J4nQaiRqzO1kOT1YsO+RABDdsvd4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732707922; c=relaxed/simple;
-	bh=KSuKiep5slYUTA2dJuETbQXhix9g0v+vOKn9qOjErus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W8IHo6u3yarUCwJu00qoZAfpRHWjaGAgVomgfG7WGpCoQl59+B/VR0HUKmpzjUfING2oubATTmIBu8CCjUVV5Go9MfjsLVT8WLoj+TPfkap3oupS9ggQoQPCBbRX1PK54GmmSHgwiIvHsi+ENuEeb3HJhEIyq2eN2PMnWehNYH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EH8C+l0F; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732707919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W5KUzbs/rsqK9vwQ9DKIlZKy9y2NKEbsPhwBSIrqK68=;
-	b=EH8C+l0FsrlyY3o/BesoFVa+Uz0Kf3KJvaYM6AKgvrL43HGVUEgG7qIIPCTTKEX8It21UO
-	nGxwMPqS73LzhGTFiWGaphsNQHULXS6zixDfm2s1xP3d5Y9elGRWLnTtuTXQCnOc8juwCm
-	MqKPymA1EhrxecsEaoWF2xg5Er5BQQc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-680-FPX3EfjFP529wSmWk5cBTQ-1; Wed,
- 27 Nov 2024 06:45:17 -0500
-X-MC-Unique: FPX3EfjFP529wSmWk5cBTQ-1
-X-Mimecast-MFC-AGG-ID: FPX3EfjFP529wSmWk5cBTQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7BA34281DD5
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Nov 2024 18:23:04 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A02DB1411C8;
+	Wed, 27 Nov 2024 18:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cipixia.com header.i=@cipixia.com header.b="F/vbQ0TN"
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from mail.cipixia.com (mail.cipixia.com [5.78.30.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C76911956048
-	for <linux-nfs@vger.kernel.org>; Wed, 27 Nov 2024 11:45:16 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.74.7])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D91F195E485;
-	Wed, 27 Nov 2024 11:45:16 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] libnsm: fix the safer atomic filenames fix
-Date: Wed, 27 Nov 2024 06:45:13 -0500
-Message-ID: <024BFAE1-2A6B-4F95-A525-E7E306C617F1@redhat.com>
-In-Reply-To: <995b5d27-6c34-4c5e-89c7-728da4878c9e@redhat.com>
-References: <7463bba8aea785f7614e169e8cdfb3d8f1e1e64a.1732663909.git.bcodding@redhat.com>
- <995b5d27-6c34-4c5e-89c7-728da4878c9e@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F321338DC8
+	for <linux-nfs@vger.kernel.org>; Wed, 27 Nov 2024 18:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.78.30.97
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1732731782; cv=none; b=PhYy4auKJz5CTCwItrdBk6FF0qBuUtqTTVT4fmf34JnZfLgR2FjNzOLS3HC/9E82Utau2AaS+PCmwE9J9TGJjCigJUzMFI3CtpJpMf6BARtBUoMwRhGdRw4bLEsdvIgCjij5lGOmbE++o5mAdkzJ2IRYvEOxTwziWFbJtUkUsHE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1732731782; c=relaxed/simple;
+	bh=HTWPNZhucgcb4cwPdBUfaEzGmWm4hkmJcjNs0F6MLKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DuoZcBRO5yVZKOxzOhi7FKEOJI9xe7Vav9gemmxdZLSiuGax7EPzFX093qyVcCdIrc3YxIObp9iiaa2t/hMaUPFUNb0BQIb0SrVASN96MbjQMXCmbKgiBS5oIgSZfIS5HR+i7yOAjHt8gpyR8WoOXeYPAlAMOX7TSD3RQwrp9nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cipixia.com; spf=pass smtp.mailfrom=cipixia.com; dkim=pass (2048-bit key) header.d=cipixia.com header.i=@cipixia.com header.b=F/vbQ0TN; arc=none smtp.client-ip=5.78.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cipixia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cipixia.com
+Received: from originating.ip.scrubbed
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	(Authenticated sender: matt)
+	by mail.cipixia.com (Postfix) with ESMTPSA id 4Xz71h3Fstz10g8;
+	Wed, 27 Nov 2024 11:16:40 -0700 (MST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cipixia.com; s=rsa2048;
+	t=1732731400;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xVv3YhlkuYBur3vYeExh8Xyxp8eitJevLqUmbexsgGM=;
+	b=F/vbQ0TNrx4Tt9VAN+DEMyeFSGbi5J6JCgKTS+aXOiPJz9eHk2AqykkeHOwvyMWICiY3jw
+	WfA/8UvMMkDobOQkuVErPInc6fM3hL66rwHKV/RZu2fZgRK5H8w3EWKLcG/sXOh26XgbKQ
+	YIWcoDo2HgsbHs/rs4jkT+S1wZkHyC1+WKyD70xNLQ4Wz1kENNkUnydcPKwEsC7dlvpAdA
+	LSlpe00IQXs4zBNS6YIJY+cUHt3UDI+ovlhShUvu1R/rfCja8N+tldHdK+2ZpPg+sDW3mH
+	aQD2mIaHLQf0TWUx1xSYQeQU66kzi3g7lu8lv2ctBKLSqcNZ69Yoc1aqitHTkA==
+Message-ID: <98f00c1a-8ecc-4d7c-ae42-6c9d6a6edac2@cipixia.com>
+Date: Wed, 27 Nov 2024 11:16:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: SELinux-Support in Linux NFSv4.1 impl?
+To: Martin Wege <martin.l.wege@gmail.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CANH4o6P-jze6MB8yh3sWxhyHJWdj+JHK3vw58cYwQ0a7eVe_Vg@mail.gmail.com>
+ <c397fb11a172be26111e1ad5cb17a92bceb065d3.camel@kernel.org>
+ <CANH4o6O-Gcjc3eqiTd-KysZx-bpbzoh=CMTNixJ26cZQuRd=UQ@mail.gmail.com>
+Content-Language: en-US
+From: Matt Kinni <matt@cipixia.com>
+In-Reply-To: <CANH4o6O-Gcjc3eqiTd-KysZx-bpbzoh=CMTNixJ26cZQuRd=UQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 27 Nov 2024, at 6:40, Steve Dickson wrote:
+On 2024-02-17 at 06:37 (-0700), Martin Wege wrote:
+> Is there documentation on how to set this up? Will this work if the
+> root fs ('/') is NFSv4.2?
 
-> On 11/26/24 6:32 PM, Benjamin Coddington wrote:
->> Commit 9f7a91b51ffc ("libnsm: safer atomic filenames") messed up the length
->> arguement to snprintf() in nsm_make_temp_pathname such that the length is
->> longer than the computed string.  When compiled with "-O
->> -D_FORTIFY_SOURCE=3", __snprintf_chk will fail and abort statd.
->>
->> The fix is to correct the original size calculation, then pull one from the
->> snprintf length for the final "/".
->>
->> Fixes: 9f7a91b51ffc ("libnsm: safer atomic filenames")
->> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> Committed...
+> 
 
-I just sent a v2 - this version doesn't handle paths without '/'.
+Hi Martin,
+On your server's /etc/exports add "security_label" like so:
 
-Ben
+    /srv  *(sec=krb5,security_label,ro,fsid=0)  (example)
 
+On your client, make sure it is mounting with nfsvers=4.2
+
+Run 'mount' on client to confirm "seclabel" is showing in the output,
+and you will see the labels coming through with ls -Z
+
+
+-- 
+Matt
 
