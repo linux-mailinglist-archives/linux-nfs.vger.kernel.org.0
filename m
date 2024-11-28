@@ -1,84 +1,84 @@
-Return-Path: <linux-nfs+bounces-8250-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8251-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 946349DBB9F
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 18:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 946F09DBBB8
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 18:19:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48586281B55
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 17:07:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5345E28119A
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 17:19:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ADF71BFE0D;
-	Thu, 28 Nov 2024 17:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2941C07DB;
+	Thu, 28 Nov 2024 17:19:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWANCEqQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsTjaN3v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D3D9463;
-	Thu, 28 Nov 2024 17:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0914D211C;
+	Thu, 28 Nov 2024 17:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732813619; cv=none; b=NqvefSNeUvqHlG6Bsgp9XfR30hSgeBx1a8rX95YVa2tf1pGrKO6isQr9PTZ3PxS84UN/Ely8sFDmkalfAUvK3qG1uD0XJkJSXXxa5RYo3vXMZeY4hvQt6JhHlnRsdr3H9aaaDPDrXGLyaATH7GLEL50zyQuWCgN9dxCXFVLrgHU=
+	t=1732814363; cv=none; b=Ta/CDehM6Q3X11rw6H7hiRhk0nfzwEOa8a0deIq5dEYyV1hC/DvLrqFeYfDZ+g4/9S/hqDQZh0uGfd738cYI9213k86LddjC0BdR/nBvuZbs7F1b7ec8S8NZDUNqqELPWDQcKteIHnoIRSawDqtSe4FgRu43GrCB9XzOEaZjCmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732813619; c=relaxed/simple;
-	bh=SEHlJifrN0Cs6lY+UEiGhN9+PywenO1OmSKs5+KtEpY=;
+	s=arc-20240116; t=1732814363; c=relaxed/simple;
+	bh=lT2LXHNWW/iC8KBP70LzdpuJFpQ0+jPk3naMytUqXDM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dKp1aNoZXqCvW7lwJg3Dpzr5ussPHgFzOV7pP2RjDKx5N4ZLR0pvypewpYtkmdEbHXlyVR7USJyELV+nmvsXuYOA4JXPHwhEpPTKtDU27OxlOec9OGwoY3a+fb8k4mrzDLiNtW0gm8a2aViDF0gkgaMz9ebQlOHtUPDHMP2J9qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWANCEqQ; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=jCWkyKhFneFKMzJGRnuwesps8kNf7P52XEXHwy7hG9KvCAwE6uumvlimob0kECsYoOH1JZfDYfVPM9xjatTnpCYta683eRx0HGeB+vF5HZ0uDObk+FNkPanWHnXg/DUo2YdFR3I2KUgZrhRDkwYQRNmLybY/cmyh5Mu98mkAmRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lsTjaN3v; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aa53a971480so133976566b.1;
-        Thu, 28 Nov 2024 09:06:56 -0800 (PST)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aa530a94c0eso144847866b.2;
+        Thu, 28 Nov 2024 09:19:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732813615; x=1733418415; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732814360; x=1733419160; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nWQ8VbEdvjXMUcHdgYXIjQKdG5RqS9Dcs74tC/QMmZ0=;
-        b=PWANCEqQXl6sTrA9NAshVRxNSVDRU+klDQIWhnnJK6Smc+R2egG2WXugFgnQq7MKWO
-         pT4ATw9aNqNaZJsvkMwjjFkFfOjGR/+gWwGAiZ0/3lDHPv1vSfhRiW5oLrf0pWx8ToXr
-         RfG0pGBtO5fTWEBWwBg3dwpEIRxIC7YWQbZbRvYfATJYb0AlC76jOKPOBRBLy2UyI/hZ
-         P/fEMhyYHjWGU5H33b2cXNGzGk84Kf5vNPanfXfWHdHtuC5m8QkDL+iKgtQJcgsldUL0
-         ZPfer3NKdOiR5iH77vw/H2MKG582C4wp43LVMeQe8YowVnAnwYTQy+Fp5XZI00YImh3X
-         udrg==
+        bh=KVVgupCFKgPii8sVMx+hkdxtwfjB/fz6SblpEzFhKN0=;
+        b=lsTjaN3vnru/9NdH0nUizC9YhJT/J1dRojEkbYQJqwaOjEkysEv5FOvqQLOT4IrvEH
+         ZuqnytujZRMIfC+Z2p7iYXutFYV21nCq20d7qR35eUOgewekArmXuCjREDON0hHn/Me4
+         55GUuZvOpp5PRhPu3WAs6IaukuKgPEnyKds7iAtZSP9qGzlOhBrDlCMcdoz/eywUcVW9
+         q+ao6DuUvqIEaFaBhM6UAxcfVaviFI8xDUhOIDETnx9u69jMPwpiDpoOUu57aMDa1rQw
+         +U5A6PyT+cg6oIrFbBpXiOk8gp6qK7snprpOmFGD7J50VG4coc58vonZ8RBxGJ55wRec
+         JwjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732813615; x=1733418415;
+        d=1e100.net; s=20230601; t=1732814360; x=1733419160;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nWQ8VbEdvjXMUcHdgYXIjQKdG5RqS9Dcs74tC/QMmZ0=;
-        b=cfbt58NVWHQou+5IuMwS2aXNMonPNdfWgtsWQNougGIjZ2v9Tf52HMXKBlAaWQ9SdH
-         TwnhGodvZVHPXhQZWISk9iPS37fK40DKVX2Uak330nH7/u/O7+LTIixeyUsB/yTG9Xen
-         5OsJbTdaGojFgPw8D9lEjlRyXr3gL6RCg4dnIaIkEwRkPH4Dmh5TOzppO93+fkKqaEe8
-         AWBMbg3nHYRNWHL6NmQQB9Y+LjtD7pLOLwoduxG0KLAoq/djzPqoFPtKHWbvgkcg7EEc
-         skYG6vZzy/xtj0SUUklLDLcCNaGdaldR3Oum43q9c9nVu5hLQWKlPTUWfst/HUdwBSgG
-         gf0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUb4Gi5VYqiiYb6Fv8OS2svrffkjoD4nfaKzJL1hKZU9rCrN7LL8FXMjGS9W1PkRyQ8djWo8VgrqnzkM2Ew@vger.kernel.org, AJvYcCV8ZV2BVf7EPqgf/u6tljOP50wEVlnylcwNQvBQHPTy0il3iR4rOQ7Gi5kZ6pPZvBe+GBu98oCEBRwv@vger.kernel.org, AJvYcCWjtoVLOQeYkCVFG6cwqojokPZ80pOO515IE/a7iPbrojrFEteVzeQ5pKTfNeQG7a/zW7GoThAY/s/yPbNU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4Hj/fjtOYYHRGZAl/HIyr4KTBjS2Ple/Dq454WrDA0IY1UEEm
-	JmHrn2Tnj+naRHRWgp/8sDqwjzyltCxmicYsfA1PxitdXJ/jD+sIMVprZuGCoXs/pqUiaPwoaSi
-	X8Nt1k3DZyO2B1tfl5H/A6gpjGF4=
-X-Gm-Gg: ASbGncsx/Kv1HBq0K0MAGBSzuIqfR/yovXS/UC8gjDeFhrxLAEut9fxxl/N8K3VPJVl
-	50GW+Cl0mqMyoaQBj/HfpNgk/MtHPAf4=
-X-Google-Smtp-Source: AGHT+IFZsoGNSDYLQa6vTS2JV4JwQxRJDWlRt4KfY3J5QfCjMg2n66+/Idb7fucFkckCWow14kxWTN8GyDRosH2HYJI=
-X-Received: by 2002:a17:906:3103:b0:aa5:2c5f:95b0 with SMTP id
- a640c23a62f3a-aa580ef327amr515350766b.8.1732813615124; Thu, 28 Nov 2024
- 09:06:55 -0800 (PST)
+        bh=KVVgupCFKgPii8sVMx+hkdxtwfjB/fz6SblpEzFhKN0=;
+        b=rB+uposTQupwf4w+KIrvGldyowksfWfd74H1QDHbam5+G2hr2hMUu9H5scLreh8qcD
+         3KX/MdmK1w5NkL+CHM36aY2r/GtcD4bHlJmDeYGTod3JCESaBK5ZsWz5vgFPsb9W03OV
+         E9xR/jtCmE4ZHj9q+2qbnob3Q0qKYg2XK2UjBW93GTL21/KXTPOXRTaEIDHxEs9RRYoK
+         LPwS6l9HfUKo1w/+dOuPTZIgmXgWMJq54cwhxH4kysup43xcdOGQWRSqZlDA1PkgFkBt
+         eLBXDg7BHYOh/T8ptIR/qdXhho5MansMfN/AijI3CK7lYPM7qAscdY6T4ZP4UHjUk89N
+         a1IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxR2LDvIKDeqPQamljZH1xsfVYjKrGJHWEE3K0/gq2+RHL+0rLZ3meJGKVjMpUTMkevNVORADHaAYAVHSB@vger.kernel.org, AJvYcCWZ8Fp8s3wCcaOpV25Jcn747+39iLtGf65nawVNpHlXACDegSmyDihu4val0fDnogDJOjzG3N4yMXCK/O7I@vger.kernel.org, AJvYcCWw8VABjjqc6StEEtXvMR2yk9JmtGcPnxb9BdtbLh9wXEaA7u3GL8/dOXauqN8nhc/wDDrthI5V4NHP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVb6sjZ8fgCeHGxMRUPVqjyr3AWKwJY7ISD563S76LH2hmJ37w
+	dCZ8CMxiPCF1ebUkfjCr3rttW0Q2deqpe7CqCeMIRyH+OMC629V0866mjcTBsZv6erYqPEZrYW/
+	7dRnnJ96a4M8p8SIoc/q3RSEXFSA=
+X-Gm-Gg: ASbGncsOmDas3o3/nR7gnk8oTSHnRV1ipI6yjjVWlcNHMRB7/fM5z/o+G6Pp7z2sELm
+	mA7FXm9sp99mkYYEL8YGVl/FI2ZiwcIw=
+X-Google-Smtp-Source: AGHT+IEtkXsNrR1KjyMsJ7i+2hLuQQtPfSdQDbN/2CraE9Ha2lBomFHybPHw7eb1Iw9/3a8pJSyVfSYXQ4DmEFB6EoQ=
+X-Received: by 2002:a17:907:2d25:b0:aa5:274b:60eb with SMTP id
+ a640c23a62f3a-aa581059879mr729658666b.44.1732814359899; Thu, 28 Nov 2024
+ 09:19:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241114-fragt-rohre-28b21496ecbc@brauner> <20241128-work-pidfs-v1-0-80f267639d98@kernel.org>
-In-Reply-To: <20241128-work-pidfs-v1-0-80f267639d98@kernel.org>
+References: <20241128-work-pidfs-v1-0-80f267639d98@kernel.org> <20241128-work-pidfs-v1-1-80f267639d98@kernel.org>
+In-Reply-To: <20241128-work-pidfs-v1-1-80f267639d98@kernel.org>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 28 Nov 2024 18:06:44 +0100
-Message-ID: <CAOQ4uxj7-kxT-OrhYuCHr7hCQVwrExTVDrg5SXwZdDnx-wJoSA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/2] pidfs: file handle preliminaries
+Date: Thu, 28 Nov 2024 18:19:08 +0100
+Message-ID: <CAOQ4uxjiHT1F3EXTkxwg1iUGJ583g9j+txe71VjqCbT-4rzV+Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/2] pidfs: rework inode number allocation
 To: Christian Brauner <brauner@kernel.org>
 Cc: Erin Shepherd <erin.shepherd@e43.eu>, Jeff Layton <jlayton@kernel.org>, 
 	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
@@ -90,11 +90,6 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Nov 28, 2024 at 1:34=E2=80=AFPM Christian Brauner <brauner@kernel.o=
 rg> wrote:
 >
-> Hey,
->
-> This reworks the inode number allocation for pidfs in order to support
-> file handles properly.
->
 > Recently we received a patchset that aims to enable file handle encoding
 > and decoding via name_to_handle_at(2) and open_by_handle_at(2).
 >
@@ -105,8 +100,7 @@ rg> wrote:
 > name_to_handle_at(2). This can be used by containers using a separate
 > pid namespace to learn what the pid number of a given process in the
 > initial pid namespace is. While this is a weak information leak it could
-> be used in various exploits and in general is an ugly wart in the
-> design.
+> be used in various exploits and in general is an ugly wart in the design.
 >
 > To solve this problem a new way is needed to lookup a struct pid based
 > on the inode number allocated for that struct pid. The other part is to
@@ -119,86 +113,194 @@ rg> wrote:
 > that is unique on both 32 bit and 64 bit. The lower 32 bit number is
 > recycled slowly and can be used to lookup struct pids.
 >
-> So after applying the pidfs file handle series at
-> https://lore.kernel.org/r/20241101135452.19359-1-erin.shepherd@e43.eu on
-> top of the patches here we should be able to simplify encoding and
-> decoding to something like:
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  fs/pidfs.c            | 92 +++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/pidfs.h |  2 ++
+>  kernel/pid.c          | 11 +++---
+>  3 files changed, 98 insertions(+), 7 deletions(-)
 >
 > diff --git a/fs/pidfs.c b/fs/pidfs.c
-> index e71294d3d607..a38b833a2d38 100644
+> index 618abb1fa1b84cf31282c922374e28d60cd49d00..09a0c8ac805301927a94758b3=
+f7d1e513826daf9 100644
 > --- a/fs/pidfs.c
 > +++ b/fs/pidfs.c
-> @@ -78,7 +78,7 @@ void pidfs_remove_pid(struct pid *pid)
->  }
+> @@ -23,6 +23,88 @@
+>  #include "internal.h"
+>  #include "mount.h"
 >
->  /* Find a struct pid based on the inode number. */
-> -static __maybe_unused struct pid *pidfs_ino_get_pid(u64 ino)
-> +static struct pid *pidfs_ino_get_pid(u64 ino)
+> +static u32 pidfs_ino_highbits;
+> +static u32 pidfs_ino_last_ino_lowbits;
+> +
+> +static DEFINE_IDR(pidfs_ino_idr);
+> +
+> +static inline ino_t pidfs_ino(u64 ino)
+> +{
+> +       /* On 32 bit low 32 bits are the inode. */
+> +       if (sizeof(ino_t) < sizeof(u64))
+> +               return (u32)ino;
+> +
+> +       /* On 64 bit simply return ino. */
+> +       return ino;
+> +}
+> +
+> +static inline u32 pidfs_gen(u64 ino)
+> +{
+> +       /* On 32 bit the generation number are the upper 32 bits. */
+> +       if (sizeof(ino_t) < sizeof(u64))
+> +               return ino >> 32;
+> +
+> +       /* On 64 bit the generation number is 1. */
+> +       return 1;
+> +}
+> +
+> +/*
+> + * Construct an inode number for struct pid in a way that we can use the
+> + * lower 32bit to lookup struct pid independent of any pid numbers that
+> + * could be leaked into userspace (e.g., via file handle encoding).
+> + */
+> +int pidfs_add_pid(struct pid *pid)
+> +{
+> +       u32 ino_highbits;
+> +       int ret;
+> +
+> +       ret =3D idr_alloc_cyclic(&pidfs_ino_idr, pid, 1, 0, GFP_ATOMIC);
+> +       if (ret >=3D 0 && ret < pidfs_ino_last_ino_lowbits)
+> +               pidfs_ino_highbits++;
+> +       ino_highbits =3D pidfs_ino_highbits;
+> +       pidfs_ino_last_ino_lowbits =3D ret;
+> +       if (ret < 0)
+> +               return ret;
+> +
+
+This code looks "too useful" to be in a random filesystem.
+Maybe work a generation counter into idr_alloc_cyclic or
+just let it let the caller know that the range has been cycled?
+Only if this is not too complicated to do.
+
+> +       pid->ino =3D (u64)ino_highbits << 32 | ret;
+> +       pid->stashed =3D NULL;
+> +       return 0;
+> +}
+> +
+> +void pidfs_remove_pid(struct pid *pid)
+> +{
+> +       idr_remove(&pidfs_ino_idr, (u32)pidfs_ino(pid->ino));
+> +}
+> +
+> +/* Find a struct pid based on the inode number. */
+> +static __maybe_unused struct pid *pidfs_ino_get_pid(u64 ino)
+> +{
+> +       ino_t pid_ino =3D pidfs_ino(ino);
+> +       u32 gen =3D pidfs_gen(ino);
+> +       struct pid *pid;
+> +
+> +       guard(rcu)();
+> +
+> +       /* Handle @pid lookup carefully so there's no risk of UAF. */
+> +       pid =3D idr_find(&pidfs_ino_idr, (u32)ino);
+> +       if (!pid)
+> +               return NULL;
+> +
+> +       if (sizeof(ino_t) < sizeof(u64)) {
+> +               if (gen && pidfs_gen(pid->ino) !=3D gen)
+> +                       pid =3D NULL;
+> +       } else {
+> +               if (pidfs_ino(pid->ino) !=3D pid_ino)
+> +                       pid =3D NULL;
+> +       }
+> +
+> +       /* Within our pid namespace hierarchy? */
+> +       if (pid_vnr(pid) =3D=3D 0)
+> +               pid =3D NULL;
+> +
+> +       return get_pid(pid);
+> +}
+> +
+>  #ifdef CONFIG_PROC_FS
+>  /**
+>   * pidfd_show_fdinfo - print information about a pidfd
+> @@ -491,6 +573,16 @@ struct file *pidfs_alloc_file(struct pid *pid, unsig=
+ned int flags)
+>
+>  void __init pidfs_init(void)
 >  {
->         ino_t pid_ino =3D pidfs_ino(ino);
->         u32 gen =3D pidfs_gen(ino);
-> @@ -475,49 +475,37 @@ static const struct dentry_operations pidfs_dentry_=
-operations =3D {
->         .d_prune        =3D stashed_dentry_prune,
->  };
+> +       /*
+> +        * On 32 bit systems the lower 32 bits are the inode number and
+> +        * the higher 32 bits are the generation number. The starting
+> +        * value for the inode number and the generation number is one.
+> +        */
+> +       if (sizeof(ino_t) < sizeof(u64))
+> +               pidfs_ino_highbits =3D 1;
+> +       else
+> +               pidfs_ino_highbits =3D 0;
+> +
+>         pidfs_mnt =3D kern_mount(&pidfs_type);
+>         if (IS_ERR(pidfs_mnt))
+>                 panic("Failed to mount pidfs pseudo filesystem");
+> diff --git a/include/linux/pidfs.h b/include/linux/pidfs.h
+> index 75bdf9807802a5d1a9699c99aa42648c2bd34170..2958652bb108b8a2e02128e17=
+317be4545b40a01 100644
+> --- a/include/linux/pidfs.h
+> +++ b/include/linux/pidfs.h
+> @@ -4,5 +4,7 @@
 >
-> -#define PIDFD_FID_LEN 3
-> -
-> -struct pidfd_fid {
-> -       u64 ino;
-> -       s32 pid;
-> -} __packed;
-> -
-> -static int pidfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
-> +static int pidfs_encode_fh(struct inode *inode, __u32 *fh, int *max_len,
->                            struct inode *parent)
->  {
->         struct pid *pid =3D inode->i_private;
-> -       struct pidfd_fid *fid =3D (struct pidfd_fid *)fh;
+>  struct file *pidfs_alloc_file(struct pid *pid, unsigned int flags);
+>  void __init pidfs_init(void);
+> +int pidfs_add_pid(struct pid *pid);
+> +void pidfs_remove_pid(struct pid *pid);
 >
-> -       if (*max_len < PIDFD_FID_LEN) {
-> -               *max_len =3D PIDFD_FID_LEN;
-> +       if (*max_len < 2) {
-> +               *max_len =3D 2;
->                 return FILEID_INVALID;
+>  #endif /* _LINUX_PID_FS_H */
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 115448e89c3e9e664d0d51c8d853e8167ba0540c..9f321c6456d24af705c28f025=
+6ca4de771f5e681 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -64,11 +64,6 @@ int pid_max =3D PID_MAX_DEFAULT;
+>
+>  int pid_max_min =3D RESERVED_PIDS + 1;
+>  int pid_max_max =3D PID_MAX_LIMIT;
+> -/*
+> - * Pseudo filesystems start inode numbering after one. We use Reserved
+> - * PIDs as a natural offset.
+> - */
+> -static u64 pidfs_ino =3D RESERVED_PIDS;
+>
+>  /*
+>   * PID-map pages start out as NULL, they get allocated upon
+> @@ -157,6 +152,7 @@ void free_pid(struct pid *pid)
+>                 }
+>
+>                 idr_remove(&ns->idr, upid->nr);
+> +               pidfs_remove_pid(pid);
 >         }
+>         spin_unlock_irqrestore(&pidmap_lock, flags);
 >
-> -       fid->ino =3D pid->ino;
-> -       fid->pid =3D pid_nr(pid);
-> -       *max_len =3D PIDFD_FID_LEN;
-> +       *max_len =3D 2;
-> +       *(u64 *)fh =3D pid->ino;
->         return FILEID_INO64_GEN;
+> @@ -276,8 +272,9 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t=
+ *set_tid,
+>         spin_lock_irq(&pidmap_lock);
+>         if (!(ns->pid_allocated & PIDNS_ADDING))
+>                 goto out_unlock;
+> -       pid->stashed =3D NULL;
+> -       pid->ino =3D ++pidfs_ino;
+> +       retval =3D pidfs_add_pid(pid);
 
-Semantic remark:
-        /*
-         * 64 bit inode number, 32 bit generation number.
-         */
-        FILEID_INO64_GEN =3D 0x81,
+I hope this does not create a scalability issue compared to the prev method=
+?
 
-filesystems are free to abuse the constants and return whatever id they wan=
-t
-(e.g. shmem_encode_fh()), but if you want to play by the rules, this would =
-be
-either:
-        /*
-         * 64 bit unique kernfs id
-         */
-        FILEID_KERNFS =3D 0xfe,
+> +       if (retval)
+> +               goto out_unlock;
+>         for ( ; upid >=3D pid->numbers; --upid) {
+>                 /* Make the PID visible to find_pid_ns. */
+>                 idr_replace(&upid->ns->idr, pid, upid->nr);
+>
+> --
+> 2.45.2
+>
 
-or:
-        /*
-         * 32bit inode number, 32 bit generation number.
-         */
-        FILEID_INO32_GEN =3D 1,
-
-which is at least sometimes correct.
-or define:
-        /*
-         * 64 bit inode number.
-         */
-        FILEID_INO64 =3D 0x80,
-
+Nice idea!
+If there is something wrong with it, then I could not find it ;)
 
 Thanks,
 Amir.
