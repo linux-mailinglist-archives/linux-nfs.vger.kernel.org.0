@@ -1,161 +1,136 @@
-Return-Path: <linux-nfs+bounces-8246-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8247-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EF189DB7C2
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 13:34:46 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75D0B163AF1
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 12:34:36 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9ADE1A9B2E;
-	Thu, 28 Nov 2024 12:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9MViOGT"
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D69529DB7C7
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 13:37:14 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBCA1A9B26;
-	Thu, 28 Nov 2024 12:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96F12284713
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 12:37:13 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7369198E63;
+	Thu, 28 Nov 2024 12:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="PHxvYRMA"
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from esa4.hc1455-7.c3s2.iphmx.com (esa4.hc1455-7.c3s2.iphmx.com [68.232.139.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76593195385
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Nov 2024 12:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732797246; cv=none; b=kWlHBauuJ5XIMSGsT3QJjFm6+8JapkY+ybnC68BjzOv6hpnMWP8yUGTMOHW30S7jk4+ZiGawxg+LCneq7eoJwBWTR2FgKEQe+ZeyRXuT0XPvOq1ZFN2baiuxvlaNtmPRJZID4oaEOB6HxZC7cjJkByCei0mVmhnhUIMzBtSyYT4=
+	t=1732797431; cv=none; b=pacBawD8nl6wIjKSjSSEr1YbSORswceozhLT8gZxMeopeMqs8wqtpzS73nc0Ky6jUPrgrzijhk/szGl+QM8Z8nyPE4hxwj9HOtCSTV1BiIl+18AI+h2i8U5uQcujTMBDSDioIh66Uq5yE5L5WSnMjaGFAGuMw9F7ZC+cCYre2qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732797246; c=relaxed/simple;
-	bh=EEW4Cdyc4h8c2gh3EbxdsQJkmYgdPEEWnE0d9G+UEoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HJnHLUI8beVexv9znof2o7BYyhJGJYf9+qbP6XEknNS2WZL8aaYZ9rSiz9AxTfOII/QBQy+3EAv5bGRSBDrwezWBXYpI4gTDTjZJ9bp9FNQHBYSfa3+Dd9LKAfEYlgqIiKppxsLOrUK442+W1eO9SHJ10EXUPdi15AFDO3ajDeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9MViOGT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B32C4CEDB;
-	Thu, 28 Nov 2024 12:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732797246;
-	bh=EEW4Cdyc4h8c2gh3EbxdsQJkmYgdPEEWnE0d9G+UEoY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K9MViOGTFAdy2/BsrZaujMwNR2PgO8NjqKmmGVd+f5Vrf5HRHy9+S/LOKENuBjYaW
-	 LkuNXMydD/9qs9BlkX7E/jYNBpzMF2hNSbQxYiHqnT42QZcw9Sry9R9lVP2U2eYCsk
-	 kT4jWctyArBV1h00zRMMgeQBID4iAKY29/3BcTbcF6iBRGZLxZJB4xtkwnCXHwTDBb
-	 IdE4QcF8DcidYNb2gBKI/QXUksOVwFrKVYxck1llRwQ6VQ25Jxc48yiBiUlcY8hB7P
-	 UJMxJiII+TyLyrxZH++dsFcgdo8d3hPWC9IqaIgdWWQ2yNIvI3H6Uw+qN/5izZpwwT
-	 EB4z6kW8lBjNg==
-From: Christian Brauner <brauner@kernel.org>
-To: Erin Shepherd <erin.shepherd@e43.eu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH RFC 2/2] pidfs: remove 32bit inode number handling
-Date: Thu, 28 Nov 2024 13:33:38 +0100
-Message-ID: <20241128-work-pidfs-v1-2-80f267639d98@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241128-work-pidfs-v1-0-80f267639d98@kernel.org>
-References: <20241128-work-pidfs-v1-0-80f267639d98@kernel.org>
+	s=arc-20240116; t=1732797431; c=relaxed/simple;
+	bh=bzLM5g36lmVNE7OsBk+spl9G4pC4UcWFAep9k5jREcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sd2044Jbp1a/73G3QBVM+dHG3tFJkIpvRlfg21dSfHilIenow4XSOCcMlC+SBcqLYpo+f++InVw+Ih9bJeifXjQ18a87PwkLvPpJ3R9tlrvtxOcO8p3rDmu2nMFmdrbh3nlLwHvzX4o32vlEpa6s31q1HKABX4VhGUhUphAnK9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=PHxvYRMA; arc=none smtp.client-ip=68.232.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1732797429; x=1764333429;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bzLM5g36lmVNE7OsBk+spl9G4pC4UcWFAep9k5jREcw=;
+  b=PHxvYRMA2+yfo/Ho7XCWqeBcZoF2bzsGbs5bVUWYUpMQtGFcfvKnNADb
+   ZUwT5uA8UtVtGloJBsuYIYdOuRv+Ti7amzgNYWnZfvCRJPABpPEtuHJ+O
+   pOM1bsfcUJMYW4Eyy/7Sd0wMvfx9aCa6kjKhf+8MAJ0/e/mAOlvXoWV8v
+   pWMcxgImnJMH38f1xEfdwc1n1+30nfeCbpb5bJBImr+U4DhfIQlZJHPlj
+   SNq4kF5uz5ukO/idCpaxZjpqGRu86HvNVm0A/H/sGMcrAcUHezCbdPFD6
+   WpHvIrr7LN/04XRPi7EU3o12S1NJK7bzAqsI4++UUQ9foey7AR8qqCYGq
+   Q==;
+X-CSE-ConnectionGUID: r1p/RxgIRUeL/VAgoHyPrQ==
+X-CSE-MsgGUID: tnzKot9yS+SjSs9QJSINMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11270"; a="182182390"
+X-IronPort-AV: E=Sophos;i="6.12,192,1728918000"; 
+   d="scan'208";a="182182390"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa4.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2024 21:37:01 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 318A62341F
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Nov 2024 21:36:59 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id B5B2ACFAB2
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Nov 2024 21:36:58 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 306E1401AE
+	for <linux-nfs@vger.kernel.org>; Thu, 28 Nov 2024 21:36:58 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.135.89])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 918731A000B;
+	Thu, 28 Nov 2024 20:36:57 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] pynfs: rpc.py: use OSError.errno to fix a not subscriptable exception
+Date: Thu, 28 Nov 2024 20:36:01 +0800
+Message-ID: <20241128123642.1636-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.45.2.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.15-dev-355e8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2419; i=brauner@kernel.org; h=from:subject:message-id; bh=EEW4Cdyc4h8c2gh3EbxdsQJkmYgdPEEWnE0d9G+UEoY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR7JKuerI9KTzHWz1GevvJ9m9KBo1PDXontVX1Tl7/5T NcPw41NHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPp387wh7fef/7sbc4qk0qr vJhkdmv823GoVtpugqXI5qkurb6lsxkZTndNi+D1qY5+aHXE8Kl6VtDDU6vFy31fHn1V+KAooHE 3EwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28824.006
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28824.006
+X-TMASE-Result: 10-0.778500-10.000000
+X-TMASE-MatchedRID: AuCKiGuH5B4AL6VbmDy897U+IyHhkXf1CZa9cSpBObnAuQ0xDMaXkH4q
+	tYI9sRE/L2EYbInFI5tLC42PB7KOrR2+l290c2mongIgpj8eDcBpkajQR5gb3lQwtQm7iV5jKra
+	uXd3MZDWvVLf7RaMfzGMdkwwWc/YUk1EYevdlvuiALYfQRrxSDM0jXPdSjj0wrryMmPAGKhUSQ0
+	tvc767qUa12UmwjLHflJGkDJWbztoYigD+WO05IRXFEH92Kf64nTtPxlIuIBW9Hzj86YHXBCnif
+	x5AGfCL
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Now that we have a unified inode number handling model remove the custom
-ida-based allocation for 32bit.
+In python3, socket.error is a deprecated alias of OSError
+https://docs.python.org/3/library/socket.html#socket.error
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Also, use socket.error[0] will raise:
+TypeError: 'OSError' object is not subscriptable
+
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 ---
- fs/pidfs.c | 46 +++++-----------------------------------------
- 1 file changed, 5 insertions(+), 41 deletions(-)
+ nfs4.0/lib/rpc/rpc.py | 4 ++--
+ rpc/rpc.py            | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index 09a0c8ac805301927a94758b3f7d1e513826daf9..334d2fc3f01ee6f219dc3e52309bfe00726885ca 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -400,40 +400,6 @@ struct pid *pidfd_pid(const struct file *file)
- 
- static struct vfsmount *pidfs_mnt __ro_after_init;
- 
--#if BITS_PER_LONG == 32
--/*
-- * Provide a fallback mechanism for 32-bit systems so processes remain
-- * reliably comparable by inode number even on those systems.
-- */
--static DEFINE_IDA(pidfd_inum_ida);
--
--static int pidfs_inum(struct pid *pid, unsigned long *ino)
--{
--	int ret;
--
--	ret = ida_alloc_range(&pidfd_inum_ida, RESERVED_PIDS + 1,
--			      UINT_MAX, GFP_ATOMIC);
--	if (ret < 0)
--		return -ENOSPC;
--
--	*ino = ret;
--	return 0;
--}
--
--static inline void pidfs_free_inum(unsigned long ino)
--{
--	if (ino > 0)
--		ida_free(&pidfd_inum_ida, ino);
--}
--#else
--static inline int pidfs_inum(struct pid *pid, unsigned long *ino)
--{
--	*ino = pid->ino;
--	return 0;
--}
--#define pidfs_free_inum(ino) ((void)(ino))
--#endif
--
- /*
-  * The vfs falls back to simple_setattr() if i_op->setattr() isn't
-  * implemented. Let's reject it completely until we have a clean
-@@ -485,7 +451,6 @@ static void pidfs_evict_inode(struct inode *inode)
- 
- 	clear_inode(inode);
- 	put_pid(pid);
--	pidfs_free_inum(inode->i_ino);
- }
- 
- static const struct super_operations pidfs_sops = {
-@@ -511,17 +476,16 @@ static const struct dentry_operations pidfs_dentry_operations = {
- 
- static int pidfs_init_inode(struct inode *inode, void *data)
- {
-+	struct pid *pid = data;
-+
- 	inode->i_private = data;
- 	inode->i_flags |= S_PRIVATE;
- 	inode->i_mode |= S_IRWXU;
- 	inode->i_op = &pidfs_inode_operations;
- 	inode->i_fop = &pidfs_file_operations;
--	/*
--	 * Inode numbering for pidfs start at RESERVED_PIDS + 1. This
--	 * avoids collisions with the root inode which is 1 for pseudo
--	 * filesystems.
--	 */
--	return pidfs_inum(data, &inode->i_ino);
-+	inode->i_ino = pidfs_ino(pid->ino);
-+	inode->i_generation = pidfs_gen(pid->ino);
-+	return 0;
- }
- 
- static void pidfs_put_data(void *data)
-
+diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
+index 24a7fc7..243ef9e 100644
+--- a/nfs4.0/lib/rpc/rpc.py
++++ b/nfs4.0/lib/rpc/rpc.py
+@@ -226,8 +226,8 @@ class RPCClient(object):
+             try:
+                 sock.bind(('', port))
+                 return
+-            except socket.error as why:
+-                if why[0] == errno.EADDRINUSE:
++            except OSError as why:
++                if why.errno == errno.EADDRINUSE:
+                     port += 1
+                 else:
+                     print("Could not use low port")
+diff --git a/rpc/rpc.py b/rpc/rpc.py
+index 1fe285a..124e97a 100644
+--- a/rpc/rpc.py
++++ b/rpc/rpc.py
+@@ -845,8 +845,8 @@ class ConnectionHandler(object):
+             try:
+                 s.bind(('', using))
+                 return
+-            except socket.error as why:
+-                if why[0] == errno.EADDRINUSE:
++            except OSError as why:
++                if why.errno == errno.EADDRINUSE:
+                     using += 1
+                     if port < 1024 <= using:
+                         # If we ask for a secure port, make sure we don't
 -- 
-2.45.2
+2.43.5
 
 
