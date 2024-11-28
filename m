@@ -1,137 +1,200 @@
-Return-Path: <linux-nfs+bounces-8243-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8244-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E40189DB31F
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 08:22:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E4D09DB7BB
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 13:34:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A914D281AD8
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 07:22:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3A188B23309
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Nov 2024 12:34:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9FC146A73;
-	Thu, 28 Nov 2024 07:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1121F19E7F9;
+	Thu, 28 Nov 2024 12:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H15v0y7j"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACE07A13A;
-	Thu, 28 Nov 2024 07:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D766819DF99;
+	Thu, 28 Nov 2024 12:34:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732778532; cv=none; b=pjz1FsBU2RSTIuGQjTnc3zvfHj6iVxjVhO1Km/N1D/L9aEuJGGse/6uQ/YaFlAfAvqmB5oMI9Im3hasUNS7vDwbSJk2Dn4dluK6aMIx32Y/XvODRW9YCC64DiPM1bYtJm4Yc9txNM4A6/veVDzE/H6uaBD++9z3QcQV74vgX12Q=
+	t=1732797241; cv=none; b=WYeC3kxcGdEcR4cf0/OSBdeDjgVjvQKo3jiTtGjaD48NUnzIEyXseON/uM6iojidY1fYfE2YzZo7xYFz44E3ZlEvCVCO2j6tlaB3yTThUpPNH/VWzVvorb2hEWL+aEyOF+vuLtz1TWAoTTo80/TTkmospOfuxChjcW/6GD1/it8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732778532; c=relaxed/simple;
-	bh=g5jmakzobWLhu8HLJiQ+Veek3J25Pbm+IxAJbAsOna8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ir1GAzKZxFsULIhGizTEIsasI2vWuogI2X8ynbkKoLNAsl0CZ4KGubboZ7YeS0p5noGE5dqgdgBQ/vsZWPuUu6SotVvCbeKhPESAdCVjSxE/REgQ7k13ndktajeniqBMcJ5k9TGfhsQ8fq/UVSOeGBwajY6dVimz1Li0Q8SFhh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XzSNj4NzGz11LtJ;
-	Thu, 28 Nov 2024 15:19:17 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 65B1814037D;
-	Thu, 28 Nov 2024 15:22:06 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 28 Nov 2024 15:22:05 +0800
-Message-ID: <8b155d3c-62b4-4f16-ab00-e3d030148d29@huawei.com>
-Date: Thu, 28 Nov 2024 15:22:04 +0800
+	s=arc-20240116; t=1732797241; c=relaxed/simple;
+	bh=MFoiCellN60PnTExDzerfYG5XksVeX7MxYSpt1qtWT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jYF9uOC7Z2yt3clpL1+zHymEYDYYdBsXW1YMEI9vN2pqcPRybBhGPJFbj778sHz69Y7hLKypvHvUFy+QgS3ujngG7hg1lYLjzUcjmm+x0vKZUdTa9VQuiMV22m4X4odZbGpDYhEqr4s76eyIWPzmJiHPTZMRg2t7YM+eFTaK9MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H15v0y7j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0792EC4CED2;
+	Thu, 28 Nov 2024 12:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732797240;
+	bh=MFoiCellN60PnTExDzerfYG5XksVeX7MxYSpt1qtWT4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H15v0y7jw74xDtEnHNikJYEpIKP3Yl2650HieT4Fjaj+530wSNfhgL6kfX8G6veDB
+	 Rbrh/GTOOeCYVwj+B2pDHqn4411mU9udMLL3yn5DOSXM0eloJtSuWtgLSPiImROHYZ
+	 rdTc9Y3sbRu+irijRCTNkc7Mp1o5lIc/AYJwoTqexupBRJoDfeqU7r6DIgip8THO5o
+	 JP/lspSfHzHjn2IuU2nlym/6kIeDr9dGmWtX/FpmOu7mKcCSK2vXajh+JwPpHt2gDw
+	 PrkVUAdl8JyCupgdmRLep2V1AT8MaWOy540ysre+AHY3q0GAmywpaa+KRI+v+03aHP
+	 gyXdMUa1RVcVQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Erin Shepherd <erin.shepherd@e43.eu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH RFC 0/2] pidfs: file handle preliminaries
+Date: Thu, 28 Nov 2024 13:33:36 +0100
+Message-ID: <20241128-work-pidfs-v1-0-80f267639d98@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241114-fragt-rohre-28b21496ecbc@brauner>
+References: <20241114-fragt-rohre-28b21496ecbc@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [bug report] deploying both NFS client and server on the same
- machine triggle hungtask
-To: <Dai.Ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
-	<jlayton@kernel.org>, NeilBrown <neilb@suse.de>, <okorniev@redhat.com>,
-	<tom@talpey.com>, <trond.myklebust@hammerspace.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yu Kuai
-	<yukuai1@huaweicloud.com>, Hou Tao <houtao1@huawei.com>, "zhangyi (F)"
-	<yi.zhang@huawei.com>, yangerkun <yangerkun@huawei.com>,
-	<chengzhihao1@huawei.com>, Li Lingfeng <lilingfeng@huaweicloud.com>
-References: <887cd8f6-3e49-410c-8b36-9e617c34ca6f@huawei.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <887cd8f6-3e49-410c-8b36-9e617c34ca6f@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20241128-work-pidfs-2bd42c7ea772
+X-Mailer: b4 0.15-dev-355e8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4075; i=brauner@kernel.org; h=from:subject:message-id; bh=MFoiCellN60PnTExDzerfYG5XksVeX7MxYSpt1qtWT4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR7JKtI1s5SC2pW0v3j/FBhSqCzWv9CTR9edfHcs7JeM Y+e10l0lLIwiHExyIopsji0m4TLLeep2GyUqQEzh5UJZAgDF6cATITZn+E3e+dvLpU2v4jQ7U6F SmfvvNwk5Vm3dElP88JFNgWuPi/9GBnWLS4yf3eR83jDk2/rj7m/UNFjeVnBHMtxseLNpo8Xna9 xAgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500017.china.huawei.com (7.202.181.81)
 
-Besides nfsd_file_shrinker, the nfsd_client_shrinker added by commit
-7746b32f467b ("NFSD: add shrinker to reap courtesy clients on low memory
-condition") in 2022 and the nfsd_reply_cache_shrinker added by commit
-3ba75830ce17 ("nfsd4: drc containerization") in 2019 may also trigger such
-an issue.
-Was this scenario not considered when designing the shrinkers for NFSD, or
-was it deemed unreasonable and not worth considering?
+Hey,
 
-在 2024/11/25 19:17, Li Lingfeng 写道:
-> Hi, we have found a hungtask issue recently.
->
-> Commit 7746b32f467b ("NFSD: add shrinker to reap courtesy clients on low
-> memory condition") adds a shrinker to NFSD, which causes NFSD to try to
-> obtain shrinker_rwsem when starting and stopping services.
->
-> Deploying both NFS client and server on the same machine may lead to the
-> following issue, since they will share the global shrinker_rwsem.
->
->     nfsd                            nfs
->                             drop_cache // hold shrinker_rwsem
->                             write back, wait for rpc_task to exit
-> // stop nfsd threads
-> svc_set_num_threads
-> // clean up xprts
-> svc_xprt_destroy_all
->                             rpc_check_timeout
->                              rpc_check_connected
->                              // wait for the connection to be 
-> disconnected
-> unregister_shrinker
-> // wait for shrinker_rwsem
->
-> Normally, the client's rpc_task will exit after the server's nfsd thread
-> has processed the request.
-> When all the server's nfsd threads exit, the client’s rpc_task is 
-> expected
-> to detect the network connection being disconnected and exit.
-> However, although the server has executed svc_xprt_destroy_all before
-> waiting for shrinker_rwsem, the network connection is not actually
-> disconnected. Instead, the operation to close the socket is simply added
-> to the task_works queue.
->
-> svc_xprt_destroy_all
->  ...
->  svc_sock_free
->   sockfd_put
->    fput_many
->     init_task_work // ____fput
->     task_work_add // add to task->task_works
->
-> The actual disconnection of the network connection will only occur after
-> the current process finishes.
-> do_exit
->  exit_task_work
->   task_work_run
->   ...
->    ____fput // close sock
->
-> Although it is not a common practice to deploy NFS client and server on
-> the same machine, I think this issue still needs to be addressed,
-> otherwise it will cause all processes trying to acquire the 
-> shrinker_rwsem
-> to hang.
->
-> I don't have any ideas yet on how to solve this problem, does anyone have
-> any suggestions?
->
-> Thanks.
->
+This reworks the inode number allocation for pidfs in order to support
+file handles properly.
+
+Recently we received a patchset that aims to enable file handle encoding
+and decoding via name_to_handle_at(2) and open_by_handle_at(2).
+
+A crucical step in the patch series is how to go from inode number to
+struct pid without leaking information into unprivileged contexts. The
+issue is that in order to find a struct pid the pid number in the
+initial pid namespace must be encoded into the file handle via
+name_to_handle_at(2). This can be used by containers using a separate
+pid namespace to learn what the pid number of a given process in the
+initial pid namespace is. While this is a weak information leak it could
+be used in various exploits and in general is an ugly wart in the
+design.
+
+To solve this problem a new way is needed to lookup a struct pid based
+on the inode number allocated for that struct pid. The other part is to
+remove the custom inode number allocation on 32bit systems that is also
+an ugly wart that should go away.
+
+So, a new scheme is used that I was discusssing with Tejun some time
+back. A cyclic ida is used for the lower 32 bits and a the high 32 bits
+are used for the generation number. This gives a 64 bit inode number
+that is unique on both 32 bit and 64 bit. The lower 32 bit number is
+recycled slowly and can be used to lookup struct pids.
+
+So after applying the pidfs file handle series at
+https://lore.kernel.org/r/20241101135452.19359-1-erin.shepherd@e43.eu on
+top of the patches here we should be able to simplify encoding and
+decoding to something like:
+
+diff --git a/fs/pidfs.c b/fs/pidfs.c
+index e71294d3d607..a38b833a2d38 100644
+--- a/fs/pidfs.c
++++ b/fs/pidfs.c
+@@ -78,7 +78,7 @@ void pidfs_remove_pid(struct pid *pid)
+ }
+ 
+ /* Find a struct pid based on the inode number. */
+-static __maybe_unused struct pid *pidfs_ino_get_pid(u64 ino)
++static struct pid *pidfs_ino_get_pid(u64 ino)
+ {
+ 	ino_t pid_ino = pidfs_ino(ino);
+ 	u32 gen = pidfs_gen(ino);
+@@ -475,49 +475,37 @@ static const struct dentry_operations pidfs_dentry_operations = {
+ 	.d_prune	= stashed_dentry_prune,
+ };
+ 
+-#define PIDFD_FID_LEN 3
+-
+-struct pidfd_fid {
+-	u64 ino;
+-	s32 pid;
+-} __packed;
+-
+-static int pidfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
++static int pidfs_encode_fh(struct inode *inode, __u32 *fh, int *max_len,
+ 			   struct inode *parent)
+ {
+ 	struct pid *pid = inode->i_private;
+-	struct pidfd_fid *fid = (struct pidfd_fid *)fh;
+ 
+-	if (*max_len < PIDFD_FID_LEN) {
+-		*max_len = PIDFD_FID_LEN;
++	if (*max_len < 2) {
++		*max_len = 2;
+ 		return FILEID_INVALID;
+ 	}
+ 
+-	fid->ino = pid->ino;
+-	fid->pid = pid_nr(pid);
+-	*max_len = PIDFD_FID_LEN;
++	*max_len = 2;
++	*(u64 *)fh = pid->ino;
+ 	return FILEID_INO64_GEN;
+ }
+ 
+ static struct dentry *pidfs_fh_to_dentry(struct super_block *sb,
+-					 struct fid *gen_fid,
++					 struct fid *fid,
+ 					 int fh_len, int fh_type)
+ {
+ 	int ret;
+ 	struct path path;
+-	struct pidfd_fid *fid = (struct pidfd_fid *)gen_fid;
+ 	struct pid *pid;
++	u64 pid_ino;
+ 
+-	if (fh_type != FILEID_INO64_GEN || fh_len < PIDFD_FID_LEN)
++	if (fh_type != FILEID_INO64_GEN || fh_len < 2)
+ 		return NULL;
+ 
+-	scoped_guard(rcu) {
+-		pid = find_pid_ns(fid->pid, &init_pid_ns);
+-		if (!pid || pid->ino != fid->ino || pid_vnr(pid) == 0)
+-			return NULL;
+-
+-		pid = get_pid(pid);
+-	}
++	pid_ino = *(u64 *)fid;
++	pid = pidfs_ino_get_pid(pid_ino);
++	if (!pid)
++		return NULL;
+ 
+ 	ret = path_from_stashed(&pid->stashed, pidfs_mnt, pid, &path);
+ 	if (ret < 0)
+
+Thanks!
+Christian
+
+---
+Christian Brauner (2):
+      pidfs: rework inode number allocation
+      pidfs: remove 32bit inode number handling
+
+ fs/pidfs.c            | 138 +++++++++++++++++++++++++++++++++++---------------
+ include/linux/pidfs.h |   2 +
+ kernel/pid.c          |  11 ++--
+ 3 files changed, 103 insertions(+), 48 deletions(-)
+---
+base-commit: b86545e02e8c22fb89218f29d381fa8e8b91d815
+change-id: 20241128-work-pidfs-2bd42c7ea772
+
 
