@@ -1,150 +1,364 @@
-Return-Path: <linux-nfs+bounces-8270-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8271-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 552469DF048
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Nov 2024 13:22:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A9DC9DF056
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Nov 2024 13:33:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 116FC281A96
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Nov 2024 12:22:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21D932821CC
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Nov 2024 12:33:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 595A5156F30;
-	Sat, 30 Nov 2024 12:22:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41761531E6;
+	Sat, 30 Nov 2024 12:33:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfJvP2z1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Um+t7c2l"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8381474D3;
-	Sat, 30 Nov 2024 12:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6F614A4C6
+	for <linux-nfs@vger.kernel.org>; Sat, 30 Nov 2024 12:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732969340; cv=none; b=lIqJr+ZMn2SX0YPMiAnab3/JX+1oKD05UZ+StEEkBSjg3lpLTShHyY/wGePPQhmFzwQgyKWowJDxrXewYrvkEkM06/D9VV0907E+2o7xcsMMLoFKNhBdmFBBJbk9/3yNk4uWluiY5oiocQc9V386ihgpg3lEOzISGNq++PcY+qU=
+	t=1732969988; cv=none; b=hP12w32TJ3oGPiLfk+hXQNXpg3fAjYuKwMz8BXFiwzTLAfdxvmgZG3kBXgjna9FL1Ul5VAwALhs6gPWzdEdPh0xYRk/YmGwkumzMRFpAPPedPCj+TYKtPjWYQQMzFanHIjX4qkltzgNmqsRk+LzBQfVXros8ZnF9Rum9lKLrc8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732969340; c=relaxed/simple;
-	bh=C49EjLtQSVvotvQ7l1FJmOzGw4tfqiQPXKNC30ME6hI=;
+	s=arc-20240116; t=1732969988; c=relaxed/simple;
+	bh=Kjxgv7tnUjGPeAr41QYzgBD9LIb7ZDcsJmC9f5ujuU8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ex8ul2Sd0WWianyF74Ddd3eeCDRp6xH2vZRGYuEEXscbUgFM68zY2riMjCZl/P4xHhxZ1NufmX+sPri3nf/JcL5UDCaP5BZaTivOix7zQNH65zzGpojywBzHhsBpjwTTq/CliOLJ3urWUjC09n+d7C6Nr4LRcJMUPakSelevaK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfJvP2z1; arc=none smtp.client-ip=209.85.208.51
+	 To:Cc:Content-Type; b=heK2/TS9S9AYYVMhrMGMzpeY3E3mBqOWwvinjAQHj5FQKaurXDB00FJ2LU6YjjB5wf2uIwTNHns/IwBLiwoM9EeKpQdLgwX4+XiVhDyBqU8eTxYK3yuFogv10vBTB7Ryh0jDfTRYAG5WxsFCgmtN+lS2L9uGxXY6MHFc0s2gCO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Um+t7c2l; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5cf9ef18ae9so6526634a12.1;
-        Sat, 30 Nov 2024 04:22:18 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-434a1639637so25149685e9.1
+        for <linux-nfs@vger.kernel.org>; Sat, 30 Nov 2024 04:33:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732969337; x=1733574137; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732969985; x=1733574785; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C49EjLtQSVvotvQ7l1FJmOzGw4tfqiQPXKNC30ME6hI=;
-        b=hfJvP2z1FaDsy6oMfUbdAf9C39Jm3EwLzexdrvgAReMyfU6KRZ2QDwLGzjO2umDgBe
-         vCDJQdV5GQkrJj2VHuraX0hcmNEBC4fjZoUg/KergitU7jtrYfgrQOnt3Yn3N6Sb1hGw
-         oYISFgfZzGIyRZ4ncaFer4Cc0GzWybj4I7dcrVBWaD/b5ri+h9TPQm+v35zLPtvQ5wcw
-         gJEv986ObUTG8Vo6qVuePVNeIK9CqJlHkpTPmkMPCsTnzTykIIgRwuLb0kAwddA2Mm/g
-         pOCfGZBkZak9Ix1MGWHwUCjZ8mqnazXExYxMpm4vRZoOgQvjJb/cZl2DQBn5aKo4aG24
-         qSAg==
+        bh=FwCPcfyY7iHIFrM6tR/M+ImOUJCVw9GN8+kt0+Wl1Jg=;
+        b=Um+t7c2lH3zMzrMu7znECafRjAnD2Incxkh+8pDmcUFxf9snuzk585QnTX7ZOt2bxM
+         UKmWa1WYjrX4Liz/Limd3KZT/eHOC1xhmv8kFrUv3EvB6brd98DyuY9bUC7MBdw1FzBC
+         E3UnI3E+XDp2dTIdAskwMJ6g4CFoQ/JB7iZs09ZdjUnLB+gd5N33klTo+mxeke9yxyS9
+         lWUCJNpfxWaD80yXUaSC4bNit7lOFRMHLia42fyanRDs+jXIIxqZ1x4XlTEHXRf7Wa4O
+         BWm17ODvjBeodp07cZJDxenMWxzyZQ2mUfdqqmx6sMYrunX7nBy/dXaQUGFoDTNV+jdA
+         q5Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732969337; x=1733574137;
+        d=1e100.net; s=20230601; t=1732969985; x=1733574785;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C49EjLtQSVvotvQ7l1FJmOzGw4tfqiQPXKNC30ME6hI=;
-        b=jUzAr41dbZf/wrmoystkcxZOTEZpf1OaSNclIB205Zb/i/AajoOZV2AvEK3jomKKyj
-         r6WZaDqW/IjiPjPSe7RX0zp1HOy5PoafyKlQMVlUR+cLb6Xlk/JgKOFBXwzx8tLn2CRd
-         miCzlzLoyIndt8MJQErmS1RYMmYdfLqv/xDWEUjkOzz4IA/RUTx58ZPrnGaS8Ump6Gya
-         IIIPel0tsZ0gOmn50D7naC0nggFfbBpvS9RwBx07fU7UAVrnyHskonOodLp6UY4nWYch
-         W2ewrJdpallEKNZNCBLWWyDrns7Nce3hbdNMlJ+fC2nJUXH7Mb5b1RfJN2x+OoWvn8Oj
-         vz3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVPSP1LaQ0389VO0yI/qgl5uuuFIC7aUArq8Gzzm46FvwAoshV4BNLnZRgzZ4dNZAOo4apbCjI3y2b1@vger.kernel.org, AJvYcCXFTo69PyM8aDMvaBD0W8InOgDhysz8APlL25ZWYUtTRI/QJysKiEVYu/mclYgpR9H2xB9uM0LYH+vFcF4u@vger.kernel.org, AJvYcCXw8ebEWok8VB3MaQ2GpNAU7EvQJu3nJSFnkpudpZ8gakK8JqgR3AdMRMmmRwVy301I6/ejwO5pacsJW6U9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvwYM9/F5hr3+gmn0F/E5WiXT1IngsYP3B7k8JlwCXmZsmbsR9
-	Vd7aIs+ZHUcCkeg0Rerdgx7TA4vi/tPJyiVZx5jqk2eQGzm5jmw4DUBtVs23gFKT5j5LS80l5e8
-	QY3y+m9tCGwr3pwn/gFeANr2tYJM=
-X-Gm-Gg: ASbGncu+QnMVHPfMusgdDvtd2/V5aHUvLkPGeOGc8WwEiLjoMEAfe0vyrAd4pfEaI1b
-	CzFwE7ODQwJmAA1lh+5nqJ3nJ69goy98=
-X-Google-Smtp-Source: AGHT+IF2FJ83y+mjkZXinRb9AUncGssgOTm6MhRbk4on0wq2m8yrBNc76xWxasrUcQhSLWqoPU2fV2BaZZX4PYSIKUo=
-X-Received: by 2002:a17:907:9485:b0:aa5:3c18:eedc with SMTP id
- a640c23a62f3a-aa5944eaabcmr1524599366b.3.1732969336434; Sat, 30 Nov 2024
- 04:22:16 -0800 (PST)
+        bh=FwCPcfyY7iHIFrM6tR/M+ImOUJCVw9GN8+kt0+Wl1Jg=;
+        b=LHTODiWUuGjTbtWHX0WKOWY8lVVQfW6hyVEjmCKA6uza674M7eYarvgyamQJFULjSO
+         yjYP12tMhT8oP1PrjfuhNPnTM3v2KZsPPn/7J/ECq24Mjf7WPstSZm1qOoJpsoIflhau
+         d67Qim3Hh3P1WVK/T6ieS0IirL0MSQADsrqHvkF+WjN8ggTTuyyGl2B3VRDHajrfcdrV
+         kIUWF7NG5DrSngCyA6Q5E/OLlfgPXU+24dwtZKG+B3rhq6fdg4asEyrPPHKe5z0l/ARz
+         hz6LYoUl0mqBy4Ey0CXDAzIupuFr/uhdIRckLN6U8Z70h3BdX0I68OgDBADFg5+si2yS
+         X8ng==
+X-Gm-Message-State: AOJu0YwIjLXb8leX8X4yaG8BfO/vhYqmiEpQSCPeeVSA5xbe9pSROl8L
+	RDARG7kDqSYcWvrHH3kUrenzgqFNwd7/699UpUP78UzwnWZ+6/BAsi4jr0wuqqXeoVhEFnMsPaa
+	aFjXwSrQD0tUeq9VGbbPo307H/Gg=
+X-Gm-Gg: ASbGnctEn+c94M1pG0bR4e2ppNiDgDA8wlLz5uuJEVVxV9uj5MSf3SG1Ut+9JYj9DrW
+	95lGM7U35MAYkRmCKFDFUPSBqENd7AtaDcg==
+X-Google-Smtp-Source: AGHT+IFyv/JJqzjbkQahi030jDjwkViHyhcK5V5ithxbTxMppekFwWpyWVTkK89sjLzi3uuaLMC1HIVvTCKZxAaaWqI=
+X-Received: by 2002:a05:600c:4fc9:b0:434:a6af:79f6 with SMTP id
+ 5b1f17b1804b1-434a9dc7074mr153651335e9.15.1732969984539; Sat, 30 Nov 2024
+ 04:33:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241129-work-pidfs-v2-0-61043d66fbce@kernel.org> <20241129-work-pidfs-file_handle-v1-0-87d803a42495@kernel.org>
-In-Reply-To: <20241129-work-pidfs-file_handle-v1-0-87d803a42495@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sat, 30 Nov 2024 13:22:05 +0100
-Message-ID: <CAOQ4uxhKVkaWm_Vv=0zsytmvT0jCq1pZ84dmrQ_buhxXi2KEhw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/6] pidfs: implement file handle support
-To: Christian Brauner <brauner@kernel.org>
-Cc: Erin Shepherd <erin.shepherd@e43.eu>, Jeff Layton <jlayton@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>
+References: <20240530071725.70043-1-b.tataroiu@gmail.com> <d7165359-a031-456e-bfae-a45d0aed5d80@redhat.com>
+ <fbd5e08d-3975-48e8-90b6-325628cb1b85@redhat.com>
+In-Reply-To: <fbd5e08d-3975-48e8-90b6-325628cb1b85@redhat.com>
+From: =?UTF-8?B?Qm9nZGFuLUNyaXN0aWFuIFTEg3TEg3JvaXU=?= <b.tataroiu@gmail.com>
+Date: Sat, 30 Nov 2024 12:32:38 +0000
+Message-ID: <CAC=XK8Nk_odMwvwXrj9suXCayni-pVnzTga0aV9tn-B-3=ia9g@mail.gmail.com>
+Subject: Re: [PATCH] Add guards around [nfsidmap] usages of [sysconf].
+To: Steve Dickson <steved@redhat.com>
+Cc: linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 29, 2024 at 2:39=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
+Hey Steve,
+
+My apologies for dropping this.
+
+I'm a bit confused since the man page for sysconf [1] seems to say it
+returns -1 and sets errno to EINVAL (and indeed the patch I originally
+submitted shows the intended behaviour on my musl system).
+
+The snippet in the newly defined [get_pwnam_buflen] is pretty much
+just what's in the [getpwnam] man page [2] example.
+
+Maybe the thing you're pointing to is that I have [*size_t* buflen =3D
+sysconf(_SC_GETPW_R_SIZE_MAX)].
+I guess that should technically be [long buflen] and the result could
+be converted to [size_t] upon return, it's just that the implicit
+conversions make it such that the current code behaves as expected.
+
+So something like
+
+     long buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+     if (buflen =3D=3D -1)
+         buflen =3D 16384;
+     return (size_t)buflen;
+
+Does that make more sense?
+
+[1] https://www.man7.org/linux/man-pages/man3/sysconf.3.html
+[2] https://www.man7.org/linux/man-pages/man3/getpwnam.3.html
+
+Best,
+Bogdan
+
+On Sat, Nov 9, 2024 at 6:25=E2=80=AFPM Steve Dickson <steved@redhat.com> wr=
+ote:
 >
-> Hey,
 >
-> Now that we have the preliminaries to lookup struct pid based on its
-> inode number alone we can implement file handle support.
 >
-> This is based on custom export operation methods which allows pidfs to
-> implement permission checking and opening of pidfs file handles cleanly
-> without hacking around in the core file handle code too much.
+> On 6/17/24 2:51 PM, Steve Dickson wrote:
+> >
+> >
+> > On 5/30/24 2:17 AM, Bogdan-Cristian T=C4=83t=C4=83roiu wrote:
+> >> sysconf(_SC_GETPW_R_SIZE_MAX) and sysconf(_SC_GETGR_R_SIZE_MAX)
+> >> return -1 on musl, which causes either segmentation faults or ENOMEM
+> >> errors.
+> > Actually sysconf() returns EINVAL not -1 since the return
+> > value is a size_t (unsigned long). So I needed to change
+> >
+> >      size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >      if (buflen =3D=3D EINVAL) <<< this from -1 to EINVAL
+> >          buflen =3D 16384;
+> >      return buflen;
+> >
+> > Good with that? Will this work with musl?
+> Just found this on my todo list... Still
+> interest in  have these patch committed?
 >
-> This is lightly tested.
-
-With my comments addressed as you pushed to vfs-6.14.pidfs branch
-in your tree, you may add to the patches posted:
-
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-
-HOWEVER,
-IMO there is still one thing that has to be addressed before merge -
-We must make sure that nfsd cannot export pidfs.
-
-In principal, SB_NOUSER filesystems should not be accessible to
-userspace paths, so exportfs should not be able to configure nfsd
-export of pidfs, but maybe this limitation can be worked around by
-using magic link paths?
-
-I think it may be worth explicitly disallowing nfsd export of SB_NOUSER
-filesystems and we could also consider blocking SB_KERNMOUNT,
-but may there are users exporting ramfs?
-
-Jeff has mentioned that he thinks we are blocking export of cgroupfs
-by nfsd, but I really don't see where that is being enforced.
-The requirement for FS_REQUIRES_DEV in check_export() is weak
-because user can overrule it with manual fsid argument to exportfs.
-
-So maybe we disallow nfsd export of kernfs and backport to stable kernels
-to be on the safe side?
-
-On top of that, we may also want to reject nfsd export of any fs
-with custom ->open() or ->permission() export ops, on the grounds
-that nfsd does not call these ops?
-
-Regarding the two other kernel users of exportfs, namely,
-overlayfs and fanotify -
-
-For overlayfs, I think that in ovl_can_decode_fh() we can safely
-opt-out of SB_NOUSER and SB_KERNMOUNT filesystems,
-to not allow nfs exporting of overlayfs over those lower fs.
-
-For fanotify, there is already a check in fanotify_events_supported()
-to disallow sb/mount marks on SB_NOUSER and a comment that
-questions the value of allowing them for SB_KERNMOUNT.
-So for pidfs there is no risk wrt fanotify and it does not look like pidfs
-is going to generate any fanotify events anyway.
-
-Thanks,
-Amir.
+> steved.
+>
+> >
+> > steved.
+> >
+> >>
+> >> Replace all usages of sysconf with dedicated methods that guard agains=
+t
+> >> a result of -1.
+> >>
+> >> Signed-off-by: Bogdan-Cristian T=C4=83t=C4=83roiu <b.tataroiu@gmail.co=
+m>
+> >> ---
+> >>   support/nfsidmap/gums.c             |  4 ++--
+> >>   support/nfsidmap/libnfsidmap.c      |  4 ++--
+> >>   support/nfsidmap/nfsidmap_common.c  | 16 ++++++++++++++++
+> >>   support/nfsidmap/nfsidmap_private.h |  2 ++
+> >>   support/nfsidmap/nss.c              |  8 ++++----
+> >>   support/nfsidmap/regex.c            |  9 +++++----
+> >>   support/nfsidmap/static.c           |  5 +++--
+> >>   7 files changed, 34 insertions(+), 14 deletions(-)
+> >>
+> >> diff --git a/support/nfsidmap/gums.c b/support/nfsidmap/gums.c
+> >> index 1d6eb318..e94a4c50 100644
+> >> --- a/support/nfsidmap/gums.c
+> >> +++ b/support/nfsidmap/gums.c
+> >> @@ -475,7 +475,7 @@ static int translate_to_uid(char *local_uid, uid_t
+> >> *uid, uid_t *gid)
+> >>       int ret =3D -1;
+> >>       struct passwd *pw =3D NULL;
+> >>       struct pwbuf *buf =3D NULL;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       buf =3D malloc(sizeof(*buf) + buflen);
+> >>       if (buf =3D=3D NULL)
+> >> @@ -501,7 +501,7 @@ static int translate_to_gid(char *local_gid, uid_t
+> >> *gid)
+> >>       struct group *gr =3D NULL;
+> >>       struct group grbuf;
+> >>       char *buf =3D NULL;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       int ret =3D -1;
+> >>       do {
+> >> diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/
+> >> libnfsidmap.c
+> >> index f8c36480..e1475879 100644
+> >> --- a/support/nfsidmap/libnfsidmap.c
+> >> +++ b/support/nfsidmap/libnfsidmap.c
+> >> @@ -457,7 +457,7 @@ int nfs4_init_name_mapping(char *conffile)
+> >>       nobody_user =3D conf_get_str("Mapping", "Nobody-User");
+> >>       if (nobody_user) {
+> >> -        size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +        size_t buflen =3D get_pwnam_buflen();
+> >>           struct passwd *buf;
+> >>           struct passwd *pw =3D NULL;
+> >>           int err;
+> >> @@ -478,7 +478,7 @@ int nfs4_init_name_mapping(char *conffile)
+> >>       nobody_group =3D conf_get_str("Mapping", "Nobody-Group");
+> >>       if (nobody_group) {
+> >> -        size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +        size_t buflen =3D get_grnam_buflen();
+> >>           struct group *buf;
+> >>           struct group *gr =3D NULL;
+> >>           int err;
+> >> diff --git a/support/nfsidmap/nfsidmap_common.c b/support/nfsidmap/
+> >> nfsidmap_common.c
+> >> index 4d2cb14f..310c68f0 100644
+> >> --- a/support/nfsidmap/nfsidmap_common.c
+> >> +++ b/support/nfsidmap/nfsidmap_common.c
+> >> @@ -116,3 +116,19 @@ int get_reformat_group(void)
+> >>       return reformat_group;
+> >>   }
+> >> +
+> >> +size_t get_pwnam_buflen(void)
+> >> +{
+> >> +    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    if (buflen =3D=3D -1)
+> >> +        buflen =3D 16384;
+> >> +    return buflen;
+> >> +}
+> >> +
+> >> +size_t get_grnam_buflen(void)
+> >> +{
+> >> +    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    if (buflen =3D=3D -1)
+> >> +        buflen =3D 16384;
+> >> +    return buflen;
+> >> +}
+> >> diff --git a/support/nfsidmap/nfsidmap_private.h b/support/nfsidmap/
+> >> nfsidmap_private.h
+> >> index a5cb6dda..234ca9d4 100644
+> >> --- a/support/nfsidmap/nfsidmap_private.h
+> >> +++ b/support/nfsidmap/nfsidmap_private.h
+> >> @@ -40,6 +40,8 @@ struct conf_list *get_local_realms(void);
+> >>   void free_local_realms(void);
+> >>   int get_nostrip(void);
+> >>   int get_reformat_group(void);
+> >> +size_t get_pwnam_buflen(void);
+> >> +size_t get_grnam_buflen(void);
+> >>   typedef enum {
+> >>       IDTYPE_USER =3D 1,
+> >> diff --git a/support/nfsidmap/nss.c b/support/nfsidmap/nss.c
+> >> index 0f43076e..3fc045dc 100644
+> >> --- a/support/nfsidmap/nss.c
+> >> +++ b/support/nfsidmap/nss.c
+> >> @@ -91,7 +91,7 @@ static int nss_uid_to_name(uid_t uid, char *domain,
+> >> char *name, size_t len)
+> >>       struct passwd *pw =3D NULL;
+> >>       struct passwd pwbuf;
+> >>       char *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       int err =3D -ENOMEM;
+> >>       buf =3D malloc(buflen);
+> >> @@ -119,7 +119,7 @@ static int nss_gid_to_name(gid_t gid, char
+> >> *domain, char *name, size_t len)
+> >>       struct group *gr =3D NULL;
+> >>       struct group grbuf;
+> >>       char *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       int err;
+> >>       if (domain =3D=3D NULL)
+> >> @@ -192,7 +192,7 @@ static struct passwd *nss_getpwnam(const char
+> >> *name, const char *domain,
+> >>   {
+> >>       struct passwd *pw;
+> >>       struct pwbuf *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       char *localname;
+> >>       int err =3D ENOMEM;
+> >> @@ -301,7 +301,7 @@ static int _nss_name_to_gid(char *name, gid_t
+> >> *gid, int dostrip)
+> >>       struct group *gr =3D NULL;
+> >>       struct group grbuf;
+> >>       char *buf, *domain;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       int err =3D -EINVAL;
+> >>       char *localname =3D NULL;
+> >>       char *ref_name =3D NULL;
+> >> diff --git a/support/nfsidmap/regex.c b/support/nfsidmap/regex.c
+> >> index 8424179f..ea094b95 100644
+> >> --- a/support/nfsidmap/regex.c
+> >> +++ b/support/nfsidmap/regex.c
+> >> @@ -46,6 +46,7 @@
+> >>   #include "nfsidmap.h"
+> >>   #include "nfsidmap_plugin.h"
+> >> +#include "nfsidmap_private.h"
+> >>   #define CONFIG_GET_STRING nfsidmap_config_get
+> >>   extern const char *nfsidmap_config_get(const char *, const char *);
+> >> @@ -95,7 +96,7 @@ static struct passwd *regex_getpwnam(const char
+> >> *name, const char *UNUSED(domain
+> >>   {
+> >>       struct passwd *pw;
+> >>       struct pwbuf *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       char *localname;
+> >>       size_t namelen;
+> >>       int err;
+> >> @@ -175,7 +176,7 @@ static struct group *regex_getgrnam(const char
+> >> *name, const char *UNUSED(domain)
+> >>   {
+> >>       struct group *gr;
+> >>       struct grbuf *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       char *localgroup;
+> >>       char *groupname;
+> >>       size_t namelen;
+> >> @@ -366,7 +367,7 @@ static int regex_uid_to_name(uid_t uid, char
+> >> *domain, char *name, size_t len)
+> >>       struct passwd *pw =3D NULL;
+> >>       struct passwd pwbuf;
+> >>       char *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       int err =3D -ENOMEM;
+> >>       buf =3D malloc(buflen);
+> >> @@ -392,7 +393,7 @@ static int regex_gid_to_name(gid_t gid, char
+> >> *UNUSED(domain), char *name, size_t
+> >>       struct group grbuf;
+> >>       char *buf;
+> >>       const char *name_prefix;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       int err;
+> >>       char * groupname =3D NULL;
+> >> diff --git a/support/nfsidmap/static.c b/support/nfsidmap/static.c
+> >> index 8ac4a398..395cac06 100644
+> >> --- a/support/nfsidmap/static.c
+> >> +++ b/support/nfsidmap/static.c
+> >> @@ -44,6 +44,7 @@
+> >>   #include "conffile.h"
+> >>   #include "nfsidmap.h"
+> >>   #include "nfsidmap_plugin.h"
+> >> +#include "nfsidmap_private.h"
+> >>   /*
+> >>    * Static Translation Methods
+> >> @@ -98,7 +99,7 @@ static struct passwd *static_getpwnam(const char *na=
+me,
+> >>   {
+> >>       struct passwd *pw;
+> >>       struct pwbuf *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETPW_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_pwnam_buflen();
+> >>       char *localname;
+> >>       int err;
+> >> @@ -149,7 +150,7 @@ static struct group *static_getgrnam(const char
+> >> *name,
+> >>   {
+> >>       struct group *gr;
+> >>       struct grbuf *buf;
+> >> -    size_t buflen =3D sysconf(_SC_GETGR_R_SIZE_MAX);
+> >> +    size_t buflen =3D get_grnam_buflen();
+> >>       char *localgroup;
+> >>       int err;
+>
 
