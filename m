@@ -1,253 +1,190 @@
-Return-Path: <linux-nfs+bounces-8335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8329-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA7029E2B9E
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 20:04:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 725DC9E2BFC
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 20:26:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6B15B85BC9
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 16:29:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C44EEBE55E6
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 16:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 655021F8AE7;
-	Tue,  3 Dec 2024 16:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26B3F1F76A4;
+	Tue,  3 Dec 2024 16:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QIY+IgOS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HGhdZpRU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407E71F8AE4
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 16:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D071F8918
+	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 16:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733243361; cv=none; b=mKVbPFo+18RKjKG0XzkQRHB9l+b/J/9CR76jGhqYivHx3/fn7Ksqasu+sOk9REjhllCPtLf8bVNSjeIj68aFTHAK5xX39faeurnb5wt/INIn6P61SpG2iAQmU7fV36ARTf3zL+BJCtOUP2vXdJM/u4aQl7EC690RWNea9LfvYwE=
+	t=1733241744; cv=none; b=ogobNONAXNEBB4hN8w/NQU3bxf5lhnte63/OlpQsx41TnngaW5tdXXqD/Xo2cWJNaqEoIRObxOvIxEy8DcRZ9hyxJfJ1Z0nml4DSZUmaXvN0OuBsJZAeOvv8Ek8whtvOEcQQDPz2JvMSGESZSCFR8WgkGao/HqhFmQC1w2/W3vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733243361; c=relaxed/simple;
-	bh=UHYvkJ/Qmw8fb6OtUDOkOorY6lSj4IVXt1zWIkSVVuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K4puTOS/txuPkBieRoW946YbP3KmMflfeAiIhtDXtNkbaRtsdQ5zJW9I9bAyC1i02WCvINug6RDKy445zw9zA679ym2QLrXkcEBxkDAA+pUSF5/xynR7z74ANWXNlv29tHvm8IZ6W66TzFNVybC+OdA8he+ZRDK1BjtAt3SnHao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QIY+IgOS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF00FC4CECF;
-	Tue,  3 Dec 2024 16:29:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733243361;
-	bh=UHYvkJ/Qmw8fb6OtUDOkOorY6lSj4IVXt1zWIkSVVuM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QIY+IgOSeWiQU3BfdYREzVyDWhB83pgOoCMOe5ey4mcE6YpCt+f+QszfI9ueWyAfP
-	 5gpzbaCnqnp5GTZybMAdZaqdIQINCRVvWZokciLGuOuSQJnk5n8oIb2wjmDp7siLfM
-	 ZOBkCDdI4V14FA7dupmqXe4kweElQ3dChkYeeFD+KnPFkKpNtYowmthOhXSPCXai+G
-	 QqJA1ZNxqfBSYYPtsHSrCMnVEgwKSZrM9ZV/hJZKydq7mw5x7e/FQ20MY3/i9k0SmK
-	 KOf/wRpaPssjdX12Cv+6L5DvTV0B/vXhJCBA9oAougMxNT73FDsy8XqSWxHTSqrv0N
-	 xLrN8AxqrMt+A==
-From: cel@kernel.org
-To: Olga Kornievskaia <okorniev@redhat.com>,
-	Anna Schumaker <anna@kernel.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 4/7] NFS: Implement NFSv4.2's OFFLOAD_STATUS XDR
-Date: Tue,  3 Dec 2024 11:29:13 -0500
-Message-ID: <20241203162908.302354-13-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241203162908.302354-9-cel@kernel.org>
-References: <20241203162908.302354-9-cel@kernel.org>
+	s=arc-20240116; t=1733241744; c=relaxed/simple;
+	bh=VBPkw8A8GZkmktt7nAjbfdFFM28sE1JXx6OCIu/3BSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=THxzLIXUuq0UK5cwcsVwsI+2inIc/eQD5yjRWL19MN5tsZvFE97u1BLRV4AFyjoZWXvIDGnOFXDNymKHN8cuBK/nOiBBbeKhm/tfjylQqBIfWtoTOC3nbItStyBZ4eh+/RF8rNo8psmIIfq/qL89TiUvDC4qfn4B2kGqzJ1RRTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HGhdZpRU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733241741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sr2JEKSNH9mMX7Q32zz6AoC1+Mmy2k+3xBv1ybUJj0g=;
+	b=HGhdZpRU1dMG9DHm+mPVU/mQYplrwL1/2K0nw4KUmTszlPak+/8BcUMnbjnyfVCQYP6gQ/
+	Nqv8Or63gg24JQQLNtAAh8U3+VuSLPH9Egh97KVJmlw8ZM7mUX9EBHeYkku8Pcn+QEDzZB
+	WKaz65e8xheXGo8I7nZVksEg1bzYp/I=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-wqhcLXhoP5OGxc3MA-6pYQ-1; Tue, 03 Dec 2024 11:02:20 -0500
+X-MC-Unique: wqhcLXhoP5OGxc3MA-6pYQ-1
+X-Mimecast-MFC-AGG-ID: wqhcLXhoP5OGxc3MA-6pYQ
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-46686a1565bso90207581cf.0
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Dec 2024 08:02:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733241739; x=1733846539;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sr2JEKSNH9mMX7Q32zz6AoC1+Mmy2k+3xBv1ybUJj0g=;
+        b=bf39VybS/y9IYtfioQJ46BGe8VUvGa1jUZR8xEjsH+KqfdmujPNAhQvAIWc0dvqOke
+         s0THOewNFgqGCcax4KhuXOFKnEt3eqsJI4IUvaCwvyhBtNyRXSUnJRFUg8Hs8EWK4XnA
+         JcwHqxQfhYuiAgAFwnAZn17IS5h1Ee8xQAE0Y42VSOF0ISxD4hsb8MFU91e9oBuwvMBP
+         MXKzIlMiUWuYsTbUD1kZcceTt3XR0J2Wb5etf9gsmNeRBECNDuJes8LmakL2x5gdDEGS
+         y+k8r1HfoyfEdKFkdweNChpzxPfsjVCfMi6JNNwFhHBK+ED7B0LYCQWH5sgChqs+r/9G
+         XuEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVNrwwj4cR/u0+WK20kq5H1MH1NtlaxNDh0lUNi9xEoCzgZIfL/s91zbepvAOokhV5Fx5IU326DaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb6DnY7TyiSjZL8j/oqHLtaVpFsrQzZglpgLv6Tc62scdKX0n6
+	TK9aSKeZRu3PDaqf0FM+wQjJlIh6HijzSOibqG3G8BJD/lNjbTUd6UZFKIp0R/IZUMNBPkDGQPe
+	LqOo/lGF2rw4hCoVq9sS4rdQhp5UJ9gqyf/DW8xDTTVPolwid1JKlqPJJXg==
+X-Gm-Gg: ASbGncs+uqvkYQMWpjF5KuqJ9nsFjVx2eHrrwVEn2xIbOnZtIwFrLAY7+wjv1vfwsR1
+	pLKj5BOxt/l2wu0dt+0tYNclM9jtQJELAVC1ZAkDXMhHuTxBxfwNaOYV80Xa+CqU/aR9IECOVU+
+	ZZXcLXRMaN7UWxCi8Jk7qyKRlGY4FRV6ZE75E4YhVLsSK3za/wHr4UI/kv9retf0VsScHeU5ADG
+	gVMzopQVT067AjdcGXi5sO08awUJ2xfGbvSOFuF/0KgBEv3lw==
+X-Received: by 2002:ac8:5d4a:0:b0:460:aa51:840a with SMTP id d75a77b69052e-4670c3d16abmr29340451cf.45.1733241739271;
+        Tue, 03 Dec 2024 08:02:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHwPJ0UjVdMTbL7wu4OJ2K+HuMZhOGYKhECHt2PYw7dH50pOTlwTNh6YiS0Wfx600SY9iIykQ==
+X-Received: by 2002:ac8:5d4a:0:b0:460:aa51:840a with SMTP id d75a77b69052e-4670c3d16abmr29340021cf.45.1733241738865;
+        Tue, 03 Dec 2024 08:02:18 -0800 (PST)
+Received: from [172.31.1.12] ([70.105.249.243])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-466c421f86dsm62619461cf.69.2024.12.03.08.02.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Dec 2024 08:02:17 -0800 (PST)
+Message-ID: <5bd739e8-e4ed-446a-b443-2554dc20d57c@redhat.com>
+Date: Tue, 3 Dec 2024 11:02:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5792; i=chuck.lever@oracle.com; h=from:subject; bh=VVja45jvjBnwA3YK9gym7fzUL0QdIxmHxMQFFKKkUpQ=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnTzHbhVDTbw1zxqw0jFYj1hGPnXzRPUAwUwLxx gMEHCYAGWKJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZ08x2wAKCRAzarMzb2Z/ l7nXD/0XRJqdhH03BpFWEzm+GY3dCMp7yrTuQwu6kYK/sj5ctXIF8MPPDRNMZa/AUs3beLef2pu 4elBc+Mta2DoybPS+VJUADKbHoK3vDVtWYLRgTB5TDqzsoC45dQaTjv/cbWCHGh9pwUK6Xt8Hms NGWZfGD6df928lM6MWiteUSZf3+4ShmOObjuBvmgjzy+vJ7X7QC/qkGP3q4nGUlXnr6HSXrxJHH vHfU3hdbkoCSAcGuiJtaxkL9nT7vN76+HdiT50bOLGnMtBo2W8b74f4NzaoGUmuSdkBYtC0m1L0 fFiEA0XEUMidiopQzQMx/h79Fgm1E+3wqIltrmJ/t3i9oMdfeZGNDHqylcdVAlsee58BOztciOD lTryzKvLof+9dizmuYbpVv1LJ+E806Lp7Q0e/MJBrIrmziSj6vhlqM6RNqeR79W9MDmA+FAG3Md M2OkA6YFmkJ7QHb2NEChvEgNOBiC7Nop8+QV/vCFMG3SlP1aI4PPlHiIWBCM7aIiuMs2lkl3+zE 4hNwLMUjFzIBM/sOLK9ygEm8oTfHuj+nN1/4IoeII0fS2iWNSfsySv9j/lSB9cIbQQJ3hGWeknp kFCJ6wR7QKAN2IPkQ3LUUFQJk2CaEZ/M+NSZh7usee4ohlWCW1Xs806GA5v3ell1fb41d/sHV7I ItQmI4n5r2pbWAA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+User-Agent: Mozilla Thunderbird
+Subject: Re: [nfs-utils PATCH] exports: Fix referrals when
+ --enable-junction=no
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Scott Mayhew <smayhew@redhat.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <328fdce3-a66b-4254-a178-389caf75a685@redhat.com>
+ <20241202203046.1436990-1-smayhew@redhat.com>
+ <6b8990cc-ec29-4e01-acd6-8c7ec6487d99@redhat.com>
+ <A47A9D21-EF59-4263-AC63-059FB0661CA8@oracle.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <A47A9D21-EF59-4263-AC63-059FB0661CA8@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hey!
 
-Add XDR encoding and decoding functions for the NFSv4.2
-OFFLOAD_STATUS operation.
+On 12/3/24 9:28 AM, Chuck Lever III wrote:
+> 
+> 
+>> On Dec 2, 2024, at 10:19 PM, Steve Dickson <SteveD@redhat.com> wrote:
+>>
+>> Hey,
+>>
+>> On 12/2/24 3:30 PM, Scott Mayhew wrote:
+>>> Commit 15dc0bea ("exportd: Moved cache upcalls routines into
+>>> libexport.a") caused write_fsloc() to be elided when junction support is
+>>> disabled.  Get rid of the bogus #ifdef HAVE_JUNCTION_SUPPORT blocks so
+>>> that referrals work again (the only #ifdef HAVE_JUNCTION_SUPPORT should
+>>> be around actual junction code).
+>> Why not just take the enable_junction config variable
+>> out of configure.ac as well?
+> 
+> It's not generally good practice, but I will break up your
+> sentence below to reply to each bit. There is something to
+> unpack in each part.
+I agree not being a good practice... But sometimes
+config switches out live their usefulness...
+Basically that's what I was thinking
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfs42xdr.c       | 86 +++++++++++++++++++++++++++++++++++++++++
- fs/nfs/nfs4xdr.c        |  1 +
- include/linux/nfs4.h    |  1 +
- include/linux/nfs_xdr.h |  5 ++-
- 4 files changed, 91 insertions(+), 2 deletions(-)
+> 
+> 
+>> If we want junctions/referrals (which are the same)
+>> IMHO...
+> 
+> Junctions and refer= are related, but they aren't
+> the same. As Scott demonstrated, a junction is a file
+> system object that stores NFSv4 referral information.
+> The "refer=" export option stores that information in
+> /etc/exports.
+Is there a point to have both ways?
+What is the advantage of one way over the other?
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index ef5730c5e704..a928b7f90e59 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -35,6 +35,11 @@
- #define encode_offload_cancel_maxsz	(op_encode_hdr_maxsz + \
- 					 XDR_QUADLEN(NFS4_STATEID_SIZE))
- #define decode_offload_cancel_maxsz	(op_decode_hdr_maxsz)
-+#define encode_offload_status_maxsz	(op_encode_hdr_maxsz + \
-+					 XDR_QUADLEN(NFS4_STATEID_SIZE))
-+#define decode_offload_status_maxsz	(op_decode_hdr_maxsz + \
-+					 2 /* osr_count */ + \
-+					 2 /* osr_complete */)
- #define encode_copy_notify_maxsz	(op_encode_hdr_maxsz + \
- 					 XDR_QUADLEN(NFS4_STATEID_SIZE) + \
- 					 1 + /* nl4_type */ \
-@@ -143,6 +148,14 @@
- 					 decode_sequence_maxsz + \
- 					 decode_putfh_maxsz + \
- 					 decode_offload_cancel_maxsz)
-+#define NFS4_enc_offload_status_sz	(compound_encode_hdr_maxsz + \
-+					 encode_sequence_maxsz + \
-+					 encode_putfh_maxsz + \
-+					 encode_offload_status_maxsz)
-+#define NFS4_dec_offload_status_sz	(compound_decode_hdr_maxsz + \
-+					 decode_sequence_maxsz + \
-+					 decode_putfh_maxsz + \
-+					 decode_offload_status_maxsz)
- #define NFS4_enc_copy_notify_sz		(compound_encode_hdr_maxsz + \
- 					 encode_putfh_maxsz + \
- 					 encode_copy_notify_maxsz)
-@@ -343,6 +356,14 @@ static void encode_offload_cancel(struct xdr_stream *xdr,
- 	encode_nfs4_stateid(xdr, &args->osa_stateid);
- }
- 
-+static void encode_offload_status(struct xdr_stream *xdr,
-+				  const struct nfs42_offload_status_args *args,
-+				  struct compound_hdr *hdr)
-+{
-+	encode_op_hdr(xdr, OP_OFFLOAD_STATUS, decode_offload_status_maxsz, hdr);
-+	encode_nfs4_stateid(xdr, &args->osa_stateid);
-+}
-+
- static void encode_copy_notify(struct xdr_stream *xdr,
- 			       const struct nfs42_copy_notify_args *args,
- 			       struct compound_hdr *hdr)
-@@ -567,6 +588,25 @@ static void nfs4_xdr_enc_offload_cancel(struct rpc_rqst *req,
- 	encode_nops(&hdr);
- }
- 
-+/*
-+ * Encode OFFLOAD_STATUS request
-+ */
-+static void nfs4_xdr_enc_offload_status(struct rpc_rqst *req,
-+					struct xdr_stream *xdr,
-+					const void *data)
-+{
-+	const struct nfs42_offload_status_args *args = data;
-+	struct compound_hdr hdr = {
-+		.minorversion = nfs4_xdr_minorversion(&args->osa_seq_args),
-+	};
-+
-+	encode_compound_hdr(xdr, req, &hdr);
-+	encode_sequence(xdr, &args->osa_seq_args, &hdr);
-+	encode_putfh(xdr, args->osa_src_fh, &hdr);
-+	encode_offload_status(xdr, args, &hdr);
-+	encode_nops(&hdr);
-+}
-+
- /*
-  * Encode COPY_NOTIFY request
-  */
-@@ -919,6 +959,26 @@ static int decode_offload_cancel(struct xdr_stream *xdr,
- 	return decode_op_hdr(xdr, OP_OFFLOAD_CANCEL);
- }
- 
-+static int decode_offload_status(struct xdr_stream *xdr,
-+				 struct nfs42_offload_status_res *res)
-+{
-+	ssize_t result;
-+	int status;
-+
-+	status = decode_op_hdr(xdr, OP_OFFLOAD_STATUS);
-+	if (status)
-+		return status;
-+	/* osr_count */
-+	if (xdr_stream_decode_u64(xdr, &res->osr_count) < 0)
-+		return -EIO;
-+	/* osr_complete<1> */
-+	result = xdr_stream_decode_uint32_array(xdr, &res->osr_complete, 1);
-+	if (result < 0)
-+		return -EIO;
-+	res->complete_count = result;
-+	return 0;
-+}
-+
- static int decode_copy_notify(struct xdr_stream *xdr,
- 			      struct nfs42_copy_notify_res *res)
- {
-@@ -1368,6 +1428,32 @@ static int nfs4_xdr_dec_offload_cancel(struct rpc_rqst *rqstp,
- 	return status;
- }
- 
-+/*
-+ * Decode OFFLOAD_STATUS response
-+ */
-+static int nfs4_xdr_dec_offload_status(struct rpc_rqst *rqstp,
-+				       struct xdr_stream *xdr,
-+				       void *data)
-+{
-+	struct nfs42_offload_status_res *res = data;
-+	struct compound_hdr hdr;
-+	int status;
-+
-+	status = decode_compound_hdr(xdr, &hdr);
-+	if (status)
-+		goto out;
-+	status = decode_sequence(xdr, &res->osr_seq_res, rqstp);
-+	if (status)
-+		goto out;
-+	status = decode_putfh(xdr);
-+	if (status)
-+		goto out;
-+	status = decode_offload_status(xdr, res);
-+
-+out:
-+	return status;
-+}
-+
- /*
-  * Decode COPY_NOTIFY response
-  */
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index e8ac3f615f93..08be0a0cce24 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -7702,6 +7702,7 @@ const struct rpc_procinfo nfs4_procedures[] = {
- 	PROC42(CLONE,		enc_clone,		dec_clone),
- 	PROC42(COPY,		enc_copy,		dec_copy),
- 	PROC42(OFFLOAD_CANCEL,	enc_offload_cancel,	dec_offload_cancel),
-+	PROC42(OFFLOAD_STATUS,	enc_offload_status,	dec_offload_status),
- 	PROC42(COPY_NOTIFY,	enc_copy_notify,	dec_copy_notify),
- 	PROC(LOOKUPP,		enc_lookupp,		dec_lookupp),
- 	PROC42(LAYOUTERROR,	enc_layouterror,	dec_layouterror),
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 8d7430d9f218..5de96243a252 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -695,6 +695,7 @@ enum {
- 	NFSPROC4_CLNT_LISTXATTRS,
- 	NFSPROC4_CLNT_REMOVEXATTR,
- 	NFSPROC4_CLNT_READ_PLUS,
-+	NFSPROC4_CLNT_OFFLOAD_STATUS,
- };
- 
- /* nfs41 types */
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 559273a0f16d..9ac6c7a26b44 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1520,8 +1520,9 @@ struct nfs42_offload_status_args {
- 
- struct nfs42_offload_status_res {
- 	struct nfs4_sequence_res	osr_seq_res;
--	uint64_t			osr_count;
--	int				osr_status;
-+	u64				osr_count;
-+	int				complete_count;
-+	u32				osr_complete;
- };
- 
- struct nfs42_copy_notify_args {
--- 
-2.47.0
+> 
+> The common part of these two mechanisms resides in
+> NFSD, which turns that information into the response
+> to a GETATTR(fs_locations).
+Right... both ways use the same protocol.
+
+> 
+> 
+>> on all the time...
+> 
+> We want "refer=" on all the time, yes.
+Fine.. Scott's patch will be in the coming releases.
+
+> 
+> Junction support has to be enabled manually. This is
+> because it depends on libxml2, which not every distro
+> wants to, or can, pull into its nfs-utils package.
+Yeah... libxml2 seems to be an Fedora only thing.
+
+> 
+> That is in fact exactly how Salvatore is using this
+> option. The stable version of Debian's nfs-utils
+> package does not want libxml2, so junction support is
+> disabled there. But they /do/ want "refer=" support.
+Yeah... The bug has been around for a while
+(pre-pandemic ;-) ) so it appears somebody is
+starting to use referrals...
+
+> 
+> 
+>> Lets not be able to turn them off at all?
+> 
+> That would be nice, but it's not yet practical for
+> every distro to enable it.
+Understood.
+
+> 
+> I am told that Debian unstable's nfs-utils will
+> enable junction support, and has added the libxml2
+> dependency successfully.
+> 
+> We will get there eventually.
+Patches are welcome! :-)
+
+steved.
+
 
 
