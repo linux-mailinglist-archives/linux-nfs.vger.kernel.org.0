@@ -1,101 +1,93 @@
-Return-Path: <linux-nfs+bounces-8331-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8332-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C6FA9E2B31
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 19:44:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F28F19E28A9
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 18:06:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0FA03B21865
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 16:29:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D12EEB38A62
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 16:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 162AE1F4283;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFA581F8ACF;
 	Tue,  3 Dec 2024 16:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+UEuZ6i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZdtsBMr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E545418BC1D
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 16:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B14F18BC1D
+	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 16:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733243359; cv=none; b=tJJfDXSRRVVXWhL9y3QXlQtjcicN+aHo+1I1bHgoZfr6JV7tg7O6B2SfJdFiuyZlRif9K2h6YcyQJ1nTyn2cZYLNOhaJdy06J9EJg/TFRzoIuUI6bxkrvUb8uO6HLgHBBp8AXXM87sMVLXUBRSwD9AJwV5NvbG1AUYoah5eNTFs=
+	t=1733243359; cv=none; b=WRm/XFDwuxHmh+Qhe6vmqHnBm0y3OZFz6kE5CMDpX2ynKxvTOjHOoqswcoNhUjpP0ifMqwiw8t1IPYix0Wl0AyDCS0gYRveVxiH3OUIByH7Tbny2y257GNqlffslW9R675IBSsxy+dBJM4OSNZdscQ56oJ7d5qBABHcGtChYk8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1733243359; c=relaxed/simple;
-	bh=vuJcrKJGCfyxBIfoRVcAqChfPRs7HYPC8SKAWuARWFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AQYGSAqgQCOFTMUXzHjE6zhCEgZlQB2G0H2qAUNEjK2ZpLj98OtY6TVK+ks+/fdkQn1uTVUQ5JOpBdmasMFRZxaMjjkhwMJjmDrWJF9OjEP1/6IKjiHX79jiAWqDqUxxzPkUmjtT0Twv/31YByoReUOwSlNTbCbBxIaRiHhbvl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+UEuZ6i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0B1C4CECF;
-	Tue,  3 Dec 2024 16:29:17 +0000 (UTC)
+	bh=mGjyLUC8Tdl3s3Io8OxFN8wjAOa9sgigj2kk4i+JBQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RpdGftW7DJIoGLLPG8uz83vaMdWM/spIsWVmgK/uRfnHgNrNX22pQum+eFj0i3VykCeuY0hr19kbFh75eIDTbIyZv4w4BqVfLGCL0+faAu54SWtZa69ySsK2DBEuakyGppZ7SOYjYESX8XXBUXVU300qTUCrdD2EL5/betHXzP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZdtsBMr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F99C4CED6;
+	Tue,  3 Dec 2024 16:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733243358;
-	bh=vuJcrKJGCfyxBIfoRVcAqChfPRs7HYPC8SKAWuARWFo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X+UEuZ6iuKAnqXtRulzVd9KAyx6g+7YS1v/KT2yKVHa1H+h8PCyZcom0tnL75x2mi
-	 ia7R4AkvZUqqKdelU6Vt/G23n98Lrn5gYEaq0sv96Y/rIeaOoS2tI3W7VEVCkNqvOd
-	 6L/WJ3cfpFD3t+SekHNI0+ebmx6XqgPfVGjaCn0XkJxNzh0OiMuhJmhjDtIgFEpmgk
-	 fNQbWeTJuMXebI10XXtryypjX/RErbtDb+3MloxEC4Eu2pBsc+mW6huVCDBmbiLAIl
-	 6vUvlse01mwIMj+mhiX/lYa2esYZxRyFlrgcCNeKa0PF7192sHXUB7jmwXm2IvqUID
-	 KYiurjR6u/WYQ==
+	s=k20201202; t=1733243359;
+	bh=mGjyLUC8Tdl3s3Io8OxFN8wjAOa9sgigj2kk4i+JBQo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LZdtsBMrMsoFtmp/pq4S4KnQhmsNt5ApbDWrOHEXFQAaXhp9VFIphBVxi5C7p6Ty/
+	 2yYq6zxTzIh2oGSFJP2z7fDKYOp+4ihu4+Cj6gQJruvqF5DUaRcoQBZiWsnOcg2wjk
+	 MkV99ViCLxH8l110F/dPDNG+CF3/6iXcOARxrhVi3o8sr+F+1ioMSfELd0n9EzTkSd
+	 tIMK/yfNZtZKoMAohvuvE28t77LZDUkuQm9jEIHEdMCrqRr2Q2iv4hSMwx+CdNCqfQ
+	 S1c3TAiMii50p+fH2jwuhl4RLGgZHmdyyGN6QOjctntMf/ygiuuLbzcAIx8JfqPUSf
+	 wGon/4YCf4wCg==
 From: cel@kernel.org
 To: Olga Kornievskaia <okorniev@redhat.com>,
 	Anna Schumaker <anna@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 0/7] Client-side OFFLOAD_STATUS implementation
-Date: Tue,  3 Dec 2024 11:29:09 -0500
-Message-ID: <20241203162908.302354-9-cel@kernel.org>
+Subject: [PATCH v1 1/7] NFS: CB_OFFLOAD can return NFS4ERR_DELAY
+Date: Tue,  3 Dec 2024 11:29:10 -0500
+Message-ID: <20241203162908.302354-10-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241203162908.302354-9-cel@kernel.org>
+References: <20241203162908.302354-9-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1491; i=chuck.lever@oracle.com; h=from:subject; bh=C7/U2aiNJzKLFLwCW1YLH2ohfnHgo1jbeigY9zFsENM=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnTzHUZlCjM5zYZrGmkIgSLfm73txmXjaWCeCCP fExVgqvFOaJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZ08x1AAKCRAzarMzb2Z/ lxdYD/4op9ZDDloRll0f1hqtVXEYyQnwGNHouYF/zJEftYdTkYbSDj2JN5/vlkyQC66Y1wwHkHy cnPZDWx9FuZAbWHqFuY0p0YnGfwvQvLNz7FiBDvQfbJyyKNX1hOR1chZNLCPc0fA5TPMr/6IdNf xPopCOkEUQoKMCE1gWkrjQHztUXzT0c4lgY0RYJib2xwVX4sOUVj2xHxiNDSbqBpP08pxj+rKh0 AEMmuVlw4emOH3Oqot+vvakgYYHfPp2U4BA88j04s0+BVafrTzdqJoh9HNpXKeom7pCr54Hg4UA s19wyMhFlDiDwDkIg5+JCzsdU8ySQpdUTIVeFwi0uOvJFbWThbpzEQ6LmP8/ks/9aCjvZbxRXgq 62yhzs9DqVpOSMcNCCZeWKJVQZO2QgYqoRU1WLz9kFKnEsLj77CBb0U8cfq4ckXxQFvLBThfqjc o6e1vOYWHPgURlDEhO7Ymf78zvmkQ1yWwoBlte+6mZP+H8rldzvD5+hqMFI2qXu9yqN05kqPPkE Q+BBlgqGwuOA7oNQ7ZIUd7CKwL/6VonEA/ANo1MrHHTWVGl2YHFwl33scDNJ8DHwoyJG3G3dUzE oandDqEldgBn1Kx+RcFpODx0DBtl5KHr9mZFN+5rLM1pRDPLzTxc9lCjy2C8LBs3jm/X2KAL5WM Xi+Emw9gFdELilA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=876; i=chuck.lever@oracle.com; h=from:subject; bh=qXuGrjg6SDFchdJvPLGOato/moBZTWja3ZWBZre7U8g=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnTzHalI7zb0ON3ksPyJGdZ3rXRv7V4llY6edT+ 5XQB6PruJuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZ08x2gAKCRAzarMzb2Z/ l1uIEACVBg6/mzssUiZPCh77Eqz44FLFXjU9l9yOyILSdNEzG89NWCNtvOUMGDhtPBuHqQIDqIN 1/o8o2MVlMGfQmeqzGz8FvLe84mX01Bb9Zo9HiK2Nkv5XNXVleZu6bHxEfU7fC7cUAd/yP2MKuC QXmvXrgInO8aSW6MpWjqxWDoVm0xiIRbOy+MCfukwZBE4CV+9pEZ6j6Hi8Rv0cAN7UpWbelPfno KQLzMqbILziA6VmIp7rXDO7zJE/OX472nr0JVU70oyztljdK5Ew178a6WZAmg/WlhnUbC2w/Hfj oubwQSqfp+ZfEhGfpeLey8B85i1vcx8nz9Lpx3vEO1TFc2YQrERB29+A1YL3/9kS6UeaCs/upQ0 2IggP3/NNIu+Vxa9wycDl+l6lqWQ6u6NKDg7G/dOLmJw6J9ni9vtkPLes9NXJnzgM4DJjvrWcRE tsvhwRfDNTx4PL3cpKveyq1MSbHTn2K7EqcI8gyrxtjO8Uxn2STCEYc24Q2O7BVe1npBvvcbYec ZI67myd1C509Y+h6YdIxNJwQayyxSmARXE5gjW8mgjq1Up+YJXuX1JtydA6wxuC0FVFWNaxZ5Sm kRUhTCJVmJ/tpvoLkniJjNjiaFU9Fjq5SFizzvKQzcf7N/L7WOYrp2djQr5XQmBPbIzoLGjuUhT zC/V4zCRalv/m2A==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-SCSI implementation experience has shown that an interrupt-only
-COPY offload implementation is not reliable. There are too many
-common scenarios where the client can miss the completion interrupt
-(in our case, this is a CB_OFFLOAD callback).
+RFC 7862 permits the callback service to respond to a CB_OFFLOAD
+operation with NFS4ERR_DELAY. Use that instead of
+NFS4ERR_SERVERFAULT for temporary memory allocation failure, as that
+is more consistent with how other operations report memory
+allocation failure.
 
-Therefore, a polling mechanism is needed. The NFSv4.2 protocol
-provides one in the form of the new OFFLOAD_STATUS operation. Linux
-NFSD implements OFFLOAD_STATUS already. This series adds a Linux NFS
-client implementation of the OFFLOAD_STATUS operation that can query
-the state of a background COPY on the server.
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfs/callback_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-These patches are also available here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/log/?h=fix-async-copy
-
-Chuck Lever (7):
-  NFS: CB_OFFLOAD can return NFS4ERR_DELAY
-  NFS: Fix typo in OFFLOAD_CANCEL comment
-  NFS: Rename struct nfs4_offloadcancel_data
-  NFS: Implement NFSv4.2's OFFLOAD_STATUS XDR
-  NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
-  NFS: Use NFSv4.2's OFFLOAD_STATUS operation
-  NFS: Refactor trace_nfs4_offload_cancel
-
- fs/nfs/callback_proc.c    |   2 +-
- fs/nfs/nfs42proc.c        | 205 ++++++++++++++++++++++++++++++++++----
- fs/nfs/nfs42xdr.c         |  88 +++++++++++++++-
- fs/nfs/nfs4proc.c         |   3 +-
- fs/nfs/nfs4trace.h        |  11 +-
- fs/nfs/nfs4xdr.c          |   1 +
- include/linux/nfs4.h      |   1 +
- include/linux/nfs_fs_sb.h |   1 +
- include/linux/nfs_xdr.h   |   5 +-
- 9 files changed, 292 insertions(+), 25 deletions(-)
-
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index 7832fb0369a1..8397c43358bd 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -718,7 +718,7 @@ __be32 nfs4_callback_offload(void *data, void *dummy,
+ 
+ 	copy = kzalloc(sizeof(struct nfs4_copy_state), GFP_KERNEL);
+ 	if (!copy)
+-		return htonl(NFS4ERR_SERVERFAULT);
++		return cpu_to_be32(NFS4ERR_DELAY);
+ 
+ 	spin_lock(&cps->clp->cl_lock);
+ 	rcu_read_lock();
 -- 
 2.47.0
 
