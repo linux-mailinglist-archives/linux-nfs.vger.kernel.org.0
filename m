@@ -1,85 +1,84 @@
-Return-Path: <linux-nfs+bounces-8320-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8321-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D4769E1B9E
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 13:04:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A18D49E1BB3
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 13:12:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23B6516034E
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 12:04:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 646B5166285
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Dec 2024 12:12:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F111E410E;
-	Tue,  3 Dec 2024 12:04:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7DC1E412E;
+	Tue,  3 Dec 2024 12:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQ4A9kk7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQPnHzRn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB711E3DFD
-	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 12:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB408F6C
+	for <linux-nfs@vger.kernel.org>; Tue,  3 Dec 2024 12:12:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733227452; cv=none; b=eLI8ZW5N6+Yru4s1rBWsU/tpe3kxv9RPzdFFMmGcy98zD1SXEL0bCsdwxMOud0LQuprGyyfOuQtSlgGYrrSlL3zWV8dn9OREgCVl77UWNVG3++kjAEm1GtwIzJ2BDKU0HAyjvNiHYun9uFPYCK5sBWR0H547+81UnSw+KRsKfB4=
+	t=1733227925; cv=none; b=u+QKLJHlF1bSRFbyk39LYX+16SpHm8cysV5Y+hxs0zy6U8jBgP/BymA35P9oNgOMEBX20Mz8CwUjVUXz1afwhKOfQa8pr/6yQIUQRQLMyzghmC2WIPQFpCaxb5RJhQcV+C69ASlU/czWc00PurhxHh9xcUq2v7/KzOZ0L5feGu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733227452; c=relaxed/simple;
-	bh=cvYdqYhnAARopE7CJZhr+GBezVBvScjdwVP3Wz5DfbU=;
+	s=arc-20240116; t=1733227925; c=relaxed/simple;
+	bh=PcXte/OmVXMRIY8hTg++jexwFrCi3iPmc6ysqGyZSYo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OCcnt/PC4XipAgdKV0/J7Ox/JPaEGT2OyXwHENPYWGpl/b38lqVSmC35fAEJ2Gq8IlxSpoXMeQ0Qs3SfcjSXdGhdJqUS+CwCR4NnsnfdobxtKTd5GjsH2Uk6g6U8MA4TedF5QhOMWcRcIJdQU5rZY7845t2sUVd2ie9JoXXfYAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hQ4A9kk7; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=dpFFAfwFa3yQUzmXvOHiuyvmA4hazHGF8wecBTAEqcSjgp9hnyy/fx1ggwaSrQ5Lht3jA2KDJw1Aav6RIZBjPoh1P9GWrU03TU3j3cUwD0/cV6nmkGbBmYMYIU8bNdgscu5gz+inAnhSlJx5vbx3nGVLRweBxnZ2SXkNyWFgaGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AQPnHzRn; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733227449;
+	s=mimecast20190719; t=1733227923;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QheyITusSom6GwJgPCJRrDHk6u7BUIRW5lpuj9iGQIw=;
-	b=hQ4A9kk7AsAFkp/OdCGcYc8AMxyvY0k/QRgSmPtJUOz9aV2gwpodMApEXY2kUhgFLmssdg
-	aJni8tvEwbn+J6iBSYYNOguyDH5jBLu7SQak0Jz2iGxb84QnOfArTQ6u8xkW8X+/vASDuT
-	b8wjrd5HkNmeHWVdYLiPoWZsiKiaa0c=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/cDq6hfQa/mV4E8AUneOJ9PtSO112nhhv8XSbq6208I=;
+	b=AQPnHzRnwz2BbtSIR0Bz4tiJymbKbVd4WiY9CkCr3tpzlSIOAUFc1u0CsGG78M3kMoG8El
+	uaCf2Ql06K/Xarah1a8ySj4AFhhOZd6UwMzuqpqdoRxg0WDHaBF/kwglM5woHbN6MyrDCy
+	uqRX0vC3ro1pr8fZxJXCC/rjQqRnMZ0=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-4v_4HvxMNeSjf2egnkkXfA-1; Tue, 03 Dec 2024 07:04:07 -0500
-X-MC-Unique: 4v_4HvxMNeSjf2egnkkXfA-1
-X-Mimecast-MFC-AGG-ID: 4v_4HvxMNeSjf2egnkkXfA
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-841843a9970so496460339f.3
-        for <linux-nfs@vger.kernel.org>; Tue, 03 Dec 2024 04:04:07 -0800 (PST)
+ us-mta-331-NBcTQyZlOz2ZBjO8ngb3bw-1; Tue, 03 Dec 2024 07:12:01 -0500
+X-MC-Unique: NBcTQyZlOz2ZBjO8ngb3bw-1
+X-Mimecast-MFC-AGG-ID: NBcTQyZlOz2ZBjO8ngb3bw
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-841ca214adaso496044539f.1
+        for <linux-nfs@vger.kernel.org>; Tue, 03 Dec 2024 04:12:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733227446; x=1733832246;
+        d=1e100.net; s=20230601; t=1733227921; x=1733832721;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QheyITusSom6GwJgPCJRrDHk6u7BUIRW5lpuj9iGQIw=;
-        b=KeKZbmHIZ5R+Am9TPccQNvXXmP6Z3Rn399iSSLD2lRCoxM028lCKvC8IA1NWV3rqD9
-         GolkMGOCcZ3zeNw1/u7QqPyNEKxE/QF0GUbdPYKDzaMXdTDUHXju0xMxMwlyyHf85dZK
-         nKtEJqDmuE52M7Zv9fftbgiGtbrlp2DeDg9PShlwuxGiB61p3gYKRZzJw19e8y0GW2e6
-         00QUbDbjUCR4hKngdU0rUaEVkZY80qQ1Sv7q4e+x8CiphPopPvpo0FvI1kp1qakScgM+
-         VrGkSgYCnBPIBCVkkJkmkAZ1iunUx6y64WIBDa11DmRgyKTxMHoAAnirTJ7EzbJtyU46
-         EnqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXh8i9RJ+Snwyd25Fau+ERsDBGItKLWZzZ9al1C2oE1XYRQrk8lVQJVE4P32EnJf3PSGVHO3a/FBp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/ZDNS4y9gq8C6rllqkvC0JyWNWZEHJClf8R08uiJ5OtHo4T03
-	jxOVQPSYR6L3BR/QMtq4mhzN/oYrz7KvlwE782L8xo1ABpwYqGsADVsS6OO+65uzxq8WkJqxAnC
-	pHPagJyCaYVJtdPQ46OHjvnWaz6EuHNSXAz4p0Lg9q5Gh5SYBkb9A7ErJbQ==
-X-Gm-Gg: ASbGncuhHh8nGghtkhgxieuq2lgZxYIT+EUcllD/rpAeY0OzNH+yyWbOZEa7wcc8AiT
-	biUZBv0Jr6i22zjfCnApSNvtXTXr2t3ibG4Z1UPZqYxAcS5lwgDmwR5yb73Uq902IbxFHh5aHtU
-	v1jwkhswM4R77APaYEaEWz4K2jnfV2MWlzNGtV1UjttLmxy8TWPpJl73yvSnvAV1JrcWFAaXVHj
-	s3yYxdqdwros2WdN4FzVEln/+YaQ+4KWPenQEQZ5Ki3L27tNg==
-X-Received: by 2002:a05:6602:6d0e:b0:843:f261:60e0 with SMTP id ca18e2360f4ac-8445b556cebmr323502739f.5.1733227445749;
-        Tue, 03 Dec 2024 04:04:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFKV1Xd32JETczqfeUUD07PCAa/s8bUrBYP4MfosB7E1YzZPlR79Pm+2BXx9MhIcooXjiDo/g==
-X-Received: by 2002:a05:6602:6d0e:b0:843:f261:60e0 with SMTP id ca18e2360f4ac-8445b556cebmr323481839f.5.1733227443941;
-        Tue, 03 Dec 2024 04:04:03 -0800 (PST)
+        bh=/cDq6hfQa/mV4E8AUneOJ9PtSO112nhhv8XSbq6208I=;
+        b=qEpMI+JNkA0KLQxKckkQgFcdaUFSmkJYyJgUdZGlcInjL9OAHmM8cCR8V83S+8Wx5p
+         g2ZQkl72axzit478+LRitA/csIL8iS74rMqleBf98KRCIhw8a412QSO6YtaSgqGMOiBf
+         alh6MMiIJuGJ4TCMwrQiAVVDg0r/C12GNVIqeQ4ogfFD4bmiktBkfcCHfLJMYx+64yXi
+         PrN5pj10AJoOdsoGeLP6s8JkzMGJSko7tF4YZwgsJ/md5zDME9ufGZeF/4MawJxqnW1g
+         WZYUvxHe1TPNuI5vLEVPSA66CMYjGwd3+jIazGf7R1Lmtee9bK4wmUBSpbeZWqSgZgO8
+         hqww==
+X-Gm-Message-State: AOJu0YwCMG0djcXvkm8rWWJG1FFhY5c/bWt0DJt7eAf3ErTH51W8z+q5
+	jE8/xLca+e7xjoGTfcv8dQuS16Md7qbvIwxIscpKZDYxD4dmUby48xyS/txIRbswAbKgDe4aSJ2
+	v8H4eDikXPLJvI7sJ+FVGupVmLO4Sfp2rwIzpHvC/WxYvBOw4Q6F88J9YEw==
+X-Gm-Gg: ASbGncurThhPa0Pn8/+nStltt38+OCA5dMqtBKg23jA8nsHU793ch7k7lqfcD/F1Ss/
+	KjeV3Adf5n9DYxvU2tCQ8lCMqjnx67v0wuGMAn/VJGhQ29i/cgZ6XvuSOqVeTUBAgJpecQck68P
+	U6B/0N8RqrxYTsNfqajqkMEdHenCVkxwL+OVMxr1xpgFF7cmDYM2pjKUcSO76JyO2wX7VPPJZ8V
+	vuQcw/MlkfOq7lZPR2CWMhlnVpSP/L6Exs/gk0DQWqM6ajTQA==
+X-Received: by 2002:a05:6602:13c5:b0:83a:b901:3150 with SMTP id ca18e2360f4ac-8445b573fcemr263918439f.8.1733227921183;
+        Tue, 03 Dec 2024 04:12:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEP3tDeO7Lkx4ybLbPkewCfvGq3n323GNxzqzmLjMiG9Fz6cruW4AIBQKbFqWFih4eZCjG8FA==
+X-Received: by 2002:a05:6602:13c5:b0:83a:b901:3150 with SMTP id ca18e2360f4ac-8445b573fcemr263917039f.8.1733227920829;
+        Tue, 03 Dec 2024 04:12:00 -0800 (PST)
 Received: from [172.31.1.12] ([70.105.249.243])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e230e5f21esm2557522173.80.2024.12.03.04.04.01
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e230e5f236sm2570212173.83.2024.12.03.04.11.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 04:04:02 -0800 (PST)
-Message-ID: <577509ce-fbbb-4715-8fe3-33cd66c89589@redhat.com>
-Date: Tue, 3 Dec 2024 07:04:00 -0500
+        Tue, 03 Dec 2024 04:11:59 -0800 (PST)
+Message-ID: <00a0d65f-6cce-4ae9-84d7-2eabf919063c@redhat.com>
+Date: Tue, 3 Dec 2024 07:11:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -87,143 +86,94 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: NFSv4 referrals broken when not enabling junction support
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
- Sam Hartman <hartmans@debian.org>, Anton Lundin <glance@ac2.se>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <Zv7NRNXeUtzpfbJg@eldamar.lan>
- <e7341203-c53c-4005-9d70-239073352b2b@redhat.com>
- <ZxUVlpd0Ec5NaWF1@eldamar.lan> <Zxv8GLvNT2sjB2Pn@eldamar.lan>
- <1fc7de18-eaf0-4a1e-bd41-e6072b0f3d7f@redhat.com>
- <Z0VVLw9htR7_C5Bc@elende.valinor.li>
- <e86284ac-7a77-440b-bb5d-bdb1e6f23a40@redhat.com>
- <Z04OnJtb1oDl5sfd@eldamar.lan>
- <328fdce3-a66b-4254-a178-389caf75a685@redhat.com>
- <A8C1C88C-35D5-43D1-B848-1E0CF337F1F6@oracle.com>
+Subject: Re: [nfs-utils PATCH] exports: Fix referrals when
+ --enable-junction=no
+To: Chuck Lever <chuck.lever@oracle.com>, Scott Mayhew <smayhew@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <328fdce3-a66b-4254-a178-389caf75a685@redhat.com>
+ <20241202203046.1436990-1-smayhew@redhat.com>
+ <Z04pmCa0es/DH8WS@tissot.1015granger.net>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <A8C1C88C-35D5-43D1-B848-1E0CF337F1F6@oracle.com>
+In-Reply-To: <Z04pmCa0es/DH8WS@tissot.1015granger.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 12/2/24 3:02 PM, Chuck Lever III wrote:
+On 12/2/24 4:41 PM, Chuck Lever wrote:
+> On Mon, Dec 02, 2024 at 03:30:46PM -0500, Scott Mayhew wrote:
+>> Commit 15dc0bea ("exportd: Moved cache upcalls routines into
+>> libexport.a") caused write_fsloc() to be elided when junction support is
+>> disabled.  Get rid of the bogus #ifdef HAVE_JUNCTION_SUPPORT blocks so
+>> that referrals work again (the only #ifdef HAVE_JUNCTION_SUPPORT should
+>> be around actual junction code).
 > 
+> I agree, this looks like an unintended regression in 15dc0bea.
 > 
->> On Dec 2, 2024, at 2:57 PM, Steve Dickson <steved@redhat.com> wrote:
->>
->>
->>
->> On 12/2/24 2:46 PM, Salvatore Bonaccorso wrote:
->>> Hi Steve,
->>> On Mon, Dec 02, 2024 at 01:26:46PM -0500, Steve Dickson wrote:
->>>>
->>>>
->>>> On 11/25/24 11:57 PM, Salvatore Bonaccorso wrote:
->>>>> Hi Steve,
->>>>>
->>>>> On Sat, Oct 26, 2024 at 09:04:01AM -0400, Steve Dickson wrote:
->>>>>>
->>>>>>
->>>>>> On 10/25/24 4:14 PM, Salvatore Bonaccorso wrote:
->>>>>>> Hi Steve,
->>>>>>>
->>>>>>> On Sun, Oct 20, 2024 at 04:37:10PM +0200, Salvatore Bonaccorso wrote:
->>>>>>>> Hi Steve,
->>>>>>>>
->>>>>>>> On Tue, Oct 08, 2024 at 06:12:58AM -0400, Steve Dickson wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 10/3/24 12:58 PM, Salvatore Bonaccorso wrote:
->>>>>>>>>> Hi Steve, hi linux-nfs people,
->>>>>>>>>>
->>>>>>>>>> it got reported twice in Debian that  NFSv4 referrals are broken when
->>>>>>>>>> junction support is disabled. The two reports are at:
->>>>>>>>>>
->>>>>>>>>> https://bugs.debian.org/1035908
->>>>>>>>>> https://bugs.debian.org/1083098
->>>>>>>>>>
->>>>>>>>>> While arguably having junction support seems to be the preferred
->>>>>>>>>> option, the bug (or maybe unintended behaviour) arises when junction
->>>>>>>>>> support is not enabled (this for instance is the case in the Debian
->>>>>>>>>> stable/bookworm version, as we cannot simply do such changes in a
->>>>>>>>>> stable release; note later relases will have it enabled).
->>>>>>>>>>
->>>>>>>>>> The "breakage" seems to be introduced with 15dc0bead10d ("exportd:
->>>>>>>>>> Moved cache upcalls routines  into libexport.a"), so
->>>>>>>>>> nfs-utils-2-5-3-rc6 as this will mask behind the #ifdef
->>>>>>>>>> HAVE_JUNCTION_SUPPORT's code which seems needed to support the refer=
->>>>>>>>>> in /etc/exports.
->>>>>>>>>>
->>>>>>>>>> I had a quick conversation with Cuck offliste about this, and I can
->>>>>>>>>> hopefully state with his word, that yes, while nfsref is the direction
->>>>>>>>>> we want to go, we do not want to actually disable refer= in
->>>>>>>>>> /etc/exports.
->>>>>>>>> +1
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Steve, what do you think? I'm not sure on the best patch for this,
->>>>>>>>>> maybe reverting the parts masking behind #ifdef HAVE_JUNCTION_SUPPORT
->>>>>>>>>> which are touched in 15dc0bead10d would be enough?
->>>>>>>>> Yeah there is a lot of change with 15dc0bead10d
->>>>>>>>>
->>>>>>>>> Let me look into this... At the up coming Bake-a-ton [1]
->>>>>>>>
->>>>>>>> Thanks a lot for that, looking forward then to a fix which we might
->>>>>>>> backport in Debian to the older version as well.
->>>>>>>
->>>>>>> Hope the Bake-a-ton was productive :)
->>>>>>>
->>>>>>> Did you had a chance to look at this issue beeing there?
->>>>>> Yes I did... and we did talk about the problem.... still looking into it.
->>>>>
->>>>> Reviewing the open bugs in Debian I remembered of this one. If you
->>>>> have already a POC implementation/bugfix available, would it help if I
->>>>> prod at least the two reporters in Debian to test the changes?
->>>>>
->>>>> Thanks a lot for your work, it is really appreciated!
->>>> I was not able to reproduce this at the Bakeathon
->>>> with the latest nfs-utils... and today I took another
->>>> look today...
->>>>
->>>> Would mind showing me the step that cause the error
->>>> and what is the error?
->>> Let me ask the two reporters in Debian, Cc'ed.
->>> Sam, Anton can you provide here how to reproduce the issue with
->>> nfs-utils which you reported?
->> Please note setting "enable-junction=no" does disable
->> the referral code. aka in dump_to_cache()
->>
->> #ifdef HAVE_JUNCTION_SUPPORT
->>         write_fsloc(&bp, &blen, exp);
->> #endif
->>
->> So unless I'm not understanding something (which is very possible :-) )
->> disabling junctions also disables referrals.
+> Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
 > 
-> Disabling junction support is not supposed to disable referrals.
-> Referrals worked long before junction support was added, and
-> stopped working in this configuration with the commit that
-> Salvatore bisected to.
-Got it... thanks!
+> I suggest adding:
+> 
+> Link: https://bugs.debian.org/1035908
+> Link: https://bugs.debian.org/1083098
+> 
+>> Fixes: 15dc0bea ("exportd: Moved cache upcalls routines into libexport.a")
+>> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Fair enough... I'm also going to tone down
+the "bogus" to "unnecessary"... Lets keep it civil.
 
 steved.
-> 
-> 
->> steved.
+
+>> ---
+>>   support/export/cache.c | 7 -------
+>>   1 file changed, 7 deletions(-)
 >>
->>> Context:
->>> - https://bugs.debian.org/1035908
->>> - https://bugs.debian.org/1083098
->>> Regards,
->>> Salvatore
+>> diff --git a/support/export/cache.c b/support/export/cache.c
+>> index 6c0a44a3..3a8e57cf 100644
+>> --- a/support/export/cache.c
+>> +++ b/support/export/cache.c
+>> @@ -34,10 +34,7 @@
+>>   #include "pseudoflavors.h"
+>>   #include "xcommon.h"
+>>   #include "reexport.h"
+>> -
+>> -#ifdef HAVE_JUNCTION_SUPPORT
+>>   #include "fsloc.h"
+>> -#endif
+>>   
+>>   #ifdef USE_BLKID
+>>   #include "blkid/blkid.h"
+>> @@ -999,7 +996,6 @@ static void nfsd_retry_fh(struct delayed *d)
+>>   	*dp = d;
+>>   }
+>>   
+>> -#ifdef HAVE_JUNCTION_SUPPORT
+>>   static void write_fsloc(char **bp, int *blen, struct exportent *ep)
+>>   {
+>>   	struct servers *servers;
+>> @@ -1022,7 +1018,6 @@ static void write_fsloc(char **bp, int *blen, struct exportent *ep)
+>>   	qword_addint(bp, blen, servers->h_referral);
+>>   	release_replicas(servers);
+>>   }
+>> -#endif
+>>   
+>>   static void write_secinfo(char **bp, int *blen, struct exportent *ep, int flag_mask, int extra_flag)
+>>   {
+>> @@ -1120,9 +1115,7 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+>>   		qword_addint(&bp, &blen, exp->e_anongid);
+>>   		qword_addint(&bp, &blen, fsidnum);
+>>   
+>> -#ifdef HAVE_JUNCTION_SUPPORT
+>>   		write_fsloc(&bp, &blen, exp);
+>> -#endif
+>>   		write_secinfo(&bp, &blen, exp, flag_mask, do_fsidnum ? NFSEXP_FSID : 0);
+>>   		if (exp->e_uuid == NULL || different_fs) {
+>>   			char u[16];
+>> -- 
+>> 2.46.2
 >>
-> 
-> --
-> Chuck Lever
-> 
+>>
 > 
 
 
