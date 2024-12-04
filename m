@@ -1,76 +1,76 @@
-Return-Path: <linux-nfs+bounces-8342-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8343-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A08B59E39FC
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2024 13:30:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C36099E3CDB
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2024 15:33:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6DCCDB24212
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2024 12:27:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5401CB39B68
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Dec 2024 14:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B539E1B0F1A;
-	Wed,  4 Dec 2024 12:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB00C1F8AD6;
+	Wed,  4 Dec 2024 14:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hsAux2YV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ej8G7Xci"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DAA1B6CF9
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Dec 2024 12:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9701EE006
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Dec 2024 14:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733315224; cv=none; b=NyDF+3MvGT9FxI+KNddFgpVb5pgFzJX9hG4uVLsb9UsOmJOz8F3sjychnd264ADVgn7oB//9NKexjzE2BdOHXz7Iw0SCAXSNSM9xcgQGBQpOX3yZWe+mIaZiday8py2UdzKMXKY+RvWR5iYqaa1duWkCuQSUFLCXdPGqSR5PmN4=
+	t=1733321042; cv=none; b=bdxlvYTf6wcfa1YIpdEP7RzAmlBsRTNrPvnFUonOzecOmstFfXDDGVM3J/ybu6/4OI+My8AoANMnPCND0kag+GqgpdJ5RRzd3Eblu3+XQsoTNV6fjE87ehzXRwT+n4xzANtoYL/Bi5gbDjBBUxBzNSvRWodrrT0u1pzp0y6/d4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733315224; c=relaxed/simple;
-	bh=LYYCIj0NL0rTx72/1sxRiv5FXsD1F+nydLeDSXsUxdI=;
+	s=arc-20240116; t=1733321042; c=relaxed/simple;
+	bh=ps12D0bZwaHSb7xCO9IWU0B3C0hpC+lWqvNS9LburUk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6+aG0Eq72bPNkBGA4FLX1g2u49MGK+hHsowyjrLS70NudVMfs6HYmS0k4TXTa0fjP5A5D0+/SyUq1Ic7Dz4l2CSDkxHFan7YCba7URXWhABEADGb0Y77gEuKPjD//td/FT3+JSMwYQigE15GcwJxazRVy4touFBec5rF7GhzVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hsAux2YV; arc=none smtp.client-ip=198.175.65.12
+	 Content-Type:Content-Disposition:In-Reply-To; b=OTpgLThIwJbJfA/ZCKPNTz7tjNpy3d9F6c0CuETsuOC/u1/2eJj8tWu4Sd1rDJJpfWlCh+5FuPLImJNtCpkqiaSDGb7R789SkhwZh5EscGagD2yhm/zWufDldMiQyopCZNIOu+ZN8P0Eh1Ki99UV8AbmVBwvOd0rgkQ1fVhitbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ej8G7Xci; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1733315223; x=1764851223;
+  t=1733321041; x=1764857041;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=LYYCIj0NL0rTx72/1sxRiv5FXsD1F+nydLeDSXsUxdI=;
-  b=hsAux2YVjYKrVVZWEmbdX/DD0uwpudVVoyY9Om01HyQs0YDmB0tTeqvS
-   xYxqyFHHsL6FZjAfNhbT3TjKs0eTlv6vgvRZrTvh6zJz+rr8Xe2dGtFkv
-   tXaO9C+mVngxr7KQ443NLHemrW/SdG/ddl4ToFUQ0UdNf3UambK85eiZU
-   aOuu11hSmNSzQQjtYnkKg5koDEXUSNA91ySc2KJWaOgbyg86dx1jrlqAb
-   axgp+LwjhSRKxW4aVa5XqI9+ZCAXid48kj5B9g+v1IIZT7PuU3UEW6fOq
-   /77DxiiPPntCdjfBItiuCoQynt+O1c0ovs95pNw+RJr335vt+/jNsGLDU
-   g==;
-X-CSE-ConnectionGUID: mAuak3izSCOBFC+Wqg2alQ==
-X-CSE-MsgGUID: 7wqpp9YyTdqhwHwQnu8aRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="44954194"
+  bh=ps12D0bZwaHSb7xCO9IWU0B3C0hpC+lWqvNS9LburUk=;
+  b=ej8G7XcixhiHQU45JrnQWFal8RFp+q2VyA1OjZCH/tEr3m3CBEAsabfs
+   vZXaw6fmOBxl/gtoKABGUsfK+W7RNT7u45eZ7TjC3L1b0q1AyPCOhS3BE
+   JxRRFizi04lY8oB1amApJeUC+KAGdhq5ebdToMGRbfg+U+9W1pmgHsKBK
+   Brc6bsroBsPiJ9Izj6EMZsYAvHWPCGzQ+ZIAodg0I1szl146PrhbR/hTc
+   2CeVq4HnjpTapv6Ms8ixax/w9J9WwppbUG27z+rM/YDwFXLjtS0ENkOGm
+   6Az0AKbPE6DvXUjAkGqmE8R0tyUi2p1118opQ2dTB22Oweb7JT96FAi83
+   Q==;
+X-CSE-ConnectionGUID: Q67cROpdTiuL8uSouB5zUw==
+X-CSE-MsgGUID: Um8B6spMR+W0C5UpTDZCKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11276"; a="44617548"
 X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="44954194"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 04:27:03 -0800
-X-CSE-ConnectionGUID: 6gRbt8nvS6OfoB7VXbkZ5g==
-X-CSE-MsgGUID: 3RyWak2fSx201/pQ5cSdfg==
+   d="scan'208";a="44617548"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2024 06:03:59 -0800
+X-CSE-ConnectionGUID: gjC+p+6jSOm3xsHwcCUIuA==
+X-CSE-MsgGUID: ntkKCBwAQ+69Ytn2tRSSBQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,207,1728975600"; 
-   d="scan'208";a="93614813"
+   d="scan'208";a="94600329"
 Received: from lkp-server02.sh.intel.com (HELO 1f5a171d57e2) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Dec 2024 04:27:00 -0800
+  by orviesa008.jf.intel.com with ESMTP; 04 Dec 2024 06:03:57 -0800
 Received: from kbuild by 1f5a171d57e2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tIoT3-00030n-2v;
-	Wed, 04 Dec 2024 12:26:57 +0000
-Date: Wed, 4 Dec 2024 20:26:33 +0800
+	id 1tIpys-00035B-24;
+	Wed, 04 Dec 2024 14:03:54 +0000
+Date: Wed, 4 Dec 2024 22:03:35 +0800
 From: kernel test robot <lkp@intel.com>
 To: NeilBrown <neilb@suse.de>, Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	David Disseldorp <ddiss@suse.com>, linux-nfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, David Disseldorp <ddiss@suse.com>,
+	linux-nfs@vger.kernel.org
 Subject: Re: [PATCH 2/2] NFS: move _maxsz and _sz #defines to the function
  which they describe.
-Message-ID: <202412042050.xy58M3zN-lkp@intel.com>
+Message-ID: <202412042135.z6hANLmp-lkp@intel.com>
 References: <20241204025703.2662394-3-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -96,35 +96,29 @@ url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/NFS-fix-open_ow
 base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
 patch link:    https://lore.kernel.org/r/20241204025703.2662394-3-neilb%40suse.de
 patch subject: [PATCH 2/2] NFS: move _maxsz and _sz #defines to the function which they describe.
-config: powerpc-linkstation_defconfig (https://download.01.org/0day-ci/archive/20241204/202412042050.xy58M3zN-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 592c0fe55f6d9a811028b5f3507be91458ab2713)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241204/202412042050.xy58M3zN-lkp@intel.com/reproduce)
+config: x86_64-randconfig-161 (https://download.01.org/0day-ci/archive/20241204/202412042135.z6hANLmp-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241204/202412042135.z6hANLmp-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202412042050.xy58M3zN-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202412042135.z6hANLmp-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   In file included from fs/nfs/nfs4xdr.c:40:
-   In file included from include/linux/mm.h:2213:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> fs/nfs/nfs4xdr.c:3040:9: warning: 'decode_sequence_maxsz' macro redefined [-Wmacro-redefined]
+>> fs/nfs/nfs4xdr.c:3040: warning: "decode_sequence_maxsz" redefined
     3040 | #define decode_sequence_maxsz   (op_decode_hdr_maxsz + \
-         |         ^
-   fs/nfs/nfs4xdr.c:135:9: note: previous definition is here
+         | 
+   fs/nfs/nfs4xdr.c:135: note: this is the location of the previous definition
      135 | #define decode_sequence_maxsz   0
-         |         ^
->> fs/nfs/nfs4xdr.c:6068:9: warning: 'encode_sequence_maxsz' macro redefined [-Wmacro-redefined]
+         | 
+>> fs/nfs/nfs4xdr.c:6068: warning: "encode_sequence_maxsz" redefined
     6068 | #define encode_sequence_maxsz   (op_encode_hdr_maxsz + \
-         |         ^
-   fs/nfs/nfs4xdr.c:134:9: note: previous definition is here
+         | 
+   fs/nfs/nfs4xdr.c:134: note: this is the location of the previous definition
      134 | #define encode_sequence_maxsz   0
-         |         ^
-   3 warnings generated.
+         | 
 
 
 vim +/decode_sequence_maxsz +3040 fs/nfs/nfs4xdr.c
