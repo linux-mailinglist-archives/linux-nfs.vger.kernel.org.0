@@ -1,91 +1,128 @@
-Return-Path: <linux-nfs+bounces-8351-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8352-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F8929E5301
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 11:53:38 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D8A49E54B5
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 12:57:48 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BEFF2875BD
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 10:53:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29EEB1882C93
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 11:57:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A41AC1DAC81;
-	Thu,  5 Dec 2024 10:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D88432144DC;
+	Thu,  5 Dec 2024 11:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yq/jr4EJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSCGyNrj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754621DA60C;
-	Thu,  5 Dec 2024 10:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB6D212B19;
+	Thu,  5 Dec 2024 11:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733396001; cv=none; b=SkGva4fCRbnK+3sqKcBaofQO3zliqzLS4mUBEAfoe2XX9tAsbN/IyFeMLSZZOFnTWlujCfDBHq1ft22T5jHFMnJMEV9/obiLt+wvFe2lAxCNGWQvXFB9LO4gBs/pxno5gZ2K5hyjeNjIbqmBXYb4a7yfk56C2DAr7ftUk7H7Ysc=
+	t=1733399863; cv=none; b=B70DfhGh863IqhJ4kkKJm9ntOKCju+X/d3GibcJO7QwMoiSKDl52qPPuRk506ZTfGXtTa+CWKqvlIppNsqyNUAnh8XQjKmcoTY27qUe0FxaFJ9T4tJS9jAQQeXgoRL179sVK4U7J1CqhLsIHKmxkxn0NVLrybfMf5zT/dryO0XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733396001; c=relaxed/simple;
-	bh=IFQCT/71vDZWwVkDuN7CYbIjKP67ulnwIBjAeTNpINE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qjERvhWm6zZb04xhHp6IAABbz0CR4ugi03XGdDB0HA0iR+8Ma7zmLQtEc4bP6oGRoQ2QWwRlC+MbA5V8BBon/L9ZB53ZtfzfTZ2QudS+lBO7Z+x14mXmotKSb2mXxcGzEX6HB9+dKLx1o0TtXIE5KXo4zRBVPUgDehm8eB6eGEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yq/jr4EJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082BDC4CED1;
-	Thu,  5 Dec 2024 10:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733396001;
-	bh=IFQCT/71vDZWwVkDuN7CYbIjKP67ulnwIBjAeTNpINE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yq/jr4EJYZ/lZkHKEKf+QQ0JGXsoGogFusR7s0ZvNrzHI/hPiEic4TrX/7+v3eQHI
-	 iXRmL66NA2KKUEDzNY+iKgltF0WEQ8+NhmspqV5mFBXMVS34xoBPHtvO9nnEEOfr6K
-	 CmEL33VgQ8Knv9JLNpWZzRFbJRfKcGa3OpT+e8KAGA12TwrPWkTHXNYcZd0hU2dacu
-	 UbQ5jZTjcXjybhoHwzKH9zYpX11aMdZyLTL+T113otC7JMN4mRbpw1j+6kFSlyEA+J
-	 aveGg3O3j+/v3TeuMr8oKY5HptUMyE8q+y3k+P2kIAgU28eVKzs/GC9W54wVP+9n1K
-	 6tnVCqkpPQUhg==
-Date: Thu, 5 Dec 2024 11:53:16 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Amir Goldstein <amir73il@gmail.com>, Jeff Layton <jlayton@kernel.org>, 
-	Erin Shepherd <erin.shepherd@e43.eu>, Chuck Lever <chuck.lever@oracle.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	stable <stable@kernel.org>
-Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export
- operations as only supporting file handles
-Message-ID: <20241205-waghalsige-hetzjagd-b271c6c2efea@brauner>
-References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
- <Z1D2BE2S6FLJ0tTk@infradead.org>
+	s=arc-20240116; t=1733399863; c=relaxed/simple;
+	bh=XFUbX/YZsggW3Lj2pO1KVc1XwRkwRE4Aixa8DIpVws8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pGOywji4T0YP0sYaqDRM5ZM8jqH1zU7Bt4bzmbUqKzJ2wuVIWHgWB2AQeJQDKMB50j5tkVZ/L7TZh74QA9vZRz6e1QsqYRcZuw4q+F8a35wE3/29CZOg/+ZVQtaiGJpR8zkbfRCVtV35Dt8U2NWeL4Eq65puoCgg2sHm+FdP+hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSCGyNrj; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa1e6ecd353so130073466b.1;
+        Thu, 05 Dec 2024 03:57:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733399859; x=1734004659; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KHqFbmX+c3US0UItNKn2A73h3t1bWaRXaMWTZM0i8F8=;
+        b=NSCGyNrjUts5rNAcFKR9aYuHdj+Fs4shdJNS3EbQ0QMEeKvn5GHhuo9cLis7qqBhJ6
+         lyBXe1w1duZyWsNsr2QlEUcPnZu/AclqhFbtDDJcXy09sbQr+4X7Iw07jfIANrKUsatx
+         TTked6sYdI9rhH/HJIpSqkxzg7qDjkuWzIOsczCKYFlJeTGIb5IP3NxIs4eiIv5Nvuiv
+         1khgUBI9UoUcWP9hawVwnMWnmweF2NW/bazxd+jTPfHekp4eL6g0LaMNlBZmtWEoqDu7
+         zFy+ZYDm2SA287SCQIj7fAFEChW2jC1wNOtTO25zT0vJY/x67K0ad+yLKegdeQ7ZKToL
+         DNKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733399859; x=1734004659;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KHqFbmX+c3US0UItNKn2A73h3t1bWaRXaMWTZM0i8F8=;
+        b=iZF/TMMKGdVMe6oQFOeHuAQpTYfhIhR+C73gjJELNhFdtyN0Z7paSJsoi/7ng7rAFm
+         VKwsTkFq9kYG/LGHRmcIxMNE0FTC1/CIeGTqxIDj90P6LC5W0k3atzGf8pS2YxgER2+8
+         HYHLKrKUV9VLBakLoHHYMcDt3rvYP38GB1ap7jKSNJR7uhHF9JHmhN+7KdU8DNPJUvRn
+         hqinb9cKPEv8oN0vAJYKb7YJNJ39UUHDiHfTCfHehJ7pAvz/gxdua62bbImZ1VbxGGUV
+         jo0tHxtKZWq0nrl0HSEhN9hwqFpVq/7WDbKCpdLW5YlMi1rJ/XRrF4m6OBkZcorJeJOo
+         jvdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhncMAEzzvspz/K5GvzzksmTvVYXaXPijLxfE8D2PyCANOuizko7UCU6u01hFPksjVpi2TaNe5fqtnfiBW@vger.kernel.org, AJvYcCV2S59lSMxVGKtfOqIcN42fY87w2XFF7MAQvmLa/fYx2Jdx/5Btl4ibrw95VetDAn4mQUANoAsyPFu1feAD@vger.kernel.org, AJvYcCXD7YMr8bGFbkHNfzfl74Jua9JATnznNg5bhy/LUZFPWfMk7ojxWXGAz6KMqatp5iq1g1DaypW2W8fK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYk4Jge3adv5fPW/VWqVzoS6S5m+bxIs/YMzitgSFeLNcvqbw9
+	6RSaMus/EkhDfgfziLbsDMi1B4Iit/pDmGzf2zYbYkAOdqMiTgeyWieTL2iXL8JYIXi1qmuS6bC
+	IRkLWIgzWuDzKuHcSdSda7WhYuuw=
+X-Gm-Gg: ASbGncvkKKhxaYUcApe/CS/7o9KDgTalh6Dtisc3GVdvyxLaOSvDKqMOhfEl0yBAEnm
+	i5QHfIgV2Ru2VYTaQl+MxkExOPtBrMAU=
+X-Google-Smtp-Source: AGHT+IFtSaplePUPTfu2b1qsmyJ35bqUssMpJaodaFJv+wLRQVvbm9L+aDyCbbZud1nyfYd6OmNtABo73+XJa8y0VQc=
+X-Received: by 2002:a05:6402:3511:b0:5d0:ccce:34b2 with SMTP id
+ 4fb4d7f45d1cf-5d10cb99fcfmr14494613a12.29.1733399859160; Thu, 05 Dec 2024
+ 03:57:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org> <Z1D2BE2S6FLJ0tTk@infradead.org>
 In-Reply-To: <Z1D2BE2S6FLJ0tTk@infradead.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 5 Dec 2024 12:57:28 +0100
+Message-ID: <CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export operations
+ as only supporting file handles
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+	Erin Shepherd <erin.shepherd@e43.eu>, Chuck Lever <chuck.lever@oracle.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, stable <stable@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 04, 2024 at 04:38:28PM -0800, Christoph Hellwig wrote:
+On Thu, Dec 5, 2024 at 1:38=E2=80=AFAM Christoph Hellwig <hch@infradead.org=
+> wrote:
+>
 > On Sun, Dec 01, 2024 at 02:12:24PM +0100, Christian Brauner wrote:
 > > Hey,
-> > 
+> >
 > > Some filesystems like kernfs and pidfs support file handles as a
 > > convenience to enable the use of name_to_handle_at(2) and
 > > open_by_handle_at(2) but don't want to and cannot be reliably exported.
 > > Add a flag that allows them to mark their export operations accordingly
 > > and make NFS check for its presence.
-> > 
-> > @Amir, I'll reorder the patches such that this series comes prior to the
-> > pidfs file handle series. Doing it that way will mean that there's never
+> >
+> > @Amir, I'll reorder the patches such that this series comes prior to th=
+e
+> > pidfs file handle series. Doing it that way will mean that there's neve=
+r
 > > a state where pidfs supports file handles while also being exportable.
 > > It's probably not a big deal but it's definitely cleaner. It also means
 > > the last patch in this series to mark pidfs as non-exportable can be
 > > dropped. Instead pidfs export operations will be marked as
 > > non-exportable in the patch that they are added in.
-> 
+>
 > Can you please invert the polarity?  Marking something as not supporting
 > is always awkward.  Clearly marking it as supporting something (and
 > writing down in detail what is required for that) is much better, even
 > it might cause a little more churn initially.
+>
 
-Fine by me but let's do that as a cleanup on top, please. Especially
-because we need to backport this to stable.
+Churn would be a bit annoying, but I guess it makes sense.
+I agree with Christian that it should be done as cleanup to allow for
+easier backport.
+
+Please suggest a name for this opt-in flag.
+EXPORT_OP_NFS_EXPORT???
+
+Thanks,
+Amir.
 
