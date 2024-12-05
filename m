@@ -1,92 +1,90 @@
-Return-Path: <linux-nfs+bounces-8346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8347-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B906B9E4B41
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 01:38:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F097B9E4C1A
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 03:04:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A82FF18806B1
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 00:38:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96A971881567
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Dec 2024 02:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4873EEAFA;
-	Thu,  5 Dec 2024 00:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EC737E782;
+	Thu,  5 Dec 2024 02:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="avJhwTcR"
+	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="W7X4k78R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from hyub.org (hyub.org [45.33.94.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C70D531;
-	Thu,  5 Dec 2024 00:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC144C96
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Dec 2024 02:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733359112; cv=none; b=sh31RdNcQ/qjswxdf54/jUJEHZEJEploZZ6I5basA3oXyzykOmnnxlQWMlOw9qbVAc9sVWL5ah7LuIatT1+mLOxdlyZOIPpB4SSfWIjMPhMYgzkQpKyjFykLUW/wfIeo0CyX702gU/RI6jaex2eoTEE+2EN6Qlu7vHu3akKBbAQ=
+	t=1733364266; cv=none; b=eLtXbJS0VnkD4wzRYqOnL+eXCK+gO5xGfhhD1ciHV323JsG5/BUYDPbtZlk8kj0Wd0GTHMLbDR8L+EV/2O/h9nS2XyWp0gjoCTOl7OhzcTt+j19WG+wtJj02sPsMMJhLlBkuGxUAm8TEGZ3lg+LnNgGbk6hmxnu3AIMl5wfP3/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733359112; c=relaxed/simple;
-	bh=9YVm5TgWSjCYrpLpmtVTO6+TJLEENd0UFDiH4YMYOaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GRi/CUo52s1sVP2yUQBaYKrEbG7corfq+mW8Z9rGXquCXXCWy5SpTLDtHr7dTdRMwoOfITvj+/6ZzcmciEUJ0rah1KQ1awTNdIo3zscjH6kVc0RYXzCFriEKI1eu3Lfw3BRAR65wu9oSes5WpKLZkXDwIGmVWpT8S5ekeF+BQBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=avJhwTcR; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Y+oQ0S3ae3U/S6jQx7MGFvQACNYgjF/pNRRinNABr+U=; b=avJhwTcRsgyF38KzhEz/82L23x
-	jjBEnChetTC0jTQmzrlc8kPnox81tZC8a3Ah5PX3Uk8AJ0XiXt0sScmbbR6ltbmZa2A0fHcGaWpXF
-	IYsfk0pUKwjYlI3lOMRUTZyU7bJ1JwicfmJXHZc80HVFSAp7vkJzjBlm9ePYnCQCz+bCHXqHF4KCu
-	aZ4q0G9PRzZKeGePjj2qL2/KobMOHecU8Jz0Zhi9Bmeh4PsT3xQJTAOMuD7sKKYLR2tglHzkXsFh7
-	S0akLWr75xXgL9US362UL7s3Qvpmo10uJT75ZgHhcQA+zJEHcW4+l8pJInBXzQMQvyjhg9rf3PEfC
-	FD20zKOQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tIzsy-0000000ENKv-0WGX;
-	Thu, 05 Dec 2024 00:38:28 +0000
-Date: Wed, 4 Dec 2024 16:38:28 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>, Jeff Layton <jlayton@kernel.org>,
-	Erin Shepherd <erin.shepherd@e43.eu>,
-	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	stable <stable@kernel.org>
-Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export
- operations as only supporting file handles
-Message-ID: <Z1D2BE2S6FLJ0tTk@infradead.org>
-References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
+	s=arc-20240116; t=1733364266; c=relaxed/simple;
+	bh=oZUjEt1nAp88r7ZXD9ohmf6+l/gVxKkb0aT/NmBpH9I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=WNnojYBvMeiDeTLFTpp9auJ68PQJzA8jMkHix55X4Chr0lT8rmMyc4oLmHtl2vd7uMHYkX64r+xUBXQd0/DgjiP+OoStS+4Bzn8BWHs4OrZG3GO9RWDd4lSxNQxZDd+yF/esZGcnox+yIOHnMitxhYvnSIuiQQg2B93+xb2Fx1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=W7X4k78R; arc=none smtp.client-ip=45.33.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
+	t=1733364260;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9m/CTvspUXjyBkKUm8pU+9Dowbxk9sI4aH5MM6NAKTA=;
+	b=W7X4k78RjSSOV6525PNFCq3Ge82KpdHBYiGJyarR8EhJ/sQTtGmb8lUyOgoIlZqbEty86u
+	4g8Mtn/29j6dFzbKjONZZnFI9Vu84WxXLATng2S1JlFM4f9z9YkqClHmBfNysKs1NYr2lq
+	d3sVeJB2ut0H7XJCRroznMTtD/dAI5Z5luHNag4br3Y7CRz+QRJ12HaMg6jig2Dnjdgft9
+	m1L3N3Zdyg0CmlScqh5FFrZDCh0mq3TfM43f/EBzTvnFyZoUkSDux1uTdR+aCX2XsIgS81
+	ycKAqozR0aJAt+Gz38SNKMLjGLSPA4QO8eTVpNzzR2+RaxVLVRgxRh51jSwdlA==
+Message-ID: <ccb8fb74-7b8d-418b-bbbc-9848aeb8a6c8@hyub.org>
+Date: Thu, 5 Dec 2024 02:04:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+From: Christopher Bii <christopherbii@hyub.org>
+Subject: [PATCH 0/2] nfsd symlink vulnerability patch
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Dec 01, 2024 at 02:12:24PM +0100, Christian Brauner wrote:
-> Hey,
-> 
-> Some filesystems like kernfs and pidfs support file handles as a
-> convenience to enable the use of name_to_handle_at(2) and
-> open_by_handle_at(2) but don't want to and cannot be reliably exported.
-> Add a flag that allows them to mark their export operations accordingly
-> and make NFS check for its presence.
-> 
-> @Amir, I'll reorder the patches such that this series comes prior to the
-> pidfs file handle series. Doing it that way will mean that there's never
-> a state where pidfs supports file handles while also being exportable.
-> It's probably not a big deal but it's definitely cleaner. It also means
-> the last patch in this series to mark pidfs as non-exportable can be
-> dropped. Instead pidfs export operations will be marked as
-> non-exportable in the patch that they are added in.
+It is hinted in the configuration files that an attacker could gain 
+access to arbitrary folders by guessing symlink paths that match 
+exported dirs, but this is not the case. They can get access to the root 
+export with certainty by simply symlinking to "../../../../../../../", 
+which will nearly* always return "/".
 
-Can you please invert the polarity?  Marking something as not supporting
-is always awkward.  Clearly marking it as supporting something (and
-writing down in detail what is required for that) is much better, even
-it might cause a little more churn initially.
+This is due to realpath() being called in the main thread which isn't 
+chrooted, concatenating the result with the export root to create the 
+export entry's final absolute path which the kernel then exports.
+
+Also, a linker issue arose so I have added another small hack just to 
+get it compiled correctly.
+
+
+Christopher Bii (2):
+   Exportfs changes - When a export rootdir is present, nfsd_realpath()
+     wrapper is used to   avoid symlink exploits. - Removed
+     canonicalization of rootdir paths. Export rootdir must now be   an
+     absolute path. - Implemented nfsd_path.h
+   Temporary fix for build issue for mount util.
+
+  support/export/export.c     |  24 +--
+  support/include/nfsd_path.h |   9 +-
+  support/misc/nfsd_path.c    | 362 ++++++++++++------------------------
+  support/nfs/exports.c       |  59 +++---
+  utils/exportfs/exportfs.c   |   8 +-
+  5 files changed, 170 insertions(+), 292 deletions(-)
+
+-- 
+2.47.1
 
 
