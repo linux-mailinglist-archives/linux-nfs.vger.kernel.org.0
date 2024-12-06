@@ -1,101 +1,101 @@
-Return-Path: <linux-nfs+bounces-8368-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8369-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D634D9E63FD
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 03:19:45 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81CB19E63FE
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 03:19:46 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD5AB18826EC
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 02:19:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 425E5284685
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 02:19:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0263149E1A;
-	Fri,  6 Dec 2024 02:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0078F1428E3;
+	Fri,  6 Dec 2024 02:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RdhcPUhl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Qmxop8XL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RdhcPUhl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Qmxop8XL"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eFTAEE98";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r19Y3XNL";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eFTAEE98";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r19Y3XNL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ABF144D0A
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 02:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED411553A7
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 02:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733451571; cv=none; b=lcz5HQDEICG66NfMwk/fQvKpb8lPGlzl1TUynsgcqYHFu107pO1Vca0qm1ErM5NSAugX03+AotxDAc1PQDTeUuaibyJImOIPnV+YAsRef+PmYfzx7ATXC2g92+soZ/9BFmVz/CMrc214yoXII84rL4qLZ4qEo81q8Fs+RIdhPm4=
+	t=1733451575; cv=none; b=eTlTfOa/77Ou/cyVnQzEVuBDwUzkeh6aI7b0LJDM3i+cWFdDkxQHkQ+LeV1Q6ZDQzDOl78Q7BIaIKqe5P1TM0uLpsYUEghcuUK+yfU2lPQ9hdaybCS3gKlhjup+04IQCaijzEs8icTUBBpzzq9C/Hcg30CWCORcDowRiBbcdqMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733451571; c=relaxed/simple;
-	bh=2s6W/0IxliIVmvW0NIPJbEldixOohfQLzcGZlv2Nn9c=;
+	s=arc-20240116; t=1733451575; c=relaxed/simple;
+	bh=DWZ/St+CP0QuIRVM1V/Cb8VydQulV9D4NKJot5WxD30=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HK3j7TfW3Tx50i0rFscPiyDRMF1Ts6ngK176QL4YJmNi8JPmCz9WCs8P6nIjB3hXrRKaAQfPIgcUrBzwy6PhNoqkTg1tvG7/gXDoLq3y948xdX/K05KnV6/JjG2X/nrQJG9Mk0HfHFU9rvZCtKqhPrv5kY8wcJIul6dkO3HZPtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RdhcPUhl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Qmxop8XL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RdhcPUhl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Qmxop8XL; arc=none smtp.client-ip=195.135.223.131
+	 MIME-Version; b=mZN+q0KRd/AcHZDWpiRfTT9WFH2h2dzJrWnODV3GbZUtemfkqbYEXMiE98kLtxH+Y66CdcPDsZLx58O0Nz4JxvMpF1fbnVizE9RP1hMgMDS7zRSbzyNKxVs9Ur1GcplScDO6vHggiQjHn1SlmoyC+cIyF5MRbQBoIcSO6lPiarc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eFTAEE98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r19Y3XNL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eFTAEE98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r19Y3XNL; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2D2701F394;
-	Fri,  6 Dec 2024 02:19:28 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id C96591F38E;
+	Fri,  6 Dec 2024 02:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1733451568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1733451572; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jl39J4Nyot8HiS3DTwx4WMT1lrl5PmwM+SJxwteyKww=;
-	b=RdhcPUhlctd83xt6MRxYZ4Y5L3Ebeg6UaU+DgzaoRpAU7hENkaQykflVT0iiXUgHABkQDp
-	F4GoTsIttRZLwP9AsU3d4gw0LVVQiGXDLA37ugjGVtrjcLuEJohwfWY4cb01vXCF6jIl9g
-	KeFvwwMLYEeKkmQaJdRVQr3Cq1iZg+8=
+	bh=svBMtH4AAINyjWLO4QEAx/fGIJOMR3kJWC34oxf54gE=;
+	b=eFTAEE982d8ObNVjWza+WHCuVKB3Y33rISjsgYPVi+9mK67RFC5bvaxWdgpG0D/POUaw5Z
+	A/duCmwGyJsFOMa9OwPWzbF35t0lWAw6zRF0L+kFe9Rdla4mU9i8Yc9losyOYuZ4we25Xq
+	k4QJF589urRyKIi/xl1qZoCcIGAflsA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1733451568;
+	s=susede2_ed25519; t=1733451572;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jl39J4Nyot8HiS3DTwx4WMT1lrl5PmwM+SJxwteyKww=;
-	b=Qmxop8XLXoAekuzzT4vg4rQxZIG8Wox0BDs/c7mBlHU/UN5hpAzGjRZxBthM8CvO9s93F2
-	Vu30lnAVsEmUhKCA==
+	bh=svBMtH4AAINyjWLO4QEAx/fGIJOMR3kJWC34oxf54gE=;
+	b=r19Y3XNLHqz2tfuh1LAIkJ/1T0SFt5pLHoMohkO0QX6VsCEW1DrtEi1L1aEZR6TtgmovJy
+	2ha/DXQ0SubMxYBg==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RdhcPUhl;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Qmxop8XL
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=eFTAEE98;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=r19Y3XNL
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1733451568; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1733451572; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jl39J4Nyot8HiS3DTwx4WMT1lrl5PmwM+SJxwteyKww=;
-	b=RdhcPUhlctd83xt6MRxYZ4Y5L3Ebeg6UaU+DgzaoRpAU7hENkaQykflVT0iiXUgHABkQDp
-	F4GoTsIttRZLwP9AsU3d4gw0LVVQiGXDLA37ugjGVtrjcLuEJohwfWY4cb01vXCF6jIl9g
-	KeFvwwMLYEeKkmQaJdRVQr3Cq1iZg+8=
+	bh=svBMtH4AAINyjWLO4QEAx/fGIJOMR3kJWC34oxf54gE=;
+	b=eFTAEE982d8ObNVjWza+WHCuVKB3Y33rISjsgYPVi+9mK67RFC5bvaxWdgpG0D/POUaw5Z
+	A/duCmwGyJsFOMa9OwPWzbF35t0lWAw6zRF0L+kFe9Rdla4mU9i8Yc9losyOYuZ4we25Xq
+	k4QJF589urRyKIi/xl1qZoCcIGAflsA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1733451568;
+	s=susede2_ed25519; t=1733451572;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jl39J4Nyot8HiS3DTwx4WMT1lrl5PmwM+SJxwteyKww=;
-	b=Qmxop8XLXoAekuzzT4vg4rQxZIG8Wox0BDs/c7mBlHU/UN5hpAzGjRZxBthM8CvO9s93F2
-	Vu30lnAVsEmUhKCA==
+	bh=svBMtH4AAINyjWLO4QEAx/fGIJOMR3kJWC34oxf54gE=;
+	b=r19Y3XNLHqz2tfuh1LAIkJ/1T0SFt5pLHoMohkO0QX6VsCEW1DrtEi1L1aEZR6TtgmovJy
+	2ha/DXQ0SubMxYBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E9E0313A15;
-	Fri,  6 Dec 2024 02:19:26 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 92CB613A15;
+	Fri,  6 Dec 2024 02:19:31 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tGFNJy5fUmc+JAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 06 Dec 2024 02:19:26 +0000
+	id E6wAEjNfUmdCJAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 06 Dec 2024 02:19:31 +0000
 From: NeilBrown <neilb@suse.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 05/11] nfs: use clear_and_wake_up_bit() in pnfs code
-Date: Fri,  6 Dec 2024 13:15:31 +1100
-Message-ID: <20241206021830.3526922-6-neilb@suse.de>
+Subject: [PATCH 06/11] nfs: use store_release_wake_up() for clearing d_fsdata
+Date: Fri,  6 Dec 2024 13:15:32 +1100
+Message-ID: <20241206021830.3526922-7-neilb@suse.de>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241206021830.3526922-1-neilb@suse.de>
 References: <20241206021830.3526922-1-neilb@suse.de>
@@ -106,11 +106,10 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 2D2701F394
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: C96591F38E
+X-Spam-Level: 
 X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
@@ -135,62 +134,35 @@ X-Spamd-Result: default: False [-3.01 / 50.00];
 	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCPT_COUNT_THREE(0.00)[3];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
 X-Spam-Flag: NO
-X-Spam-Level: 
 
-The wake_up_bit() interface is fragile as it sometimes needs an explicit
-barrier before it is called.  It is generally better to use the combined
-interfaces which have all necessary barriers.
+The barrier provided by smp_store_release() is before the store, while
+wake_up_var() needs a full barrier *after* the store.
 
-The usage of wake_up_bit() in NFS/pnfs IS safe as the required barriers
-are included.  But it is ugly to need that explicit barrier.
-
-This patch changes to use clear_and_wake_up_bit() which transparently
-includes the required barrier.  Also use test_and_clear_wake_up_bit() in
-one case.
+The new store_release_wake_up() interface encodes all the barriers
+making this sort of bug harder to write.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/pnfs.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ fs/nfs/dir.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 5963c0440e23..445ba09ba324 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2034,9 +2034,8 @@ static void nfs_layoutget_begin(struct pnfs_layout_hdr *lo)
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 492cffd9d3d8..ded86facef8f 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1837,9 +1837,7 @@ static void block_revalidate(struct dentry *dentry)
  
- static void nfs_layoutget_end(struct pnfs_layout_hdr *lo)
+ static void unblock_revalidate(struct dentry *dentry)
  {
--	if (atomic_dec_and_test(&lo->plh_outstanding) &&
--	    test_and_clear_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags))
--		wake_up_bit(&lo->plh_flags, NFS_LAYOUT_DRAIN);
-+	if (atomic_dec_and_test(&lo->plh_outstanding))
-+		test_and_clear_wake_up_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
- }
- 
- static bool pnfs_is_first_layoutget(struct pnfs_layout_hdr *lo)
-@@ -2048,9 +2047,7 @@ static void pnfs_clear_first_layoutget(struct pnfs_layout_hdr *lo)
- {
- 	unsigned long *bitlock = &lo->plh_flags;
- 
--	clear_bit_unlock(NFS_LAYOUT_FIRST_LAYOUTGET, bitlock);
--	smp_mb__after_atomic();
--	wake_up_bit(bitlock, NFS_LAYOUT_FIRST_LAYOUTGET);
-+	clear_and_wake_up_bit(NFS_LAYOUT_FIRST_LAYOUTGET, bitlock);
- }
- 
- static void _add_to_server_list(struct pnfs_layout_hdr *lo,
-@@ -3221,9 +3218,7 @@ static void pnfs_clear_layoutcommitting(struct inode *inode)
- {
- 	unsigned long *bitlock = &NFS_I(inode)->flags;
- 
--	clear_bit_unlock(NFS_INO_LAYOUTCOMMITTING, bitlock);
--	smp_mb__after_atomic();
--	wake_up_bit(bitlock, NFS_INO_LAYOUTCOMMITTING);
-+	clear_and_wake_up_bit(NFS_INO_LAYOUTCOMMITTING, bitlock);
+-	/* store_release ensures wait_var_event() sees the update */
+-	smp_store_release(&dentry->d_fsdata, NULL);
+-	wake_up_var(&dentry->d_fsdata);
++	store_release_wake_up(&dentry->d_fsdata, NULL);
  }
  
  /*
