@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-8386-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8387-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 597AF9E6F79
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 14:49:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0822D9E6FC6
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 15:03:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE5411882BF1
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 13:49:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8CC116DE8B
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 13:59:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142C95464A;
-	Fri,  6 Dec 2024 13:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6264207E1E;
+	Fri,  6 Dec 2024 13:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nz6VRR4/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtMsakNb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04A336126
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 13:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0641207E1D
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 13:59:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733492963; cv=none; b=IlEsSVa9bZa3E7yU0OTmgcTIRloZSrPzI+kHpqn/8EHzQhxc6Mmbj6RKQwpoZPeUmj/QnntkhC2bV7dVfwohBetWcXWe6CyH17x3uLq7/tWACOCqEE05gkxxGXsH+9iBap0sYd9aTN4xrQcLbDoCtBcH2re7aCpGL+6iSxYrOuE=
+	t=1733493588; cv=none; b=rZFIhSKkLP+Z2HKJXJAUSJ8qFqGYvJfwydQ/bVIUd8RRDxNN0aCSahck/kjxbGWB5npYidKI/+LmO+MctoQanwQ9EeqpJqRTxRLBi3OjJwm4iD7whFcLJ8ZohEMT/Jl2bVPm4ziVcCkvxhjRY+mJtDkFaakFHLNwTb5yk3p5/Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733492963; c=relaxed/simple;
-	bh=73jRODbhoyG9oGhgaz9i3v77Z3nZuzkuI5SKFv9oeSA=;
+	s=arc-20240116; t=1733493588; c=relaxed/simple;
+	bh=7R0cn5bTvHrDmaIo34UkjB0P7lFLllKP2++R1RSqe50=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GOd0HqDrZVAlw6+6CHlVvp82r7SG1B8ZbgB3sjkrkfYAfY2ZJX7Z5xLKS4+S8c8hwETFDpuQWBtxH3gDOqT/bAb9nN0ENJk5LSdWgJnaXrNucs+2F2BELmYQrJALZ6sLP1KoXePoww9QZ50dksiZzWrIULPnagrShYE4i+iQrwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nz6VRR4/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC735C4CED1;
-	Fri,  6 Dec 2024 13:49:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ALXYJAx1l0vuvzW17wFZT/rVKvAVN4jek0NrAFltETITj48MQ3mix6sI1pT1QLwFLkPMZj4t7tvXo93GPJUdh6HG+Q2S1HTkawauNOkjzQvUchD7U2cuLe22i9JcjziqN6LhcrdAatrz4WhoS8L0dMzSPn2sMyqP7tgnSdF1zY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtMsakNb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5957C4CED1;
+	Fri,  6 Dec 2024 13:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733492962;
-	bh=73jRODbhoyG9oGhgaz9i3v77Z3nZuzkuI5SKFv9oeSA=;
+	s=k20201202; t=1733493587;
+	bh=7R0cn5bTvHrDmaIo34UkjB0P7lFLllKP2++R1RSqe50=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Nz6VRR4/JScwv1xAzniYSAX+JfX4NczXlZHvpm83wvkVf8QgtDjYNAxffkD+zl9LM
-	 acS0aCA4b9tCIGUnXvf+XWBvk+b0HOcIlkNOGhxBEmyRTuqytLvDNvuK8PrtIkKYkb
-	 agWCzGQqUlRpTxszapXtsinLiDrcT2KQP+LZPbFyGKAFWhZghQrmSCQvaY2Xt348Af
-	 oeV+4c90WE2NXKRSxujmbH103VMdp8B7V8NixF3p/o73iarx2QrFJ6FxO+TtGtiAd/
-	 7ifRZitp/khRKHxe7Aqz6fKM1LIElXS709sgpCGRsKSLSS3FhGOWQ3hZBAJ9OroyWc
-	 3b0qJHMEKvZ2A==
-Message-ID: <88bcf45dd056320171de9442d5d3684a2f37a612.camel@kernel.org>
-Subject: Re: [PATCH 4/6] nfsd: allocate new session-based DRC slots on
- demand.
+	b=AtMsakNbdNfpHrfz2WizisvVvmT5p9Hn2K0nR/41LyG2n7SkY1E+zIPhuWoBWL1ym
+	 BPjW+AU+W6x5lqQU4oOD6JtWGXu7n7RCysOs+VpJLwONXMFLGpOseXtzQX9PPCF9Ve
+	 SPC3OEzgpCNZiBQHenZMv411djWIyu3CqejkQFESt0ET0FgepAhzl4WS7Zcjwm8Dmr
+	 KVNzPPoX7VaKRzaFHR5sEIkAzB7AN0sIr96vBVUjnQEFzoBcHwEDkWloIn6fmcamIZ
+	 L9KgHJmkooTtSSHO6Siv8BeesUCliZmUA9l4X33Qi8QmT7bSh4erV2z2FpbYEF4yL5
+	 s76oHqvdeTm3g==
+Message-ID: <26db8205b69b77bcef586885c1bbb05afb4e37dd.camel@kernel.org>
+Subject: Re: [PATCH 5/6] nfsd: add support for freeing unused session-DRC
+ slots
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>
 Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Date: Fri, 06 Dec 2024 08:49:20 -0500
-In-Reply-To: <173344943283.1734440.2066475669031086509@noble.neil.brown.name>
-References: <>, <911b04ba2e5389f97fdeaac632b8fb8c66da130e.camel@kernel.org>
-	 <173344943283.1734440.2066475669031086509@noble.neil.brown.name>
+Date: Fri, 06 Dec 2024 08:59:45 -0500
+In-Reply-To: <173346513837.1734440.3876153166552002328@noble.neil.brown.name>
+References: <>, <fc4542f333779947144c19024bbb924a82932bff.camel@kernel.org>
+	 <173346513837.1734440.3876153166552002328@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,124 +137,60 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-12-06 at 12:43 +1100, NeilBrown wrote:
+On Fri, 2024-12-06 at 17:05 +1100, NeilBrown wrote:
 > On Fri, 06 Dec 2024, Jeff Layton wrote:
 > > On Fri, 2024-12-06 at 11:43 +1100, NeilBrown wrote:
-> > > If a client ever uses the highest available slot for a given session,
-> > > attempt to allocate more slots so there is room for the client to use
-> > > them if wanted.  GFP_NOWAIT is used so if there is not plenty of
-> > > free memory, failure is expected - which is what we want.  It also
-> > > allows the allocation while holding a spinlock.
-> > >=20
-> > > Each time we increase the number of slots by 20% (rounded up).  This
-> > > allows fairly quick growth while avoiding excessive over-shoot.
-> > >=20
-> > > We would expect to stablise with around 10% more slots available than
-> > > the client actually uses.
-> > >=20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++++++++++++++-----
-> > >  1 file changed, 35 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 67dfc699e411..ec4468ebbd40 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -4235,11 +4235,6 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> > >  	slot =3D xa_load(&session->se_slots, seq->slotid);
-> > >  	dprintk("%s: slotid %d\n", __func__, seq->slotid);
+>=20
+> > > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> > > index 382cc1389396..c26ba86dbdfd 100644
+> > > --- a/fs/nfsd/xdr4.h
+> > > +++ b/fs/nfsd/xdr4.h
+> > > @@ -576,9 +576,7 @@ struct nfsd4_sequence {
+> > >  	u32			slotid;			/* request/response */
+> > >  	u32			maxslots;		/* request/response */
+> > >  	u32			cachethis;		/* request */
+> > > -#if 0
+> > >  	u32			target_maxslots;	/* response */
+> > > -#endif /* not yet */
+> > >  	u32			status_flags;		/* response */
+> > >  };
 > > > =20
-> > > -	/* We do not negotiate the number of slots yet, so set the
-> > > -	 * maxslots to the session maxreqs which is used to encode
-> > > -	 * sr_highest_slotid and the sr_target_slot id to maxslots */
-> > > -	seq->maxslots =3D session->se_fchannel.maxreqs;
-> > > -
-> > >  	trace_nfsd_slot_seqid_sequence(clp, seq, slot);
-> > >  	status =3D check_slot_seqid(seq->seqid, slot->sl_seqid,
-> > >  					slot->sl_flags & NFSD4_SLOT_INUSE);
-> > > @@ -4289,6 +4284,41 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> > >  	cstate->session =3D session;
-> > >  	cstate->clp =3D clp;
-> > > =20
-> > > +	/*
-> > > +	 * If the client ever uses the highest available slot,
-> > > +	 * gently try to allocate another 20%.  This allows
-> > > +	 * fairly quick growth without grossly over-shooting what
-> > > +	 * the client might use.
-> > > +	 */
 > >=20
-> > 20% seems like a reasonable place to start, but I do wonder if this
-> > might need to be tunable under some workloads. Oh well, we can cross
-> > that bridge if/when someone complains.
->=20
-> I think that if we need a tunable, then it is a failure of design.
-> If?when someone complains we may well need to redesign.  I hope we could
-> avoid a tunable in that design!
->=20
-
-I hope so too.
-
-> > =20
-> > > +	if (seq->slotid =3D=3D session->se_fchannel.maxreqs - 1 &&
-> > > +	    session->se_fchannel.maxreqs < NFSD_MAX_SLOTS_PER_SESSION) {
-> > > +		int s =3D session->se_fchannel.maxreqs;
-> > > +		int cnt =3D DIV_ROUND_UP(s, 5);
-> > > +
-> > > +		do {
-> > > +			/*
-> > > +			 * GFP_NOWAIT is a low-priority non-blocking
-> > > +			 * allocation which can be used under
-> > > +			 * client_lock and only succeeds if there is
-> > > +			 * plenty of memory.
-> > > +			 * Use GFP_ATOMIC which is higher priority for
-> > > +			 * xa_store() so we are less likely to waste the
-> > > +			 * effort of the first allocation.
-> > > +			 */
 > >=20
-> > I don't know here. Why not just use GFP_NOWAIT for the xa_store too? If
-> > we're so memory constrained that that fails, we're probably better off
-> > releasing the slot.
+> > I don't see where the above "#if 0" gets removed in patch 6. Shouldn't
+> > it be?
 >=20
-> Maybe.  I'm open simple using GFP_NOWAIT both places.
-> Most often xa_store won't need to allocate anything - it adds slots to
-> the array in batches (at least I assume it does - anything else would be
-> inefficient).  So it mostly won't matter.
-> So if seems at all inelegant - let's drop it.
->=20
+> You are misreading.  It is being removed here in patch 5.=20
+> It was added in 2.6.38 in=20
+> Commit b85d4c01b76f ("nfsd41: sequence operation")
 >=20
 
-I'd prefer we drop that part. It probably won't matter much in the long
-run anyway.
+Oh, sorry -- my mistake. That's what I get for reviewing patches just
+before boarding a redeye flight!
 
 >=20
 > >=20
-> > > +			slot =3D kzalloc(slot_bytes(&session->se_fchannel),
-> > > +				       GFP_NOWAIT);
-> > > +			if (slot &&
-> > > +			    !xa_is_err(xa_store(&session->se_slots, s, slot,
-> > > +						GFP_ATOMIC | __GFP_NOWARN))) {
-> > > +				s +=3D 1;
-> > > +				session->se_fchannel.maxreqs =3D s;
-> > > +			} else {
-> > > +				kfree(slot);
-> > > +			}
-> > > +		} while (slot && --cnt > 0);
-> > > +	}
-> > > +	seq->maxslots =3D session->se_fchannel.maxreqs;
-> > > +
-> > >  out:
-> > >  	switch (clp->cl_cb_state) {
-> > >  	case NFSD4_CB_DOWN:
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
-> >=20
+> > While it makes for a larger patch, I think we'd be better served by
+> > squashing 5 and 6 together. It doesn't make sense to add this core
+> > infrastructure without something to call it.
+>=20
+> I find it easier to review if the distinct elements of functionality are
+> kept separate.  But if both you and Chuck want just one patch here, I
+> can do that.
 >=20
 
+The proposed code is bisectable, so I don't feel too strongly about it.
+Adding in unused functions is "Not The Way We (Usually) Do Things"
+though.
+
+I think in this case it was harder for me to review, since I had to
+skip ahead to patch #6 to see how reduce_session_slots() would actually
+be used. The spin_trylock(), in particular was confusing until I
+realized it was being called from a shrinker that iterated over all of
+the clients and spinning there is probably not good.
+
+Either way, a kerneldoc header over reduce_session_slots() that
+explains this subtlety would be nice.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
