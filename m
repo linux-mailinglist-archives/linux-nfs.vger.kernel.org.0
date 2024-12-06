@@ -1,89 +1,103 @@
-Return-Path: <linux-nfs+bounces-8401-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8402-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BAB19E7B34
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 22:56:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 503909E7B6E
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 23:12:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6BB221885E30
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 21:56:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BA6E16A041
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 22:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17D8D1AAA3A;
-	Fri,  6 Dec 2024 21:56:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166641E2007;
+	Fri,  6 Dec 2024 22:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy4Omo7z"
+	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="t1Y2TObz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hyub.org (hyub.org [45.33.94.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BDA22C6C3
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 21:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCCC22C6C0
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 22:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733522195; cv=none; b=OG+NkY+8UXJfyDendCIbYwE4UtRM/8/jS4mga4Rjt9dCrES0/w+CeJ0RYwUPkpkFyRdH1uG+ys1q55lcU6NecV40/x/OL0rkK/KBQnSmEY8gE1uesQvx37xUrcFL1OcLanuV+CXph3LxuNSy5xjv3s2YgUGYmeDPTXHa2RMYi5M=
+	t=1733523170; cv=none; b=bqgD+XVA2ie3VHlh7sYAPc5vdSD5GnLcb76YvaPBtaQFE4Wk6fmZsagpxU+gjYzFTvpm4KxIDsWy/vGa/eD6zYjDtOSFyFuJf7PSDj9LGcKwfHD6vxHnFMoNL6Z8ZoCgRPJ2TZMUGLe63OBHTcR3cYz1tPSUDX2yaCqtrFnNXz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733522195; c=relaxed/simple;
-	bh=XIkFEw5ClcNqk83odWvidPMRr0ufIgEowdu6iHACqQs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DQC9FAFtMtAF8HupAwAKYnSorIJffYWmcgdJitTsYD2j9lGFVcFBvCFHvbeyTLB9/Ohohj583Ufz0gxehhjLVXYF1575GxIhtIuuH/1PUj085/jcGke/pfb+0zg/aulZlXzB7OGZlryucgfvO1bxUI5qkHVJu3L06hrOB09U1X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy4Omo7z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E14C4CED1;
-	Fri,  6 Dec 2024 21:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733522194;
-	bh=XIkFEw5ClcNqk83odWvidPMRr0ufIgEowdu6iHACqQs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jy4Omo7zfV5Ka0NiAWipxhrvfGPtBWgrsUJy5H/3DZlNJMp8RYOu8DVhk3Wpa3vRs
-	 qKNkXQ7uI7bOVkBqOWrDG+jKr1Z5wXDvBR5C7e5BRce83XlLFJ/xPXeyCD5jG+5mD+
-	 THTS6yyfqw55AidcQ1tj8rNoetXbo/P9ccl63g5DbzIyH/ZFMiTzPu9XCx2HnTi70Y
-	 /oZsMTD+zrC/7tFC3iWEVfwbyyY8tzYQhP7gmo9qagUWCXQkUZFZK/8hsJxPoOhtRD
-	 A60tz7rKOCGm0iuD60FvSLqupPhcnGUqplyUzClavYH/yEiXXgIzI9HzPRFxOFUmTP
-	 JlatNEp9hJhlQ==
-From: cel@kernel.org
-To: Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 0/2] nfsd: use new wake_up_var interface
-Date: Fri,  6 Dec 2024 16:56:28 -0500
-Message-ID: <173352216221.458035.12030085264827993988.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241206025723.3537777-1-neilb@suse.de>
-References: <20241206025723.3537777-1-neilb@suse.de>
+	s=arc-20240116; t=1733523170; c=relaxed/simple;
+	bh=uD5u+DDja1KSzz2v5g8CwudHCF/Msl9v0aWeiddDo/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i9Xmb8pGxKli+GONjjKwjwXO6x1lavg6gCmgzCOjnw/Grpw4wXHgeTu9KZlp3/wpd2Dm+6gabXWpS0Amad4BIz/KVPHPie6rcfIG28UL7oUwmBNpJwsSB2vV/sIKSSRZENKYjeFfovwUNC4Yuplc6NNd9gc4EMspWGdgHSynlw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=t1Y2TObz; arc=none smtp.client-ip=45.33.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
+	t=1733523160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EYFLzz+xiRzwaWZryCofz5R6HWzz8+Eqiro0UqmLN9Y=;
+	b=t1Y2TObz+X+bg3r3Iw6RQBsjyWfF4IJDU0m25Z0cFEj7gCl9bruzMQhlp23dU2/oz8f/UZ
+	ok0g4A/EB1F9S/sZLjS6sbPvasqwYQlff6xI7kIqahHt628ZdYYg2JpdZX+p9dYwunAILv
+	w0lQvHBZjM2PJTC/Lr6ZEZLxNdZj0HhXQqYfNardGuwhuTr6lyELcv40mY9mD7OjB0MtnC
+	Zp+I8XpxTtUolr2rFgutfx0tmXc1dxiAm9MPR8OxL6eE0YlL8QWBcoeZ4iSx38Ry1czyA+
+	diLtOB+K9OV7KvXSh0XQArK0uF+bkK3zV8q6e5M9cFOqSdGUFdBc9rG9ZZ50ZA==
+From: Christopher Bii <christopherbii@hyub.org>
+To: steved@redhat.com
+Cc: Christopher Bii <christopherbii@hyub.org>,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/5] nfs export symlink vulnerability fix (duplicate(ish))
+Date: Fri,  6 Dec 2024 17:11:52 -0500
+Message-ID: <20241206221202.31507-1-christopherbii@hyub.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hello,
 
-On Fri, 06 Dec 2024 13:55:51 +1100, NeilBrown wrote:
-> wake_up_var() in a fragile interface as it sometimes needs a memory
-> barrier before it.  Recently new interfaces were added which include all
-> required barriers.
-> 
-> These patches update nfsd and svc parrts of sunrpc to use new interfaces
-> where appropriate.
-> 
-> [...]
+It is hinted in the configuration files that an attacker could gain access
+to arbitrary folders by guessing symlink paths that match exported dirs,
+but this is not the case. They can get access to the root export with
+certainty by simply symlinking to "../../../../../../../", which will
+always return "/".
 
-Applied to nfsd-testing for v6.14, thanks!
+This is due to realpath() being called in the main thread which isn't
+chrooted, concatenating the result with the export root to create the
+export entry's final absolute path which the kernel then exports.
 
-[1/2] nfsd: use new wake_up_var interfaces.
-      commit: 70b79974d849d8ff1f60295c03600f9c9db4da05
-[2/2] sunrpc/svc: use store_release_wake_up()
-      commit: 101543f023804bc0e62a2fdb15e143c022fedc7c
+PS: I already sent this patch to the mailing list about the same subject
+but it was poorly formatted. Changes were merged into a single commit. I
+have broken it up into smaller commits and made the patch into a single
+thread. Pardon the mistake, first contribution.
 
---
-Chuck Lever
+Thanks
+
+Christopher Bii (5):
+  nfsd_path.h - nfsd_path.c: - Configured export rootdir must now be an
+    absolute path - Rootdir is into a global variable what will also be
+    used to retrieve   it later on - nfsd_path_nfsd_rootdir(void) is
+    simplified with nfsd_path_rootdir   which returns the global var
+    rather than reprobing config for rootdir   entry
+  nfsd_path.c: - Simplification of nfsd_path_strip_root(char*)
+  nfsd_path.h - nfsd_path.c: - nfsd_path_prepend_dir(const char*, const
+    char*) -> nfsd_path_prepend_root(const char*)
+  NFS export symlink vulnerability fix - Replaced dangerous use of
+    realpath within support/nfs/export.c with   nfsd_realpath variant
+    that is executed within the chrooted thread   rather than main
+    thread. - Implemented nfsd_path.h methods to work securely within
+    chrooted thread   using nfsd_run_task() helper
+  support/nfs/exports.c - Small changes
+
+ support/export/export.c     |  17 +-
+ support/include/nfsd_path.h |   9 +-
+ support/misc/nfsd_path.c    | 362 ++++++++++++------------------------
+ support/nfs/exports.c       |  49 ++---
+ 4 files changed, 151 insertions(+), 286 deletions(-)
+
+-- 
+2.47.1
 
 
