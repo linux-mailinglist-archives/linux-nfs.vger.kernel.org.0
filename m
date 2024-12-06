@@ -1,100 +1,100 @@
-Return-Path: <linux-nfs+bounces-8370-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8371-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D2709E6400
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A7FB9E63FF
 	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 03:19:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1DCC01882826
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 02:19:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62218163F08
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 02:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2F05156871;
-	Fri,  6 Dec 2024 02:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD03B13C8FF;
+	Fri,  6 Dec 2024 02:19:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Fdfa36Zy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4/fQRaMK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Fdfa36Zy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4/fQRaMK"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rsiikS2J";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xAnRmVxq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Wi/sJ+7u";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TglHwA/1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FED15B0F2
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 02:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A685156236
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 02:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733451580; cv=none; b=Nqd3qfEUFMZFm5FxcFyWcuxjGZFLoj/eblfQVV65KxDZ54dOvVTltXKs1Dkl4gqLZ9SeZqIGLjNj6p4uJlbUQ/i+MLd7Ms9seXH6g5UjqM/qp1rrQZAQC9MjULP7wGClSUgjyGBMM81kmkeEvlRfE7ZQUK0y7JYQuWhR/IGQ+Cc=
+	t=1733451586; cv=none; b=Syh0nyclBIXHTLf1reQ2K3g3nEn6Vwu2jtFDlkq+9f5+YW9R981fshr/cQF3LtYsD7Wb85ybtg2MQcw6QbycCNycrZPvGEV01WX22PUS6xEVD8WuxcMwcBjySVuBtx9w6R7xEU+D/sORSmMbHc3ZJwtXxQdFQi/7bdciK86aNcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733451580; c=relaxed/simple;
-	bh=cVNSAV/8JQMWoju+MYo2Yf/t7TMOEgLlhBSFGtjzZ1c=;
+	s=arc-20240116; t=1733451586; c=relaxed/simple;
+	bh=dGxEauQ5AiclfhaDNdq2WobA3iP6WuROfPZD4be0tTY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j/nup21ltIDmyMK++havAUzlW1+GPanAGwC2Zdmdy9g+ZFGycftoLCLXyKVUkgwP3g4zPZC3qkUQH7QQJ0vDMZHofCwjHAA18D8ybyyemT1lq6T4krGXIivgB/R0VIQqL232MKWEJ+E+trgMjCjm9lcpwDgcMJJG+23kyNmDygA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Fdfa36Zy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4/fQRaMK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Fdfa36Zy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4/fQRaMK; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=SLtVqyqcet7mFthW90VY/WSxcmMC/QqcHxyT23tkmgtOsDLZoiufMpzq0P/WLckmVGOMDt4jhzlPiVovTj7QAKO5GcNcB+AGN3/agGBga3lzr1oJxWK5Ci5EUcutES00BQiSCuMUFQDaj2F3EMMpMUR7L2NeonnyD0eq7DA8PsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rsiikS2J; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xAnRmVxq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Wi/sJ+7u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TglHwA/1; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7D36121167;
-	Fri,  6 Dec 2024 02:19:37 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2E54F1F38E;
+	Fri,  6 Dec 2024 02:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1733451577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1733451583; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UNb/uGc2lPIIxNp5vwEKRcfwzOVAv9zyFlaa3o15TvQ=;
-	b=Fdfa36Zy7YdxOhjTAWV0ivW40Ycp7b2dowlAEmt3F9gOxyI5xX5ZkmMsrUFJVCzvS3mkW+
-	pULfPSEBAWBZl83NuM2C7sRBV/1X1n+aGVNYVCX/xyOaujZMC7KztB2Kyl6vHHfTbB2v/b
-	oKaHKdeaODUVdUzOcKRS462w5cMykdg=
+	bh=bEzXuyO84He5M3buB+jg1R0KA4CrI62RrWSXlq5lffg=;
+	b=rsiikS2Jt3aHhbv1xyC9zAc30AsrsAP5BPTsKwmqPcUzZVHxGwqL8BMM7ReFo94+/rhuV+
+	wnxHNRCRX85OsV8tw85x8jFwk+VSoDUA0iZ7CAb82IAlTrRvoRLk1ZetdenpiPEjF75xoM
+	nwAbH//DxqpN5wza7hEzG5bM6j9O5ts=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1733451577;
+	s=susede2_ed25519; t=1733451583;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UNb/uGc2lPIIxNp5vwEKRcfwzOVAv9zyFlaa3o15TvQ=;
-	b=4/fQRaMK3AIjdUspzqcBrKrqCsr4YI1HsUFo6O5+ue0JMDJhKuwIvaKIZvO6dicryeU6pP
-	J5RPp3ECo8ArqJCA==
-Authentication-Results: smtp-out1.suse.de;
+	bh=bEzXuyO84He5M3buB+jg1R0KA4CrI62RrWSXlq5lffg=;
+	b=xAnRmVxq4whUTPbC5Iblm29L7ie7V730Fnp0+6f8hdLrPzRFvQQJYNTupnA0JRWlpOyAje
+	gX/1bFXE+I892bCQ==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1733451577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1733451582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UNb/uGc2lPIIxNp5vwEKRcfwzOVAv9zyFlaa3o15TvQ=;
-	b=Fdfa36Zy7YdxOhjTAWV0ivW40Ycp7b2dowlAEmt3F9gOxyI5xX5ZkmMsrUFJVCzvS3mkW+
-	pULfPSEBAWBZl83NuM2C7sRBV/1X1n+aGVNYVCX/xyOaujZMC7KztB2Kyl6vHHfTbB2v/b
-	oKaHKdeaODUVdUzOcKRS462w5cMykdg=
+	bh=bEzXuyO84He5M3buB+jg1R0KA4CrI62RrWSXlq5lffg=;
+	b=Wi/sJ+7u+7aB1m0WGDxdQ/NfHvMRdyvreBzm1YLzAnIuorJ3QRdyhgJe7OnD1jcF9ZMxML
+	H+DBssMFOQLM4IJFK3L3eKsTfT9Lvq5jPpPrPup5+mQZ5fsqRWZ+sFGO4Ew9diQkrrQmVN
+	32Zp2uzd/bMMLgPB1T0JCGqIP1663V8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1733451577;
+	s=susede2_ed25519; t=1733451582;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UNb/uGc2lPIIxNp5vwEKRcfwzOVAv9zyFlaa3o15TvQ=;
-	b=4/fQRaMK3AIjdUspzqcBrKrqCsr4YI1HsUFo6O5+ue0JMDJhKuwIvaKIZvO6dicryeU6pP
-	J5RPp3ECo8ArqJCA==
+	bh=bEzXuyO84He5M3buB+jg1R0KA4CrI62RrWSXlq5lffg=;
+	b=TglHwA/1XiwwCk2MB3rhslLgXwXAAyUxb1K9ZZaHObHlTDX/bVpWB9m/fwKscDGRQJkbB7
+	XVzx2YfnRvZMzpBg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4480713A15;
-	Fri,  6 Dec 2024 02:19:35 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EB3A913A15;
+	Fri,  6 Dec 2024 02:19:40 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0ZF6OjdfUmdSJAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 06 Dec 2024 02:19:35 +0000
+	id HaKBJzxfUmdbJAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 06 Dec 2024 02:19:40 +0000
 From: NeilBrown <neilb@suse.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 07/11] sunrpc: discard rpc_wait_bit_killable()
-Date: Fri,  6 Dec 2024 13:15:33 +1100
-Message-ID: <20241206021830.3526922-8-neilb@suse.de>
+Subject: [PATCH 08/11] nfs: discard nfs_wait_bit_killable()
+Date: Fri,  6 Dec 2024 13:15:34 +1100
+Message-ID: <20241206021830.3526922-9-neilb@suse.de>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241206021830.3526922-1-neilb@suse.de>
 References: <20241206021830.3526922-1-neilb@suse.de>
@@ -107,7 +107,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
 X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
@@ -129,60 +129,134 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 X-Spam-Score: -2.80
 X-Spam-Flag: NO
 
-rpc_wait_bit_kill() currently differs from bit_wait() in the it returns
--ERESTARTSYS rather then -EINTR.  The sunrpc and nfs code never really
-care about the difference.  The error could get up to user-space but it
-is only generated when a process is being killed, in which case there is
-no user-space to see the difference.
+This patch changes NFS to use wait_on_bit() instead of
+wait_on_bit_action()
+nfs_wait_bit_killable() is identical to bit_wait() except that it
+returns -ERESTARTSYS instead of -EINTR.  NFS doesn't care about this
+distinction.  The status will often get back to user-space but it will
+only be sent when the process is being killed in which case there is no
+user-space to care.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/sched.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ fs/nfs/file.c      |  5 ++---
+ fs/nfs/inode.c     | 14 ++------------
+ fs/nfs/internal.h  |  1 -
+ fs/nfs/nfs4state.c |  5 ++---
+ fs/nfs/pnfs.c      |  9 +++------
+ 5 files changed, 9 insertions(+), 25 deletions(-)
 
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 1b710ffc7ad6..0618dc586009 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -274,14 +274,6 @@ void rpc_destroy_wait_queue(struct rpc_wait_queue *queue)
- }
- EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 1bb646752e46..0fafdfec5886 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -607,9 +607,8 @@ static vm_fault_t nfs_vm_page_mkwrite(struct vm_fault *vmf)
+ 		goto out;
+ 	}
  
--static int rpc_wait_bit_killable(struct wait_bit_key *key, int mode)
+-	wait_on_bit_action(&NFS_I(inode)->flags, NFS_INO_INVALIDATING,
+-			   nfs_wait_bit_killable,
+-			   TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
++	wait_on_bit(&NFS_I(inode)->flags, NFS_INO_INVALIDATING,
++		    TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+ 
+ 	folio_lock(folio);
+ 	mapping = folio->mapping;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 4c4c3ab57fcd..2f1b4f11a056 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -72,15 +72,6 @@ nfs_fattr_to_ino_t(struct nfs_fattr *fattr)
+ 	return nfs_fileid_to_ino_t(fattr->fileid);
+ }
+ 
+-int nfs_wait_bit_killable(struct wait_bit_key *key, int mode)
 -{
 -	schedule();
 -	if (signal_pending_state(mode, current))
 -		return -ERESTARTSYS;
 -	return 0;
 -}
+-EXPORT_SYMBOL_GPL(nfs_wait_bit_killable);
 -
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
- static void rpc_task_set_debuginfo(struct rpc_task *task)
- {
-@@ -343,7 +335,7 @@ static int rpc_complete_task(struct rpc_task *task)
- int rpc_wait_for_completion_task(struct rpc_task *task)
- {
- 	return out_of_line_wait_on_bit(&task->tk_runstate, RPC_TASK_ACTIVE,
--			rpc_wait_bit_killable, TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
-+			bit_wait, TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
- }
- EXPORT_SYMBOL_GPL(rpc_wait_for_completion_task);
+ /**
+  * nfs_compat_user_ino64 - returns the user-visible inode number
+  * @fileid: 64-bit fileid
+@@ -1419,9 +1410,8 @@ int nfs_clear_invalid_mapping(struct address_space *mapping)
+ 	 * the bit lock here if it looks like we're going to be doing that.
+ 	 */
+ 	for (;;) {
+-		ret = wait_on_bit_action(bitlock, NFS_INO_INVALIDATING,
+-					 nfs_wait_bit_killable,
+-					 TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
++		ret = wait_on_bit(bitlock, NFS_INO_INVALIDATING,
++				  TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+ 		if (ret)
+ 			goto out;
+ 		smp_rmb(); /* pairs with smp_wmb() below */
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index e564bd11ba60..1ec10fa50830 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -451,7 +451,6 @@ extern void nfs_evict_inode(struct inode *);
+ extern void nfs_zap_acl_cache(struct inode *inode);
+ extern void nfs_set_cache_invalid(struct inode *inode, unsigned long flags);
+ extern bool nfs_check_cache_invalid(struct inode *, unsigned long);
+-extern int nfs_wait_bit_killable(struct wait_bit_key *key, int mode);
  
-@@ -982,12 +974,12 @@ static void __rpc_execute(struct rpc_task *task)
- 		/* sync task: sleep here */
- 		trace_rpc_task_sync_sleep(task, task->tk_action);
- 		status = out_of_line_wait_on_bit(&task->tk_runstate,
--				RPC_TASK_QUEUED, rpc_wait_bit_killable,
-+				RPC_TASK_QUEUED, bit_wait,
- 				TASK_KILLABLE|TASK_FREEZABLE);
- 		if (status < 0) {
- 			/*
- 			 * When a sync task receives a signal, it exits with
--			 * -ERESTARTSYS. In order to catch any callbacks that
-+			 * -EINTR. In order to catch any callbacks that
- 			 * clean up after sleeping on some queue, we don't
- 			 * break the loop here, but go around once more.
- 			 */
+ #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+ /* localio.c */
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 9a9f60a2291b..556b521f17eb 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1313,9 +1313,8 @@ int nfs4_wait_clnt_recover(struct nfs_client *clp)
+ 	might_sleep();
+ 
+ 	refcount_inc(&clp->cl_count);
+-	res = wait_on_bit_action(&clp->cl_state, NFS4CLNT_MANAGER_RUNNING,
+-				 nfs_wait_bit_killable,
+-				 TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
++	res = wait_on_bit(&clp->cl_state, NFS4CLNT_MANAGER_RUNNING,
++			  TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+ 	if (res)
+ 		goto out;
+ 	if (clp->cl_cons_state < 0)
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 445ba09ba324..400f409f45fa 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -2022,9 +2022,8 @@ static int pnfs_prepare_to_retry_layoutget(struct pnfs_layout_hdr *lo)
+ 	 * reference
+ 	 */
+ 	pnfs_layoutcommit_inode(lo->plh_inode, false);
+-	return wait_on_bit_action(&lo->plh_flags, NFS_LAYOUT_RETURN,
+-				   nfs_wait_bit_killable,
+-				   TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
++	return wait_on_bit(&lo->plh_flags, NFS_LAYOUT_RETURN,
++			   TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+ }
+ 
+ static void nfs_layoutget_begin(struct pnfs_layout_hdr *lo)
+@@ -3319,9 +3318,8 @@ pnfs_layoutcommit_inode(struct inode *inode, bool sync)
+ 	if (test_and_set_bit(NFS_INO_LAYOUTCOMMITTING, &nfsi->flags)) {
+ 		if (!sync)
+ 			goto out;
+-		status = wait_on_bit_lock_action(&nfsi->flags,
++		status = wait_on_bit_lock(&nfsi->flags,
+ 				NFS_INO_LAYOUTCOMMITTING,
+-				nfs_wait_bit_killable,
+ 				TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+ 		if (status)
+ 			goto out;
+@@ -3369,7 +3367,6 @@ pnfs_layoutcommit_inode(struct inode *inode, bool sync)
+ 		}
+ 	}
+ 
+-
+ 	status = nfs4_proc_layoutcommit(data, sync);
+ out:
+ 	if (status)
 -- 
 2.47.0
 
