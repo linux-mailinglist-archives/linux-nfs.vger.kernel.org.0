@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-8379-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8380-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DFA59E66F4
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 06:40:42 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5FBE9E66F5
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 06:41:37 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA60A1884C99
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 05:40:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 841A6284B58
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Dec 2024 05:41:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51CCE13DDDD;
-	Fri,  6 Dec 2024 05:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96C0313DDDD;
+	Fri,  6 Dec 2024 05:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vz99sNYB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRG/b+Fo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB3281AD7
-	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 05:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08281AD7
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Dec 2024 05:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733463638; cv=none; b=Bwnh4vdRXHshjoD3BET6xoY8SGOs6sMTJhjmtNltmPvNftP/Wl2D8o1Tat3Kbunap3pDH+SW2ThQRnQNMgQ6B7OZ3/oxCgKMjIGjRWFHFnlz1MN6PenXKV785sZD6NlOX24qBPeysgE20r4pLjxRfitnNNo0NG7XWu9WLbUD6GY=
+	t=1733463694; cv=none; b=utWZcc5mstwAbJ8fsV2iMW8eY7shUWRXVjNkEBOLVFgh/vCPLbW9ixK3HTZHZrpGPshfDAF8jyK0dgx9Z3I26mpVULOv9HK98c2Vjq8UqIGHNCtyWS9xpNA3RkSep+cdI1VbYVG5Pb/7+DR3yPgSOt8MWjfnSy/wImv1d8jzjbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733463638; c=relaxed/simple;
-	bh=81Vzg3x+oFTXblD5AyM3DKGzK2KumEZhfqowMhRek2I=;
+	s=arc-20240116; t=1733463694; c=relaxed/simple;
+	bh=dfTKAumwPNXzTVmp46uTkrFTAEOYDJdGkKWQtbpHs7g=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rIK60y1Tjj2K6BlTSUVd+VZw+i1RueG3wqopGAQH6eefuOSG8mWdHlgRLibiLbDpYOrZxtI5SOQ2WonuZhaajcvdZCQPxEF1RznyBHRIMBBrrP8kja7WTdYMEGhS0oZ/Ru4lpVJH3/GuYW9KaVVgCyBq8P0pK/s0lbb5llDcsFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vz99sNYB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72277C4CED1;
-	Fri,  6 Dec 2024 05:40:37 +0000 (UTC)
+	 Content-Type:MIME-Version; b=LSNE3giVYuMqHBSgoCprBEQnHxfBotltVXnuo7hySOgCYHhMT97nI3TsOn6gKVLh/cmNvWLXmIJo+gy4xvuhe/4enhnd6eS8lIOWX7LrZmK1wrASAiWDBN6K8kSZBhKo/82y6JWe5HRURKZ5i8SKzzXOn3a/gg28eJJeoMvdCVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRG/b+Fo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D4BC4CED1;
+	Fri,  6 Dec 2024 05:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733463637;
-	bh=81Vzg3x+oFTXblD5AyM3DKGzK2KumEZhfqowMhRek2I=;
+	s=k20201202; t=1733463694;
+	bh=dfTKAumwPNXzTVmp46uTkrFTAEOYDJdGkKWQtbpHs7g=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Vz99sNYByg1CzWTCtG5fop0t47SdnndKcy7MTGCutvWbLFhFN85QDHIOWxHTAffdm
-	 lv4DUp7R0se9ErHfFDzTVoi8SB0iRA4IX1M0AJai3RnlrGtIx++2oMhjy0ol3qOB0F
-	 FYzwwvbkjBE/FH6HVGvqSIERXsJaGsBfWdnFaXnsfAblOZjKyTPy7LcHWjiiJh47Xd
-	 8eodNkHKEziELhbnP06yLR6FEIxSeCfHGcWGoGNeVN8Z178IkeKKtmQZhVw1aMZXrJ
-	 7gkt4cSqYOWkftnZMq3hwPe0SNVSOva64suVVYW9WEws7sGM5LmsIDbN6roCPfe4Ax
-	 uAcVGh+myA/+Q==
-Message-ID: <36a543b848e59ddf26c85d0c79b7e377d865a0af.camel@kernel.org>
-Subject: Re: [PATCH 1/2] nfsd: use new wake_up_var interfaces.
+	b=SRG/b+Foa1XS6gE9COk/OzioSzz09mNuxe2Elgl/MhhT80lwYY6n+DUGvrqU0Enkq
+	 U3jradx1H++/75oBBN7XrHE9+cLnPwDQBS592Ef+a8QIobvou5MC150F6vwocKNcyz
+	 1/PoP/3PAm+8Pa8Lfn5Ij+HNmLUpBFEFe8+FHHN/kV86vAXV7ZonlIGCx1mYpmy73f
+	 CbZcQCegvu7OVxRqH5wLOp1BF/gLQK6x5FOn5WJU70V8USaZVLZThEhr0L7OIzZE9i
+	 fLTc/pRjPTr7C1GaN88ECxCzcW8IMQhDk9Mzht0UBQ64/qKy95YaC64hgdBy6zfKiq
+	 DDlO/dGaGKbFg==
+Message-ID: <216ae53f9ab71f9e081bf5d9e6fdcbe30d1dbd3d.camel@kernel.org>
+Subject: Re: [PATCH 2/2] sunrpc/svc: use store_release_wake_up()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Thu, 05 Dec 2024 21:40:36 -0800
-In-Reply-To: <20241206025723.3537777-2-neilb@suse.de>
+Date: Thu, 05 Dec 2024 21:41:33 -0800
+In-Reply-To: <20241206025723.3537777-3-neilb@suse.de>
 References: <20241206025723.3537777-1-neilb@suse.de>
-	 <20241206025723.3537777-2-neilb@suse.de>
+	 <20241206025723.3537777-3-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,110 +136,35 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Fri, 2024-12-06 at 13:55 +1100, NeilBrown wrote:
-> The wake_up_var interface is fragile as barriers are sometimes needed.
-> There are now new interfaces so that most wake-ups can use an interface
-> that is guaranteed to have all barriers needed.
->=20
-> This patch changes the wake up on cl_cb_inflight to use
-> atomic_dec_and_wake_up().
->=20
-> It also changes the wake up on rp_locked to use store_release_wake_up().
-> This involves changing rp_locked from atomic_t to int.
+> svc_thread_init_status() contains an open-coded
+> store_release_wake_up().  It is cleaner to use that function directly
+> rather than needing to remember the barrier.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4callback.c |  3 +--
->  fs/nfsd/nfs4state.c    | 16 ++++++----------
->  fs/nfsd/state.h        |  2 +-
->  3 files changed, 8 insertions(+), 13 deletions(-)
+>  include/linux/sunrpc/svc.h | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 3877b53e429f..a8dc9de2f7fb 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1036,8 +1036,7 @@ static void nfsd41_cb_inflight_begin(struct nfs4_cl=
-ient *clp)
->  static void nfsd41_cb_inflight_end(struct nfs4_client *clp)
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index e68fecf6eab5..e4f09f58d58c 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -327,12 +327,7 @@ static inline bool svc_thread_should_stop(struct svc=
+_rqst *rqstp)
+>   */
+>  static inline void svc_thread_init_status(struct svc_rqst *rqstp, int er=
+r)
 >  {
-> =20
-> -	if (atomic_dec_and_test(&clp->cl_cb_inflight))
-> -		wake_up_var(&clp->cl_cb_inflight);
-> +	atomic_dec_and_wake_up(&clp->cl_cb_inflight);
+> -	rqstp->rq_err =3D err;
+> -	/* memory barrier ensures assignment to error above is visible before
+> -	 * waitqueue_active() test below completes.
+> -	 */
+> -	smp_mb();
+> -	wake_up_var(&rqstp->rq_err);
+> +	store_release_wake_up(&rqstp->rq_err, err);
+>  	if (err)
+>  		kthread_exit(1);
 >  }
-> =20
->  static void nfsd41_cb_inflight_wait_complete(struct nfs4_client *clp)
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 741b9449f727..9fbf7c8f0a3e 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -4739,7 +4739,7 @@ static void init_nfs4_replay(struct nfs4_replay *rp=
-)
->  	rp->rp_status =3D nfserr_serverfault;
->  	rp->rp_buflen =3D 0;
->  	rp->rp_buf =3D rp->rp_ibuf;
-> -	atomic_set(&rp->rp_locked, RP_UNLOCKED);
-> +	rp->rp_locked =3D RP_UNLOCKED;
->  }
-> =20
->  static int nfsd4_cstate_assign_replay(struct nfsd4_compound_state *cstat=
-e,
-> @@ -4747,9 +4747,9 @@ static int nfsd4_cstate_assign_replay(struct nfsd4_=
-compound_state *cstate,
->  {
->  	if (!nfsd4_has_session(cstate)) {
->  		wait_var_event(&so->so_replay.rp_locked,
-> -			       atomic_cmpxchg(&so->so_replay.rp_locked,
-> -					      RP_UNLOCKED, RP_LOCKED) !=3D RP_LOCKED);
-> -		if (atomic_read(&so->so_replay.rp_locked) =3D=3D RP_UNHASHED)
-> +			       cmpxchg(&so->so_replay.rp_locked,
-> +				       RP_UNLOCKED, RP_LOCKED) !=3D RP_LOCKED);
-
-nit: try_cmpxchg() generates more efficient assembly. Can we switch to
-that here too?
-
-> +		if (so->so_replay.rp_locked =3D=3D RP_UNHASHED)
->  			return -EAGAIN;
->  		cstate->replay_owner =3D nfs4_get_stateowner(so);
->  	}
-> @@ -4762,9 +4762,7 @@ void nfsd4_cstate_clear_replay(struct nfsd4_compoun=
-d_state *cstate)
-> =20
->  	if (so !=3D NULL) {
->  		cstate->replay_owner =3D NULL;
-> -		atomic_set(&so->so_replay.rp_locked, RP_UNLOCKED);
-> -		smp_mb__after_atomic();
-> -		wake_up_var(&so->so_replay.rp_locked);
-> +		store_release_wake_up(&so->so_replay.rp_locked, RP_UNLOCKED);
->  		nfs4_put_stateowner(so);
->  	}
->  }
-> @@ -5069,9 +5067,7 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct=
- net *net)
->  	 * Some threads with a reference might be waiting for rp_locked,
->  	 * so tell them to stop waiting.
->  	 */
-> -	atomic_set(&oo->oo_owner.so_replay.rp_locked, RP_UNHASHED);
-> -	smp_mb__after_atomic();
-> -	wake_up_var(&oo->oo_owner.so_replay.rp_locked);
-> +	store_release_wake_up(&oo->oo_owner.so_replay.rp_locked, RP_UNHASHED);
->  	wait_event(close_wq, refcount_read(&s->st_stid.sc_count) =3D=3D 2);
-> =20
->  	release_all_access(s);
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index e16bb3717fb9..ba30b2335b66 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -505,7 +505,7 @@ struct nfs4_replay {
->  	unsigned int		rp_buflen;
->  	char			*rp_buf;
->  	struct knfsd_fh		rp_openfh;
-> -	atomic_t		rp_locked;
-> +	int			rp_locked;
->  	char			rp_ibuf[NFSD4_REPLAY_ISIZE];
->  };
-> =20
-
-Looks good otherwise.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
