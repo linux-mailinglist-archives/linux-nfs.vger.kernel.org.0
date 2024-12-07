@@ -1,122 +1,177 @@
-Return-Path: <linux-nfs+bounces-8409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8410-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DD719E7F09
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Dec 2024 09:34:57 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44A3A167D35
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Dec 2024 08:34:54 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CD855896;
-	Sat,  7 Dec 2024 08:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dS9fui4Q"
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05CC59E7F19
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Dec 2024 09:49:22 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF0518638
-	for <linux-nfs@vger.kernel.org>; Sat,  7 Dec 2024 08:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B595F282298
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Dec 2024 08:49:20 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6604113777F;
+	Sat,  7 Dec 2024 08:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaqNOB1B"
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850C413665A;
+	Sat,  7 Dec 2024 08:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733560494; cv=none; b=ku6X338lFOyXSbdkFHMAvu7HVSgcJ/lq42PsVM2npSk2tkBUUlB5q1nt+NY7lElc2v8eUAFFPQnL/qGlWIqK3xCkl3Lj7+8F8yjb6Ivx94oIVpbAvC9kiwYTKD6sV166BQJ9iEUXA8zEIALBuGz5MK+pHt9xd2TbkZVjfS3+5u4=
+	t=1733561357; cv=none; b=ti3cy1SnoO7xcGRTLpGxM6Y9+W+ssijbfA9XsI8Xi+Kt9aFkyZDy0ioNGOQx8ewMM0sbuC7LfqEpDqXXw6Jdxj62zIelJnWL6r6WsZ2sEZVUuovDlHAGobUqD9/juXPJMxsT0TuKofGOEMwL+x1a6wMrFRUg8zYh13POeQAHNaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733560494; c=relaxed/simple;
-	bh=dkrbRpLnL3o2NYZhbOW0uoBfmdmuXOO0he4s/8mkfDU=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=UpsUxV4GIzad6WI6S3A36qst0IfD+Rup+4tZf9XbOIBPeV5Q7rrzMff5c2sJ7Ms0AoCfqSH6wHs+3fWxcTXyP5aZ9ysWXyNIXJJyhBBwGC0IvzJK7k+cnlNEZTTbUZeijwAS2Lv8T2M65couAFrLrxKWQgwE/ZplQxezxpcj5eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dS9fui4Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADEB1C4CECD;
-	Sat,  7 Dec 2024 08:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733560493;
-	bh=dkrbRpLnL3o2NYZhbOW0uoBfmdmuXOO0he4s/8mkfDU=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=dS9fui4QgWSdhKFeSXA7FH/JOA2ki8nLHBN1yLdQK7SNw2/6OIu7N9T0CBEZtK7qT
-	 YC+xB/EKIi5aJMN8bU+VfkKBWTdvn6xVaIi/XKXTyWfK5hVgZaBvIFXdJ8IRXf8Elu
-	 H9UnBoMOTTZ7aVgrRJSQmNOr1fy94uPlsA863A8c5uXIwdNY2haKDfmZsAUdHf39ca
-	 +2QYl/+tWxZNUhcZonNG0jFnn/a748lsvgT8QFF6dXgJ785or82QSkvfohma4OuZuN
-	 Oa56SdzVxovjvdbcCq6q3X5Hb9NnOy8GX0Evh8hUGS8MYljESY/rxqEJvwTLSKWW+G
-	 sygEwOW9XgWKA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B9416380A95D;
-	Sat,  7 Dec 2024 08:35:09 +0000 (UTC)
-From: Chen Chen via Bugspray Bot <bugbot@kernel.org>
-Date: Sat, 07 Dec 2024 08:35:12 +0000
+	s=arc-20240116; t=1733561357; c=relaxed/simple;
+	bh=5GKA+vbte+FsEYYxUpMwZCs4AtQKQ7dQr4JEctxyC3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cS0DVkkZOfnRk1w5z1KCoQ3m1Wzh+m4advRoftkQIT4+TR7Gj7lIEEI2ntmWAeDsi7N8SQ9ps/KGEAFKwGvIjJQ5RO1g9D6bhxaZ7rnKWBaGePQGpVfXxI9zmBcun+KM05vSQq/gx4vSOYVE1YauKx+2k1orpZ6mMUZCT38bdjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaqNOB1B; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9a0ef5179dso356206466b.1;
+        Sat, 07 Dec 2024 00:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733561354; x=1734166154; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/hSP0puytjp0Y0zAx0eNIAWPfHJkDF0VFbADCuhWmQ4=;
+        b=jaqNOB1Bod3dvcexa8nE7cuI7QEtN8hU0oh5k58l+qal30dVZi8SCcO/9UGfO+0pLm
+         PPyox6sFHaQeCbvpoEp4UFrnKN77XtxlJoJd91QcOr26NshqJ7vLXsCkKgEJn25HNun+
+         cEnDaCiLXQBzx9hczqJkCrGFZgeTuS+D2ts3LZ1zvJdB++p6IuEU1pvYiBcDXuo8QD3N
+         hDMjU509iRgCpD1f5dXWAeUtne5O1S6RfpzX6gjQE94TymK7K9POpwr5P3ghNkSTdQqt
+         IV26qiOFWXoIqSlAynjf/6HDI/hzugU4ViEJB0/SHXdOXeWlugDrzfhZtGnAyv+ZDvfQ
+         9uUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733561354; x=1734166154;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/hSP0puytjp0Y0zAx0eNIAWPfHJkDF0VFbADCuhWmQ4=;
+        b=u6xQ295OKVNu6fkFX7AQdpEFoEEIotjb8BnLHxPih583G8H2m8H0UP20zs985uCj5d
+         0JRQ4dgkuXrhLrOjUzE9uaRUTJcoolY7JiDc7H8TIFgx5c3JFn6E08u/I2AuIsg4Di5H
+         9xnqX1jVK4EdpvkdeU8JoOllmxD1dPkyBoQN7Bn8UjvyEJBPdgXE+Jlv991oeFrEhg+U
+         ZfgQziHpFPkabB3l4+Xn7cwN0haPtRn2dTkQYNsu+5HPa+IwpXXgOFhLwhNYITr2jiQ3
+         b7xbMBeW2kUbB37lQwMXV5YgiA1cF31EmjMKC69lV94kjR5mfBXKHy/W1f24fOfl99q0
+         yU9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUWoqO4HeeGPzggrc9ceMjtnWH5OMCrYCBgxStl6Zs3/Czi5ue/6+GoQghcYUh9UBAnpldcy40Rg3CzTBAF@vger.kernel.org, AJvYcCV6an9w9Q2D/h9NvXfXhDnN5f5fqpgUgYPz2JVj5B2YyxhVqHNku1oXvz4IWJnlapBP4ZbkNUiuUEuo@vger.kernel.org, AJvYcCXvAdVo3TGyaj/o3mntOPYT/tGMKc/k3Wlkqzk8FokYhbRv75B3WrZFeyo+q2WsKjF/woA03BJt65FcDH/Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzphTQuhPPY0eJ8dVDuO8v4cJKZTVI+iu1NR4OKlGq7YV32ccBw
+	E3frM5iV+lwAO/sgbYhz1ZIuas1nZlJRHX1cUrpwkBQeGIbrtdfy3lwa8yyu061wRpkGUnQa6id
+	ljVIZOLf9xiXh7jbVhTnEld3qIv9JXFizPXU=
+X-Gm-Gg: ASbGncvWyvl5xjBwESHT1wNOR0w3aqCA2ctsYTZimBq/mY+D9PtXwPpRdYF8FhtxBAI
+	6SWMC2PWZaIV3m9Zh6icqNtbadwvrqD8=
+X-Google-Smtp-Source: AGHT+IHiPKXD6U2wEjizdAdQQpJLBRGoO27NflI25U/GTYqfvZidUlJGCeVyA9IXcSzWD+qq/+d6WVb3tjpBLX7by/o=
+X-Received: by 2002:a17:907:9507:b0:aa6:38e9:9d03 with SMTP id
+ a640c23a62f3a-aa63a09a422mr349425266b.30.1733561353613; Sat, 07 Dec 2024
+ 00:49:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: jlayton@kernel.org, cel@kernel.org, linux-nfs@vger.kernel.org, 
- anna@kernel.org, trondmy@kernel.org
-Message-ID: <20241207-b219535c8-544381616c66@bugzilla.kernel.org>
-In-Reply-To: <20241127-b219535c0-4d5445e74947@bugzilla.kernel.org>
-References: <20241127-b219535c0-4d5445e74947@bugzilla.kernel.org>
-Subject: Re: Possible memory leak on nfsd
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
+ <Z1D2BE2S6FLJ0tTk@infradead.org> <CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
+ <20241206160358.GC7820@frogsfrogsfrogs>
+In-Reply-To: <20241206160358.GC7820@frogsfrogsfrogs>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sat, 7 Dec 2024 09:49:02 +0100
+Message-ID: <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export operations
+ as only supporting file handles
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Christian Brauner <brauner@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, Erin Shepherd <erin.shepherd@e43.eu>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	stable <stable@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Chen Chen added an attachment on Kernel.org Bugzilla:
+On Fri, Dec 6, 2024 at 5:03=E2=80=AFPM Darrick J. Wong <djwong@kernel.org> =
+wrote:
+>
+> On Thu, Dec 05, 2024 at 12:57:28PM +0100, Amir Goldstein wrote:
+> > On Thu, Dec 5, 2024 at 1:38=E2=80=AFAM Christoph Hellwig <hch@infradead=
+.org> wrote:
+> > >
+> > > On Sun, Dec 01, 2024 at 02:12:24PM +0100, Christian Brauner wrote:
+> > > > Hey,
+> > > >
+> > > > Some filesystems like kernfs and pidfs support file handles as a
+> > > > convenience to enable the use of name_to_handle_at(2) and
+> > > > open_by_handle_at(2) but don't want to and cannot be reliably expor=
+ted.
+> > > > Add a flag that allows them to mark their export operations accordi=
+ngly
+> > > > and make NFS check for its presence.
+> > > >
+> > > > @Amir, I'll reorder the patches such that this series comes prior t=
+o the
+> > > > pidfs file handle series. Doing it that way will mean that there's =
+never
+> > > > a state where pidfs supports file handles while also being exportab=
+le.
+> > > > It's probably not a big deal but it's definitely cleaner. It also m=
+eans
+> > > > the last patch in this series to mark pidfs as non-exportable can b=
+e
+> > > > dropped. Instead pidfs export operations will be marked as
+> > > > non-exportable in the patch that they are added in.
+> > >
+> > > Can you please invert the polarity?  Marking something as not support=
+ing
+> > > is always awkward.  Clearly marking it as supporting something (and
+> > > writing down in detail what is required for that) is much better, eve=
+n
+> > > it might cause a little more churn initially.
+> > >
+> >
+> > Churn would be a bit annoying, but I guess it makes sense.
+> > I agree with Christian that it should be done as cleanup to allow for
+> > easier backport.
+> >
+> > Please suggest a name for this opt-in flag.
+> > EXPORT_OP_NFS_EXPORT???
+>
+> That's probably too specific to NFS--
+>
+> AFAICT the goal here is to prevent exporting {pid,kern}fs file handles
+> to other nodes, correct?  Because we don't want to allow a process on
+> another computer to mess around with processes on the local computer?
+>
+> How about:
+>
+> /* file handles can be used by a process on another node */
+> #define EXPORT_OP_ALLOW_REMOTE_NODES    (...)
 
-Created attachment 307330
-dmesg of another 3 crashes
+This has a sound of security which is incorrect IMO.
+The fact that we block nfsd export of cgroups does not prevent
+any type of userland file server from exporting cgroup file handles.
 
-Since reporting I got another 3 crashes. All killed by nfsd.
+I hate to be a pain, but IMO, the claim that inverted polarity is clearer
+is not a consensus and there are plenty of counter examples.
+I do not object to inverting the polarity if a flag name is found
+that explains the property well, but IMO, this is not it.
 
-First one:
-[136965.765431] Out of memory and no killable processes...
-[136965.765433] Kernel panic - not syncing: System is deadlocked on memory
-[136965.766148] CPU: 2 PID: 1856 Comm: nfsd Kdump: loaded Tainted: G            E      6.1.119-1.el9.elrepo.x86_64 #1
-[136965.766852] Hardware name: Dell Inc. PowerEdge R740/0923K0, BIOS 2.22.2 09/12/2024
-[136965.767546] Call Trace:
-[136965.768230]  <TASK>
-[136965.768903]  dump_stack_lvl+0x45/0x5e
-[136965.769571]  panic+0x10c/0x2c2
-[136965.770231]  out_of_memory.cold+0x2f/0x7e
-[136965.770874]  __alloc_pages_slowpath.constprop.0+0x707/0x9d0
-[136965.771518]  __alloc_pages+0x35d/0x370
-[136965.772147]  __alloc_pages_bulk+0x3e5/0x680
-[136965.772766]  svc_alloc_arg+0x81/0x1f0 [sunrpc]
-[136965.773431]  svc_recv+0x1f/0x190 [sunrpc]
-[136965.774089]  ? nfsd_inet6addr_event+0x110/0x110 [nfsd]
-[136965.774726]  nfsd+0x87/0xc0 [nfsd]
-[136965.775347]  kthread+0xe5/0x110
-[136965.775926]  ? kthread_complete_and_exit+0x20/0x20
-[136965.776499]  ret_from_fork+0x1f/0x30
-[136965.777062]  </TASK>
+Maybe opt-out of nfsd export is a little less safer than opt-in, but
+1. opt-out is and will remain the rare exception for export_operations
+2. at least the flag name EXPORT_OP_LOCAL_FILE_HANDLE
+    is pretty clear IMO
 
-Second:
-[167723.787640] WARNING: CPU: 3 PID: 1872 at mm/slab_common.c:957 free_large_kmalloc+0x5a/0x80
-[167723.787667] Modules linked in: <cut here>
-[167723.787874] CPU: 3 PID: 1872 Comm: nfsd Kdump: loaded Not tainted 5.14.0-503.15.1.el9_5.x86_64 #1
-[167723.787882] Hardware name: Dell Inc. PowerEdge R740/0923K0, BIOS 2.22.2 09/12/2024
-[167723.787886] RIP: 0010:free_large_kmalloc+0x5a/0x80
+Plus, as I wrote in another email, the fact that pidfs is SB_NOUSER,
+so userspace is not allowed to mount it into the namespace and
+userland file servers cannot export the filesystem itself.
+That property itself (SB_NOUSER), is therefore a good enough indication
+to deny nfsd export of this fs.
+So really the immediate need for an explicit flag is only to stop exporting
+kernfs/cgroupfs and I don't see this need spreading much further
+(perhaps to nsfs) and therefore, the value of inverting to opt-in is
+questionable IMO.
 
-Third:
-[ 3883.748094] ------------[ cut here ]------------
-[ 3883.748105] WARNING: CPU: 9 PID: 1886 at mm/slab_common.c:957 free_large_kmalloc+0x5a/0x80
-[ 3883.748131] Modules linked in: <cut here>
-[ 3883.748339] CPU: 9 PID: 1886 Comm: nfsd Kdump: loaded Not tainted 5.14.0-503.15.1.el9_5.x86_64 #1
-[ 3883.748342] Hardware name: Dell Inc. PowerEdge R740/0923K0, BIOS 2.22.2 09/12/2024
-[ 3883.748344] RIP: 0010:free_large_kmalloc+0x5a/0x80
-
-File: crash.log (text/plain)
-Size: 31.77 KiB
-Link: https://bugzilla.kernel.org/attachment.cgi?id=307330
----
-dmesg of another 3 crashes
-
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
-
+Thanks,
+Amir.
 
