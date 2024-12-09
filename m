@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-8482-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8483-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A9D29EA107
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 22:16:11 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CD999EA10A
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 22:16:23 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96BEB282F13
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 21:16:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3498C166C6A
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 21:16:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AFA71A08C5;
-	Mon,  9 Dec 2024 21:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F0A1A0BFA;
+	Mon,  9 Dec 2024 21:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGVdm4Jl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+8OTdKs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390391A08AF;
-	Mon,  9 Dec 2024 21:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695551A0BE3;
+	Mon,  9 Dec 2024 21:14:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733778863; cv=none; b=KfeZ4ZTqeKgir2eOv8OZwMePTSSynm+fuJDPUWpd36fj/jr/Q/HYiT1lLLiJh+7axd4tB2uYhEu8FDmXCjA0XOzSoltTqh+9gaMm6bYoh/CT4QBLGH67JLEclJkv80dCX/gy6LnwENct51N0tQTyYm1bKGDQZTAwYWu/1KT7mfM=
+	t=1733778864; cv=none; b=UsZPSEc1ieXaiWorEMzleMDFIsUXS5Fg8Rh78qo4qQYKJ57YXW7TAR+Bcmo5cFplN8pcHeKMEVNDrzv+eHE1phX9Kf2DFWyjfdi0Uemu+Hpj8mkiDX5wGFCovznVK59sNX5TTrg+TKG8A1M6yzeV3eLfQsCzvxD6IY1GSK7rfRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733778863; c=relaxed/simple;
-	bh=9WoUPZjHr8bK84+akahdLMLMXcoDDgjY9wWCKOM+HkQ=;
+	s=arc-20240116; t=1733778864; c=relaxed/simple;
+	bh=rQEx98rn8d9+pbS2nmZE+3Rzrcgee4u6M78asDv5644=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HiWdxGKrDLNvr9OXD9CFG4eHUmvKdciA+oQYIyRxAKiBpqe2Hjab5cd2ZpFlHx4aikP7iTmiq4+NGva3vpP5925TQT/WTuXXV4ubu57EeILsq7SPBtIZgvE0xY8SJNFI8k+++sQEjkJ1qRPHfVz+xkmOGm+V6lDfd/c4xs1zesI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGVdm4Jl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3B12C4CEE4;
-	Mon,  9 Dec 2024 21:14:21 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=TcGRC57Psy+Xnf6TemF3BnEplxS7NVGXxGfnkoguz/WwQaK3TJ5jVA8qnIaUTrzHDU0VZLTQ/IPSrOCcJaSJ0V9ex7QUz7AZH5FmiF/d7t954LQkiGulpv/SYe+DDqF7AnWJwIp1vVRaujEmswKMhxXLIE5AEhZYj6zSe3T5qn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+8OTdKs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4C1C4CED1;
+	Mon,  9 Dec 2024 21:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733778862;
-	bh=9WoUPZjHr8bK84+akahdLMLMXcoDDgjY9wWCKOM+HkQ=;
+	s=k20201202; t=1733778864;
+	bh=rQEx98rn8d9+pbS2nmZE+3Rzrcgee4u6M78asDv5644=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WGVdm4JlgZKwyrWIJtTh4T87O5x7SeMpbVTkF5QXHeP7UaF6hJJeGeae8+axUx/hE
-	 0+BEYYwPNUDkfdSuqvzz9jatfilqBW/ntC1XA9cIOmWpTJNqQHBiBIwH2tFXSt6gra
-	 /Vs51vIBRYRnFg2M0F1vnhsd6YTlo4SQCSWpJOA0f43ku7qvvLZW0zuHm+Ngcoq0k/
-	 VJYR0rExhIaqj2LyfSbOM4hRlII0GZfNw4527P4RYUw7g4Ya5fhAN5caCrCQt0ycyQ
-	 tImtJYoU1zLQl/acJMl7Ty3RuhotxHF6cS2A2CSq3pNpauIyn2bXdhrELftZdJUCGM
-	 OY/t1ptI1MWiA==
+	b=o+8OTdKsrn1sltLnY7OEjSRjDrx2/i1K3HV+daj1gdJGj3iLJhl7CvC4rUbxjBqhl
+	 MaFW5ulxGEpkPORn3ydqs9+7e3OpLn+saCpdI2XfIQE7Gr5X/eiBRBaGsnjPSEUd7u
+	 oYMCAy+JnbRAAtz79LDT74PksJjrn46t5pI37NLQPceCxYGpn72N4BURxrh0ftQfFu
+	 J1t93BHJJ5v7x47IlHY+PUQy2EPoHJfi3AhRWssGMcu2w7BoeNitasgqXr2Jff+Sx+
+	 4kaH5UHlHiS3bBJkykV2nOheVq0XeWIOk0ZCWdIAaAAynPCP6JahRxSK1JjFk+ZC3b
+	 zyqirx3n10U6w==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 09 Dec 2024 16:13:58 -0500
-Subject: [PATCH v5 06/10] nfsd: add support for FATTR4_OPEN_ARGUMENTS
+Date: Mon, 09 Dec 2024 16:13:59 -0500
+Subject: [PATCH v5 07/10] nfsd: rework NFS4_SHARE_WANT_* flag handling
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241209-delstid-v5-6-42308228f692@kernel.org>
+Message-Id: <20241209-delstid-v5-7-42308228f692@kernel.org>
 References: <20241209-delstid-v5-0-42308228f692@kernel.org>
 In-Reply-To: <20241209-delstid-v5-0-42308228f692@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,121 +62,100 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3826; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=9WoUPZjHr8bK84+akahdLMLMXcoDDgjY9wWCKOM+HkQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnV12lqKSDRdIiTE1ufOsYdle1KCEQAxu9zlT3v
- 3HLsSEXd9+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ1ddpQAKCRAADmhBGVaC
- FdB/EACwVd+VXDypvgUJ7QQO15F0DNal7mIHMf8+1p16ZFS+9PnQqKZ23MeA+X9R3UaxUgfO6Fg
- tcEprOXFlkejEo/HZiWUvkpZ9RZgTH19zBraZ+aG0u7hgdcoVzaqkFcWQ0amFL+y5KLt3N+cS8Y
- NPcvRzOzWeENic3ZUvseztcRCSfZ6C8uem6FijAX21NtfSUBsJbqtKl8wg74l5PaQ6kAldbNVIY
- ESvS82TlJsFoRNBSLFoBtlORXw2PPF92QN4udBPp/jq+c0dbUvIqLbO17fJFTfTHzu8WCKW4ze5
- 1ytGgSyD8iriy0S4Ysn2ceI/AYwQXzrcKQn0qbWjaKxKbHgK9rvD+ICpT6H2e4DouJeT2EJz1Ly
- 4Jj1Z4+zQOZ/uVmFJWPpX8UU5VA+sSGk4rUohh8K4ntb2CkQP0FrsyF+qhAe1/ZKHC3l856nDHo
- Q3OzuMVAI3XCvnODl/8qkFK0HWtayfwTF3gJr1Lw7SjrgVgSpc4y0Z9EuT236sFJp7X64u76fEM
- ogkGP6b68CpwnOA/Fo+qOhjUB5FBYeP0uWIVVPztk2alC5GsDZhwB08fRGXg4LWoQE431C7jOhF
- 8PrArZmQlJbniWvXPxEzUmIYrPPD/czXwhQuFeS5Q0uqpLzabm1cpuoJ29uSW/ee1QPml5Kjq4C
- If1wa2cab7QqMLQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3253; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=rQEx98rn8d9+pbS2nmZE+3Rzrcgee4u6M78asDv5644=;
+ b=kA0DAAgBAA5oQRlWghUByyZiAGdXXaWiZQK7EixCCJzVU33DBioa0QVfbEGFjYd6POSvVydKr
+ YkCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJnV12lAAoJEAAOaEEZVoIV96QQAIPs
+ Z2D8rdr8xesCz4br6nT1rY46GeGtI4vBBm13lLl/uRD69/HxrOEKonImHusiwreDRJ4+5O3lVtW
+ EwUloHYnRilp6qZfbx8M6hgkY7+QKSxU80aFNdywqDo5lFnu3oiIcPNwHUuWOms4albC7F2vBY1
+ vr4/SkOygTSStKt0h6+uPLFGT6OxL4uY2ImP/pZBoTyAsNr1nHVDoPPL95sI2OuhgrkuYJZHhri
+ qoELDiZYbyZLPoCt3gM9sRjYySLgoCqbaJaoQ8ne2dBxhiazhraQNLHRxrdm5FrgQftnkJy+gmY
+ E6whZ9TiuR0BiaP98GLgALq8RGq85OuGqZyM1KJVcvYb2s0V3ItZhQbu0sLiBsY03VXWDFlKY+o
+ ksLG1DJ9bWNFmU9PizHPSsDXAYP0IRZoWVcLUDQ+fTtKkbmmUJ6kkvi/MZnKfiEbJ2+n34mG1eD
+ k8NwWThzlbM+IRd17rBxHrZ4EH9beDfyvQCqYxvOwsXW3Rp1xFfMXtzAEV+3xtEcFTKTr1F1j5Y
+ Z9M+YdORFWEhyd4xVMTrxHx67erQjCuqa2zYvk/ZGQrmx2KdfOw5O9V4zta1AA1eBtnh/oNg2CV
+ QNUtVyzruR3Tlc84euMMf1IFBqfbnu8t74I1CbGIyjHvNaD0MrI7f3RzXv+RM3igj+CeSIhTmvm
+ rrnit
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Add support for FATTR4_OPEN_ARGUMENTS. This a new mechanism for the
-client to discover what OPEN features the server supports.
+The delstid draft adds new NFS4_SHARE_WANT_TYPE_MASK values that don't
+fit neatly into the existing WANT_MASK or WHEN_MASK. Add a new
+NFS4_SHARE_WANT_MOD_MASK value and redefine NFS4_SHARE_WANT_MASK to
+include it.
+
+Also fix the checks in nfsd4_deleg_xgrade_none_ext() to check for the
+flags instead of equality, since there may be modifier flags in the
+value.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4xdr.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfsd.h    |  3 ++-
- 2 files changed, 52 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c       | 4 ++--
+ fs/nfsd/nfs4xdr.c         | 2 +-
+ include/uapi/linux/nfs4.h | 7 +++++--
+ 3 files changed, 8 insertions(+), 5 deletions(-)
 
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index b1e71462b9d91119457a60210a07021febedaf5c..4c36e50b9eda119948461411ae8bc851907b2eb3 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6115,10 +6115,10 @@ static void nfsd4_deleg_xgrade_none_ext(struct nfsd4_open *open,
+ 					struct nfs4_delegation *dp)
+ {
+ 	if (deleg_is_write(dp->dl_type)) {
+-		if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_READ_DELEG) {
++		if (open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_READ_DELEG) {
+ 			open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
+ 			open->op_why_no_deleg = WND4_NOT_SUPP_DOWNGRADE;
+-		} else if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG) {
++		} else if (open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG) {
+ 			open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
+ 			open->op_why_no_deleg = WND4_NOT_SUPP_UPGRADE;
+ 		}
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 8c48da421a07bf460ace6eddc140ed5fedffd408..3006406aac8332e27ca9310288c724954f804e75 100644
+index 3006406aac8332e27ca9310288c724954f804e75..7b867d0e5099608cc199c216a6140f3d45292376 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -55,6 +55,7 @@
- #include "netns.h"
- #include "pnfs.h"
- #include "filecache.h"
-+#include "nfs4xdr_gen.h"
+@@ -1067,7 +1067,7 @@ static __be32 nfsd4_decode_share_access(struct nfsd4_compoundargs *argp, u32 *sh
+ 		return nfs_ok;
+ 	if (!argp->minorversion)
+ 		return nfserr_bad_xdr;
+-	switch (w & NFS4_SHARE_WANT_MASK) {
++	switch (w & NFS4_SHARE_WANT_TYPE_MASK) {
+ 	case OPEN4_SHARE_ACCESS_WANT_NO_PREFERENCE:
+ 	case OPEN4_SHARE_ACCESS_WANT_READ_DELEG:
+ 	case OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG:
+diff --git a/include/uapi/linux/nfs4.h b/include/uapi/linux/nfs4.h
+index caf4db2fcbb94686631ec2232a8ff189c97c8617..4273e0249fcbb54996f5642f9920826b9d68b7b9 100644
+--- a/include/uapi/linux/nfs4.h
++++ b/include/uapi/linux/nfs4.h
+@@ -58,7 +58,7 @@
+ #define NFS4_SHARE_DENY_BOTH	0x0003
  
- #include "trace.h"
+ /* nfs41 */
+-#define NFS4_SHARE_WANT_MASK		0xFF00
++#define NFS4_SHARE_WANT_TYPE_MASK	0xFF00
+ #define NFS4_SHARE_WANT_NO_PREFERENCE	0x0000
+ #define NFS4_SHARE_WANT_READ_DELEG	0x0100
+ #define NFS4_SHARE_WANT_WRITE_DELEG	0x0200
+@@ -66,13 +66,16 @@
+ #define NFS4_SHARE_WANT_NO_DELEG	0x0400
+ #define NFS4_SHARE_WANT_CANCEL		0x0500
  
-@@ -3387,6 +3388,54 @@ static __be32 nfsd4_encode_fattr4_xattr_support(struct xdr_stream *xdr,
- 	return nfsd4_encode_bool(xdr, err == 0);
- }
+-#define NFS4_SHARE_WHEN_MASK		0xF0000
++#define NFS4_SHARE_WHEN_MASK				0xF0000
+ #define NFS4_SHARE_SIGNAL_DELEG_WHEN_RESRC_AVAIL	0x10000
+ #define NFS4_SHARE_PUSH_DELEG_WHEN_UNCONTENDED		0x20000
  
-+#define NFSD_OA_SHARE_ACCESS	(BIT(OPEN_ARGS_SHARE_ACCESS_READ)	| \
-+				 BIT(OPEN_ARGS_SHARE_ACCESS_WRITE)	| \
-+				 BIT(OPEN_ARGS_SHARE_ACCESS_BOTH))
-+
-+#define NFSD_OA_SHARE_DENY	(BIT(OPEN_ARGS_SHARE_DENY_NONE)		| \
-+				 BIT(OPEN_ARGS_SHARE_DENY_READ)		| \
-+				 BIT(OPEN_ARGS_SHARE_DENY_WRITE)	| \
-+				 BIT(OPEN_ARGS_SHARE_DENY_BOTH))
-+
-+#define NFSD_OA_SHARE_ACCESS_WANT	(BIT(OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG)		| \
-+					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG)		| \
-+					 BIT(OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL))
-+
-+#define NFSD_OA_OPEN_CLAIM	(BIT(OPEN_ARGS_OPEN_CLAIM_NULL)		| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_PREVIOUS)	| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR)	| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV)| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_FH)		| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH)	| \
-+				 BIT(OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH))
-+
-+#define NFSD_OA_CREATE_MODE	(BIT(OPEN_ARGS_CREATEMODE_UNCHECKED4)	| \
-+				 BIT(OPEN_ARGS_CREATE_MODE_GUARDED)	| \
-+				 BIT(OPEN_ARGS_CREATEMODE_EXCLUSIVE4)	| \
-+				 BIT(OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1))
-+
-+static uint32_t oa_share_access = NFSD_OA_SHARE_ACCESS;
-+static uint32_t oa_share_deny = NFSD_OA_SHARE_DENY;
-+static uint32_t oa_share_access_want = NFSD_OA_SHARE_ACCESS_WANT;
-+static uint32_t oa_open_claim = NFSD_OA_OPEN_CLAIM;
-+static uint32_t oa_create_mode = NFSD_OA_CREATE_MODE;
-+
-+static const struct open_arguments4 nfsd_open_arguments = {
-+	.oa_share_access = { .count = 1, .element = &oa_share_access },
-+	.oa_share_deny = { .count = 1, .element = &oa_share_deny },
-+	.oa_share_access_want = { .count = 1, .element = &oa_share_access_want },
-+	.oa_open_claim = { .count = 1, .element = &oa_open_claim },
-+	.oa_create_mode = { .count = 1, .element = &oa_create_mode },
-+};
-+
-+static __be32 nfsd4_encode_fattr4_open_arguments(struct xdr_stream *xdr,
-+						 const struct nfsd4_fattr_args *args)
-+{
-+	if (!xdrgen_encode_fattr4_open_arguments(xdr, &nfsd_open_arguments))
-+		return nfserr_resource;
-+	return nfs_ok;
-+}
-+
- static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
- 	[FATTR4_SUPPORTED_ATTRS]	= nfsd4_encode_fattr4_supported_attrs,
- 	[FATTR4_TYPE]			= nfsd4_encode_fattr4_type,
-@@ -3487,6 +3536,7 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode_ops[] = {
++#define NFS4_SHARE_WANT_MOD_MASK			0xF00000
+ #define NFS4_SHARE_WANT_DELEG_TIMESTAMPS		0x100000
+ #define NFS4_SHARE_WANT_OPEN_XOR_DELEGATION		0x200000
  
- 	[FATTR4_MODE_UMASK]		= nfsd4_encode_fattr4__noop,
- 	[FATTR4_XATTR_SUPPORT]		= nfsd4_encode_fattr4_xattr_support,
-+	[FATTR4_OPEN_ARGUMENTS]		= nfsd4_encode_fattr4_open_arguments,
- };
- 
- /*
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 4b56ba1e8e48d08c4e3e52f378822c311193c3d4..1955c8e9c4c793728fa75dd136cadc735245483f 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -458,7 +458,8 @@ enum {
- 	(NFSD4_1_SUPPORTED_ATTRS_WORD2 | \
- 	FATTR4_WORD2_MODE_UMASK | \
- 	NFSD4_2_SECURITY_ATTRS | \
--	FATTR4_WORD2_XATTR_SUPPORT)
-+	FATTR4_WORD2_XATTR_SUPPORT | \
-+	FATTR4_WORD2_OPEN_ARGUMENTS)
- 
- extern const u32 nfsd_suppattrs[3][3];
- 
++#define NFS4_SHARE_WANT_MASK	(NFS4_SHARE_WANT_TYPE_MASK | NFS4_SHARE_WANT_MOD_MASK)
++
+ #define NFS4_CDFC4_FORE	0x1
+ #define NFS4_CDFC4_BACK 0x2
+ #define NFS4_CDFC4_BOTH 0x3
 
 -- 
 2.47.1
