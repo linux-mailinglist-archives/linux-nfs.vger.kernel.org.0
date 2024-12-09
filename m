@@ -1,65 +1,64 @@
-Return-Path: <linux-nfs+bounces-8455-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8456-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4A699E9790
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:45:19 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABA649E97B8
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:49:27 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEDD6282E66
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 13:45:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24292166086
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 13:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 051031A23AC;
-	Mon,  9 Dec 2024 13:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D6221B040C;
+	Mon,  9 Dec 2024 13:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jwBxK1Rs"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wKzci/M0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D80935953;
-	Mon,  9 Dec 2024 13:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1E01A238E;
+	Mon,  9 Dec 2024 13:46:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733751912; cv=none; b=O1OHzva6HkeK4oXCiN6dN5BpcO6FdUeFfZjLcDEu97OtYmned24ANVk8Azv1ha4geUnyw2werveeXc7d41nnFibSBsnw46N5w8twdsRf4nBF99+gjm509tTkV0ROz+DrkHO2WELTR9KcuDmAjF8OAKFnV3iBGXc/TQ23++j9nnw=
+	t=1733752019; cv=none; b=B/0WHGxxcMY3KYCxQOlIdXIU/VlQ6FLVtwq5wDbIPkTkTmQXD9qS1m0ruRpcJb4f19N9exHhAcpZPcGm/4teJ3OGyyN52DwLL+ykIi1gjt5CcxEJTQQDIUIcBqHUV47sj0Mcl9bxrTMXdw/FXr5cqZjXt7X5BSKLseP4gmcKqF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733751912; c=relaxed/simple;
-	bh=1a6G46JfjtTX9I6SjXR1A7pNkXwaTOdnMXH2In3vczQ=;
+	s=arc-20240116; t=1733752019; c=relaxed/simple;
+	bh=7YMcql3307lL7mtzM9GeKeg6x8rr1woEKBhM4L9q1YY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAlRvXjih7ppEFi6Xf8b4jqIyh8X/t4r2ssG6C1GJzaRWOJfCFJnGIrTF9a2oozTi6y13AVK6qfBLuy4U/fxpazuWLuakwB/8qjBZVf1IXmHh518qZ3jQaeLmMS+Jv5hg3IVtogNA8NVL0AKszF4GQ1HZcrQwN2oYuy/Z4666zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jwBxK1Rs; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJOhfmibDoOYeUuuF4eINXd5JtZZ2mkDKSMoN+l1pG1sszoH733hAjTH9oGSUqZVN2ILkcDTvxK9qaP8Tdjy0HLgFnREhycUcB0u+eVgsUhxdxQDnxVii6DBDpmWRex/H9H0XQz+fjVayk08gwDJeJo/26GqGpkftzsiZh/2IJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wKzci/M0; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=FVpmPI05TSIP+K81Kd1Fzbdes5yFYSHh6V7vfJ86r/4=; b=jwBxK1RsoDnn1OE6ohrOqQJnCq
-	aeU2BNeJzd8PaAMbkVibitfScV8PpDhw2C5qqk/SNj6rmGAs7N6lDReltM2egjeIQTEXw6TlSji47
-	ZbDGZFds0RfIne5sQ3dXPi4yp6bfUAYqTuCRjsSGz/KGIciDN8oGyx1Fh0qyQCagb0S3dq4dqhIW6
-	PF/Lquz8G+boUHRdnf7n9JbV67TEXc/EvFJJCJc7ShZ/88gvxvHiUSkLfWxvxQe//5qscocXBWAUb
-	F9qEUVAlI6tpwDXW5KlLl4tc3LxcPqAWVut9H0Vq2ouiA4iSzWf4bEaL/0cEL0M49/3OgcgF4DZD5
-	0MaCOxPg==;
+	bh=w43T1I6/sKwJscxNGbfJG/M/ns6oG3NjgCwcsgsn5ec=; b=wKzci/M0+tJjPJMVBnZLPgTW6a
+	gQ0H2/IbEZgQ212cFKxiI67Ey3pi4lT7duv3vIwB2y04YsEr92pdfx0aWKdU/4yVmOaqIFcpGH9Is
+	EjIxHi64qjRFHLWwuCN5auy0pEWLWC+owNk1M+sCEg6d9tN3+CBnkshw+Q1lW6L/tHv/5SGJqXS4e
+	zLwswz4JzBakMqKXAutVpypips45STjMrkTaTHpSmMVPuenOe3ZPca/u3u/7sFNvRY0Kf1TzRli1q
+	cYqXnnOJBFkt8sAKVhLMp9H3ygZCfGRLtHe25KSjCx+n4dBlAajd1XZDTR7sBaSTOOq2hFU8Q6GRS
+	nnV26qqA==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tKe4T-000000083PB-3joO;
-	Mon, 09 Dec 2024 13:45:09 +0000
-Date: Mon, 9 Dec 2024 05:45:09 -0800
+	id 1tKe6C-000000083to-3T6r;
+	Mon, 09 Dec 2024 13:46:56 +0000
+Date: Mon, 9 Dec 2024 05:46:56 -0800
 From: Christoph Hellwig <hch@infradead.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Amir Goldstein <amir73il@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
 	"Darrick J. Wong" <djwong@kernel.org>,
 	Christian Brauner <brauner@kernel.org>,
 	Jeff Layton <jlayton@kernel.org>,
 	Erin Shepherd <erin.shepherd@e43.eu>,
 	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	stable <stable@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Shaohua Li <shli@fb.com>
+	stable <stable@kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Shaohua Li <shli@fb.com>
 Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export
  operations as only supporting file handles
-Message-ID: <Z1b0ZQAstSIf-ZMo@infradead.org>
+Message-ID: <Z1b00KG2O6YMuh_r@infradead.org>
 References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
  <Z1D2BE2S6FLJ0tTk@infradead.org>
  <CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
@@ -67,7 +66,6 @@ References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
  <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
  <Z1ahFxFtksuThilS@infradead.org>
  <CAOQ4uxiEnEC87pVBhfNcjduHOZWfbEoB8HKVbjNHtkaWA5d-JA@mail.gmail.com>
- <2024120942-skincare-flanking-ab83@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,22 +74,26 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024120942-skincare-flanking-ab83@gregkh>
+In-Reply-To: <CAOQ4uxiEnEC87pVBhfNcjduHOZWfbEoB8HKVbjNHtkaWA5d-JA@mail.gmail.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Dec 09, 2024 at 10:16:36AM +0100, Greg KH wrote:
-> > Maybe we were wrong about the assumption that cgroupfs should be treated
-> > specially and deny export cgroups over nfs??
+On Mon, Dec 09, 2024 at 09:58:58AM +0100, Amir Goldstein wrote:
+> To be clear, exporting pidfs or internal shmem via an anonymous fd is
+> probably not possible with existing userspace tools, but with all the new
+> mount_fd and magic link apis, I can never be sure what can be made possible
+> to achieve when the user holds an anonymous fd.
 > 
-> Please don't export any of the "fake" kernel filesystems (configfs,
-> cgroups, sysfs, debugfs, proc, etc) over nfs please.  That way lies
-> madness and makes no sense.
+> The thinking behind adding the EXPORT_OP_LOCAL_FILE_HANDLE flag
+> was that when kernfs/cgroups was added exportfs support with commit
+> aa8188253474 ("kernfs: add exportfs operations"), there was no intention
+> to export cgroupfs over nfs, only local to uses, but that was never enforced,
+> so we thought it would be good to add this restriction and backport it to
+> stable kernels.
 
-Umm, yes: it sounds like a pretty useless idea.  But you can do that
-today with a userland nfs server, so why explicitly forbid it for
-the kernel nfs server.  In either case you absolutely have to want it,
-you're not going to accidentally NFS export a file system.
-
-I'm still trying to understand what problem we're trying to solve here.
+Can you please explain what the problem with exporting these file
+systems over NFS is?  Yes, it's not going to be very useful.  But what
+is actually problematic about it?  Any why is it not problematic with
+a userland nfs server?  We really need to settle that argumet before
+deciding a flag name or polarity.
 
 
