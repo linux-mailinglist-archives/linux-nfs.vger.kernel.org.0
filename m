@@ -1,182 +1,78 @@
-Return-Path: <linux-nfs+bounces-8457-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8458-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D86C9E98BD
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 15:25:38 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4EC81886A14
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:25:34 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33BC1B042A;
-	Mon,  9 Dec 2024 14:25:21 +0000 (UTC)
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EFB59E9939
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 15:44:59 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC111B4225
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 14:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29B8A28233D
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:44:58 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E111B043D;
+	Mon,  9 Dec 2024 14:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyyLC46z"
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553D0288CC
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 14:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733754321; cv=none; b=H5zzwt2xos1MfyAfWgNiB6VLNilidKwWksHfPwLu/V5al4Vv5kgxDjSZfhaKfbRZGh+f9YhKUG5S/0U9AWHz47rZ373Jr4ZOwWya9qO2NT2qD5cCjCssU1idJOt9qSh7bLxMZ9uT95FJwa2DPEEosbiNBdY3FxRkOxveI49USb8=
+	t=1733755496; cv=none; b=adZPOL39jHtCyBxmm8o43I4hxU7aBg00E36gLR+/aSzwypPsbu0abeRoL6E4n1px6h9OkoJ2WIqhqVr+n0gfT+Tj1UWaGj4NbrqqqqiAFcCFT6ymEISspcJlAmeST1bA+EQr+yiY115g+4ApqliN3pIOBvjiJzlM9m4EH4NRqgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733754321; c=relaxed/simple;
-	bh=3fKcBSTIczLZmnM7WvJiOv/wYqFBKiu5eJkpFlJGjVU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=b2+5DvEYVapkYIVTqRQPBrb5nRLdLcd4YzWGnFA0EmLLWOHfmXIyuMseKMDs0jMPEgBEkEAzmzLAI7rNf+FCoXQek8Cv5XlxN7kdFZgUrYUnciptDbG6x2x5EBiTA3qRyi+YgLpWBkfCgEuZwqGypcAe2RdxR1kwDipiRnHwzd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-128-kVXU_ls3MVWtc2iaAMXRCQ-1; Mon, 09 Dec 2024 14:25:10 +0000
-X-MC-Unique: kVXU_ls3MVWtc2iaAMXRCQ-1
-X-Mimecast-MFC-AGG-ID: kVXU_ls3MVWtc2iaAMXRCQ
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 9 Dec
- 2024 14:24:13 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 9 Dec 2024 14:24:13 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, NeilBrown <neilb@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>, "J. Bruce Fields"
-	<bfields@fieldses.org>
-CC: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, "Tom
- Talpey" <tom@talpey.com>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] nfsd: fix incorrect high limit in clamp() on
- over-allocation
-Thread-Topic: [PATCH] nfsd: fix incorrect high limit in clamp() on
- over-allocation
-Thread-Index: AQHbSjVq0PUYaX8pR0uX6YQCOtR2XrLd7zfQ
-Date: Mon, 9 Dec 2024 14:24:13 +0000
-Message-ID: <91cf0982fcf9470d94c3d5c149cfd2bd@AcuMS.aculab.com>
-References: <20241209-nfs4state_fix-v1-1-7a66819c60f0@wanadoo.fr>
-In-Reply-To: <20241209-nfs4state_fix-v1-1-7a66819c60f0@wanadoo.fr>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1733755496; c=relaxed/simple;
+	bh=qSHon1Uh5gGIQFZsSfJmkL/y5YjDSuYQz04D+CuSWqk=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=Kiumf6x9BIDlFXqA7vj43z+RhoSDDlQbjWoISE8ybjucayBcXjmSPUNeapBhjHZud/jI/itUFof7nsjf7Ajtp16KjNh+FPQVwsbOzuUa2PYW/vIZ7ppLaSCi+971w1/R+Wo76Ici93890EkC/tXEIHr4aDiUN/xPdQLTtF/+RrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyyLC46z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E03CDC4CEDD;
+	Mon,  9 Dec 2024 14:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733755495;
+	bh=qSHon1Uh5gGIQFZsSfJmkL/y5YjDSuYQz04D+CuSWqk=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=tyyLC46zL4e2Z14++Jw8tFDdQ1eeoy0CXhgv26aCBmB53GEC0si4ndx4BIiIvFxgg
+	 q/j/PgEHv2qJGsM837VJPT5IJV//6z2DEdG3ibXyLdB7WM7njDhjfrmdYciHzw68vg
+	 WXBCmFJ2ONgNeq8o5krmstS4cxD82w8QLK8uWzMC7lp4YH2UsZfAUAav9Aus9Ki8h+
+	 /V9FmcME1zZYs5D3U/rAb7UJnFWYw40Q1YXRi95cqJak9D6AXm/IfUP0MTP+hKrtgY
+	 4UT267bKfu/TPnkqhe9pfw+QJ1mpgRBc3p2VOB7IyGRzPIOC7CgJY0nCYzMypFuGoi
+	 ZqPKnHEEYT8AQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 75E4E380A95E;
+	Mon,  9 Dec 2024 14:45:12 +0000 (UTC)
+From: Chuck Lever via Bugspray Bot <bugbot@kernel.org>
+Date: Mon, 09 Dec 2024 14:45:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: uwpwFklyDNTvoPlHDTni004sWPZ57l6bLlpEP-HVFoQ_1733754310
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: anna@kernel.org, trondmy@kernel.org, jlayton@kernel.org, 
+ linux-nfs@vger.kernel.org, cel@kernel.org
+Message-ID: <20241209-b219580c1-1d3560de8c9a@bugzilla.kernel.org>
+In-Reply-To: <20241209-b219580c0-d09195e1d9e8@bugzilla.kernel.org>
+References: <20241209-b219580c0-d09195e1d9e8@bugzilla.kernel.org>
+Subject: Re: kernel BUG at fs/nfsd/nfs4recover.c:534 Oops: invalid opcode:
+ 0000
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-RnJvbTogVmluY2VudCBNYWlsaG9sDQo+IFNlbnQ6IDA5IERlY2VtYmVyIDIwMjQgMTI6MjYNCj4g
-DQo+IElmIG92ZXIgYWxsb2NhdGlvbiBvY2N1cnMgaW4gbmZzZDRfZ2V0X2RyY19tZW0oKSwgdG90
-YWxfYXZhaWwgaXMgc2V0DQo+IHRvIHplcm8uIENvbnNlcXVlbnRseSwNCj4gDQo+ICAgY2xhbXBf
-dCh1bnNpZ25lZCBsb25nLCBhdmFpbCwgc2xvdHNpemUsIHRvdGFsX2F2YWlsL3NjYWxlX2ZhY3Rv
-cik7DQo+IA0KPiBnaXZlczoNCj4gDQo+ICAgY2xhbXBfdCh1bnNpZ25lZCBsb25nLCBhdmFpbCwg
-c2xvdHNpemUsIDApOw0KPiANCj4gcmVzdWx0aW5nIGluIGEgY2xhbXAoKSBjYWxsIHdoZXJlIHRo
-ZSBoaWdoIGxpbWl0IGlzIHNtYWxsZXIgdGhhbiB0aGUNCj4gbG93IGxpbWl0LCB3aGljaCBpcyB1
-bmRlZmluZWQ6IHRoZSByZXN1bHQgY291bGQgYmUgZWl0aGVyIHNsb3RzaXplIG9yDQo+IHplcm8g
-ZGVwZW5kaW5nIG9uIHRoZSBvcmRlciBvZiBldmFsdWF0aW9uLg0KPiANCj4gTHVja2lseSwgdGhl
-IHR3byBpbnN0cnVjdGlvbnMganVzdCBiZWxvdyB0aGUgY2xhbXAoKSByZWNvdmVyIHRoZQ0KPiB1
-bmRlZmluZWQgYmVoYXZpb3VyOg0KPiANCj4gICBudW0gPSBtaW5fdChpbnQsIG51bSwgYXZhaWwg
-LyBzbG90c2l6ZSk7DQo+ICAgbnVtID0gbWF4X3QoaW50LCBudW0sIDEpOw0KPiANCj4gSWYgYXZh
-aWwgPSBzbG90c2l6ZSwgdGhlIG1pbl90KCkgc2V0cyBpdCBiYWNrIHRvIDEuIElmIGF2YWlsID0g
-MCwgdGhlDQo+IG1heF90KCkgc2V0cyBpdCBiYWNrIHRvIDEuDQo+IA0KPiBTbyB0aGlzIHVuZGVm
-aW5lZCBiZWhhdmlvdXIgaGFzIG5vIHZpc2libGUgZWZmZWN0Lg0KPiANCj4gQW55d2F5LCByZW1v
-dmUgdGhlIHVuZGVmaW5lZCBiZWhhdmlvdXIgaW4gY2xhbXAoKSBieSBvbmx5IGNhbGxpbmcgaXQN
-Cj4gYW5kIG9ubHkgZG9pbmcgdGhlIGNhbGN1bGF0aW9uIG9mIG51bSBpZiBtZW1vcnkgaXMgc3Rp
-bGwgYXZhaWxhYmxlLg0KPiBPdGhlcndpc2UsIGlmIG92ZXItYWxsb2NhdGlvbiBvY2N1cnJlZCwg
-ZGlyZWN0bHkgc2V0IG51bSB0byAxIGFzDQo+IGludGVuZGVkIGJ5IHRoZSBhdXRob3IuDQoNCk5B
-SzoNClRoZSBjb2RlIGlzIHN0aWxsIHdyb25nDQoNCj4gV2hpbGUgYXQgaXQsIGFwcGx5IGJlbG93
-IGNoZWNrcGF0Y2ggZml4Og0KPiANCj4gICBXQVJOSU5HOiBtaW4oKSBzaG91bGQgcHJvYmFibHkg
-YmUgbWluX3QodW5zaWduZWQgbG9uZywgTkZTRF9NQVhfTUVNX1BFUl9TRVNTSU9OLCB0b3RhbF9h
-dmFpbCkNCj4gICAjMTAwOiBGSUxFOiBmcy9uZnNkL25mczRzdGF0ZS5jOjE5NTQ6DQo+ICAgKwkJ
-YXZhaWwgPSBtaW4oKHVuc2lnbmVkIGxvbmcpTkZTRF9NQVhfTUVNX1BFUl9TRVNTSU9OLCB0b3Rh
-bF9hdmFpbCk7DQoNClRoYXQgd2FzIG5ldmVyIGEgYnVnIGFuZCBjaGVja3BhdGNoIHNob3VsZCBu
-ZXZlciByZXBvcnQgaXQhDQpDYXN0aW5nIG9uZSBhcmd1bWVudCB0byBtaW4oKSBoYXMgYWx3YXlz
-IGJlZW4gc2FmZXIgdGhhbiB1c2luZyBtaW5fdCgpLg0KSW5kZWVkIGl0IHNob3VsZCByZWFsbHkg
-aGF2ZSBiZWVuIHRoZSBwcmVmZXJyZWQgc29saXRpb24uDQpDb25zaWRlciB3aGF0IGhhcHBlbnMg
-d2l0aCBtaW5fdCgpIGlmICd0b3RhbF9hdmFpbCcgaGFwcGVucyB0byBiZSA2NGJpdA0KKHdpdGgg
-bG9uZyBiZWluZyAzMmJpdCkgLSBzdWRkZW5seSBzaWduaWZpY2FudCBiaXQgZ2V0IG1hc2tlZCBv
-ZmYuDQoNCldpdGggdGhlICduZXcgaW1wcm92ZWQnIG1pbigpIGp1c3QgZGVsZXRlIHRoZSBjYXN0
-IC0gaXQgd29uJ3QgY29tcGxhaW4uDQoNCj4gDQo+IEZpeGVzOiA3ZjQ5ZmQ1ZDdhY2QgKCJuZnNk
-OiBoYW5kbGUgZHJjIG92ZXItYWxsb2NhdGlvbiBncmFjZWZ1bGx5LiIpDQo+IFNpZ25lZC1vZmYt
-Ynk6IFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+DQouLi4NCj4g
-QmVjYXVzZSBEYXZpZCdzIHBhdGNoIGlzIHRhcmdldHRpbmcgQW5kcmV3J3MgbW0gdHJlZSwgSSB3
-b3VsZCBzdWdnZXN0DQo+IHRoYXQgbXkgcGF0Y2ggYWxzbyBnb2VzIHRvIHRoYXQgdHJlZS4NCj4g
-LS0tDQo+ICBmcy9uZnNkL25mczRzdGF0ZS5jIHwgNDYgKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMo
-KyksIDIxIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL25mc2QvbmZzNHN0YXRl
-LmMgYi9mcy9uZnNkL25mczRzdGF0ZS5jDQo+IGluZGV4IDc0MWI5NDQ5ZjcyN2RlZmM3OTQzNDdm
-MWIxMTZjOTU1ZDcxNWU2OTEuLmViOTE0NjBjNDM0ZTMwZjZkZjcwZjY2ZDkzN2Y4YzBmMzM0Yjhl
-MWIgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCj4gKysrIGIvZnMvbmZzZC9u
-ZnM0c3RhdGUuYw0KPiBAQCAtMTk0NCwzNSArMTk0NCwzOSBAQCBzdGF0aWMgdTMyIG5mc2Q0X2dl
-dF9kcmNfbWVtKHN0cnVjdCBuZnNkNF9jaGFubmVsX2F0dHJzICpjYSwgc3RydWN0IG5mc2RfbmV0
-DQo+ICpubg0KPiAgew0KPiAgCXUzMiBzbG90c2l6ZSA9IHNsb3RfYnl0ZXMoY2EpOw0KPiAgCXUz
-MiBudW0gPSBjYS0+bWF4cmVxczsNCj4gLQl1bnNpZ25lZCBsb25nIGF2YWlsLCB0b3RhbF9hdmFp
-bDsNCj4gLQl1bnNpZ25lZCBpbnQgc2NhbGVfZmFjdG9yOw0KPiANCj4gIAlzcGluX2xvY2soJm5m
-c2RfZHJjX2xvY2spOw0KPiAtCWlmIChuZnNkX2RyY19tYXhfbWVtID4gbmZzZF9kcmNfbWVtX3Vz
-ZWQpDQo+ICsJaWYgKG5mc2RfZHJjX21heF9tZW0gPiBuZnNkX2RyY19tZW1fdXNlZCkgew0KPiAr
-CQl1bnNpZ25lZCBsb25nIGF2YWlsLCB0b3RhbF9hdmFpbDsNCj4gKwkJdW5zaWduZWQgaW50IHNj
-YWxlX2ZhY3RvcjsNCj4gKw0KPiAgCQl0b3RhbF9hdmFpbCA9IG5mc2RfZHJjX21heF9tZW0gLSBu
-ZnNkX2RyY19tZW1fdXNlZDsNCg0KWW91J3ZlIG9ubHkgY2hlY2tlZCA+IHRoZSByZXN1bHQgY2Fu
-IHN0aWxsIGJlIDEuDQoNCj4gLQllbHNlDQo+ICsJCWF2YWlsID0gbWluX3QodW5zaWduZWQgbG9u
-ZywNCj4gKwkJCSAgICAgIE5GU0RfTUFYX01FTV9QRVJfU0VTU0lPTiwgdG90YWxfYXZhaWwpOw0K
-PiArCQkvKg0KPiArCQkgKiBOZXZlciB1c2UgbW9yZSB0aGFuIGEgZnJhY3Rpb24gb2YgdGhlIHJl
-bWFpbmluZyBtZW1vcnksDQo+ICsJCSAqIHVubGVzcyBpdCdzIHRoZSBvbmx5IHdheSB0byBnaXZl
-IHRoaXMgY2xpZW50IGEgc2xvdC4NCj4gKwkJICogVGhlIGNob3NlbiBmcmFjdGlvbiBpcyBlaXRo
-ZXIgMS84IG9yIDEvbnVtYmVyIG9mIHRocmVhZHMsDQo+ICsJCSAqIHdoaWNoZXZlciBpcyBzbWFs
-bGVyLiAgVGhpcyBlbnN1cmVzIHRoZXJlIGFyZSBhZGVxdWF0ZQ0KPiArCQkgKiBzbG90cyB0byBz
-dXBwb3J0IG11bHRpcGxlIGNsaWVudHMgcGVyIHRocmVhZC4NCj4gKwkJICogR2l2ZSB0aGUgY2xp
-ZW50IG9uZSBzbG90IGV2ZW4gaWYgdGhhdCB3b3VsZCByZXF1aXJlDQo+ICsJCSAqIG92ZXItYWxs
-b2NhdGlvbi0taXQgaXMgYmV0dGVyIHRoYW4gZmFpbHVyZS4NCj4gKwkJICovDQo+ICsJCXNjYWxl
-X2ZhY3RvciA9IG1heF90KHVuc2lnbmVkIGludCwNCj4gKwkJCQkgICAgIDgsIG5uLT5uZnNkX3Nl
-cnYtPnN2X25ydGhyZWFkcyk7DQoNClNob3VsZG4ndCBuZWVkIHRvIGJlIG1heF90KCksIG1heCgp
-IGxvb2tzIHRvIGJlIGZpbmUuDQpCdXQgY2FuIHdlIHBsZWFzZSBoYXZlIHRoZSBjb25zdGFudHMg
-b24gdGhlIHJpZ2h0Pw0KDQo+ICsJCWF2YWlsID0gY2xhbXBfdCh1bnNpZ25lZCBsb25nLCBhdmFp
-bCwgc2xvdHNpemUsDQo+ICsJCQkJdG90YWxfYXZhaWwvc2NhbGVfZmFjdG9yKTsNCj4gKwkJbnVt
-ID0gbWluX3QoaW50LCBudW0sIGF2YWlsIC8gc2xvdHNpemUpOw0KPiArCQludW0gPSBtYXhfdChp
-bnQsIG51bSwgMSk7DQo+ICsJfSBlbHNlIHsNCj4gIAkJLyogV2UgaGF2ZSBoYW5kZWQgb3V0IG1v
-cmUgc3BhY2UgdGhhbiB3ZSBjaG9zZSBpbg0KPiAgCQkgKiBzZXRfbWF4X2RyYygpIHRvIGFsbG93
-LiAgVGhhdCBpc24ndCByZWFsbHkgYQ0KPiAgCQkgKiBwcm9ibGVtIGFzIGxvbmcgYXMgdGhhdCBk
-b2Vzbid0IG1ha2UgdXMgdGhpbmsgd2UNCj4gIAkJICogaGF2ZSBsb3RzIG1vcmUgZHVlIHRvIGlu
-dGVnZXIgb3ZlcmZsb3cuDQo+ICAJCSAqLw0KPiAtCQl0b3RhbF9hdmFpbCA9IDA7DQo+IC0JYXZh
-aWwgPSBtaW4oKHVuc2lnbmVkIGxvbmcpTkZTRF9NQVhfTUVNX1BFUl9TRVNTSU9OLCB0b3RhbF9h
-dmFpbCk7DQo+IC0JLyoNCj4gLQkgKiBOZXZlciB1c2UgbW9yZSB0aGFuIGEgZnJhY3Rpb24gb2Yg
-dGhlIHJlbWFpbmluZyBtZW1vcnksDQo+IC0JICogdW5sZXNzIGl0J3MgdGhlIG9ubHkgd2F5IHRv
-IGdpdmUgdGhpcyBjbGllbnQgYSBzbG90Lg0KPiAtCSAqIFRoZSBjaG9zZW4gZnJhY3Rpb24gaXMg
-ZWl0aGVyIDEvOCBvciAxL251bWJlciBvZiB0aHJlYWRzLA0KPiAtCSAqIHdoaWNoZXZlciBpcyBz
-bWFsbGVyLiAgVGhpcyBlbnN1cmVzIHRoZXJlIGFyZSBhZGVxdWF0ZQ0KPiAtCSAqIHNsb3RzIHRv
-IHN1cHBvcnQgbXVsdGlwbGUgY2xpZW50cyBwZXIgdGhyZWFkLg0KPiAtCSAqIEdpdmUgdGhlIGNs
-aWVudCBvbmUgc2xvdCBldmVuIGlmIHRoYXQgd291bGQgcmVxdWlyZQ0KPiAtCSAqIG92ZXItYWxs
-b2NhdGlvbi0taXQgaXMgYmV0dGVyIHRoYW4gZmFpbHVyZS4NCj4gLQkgKi8NCj4gLQlzY2FsZV9m
-YWN0b3IgPSBtYXhfdCh1bnNpZ25lZCBpbnQsIDgsIG5uLT5uZnNkX3NlcnYtPnN2X25ydGhyZWFk
-cyk7DQo+IC0NCj4gLQlhdmFpbCA9IGNsYW1wX3QodW5zaWduZWQgbG9uZywgYXZhaWwsIHNsb3Rz
-aXplLA0KPiAtCQkJdG90YWxfYXZhaWwvc2NhbGVfZmFjdG9yKTsNCj4gLQludW0gPSBtaW5fdChp
-bnQsIG51bSwgYXZhaWwgLyBzbG90c2l6ZSk7DQo+IC0JbnVtID0gbWF4X3QoaW50LCBudW0sIDEp
-Ow0KPiArCQludW0gPSAxOw0KPiArCX0NCg0KSSdkIGxlYXZlIHRoZSBsb2dpYyBhbG9uZSBhbmQg
-dXNlIGV4cGxpY2l0IG1pbigpIGFuZCBtYXgpIGluc3RlYWQgb2YgY2xhbXAoKS4NCihhbmQgaG9w
-ZWZ1bGx5IGNoZWNrcGF0Y2ggd29uJ3Qgc3VnZ2VzdCBjbGFtcCgpIGFnYWluKS4NCg0KVGhlIGNs
-YW1wKCkgaXMgdHJ5aW5nIHRvIGluY3JlYXNlICdhdmFpbCcgdG8gJ3Nsb3RzaXplJyAtIHRoYXQg
-d291bGQNCmVuc3VyZSB0aGUgbGF0ZXIgbWF4KCkgZG9lcyBub3RoaW5nLg0KU28gcmVwbGFjZSB0
-aGUgY2xhbXAoKSB3aXRoIGEgbWF4KCksIGdpdmluZzoNCglhdmFpbCA9IG1heChhdmFpbCwgdG90
-YWxfYXZhaWwgLyBtYXgobm4tPm5mc2Rfc2Vydi0+c3ZfbnJ0aHJlYWRzLCA4KSk7DQoJbnVtID0g
-bWluKGNhLT5tYXhyZWdzLCBhdmFpbCAvIHNsb3RzaXplKSA/OiAxOw0KDQpVbmxlc3MgSSBtaXNz
-ZWQgYW5vdGhlciBhc3NpZ25tZW50IHRvICdudW0nIHRoYXQgaXMgcHJvYmFibHkgZXF1dmFsZW50
-Lg0KDQoJRGF2aWQNCg0KPiAgCW5mc2RfZHJjX21lbV91c2VkICs9IG51bSAqIHNsb3RzaXplOw0K
-PiAgCXNwaW5fdW5sb2NrKCZuZnNkX2RyY19sb2NrKTsNCj4gDQo+IA0KPiAtLS0NCj4gYmFzZS1j
-b21taXQ6IGZhYzA0ZWZjNWM3OTNkY2NiZDA3ZTJkNTlhZjlmOTBiN2ZjMGRjYTQNCj4gY2hhbmdl
-LWlkOiAyMDI0MTIwOS1uZnM0c3RhdGVfZml4LWJjNmYxYzFmYzFkMQ0KPiANCj4gQmVzdCByZWdh
-cmRzLA0KPiAtLQ0KPiBWaW5jZW50IE1haWxob2wgPG1haWxob2wudmluY2VudEB3YW5hZG9vLmZy
-Pg0KPiANCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1v
-dW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEz
-OTczODYgKFdhbGVzKQ0K
+Chuck Lever writes via Kernel.org Bugzilla:
+
+The Debian folks have been seeing this issue since at least 6.11.9, so it was introduced well before 6.12.2. Start by bisecting the Linus branch (not stable) to see which commit introduced this issue.
+
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219580#c1
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
 
