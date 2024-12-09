@@ -1,99 +1,105 @@
-Return-Path: <linux-nfs+bounces-8442-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8443-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18E9C9E88C7
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 01:53:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88ABD9E8C97
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 08:50:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E36918836CB
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 00:53:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C92D1882903
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 07:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704D319BBC;
-	Mon,  9 Dec 2024 00:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 515E121504F;
+	Mon,  9 Dec 2024 07:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZNaiQaA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kFdV293R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E48AD2C
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 00:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E800214A64;
+	Mon,  9 Dec 2024 07:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733705617; cv=none; b=tgDZkvDSRBgMGHIiUUip/spF2FgWxfX1Nm60Y+n1VPjjHFgk2giGge6jdFw2zxv+yihGZ/HS2FLwEOGP33OI7Z75NpGWKDQv1/JqoxEoIoz9rWjNaPVF40mBJIQ645YSziAqESFp0hQ/Q8eKiqKkZuo8CXwHvD5us5dMGFuvxYA=
+	t=1733730596; cv=none; b=DAUwyotUOX2b99dFGiIC9M3trF/Gr4qV9qMs/UAQ8ZD1W5Xq+MjuxryS38dCQeNXi9SEAsnXU9EPlIC9zRNz00mM+p2QPzGwi3KNIRGi7V3yC1hR/Cqm36fGE2jGH6BKpTCvMox9tEJWwuNX0+X/RCS6BGi3qaeMbLRsj89Ukhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733705617; c=relaxed/simple;
-	bh=euJLNu/ozKuUfN4rLHyjVTOg6Zbbm3BGVF3YJyO9E/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q8+oZSkWBxxeUAiWxD+0iEGe8NuJn0R06Ekun/DHGpCpnSohrRVgikOEJ3hNvWNp/VJAH4hrePr/hPO2eSE15YUPWwnSRh2pab3qfstZXcBRjZDO5DaO92Hx3ynEN1HXljs7OrmKA3aSdO0/jrmuLmDbOEiTvaV4x6RUuv7Oa18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZNaiQaA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78847C4CED2;
-	Mon,  9 Dec 2024 00:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733705617;
-	bh=euJLNu/ozKuUfN4rLHyjVTOg6Zbbm3BGVF3YJyO9E/s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qZNaiQaAx/EZ8PfYaNcsPv8j69mHztMD0t2z28/Y83Os3tgwNKAUHGktiuluS9FSm
-	 mAM9RqFO0Ly0g3l1oFPFaX52Ivb91W8y9OOBrGG7H7U+YZyrBf/nXkF/kdG41Lztb8
-	 9rVL+rBeNlruf0EBrYMWXKVQ67Itp5Abo9BUiglBnd3Lg8lUeOD2l84CQbd4Mb4kJ9
-	 jvY7PemkN4hg1cmXuv8vA0zKk+rDfjRfj6a7NNvqrYV1PhTDpe5zEOkEF8rY4Vp70G
-	 8uLqcVF95yXKLLC/nhCGYEVXRQWhpCLRBRXsUfkSoFLjygQBdVFluKp+GSegOikWG2
-	 2HK6HZ0FovUDA==
-From: cel@kernel.org
-To: Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 1/6] nfsd: use an xarray to store v4.1 session slots
-Date: Sun,  8 Dec 2024 19:53:30 -0500
-Message-ID: <173370556434.1781407.6644392216606855682.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241208224629.697448-2-neilb@suse.de>
-References: <20241208224629.697448-1-neilb@suse.de> <20241208224629.697448-2-neilb@suse.de>
+	s=arc-20240116; t=1733730596; c=relaxed/simple;
+	bh=5EFS2InPg2t3NJWSEh6nQPiSR6HZgWxCXmJAgXABqHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=khurs/AJwDcter3w/t164ocuRJxp15nFof7a/veymZYPg09i714dTrvzIN0gxdR7EAyk5Rt3M2wzxZe+1zBC8FzfwDydXUvJDyuZ+jXiAMI9HHxm/BqRCrAcLCA6QeMeSapmRhvGCpCI1b4rX9gGhK0AmdswWigkOcDfK8Xfw44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kFdV293R; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OmWUSu3bZ9nMiHmrTjQz9XT/WaHo0p18xXNKxBDgGoo=; b=kFdV293Ri3XsiETHw6qp1L/ven
+	tu0zlgZxqg2itd3JpxhPBppLYWVfJk0TptPfu3jDrslxYrX7ElP1ehMdRlSkXKDyHu3mG2JWIudTo
+	N6s8D81wUhcbMVjHZOq9fIwVGQy5+BiMoD4oGPcV6b5ucHWiq59GqHanTXjkm6+Znbt0/7lW6qcyF
+	zgS/fjXH5vc+yJD3N21jr3/LkbDilbaRlKjG3rrYK+Yl5vJJOe4uKHJDb4fkK7ftlJyqnZbgGX+nu
+	CCGWmEnwd4M5KOryK5MgMLiX3nAQWd7TSum6MI02vEfT+9hfhlx5qChqPb9PDknw9Ox45r5zTH5e6
+	69XYPHxg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tKYWV-00000006mEI-2tYU;
+	Mon, 09 Dec 2024 07:49:43 +0000
+Date: Sun, 8 Dec 2024 23:49:43 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Erin Shepherd <erin.shepherd@e43.eu>,
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	stable <stable@kernel.org>
+Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export
+ operations as only supporting file handles
+Message-ID: <Z1ahFxFtksuThilS@infradead.org>
+References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
+ <Z1D2BE2S6FLJ0tTk@infradead.org>
+ <CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
+ <20241206160358.GC7820@frogsfrogsfrogs>
+ <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Chuck Lever <chuck.lever@oracle.com>
-
-On Mon, 09 Dec 2024 09:43:12 +1100, NeilBrown wrote:
-> Using an xarray to store session slots will make it easier to change the
-> number of active slots based on demand, and removes an unnecessary
-> limit.
+On Sat, Dec 07, 2024 at 09:49:02AM +0100, Amir Goldstein wrote:
+> > /* file handles can be used by a process on another node */
+> > #define EXPORT_OP_ALLOW_REMOTE_NODES    (...)
 > 
-> To achieve good throughput with a high-latency server it can be helpful
-> to have hundreds of concurrent writes, which means hundreds of slots.
-> So increase the limit to 2048 (twice what the Linux client will
-> currently use).  This limit is only a sanity check, not a hard limit.
-> 
-> [...]
+> This has a sound of security which is incorrect IMO.
+> The fact that we block nfsd export of cgroups does not prevent
+> any type of userland file server from exporting cgroup file handles.
 
-Applied to nfsd-testing for v6.14, thanks!
+So what is the purpose of the flag?  Asking for a coherent name and
+description was the other bigger ask for me.
 
-[1/6] nfsd: use an xarray to store v4.1 session slots
-      commit: 2d8efbc3b656b43a5d1b813e3a778c9b9c8810a4
-[2/6] nfsd: remove artificial limits on the session-based DRC
-      commit: 8233f78fbd970cbfcb9f78c719ac5a3aac4ea053
-[3/6] nfsd: add session slot count to /proc/fs/nfsd/clients/*/info
-      commit: c1c0d459067dc044dba36779da8a9da69c2053cb
-[4/6] nfsd: allocate new session-based DRC slots on demand.
-      commit: c2340cd75a0c99bb68cefde70db5893577f100f4
-[5/6] nfsd: add support for freeing unused session-DRC slots
-      commit: 22b1fbeea695de4efedf4de4db66be21004f134a
-[6/6] nfsd: add shrinker to reduce number of slots allocated per session
-      commit: 8af8f01a1bb7d84ad2d176ae00112c96647e151f
+> Maybe opt-out of nfsd export is a little less safer than opt-in, but
+> 1. opt-out is and will remain the rare exception for export_operations
+> 2. at least the flag name EXPORT_OP_LOCAL_FILE_HANDLE
+>     is pretty clear IMO
 
---
-Chuck Lever
+Even after this thread I have absolutely no idea what problem it tries
+to solve.  Maybe that's not just the flag names fault, and not of opt-in
+vs out, but both certainly don't help.
+
+> Plus, as I wrote in another email, the fact that pidfs is SB_NOUSER,
+> so userspace is not allowed to mount it into the namespace and
+> userland file servers cannot export the filesystem itself.
+> That property itself (SB_NOUSER), is therefore a good enough indication
+> to deny nfsd export of this fs.
+
+So check SB_NOUSER in nfsd and be done with it?
 
 
