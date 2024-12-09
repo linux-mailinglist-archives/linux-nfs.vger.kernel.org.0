@@ -1,167 +1,161 @@
-Return-Path: <linux-nfs+bounces-8444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE0509E8E47
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 10:01:56 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97FE31888704
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 08:59:55 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59137215702;
-	Mon,  9 Dec 2024 08:55:13 +0000 (UTC)
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E18F99E8E40
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 10:01:19 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41938215713;
-	Mon,  9 Dec 2024 08:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2623281FBD
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 09:01:18 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F4FA21638B;
+	Mon,  9 Dec 2024 08:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbL8lFoa"
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECD7216388;
+	Mon,  9 Dec 2024 08:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733734513; cv=none; b=X8ZJJhzSAFkzjRQEijbW7htf/GY0pRXT3zA3rAaD54IH7SBg+5PZJz8RwWkASZncddtWxgYtIZ0Wv3TROlJGV3PqJZYvHx9LbYOrn09CNc4KKpcy5c/M5GIv61CmZbolVGQRtS9SO7Fe4mlMhH/Z1GobAWyJAdLWY+nAQ9C6OAw=
+	t=1733734754; cv=none; b=H2fQr1P2Bj3gZQsRdT2XFrCu6kL7EoYVNsTPfmtjigCINijSZR0NhiIFbH4sL/d5jLCObHs86bkbcVGCg3ANnmyvZ/dBa/1yHkFfjE35J6gD4/8Z1dXdIkeGTu7Pya957mkLPNVhxxf6PYiAJ5hr1AA3TjJ3nmdYlB/pH1sp8Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733734513; c=relaxed/simple;
-	bh=Sx5tuVGwvldKiKbjin/8O8xKdARGBN3u7aH1k0prIn0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k8gcVOeiExrkRt1NoF6m9tDyzd809Nkz6XdoeMUtxehup8p+hel/lLI2NlOLI0Koe5sdqX3yBdOJcXRULYUEW192aWaze7YCtM3WgN0a6a4adaMKBzzm1kmBgcRpn5gJxKQtTGZxLZuS3IiPkywN8HVBMGR8jvNVtNz2nAcKIWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: bizesmtpsz3t1733734470t3a0xk6
-X-QQ-Originating-IP: 0zwgXXY4uVyL+9RCbCNtwRYcWZjM93Hiokrooz7lcZQ=
-Received: from localhost.localdomain ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 09 Dec 2024 16:54:27 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 9436664489369266355
-From: chenxiaosong@chenxiaosong.com
-To: gregkh@linuxfoundation.org,
-	trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	huhai@kylinos.cn,
-	chenxiaosong@kylinos.cn
-Subject: [PATCH 4.19] NFS: fix null-ptr-deref in nfs_inode_add_request()
-Date: Mon,  9 Dec 2024 08:54:10 +0000
-Message-Id: <20241209085410.601489-1-chenxiaosong@chenxiaosong.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733734754; c=relaxed/simple;
+	bh=npytWJ14egtdb2VlDm9K3uiWjqdb48MwyRsQxkJ5tKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UskamZIzwTjx2uuXQmdWfGRaPO+4l7cYWP/kbwEHscSebV48nxIoEXNIspk7PjGt3XHZUCKKEG+Cn0emshbPmc3UI7nyNzwQCIhrCYEz70lLTnP1j6DzrIZ3tkzdIMZb64SbEIRnW/HrdrlwpmQslS4tgkuvE/aKPQEvCH78Ofw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbL8lFoa; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5d3e8f64d5dso2121490a12.3;
+        Mon, 09 Dec 2024 00:59:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733734750; x=1734339550; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bqsYvwOOYJqI0HxdPRE2Hj4F+6WdBcYKvH3M4THFPWw=;
+        b=QbL8lFoaSzzOiLnHsYYIwNSOH5A+3+NpAXt7i76qjwvAA1VMMXpK8LmRrDbJ5xQaRM
+         xQMIlaOHIBc7uPCHrCdGNLP/2R84KOjkPfuyV3+t4bK3fYgtWyO/pXJTQD5Kapbh8iCn
+         GIrfgan04rgcJa/7s3nZ/8WO4/yXaXDQXSwlVnzkyNL3/wPR3UsWvVC0v8EPXYIeVSnZ
+         +DGQnV9trZgtSa4+VSZccBT16WqNzauYxgXuubAyk7p83KfFmF13vNe6Td+Murn7Zvt0
+         byDnhsnA54nyYav7CifsnXIm5ofFzTkJsitplaeA7sCypvYX6B/URbr4aOz+90nQ/cU0
+         Q4Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733734750; x=1734339550;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bqsYvwOOYJqI0HxdPRE2Hj4F+6WdBcYKvH3M4THFPWw=;
+        b=E6G1iZ3tXF6G11bUor6U8T33LCy2zmB2MpgkgxUySkq1c1HyAvcTKaqyYA1h13l3uQ
+         CHMwesQnl/B5nUnPL9JEDDPGbouUX4SCTaB9Oao1SCGZTTPhhNJTi29k0ALq4pvipMRq
+         A4aMnOliH2QO9lKF+1ZK9SFty4PP/Bog1EnmBHNyl3mq4gXlChSljsiafQW1UYsX3CFw
+         TVdNyggwLbYl6rReUSOi9qnTPzx3ay4ldPkMdJLRs3CZNJJqD6P+Sp3Z1D+CWdUISjaK
+         eTVtD3dMqqlw6AlE0IV2xiF0Hhkhz9THU89URnH07aIvMcAGkI8u7W22SS8zngt+H8GA
+         XNMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvEVoRXoiLhIQL374PlHXAsfToqrfOnTES+nZJoCVmLRiisIrQr0Efr5ozyUm6gD9FZdKcFaxlpwUWHV/N@vger.kernel.org, AJvYcCWMOgO2E/5l06gyMxQB0eX2rQj/4S4a271IeZANiSqRnSNqRUF+X6QQl3eRcrZ13VmXpcYJFvMwbmsb03XX@vger.kernel.org, AJvYcCXK/Oif9vFjGPTRSAsEOgauIe3AmD/MS6rmxz2n3o5eHFFv7wNUziVa9sI3MMce5shuMWZvcFJHDtGe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4w04w6DRTyNJsmyA1Acd3KKofGWGmnpXfTcIq5Frp4WNZidxv
+	pcZQMfY46LMlgnV9Fs9JMB8khtW+akKvpjAoyreUzVjp0t6LonaOSHuNUDyuF6Sekjl8Yz07ALD
+	9BGoCjP7GoI45pnK68hMaAgvP7oalrBoIvUQ=
+X-Gm-Gg: ASbGnctzUcUA6Ba4GlNc4AXzve1TFgXKjeEC0QFdM8clw5lNk7lRA9Q1bP61RqXfEEU
+	0XsAYhFvwU8KgRGL1p6Dr6DvFMlwjTfw=
+X-Google-Smtp-Source: AGHT+IFbZMAd2GmlVtMCS3Zq6WbMuDHdX6/bNyqG2LoXdhZ7ENWQ474L+6RWee4ycIOKzYu+NcRnefPTUPpirQId6lg=
+X-Received: by 2002:a05:6402:912:b0:5d0:ca51:e859 with SMTP id
+ 4fb4d7f45d1cf-5d3be71b9e8mr12468354a12.27.1733734750224; Mon, 09 Dec 2024
+ 00:59:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: Ma+A2HZKKIKoV2XrcpQPY7e6H60M34Dg5bldmTOpnZB/kzi8vGN+7cYH
-	pQlMigvGEVn6XIRQ+88JStv3inuPTbPtjO938L3Z+5r0leelUW2DrHw3uTCH1FMh2wS3tIi
-	UFppIfsnBRm0ER0jmrTqYY1uhq/7+5OaaTDLwyZSmsYjB5RxNIosoyrvnkAFTQWUUOqmE18
-	CtCzXOSybJV4Ns6vwUAa2PlhK+LRyNNwsPoxnWF2+U/6QGBhIhqVffiQxlZ7XTKpWy9d8qf
-	2ZZ3pOgdqWtiyYNlk2/NQWjtRKmX/Seq5obrLUvZ67t9J6iKxXM2K7RLYtK8LImgvPTHSKm
-	n73gjWXDhLhA/sbUPNVMZaI7zRsXCve5jALnyrVHYVF9McpoHJNAHSXG5SrTE+3wT/FJax6
-	/Pdkk/C8kOdFgMp5qGNmt4VkaWqcmggEUcEstDfvh9QRjHniij3I8r4DIqhOatbD85pmpZP
-	S/teD5XbuSMSl4JldvPxQ7AnFv0Bi2nxWZN7AxRTyPz+oZtOEmx11tS3+oX4ToF2O1CONUh
-	VWqxDijkR9v7IH+TUbWukcZXKcSJTrK9dq/ATXn+c/tviybhau/ggRLqbKP64rTBPlZdhhW
-	PGTTVpWoSaFSYtu7h88tWI3pbi/GKLEW7MtfSbp53C0kOgOeEXuHG6ZFvIlafs09O/yWjKQ
-	QTlkdmg4uxzfLE5YdIvkRtoVW3enOsGEIcpBBYAz+BwDrq/mjwyjExlHa3Qt6HTR3u6gXCt
-	ufFsLROMt5aOvIJxVLd2F/jow+Aq8q4AWcbLkYJuCh5Pk3vRejJGbAUNXwo+hHYUCpjZRIs
-	KfBg3i3P+dESJjXiuu+vEuSbTzE1mfiTPD1Wfgsz412HQffRR8QbJnsGLmZDzl2w2RrSA9I
-	M8VKEhyDHsKK+g3wFK3W7zG20Z12rynO8f7Q1e71bOzkYgH1exwMcvud7giPyF1xpW+N2KS
-	Dt+o=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+References: <20241201-work-exportfs-v1-0-b850dda4502a@kernel.org>
+ <Z1D2BE2S6FLJ0tTk@infradead.org> <CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
+ <20241206160358.GC7820@frogsfrogsfrogs> <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
+ <Z1ahFxFtksuThilS@infradead.org>
+In-Reply-To: <Z1ahFxFtksuThilS@infradead.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 9 Dec 2024 09:58:58 +0100
+Message-ID: <CAOQ4uxiEnEC87pVBhfNcjduHOZWfbEoB8HKVbjNHtkaWA5d-JA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export operations
+ as only supporting file handles
+To: Christoph Hellwig <hch@infradead.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	Jeff Layton <jlayton@kernel.org>, Erin Shepherd <erin.shepherd@e43.eu>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	stable <stable@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Shaohua Li <shli@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On Mon, Dec 9, 2024 at 8:49=E2=80=AFAM Christoph Hellwig <hch@infradead.org=
+> wrote:
+>
+> On Sat, Dec 07, 2024 at 09:49:02AM +0100, Amir Goldstein wrote:
+> > > /* file handles can be used by a process on another node */
+> > > #define EXPORT_OP_ALLOW_REMOTE_NODES    (...)
+> >
+> > This has a sound of security which is incorrect IMO.
+> > The fact that we block nfsd export of cgroups does not prevent
+> > any type of userland file server from exporting cgroup file handles.
+>
+> So what is the purpose of the flag?  Asking for a coherent name and
+> description was the other bigger ask for me.
+>
+> > Maybe opt-out of nfsd export is a little less safer than opt-in, but
+> > 1. opt-out is and will remain the rare exception for export_operations
+> > 2. at least the flag name EXPORT_OP_LOCAL_FILE_HANDLE
+> >     is pretty clear IMO
+>
+> Even after this thread I have absolutely no idea what problem it tries
+> to solve.  Maybe that's not just the flag names fault, and not of opt-in
+> vs out, but both certainly don't help.
+>
+> > Plus, as I wrote in another email, the fact that pidfs is SB_NOUSER,
+> > so userspace is not allowed to mount it into the namespace and
+> > userland file servers cannot export the filesystem itself.
+> > That property itself (SB_NOUSER), is therefore a good enough indication
+> > to deny nfsd export of this fs.
+>
+> So check SB_NOUSER in nfsd and be done with it?
+>
 
-There is panic as follows:
+That will work for the new user (pidfs).
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
-  Call Trace:
-   nfs_inode_add_request+0x1cc/0x5b8
-   nfs_setup_write_request+0x1fa/0x1fc
-   nfs_writepage_setup+0x2d/0x7d
-   nfs_updatepage+0x8b8/0x936
-   nfs_write_end+0x61d/0xd45
-   generic_perform_write+0x19a/0x3f0
-   nfs_file_write+0x2cc/0x6e5
-   new_sync_write+0x442/0x560
-   __vfs_write+0xda/0xef
-   vfs_write+0x176/0x48b
-   ksys_write+0x10a/0x1e9
-   __se_sys_write+0x24/0x29
-   __x64_sys_write+0x79/0x93
-   do_syscall_64+0x16d/0x4bb
-   entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+I think SB_KERNMOUNT qualifies as well, because it signifies
+a mount that does not belong to any user's mount namespace.
 
-The above panic may happen as follows:
+For example, tmpfs (shmem) can be exported via nfs, but trying to
+export an anonymous memfd should fail.
 
-  nfs_updatepage
-    nfs_writepage_setup
-      nfs_setup_write_request
-        nfs_try_to_update_request will return NULL
-          nfs_wb_page will return 0
-            if (clear_page_dirty_for_io(page)) == true
-            nfs_writepage_locked will return 0
-              nfs_do_writepage will return 0
-                nfs_page_async_flush
-                  if (nfs_error_is_fatal_on_server(ret)) == true
-                  nfs_write_error_remove_page
-                    generic_error_remove_page
-                      truncate_inode_page
-                        delete_from_page_cache
-                          __delete_from_page_cache
-                            page_cache_tree_delete
-                              page->mapping = NULL
-                nfs_page_async_flush() return 0 <== this is point
-              nfs_do_writepage return 0
-            nfs_writepage_locked return 0
-          nfs_wb_page return 0
-        nfs_try_to_update_request return NULL
-        if (req != NULL) == false
-        nfs_create_request
-          req->wb_page = page // page->mapping == NULL
-        nfs_inode_add_request
-          mapping = page_file_mapping(req->wb_page) == NULL
-            return page->mapping // is NULL
-          spin_lock(&mapping->private_lock) // oops, mapping is NULL
+To be clear, exporting pidfs or internal shmem via an anonymous fd is
+probably not possible with existing userspace tools, but with all the new
+mount_fd and magic link apis, I can never be sure what can be made possible
+to achieve when the user holds an anonymous fd.
 
-Fix this by reporting fatal errors and stop writeback.
+The thinking behind adding the EXPORT_OP_LOCAL_FILE_HANDLE flag
+was that when kernfs/cgroups was added exportfs support with commit
+aa8188253474 ("kernfs: add exportfs operations"), there was no intention
+to export cgroupfs over nfs, only local to uses, but that was never enforce=
+d,
+so we thought it would be good to add this restriction and backport it to
+stable kernels.
 
-The patchset (29 patches) "Fix up soft mounts for NFSv4.x" [1] replaces
-the custom error reporting mechanism. It seems that we can fix this bug
-if we merge all the patchset into LTS 4.19. However, it is clear that
-this is not the best option for LTS 4.19.
+[CC patch authors]
 
-By the way, applying commit 22876f540bdf ("NFS: Don't call
-generic_error_remove_page() while holding locks") into LTS 4.19 will
-introduce other issues [2].
+I tried to look for some property of cgroupfs that will make it not eligibl=
+e
+for nfs such as the SB_KERNMOUNT and SB_NOUSER indicators, but
+as far as I can see cgroups looks like any other non-blockdev filesystem.
 
-Link[1]: https://lore.kernel.org/all/20190407175912.23528-1-trond.myklebust@hammerspace.com/
-Link[2]: https://lore.kernel.org/all/tencent_F89651CE8E1BFCEC42C4BFEDD0CA77F82609@qq.com/
-Fixes: 89047634f5ce ("NFS: Don't interrupt file writeout due to fatal errors")
-Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
----
- fs/nfs/write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Maybe we were wrong about the assumption that cgroupfs should be treated
+specially and deny export cgroups over nfs??
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 65aaa6eaad2c..c69a539eee2c 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -660,7 +660,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 	return ret;
- out_launder:
- 	nfs_write_error_remove_page(req);
--	return 0;
-+	return ret;
- }
- 
- static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
--- 
-2.34.1
-
+Thanks,
+Amir.
 
