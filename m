@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-8462-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8463-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDEF69E9971
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 15:51:21 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CEC619E9979
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 15:54:09 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15B2B168B63
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:50:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80C0E282226
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 14:54:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1C41E9B0F;
-	Mon,  9 Dec 2024 14:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3739B1B424E;
+	Mon,  9 Dec 2024 14:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1fRtEV4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dC68sHO7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151631E9B0A
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 14:49:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B7C1B424D
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 14:54:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733755761; cv=none; b=K9sl80T0lCEmsvPF/orlB49d1IEzmEfq7zgGZaNy9YQVo8+6s2DAIH8bokUSTuK+ADSjg598ncXe7NsGpgPlgzF8nkQ9k1jSBH6j5/BAPBITp3Fl0IFj1VYBrr2PP9zA1shEmPEWP6xaZNyvsjomLFjQWz67acwqbNiwnkqyo74=
+	t=1733756048; cv=none; b=heAeHXdIJz8GkZDVnQ7LqkjACsxX22CS8xWBclqHK3T3swiD7gaZZoqThnopEQ1XzjuLwbbeBd/oOr0izgy7w5CLYkOMLy9eUllWprtAvZ+9Yy9+9EcTaQ2DILh+Uk4MiRhMPFt9N4+R+JzbYnKGgJgxXABWNoCVMKYc6QvgpAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733755761; c=relaxed/simple;
-	bh=XcCP1JW4rIZYzbHT1zzcGxNrCcVjTZsly2vtrA9ecak=;
+	s=arc-20240116; t=1733756048; c=relaxed/simple;
+	bh=ayRGytfhx0PIKK9FF9pC0Rx84lvlu8XhnkpGDRBzaYY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZQ9xXppWkOGQaOo53K6247NgRQAJPgRA61fteO35Zcq6ykPy9R4lJjO2Ci5ZT/f3zuvgTH8qmQ5Y3bzK5N0Jc7PlVa56R6igcATo1K4dA9/KRcX1T4Iredh0MEKmhf5xEKwVq2QhqeTfWW0ZyvEL2Alpb+Ucx1kvuw6G+Pab8Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1fRtEV4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F201C4CED1;
-	Mon,  9 Dec 2024 14:49:20 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ix+VWm4VpU6TAoN9AeT8sbPn4VAKTD0kZQJD6nPe5Xt0awFWK2l2SKMa1W+xrifOQxILt/QZNa2xF4nqxsiR2CUKGXGWPb1jpYQ1mJaFwse0rJwh0LvYL9jIkXXuBy2TIXtYw0IQBmq0DpdIs/1WOM0qCnM6P62OcT5RIx6poNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dC68sHO7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607B8C4CEE2;
+	Mon,  9 Dec 2024 14:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733755760;
-	bh=XcCP1JW4rIZYzbHT1zzcGxNrCcVjTZsly2vtrA9ecak=;
+	s=k20201202; t=1733756047;
+	bh=ayRGytfhx0PIKK9FF9pC0Rx84lvlu8XhnkpGDRBzaYY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=a1fRtEV4NVmgh0BHwMlS/G1X0lDWutn6Rd2kzzley5BF35cBl3gRY/NAxzUKNoZHv
-	 Pe5HZgoue0xuuXpI8H1vJGs1zqhNqHNcTlS3kS3/SUA3YetZsSL8gwLWuNrxP0S6/4
-	 LZmQm2zVn7mcqjWaJQroU4wv8lrbWAAg2rgliVyES8b162fRduCErydTRO3tfmBypb
-	 wuhQVGJl7HiVZ7rYmQ8Y0DmGUNaFjvMd++U/TugYrg7vJlhts5rE5Lz9XljCP7/EPJ
-	 TeVLWrKcGYrJywc3J48M+DC1cWWv4oIUgO0ETPBp1vzcmbZrrbDy1dXW9UZqf05sdY
-	 KbEqkIBirPVKA==
-Message-ID: <244a3db2dec9207b44e6055d1fb8b371be026bc3.camel@kernel.org>
-Subject: Re: [PATCH 0/6 v4] nfsd: allocate/free session-based DRC slots on
- demand
+	b=dC68sHO7EnOTnIsykx4WrQudclhXU32KQbN52iFsgH2eIiaIoEvmo5XaCnV1Z82P9
+	 38vLQWRiEGMoRDWUHNn4HejlOq5OFfmU2xH53BA47FwEwBcn4ctJ4+jzs/cvuEcuXc
+	 EeHRMblHIKxf0plQhm5PLyiFUAU+WuvLw7yENajq2KUVkzOWt0aHpxIOeQ2N4bwYn5
+	 hk0OKu8AmYhLcLJ6jU52LGdyqSTa7zkYpntqYKg8/FHyp9hsEVZhTcOo0/Tvvh3INN
+	 Z8ERZdD9Q3y9PzAbCAZJ6+HTacGmE9yHV+AVinJ2a1mDFvXXHCXQif68rTMpR9w20J
+	 /dJRewqBSu2ow==
+Message-ID: <ea34b105d4c4149000a6f10a7b0e68ac2033ac8e.camel@kernel.org>
+Subject: Re: [PATCH 0/2] nfsd: don't use sv_nrthreads in connection limiting
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date: Mon, 09 Dec 2024 09:49:18 -0500
-In-Reply-To: <20241208224629.697448-1-neilb@suse.de>
-References: <20241208224629.697448-1-neilb@suse.de>
+Date: Mon, 09 Dec 2024 09:54:06 -0500
+In-Reply-To: <20241209004310.728309-1-neilb@suse.de>
+References: <20241209004310.728309-1-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,24 +134,19 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-12-09 at 09:43 +1100, NeilBrown wrote:
-> Changes from v3 include:
->  - use GFP_NOWAIT more consistently - don't use GFP_ATOMIC
->  - document reduce_session_slots()
->  - change sl_generation to u16.  As we reduce the number of slots one at
->    a time and update se_slot_gen each time, we could cycle a u8 generatio=
-n
->    counter quickly.
+On Mon, 2024-12-09 at 11:41 +1100, NeilBrown wrote:
+> This is a resend of a couple of patches from a series that didn't get
+> accepted in its entirety, but I think these patches were not objected
+> to.  Hopefully they can land so that when I get back to the series it
+> will be smaller.
 >=20
 > Thanks,
 > NeilBrown
 >=20
->  [PATCH 1/6] nfsd: use an xarray to store v4.1 session slots
->  [PATCH 2/6] nfsd: remove artificial limits on the session-based DRC
->  [PATCH 3/6] nfsd: add session slot count to
->  [PATCH 4/6] nfsd: allocate new session-based DRC slots on demand.
->  [PATCH 5/6] nfsd: add support for freeing unused session-DRC slots
->  [PATCH 6/6] nfsd: add shrinker to reduce number of slots allocated
+>=20
+
+The new heuristic makes a lot more sense than the hard cap that we have
+now:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
