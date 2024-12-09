@@ -1,793 +1,154 @@
-Return-Path: <linux-nfs+bounces-8452-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8453-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BE8E9E90AF
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 11:43:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 09A669E92FE
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 12:56:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11B5816381E
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 10:43:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 845531636EF
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 11:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08531216E36;
-	Mon,  9 Dec 2024 10:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F01F72236E3;
+	Mon,  9 Dec 2024 11:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PXpWFt+Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqVGfwBD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30637216E0A
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 10:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97A4221D9F
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Dec 2024 11:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733740987; cv=none; b=ZymVcDfwwjz5x1b4HhKNwM3peqA/+hQIycCYzg/n/VWubHwY2MAn5pUUn3r+IBshB4GQPFUMorfXfSxorvImCoEDbfqPyLnbxy6SyguxDGmXMj0cLBkY18sXotDifT6n2WrDP6qzToGiMxiPkhNtOrWryIarhLcm9hW29jtjIlA=
+	t=1733745294; cv=none; b=sRzaPF2viG77f4alwwXxElShz5/udvtjOpyr4/ktdnZtvzFwyTszOtUmDT43AwtKfk0u9luOFJeV65iyxnzGiYYi4niTuDyi2bdAg85YCcHnbjQjuR1nhqgvEENPwSoyVd0+RXICVKBUvbdVepPZTzqzVaJSpHa7g6kJtan4Aj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733740987; c=relaxed/simple;
-	bh=QnCtSmlEvokI/muLEEu/r+YZcsMDo8w4d3OUbm23lms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=intJcWsFtS4q1zIHcmt7oZbAYlDXZhoMydFaKv4u04uyJOXVpPCtLQJbZY2lgTgadAsLKfJgmoedCsuQbhRtlBqNz30yJZ4lrSC7/WksY57qXxOFlSEtdR7s/D9ol1NIePPJkfCoB4SVNeK9NVT1YEr+3B2hPw1HtIRANMGBPUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PXpWFt+Z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733740984;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LD/aBbR9I7M63wBFDp4bwlb8GSFTtz4xTbiOCeM4dEA=;
-	b=PXpWFt+Zm1L+Mj3hDUuAzFJgb53HbMrpJvIdFgyengoCi4jqZWzGcFaqVTTC4MCclhTho0
-	BOzuhhsnEdXtlJQ522bn8DOSLMR4xF+xlguYRxtajTwD2MdgwjNf++e9+NyqmKaZo6VslE
-	OyCmBOUKaj4hONuO3izjK7dw/CAzcyk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-245-cwLnEb19PfS-pkydP3Q7ww-1; Mon, 09 Dec 2024 05:43:02 -0500
-X-MC-Unique: cwLnEb19PfS-pkydP3Q7ww-1
-X-Mimecast-MFC-AGG-ID: cwLnEb19PfS-pkydP3Q7ww
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7b6cc591cc3so324965585a.3
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Dec 2024 02:43:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733740980; x=1734345780;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LD/aBbR9I7M63wBFDp4bwlb8GSFTtz4xTbiOCeM4dEA=;
-        b=e5xZfo7rNg6BSn16xqG2wlYWn2mzVYraj08XO7b1XyZgUCipHIWT+obp6xNcTQXjGU
-         iaL/b2g6ysoNZ8Bv4JzNo7cE8PBywNwbkbxz0s9VWUbURenpUvXyDoNAak01U4hOXZmb
-         y9AI1BRVfjAtvBLjI/uJ5V/sjiFJYEKbqFPbBYArv9r6w3wbAzx/G/dSjzEQ4QDQzsMf
-         kiCTJYxiL+ImYUTGq8xDXh29rz+oj+Qw49nLXUO9VEmNBCIUxmtefddPl073LFaAO0Jm
-         znP+Od+7RNSPfnbKLFpBxD2egmpyLOLI0DVktuWAQfKeXljJepJi4DmXFLSoKhGEDLu0
-         eLtA==
-X-Gm-Message-State: AOJu0YzWWi8KcbzpGex267NRlbXEbsceYzgM42Kps0GvaNn/DUkkQ/EH
-	8/8fvP8SgeJKXpO0qi5tNcVDzYzKTHGg9fwPPfi53FtrgZS3ChAOAEIXRvTgeDrvSFMs9/6R8Bm
-	mQy3phYaecNXBbsrJtVyISmRfk0D9Ggng/mAw+cMWR0rKw0nTvxEy8bmEh33fHdds1A==
-X-Gm-Gg: ASbGncuRQMOAYq71qeguVTmPORvHIioX9oUB5Nvoer5eo5Cd2FFwvMWlCe/DzOtdVxE
-	7MAJmE/ogYJlyNRbXuLO+iQAtmpMZURD9zZWw/z15UIji+R+VffJ7UvJMS0GSF15knw6rXdb9Fn
-	7s7oYE2KiYn71ruK016pJNOxoHESj7XDkI4FuWz4FTg1+Z6l95NAkGCr5Z/fUfi6YrnAeHYpSEw
-	UPMlnwSqHrSwAGiy4ConJkpAvujJ/6Q7TX73dTRHiaZpB1dSw==
-X-Received: by 2002:a05:620a:26a9:b0:7b6:d2cb:13ea with SMTP id af79cd13be357-7b6d2cb1568mr680371085a.60.1733740980453;
-        Mon, 09 Dec 2024 02:43:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdV8wVHYFwSltGfA8wMsYI6pbPpkXiGEH+KDk21JQ8L/SbTCfW6gNQgIaRSrni6viucS7zRA==
-X-Received: by 2002:a05:620a:26a9:b0:7b6:d2cb:13ea with SMTP id af79cd13be357-7b6d2cb1568mr680368485a.60.1733740980026;
-        Mon, 09 Dec 2024 02:43:00 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.249.243])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b6c4ed23fdsm234718485a.4.2024.12.09.02.42.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Dec 2024 02:42:59 -0800 (PST)
-Message-ID: <af27b4b3-b41d-4eee-a41f-13271a4a7e78@redhat.com>
-Date: Mon, 9 Dec 2024 05:42:58 -0500
+	s=arc-20240116; t=1733745294; c=relaxed/simple;
+	bh=+FeSddHzKJoeNYOnyzGHyy4JAUUPqDLIK7WE7uK1qc4=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:Subject; b=R3OCiviBB6WNr3WQQ9+TD2+RPGzBQFEE9C0gV3FnSm/GGRCENwfN/SsE2K1Qp0Nk/TiJYm7HWdyG2r43ZepE6D0lhb/3StoEy63hKATHp7mj/HWcMXVu6R90ZiApt5nM696VX/HflC+rZlWhxfoD8cpiK6g+uKnY894nPQckmkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqVGfwBD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6215BC4CED1;
+	Mon,  9 Dec 2024 11:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733745294;
+	bh=+FeSddHzKJoeNYOnyzGHyy4JAUUPqDLIK7WE7uK1qc4=;
+	h=From:Date:To:Subject:From;
+	b=gqVGfwBDk10xLydOlWpdmAwq0P3eRg6ejv4Jf+opKTelNj473pVcRn26kNcRrrCbW
+	 8vl3RBClPWcJ/a2nbF/P+7vtcnmnP0fUXRSKe8WIWbRpTYtQVFd1ySxNskvFE1izih
+	 DOsaXX/+3CRV+fdtTH5INNwidKihJefiUmC/W5IwG/bQOdAtNeNSCDooda3fVslMDg
+	 3mL//LJ7W3NZiwQS+/Pk2NY9C5fr0rud3sI6CHO1NgrJFNiW072qhVMTn+5g8q+DOy
+	 Is7qgDB4GkU8/+/DfSqNMnltTjbWlcr4gDi51YShYd1wU1UlzdT0gNO8CjrFQPJR5l
+	 2dW4aSVTtsbyQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F13DA380A95E;
+	Mon,  9 Dec 2024 11:55:10 +0000 (UTC)
+From: Jur van der Burg via Bugspray Bot <bugbot@kernel.org>
+Date: Mon, 09 Dec 2024 11:55:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Exportfs changes - When a export rootdir is present,
- nfsd_realpath() wrapper is used to avoid symlink exploits. - Removed
- canonicalization of rootdir paths. Export rootdir must now be an absolute
- path. - Implemented nfsd_path.h
-To: Christopher Bii <christopherbii@hyub.org>
-Cc: linux-nfs@vger.kernel.org
-References: <273abae8-e3c8-4c8c-b082-3bb624271818@hyub.org>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <273abae8-e3c8-4c8c-b082-3bb624271818@hyub.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: jlayton@kernel.org, trondmy@kernel.org, cel@kernel.org, 
+ linux-nfs@vger.kernel.org, anna@kernel.org
+Message-ID: <20241209-b219580c0-d09195e1d9e8@bugzilla.kernel.org>
+Subject: kernel BUG at fs/nfsd/nfs4recover.c:534 Oops: invalid opcode: 0000
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-Hello,
+Jur van der Burg writes via Kernel.org Bugzilla:
 
-On 12/4/24 9:04 PM, Christopher Bii wrote:
-> Signed-off-by: Christopher Bii <christopherbii@hyub.org>
-> ---
->   support/export/export.c     |  24 +--
->   support/include/exportfs.h  |   1 +
->   support/include/nfsd_path.h |   9 +-
->   support/misc/nfsd_path.c    | 362 ++++++++++++------------------------
->   support/nfs/exports.c       |  53 +++---
->   utils/exportfs/exportfs.c   |   8 +-
->   6 files changed, 165 insertions(+), 292 deletions(-)
-There is a lot of change here... that will be very hard to test.
-Please let me know what explicit problem this is fixing and
-how to test it...
+I've got an instant crash when starting the nfs server on kernel 6.12.2. Previous kernels (at least up to 6.6.56) were fine:
 
-Note: neither patches apply... Please use 'git format-patch'
-to create the patches and  'git send-email' to post the
-patches... tia!
+Dec  9 12:51:15 hostx kernel: [   66.833082] RPC: Registered named UNIX socket transport module.
+Dec  9 12:51:15 hostx kernel: [   66.833088] RPC: Registered udp transport module.
+Dec  9 12:51:15 hostx kernel: [   66.833089] RPC: Registered tcp transport module.
+Dec  9 12:51:15 hostx kernel: [   66.833090] RPC: Registered tcp-with-tls transport module.
+Dec  9 12:51:15 hostx kernel: [   66.833091] RPC: Registered tcp NFSv4.1 backchannel transport module.
+Dec  9 12:51:17 hostx kernel: [   68.010707] NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
+Dec  9 12:51:17 hostx kernel: [   68.010740] NFSD: Using legacy client tracking operations.
+Dec  9 12:51:17 hostx kernel: [   68.010744] NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
+Dec  9 12:51:17 hostx kernel: [   68.010790] ------------[ cut here ]------------
+Dec  9 12:51:17 hostx kernel: [   68.010792] kernel BUG at fs/nfsd/nfs4recover.c:534!
+Dec  9 12:51:17 hostx kernel: [   68.010808] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+Dec  9 12:51:17 hostx kernel: [   68.011526] CPU: 3 UID: 0 PID: 5020 Comm: rpc.nfsd Not tainted 6.12.2-0.1-vtserver #1
+Dec  9 12:51:17 hostx kernel: [   68.011921] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+Dec  9 12:51:17 hostx kernel: [   68.012320] RIP: 0010:nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.012843] Code: 48 8b 1c d8 e8 c6 e1 68 e0 48 8b bb 30 01 00 00 48 85 ff 74 10 e8 c5 81 8f e0 48 c7 83 30 01 00 00 00 00 00 00 44 89 e3 eb 8b <0f> 0b 48 c7 c6 80 97 ae a0 48 c7 c7 b8 de b3 a0 e8 70 62 66 e0 8b
+Dec  9 12:51:17 hostx kernel: [   68.013647] RSP: 0018:ffffc900009bbce8 EFLAGS: 00010282
+Dec  9 12:51:17 hostx kernel: [   68.014043] RAX: 0000000000000049 RBX: 000000000000000b RCX: 0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.014437] RDX: 0000000000000000 RSI: ffffffff824792fb RDI: 00000000ffffffff
+Dec  9 12:51:17 hostx kernel: [   68.014825] RBP: ffff888115dda000 R08: 00000000ffff7fff R09: 0000000000000058
+Dec  9 12:51:17 hostx kernel: [   68.015214] R10: 00000000ffff7fff R11: ffffffff82852f00 R12: ffff888115dda000
+Dec  9 12:51:17 hostx kernel: [   68.015602] R13: ffff888115dda000 R14: ffff888115dda000 R15: ffff8881172b9e40
+Dec  9 12:51:17 hostx kernel: [   68.015989] FS:  00007f99b2cb1740(0000) GS:ffff888237cc0000(0000) knlGS:0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.016383] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Dec  9 12:51:17 hostx kernel: [   68.016791] CR2: 00007f0f31eef190 CR3: 000000013f422003 CR4: 00000000001706f0
+Dec  9 12:51:17 hostx kernel: [   68.017237] Call Trace:
+Dec  9 12:51:17 hostx kernel: [   68.017640]  <TASK>
+Dec  9 12:51:17 hostx kernel: [   68.018024]  ? die+0x43/0xb0
+Dec  9 12:51:17 hostx kernel: [   68.018415]  ? do_trap+0x119/0x150
+Dec  9 12:51:17 hostx kernel: [   68.018798]  ? nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.019294]  ? do_error_trap+0x87/0xc0
+Dec  9 12:51:17 hostx kernel: [   68.019692]  ? nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.020179]  ? exc_invalid_op+0x53/0x70
+Dec  9 12:51:17 hostx kernel: [   68.020560]  ? nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.021031]  ? asm_exc_invalid_op+0x16/0x20
+Dec  9 12:51:17 hostx kernel: [   68.021410]  ? nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.021894]  ? nfsd4_legacy_tracking_init+0xc4/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.022367]  nfsd4_client_tracking_init+0x1a5/0x1e0 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.022862]  nfs4_state_start_net+0x2d1/0x440 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.023347]  nfsd_svc+0x1c5/0x330 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.023827]  ? simple_strntoull+0xa8/0xc0
+Dec  9 12:51:17 hostx kernel: [   68.024203]  write_threads+0xc8/0x1a0 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.024684]  ? preempt_count_add+0x69/0xa0
+Dec  9 12:51:17 hostx kernel: [   68.025065]  ? _copy_from_user+0x25/0x60
+Dec  9 12:51:17 hostx kernel: [   68.025449]  ? _raw_spin_unlock+0x15/0x30
+Dec  9 12:51:17 hostx kernel: [   68.025850]  ? simple_transaction_get+0xcb/0xe0
+Dec  9 12:51:17 hostx kernel: [   68.026233]  ? __pfx_write_threads+0x10/0x10 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.026724]  nfsctl_transaction_write+0x51/0xa0 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.027219]  vfs_write+0x136/0x480
+Dec  9 12:51:17 hostx kernel: [   68.027610]  ksys_write+0x71/0x100
+Dec  9 12:51:17 hostx kernel: [   68.027990]  do_syscall_64+0x4b/0x110
+Dec  9 12:51:17 hostx kernel: [   68.028371]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Dec  9 12:51:17 hostx kernel: [   68.028779] RIP: 0033:0x7f99b2679be4
+Dec  9 12:51:17 hostx kernel: [   68.029162] Code: 84 00 00 00 00 00 48 8b 05 09 84 20 00 c3 0f 1f 84 00 00 00 00 00 8b 05 0a c8 20 00 48 63 ff 85 c0 75 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 f3 c3 66 90 55 53 48 89 d5 48 89 f3 48 83
+Dec  9 12:51:17 hostx kernel: [   68.029994] RSP: 002b:00007ffdd307a0d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+Dec  9 12:51:17 hostx kernel: [   68.030427] RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f99b2679be4
+Dec  9 12:51:17 hostx kernel: [   68.030857] RDX: 0000000000000002 RSI: 0000000000608600 RDI: 0000000000000003
+Dec  9 12:51:17 hostx kernel: [   68.031291] RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.031748] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.032181] R13: 0000000000000001 R14: 0000000000000000 R15: 00007ffdd307bde6
+Dec  9 12:51:17 hostx kernel: [   68.032610]  </TASK>
+Dec  9 12:51:17 hostx kernel: [   68.033015] Modules linked in: nfsd auth_rpcgss nfs_acl lockd grace sunrpc iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi target_core_mod usbip_host vhci_hcd usbip_core vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock veth bridge stp llc crc32c_intel ghash_clmulni_intel aesni_intel crypto_simd cryptd rapl vmwgfx drm_ttm_helper ttm drm_kms_helper drm pata_acpi cpuspeed vmw_balloon uhci_hcd sr_mod psmouse e1000e serio_raw pcspkr vmxnet3 ehci_pci e1000 vmw_vmci cdrom ehci_hcd vmw_pvscsi i2c_piix4 i2c_smbus ac button usbhid xhci_pci xhci_hcd usbcore usb_common dm_multipath dm_mod dax nvme nvme_core virtio_net net_failover failover virtio_scsi virtio_blk virtio_pci virtio_pci_legacy_dev virtio_pci_modern_dev virtio_ring virtio ata_generic pata_atiixp fan thermal
+Dec  9 12:51:17 hostx kernel: [   68.035844] ---[ end trace 0000000000000000 ]---
+Dec  9 12:51:17 hostx kernel: [   68.036353] RIP: 0010:nfsd4_legacy_tracking_init+0x20b/0x260 [nfsd]
+Dec  9 12:51:17 hostx kernel: [   68.036946] Code: 48 8b 1c d8 e8 c6 e1 68 e0 48 8b bb 30 01 00 00 48 85 ff 74 10 e8 c5 81 8f e0 48 c7 83 30 01 00 00 00 00 00 00 44 89 e3 eb 8b <0f> 0b 48 c7 c6 80 97 ae a0 48 c7 c7 b8 de b3 a0 e8 70 62 66 e0 8b
+Dec  9 12:51:17 hostx kernel: [   68.037974] RSP: 0018:ffffc900009bbce8 EFLAGS: 00010282
+Dec  9 12:51:17 hostx kernel: [   68.038509] RAX: 0000000000000049 RBX: 000000000000000b RCX: 0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.039021] RDX: 0000000000000000 RSI: ffffffff824792fb RDI: 00000000ffffffff
+Dec  9 12:51:17 hostx kernel: [   68.039562] RBP: ffff888115dda000 R08: 00000000ffff7fff R09: 0000000000000058
+Dec  9 12:51:17 hostx kernel: [   68.040074] R10: 00000000ffff7fff R11: ffffffff82852f00 R12: ffff888115dda000
+Dec  9 12:51:17 hostx kernel: [   68.040618] R13: ffff888115dda000 R14: ffff888115dda000 R15: ffff8881172b9e40
+Dec  9 12:51:17 hostx kernel: [   68.041135] FS:  00007f99b2cb1740(0000) GS:ffff888237cc0000(0000) knlGS:0000000000000000
+Dec  9 12:51:17 hostx kernel: [   68.041692] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Dec  9 12:51:17 hostx kernel: [   68.042230] CR2: 00007f0f31eef190 CR3: 000000013f422003 CR4: 00000000001706f0
 
-steved.
+I found one reference to the same issue but no solution:
 
-> 
-> diff --git a/support/export/export.c b/support/export/export.c
-> index 2c8c3335..463ba846 100644
-> --- a/support/export/export.c
-> +++ b/support/export/export.c
-> @@ -40,20 +40,7 @@ static int    export_check(const nfs_export *exp, 
-> const struct addrinfo *ai,
->   static void
->   exportent_mkrealpath(struct exportent *eep)
->   {
-> -    const char *chroot = nfsd_path_nfsd_rootdir();
-> -    char *ret = NULL;
-> -
-> -    if (chroot) {
-> -        char buffer[PATH_MAX];
-> -        if (realpath(chroot, buffer))
-> -            ret = nfsd_path_prepend_dir(buffer, eep->e_path);
-> -        else
-> -            xlog(D_GENERAL, "%s: failed to resolve path %s: %m",
-> -                    __func__, chroot);
-> -    }
-> -    if (!ret)
-> -        ret = xstrdup(eep->e_path);
-> -    eep->e_realpath = ret;
-> +        eep->e_realpath = nfsd_path_prepend_root(eep->e_path);
->   }
->    char *
-> @@ -64,6 +51,13 @@ exportent_realpath(struct exportent *eep)
->       return eep->e_realpath;
->   }
->   +void
-> +exportent_free_realpath(struct exportent* eep)
-> +{
-> +        if (eep->e_realpath && eep->e_realpath != eep->e_path)
-> +                free(eep->e_realpath);
-> +};
-> +
->   void
->   exportent_release(struct exportent *eep)
->   {
-> @@ -73,7 +67,7 @@ exportent_release(struct exportent *eep)
->       free(eep->e_fslocdata);
->       free(eep->e_uuid);
->       xfree(eep->e_hostname);
-> -    xfree(eep->e_realpath);
-> +        exportent_free_realpath(eep);
->   }
->    static void
-> diff --git a/support/include/exportfs.h b/support/include/exportfs.h
-> index 9edf0d04..c65e2a1c 100644
-> --- a/support/include/exportfs.h
-> +++ b/support/include/exportfs.h
-> @@ -173,6 +173,7 @@ struct export_features {
->    struct export_features *get_export_features(void);
->   void fix_pseudoflavor_flags(struct exportent *ep);
-> +void exportent_free_realpath(struct exportent*);
->   char *exportent_realpath(struct exportent *eep);
->   int export_test(struct exportent *eep, int with_fsid);
->   diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
-> index aa1e1dd0..9c5976e8 100644
-> --- a/support/include/nfsd_path.h
-> +++ b/support/include/nfsd_path.h
-> @@ -8,12 +8,13 @@
->    struct file_handle;
->   struct statfs;
-> +struct nfsd_task_t;
->    void         nfsd_path_init(void);
->   -const char *    nfsd_path_nfsd_rootdir(void);
-> +const char *    nfsd_path_rootdir(void);
->   char *        nfsd_path_strip_root(char *pathname);
-> -char *        nfsd_path_prepend_dir(const char *dir, const char 
-> *pathname);
-> +char *        nfsd_path_prepend_root(char *pathname);
->    int         nfsd_path_stat(const char *pathname, struct stat *statbuf);
->   int         nfsd_path_lstat(const char *pathname, struct stat *statbuf);
-> @@ -23,8 +24,8 @@ int        nfsd_path_statfs(const char *pathname,
->    char *        nfsd_realpath(const char *path, char *resolved_path);
->   -ssize_t        nfsd_path_read(int fd, char *buf, size_t len);
-> -ssize_t        nfsd_path_write(int fd, const char *buf, size_t len);
-> +ssize_t        nfsd_path_read(int fd, void* buf, size_t len);
-> +ssize_t        nfsd_path_write(int fd, void* buf, size_t len);
->    int        nfsd_name_to_handle_at(int fd, const char *path,
->                          struct file_handle *fh,
-> diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-> index c3dea4f0..b896f091 100644
-> --- a/support/misc/nfsd_path.c
-> +++ b/support/misc/nfsd_path.c
-> @@ -19,95 +19,79 @@
->   #include "nfsd_path.h"
->   #include "workqueue.h"
->   -static struct xthread_workqueue *nfsd_wq;
-> +static struct xthread_workqueue *nfsd_wq = NULL;
-> +const char      *rootdir;
-> +size_t          rootdir_pathlen = 0;
->   -static int
-> -nfsd_path_isslash(const char *path)
-> -{
-> -    return path[0] == '/' && path[1] == '/';
-> -}
-> +struct nfsd_task_t {
-> +        int             ret;
-> +        void*           data;
-> +};
-> +/* Function used to offload tasks that must be ran within the correct
-> + * chroot environment.
-> + * */
-> +static void
-> +nfsd_run_task(void (*func)(void*), void* data){
-> +        nfsd_wq ? xthread_work_run_sync(nfsd_wq, func, data) : func(data);
-> +};
->   -static int
-> -nfsd_path_isdot(const char *path)
-> +const char*
-> +nfsd_path_rootdir(void)
->   {
-> -    return path[0] == '.' && path[1] == '/';
-> -}
-> +        return rootdir;
-> +};
->   -static const char *
-> -nfsd_path_strip(const char *path)
-> +/* Set rootdir global variable. Rootdir must be an absolute path
-> + * and resolveable by realpath()
-> + * */
-> +static void
-> +nfsd_rootdir_set(void)
->   {
-> -    if (!path || *path == '\0')
-> -        goto out;
-> -    for (;;) {
-> -        if (nfsd_path_isslash(path)) {
-> -            path++;
-> -            continue;
-> -        }
-> -        if (nfsd_path_isdot(path)) {
-> -            path += 2;
-> -            continue;
-> -        }
-> -        break;
-> -    }
-> -out:
-> -    return path;
-> -}
-> +        const char             *path;
-> +        if (!(path = conf_get_str("exports", "rootdir")))
-> +                return;
->   -const char *
-> -nfsd_path_nfsd_rootdir(void)
-> -{
-> -    const char *rootdir;
-> -
-> -    rootdir = nfsd_path_strip(conf_get_str("exports", "rootdir"));
-> -    if (!rootdir || rootdir[0] ==  '\0')
-> -        return NULL;
-> -    if (rootdir[0] == '/' && rootdir[1] == '\0')
-> -        return NULL;
-> -    return rootdir;
-> +        if (path[0] != '/')
-> +                xlog(L_FATAL, "%s: NFS export rootdir must be an 
-> absolute path. "
-> +                                "Current value: \"%s\"", __func__, path);
-> +
-> +        if (!(rootdir = realpath(path, NULL))){
-> +                free((void*)rootdir);
-> +                xlog(L_FATAL, "realpath(): Unable to resolve root 
-> export path \"%s\"", path);
-> +        };
-> +
-> +        rootdir_pathlen = strlen(rootdir);
->   }
->    char *
->   nfsd_path_strip_root(char *pathname)
->   {
-> -    char buffer[PATH_MAX];
-> -    const char *dir = nfsd_path_nfsd_rootdir();
-> -
-> -    if (!dir)
-> -        goto out;
-> -
-> -    if (realpath(dir, buffer))
-> -        return strstr(pathname, buffer) == pathname ?
-> -            pathname + strlen(buffer) : NULL;
-> +    if (!rootdir)
-> +                return pathname;
->   -    xlog(D_GENERAL, "%s: failed to resolve path %s: %m", __func__, dir);
-> -out:
-> -    return pathname;
-> +        return strstr(pathname, rootdir) == pathname ?
-> +                pathname + rootdir_pathlen : pathname;
->   }
->    char *
-> -nfsd_path_prepend_dir(const char *dir, const char *pathname)
-> +nfsd_path_prepend_root(char *pathname)
->   {
-> -    size_t len, dirlen;
-> -    char *ret;
-> -
-> -    dirlen = strlen(dir);
-> -    while (dirlen > 0 && dir[dirlen - 1] == '/')
-> -        dirlen--;
-> -    if (!dirlen)
-> -        return NULL;
-> -    while (pathname[0] == '/')
-> -        pathname++;
-> -    len = dirlen + strlen(pathname) + 1;
-> -    ret = xmalloc(len + 1);
-> -    snprintf(ret, len+1, "%.*s/%s", (int)dirlen, dir, pathname);
-> -    return ret;
-> +        char*                   buff;
-> +
-> +        if (!rootdir)
-> +                return pathname;
-> +
-> +        buff = malloc(strlen(pathname) + rootdir_pathlen + 1);
-> +        memcpy(buff, rootdir, rootdir_pathlen);
-> +        strcpy(buff + rootdir_pathlen, pathname);
-> +
-> +        return buff;
->   }
->    static void
->   nfsd_setup_workqueue(void)
->   {
-> -    const char *rootdir = nfsd_path_nfsd_rootdir();
-> -
-> +    nfsd_rootdir_set();
->       if (!rootdir)
->           return;
->   @@ -124,224 +108,119 @@ nfsd_path_init(void)
->   }
->    struct nfsd_stat_data {
-> -    const char *pathname;
-> -    struct stat *statbuf;
-> -    int ret;
-> -    int err;
-> +    const char      *pathname;
-> +    struct stat     *statbuf;
-> +        int             (*stat_handler)(const char*, struct stat*);
->   };
->    static void
-> -nfsd_statfunc(void *data)
-> -{
-> -    struct nfsd_stat_data *d = data;
-> -
-> -    d->ret = xstat(d->pathname, d->statbuf);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> -}
-> -
-> -static void
-> -nfsd_lstatfunc(void *data)
-> +nfsd_handle_stat(void *data)
->   {
-> -    struct nfsd_stat_data *d = data;
-> -
-> -    d->ret = xlstat(d->pathname, d->statbuf);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> +        struct nfsd_task_t*     t = data;
-> +    struct nfsd_stat_data*  d = t->data;
-> +        t->ret = d->stat_handler(d->pathname, d->statbuf);
->   }
->    static int
-> -nfsd_run_stat(struct xthread_workqueue *wq,
-> -        void (*func)(void *),
-> -        const char *pathname,
-> -        struct stat *statbuf)
-> +nfsd_run_stat(const char *pathname,
-> +            struct stat *statbuf,
-> +                int (*handler)(const char*, struct stat*))
->   {
-> -    struct nfsd_stat_data data = {
-> -        pathname,
-> -        statbuf,
-> -        0,
-> -        0
-> -    };
-> -    xthread_work_run_sync(wq, func, &data);
-> -    if (data.ret < 0)
-> -        errno = data.err;
-> -    return data.ret;
-> +        struct nfsd_task_t      t;
-> +        struct nfsd_stat_data   d = { pathname, statbuf, handler };
-> +        t.data = &d;
-> +        nfsd_run_task(nfsd_handle_stat, &t);
-> +    return t.ret;
->   }
->    int
->   nfsd_path_stat(const char *pathname, struct stat *statbuf)
->   {
-> -    if (!nfsd_wq)
-> -        return xstat(pathname, statbuf);
-> -    return nfsd_run_stat(nfsd_wq, nfsd_statfunc, pathname, statbuf);
-> +        return nfsd_run_stat(pathname, statbuf, stat);
->   }
->    int
-> -nfsd_path_lstat(const char *pathname, struct stat *statbuf)
-> -{
-> -    if (!nfsd_wq)
-> -        return xlstat(pathname, statbuf);
-> -    return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
-> -}
-> -
-> -struct nfsd_statfs_data {
-> -    const char *pathname;
-> -    struct statfs *statbuf;
-> -    int ret;
-> -    int err;
-> +nfsd_path_lstat(const char* pathname, struct stat* statbuf){
-> +        return nfsd_run_stat(pathname, statbuf, lstat);
->   };
->   -static void
-> -nfsd_statfsfunc(void *data)
-> -{
-> -    struct nfsd_statfs_data *d = data;
-> -
-> -    d->ret = statfs(d->pathname, d->statbuf);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> -}
-> -
-> -static int
-> -nfsd_run_statfs(struct xthread_workqueue *wq,
-> -          const char *pathname,
-> -          struct statfs *statbuf)
-> -{
-> -    struct nfsd_statfs_data data = {
-> -        pathname,
-> -        statbuf,
-> -        0,
-> -        0
-> -    };
-> -    xthread_work_run_sync(wq, nfsd_statfsfunc, &data);
-> -    if (data.ret < 0)
-> -        errno = data.err;
-> -    return data.ret;
-> -}
-> -
->   int
-> -nfsd_path_statfs(const char *pathname, struct statfs *statbuf)
-> +nfsd_path_statfs(const char* pathname, struct statfs* statbuf)
->   {
-> -    if (!nfsd_wq)
-> -        return statfs(pathname, statbuf);
-> -    return nfsd_run_statfs(nfsd_wq, pathname, statbuf);
-> -}
-> +        return nfsd_run_stat(pathname, (struct stat*)statbuf, (int (*) 
-> (const char*, struct stat*))statfs);
-> +};
->   -struct nfsd_realpath_data {
-> -    const char *pathname;
-> -    char *resolved;
-> -    int err;
-> +struct nfsd_realpath_t {
-> +        const char*     path;
-> +        char*           resolved_buf;
-> +        char*           res_ptr;
->   };
->    static void
->   nfsd_realpathfunc(void *data)
->   {
-> -    struct nfsd_realpath_data *d = data;
-> -
-> -    d->resolved = realpath(d->pathname, d->resolved);
-> -    if (!d->resolved)
-> -        d->err = errno;
-> +        struct nfsd_realpath_t *d = data;
-> +        d->res_ptr = realpath(d->path, d->resolved_buf);
->   }
->   -char *
-> -nfsd_realpath(const char *path, char *resolved_path)
-> +char*
-> +nfsd_realpath(const char *path, char *resolved_buf)
->   {
-> -    struct nfsd_realpath_data data = {
-> -        path,
-> -        resolved_path,
-> -        0
-> -    };
-> -
-> -    if (!nfsd_wq)
-> -        return realpath(path, resolved_path);
-> -
-> -    xthread_work_run_sync(nfsd_wq, nfsd_realpathfunc, &data);
-> -    if (!data.resolved)
-> -        errno = data.err;
-> -    return data.resolved;
-> +        struct nfsd_realpath_t realpath_buf = {
-> +                .path = path,
-> +                .resolved_buf = resolved_buf
-> +        };
-> +        nfsd_run_task(nfsd_realpathfunc, &realpath_buf);
-> +        return realpath_buf.res_ptr;
->   }
->   -struct nfsd_read_data {
-> -    int fd;
-> -    char *buf;
-> -    size_t len;
-> -    ssize_t ret;
-> -    int err;
-> +struct nfsd_rw_data {
-> +    int             fd;
-> +    void*           buf;
-> +    size_t          len;
-> +        ssize_t         bytes_read;
->   };
->    static void
->   nfsd_readfunc(void *data)
->   {
-> -    struct nfsd_read_data *d = data;
-> -
-> -    d->ret = read(d->fd, d->buf, d->len);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> +        struct nfsd_rw_data* t = (struct nfsd_rw_data*)data;
-> +        t->bytes_read = read(t->fd, t->buf, t->len);
->   }
->    static ssize_t
-> -nfsd_run_read(struct xthread_workqueue *wq, int fd, char *buf, size_t len)
-> +nfsd_run_read(int fd, void* buf, size_t len)
->   {
-> -    struct nfsd_read_data data = {
-> -        fd,
-> -        buf,
-> -        len,
-> -        0,
-> -        0
-> -    };
-> -    xthread_work_run_sync(wq, nfsd_readfunc, &data);
-> -    if (data.ret < 0)
-> -        errno = data.err;
-> -    return data.ret;
-> +        struct nfsd_rw_data d = { .fd = fd, .buf = buf, .len = len };
-> +        nfsd_run_task(nfsd_readfunc, &d);
-> +    return d.bytes_read;
->   }
->    ssize_t
-> -nfsd_path_read(int fd, char *buf, size_t len)
-> +nfsd_path_read(int fd, void* buf, size_t len)
->   {
-> -    if (!nfsd_wq)
-> -        return read(fd, buf, len);
-> -    return nfsd_run_read(nfsd_wq, fd, buf, len);
-> +    return nfsd_run_read(fd, buf, len);
->   }
->   -struct nfsd_write_data {
-> -    int fd;
-> -    const char *buf;
-> -    size_t len;
-> -    ssize_t ret;
-> -    int err;
-> -};
-> -
->   static void
->   nfsd_writefunc(void *data)
->   {
-> -    struct nfsd_write_data *d = data;
-> -
-> -    d->ret = write(d->fd, d->buf, d->len);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> +    struct nfsd_rw_data* d = data;
-> +    d->bytes_read = write(d->fd, d->buf, d->len);
->   }
->    static ssize_t
-> -nfsd_run_write(struct xthread_workqueue *wq, int fd, const char *buf, 
-> size_t len)
-> +nfsd_run_write(int fd, void* buf, size_t len)
->   {
-> -    struct nfsd_write_data data = {
-> -        fd,
-> -        buf,
-> -        len,
-> -        0,
-> -        0
-> -    };
-> -    xthread_work_run_sync(wq, nfsd_writefunc, &data);
-> -    if (data.ret < 0)
-> -        errno = data.err;
-> -    return data.ret;
-> +        struct nfsd_rw_data d = { .fd = fd, .buf = buf, .len = len };
-> +        nfsd_run_task(nfsd_writefunc, &d);
-> +    return d.bytes_read;
->   }
->    ssize_t
-> -nfsd_path_write(int fd, const char *buf, size_t len)
-> +nfsd_path_write(int fd, void* buf, size_t len)
->   {
-> -    if (!nfsd_wq)
-> -        return write(fd, buf, len);
-> -    return nfsd_run_write(nfsd_wq, fd, buf, len);
-> +    return nfsd_run_write(fd, buf, len);
->   }
->    #if defined(HAVE_NAME_TO_HANDLE_AT)
-> @@ -352,23 +231,18 @@ struct nfsd_handle_data {
->       int *mount_id;
->       int flags;
->       int ret;
-> -    int err;
->   };
->    static void
->   nfsd_name_to_handle_func(void *data)
->   {
->       struct nfsd_handle_data *d = data;
-> -
-> -    d->ret = name_to_handle_at(d->fd, d->path,
-> -            d->fh, d->mount_id, d->flags);
-> -    if (d->ret < 0)
-> -        d->err = errno;
-> +    d->ret = name_to_handle_at(d->fd, d->path, d->fh, d->mount_id, d- 
->  >flags);
->   }
->    static int
-> -nfsd_run_name_to_handle_at(struct xthread_workqueue *wq,
-> -        int fd, const char *path, struct file_handle *fh,
-> +nfsd_run_name_to_handle_at(int fd, const char *path,
-> +                struct file_handle *fh,
->           int *mount_id, int flags)
->   {
->       struct nfsd_handle_data data = {
-> @@ -377,25 +251,19 @@ nfsd_run_name_to_handle_at(struct 
-> xthread_workqueue *wq,
->           fh,
->           mount_id,
->           flags,
-> -        0,
->           0
->       };
->   -    xthread_work_run_sync(wq, nfsd_name_to_handle_func, &data);
-> -    if (data.ret < 0)
-> -        errno = data.err;
-> +    nfsd_run_task(nfsd_name_to_handle_func, &data);
->       return data.ret;
->   }
->    int
-> -nfsd_name_to_handle_at(int fd, const char *path, struct file_handle *fh,
-> +nfsd_name_to_handle_at(int fd, const char *path,
-> +                struct file_handle *fh,
->           int *mount_id, int flags)
->   {
-> -    if (!nfsd_wq)
-> -        return name_to_handle_at(fd, path, fh, mount_id, flags);
-> -
-> -    return nfsd_run_name_to_handle_at(nfsd_wq, fd, path, fh,
-> -            mount_id, flags);
-> +        return nfsd_run_name_to_handle_at(fd, path, fh, mount_id, flags);
->   }
->   #else
->   int
-> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-> index a6816e60..c8ce8566 100644
-> --- a/support/nfs/exports.c
-> +++ b/support/nfs/exports.c
-> @@ -32,6 +32,7 @@
->   #include "xio.h"
->   #include "pseudoflavors.h"
->   #include "reexport.h"
-> +#include "nfsd_path.h"
->    #define EXPORT_DEFAULT_FLAGS    \
->   (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES| 
-> NFSEXP_NOSUBTREECHECK)
-> @@ -160,7 +161,7 @@ getexportent(int fromkernel)
->       }
->        xfree(ee.e_hostname);
-> -    xfree(ee.e_realpath);
-> +    exportent_free_realpath(&ee);
->       ee = def_ee;
->        /* Check for default client */
-> @@ -185,28 +186,34 @@ getexportent(int fromkernel)
->       }
->       ee.e_hostname = xstrdup(hostname);
->   -    if (parseopts(opt, &ee, NULL) < 0) {
-> -        if(ee.e_hostname)
-> -        {
-> -            xfree(ee.e_hostname);
-> -            ee.e_hostname=NULL;
-> -        }
-> -        if(ee.e_uuid)
-> -        {
-> -            xfree(ee.e_uuid);
-> -            ee.e_uuid=NULL;
-> -        }
-> +    if (parseopts(opt, &ee, NULL) < 0)
-> +                goto out;
->   -        return NULL;
-> -    }
->       /* resolve symlinks */
-> -    if (realpath(ee.e_path, rpath) != NULL) {
-> -        rpath[sizeof (rpath) - 1] = '\0';
-> -        strncpy(ee.e_path, rpath, sizeof (ee.e_path) - 1);
-> -        ee.e_path[sizeof (ee.e_path) - 1] = '\0';
-> -    }
-> +    if (nfsd_realpath(ee.e_path, rpath) == NULL) {
-> +                xlog(L_ERROR, "realpath(): Unable to resolve path at 
-> %s", ee.e_path);
-> +                goto out;
-> +        };
->   -    return &ee;
-> +        if (strlen(rpath) > sizeof(ee.e_path) - 1){
-> +                xlog(L_ERROR, "Path %s exceeds limit of %lu chars", 
-> ee.e_path, sizeof(ee.e_path) - 1);
-> +                goto out;
-> +        };
-> +
-> +        strcpy(ee.e_path, rpath);
-> +        return &ee;
-> +
-> +out:
-> +        if (ee.e_hostname){
-> +                free(ee.e_hostname);
-> +                ee.e_hostname = NULL;
-> +        };
-> +        if (ee.e_uuid){
-> +                free(ee.e_uuid);
-> +                ee.e_uuid = NULL;
-> +        };
-> +
-> +        return NULL;
->   }
->    static const struct secinfo_flag_displaymap {
-> @@ -424,15 +431,15 @@ mkexportent(char *hname, char *path, char *options)
->        xfree(ee.e_hostname);
->       ee.e_hostname = xstrdup(hname);
-> -    xfree(ee.e_realpath);
-> +    exportent_free_realpath(&ee);
->       ee.e_realpath = NULL;
->        if (strlen(path) >= sizeof(ee.e_path)) {
->           xlog(L_ERROR, "path name %s too long", path);
->           return NULL;
->       }
-> -    strncpy(ee.e_path, path, sizeof (ee.e_path));
-> -    ee.e_path[sizeof (ee.e_path) - 1] = '\0';
-> +    strcpy(ee.e_path, path);
-> +
->       if (parseopts(options, &ee, NULL) < 0)
->           return NULL;
->       return &ee;
-> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> index b03a047b..0697e398 100644
-> --- a/utils/exportfs/exportfs.c
-> +++ b/utils/exportfs/exportfs.c
-> @@ -266,7 +266,6 @@ export_all(int verbose)
->       }
->   }
->   -
->   static void
->   exportfs_parsed(char *hname, char *path, char *options, int verbose)
->   {
-> @@ -512,11 +511,13 @@ validate_export(nfs_export *exp)
->        * If a path doesn't exist, or is not a dir or file, give an warning
->        * otherwise trial-export to '-test-client-' and check for failure.
->        */
-> -    struct stat stb;
-> -    char *path = exportent_realpath(&exp->m_export);
-> +    struct stat     stb;
-> +    char            *path;
->       struct statfs stf;
->       int fs_has_fsid = 0;
->   +        path = exportent_realpath(&exp->m_export);
-> +
->       if (stat(path, &stb) < 0) {
->           xlog(L_ERROR, "Failed to stat %s: %m", path);
->           return;
-> @@ -547,6 +548,7 @@ validate_export(nfs_export *exp)
->           return;
->        }
-> +
->   }
->    static _Bool
+https://www.mail-archive.com/debian-kernel@lists.debian.org/msg139065.html
+
+This is 100% reproducable at will.
+
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219580#c0
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
 
