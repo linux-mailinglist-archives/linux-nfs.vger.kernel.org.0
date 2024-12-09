@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-8480-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8481-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A64E39EA101
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 22:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 382139EA104
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 22:16:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BF53D1888C5B
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 21:15:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B1BC1888B12
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 21:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D973C19FA64;
-	Mon,  9 Dec 2024 21:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B4AB1A01CD;
+	Mon,  9 Dec 2024 21:14:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEjtJpdT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjxrdq3/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB9719D082;
-	Mon,  9 Dec 2024 21:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F374119CD0E;
+	Mon,  9 Dec 2024 21:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733778860; cv=none; b=AAiyFuU0aVLoicO00ePlAwAiQ4uMMCAwAKhEFPuM5eVhO5XnZMna2TgasyRJfMPRIBvEvqlAZdYEo1erWGRm6PWom3jB8iMUTlZg4prwBWZ+h2OwsHe6n47udraSDsy/01Mx2H/9PD1L1/a6BPjsjvtSmbtN61rpdeNCRwvkGLM=
+	t=1733778862; cv=none; b=ACnMpbX7f+oqdLGtnd6SlHCowRKlWy1JZtthrHul1maefe1GutamUt81CPM6tzzn6GsHL4L+lQaaxfynf0Xc6km6tHyrBFluhGgujcRZUCugQRfbjITksg8iCctmzrEtw1DeOnBOEEke2Lh/Y3iARm1YGcxMv5h9nWXbKJ9uCTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733778860; c=relaxed/simple;
-	bh=b2Ye+YODeDDeRQCGrTVpIs2PnPSb+KXT7Cr6qu+61Nc=;
+	s=arc-20240116; t=1733778862; c=relaxed/simple;
+	bh=Ei9QY/Q91nGMwiwpS6SgihvnJDZBcQSLaAo+HH/qVFY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mrwtSHpNnk5Zg6ehucUH5j8njQnlxeSSk7+elTjOut+qeHTo/lJEr+yxKxo54zE8U6D4B6LAqkC7nHK2d35/Sv7hUmTiKficvMvfALV+Icp3hD0uwNr7BDgKBHz6z2QJy1d97IT7ZFt7aMLzmETTLMSfh+giU3xqmMuWc1yNz9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEjtJpdT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 425DDC4CEE0;
-	Mon,  9 Dec 2024 21:14:19 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=O2p6PnZ4sl43v9R4SKF1FhWnd4ym5GO73JbQOLDO80AteSWE7diF5ndWxeYh3KOPmeVHcllspDWnY04tFxUDEVczjUcIFOstqIy+NsDmqtfkQkg8WcQHcPcAg8mm5wVOYjPZvY4lbKUFYZ5Rt1GP6T6tS4pTOUA9svh36MwW1Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjxrdq3/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 808B4C4CEE1;
+	Mon,  9 Dec 2024 21:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733778860;
-	bh=b2Ye+YODeDDeRQCGrTVpIs2PnPSb+KXT7Cr6qu+61Nc=;
+	s=k20201202; t=1733778861;
+	bh=Ei9QY/Q91nGMwiwpS6SgihvnJDZBcQSLaAo+HH/qVFY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rEjtJpdTeCjKKfbQyEhgcaNg6658loKxO4inIbNwy/LjHjQqPemxkAMBC6Bdo15ew
-	 QYAv4NPnGr2PTQJgU1fBa34Eifmnm2pDRstidTXgRpSmCU3LRF1ys6ddp1U2Ty8s1i
-	 x40Gl1XiKlONXa3+DGYqUTjyszgv//vDy3jAlscWZLrNnNR7N6mHyF2nHy8+wAFFRg
-	 406zNrX9o9v6J8X/Qa7obhDrxttStgqiAuZZ4YVO/MqcF+DzsKFgJFQXdAxZwzu7at
-	 IIKzJ4P5bWHpzkDW7sFs6vxVFhgRe0sOuyNs1ZjRVfQDgeqfEPKngc+wRCuvBqfzm2
-	 tz1LIriVVzOlA==
+	b=sjxrdq3/MDhyF8tyNCBisi0mcP70oglEk57EMWQNeOOmrfxtMqLrKj42CtHFU5edX
+	 aNbyeaHAZoR5vr72PJNTFjEqRrrcm1ffh75qnUuuYVyNIkTlTPs035yn4Cx1EPe3LG
+	 N0XBt9L6j95s+Isrupgd9tHWuGKsQH1yLrgjurpckbGlB2LXUujG7uuyG9IH5Kjfer
+	 n/xpslwF7rcSqW/fVkVnLnUGofVJOJ/zZMlFNmsE2+nIIlzAtnF0+aOg8A+KJHofpc
+	 wRXiN0RJJyMiyBT7fsQClrtXIzn1GDr1Kg2O6/i2SYanNlOoZCWOpIbqqom+EgPilv
+	 eYGdKxDCE2yhQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 09 Dec 2024 16:13:56 -0500
-Subject: [PATCH v5 04/10] nfsd: rename NFS4_SHARE_WANT_* constants to
- OPEN4_SHARE_ACCESS_WANT_*
+Date: Mon, 09 Dec 2024 16:13:57 -0500
+Subject: [PATCH v5 05/10] nfsd: prepare delegation code for handing out
+ *_ATTRS_DELEG delegations
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241209-delstid-v5-4-42308228f692@kernel.org>
+Message-Id: <20241209-delstid-v5-5-42308228f692@kernel.org>
 References: <20241209-delstid-v5-0-42308228f692@kernel.org>
 In-Reply-To: <20241209-delstid-v5-0-42308228f692@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -63,219 +63,175 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8255; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=b2Ye+YODeDDeRQCGrTVpIs2PnPSb+KXT7Cr6qu+61Nc=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnV12k2LsgwIa94XJbHdyUKfJSE088fr6DKYBOF
- KDF0n487L6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ1ddpAAKCRAADmhBGVaC
- FXCyEACxg2BlOVtZBUk2eOT5QOkhDMqkf8a7BYiS04uwN/2myPODxkPfcCYJCe9bJ5oJOFUuTe+
- KZ0m/6FTNxRTGbbgwYs2bYdWthfl+rfbS5fPdd4i49mlsiIj1X6mZngLjlPVk7jHZaYLMEerLzX
- qy3BtPDjMUom/O/vDAEgVrTlEeNbHzshDJ2p00+wPbUGpIsmwFszw3oQLhilVq6yBLc3XNViS7B
- HtoZ06g2PpfkZSB1qPree6M5HDZLglfZaoOTy5ruAmP0SVExKPAbKxr4+Fvl9W0FsjTQOo74FRj
- OQ8Fc0ZQgEb91hDC/f/KRv6IPWQbH84lPzalTbRgD95Xh6qwX8+PbaBPzGU6NDE2orRhFgD3UQb
- 9Mfp3fV6vZHekDt/3bBo/zdvY62Ikhk7rXO0v58GcqWhrmwEm5WGZkbijsu3+P2Ui8dhj9d31BD
- sChIR2TtdrgucNzfexGjNc95Kte3lKDoDKRzawKswgYjBU1HS+5LHYphTlBqCFgjKpNWm7aRKui
- dPN9scemQ6Fb5Nd2LA2wHBfCXTnpQAC1bX0mf4im3ad0otrfZ8be8NaXhfypgWUze3Xg1snLg+V
- r5WM75O7lHsIthW1/BjczsPe5NJrHpUty35fkyKrKmmpFK2+m+81E/71qQRywIHu9w/KfFE7g0A
- +I4+elbVUjRhFqA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5735; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Ei9QY/Q91nGMwiwpS6SgihvnJDZBcQSLaAo+HH/qVFY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnV12kxgkTP9BnwaOg+U1c1tDCGn6LPiBtqohr+
+ NzSbzWxlHWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ1ddpAAKCRAADmhBGVaC
+ Ff0MD/9jwUZsrnaM9bVcRVVMhdvEZN25bk4yEIpcX3cNz9lDUjonJIPZipmouN4cqIB81pKtbjH
+ gdA3ng1/8XpnXp2C63fqS15CrEvX6sIH39n0H+op/quDApRF07wYSt0xcyB4xB+ibkMsjD39C45
+ JuhmFfh3WXHlH+1yJenOqXdsMWF4RBKSBcqtHfXB6bm5ng1Cgaab25TxuO8dEuw8X035tkv4qgn
+ f990c+guHaSYgk6bry5RoJmdQER1oT2nNTC9HAlV+HVKTlT6sMGcSd1wAr7f084RrU94GkRcxJ6
+ cYHsreSGAbUFl+nW5zaF67p7pnRtTaESWfRDXTtBY7HTae3P3ojfw0cDK0aCFeDsLCb/j71FdnR
+ J5hTRf8sspxrxonH1mxg9Ge3Lj9Ays4Cqnh4xDI1ctuiXid4OFF4s3psXrsmoslrMdiW9UCnuqA
+ dcowjkImEy+JtuU3SHlP6qR4rlPltyAhEZ6M16XRr3BCYq19Ky45MAQwieMDOCGpFMQ4K16VEqU
+ AktMN3ICIqglpYwFw0ek0iqEeIXy6LIl595e7Bnd6j+DZk6jdJkgTVn7QWNHMM64y90yWAkNyXz
+ XIyob1YVBwsvEEFXzV/8F12YfhQN/NrimUYY+hAAlh2QbkOcD3AG8vLPwCU0HznxLBJ6hUv7sQz
+ zOIALC5oYxbzPeQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Add the OPEN4_SHARE_ACCESS_WANT constants from the nfs4.1 and delstid
-draft into the nfs4_1.x file, and regenerate the headers and source
-files. Do a mass renaming of NFS4_SHARE_WANT_* to
-OPEN4_SHARE_ACCESS_WANT_* in the nfsd directory.
+Add some preparatory code to various functions that handle delegation
+types to allow them to handle the OPEN_DELEGATE_*_ATTRS_DELEG constants.
+Add helpers for detecting whether it's a read or write deleg, and
+whether the attributes are delegated.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- Documentation/sunrpc/xdr/nfs4_1.x    | 15 ++++++++++++++-
- fs/nfsd/nfs4state.c                  | 16 ++++++++--------
- fs/nfsd/nfs4xdr.c                    | 12 ++++++------
- fs/nfsd/nfs4xdr_gen.c                |  2 +-
- fs/nfsd/nfs4xdr_gen.h                |  2 +-
- include/linux/sunrpc/xdrgen/nfs4_1.h | 24 +++++++++++++++++++++---
- 6 files changed, 51 insertions(+), 20 deletions(-)
+ fs/nfsd/nfs4state.c | 43 ++++++++++++++++++++++++++++---------------
+ fs/nfsd/nfs4xdr.c   |  2 ++
+ fs/nfsd/state.h     | 16 ++++++++++++++++
+ 3 files changed, 46 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/sunrpc/xdr/nfs4_1.x b/Documentation/sunrpc/xdr/nfs4_1.x
-index ee9f8f249f1e71dbfc383007a6950ebc4104ed67..ca95150a3a29fc5418991bf2395326bd73645ea8 100644
---- a/Documentation/sunrpc/xdr/nfs4_1.x
-+++ b/Documentation/sunrpc/xdr/nfs4_1.x
-@@ -138,7 +138,6 @@ pragma public fattr4_open_arguments;
- const FATTR4_OPEN_ARGUMENTS     = 86;
- 
- 
--const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
- 
- 
- const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
-@@ -161,7 +160,21 @@ pragma public		fattr4_time_deleg_modify;
- const FATTR4_TIME_DELEG_ACCESS  = 84;
- const FATTR4_TIME_DELEG_MODIFY  = 85;
- 
-+
-+
-+/* new flags for share_access field of OPEN4args */
-+const OPEN4_SHARE_ACCESS_WANT_DELEG_MASK        = 0xFF00;
-+const OPEN4_SHARE_ACCESS_WANT_NO_PREFERENCE     = 0x0000;
-+const OPEN4_SHARE_ACCESS_WANT_READ_DELEG        = 0x0100;
-+const OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG       = 0x0200;
-+const OPEN4_SHARE_ACCESS_WANT_ANY_DELEG         = 0x0300;
-+const OPEN4_SHARE_ACCESS_WANT_NO_DELEG          = 0x0400;
-+const OPEN4_SHARE_ACCESS_WANT_CANCEL            = 0x0500;
-+
-+const OPEN4_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL = 0x10000;
-+const OPEN4_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED = 0x20000;
- const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
-+const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
- 
- enum open_delegation_type4 {
-        OPEN_DELEGATE_NONE                  = 0,
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c0e46ce0e068d8c73226dfe73adc58c24a630d77..76b07c78559a0f59c0864b6247214f7136cd3dd2 100644
+index 76b07c78559a0f59c0864b6247214f7136cd3dd2..b1e71462b9d91119457a60210a07021febedaf5c 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -5964,14 +5964,14 @@ static void nfsd4_open_deleg_none_ext(struct nfsd4_open *open, int status)
- 	else {
- 		open->op_why_no_deleg = WND4_RESOURCE;
- 		switch (open->op_deleg_want) {
--		case NFS4_SHARE_WANT_READ_DELEG:
--		case NFS4_SHARE_WANT_WRITE_DELEG:
--		case NFS4_SHARE_WANT_ANY_DELEG:
-+		case OPEN4_SHARE_ACCESS_WANT_READ_DELEG:
-+		case OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG:
-+		case OPEN4_SHARE_ACCESS_WANT_ANY_DELEG:
- 			break;
--		case NFS4_SHARE_WANT_CANCEL:
-+		case OPEN4_SHARE_ACCESS_WANT_CANCEL:
- 			open->op_why_no_deleg = WND4_CANCELLED;
- 			break;
--		case NFS4_SHARE_WANT_NO_DELEG:
-+		case OPEN4_SHARE_ACCESS_WANT_NO_DELEG:
- 			WARN_ON_ONCE(1);
- 		}
- 	}
-@@ -6101,11 +6101,11 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+@@ -2873,6 +2873,21 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	return 0;
+ }
+ 
++static char *nfs4_show_deleg_type(u32 dl_type)
++{
++	switch (dl_type) {
++	case OPEN_DELEGATE_READ:
++		return "r";
++	case OPEN_DELEGATE_WRITE:
++		return "w";
++	case OPEN_DELEGATE_READ_ATTRS_DELEG:
++		return "ra";
++	case OPEN_DELEGATE_WRITE_ATTRS_DELEG:
++		return "wa";
++	}
++	return "?";
++}
++
+ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ {
+ 	struct nfs4_delegation *ds;
+@@ -2886,8 +2901,7 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 	nfs4_show_stateid(s, &st->sc_stateid);
+ 	seq_puts(s, ": { type: deleg, ");
+ 
+-	seq_printf(s, "access: %s",
+-		   ds->dl_type == OPEN_DELEGATE_READ ? "r" : "w");
++	seq_printf(s, "access: %s", nfs4_show_deleg_type(ds->dl_type));
+ 
+ 	/* XXX: lease time, whether it's being recalled. */
+ 
+@@ -5472,7 +5486,7 @@ nfsd4_process_open1(struct nfsd4_compound_state *cstate,
+ static inline __be32
+ nfs4_check_delegmode(struct nfs4_delegation *dp, int flags)
+ {
+-	if ((flags & WR_STATE) && (dp->dl_type == OPEN_DELEGATE_READ))
++	if ((flags & WR_STATE) && deleg_is_read(dp->dl_type))
+ 		return nfserr_openmode;
+ 	else
+ 		return nfs_ok;
+@@ -5704,8 +5718,7 @@ static bool nfsd4_cb_channel_good(struct nfs4_client *clp)
+ 	return clp->cl_minorversion && clp->cl_cb_state == NFSD4_CB_UNKNOWN;
+ }
+ 
+-static struct file_lease *nfs4_alloc_init_lease(struct nfs4_delegation *dp,
+-						int flag)
++static struct file_lease *nfs4_alloc_init_lease(struct nfs4_delegation *dp)
+ {
+ 	struct file_lease *fl;
+ 
+@@ -5714,7 +5727,7 @@ static struct file_lease *nfs4_alloc_init_lease(struct nfs4_delegation *dp,
+ 		return NULL;
+ 	fl->fl_lmops = &nfsd_lease_mng_ops;
+ 	fl->c.flc_flags = FL_DELEG;
+-	fl->c.flc_type = flag == OPEN_DELEGATE_READ ? F_RDLCK : F_WRLCK;
++	fl->c.flc_type = deleg_is_read(dp->dl_type) ? F_RDLCK : F_WRLCK;
+ 	fl->c.flc_owner = (fl_owner_t)dp;
+ 	fl->c.flc_pid = current->tgid;
+ 	fl->c.flc_file = dp->dl_stid.sc_file->fi_deleg_file->nf_file;
+@@ -5901,7 +5914,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	if (!dp)
+ 		goto out_delegees;
+ 
+-	fl = nfs4_alloc_init_lease(dp, dl_type);
++	fl = nfs4_alloc_init_lease(dp);
+ 	if (!fl)
+ 		goto out_clnt_odstate;
+ 
+@@ -6101,14 +6114,14 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
  static void nfsd4_deleg_xgrade_none_ext(struct nfsd4_open *open,
  					struct nfs4_delegation *dp)
  {
--	if (open->op_deleg_want == NFS4_SHARE_WANT_READ_DELEG &&
-+	if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_READ_DELEG &&
- 	    dp->dl_type == OPEN_DELEGATE_WRITE) {
- 		open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
- 		open->op_why_no_deleg = WND4_NOT_SUPP_DOWNGRADE;
--	} else if (open->op_deleg_want == NFS4_SHARE_WANT_WRITE_DELEG &&
-+	} else if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG &&
- 		   dp->dl_type == OPEN_DELEGATE_WRITE) {
- 		open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
- 		open->op_why_no_deleg = WND4_NOT_SUPP_UPGRADE;
-@@ -6201,7 +6201,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	mutex_unlock(&stp->st_mutex);
- 
- 	if (nfsd4_has_session(&resp->cstate)) {
--		if (open->op_deleg_want & NFS4_SHARE_WANT_NO_DELEG) {
-+		if (open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_NO_DELEG) {
- 			open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
- 			open->op_why_no_deleg = WND4_NOT_WANTED;
- 			goto nodeleg;
+-	if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_READ_DELEG &&
+-	    dp->dl_type == OPEN_DELEGATE_WRITE) {
+-		open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
+-		open->op_why_no_deleg = WND4_NOT_SUPP_DOWNGRADE;
+-	} else if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG &&
+-		   dp->dl_type == OPEN_DELEGATE_WRITE) {
+-		open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
+-		open->op_why_no_deleg = WND4_NOT_SUPP_UPGRADE;
++	if (deleg_is_write(dp->dl_type)) {
++		if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_READ_DELEG) {
++			open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
++			open->op_why_no_deleg = WND4_NOT_SUPP_DOWNGRADE;
++		} else if (open->op_deleg_want == OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG) {
++			open->op_delegate_type = OPEN_DELEGATE_NONE_EXT;
++			open->op_why_no_deleg = WND4_NOT_SUPP_UPGRADE;
++		}
+ 	}
+ 	/* Otherwise the client must be confused wanting a delegation
+ 	 * it already has, therefore we don't return
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 593cf8c2ffe9dad90549ae0d0d5d9cbcbf18a690..39a3b21bb90590f9f2711ca1cc0f44a68819d4a0 100644
+index 39a3b21bb90590f9f2711ca1cc0f44a68819d4a0..8c48da421a07bf460ace6eddc140ed5fedffd408 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -1067,12 +1067,12 @@ static __be32 nfsd4_decode_share_access(struct nfsd4_compoundargs *argp, u32 *sh
- 	if (!argp->minorversion)
- 		return nfserr_bad_xdr;
- 	switch (w & NFS4_SHARE_WANT_MASK) {
--	case NFS4_SHARE_WANT_NO_PREFERENCE:
--	case NFS4_SHARE_WANT_READ_DELEG:
--	case NFS4_SHARE_WANT_WRITE_DELEG:
--	case NFS4_SHARE_WANT_ANY_DELEG:
--	case NFS4_SHARE_WANT_NO_DELEG:
--	case NFS4_SHARE_WANT_CANCEL:
-+	case OPEN4_SHARE_ACCESS_WANT_NO_PREFERENCE:
-+	case OPEN4_SHARE_ACCESS_WANT_READ_DELEG:
-+	case OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG:
-+	case OPEN4_SHARE_ACCESS_WANT_ANY_DELEG:
-+	case OPEN4_SHARE_ACCESS_WANT_NO_DELEG:
-+	case OPEN4_SHARE_ACCESS_WANT_CANCEL:
+@@ -4236,10 +4236,12 @@ nfsd4_encode_open_delegation4(struct xdr_stream *xdr, struct nfsd4_open *open)
+ 		status = nfs_ok;
  		break;
- 	default:
- 		return nfserr_bad_xdr;
-diff --git a/fs/nfsd/nfs4xdr_gen.c b/fs/nfsd/nfs4xdr_gen.c
-index a0e01f50a28d7f6828f3e6ef02f90b84bf180841..a17b5d8e60b3579caa2e2a8b40ed757070e1a622 100644
---- a/fs/nfsd/nfs4xdr_gen.c
-+++ b/fs/nfsd/nfs4xdr_gen.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- // Generated by xdrgen. Manual edits will be lost.
- // XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x
--// XDR specification modification time: Sat Oct 12 08:10:54 2024
-+// XDR specification modification time: Mon Oct 14 09:10:13 2024
+ 	case OPEN_DELEGATE_READ:
++	case OPEN_DELEGATE_READ_ATTRS_DELEG:
+ 		/* read */
+ 		status = nfsd4_encode_open_read_delegation4(xdr, open);
+ 		break;
+ 	case OPEN_DELEGATE_WRITE:
++	case OPEN_DELEGATE_WRITE_ATTRS_DELEG:
+ 		/* write */
+ 		status = nfsd4_encode_open_write_delegation4(xdr, open);
+ 		break;
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index e16bb3717fb9bb4725b9498c70dd3da72552845a..d8d7e568cf15e5cd84e00ed5548d164892ba7639 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -207,6 +207,22 @@ struct nfs4_delegation {
+ 	struct nfs4_cb_fattr    dl_cb_fattr;
+ };
  
- #include <linux/sunrpc/svc.h>
++static inline bool deleg_is_read(u32 dl_type)
++{
++	return (dl_type == OPEN_DELEGATE_READ || dl_type == OPEN_DELEGATE_READ_ATTRS_DELEG);
++}
++
++static inline bool deleg_is_write(u32 dl_type)
++{
++	return (dl_type == OPEN_DELEGATE_WRITE || dl_type == OPEN_DELEGATE_WRITE_ATTRS_DELEG);
++}
++
++static inline bool deleg_attrs_deleg(u32 dl_type)
++{
++	return dl_type == OPEN_DELEGATE_READ_ATTRS_DELEG ||
++	       dl_type == OPEN_DELEGATE_WRITE_ATTRS_DELEG;
++}
++
+ #define cb_to_delegation(cb) \
+ 	container_of(cb, struct nfs4_delegation, dl_recall)
  
-diff --git a/fs/nfsd/nfs4xdr_gen.h b/fs/nfsd/nfs4xdr_gen.h
-index 3fc8bde2b3b5db6f80f17b41e7f5991487cfa959..41a0033b72562ee3c1fcdcd4a887ce635385b22b 100644
---- a/fs/nfsd/nfs4xdr_gen.h
-+++ b/fs/nfsd/nfs4xdr_gen.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by xdrgen. Manual edits will be lost. */
- /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
--/* XDR specification modification time: Sat Oct 12 08:10:54 2024 */
-+/* XDR specification modification time: Mon Oct 14 09:10:13 2024 */
- 
- #ifndef _LINUX_XDRGEN_NFS4_1_DECL_H
- #define _LINUX_XDRGEN_NFS4_1_DECL_H
-diff --git a/include/linux/sunrpc/xdrgen/nfs4_1.h b/include/linux/sunrpc/xdrgen/nfs4_1.h
-index 9ca83a4a04cff8ebb5aafa08a24a2db771d6c1ef..cf21a14aa8850f4b21cd365cb7bc22a02c6097ce 100644
---- a/include/linux/sunrpc/xdrgen/nfs4_1.h
-+++ b/include/linux/sunrpc/xdrgen/nfs4_1.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Generated by xdrgen. Manual edits will be lost. */
- /* XDR specification file: ../../Documentation/sunrpc/xdr/nfs4_1.x */
--/* XDR specification modification time: Sat Oct 12 08:10:54 2024 */
-+/* XDR specification modification time: Mon Oct 14 09:10:13 2024 */
- 
- #ifndef _LINUX_XDRGEN_NFS4_1_DEF_H
- #define _LINUX_XDRGEN_NFS4_1_DEF_H
-@@ -84,8 +84,6 @@ typedef struct open_arguments4 fattr4_open_arguments;
- 
- enum { FATTR4_OPEN_ARGUMENTS = 86 };
- 
--enum { OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000 };
--
- enum { OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010 };
- 
- typedef struct nfstime4 fattr4_time_deleg_access;
-@@ -96,8 +94,28 @@ enum { FATTR4_TIME_DELEG_ACCESS = 84 };
- 
- enum { FATTR4_TIME_DELEG_MODIFY = 85 };
- 
-+enum { OPEN4_SHARE_ACCESS_WANT_DELEG_MASK = 0xFF00 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_NO_PREFERENCE = 0x0000 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_READ_DELEG = 0x0100 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG = 0x0200 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_ANY_DELEG = 0x0300 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_NO_DELEG = 0x0400 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_CANCEL = 0x0500 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL = 0x10000 };
-+
-+enum { OPEN4_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED = 0x20000 };
-+
- enum { OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000 };
- 
-+enum { OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000 };
-+
- enum open_delegation_type4 {
- 	OPEN_DELEGATE_NONE = 0,
- 	OPEN_DELEGATE_READ = 1,
 
 -- 
 2.47.1
