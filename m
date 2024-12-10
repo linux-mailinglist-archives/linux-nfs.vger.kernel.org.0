@@ -1,72 +1,56 @@
-Return-Path: <linux-nfs+bounces-8505-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8506-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD77F9EB11A
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 13:44:52 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 871469EB11D
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 13:45:24 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AE40287531
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 12:44:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECCDA188C2CC
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 12:45:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43A941A4F09;
-	Tue, 10 Dec 2024 12:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F8A19F13B;
+	Tue, 10 Dec 2024 12:45:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0OxeNi0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpIn2Kbs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1121D19CC1C;
-	Tue, 10 Dec 2024 12:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF8E17BB38
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Dec 2024 12:45:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733834686; cv=none; b=Lr46FN8wQhIMIEo09obMJlSwwzIrSFt+79ZmTKWeeaXWDYm3Duh4xOjR5duNKi6WozJAg94/Lb2o+IuG13Gn8+yb/EP8s6PICXQo84AMBKvBMTKdR8fWMqbWhQzQGI63Q7DB1Z737NZvTM2fJf3LeB86QvvGjGjz0UZ5LGNAMUU=
+	t=1733834719; cv=none; b=Yf0hS1MfBWBmQd01krlJJNZWR+FOB2oprCOdi65P8eOnJVBvGA0VUdyuBI8zdtlNJunkBXH9YNW0Ooq9dxt0AVVxGXFdRvzAR8a+Ir3dXXChv2tAzaHgOlqt8s7IYdPzPlGakIYiOl/BCcHOTeOezJgM7gQE5mrae/lHkzKo6ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733834686; c=relaxed/simple;
-	bh=L2UmMkEAjWl/RspMbGsEqygaTjbGn+Q9iIdhXVK1si4=;
+	s=arc-20240116; t=1733834719; c=relaxed/simple;
+	bh=EVo30XqInG+fpP3yFtt9NHsMC5OPBax2Cv23riV3UsI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SMGCx9LPIgftySAbp4OAWT+Cy44PXhsSamIIdVOmaLSZd1RycqMRbyUcJJHJqIdoeldlZNITWMTPPOmll01ikAzxItiYDbPEaig+Xfa/jasj6a3e3eaDp813XMHChsvz3JpKKjy87VRb/WTB3MB6doSqk6iyEkBmi1itTHrBxpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0OxeNi0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0FFC4CED6;
-	Tue, 10 Dec 2024 12:44:44 +0000 (UTC)
+	 Content-Type:MIME-Version; b=s5Jsx3VHfvL1bVrYQVcia2vFEklQNhCsoop9klkOZVziLYNpe2LbTfZxbIHifkfGkzg+XRjpv6jcXs5cWWfsroEhUBvTbDncZofgzTsMu51gYLmuekfWyIFQXXeL4PYpHoyGNLuuu0CuxVX4YaJQziHyrrVClzCuVfuC6aOmzsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpIn2Kbs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C3FC4CED6;
+	Tue, 10 Dec 2024 12:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733834685;
-	bh=L2UmMkEAjWl/RspMbGsEqygaTjbGn+Q9iIdhXVK1si4=;
+	s=k20201202; t=1733834718;
+	bh=EVo30XqInG+fpP3yFtt9NHsMC5OPBax2Cv23riV3UsI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=I0OxeNi0VTqhT9wkN++q0rdqsjkaeOatEYMcmV81X6uRx3wYCHCUr4QojyzIREBfm
-	 YM8VtbrLWI8wrtqXmJhk3fVXfwLVLNJlFvisdIc086vWsCoNz8xWvXszoLPf14eKz9
-	 YdURoDRliPjqxs7yL+CGgMtadnf3SfEPNNk3l5UJNyabeb+WvECWi1jPIJX2Xq1vb9
-	 Gk2J7vm40YU/h+GgJj9NcZqpXtkQVbYNQkSx8WCNlHc36QpzcA5ZFCblliIqHo6ElP
-	 jAH2kowNu4R7HzeDJ0eT0BrMSfA2cV08h3zwYAsJuEi6MVqtq1HSK8gxfxKlyGZCfp
-	 KNV7KF43ZcuLA==
-Message-ID: <eb9edf1c7abb3ef2f5fe6c80eee08ff2d21d6dd2.camel@kernel.org>
-Subject: Re: [PATCH 0/4] exportfs: add flag to allow marking export
- operations as only supporting file handles
+	b=bpIn2Kbs5k06kCvQf1OXhWLj/r0CHX1ajz/VpyJZuIhCx3zNJIMQ5VMlqVnKnKZyx
+	 w9oiRBOYC/fqlx/uOTHQzTYlKLaKpZjhX7RSVtyxQPS/Tg+wi2H0S5XWlewSVTvXZL
+	 zdVG0ctoQSrsMP8khMe4D/0M8q5xErl1V3rrM4iIRxQCga+66qSuGDU/OS/xCtmIgj
+	 D2EM4oIAd1vgTFOSvHWqirB5M7ryWtzM2DadkpEvq+XphdR1b9WPe93HAvyXV4yUQ8
+	 BEWKU/ngmJ/rypxNFaqJeMF1aTP8xsJ1YbjRp8i2qBN6jj4Yb43F2x26SnL0xd+FvC
+	 N4A91FoJ/yMWg==
+Message-ID: <18561db8ded4ef25592fd8953b44949881bf21a4.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Clean up unused variable
 From: Jeff Layton <jlayton@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>
-Cc: Amir Goldstein <amir73il@gmail.com>, Christoph Hellwig
- <hch@infradead.org>,  "Darrick J. Wong" <djwong@kernel.org>, Erin Shepherd
- <erin.shepherd@e43.eu>,  linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-nfs@vger.kernel.org, stable
- <stable@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Jens Axboe
- <axboe@kernel.dk>, Shaohua Li <shli@fb.com>
-Date: Tue, 10 Dec 2024 07:44:43 -0500
-In-Reply-To: <20241210-gekonnt-pigmente-6d44d768469f@brauner>
-References: 
-	<CAOQ4uxjPSmrvy44AdahKjzFOcydKN8t=xBnS_bhV-vC+UBdPUg@mail.gmail.com>
-	 <20241206160358.GC7820@frogsfrogsfrogs>
-	 <CAOQ4uxgzWZ_X8S6dnWSwU=o5QKR_azq=5fe2Qw8gavLuTOy7Aw@mail.gmail.com>
-	 <Z1ahFxFtksuThilS@infradead.org>
-	 <CAOQ4uxiEnEC87pVBhfNcjduHOZWfbEoB8HKVbjNHtkaWA5d-JA@mail.gmail.com>
-	 <Z1b00KG2O6YMuh_r@infradead.org>
-	 <CAOQ4uxjcVuq+PCoMos5Vi=t_S1OgJEM5wQ6Za2Ue9_FOq31m9Q@mail.gmail.com>
-	 <15628525-629f-49a4-a821-92092e2fa8cb@oracle.com>
-	 <d74572123acf8e09174a29897c3074f5d46e4ede.camel@kernel.org>
-	 <337ca572-2bfb-4bb5-b71c-daf7ac5e9d56@oracle.com>
-	 <20241210-gekonnt-pigmente-6d44d768469f@brauner>
+To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Tue, 10 Dec 2024 07:45:17 -0500
+In-Reply-To: <20241206213633.405299-1-cel@kernel.org>
+References: <20241206213633.405299-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -151,187 +135,39 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2024-12-10 at 11:13 +0100, Christian Brauner wrote:
-> On Mon, Dec 09, 2024 at 12:20:10PM -0500, Chuck Lever wrote:
-> > On 12/9/24 12:15 PM, Jeff Layton wrote:
-> > > On Mon, 2024-12-09 at 11:35 -0500, Chuck Lever wrote:
-> > > > On 12/9/24 11:30 AM, Amir Goldstein wrote:
-> > > > > On Mon, Dec 9, 2024 at 2:46=E2=80=AFPM Christoph Hellwig <hch@inf=
-radead.org> wrote:
-> > > > > >=20
-> > > > > > On Mon, Dec 09, 2024 at 09:58:58AM +0100, Amir Goldstein wrote:
-> > > > > > > To be clear, exporting pidfs or internal shmem via an anonymo=
-us fd is
-> > > > > > > probably not possible with existing userspace tools, but with=
- all the new
-> > > > > > > mount_fd and magic link apis, I can never be sure what can be=
- made possible
-> > > > > > > to achieve when the user holds an anonymous fd.
-> > > > > > >=20
-> > > > > > > The thinking behind adding the EXPORT_OP_LOCAL_FILE_HANDLE fl=
-ag
-> > > > > > > was that when kernfs/cgroups was added exportfs support with =
-commit
-> > > > > > > aa8188253474 ("kernfs: add exportfs operations"), there was n=
-o intention
-> > > > > > > to export cgroupfs over nfs, only local to uses, but that was=
- never enforced,
-> > > > > > > so we thought it would be good to add this restriction and ba=
-ckport it to
-> > > > > > > stable kernels.
-> > > > > >=20
-> > > > > > Can you please explain what the problem with exporting these fi=
-le
-> > > > > > systems over NFS is?  Yes, it's not going to be very useful.  B=
-ut what
-> > > > > > is actually problematic about it?  Any why is it not problemati=
-c with
-> > > > > > a userland nfs server?  We really need to settle that argumet b=
-efore
-> > > > > > deciding a flag name or polarity.
-> > > > > >=20
-> > > > >=20
-> > > > > I agree that it is not the end of the world and users do have to =
-explicitly
-> > > > > use fsid=3D argument to be able to export cgroupfs via nfsd.
-> > > > >=20
-> > > > > The idea for this patch started from the claim that Jeff wrote th=
-at cgroups
-> > > > > is not allowed for nfsd export, but I couldn't find where it is n=
-ot allowed.
-> > > > >=20
-> > >=20
-> > > I think that must have been a wrong assumption on my part. I don't se=
-e
-> > > anything that specifically prevents that either. If cgroupfs is mount=
-ed
-> > > and you tell mountd to export it, I don't see what would prevent that=
-.
-> > >=20
-> > > To be clear, I don't see how you would trick bog-standard mountd into
-> > > exporting a filesystem that isn't mounted into its namespace, however=
-.
-> > > Writing a replacement for mountd is always a possibilty.
-> > >=20
-> > > > > I have no issue personally with leaving cgroupfs exportable via n=
-fsd
-> > > > > and changing restricting only SB_NOUSER and SB_KERNMOUNT fs.
-> > > > >=20
-> > > > > Jeff, Chuck, what is your opinion w.r.t exportability of cgroupfs=
- via nfsd?
-> > > >=20
-> > > > We all seem to be hard-pressed to find a usage scenario where expor=
-ting
-> > > > pseudo-filesystems via NFS is valuable. But maybe someone has done =
-it
-> > > > and has a good reason for it.
-> > > >=20
-> > > > The issue is whether such export should be consistently and activel=
-y
-> > > > prevented.
-> > > >=20
-> > > > I'm not aware of any specific security issues with it.
-> > > >=20
-> > > >=20
-> > >=20
-> > > I'm not either, but we are in new territory here. nfsd is a network
-> > > service, so it does present more of an attack surface vs. local acces=
-s.
-> > >=20
-> > > In general, you do have to take active steps to export a filesystem,
-> > > but if someone exports / with "crossmnt", everything mounted is
-> > > potentially accessible. That's obviously a dumb thing to do, but peop=
-le
-> > > make mistakes, and it's possible that doing this could be part of a
-> > > wider exploit.
-> > >=20
-> > > I tend to think it safest to make exporting via nfsd an opt-in thing =
-on
-> > > a per-fs basis (along the lines of this patchset). If someone wants t=
-o
-> > > allow access to more "exotic" filesystems, let them argue their use-
-> > > case on the list first.
-> >=20
-> > If we were starting from scratch, 100% agree.
-> >=20
-> > The current situation is that these file systems appear to be exportabl=
-e
-> > (and not only via NFS). The proposal is that this facility is to be
-> > taken away. This can easily turn into a behavior regression for someone
-> > if we're not careful.
+On Fri, 2024-12-06 at 16:36 -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> So I'm happy to drop the exportfs preliminary we have now preventing
-> kernfs from being exported but then Christoph and you should figure out
-> what the security implications of allowing kernfs instances to be
-> exported areare because I'm not an NFS export expert.
+> @sb should have been removed by commit 7e64c5bc497c ("NLM/NFSD: Fix
+> lock notifications for async-capable filesystems").
 >=20
-> Filesystems that fall under kernfs that are exportable by NFS as I
-> currently understand it are at least:
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 2 --
+>  1 file changed, 2 deletions(-)
 >=20
-> (1) sysfs
-> (2) cgroupfs
->=20
-> Has anyone ever actually tried to export the two and tested what
-> happens? Because I wouldn't be surprised if this ended in tears but
-> maybe I'm overly pessimistic.
->=20
-> Both (1) and (2) are rather special and don't have standard filesystem
-> semantics in a few places.
->=20
-> - cgroupfs isn't actually namespace aware. Whereas most filesystems like
->   tmpfs and ramfs that are mountable inside unprivileged containers are
->   multi-instance filesystems, aka allocate a new superblock per
->   container cgroupfs is single-instance with a nasty implementation to
->   virtualize the per-container view via cgroup namespaces. I wouldn't be
->   surprised if that ends up being problematic.
->=20
-> - Cgroupfs has write-time permission checks as the process that is moved
->   into a cgroup isn't known at open time. That has been exploitable
->   before this was fixed.
->=20
-> - Even though it's legacy cgroup has a v1 and v2 mode where v1 is even
->   more messed up than v2 including the release-agent logic which ends up
->   issuing a usermode helper to call a binary when a cgroup is released.
->=20
-> - sysfs potentially exposes all kinds of extremly low-level information
->   to a remote machine.
->=20
-> None of this gives me the warm and fuzzy. But that's just me.
->=20
-> Otherwise, I don't understand what it means that a userspace NFS server
-> can export kernfs instances. I don't know what that means and what the
-> contrast to in-kernel NFS server export is and whether that has the same
-> security implications. If so it's even scary that some random userspace
-> NFS server can just expose guts like kernfs.
->=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 741b9449f727..1272a1fafeb8 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7966,7 +7966,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	struct nfsd4_blocked_lock *nbl =3D NULL;
+>  	struct file_lock *file_lock =3D NULL;
+>  	struct file_lock *conflock =3D NULL;
+> -	struct super_block *sb;
+>  	__be32 status =3D 0;
+>  	int lkflg;
+>  	int err;
+> @@ -7986,7 +7985,6 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0);
+>  	if (status !=3D nfs_ok)
+>  		return status;
+> -	sb =3D cstate->current_fh.fh_dentry->d_sb;
+> =20
+>  	if (lock->lk_is_new) {
+>  		if (nfsd4_has_session(cstate))
 
-A userspace NFS server can export anything to which it has access. If
-cgroupfs or sysfs is mounted and the server is running with appropriate
-permissions then there is nothing that prevents it from making that
-available. It's helpful if the filesystem can implement
-name_to_handle_at() and open_by_handle_at(), but even that isn't
-specifically required.
-
-> But if both of you feel that this is safe to do and there aren't any
-> security issues lurking that have gone unnoticed simply because no one
-> has really ever exported sysfs or cgroupfs then by all means continue
-> allowing that. I'm rather skeptical.
-
-I'm not sure I agree that it's "safe", but in order to export kernfs or
-pidfs you have to explicitly set it up to be exported. Christoph has a
-good point that we don't have a specific scenario that we're trying to
-prevent here.
-
-My main thinking here is that:
-
-1/ exporting these fstypes is not something we consider useful
-
-2/ by forbidding this now, we prevent someone from complaining that
-there is a regression later if we do find that it's problematic and
-have to forbid it
-
-Also, if we forbid this now, that might force someone who does want to
-do this to articulate their use-case publicly.
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
