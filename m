@@ -1,48 +1,49 @@
-Return-Path: <linux-nfs+bounces-8488-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8489-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11679EA406
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 02:02:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6167F9EA40A
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 02:03:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CD6E166E91
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 01:02:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB52D166E48
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 01:03:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28609134B0;
-	Tue, 10 Dec 2024 01:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D072170806;
+	Tue, 10 Dec 2024 01:02:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rhUJCTiS"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="OxgbSu8o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7CC22092;
-	Tue, 10 Dec 2024 01:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224C04C81;
+	Tue, 10 Dec 2024 01:02:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733792570; cv=none; b=CiIkTvqvt5Jqd5k4h5/6FebWcmEt5KbksIMIk1eAal7gGAgeRiLB71DR46Gh8PayI851sy0Mr8qS0dYG9BWg9dOyDpw0zi1s1nI9CZl6iqibhGyWgTuk0sZ7dMxRmdhf3PLUQm++GPjBu28L7luWyZB0YX/iUxpfDRzqakw8r4A=
+	t=1733792571; cv=none; b=ckNyRexM0TO5EmOJYkLXOLNlZsXd/hNICV1VGrMThXKtD+McuIsJJAKd7UMXw/eKaFnt2M0F33QhAxulsr5M0/H9YbLCptuPFmsv+i+0LxBIw0lUpWPENn5tlRc+wowhvFhGVp2pGhg18aWNGcP0ybk6DDcq2dszGnaFdh4g+gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733792570; c=relaxed/simple;
-	bh=p/5AWqZaj024rsVYdJI1Q2n9RpO+c+9BlKdB4PUzAp4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmaKOyQA8XfOXArIsncA+x6myDRBr5ua8mR29mbpVcDbdIDXH9iZFxLMMh8vaQ3OCRv59uxKG6TxQuegw+T17kl8RUsYh31pWEKR2QL1isTkD5gLOv7b33Hi7FmD71u0ttClo+oaXYD3s7UK/n6dyPd0TKoPCAJj+Eah2XVw0i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rhUJCTiS; arc=none smtp.client-ip=46.235.229.95
+	s=arc-20240116; t=1733792571; c=relaxed/simple;
+	bh=FikacwOceV8WTYv3qRskTLQxlm2UT7s3KO/UmEIEY6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qbBAGCtYumhVoh/YrXhLvs/b4qi3U6CX3jrAoU98oosPgKYd4LNnhwSDjATgqKEEBFChP0RhSnGf9lXLH6MTnlCYH+4YBDxAowocgMlQWs1mEVJjLLPpcrdvwWdU+Cn8aLb6ye6Lipnzolm1A/E6mSyCugXiJZ3v9O3Mq1zFwiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=OxgbSu8o; arc=none smtp.client-ip=46.235.229.95
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
 	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=fKfFzwBT2tq5xy+y0ceX0rFHUd9ACjHlyn2oZK5pcdE=; b=rhUJCTiSliPDE5vp
-	cukzU+yic+BQ1GtmUQj1Ks4/tg+0S50ODaAO0nixZLMojmw7hH3s2SEVHyJHHz+kXubC3tFxob4Ra
-	y4Q76z4TnZp3lllI0N6VCpIi1jUumztgrd0LAtS2o0ch8P2NwCyXDn3NWxmfVgAn07v+r/usSky3x
-	Rn0SDo6yGyylzcDQ/Y65SR0zvRx6alGDFkW8Q3yHohTFbJpTqvC8pk41RmCCJgTyMxsEDI8W3Ly7D
-	E665xiNv7U/LGLt/BIw2+rOpS8P0lOTl8b4ahtIZaqcBmFVXgdRaiBJo09RDDFhGz836RfBOIPSsC
-	WdRcHqcHm4exgXN0Ng==;
+	:Subject; bh=pqiXYTA41lhuBLarW6/wfqenQXsfc6O8HWAF6tBuSSc=; b=OxgbSu8oLeRcPc6b
+	OCi98mkXrbknrfoxV4W5s6TD/HBxj/eXzdKiLgPRPYVgy7HmyGiY1DhMPVijdS1Wu4UGMXcdMtazH
+	67xTjoV2PVuo3cN5Liail7sfqrrgQxoZlQ3a2+91dRL2c+PPZkUYccyRMVvzVtyrnfwLRMYL6ZZ3I
+	HXYHW3o6S1PnkdLBnJk1dmyd6udhGFJt+9r1tYH0w6GgROsAW6f7hjyYi2qBRV8ss8jrFrjXhisR/
+	GTi6WXU0JGyTTGTG5POu5/pA5AgFJ8dd7Q82GgQIuJK3cTPd2V+qAtFdhtW3aD/evyl8SPdFNd6Aj
+	5EWhrkFcxOOHoGkNOg==;
 Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
 	by mx.treblig.org with esmtp (Exim 4.96)
 	(envelope-from <linux@treblig.org>)
-	id 1tKodw-004Oea-2Y;
-	Tue, 10 Dec 2024 01:02:28 +0000
+	id 1tKodx-004Oea-2N;
+	Tue, 10 Dec 2024 01:02:29 +0000
 From: linux@treblig.org
 To: trondmy@kernel.org,
 	anna@kernel.org,
@@ -61,10 +62,12 @@ Cc: linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 0/3] sunrpc: Deadcoding
-Date: Tue, 10 Dec 2024 01:02:22 +0000
-Message-ID: <20241210010225.343017-1-linux@treblig.org>
+Subject: [PATCH 1/3] sunrpc: Remove unused xprt_iter_get_xprt
+Date: Tue, 10 Dec 2024 01:02:23 +0000
+Message-ID: <20241210010225.343017-2-linux@treblig.org>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20241210010225.343017-1-linux@treblig.org>
+References: <20241210010225.343017-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -75,33 +78,58 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Hi,
-  This is a bunch of deadcoding around the sunrpc code.
-This all removes whole functions/definitions/files
-rather than changing any actual codepaths.
+xprt_iter_get_xprt() was added by
+commit 80b14d5e61ca ("SUNRPC: Add a structure to track multiple
+transports") but is unused.
 
-Dave
+Remove it.
 
 Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/linux/sunrpc/xprtmultipath.h |  1 -
+ net/sunrpc/xprtmultipath.c           | 17 -----------------
+ 2 files changed, 18 deletions(-)
 
-Dr. David Alan Gilbert (3):
-  sunrpc: Remove unused xprt_iter_get_xprt
-  sunrpc: Remove gss_generic_token deadcode
-  sunrpc: Remove gss_{de,en}crypt_xdr_buf deadcode
-
- include/linux/sunrpc/gss_asn1.h         |  81 ---------
- include/linux/sunrpc/gss_krb5.h         |   1 -
- include/linux/sunrpc/xprtmultipath.h    |   1 -
- net/sunrpc/auth_gss/Makefile            |   2 +-
- net/sunrpc/auth_gss/gss_generic_token.c | 231 ------------------------
- net/sunrpc/auth_gss/gss_krb5_crypto.c   |  55 ------
- net/sunrpc/auth_gss/gss_krb5_internal.h |   7 -
- net/sunrpc/auth_gss/gss_mech_switch.c   |   1 -
- net/sunrpc/xprtmultipath.c              |  17 --
- 9 files changed, 1 insertion(+), 395 deletions(-)
- delete mode 100644 include/linux/sunrpc/gss_asn1.h
- delete mode 100644 net/sunrpc/auth_gss/gss_generic_token.c
-
+diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
+index c0514c684b2c..e411368cdacf 100644
+--- a/include/linux/sunrpc/xprtmultipath.h
++++ b/include/linux/sunrpc/xprtmultipath.h
+@@ -75,7 +75,6 @@ extern struct rpc_xprt_switch *xprt_iter_xchg_switch(
+ 		struct rpc_xprt_switch *newswitch);
+ 
+ extern struct rpc_xprt *xprt_iter_xprt(struct rpc_xprt_iter *xpi);
+-extern struct rpc_xprt *xprt_iter_get_xprt(struct rpc_xprt_iter *xpi);
+ extern struct rpc_xprt *xprt_iter_get_next(struct rpc_xprt_iter *xpi);
+ 
+ extern bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
+diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+index 720d3ba742ec..7e98d4dd9f10 100644
+--- a/net/sunrpc/xprtmultipath.c
++++ b/net/sunrpc/xprtmultipath.c
+@@ -602,23 +602,6 @@ struct rpc_xprt *xprt_iter_get_helper(struct rpc_xprt_iter *xpi,
+ 	return ret;
+ }
+ 
+-/**
+- * xprt_iter_get_xprt - Returns the rpc_xprt pointed to by the cursor
+- * @xpi: pointer to rpc_xprt_iter
+- *
+- * Returns a reference to the struct rpc_xprt that is currently
+- * pointed to by the cursor.
+- */
+-struct rpc_xprt *xprt_iter_get_xprt(struct rpc_xprt_iter *xpi)
+-{
+-	struct rpc_xprt *xprt;
+-
+-	rcu_read_lock();
+-	xprt = xprt_iter_get_helper(xpi, xprt_iter_ops(xpi)->xpi_xprt);
+-	rcu_read_unlock();
+-	return xprt;
+-}
+-
+ /**
+  * xprt_iter_get_next - Returns the next rpc_xprt following the cursor
+  * @xpi: pointer to rpc_xprt_iter
 -- 
 2.47.1
 
