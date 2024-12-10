@@ -1,112 +1,108 @@
-Return-Path: <linux-nfs+bounces-8487-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8488-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 580039EA209
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 23:46:00 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B11679EA406
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 02:02:53 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1086B28286C
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Dec 2024 22:45:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CD6E166E91
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Dec 2024 01:02:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F30E1A08AF;
-	Mon,  9 Dec 2024 22:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28609134B0;
+	Tue, 10 Dec 2024 01:02:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlYfRbGz"
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rhUJCTiS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4E819F13B;
-	Mon,  9 Dec 2024 22:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7CC22092;
+	Tue, 10 Dec 2024 01:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733783635; cv=none; b=MLBSyPquwu3ypQnO4c5MDIHj69JbkUVaEq8aoCj2FruolmP90LgaV9h6NLtB2KS58ABhvwSyxE83PLpfvejwYncho9BTwgFTFEifjDyri73zVQcWClSgQpE8+7xihs+lbTgsA/vUtsCm0aBDXHTkdNcWo7fFS/B/AV+7xXw6tBg=
+	t=1733792570; cv=none; b=CiIkTvqvt5Jqd5k4h5/6FebWcmEt5KbksIMIk1eAal7gGAgeRiLB71DR46Gh8PayI851sy0Mr8qS0dYG9BWg9dOyDpw0zi1s1nI9CZl6iqibhGyWgTuk0sZ7dMxRmdhf3PLUQm++GPjBu28L7luWyZB0YX/iUxpfDRzqakw8r4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733783635; c=relaxed/simple;
-	bh=S9dsHYZQ2ksvHpQ9FdgP36O+fNCp6A8Vmt2q+R+4gvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PN5wxVNeOfdm2NB60zUs2rFKoIzMAX+UO1j5GN6AoQ7bCmjrTh+b6h74jwBctQTlmrYyXqxOgz3HwHADzPYnZON6rHw+/hyRSQdCnuzRFq4PsOkH9GZmaVKtmgogfUkpg79yoScWPiKlgcPDIEwrXbUkje3P+dD/cyPlI9JF7i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlYfRbGz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AD5C4CED1;
-	Mon,  9 Dec 2024 22:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733783633;
-	bh=S9dsHYZQ2ksvHpQ9FdgP36O+fNCp6A8Vmt2q+R+4gvo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KlYfRbGzj4dC0Vu6sUP/1uP08na/ljXE1gdo6PnS3at+qN2r1zlTrvHg5dnYRFRTT
-	 mkiU7UJPd1se9apbAV1AGFvEnQqa8ZhZwO36UAsRc5v7Xwwt4Sa3tZhPaZw1hr3IT/
-	 ctRXYWeX9OeP4f7bfrakx+UsFh49i+dRrSignVzEvb2VH8zAm6ra+t8Fmrb/Qp22gZ
-	 HmAYUDVA7X7vhLlEB6ZwNcfmH/DYZhniQC7wQtSlIX3hnzBF9m2NN5B+xHg1iXyoQ0
-	 wyDiu56wnRcZ0sZLMEROYfaxq+0qJji7agw//fnM5wyqe9tadF7rL4wAKxZ9nA9pYv
-	 BaHevB0tVx1nA==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org,
+	s=arc-20240116; t=1733792570; c=relaxed/simple;
+	bh=p/5AWqZaj024rsVYdJI1Q2n9RpO+c+9BlKdB4PUzAp4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmaKOyQA8XfOXArIsncA+x6myDRBr5ua8mR29mbpVcDbdIDXH9iZFxLMMh8vaQ3OCRv59uxKG6TxQuegw+T17kl8RUsYh31pWEKR2QL1isTkD5gLOv7b33Hi7FmD71u0ttClo+oaXYD3s7UK/n6dyPd0TKoPCAJj+Eah2XVw0i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=rhUJCTiS; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=fKfFzwBT2tq5xy+y0ceX0rFHUd9ACjHlyn2oZK5pcdE=; b=rhUJCTiSliPDE5vp
+	cukzU+yic+BQ1GtmUQj1Ks4/tg+0S50ODaAO0nixZLMojmw7hH3s2SEVHyJHHz+kXubC3tFxob4Ra
+	y4Q76z4TnZp3lllI0N6VCpIi1jUumztgrd0LAtS2o0ch8P2NwCyXDn3NWxmfVgAn07v+r/usSky3x
+	Rn0SDo6yGyylzcDQ/Y65SR0zvRx6alGDFkW8Q3yHohTFbJpTqvC8pk41RmCCJgTyMxsEDI8W3Ly7D
+	E665xiNv7U/LGLt/BIw2+rOpS8P0lOTl8b4ahtIZaqcBmFVXgdRaiBJo09RDDFhGz836RfBOIPSsC
+	WdRcHqcHm4exgXN0Ng==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1tKodw-004Oea-2Y;
+	Tue, 10 Dec 2024 01:02:28 +0000
+From: linux@treblig.org
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: linux-nfs@vger.kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 00/10] nfsd: implement the "delstid" draft
-Date: Mon,  9 Dec 2024 17:33:47 -0500
-Message-ID: <173378349324.1842041.4044954409242921629.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241209-delstid-v5-0-42308228f692@kernel.org>
-References: <20241209-delstid-v5-0-42308228f692@kernel.org>
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH 0/3] sunrpc: Deadcoding
+Date: Tue, 10 Dec 2024 01:02:22 +0000
+Message-ID: <20241210010225.343017-1-linux@treblig.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-On Mon, 09 Dec 2024 16:13:52 -0500, Jeff Layton wrote:
-> We had a report from the kernel test robot that adding support for
-> OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION caused an "App Overhead"
-> regression in the fs_mark benchmark, and we dropped that series for
-> v6.13.
-> 
-> I've not been able to reproduce this problem. Even on the real hardware
-> to which I have access, I don't see the regression in App Overhead
-> values that the KTR is reporting in that test.xi
-> 
-> [...]
+Hi,
+  This is a bunch of deadcoding around the sunrpc code.
+This all removes whole functions/definitions/files
+rather than changing any actual codepaths.
 
-Applied to nfsd-testing for v6.14, thanks!
+Dave
 
-[01/10] nfsd: fix handling of delegated change attr in CB_GETATTR
-        commit: be53fa67d813cc134809723699fe96b8dcdf69d3
-[02/10] nfs_common: make include/linux/nfs4.h include generated nfs4_1.h
-        commit: ba432f5dc998369372737b50d45e9cd5bb221b78
-[03/10] nfsd: switch to autogenerated definitions for open_delegation_type4
-        commit: 5508d620b0c77c979dcea271ab40e66f1065e55d
-[04/10] nfsd: rename NFS4_SHARE_WANT_* constants to OPEN4_SHARE_ACCESS_WANT_*
-        commit: 1fcab4e8e19b75f77b1f966787272a86f8b1a191
-[05/10] nfsd: prepare delegation code for handing out *_ATTRS_DELEG delegations
-        commit: 103d2fab19ee8f9cde323b7b2d1b9057451fecb4
-[06/10] nfsd: add support for FATTR4_OPEN_ARGUMENTS
-        commit: c47967f05d73859bb1f6faeb7eead7fe87f92f3c
-[07/10] nfsd: rework NFS4_SHARE_WANT_* flag handling
-        commit: f710fdaf971eb5889c6399fdf3dac9fd27604184
-[08/10] nfsd: add support for delegated timestamps
-        commit: 262ddeaebc5930998f9366b2d91471575d9dff16
-[09/10] nfsd: handle delegated timestamps in SETATTR
-        commit: 7fbc290538d9b00d34bc0e4aede0b45348a4b957
-[10/10] nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
-        commit: fca2cd592b6ad1b3809abf7ba27e20d8a7a433c4
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
---
-Chuck Lever
+Dr. David Alan Gilbert (3):
+  sunrpc: Remove unused xprt_iter_get_xprt
+  sunrpc: Remove gss_generic_token deadcode
+  sunrpc: Remove gss_{de,en}crypt_xdr_buf deadcode
+
+ include/linux/sunrpc/gss_asn1.h         |  81 ---------
+ include/linux/sunrpc/gss_krb5.h         |   1 -
+ include/linux/sunrpc/xprtmultipath.h    |   1 -
+ net/sunrpc/auth_gss/Makefile            |   2 +-
+ net/sunrpc/auth_gss/gss_generic_token.c | 231 ------------------------
+ net/sunrpc/auth_gss/gss_krb5_crypto.c   |  55 ------
+ net/sunrpc/auth_gss/gss_krb5_internal.h |   7 -
+ net/sunrpc/auth_gss/gss_mech_switch.c   |   1 -
+ net/sunrpc/xprtmultipath.c              |  17 --
+ 9 files changed, 1 insertion(+), 395 deletions(-)
+ delete mode 100644 include/linux/sunrpc/gss_asn1.h
+ delete mode 100644 net/sunrpc/auth_gss/gss_generic_token.c
+
+-- 
+2.47.1
 
 
