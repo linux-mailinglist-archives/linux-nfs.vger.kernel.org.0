@@ -1,143 +1,245 @@
-Return-Path: <linux-nfs+bounces-8548-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8549-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EC039F0E07
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 14:56:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD1629F0E72
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 15:05:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85472188D3BA
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 13:55:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDAF3161A4B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 14:05:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 919391EE7CE;
-	Fri, 13 Dec 2024 13:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0898E1E105B;
+	Fri, 13 Dec 2024 14:04:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFcncDkQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GvpBbhdJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786111EE7A5
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 13:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291ED1E0B9C
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 14:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734097896; cv=none; b=KrOdE6X/QykzZQzHM/MljwfdibeNemSorRp0MDiBOli1HF6ISTS8Ux1inLzayq5BZZxSkkJgXB1tELogLwHE7VPyq0HF5dj5HydxVeu2vZWtLvOchlv4GzzA1QhSd0n1rcx86BEu4/13RhisSbLJW4kM9eCfe25AP1ZMPBXS2kc=
+	t=1734098679; cv=none; b=T3ANA+sthWcraDiguJcP661r3yEaW/q5xaOuh0xqeOStTEqt02JhC/korc6gfsHXdkrw4MSoxojogfHE/BQMmaFGl6gCYQyfdmzxGxy5o1hH0m8inDbi9WFLEH0g8Y++WDEelOHOv6GUm6cH7HOQab2orApu78/2JDBmfjG/zZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734097896; c=relaxed/simple;
-	bh=SrqCMAuMjlWi8sIixKN4Dar0oa3TrmkaDfBeGAAPycg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vFrf99VRA1iVQ6J6vGQWRcAnIyNo45UUa/IgeK0KsP+MHQ5frhZB/7GbT018HDZHTFdPvZm57KoOc0Vwu5e9xK9ZF3u1jxDxp19ft8c0NxWdUTo2+vT25anenI0Gi6QK8CgM6bkWIolBESQzUBTNxroOuPmZn/6bg7+ZbHbRBRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFcncDkQ; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1734098679; c=relaxed/simple;
+	bh=BLcmeVJ5U4DYQzHKAiQZlh7Ak2tSTMDloMiK5se3BJg=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=EVDUUfyNhMIke3H1ftsaaH1ixa+CGcFrRHG81oJGNh6RPwEmfV9POw99Ua159z6szEpyO7oj7RQXVDXPWiISmUj10405j371yVwZLlkXlm7m2D72FA8jo2WH7DKk8jsYkk/lF2aKL4kOvW6mBeuoHqQ6n9E60hISOLRP0XKwLi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GvpBbhdJ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097893;
+	s=mimecast20190719; t=1734098677;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L1v5Uahl/uBNImxZaUKZS5taSNKrtxd0nK3bDl+BkV8=;
-	b=gFcncDkQScyof+oZWSXMb8Uj0dNkyguo4wg2n5Zd76UMxbvtlZjSHs23Uio68rTlPl+KXk
-	by5rmukTvE6soTdYUbACScuDCdeQSK/JEnxqwFtNIPECCRWDwycnCFLInVLgS0h6I+NPTn
-	JAW1c2Cmkk3mLtmbZtKPqunVyrmD43c=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=BMjJh3rNwqJWG/q45S190yCaLe7IaLUoUOyUtTRrI4M=;
+	b=GvpBbhdJxHLTTk7tEp+GrG/hgYqBCPd4kPoQuAMbQOt5cprpaETz7whqcUONxLZW3Ed8q1
+	hOC9JW56Isx4kO8QHtMb/czvH7FVwTfoyZhnSvYhcTpIOPBPtDDERUfoJ9wi9DhH3hW1U3
+	L6iyPynqFBzBi5lCPaA9Wu+6UhhPYdI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-iuxIXFenMlSlR7jWS7DojA-1; Fri,
- 13 Dec 2024 08:51:30 -0500
-X-MC-Unique: iuxIXFenMlSlR7jWS7DojA-1
-X-Mimecast-MFC-AGG-ID: iuxIXFenMlSlR7jWS7DojA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-528-A8uEA95lOSGhAgZJarh21Q-1; Fri,
+ 13 Dec 2024 09:04:32 -0500
+X-MC-Unique: A8uEA95lOSGhAgZJarh21Q-1
+X-Mimecast-MFC-AGG-ID: A8uEA95lOSGhAgZJarh21Q
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 059B41955F08;
-	Fri, 13 Dec 2024 13:51:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk.com (unknown [10.42.28.48])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 056F31956086;
-	Fri, 13 Dec 2024 13:51:22 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCB9F1955E9A;
+	Fri, 13 Dec 2024 14:04:29 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.48])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9948F195605A;
+	Fri, 13 Dec 2024 14:04:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>
-Cc: David Howells <dhowells@redhat.com>,
-	Max Kellermann <max.kellermann@ionos.com>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Xiubo Li <xiubli@redhat.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 10/10] netfs: Fix the (non-)cancellation of copy when cache is temporarily disabled
-Date: Fri, 13 Dec 2024 13:50:10 +0000
-Message-ID: <20241213135013.2964079-11-dhowells@redhat.com>
 In-Reply-To: <20241213135013.2964079-1-dhowells@redhat.com>
 References: <20241213135013.2964079-1-dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+    Ilya Dryomov <idryomov@gmail.com>
+Cc: dhowells@redhat.com, Max Kellermann <max.kellermann@ionos.com>,
+    Xiubo Li <xiubli@redhat.com>, Trond Myklebust <trondmy@kernel.org>,
+    Jeff Layton <jlayton@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org
+Subject: ceph xfstests failures [was Re: [PATCH 00/10] netfs, ceph, nfs, cachefiles: Miscellaneous fixes/changes]
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2964552.1734098664.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Dec 2024 14:04:24 +0000
+Message-ID: <2964553.1734098664@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-When the caching for a cookie is temporarily disabled (e.g. due to a DIO
-write on that file), future copying to the cache for that file is disabled
-until all fds open on that file are closed.  However, if netfslib is using
-the deprecated PG_private_2 method (such as is currently used by ceph), and
-decides it wants to copy to the cache, netfs_advance_write() will just bail
-at the first check seeing that the cache stream is unavailable, and
-indicate that it dealt with all the content.
+David Howells <dhowells@redhat.com> wrote:
 
-This means that we have no subrequests to provide notifications to drive
-the state machine or even to pin the request and the request just gets
-discarded, leaving the folios with PG_private_2 set.
+> With these patches, I can run xfstest -g quick to completion on ceph wit=
+h a
+> local cache.
 
-Fix this by jumping directly to cancel the request if the cache is not
-available.  That way, we don't remove mark3 from the folio_queue list and
-netfs_pgpriv2_cancel() will clean up the folios.
+I should qualify that.  The thing completes and doesn't hang, but I get 6
+failures:
 
-This was found by running the generic/013 xfstest against ceph with an
-active cache and the "-o fsc" option passed to ceph.  That would usually
-hang
+    Failures: generic/604 generic/633 generic/645 generic/696 generic/697 =
+generic/732
 
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-Reported-by: Max Kellermann <max.kellermann@ionos.com>
-Closes: https://lore.kernel.org/r/CAKPOu+_4m80thNy5_fvROoxBm689YtA0dZ-=gcmkzwYSY4syqw@mail.gmail.com/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Ilya Dryomov <idryomov@gmail.com>
-cc: Xiubo Li <xiubli@redhat.com>
-cc: netfs@lists.linux.dev
-cc: ceph-devel@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
+Though these don't appear to be anything to do with netfslib (see attached=
+).
+There are two cases where the mount is busy and the rest seems to be due t=
+o
+id-mapped mounts and/or user namespaces.
+
+The xfstest local.config file looks something like:
+
+    export FSTYP=3Dceph
+    export TEST_DEV=3D<ipaddr>:/test
+    export TEST_DIR=3D/xfstest.test
+    TEST_FS_MOUNT_OPTS=3D'-o name=3Dadmin,mds_namespace=3Dtest,fs=3Dtest,f=
+sc'
+    export SCRATCH_DEV=3D<ipaddr>:/scratch
+    export SCRATCH_MNT=3D/xfstest.scratch
+    export MOUNT_OPTIONS=3D'-o name=3Dadmin,mds_namespace=3Dscratch,fs=3Ds=
+cratch,fsc=3Dscratch'
+
+David
 ---
- fs/netfs/read_pgpriv2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+# ./check -E .exclude generic/604 generic/633 generic/645 generic/696 gene=
+ric/697 generic/732
+FSTYP         -- ceph
+PLATFORM      -- Linux/x86_64 andromeda 6.13.0-rc2-build3+ #5311 SMP Fri D=
+ec 13 09:03:34 GMT 2024
+MKFS_OPTIONS  -- <ipaddr>:/scratch
+MOUNT_OPTIONS -- -o name=3Dadmin,mds_namespace=3Dscratch,fs=3Dscratch,fsc=3D=
+scratch -o context=3Dsystem_u:object_r:root_t:s0 <ipaddr>:/scratch /xfstes=
+t.scratch
 
-diff --git a/fs/netfs/read_pgpriv2.c b/fs/netfs/read_pgpriv2.c
-index ba5af89d37fa..54d5004fec18 100644
---- a/fs/netfs/read_pgpriv2.c
-+++ b/fs/netfs/read_pgpriv2.c
-@@ -170,6 +170,10 @@ void netfs_pgpriv2_write_to_the_cache(struct netfs_io_request *rreq)
- 
- 	trace_netfs_write(wreq, netfs_write_trace_copy_to_cache);
- 	netfs_stat(&netfs_n_wh_copy_to_cache);
-+	if (!wreq->io_streams[1].avail) {
-+		netfs_put_request(wreq, false, netfs_rreq_trace_put_return);
-+		goto couldnt_start;
-+	}
- 
- 	for (;;) {
- 		error = netfs_pgpriv2_copy_folio(wreq, folio);
+generic/604 2s ... [failed, exit status 1]- output mismatch (see /root/xfs=
+tests-dev/results//generic/604.out.bad)
+    --- tests/generic/604.out   2024-09-12 12:36:14.187441830 +0100
+    +++ /root/xfstests-dev/results//generic/604.out.bad 2024-12-13 13:18:5=
+1.910900871 +0000
+    @@ -1,2 +1,4 @@
+     QA output created by 604
+    -Silence is golden
+    +mount error 16 =3D Device or resource busy
+    +mount -o name=3Dadmin,mds_namespace=3Dscratch,fs=3Dscratch,fsc=3Dscra=
+tch -o context=3Dsystem_u:object_r:root_t:s0 <ipaddr>:/scratch /xfstest.sc=
+ratch failed
+    +(see /root/xfstests-dev/results//generic/604.full for details)
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/604.out /root/xfstests-=
+dev/results//generic/604.out.bad'  to see the entire diff)
+generic/633       [failed, exit status 1]- output mismatch (see /root/xfst=
+ests-dev/results//generic/633.out.bad)
+    --- tests/generic/633.out   2024-09-12 12:36:14.187441830 +0100
+    +++ /root/xfstests-dev/results//generic/633.out.bad 2024-12-13 13:18:5=
+5.958979531 +0000
+    @@ -1,2 +1,4 @@
+     QA output created by 633
+     Silence is golden
+    +idmapped-mounts.c: 307: tcore_create_in_userns - Input/output error -=
+ failure: open file
+    +vfstest.c: 2418: run_test - Success - failure: create operations in u=
+ser namespace
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/633.out /root/xfstests-=
+dev/results//generic/633.out.bad'  to see the entire diff)
+generic/645       [failed, exit status 1]- output mismatch (see /root/xfst=
+ests-dev/results//generic/645.out.bad)
+    --- tests/generic/645.out   2024-09-12 12:36:14.191441810 +0100
+    +++ /root/xfstests-dev/results//generic/645.out.bad 2024-12-13 13:19:2=
+5.526908024 +0000
+    @@ -1,2 +1,4 @@
+     QA output created by 645
+     Silence is golden
+    +idmapped-mounts.c: 6671: nested_userns - Invalid argument - failure: =
+sys_mount_setattr
+    +vfstest.c: 2418: run_test - Invalid argument - failure: test that nes=
+ted user namespaces behave correctly when attached to idmapped mounts
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/645.out /root/xfstests-=
+dev/results//generic/645.out.bad'  to see the entire diff)
+generic/696       - output mismatch (see /root/xfstests-dev/results//gener=
+ic/696.out.bad)
+    --- tests/generic/696.out   2024-09-12 12:36:14.195441791 +0100
+    +++ /root/xfstests-dev/results//generic/696.out.bad 2024-12-13 13:19:3=
+0.254804087 +0000
+    @@ -1,2 +1,6 @@
+     QA output created by 696
+    +idmapped-mounts.c: 7763: setgid_create_umask_idmapped - Input/output =
+error - failure: create
+    +vfstest.c: 2418: run_test - Success - failure: create operations by u=
+sing umask in directories with setgid bit set on idmapped mount
+    +idmapped-mounts.c: 7763: setgid_create_umask_idmapped - Input/output =
+error - failure: create
+    +vfstest.c: 2418: run_test - Success - failure: create operations by u=
+sing umask in directories with setgid bit set on idmapped mount
+     Silence is golden
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/696.out /root/xfstests-=
+dev/results//generic/696.out.bad'  to see the entire diff)
+
+HINT: You _MAY_ be missing kernel fix:
+      ac6800e279a2 fs: Add missing umask strip in vfs_tmpfile 1639a49ccdce=
+ fs: move S_ISGID stripping into the vfs_*() helpers
+
+generic/697       - output mismatch (see /root/xfstests-dev/results//gener=
+ic/697.out.bad)
+    --- tests/generic/697.out   2024-09-12 12:36:14.195441791 +0100
+    +++ /root/xfstests-dev/results//generic/697.out.bad 2024-12-13 13:19:3=
+1.749225548 +0000
+    @@ -1,2 +1,4 @@
+     QA output created by 697
+    +idmapped-mounts.c: 8218: setgid_create_acl_idmapped - Input/output er=
+ror - failure: create
+    +vfstest.c: 2418: run_test - Success - failure: create operations by u=
+sing acl in directories with setgid bit set on idmapped mount
+     Silence is golden
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/697.out /root/xfstests-=
+dev/results//generic/697.out.bad'  to see the entire diff)
+
+HINT: You _MAY_ be missing kernel fix:
+      1639a49ccdce fs: move S_ISGID stripping into the vfs_*() helpers
+
+generic/732 1s ... [failed, exit status 1]- output mismatch (see /root/xfs=
+tests-dev/results//generic/732.out.bad)
+    --- tests/generic/732.out   2024-09-12 12:36:14.195441791 +0100
+    +++ /root/xfstests-dev/results//generic/732.out.bad 2024-12-13 13:19:3=
+4.482858235 +0000
+    @@ -1,2 +1,5 @@
+     QA output created by 732
+     Silence is golden
+    +mount error 16 =3D Device or resource busy
+    +mount -o name=3Dadmin,mds_namespace=3Dscratch,fs=3Dscratch,fsc=3Dscra=
+tch -o context=3Dsystem_u:object_r:root_t:s0 <ipaddr>:/scratch /xfstest.te=
+st/mountpoint2-732 failed
+    +(see /root/xfstests-dev/results//generic/732.full for details)
+    ...
+    (Run 'diff -u /root/xfstests-dev/tests/generic/732.out /root/xfstests-=
+dev/results//generic/732.out.bad'  to see the entire diff)
+Ran: generic/604 generic/633 generic/645 generic/696 generic/697 generic/7=
+32
+Failures: generic/604 generic/633 generic/645 generic/696 generic/697 gene=
+ric/732
+Failed 6 of 6 tests
 
 
