@@ -1,400 +1,291 @@
-Return-Path: <linux-nfs+bounces-8535-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8536-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A48C9EFF48
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Dec 2024 23:26:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2AD39F012D
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 01:39:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 354CC2882B8
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Dec 2024 22:26:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DD3628147A
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 00:39:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51741DE3DB;
-	Thu, 12 Dec 2024 22:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3542383;
+	Fri, 13 Dec 2024 00:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ldNQjFOt";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qRlAEl2v"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="TvyF81p2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F3F1DE3BF;
-	Thu, 12 Dec 2024 22:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734042372; cv=fail; b=kBN6B6YOzEkJyOQWl+TpVaZAeIK73X+QdFcUH0GBO5vB9qHe6SFEfid3M0ycG7GeWgbwO9TBIi6p4fpasNI3odHEkUC0YGOOIHGe0aCzdvecltkBx4+GLtaN0vSL15ElXn/8egWL2BTDaG+icl7RCS7/eXwhB7TrdmcuXxfqN0Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734042372; c=relaxed/simple;
-	bh=652rrCIbPuJzKq4NNuggokbjRTmJ/PkwrLNOBAWpjq4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sFhlMEdHyraPIx+p1d6W/NUXzoBffp8aa7mySBqybNM4wyP8Cs38jLS5gtxw+Ll6x+VwaOsy3V0u4LyvUyNVBRcXPJV5nXonCEpzF4Lj5HoF7vTpZ+z6SMsuuu6MVYFkfBF9LcB/ge8pxcmVsi6hy2CFhqPFASUood1enlUF5Ts=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ldNQjFOt; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qRlAEl2v; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BCJfvWU028759;
-	Thu, 12 Dec 2024 21:06:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=jpIJT3GzvqBXt8YyqbkcUFEL8C5Th5+qsmTpjj3vJ+I=; b=
-	ldNQjFOt6zky/sCGwc0uDxl7LX/lh0QzNe3LW8wM6bgkER/iERCei0MAAGMwQNh6
-	LcvaA8oMGRr+Ab03YlgeoLTP0bXgIXBqHBHfkpw5pDzFJOzfrb+BmUV0MRYm3NSj
-	zvVvoSdIt054S9TDBXes/wT6+7Y3jfLazxzAf+zI4TxZdNnzbTj59oqFwqfDdycB
-	lHYtPXJSH6UeJRm8hoVdFYtBUKP0zifx6MXEbFm52YM6Vwlp/BnZVPyNHW9Ldh79
-	SpxyPbw3MCdUQHXS9A6OUfY7j2zcK69nnU0EYdeIzjk/aqGUutYLOEg56BlEGIiJ
-	rD5Or22qeQdf+B7Agg17mw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43cd9av77x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Dec 2024 21:06:25 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BCKGoAM036326;
-	Thu, 12 Dec 2024 21:06:24 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2041.outbound.protection.outlook.com [104.47.74.41])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43cctbydtk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 12 Dec 2024 21:06:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EISVG1hKD+aaipCJrk/sPvdfP4jz17eWBBkGDj1Wr0idywPNPYutNtOJfqBIb3HWL/iDLe6YIA5nfh8RW5627brwc0Zf9taJ8VISdG1lNx3wThaFXyNkTt2ILhvbRGmj5PkoJ7V6RXCWHEF7OJ+jfjUDph4zmEvU0e+KLMqqJ6XfVJrqSx9CysSpH9DmdSl0iNFhvwIWlsSjOgpzfBdfb1LA1Mq0EsNmwoxLIbOPdP3pITHDdxr3q4LHj8F3iLRH9Y/ui2AN+wfBLnQNeNppdNDMJjPmRE/Xe471EXXT0H4B/12dU+oBoNbMfVEqMU7hFwxabMu7+HwVtxLw9o7Zbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jpIJT3GzvqBXt8YyqbkcUFEL8C5Th5+qsmTpjj3vJ+I=;
- b=SEZQV9Y3jHb1o0x1L8B98gyi9lbxAzKrFNiuI44++BMCtuvUXCJ6SHSifgDbUNYItmTumOzE3DLAEIZs6RUaO0EK/0F3J6C1GRukqyct5CIVstyPmHPbr4MOqb7vjyhfakWhNlsA6+DdFxVme0szpA/EwEXby9pGXafjx/0qkTjrFr/6p8LGF0/EeMLWmiYqBRMRIjrzVMnxmv2iQN2IUmZ6H2qxRYOXYIoiBEyGxHaiv2NFYclrCCz6NR6Bemgkhdml8N5vMZWb2cbrOQQQpsbfkGEgs6+7k8yNzm66RyUrLnqUSxx5JxDnZ1ad6VKh3oEafi0fql/X+t96YBWT3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77451854
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 00:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734050367; cv=none; b=O0fx9uiMP6g27+ionrs4BCZJqTSk8HemGW3XLLavGV/ev+3gNhlhUcJTw4TlPdjs0N4HquC6tv19k6nbB6blBqsi/fK2H6iDbF5U/JWkp3isO5Fn0JE9hWVQe3kvy+Hh1lrHcqhX6zIAG5pS24Vy860tXWK+4CPQrdUWKNU0Vs4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734050367; c=relaxed/simple;
+	bh=w5+4zVvee0iv6wu1kPgVM3sVeUcXg1TUNqQ9TjvlZtk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t0sGEXYSuMFsTDrS0AMOZDVDKV3jeGHl/iQPq8vTjCACWQ1Hkib7QzPdoqbgVDhxHkZtXTHt8+7LqjcRtHml5QlAXsAtT5blkTLZtugnUE//0uZC/iUR5ITvpOadOSw29Ut3R3FwGTWSyt3E94JoWMelX+GLWrB3PKh2XIg0y7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=TvyF81p2; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53f22fd6887so1315728e87.2
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Dec 2024 16:39:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jpIJT3GzvqBXt8YyqbkcUFEL8C5Th5+qsmTpjj3vJ+I=;
- b=qRlAEl2vibpPwcrVzVWcbHNGhzpAKVGceA1BwkbEBOKP/C/g24SO0oH5ZJmzBTE80xoDm2sVthIxUXS3B3LSigSgLA8nXcC8iL8HCFAXPraaSFHCyASu1WLH5t4aBQ6bE4pdrGezu+DWdOkmn0KuBMmGvux4bSXoy0aEIwh1u/Y=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MW4PR10MB5701.namprd10.prod.outlook.com (2603:10b6:303:18b::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.20; Thu, 12 Dec
- 2024 21:06:21 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8251.008; Thu, 12 Dec 2024
- 21:06:21 +0000
-Message-ID: <2a3c0a1f-0213-4915-a4c0-a2ba31ae1bbc@oracle.com>
-Date: Thu, 12 Dec 2024 16:06:18 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 09/10] nfsd: handle delegated timestamps in SETATTR
-To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Jonathan Corbet <corbet@lwn.net>,
-        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20241209-delstid-v5-0-42308228f692@kernel.org>
- <20241209-delstid-v5-9-42308228f692@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20241209-delstid-v5-9-42308228f692@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0211.namprd03.prod.outlook.com
- (2603:10b6:610:e7::6) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=umich.edu; s=google-2016-06-03; t=1734050364; x=1734655164; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Ph3XQ9C/6UtL+evRp8sTP1xjM50WQGOZo6uaoMH+yo=;
+        b=TvyF81p2va6OzcyVtUdzEXf/qn7mQvwW8Ngxf/h7A7IP9V1/HL5mSbsU2el2cRBue6
+         pqkxrCBV065xSJYIuOkCCnTiKgl2adQzeyZxNxLQcMetLgv2QLE1YEPnoJIb+i8hrln9
+         BH7RS3zmfg58td9S/jpUCpC+mlcHmQ+GsJ8U2OT19YWgbgijKS2kleg/BQfiDyt/IQs+
+         9C2laK6hSFQAtFnsTtHW5Q5UQdo4TJZWA5pBlCnGij1GiuS/X4646bDg8LoCA29wb/vK
+         aLf2l1fr+rRK4lpNyTQYGDlt8CR8GhubDUAy5E8/lCefKH/BG6Jv30bOzNPUjFK+6N0p
+         t97Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734050364; x=1734655164;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Ph3XQ9C/6UtL+evRp8sTP1xjM50WQGOZo6uaoMH+yo=;
+        b=Fe33C8G4NcIegXmC7MxgylFYrt8V208cEHoKKibnlihOB8yRTDlQtQnPzeFDU0fAjY
+         XllBxrLRr8UrcQQhdTP01DCTwSGeFT976hoYZBss3FV958YiVnTQFPGH3AkOWghB0HLb
+         TmMstS/hBtnVKSR4rRrc9pBz/pOBEAPt/jQNDVNQmNGnjLESqsCx0BT8cvG/5kBf+eBJ
+         BTVVQsscefxcbHMThINwhLWXN5/hWxy1hhoaFgM72CRN92+UVhCd6nPyksbFTUSxvcYS
+         MzcMdODu3JT5wLkJbitnA6T/Aw8wHrv6L3g+x1dZ7OEZhLgp4+92a+1Ixi4fReZNjBKH
+         d8Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4UoNVHfXA1JSGLS95W9B9itrKnas1HxFXpttRYVz2j4/8nfjNBOGTkmu8vQ+8I5mMDFPc9sQMYEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQbIyMpRscdH2yQcK6yP4rDRy8v19+KPAU0vnBLG+ltfgBsikQ
+	oY9WikkF1Ypf94WiXl2Whyn5/72crL36S73JlE9HIOHjXU+HcdcnKGTqIfIcDjZhyg8XjAtaJCU
+	UtVJN2/Vt+8Z7511VCjOyUdVHLmo=
+X-Gm-Gg: ASbGncvx2yFQu/g3lfsI1xzBMtsA0zXl//vw+r1luf+j8pipom9SUTXM97KAY5VsYa4
+	+BT8/jHYxlhYVASPyNHgTfwy0EGyz8GZ4GiQStufcuDqf0WREtemOgg8j3CskX0LKt9XB5hZ7
+X-Google-Smtp-Source: AGHT+IHqryVfvaMppR36EBnb73Zh/s+HQHLM2pdlkcdRyBztApP6W59/WcvHQIT/QbsfUZvsSy3B8Xlc35fWR2J9zxI=
+X-Received: by 2002:a2e:a58e:0:b0:302:3abc:d9e8 with SMTP id
+ 38308e7fff4ca-3025459d237mr2086981fa.32.1734050363671; Thu, 12 Dec 2024
+ 16:39:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MW4PR10MB5701:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d53437e-b8d6-4924-0c8c-08dd1af0d3ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TmlyY0pqVk11WEhoZ3VQM1ZwT1RQNjViSTFoSkRqV2VIRFNJbFYwb0h0Y0ln?=
- =?utf-8?B?TW1uUGxna0VNVUZkWHdTcDF3azAzSzZRLzJLcEVFanprUTBTMEpMVld4KzBr?=
- =?utf-8?B?cCtIOEd5Qm0wcEVaTjFGcTJLbFJHSS8reWJtUXRIanBDTVpDTk5aT3QxL1V4?=
- =?utf-8?B?M0Vsd3VhNTBnQWNLcE1HZ0J0WHZsM1BDSy9PbS9PbkFQL1l5YVNuUWdlQXFE?=
- =?utf-8?B?c2EyY05nTFZGTEZZbmJpVFNMZlJOSzRNZmJPWWpNSlRWWHBJRXQwaVlzblp3?=
- =?utf-8?B?bDJ3OHFrUWJFMHFYeDQ1eFBEczF2b290bndBaGxiWks3dXdmaTRnQURjMmZP?=
- =?utf-8?B?dkNzaGNLM2NxR0JrNm5EQmMzeTQ1L216eG5NS0I5VUlCWDZoRGFSS0NpR0JE?=
- =?utf-8?B?Mm9OaUZwSHdIRUppSjA0NkVHaXJNek5RVEU2bS9UdkllZmlEUkgvbUY2ckFa?=
- =?utf-8?B?SVR1aXM1L1o5Y3pSc0dkd0RHQzh3ZjFRV3psZURIN0xxcWFvUTJVa0ZCUEgv?=
- =?utf-8?B?dCsyUVhVRzNIV1ZWMDJYeHFXc2tzVVZLQVJUcnJydHVvblRsTTc0YVBLVzVZ?=
- =?utf-8?B?WmxpRnJXc215clJrNzBmRHY3WThYVzE1RlZnby94elBVcGc2MGNEMmdZaWpl?=
- =?utf-8?B?bWVBTzZDRlZ1ZjkvaWppN2h2ck03OHVZMmFLK0ROdXZaSkN5dEhVRm5DQVVG?=
- =?utf-8?B?b2pVd25NS3FWRXpBZmJFYTdMV2g4Ym1BWDdzZ01OeFRlTVBBUEd0UDFDdXFq?=
- =?utf-8?B?ZEo1cVB5VnRsaHp6NVRDRTIzWGZ2VjExRG1ZUmpBSFk0Nml5UkRxYmZxVDMv?=
- =?utf-8?B?djVtd3BxNHkxZFFOdW9hWHR1UVBMT2x1S3dMSTFBSkFjWVpDRjZ4LzRteklz?=
- =?utf-8?B?OFNPcXJhVmE4TTdxWUMvaHlNc084dGdJdEtsTmhJcVN6aldMYVoyN0Vubit2?=
- =?utf-8?B?ZitsRFVLcVJycFd0MG41VXI5NGV3R25KMDlOYnJEM1BJZlMrUVN5YW5HNUEw?=
- =?utf-8?B?bXFmaWhWWkxnWEhqek4vRDdocTM1aWkzelkrNnptRlQyVXFKS1JKTWdNV3J2?=
- =?utf-8?B?dit6aCswRklhNG9ZN29PN3ZVUTVVVElmdUwrWEtMbHlpcHhWVUNmZEtuRE45?=
- =?utf-8?B?QStYUmprVXNlTUFWVER3Rk12dUc0YkZnMnJzN3pWd3R2Qm5DT25jdjd3Wjdk?=
- =?utf-8?B?THFHNElYYkFPeHFpaXJZK1BKSXNRM2ExRGtnSGdvRlRQK09Falg3MXBKSzU1?=
- =?utf-8?B?dEgwbnloS1BBd3Q5VzkyQlVnU01ZUjR4SFBWSUZoNitjc1FCZDlpMGc5WDVD?=
- =?utf-8?B?RWluZTBIb1lVaEsySmJSNklKMW85SzdFaGdrNFh5aHpIS3pYSFpvbCtuZWQ4?=
- =?utf-8?B?cCtSMkp2UjdTZWJaMUYraU9XMkVSVzFGMVN3c2FzMVpjU0xacEJvNXFCRzMz?=
- =?utf-8?B?WmpLSVhwSUljeFRtNktpcHZIb1hmQk50UW5CMDcvQVVBd3lVZmUxMHc3bE1X?=
- =?utf-8?B?aGJEb2ZsNjZGN0FHM2VHd3hZWERScCtRZ1VBNTg4cmhSU2dBOWZmRWtsYkFD?=
- =?utf-8?B?enpuN0V1WG5NSTg5dzZXVHhFU2IxcCtML0hicmgvaHR5VSsyMVZ5T0pHSVZC?=
- =?utf-8?B?WU9DNGN3d1FaaFExUTQ2N0ZKdTJqejduU1FJSzlqdk1mblpBYUFPYU5FUFNv?=
- =?utf-8?B?d2YyRE9BMWZyYlJRRTdnU0xIZEhRYnovdjFpcjdRZVZTZHdySnNSZVlLbEZr?=
- =?utf-8?B?Qmk3c1NXbkoxaGdYZU5rNy9SRjkxa2xsaTZ0eHh2cmFVSzBRNVRjWEZlOVpV?=
- =?utf-8?B?ZUxRZ1ZqRmtrVTJhY1JYdz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OFNEN3BBOHlEejcwYWdxWnJpdXBnQ0JEQndubWE5ZnJBYUwwOGpUeEtpOEw3?=
- =?utf-8?B?b1dzM0dhUVpHL3BnTE93YXFIRkd2aDJ5ZGdpM3NGeDhzMHJqQXFBM00xUCtR?=
- =?utf-8?B?UVFndTRrMkw2UTcxdmduUW5UMTRNMlBwdVBOVG41YWRMVlM3bUpESGdFcnlG?=
- =?utf-8?B?YXJ3UDAzQzdrVkl1RGE4bVBvNjdnUm9LNFpiMjZNaXBoM05ZSm8zN2QzTDI3?=
- =?utf-8?B?Sm9BR3ErUEpHYXpuY2JqQWx5LzI3cHNhSjFGNTNHOHZRNmRhUjREeU10ZEdq?=
- =?utf-8?B?VUZBU3JQa1I4YzBWOUJ4TG9BY1dtRmpVSEtpanAzQUZEaGRJaXJRcmN1ZUNC?=
- =?utf-8?B?Nm1iakgrZlBGbm9KMmxTVUZ4TWpBS3ZNSmZEdlFXb3FYNHhLbmQ3ZHhidkRS?=
- =?utf-8?B?eTVrMTA2NTZoREhTcURIU2IzR2hrZDRYaTRiNGZZNDJkZFR4N3dpU2lwaWZY?=
- =?utf-8?B?OGVxQUFmVUZhU0JyL0hzZHYzWERjclowSUFFdmp2Rlp6Wmt4elZxM0J0cFJD?=
- =?utf-8?B?a2VGdG14RmpacTA2YUhVQzhQaThqcmdORjlnYTZDVEJvWkh0SlRTaHVnd0lX?=
- =?utf-8?B?cVNTSFljMVRtUmRYbFQ1RjNRcTZkRzc1NG9XVjRVdGs4ZGdOTklhV0hETno1?=
- =?utf-8?B?bUZQbnpQY3d5Zm5ZaUpvMkJYVFA3U21qOCtYYVNGVHdEVkV4Q2tEMkJCWGxP?=
- =?utf-8?B?b3NqeDV6Q05mRnRuQVZLbkhDL3VQUTJRRFFlcUZ5UFZIVEpEcm5EZWl0Zzgr?=
- =?utf-8?B?Y0dBV3ZGc1NjTUcrN250THJ1M3FWRTJHbFg3WndaR0NCN0krR2ttRnpCY1hB?=
- =?utf-8?B?V2xWUVkvL0phbHQ0SHZUY1R4VTFXNlRLTFpsQXlEbmhFTVI1L3BFTXhoR1Yx?=
- =?utf-8?B?Qnh0Yjd6WlpXWGFrWENXRkN5dlRnMGhOVFhtRXQ2cnR1K29xRGFXbm9iMzZ2?=
- =?utf-8?B?aG9sU3NFTUpQbTl6SzE4ODhtaTRQQ1NEMllwck5KeExuZWFOSEZlVTBNL2xK?=
- =?utf-8?B?bXRPZjhIVlBEeWZFRjY4Y1BhSmJuTWx0MnRicnZNTVZaRUpKRWNzdGVaSEhT?=
- =?utf-8?B?bXhaL2ZUSitSeHFBRXFuS2RhejVQZEphd3AyTWlScy9FM0lQdkdmVnpsSFFq?=
- =?utf-8?B?WGFwQSs5cGIzbkVtbktTYkNHMnVjVS9kRTVIUU0zZHVVQ2dDSnBLcDZhVys3?=
- =?utf-8?B?bUxQcERIOVByM3l6NGw2Um5pRTJ5bmx0ZEUxZ1BJb0lrMHBNSTJidlRWSzEv?=
- =?utf-8?B?aFVaUFdjRHZOSVJJSkluVWxNRnpaejBGaEZkcEtXNWllWG1RbVdjM0dkNloz?=
- =?utf-8?B?STNtWjFLcTNuRFdsYUoySWpsN2oyQTFTTEJEbU9leFh5N2dQREpKUGl3K2lp?=
- =?utf-8?B?ZWNEajhjdTFhTkdLTWhNNUJFY2Y5ZHVGTUoycG1nSGo4bk1Bc2xSRTQzczl1?=
- =?utf-8?B?SGlualZTMGRKdUw3a1E0N0szd1BuM2RITDdaeUNzYURaRTZGL2ZIRTZrQ3Iw?=
- =?utf-8?B?UHUwTTJublZhSVRwanJUN0JxUVdlS2JtTWNleEJBVkY2N2kxTUZEWkswZEg3?=
- =?utf-8?B?b3ZaSlAwcmk3blJ5bWh3c0c2Nkc3b0V4U3UzVTUvdHdmMkIwMUdXclZZUHlo?=
- =?utf-8?B?THhocjdZVjFkTHp5eUZWSkZhQzd2ODBpUnZ3WEdtdWhLbWhXQU9MUDM1SEY1?=
- =?utf-8?B?TzdXRk5JRXpvS1hNWDhDNkFXRUtSTGlrejg3ODhqZUNPUXg1NlpkY1lXM0da?=
- =?utf-8?B?Y01qVmorcVhqbVY2TGpFUDlPSHdTL2UzNXNvTjhGNzk2cjNmb0dYNmQ3elN1?=
- =?utf-8?B?SnIreEUwQ1gyaTM5cFFONk5kc3BzUnZKOFhCNDRhOHBOYytrbTdYeHZnQmJy?=
- =?utf-8?B?MVM5Sk42SG1lUi9oMDNLMFFzUGsxbjhBVCs1NGRlWVhmMEJtakl5c1FQbkYv?=
- =?utf-8?B?YnNWTjVkWmZRMzlvNnZXclA5bENoUDJWT2JyNHVhUWp4bUYwS09aVlU0MHBh?=
- =?utf-8?B?SXd2eWJnSHVCaXVXMHFZbFlNSDloRlB3UXZhYzdvRDIxUEJIWlN4K1VUMlZT?=
- =?utf-8?B?enpUM1pQMVJyTkhSYW9nRlcwNk9IeHJXNGxsclY4VFMvRFoyMXhQMzIwUHhq?=
- =?utf-8?Q?SycMnjQK5DOPG6l4H7wyvNG6k?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ARvzqyOwcJe9gjV8EewYbL/gWhqKwPU/7ffcX6hsK4MEN5TcS6zelL1R0DXPZ1DFdEHjzuF3s+vnwDfGF8KhJNRAZq4HfgnLb512sojXQIhOsdvaYxKZlLW/mrZvFBehTviy91NB2WV8loPTAViZKw3Mi2o/VNSddGK+Pn+vDD3170kJr1Z+TZnts0hJkKAO8xpxynrQfIrysJbA4Y62DpMfNJfjr0q7Qfs8Q7202R61YXBsdlrxWn+BBB5QUKVNECW/ciM5ysSqJdY1QlcF2rNphDkrJBn3vLxKmc3mVOVWj0dJcIl9CIcRhQL7Iuor2n3z8YJgw+sub2SqLBhu16uaEuHRGMdK89VY7da1ODXnOdnDMLv1ANGwpbcLSatRf0sccIQfReXDxUVctzNhLFGtHrfkcGPuAuHuRESoHe4m3RAA1ZoDN0qT2vtrU16wLdQeCVU032XDbRnwqVJ/oMM8rORbQj+py8aYiVBXMwxypRpRj/I5HdYbGpy0cnh9vvpTpSUQ8Lkcj/odPQgpKfWQUa+W2vJ+2dHMQgordZoWVMAKh76Eecr0kTXbSx9dxcRg9aEmhSsszQKPbeOAXXn4O/SeQbmcftgHJ9Opgkk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d53437e-b8d6-4924-0c8c-08dd1af0d3ec
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2024 21:06:21.0157
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5c5BLzY3egckgsWalSz0ZFEA+BDmi5NZFNrnfAMiPLC1adHlTwS7XW7nQjCO13D/z7eIr6V5/lMvMMQDZEGvfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5701
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-12_10,2024-12-12_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
- mlxlogscore=973 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2412120153
-X-Proofpoint-GUID: FJObqsn3i10_rqkcMN1Hv6qMEW914E6c
-X-Proofpoint-ORIG-GUID: FJObqsn3i10_rqkcMN1Hv6qMEW914E6c
+References: <20241203162908.302354-9-cel@kernel.org> <20241203162908.302354-14-cel@kernel.org>
+In-Reply-To: <20241203162908.302354-14-cel@kernel.org>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Thu, 12 Dec 2024 19:39:12 -0500
+Message-ID: <CAN-5tyFCRcdJ_SRKfb+79dJ8pxRp=N4vb10FT2eYkhcmEb+uhw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/7] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
+To: cel@kernel.org
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/9/24 4:14 PM, Jeff Layton wrote:
-> Allow SETATTR to handle delegated timestamps. This patch assumes that
-> only the delegation holder has the ability to set the timestamps in this
-> way, so we allow this only if the SETATTR stateid refers to a
-> *_ATTRS_DELEG delegation.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Tue, Dec 3, 2024 at 11:29=E2=80=AFAM <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> Enable the Linux NFS client to observe the progress of an offloaded
+> asynchronous COPY operation. This new operation will be put to use
+> in a subsequent patch.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->   fs/nfsd/nfs4proc.c  | 31 ++++++++++++++++++++++++++++---
->   fs/nfsd/nfs4state.c |  2 +-
->   fs/nfsd/nfs4xdr.c   | 20 ++++++++++++++++++++
->   fs/nfsd/nfsd.h      |  5 ++++-
->   4 files changed, 53 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index f8a10f90bc7a4b288c20d2733c85f331cc0a8dba..fea171ffed623818c61886b786339b0b73f1053d 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1135,18 +1135,43 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->   		.na_iattr	= &setattr->sa_iattr,
->   		.na_seclabel	= &setattr->sa_label,
->   	};
-> +	bool save_no_wcc, deleg_attrs;
-> +	struct nfs4_stid *st = NULL;
->   	struct inode *inode;
->   	__be32 status = nfs_ok;
-> -	bool save_no_wcc;
->   	int err;
->   
-> -	if (setattr->sa_iattr.ia_valid & ATTR_SIZE) {
-> +	deleg_attrs = setattr->sa_bmval[2] & (FATTR4_WORD2_TIME_DELEG_ACCESS |
-> +					      FATTR4_WORD2_TIME_DELEG_MODIFY);
+>  fs/nfs/nfs42proc.c        | 117 ++++++++++++++++++++++++++++++++++++++
+>  fs/nfs/nfs4proc.c         |   3 +-
+>  include/linux/nfs_fs_sb.h |   1 +
+>  3 files changed, 120 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+> index 9d716907cf30..fa180ce7c803 100644
+> --- a/fs/nfs/nfs42proc.c
+> +++ b/fs/nfs/nfs42proc.c
+> @@ -21,6 +21,8 @@
+>
+>  #define NFSDBG_FACILITY NFSDBG_PROC
+>  static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid =
+*std);
+> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
+ateid,
+> +                                    u64 *copied);
+>
+>  static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *=
+naddr)
+>  {
+> @@ -582,6 +584,121 @@ static int nfs42_do_offload_cancel_async(struct fil=
+e *dst,
+>         return status;
+>  }
+>
+> +static void nfs42_offload_status_done(struct rpc_task *task, void *calld=
+ata)
+> +{
+> +       struct nfs42_offload_data *data =3D calldata;
 > +
-> +	if (deleg_attrs || (setattr->sa_iattr.ia_valid & ATTR_SIZE)) {
-> +		int flags = WR_STATE;
+> +       nfs41_sequence_done(task, &data->res.osr_seq_res);
+> +       switch (task->tk_status) {
+> +       case 0:
+> +               return;
+> +       case -NFS4ERR_ADMIN_REVOKED:
+> +       case -NFS4ERR_BAD_STATEID:
+> +       case -NFS4ERR_OLD_STATEID:
+> +               /*
+> +                * Server does not recognize the COPY stateid. CB_OFFLOAD
+> +                * could have purged it, or server might have rebooted.
+> +                * Since COPY stateids don't have an associated inode,
+> +                * avoid triggering state recovery.
+> +                */
+> +               task->tk_status =3D -EBADF;
+> +               break;
+> +       case -NFS4ERR_NOTSUPP:
+> +       case -ENOTSUPP:
+> +       case -EOPNOTSUPP:
+> +               data->seq_server->caps &=3D ~NFS_CAP_OFFLOAD_STATUS;
+> +               task->tk_status =3D -EOPNOTSUPP;
+> +               break;
+> +       default:
+> +               if (nfs4_async_handle_error(task, data->seq_server,
+> +                                           NULL, NULL) =3D=3D -EAGAIN)
+> +                       rpc_restart_call_prepare(task);
+> +               else
+> +                       task->tk_status =3D -EIO;
+> +       }
+> +}
 > +
-> +		if (setattr->sa_bmval[2] & FATTR4_WORD2_TIME_DELEG_ACCESS)
-> +			flags |= RD_STATE;
+> +static const struct rpc_call_ops nfs42_offload_status_ops =3D {
+> +       .rpc_call_prepare =3D nfs42_offload_prepare,
+> +       .rpc_call_done =3D nfs42_offload_status_done,
+> +       .rpc_release =3D nfs42_offload_release
+> +};
 > +
->   		status = nfs4_preprocess_stateid_op(rqstp, cstate,
->   				&cstate->current_fh, &setattr->sa_stateid,
-> -				WR_STATE, NULL, NULL);
-> +				flags, NULL, &st);
->   		if (status)
->   			return status;
->   	}
-> +
-> +	if (deleg_attrs) {
-> +		status = nfserr_bad_stateid;
-> +		if (st->sc_type & SC_TYPE_DELEG) {
-> +			struct nfs4_delegation *dp = delegstateid(st);
-> +
-> +			/* Only for *_ATTRS_DELEG flavors */
-> +			if (deleg_attrs_deleg(dp->dl_type))
-> +				status = nfs_ok;
-> +		}
-> +	}
-> +	if (st)
-> +		nfs4_put_stid(st);
-> +	if (status)
-> +		return status;
-> +
->   	err = fh_want_write(&cstate->current_fh);
->   	if (err)
->   		return nfserrno(err);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index c882eeba7830b0249ccd74654f81e63b12a30f14..a76e35f86021c5657e31e4fddf08cb5781f01e32 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5486,7 +5486,7 @@ nfsd4_process_open1(struct nfsd4_compound_state *cstate,
->   static inline __be32
->   nfs4_check_delegmode(struct nfs4_delegation *dp, int flags)
->   {
-> -	if ((flags & WR_STATE) && deleg_is_read(dp->dl_type))
-> +	if (!(flags & RD_STATE) && deleg_is_read(dp->dl_type))
->   		return nfserr_openmode;
->   	else
->   		return nfs_ok;
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 0561c99b5def2eccf679bf3ea0e5b1a57d5d8374..ce93a31ac5cec75b0f944d288e796e7a73641572 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -521,6 +521,26 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
->   		*umask = mask & S_IRWXUGO;
->   		iattr->ia_valid |= ATTR_MODE;
->   	}
-> +	if (bmval[2] & FATTR4_WORD2_TIME_DELEG_ACCESS) {
-> +		fattr4_time_deleg_access access;
-> +
-> +		if (!xdrgen_decode_fattr4_time_deleg_access(argp->xdr, &access))
-> +			return nfserr_bad_xdr;
-> +		iattr->ia_atime.tv_sec = access.seconds;
-> +		iattr->ia_atime.tv_nsec = access.nseconds;
-> +		iattr->ia_valid |= ATTR_ATIME | ATTR_ATIME_SET | ATTR_DELEG;
-> +	}
-> +	if (bmval[2] & FATTR4_WORD2_TIME_DELEG_MODIFY) {
-> +		fattr4_time_deleg_modify modify;
-> +
-> +		if (!xdrgen_decode_fattr4_time_deleg_modify(argp->xdr, &modify))
-> +			return nfserr_bad_xdr;
-> +		iattr->ia_mtime.tv_sec = modify.seconds;
-> +		iattr->ia_mtime.tv_nsec = modify.nseconds;
-> +		iattr->ia_ctime.tv_sec = modify.seconds;
-> +		iattr->ia_ctime.tv_nsec = modify.seconds;
-> +		iattr->ia_valid |= ATTR_CTIME | ATTR_MTIME | ATTR_MTIME_SET | ATTR_DELEG;
-> +	}
->   
->   	/* request sanity: did attrlist4 contain the expected number of words? */
->   	if (attrlist4_count != xdr_stream_pos(argp->xdr) - starting_pos)
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 004415651295891b3440f52a4c986e3a668a48cb..f007699aa397fe39042d80ccd568db4654d19dd5 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -531,7 +531,10 @@ static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
->   #endif
->   #define NFSD_WRITEABLE_ATTRS_WORD2 \
->   	(FATTR4_WORD2_MODE_UMASK \
-> -	| MAYBE_FATTR4_WORD2_SECURITY_LABEL)
-> +	| MAYBE_FATTR4_WORD2_SECURITY_LABEL \
-> +	| FATTR4_WORD2_TIME_DELEG_ACCESS \
-> +	| FATTR4_WORD2_TIME_DELEG_MODIFY \
-> +	)
->   
->   #define NFSD_SUPPATTR_EXCLCREAT_WORD0 \
->   	NFSD_WRITEABLE_ATTRS_WORD0
-> 
+> +/**
+> + * nfs42_proc_offload_status - Poll completion status of an async copy o=
+peration
+> + * @file: handle of file being copied
+> + * @stateid: copy stateid (from async COPY result)
+> + * @copied: OUT: number of bytes copied so far
+> + *
+> + * Return values:
+> + *   %0: Server returned an NFS4_OK completion status
+> + *   %-EINPROGRESS: Server returned no completion status
+> + *   %-EREMOTEIO: Server returned an error completion status
+> + *   %-EBADF: Server did not recognize the copy stateid
+> + *   %-EOPNOTSUPP: Server does not support OFFLOAD_STATUS
+> + *   %-ERESTARTSYS: Wait interrupted by signal
+> + *
+> + * Other negative errnos indicate the client could not complete the
+> + * request.
+> + */
+> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
+ateid,
+> +                                    u64 *copied)
+> +{
+> +       struct nfs_open_context *ctx =3D nfs_file_open_context(file);
+> +       struct nfs_server *server =3D NFS_SERVER(file_inode(file));
+> +       struct nfs42_offload_data *data =3D NULL;
+> +       struct rpc_message msg =3D {
+> +               .rpc_proc       =3D &nfs4_procedures[NFSPROC4_CLNT_OFFLOA=
+D_STATUS],
+> +               .rpc_cred       =3D ctx->cred,
+> +       };
+> +       struct rpc_task_setup task_setup_data =3D {
+> +               .rpc_client     =3D server->client,
+> +               .rpc_message    =3D &msg,
+> +               .callback_ops   =3D &nfs42_offload_status_ops,
+> +               .workqueue      =3D nfsiod_workqueue,
+> +               .flags          =3D RPC_TASK_ASYNC | RPC_TASK_SOFTCONN,
 
-Hi Jeff-
+I wonder why we are making status_offload an async task? Copy within
+which we are doing copy_offload is/was a sync task.
 
-After this patch is applied, I see failures of the git regression suite
-on NFSv4.2 mounts.
+Why is it a SOFTCONN task?
 
-Test Summary Report
--------------------
-./t3412-rebase-root.sh                             (Wstat: 256 (exited 
-1) Tests: 25 Failed: 5)
-   Failed tests:  6, 19, 21-22, 24
-   Non-zero exit status: 1
-./t3400-rebase.sh                                  (Wstat: 256 (exited 
-1) Tests: 38 Failed: 1)
-   Failed test:  31
-   Non-zero exit status: 1
-./t3406-rebase-message.sh                          (Wstat: 256 (exited 
-1) Tests: 32 Failed: 2)
-   Failed tests:  15, 20
-   Non-zero exit status: 1
-./t3428-rebase-signoff.sh                          (Wstat: 256 (exited 
-1) Tests: 7 Failed: 2)
-   Failed tests:  6-7
-   Non-zero exit status: 1
-./t3418-rebase-continue.sh                         (Wstat: 256 (exited 
-1) Tests: 29 Failed: 1)
-   Failed test:  7
-   Non-zero exit status: 1
-./t3415-rebase-autosquash.sh                       (Wstat: 256 (exited 
-1) Tests: 27 Failed: 2)
-   Failed tests:  3-4
-   Non-zero exit status: 1
-./t3404-rebase-interactive.sh                      (Wstat: 256 (exited 
-1) Tests: 131 Failed: 15)
-   Failed tests:  32, 34-43, 45, 121-123
-   Non-zero exit status: 1
-./t1013-read-tree-submodule.sh                     (Wstat: 256 (exited 
-1) Tests: 68 Failed: 1)
-   Failed test:  34
-   Non-zero exit status: 1
-./t2013-checkout-submodule.sh                      (Wstat: 256 (exited 
-1) Tests: 74 Failed: 4)
-   Failed tests:  26-27, 30-31
-   Non-zero exit status: 1
-./t5500-fetch-pack.sh                              (Wstat: 256 (exited 
-1) Tests: 375 Failed: 1)
-   Failed test:  28
-   Non-zero exit status: 1
-./t5572-pull-submodule.sh                          (Wstat: 256 (exited 
-1) Tests: 67 Failed: 2)
-   Failed tests:  5, 7
-   Non-zero exit status: 1
-Files=1007, Tests=30810, 1417 wallclock secs (11.18 usr 10.17 sys + 
-1037.05 cusr 6529.12 csys = 7587.52 CPU)
-Result: FAIL
+> +       };
+> +       struct rpc_task *task;
+> +       int status;
+> +
+> +       if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
+> +               return -EOPNOTSUPP;
 
-The NFS client and NFS server under test are running the same v6.13-rc2
-kernel from my git.kernel.org nfsd-testing branch.
+Let's not forget to mark tasks RPC_TASK_MOVEABLE. I know other
+nfs42proc need review and add that but since I remembered it here,
+let's add it. It allows for if ever this transport were to be moved,
+then the tasks can migrate to another transport.
 
 
--- 
-Chuck Lever
+> +
+> +       data =3D kzalloc(sizeof(struct nfs42_offload_data), GFP_KERNEL);
+> +       if (data =3D=3D NULL)
+> +               return -ENOMEM;
+> +
+> +       data->seq_server =3D server;
+> +       data->args.osa_src_fh =3D NFS_FH(file_inode(file));
+> +       memcpy(&data->args.osa_stateid, stateid,
+> +               sizeof(data->args.osa_stateid));
+> +       msg.rpc_argp =3D &data->args;
+> +       msg.rpc_resp =3D &data->res;
+> +       task_setup_data.callback_data =3D data;
+> +       nfs4_init_sequence(&data->args.osa_seq_args, &data->res.osr_seq_r=
+es,
+> +                          1, 0);
+> +       task =3D rpc_run_task(&task_setup_data);
+> +       if (IS_ERR(task)) {
+> +               nfs42_offload_release(data);
+> +               return PTR_ERR(task);
+> +       }
+> +       status =3D rpc_wait_for_completion_task(task);
+> +       if (status)
+> +               goto out;
+> +
+> +       *copied =3D data->res.osr_count;
+> +       if (task->tk_status)
+> +               status =3D task->tk_status;
+> +       else if (!data->res.complete_count)
+> +               status =3D -EINPROGRESS;
+> +       else if (data->res.osr_complete !=3D NFS_OK)
+> +               status =3D -EREMOTEIO;
+> +
+> +out:
+> +       rpc_put_task(task);
+> +       return status;
+> +}
+> +
+>  static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
+>                                    struct nfs42_copy_notify_args *args,
+>                                    struct nfs42_copy_notify_res *res)
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 405f17e6e0b4..973b8d8fa98b 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -10769,7 +10769,8 @@ static const struct nfs4_minor_version_ops nfs_v4=
+_2_minor_ops =3D {
+>                 | NFS_CAP_CLONE
+>                 | NFS_CAP_LAYOUTERROR
+>                 | NFS_CAP_READ_PLUS
+> -               | NFS_CAP_MOVEABLE,
+> +               | NFS_CAP_MOVEABLE
+> +               | NFS_CAP_OFFLOAD_STATUS,
+>         .init_client =3D nfs41_init_client,
+>         .shutdown_client =3D nfs41_shutdown_client,
+>         .match_stateid =3D nfs41_match_stateid,
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index b804346a9741..946ca1c28773 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -290,6 +290,7 @@ struct nfs_server {
+>  #define NFS_CAP_CASE_INSENSITIVE       (1U << 6)
+>  #define NFS_CAP_CASE_PRESERVING        (1U << 7)
+>  #define NFS_CAP_REBOOT_LAYOUTRETURN    (1U << 8)
+> +#define NFS_CAP_OFFLOAD_STATUS (1U << 9)
+>  #define NFS_CAP_OPEN_XOR       (1U << 12)
+>  #define NFS_CAP_DELEGTIME      (1U << 13)
+>  #define NFS_CAP_POSIX_LOCK     (1U << 14)
+> --
+> 2.47.0
+>
+>
 
