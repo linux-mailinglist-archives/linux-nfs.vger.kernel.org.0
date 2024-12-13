@@ -1,60 +1,62 @@
-Return-Path: <linux-nfs+bounces-8538-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8539-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32F4A9F0DB1
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 14:50:45 +0100 (CET)
-Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 721919F0DBC
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 14:51:07 +0100 (CET)
+Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A3EA18804A0
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 13:50:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 329A42845E8
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 13:51:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DCD1E0DBA;
-	Fri, 13 Dec 2024 13:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C20661E0B86;
+	Fri, 13 Dec 2024 13:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xy+eugGA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dAUgyAqG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D15D1E0B73
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 13:50:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2094F1E0E0B
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 13:50:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734097834; cv=none; b=oARaCP0sO7oRbxXYcNg4uVQ607cAOdlOb0XUDTMNiygmI0HLlbs+9EDr7+k35+WJdkq8I5Va7BZtEABAaFXXXB1mKUn0cxFD7QOO/jBcKYN/7rCGzsmkHMuoqO1NKUL+R7hN6hz4o+5v414ofMe7t+39PknIdnVx1q9QXdvNr/4=
+	t=1734097841; cv=none; b=MHb5H4sERWE3d90y+t1VtfK93K9AqZYGDsakEMfEMjaYohJZhSLcc8wWjns980RXSDQ7gAmyPvNE6QZXXs9uSiPYGZLUygQaA5+eUTdVzBDgzUx093vsJBcqlHafyYtOVm6NgMHuHOjYchDV29fMc2D2Ya708nvTj1/zGKpE+V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734097834; c=relaxed/simple;
-	bh=yrjsEmooXq2ypadXEezCFG+UKHZM0Z6P5rrlvhFilyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KupWHaVrWORjqVsIyqlDc6aC5Lus6HNpjynm6LYLMpd33qeeHk8fPyB5o6VJmsLz++tjl7ZT94VH2yGlSrpJGc1W973kc1aCutpPqoRB2tCNQj+TJrTO7nmrWJNfh75QFHVZlLzR4VAE3UH+JDPfm+rEqb0dpPXXBdio6HHl4Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xy+eugGA; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1734097841; c=relaxed/simple;
+	bh=TCORsvgxEZsnnFjuTyK84xCEQqwdy4pROgfsDRybzPs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=R/jMzqfMf56W5DP+a1ECVaHDydYxnZGJQiUHj/FbGFnhqHlc1JVqmneay3/PNy9DgvSWNDGY6IJa4eI9j1SmbajQyRZA+VNiPOSMeMSwyIDP/hY1ygWTb7UkEg7zmRs82A+BnpKqZvqriN+NDQfjeHK26tT3gXmIVzGGdZCgFbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dAUgyAqG; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097831;
+	s=mimecast20190719; t=1734097839;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zlbVdG3EuDS4xv5qOG5kSQTp/vih38GtqzMbAmIdEqA=;
-	b=Xy+eugGAdUa4S4WYt3WqLWhpyCJk3Zh7tUZ6MYUz3Le/i4Z+rkaPv4Mr9WSLj6N3QBFBDr
-	UGinOaQGEuyLhUVakj/Qo+BcMSj9PBeOSBWXDdbVsIBxRYPO0ZMkL7CxrdWi+aKW6aqfrB
-	Xea9luuyaxARGOH09ZU8CSPyDjAG+RU=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zFfHFGyfFLnfH39ds9xcldOHx5zC/fcdWITNBPuGcyY=;
+	b=dAUgyAqGBnSmDkAzLoYLbGJM7jy5+4XHHGZKxzR+HQ6D6SfvsaVP3uFjo3ahzO7bnlhSb1
+	CCGstS8kFfl9jjxn6rC0Ej56YtrvcJqxbRAlvW9a30+e6+FCYgV+DQfk104BLGN2A4fSar
+	pTb+UPs7N5j3ojFU8K70AHmoUdXG4Hg=
 Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-woItBugOMb6D8BiRItruoA-1; Fri,
- 13 Dec 2024 08:50:26 -0500
-X-MC-Unique: woItBugOMb6D8BiRItruoA-1
-X-Mimecast-MFC-AGG-ID: woItBugOMb6D8BiRItruoA
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-166-qo9Op8B1MvuELGCTRl92nA-1; Fri,
+ 13 Dec 2024 08:50:33 -0500
+X-MC-Unique: qo9Op8B1MvuELGCTRl92nA-1
+X-Mimecast-MFC-AGG-ID: qo9Op8B1MvuELGCTRl92nA
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 23A451955D4B;
-	Fri, 13 Dec 2024 13:50:22 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A073919560A6;
+	Fri, 13 Dec 2024 13:50:30 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.48])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8520330044C1;
-	Fri, 13 Dec 2024 13:50:16 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BB0A9195394B;
+	Fri, 13 Dec 2024 13:50:23 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -73,10 +75,14 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-erofs@lists.ozlabs.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 00/10] netfs, ceph, nfs, cachefiles: Miscellaneous fixes/changes
-Date: Fri, 13 Dec 2024 13:50:00 +0000
-Message-ID: <20241213135013.2964079-1-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Marc Dionne <marc.dionne@auristor.com>
+Subject: [PATCH 01/10] kheaders: Ignore silly-rename files
+Date: Fri, 13 Dec 2024 13:50:01 +0000
+Message-ID: <20241213135013.2964079-2-dhowells@redhat.com>
+In-Reply-To: <20241213135013.2964079-1-dhowells@redhat.com>
+References: <20241213135013.2964079-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -84,94 +90,52 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi Christian,
+Tell tar to ignore silly-rename files (".__afs*" and ".nfs*") when building
+the header archive.  These occur when a file that is open is unlinked
+locally, but hasn't yet been closed.  Such files are visible to the user
+via the getdents() syscall and so programs may want to do things with them.
 
-Here are some miscellaneous fixes and changes for netfslib and the ceph and
-nfs filesystems:
+During the kernel build, such files may be made during the processing of
+header files and the cleanup may get deferred by fput() which may result in
+tar seeing these files when it reads the directory, but they may have
+disappeared by the time it tries to open them, causing tar to fail with an
+error.  Further, we don't want to include them in the tarball if they still
+exist.
 
- (1) Ignore silly-rename files from afs and nfs when building the header
-     archive in a kernel build.
+With CONFIG_HEADERS_INSTALL=y, something like the following may be seen:
 
- (2) netfs: Fix the way read result collection applies results to folios
-     when each folio is being read by multiple subrequests and the results
-     come out of order.
+   find: './kernel/.tmp_cpio_dir/include/dt-bindings/reset/.__afs2080': No such file or directory
+   tar: ./include/linux/greybus/.__afs3C95: File removed before we read it
 
- (3) netfs: Fix ENOMEM handling in buffered reads.
+The find warning doesn't seem to cause a problem.
 
- (4) nfs: Fix an oops in nfs_netfs_init_request() when copying to the cache.
+Fix this by telling tar when called from in gen_kheaders.sh to exclude such
+files.  This only affects afs and nfs; cifs uses the Windows Hidden
+attribute to prevent the file from being seen.
 
- (5) cachefiles: Parse the "secctx" command immediately to get the correct
-     error rather than leaving it to the "bind" command.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Masahiro Yamada <masahiroy@kernel.org>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-kernel@vger.kernel.org
+---
+ kernel/gen_kheaders.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
- (6) netfs: Remove a redundant smp_rmb().  This isn't a bug per se and
-     could be deferred.
-
- (7) netfs: Fix missing barriers by using clear_and_wake_up_bit().
-
- (8) netfs: Work around recursion in read retry by failing and abandoning
-     the retried subrequest if no I/O is performed.
-
-     [!] NOTE: This only works around the recursion problem if the
-     	 recursion keeps returning no data.  If the server manages, say, to
-     	 repeatedly return a single byte of data faster than the retry
-     	 algorithm can complete, it will still recurse and the stack
-     	 overrun may still occur.  Actually fixing this requires quite an
-     	 intrusive change which will hopefully make the next merge window.
-
- (9) netfs: Fix the clearance of a folio_queue when unlocking the page if
-     we're going to want to subsequently send the queue for copying to the
-     cache (if, for example, we're using ceph).
-
-(10) netfs: Fix the lack of cancellation of copy-to-cache when the cache
-     for a file is temporarily disabled (for example when a DIO write is
-     done to the file).  This patch and (9) fix hangs with ceph.
-
-With these patches, I can run xfstest -g quick to completion on ceph with a
-local cache.
-
-The patches can also be found here with a bonus cifs patch:
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
-
-Thanks,
-David
-
-David Howells (8):
-  kheaders: Ignore silly-rename files
-  netfs: Fix non-contiguous donation between completed reads
-  netfs: Fix enomem handling in buffered reads
-  nfs: Fix oops in nfs_netfs_init_request() when copying to cache
-  netfs: Fix missing barriers by using clear_and_wake_up_bit()
-  netfs: Work around recursion by abandoning retry if nothing read
-  netfs: Fix ceph copy to cache on write-begin
-  netfs: Fix the (non-)cancellation of copy when cache is temporarily
-    disabled
-
-Max Kellermann (1):
-  cachefiles: Parse the "secctx" immediately
-
-Zilin Guan (1):
-  netfs: Remove redundant use of smp_rmb()
-
- fs/9p/vfs_addr.c         |  6 +++++-
- fs/afs/write.c           |  5 ++++-
- fs/cachefiles/daemon.c   | 14 +++++++-------
- fs/cachefiles/internal.h |  3 ++-
- fs/cachefiles/security.c |  6 +++---
- fs/netfs/buffered_read.c | 28 ++++++++++++++++------------
- fs/netfs/direct_write.c  |  1 -
- fs/netfs/read_collect.c  | 33 +++++++++++++++++++--------------
- fs/netfs/read_pgpriv2.c  |  4 ++++
- fs/netfs/read_retry.c    |  6 ++++--
- fs/netfs/write_collect.c | 14 +++++---------
- fs/netfs/write_issue.c   |  2 ++
- fs/nfs/fscache.c         |  9 ++++++++-
- fs/smb/client/cifssmb.c  | 13 +++++++++----
- fs/smb/client/smb2pdu.c  |  9 ++++++---
- include/linux/netfs.h    |  6 +++---
- kernel/gen_kheaders.sh   |  1 +
- 17 files changed, 98 insertions(+), 62 deletions(-)
+diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+index 383fd43ac612..7e1340da5aca 100755
+--- a/kernel/gen_kheaders.sh
++++ b/kernel/gen_kheaders.sh
+@@ -89,6 +89,7 @@ find $cpio_dir -type f -print0 |
+ 
+ # Create archive and try to normalize metadata for reproducibility.
+ tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
++    --exclude=".__afs*" --exclude=".nfs*" \
+     --owner=0 --group=0 --sort=name --numeric-owner --mode=u=rw,go=r,a+X \
+     -I $XZ -cf $tarfile -C $cpio_dir/ . > /dev/null
+ 
 
 
