@@ -1,54 +1,82 @@
-Return-Path: <linux-nfs+bounces-8537-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8538-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CB369F033B
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 04:46:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32F4A9F0DB1
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 14:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4698A162849
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 03:46:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A3EA18804A0
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 13:50:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6085D82866;
-	Fri, 13 Dec 2024 03:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5DCD1E0DBA;
+	Fri, 13 Dec 2024 13:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xy+eugGA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B4D39FD9;
-	Fri, 13 Dec 2024 03:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D15D1E0B73
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 13:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734061560; cv=none; b=rS05+0356JlHKU/05WeeulMl8H7NqI5UQr3F8pWJjrj3ewc7ahczfYfDKf5FNKPeFn4NAB2b9aj23bVSoSWz6C8KTFgHLi+tTf/kDfxDy6xFZHZ4CYgyu2pfqc8y3pSvfYuNijtC48W8kZWixde4Wj3+03M+E8kXrxDBZ6vIIJA=
+	t=1734097834; cv=none; b=oARaCP0sO7oRbxXYcNg4uVQ607cAOdlOb0XUDTMNiygmI0HLlbs+9EDr7+k35+WJdkq8I5Va7BZtEABAaFXXXB1mKUn0cxFD7QOO/jBcKYN/7rCGzsmkHMuoqO1NKUL+R7hN6hz4o+5v414ofMe7t+39PknIdnVx1q9QXdvNr/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734061560; c=relaxed/simple;
-	bh=4MtF0ddoPmtJmrgr8IJB5wJDaaEMwNuMox0UYP3pJYY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A9HXJYd+hfI15eXMKuREMd3QCvJ8tM4jrqnmyzE6pZF3RqRQw19FOLW03pZRZ8kEitDHORfs8gzDiUoxMtZD3+1melf9d/OcCFTnKBoSwvFnBDqlJp7dJJTf97zsTRG6cTnmTSbdVlnLlYsd2/vjUglcEoPqmWm3vuf0jskYsfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Y8Ztb65Kjz1T70Y;
-	Fri, 13 Dec 2024 11:43:19 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 665BB140259;
-	Fri, 13 Dec 2024 11:45:48 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Dec
- 2024 11:45:47 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <trondmy@kernel.org>, <anna@kernel.org>
-CC: <trond.myklebust@hammerspace.com>, <jlayton@kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] NFSv4: Fix deadlock during the running of state manager
-Date: Fri, 13 Dec 2024 11:59:08 +0800
-Message-ID: <20241213035908.1789132-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1734097834; c=relaxed/simple;
+	bh=yrjsEmooXq2ypadXEezCFG+UKHZM0Z6P5rrlvhFilyU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KupWHaVrWORjqVsIyqlDc6aC5Lus6HNpjynm6LYLMpd33qeeHk8fPyB5o6VJmsLz++tjl7ZT94VH2yGlSrpJGc1W973kc1aCutpPqoRB2tCNQj+TJrTO7nmrWJNfh75QFHVZlLzR4VAE3UH+JDPfm+rEqb0dpPXXBdio6HHl4Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xy+eugGA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734097831;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zlbVdG3EuDS4xv5qOG5kSQTp/vih38GtqzMbAmIdEqA=;
+	b=Xy+eugGAdUa4S4WYt3WqLWhpyCJk3Zh7tUZ6MYUz3Le/i4Z+rkaPv4Mr9WSLj6N3QBFBDr
+	UGinOaQGEuyLhUVakj/Qo+BcMSj9PBeOSBWXDdbVsIBxRYPO0ZMkL7CxrdWi+aKW6aqfrB
+	Xea9luuyaxARGOH09ZU8CSPyDjAG+RU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-woItBugOMb6D8BiRItruoA-1; Fri,
+ 13 Dec 2024 08:50:26 -0500
+X-MC-Unique: woItBugOMb6D8BiRItruoA-1
+X-Mimecast-MFC-AGG-ID: woItBugOMb6D8BiRItruoA
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 23A451955D4B;
+	Fri, 13 Dec 2024 13:50:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk.com (unknown [10.42.28.48])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8520330044C1;
+	Fri, 13 Dec 2024 13:50:16 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Max Kellermann <max.kellermann@ionos.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Xiubo Li <xiubli@redhat.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-erofs@lists.ozlabs.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/10] netfs, ceph, nfs, cachefiles: Miscellaneous fixes/changes
+Date: Fri, 13 Dec 2024 13:50:00 +0000
+Message-ID: <20241213135013.2964079-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -56,113 +84,94 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Unlinking file may cause the following deadlock in state manager:
-[root@localhost test]# cat /proc/2943/stack
-[<0>] rpc_wait_bit_killable+0x1a/0x90
-[<0>] _nfs4_proc_delegreturn+0x60f/0x760
-[<0>] nfs4_proc_delegreturn+0x13d/0x2a0
-[<0>] nfs_do_return_delegation+0xba/0x110
-[<0>] nfs_end_delegation_return+0x32c/0x620
-[<0>] nfs_complete_unlink+0xc7/0x290
-[<0>] nfs_dentry_iput+0x36/0x50
-[<0>] __dentry_kill+0xaa/0x250
-[<0>] dput.part.0+0x26c/0x4d0
-[<0>] __put_nfs_open_context+0x1d9/0x260
-[<0>] nfs4_open_reclaim+0x77/0xa0
-[<0>] nfs4_do_reclaim+0x385/0xf40
-[<0>] nfs4_state_manager+0x762/0x14e0
-[<0>] nfs4_run_state_manager+0x181/0x330
-[<0>] kthread+0x1a7/0x1f0
-[<0>] ret_from_fork+0x34/0x60
-[<0>] ret_from_fork_asm+0x1a/0x30
-[root@localhost test]#
+Hi Christian,
 
-It can be reproduced by following steps:
-1) client: open file
-2) client: unlink file
-3) server: service restart(trigger state manager in client)
-4) client: close file(in nfs4_open_reclaim, between nfs4_do_open_reclaim
-and put_nfs_open_context)
+Here are some miscellaneous fixes and changes for netfslib and the ceph and
+nfs filesystems:
 
-Since the file has been open, unlinking will just set DCACHE_NFSFS_RENAMED
-for the dentry like this:
-nfs_unlink
- nfs_sillyrename
-  nfs_async_unlink
-   // set DCACHE_NFSFS_RENAMED
+ (1) Ignore silly-rename files from afs and nfs when building the header
+     archive in a kernel build.
 
-Restarting service will trigger state manager in client.
-(1) NFS4_SLOT_TBL_DRAINING will be set to nfs4_slot_table since session
-has been reset.
-(2) DCACHE_NFSFS_RENAMED is detected in nfs_dentry_iput. Therefore,
-nfs_complete_unlink is called to trigger delegation return.
-(3) Due to the slot table being in draining state and sa_privileged being
-0, the delegation return will be queued and wait.
-nfs4_state_manager
- nfs4_reset_session
-  nfs4_begin_drain_session
-   nfs4_drain_slot_tbl
-    // set NFS4_SLOT_TBL_DRAINING (1)
- nfs4_do_reclaim
-  nfs4_open_reclaim
-   __put_nfs_open_context
-    __dentry_kill
-     nfs_dentry_iput // check DCACHE_NFSFS_RENAMED (2)
-      nfs_complete_unlink
-       nfs_end_delegation_return
-        nfs_do_return_delegation
-         nfs4_proc_delegreturn
-          _nfs4_proc_delegreturn
-           rpc_run_task
-            ...
-            nfs4_delegreturn_prepare
-             nfs4_setup_sequence
-              nfs4_slot_tbl_draining // check NFS4_SLOT_TBL_DRAINING
-                                     // and sa_privileged is 0 (3)
-               rpc_sleep_on // set queued and add to slot_tbl_waitq
-                // rpc_task is async and wait in __rpc_execute
-           rpc_wait_for_completion_task
-            __rpc_wait_for_completion_task
-             out_of_line_wait_on_bit
-              rpc_wait_bit_killable // wait for rpc_task to complete
- <-------- can not get here to wake up rpc_task -------->
- nfs4_end_drain_session
-  nfs4_end_drain_slot_table
-   nfs41_wake_slot_table
+ (2) netfs: Fix the way read result collection applies results to folios
+     when each folio is being read by multiple subrequests and the results
+     come out of order.
 
-On the one hand, the state manager is blocked by the unfinished delegation
-return. As a result, nfs4_end_drain_session cannot be invoked to clear
-NFS4_SLOT_TBL_DRAINING and wake up waiting tasks.
-On the other hand, since NFS4_SLOT_TBL_DRAINING is not cleared,
-delegation return can only wait in the queue, resulting in a deadlock.
+ (3) netfs: Fix ENOMEM handling in buffered reads.
 
-Fix it by turning the delegation return into a privileged operation for
-the case where the nfs_client is in NFS4CLNT_RECLAIM_REBOOT state.
+ (4) nfs: Fix an oops in nfs_netfs_init_request() when copying to the cache.
 
-Fixes: 977fcc2b0b41 ("NFS: Add a delegation return into nfs4_proc_unlink_setup()")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfs/nfs4proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ (5) cachefiles: Parse the "secctx" command immediately to get the correct
+     error rather than leaving it to the "bind" command.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 405f17e6e0b4..f3b1f2725c4e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6878,7 +6878,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
- 		data->res.sattr_res = true;
- 	}
- 
--	if (!data->inode)
-+	if (!data->inode || test_bit(NFS4CLNT_RECLAIM_REBOOT, &server->nfs_client->cl_state))
- 		nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1,
- 				   1);
- 	else
--- 
-2.31.1
+ (6) netfs: Remove a redundant smp_rmb().  This isn't a bug per se and
+     could be deferred.
+
+ (7) netfs: Fix missing barriers by using clear_and_wake_up_bit().
+
+ (8) netfs: Work around recursion in read retry by failing and abandoning
+     the retried subrequest if no I/O is performed.
+
+     [!] NOTE: This only works around the recursion problem if the
+     	 recursion keeps returning no data.  If the server manages, say, to
+     	 repeatedly return a single byte of data faster than the retry
+     	 algorithm can complete, it will still recurse and the stack
+     	 overrun may still occur.  Actually fixing this requires quite an
+     	 intrusive change which will hopefully make the next merge window.
+
+ (9) netfs: Fix the clearance of a folio_queue when unlocking the page if
+     we're going to want to subsequently send the queue for copying to the
+     cache (if, for example, we're using ceph).
+
+(10) netfs: Fix the lack of cancellation of copy-to-cache when the cache
+     for a file is temporarily disabled (for example when a DIO write is
+     done to the file).  This patch and (9) fix hangs with ceph.
+
+With these patches, I can run xfstest -g quick to completion on ceph with a
+local cache.
+
+The patches can also be found here with a bonus cifs patch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (8):
+  kheaders: Ignore silly-rename files
+  netfs: Fix non-contiguous donation between completed reads
+  netfs: Fix enomem handling in buffered reads
+  nfs: Fix oops in nfs_netfs_init_request() when copying to cache
+  netfs: Fix missing barriers by using clear_and_wake_up_bit()
+  netfs: Work around recursion by abandoning retry if nothing read
+  netfs: Fix ceph copy to cache on write-begin
+  netfs: Fix the (non-)cancellation of copy when cache is temporarily
+    disabled
+
+Max Kellermann (1):
+  cachefiles: Parse the "secctx" immediately
+
+Zilin Guan (1):
+  netfs: Remove redundant use of smp_rmb()
+
+ fs/9p/vfs_addr.c         |  6 +++++-
+ fs/afs/write.c           |  5 ++++-
+ fs/cachefiles/daemon.c   | 14 +++++++-------
+ fs/cachefiles/internal.h |  3 ++-
+ fs/cachefiles/security.c |  6 +++---
+ fs/netfs/buffered_read.c | 28 ++++++++++++++++------------
+ fs/netfs/direct_write.c  |  1 -
+ fs/netfs/read_collect.c  | 33 +++++++++++++++++++--------------
+ fs/netfs/read_pgpriv2.c  |  4 ++++
+ fs/netfs/read_retry.c    |  6 ++++--
+ fs/netfs/write_collect.c | 14 +++++---------
+ fs/netfs/write_issue.c   |  2 ++
+ fs/nfs/fscache.c         |  9 ++++++++-
+ fs/smb/client/cifssmb.c  | 13 +++++++++----
+ fs/smb/client/smb2pdu.c  |  9 ++++++---
+ include/linux/netfs.h    |  6 +++---
+ kernel/gen_kheaders.sh   |  1 +
+ 17 files changed, 98 insertions(+), 62 deletions(-)
 
 
