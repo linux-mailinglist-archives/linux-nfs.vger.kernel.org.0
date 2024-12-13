@@ -1,291 +1,168 @@
-Return-Path: <linux-nfs+bounces-8536-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8537-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2AD39F012D
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 01:39:31 +0100 (CET)
-Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CB369F033B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 04:46:04 +0100 (CET)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4698A162849
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 03:46:01 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6085D82866;
+	Fri, 13 Dec 2024 03:46:00 +0000 (UTC)
+X-Original-To: linux-nfs@vger.kernel.org
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6DD3628147A
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 00:39:30 +0000 (UTC)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3542383;
-	Fri, 13 Dec 2024 00:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="TvyF81p2"
-X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77451854
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 00:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B4D39FD9;
+	Fri, 13 Dec 2024 03:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734050367; cv=none; b=O0fx9uiMP6g27+ionrs4BCZJqTSk8HemGW3XLLavGV/ev+3gNhlhUcJTw4TlPdjs0N4HquC6tv19k6nbB6blBqsi/fK2H6iDbF5U/JWkp3isO5Fn0JE9hWVQe3kvy+Hh1lrHcqhX6zIAG5pS24Vy860tXWK+4CPQrdUWKNU0Vs4=
+	t=1734061560; cv=none; b=rS05+0356JlHKU/05WeeulMl8H7NqI5UQr3F8pWJjrj3ewc7ahczfYfDKf5FNKPeFn4NAB2b9aj23bVSoSWz6C8KTFgHLi+tTf/kDfxDy6xFZHZ4CYgyu2pfqc8y3pSvfYuNijtC48W8kZWixde4Wj3+03M+E8kXrxDBZ6vIIJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734050367; c=relaxed/simple;
-	bh=w5+4zVvee0iv6wu1kPgVM3sVeUcXg1TUNqQ9TjvlZtk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t0sGEXYSuMFsTDrS0AMOZDVDKV3jeGHl/iQPq8vTjCACWQ1Hkib7QzPdoqbgVDhxHkZtXTHt8+7LqjcRtHml5QlAXsAtT5blkTLZtugnUE//0uZC/iUR5ITvpOadOSw29Ut3R3FwGTWSyt3E94JoWMelX+GLWrB3PKh2XIg0y7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=TvyF81p2; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53f22fd6887so1315728e87.2
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Dec 2024 16:39:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1734050364; x=1734655164; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5Ph3XQ9C/6UtL+evRp8sTP1xjM50WQGOZo6uaoMH+yo=;
-        b=TvyF81p2va6OzcyVtUdzEXf/qn7mQvwW8Ngxf/h7A7IP9V1/HL5mSbsU2el2cRBue6
-         pqkxrCBV065xSJYIuOkCCnTiKgl2adQzeyZxNxLQcMetLgv2QLE1YEPnoJIb+i8hrln9
-         BH7RS3zmfg58td9S/jpUCpC+mlcHmQ+GsJ8U2OT19YWgbgijKS2kleg/BQfiDyt/IQs+
-         9C2laK6hSFQAtFnsTtHW5Q5UQdo4TJZWA5pBlCnGij1GiuS/X4646bDg8LoCA29wb/vK
-         aLf2l1fr+rRK4lpNyTQYGDlt8CR8GhubDUAy5E8/lCefKH/BG6Jv30bOzNPUjFK+6N0p
-         t97Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734050364; x=1734655164;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5Ph3XQ9C/6UtL+evRp8sTP1xjM50WQGOZo6uaoMH+yo=;
-        b=Fe33C8G4NcIegXmC7MxgylFYrt8V208cEHoKKibnlihOB8yRTDlQtQnPzeFDU0fAjY
-         XllBxrLRr8UrcQQhdTP01DCTwSGeFT976hoYZBss3FV958YiVnTQFPGH3AkOWghB0HLb
-         TmMstS/hBtnVKSR4rRrc9pBz/pOBEAPt/jQNDVNQmNGnjLESqsCx0BT8cvG/5kBf+eBJ
-         BTVVQsscefxcbHMThINwhLWXN5/hWxy1hhoaFgM72CRN92+UVhCd6nPyksbFTUSxvcYS
-         MzcMdODu3JT5wLkJbitnA6T/Aw8wHrv6L3g+x1dZ7OEZhLgp4+92a+1Ixi4fReZNjBKH
-         d8Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4UoNVHfXA1JSGLS95W9B9itrKnas1HxFXpttRYVz2j4/8nfjNBOGTkmu8vQ+8I5mMDFPc9sQMYEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQbIyMpRscdH2yQcK6yP4rDRy8v19+KPAU0vnBLG+ltfgBsikQ
-	oY9WikkF1Ypf94WiXl2Whyn5/72crL36S73JlE9HIOHjXU+HcdcnKGTqIfIcDjZhyg8XjAtaJCU
-	UtVJN2/Vt+8Z7511VCjOyUdVHLmo=
-X-Gm-Gg: ASbGncvx2yFQu/g3lfsI1xzBMtsA0zXl//vw+r1luf+j8pipom9SUTXM97KAY5VsYa4
-	+BT8/jHYxlhYVASPyNHgTfwy0EGyz8GZ4GiQStufcuDqf0WREtemOgg8j3CskX0LKt9XB5hZ7
-X-Google-Smtp-Source: AGHT+IHqryVfvaMppR36EBnb73Zh/s+HQHLM2pdlkcdRyBztApP6W59/WcvHQIT/QbsfUZvsSy3B8Xlc35fWR2J9zxI=
-X-Received: by 2002:a2e:a58e:0:b0:302:3abc:d9e8 with SMTP id
- 38308e7fff4ca-3025459d237mr2086981fa.32.1734050363671; Thu, 12 Dec 2024
- 16:39:23 -0800 (PST)
+	s=arc-20240116; t=1734061560; c=relaxed/simple;
+	bh=4MtF0ddoPmtJmrgr8IJB5wJDaaEMwNuMox0UYP3pJYY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A9HXJYd+hfI15eXMKuREMd3QCvJ8tM4jrqnmyzE6pZF3RqRQw19FOLW03pZRZ8kEitDHORfs8gzDiUoxMtZD3+1melf9d/OcCFTnKBoSwvFnBDqlJp7dJJTf97zsTRG6cTnmTSbdVlnLlYsd2/vjUglcEoPqmWm3vuf0jskYsfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Y8Ztb65Kjz1T70Y;
+	Fri, 13 Dec 2024 11:43:19 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 665BB140259;
+	Fri, 13 Dec 2024 11:45:48 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 13 Dec
+ 2024 11:45:47 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>
+CC: <trond.myklebust@hammerspace.com>, <jlayton@kernel.org>,
+	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH] NFSv4: Fix deadlock during the running of state manager
+Date: Fri, 13 Dec 2024 11:59:08 +0800
+Message-ID: <20241213035908.1789132-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241203162908.302354-9-cel@kernel.org> <20241203162908.302354-14-cel@kernel.org>
-In-Reply-To: <20241203162908.302354-14-cel@kernel.org>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Thu, 12 Dec 2024 19:39:12 -0500
-Message-ID: <CAN-5tyFCRcdJ_SRKfb+79dJ8pxRp=N4vb10FT2eYkhcmEb+uhw@mail.gmail.com>
-Subject: Re: [PATCH v1 5/7] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
-To: cel@kernel.org
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On Tue, Dec 3, 2024 at 11:29=E2=80=AFAM <cel@kernel.org> wrote:
->
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Enable the Linux NFS client to observe the progress of an offloaded
-> asynchronous COPY operation. This new operation will be put to use
-> in a subsequent patch.
->
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfs/nfs42proc.c        | 117 ++++++++++++++++++++++++++++++++++++++
->  fs/nfs/nfs4proc.c         |   3 +-
->  include/linux/nfs_fs_sb.h |   1 +
->  3 files changed, 120 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-> index 9d716907cf30..fa180ce7c803 100644
-> --- a/fs/nfs/nfs42proc.c
-> +++ b/fs/nfs/nfs42proc.c
-> @@ -21,6 +21,8 @@
->
->  #define NFSDBG_FACILITY NFSDBG_PROC
->  static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid =
-*std);
-> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
-ateid,
-> +                                    u64 *copied);
->
->  static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *=
-naddr)
->  {
-> @@ -582,6 +584,121 @@ static int nfs42_do_offload_cancel_async(struct fil=
-e *dst,
->         return status;
->  }
->
-> +static void nfs42_offload_status_done(struct rpc_task *task, void *calld=
-ata)
-> +{
-> +       struct nfs42_offload_data *data =3D calldata;
-> +
-> +       nfs41_sequence_done(task, &data->res.osr_seq_res);
-> +       switch (task->tk_status) {
-> +       case 0:
-> +               return;
-> +       case -NFS4ERR_ADMIN_REVOKED:
-> +       case -NFS4ERR_BAD_STATEID:
-> +       case -NFS4ERR_OLD_STATEID:
-> +               /*
-> +                * Server does not recognize the COPY stateid. CB_OFFLOAD
-> +                * could have purged it, or server might have rebooted.
-> +                * Since COPY stateids don't have an associated inode,
-> +                * avoid triggering state recovery.
-> +                */
-> +               task->tk_status =3D -EBADF;
-> +               break;
-> +       case -NFS4ERR_NOTSUPP:
-> +       case -ENOTSUPP:
-> +       case -EOPNOTSUPP:
-> +               data->seq_server->caps &=3D ~NFS_CAP_OFFLOAD_STATUS;
-> +               task->tk_status =3D -EOPNOTSUPP;
-> +               break;
-> +       default:
-> +               if (nfs4_async_handle_error(task, data->seq_server,
-> +                                           NULL, NULL) =3D=3D -EAGAIN)
-> +                       rpc_restart_call_prepare(task);
-> +               else
-> +                       task->tk_status =3D -EIO;
-> +       }
-> +}
-> +
-> +static const struct rpc_call_ops nfs42_offload_status_ops =3D {
-> +       .rpc_call_prepare =3D nfs42_offload_prepare,
-> +       .rpc_call_done =3D nfs42_offload_status_done,
-> +       .rpc_release =3D nfs42_offload_release
-> +};
-> +
-> +/**
-> + * nfs42_proc_offload_status - Poll completion status of an async copy o=
-peration
-> + * @file: handle of file being copied
-> + * @stateid: copy stateid (from async COPY result)
-> + * @copied: OUT: number of bytes copied so far
-> + *
-> + * Return values:
-> + *   %0: Server returned an NFS4_OK completion status
-> + *   %-EINPROGRESS: Server returned no completion status
-> + *   %-EREMOTEIO: Server returned an error completion status
-> + *   %-EBADF: Server did not recognize the copy stateid
-> + *   %-EOPNOTSUPP: Server does not support OFFLOAD_STATUS
-> + *   %-ERESTARTSYS: Wait interrupted by signal
-> + *
-> + * Other negative errnos indicate the client could not complete the
-> + * request.
-> + */
-> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *st=
-ateid,
-> +                                    u64 *copied)
-> +{
-> +       struct nfs_open_context *ctx =3D nfs_file_open_context(file);
-> +       struct nfs_server *server =3D NFS_SERVER(file_inode(file));
-> +       struct nfs42_offload_data *data =3D NULL;
-> +       struct rpc_message msg =3D {
-> +               .rpc_proc       =3D &nfs4_procedures[NFSPROC4_CLNT_OFFLOA=
-D_STATUS],
-> +               .rpc_cred       =3D ctx->cred,
-> +       };
-> +       struct rpc_task_setup task_setup_data =3D {
-> +               .rpc_client     =3D server->client,
-> +               .rpc_message    =3D &msg,
-> +               .callback_ops   =3D &nfs42_offload_status_ops,
-> +               .workqueue      =3D nfsiod_workqueue,
-> +               .flags          =3D RPC_TASK_ASYNC | RPC_TASK_SOFTCONN,
+Unlinking file may cause the following deadlock in state manager:
+[root@localhost test]# cat /proc/2943/stack
+[<0>] rpc_wait_bit_killable+0x1a/0x90
+[<0>] _nfs4_proc_delegreturn+0x60f/0x760
+[<0>] nfs4_proc_delegreturn+0x13d/0x2a0
+[<0>] nfs_do_return_delegation+0xba/0x110
+[<0>] nfs_end_delegation_return+0x32c/0x620
+[<0>] nfs_complete_unlink+0xc7/0x290
+[<0>] nfs_dentry_iput+0x36/0x50
+[<0>] __dentry_kill+0xaa/0x250
+[<0>] dput.part.0+0x26c/0x4d0
+[<0>] __put_nfs_open_context+0x1d9/0x260
+[<0>] nfs4_open_reclaim+0x77/0xa0
+[<0>] nfs4_do_reclaim+0x385/0xf40
+[<0>] nfs4_state_manager+0x762/0x14e0
+[<0>] nfs4_run_state_manager+0x181/0x330
+[<0>] kthread+0x1a7/0x1f0
+[<0>] ret_from_fork+0x34/0x60
+[<0>] ret_from_fork_asm+0x1a/0x30
+[root@localhost test]#
 
-I wonder why we are making status_offload an async task? Copy within
-which we are doing copy_offload is/was a sync task.
+It can be reproduced by following steps:
+1) client: open file
+2) client: unlink file
+3) server: service restart(trigger state manager in client)
+4) client: close file(in nfs4_open_reclaim, between nfs4_do_open_reclaim
+and put_nfs_open_context)
 
-Why is it a SOFTCONN task?
+Since the file has been open, unlinking will just set DCACHE_NFSFS_RENAMED
+for the dentry like this:
+nfs_unlink
+ nfs_sillyrename
+  nfs_async_unlink
+   // set DCACHE_NFSFS_RENAMED
 
-> +       };
-> +       struct rpc_task *task;
-> +       int status;
-> +
-> +       if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
-> +               return -EOPNOTSUPP;
+Restarting service will trigger state manager in client.
+(1) NFS4_SLOT_TBL_DRAINING will be set to nfs4_slot_table since session
+has been reset.
+(2) DCACHE_NFSFS_RENAMED is detected in nfs_dentry_iput. Therefore,
+nfs_complete_unlink is called to trigger delegation return.
+(3) Due to the slot table being in draining state and sa_privileged being
+0, the delegation return will be queued and wait.
+nfs4_state_manager
+ nfs4_reset_session
+  nfs4_begin_drain_session
+   nfs4_drain_slot_tbl
+    // set NFS4_SLOT_TBL_DRAINING (1)
+ nfs4_do_reclaim
+  nfs4_open_reclaim
+   __put_nfs_open_context
+    __dentry_kill
+     nfs_dentry_iput // check DCACHE_NFSFS_RENAMED (2)
+      nfs_complete_unlink
+       nfs_end_delegation_return
+        nfs_do_return_delegation
+         nfs4_proc_delegreturn
+          _nfs4_proc_delegreturn
+           rpc_run_task
+            ...
+            nfs4_delegreturn_prepare
+             nfs4_setup_sequence
+              nfs4_slot_tbl_draining // check NFS4_SLOT_TBL_DRAINING
+                                     // and sa_privileged is 0 (3)
+               rpc_sleep_on // set queued and add to slot_tbl_waitq
+                // rpc_task is async and wait in __rpc_execute
+           rpc_wait_for_completion_task
+            __rpc_wait_for_completion_task
+             out_of_line_wait_on_bit
+              rpc_wait_bit_killable // wait for rpc_task to complete
+ <-------- can not get here to wake up rpc_task -------->
+ nfs4_end_drain_session
+  nfs4_end_drain_slot_table
+   nfs41_wake_slot_table
 
-Let's not forget to mark tasks RPC_TASK_MOVEABLE. I know other
-nfs42proc need review and add that but since I remembered it here,
-let's add it. It allows for if ever this transport were to be moved,
-then the tasks can migrate to another transport.
+On the one hand, the state manager is blocked by the unfinished delegation
+return. As a result, nfs4_end_drain_session cannot be invoked to clear
+NFS4_SLOT_TBL_DRAINING and wake up waiting tasks.
+On the other hand, since NFS4_SLOT_TBL_DRAINING is not cleared,
+delegation return can only wait in the queue, resulting in a deadlock.
 
+Fix it by turning the delegation return into a privileged operation for
+the case where the nfs_client is in NFS4CLNT_RECLAIM_REBOOT state.
 
-> +
-> +       data =3D kzalloc(sizeof(struct nfs42_offload_data), GFP_KERNEL);
-> +       if (data =3D=3D NULL)
-> +               return -ENOMEM;
-> +
-> +       data->seq_server =3D server;
-> +       data->args.osa_src_fh =3D NFS_FH(file_inode(file));
-> +       memcpy(&data->args.osa_stateid, stateid,
-> +               sizeof(data->args.osa_stateid));
-> +       msg.rpc_argp =3D &data->args;
-> +       msg.rpc_resp =3D &data->res;
-> +       task_setup_data.callback_data =3D data;
-> +       nfs4_init_sequence(&data->args.osa_seq_args, &data->res.osr_seq_r=
-es,
-> +                          1, 0);
-> +       task =3D rpc_run_task(&task_setup_data);
-> +       if (IS_ERR(task)) {
-> +               nfs42_offload_release(data);
-> +               return PTR_ERR(task);
-> +       }
-> +       status =3D rpc_wait_for_completion_task(task);
-> +       if (status)
-> +               goto out;
-> +
-> +       *copied =3D data->res.osr_count;
-> +       if (task->tk_status)
-> +               status =3D task->tk_status;
-> +       else if (!data->res.complete_count)
-> +               status =3D -EINPROGRESS;
-> +       else if (data->res.osr_complete !=3D NFS_OK)
-> +               status =3D -EREMOTEIO;
-> +
-> +out:
-> +       rpc_put_task(task);
-> +       return status;
-> +}
-> +
->  static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
->                                    struct nfs42_copy_notify_args *args,
->                                    struct nfs42_copy_notify_res *res)
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 405f17e6e0b4..973b8d8fa98b 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -10769,7 +10769,8 @@ static const struct nfs4_minor_version_ops nfs_v4=
-_2_minor_ops =3D {
->                 | NFS_CAP_CLONE
->                 | NFS_CAP_LAYOUTERROR
->                 | NFS_CAP_READ_PLUS
-> -               | NFS_CAP_MOVEABLE,
-> +               | NFS_CAP_MOVEABLE
-> +               | NFS_CAP_OFFLOAD_STATUS,
->         .init_client =3D nfs41_init_client,
->         .shutdown_client =3D nfs41_shutdown_client,
->         .match_stateid =3D nfs41_match_stateid,
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index b804346a9741..946ca1c28773 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -290,6 +290,7 @@ struct nfs_server {
->  #define NFS_CAP_CASE_INSENSITIVE       (1U << 6)
->  #define NFS_CAP_CASE_PRESERVING        (1U << 7)
->  #define NFS_CAP_REBOOT_LAYOUTRETURN    (1U << 8)
-> +#define NFS_CAP_OFFLOAD_STATUS (1U << 9)
->  #define NFS_CAP_OPEN_XOR       (1U << 12)
->  #define NFS_CAP_DELEGTIME      (1U << 13)
->  #define NFS_CAP_POSIX_LOCK     (1U << 14)
-> --
-> 2.47.0
->
->
+Fixes: 977fcc2b0b41 ("NFS: Add a delegation return into nfs4_proc_unlink_setup()")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 405f17e6e0b4..f3b1f2725c4e 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6878,7 +6878,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
+ 		data->res.sattr_res = true;
+ 	}
+ 
+-	if (!data->inode)
++	if (!data->inode || test_bit(NFS4CLNT_RECLAIM_REBOOT, &server->nfs_client->cl_state))
+ 		nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1,
+ 				   1);
+ 	else
+-- 
+2.31.1
+
 
