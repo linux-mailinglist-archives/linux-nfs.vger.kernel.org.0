@@ -1,332 +1,424 @@
-Return-Path: <linux-nfs+bounces-8555-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8556-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41D679F14D0
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 19:19:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 521B49F1516
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 19:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87B127A03B3
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 18:19:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63928169E8B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Dec 2024 18:41:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 430771E377E;
-	Fri, 13 Dec 2024 18:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 522B6189BA2;
+	Fri, 13 Dec 2024 18:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bMXwxerO";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="uRGwxQ28"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD52187FFA;
-	Fri, 13 Dec 2024 18:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734113962; cv=none; b=uDDMbRuJ/Tvt9TpP8Y2y5LzgqKt/X5N9ugKBy+boTPysi2XYz09KeKtUsUsUiJEgh42uJVOnhRVyoA9/rcrdA4QC6hQ9eaZJnTIaDa5r2PHQUt/WMdKvBoS2H46fsq/EKQdayNhDTYwhqtbg+N9WYFKdoXigVwyudoNMLSQF/Nw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734113962; c=relaxed/simple;
-	bh=lZbT2+kClZ4vA/rvtXSM0QCUhZ4BKrmm+V8501KNblU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MR0AAUd2rtHruL80uJ7eFvvMPeJOsLiQi0UYBL5b1O/XAO2fTPANlRSUpywqSAa4pri7VDMmINLfmxG2a3cvkerNxe/7kFy6jRNBm4Qbc9JSY0QtfImJeEec0abIc9KKVZzkj6mFqJqBgdRfUviza27E/vB5gbS1tKaV4M3+h7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y8yJ95Jb8z6LD8q;
-	Sat, 14 Dec 2024 02:18:17 +0800 (CST)
-Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07B0A1404F5;
-	Sat, 14 Dec 2024 02:19:15 +0800 (CST)
-Received: from [10.123.123.159] (10.123.123.159) by
- mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 13 Dec 2024 21:19:12 +0300
-Message-ID: <f480bbea-989d-378a-9493-c2bee412db00@huawei-partners.com>
-Date: Fri, 13 Dec 2024 21:19:10 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AFA1DA5F
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Dec 2024 18:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734115273; cv=fail; b=bpvzv4nthD6tRG3UK/tc3VPn2gvYOtjdeXs70M0Yarctvh3CP+Lcbdomr09VKoQXoYZIxCxStcTa4PCI14+X8u6DCeoSkhq9F4IJtK7puMBu4yo1+ofAl4TvjUAEXaCbqQF1s/ImWR6vGOuRGtEqwzSeyoh2puhzJZT5IaH/NRQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734115273; c=relaxed/simple;
+	bh=geYlpim0kzfjXy26B01skOVBN8zho1Is8f/AP8m8HZA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pvZVDDexV4qkmZ95plcIVMYF7G5T22qR6JvhFWIRdZbQQkAi8TlR238MQnoKF1nS5rJv26g4GXg9qV2hvG2hjyF4y2Jvwa8nK7wsVc8bclcC9DM0uBLmy3VEFix5Hku/WUEVA45yc4duKUa70cBifR6ZO77x/o91MaXVXVv6LpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=bMXwxerO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=uRGwxQ28; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BDIBrsR011070;
+	Fri, 13 Dec 2024 18:40:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=TCDsy2vLZF3EghF51rdFx1a/MxgNiC7H4LbgWNfP6aQ=; b=
+	bMXwxerOTYImPpKmEGzPYnoeUhOgcLRyS/10HkJaAxS9zOxzYFcjMGP3mn+03vQe
+	SVU9gG5DXQQChjbP9yQIEbh/OiKnsW9Uc3rB3aF0OSp6SMMyiAx43gMle/Fgc/Lk
+	urUe3AxZ3hOFGKEhX74+kSgdyCGaQ9LffuPpTq5X4epHM1qX48kZJxxhPrmpYt9R
+	0OsGFU1B8evbkDH96J6hUnux46at3PIbwhoUBqRzryDpeuQCHnDPxVO3K2xp0CVg
+	OPUUXMbS05btFPZECPwRbC7uBn5NWypIIh2Tk5tNb1i53Q99gMFCMxI8A0Ztxrs4
+	P3Mef73rcvAgaz8BrSFcGA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43cdyt5wtt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Dec 2024 18:40:59 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BDGsui2038162;
+	Fri, 13 Dec 2024 18:40:58 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2173.outbound.protection.outlook.com [104.47.59.173])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 43cctke4b3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Dec 2024 18:40:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rMTiL3cdWBNvjUhrx+eY7We+Ilr1B6WJxu0rLMXvHyl7tAIHiGUQYLBRBlQIiunuz8BiW7WNpH2eIDjTJBadA4PgGhcB/LEEGUt1aHzSOFWXdP8qd7inIoZlam6rbF75rv/JMk3r72DLwmDylR2DzksNrqAO51ezWi9whEz+J6ESdyYqBMg+wob39btmAhRS3QXvMrSErmaFTvSJdRB2teM6//6Q1u54Oef526h8wyE9wUeOz8KvCjXasWy81m69lqRqUpMY43ujbCs53AaNYC9a9FLfVJmXJ423rYxQFGmDPJR+iCbdStXqF/NVaSriwBkX9FAMBwZ1D1leiAHk8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TCDsy2vLZF3EghF51rdFx1a/MxgNiC7H4LbgWNfP6aQ=;
+ b=kbTPv/qDDhLJiFR9AZyyzUnMh82UGVwpVM8rli/Q2X5Looiz+hNOSn/2tVagit49SFZ62D1vcYM/Gy3Bk7D4MSh389y8O0kKRIlPZEHolmYp5GeQlOseOs+XkYG/tYtWSWIwdcCxGqIzdCnp19mZaNPvaik3Fk37hVqGTWQk2YcjEx7k4g63R/OI/TNb4/3Riyl6b++KiVO0tYYobMAOrui55diWPA2Ohur4JmjZ1DCVJXChLEcpnBgCRYmmKc26+MOUwFobDaoGN2XjX6py21JbPYR+0boBqLJBG8S5WOfeSPpz+MyWCm1MT8fFE9ioyrukDygeEl1SDsdGwDvehg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TCDsy2vLZF3EghF51rdFx1a/MxgNiC7H4LbgWNfP6aQ=;
+ b=uRGwxQ28RKvrqctKWJhpK3CrihFu4oNPUBlOZyyc6uxYfia9jG0OepCAxkknPgENfzCNqg/asKLEECivs8iUMfa/tRqZCxFdtSQKjZVLz6jIB+K+d1dl7PBmy4N5qiONccDinXCcltDw2GOGcLP64IrYpqXqJ1792F7AJGcmVV8=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by BN0PR10MB4904.namprd10.prod.outlook.com (2603:10b6:408:125::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8251.17; Fri, 13 Dec
+ 2024 18:40:56 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8251.008; Fri, 13 Dec 2024
+ 18:40:56 +0000
+Message-ID: <00dba584-79c0-4450-8cf1-69ce5c40601e@oracle.com>
+Date: Fri, 13 Dec 2024 13:40:55 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 5/7] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
+To: Olga Kornievskaia <aglo@umich.edu>, cel@kernel.org
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Anna Schumaker
+ <anna@kernel.org>,
+        linux-nfs@vger.kernel.org
+References: <20241203162908.302354-9-cel@kernel.org>
+ <20241203162908.302354-14-cel@kernel.org>
+ <CAN-5tyFCRcdJ_SRKfb+79dJ8pxRp=N4vb10FT2eYkhcmEb+uhw@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAN-5tyFCRcdJ_SRKfb+79dJ8pxRp=N4vb10FT2eYkhcmEb+uhw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR03CA0254.namprd03.prod.outlook.com
+ (2603:10b6:610:e5::19) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Content-Language: ru
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-CC: Matthieu Baerts <matttbe@kernel.org>, <gnoack@google.com>,
-	<willemdebruijn.kernel@gmail.com>, <matthieu@buffet.re>,
-	<linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <yusongping@huawei.com>,
-	<artem.kuzin@huawei.com>, <konstantin.meskhidze@huawei.com>, MPTCP Linux
-	<mptcp@lists.linux.dev>, <linux-nfs@vger.kernel.org>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
- <20241018.Kahdeik0aaCh@digikod.net>
- <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
- <20241212.qua0Os3sheev@digikod.net>
-From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
-In-Reply-To: <20241212.qua0Os3sheev@digikod.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- mscpeml500004.china.huawei.com (7.188.26.250)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|BN0PR10MB4904:EE_
+X-MS-Office365-Filtering-Correlation-Id: c496fb51-b7be-4045-d227-08dd1ba5ae6d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eEQxWVZUd2hkNytGdmpLUTlWZ0JIT1JVd215VlhSb0xpMi9kWWg3UjVCN2tm?=
+ =?utf-8?B?VVhQQmwxd2xER00xUi83T3ltYzR4dkxwRzFmWFF0WFc0UEx6bWlUcWRuUm1E?=
+ =?utf-8?B?YnFTUndpOVdldlJMeEVDZUo3R1RnWFVocDhGYVAvWlRxbXFWakxGcGsxNVY4?=
+ =?utf-8?B?bkUyYmhnaEZHeU02UVpndWY3Q2ZPNm9nNVVrd0Zta2dGS255b3pHMXF2eEFy?=
+ =?utf-8?B?c2Fady9PUU4xN0tjLzJZVU4yOEJKR2VuUDFjV3pzbG1nNU04dWtrQWZnRUkw?=
+ =?utf-8?B?dnVqZk80RW9sODlOU2g1L01wSFkrSHljWit6L2lCTEVPU1FmMXNXNnlCdjNt?=
+ =?utf-8?B?ZlhIMnVwZHh5S0JJT2pRd2IzczYrc0w2SUlTNHE2aXlRNXhvanU1NTZGLzZF?=
+ =?utf-8?B?anE2RzRzc1VtUTUxZXpuTmJDcHc0dGpYS1Y2QXdSKzFXVnoySXY4blhrWUFS?=
+ =?utf-8?B?OWJGd0IyeU80UlJ3b1o2OXhxdlVxUk53REorL1gzeDJmemtFTVlPWVh1bTdN?=
+ =?utf-8?B?Q2ZWaXZ5WHc4cm9wYWgyeWFNVks0eEVNWndsQThWNlJyc3h4OEkzYTVzUUlX?=
+ =?utf-8?B?LzYyOUwxSEtaR09qK1B5cEY3QXNUMHMvWnVVeWhFN0c4WnNTamJyM28xc0RK?=
+ =?utf-8?B?M2YzZ3cxRWtxT0F3RnhBL0tLbFZGZEZQZmlpeHhLKzYzTEp1blJVZkN6MDMz?=
+ =?utf-8?B?YWtBSEZiZmVweTRtUUxKQmQxN3BKWWpLRlBzS0M0aU5xTVJJWktBMk50Rmxh?=
+ =?utf-8?B?bCsyZ09BOWcxNHpYTnZESDJIei9qRUZmRWFhcldKQzB5dmVMSFpiZ2dZanF5?=
+ =?utf-8?B?Si9GOEo1Wk9lRDczRFBRRDN6c3JFY21NdUFRNksvNjhmTjFnSUNUL0JkdnYy?=
+ =?utf-8?B?bzhiUEF0a1d1QXBSS2I5TmYxcmJRUEtrRUZ4V0FmTzN0NVFra3Mvb05JdmIy?=
+ =?utf-8?B?Z2RtcWI4ckFkcEZ3NUhYRDhFSHlLZVBweUxNb0J5MGVBU0Y4ZmdUR2oyeVoy?=
+ =?utf-8?B?Q2t4VnRadHRBK2w0NXhLdHZ4UDN6Q2FtRDBDUDU4L2lzci8vSFBwQkMwbkVs?=
+ =?utf-8?B?bE9OSC9SS0hZeDhpRitFRE9BdVRPNmNSU3lYaXlZR1BWaUpDTzJhNHpuUGdK?=
+ =?utf-8?B?YmNnNDIva1k3Q0ZGcHhyWmpaWWZvN3RiVXNOMUh5U0NPT280a3ZWMnZUSEZt?=
+ =?utf-8?B?OXpaNmtUTmNtbVhsSnZNMUFKandpQlZKd0FscktHSlovcmduQW4zcDB3Ukl6?=
+ =?utf-8?B?UTFpaWtxcEtBQzJNWnlxVzg5K0tIYUZIRUUxZGlkSmhuVzlvTGZQSUg2R3Z3?=
+ =?utf-8?B?YWlnemtIRDBaQ1hJZmM0UDhvUWFoUHFUakF0TFFjMklVU3c1aFVKWVRHSjNz?=
+ =?utf-8?B?NjJOZ0RmcS95bmpsaExSMkgybUNjWWp4aGZkaVhTbm5wQUFIaDRGSkF3YTUz?=
+ =?utf-8?B?bjBOY1greE44VUptWEFtZGlzTGk1MmFWSlN4NnR4SHc5K0hqMXZhcTBwSXFp?=
+ =?utf-8?B?K3IyRmhxM2orL2ExdDVzVFo5WWRuRG1YQXFnQ2o3RUcyQmw0SFR4NjdrTG1W?=
+ =?utf-8?B?MDhsVHM1bUpjcDRaQitwK2dXU01OdEk3ZVY5aTlwVkRSNnZFL2N1VlBNZHkv?=
+ =?utf-8?B?S0V5R1poZjVJb0dGcWU3RmUxUXE1dEQ2Q2NHb1dkSDdJQ2t3NnZ6aGpTSlla?=
+ =?utf-8?B?SFY3SHUvemIxNkhENFEzb2VNaU5nVkNEcmh5dldsNFNYMUJUVEVhVWJ4K2ND?=
+ =?utf-8?B?aGFlTDJUYUQ0VGtjSFc1WGI2NDZNZkxySUMwS0JBOFRJc3VtOFlEVlh4WE5s?=
+ =?utf-8?B?OTR1SDRtamdQQThWTC9TZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?U2Y3VVc0V0UxT3g1MlRxSFl4Y0dYU1N2Z2RoZ0Y4RVROSkNvb1Z3Ky9UNmhD?=
+ =?utf-8?B?SXlOcnNGeXBNSlVvc2drZzZTMzRyRVFpT1J1eDg4aDIrbi8rNFhvcUJ3M3Y2?=
+ =?utf-8?B?ZFUzSmRlS3JkQ3hRRUk1QVVxL3ZwVWVVTDF2ZTdCTm9TZm9zVjJHdWgxYTF6?=
+ =?utf-8?B?Tm5Bekh4UnZOSVA3dXBxK0FwVGoxSmhlMmwzQ0kwcWJPbm1ML1dkeEFJU1dN?=
+ =?utf-8?B?UWhYckVYNFBIVGVUdENtR2tIa2dZcThqT0lOVFdsRlhjVUhmZUZZdGdvTmRO?=
+ =?utf-8?B?TExZL1Bmdi91a2NneTArVVB6Nys5S2dFRWw0bEszZEl6VWN3dkROcHM2V09M?=
+ =?utf-8?B?aG1aN3JxLzdHWEdzcHQ0WWFIZGl6UEl1RWdQVFFGdUZPeWJyR1JLSFlvWG1N?=
+ =?utf-8?B?WEFMZDdXNjJUeEtGU0ZxYjIxN25JbS9ibXVvNUg5eVZLckFhVk50QUVPb0Z5?=
+ =?utf-8?B?dVJWNUE1TTVBZnBxVGF3b1JWTEZNTlZxSnJNUXZkQlRXOUhpVThtT1VlenVj?=
+ =?utf-8?B?STgxOG01dU1EZnozNWtTZ0ZJQlNxT1JuUFpHeXJsb0J0bVExUmwwR01xYnZJ?=
+ =?utf-8?B?dnpDSTVNeVZySzNlUTJYOGxpczNwQlN0R0x4RWp0cEJUYk9TK1ZmQTk0b0V2?=
+ =?utf-8?B?dTB4WWlpZVNXT2c3a2Jjcm1yS1Vrc3FhTnEvd21jTWxmOU9mU3RqQlNFZ20y?=
+ =?utf-8?B?TWdVUkJVWFl6eW8zb290WEczZmxLVjBkNDJXYzRFbGsrd0ZWY0ZvSkphVVZp?=
+ =?utf-8?B?VW1QU3BZQWQzVEFNbWNmZ2UzbEFQSUVaU3daeUlkaEtiR3NTNTRZZ2l1dW5N?=
+ =?utf-8?B?TDQ0WjJUS3ZJQmp3bERQQm1MWWc4UmRLYjRhZC9uemJzRGpSSXZNWG0rNGhj?=
+ =?utf-8?B?czVmeVh1RUkrUDdENGFSRFF4U3ZFeml2ZkJwVWc5d3RrcURWQlZOVXkyTkRs?=
+ =?utf-8?B?TkF6QXB1N1luM055U2hhQzJyL1QzV2UrWDd5UXhid0paWjJ6b3o2aTQ2VnpI?=
+ =?utf-8?B?N25FNDl6RUVlNldOZU8zOHhIWE5nTzBwT0l6M3dURVRzVDJ3VUg0eVgzNVEz?=
+ =?utf-8?B?ZzRQQkNGWThqMVNBTVFJejlXWVF5UG5vcUQwV2kzQm9HQ2pZMkd0dnNFOEoz?=
+ =?utf-8?B?VlFBTDNYdnJHTDc4NkxJUERxTWw4WTBKaW40Zk1oa1ZXL3o2Sk12OC8rQzFD?=
+ =?utf-8?B?OXh2VkxQc3dSYTdWNkE2NCtiSVpSeGlTY1hYbHpUMUFoTXdVSWNzYjVmTWo4?=
+ =?utf-8?B?YUZucUhENUxwTUVzRVhvRVVhd1ViUFV1NFpOMk9XOEsvMSs1U2dsakdhZjdr?=
+ =?utf-8?B?Z2Q4UFl6a3VmNTNPczZzbkY2NTQ0NTB4VWs4K2IrU0kxcmhjVTZQOHNBTWo0?=
+ =?utf-8?B?YVUxMWk2L2I4UUQwL29UYll3SkhTc2VUYlhhTVlIT0o0WU9EK3k3bDB1ZVhj?=
+ =?utf-8?B?NmFJbkRyU0NDUGVyVEJhdVRDaTRBZTlBZ01xanRxU2F0WEJ3d09lU2ZZV1VL?=
+ =?utf-8?B?UWpDZkRCZ1ozR3FUdXVheDR1MHhJd1grK2pHcnh6RFhIL0ZiZzV1UlhERE9T?=
+ =?utf-8?B?VDdqbForZFdJaWhyaXBKdThsdTdzR1g2WDZxVXNma05hUUovUS9aL1RZTlRZ?=
+ =?utf-8?B?UHJoK2dzNGUzZWtQLzN0aytwKzhuazczWW1KcERaMnNZREpXNUxTbnJKQ1h1?=
+ =?utf-8?B?UlRMYk13WjZTMks4QTBCY24xaDM3TXI3SDJoUnorU1ZDazNVZWNuUHc4RStO?=
+ =?utf-8?B?SWwzK1VxK2Q3SEREUUhYNk1NV0puNWt0OUEzZEFhaEFCcFYvRFNibThUa0RM?=
+ =?utf-8?B?WCtBUlhqc0hxTmdwV0tBeGVqd3lDVWh5NVRGNFI5OElReDdHMkNuTXVjcVlR?=
+ =?utf-8?B?ZDAwcitXWXZwckx6dHlYS05sZWxUV3drbkNjUWNCdUxBbldCcnBNaC9yRlRT?=
+ =?utf-8?B?V0NZeWtCMGNIaVB0SXVacjlkSEJrWVVrWGNoTUhsK2RzUWNLaGp3cmd4OVhK?=
+ =?utf-8?B?QjZFYzNYczZ6TGJZdFg1VzBqRzQydGtJaW8rcE8yOVRBN2NJbVRwSFFUWjVJ?=
+ =?utf-8?B?YWFlZjVUa0NGOGVyR0FKTGg3a2VyUDBzbFlDWFZMYnRuV1BpWkw5aDFqNUNt?=
+ =?utf-8?Q?HMTWbZ3Ee7imH6f5yCHC/1F1w?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	WsMH4PylvLrhLRp0n2wQZg3wj8e46E9FmyDWhOlox8lMbdbPdIQVoRtxRCtpAS2RbIPStbDtqCuFvnZpF3xPRFILy1goP+rsYkl9vw911BRivdJjnhIgJcdA+bCyPnSraleAfKSd7BQrVPTi79Q7Jp9Dw2RZl/lBEfBA+F1CJJrNJ/r7B8cMSjh9zPFIyIaHrg2PfTb8Kf/hV1QwEr7+d0K63lNSbEFKt4XmRxpuEIwVVjQKpfeYyAprfHYEOccM1yWTTKdqua2D503T2/MeGf8jc2LyO3L7iuu0Cjk81S1Tuee7GvYtmMZ4i/ZG0GOiS6aWtGnn7Sam/alHa1lj/n4XqcmLlDTWLRCgNerNV4iFYXqN0P4ov5dtg3aBL8qp6EzDvLJ0yYOmz0nPs7AH1UIOZNbsJoO3q7qcOTBirUZ88aiqKiFMrOXcuZ4qMQ9bKpr349b9XsLvzBDqYvTxsOr8wl5Xajj3C7mY8fj5T+gEIaehTNBsbJggvOeFoR5ErT3KAeBRPTPJFHZc4Kn5mBkPoRzxXuKbsSuZx5blHMDSYY11jZC0qBT5Wcna9KiaTJaSsbSQeu5XxIy1/nJj2q/GVFnWjhzy+tqSCC86n/w=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c496fb51-b7be-4045-d227-08dd1ba5ae6d
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2024 18:40:56.7984
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9+CLe5lm+J2HRKyhjm5PiOYvuFpqdTxzoRFw5PShsLMyR5WnG7/EB8DwtvRw4Z5hdGJQKdwWEGBMUmlHQL4UcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4904
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-13_07,2024-12-12_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2412130132
+X-Proofpoint-ORIG-GUID: fU38oylGHgrg7pFoZ8s4m5uRe03Jisq4
+X-Proofpoint-GUID: fU38oylGHgrg7pFoZ8s4m5uRe03Jisq4
 
-On 12/12/2024 9:43 PM, Mickaël Salaün wrote:
-> On Thu, Oct 31, 2024 at 07:21:44PM +0300, Mikhail Ivanov wrote:
->> On 10/18/2024 9:08 PM, Mickaël Salaün wrote:
->>> On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
->>>> Hi Mikhail and Landlock maintainers,
->>>>
->>>> +cc MPTCP list.
->>>
->>> Thanks, we should include this list in the next series.
->>>
->>>>
->>>> On 17/10/2024 13:04, Mikhail Ivanov wrote:
->>>>> Do not check TCP access right if socket protocol is not IPPROTO_TCP.
->>>>> LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
->>>>> should not restrict bind(2) and connect(2) for non-TCP protocols
->>>>> (SCTP, MPTCP, SMC).
->>>>
->>>> Thank you for the patch!
->>>>
->>>> I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
->>>> treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
->>>> see TCP packets with extra TCP options. On Linux, there is indeed a
->>>> dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
->>>> because we needed such dedicated socket to talk to the userspace.
->>>>
->>>> I don't know Landlock well, but I think it is important to know that an
->>>> MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
->>>> will do a fallback to "plain" TCP if MPTCP is not supported by the other
->>>> peer or by a middlebox. It means that with this patch, if TCP is blocked
->>>> by Landlock, someone can simply force an application to create an MPTCP
->>>> socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
->>>> certainly work, even when connecting to a peer not supporting MPTCP.
->>>>
->>>> Please note that I'm not against this modification -- especially here
->>>> when we remove restrictions around MPTCP sockets :) -- I'm just saying
->>>> it might be less confusing for users if MPTCP is considered as being
->>>> part of TCP. A bit similar to what someone would do with a firewall: if
->>>> TCP is blocked, MPTCP is blocked as well.
->>>
->>> Good point!  I don't know well MPTCP but I think you're right.  Given
->>> it's close relationship with TCP and the fallback mechanism, it would
->>> make sense for users to not make a difference and it would avoid bypass
->>> of misleading restrictions.  Moreover the Landlock rules are simple and
->>> only control TCP ports, not peer addresses, which seems to be the main
->>> evolution of MPTCP. >
->>>>
->>>> I understand that a future goal might probably be to have dedicated
->>>> restrictions for MPTCP and the other stream protocols (and/or for all
->>>> stream protocols like it was before this patch), but in the meantime, it
->>>> might be less confusing considering MPTCP as being part of TCP (I'm not
->>>> sure about the other stream protocols).
->>>
->>> We need to take a closer look at the other stream protocols indeed.
->> Hello! Sorry for the late reply, I was on a small business trip.
+On 12/12/24 7:39 PM, Olga Kornievskaia wrote:
+> On Tue, Dec 3, 2024 at 11:29 AM <cel@kernel.org> wrote:
 >>
->> Thanks a lot for this catch, without doubt MPTCP should be controlled
->> with TCP access rights.
+>> From: Chuck Lever <chuck.lever@oracle.com>
 >>
->> In that case, we should reconsider current semantics of TCP control.
+>> Enable the Linux NFS client to observe the progress of an offloaded
+>> asynchronous COPY operation. This new operation will be put to use
+>> in a subsequent patch.
 >>
->> Currently, it looks like this:
->> * LANDLOCK_ACCESS_NET_BIND_TCP: Bind a TCP socket to a local port.
->> * LANDLOCK_ACCESS_NET_CONNECT_TCP: Connect an active TCP socket to a
->>    remote port.
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>>   fs/nfs/nfs42proc.c        | 117 ++++++++++++++++++++++++++++++++++++++
+>>   fs/nfs/nfs4proc.c         |   3 +-
+>>   include/linux/nfs_fs_sb.h |   1 +
+>>   3 files changed, 120 insertions(+), 1 deletion(-)
 >>
->> According to these definitions only TCP sockets should be restricted and
->> this is already provided by Landlock (considering observing commit)
->> (assuming that "TCP socket" := user space socket of IPPROTO_TCP
->> protocol).
+>> diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+>> index 9d716907cf30..fa180ce7c803 100644
+>> --- a/fs/nfs/nfs42proc.c
+>> +++ b/fs/nfs/nfs42proc.c
+>> @@ -21,6 +21,8 @@
 >>
->> AFAICS the two objectives of TCP access rights are to control
->> (1) which ports can be used for sending or receiving TCP packets
->>      (including SYN, ACK or other service packets).
->> (2) which ports can be used to establish TCP connection (performed by
->>      kernel network stack on server or client side).
+>>   #define NFSDBG_FACILITY NFSDBG_PROC
+>>   static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid *std);
+>> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *stateid,
+>> +                                    u64 *copied);
 >>
->> In most cases denying (2) cause denying (1). Sending or receiving TCP
->> packets without initial 3-way handshake is only possible on RAW [1] or
->> PACKET [2] sockets. Usage of such sockets requires root privilligies, so
->> there is no point to control them with Landlock.
+>>   static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *naddr)
+>>   {
+>> @@ -582,6 +584,121 @@ static int nfs42_do_offload_cancel_async(struct file *dst,
+>>          return status;
+>>   }
+>>
+>> +static void nfs42_offload_status_done(struct rpc_task *task, void *calldata)
+>> +{
+>> +       struct nfs42_offload_data *data = calldata;
+>> +
+>> +       nfs41_sequence_done(task, &data->res.osr_seq_res);
+>> +       switch (task->tk_status) {
+>> +       case 0:
+>> +               return;
+>> +       case -NFS4ERR_ADMIN_REVOKED:
+>> +       case -NFS4ERR_BAD_STATEID:
+>> +       case -NFS4ERR_OLD_STATEID:
+>> +               /*
+>> +                * Server does not recognize the COPY stateid. CB_OFFLOAD
+>> +                * could have purged it, or server might have rebooted.
+>> +                * Since COPY stateids don't have an associated inode,
+>> +                * avoid triggering state recovery.
+>> +                */
+>> +               task->tk_status = -EBADF;
+>> +               break;
+>> +       case -NFS4ERR_NOTSUPP:
+>> +       case -ENOTSUPP:
+>> +       case -EOPNOTSUPP:
+>> +               data->seq_server->caps &= ~NFS_CAP_OFFLOAD_STATUS;
+>> +               task->tk_status = -EOPNOTSUPP;
+>> +               break;
+>> +       default:
+>> +               if (nfs4_async_handle_error(task, data->seq_server,
+>> +                                           NULL, NULL) == -EAGAIN)
+>> +                       rpc_restart_call_prepare(task);
+>> +               else
+>> +                       task->tk_status = -EIO;
+>> +       }
+>> +}
+>> +
+>> +static const struct rpc_call_ops nfs42_offload_status_ops = {
+>> +       .rpc_call_prepare = nfs42_offload_prepare,
+>> +       .rpc_call_done = nfs42_offload_status_done,
+>> +       .rpc_release = nfs42_offload_release
+>> +};
+>> +
+>> +/**
+>> + * nfs42_proc_offload_status - Poll completion status of an async copy operation
+>> + * @file: handle of file being copied
+>> + * @stateid: copy stateid (from async COPY result)
+>> + * @copied: OUT: number of bytes copied so far
+>> + *
+>> + * Return values:
+>> + *   %0: Server returned an NFS4_OK completion status
+>> + *   %-EINPROGRESS: Server returned no completion status
+>> + *   %-EREMOTEIO: Server returned an error completion status
+>> + *   %-EBADF: Server did not recognize the copy stateid
+>> + *   %-EOPNOTSUPP: Server does not support OFFLOAD_STATUS
+>> + *   %-ERESTARTSYS: Wait interrupted by signal
+>> + *
+>> + * Other negative errnos indicate the client could not complete the
+>> + * request.
+>> + */
+>> +static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *stateid,
+>> +                                    u64 *copied)
+>> +{
+>> +       struct nfs_open_context *ctx = nfs_file_open_context(file);
+>> +       struct nfs_server *server = NFS_SERVER(file_inode(file));
+>> +       struct nfs42_offload_data *data = NULL;
+>> +       struct rpc_message msg = {
+>> +               .rpc_proc       = &nfs4_procedures[NFSPROC4_CLNT_OFFLOAD_STATUS],
+>> +               .rpc_cred       = ctx->cred,
+>> +       };
+>> +       struct rpc_task_setup task_setup_data = {
+>> +               .rpc_client     = server->client,
+>> +               .rpc_message    = &msg,
+>> +               .callback_ops   = &nfs42_offload_status_ops,
+>> +               .workqueue      = nfsiod_workqueue,
+>> +               .flags          = RPC_TASK_ASYNC | RPC_TASK_SOFTCONN,
 > 
-> I agree.
+> I wonder why we are making status_offload an async task? Copy within
+> which we are doing copy_offload is/was a sync task.
+
+I tried it as a sync task, there were some issues with that that I
+no longer recall.
+
+
+> Why is it a SOFTCONN task?
+
+If there is no existing connection to the server, fail immediately
+instead of waiting for minutes to reconnect.
+
+Otherwise, just like RENEW, the client will stack up a bunch of
+OFFLOAD_STATUS operations as long as the RPC transport is down.
+
+Also, when retrying, wait interruptibly -- that way a ^C will work
+as expected.
+
+
+>> +       };
+>> +       struct rpc_task *task;
+>> +       int status;
+>> +
+>> +       if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
+>> +               return -EOPNOTSUPP;
 > 
->>
->> Therefore Landlock should only take care about case (2). For now
->> (please correct me if I'm wrong), we only considered control of
->> connection performed on user space plain TCP sockets (created with
->> IPPROTO_TCP).
-> 
-> Correct. Landlock is dedicated to sandbox user space processes and the
-> related access rights should focus on restricting what is possible
-> through syscalls (mainly).
-> 
->>
->> TCP kernel sockets are generally used in the following ways:
->> * in a couple of other user space protocols (MPTCP, SMC, RDS)
->> * in a few network filesystems (e.g. NFS communication over TCP)
->>
->> For the second case TCP connection is currently not restricted by
->> Landlock. This approach is may be correct, since NFS should not have
->> access to a plain TCP communication and TCP restriction of NFS may
->> be too implicit. Nevertheless, I think that restriction via current
->> access rights should be considered.
-> 
-> I'm not sure what you mean here.  I'm not familiar with NFS in the
-> kernel.  AFAIK there is no socket type for NFS.
+> Let's not forget to mark tasks RPC_TASK_MOVEABLE. I know other
+> nfs42proc need review and add that but since I remembered it here,
+> let's add it. It allows for if ever this transport were to be moved,
+> then the tasks can migrate to another transport.
 
-NFS client makes RPC requests to perform remote file operations on the
-NFS server. RPC requests can be sent using TCP, UDP, or RDMA sockets at
-the transport layer.
+OK.
 
-Call trace of creating TCP socket for client->server communication:
-	nfs_create_rpc_client()
-	rpc_create()
-	xprt_create_transport()
-	xs_setup_tcp()
-	xs_tcp_setup_socket()
-	xs_create_sock()
 
-And RPC request is forwarded to TCP stack by calling
-	xs_tcp_send_request().
-
-> 
+>> +
+>> +       data = kzalloc(sizeof(struct nfs42_offload_data), GFP_KERNEL);
+>> +       if (data == NULL)
+>> +               return -ENOMEM;
+>> +
+>> +       data->seq_server = server;
+>> +       data->args.osa_src_fh = NFS_FH(file_inode(file));
+>> +       memcpy(&data->args.osa_stateid, stateid,
+>> +               sizeof(data->args.osa_stateid));
+>> +       msg.rpc_argp = &data->args;
+>> +       msg.rpc_resp = &data->res;
+>> +       task_setup_data.callback_data = data;
+>> +       nfs4_init_sequence(&data->args.osa_seq_args, &data->res.osr_seq_res,
+>> +                          1, 0);
+>> +       task = rpc_run_task(&task_setup_data);
+>> +       if (IS_ERR(task)) {
+>> +               nfs42_offload_release(data);
+>> +               return PTR_ERR(task);
+>> +       }
+>> +       status = rpc_wait_for_completion_task(task);
+>> +       if (status)
+>> +               goto out;
+>> +
+>> +       *copied = data->res.osr_count;
+>> +       if (task->tk_status)
+>> +               status = task->tk_status;
+>> +       else if (!data->res.complete_count)
+>> +               status = -EINPROGRESS;
+>> +       else if (data->res.osr_complete != NFS_OK)
+>> +               status = -EREMOTEIO;
+>> +
+>> +out:
+>> +       rpc_put_task(task);
+>> +       return status;
+>> +}
+>> +
+>>   static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
+>>                                     struct nfs42_copy_notify_args *args,
+>>                                     struct nfs42_copy_notify_res *res)
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index 405f17e6e0b4..973b8d8fa98b 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -10769,7 +10769,8 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
+>>                  | NFS_CAP_CLONE
+>>                  | NFS_CAP_LAYOUTERROR
+>>                  | NFS_CAP_READ_PLUS
+>> -               | NFS_CAP_MOVEABLE,
+>> +               | NFS_CAP_MOVEABLE
+>> +               | NFS_CAP_OFFLOAD_STATUS,
+>>          .init_client = nfs41_init_client,
+>>          .shutdown_client = nfs41_shutdown_client,
+>>          .match_stateid = nfs41_match_stateid,
+>> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+>> index b804346a9741..946ca1c28773 100644
+>> --- a/include/linux/nfs_fs_sb.h
+>> +++ b/include/linux/nfs_fs_sb.h
+>> @@ -290,6 +290,7 @@ struct nfs_server {
+>>   #define NFS_CAP_CASE_INSENSITIVE       (1U << 6)
+>>   #define NFS_CAP_CASE_PRESERVING        (1U << 7)
+>>   #define NFS_CAP_REBOOT_LAYOUTRETURN    (1U << 8)
+>> +#define NFS_CAP_OFFLOAD_STATUS (1U << 9)
+>>   #define NFS_CAP_OPEN_XOR       (1U << 12)
+>>   #define NFS_CAP_DELEGTIME      (1U << 13)
+>>   #define NFS_CAP_POSIX_LOCK     (1U << 14)
+>> --
+>> 2.47.0
 >>
->> For the first case, each protocol use TCP differently, so they should
->> be considered separately.
-> 
-> Yes, for user-accessible protocols.
-> 
 >>
->> In the case of MPTCP TCP internal sockets are used to establish
->> connection and exchange data between two network interfaces. MPTCP
->> allows to have multiple TCP connections between two MPTCP sockets by
->> connecting different network interfaces (e.g. WIFI and 3G).
->>
->> Shared Memory Communication is a protocol that allows TCP applications
->> transparently use RDMA for communication [3]. TCP internal socket is
->> used to exchange service CLC messages when establishing SMC connection
->> (which seems harmless for sandboxing) and for communication in the case
->> of fallback. Fallback happens only if RDMA communication became
->> impossible (e.g. if RDMA capable RNIC card went down on host or peer
->> side). So, preventing TCP communication may be achieved by controlling
->> fallback mechanism.
->>
->> Reliable Datagram Socket is connectionless protocol implemented by
->> Oracle [4]. It uses TCP stack or Infiniband to reliably deliever
->> datagrams. For every sendmsg(2), recvmsg(2) it establishes TCP
->> connection and use it to deliever splitted message.
->>
->> In comparison with previous protocols, RDS sockets cannot be binded or
->> connected to special TCP ports (e.g. with bind(2), connect(2)). 16385
->> port is assigned to receiving side and sending side is binded to the
->> port allocated by the kernel (by using zero as port number).
->>
->> It may be useful to restrict RDS-over-TCP with current access rights,
->> since it allows to perform TCP communication from user-space. But it
->> would be only possible to fully allow or deny sending/receiving
->> (since used ports are not controlled from user space).
-> 
-> Thanks for these explanations.  The ability to fine-control specific
-> protocol operations (e.g. connect, bind) can be useful for widely used
-> protocol such as TCP and UDP (or if someone wants to implement it for
-> another protocol), but this approach would not scale with all protocols
-> because of their own semantic and the development efforts.  The Landlock
-> access rights should be explicit, and we should also be able to deny
-> access to a whole set of protocols.  This should be partially possible
-> with your socket creation patch series.  I guess the remaining cases
-> would be to cover transformation of one socket type to another.  I think
-> we could control such transformation by building on top of the socket
-> creation control foundation: instead of controlling socket creation, add
-> a new access right to control socket transformation.  What do you think?
 
-I agree that implementing fine-control network access rights for other
-protocols only to be able to completely restrict TCP operations seems
-excessive.
 
-Do you mean the implementation of 2 access rights: for creating and
-transforming sockets?
-
-If so, there are only 2 socket protocols that can be transformed to TCP
-(in the fallback path) - MPTCP and SMC. Recall that in the case of RDS,
-a TCP socket can be used implicitly to deliver an RDS datagram. Let's
-assume that the process of configuring TCP as a transport for RDS is
-also included in the socket transformation control.
-
-Socket creation control is sufficient to restrict the implicit use of a
-TCP connection. Theoretically, separate socket transformation
-control is only required if the user wants to use (for example) SMC
-sockets with restricted (partially or completely) TCP bind(2) and
-connect(2) actions. But SMC (or MPTCP) applications should rely on TCP
-communication in case of fallback. I think they are unlikely to have any
-TCP restrictions.
-
-However, control of fallback to TCP by applying socket creation rules
-is too implicit and inconvenient.
-
-Initially, I thought that users could expect TCP access rights to
-completely restrict the corresponding TCP actions without additional
-rules for sockets. I have concerns that socket transformation control
-would not be explicit enough for such purpose.
-
-Probably, it will be more correctly to apply rules that deny creation of
-SMC, MPTCP and RDS sockets (or their transformation to TCP) in
-landlock_restrict_self() if TCP actions are not fully allowed?
-
-> 
->>
->> Restricting any TCP connection in the kernel is probably simplest
->> design, but we should consider above cases to provide the most useful
->> one.
->>
->> [1] https://man7.org/linux/man-pages/man7/raw.7.html
->> [2] https://man7.org/linux/man-pages/man7/packet.7.html
->> [3] https://datatracker.ietf.org/doc/html/rfc7609
->> [4] https://oss.oracle.com/projects/rds/dist/documentation/rds-3.1-spec.html
->>
->>>
->>>>
->>>>
->>>>> sk_is_tcp() is used for this to check address family of the socket
->>>>> before doing INET-specific address length validation. This is required
->>>>> for error consistency.
->>>>>
->>>>> Closes: https://github.com/landlock-lsm/linux/issues/40
->>>>> Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
->>>>
->>>> I don't know how fixes are considered in Landlock, but should this patch
->>>> be considered as a fix? It might be surprising for someone who thought
->>>> all "stream" connections were blocked to have them unblocked when
->>>> updating to a minor kernel version, no?
->>>
->>> Indeed.  The main issue was with the semantic/definition of
->>> LANDLOCK_ACCESS_FS_NET_{CONNECT,BIND}_TCP.  We need to synchronize the
->>> code with the documentation, one way or the other, preferably following
->>> the principle of least astonishment.
->>>
->>>>
->>>> (Personally, I would understand such behaviour change when upgrading to
->>>> a major version, and still, maybe only if there were alternatives to
->>>
->>> This "fix" needs to be backported, but we're not clear yet on what it
->>> should be. :)
->>>
->>>> continue having the same behaviour, e.g. a way to restrict all stream
->>>> sockets the same way, or something per stream socket. But that's just me
->>>> :) )
->>>
->>> The documentation and the initial idea was to control TCP bind and
->>> connect.  The kernel implementation does more than that, so we need to
->>> synthronize somehow.
->>>
->>>>
->>>> Cheers,
->>>> Matt
->>>> -- 
->>>> Sponsored by the NGI0 Core fund.
->>>>
->>>>
->>
+-- 
+Chuck Lever
 
