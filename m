@@ -1,302 +1,143 @@
-Return-Path: <linux-nfs+bounces-8583-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8584-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E9739F3ACC
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:27:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 824079F3AE1
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:35:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13A8F188A308
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:27:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0CB7418858BD
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:35:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2428013D29A;
-	Mon, 16 Dec 2024 20:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E68921D319B;
+	Mon, 16 Dec 2024 20:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j+Q916uK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BKxTf4zv";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j+Q916uK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BKxTf4zv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyErdhUE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2E71D222B
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD161D2785
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734380826; cv=none; b=gjMLS6xmYr4G9McspHAmuagCZIGERmGwMz0gy3oQrfoReZD+wllfL1b3R0D9meowUhZiPPhk6u9VBezB5fPlVg33xuHmgHGSBF+dVpB/pNCh6Guq0vVqeutMRXU52k8tdPPlH4vfL3eKte/AIQNVQ3KfwbnzD+dFI0kGeFTtWfo=
+	t=1734381298; cv=none; b=gpPn1/nkJSAbxC6iCwB8qlzEmEcGfzfDDM92coiDPvVXKB/hr9uVZhXdbAbngtt/Lr1/8uGkKo7rCx9Bj5Kwvc8yG4U1GFLe1jT7e+ttDZaFYDSCquISObIA2NfuAiUlAf2x+yJQpIqUkct5EtF1zBn79RpIxEvxOJXmZL23s94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734380826; c=relaxed/simple;
-	bh=wba3CXo4CZOjc8RnTFUlImUR6VFEhddm9QLf7Y+unTA=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nNgSGfmqbcvDrKOqVuiXgE3jzSY3Q+7WaeeeASn7dHdnJ2JGPuYVMdP4HZ5UNMRBHRxr6eZ5WejDGNX0Rj5CGjCebarrc6dscQyO1mnVWWrFojm3ZyXJHnOp39MvdTu8tgtoUDl0VDJ7h8k3AqE4tRdbngWJdS99TurAPNL1mR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j+Q916uK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=BKxTf4zv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j+Q916uK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=BKxTf4zv; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1734381298; c=relaxed/simple;
+	bh=SZDZJSjVc5zhdXXeycEYKDY+bf6/mxmwzv0HttjJEA0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=E/lHeG2BH5hdosZBwoFTMSPBtQz9WMiym7YOcKhl+yfg6jiJAUvIFZJTseA2/AhCHG2LfSs+KYpCKbd0y46PHyQauxqTTzGvbHwudVj0wmQnrK0HA+/g1LU/HZsJYtcI7Cr/sQDl2q6rAILiBCLtFkF342fMq7KTDNG9bqQ2wi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XyErdhUE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734381296;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uel8b3F42MjWx1FV4MNqrLkM5e1s0/oyCwTXY7gJWI=;
+	b=XyErdhUEKLNHoEHeEpY0aHlFpBoPkNYCn0OsXJVC0NwsNehuzNMsQUlpviur2Gwoyv79Wn
+	K5pB5deN2aGr0ohjgDm3SuuESP08D4it9d4GA7mHllAx7MPyaqZ0v0bGc2S5FXm91aR64K
+	uLq/fV5Wo1UColav8AYvCFAG5V2hi6c=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-130-PLpJV9waPvq0rsK0CpjcQA-1; Mon,
+ 16 Dec 2024 15:34:55 -0500
+X-MC-Unique: PLpJV9waPvq0rsK0CpjcQA-1
+X-Mimecast-MFC-AGG-ID: PLpJV9waPvq0rsK0CpjcQA
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id BB5C11F37E;
-	Mon, 16 Dec 2024 20:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1734380821;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=sZkiaJq7Uda+CtgrGzlKCQgA6idz50G6sd2iF63F3CY=;
-	b=j+Q916uK7LBI3dtj3AFPK4IaYdSgKoFFgkI/L9SUhT4cSDGkew3d/BR7HhWiwwQdfkgXIJ
-	Jb+0Ra3cwfJF2TLheomO/e41nyCE3yGU754C5vdu2H2+qwdLdnZqjlIQB0kCobDO/S+i14
-	sak7SmpYpK8wSAyWaMdFE7IyfJhZ4vA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1734380821;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=sZkiaJq7Uda+CtgrGzlKCQgA6idz50G6sd2iF63F3CY=;
-	b=BKxTf4zvQPnbRzbV0EPjSvI7Yu5qCNpMMoK4T1ZZ9lVn6VU3qCMyYnqHnZz2sHbYl0K10v
-	gOyBvDh/h+d3mQCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1734380821;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=sZkiaJq7Uda+CtgrGzlKCQgA6idz50G6sd2iF63F3CY=;
-	b=j+Q916uK7LBI3dtj3AFPK4IaYdSgKoFFgkI/L9SUhT4cSDGkew3d/BR7HhWiwwQdfkgXIJ
-	Jb+0Ra3cwfJF2TLheomO/e41nyCE3yGU754C5vdu2H2+qwdLdnZqjlIQB0kCobDO/S+i14
-	sak7SmpYpK8wSAyWaMdFE7IyfJhZ4vA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1734380821;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=sZkiaJq7Uda+CtgrGzlKCQgA6idz50G6sd2iF63F3CY=;
-	b=BKxTf4zvQPnbRzbV0EPjSvI7Yu5qCNpMMoK4T1ZZ9lVn6VU3qCMyYnqHnZz2sHbYl0K10v
-	gOyBvDh/h+d3mQCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 565A1137CF;
-	Mon, 16 Dec 2024 20:27:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id bGMsCBWNYGf6XwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Mon, 16 Dec 2024 20:27:01 +0000
-Date: Mon, 16 Dec 2024 21:26:54 +0100
-From: Petr Vorel <pvorel@suse.cz>
-To: NeilBrown <neilb@suse.de>, Steve Dickson <steved@redhat.com>,
-	linux-nfs@vger.kernel.org
-Subject: Abstract address for rpcbind in kernel not working
-Message-ID: <20241216202654.GA619856@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B245219560A3;
+	Mon, 16 Dec 2024 20:34:51 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.48])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6A88819560A2;
+	Mon, 16 Dec 2024 20:34:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20241213135013.2964079-1-dhowells@redhat.com>
+References: <20241213135013.2964079-1-dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: dhowells@redhat.com, Max Kellermann <max.kellermann@ionos.com>,
+    Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>,
+    Trond Myklebust <trondmy@kernel.org>,
+    Jeff Layton <jlayton@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH 11/10] netfs: Fix is-caching check in read-retry
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Score: -3.50
-X-Spamd-Result: default: False [-3.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:replyto];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3752047.1734381285.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 16 Dec 2024 20:34:45 +0000
+Message-ID: <3752048.1734381285@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi Neil, Steve,
+netfs: Fix is-caching check in read-retry
 
-some time ago I reported a problem with nfslock01.sh test on NFSv3 [1].
+The read-retry code checks the NETFS_RREQ_COPY_TO_CACHE flag to determine
+if there might be failed reads from the cache that need turning into reads
+from the server, with the intention of skipping the complicated part if it
+can.  The code that set the flag, however, got lost during the read-side
+rewrite.
 
-Neil send various fixes to support abstract address for rpcbind in kernel:
+Fix the check to see if the cache_resources are valid instead.  The flag
+can then be removed.
 
-* kernel [2] released in v6.5-rc1 as:
-4388ce05fa38 ("SUNRPC: support abstract unix socket addresses")
-626590ea4c93 ("SUNRPC: attempt to reach rpcbind with an abstract socket name")
+Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/read_retry.c |    2 +-
+ include/linux/netfs.h |    1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-* libtirpc [3] released in 1.3.5
-d4d6c80 ("Allow working with abstract AF_UNIX addresses.")
-33c687b ("Change local_rpcb() to take a targaddr pointer.")
-d68523a ("Try using a new abstract address when connecting to rpcbind")
+diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
+index 0e72e9226fc8..21b4a54e545e 100644
+--- a/fs/netfs/read_retry.c
++++ b/fs/netfs/read_retry.c
+@@ -49,7 +49,7 @@ static void netfs_retry_read_subrequests(struct netfs_io=
+_request *rreq)
+ 	 * up to the first permanently failed one.
+ 	 */
+ 	if (!rreq->netfs_ops->prepare_read &&
+-	    !test_bit(NETFS_RREQ_COPY_TO_CACHE, &rreq->flags)) {
++	    !rreq->cache_resources.ops) {
+ 		struct netfs_io_subrequest *subreq;
+ =
 
-* rpcbind [4] released in 1.2.7
-4e1f1b2 ("rpcinfo: try connecting using abstract address.")
-652aa9a ("Listen on an AF_UNIX abstract address if supported.")
+ 		list_for_each_entry(subreq, &rreq->subrequests, rreq_link) {
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 4083d77e3f39..ecdd5ced16a8 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -269,7 +269,6 @@ struct netfs_io_request {
+ 	size_t			prev_donated;	/* Fallback for subreq->prev_donated */
+ 	refcount_t		ref;
+ 	unsigned long		flags;
+-#define NETFS_RREQ_COPY_TO_CACHE	1	/* Need to write to the cache */
+ #define NETFS_RREQ_NO_UNLOCK_FOLIO	2	/* Don't unlock no_unlock_folio on c=
+ompletion */
+ #define NETFS_RREQ_DONT_UNLOCK_FOLIOS	3	/* Don't unlock the folios on com=
+pletion */
+ #define NETFS_RREQ_FAILED		4	/* The request failed */
 
-NOTE: these 2 patches were never merged
-[PATCH 1/4] anpage: describe use of extra port for broadcast rpc [5]
-[PATCH 2/4] rpcbind: allow broadcast RPC to be disabled. [6]
-
-But when testing nfslock01.sh with:
-
-$ rpm -q -e libtirpc3 -e rpcbind
-libtirpc3-1.3.6-1.1.x86_64
-rpcbind-1.2.7-1.1.x86_64
-
-$ uname -a
-Linux ts 6.13.0-rc1-1.g492f944-default #1 SMP PREEMPT_DYNAMIC Mon Dec  2 08:55:00 UTC 2024 (492f944) x86_64 x86_64 x86_64 GNU/Linux
-
-it's still not working. Any hint what's wrong?
-
-Kind regards,
-Petr
-
-dmesg:
-[501926.369717] [  T28210] lockd: cannot monitor 10.0.0.2
-[501926.372490] [  T28211] lockd: cannot monitor 10.0.0.2
-
-$ cat /usr/lib/systemd/system/rpcbind.socket
-[Unit]
-Description=RPCbind Server Activation Socket
-DefaultDependencies=no
-Wants=rpcbind.target
-Before=rpcbind.target
-
-[Socket]
-ListenStream=/run/rpcbind.sock
-ListenStream=@/run/rpcbind.sock
-
-# RPC netconfig can't handle ipv6/ipv4 dual sockets
-BindIPv6Only=ipv6-only
-ListenStream=0.0.0.0:111
-ListenDatagram=0.0.0.0:111
-ListenStream=[::]:111
-ListenDatagram=[::]:111
-
-[Install]
-WantedBy=sockets.target
-
-# PATH="/opt/ltp/testcases/bin:$PATH" nfslock01.sh -v 3 -t tcp
-nfslock01 1 TINFO: Running: nfslock01.sh -v 3 -t tcp
-nfslock01 1 TINFO: Tested kernel: Linux ts 6.13.0-rc1-1.g492f944-default #1 SMP PREEMPT_DYNAMIC Mon Dec  2 08:55:00 UTC 2024 (492f944) x86_64 x86_64 x86_64 GNU/Linux
-nfslock01 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
-nfslock01 1 TINFO: add local addr 10.0.0.2/24
-nfslock01 1 TINFO: add local addr fd00:1:1:1::2/64
-nfslock01 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
-nfslock01 1 TINFO: add remote addr 10.0.0.1/24
-nfslock01 1 TINFO: add remote addr fd00:1:1:1::1/64
-nfslock01 1 TINFO: Network config (local -- remote):
-nfslock01 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
-nfslock01 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
-nfslock01 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
-nfslock01 1 TINFO: Using /tmp/LTP_nfslock01.cXBE0JezwN as tmpdir (tmpfs filesystem)
-tst_device.c:96: TINFO: Found free device 0 '/dev/loop0'
-tst_supported_fs_types.c:169: TINFO: Skipping ext2 as requested by the test
-tst_supported_fs_types.c:169: TINFO: Skipping ext3 as requested by the test
-tst_supported_fs_types.c:97: TINFO: Kernel supports ext4
-tst_supported_fs_types.c:62: TINFO: mkfs.ext4 does exist
-tst_supported_fs_types.c:97: TINFO: Kernel supports xfs
-tst_supported_fs_types.c:62: TINFO: mkfs.xfs does exist
-tst_supported_fs_types.c:97: TINFO: Kernel supports btrfs
-tst_supported_fs_types.c:62: TINFO: mkfs.btrfs does exist
-tst_supported_fs_types.c:97: TINFO: Kernel supports bcachefs
-tst_supported_fs_types.c:62: TINFO: mkfs.bcachefs does exist
-tst_supported_fs_types.c:169: TINFO: Skipping vfat as requested by the test
-tst_supported_fs_types.c:169: TINFO: Skipping exfat as requested by the test
-tst_supported_fs_types.c:169: TINFO: Skipping ntfs as requested by the test
-tst_supported_fs_types.c:169: TINFO: Skipping tmpfs as requested by the test
-nfslock01 1 TINFO: === Testing on ext4 ===
-nfslock01 1 TINFO: Formatting ext4 with opts='/dev/loop0'
-nfslock01 1 TINFO: Mounting device: mount -t ext4 /dev/loop0 /tmp/LTP_nfslock01.cXBE0JezwN/mntpoint 
-nfslock01 1 TINFO: timeout per run is 0h 5m 0s
-nfslock01 1 TINFO: mount.nfs: (linux nfs-utils 2.6.4)
-nfslock01 1 TINFO: setup NFSv3, socket type tcp
-nfslock01 1 TINFO: Mounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 1 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.cXBE0JezwN/mntpoint/3/tcp /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 1 TINFO: creating test files (chars: 64, lines: 16384)
-nfslock01 1 TINFO: Testing locking
-nfslock01 1 TINFO: locking 'flock_idata' file and writing data
-nfslock01 1 failed in writeb_lock, errno = 37
-TINFO: waiting for pids: 27919 27920
-failed in writeb_lock, errno = 37
-nfslock01 1 TFAIL: nfs_lock process failed
-nfslock01 2 TINFO: Cleaning up testcase
-nfslock01 2 TINFO: Unmounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 2 TINFO: === Testing on xfs ===
-nfslock01 2 TINFO: Formatting xfs with opts='/dev/loop0'
-nfslock01 2 TINFO: Mounting device: mount -t xfs /dev/loop0 /tmp/LTP_nfslock01.cXBE0JezwN/mntpoint 
-nfslock01 2 TINFO: timeout per run is 0h 5m 0s
-nfslock01 2 TINFO: mount.nfs: (linux nfs-utils 2.6.4)
-nfslock01 2 TINFO: setup NFSv3, socket type tcp
-nfslock01 2 TINFO: Mounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 2 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.cXBE0JezwN/mntpoint/3/tcp /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 2 TINFO: creating test files (chars: 64, lines: 16384)
-nfslock01 2 TINFO: Testing locking
-nfslock01 2 TINFO: locking 'flock_idata' file and writing data
-nfslock01 2 failed in writeb_lock, errno = 37
-TINFO: waiting for pids: 28005 28006
-nfslock01 2 TFAIL: failed in writeb_lock, errno = 37
-nfs_lock process failed
-nfslock01 3 TINFO: Cleaning up testcase
-nfslock01 3 TINFO: Unmounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 3 TINFO: === Testing on btrfs ===
-nfslock01 3 TINFO: Formatting btrfs with opts='/dev/loop0'
-nfslock01 3 TINFO: Mounting device: mount -t btrfs /dev/loop0 /tmp/LTP_nfslock01.cXBE0JezwN/mntpoint 
-nfslock01 3 TINFO: timeout per run is 0h 5m 0s
-nfslock01 3 TINFO: mount.nfs: (linux nfs-utils 2.6.4)
-nfslock01 3 TINFO: setup NFSv3, socket type tcp
-nfslock01 3 TINFO: Mounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 3 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.cXBE0JezwN/mntpoint/3/tcp /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 3 TINFO: creating test files (chars: 64, lines: 16384)
-nfslock01 3 TINFO: Testing locking
-nfslock01 3 TINFO: locking 'flock_idata' file and writing data
-nfslock01 3 TINFO: waiting for pids: 28103 28104
-failed in writeb_lock, errno = 37
-failed in writeb_lock, errno = 37
-nfslock01 3 TFAIL: nfs_lock process failed
-nfslock01 4 TINFO: Cleaning up testcase
-nfslock01 4 TINFO: Unmounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 4 TINFO: === Testing on bcachefs ===
-nfslock01 4 TINFO: Formatting bcachefs with opts='/dev/loop0'
-nfslock01 4 TINFO: Mounting device: mount -t bcachefs /dev/loop0 /tmp/LTP_nfslock01.cXBE0JezwN/mntpoint 
-nfslock01 4 TINFO: timeout per run is 0h 5m 0s
-nfslock01 4 TINFO: mount.nfs: (linux nfs-utils 2.6.4)
-nfslock01 4 TINFO: setup NFSv3, socket type tcp
-nfslock01 4 TINFO: Mounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 4 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.cXBE0JezwN/mntpoint/3/tcp /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 4 TINFO: creating test files (chars: 64, lines: 16384)
-nfslock01 4 TINFO: Testing locking
-nfslock01 4 TINFO: locking 'flock_idata' file and writing data
-nfslock01 4 TINFO: failed in writeb_lock, errno = 37
-failed in writeb_lock, errno = 37
-waiting for pids: 28210 28211
-nfslock01 4 TFAIL: nfs_lock process failed
-nfslock01 5 TINFO: Cleaning up testcase
-nfslock01 5 TINFO: Unmounting /tmp/LTP_nfslock01.cXBE0JezwN/3/0
-nfslock01 5 TINFO: AppArmor enabled, this may affect test results
-nfslock01 5 TINFO: it can be disabled with TST_DISABLE_APPARMOR=1 (requires super/root)
-nfslock01 5 TINFO: loaded AppArmor profiles: none
-
-Summary:
-passed   0
-failed   4
-broken   0
-skipped  0
-warnings 0
-
-[1] https://lore.kernel.org/linux-nfs/20230502075921.3614794-1-pvorel@suse.cz/
-[2] https://lore.kernel.org/linux-nfs/168375610447.26246.3237443941479930060.stgit@noble.brown/
-[3] https://lore.kernel.org/linux-nfs/20240311014327.19692-1-neilb@suse.de/
-[4] https://lore.kernel.org/linux-nfs/20240225235628.12473-1-neilb@suse.de/
-[5] https://lore.kernel.org/linux-nfs/20240225235628.12473-2-neilb@suse.de/
-[6] https://lore.kernel.org/linux-nfs/20240225235628.12473-3-neilb@suse.de/
 
