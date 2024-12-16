@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-8586-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8587-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA62B9F3B22
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:43:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C65F9F3B2D
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:43:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF43B16E162
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:42:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58FF816DF62
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FD51D5141;
-	Mon, 16 Dec 2024 20:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28EC01D88A4;
+	Mon, 16 Dec 2024 20:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFyzTlhv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXJGc+Qv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952091D47D9
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4FF1D5150
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734381714; cv=none; b=Fbnyz91i954FdaacIbZsULDWvw1+z3cHC7eH5hDBR2idX0oIjxKKxDTfW8ynRn4kcB96dunF0cjLXk7H2PEWVPd3tI2vMqfWigdT/22ld8VnXE7AUmhfwZ7sYkb4T4Tm7lM5QVSdLzeyfO7WE4yAU8gWcrGPCqMrCtSkvXH5i+o=
+	t=1734381721; cv=none; b=S4KTmuCpCjU921CwAGecztsHsreuiQl0cgOAW/4SxRrbRYxwNjt1CwoVdoRSgl5nwzNdcvGIlRz9nMuyXZYCKWnvvbgFjb2Qni6R3qiEU5tFJaEYLQBs0LrA7CIJa/MVwWIktWJUu4SAwPM2Q7dvaMKdeZdoSFD9h9U00Lhpbvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734381714; c=relaxed/simple;
-	bh=2MDo0CYjbgS3+aTOA6R0iIDfuuEZBPXPgr5AGDed70I=;
+	s=arc-20240116; t=1734381721; c=relaxed/simple;
+	bh=MJ2Vn5+2w/awQ8QXC51y0AmV16GfrAD0/WwNRye3l4w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XTLTkdfNvhQqThMT2MouDZCQ1EIiH+w7ZoOoDBRJcS1dxUr+GV/IfORMh/nytkCG7nPaRd2EuNd2Ub1hQH8xsLVz+4VO0iNU3tevI8lq4LNdVHIzEVbQX/jKeUi9aifhZxtOCGCfqGTruOWUvjvtX2vJKeRanfC81dQXWFHnAOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EFyzTlhv; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=JeU5Tc+aLBCzvjf13F5k/U1W3AMeqP5E3otDE8SGVsT+jCDuQLoETgV80Kwk3m/vYi5wpaZv4E5iPDcNfTEKtwVC3h4zgiGz1HEo85GpmKAJuHGqZCeqTSvLMN2GgOEabJeB4UGRx8OcX9i/NEsbShzrmIxH2XRfKX8gBFpUI/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YXJGc+Qv; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734381711;
+	s=mimecast20190719; t=1734381718;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=adTBnOlG7OP+mEEaZME4U1Xm6Whye29vdivXZFAeN/g=;
-	b=EFyzTlhvEUzCXSfDSJY6uxr6WTyvmZdFTYkavtxt+udQ5RaFXMIuqfqpRQTi6kjDYFvmHR
-	oGgtf/Enan5UChMe0Jy+gsGGgwpSwwg3LwW4ESVndTJg7dBhbi3XknTJeXOZXTT8R7b8Cz
-	jAhKX8ty8bqGpekBKl76n9D3RC9rw24=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ImLLuUlnuS58zU73BDFFYc3DK9zcBLY9IdUFoq8DTcw=;
+	b=YXJGc+QvNSsfI5pL+wYE3D9KuY52Mj1V96YgBcaxlsF1TyUapVfbWGhqJ5t35N9ZnSVI11
+	t8vHVXQD4NWTouRi7onXRw/2rGqg8XGE1Fme6NEbZW1Q2oog12AQpfBuqJcMbZFMACyYrC
+	u3CdeLvLdAj4+VuklSUqzuK2LpgLZ1A=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-jA7cNRPXO32tOToDKSMRqw-1; Mon,
- 16 Dec 2024 15:41:46 -0500
-X-MC-Unique: jA7cNRPXO32tOToDKSMRqw-1
-X-Mimecast-MFC-AGG-ID: jA7cNRPXO32tOToDKSMRqw
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-627-UvuEeORjP-aiztK1V-7R9Q-1; Mon,
+ 16 Dec 2024 15:41:54 -0500
+X-MC-Unique: UvuEeORjP-aiztK1V-7R9Q-1
+X-Mimecast-MFC-AGG-ID: UvuEeORjP-aiztK1V-7R9Q
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5273A1956052;
-	Mon, 16 Dec 2024 20:41:43 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B8D031955F4A;
+	Mon, 16 Dec 2024 20:41:50 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.48])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B548A19560A2;
-	Mon, 16 Dec 2024 20:41:36 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 050E219560AD;
+	Mon, 16 Dec 2024 20:41:44 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
@@ -82,9 +82,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 01/32] netfs: Clean up some whitespace in trace header
-Date: Mon, 16 Dec 2024 20:40:51 +0000
-Message-ID: <20241216204124.3752367-2-dhowells@redhat.com>
+Subject: [PATCH v5 02/32] cachefiles: Clean up some whitespace in trace header
+Date: Mon, 16 Dec 2024 20:40:52 +0000
+Message-ID: <20241216204124.3752367-3-dhowells@redhat.com>
 In-Reply-To: <20241216204124.3752367-1-dhowells@redhat.com>
 References: <20241216204124.3752367-1-dhowells@redhat.com>
 Precedence: bulk
@@ -94,233 +94,365 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Clean up some whitespace in the netfs trace header.
+Clean up some whitespace in the cachefiles trace header.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- include/trace/events/netfs.h | 130 +++++++++++++++++------------------
- 1 file changed, 65 insertions(+), 65 deletions(-)
+ include/trace/events/cachefiles.h | 172 +++++++++++++++---------------
+ 1 file changed, 86 insertions(+), 86 deletions(-)
 
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index bf511bca896e..c3c309f8fbe1 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -250,13 +250,13 @@ TRACE_EVENT(netfs_read,
- 	    TP_ARGS(rreq, start, len, what),
+diff --git a/include/trace/events/cachefiles.h b/include/trace/events/cachefiles.h
+index 7d931db02b93..74114c261bcd 100644
+--- a/include/trace/events/cachefiles.h
++++ b/include/trace/events/cachefiles.h
+@@ -223,10 +223,10 @@ TRACE_EVENT(cachefiles_ref,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			obj		)
+-		    __field(unsigned int,			cookie		)
+-		    __field(enum cachefiles_obj_ref_trace,	why		)
+-		    __field(int,				usage		)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			cookie)
++		    __field(enum cachefiles_obj_ref_trace,	why)
++		    __field(int,				usage)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -249,10 +249,10 @@ TRACE_EVENT(cachefiles_lookup,
+ 	    TP_ARGS(obj, dir, de),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(unsigned int,		cookie		)
--		    __field(loff_t,			i_size		)
--		    __field(loff_t,			start		)
+-		    __field(unsigned int,		obj	)
+-		    __field(short,			error	)
+-		    __field(unsigned long,		dino	)
+-		    __field(unsigned long,		ino	)
++		    __field(unsigned int,		obj)
++		    __field(short,			error)
++		    __field(unsigned long,		dino)
++		    __field(unsigned long,		ino)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -273,8 +273,8 @@ TRACE_EVENT(cachefiles_mkdir,
+ 	    TP_ARGS(dir, subdir),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			dir	)
+-		    __field(unsigned int,			subdir	)
++		    __field(unsigned int,			dir)
++		    __field(unsigned int,			subdir)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -293,8 +293,8 @@ TRACE_EVENT(cachefiles_tmpfile,
+ 	    TP_ARGS(obj, backer),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -313,8 +313,8 @@ TRACE_EVENT(cachefiles_link,
+ 	    TP_ARGS(obj, backer),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -336,9 +336,9 @@ TRACE_EVENT(cachefiles_unlink,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,		obj		)
+-		    __field(unsigned int,		ino		)
+-		    __field(enum fscache_why_object_killed, why		)
++		    __field(unsigned int,		obj)
++		    __field(unsigned int,		ino)
++		    __field(enum fscache_why_object_killed, why)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -361,9 +361,9 @@ TRACE_EVENT(cachefiles_rename,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,		obj		)
+-		    __field(unsigned int,		ino		)
+-		    __field(enum fscache_why_object_killed, why		)
++		    __field(unsigned int,		obj)
++		    __field(unsigned int,		ino)
++		    __field(enum fscache_why_object_killed, why)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -387,10 +387,10 @@ TRACE_EVENT(cachefiles_coherency,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			obj	)
+-		    __field(enum cachefiles_coherency_trace,	why	)
+-		    __field(enum cachefiles_content,		content	)
+-		    __field(u64,				ino	)
++		    __field(unsigned int,			obj)
++		    __field(enum cachefiles_coherency_trace,	why)
++		    __field(enum cachefiles_content,		content)
++		    __field(u64,				ino)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -416,9 +416,9 @@ TRACE_EVENT(cachefiles_vol_coherency,
+ 
+ 	    /* Note that obj may be NULL */
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,			vol	)
+-		    __field(enum cachefiles_coherency_trace,	why	)
+-		    __field(u64,				ino	)
++		    __field(unsigned int,			vol)
++		    __field(enum cachefiles_coherency_trace,	why)
++		    __field(u64,				ino)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -445,14 +445,14 @@ TRACE_EVENT(cachefiles_prep_read,
+ 	    TP_ARGS(obj, start, len, flags, source, why, cache_inode, netfs_inode),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,		obj		)
+-		    __field(unsigned short,		flags		)
+-		    __field(enum netfs_io_source,	source		)
+-		    __field(enum cachefiles_prepare_read_trace,	why	)
 -		    __field(size_t,			len		)
--		    __field(enum netfs_read_trace,	what		)
+-		    __field(loff_t,			start		)
 -		    __field(unsigned int,		netfs_inode	)
-+		    __field(unsigned int,		rreq)
-+		    __field(unsigned int,		cookie)
-+		    __field(loff_t,			i_size)
-+		    __field(loff_t,			start)
+-		    __field(unsigned int,		cache_inode	)
++		    __field(unsigned int,		obj)
++		    __field(unsigned short,		flags)
++		    __field(enum netfs_io_source,	source)
++		    __field(enum cachefiles_prepare_read_trace,	why)
 +		    __field(size_t,			len)
-+		    __field(enum netfs_read_trace,	what)
++		    __field(loff_t,			start)
 +		    __field(unsigned int,		netfs_inode)
++		    __field(unsigned int,		cache_inode)
  			     ),
  
  	    TP_fast_assign(
-@@ -284,10 +284,10 @@ TRACE_EVENT(netfs_rreq,
- 	    TP_ARGS(rreq, what),
+@@ -484,10 +484,10 @@ TRACE_EVENT(cachefiles_read,
+ 	    TP_ARGS(obj, backer, start, len),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(unsigned int,		flags		)
--		    __field(enum netfs_io_origin,	origin		)
--		    __field(enum netfs_rreq_trace,	what		)
-+		    __field(unsigned int,		rreq)
-+		    __field(unsigned int,		flags)
-+		    __field(enum netfs_io_origin,	origin)
-+		    __field(enum netfs_rreq_trace,	what)
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
+-		    __field(size_t,				len	)
+-		    __field(loff_t,				start	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
++		    __field(size_t,				len)
++		    __field(loff_t,				start)
  			     ),
  
  	    TP_fast_assign(
-@@ -311,15 +311,15 @@ TRACE_EVENT(netfs_sreq,
- 	    TP_ARGS(sreq, what),
+@@ -513,10 +513,10 @@ TRACE_EVENT(cachefiles_write,
+ 	    TP_ARGS(obj, backer, start, len),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(unsigned short,		index		)
--		    __field(short,			error		)
--		    __field(unsigned short,		flags		)
--		    __field(enum netfs_io_source,	source		)
--		    __field(enum netfs_sreq_trace,	what		)
--		    __field(size_t,			len		)
--		    __field(size_t,			transferred	)
--		    __field(loff_t,			start		)
-+		    __field(unsigned int,		rreq)
-+		    __field(unsigned short,		index)
-+		    __field(short,			error)
-+		    __field(unsigned short,		flags)
-+		    __field(enum netfs_io_source,	source)
-+		    __field(enum netfs_sreq_trace,	what)
-+		    __field(size_t,			len)
-+		    __field(size_t,			transferred)
-+		    __field(loff_t,			start)
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
+-		    __field(size_t,				len	)
+-		    __field(loff_t,				start	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
++		    __field(size_t,				len)
++		    __field(loff_t,				start)
  			     ),
  
  	    TP_fast_assign(
-@@ -351,15 +351,15 @@ TRACE_EVENT(netfs_failure,
- 	    TP_ARGS(rreq, sreq, error, what),
+@@ -540,11 +540,11 @@ TRACE_EVENT(cachefiles_trunc,
+ 	    TP_ARGS(obj, backer, from, to, why),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(short,			index		)
--		    __field(short,			error		)
--		    __field(unsigned short,		flags		)
--		    __field(enum netfs_io_source,	source		)
--		    __field(enum netfs_failure,		what		)
--		    __field(size_t,			len		)
--		    __field(size_t,			transferred	)
--		    __field(loff_t,			start		)
-+		    __field(unsigned int,		rreq)
-+		    __field(short,			index)
-+		    __field(short,			error)
-+		    __field(unsigned short,		flags)
-+		    __field(enum netfs_io_source,	source)
-+		    __field(enum netfs_failure,		what)
-+		    __field(size_t,			len)
-+		    __field(size_t,			transferred)
-+		    __field(loff_t,			start)
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
+-		    __field(enum cachefiles_trunc_trace,	why	)
+-		    __field(loff_t,				from	)
+-		    __field(loff_t,				to	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
++		    __field(enum cachefiles_trunc_trace,	why)
++		    __field(loff_t,				from)
++		    __field(loff_t,				to)
  			     ),
  
  	    TP_fast_assign(
-@@ -390,9 +390,9 @@ TRACE_EVENT(netfs_rreq_ref,
- 	    TP_ARGS(rreq_debug_id, ref, what),
+@@ -571,8 +571,8 @@ TRACE_EVENT(cachefiles_mark_active,
  
+ 	    /* Note that obj may be NULL */
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(int,			ref		)
--		    __field(enum netfs_rreq_ref_trace,	what		)
-+		    __field(unsigned int,		rreq)
-+		    __field(int,			ref)
-+		    __field(enum netfs_rreq_ref_trace,	what)
+-		    __field(unsigned int,		obj		)
+-		    __field(ino_t,			inode		)
++		    __field(unsigned int,		obj)
++		    __field(ino_t,			inode)
  			     ),
  
  	    TP_fast_assign(
-@@ -414,10 +414,10 @@ TRACE_EVENT(netfs_sreq_ref,
- 	    TP_ARGS(rreq_debug_id, subreq_debug_index, ref, what),
+@@ -592,8 +592,8 @@ TRACE_EVENT(cachefiles_mark_failed,
  
+ 	    /* Note that obj may be NULL */
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		rreq		)
--		    __field(unsigned int,		subreq		)
--		    __field(int,			ref		)
--		    __field(enum netfs_sreq_ref_trace,	what		)
-+		    __field(unsigned int,		rreq)
-+		    __field(unsigned int,		subreq)
-+		    __field(int,			ref)
-+		    __field(enum netfs_sreq_ref_trace,	what)
+-		    __field(unsigned int,		obj		)
+-		    __field(ino_t,			inode		)
++		    __field(unsigned int,		obj)
++		    __field(ino_t,			inode)
  			     ),
  
  	    TP_fast_assign(
-@@ -465,10 +465,10 @@ TRACE_EVENT(netfs_write_iter,
- 	    TP_ARGS(iocb, from),
+@@ -613,8 +613,8 @@ TRACE_EVENT(cachefiles_mark_inactive,
  
+ 	    /* Note that obj may be NULL */
  	    TP_STRUCT__entry(
--		    __field(unsigned long long,		start		)
--		    __field(size_t,			len		)
--		    __field(unsigned int,		flags		)
--		    __field(unsigned int,		ino		)
-+		    __field(unsigned long long,		start)
-+		    __field(size_t,			len)
-+		    __field(unsigned int,		flags)
-+		    __field(unsigned int,		ino)
+-		    __field(unsigned int,		obj		)
+-		    __field(ino_t,			inode		)
++		    __field(unsigned int,		obj)
++		    __field(ino_t,			inode)
  			     ),
  
  	    TP_fast_assign(
-@@ -489,12 +489,12 @@ TRACE_EVENT(netfs_write,
- 	    TP_ARGS(wreq, what),
+@@ -633,10 +633,10 @@ TRACE_EVENT(cachefiles_vfs_error,
+ 	    TP_ARGS(obj, backer, error, where),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		wreq		)
--		    __field(unsigned int,		cookie		)
--		    __field(unsigned int,		ino		)
--		    __field(enum netfs_write_trace,	what		)
--		    __field(unsigned long long,		start		)
--		    __field(unsigned long long,		len		)
-+		    __field(unsigned int,		wreq)
-+		    __field(unsigned int,		cookie)
-+		    __field(unsigned int,		ino)
-+		    __field(enum netfs_write_trace,	what)
-+		    __field(unsigned long long,		start)
-+		    __field(unsigned long long,		len)
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
+-		    __field(enum cachefiles_error_trace,	where	)
+-		    __field(short,				error	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
++		    __field(enum cachefiles_error_trace,	where)
++		    __field(short,				error)
  			     ),
  
  	    TP_fast_assign(
-@@ -522,10 +522,10 @@ TRACE_EVENT(netfs_collect,
- 	    TP_ARGS(wreq),
+@@ -660,10 +660,10 @@ TRACE_EVENT(cachefiles_io_error,
+ 	    TP_ARGS(obj, backer, error, where),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		wreq		)
--		    __field(unsigned int,		len		)
--		    __field(unsigned long long,		transferred	)
--		    __field(unsigned long long,		start		)
-+		    __field(unsigned int,		wreq)
-+		    __field(unsigned int,		len)
-+		    __field(unsigned long long,		transferred)
-+		    __field(unsigned long long,		start)
+-		    __field(unsigned int,			obj	)
+-		    __field(unsigned int,			backer	)
+-		    __field(enum cachefiles_error_trace,	where	)
+-		    __field(short,				error	)
++		    __field(unsigned int,			obj)
++		    __field(unsigned int,			backer)
++		    __field(enum cachefiles_error_trace,	where)
++		    __field(short,				error)
  			     ),
  
  	    TP_fast_assign(
-@@ -548,12 +548,12 @@ TRACE_EVENT(netfs_collect_sreq,
- 	    TP_ARGS(wreq, subreq),
+@@ -687,11 +687,11 @@ TRACE_EVENT(cachefiles_ondemand_open,
+ 	    TP_ARGS(obj, msg, load),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,		wreq		)
--		    __field(unsigned int,		subreq		)
--		    __field(unsigned int,		stream		)
--		    __field(unsigned int,		len		)
--		    __field(unsigned int,		transferred	)
--		    __field(unsigned long long,		start		)
-+		    __field(unsigned int,		wreq)
-+		    __field(unsigned int,		subreq)
-+		    __field(unsigned int,		stream)
-+		    __field(unsigned int,		len)
-+		    __field(unsigned int,		transferred)
-+		    __field(unsigned long long,		start)
+-		    __field(unsigned int,	obj		)
+-		    __field(unsigned int,	msg_id		)
+-		    __field(unsigned int,	object_id	)
+-		    __field(unsigned int,	fd		)
+-		    __field(unsigned int,	flags		)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	msg_id)
++		    __field(unsigned int,	object_id)
++		    __field(unsigned int,	fd)
++		    __field(unsigned int,	flags)
  			     ),
  
  	    TP_fast_assign(
-@@ -579,11 +579,11 @@ TRACE_EVENT(netfs_collect_folio,
- 	    TP_ARGS(wreq, folio, fend, collected_to),
+@@ -717,9 +717,9 @@ TRACE_EVENT(cachefiles_ondemand_copen,
+ 	    TP_ARGS(obj, msg_id, len),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,	wreq		)
--		    __field(unsigned long,	index		)
--		    __field(unsigned long long,	fend		)
--		    __field(unsigned long long,	cleaned_to	)
--		    __field(unsigned long long,	collected_to	)
-+		    __field(unsigned int,	wreq)
-+		    __field(unsigned long,	index)
-+		    __field(unsigned long long,	fend)
-+		    __field(unsigned long long,	cleaned_to)
-+		    __field(unsigned long long,	collected_to)
+-		    __field(unsigned int,	obj	)
+-		    __field(unsigned int,	msg_id	)
+-		    __field(long,		len	)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	msg_id)
++		    __field(long,		len)
  			     ),
  
  	    TP_fast_assign(
-@@ -608,10 +608,10 @@ TRACE_EVENT(netfs_collect_state,
- 	    TP_ARGS(wreq, collected_to, notes),
+@@ -740,9 +740,9 @@ TRACE_EVENT(cachefiles_ondemand_close,
+ 	    TP_ARGS(obj, msg),
  
  	    TP_STRUCT__entry(
--		    __field(unsigned int,	wreq		)
--		    __field(unsigned int,	notes		)
--		    __field(unsigned long long,	collected_to	)
--		    __field(unsigned long long,	cleaned_to	)
-+		    __field(unsigned int,	wreq)
-+		    __field(unsigned int,	notes)
-+		    __field(unsigned long long,	collected_to)
-+		    __field(unsigned long long,	cleaned_to)
+-		    __field(unsigned int,	obj		)
+-		    __field(unsigned int,	msg_id		)
+-		    __field(unsigned int,	object_id	)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	msg_id)
++		    __field(unsigned int,	object_id)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -764,11 +764,11 @@ TRACE_EVENT(cachefiles_ondemand_read,
+ 	    TP_ARGS(obj, msg, load),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,	obj		)
+-		    __field(unsigned int,	msg_id		)
+-		    __field(unsigned int,	object_id	)
+-		    __field(loff_t,		start		)
+-		    __field(size_t,		len		)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	msg_id)
++		    __field(unsigned int,	object_id)
++		    __field(loff_t,		start)
++		    __field(size_t,		len)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -793,8 +793,8 @@ TRACE_EVENT(cachefiles_ondemand_cread,
+ 	    TP_ARGS(obj, msg_id),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,	obj	)
+-		    __field(unsigned int,	msg_id	)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	msg_id)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -814,10 +814,10 @@ TRACE_EVENT(cachefiles_ondemand_fd_write,
+ 	    TP_ARGS(obj, backer, start, len),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,	obj	)
+-		    __field(unsigned int,	backer	)
+-		    __field(loff_t,		start	)
+-		    __field(size_t,		len	)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	backer)
++		    __field(loff_t,		start)
++		    __field(size_t,		len)
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -840,8 +840,8 @@ TRACE_EVENT(cachefiles_ondemand_fd_release,
+ 	    TP_ARGS(obj, object_id),
+ 
+ 	    TP_STRUCT__entry(
+-		    __field(unsigned int,	obj		)
+-		    __field(unsigned int,	object_id	)
++		    __field(unsigned int,	obj)
++		    __field(unsigned int,	object_id)
  			     ),
  
  	    TP_fast_assign(
