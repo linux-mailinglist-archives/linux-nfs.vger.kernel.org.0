@@ -1,43 +1,43 @@
-Return-Path: <linux-nfs+bounces-8578-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8580-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 474119F332B
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 15:26:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A5D19F3330
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 15:27:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9F2E1625AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 14:26:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D9BB166065
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 14:26:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186ED206292;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD30D2063F2;
 	Mon, 16 Dec 2024 14:25:40 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9407205E25;
-	Mon, 16 Dec 2024 14:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DCF206262;
+	Mon, 16 Dec 2024 14:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734359140; cv=none; b=igFViJ20BpVqycq6iWu3tUWHtPq12tHwFtuTz2oJrAAJ+o57aTFBL/WxS33POYoIIGeD+pHbw1eSetugQMiL8/9sL9aju1rvitSQarqMFMJhJTYd5RHIdUtjwz8NbMsEgkOeht8kGCHW5UleG/g79hsQR34W2xC51wnaEXOi1DY=
+	t=1734359140; cv=none; b=d2cikFOtDfcsd3ly+NfpSmvDPZbdfdv//ptFtoifGd8O2dPJLo6PoXrzVlWo425WFD9tCC7DnuzHW3Uha+4rKb/3Vtr4Pij5r6s1KQX3juUoYOap3qjPxafqk7lo/D9YERC8dhFPC1f8vD9t38bxqTrevsEfFSqcZRtC6yXVkr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734359140; c=relaxed/simple;
-	bh=FJ+zZo7Q4MEMV6H65VX1mUt1fWAqnZDGhMap4AjCKWI=;
+	bh=cfVUAignU+1ynTpbAgg+5yw8IE0/TZsz9snTLeLHuPQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PdEtlwtHUBbctRuO1cH98x9K2xq/8RQ14Cf7HcdTIMLBL4dVtjUBjd4vOUT/qHnAac2lDFPJ2s/4zbg7d3j3d13xA/09tj7tDS2FpXSsuHTSLIlDvXoVGM+s8dLEVqHxarpN29tD59ihmgGhFOxoHIt9m9isE0DXAqPi2d+20Sw=
+	 MIME-Version; b=PIPqB/Y9jbFK5O8Yj157FcapKUHq/L8EifDLcbyEnXvCvUyNUmHRckERRrMv2Wwej3zJZyVDLlSaS7W/nMarKJ53P8x3dsovWLQG4zPpupOXYFc6ixsm2c6ri+mmS/3Jaf8z2+fGaOTc58VVlSL3W9WsR+2iw24XcC85sW5iIGg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YBhzs2MDSz4f3lW3;
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YBhzs68B9z4f3lWF;
 	Mon, 16 Dec 2024 22:25:13 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id C66C31A018D;
-	Mon, 16 Dec 2024 22:25:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 5546B1A0568;
+	Mon, 16 Dec 2024 22:25:34 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgBHIoZXOGBnSTcXEw--.14700S5;
-	Mon, 16 Dec 2024 22:25:33 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgBHIoZXOGBnSTcXEw--.14700S6;
+	Mon, 16 Dec 2024 22:25:34 +0800 (CST)
 From: Yang Erkun <yangerkun@huaweicloud.com>
 To: chuck.lever@oracle.com,
 	jlayton@kernel.org,
@@ -52,9 +52,9 @@ To: chuck.lever@oracle.com,
 Cc: yangerkun@huawei.com,
 	yangerkun@huaweicloud.com,
 	yi.zhang@huawei.com
-Subject: [RFC PATCH 1/5] nfsd: Revert "nfsd: release svc_expkey/svc_export with rcu_work"
-Date: Mon, 16 Dec 2024 22:21:52 +0800
-Message-Id: <20241216142156.4133267-2-yangerkun@huaweicloud.com>
+Subject: [RFC PATCH 2/5] SUNRPC: move cache_put out from cache_check
+Date: Mon, 16 Dec 2024 22:21:53 +0800
+Message-Id: <20241216142156.4133267-3-yangerkun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241216142156.4133267-1-yangerkun@huaweicloud.com>
 References: <20241216142156.4133267-1-yangerkun@huaweicloud.com>
@@ -65,146 +65,195 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBHIoZXOGBnSTcXEw--.14700S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFykKw1UGrW5XFy3KF13CFg_yoWrAw15pa
-	yfAay7KaykXF1jgw4UJa1jvw13KasYvw1ku348G3yYvF1rtr18G3WrAFyj9ry5t3y8W3y3
-	ur4jqa1DCw18ZFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
-	0E8cxan2IY04v7MxkF7I0En4kS14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCa
-	FVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-	Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-	6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-	0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	YxBIdaVFxhVjvjDU0xZFpf9x0pEYLvJUUUUU=
+X-CM-TRANSID:gCh0CgBHIoZXOGBnSTcXEw--.14700S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFWfWrWkCF4rXw4rXr1kZrb_yoW7XF48pF
+	Z3A348Xr40grs7Xw4fAr4DZw1rAr93K3ZFgw4Fka13Aw43Xw15GF1ruFyjvr1avrWrWw4a
+	kF1UtF4Y9w1DuaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVWrXVW3AwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
+	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
+	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
+	Ja73UjIFyTuYvjTRJ-BMUUUUU
 X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
 
 From: Yang Erkun <yangerkun@huawei.com>
 
-This reverts commit f8c989a0c89a75d30f899a7cabdc14d72522bb8d.
+Only do check in cache_check, this is a prepare patch.
 
-Before this commit, svc_export_put or expkey_put will call path_put with
-sync mode. After this commit, path_put will be called with async mode.
-And this can lead the unexpected results show as follow.
-
-mkfs.xfs -f /dev/sda
-echo "/ *(rw,no_root_squash,fsid=0)" > /etc/exports
-echo "/mnt *(rw,no_root_squash,fsid=1)" >> /etc/exports
-exportfs -ra
-service nfs-server start
-mount -t nfs -o vers=4.0 127.0.0.1:/mnt /mnt1
-mount /dev/sda /mnt/sda
-touch /mnt1/sda/file
-exportfs -r
-umount /mnt/sda # failed unexcepted
-
-The touch will finally call nfsd_cross_mnt, add refcount to mount, and
-then add cache_head. Before this commit, exportfs -r will call
-cache_flush to cleanup all cache_head, and path_put in
-svc_export_put/expkey_put will be finished with sync mode. So, the
-latter umount will always success. However, after this commit, path_put
-will be called with async mode, the latter umount may failed, and if
-we add some delay, umount will success too. Personally I think this bug
-and should be fixed. We first revert before bugfix patch, and then fix
-the original bug with a different way.
-
-Fixes: f8c989a0c89a ("nfsd: release svc_expkey/svc_export with rcu_work")
 Signed-off-by: Yang Erkun <yangerkun@huawei.com>
 ---
- fs/nfsd/export.c | 31 ++++++-------------------------
- fs/nfsd/export.h |  4 ++--
- 2 files changed, 8 insertions(+), 27 deletions(-)
+ fs/nfs/dns_resolve.c              |  4 +++-
+ fs/nfsd/export.c                  |  6 +++++-
+ fs/nfsd/nfs4idmap.c               |  2 ++
+ net/sunrpc/auth_gss/svcauth_gss.c |  9 +++++++--
+ net/sunrpc/cache.c                |  7 +++----
+ net/sunrpc/svcauth_unix.c         | 12 +++++++++++-
+ 6 files changed, 31 insertions(+), 9 deletions(-)
 
+diff --git a/fs/nfs/dns_resolve.c b/fs/nfs/dns_resolve.c
+index 714975e5c0db..733163b01795 100644
+--- a/fs/nfs/dns_resolve.c
++++ b/fs/nfs/dns_resolve.c
+@@ -287,8 +287,10 @@ static int do_cache_lookup(struct cache_detail *cd,
+ 	*item = nfs_dns_lookup(cd, key);
+ 	if (*item) {
+ 		ret = cache_check(cd, &(*item)->h, &dreq->req);
+-		if (ret)
++		if (ret) {
++			cache_put(&(*item)->h, cd);
+ 			*item = NULL;
++		}
+ 	}
+ 	return ret;
+ }
 diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index eacafe46e3b6..aa4712362b3b 100644
+index aa4712362b3b..56002d9ef66b 100644
 --- a/fs/nfsd/export.c
 +++ b/fs/nfsd/export.c
-@@ -40,24 +40,15 @@
- #define	EXPKEY_HASHMAX		(1 << EXPKEY_HASHBITS)
- #define	EXPKEY_HASHMASK		(EXPKEY_HASHMAX -1)
+@@ -953,6 +953,7 @@ exp_find_key(struct cache_detail *cd, struct auth_domain *clp, int fsid_type,
+ 		return ERR_PTR(-ENOMEM);
+ 	err = cache_check(cd, &ek->h, reqp);
+ 	if (err) {
++		cache_put(&ek->h, cd);
+ 		trace_nfsd_exp_find_key(&key, err);
+ 		return ERR_PTR(err);
+ 	}
+@@ -978,6 +979,7 @@ exp_get_by_name(struct cache_detail *cd, struct auth_domain *clp,
+ 		return ERR_PTR(-ENOMEM);
+ 	err = cache_check(cd, &exp->h, reqp);
+ 	if (err) {
++		cache_put(&exp->h, cd);
+ 		trace_nfsd_exp_get_by_name(&key, err);
+ 		return ERR_PTR(err);
+ 	}
+@@ -1428,8 +1430,10 @@ static int e_show(struct seq_file *m, void *p)
+ 	if (!cache_get_rcu(&exp->h))
+ 		return 0;
  
--static void expkey_put_work(struct work_struct *work)
-+static void expkey_put(struct kref *ref)
- {
--	struct svc_expkey *key =
--		container_of(to_rcu_work(work), struct svc_expkey, ek_rcu_work);
-+	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
+-	if (cache_check(cd, &exp->h, NULL))
++	if (cache_check(cd, &exp->h, NULL)) {
++		cache_put(&exp->h, cd);
+ 		return 0;
++	}
  
- 	if (test_bit(CACHE_VALID, &key->h.flags) &&
- 	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
- 		path_put(&key->ek_path);
- 	auth_domain_put(key->ek_client);
--	kfree(key);
--}
--
--static void expkey_put(struct kref *ref)
--{
--	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
--
--	INIT_RCU_WORK(&key->ek_rcu_work, expkey_put_work);
--	queue_rcu_work(system_wq, &key->ek_rcu_work);
-+	kfree_rcu(key, ek_rcu);
+ 	exp_put(exp);
+ 	return svc_export_show(m, cd, cp);
+diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
+index 8cca1329f348..8861e34b5126 100644
+--- a/fs/nfsd/nfs4idmap.c
++++ b/fs/nfsd/nfs4idmap.c
+@@ -515,6 +515,8 @@ idmap_lookup(struct svc_rqst *rqstp,
+ 		return -ENOMEM;
+  retry:
+ 	ret = cache_check(detail, &(*item)->h, &rqstp->rq_chandle);
++	if (ret)
++		cache_put(&(*item)->h, detail);
+ 
+ 	if (ret == -ETIMEDOUT) {
+ 		struct ent *prev_item = *item;
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 73a90ad873fb..c0846adcb65e 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -634,8 +634,11 @@ gss_svc_searchbyctx(struct cache_detail *cd, struct xdr_netobj *handle)
+ 	rsc_free(&rsci);
+ 	if (!found)
+ 		return NULL;
+-	if (cache_check(cd, &found->h, NULL))
++	if (cache_check(cd, &found->h, NULL)) {
++		cache_put(&found->h, cd);
+ 		return NULL;
++	}
++
+ 	return found;
  }
  
- static int expkey_upcall(struct cache_detail *cd, struct cache_head *h)
-@@ -364,26 +355,16 @@ static void export_stats_destroy(struct export_stats *stats)
- 					    EXP_STATS_COUNTERS_NUM);
+@@ -1194,9 +1197,11 @@ svcauth_gss_legacy_init(struct svc_rqst *rqstp,
+ 	rsi_free(&rsikey);
+ 	if (!rsip)
+ 		return SVC_CLOSE;
+-	if (cache_check(sn->rsi_cache, &rsip->h, &rqstp->rq_chandle) < 0)
++	if (cache_check(sn->rsi_cache, &rsip->h, &rqstp->rq_chandle) < 0) {
+ 		/* No upcall result: */
++		cache_put(&rsip->h, sn->rsi_cache);
+ 		return SVC_CLOSE;
++	}
+ 
+ 	ret = SVC_CLOSE;
+ 	if (!svcauth_gss_proc_init_verf(sn->rsc_cache, rqstp, &rsip->out_handle,
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 059f6ef1ad18..eaf4defd1fcf 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -336,8 +336,6 @@ int cache_check(struct cache_detail *detail,
+ 				rv = -ETIMEDOUT;
+ 		}
+ 	}
+-	if (rv)
+-		cache_put(h, detail);
+ 	return rv;
  }
+ EXPORT_SYMBOL_GPL(cache_check);
+@@ -1430,10 +1428,11 @@ static int c_show(struct seq_file *m, void *p)
+ 	if (!cache_get_rcu(cp))
+ 		return 0;
  
--static void svc_export_put_work(struct work_struct *work)
-+static void svc_export_put(struct kref *ref)
- {
--	struct svc_export *exp =
--		container_of(to_rcu_work(work), struct svc_export, ex_rcu_work);
--
-+	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
- 	path_put(&exp->ex_path);
- 	auth_domain_put(exp->ex_client);
- 	nfsd4_fslocs_free(&exp->ex_fslocs);
- 	export_stats_destroy(exp->ex_stats);
- 	kfree(exp->ex_stats);
- 	kfree(exp->ex_uuid);
--	kfree(exp);
--}
--
--static void svc_export_put(struct kref *ref)
--{
--	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
--
--	INIT_RCU_WORK(&exp->ex_rcu_work, svc_export_put_work);
--	queue_rcu_work(system_wq, &exp->ex_rcu_work);
-+	kfree_rcu(exp, ex_rcu);
- }
+-	if (cache_check(cd, cp, NULL))
++	if (cache_check(cd, cp, NULL)) {
++		cache_put(cp, cd);
+ 		/* cache_check does a cache_put on failure */
+ 		seq_puts(m, "# ");
+-	else {
++	} else {
+ 		if (cache_is_expired(cd, cp))
+ 			seq_puts(m, "# ");
+ 		cache_put(cp, cd);
+diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
+index 8ca98b146ec8..df014463c054 100644
+--- a/net/sunrpc/svcauth_unix.c
++++ b/net/sunrpc/svcauth_unix.c
+@@ -651,6 +651,10 @@ static struct group_info *unix_gid_find(kuid_t uid, struct svc_rqst *rqstp)
+ 	if (!ug)
+ 		return ERR_PTR(-EAGAIN);
+ 	ret = cache_check(sn->unix_gid_cache, &ug->h, &rqstp->rq_chandle);
++
++	if (ret)
++		cache_put(&ug->h, sn->unix_gid_cache);
++
+ 	switch (ret) {
+ 	case -ENOENT:
+ 		return ERR_PTR(-ENOENT);
+@@ -676,6 +680,7 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
+ 	struct svc_xprt *xprt = rqstp->rq_xprt;
+ 	struct net *net = xprt->xpt_net;
+ 	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
++	int check_res;
  
- static int svc_export_upcall(struct cache_detail *cd, struct cache_head *h)
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index 6f2fbaae01fa..4d92b99c1ffd 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -75,7 +75,7 @@ struct svc_export {
- 	u32			ex_layout_types;
- 	struct nfsd4_deviceid_map *ex_devid_map;
- 	struct cache_detail	*cd;
--	struct rcu_work		ex_rcu_work;
-+	struct rcu_head		ex_rcu;
- 	unsigned long		ex_xprtsec_modes;
- 	struct export_stats	*ex_stats;
- };
-@@ -92,7 +92,7 @@ struct svc_expkey {
- 	u32			ek_fsid[6];
+ 	switch (rqstp->rq_addr.ss_family) {
+ 	case AF_INET:
+@@ -704,7 +709,12 @@ svcauth_unix_set_client(struct svc_rqst *rqstp)
+ 	if (ipm == NULL)
+ 		return SVC_DENIED;
  
- 	struct path		ek_path;
--	struct rcu_work		ek_rcu_work;
-+	struct rcu_head		ek_rcu;
- };
- 
- #define EX_ISSYNC(exp)		(!((exp)->ex_flags & NFSEXP_ASYNC))
+-	switch (cache_check(sn->ip_map_cache, &ipm->h, &rqstp->rq_chandle)) {
++	check_res = cache_check(sn->ip_map_cache, &ipm->h, &rqstp->rq_chandle);
++
++	if (check_res)
++		cache_put(&ipm->h, sn->ip_map_cache);
++
++	switch (check_res) {
+ 		default:
+ 			BUG();
+ 		case -ETIMEDOUT:
 -- 
 2.39.2
 
