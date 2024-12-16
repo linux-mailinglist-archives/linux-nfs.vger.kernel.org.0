@@ -1,209 +1,252 @@
-Return-Path: <linux-nfs+bounces-8567-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8568-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B41039F28C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 04:19:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1C259F2AA8
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 08:06:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3188E18832B6
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 03:19:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BDEB57A2DD0
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 07:05:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2AB15383C;
-	Mon, 16 Dec 2024 03:18:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F181CEAC3;
+	Mon, 16 Dec 2024 07:05:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E02322B
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 03:18:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8981BB6BC;
+	Mon, 16 Dec 2024 07:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734319102; cv=none; b=OVO6XDxVUjb9V/acwWY78z3wBRSVnqSWovfpAbDEx23Vrez2fMJShlljSWVl19KNm++Uzhph8/evSlqneo6IMtsqCor34tbNlZ40wj8PrBUIO9nU5JTYWv+S3KTZsUCX6noy5rPQfmk6TA42phF9HrplMQui8N+RMBY6BqihJzE=
+	t=1734332736; cv=none; b=eX7zANb+7JuIOyRUzgDv1u202PbkrgWzZNcAeuDqSK6KeR33SW9REw0xIyPfSwaDM5+BCWmbcRkjGmSN0yyFsxag3WFln1wqL2eOwMvXjRBAqTcchAyBBnmcFDmyG6nIVZv1TtWyRv9QqBpcHZkpH/AT3aB28dSChkI0umpKhPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734319102; c=relaxed/simple;
-	bh=io19vsz7CTh1k6pfT8FngngGeFmejLD3ASRQh/sx7Iw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fSFFq3QiOw/ddh8df5VHA/dd2EkeQAccYwwzXfTT4pTTHvyxWf73tKOKC3r6/GyDZTiJbLEjAvZgjhuRnsrpqEsZP+PTitviPh+rrHfcLvXofWsQNS4qXGn/ONGk65FKB8+BtfbqB/Hzfhzb5ej5ZE66w65iPlT4IcOBqqQQhBY=
+	s=arc-20240116; t=1734332736; c=relaxed/simple;
+	bh=cLZo+IZieljrwnvYZwR7i8aX+4qeOLytTkDuH3TQlxg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=n+yaG1ynv9XzLo9qdXs5+r63SMPmkdCfhvC9F9uLkDqDjkdp/Pk13uZdwHpY81PzfTR07xc2dOkjAf5fffBLb/TOaarRT5wIxTMY/iDrfFwWsri258QkBSvR/aFHXPQPszhBjVsgyZbYywBGu6Oov5AycTMu/Xs01B8Z+u0bzvI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YBQ9v1Q8Mz4f3jsr
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 11:17:55 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YBWD52PWLz4f3jdL;
+	Mon, 16 Dec 2024 15:05:09 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 9C8881A0194
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 11:18:14 +0800 (CST)
-Received: from [10.174.177.210] (unknown [10.174.177.210])
-	by APP4 (Coremail) with SMTP id gCh0CgDHo4f1m19n2ZXqEg--.12842S3;
-	Mon, 16 Dec 2024 11:18:14 +0800 (CST)
-Message-ID: <eb4a56e2-d6d2-0491-fcf5-95d5c29cd7ab@huaweicloud.com>
-Date: Mon, 16 Dec 2024 11:18:12 +0800
+	by mail.maildlp.com (Postfix) with ESMTP id B9A5C1A0197;
+	Mon, 16 Dec 2024 15:05:28 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP4 (Coremail) with SMTP id gCh0CgDHoYU30V9nL9r5Eg--.39298S2;
+	Mon, 16 Dec 2024 15:05:28 +0800 (CST)
+Subject: Re: [PATCH v3 1/5] Xarray: Do not return sibling entries from
+ xas_find_marked()
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ willy@infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-nfs@vger.kernel.org
+References: <20241213122523.12764-1-shikemeng@huaweicloud.com>
+ <20241213122523.12764-2-shikemeng@huaweicloud.com>
+ <1f8b523e-d68f-4382-8b1e-2475eb47ae81@linux.alibaba.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <5d89f26a-8ac9-9768-5fc7-af155473f396@huaweicloud.com>
+Date: Mon, 16 Dec 2024 15:05:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] nfsd: do not use async mode when not in rcu context
-To: chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org
-Cc: yangerkun@huawei.com, liumingrui@huawei.com
-References: <20241214134916.422488-1-yangerkun@huaweicloud.com>
-From: yangerkun <yangerkun@huaweicloud.com>
-In-Reply-To: <20241214134916.422488-1-yangerkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <1f8b523e-d68f-4382-8b1e-2475eb47ae81@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHo4f1m19n2ZXqEg--.12842S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFyrXFyrZFWrCw4rCw1fXrb_yoWruF18pF
-	WfJayakaykJFy2gwsrXa4jvwnxK3ZY9Fy8Zw18K3yYvrn8Jr1kCw1rZFyj9ryYvrW8W3yx
-	Zr40qa1DGw48ZFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:gCh0CgDHoYU30V9nL9r5Eg--.39298S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFyfJw18CrW3KFW7Zr1kKrg_yoWrKF15pF
+	Z5KryDKry0yr1kJrnrJ3WUXryUG34UXanrJrWrWa42vF15Ar1jgF4jqr1jgF1DJrWkJF4x
+	JF4UA347ZF1UAr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AK
-	xVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU80fO7
-	UUUUU==
-X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
 
 
-在 2024/12/14 21:49, Yang Erkun 写道:
-> From: Yang Erkun <yangerkun@huawei.com>
+on 12/13/2024 2:12 PM, Baolin Wang wrote:
 > 
-> shell:
 > 
-> mkfs.xfs -f /dev/sda
-> echo "/ *(rw,no_root_squash,fsid=0)" > /etc/exports
-> echo "/mnt *(rw,no_root_squash,fsid=1)" >> /etc/exports
-> exportfs -ra
-> service nfs-server start
-> mount -t nfs -o vers=4.0 127.0.0.1:/mnt /mnt1
-> mount /dev/sda /mnt/sda
-> touch /mnt1/sda/file
-> exportfs -r
-> umount /mnt/sda
+> On 2024/12/13 20:25, Kemeng Shi wrote:
+>> Similar to issue fixed in commit cbc02854331ed ("XArray: Do not return
+>> sibling entries from xa_load()"), we may return sibling entries from
+>> xas_find_marked as following:
+>>      Thread A:               Thread B:
+>>                              xa_store_range(xa, entry, 6, 7, gfp);
+>>                 xa_set_mark(xa, 6, mark)
+>>      XA_STATE(xas, xa, 6);
+>>      xas_find_marked(&xas, 7, mark);
+>>      offset = xas_find_chunk(xas, advance, mark);
+>>      [offset is 6 which points to a valid entry]
+>>                              xa_store_range(xa, entry, 4, 7, gfp);
+>>      entry = xa_entry(xa, node, 6);
+>>      [entry is a sibling of 4]
+>>      if (!xa_is_node(entry))
+>>          return entry;
+>>
+>> Skip sibling entry like xas_find() does to protect caller from seeing
+>> sibling entry from xas_find_marked() or caller may use sibling entry
+>> as a valid entry and crash the kernel.
+>>
+>> Besides, load_race() test is modified to catch mentioned issue and modified
+>> load_race() only passes after this fix is merged.
+>>
+>> Here is an example how this bug could be triggerred in tmpfs which
+>> enables large folio in mapping:
+>> Let's take a look at involved racer:
+>> 1. How pages could be created and dirtied in shmem file.
+>> write
+>>   ksys_write
+>>    vfs_write
+>>     new_sync_write
+>>      shmem_file_write_iter
+>>       generic_perform_write
+>>        shmem_write_begin
+>>         shmem_get_folio
+>>          shmem_allowable_huge_orders
+>>          shmem_alloc_and_add_folios
+>>          shmem_alloc_folio
+>>          __folio_set_locked
+>>          shmem_add_to_page_cache
+>>           XA_STATE_ORDER(..., index, order)
+>>           xax_store()
+>>        shmem_write_end
+>>         folio_mark_dirty()
+>>
+>> 2. How dirty pages could be deleted in shmem file.
+>> ioctl
+>>   do_vfs_ioctl
+>>    file_ioctl
+>>     ioctl_preallocate
+>>      vfs_fallocate
+>>       shmem_fallocate
+>>        shmem_truncate_range
+>>         shmem_undo_range
+>>          truncate_inode_folio
+>>           filemap_remove_folio
+>>            page_cache_delete
+>>             xas_store(&xas, NULL);
+>>
+>> 3. How dirty pages could be lockless searched
+>> sync_file_range
+>>   ksys_sync_file_range
+>>    __filemap_fdatawrite_range
+>>     filemap_fdatawrite_wbc
 > 
-> Commit f8c989a0c89a ("nfsd: release svc_expkey/svc_export with rcu_work")
-> describe that when we call e_show/c_show, the last reference can down to
-> 0, and we will call expkey_put/svc_export_put with rcu context, this may
-> lead uaf or sleep in atomic bug. Finally, we introduce async mode to the
-> release and fix the bug. However, some other command may also finally call
-> expkey_put/svc_export_put without rcu context, but expect that the sync
-> mode for the resource release. Like upper shell, before that commit,
-> exportfs -r will remove all entry with sync mode, and the last umount
-> /mnt/sda will always success. But after this commit, the umount will always
-> fail, after we add some delay, they will success again. Personally, I think
-> is actually a bug, and need be fixed.
+> Seems not a good example, IIUC, tmpfs doesn't support writeback (mapping_can_writeback() will return false), right?
 > 
-> Use rcu_read_lock_any_held to distinguish does we really under rcu context,
-> and if no, release resource with sync mode.
-> 
-> Fixes: f8c989a0c89a ("nfsd: release svc_expkey/svc_export with rcu_work")
-> Signed-off-by: Yang Erkun <yangerkun@huawei.com>
-> ---
->   fs/nfsd/export.c | 44 ++++++++++++++++++++++++++++++++------------
->   1 file changed, 32 insertions(+), 12 deletions(-)
-> 
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index eacafe46e3b6..25f13e877c2f 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -40,11 +40,8 @@
->   #define	EXPKEY_HASHMAX		(1 << EXPKEY_HASHBITS)
->   #define	EXPKEY_HASHMASK		(EXPKEY_HASHMAX -1)
->   
-> -static void expkey_put_work(struct work_struct *work)
-> +static void expkey_release(struct svc_expkey *key)
->   {
-> -	struct svc_expkey *key =
-> -		container_of(to_rcu_work(work), struct svc_expkey, ek_rcu_work);
-> -
->   	if (test_bit(CACHE_VALID, &key->h.flags) &&
->   	    !test_bit(CACHE_NEGATIVE, &key->h.flags))
->   		path_put(&key->ek_path);
-> @@ -52,12 +49,25 @@ static void expkey_put_work(struct work_struct *work)
->   	kfree(key);
->   }
->   
-> +static void expkey_put_work(struct work_struct *work)
-> +{
-> +	struct svc_expkey *key =
-> +		container_of(to_rcu_work(work), struct svc_expkey, ek_rcu_work);
-> +
-> +	expkey_release(key);
-> +}
-> +
->   static void expkey_put(struct kref *ref)
->   {
->   	struct svc_expkey *key = container_of(ref, struct svc_expkey, h.ref);
->   
-> -	INIT_RCU_WORK(&key->ek_rcu_work, expkey_put_work);
-> -	queue_rcu_work(system_wq, &key->ek_rcu_work);
-> +	if (rcu_read_lock_any_held()) {
+Ahhh, right. Thank you for correcting me. Then I would like to use nfs as low-level
+ filesystem in example and the potential crash could be triggered in the same steps.
 
-Emm...
+Invovled racers:
+1. How pages could be created and dirtied in nfs.
+write
+ ksys_write
+  vfs_write
+   new_sync_write
+    nfs_file_write
+     generic_perform_write
+      nfs_write_begin
+	   fgf_set_order
+	   __filemap_get_folio
+      nfs_write_end
+       nfs_update_folio
+	    nfs_writepage_setup
+		 nfs_mark_request_dirty
+		  filemap_dirty_folio
+		   __folio_mark_dirty
+		    __xa_set_mark
 
-This api won't work when we disable CONFIG_PREEMPT_COUNT...
+2. How dirty pages could be deleted in nfs.
+ioctl
+ do_vfs_ioctl
+  file_ioctl
+   ioctl_preallocate
+    vfs_fallocate
+     nfs42_fallocate
+      nfs42_proc_deallocate
+       truncate_pagecache_range
+        truncate_inode_pages_range
+         truncate_inode_folio
+	  filemap_remove_folio
+	   page_cache_delete
+	    xas_store(&xas, NULL);
 
-> +		INIT_RCU_WORK(&key->ek_rcu_work, expkey_put_work);
-> +		queue_rcu_work(system_wq, &key->ek_rcu_work);
-> +	} else {
-> +		synchronize_rcu();
-> +		expkey_release(key);
-> +	}
->   }
->   
->   static int expkey_upcall(struct cache_detail *cd, struct cache_head *h)
-> @@ -364,11 +374,8 @@ static void export_stats_destroy(struct export_stats *stats)
->   					    EXP_STATS_COUNTERS_NUM);
->   }
->   
-> -static void svc_export_put_work(struct work_struct *work)
-> +static void svc_export_release(struct svc_export *exp)
->   {
-> -	struct svc_export *exp =
-> -		container_of(to_rcu_work(work), struct svc_export, ex_rcu_work);
-> -
->   	path_put(&exp->ex_path);
->   	auth_domain_put(exp->ex_client);
->   	nfsd4_fslocs_free(&exp->ex_fslocs);
-> @@ -378,12 +385,25 @@ static void svc_export_put_work(struct work_struct *work)
->   	kfree(exp);
->   }
->   
-> +static void svc_export_put_work(struct work_struct *work)
-> +{
-> +	struct svc_export *exp =
-> +		container_of(to_rcu_work(work), struct svc_export, ex_rcu_work);
-> +
-> +	svc_export_release(exp);
-> +}
-> +
->   static void svc_export_put(struct kref *ref)
->   {
->   	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
->   
-> -	INIT_RCU_WORK(&exp->ex_rcu_work, svc_export_put_work);
-> -	queue_rcu_work(system_wq, &exp->ex_rcu_work);
-> +	if (rcu_read_lock_any_held()) {
-> +		INIT_RCU_WORK(&exp->ex_rcu_work, svc_export_put_work);
-> +		queue_rcu_work(system_wq, &exp->ex_rcu_work);
-> +	} else {
-> +		synchronize_rcu();
-> +		svc_export_release(exp);
-> +	}
->   }
->   
->   static int svc_export_upcall(struct cache_detail *cd, struct cache_head *h)
+
+3. How dirty pages could be lockless searched
+sync_file_range
+ ksys_sync_file_range
+  __filemap_fdatawrite_range
+   filemap_fdatawrite_wbc
+    do_writepages
+     writeback_use_writepage
+      writeback_iter
+       writeback_get_folio
+        filemap_get_folios_tag
+         find_get_entry
+          folio = xas_find_marked()
+          folio_try_get(folio)
+
+Steps to crash kernel:
+1.Create               2.Search             3.Delete
+/* write page 2,3 */
+write
+ ...
+  nfs_write_begin
+   fgf_set_order
+   __filemap_get_folio
+    ...
+     xa_store(&xas, folio)
+  nfs_write_end
+   ...
+    __folio_mark_dirty
+
+                       /* sync page 2 and page 3 */
+                       sync_file_range
+                        ...
+                         find_get_entry
+                          folio = xas_find_marked()
+                          /* offset will be 2 */
+                          offset = xas_find_chunk()
+
+                                             /* delete page 2 and page 3 */
+                                             ioctl
+                                              ...
+                                               xas_store(&xas, NULL);
+
+/* write page 0-3 */
+write
+ ...
+  nfs_write_begin
+   fgf_set_order
+   __filemap_get_folio
+    ...
+     xa_store(&xas, folio)
+  nfs_write_end
+   ...
+    __folio_mark_dirty
+
+                          /* get sibling entry from offset 2 */
+                          entry = xa_entry(.., 2)
+                          /* use sibling entry as folio and crash kernel */
+                          folio_try_get(folio)
 
 
