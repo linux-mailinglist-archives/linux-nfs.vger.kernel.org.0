@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-8595-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8596-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC4B19F3B74
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:48:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5E419F3B78
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 21:48:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0366E7A60F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:48:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 63A5E7A67D9
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Dec 2024 20:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5440E1E104E;
-	Mon, 16 Dec 2024 20:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9FC1E3796;
+	Mon, 16 Dec 2024 20:43:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NTTzo4hN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i0LjnYDP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D831E0E0D
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E4B1E2852
+	for <linux-nfs@vger.kernel.org>; Mon, 16 Dec 2024 20:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734381779; cv=none; b=qxK6bxJ6VPNduZbfc4cKlwK+rnlLDgmTe1Geq3sJEbbLSNoJNlFvLh98x391x58odBa6naxvHSBM0ojzdK1nUB+aZkKyQEuOCKmful2q6d3hqxZaSoDSnobQDTaressG97SMMaU7fxsHODMDDZeYk30o4FyQkT9E9+pPyUv04H8=
+	t=1734381785; cv=none; b=EbHsiBjv59ZWZII3t7U0EGl80sMkMTsyqTPVabY1lbOH/6ZVQhlyX61CCakhQd5gzG2h/TZwry3P7h4O6HxCvjMWA3wNK2sRxZLro+khCJlm+2XMpg+MRg8jqcbzUO6agfmB3Ge3hrvlMeZBsKC781yssc9tuOOP9HlMKxd7xo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734381779; c=relaxed/simple;
-	bh=TPib/jBc03UFvozatFPF3MMXl8SN6lFqc8ChVYwnJ7E=;
+	s=arc-20240116; t=1734381785; c=relaxed/simple;
+	bh=SKerEHgGM+NnNbcAc8dQlNDneQtFn7BxA93lXsGmYFw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hp4mF53n+5J0Hn+oXA/lY12/3qdhb2c++41DDiicevrZWWkGpoAEAIillHU0uBQ7i4ci6I/UmCarl/VqvvpFdoDwWTuUy5e/ckE8OsG+i6+NDbcw17OBq7H+c/38wxb+F8iwaLXRIruoHfjqhRNLJB6hT90WUaklHZPhDLQmxL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NTTzo4hN; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=LUUkH2/bjMILFrjfZ8PeVEH6AA3QxGlYiVGSwhiFj9AlXFuWJap2uuytqu8CpTdPnEghe0iMDLiJ4Tp+7TabIScPElctcOWWNalfiEq7LQrwuu50kG/nBCdS1tFp/zU5vQ38VPKMPETx7vYCE4xBghsdlFwaI8hsocQmxU2HO+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i0LjnYDP; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734381776;
+	s=mimecast20190719; t=1734381782;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=R1KN0H1DyrTJ9oId0tb+k5ruXvxmzXbOtML0jIjZVz8=;
-	b=NTTzo4hNZvp40L1aVPUhJP0vo0sDiUzOkur34RZ1aF4JjHi2UFIYv3fr6kzcLTHNEw5Apc
-	/919cU8k2XfStQ0H9sJl6sakinx10rGaU1Wg9i/oOYwVZQ2+PLtdz1w9I01jioKJi0lih1
-	tjKuMabFSMWxTnWhMLGprlIwC3IbMvc=
+	bh=MklTcYfvPOLy1NwZc1kfQfg10kbAaSIvx2D4rHXDyWY=;
+	b=i0LjnYDPpBTQTF5Rep0x9x8rTXdx1uM6QwkDCD2rDDOlZeNdRmL/h28bIYWYIbXbMl3pdI
+	rTvlxe+0aqJwVber3oshjONR3M6+7o73Zr8lt5VuTamikDpbhZMOGCWqc0/uSCNGiDbO/Z
+	VLnG4FSyEd83ciGr75WzSsdYSdBySfM=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-dbBrdsInOVus8GFxw7tcpQ-1; Mon,
- 16 Dec 2024 15:42:54 -0500
-X-MC-Unique: dbBrdsInOVus8GFxw7tcpQ-1
-X-Mimecast-MFC-AGG-ID: dbBrdsInOVus8GFxw7tcpQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-423-1s12ay6wOs2Tgrvj1-IX_g-1; Mon,
+ 16 Dec 2024 15:43:00 -0500
+X-MC-Unique: 1s12ay6wOs2Tgrvj1-IX_g-1
+X-Mimecast-MFC-AGG-ID: 1s12ay6wOs2Tgrvj1-IX_g
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 605751956059;
-	Mon, 16 Dec 2024 20:42:50 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D71951956054;
+	Mon, 16 Dec 2024 20:42:57 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.48])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 18CA519560AD;
-	Mon, 16 Dec 2024 20:42:43 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA7DE19560B0;
+	Mon, 16 Dec 2024 20:42:51 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
@@ -81,11 +81,10 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-cachefs@redhat.com
-Subject: [PATCH v5 10/32] netfs: Don't use bh spinlock
-Date: Mon, 16 Dec 2024 20:41:00 +0000
-Message-ID: <20241216204124.3752367-11-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 11/32] afs: Don't use mutex for I/O operation lock
+Date: Mon, 16 Dec 2024 20:41:01 +0000
+Message-ID: <20241216204124.3752367-12-dhowells@redhat.com>
 In-Reply-To: <20241216204124.3752367-1-dhowells@redhat.com>
 References: <20241216204124.3752367-1-dhowells@redhat.com>
 Precedence: bulk
@@ -95,219 +94,208 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-All the accessing of the subrequest lists is now done in process context,
-possibly in a workqueue, but not now in a BH context, so we don't need the
-lock against BH interference when taking the netfs_io_request::lock
-spinlock.
+Don't use the standard mutex for the I/O operation lock, but rather
+implement our own as the standard mutex must be released in the same thread
+as locked it.  This is a problem when it comes to doing async FetchData
+where the lock will be dropped from the workqueue that processed the
+incoming data and not from the issuing thread.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
 ---
- fs/netfs/buffered_read.c |  4 ++--
- fs/netfs/direct_read.c   |  4 ++--
- fs/netfs/read_collect.c  | 20 ++++++++++----------
- fs/netfs/read_retry.c    |  8 ++++----
- fs/netfs/write_collect.c |  4 ++--
- fs/netfs/write_issue.c   |  4 ++--
- 6 files changed, 22 insertions(+), 22 deletions(-)
+ fs/afs/fs_operation.c | 111 +++++++++++++++++++++++++++++++++++++++---
+ fs/afs/internal.h     |   3 +-
+ fs/afs/super.c        |   2 +-
+ 3 files changed, 108 insertions(+), 8 deletions(-)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index fa1013020ac9..4ff4b587dc4b 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -200,12 +200,12 @@ static void netfs_read_to_pagecache(struct netfs_io_request *rreq)
- 		subreq->len	= size;
- 
- 		atomic_inc(&rreq->nr_outstanding);
--		spin_lock_bh(&rreq->lock);
-+		spin_lock(&rreq->lock);
- 		list_add_tail(&subreq->rreq_link, &rreq->subrequests);
- 		subreq->prev_donated = rreq->prev_donated;
- 		rreq->prev_donated = 0;
- 		trace_netfs_sreq(subreq, netfs_sreq_trace_added);
--		spin_unlock_bh(&rreq->lock);
-+		spin_unlock(&rreq->lock);
- 
- 		source = netfs_cache_prepare_read(rreq, subreq, rreq->i_size);
- 		subreq->source = source;
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index 54027fd14904..1a20cc3979c7 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -68,12 +68,12 @@ static int netfs_dispatch_unbuffered_reads(struct netfs_io_request *rreq)
- 		subreq->len	= size;
- 
- 		atomic_inc(&rreq->nr_outstanding);
--		spin_lock_bh(&rreq->lock);
-+		spin_lock(&rreq->lock);
- 		list_add_tail(&subreq->rreq_link, &rreq->subrequests);
- 		subreq->prev_donated = rreq->prev_donated;
- 		rreq->prev_donated = 0;
- 		trace_netfs_sreq(subreq, netfs_sreq_trace_added);
--		spin_unlock_bh(&rreq->lock);
-+		spin_unlock(&rreq->lock);
- 
- 		netfs_stat(&netfs_n_rh_download);
- 		if (rreq->netfs_ops->prepare_read) {
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 454a5bbdd6f8..26e430baeb5a 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -144,7 +144,7 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 	prev_donated = READ_ONCE(subreq->prev_donated);
- 	next_donated =  READ_ONCE(subreq->next_donated);
- 	if (prev_donated || next_donated) {
--		spin_lock_bh(&rreq->lock);
-+		spin_lock(&rreq->lock);
- 		prev_donated = subreq->prev_donated;
- 		next_donated =  subreq->next_donated;
- 		subreq->start -= prev_donated;
-@@ -157,7 +157,7 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 			next_donated = subreq->next_donated = 0;
- 		}
- 		trace_netfs_sreq(subreq, netfs_sreq_trace_add_donations);
--		spin_unlock_bh(&rreq->lock);
-+		spin_unlock(&rreq->lock);
- 	}
- 
- 	avail = subreq->transferred;
-@@ -186,18 +186,18 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 		} else if (fpos < start) {
- 			excess = fend - subreq->start;
- 
--			spin_lock_bh(&rreq->lock);
-+			spin_lock(&rreq->lock);
- 			/* If we complete first on a folio split with the
- 			 * preceding subreq, donate to that subreq - otherwise
- 			 * we get the responsibility.
- 			 */
- 			if (subreq->prev_donated != prev_donated) {
--				spin_unlock_bh(&rreq->lock);
-+				spin_unlock(&rreq->lock);
- 				goto donation_changed;
- 			}
- 
- 			if (list_is_first(&subreq->rreq_link, &rreq->subrequests)) {
--				spin_unlock_bh(&rreq->lock);
-+				spin_unlock(&rreq->lock);
- 				pr_err("Can't donate prior to front\n");
- 				goto bad;
- 			}
-@@ -213,7 +213,7 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 
- 			if (subreq->consumed >= subreq->len)
- 				goto remove_subreq_locked;
--			spin_unlock_bh(&rreq->lock);
-+			spin_unlock(&rreq->lock);
- 		} else {
- 			pr_err("fpos > start\n");
- 			goto bad;
-@@ -241,11 +241,11 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 	/* Donate the remaining downloaded data to one of the neighbouring
- 	 * subrequests.  Note that we may race with them doing the same thing.
- 	 */
--	spin_lock_bh(&rreq->lock);
-+	spin_lock(&rreq->lock);
- 
- 	if (subreq->prev_donated != prev_donated ||
- 	    subreq->next_donated != next_donated) {
--		spin_unlock_bh(&rreq->lock);
-+		spin_unlock(&rreq->lock);
- 		cond_resched();
- 		goto donation_changed;
- 	}
-@@ -296,11 +296,11 @@ static bool netfs_consume_read_data(struct netfs_io_subrequest *subreq)
- 	goto remove_subreq_locked;
- 
- remove_subreq:
--	spin_lock_bh(&rreq->lock);
-+	spin_lock(&rreq->lock);
- remove_subreq_locked:
- 	subreq->consumed = subreq->len;
- 	list_del(&subreq->rreq_link);
--	spin_unlock_bh(&rreq->lock);
-+	spin_unlock(&rreq->lock);
- 	netfs_put_subrequest(subreq, false, netfs_sreq_trace_put_consumed);
- 	return true;
- 
-diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
-index a2021efa44c0..a33bd06e80f8 100644
---- a/fs/netfs/read_retry.c
-+++ b/fs/netfs/read_retry.c
-@@ -142,12 +142,12 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 			__clear_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
- 			subreq->retry_count++;
- 
--			spin_lock_bh(&rreq->lock);
-+			spin_lock(&rreq->lock);
- 			list_add_tail(&subreq->rreq_link, &rreq->subrequests);
- 			subreq->prev_donated += rreq->prev_donated;
- 			rreq->prev_donated = 0;
- 			trace_netfs_sreq(subreq, netfs_sreq_trace_retry);
--			spin_unlock_bh(&rreq->lock);
-+			spin_unlock(&rreq->lock);
- 
- 			BUG_ON(!len);
- 
-@@ -217,9 +217,9 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
- 		__clear_bit(NETFS_SREQ_FAILED, &subreq->flags);
- 		__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
- 	}
--	spin_lock_bh(&rreq->lock);
-+	spin_lock(&rreq->lock);
- 	list_splice_tail_init(&queue, &rreq->subrequests);
--	spin_unlock_bh(&rreq->lock);
-+	spin_unlock(&rreq->lock);
+diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
+index 428721bbe4f6..0175d7a31332 100644
+--- a/fs/afs/fs_operation.c
++++ b/fs/afs/fs_operation.c
+@@ -49,6 +49,105 @@ struct afs_operation *afs_alloc_operation(struct key *key, struct afs_volume *vo
+ 	return op;
  }
  
++struct afs_io_locker {
++	struct list_head	link;
++	struct task_struct	*task;
++	unsigned long		have_lock;
++};
++
++/*
++ * Unlock the I/O lock on a vnode.
++ */
++static void afs_unlock_for_io(struct afs_vnode *vnode)
++{
++	struct afs_io_locker *locker;
++
++	spin_lock(&vnode->lock);
++	locker = list_first_entry_or_null(&vnode->io_lock_waiters,
++					  struct afs_io_locker, link);
++	if (locker) {
++		list_del(&locker->link);
++		smp_store_release(&locker->have_lock, 1); /* The unlock barrier. */
++		smp_mb__after_atomic(); /* Store have_lock before task state */
++		wake_up_process(locker->task);
++	} else {
++		clear_bit(AFS_VNODE_IO_LOCK, &vnode->flags);
++	}
++	spin_unlock(&vnode->lock);
++}
++
++/*
++ * Lock the I/O lock on a vnode uninterruptibly.  We can't use an ordinary
++ * mutex as lockdep will complain if we unlock it in the wrong thread.
++ */
++static void afs_lock_for_io(struct afs_vnode *vnode)
++{
++	struct afs_io_locker myself = { .task = current, };
++
++	spin_lock(&vnode->lock);
++
++	if (!test_and_set_bit(AFS_VNODE_IO_LOCK, &vnode->flags)) {
++		spin_unlock(&vnode->lock);
++		return;
++	}
++
++	list_add_tail(&myself.link, &vnode->io_lock_waiters);
++	spin_unlock(&vnode->lock);
++
++	for (;;) {
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		if (smp_load_acquire(&myself.have_lock)) /* The lock barrier */
++			break;
++		schedule();
++	}
++	__set_current_state(TASK_RUNNING);
++}
++
++/*
++ * Lock the I/O lock on a vnode interruptibly.  We can't use an ordinary mutex
++ * as lockdep will complain if we unlock it in the wrong thread.
++ */
++static int afs_lock_for_io_interruptible(struct afs_vnode *vnode)
++{
++	struct afs_io_locker myself = { .task = current, };
++	int ret = 0;
++
++	spin_lock(&vnode->lock);
++
++	if (!test_and_set_bit(AFS_VNODE_IO_LOCK, &vnode->flags)) {
++		spin_unlock(&vnode->lock);
++		return 0;
++	}
++
++	list_add_tail(&myself.link, &vnode->io_lock_waiters);
++	spin_unlock(&vnode->lock);
++
++	for (;;) {
++		set_current_state(TASK_INTERRUPTIBLE);
++		if (smp_load_acquire(&myself.have_lock) || /* The lock barrier */
++		    signal_pending(current))
++			break;
++		schedule();
++	}
++	__set_current_state(TASK_RUNNING);
++
++	/* If we got a signal, try to transfer the lock onto the next
++	 * waiter.
++	 */
++	if (unlikely(signal_pending(current))) {
++		spin_lock(&vnode->lock);
++		if (myself.have_lock) {
++			spin_unlock(&vnode->lock);
++			afs_unlock_for_io(vnode);
++		} else {
++			list_del(&myself.link);
++			spin_unlock(&vnode->lock);
++		}
++		ret = -ERESTARTSYS;
++	}
++	return ret;
++}
++
  /*
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 237018caba27..f026cbc0e2fe 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -238,14 +238,14 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+  * Lock the vnode(s) being operated upon.
+  */
+@@ -60,7 +159,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
+ 	_enter("");
  
- 		cancel:
- 			/* Remove if completely consumed. */
--			spin_lock_bh(&wreq->lock);
-+			spin_lock(&wreq->lock);
+ 	if (op->flags & AFS_OPERATION_UNINTR) {
+-		mutex_lock(&vnode->io_lock);
++		afs_lock_for_io(vnode);
+ 		op->flags |= AFS_OPERATION_LOCK_0;
+ 		_leave(" = t [1]");
+ 		return true;
+@@ -72,7 +171,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
+ 	if (vnode2 > vnode)
+ 		swap(vnode, vnode2);
  
- 			remove = front;
- 			list_del_init(&front->rreq_link);
- 			front = list_first_entry_or_null(&stream->subrequests,
- 							 struct netfs_io_subrequest, rreq_link);
- 			stream->front = front;
--			spin_unlock_bh(&wreq->lock);
-+			spin_unlock(&wreq->lock);
- 			netfs_put_subrequest(remove, false,
- 					     notes & SAW_FAILURE ?
- 					     netfs_sreq_trace_put_cancel :
-diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
-index 7a14a48e62ee..286bc2aa3ca0 100644
---- a/fs/netfs/write_issue.c
-+++ b/fs/netfs/write_issue.c
-@@ -203,7 +203,7 @@ static void netfs_prepare_write(struct netfs_io_request *wreq,
- 	 * the list.  The collector only goes nextwards and uses the lock to
- 	 * remove entries off of the front.
- 	 */
--	spin_lock_bh(&wreq->lock);
-+	spin_lock(&wreq->lock);
- 	list_add_tail(&subreq->rreq_link, &stream->subrequests);
- 	if (list_is_first(&subreq->rreq_link, &stream->subrequests)) {
- 		stream->front = subreq;
-@@ -214,7 +214,7 @@ static void netfs_prepare_write(struct netfs_io_request *wreq,
- 		}
- 	}
+-	if (mutex_lock_interruptible(&vnode->io_lock) < 0) {
++	if (afs_lock_for_io_interruptible(vnode) < 0) {
+ 		afs_op_set_error(op, -ERESTARTSYS);
+ 		op->flags |= AFS_OPERATION_STOP;
+ 		_leave(" = f [I 0]");
+@@ -81,10 +180,10 @@ static bool afs_get_io_locks(struct afs_operation *op)
+ 	op->flags |= AFS_OPERATION_LOCK_0;
  
--	spin_unlock_bh(&wreq->lock);
-+	spin_unlock(&wreq->lock);
+ 	if (vnode2) {
+-		if (mutex_lock_interruptible_nested(&vnode2->io_lock, 1) < 0) {
++		if (afs_lock_for_io_interruptible(vnode2) < 0) {
+ 			afs_op_set_error(op, -ERESTARTSYS);
+ 			op->flags |= AFS_OPERATION_STOP;
+-			mutex_unlock(&vnode->io_lock);
++			afs_unlock_for_io(vnode);
+ 			op->flags &= ~AFS_OPERATION_LOCK_0;
+ 			_leave(" = f [I 1]");
+ 			return false;
+@@ -104,9 +203,9 @@ static void afs_drop_io_locks(struct afs_operation *op)
+ 	_enter("");
  
- 	stream->construct = subreq;
+ 	if (op->flags & AFS_OPERATION_LOCK_1)
+-		mutex_unlock(&vnode2->io_lock);
++		afs_unlock_for_io(vnode2);
+ 	if (op->flags & AFS_OPERATION_LOCK_0)
+-		mutex_unlock(&vnode->io_lock);
++		afs_unlock_for_io(vnode);
  }
+ 
+ static void afs_prepare_vnode(struct afs_operation *op, struct afs_vnode_param *vp,
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index c9d620175e80..07b8f7083e73 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -702,13 +702,14 @@ struct afs_vnode {
+ 	struct afs_file_status	status;		/* AFS status info for this file */
+ 	afs_dataversion_t	invalid_before;	/* Child dentries are invalid before this */
+ 	struct afs_permits __rcu *permit_cache;	/* cache of permits so far obtained */
+-	struct mutex		io_lock;	/* Lock for serialising I/O on this mutex */
++	struct list_head	io_lock_waiters; /* Threads waiting for the I/O lock */
+ 	struct rw_semaphore	validate_lock;	/* lock for validating this vnode */
+ 	struct rw_semaphore	rmdir_lock;	/* Lock for rmdir vs sillyrename */
+ 	struct key		*silly_key;	/* Silly rename key */
+ 	spinlock_t		wb_lock;	/* lock for wb_keys */
+ 	spinlock_t		lock;		/* waitqueue/flags lock */
+ 	unsigned long		flags;
++#define AFS_VNODE_IO_LOCK	0		/* Set if the I/O serialisation lock is held */
+ #define AFS_VNODE_UNSET		1		/* set if vnode attributes not yet set */
+ #define AFS_VNODE_DIR_VALID	2		/* Set if dir contents are valid */
+ #define AFS_VNODE_ZAP_DATA	3		/* set if vnode's data should be invalidated */
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index f3ba1c3e72f5..7631302c1984 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -663,7 +663,7 @@ static void afs_i_init_once(void *_vnode)
+ 
+ 	memset(vnode, 0, sizeof(*vnode));
+ 	inode_init_once(&vnode->netfs.inode);
+-	mutex_init(&vnode->io_lock);
++	INIT_LIST_HEAD(&vnode->io_lock_waiters);
+ 	init_rwsem(&vnode->validate_lock);
+ 	spin_lock_init(&vnode->wb_lock);
+ 	spin_lock_init(&vnode->lock);
 
 
