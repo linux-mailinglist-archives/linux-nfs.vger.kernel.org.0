@@ -1,162 +1,85 @@
-Return-Path: <linux-nfs+bounces-8621-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8622-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 858929F4172
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 05:00:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10A4F9F4517
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 08:28:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 300781690D4
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 04:00:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55959167948
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 07:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B3C4A23;
-	Tue, 17 Dec 2024 03:59:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457AB18C939;
+	Tue, 17 Dec 2024 07:27:58 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A116714601C;
-	Tue, 17 Dec 2024 03:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B8A192D69;
+	Tue, 17 Dec 2024 07:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734407999; cv=none; b=P33K3vy44PjuY1YCruAHsYMuxBECvbr/nn2PI/uJmIaideXIX/LZ58frXMQGf17pbFYkT+SfEyfm0jsYrK2gkvRiTTe0+y9BD5i7FRftrUnN1J9ZB6dS/tYBdLGgQji8gxLwhuWbofgN3/b+x2g/9QKKZ1Pzw/95fJfEzWRrsdE=
+	t=1734420478; cv=none; b=Zswh2uOdghaRwgugCobKuqjzgtGNTEd6xHkSywgaQg9WdgmY/mxA/aXgrO9cjXEG2bVy3Z3Jn5dUM/zKU/U5odeI6C7QPeXe7aKJUfl7yoR8mBUoAM1moHxTuDqpLLjDgr3R4dfwjjjO4AVk448keOADUaxeGBVgvdRqrTKPz2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734407999; c=relaxed/simple;
-	bh=GXKY4ibAqf+fScHyj3FgJPIYI3um2k9fkI7luLsdvHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nkaaLAM/nzdoysZ/sJkmrmdr8zjYjiFbZ070p48GQNcbh+YQ4UOGvi6IS8QoHD/Jb2szDqKDo38X00RMYNPjtaR9Drsye42aTmAiLsSUUzFP3riYmdJxd6EnppCFt70VhQwK5IhQ2wscER1gf7PIsyTkd+HkPrNna+igjGCFvQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8E68768C4E; Tue, 17 Dec 2024 04:59:43 +0100 (CET)
-Date: Tue, 17 Dec 2024 04:59:43 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Cheng Xu <chengyou@linux.alibaba.com>,
-	Kai Shen <kaishen@linux.alibaba.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Christian Benvenuti <benve@cisco.com>,
-	Nelson Escobar <neescoba@cisco.com>,
-	Bernard Metzler <bmt@zurich.ibm.com>,
-	Karsten Keil <isdn@linux-pingi.de>,
-	Michal Ostrowski <mostrows@earthlink.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, Lee Duncan <lduncan@suse.com>,
-	Chris Leech <cleech@redhat.com>,
-	Mike Christie <michael.christie@oracle.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Alexander Aring <aahringo@redhat.com>,
-	David Teigland <teigland@redhat.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <sfrench@samba.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Tom Talpey <tom@talpey.com>, Simon Horman <horms@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, David Ahern <dsahern@kernel.org>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Oliver Hartkopp <socketcan@hartkopp.net>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Robin van der Gracht <robin@protonic.nl>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
-	James Chapman <jchapman@katalix.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
-	Ying Xue <ying.xue@windriver.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Martin Schiller <ms@dev.tdt.de>,
-	Kentaro Takeda <takedakn@nttdata.co.jp>,
-	Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Guillaume Nault <gnault@redhat.com>,
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Wu Yunchuan <yunchuan@nfschina.com>,
-	Max Gurtovoy <mgurtovoy@nvidia.com>,
-	Maurizio Lombardi <mlombard@redhat.com>,
-	David Howells <dhowells@redhat.com>,
-	Atte =?iso-8859-1?Q?Heikkil=E4?= <atteh.mailbox@gmail.com>,
-	Vincent Duvert <vincent.ldev@duvert.net>,
-	Denis Kirjanov <kirjanov@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Thomas Huth <thuth@redhat.com>,
-	Andrew Waterman <waterman@eecs.berkeley.edu>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Andrej Shadura <andrew.shadura@collabora.co.uk>,
-	Ying Hsu <yinghsu@chromium.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Tom Parkin <tparkin@katalix.com>,
-	Jason Xing <kernelxing@tencent.com>,
-	Dan Carpenter <error27@gmail.com>, Hyunwoo Kim <v4bel@theori.io>,
-	Bernard Pidoux <f6bvp@free.fr>,
-	Sangsoo Lee <constant.lee@samsung.com>,
-	Doug Brown <doug@schmorgal.com>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Gou Hao <gouhao@uniontech.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Yajun Deng <yajun.deng@linux.dev>, Michal Luczaj <mhal@rbox.co>,
-	Jiri Pirko <jiri@resnulli.us>, syzbot <syzkaller@googlegroups.com>,
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-	linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com,
-	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	target-devel@vger.kernel.org, gfs2@lists.linux.dev,
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-	linux-cifs@vger.kernel.org, linux-hams@vger.kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-can@vger.kernel.org,
-	linux-s390@vger.kernel.org, rds-devel@oss.oracle.com,
-	linux-sctp@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-	virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	syzbot+d7ce59b06b3eb14fd218@syzkaller.appspotmail.com,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: Convert proto_ops::getname to sockaddr_storage
-Message-ID: <20241217035943.GB14719@lst.de>
-References: <20241217023417.work.145-kees@kernel.org>
+	s=arc-20240116; t=1734420478; c=relaxed/simple;
+	bh=OdewV4615FId0WACNx+91iHsJ8vh/kQT1TGkcrL/w2g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EUXTvwoe+Fp3/6tcnrsmkDk2+REAHPG8dxVMK+A15/9NEVC4Yx2ljpFL0zyoXnqkFrTnHljjs90R3xPVtKSNJPjqxy7wWgttTFfv8uQ5jg/rVsQHjjHNgg8h2qPiz9iyHQb8N4kv03LSjZQPprZlvuhFzFm8tN7th5Mhl/QNmFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YC7c814H8z11Mq2;
+	Tue, 17 Dec 2024 15:24:40 +0800 (CST)
+Received: from kwepemh100007.china.huawei.com (unknown [7.202.181.92])
+	by mail.maildlp.com (Postfix) with ESMTPS id A20C914034D;
+	Tue, 17 Dec 2024 15:27:53 +0800 (CST)
+Received: from huawei.com (10.67.175.69) by kwepemh100007.china.huawei.com
+ (7.202.181.92) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Dec
+ 2024 15:27:53 +0800
+From: Zhang Kunbo <zhangkunbo@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chris.zjh@huawei.com>, <liaochang1@huawei.com>
+Subject: [PATCH -next] fs/nfs: fix missing declaration of nfs_idmap_cache_timeout
+Date: Tue, 17 Dec 2024 07:19:21 +0000
+Message-ID: <20241217071921.2635013-1-zhangkunbo@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241217023417.work.145-kees@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemh100007.china.huawei.com (7.202.181.92)
 
-Would be nice to avoid a bunch of the overly long lines, but the
-fundamental changes looks good:
+fs/nfs/super.c should include fs/nfs/nfs4idmap.h for
+declaration of nfs_idmap_cache_timeout. This fixes the sparse warning:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+fs/nfs/super.c:1397:14: warning: symbol 'nfs_idmap_cache_timeout' was not declared. Should it be static?
+
+Signed-off-by: Zhang Kunbo <zhangkunbo@huawei.com>
+---
+ fs/nfs/super.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index ae5c5e39afa0..aeb715b4a690 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -73,6 +73,7 @@
+ #include "nfs.h"
+ #include "netns.h"
+ #include "sysfs.h"
++#include "nfs4idmap.h"
+ 
+ #define NFSDBG_FACILITY		NFSDBG_VFS
+ 
+-- 
+2.34.1
+
 
