@@ -1,120 +1,149 @@
-Return-Path: <linux-nfs+bounces-8627-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8628-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01F2C9F4FA9
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 16:40:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CEA7F9F509F
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 17:15:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04C287A05DE
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 15:40:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70E787A96D7
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Dec 2024 16:11:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73AB01F4E4A;
-	Tue, 17 Dec 2024 15:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B53B11FCD07;
+	Tue, 17 Dec 2024 16:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+AO/L4z"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rPd0F531"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A811F4705
-	for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2024 15:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9831FCCFF;
+	Tue, 17 Dec 2024 16:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734450037; cv=none; b=bPfKOKfuI7xhok0+5qYdFU7bvS/K8rvCBOdnHS77l0z5CqXcbIiMWJyTBHeZNDxr0WOtyt8p8WOYIW09zrZ+e5EX1LfW5Pf/cdSP2MI4L/vFPUBSh7WGXqJNa8jYeaf7O+y67WoPTmgNSTEtgojdzcfh2RZvfEOFf6K0k0BCvjg=
+	t=1734451202; cv=none; b=Q4ph1lM4xEVjyvsPwe35Z7cmRIwrYz0bbaNLsyRwRzHEW7SpzZx48xZ+hfTClQY9hX4xsd8Du86YZwBVN+v5I8R6+YpQc6sQCE327rl9NK5o5n/wpj0AuFPLyle5wDPkCnbGvu2t2KB2FwcjfGBX8RJpwI+YPb9+e0qdZLdu1dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734450037; c=relaxed/simple;
-	bh=fULVYAHdRm7ygFtSMjsoaisV+RroR0R0F/bor7V4wi4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=kKokxcamMkOlkwubwzJWng2/YxkT3hoPkVZBUuOF6JItp6qU/rXkH4MbEDP6rDZD2hESTMDwcRWJwRVVplk6yFhv4jem+Dp+XyAbP/FZU3DXOjEa3gC6Sq+CoHEBW5oT0fTpxkhV77v/J9WRzb9fTdVw8bdlsOCJyUSCStOBd5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+AO/L4z; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7273967f2f0so5864787b3a.1
-        for <linux-nfs@vger.kernel.org>; Tue, 17 Dec 2024 07:40:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734450035; x=1735054835; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u2ny11zzNQZXRQARDhl//+4XGgz5eIyl7gckhaJNIp0=;
-        b=i+AO/L4zBfrPHqVYfWRRbeuWNlLgZ+QAZ5GQxAcLPgVM6He/3AtIdXJ9Levp3s8sqC
-         seXqJTTsej3YUaGfs+lVZwqkGZ1abFrXvTeIWMZAlfB+rxnl+FiDQifzyiz5RQr9f/LW
-         Ct58UvFmNvleMQMg6v71GGDJlfwUjcEn8pX1rplfvj59iQy6XqVM6MEyb81RJoHX9sR6
-         1u+eJvgWOiykSTIdO6K2n/0FtpsN6NkT+3Nz6i+CGnbzgT4pr92o7xrpI75KF98Gi+/z
-         PjRukKX5un/TTi5M32i1RdnATQlBf05XWFgmkHMUSfbPdG65xMoh58pEp4NXdjYhg8ko
-         2ZSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734450035; x=1735054835;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u2ny11zzNQZXRQARDhl//+4XGgz5eIyl7gckhaJNIp0=;
-        b=XTzbfGDx9djW5h1nmp97DPy4U1i03YrRNEu36XQ8eQ4fNn6NFmA5gtURa15YiL3Gaa
-         AjYXkKH5YtucJAJlHUYchMBsq2rPB2y3qOVZZRsmyoMXCDC2xwZIR9AD5OIyM0kyDrL3
-         8i6zoJ95wWzE5p1FhByuQP2U9JknghGVAONf/hfjyzUFQVJJbY/xTeSkN6ohnepK8uZb
-         2aOaT3k9//QWOf/PWLjJjTEccmjSVVMevigxuMHyNruqsOl0yczsSWI2tp+7F5MKnqBu
-         v8mwlzL4MqCmacvncOsJcysmhuReVc3QLUc+VQxXoLQXE5kvvh4qzbcAUrK/8Y1AGeba
-         dGfA==
-X-Gm-Message-State: AOJu0Yyv/1SljRmmEsmFJmmkEoH6dNJxslKgHb8HPyG+BLFNpuBAiS0c
-	4EYtlVQuKh+/phX+eUHV+OXws1H1jp02pLA9lx0OAUUppRQ57/VayKsK
-X-Gm-Gg: ASbGnctbO+B9EkbwVioacd55m/7EsAnqYvLsEGa1mlmTLWn3dSwXGxLWJUWtMQHHVbX
-	fQSEQTXy/wqUXtSUL9wygEsJIvGUyZh6ln8AMQDerW1bHgNhttFv1IyzqL2u+/9vhFi1dfH+laG
-	QV+KHUEvsXfwLD3KF8/FwxtXFMLrWiprlHtFIewxOBP4J85ucsqjL9//DHWDfdXugonAABulOLI
-	xZJ1wieOtjKSfSVroN+IHMxGcR0Y1ieaSQ86Z1qs8pDbG5EjV5eG2cWHzToSdBQxCzvM6TAt2nS
-	noFrh2La5YoAxRCnfYUt/VUJ9ZvG0QC9tIW35YV82N8jjbkJvEhjwZ/TJ4Q5u9wW9qoT2eW4UOQ
-	WqQZLbRQ=
-X-Google-Smtp-Source: AGHT+IHbabR5BOAyf31jICdVKAesKcXXKiICnvptTng2qVBu7CcDXzbxZ6j4JQeB1RHDdQ+9hj5EDw==
-X-Received: by 2002:a05:6a00:8015:b0:725:e015:908d with SMTP id d2e1a72fcca58-7290c0ee458mr21755073b3a.1.1734450034942;
-        Tue, 17 Dec 2024 07:40:34 -0800 (PST)
-Received: from leira.trondhjem.org.localdomain (104-63-89-173.lightspeed.livnmi.sbcglobal.net. [104.63.89.173])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918ac5280sm6789036b3a.35.2024.12.17.07.40.34
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 07:40:34 -0800 (PST)
-From: trondmy@gmail.com
-X-Google-Original-From: trond.myklebust@hammerspace.com
-To: linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS/pnfs: Fix a live lock between recalled layouts and layoutget
-Date: Tue, 17 Dec 2024 10:40:32 -0500
-Message-ID: <0688a7b30bfe847ccab1feca8dde7617036e7ca8.1734439172.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1734451202; c=relaxed/simple;
+	bh=xCKUQNxXucXZ8ICMApJ15nckq8nAUUkgFrBwlbRo1NE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgvaUnjrYgnudj3Ag5kNRZcOWKMPL6afOoXWErPuRRC3hfOQh8jbzeUqP9zlN0S+s0Ne+ahNWXH96i6WR5rPDvYFy4GkOu5MsD2iW0WWjWQ6jdiC5n3wJuLLdkGuzsYmxSf5TF4YJQ3FzclJMbcTINu5w4beUqA5vuAD/ZhN0ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rPd0F531; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8E9C4CED3;
+	Tue, 17 Dec 2024 16:00:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1734451202;
+	bh=xCKUQNxXucXZ8ICMApJ15nckq8nAUUkgFrBwlbRo1NE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rPd0F5311VnXBXvEwJJ5aVEcV3/2VJc1PSO72EutsktpTy7Tk5MOfhxQJSojSSo8e
+	 tym7ZqFDNPXd0Mi/WcGId1FS0/wUbyMB+6thl2MYoSZJB4akqM/SSa0ibmpOFkoSDn
+	 4OFla7H7P6xcndq04DdDw3A18FfK/G01DoZenlZk=
+Date: Tue, 17 Dec 2024 16:59:58 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Li Lingfeng <lilingfeng3@huawei.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
+	yangerkun <yangerkun@huawei.com>,
+	"zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao <houtao1@huawei.com>,
+	"yukuai (C)" <yukuai3@huawei.com>,
+	"chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+	ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Subject: Re: CVE-2024-50106: nfsd: fix race between laundromat and
+ free_stateid
+Message-ID: <2024121713-reproduce-rippling-73cc@gregkh>
+References: <2024110553-CVE-2024-50106-c095@gregkh>
+ <ef9774e3-572b-427f-99e9-c6a456ffe4fc@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef9774e3-572b-427f-99e9-c6a456ffe4fc@huawei.com>
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Tue, Dec 17, 2024 at 11:30:41PM +0800, Li Lingfeng wrote:
+> Hi,
+> after analysis, we think that this issue is not introduced by commit
+> 2d4a532d385f ("nfsd: ensure that clp->cl_revoked list is protected by
+> clp->cl_lock") but by commit 83e733161fde ("nfsd: avoid race after
+> unhash_delegation_locked()").
+> Therefore, kernel versions earlier than 6.9 do not involve this issue.
+> 
+> // normal case 1 -- free deleg by delegreturn
+> 1) OP_DELEGRETURN
+> nfsd4_delegreturn
+>  nfsd4_lookup_stateid
+>  destroy_delegation
+>   destroy_unhashed_deleg
+>    nfs4_unlock_deleg_lease
+>     vfs_setlease // unlock
+>  nfs4_put_stid // put last refcount
+>   idr_remove // remove from cl_stateids
+>   s->sc_free // free deleg
+> 
+> 2) OP_FREE_STATEID
+> nfsd4_free_stateid
+>  find_stateid_locked // can not find the deleg in cl_stateids
+> 
+> 
+> // normal case 2 -- free deleg by laundromat
+> nfs4_laundromat
+>  state_expired
+>  unhash_delegation_locked // set NFS4_REVOKED_DELEG_STID
+>  list_add // add the deleg to reaplist
+>  list_first_entry // get the deleg from reaplist
+>  revoke_delegation
+>   destroy_unhashed_deleg
+>    nfs4_unlock_deleg_lease
+>    nfs4_put_stid
+> 
+> 
+> // abnormal case
+> nfs4_laundromat
+>  state_expired
+>  unhash_delegation_locked
+>   // set NFS4_REVOKED_DELEG_STID
+>  list_add
+>   // add the deleg to reaplist
+>                                 1) OP_DELEGRETURN
+>                                 nfsd4_delegreturn
+>                                  nfsd4_lookup_stateid
+> nfsd4_stid_check_stateid_generation
+>                                   nfsd4_verify_open_stid
+>                                    // check NFS4_REVOKED_DELEG_STID
+>                                    // and return nfserr_deleg_revoked
+>                                  // skip destroy_delegation
+> 
+>                                 2) OP_FREE_STATEID
+>                                 nfsd4_free_stateid
+>                                  // check NFS4_REVOKED_DELEG_STID
+>                                  list_del_init
+>                                   // remove deleg from reaplist
+>                                  nfs4_put_stid
+>                                   // free deleg
+>  list_first_entry
+>   // cant not get the deleg from reaplist
+> 
+> 
+> Before commit 83e733161fde ("nfsd: avoid race after
+> unhash_delegation_locked()"), nfs4_laundromat --> unhash_delegation_locked
+> would not set NFS4_REVOKED_DELEG_STID for the deleg.
+> So the description "it marks the delegation stid revoked" in the CVE fix
+> patch does not hold true. And the OP_FREE_STATEID operation will not
+> release the deleg.
 
-When the server is recalling a layout, we should ignore the count of
-outstanding layoutget calls, since the server is expected to return
-either NFS4ERR_RECALLCONFLICT or NFS4ERR_RETURNCONFLICT for as long as
-the recall is outstanding.
-Currently, we may end up livelocking, causing the layout to eventually
-be forcibly revoked.
+Thanks for the research.  If the maintainers involved agree, we'll be
+glad to add a .vulnerable file to our git repo and regenerate the json
+entry to reflect this starting point for the issue.
 
-Fixes: bf0291dd2267 ("pNFS: Ensure LAYOUTGET and LAYOUTRETURN are properly serialised")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/pnfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 0d16b383a452..5f582713bf05 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1308,7 +1308,7 @@ pnfs_prepare_layoutreturn(struct pnfs_layout_hdr *lo,
- 		enum pnfs_iomode *iomode)
- {
- 	/* Serialise LAYOUTGET/LAYOUTRETURN */
--	if (atomic_read(&lo->plh_outstanding) != 0)
-+	if (atomic_read(&lo->plh_outstanding) != 0 && lo->plh_return_seq == 0)
- 		return false;
- 	if (test_and_set_bit(NFS_LAYOUT_RETURN_LOCK, &lo->plh_flags))
- 		return false;
--- 
-2.47.1
-
+greg k-h
 
