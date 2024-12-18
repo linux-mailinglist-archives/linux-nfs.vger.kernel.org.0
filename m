@@ -1,141 +1,246 @@
-Return-Path: <linux-nfs+bounces-8653-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8654-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BEEE9F69C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 16:15:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BBD39F6C22
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 18:17:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 819BF189737A
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 15:12:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B22D6167226
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 17:16:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 537951BEF60;
-	Wed, 18 Dec 2024 15:11:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F281F130B;
+	Wed, 18 Dec 2024 17:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQtXdWA/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaRZII0X"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0637189F2B
-	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 15:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0E4A1D;
+	Wed, 18 Dec 2024 17:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734534715; cv=none; b=AVZoudIno6H4YFWbY2z7Z2e607U4qFXOhKnJbsHLqAZoEngTYsAmEDsUwKMJVIGcIeuoBklvwk5cKmEMdpjIqgAM1YSRdvRqL0Wr0ZBDOtjMobQ1XL4tlyJY3pnNtMRQ5PIErnbxo5+YfJfGxhWwMo0zfnabhz+JB9qW8PKXbdc=
+	t=1734542206; cv=none; b=TQA6sTH7J8ov4upAwqJNR5Ni244yxuLdOsFRl7XpGcEDHwBn7sndpwiyhOlR45lpTRpCGFluvIkFhtYHBEMW7RCbE7c6pZAd5bA1RycRq84RBzKgtwDrfkJ+IBh5m4ovrlluhE8sRSbObMN+1T2aFiFB+VNPlCJCl/RGyl3K4Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734534715; c=relaxed/simple;
-	bh=R+try+RfmuI5idpwgCK59NxsfBbJVo2MvgXWGidK9aw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GAyuZD30peiTMT/SFMh4q452HcUlFj25EieCDDMnXeshkbPFPC/+M4LwtWgWaNEaS1D0ur7Z0EO8LeAMlnMUy4k1E2Ah1CYbLF0q7t7GeN2JRx/FDPc1qRo6tLhqS2x4xMt1VfPM5a/1/L4EvWVDiM7aHW7q6OYij7F2tTdPSKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQtXdWA/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734534712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eKNTmBt743FcaTDi2mwFJxCsPfiytiWrNSq57tYzXto=;
-	b=UQtXdWA//4H5K6NgbkOTpqrdAuw+bKw1HSczzRwDlUhLDNt8kxzf+3h/zDm+T9T+QX7UEP
-	z5RwE9Agy36UBnU9YDmf8Efk7lgUq37e44zSKZ8Ycm3wgw3mEUZEctIwAD79mudg8dGWSo
-	i5KKKeZaLfLIp6LYB9XPPP0EZ/WgNvI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-BxnPGReFP6a7Bb6dLzALNg-1; Wed, 18 Dec 2024 10:11:51 -0500
-X-MC-Unique: BxnPGReFP6a7Bb6dLzALNg-1
-X-Mimecast-MFC-AGG-ID: BxnPGReFP6a7Bb6dLzALNg
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5d3f3d6a922so2275739a12.1
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 07:11:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734534710; x=1735139510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eKNTmBt743FcaTDi2mwFJxCsPfiytiWrNSq57tYzXto=;
-        b=dgDEOTl6Ko0eKu9PsDeZTiXcBJ1jGIjoWBnw3eLWNXh9dezhJdxXf//t8ABhRACZ//
-         AT6TIvxiCVm1VqBpQRT1mNdPHKy9VVeDs9fZdlbGAGZRAdHbWsI3FGJm1GM35keP/y9u
-         s73hyPDhnz4eEZbmU/sKkRiZyQZTnN3Ojav1E7UlE6CijVANVh9WXsH+HnMl858T8WUd
-         Mw3I0zaDlXGiPAbWXxvvq7QSJeSHu4JrMPPNikjKtpLc4RCgVXR2uIxOfl2Xh38Mj8Vx
-         BNTT2kQoN9RqxsR16xLkCeq9DE/KIYeoZsh5sQ0MbxN3Gwc8+kY6kBF2M2wNyu9wVr8f
-         d6QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZrOOX1AGA0oRZ/oguRaaG4JLcwo4Tj2u3hIZgcMoZAcJ5LuaLoaw1m5hDC30PMtcDiQvE6d6/4zQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQm5fbu4MUySYQJsYSY/s+1iMUhPdtbi051i77HKYhUlj7Bpkn
-	vTSkA92AMO3mXj791L3tsk2PdPqmhL7k91SuNAMeuD7yaVPqZKev2FUOKRcofvlO+0EkhssIFDX
-	u7zoGiaywjnTRrY4wqV+mYVTZyWzFHc2X++xgcMJzQCLIJds/WMj7QaGByE+Uz096y6DIjkqzvP
-	vH7A6spx3Mr7YOTILG1l57DN3ZQK3BmvMk
-X-Gm-Gg: ASbGncv1CXoQHM3OGiEVN5xZIiIA/xbT5EEQC+GB2imto1HbY8sRqU3DvGYrYMiYI5O
-	lIIKrNPWs6xduK8fLqHHGJ6fdyIk72nxHfqLw+2Jrtut97/Cz6ymtm1+23MubVLMv4LYxoTg=
-X-Received: by 2002:a05:6402:4498:b0:5d3:ba42:e9f4 with SMTP id 4fb4d7f45d1cf-5d7ee3ff1e3mr2854045a12.23.1734534710161;
-        Wed, 18 Dec 2024 07:11:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFvGsg1NUO6l9abXMUwq6bTbKqd7zjlTgzbxTgfGPITaLOLaXQ8Fo7FTknMiGuyKGqO9/srPflmhW8YzdheD2Q=
-X-Received: by 2002:a05:6402:4498:b0:5d3:ba42:e9f4 with SMTP id
- 4fb4d7f45d1cf-5d7ee3ff1e3mr2854016a12.23.1734534709799; Wed, 18 Dec 2024
- 07:11:49 -0800 (PST)
+	s=arc-20240116; t=1734542206; c=relaxed/simple;
+	bh=vByKvfBxoRz2Ew61HCzPzSOCqlcnxTOUTykzOp1/1ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntcXmMJf6taDtf68cQ0Ge3yfF+Yb8PJKG07mHl0i6FJuguopRQJZNLpFtOWmpVnVntdaqxSsV9It88JhQu31JclaY9WEFP/dsRpOlw3Hja21/mlsdrKeZ+/SiIVxQKAgK1HEilJR4ZlhNBp5ut9oOZY9HdWGaJKgpsiO7l4Y3u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaRZII0X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C71C4CECD;
+	Wed, 18 Dec 2024 17:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734542206;
+	bh=vByKvfBxoRz2Ew61HCzPzSOCqlcnxTOUTykzOp1/1ME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LaRZII0XV6az6sQ50USic51NDQt/fhWVoYaA0YSNVF8wUYpBxoJhSrjQCGTK6ajMD
+	 z44k3r2auvUrUCAQ2utziWzufJqHMxWXuyjupFw2hQDT4GtknGMBDIwv/yAYqbujzO
+	 30CCkreSlXnX7bEvuNiMcv3X/KgZCvjfJ92T2tLmULVlTdo4UJ4eE8TL+mLSttbx8p
+	 9mc3PfIVjxlmEs4uz9KMwzQaubt0ZtM0FbNMIwtm4XvZDZ0iIKywCsSTvbpiYkh8K8
+	 ZMAkejSDmtJ60gpcz3HHFd7QMoSicq1hWSYwaIKB9HXHte41/NmPr73vJCAMZ5698y
+	 t9dJEp6sKqvDg==
+Date: Wed, 18 Dec 2024 12:16:44 -0500
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, hannes@cmpxchg.org,
+	clm@meta.com, linux-kernel@vger.kernel.org, willy@infradead.org,
+	kirill@shutemov.name, bfoster@redhat.com, linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: flag as supporting FOP_DONTCACHE
+Message-ID: <Z2MDfBWULaV7n9Pb@kernel.org>
+References: <20241213155557.105419-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>
-In-Reply-To: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Wed, 18 Dec 2024 10:11:39 -0500
-Message-ID: <CACSpFtA20yrYg6uoUXKQuYOpwpn5NOa_kgLRABWJCgN5y19-Fg@mail.gmail.com>
-Subject: Re: does nfsd reset the callback client too hastily?
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241213155557.105419-1-axboe@kernel.dk>
 
-On Tue, Dec 17, 2024 at 9:58=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
->
+On Fri, Dec 13, 2024 at 08:55:14AM -0700, Jens Axboe wrote:
 > Hi,
->  I've been pondering the messages
->
->  receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt XXXXXX=
-X xid XXXXXX
+> 
+> 5 years ago I posted patches adding support for RWF_UNCACHED, as a way
+> to do buffered IO that isn't page cache persistent. The approach back
+> then was to have private pages for IO, and then get rid of them once IO
+> was done. But that then runs into all the issues that O_DIRECT has, in
+> terms of synchronizing with the page cache.
+> 
+> So here's a new approach to the same concent, but using the page cache
+> as synchronization. Due to excessive bike shedding on the naming, this
+> is now named RWF_DONTCACHE, and is less special in that it's just page
+> cache IO, except it prunes the ranges once IO is completed.
+> 
+> Why do this, you may ask? The tldr is that device speeds are only
+> getting faster, while reclaim is not. Doing normal buffered IO can be
+> very unpredictable, and suck up a lot of resources on the reclaim side.
+> This leads people to use O_DIRECT as a work-around, which has its own
+> set of restrictions in terms of size, offset, and length of IO. It's
+> also inherently synchronous, and now you need async IO as well. While
+> the latter isn't necessarily a big problem as we have good options
+> available there, it also should not be a requirement when all you want
+> to do is read or write some data without caching.
+> 
+> Even on desktop type systems, a normal NVMe device can fill the entire
+> page cache in seconds. On the big system I used for testing, there's a
+> lot more RAM, but also a lot more devices. As can be seen in some of the
+> results in the following patches, you can still fill RAM in seconds even
+> when there's 1TB of it. Hence this problem isn't solely a "big
+> hyperscaler system" issue, it's common across the board.
+> 
+> Common for both reads and writes with RWF_DONTCACHE is that they use the
+> page cache for IO. Reads work just like a normal buffered read would,
+> with the only exception being that the touched ranges will get pruned
+> after data has been copied. For writes, the ranges will get writeback
+> kicked off before the syscall returns, and then writeback completion
+> will prune the range. Hence writes aren't synchronous, and it's easy to
+> pipeline writes using RWF_DONTCACHE. Folios that aren't instantiated by
+> RWF_DONTCACHE IO are left untouched. This means you that uncached IO
+> will take advantage of the page cache for uptodate data, but not leave
+> anything it instantiated/created in cache.
+> 
+> File systems need to support this. This patchset adds support for the
+> generic read path, which covers file systems like ext4. Patches exist to
+> add support for iomap/XFS and btrfs as well, which sit on top of this
+> series. If RWF_DONTCACHE IO is attempted on a file system that doesn't
+> support it, -EOPNOTSUPP is returned. Hence the user can rely on it
+> either working as designed, or flagging and error if that's not the
+> case. The intent here is to give the application a sensible fallback
+> path - eg, it may fall back to O_DIRECT if appropriate, or just live
+> with the fact that uncached IO isn't available and do normal buffered
+> IO.
+> 
+> Adding "support" to other file systems should be trivial, most of the
+> time just a one-liner adding FOP_DONTCACHE to the fop_flags in the
+> file_operations struct.
+> 
+> Performance results are in patch 8 for reads, and you can find the write
+> side results in the XFS patch adding support for DONTCACHE writes for
+> XFS:
+> 
+> ://git.kernel.dk/cgit/linux/commit/?h=buffered-uncached.9&id=edd7b1c910c5251941c6ba179f44b4c81a089019
+> 
+> with the tldr being that I see about a 65% improvement in performance
+> for both, with fully predictable IO times. CPU reduction is substantial
+> as well, with no kswapd activity at all for reclaim when using
+> uncached IO.
+> 
+> Using it from applications is trivial - just set RWF_DONTCACHE for the
+> read or write, using pwritev2(2) or preadv2(2). For io_uring, same
+> thing, just set RWF_DONTCACHE in sqe->rw_flags for a buffered read/write
+> operation. And that's it.
+> 
+> Patches 1..7 are just prep patches, and should have no functional
+> changes at all. Patch 8 adds support for the filemap path for
+> RWF_DONTCACHE reads, and patches 9..11 are just prep patches for
+> supporting the write side of uncached writes. In the below mentioned
+> branch, there are then patches to adopt uncached reads and writes for
+> xfs, btrfs, and ext4. The latter currently relies on bit of a hack for
+> passing whether this is an uncached write or not through
+> ->write_begin(), which can hopefully go away once ext4 adopts iomap for
+> buffered writes. I say this is a hack as it's not the prettiest way to
+> do it, however it is fully solid and will work just fine.
+> 
+> Passes full xfstests and fsx overnight runs, no issues observed. That
+> includes the vm running the testing also using RWF_DONTCACHE on the
+> host. I'll post fsstress and fsx patches for RWF_DONTCACHE separately.
+> As far as I'm concerned, no further work needs doing here.
+> 
+> And git tree for the patches is here:
+> 
+> https://git.kernel.dk/cgit/linux/log/?h=buffered-uncached.9
+> 
+>  include/linux/fs.h             | 21 +++++++-
+>  include/linux/page-flags.h     |  5 ++
+>  include/linux/pagemap.h        |  1 +
+>  include/trace/events/mmflags.h |  3 +-
+>  include/uapi/linux/fs.h        |  6 ++-
+>  mm/filemap.c                   | 97 +++++++++++++++++++++++++++++-----
+>  mm/internal.h                  |  2 +
+>  mm/readahead.c                 | 22 ++++++--
+>  mm/swap.c                      |  2 +
+>  mm/truncate.c                  | 54 ++++++++++---------
+>  10 files changed, 166 insertions(+), 47 deletions(-)
+> 
+> Since v6
+> - Rename the PG_uncached flag to PG_dropbehind
+> - Shuffle patches around a bit, most notably so the foliop_uncached
+>   patch goes with the ext4 support
+> - Get rid of foliop_uncached hack for btrfs (Christoph)
+> - Get rid of passing in struct address_space to filemap_create_folio()
+> - Inline invalidate_complete_folio2() in folio_unmap_invalidate() rather
+>   than keep it as a separate helper
+> - Rebase on top of current master
+> 
+> -- 
+> Jens Axboe
+> 
+> 
 
-I wonder why are you seeing this? There was this commit 05a4b58301c3
-"SUNRPC: remove printk when back channel request not found" from a
-year ago....
 
-> that turn up occasionally.  Google reports a variety of hits and I've
-> seen them in a logs from a customer though I don't think they were
-> directly related to the customer's problem.
->
-> These messages suggest a callback reply from the client which the server
-> was not expecting.  I think the most likely cause that the server called
->   rpc_shutdown_client(clp->cl_cb_client);
-> while there were outstanding callbacks.
-> This causes rpc_killall_tasks() to be called so that the tasks stop
-> waiting for a reply and are discarded.
->
-> The rpc_shutdown_client() call can come from nfsd4_process_cb_update()
-> which gets runs whenever nfsd4_probe_callback() is called.  This happens
-> in quite a few places including when a new connection is bound to a
-> session.
->
-> So if a new connection is bound, the current callback channel is aborted
-> even though it is working perfectly well.  That is particularly
-> problematic as callback request are not currently retransmitted.
->
-> So I'm wondering if nfsd4_process_cb_update() should only shutdown the
-> current cb client if there is evidence that it isn't work.
->
-> I'm not certain how best to do that.  One option might be to do a search
-> similar to that in __nfsd4_find_backchannel() and see if the current
-> session and xprt are still valid.  There might be a better way.
->
-> Thoughts?
->
-> Thanks,
-> NeilBrown
->
+Hi Jens,
+
+You may recall I tested NFS to work with UNCACHED (now DONTCACHE).
+I've rebased the required small changes, feel free to append this to
+your series if you like.
+
+More work is needed to inform knfsd to selectively use DONTCACHE, but
+that will require more effort and coordination amongst the NFS kernel
+team.
+
+From: Mike Snitzer <snitzer@kernel.org>
+Date: Thu, 14 Nov 2024 22:09:01 +0000
+Subject: [PATCH] nfs: flag as supporting FOP_DONTCACHE
+
+Jens says: "nfs just uses generic_file_read_iter(), so read side is
+fine with the flag added and generic_perform_write() for the write
+side, wrapped in some nfs jazz. So you can probably just set the flag
+and be done with it."
+
+Must also update nfs_write_begin() to set FGP_DONTCACHE in fgp flags
+passed to __filemap_get_folio().
+
+Suggested-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ fs/nfs/file.c     | 3 +++
+ fs/nfs/nfs4file.c | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 1bb646752e466..ff5d4c97df494 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -354,6 +354,8 @@ static int nfs_write_begin(struct file *file, struct address_space *mapping,
+ 		file, mapping->host->i_ino, len, (long long) pos);
+ 
+ 	fgp |= fgf_set_order(len);
++	if (foliop_is_dropbehind(foliop))
++		fgp |= FGP_DONTCACHE;
+ start:
+ 	folio = __filemap_get_folio(mapping, pos >> PAGE_SHIFT, fgp,
+ 				    mapping_gfp_mask(mapping));
+@@ -909,5 +911,6 @@ const struct file_operations nfs_file_operations = {
+ 	.splice_write	= iter_file_splice_write,
+ 	.check_flags	= nfs_check_flags,
+ 	.setlease	= simple_nosetlease,
++	.fop_flags	= FOP_DONTCACHE,
+ };
+ EXPORT_SYMBOL_GPL(nfs_file_operations);
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 1cd9652f3c280..83e2467b7c66f 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -467,4 +467,5 @@ const struct file_operations nfs4_file_operations = {
+ #else
+ 	.llseek		= nfs_file_llseek,
+ #endif
++	.fop_flags	= FOP_DONTCACHE,
+ };
+-- 
+2.44.0
 
 
