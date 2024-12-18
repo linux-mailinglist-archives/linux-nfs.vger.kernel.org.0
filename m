@@ -1,207 +1,225 @@
-Return-Path: <linux-nfs+bounces-8660-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8661-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CC569F6F61
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 22:19:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53D6A9F6FE2
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 23:11:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E9A1B1892CF2
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 21:19:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9813616CFDD
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 22:11:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 159A21F543D;
-	Wed, 18 Dec 2024 21:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE66A1FCFE4;
+	Wed, 18 Dec 2024 22:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mG/gWkjx"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P4UPa765";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+i9OS3px";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1orWHmHL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QpFyC1BC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E4C1ACEA9
-	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 21:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCE81FCF66
+	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 22:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734556785; cv=none; b=i/9mXnzWFeAax+4Fl29z0G+wOegXRLXtLrKxblPuIIJpxU3g2g68YIYKUNTfr8ldZ4ZPfoepl/TSqnzPIubXWJAy21rR/BAZGNbsKjOQnzK9XJtNckvYnvzOaMTda0x6XkWREGt+DS6v8LWYv1jMpNL/lz1rsdhFaq/kvZA1TLU=
+	t=1734559856; cv=none; b=qZWl+gUi2a+80z3SDl13tvdPo87RWP2cnP+EzT+zLr/MZqPtXHMmZqjUUwTqvIz8FEYf5s8vaBKvJqTQ6v6b9XfMyGkrKdz15yCgCUVLkvWQRm3M5amxhJdbgGcWvph6ak6F2MdRBpJfJkNWyPpWWS20ru8RfrqbtyqBAnFZFjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734556785; c=relaxed/simple;
-	bh=dJXD4HnMjB0kqJUjoIE/n1TBJEnTJ5gV4GBuBhog8dM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eHEi0FujCbNWpHKgHmzx3EgD2DiUQjCkLEkfhl94kK8cYYGHIZbO4N6kseU4NzZI5JMcjiNvJuwIwxGf78XNOwfSyIRvH8STOF7cmySvRtuaU9EGVkHViwTsKQlX/rs44ChqLhNoHune5MbwSWMm0A0YBXQY4rEwphufe+hj5PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mG/gWkjx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C48BCC4CECD;
-	Wed, 18 Dec 2024 21:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734556784;
-	bh=dJXD4HnMjB0kqJUjoIE/n1TBJEnTJ5gV4GBuBhog8dM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mG/gWkjxc27GefuOfdUhx/DbqltBm1uBqIh7o+n/Quzz3B3DGxybNvCcqj30o1wAY
-	 rRwf4UO7YnnlqrBGJRJDalzf9Sc8VPaCAvWL9PL4l6NTkzFEmfwtWGVvZMKzVs3r2W
-	 CKMkcS5qLa82w0QCl+jfUlNLpqAu0Of5JiFH2lD9qClfAvAkqLnTMS5s5AGm0crbNO
-	 kE7kqmr6EBURD/cI5SUq9Nx3ra4I9b+71U3/eZsFifBuPtK47IJpDUbUrScybMqckP
-	 xzBHcVoZAnmOYE10Pznw8A+XildOWl9ZE7vit2keai6/zrcOHdP4YNi4PY1reqTIve
-	 t8tSqLgmfnzAg==
-Date: Wed, 18 Dec 2024 16:19:42 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	NeilBrown <neilb@suse.de>, linux-nfs@vger.kernel.org
-Subject: Re: [for-6.13 PATCH v3 00/14] nfs/nfsd: improvements for LOCALIO
-Message-ID: <Z2M8blaSYonRmDYT@kernel.org>
-References: <20241116014106.25456-1-snitzer@kernel.org>
- <754757a44ac96f894c82338ec3212cf7202d540a.camel@kernel.org>
- <Z0E-e7p5FtWWVKeV@kernel.org>
- <Z2MG3X_PpbJRNzCw@kernel.org>
- <f0d7f601-a6ac-40d6-9665-e9a40e2dc00c@oracle.com>
- <23bc5e70-9d7a-4185-9645-0ba89cd43de0@oracle.com>
+	s=arc-20240116; t=1734559856; c=relaxed/simple;
+	bh=loZIB8p1VVp/S+7DRIOeTiKmrmfDIMcRU9xIHQ4vkaM=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=jQeLm2tHSkIy3DIC8mc5gV/xBRWSfn33GjPzbvpU3kOTCvDj9zXSSULpDAoJUOWGQaWXg9TsCQhoB+R0xSU9bn4yq6awGl18QXlMCyb/eQXcNWg1t04RehW1JPcEd2XF510OgvSOgAI+LN5dDTqh6VEvomsYBEoDEE80v8c7+kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P4UPa765; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+i9OS3px; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1orWHmHL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QpFyC1BC; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E89852115C;
+	Wed, 18 Dec 2024 22:10:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734559853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
+	b=P4UPa765d/TDqzY524371xCpHzy95ZpZfcTDfnByC3YtMrXnIE95wIcmuEFqWR7MGfVIBc
+	OsjotGyXTMavYYuuQ1fs4rN8XK/LyKWjKlnIWGmWikc2V2K7YdfgNBkRl8V3TPsb5q2Lqo
+	VA3VmzCv48UY64L30duu3lF+3me3kZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734559853;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
+	b=+i9OS3pxfVcNoXd51yUWQ/IHd5684n+cbDUABlUcO7DQs1VCGoCAvupAIxRNfJadoPPpVV
+	R2SJ/ZJNYXtFTgCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1734559852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
+	b=1orWHmHLzS2jWdzwaa5UJLtmE59qX0nu7izZACIMgX4mWV/QBqegRm7TM1co0tA2Lz0XMq
+	RFcuPJzXfHuqtGdipAGU81xHCU99beZIiJL9WjBzcV3WFM212fw8lZcme307qDjPbypscR
+	lj2zLG5K4X9/EyduMXPM3QVbiZTj9/U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1734559852;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
+	b=QpFyC1BCUlykn26o6zdcI8ij8KKnVynfqj0hd0COja5NTj/Oul5scT3AQE0g9ZYSFXhCp7
+	3W9CyNr/auzNXvDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 24F9D132EA;
+	Wed, 18 Dec 2024 22:10:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2calMmpIY2dGKAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 18 Dec 2024 22:10:50 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23bc5e70-9d7a-4185-9645-0ba89cd43de0@oracle.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ linux-nfs@vger.kernel.org
+Subject: Re: does nfsd reset the callback client too hastily?
+In-reply-to: <eaecc0e5-ff04-40ca-94c1-997cf6ab116e@oracle.com>
+References: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>,
+ <eaecc0e5-ff04-40ca-94c1-997cf6ab116e@oracle.com>
+Date: Thu, 19 Dec 2024 09:10:44 +1100
+Message-id: <173455984414.1734440.2852424631193788379@noble.neil.brown.name>
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Dec 18, 2024 at 04:05:23PM -0500, Chuck Lever wrote:
-> On 12/18/24 3:55 PM, Anna Schumaker wrote:
-> > 
-> > 
-> > On 12/18/24 12:31 PM, Mike Snitzer wrote:
-> > > On Fri, Nov 22, 2024 at 09:31:23PM -0500, Mike Snitzer wrote:
-> > > > On Fri, Nov 22, 2024 at 12:26:39PM -0500, Jeff Layton wrote:
-> > > > > On Fri, 2024-11-15 at 20:40 -0500, Mike Snitzer wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > All available here:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
-> > > > > > 
-> > > > > > Changes since v2:
-> > > > > > - switched from rcu_assign_pointer to RCU_INIT_POINTER when setting to
-> > > > > >    NULL.
-> > > > > > - removed some unnecessary #if IS_ENABLED(CONFIG_NFS_LOCALIO)
-> > > > > > - revised the NFS v3 probe patch to use a new nfsv3.ko modparam
-> > > > > >    'nfs3_localio_probe_throttle' to control if NFSv3 will probe for
-> > > > > >    LOCALIO. Avoids use of NFS_CS_LOCAL_IO and will probe every
-> > > > > >    'nfs3_localio_probe_throttle' IO requests (defaults to 0, disabled).
-> > > > > > - added "Module Parameters" section to localio.rst
-> > > > > > 
-> > > > > > All review appreciated, thanks.
-> > > > > > Mike
-> > > > > > 
-> > > > > > Mike Snitzer (14):
-> > > > > >    nfs/localio: add direct IO enablement with sync and async IO support
-> > > > > >    nfsd: add nfsd_file_{get,put} to 'nfs_to' nfsd_localio_operations
-> > > > > >    nfs_common: rename functions that invalidate LOCALIO nfs_clients
-> > > > > >    nfs_common: move localio_lock to new lock member of nfs_uuid_t
-> > > > > >    nfs: cache all open LOCALIO nfsd_file(s) in client
-> > > > > >    nfsd: update percpu_ref to manage references on nfsd_net
-> > > > > >    nfsd: rename nfsd_serv_ prefixed methods and variables with nfsd_net_
-> > > > > >    nfsd: nfsd_file_acquire_local no longer returns GC'd nfsd_file
-> > > > > >    nfs_common: rename nfslocalio nfs_uuid_lock to nfs_uuids_lock
-> > > > > >    nfs_common: track all open nfsd_files per LOCALIO nfs_client
-> > > > > >    nfs_common: add nfs_localio trace events
-> > > > > >    nfs/localio: remove redundant code and simplify LOCALIO enablement
-> > > > > >    nfs: probe for LOCALIO when v4 client reconnects to server
-> > > > > >    nfs: probe for LOCALIO when v3 client reconnects to server
-> > > > > > 
-> > > > > >   Documentation/filesystems/nfs/localio.rst |  98 +++++----
-> > > > > >   fs/nfs/client.c                           |   6 +-
-> > > > > >   fs/nfs/direct.c                           |   1 +
-> > > > > >   fs/nfs/flexfilelayout/flexfilelayout.c    |  25 +--
-> > > > > >   fs/nfs/flexfilelayout/flexfilelayout.h    |   1 +
-> > > > > >   fs/nfs/inode.c                            |   3 +
-> > > > > >   fs/nfs/internal.h                         |   9 +-
-> > > > > >   fs/nfs/localio.c                          | 232 +++++++++++++++-----
-> > > > > >   fs/nfs/nfs3proc.c                         |  46 +++-
-> > > > > >   fs/nfs/nfs4state.c                        |   1 +
-> > > > > >   fs/nfs/nfstrace.h                         |  32 ---
-> > > > > >   fs/nfs/pagelist.c                         |   5 +-
-> > > > > >   fs/nfs/write.c                            |   3 +-
-> > > > > >   fs/nfs_common/Makefile                    |   3 +-
-> > > > > >   fs/nfs_common/localio_trace.c             |  10 +
-> > > > > >   fs/nfs_common/localio_trace.h             |  56 +++++
-> > > > > >   fs/nfs_common/nfslocalio.c                | 250 +++++++++++++++++-----
-> > > > > >   fs/nfsd/filecache.c                       |  20 +-
-> > > > > >   fs/nfsd/localio.c                         |   9 +-
-> > > > > >   fs/nfsd/netns.h                           |  12 +-
-> > > > > >   fs/nfsd/nfsctl.c                          |   6 +-
-> > > > > >   fs/nfsd/nfssvc.c                          |  40 ++--
-> > > > > >   include/linux/nfs_fs.h                    |  22 +-
-> > > > > >   include/linux/nfs_fs_sb.h                 |   3 +-
-> > > > > >   include/linux/nfs_xdr.h                   |   1 +
-> > > > > >   include/linux/nfslocalio.h                |  48 +++--
-> > > > > >   26 files changed, 674 insertions(+), 268 deletions(-)
-> > > > > >   create mode 100644 fs/nfs_common/localio_trace.c
-> > > > > >   create mode 100644 fs/nfs_common/localio_trace.h
-> > > > > > 
-> > > > > 
-> > > > > I went through the set and it looks mostly sane to me. The one concern
-> > > > > I have is that you have the client set up to start caching nfsd files
-> > > > > before there is a mechanism to call it and ask them to return them. You
-> > > > > might see some weird behavior there on a bisect, but it looks like it
-> > > > > all gets resolved in the end.
-> > > > 
-> > > > Yeah, couldn't see a better way to atomically pivot to the new disable
-> > > > functionality without it needing to be a large muddled patch.
-> > > > 
-> > > > Shouldn't be bad even if someone did bisect, its only the server being
-> > > > restarted during LOCALIO that could see issues (unlikely thing for
-> > > > someone to be testing for specifically with a bisect).
-> > > > 
-> > > > > How do you intend for this to go in? Since most of this is client side,
-> > > > > will this be going in via Trond/Anna's tree?
-> > > > 
-> > > > Yes, likely easiest to have it go through Trond/Anna's tree.  Trond
-> > > > did have it in his testing tree, maybe your Reviewed-by helps it all
-> > > > land.
-> > > > 
-> > > > > You can add:
-> > > > > 
-> > > > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > > > 
-> > > > Thanks,
-> > > > Mike
-> > > > 
-> > > 
-> > > Hi all,
-> > > 
-> > > These LOCALIO changes didn't land for 6.13 merge, please advise on if
-> > > we might get these changes staged for 6.14 now-ish.
-> > 
-> > Works for me.
-> > 
-> > > 
-> > > Trond and/or Anna, do you feel comfortable picking this series up
-> > > (nfsd cachnges too) or would you like to see any changes before that
-> > > is possible?
-> > 
-> > I'll go through the patches once more, but they should be fine. I will need Acked-by's for the NFSD bits from Chuck or Jeff.
-> 
-> Looks like Jeff gave his Reviewed-by for the series already.
-> 
-> I had asked for some minor changes, haven't seen them go by,
+On Thu, 19 Dec 2024, Chuck Lever wrote:
+> On 12/17/24 9:57 PM, NeilBrown wrote:
+> >=20
+> > Hi,
+> >   I've been pondering the messages
+> >=20
+> >   receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt XXXXX=
+XX xid XXXXXX
+> >=20
+> > that turn up occasionally.  Google reports a variety of hits and I've
+> > seen them in a logs from a customer though I don't think they were
+> > directly related to the customer's problem.
+>=20
+> That message isn't actionable by administrators, and risks filling the
+> server's system journal with noise. I suggest that it be removed or
+> turned into a trace point.
 
-Only thing I was aware of, and addressed in v2, was this:
-https://lore.kernel.org/all/ZzNm0hekxOyAUhib@tissot.1015granger.net/
+As Olga notes it has already been removed.  But the point was not about
+the message but the behaviour that leads to it.  Does is really make
+sense to reset the client when there is no evidence of failure?
 
-I added a module parameters section to the localio.rst and mentioned
-that in v2's 0th header:
-https://lore.kernel.org/r/all/20241114035952.13889-1-snitzer@kernel.org/
+Maybe I'll send a patch.
 
-with:
 
-"- updated Documentation/filesystems/nfs/localio.rst to reflect the
-  percpu_ref change from nfsd_serv to nfsd_net. Also discuss O_DIRECT
-  relative to LOCALIO and document the nfs module param (Chuck, I do
-  think we need it, otherwise O_DIRECT regressions are possible)."
+>=20
+>=20
+> > These messages suggest a callback reply from the client which the server
+> > was not expecting.  I think the most likely cause that the server called
+> >    rpc_shutdown_client(clp->cl_cb_client);
+> > while there were outstanding callbacks.
+> > This causes rpc_killall_tasks() to be called so that the tasks stop
+> > waiting for a reply and are discarded.
+> >=20
+> > The rpc_shutdown_client() call can come from nfsd4_process_cb_update()
+> > which gets runs whenever nfsd4_probe_callback() is called.  This happens
+> > in quite a few places including when a new connection is bound to a
+> > session.
+> >=20
+> > So if a new connection is bound, the current callback channel is aborted
+> > even though it is working perfectly well.  That is particularly
+> > problematic as callback request are not currently retransmitted.
+> >=20
+> > So I'm wondering if nfsd4_process_cb_update() should only shutdown the
+> > current cb client if there is evidence that it isn't work.
+> >=20
+> > I'm not certain how best to do that.  One option might be to do a search
+> > similar to that in __nfsd4_find_backchannel() and see if the current
+> > session and xprt are still valid.  There might be a better way.
+> >=20
+> > Thoughts?
+>=20
+> Operating from memory, so this might be crazy talk:
+>=20
+> The fundamental problem is lack of ability to retransmit a callback
+> after a reconnect. The rpc_shutdown_clnt() tosses all pending RPC
+> tasks, making it impossible to retransmit them.
+>=20
+> I'd rather see the rpc_clnt be owned by the session instead of the
+> nfs_client. Then the rpc_clnt could be destroyed only when the session
+> is actually destroyed, at which point we know it is sensible and safe
+> to discard pending callback operations.
+>=20
+> But the callback code is designed to handle both NFSv4.0 and NFSv4.1
+> callbacks, even though these are somewhat different beasts.
+>=20
+> NFSv4.0 operates:
+> - on a real transport that can reestablish a connection on demand
+> - without a session
+>=20
+> NFSv4.1 operates:
+> - on a virtual transport, and has to wait for the client to reestablish
+>    a connection
+> - within a session context that is supposed to survive multiple
+>    transport instances
+>=20
+> Some reorganization is needed to successfully re-anchor the rpc_clnt.
 
-> but, for the NFSD-related hunks:
-> 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+That's helpful - thanks.
+I wonder if the xprtmultipath infrastructure could be used to attach all
+the bound xprts to the rpc_clnt.
 
-Thanks!
+I'll see what I can come up with.
+
+NeilBrown
+
+
+>=20
+> --=20
+> Chuck Lever
+>=20
+
 
