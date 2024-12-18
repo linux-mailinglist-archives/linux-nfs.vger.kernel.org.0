@@ -1,55 +1,57 @@
-Return-Path: <linux-nfs+bounces-8654-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8655-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BBD39F6C22
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 18:17:07 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F19E9F6C5A
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 18:31:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B22D6167226
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 17:16:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0B2A7A2898
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 17:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F281F130B;
-	Wed, 18 Dec 2024 17:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5818A1F4284;
+	Wed, 18 Dec 2024 17:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaRZII0X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kJfV2l+K"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0E4A1D;
-	Wed, 18 Dec 2024 17:16:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B301A256E
+	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 17:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734542206; cv=none; b=TQA6sTH7J8ov4upAwqJNR5Ni244yxuLdOsFRl7XpGcEDHwBn7sndpwiyhOlR45lpTRpCGFluvIkFhtYHBEMW7RCbE7c6pZAd5bA1RycRq84RBzKgtwDrfkJ+IBh5m4ovrlluhE8sRSbObMN+1T2aFiFB+VNPlCJCl/RGyl3K4Rw=
+	t=1734543071; cv=none; b=Dmfim7c5M4O4pqPYlde1BppbvcQVLesn6Ox/RAoDeXnT6FHN1gLkMbYZYmMJuw79oMmtQE4UPu1HoqpvyZwXXIKAYwkf9TEyitW/Ty1aW3sr+qkadubNLlpFfjvxOXYntv6VVzEht3++eVIQjEWwIc/2+q5X30IETtoPnPoCGII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734542206; c=relaxed/simple;
-	bh=vByKvfBxoRz2Ew61HCzPzSOCqlcnxTOUTykzOp1/1ME=;
+	s=arc-20240116; t=1734543071; c=relaxed/simple;
+	bh=iuz83Ca2mKSZ7Mf2Ktt4tMHRkAR0eAUyrj2Z6h+elBM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ntcXmMJf6taDtf68cQ0Ge3yfF+Yb8PJKG07mHl0i6FJuguopRQJZNLpFtOWmpVnVntdaqxSsV9It88JhQu31JclaY9WEFP/dsRpOlw3Hja21/mlsdrKeZ+/SiIVxQKAgK1HEilJR4ZlhNBp5ut9oOZY9HdWGaJKgpsiO7l4Y3u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaRZII0X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4C71C4CECD;
-	Wed, 18 Dec 2024 17:16:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=M6l5lo7lIE3Isi4FFGVDTbyVzWpVcgzIfOHcsYjVsLeRGzl91w+q9PVkaaQ2+5h8+oGPFlY3zt4UNTPdu68KOU7knHWIbi5MOdjFxQAu9r/HQA20QGY7v9ZFr9e63Kx4t7Nou+0NfZ2EQpNeUSs3uT+PRmjARuapkkj78j//7tU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kJfV2l+K; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955F5C4CECD;
+	Wed, 18 Dec 2024 17:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734542206;
-	bh=vByKvfBxoRz2Ew61HCzPzSOCqlcnxTOUTykzOp1/1ME=;
+	s=k20201202; t=1734543070;
+	bh=iuz83Ca2mKSZ7Mf2Ktt4tMHRkAR0eAUyrj2Z6h+elBM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LaRZII0XV6az6sQ50USic51NDQt/fhWVoYaA0YSNVF8wUYpBxoJhSrjQCGTK6ajMD
-	 z44k3r2auvUrUCAQ2utziWzufJqHMxWXuyjupFw2hQDT4GtknGMBDIwv/yAYqbujzO
-	 30CCkreSlXnX7bEvuNiMcv3X/KgZCvjfJ92T2tLmULVlTdo4UJ4eE8TL+mLSttbx8p
-	 9mc3PfIVjxlmEs4uz9KMwzQaubt0ZtM0FbNMIwtm4XvZDZ0iIKywCsSTvbpiYkh8K8
-	 ZMAkejSDmtJ60gpcz3HHFd7QMoSicq1hWSYwaIKB9HXHte41/NmPr73vJCAMZ5698y
-	 t9dJEp6sKqvDg==
-Date: Wed, 18 Dec 2024 12:16:44 -0500
+	b=kJfV2l+KX4LlhEf/dYLnfG2Si7Z7vYDMxmmLVNvD0YtA6rL/sT3HxYumPhuokIrge
+	 nz2j55RYOc7AaW42MeCW2WctLodvsowTR7vJWh2kH0+lKPgudiFE6qGmUSlHIJZcP7
+	 NZAVlp9FW02Z0EkvJmEAK/N4S9kCzDtYhCrnpngSTX6an+ODQwdqnSAXK0eepNmvQ6
+	 SB2Vhe9FVQr1OrINpqW445fnp+aL9fe8lRlKBpiitQJM+Jf8Ahq5Jm+d6jLUsjyJKx
+	 lOOz8x5scuFZZgeWc1b02/5702W+1mzxMeYehNjokQqxmovye0l4Gg58wtX3t4ChzG
+	 75YcNFe4Sra0g==
+Date: Wed, 18 Dec 2024 12:31:09 -0500
 From: Mike Snitzer <snitzer@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, hannes@cmpxchg.org,
-	clm@meta.com, linux-kernel@vger.kernel.org, willy@infradead.org,
-	kirill@shutemov.name, bfoster@redhat.com, linux-nfs@vger.kernel.org
-Subject: [PATCH] nfs: flag as supporting FOP_DONTCACHE
-Message-ID: <Z2MDfBWULaV7n9Pb@kernel.org>
-References: <20241213155557.105419-1-axboe@kernel.dk>
+To: Jeff Layton <jlayton@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [for-6.13 PATCH v3 00/14] nfs/nfsd: improvements for LOCALIO
+Message-ID: <Z2MG3X_PpbJRNzCw@kernel.org>
+References: <20241116014106.25456-1-snitzer@kernel.org>
+ <754757a44ac96f894c82338ec3212cf7202d540a.camel@kernel.org>
+ <Z0E-e7p5FtWWVKeV@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,189 +60,113 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241213155557.105419-1-axboe@kernel.dk>
+In-Reply-To: <Z0E-e7p5FtWWVKeV@kernel.org>
 
-On Fri, Dec 13, 2024 at 08:55:14AM -0700, Jens Axboe wrote:
-> Hi,
+On Fri, Nov 22, 2024 at 09:31:23PM -0500, Mike Snitzer wrote:
+> On Fri, Nov 22, 2024 at 12:26:39PM -0500, Jeff Layton wrote:
+> > On Fri, 2024-11-15 at 20:40 -0500, Mike Snitzer wrote:
+> > > Hi,
+> > > 
+> > > All available here:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=nfs-localio-for-next
+> > > 
+> > > Changes since v2:
+> > > - switched from rcu_assign_pointer to RCU_INIT_POINTER when setting to
+> > >   NULL.
+> > > - removed some unnecessary #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+> > > - revised the NFS v3 probe patch to use a new nfsv3.ko modparam
+> > >   'nfs3_localio_probe_throttle' to control if NFSv3 will probe for
+> > >   LOCALIO. Avoids use of NFS_CS_LOCAL_IO and will probe every
+> > >   'nfs3_localio_probe_throttle' IO requests (defaults to 0, disabled).
+> > > - added "Module Parameters" section to localio.rst
+> > > 
+> > > All review appreciated, thanks.
+> > > Mike
+> > > 
+> > > Mike Snitzer (14):
+> > >   nfs/localio: add direct IO enablement with sync and async IO support
+> > >   nfsd: add nfsd_file_{get,put} to 'nfs_to' nfsd_localio_operations
+> > >   nfs_common: rename functions that invalidate LOCALIO nfs_clients
+> > >   nfs_common: move localio_lock to new lock member of nfs_uuid_t
+> > >   nfs: cache all open LOCALIO nfsd_file(s) in client
+> > >   nfsd: update percpu_ref to manage references on nfsd_net
+> > >   nfsd: rename nfsd_serv_ prefixed methods and variables with nfsd_net_
+> > >   nfsd: nfsd_file_acquire_local no longer returns GC'd nfsd_file
+> > >   nfs_common: rename nfslocalio nfs_uuid_lock to nfs_uuids_lock
+> > >   nfs_common: track all open nfsd_files per LOCALIO nfs_client
+> > >   nfs_common: add nfs_localio trace events
+> > >   nfs/localio: remove redundant code and simplify LOCALIO enablement
+> > >   nfs: probe for LOCALIO when v4 client reconnects to server
+> > >   nfs: probe for LOCALIO when v3 client reconnects to server
+> > > 
+> > >  Documentation/filesystems/nfs/localio.rst |  98 +++++----
+> > >  fs/nfs/client.c                           |   6 +-
+> > >  fs/nfs/direct.c                           |   1 +
+> > >  fs/nfs/flexfilelayout/flexfilelayout.c    |  25 +--
+> > >  fs/nfs/flexfilelayout/flexfilelayout.h    |   1 +
+> > >  fs/nfs/inode.c                            |   3 +
+> > >  fs/nfs/internal.h                         |   9 +-
+> > >  fs/nfs/localio.c                          | 232 +++++++++++++++-----
+> > >  fs/nfs/nfs3proc.c                         |  46 +++-
+> > >  fs/nfs/nfs4state.c                        |   1 +
+> > >  fs/nfs/nfstrace.h                         |  32 ---
+> > >  fs/nfs/pagelist.c                         |   5 +-
+> > >  fs/nfs/write.c                            |   3 +-
+> > >  fs/nfs_common/Makefile                    |   3 +-
+> > >  fs/nfs_common/localio_trace.c             |  10 +
+> > >  fs/nfs_common/localio_trace.h             |  56 +++++
+> > >  fs/nfs_common/nfslocalio.c                | 250 +++++++++++++++++-----
+> > >  fs/nfsd/filecache.c                       |  20 +-
+> > >  fs/nfsd/localio.c                         |   9 +-
+> > >  fs/nfsd/netns.h                           |  12 +-
+> > >  fs/nfsd/nfsctl.c                          |   6 +-
+> > >  fs/nfsd/nfssvc.c                          |  40 ++--
+> > >  include/linux/nfs_fs.h                    |  22 +-
+> > >  include/linux/nfs_fs_sb.h                 |   3 +-
+> > >  include/linux/nfs_xdr.h                   |   1 +
+> > >  include/linux/nfslocalio.h                |  48 +++--
+> > >  26 files changed, 674 insertions(+), 268 deletions(-)
+> > >  create mode 100644 fs/nfs_common/localio_trace.c
+> > >  create mode 100644 fs/nfs_common/localio_trace.h
+> > > 
+> > 
+> > I went through the set and it looks mostly sane to me. The one concern
+> > I have is that you have the client set up to start caching nfsd files
+> > before there is a mechanism to call it and ask them to return them. You
+> > might see some weird behavior there on a bisect, but it looks like it
+> > all gets resolved in the end.
 > 
-> 5 years ago I posted patches adding support for RWF_UNCACHED, as a way
-> to do buffered IO that isn't page cache persistent. The approach back
-> then was to have private pages for IO, and then get rid of them once IO
-> was done. But that then runs into all the issues that O_DIRECT has, in
-> terms of synchronizing with the page cache.
+> Yeah, couldn't see a better way to atomically pivot to the new disable
+> functionality without it needing to be a large muddled patch.
 > 
-> So here's a new approach to the same concent, but using the page cache
-> as synchronization. Due to excessive bike shedding on the naming, this
-> is now named RWF_DONTCACHE, and is less special in that it's just page
-> cache IO, except it prunes the ranges once IO is completed.
+> Shouldn't be bad even if someone did bisect, its only the server being
+> restarted during LOCALIO that could see issues (unlikely thing for
+> someone to be testing for specifically with a bisect).
 > 
-> Why do this, you may ask? The tldr is that device speeds are only
-> getting faster, while reclaim is not. Doing normal buffered IO can be
-> very unpredictable, and suck up a lot of resources on the reclaim side.
-> This leads people to use O_DIRECT as a work-around, which has its own
-> set of restrictions in terms of size, offset, and length of IO. It's
-> also inherently synchronous, and now you need async IO as well. While
-> the latter isn't necessarily a big problem as we have good options
-> available there, it also should not be a requirement when all you want
-> to do is read or write some data without caching.
+> > How do you intend for this to go in? Since most of this is client side,
+> > will this be going in via Trond/Anna's tree?
 > 
-> Even on desktop type systems, a normal NVMe device can fill the entire
-> page cache in seconds. On the big system I used for testing, there's a
-> lot more RAM, but also a lot more devices. As can be seen in some of the
-> results in the following patches, you can still fill RAM in seconds even
-> when there's 1TB of it. Hence this problem isn't solely a "big
-> hyperscaler system" issue, it's common across the board.
+> Yes, likely easiest to have it go through Trond/Anna's tree.  Trond
+> did have it in his testing tree, maybe your Reviewed-by helps it all
+> land.
 > 
-> Common for both reads and writes with RWF_DONTCACHE is that they use the
-> page cache for IO. Reads work just like a normal buffered read would,
-> with the only exception being that the touched ranges will get pruned
-> after data has been copied. For writes, the ranges will get writeback
-> kicked off before the syscall returns, and then writeback completion
-> will prune the range. Hence writes aren't synchronous, and it's easy to
-> pipeline writes using RWF_DONTCACHE. Folios that aren't instantiated by
-> RWF_DONTCACHE IO are left untouched. This means you that uncached IO
-> will take advantage of the page cache for uptodate data, but not leave
-> anything it instantiated/created in cache.
+> > You can add:
+> > 
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
 > 
-> File systems need to support this. This patchset adds support for the
-> generic read path, which covers file systems like ext4. Patches exist to
-> add support for iomap/XFS and btrfs as well, which sit on top of this
-> series. If RWF_DONTCACHE IO is attempted on a file system that doesn't
-> support it, -EOPNOTSUPP is returned. Hence the user can rely on it
-> either working as designed, or flagging and error if that's not the
-> case. The intent here is to give the application a sensible fallback
-> path - eg, it may fall back to O_DIRECT if appropriate, or just live
-> with the fact that uncached IO isn't available and do normal buffered
-> IO.
-> 
-> Adding "support" to other file systems should be trivial, most of the
-> time just a one-liner adding FOP_DONTCACHE to the fop_flags in the
-> file_operations struct.
-> 
-> Performance results are in patch 8 for reads, and you can find the write
-> side results in the XFS patch adding support for DONTCACHE writes for
-> XFS:
-> 
-> ://git.kernel.dk/cgit/linux/commit/?h=buffered-uncached.9&id=edd7b1c910c5251941c6ba179f44b4c81a089019
-> 
-> with the tldr being that I see about a 65% improvement in performance
-> for both, with fully predictable IO times. CPU reduction is substantial
-> as well, with no kswapd activity at all for reclaim when using
-> uncached IO.
-> 
-> Using it from applications is trivial - just set RWF_DONTCACHE for the
-> read or write, using pwritev2(2) or preadv2(2). For io_uring, same
-> thing, just set RWF_DONTCACHE in sqe->rw_flags for a buffered read/write
-> operation. And that's it.
-> 
-> Patches 1..7 are just prep patches, and should have no functional
-> changes at all. Patch 8 adds support for the filemap path for
-> RWF_DONTCACHE reads, and patches 9..11 are just prep patches for
-> supporting the write side of uncached writes. In the below mentioned
-> branch, there are then patches to adopt uncached reads and writes for
-> xfs, btrfs, and ext4. The latter currently relies on bit of a hack for
-> passing whether this is an uncached write or not through
-> ->write_begin(), which can hopefully go away once ext4 adopts iomap for
-> buffered writes. I say this is a hack as it's not the prettiest way to
-> do it, however it is fully solid and will work just fine.
-> 
-> Passes full xfstests and fsx overnight runs, no issues observed. That
-> includes the vm running the testing also using RWF_DONTCACHE on the
-> host. I'll post fsstress and fsx patches for RWF_DONTCACHE separately.
-> As far as I'm concerned, no further work needs doing here.
-> 
-> And git tree for the patches is here:
-> 
-> https://git.kernel.dk/cgit/linux/log/?h=buffered-uncached.9
-> 
->  include/linux/fs.h             | 21 +++++++-
->  include/linux/page-flags.h     |  5 ++
->  include/linux/pagemap.h        |  1 +
->  include/trace/events/mmflags.h |  3 +-
->  include/uapi/linux/fs.h        |  6 ++-
->  mm/filemap.c                   | 97 +++++++++++++++++++++++++++++-----
->  mm/internal.h                  |  2 +
->  mm/readahead.c                 | 22 ++++++--
->  mm/swap.c                      |  2 +
->  mm/truncate.c                  | 54 ++++++++++---------
->  10 files changed, 166 insertions(+), 47 deletions(-)
-> 
-> Since v6
-> - Rename the PG_uncached flag to PG_dropbehind
-> - Shuffle patches around a bit, most notably so the foliop_uncached
->   patch goes with the ext4 support
-> - Get rid of foliop_uncached hack for btrfs (Christoph)
-> - Get rid of passing in struct address_space to filemap_create_folio()
-> - Inline invalidate_complete_folio2() in folio_unmap_invalidate() rather
->   than keep it as a separate helper
-> - Rebase on top of current master
-> 
-> -- 
-> Jens Axboe
-> 
+> Thanks,
+> Mike
 > 
 
+Hi all,
 
-Hi Jens,
+These LOCALIO changes didn't land for 6.13 merge, please advise on if
+we might get these changes staged for 6.14 now-ish.
 
-You may recall I tested NFS to work with UNCACHED (now DONTCACHE).
-I've rebased the required small changes, feel free to append this to
-your series if you like.
+Trond and/or Anna, do you feel comfortable picking this series up
+(nfsd cachnges too) or would you like to see any changes before that
+is possible?
 
-More work is needed to inform knfsd to selectively use DONTCACHE, but
-that will require more effort and coordination amongst the NFS kernel
-team.
-
-From: Mike Snitzer <snitzer@kernel.org>
-Date: Thu, 14 Nov 2024 22:09:01 +0000
-Subject: [PATCH] nfs: flag as supporting FOP_DONTCACHE
-
-Jens says: "nfs just uses generic_file_read_iter(), so read side is
-fine with the flag added and generic_perform_write() for the write
-side, wrapped in some nfs jazz. So you can probably just set the flag
-and be done with it."
-
-Must also update nfs_write_begin() to set FGP_DONTCACHE in fgp flags
-passed to __filemap_get_folio().
-
-Suggested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/file.c     | 3 +++
- fs/nfs/nfs4file.c | 1 +
- 2 files changed, 4 insertions(+)
-
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 1bb646752e466..ff5d4c97df494 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -354,6 +354,8 @@ static int nfs_write_begin(struct file *file, struct address_space *mapping,
- 		file, mapping->host->i_ino, len, (long long) pos);
- 
- 	fgp |= fgf_set_order(len);
-+	if (foliop_is_dropbehind(foliop))
-+		fgp |= FGP_DONTCACHE;
- start:
- 	folio = __filemap_get_folio(mapping, pos >> PAGE_SHIFT, fgp,
- 				    mapping_gfp_mask(mapping));
-@@ -909,5 +911,6 @@ const struct file_operations nfs_file_operations = {
- 	.splice_write	= iter_file_splice_write,
- 	.check_flags	= nfs_check_flags,
- 	.setlease	= simple_nosetlease,
-+	.fop_flags	= FOP_DONTCACHE,
- };
- EXPORT_SYMBOL_GPL(nfs_file_operations);
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 1cd9652f3c280..83e2467b7c66f 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -467,4 +467,5 @@ const struct file_operations nfs4_file_operations = {
- #else
- 	.llseek		= nfs_file_llseek,
- #endif
-+	.fop_flags	= FOP_DONTCACHE,
- };
--- 
-2.44.0
-
+Thanks,
+Mike
 
