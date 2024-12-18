@@ -1,126 +1,278 @@
-Return-Path: <linux-nfs+bounces-8647-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8650-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD97F9F5ECD
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 07:48:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D76AB9F67AB
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 14:51:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1633D7A1955
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 06:48:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B4427A2457
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 13:51:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3476158D96;
-	Wed, 18 Dec 2024 06:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD6E21ACEC1;
+	Wed, 18 Dec 2024 13:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SsulOY7q";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qcpoOVbe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65423154457;
-	Wed, 18 Dec 2024 06:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734504494; cv=none; b=Gujw4Rgj9XtDnfbCkyprj/xSSGWbU+tj8tGaIVVMGEZCQUVYF5b0qwK5vNmtrhRGaZHjuuH/Y7nFPLzOzxbScKrLEW4Hg9OSJ1Ke/cdUxS8H0wOtbrcf+pNB+Zij9m55F6xiPqH2OM3Yvtnjy0cc6uhEsZ9PNeNS/nzcpHy8sdU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734504494; c=relaxed/simple;
-	bh=tyU/E7IdI0PoI6xnGSKBcD21KiHHsKL6ZTo0hZJt4KA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VGuSUL5aWQiTjVmoHqGpR3D9xofx/OdHjNzf6DJoiEY1/8uIdCj5oselUa5Cpj6kyK0u0hFXPwonZRpoyhompdPqPJYkJRDqzQeRluTA5ryPliZKYjFesRyvnVYp5srkdXTMACQIyRByizbDiGq6My6ZDpgqMXqFfgMPODcYw70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YCklH0Swkz4f3jqZ;
-	Wed, 18 Dec 2024 14:47:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7E5EE1A018D;
-	Wed, 18 Dec 2024 14:48:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP1 (Coremail) with SMTP id cCh0CgA33a4mcGJnxKU7Ew--.4083S7;
-	Wed, 18 Dec 2024 14:48:09 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH v4 5/5] Xarray: use xa_mark_t in xas_squash_marks() to keep code consistent
-Date: Wed, 18 Dec 2024 23:46:13 +0800
-Message-Id: <20241218154613.58754-6-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20241218154613.58754-1-shikemeng@huaweicloud.com>
-References: <20241218154613.58754-1-shikemeng@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE7B158853
+	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 13:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734529881; cv=fail; b=UEpm8kf5DWS444iCZGFeAM4dHsQMfLkMKWyIi1/L96AI7nrtWaNJMyI2vg5obSgVkIIOoyfenEBe+l786eFPbAXMqBS1oJbtM08dR34LQNESZ5eRWnJcf1u1ycr29RYvI8qQU/JNJfmkPs69MFYyKXXMArgSo4/FSH53f9XiPNA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734529881; c=relaxed/simple;
+	bh=/N9HA7b8H4qggkaqJklsc15Wc/Jb6Skp1p5Bwjwyk08=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=E6hW49d7M5ibnJ1q444teJWp1XceeagJX0a66qSvsVDmAUKbtJI3l6Dje7WDvXu3VMT9b/fcVjmv6T4ZJ0y0hjLmPl6FDXaPTsbgCzeKTvlQXWFu64KDoq8l0al6c7yPx5ac5Z4j0XwH+1PJSSMndZ1iSLHHyagIYRkn/wrMe9M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SsulOY7q; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qcpoOVbe; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BIBmuY7011892;
+	Wed, 18 Dec 2024 13:51:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=pQozbS407BzrhMtFq4rGmZfjYSAu1S+IISUxgtyduE4=; b=
+	SsulOY7q9E9TlMHIN4903Wr8NyHpw6FwDKFwFCGX1QjzRBRaVZWuVIF6I0Mg98jh
+	mVtSsb+ExjLhjE77yfo3B8aR0k7F9AwCisGSjNbO+cSheuoX6hHTd1zykeNuOjhR
+	+cnAk4kNDV5f1rRaZRKb9ABjSHAIArhOF7dZdYOMipcNkiRazuDV0LlQ2yMY71pc
+	6MnVUBOGj1h3kJFwzbIdAkbO+3N7jF+t+KxSgdsyFONrKgDrmg7CHZMq/ub9i4xg
+	KEDslz8pEc6H46f8LwYYT0OrAu951BTecGpYCjF1DEbMo3ETxuLztpGvGBwamycu
+	xeZe4yweGfqAJS8smMY7fg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43h1w9gmrh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Dec 2024 13:51:05 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 4BIDbqaZ006344;
+	Wed, 18 Dec 2024 13:51:04 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43h0far22h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Dec 2024 13:51:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SM+UoBBZgPEy7xv12tOVO1+n8v9OqN5XyPvZ5sRc1f2Azu/IkjoBBiibuRbh5fEypOSMacl4I9ltc2r+fXtbfgKbbCWr10tl3yjhmB/X4JI1TmXqt1qe9MfTC6v8ggqYSpUHvsdorvSX0UaZOsz9z0lq4CHRrDiXapZGlOBZ5f0Pe06iIgWmVHPgoJdRd2l27RdrXMcUZavGvQH2Ga4qTN2ERArsfVLTdC968TLgqDOpKxi7Zh82Ge1ZmIrKZl5tpbD8YhwEB4p3na+v7JYWVkMh2n6coxiyDNvqUb72RplP+u4w9XlF7HwYVDbYRyBSaqz1eh0pUK8jqjK2bctmZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pQozbS407BzrhMtFq4rGmZfjYSAu1S+IISUxgtyduE4=;
+ b=KuK4NmMr0gI+MCHh7ZaJ/9oT28TPQiOtyov9lHWFxgp+nWvHntC05ILBq3kAc3L73YvAZAc6xXs1JAytWdqFgDgdrDxDE6ctda3X4hpBLAgBOp38Y4HaC7Cdq0QwPnZWgs0uPXgzOtWETQ1OurMGEg+UavxIUr9hSdKz6QqttW2n4dJiecNzLThjLN+Pp8FnovySBOm+2HYTVxChn8oUEjoDEa5e0qzRh13mjmZApzDw/Ex8mdgYba3z4dicwYnHYKR4/6YFgevfO2pQeWO/6i8W7GNr9LybisgnLLVbCTBox3ydmFGQD5qtoYIvfyLpGZ2l0rtwuvgjPFqaF6zzWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQozbS407BzrhMtFq4rGmZfjYSAu1S+IISUxgtyduE4=;
+ b=qcpoOVbeve3PjvDGQADXpDzlhbwdtsJ9G+nZlyGDrg2ETTUSVNU5T96eqbkRWtQakmHNuNUHq/KB1eSiT/bpPXy5+RsEWg3+zD+Dt7nC4PLnA/tc3AK36mSEQ1HXgfEU5CWpPOeg1zrvv/Wt/1fSKiyauiz0zc+CmxGyRFMA1jc=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MN0PR10MB5984.namprd10.prod.outlook.com (2603:10b6:208:3c8::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Wed, 18 Dec
+ 2024 13:51:02 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8272.005; Wed, 18 Dec 2024
+ 13:51:02 +0000
+Message-ID: <eaecc0e5-ff04-40ca-94c1-997cf6ab116e@oracle.com>
+Date: Wed, 18 Dec 2024 08:51:00 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: does nfsd reset the callback client too hastily?
+To: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+References: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH5P223CA0024.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:610:1f3::14) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgA33a4mcGJnxKU7Ew--.4083S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1UuF13JryrGFWxCFyfWFg_yoW8GrWkpF
-	97C3s8Ka1xA3WUKrnFvan7t345Ja1kK3yjyr4xGwnayFZ8Gr1Yqay7tryjqFnxGFy8ZFy3
-	Cr1Fg3y5Wa1UZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJw
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	s3kuDUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN0PR10MB5984:EE_
+X-MS-Office365-Filtering-Correlation-Id: c344f038-91bc-4ab7-4d9a-08dd1f6b0275
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b1Vvc0l2T045MUJ4Wk9vencwaGZ2NDdHWVdpYVcxSU5RRHpPMFZQVFVEaTRu?=
+ =?utf-8?B?VkZPVWJBU3F2dEs3bWtUWkJNQytreVZjd0kzVVo1UEtuTjhwZlA2Y0VVNndn?=
+ =?utf-8?B?MmlvTFREYVIyUlRtWTFWcFluMVJqQ0xwK3Bjbk5nRDVwZTVVMlo2ZCtkRU00?=
+ =?utf-8?B?MXRVWlNuSk9EUm1qbnFmVDRyY2xRTUpHbUdWSmpXbStKTjJUOTExSFZqUTN3?=
+ =?utf-8?B?SDluNm9xREpWUFdVcFFXWDlFZFhVdDRQL2ZGcThvekxGMmlVQWQ4Zk9ucTV4?=
+ =?utf-8?B?Y0FVS2QzdURoS2NOOFNUdWlRVmhBT3dWdkgvUXIxeHd4TmhoMEMyUTNsK2tz?=
+ =?utf-8?B?U0pnVlZnMDZOZno2b1lWSnlzbE04eXNVYmlJbUM5cDRNcXo1SmJLdFVCRUZX?=
+ =?utf-8?B?Y3lHNlBtYlFzNXBqN0V4bDl4eHRjUUVSMHpKM3VYbEpsREZqcVpDSUg0R1lL?=
+ =?utf-8?B?NExSdE5KbEJVQlVacDJXaS9NakwvQ0plb0cyakl5dVhWb0d0eTZiYnpsNm1R?=
+ =?utf-8?B?WmlQbVl2UkdVOGh2UnNXUGEwdGY2UEJVcXhpekF5L3RrSldiVzZHV3dmamxI?=
+ =?utf-8?B?VFViam9KRmhTN3ZvNWZ0VTd4NUdRN3pIZDZQeXN3a1ZRdngyQjc3RFYxNzA0?=
+ =?utf-8?B?a29uWFBTY2dvREZSWUxpdjhTYkRoRldYNElBSUZZSnNsMjA3QVVEcjdQSjBs?=
+ =?utf-8?B?NFNiWld5UkdtRmhWTDhMbUxKVE85aTRQUjFWbFRaVWFxcUhDcGR0VjNCWFBx?=
+ =?utf-8?B?eGVrMno4bmZzQkkzRlZEK0ZhS0RxSFdGOVE4Tmw1OGhpZHhYUlFNUWJjOVM5?=
+ =?utf-8?B?VlJpMkIrR0ZVUm5pZ1FPRmM5c2VoSjhxMVVvRzhrcFNKd0dRUzFCRDkzQm8y?=
+ =?utf-8?B?UzNJYUE4Nlg3MFI1RU0zaTRKOGhPT0wwMGp6ODFRSG5vc1ZvSzhnRjF2ZjJR?=
+ =?utf-8?B?RWFJQ3VHYy9ta2RMay96R3djcC9nT2hGVGpEZSt6SVhpZHBFb3BRdm5Oc0VB?=
+ =?utf-8?B?Syt3TXJ4UjFqeTFnTmpBVHBkSTExbjdPbS9zbXhiNUhLYTVGUVAwUUw5Mk9s?=
+ =?utf-8?B?eU4xR2hndmhOdElHa2R3NUk4aG1XR3IxWHYydGgydlJmempvM215c3J0djR6?=
+ =?utf-8?B?MGVCR2xjclMyNWR0QjNSdTQ5MEFzNmwyd0lXWU5sclBSZVp6SnQzamQ0aHpI?=
+ =?utf-8?B?cS8xa2FYYzBJYjFYVjlzS0tSQjNRR1JHU1F5RjhMbDBsMS9SUmIwaEp5MFRT?=
+ =?utf-8?B?Q3JDZU5qdi9xcTdKbEJpWXJNRmI5aVJ2WEE3WWZZdVdaMkNGamtRdmg3UFFq?=
+ =?utf-8?B?ZDloUC9jTW1Qc3cvcm5TY2Fhb3lJQlFIdktFNzlhYS9LUGJCbjVQRnNSLzAy?=
+ =?utf-8?B?clFqajQyYlZOY2JIY3IvUmh0VUQyOFNnUVlrQzBQYVYzYThWZkk0RC8zbkor?=
+ =?utf-8?B?Yjd6RFBPVmtURXE3NVdzWWtXVW1wbE5pQkpLNDMxcklJaUJDZk1FN05xM09F?=
+ =?utf-8?B?QXM5YngyTVpDNVNjdExXNUFQMm5WdUtrcEJxMGFLZ0lldFdYL1hjU0RWdmxS?=
+ =?utf-8?B?K3EwTVZFZUdBNytsdWpYT3lwcmlCeWU4R1JibHdhZS9UMWxTNlpQb0hWWTVu?=
+ =?utf-8?B?Yk5QY3MyUU1pUWZvWmRYbVhNdGsrVVE1WDFoamNjYXViWHpETTJjM05QOEFx?=
+ =?utf-8?B?RWZlQ05jb1N4OGoxYnNvOFU5VHVYYnN5Y1hpdjVSQmNQU0VicGhJSlZDK2tl?=
+ =?utf-8?B?MzFNaWxkeWFoTEtEaHpnSEY0MDhvVWZ3aGZmWnVzZGNPK0J6eTZ4WWsvaWNN?=
+ =?utf-8?B?N2hSTmZxaDlvNmgwM1EwblVRQjhxcDh1MEk4S2FOaGRmKy9FTXlDdjQwRTNQ?=
+ =?utf-8?Q?l5u/iOKrg3T40?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dVllQzY5eCtub1RobE1HZWFTeWxWanR2d0JtV1dETUhSVFJjQWxDeHVuOG54?=
+ =?utf-8?B?ZmQwLzJsb3l0SC91UHR5UXhqZkxMZEY4UWtOK0hGcTFha3JvS0RkRWxJZ2lH?=
+ =?utf-8?B?UThsaXB4UlhQZ0tKdVdmODZWUGhTVmQyMmYzTnFmVnFTa3VjODF2OE1CTDQ0?=
+ =?utf-8?B?SXY3VU1BK21NbUIxekIrWjE0ajh4QmJwM3h1YjBHcnR2NCtYTXBxdFl1R3hT?=
+ =?utf-8?B?SFVoc1lVTW5oMWsxS0tKenM0b2gyQVJieG43NldqcjZJbS9lR0gwYXdGTmNa?=
+ =?utf-8?B?eXowU010YUpyYkNXdktXQnV2c3JrWDBXUUVSREZ0YkZLU1dOVTJGc2g0MTNk?=
+ =?utf-8?B?blV4L1oxeTh1VlhIZmlwSlRTS2pVUmVockZFcW5QYWhMYUlYNUZCcFM5ajVV?=
+ =?utf-8?B?WU5tRGtFMFVBN0dGZTM0OVdzeUdDdzZ6SXV5WUpScGtuUG9xTE1lZDJaNXhD?=
+ =?utf-8?B?d252cW5UVDhJb2lvazBRbFZ3UWExU3EzRTdOckhPeFpmWGEzWUZmWkdIWU9Q?=
+ =?utf-8?B?SHVRRzRCL011Y3ZJZWtFb1doWk9EaEhOQUJVbll1N2F0b3hoaXBZSGxpd2Zx?=
+ =?utf-8?B?RlNkVWJNdFBlMWpoVFBFQ3RVckJNVTU0U1ZoRlNvMVZpN05vQUtSa0FmUE4r?=
+ =?utf-8?B?ZFFGcitwR1RIYnl6VFJUZ0dlT3dIa0lwQWN0c1YrMzlOajhMbUFCb3Z5ZE8w?=
+ =?utf-8?B?Njh6aWRZVmdjOTMvQTlSYkFJRTdObFlsQXkrZDNvaHk1Y1ZpVjRDbEhwUXFS?=
+ =?utf-8?B?R1FKRnlKTGtXRmFXcmhtRzRyM0pnY2dRWmxVWkRVaGcrbG5ZaWJJR2E0Z2pm?=
+ =?utf-8?B?bm93NFkxMlhzNHByUnp3TWtkTE4yTzdBMU9LVExicU5YakRzRTYwT21lN2Iv?=
+ =?utf-8?B?WjA2WWxLaWtsKzRQdEhWbTRnSm15U2MrYW0vQWRkWlBJc2dTRjNSTHJDNk1F?=
+ =?utf-8?B?Y2lKeXR6ZVorVWlYNko1Mm1DeTAyR0QyR010eE1ZRi9uSmNnc3FCRmZXM0F4?=
+ =?utf-8?B?a244RksrVGM3dGM3TVVOb0JrWkFqdkdvQ0hvMlRPdy95Y2dBVFlYVmgxYnhE?=
+ =?utf-8?B?bUM0YXdVa3g2Rk4wMkYyekhXTFlHRnQrd2QwUlpzQjlkcFhyWTU3K3JRS1F6?=
+ =?utf-8?B?a0ZIc3ZjYWdJWGV4VVoyTXZ4Q0IrQ1lKVnBEb213NHAydVI2aWx1a2dvc3Bv?=
+ =?utf-8?B?bElOMjhGa0pWNTZJb3hzRlNlMitQWFBTME9hS1lLK3FjSUpsTWpvUk1UY0wy?=
+ =?utf-8?B?K0haVU9PaStTeFNocEtaYnltT0VhaW9Od09vYldmdWVoUHA2eXB2TWhId0pw?=
+ =?utf-8?B?Y3ZSRzRFYXk5ajdYKzhlOUN3YXhFZ1h0R3Nhb0l6UVRQazJYUEpqWFU2dW1W?=
+ =?utf-8?B?b2VVZGpFaHhVOWczTC9BRkwwQVFQbDlxMGJVQ3dxdGJPc05DNWNBTzF4eDZk?=
+ =?utf-8?B?RDl1TFoyN3pycW5hUENiMnlja3FGamUwdEY1Q3dIZE9yUG1FN2JuOTI1UXc2?=
+ =?utf-8?B?eVRIVEpZYVp6ME51VDZNVG9aeFR6dzU2QmkyVVlMSE8zR1VCcUJNbWIxR1Nw?=
+ =?utf-8?B?WUc4eXhTeW9ja0pOTUF3UTl3UTZudm1MVHZTM0hrTE01N0hMamtjcm1TeEJh?=
+ =?utf-8?B?VDFhTVpKcTRUeE5NVTkwQ0g1ZG9RMkNidXZjVnpYSGZWQkUxd3JCMk84ekkr?=
+ =?utf-8?B?elVxd0wrQVJBRnhWdTR3eGx3N3RnQ2tnWWE3SkNBSS9KNmVWWjdnVzlLQ3dD?=
+ =?utf-8?B?MHZZVndVYmxvNGtvL0ppT1lkQlRsbXhBYTAwYk9jeUZxSjlOa3E3bjMvYXhi?=
+ =?utf-8?B?KysveUthNml0OUtYdGJxOUNFK0kzeEhIZnJSdHEzVFNZZkJjTm0ySi90RTBq?=
+ =?utf-8?B?YUJnSll2VG5oT1REWVlvb0tTQnFDOU5qM2xSaThuVklyNlVuMzdsUkNLUmhL?=
+ =?utf-8?B?eEdrVFVQUVRFRGhSRHJKc1luYXpyV21DQTBIWEM1b0pnbWlScFZOb2NubzRo?=
+ =?utf-8?B?UDczK2grallZcThzVEtHbFQxaFFqa0tTN3VnZWNpV1NWRnNjVzVxenlGUnRT?=
+ =?utf-8?B?VW9Qbi9HOTNnbnlxWWtieHhrZVdVN2FnYTI3M2RJSkVNQW0weE95ZU1sanBp?=
+ =?utf-8?B?N2pnak54M0M4YjNFR04wQ0loUHhEdXY0MEdaazJNdGU0NnhXeDZPOVM2TG01?=
+ =?utf-8?B?N2c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	1F8bPJs8J4mQD/pQtFCVi3Vl6hA9hp5KI2lS12p6XoMbsfofU9xIz3cUL0j8x2W6/Jg/Nw7z0zWtwrry74m2SUmlDhvAXR/MAwpyiSkK79uFGIN8dmLUzSJ2zwDHt1KEpPoInFTwsiNqGtnj5kL70WPJOTSLxYuWLOMMABvCUAeXxDk1towW9Hu4eVVdVOwLCe6+I0XfTTMGXYyiNqMERWDwZtgKemtYhSfvGujZYfwpX3OzmCRrqMo6AL9XctNwXlFsz2AUzWQIanW0wLlE6Cn5lB0Dji9h/rmeG2VVOAaQoMxCTOneRYCyOChkoUAX1YwYXSIbUmwI95bwLVKGTroqesldimICycG3jyRg9v1zeGDfO27bIzDcEFO6ey1llV24i+PDrKrppIe1FNKS2txo5RoNIMmPj7JWtO341YVS1yp/UsSPnvvJ0pw8MaAoY/QqOWi7osGVc0HW4wPtWPQhP2+mRvnC4mpXWe1CGdHjj7SI4p1TLh1Kac5x2TwyFZXFQrm1G2rlk4hx521zHtfw8T6TW3wEFdRrmtyFq5lWgZyJZD0EVfVjRKBczxqwTHdOaZpZSl/Ez/vDLZjBSKa47m72U6t0hcJfE/H/0yk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c344f038-91bc-4ab7-4d9a-08dd1f6b0275
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Dec 2024 13:51:02.1248
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UGEMAFl1KEZ6BD2FICByYxCMDVsGqT68438ZCmtOUxT5In9O7ANan1hqKKT+bIGOqV1MGQULpIpiDTWr4nGwOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR10MB5984
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2024-12-18_04,2024-12-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2412180108
+X-Proofpoint-GUID: 0CUPtPf7zNv8IQBitRKWV6mqZzNjLJ-Z
+X-Proofpoint-ORIG-GUID: 0CUPtPf7zNv8IQBitRKWV6mqZzNjLJ-Z
 
-Besides xas_squash_marks(), all functions use xa_mark_t type to iterate
-all possible marks. Use xa_mark_t in xas_squash_marks() to keep code
-consistent.
+On 12/17/24 9:57 PM, NeilBrown wrote:
+> 
+> Hi,
+>   I've been pondering the messages
+> 
+>   receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt XXXXXXX xid XXXXXX
+> 
+> that turn up occasionally.  Google reports a variety of hits and I've
+> seen them in a logs from a customer though I don't think they were
+> directly related to the customer's problem.
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- lib/xarray.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+That message isn't actionable by administrators, and risks filling the
+server's system journal with noise. I suggest that it be removed or
+turned into a trace point.
 
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 4231af284bd8..a74795911f1c 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -125,16 +125,20 @@ static inline void node_mark_all(struct xa_node *node, xa_mark_t mark)
-  */
- static void xas_squash_marks(const struct xa_state *xas)
- {
--	unsigned int mark = 0;
-+	xa_mark_t mark = 0;
- 	unsigned int limit = xas->xa_offset + xas->xa_sibs + 1;
- 
--	do {
--		unsigned long *marks = xas->xa_node->marks[mark];
--		if (find_next_bit(marks, limit, xas->xa_offset + 1) == limit)
--			continue;
--		__set_bit(xas->xa_offset, marks);
--		bitmap_clear(marks, xas->xa_offset + 1, xas->xa_sibs);
--	} while (mark++ != (__force unsigned)XA_MARK_MAX);
-+	for (;;) {
-+		unsigned long *marks = node_marks(xas->xa_node, mark);
-+
-+		if (find_next_bit(marks, limit, xas->xa_offset + 1) != limit) {
-+			__set_bit(xas->xa_offset, marks);
-+			bitmap_clear(marks, xas->xa_offset + 1, xas->xa_sibs);
-+		}
-+		if (mark == XA_MARK_MAX)
-+			break;
-+		mark_inc(mark);
-+	}
- }
- 
- /* extracts the offset within this node from the index */
+
+> These messages suggest a callback reply from the client which the server
+> was not expecting.  I think the most likely cause that the server called
+>    rpc_shutdown_client(clp->cl_cb_client);
+> while there were outstanding callbacks.
+> This causes rpc_killall_tasks() to be called so that the tasks stop
+> waiting for a reply and are discarded.
+> 
+> The rpc_shutdown_client() call can come from nfsd4_process_cb_update()
+> which gets runs whenever nfsd4_probe_callback() is called.  This happens
+> in quite a few places including when a new connection is bound to a
+> session.
+> 
+> So if a new connection is bound, the current callback channel is aborted
+> even though it is working perfectly well.  That is particularly
+> problematic as callback request are not currently retransmitted.
+> 
+> So I'm wondering if nfsd4_process_cb_update() should only shutdown the
+> current cb client if there is evidence that it isn't work.
+> 
+> I'm not certain how best to do that.  One option might be to do a search
+> similar to that in __nfsd4_find_backchannel() and see if the current
+> session and xprt are still valid.  There might be a better way.
+> 
+> Thoughts?
+
+Operating from memory, so this might be crazy talk:
+
+The fundamental problem is lack of ability to retransmit a callback
+after a reconnect. The rpc_shutdown_clnt() tosses all pending RPC
+tasks, making it impossible to retransmit them.
+
+I'd rather see the rpc_clnt be owned by the session instead of the
+nfs_client. Then the rpc_clnt could be destroyed only when the session
+is actually destroyed, at which point we know it is sensible and safe
+to discard pending callback operations.
+
+But the callback code is designed to handle both NFSv4.0 and NFSv4.1
+callbacks, even though these are somewhat different beasts.
+
+NFSv4.0 operates:
+- on a real transport that can reestablish a connection on demand
+- without a session
+
+NFSv4.1 operates:
+- on a virtual transport, and has to wait for the client to reestablish
+   a connection
+- within a session context that is supposed to survive multiple
+   transport instances
+
+Some reorganization is needed to successfully re-anchor the rpc_clnt.
+
 -- 
-2.30.0
-
+Chuck Lever
 
