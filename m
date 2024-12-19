@@ -1,225 +1,111 @@
-Return-Path: <linux-nfs+bounces-8661-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8662-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53D6A9F6FE2
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 23:11:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1BF09F7352
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 04:27:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9813616CFDD
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Dec 2024 22:11:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179BE16694B
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 03:27:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE66A1FCFE4;
-	Wed, 18 Dec 2024 22:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D0581727;
+	Thu, 19 Dec 2024 03:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P4UPa765";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+i9OS3px";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1orWHmHL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QpFyC1BC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en53Dg+I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCE81FCF66
-	for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 22:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D243D3B8
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2024 03:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734559856; cv=none; b=qZWl+gUi2a+80z3SDl13tvdPo87RWP2cnP+EzT+zLr/MZqPtXHMmZqjUUwTqvIz8FEYf5s8vaBKvJqTQ6v6b9XfMyGkrKdz15yCgCUVLkvWQRm3M5amxhJdbgGcWvph6ak6F2MdRBpJfJkNWyPpWWS20ru8RfrqbtyqBAnFZFjc=
+	t=1734578836; cv=none; b=JO/Nzf2E/j+yKUGlYKRpYkPoOUC9Oxop1PEhZgfzpbwdjOOtwIBP0f7oan5sk36cl7zJrWspFH4flKaLnHpG29JqV58bMAth2vzXDgK0yls5QrwlVE5bmRX3f4u2Qqil+YbTy0vKaT4dglgH92uz+XA+VLtw2x/qhA3qUVOPhxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734559856; c=relaxed/simple;
-	bh=loZIB8p1VVp/S+7DRIOeTiKmrmfDIMcRU9xIHQ4vkaM=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=jQeLm2tHSkIy3DIC8mc5gV/xBRWSfn33GjPzbvpU3kOTCvDj9zXSSULpDAoJUOWGQaWXg9TsCQhoB+R0xSU9bn4yq6awGl18QXlMCyb/eQXcNWg1t04RehW1JPcEd2XF510OgvSOgAI+LN5dDTqh6VEvomsYBEoDEE80v8c7+kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P4UPa765; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+i9OS3px; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1orWHmHL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QpFyC1BC; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E89852115C;
-	Wed, 18 Dec 2024 22:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734559853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
-	b=P4UPa765d/TDqzY524371xCpHzy95ZpZfcTDfnByC3YtMrXnIE95wIcmuEFqWR7MGfVIBc
-	OsjotGyXTMavYYuuQ1fs4rN8XK/LyKWjKlnIWGmWikc2V2K7YdfgNBkRl8V3TPsb5q2Lqo
-	VA3VmzCv48UY64L30duu3lF+3me3kZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734559853;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
-	b=+i9OS3pxfVcNoXd51yUWQ/IHd5684n+cbDUABlUcO7DQs1VCGoCAvupAIxRNfJadoPPpVV
-	R2SJ/ZJNYXtFTgCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1734559852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
-	b=1orWHmHLzS2jWdzwaa5UJLtmE59qX0nu7izZACIMgX4mWV/QBqegRm7TM1co0tA2Lz0XMq
-	RFcuPJzXfHuqtGdipAGU81xHCU99beZIiJL9WjBzcV3WFM212fw8lZcme307qDjPbypscR
-	lj2zLG5K4X9/EyduMXPM3QVbiZTj9/U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1734559852;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=595+am7nS0CcEJTMCMaW4cgBrso3Yn/hjjpJc/AmLHo=;
-	b=QpFyC1BCUlykn26o6zdcI8ij8KKnVynfqj0hd0COja5NTj/Oul5scT3AQE0g9ZYSFXhCp7
-	3W9CyNr/auzNXvDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 24F9D132EA;
-	Wed, 18 Dec 2024 22:10:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2calMmpIY2dGKAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 18 Dec 2024 22:10:50 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1734578836; c=relaxed/simple;
+	bh=QZ4+f7yIRKcM9/zfQV/ov5cp5AvsVkeqvaPWgOc1yoU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9EecCrzW8bdLj0U668oKqZolw8ZDaP6RBXBK6+b+0KG6u4gmDjZvlvtHbcdvAWSpe7DLPCw2JJGIvnUf33S4/2DGJt6hyn9Znmz6kFLTMICVTdLD0RThXZL5gqnX0MmwlyB0Gjv2DZF3HKbM05x2umDejZsYk8d5omocTDbAXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=en53Dg+I; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7292a83264eso305742b3a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 19:27:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734578834; x=1735183634; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d71Cs0LA8jsUYI3W9Wprc5B7qzJhXd0CqvlwHf9UOhw=;
+        b=en53Dg+IkF4pUZ/KhkJwk7/+srAQTJzm9IVcxFM3brU3o+i2GaE2m8sLfBxTJpTNax
+         rLfJd6OzJgzwLrYf7vQkLYOTVDtSPPmjWLHzqijMgcxdaXNxok4IAfrQ4pwRpn1btK4l
+         9+TbD/GX7jSnMw2cJWkcvEQ5+v9OJT2XWdyCQw67+MDD/IovJj7bPEzHOCZnUqsKbx/f
+         p1fsflBGl2V6v84apxeeLICvqVJ7Ge8Wf1h+vk77n/bbKMztsAGbiQOXRDSYiO7BGwFC
+         6gWiApgOldFmBiDb6ii2hI1vims328wJrDGwot/ef4Qg5/1v1Wl+SEZ9qJZbVih/zk1O
+         Z6+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734578834; x=1735183634;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d71Cs0LA8jsUYI3W9Wprc5B7qzJhXd0CqvlwHf9UOhw=;
+        b=TDg6JXOer9ErQuqN3wdM1LS2RLsYy8M4jF2sot8fXqP8e7m5uEH2t/mCoh9w5yWIiw
+         AXWV42zcs20s3Cf2r/2KHX5PEProoZP44OWIoTDtKF+mBH94gkR/F0OAKmQmhlJih62Y
+         lCwhUVacYXHTKOh/7ddrvKUahCtGqgVMaMtjpdYJ90BHRALAz8vTunUs8MANY3uJa0R4
+         bswOOd/xdUfZGXRfE3u/19UYK7qSvOt4Myo9jDsHGtatZUABhDBVCHawAmLqqVTQ5tLp
+         kDgH2xS8geq6mFohhmKTF/AhXbY18NFjRScE8fWk4fnzHTgQvAhoJbxhZyzUX2CNKlrw
+         sGmA==
+X-Gm-Message-State: AOJu0YwQCL+7cGUxWLGDMfy9seKH9JEHjYZdAt/KQYZodEq+owsC2hRF
+	E/0XNiniWmCjSKg2ffVHywTJ6ZKRAIOE8fyp8JCID7It1/GtYHOBIsjSS5sQ
+X-Gm-Gg: ASbGnct4m8ZEupX6bSKuiJbMTtzm6VAcp6FLITXan2D971P6ZEbp3GLm9dyLhxK9BAY
+	ogWtXiWpCa7itjMALKY61ScXqCJBYzpa0n9SvQ3jUm8+hIfb9IREZsNW8SeL/aFdPav+jChV8HT
+	XyYjxMepRGRMP7yV7ehqO0t+EFnaPuN/hjzDAJ2VlPdpxb4tSla+gNBwUpcJ+6QHHjZPhkPticV
+	Tm9BtD8GSVhZcvjKur6y82gxGfFJXiwolgThNpgYwp2E2uNQvM3jm/12w==
+X-Google-Smtp-Source: AGHT+IEHO/BXRvK5sfp1QTbRoSs9X+2goozDv6bBhIyf0ib/Fb4O6O/a/bWZyUSfAyzAXxXa7/XUHQ==
+X-Received: by 2002:a05:6a20:6a1d:b0:1db:df34:a1d6 with SMTP id adf61e73a8af0-1e5b48a4612mr8096914637.42.1734578833606;
+        Wed, 18 Dec 2024 19:27:13 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:8201:fd20::d5a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad90ba0asm225194b3a.172.2024.12.18.19.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2024 19:27:13 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: linux-nfs@vger.kernel.org
+Cc: Khem Raj <raj.khem@gmail.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Steve Dickson <steved@redhat.com>
+Subject: [PATCH] Fix typecast warning with clang
+Date: Wed, 18 Dec 2024 19:27:09 -0800
+Message-ID: <20241219032709.4173094-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- linux-nfs@vger.kernel.org
-Subject: Re: does nfsd reset the callback client too hastily?
-In-reply-to: <eaecc0e5-ff04-40ca-94c1-997cf6ab116e@oracle.com>
-References: <173449067508.1734440.12408545842217309424@noble.neil.brown.name>,
- <eaecc0e5-ff04-40ca-94c1-997cf6ab116e@oracle.com>
-Date: Thu, 19 Dec 2024 09:10:44 +1100
-Message-id: <173455984414.1734440.2852424631193788379@noble.neil.brown.name>
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On Thu, 19 Dec 2024, Chuck Lever wrote:
-> On 12/17/24 9:57 PM, NeilBrown wrote:
-> >=20
-> > Hi,
-> >   I've been pondering the messages
-> >=20
-> >   receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt XXXXX=
-XX xid XXXXXX
-> >=20
-> > that turn up occasionally.  Google reports a variety of hits and I've
-> > seen them in a logs from a customer though I don't think they were
-> > directly related to the customer's problem.
->=20
-> That message isn't actionable by administrators, and risks filling the
-> server's system journal with noise. I suggest that it be removed or
-> turned into a trace point.
+Fixes
+file.c:200:8: error: assigning to 'char *' from 'const char *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
 
-As Olga notes it has already been removed.  But the point was not about
-the message but the behaviour that leads to it.  Does is really make
-sense to reset the client when there is no evidence of failure?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Benjamin Coddington <bcodding@redhat.com>
+Cc: Steve Dickson <steved@redhat.com>
+---
+ support/nsm/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe I'll send a patch.
-
-
->=20
->=20
-> > These messages suggest a callback reply from the client which the server
-> > was not expecting.  I think the most likely cause that the server called
-> >    rpc_shutdown_client(clp->cl_cb_client);
-> > while there were outstanding callbacks.
-> > This causes rpc_killall_tasks() to be called so that the tasks stop
-> > waiting for a reply and are discarded.
-> >=20
-> > The rpc_shutdown_client() call can come from nfsd4_process_cb_update()
-> > which gets runs whenever nfsd4_probe_callback() is called.  This happens
-> > in quite a few places including when a new connection is bound to a
-> > session.
-> >=20
-> > So if a new connection is bound, the current callback channel is aborted
-> > even though it is working perfectly well.  That is particularly
-> > problematic as callback request are not currently retransmitted.
-> >=20
-> > So I'm wondering if nfsd4_process_cb_update() should only shutdown the
-> > current cb client if there is evidence that it isn't work.
-> >=20
-> > I'm not certain how best to do that.  One option might be to do a search
-> > similar to that in __nfsd4_find_backchannel() and see if the current
-> > session and xprt are still valid.  There might be a better way.
-> >=20
-> > Thoughts?
->=20
-> Operating from memory, so this might be crazy talk:
->=20
-> The fundamental problem is lack of ability to retransmit a callback
-> after a reconnect. The rpc_shutdown_clnt() tosses all pending RPC
-> tasks, making it impossible to retransmit them.
->=20
-> I'd rather see the rpc_clnt be owned by the session instead of the
-> nfs_client. Then the rpc_clnt could be destroyed only when the session
-> is actually destroyed, at which point we know it is sensible and safe
-> to discard pending callback operations.
->=20
-> But the callback code is designed to handle both NFSv4.0 and NFSv4.1
-> callbacks, even though these are somewhat different beasts.
->=20
-> NFSv4.0 operates:
-> - on a real transport that can reestablish a connection on demand
-> - without a session
->=20
-> NFSv4.1 operates:
-> - on a virtual transport, and has to wait for the client to reestablish
->    a connection
-> - within a session context that is supposed to survive multiple
->    transport instances
->=20
-> Some reorganization is needed to successfully re-anchor the rpc_clnt.
-
-That's helpful - thanks.
-I wonder if the xprtmultipath infrastructure could be used to attach all
-the bound xprts to the rpc_clnt.
-
-I'll see what I can come up with.
-
-NeilBrown
-
-
->=20
-> --=20
-> Chuck Lever
->=20
-
+diff --git a/support/nsm/file.c b/support/nsm/file.c
+index de122b0..0fa6164 100644
+--- a/support/nsm/file.c
++++ b/support/nsm/file.c
+@@ -197,7 +197,7 @@ nsm_make_temp_pathname(const char *pathname)
+ 
+ 	base = strrchr(pathname, '/');
+ 	if (base == NULL)
+-		base = pathname;
++		base = (char*)pathname;
+ 	else
+ 		base++;
+ 
 
