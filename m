@@ -1,111 +1,95 @@
-Return-Path: <linux-nfs+bounces-8662-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8663-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1BF09F7352
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 04:27:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 91DCC9F74A1
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 07:27:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179BE16694B
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 03:27:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DCD37169C4A
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Dec 2024 06:27:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D0581727;
-	Thu, 19 Dec 2024 03:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9181F868D;
+	Thu, 19 Dec 2024 06:27:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="en53Dg+I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mkh+Wuhi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D243D3B8
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2024 03:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5556478F4C
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Dec 2024 06:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734578836; cv=none; b=JO/Nzf2E/j+yKUGlYKRpYkPoOUC9Oxop1PEhZgfzpbwdjOOtwIBP0f7oan5sk36cl7zJrWspFH4flKaLnHpG29JqV58bMAth2vzXDgK0yls5QrwlVE5bmRX3f4u2Qqil+YbTy0vKaT4dglgH92uz+XA+VLtw2x/qhA3qUVOPhxE=
+	t=1734589652; cv=none; b=E23l2AvhgaO7Ej1zLIN1ZtQ2iYC9CsKf2PyrnvvWZ6VI0C6ZX1SVwHzekbQ97kiLC3XNs2d2b2dAbo69YJHU02rmDE/1dr7JzSgFtNnTGwiSkbRj9Y/v3nbOLVbovfiZIYA6Wk3hGG1J4Mn5vUtjRGE3fmlRdwRwaKvAVCrhf6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734578836; c=relaxed/simple;
-	bh=QZ4+f7yIRKcM9/zfQV/ov5cp5AvsVkeqvaPWgOc1yoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9EecCrzW8bdLj0U668oKqZolw8ZDaP6RBXBK6+b+0KG6u4gmDjZvlvtHbcdvAWSpe7DLPCw2JJGIvnUf33S4/2DGJt6hyn9Znmz6kFLTMICVTdLD0RThXZL5gqnX0MmwlyB0Gjv2DZF3HKbM05x2umDejZsYk8d5omocTDbAXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=en53Dg+I; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1734589652; c=relaxed/simple;
+	bh=JFP5u889PgmBqxR53F2PsGp1GnTxlcCjS/V0dTVR05A=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=IlWhW+WqPTmXJ+YX2hwb8ONgSPeLFG+9qiAcGFcFbGR7XIGBjgtzZkstZWHz+ulsgPc/zorXkvY0qV64TUQU3GmNziNjbLTWZ7xn1eshTYkBNsV8U3LK04b6lVWP9wPX5q+ieJMrGkJki/xr7capD81gWqtwrg13G5eVC6963yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mkh+Wuhi; arc=none smtp.client-ip=209.85.208.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7292a83264eso305742b3a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 19:27:14 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3011c7b39c7so5564231fa.1
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Dec 2024 22:27:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734578834; x=1735183634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d71Cs0LA8jsUYI3W9Wprc5B7qzJhXd0CqvlwHf9UOhw=;
-        b=en53Dg+IkF4pUZ/KhkJwk7/+srAQTJzm9IVcxFM3brU3o+i2GaE2m8sLfBxTJpTNax
-         rLfJd6OzJgzwLrYf7vQkLYOTVDtSPPmjWLHzqijMgcxdaXNxok4IAfrQ4pwRpn1btK4l
-         9+TbD/GX7jSnMw2cJWkcvEQ5+v9OJT2XWdyCQw67+MDD/IovJj7bPEzHOCZnUqsKbx/f
-         p1fsflBGl2V6v84apxeeLICvqVJ7Ge8Wf1h+vk77n/bbKMztsAGbiQOXRDSYiO7BGwFC
-         6gWiApgOldFmBiDb6ii2hI1vims328wJrDGwot/ef4Qg5/1v1Wl+SEZ9qJZbVih/zk1O
-         Z6+g==
+        d=gmail.com; s=20230601; t=1734589648; x=1735194448; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JFP5u889PgmBqxR53F2PsGp1GnTxlcCjS/V0dTVR05A=;
+        b=Mkh+Wuhip8gKO0/MuNhlhQh5Wm4ta+IniwzePwyDnkSiqJm71miEa5HT1jOwQqFsX2
+         4Kw9vy+NEuW7OJs4i1BtgAD9i4VYt22Lj0ire/PCZapzhkzzgrocjJ5aFNhiSzjawGI3
+         EotwtZY7NpU3ynzmQjyteXEzHJryg5zi6U649Se7AiIsx3YAeG/Fpf3AOcQqoIsvbr5c
+         h6nnbjzX3rpgFSgMvemUZmTxl4AzKp593BCbD9yFQHba6EY6hlMA+4XVg27RMA/qrEZU
+         txh6CJcZwttZMhUk7ohwhz8NofG/wqo68VKkR16suJnlPhBVX6tpf1u3/xcQRekF0FkO
+         I7uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734578834; x=1735183634;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d71Cs0LA8jsUYI3W9Wprc5B7qzJhXd0CqvlwHf9UOhw=;
-        b=TDg6JXOer9ErQuqN3wdM1LS2RLsYy8M4jF2sot8fXqP8e7m5uEH2t/mCoh9w5yWIiw
-         AXWV42zcs20s3Cf2r/2KHX5PEProoZP44OWIoTDtKF+mBH94gkR/F0OAKmQmhlJih62Y
-         lCwhUVacYXHTKOh/7ddrvKUahCtGqgVMaMtjpdYJ90BHRALAz8vTunUs8MANY3uJa0R4
-         bswOOd/xdUfZGXRfE3u/19UYK7qSvOt4Myo9jDsHGtatZUABhDBVCHawAmLqqVTQ5tLp
-         kDgH2xS8geq6mFohhmKTF/AhXbY18NFjRScE8fWk4fnzHTgQvAhoJbxhZyzUX2CNKlrw
-         sGmA==
-X-Gm-Message-State: AOJu0YwQCL+7cGUxWLGDMfy9seKH9JEHjYZdAt/KQYZodEq+owsC2hRF
-	E/0XNiniWmCjSKg2ffVHywTJ6ZKRAIOE8fyp8JCID7It1/GtYHOBIsjSS5sQ
-X-Gm-Gg: ASbGnct4m8ZEupX6bSKuiJbMTtzm6VAcp6FLITXan2D971P6ZEbp3GLm9dyLhxK9BAY
-	ogWtXiWpCa7itjMALKY61ScXqCJBYzpa0n9SvQ3jUm8+hIfb9IREZsNW8SeL/aFdPav+jChV8HT
-	XyYjxMepRGRMP7yV7ehqO0t+EFnaPuN/hjzDAJ2VlPdpxb4tSla+gNBwUpcJ+6QHHjZPhkPticV
-	Tm9BtD8GSVhZcvjKur6y82gxGfFJXiwolgThNpgYwp2E2uNQvM3jm/12w==
-X-Google-Smtp-Source: AGHT+IEHO/BXRvK5sfp1QTbRoSs9X+2goozDv6bBhIyf0ib/Fb4O6O/a/bWZyUSfAyzAXxXa7/XUHQ==
-X-Received: by 2002:a05:6a20:6a1d:b0:1db:df34:a1d6 with SMTP id adf61e73a8af0-1e5b48a4612mr8096914637.42.1734578833606;
-        Wed, 18 Dec 2024 19:27:13 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:8201:fd20::d5a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72aad90ba0asm225194b3a.172.2024.12.18.19.27.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2024 19:27:13 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: linux-nfs@vger.kernel.org
-Cc: Khem Raj <raj.khem@gmail.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Steve Dickson <steved@redhat.com>
-Subject: [PATCH] Fix typecast warning with clang
-Date: Wed, 18 Dec 2024 19:27:09 -0800
-Message-ID: <20241219032709.4173094-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.47.1
+        d=1e100.net; s=20230601; t=1734589648; x=1735194448;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JFP5u889PgmBqxR53F2PsGp1GnTxlcCjS/V0dTVR05A=;
+        b=FH9+hlWyhV3qqN3s2NHejsqGaz0yZWi3c84gKhdJrxoBfsgOS6hSAB4fC1Z2T1gHlk
+         EFdGnmsMw+TmdS862q3tKjdiFpweaqF38XI20HglBKcBEeu7NWbLKAiPfijxG2kPIkRU
+         8mYGTGkgx/aAEojaNgzvtKRFwe/beYnCbJ5z/1gbJZN6oPdLxmaJQBj8dssMNDPDHFNy
+         ywoXismgFTOJrcoVZuQljnc7p+i1tjnM6FlY/YcqCGtBWLYCcYR5PEnHlyWIdkEOEiHD
+         AYXgtgNLckKNGu09HzpZqEfX8kN9VaINKHXvCGaLaOyig1rJaR+bHC5ai2U6rMQUtNTi
+         d9dg==
+X-Gm-Message-State: AOJu0YxjtQRWytZ6wJ+7CAKwDA30Pt+TRAaSteeNJZ7S+euy3O18Jguz
+	kvecEhpv2RwSxkz+CobZbTXwvHVfneOl/8nQDC5bRhjO6HJ0XMWDIX1TEF62WZJdIKE1pHhWvx+
+	b7PvVWSktirljdVtd7m6QVRMUh/QcDuJa
+X-Gm-Gg: ASbGncu/JiMDM8OTEGXqspk2tww0L/byGwzTcQAxAjnq0RaRgwbjVMoQH/NHmOWr80m
+	Tj0GIlAL5gmwDMMzPa8ZFTc84NkafFsg9c0o7yw==
+X-Google-Smtp-Source: AGHT+IGuCAep2aRjso7EKbBRMV2O4nkEswXFP+ikCP1IKLBmtt70EqmdruBGJdqH2SmhLAxntNFFI7VKsJzw/sORZz0=
+X-Received: by 2002:a05:6512:b03:b0:540:2567:469b with SMTP id
+ 2adb3069b0e04-541e67473a7mr2210060e87.16.1734589648082; Wed, 18 Dec 2024
+ 22:27:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Aleksandr Beliaev <trap000d@gmail.com>
+Date: Thu, 19 Dec 2024 19:27:17 +1300
+Message-ID: <CACbgpGO9N7W_ZKmpjorkn+h8a0DBLPn5U_vp3s61AzfCwomo_A@mail.gmail.com>
+Subject: Recent version of nfs-utils/nfsidmap has issue with static
+ translation method
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Fixes
-file.c:200:8: error: assigning to 'char *' from 'const char *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
+Hi there,
+I'm an Arch Linux user.
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Cc: Benjamin Coddington <bcodding@redhat.com>
-Cc: Steve Dickson <steved@redhat.com>
----
- support/nsm/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Few days ago after the recent update of nfs-utils/nfsidmap to version
+2.8.2 there was an issue.
+In short, if the 'static' translation method is enabled in
+/etc/idmapd.conf, then nfsidmap won't work at all. You can find all
+details in bug report I submitted to Arch repo here:
+https://gitlab.archlinux.org/archlinux/packaging/packages/nfs-utils/-/issues/2
 
-diff --git a/support/nsm/file.c b/support/nsm/file.c
-index de122b0..0fa6164 100644
---- a/support/nsm/file.c
-+++ b/support/nsm/file.c
-@@ -197,7 +197,7 @@ nsm_make_temp_pathname(const char *pathname)
- 
- 	base = strrchr(pathname, '/');
- 	if (base == NULL)
--		base = pathname;
-+		base = (char*)pathname;
- 	else
- 		base++;
- 
+They suggested it's an upstream bug and asked if I could submit it to
+upstream developers. So I'm doing it according to your official Wiki:
+https://linux-nfs.org/wiki/index.php/Reporting_bugs
+
+The best regards,
 
