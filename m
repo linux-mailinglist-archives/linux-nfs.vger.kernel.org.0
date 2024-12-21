@@ -1,192 +1,168 @@
-Return-Path: <linux-nfs+bounces-8698-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8699-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CF839F9DE4
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 03:16:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C27B9F9E6E
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 06:15:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CC167A288D
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 02:16:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C17B01891850
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 05:15:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B1F225D7;
-	Sat, 21 Dec 2024 02:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BEE1E9B30;
+	Sat, 21 Dec 2024 05:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eT1Osw7T"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NBXpg8Ka"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3DB1799B
-	for <linux-nfs@vger.kernel.org>; Sat, 21 Dec 2024 02:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFED1DC05D;
+	Sat, 21 Dec 2024 05:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734747408; cv=none; b=twTStxJ/HwFPs6/wte8JZuQKG87ELyKeh6Ks8NzOFTZWzm9ioW11ccYiZ8MZ5ty5Orbx0t7TnUxGyYpbp1WL1bb1loTXd5UIQ+HfSCHCSIBXCxJc21raba9+1SyLitePIeVUv1c1+oY/6R99ZMc/ancYDMeGgOuCqJtqkJspImw=
+	t=1734758139; cv=none; b=tTRf2eXtVFJlRkda7dBladHLYp0+UoyC471ndFO4zcXVOQqMxTUv3Qr89YKrFeROmgJ6X1ixIgxSufVl+5mekSbT+ioJkGobEKn407mwjYqHYrvMGOB6sNUrnzKjdiH1hd/yrI6C9u5sXv9J3ToRgp9r2pSb3U4+SR5Ax9mwYqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734747408; c=relaxed/simple;
-	bh=x/UsBW7+HkVZaj1LOfbE4/Mfp8YP30NdiYzfELlBPuQ=;
+	s=arc-20240116; t=1734758139; c=relaxed/simple;
+	bh=6D22z4Q6qM5owg8DKTRELAvvJsU6v0seLUtNWMGH3rc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fLPPdXjXkJJVUj2QAAUIY8ofeoCIpsb3InaFT5x/TDH/CGrL8ygx/WXjTQtGu2Wxr2wl4U5XlzN0Lffvz0G+v6fpFbm+2g0Fsjv3IO7l1ex9plhyYWnARjyp8X/ZooLfqrJG0DVs+saPH9dePKOyLllxcN7Obs4LYKJni7IHAiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eT1Osw7T; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7fd5248d663so1921683a12.0
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2024 18:16:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734747406; x=1735352206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TjTZUprqBIakbAvGGwLQMzXQKXDx2asBM8wx8aqKnlA=;
-        b=eT1Osw7TGm1rtH8k5trZQStj0MLWCY4qEi3nL6/nsOmaSYznkFsgXe1N5ivBXg22t5
-         3TE0riNGm6Sr2S8n7UBZ5GTky/dCtovKyBt5+ktBg5Xk9ZT0kdy589Lsff6mA5J0naCX
-         M0QAFzRIejAKoy8oSj3VPiR15qMPGYqSijZai7KC+mDuV4wVTeW8HHPWmbrPcWT+GQrU
-         jwewd46JNiFus9fxPCjncOCWbZznZ7Qka9Xx5EuuTthRmdzMT9QXY5iimhMfpVyMvG71
-         WfZP6HqS+zRXBtOY1hNe1DWC3jyo8rejJOWr/rgAL2pOGUy7ydQyavSJcVl+IKyU4Rr3
-         OYfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734747406; x=1735352206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TjTZUprqBIakbAvGGwLQMzXQKXDx2asBM8wx8aqKnlA=;
-        b=UQvWrtj12RJbAHOfQYLISdon8AuFva+0yUdK1Rdw711BWwHhR3XFKz/XBKj+F4M3TS
-         JVoPYj+KtZArAu6koQX/HD9I55HhTZ2/91anleA/YMZZlIzzHqOPvlCTRTbn0w0CPyg7
-         tOlercDx5qdRRtD+EVgN07UTH6aRV5wg3TMMkiasflA+Za2fEs8rHGzn3mquUaYj/z2W
-         /DQv1ylh7eP3k89xMptuDFMeynQcMdfyAtGmleNqtUcXiDxaQ4gQ2u5tGiMCcSAIv2ZP
-         WpdfyoMfNS9yyDwzoPGNiLMdI42RAXj6YbR7V8jdMhKV/W6zNRAKruTwxb2rgeteX4vO
-         IAsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWri7glIopvWsz5F4ByU2xIUaVPV5PA5FWHp3p2fQGJi3M11+tJZRrBPR/ZqbbzrRwzWxHmhk/GutI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9LEeMTwQqS600doWwEeeu7hJoJD178/OC05n7TDCTNiOD64NY
-	5sRJF9GiDwRDdk3RQzyz43AITgH/f7ON9SEmfarcfpuojLCFvmU15+809jfHaRTsd25IVmIx24/
-	2ia7UK6jtJo4IACOP2x/vGd2WaeA=
-X-Gm-Gg: ASbGncs5g92mNcvBIbvFXIXG1Vo9ro++qZ932R4/kc/JTvPma0DcoxN+g/6Jlm2qAFT
-	vEquO2Fj8VeMCBbxZ1AbTZl3DjZbL7yR4oYpR
-X-Google-Smtp-Source: AGHT+IEChv0EE2rdTHoo0ynORPaMr6xfzeKuwl25AuJa1551vqqpZqeztnJiL7ephwMS47Ecx1nRfGb/07+GYYItdAw=
-X-Received: by 2002:a17:90a:e706:b0:2ee:cd83:8fd3 with SMTP id
- 98e67ed59e1d1-2f452ee931amr8021649a91.33.1734747405847; Fri, 20 Dec 2024
- 18:16:45 -0800 (PST)
+	 To:Cc:Content-Type; b=tTyTQPCN9iagD8LBxoXy1XbFfwexQc/5IGhnsUrrrYr6w967Y19tITkMicl48DJ03eC0RCjL1V/eTk3tm5PxyXW3oO1QevN+VtHMAz7IkzZnakrgjNA72qjYROFl9mJpf9MEACvBLGIs+dm1WIg/evsxm2o+78CBdPs+xJzitU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NBXpg8Ka; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92513C4CED0;
+	Sat, 21 Dec 2024 05:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734758138;
+	bh=6D22z4Q6qM5owg8DKTRELAvvJsU6v0seLUtNWMGH3rc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NBXpg8KaWOmk5BPV9JRlUwyRpdhTsLRyF3o8nRURr2/sbFbiwU2VhLnOWtq7YJJec
+	 Ot/mrxQD51xumkqWjcecDxrOC+vTCvlpENvgKus+wds6XuYQMZ4OjFmYVLVzNmKCQx
+	 8Yd4aIB+ofU4wRNrNx2mJNZo6Y8Ig66H3F2PCCchNTw5ieI+yPfxIk0SIIw6/HdH41
+	 HX+8wPXoowb5iLRcX7svVCHB1ds6rNhJGAqS3gQxaOmqT1MnGb2nQvhuhzrDVJM+Yw
+	 huvvldEYppAd0O00Hj7vzofTkZWWE0+YpLYoWM8cW36gTa9GhYsreT3EctWsy/x6p3
+	 x8mJPCbZig5Og==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30227ccf803so30688031fa.2;
+        Fri, 20 Dec 2024 21:15:38 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWGYreHwMUszy5UgNuZUTksceEcl518AJ8OCVnzRDwaZczjkPJnylw1YUIvjxs7AAhKkbo5MLe1v3qJkA==@vger.kernel.org, AJvYcCWSCIUaRI9WNkoiR2C4CwDdxDzKkhUjTSH29am2r5U/UnABcQSFwFQHAxzlrLY4Ijgk0Ku02IoiyMZI@vger.kernel.org, AJvYcCX4OD0BWgsTIfwCHejzb4Wbs1QjRUOWVphN7WOeL9URPj4Wd0dJr27TxNnLoBnheLQNQnRXsY5uN6l0vcg2rw==@vger.kernel.org, AJvYcCXWuKiJRAxB0ULYb+sV7GQW3R5QzcDVIOgohd8U22CaW687WMlQlXspxjCNEfxPI/wY7hqpCqhapmc2@vger.kernel.org, AJvYcCXpFdprpb/RC2RqVVz3qTWNF9y+ukZIqZaDyfYrWSk4Cffu0OAsqifYTJQqPJDeELEFX5aFQ0U036J4gI3e@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3cvYGpHu0L7ETAVbB0U+iEkcJhrnzUNsk7BsAK0J7EFOH3p13
+	xAUbVQXN0SCrUCHNmtL/CaS479CKWBMMbiiCdlaFZ+3Ijv78nPKXhlr9DiUElRB6MQuif8guWJ5
+	JMClfEpJGmmWsVCmMwE52dj87PVM=
+X-Google-Smtp-Source: AGHT+IFLGvnYDVZLLa6gb/IFLNG+NtJdTz+H8BQtiW/Pv7A9hdRHwl2vjaIxr7x6UhU9lyjaVH3MCdnPjifz3TMcGbU=
+X-Received: by 2002:ac2:5682:0:b0:542:2f5a:5f52 with SMTP id
+ 2adb3069b0e04-5422f5a5f9dmr180818e87.13.1734758137206; Fri, 20 Dec 2024
+ 21:15:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy4-SNVD+zqgaJTmLtAQ+kKV_Ce4tRr2zqgjTq1KPM-rfQ@mail.gmail.com>
- <4804ce6a-fa67-4b50-bc31-715689d3c766@oracle.com>
-In-Reply-To: <4804ce6a-fa67-4b50-bc31-715689d3c766@oracle.com>
-From: J David <j.david.lists@gmail.com>
-Date: Fri, 20 Dec 2024 21:16:34 -0500
-Message-ID: <CABXB=RQn8qU5TZsWyBpWNaDQpaMPhdi4RYVJ0D1qJAWiFuBAHQ@mail.gmail.com>
-Subject: Re: knfsd server bug when GETATTR follows READDIR
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Rick Macklem <rick.macklem@gmail.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20241213135013.2964079-1-dhowells@redhat.com> <20241213135013.2964079-2-dhowells@redhat.com>
+In-Reply-To: <20241213135013.2964079-2-dhowells@redhat.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 21 Dec 2024 14:15:00 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQndCMudAtVRAbfSfnV+XhSMDcnP-s1_GAQh8UiEdLBSg@mail.gmail.com>
+Message-ID: <CAK7LNAQndCMudAtVRAbfSfnV+XhSMDcnP-s1_GAQh8UiEdLBSg@mail.gmail.com>
+Subject: Re: [PATCH 01/10] kheaders: Ignore silly-rename files
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Max Kellermann <max.kellermann@ionos.com>, 
+	Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Marc Dionne <marc.dionne@auristor.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Tue, Dec 17, 2024 at 8:51=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+On Fri, Dec 13, 2024 at 10:50=E2=80=AFPM David Howells <dhowells@redhat.com=
 > wrote:
-> If they can reproduce
-> this issue with an "in tree" file system contained in a recent upstream
-> Linux kernel, then we can take a look. (Or you and J. David can give it
-> a try).
+>
+> Tell tar to ignore silly-rename files (".__afs*" and ".nfs*") when buildi=
+ng
+> the header archive.  These occur when a file that is open is unlinked
+> locally, but hasn't yet been closed.  Such files are visible to the user
+> via the getdents() syscall and so programs may want to do things with the=
+m.
+>
+> During the kernel build, such files may be made during the processing of
+> header files and the cleanup may get deferred by fput() which may result =
+in
+> tar seeing these files when it reads the directory, but they may have
+> disappeared by the time it tries to open them, causing tar to fail with a=
+n
+> error.  Further, we don't want to include them in the tarball if they sti=
+ll
+> exist.
+>
+> With CONFIG_HEADERS_INSTALL=3Dy, something like the following may be seen=
+:
 
-Yes, I reproduced this behavior on ext4 with 6.11.5+bpo-amd64 from
-Debian backports on completely different hardware.
+I am confused.
 
-Then I set up another NFS server on Arch (running kernel 6.12.4), and
-reproduced the issue there as well.
+kernel/gen_kheaders.sh is executed when CONFIG_IKHEADERS is enabled.
 
-Then, just to be sure, I went and found the instructions for building
-the Linux kernel from source, built and tested both 6.12.6 and
-6.13-rc3 as downloaded directly from www.kernel.org, and the issue
-occurs with those as well.
+How is CONFIG_HEADERS_INSTALL related?
 
-Additionally, I have tested every combination of FreeBSD, Linux and
-OpenIndiana as client and server to confirm that FreeBSD client with
-Linux server is the only case where this problem occurs.
 
-Does this count as reproducing the issue with an "in tree" file system
-contained in a recent upstream Linux kernel? I'm asking sincerely; I'm
-so far out of my depth that I'm pretty sure there are sea monsters
-swimming around down there. So I can't rule out the possibility that
-I've done something wrong either in setup or testing.
 
-During the course of this, I've gotten the reproduction down to
-extracting a 2k tar file and then running "du" on the resulting
-directory from the client. Doesn't matter if the file is untarred on
-the FreeBSD client, the server, or another client. The tar file
-contains a directory with a handful of random Javascript files from
-Drupal. As far as I can tell, it has something to do with the number,
-size, or names of the files. The Drupal project has three separate
-directories all structured like this with the same filenames, but the
-file contents vary. The issue occurs with all of them.
+>    find: './kernel/.tmp_cpio_dir/include/dt-bindings/reset/.__afs2080': N=
+o such file or directory
+>    tar: ./include/linux/greybus/.__afs3C95: File removed before we read i=
+t
+>
+> The find warning doesn't seem to cause a problem.
 
-The Linux /etc/exports file is just:
+I picked the following commit.
 
-/data 192.168.201.0/24(rw,sync)
+https://lore.kernel.org/all/20241218202021.17276-1-elsk@google.com/
 
-(The production case also uses crossmnt and no_subtree_check, anonuid,
-and anongid, but I eliminated those one by one to make sure they
-weren't responsible.)
+This shoots the root cause of the 'find' errors.
+Does it fix your problems too?
 
-The corresponding fstab entry on the FreeBSD 14.2-RELEASE client is:
 
-192.168.201.200:/data /data nfs rw,tcp,nfsv4,minorversion=3D2 0 0
+Your patch does not address the 'find' errors.
 
-One additional thing I noticed that really blew my mind is that I can
-shutdown both the client and the server, wait, power them back on, and
-the issue is still there. So it's not something in RAM.  That prompted
-me to try "touch x" in the directory to create a new 0-length file.
-The issue then goes away. Then I can "rm x" and the issue comes back.
-By contrast, I can write megabytes from /dev/random into one of the
-files without affecting anything; the issue stays the same.
 
-I then tried it with all empty files using the same filenames. The
-issue still occurred. Add or remove one file and the issue goes away.
-I then renamed one of the files to zz.js. Issue still occurs. Renamed
-it to zzz.js. Problem still occurs. Kept going until I got to
-zzzzzz.js and it worked.
 
-Finally, I got it to the point where running this in an empty mounted
-directory will create the issue:
 
-rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
-touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
-done; touch y0-xxxxxx.xx
 
-and this will not:
 
-rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
-touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
-done; touch y0-xxxxxxx.xx
+>
+> Fix this by telling tar when called from in gen_kheaders.sh to exclude su=
+ch
+> files.  This only affects afs and nfs; cifs uses the Windows Hidden
+> attribute to prevent the file from being seen.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Masahiro Yamada <masahiroy@kernel.org>
+> cc: Marc Dionne <marc.dionne@auristor.com>
+> cc: linux-afs@lists.infradead.org
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-kernel@vger.kernel.org
+> ---
+>  kernel/gen_kheaders.sh | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+> index 383fd43ac612..7e1340da5aca 100755
+> --- a/kernel/gen_kheaders.sh
+> +++ b/kernel/gen_kheaders.sh
+> @@ -89,6 +89,7 @@ find $cpio_dir -type f -print0 |
+>
+>  # Create archive and try to normalize metadata for reproducibility.
+>  tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=3D$KBUILD_BUILD_TIMESTAMP}" \
+> +    --exclude=3D".__afs*" --exclude=3D".nfs*" \
+>      --owner=3D0 --group=3D0 --sort=3Dname --numeric-owner --mode=3Du=3Dr=
+w,go=3Dr,a+X \
+>      -I $XZ -cf $tarfile -C $cpio_dir/ . > /dev/null
+>
+>
 
-(The difference being one extra x in the last filename.)
 
-It works in the other direction as well. This causes the issue:
-
-rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
-touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
-done; touch y0-xxx.xx
-
-This does not:
-
-rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
-touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
-done; touch y0-xx.xx
-
-There's a four-character window involving the length of the filenames
-where 62 files in a directory causes this issue. There's a little more
-to it than that; it doesn't look like you can just create 61
-two-letter filenames and then one really long one and get the issue.
-
-So I haven't found the specifics yet, but perhaps due to pure chance
-this directory structure is exactly right to provoke an incredibly
-obscure edge case?
-
-Thanks!
+--=20
+Best Regards
+Masahiro Yamada
 
