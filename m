@@ -1,198 +1,192 @@
-Return-Path: <linux-nfs+bounces-8697-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8698-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABE649F9CA0
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2024 23:14:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CF839F9DE4
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 03:16:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFE3D16A316
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Dec 2024 22:14:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9CC167A288D
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Dec 2024 02:16:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 706891A3BC8;
-	Fri, 20 Dec 2024 22:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B1F225D7;
+	Sat, 21 Dec 2024 02:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="PhTqpqPb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eT1Osw7T"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2112.outbound.protection.outlook.com [40.107.244.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE37215702;
-	Fri, 20 Dec 2024 22:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734732851; cv=fail; b=rNdjX/k577cGiiyNFY1n0CfeiF5ktJsW/oy2DDp4GA2BsImFFArsXGrs2zgG30bVdRrF8WXIXHOwdrWO18Kc92kSz6Bx+8esiuPERmxItrcrC9dG1UtX5msK6bjFGeqJGb48GUxBmXCqta4lRrEP4I9jGyqGSDsoOEEGNwELy30=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734732851; c=relaxed/simple;
-	bh=BUypZmvZ++oXhoZALIeg5hBdts4JMLQ4g36HOyjtosQ=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=oLDBHqiX+RD1qE2un3EycVtPpgo7JDOyl811WRKRnFEsyo2onan0VpvYtMfOuqAFAw7OH77LFzw/OxcMIarGu8kACD50eO2Vmx9p+oZiWTrLfSVujz4mcT9H62hwkUH4YF9vrypcp7jHeljmGaJmvePNd5W3xmIVCMeq3rWGO20=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=PhTqpqPb; arc=fail smtp.client-ip=40.107.244.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n3D0E1UrGVOrC/UGynKDKvXqP5GRLQjpEQj/tjw573EH9STK1x9rWUYCl1yw71S2NWh0UPaxKYhUSoxnMm9hZPJjyeC6JGUoMVuj3Z7ZGrvrGlpisPZ8CaV1HNffwL3eEdy+8IBT+My7ljIWpD5t9g2JSxX5KqH3CDu+slyGYQaxQHXrh9/1C0zGhkocd6sOa8pH3D31sUKuCB1a6Ujy/cj7oUFhOZAxu2ZOqyjUwerg3eKMuphOzGK+APyzWxYk6J7+gJlbFiU8Zw6XxT2ocdt27XF3dCcCxf11ThwKp1hybOjh209K1zhnLufDcWenUzD5Mwtsn49JynBoqcG8oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BUypZmvZ++oXhoZALIeg5hBdts4JMLQ4g36HOyjtosQ=;
- b=qNZXC1jN26cLCs0Gn/9pPigom6grI1G4OC70pCHQEUWqitFpSqzJaTWdLRltrjjd51Y34RKvj4AxqZb5tZ5W8THGQHVfz/S+YZ0mlWNeqmNBpCPQLZLCNUxpvzF4sha/Mc5OwKPZ72vrl+qlAe3aeUowP9xloWuwr/KOVhSqJuJkrDJulPBZF9SBDyruoSo0v2uT8e4Pzq4IQLhZBWZM+VWzSLwBMJikutokTSFzUspYl1ekMq6cVVdR3YJcURoeCdg0D2dFY4DbAQGBLYS1gcr3pQDWqGulw1jKiLj3gK7OaKPq/ANKrBmh82qpP7X40MESQujlS6vGlfQfoPiDuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUypZmvZ++oXhoZALIeg5hBdts4JMLQ4g36HOyjtosQ=;
- b=PhTqpqPbd6HNIrPJzmAni23dz1KF5URmpPGDSWf0TXX6F+IKKKayt5qWqbiT/dMpRE/GRyV2YfpFrYzVpGzzG1Q23fqbY9YBxTmDidqdnpo03zEDd/3SttnBvFDH0ZGamYFaSSqKMn+Ml/h2J37NuxtCGUWJ2xfspEdjwu8aCn0=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MW5PR13MB5927.namprd13.prod.outlook.com (2603:10b6:303:1c4::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8272.13; Fri, 20 Dec
- 2024 22:14:05 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb%4]) with mapi id 15.20.8272.013; Fri, 20 Dec 2024
- 22:14:05 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT  PULL] Please put NFS client bugfixes for 6.13
-Thread-Topic: [GIT  PULL] Please put NFS client bugfixes for 6.13
-Thread-Index: AQHbUyx7IC4MolvJKkiEgjeZq935wg==
-Date: Fri, 20 Dec 2024 22:14:04 +0000
-Message-ID: <10d898a194fa59e8f79ba08b24237c01a3f58a80.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MW5PR13MB5927:EE_
-x-ms-office365-filtering-correlation-id: a4f42d25-7009-4704-fccd-08dd21439dcc
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?R3pjUndzY0Jzc1dsSHNveXE3RHBscXdTeEtQeS9XekwyQ0hsME1rekZPOWRW?=
- =?utf-8?B?bEw1bHZsVzJrL3IwTEh5eHdFSmZuVjIybnhiN1VRZEF6VmNFaXpDTENoVk1z?=
- =?utf-8?B?VlE5UUlWcEtGWHNKOFhYOVBaL0xYNGVDQUZvc2lXWGRsVzB1alUzdWZkRlZy?=
- =?utf-8?B?L3lNNzdQT1FHSzdBQ3ZVbG8yUTgwQXFxWTlFS2pZbjdmZEFMM2lCblhvZlJ6?=
- =?utf-8?B?MFZLU3A4eVJYcHErb2ZkTEZFWlN0aFM0ZWdzWUxEeFBhUkxkZ2J6cml5ZURZ?=
- =?utf-8?B?eVArR2pYTFNzZm5RN012TjdySTNkMHp3ZmZ1MmJPT2NUUzBPa1lrTFFxU3pS?=
- =?utf-8?B?VEVhU2VuWXdYTEtVL0xsQjdmd1VQenBQaU1zZzBVM1RYZldZczBaL2s2Z3pr?=
- =?utf-8?B?M1lJSTh3ZE5BNlBZT0VvYnRMd1p0OS9HVjlPRkM3UUk1azdXeU9WcExqZk5o?=
- =?utf-8?B?NU5mNE9WR3ZFM3hiaTF3clU4d2FlbDdHV0txQ1ZJUWxpMGVnRkUvNGlpU3pI?=
- =?utf-8?B?R08wZXdiaHpZVVplWTFsU1FwSmtyOXFqd0RwWEZFSVFlVXFDc3ZQTlN6dDBt?=
- =?utf-8?B?Uyt2cEFPZUk1LzdVanZQbyt3ZHNCR25TVGlLSXdWOFd2YUN4UGhSQzBQNTI4?=
- =?utf-8?B?SHo0a1NIcUJIcDFKd25HT1hYZDlJVWxNMXc1ZDR3MWwwdGs3MDZORTZCZlhn?=
- =?utf-8?B?UjVFQUZzRTBhdW5mNmlua3d6Yjh1Tm9CbHpIREFmWVhZMVBhd0c0YmxKUm5E?=
- =?utf-8?B?dEI1RWNTK3FqMG1CL3d3UkFDbVU5MkdKdlhSeUFld3c5Kys2NGo5dGxGN3Qy?=
- =?utf-8?B?b24vczlMRVFicjg4dXFVTE56YXQwQUhkL1E1Ympmcy9hMFZFalVyeU12a29B?=
- =?utf-8?B?ZEZPZFp1Z3QrdUVYSURzSnF6K01hMjM2ZEVUbUpaMER5OHgyRE8velVEU1Bx?=
- =?utf-8?B?UmU4cW8zYm9kaCtoNjZ5ZDBVYmNjbVJrdFFsY29sNUkzRm5mMXRVcVF1K0xE?=
- =?utf-8?B?enU2TS9pU3dUUG5VOFREZzVSSXJ0WVUzZGRPSFpaM0tXL0xES2xhOVRSRWJH?=
- =?utf-8?B?V0t3b1dhbXRkaVdPZ21zaDg2Rjl4LzlMbGhtdGxOc1ZWZjNnWnpSSmdDbnh1?=
- =?utf-8?B?TC9uOVRwenRqcWFXTnNZMlhvdVk5Sk9kT1B3dnlHbEpaOGM3bVQyTnJyUk8z?=
- =?utf-8?B?Z3pRWlNLdytRYklEM01URHJWZHJhQkRTaGhRWGszaUdMZWhTcXVZU0xmWVZJ?=
- =?utf-8?B?cm9NcGkvZmNSdzI2MEt2Mzc4dVFmZGlicTN2bVJraHJNRkF0eXhGU1lhUGtq?=
- =?utf-8?B?WEVWL0ZsNkZKWHNmSjV3N1RaQTY3RzdaTmxsMThPU1B3OCszN1VyRHE4S1B5?=
- =?utf-8?B?bjlhN2tib0pXelRlaVZBeW53MUVmdmpxcHhYa0FBek5aWkd4L2szWDZLbE9Y?=
- =?utf-8?B?TTNPRXA1eVdkM0h1WW45ZGJBVWduUkp0SWRkdEFqcVZrS1kwWVdqNmIrMzdO?=
- =?utf-8?B?OEl5S1lPTzV0b2FpZlVtemdiek5FNGI2SHI4Y2hhNVg0ckZIWVVOZWVYcXgy?=
- =?utf-8?B?UEZPT3RtdDR4aWZIRGRXSzNoTjZ6L3EySXZVQm4xOElOaEQ5WnJnNEtJNWVh?=
- =?utf-8?B?ZC9KMXdiY2x5dFJmRTFXNGs5RU1oMmo3Y3ZWVExzdFBRaHhvN2VNQ01OWGhT?=
- =?utf-8?B?bStyVjE0WWxVcCtJb3BjR1BUcWEzaWtlS051UEdPNFFFU3A0QmQ0MUp6NXR0?=
- =?utf-8?B?Mkptamd2R1hycTMvYUYwaHFSbkh0Q2ZFSUNFUzBaMVZvY3NEdGRaV09ZcUhM?=
- =?utf-8?B?OW9weHRwUUM2SUFxQVpYa3VpUWVXNGRsWFg3Y3JoRllEWGQrS3hOZk8wMFRC?=
- =?utf-8?B?em5RaW1sS3pqbDViR0xtMVBTMlR2K3p2eTl4VDhIaFoxNlJ4dGt1UVJOWVNl?=
- =?utf-8?Q?SDOy2RnfW3dryN3kp+qqDHPQIlUvS0jy?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?UE5qeVV4SHhzVng2Z0I1VHRzWW5KbHpucncwSFZlMm9hclJmSnF5L3pDZUVu?=
- =?utf-8?B?NFBITHdETHdlVWliVmNldnJsZUlLOHFFSlRyck9TelJIV0Z6OGFUQ2NCdHZt?=
- =?utf-8?B?UEc3eTJ4Mnk4bUZpeE5Fbllnb0QrQVNMMTNiTVo1LzJDZXI5SnBRMVI5aWNQ?=
- =?utf-8?B?ejdndG5sbUhTak1NMGpkcGYvbnA3R3AxdTFja2I3bnc3Y0dUZXNHaUtrNWVU?=
- =?utf-8?B?YzBRYmg2S0NTS3NpKy9HdW84SHRzdzdKRVQ4T0FsTHlZSVkwWXorK2tCNUN6?=
- =?utf-8?B?RC9VV2J0K1VvV0Z3NUlPbkZ6M1FhOFRSOExWUng5ODZNczhsWlRQckVzakFK?=
- =?utf-8?B?UXUrZmo2UzdMWERidmIvamxyd3A5MkxEdTZjNFdYNkNKOHU3Qy85amx3U3M5?=
- =?utf-8?B?OWdkZWNJVHJIbTBjRXpaTnpQdjZYbDFUUTdkaUoxellMWFdFc3Jvd3ZIZ0FS?=
- =?utf-8?B?Y2duVlcydGdQRWNJem0vdUVLN1lWSkdBN1NKUDBWbkZtaXJuNkt0T3NwZ1ZR?=
- =?utf-8?B?bWZyZFVCTUdoZnQ1ZjREcTBXWi9aR0tadUx5a2ljUVY0SFdmS2FPSkRNWkR1?=
- =?utf-8?B?Z1dIYUZiSUFzTVFrbWFJbzhzTFBUTEhseGI4WXM0ZkRUNUlwbnN6VGFGUEYv?=
- =?utf-8?B?T2xheW9qN0dYWmIrOGxTQUlzT3JFZWhoOVE2bVVYeFI0aStUSk5XR3JuTVA2?=
- =?utf-8?B?MVhPWE8rSU9Kb1U1a2cwWjl2VS9IS2FJOXJha0lsUFR3NGlGMmlYN1o2TkJs?=
- =?utf-8?B?Ny9PN1EvM2ZhbzgxS0VBOVE0OFRaa0dzc09JTkpTd3BETDk5Tkpjem5CODh5?=
- =?utf-8?B?RytCZHBvTFJzS0p2a0ZRRVlZV1g0UUFWYyt0bjRrU21oZVNteTNvd1dtUjZj?=
- =?utf-8?B?NmZaWEMzNjNBaldaNFFNRll2WElUMzlYVHpnRHplQUowYXlUa3NFWU1Jd3R0?=
- =?utf-8?B?aWVUVVV3eXFKQmVpaFUySXkvSkI4NlhXbnFEQngwdEd2UGNuS3RQb1hkMUZY?=
- =?utf-8?B?RUFVNHEvSktyYkxZVHZSRjNFVm90eU5pMEFRRmJJSTFkTkFjdTc1YlFlaG5l?=
- =?utf-8?B?WitiMEE4NkxzRDQ4QVo3WVN5d3RDaTdFQ2ZnU2ZjVzFKUFBJMFVwYmljRm9P?=
- =?utf-8?B?ZXRVK0hhN0lzNExqK0grcTZDVHJ3VkYwVjhKeEo2b2tKZzdVSE04QXVwdWRO?=
- =?utf-8?B?eG1iNDV0TGYyZm9pSjZ1SDRoRTR3enZzdTlRdGpCTUFOTGE5Rlp2MXQrRUFX?=
- =?utf-8?B?WkZhWDRhWW9PTWZhNS85ZlRlZHRBWnFzdCswMnhzdXpHR2FtbHVWWW5LVE1w?=
- =?utf-8?B?d29iYUV6NkVjZzl1L3lGcTdRc0toSUxBd1crN1pOUnFOZlRwWWZOVjl5eGFu?=
- =?utf-8?B?UVlUSmd3Q0Q5amdQT2o1NHJITVhGdlF2bkY3VEVpTkFTU3RYS1RRSWdMNSs0?=
- =?utf-8?B?WnBydXdNeDFPU1NzWU9XN3B1TVNySjFsdUQyTjRQWXVVZ1ZJQ29OTE1CeWxt?=
- =?utf-8?B?UXZRNjdrd3VaYUZ4aUZjZklRZ1hPUVNQT0d5RDN6cUpMbC94Um5Hd2diWGp0?=
- =?utf-8?B?OWFjcFhrOXo0dHV3OStmQUtldFVMK0JpMHphVTdzRVFMMEl5enNGUFZQRUJa?=
- =?utf-8?B?cVU5bVVMMkN3bTM3dkhVSDZMVW1IdXhnRG10amhqYWYwbThzdEdxTi9vK284?=
- =?utf-8?B?NVQ2VytpYTBPdjRLWm5LQkdna2xZU2ZaeUtja3FiQmtxWjBIdkNVMU4xNnJu?=
- =?utf-8?B?b2k4SXAySlJ3d1NsSTlEcEhwRGxoRzlHNkQyb0dnZU5UMWR4Zm5RYVBpMlBp?=
- =?utf-8?B?OVQrQmNZaU1PZWFoVmVjUkRxdUtsZGMyRExkTWpWbnBFaHhEdy82ZDE2YnJk?=
- =?utf-8?B?aUNoejlVdnNwcGtRT0ZqMy8xdm5hTmRwd2Y1VGVkWExHWXpCUFdpT3FTNG9s?=
- =?utf-8?B?MWtLbUlDdCs0QjRVZGRSVFFsQVJpanoycDNLdnFsdFh2MjNabzRqZmJUeTFF?=
- =?utf-8?B?YmRaZUpRZnc4MUcwRHBkQWd3SE9EMlhxcFZTVGlXV0RweW9yem10eElOajJF?=
- =?utf-8?B?c292UTVGc3pQUi9HTHBERGdQeUUzSFBFYjErRC9VM0hYNmRUOS9wZlFydno4?=
- =?utf-8?B?SWpKV0tubm5EL2FHMUZmSkwzYWtVQkovNndvd1J5VzRweHRqODhNMUJEMWZK?=
- =?utf-8?B?OEYreENDU3VVdlBKTitnMGNLOXNBTmQxWUxjeWdTR2VMTU1TY3E0aFl3YWFw?=
- =?utf-8?B?YWh2YjRYak9RSy9wUzdwc0pXU0pBPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E6FE5A5500627D46B6F1CF45004FADEA@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3DB1799B
+	for <linux-nfs@vger.kernel.org>; Sat, 21 Dec 2024 02:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1734747408; cv=none; b=twTStxJ/HwFPs6/wte8JZuQKG87ELyKeh6Ks8NzOFTZWzm9ioW11ccYiZ8MZ5ty5Orbx0t7TnUxGyYpbp1WL1bb1loTXd5UIQ+HfSCHCSIBXCxJc21raba9+1SyLitePIeVUv1c1+oY/6R99ZMc/ancYDMeGgOuCqJtqkJspImw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1734747408; c=relaxed/simple;
+	bh=x/UsBW7+HkVZaj1LOfbE4/Mfp8YP30NdiYzfELlBPuQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLPPdXjXkJJVUj2QAAUIY8ofeoCIpsb3InaFT5x/TDH/CGrL8ygx/WXjTQtGu2Wxr2wl4U5XlzN0Lffvz0G+v6fpFbm+2g0Fsjv3IO7l1ex9plhyYWnARjyp8X/ZooLfqrJG0DVs+saPH9dePKOyLllxcN7Obs4LYKJni7IHAiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eT1Osw7T; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7fd5248d663so1921683a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Dec 2024 18:16:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734747406; x=1735352206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TjTZUprqBIakbAvGGwLQMzXQKXDx2asBM8wx8aqKnlA=;
+        b=eT1Osw7TGm1rtH8k5trZQStj0MLWCY4qEi3nL6/nsOmaSYznkFsgXe1N5ivBXg22t5
+         3TE0riNGm6Sr2S8n7UBZ5GTky/dCtovKyBt5+ktBg5Xk9ZT0kdy589Lsff6mA5J0naCX
+         M0QAFzRIejAKoy8oSj3VPiR15qMPGYqSijZai7KC+mDuV4wVTeW8HHPWmbrPcWT+GQrU
+         jwewd46JNiFus9fxPCjncOCWbZznZ7Qka9Xx5EuuTthRmdzMT9QXY5iimhMfpVyMvG71
+         WfZP6HqS+zRXBtOY1hNe1DWC3jyo8rejJOWr/rgAL2pOGUy7ydQyavSJcVl+IKyU4Rr3
+         OYfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734747406; x=1735352206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TjTZUprqBIakbAvGGwLQMzXQKXDx2asBM8wx8aqKnlA=;
+        b=UQvWrtj12RJbAHOfQYLISdon8AuFva+0yUdK1Rdw711BWwHhR3XFKz/XBKj+F4M3TS
+         JVoPYj+KtZArAu6koQX/HD9I55HhTZ2/91anleA/YMZZlIzzHqOPvlCTRTbn0w0CPyg7
+         tOlercDx5qdRRtD+EVgN07UTH6aRV5wg3TMMkiasflA+Za2fEs8rHGzn3mquUaYj/z2W
+         /DQv1ylh7eP3k89xMptuDFMeynQcMdfyAtGmleNqtUcXiDxaQ4gQ2u5tGiMCcSAIv2ZP
+         WpdfyoMfNS9yyDwzoPGNiLMdI42RAXj6YbR7V8jdMhKV/W6zNRAKruTwxb2rgeteX4vO
+         IAsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWri7glIopvWsz5F4ByU2xIUaVPV5PA5FWHp3p2fQGJi3M11+tJZRrBPR/ZqbbzrRwzWxHmhk/GutI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9LEeMTwQqS600doWwEeeu7hJoJD178/OC05n7TDCTNiOD64NY
+	5sRJF9GiDwRDdk3RQzyz43AITgH/f7ON9SEmfarcfpuojLCFvmU15+809jfHaRTsd25IVmIx24/
+	2ia7UK6jtJo4IACOP2x/vGd2WaeA=
+X-Gm-Gg: ASbGncs5g92mNcvBIbvFXIXG1Vo9ro++qZ932R4/kc/JTvPma0DcoxN+g/6Jlm2qAFT
+	vEquO2Fj8VeMCBbxZ1AbTZl3DjZbL7yR4oYpR
+X-Google-Smtp-Source: AGHT+IEChv0EE2rdTHoo0ynORPaMr6xfzeKuwl25AuJa1551vqqpZqeztnJiL7ephwMS47Ecx1nRfGb/07+GYYItdAw=
+X-Received: by 2002:a17:90a:e706:b0:2ee:cd83:8fd3 with SMTP id
+ 98e67ed59e1d1-2f452ee931amr8021649a91.33.1734747405847; Fri, 20 Dec 2024
+ 18:16:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4f42d25-7009-4704-fccd-08dd21439dcc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2024 22:14:05.0079
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j0I4u6Xg/uh40l2V8Za590lZxrlbQA9uqo/CXMkWx88G6wHM+D3LOwy/by/5JDdbFUap2WhCnuER3raZfiZzSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR13MB5927
+References: <CAM5tNy4-SNVD+zqgaJTmLtAQ+kKV_Ce4tRr2zqgjTq1KPM-rfQ@mail.gmail.com>
+ <4804ce6a-fa67-4b50-bc31-715689d3c766@oracle.com>
+In-Reply-To: <4804ce6a-fa67-4b50-bc31-715689d3c766@oracle.com>
+From: J David <j.david.lists@gmail.com>
+Date: Fri, 20 Dec 2024 21:16:34 -0500
+Message-ID: <CABXB=RQn8qU5TZsWyBpWNaDQpaMPhdi4RYVJ0D1qJAWiFuBAHQ@mail.gmail.com>
+Subject: Re: knfsd server bug when GETATTR follows READDIR
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Rick Macklem <rick.macklem@gmail.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgNzhkNGYzNGUy
-MTE1YjUxN2JjYmZlN2VjMGQwMThiYmJiNmY5YjBiODoNCg0KICBMaW51eCA2LjEzLXJjMyAoMjAy
-NC0xMi0xNSAxNTo1ODoyMyAtMDgwMCkNCg0KYXJlIGF2YWlsYWJsZSBpbiB0aGUgR2l0IHJlcG9z
-aXRvcnkgYXQ6DQoNCiAgZ2l0Oi8vZ2l0LmxpbnV4LW5mcy5vcmcvcHJvamVjdHMvdHJvbmRteS9s
-aW51eC1uZnMuZ2l0IHRhZ3MvbmZzLWZvci02LjEzLTINCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFu
-Z2VzIHVwIHRvIGJlZGI0ZTYwODhhODg2ZjU4N2QyZWE0NGUwYzE5OGM4Y2UyMTgyYzk6DQoNCiAg
-ZnMvbmZzOiBmaXggbWlzc2luZyBkZWNsYXJhdGlvbiBvZiBuZnNfaWRtYXBfY2FjaGVfdGltZW91
-dCAoMjAyNC0xMi0xNyAxMToxNDoyMCAtMDUwMCkNCg0KVGhhbmtzLA0KICBUcm9uZA0KLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQ0KTkZTIGNsaWVudCBidWdmaXhlcyBmb3IgTGludXggNi4xMw0KDQpCdWdmaXhlczoNCi0gTkZT
-L3BuZnM6IEZpeCBhIGxpdmUgbG9jayBiZXR3ZWVuIHJlY2FsbGVkIGxheW91dHMgYW5kIGxheW91
-dGdldA0KLSBGaXggYSBidWlsZCB3YXJuaW5nIGFib3V0IGFuIHVuZGVjbGFyZWQgc3ltYm9sICdu
-ZnNfaWRtYXBfY2FjaGVfdGltZW91dCcNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KVHJvbmQgTXlrbGVidXN0ICgxKToN
-CiAgICAgIE5GUy9wbmZzOiBGaXggYSBsaXZlIGxvY2sgYmV0d2VlbiByZWNhbGxlZCBsYXlvdXRz
-IGFuZCBsYXlvdXRnZXQNCg0KWmhhbmcgS3VuYm8gKDEpOg0KICAgICAgZnMvbmZzOiBmaXggbWlz
-c2luZyBkZWNsYXJhdGlvbiBvZiBuZnNfaWRtYXBfY2FjaGVfdGltZW91dA0KDQogZnMvbmZzL3Bu
-ZnMuYyAgfCAyICstDQogZnMvbmZzL3N1cGVyLmMgfCAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDIg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGlu
-dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhh
-bW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Hello,
+
+On Tue, Dec 17, 2024 at 8:51=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+> If they can reproduce
+> this issue with an "in tree" file system contained in a recent upstream
+> Linux kernel, then we can take a look. (Or you and J. David can give it
+> a try).
+
+Yes, I reproduced this behavior on ext4 with 6.11.5+bpo-amd64 from
+Debian backports on completely different hardware.
+
+Then I set up another NFS server on Arch (running kernel 6.12.4), and
+reproduced the issue there as well.
+
+Then, just to be sure, I went and found the instructions for building
+the Linux kernel from source, built and tested both 6.12.6 and
+6.13-rc3 as downloaded directly from www.kernel.org, and the issue
+occurs with those as well.
+
+Additionally, I have tested every combination of FreeBSD, Linux and
+OpenIndiana as client and server to confirm that FreeBSD client with
+Linux server is the only case where this problem occurs.
+
+Does this count as reproducing the issue with an "in tree" file system
+contained in a recent upstream Linux kernel? I'm asking sincerely; I'm
+so far out of my depth that I'm pretty sure there are sea monsters
+swimming around down there. So I can't rule out the possibility that
+I've done something wrong either in setup or testing.
+
+During the course of this, I've gotten the reproduction down to
+extracting a 2k tar file and then running "du" on the resulting
+directory from the client. Doesn't matter if the file is untarred on
+the FreeBSD client, the server, or another client. The tar file
+contains a directory with a handful of random Javascript files from
+Drupal. As far as I can tell, it has something to do with the number,
+size, or names of the files. The Drupal project has three separate
+directories all structured like this with the same filenames, but the
+file contents vary. The issue occurs with all of them.
+
+The Linux /etc/exports file is just:
+
+/data 192.168.201.0/24(rw,sync)
+
+(The production case also uses crossmnt and no_subtree_check, anonuid,
+and anongid, but I eliminated those one by one to make sure they
+weren't responsible.)
+
+The corresponding fstab entry on the FreeBSD 14.2-RELEASE client is:
+
+192.168.201.200:/data /data nfs rw,tcp,nfsv4,minorversion=3D2 0 0
+
+One additional thing I noticed that really blew my mind is that I can
+shutdown both the client and the server, wait, power them back on, and
+the issue is still there. So it's not something in RAM.  That prompted
+me to try "touch x" in the directory to create a new 0-length file.
+The issue then goes away. Then I can "rm x" and the issue comes back.
+By contrast, I can write megabytes from /dev/random into one of the
+files without affecting anything; the issue stays the same.
+
+I then tried it with all empty files using the same filenames. The
+issue still occurred. Add or remove one file and the issue goes away.
+I then renamed one of the files to zz.js. Issue still occurs. Renamed
+it to zzz.js. Problem still occurs. Kept going until I got to
+zzzzzz.js and it worked.
+
+Finally, I got it to the point where running this in an empty mounted
+directory will create the issue:
+
+rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+done; touch y0-xxxxxx.xx
+
+and this will not:
+
+rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+done; touch y0-xxxxxxx.xx
+
+(The difference being one extra x in the last filename.)
+
+It works in the other direction as well. This causes the issue:
+
+rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+done; touch y0-xxx.xx
+
+This does not:
+
+rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+done; touch y0-xx.xx
+
+There's a four-character window involving the length of the filenames
+where 62 files in a directory causes this issue. There's a little more
+to it than that; it doesn't look like you can just create 61
+two-letter filenames and then one really long one and get the issue.
+
+So I haven't found the specifics yet, but perhaps due to pure chance
+this directory structure is exactly right to provoke an incredibly
+obscure edge case?
+
+Thanks!
 
