@@ -1,225 +1,155 @@
-Return-Path: <linux-nfs+bounces-8714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 696429FA90D
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2024 02:45:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 469CC9FAF64
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2024 15:20:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D1E6188591F
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2024 01:45:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EB101885EF9
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Dec 2024 14:20:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CF0C14012;
-	Mon, 23 Dec 2024 01:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkOZEIhZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35FA31AF0A7;
+	Mon, 23 Dec 2024 14:19:41 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CADD528;
-	Mon, 23 Dec 2024 01:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0CB194AF9;
+	Mon, 23 Dec 2024 14:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734918317; cv=none; b=a3+WoduHaVHa2gEGG9KELQ8y44DcmPuZ9y7k/8uVMm3s2gRyy+Z5JtJl026VCbmJPI/7tmbyYQX5P/9YSZjXDwy177HPUEooTCbkE3LNFTZMPedcl1j9R1etKFy+F3MoidKoeMrZVWduWZqORyV7DUlf8oumyECYAaO6b1/lCeY=
+	t=1734963581; cv=none; b=rDsi3FE9v4irQ9a+EdHg4X9dGGiIdZY3okKMS5+Y6Oh6uDAcngkcSfs68XNXXGir6Ydk7/NID0kb6cUzS5zQLg++121sIOvHwZePcxQSX503MlOk6ZspcqFfoKedMmWtdAWT3Zw92U0G0EQk5OuVuqif2tOhDgVzbM9RUZuIbKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734918317; c=relaxed/simple;
-	bh=IADwT1ASv5b+mEyXyPpKE7q0AQti0JeRagF2Sd8iMHI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lKGiXdNxbytliElXxJ2z1aKOaYy6KqS45FOneV2zExxOuyfwXTA+N7PgpNJgOaEp6DSpj1H3swtMU5W4oQZ5CnaNWuzGcqJkPK2AQ0c50vrP/NopvL7EPxqbXQSl7FY72WZbHkns7pSR8asqWyVFet9vK2kZ6aEQ7kZZjbXaW1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TkOZEIhZ; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3d143376dso5282862a12.3;
-        Sun, 22 Dec 2024 17:45:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734918313; x=1735523113; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NcqVitReAslD1wR2ijx9sy1BWVMCeFwMMt/XKmiiD68=;
-        b=TkOZEIhZlBMu+dIjXQZOoO0vucPHn/DSgXHvV7wjFZTPZM6Y94jswk9c52xOFNgoO1
-         dzBJVaFw72UU/o5IA13Fhh/vN3FBJAhr6avzXHLola5yWa15q0BuIy7fSQLSCKVV7wTY
-         ZKERvzzgdUY0Z3U+WVQ41BjbUsMPiq4DZKNYuiM9CR5WGLaaPBfjMY8ZbQtjvYQOwQ6P
-         tdDLnmchxLeQsC2AbFsnIy84CslwaD0D+tJrK0dNWiYrmJHjtvcdLZRAic6uFL5kbEcm
-         zMhorVMVdvXKbzM0/T5jbjO44Lkc46TjB8+s01XmtYLHxt4kP1i4Xul5BXHfm30mMr7Z
-         Bb9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734918313; x=1735523113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NcqVitReAslD1wR2ijx9sy1BWVMCeFwMMt/XKmiiD68=;
-        b=qMkOtAuGnkAVFGd7/6mVKNPnlten13sJ9c7PbojmbLfhuV03DsxydamGTdC4dptd9W
-         1UnC9F7zyh/shnkbJbp6Bi3gllEOJW7//pZelCopCez776mkAXsHM0MpEwYItAowrGZ0
-         AxhETRUcrZO27ClGzdpTFK8BlkIZ9mfbZcomy3TIgRMePGfC5DrCd4364VfehHPRL+H+
-         4ywqg4XH3MCDvSOp1Z8kCUNtXsNPAEaY5XwnTLz8caovtMOZdYwpADaa7WTm1k576Zrz
-         9BcgTXaWMoItwr4ZnyBN/PmLwiTI/JnLSEAYd82QxFzuRjC/JylHwIPsgG1UuzdVBHsk
-         mB9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWYRN4Zi0E8rp9PwAjvcIfvEOY2kTxy/yy+gjFSwc/Fg3qYAU2J2W670gpo8U150z9hGrklQdTRhws=@vger.kernel.org, AJvYcCWk+u5p+x5rUmKgsrlDOOPM3+zU8m4fIctS8YkDWh0vKM9qWUhL5knsAkkGodrCUpluncLCqmQQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEmN2PwSTDRkM8V5csrqxs1urBoBSMlHP0IeU+VRw+V+bLU2tq
-	0UK8q4o4rELCGCorY8GGEVXCH+14YGI6MOYyouoxi01qhxlMXoFxa5O/+criJLgdmeFMB+ii2H3
-	09G77BTYXISpE4I2KZlijzJhXWQ==
-X-Gm-Gg: ASbGnct/rK6kk46XAp7dSOZbM6X5fA9pMWJEILpnQleH3Gwmbhwc1j9eoM9YhdvaWGe
-	dVX1WJ2Y0O4Jj7I/q3Ddhh9T9Hey19enYQxb+2/PCGVpzJNdm8q8IM6gtPraDWksjcfi4
-X-Google-Smtp-Source: AGHT+IEMuLk2jG/lnPkFEUYsFU9hvAfGnT30j3+pWAske5Pk58u4aLftQ7yBHAGASlihgaZcjiswCt8gEHTyGHsGISM=
-X-Received: by 2002:a05:6402:4023:b0:5d1:3da:e6c with SMTP id
- 4fb4d7f45d1cf-5d81dd8ea06mr11802526a12.10.1734918312696; Sun, 22 Dec 2024
- 17:45:12 -0800 (PST)
+	s=arc-20240116; t=1734963581; c=relaxed/simple;
+	bh=LD1ldJyFEOxj/gShQMs55PiIrz4vec4vEH1Dps8gt9M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BlRPYlak2kfIHiO0dbCCammk7URxmdAdk29wui5myKuxq8hfFVyK4bji8PxB9Ntn7qBk2z5Cq78rsRUoQNIGROe54T/P36q+warW8CKOibFqJEM8pZgK3hn2CG3GT801IfkHV4Td7Wu1O3YMHgEcP5k4UBb6sHS6YgVbyM5MWQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4YH0XT6B6Kz20mdx;
+	Mon, 23 Dec 2024 22:19:53 +0800 (CST)
+Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5884F180043;
+	Mon, 23 Dec 2024 22:19:34 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by kwepemh100016.china.huawei.com
+ (7.202.181.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Dec
+ 2024 22:19:30 +0800
+From: Kaixiong Yu <yukaixiong@huawei.com>
+To: <akpm@linux-foundation.org>, <mcgrof@kernel.org>
+CC: <ysato@users.sourceforge.jp>, <dalias@libc.org>,
+	<glaubitz@physik.fu-berlin.de>, <luto@kernel.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
+	<jack@suse.cz>, <kees@kernel.org>, <j.granados@samsung.com>,
+	<willy@infradead.org>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
+	<lorenzo.stoakes@oracle.com>, <trondmy@kernel.org>, <anna@kernel.org>,
+	<chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
+	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <paul@paul-moore.com>, <jmorris@namei.org>,
+	<linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>, <dhowells@redhat.com>,
+	<haifeng.xu@shopee.com>, <baolin.wang@linux.alibaba.com>,
+	<shikemeng@huaweicloud.com>, <dchinner@redhat.com>, <bfoster@redhat.com>,
+	<souravpanda@google.com>, <hannes@cmpxchg.org>, <rientjes@google.com>,
+	<pasha.tatashin@soleen.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
+	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
+	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
+	<wangkefeng.wang@huawei.com>
+Subject: [PATCH v4 -next 00/15] sysctl: move sysctls from vm_table into its own files
+Date: Mon, 23 Dec 2024 22:15:19 +0800
+Message-ID: <20241223141550.638616-1-yukaixiong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241223001005.3654-2-cel@kernel.org> <CAM5tNy4EYVuWXVzAwmrFJ=Sa5CnhLOZW40=gtFZka9gHzkxtwQ@mail.gmail.com>
-In-Reply-To: <CAM5tNy4EYVuWXVzAwmrFJ=Sa5CnhLOZW40=gtFZka9gHzkxtwQ@mail.gmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sun, 22 Dec 2024 17:45:03 -0800
-Message-ID: <CAM5tNy7FzBSyV1t90cvvB=wFJdJbEnRUBF8J=_dWA+aBZSb1Jw@mail.gmail.com>
-Subject: Re: [RFC PATCH] NFSD: Encode COMPOUND operation status on page boundaries
-To: cel@kernel.org
-Cc: Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, 
-	J David <j.david.lists@gmail.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemh100016.china.huawei.com (7.202.181.102)
 
-On Sun, Dec 22, 2024 at 5:25=E2=80=AFPM Rick Macklem <rick.macklem@gmail.co=
-m> wrote:
->
-> On Sun, Dec 22, 2024 at 4:10=E2=80=AFPM <cel@kernel.org> wrote:
-> >
-> > From: Chuck Lever <chuck.lever@oracle.com>
-> >
-> > J. David reports an odd corruption of a READDIR reply sent to a
-> > FreeBSD client.
-> >
-> > xdr_reserve_space() has to do a special trick when the @nbytes value
-> > requests more space than there is in the current page of the XDR
-> > buffer.
-> >
-> > In that case, xdr_reserve_space() returns a pointer to the start of
-> > the next page, and then the next call to xdr_reserve_space() invokes
-> > __xdr_commit_encode() to copy enough of the data item back into the
-> > previous page to make that data item contiguous across the page
-> > boundary.
-> >
-> > But we need to be careful in the case where buffer space is reserved
-> > early for a data item that will be inserted into the buffer later.
-> >
-> > One such caller, nfsd4_encode_operation(), reserves 8 bytes in the
-> > encoding buffer for each COMPOUND operation. However, a READDIR
-> > result can sometimes encode file names so that there are only 4
-> > bytes left at the end of the current XDR buffer page (though plenty
-> > of pages are left to handle the remaining encoding tasks).
-> >
-> > If a COMPOUND operation follows the READDIR result (say, a GETATTR),
-> > then nfsd4_encode_operation() will reserve 8 bytes for the op number
-> > (9) and the op status (usually NFS4_OK). In this weird case,
-> > xdr_reserve_space() returns a pointer to byte zero of the next buffer
-> > page, as it assumes the data item will be copied back into place (in
-> > the previous page) on the next call to xdr_reserve_space().
-> >
-> > nfsd4_encode_operation() writes the op num into the buffer, then
-> > saves the next 4-byte location for the op's status code. The next
-> > xdr_reserve_space() call is part of GETATTR encoding, so the op num
-> > gets copied back into the previous page, but the saved location for
-> > the op status continues to point to the wrong spot in the current
-> > XDR buffer page because __xdr_commit_encode() moved that data item.
-> >
-> > After GETATTR encoding is complete, nfsd4_encode_operation() writes
-> > the op status over the first XDR data item in the GETATTR result.
-> > The NFS4_OK status code (0) makes it look like there are zero items
-> > in the GETATTR's attribute bitmask.
-> I can confirm that this patch fixes the test case I have, which is based =
-on
-> J. David's reproducer.
->
-> I also think the analysis sounds right. I had gotten to the point where
-> I thought it was some oddball case related to xdr_reserve_space() and
-> saw that the pointer used by GETATTR's nfsd4_encode_bitmap4() was
-> 4 bytes into a page, for the broken case.
-> (As an aside, it appears that "%p" is broken for 32bit arches. I needed t=
-o
-> use "%x" with a (unsigned int) cast to printk() pointers. I doubt anyone =
- much
-> cares about 32bits any more, but I might look to see if I can fix it.)
->
-> Good work Chuck!
->
-> >
-> > The patch description of commit 2825a7f90753 ("nfsd4: allow encoding
-> > across page boundaries") [2014] remarks that NFSD "can't handle a
-> > new operation starting close to the end of a page." This behavior
-> > appears to be one reason for that remark.
-> >
-> > Break up the reservation of the COMPOUND op num and op status data
-> > items into two distinct 4-octet reservations. Thanks to XDR data
-> > item alignment restrictions, a 4-octet buffer reservation can never
-> > straddle a page boundary.
-> I don't know enough about the code to comment w.r.t. whether or not this
-> is a correct fix, although it seems to work for the test case.
->
-> I will note that it is a pretty subtle trap and it would be nice if somet=
-hing
-> could be done to avoid this coding mistake from happening again.
-> All I can think of is defining a new function that must be used instead o=
-f
-> xdr_reserve_space() if there will be other encoding calls done before the
-> pointer is used. Something like xdr_reserve_u32_long_term(). (Chuck is
-> much better at naming stuff than I am.)
-> --> If your fix is correct, in general, this function would just call
-> xdr_reserve_space(xdr, XDR_UNIT),
->       but it could also set a flag in the xdr structure so that it can
-> only be done once until
->       the flag is cleared (by a function call when the code is done
-> with the pointer), or something like that?
-I take back this latter bit w.r.t. a flag. If the function only
-allocates 4bytes,
-it will never straddle pages and cause problems.
+This patch series moves sysctls of vm_table in kernel/sysctl.c to
+places where they actually belong, and do some related code clean-ups.
+After this patch series, all sysctls in vm_table have been moved into its
+own files, meanwhile, delete vm_table.
 
-My suggestion would just clarify that "long term" pointers can only be
-used for a 4 byte (XDR_UNIT) allocation.
+All the modifications of this patch series base on
+linux-next(tags/next-20241219). To test this patch series, the code was
+compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
+x86_64 architectures. After this patch series is applied, all files
+under /proc/sys/vm can be read or written normally.
 
-rick
+Changes in v4:
+ - change all "static struct ctl_table" type into
+   "static const struct ctl_table" type in patch1~10,12,13,14
+ - simplify result of rpcauth_cache_shrink_count() in patch11
 
->
-> Anyhow, others probably can suggest better changes that would avoid this =
-trap?
->
-> Good work, rick
->
-> >
-> > Reported-by: J David <j.david.lists@gmail.com>
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > ---
-> >  fs/nfsd/nfs4xdr.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > index 53fac037611c..8780da884197 100644
-> > --- a/fs/nfsd/nfs4xdr.c
-> > +++ b/fs/nfsd/nfs4xdr.c
-> > @@ -5764,10 +5764,11 @@ nfsd4_encode_operation(struct nfsd4_compoundres=
- *resp, struct nfsd4_op *op)
-> >         nfsd4_enc encoder;
-> >         __be32 *p;
-> >
-> > -       p =3D xdr_reserve_space(xdr, 8);
-> > +       if (xdr_stream_encode_u32(xdr, op->opnum) !=3D XDR_UNIT)
-> > +               goto release;
-> > +       p =3D xdr_reserve_space(xdr, XDR_UNIT);
-> >         if (!p)
-> >                 goto release;
-> > -       *p++ =3D cpu_to_be32(op->opnum);
-> >         post_err_offset =3D xdr->buf->len;
-> >
-> >         if (op->opnum =3D=3D OP_ILLEGAL)
-> > --
-> > 2.47.0
-> >
+Changes in v3:
+ - change patch1~10, patch14 title suggested by Joel Granados
+ - change sysctl_stat_interval to static type in patch1
+ - add acked-by from Paul Moore in patch7
+ - change dirtytime_expire_interval to static type in patch9
+ - add acked-by from Anna Schumaker in patch11
+
+Changes in v2:
+ - fix sysctl_max_map_count undeclared issue in mm/nommu.c for patch6
+ - update changelog for patch7/12, suggested by Kees/Paul
+ - fix patch8, sorry for wrong changes and forget to built with NOMMU
+ - add reviewed-by from Kees except patch8 since patch8 is wrong in v1
+ - add reviewed-by from Jan Kara, Christian Brauner in patch12
+
+Kaixiong Yu (15):
+  mm: vmstat: move sysctls to mm/vmstat.c
+  mm: filemap: move sysctl to mm/filemap.c
+  mm: swap: move sysctl to mm/swap.c
+  mm: vmscan: move vmscan sysctls to mm/vmscan.c
+  mm: util: move sysctls to mm/util.c
+  mm: mmap: move sysctl to mm/mmap.c
+  security: min_addr: move sysctl to security/min_addr.c
+  mm: nommu: move sysctl to mm/nommu.c
+  fs: fs-writeback: move sysctl to fs/fs-writeback.c
+  fs: drop_caches: move sysctl to fs/drop_caches.c
+  sunrpc: simplify rpcauth_cache_shrink_count()
+  fs: dcache: move the sysctl to fs/dcache.c
+  x86: vdso: move the sysctl to arch/x86/entry/vdso/vdso32-setup.c
+  sh: vdso: move the sysctl to arch/sh/kernel/vsyscall/vsyscall.c
+  sysctl: remove unneeded include
+
+ arch/sh/kernel/vsyscall/vsyscall.c |  14 ++
+ arch/x86/entry/vdso/vdso32-setup.c |  16 ++-
+ fs/dcache.c                        |  21 ++-
+ fs/drop_caches.c                   |  23 ++-
+ fs/fs-writeback.c                  |  30 ++--
+ include/linux/dcache.h             |   7 +-
+ include/linux/mm.h                 |  23 ---
+ include/linux/mman.h               |   2 -
+ include/linux/swap.h               |   9 --
+ include/linux/vmstat.h             |  11 --
+ include/linux/writeback.h          |   4 -
+ kernel/sysctl.c                    | 221 -----------------------------
+ mm/filemap.c                       |  18 ++-
+ mm/internal.h                      |  10 ++
+ mm/mmap.c                          |  54 +++++++
+ mm/nommu.c                         |  15 +-
+ mm/swap.c                          |  16 ++-
+ mm/swap.h                          |   1 +
+ mm/util.c                          |  67 +++++++--
+ mm/vmscan.c                        |  23 +++
+ mm/vmstat.c                        |  44 +++++-
+ net/sunrpc/auth.c                  |   2 +-
+ security/min_addr.c                |  11 ++
+ 23 files changed, 330 insertions(+), 312 deletions(-)
+
+-- 
+2.34.1
+
 
