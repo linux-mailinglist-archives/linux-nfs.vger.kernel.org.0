@@ -1,296 +1,304 @@
-Return-Path: <linux-nfs+bounces-8757-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8758-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DEC59FB7F4
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Dec 2024 01:07:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E97B49FB9FB
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Dec 2024 07:52:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C15061884A7D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Dec 2024 00:07:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64A87164734
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Dec 2024 06:52:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA1BB367;
-	Tue, 24 Dec 2024 00:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F7B16DEB1;
+	Tue, 24 Dec 2024 06:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X86qlDzn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpbM+p77"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2B718D;
-	Tue, 24 Dec 2024 00:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE3345BE3
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Dec 2024 06:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734998829; cv=none; b=MmKs1xycQWJcZ6rmkduOcQNw+BVkEP3tmJlBhLMclNcWbeN2SjhTnozoaq7QyBeS3aBQtG0TdYwABYcbPQb8xMQChg6HqNKYIrvkqNhSshXtMucmKWkBGbSuOogPgSeu2QENUt86sokwPQEBMCvdQoOQ5C6v9GIeaTt/W/1XciE=
+	t=1735023169; cv=none; b=ckwEOfL1U8z+6+e6uLaEXF04WEgrxyAcyCrRC3arZmNJZYnAMbuzFeD4kBmTVtXWaOblWclV7KYEVUbH8+TeGq7UuTh5tQ1slvfAHcG80nQLQTpfxZ9rjBrNYi4/iUZ8vHK5w96JN05WXUVW9luZLzJ+ErLfeTsktbx1ZKCiWKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734998829; c=relaxed/simple;
-	bh=Xhig4yjzCXQSuPEmJy/IOpdcXFCQoMkKEqtoDg1Ku/g=;
+	s=arc-20240116; t=1735023169; c=relaxed/simple;
+	bh=l0nDw8dqCp3l6h3gTazA+iU6GhZCaBg4ngOSbWQywfk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b45JvnGRwesbgTEUyai5Qa7BJRKfafOTzmRvMqErHTVXLdgF6EbyxAFXkjOd0qR7/kUtcM1QMDxqfrQcb89LKbKTbALtSpgmBJeP4BajnQaDHXlb7jaxRuKXwbBTFGCr6gynuSHW1fBdFjWFnQpBDdzjJcNRnUi/PqbJdnvR+NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X86qlDzn; arc=none smtp.client-ip=209.85.208.53
+	 To:Content-Type; b=QWw7BUIkKWX1ZR6yc0XdmNorV5DEgGsUWgkkaniq7JPpYNkDxkfqxWo9OUFNE/eVSkoK6pqAThw798EAoq/Ot1G/c6R7Id245s5JwHUnMrSDeA7lvL1MH/TJ5bYKh5QAMA5sC0sOwUpWnoZFTkKlTnHgHHJf00tUb+vLz77AYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SpbM+p77; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d414b8af7bso8740171a12.0;
-        Mon, 23 Dec 2024 16:07:07 -0800 (PST)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ceb03aadb1so6748816a12.0
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Dec 2024 22:52:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734998826; x=1735603626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1735023165; x=1735627965; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1lMU+hQtbnunvlQNknpF6Gcl4rHXPH30K4I/D3Bk1Ik=;
-        b=X86qlDzn3eTMOOXJnZ9Y2Bl4pza5lZ+2W0AsSN+18tLFwXvbtB06DZWEIfMnC7eXr3
-         6a3FuAkbe+9C9hg6NJpcSP/IXLqUR373ppMMogvUOe1y2WkQtIYsAP09dWVc6avgxG1L
-         9tALdb8+08wY04T7QduVZG+MOBfLsdyQsVt9eCCu0dsC8JFM2G33wrePMh54DwTpoWOT
-         ee7D5ZbX1Tr3esHT6iEZEk/EiJPw0qwbV369zYxhiV4zXk8YXnTP2Q6a8e2DlVV/zYun
-         atmMkRQ6eYrPPC05pvU7vQoVYUCHRsYEu80moCxhPeU4FxJQNi1s/i6Meq7q7rzLz/Oa
-         Bmvg==
+        bh=7id4LPusEbPX2ZA5/P1ErY6IpIwRW8RN+BgIb5mhs00=;
+        b=SpbM+p77gACtHLAiZPe+/ElLNOsSKIfuYc4QTJdLcpEmJUULK6yy0aHf/fZUtu9yma
+         W0/4j6vPgd9J57EYsXtWd9gGjGq+7dTlc/YsDDa4swtJncCUpEXi0RFAAVtS6ok9FTcC
+         gzmaG+W5tMeAJJBBpN1XXY3adhbXaZoqKEJxbPXs+n7IsajDUaLKciIW0Rqo6I9CW0Eb
+         /PwzWqW16QPiwDX+tDyrs2xQCNkRjk9bKsVdwpgaXKc9oPTh6QsPn1J0tSPW4nfUDQ38
+         S2OLFEA5tx9DVFgVN54mm+rnkwAOAZ2oByNCPK7P6JXdtdOEUpajHEeEaJiXZM8tIBOs
+         4/2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734998826; x=1735603626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1735023165; x=1735627965;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1lMU+hQtbnunvlQNknpF6Gcl4rHXPH30K4I/D3Bk1Ik=;
-        b=bCVW3EXj20e0o2TMmrBb0ewej6qZ3T/xrd1iKauCkeNvS2JSMOAUFtoNFLPjWQ+roy
-         V9bJzSnrQBIgTmhz2ynD1TpnkQ86vxqgQl/OT9Vo+FB4VnIiIYbYqtET76xLUr8oUCh0
-         G3mE1c2pSfHk4gKx8LkSSVKm8C5b2xjQLhXYuarVyMdo1odiemHsFOFoo/r8O7jLDK8l
-         QSlkKcKo+SYFULPqv8Ycxhtp4Q92bny52R/52VmmhaihVZK0mDoIGSm8MdlBu2AyEouz
-         zqR5ayyb57+VzlRd3ZWilF0/qk2pBPPIUK24nngqvikk60u4WjIuTPTf3QqTtDjswvIW
-         fBBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxnr7gVRkWXoNxgR93fr807OVVMP9rr++4XVlL3axsqbl7UsdrBeBVfWKwH0Rq+WWz/cki0kb1zxc=@vger.kernel.org, AJvYcCWfsmxRLzAm7BIfFS8ToTqwGH3s3UBNdgf0G1niqUYUq760vXgzc1TOc1YiDyFUvtRnEeuJ64E/@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywou7UVGJ0rn71w2ILapga5xYre34qGVFq0yVKG9FTH/YczTm8o
-	eJjlXPLjJGZog0EHVQO30u5/osm7ORGD4dz4z2f3vm4L7j70+6i94TsCSTzJHP2TT1h+kOMgRUU
-	YVm6KCaNoOWZFQIxGLPhpjlN3PA==
-X-Gm-Gg: ASbGnctJ8IQfsWNGPrXv/8tQrysUPsYxgqu7b/SjaEmq++Kep+I78xnLljnDh3GX3du
-	Y6fAJ7GLmerQbXHiP318apFFbzmdn4Lz2y7yMaCICMVSB04FVkGGXrcn3kQPZhri3FTU1xw==
-X-Google-Smtp-Source: AGHT+IEkUCccwpx98cGyBa26102/uNic63XZiVjc6A2Ca12R+xC7iT3UPSMgagN20xBViaS/grxWrBtg+YNaO99j+4g=
-X-Received: by 2002:a05:6402:2802:b0:5d2:723c:a568 with SMTP id
- 4fb4d7f45d1cf-5d81ddf3ba0mr14964076a12.10.1734998825486; Mon, 23 Dec 2024
- 16:07:05 -0800 (PST)
+        bh=7id4LPusEbPX2ZA5/P1ErY6IpIwRW8RN+BgIb5mhs00=;
+        b=syRxJvzW+ikr62AyRKQXT7D79lwyg7yeZjKAuCO8yxu8sTFD6z836U33C8x/eVkRoR
+         95s1KAKIuGG2FQRi13HcMnMQ2re1WWJ2rfNwQUchlY73HXC6jyG2oQ7mabEFzHCkMs9h
+         bB0pqRKqiC4EANQyFp6H8eGO3LFAWh6qGTAuyZgs2GcL3rtPMeDnI7SbNogYaCl9x+qs
+         x6cK10uiieWajQBLowAHkwsqNf486/LojRjT4Zy0SxejJ4UjONZKZ1bblxnkXRcOpN1b
+         gWKdN+oLXlxn9lzKeh2cKbEkJ2S3U1v3G+XLla4vYAIGSANkFloL06szCBneq8gBrOuN
+         O3qQ==
+X-Gm-Message-State: AOJu0YyRhV3ADsgw3FfG9WcjwakiOEf06OwHfKGuaqZhyyIm+fVMyINB
+	JXwPKxgDCEbmInG06H+s0CUMyVYjrpmmOrAl3OuxYXxb+4AgzscejJOwSmmtY98GksiAD+MMpku
+	LQp6BeHA5ov4UyA4VZzExrx1g8lsfMzVa
+X-Gm-Gg: ASbGncs+JMg7lqtoU2ecMjw0WZJgT6vRyKO9N8sjBFetglcdnqcacpob3y1W9iOpP2x
+	CTot52E09kj8OvinR1/28mxwSMFMpTjA+oJxIXEY=
+X-Google-Smtp-Source: AGHT+IFkSE5WoCAu2mH138Eev+PpnfTVXxiSi60mGSeLaVDlODBVOBeJx7k6nG4R+pkoQ4VjEQf2Cq5BoJU5HibLHWc=
+X-Received: by 2002:a05:6402:3549:b0:5d3:ce7f:abee with SMTP id
+ 4fb4d7f45d1cf-5d81ddffac3mr12795735a12.25.1735023164961; Mon, 23 Dec 2024
+ 22:52:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241223001005.3654-2-cel@kernel.org> <CAM5tNy4EYVuWXVzAwmrFJ=Sa5CnhLOZW40=gtFZka9gHzkxtwQ@mail.gmail.com>
- <3d0804bb-ecc7-4507-9247-1d0dd8305073@oracle.com>
-In-Reply-To: <3d0804bb-ecc7-4507-9247-1d0dd8305073@oracle.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Mon, 23 Dec 2024 16:06:55 -0800
-Message-ID: <CAM5tNy7iZdhJ_f6uZbAkthdXiEBg7nj-yQyUxfKx1gFy5qiW5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] NFSD: Encode COMPOUND operation status on page boundaries
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: cel@kernel.org, Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, J David <j.david.lists@gmail.com>, stable@vger.kernel.org
+References: <CAM5tNy4-SNVD+zqgaJTmLtAQ+kKV_Ce4tRr2zqgjTq1KPM-rfQ@mail.gmail.com>
+ <4804ce6a-fa67-4b50-bc31-715689d3c766@oracle.com> <CABXB=RQn8qU5TZsWyBpWNaDQpaMPhdi4RYVJ0D1qJAWiFuBAHQ@mail.gmail.com>
+ <e4853faf-0836-4595-952b-69f71150bede@oracle.com> <CAM5tNy6tR96WrCeoLEfoA5cGs0AP=mR3q1nmYrqbFTTQB=G=Yw@mail.gmail.com>
+ <CAM5tNy6dFBgAhkX_mBzXyRyb+WfukZT0egpt75XRgCYKHPsP3Q@mail.gmail.com> <3998d739-c042-46b4-8166-dbd6c5f0e804@oracle.com>
+In-Reply-To: <3998d739-c042-46b4-8166-dbd6c5f0e804@oracle.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Tue, 24 Dec 2024 07:51:00 +0100
+Message-ID: <CALXu0UfSYhcTm6TN28WU9+FCzQMQkKXMZxGp2PHb3kFi3jb6-A@mail.gmail.com>
+Subject: Re: knfsd server bug when GETATTR follows READDIR
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 23, 2024 at 6:31=E2=80=AFAM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
+On Sun, 22 Dec 2024 at 21:19, Chuck Lever <chuck.lever@oracle.com> wrote:
 >
-> On 12/22/24 8:25 PM, Rick Macklem wrote:
-> > On Sun, Dec 22, 2024 at 4:10=E2=80=AFPM <cel@kernel.org> wrote:
+> On 12/21/24 6:53 PM, Rick Macklem wrote:
+> > On Sat, Dec 21, 2024 at 3:27=E2=80=AFPM Rick Macklem <rick.macklem@gmai=
+l.com> wrote:
 > >>
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> J. David reports an odd corruption of a READDIR reply sent to a
-> >> FreeBSD client.
-> >>
-> >> xdr_reserve_space() has to do a special trick when the @nbytes value
-> >> requests more space than there is in the current page of the XDR
-> >> buffer.
-> >>
-> >> In that case, xdr_reserve_space() returns a pointer to the start of
-> >> the next page, and then the next call to xdr_reserve_space() invokes
-> >> __xdr_commit_encode() to copy enough of the data item back into the
-> >> previous page to make that data item contiguous across the page
-> >> boundary.
-> >>
-> >> But we need to be careful in the case where buffer space is reserved
-> >> early for a data item that will be inserted into the buffer later.
-> >>
-> >> One such caller, nfsd4_encode_operation(), reserves 8 bytes in the
-> >> encoding buffer for each COMPOUND operation. However, a READDIR
-> >> result can sometimes encode file names so that there are only 4
-> >> bytes left at the end of the current XDR buffer page (though plenty
-> >> of pages are left to handle the remaining encoding tasks).
-> >>
-> >> If a COMPOUND operation follows the READDIR result (say, a GETATTR),
-> >> then nfsd4_encode_operation() will reserve 8 bytes for the op number
-> >> (9) and the op status (usually NFS4_OK). In this weird case,
-> >> xdr_reserve_space() returns a pointer to byte zero of the next buffer
-> >> page, as it assumes the data item will be copied back into place (in
-> >> the previous page) on the next call to xdr_reserve_space().
-> >>
-> >> nfsd4_encode_operation() writes the op num into the buffer, then
-> >> saves the next 4-byte location for the op's status code. The next
-> >> xdr_reserve_space() call is part of GETATTR encoding, so the op num
-> >> gets copied back into the previous page, but the saved location for
-> >> the op status continues to point to the wrong spot in the current
-> >> XDR buffer page because __xdr_commit_encode() moved that data item.
-> >>
-> >> After GETATTR encoding is complete, nfsd4_encode_operation() writes
-> >> the op status over the first XDR data item in the GETATTR result.
-> >> The NFS4_OK status code (0) makes it look like there are zero items
-> >> in the GETATTR's attribute bitmask.
-> > I can confirm that this patch fixes the test case I have, which is base=
-d on
-> > J. David's reproducer.
->
-> May I add:
->
-> Tested-by: Rick Macklem <rick.macklem@gmail.com>
->
-> ?
-Sure, if you'd like. I have now tested both versions of the patch.
-I suppose I'm more well known as rmacklem@uoguelph.ca but they both work.
-
->
->
-> > I also think the analysis sounds right. I had gotten to the point where
-> > I thought it was some oddball case related to xdr_reserve_space() and
-> > saw that the pointer used by GETATTR's nfsd4_encode_bitmap4() was
-> > 4 bytes into a page, for the broken case.
->
-> May I also add:
->
-> Reviewed-by: Rick Macklem <rick.macklem@gmail.com>
->
-> ?
-Both patches look fine to me, although I do not understand the code
-in __write_bytes_to_xdr_buf(), so I'm not sure I'm the guy to review this s=
-tuff.
-I do understand that a xdr_reserve_space(xdr, 4) is safe, since it is impos=
-sible
-for it to straddle a page.
-
-I'll leave it up to you.
-
->
->
-> > (As an aside, it appears that "%p" is broken for 32bit arches. I needed=
- to
-> > use "%x" with a (unsigned int) cast to printk() pointers. I doubt anyon=
-e  much
-> > cares about 32bits any more, but I might look to see if I can fix it.)
->
-> On Linux, the %p formatter emits a hash instead of the actual pointer
-> address, for security reasons. There are ways to disable this -- see
-> the "no_hash_pointers" kernel command line argument for the big hammer.
->
-> (Documentation/admin-guide/kernel-parameters.txt)
-Thanks for the info. The "pointers" did throw me off for a bit;-)
-
-Thanks, rick
-
->
->
-> > Good work Chuck!
->
-> Thanks!
->
->
-> >> The patch description of commit 2825a7f90753 ("nfsd4: allow encoding
-> >> across page boundaries") [2014] remarks that NFSD "can't handle a
-> >> new operation starting close to the end of a page." This behavior
-> >> appears to be one reason for that remark.
-> >>
-> >> Break up the reservation of the COMPOUND op num and op status data
-> >> items into two distinct 4-octet reservations. Thanks to XDR data
-> >> item alignment restrictions, a 4-octet buffer reservation can never
-> >> straddle a page boundary.
-> > I don't know enough about the code to comment w.r.t. whether or not thi=
+> >> On Sat, Dec 21, 2024 at 9:34=E2=80=AFAM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>>
+> >>> On 12/20/24 9:16 PM, J David wrote:
+> >>>> Hello,
+> >>>>
+> >>>> On Tue, Dec 17, 2024 at 8:51=E2=80=AFPM Chuck Lever <chuck.lever@ora=
+cle.com> wrote:
+> >>>>> If they can reproduce
+> >>>>> this issue with an "in tree" file system contained in a recent upst=
+ream
+> >>>>> Linux kernel, then we can take a look. (Or you and J. David can giv=
+e it
+> >>>>> a try).
+> >>>>
+> >>>> Yes, I reproduced this behavior on ext4 with 6.11.5+bpo-amd64 from
+> >>>> Debian backports on completely different hardware.
+> >>>>
+> >>>> Then I set up another NFS server on Arch (running kernel 6.12.4), an=
+d
+> >>>> reproduced the issue there as well.
+> >>>>
+> >>>> Then, just to be sure, I went and found the instructions for buildin=
+g
+> >>>> the Linux kernel from source, built and tested both 6.12.6 and
+> >>>> 6.13-rc3 as downloaded directly from www.kernel.org, and the issue
+> >>>> occurs with those as well.
+> >>>
+> >>> Reproducing on v6.13-rc with ext4 is all that was necessary, thank yo=
+u!
+> >>>
+> >>>
+> >>>> Additionally, I have tested every combination of FreeBSD, Linux and
+> >>>> OpenIndiana as client and server to confirm that FreeBSD client with
+> >>>> Linux server is the only case where this problem occurs.
+> >>>
+> >>> Interesting.
+> >>>
+> >>>
+> >>>> Does this count as reproducing the issue with an "in tree" file syst=
+em
+> >>>> contained in a recent upstream Linux kernel? I'm asking sincerely; I=
+'m
+> >>>> so far out of my depth that I'm pretty sure there are sea monsters
+> >>>> swimming around down there. So I can't rule out the possibility that
+> >>>> I've done something wrong either in setup or testing.
+> >>>>
+> >>>> During the course of this, I've gotten the reproduction down to
+> >>>> extracting a 2k tar file and then running "du" on the resulting
+> >>>> directory from the client. Doesn't matter if the file is untarred on
+> >>>> the FreeBSD client, the server, or another client. The tar file
+> >>>> contains a directory with a handful of random Javascript files from
+> >>>> Drupal. As far as I can tell, it has something to do with the number=
+,
+> >>>> size, or names of the files. The Drupal project has three separate
+> >>>> directories all structured like this with the same filenames, but th=
+e
+> >>>> file contents vary. The issue occurs with all of them.
+> >>>>
+> >>>> The Linux /etc/exports file is just:
+> >>>>
+> >>>> /data 192.168.201.0/24(rw,sync)
+> >>>>
+> >>>> (The production case also uses crossmnt and no_subtree_check, anonui=
+d,
+> >>>> and anongid, but I eliminated those one by one to make sure they
+> >>>> weren't responsible.)
+> >>>>
+> >>>> The corresponding fstab entry on the FreeBSD 14.2-RELEASE client is:
+> >>>>
+> >>>> 192.168.201.200:/data /data nfs rw,tcp,nfsv4,minorversion=3D2 0 0
+> >>>
+> >>> Out of curiosity, do you see the problem recur with nfsv3 or the othe=
+r
+> >>> NFSv4 minor versions?
+> >>>
+> >>>
+> >>>> One additional thing I noticed that really blew my mind is that I ca=
+n
+> >>>> shutdown both the client and the server, wait, power them back on, a=
+nd
+> >>>> the issue is still there. So it's not something in RAM.  That prompt=
+ed
+> >>>> me to try "touch x" in the directory to create a new 0-length file.
+> >>>> The issue then goes away. Then I can "rm x" and the issue comes back=
+.
+> >>>> By contrast, I can write megabytes from /dev/random into one of the
+> >>>> files without affecting anything; the issue stays the same.
+> >>>>
+> >>>> I then tried it with all empty files using the same filenames. The
+> >>>> issue still occurred. Add or remove one file and the issue goes away=
+.
+> >>>> I then renamed one of the files to zz.js. Issue still occurs. Rename=
+d
+> >>>> it to zzz.js. Problem still occurs. Kept going until I got to
+> >>>> zzzzzz.js and it worked.
+> >>>>
+> >>>> Finally, I got it to the point where running this in an empty mounte=
+d
+> >>>> directory will create the issue:
+> >>>>
+> >>>> rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+> >>>> touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+> >>>> done; touch y0-xxxxxx.xx
+> >>>>
+> >>>> and this will not:
+> >>>>
+> >>>> rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+> >>>> touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+> >>>> done; touch y0-xxxxxxx.xx
+> >>>>
+> >>>> (The difference being one extra x in the last filename.)
+> >>>>
+> >>>> It works in the other direction as well. This causes the issue:
+> >>>>
+> >>>> rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+> >>>> touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+> >>>> done; touch y0-xxx.xx
+> >>>>
+> >>>> This does not:
+> >>>>
+> >>>> rm *.xx; for a in a b c d e f g h ; do for b in 1 2 3 4 5 6 7 ; do
+> >>>> touch $a$b.xx ; done; done; for a in 1 2 3 4 5; do touch x$a-xx.xx;
+> >>>> done; touch y0-xx.xx
+> >>>>
+> >>>> There's a four-character window involving the length of the filename=
 s
-> > is a correct fix, although it seems to work for the test case.
->
-> The most correct fix, IMO, would be to use write_bytes_to_xdr_buf()
-> to insert the op status once the operation has been encoded. That
-> API does not depend on an ephemeral C pointer into a buffer.
->
-> The most performant fix is the one proposed here, and this one is
-> also likely to apply cleanly to older Linux kernels.
->
->
-> > I will note that it is a pretty subtle trap and it would be nice if som=
-ething
-> > could be done to avoid this coding mistake from happening again.
-> > All I can think of is defining a new function that must be used instead=
- of
-> > xdr_reserve_space() if there will be other encoding calls done before t=
-he
-> > pointer is used. Something like xdr_reserve_u32_long_term(). (Chuck is
-> > much better at naming stuff than I am.)
-> > --> If your fix is correct, in general, this function would just call
-> > xdr_reserve_space(xdr, XDR_UNIT),
-> >        but it could also set a flag in the xdr structure so that it can
-> > only be done once until
-> >        the flag is cleared (by a function call when the code is done
-> > with the pointer), or something like that?
->
-> Well there's no limit on the number of times you can call
-> xdr_reserve_space(XDR_UNIT) and save the result.
->
-> It just so happens that, with the current implementation of
-> xdr_reserve_space(), reserving up to 4 octets returns a pointer that
-> remains valid as long as the buffer exists. For larger sizes, that
-> doesn't happen to work -- the returned pointer is guaranteed to be valid
-> only until the next call to xdr_reserve_space() or xdr_commit_encode().
->
-> The only reason to use the "save the pointer" trick is because it is
-> more performant than write_bytes_to_xdr_buf() (go look at what that API
-> does to see why).
->
-> So the whole "save a pointer into the XDR buf, use it later" trick is
-> brittle and depends on an undocumented behavior of that API. At this
-> point, the least we can do is add a warning to reserve_space's kdoc
-> comment. The best we could do is come up with an API that performs
-> reasonably well and makes this common trope less brittle.
->
-> I'm auditing the code base for other places that might make unsafe
-> assumptions about the pointer returned from xdr_reserve_space().
-> nfsd4_encode_read() and read_plus() both do. Probably the SunRPC GSS-API
-> encoders do as well.
->
->
-> > Anyhow, others probably can suggest better changes that would avoid thi=
-s trap?
+> >>>> where 62 files in a directory causes this issue. There's a little mo=
+re
+> >>>> to it than that; it doesn't look like you can just create 61
+> >>>> two-letter filenames and then one really long one and get the issue.
+> >>>>
+> >>>> So I haven't found the specifics yet, but perhaps due to pure chance
+> >>>> this directory structure is exactly right to provoke an incredibly
+> >>>> obscure edge case?
+> >>>
+> >>> Well it's likely that this is a problem with READDIR, so file content
+> >>> is not going to be an issue. The file name lengths are the problem.
+> >>>
+> >>> Also, I'm wondering what the FreeBSD client's directory readdir
+> >>> arguments are (how much does it request, what are the maximum limits =
+it
+> >>> negotiates, and so on). Rick?
+> >> As you'll see in the packet trace:
+> >> Sequence: cache this: No
+> >> Putfh: directory fh
+> >> Readdir:
+> >>      cookie: 0
+> >>      cookie_verf: 0
+> >>      dircount: 8706
+> >>      maxcount: 8706
+> >>      attr: type, RDattr_error, fileid, mounted_on_fleid
+> >> Getattr: same attributes as requested for a previous GETATTR, mainly
+> >>                to keep the directory's attribute cache up to date.
+> >>
+> >> The session negotiates a max request/reply size of just over 1Mbyte an=
+d a
+> >> maximum of something like 20 ops. (Can't recall, but definitely more t=
+han 4.)
+> >>
+> >> If you are wondering where the 8706 comes from, it was an estimate of =
+how
+> >> much would be needed to fill an 8K buffer with the XDR translated to U=
+FS dirents
+> >> by adding 512 to 8K.
+> >>
+> >> I have not yet had a chance to see if I can reproduce the problem with
+> >> J. David's
+> >> reproducer. I will try that soon, and if I can reproduce it, I will
+> >> poke at it to try and
+> >> figure out what is going on.
+> > Just fyi, I have reproduced it. Once you use J. David's little shell sc=
+ript to
+> > create the files in the directory, the Readdir RPC gets the junk reply
+> > to GETATTR
+> > (the count of words for the attribute bitmap in the reply is 0 instead =
+of 2).
+> > You can unmount/remount it and still get the failure, assuming you do n=
+ot
+> > mess with the directory contents.
 > >
-> > Good work, rick
+> > Good work finding the reproducer, J. David!
 > >
-> >>
-> >> Reported-by: J David <j.david.lists@gmail.com>
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >>   fs/nfsd/nfs4xdr.c | 5 +++--
-> >>   1 file changed, 3 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> >> index 53fac037611c..8780da884197 100644
-> >> --- a/fs/nfsd/nfs4xdr.c
-> >> +++ b/fs/nfsd/nfs4xdr.c
-> >> @@ -5764,10 +5764,11 @@ nfsd4_encode_operation(struct nfsd4_compoundre=
-s *resp, struct nfsd4_op *op)
-> >>          nfsd4_enc encoder;
-> >>          __be32 *p;
-> >>
-> >> -       p =3D xdr_reserve_space(xdr, 8);
-> >> +       if (xdr_stream_encode_u32(xdr, op->opnum) !=3D XDR_UNIT)
-> >> +               goto release;
-> >> +       p =3D xdr_reserve_space(xdr, XDR_UNIT);
-> >>          if (!p)
-> >>                  goto release;
-> >> -       *p++ =3D cpu_to_be32(op->opnum);
-> >>          post_err_offset =3D xdr->buf->len;
-> >>
-> >>          if (op->opnum =3D=3D OP_ILLEGAL)
-> >> --
-> >> 2.47.0
-> >>
+> > I will start to poke around to see if I can figure out what the knfsd s=
+erver is
+> > doing.
+> >
+> > Chuck, I suspect any fairly recent FreeBSD client will be sufficient to
+> > reproduce this, just in case you are inspired to cross over to the dark
+> > side and install FreeBSD somewhere.
 >
+> I see the same malformed GETATTR result in the attachments.
 >
-> --
-> Chuck Lever
+> Linux doesn't trip on this issue because it's NFS client doesn't ever
+> append a GETATTR operation after a READDIR.
+
+Windows ms-nfs41-client driver also does GETATTR after READDIR, and
+trips over bogus return values on a regular basis. Solaris 11.4 nfsd
+and nfs4j do not exhibit such problems.
+
+Another garbage value that client gets from Linux nfsd is
+FATTR4_WORD0_CHANGE, which sometimes returns absurdly high values.
+Maybe add some WARN_ONCE() to Linux nfsd if unexpected crazy values
+are sent over the wire?
+
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
