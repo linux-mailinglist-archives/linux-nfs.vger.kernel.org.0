@@ -1,199 +1,193 @@
-Return-Path: <linux-nfs+bounces-8775-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8776-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D89D9FC3E2
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Dec 2024 08:03:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01F399FC462
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Dec 2024 10:15:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 843F81883614
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Dec 2024 07:03:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C6E6163915
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Dec 2024 09:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D89153BC1;
-	Wed, 25 Dec 2024 07:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A93AA17993;
+	Wed, 25 Dec 2024 09:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lhxo524+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC44145FFF;
-	Wed, 25 Dec 2024 07:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA2D24B34
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Dec 2024 09:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735110177; cv=none; b=WbA375fWWgliY9QgQjzzIb+FhCGWN+LWuGDwQxsOqbixxoa8iP2YKP+hfsEKUaDOdvwaesGu/nNSWgt/w9gyXmdCJl+B16sdyvvESxRKBwTpYGTFBYQFqB2qLqJdlFbRyQ4/CA1SMPWd3LYCctFPfa56IigMkv4Z3aNCOSdI+2k=
+	t=1735118152; cv=none; b=Odfw6sfrYOonzQCyNO6qqtZQnmtn9jqZ42/uJL7v967cmC4LoWzvQI6sx/zCAGr4XSo+dMxpKr99wKelGUX8LVUtZs8U9/qLfN0tDhtRflb8/bLSrDY9GpZm49ffLcRZCph/tUHrJDdMzsPGDGQNmGc4xY3RjbRcIQXQJIabPYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735110177; c=relaxed/simple;
-	bh=Yyjz2J7ZGAJ0mIRmPMOtulZnv0T+LazP7gUqsED1r4U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wxx9n5UI0sIygNcNdqb9w07eXALW93+4I/3UViREYoNwvVkQQ5UYSE07Zuv3eRk0Jt2TrF0yeRGM/Zq0U5/FBE8Zpxr1ti0GrzW7ok2VXlPiJu9ARRJviCik+kZ/ARunfW9ERiireHCZ6bf7VT62KiSjAsvXm7UY05GQhQTdrvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YJ2kz3bFkz4f3jqq;
-	Wed, 25 Dec 2024 15:02:35 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 229761A06E6;
-	Wed, 25 Dec 2024 15:02:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgAHL4MRrmtnO8dPFg--.38269S8;
-	Wed, 25 Dec 2024 15:02:49 +0800 (CST)
-From: Yang Erkun <yangerkun@huawei.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	yangerkun@huawei.com,
-	yangerkun@huaweicloud.com,
-	liumingrui@huawei.com
-Subject: [PATCH v2 4/4] nfsd: fix UAF when access ex_uuid or ex_stats
-Date: Wed, 25 Dec 2024 14:59:08 +0800
-Message-ID: <20241225065908.1547645-5-yangerkun@huawei.com>
-X-Mailer: git-send-email 2.46.1
-In-Reply-To: <20241225065908.1547645-1-yangerkun@huawei.com>
-References: <20241225065908.1547645-1-yangerkun@huawei.com>
+	s=arc-20240116; t=1735118152; c=relaxed/simple;
+	bh=xFYhYKoZWh94YI11wxvj6/NoY1VwFiJ19YaDnS9q81Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d1VmIKbsZ3QpEyUAWCqb+2YVl02DODNwdh01Ok4kWPOEWfuWBofT3+kO/3DIOuwz0d/JFpiAwFgLHUB0hLVbaijEU/vY+8Le6KkUZS0XDMLz6uZUgUHKFZ+PPd69IOWk3JJq/+1oc49Ri8GsDuomJ5kBcfhanj81Z327DoS6WHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lhxo524+; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaeecbb7309so233791166b.0
+        for <linux-nfs@vger.kernel.org>; Wed, 25 Dec 2024 01:15:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735118149; x=1735722949; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KrXAHy7bFssZtn2+hXzCCNKCRoNl/u0JDKVfaKj7ZpU=;
+        b=Lhxo524++KKq4l16PTgQk0hAA9gpE+WEao8bZTaQpSlu7zrxNi6wKyEzGz3XWf8Uig
+         0biaZfTyLwPgSoOHrNOfZfhnyyZhhsNlbUjGC/jbGov4oU34+sFnWT1NLNG53tswG63F
+         p6dV3qXGaQmrWsjb2xBpYbphDArWI5l9jVrjEwAo+Z8ziW1lHJMjWis1pxigwFu85UbJ
+         pm96ZVnhROKCyne8UCDZUEfuPvhBi2hoyZbfAjQ0GD/NE69IbbxB1cIAymCeA0a5Hh4f
+         btaWIF2lNpSJn+vb52FPDn3z6pODwCH79iycb+UlLkmA0VJNaBHoGZ6LmpV+PwJa20a/
+         klXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735118149; x=1735722949;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KrXAHy7bFssZtn2+hXzCCNKCRoNl/u0JDKVfaKj7ZpU=;
+        b=AWgvb7pegKBCmuO9PyMmUCJkEiELkObqI1H5nCk73hvNs7cywSRKPM3AVDOwSpTIb+
+         7/SbMn0OyX3mHLwUYLMYwj91Jdyj91XMiRJkouRCSpIHNpy/OHaqAJVDYc6JED2rn4Kx
+         pBzR36jnCcFn+WinCtHTmMO5h3qUzzCaLUKmn8TRUbdkEUNvIqZnUGjE3WfMw3rskGgr
+         gkOkFZZTzYp8NgGQ1cpuYCGG4Ud7QRO+YUgVyTjK/RChzB/U4dutKqPN6FKn0N26Uf02
+         AKT7Of8uolXT2oKugz3XVOp7PX1/98Gj7DDsItQutB4EncJ35oM80lxNdvyioZfLM63Y
+         EaOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSZO19T2vMynxd5Uti8uDHg+vmmW1wpPCuBaoP662KcqCV+W1pKFecbJUnz5LRTuNvLUL4JoT2/DQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Yi09vFofaoNWusYiH/lJ4z82aSyvfZ/2WICmt6X7rV2wN5/k
+	DCMHa/XqZDWdnb2RSgtZ4w8QbokRMXm5754eULlSCsNCPkJhhdkM
+X-Gm-Gg: ASbGncvjGgZYme1rsDasmVp0vSyZBwAaLoxjstkDTV2ITFWl77upbYtC06CDhPx3LbF
+	BhJBgL+80S73Do2XNOnrpZnI/cEF7G8I2O3SD4Z4+stvGKq/x16B7oyExpqLKElrRQod/Os3ubs
+	I+vbCV/Q3ES1t9MkNRqevijiDXdQtcqdKzRBCb0ioTdzIJO3AMCZq33S5FNhKLUg84FgZZQSrfY
+	Z8tQzck3bNHunJPJBmzZiWFi77JjRoC4832yqcSEIALjEc2IYK4PzHoihZgOUvYsyBhqoUWQpXK
+	cFiJkrsb43a14kuP
+X-Google-Smtp-Source: AGHT+IGvX/HlVQjJOVLkdxqPLyTGB2XJarDfUuDzuJ94CDNllNRVs+beZ728R1jvuZAVZ2SyZqg5Dg==
+X-Received: by 2002:a17:907:3687:b0:aa6:9198:75a6 with SMTP id a640c23a62f3a-aac2ad81a4emr1805650566b.21.1735118148716;
+        Wed, 25 Dec 2024 01:15:48 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0f06cf19sm770585166b.198.2024.12.25.01.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2024 01:15:48 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 334E8BE2EE7; Wed, 25 Dec 2024 10:15:47 +0100 (CET)
+Date: Wed, 25 Dec 2024 10:15:47 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Chuck Lever III <chuck.lever@oracle.com>,
+	Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Harald Dunkel <harald.dunkel@aixigo.com>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	herzog@phys.ethz.ch, Martin Svec <martin.svec@zoner.cz>,
+	Michael Gernoth <debian@zerfleddert.de>,
+	Pellegrin Baptiste <Baptiste.Pellegrin@ac-grenoble.fr>
+Subject: nfsd blocks indefinitely in nfsd4_destroy_session (was: Re: nfsd
+ becomes a zombie)
+Message-ID: <Z2vNQ6HXfG_LqBQc@eldamar.lan>
+References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
+ <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHL4MRrmtnO8dPFg--.38269S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF1fWFy8Kw43Ar13GFWfXwb_yoW5tFWrpa
-	4kAayxJrykJFyUArsFy3Wjqw1ftanavr1I9rn2kw4a9F13tr18CFy5Zryq9ryjkrW8Cayx
-	u3WjyFs8Gw4FywUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHSb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7Iv64x0x7Aq67IIx4CEVc8vx2IErcIFxwACI4
-	02YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCF
-	04k20xvEw4C26cxK6c8Ij28IcwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU0sXo7
-	UUUUU==
-Sender: yangerkun@huaweicloud.com
-X-CM-SenderInfo: 51dqwvhunx0q5kxd4v5lfo033gof0z/
+In-Reply-To: <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
 
-We can access exp->ex_stats or exp->ex_uuid in rcu context(c_show and
-e_show). All these resources should be released using kfree_rcu. Fix this
-by using call_rcu, clean them all after a rcu grace period.
+Hi Chuck, hi all,
 
-==================================================================
-BUG: KASAN: slab-use-after-free in svc_export_show+0x362/0x430 [nfsd]
-Read of size 1 at addr ff11000010fdc120 by task cat/870
+[it was not ideal to pick one of the message for this followup, let me
+know if you want a complete new thread, adding as well Benjamin and
+Trond as they are involved in one mentioned patch]
 
-CPU: 1 UID: 0 PID: 870 Comm: cat Not tainted 6.12.0-rc3+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.16.1-2.fc37 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x53/0x70
- print_address_description.constprop.0+0x2c/0x3a0
- print_report+0xb9/0x280
- kasan_report+0xae/0xe0
- svc_export_show+0x362/0x430 [nfsd]
- c_show+0x161/0x390 [sunrpc]
- seq_read_iter+0x589/0x770
- seq_read+0x1e5/0x270
- proc_reg_read+0xe1/0x140
- vfs_read+0x125/0x530
- ksys_read+0xc1/0x160
- do_syscall_64+0x5f/0x170
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Jun 17, 2024, at 2:55 AM, Harald Dunkel <harald.dunkel@aixigo.com> wrote:
+> > 
+> > Hi folks,
+> > 
+> > what would be the reason for nfsd getting stuck somehow and becoming
+> > an unkillable process? See
+> > 
+> > - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071562
+> > - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2062568
+> > 
+> > Doesn't this mean that something inside the kernel gets stuck as
+> > well? Seems odd to me.
+> 
+> I'm not familiar with the Debian or Ubuntu kernel packages. Can
+> the kernel release numbers be translated to LTS kernel releases
+> please? Need both "last known working" and "first broken" releases.
+> 
+> This:
+> 
+> [ 6596.911785] RPC: Could not send backchannel reply error: -110
+> [ 6596.972490] RPC: Could not send backchannel reply error: -110
+> [ 6837.281307] RPC: Could not send backchannel reply error: -110
+> 
+> is a known set of client backchannel bugs. Knowing the LTS kernel
+> releases (see above) will help us figure out what needs to be
+> backported to the LTS kernels kernels in question.
+> 
+> This:
+> 
+> [11183.290619] wait_for_completion+0x88/0x150
+> [11183.290623] __flush_workqueue+0x140/0x3e0
+> [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
+> [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
+> 
+> is probably related to the backchannel errors on the client, but
+> client bugs shouldn't cause the server to hang like this. We
+> might be able to say more if you can provide the kernel release
+> translations (see above).
 
-Allocated by task 830:
- kasan_save_stack+0x20/0x40
- kasan_save_track+0x14/0x30
- __kasan_kmalloc+0x8f/0xa0
- __kmalloc_node_track_caller_noprof+0x1bc/0x400
- kmemdup_noprof+0x22/0x50
- svc_export_parse+0x8a9/0xb80 [nfsd]
- cache_do_downcall+0x71/0xa0 [sunrpc]
- cache_write_procfs+0x8e/0xd0 [sunrpc]
- proc_reg_write+0xe1/0x140
- vfs_write+0x1a5/0x6d0
- ksys_write+0xc1/0x160
- do_syscall_64+0x5f/0x170
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+In Debian we hstill have the bug #1071562 open and one person notified
+mye offlist that it appears that the issue get more frequent since
+they updated on NFS client side from Ubuntu 20.04 to Debian bookworm
+with a 6.1.y based kernel). 
 
-Freed by task 868:
- kasan_save_stack+0x20/0x40
- kasan_save_track+0x14/0x30
- kasan_save_free_info+0x3b/0x60
- __kasan_slab_free+0x37/0x50
- kfree+0xf3/0x3e0
- svc_export_put+0x87/0xb0 [nfsd]
- cache_purge+0x17f/0x1f0 [sunrpc]
- nfsd_destroy_serv+0x226/0x2d0 [nfsd]
- nfsd_svc+0x125/0x1e0 [nfsd]
- write_threads+0x16a/0x2a0 [nfsd]
- nfsctl_transaction_write+0x74/0xa0 [nfsd]
- vfs_write+0x1a5/0x6d0
- ksys_write+0xc1/0x160
- do_syscall_64+0x5f/0x170
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Some people around those issues, seem to claim that the change
+mentioned in
+https://lists.proxmox.com/pipermail/pve-devel/2024-July/064614.html
+would fix the issue, which is as well backchannel related.
 
-Fixes: ae74136b4bb6 ("SUNRPC: Allow cache lookups to use RCU protection rather than the r/w spinlock")
-Reviewed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Yang Erkun <yangerkun@huawei.com>
----
- fs/nfsd/export.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel reply,
+again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use the
+nfs_client's rpc timeouts for backchannel") this is not something
+which goes back to 6.1.y, could it be possible that hte backchannel
+refactoring and this final fix indeeds fixes the issue?
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index c6168bccfb6c..0363720280d4 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -355,16 +355,25 @@ static void export_stats_destroy(struct export_stats *stats)
- 					    EXP_STATS_COUNTERS_NUM);
- }
- 
--static void svc_export_put(struct kref *ref)
-+static void svc_export_release(struct rcu_head *rcu_head)
- {
--	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
--	path_put(&exp->ex_path);
--	auth_domain_put(exp->ex_client);
-+	struct svc_export *exp = container_of(rcu_head, struct svc_export,
-+			ex_rcu);
-+
- 	nfsd4_fslocs_free(&exp->ex_fslocs);
- 	export_stats_destroy(exp->ex_stats);
- 	kfree(exp->ex_stats);
- 	kfree(exp->ex_uuid);
--	kfree_rcu(exp, ex_rcu);
-+	kfree(exp);
-+}
-+
-+static void svc_export_put(struct kref *ref)
-+{
-+	struct svc_export *exp = container_of(ref, struct svc_export, h.ref);
-+
-+	path_put(&exp->ex_path);
-+	auth_domain_put(exp->ex_client);
-+	call_rcu(&exp->ex_rcu, svc_export_release);
- }
- 
- static int svc_export_upcall(struct cache_detail *cd, struct cache_head *h)
--- 
-2.46.1
+As people report it is not easily reproducible, so this makes it
+harder to identify fixes correctly.
 
+I gave a (short) stance on trying to backport commits up to
+6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but this quickly
+seems to indicate it is probably still not the right thing for
+backporting to the older stable series.
+
+As at least pre-requisites:
+
+2009e32997ed568a305cf9bc7bf27d22e0f6ccda
+4119bd0306652776cb0b7caa3aea5b2a93aecb89
+163cdfca341b76c958567ae0966bd3575c5c6192
+f4afc8fead386c81fda2593ad6162271d26667f8
+6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
+57331a59ac0d680f606403eb24edd3c35aecba31
+
+and still there would be conflicting codepaths (and does not seem
+right).
+
+Chuck, Benjamin, Trond, is there anything we can provive on reporters
+side that we can try to tackle this issue better?
+
+Regards,
+Salvatore
 
