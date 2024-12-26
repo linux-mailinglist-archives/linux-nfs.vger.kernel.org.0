@@ -1,192 +1,191 @@
-Return-Path: <linux-nfs+bounces-8782-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8783-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FC389FCB09
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 14:03:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE7BF9FCBDD
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 17:24:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A470C160F7E
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 13:03:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54721162429
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 16:24:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E781CCEE7;
-	Thu, 26 Dec 2024 13:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F0486252;
+	Thu, 26 Dec 2024 16:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7Cjnz/c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxzf16jU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE903182D7;
-	Thu, 26 Dec 2024 13:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A3F4C74
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 16:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735218188; cv=none; b=rKYf3KnU8YpqrPE8f9LtTbI/N5SVDEpogCghFkkuADnWeNGEGM9vqvQeqovN6pPFaKEhmZ42tWnmaZc8ot13qQubr5wz+lEZWF2xdFwWjNQAW0l3qbpC7NwL/kpTiTGJ0+DarjejDVTsVWLNusKTBVqDstHc1cPNTLytwQxeHn4=
+	t=1735230249; cv=none; b=CpWg6H+y/j1LVlwtwLE5D5sW0Br3CORDH3xQLQRqRBf8uxe/qePbc/CnQ3tIogRZu+QGdj391+eUhKy8XR9Zu3dObSrD3eooYdRAsAetGRHKXBU83LBwXHQSIXSC9oicyuOJ7q9L34e7ykXKIkAn6ZNZc94b6XwKu1dRJzKMvGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735218188; c=relaxed/simple;
-	bh=pirU5BDdIyjCf71XqStimG+MKWHAwc1Cd5J85B0PrJw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QsSMUQDFPsUGjJPljgjKQuPPPCBPLoLjbhr0V5tjuwf4f54MkeVRO2vSiBfyxW/YiQTjLDcM18UpzCtLgG5MtDR9RB/uctkBehm5hP7pUnfYH6j0NA/hieZngYPy18iae1VX10AQRXzZAp8+FFoMIwJSeDAakQaCzdGbzNAutEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7Cjnz/c; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08C5EC4CED1;
-	Thu, 26 Dec 2024 13:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735218187;
-	bh=pirU5BDdIyjCf71XqStimG+MKWHAwc1Cd5J85B0PrJw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=c7Cjnz/caRNaa9riVzaxurWOPpmDjS0x9aO3PC80vqoV9iQtiWI7EoJCLU7KZHCjq
-	 Gn69cpuf2YIwJzvjcJLbpJKhvcWz1/ioBNvCg5+uoEQsRj6JtjKtghqRO7rOGsZ58d
-	 A+GmGtnI5Urid1Q6CdO1/IjUUwToaP+bBNkMgM/aUG9i3crhOkZPaqx3TQl9U0Hu+I
-	 w3/Q/zonQ6bXXJL48NQGSKyJxJWRUli6mVxRS9bDZtY+CnAnAmB8uQL72CZicVc3m/
-	 xjKTt63B7KnJrVI4Du/QPa+v/Jc7JV3ZQWc5ZQS4mtOd3/v50fyE6wXygHwVjdLckG
-	 9LT2il2kg/TuQ==
-Message-ID: <def9a2309ee77f58945c5aa65ab1c6b0e333d04b.camel@kernel.org>
-Subject: Re: [PATCH v2 0/4] nfsd/sunrpc: cleanup resource with sync mode
-From: Jeff Layton <jlayton@kernel.org>
-To: Yang Erkun <yangerkun@huawei.com>, chuck.lever@oracle.com,
- neilb@suse.de, 	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- trondmy@kernel.org, 	anna@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, 	pabeni@redhat.com, horms@kernel.org
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
-	yangerkun@huaweicloud.com, liumingrui@huawei.com
-Date: Thu, 26 Dec 2024 08:03:04 -0500
-In-Reply-To: <20241225065908.1547645-1-yangerkun@huawei.com>
-References: <20241225065908.1547645-1-yangerkun@huawei.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	s=arc-20240116; t=1735230249; c=relaxed/simple;
+	bh=kz/hExN0ihoax+uGMZmTES8KQJDKy9q83KWAGDeliPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdEcuLkiEqlqH49xzQoBvdOO7nwcDUJoMJFFtwhmuR9m5jywS1ISEOSTr5QaEIfcf5f7U5Cw9fY+zRZBoWHJxpOAqVuHJ6cKIgsKXsFOg7VOOvkBRSmpLPUeVASO0doRY3iuTrd7wGsUniH5Y2rH5f4ngSx8hO9r734aMU3DGmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxzf16jU; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3e9f60bf4so10913997a12.3
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 08:24:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735230245; x=1735835045; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fCzcUnoROET+F0AZeCcs607ThuNghv3ZYE1azcLt4+4=;
+        b=bxzf16jUONt9bKBzX/HdXL783uVBtYYfkSVfGOy0fW/FA5eK+JzlEP6mnNMOhy2I5z
+         CU1WXnpZaVZUzv/yae012cW4DqdxKBF+ZPSqGDY7qes/J0XkZ0fozzgv61rk05Ga+Nh+
+         ap/Lu2HjCb8n1XxjqT4hsTAWRKa0Z9Nelhck/aHFbnagaUVzaz05vQEAGnZAt+lMgvFY
+         rqyH0oBagkGFktE59xlyevOPRuoB6e9oQOUTxV/Lr3ixqyLZtMl08IJyFh+x8zti7ttz
+         +a0jMLFawRMhU6IFlE5GpFyofsSkPJN7GZn3tffEkqRWK53/8FNSC5Oxs6kVQgC6v2u3
+         erzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735230245; x=1735835045;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fCzcUnoROET+F0AZeCcs607ThuNghv3ZYE1azcLt4+4=;
+        b=TILFNDWTXcD50/ybVtzMeDZpHxOU+v8yYdfBqrt4Z9tQbuz1821lv6mo4Q47mMTtG0
+         OlxvLQx+n/tY9HPK1yoOfNTw35LmWebpSo7qMJEzeakuMvUinLGuO0n1YFkGgdJmEeWk
+         uqKS5LtWrOI5e6saeIRYloIMzfaMKuLi5EpZXFeVxaadnCZcJgPk5Mkae6Iz8a/npK4j
+         Lk9rEOhn+kFy/F05SpKk3YNPxyY3hOy6f3mIlVBYwuk+WIGzqxYVXLYAXfAyAMS57OWm
+         GNm5hWTNKSqfeUfc3aO5Qnl1RRapiFzefvfyQS5yNqolaeatjfA6za72SEonJbbtJKU/
+         +eEw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6GGkb1Spb+4BFABPO+rLQQJ2eAyCwRrnUQrfgwiAFkSRAMSBZLgYa2b0zzDq9Ye4gacoI1IrvKYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbCCV/AczB3bAQdJdGG2vPlu1lqimosZbnGNrqBqG840ZcW3ci
+	dTlR0naykAXLF8PYFOCsiqdAN+ZbZlV941NfQwaMq8AgY3JoUxq1
+X-Gm-Gg: ASbGncuCFJvDWksDEWKC0920q3jfNRcx/Ka6KxqXl+Svms21JxvJRnGZviH9oSY1TaC
+	bvNVr9yTrUx+QiOX9e18AniSvy3XwPQYt5o5Xi6sbP3XWopLEk6hqEpbg4uOTyrWL+QfthtOIez
+	t7weKWtpAgYbTvAiTa6ArTR94+v8EisIr5PGkoVsruoWD/Ot3KC6HSVPcHoI/I0eF5n2lkWFbRQ
+	JDlFc3h3w4kSEEcqP7Sav+gdhVKXllL6+VH/6cED2HpBDMA8hzFt8tV9Fz9jkVVwyUeFTygebIZ
+	id6RkQWZzJ4/v9oF
+X-Google-Smtp-Source: AGHT+IEZ3fIH6S0/NcWuX9FYgSiOMmkWFW+1x3BqMt+IWCfW7Vvxr8zIob1rVpQViiKJryZ9rSD0Ow==
+X-Received: by 2002:a05:6402:501b:b0:5d0:efaf:fb73 with SMTP id 4fb4d7f45d1cf-5d81ddc3ca4mr20223484a12.15.1735230244968;
+        Thu, 26 Dec 2024 08:24:04 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80675a535sm9375392a12.6.2024.12.26.08.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2024 08:24:03 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id C77B9BE2EE7; Thu, 26 Dec 2024 17:24:02 +0100 (CET)
+Date: Thu, 26 Dec 2024 17:24:02 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jur van der Burg via Bugspray Bot <bugbot@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Cc: anna@kernel.org, trondmy@kernel.org, jlayton@kernel.org,
+	linux-nfs@vger.kernel.org, cel@kernel.org, 1091439@bugs.debian.org,
+	1091439-submitter@bugs.debian.org, 1087900@bugs.debian.org,
+	1087900-submitter@bugs.debian.org
+Subject: Re: kernel BUG at fs/nfsd/nfs4recover.c:534 Oops: invalid opcode:
+ 0000
+Message-ID: <Z22DIiV98XBSfPVr@eldamar.lan>
+References: <20241209-b219580c0-d09195e1d9e8@bugzilla.kernel.org>
+ <20241209-b219580c2-2def6494caed@bugzilla.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241209-b219580c2-2def6494caed@bugzilla.kernel.org>
 
-On Wed, 2024-12-25 at 14:59 +0800, Yang Erkun wrote:
-> After f8c989a0c89a ("nfsd: release svc_expkey/svc_export with
-> rcu_work"), svc_export_put/expkey_put will call path_put with async
-> mode. This can lead some unexpected failure:
->=20
-> mkdir /mnt/sda
-> mkfs.xfs -f /dev/sda
-> echo "/ *(rw,no_root_squash,fsid=3D0)" > /etc/exports
-> echo "/mnt *(rw,no_root_squash,fsid=3D1)" >> /etc/exports
-> exportfs -ra
-> service nfs-server start
-> mount -t nfs -o vers=3D4.0 127.0.0.1:/mnt /mnt1
-> mount /dev/sda /mnt/sda
-> touch /mnt1/sda/file
-> exportfs -r
-> umount /mnt/sda # failed unexcepted
->=20
-> The touch above will finally call nfsd_cross_mnt, add refcount to mount,
-> and then add cache_head. Before this commit, exportfs -r will call
-> cache_flush to cleanup all cache_head, and path_put in
-> svc_export_put/expkey_put will be finished with sync mode. So, the
-> latter umount will always success. However, after this commit, path_put
-> will be called with async mode, the latter umount may failed, and if we
-> add some delay, umount will success too. Personally I think this bug and
-> should be fixed. We first revert before bugfix patch, and then fix the
-> original bug with a different way.
->=20
-> v1->v2:
->=20
-> 1. do not change cache_check, instead add cache_check_rcu and use it in
-> c_show/e_show
-> 2. the first patch has been applied
->=20
-> Yang Erkun (4):
->   SUNRPC: introduce cache_check_rcu to help check in rcu context
->   nfsd: no need get cache ref when protected by rcu
->   SUNRPC: no need get cache ref when protected by rcu
->   nfsd: fix UAF when access ex_uuid or ex_stats
->=20
->  fs/nfsd/export.c             | 25 ++++++++++-------
->  include/linux/sunrpc/cache.h |  2 ++
->  net/sunrpc/cache.c           | 53 ++++++++++++++++++++----------------
->  3 files changed, 46 insertions(+), 34 deletions(-)
->=20
+Hi Jur,
 
-A much nicer fix. My only minor nit is that it might be nice to add a
-kerneldoc header over cache_check_rcu, so that it's clear that it
-doesn't touch the cache_head refcount like cache_check does.
+On Mon, Dec 09, 2024 at 04:50:05PM +0000, Jur van der Burg via Bugspray Bot wrote:
+> Jur van der Burg writes via Kernel.org Bugzilla:
+> 
+> I tried kernel 6.10.1 and that one is ok. In the mean time I
+> upgraded nfs-utils from 2.5.1 to 2.8.1 which seems to fix the issue.
+> Sorry for the noise, case closed.
+> 
+> View: https://bugzilla.kernel.org/show_bug.cgi?id=219580#c2
+> You can reply to this message to join the discussion.
 
-Either way, you can add:
+Are you sure this is solved? I got hit by this today after trying to
+check the report from another Debian user:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+https://bugs.debian.org/1091439
+the earlier report was
+https://bugs.debian.org/1087900
+
+Surprisingly I managed to hit this, after: 
+
+Doing a fresh Debian installation with Debian unstable, rebooting
+after installation. The running kernel is 6.12.6-1 (but now believe it
+might be hit in any sufficient earlier version):
+
+Notably, in kernel-log I see as well
+
+[   50.295209] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[   52.158301] NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
+[   52.158333] NFSD: Using legacy client tracking operations.
+[   52.158337] NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
+
+Normally it should have been (if using the more modern client racking
+operations):
+
+
+[  145.851951] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[  146.891838] NFSD: Using nfsdcld client tracking operations.
+[  146.891844] NFSD: no clients to reclaim, skipping NFSv4 grace period (net f0000000)
+
+I can reproduce it if I do in following order:
+
+Install Debian unstable, reboot after installation.
+
+Install nfs-kernel-server package with its dependencies.
+
+In our case this is nfs-utils upstream already at 2.8.2.
+
+I notice the following observation: When installing under this
+condition the package freshly there is not yet a valid:
+
+/var/lib/nfs/nfsdcld/main.sqlite
+
+for the nfsdcld, and so it used the legacy client tracking.
+
+At this point we get the splat. if before installing the packages I
+initialize /var/lib/nfs/nfsdcld/main.sqlite:
+
+mkdir -p /var/lib/nfs/nfsdcld
+chmod -c 0700 /var/lib/nfs/nfsdcld/
+
+and
+
+sqlite3 /var/lib/nfs/nfsdcld/main.sqlite <<SQL
+CREATE TABLE parameters (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE grace (current INTEGER , recovery INTEGER);
+INSERT OR FAIL INTO grace values (1, 0);
+INSERT OR FAIL INTO parameters values ("version", "4");
+INSERT OR FAIL INTO parameters values ("first_time", "1");
+SQL
+
+So to me it looks that the problem arises from actually starting the
+services were we have to fallback to the legacy method as we cannot
+use yet nfsdcld.
+
+One other observation: if while installing the package the nfsdcltrack
+utility is available and the these NFS client tracking methods are
+availabe, it seems that the issue is not hit, and dmesg shows
+
+[  216.206678] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[  218.215961] NFSD: Using UMH upcall client tracking operations.
+[  218.218074] NFSD: Using UMH upcall client tracking operations.
+[  218.218078] NFSD: starting 90-second grace period (net f0000000)
+
+In the most recent nfs-utils packages we do actually not install
+nfsdcltrack anymore as as I understand it's encouraged to move away
+form it as nfsdcld is available.
+
+Regards,
+Salvatore
 
