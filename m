@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-8788-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8789-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50D579FCBE3
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 17:29:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA8A69FCBE4
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 17:29:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EF811625F7
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 16:29:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B6F8188310F
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 16:29:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9E213C3F6;
-	Thu, 26 Dec 2024 16:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2006186252;
+	Thu, 26 Dec 2024 16:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DhKcGNsN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXehzuBv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB0B4C74
-	for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 16:29:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6194C74
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 16:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735230541; cv=none; b=VoKucvROItAO9wl4Bk5LmddzRXUfGqa3n9pV8oJEZPAF0vQ4DxktRS6Q+oDPykkilpFMn232WGPYZgAcCKPP4nTD1JqHvUwbZ10MvQGTQ3MOBfaaNW29bWWZf/Bib75vKdZV/IjIp73qSaop53c+PbBzOWV7qkT34Kn6Eh6+GYQ=
+	t=1735230542; cv=none; b=p+1ygi2t+SmPRNqqzZqiJMZwzlTkn7aEE4Y2IL8d4QxXutdOun6IaygZXSNwKVvVVUEKpQ06lpaEydUdkEkZhQqPJ7RyEutzv6RxE3jBhaRLtFIb+ppu5AYK2O2J//P+GM+FOYYIau55s96fzIN5enRSGTt8+12wqCRAv/W2bV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735230541; c=relaxed/simple;
-	bh=bOuMa9sMAGF/sqzqytsqwn7EWGVttZ3gpupeBr5Kh4g=;
+	s=arc-20240116; t=1735230542; c=relaxed/simple;
+	bh=t0dHrzz6nCVz5GdSMqgBuHRQMV2JCKRfQ1sMFljOO0I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p4/yrUQKYZ1IQ9/lhsJpjzb1oObSajYZdpWGe4TYCt4NoA+oYfd/NCgY2K6QRPZnPzbGMLCSXsJOff4C5zZbj+hj2n0Iu8hMxUNJv+jn9iPdFxHiaddbstMoKL7eMYFQmKkNWsqxzKWf5H/5zpRHfeLk24JRUL6IeL7wnAwE82E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DhKcGNsN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5C5C4CED4;
-	Thu, 26 Dec 2024 16:28:59 +0000 (UTC)
+	 MIME-Version; b=NT90xdOSzSn0jgY9qG4XoM0ydespl1uRAAXH4NHeDX+21d4e3QWyQwkf5opsXAqITwO7dxbPwK8A1T3L2COrXJZL2EP7zV7wC3jfz/GEhwfRp41X9wzsZHAHC21Teqst6oOsiGDT+VXNbATsTRzCl+8QtTTL93gZsRMdfGAJdDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXehzuBv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B916AC4CED2;
+	Thu, 26 Dec 2024 16:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735230540;
-	bh=bOuMa9sMAGF/sqzqytsqwn7EWGVttZ3gpupeBr5Kh4g=;
+	s=k20201202; t=1735230541;
+	bh=t0dHrzz6nCVz5GdSMqgBuHRQMV2JCKRfQ1sMFljOO0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DhKcGNsN55BiKo8xQUv71p3O5aoyapepkK4Aq9dBbYQWLRRl7tJB3vx/HMepq9ON9
-	 7i8VGNkx7BO6zZys/n+UecOc3t4LhldbpVJFzk25nFbJ/3WhBtvge+gjOMbgetzu8i
-	 jODEbaPrDi5ikU+pXlQDpZGE+nyYP4COBkn4MnsfO1/Vx/RZv/0rMPxIvu1qhszz5k
-	 r167RUcd9UuJHAg/a7KjGIigyM6ZydRR0YkGI3/J1YK5kZ47y6sFRQIMcWkf8nkGyG
-	 ffOEb+Mfe89sJilsMbW/C0+VKqor6iRMhpRXrqi5wAlU4K8BayYFO0XZ0TfZgvQGhn
-	 wzDuA0wiJD3CQ==
+	b=NXehzuBvdXq+J75qVZ+hz+i1s8xeE2lXnHVW5/6uld7ffiV/N9b2BTQwyJmJmZnkq
+	 XrxdU9ZVVFvDSj9e8bqCgvMRKvIkKrzw1sFdvnseDNOfaHCXPh+6m6IDY15WkC7ZMo
+	 zzW0czbjgcdWYHA5TcBKV34Qx0MrYnuQ55JkXLiKtbDgPiA9n+0oOwaG6xyektcko4
+	 N3xGWf6IUFImAON0084nK34KSs6u5aWMCmrxaZkChckgqw9uQT/YhbTGdZgV6w5Fm6
+	 mNXyVMfWZuOEO9EreBMQcS4w5QIVtDVXTvJaQer5MJPSJUK+32ihN969AqMD8aoeiD
+	 niL0jp5SsFSVA==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -51,9 +51,9 @@ Cc: <linux-nfs@vger.kernel.org>,
 	Rick Macklem <rick.macklem@gmail.com>,
 	j.david.lists@gmail.com,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 4/6] NFSD: Insulate nfsd4_encode_read_plus_data() from page boundaries in the encode buffer
-Date: Thu, 26 Dec 2024 11:28:51 -0500
-Message-ID: <20241226162853.8940-5-cel@kernel.org>
+Subject: [PATCH v3 5/6] NFSD: Insulate nfsd4_encode_fattr4() from page boundaries in the encode buffer
+Date: Thu, 26 Dec 2024 11:28:52 -0500
+Message-ID: <20241226162853.8940-6-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241226162853.8940-1-cel@kernel.org>
 References: <20241226162853.8940-1-cel@kernel.org>
@@ -67,72 +67,60 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Commit eeadcb757945 ("NFSD: Simplify READ_PLUS") replaced the use of
-write_bytes_to_xdr_buf(), copying what was in nfsd4_encode_read()
-at the time.
+Commit ab04de60ae1c ("NFSD: Optimize nfsd4_encode_fattr()") replaced
+the use of write_bytes_to_xdr_buf() because it's expensive and the
+data items to be encoded are already properly aligned.
 
-However, the current code will corrupt the encoded data if the XDR
-data items that are reserved early and then poked into the XDR
-buffer later happen to fall on a page boundary in the XDR encoding
-buffer.
+However, there's no guarantee that the pointer returned from
+xdr_reserve_space() will still point to the correct reserved space
+in the encode buffer after one or more intervening calls to
+xdr_reserve_space(). It just happens to work with the current
+implementation of xdr_reserve_space().
 
-__xdr_commit_encode can shift encoded data items in the encoding
-buffer so that pointers returned from xdr_reserve_space() no longer
-address the same part of the encoding stream.
+This commit effectively reverts the optimization.
 
-Fixes: eeadcb757945 ("NFSD: Simplify READ_PLUS")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ fs/nfsd/nfs4xdr.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 00e2f4fc4e19..b770225d63dc 100644
+index b770225d63dc..d4ee633b01e3 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -5304,14 +5304,21 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 	struct file *file = read->rd_nf->nf_file;
- 	struct xdr_stream *xdr = resp->xdr;
- 	bool splice_ok = argp->splice_ok;
-+	unsigned int offset_offset;
-+	__be32 nfserr, wire_count;
- 	unsigned long maxcount;
--	__be32 nfserr, *p;
-+	__be64 wire_offset;
+@@ -3506,8 +3506,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 	struct nfsd4_fattr_args args;
+ 	struct svc_fh *tempfh = NULL;
+ 	int starting_len = xdr->buf->len;
+-	__be32 *attrlen_p, status;
+-	int attrlen_offset;
++	unsigned int attrlen_offset;
++	__be32 attrlen, status;
+ 	u32 attrmask[3];
+ 	int err;
+ 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
+@@ -3627,9 +3627,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		goto out;
  
--	/* Content type, offset, byte count */
--	p = xdr_reserve_space(xdr, 4 + 8 + 4);
--	if (!p)
-+	if (xdr_stream_encode_u32(xdr, NFS4_CONTENT_DATA) != XDR_UNIT)
- 		return nfserr_io;
+ 	/* attr_vals */
+-	attrlen_offset = xdr->buf->len;
+-	attrlen_p = xdr_reserve_space(xdr, XDR_UNIT);
+-	if (!attrlen_p)
++	attrlen_offset = xdr_stream_pos(xdr);
++	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT)))
+ 		goto out_resource;
+ 	bitmap_from_arr32(attr_bitmap, attrmask,
+ 			  ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
+@@ -3639,7 +3638,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
+ 		if (status != nfs_ok)
+ 			goto out;
+ 	}
+-	*attrlen_p = cpu_to_be32(xdr->buf->len - attrlen_offset - XDR_UNIT);
++	attrlen = cpu_to_be32(xdr_stream_pos(xdr) - attrlen_offset - XDR_UNIT);
++	write_bytes_to_xdr_buf(xdr->buf, attrlen_offset, &attrlen, XDR_UNIT);
+ 	status = nfs_ok;
  
-+	offset_offset = xdr_stream_pos(xdr);
-+
-+	/* Reserve space for the byte offset and count */
-+	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT * 3)))
-+		return nfserr_io;
-+	xdr_commit_encode(xdr);
-+
- 	maxcount = min_t(unsigned long, read->rd_length,
- 			 (xdr->buf->buflen - xdr->buf->len));
- 
-@@ -5322,10 +5329,12 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
- 	if (nfserr)
- 		return nfserr;
- 
--	*p++ = cpu_to_be32(NFS4_CONTENT_DATA);
--	p = xdr_encode_hyper(p, read->rd_offset);
--	*p = cpu_to_be32(read->rd_length);
--
-+	wire_offset = cpu_to_be64(read->rd_offset);
-+	write_bytes_to_xdr_buf(xdr->buf, offset_offset, &wire_offset,
-+			       XDR_UNIT * 2);
-+	wire_count = cpu_to_be32(read->rd_length);
-+	write_bytes_to_xdr_buf(xdr->buf, offset_offset + XDR_UNIT * 2,
-+			       &wire_count, XDR_UNIT);
- 	return nfs_ok;
- }
- 
+ out:
 -- 
 2.47.0
 
