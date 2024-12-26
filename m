@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-8785-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8786-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C37E9FCBE0
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 17:29:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65AD29FCBE2
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 17:29:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F10A41882C4E
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 16:29:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8BCF87A158A
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Dec 2024 16:29:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07915136351;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B649E13B7A1;
 	Thu, 26 Dec 2024 16:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbhwZIQN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DndtlL9G"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D565A4C74
-	for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 16:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DCC4C74
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Dec 2024 16:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735230537; cv=none; b=giovZwSLwP+aeknj/39wxrlFxS7IeEin+9v8bukfIeb1BjMw1QnMgHq8/dxbaqehxDrhCgTSAUeWAOX8/2o7k4PkuJLXyzxg/LfoSUGu6puUIDnpbDJ6+wb63GtL2Bsa+Cd28Ahi6y66dKY89ZT2jUAPVDPYSBL49ADTuyhCbyg=
+	t=1735230538; cv=none; b=qJbrSO0Z0Xxk14NVsQUYkF69PwtGMw1BvaJPQqnOtDtXjGGF1CmEich/zAagHOK3Lzx6Cv2r9lsCuhZJPQC9P29t5Ew5HIHv7FLbSQ1qr/d7HkmUBFTZtYuEVwhVW3TwGJARMLgShKUlvLZsvtGGmeDByxGRCgUDWbndxA3H1To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735230537; c=relaxed/simple;
-	bh=GQwAtmkyCs6amxoVHXGz+jecKwg86jAnP7qW6+XwFGI=;
+	s=arc-20240116; t=1735230538; c=relaxed/simple;
+	bh=mTzUny1CMezcW1PIxqv5iGaLn8avZ/ysicpu9dh07AM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s1VDe2QS8/0ZXLa8CCucqaT9YWU93Wjh3H+Rl+g1zfviTothBAMjEixM+4XtRDkgbfz9M5LZXqfwLIN5GonT8qzY2CYndYKIeYa4p4dzS+wVF9gVyCCeGRMv4Tvj603WOp4Ubg1FNgjvALwcRG/hU53cmYaCzg10tjXlctTxjF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbhwZIQN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C8BC4CED4;
-	Thu, 26 Dec 2024 16:28:56 +0000 (UTC)
+	 MIME-Version; b=dNexhg3oYNWqgLNJOVPWhsdDl3+T5iOY8gVlruBHmeOFK1tdwZWMSTgKy9SbNvSqyLDF3hE79g/CjId39wBih4U2cPxhxkzrMt2JurOg8VWOq67u1nWaiQMGefGYCQxwvHNIeYMnXjlqNphzNDmDsIBnV164PIRh+Pnuar/TXkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DndtlL9G; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9508EC4CED1;
+	Thu, 26 Dec 2024 16:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735230537;
-	bh=GQwAtmkyCs6amxoVHXGz+jecKwg86jAnP7qW6+XwFGI=;
+	s=k20201202; t=1735230538;
+	bh=mTzUny1CMezcW1PIxqv5iGaLn8avZ/ysicpu9dh07AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jbhwZIQNKWHH2gWC8OLRp4J5r0gP7xN7G+rGjavOXz6/Hsk1uNytKSxpvRW6nkkcd
-	 BJ7om6S0FHiN0lAsV2X+9KA+vFF28frLG8Ne+89+IZqUbxq2i2AgHya8Kln9es0OXA
-	 ATJz9EhTuy85L2KefZuZigR03EgPByk4Ujx6vnU2vIHVqC5ZXiHImX31Nln/EjRAhn
-	 Tr/xiNEW9DlEUchm2z0Ba+t/LyhtzSerBAOzWiZe7sM+QlCixCyay60dj4LZQkoedu
-	 Bg5gDVdiUjVUi4I+f+qEdNk5T9gF05nlJTLWnNMb/rU2I8Mwmwe6tWs3STxTOxOdUR
-	 g08vma3SPCusA==
+	b=DndtlL9GPv0uzQ4cbP1GbQm5mQWmP+DnosnbxpDtvsTKwJOPE/TgnzzrLzAh8mc0d
+	 UNoooftF1RFL5b+XmzI9QggkiMBtmWoXlKQ3x8V6vA38RyfONMwuWuWymncQCtozS6
+	 Q3hHQxejmnZeKlzQfhUypW4GhSu5v+IMJlbSLDybHiGdnoLS1tu3ns3et+YqcClTGP
+	 Z0jpfflJztgGHRTq1T9ffdgf+G6/0XrieeczK7mUfBcE1X0ThI2buoqPUQ/TE4ae5v
+	 xBrMS9v8l2jkaHpboPOCv07zBgCn0u6ODTJWTEyDMD1F9h90kzTwFbW5j3FHReydla
+	 JY57vkMjl4e5Q==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -50,11 +50,10 @@ To: Neil Brown <neilb@suse.de>,
 Cc: <linux-nfs@vger.kernel.org>,
 	Rick Macklem <rick.macklem@gmail.com>,
 	j.david.lists@gmail.com,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Rick Macklem <rmacklem@uoguelph.ca>
-Subject: [PATCH v3 1/6] NFSD: Encode COMPOUND operation status on page boundaries
-Date: Thu, 26 Dec 2024 11:28:48 -0500
-Message-ID: <20241226162853.8940-2-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v3 2/6] NFSD: Insulate nfsd4_encode_read() from page boundaries in the encode buffer
+Date: Thu, 26 Dec 2024 11:28:49 -0500
+Message-ID: <20241226162853.8940-3-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20241226162853.8940-1-cel@kernel.org>
 References: <20241226162853.8940-1-cel@kernel.org>
@@ -68,114 +67,110 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-J. David reports an odd corruption of a READDIR reply sent to a
-FreeBSD client.
+Commit 28d5bc468efe ("NFSD: Optimize nfsd4_encode_readv()") replaced
+the use of write_bytes_to_xdr_buf() because it's expensive and the
+data items to be encoded are already properly aligned.
 
-xdr_reserve_space() has to do a special trick when the @nbytes value
-requests more space than there is in the current page of the XDR
+However, the current code will corrupt the encoded data if the XDR
+data items that are reserved early and then poked into the XDR
+buffer later happen to fall on a page boundary in the XDR encoding
 buffer.
 
-In that case, xdr_reserve_space() returns a pointer to the start of
-the next page, and then the next call to xdr_reserve_space() invokes
-__xdr_commit_encode() to copy enough of the data item back into the
-previous page to make that data item contiguous across the page
-boundary.
+__xdr_commit_encode can shift encoded data items in the encoding
+buffer so that pointers returned from xdr_reserve_space() no longer
+address the same part of the encoding stream.
 
-But we need to be careful in the case where buffer space is reserved
-early for a data item whose value will be inserted into the buffer
-later.
+This isn't an issue for splice reads because the reserved encode
+buffer areas must fall in the XDR buffers header for the splice to
+work without error. For vectored reads, however, there is a
+possibility of send buffer corruption in rare cases.
 
-One such caller, nfsd4_encode_operation(), reserves 8 bytes in the
-encoding buffer for each COMPOUND operation. However, a READDIR
-result can sometimes encode file names so that there are only 4
-bytes left at the end of the current XDR buffer page (though plenty
-of pages are left to handle the remaining encoding tasks).
-
-If a COMPOUND operation follows the READDIR result (say, a GETATTR),
-then nfsd4_encode_operation() will reserve 8 bytes for the op number
-(9) and the op status (usually NFS4_OK). In this weird case,
-xdr_reserve_space() returns a pointer to byte zero of the next buffer
-page, as it assumes the data item will be copied back into place (in
-the previous page) on the next call to xdr_reserve_space().
-
-nfsd4_encode_operation() writes the op num into the buffer, then
-saves the next 4-byte location for the op's status code. The next
-xdr_reserve_space() call is part of GETATTR encoding, so the op num
-gets copied back into the previous page, but the saved location for
-the op status continues to point to the wrong spot in the current
-XDR buffer page because __xdr_commit_encode() moved that data item.
-
-After GETATTR encoding is complete, nfsd4_encode_operation() writes
-the op status over the first XDR data item in the GETATTR result.
-The NFS4_OK status code (0) makes it look like there are zero items
-in the GETATTR's attribute bitmask.
-
-The patch description of commit 2825a7f90753 ("nfsd4: allow encoding
-across page boundaries") [2014] remarks that NFSD "can't handle a
-new operation starting close to the end of a page." This bug appears
-to be one reason for that remark.
-
-Reported-by: J David <j.david.lists@gmail.com>
-Closes: https://lore.kernel.org/linux-nfs/3998d739-c042-46b4-8166-dbd6c5f0e804@oracle.com/T/#t
-Tested-by: Rick Macklem <rmacklem@uoguelph.ca>
-Reviewed-by: NeilBrown <neilb@suse.de>
-X-Cc: stable@vger.kernel.org
+Fixes: 28d5bc468efe ("NFSD: Optimize nfsd4_encode_readv()")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ fs/nfsd/nfs4xdr.c | 34 +++++++++++++++++++---------------
+ 1 file changed, 19 insertions(+), 15 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 53fac037611c..efcb132c19d4 100644
+index efcb132c19d4..094806fe1a32 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -5760,15 +5760,14 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
- 	struct nfs4_stateowner *so = resp->cstate.replay_owner;
- 	struct svc_rqst *rqstp = resp->rqstp;
- 	const struct nfsd4_operation *opdesc = op->opdesc;
--	int post_err_offset;
-+	unsigned int op_status_offset;
- 	nfsd4_enc encoder;
+@@ -4316,6 +4316,15 @@ static __be32 nfsd4_encode_splice_read(
+ 	int status, space_left;
+ 	__be32 nfserr;
+ 
++	/*
++	 * Splice read doesn't work if encoding has already wandered
++	 * into the XDR buf's page array.
++	 */
++	if (unlikely(xdr->buf->page_len)) {
++		WARN_ON_ONCE(1);
++		return nfserr_serverfault;
++	}
++
+ 	/*
+ 	 * Make sure there is room at the end of buf->head for
+ 	 * svcxdr_encode_opaque_pages() to create a tail buffer
+@@ -4398,25 +4407,23 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	struct nfsd4_compoundargs *argp = resp->rqstp->rq_argp;
+ 	struct nfsd4_read *read = &u->read;
+ 	struct xdr_stream *xdr = resp->xdr;
+-	int starting_len = xdr->buf->len;
+ 	bool splice_ok = argp->splice_ok;
++	unsigned int eof_offset;
+ 	unsigned long maxcount;
++	__be32 wire_data[2];
+ 	struct file *file;
 -	__be32 *p;
  
--	p = xdr_reserve_space(xdr, 8);
--	if (!p)
-+	if (xdr_stream_encode_u32(xdr, op->opnum) != XDR_UNIT)
-+		goto release;
-+	op_status_offset = xdr_stream_pos(xdr);
-+	if (!xdr_reserve_space(xdr, XDR_UNIT))
- 		goto release;
--	*p++ = cpu_to_be32(op->opnum);
--	post_err_offset = xdr->buf->len;
+ 	if (nfserr)
+ 		return nfserr;
++
++	eof_offset = xdr_stream_pos(xdr);
+ 	file = read->rd_nf->nf_file;
  
- 	if (op->opnum == OP_ILLEGAL)
- 		goto status;
-@@ -5809,20 +5808,21 @@ nfsd4_encode_operation(struct nfsd4_compoundres *resp, struct nfsd4_op *op)
- 		 * bug if we had to do this on a non-idempotent op:
- 		 */
- 		warn_on_nonidempotent_op(op);
--		xdr_truncate_encode(xdr, post_err_offset);
-+		xdr_truncate_encode(xdr, op_status_offset + XDR_UNIT);
+-	p = xdr_reserve_space(xdr, 8); /* eof flag and byte count */
+-	if (!p) {
++	/* Reserve space for the eof flag and byte count */
++	if (unlikely(!xdr_reserve_space(xdr, XDR_UNIT * 2))) {
+ 		WARN_ON_ONCE(splice_ok);
+ 		return nfserr_resource;
  	}
- 	if (so) {
--		int len = xdr->buf->len - post_err_offset;
-+		int len = xdr->buf->len - (op_status_offset + XDR_UNIT);
+-	if (resp->xdr->buf->page_len && splice_ok) {
+-		WARN_ON_ONCE(1);
+-		return nfserr_serverfault;
+-	}
+ 	xdr_commit_encode(xdr);
  
- 		so->so_replay.rp_status = op->status;
- 		so->so_replay.rp_buflen = len;
--		read_bytes_from_xdr_buf(xdr->buf, post_err_offset,
-+		read_bytes_from_xdr_buf(xdr->buf, op_status_offset + XDR_UNIT,
- 						so->so_replay.rp_buf, len);
+ 	maxcount = min_t(unsigned long, read->rd_length,
+@@ -4427,12 +4434,13 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	else
+ 		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
+ 	if (nfserr) {
+-		xdr_truncate_encode(xdr, starting_len);
++		xdr_truncate_encode(xdr, eof_offset);
+ 		return nfserr;
  	}
- status:
- 	op->status = nfsd4_map_status(op->status,
- 				      resp->cstate.minorversion);
--	*p = op->status;
-+	write_bytes_to_xdr_buf(xdr->buf, op_status_offset,
-+			       &op->status, XDR_UNIT);
- release:
- 	if (opdesc && opdesc->op_release)
- 		opdesc->op_release(&op->u);
+ 
+-	p = xdr_encode_bool(p, read->rd_eof);
+-	*p = cpu_to_be32(read->rd_length);
++	wire_data[0] = read->rd_eof ? xdr_one : xdr_zero;
++	wire_data[1] = cpu_to_be32(read->rd_length);
++	write_bytes_to_xdr_buf(xdr->buf, eof_offset, &wire_data, XDR_UNIT * 2);
+ 	return nfs_ok;
+ }
+ 
+@@ -5303,10 +5311,6 @@ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+ 	p = xdr_reserve_space(xdr, 4 + 8 + 4);
+ 	if (!p)
+ 		return nfserr_io;
+-	if (resp->xdr->buf->page_len && splice_ok) {
+-		WARN_ON_ONCE(splice_ok);
+-		return nfserr_serverfault;
+-	}
+ 
+ 	maxcount = min_t(unsigned long, read->rd_length,
+ 			 (xdr->buf->buflen - xdr->buf->len));
 -- 
 2.47.0
 
