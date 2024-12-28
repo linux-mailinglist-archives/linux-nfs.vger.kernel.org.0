@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-8821-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8823-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A8D99FDB30
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 16:04:09 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 765DB9FDB40
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 16:05:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D29A3A1C34
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 15:04:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E6417A1FCA
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 15:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A06219C54B;
-	Sat, 28 Dec 2024 15:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86395157E82;
+	Sat, 28 Dec 2024 15:02:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D31A19AD5C;
-	Sat, 28 Dec 2024 15:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF5419DF48;
+	Sat, 28 Dec 2024 15:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735398131; cv=none; b=N618TKGcZIvnuskPnLWb9by1u1p+IJOkdqYuVb7ZtzrupAGRmBEwfXVlXXSY0+wdZMF5zGWyIp1LrteC5zwmDIOH7pjIl5K0ZFoQX/61GtXT5bhpEvjaPZZFaxIwXvAcTvfU250AiZ6DG9jvm0kS4XsGqI8aFR3hCXiQJOdQS4M=
+	t=1735398138; cv=none; b=A/U+kIrBDSzzeGTe+IrP9WEfABMJgkcPQZuE27FO1nbky5yjlwTPLjJw4MuRvYHbwcao9lmVDhHN7sbWyaM/QGuWf3f712AMCAEkGoNNYbKDXWloh7j2Rr+n5HrNQGJR+mZa0RlvMqmGDZiC82/DH9man+rFi2yO2beDQBcG6B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735398131; c=relaxed/simple;
-	bh=M3xZTu6EzZyd6n2YrYUR5sdHROdsWcbu6nDRtPtIFM8=;
+	s=arc-20240116; t=1735398138; c=relaxed/simple;
+	bh=fAeSG8GX2vLrPZYjKh64LRtiL1F/nvMSmcxJk9KJfNI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ap3av+7EkltM2FY4w5y5PVTRm/F51Lzs0R3FwJvHZPtkBPKYklAwtYGySME+fWAgEE5rdkY0Qli7cI8gmyL4MZ80kJurzDSz8jX0kk21m3jjpU5Ex4WHhfRy1GfLdHzZZSiREedVbkNuGGxW9FsxB+Au5SgUHL57XfPYPpMrkDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 MIME-Version:Content-Type; b=c9TSWWWuzxigzqevMH/LU8bBJwVJPaGYiuyjEx5J7SEHSCwj2NdSl0kZaBw09FqDvi9ErU1v+AodplcDhiWX4W565St61m8iNv3VGodiU9k8W5Cryrg63eVkgDTonrEI2op91FHp1uhMaCs70muVylaCbBPRqQxDgi20WtLouUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YL59f4bVdz1kxHQ;
-	Sat, 28 Dec 2024 22:59:18 +0800 (CST)
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YL59n2bf5z2FcBc;
+	Sat, 28 Dec 2024 22:59:25 +0800 (CST)
 Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1665B1A0188;
-	Sat, 28 Dec 2024 23:02:06 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F29C51A0188;
+	Sat, 28 Dec 2024 23:02:12 +0800 (CST)
 Received: from huawei.com (10.175.113.32) by kwepemh100016.china.huawei.com
  (7.202.181.102) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 28 Dec
- 2024 23:02:02 +0800
+ 2024 23:02:09 +0800
 From: Kaixiong Yu <yukaixiong@huawei.com>
 To: <akpm@linux-foundation.org>, <mcgrof@kernel.org>
 CC: <ysato@users.sourceforge.jp>, <dalias@libc.org>,
@@ -63,9 +63,9 @@ CC: <ysato@users.sourceforge.jp>, <dalias@libc.org>,
 	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
 	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
 	<wangkefeng.wang@huawei.com>
-Subject: [PATCH v4 -next 07/15] security: min_addr: move sysctl to security/min_addr.c
-Date: Sat, 28 Dec 2024 22:57:38 +0800
-Message-ID: <20241228145746.2783627-8-yukaixiong@huawei.com>
+Subject: [PATCH v4 -next 09/15] fs: fs-writeback: move sysctl to fs/fs-writeback.c
+Date: Sat, 28 Dec 2024 22:57:40 +0800
+Message-ID: <20241228145746.2783627-10-yukaixiong@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241228145746.2783627-1-yukaixiong@huawei.com>
 References: <20241228145746.2783627-1-yukaixiong@huawei.com>
@@ -80,78 +80,118 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemh100016.china.huawei.com (7.202.181.102)
 
-The dac_mmap_min_addr belongs to min_addr.c, move it to
-min_addr.c from /kernel/sysctl.c. In the previous Linux kernel
-boot process, sysctl_init_bases needs to be executed before
-init_mmap_min_addr, So, register_sysctl_init should be executed
-before update_mmap_min_addr in init_mmap_min_addr. And according
-to the compilation condition in security/Makefile:
-
-      obj-$(CONFIG_MMU)            += min_addr.o
-
-if CONFIG_MMU is not defined, min_addr.c would not be included in the
-compilation process. So, drop the CONFIG_MMU check.
+The dirtytime_expire_interval belongs to fs/fs-writeback.c, move it to
+fs/fs-writeback.c from /kernel/sysctl.c. And remove the useless extern
+variable declaration and the function declaration from
+include/linux/writeback.h
 
 Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
 Reviewed-by: Kees Cook <kees@kernel.org>
-Acked-by: Paul Moore <paul@paul-moore.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
 ---
 v4:
- - const qualify struct ctl_table min_addr_sysctl_table
+ - const qualify struct ctl_table vm_fs_writeback_table
 v3:
+ - change dirtytime_expire_interval to static type
  - change the title
-v2:
- - update the changelog to explain why drop CONFIG_MMU check.
 ---
 ---
- kernel/sysctl.c     |  9 ---------
- security/min_addr.c | 11 +++++++++++
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ fs/fs-writeback.c         | 30 +++++++++++++++++++++---------
+ include/linux/writeback.h |  4 ----
+ kernel/sysctl.c           |  8 --------
+ 3 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 9c245898f535..62a58e417c40 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2049,15 +2049,6 @@ static struct ctl_table vm_table[] = {
- 		.proc_handler	= proc_dointvec_minmax,
- 		.extra1		= SYSCTL_ZERO,
- 	},
--#ifdef CONFIG_MMU
--	{
--		.procname	= "mmap_min_addr",
--		.data		= &dac_mmap_min_addr,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= mmap_min_addr_handler,
--	},
--#endif
- #if (defined(CONFIG_X86_32) && !defined(CONFIG_UML))|| \
-    (defined(CONFIG_SUPERH) && defined(CONFIG_VSYSCALL))
- 	{
-diff --git a/security/min_addr.c b/security/min_addr.c
-index 0ce267c041ab..df1bc643d886 100644
---- a/security/min_addr.c
-+++ b/security/min_addr.c
-@@ -44,8 +44,19 @@ int mmap_min_addr_handler(const struct ctl_table *table, int write,
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 5980ac24c7a4..4f907e8dbfff 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -65,7 +65,7 @@ struct wb_writeback_work {
+  * timestamps written to disk after 12 hours, but in the worst case a
+  * few inodes might not their timestamps updated for 24 hours.
+  */
+-unsigned int dirtytime_expire_interval = 12 * 60 * 60;
++static unsigned int dirtytime_expire_interval = 12 * 60 * 60;
+ 
+ static inline struct inode *wb_inode(struct list_head *head)
+ {
+@@ -2435,14 +2435,7 @@ static void wakeup_dirtytime_writeback(struct work_struct *w)
+ 	schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
+ }
+ 
+-static int __init start_dirtytime_writeback(void)
+-{
+-	schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
+-	return 0;
+-}
+-__initcall(start_dirtytime_writeback);
+-
+-int dirtytime_interval_handler(const struct ctl_table *table, int write,
++static int dirtytime_interval_handler(const struct ctl_table *table, int write,
+ 			       void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	int ret;
+@@ -2453,6 +2446,25 @@ int dirtytime_interval_handler(const struct ctl_table *table, int write,
  	return ret;
  }
  
-+static const struct ctl_table min_addr_sysctl_table[] = {
++static const struct ctl_table vm_fs_writeback_table[] = {
 +	{
-+		.procname	= "mmap_min_addr",
-+		.data		= &dac_mmap_min_addr,
-+		.maxlen		= sizeof(unsigned long),
++		.procname	= "dirtytime_expire_seconds",
++		.data		= &dirtytime_expire_interval,
++		.maxlen		= sizeof(dirtytime_expire_interval),
 +		.mode		= 0644,
-+		.proc_handler	= mmap_min_addr_handler,
++		.proc_handler	= dirtytime_interval_handler,
++		.extra1		= SYSCTL_ZERO,
 +	},
 +};
 +
- static int __init init_mmap_min_addr(void)
- {
-+	register_sysctl_init("vm", min_addr_sysctl_table);
- 	update_mmap_min_addr();
++static int __init start_dirtytime_writeback(void)
++{
++	schedule_delayed_work(&dirtytime_work, dirtytime_expire_interval * HZ);
++	register_sysctl_init("vm", vm_fs_writeback_table);
++	return 0;
++}
++__initcall(start_dirtytime_writeback);
++
+ /**
+  * __mark_inode_dirty -	internal function to mark an inode dirty
+  *
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index d11b903c2edb..caf4f0b12235 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -327,12 +327,8 @@ extern struct wb_domain global_wb_domain;
+ /* These are exported to sysctl. */
+ extern unsigned int dirty_writeback_interval;
+ extern unsigned int dirty_expire_interval;
+-extern unsigned int dirtytime_expire_interval;
+ extern int laptop_mode;
  
- 	return 0;
+-int dirtytime_interval_handler(const struct ctl_table *table, int write,
+-		void *buffer, size_t *lenp, loff_t *ppos);
+-
+ void global_dirty_limits(unsigned long *pbackground, unsigned long *pdirty);
+ unsigned long wb_calc_thresh(struct bdi_writeback *wb, unsigned long thresh);
+ unsigned long cgwb_calc_thresh(struct bdi_writeback *wb);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 97f9abffff0f..c5527f59e3f2 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2014,14 +2014,6 @@ static struct ctl_table kern_table[] = {
+ };
+ 
+ static struct ctl_table vm_table[] = {
+-	{
+-		.procname	= "dirtytime_expire_seconds",
+-		.data		= &dirtytime_expire_interval,
+-		.maxlen		= sizeof(dirtytime_expire_interval),
+-		.mode		= 0644,
+-		.proc_handler	= dirtytime_interval_handler,
+-		.extra1		= SYSCTL_ZERO,
+-	},
+ 	{
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
 -- 
 2.34.1
 
