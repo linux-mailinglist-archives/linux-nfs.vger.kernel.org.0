@@ -1,217 +1,157 @@
-Return-Path: <linux-nfs+bounces-8836-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8837-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00C509FDC23
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 20:36:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8752D9FDF50
+	for <lists+linux-nfs@lfdr.de>; Sun, 29 Dec 2024 15:47:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 80452161C9F
-	for <lists+linux-nfs@lfdr.de>; Sat, 28 Dec 2024 19:36:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6C813A0594
+	for <lists+linux-nfs@lfdr.de>; Sun, 29 Dec 2024 14:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E96316F288;
-	Sat, 28 Dec 2024 19:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehdq5wQ7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C08328691;
+	Sun, 29 Dec 2024 14:47:18 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABE32111
-	for <linux-nfs@vger.kernel.org>; Sat, 28 Dec 2024 19:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DAA2594A6;
+	Sun, 29 Dec 2024 14:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735414584; cv=none; b=ePfRCJ53Jk/2zpNDqYqpzV2eAnidMkJxLd7zLDMV8c0dnrrndbVy8YwzTFwRFmrycuVI15W5T+rWFXVx8Aw84ypK/MUeXe6CnhYeA1p/lswPK5MjOhMMCtQyoQvHXgxN6NpQAvOtgAsPXT9QGelw2M4QVngYCjFgkleSsE1WtYc=
+	t=1735483638; cv=none; b=ht6eweCkrYmuPId2wbGvSJn9KZl+zhj47bkEdz4ZBPTg0WBetoMGypdrAwJ3H8oJAdXzPkXNPmBXqOJs3I8DUeu4jpa863f6CeCl51BOEiaqVjleWycwJcWJu+y5Vh8tlFwjrmFaOOAlHzVbiYovC5MbycKOU21HMCV7QHtX64c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735414584; c=relaxed/simple;
-	bh=Akx1V+q+r9EEU/tb9bWat5ygmD2BWqxQeF0TG+jTlTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gDeKU5cjiennUSxaBGiEaXu8vuW9r0Kix2CxKyAHJ+AGBGpR62rRnQnr3yGeztNLlnxszoUyQxFtzKsLE9AQdhXpHpUJi/ojcI/QAs6t+q8Cx0vTC5auP6tHxsYCh7j6NZ92VLipfsOGZq1ZH2k+Hhej4t4hE0aihx/1O2L6Vm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehdq5wQ7; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5d3f57582a2so16282147a12.1
-        for <linux-nfs@vger.kernel.org>; Sat, 28 Dec 2024 11:36:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1735414580; x=1736019380; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gn58RloNVo6Sep/k0zVSMNcnAsyr80kQyG14LNUeAs8=;
-        b=ehdq5wQ7ORbUHo0Ih3Lu3bZpUxbXCJM0+ibHd7R5UI9owyB6gaBknsUmh50+cx6yXP
-         Nvyqivi7q+cftnbecOtdaxbcaksveO+2FGgszifBuGavftharlXJdU5p5iQCB8LFgqor
-         2jyAX598cgWpjotzS9ShZ8LGrzY/4Wf5DZiLW1jnah5W/OjCGlugafptjUcyK9EnnmHV
-         tWdipiLvkSH4E1YpSBQCt/HIA/IjqDoIanOK9GGcl/b65T0Mv0SP9eiKb9Lb5yYMkCye
-         2kWJAqwLlIBiX8CO2qzcWGiDGjpYVEij6wRm21Iawv+PGcpP6RjguwZXgLldljetND8M
-         jKHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735414580; x=1736019380;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gn58RloNVo6Sep/k0zVSMNcnAsyr80kQyG14LNUeAs8=;
-        b=ZHHUfQxaMyti6KHjYf3au59oU2GnDZ4VDkSgyJ1UBRYEo5YULxexGs97IlxRndvKi9
-         FJ3mJvVWN299YgHW0GNwwtSAiH5kLR0gXIglyhS6B22Od/vyx/K/hmQtASrQUWdu05dx
-         ahBJLfREfF4zaLCkemhRjKKp35gaUqM+rcv3qH7QRYxhH1OVMfXEK1XfoaCIKDXijtOp
-         S/BW706OZUd4v4BUT2ZkTKISUvjREit81t9vfdZ9g3IlIAKIkw0HDJVxVpUDJi3N/ZLG
-         OWDpJvVdi3R7sttt6x3S/tSfwT8QQ200ER5Dpj3xZGeLBgvHYsxnSUs86WJbgA7X/EJL
-         vsIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhsu9tgV+WsbqRefMu6tTekvV6BOh57m1rCasayjbNnY1Rmb2frwWkwJz87WO94Aj4dlh5amUwnRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkM/sRP8+jUgXfy12r0AxM2drgn5pYXJfQTTwjF6VYZZ5ckugg
-	dIyasSyg2EYMfrU0ihcdQ752t//WBzntGJhgzbgR76CiJNUvRmOt
-X-Gm-Gg: ASbGncu+ss6bu5JaE65PDmozQI3lkMZMtV1nkXi7cKlhoQzhLaYgHFTtnePCH8w6x9j
-	qqcbfWmNRzV5zkdNhDkt9JPN3qr+Nrc3WHsd/4hx3edbQF0+hgM2A99x3SkIeSzuiLFWcyhl/Lr
-	Hs8qrqyso4ewUkz6K3xM92R/yWobjmpA/kmGlq1kvgyN1CMLZDjE9fcSpVYWXsZUdy46TIHuvht
-	peblKXRPXf2uV5EMa7d+Gtd0cU/nxf4ctZdnNbcyyKJwAr6D+uGlT3z1VCVuRu9j0q3kBi+plOm
-	Ted2JxXaiHKU/D7i
-X-Google-Smtp-Source: AGHT+IFhZpl+RyQS4KP0FVZKSrfvDU+9IrJ4fAb4qfXnIxTVSaAS5A6uHibE/h33p3WMddQaPR9VNw==
-X-Received: by 2002:a17:907:6e8d:b0:aa6:68bc:160d with SMTP id a640c23a62f3a-aac08154dd4mr3335343266b.16.1735414580341;
-        Sat, 28 Dec 2024 11:36:20 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e89537dsm1290763166b.54.2024.12.28.11.36.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2024 11:36:19 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 814D2BE2EE7; Sat, 28 Dec 2024 20:36:18 +0100 (CET)
-Date: Sat, 28 Dec 2024 20:36:18 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Scott Mayhew <smayhew@redhat.com>,
-	Jur van der Burg via Bugspray Bot <bugbot@kernel.org>,
-	anna@kernel.org, trondmy@kernel.org, jlayton@kernel.org,
-	linux-nfs@vger.kernel.org, cel@kernel.org, 1091439@bugs.debian.org,
-	1091439-submitter@bugs.debian.org, 1087900@bugs.debian.org,
-	1087900-submitter@bugs.debian.org
-Subject: Re: kernel BUG at fs/nfsd/nfs4recover.c:534 Oops: invalid opcode:
- 0000
-Message-ID: <Z3BTMhIfOedhgqlk@eldamar.lan>
-References: <20241209-b219580c0-d09195e1d9e8@bugzilla.kernel.org>
- <20241209-b219580c2-2def6494caed@bugzilla.kernel.org>
- <Z22DIiV98XBSfPVr@eldamar.lan>
- <7c76ca67-8552-4cfa-b579-75a33caa3ed2@oracle.com>
- <Z22r2RBlGT8PUHHb@eldamar.lan>
- <Z25LCAz9-qDVAop9@eldamar.lan>
- <9e988cfa-5a27-4139-b922-b5c416ae0c72@oracle.com>
- <Z2-V_reIDIgJ1AH7@eldamar.lan>
- <ae592779-4eb5-410e-b9bc-49165fbb643d@oracle.com>
+	s=arc-20240116; t=1735483638; c=relaxed/simple;
+	bh=Rg1PbKBINREC4avwH+xxhHmTQwUm4wj3iO8naBUOwtM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lDR9gKGjrjufD1lvL3bjye2YMe2JrEedvz0/wlT7JIGQq0vzQzg9HDzqQ7vWZj3MVxaAR/rdw7gitWKVcMGZTJNgCPmo2Y7BASmkVGi5x0dkmYf1UkzKr5tJuVCYuC0QkK+1STNGlTP/b5CQCPMATZbHndIfbTHTOTK9Ef1xlsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from altlinux.ipa.basealt.ru (unknown [178.76.204.78])
+	by air.basealt.ru (Postfix) with ESMTPSA id EAC5A23375;
+	Sun, 29 Dec 2024 17:47:04 +0300 (MSK)
+From: Vasiliy Kovalev <kovalev@altlinux.org>
+To: stable@vger.kernel.org
+Cc: "J . Bruce Fields" <bfields@fieldses.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	kovalev@altlinux.org,
+	Yang Erkun <yangerkun@huaweicloud.com>
+Subject: [PATCH 5.10/5.15/6.1] nfsd: cancel nfsd_shrinker_work using sync mode in nfs4_state_shutdown_net
+Date: Sun, 29 Dec 2024 17:45:57 +0300
+Message-Id: <20241229144557.1203112-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae592779-4eb5-410e-b9bc-49165fbb643d@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Chuck,
+From: Yang Erkun <yangerkun@huaweicloud.com>
 
-On Sat, Dec 28, 2024 at 12:13:56PM -0500, Chuck Lever wrote:
-> On 12/28/24 1:09 AM, Salvatore Bonaccorso wrote:
-> > Hi,
-> > 
-> > On Fri, Dec 27, 2024 at 04:31:44PM -0500, Chuck Lever wrote:
-> > > On 12/27/24 1:36 AM, Salvatore Bonaccorso wrote:
-> > > > Hi,
-> > > > 
-> > > > On Thu, Dec 26, 2024 at 08:17:45PM +0100, Salvatore Bonaccorso wrote:
-> > > > > Hi Chuck, hi all,
-> > > > > 
-> > > > > On Thu, Dec 26, 2024 at 11:33:01AM -0500, Chuck Lever wrote:
-> > > > > > On 12/26/24 11:24 AM, Salvatore Bonaccorso wrote:
-> > > > > > > Hi Jur,
-> > > > > > > 
-> > > > > > > On Mon, Dec 09, 2024 at 04:50:05PM +0000, Jur van der Burg via Bugspray Bot wrote:
-> > > > > > > > Jur van der Burg writes via Kernel.org Bugzilla:
-> > > > > > > > 
-> > > > > > > > I tried kernel 6.10.1 and that one is ok. In the mean time I
-> > > > > > > > upgraded nfs-utils from 2.5.1 to 2.8.1 which seems to fix the issue.
-> > > > > > > > Sorry for the noise, case closed.
-> > > > > > > > 
-> > > > > > > > View: https://bugzilla.kernel.org/show_bug.cgi?id=219580#c2
-> > > > > > > > You can reply to this message to join the discussion.
-> > > > > > > 
-> > > > > > > Are you sure this is solved? I got hit by this today after trying to
-> > > > > > > check the report from another Debian user:
-> > > > > > > 
-> > > > > > > https://bugs.debian.org/1091439
-> > > > > > > the earlier report was
-> > > > > > > https://bugs.debian.org/1087900
-> > > > > > > 
-> > > > > > > Surprisingly I managed to hit this, after:
-> > > > > > > 
-> > > > > > > Doing a fresh Debian installation with Debian unstable, rebooting
-> > > > > > > after installation. The running kernel is 6.12.6-1 (but now believe it
-> > > > > > > might be hit in any sufficient earlier version):
-> > > > > > > 
-> > > > > > > Notably, in kernel-log I see as well
-> > > > > > > 
-> > > > > > > [   50.295209] RPC: Registered tcp NFSv4.1 backchannel transport module.
-> > > > > > > [   52.158301] NFSD: Using /var/lib/nfs/v4recovery as the NFSv4 state recovery directory
-> > > > > > > [   52.158333] NFSD: Using legacy client tracking operations.
-> > > > > > 
-> > > > > > Hi Salvatore,
-> > > > > > 
-> > > > > > If you no longer provision nfsdcltrack in user space, then you want to
-> > > > > > set CONFIG_NFSD_LEGACY_CLIENT_TRACKING to 'N' in your kernel config.
-> > > > > 
-> > > > > Right, while this might not be possible right now in the distribution,
-> > > > > to confirm, setting CONFIG_NFSD_LEGACY_CLIENT_TRACKING would resolve
-> > > > > the problem. In the distribution I think we would not yet be able to
-> > > > > do a hard cut for planned next stable release.
-> > > > > 
-> > > > > Remember, that in Debian we only with the current stable release got
-> > > > > again somehow on "track" with nfs-utils code.
-> > > > > 
-> > > > > > Otherwise, Scott Mayhew is the area expert (cc'd).
-> > > > > 
-> > > > > Thanks!
-> > > > > 
-> > > > > I will try to get more narrow down to the versions to see where the
-> > > > > problem might be introduced, but if you already have a clue, and know
-> > > > > what we might try (e.g. commit revert on top, or patch) I'm happy to
-> > > > > test this as well (since now reliably able to trigger it).
-> > > > 
-> > > > Okay so this was maybe obvious for you already but bisecting leads to
-> > > > the first bad commit beeing:
-> > > > 
-> > > > 74fd48739d04 ("nfsd: new Kconfig option for legacy client tracking")
-> > > > 
-> > > > The Problem is not present in v6.7 and it is triggerable with
-> > > > 74fd48739d04 ("nfsd: new Kconfig option for legacy client tracking")
-> > > > 
-> > > > Most importantly as the switch to defaulting to y was only in later
-> > > > versions, explicitly setting CONFIG_NFSD_LEGACY_CLIENT_TRACKING=y.
-> > > 
-> > > Hi Salvatore -
-> > > 
-> > > I see that Scott recently sent a fix for a similar crash to linux-nfs@ :
-> > > 
-> > > https://lore.kernel.org/linux-nfs/032ff3ad487ce63656f95c6cdf3db8543fb0d061.camel@kernel.org/T/#t
-> > 
-> > Oh right, this described escactly the problem.
-> > 
-> > Do you think that can be made reaching 6.13 as well (and then
-> > cherry-picked to the affected stable series 6.12.y) or do we have to
-> > wait for landing in 6.14 first?
-> 
-> In nfsd-next, this fix is tagged:
-> 
-> Fixes: 74fd48739d04 ("nfsd: new Kconfig option for legacy client tracking")
-> 
-> So it will be backported to all appropriate earlier kernels as soon as
-> it goes into Linus's master via the v6.14 merge window (in a couple of
-> weeks).
+[ Upstream commit d5ff2fb2e7167e9483846e34148e60c0c016a1f6 ]
 
-Yes right, I was more wondering if it is eliglible for already land in
-v6.13 as it is a bufix. But the issue has been open for long already,
-so I guess waiting until it lands in v6.14 and then only get applied
-way down as needed has to be sufficient.
+In the normal case, when we excute `echo 0 > /proc/fs/nfsd/threads`, the
+function `nfs4_state_destroy_net` in `nfs4_state_shutdown_net` will
+release all resources related to the hashed `nfs4_client`. If the
+`nfsd_client_shrinker` is running concurrently, the `expire_client`
+function will first unhash this client and then destroy it. This can
+lead to the following warning. Additionally, numerous use-after-free
+errors may occur as well.
 
-Thanks all for your work,
+nfsd_client_shrinker         echo 0 > /proc/fs/nfsd/threads
 
-Regards,
-Salvatore
+expire_client                nfsd_shutdown_net
+  unhash_client                ...
+                               nfs4_state_shutdown_net
+                                 /* won't wait shrinker exit */
+  /*                             cancel_work(&nn->nfsd_shrinker_work)
+   * nfsd_file for this          /* won't destroy unhashed client1 */
+   * client1 still alive         nfs4_state_destroy_net
+   */
+
+                               nfsd_file_cache_shutdown
+                                 /* trigger warning */
+                                 kmem_cache_destroy(nfsd_file_slab)
+                                 kmem_cache_destroy(nfsd_file_mark_slab)
+  /* release nfsd_file and mark */
+  __destroy_client
+
+====================================================================
+BUG nfsd_file (Not tainted): Objects remaining in nfsd_file on
+__kmem_cache_shutdown()
+--------------------------------------------------------------------
+CPU: 4 UID: 0 PID: 764 Comm: sh Not tainted 6.12.0-rc3+ #1
+
+ dump_stack_lvl+0x53/0x70
+ slab_err+0xb0/0xf0
+ __kmem_cache_shutdown+0x15c/0x310
+ kmem_cache_destroy+0x66/0x160
+ nfsd_file_cache_shutdown+0xac/0x210 [nfsd]
+ nfsd_destroy_serv+0x251/0x2a0 [nfsd]
+ nfsd_svc+0x125/0x1e0 [nfsd]
+ write_threads+0x16a/0x2a0 [nfsd]
+ nfsctl_transaction_write+0x74/0xa0 [nfsd]
+ vfs_write+0x1a5/0x6d0
+ ksys_write+0xc1/0x160
+ do_syscall_64+0x5f/0x170
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+====================================================================
+BUG nfsd_file_mark (Tainted: G    B   W         ): Objects remaining
+nfsd_file_mark on __kmem_cache_shutdown()
+--------------------------------------------------------------------
+
+ dump_stack_lvl+0x53/0x70
+ slab_err+0xb0/0xf0
+ __kmem_cache_shutdown+0x15c/0x310
+ kmem_cache_destroy+0x66/0x160
+ nfsd_file_cache_shutdown+0xc8/0x210 [nfsd]
+ nfsd_destroy_serv+0x251/0x2a0 [nfsd]
+ nfsd_svc+0x125/0x1e0 [nfsd]
+ write_threads+0x16a/0x2a0 [nfsd]
+ nfsctl_transaction_write+0x74/0xa0 [nfsd]
+ vfs_write+0x1a5/0x6d0
+ ksys_write+0xc1/0x160
+ do_syscall_64+0x5f/0x170
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+To resolve this issue, cancel `nfsd_shrinker_work` using synchronous
+mode in nfs4_state_shutdown_net.
+
+Fixes: 7c24fa225081 ("NFSD: replace delayed_work with work_struct for nfsd_client_shrinker")
+Signed-off-by: Yang Erkun <yangerkun@huaweicloud.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+(cherry picked from commit f965dc0f099a54fca100acf6909abe52d0c85328)
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+---
+Backport to fix CVE-2024-50121
+Link: https://www.cve.org/CVERecord/?id=CVE-2024-50121
+---
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 8bceae771c1c75..f6fa719ee32668 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -8208,7 +8208,7 @@ nfs4_state_shutdown_net(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+ 	unregister_shrinker(&nn->nfsd_client_shrinker);
+-	cancel_work(&nn->nfsd_shrinker_work);
++	cancel_work_sync(&nn->nfsd_shrinker_work);
+ 	cancel_delayed_work_sync(&nn->laundromat_work);
+ 	locks_end_grace(&nn->nfsd4_manager);
+ 
+-- 
+2.33.8
+
 
