@@ -1,180 +1,131 @@
-Return-Path: <linux-nfs+bounces-8883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D82FEA00007
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 21:32:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14FC4A00111
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 23:07:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9101162F91
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 20:32:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41FF41883E0E
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 22:07:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2CB1B6525;
-	Thu,  2 Jan 2025 20:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b="gC1Ajte0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D0B1487E1;
+	Thu,  2 Jan 2025 22:07:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2134.outbound.protection.outlook.com [40.107.237.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4529F1B87DB
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 20:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735849942; cv=fail; b=IfCXsBGiweXcdrh8BorG9HkPikp7AFr2AA9qh6bFvOSS09ALZ0GVxRijj88IfSvTh+uish1MA06PCwsb0GFH70LdtX7HOFTR1sOKoJf/gI425U0bSHgxOeZX6ZC4V+RCBgOfIFICwko8D7X8mrthl2Gcy8qD0AE0KBISvWrkUT4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735849942; c=relaxed/simple;
-	bh=cCb9YWvEVU8gnkGpOcpLFb/AbtJJkuccCiE3GJ4UmAU=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HK+213VixJUMjVPzIoDdbdUCR//OAwJrcpJyAtBatIWQEOovYyfVVSjwc+DuiJWPVZvnMVXeGBGtjYjedjSj57UD6Wept7fdYMzahOFv/NlsubiOQReCmTHc+8BvMlue/bPwHHL4XklU1jZIbSZmY8K6sQOOTC0psGyVMtRGwbs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu; spf=none smtp.mailfrom=rutgers.edu; dkim=pass (2048-bit key) header.d=rutgers.edu header.i=@rutgers.edu header.b=gC1Ajte0; arc=fail smtp.client-ip=40.107.237.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rutgers.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=rutgers.edu
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y8ump7qy0WyqcbJH5kfIU5sQqhvj05Y+c2K8b6JCDFhGg2EppiePOOjp0+qFisQYziEe+B5petmWGghg+AeEUJTR6f8MCOAHbi/mOJouhW/Mm4dmSjz2I/OkuioJpByChUoAYLKpiw4lptrDByODg+KNqLgwK15Me0lDFy73KX4FiYzFSvYLa+bjoCc9VffKPdwyOpEWwFDydiU5Hq/e+/aUx5ABlC2sb0aPIZjfwEKn2aHLQ4uKLIpTq54CIQ+HbT/kIJd1yKOkJSrQ+AureQYC+9VWifnXnITx92T67fOHKldBgcqu5a+xrXNMEBoFFnhVbqvJdOsnQ6NOinQqgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B935yx5zl5dEjdhttHV2o1K1GA88FGIHJazF/83rf3s=;
- b=EeaXzLlcGklPQ9zbo6U+p1EDlzDxQqwHfShS9dTpUT3q8oqg47z1oiUgYiioQy5y+rDujBP5NR0DE2wjlZrMo+t+mb7q6ReQ5iO2dEs2iTxn1y1/GorqIfs3J+BLGBNnGiktZmaJ7vsKNfv+m3KXjJcqdX+CzrJpLsh1S25vO72K2qZbv3nSNaz9tEVyv3ij8V22x9jfOA9Tzaz9TUY5roLKWDph0lWL6e0MGbpHEzVqnc1MrIl6oT8y1DDyd/BzsuQPDWcfxj3NBJDAXFRFvlXkA5pXEoDoUAlUU9f+qsl0FSehcDe+z61bcOuyiBpqtSHHHzyqzOMng3j5qUK7ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=rutgers.edu; dmarc=pass action=none header.from=rutgers.edu;
- dkim=pass header.d=rutgers.edu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rutgers.edu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B935yx5zl5dEjdhttHV2o1K1GA88FGIHJazF/83rf3s=;
- b=gC1Ajte0cYGHSk7+8lUbVKlPcKEybcyMvHcmmxm1zCxa36ut+721ksAx91/S7XdukZjXmRvSQvZKj+LDGfd+JBTlEyFY9iHdAicGlllmIjMWHzEY7vjI2cyBt5c+YvsDuQAgWSpEVW6ZZxRxCJKQDFt2PtwV0JRFKUE29AdertfmZgIsSahsI+qTRc8gxubMMmAzq5m3edrwdIO+ZSUchh085OhoTeL+vQtTOv4wLpy5wEXFOa0tCSAQB5DYkb85MRG4vNx48szCPXywVoRYJVyh7nIlanW4iTV6dioc3Yq5axRgthjsBtX2N+onDsTDC1u1DryQSn9hY/Z5mGcqlQ==
-Received: from PH0PR14MB5493.namprd14.prod.outlook.com (2603:10b6:510:12a::11)
- by DS0PR14MB5591.namprd14.prod.outlook.com (2603:10b6:8:c5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8314.12; Thu, 2 Jan
- 2025 20:32:13 +0000
-Received: from PH0PR14MB5493.namprd14.prod.outlook.com
- ([fe80::c4e6:a77b:bbcc:efd4]) by PH0PR14MB5493.namprd14.prod.outlook.com
- ([fe80::c4e6:a77b:bbcc:efd4%4]) with mapi id 15.20.8314.012; Thu, 2 Jan 2025
- 20:32:13 +0000
-From: Charles Hedrick <hedrick@rutgers.edu>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: problem with nfsmount.conf
-Thread-Topic: problem with nfsmount.conf
-Thread-Index: AQHbXVMhJuSPvcSY+EmZgNKKwEXcQA==
-Date: Thu, 2 Jan 2025 20:32:13 +0000
-Message-ID:
- <PH0PR14MB5493E6F4ACD3CA4385C7E294AA142@PH0PR14MB5493.namprd14.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=rutgers.edu;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR14MB5493:EE_|DS0PR14MB5591:EE_
-x-ms-office365-filtering-correlation-id: 140c52ac-446a-460a-b789-08dd2b6c8a8a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|366016|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?VWPiR2BpFdbAEl6mQRiZkTOK/99Q+O9c25+WhY1D64QHHvbyCUckZcTrPm?=
- =?iso-8859-1?Q?p8abx4rDhOoCUkkmsRdcPq3mOO1kzm3N+MxYTC2CcVLzfjAqjWNu1vHXTS?=
- =?iso-8859-1?Q?EDLg8b0LdZLTjMja/fBSLTjAeg6G6tAgWpxrIeCDagGK7Cb0tiqePzKXU6?=
- =?iso-8859-1?Q?IImeXMztqHFs8YNmtZ345dEx2a+DIpFRW693MbEWP9O2JO7HThF5vmcfxn?=
- =?iso-8859-1?Q?ev/LN6kPYWwtOFNyDiAVfBbfXNAnet+TWF9i5ApCghtQOzRdAgXbrY7h//?=
- =?iso-8859-1?Q?zRJhlIMrPyYz1fJ2ihytfgndMmNeITpkf7GJiNiun2rQ0IXwW15STT1b6y?=
- =?iso-8859-1?Q?Q60e4dFIZdLumtIsRbBJHkFSPo8i+/aY8ahY5wNJ88xdAn63bOtkQHFmRB?=
- =?iso-8859-1?Q?aNNUZ1ucIuF8eAn5zGesKnjwtlOz/8vN1R7xiqklIZ67z3vgT9VNRoDDI1?=
- =?iso-8859-1?Q?DjDQry7B+cmI7w1nj/NSgIzvMRdLMLqE9HVhZ7IJ+SHjL3DqXzeD2IkTVC?=
- =?iso-8859-1?Q?SOmsv4peMf2FDxtS9gcib4dCOX0UoX2YFbN2lGwr987dqYeuw7YGHw6ns+?=
- =?iso-8859-1?Q?8ftgAbcq23iI998vGSduVz+A4J37OPWW7wofetni7JaWaIWtaV91PFnNZX?=
- =?iso-8859-1?Q?+ESBnAK9zEPB7sdpB63bL/9VYkQsFzxK+cY0tLb43873y74jH/lC/dG3i7?=
- =?iso-8859-1?Q?ucNhd5hOICIs1k0GXYBCrLbdMa7a03RLGJQ8ZtQpEsr74mxX2FmmuRxt3o?=
- =?iso-8859-1?Q?nEJyrpnLmx3b4MrzYwSo4XoS1SaI4zHUm5F04ILiwjA8OLnZjF8gjdLr3f?=
- =?iso-8859-1?Q?9deJ3Dl0VWql4YUOcOltR+EvRZL+GvArQaCTmbyLuA1yIVFUuh7Ga4FkkZ?=
- =?iso-8859-1?Q?ikzlAc2BUg4GkjVBBBBXvhVb3nColZEH3px80GKhjftznogmIXxpXWxNcr?=
- =?iso-8859-1?Q?oRVYXV95FGlAqC7htQnAj0Jla4HCr+Ok0j5W1Ep8qlStw9mZ96G1cm2G9d?=
- =?iso-8859-1?Q?Fk6rBPvOgKUG5UanEVDIZCn8FFTf6FI9SPApirQgHiwSPC9PWbqafiCNCe?=
- =?iso-8859-1?Q?iA5nVta8XlIbW+nXziJTGVdh5ok1j8ZFo6M0GGaqIZnCjB8irZ5xSCaeUy?=
- =?iso-8859-1?Q?BYEMXC+XjdcngeKEAP3Zz3AbSF1IaMm5oriDIkbB5i8+3YZX/7KWHFWLuh?=
- =?iso-8859-1?Q?Qdawmw8+WEL+Lfz3Ryg3oMl1i+tiJ0QJklQGwZSnrnQchnz/BOuQ8PK1M/?=
- =?iso-8859-1?Q?nis3KX8q0Zis3X+sWmvDb2HKhuyX54f4f8ANKOl7+3h6cvL5UopPlqf2OT?=
- =?iso-8859-1?Q?Qdlh49qRTsFe2RaWAnI6MTjQG/mRpTX3+DZGK4nHg85mosmtPh3/LgvcXg?=
- =?iso-8859-1?Q?QWqB0FUot/o3kP/wjA3dK0b5FDSNjp7+IlKvEu7XOyhAf/9KYmC7PeWw1j?=
- =?iso-8859-1?Q?J1Www0ciBM2VPUR0lL/sGl4A/G+nziXr1VUbGHLTl9NzKaSbaBOKm6Xdr1?=
- =?iso-8859-1?Q?cgF+jZlE8g9fh1mwEI95vT?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR14MB5493.namprd14.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(10070799003)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?5xYmbsnEb/p9cmQsPlussmzP7R8ZZnyrxZDdDrw3AOlA15Ky1evGqRxJRj?=
- =?iso-8859-1?Q?oSzGpnycyCHGOOk0neEjvOMWZlugq+sbpFhjYc/VrTgnx7kWkp2BVKplax?=
- =?iso-8859-1?Q?aAMKlsTSSs9O5kltEMTVD/HebTkP7EupIPqsoJr59KyEpdGNcjUj66jeD1?=
- =?iso-8859-1?Q?kxsenOHHFLvQEUs2joSmCSa6h44bJP3iA+ueKkPyyNrMJB47E/UVzgYctX?=
- =?iso-8859-1?Q?bpHgCGi9+ukILby60PRPgOWrwToUJerECl9X3W6qIwWWVSPa36qy+2Ev9T?=
- =?iso-8859-1?Q?dcg9oCIZ+uaMLw8mlWYKOyTmzlfPRQGOEaWZKNzhQVL+7Y1Zw0LHtm6ldg?=
- =?iso-8859-1?Q?KTz9RT28Veq2XH49zwxviKW4pJI4u1VK4Z51059u1bhj4v64wgBFzuQozd?=
- =?iso-8859-1?Q?cJyCbiTeKAbxZfNXEXE+f1Khf8DFpnYp5neazvhHFQb8VQ/5lu2VIzsnb1?=
- =?iso-8859-1?Q?MhDvK941ML/glz0JwDXkdA94xhdnENN6drmkPPQ66ai4z22aU1WJOMLrrw?=
- =?iso-8859-1?Q?NSup3jIK7VcwR72jSwRbV4ES4PV5AeLSrQl12XqbkUEey9dGs1frVlq0Vq?=
- =?iso-8859-1?Q?NbYbOZNshz9S2/oIBM3a5BObUID5UOeh9Ix7767WXfhD2B6eT4hk7v81c6?=
- =?iso-8859-1?Q?V9tZfNwF2xUrWE34KkrZeyd8bKb46rHOTj3AR5qpnDvlh0iSmG2DOk7eoO?=
- =?iso-8859-1?Q?SS3oUext7XA3Y6fzRhS5NAjewnUfJs3qAQQf0WQHpy6w5GQRKW4L1YCdJb?=
- =?iso-8859-1?Q?5v737DVheXdOeOwnmfzY1dnTnMHou1Y70/TgI63AiF55I9GcyLupAcRmy1?=
- =?iso-8859-1?Q?UsYaDG3b3XC36Q7N5vR5MDK2Um7Taj6Kq4Q+XQajRjYTovm+UEBISPG6Xu?=
- =?iso-8859-1?Q?FGQ8fAKVGV47pE201dJ7mYVy+HpwF48lVzobOvriBj2RpKm09IDrrfCvkM?=
- =?iso-8859-1?Q?io6bYTgn43LTJ8+g8lG1u44NBWMqm+pV/FNMt6Br7+QbllSxLzp7IEa0tv?=
- =?iso-8859-1?Q?ywUgrevAt5qBkVgqh+CEsI7uJUu4yxAZTPxlA3Rvaxc/PoE3PliQ/hIPW6?=
- =?iso-8859-1?Q?06VKcliWmruiIbKvxkIs2BlDCQRvgyAjRek9znJ1sKgc5fFk4Rr3Wy3lkq?=
- =?iso-8859-1?Q?6e8jGozryfqA0+KxLHZcBof0mdw6lAS9wDTjK5bHpfjldYwtLlWvgmFo6p?=
- =?iso-8859-1?Q?+ajWCZKjCADuc4wOheC44e6all7W9YVUT70NwKaMaYSo40B/JVOKSOYONS?=
- =?iso-8859-1?Q?4topkQR5eZhEKGR6zd4ouWTrq6Hw4T8Re8ftFkRmd2t0diG+aPTqdltZ9c?=
- =?iso-8859-1?Q?z6p2EsrQKY2NucnV1YecgcsejNXooya2k9pMqy+mQcRpcl4686wVO/W3SL?=
- =?iso-8859-1?Q?6yXCJzzeyF39u6kTWka9Uq+P1lTAR7XrdD+RWhj6u/vRRWzLQoiY3muPEN?=
- =?iso-8859-1?Q?9rx9kpGUjSQhzzFcpnSkpeucKks6ycS2vz3LbkEmrOceF7m/AvOBwcYAvf?=
- =?iso-8859-1?Q?z2dR3OqNmHI0F73BNc0fH4GvcjV3ohL7gGaELiyQYkNTLaGcqxRz/l3ACF?=
- =?iso-8859-1?Q?PAZtcruoezH86mwsg+b4MMbUAy7AlTxuVV4W4Io/YaRjkkN7sR0r+kAftc?=
- =?iso-8859-1?Q?G1fCyZySQkPqVwAt1UvQ86n1xGiGVEFand8r5m0eMRFXXT1/Jc7q85YQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19F11AD3F6
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 22:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1735855659; cv=none; b=FUTbAC02PXbyGWXU8t7HnJx1U0HcTwcSanvO0aEh2eAYx/zwSw9GqrkYQ1d/WkY65n8hTvTMh9OxaNgwTOaKVQ0hgPANnlvzfpAx6X8ZuiOg0HVeuu+uHFsik/idwpzRz9R+/85qAKkYNgkYCIqnEfoniR26S0kIKMFVW9Zl0cg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1735855659; c=relaxed/simple;
+	bh=wremUwwmZrgL8ALF121knvSAKKnvmS2hAfptP1wB5tw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=p8oQA4mwbV+/FHLQOe8Gzh4+jpv+nanDKfP2ZpCPS5P00WSyE0NCtVb69oj5uyWsKqQsG1boHG9ri2lzeYk7Viw70W+5TH7xxiX8pEbs9nmWb3YwBxTyrlet8ag1/mLzoqFm3NJaYjjOigS9/BAFLiGkcUoVdl3lz+iXYrkyEbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso19395825a12.0
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Jan 2025 14:07:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735855656; x=1736460456;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wremUwwmZrgL8ALF121knvSAKKnvmS2hAfptP1wB5tw=;
+        b=c/WvcBDsca4U8Kug2Zs+UTEgs6YCYcDOyjV3E+y5NeQkQl5cqbO+0o5qK9/tGcUWxt
+         3g1MGLTw2DYB0aTNgILFKD1faucDojSFLMvL0OkpTWks5ZLdYXSigemxWmsBVzdd0A7X
+         u3HEvpsSV9nGQpNOr1BSMNoCjCaonWyvjJLAKQMi44T/p4LOsqHOkQYdTwhXoXZ3VyTI
+         Jnrm0mS+EZnKNA3eyNdb7oQJmI7Fw+s/5dNRxJGgGeQRwuadUPR70qQGvTxlDemNbvPS
+         hsZYZxpp8d4mRinrGNraywhqusGF2HjXkQkWNGnrioWYkvLuklRsM5TWSaN052PB1sJX
+         V7kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVsdNLua9u75f/219AbOu7kvniE2iiTSajj9RV4DxxkOe6T3oE2oNZQejnDYNBFSDbI37f6/jKvNJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCaOEg+0IbK5C1foGz2UmY8si5BA0khEHUeH60n1KvzOakEqg1
+	0dqoPH61HHc3psMBZ2w3aaOV5XpOhzNIgg7u0s8M6OcsXWXUHCfoakNFxA==
+X-Gm-Gg: ASbGnctRZv+C7DcsEQ6sds9B4MiyN0OqrIdtC5mD0b/eBtmcsSzjjcDDhLlGi2ZoXOo
+	bz03R6JRsfVWoEXj5pWyXIRg3/FEDHLDJ/rWkG2OPu6aiwWpFXrUj1n5JIe68Cntz3K6K35Ogjd
+	cbq9bvyC7BkzPlPlZ1s4HfxbpvTc4aMBtOaavcuRjHSwV1LMnQI96I2TWygjcllpOp3SEqN89cI
+	1+7yzbl/Zbaq84VZU8MpRsL4eeJyAykYHBnLJ/CpjpGR7V130GTr/v8j04T9b+f+iDG5AqlP8R3
+	VZ+Zh/KMfX82OAC9aIrl23A=
+X-Google-Smtp-Source: AGHT+IHQZiGpEZ7NvyZaI5CDiXMXOTWS+SE4FNVgJnHR2U6E4vT3kDfHIx6QkTAnAvBJ/tFbuoE47g==
+X-Received: by 2002:a05:6402:3224:b0:5d4:34a5:e2f4 with SMTP id 4fb4d7f45d1cf-5d81de38bdfmr43347416a12.31.1735855655616;
+        Thu, 02 Jan 2025 14:07:35 -0800 (PST)
+Received: from [10.100.102.74] (CBL217-132-142-53.bb.netvision.net.il. [217.132.142.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80701abdcsm18677801a12.74.2025.01.02.14.07.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Jan 2025 14:07:35 -0800 (PST)
+Message-ID: <3ee21c03-83a5-4ad8-a54f-5c076125e924@grimberg.me>
+Date: Fri, 3 Jan 2025 00:07:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: rutgers.edu
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR14MB5493.namprd14.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 140c52ac-446a-460a-b789-08dd2b6c8a8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Jan 2025 20:32:13.7141
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b92d2b23-4d35-4470-93ff-69aca6632ffe
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KMlledCmEtqoIqL+u0cGgZA+VQZP/x1uXvqeh7mKRWYfDimWNWdYy21Ff1nMoItnXSQCFIOqYI6KTnO1AX0x8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR14MB5591
+User-Agent: Mozilla Thunderbird
+Subject: Re: Write delegation stateid permission checks
+To: Jeff Layton <jlayton@kernel.org>, Shaul Tamari
+ <shaul.tamari@vastdata.com>, linux-nfs@vger.kernel.org
+References: <CAFEWm5DTvUucAps=SamE5OVs0uYX5n4trFf5PBasBOFbEFWAfA@mail.gmail.com>
+ <e52500f98a7153822a6165d26dcf66c3d352129b.camel@kernel.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <e52500f98a7153822a6165d26dcf66c3d352129b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Is this the right place for nfs-utils?=0A=
-=0A=
-/etc/nfsmount.conf if you have a global section and multiple servers, vers=
-=3D only works for some servers (the last?) I'm unable to find the exact al=
-gorithm.=0A=
-=0A=
-I've replicated this with Ubuntu 22.04, 24.04, and Redhat 9.5. It also occu=
-rs with the latest source (2.8.2) built on Ubuntu 24.04.=0A=
-=0A=
-[ NFSMount_Global_Options ]=0A=
-vers=3D3=0A=
-rsize=3D65536=0A=
-wsize=3D393216=0A=
-[ Server "communis.lcsr.rutgers.edu" ]=0A=
-vers=3D4.2=0A=
-[ Server "eternal.lcsr.rutgers.edu" ]=0A=
-vers=3D4.2=0A=
-=0A=
-mount communis.lcsr.rutgers.edu:/xxx /mnt=0A=
-=0A=
-will mount version 3.  Eternal will mount version 4.2=
+
+
+
+On 02/01/2025 15:41, Jeff Layton wrote:
+> On Thu, 2025-01-02 at 11:08 +0200, Shaul Tamari wrote:
+>> Hi,
+>>
+>> I have a question regarding NFS4.1 write delegation stateid permission checks.
+>>
+>> Is there a difference in how a server should check permissions for a
+>> write delegation stateid that was given when the file was opened with:
+>> 1. OPEN4_SHARE_ACCESS_BOTH
+>> 2. OPEN4_SHARE_ACCESS_WRITE
+>>
+> (cc'ing Sagi since he was looking at this recently)
+
+And completely dropped the ball on this :\
+
+>
+> A write delegation really should have been called a read-write
+> delegation, because the server has to allow the client to do reads as
+> well, if you hold one.
+
+Assuming the access check passes.
+
+>
+> The Linux kernel nfs server doesn't currently give out delegations to
+> OPEN4_SHARE_ACCESS_WRITE-only opens for this reason. You have to
+> request BOTH in order to get one, because a permission check for write
+> is not sufficient to allow you to read as well.
+>
+>
+>> Should the server check permissions for read access as well when
+>> OPEN4_SHARE_ACCESS_WRITE is requested and DELEGATION_WRITE is granted
+>> ?
+>>
+> Possibly? When trying to grant a write delegation, the server should
+> probably also do an opportunistic permission check for read as well,
+> and only grant the delegation if that passes. If it fails, you could
+> still allow the open and just not grant the delegation.
+
+Yes, that is what Chuck suggested at the time.
+
+>
+> ISTR that Sagi may have tried this approach though and there was a
+> problem with it?
+
+Not a problem per se, IIRC the thread left off that we need to sort out
+access reference accounting for nfsd_file for both reads and writes for
+a single write deleg...
 
