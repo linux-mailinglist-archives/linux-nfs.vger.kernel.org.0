@@ -1,59 +1,57 @@
-Return-Path: <linux-nfs+bounces-8868-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8869-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C3A29FF9C3
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 14:21:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5B869FF9CB
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 14:23:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FBAD3A2FBB
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 13:21:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8F333A373C
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 13:23:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A431B0F11;
-	Thu,  2 Jan 2025 13:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F026979E1;
+	Thu,  2 Jan 2025 13:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+DMkTC4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vb8o2Cs1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F11D1B0434
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 13:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2C479D2
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 13:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735824087; cv=none; b=rV4i6/nS1a0DFT+BadG31hNR9VjaJ/ZUydar7W/lXdwLyX3cZE8kW85mqEsyx0ODfXvjRvdQicEgXYmJgt3hxJAmP8fzuAqgHrqRt3OjoQaZu1Lrrj3wDM5R6d8poBwv+MroQlCi1Rgc/5YsF8Sx1OCw0cR9ZwaeNTn3SkSUMIU=
+	t=1735824192; cv=none; b=Xx1PPQvqJdMS0z7tO6gRwbPvEVpNaoAGmebAcPs1xtUh8hi+Nv9FuXnRwUDqupBC92n86WTT0bpkUy8d5S9pXMSqngOQOnycuGzVAZFPBKKNn2O49YpemrBbSSHjUjZqnTkbKtO/Qj2ncweNh7DJYHrj3fRtSC51yYB/3H3F3w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735824087; c=relaxed/simple;
-	bh=eFg24067G1/ru6VFPaq0wubXe1i6yDhwW+xiWepH098=;
+	s=arc-20240116; t=1735824192; c=relaxed/simple;
+	bh=x4mVg4swz2ILw6H63SMFuQUJN0h5RkxU/n/ccC7tJHA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Lc5PGeyMEmpOfbRRYG5+RatFbP2gA93s+RSO15O0TxBDdCHVt0X9HZAv7mimJXkUIUK6Y3N9qvrh/Za4RJDlhRDlJQcMPASh93/2ubiu5VBIJt6ve0XQ8AGCais2v5SBK0JFsFNlR+J1mLArb9nHnxjndAHzUsR40FGV4nmP3AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+DMkTC4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB9EC4CED7;
-	Thu,  2 Jan 2025 13:21:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=VzNvpVhAfUptMbPBKSjdxCbYjFNE8YUJ+hWpfZtaMS7gYmctgbS45ww+Zhu/cMcIejADUzgLGosJv8VVKCQgWLgNa4oPA9ZXMFh7u8dmweoHF2jhvgha1KwRPoZVKpmxbdsYsK+eMtApgsAXdpp6674IxHwv9K633wZUAPjb2ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vb8o2Cs1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C719C4CED0;
+	Thu,  2 Jan 2025 13:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735824087;
-	bh=eFg24067G1/ru6VFPaq0wubXe1i6yDhwW+xiWepH098=;
+	s=k20201202; t=1735824192;
+	bh=x4mVg4swz2ILw6H63SMFuQUJN0h5RkxU/n/ccC7tJHA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=k+DMkTC4oNhGsPESsIgVzEEkrNQ3p8ZjpxckkNksr5BdSK7smr4AeD2+wQfC8pXdO
-	 JwZeferuHJxTK2PRv9ndF9QTE/wtnPeXer1U4v1dOtPVFHa9tQaf/USml32edydH/d
-	 MgkzT4zJPMe0dlzR+4dJzS9BLF7PzOJfxXAlR8vC+2xdpcnSzDg3FqmpLJkgr89Pla
-	 UKyvIh8VZj4QkDUDvm9dbxztXWFgNWCjtD5WnKFw9G/3BVepU0EFhzf4Cv6r3VLbPc
-	 v7mBJBd6EYvj8pHiUcafSgRPJwEthO5YfxpRz541hQnPJGUDV4YFADFy59NeEtSJmy
-	 1Ud38in+A6S2Q==
-Message-ID: <6a262addf1c7996a93e4e6d97493056a919c4f03.camel@kernel.org>
-Subject: Re: [PATCH v4 9/9] SUNRPC: Document validity guarantees of the
- pointer returned by reserve_space
+	b=Vb8o2Cs1EW/ikRdN1/E1INZGBqVolO30TNvR6nph/USUdiPagfdpmZbJVEUNBYma/
+	 j9ztJsjZGluC84i3mB4xavyqXwJa+peCqT6rh3uFLcTcePEVzKhFcBY16NBH1Ev2We
+	 MlCwu+SjyAmfwWhqlwkeusg0ZMaKwsmWb9JEu5cmC/zZ6Y73Tu2G82kegUJi1LKlny
+	 W91GzUzOcvGcq7R7516t0VpKcgY2hWqxL2CuclU98ConguMmKniTawIXLbw3PXvOwA
+	 /6pf3CEJSrX4djGGyUZRMFmUCKQtar9Z90Wll5hTW/YZhSF+m/WvHS/xGtdceERMu/
+	 /SthzmTZrrOAQ==
+Message-ID: <7f46e0fa59ec81795583e4ca2344f05b0f26fe99.camel@kernel.org>
+Subject: Re: [PATCH v4 0/9] Fix XDR encoding near page boundaries
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Rick Macklem <rick.macklem@gmail.com>, 
 	j.david.lists@gmail.com, Chuck Lever <chuck.lever@oracle.com>
-Date: Thu, 02 Jan 2025 08:21:25 -0500
-In-Reply-To: <20241231002901.12725-10-cel@kernel.org>
+Date: Thu, 02 Jan 2025 08:23:10 -0500
+In-Reply-To: <20241231002901.12725-1-cel@kernel.org>
 References: <20241231002901.12725-1-cel@kernel.org>
-	 <20241231002901.12725-10-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,53 +136,38 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-12-30 at 19:29 -0500, cel@kernel.org wrote:
+On Mon, 2024-12-30 at 19:28 -0500, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> A subtlety of this API is that if the @nbytes region traverses a
-> page boundary, the next __xdr_commit_encode will shift the data item
-> in the XDR encode buffer. This makes the returned pointer point to
-> something else, leading to unexpected behavior.
+> Refresh the patch series to address the longstanding bug pointed out
+> by J David and Rick Macklem.
 >=20
-> There are a few cases where the caller saves the returned pointer
-> and then later uses it to insert a computed value into an earlier
-> part of the stream. This can be safe only if either:
+> Changes since v2:
+> - Address same issue in NFSv4 READLINK and SECINFO operations
+> - Update kdoc comment for xdr_reserve_space()
 >=20
->  - the data item is guaranteed to be in the XDR buffer's head, and
->    thus is not ever going to be near a page boundary, or
->  - the data item is no larger than 4 octets, since XDR alignment
->    rules require all data items to start on 4-octet boundaries
+> Chuck Lever (9):
+>   NFSD: Encode COMPOUND operation status on page boundaries
+>   NFSD: Insulate nfsd4_encode_read() from page boundaries in the encode
+>     buffer
+>   NFSD: Insulate nfsd4_encode_read_plus() from page boundaries in the
+>     encode buffer
+>   NFSD: Insulate nfsd4_encode_read_plus_data() from page boundaries in
+>     the encode buffer
+>   NFSD: Insulate nfsd4_encode_fattr4() from page boundaries in the
+>     encode buffer
+>   NFSD: Insulate nfsd4_encode_readlink() from page boundaries in the
+>     encode buffer
+>   NFSD: Refactor nfsd4_do_encode_secinfo() again
+>   NFSD: Insulate nfsd4_encode_secinfo() from page boundaries in the
+>     encode buffer
+>   SUNRPC: Document validity guarantees of the pointer returned by
+>     reserve_space
 >=20
-> But that safety is only an artifact of the current implementation.
-> It would be less brittle if these "safe" uses were eventually
-> replaced.
+>  fs/nfsd/nfs4xdr.c | 214 +++++++++++++++++++++++++---------------------
+>  net/sunrpc/xdr.c  |   6 ++
+>  2 files changed, 122 insertions(+), 98 deletions(-)
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/xdr.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 62e07c330a66..4e003cb516fe 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -1097,6 +1097,12 @@ static noinline __be32 *xdr_get_next_encode_buffer=
-(struct xdr_stream *xdr,
->   * Checks that we have enough buffer space to encode 'nbytes' more
->   * bytes of data. If so, update the total xdr_buf length, and
->   * adjust the length of the current kvec.
-> + *
-> + * The returned pointer is valid only until the next call to
-> + * xdr_reserve_space() or xdr_commit_encode() on @xdr. The current
-> + * implementation of this API guarantees that space reserved for a
-> + * four-byte data item remains valid until @xdr is destroyed, but
-> + * that might not always be true in the future.
->   */
->  __be32 * xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes)
->  {
-
-I agree with Neil that this API could do with less footguns, but this
-does seem to be an improvement.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
