@@ -1,131 +1,132 @@
-Return-Path: <linux-nfs+bounces-8884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14FC4A00111
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 23:07:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EFC6A0013D
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 23:41:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41FF41883E0E
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 22:07:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D36EC160FE8
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 22:41:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96D0B1487E1;
-	Thu,  2 Jan 2025 22:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D5E19CC0A;
+	Thu,  2 Jan 2025 22:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Asy1Xw4W"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19F11AD3F6
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 22:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9B1957FF
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 22:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735855659; cv=none; b=FUTbAC02PXbyGWXU8t7HnJx1U0HcTwcSanvO0aEh2eAYx/zwSw9GqrkYQ1d/WkY65n8hTvTMh9OxaNgwTOaKVQ0hgPANnlvzfpAx6X8ZuiOg0HVeuu+uHFsik/idwpzRz9R+/85qAKkYNgkYCIqnEfoniR26S0kIKMFVW9Zl0cg=
+	t=1735857676; cv=none; b=IoT6ofauo2SXtLK5AD6Y8hrIMajHAPV2MrAWlEOBvPpqbnWWLZulAOAHGZMCsl83CbBySHURSpdIghkM++558N6fSSjDZnWvvlQyb1+TB9XuPuvpTxvUgmUWRkYLWwkI96gz6x9Oa24C9H8RuQFhCMeXk4JoNO0THkqOvBd35V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735855659; c=relaxed/simple;
-	bh=wremUwwmZrgL8ALF121knvSAKKnvmS2hAfptP1wB5tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=p8oQA4mwbV+/FHLQOe8Gzh4+jpv+nanDKfP2ZpCPS5P00WSyE0NCtVb69oj5uyWsKqQsG1boHG9ri2lzeYk7Viw70W+5TH7xxiX8pEbs9nmWb3YwBxTyrlet8ag1/mLzoqFm3NJaYjjOigS9/BAFLiGkcUoVdl3lz+iXYrkyEbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d3f65844deso19395825a12.0
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Jan 2025 14:07:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735855656; x=1736460456;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wremUwwmZrgL8ALF121knvSAKKnvmS2hAfptP1wB5tw=;
-        b=c/WvcBDsca4U8Kug2Zs+UTEgs6YCYcDOyjV3E+y5NeQkQl5cqbO+0o5qK9/tGcUWxt
-         3g1MGLTw2DYB0aTNgILFKD1faucDojSFLMvL0OkpTWks5ZLdYXSigemxWmsBVzdd0A7X
-         u3HEvpsSV9nGQpNOr1BSMNoCjCaonWyvjJLAKQMi44T/p4LOsqHOkQYdTwhXoXZ3VyTI
-         Jnrm0mS+EZnKNA3eyNdb7oQJmI7Fw+s/5dNRxJGgGeQRwuadUPR70qQGvTxlDemNbvPS
-         hsZYZxpp8d4mRinrGNraywhqusGF2HjXkQkWNGnrioWYkvLuklRsM5TWSaN052PB1sJX
-         V7kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsdNLua9u75f/219AbOu7kvniE2iiTSajj9RV4DxxkOe6T3oE2oNZQejnDYNBFSDbI37f6/jKvNJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCaOEg+0IbK5C1foGz2UmY8si5BA0khEHUeH60n1KvzOakEqg1
-	0dqoPH61HHc3psMBZ2w3aaOV5XpOhzNIgg7u0s8M6OcsXWXUHCfoakNFxA==
-X-Gm-Gg: ASbGnctRZv+C7DcsEQ6sds9B4MiyN0OqrIdtC5mD0b/eBtmcsSzjjcDDhLlGi2ZoXOo
-	bz03R6JRsfVWoEXj5pWyXIRg3/FEDHLDJ/rWkG2OPu6aiwWpFXrUj1n5JIe68Cntz3K6K35Ogjd
-	cbq9bvyC7BkzPlPlZ1s4HfxbpvTc4aMBtOaavcuRjHSwV1LMnQI96I2TWygjcllpOp3SEqN89cI
-	1+7yzbl/Zbaq84VZU8MpRsL4eeJyAykYHBnLJ/CpjpGR7V130GTr/v8j04T9b+f+iDG5AqlP8R3
-	VZ+Zh/KMfX82OAC9aIrl23A=
-X-Google-Smtp-Source: AGHT+IHQZiGpEZ7NvyZaI5CDiXMXOTWS+SE4FNVgJnHR2U6E4vT3kDfHIx6QkTAnAvBJ/tFbuoE47g==
-X-Received: by 2002:a05:6402:3224:b0:5d4:34a5:e2f4 with SMTP id 4fb4d7f45d1cf-5d81de38bdfmr43347416a12.31.1735855655616;
-        Thu, 02 Jan 2025 14:07:35 -0800 (PST)
-Received: from [10.100.102.74] (CBL217-132-142-53.bb.netvision.net.il. [217.132.142.53])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80701abdcsm18677801a12.74.2025.01.02.14.07.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2025 14:07:35 -0800 (PST)
-Message-ID: <3ee21c03-83a5-4ad8-a54f-5c076125e924@grimberg.me>
-Date: Fri, 3 Jan 2025 00:07:31 +0200
+	s=arc-20240116; t=1735857676; c=relaxed/simple;
+	bh=Fuzi2OciZrSNsNSQ08UYUJdh93KN5h4C4nLvFXcXx18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AoFQivVAFAQV9MNFGJ3KnXNN3TUSBfQoZo1BNR28cAXtrF2LeXwKKUZSlQ0HyJT7B/VFOOKVCLx5ZwHhRd7lj9Qk252aKorG7ng7Y61I8csNoDC22EmsldXSZZ9I7DuKA/aeBvwdCyP5SkYHK4/cKWCKGFNdRI9ofNMMOMc8rZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Asy1Xw4W; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1735857673;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0pTRbGywa5WzHoiyB0mz8z/JEsavG6nP8Dp0JqkYJdU=;
+	b=Asy1Xw4WY2f3tFrIt20pMIRnzBq3nyxvW8I2fdT5knQ5HwD3A+vjnGAvmzUVaEAqJonuup
+	o48Zci2Nk6mg61Jn1QP9x7zOgIbWJnrnZ+o8kPI69/w5DQ9YeIaal/ZgWv/GQKP6G4n4UZ
+	aoN9/4aqkxJr4lcx66wT/Wqy12bxCNw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-2xUnushSMDuN72em0w16jg-1; Thu,
+ 02 Jan 2025 17:41:12 -0500
+X-MC-Unique: 2xUnushSMDuN72em0w16jg-1
+X-Mimecast-MFC-AGG-ID: 2xUnushSMDuN72em0w16jg
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 571AF19560A2
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 22:41:11 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.80.211])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0547B1956052;
+	Thu,  2 Jan 2025 22:41:11 +0000 (UTC)
+Received: from aion.redhat.com (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id 842D52E9164;
+	Thu, 02 Jan 2025 17:41:09 -0500 (EST)
+From: Scott Mayhew <smayhew@redhat.com>
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [nfs-utils PATCH] conffile: add 'arg' argument to conf_remove_now()
+Date: Thu,  2 Jan 2025 17:41:09 -0500
+Message-ID: <20250102224109.634190-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Write delegation stateid permission checks
-To: Jeff Layton <jlayton@kernel.org>, Shaul Tamari
- <shaul.tamari@vastdata.com>, linux-nfs@vger.kernel.org
-References: <CAFEWm5DTvUucAps=SamE5OVs0uYX5n4trFf5PBasBOFbEFWAfA@mail.gmail.com>
- <e52500f98a7153822a6165d26dcf66c3d352129b.camel@kernel.org>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <e52500f98a7153822a6165d26dcf66c3d352129b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
+Commit 9350a97a added an optional 'arg' to section names, but the logic
+to remove configurations wasn't updated to check the 'arg' argument.
+This wasn't really a problem until commit 15e17993 updated
+conf_parse_line() to call conf_set() with override=1, the end result
+being that we'll only remember the last value seen for any given
+section/tag combination.
 
+Fixes: 9350a97a ("Added an conditional argument to the Section names")
+Fixes: 15e17993 ("conffile: process config.d directory config files.")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ support/nfs/conffile.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+index 1e9c22b5..137fac8d 100644
+--- a/support/nfs/conffile.c
++++ b/support/nfs/conffile.c
+@@ -169,13 +169,15 @@ static void free_conftrans(struct conf_trans *ct)
+  * Insert a tag-value combination from LINE (the equal sign is at POS)
+  */
+ static int
+-conf_remove_now(const char *section, const char *tag)
++conf_remove_now(const char *section, const char *arg, const char *tag)
+ {
+ 	struct conf_binding *cb, *next;
+ 
+ 	cb = LIST_FIRST(&conf_bindings[conf_hash (section)]);
+ 	for (; cb; cb = next) {
+ 		next = LIST_NEXT(cb, link);
++		if (arg && (cb->arg == NULL || strcasecmp(arg, cb->arg) != 0))
++			continue;
+ 		if (strcasecmp(cb->section, section) == 0
+ 				&& strcasecmp(cb->tag, tag) == 0) {
+ 			LIST_REMOVE(cb, link);
+@@ -217,7 +219,7 @@ conf_set_now(const char *section, const char *arg, const char *tag,
+ 	struct conf_binding *node = 0;
+ 
+ 	if (override)
+-		conf_remove_now(section, tag);
++		conf_remove_now(section, arg, tag);
+ 	else if (conf_get_section(section, arg, tag)) {
+ 		if (!is_default) {
+ 			xlog(LOG_INFO, "conf_set: duplicate tag [%s]:%s, ignoring...",
+@@ -1254,7 +1256,7 @@ conf_end(int transaction, int commit)
+ 						node->is_default);
+ 					break;
+ 				case CONF_REMOVE:
+-					conf_remove_now(node->section, node->tag);
++					conf_remove_now(node->section, node->arg, node->tag);
+ 					break;
+ 				case CONF_REMOVE_SECTION:
+ 					conf_remove_section_now(node->section);
+-- 
+2.45.2
 
-On 02/01/2025 15:41, Jeff Layton wrote:
-> On Thu, 2025-01-02 at 11:08 +0200, Shaul Tamari wrote:
->> Hi,
->>
->> I have a question regarding NFS4.1 write delegation stateid permission checks.
->>
->> Is there a difference in how a server should check permissions for a
->> write delegation stateid that was given when the file was opened with:
->> 1. OPEN4_SHARE_ACCESS_BOTH
->> 2. OPEN4_SHARE_ACCESS_WRITE
->>
-> (cc'ing Sagi since he was looking at this recently)
-
-And completely dropped the ball on this :\
-
->
-> A write delegation really should have been called a read-write
-> delegation, because the server has to allow the client to do reads as
-> well, if you hold one.
-
-Assuming the access check passes.
-
->
-> The Linux kernel nfs server doesn't currently give out delegations to
-> OPEN4_SHARE_ACCESS_WRITE-only opens for this reason. You have to
-> request BOTH in order to get one, because a permission check for write
-> is not sufficient to allow you to read as well.
->
->
->> Should the server check permissions for read access as well when
->> OPEN4_SHARE_ACCESS_WRITE is requested and DELEGATION_WRITE is granted
->> ?
->>
-> Possibly? When trying to grant a write delegation, the server should
-> probably also do an opportunistic permission check for read as well,
-> and only grant the delegation if that passes. If it fails, you could
-> still allow the open and just not grant the delegation.
-
-Yes, that is what Chuck suggested at the time.
-
->
-> ISTR that Sagi may have tried this approach though and there was a
-> problem with it?
-
-Not a problem per se, IIRC the thread left off that we need to sort out
-access reference accounting for nfsd_file for both reads and writes for
-a single write deleg...
 
