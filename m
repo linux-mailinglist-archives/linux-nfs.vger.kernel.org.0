@@ -1,57 +1,55 @@
-Return-Path: <linux-nfs+bounces-8869-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8870-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5B869FF9CB
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 14:23:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 341619FF9E5
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 14:41:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8F333A373C
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 13:23:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34A401883075
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Jan 2025 13:41:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F026979E1;
-	Thu,  2 Jan 2025 13:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E35E419E968;
+	Thu,  2 Jan 2025 13:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vb8o2Cs1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/be7yeR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2C479D2
-	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 13:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB1086FB0
+	for <linux-nfs@vger.kernel.org>; Thu,  2 Jan 2025 13:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735824192; cv=none; b=Xx1PPQvqJdMS0z7tO6gRwbPvEVpNaoAGmebAcPs1xtUh8hi+Nv9FuXnRwUDqupBC92n86WTT0bpkUy8d5S9pXMSqngOQOnycuGzVAZFPBKKNn2O49YpemrBbSSHjUjZqnTkbKtO/Qj2ncweNh7DJYHrj3fRtSC51yYB/3H3F3w4=
+	t=1735825299; cv=none; b=ffLR5XNG2dxJxI8cle1uSuK3VDM2YwHmEqs/37LduFa3RmUrgzl+L9t2up8t2ud1+GD5+xN94vzISneMjOLxMt7V5fSFvKFDLohuK2M0+dk+SYzQObCbex99JhYjOiNYa4TEQbOEjQBSlOPvZ/qXJGfKiyB5HZMMCMa/tXm3ZAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735824192; c=relaxed/simple;
-	bh=x4mVg4swz2ILw6H63SMFuQUJN0h5RkxU/n/ccC7tJHA=;
+	s=arc-20240116; t=1735825299; c=relaxed/simple;
+	bh=AClJ4mMjTBKeEZY025TOTPyPfQTdg1vkg3CasmO1Kss=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VzNvpVhAfUptMbPBKSjdxCbYjFNE8YUJ+hWpfZtaMS7gYmctgbS45ww+Zhu/cMcIejADUzgLGosJv8VVKCQgWLgNa4oPA9ZXMFh7u8dmweoHF2jhvgha1KwRPoZVKpmxbdsYsK+eMtApgsAXdpp6674IxHwv9K633wZUAPjb2ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vb8o2Cs1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C719C4CED0;
-	Thu,  2 Jan 2025 13:23:11 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IgW7ZaM8u0h44EGNKgskX8lmgpbpuFkzmjL72KrBG1sJX2y7VV1uhbMLxSso+r1BrViDDQ6Z3DLctWllg5AjZjZ/Z5fRMLJHyZXUmp6JlwuIzw41W6oSUy4E8PmhI5zk/KJM5dg0lGmc/LgydNURZkamdWA2xY5Rsf7ICa6FUp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/be7yeR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30D2C4CED0;
+	Thu,  2 Jan 2025 13:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735824192;
-	bh=x4mVg4swz2ILw6H63SMFuQUJN0h5RkxU/n/ccC7tJHA=;
+	s=k20201202; t=1735825299;
+	bh=AClJ4mMjTBKeEZY025TOTPyPfQTdg1vkg3CasmO1Kss=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Vb8o2Cs1EW/ikRdN1/E1INZGBqVolO30TNvR6nph/USUdiPagfdpmZbJVEUNBYma/
-	 j9ztJsjZGluC84i3mB4xavyqXwJa+peCqT6rh3uFLcTcePEVzKhFcBY16NBH1Ev2We
-	 MlCwu+SjyAmfwWhqlwkeusg0ZMaKwsmWb9JEu5cmC/zZ6Y73Tu2G82kegUJi1LKlny
-	 W91GzUzOcvGcq7R7516t0VpKcgY2hWqxL2CuclU98ConguMmKniTawIXLbw3PXvOwA
-	 /6pf3CEJSrX4djGGyUZRMFmUCKQtar9Z90Wll5hTW/YZhSF+m/WvHS/xGtdceERMu/
-	 /SthzmTZrrOAQ==
-Message-ID: <7f46e0fa59ec81795583e4ca2344f05b0f26fe99.camel@kernel.org>
-Subject: Re: [PATCH v4 0/9] Fix XDR encoding near page boundaries
+	b=t/be7yeRuRtFDd5UzTJzGDR4OwgjFcYygOtOmCZNW4+nyoBNco4u0ixk8LbSf/8hD
+	 lJNWijGQpM2vLPWoXqJSG9mGM6bERnm+lxrto5IwOegYqOpFxJoYkkNOp7Ud68y+m2
+	 Ae1CH81mYvYsOnF8AROy16GCBIVlcAeapJ4osncvNbsTsMGmbPT5fC5cI4WGYOGSgz
+	 7H3CUo8ArTNJD/o+TAM321cc+Q6XGk91uAOwZ94TtSgDrjg9rl+J3fH9sOMrcpYeMG
+	 jk9Kf2PoUmsytftU1XKJEADZA6k8uhg5segwGq6awR/36LXFmTLEtERbp97dWqOZ96
+	 nDZ4JXWKqCD+Q==
+Message-ID: <e52500f98a7153822a6165d26dcf66c3d352129b.camel@kernel.org>
+Subject: Re: Write delegation stateid permission checks
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Rick Macklem <rick.macklem@gmail.com>, 
-	j.david.lists@gmail.com, Chuck Lever <chuck.lever@oracle.com>
-Date: Thu, 02 Jan 2025 08:23:10 -0500
-In-Reply-To: <20241231002901.12725-1-cel@kernel.org>
-References: <20241231002901.12725-1-cel@kernel.org>
+To: Shaul Tamari <shaul.tamari@vastdata.com>, linux-nfs@vger.kernel.org
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Date: Thu, 02 Jan 2025 08:41:37 -0500
+In-Reply-To: <CAFEWm5DTvUucAps=SamE5OVs0uYX5n4trFf5PBasBOFbEFWAfA@mail.gmail.com>
+References: 
+	<CAFEWm5DTvUucAps=SamE5OVs0uYX5n4trFf5PBasBOFbEFWAfA@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,38 +134,50 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-12-30 at 19:28 -0500, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 2025-01-02 at 11:08 +0200, Shaul Tamari wrote:
+> Hi,
 >=20
-> Refresh the patch series to address the longstanding bug pointed out
-> by J David and Rick Macklem.
+> I have a question regarding NFS4.1 write delegation stateid permission ch=
+ecks.
 >=20
-> Changes since v2:
-> - Address same issue in NFSv4 READLINK and SECINFO operations
-> - Update kdoc comment for xdr_reserve_space()
->=20
-> Chuck Lever (9):
->   NFSD: Encode COMPOUND operation status on page boundaries
->   NFSD: Insulate nfsd4_encode_read() from page boundaries in the encode
->     buffer
->   NFSD: Insulate nfsd4_encode_read_plus() from page boundaries in the
->     encode buffer
->   NFSD: Insulate nfsd4_encode_read_plus_data() from page boundaries in
->     the encode buffer
->   NFSD: Insulate nfsd4_encode_fattr4() from page boundaries in the
->     encode buffer
->   NFSD: Insulate nfsd4_encode_readlink() from page boundaries in the
->     encode buffer
->   NFSD: Refactor nfsd4_do_encode_secinfo() again
->   NFSD: Insulate nfsd4_encode_secinfo() from page boundaries in the
->     encode buffer
->   SUNRPC: Document validity guarantees of the pointer returned by
->     reserve_space
->=20
->  fs/nfsd/nfs4xdr.c | 214 +++++++++++++++++++++++++---------------------
->  net/sunrpc/xdr.c  |   6 ++
->  2 files changed, 122 insertions(+), 98 deletions(-)
+> Is there a difference in how a server should check permissions for a
+> write delegation stateid that was given when the file was opened with:
+> 1. OPEN4_SHARE_ACCESS_BOTH
+> 2. OPEN4_SHARE_ACCESS_WRITE
 >=20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+(cc'ing Sagi since he was looking at this recently)
+
+A write delegation really should have been called a read-write
+delegation, because the server has to allow the client to do reads as
+well, if you hold one.
+
+The Linux kernel nfs server doesn't currently give out delegations to
+OPEN4_SHARE_ACCESS_WRITE-only opens for this reason. You have to
+request BOTH in order to get one, because a permission check for write
+is not sufficient to allow you to read as well.
+
+
+> Should the server check permissions for read access as well when
+> OPEN4_SHARE_ACCESS_WRITE is requested and DELEGATION_WRITE is granted
+> ?
+>=20
+
+Possibly? When trying to grant a write delegation, the server should
+probably also do an opportunistic permission check for read as well,
+and only grant the delegation if that passes. If it fails, you could
+still allow the open and just not grant the delegation.
+
+ISTR that Sagi may have tried this approach though and there was a
+problem with it?
+
+> or there is an assumption that the client will query the server for
+> read access permissions ?
+>=20
+
+The client should always do an ACCESS call to test permissions unless
+the user's access matches the ACE that gets sent along with the
+delegation.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
