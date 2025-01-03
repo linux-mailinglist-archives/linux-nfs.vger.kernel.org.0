@@ -1,58 +1,59 @@
-Return-Path: <linux-nfs+bounces-8893-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8894-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42CEEA00A4F
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2025 15:12:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A63EA00A70
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2025 15:22:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 625ED1882414
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2025 14:12:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1C447A1D2B
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Jan 2025 14:21:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1E1F1FA249;
-	Fri,  3 Jan 2025 14:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D64F1F943A;
+	Fri,  3 Jan 2025 14:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwEZ2iSH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdBlfWQZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3C51F9F79
-	for <linux-nfs@vger.kernel.org>; Fri,  3 Jan 2025 14:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C431D131E
+	for <linux-nfs@vger.kernel.org>; Fri,  3 Jan 2025 14:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735913521; cv=none; b=djhnT0nzBb6fo6fE9xtOgOqqO4uwB79bmGWgZhZ6RkvAac3hjOUf0KdSMOoKQKm9i7/656oQc4B8k4Azboai75+xuD77Cm+AQOU2u/jt/Vxy+Rcxek3fllg5QBBqPsd9B6wFjha94KYGDTosVA6c5rUG4TNizck1bsCPGBnYX9w=
+	t=1735914122; cv=none; b=bdJFEVCN+pbuvkIRoOUIlBu7RyBzVDgcpzKZSKZR0WZO0jenWXh0BJlpT7N4lzvVWw64vATI5WravnjgXD6afLdL+BY2aEU1nNQ8bMLq1VoIk1eUqYSyupGy/nmYcJ9dI3trJii3GBuNFGj9+ZovvD0b7QuZ4rP/UNEn0VNuNVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735913521; c=relaxed/simple;
-	bh=z/GRJA+3k2MB7wv0wP8ipVVKvCN+Zzx3jxsD8t2kRLo=;
+	s=arc-20240116; t=1735914122; c=relaxed/simple;
+	bh=LY+IhWJPJ4Zz3ZPBFUpNEDNm2B83svFSr0we4CpS590=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FjaLGKfE3uqf/hUufGOT5y7SfjV/Dz1NmBeEhzh/o/q0OZNh8YbPhg817KhsbaRgPjmk0J7FEdWukfF+bb+9LLPrRRy8WjdnmL11wwAhha6OXskfx9wmtdN5uzeKBli6Z8z+CJWSWkdSZ7gvMJHEyyDa3UF1epiC8Jl1FK8innU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwEZ2iSH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D6BC4CECE;
-	Fri,  3 Jan 2025 14:12:00 +0000 (UTC)
+	 Content-Type:MIME-Version; b=XgzoiJUGClNbYfLaiV0m1os8mmrwxSJMaDLj3GG1hqn2xjE5JvjmHF3RfQfjBlsHuFhYUOWmhre1lvyG0yTvVXrulh9dT9s3JCEdoD2MeuarzkJMZ1htaI03BAMTbxWLv4xvdvIsRA263oo0kNdMpy75oOEnRpvct10tveuVpNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdBlfWQZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038C4C4CECE;
+	Fri,  3 Jan 2025 14:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735913521;
-	bh=z/GRJA+3k2MB7wv0wP8ipVVKvCN+Zzx3jxsD8t2kRLo=;
+	s=k20201202; t=1735914121;
+	bh=LY+IhWJPJ4Zz3ZPBFUpNEDNm2B83svFSr0we4CpS590=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fwEZ2iSHELdNZ+fboTvms0uAnoQe1UEVc1/+Ip5FYOzmQnegn/S5B7+kiIsUg91Ph
-	 4DXxsJSkAHb40pBhVNOQMib1NtpXpvB9+FTGF9GGB9/qeUMg2qjBKXuWBEtU7X+u+V
-	 BnH3SJBn3yYaukKD/F19VmO9fMrEV3FxRxtPlnxTpnlRX/7asu5BhzBy38VpIQHkQH
-	 l/JxuzAwpIsf+l6x/QlURKln6HIco2rZp0RMFKTV8NCiZtTZRppni2zWvb/aKkpIo3
-	 D76aR+zHTAG5G4BYTKWPk4//aIJEGODR+1yeYo3tYgg9Jn4a3bSZtSHUzOxlEexANF
-	 jwStmgP7JDbgA==
-Message-ID: <3d467e813614d8314d4defe94b3409635974b06c.camel@kernel.org>
-Subject: Re: [PATCH v1 1/2] Revert "SUNRPC: Reduce thread wake-up rate when
- receiving large RPC messages"
+	b=TdBlfWQZaYLvlcOkJjw790FJYEozVQYbDrEsFd3SW68wPBukIQ4BpP4rvSrEp8RbT
+	 TzQ1wJhkLnsApDyRsAZGBDPckWpn6SwtKsjG6ZZQtGZOM7yFL4HOMwjHR0sWWDBUHA
+	 g9Wqe/hCbwqW7qZBk9b7Snck+UqjNpQi5nQPpyFSpTrHUswArtLxQRHFUsDquq6HYi
+	 YRKsmofXMoK6hi61lt95+hFXrNTGaP8yT0q2+U8uKj4cHzTAggZAC9Sb25eQGDAwuj
+	 n5l556F7jUp4iobRwb0Zrn8Ae7+J7hXe557RyvElGNcCOE4/yvLHO70F29kCsbDEgL
+	 KQH49HanLzgew==
+Message-ID: <9625cc88696859c489a2e8eb6dcd48ce1434e4e4.camel@kernel.org>
+Subject: Re: [PATCH v1 2/2] NFSD: Change the filecache laundrette workqueue
+ again
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Jakub
- Kicinski <kuba@kernel.org>
-Date: Fri, 03 Jan 2025 09:11:59 -0500
-In-Reply-To: <20250103010002.619062-1-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Tejun
+ Heo	 <tj@kernel.org>
+Date: Fri, 03 Jan 2025 09:21:59 -0500
+In-Reply-To: <20250103010002.619062-2-cel@kernel.org>
 References: <20250103010002.619062-1-cel@kernel.org>
+	 <20250103010002.619062-2-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,73 +141,39 @@ MIME-Version: 1.0
 On Thu, 2025-01-02 at 20:00 -0500, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> I noticed that a handful of NFSv3 fstests were taking an
-> unexpectedly long time to run. Troubleshooting showed that the
-> server's TCP window closed and never re-opened, which caused the
-> client to trigger an RPC retransmit timeout after 180 seconds.
+> Youzhong Yang <youzhong@gmail.com> noticed the workqueue subsystem
+> complaining about how long the filecache laundrette was running.
+> This resulted in switching from using the system_wq for the
+> laundrette to system_unbound_wq (see commit 4b84551a35e3 ("nfsd: use
+> system_unbound_wq for nfsd_file_gc_worker()").
 >=20
-> The client's recovery action was to establish a fresh connection
-> and retransmit the timed-out requests. This worked, but it adds a
-> long delay.
+> However, I've seen the laundrette running for multiple milliseconds
+> on some workloads, delaying other work. For the purpose of
+> scheduling fairness, perhaps a better choice would be to process
+> filecache disposal queues on the system_long_wq instead.
 >=20
-> I tracked the problem to the commit that attempted to reduce the
-> rate at which the network layer delivers TCP socket data_ready
-> callbacks. Under most circumstances this change worked as expected,
-> but for NFSv3, which has no session or other type of throttling, it
-> can overwhelm the receiver on occasion.
->=20
-> I'm sure I could tweak the lowat settings, but the small benefit
-> doesn't seem worth the bother. Just revert it.
->=20
-> Fixes: 2b877fc53e97 ("SUNRPC: Reduce thread wake-up rate when receiving l=
-arge RPC messages")
-> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/svcsock.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
+>  fs/nfsd/filecache.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 95397677673b..cb3bd12f5818 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -1083,9 +1083,6 @@ static void svc_tcp_fragment_received(struct svc_so=
-ck *svsk)
->  	/* If we have more data, signal svc_xprt_enqueue() to try again */
->  	svsk->sk_tcplen =3D 0;
->  	svsk->sk_marker =3D xdr_zero;
-> -
-> -	smp_wmb();
-> -	tcp_set_rcvlowat(svsk->sk_sk, 1);
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index a1cdba42c4fa..91a535c2dede 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -112,7 +112,7 @@ static void
+>  nfsd_file_schedule_laundrette(void)
+>  {
+>  	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
+> -		queue_delayed_work(system_unbound_wq, &nfsd_filecache_laundrette,
+> +		queue_delayed_work(system_long_wq, &nfsd_filecache_laundrette,
+>  				   NFSD_LAUNDRETTE_DELAY);
 >  }
 > =20
->  /**
-> @@ -1175,17 +1172,10 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqst=
-p)
->  		goto err_delete;
->  	if (len =3D=3D want)
->  		svc_tcp_fragment_received(svsk);
-> -	else {
-> -		/* Avoid more ->sk_data_ready() calls until the rest
-> -		 * of the message has arrived. This reduces service
-> -		 * thread wake-ups on large incoming messages. */
-> -		tcp_set_rcvlowat(svsk->sk_sk,
-> -				 svc_sock_reclen(svsk) - svsk->sk_tcplen);
 
-Could we instead clamp this to the window size so that we at least only
-do a wakeup for each window-size chunk?
-
-> -
-> +	else
->  		trace_svcsock_tcp_recv_short(&svsk->sk_xprt,
->  				svc_sock_reclen(svsk),
->  				svsk->sk_tcplen - sizeof(rpc_fraghdr));
-> -	}
->  	goto err_noclose;
->  error:
->  	if (len !=3D -EAGAIN)
-
-Reverting for now is fine though.
+TIL that there is system_long_wq! Seems like a reasonable thing to do
+since this is generally low-priority work.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
