@@ -1,85 +1,94 @@
-Return-Path: <linux-nfs+bounces-8921-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8922-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6907DA01CC1
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 00:40:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4D15A01CC2
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 00:41:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E167D3A33C5
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Jan 2025 23:40:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3728818830E1
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Jan 2025 23:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 664CE1487DD;
-	Sun,  5 Jan 2025 23:40:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB5101487DD;
+	Sun,  5 Jan 2025 23:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sxsuTR2D";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WBh62DTE";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sxsuTR2D";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WBh62DTE"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MAXorwJQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N4PCYTcA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MAXorwJQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N4PCYTcA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981941465BA
-	for <linux-nfs@vger.kernel.org>; Sun,  5 Jan 2025 23:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8861465BA
+	for <linux-nfs@vger.kernel.org>; Sun,  5 Jan 2025 23:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736120449; cv=none; b=QKZLV/LKYxpQ7NjrCbaXy2Jr2WVryTIHxGYVvUJD+zLVjO4oFbkb3mn2XdDRS5F16cHSguIwM88D1rGlnB5WVNWHBn1+8VAHGa4R3iiv97YyUwb+jPLt6W4EtZyIbHGT3zLi11bErpLcx2fzOerTGas3RZiGGB5NEhTYQR0pIMc=
+	t=1736120458; cv=none; b=Zjw9w/AEuCU3fzf+8zTwFjM/VA2aW3E8Qh4TnxzwYP6If3yXWsmMLJSB43oXJGRWbTXE6B85U41AvXE7n+R6SPXlp/inGdUcNzci7wRhCcqZ1rDvRXBZBOOsqwG3uFAkZv755gGYx+k6SD+c45VG6owNg/hxKaqy7hq9Q4SKIrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736120449; c=relaxed/simple;
-	bh=CTIg/HS7HJSxxH2TTDwYHPtW2Hn23tOS44QnEkG+Hx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PmC+LFYbzQd6pn1MmHOIzO7ARuJ3p4JtHLTCZKZltIENvNZr4dOaaZodVRdNdIoIfZ/J/yRVRaykGbnedVRRvAOW+hRQzBr5fdVk8kQ9rD9sOfiH/+GaKfJ6sbKc4/rvtOKxAeYdKBsDWQuytUg3WjLkIJ7PvkQR4L+Bfa8q9Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sxsuTR2D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WBh62DTE; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sxsuTR2D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WBh62DTE; arc=none smtp.client-ip=195.135.223.131
+	s=arc-20240116; t=1736120458; c=relaxed/simple;
+	bh=ZlnDCx8OJ/EzvbBHJ6CHCfwElIjgvnvanfWxJ3uUov0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VPJks1ivlxLF2jiextKTGP408OL2vXQZ+R1cMepkxy0gFWOL2TJls9Ru5o9odxmN//d9SyWXCxZGzzG1wJimWJPq4rsQ78aXgW3dutXbSeB+KUbEsvMGq/XkXQkXL8ARJnxL4trPUonO2/Q8gE+84DentsKM48BW2ualkI5C+IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MAXorwJQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N4PCYTcA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MAXorwJQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N4PCYTcA; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AF6301F365;
-	Sun,  5 Jan 2025 23:40:45 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 42AFB21161;
+	Sun,  5 Jan 2025 23:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736120445; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EMrv+AvuDIcCquQaOEytmLmCkeQ926HlwG2YnzZE+Yk=;
-	b=sxsuTR2DtLXXh0Fs2M8rABx88iejM+8EH7ZabuBOokIdL4TJioz62TNt+22RXP0PfSEBQ1
-	2sYwZ+RcO4BbMYgWKczueDNDZuQRxyQGMYFEc2juROKR0GimYG5Le6kVMDWVw2yQ4SFhif
-	zGCkZkUjdr4+Tg/vzDHR7jsdqsv3iOI=
+	t=1736120455; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ms6/8P4lBG/rGF0e5Te+eN1nbzET+yc+8PrBvEx16Yc=;
+	b=MAXorwJQDrsxQGwXh3vQaNCByhmrvjk8dnXB/PRUwAEY4z+L0vc2x1SpTLAVKfJYJEWeU9
+	LdiUjNU2/MLUUYDApfkIq2PvG9C1tyqLSYJmsXtP7BfYdSL8TbEOQstuLiyQgSU0Jx9XJe
+	uaDVi0Lt/wUrdOLAM5S72yENMrJu6qM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736120445;
+	s=susede2_ed25519; t=1736120455;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EMrv+AvuDIcCquQaOEytmLmCkeQ926HlwG2YnzZE+Yk=;
-	b=WBh62DTEs7Wd5+Y2OImDGTydkxzYqXmYq85Wn/FRNl4PXA5fJY+IiljqoFc3LfsNy+ghWk
-	XJ83GQIbU/V7eNDQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=sxsuTR2D;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WBh62DTE
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ms6/8P4lBG/rGF0e5Te+eN1nbzET+yc+8PrBvEx16Yc=;
+	b=N4PCYTcAem+aMEl0ypcgxJsKyx7b/m2jZKH7UGzl5Gq0B3YEDV8c60WFRPBKZWs1Raj2OD
+	i7yboUohZ2V2FOAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=MAXorwJQ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=N4PCYTcA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736120445; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EMrv+AvuDIcCquQaOEytmLmCkeQ926HlwG2YnzZE+Yk=;
-	b=sxsuTR2DtLXXh0Fs2M8rABx88iejM+8EH7ZabuBOokIdL4TJioz62TNt+22RXP0PfSEBQ1
-	2sYwZ+RcO4BbMYgWKczueDNDZuQRxyQGMYFEc2juROKR0GimYG5Le6kVMDWVw2yQ4SFhif
-	zGCkZkUjdr4+Tg/vzDHR7jsdqsv3iOI=
+	t=1736120455; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ms6/8P4lBG/rGF0e5Te+eN1nbzET+yc+8PrBvEx16Yc=;
+	b=MAXorwJQDrsxQGwXh3vQaNCByhmrvjk8dnXB/PRUwAEY4z+L0vc2x1SpTLAVKfJYJEWeU9
+	LdiUjNU2/MLUUYDApfkIq2PvG9C1tyqLSYJmsXtP7BfYdSL8TbEOQstuLiyQgSU0Jx9XJe
+	uaDVi0Lt/wUrdOLAM5S72yENMrJu6qM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736120445;
+	s=susede2_ed25519; t=1736120455;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EMrv+AvuDIcCquQaOEytmLmCkeQ926HlwG2YnzZE+Yk=;
-	b=WBh62DTEs7Wd5+Y2OImDGTydkxzYqXmYq85Wn/FRNl4PXA5fJY+IiljqoFc3LfsNy+ghWk
-	XJ83GQIbU/V7eNDQ==
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ms6/8P4lBG/rGF0e5Te+eN1nbzET+yc+8PrBvEx16Yc=;
+	b=N4PCYTcAem+aMEl0ypcgxJsKyx7b/m2jZKH7UGzl5Gq0B3YEDV8c60WFRPBKZWs1Raj2OD
+	i7yboUohZ2V2FOAA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7DFAE137CF;
-	Sun,  5 Jan 2025 23:40:43 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 20E63137CF;
+	Sun,  5 Jan 2025 23:40:52 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HFiUDHsYe2eKaQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 05 Jan 2025 23:40:43 +0000
+	id tjO8MYQYe2eQaQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Sun, 05 Jan 2025 23:40:52 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -87,10 +96,12 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH intro] nfsd: add scheduling point in nfsd_file_gc()
-Date: Mon,  6 Jan 2025 10:11:58 +1100
-Message-ID: <20250105234022.2361576-1-neilb@suse.de>
+Subject: [PATCH] nfsd: add scheduling point in nfsd_file_gc()
+Date: Mon,  6 Jan 2025 10:11:59 +1100
+Message-ID: <20250105234022.2361576-2-neilb@suse.de>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250105234022.2361576-1-neilb@suse.de>
+References: <20250105234022.2361576-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -98,7 +109,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AF6301F365
+X-Rspamd-Queue-Id: 42AFB21161
 X-Spam-Score: -3.01
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-3.01 / 50.00];
@@ -110,7 +121,7 @@ X-Spamd-Result: default: False [-3.01 / 50.00];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email];
 	ARC_NA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -128,45 +139,50 @@ X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-This patch is intended to fix the problem:
-    However, I've seen the laundrette running for multiple milliseconds
-    on some workloads, delaying other work. 
+Under a high NFSv3 load with lots of different file being accessed The
+list_lru of garbage-collectable files can become quite long.
 
-reported by Chuck in 
-   [PATCH v1 2/2] NFSD: Change the filecache laundrette workqueue again
+Asking lisT_lru_scan() to scan the whole list can result in a long
+period during which a spinlock is held and no scheduling is possible.
+This is impolite.
 
-I believe this problem is mostly likely caused by a lack of scheduling
-points in nfsd_file_gc() so this patches adds them as needed.
+So only ask list_lru_scan() to scan 1024 entries at a time, and repeat
+if necessary - calling cond_resched() each time.
 
-On reflecting, I think that the approach here is wrong but that would
-need a bigger fix.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfsd/filecache.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-We generally expect a given file to be used repeatedly for a while, and
-then for accesses to stop when the client closes the file.  The
-nfsd_file_gc() call happens every two seconds with the aim of discarding
-all the files that haven't been used since two seconds ago.
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index a1cdba42c4fa..e99a86798e86 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -543,11 +543,18 @@ nfsd_file_gc(void)
+ {
+ 	LIST_HEAD(dispose);
+ 	unsigned long ret;
+-
+-	ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+-			    &dispose, list_lru_count(&nfsd_file_lru));
+-	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+-	nfsd_file_dispose_list_delayed(&dispose);
++	unsigned long cnt = list_lru_count(&nfsd_file_lru);
++
++	while (cnt > 0) {
++		unsigned long num_to_scan = min(cnt, 1024UL);
++		ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
++				    &dispose, num_to_scan);
++		trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
++		nfsd_file_dispose_list_delayed(&dispose);
++		cnt -= num_to_scan;
++		if (cnt)
++			cond_resched();
++	}
+ }
+ 
+ static void
+-- 
+2.47.1
 
-To do this, it scans all the files currently on the list - many of which
-are likely to have been used recently.  This seems like a waste of
-effort.
-
-I think it would be better to have two lists. A and B.
-When refcount reaches zero for a GC file, it is added to A.
-When the refcount is incremented we removed from wherever it is.
-Every 2 seconds we free everything on B and then splice A across to B.
-
-This completely avoids walking through all the still-active files,
-moving them to the end of the LRU.
-
-However this would make the shrinker a little more complex as we
-wouldn't be able to use list_lru.  So I'm not proposing that immediately
-but would like to know what others think first.
-
-Thanks,
-NeilBrown
-
-
-
-
- [PATCH] nfsd: add scheduling point in nfsd_file_gc()
 
