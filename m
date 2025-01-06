@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-8927-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8928-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25020A02435
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 12:22:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77C42A024AB
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 12:59:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8A8D3A1E50
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 11:22:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 042F63A521F
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 11:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4F81D8DFB;
-	Mon,  6 Jan 2025 11:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8E301DDA1E;
+	Mon,  6 Jan 2025 11:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqytaXf/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CP4xZKwv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F58812BF24;
-	Mon,  6 Jan 2025 11:22:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6911DB346;
+	Mon,  6 Jan 2025 11:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736162553; cv=none; b=GtnfbHIRAn+f4uqkiPC3m61aNbNHuOqfaEv1RpX6sO1ZITiRfyElo+iUqSBR1AEoPo2hFHPz47Nkbw+oQL8POCX7RFn6cNi8mlu3C0e2J2yjNi/NVxkB694UOEhYuFcecNpuHbebH4QLUJSARJ2YtfXOe1LGy3rPtJbm1Q6VlEA=
+	t=1736164771; cv=none; b=BLcvHxup7g6F+weDKRjd4KMYzSQGW9Pid+llZKNDDnVxQ16wUFDDaixm55nWT6VoSCuZdF5yvsG3kikMtHQuEio7G4b/WM53YVLCa1XlNiyx3tgDMkm9zSHoWumTXoX1x6QLTjSySkp6pME08pYtsCePJFHCR6dYDRuGZN85lNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736162553; c=relaxed/simple;
-	bh=YFa9n4kRGb7FoyqSu+bxpz+vwRWZ9zT3kNRGUT1JfBY=;
+	s=arc-20240116; t=1736164771; c=relaxed/simple;
+	bh=V3UI3pxRy5iNtJCoL0NaOG5gDruTQVT2IoIJ4kD3Q/0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aBT1yzBoM0Dj2fwW5hyl9H7hvNi/uS49Y+6s2TNuQLlKIoAvbAM0uA6+kgHC08P0YtcfAJNMplBhNTDhDjGPogrWvU1P5tr967BCfGCCeJF4klWeWmnDu6bhXV7fUNVR1/xsgqDU1nojfRQ9pbyMnjrWeNdZ0rx3fQreop96qQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqytaXf/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F0F7C4CED2;
-	Mon,  6 Jan 2025 11:22:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jliHaE3jD4lNnNSJu8AuD8MoRCFs1esfNZv3Mjkttnizm1uZ9IIx4rURCP9tjssbVhFYUotrv5T7gHtPT1X2GpX51FTVAKRqMWXc9uwDrR4Der/eIqfyE8QO+AQ/N8fWsTVP73/o7o2HhYVoO+16usoh1alXghAcrq3JZeaC5Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CP4xZKwv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F5AC4CED2;
+	Mon,  6 Jan 2025 11:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736162553;
-	bh=YFa9n4kRGb7FoyqSu+bxpz+vwRWZ9zT3kNRGUT1JfBY=;
+	s=k20201202; t=1736164770;
+	bh=V3UI3pxRy5iNtJCoL0NaOG5gDruTQVT2IoIJ4kD3Q/0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EqytaXf/7ROrApNQc7+jdeEXSnG0XyB08a51lNqhal39rNrVGwnNgN+u/Z8hIhmce
-	 d2yxLhvWHE7J1n1GOk/CTpKIHOHrGQLdUcpmORwyzHesjm2dJGzfoj2kRVelTG1MK/
-	 GuV+fcIovomL/5xMd9TeNwkdviLgqUTGyQRwSokQuZImy34o/4wgB9eZJOa5q3YoyQ
-	 zQRq6cyE9aOlPY+E1XL2LROe2WtvmgyA8HetkqILqy4ZfmOCIOrcqnvQmm0u9C11Tt
-	 dEuIwGkTD9dQfEuPHY4KvFZfnIdzF5adD5QpmOAO6aC5I81zMi2mq+qter+pNgSLS0
-	 p3RjUmiAeK7pQ==
-Date: Mon, 6 Jan 2025 12:22:27 +0100
+	b=CP4xZKwvSKPXpdL6WQezLv7buO14myH/Eg7GLBppcd4uhHRyU1mMf25JQAGreU7pC
+	 72P1c9I14dcTxUG8mOh/zkeKchsfITBN8xqL0vPnRDfglHsQB7VpmVelun4FEnHFhB
+	 ijta7qDDHZndv7aRnY70jpQowzNTI5Hq5maxG4HdN2dKPthAMSf/5Hc5C48ndnIxpz
+	 AhEFvkqePFmebeQC4XnT+gOiQNSyq376QkqleqbJCkM5c6nfU7xirOJpp75RJuhhp7
+	 VyXIpvQtJOL7b7gcy4zGToM+KklyqrjYBXljZzOuy9mbniKSrhYLP2PdBSjh0nbtZS
+	 Tcoyda4SzZedg==
+Date: Mon, 6 Jan 2025 12:59:25 +0100
 From: Joel Granados <joel.granados@kernel.org>
-To: yukaixiong <yukaixiong@huawei.com>
+To: Kaixiong Yu <yukaixiong@huawei.com>
 Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
 	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
 	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
@@ -62,12 +62,11 @@ Cc: akpm@linux-foundation.org, mcgrof@kernel.org,
 	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
 	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
 	wangkefeng.wang@huawei.com
-Subject: Re: Re: [PATCH v4 -next 00/15] sysctl: move sysctls from vm_table
- into its own files
-Message-ID: <3elcftj5bn5iqfdly4cgmzpz4kodqrdl6dnqyqvn5fxjgmoxw4@yactmy2fbdkm>
-References: <20241223141550.638616-1-yukaixiong@huawei.com>
- <42tsyuvdvym6i3j4ppsluvx7kejxjzbma5z4jjgccni6kuwtj7@rhuklbyko7yf>
- <ceb3be0a-f035-aaec-286f-8ba95e62deba@huawei.com>
+Subject: Re: [PATCH v4 -next 14/15] sh: vdso: move the sysctl to
+ arch/sh/kernel/vsyscall/vsyscall.c
+Message-ID: <eiskmyz22ckjfmsxztt7a6m7e4sktp226j4hjktuggyqb4jirc@2rqxvgoq4v55>
+References: <20241228145746.2783627-1-yukaixiong@huawei.com>
+ <20241228145746.2783627-15-yukaixiong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,47 +75,106 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ceb3be0a-f035-aaec-286f-8ba95e62deba@huawei.com>
+In-Reply-To: <20241228145746.2783627-15-yukaixiong@huawei.com>
 
-On Sat, Dec 28, 2024 at 09:40:50PM +0800, yukaixiong wrote:
+On Sat, Dec 28, 2024 at 10:57:45PM +0800, Kaixiong Yu wrote:
+> When CONFIG_SUPERH and CONFIG_VSYSCALL are defined,
+> vdso_enabled belongs to arch/sh/kernel/vsyscall/vsyscall.c.
+> So, move it into its own file. After this patch is applied,
+> all sysctls of vm_table would be moved. So, delete vm_table.
 > 
+> Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> ---
+> v4:
+>  - const qualify struct ctl_table vdso_table
+> v3:
+>  - change the title
+> ---
+> ---
+>  arch/sh/kernel/vsyscall/vsyscall.c | 14 ++++++++++++++
+>  kernel/sysctl.c                    | 14 --------------
+>  2 files changed, 14 insertions(+), 14 deletions(-)
 > 
-> On 2024/12/28 20:15, Joel Granados wrote:
-> > On Mon, Dec 23, 2024 at 10:15:19PM +0800, Kaixiong Yu wrote:
-> >> This patch series moves sysctls of vm_table in kernel/sysctl.c to
-> >> places where they actually belong, and do some related code clean-ups.
-> >> After this patch series, all sysctls in vm_table have been moved into its
-> >> own files, meanwhile, delete vm_table.
-...
-> >>    sysctl: remove unneeded include
-> > This patchset looks strange. There seems to be 15 patches, but there are
-> > 30 e-mails in the thread? You can also see this when you look at it in
-> > lore [1]. And they are different repeated e-mails (mutt does not
-> > de-duplicate them). Also `b4 shazam ...` does not work. What happened?
-> > Did you send it twice with the same mail ID? Am I the only one seeing
-> > this?
-> >
-> > I would suggest the following (hopefully you are using b4):
-> > 1. Check to see how things will be sent with b4. `b4 send --resend -o OUTPUT_DIR`
-> >     If you see 30 emails in that dir from your patchset then something is
-> >     still wrong.
-> > 2. After you make sure that everything is in order. Do the resend
-> >     without bumping the version up (leave it at version 4)
-> >
-> > Best
-> >
-> > [1] : https://lore.kernel.org/all/20241223141550.638616-1-yukaixiong@huawei.com/
-> 
-> I'm very sorry, due to my mistake, 15 patches were sent twice.
-No worries. I saw that you have re-sent the patchset and it seems that
-this time there is only 15 mails. I see that you are only using my
-j.granados@samsung.com ID; can you please add my kernel.org
-(joel.granados@kernel.org) mail to the future mails that you send (no
-need to re-send v4).
+> diff --git a/arch/sh/kernel/vsyscall/vsyscall.c b/arch/sh/kernel/vsyscall/vsyscall.c
+> index add35c51e017..898132f34e6a 100644
+> --- a/arch/sh/kernel/vsyscall/vsyscall.c
+> +++ b/arch/sh/kernel/vsyscall/vsyscall.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/module.h>
+>  #include <linux/elf.h>
+>  #include <linux/sched.h>
+> +#include <linux/sysctl.h>
+>  #include <linux/err.h>
+>  
+>  /*
+> @@ -30,6 +31,17 @@ static int __init vdso_setup(char *s)
+>  }
+>  __setup("vdso=", vdso_setup);
+>  
+> +static const struct ctl_table vdso_table[] = {
+> +	{
+> +		.procname	= "vdso_enabled",
+> +		.data		= &vdso_enabled,
+> +		.maxlen		= sizeof(vdso_enabled),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +		.extra1		= SYSCTL_ZERO,
+> +	},
+> +};
+> +
+>  /*
+>   * These symbols are defined by vsyscall.o to mark the bounds
+>   * of the ELF DSO images included therein.
+> @@ -55,6 +67,8 @@ int __init vsyscall_init(void)
+>  	       &vsyscall_trapa_start,
+>  	       &vsyscall_trapa_end - &vsyscall_trapa_start);
+>  
+> +	register_sysctl_init("vm", vdso_table);
+> +
+>  	return 0;
+>  }
+>  
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 7ff07b7560b4..cebd0ef5d19d 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2012,23 +2012,9 @@ static struct ctl_table kern_table[] = {
+>  #endif
+>  };
+>  
+As you mentioned in the commit message, this patch has two objectives.
+1. It moves the vdso_enabled table and 2. It removes the vm_table.
+Please separate these two in such a way that the second (removal of
+vm_table) can be done at the end and is not related to any particular
+table under vm_table. I prefer it that way so that the removal of
+vm_table does not block the upstreaming of a move that is already
+reviewed and ready.
 
-Thx
 
-...
+> -static struct ctl_table vm_table[] = {
+> -#if defined(CONFIG_SUPERH) && defined(CONFIG_VSYSCALL)
+> -	{
+> -		.procname	= "vdso_enabled",
+> -		.data		= &vdso_enabled,
+> -		.maxlen		= sizeof(vdso_enabled),
+> -		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec,
+> -		.extra1		= SYSCTL_ZERO,
+> -	},
+> -#endif
+> -};
+> -
+>  int __init sysctl_init_bases(void)
+>  {
+>  	register_sysctl_init("kernel", kern_table);
+> -	register_sysctl_init("vm", vm_table);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
 
 -- 
 
