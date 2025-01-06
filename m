@@ -1,105 +1,160 @@
-Return-Path: <linux-nfs+bounces-8934-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8935-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5032AA02954
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 16:22:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90587A02DB7
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 17:27:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1B383A4CA2
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 15:21:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1C521885778
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 16:27:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD5E8634A;
-	Mon,  6 Jan 2025 15:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A7ED166F07;
+	Mon,  6 Jan 2025 16:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="CS7tmysY"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XdvQWNaC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00239146D6B
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jan 2025 15:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5109114AD2B;
+	Mon,  6 Jan 2025 16:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736176916; cv=none; b=Lr/13m5gqCivw9qUynQnXCxBNsaedus0fOL1ORLVH7tQmNjM7q0GD+BXA/ASXLFzb6r+dwVP9XX4WGWECkien1C0AuoM1+ysMvUVPX9YfITldLwukI5XEKU0w4Ps1f1ocvbruSarbLsF6YWCW1DZWXN8RGRFKnjJCS4qMLk/esE=
+	t=1736180834; cv=none; b=FTnMkrbZPOpeJ7atbS/X/isxWVaQoh8TxUjvIuWyai1edd2TTWM0DiYp+9e4Fv85H9AmdlL5aRfQ4Lvr1eUZYiv4OWCwMZVZTgm2k4P3iYaM1tRXVvyCyZtv0MPzp50h8lJWssgHPtXwIPQ2nWh5GdJGXeQ2Xx76/amkavU2ncU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736176916; c=relaxed/simple;
-	bh=XKL+MBnG5+oiljLSOU+x+nOG/gR1ZAoIG1X83T1HLHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=flcDFcfpMA3oa629fOJjPSRD9LduIyTkVj+9KBTI2tLqYxXThxj9qPYhWEbwXekwAplcd7naQQdNOVnj+Bo3oUi4awYqIIffzYqHd4RFE5pdUB2LP93DvolqqWwmN06GtBack4nEIWxepYHALIR14CuSG8GYAX7os6AjM34jxLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=CS7tmysY; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30167f4c1e3so84986811fa.3
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Jan 2025 07:21:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1736176913; x=1736781713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XKL+MBnG5+oiljLSOU+x+nOG/gR1ZAoIG1X83T1HLHQ=;
-        b=CS7tmysYGowkduT+r4pMWDvhJFXt86PiSm58F0HfN1aAKfI68A9AvPVIbDBZW4pWaI
-         FFzMsiVX1gF/L0N/ZQuLsFMykZoDQJZzX9s5ze3jQR2PhmQUbyvi+rYTHJIxM0orlrc4
-         HSTazEpeWvvsmh+bJXjfHfYqYyHG6FYRhGdYuGrgHeJ2/sWh30jGqQcpSY0zmdkVJITn
-         GQUNYeSpUYo7ug91PKElDPjXbgBSOtRl2g+axO7FwBr3Tclc4W/3QjtLH1zdmvA5VOun
-         Gm60Fl8kPL4zyUrkV1rmadT4vLraxJ47WZh8UZjV0Y0e7XPoqPM/rszqkwhtqDLYkQDs
-         aTIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736176913; x=1736781713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XKL+MBnG5+oiljLSOU+x+nOG/gR1ZAoIG1X83T1HLHQ=;
-        b=mHH2SzHgTYByXcXZYsrkoogOKglMsTwbL6TiXV91pqmvy+Ku/GjuuPp6BxZqZ6YGbq
-         uehfTd4mSRz87j4tzuvXDBAt0M1+WEDujpfy2oPgFUf+Pgn8jINWq2jxb2zlr6CfK7+l
-         lTjOaEBI3o6wPi5hdkvXjy6pGrYLlQF/CIRjUNBDLmAfOAsc9sBCrzaiaPZCoJ6WLnJW
-         lVnelCaEb4uy34pXXgmxuDEXkyggufO/XILlwRbjntd5wJUn1d/pPdoEdPHH3vKJBTlj
-         cHmueDkJrLXqZBvVh7TAJlkZqkd7tisS0wr4BsHp6m9Xma1d2ZxowW+2jbTimF743m8f
-         MnPQ==
-X-Gm-Message-State: AOJu0YxOI0A+LUatzaQAY5ZHZ8bypAP5PDmMbY/HzG1vBGcYgZvS1Ef9
-	moz6snByEO7KRMhSlpp6dmZeH09+ZWCeKAb8biBje6Mk8x8VirS8h0XBt5N7IMGOxnt2Qen9bM+
-	vSSj5BVumn/jBd2NDnqGYoSyE6t0=
-X-Gm-Gg: ASbGncsKB2Fij0YB73C7uxB/rwh2cOwVoZ1rDxtV2S7Op/rVNgpByJqrQ0xPWLwd49A
-	gnh/iQbWJ71u5EjZcBL2iKy/M0445vTVEdZiTq07LiK8f1lEIPBNb0/swv45FRdu5Ur62OFtd
-X-Google-Smtp-Source: AGHT+IHUiWP4RjTS9yrZ9yOl2Ex/TMjzd+TwPBLwEJtMDJ00v/AutwO2IGhCb9pZchYEGPHEMMqDgAChg8qWPszyfTA=
-X-Received: by 2002:a2e:a78a:0:b0:300:1aa5:4938 with SMTP id
- 38308e7fff4ca-30468547b78mr155789261fa.18.1736176912801; Mon, 06 Jan 2025
- 07:21:52 -0800 (PST)
+	s=arc-20240116; t=1736180834; c=relaxed/simple;
+	bh=qknyeIuk7vwF3kZJfa4pgkkq5oqBltdINejG9zx0bKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6riQmlt39cyNde+ghfNDzPHxTlEYdRjpFTyxzxhq92E0rp0Hqe6e8wFyVAiXJIuDxTIiO71mhG2JjXgpnfaBNoDbVEoJRk/ejfq5xl+gk6cHT1Ho1G3nZOeQHRsak91zS4/3eBzKJECaq/kUqwMIufXu6ArvrkvTabI2/Wt7ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XdvQWNaC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 740FDC4CED2;
+	Mon,  6 Jan 2025 16:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1736180834;
+	bh=qknyeIuk7vwF3kZJfa4pgkkq5oqBltdINejG9zx0bKg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XdvQWNaCXT7olxR12IbTVMfenEr6P7+lHpxFNMCYclp89k4s1Znw0tt75beJ0rEQ6
+	 dayh2HI1JJDWw0dNywP/+mYLRjV9WmmYy904QReoqmhj30hB0JDAM9JkjE1CmWj95m
+	 nOeUjUkhn2J4FAjjXx7Il2fwE7q/dLw9nk6ihBQc=
+Date: Mon, 6 Jan 2025 17:27:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>, cve@kernel.org,
+	linux-kernel@vger.kernel.org, linux-cve-announce@vger.kernel.org,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>,
+	yangerkun <yangerkun@huawei.com>,
+	"zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao <houtao1@huawei.com>,
+	"yukuai (C)" <yukuai3@huawei.com>,
+	"chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
+	ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Subject: Re: CVE-2024-50106: nfsd: fix race between laundromat and
+ free_stateid
+Message-ID: <2025010602-sureness-clang-0a8d@gregkh>
+References: <2024110553-CVE-2024-50106-c095@gregkh>
+ <ef9774e3-572b-427f-99e9-c6a456ffe4fc@huawei.com>
+ <2024121713-reproduce-rippling-73cc@gregkh>
+ <e6bc81ec-4536-44e4-983a-28b8bc0f3979@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0Ucd6UQTCn_SZz_kutWwc=OUd6faHMjLx4Kj=Cmhjvs9pw@mail.gmail.com>
-In-Reply-To: <CALXu0Ucd6UQTCn_SZz_kutWwc=OUd6faHMjLx4Kj=Cmhjvs9pw@mail.gmail.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Mon, 6 Jan 2025 10:21:41 -0500
-X-Gm-Features: AbW1kvbtyi58nY6y_BheE7aAkDpB9ywsjaf7jX3-4NL-r9IwXChn-LB_djFyosA
-Message-ID: <CAN-5tyHR_cfyVFmrj_m0i-2K-z_=SDGCpaYGEQZWEGw7CBWoUw@mail.gmail.com>
-Subject: Re: NFS4.2 CLONE copy blocks into the same file?
-To: Cedric Blancher <cedric.blancher@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6bc81ec-4536-44e4-983a-28b8bc0f3979@oracle.com>
 
-On Sun, Jan 5, 2025 at 1:46=E2=80=AFAM Cedric Blancher
-<cedric.blancher@gmail.com> wrote:
->
-> Good morning!
->
-> Can Linux nfsd NFS4.2 CLONE copy blocks within the same file?
+On Tue, Dec 17, 2024 at 08:55:20PM -0500, Chuck Lever wrote:
+> On 12/17/24 10:59 AM, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 17, 2024 at 11:30:41PM +0800, Li Lingfeng wrote:
+> > > Hi,
+> > > after analysis, we think that this issue is not introduced by commit
+> > > 2d4a532d385f ("nfsd: ensure that clp->cl_revoked list is protected by
+> > > clp->cl_lock") but by commit 83e733161fde ("nfsd: avoid race after
+> > > unhash_delegation_locked()").
+> > > Therefore, kernel versions earlier than 6.9 do not involve this issue.
+> > > 
+> > > // normal case 1 -- free deleg by delegreturn
+> > > 1) OP_DELEGRETURN
+> > > nfsd4_delegreturn
+> > >   nfsd4_lookup_stateid
+> > >   destroy_delegation
+> > >    destroy_unhashed_deleg
+> > >     nfs4_unlock_deleg_lease
+> > >      vfs_setlease // unlock
+> > >   nfs4_put_stid // put last refcount
+> > >    idr_remove // remove from cl_stateids
+> > >    s->sc_free // free deleg
+> > > 
+> > > 2) OP_FREE_STATEID
+> > > nfsd4_free_stateid
+> > >   find_stateid_locked // can not find the deleg in cl_stateids
+> > > 
+> > > 
+> > > // normal case 2 -- free deleg by laundromat
+> > > nfs4_laundromat
+> > >   state_expired
+> > >   unhash_delegation_locked // set NFS4_REVOKED_DELEG_STID
+> > >   list_add // add the deleg to reaplist
+> > >   list_first_entry // get the deleg from reaplist
+> > >   revoke_delegation
+> > >    destroy_unhashed_deleg
+> > >     nfs4_unlock_deleg_lease
+> > >     nfs4_put_stid
+> > > 
+> > > 
+> > > // abnormal case
+> > > nfs4_laundromat
+> > >   state_expired
+> > >   unhash_delegation_locked
+> > >    // set NFS4_REVOKED_DELEG_STID
+> > >   list_add
+> > >    // add the deleg to reaplist
+> > >                                  1) OP_DELEGRETURN
+> > >                                  nfsd4_delegreturn
+> > >                                   nfsd4_lookup_stateid
+> > > nfsd4_stid_check_stateid_generation
+> > >                                    nfsd4_verify_open_stid
+> > >                                     // check NFS4_REVOKED_DELEG_STID
+> > >                                     // and return nfserr_deleg_revoked
+> > >                                   // skip destroy_delegation
+> > > 
+> > >                                  2) OP_FREE_STATEID
+> > >                                  nfsd4_free_stateid
+> > >                                   // check NFS4_REVOKED_DELEG_STID
+> > >                                   list_del_init
+> > >                                    // remove deleg from reaplist
+> > >                                   nfs4_put_stid
+> > >                                    // free deleg
+> > >   list_first_entry
+> > >    // cant not get the deleg from reaplist
+> > > 
+> > > 
+> > > Before commit 83e733161fde ("nfsd: avoid race after
+> > > unhash_delegation_locked()"), nfs4_laundromat --> unhash_delegation_locked
+> > > would not set NFS4_REVOKED_DELEG_STID for the deleg.
+> > > So the description "it marks the delegation stid revoked" in the CVE fix
+> > > patch does not hold true. And the OP_FREE_STATEID operation will not
+> > > release the deleg.
+> > 
+> > Thanks for the research.  If the maintainers involved agree, we'll be
+> > glad to add a .vulnerable file to our git repo and regenerate the json
+> > entry to reflect this starting point for the issue.
+> 
+> Hi Greg,
+> 
+> As mentioned earlier, our reviewers felt that this bug would indeed be
+> difficult or impossible to reproduce before 83e733161fde, and there
+> have been no reports of similar crash symptoms in kernels before v6.9.
+> 
+> No objection to updating the CVE to reflect that.
 
-Linux server calls into the exported filesystem for support of
-clone/copy functionality (thru the same copy_file_range() VFS
-functionality).
+The CVE has now been updated to reflect this, thanks!
 
->
-> Ced
-> --
-> Cedric Blancher <cedric.blancher@gmail.com>
-> [https://plus.google.com/u/0/+CedricBlancher/]
-> Institute Pasteur
->
+greg k-h
 
