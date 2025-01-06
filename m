@@ -1,257 +1,124 @@
-Return-Path: <linux-nfs+bounces-8926-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8927-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B07BA01DF3
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 04:02:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25020A02435
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 12:22:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDE3E16378B
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 03:02:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8A8D3A1E50
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jan 2025 11:22:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EBCB1990C7;
-	Mon,  6 Jan 2025 03:02:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4F81D8DFB;
+	Mon,  6 Jan 2025 11:22:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="euQ3p4ZP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JCkuOWq4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="euQ3p4ZP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JCkuOWq4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqytaXf/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6E419D899
-	for <linux-nfs@vger.kernel.org>; Mon,  6 Jan 2025 03:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F58812BF24;
+	Mon,  6 Jan 2025 11:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736132540; cv=none; b=f4twluC21TWR7a4GTJYYtu/fvp9U0O5XmwwdYJmz/aSqknsJ8weQ0aKD69Kg3mx9jWKW1WKb7X79iRD8+v4IliTzD0vYBJoImrSVRyPK6dMEBOO7NO0ybyX6CYRDm+tUeXh7GZf2FKrzkG5pZ8A76VjkLo8rq4ca00OENIPz+zI=
+	t=1736162553; cv=none; b=GtnfbHIRAn+f4uqkiPC3m61aNbNHuOqfaEv1RpX6sO1ZITiRfyElo+iUqSBR1AEoPo2hFHPz47Nkbw+oQL8POCX7RFn6cNi8mlu3C0e2J2yjNi/NVxkB694UOEhYuFcecNpuHbebH4QLUJSARJ2YtfXOe1LGy3rPtJbm1Q6VlEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736132540; c=relaxed/simple;
-	bh=biW0x7BDenWDB+KCWmdXhJ9OR7LiYXpu9XkEoIwiOMc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=e1tGsEEtANL2WhP0rm5Xln6SUjt6YyhGSnJpzIbRfRLJjXs9t6ktCWbDGt/tk1YhzzPhFrpqaphEJ9/cvx6sksARzXWO6EhaFRvOJDRisDiL4jr68WYTrdp1ZZyuGEAq4ONh/yMwEE16FlKZJ2rgDay0xlZZtqeM0SOBXn5TRhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=euQ3p4ZP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JCkuOWq4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=euQ3p4ZP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JCkuOWq4; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 075071F74B;
-	Mon,  6 Jan 2025 03:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736132536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67MQarqiqwH3RcKjxLosVbTeCKsGKRnG61YkQSIkx/8=;
-	b=euQ3p4ZPdORuVBD7V/u/MLIorUrF/18ccUSDqpLN0Gjgs8ed2oDtjsKmdKhkB+qdpSWc4K
-	iQGoI45DUQsXZuSQOkE0M1k10V2Deod+r4EiHmZebSA0ZigwlCZLHNU6JfjD8dJHk5dJZ3
-	pjodK+MypSmyNaG68lfki3XBhLMJqdc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736132536;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67MQarqiqwH3RcKjxLosVbTeCKsGKRnG61YkQSIkx/8=;
-	b=JCkuOWq49vD3mgKXjcuzqmHW4wyi5OL7DhwzKo4xsswz2MtxzNrM9Wr9T6fEW42aJXmred
-	DWY8VrR4ujSmrrBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=euQ3p4ZP;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=JCkuOWq4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736132536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67MQarqiqwH3RcKjxLosVbTeCKsGKRnG61YkQSIkx/8=;
-	b=euQ3p4ZPdORuVBD7V/u/MLIorUrF/18ccUSDqpLN0Gjgs8ed2oDtjsKmdKhkB+qdpSWc4K
-	iQGoI45DUQsXZuSQOkE0M1k10V2Deod+r4EiHmZebSA0ZigwlCZLHNU6JfjD8dJHk5dJZ3
-	pjodK+MypSmyNaG68lfki3XBhLMJqdc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736132536;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=67MQarqiqwH3RcKjxLosVbTeCKsGKRnG61YkQSIkx/8=;
-	b=JCkuOWq49vD3mgKXjcuzqmHW4wyi5OL7DhwzKo4xsswz2MtxzNrM9Wr9T6fEW42aJXmred
-	DWY8VrR4ujSmrrBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D63E7139AB;
-	Mon,  6 Jan 2025 03:02:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1kYPIrVHe2eHFwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 06 Jan 2025 03:02:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1736162553; c=relaxed/simple;
+	bh=YFa9n4kRGb7FoyqSu+bxpz+vwRWZ9zT3kNRGUT1JfBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aBT1yzBoM0Dj2fwW5hyl9H7hvNi/uS49Y+6s2TNuQLlKIoAvbAM0uA6+kgHC08P0YtcfAJNMplBhNTDhDjGPogrWvU1P5tr967BCfGCCeJF4klWeWmnDu6bhXV7fUNVR1/xsgqDU1nojfRQ9pbyMnjrWeNdZ0rx3fQreop96qQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqytaXf/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F0F7C4CED2;
+	Mon,  6 Jan 2025 11:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736162553;
+	bh=YFa9n4kRGb7FoyqSu+bxpz+vwRWZ9zT3kNRGUT1JfBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EqytaXf/7ROrApNQc7+jdeEXSnG0XyB08a51lNqhal39rNrVGwnNgN+u/Z8hIhmce
+	 d2yxLhvWHE7J1n1GOk/CTpKIHOHrGQLdUcpmORwyzHesjm2dJGzfoj2kRVelTG1MK/
+	 GuV+fcIovomL/5xMd9TeNwkdviLgqUTGyQRwSokQuZImy34o/4wgB9eZJOa5q3YoyQ
+	 zQRq6cyE9aOlPY+E1XL2LROe2WtvmgyA8HetkqILqy4ZfmOCIOrcqnvQmm0u9C11Tt
+	 dEuIwGkTD9dQfEuPHY4KvFZfnIdzF5adD5QpmOAO6aC5I81zMi2mq+qter+pNgSLS0
+	 p3RjUmiAeK7pQ==
+Date: Mon, 6 Jan 2025 12:22:27 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: yukaixiong <yukaixiong@huawei.com>
+Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
+	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	hpa@zytor.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kees@kernel.org, j.granados@samsung.com, willy@infradead.org, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
+	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, 
+	jmorris@namei.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, dhowells@redhat.com, 
+	haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com, shikemeng@huaweicloud.com, 
+	dchinner@redhat.com, bfoster@redhat.com, souravpanda@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, pasha.tatashin@soleen.com, david@redhat.com, 
+	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
+	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
+	wangkefeng.wang@huawei.com
+Subject: Re: Re: [PATCH v4 -next 00/15] sysctl: move sysctls from vm_table
+ into its own files
+Message-ID: <3elcftj5bn5iqfdly4cgmzpz4kodqrdl6dnqyqvn5fxjgmoxw4@yactmy2fbdkm>
+References: <20241223141550.638616-1-yukaixiong@huawei.com>
+ <42tsyuvdvym6i3j4ppsluvx7kejxjzbma5z4jjgccni6kuwtj7@rhuklbyko7yf>
+ <ceb3be0a-f035-aaec-286f-8ba95e62deba@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH] nfsd: add scheduling point in nfsd_file_gc()
-In-reply-to: <de100fd1-b741-4386-ac9c-21f3957d342e@oracle.com>
-References: <>, <de100fd1-b741-4386-ac9c-21f3957d342e@oracle.com>
-Date: Mon, 06 Jan 2025 14:02:02 +1100
-Message-id: <173613252284.22054.16371856139892298093@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 075071F74B
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ceb3be0a-f035-aaec-286f-8ba95e62deba@huawei.com>
 
-On Mon, 06 Jan 2025, Chuck Lever wrote:
-> On 1/5/25 6:11 PM, NeilBrown wrote:
-> > Under a high NFSv3 load with lots of different file being accessed The
-> > list_lru of garbage-collectable files can become quite long.
-> > 
-> > Asking lisT_lru_scan() to scan the whole list can result in a long
-> > period during which a spinlock is held and no scheduling is possible.
-> > This is impolite.
-> > 
-> > So only ask list_lru_scan() to scan 1024 entries at a time, and repeat
-> > if necessary - calling cond_resched() each time.
-> > 
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >   fs/nfsd/filecache.c | 17 ++++++++++++-----
-> >   1 file changed, 12 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index a1cdba42c4fa..e99a86798e86 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -543,11 +543,18 @@ nfsd_file_gc(void)
-> >   {
-> >   	LIST_HEAD(dispose);
-> >   	unsigned long ret;
-> > -
-> > -	ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
-> > -			    &dispose, list_lru_count(&nfsd_file_lru));
-> > -	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> > -	nfsd_file_dispose_list_delayed(&dispose);
-> > +	unsigned long cnt = list_lru_count(&nfsd_file_lru);
-> > +
-> > +	while (cnt > 0) {
-> 
-> Since @cnt is unsigned, it should be safe to use "while (cnt) {"
-
-"while (cnt > 0) {" is equally safe and for me it emphasises that it
-is a decreasing counter, not a Bool.  But different people have
-different tastes.
-
-> 
-> (I might use "total" and "remaining" here -- "cnt", when said aloud,
-> leaves me snickering).
-
-"remaining" would be better than "cnt".
-
+On Sat, Dec 28, 2024 at 09:40:50PM +0800, yukaixiong wrote:
 > 
 > 
-> > +		unsigned long num_to_scan = min(cnt, 1024UL);
+> On 2024/12/28 20:15, Joel Granados wrote:
+> > On Mon, Dec 23, 2024 at 10:15:19PM +0800, Kaixiong Yu wrote:
+> >> This patch series moves sysctls of vm_table in kernel/sysctl.c to
+> >> places where they actually belong, and do some related code clean-ups.
+> >> After this patch series, all sysctls in vm_table have been moved into its
+> >> own files, meanwhile, delete vm_table.
+...
+> >>    sysctl: remove unneeded include
+> > This patchset looks strange. There seems to be 15 patches, but there are
+> > 30 e-mails in the thread? You can also see this when you look at it in
+> > lore [1]. And they are different repeated e-mails (mutt does not
+> > de-duplicate them). Also `b4 shazam ...` does not work. What happened?
+> > Did you send it twice with the same mail ID? Am I the only one seeing
+> > this?
+> >
+> > I would suggest the following (hopefully you are using b4):
+> > 1. Check to see how things will be sent with b4. `b4 send --resend -o OUTPUT_DIR`
+> >     If you see 30 emails in that dir from your patchset then something is
+> >     still wrong.
+> > 2. After you make sure that everything is in order. Do the resend
+> >     without bumping the version up (leave it at version 4)
+> >
+> > Best
+> >
+> > [1] : https://lore.kernel.org/all/20241223141550.638616-1-yukaixiong@huawei.com/
 > 
-> I see long delays with fewer than 1024 items on the list. I might
-> drop this number by one or two orders of magnitude. And make it a
-> symbolic constant.
+> I'm very sorry, due to my mistake, 15 patches were sent twice.
+No worries. I saw that you have re-sent the patchset and it seems that
+this time there is only 15 mails. I see that you are only using my
+j.granados@samsung.com ID; can you please add my kernel.org
+(joel.granados@kernel.org) mail to the future mails that you send (no
+need to re-send v4).
 
-In that case I seriously wonder if this is where the delays are coming
-from.
+Thx
 
-nfsd_file_dispose_list_delayed() does take and drop a spinlock
-repeatedly (though it may not always be the same lock) and call
-svc_wake_up() repeatedly - although the head of the queue might already
-be woken.  We could optimise that to detect runs with the same nn and
-only take the lock once, and only wake_up once.
+...
 
-> 
-> There's another naked integer (8) in nfsd_file_net_dispose() -- how does
-> that relate to this new cap? Should that also be a symbolic constant?
+-- 
 
-I don't think they relate.
-The trade-off with "8" is:
-  a bigger number might block an nfsd thread for longer,
-    forcing serialising when the work can usefully be done in parallel.
-  a smaller number might needlessly wake lots of threads
-    to share out a tiny amount of work.
-
-The 1024 is simply about "don't hold a spinlock for too long".
-
-> 
-> 
-> > +		ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
-> > +				    &dispose, num_to_scan);
-> > +		trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> > +		nfsd_file_dispose_list_delayed(&dispose);
-> 
-> I need to go back and review the function traces to see where the
-> delays add up -- to make sure rescheduling here, rather than at some
-> other point, is appropriate. It probably is, but my memory fails me
-> these days.
-
-I would like to see those function traces too.
-
-> 
-> 
-> > +		cnt -= num_to_scan;
-> > +		if (cnt)
-> > +			cond_resched();
-> 
-> Another approach might be to poke the laundrette again and simply
-> exit here, but I don't feel strongly about that.
-
-That wouldn't work without storing the 'remaining' count somewhere.
-With the current design we need to scan the whole list every 2 seconds.
-
-Thanks,
-NeilBrown
-
-
-> 
-> 
-> > +	}
-> >   }
-> >   
-> >   static void
-> 
-> 
-> -- 
-> Chuck Lever
-> 
-
+Joel Granados
 
