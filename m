@@ -1,129 +1,135 @@
-Return-Path: <linux-nfs+bounces-8945-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8946-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 258E6A0440C
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 16:18:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63FA1A044D2
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 16:37:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0838D1886A75
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 15:18:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF84416668A
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 15:37:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F24191F2370;
-	Tue,  7 Jan 2025 15:18:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5EDF1F1928;
+	Tue,  7 Jan 2025 15:37:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="j+i4y5Pp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVW0u8H7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688CE195808
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 15:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624011F0E3C
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 15:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736263089; cv=none; b=DLrXya4jMXWyGii6d9tarxE2TJ4hDRABug7z1JmZBL4wtaFuQAuLwOpJdDbBNqJvuNU25sz85KkWOTipAVwHgMf3MIbYDebUE29HT6dYu2vqcu8+Cx21i8ryNpi7m284D9U5FZ5VUVT8KPcSHMExNklxv35g2sggKJ7ZSWI26kY=
+	t=1736264242; cv=none; b=hBb77esKdbop/zdAtu8wunkcBAQvK5gANnUJo51keW22OW+NMXCQjJBKpMgyth/c4+MMMYKS14EwZVmLZWGEs+ix3Tz7zhgYXPbmIQmoAXWyRq4bTefXqu0BBt6mjyvj/hwjsMnVS0tMbJ+h5Bc16NZguolOzO+xlmYHHD8Uui8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736263089; c=relaxed/simple;
-	bh=QhQZNm44rVLaNdsaumVEOL9NYtkpvLczIFnmJDjzXB0=;
+	s=arc-20240116; t=1736264242; c=relaxed/simple;
+	bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rL4Gf1h7Yav1b3FbFZxBOgRtRZ6sOU7WShwPyGrwCvmPwWgkIauHlsvHD3CohlXSxVG6ZxtX1H82KYgSYnXXsrDLqYiyxxdtSRADklJBvJ3VzYX7AN3GQLXYjheN0cpVBPoGXcpXh7pdFq+5i6ykx+jhV65o34F2ZpwSCpCJHyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=j+i4y5Pp; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+	 To:Content-Type; b=bsh0mTIk5FrgKKF8SjhuMCc7/0xMBMvXuDTNkJLTIVt2xySBDoJkGGXM+Vv9qDlFZgYAbe7mICVbCSBoy5Yhcg8GJ7Fe2aDcjOsFXrz78gsP8sIrcRsZBerga1860oWADCzt6sHc0x3iHAXVEkmYFJ+NdFSKp8rdOuc8qecu/WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jVW0u8H7; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-305d840926fso21465101fa.2
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2025 07:18:07 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaf60d85238so1059860566b.0
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2025 07:37:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1736263085; x=1736867885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1736264237; x=1736869037; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QhQZNm44rVLaNdsaumVEOL9NYtkpvLczIFnmJDjzXB0=;
-        b=j+i4y5PpAovZMUpJv4WD72uXw8mKiH9CIfGZreDXzL5VNUo0ozcg4+KLBubkMuI1Nr
-         sfXJ5HtEAD/A/Kf/Usmt2s0A/I+bGrm/LOHojcUb3O4PWBVG5kIsJejcgSkoGi/yo/oU
-         ZesE+oNNMUFjoy2Vj0qjl/6XzBYZJy38JlJztZRk66DeQ8N+UOGdjPoeQFmC4C1r3vMw
-         YySxwnwLnmZl8xux/jNx7dJ482xCrcgvc+ullNZbSL9abgBisaVa7IBlsfiNRYVy4DOb
-         gYG4XNiPlijhI4G8Dkq3UXkOa7QwcNNKa5PyJUKLRX2QviUg6u3C9ZJU1HJlFC99xSOZ
-         +DJg==
+        bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
+        b=jVW0u8H7aQ7gcd7jScjEMGfaxzTPzjK8ifdSSUoAOhHVdGzFVdlk1GsW29FaDSG+wV
+         5n1OYJ2+I75ck7kTyxt2B8x6muO2ASKd8rq0nLa2hO8kTGONswA/TNfqn7yFxwZwLvpP
+         vj6jyMccGljihrT7YMe+usu/ttX0IBYcGtkAiu9v5tPA3ZxDW+HXPKlXMq+MFBFf7Xi5
+         dJ3ymJzRJlKADEp8Z0tiiLUASEujwX1lv/rOuDFZNCSncya9fTDBCqCXyIA/vBL7BAg2
+         lf/EfImyKdtCdYbHJ+/1+PtF4XGcNHxLDBZ7Cw6PA+4ZoEQrNlWBiZZW9LFSCV0JSk7w
+         McvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736263085; x=1736867885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1736264237; x=1736869037;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QhQZNm44rVLaNdsaumVEOL9NYtkpvLczIFnmJDjzXB0=;
-        b=APNH3QX5ij1k0uAInvpSAn2asOXBd1fLUQGaYGims237UE2efeF2WreZiIXi7Vf979
-         sgjbrIQjpEkMBb0sERtd6EYRzaf/NdmDATssf+ebdYoUHopI9VKdZwW7JNiV72Rnl2J5
-         pBQ/LK2132aN6YhHk0om5RL1Y+qiSNu2KArGdzo67JbIoQaJay5YqOVvEFzQAtS4USCo
-         DudL8qSH17HSOJ6IBequAdXYQbx/Qa0xHaeLHmkRcFVPWHxsoVwhE1M8Pi5S3DsY7fbK
-         2FJGQwk5tVkP0bp7sq9pbprQcoqeIMxtJHDxjISGlrLxh2K7PHNxVw64+vzygw1U8HmQ
-         fUJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXRBab28EaL7++AF00tArifHd05BhdyO3tip2XUXt/uRSpf1dmgdOAjrlQecYs7hBkjWdavyBcFmK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1DbozXkRP3F2Tb/LLsG7kTMyxkkoW5mbddgxer7rwE/5Q4smn
-	v/qo90MuqBEED8TdL3Ci6oXhMYNcVHH+DziRPDlaCeTm8OdyTgevJzHZK1Id4xIdydaIQn7zjNm
-	DIO62rOvwIr9+J8aDksHOpUsuOgY=
-X-Gm-Gg: ASbGncurxk4awrn4N4F9WDeLaL0wp6XlkbYu+oKakW/h6UPqgrdK39cbiEFiDubwj50
-	rKNPkOyqVCNxOczJLSkwwUvzOYvTxOaOPubINEENLoy1WxvD6laZkhcQC/9NqAH00thBOnysx
-X-Google-Smtp-Source: AGHT+IGbGuZKx/Q+OLkGFTbnU96vsLusgnhfjVEmt5Gl6u4Km7zxBCRpF5QDOYJNzCnCtVdDoOB0ZI9dbzYJRKpY3g0=
-X-Received: by 2002:a05:651c:547:b0:302:2620:ec84 with SMTP id
- 38308e7fff4ca-3046851fd09mr187253061fa.7.1736263085235; Tue, 07 Jan 2025
- 07:18:05 -0800 (PST)
+        bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
+        b=oR8QUvaTCIweuhAvdiboYabV89TDJnp+VZZPNrfSTUmAWrAvG1aCKszVrR2ApnfX3D
+         nGHpDhAJlGmhk3rHw7IxoqT91h115hNw4gc69RKFGH+a34Da9RyXVQebs62/JFoM9xb5
+         splbrqjP6Op6Yy9BNOjwag/fF9Xve0MqNKrKkW/8tYtegcKRIJTYsMQD/u7Ox40Alw5Z
+         z6KApJErBxmU6BRvVs5IeeLWvFHMgDw2oIt3ftsE0yUuR8GAvMsahQaMuwGgAkaFfI7T
+         tpwNQinLkFm6e4Fs4LvEySxsH6Fd8iGUq2c7fTNXHrcBrQTkiQvs8sYeCgg3PvfVm9m0
+         b2wA==
+X-Gm-Message-State: AOJu0YxsF6z0l4S7sJl/Bc0Kswc1+IgwMMud7ROOYM0yXE8sF26PvYcf
+	njEvp5tyrEcXz/NeGrO23dDbT3MzJ88IzJJpPWuRLqJgEdep2QeKaBl+2X8dnLk8f6Bap1xwVi7
+	fzpUKcbhxyT2v2RN/o6uqf3U138kfRG+4HDk=
+X-Gm-Gg: ASbGncvBWU0DMSKkjE/On2ZVlgPFuy0aQEuVMWNlCe5J7bEm/Rxn5DNkbcoLMsIZvVi
+	Qr0GDJ8OZz9wgpcQqn94i4HguJKV59UiafzbjdQ==
+X-Google-Smtp-Source: AGHT+IFvSKbU/kNsIU19wZzMG7mxgTZFT1gKu1ebtRftaxyVn1LGa/mQEkaJibntHUeLrtds5pnK9pK9vgXnLB5bGBI=
+X-Received: by 2002:a17:907:6eaa:b0:aac:83f:e10a with SMTP id
+ a640c23a62f3a-aac334425cfmr5367160066b.19.1736264236965; Tue, 07 Jan 2025
+ 07:37:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0UcAfYN4z9Wmr0SA6DRUt7RmasN2qq9wSZTt50yBs4hP9A@mail.gmail.com>
- <948ffb91-caa5-4244-b0fd-19f460ebd7a6@oracle.com> <CALXu0UeMT019gHRW0GpiQBn1vh0TTRqEg50CFUyKLHUoL8BJSQ@mail.gmail.com>
- <4a6fc718-aced-4f02-a4b6-bdc8fccd329e@oracle.com>
-In-Reply-To: <4a6fc718-aced-4f02-a4b6-bdc8fccd329e@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 7 Jan 2025 10:17:53 -0500
-X-Gm-Features: AbW1kvaeWOXEofIggoHCi-JKFdDmXkXfyM75jHRK-YOqQWP3RIxj9s3qDHXq6hk
-Message-ID: <CAN-5tyG6e2d7GrAY=6bs3A5gTgpqaoVhD_RA9nyifv_fyJ_rDg@mail.gmail.com>
-Subject: Re: cp(1) using NFS4.2 CLONE?
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Cedric Blancher <cedric.blancher@gmail.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CALWcw=Gg33HWRLCrj9QLXMPME=pnuZx_tE4+Pw8gwutQM4M=vw@mail.gmail.com>
+ <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com>
+In-Reply-To: <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com>
+From: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
+Date: Tue, 7 Jan 2025 16:36:41 +0100
+Message-ID: <CALWcw=G-TV19UPmL=oy-HE9wc0q-VpHBVyuYcVQ8b9OQq-8Lqg@mail.gmail.com>
+Subject: Re: Needed: ADB (WRITE_SAME) support in Linux nfsd
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 7, 2025 at 9:35=E2=80=AFAM Anna Schumaker <anna.schumaker@oracl=
+On Tue, Jan 7, 2025 at 4:10=E2=80=AFPM Anna Schumaker <anna.schumaker@oracl=
 e.com> wrote:
 >
+> Hi Takeshi,
 >
->
-> On 1/7/25 2:10 AM, Cedric Blancher wrote:
-> > On Mon, 6 Jan 2025 at 18:30, Dai Ngo <dai.ngo@oracle.com> wrote:
-> >>
-> >>
-> >> On 1/4/25 10:44 PM, Cedric Blancher wrote:
-> >>> Good morning!
-> >>>
-> >>> Can standard Linux cp(1) use NFS4.2 CLONE?
-> >>
-> >> yes, use option '--reflink=3Dauto'
-> >>
+> On 1/6/25 6:56 PM, Takeshi Nishimura wrote:
+> > Dear list,
 > >
-> > Why is this not on by default?
+> > how can we get ADB (WRITE_SAME) support in (Debian) Linux nfsd, and an
+> > ioct() in Linux nfsd client to use it?
 >
-> That's a question for the GNU coreutils people, since that's how they imp=
-lemented it.
->
-> I thought that the copy_file_range system call would try to do a clone fi=
-rst, but it looks like that behavior changed a while ago. Now the system ca=
-ll will only attempt a clone on filesystems that don't specifically impleme=
-nt copy.
+> Thanks for the request! Just so you're aware of the process, this email l=
+ist is for upstream Linux kernel development. If we decide to go ahead with=
+ adding WRITE_SAME support it'll be up to Debian later to enable it (that p=
+art is out of our hands, and isn't up to us).
 
-As far as I can see CLONE is still the first thing that's tried (linux
-6.13-rc kernel) when cp is done. CentOS9 distro. No need to use
---reflink as far I know.
+I assume WRITE_SAME will not have a separate build flag, right?
 
 >
-> Anna
->
 > >
-> > Ced
+> > We have a set of custom "big data" applications which could greatly
+> > benefit from such an acceleration ABI, both for implementing "zero
+> > data" (fill blocks with 0 bytes), and fill blocks with identical data
+> > patterns, without sending the same pattern over and over again over
+> > the network wire.
 >
+> Having said that, I'm not opposed to implementing WRITE_SAME. I wonder if=
+ we could somehow use it to build support for fallocate's FALLOC_FL_ZERO_RA=
+NGE flag at the same time.
+
+No, I am asking really for WRITE_SAME support to write identical data
+to multiple locations. Like https://linux.die.net/man/8/sg_write_same
+Writing zero bytes is just a subset, and not what we need. WRITE_SAME
+is intended as "big data" and database accelerator function.
+
 >
+> I'm also wondering if there would be any advantage to local filesystems i=
+f this were to be implemented as a generic system call, rather than as an N=
+FS-specific ioctl(), since some storage devices have a WRITE_SAME operation=
+ that could be used for acceleration. But I haven't convinced myself either=
+ way yet.
+
+Getting a new, generic syscall in Linux takes 3-5 years on average. By
+then our project will be finished, or renewed with new funding, but
+all without getting a boost from WRITE_SAME support in NFS-
+--=20
+Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
+=A6
+Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
 
