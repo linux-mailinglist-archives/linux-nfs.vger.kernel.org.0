@@ -1,235 +1,266 @@
-Return-Path: <linux-nfs+bounces-8959-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8960-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EB2BA04B6F
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 22:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A847FA04B75
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 22:17:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63BCE3A4AB2
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 21:14:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F9C83A067A
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 21:17:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28971F708C;
-	Tue,  7 Jan 2025 21:14:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB38B18C031;
+	Tue,  7 Jan 2025 21:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="ikrfl9dm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lACMowc4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from hyub.org (hyub.org [45.33.94.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2861F471C
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 21:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82524156968
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 21:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736284486; cv=none; b=bI3vHJ+zXRPV1vqEA6Mrd56fAUsEQv20ORQE0hiOTvQx64OcVoJxUnM2ikgj7mKHwkaJcK5RSup6wMVlZrgKSYZI7syq5M11CeZ+UUup1qRx79yPWCUDlIhU6tsuwhbSqSNupeXn999vVIPB+bM9QKRZqrqq21Q+aiOq7ysTO74=
+	t=1736284627; cv=none; b=sFZ2ZsQc/XRhqIYgcbuETwPSjkmbZnYaW5JOnXwn/CZNWQapjqHnOMu/+IMYMmqZVe5H5AwJqsvjycJotQEK+d+f625GfwxGNnCh0CWar6fXL1f27zJkS6c+o8dz04qqfWEIQanits7TnYQYrpfVOLQmWcJiKxhY8fuLh3Z6+Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736284486; c=relaxed/simple;
-	bh=9/xSQ2zC05FlS/28M4eEqUc3w/Q9QItPn+/pClhbBm0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ONkeRu524ZB+RWYqVHFJ4GyadTpn19CCsfrO6uTWrNUtMQt/u7GQPYpNwUP8NeOA7CqtOWLe8uhM1h/wsj6veAeZ3xoBORLGT/w7JWNP9h9L9JsNUbZqrqneZ0oCcDEg/eEgWHRsJORb1t+oM0pY4TH3Xn6h1PbUPsASILx/QjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=ikrfl9dm; arc=none smtp.client-ip=45.33.94.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
-	t=1736279640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KAYX1aI2hzwKdsgMiNOaPNb+BYcXBADvrZH3lnq0Qlg=;
-	b=ikrfl9dmOq5K37FnnLnOHPhSsYqEw9lqdyM/hQ2wWdqgMCfAGGEbkGAkc2E5Ng+Ww2yxq5
-	QQZzl45ekcLiu2Erw4EzNFLusQSJDQvXnceW/bN8B6/FginCar0MJi3M+9JbTcReNGcNr/
-	76w6zYD5G+3ll8mXBNjhgEYt8s5EF8qDLcX/pjkgFZMPw2Iky8SrkmtiiGUGenKnAvTYOc
-	+lPdAiX3zNla+P+M+imwuXvOX7TXzeVgqZUIHjm/+t6xNT7ZksuzOa3CaXfdO54tn8VmNI
-	sP4B9Xt8zALv4J/rRJyLD0V/eUmA2tRw3ja1149ac2ureAnbZv7Jy/6R2t+bag==
-Message-ID: <ad8a8180-382e-49fe-a928-504235fc76be@hyub.org>
-Date: Tue, 7 Jan 2025 21:14:00 +0000
+	s=arc-20240116; t=1736284627; c=relaxed/simple;
+	bh=dddWGGzNYAscyAVs99RMf4cCm7oNoq1smSRJhbINiLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oevsNGk4IYgwXnP550zuNirXfCtiOIWLoJhdzkbCxnAjkOaYNfNC9BixZZi259oTyk9qT8kDEKQfm4DN6SUhXr+cPxgH7EPSrpLCuuqcyJoODhzRBe6sHf5OQiSqbRHwR4WapN4l1sHZJDlLo56J0u2PvdUZHshVOnSuSmminfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lACMowc4; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d3e8f64d5dso28849207a12.3
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2025 13:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736284624; x=1736889424; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CZpQWkqEueEV9e4RJPVRqpwL4AqNPz7eNsWUFOnPtkM=;
+        b=lACMowc4OmofqTZ2VrEr7qzNIARPPWU/rOGbkuYTdXemppJy5ucud97cm9h5n+CfRS
+         4DkDV9fZqzhn+Z202EWnKwFqXykIsnLlPzFvUp5OOoNMCH1MPwUuWpPm7U27uFETjg7Q
+         Mad3Mt2/nHuw4Dw9D6kTnaTGJxDh8U6nHoVAuNpiYCH4mqEG+Wi7CcV8wPjFUYmUOq2q
+         1v2NJt6PXgQPbtYwuAWZvpwpvlujpIVKUJdoMOJzNoESgHq9lHJSBuhC4EYQmqcNJCOE
+         HKwdNSlKPcC0MRMwfh1x+3bce7KEnhO3b/CWYntzk5Kerus3XS7/Z2D1Stzppwml78g/
+         6HTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736284624; x=1736889424;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CZpQWkqEueEV9e4RJPVRqpwL4AqNPz7eNsWUFOnPtkM=;
+        b=JnvYyFGhC5RsGdO5pLrddOHIYIc+y64Vxi6EUEkkjTjWqQerfKjFlso2RzOzT9gdPK
+         /cf4uGWct4OMATlXozNb/sVd1gFevCR64TEKUbn9Blr2UoC/1GUqTBa2OyIpm/8Xkf2W
+         pZqYzPthFoKPEqMNwbC0cd5C5E4EK6YfMARkED0PZjPtCeYufLJG+C4i+3R72jptjrtf
+         N3ZEPnxejxs1qnIartdkIQgeGIVAsUhx+Fc2UjRDZl2wJqpvka7VLufQQGreb1YQ2E8g
+         T0BTfqBjx/FxNtqMr8Kg2NMDKRMItUFH+8SkNEcL/BbBpg3li0oP+hmdIKpDRIevD8ub
+         L28A==
+X-Forwarded-Encrypted: i=1; AJvYcCVcFjlZz4xx0LDp3960Tq03BpV9TZZp+MhX/R2PXcMXOHC4shDIux92m0TZEdJUIMcPgsHXltuIv9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6HA0laFodO01+dpuvEScTqBwuHAZH9HFpPmVlwZ1fZ+vmFal3
+	Cgi3bs0zSEiqwWZAeyQnqoWo5gHft11qpOJoukNj+FC8EWtzBKAw
+X-Gm-Gg: ASbGncu9cRnyWQVB+JCBkkKM5I7pX3YGE3snoB88s1LEGjgmBpeuspUitXvVA8odZYi
+	NBc8NCW+ox1g7lHt+wF5DnjYpMH4GLIV2+Lbh4AANwaolBJqiSM8rgdyQiJgjxMk64ouuDNTGjn
+	2jRxuGRo45J0W3qiD0oWmokRqxX9OM1APZIbGDWSe0WSTpTU2Hawr5vz0sq9Ut+o6O+Jn1wASlt
+	mD+iMPLeCX17kW78y6gwKKEcQ3VTuH9eFXBtvZgjHjqjmNX9Mt448M+7PsjvoZFulaJgKXtmdLW
+	RS0pakbQbOzcdqY7
+X-Google-Smtp-Source: AGHT+IHdAq6N//wIz+7L6UP2yU4fttJWfHrFDz4q2raHAE5EOLmgDjU6QcdLIVDI9gAQ8eX1z9zDTw==
+X-Received: by 2002:a05:6402:2554:b0:5d0:d30b:d53e with SMTP id 4fb4d7f45d1cf-5d972e1a980mr258832a12.19.1736284623470;
+        Tue, 07 Jan 2025 13:17:03 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d9706479b5sm241980a12.80.2025.01.07.13.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 13:17:02 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 3E5C2BE2EE7; Tue, 07 Jan 2025 22:17:01 +0100 (CET)
+Date: Tue, 7 Jan 2025 22:17:01 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Harald Dunkel <harald.dunkel@aixigo.com>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+	herzog@phys.ethz.ch, Martin Svec <martin.svec@zoner.cz>,
+	Michael Gernoth <debian@zerfleddert.de>,
+	Pellegrin Baptiste <Baptiste.Pellegrin@ac-grenoble.fr>
+Subject: Re: nfsd blocks indefinitely in nfsd4_destroy_session
+Message-ID: <Z32ZzQiKfEeVoyfU@eldamar.lan>
+References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
+ <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
+ <Z2vNQ6HXfG_LqBQc@eldamar.lan>
+ <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/5] nfs export symlink vulnerability fix (duplicate(ish))
-To: Steve Dickson <steved@redhat.com>, neilb@suse.de
-Cc: linux-nfs@vger.kernel.org, neilb@suse.de, steved@redhat.com
-References: <20241206221202.31507-1-christopherbii@hyub.org>
- <987a603b-bbe5-488e-8f00-947c79bc3685@redhat.com>
- <3e4f1b57-6d68-4209-9c00-d37bb81b5bc1@hyub.org>
- <38bab9bf-7ccc-46fd-9612-8af229b16eee@redhat.com>
- <f31f0238-18b1-49dc-9e38-4c8fe5642cd5@hyub.org>
- <1d3d62e4-9ded-4d8b-bb24-804be117cd43@redhat.com>
-From: Christopher Bii <christopherbii@hyub.org>
-In-Reply-To: <1d3d62e4-9ded-4d8b-bb24-804be117cd43@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
 
-I believe Neil is assuming realpath is called after the entry has been 
-concatenated to the rootdir. But this is not the case. realpath is 
-called on the exportent path before the concatenation happens. Which is 
-a huge flaw.
+Hi Chuck,
 
-Steve Dickson wrote:
-> 
-> 
-> On 1/7/25 3:36 PM, Christopher Bii wrote:
->> When I said in this version of the submission I meant the previous one 
->> that I already submitted. I can send it again but I would just be 
->> removing the last commit in the chain. Should I resubmit it that way or?
->>
->> Commit hash with correct fix: 0969665e8e2586179efc9366f7e4506ccc72189c
->> Or 4/5 in the email chain.
-> What I'm concerned about is
->    * Neal's concern this is not a problem
->    * When one starts pulling patches out of a
->      patch set... doesn't that invalid the testing
->      that has been done.
-> 
-> So I would like you to address Neil's concerns and
-> post a V2 patch after the patch test is tested
-> w/out that patch.
-> 
-> thanks!
-> 
-> steved.
-> 
->>
->> Thanks
->>
->> Steve Dickson wrote:
->>>
->>>
->>> On 1/7/25 3:08 PM, Christopher Bii wrote:
->>>> Hi Steve,
->>>>
->>>> Thank you for the reply. I made sure to separate the patch on this 
->>>> version of my submission. Patch 4/5 changes no logic, it is only 
->>>> patch 5/5 that changes the failure handling. If you guys would like 
->>>> to test that patch independently, I believe it will do the trick.
->>> Good ahead and make a V2 of the patch set so we can review it.
->>>
->>> thanks!
->>>
->>> steved.
->>>>
->>>> Thanks,
->>>> Christopher Bii
->>>>
->>>> Steve Dickson wrote:
->>>>> Hello,
->>>>>
->>>>> On 12/6/24 5:11 PM, Christopher Bii wrote:
->>>>>> Hello,
->>>>>>
->>>>>> It is hinted in the configuration files that an attacker could 
->>>>>> gain access
->>>>>> to arbitrary folders by guessing symlink paths that match exported 
->>>>>> dirs,
->>>>>> but this is not the case. They can get access to the root export with
->>>>>> certainty by simply symlinking to "../../../../../../../", which will
->>>>>> always return "/".
->>>>>>
->>>>>> This is due to realpath() being called in the main thread which isn't
->>>>>> chrooted, concatenating the result with the export root to create the
->>>>>> export entry's final absolute path which the kernel then exports.
->>>>>>
->>>>>> PS: I already sent this patch to the mailing list about the same 
->>>>>> subject
->>>>>> but it was poorly formatted. Changes were merged into a single 
->>>>>> commit. I
->>>>>> have broken it up into smaller commits and made the patch into a 
->>>>>> single
->>>>>> thread. Pardon the mistake, first contribution.
->>>>> First of all thank you this contribution... but :-)
->>>>> the patch makes an assumption that is incorrect.
->>>>> An export directory has to exist when exported.
->>>>>
->>>>> The point being... even though the export does not
->>>>> exist when exported... it can in the future due
->>>>> to mounting races. This is a change NeilBrown
->>>>> made a few years back...
->>>>>
->>>>> Which means the following fails which does not
->>>>> with the original code
->>>>>
->>>>> exportfs -ua
->>>>> exportfs -vi *:/not_exist
->>>>> exportfs: Failed to stat /not_exist: No such file or directory
->>>>> (which is a warning, not an error meaning /not_exist is still 
->>>>> exported)
->>>>>
->>>>> With these patches this valid export fails
->>>>> exportfs -vi *:/export_test fails with
->>>>> exportfs: nfsd_realpath(): unable to resolve path /not_exist
->>>>>
->>>>> because /not_exist is exported (aka in /var/lib/nfs/etab)
->>>>> so the failure is not correct because /not_exist could
->>>>> exist in the future.
->>>>>
->>>>> Thank you Yongcheng Yang for this test which points
->>>>> out the problem.
->>>>>
->>>>> Here is part of the patch that needs work
->>>>> in getexportent:
->>>>>
->>>>>       /* resolve symlinks */
->>>>> -    if (realpath(ee.e_path, rpath) != NULL) {
->>>>> -        rpath[sizeof (rpath) - 1] = '\0';
->>>>> -        strncpy(ee.e_path, rpath, sizeof (ee.e_path) - 1);
->>>>> -        ee.e_path[sizeof (ee.e_path) - 1] = '\0';
->>>>> -    }
->>>>> +    if (nfsd_realpath(ee.e_path, rpath) == NULL) {
->>>>> +                xlog(L_ERROR, "nfsd_realpath(): unable to resolve 
->>>>> path %s", ee.e_path);
->>>>> +                goto out;
->>>>> +        };
->>>>>
->>>>> the current code ignores the realpath() failure... your patch does 
->>>>> not.
->>>>>
->>>>>
->>>>> I would like to fix the symlink vulnerability you have pointed
->>>>> out... but stay with the assumptions of the original code.
->>>>> I'll be more than willing to work with you to make this happen!
->>>>>
->>>>> steved.
->>>>>>
->>>>>> Thanks
->>>>>>
->>>>>> Christopher Bii (5):
->>>>>>    nfsd_path.h - nfsd_path.c: - Configured export rootdir must now 
->>>>>> be an
->>>>>>      absolute path - Rootdir is into a global variable what will 
->>>>>> also be
->>>>>>      used to retrieve   it later on - nfsd_path_nfsd_rootdir(void) is
->>>>>>      simplified with nfsd_path_rootdir   which returns the global var
->>>>>>      rather than reprobing config for rootdir   entry
->>>>>>    nfsd_path.c: - Simplification of nfsd_path_strip_root(char*)
->>>>>>    nfsd_path.h - nfsd_path.c: - nfsd_path_prepend_dir(const char*, 
->>>>>> const
->>>>>>      char*) -> nfsd_path_prepend_root(const char*)
->>>>>>    NFS export symlink vulnerability fix - Replaced dangerous use of
->>>>>>      realpath within support/nfs/export.c with   nfsd_realpath 
->>>>>> variant
->>>>>>      that is executed within the chrooted thread   rather than main
->>>>>>      thread. - Implemented nfsd_path.h methods to work securely 
->>>>>> within
->>>>>>      chrooted thread   using nfsd_run_task() helper
->>>>>>    support/nfs/exports.c - Small changes
->>>>>>
->>>>>>   support/export/export.c     |  17 +-
->>>>>>   support/include/nfsd_path.h |   9 +-
->>>>>>   support/misc/nfsd_path.c    | 362 +++++++++++ 
->>>>>> +------------------------
->>>>>>   support/nfs/exports.c       |  49 ++---
->>>>>>   4 files changed, 151 insertions(+), 286 deletions(-)
->>>>>>
->>>>>
->>>>
->>>
->>>
->>
-> 
+Thanks for your time on this, much appreciated.
 
+On Wed, Jan 01, 2025 at 02:24:50PM -0500, Chuck Lever wrote:
+> On 12/25/24 4:15 AM, Salvatore Bonaccorso wrote:
+> > Hi Chuck, hi all,
+> > 
+> > [it was not ideal to pick one of the message for this followup, let me
+> > know if you want a complete new thread, adding as well Benjamin and
+> > Trond as they are involved in one mentioned patch]
+> > 
+> > On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wrote:
+> > > 
+> > > 
+> > > > On Jun 17, 2024, at 2:55 AM, Harald Dunkel <harald.dunkel@aixigo.com> wrote:
+> > > > 
+> > > > Hi folks,
+> > > > 
+> > > > what would be the reason for nfsd getting stuck somehow and becoming
+> > > > an unkillable process? See
+> > > > 
+> > > > - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071562
+> > > > - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2062568
+> > > > 
+> > > > Doesn't this mean that something inside the kernel gets stuck as
+> > > > well? Seems odd to me.
+> > > 
+> > > I'm not familiar with the Debian or Ubuntu kernel packages. Can
+> > > the kernel release numbers be translated to LTS kernel releases
+> > > please? Need both "last known working" and "first broken" releases.
+> > > 
+> > > This:
+> > > 
+> > > [ 6596.911785] RPC: Could not send backchannel reply error: -110
+> > > [ 6596.972490] RPC: Could not send backchannel reply error: -110
+> > > [ 6837.281307] RPC: Could not send backchannel reply error: -110
+> > > 
+> > > is a known set of client backchannel bugs. Knowing the LTS kernel
+> > > releases (see above) will help us figure out what needs to be
+> > > backported to the LTS kernels kernels in question.
+> > > 
+> > > This:
+> > > 
+> > > [11183.290619] wait_for_completion+0x88/0x150
+> > > [11183.290623] __flush_workqueue+0x140/0x3e0
+> > > [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
+> > > [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
+> > > 
+> > > is probably related to the backchannel errors on the client, but
+> > > client bugs shouldn't cause the server to hang like this. We
+> > > might be able to say more if you can provide the kernel release
+> > > translations (see above).
+> > 
+> > In Debian we hstill have the bug #1071562 open and one person notified
+> > mye offlist that it appears that the issue get more frequent since
+> > they updated on NFS client side from Ubuntu 20.04 to Debian bookworm
+> > with a 6.1.y based kernel).
+> > 
+> > Some people around those issues, seem to claim that the change
+> > mentioned in
+> > https://lists.proxmox.com/pipermail/pve-devel/2024-July/064614.html
+> > would fix the issue, which is as well backchannel related.
+> > 
+> > This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel reply,
+> > again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use the
+> > nfs_client's rpc timeouts for backchannel") this is not something
+> > which goes back to 6.1.y, could it be possible that hte backchannel
+> > refactoring and this final fix indeeds fixes the issue?
+> > 
+> > As people report it is not easily reproducible, so this makes it
+> > harder to identify fixes correctly.
+> > 
+> > I gave a (short) stance on trying to backport commits up to
+> > 6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but this quickly
+> > seems to indicate it is probably still not the right thing for
+> > backporting to the older stable series.
+> > 
+> > As at least pre-requisites:
+> > 
+> > 2009e32997ed568a305cf9bc7bf27d22e0f6ccda
+> > 4119bd0306652776cb0b7caa3aea5b2a93aecb89
+> > 163cdfca341b76c958567ae0966bd3575c5c6192
+> > f4afc8fead386c81fda2593ad6162271d26667f8
+> > 6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
+> > 57331a59ac0d680f606403eb24edd3c35aecba31
+> > 
+> > and still there would be conflicting codepaths (and does not seem
+> > right).
+> > 
+> > Chuck, Benjamin, Trond, is there anything we can provive on reporters
+> > side that we can try to tackle this issue better?
+> 
+> As I've indicated before, NFSD should not block no matter what the
+> client may or may not be doing. I'd like to focus on the server first.
+> 
+> What is the result of:
+> 
+> $ cd <Bookworm's v6.1.90 kernel source >
+> $ unset KBUILD_OUTPUT
+> $ make -j `nproc`
+> $ scripts/faddr2line \
+> 	fs/nfsd/nfs4state.o \
+> 	nfsd4_destroy_session+0x16d
+> 
+> Since this issue appeared after v6.1.1, is it possible to bisect
+> between v6.1.1 and v6.1.90 ?
+
+First please note, at least speaking of triggering the issue in
+Debian, Debian has moved to 6.1.119 based kernel already (and soon in
+the weekends point release move to 6.1.123).
+
+That said, one of the users which regularly seems to be hit by the
+issue was able to provide the above requested information, based for
+6.1.119:
+
+~/kernel/linux-source-6.1# make kernelversion
+6.1.119
+~/kernel/linux-source-6.1# scripts/faddr2line fs/nfsd/nfs4state.o nfsd4_destroy_session+0x16d
+nfsd4_destroy_session+0x16d/0x250:
+__list_del_entry at /root/kernel/linux-source-6.1/./include/linux/list.h:134
+(inlined by) list_del at /root/kernel/linux-source-6.1/./include/linux/list.h:148
+(inlined by) unhash_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:2062
+(inlined by) nfsd4_destroy_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:3856
+
+They could provide as well a decode_stacktrace output for the recent
+hit (if that is helpful for you):
+
+[Mon Jan 6 13:25:28 2025] INFO: task nfsd:55306 blocked for more than 6883 seconds.
+[Mon Jan 6 13:25:28 2025]       Not tainted 6.1.0-28-amd64 #1 Debian 6.1.119-1
+[Mon Jan 6 13:25:28 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[Mon Jan 6 13:25:28 2025] task:nfsd            state:D stack:0     pid:55306 ppid:2      flags:0x00004000
+[Mon Jan 6 13:25:28 2025] Call Trace:
+[Mon Jan 6 13:25:28 2025]  <TASK>
+[Mon Jan 6 13:25:28 2025] __schedule+0x34d/0x9e0
+[Mon Jan 6 13:25:28 2025] schedule+0x5a/0xd0
+[Mon Jan 6 13:25:28 2025] schedule_timeout+0x118/0x150
+[Mon Jan 6 13:25:28 2025] wait_for_completion+0x86/0x160
+[Mon Jan 6 13:25:28 2025] __flush_workqueue+0x152/0x420
+[Mon Jan 6 13:25:28 2025] nfsd4_destroy_session (debian/build/build_amd64_none_amd64/include/linux/spinlock.h:351 debian/build/build_amd64_none_amd64/fs/nfsd/nfs4state.c:3861) nfsd
+[Mon Jan 6 13:25:28 2025] nfsd4_proc_compound (debian/build/build_amd64_none_amd64/fs/nfsd/nfs4proc.c:2680) nfsd
+[Mon Jan 6 13:25:28 2025] nfsd_dispatch (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:1022) nfsd
+[Mon Jan 6 13:25:28 2025] svc_process_common (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1344) sunrpc
+[Mon Jan 6 13:25:28 2025] ? svc_recv (debian/build/build_amd64_none_amd64/net/sunrpc/svc_xprt.c:897) sunrpc
+[Mon Jan 6 13:25:28 2025] ? nfsd_svc (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:983) nfsd
+[Mon Jan 6 13:25:28 2025] ? nfsd_inet6addr_event (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:922) nfsd
+[Mon Jan 6 13:25:28 2025] svc_process (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1474) sunrpc
+[Mon Jan 6 13:25:28 2025] nfsd (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:960) nfsd
+[Mon Jan 6 13:25:28 2025] kthread+0xd7/0x100
+[Mon Jan 6 13:25:28 2025] ? kthread_complete_and_exit+0x20/0x20
+[Mon Jan 6 13:25:28 2025] ret_from_fork+0x1f/0x30
+[Mon Jan  6 13:25:28 2025]  </TASK>
+
+The question about bisection is actually harder, those are production
+systems and I understand it's not possible to do bisect there, while
+unfortunately not reprodcing the issue on "lab conditions".
+
+Does the above give us still a clue on what you were looking for?
+
+Regards,
+Salvatore
 
