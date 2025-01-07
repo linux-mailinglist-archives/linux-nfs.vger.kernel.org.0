@@ -1,133 +1,94 @@
-Return-Path: <linux-nfs+bounces-8946-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8947-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63FA1A044D2
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 16:37:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8B6CA044F3
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 16:42:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF84416668A
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 15:37:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C5E33A071E
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 15:42:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5EDF1F1928;
-	Tue,  7 Jan 2025 15:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3989619E806;
+	Tue,  7 Jan 2025 15:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVW0u8H7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8yp+Cgt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624011F0E3C
-	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 15:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E412F1537C3
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 15:42:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736264242; cv=none; b=hBb77esKdbop/zdAtu8wunkcBAQvK5gANnUJo51keW22OW+NMXCQjJBKpMgyth/c4+MMMYKS14EwZVmLZWGEs+ix3Tz7zhgYXPbmIQmoAXWyRq4bTefXqu0BBt6mjyvj/hwjsMnVS0tMbJ+h5Bc16NZguolOzO+xlmYHHD8Uui8=
+	t=1736264534; cv=none; b=att0PmNN1vRjtl3CK//eYGO37I/9t/TZceb3aOqjxQoIvS4T/YBmZ0kyvlknubzFyVDjp4SOmZERv7JrRkrfig83FzCHnELZ57Rnes5bufA957enz7NdfhhprLmGfjAf/XUaMCYvZcxTkbALGCAnugMq1/+w4QdsOBKfePBxhEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736264242; c=relaxed/simple;
-	bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=bsh0mTIk5FrgKKF8SjhuMCc7/0xMBMvXuDTNkJLTIVt2xySBDoJkGGXM+Vv9qDlFZgYAbe7mICVbCSBoy5Yhcg8GJ7Fe2aDcjOsFXrz78gsP8sIrcRsZBerga1860oWADCzt6sHc0x3iHAXVEkmYFJ+NdFSKp8rdOuc8qecu/WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jVW0u8H7; arc=none smtp.client-ip=209.85.218.48
+	s=arc-20240116; t=1736264534; c=relaxed/simple;
+	bh=BlkOg4dvm9C4NnOQjvIamWerl0iODlh43Y3QIEUCy7M=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=UAAfPxleniWkqRtVlBQQy0y0RUha5hopAA7VvZAf+xOGrpUCDOvv9TfeLloUHDS1ivD7daob+0QIDTUk+yI0pUpppxxaSLpi+GQN3Qp54CWjYZ6jfe14hOi0+Ns91r22N+4DOMCs3/ug5/PdLSiXZ8X+JmaDRU4quo1O4FwnkDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8yp+Cgt; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaf60d85238so1059860566b.0
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2025 07:37:18 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5d3f57582a2so29616441a12.1
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jan 2025 07:42:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736264237; x=1736869037; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736264529; x=1736869329; darn=vger.kernel.org;
         h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
-        b=jVW0u8H7aQ7gcd7jScjEMGfaxzTPzjK8ifdSSUoAOhHVdGzFVdlk1GsW29FaDSG+wV
-         5n1OYJ2+I75ck7kTyxt2B8x6muO2ASKd8rq0nLa2hO8kTGONswA/TNfqn7yFxwZwLvpP
-         vj6jyMccGljihrT7YMe+usu/ttX0IBYcGtkAiu9v5tPA3ZxDW+HXPKlXMq+MFBFf7Xi5
-         dJ3ymJzRJlKADEp8Z0tiiLUASEujwX1lv/rOuDFZNCSncya9fTDBCqCXyIA/vBL7BAg2
-         lf/EfImyKdtCdYbHJ+/1+PtF4XGcNHxLDBZ7Cw6PA+4ZoEQrNlWBiZZW9LFSCV0JSk7w
-         McvA==
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qAgkBGNlE4p5wgVdkywAx+fCyXwfSSMlvtL28piloLM=;
+        b=m8yp+CgtATXUwJstB9AmlYz21HwCNX07TwydivqkP4fXl5g+qVbHbddzCUfXIlbaN7
+         37ZTBCkz2Xhsfz9fAh8s/5+1AJRZwe6PF6v3rQijwXEKphM2TUTXnaJcqxLoXSRKCmfp
+         yc1uXSxoVK1Dm9z7CYpYK8pHX+q9eGgV8e/Or3dVMgVdB02EHW6HiLhcb6UFGPdEjpp3
+         uxnUhfLWbE9cvUWcnbyS25LyuYfxq8sWZsIF6p8zDvXgCQetovmg1tIXIc4a/mpMZvr4
+         TKJg9nIK54Th0dyrHOBqp/+x6sVX2yfWVkns3ILjyP0j298oevcji+BMN5hsTeo6hK3C
+         e9rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736264237; x=1736869037;
+        d=1e100.net; s=20230601; t=1736264529; x=1736869329;
         h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lDDtZaK/H3el8GfnXlLFzFGkLg592W6Uqf0TzYWhMz8=;
-        b=oR8QUvaTCIweuhAvdiboYabV89TDJnp+VZZPNrfSTUmAWrAvG1aCKszVrR2ApnfX3D
-         nGHpDhAJlGmhk3rHw7IxoqT91h115hNw4gc69RKFGH+a34Da9RyXVQebs62/JFoM9xb5
-         splbrqjP6Op6Yy9BNOjwag/fF9Xve0MqNKrKkW/8tYtegcKRIJTYsMQD/u7Ox40Alw5Z
-         z6KApJErBxmU6BRvVs5IeeLWvFHMgDw2oIt3ftsE0yUuR8GAvMsahQaMuwGgAkaFfI7T
-         tpwNQinLkFm6e4Fs4LvEySxsH6Fd8iGUq2c7fTNXHrcBrQTkiQvs8sYeCgg3PvfVm9m0
-         b2wA==
-X-Gm-Message-State: AOJu0YxsF6z0l4S7sJl/Bc0Kswc1+IgwMMud7ROOYM0yXE8sF26PvYcf
-	njEvp5tyrEcXz/NeGrO23dDbT3MzJ88IzJJpPWuRLqJgEdep2QeKaBl+2X8dnLk8f6Bap1xwVi7
-	fzpUKcbhxyT2v2RN/o6uqf3U138kfRG+4HDk=
-X-Gm-Gg: ASbGncvBWU0DMSKkjE/On2ZVlgPFuy0aQEuVMWNlCe5J7bEm/Rxn5DNkbcoLMsIZvVi
-	Qr0GDJ8OZz9wgpcQqn94i4HguJKV59UiafzbjdQ==
-X-Google-Smtp-Source: AGHT+IFvSKbU/kNsIU19wZzMG7mxgTZFT1gKu1ebtRftaxyVn1LGa/mQEkaJibntHUeLrtds5pnK9pK9vgXnLB5bGBI=
-X-Received: by 2002:a17:907:6eaa:b0:aac:83f:e10a with SMTP id
- a640c23a62f3a-aac334425cfmr5367160066b.19.1736264236965; Tue, 07 Jan 2025
- 07:37:16 -0800 (PST)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qAgkBGNlE4p5wgVdkywAx+fCyXwfSSMlvtL28piloLM=;
+        b=lLJ7h6PUcPIMKZpRlPRzC5A3eOQ3QxuUXUefTznVnse61cecVvAMsj8MkKNmrPIEnb
+         NfssUOQBNBG4Td+32FUsqtF33YyxgMHK5I8P3aSHaBvhjJzFeURziLBRBKtn8HUutloH
+         xu1VLpog/qizEmTp8bMp7DNoEixI1E0KPjDGNZ8eEMek/eE9ES/dlVa8IErSzCZ/57kg
+         SUKQx+b4T+lRgWW2wNNzgs2UVvcOSf0Ygj6GJd0tHKCRiNo044uDaA9l78avOp69ISB/
+         HPCHOuPDD1vx62t/fwxvmJlFmDAQr9DM+Zr3WeXZ5J/omdvdp9+raiwXqGvSlTzXO103
+         xSWQ==
+X-Gm-Message-State: AOJu0YxrnMlR1elvtEZwMI6Pkv7Ed3pUoGip0mOqB3AaYb98G1kg85Zi
+	UahOeIfAqrU2fQz/NDbqI9dd/ZA0AT7mASJzEE4y2Tf3RGWSsxZLxty1nLrLecntiKTQxDCAz9c
+	JjTYHMOVMsAnT5iiCp1l4nJ64sD3i1ozmy90=
+X-Gm-Gg: ASbGncu/c4bdiC46Z8EwHSIHmbQEBw8iCupHPHdpqMfA6sm0y0YKWLwUXvEoTzoWaMt
+	ekqhCwV26oJslXBvr/5JDZrX6RkEVChlBwbG4Gg==
+X-Google-Smtp-Source: AGHT+IHcnXPv7rdSMopuGI/6IM9YrKpGRVYZBaQDEfIzYLbNsRWSnHE7nomPl+vfhK4sNLcKLQJdC1bGpw7s0Bq7rkI=
+X-Received: by 2002:a17:907:1b85:b0:aab:c6d6:629e with SMTP id
+ a640c23a62f3a-ab2918ba338mr267495966b.27.1736264528881; Tue, 07 Jan 2025
+ 07:42:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALWcw=Gg33HWRLCrj9QLXMPME=pnuZx_tE4+Pw8gwutQM4M=vw@mail.gmail.com>
- <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com>
-In-Reply-To: <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com>
 From: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
-Date: Tue, 7 Jan 2025 16:36:41 +0100
-Message-ID: <CALWcw=G-TV19UPmL=oy-HE9wc0q-VpHBVyuYcVQ8b9OQq-8Lqg@mail.gmail.com>
-Subject: Re: Needed: ADB (WRITE_SAME) support in Linux nfsd
+Date: Tue, 7 Jan 2025 16:41:33 +0100
+Message-ID: <CALWcw=F7tO_6S9xGUyyqZnc89FxhpKgtF7soZ+59vnSeYB2xMw@mail.gmail.com>
+Subject: Why does Linux nfs not set EXCHGID4_FLAG_SUPP_FENCE_OPS in NFSv4.2 mode?
 To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 7, 2025 at 4:10=E2=80=AFPM Anna Schumaker <anna.schumaker@oracl=
-e.com> wrote:
->
-> Hi Takeshi,
->
-> On 1/6/25 6:56 PM, Takeshi Nishimura wrote:
-> > Dear list,
-> >
-> > how can we get ADB (WRITE_SAME) support in (Debian) Linux nfsd, and an
-> > ioct() in Linux nfsd client to use it?
->
-> Thanks for the request! Just so you're aware of the process, this email l=
-ist is for upstream Linux kernel development. If we decide to go ahead with=
- adding WRITE_SAME support it'll be up to Debian later to enable it (that p=
-art is out of our hands, and isn't up to us).
+Why does Linux nfs not set EXCHGID4_FLAG_SUPP_FENCE_OPS in NFSv4.2 mode?
 
-I assume WRITE_SAME will not have a separate build flag, right?
+From https://datatracker.ietf.org/doc/html/rfc7862#section-14.1.4
+   A client SHOULD request the EXCHGID4_FLAG_SUPP_FENCE_OPS capability
+   when it sends an EXCHANGE_ID operation.  The server SHOULD set this
+   capability in the EXCHANGE_ID reply whether the client requests it or
+   not.  It is the server's return that determines whether this
+   capability is in effect.  When it is in effect, the following will
+   occur:
 
->
-> >
-> > We have a set of custom "big data" applications which could greatly
-> > benefit from such an acceleration ABI, both for implementing "zero
-> > data" (fill blocks with 0 bytes), and fill blocks with identical data
-> > patterns, without sending the same pattern over and over again over
-> > the network wire.
->
-> Having said that, I'm not opposed to implementing WRITE_SAME. I wonder if=
- we could somehow use it to build support for fallocate's FALLOC_FL_ZERO_RA=
-NGE flag at the same time.
-
-No, I am asking really for WRITE_SAME support to write identical data
-to multiple locations. Like https://linux.die.net/man/8/sg_write_same
-Writing zero bytes is just a subset, and not what we need. WRITE_SAME
-is intended as "big data" and database accelerator function.
-
->
-> I'm also wondering if there would be any advantage to local filesystems i=
-f this were to be implemented as a generic system call, rather than as an N=
-FS-specific ioctl(), since some storage devices have a WRITE_SAME operation=
- that could be used for acceleration. But I haven't convinced myself either=
- way yet.
-
-Getting a new, generic syscall in Linux takes 3-5 years on average. By
-then our project will be finished, or renewed with new funding, but
-all without getting a boost from WRITE_SAME support in NFS-
+Why is Linux not doing this?
 --=20
 Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
 =A6
