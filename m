@@ -1,112 +1,131 @@
-Return-Path: <linux-nfs+bounces-8950-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8951-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DE25A04A0A
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 20:21:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE8B7A04A45
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 20:31:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0019C1649F2
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 19:21:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6F8F165840
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jan 2025 19:31:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 202451DFE12;
-	Tue,  7 Jan 2025 19:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 476C01DE889;
+	Tue,  7 Jan 2025 19:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="is/TlKHc"
+	dkim=pass (2048-bit key) header.d=dimebar.com header.i=@dimebar.com header.b="Fl1ER7Ts";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U1Q5fOuK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDEB2C187;
-	Tue,  7 Jan 2025 19:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD7E225D6
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 19:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736277710; cv=none; b=Y3jsgiZSlsMGTdxCgNjmjtWoDmws8gYIL0ia5LrN3bb3HCsJrRXzaljIfvIA/ZLnSlsYATjRV6UI2JEZA0CP3AMtP9feClgsQxlt4OozI/LfH/kDzRZPxgbvu05o6+w+bGrcR4r3+osPbTm2NaSjKtblTGzeQJ7Z0391ggUxjdg=
+	t=1736278312; cv=none; b=l//WljkcP1r7LeLzVTXhvD/mYUDZWdfMO5crFqUIS4LKjHBGBDP3x6YgcoI7AVFBcbSsB9FOHMA1KiYegBn2Ta01V09HSUt/Lh7QiDmL1aYnlK0tAWVdRamdUWvmP31xMYJr7XBZ/ZQrLmul7/XsEb5n4gn1+6Zoe1n5ZCVfPBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736277710; c=relaxed/simple;
-	bh=GZ+QK4W7m00pfsGrM/XH/gNWBMYeZTIE5O8xFsp0/rs=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=hR60f+bHh0jgiZk04cHbT9qy0iowaMy0fl5YJoPKPqCoQNYu2O+nmI2MKym7QGiWJPiHdTO26W8z9mVUtYtBdy6rffHSXyy8YNsZRwwtzFksHbIWOlWv86YlonQBrYwgjgjjV462eFdlYCn74OF1Iu8T2YzEfXC5PNwPHsApj+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=is/TlKHc; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1736278312; c=relaxed/simple;
+	bh=/xSHFVoGgG23v2SMpqU6VFc10ChS6NSFoe2wZ9B/3aY=;
+	h=MIME-Version:Date:From:To:Message-Id:Subject:Content-Type; b=kzRHwTXMSHwMdAJ9hQQtTSeEdG5SZ40/9Af/PODW4Dpkvf2fOf9RWV8BMfA3HI6gl+AuXvtbyIN8n1hVjqQ9HT8Ujfxq+S2YKt6q27xkN6VSpuueXTenjuDLFJuvIMHob3Li0Ssnr5UeXdErZPse4XdCdfHaINlnsV1AsQOPYVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dimebar.com; spf=none smtp.mailfrom=dimebar.com; dkim=pass (2048-bit key) header.d=dimebar.com header.i=@dimebar.com header.b=Fl1ER7Ts; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=U1Q5fOuK; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dimebar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dimebar.com
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.stl.internal (Postfix) with ESMTP id BFBB51140130
+	for <linux-nfs@vger.kernel.org>; Tue,  7 Jan 2025 14:31:48 -0500 (EST)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-10.internal (MEProxy); Tue, 07 Jan 2025 14:31:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dimebar.com; h=
+	cc:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm1; t=1736278308; x=1736364708; bh=fGTKkzDNKn
+	9+ZAl1HcXGx+ogk7UrKwlIoPeCKBehpWQ=; b=Fl1ER7TsAP1XmsZPmR/V9Gdp7E
+	bLcnNnBVzhgZ04G/hFXLcsVAYQuAb2fwkzfsnAOJrhzQzsc/Wa2Z1b9xLmG37PrW
+	f/GKugCAyINT13Pp9aSTVoVDQbecl0BEEhSGlnzJzsn7J0BdABpcG97CxwDQ/8Ij
+	arHOR/OhZ6UGsJ7Vquvj4XoiHFAvOINBM8TDDwxT7/+4MmMiolX3oEKsNE7TOAOQ
+	e6XapHPqwU8O7ct6+4Js8qqALt8WP5L2jWAhSvxjQ+uaL2DO5d3kTeAnAUrN68xY
+	ecMovPbr0XDm14NhaaizxHKzsEBgNnK++MyjhXrmQt0dRiJ+pamyQvuVMhXg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1736278308; x=1736364708; bh=fGTKkzDNKn9+ZAl1HcXGx+ogk7UrKwlIoPe
+	CKBehpWQ=; b=U1Q5fOuKRTuRTH1wlV3Y2fwWpLgaiRx3SqtbvEfIQql/Yf4Jv0d
+	ndaqeQmRHGtrov2hDLXLJ9i7Xb2QoWPW3YL2w5xPRIeP7fL3i3Dp52EFn8oY/7QU
+	e3uPElR0ZgGaQICrTH1UsjZB2n9JWkpnbrEYwscufam+K5Hrs1/LNjR+MQttlbno
+	CDvp0jwUOx3i1r+/1yMCmq756qVVTK1qHBwDefSduEcAxQFZ6CmhKQcZyLKkYx+P
+	waOPIPqC59GpFoFE+tKA5OYMZ6GvWWv/K0zrtuaotgeTBDmZHWg1DsHBOOs7l4EU
+	V0po+PGQ14Zvr2t0nQ5yyC2TI4+K7R+C+pA==
+X-ME-Sender: <xms:JIF9Z9EFv63ukEdgArQbE6p8V2xg6L3WBW2hHBCMCFIr8taDdJAR7Q>
+    <xme:JIF9ZyVcMXwOWc7RV0uiPrj-R4a8T5J9mLOZYzNjxsIoThXpnsVeVkdGsTNUFGMko
+    whR8-YwwjlMx7Oh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegvddguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepofggff
+    fhvffkufgtgfesthhqredtredtjeenucfhrhhomhepfdfrhhhilhhiphcutfhofihlrghn
+    ughsfdcuoehlihhnuhigqdhnfhhsseguihhmvggsrghrrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeetfeetfedtkefgffeigeeuvdevgffhteffveejfefgvdeujeefveehvdfgleet
+    keenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehlih
+    hnuhigqdhnfhhsseguihhmvggsrghrrdgtohhmpdhnsggprhgtphhtthhopedupdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrh
+    hnvghlrdhorhhg
+X-ME-Proxy: <xmx:JIF9Z_LRSTkBDxED4TkCRnV4DqpJFEXTDLiF-skx6jiMtZ5BAFnJ7Q>
+    <xmx:JIF9ZzE8CWMkVQl9tBtHwSI8P0r5dZW6pwBD0k8lRUnu4Em-O8fy0A>
+    <xmx:JIF9ZzVrcq7qaMLliRufHXn0DrTGBDpBu7XmUCHeYE4qSZ6R9rwFSg>
+    <xmx:JIF9Z-Pfy175JRxPAFtEGOp449eS996iUpZVV1ftOlZ4frryxNeufA>
+    <xmx:JIF9Z6AOtWYVN-_o8uG6S-TiaCcOEFaPxFIEVrwj-o7MXhr_4BbUmOVI>
+Feedback-ID: id0b949ab:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4B40E18A0068; Tue,  7 Jan 2025 14:31:48 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1736277697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ruu+MdlbmeQTHnEcd698GTDKPwfbm70xeflDbIRt+SU=;
-	b=is/TlKHcoWBGgFdpZjGSrc2/NgTLgQJ7+qFD5yLDlkPCN9eqfTQspu6mofVjlUl0C3yXwJ
-	HYt5aCrqZzvkrUvuQ/+xVgJanRsbeQ4t4GTftMQf/UGbF9st6q9FhtEf1G2qK7AmlEdzoO
-	4XUIVgmjhq2cS8gxAL5tzYn4G/c3EqYqQkMGg8yBBOYPQOouG4b2z8OYS6rqZQ3oCFTp2K
-	IaJVvIWypwWzaZYylG4r8LCKSCThFSuPMRuNLJ8AyL5LjYVUR8DTEeYWGj2NGbnHoaun4d
-	mNM+eVmdYO8o6q/F8tthn7a1SSuuT3EC5eoCmKCsQnAsVRg/lHFF6U5joD2xLg==
-Date: Tue, 07 Jan 2025 20:21:34 +0100
-From: Dragan Simic <dsimic@manjaro.org>
-To: trondmy@kernel.org, anna@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Diederik de Haas <didi.debian@cknow.org>
-Subject: Re: [PATCH] nfs: Make NFS_FSCACHE select NETFS_SUPPORT instead of
- depending on it
-In-Reply-To: <4faf55b5022a9e363e3cad791144064636ed0eba.1735326877.git.dsimic@manjaro.org>
-References: <4faf55b5022a9e363e3cad791144064636ed0eba.1735326877.git.dsimic@manjaro.org>
-Message-ID: <ba8defca2f731d588a94e5e7013c1c19@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Date: Tue, 07 Jan 2025 19:30:02 +0000
+From: "Philip Rowlands" <linux-nfs@dimebar.com>
+To: linux-nfs@vger.kernel.org
+Message-Id: <12d7ea53-1202-4e21-a7ef-431c94758ce5@app.fastmail.com>
+Subject: Regression for client nfs_compare_super with NFS_SB_MASK
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Kernel 6.1.120 / 6.12.2 and others recently changed the definition of NF=
+S_SB_MASK which is used by nfs_compare_super to find existing superblock=
+s.
+   nfs: ignore SB_RDONLY when mounting nfs
+   [ Upstream commit 52cb7f8f177878b4f22397b9c4d2c8f743766be3 ]
 
-On 2024-12-27 20:17, Dragan Simic wrote:
-> Having the NFS_FSCACHE option depend on the NETFS_SUPPORT options makes
-> selecting NFS_FSCACHE impossible unless another option that 
-> additionally
-> selects NETFS_SUPPORT is already selected.
-> 
-> As a result, for example, being able to reach and select the 
-> NFS_FSCACHE
-> option requires the CEPH_FS or CIFS option to be selected beforehand, 
-> which
-> obviously doesn't make much sense.
-> 
-> Let's correct this by making the NFS_FSCACHE option actually select the
-> NETFS_SUPPORT option, instead of depending on it.
-> 
-> Fixes: 915cd30cdea8 ("netfs, fscache: Combine fscache with netfs")
-> Cc: stable@vger.kernel.org
-> Reported-by: Diederik de Haas <didi.debian@cknow.org>
-> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+As a result, we now see mount options shared at the superblock level whi=
+ch should not be shared, such as ro.
 
-Just checking, any thoughts about this patch?
+Steps to reproduce on Fedora 40:
 
-> ---
->  fs/nfs/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-> index 0eb20012792f..d3f76101ad4b 100644
-> --- a/fs/nfs/Kconfig
-> +++ b/fs/nfs/Kconfig
-> @@ -170,7 +170,8 @@ config ROOT_NFS
-> 
->  config NFS_FSCACHE
->  	bool "Provide NFS client caching support"
-> -	depends on NFS_FS=m && NETFS_SUPPORT || NFS_FS=y && NETFS_SUPPORT=y
-> +	depends on NFS_FS
-> +	select NETFS_SUPPORT
->  	select FSCACHE
->  	help
->  	  Say Y here if you want NFS data to be cached locally on disc 
-> through
+mkdir -p /export/{stuff,things}/dir{1,2,3,4}
+echo '/export/stuff  *(rw)' >> /etc/exports
+echo '/export/things *(rw)' >> /etc/exports
+systemctl restart nfs-server
+
+mount -t nfs -o ro,vers=3D3 localhost:/export/stuff  /mnt/stuff
+mount -t nfs -o rw,vers=3D3 localhost:/export/things /mnt/things
+grep -w nfs /proc/mounts
+
+# note that both mountpoints are ro, despite the explicit ro/rw options
+# reversing the order of mounts gives a different result
+
+I don=E2=80=99t fully understand the previous problem report regarding r=
+epeated mounts with different options to the same mountpoint, but by rol=
+ling back the specific patch, we no longer see the above unintended-ro i=
+ssue.
+
+Is there a reason that NFSv4 mounts don=E2=80=99t seem to trigger the bu=
+g?
+
+
+Cheers,
+Phil
 
