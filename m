@@ -1,183 +1,109 @@
-Return-Path: <linux-nfs+bounces-8975-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8976-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 939F6A06452
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 19:25:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36D7AA064E1
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 19:52:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B9C91626B7
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 18:25:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EAFB3A70E8
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 18:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A60515853B;
-	Wed,  8 Jan 2025 18:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ABDC1F37BB;
+	Wed,  8 Jan 2025 18:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="ndOlKayl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJ5u6syE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from hyub.org (hyub.org [45.33.94.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F451FECBD
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 18:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6981A23B7;
+	Wed,  8 Jan 2025 18:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736360708; cv=none; b=jyCkU4nhNYQ+CqOGBX49fcwRqxzy+wfmZ6AP1ukhUA0nPJK2BdYCHpfU+daVChK/uRBOclNWk1o4dJYqimbnbUYKTSJ9CeHLPSoKRDBqm4AdYyWvby0o3IDBGsOybGOdBDY6MT77COIUWLLumAtNzHuN2Hpuf3YYya43q5YUTuw=
+	t=1736362327; cv=none; b=L3EQX1BcTUbg1eg4kP8vdAChfIt7/+0iqShfJ0y+HBWWVq3G2QLLmL4ksBbcuPeddXpYdkZvh8t+EIOJbfgo+HbSrLp/AsOx5MguLzt0T6lDfwOKPbdQDDHh7QzRgajs/hwVw7BTDvUVHslddnXLz12t4U0szQ+PGX6dlLKmxxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736360708; c=relaxed/simple;
-	bh=9eEMBaMt8iQZc/KDc16Y7tUJiwNxTKW82Jd9+yq4JKo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekWPfbe+9zTe+AIgb4cNszkdUb47VkQUC68qVrTs4wo/qgcPm5mb9A+44mUzGWb+YesaODLGusL7suM50j0oFZ0LEioDk+5ijiF97gQ+JfNNFFYWXCuJk1cTz6Wa+mQ/ty8jkw8765npOEGSVEEqRiFsrzh+X7DE2htA+wOhMzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=ndOlKayl; arc=none smtp.client-ip=45.33.94.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
-	t=1736355860;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2xTHuHCBQSghiPL5q1GVjuIv+xfZea3Giu/llucoiew=;
-	b=ndOlKayl0Ny5emizSOXMSJ5BPCHWPS+a7fXHmkfScjWf99yP9BOY48+gQZpOqVf0tbESvo
-	vaNQ7KAcJxk8bEyaH8SL7OH+dfgOsDMfddVQzwSbbw7mB1JJ0VCvmtwe4glgyjeE63bZB2
-	4JEekAGDM2NjezltpwRxiUEEEGXVbBZCP/7JLJYWSJigxTxsZITXFIz82p/SPoCjApDp8k
-	EQ2ibllFQjZfCgjWVe+P07NRcroxt7dAARSVpGeP/hXSii2FbWHET9D00zkh6U+gOatIbo
-	xqA6jGgVi0RdrxcAWRPgzpBKZtTJDOwTeOjtnKFfb/SPMBwIVhkDtdVIZckfnw==
-Message-ID: <2305be45-74e4-4a34-a8d3-1dc6b8cae103@hyub.org>
-Date: Wed, 8 Jan 2025 18:25:00 +0000
+	s=arc-20240116; t=1736362327; c=relaxed/simple;
+	bh=0HvcmNnJXWX8ZP5yUzIJuodN6QVVSsF8K+F4vvQA5NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gPP1wV7IdIrk5kd0OWT8HnHpZI46nZZsl3GBf2afvKzSo8YTZyFOX8vK7Ro0dWe0zCCfVsexMbrNvMeLx37PG1Fpzmwi/hp5MIaGK6/lrKUEKBm6tJGorhS+X3TT57LxXqUeHkjbT6Fs48q8sxrxfQhBvNJQuMhFu5bhcsIbbEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJ5u6syE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB7ACC4CED3;
+	Wed,  8 Jan 2025 18:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736362326;
+	bh=0HvcmNnJXWX8ZP5yUzIJuodN6QVVSsF8K+F4vvQA5NQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TJ5u6syEbwO3g4EXk7nzJZzyr6alDqPxdEPwNCgNprtZAfL0bCVz3IZIPJUYQFt3e
+	 k3Z3ibcMla3ZU8m2xiGY544RpWO4IW527ZiKl2UebF4Oofho21bDPPRm9wUJIX76Os
+	 KCuia6tquR3TWn5PmXOYOqdD5d4N4LPMu6wIs7vx313X3SDdP33Grnc+NnZiTKJMM3
+	 wW88h7nwKhm6nMgIkK8VQt0ROO9nc9vz3MusOjuM1Ezhfz+MPHakY+Pt7Q0k8vctWA
+	 2ipDNG+s8hdn9m+Rjp7KzCAaMULYkPf15PuH0gqiu/oENmc5zFEuiht88pOPfiR5ZJ
+	 Z6u3HVc3STrBg==
+From: cel@kernel.org
+To: trondmy@kernel.org,
+	anna@kernel.org,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	Li Lingfeng <lilingfeng3@huawei.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	liujian56@huawei.com,
+	yukuai1@huaweicloud.com,
+	houtao1@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	lilingfeng@huaweicloud.com
+Subject: Re: [PATCH] sunrpc: clean cache_detail immediately when flush is written frequently
+Date: Wed,  8 Jan 2025 13:51:58 -0500
+Message-ID: <173636224524.14442.18042606814897132165.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241227083353.4125224-1-lilingfeng3@huawei.com>
+References: <20241227083353.4125224-1-lilingfeng3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/5] nfs export symlink vulnerability fix (duplicate(ish))
-To: Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Yongcheng Yang <yongcheng.yang@gmail.com>,
- Neil Brown <neilb@suse.de>
-References: <20241206221202.31507-1-christopherbii@hyub.org>
- <987a603b-bbe5-488e-8f00-947c79bc3685@redhat.com>
-From: Christopher Bii <christopherbii@hyub.org>
-In-Reply-To: <987a603b-bbe5-488e-8f00-947c79bc3685@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hello Steve,
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I would like to bring into question the reason why the failure case is 
-ignored in the current implementation. Whenever a rootdir is set,
-realpath would previously fail if the path didn't exist. So ignoring it
-indeed made sense, as a blanket solution.
+On Fri, 27 Dec 2024 16:33:53 +0800, Li Lingfeng wrote:
+> We will write /proc/net/rpc/xxx/flush if we want to clean cache_detail.
+> This updates nextcheck to the current time and calls cache_flush -->
+> cache_clean to clean cache_detail.
+> If we write this interface again within one second, it will only increase
+> flush_time and nextcheck without actually cleaning cache_detail.
+> Therefore, if we keep writing this interface repeatedly within one second,
+> flush_time and nextcheck will keep increasing, even far exceeding the
+> current time, making it impossible to clear cache_detail through the flush
+> interface or cache_cleaner.
+> If someone frequently calls the flush interface, we should immediately
+> clean the corresponding cache_detail instead of continuously accumulating
+> nextcheck.
+> 
+> [...]
 
-But was pre-exporting really a feature? I find the risks to greatly
-outweigh the benefits. Should a non-existant dir be pre-exported,
-someone could, maliciously or accidentally, symlink to any arbitrary
-directory on the fly without warning, possibly compromising the system.
+Applied to nfsd-testing, thanks!
 
-I think this should be reconsidered as there is no longer functionality
-requiring us to ignore the failure of export path resolution via
-realpath.
+[1/1] sunrpc: clean cache_detail immediately when flush is written frequently
+      commit: 33c4c54ed3b912edca4c2cd9ae3dd0492ab9fc4c
 
-Thank you,
-Christopher Bii
-
-Steve Dickson wrote:
-> Hello,
-> 
-> On 12/6/24 5:11 PM, Christopher Bii wrote:
->> Hello,
->>
->> It is hinted in the configuration files that an attacker could gain 
->> access
->> to arbitrary folders by guessing symlink paths that match exported dirs,
->> but this is not the case. They can get access to the root export with
->> certainty by simply symlinking to "../../../../../../../", which will
->> always return "/".
->>
->> This is due to realpath() being called in the main thread which isn't
->> chrooted, concatenating the result with the export root to create the
->> export entry's final absolute path which the kernel then exports.
->>
->> PS: I already sent this patch to the mailing list about the same subject
->> but it was poorly formatted. Changes were merged into a single commit. I
->> have broken it up into smaller commits and made the patch into a single
->> thread. Pardon the mistake, first contribution.
-> First of all thank you this contribution... but :-)
-> the patch makes an assumption that is incorrect.
-> An export directory has to exist when exported.
-> 
-> The point being... even though the export does not
-> exist when exported... it can in the future due
-> to mounting races. This is a change NeilBrown
-> made a few years back...
-> 
-> Which means the following fails which does not
-> with the original code
-> 
-> exportfs -ua
-> exportfs -vi *:/not_exist
-> exportfs: Failed to stat /not_exist: No such file or directory
-> (which is a warning, not an error meaning /not_exist is still exported)
-> 
-> With these patches this valid export fails
-> exportfs -vi *:/export_test fails with
-> exportfs: nfsd_realpath(): unable to resolve path /not_exist
-> 
-> because /not_exist is exported (aka in /var/lib/nfs/etab)
-> so the failure is not correct because /not_exist could
-> exist in the future.
-> 
-> Thank you Yongcheng Yang for this test which points
-> out the problem.
-> 
-> Here is part of the patch that needs work
-> in getexportent:
-> 
->       /* resolve symlinks */
-> -    if (realpath(ee.e_path, rpath) != NULL) {
-> -        rpath[sizeof (rpath) - 1] = '\0';
-> -        strncpy(ee.e_path, rpath, sizeof (ee.e_path) - 1);
-> -        ee.e_path[sizeof (ee.e_path) - 1] = '\0';
-> -    }
-> +    if (nfsd_realpath(ee.e_path, rpath) == NULL) {
-> +                xlog(L_ERROR, "nfsd_realpath(): unable to resolve path 
-> %s", ee.e_path);
-> +                goto out;
-> +        };
-> 
-> the current code ignores the realpath() failure... your patch does not.
-> 
-> 
-> I would like to fix the symlink vulnerability you have pointed
-> out... but stay with the assumptions of the original code.
-> I'll be more than willing to work with you to make this happen!
-> 
-> steved.
->>
->> Thanks
->>
->> Christopher Bii (5):
->>    nfsd_path.h - nfsd_path.c: - Configured export rootdir must now be an
->>      absolute path - Rootdir is into a global variable what will also be
->>      used to retrieve   it later on - nfsd_path_nfsd_rootdir(void) is
->>      simplified with nfsd_path_rootdir   which returns the global var
->>      rather than reprobing config for rootdir   entry
->>    nfsd_path.c: - Simplification of nfsd_path_strip_root(char*)
->>    nfsd_path.h - nfsd_path.c: - nfsd_path_prepend_dir(const char*, const
->>      char*) -> nfsd_path_prepend_root(const char*)
->>    NFS export symlink vulnerability fix - Replaced dangerous use of
->>      realpath within support/nfs/export.c with   nfsd_realpath variant
->>      that is executed within the chrooted thread   rather than main
->>      thread. - Implemented nfsd_path.h methods to work securely within
->>      chrooted thread   using nfsd_run_task() helper
->>    support/nfs/exports.c - Small changes
->>
->>   support/export/export.c     |  17 +-
->>   support/include/nfsd_path.h |   9 +-
->>   support/misc/nfsd_path.c    | 362 ++++++++++++------------------------
->>   support/nfs/exports.c       |  49 ++---
->>   4 files changed, 151 insertions(+), 286 deletions(-)
->>
-> 
+--
+Chuck Lever
 
 
