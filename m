@@ -1,216 +1,133 @@
-Return-Path: <linux-nfs+bounces-8980-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8981-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A75DA0667F
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:43:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CFA7BA06698
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:48:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A94C6188A456
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 20:43:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B25E167779
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 20:48:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FFC42036E8;
-	Wed,  8 Jan 2025 20:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D14D20103D;
+	Wed,  8 Jan 2025 20:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="egvB5TSJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ogtn6ic2";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="egvB5TSJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ogtn6ic2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LrrDHX04"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9487F2036E9
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 20:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE0B1DFE06
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 20:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736368916; cv=none; b=DNL4rPJJvOUwOEYS+GkiRP3LQt28fj2vgmEZcln3RTjMmc+GRo0y65wTaMfbPIBQb/p/6c1XxQ4NWGaFjtq6OeYBYXv9cYZa07WlVBbPQIT/aUiWdbzagDamahYUhiJnDrDTfRhJWl06kOBv7O330W0k1KjVHCOy0VUYlM45vig=
+	t=1736369314; cv=none; b=ST+dDwCQPT37gsTHqAMBXLsbgWE3R/rI5/+OLN5ty4NiSq4vm8+4cYGWL0w9GSQSV+OBZ1qmFzi5VP4PbfC//MAZ4OrX+3SXuw2GX59VktLnTZ1GriWGU+yEMrBPUp4bGZBGcERYHswDFagt+TMj3Iswk4jSHKB5Xc94FICZeP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736368916; c=relaxed/simple;
-	bh=o0Ys5pgFrtq+idNSluYAHtJtUof5pWBJqZnPU4UM/Hk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=gCjsL1eZGCeRkiYQpO8MzMwN6yvT07tm3sG8YYM81LtVmizjNVBGEcvqfjvWkkKVMaCuYAfCKcG0alMybjVkfTSgCzv3Y+rvBsmiR2uMSffTlNeKeP3/M3yqBnPOVc8GszIL5DzGokxv9PEdYdGJ9liGVivmmt3+ks1gjDwH2pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=egvB5TSJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ogtn6ic2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=egvB5TSJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ogtn6ic2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C70BF1F385;
-	Wed,  8 Jan 2025 20:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736368912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=od/ZgTWYtty6qPOjLkfkMPsMcCyJ5TkuT9APAgu8kY8=;
-	b=egvB5TSJ8k4JzF4mfxqFBjvviR4aWbz2d/zlAII5h1HmWlKBAipzmKn/5Kj2Hi84BxL2hQ
-	Y4uYbkJwK/q9Vpa326l/1EwcLOAIuxCNzp1oJ/Obmw8LU2kHVJL0zlAZ5hd+GSDkmt34GZ
-	JhwtCeXrtM7QfAXnMIVRcQWbRFzQWOU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736368912;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=od/ZgTWYtty6qPOjLkfkMPsMcCyJ5TkuT9APAgu8kY8=;
-	b=ogtn6ic27Fdu4D63Os0LC1U9DHzuWvZFh+AcIK3B8Q2eMbQD51y2+QXwXNfgQFBuK4CJPl
-	zWWtoZi9wsSHz9Aw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736368912; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=od/ZgTWYtty6qPOjLkfkMPsMcCyJ5TkuT9APAgu8kY8=;
-	b=egvB5TSJ8k4JzF4mfxqFBjvviR4aWbz2d/zlAII5h1HmWlKBAipzmKn/5Kj2Hi84BxL2hQ
-	Y4uYbkJwK/q9Vpa326l/1EwcLOAIuxCNzp1oJ/Obmw8LU2kHVJL0zlAZ5hd+GSDkmt34GZ
-	JhwtCeXrtM7QfAXnMIVRcQWbRFzQWOU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736368912;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=od/ZgTWYtty6qPOjLkfkMPsMcCyJ5TkuT9APAgu8kY8=;
-	b=ogtn6ic27Fdu4D63Os0LC1U9DHzuWvZFh+AcIK3B8Q2eMbQD51y2+QXwXNfgQFBuK4CJPl
-	zWWtoZi9wsSHz9Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A883F1351A;
-	Wed,  8 Jan 2025 20:41:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pz49Fw7jfmdDOgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 08 Jan 2025 20:41:50 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1736369314; c=relaxed/simple;
+	bh=OXo8r1k4n0kDJJ9cl6bCLf+fFRmeOjCtfVEXC1wUd9w=;
+	h=From:To:Subject:Date:Message-Id; b=oRBf3sY2hHx1Y553gOMwHhwZXeyEuJ9lHQPKNx0gLv1PnQQjaVLdy9k699s6Qfqq0lIzdOWNV1UiZ0eVE57pPwJIep1AJ3GLH3XQYUV1Lox9oMfgW3fwSrdJc+Vm5+qKSRVsIL0X9uLxKguo3SuPHsvDaDVe5ZRKpML86VaMBfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LrrDHX04; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 508IMxYa013209
+	for <linux-nfs@vger.kernel.org>; Wed, 8 Jan 2025 20:48:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	date:from:message-id:subject:to; s=corp-2023-11-20; bh=k1+/Nzkjq
+	CcUMQL8PCbLoAAathI8OUbTPwZWOTVr/LI=; b=LrrDHX04wYWhaRQ1ACNjeoK3C
+	Mlo4cSiCrXNsbGWS3GBZIGfLLgy4jBuSxIoTJ7l9jpO6SYTs191oCrHsDbIs0BM4
+	jS9uS84qYfjT5lNOT8x+/SyRqtVwrdTjYyWwb0Y2UGCNQxaQhlpnpftKIuMW3x0m
+	nSUAmfuGXWtkPDkyQD55iU6zza2QRNJn1yLWp9EuGKq7PhNw6RsAIabHRjLMNzx5
+	Pxr+e62lXHzV8ddpcDhDcIFNNQhM7oX+Hv/j0vcB4mSBFyGRKQJ+fl5sNaSA1Por
+	lmeM84SP6kh4+2bcbs2rXsG3gQMwBxkRwWithMNLUMOhtg1RGrFtp55CyK1dA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 43xwhsqgwh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-nfs@vger.kernel.org>; Wed, 08 Jan 2025 20:48:31 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 508J8MgV020693
+	for <linux-nfs@vger.kernel.org>; Wed, 8 Jan 2025 20:48:30 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43xuea85yb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <linux-nfs@vger.kernel.org>; Wed, 08 Jan 2025 20:48:30 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 508KmU4u016794
+	for <linux-nfs@vger.kernel.org>; Wed, 8 Jan 2025 20:48:30 GMT
+Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 43xuea85xp-1;
+	Wed, 08 Jan 2025 20:48:30 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] SUNRPC: do not retry on EKEYEXPIRED when user TGT ticket expired
+Date: Wed,  8 Jan 2025 12:48:12 -0800
+Message-Id: <1736369292-23095-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-08_05,2025-01-08_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501080169
+X-Proofpoint-GUID: xvJ1AKtJ_cxNht705GleE9D5kjODZEvO
+X-Proofpoint-ORIG-GUID: xvJ1AKtJ_cxNht705GleE9D5kjODZEvO
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH] nfsd: add scheduling point in nfsd_file_gc()
-In-reply-to: <c205384d-cf12-4dde-8875-e826e4a7c2f6@oracle.com>
-References: <>, <c205384d-cf12-4dde-8875-e826e4a7c2f6@oracle.com>
-Date: Thu, 09 Jan 2025 07:41:43 +1100
-Message-id: <173636890368.22054.15435316321445899208@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
 
-On Thu, 09 Jan 2025, Chuck Lever wrote:
-> On 1/7/25 6:01 PM, NeilBrown wrote:
-> > On Tue, 07 Jan 2025, Chuck Lever wrote:
-> >> On 1/5/25 10:02 PM, NeilBrown wrote:
-> >>> On Mon, 06 Jan 2025, Chuck Lever wrote:
-> >>>> On 1/5/25 6:11 PM, NeilBrown wrote:
-> >>
-> >>>>> +		unsigned long num_to_scan =3D min(cnt, 1024UL);
-> >>>>
-> >>>> I see long delays with fewer than 1024 items on the list. I might
-> >>>> drop this number by one or two orders of magnitude. And make it a
-> >>>> symbolic constant.
-> >>>
-> >>> In that case I seriously wonder if this is where the delays are coming
-> >>> from.
-> >>>
-> >>> nfsd_file_dispose_list_delayed() does take and drop a spinlock
-> >>> repeatedly (though it may not always be the same lock) and call
-> >>> svc_wake_up() repeatedly - although the head of the queue might already
-> >>> be woken.  We could optimise that to detect runs with the same nn and
-> >>> only take the lock once, and only wake_up once.
-> >>>
-> >>>>
-> >>>> There's another naked integer (8) in nfsd_file_net_dispose() -- how do=
-es
-> >>>> that relate to this new cap? Should that also be a symbolic constant?
-> >>>
-> >>> I don't think they relate.
-> >>> The trade-off with "8" is:
-> >>>     a bigger number might block an nfsd thread for longer,
-> >>>       forcing serialising when the work can usefully be done in paralle=
-l.
-> >>>     a smaller number might needlessly wake lots of threads
-> >>>       to share out a tiny amount of work.
-> >>>
-> >>> The 1024 is simply about "don't hold a spinlock for too long".
-> >>
-> >> By that, I think you mean list_lru_walk() takes &l->lock for the
-> >> duration of the scan? For a long scan, that would effectively block
-> >> adding or removing LRU items for quite some time.
-> >>
-> >> So here's a typical excerpt from a common test:
-> >>
-> >> kworker/u80:7-206   [003]   266.985735: nfsd_file_unhash: ...
-> >>
-> >> kworker/u80:7-206   [003]   266.987723: nfsd_file_gc_removed: 1309
-> >> entries removed, 2972 remaining
-> >>
-> >> nfsd-1532  [015]   266.988626: nfsd_file_free: ...
-> >>
-> >> Here, the nfsd_file_unhash record marks the beginning of the LRU
-> >> walk, and the nfsd_file_gc_removed record marks the end. The
-> >> timestamps indicate the walk took two milliseconds.
-> >>
-> >> The nfsd_file_free record above marks the last disposal activity.
-> >> That takes almost a millisecond, but as far as I can tell, it
-> >> does not hold any locks for long.
-> >>
-> >> This seems to me like a strong argument for cutting the scan size
-> >> down to no more than 32-64 items. Ideally spin locks are supposed
-> >> to be held only for simple operations (eg, list_add); this seems a
-> >> little outside that window (hence your remark that "a large
-> >> nr_to_walk is always a bad idea" -- I now see what you meant).
-> >=20
-> > This is useful - thanks.
-> > So the problem seems to be that holding the list_lru while canning the
-> > whole list can block all incoming NFSv3 for a noticeable amount of time
-> > - 2 msecs above.  That makes perfect sense and as you say it suggests
-> > that the lack of scheduling points isn't really the issue.
-> >=20
-> > This confirms for me that the list_lru approach is no a good fit for
-> > this problem.  I have written a patch which replaces it with a pair of
-> > simple lists as I described in my cover letter.
->=20
-> Before proceeding with replacement of the LRU, is there interest in
-> addressing this issue in LTS kernels as well? If so, then IMO the
-> better approach would be to take a variant of your narrower fix for
-> v6.14, and then visit the deeper LRU changes for v6.15ff.
+When a user TGT ticket expired, gssd returns EKEYEXPIRED to the RPC
+layer for the upcall to create the security context. The RPC layer
+then retries the upcall twice before returning the EKEYEXPIRED to
+the NFS layer.
 
-That is probably reasonable.  You could take the first patch, drop the
-1024 to 64 (or less if testing suggests that is still too high), and
-maybe drop he cond_resched().
+This results in three separate TCP connections to the NFS server being
+created by gssd for each RPC request. These connections are not used
+and left in TIME_WAIT state.
 
-Thanks,
-NeilBrown
+Note that for RPC call that uses machine credential, gssd automatically
+renews the ticket. But for a regular user the ticket needs to be
+renewed by the user before access to the krb5 share is allowed.
+
+This patch removes the retries by RPC on EKEYEXPIRED so that these
+unused TCP connections are not created.
+
+Reproducer:
+
+$ kinit -l 1m
+$ sleep 65
+$ cd /mnt/krb5share
+$ netstat -na |grep TIME_WAIT
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ net/sunrpc/clnt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 0090162ee8c3..cd5c84a07005 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1854,13 +1854,13 @@ call_refreshresult(struct rpc_task *task)
+ 		fallthrough;
+ 	case -EAGAIN:
+ 		status = -EACCES;
+-		fallthrough;
+-	case -EKEYEXPIRED:
+ 		if (!task->tk_cred_retry)
+ 			break;
+ 		task->tk_cred_retry--;
+ 		trace_rpc_retry_refresh_status(task);
+ 		return;
++	case -EKEYEXPIRED:
++		break;
+ 	case -ENOMEM:
+ 		rpc_delay(task, HZ >> 4);
+ 		return;
+-- 
+2.43.5
+
 
