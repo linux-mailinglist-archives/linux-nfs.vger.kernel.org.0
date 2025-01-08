@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-8993-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8994-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E78F2A06748
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 22:37:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4779A0674A
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 22:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B61F3A651E
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:37:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E33203A651E
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:37:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12260203717;
-	Wed,  8 Jan 2025 21:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15D67204696;
+	Wed,  8 Jan 2025 21:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMERH7i/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyK630XG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25A3204696
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 21:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64CE204699
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 21:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736372251; cv=none; b=Oz/PWm3KDsuq5fZ0Dnr59ISiyLTcY7lU55oOTKz1FaN9F0NpD+7NiNuooysd/I39QWKnVZWmbr4Y4+GyD2Aea4reXG7zd7AqvKUCmiQMsME8Zi25zP8Y4y9Z8xkl1covgxTu35lJwPu/ibwWbnQAOYQCVXjFkhs6qfZYi+qg9Ps=
+	t=1736372252; cv=none; b=uOhdcM+gZr9ybFSryYwDcN04uP4SQdhUvBgUfzM8gHecxW89hr791kl8uajwvXTIIfc2F5NVuFCg2j839Zo6ihhBxokB+pm9YkhM89BfMXSen9rGzYKoG8hbdZ2UV1agmQHjckbhVVaAEmLWWu0iSePxC+xkO/N+6afqNrYV1XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736372251; c=relaxed/simple;
-	bh=ciNJNKQUk6OHtbaa2qJUKYgCaPsZGL7zLIgxK4tRh4o=;
+	s=arc-20240116; t=1736372252; c=relaxed/simple;
+	bh=5qlZXj8hlh4KeRoXPvbvmIX++lohLRAE6j8J2PBxSB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AEmUDXlOW3VD9vFPjIpNiz6bQly9u5a43ilF/SSEB5R2RK4NhB8cwfX1rN3QYMgsIM4Q01PWrazWA96qfS2zZFs7UeIwCBVqfr/03sfOmNCcwLmsLeHvjJcO5H14/zlkpJ7KU2F8rDVeyfbA5+ZLRUl+FczSUH78o1nF5/kkGYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMERH7i/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF36C4CEDF;
+	 MIME-Version; b=g0LI3Z6cxoObUn548USbDA4jc50bE9d7n7OKxE6xhnIuea9mkJFCZh42ahpTF/HRHrL7znslknoG7K9HU9sMrMgSQWJ4kZ+ABuevwyP/wYoqDvvN3l13DPzFqgGJSoKFMtbyFpHLZdRld0v8evMo7ZKG44cwJEDKFBeco/MxiYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyK630XG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4ADEC4CEE2;
 	Wed,  8 Jan 2025 21:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736372250;
-	bh=ciNJNKQUk6OHtbaa2qJUKYgCaPsZGL7zLIgxK4tRh4o=;
+	s=k20201202; t=1736372251;
+	bh=5qlZXj8hlh4KeRoXPvbvmIX++lohLRAE6j8J2PBxSB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kMERH7i/Ncln1YBX7JEo7yvUy9dzRWmDi+DRDiFHPwKDIK4WdRtNXflrK9yoW0cr+
-	 a8Z4udmQFQUFcDZ3Cda/z9PjUrXqFBigzzILAH29vhP0shtJeyG0FNp6ESntTV5qMf
-	 B8m5k+YBfA7FhAezzqnrNzmoCO89bhrjyAn/tY+C5lz027/5CqCuB0e7bJyleA3v9L
-	 QzSsDU9FhfSk93tu3UnBhtMBAmgNdbUIsKzwtp0rBy5QWOgB30mQiRaj+FxDIVyaYY
-	 Xm2eFgM2eJR2NHnNEoVOn1aUTO2PYfk1RIMixFLYe8A8+eSGkY4Xgowb4AVdl8OREc
-	 4Ihju119lHMLQ==
+	b=uyK630XGrEkgjxJZw8Ek05mjGJSuPImL3iJFJGDNMEsB3xpTeXnNYQnV6/YL4Disi
+	 dmspzb2phczjRmXfvPnFd2FR5Mcr7GMX+K1khy1KMndKvDTxBfPfRp8PieDcUQ1Z1w
+	 uRPQ0TVz9kTiCtvrGTfiKYyVEiZN/JWi/cO/dj18+BqvgQd31xC1vaR9JeLBU5W7k6
+	 Zl3n4ZAtitW84ukhdQF77HVBaXzFvCMDg5ZiXBkCKgCTVcp0GyeIqEMA/pzkUsDhjm
+	 vCUh2TnMr1xgwLBYZNmWZJ17tohemAYfA2Hqr2tP0ruBGMj4XqsQMsBbca4cWQOqpq
+	 5xkDrycuqIT7A==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	steved@redhat.com
 Cc: anna@kernel.org
-Subject: [PATCH NFS-UTILS 05/10] rpcctl: Add missing docstrings to the Xprt class
-Date: Wed,  8 Jan 2025 16:37:21 -0500
-Message-ID: <20250108213726.260664-6-anna@kernel.org>
+Subject: [PATCH NFS-UTILS 06/10] rpcctl: Add missing docstrings to the XprtSwitch class
+Date: Wed,  8 Jan 2025 16:37:22 -0500
+Message-ID: <20250108213726.260664-7-anna@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250108213726.260664-1-anna@kernel.org>
 References: <20250108213726.260664-1-anna@kernel.org>
@@ -63,98 +63,64 @@ From: Anna Schumaker <anna.schumaker@oracle.com>
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- tools/rpcctl/rpcctl.py | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/rpcctl/rpcctl.py | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index 435f4be6623a..b8808787b51d 100755
+index b8808787b51d..adeb26d51f0e 100755
 --- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -44,7 +44,10 @@ def read_info_file(path):
+@@ -177,7 +177,10 @@ class Xprt:
  
  
- class Xprt:
-+    """Represents a single sunrpc connection."""
+ class XprtSwitch:
++    """Represents a group of xprt connections."""
 +
-     def __init__(self, path):
-+        """Read in xprt information from sysfs."""
+     def __init__(self, path, sep=":"):
++        """Read in xprt switch information from sysfs."""
          self.path = path
-         self.name = path.stem.rsplit("-", 1)[0]
-         self.type = path.stem.split("-")[2]
-@@ -54,6 +57,7 @@ class Xprt:
-         self.read_state()
+         self.name = path.stem
+         self.info = read_info_file(path / "xprt_switch_info")
+@@ -186,9 +189,11 @@ class XprtSwitch:
+         self.sep = sep
  
      def __lt__(self, rhs):
-+        """Compare the names of two xprt instances."""
++        """Compare the name of two xprt switch instances."""
          return self.name < rhs.name
  
-     def _xprt(self):
-@@ -79,24 +83,29 @@ class Xprt:
-                f"tasks {self.info['tasks_queuelen']}"
- 
      def __str__(self):
-+        """Return a string representation of an xprt."""
-         if not self.path.exists():
-             return f"{self.name}: has been removed"
-         return "\n".join([self._xprt(), self._src_reqs(),
-                           self._cong_slots(), self._queues()])
- 
-     def read_state(self):
-+        """Read in the xprt_state file."""
-         if self.path.exists():
-             with open(self.path / "xprt_state") as f:
-                 self.state = ','.join(f.readline().split()[1:])
- 
-     def small_str(self):
-+        """Return a short string summary of an xprt."""
-         main = " [main]" if self.info.get("main_xprt") else ""
-         return f"{self.name}: {self.type}, {self.dstaddr}{main}"
- 
-     def set_dstaddr(self, newaddr):
-+        """Change the dstaddr of an xprt."""
-         self.dstaddr = write_addr_file(self.path / "dstaddr", newaddr)
- 
-     def set_state(self, state):
-+        """Change the state of an xprt."""
-         if self.info.get("main_xprt"):
-             raise Exception(f"Main xprts cannot be set {state}")
-         with open(self.path / "xprt_state", 'w') as f:
-@@ -104,12 +113,14 @@ class Xprt:
-         self.read_state()
- 
-     def remove(self):
-+        """Remove an xprt."""
-         if self.info.get("main_xprt"):
-             raise Exception("Main xprts cannot be removed")
-         self.set_state("offline")
-         self.set_state("remove")
++        """Return a string representation of an xprt switch."""
+         switch = f"{self.name}{self.sep} " \
+                  f"xprts {self.info['num_xprts']}, " \
+                  f"active {self.info['num_active']}, " \
+@@ -197,6 +202,7 @@ class XprtSwitch:
+         return "\n".join([switch] + xprts)
  
      def add_command(subparser):
-+        """Add parser options for the `rpcctl xprt` command."""
-         parser = subparser.add_parser("xprt",
-                                       help="Commands for individual xprts")
-         parser.set_defaults(func=Xprt.show, xprt=None)
-@@ -140,6 +151,7 @@ class Xprt:
-         dstaddr.set_defaults(func=Xprt.set_property, property="dstaddr")
++        """Add parser options for the `rpcctl switch` command."""
+         parser = subparser.add_parser("switch",
+                                       help="Commands for xprt switches")
+         parser.set_defaults(func=XprtSwitch.show, switch=None)
+@@ -219,16 +225,19 @@ class XprtSwitch:
+         dstaddr.set_defaults(func=XprtSwitch.set_property, property="dstaddr")
  
      def get_by_name(name):
-+        """Find a (sorted) list of Xprts matching the given name."""
-         glob = f"**/{name}-*" if name else "**/xprt-*"
-         res = [Xprt(x) for x in (sunrpc / "xprt-switches").glob(glob)]
-         if name and len(res) == 0:
-@@ -148,10 +160,12 @@ class Xprt:
-         return sorted(res)
++        """Find a (sorted) list of XprtSwitches matching the given name."""
+         xprt_switches = sunrpc / "xprt-switches"
+         if name:
+             return [XprtSwitch(xprt_switches / name)]
+         return [XprtSwitch(f) for f in sorted(xprt_switches.iterdir())]
  
      def show(args):
-+        """Handle the `rpcctl xprt show` command."""
-         for xprt in Xprt.get_by_name(args.xprt):
-             print(xprt)
++        """Handle the `rpcctl switch show` command."""
+         for switch in XprtSwitch.get_by_name(args.switch):
+             print(switch)
  
      def set_property(args):
-+        """Handle the `rpcctl xprt set` command."""
-         for xprt in Xprt.get_by_name(args.xprt[0]):
-             if args.property == "dstaddr":
-                 xprt.set_dstaddr(socket.gethostbyname(args.newaddr[0]))
++        """Handle the `rpcctl switch set` command."""
+         for switch in XprtSwitch.get_by_name(args.switch[0]):
+             resolved = socket.gethostbyname(args.newaddr[0])
+             for xprt in switch.xprts:
 -- 
 2.47.1
 
