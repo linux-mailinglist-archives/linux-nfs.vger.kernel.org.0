@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-8995-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-8996-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8948A0674B
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 22:37:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B21A0674C
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 22:37:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CCF0D166422
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:37:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 892071661D1
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 21:37:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 160972046B0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5796204699;
 	Wed,  8 Jan 2025 21:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4JcVL6r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8lupjdP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65282046AD
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 21:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1840204690
+	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 21:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736372252; cv=none; b=j5a137caz6xsdOOo9axM4LjwuWYj2r7lTiLqX6gTPp1tfaObfHtnimSIIWr/XMe6eju8WfTBu9kOycvAWQDyVlmi5YYjgqnO8yBjJJWYftu+t6fGo5+SRQ56NLwKbg/BWZTzxflJhG1zyrUhyvQyml9cTQ461Uy/EGg2O9mxAgw=
+	t=1736372252; cv=none; b=UrYZxSLHDmWbWkB/HtpndUzO4CHGcezjDtcUvW3YGxOuITis7L5y2HSZ43e2RlWB6Qb1aYfR/+paYrAshN6zVRx3NOiZTUB6b7Wl18jux0x38hMSsgmXrdGsbBhtkbEa78Qe6Kj2aFFZMFq9gKUfRrvoWbPnIImygDgdB/vnDxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736372252; c=relaxed/simple;
-	bh=0DECj3dt2Ypdi8/vKPv5Nz3JV/SpaEltQPMDB1K/eR4=;
+	bh=FH9V4eDopKIQlmPmb10TVifkgoelCXgFhNpQXHzB1+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V4A+ZKoFLoD8kHnrSfc7aQ5mLOIrLstE7Fc2dJUpzNKb+SDU/Yv/aqmidawPe4xT0zKEk8UXW1uRSNbqgHpepxqAWcugILB/WZB2cebnBkNIDbHPAIFGRNj6XscCwDgY9LZF0+DTGFM7vJGAStw+meZzkmNv7OBxHZJOqvXCr7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4JcVL6r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F69C4CEDF;
+	 MIME-Version; b=UL9jVC6RR1x1S7Xi9N2yEWRgK5+4g+XNr2pWrSi2/RefaXDcbSvssm1P+2oao2LJBgZJau830JyajD5k687NWC9aqz4ipMjybdmIzj4EFvtmc1mo1RNrmsku2WIbKe/cGgjtgpGkBTmjeSvAYlZBv5Vtc8ZLV5SmGKIygLpgvH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8lupjdP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4427C4CEE1;
 	Wed,  8 Jan 2025 21:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736372251;
-	bh=0DECj3dt2Ypdi8/vKPv5Nz3JV/SpaEltQPMDB1K/eR4=;
+	s=k20201202; t=1736372252;
+	bh=FH9V4eDopKIQlmPmb10TVifkgoelCXgFhNpQXHzB1+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z4JcVL6rTIeUTbG++fTsTYirWxWlQGmxw1uNgCNE5h7iX5GWsKAhC+J4ZQ61phQOB
-	 nmyOP+5Bf8UUt2S4Zgu2Fh9n+f7LnVNTFZchnRy6Rcdxd9bIr9A4cbmyANY507gxj8
-	 a/hbQM0zXa9a20w3pmfafyCNWxcWOEAPBktU4Q66Iocqf2llEGlPnkJ50at4dJgiJk
-	 YwCFGuz+JiBmoMSdwzGkNE4zvGxH0aESw/SfKXZadVDjb8Qhc2OU8C+78sDthrukYU
-	 0hrG9+JbY/jvIKXZO4tb+tyaDiTm+PEyyqe1OLYTb42VY5Lorh1xQ4v3iTvB8gpQ9N
-	 cq56duYg5grRg==
+	b=C8lupjdPohu3A9TboO5UhoqJwaeMWUi7Svew0BHvk+0F8QljlVulyuwePc1VR1ip5
+	 0ie0M6g1HeQ4aH0qZ8eJSrSWvyUQn5+nBnv42pgwoVLlybr7XBAXhSGy3duop2uyt4
+	 UBMVhNHaR8bN9SBbMNO7VElBkDmTtPweGXPxxzX7pqxbcb5DXDre6nvn0GKeeVNIbw
+	 GUWxVnE3qAUiNUCV9kxMfL/bYFbf3yDw5zNde7C42K+XhIVSWvffR5419vXAI0CHUV
+	 Co3TEE8Ju49Upho5+QYHle2jU7qaEz37zq9PmcoZ8jHI0yfyh9VwKIGtYDilLvozZX
+	 A369GI/JT4aiA==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	steved@redhat.com
 Cc: anna@kernel.org
-Subject: [PATCH NFS-UTILS 07/10] rpcctl: Add remaining missing docstrings
-Date: Wed,  8 Jan 2025 16:37:23 -0500
-Message-ID: <20250108213726.260664-8-anna@kernel.org>
+Subject: [PATCH NFS-UTILS 08/10] rpcctl.py: Rename {read,write}_addr_file()
+Date: Wed,  8 Jan 2025 16:37:24 -0500
+Message-ID: <20250108213726.260664-9-anna@kernel.org>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250108213726.260664-1-anna@kernel.org>
 References: <20250108213726.260664-1-anna@kernel.org>
@@ -61,92 +61,65 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
+There is nothing address specific about these functions, so name them
+something more generic so they can be reused.
+
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- tools/rpcctl/rpcctl.py | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/rpcctl/rpcctl.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index adeb26d51f0e..0221fbb68be1 100755
+index 0221fbb68be1..654b2f60a894 100755
 --- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -1,4 +1,5 @@
- #!/usr/bin/python3
-+"""Utility for working with the sunrpc sysfs files."""
- import argparse
- import collections
- import errno
-@@ -20,6 +21,7 @@ if not sunrpc.is_dir():
+@@ -20,8 +20,8 @@ if not sunrpc.is_dir():
+     sys.exit(1)
  
  
- def read_addr_file(path):
-+    """Read an xprt address file."""
+-def read_addr_file(path):
+-    """Read an xprt address file."""
++def read_sysfs_file(path):
++    """Read a sysfs file."""
      try:
          with open(path, 'r') as f:
              return f.readline().strip()
-@@ -28,12 +30,14 @@ def read_addr_file(path):
+@@ -29,11 +29,11 @@ def read_addr_file(path):
+         return "(enoent)"
  
  
- def write_addr_file(path, newaddr):
-+    """Write a new address to an xprt address file."""
+-def write_addr_file(path, newaddr):
+-    """Write a new address to an xprt address file."""
++def write_sysfs_file(path, input):
++    """Write 'input' to a sysfs file."""
      with open(path, 'w') as f:
-         f.write(newaddr)
-     return read_addr_file(path)
+-        f.write(newaddr)
+-    return read_addr_file(path)
++        f.write(input)
++    return read_sysfs_file(path)
  
  
  def read_info_file(path):
-+    """Read an xprt or xprt switch information file."""
-     res = collections.defaultdict(int)
-     try:
-         with open(path) as info:
-@@ -246,18 +250,24 @@ class XprtSwitch:
- 
- 
- class RpcClient:
-+    """Represents an rpc client instance."""
-+
-     def __init__(self, path):
-+        """Read in rpc client information from sysfs."""
-         self.path = path
-         self.name = path.stem
-         self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
+@@ -56,8 +56,8 @@ class Xprt:
+         self.name = path.stem.rsplit("-", 1)[0]
+         self.type = path.stem.split("-")[2]
+         self.info = read_info_file(path / "xprt_info")
+-        self.dstaddr = read_addr_file(path / "dstaddr")
+-        self.srcaddr = read_addr_file(path / "srcaddr")
++        self.dstaddr = read_sysfs_file(path / "dstaddr")
++        self.srcaddr = read_sysfs_file(path / "srcaddr")
+         self.read_state()
  
      def __lt__(self, rhs):
-+        """Compare the name of two rpc client instances."""
-         return self.name < rhs.name
+@@ -106,7 +106,7 @@ class Xprt:
  
-     def __str__(self):
-+        """Return a string representation of an rpc client."""
-         return f"{self.name}: {self.switch}"
+     def set_dstaddr(self, newaddr):
+         """Change the dstaddr of an xprt."""
+-        self.dstaddr = write_addr_file(self.path / "dstaddr", newaddr)
++        self.dstaddr = write_sysfs_file(self.path / "dstaddr", newaddr)
  
-     def add_command(subparser):
-+        """Add parser options for the `rpcctl client` command."""
-         parser = subparser.add_parser("client",
-                                       help="Commands for rpc clients")
-         parser.set_defaults(func=RpcClient.show, client=None)
-@@ -269,12 +279,14 @@ class RpcClient:
-         parser.set_defaults(func=RpcClient.show)
- 
-     def get_by_name(name):
-+        """Find a (sorted) list of RpcClients matching the given name."""
-         rpc_clients = sunrpc / "rpc-clients"
-         if name:
-             return [RpcClient(rpc_clients / name)]
-         return [RpcClient(f) for f in sorted(rpc_clients.iterdir())]
- 
-     def show(args):
-+        """Handle the `rpcctl client show` command."""
-         for client in RpcClient.get_by_name(args.client):
-             print(client)
- 
-@@ -283,6 +295,7 @@ parser = argparse.ArgumentParser()
- 
- 
- def show_small_help(args):
-+    """Show a one-line usage summary if no subcommand is given."""
-     parser.print_usage()
-     print("sunrpc dir:", sunrpc)
- 
+     def set_state(self, state):
+         """Change the state of an xprt."""
 -- 
 2.47.1
 
