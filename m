@@ -1,234 +1,99 @@
-Return-Path: <linux-nfs+bounces-9019-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9020-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3399FA0794C
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 15:33:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D335BA079A5
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 15:49:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98E763A412D
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 14:33:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A87618844B5
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 14:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11ECB21B19F;
-	Thu,  9 Jan 2025 14:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgemNqqb"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D8E219E9E;
+	Thu,  9 Jan 2025 14:49:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56791217652
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 14:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BF33FBB3;
+	Thu,  9 Jan 2025 14:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736433198; cv=none; b=k/TzBZs35BTz8p5JBUyczkexUvmGUfPeXQbM6vK/E1VwlIUdN+E/un0aJA+SkpBy096/AvH5XrE2FncvqjRa3aV7XYF6/mnMpIbBVWdzoFBH3hwRsqnVg7ycieytLaD1oIkF/MmDffz6FcmW2nT+YnYmcQowxcinibNgH250ZMQ=
+	t=1736434148; cv=none; b=k0rU2qCSk1sacKNAwDkbIDfoixc1IxmQFLV4hJQFRZpq6H6kYi1F6M6QMzxbawenf0GFZ6suD6xVY/FBinaEny72eCL8jexOj5iUtRcoFAf8W7KhT3rwgfrfw5aRb80+b0cecTUTCuSw1g7/MkTSFdzBBcGcBQARYaVYROLKlU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736433198; c=relaxed/simple;
-	bh=2IiqzLo15QDTgx3pNQnMhlFUgn3N3MSRlBUCQq5QrRY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kb1e22sUeSBd+0Khq+eFjU8pjVQHsW38gR1WnzeTnSG+bFq33aHtoGzR/e5v29T8wlbEnCiJRGlO1NwX0k+DfMXmm7r+4+wZnW/P9V9yfUSiLctfZGhlLEtqCF/1a10ysdZhzHqOGAzFrJQfhDIXT2Pw67x1DE/FBo0H5l9P+W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cgemNqqb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736433194;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0lJFL/x4hcwWn2NViwmUSUTFWkPSrB35uv18Wzt5aNI=;
-	b=cgemNqqbB9B4zgatuDxaoeAz+7ORp/Qe+Yp/0AnUm3Sci70rWTkNeM8eH2wqp9/qB6Ugp9
-	BgrrX516kauMO6jqtOJnZJJoeHTBvgmfRgZRMjTL7hRFOTbqiePlM0lyjRXNVCkUsOnbLL
-	SEonxxKL5G4bG6qeo2/qL/o7QXCNTcM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-228-0qqC7XEFNKquFgvT1_VTRA-1; Thu,
- 09 Jan 2025 09:33:09 -0500
-X-MC-Unique: 0qqC7XEFNKquFgvT1_VTRA-1
-X-Mimecast-MFC-AGG-ID: 0qqC7XEFNKquFgvT1_VTRA
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E4841955DA8;
-	Thu,  9 Jan 2025 14:33:08 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.76.8])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7B2C119560AB;
-	Thu,  9 Jan 2025 14:33:07 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
-Subject: Re: [PATCH 1/3] NFS: Add implid to sysfs
-Date: Thu, 09 Jan 2025 09:33:05 -0500
-Message-ID: <0430CAB9-DDCA-4DE7-B377-1AE485FB731E@redhat.com>
-In-Reply-To: <20250108213632.260498-2-anna@kernel.org>
-References: <20250108213632.260498-1-anna@kernel.org>
- <20250108213632.260498-2-anna@kernel.org>
+	s=arc-20240116; t=1736434148; c=relaxed/simple;
+	bh=46OfJedDFsal/84XtGkdidDlykadwg95odP8kEBZssY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uoHQkJ1uNH96+Nx59w/vQTLSR+n3d0MLE3Oyv95Kpd4XF2eMKkCcOnSA4lsYfklJJ6c447yx2AiQRrLEZQXzmtsPigGOnzVaRLn9ZYF9fX66IU0RhsQnWZckf5v3jqM0lOLADlh6yezWjp/vNMyGxKcZzn6jIb8FAFJFEAyTh/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F4DC4CED2;
+	Thu,  9 Jan 2025 14:49:04 +0000 (UTC)
+Date: Thu, 9 Jan 2025 09:50:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Kees Cook
+ <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+ codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev,
+ linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org,
+ kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+Message-ID: <20250109095037.0ac3fe09@gandalf.local.home>
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 8 Jan 2025, at 16:36, Anna Schumaker wrote:
+On Thu, 09 Jan 2025 14:16:39 +0100
+Joel Granados <joel.granados@kernel.org> wrote:
 
-> From: Anna Schumaker <anna.schumaker@oracle.com>
->
-> The Linux NFS server added support for returning this information durin=
-g
-> an EXCHANGE_ID in Linux v6.13. This is something and admin might want t=
-o
-> query, so let's add it to sysfs.
-
-I agree that admins will want to know (and they might not yet know they w=
-ant
-to know), good idea!
-
-A couple comments..
-
-> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
-> ---
->  fs/nfs/sysfs.c | 79 ++++++++++++++++++++++++++++++++++++++++++++++++++=
-
->  1 file changed, 79 insertions(+)
->
-> diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-> index 7b59a40d40c0..6b82c92c45bf 100644
-> --- a/fs/nfs/sysfs.c
-> +++ b/fs/nfs/sysfs.c
-> @@ -272,6 +272,32 @@ shutdown_store(struct kobject *kobj, struct kobj_a=
-ttribute *attr,
->
->  static struct kobj_attribute nfs_sysfs_attr_shutdown =3D __ATTR_RW(shu=
-tdown);
->
-> +#if IS_ENABLED(CONFIG_NFS_V4_1)
-> +static ssize_t
-> +implid_domain_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct nfs_server *server =3D container_of(kobj, struct nfs_server, k=
-obj);
-> +	struct nfs41_impl_id *impl_id =3D server->nfs_client->cl_implid;
-> +	return sysfs_emit(buf, "%s\n", impl_id->domain);
-> +}
-> +
-> +static struct kobj_attribute nfs_sysfs_attr_implid_domain =3D __ATTR_R=
-O(implid_domain);
-> +
-> +
-> +static ssize_t
-> +implid_name_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct nfs_server *server =3D container_of(kobj, struct nfs_server, k=
-obj);
-> +	struct nfs41_impl_id *impl_id =3D server->nfs_client->cl_implid;
-> +	return sysfs_emit(buf, "%s\n", impl_id->name);
-> +}
-> +
-> +static struct kobj_attribute nfs_sysfs_attr_implid_name =3D __ATTR_RO(=
-implid_name);
-> +
-> +#endif /* IS_ENABLED(CONFIG_NFS_V4_1) */
-> +
->  #define RPC_CLIENT_NAME_SIZE 64
->
->  void nfs_sysfs_link_rpc_client(struct nfs_server *server,
-> @@ -309,6 +335,33 @@ static struct kobj_type nfs_sb_ktype =3D {
->  	.child_ns_type =3D nfs_netns_object_child_ns_type,
->  };
->
-> +#if IS_ENABLED(CONFIG_NFS_V4_1)
-> +static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
-> +{
-> +	struct nfs_client *clp =3D server->nfs_client;
-> +	int ret;
-> +
-> +	if (clp->cl_implid && strlen(clp->cl_implid->domain) > 0) {
-
-Can we create the files and leave them empty if the strings are not set?
-Having an empty file might be a nice prompt for an implementation to star=
-t
-sending values.  I also have a slight preference for a less dynamic sysfs=
-=2E
-
-> +		ret =3D sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_d=
-omain.attr,
-> +					   nfs_netns_server_namespace(&server->kobj));
-> +		if (ret < 0)
-> +			pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-> +				server->s_sysfs_id, ret);
-> +
-> +		ret =3D sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_n=
-ame.attr,
-> +					   nfs_netns_server_namespace(&server->kobj));
-> +		if (ret < 0)
-> +			pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-> +				server->s_sysfs_id, ret);
-> +
-> +	}
-> +}
-> +#else /* CONFIG_NFS_V4_1 */
-> +static inline void nfs_sysfs_add_nfsv41_server(struct nfs_server *serv=
-er)
-> +{
-> +}
-> +#endif /* CONFIG_NFS_V4_1 */
-> +
->  void nfs_sysfs_add_server(struct nfs_server *server)
->  {
->  	int ret;
-> @@ -325,6 +378,32 @@ void nfs_sysfs_add_server(struct nfs_server *serve=
-r)
->  	if (ret < 0)
->  		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
->  			server->s_sysfs_id, ret);
-> +
-> +	nfs_sysfs_add_nfsv41_server(server);
-
-I think you didn't mean to send the hunk below.  :)
-
-Ben
-
-> +
-> +/*	if (server->nfs_client->cl_serverowner) {
-> +		ret =3D sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_serverow=
-ner.attr,
-> +					nfs_netns_server_namespace(&server->kobj));
-> +		if (ret < 0)
-> +			pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-> +				server->s_sysfs_id, ret);
-> +	}
-> +
-> +	if (server->nfs_client->cl_serverscope) {
-> +		ret =3D sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_serversc=
-ope.attr,
-> +					nfs_netns_server_namespace(&server->kobj));
-> +		if (ret < 0)
-> +			pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-> +				server->s_sysfs_id, ret);
-> +	}
-> +
-> +	if (server->nfs_client->cl_implid) {
-> +		ret =3D sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid.a=
-ttr,
-> +					nfs_netns_server_namespace(&server->kobj));
-> +		if (ret < 0)
-> +			pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-> +				server->s_sysfs_id, ret);
-> +	}*/
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 2e113f8b13a2..489cbab3d64c 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
 >  }
->  EXPORT_SYMBOL_GPL(nfs_sysfs_add_server);
->
-> -- =
+>  
+> -static struct ctl_table ftrace_sysctls[] = {
+> +static const struct ctl_table ftrace_sysctls[] = {
+>  	{
+>  		.procname       = "ftrace_enabled",
+>  		.data           = &ftrace_enabled,
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 17bcad8f79de..97325fbd6283 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table user_event_sysctls[] = {
+> +static const struct ctl_table user_event_sysctls[] = {
+>  	{
+>  		.procname	= "user_events_max",
+>  		.data		= &max_user_events,
 
-> 2.47.1
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org> # for kernel/trace/
 
+-- Steve
 
