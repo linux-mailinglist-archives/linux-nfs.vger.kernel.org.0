@@ -1,89 +1,115 @@
-Return-Path: <linux-nfs+bounces-9032-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9033-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21633A07DB3
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 17:36:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41B8EA07F7B
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 19:06:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E7041692CA
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 16:36:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6732188A1F2
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 18:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE9E9222572;
-	Thu,  9 Jan 2025 16:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25AF1993BD;
+	Thu,  9 Jan 2025 18:06:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0vZAMXC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXJVC9TE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F99222569;
-	Thu,  9 Jan 2025 16:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353901891A8;
+	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736440566; cv=none; b=RrqXe597uKCUQ4WKzCPf8CL2zUT4JtTv5n+8rhzv+oh0YGeLaF/8SKYIusAlIHEluXUst+bRPdDOTfAqfePOJWmFzVbml09uy1QgGRX63ID+rLRbSbgQ5OcAcdKNaDolhi3qTyspsupRfKeH+UIFa8TKbfE2ej+JenmqyT1dQQs=
+	t=1736445964; cv=none; b=VvHEyCfUg876uGgrEmYxXy8UlEdiwWGoaWWMkr5oFovrJb2FwTebjDin5EpnoVGYN28ukq2myVh045svMJRL8JsE63HRfqjdXQUl0H7gIUF9MzCVFKBKpnJjQbHKPxKz4Cwf4idIawEkLnve+ppo6OhZbiIIU0jjqIZfLC+2X38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736440566; c=relaxed/simple;
-	bh=jU3RypXovbkii7FU1sbotxWRcH9k7T1/3ojFfFsJa0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hImkMrBoL6yBIutKmiGGz6+7rLRsm77IXOPURZHbHeo3IdC7Xlgo+H/RcY1uccsJfxjl96xLQtDwy6rv/ZqEruklUF7+kOrG8DdeG920b1XnNenjNj/a+5aw/AlHpLtNM8+DQglEIbZv+d6W9CSPZJKMvy0ZdmC7Ax+rTEM3tCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0vZAMXC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D73C4CED3;
-	Thu,  9 Jan 2025 16:36:05 +0000 (UTC)
+	s=arc-20240116; t=1736445964; c=relaxed/simple;
+	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VZDfMAbOVoBTLRuPumm/61F/h2i1GJZRnbEgzMhnss0baXDo1f0XYOpYBi4tzja4LFrqQzafYP5JJv1S7AdbWgoNz5EGEy4gUerg2ncDitCupUAfGFl3lErZBMARDgI5diRRJnipAROC50bHeFT1zHg9fSZZr/jK+qNPqzMkH2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXJVC9TE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C334DC4CEE4;
+	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736440566;
-	bh=jU3RypXovbkii7FU1sbotxWRcH9k7T1/3ojFfFsJa0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K0vZAMXCMDfwNFpDIttwYNvzv/Evr02hJiaBlveeXLMmK5ubZovHlbn+isIVjzJxb
-	 low1xU4JRif4413Tvq00TG3uVBdbfHGkYPiL0QaYpP/4UotrqisCGG4o++k/tvkagq
-	 Sl0JXgXh4VtsPa3nHXkLDzDi7BzLero2AEWZ1Tx8p/TBTI9Mq5/UjmnFhgTmt9GmmQ
-	 RcDQeaKjsbrFVye2QUxqfoAR/uvjNa5wt3HxNaXW0Vv2KhwRPWrkllvSGnbv4uVi9B
-	 P+t3csxGUgDXpKtRh2xhy6Cw3lzQzFjL9ASxo4nDQzf8Z68oCsS7iRDbdTCFHSOHnu
-	 2DwWILLpSvpUw==
-Date: Thu, 9 Jan 2025 08:36:04 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Donald Hunter <donald.hunter@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Chuck Lever
- <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
- <anna@kernel.org>, Scott Mayhew <smayhew@redhat.com>, Yongcheng Yang
- <yoyang@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] lockd: add netlink control interface
-Message-ID: <20250109083604.77ffe61d@kernel.org>
-In-Reply-To: <20250108-lockd-nl-v1-1-b39f89ae0f20@kernel.org>
-References: <20250108-lockd-nl-v1-1-b39f89ae0f20@kernel.org>
+	s=k20201202; t=1736445963;
+	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hXJVC9TEna9TWYKbS9F02aIUvOHalq4E7m1+cvMk0ArDdbnyNkOQeESQ7Ur7QTEYq
+	 oV3fJnNHiU6ugTU9/tuOjHdJ9qaR831jsML8BcJ2B2+uzRQfA4kpmr3AmZ+XqRvw70
+	 BTN8HX8ggLtR2WOIhN2X2Ipa4OKa5qs1wwTNGfy1p+9su4jHqsiWIAwGFmgaxU7Nfw
+	 H9Abn1fQ/2SPP2QU6lVw0EYHITfjtwSWp9wIQJbaVZRVNv4TDYE1jWwRNuescPEqI8
+	 vYK392uOFALwuMqP1HoC1bERclFcBuYV7fmAeGJqkaXECHPwUoHQw9LVho0fFgK9tk
+	 fJ+fXn+JQWXLQ==
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-844e61f3902so84636339f.0;
+        Thu, 09 Jan 2025 10:06:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU7vJw0Yhmq1HoAJE/OsvsfkQbIo3Qpr1D+sW06TxmQ5b/DqPayTYNKisT6YlckhoJ/IfnE5UGOvIbJrutD@vger.kernel.org, AJvYcCUKdmxyZjBp3BN7k7bDpN4N42WSL1faJzx46lngDyuVmFlNTI2wAZ/leYEmL86hu//fxZPWQhEABSYGBg==@vger.kernel.org, AJvYcCULY3K6q3eLHaJUinkOdCYzYWWRKDGEXIaMe8mEfRkN7N0K8Ln5LelCSICnWBP+PVw21khAYRY0I/yXGM34ex8875Lt@vger.kernel.org, AJvYcCVCk/MjPKokyvIFdvJp7RsCvf++XNAKuITebk7mFTLuT4l7VFi6vfvJas82zOGLosM7pdOUakoKNiRPAVV1L9BY@vger.kernel.org, AJvYcCVFFZUa45jD1kY7O9eFU5SsUOqiXanSiyk6iItfL/7JIGCYDwQAnECEOmbGSW/J+JeHcB6lQHM7lC43jd5b@vger.kernel.org, AJvYcCVKb72VeDQU6u4ACgTVz6YEQ9f7JtoFU9ctAvBDnt3aKvFaKQ54WshcK/7b9jpNv5D7FWre/NxGxAk=@vger.kernel.org, AJvYcCWSrc8M6fjpLnYyFHGOEb0RYL+mB/Fgxv1FV7zmoLzsAJ/Wtn0fIkCarRXTIngSvrano0x6/jdeyxsYuYEC@vger.kernel.org, AJvYcCWtgvWJyxsKGbn8X+vDuQqN1WrpeWmOWctnx7Ti3HzLu15h1v1usBlf1r3HeMsvDVagzn8TvL7uzPxfkw==@vger.kernel.org, AJvYcCX1Empd1OmdV4QaxGiw76Wp2zNEdc/H8iMRZeDlhlVKhz+vvxL6oJW0ZpjcVO3ki6VJyF8ALxZck6AoB/K1dw==@vger.kernel.org, AJvY
+ cCXCdgnNYyUlkiKT78jlZjfznht9f2JVWR1FljjRzn/hSF7yDBGVSj/joJqZdFNNQVpgo7plN3gnyhdWbQ==@vger.kernel.org, AJvYcCXFAQPNv8JtV7Wufe/McLhaGMCOYYMEUuHAmDXIIawBAvL4rUEOqJWikiBGT1GQ0wOeS3/g9CdYIF2h@vger.kernel.org, AJvYcCXGtnrLPWgALgr4QfzQA/NmEN6VmXmCX3wvTuErCHMi7SS8EiHmFcpyctKEJjF0V//QHSPsdom+rrFL3VKS@vger.kernel.org, AJvYcCXIzeaTKwsRbHvTyT2sT4J+p6Lh7htnXdaRITEsFqjlkKr7xu+q6+m2LKFK5/i2uR/Qu6E=@vger.kernel.org, AJvYcCXTsx3jAkPtqX7iahsPp8jY9cpP/DM984HqW5e5UUcTmN4TWdk2KDFO+cbAx2jA6Ae3+lm91tc+D1yVGg==@vger.kernel.org, AJvYcCXZ70fEeI70dxqfxPZVy8gOKyomd4lrw3DiPAmwp8fv74mTYEvvhCkSKuLewpzIZgciA3MiXVGc2Ys=@vger.kernel.org, AJvYcCXkhvwjOgsaIzBVYWxnjX61N5K2at4QUYgwmwKHhktkaridkUeBV6OMnzfq0vd6TMRwa9M/P7iyAql4@vger.kernel.org, AJvYcCXrcdxhbTsLKpwI1RIN5zp6raljAefAN4PXOQoTv2fBw5HAHfCD7FvZy5vJWBmhGWDqwVNFKpR8Co/lYKYTnT8acJP5/X5U@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAA8huuUN4T/BErSHEBklOz+LJ/qJkbUPu2hkdEypz5WdiISEO
+	+iw2r5548Ec7U0VJ51OVdV81QeQasNe8w7IkhP5T2gqDd/c925a0zD8/6rhvfa+CwPjO/nxhtxn
+	OkxDxrMGctxtZtN+RNCllTsC25ns=
+X-Google-Smtp-Source: AGHT+IHw82IqZn0L3vIWI2GRAE2/Fu1vkOzFuTOkK3ccul7HxPp7E2ac95iMCNTUN8mztI4YyZ2Kf9FZUsicSlonzfg=
+X-Received: by 2002:a05:6e02:3048:b0:3a7:6a98:3fdf with SMTP id
+ e9e14a558f8ab-3ce3a9da817mr60484875ab.14.1736445963152; Thu, 09 Jan 2025
+ 10:06:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 9 Jan 2025 10:05:51 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
+X-Gm-Features: AbW1kvZZD8oqcdTZ9DXv7tEUC7bpyqeBsuw6nnhXboAE2kNg_1eTiibnv93HXj8
+Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+To: Joel Granados <joel.granados@kernel.org>
+Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
+	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 08 Jan 2025 16:00:15 -0500 Jeff Layton wrote:
-> The legacy rpc.nfsd tool will set the nlm_grace_period if the NFSv4
-> grace period is set. nfsdctl is missing this functionality, so add a new
-> netlink control interface for lockd that it can use. For now, it only
-> allows setting the grace period, and the tcp and udp listener ports.
-> 
-> lockd currently uses module parameters and sysctls for configuration, so
-> all of its settings are global. With this change, lockd now tracks these
-> values on a per-net-ns basis. It will only fall back to using the global
-> values if any of them are 0.
-> 
-> Finally, as a backward compatability measure, if updating the nlm
-> settings in the init_net namespace, also update the legacy global
-> values to match.
+On Thu, Jan 9, 2025 at 5:16=E2=80=AFAM Joel Granados <joel.granados@kernel.=
+org> wrote:
+>
+[...]
+>  drivers/base/firmware_loader/fallback_table.c | 2 +-
+>  drivers/cdrom/cdrom.c                         | 2 +-
+>  drivers/char/hpet.c                           | 2 +-
+>  drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
+>  drivers/char/random.c                         | 2 +-
+>  drivers/gpu/drm/i915/i915_perf.c              | 2 +-
+>  drivers/gpu/drm/xe/xe_observation.c           | 2 +-
+>  drivers/hv/hv_common.c                        | 2 +-
+>  drivers/infiniband/core/iwcm.c                | 2 +-
+>  drivers/infiniband/core/ucma.c                | 2 +-
+>  drivers/macintosh/mac_hid.c                   | 2 +-
+>  drivers/md/md.c                               | 2 +-
 
-Netlinky stuff LGTM, FWIW!
+For md bits:
 
-To encourage more doc: properties I should point out that we
-render the specs on docs.kernel.org, now ;)
-https://docs.kernel.org/next/networking/netlink_spec/nfsd.html
+Reviewed-by: Song Liu <song@kernel.org>
+
+Thanks,
+Song
+
+[...]
 
