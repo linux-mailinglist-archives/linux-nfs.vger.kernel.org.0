@@ -1,339 +1,320 @@
-Return-Path: <linux-nfs+bounces-9010-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9011-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E99B1A07527
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 12:56:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62118A075C3
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 13:31:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DA6B188AE77
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 11:56:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E926F1887783
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 12:31:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 173DF216E04;
-	Thu,  9 Jan 2025 11:56:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934F4215F4E;
+	Thu,  9 Jan 2025 12:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phys.ethz.ch header.i=@phys.ethz.ch header.b="Ve6vGfSH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBMLvkoY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from phd-imap.ethz.ch (phd-imap.ethz.ch [129.132.80.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0959B1A23B0
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 11:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.132.80.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCB17D2
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 12:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736423812; cv=none; b=A7NxczLVGmRuXM3Cep6yS7Gbe/IdBbqr4ccJPiQkWC462KXKPSsPaMqFnxLZShroi0bmo3w0kAkkP1OPBrRE/sgxP+5BeIJyKshc5LVZDC0cX0w1qzahrnhMJKLxWvYLiPFFCLaKl7VjsF5V/6AyIxHAXTf7DR4tczuu0e22idM=
+	t=1736425877; cv=none; b=dE5NpM+ccrv1adyIZBwREP5N+swo7NcQVKrMwI/50OOsZKF0w2atMNrboS88WhwOwCmqbwjPMgJU7FrjhdT5gCbQtppRnVhTNRiXF3NxAI6E4DvZJbDXerMoxRBzNWFJ7B15uodIU2aKSxO27ib1xOS4ps/ouPABPjsewbaaZro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736423812; c=relaxed/simple;
-	bh=UZ+3RiVGIcTOXRer5tKmVs20rWC6aaA/7hIvQNlroIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t96seOYGGsyE6Y+yhdFCUOBYflFigh9iGelDAj2NxN77Icv0eYJwnG70GaT5c2CQAvNB8xI99Tj4Z2PBuL8Q5m8D7Ff3iSqUSrE3eSRqZfEVtgAAm7Zvdo6HXlRy6uDBS932mYQfFBHepdy/lbQizgZ4R4tC87GjY+Purezl7TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phys.ethz.ch; spf=pass smtp.mailfrom=phys.ethz.ch; dkim=pass (2048-bit key) header.d=phys.ethz.ch header.i=@phys.ethz.ch header.b=Ve6vGfSH; arc=none smtp.client-ip=129.132.80.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=phys.ethz.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phys.ethz.ch
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phys.ethz.ch;
-	s=2023; t=1736423805;
-	bh=m0EkLpgeCvzuNiAA62i71oXyUR3jPTBIiYGDYMgQ51I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Ve6vGfSHEmNr+5ht6fwnO6P9poa1uCCKAAJ8c8AifxVIWIb94/qCFQ42IC7HyQOxH
-	 Xns1uA/2UqfoiQZuvns5gN7bUBBTLhjTkiLJ3YUsV0fM2wtReJTfQeXbQ/AoSOQLf2
-	 PTdKUz4IuQl4mVifcLYkORUPJliacn7/ppCAeq1gh9ihhupecquIkByZYKhc0WIdpw
-	 WLoJWSm3kG4J6iSx/7wnIitBVWnvwEqsnHCPC8l7x5bBjxZ94a7opPa9UQaTmsWd8g
-	 t2rq6YWYcXH0fLt8Yq/4t5wP7PbYoKm5y1xwgi2e7ioNZ5XayOxmA6+ZQ2uXCoPA5R
-	 wIOPJH0U+XIHA==
-Received: from localhost (192-168-127-49.net4.ethz.ch [192.168.127.49])
-	by phd-imap.ethz.ch (Postfix) with ESMTP id 4YTNYT4nx1z8R;
-	Thu,  9 Jan 2025 12:56:45 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at phys.ethz.ch
-Received: from phd-mxin.ethz.ch ([192.168.127.53])
-	by localhost (phd-mailscan.ethz.ch [192.168.127.49]) (amavisd-new, port 10024)
-	with LMTP id ErK6U4ZBoQyt; Thu,  9 Jan 2025 12:56:45 +0100 (CET)
-Received: from phys.ethz.ch (mothership.ethz.ch [192.33.96.20])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: daduke@phd-mxin.ethz.ch)
-	by phd-mxin.ethz.ch (Postfix) with ESMTPSA id 4YTNYT3sY5z9w;
-	Thu,  9 Jan 2025 12:56:45 +0100 (CET)
-Date: Thu, 9 Jan 2025 12:56:44 +0100
-From: Christian Herzog <herzog@phys.ethz.ch>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Harald Dunkel <harald.dunkel@aixigo.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Martin Svec <martin.svec@zoner.cz>,
-	Michael Gernoth <debian@zerfleddert.de>,
-	Pellegrin Baptiste <Baptiste.Pellegrin@ac-grenoble.fr>
-Subject: Re: nfsd blocks indefinitely in nfsd4_destroy_session
-Message-ID: <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
-Reply-To: Christian Herzog <herzog@phys.ethz.ch>
-References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
- <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
- <Z2vNQ6HXfG_LqBQc@eldamar.lan>
- <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
- <Z32ZzQiKfEeVoyfU@eldamar.lan>
- <3cdcf2ee-46b3-463d-bc14-0f44062c0bd0@oracle.com>
- <Z36RshcsxU1xFj_X@phys.ethz.ch>
- <7fb711b1-c557-48de-bf91-d522bdbcc575@oracle.com>
+	s=arc-20240116; t=1736425877; c=relaxed/simple;
+	bh=PryTqdQOHYY7z2qhltgV0XTY/j9IYwt3bcAHmUPhbcI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GNXv/+DXS3leba8Ukn6EcHpR1UQX3VmbpOFY9dXyEe/+Kvzen14fWak2hBqCJUDPU1GvMGca0L3/Kp2vghJzLJpyeBBJw3RAA5I86xFYFaQBwpOuvFGvWTGpVoicCjbC3jrdi9rfoxC4bdUZxlQE088XEkWwXQqY4lMb7vTR3vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBMLvkoY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93759C4CED2;
+	Thu,  9 Jan 2025 12:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736425875;
+	bh=PryTqdQOHYY7z2qhltgV0XTY/j9IYwt3bcAHmUPhbcI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TBMLvkoY8IiB14nrrRnS2eY2hhK1EHZueM4yAuwTo1rt0xV5MrSCKFW8SumrYAT7M
+	 SR4reK/8pyLjYN8hYCkHopM1nK1pBbMrE0rWX+9Axbwkw/Hsv3klDdDxkoq9jyv+zs
+	 2CzySQ4VCAHwRUxPqqICqVjKVfs4h9Iu7OxCQWMSOqzL+OgdQcLi0zf2kz05CRiBZ1
+	 tkEwmy3ou5B0d2u6iV357hRt27hgOJnUrKQU5ZNRqoOkWvcQmIlRCMp8Fe7EkRo1VS
+	 BMl+XaiOGz0d4fLd0bckuTSZFW3NkprUrUarAn3G+T26RBHkQvAgjHfXfnXBibS3cZ
+	 MsxYuCf5BxMbA==
+Message-ID: <52d4ff32bb0c598e97946e478c70fa3c718254d2.camel@kernel.org>
+Subject: Re: [nfs-utils PATCH] nfsdctl: tweak the version subcommand behavior
+From: Jeff Layton <jlayton@kernel.org>
+To: Scott Mayhew <smayhew@redhat.com>, steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 09 Jan 2025 07:31:14 -0500
+In-Reply-To: <20250108225439.814872-1-smayhew@redhat.com>
+References: <20250108225439.814872-1-smayhew@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7fb711b1-c557-48de-bf91-d522bdbcc575@oracle.com>
 
-Dear Chuck,
+On Wed, 2025-01-08 at 17:54 -0500, Scott Mayhew wrote:
+> The section for the 'nfsdctl version' subcommand on the man page states
+> that the minorversion is optional, and if omitted it will cause all
+> minorversions to be enabled/disabled, but it currently doesn't work that
+> way.
+>=20
+> Make it work that way, with one exception.  If v4.0 is disabled, then
+> 'nfsdctl version +4' will not re-enable it; instead it must be
+> explicitly re-enabled via 'nfsdctl version +4.0'.  This mirrors the way
+> /proc/fs/nfsd/versions works.
+>=20
 
-On Wed, Jan 08, 2025 at 10:07:49AM -0500, Chuck Lever wrote:
-> On 1/8/25 9:54 AM, Christian Herzog wrote:
-> > Dear Chuck,
-> > 
-> > On Wed, Jan 08, 2025 at 08:33:23AM -0500, Chuck Lever wrote:
-> > > On 1/7/25 4:17 PM, Salvatore Bonaccorso wrote:
-> > > > Hi Chuck,
-> > > > 
-> > > > Thanks for your time on this, much appreciated.
-> > > > 
-> > > > On Wed, Jan 01, 2025 at 02:24:50PM -0500, Chuck Lever wrote:
-> > > > > On 12/25/24 4:15 AM, Salvatore Bonaccorso wrote:
-> > > > > > Hi Chuck, hi all,
-> > > > > > 
-> > > > > > [it was not ideal to pick one of the message for this followup, let me
-> > > > > > know if you want a complete new thread, adding as well Benjamin and
-> > > > > > Trond as they are involved in one mentioned patch]
-> > > > > > 
-> > > > > > On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > On Jun 17, 2024, at 2:55 AM, Harald Dunkel <harald.dunkel@aixigo.com> wrote:
-> > > > > > > > 
-> > > > > > > > Hi folks,
-> > > > > > > > 
-> > > > > > > > what would be the reason for nfsd getting stuck somehow and becoming
-> > > > > > > > an unkillable process? See
-> > > > > > > > 
-> > > > > > > > - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071562
-> > > > > > > > - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2062568
-> > > > > > > > 
-> > > > > > > > Doesn't this mean that something inside the kernel gets stuck as
-> > > > > > > > well? Seems odd to me.
-> > > > > > > 
-> > > > > > > I'm not familiar with the Debian or Ubuntu kernel packages. Can
-> > > > > > > the kernel release numbers be translated to LTS kernel releases
-> > > > > > > please? Need both "last known working" and "first broken" releases.
-> > > > > > > 
-> > > > > > > This:
-> > > > > > > 
-> > > > > > > [ 6596.911785] RPC: Could not send backchannel reply error: -110
-> > > > > > > [ 6596.972490] RPC: Could not send backchannel reply error: -110
-> > > > > > > [ 6837.281307] RPC: Could not send backchannel reply error: -110
-> > > > > > > 
-> > > > > > > is a known set of client backchannel bugs. Knowing the LTS kernel
-> > > > > > > releases (see above) will help us figure out what needs to be
-> > > > > > > backported to the LTS kernels kernels in question.
-> > > > > > > 
-> > > > > > > This:
-> > > > > > > 
-> > > > > > > [11183.290619] wait_for_completion+0x88/0x150
-> > > > > > > [11183.290623] __flush_workqueue+0x140/0x3e0
-> > > > > > > [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
-> > > > > > > [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
-> > > > > > > 
-> > > > > > > is probably related to the backchannel errors on the client, but
-> > > > > > > client bugs shouldn't cause the server to hang like this. We
-> > > > > > > might be able to say more if you can provide the kernel release
-> > > > > > > translations (see above).
-> > > > > > 
-> > > > > > In Debian we hstill have the bug #1071562 open and one person notified
-> > > > > > mye offlist that it appears that the issue get more frequent since
-> > > > > > they updated on NFS client side from Ubuntu 20.04 to Debian bookworm
-> > > > > > with a 6.1.y based kernel).
-> > > > > > 
-> > > > > > Some people around those issues, seem to claim that the change
-> > > > > > mentioned in
-> > > > > > https://lists.proxmox.com/pipermail/pve-devel/2024-July/064614.html
-> > > > > > would fix the issue, which is as well backchannel related.
-> > > > > > 
-> > > > > > This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel reply,
-> > > > > > again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use the
-> > > > > > nfs_client's rpc timeouts for backchannel") this is not something
-> > > > > > which goes back to 6.1.y, could it be possible that hte backchannel
-> > > > > > refactoring and this final fix indeeds fixes the issue?
-> > > > > > 
-> > > > > > As people report it is not easily reproducible, so this makes it
-> > > > > > harder to identify fixes correctly.
-> > > > > > 
-> > > > > > I gave a (short) stance on trying to backport commits up to
-> > > > > > 6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but this quickly
-> > > > > > seems to indicate it is probably still not the right thing for
-> > > > > > backporting to the older stable series.
-> > > > > > 
-> > > > > > As at least pre-requisites:
-> > > > > > 
-> > > > > > 2009e32997ed568a305cf9bc7bf27d22e0f6ccda
-> > > > > > 4119bd0306652776cb0b7caa3aea5b2a93aecb89
-> > > > > > 163cdfca341b76c958567ae0966bd3575c5c6192
-> > > > > > f4afc8fead386c81fda2593ad6162271d26667f8
-> > > > > > 6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
-> > > > > > 57331a59ac0d680f606403eb24edd3c35aecba31
-> > > > > > 
-> > > > > > and still there would be conflicting codepaths (and does not seem
-> > > > > > right).
-> > > > > > 
-> > > > > > Chuck, Benjamin, Trond, is there anything we can provive on reporters
-> > > > > > side that we can try to tackle this issue better?
-> > > > > 
-> > > > > As I've indicated before, NFSD should not block no matter what the
-> > > > > client may or may not be doing. I'd like to focus on the server first.
-> > > > > 
-> > > > > What is the result of:
-> > > > > 
-> > > > > $ cd <Bookworm's v6.1.90 kernel source >
-> > > > > $ unset KBUILD_OUTPUT
-> > > > > $ make -j `nproc`
-> > > > > $ scripts/faddr2line \
-> > > > > 	fs/nfsd/nfs4state.o \
-> > > > > 	nfsd4_destroy_session+0x16d
-> > > > > 
-> > > > > Since this issue appeared after v6.1.1, is it possible to bisect
-> > > > > between v6.1.1 and v6.1.90 ?
-> > > > 
-> > > > First please note, at least speaking of triggering the issue in
-> > > > Debian, Debian has moved to 6.1.119 based kernel already (and soon in
-> > > > the weekends point release move to 6.1.123).
-> > > > 
-> > > > That said, one of the users which regularly seems to be hit by the
-> > > > issue was able to provide the above requested information, based for
-> > > > 6.1.119:
-> > > > 
-> > > > ~/kernel/linux-source-6.1# make kernelversion
-> > > > 6.1.119
-> > > > ~/kernel/linux-source-6.1# scripts/faddr2line fs/nfsd/nfs4state.o nfsd4_destroy_session+0x16d
-> > > > nfsd4_destroy_session+0x16d/0x250:
-> > > > __list_del_entry at /root/kernel/linux-source-6.1/./include/linux/list.h:134
-> > > > (inlined by) list_del at /root/kernel/linux-source-6.1/./include/linux/list.h:148
-> > > > (inlined by) unhash_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:2062
-> > > > (inlined by) nfsd4_destroy_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:3856
-> > > > 
-> > > > They could provide as well a decode_stacktrace output for the recent
-> > > > hit (if that is helpful for you):
-> > > > 
-> > > > [Mon Jan 6 13:25:28 2025] INFO: task nfsd:55306 blocked for more than 6883 seconds.
-> > > > [Mon Jan 6 13:25:28 2025]       Not tainted 6.1.0-28-amd64 #1 Debian 6.1.119-1
-> > > > [Mon Jan 6 13:25:28 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> > > > [Mon Jan 6 13:25:28 2025] task:nfsd            state:D stack:0     pid:55306 ppid:2      flags:0x00004000
-> > > > [Mon Jan 6 13:25:28 2025] Call Trace:
-> > > > [Mon Jan 6 13:25:28 2025]  <TASK>
-> > > > [Mon Jan 6 13:25:28 2025] __schedule+0x34d/0x9e0
-> > > > [Mon Jan 6 13:25:28 2025] schedule+0x5a/0xd0
-> > > > [Mon Jan 6 13:25:28 2025] schedule_timeout+0x118/0x150
-> > > > [Mon Jan 6 13:25:28 2025] wait_for_completion+0x86/0x160
-> > > > [Mon Jan 6 13:25:28 2025] __flush_workqueue+0x152/0x420
-> > > > [Mon Jan 6 13:25:28 2025] nfsd4_destroy_session (debian/build/build_amd64_none_amd64/include/linux/spinlock.h:351 debian/build/build_amd64_none_amd64/fs/nfsd/nfs4state.c:3861) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] nfsd4_proc_compound (debian/build/build_amd64_none_amd64/fs/nfsd/nfs4proc.c:2680) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] nfsd_dispatch (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:1022) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] svc_process_common (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1344) sunrpc
-> > > > [Mon Jan 6 13:25:28 2025] ? svc_recv (debian/build/build_amd64_none_amd64/net/sunrpc/svc_xprt.c:897) sunrpc
-> > > > [Mon Jan 6 13:25:28 2025] ? nfsd_svc (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:983) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] ? nfsd_inet6addr_event (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:922) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] svc_process (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1474) sunrpc
-> > > > [Mon Jan 6 13:25:28 2025] nfsd (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:960) nfsd
-> > > > [Mon Jan 6 13:25:28 2025] kthread+0xd7/0x100
-> > > > [Mon Jan 6 13:25:28 2025] ? kthread_complete_and_exit+0x20/0x20
-> > > > [Mon Jan 6 13:25:28 2025] ret_from_fork+0x1f/0x30
-> > > > [Mon Jan  6 13:25:28 2025]  </TASK>
-> > > > 
-> > > > The question about bisection is actually harder, those are production
-> > > > systems and I understand it's not possible to do bisect there, while
-> > > > unfortunately not reprodcing the issue on "lab conditions".
-> > > > 
-> > > > Does the above give us still a clue on what you were looking for?
-> > > 
-> > > Thanks for the update.
-> > > 
-> > > It's possible that 38f080f3cd19 ("NFSD: Move callback_wq into struct
-> > > nfs4_client"), while not a specific fix for this issue, might offer some
-> > > relief by preventing the DESTROY_SESSION hang from affecting all other
-> > > clients of the degraded server.
-> > > 
-> > > Not having a reproducer or the ability to bisect puts a damper on
-> > > things. The next step, then, is to enable tracing on servers where this
-> > > issue can come up, and wait for the hang to occur. The following command
-> > > captures information only about callback operation, so it should not
-> > > generate much data or impact server performance.
-> > > 
-> > >    # trace-cmd record -e nfsd:nfsd_cb\*
-> > > 
-> > > Let that run until the problem occurs, then ^C, compress the resulting
-> > > trace.dat file, and either attach it to 1071562 or email it to me
-> > > privately.
-> > thanks for the follow-up.
-> > 
-> > I am the "customer" with two affected file servers. We have since moved those
-> > servers to the backports kernel (6.11.10) in the hope of forward fixing the
-> > issue. If this kernel is stable, I'm afraid I can't go back to the 'bad'
-> > kernel (700+ researchers affected..), and we're also not able to trigger the
-> > issue on our test environment.
-> 
-> Hello Dr. Herzog -
-> 
-> If the problem recurs on 6.11, the trace-cmd I suggest above works
-> there as well.
-the bad news is: it just happened again with the bpo kernel.
+The question is: do we want to mirror that particular quirk in the
+interface? I'm not sure if there was a logical reason for making +4
+work that way in the /proc interface, so it's not clear to me that we
+want to replicate that here.
 
-We then immediately started trace-cmd since usually there are several call
-traces in a row and we did get a trace.dat:
-http://people.phys.ethz.ch/~daduke/trace.dat
+Honestly, it may be better to just require explicit minorversions in
+this interface and not worry about trying to interpret what +4
+means.=C2=A0You'd need to specify "+4.1 +4.2" instead of just saying "+4",
+but that doesn't seem too onerous.
 
-we did notice however that the stack trace looked a bit different this time:
+Thoughts?
 
-    INFO: task nfsd:2566 blocked for more than 5799 seconds.
-    Tainted: G        W          6.11.10+bpo-amd64 #1 Debia>
-    "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables t>
-    task:nfsd            state:D stack:0     pid:2566  tgid:2566 >
-    Call Trace:
-    <TASK>
-    __schedule+0x400/0xad0
-    schedule+0x27/0xf0
-    nfsd4_shutdown_callback+0xfe/0x140 [nfsd]
-    ? __pfx_var_wake_function+0x10/0x10
-    __destroy_client+0x1f0/0x290 [nfsd]
-    nfsd4_destroy_clientid+0xf1/0x1e0 [nfsd]
-    ? svcauth_unix_set_client+0x586/0x5f0 [sunrpc]
-    nfsd4_proc_compound+0x34d/0x670 [nfsd]
-    nfsd_dispatch+0xfd/0x220 [nfsd]
-    svc_process_common+0x2f7/0x700 [sunrpc]
-    ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
-    svc_process+0x131/0x180 [sunrpc]
-    svc_recv+0x830/0xa10 [sunrpc]
-    ? __pfx_nfsd+0x10/0x10 [nfsd]
-    nfsd+0x87/0xf0 [nfsd]
-    kthread+0xcf/0x100
-    ? __pfx_kthread+0x10/0x10
-    ret_from_fork+0x31/0x50
-    ? __pfx_kthread+0x10/0x10
-    ret_from_fork_asm+0x1a/0x30
-    </TASK>
+> Link: https://issues.redhat.com/browse/RHEL-72477
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  utils/nfsdctl/nfsdctl.8    |  9 ++++--
+>  utils/nfsdctl/nfsdctl.adoc |  5 +++-
+>  utils/nfsdctl/nfsdctl.c    | 58 +++++++++++++++++++++++++++++++++++---
+>  3 files changed, 64 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
+> index b08fe803..835d60b4 100644
+> --- a/utils/nfsdctl/nfsdctl.8
+> +++ b/utils/nfsdctl/nfsdctl.8
+> @@ -2,12 +2,12 @@
+>  .\"     Title: nfsdctl
+>  .\"    Author: Jeff Layton
+>  .\" Generator: Asciidoctor 2.0.20
+> -.\"      Date: 2024-12-30
+> +.\"      Date: 2025-01-08
+>  .\"    Manual: \ \&
+>  .\"    Source: \ \&
+>  .\"  Language: English
+>  .\"
+> -.TH "NFSDCTL" "8" "2024-12-30" "\ \&" "\ \&"
+> +.TH "NFSDCTL" "8" "2025-01-08" "\ \&" "\ \&"
+>  .ie \n(.g .ds Aq \(aq
+>  .el       .ds Aq '
+>  .ss \n[.ss] 0
+> @@ -172,7 +172,10 @@ MINOR: the minor version integer value
+>  .nf
+>  .fam C
+>  The minorversion field is optional. If not given, it will disable or ena=
+ble
+> -all minorversions for that major version.
+> +all minorversions for that major version.  Note however that if NFSv4.0 =
+was
+> +previously disabled, it can only be re\-enabled by explicitly specifying=
+ the
+> +minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
+> +interface).
+>  .fam
+>  .fi
+>  .if n .RE
+> diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
+> index c5921458..20e9bf8e 100644
+> --- a/utils/nfsdctl/nfsdctl.adoc
+> +++ b/utils/nfsdctl/nfsdctl.adoc
+> @@ -91,7 +91,10 @@ Each subcommand can also accept its own set of options=
+ and arguments. The
+>      MINOR: the minor version integer value
+> =20
+>    The minorversion field is optional. If not given, it will disable or e=
+nable
+> -  all minorversions for that major version.
+> +  all minorversions for that major version.  Note however that if NFSv4.=
+0 was
+> +  previously disabled, it can only be re-enabled by explicitly specifyin=
+g the
+> +  minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
+> +  interface).
+> =20
+>    Note that versions can only be set when there are no nfsd threads runn=
+ing.
+> =20
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index 722bf4a0..d86ff80e 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -761,6 +761,32 @@ static int update_nfsd_version(int major, int minor,=
+ bool enabled)
+>  	return -EINVAL;
+>  }
+> =20
+> +static bool v40_is_disabled(void)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
+> +		if (nfsd_versions[i].major =3D=3D 0)
+> +			break;
+> +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor =3D=3D 0=
+)
+> +			return !nfsd_versions[i].enabled;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int get_max_minorversion(void)
+> +{
+> +	int i, max =3D 0;
+> +
+> +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
+> +		if (nfsd_versions[i].major =3D=3D 0)
+> +			break;
+> +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor > max)
+> +			max =3D nfsd_versions[i].minor;
+> +	}
+> +	return max;
+> +}
+> +
+>  static void version_usage(void)
+>  {
+>  	printf("Usage: %s version { {+,-}major.minor } ...\n", taskname);
+> @@ -778,7 +804,8 @@ static void version_usage(void)
+> =20
+>  static int version_func(struct nl_sock *sock, int argc, char ** argv)
+>  {
+> -	int ret, i;
+> +	int ret, i, j, max_minor;
+> +	bool v40_disabled;
+> =20
+>  	/* help is only valid as first argument after command */
+>  	if (argc > 1 &&
+> @@ -792,6 +819,9 @@ static int version_func(struct nl_sock *sock, int arg=
+c, char ** argv)
+>  		return ret;
+> =20
+>  	if (argc > 1) {
+> +		v40_disabled =3D v40_is_disabled();
+> +		max_minor =3D get_max_minorversion();
+> +
+>  		for (i =3D 1; i < argc; ++i) {
+>  			int ret, major, minor =3D 0;
+>  			char sign =3D '\0', *str =3D argv[i];
+> @@ -815,9 +845,29 @@ static int version_func(struct nl_sock *sock, int ar=
+gc, char ** argv)
+>  				return -EINVAL;
+>  			}
+> =20
+> -			ret =3D update_nfsd_version(major, minor, enabled);
+> -			if (ret)
+> -				return ret;
+> +			/*
+> +			 * The minorversion field is optional. If omitted, it should
+> +			 * cause all the minor versions for that major version to be
+> +			 * enabled/disabled.
+> +			 *
+> +			 * HOWEVER, we do not enable v4.0 in this manner if it was
+> +			 * previously disabled - it has to be explicitly enabled
+> +			 * instead.  This is to retain the behavior of the old
+> +			 * /proc/fs/nfsd/versions interface.
+> +			 */
+> +			if (major =3D=3D 4 && ret =3D=3D 2) {
+> +				for (j =3D 0; j <=3D max_minor; ++j) {
+> +					if (j =3D=3D 0 && enabled && v40_disabled)
+> +						continue;
+> +					ret =3D update_nfsd_version(major, j, enabled);
+> +					if (ret)
+> +						return ret;
+> +				}
+> +			} else {
+> +				ret =3D update_nfsd_version(major, minor, enabled);
+> +				if (ret)
+> +					return ret;
+> +			}
+>  		}
+>  		return set_nfsd_versions(sock);
+>  	}
 
-and also the state of the offending client in `/proc/fs/nfsd/clients/*/info`
-used to be callback state: UNKNOWN while now it is DOWN or FAULT. No idea
-what it means, but I thought it was worth mentioning.
-
-thanks!
--Christian
-
-
-
-
--- 
-Dr. Christian Herzog <herzog@phys.ethz.ch>  support: +41 44 633 26 68
-Head, IT Services Group, HPT H 8              voice: +41 44 633 39 50
-Department of Physics, ETH Zurich           
-8093 Zurich, Switzerland                     http://isg.phys.ethz.ch/
+--=20
+Jeff Layton <jlayton@kernel.org>
 
