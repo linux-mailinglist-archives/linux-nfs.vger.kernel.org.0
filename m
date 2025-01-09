@@ -1,125 +1,107 @@
-Return-Path: <linux-nfs+bounces-9008-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9009-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5418A06BAB
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 03:50:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C63ACA06CE0
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 05:24:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8621D1888F9A
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 02:50:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CA80B7A2517
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 04:23:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCF7282FA;
-	Thu,  9 Jan 2025 02:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1174513B2B8;
+	Thu,  9 Jan 2025 04:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qPAp8JPx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4798C847C;
-	Thu,  9 Jan 2025 02:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC822D052;
+	Thu,  9 Jan 2025 04:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736391027; cv=none; b=euZ+DV8e442DUJz0e3DSdqy8cYHWYZ8et0NOEJeT4mY1aVwSv6rFuVXhljouwvDKOFblVFsLDeW68TLTeAsR93DNKQJtVrNjHq/Mbjh+UJZjQsyLEMjJX5bdLIc89GWjaEQsGjuX3IT3b4bPsRPaPIArSB4naeiwGVNVBE2Tkug=
+	t=1736396637; cv=none; b=JwHnQKK+bY53OKhILQwogxOZEA3X6qdIMB0/W2Q2SdUkSWHNZOMlsK1QH2pC5CpE4KxTpdxYkZP9P8BCmiwia4vxLCqeml7tYQloALQ0dR0bHF6EibRM0saDxV94CGtkdZUztbX8AIXsyhtuXZejcdqLtQepMUWOru3IBZUG5xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736391027; c=relaxed/simple;
-	bh=kwYWjpWfNmL1d5hD26X0HlYhelzrjDrfHJjfWnrO1i0=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aG0TSzjGO1rar+lrvcWoRfso/ll4pjzFZ6sXrriTW0uCoJLyAVRcgdUSnQUtsSgyowrWnypWKUQsAHGwvxy35SdRFm6lWRuKsWeDqFuQFqFFqpj+kqRyfrxuyZRonWbq8qSa0EEhpy1DufUn9jWSCDytbosNYZ45B14/j6mOZkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YT8Ll1PkJz1W3QY;
-	Thu,  9 Jan 2025 10:46:39 +0800 (CST)
-Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
-	by mail.maildlp.com (Postfix) with ESMTPS id CCEBC140135;
-	Thu,  9 Jan 2025 10:50:21 +0800 (CST)
-Received: from [10.174.179.93] (10.174.179.93) by
- kwepemh100016.china.huawei.com (7.202.181.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 9 Jan 2025 10:50:18 +0800
-Subject: Re: [PATCH v4 -next 00/15] sysctl: move sysctls from vm_table into
- its own files
-To: Joel Granados <joel.granados@kernel.org>
-References: <20241228145746.2783627-1-yukaixiong@huawei.com>
- <tgp2b7kbbdx4obapr4fgtmgjjo6zjbxbligucs32eewiasacko@f4h6uoamznry>
-CC: <akpm@linux-foundation.org>, <mcgrof@kernel.org>,
-	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
-	<glaubitz@physik.fu-berlin.de>, <luto@kernel.org>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
-	<jack@suse.cz>, <kees@kernel.org>, <j.granados@samsung.com>,
-	<willy@infradead.org>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
-	<lorenzo.stoakes@oracle.com>, <trondmy@kernel.org>, <anna@kernel.org>,
-	<chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <paul@paul-moore.com>, <jmorris@namei.org>,
-	<linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>, <dhowells@redhat.com>,
-	<haifeng.xu@shopee.com>, <baolin.wang@linux.alibaba.com>,
-	<shikemeng@huaweicloud.com>, <dchinner@redhat.com>, <bfoster@redhat.com>,
-	<souravpanda@google.com>, <hannes@cmpxchg.org>, <rientjes@google.com>,
-	<pasha.tatashin@soleen.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
-	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
-	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
-	<wangkefeng.wang@huawei.com>
-From: yukaixiong <yukaixiong@huawei.com>
-Message-ID: <5eeef365-6a33-ca76-2406-3102eb49f99f@huawei.com>
-Date: Thu, 9 Jan 2025 10:50:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1736396637; c=relaxed/simple;
+	bh=spdTS9iR+RIoAo2q6w1NgnY7g3M/Dzt6qy6HJYyopvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hwxNI9IZ1WOOI9HP4B4wFq9Ov+w7+cd3cmfvuNo2tQbZJXP9sRtJAF+sb4uCizizUbNY+lppmCglKY+eFnwYHeSGtRh6/j6bBzJlJ45gjV9EAcemvjb7IXy/ITAU4zDp8EqZmw8W7UleKQikSeFji/I7ODqf0edfwrEak/C7/cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=qPAp8JPx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1736396623;
+	bh=NPPD3LzGb2++9e0+9IH3UpO10alHsxkHFOY/Dk508cM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=qPAp8JPxnFBcAHDcJ6vfzM9hM/ZKCaAQJKtgRL0REo9f7iEnS2vCQsMiBrZt3V66S
+	 u+sz9XpM41tAyOk6WF4TCs5OIfwTS87jkLuctdVlUS2VSUIPLBJXcNVce+F6pz8kM5
+	 hWQn47fh7v2h4QanWD5SnpuVtIalGdLezadA9lSV/2oWlqdqj4HkJF6nQUMRIsz4w8
+	 tErgFoizd9IpOzQ4D7azf5bX0RoB5DD9cyPMXkc+sYegDCjyydu5983r00Xsr00NMA
+	 nt96qYCk6GB/UMLCQLt0mWOM+WuYnRDGiNeNzYsfp4h6mx1bGKzC+/8oO08Z1cJB8b
+	 XmmFQ9OQBAj5w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YTBVl25Dzz4wc2;
+	Thu,  9 Jan 2025 15:23:43 +1100 (AEDT)
+Date: Thu, 9 Jan 2025 15:23:49 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>
+Cc: Anna Schumaker <anna.schumaker@oracle.com>, Mike Snitzer
+ <snitzer@kernel.org>, NFS Mailing List <linux-nfs@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the nfs-anna tree
+Message-ID: <20250109152349.46442c56@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <tgp2b7kbbdx4obapr4fgtmgjjo6zjbxbligucs32eewiasacko@f4h6uoamznry>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggpeml500006.china.huawei.com (7.185.36.76) To
- kwepemh100016.china.huawei.com (7.202.181.102)
+Content-Type: multipart/signed; boundary="Sig_/dQDCW+9Okr+3scrclA1zfyC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/dQDCW+9Okr+3scrclA1zfyC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2025/1/6 20:15, Joel Granados wrote:
-> On Sat, Dec 28, 2024 at 10:57:31PM +0800, Kaixiong Yu wrote:
->> This patch series moves sysctls of vm_table in kernel/sysctl.c to
->> places where they actually belong, and do some related code clean-ups.
->> After this patch series, all sysctls in vm_table have been moved into its
->> own files, meanwhile, delete vm_table.
->>
->> All the modifications of this patch series base on
->> linux-next(tags/next-20241219). To test this patch series, the code was
->> compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
->> x86_64 architectures. After this patch series is applied, all files
->> under /proc/sys/vm can be read or written normally.
->>
->> Changes in v4:
->>   - due to my mistake, the previous version sent 15 patches twice.
->>     Please ignore that, as this version is the correct one.
-> I would not ignore the reviewed-by tags that you got from Lorenzo.
-> Please include those moving forward.
-Good suggestion!
-Thx !
->>   - change all "static struct ctl_table" type into
->>     "static const struct ctl_table" type in patch1~10,12,13,14
->>   - simplify result of rpcauth_cache_shrink_count() in patch11
-> ...
->>   mm/vmscan.c                        |  23 +++
->>   mm/vmstat.c                        |  44 +++++-
->>   net/sunrpc/auth.c                  |   2 +-
->>   security/min_addr.c                |  11 ++
->>   23 files changed, 330 insertions(+), 312 deletions(-)
->>
->> -- 
->> 2.34.1
->>
-> best
->
+After merging the nfs-anna tree, today's linux-next build (htmldocs)
+produced this warning:
 
+Documentation/filesystems/nfs/localio.rst:284: ERROR: Unexpected indentatio=
+n.
+Documentation/filesystems/nfs/localio.rst:285: WARNING: Block quote ends wi=
+thout a blank line; unexpected unindent.
+
+Introduced by commit
+
+  cc1080daed34 ("nfs/localio: add direct IO enablement with sync and async =
+IO support")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dQDCW+9Okr+3scrclA1zfyC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmd/T1UACgkQAVBC80lX
+0Gy9cwf/Z9K+puC1b3IsX76YGr42seAZ3q0EEICZxq/cR9h5KBOaB+dL5ohezYJU
+Y/rVYPodEIJ0h1Mk0mu/C2UHqGWXD/DoxajOBgSJBc5CKsrHFQDQsFWgk/NhlhUd
+dGGKA1UHJwWy0b9g9PpL0LJzxrMMI2zxFLkgHaLxDVwGH71OLZ7c8HtbzO9TdKjC
+6opO+hZUVYSyS/KUqE68tDy87pPXby2ibjVZN/pdaiqd67ryZAzTKCa0gIpwvM0Q
+aOaAYWOEQeR2lAF4+v3uMO6MppeU8cVJH7Rl+oMOZ3grOUJ2QNq6aRljl+1Y80Ds
+RybkK5J6Fx3dvjJTRfevUkBP5pw3Rw==
+=KzSI
+-----END PGP SIGNATURE-----
+
+--Sig_/dQDCW+9Okr+3scrclA1zfyC--
 
