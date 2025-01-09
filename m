@@ -1,384 +1,459 @@
-Return-Path: <linux-nfs+bounces-9029-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9030-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A4ACA07CBD
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 17:01:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C906A07D01
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 17:10:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 917C01653ED
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 16:01:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C57C318844BA
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 16:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05BB6218AA5;
-	Thu,  9 Jan 2025 16:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A32C321C174;
+	Thu,  9 Jan 2025 16:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWt3Oni9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ke0o+cN1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bhaHFd0z"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC942185B3
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 16:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736438507; cv=none; b=BCdcIYx/ByqdPkaQ1q9mnLrDBTaWOl7gL04ZPX7ThIyLvLeCYr3awII20Dp0Xpdsok1UQngKI5jTjjC71jiQrjKdufQp7nc+4mUCfpr7mWpi8HlO8SrhpoQBJW+cUUpIktd+busEp2OIcteXf6kEJkagnq3FrUWeP7bfyuMvMAQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736438507; c=relaxed/simple;
-	bh=ikNjW+i/4PBaGvleJ1Ec/S600BLomK0HhIsBOOzPHR0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sTsopXLe8XDy9E0mdWtfwqBIb1e1iw78sfG3Vcr8Mc75WedLzzxW7yGVRaKbggcJaCzUNnKLg2bva/jawOQUjv4fKEjAsL++MypdrfL+GvaGs2nIz+Ms954oOQ0mwo/1HrU0kHylQ8Z/R9aiYlpLFOG3Wya36rj4MkU81/7QXqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWt3Oni9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 089A9C4CED2;
-	Thu,  9 Jan 2025 16:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736438507;
-	bh=ikNjW+i/4PBaGvleJ1Ec/S600BLomK0HhIsBOOzPHR0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aWt3Oni9zlkSLAY+zhJiG9wCAPim/+VCXqYC03fSf6zy1Xa9Co7WVXUNMyPNprCVL
-	 C7sDyP+PB74A7noZ4pV5ZaGteTjP81+nABGi5o/k4suVq1ULAvGkO/8evA4aI441rr
-	 wX0fXMg+v4RJWWFAO2nn90RtYzEPMhohrU1zVfOeDdeA/2/dswbPPpnVB5fojKPDzo
-	 RfeNGQw6EoIEqtQOY6HNKyoWxIQxlJwbUGhMyYe8w2C5jGAHWLcJN3c45JK/XRZ6qv
-	 AAEndjxo8FxQvaN30OgKUH5BNkDETo4FpBhxRMFn3/4bC62Qk6WxFaa2zmHYKnxAev
-	 zbkRFpnMprw5g==
-Message-ID: <08555231d6181e8a59fbfa780d2164a1c81a0ce6.camel@kernel.org>
-Subject: Re: [nfs-utils PATCH] nfsdctl: tweak the version subcommand behavior
-From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: steved@redhat.com, linux-nfs@vger.kernel.org
-Date: Thu, 09 Jan 2025 11:01:45 -0500
-In-Reply-To: <Z3_r_FuHcKO-EVUD@aion>
-References: <20250108225439.814872-1-smayhew@redhat.com>
-	 <52d4ff32bb0c598e97946e478c70fa3c718254d2.camel@kernel.org>
-	 <Z3_r_FuHcKO-EVUD@aion>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8323522069A
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 16:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736438995; cv=fail; b=F0voNfpAzp50/zkoAHy/9UCwRUuTU/JH6EicycH0qx0jCUO0jbxsvVLUzp4r1T6YkBy2mAEoi+6rj6CI+zLeju5s/dxV8cAP+Bp5JxOzOxS72AyY/lSQ2tQVKUK5fwK0QMlWS3U7P+a0nkRekR3qeXlnuj63Xgjfn8iBzBoj+XI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736438995; c=relaxed/simple;
+	bh=MoABrPkY4pQ+3QQEtB0Szx3L08yVPeWEvTt0L2yn+MI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=mnaL/tjXq8FyC1P+Mt03lZRYtUS/wZ0rNz2rPabKVW8uexXztWqF5XadxRdRm3e6dwPjPHc446vAjQC4WzgnG9idEQ2z1u6xfAheJo7LPaentJ+JIsHl1vAB++OHMh/xrTsM6Mtlw5DGExCpoql2yHqI0F4e4bO7QpaQMyKA7as=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ke0o+cN1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bhaHFd0z; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 509FtlJ6017238;
+	Thu, 9 Jan 2025 16:09:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=AswiMzP9885ICNPstcY9bp3pE8c/D52tGr9itnuG4vQ=; b=
+	Ke0o+cN1DOhsonukJQznjU6ARRmkeQAgFx5x6ovY+ufJHGnmk9KU20FsqbmHtGQj
+	s5DZlToe5ax5vClwBlG5wYAiUZ20t017ba08yKD+4M/C7dwzXx4gEpEzXRA8CFcD
+	i8J3Xybn0stCi7JQn5Ojphmh7u36TiOXXhvFoaG/GJyZJMECtGOSnxPxHMsrfLNK
+	pNL0lH4srI7q7QojtslZyNQOyyh0ZtLlLEWsPECyJSbrA9+7/B2rhYCBAdNkxhS/
+	4Ll9kkAoy/4HSUhK3Twe/ZVU+1Yfn1BpZieRCbyKFCnxhV1vsfBMlf8/plmlaSsE
+	5v+XMmxBv4d6o550voOzPw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 442b8ugrhb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 09 Jan 2025 16:09:31 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 509FUgS5027615;
+	Thu, 9 Jan 2025 16:09:31 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2049.outbound.protection.outlook.com [104.47.55.49])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 43xuebh22x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 09 Jan 2025 16:09:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jxMY83cmHjI5N07zhAWyx3FJ3aTAD4HVYKSt179zwgZsqkMPooahdq57EmIVtRMQNfsakMuayuwXV7g/eyaYQSoFyy7dynfvOcVjXFpFpk0skIDiu44e7/AiV1+WvToyuIkdTNRQG7y1TKS7N9dt2JZvTczLo6xYlxKCQj/sI5wktlihmNCuKc37qagp1UhzStPgIACWKUK+ppASkCZQferdC4MAjeeCh7ES1mrJOVdPfN9nCrpioRwEfQwpSkgWjPxtLW6vvmh/thekmrdLH4HISg4ulMzf/D7j8xNfxS4EjG9Ohz8axy5od9NRdgctR1T+CMQR7YhfXu3JURXu3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AswiMzP9885ICNPstcY9bp3pE8c/D52tGr9itnuG4vQ=;
+ b=LgipUPYd54fYqtHFCyd5PnudhL6Pg1g4iFOWJV85jAb7u6ymWTdJjOP5G69V79eFguWWlkSdwv6rM4OCH/U+rVErFXZgH35XDhTibrj4d6PS77/5sE9/Ngwxuo7rHqHIA9uPZgryJLNfjZ6RoPWWbAGqJQCJhbN+naKAI2KOnXeq3agbM/1MlHrILm69qfpe8Gyd5HitLkJIwnPcljgTfxWLJhTlw7+m7SpWhBTd62t6fGRG2B6Qh7qchP0RKIBJ0wkBXYX2mPyPI+4R17YtrpTm/hifWrDiE1bhbZ4a5/gndoMpA5ZJAPpSSNRjO6IM78c1vw4uL4TEbeee3BRmWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AswiMzP9885ICNPstcY9bp3pE8c/D52tGr9itnuG4vQ=;
+ b=bhaHFd0zALpqB1fig0I1iWn8KPwET65Zy0a/KQ8w35BN7RfshSDjtq4JYAk/P61viJaV8Qy/rBbnMXgniw6xitLst4FY4MunEYbsLFpYF4ZP5PY6k7/4p+ujNsrxd5IevGI9A7GDMbdqQAnIla/ovvmd5sZ2vE4OCcM49lrJYyI=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SJ0PR10MB6326.namprd10.prod.outlook.com (2603:10b6:a03:44c::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.12; Thu, 9 Jan
+ 2025 16:09:28 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8335.011; Thu, 9 Jan 2025
+ 16:09:28 +0000
+Message-ID: <08f157a9-69fa-46ac-9282-87fd7cc74684@oracle.com>
+Date: Thu, 9 Jan 2025 11:09:26 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfsd blocks indefinitely in nfsd4_destroy_session
+To: Christian Herzog <herzog@phys.ethz.ch>
+Cc: Salvatore Bonaccorso <carnil@debian.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Harald Dunkel <harald.dunkel@aixigo.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Martin Svec <martin.svec@zoner.cz>,
+        Michael Gernoth <debian@zerfleddert.de>,
+        Pellegrin Baptiste <Baptiste.Pellegrin@ac-grenoble.fr>
+References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
+ <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
+ <Z2vNQ6HXfG_LqBQc@eldamar.lan>
+ <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
+ <Z32ZzQiKfEeVoyfU@eldamar.lan>
+ <3cdcf2ee-46b3-463d-bc14-0f44062c0bd0@oracle.com>
+ <Z36RshcsxU1xFj_X@phys.ethz.ch>
+ <7fb711b1-c557-48de-bf91-d522bdbcc575@oracle.com>
+ <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
+ <da2be7f1-3c05-4de7-ac22-fb4cbd4e52fb@oracle.com>
+ <Z3_yQlGPLFoqY_Wl@phys.ethz.ch>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <Z3_yQlGPLFoqY_Wl@phys.ethz.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0P221CA0042.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::26) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SJ0PR10MB6326:EE_
+X-MS-Office365-Filtering-Correlation-Id: 805cd97b-3f9d-441c-c8b6-08dd30c7fe73
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aXZCdGFRVWFSTjhvNDNVY2hmZ2ZWM3hwTk9UT2IyNnVtalp0Tk5tWVdDTVlC?=
+ =?utf-8?B?T3llYjExQWppZGl1YXZ6Wkw5cHdvSEtJRlVzbndobDlBenUzdWdWWjFramVZ?=
+ =?utf-8?B?NnVrelRPM1FWTTQ0QlZmcjJUdzBSY0xLbEZ5TS94SExIbXBSNEUyeHZCeWN6?=
+ =?utf-8?B?QXh4V3hMb1lsR0lCTnpubjlMNXp2QzNFanNpZndVd3lhZGc5OHd3SU03SWdP?=
+ =?utf-8?B?RWl3d3o1UVVpYjNJWmMxNzUwODJVQndQTUpKd1VuVVRsMXIyeGplUzNKUUts?=
+ =?utf-8?B?S0Z4L2lRU2hrZFpVNzVyWGUzcjNZeDUxY2hMOWs0Tys4ZHYwcmFkdVZaWXo1?=
+ =?utf-8?B?RCt6UC85MU9hb0JyQ0NDbXUrR29lWkpTaG9IeWtmMVlaMkhDK1NLbVI0VW5Z?=
+ =?utf-8?B?UTJOUEU3QitJRlg4M3lkaVVITnNSZjFIVDBCZ2Z3dHVtQmozT3cwS2lCMk1W?=
+ =?utf-8?B?bzY4TmhCMFBmRVJ2eUcvOFRyVjdBbEZ4TDJVNG12VmlOQTg2VXU5NTEzSHYz?=
+ =?utf-8?B?cHgvYWhUZU5iUHZsRDFyeEpiQnVPQXFoY0g5NVNBL2M1cUtZTE03dXErYkln?=
+ =?utf-8?B?TkptUnlQTG10d1ptMUJWanYxeDhYMnB4cWlSTThsYXJOVjNNeUVzeklEN2J2?=
+ =?utf-8?B?SGFFeXZzamdwQ0F5c3V6aVQxOG9nYUdwak5KR1VrUEhUQkRmTDJXWGwxS2s4?=
+ =?utf-8?B?SXR2TjBOcU1ySnZvZ1Z5ZHlaL3IvLy91L2E5dlBab1RkK3hrMVZiUXgvTjN3?=
+ =?utf-8?B?d1JvTW1jeDE3LzBGVU9yL0l1c01OK3hyOXBHTi9ra0VhN1lOd3pQNnU4ZGFi?=
+ =?utf-8?B?Sk9MTGQ5NWt0QUt4SkMzTGgwZWQ5MUM2VGhmSG9hNlQ3dHJyZTV3M3RzN012?=
+ =?utf-8?B?U2JrVW93cnVUV0M2TGp0MDh4NEVzbm1HUGxrZWN4Y1BFNFl1SVRpdWJHcHhy?=
+ =?utf-8?B?K0l0aGRTd09NczBzbWJtQWRZUXJ1bzhxS0dXZ3JxYTk4SEtRTlc2cGk1aE5j?=
+ =?utf-8?B?anB3aTl2UTB1UmdlR2hsT0QzS2pGb2NwMWlNRGM4N0xMQkJQbzA5d0cwcDVS?=
+ =?utf-8?B?eGxNRG4xLzJaeSsrNXJ1SGU5dk5xWHZXZVJwb0N3cmJVZUJRRnVTdERRangv?=
+ =?utf-8?B?WWY2bWFEYi9XTHhmWk4zU3JNbTRVbzlCRiswWVNYamtrRWsvcHpUblAySUcr?=
+ =?utf-8?B?R1FCN3lmaGxkV2xVRWgzTXFybSsxNmpNWVorVEsxcW9aQnFVamFYVzVBbkZE?=
+ =?utf-8?B?YWVOV3pncUVRS0ZnaS8xdC90UHg1bk42SEwyb3l2NmhUQ2J3Z0s4WWI4bVVO?=
+ =?utf-8?B?MXdPeG94TDBVOWNuL05FVEl4R3RoeFlqRHFiZnMva3FGcGFWZk9sNHZyNjJP?=
+ =?utf-8?B?ZGJiQ3MvRmRNZ0NKVU81R1RzWm90cGw5bmM3NklPZHFZYWpFU2wyUUw4cXVP?=
+ =?utf-8?B?dHhwdER5ekdVQ2lUT0xmdG1wT0kwZ2V1L1hDT0NGeEdPL2pZa3RXUzJ4d293?=
+ =?utf-8?B?aHR1NFFtRU5IbGppSnp0b0grajFBckh2T0wyQmZDVHFXT2ZmSmhyMTRvbytK?=
+ =?utf-8?B?QVlqcWtjR1FBV0RoY1lzY0wwVTVENm9EVkZOSEJRVkxXTjg5Q0JJdURqQmEw?=
+ =?utf-8?B?aUZkNFhHVDlCSE1ud0QvL2NqczJJV210b1BSclJuWnhhOW80ZG1wTkkxODJI?=
+ =?utf-8?B?NXJOeVFvQjRNd3NNZlBLOTIrSmZNdWRXc3ZxemJLQUhtUjdHMnZ2ZmhybFR6?=
+ =?utf-8?B?V09VKzk2WDIvaE9XNCtkeDhPYitETUNrTFBMQnY4RlFDZTZoM2ZIYUFsM2tv?=
+ =?utf-8?B?QWlWRkJWMW5wWDlHVGhCQT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SGwvVVA1MFBnSmpwZlNTK0pUcDVQa0tITXhOUmJIVkZlUXlZREVpMCs1SmlB?=
+ =?utf-8?B?MkNIRzNSRXduQVZDdVpVS3FJbnBiNFhFUkdlOTZXV1IzNUp0WlBHQWhQOWtO?=
+ =?utf-8?B?TW1EcDhMZUxDamovMVk0RWw0cUIzZnJpcnh5VXpXdW41cjFvS3lFYUd2WVBW?=
+ =?utf-8?B?R1cyZ1ljcVRiWkY0U3BRcFdYQ1o2cFhMa1hBQm1EaTNPQlJlT1ZUTjJFM25P?=
+ =?utf-8?B?MHdBbjMreTd0cnFlRG96ZmtHclQ0L0srdE1nbGtBdUZsc2luMFJ0dTFpYVVr?=
+ =?utf-8?B?WSsvcWJUNlg3aVFPZTFqekN5NmUwOUlyMkVsZkxRT1FiWEV1dTl5d3U0Sitp?=
+ =?utf-8?B?ZlRWZURoWTRCdDBlanhPS3R3R3ZkZHB0TGlFaWl3dTU1ZW9NdTI4QVNBVnBU?=
+ =?utf-8?B?NDlsQWtmS3VqVnltTHkyZFgveVJsc2duNkhhTi9Md0FYeW96UFcwYlBxWFpZ?=
+ =?utf-8?B?OVJ5VVAzVkFhMHBMTFlKampaVkJPNWJ3MkFJY0tCV1hzWlpIQWkrS1J6Ui84?=
+ =?utf-8?B?Z0pvRGZ3cGF3N1VDeW5zdUNobVVIWjhYNlhwSnkwVklOOVU5RWhXZmZYZ3Bp?=
+ =?utf-8?B?YXRNVHBUN0xJL2tCUmoreFovd29FUkpNTzBmWWV3Q1hWa0hXRWhvNTJ6b0Fq?=
+ =?utf-8?B?S0U2YURDRmdaUVFpZ0czTVQzMjVrNVE1QjZUWnBWbWFLYzNRRFp6dEphMHda?=
+ =?utf-8?B?VVJkTDNvbHpCTGg4NDdQUHZmRCs4S2xqV1RQZlduQy9iZExsTUs2dEJacHdw?=
+ =?utf-8?B?NTJzcEY3cDIyNWE5VG1mNk8raW9sdU1SOXRCdmQ1NFRacGVZZ3hxeGFOY09o?=
+ =?utf-8?B?SU5UVE9ZUG5RR0t4alozcUU0VDRZYXVPcjFlcUZFZDJzOWI3SDdxWUoySUpv?=
+ =?utf-8?B?dmZtTWRMOWhHR09JYUVZdHBLQTFSNlN2ZkhqdG5RZXd0UnIyV0Z6RHBwbWQ2?=
+ =?utf-8?B?R2t0ZnNoS0wzbE1UZE1UVnZxS2RpZjNZZEtpTEIxQjFmb0I3akpsU3Y4WEE1?=
+ =?utf-8?B?ZzJ6a0twbWJnZGhqNUJqVWxTbk9aR3d6cXJ5cWdFQ3lZVEZvTUlDTjhHUllB?=
+ =?utf-8?B?UUFKMFl2TklGdVlZaHgxTmNMeURvNkp3NkNMZm02b08reDBZU1FraW9TUGZw?=
+ =?utf-8?B?ei9seWlRV2cwSWQ4TXhrUmZ3ZGNoSTZZTXc1SnFnR0dmY1NITkpscW5ZajBE?=
+ =?utf-8?B?a24yS241RVA0Mk1lZnV2MXpZbXI1MWUyeW9WclMwRmpGVU9GSjcwUkgzMWlP?=
+ =?utf-8?B?djkrTFYzUTZRcHFUb2RsN29TUTY4VTNFekI0ZkJBSWxkMEZQRVJ1UXEyL08y?=
+ =?utf-8?B?aFdJNmYwK2w3NHJRcFJsdUVqMkh6UDQ4c1IweVJ2Q0haRzF3bWN3cnNTOEtU?=
+ =?utf-8?B?V0dTazVIa0dqd1ZyK3pXbzY0S1dVV2lFbXcvSU5ORW9SODN2MFp6YlNEd0E0?=
+ =?utf-8?B?aFdKSFpLczFjS0lIbHMwQTJQenB0R203bzlXSlc2K0tjTU1Ra2tuelNFTUdC?=
+ =?utf-8?B?bzdBVEN4MkJBTWk4L0UyeHZLS00zQTV1OHVhY2lUVVUxR0tsSVJydk5iaVZ1?=
+ =?utf-8?B?MHo2K1VZeVBOaDdSMEVVTmZJd09Od3dmcEdHT2phVTYzWkxhTU14R1ZmejA5?=
+ =?utf-8?B?U2wvVXRkQ0lzMW1BNjFsK0poSjV6U0FyUlZ4WERnZHV5SHl4Njk3eVVuU3RO?=
+ =?utf-8?B?OVArWlBGeldtMEprTFpaS3FwR0FkVEJKV0F1M2lpMWV2SDAvUlFxYnFqZXky?=
+ =?utf-8?B?ak8vZlRxN1BwTnlQbitMSXJHeXNJMStCUmR2bEVETng2NWwwNG0rQWEvUmZp?=
+ =?utf-8?B?R1MwTWpBQlIxaEwzejFVSGc5YktkeXl1aXNiNTdmRzhiUUFGcHRpcjRzclh5?=
+ =?utf-8?B?Zlg1R0p2cEMwcC9NVDRLYjEvaDZKVHRnQUxLamFzdHVRRHpqQnNPVXk3cUtB?=
+ =?utf-8?B?Qk4xOU54dnVKWStGbkFMK1V3VDg4TVFMRm1lSnhlL0k0MnR0T3h4L0lwWkJl?=
+ =?utf-8?B?WVhKdlFVZi9BM3F6c09IRFhxTklsRkIzWmpGN1RUZlY2R3lCUjlLbHBqNUFr?=
+ =?utf-8?B?U0U0K3ZWS29wV3c2TmMyZlMvNmpOaVZBb3lrYW4xY1Zvdks1OGZnVDYySjRB?=
+ =?utf-8?B?Q01iR1JEZHlCeFI4S2tzWk5ERllpa01RcTVMeWhVbkowZ0hQSzFFMW12amVx?=
+ =?utf-8?B?MUE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	RnpYwyCUwvPCoXkPyk1H1U13NKLYtwHaP900pTVnX5sbcYUPPd6GgKG4uS1NyLfsM89L00UUBxteu/sr/RF4tMcmaTDCyjwACgGCN3HF+vwt/npfNU4tCmuzFeq8FpgBLTLznV7oGs6VfEK0I0SW1OoqG630XkN8nG5ricmi4WfBfJchkLch91CfW3IggMmVQtIkpoIPHLA10OhY8FfN+2iqX9yozegedH8k9f9q8epOyAkpPPWyHC3omsfe/YruIImXiqXnoroEtS9TKi9MZS0HmpZuCQBD/Rld7bcSIQA/Yr2BqQQa9fKhzKBzxusFUt4OgLTiD96OQliOwqp0GTDkLFakLg3ezkMrX+ffssomO882K24SCNOk5HvgPbRcIUvEmKmfiGq3bRkH9AE3xD+IHNPcsX6rBJyuu6/ebgP2OFA75tCrkX6UCWX9PzQS4ik+GSKf7br46A4IXkivtTM5CaDAKa7W6XFGXRL7Z3BCbWV+x1CUr1qiFfTZ5BTPseonbHxg/na8hTaAkIalj1ICcpIlE8xpZxXxAIONRzNL6OvSn0mFLhmCLCyfBZAt1G1b+t5HEkWkDAANKeHlUPox8KkTTL13CAcN7NWq/1c=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 805cd97b-3f9d-441c-c8b6-08dd30c7fe73
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2025 16:09:28.4262
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5yKC+9l77gClfXGjFc4AMDMfkkVnM0PwIG/Li4ilC5G8uvoZqyLaH+SdzqYQOR7zYV3v/3o7v+aNXlQc9XoRhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB6326
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-09_07,2025-01-09_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501090129
+X-Proofpoint-ORIG-GUID: IM06bIQrTJrnxLOnW-pJIfaO5rb-lb5S
+X-Proofpoint-GUID: IM06bIQrTJrnxLOnW-pJIfaO5rb-lb5S
 
-On Thu, 2025-01-09 at 10:32 -0500, Scott Mayhew wrote:
-> On Thu, 09 Jan 2025, Jeff Layton wrote:
->=20
-> > On Wed, 2025-01-08 at 17:54 -0500, Scott Mayhew wrote:
-> > > The section for the 'nfsdctl version' subcommand on the man page stat=
-es
-> > > that the minorversion is optional, and if omitted it will cause all
-> > > minorversions to be enabled/disabled, but it currently doesn't work t=
-hat
-> > > way.
-> > >=20
-> > > Make it work that way, with one exception.  If v4.0 is disabled, then
-> > > 'nfsdctl version +4' will not re-enable it; instead it must be
-> > > explicitly re-enabled via 'nfsdctl version +4.0'.  This mirrors the w=
-ay
-> > > /proc/fs/nfsd/versions works.
-> > >=20
-> >=20
-> > The question is: do we want to mirror that particular quirk in the
-> > interface? I'm not sure if there was a logical reason for making +4
-> > work that way in the /proc interface, so it's not clear to me that we
-> > want to replicate that here.
->=20
-> Digging thru my email archive it seems that the reason for that was to
-> deal with really old kernels that understood +4/-4 but not +4.0/-4.0.
-> Since old kernels obviously won't have a netlink interface for nfsd it
-> seems we can drop this quirk at least.
-> >=20
-> > Honestly, it may be better to just require explicit minorversions in
-> > this interface and not worry about trying to interpret what +4
-> > means.=C2=A0You'd need to specify "+4.1 +4.2" instead of just saying "+=
-4",
-> > but that doesn't seem too onerous.
-> >=20
-> > Thoughts?
->=20
-> It seems to me main alternatives are=20
->=20
-> 1. Drop the special handling for v4.0 but allow +4/-4 to always
-> enable/disable all minor versions, including v4.0.  So a small
-> adjustment to this patch.
->=20
-> 2. Require the minor versions to be explicitly specified for v4.  So allo=
-w
-> +2/-2/+3/-3, but emit an error if +4/-4 is specified.  Maybe emit an erro=
-r
-> if +2.0/-2.0/+3.0/-3.0 is specified.
->=20
-> 3. Leave the code alone (so +4/-4 would be interpreted as +4.0/-4.1) and
-> just update the man page.
->=20
-> 4. Make the 'nfsdctl version' behavior consistent with the nfs.conf optio=
-n
-> handling in 'nfsdctl autostart'.  Currently thats:
->=20
->         * vers4=3Dy turns on all minor versions.  vers4.x=3Dn on top of t=
-hat
->           will turn off those specific minor versions.
->         * vers4=3Dn turns off all minor versions.  vers4.x=3Dy on top of
->           that has no effect.
->=20
-> I don't really have a strong preference as long as the behavior matches
-> whatever the man page says it is.  If I had to vote I'd just say go with
-> option 3, but if it's important for the behaviors of the different
-> subcommands to be consistent, then we really don't have a choice and
-> have to go with option 4.
->=20
+On 1/9/25 10:58 AM, Christian Herzog wrote:
+> On Thu, Jan 09, 2025 at 10:49:37AM -0500, Chuck Lever wrote:
+>> On 1/9/25 6:56 AM, Christian Herzog wrote:
+>>> Dear Chuck,
+>>>
+>>> On Wed, Jan 08, 2025 at 10:07:49AM -0500, Chuck Lever wrote:
+>>>> On 1/8/25 9:54 AM, Christian Herzog wrote:
+>>>>> Dear Chuck,
+>>>>>
+>>>>> On Wed, Jan 08, 2025 at 08:33:23AM -0500, Chuck Lever wrote:
+>>>>>> On 1/7/25 4:17 PM, Salvatore Bonaccorso wrote:
+>>>>>>> Hi Chuck,
+>>>>>>>
+>>>>>>> Thanks for your time on this, much appreciated.
+>>>>>>>
+>>>>>>> On Wed, Jan 01, 2025 at 02:24:50PM -0500, Chuck Lever wrote:
+>>>>>>>> On 12/25/24 4:15 AM, Salvatore Bonaccorso wrote:
+>>>>>>>>> Hi Chuck, hi all,
+>>>>>>>>>
+>>>>>>>>> [it was not ideal to pick one of the message for this followup, let me
+>>>>>>>>> know if you want a complete new thread, adding as well Benjamin and
+>>>>>>>>> Trond as they are involved in one mentioned patch]
+>>>>>>>>>
+>>>>>>>>> On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wrote:
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>> On Jun 17, 2024, at 2:55 AM, Harald Dunkel <harald.dunkel@aixigo.com> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Hi folks,
+>>>>>>>>>>>
+>>>>>>>>>>> what would be the reason for nfsd getting stuck somehow and becoming
+>>>>>>>>>>> an unkillable process? See
+>>>>>>>>>>>
+>>>>>>>>>>> - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1071562
+>>>>>>>>>>> - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2062568
+>>>>>>>>>>>
+>>>>>>>>>>> Doesn't this mean that something inside the kernel gets stuck as
+>>>>>>>>>>> well? Seems odd to me.
+>>>>>>>>>>
+>>>>>>>>>> I'm not familiar with the Debian or Ubuntu kernel packages. Can
+>>>>>>>>>> the kernel release numbers be translated to LTS kernel releases
+>>>>>>>>>> please? Need both "last known working" and "first broken" releases.
+>>>>>>>>>>
+>>>>>>>>>> This:
+>>>>>>>>>>
+>>>>>>>>>> [ 6596.911785] RPC: Could not send backchannel reply error: -110
+>>>>>>>>>> [ 6596.972490] RPC: Could not send backchannel reply error: -110
+>>>>>>>>>> [ 6837.281307] RPC: Could not send backchannel reply error: -110
+>>>>>>>>>>
+>>>>>>>>>> is a known set of client backchannel bugs. Knowing the LTS kernel
+>>>>>>>>>> releases (see above) will help us figure out what needs to be
+>>>>>>>>>> backported to the LTS kernels kernels in question.
+>>>>>>>>>>
+>>>>>>>>>> This:
+>>>>>>>>>>
+>>>>>>>>>> [11183.290619] wait_for_completion+0x88/0x150
+>>>>>>>>>> [11183.290623] __flush_workqueue+0x140/0x3e0
+>>>>>>>>>> [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
+>>>>>>>>>> [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
+>>>>>>>>>>
+>>>>>>>>>> is probably related to the backchannel errors on the client, but
+>>>>>>>>>> client bugs shouldn't cause the server to hang like this. We
+>>>>>>>>>> might be able to say more if you can provide the kernel release
+>>>>>>>>>> translations (see above).
+>>>>>>>>>
+>>>>>>>>> In Debian we hstill have the bug #1071562 open and one person notified
+>>>>>>>>> mye offlist that it appears that the issue get more frequent since
+>>>>>>>>> they updated on NFS client side from Ubuntu 20.04 to Debian bookworm
+>>>>>>>>> with a 6.1.y based kernel).
+>>>>>>>>>
+>>>>>>>>> Some people around those issues, seem to claim that the change
+>>>>>>>>> mentioned in
+>>>>>>>>> https://lists.proxmox.com/pipermail/pve-devel/2024-July/064614.html
+>>>>>>>>> would fix the issue, which is as well backchannel related.
+>>>>>>>>>
+>>>>>>>>> This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel reply,
+>>>>>>>>> again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use the
+>>>>>>>>> nfs_client's rpc timeouts for backchannel") this is not something
+>>>>>>>>> which goes back to 6.1.y, could it be possible that hte backchannel
+>>>>>>>>> refactoring and this final fix indeeds fixes the issue?
+>>>>>>>>>
+>>>>>>>>> As people report it is not easily reproducible, so this makes it
+>>>>>>>>> harder to identify fixes correctly.
+>>>>>>>>>
+>>>>>>>>> I gave a (short) stance on trying to backport commits up to
+>>>>>>>>> 6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but this quickly
+>>>>>>>>> seems to indicate it is probably still not the right thing for
+>>>>>>>>> backporting to the older stable series.
+>>>>>>>>>
+>>>>>>>>> As at least pre-requisites:
+>>>>>>>>>
+>>>>>>>>> 2009e32997ed568a305cf9bc7bf27d22e0f6ccda
+>>>>>>>>> 4119bd0306652776cb0b7caa3aea5b2a93aecb89
+>>>>>>>>> 163cdfca341b76c958567ae0966bd3575c5c6192
+>>>>>>>>> f4afc8fead386c81fda2593ad6162271d26667f8
+>>>>>>>>> 6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
+>>>>>>>>> 57331a59ac0d680f606403eb24edd3c35aecba31
+>>>>>>>>>
+>>>>>>>>> and still there would be conflicting codepaths (and does not seem
+>>>>>>>>> right).
+>>>>>>>>>
+>>>>>>>>> Chuck, Benjamin, Trond, is there anything we can provive on reporters
+>>>>>>>>> side that we can try to tackle this issue better?
+>>>>>>>>
+>>>>>>>> As I've indicated before, NFSD should not block no matter what the
+>>>>>>>> client may or may not be doing. I'd like to focus on the server first.
+>>>>>>>>
+>>>>>>>> What is the result of:
+>>>>>>>>
+>>>>>>>> $ cd <Bookworm's v6.1.90 kernel source >
+>>>>>>>> $ unset KBUILD_OUTPUT
+>>>>>>>> $ make -j `nproc`
+>>>>>>>> $ scripts/faddr2line \
+>>>>>>>> 	fs/nfsd/nfs4state.o \
+>>>>>>>> 	nfsd4_destroy_session+0x16d
+>>>>>>>>
+>>>>>>>> Since this issue appeared after v6.1.1, is it possible to bisect
+>>>>>>>> between v6.1.1 and v6.1.90 ?
+>>>>>>>
+>>>>>>> First please note, at least speaking of triggering the issue in
+>>>>>>> Debian, Debian has moved to 6.1.119 based kernel already (and soon in
+>>>>>>> the weekends point release move to 6.1.123).
+>>>>>>>
+>>>>>>> That said, one of the users which regularly seems to be hit by the
+>>>>>>> issue was able to provide the above requested information, based for
+>>>>>>> 6.1.119:
+>>>>>>>
+>>>>>>> ~/kernel/linux-source-6.1# make kernelversion
+>>>>>>> 6.1.119
+>>>>>>> ~/kernel/linux-source-6.1# scripts/faddr2line fs/nfsd/nfs4state.o nfsd4_destroy_session+0x16d
+>>>>>>> nfsd4_destroy_session+0x16d/0x250:
+>>>>>>> __list_del_entry at /root/kernel/linux-source-6.1/./include/linux/list.h:134
+>>>>>>> (inlined by) list_del at /root/kernel/linux-source-6.1/./include/linux/list.h:148
+>>>>>>> (inlined by) unhash_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:2062
+>>>>>>> (inlined by) nfsd4_destroy_session at /root/kernel/linux-source-6.1/fs/nfsd/nfs4state.c:3856
+>>>>>>>
+>>>>>>> They could provide as well a decode_stacktrace output for the recent
+>>>>>>> hit (if that is helpful for you):
+>>>>>>>
+>>>>>>> [Mon Jan 6 13:25:28 2025] INFO: task nfsd:55306 blocked for more than 6883 seconds.
+>>>>>>> [Mon Jan 6 13:25:28 2025]       Not tainted 6.1.0-28-amd64 #1 Debian 6.1.119-1
+>>>>>>> [Mon Jan 6 13:25:28 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>>>>>>> [Mon Jan 6 13:25:28 2025] task:nfsd            state:D stack:0     pid:55306 ppid:2      flags:0x00004000
+>>>>>>> [Mon Jan 6 13:25:28 2025] Call Trace:
+>>>>>>> [Mon Jan 6 13:25:28 2025]  <TASK>
+>>>>>>> [Mon Jan 6 13:25:28 2025] __schedule+0x34d/0x9e0
+>>>>>>> [Mon Jan 6 13:25:28 2025] schedule+0x5a/0xd0
+>>>>>>> [Mon Jan 6 13:25:28 2025] schedule_timeout+0x118/0x150
+>>>>>>> [Mon Jan 6 13:25:28 2025] wait_for_completion+0x86/0x160
+>>>>>>> [Mon Jan 6 13:25:28 2025] __flush_workqueue+0x152/0x420
+>>>>>>> [Mon Jan 6 13:25:28 2025] nfsd4_destroy_session (debian/build/build_amd64_none_amd64/include/linux/spinlock.h:351 debian/build/build_amd64_none_amd64/fs/nfsd/nfs4state.c:3861) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] nfsd4_proc_compound (debian/build/build_amd64_none_amd64/fs/nfsd/nfs4proc.c:2680) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] nfsd_dispatch (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:1022) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] svc_process_common (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1344) sunrpc
+>>>>>>> [Mon Jan 6 13:25:28 2025] ? svc_recv (debian/build/build_amd64_none_amd64/net/sunrpc/svc_xprt.c:897) sunrpc
+>>>>>>> [Mon Jan 6 13:25:28 2025] ? nfsd_svc (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:983) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] ? nfsd_inet6addr_event (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:922) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] svc_process (debian/build/build_amd64_none_amd64/net/sunrpc/svc.c:1474) sunrpc
+>>>>>>> [Mon Jan 6 13:25:28 2025] nfsd (debian/build/build_amd64_none_amd64/fs/nfsd/nfssvc.c:960) nfsd
+>>>>>>> [Mon Jan 6 13:25:28 2025] kthread+0xd7/0x100
+>>>>>>> [Mon Jan 6 13:25:28 2025] ? kthread_complete_and_exit+0x20/0x20
+>>>>>>> [Mon Jan 6 13:25:28 2025] ret_from_fork+0x1f/0x30
+>>>>>>> [Mon Jan  6 13:25:28 2025]  </TASK>
+>>>>>>>
+>>>>>>> The question about bisection is actually harder, those are production
+>>>>>>> systems and I understand it's not possible to do bisect there, while
+>>>>>>> unfortunately not reprodcing the issue on "lab conditions".
+>>>>>>>
+>>>>>>> Does the above give us still a clue on what you were looking for?
+>>>>>>
+>>>>>> Thanks for the update.
+>>>>>>
+>>>>>> It's possible that 38f080f3cd19 ("NFSD: Move callback_wq into struct
+>>>>>> nfs4_client"), while not a specific fix for this issue, might offer some
+>>>>>> relief by preventing the DESTROY_SESSION hang from affecting all other
+>>>>>> clients of the degraded server.
+>>>>>>
+>>>>>> Not having a reproducer or the ability to bisect puts a damper on
+>>>>>> things. The next step, then, is to enable tracing on servers where this
+>>>>>> issue can come up, and wait for the hang to occur. The following command
+>>>>>> captures information only about callback operation, so it should not
+>>>>>> generate much data or impact server performance.
+>>>>>>
+>>>>>>      # trace-cmd record -e nfsd:nfsd_cb\*
+>>>>>>
+>>>>>> Let that run until the problem occurs, then ^C, compress the resulting
+>>>>>> trace.dat file, and either attach it to 1071562 or email it to me
+>>>>>> privately.
+>>>>> thanks for the follow-up.
+>>>>>
+>>>>> I am the "customer" with two affected file servers. We have since moved those
+>>>>> servers to the backports kernel (6.11.10) in the hope of forward fixing the
+>>>>> issue. If this kernel is stable, I'm afraid I can't go back to the 'bad'
+>>>>> kernel (700+ researchers affected..), and we're also not able to trigger the
+>>>>> issue on our test environment.
+>>>>
+>>>> Hello Dr. Herzog -
+>>>>
+>>>> If the problem recurs on 6.11, the trace-cmd I suggest above works
+>>>> there as well.
+>>> the bad news is: it just happened again with the bpo kernel.
+>>>
+>>> We then immediately started trace-cmd since usually there are several call
+>>> traces in a row and we did get a trace.dat:
+>>> http://people.phys.ethz.ch/~daduke/trace.dat
+>>
+>> I'd prefer to have the trace running from before the first occurrence
+>> of the problem. Even better would be to get it started before the
+>> first client mounts the server.
+>>
+>> But I will have a look at your trace soon.
+> before you invest significant time in the trace: there is a chance it's a
+> false alarm: we do see nfsd in D, but they're not spreading like they used to.
+> And since someone is pulling 400 Mb/s from that server via globus gridftp,
+> it might just be real IO overload. We're still trying to figure out what we're
+> dealing with...
 
-Now that you've laid them out, I think option #1 sounds best. Having to
-specify a minorversion is a departure from the current interface, and
-probably more effort than it's worth.
-
-The behavior in #1 also seems the most intuitive if we're going to keep
-the ability to accept a value that doesn't have a minorversion.
+6.11 is going to behave a little differently, IIRC. It should allow
+other clients to continue working normally after one client hits this
+issue.
 
 
-> > > Link: https://issues.redhat.com/browse/RHEL-72477
-> > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > > ---
-> > >  utils/nfsdctl/nfsdctl.8    |  9 ++++--
-> > >  utils/nfsdctl/nfsdctl.adoc |  5 +++-
-> > >  utils/nfsdctl/nfsdctl.c    | 58 +++++++++++++++++++++++++++++++++++-=
---
-> > >  3 files changed, 64 insertions(+), 8 deletions(-)
-> > >=20
-> > > diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
-> > > index b08fe803..835d60b4 100644
-> > > --- a/utils/nfsdctl/nfsdctl.8
-> > > +++ b/utils/nfsdctl/nfsdctl.8
-> > > @@ -2,12 +2,12 @@
-> > >  .\"     Title: nfsdctl
-> > >  .\"    Author: Jeff Layton
-> > >  .\" Generator: Asciidoctor 2.0.20
-> > > -.\"      Date: 2024-12-30
-> > > +.\"      Date: 2025-01-08
-> > >  .\"    Manual: \ \&
-> > >  .\"    Source: \ \&
-> > >  .\"  Language: English
-> > >  .\"
-> > > -.TH "NFSDCTL" "8" "2024-12-30" "\ \&" "\ \&"
-> > > +.TH "NFSDCTL" "8" "2025-01-08" "\ \&" "\ \&"
-> > >  .ie \n(.g .ds Aq \(aq
-> > >  .el       .ds Aq '
-> > >  .ss \n[.ss] 0
-> > > @@ -172,7 +172,10 @@ MINOR: the minor version integer value
-> > >  .nf
-> > >  .fam C
-> > >  The minorversion field is optional. If not given, it will disable or=
- enable
-> > > -all minorversions for that major version.
-> > > +all minorversions for that major version.  Note however that if NFSv=
-4.0 was
-> > > +previously disabled, it can only be re\-enabled by explicitly specif=
-ying the
-> > > +minorversion (this mirrors the behavior of the /proc/fs/nfsd/version=
-s
-> > > +interface).
-> > >  .fam
-> > >  .fi
-> > >  .if n .RE
-> > > diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
-> > > index c5921458..20e9bf8e 100644
-> > > --- a/utils/nfsdctl/nfsdctl.adoc
-> > > +++ b/utils/nfsdctl/nfsdctl.adoc
-> > > @@ -91,7 +91,10 @@ Each subcommand can also accept its own set of opt=
-ions and arguments. The
-> > >      MINOR: the minor version integer value
-> > > =20
-> > >    The minorversion field is optional. If not given, it will disable =
-or enable
-> > > -  all minorversions for that major version.
-> > > +  all minorversions for that major version.  Note however that if NF=
-Sv4.0 was
-> > > +  previously disabled, it can only be re-enabled by explicitly speci=
-fying the
-> > > +  minorversion (this mirrors the behavior of the /proc/fs/nfsd/versi=
-ons
-> > > +  interface).
-> > > =20
-> > >    Note that versions can only be set when there are no nfsd threads =
-running.
-> > > =20
-> > > diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-> > > index 722bf4a0..d86ff80e 100644
-> > > --- a/utils/nfsdctl/nfsdctl.c
-> > > +++ b/utils/nfsdctl/nfsdctl.c
-> > > @@ -761,6 +761,32 @@ static int update_nfsd_version(int major, int mi=
-nor, bool enabled)
-> > >  	return -EINVAL;
-> > >  }
-> > > =20
-> > > +static bool v40_is_disabled(void)
-> > > +{
-> > > +	int i;
-> > > +
-> > > +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
-> > > +		if (nfsd_versions[i].major =3D=3D 0)
-> > > +			break;
-> > > +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor =3D=
-=3D 0)
-> > > +			return !nfsd_versions[i].enabled;
-> > > +	}
-> > > +	return false;
-> > > +}
-> > > +
-> > > +static int get_max_minorversion(void)
-> > > +{
-> > > +	int i, max =3D 0;
-> > > +
-> > > +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
-> > > +		if (nfsd_versions[i].major =3D=3D 0)
-> > > +			break;
-> > > +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor > ma=
-x)
-> > > +			max =3D nfsd_versions[i].minor;
-> > > +	}
-> > > +	return max;
-> > > +}
-> > > +
-> > >  static void version_usage(void)
-> > >  {
-> > >  	printf("Usage: %s version { {+,-}major.minor } ...\n", taskname);
-> > > @@ -778,7 +804,8 @@ static void version_usage(void)
-> > > =20
-> > >  static int version_func(struct nl_sock *sock, int argc, char ** argv=
-)
-> > >  {
-> > > -	int ret, i;
-> > > +	int ret, i, j, max_minor;
-> > > +	bool v40_disabled;
-> > > =20
-> > >  	/* help is only valid as first argument after command */
-> > >  	if (argc > 1 &&
-> > > @@ -792,6 +819,9 @@ static int version_func(struct nl_sock *sock, int=
- argc, char ** argv)
-> > >  		return ret;
-> > > =20
-> > >  	if (argc > 1) {
-> > > +		v40_disabled =3D v40_is_disabled();
-> > > +		max_minor =3D get_max_minorversion();
-> > > +
-> > >  		for (i =3D 1; i < argc; ++i) {
-> > >  			int ret, major, minor =3D 0;
-> > >  			char sign =3D '\0', *str =3D argv[i];
-> > > @@ -815,9 +845,29 @@ static int version_func(struct nl_sock *sock, in=
-t argc, char ** argv)
-> > >  				return -EINVAL;
-> > >  			}
-> > > =20
-> > > -			ret =3D update_nfsd_version(major, minor, enabled);
-> > > -			if (ret)
-> > > -				return ret;
-> > > +			/*
-> > > +			 * The minorversion field is optional. If omitted, it should
-> > > +			 * cause all the minor versions for that major version to be
-> > > +			 * enabled/disabled.
-> > > +			 *
-> > > +			 * HOWEVER, we do not enable v4.0 in this manner if it was
-> > > +			 * previously disabled - it has to be explicitly enabled
-> > > +			 * instead.  This is to retain the behavior of the old
-> > > +			 * /proc/fs/nfsd/versions interface.
-> > > +			 */
-> > > +			if (major =3D=3D 4 && ret =3D=3D 2) {
-> > > +				for (j =3D 0; j <=3D max_minor; ++j) {
-> > > +					if (j =3D=3D 0 && enabled && v40_disabled)
-> > > +						continue;
-> > > +					ret =3D update_nfsd_version(major, j, enabled);
-> > > +					if (ret)
-> > > +						return ret;
-> > > +				}
-> > > +			} else {
-> > > +				ret =3D update_nfsd_version(major, minor, enabled);
-> > > +				if (ret)
-> > > +					return ret;
-> > > +			}
-> > >  		}
-> > >  		return set_nfsd_versions(sock);
-> > >  	}
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
->=20
+>> It would be extremely helpful if we could reproduce this problem in
+>> our own labs.
+> easy: just hire 700 physicists and let 'em loose
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Yeah, that's the problem. I ain't got 700 physicists in my back
+pocket who would put up with NFS server outages ;-)
+
+Jeff and I have discussed a potential pynfs-based reproducer,
+but no guarantee it's the same issue as yours.
+
+
+-- 
+Chuck Lever
 
