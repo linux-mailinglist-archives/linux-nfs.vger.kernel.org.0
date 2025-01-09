@@ -1,234 +1,278 @@
-Return-Path: <linux-nfs+bounces-9001-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9002-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A082DA06900
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 23:55:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95DF3A06AD2
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 03:20:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D88A1888F0B
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jan 2025 22:55:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC5DD1883DAD
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 02:20:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEEDE20408C;
-	Wed,  8 Jan 2025 22:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXfHvVyr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3603B15E8B;
+	Thu,  9 Jan 2025 02:20:26 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B992040A3
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 22:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8005BE5E;
+	Thu,  9 Jan 2025 02:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736376886; cv=none; b=tr+NvmDmg66HNFAaO4P42O9LAPo3LbkKhvvseHYIHoKk/XAmuj+NG9L0Fmyme81wfioeNXF6TmWOsRvWUOfTaUhGRsJPofeREq4OAmqW3rof/7dg75ERTju9ykRTyD0rsNTHJfQyy6AhkPfA8x05XKWhy9mun8+0bIe0GdaX6eg=
+	t=1736389226; cv=none; b=Nyj2ptLlLYxApwyFchThgmSaSZTXzMKyp+p5EjXcTDhETs1nkAUMTMYBZh+HzchV63v2PoK6FDEZxNtuIuhM3V9cK44OKSnsGwlzN+pi+8Y44pp8Os1BMawPNpd7Sr8EjuUuSPLCrzVxJb3FuImzlV0ucppkneCnWGZWz0cszOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736376886; c=relaxed/simple;
-	bh=PsktHwbeo92KFMG2d8kJgen+2bKXv3mNXw9pVPvW9Yo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XmNX41qmRROLD1uXtog5aj4sfdv64DzQAj2wKbDV00+RZjaoiWzpBYWCoq3vaqGF46TkDHeYXZs7I3MTHr2f7siIjgVbe0EVezZ0F1Q4o7jbkkP43kOBU1FKCLlX22CVMa20WOa0nMXf5kO875HN0AmtfX2of7uOi+aWU/fc3xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXfHvVyr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736376883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=whZNX1Rilyr2aqPPJZpq67r3niRHtAdZ8tFoam4hgpw=;
-	b=cXfHvVyrtmDiyI+uUUGzZ5PkZ6JKgX1H4U7Ci9htMuQzOkXnIS4oBJ+xTBzNSrPvcsPH8a
-	YcepJraddMIgCH33+y/iy+X3LtuBKNx/S/3UODZxiVHQ/E5WT4EO8el8tEBeT/GFosx5i3
-	+kZ8072SlbUmHjLs9HoUGYc6hhzB0nw=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-336-ayJESXIwNAGnt0Dt2PI3wg-1; Wed,
- 08 Jan 2025 17:54:41 -0500
-X-MC-Unique: ayJESXIwNAGnt0Dt2PI3wg-1
-X-Mimecast-MFC-AGG-ID: ayJESXIwNAGnt0Dt2PI3wg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E355B19560B3
-	for <linux-nfs@vger.kernel.org>; Wed,  8 Jan 2025 22:54:40 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.80.211])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97DAC19560AB;
-	Wed,  8 Jan 2025 22:54:40 +0000 (UTC)
-Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 628302E9E19;
-	Wed, 08 Jan 2025 17:54:39 -0500 (EST)
-From: Scott Mayhew <smayhew@redhat.com>
-To: steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH] nfsdctl: tweak the version subcommand behavior
-Date: Wed,  8 Jan 2025 17:54:39 -0500
-Message-ID: <20250108225439.814872-1-smayhew@redhat.com>
+	s=arc-20240116; t=1736389226; c=relaxed/simple;
+	bh=/sQEQ5TutOnrYYS0lFylL2fbNiVpAWSQGdovRBLQkiA=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=MGAsQpnPMVnRuW5n/WgQKYKCOPygWrmGqUmWv0pVRp59POPgTMa+INXreK+IpxWc8Lw/Axc3VYD4Dp8dhahikKUR3ddl+kLwAjIfIwAVwAORicn8PWh3podW+uj6lT9pHUkkByMyncti4XruKJnB2k+dBz2hkgE6zYtOet8YKmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YT7h55PQ3zjY89;
+	Thu,  9 Jan 2025 10:16:37 +0800 (CST)
+Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
+	by mail.maildlp.com (Postfix) with ESMTPS id A0DFE1800D1;
+	Thu,  9 Jan 2025 10:20:20 +0800 (CST)
+Received: from [10.174.179.93] (10.174.179.93) by
+ kwepemh100016.china.huawei.com (7.202.181.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 9 Jan 2025 10:20:17 +0800
+Subject: Re: [PATCH v4 -next 06/15] mm: mmap: move sysctl to mm/mmap.c
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+References: <20241223141550.638616-1-yukaixiong@huawei.com>
+ <20241223141550.638616-7-yukaixiong@huawei.com>
+ <ef1d602b-23cb-4a95-b83e-c506958dc90c@lucifer.local>
+CC: <akpm@linux-foundation.org>, <mcgrof@kernel.org>,
+	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
+	<glaubitz@physik.fu-berlin.de>, <luto@kernel.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
+	<jack@suse.cz>, <kees@kernel.org>, <j.granados@samsung.com>,
+	<willy@infradead.org>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
+	<trondmy@kernel.org>, <anna@kernel.org>, <chuck.lever@oracle.com>,
+	<jlayton@kernel.org>, <neilb@suse.de>, <okorniev@redhat.com>,
+	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<paul@paul-moore.com>, <jmorris@namei.org>, <linux-sh@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>, <dhowells@redhat.com>,
+	<haifeng.xu@shopee.com>, <baolin.wang@linux.alibaba.com>,
+	<shikemeng@huaweicloud.com>, <dchinner@redhat.com>, <bfoster@redhat.com>,
+	<souravpanda@google.com>, <hannes@cmpxchg.org>, <rientjes@google.com>,
+	<pasha.tatashin@soleen.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
+	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
+	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
+	<wangkefeng.wang@huawei.com>
+From: yukaixiong <yukaixiong@huawei.com>
+Message-ID: <66d64c25-5c82-1388-e09d-f49765efcfba@huawei.com>
+Date: Thu, 9 Jan 2025 10:20:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <ef1d602b-23cb-4a95-b83e-c506958dc90c@lucifer.local>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggpeml500006.china.huawei.com (7.185.36.76) To
+ kwepemh100016.china.huawei.com (7.202.181.102)
 
-The section for the 'nfsdctl version' subcommand on the man page states
-that the minorversion is optional, and if omitted it will cause all
-minorversions to be enabled/disabled, but it currently doesn't work that
-way.
 
-Make it work that way, with one exception.  If v4.0 is disabled, then
-'nfsdctl version +4' will not re-enable it; instead it must be
-explicitly re-enabled via 'nfsdctl version +4.0'.  This mirrors the way
-/proc/fs/nfsd/versions works.
 
-Link: https://issues.redhat.com/browse/RHEL-72477
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- utils/nfsdctl/nfsdctl.8    |  9 ++++--
- utils/nfsdctl/nfsdctl.adoc |  5 +++-
- utils/nfsdctl/nfsdctl.c    | 58 +++++++++++++++++++++++++++++++++++---
- 3 files changed, 64 insertions(+), 8 deletions(-)
+On 2025/1/2 22:08, Lorenzo Stoakes wrote:
+> On Mon, Dec 23, 2024 at 10:15:25PM +0800, Kaixiong Yu wrote:
+>> This moves all mmap related sysctls to mm/mmap.c, as part of the
+>> kernel/sysctl.c cleaning, also move the variable declaration from
+>> kernel/sysctl.c into mm/mmap.c.
+>>
+>> Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
+>> Reviewed-by: Kees Cook <kees@kernel.org>
+> Looks good to me, thanks!
+>
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
-index b08fe803..835d60b4 100644
---- a/utils/nfsdctl/nfsdctl.8
-+++ b/utils/nfsdctl/nfsdctl.8
-@@ -2,12 +2,12 @@
- .\"     Title: nfsdctl
- .\"    Author: Jeff Layton
- .\" Generator: Asciidoctor 2.0.20
--.\"      Date: 2024-12-30
-+.\"      Date: 2025-01-08
- .\"    Manual: \ \&
- .\"    Source: \ \&
- .\"  Language: English
- .\"
--.TH "NFSDCTL" "8" "2024-12-30" "\ \&" "\ \&"
-+.TH "NFSDCTL" "8" "2025-01-08" "\ \&" "\ \&"
- .ie \n(.g .ds Aq \(aq
- .el       .ds Aq '
- .ss \n[.ss] 0
-@@ -172,7 +172,10 @@ MINOR: the minor version integer value
- .nf
- .fam C
- The minorversion field is optional. If not given, it will disable or enable
--all minorversions for that major version.
-+all minorversions for that major version.  Note however that if NFSv4.0 was
-+previously disabled, it can only be re\-enabled by explicitly specifying the
-+minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
-+interface).
- .fam
- .fi
- .if n .RE
-diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
-index c5921458..20e9bf8e 100644
---- a/utils/nfsdctl/nfsdctl.adoc
-+++ b/utils/nfsdctl/nfsdctl.adoc
-@@ -91,7 +91,10 @@ Each subcommand can also accept its own set of options and arguments. The
-     MINOR: the minor version integer value
- 
-   The minorversion field is optional. If not given, it will disable or enable
--  all minorversions for that major version.
-+  all minorversions for that major version.  Note however that if NFSv4.0 was
-+  previously disabled, it can only be re-enabled by explicitly specifying the
-+  minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
-+  interface).
- 
-   Note that versions can only be set when there are no nfsd threads running.
- 
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index 722bf4a0..d86ff80e 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -761,6 +761,32 @@ static int update_nfsd_version(int major, int minor, bool enabled)
- 	return -EINVAL;
- }
- 
-+static bool v40_is_disabled(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < MAX_NFS_VERSIONS; ++i) {
-+		if (nfsd_versions[i].major == 0)
-+			break;
-+		if (nfsd_versions[i].major == 4 && nfsd_versions[i].minor == 0)
-+			return !nfsd_versions[i].enabled;
-+	}
-+	return false;
-+}
-+
-+static int get_max_minorversion(void)
-+{
-+	int i, max = 0;
-+
-+	for (i = 0; i < MAX_NFS_VERSIONS; ++i) {
-+		if (nfsd_versions[i].major == 0)
-+			break;
-+		if (nfsd_versions[i].major == 4 && nfsd_versions[i].minor > max)
-+			max = nfsd_versions[i].minor;
-+	}
-+	return max;
-+}
-+
- static void version_usage(void)
- {
- 	printf("Usage: %s version { {+,-}major.minor } ...\n", taskname);
-@@ -778,7 +804,8 @@ static void version_usage(void)
- 
- static int version_func(struct nl_sock *sock, int argc, char ** argv)
- {
--	int ret, i;
-+	int ret, i, j, max_minor;
-+	bool v40_disabled;
- 
- 	/* help is only valid as first argument after command */
- 	if (argc > 1 &&
-@@ -792,6 +819,9 @@ static int version_func(struct nl_sock *sock, int argc, char ** argv)
- 		return ret;
- 
- 	if (argc > 1) {
-+		v40_disabled = v40_is_disabled();
-+		max_minor = get_max_minorversion();
-+
- 		for (i = 1; i < argc; ++i) {
- 			int ret, major, minor = 0;
- 			char sign = '\0', *str = argv[i];
-@@ -815,9 +845,29 @@ static int version_func(struct nl_sock *sock, int argc, char ** argv)
- 				return -EINVAL;
- 			}
- 
--			ret = update_nfsd_version(major, minor, enabled);
--			if (ret)
--				return ret;
-+			/*
-+			 * The minorversion field is optional. If omitted, it should
-+			 * cause all the minor versions for that major version to be
-+			 * enabled/disabled.
-+			 *
-+			 * HOWEVER, we do not enable v4.0 in this manner if it was
-+			 * previously disabled - it has to be explicitly enabled
-+			 * instead.  This is to retain the behavior of the old
-+			 * /proc/fs/nfsd/versions interface.
-+			 */
-+			if (major == 4 && ret == 2) {
-+				for (j = 0; j <= max_minor; ++j) {
-+					if (j == 0 && enabled && v40_disabled)
-+						continue;
-+					ret = update_nfsd_version(major, j, enabled);
-+					if (ret)
-+						return ret;
-+				}
-+			} else {
-+				ret = update_nfsd_version(major, minor, enabled);
-+				if (ret)
-+					return ret;
-+			}
- 		}
- 		return set_nfsd_versions(sock);
- 	}
--- 
-2.47.1
+Thanks for your review!
+
+Best ...
+>> ---
+>> v4:
+>>   - const qualify struct ctl_table mmap_table
+>> v3:
+>>   - change the title
+>> v2:
+>>   - fix sysctl_max_map_count undeclared issue in mm/nommu.c
+>> ---
+>> ---
+>>   kernel/sysctl.c | 50 +--------------------------------------------
+>>   mm/mmap.c       | 54 +++++++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 55 insertions(+), 49 deletions(-)
+>>
+>> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+>> index aea3482106e0..9c245898f535 100644
+>> --- a/kernel/sysctl.c
+>> +++ b/kernel/sysctl.c
+>> @@ -127,12 +127,6 @@ enum sysctl_writes_mode {
+>>
+>>   static enum sysctl_writes_mode sysctl_writes_strict = SYSCTL_WRITES_STRICT;
+>>   #endif /* CONFIG_PROC_SYSCTL */
+>> -
+>> -#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+>> -    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>> -int sysctl_legacy_va_layout;
+>> -#endif
+>> -
+>>   #endif /* CONFIG_SYSCTL */
+>>
+>>   /*
+>> @@ -2037,16 +2031,7 @@ static struct ctl_table vm_table[] = {
+>>   		.extra1		= SYSCTL_ONE,
+>>   		.extra2		= SYSCTL_FOUR,
+>>   	},
+>> -#ifdef CONFIG_MMU
+>> -	{
+>> -		.procname	= "max_map_count",
+>> -		.data		= &sysctl_max_map_count,
+>> -		.maxlen		= sizeof(sysctl_max_map_count),
+>> -		.mode		= 0644,
+>> -		.proc_handler	= proc_dointvec_minmax,
+>> -		.extra1		= SYSCTL_ZERO,
+>> -	},
+>> -#else
+>> +#ifndef CONFIG_MMU
+>>   	{
+>>   		.procname	= "nr_trim_pages",
+>>   		.data		= &sysctl_nr_trim_pages,
+>> @@ -2064,17 +2049,6 @@ static struct ctl_table vm_table[] = {
+>>   		.proc_handler	= proc_dointvec_minmax,
+>>   		.extra1		= SYSCTL_ZERO,
+>>   	},
+> Nitty, but  this bit belongs in mm/nommu.c?
+>
+>> -#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+>> -    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>> -	{
+>> -		.procname	= "legacy_va_layout",
+>> -		.data		= &sysctl_legacy_va_layout,
+>> -		.maxlen		= sizeof(sysctl_legacy_va_layout),
+>> -		.mode		= 0644,
+>> -		.proc_handler	= proc_dointvec_minmax,
+>> -		.extra1		= SYSCTL_ZERO,
+>> -	},
+>> -#endif
+>>   #ifdef CONFIG_MMU
+>>   	{
+>>   		.procname	= "mmap_min_addr",
+>> @@ -2100,28 +2074,6 @@ static struct ctl_table vm_table[] = {
+>>   		.extra1		= SYSCTL_ZERO,
+>>   	},
+>>   #endif
+>> -#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
+>> -	{
+>> -		.procname	= "mmap_rnd_bits",
+>> -		.data		= &mmap_rnd_bits,
+>> -		.maxlen		= sizeof(mmap_rnd_bits),
+>> -		.mode		= 0600,
+>> -		.proc_handler	= proc_dointvec_minmax,
+>> -		.extra1		= (void *)&mmap_rnd_bits_min,
+>> -		.extra2		= (void *)&mmap_rnd_bits_max,
+>> -	},
+>> -#endif
+>> -#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+>> -	{
+>> -		.procname	= "mmap_rnd_compat_bits",
+>> -		.data		= &mmap_rnd_compat_bits,
+>> -		.maxlen		= sizeof(mmap_rnd_compat_bits),
+>> -		.mode		= 0600,
+>> -		.proc_handler	= proc_dointvec_minmax,
+>> -		.extra1		= (void *)&mmap_rnd_compat_bits_min,
+>> -		.extra2		= (void *)&mmap_rnd_compat_bits_max,
+>> -	},
+>> -#endif
+>>   };
+>>
+>>   int __init sysctl_init_bases(void)
+>> diff --git a/mm/mmap.c b/mm/mmap.c
+>> index aef835984b1c..cc579aafd7ba 100644
+>> --- a/mm/mmap.c
+>> +++ b/mm/mmap.c
+>> @@ -1603,6 +1603,57 @@ struct vm_area_struct *_install_special_mapping(
+>>   					&special_mapping_vmops);
+>>   }
+>>
+>> +#ifdef CONFIG_SYSCTL
+>> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+>> +		defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>> +int sysctl_legacy_va_layout;
+>> +#endif
+>> +
+>> +static const struct ctl_table mmap_table[] = {
+>> +		{
+>> +				.procname       = "max_map_count",
+>> +				.data           = &sysctl_max_map_count,
+>> +				.maxlen         = sizeof(sysctl_max_map_count),
+>> +				.mode           = 0644,
+>> +				.proc_handler   = proc_dointvec_minmax,
+>> +				.extra1         = SYSCTL_ZERO,
+>> +		},
+>> +#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
+>> +		defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
+>> +		{
+>> +				.procname       = "legacy_va_layout",
+>> +				.data           = &sysctl_legacy_va_layout,
+>> +				.maxlen         = sizeof(sysctl_legacy_va_layout),
+>> +				.mode           = 0644,
+>> +				.proc_handler   = proc_dointvec_minmax,
+>> +				.extra1         = SYSCTL_ZERO,
+>> +		},
+>> +#endif
+>> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_BITS
+>> +		{
+>> +				.procname       = "mmap_rnd_bits",
+>> +				.data           = &mmap_rnd_bits,
+>> +				.maxlen         = sizeof(mmap_rnd_bits),
+>> +				.mode           = 0600,
+>> +				.proc_handler   = proc_dointvec_minmax,
+>> +				.extra1         = (void *)&mmap_rnd_bits_min,
+>> +				.extra2         = (void *)&mmap_rnd_bits_max,
+>> +		},
+>> +#endif
+>> +#ifdef CONFIG_HAVE_ARCH_MMAP_RND_COMPAT_BITS
+>> +		{
+>> +				.procname       = "mmap_rnd_compat_bits",
+>> +				.data           = &mmap_rnd_compat_bits,
+>> +				.maxlen         = sizeof(mmap_rnd_compat_bits),
+>> +				.mode           = 0600,
+>> +				.proc_handler   = proc_dointvec_minmax,
+>> +				.extra1         = (void *)&mmap_rnd_compat_bits_min,
+>> +				.extra2         = (void *)&mmap_rnd_compat_bits_max,
+>> +		},
+>> +#endif
+>> +};
+>> +#endif /* CONFIG_SYSCTL */
+>> +
+>>   /*
+>>    * initialise the percpu counter for VM
+>>    */
+>> @@ -1612,6 +1663,9 @@ void __init mmap_init(void)
+>>
+>>   	ret = percpu_counter_init(&vm_committed_as, 0, GFP_KERNEL);
+>>   	VM_BUG_ON(ret);
+>> +#ifdef CONFIG_SYSCTL
+>> +	register_sysctl_init("vm", mmap_table);
+>> +#endif
+>>   }
+>>
+>>   /*
+>> --
+>> 2.34.1
+>>
+> .
+>
 
 
