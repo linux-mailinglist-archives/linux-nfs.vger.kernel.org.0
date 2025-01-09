@@ -1,484 +1,1818 @@
-Return-Path: <linux-nfs+bounces-9012-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9013-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 229A4A075F1
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 13:42:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61196A076FF
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 14:17:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC85F18897A3
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 12:42:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80D151881FFB
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 13:17:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDF8217F23;
-	Thu,  9 Jan 2025 12:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B116218AC8;
+	Thu,  9 Jan 2025 13:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJJ0gJKo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZNAenKt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08592217738
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 12:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E653B21858E;
+	Thu,  9 Jan 2025 13:16:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736426541; cv=none; b=iksN2pjDQemevGPeQTj3mR+90OXfgEk9Rf5Qs9fkw1FoMlQVGgXb0U1IG7TShlgBPeP8MRG+kKH59qo7iuzz9LLkzO9Trfb+QwJHdbmJWb8uNESeOPOHO5BH1cfNir4ueHmmxqkKJtzxz5MK9J1ERnxy7ZeY+XUu/iPxcCmFrlI=
+	t=1736428617; cv=none; b=RpsAZzsDyWeA1GmboOJo5iRaMx6/RL+rY1NPMfoFXSmJhO0KGrcxTY7aeCnr0x44/0hvouSMWd9avXFOTlsSMZlpW9CsOhitvw2Iwb1wJjuucyhrzVOGhIsHFd7j28olxN76NjtgNjie3V6lq1ne+0zKcjgTjDdFVXFkootUrQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736426541; c=relaxed/simple;
-	bh=nmbqlmUvy74H9NXuWnDgUUvWDPp7chWmd0RBoi2eblI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qxESVMpm8ybJbCnuuPTeDnfuWH1HfftNXS9sdeQIOZiuPx+FcFa909tcYv0GWBLBw2vKVPsdVOH5Z3VlQ+lmMsOUeSAz/NDdWWq33Eqonaj9s/KhiwArfwQ7TjlGRNzgg4wtOKHk4MO1wSEAoD8EsCyY8zOzuVJ9YeQsn5u1GNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJJ0gJKo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA0FC4CED6;
-	Thu,  9 Jan 2025 12:42:17 +0000 (UTC)
+	s=arc-20240116; t=1736428617; c=relaxed/simple;
+	bh=QHFDDYEIESLL8xDpW6X9Y5s2XowLH1Fd+eLbLdm47vM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NJV37IPyzCR+LwCYwgTc/evXy8D51Mvi/K04FHGhIz/rFjhUkywYzqU/iIvj2sJrA27RTevD9xLsiUrc1iDhNGMhwHDNb4JgYg2dODF66ux5KxqqiThcYUtcLUIdbrf4GLPau7rhoWoIK8XUjzS8W0GQu4ZYAbLn6jvPilNX0bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZNAenKt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 72292C4CED2;
+	Thu,  9 Jan 2025 13:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736426538;
-	bh=nmbqlmUvy74H9NXuWnDgUUvWDPp7chWmd0RBoi2eblI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pJJ0gJKo/glw2vNfO4yFVJBafFxKSsBcgZKvtqTAEZX+BVa911r72NZGs6ES++W0Q
-	 jbDXYNFjJDD/9DUh/f5IFHn9nKCVRVJ584Zm078OS78gwY33P7HD6u8iY5JlgZfsRy
-	 OouyoWBXgxJk8QzGP2tVVkEZh+MmTLhfbbhVy122BKkhTQtLel7nB7pXH6JVV4Sfy4
-	 aNEkpIWNDNLLxPX0n3UGh90ZTP8FcUaUBGkWyhpNEHagGHdxRjTDIshqA75nwE3WLS
-	 Aj8cHnLtBV5EGnvnT0F3c/+DRfIKgHkDgAt/yyjT1unNvkSigADVV0pa4Uow4iC8x4
-	 zwPSMjebBdv+Q==
-Message-ID: <36f4892e1332e2322ab46e1343316eb187d78025.camel@kernel.org>
-Subject: Re: nfsd blocks indefinitely in nfsd4_destroy_session
-From: Jeff Layton <jlayton@kernel.org>
-To: Christian Herzog <herzog@phys.ethz.ch>, Chuck Lever
- <chuck.lever@oracle.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, Benjamin Coddington	
- <bcodding@redhat.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Harald Dunkel <harald.dunkel@aixigo.com>, Linux NFS Mailing List
- <linux-nfs@vger.kernel.org>, Martin Svec	 <martin.svec@zoner.cz>, Michael
- Gernoth <debian@zerfleddert.de>, Pellegrin Baptiste
- <Baptiste.Pellegrin@ac-grenoble.fr>
-Date: Thu, 09 Jan 2025 07:42:16 -0500
-In-Reply-To: <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
-References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
-	 <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
-	 <Z2vNQ6HXfG_LqBQc@eldamar.lan>
-	 <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
-	 <Z32ZzQiKfEeVoyfU@eldamar.lan>
-	 <3cdcf2ee-46b3-463d-bc14-0f44062c0bd0@oracle.com>
-	 <Z36RshcsxU1xFj_X@phys.ethz.ch>
-	 <7fb711b1-c557-48de-bf91-d522bdbcc575@oracle.com>
-	 <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	s=k20201202; t=1736428616;
+	bh=QHFDDYEIESLL8xDpW6X9Y5s2XowLH1Fd+eLbLdm47vM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=MZNAenKt/5u4q+Ekg15RQfUrwQ31IopEH16I5ztuNSX5gsVJRJgqlN0GdGCPz7EqU
+	 qHudQsZxpNCJCbqsxfLPEF7Q3CCrqJv5udU3yhN9yxi6kYuNnZAvpTiKTeZOBFDH+y
+	 0qNfj/c6BEF9seU9kUr3jcH7cXvFQVyXolb+BnTU/8Dumg9301T99Iy7PwFl7nPI27
+	 1XWLRbpnngpXn8HqExbM4Bwg2Q8OHDARuuYuTdekV0EGHQyN8SsrNRqKo0ZBX3uOv2
+	 95yvIvckZtldFKBbGUso0ImbwVHpx2iJxURg1QBQ40wUVbi+ei1ByIBMN8JkOv6/mF
+	 VWxdzlDWDoJ8A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BFE77197;
+	Thu,  9 Jan 2025 13:16:56 +0000 (UTC)
+From: Joel Granados <joel.granados@kernel.org>
+Date: Thu, 09 Jan 2025 14:16:39 +0100
+Subject: [PATCH] treewide: const qualify ctl_tables where applicable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+X-B4-Tracking: v=1; b=H4sIADbMf2cC/x3MTQqAIBBA4avErBPM6PcqEaLTVBNhoRJBdPek5
+ bd474FAnilAnz3g6eLAh0so8gxwNW4hwVMyKKkqWchObGYRGHcdjd1J4+FCFGU711YhWmsaSOX
+ paeb7vw7j+37JTJubZQAAAA==
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
+ openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
+ linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
+ codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+ linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
+ kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, 
+ Joel Granados <joel.granados@kernel.org>
+X-Mailer: b4 0.15-dev-00a43
+X-Developer-Signature: v=1; a=openpgp-sha256; l=64124;
+ i=joel.granados@kernel.org; h=from:subject:message-id;
+ bh=QHFDDYEIESLL8xDpW6X9Y5s2XowLH1Fd+eLbLdm47vM=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGd/zEbbYaRdkysCJ+jpppy2dECrbdVpWmHU4
+ jeUslEo4A/TgIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJnf8xGAAoJELqXzVK3
+ lkFPbWcMAI8bS7hGmC8o4j/KTrRjhK0qGDUbFUwydu3CXaxb37Vb7kdGXBtl/0ahO4L9rdsDNAA
+ 49m6fEujEgmAjZ4ZEv9s0BTCttKkupimacMMKD2DS8uY3YjEkojI+8xPj/6hpeW3uFlLth0SQIE
+ Gah6s/HUK5BvOxagvM6jf1p28mhPv4LisrNbjEg5JNb/kc5NDV6f8UlcqprDTEsSty0dyCfJNXu
+ F0IDnhhRaXwUuVsXnsVAFbdiOGC/3lWe2zJg3eKExYAXF0IupI0iromTCKyNrN32FO1buoMKMqo
+ DsoTOyU7F5zNmMjE2LkGj7eYcpi7Y/MjXkjTfpabVjGPomahc15ChMwuZZq2fvSGa1QLPl5HYBC
+ +/aDXHj7K174H5EmyGeiG9RA+Xob8Y5nazXtSruUaxNck1Sl6G89tUXLohZCmU1JbAkJUdyHy8O
+ 7j3zlizHbXdlrODQM9RR+EdDByexygbJsD7UcPl1P9QLIn1NALjNePIFM1SQw5c6AhHVg8/b4u4
+ vg=
+X-Developer-Key: i=joel.granados@kernel.org; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for joel.granados@kernel.org/default with
+ auth_id=239
 
-On Thu, 2025-01-09 at 12:56 +0100, Christian Herzog wrote:
-> Dear Chuck,
->=20
-> On Wed, Jan 08, 2025 at 10:07:49AM -0500, Chuck Lever wrote:
-> > On 1/8/25 9:54 AM, Christian Herzog wrote:
-> > > Dear Chuck,
-> > >=20
-> > > On Wed, Jan 08, 2025 at 08:33:23AM -0500, Chuck Lever wrote:
-> > > > On 1/7/25 4:17 PM, Salvatore Bonaccorso wrote:
-> > > > > Hi Chuck,
-> > > > >=20
-> > > > > Thanks for your time on this, much appreciated.
-> > > > >=20
-> > > > > On Wed, Jan 01, 2025 at 02:24:50PM -0500, Chuck Lever wrote:
-> > > > > > On 12/25/24 4:15 AM, Salvatore Bonaccorso wrote:
-> > > > > > > Hi Chuck, hi all,
-> > > > > > >=20
-> > > > > > > [it was not ideal to pick one of the message for this followu=
-p, let me
-> > > > > > > know if you want a complete new thread, adding as well Benjam=
-in and
-> > > > > > > Trond as they are involved in one mentioned patch]
-> > > > > > >=20
-> > > > > > > On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wro=
-te:
-> > > > > > > >=20
-> > > > > > > >=20
-> > > > > > > > > On Jun 17, 2024, at 2:55=E2=80=AFAM, Harald Dunkel <haral=
-d.dunkel@aixigo.com> wrote:
-> > > > > > > > >=20
-> > > > > > > > > Hi folks,
-> > > > > > > > >=20
-> > > > > > > > > what would be the reason for nfsd getting stuck somehow a=
-nd becoming
-> > > > > > > > > an unkillable process? See
-> > > > > > > > >=20
-> > > > > > > > > - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D107=
-1562
-> > > > > > > > > - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bu=
-g/2062568
-> > > > > > > > >=20
-> > > > > > > > > Doesn't this mean that something inside the kernel gets s=
-tuck as
-> > > > > > > > > well? Seems odd to me.
-> > > > > > > >=20
-> > > > > > > > I'm not familiar with the Debian or Ubuntu kernel packages.=
- Can
-> > > > > > > > the kernel release numbers be translated to LTS kernel rele=
-ases
-> > > > > > > > please? Need both "last known working" and "first broken" r=
-eleases.
-> > > > > > > >=20
-> > > > > > > > This:
-> > > > > > > >=20
-> > > > > > > > [ 6596.911785] RPC: Could not send backchannel reply error:=
- -110
-> > > > > > > > [ 6596.972490] RPC: Could not send backchannel reply error:=
- -110
-> > > > > > > > [ 6837.281307] RPC: Could not send backchannel reply error:=
- -110
-> > > > > > > >=20
-> > > > > > > > is a known set of client backchannel bugs. Knowing the LTS =
-kernel
-> > > > > > > > releases (see above) will help us figure out what needs to =
-be
-> > > > > > > > backported to the LTS kernels kernels in question.
-> > > > > > > >=20
-> > > > > > > > This:
-> > > > > > > >=20
-> > > > > > > > [11183.290619] wait_for_completion+0x88/0x150
-> > > > > > > > [11183.290623] __flush_workqueue+0x140/0x3e0
-> > > > > > > > [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
-> > > > > > > > [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
-> > > > > > > >=20
-> > > > > > > > is probably related to the backchannel errors on the client=
-, but
-> > > > > > > > client bugs shouldn't cause the server to hang like this. W=
-e
-> > > > > > > > might be able to say more if you can provide the kernel rel=
-ease
-> > > > > > > > translations (see above).
-> > > > > > >=20
-> > > > > > > In Debian we hstill have the bug #1071562 open and one person=
- notified
-> > > > > > > mye offlist that it appears that the issue get more frequent =
-since
-> > > > > > > they updated on NFS client side from Ubuntu 20.04 to Debian b=
-ookworm
-> > > > > > > with a 6.1.y based kernel).
-> > > > > > >=20
-> > > > > > > Some people around those issues, seem to claim that the chang=
-e
-> > > > > > > mentioned in
-> > > > > > > https://lists.proxmox.com/pipermail/pve-devel/2024-July/06461=
-4.html
-> > > > > > > would fix the issue, which is as well backchannel related.
-> > > > > > >=20
-> > > > > > > This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel repl=
-y,
-> > > > > > > again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use =
-the
-> > > > > > > nfs_client's rpc timeouts for backchannel") this is not somet=
-hing
-> > > > > > > which goes back to 6.1.y, could it be possible that hte backc=
-hannel
-> > > > > > > refactoring and this final fix indeeds fixes the issue?
-> > > > > > >=20
-> > > > > > > As people report it is not easily reproducible, so this makes=
- it
-> > > > > > > harder to identify fixes correctly.
-> > > > > > >=20
-> > > > > > > I gave a (short) stance on trying to backport commits up to
-> > > > > > > 6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but thi=
-s quickly
-> > > > > > > seems to indicate it is probably still not the right thing fo=
-r
-> > > > > > > backporting to the older stable series.
-> > > > > > >=20
-> > > > > > > As at least pre-requisites:
-> > > > > > >=20
-> > > > > > > 2009e32997ed568a305cf9bc7bf27d22e0f6ccda
-> > > > > > > 4119bd0306652776cb0b7caa3aea5b2a93aecb89
-> > > > > > > 163cdfca341b76c958567ae0966bd3575c5c6192
-> > > > > > > f4afc8fead386c81fda2593ad6162271d26667f8
-> > > > > > > 6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
-> > > > > > > 57331a59ac0d680f606403eb24edd3c35aecba31
-> > > > > > >=20
-> > > > > > > and still there would be conflicting codepaths (and does not =
-seem
-> > > > > > > right).
-> > > > > > >=20
-> > > > > > > Chuck, Benjamin, Trond, is there anything we can provive on r=
-eporters
-> > > > > > > side that we can try to tackle this issue better?
-> > > > > >=20
-> > > > > > As I've indicated before, NFSD should not block no matter what =
-the
-> > > > > > client may or may not be doing. I'd like to focus on the server=
- first.
-> > > > > >=20
-> > > > > > What is the result of:
-> > > > > >=20
-> > > > > > $ cd <Bookworm's v6.1.90 kernel source >
-> > > > > > $ unset KBUILD_OUTPUT
-> > > > > > $ make -j `nproc`
-> > > > > > $ scripts/faddr2line \
-> > > > > > 	fs/nfsd/nfs4state.o \
-> > > > > > 	nfsd4_destroy_session+0x16d
-> > > > > >=20
-> > > > > > Since this issue appeared after v6.1.1, is it possible to bisec=
-t
-> > > > > > between v6.1.1 and v6.1.90 ?
-> > > > >=20
-> > > > > First please note, at least speaking of triggering the issue in
-> > > > > Debian, Debian has moved to 6.1.119 based kernel already (and soo=
-n in
-> > > > > the weekends point release move to 6.1.123).
-> > > > >=20
-> > > > > That said, one of the users which regularly seems to be hit by th=
-e
-> > > > > issue was able to provide the above requested information, based =
-for
-> > > > > 6.1.119:
-> > > > >=20
-> > > > > ~/kernel/linux-source-6.1# make kernelversion
-> > > > > 6.1.119
-> > > > > ~/kernel/linux-source-6.1# scripts/faddr2line fs/nfsd/nfs4state.o=
- nfsd4_destroy_session+0x16d
-> > > > > nfsd4_destroy_session+0x16d/0x250:
-> > > > > __list_del_entry at /root/kernel/linux-source-6.1/./include/linux=
-/list.h:134
-> > > > > (inlined by) list_del at /root/kernel/linux-source-6.1/./include/=
-linux/list.h:148
-> > > > > (inlined by) unhash_session at /root/kernel/linux-source-6.1/fs/n=
-fsd/nfs4state.c:2062
-> > > > > (inlined by) nfsd4_destroy_session at /root/kernel/linux-source-6=
-.1/fs/nfsd/nfs4state.c:3856
-> > > > >=20
-> > > > > They could provide as well a decode_stacktrace output for the rec=
-ent
-> > > > > hit (if that is helpful for you):
-> > > > >=20
-> > > > > [Mon Jan 6 13:25:28 2025] INFO: task nfsd:55306 blocked for more =
-than 6883 seconds.
-> > > > > [Mon Jan 6 13:25:28 2025]       Not tainted 6.1.0-28-amd64 #1 Deb=
-ian 6.1.119-1
-> > > > > [Mon Jan 6 13:25:28 2025] "echo 0 > /proc/sys/kernel/hung_task_ti=
-meout_secs" disables this message.
-> > > > > [Mon Jan 6 13:25:28 2025] task:nfsd            state:D stack:0   =
-  pid:55306 ppid:2      flags:0x00004000
-> > > > > [Mon Jan 6 13:25:28 2025] Call Trace:
-> > > > > [Mon Jan 6 13:25:28 2025]  <TASK>
-> > > > > [Mon Jan 6 13:25:28 2025] __schedule+0x34d/0x9e0
-> > > > > [Mon Jan 6 13:25:28 2025] schedule+0x5a/0xd0
-> > > > > [Mon Jan 6 13:25:28 2025] schedule_timeout+0x118/0x150
-> > > > > [Mon Jan 6 13:25:28 2025] wait_for_completion+0x86/0x160
-> > > > > [Mon Jan 6 13:25:28 2025] __flush_workqueue+0x152/0x420
-> > > > > [Mon Jan 6 13:25:28 2025] nfsd4_destroy_session (debian/build/bui=
-ld_amd64_none_amd64/include/linux/spinlock.h:351 debian/build/build_amd64_n=
-one_amd64/fs/nfsd/nfs4state.c:3861) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] nfsd4_proc_compound (debian/build/build=
-_amd64_none_amd64/fs/nfsd/nfs4proc.c:2680) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] nfsd_dispatch (debian/build/build_amd64=
-_none_amd64/fs/nfsd/nfssvc.c:1022) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] svc_process_common (debian/build/build_=
-amd64_none_amd64/net/sunrpc/svc.c:1344) sunrpc
-> > > > > [Mon Jan 6 13:25:28 2025] ? svc_recv (debian/build/build_amd64_no=
-ne_amd64/net/sunrpc/svc_xprt.c:897) sunrpc
-> > > > > [Mon Jan 6 13:25:28 2025] ? nfsd_svc (debian/build/build_amd64_no=
-ne_amd64/fs/nfsd/nfssvc.c:983) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] ? nfsd_inet6addr_event (debian/build/bu=
-ild_amd64_none_amd64/fs/nfsd/nfssvc.c:922) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] svc_process (debian/build/build_amd64_n=
-one_amd64/net/sunrpc/svc.c:1474) sunrpc
-> > > > > [Mon Jan 6 13:25:28 2025] nfsd (debian/build/build_amd64_none_amd=
-64/fs/nfsd/nfssvc.c:960) nfsd
-> > > > > [Mon Jan 6 13:25:28 2025] kthread+0xd7/0x100
-> > > > > [Mon Jan 6 13:25:28 2025] ? kthread_complete_and_exit+0x20/0x20
-> > > > > [Mon Jan 6 13:25:28 2025] ret_from_fork+0x1f/0x30
-> > > > > [Mon Jan  6 13:25:28 2025]  </TASK>
-> > > > >=20
-> > > > > The question about bisection is actually harder, those are produc=
-tion
-> > > > > systems and I understand it's not possible to do bisect there, wh=
-ile
-> > > > > unfortunately not reprodcing the issue on "lab conditions".
-> > > > >=20
-> > > > > Does the above give us still a clue on what you were looking for?
-> > > >=20
-> > > > Thanks for the update.
-> > > >=20
-> > > > It's possible that 38f080f3cd19 ("NFSD: Move callback_wq into struc=
-t
-> > > > nfs4_client"), while not a specific fix for this issue, might offer=
- some
-> > > > relief by preventing the DESTROY_SESSION hang from affecting all ot=
-her
-> > > > clients of the degraded server.
-> > > >=20
-> > > > Not having a reproducer or the ability to bisect puts a damper on
-> > > > things. The next step, then, is to enable tracing on servers where =
-this
-> > > > issue can come up, and wait for the hang to occur. The following co=
-mmand
-> > > > captures information only about callback operation, so it should no=
-t
-> > > > generate much data or impact server performance.
-> > > >=20
-> > > >    # trace-cmd record -e nfsd:nfsd_cb\*
-> > > >=20
-> > > > Let that run until the problem occurs, then ^C, compress the result=
-ing
-> > > > trace.dat file, and either attach it to 1071562 or email it to me
-> > > > privately.
-> > > thanks for the follow-up.
-> > >=20
-> > > I am the "customer" with two affected file servers. We have since mov=
-ed those
-> > > servers to the backports kernel (6.11.10) in the hope of forward fixi=
-ng the
-> > > issue. If this kernel is stable, I'm afraid I can't go back to the 'b=
-ad'
-> > > kernel (700+ researchers affected..), and we're also not able to trig=
-ger the
-> > > issue on our test environment.
-> >=20
-> > Hello Dr. Herzog -
-> >=20
-> > If the problem recurs on 6.11, the trace-cmd I suggest above works
-> > there as well.
-> the bad news is: it just happened again with the bpo kernel.
->=20
-> We then immediately started trace-cmd since usually there are several cal=
-l
-> traces in a row and we did get a trace.dat:
-> http://people.phys.ethz.ch/~daduke/trace.dat
->=20
-> we did notice however that the stack trace looked a bit different this ti=
-me:
->=20
->     INFO: task nfsd:2566 blocked for more than 5799 seconds.
->     Tainted: G        W          6.11.10+bpo-amd64 #1 Debia>
->     "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables t>
->     task:nfsd            state:D stack:0     pid:2566  tgid:2566 >
->     Call Trace:
->     <TASK>
->     __schedule+0x400/0xad0
->     schedule+0x27/0xf0
->     nfsd4_shutdown_callback+0xfe/0x140 [nfsd]
->     ? __pfx_var_wake_function+0x10/0x10
->     __destroy_client+0x1f0/0x290 [nfsd]
->     nfsd4_destroy_clientid+0xf1/0x1e0 [nfsd]
->     ? svcauth_unix_set_client+0x586/0x5f0 [sunrpc]
->     nfsd4_proc_compound+0x34d/0x670 [nfsd]
->     nfsd_dispatch+0xfd/0x220 [nfsd]
->     svc_process_common+0x2f7/0x700 [sunrpc]
->     ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
->     svc_process+0x131/0x180 [sunrpc]
->     svc_recv+0x830/0xa10 [sunrpc]
->     ? __pfx_nfsd+0x10/0x10 [nfsd]
->     nfsd+0x87/0xf0 [nfsd]
->     kthread+0xcf/0x100
->     ? __pfx_kthread+0x10/0x10
->     ret_from_fork+0x31/0x50
->     ? __pfx_kthread+0x10/0x10
->     ret_from_fork_asm+0x1a/0x30
->     </TASK>
->=20
-> and also the state of the offending client in `/proc/fs/nfsd/clients/*/in=
-fo`
-> used to be callback state: UNKNOWN while now it is DOWN or FAULT. No idea
-> what it means, but I thought it was worth mentioning.
->=20
+Add the const qualifier to all the ctl_tables in the tree except the
+ones in ./net dir. The "net" sysctl code is special as it modifies the
+arrays before passing it on to the registration function.
 
-Looks like this is hung in nfsd41_cb_inflight_wait_complete() ? That
-probably means that the cl_cb_inflight counter is stuck at >0. I'm
-guessing that means that there is some callback that it's expecting to
-complete that isn't. From nfsd4_shutdown_callback():
+Constifying ctl_table structs will prevent the modification of
+proc_handler function pointers as the arrays would reside in .rodata.
+This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
+constify the ctl_table argument of proc_handlers") constified all the
+proc_handlers.
 
-        /*
-         * Note this won't actually result in a null callback;
-         * instead, nfsd4_run_cb_null() will detect the killed
-         * client, destroy the rpc client, and stop:
-         */
-        nfsd4_run_cb(&clp->cl_cb_null);
-        flush_workqueue(clp->cl_callback_wq);
-        nfsd41_cb_inflight_wait_complete(clp);
+Created this by running an spatch followed by a sed command:
+Spatch:
+    virtual patch
 
-...it sounds like that isn't happening properly though.
+    @
+    depends on !(file in "net")
+    disable optional_qualifier
+    @
+    identifier table_name;
+    @@
 
-It might be interesting to see if you can track down the callback
-client in /sys/kernel/debug/sunrpc and see what it's doing.
---=20
-Jeff Layton <jlayton@kernel.org>
+    + const
+    struct ctl_table table_name [] = { ... };
+
+sed:
+    sed --in-place \
+      -e "s/struct ctl_table .table = &uts_kern/const struct ctl_table *table = \&uts_kern/" \
+      kernel/utsname_sysctl.c
+
+Signed-off-by: Joel Granados <joel.granados@kernel.org>
+---
+This treewide commit builds upon the work Thomas began a few releases
+ago [1], where he laid the groundwork for constifying ctl_tables. We
+implement constification throughout the tree, with the exception of the
+ctl_tables in the "net" directory. Those are special in that they treat
+the ctl_table as non-const but we can take them at a later point.
+
+Upstreaming:
+===========
+It is late in the release cycle, but I'm hopeful that we can get this
+in for the upcoming merge window and this is why:
+1. We don't use linux-next: As with previous treewide changes similar to
+   this one [1], we avoid using linux-next in order to avoid unwanted
+   merge conflicts
+2. This is a non-functional change: which lowers the probability of
+   unforeseen errors or regressions.
+3. It will have at least 2 weeks to be tested/reviewed: The PULL should
+   be sent at the end of the merge window, giving it at least 2 weeks.
+   And if there are more release candidates after rc6, there will be
+   more time.
+
+Testing:
+========
+1. Currently being tested in 0-day
+2. sysctl self-tests/kunit-tests
+
+Reduced To/Cc:
+==============
+b4 originally gave me 200 ppl that this should go out to (which seems a
+bit overkill from my point of view). So I left the mailing lists and
+reduced the To: the ppl previously involved in the effort and sysctl
+maintainers. Please tell me if I missed someone important to the
+constification effort.
+
+Comments are greatly appreciated.
+Specially interested in any specifics from @Thomas and @kees
+
+Best
+
+[1] https://lore.kernel.org/20240724210014.mc6nima6cekgiukx@joelS2.panther.com
+
+--
+---
+ arch/arm/kernel/isa.c                         | 2 +-
+ arch/arm64/kernel/fpsimd.c                    | 4 ++--
+ arch/arm64/kernel/process.c                   | 2 +-
+ arch/powerpc/kernel/idle.c                    | 2 +-
+ arch/powerpc/platforms/pseries/mobility.c     | 2 +-
+ arch/riscv/kernel/process.c                   | 2 +-
+ arch/riscv/kernel/vector.c                    | 2 +-
+ arch/s390/appldata/appldata_base.c            | 2 +-
+ arch/s390/kernel/debug.c                      | 2 +-
+ arch/s390/kernel/hiperdispatch.c              | 2 +-
+ arch/s390/kernel/topology.c                   | 2 +-
+ arch/s390/mm/cmm.c                            | 2 +-
+ arch/s390/mm/pgalloc.c                        | 2 +-
+ arch/x86/entry/vdso/vdso32-setup.c            | 2 +-
+ arch/x86/kernel/cpu/bus_lock.c                | 2 +-
+ arch/x86/kernel/itmt.c                        | 2 +-
+ crypto/fips.c                                 | 2 +-
+ drivers/base/firmware_loader/fallback_table.c | 2 +-
+ drivers/cdrom/cdrom.c                         | 2 +-
+ drivers/char/hpet.c                           | 2 +-
+ drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
+ drivers/char/random.c                         | 2 +-
+ drivers/gpu/drm/i915/i915_perf.c              | 2 +-
+ drivers/gpu/drm/xe/xe_observation.c           | 2 +-
+ drivers/hv/hv_common.c                        | 2 +-
+ drivers/infiniband/core/iwcm.c                | 2 +-
+ drivers/infiniband/core/ucma.c                | 2 +-
+ drivers/macintosh/mac_hid.c                   | 2 +-
+ drivers/md/md.c                               | 2 +-
+ drivers/misc/sgi-xp/xpc_main.c                | 4 ++--
+ drivers/perf/arm_pmuv3.c                      | 2 +-
+ drivers/perf/riscv_pmu_sbi.c                  | 2 +-
+ drivers/scsi/scsi_sysctl.c                    | 2 +-
+ drivers/scsi/sg.c                             | 2 +-
+ drivers/tty/tty_io.c                          | 2 +-
+ drivers/xen/balloon.c                         | 2 +-
+ fs/aio.c                                      | 2 +-
+ fs/cachefiles/error_inject.c                  | 2 +-
+ fs/coda/sysctl.c                              | 2 +-
+ fs/coredump.c                                 | 2 +-
+ fs/dcache.c                                   | 2 +-
+ fs/devpts/inode.c                             | 2 +-
+ fs/eventpoll.c                                | 2 +-
+ fs/exec.c                                     | 2 +-
+ fs/file_table.c                               | 2 +-
+ fs/fuse/sysctl.c                              | 2 +-
+ fs/inode.c                                    | 2 +-
+ fs/lockd/svc.c                                | 2 +-
+ fs/locks.c                                    | 2 +-
+ fs/namei.c                                    | 2 +-
+ fs/namespace.c                                | 2 +-
+ fs/nfs/nfs4sysctl.c                           | 2 +-
+ fs/nfs/sysctl.c                               | 2 +-
+ fs/notify/dnotify/dnotify.c                   | 2 +-
+ fs/notify/fanotify/fanotify_user.c            | 2 +-
+ fs/notify/inotify/inotify_user.c              | 2 +-
+ fs/ocfs2/stackglue.c                          | 2 +-
+ fs/pipe.c                                     | 2 +-
+ fs/quota/dquot.c                              | 2 +-
+ fs/sysctls.c                                  | 2 +-
+ fs/userfaultfd.c                              | 2 +-
+ fs/verity/init.c                              | 2 +-
+ fs/xfs/xfs_sysctl.c                           | 2 +-
+ init/do_mounts_initrd.c                       | 2 +-
+ io_uring/io_uring.c                           | 2 +-
+ ipc/ipc_sysctl.c                              | 2 +-
+ ipc/mq_sysctl.c                               | 2 +-
+ kernel/acct.c                                 | 2 +-
+ kernel/bpf/syscall.c                          | 2 +-
+ kernel/delayacct.c                            | 2 +-
+ kernel/exit.c                                 | 2 +-
+ kernel/hung_task.c                            | 2 +-
+ kernel/kexec_core.c                           | 2 +-
+ kernel/kprobes.c                              | 2 +-
+ kernel/latencytop.c                           | 2 +-
+ kernel/locking/lockdep.c                      | 2 +-
+ kernel/panic.c                                | 2 +-
+ kernel/pid_namespace.c                        | 2 +-
+ kernel/pid_sysctl.h                           | 2 +-
+ kernel/printk/sysctl.c                        | 2 +-
+ kernel/reboot.c                               | 2 +-
+ kernel/sched/autogroup.c                      | 2 +-
+ kernel/sched/core.c                           | 2 +-
+ kernel/sched/deadline.c                       | 2 +-
+ kernel/sched/fair.c                           | 2 +-
+ kernel/sched/rt.c                             | 2 +-
+ kernel/sched/topology.c                       | 2 +-
+ kernel/seccomp.c                              | 2 +-
+ kernel/signal.c                               | 2 +-
+ kernel/stackleak.c                            | 2 +-
+ kernel/sysctl-test.c                          | 6 +++---
+ kernel/sysctl.c                               | 4 ++--
+ kernel/time/timer.c                           | 2 +-
+ kernel/trace/ftrace.c                         | 2 +-
+ kernel/trace/trace_events_user.c              | 2 +-
+ kernel/umh.c                                  | 2 +-
+ kernel/utsname_sysctl.c                       | 4 ++--
+ kernel/watchdog.c                             | 4 ++--
+ lib/alloc_tag.c                               | 2 +-
+ lib/test_sysctl.c                             | 6 +++---
+ mm/compaction.c                               | 2 +-
+ mm/hugetlb.c                                  | 2 +-
+ mm/hugetlb_vmemmap.c                          | 2 +-
+ mm/memory-failure.c                           | 2 +-
+ mm/oom_kill.c                                 | 2 +-
+ mm/page-writeback.c                           | 2 +-
+ mm/page_alloc.c                               | 2 +-
+ security/apparmor/lsm.c                       | 2 +-
+ security/keys/sysctl.c                        | 2 +-
+ security/loadpin/loadpin.c                    | 2 +-
+ security/yama/yama_lsm.c                      | 2 +-
+ 111 files changed, 120 insertions(+), 120 deletions(-)
+
+diff --git a/arch/arm/kernel/isa.c b/arch/arm/kernel/isa.c
+index 905b1b191546..db8be609fab2 100644
+--- a/arch/arm/kernel/isa.c
++++ b/arch/arm/kernel/isa.c
+@@ -16,7 +16,7 @@
+ 
+ static unsigned int isa_membase, isa_portbase, isa_portshift;
+ 
+-static struct ctl_table ctl_isa_vars[] = {
++static const struct ctl_table ctl_isa_vars[] = {
+ 	{
+ 		.procname	= "membase",
+ 		.data		= &isa_membase, 
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 8c4c1a2186cc..2b601d88762d 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -562,7 +562,7 @@ static int vec_proc_do_default_vl(const struct ctl_table *table, int write,
+ 	return 0;
+ }
+ 
+-static struct ctl_table sve_default_vl_table[] = {
++static const struct ctl_table sve_default_vl_table[] = {
+ 	{
+ 		.procname	= "sve_default_vector_length",
+ 		.mode		= 0644,
+@@ -585,7 +585,7 @@ static int __init sve_sysctl_init(void) { return 0; }
+ #endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ 
+ #if defined(CONFIG_ARM64_SME) && defined(CONFIG_SYSCTL)
+-static struct ctl_table sme_default_vl_table[] = {
++static const struct ctl_table sme_default_vl_table[] = {
+ 	{
+ 		.procname	= "sme_default_vector_length",
+ 		.mode		= 0644,
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index 2968a33bb3bc..42faebb7b712 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -859,7 +859,7 @@ long get_tagged_addr_ctrl(struct task_struct *task)
+  * disable it for tasks that already opted in to the relaxed ABI.
+  */
+ 
+-static struct ctl_table tagged_addr_sysctl_table[] = {
++static const struct ctl_table tagged_addr_sysctl_table[] = {
+ 	{
+ 		.procname	= "tagged_addr_disabled",
+ 		.mode		= 0644,
+diff --git a/arch/powerpc/kernel/idle.c b/arch/powerpc/kernel/idle.c
+index 30b56c67fa61..e527cd3ef128 100644
+--- a/arch/powerpc/kernel/idle.c
++++ b/arch/powerpc/kernel/idle.c
+@@ -97,7 +97,7 @@ void power4_idle(void)
+ /*
+  * Register the sysctl to set/clear powersave_nap.
+  */
+-static struct ctl_table powersave_nap_ctl_table[] = {
++static const struct ctl_table powersave_nap_ctl_table[] = {
+ 	{
+ 		.procname	= "powersave-nap",
+ 		.data		= &powersave_nap,
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index 1798f0f14d58..62bd8e2d5d4c 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -53,7 +53,7 @@ struct update_props_workarea {
+ static unsigned int nmi_wd_lpm_factor = 200;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table nmi_wd_lpm_factor_ctl_table[] = {
++static const struct ctl_table nmi_wd_lpm_factor_ctl_table[] = {
+ 	{
+ 		.procname	= "nmi_wd_lpm_factor",
+ 		.data		= &nmi_wd_lpm_factor,
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 58b6482c2bf6..7891294abf49 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -364,7 +364,7 @@ static bool try_to_set_pmm(unsigned long value)
+  * disable it for tasks that already opted in to the relaxed ABI.
+  */
+ 
+-static struct ctl_table tagged_addr_sysctl_table[] = {
++static const struct ctl_table tagged_addr_sysctl_table[] = {
+ 	{
+ 		.procname	= "tagged_addr_disabled",
+ 		.mode		= 0644,
+diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+index 821818886fab..d022b028ac3f 100644
+--- a/arch/riscv/kernel/vector.c
++++ b/arch/riscv/kernel/vector.c
+@@ -287,7 +287,7 @@ long riscv_v_vstate_ctrl_set_current(unsigned long arg)
+ 
+ #ifdef CONFIG_SYSCTL
+ 
+-static struct ctl_table riscv_v_default_vstate_table[] = {
++static const struct ctl_table riscv_v_default_vstate_table[] = {
+ 	{
+ 		.procname	= "riscv_v_default_allow",
+ 		.data		= &riscv_v_implicit_uacc,
+diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
+index 91a30e017d65..dd7ba7587dd5 100644
+--- a/arch/s390/appldata/appldata_base.c
++++ b/arch/s390/appldata/appldata_base.c
+@@ -52,7 +52,7 @@ static int appldata_interval_handler(const struct ctl_table *ctl, int write,
+ 				     void *buffer, size_t *lenp, loff_t *ppos);
+ 
+ static struct ctl_table_header *appldata_sysctl_header;
+-static struct ctl_table appldata_table[] = {
++static const struct ctl_table appldata_table[] = {
+ 	{
+ 		.procname	= "timer",
+ 		.mode		= S_IRUGO | S_IWUSR,
+diff --git a/arch/s390/kernel/debug.c b/arch/s390/kernel/debug.c
+index de19fd8a6a95..2c245c2bce4f 100644
+--- a/arch/s390/kernel/debug.c
++++ b/arch/s390/kernel/debug.c
+@@ -972,7 +972,7 @@ static int s390dbf_procactive(const struct ctl_table *table, int write,
+ 		return 0;
+ }
+ 
+-static struct ctl_table s390dbf_table[] = {
++static const struct ctl_table s390dbf_table[] = {
+ 	{
+ 		.procname	= "debug_stoppable",
+ 		.data		= &debug_stoppable,
+diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
+index 2a99a216ab62..7857a7e8e56c 100644
+--- a/arch/s390/kernel/hiperdispatch.c
++++ b/arch/s390/kernel/hiperdispatch.c
+@@ -292,7 +292,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
+ 	return 0;
+ }
+ 
+-static struct ctl_table hiperdispatch_ctl_table[] = {
++static const struct ctl_table hiperdispatch_ctl_table[] = {
+ 	{
+ 		.procname	= "hiperdispatch",
+ 		.mode		= 0644,
+diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
+index 4f9c301a705b..5067293ef69d 100644
+--- a/arch/s390/kernel/topology.c
++++ b/arch/s390/kernel/topology.c
+@@ -662,7 +662,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
+ 	return set_polarization(polarization);
+ }
+ 
+-static struct ctl_table topology_ctl_table[] = {
++static const struct ctl_table topology_ctl_table[] = {
+ 	{
+ 		.procname	= "topology",
+ 		.mode		= 0644,
+diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
+index d01724a715d0..939e3bec2db7 100644
+--- a/arch/s390/mm/cmm.c
++++ b/arch/s390/mm/cmm.c
+@@ -332,7 +332,7 @@ static int cmm_timeout_handler(const struct ctl_table *ctl, int write,
+ 	return 0;
+ }
+ 
+-static struct ctl_table cmm_table[] = {
++static const struct ctl_table cmm_table[] = {
+ 	{
+ 		.procname	= "cmm_pages",
+ 		.mode		= 0644,
+diff --git a/arch/s390/mm/pgalloc.c b/arch/s390/mm/pgalloc.c
+index 58696a0c4e4a..18d3176e44fb 100644
+--- a/arch/s390/mm/pgalloc.c
++++ b/arch/s390/mm/pgalloc.c
+@@ -21,7 +21,7 @@
+ int page_table_allocate_pgste = 0;
+ EXPORT_SYMBOL(page_table_allocate_pgste);
+ 
+-static struct ctl_table page_table_sysctl[] = {
++static const struct ctl_table page_table_sysctl[] = {
+ 	{
+ 		.procname	= "allocate_pgste",
+ 		.data		= &page_table_allocate_pgste,
+diff --git a/arch/x86/entry/vdso/vdso32-setup.c b/arch/x86/entry/vdso/vdso32-setup.c
+index 76e4e74f35b5..f6d2d8aba643 100644
+--- a/arch/x86/entry/vdso/vdso32-setup.c
++++ b/arch/x86/entry/vdso/vdso32-setup.c
+@@ -57,7 +57,7 @@ __setup_param("vdso=", vdso_setup, vdso32_setup, 0);
+ /* Register vsyscall32 into the ABI table */
+ #include <linux/sysctl.h>
+ 
+-static struct ctl_table abi_table2[] = {
++static const struct ctl_table abi_table2[] = {
+ 	{
+ 		.procname	= "vsyscall32",
+ 		.data		= &vdso32_enabled,
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index 704e9241b964..6cba85c79d42 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -49,7 +49,7 @@ static unsigned int sysctl_sld_mitigate = 1;
+ static DEFINE_SEMAPHORE(buslock_sem, 1);
+ 
+ #ifdef CONFIG_PROC_SYSCTL
+-static struct ctl_table sld_sysctls[] = {
++static const struct ctl_table sld_sysctls[] = {
+ 	{
+ 		.procname       = "split_lock_mitigate",
+ 		.data           = &sysctl_sld_mitigate,
+diff --git a/arch/x86/kernel/itmt.c b/arch/x86/kernel/itmt.c
+index 51b805c727fc..083d8c4deb2b 100644
+--- a/arch/x86/kernel/itmt.c
++++ b/arch/x86/kernel/itmt.c
+@@ -64,7 +64,7 @@ static int sched_itmt_update_handler(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table itmt_kern_table[] = {
++static const struct ctl_table itmt_kern_table[] = {
+ 	{
+ 		.procname	= "sched_itmt_enabled",
+ 		.data		= &sysctl_sched_itmt_enabled,
+diff --git a/crypto/fips.c b/crypto/fips.c
+index 8a784018ebfc..ec6574596e59 100644
+--- a/crypto/fips.c
++++ b/crypto/fips.c
+@@ -41,7 +41,7 @@ __setup("fips=", fips_enable);
+ static char fips_name[] = FIPS_MODULE_NAME;
+ static char fips_version[] = FIPS_MODULE_VERSION;
+ 
+-static struct ctl_table crypto_sysctl_table[] = {
++static const struct ctl_table crypto_sysctl_table[] = {
+ 	{
+ 		.procname	= "fips_enabled",
+ 		.data		= &fips_enabled,
+diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+index ddb70e29eb42..c8afc501a8a4 100644
+--- a/drivers/base/firmware_loader/fallback_table.c
++++ b/drivers/base/firmware_loader/fallback_table.c
+@@ -25,7 +25,7 @@ struct firmware_fallback_config fw_fallback_config = {
+ EXPORT_SYMBOL_NS_GPL(fw_fallback_config, "FIRMWARE_LOADER_PRIVATE");
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table firmware_config_table[] = {
++static const struct ctl_table firmware_config_table[] = {
+ 	{
+ 		.procname	= "force_sysfs_fallback",
+ 		.data		= &fw_fallback_config.force_sysfs_fallback,
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 51745ed1bbab..b163e043c687 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -3612,7 +3612,7 @@ static int cdrom_sysctl_handler(const struct ctl_table *ctl, int write,
+ }
+ 
+ /* Place files in /proc/sys/dev/cdrom */
+-static struct ctl_table cdrom_table[] = {
++static const struct ctl_table cdrom_table[] = {
+ 	{
+ 		.procname	= "info",
+ 		.data		= &cdrom_sysctl_settings.info, 
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index 48fe96ab4649..e110857824fc 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -724,7 +724,7 @@ static int hpet_is_known(struct hpet_data *hdp)
+ 	return 0;
+ }
+ 
+-static struct ctl_table hpet_table[] = {
++static const struct ctl_table hpet_table[] = {
+ 	{
+ 	 .procname = "max-user-freq",
+ 	 .data = &hpet_max_freq,
+diff --git a/drivers/char/ipmi/ipmi_poweroff.c b/drivers/char/ipmi/ipmi_poweroff.c
+index 941d2dcc8c9d..de84f59468a9 100644
+--- a/drivers/char/ipmi/ipmi_poweroff.c
++++ b/drivers/char/ipmi/ipmi_poweroff.c
+@@ -650,7 +650,7 @@ static struct ipmi_smi_watcher smi_watcher = {
+ #ifdef CONFIG_PROC_FS
+ #include <linux/sysctl.h>
+ 
+-static struct ctl_table ipmi_table[] = {
++static const struct ctl_table ipmi_table[] = {
+ 	{ .procname	= "poweroff_powercycle",
+ 	  .data		= &poweroff_powercycle,
+ 	  .maxlen	= sizeof(poweroff_powercycle),
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 23ee76bbb4aa..2581186fa61b 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1665,7 +1665,7 @@ static int proc_do_rointvec(const struct ctl_table *table, int write, void *buf,
+ 	return write ? 0 : proc_dointvec(table, 0, buf, lenp, ppos);
+ }
+ 
+-static struct ctl_table random_table[] = {
++static const struct ctl_table random_table[] = {
+ 	{
+ 		.procname	= "poolsize",
+ 		.data		= &sysctl_poolsize,
+diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+index 2406cda75b7b..5384d1bb4923 100644
+--- a/drivers/gpu/drm/i915/i915_perf.c
++++ b/drivers/gpu/drm/i915/i915_perf.c
+@@ -4802,7 +4802,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+ 	return ret;
+ }
+ 
+-static struct ctl_table oa_table[] = {
++static const struct ctl_table oa_table[] = {
+ 	{
+ 	 .procname = "perf_stream_paranoid",
+ 	 .data = &i915_perf_stream_paranoid,
+diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_observation.c
+index 8ec1b84cbb9e..57cf01efc07f 100644
+--- a/drivers/gpu/drm/xe/xe_observation.c
++++ b/drivers/gpu/drm/xe/xe_observation.c
+@@ -56,7 +56,7 @@ int xe_observation_ioctl(struct drm_device *dev, void *data, struct drm_file *fi
+ 	}
+ }
+ 
+-static struct ctl_table observation_ctl_table[] = {
++static const struct ctl_table observation_ctl_table[] = {
+ 	{
+ 	 .procname = "observation_paranoid",
+ 	 .data = &xe_observation_paranoid,
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 7a35c82976e0..9453f0c26f2a 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -141,7 +141,7 @@ static int sysctl_record_panic_msg = 1;
+  * sysctl option to allow the user to control whether kmsg data should be
+  * reported to Hyper-V on panic.
+  */
+-static struct ctl_table hv_ctl_table[] = {
++static const struct ctl_table hv_ctl_table[] = {
+ 	{
+ 		.procname	= "hyperv_record_panic_msg",
+ 		.data		= &sysctl_record_panic_msg,
+diff --git a/drivers/infiniband/core/iwcm.c b/drivers/infiniband/core/iwcm.c
+index 7e3a55349e10..cad8df0518d6 100644
+--- a/drivers/infiniband/core/iwcm.c
++++ b/drivers/infiniband/core/iwcm.c
+@@ -103,7 +103,7 @@ struct iwcm_work {
+ static unsigned int default_backlog = 256;
+ 
+ static struct ctl_table_header *iwcm_ctl_table_hdr;
+-static struct ctl_table iwcm_ctl_table[] = {
++static const struct ctl_table iwcm_ctl_table[] = {
+ 	{
+ 		.procname	= "default_backlog",
+ 		.data		= &default_backlog,
+diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
+index 02f1666f3cba..65bcc9475a6e 100644
+--- a/drivers/infiniband/core/ucma.c
++++ b/drivers/infiniband/core/ucma.c
+@@ -63,7 +63,7 @@ MODULE_LICENSE("Dual BSD/GPL");
+ static unsigned int max_backlog = 1024;
+ 
+ static struct ctl_table_header *ucma_ctl_table_hdr;
+-static struct ctl_table ucma_ctl_table[] = {
++static const struct ctl_table ucma_ctl_table[] = {
+ 	{
+ 		.procname	= "max_backlog",
+ 		.data		= &max_backlog,
+diff --git a/drivers/macintosh/mac_hid.c b/drivers/macintosh/mac_hid.c
+index b461b1bed25b..369d72f59b3c 100644
+--- a/drivers/macintosh/mac_hid.c
++++ b/drivers/macintosh/mac_hid.c
+@@ -215,7 +215,7 @@ static int mac_hid_toggle_emumouse(const struct ctl_table *table, int write,
+ }
+ 
+ /* file(s) in /proc/sys/dev/mac_hid */
+-static struct ctl_table mac_hid_files[] = {
++static const struct ctl_table mac_hid_files[] = {
+ 	{
+ 		.procname	= "mouse_button_emulation",
+ 		.data		= &mouse_emulate_buttons,
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index aebe12b0ee27..0e06f9027d81 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -294,7 +294,7 @@ void mddev_destroy_serial_pool(struct mddev *mddev, struct md_rdev *rdev)
+ 
+ static struct ctl_table_header *raid_table_header;
+ 
+-static struct ctl_table raid_table[] = {
++static const struct ctl_table raid_table[] = {
+ 	{
+ 		.procname	= "speed_limit_min",
+ 		.data		= &sysctl_speed_limit_min,
+diff --git a/drivers/misc/sgi-xp/xpc_main.c b/drivers/misc/sgi-xp/xpc_main.c
+index 61b66e318488..7a3c34306de9 100644
+--- a/drivers/misc/sgi-xp/xpc_main.c
++++ b/drivers/misc/sgi-xp/xpc_main.c
+@@ -93,7 +93,7 @@ int xpc_disengage_timelimit = XPC_DISENGAGE_DEFAULT_TIMELIMIT;
+ static int xpc_disengage_min_timelimit;	/* = 0 */
+ static int xpc_disengage_max_timelimit = 120;
+ 
+-static struct ctl_table xpc_sys_xpc_hb[] = {
++static const struct ctl_table xpc_sys_xpc_hb[] = {
+ 	{
+ 	 .procname = "hb_interval",
+ 	 .data = &xpc_hb_interval,
+@@ -111,7 +111,7 @@ static struct ctl_table xpc_sys_xpc_hb[] = {
+ 	 .extra1 = &xpc_hb_check_min_interval,
+ 	 .extra2 = &xpc_hb_check_max_interval},
+ };
+-static struct ctl_table xpc_sys_xpc[] = {
++static const struct ctl_table xpc_sys_xpc[] = {
+ 	{
+ 	 .procname = "disengage_timelimit",
+ 	 .data = &xpc_disengage_timelimit,
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index b5cc11abc962..0e360feb3432 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -1279,7 +1279,7 @@ static int armv8pmu_proc_user_access_handler(const struct ctl_table *table, int
+ 	return 0;
+ }
+ 
+-static struct ctl_table armv8_pmu_sysctl_table[] = {
++static const struct ctl_table armv8_pmu_sysctl_table[] = {
+ 	{
+ 		.procname       = "perf_user_access",
+ 		.data		= &sysctl_perf_user_access,
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 1aa303f76cc7..ea96c0a88f73 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -1315,7 +1315,7 @@ static int riscv_pmu_proc_user_access_handler(const struct ctl_table *table,
+ 	return 0;
+ }
+ 
+-static struct ctl_table sbi_pmu_sysctl_table[] = {
++static const struct ctl_table sbi_pmu_sysctl_table[] = {
+ 	{
+ 		.procname       = "perf_user_access",
+ 		.data		= &sysctl_perf_user_access,
+diff --git a/drivers/scsi/scsi_sysctl.c b/drivers/scsi/scsi_sysctl.c
+index 093774d77534..be4aef0f4f99 100644
+--- a/drivers/scsi/scsi_sysctl.c
++++ b/drivers/scsi/scsi_sysctl.c
+@@ -12,7 +12,7 @@
+ #include "scsi_priv.h"
+ 
+ 
+-static struct ctl_table scsi_table[] = {
++static const struct ctl_table scsi_table[] = {
+ 	{ .procname	= "logging_level",
+ 	  .data		= &scsi_logging_level,
+ 	  .maxlen	= sizeof(scsi_logging_level),
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 94127868bedf..effb7e768165 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -1639,7 +1639,7 @@ MODULE_PARM_DESC(allow_dio, "allow direct I/O (default: 0 (disallow))");
+ #ifdef CONFIG_SYSCTL
+ #include <linux/sysctl.h>
+ 
+-static struct ctl_table sg_sysctls[] = {
++static const struct ctl_table sg_sysctls[] = {
+ 	{
+ 		.procname	= "sg-big-buff",
+ 		.data		= &sg_big_buff,
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index dcb1769c3625..0e84677712b4 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -3618,7 +3618,7 @@ void console_sysfs_notify(void)
+ 		sysfs_notify(&consdev->kobj, NULL, "active");
+ }
+ 
+-static struct ctl_table tty_table[] = {
++static const struct ctl_table tty_table[] = {
+ 	{
+ 		.procname	= "legacy_tiocsti",
+ 		.data		= &tty_legacy_tiocsti,
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 528395133b4f..163f7f1d70f1 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -84,7 +84,7 @@ module_param(balloon_boot_timeout, uint, 0444);
+ #ifdef CONFIG_XEN_BALLOON_MEMORY_HOTPLUG
+ static int xen_hotplug_unpopulated;
+ 
+-static struct ctl_table balloon_table[] = {
++static const struct ctl_table balloon_table[] = {
+ 	{
+ 		.procname	= "hotplug_unpopulated",
+ 		.data		= &xen_hotplug_unpopulated,
+diff --git a/fs/aio.c b/fs/aio.c
+index 50671640b588..7b976b564cfc 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -224,7 +224,7 @@ static unsigned long aio_nr;		/* current system wide number of aio requests */
+ static unsigned long aio_max_nr = 0x10000; /* system wide maximum number of aio requests */
+ /*----end sysctl variables---*/
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table aio_sysctls[] = {
++static const struct ctl_table aio_sysctls[] = {
+ 	{
+ 		.procname	= "aio-nr",
+ 		.data		= &aio_nr,
+diff --git a/fs/cachefiles/error_inject.c b/fs/cachefiles/error_inject.c
+index 1715d5ca2b2d..e341ade47dd8 100644
+--- a/fs/cachefiles/error_inject.c
++++ b/fs/cachefiles/error_inject.c
+@@ -11,7 +11,7 @@
+ unsigned int cachefiles_error_injection_state;
+ 
+ static struct ctl_table_header *cachefiles_sysctl;
+-static struct ctl_table cachefiles_sysctls[] = {
++static const struct ctl_table cachefiles_sysctls[] = {
+ 	{
+ 		.procname	= "error_injection",
+ 		.data		= &cachefiles_error_injection_state,
+diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
+index 9f2d5743e2c8..0df46f09b6cc 100644
+--- a/fs/coda/sysctl.c
++++ b/fs/coda/sysctl.c
+@@ -14,7 +14,7 @@
+ 
+ static struct ctl_table_header *fs_table_header;
+ 
+-static struct ctl_table coda_table[] = {
++static const struct ctl_table coda_table[] = {
+ 	{
+ 		.procname	= "timeout",
+ 		.data		= &coda_timeout,
+diff --git a/fs/coredump.c b/fs/coredump.c
+index d48edb37bc35..591700e1b2ce 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -995,7 +995,7 @@ static int proc_dostring_coredump(const struct ctl_table *table, int write,
+ static const unsigned int core_file_note_size_min = CORE_FILE_NOTE_SIZE_DEFAULT;
+ static const unsigned int core_file_note_size_max = CORE_FILE_NOTE_SIZE_MAX;
+ 
+-static struct ctl_table coredump_sysctls[] = {
++static const struct ctl_table coredump_sysctls[] = {
+ 	{
+ 		.procname	= "core_uses_pid",
+ 		.data		= &core_uses_pid,
+diff --git a/fs/dcache.c b/fs/dcache.c
+index b4d5e9e1e43d..370302d4e488 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -192,7 +192,7 @@ static int proc_nr_dentry(const struct ctl_table *table, int write, void *buffer
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table fs_dcache_sysctls[] = {
++static const struct ctl_table fs_dcache_sysctls[] = {
+ 	{
+ 		.procname	= "dentry-state",
+ 		.data		= &dentry_stat,
+diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
+index b20e565b9c5e..1096ff8562fa 100644
+--- a/fs/devpts/inode.c
++++ b/fs/devpts/inode.c
+@@ -45,7 +45,7 @@ static int pty_limit_min;
+ static int pty_limit_max = INT_MAX;
+ static atomic_t pty_count = ATOMIC_INIT(0);
+ 
+-static struct ctl_table pty_table[] = {
++static const struct ctl_table pty_table[] = {
+ 	{
+ 		.procname	= "max",
+ 		.maxlen		= sizeof(int),
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index f9898e60dd8b..7c0980db77b3 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -318,7 +318,7 @@ static void unlist_file(struct epitems_head *head)
+ static long long_zero;
+ static long long_max = LONG_MAX;
+ 
+-static struct ctl_table epoll_table[] = {
++static const struct ctl_table epoll_table[] = {
+ 	{
+ 		.procname	= "max_user_watches",
+ 		.data		= &max_user_watches,
+diff --git a/fs/exec.c b/fs/exec.c
+index 98cb7ba9983c..96229a6a4dff 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -2142,7 +2142,7 @@ static int proc_dointvec_minmax_coredump(const struct ctl_table *table, int writ
+ 	return error;
+ }
+ 
+-static struct ctl_table fs_exec_sysctls[] = {
++static const struct ctl_table fs_exec_sysctls[] = {
+ 	{
+ 		.procname	= "suid_dumpable",
+ 		.data		= &suid_dumpable,
+diff --git a/fs/file_table.c b/fs/file_table.c
+index 976736be47cb..70ed0b3a5a0e 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -106,7 +106,7 @@ static int proc_nr_files(const struct ctl_table *table, int write, void *buffer,
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table fs_stat_sysctls[] = {
++static const struct ctl_table fs_stat_sysctls[] = {
+ 	{
+ 		.procname	= "file-nr",
+ 		.data		= &files_stat,
+diff --git a/fs/fuse/sysctl.c b/fs/fuse/sysctl.c
+index b272bb333005..63fb1e5bee30 100644
+--- a/fs/fuse/sysctl.c
++++ b/fs/fuse/sysctl.c
+@@ -13,7 +13,7 @@ static struct ctl_table_header *fuse_table_header;
+ /* Bound by fuse_init_out max_pages, which is a u16 */
+ static unsigned int sysctl_fuse_max_pages_limit = 65535;
+ 
+-static struct ctl_table fuse_sysctl_table[] = {
++static const struct ctl_table fuse_sysctl_table[] = {
+ 	{
+ 		.procname	= "max_pages_limit",
+ 		.data		= &fuse_max_pages_limit,
+diff --git a/fs/inode.c b/fs/inode.c
+index 6b4c77268fc0..5587aabdaa5e 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -184,7 +184,7 @@ static int proc_nr_inodes(const struct ctl_table *table, int write, void *buffer
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table inodes_sysctls[] = {
++static const struct ctl_table inodes_sysctls[] = {
+ 	{
+ 		.procname	= "inode-nr",
+ 		.data		= &inodes_stat,
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 4ec22c2f2ea3..d6cac1c89c2a 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -419,7 +419,7 @@ EXPORT_SYMBOL_GPL(lockd_down);
+  * Sysctl parameters (same as module parameters, different interface).
+  */
+ 
+-static struct ctl_table nlm_sysctls[] = {
++static const struct ctl_table nlm_sysctls[] = {
+ 	{
+ 		.procname	= "nlm_grace_period",
+ 		.data		= &nlm_grace_period,
+diff --git a/fs/locks.c b/fs/locks.c
+index 25afc8d9c9d1..1619cddfa7a4 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -97,7 +97,7 @@ static int leases_enable = 1;
+ static int lease_break_time = 45;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table locks_sysctls[] = {
++static const struct ctl_table locks_sysctls[] = {
+ 	{
+ 		.procname	= "leases-enable",
+ 		.data		= &leases_enable,
+diff --git a/fs/namei.c b/fs/namei.c
+index 9d30c7aa9aa6..6a18b2ea21b7 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1099,7 +1099,7 @@ static int sysctl_protected_fifos __read_mostly;
+ static int sysctl_protected_regular __read_mostly;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table namei_sysctls[] = {
++static const struct ctl_table namei_sysctls[] = {
+ 	{
+ 		.procname	= "protected_symlinks",
+ 		.data		= &sysctl_protected_symlinks,
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 23e81c2a1e3f..3819c322244e 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -5927,7 +5927,7 @@ const struct proc_ns_operations mntns_operations = {
+ };
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table fs_namespace_sysctls[] = {
++static const struct ctl_table fs_namespace_sysctls[] = {
+ 	{
+ 		.procname	= "mount-max",
+ 		.data		= &sysctl_mount_max,
+diff --git a/fs/nfs/nfs4sysctl.c b/fs/nfs/nfs4sysctl.c
+index 886a7c4c60b3..d1a92d8f8ba4 100644
+--- a/fs/nfs/nfs4sysctl.c
++++ b/fs/nfs/nfs4sysctl.c
+@@ -17,7 +17,7 @@ static const int nfs_set_port_min;
+ static const int nfs_set_port_max = 65535;
+ static struct ctl_table_header *nfs4_callback_sysctl_table;
+ 
+-static struct ctl_table nfs4_cb_sysctls[] = {
++static const struct ctl_table nfs4_cb_sysctls[] = {
+ 	{
+ 		.procname = "nfs_callback_tcpport",
+ 		.data = &nfs_callback_set_tcpport,
+diff --git a/fs/nfs/sysctl.c b/fs/nfs/sysctl.c
+index e645be1a3381..f579df0e8d67 100644
+--- a/fs/nfs/sysctl.c
++++ b/fs/nfs/sysctl.c
+@@ -14,7 +14,7 @@
+ 
+ static struct ctl_table_header *nfs_callback_sysctl_table;
+ 
+-static struct ctl_table nfs_cb_sysctls[] = {
++static const struct ctl_table nfs_cb_sysctls[] = {
+ 	{
+ 		.procname	= "nfs_mountpoint_timeout",
+ 		.data		= &nfs_mountpoint_expiry_timeout,
+diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
+index 6004dfdfdf0f..c4cdaf5fa7ed 100644
+--- a/fs/notify/dnotify/dnotify.c
++++ b/fs/notify/dnotify/dnotify.c
+@@ -20,7 +20,7 @@
+ 
+ static int dir_notify_enable __read_mostly = 1;
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table dnotify_sysctls[] = {
++static const struct ctl_table dnotify_sysctls[] = {
+ 	{
+ 		.procname	= "dir-notify-enable",
+ 		.data		= &dir_notify_enable,
+diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+index 2d85c71717d6..004cfdae1316 100644
+--- a/fs/notify/fanotify/fanotify_user.c
++++ b/fs/notify/fanotify/fanotify_user.c
+@@ -58,7 +58,7 @@ static int fanotify_max_queued_events __read_mostly;
+ static long ft_zero = 0;
+ static long ft_int_max = INT_MAX;
+ 
+-static struct ctl_table fanotify_table[] = {
++static const struct ctl_table fanotify_table[] = {
+ 	{
+ 		.procname	= "max_user_groups",
+ 		.data	= &init_user_ns.ucount_max[UCOUNT_FANOTIFY_GROUPS],
+diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
+index e0c48956608a..b372fb2c56bd 100644
+--- a/fs/notify/inotify/inotify_user.c
++++ b/fs/notify/inotify/inotify_user.c
+@@ -58,7 +58,7 @@ struct kmem_cache *inotify_inode_mark_cachep __ro_after_init;
+ static long it_zero = 0;
+ static long it_int_max = INT_MAX;
+ 
+-static struct ctl_table inotify_table[] = {
++static const struct ctl_table inotify_table[] = {
+ 	{
+ 		.procname	= "max_user_instances",
+ 		.data		= &init_user_ns.ucount_max[UCOUNT_INOTIFY_INSTANCES],
+diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
+index 20aa37b67cfb..ddd761cf44c8 100644
+--- a/fs/ocfs2/stackglue.c
++++ b/fs/ocfs2/stackglue.c
+@@ -650,7 +650,7 @@ static int ocfs2_sysfs_init(void)
+  * and easier to preserve the name.
+  */
+ 
+-static struct ctl_table ocfs2_nm_table[] = {
++static const struct ctl_table ocfs2_nm_table[] = {
+ 	{
+ 		.procname	= "hb_ctl_path",
+ 		.data		= ocfs2_hb_ctl_path,
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 12b22c2723b7..638fb318e7be 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -1477,7 +1477,7 @@ static int proc_dopipe_max_size(const struct ctl_table *table, int write,
+ 				 do_proc_dopipe_max_size_conv, NULL);
+ }
+ 
+-static struct ctl_table fs_pipe_sysctls[] = {
++static const struct ctl_table fs_pipe_sysctls[] = {
+ 	{
+ 		.procname	= "pipe-max-size",
+ 		.data		= &pipe_max_size,
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index f9578918cfb2..825c5c2e0962 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2926,7 +2926,7 @@ static int do_proc_dqstats(const struct ctl_table *table, int write,
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table fs_dqstats_table[] = {
++static const struct ctl_table fs_dqstats_table[] = {
+ 	{
+ 		.procname	= "lookups",
+ 		.data		= &dqstats.stat[DQST_LOOKUPS],
+diff --git a/fs/sysctls.c b/fs/sysctls.c
+index 8dbde9a802fa..ad429dffeb4b 100644
+--- a/fs/sysctls.c
++++ b/fs/sysctls.c
+@@ -7,7 +7,7 @@
+ #include <linux/init.h>
+ #include <linux/sysctl.h>
+ 
+-static struct ctl_table fs_shared_sysctls[] = {
++static const struct ctl_table fs_shared_sysctls[] = {
+ 	{
+ 		.procname	= "overflowuid",
+ 		.data		= &fs_overflowuid,
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 7c0bd0b55f88..97c4d71115d8 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -36,7 +36,7 @@
+ static int sysctl_unprivileged_userfaultfd __read_mostly;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table vm_userfaultfd_table[] = {
++static const struct ctl_table vm_userfaultfd_table[] = {
+ 	{
+ 		.procname	= "unprivileged_userfaultfd",
+ 		.data		= &sysctl_unprivileged_userfaultfd,
+diff --git a/fs/verity/init.c b/fs/verity/init.c
+index f440f0e61e3e..6e8d33b50240 100644
+--- a/fs/verity/init.c
++++ b/fs/verity/init.c
+@@ -10,7 +10,7 @@
+ #include <linux/ratelimit.h>
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table fsverity_sysctl_table[] = {
++static const struct ctl_table fsverity_sysctl_table[] = {
+ #ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+ 	{
+ 		.procname       = "require_signatures",
+diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+index c84df23b494d..751dc74a3067 100644
+--- a/fs/xfs/xfs_sysctl.c
++++ b/fs/xfs/xfs_sysctl.c
+@@ -66,7 +66,7 @@ xfs_deprecated_dointvec_minmax(
+ 	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table xfs_table[] = {
++static const struct ctl_table xfs_table[] = {
+ 	{
+ 		.procname	= "irix_sgid_inherit",
+ 		.data		= &xfs_params.sgid_inherit.val,
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index 22c7f41ff642..903b4d573d3d 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -21,7 +21,7 @@ phys_addr_t phys_initrd_start __initdata;
+ unsigned long phys_initrd_size __initdata;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_do_mounts_initrd_table[] = {
++static const struct ctl_table kern_do_mounts_initrd_table[] = {
+ 	{
+ 		.procname       = "real-root-dev",
+ 		.data           = &real_root_dev,
+diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+index d3403c8216db..72ad31225fb3 100644
+--- a/io_uring/io_uring.c
++++ b/io_uring/io_uring.c
+@@ -156,7 +156,7 @@ static int __read_mostly sysctl_io_uring_disabled;
+ static int __read_mostly sysctl_io_uring_group = -1;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kernel_io_uring_disabled_table[] = {
++static const struct ctl_table kernel_io_uring_disabled_table[] = {
+ 	{
+ 		.procname	= "io_uring_disabled",
+ 		.data		= &sysctl_io_uring_disabled,
+diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
+index 54318e0b4557..15b17e86e198 100644
+--- a/ipc/ipc_sysctl.c
++++ b/ipc/ipc_sysctl.c
+@@ -73,7 +73,7 @@ int ipc_mni = IPCMNI;
+ int ipc_mni_shift = IPCMNI_SHIFT;
+ int ipc_min_cycle = RADIX_TREE_MAP_SIZE;
+ 
+-static struct ctl_table ipc_sysctls[] = {
++static const struct ctl_table ipc_sysctls[] = {
+ 	{
+ 		.procname	= "shmmax",
+ 		.data		= &init_ipc_ns.shm_ctlmax,
+diff --git a/ipc/mq_sysctl.c b/ipc/mq_sysctl.c
+index b70dc2ff22d8..0dd12e1c9f53 100644
+--- a/ipc/mq_sysctl.c
++++ b/ipc/mq_sysctl.c
+@@ -20,7 +20,7 @@ static int msg_max_limit_max = HARD_MSGMAX;
+ static int msg_maxsize_limit_min = MIN_MSGSIZEMAX;
+ static int msg_maxsize_limit_max = HARD_MSGSIZEMAX;
+ 
+-static struct ctl_table mq_sysctls[] = {
++static const struct ctl_table mq_sysctls[] = {
+ 	{
+ 		.procname	= "queues_max",
+ 		.data		= &init_ipc_ns.mq_queues_max,
+diff --git a/kernel/acct.c b/kernel/acct.c
+index 179848ad33e9..31222e8cd534 100644
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -76,7 +76,7 @@ static int acct_parm[3] = {4, 2, 30};
+ #define ACCT_TIMEOUT	(acct_parm[2])	/* foo second timeout between checks */
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_acct_table[] = {
++static const struct ctl_table kern_acct_table[] = {
+ 	{
+ 		.procname       = "acct",
+ 		.data           = &acct_parm,
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 5684e8ce132d..fbcf07f98d8b 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -6124,7 +6124,7 @@ static int bpf_unpriv_handler(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table bpf_syscall_table[] = {
++static const struct ctl_table bpf_syscall_table[] = {
+ 	{
+ 		.procname	= "unprivileged_bpf_disabled",
+ 		.data		= &sysctl_unprivileged_bpf_disabled,
+diff --git a/kernel/delayacct.c b/kernel/delayacct.c
+index dead51de8eb5..75659ac036cd 100644
+--- a/kernel/delayacct.c
++++ b/kernel/delayacct.c
+@@ -64,7 +64,7 @@ static int sysctl_delayacct(const struct ctl_table *table, int write, void *buff
+ 	return err;
+ }
+ 
+-static struct ctl_table kern_delayacct_table[] = {
++static const struct ctl_table kern_delayacct_table[] = {
+ 	{
+ 		.procname       = "task_delayacct",
+ 		.data           = NULL,
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 1dcddfe537ee..3485e5fc499e 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -85,7 +85,7 @@
+ static unsigned int oops_limit = 10000;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_exit_table[] = {
++static const struct ctl_table kern_exit_table[] = {
+ 	{
+ 		.procname       = "oops_limit",
+ 		.data           = &oops_limit,
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index c18717189f32..62a5d8927ce9 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -272,7 +272,7 @@ static int proc_dohung_task_timeout_secs(const struct ctl_table *table, int writ
+  * and hung_task_check_interval_secs
+  */
+ static const unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
+-static struct ctl_table hung_task_sysctls[] = {
++static const struct ctl_table hung_task_sysctls[] = {
+ #ifdef CONFIG_SMP
+ 	{
+ 		.procname	= "hung_task_all_cpu_backtrace",
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3..71b0809e06d6 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -925,7 +925,7 @@ static int kexec_limit_handler(const struct ctl_table *table, int write,
+ 	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table kexec_core_sysctls[] = {
++static const struct ctl_table kexec_core_sysctls[] = {
+ 	{
+ 		.procname	= "kexec_load_disabled",
+ 		.data		= &kexec_load_disabled,
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index b027a4030976..9a15fb343be8 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -954,7 +954,7 @@ static int proc_kprobes_optimization_handler(const struct ctl_table *table,
+ 	return ret;
+ }
+ 
+-static struct ctl_table kprobe_sysctls[] = {
++static const struct ctl_table kprobe_sysctls[] = {
+ 	{
+ 		.procname	= "kprobes-optimization",
+ 		.data		= &sysctl_kprobes_optimization,
+diff --git a/kernel/latencytop.c b/kernel/latencytop.c
+index 7a75eab9c179..39a5fcdff9f9 100644
+--- a/kernel/latencytop.c
++++ b/kernel/latencytop.c
+@@ -77,7 +77,7 @@ static int sysctl_latencytop(const struct ctl_table *table, int write, void *buf
+ 	return err;
+ }
+ 
+-static struct ctl_table latencytop_sysctl[] = {
++static const struct ctl_table latencytop_sysctl[] = {
+ 	{
+ 		.procname   = "latencytop",
+ 		.data       = &latencytop_enabled,
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 2d8ec0351ef9..926b796ba71a 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -79,7 +79,7 @@ module_param(lock_stat, int, 0644);
+ #endif
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_lockdep_table[] = {
++static const struct ctl_table kern_lockdep_table[] = {
+ #ifdef CONFIG_PROVE_LOCKING
+ 	{
+ 		.procname       = "prove_locking",
+diff --git a/kernel/panic.c b/kernel/panic.c
+index fbc59b3b64d0..d8635d5cecb2 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -84,7 +84,7 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+ EXPORT_SYMBOL(panic_notifier_list);
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_panic_table[] = {
++static const struct ctl_table kern_panic_table[] = {
+ #ifdef CONFIG_SMP
+ 	{
+ 		.procname       = "oops_all_cpu_backtrace",
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index d70ab49d5b4a..0f23285be4f9 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -282,7 +282,7 @@ static int pid_ns_ctl_handler(const struct ctl_table *table, int write,
+ }
+ 
+ extern int pid_max;
+-static struct ctl_table pid_ns_ctl_table[] = {
++static const struct ctl_table pid_ns_ctl_table[] = {
+ 	{
+ 		.procname = "ns_last_pid",
+ 		.maxlen = sizeof(int),
+diff --git a/kernel/pid_sysctl.h b/kernel/pid_sysctl.h
+index 18ecaef6be41..5d8f981de7c5 100644
+--- a/kernel/pid_sysctl.h
++++ b/kernel/pid_sysctl.h
+@@ -31,7 +31,7 @@ static int pid_mfd_noexec_dointvec_minmax(const struct ctl_table *table,
+ 	return err;
+ }
+ 
+-static struct ctl_table pid_ns_ctl_table_vm[] = {
++static const struct ctl_table pid_ns_ctl_table_vm[] = {
+ 	{
+ 		.procname	= "memfd_noexec",
+ 		.data		= &init_pid_ns.memfd_noexec_scope,
+diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
+index f5072dc85f7a..da77f3f5c1fe 100644
+--- a/kernel/printk/sysctl.c
++++ b/kernel/printk/sysctl.c
+@@ -20,7 +20,7 @@ static int proc_dointvec_minmax_sysadmin(const struct ctl_table *table, int writ
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table printk_sysctls[] = {
++static const struct ctl_table printk_sysctls[] = {
+ 	{
+ 		.procname	= "printk",
+ 		.data		= &console_loglevel,
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index a701000bab34..b5a8569e5d81 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -1287,7 +1287,7 @@ static struct attribute *reboot_attrs[] = {
+ };
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table kern_reboot_table[] = {
++static const struct ctl_table kern_reboot_table[] = {
+ 	{
+ 		.procname       = "poweroff_cmd",
+ 		.data           = &poweroff_cmd,
+diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
+index db68a964e34e..83d46b9b8ec8 100644
+--- a/kernel/sched/autogroup.c
++++ b/kernel/sched/autogroup.c
+@@ -9,7 +9,7 @@ static struct autogroup autogroup_default;
+ static atomic_t autogroup_seq_nr;
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table sched_autogroup_sysctls[] = {
++static const struct ctl_table sched_autogroup_sysctls[] = {
+ 	{
+ 		.procname       = "sched_autogroup_enabled",
+ 		.data           = &sysctl_sched_autogroup_enabled,
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3e5a6bf587f9..00fea6f32ae5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4646,7 +4646,7 @@ static int sysctl_schedstats(const struct ctl_table *table, int write, void *buf
+ #endif /* CONFIG_SCHEDSTATS */
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table sched_core_sysctls[] = {
++static const struct ctl_table sched_core_sysctls[] = {
+ #ifdef CONFIG_SCHEDSTATS
+ 	{
+ 		.procname       = "sched_schedstats",
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index d94f2ed6d1f4..dab4887d6406 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -26,7 +26,7 @@
+ static unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
+ static unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table sched_dl_sysctls[] = {
++static const struct ctl_table sched_dl_sysctls[] = {
+ 	{
+ 		.procname       = "sched_deadline_period_max_us",
+ 		.data           = &sysctl_sched_dl_period_max,
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3e9ca38512de..1692dbb67d7a 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -130,7 +130,7 @@ static unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
+ #endif
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table sched_fair_sysctls[] = {
++static const struct ctl_table sched_fair_sysctls[] = {
+ #ifdef CONFIG_CFS_BANDWIDTH
+ 	{
+ 		.procname       = "sched_cfs_bandwidth_slice_us",
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index bd66a46b06ac..4b8e33c615b1 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -26,7 +26,7 @@ static int sched_rt_handler(const struct ctl_table *table, int write, void *buff
+ 		size_t *lenp, loff_t *ppos);
+ static int sched_rr_handler(const struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos);
+-static struct ctl_table sched_rt_sysctls[] = {
++static const struct ctl_table sched_rt_sysctls[] = {
+ 	{
+ 		.procname       = "sched_rt_period_us",
+ 		.data           = &sysctl_sched_rt_period,
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9748a4c8d668..20d59b0bc928 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -312,7 +312,7 @@ static int sched_energy_aware_handler(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table sched_energy_aware_sysctls[] = {
++static const struct ctl_table sched_energy_aware_sysctls[] = {
+ 	{
+ 		.procname       = "sched_energy_aware",
+ 		.data           = &sysctl_sched_energy_aware,
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 385d48293a5f..f59381c4a2ff 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -2450,7 +2450,7 @@ static int seccomp_actions_logged_handler(const struct ctl_table *ro_table, int
+ 	return ret;
+ }
+ 
+-static struct ctl_table seccomp_sysctl_table[] = {
++static const struct ctl_table seccomp_sysctl_table[] = {
+ 	{
+ 		.procname	= "actions_avail",
+ 		.data		= (void *) &seccomp_actions_avail,
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 989b1cc9116a..77f32c2d6ccb 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -4931,7 +4931,7 @@ static inline void siginfo_buildtime_checks(void)
+ }
+ 
+ #if defined(CONFIG_SYSCTL)
+-static struct ctl_table signal_debug_table[] = {
++static const struct ctl_table signal_debug_table[] = {
+ #ifdef CONFIG_SYSCTL_EXCEPTION_TRACE
+ 	{
+ 		.procname	= "exception-trace",
+diff --git a/kernel/stackleak.c b/kernel/stackleak.c
+index 39fd620a7db6..c1bfc14cd36e 100644
+--- a/kernel/stackleak.c
++++ b/kernel/stackleak.c
+@@ -44,7 +44,7 @@ static int stack_erasing_sysctl(const struct ctl_table *table, int write,
+ 					state ? "enabled" : "disabled");
+ 	return ret;
+ }
+-static struct ctl_table stackleak_sysctls[] = {
++static const struct ctl_table stackleak_sysctls[] = {
+ 	{
+ 		.procname	= "stack_erasing",
+ 		.data		= NULL,
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 3ac98bb7fb82..eb2842bd0557 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -374,7 +374,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
+ 		struct kunit *test)
+ {
+ 	unsigned char data = 0;
+-	struct ctl_table table_foo[] = {
++	const struct ctl_table table_foo[] = {
+ 		{
+ 			.procname	= "foo",
+ 			.data		= &data,
+@@ -386,7 +386,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
+ 		},
+ 	};
+ 
+-	struct ctl_table table_bar[] = {
++	const struct ctl_table table_bar[] = {
+ 		{
+ 			.procname	= "bar",
+ 			.data		= &data,
+@@ -398,7 +398,7 @@ static void sysctl_test_register_sysctl_sz_invalid_extra_value(
+ 		},
+ 	};
+ 
+-	struct ctl_table table_qux[] = {
++	const struct ctl_table table_qux[] = {
+ 		{
+ 			.procname	= "qux",
+ 			.data		= &data,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 5c9202cb8f59..3a0132cb0d5d 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1609,7 +1609,7 @@ int proc_do_static_key(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table kern_table[] = {
++static const struct ctl_table kern_table[] = {
+ 	{
+ 		.procname	= "panic",
+ 		.data		= &panic_timeout,
+@@ -2030,7 +2030,7 @@ static struct ctl_table kern_table[] = {
+ #endif
+ };
+ 
+-static struct ctl_table vm_table[] = {
++static const struct ctl_table vm_table[] = {
+ 	{
+ 		.procname	= "overcommit_memory",
+ 		.data		= &sysctl_overcommit_memory,
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index a5860bf6d16f..79a1f83d2944 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -301,7 +301,7 @@ static int timer_migration_handler(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table timer_sysctl[] = {
++static const struct ctl_table timer_sysctl[] = {
+ 	{
+ 		.procname	= "timer_migration",
+ 		.data		= &sysctl_timer_migration,
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 2e113f8b13a2..489cbab3d64c 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table ftrace_sysctls[] = {
++static const struct ctl_table ftrace_sysctls[] = {
+ 	{
+ 		.procname       = "ftrace_enabled",
+ 		.data           = &ftrace_enabled,
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 17bcad8f79de..97325fbd6283 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table user_event_sysctls[] = {
++static const struct ctl_table user_event_sysctls[] = {
+ 	{
+ 		.procname	= "user_events_max",
+ 		.data		= &max_user_events,
+diff --git a/kernel/umh.c b/kernel/umh.c
+index be9234270777..b4da45a3a7cf 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -544,7 +544,7 @@ static int proc_cap_handler(const struct ctl_table *table, int write,
+ 	return 0;
+ }
+ 
+-static struct ctl_table usermodehelper_table[] = {
++static const struct ctl_table usermodehelper_table[] = {
+ 	{
+ 		.procname	= "bset",
+ 		.data		= &usermodehelper_bset,
+diff --git a/kernel/utsname_sysctl.c b/kernel/utsname_sysctl.c
+index 7282f61a8650..bfbaaecb1dd4 100644
+--- a/kernel/utsname_sysctl.c
++++ b/kernel/utsname_sysctl.c
+@@ -75,7 +75,7 @@ static DEFINE_CTL_TABLE_POLL(hostname_poll);
+ static DEFINE_CTL_TABLE_POLL(domainname_poll);
+ 
+ // Note: update 'enum uts_proc' to match any changes to this table
+-static struct ctl_table uts_kern_table[] = {
++static const struct ctl_table uts_kern_table[] = {
+ 	{
+ 		.procname	= "arch",
+ 		.data		= init_uts_ns.name.machine,
+@@ -129,7 +129,7 @@ static struct ctl_table uts_kern_table[] = {
+  */
+ void uts_proc_notify(enum uts_proc proc)
+ {
+-	struct ctl_table *table = &uts_kern_table[proc];
++	const struct ctl_table *table = &uts_kern_table[proc];
+ 
+ 	proc_sys_poll_notify(table->poll);
+ }
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 41e0f7e9fa35..04e27fed20cb 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -1094,7 +1094,7 @@ static int proc_watchdog_cpumask(const struct ctl_table *table, int write,
+ 
+ static const int sixty = 60;
+ 
+-static struct ctl_table watchdog_sysctls[] = {
++static const struct ctl_table watchdog_sysctls[] = {
+ 	{
+ 		.procname       = "watchdog",
+ 		.data		= &watchdog_user_enabled,
+@@ -1175,7 +1175,7 @@ static struct ctl_table watchdog_sysctls[] = {
+ #endif
+ };
+ 
+-static struct ctl_table watchdog_hardlockup_sysctl[] = {
++static const struct ctl_table watchdog_hardlockup_sysctl[] = {
+ 	{
+ 		.procname       = "nmi_watchdog",
+ 		.data		= &watchdog_hardlockup_user_enabled,
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 7dcebf118a3e..73fda8406350 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -710,7 +710,7 @@ struct page_ext_operations page_alloc_tagging_ops = {
+ EXPORT_SYMBOL(page_alloc_tagging_ops);
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table memory_allocation_profiling_sysctls[] = {
++static const struct ctl_table memory_allocation_profiling_sysctls[] = {
+ 	{
+ 		.procname	= "mem_profiling",
+ 		.data		= &mem_alloc_profiling_key,
+diff --git a/lib/test_sysctl.c b/lib/test_sysctl.c
+index b6696fa1d426..4249e0cc8aaf 100644
+--- a/lib/test_sysctl.c
++++ b/lib/test_sysctl.c
+@@ -71,7 +71,7 @@ static struct test_sysctl_data test_data = {
+ };
+ 
+ /* These are all under /proc/sys/debug/test_sysctl/ */
+-static struct ctl_table test_table[] = {
++static const struct ctl_table test_table[] = {
+ 	{
+ 		.procname	= "int_0001",
+ 		.data		= &test_data.int_0001,
+@@ -177,7 +177,7 @@ static int test_sysctl_setup_node_tests(void)
+ }
+ 
+ /* Used to test that unregister actually removes the directory */
+-static struct ctl_table test_table_unregister[] = {
++static const struct ctl_table test_table_unregister[] = {
+ 	{
+ 		.procname	= "unregister_error",
+ 		.data		= &test_data.int_0001,
+@@ -220,7 +220,7 @@ static int test_sysctl_run_register_mount_point(void)
+ 	return 0;
+ }
+ 
+-static struct ctl_table test_table_empty[] = { };
++static const struct ctl_table test_table_empty[] = { };
+ 
+ static int test_sysctl_run_register_empty(void)
+ {
+diff --git a/mm/compaction.c b/mm/compaction.c
+index a2b16b08cbbf..62e8ee230e1c 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -3297,7 +3297,7 @@ static int proc_dointvec_minmax_warn_RT_change(const struct ctl_table *table,
+ 	return ret;
+ }
+ 
+-static struct ctl_table vm_compaction[] = {
++static const struct ctl_table vm_compaction[] = {
+ 	{
+ 		.procname	= "compact_memory",
+ 		.data		= &sysctl_compact_memory,
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index c498874a7170..3857b9d72c84 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4845,7 +4845,7 @@ static int hugetlb_overcommit_handler(const struct ctl_table *table, int write,
+ 	return ret;
+ }
+ 
+-static struct ctl_table hugetlb_table[] = {
++static const struct ctl_table hugetlb_table[] = {
+ 	{
+ 		.procname	= "nr_hugepages",
+ 		.data		= NULL,
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 57b7f591eee8..7735972add01 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -693,7 +693,7 @@ void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_l
+ 	free_vmemmap_page_list(&vmemmap_pages);
+ }
+ 
+-static struct ctl_table hugetlb_vmemmap_sysctls[] = {
++static const struct ctl_table hugetlb_vmemmap_sysctls[] = {
+ 	{
+ 		.procname	= "hugetlb_optimize_vmemmap",
+ 		.data		= &vmemmap_optimize_enabled,
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index a7b8ccd29b6f..995a15eb67e2 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -124,7 +124,7 @@ const struct attribute_group memory_failure_attr_group = {
+ 	.attrs = memory_failure_attr,
+ };
+ 
+-static struct ctl_table memory_failure_table[] = {
++static const struct ctl_table memory_failure_table[] = {
+ 	{
+ 		.procname	= "memory_failure_early_kill",
+ 		.data		= &sysctl_memory_failure_early_kill,
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index 1c485beb0b93..c8280a39119c 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -699,7 +699,7 @@ static void queue_oom_reaper(struct task_struct *tsk)
+ }
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table vm_oom_kill_table[] = {
++static const struct ctl_table vm_oom_kill_table[] = {
+ 	{
+ 		.procname	= "panic_on_oom",
+ 		.data		= &sysctl_panic_on_oom,
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index d213ead95675..fb523107701f 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2313,7 +2313,7 @@ static int page_writeback_cpu_online(unsigned int cpu)
+ /* this is needed for the proc_doulongvec_minmax of vm_dirty_bytes */
+ static const unsigned long dirty_bytes_min = 2 * PAGE_SIZE;
+ 
+-static struct ctl_table vm_page_writeback_sysctls[] = {
++static const struct ctl_table vm_page_writeback_sysctls[] = {
+ 	{
+ 		.procname   = "dirty_background_ratio",
+ 		.data       = &dirty_background_ratio,
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cae7b93864c2..6224a2ab5e86 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6172,7 +6172,7 @@ static int percpu_pagelist_high_fraction_sysctl_handler(const struct ctl_table *
+ 	return ret;
+ }
+ 
+-static struct ctl_table page_alloc_sysctl_table[] = {
++static const struct ctl_table page_alloc_sysctl_table[] = {
+ 	{
+ 		.procname	= "min_free_kbytes",
+ 		.data		= &min_free_kbytes,
+diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+index 1edc12862a7d..9b6c2f157f83 100644
+--- a/security/apparmor/lsm.c
++++ b/security/apparmor/lsm.c
+@@ -2038,7 +2038,7 @@ static int apparmor_dointvec(const struct ctl_table *table, int write,
+ 	return proc_dointvec(table, write, buffer, lenp, ppos);
+ }
+ 
+-static struct ctl_table apparmor_sysctl_table[] = {
++static const struct ctl_table apparmor_sysctl_table[] = {
+ #ifdef CONFIG_USER_NS
+ 	{
+ 		.procname       = "unprivileged_userns_apparmor_policy",
+diff --git a/security/keys/sysctl.c b/security/keys/sysctl.c
+index 91f000eef3ad..cde08c478f32 100644
+--- a/security/keys/sysctl.c
++++ b/security/keys/sysctl.c
+@@ -9,7 +9,7 @@
+ #include <linux/sysctl.h>
+ #include "internal.h"
+ 
+-static struct ctl_table key_sysctls[] = {
++static const struct ctl_table key_sysctls[] = {
+ 	{
+ 		.procname = "maxkeys",
+ 		.data = &key_quota_maxkeys,
+diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
+index 68252452b66c..e2d664b76026 100644
+--- a/security/loadpin/loadpin.c
++++ b/security/loadpin/loadpin.c
+@@ -53,7 +53,7 @@ static bool deny_reading_verity_digests;
+ #endif
+ 
+ #ifdef CONFIG_SYSCTL
+-static struct ctl_table loadpin_sysctl_table[] = {
++static const struct ctl_table loadpin_sysctl_table[] = {
+ 	{
+ 		.procname       = "enforce",
+ 		.data           = &enforce,
+diff --git a/security/yama/yama_lsm.c b/security/yama/yama_lsm.c
+index e1a5e13ea269..54bd5f535ac1 100644
+--- a/security/yama/yama_lsm.c
++++ b/security/yama/yama_lsm.c
+@@ -454,7 +454,7 @@ static int yama_dointvec_minmax(const struct ctl_table *table, int write,
+ 
+ static int max_scope = YAMA_SCOPE_NO_ATTACH;
+ 
+-static struct ctl_table yama_sysctl_table[] = {
++static const struct ctl_table yama_sysctl_table[] = {
+ 	{
+ 		.procname       = "ptrace_scope",
+ 		.data           = &ptrace_scope,
+
+---
+base-commit: 9d89551994a430b50c4fffcb1e617a057fa76e20
+change-id: 20250109-jag-ctl_table_const-38f6b2ccbba7
+
+Best regards,
+-- 
+Joel Granados <joel.granados@kernel.org>
+
+
 
