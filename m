@@ -1,115 +1,113 @@
-Return-Path: <linux-nfs+bounces-9033-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9034-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41B8EA07F7B
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 19:06:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABEF4A080A5
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 20:40:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6732188A1F2
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 18:06:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEC83167A2D
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 19:40:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A25AF1993BD;
-	Thu,  9 Jan 2025 18:06:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3EC31A239D;
+	Thu,  9 Jan 2025 19:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXJVC9TE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YrObyKMl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353901891A8;
-	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD46884039
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 19:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736445964; cv=none; b=VvHEyCfUg876uGgrEmYxXy8UlEdiwWGoaWWMkr5oFovrJb2FwTebjDin5EpnoVGYN28ukq2myVh045svMJRL8JsE63HRfqjdXQUl0H7gIUF9MzCVFKBKpnJjQbHKPxKz4Cwf4idIawEkLnve+ppo6OhZbiIIU0jjqIZfLC+2X38=
+	t=1736451610; cv=none; b=pXapak3+6az+TtLfN03TEXHj+GG4xVIcV+Rtdz/RF+olm1n4L8s7MeWoA1XxEmSXHXUVvU8cl/VZvIuhVivSP9Mu+RuBbIHajF00CpLVhxbcqhn7QIrA68s6YwlBVCSnSfZib9AgJC2oaTqW6kNZ4poeAQghScOYyne0AbFv00c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736445964; c=relaxed/simple;
-	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VZDfMAbOVoBTLRuPumm/61F/h2i1GJZRnbEgzMhnss0baXDo1f0XYOpYBi4tzja4LFrqQzafYP5JJv1S7AdbWgoNz5EGEy4gUerg2ncDitCupUAfGFl3lErZBMARDgI5diRRJnipAROC50bHeFT1zHg9fSZZr/jK+qNPqzMkH2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXJVC9TE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C334DC4CEE4;
-	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
+	s=arc-20240116; t=1736451610; c=relaxed/simple;
+	bh=AzGlgNYk/qUuzqYmAwGe5P7EIYQ4kZMwA0siNU2x4K0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=s4Q/qkEcLzNrXHQE+3fLJuz8yUFSnlAcHbeyY13qb8WIj03l8DyD6Cc/3sh42W3upTLElovazLtjVItPAQtvpDZTiVAAXFFNuE6ktl1lwGkS0/l/Nbc5Gsja1W2I8NyUkb4lCV3I7m2T0qrwNtXWjQg/t+Jhw57cY9F4wFq6ZUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YrObyKMl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2787C4CED2;
+	Thu,  9 Jan 2025 19:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736445963;
-	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hXJVC9TEna9TWYKbS9F02aIUvOHalq4E7m1+cvMk0ArDdbnyNkOQeESQ7Ur7QTEYq
-	 oV3fJnNHiU6ugTU9/tuOjHdJ9qaR831jsML8BcJ2B2+uzRQfA4kpmr3AmZ+XqRvw70
-	 BTN8HX8ggLtR2WOIhN2X2Ipa4OKa5qs1wwTNGfy1p+9su4jHqsiWIAwGFmgaxU7Nfw
-	 H9Abn1fQ/2SPP2QU6lVw0EYHITfjtwSWp9wIQJbaVZRVNv4TDYE1jWwRNuescPEqI8
-	 vYK392uOFALwuMqP1HoC1bERclFcBuYV7fmAeGJqkaXECHPwUoHQw9LVho0fFgK9tk
-	 fJ+fXn+JQWXLQ==
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-844e61f3902so84636339f.0;
-        Thu, 09 Jan 2025 10:06:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU7vJw0Yhmq1HoAJE/OsvsfkQbIo3Qpr1D+sW06TxmQ5b/DqPayTYNKisT6YlckhoJ/IfnE5UGOvIbJrutD@vger.kernel.org, AJvYcCUKdmxyZjBp3BN7k7bDpN4N42WSL1faJzx46lngDyuVmFlNTI2wAZ/leYEmL86hu//fxZPWQhEABSYGBg==@vger.kernel.org, AJvYcCULY3K6q3eLHaJUinkOdCYzYWWRKDGEXIaMe8mEfRkN7N0K8Ln5LelCSICnWBP+PVw21khAYRY0I/yXGM34ex8875Lt@vger.kernel.org, AJvYcCVCk/MjPKokyvIFdvJp7RsCvf++XNAKuITebk7mFTLuT4l7VFi6vfvJas82zOGLosM7pdOUakoKNiRPAVV1L9BY@vger.kernel.org, AJvYcCVFFZUa45jD1kY7O9eFU5SsUOqiXanSiyk6iItfL/7JIGCYDwQAnECEOmbGSW/J+JeHcB6lQHM7lC43jd5b@vger.kernel.org, AJvYcCVKb72VeDQU6u4ACgTVz6YEQ9f7JtoFU9ctAvBDnt3aKvFaKQ54WshcK/7b9jpNv5D7FWre/NxGxAk=@vger.kernel.org, AJvYcCWSrc8M6fjpLnYyFHGOEb0RYL+mB/Fgxv1FV7zmoLzsAJ/Wtn0fIkCarRXTIngSvrano0x6/jdeyxsYuYEC@vger.kernel.org, AJvYcCWtgvWJyxsKGbn8X+vDuQqN1WrpeWmOWctnx7Ti3HzLu15h1v1usBlf1r3HeMsvDVagzn8TvL7uzPxfkw==@vger.kernel.org, AJvYcCX1Empd1OmdV4QaxGiw76Wp2zNEdc/H8iMRZeDlhlVKhz+vvxL6oJW0ZpjcVO3ki6VJyF8ALxZck6AoB/K1dw==@vger.kernel.org, AJvY
- cCXCdgnNYyUlkiKT78jlZjfznht9f2JVWR1FljjRzn/hSF7yDBGVSj/joJqZdFNNQVpgo7plN3gnyhdWbQ==@vger.kernel.org, AJvYcCXFAQPNv8JtV7Wufe/McLhaGMCOYYMEUuHAmDXIIawBAvL4rUEOqJWikiBGT1GQ0wOeS3/g9CdYIF2h@vger.kernel.org, AJvYcCXGtnrLPWgALgr4QfzQA/NmEN6VmXmCX3wvTuErCHMi7SS8EiHmFcpyctKEJjF0V//QHSPsdom+rrFL3VKS@vger.kernel.org, AJvYcCXIzeaTKwsRbHvTyT2sT4J+p6Lh7htnXdaRITEsFqjlkKr7xu+q6+m2LKFK5/i2uR/Qu6E=@vger.kernel.org, AJvYcCXTsx3jAkPtqX7iahsPp8jY9cpP/DM984HqW5e5UUcTmN4TWdk2KDFO+cbAx2jA6Ae3+lm91tc+D1yVGg==@vger.kernel.org, AJvYcCXZ70fEeI70dxqfxPZVy8gOKyomd4lrw3DiPAmwp8fv74mTYEvvhCkSKuLewpzIZgciA3MiXVGc2Ys=@vger.kernel.org, AJvYcCXkhvwjOgsaIzBVYWxnjX61N5K2at4QUYgwmwKHhktkaridkUeBV6OMnzfq0vd6TMRwa9M/P7iyAql4@vger.kernel.org, AJvYcCXrcdxhbTsLKpwI1RIN5zp6raljAefAN4PXOQoTv2fBw5HAHfCD7FvZy5vJWBmhGWDqwVNFKpR8Co/lYKYTnT8acJP5/X5U@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAA8huuUN4T/BErSHEBklOz+LJ/qJkbUPu2hkdEypz5WdiISEO
-	+iw2r5548Ec7U0VJ51OVdV81QeQasNe8w7IkhP5T2gqDd/c925a0zD8/6rhvfa+CwPjO/nxhtxn
-	OkxDxrMGctxtZtN+RNCllTsC25ns=
-X-Google-Smtp-Source: AGHT+IHw82IqZn0L3vIWI2GRAE2/Fu1vkOzFuTOkK3ccul7HxPp7E2ac95iMCNTUN8mztI4YyZ2Kf9FZUsicSlonzfg=
-X-Received: by 2002:a05:6e02:3048:b0:3a7:6a98:3fdf with SMTP id
- e9e14a558f8ab-3ce3a9da817mr60484875ab.14.1736445963152; Thu, 09 Jan 2025
- 10:06:03 -0800 (PST)
+	s=k20201202; t=1736451610;
+	bh=AzGlgNYk/qUuzqYmAwGe5P7EIYQ4kZMwA0siNU2x4K0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=YrObyKMlJ1Qy/3wGevMmQOUluM0vehwMFhECo8w4Wxd2P4QkPspP0BQ22jDuIjQ2o
+	 DPcPdybPsNLLIVW2ajmRoX6vI/6HuG7YywDoSp+40N/0t5g4Oil7gyM7+WF9RDl05R
+	 XbV/sywTNH6QgN5omH8BJgd8umyZvMcYMnIwSEvyFvSktg4Xq06Ljj2MK4fYvKT8NF
+	 VCjFKNIfze81vXB3wFa45Q6MujPamGabe/bQU0B5LIlyhk08MEiAPfnxwxhBeTYiF0
+	 /AWMuJPH3Cmecqe06w1ED2vNw6ubCxlaqTcBlmPALrA1QroHsergAViRm6Q/TGA+aQ
+	 HD1FasDqplvVA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/3] nfsdctl: add support for new lockd configuration
+ interface
+Date: Thu, 09 Jan 2025 14:40:03 -0500
+Message-Id: <20250109-lockd-nl-v1-0-108548ab0b6b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 9 Jan 2025 10:05:51 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-X-Gm-Features: AbW1kvZZD8oqcdTZ9DXv7tEUC7bpyqeBsuw6nnhXboAE2kNg_1eTiibnv93HXj8
-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-To: Joel Granados <joel.granados@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABMmgGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDQwNL3Zz85OwU3bwcXTMjc6O0RMtUi0TTFCWg8oKi1LTMCrBR0bG1tQB
+ KNIV9WgAAAA==
+X-Change-ID: 20250109-lockd-nl-6272fa9e8a5d
+To: Steve Dickson <steved@redhat.com>
+Cc: Scott Mayhew <smayhew@redhat.com>, Yongcheng Yang <yoyang@redhat.com>, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1103; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=AzGlgNYk/qUuzqYmAwGe5P7EIYQ4kZMwA0siNU2x4K0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBngCYY8Ax1JJtAxQeEDsCyF6j0GU7gP6Y3Xby2J
+ FMJGVFmSjqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ4AmGAAKCRAADmhBGVaC
+ FTIOD/9MzQscRYAPyyW+FQ8B2qo0TQejDq/Sm+4WbjTHCqpCGzt/41RSM5mTc1DnCSIGxbISUCV
+ Vfqy3n/1vXJ+57SCYAjMrqwASqdy4EewO15mAchZZxmYjp2FwE4d/OOCZVY458qxGAJCc0oBmxP
+ Yk0v6w0e7gYaLrXhzJcuKp5rfpDEVdfyd/YuDRUtYQtiwFyRQlogRHtuDG3KWqMY5Gbi00h9AgC
+ 8Zv9PzOCa174/Pq9mR2ZDk0C6Yv2CJG4ZOjshJoZhXN/ZzMH5lwHa9zZ1ckL8L1cUsJymIm/GDU
+ cTCu3yJj4yQW1D4hO26d54NuU1HlxLZm5pHcN/xxjyN7Z5vpN3JjSRdY4bi7qA71JA0cqYZ4uBR
+ rK1gbEXR5CdQsFjBnNYXxf/C8eW9kgqBP00DltZkzAUD6tVhX1LGoP70tSQDg3cYsH1eTRlKvF3
+ 4zt9N7h3Du/WLHV7lQFD2MslxrozKt8wxvj1pECahyzFHyuYOuoydxEuXtQrwuwtvVTblCfqmg0
+ YmwPOG8gO0WbdTphzwJJ8I0KpPzDurtUaa4WnCQ+5D5jNeRtVAGXE3MY+7kXgnFUNgfHn/sM6ln
+ UL0Y9A9NXAEkvfNvG35mh/+YO5YWqaAsTkbN/rdm19KD8+SsR4tqPdadbh0sovlhhC1sc+yy3oC
+ /mus85Qf8nuzjyA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, Jan 9, 2025 at 5:16=E2=80=AFAM Joel Granados <joel.granados@kernel.=
-org> wrote:
->
-[...]
->  drivers/base/firmware_loader/fallback_table.c | 2 +-
->  drivers/cdrom/cdrom.c                         | 2 +-
->  drivers/char/hpet.c                           | 2 +-
->  drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
->  drivers/char/random.c                         | 2 +-
->  drivers/gpu/drm/i915/i915_perf.c              | 2 +-
->  drivers/gpu/drm/xe/xe_observation.c           | 2 +-
->  drivers/hv/hv_common.c                        | 2 +-
->  drivers/infiniband/core/iwcm.c                | 2 +-
->  drivers/infiniband/core/ucma.c                | 2 +-
->  drivers/macintosh/mac_hid.c                   | 2 +-
->  drivers/md/md.c                               | 2 +-
+This patch series adds support for the new lockd configuration interface
+that should fix this RH bug:
 
-For md bits:
+    https://issues.redhat.com/browse/RHEL-71698
 
-Reviewed-by: Song Liu <song@kernel.org>
+There are some other improvements here too, notably a switch to xlog.
+Only lightly tested, but seems to do the right thing.
 
-Thanks,
-Song
+Port handling with lockd still needs more work. Currently that is
+usually configured by rpc.statd. I think we need to convert it to
+use netlink to configure the ports as well, when it's able.
 
-[...]
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (3):
+      nfsdctl: convert to xlog()
+      nfsdctl: fix the --version option
+      nfsdctl: add necessary bits to configure lockd
+
+ configure.ac                  |   4 +
+ utils/nfsdctl/lockd_netlink.h |  29 ++++
+ utils/nfsdctl/nfsdctl.adoc    |   8 ++
+ utils/nfsdctl/nfsdctl.c       | 323 ++++++++++++++++++++++++++++++++++--------
+ 4 files changed, 301 insertions(+), 63 deletions(-)
+---
+base-commit: 3423eb18c80db7ac2bfebe10b1e2e9586b84679b
+change-id: 20250109-lockd-nl-6272fa9e8a5d
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
