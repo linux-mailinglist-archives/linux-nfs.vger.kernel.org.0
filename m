@@ -1,54 +1,68 @@
-Return-Path: <linux-nfs+bounces-9011-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9012-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62118A075C3
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 13:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 229A4A075F1
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 13:42:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E926F1887783
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 12:31:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AC85F18897A3
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 12:42:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934F4215F4E;
-	Thu,  9 Jan 2025 12:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDF8217F23;
+	Thu,  9 Jan 2025 12:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TBMLvkoY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pJJ0gJKo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCB17D2
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 12:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08592217738
+	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 12:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736425877; cv=none; b=dE5NpM+ccrv1adyIZBwREP5N+swo7NcQVKrMwI/50OOsZKF0w2atMNrboS88WhwOwCmqbwjPMgJU7FrjhdT5gCbQtppRnVhTNRiXF3NxAI6E4DvZJbDXerMoxRBzNWFJ7B15uodIU2aKSxO27ib1xOS4ps/ouPABPjsewbaaZro=
+	t=1736426541; cv=none; b=iksN2pjDQemevGPeQTj3mR+90OXfgEk9Rf5Qs9fkw1FoMlQVGgXb0U1IG7TShlgBPeP8MRG+kKH59qo7iuzz9LLkzO9Trfb+QwJHdbmJWb8uNESeOPOHO5BH1cfNir4ueHmmxqkKJtzxz5MK9J1ERnxy7ZeY+XUu/iPxcCmFrlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736425877; c=relaxed/simple;
-	bh=PryTqdQOHYY7z2qhltgV0XTY/j9IYwt3bcAHmUPhbcI=;
+	s=arc-20240116; t=1736426541; c=relaxed/simple;
+	bh=nmbqlmUvy74H9NXuWnDgUUvWDPp7chWmd0RBoi2eblI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GNXv/+DXS3leba8Ukn6EcHpR1UQX3VmbpOFY9dXyEe/+Kvzen14fWak2hBqCJUDPU1GvMGca0L3/Kp2vghJzLJpyeBBJw3RAA5I86xFYFaQBwpOuvFGvWTGpVoicCjbC3jrdi9rfoxC4bdUZxlQE088XEkWwXQqY4lMb7vTR3vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TBMLvkoY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93759C4CED2;
-	Thu,  9 Jan 2025 12:31:15 +0000 (UTC)
+	 Content-Type:MIME-Version; b=qxESVMpm8ybJbCnuuPTeDnfuWH1HfftNXS9sdeQIOZiuPx+FcFa909tcYv0GWBLBw2vKVPsdVOH5Z3VlQ+lmMsOUeSAz/NDdWWq33Eqonaj9s/KhiwArfwQ7TjlGRNzgg4wtOKHk4MO1wSEAoD8EsCyY8zOzuVJ9YeQsn5u1GNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pJJ0gJKo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA0FC4CED6;
+	Thu,  9 Jan 2025 12:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736425875;
-	bh=PryTqdQOHYY7z2qhltgV0XTY/j9IYwt3bcAHmUPhbcI=;
+	s=k20201202; t=1736426538;
+	bh=nmbqlmUvy74H9NXuWnDgUUvWDPp7chWmd0RBoi2eblI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TBMLvkoY8IiB14nrrRnS2eY2hhK1EHZueM4yAuwTo1rt0xV5MrSCKFW8SumrYAT7M
-	 SR4reK/8pyLjYN8hYCkHopM1nK1pBbMrE0rWX+9Axbwkw/Hsv3klDdDxkoq9jyv+zs
-	 2CzySQ4VCAHwRUxPqqICqVjKVfs4h9Iu7OxCQWMSOqzL+OgdQcLi0zf2kz05CRiBZ1
-	 tkEwmy3ou5B0d2u6iV357hRt27hgOJnUrKQU5ZNRqoOkWvcQmIlRCMp8Fe7EkRo1VS
-	 BMl+XaiOGz0d4fLd0bckuTSZFW3NkprUrUarAn3G+T26RBHkQvAgjHfXfnXBibS3cZ
-	 MsxYuCf5BxMbA==
-Message-ID: <52d4ff32bb0c598e97946e478c70fa3c718254d2.camel@kernel.org>
-Subject: Re: [nfs-utils PATCH] nfsdctl: tweak the version subcommand behavior
+	b=pJJ0gJKo/glw2vNfO4yFVJBafFxKSsBcgZKvtqTAEZX+BVa911r72NZGs6ES++W0Q
+	 jbDXYNFjJDD/9DUh/f5IFHn9nKCVRVJ584Zm078OS78gwY33P7HD6u8iY5JlgZfsRy
+	 OouyoWBXgxJk8QzGP2tVVkEZh+MmTLhfbbhVy122BKkhTQtLel7nB7pXH6JVV4Sfy4
+	 aNEkpIWNDNLLxPX0n3UGh90ZTP8FcUaUBGkWyhpNEHagGHdxRjTDIshqA75nwE3WLS
+	 Aj8cHnLtBV5EGnvnT0F3c/+DRfIKgHkDgAt/yyjT1unNvkSigADVV0pa4Uow4iC8x4
+	 zwPSMjebBdv+Q==
+Message-ID: <36f4892e1332e2322ab46e1343316eb187d78025.camel@kernel.org>
+Subject: Re: nfsd blocks indefinitely in nfsd4_destroy_session
 From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>, steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 09 Jan 2025 07:31:14 -0500
-In-Reply-To: <20250108225439.814872-1-smayhew@redhat.com>
-References: <20250108225439.814872-1-smayhew@redhat.com>
+To: Christian Herzog <herzog@phys.ethz.ch>, Chuck Lever
+ <chuck.lever@oracle.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, Benjamin Coddington	
+ <bcodding@redhat.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Harald Dunkel <harald.dunkel@aixigo.com>, Linux NFS Mailing List
+ <linux-nfs@vger.kernel.org>, Martin Svec	 <martin.svec@zoner.cz>, Michael
+ Gernoth <debian@zerfleddert.de>, Pellegrin Baptiste
+ <Baptiste.Pellegrin@ac-grenoble.fr>
+Date: Thu, 09 Jan 2025 07:42:16 -0500
+In-Reply-To: <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
+References: <4c3080af-eec7-4af5-8b0d-c35ac98ec074@aixigo.com>
+	 <C1CE3A96-599C-4D73-BCC0-3587EC68FCB0@oracle.com>
+	 <Z2vNQ6HXfG_LqBQc@eldamar.lan>
+	 <ecdae86c-2954-4aca-bf1c-f95408ad0ad4@oracle.com>
+	 <Z32ZzQiKfEeVoyfU@eldamar.lan>
+	 <3cdcf2ee-46b3-463d-bc14-0f44062c0bd0@oracle.com>
+	 <Z36RshcsxU1xFj_X@phys.ethz.ch>
+	 <7fb711b1-c557-48de-bf91-d522bdbcc575@oracle.com>
+	 <Z3-5fOEXTSZvmM8F@phys.ethz.ch>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,188 +147,338 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-01-08 at 17:54 -0500, Scott Mayhew wrote:
-> The section for the 'nfsdctl version' subcommand on the man page states
-> that the minorversion is optional, and if omitted it will cause all
-> minorversions to be enabled/disabled, but it currently doesn't work that
-> way.
+On Thu, 2025-01-09 at 12:56 +0100, Christian Herzog wrote:
+> Dear Chuck,
 >=20
-> Make it work that way, with one exception.  If v4.0 is disabled, then
-> 'nfsdctl version +4' will not re-enable it; instead it must be
-> explicitly re-enabled via 'nfsdctl version +4.0'.  This mirrors the way
-> /proc/fs/nfsd/versions works.
+> On Wed, Jan 08, 2025 at 10:07:49AM -0500, Chuck Lever wrote:
+> > On 1/8/25 9:54 AM, Christian Herzog wrote:
+> > > Dear Chuck,
+> > >=20
+> > > On Wed, Jan 08, 2025 at 08:33:23AM -0500, Chuck Lever wrote:
+> > > > On 1/7/25 4:17 PM, Salvatore Bonaccorso wrote:
+> > > > > Hi Chuck,
+> > > > >=20
+> > > > > Thanks for your time on this, much appreciated.
+> > > > >=20
+> > > > > On Wed, Jan 01, 2025 at 02:24:50PM -0500, Chuck Lever wrote:
+> > > > > > On 12/25/24 4:15 AM, Salvatore Bonaccorso wrote:
+> > > > > > > Hi Chuck, hi all,
+> > > > > > >=20
+> > > > > > > [it was not ideal to pick one of the message for this followu=
+p, let me
+> > > > > > > know if you want a complete new thread, adding as well Benjam=
+in and
+> > > > > > > Trond as they are involved in one mentioned patch]
+> > > > > > >=20
+> > > > > > > On Mon, Jun 17, 2024 at 02:31:54PM +0000, Chuck Lever III wro=
+te:
+> > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > > On Jun 17, 2024, at 2:55=E2=80=AFAM, Harald Dunkel <haral=
+d.dunkel@aixigo.com> wrote:
+> > > > > > > > >=20
+> > > > > > > > > Hi folks,
+> > > > > > > > >=20
+> > > > > > > > > what would be the reason for nfsd getting stuck somehow a=
+nd becoming
+> > > > > > > > > an unkillable process? See
+> > > > > > > > >=20
+> > > > > > > > > - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D107=
+1562
+> > > > > > > > > - https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bu=
+g/2062568
+> > > > > > > > >=20
+> > > > > > > > > Doesn't this mean that something inside the kernel gets s=
+tuck as
+> > > > > > > > > well? Seems odd to me.
+> > > > > > > >=20
+> > > > > > > > I'm not familiar with the Debian or Ubuntu kernel packages.=
+ Can
+> > > > > > > > the kernel release numbers be translated to LTS kernel rele=
+ases
+> > > > > > > > please? Need both "last known working" and "first broken" r=
+eleases.
+> > > > > > > >=20
+> > > > > > > > This:
+> > > > > > > >=20
+> > > > > > > > [ 6596.911785] RPC: Could not send backchannel reply error:=
+ -110
+> > > > > > > > [ 6596.972490] RPC: Could not send backchannel reply error:=
+ -110
+> > > > > > > > [ 6837.281307] RPC: Could not send backchannel reply error:=
+ -110
+> > > > > > > >=20
+> > > > > > > > is a known set of client backchannel bugs. Knowing the LTS =
+kernel
+> > > > > > > > releases (see above) will help us figure out what needs to =
+be
+> > > > > > > > backported to the LTS kernels kernels in question.
+> > > > > > > >=20
+> > > > > > > > This:
+> > > > > > > >=20
+> > > > > > > > [11183.290619] wait_for_completion+0x88/0x150
+> > > > > > > > [11183.290623] __flush_workqueue+0x140/0x3e0
+> > > > > > > > [11183.290629] nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
+> > > > > > > > [11183.290689] nfsd4_destroy_session+0x186/0x260 [nfsd]
+> > > > > > > >=20
+> > > > > > > > is probably related to the backchannel errors on the client=
+, but
+> > > > > > > > client bugs shouldn't cause the server to hang like this. W=
+e
+> > > > > > > > might be able to say more if you can provide the kernel rel=
+ease
+> > > > > > > > translations (see above).
+> > > > > > >=20
+> > > > > > > In Debian we hstill have the bug #1071562 open and one person=
+ notified
+> > > > > > > mye offlist that it appears that the issue get more frequent =
+since
+> > > > > > > they updated on NFS client side from Ubuntu 20.04 to Debian b=
+ookworm
+> > > > > > > with a 6.1.y based kernel).
+> > > > > > >=20
+> > > > > > > Some people around those issues, seem to claim that the chang=
+e
+> > > > > > > mentioned in
+> > > > > > > https://lists.proxmox.com/pipermail/pve-devel/2024-July/06461=
+4.html
+> > > > > > > would fix the issue, which is as well backchannel related.
+> > > > > > >=20
+> > > > > > > This is upstream: 6ddc9deacc13 ("SUNRPC: Fix backchannel repl=
+y,
+> > > > > > > again"). While this commit fixes 57331a59ac0d ("NFSv4.1: Use =
+the
+> > > > > > > nfs_client's rpc timeouts for backchannel") this is not somet=
+hing
+> > > > > > > which goes back to 6.1.y, could it be possible that hte backc=
+hannel
+> > > > > > > refactoring and this final fix indeeds fixes the issue?
+> > > > > > >=20
+> > > > > > > As people report it is not easily reproducible, so this makes=
+ it
+> > > > > > > harder to identify fixes correctly.
+> > > > > > >=20
+> > > > > > > I gave a (short) stance on trying to backport commits up to
+> > > > > > > 6ddc9deacc13 ("SUNRPC: Fix backchannel reply, again") but thi=
+s quickly
+> > > > > > > seems to indicate it is probably still not the right thing fo=
+r
+> > > > > > > backporting to the older stable series.
+> > > > > > >=20
+> > > > > > > As at least pre-requisites:
+> > > > > > >=20
+> > > > > > > 2009e32997ed568a305cf9bc7bf27d22e0f6ccda
+> > > > > > > 4119bd0306652776cb0b7caa3aea5b2a93aecb89
+> > > > > > > 163cdfca341b76c958567ae0966bd3575c5c6192
+> > > > > > > f4afc8fead386c81fda2593ad6162271d26667f8
+> > > > > > > 6ed8cdf967f7e9fc96cd1c129719ef99db2f9afc
+> > > > > > > 57331a59ac0d680f606403eb24edd3c35aecba31
+> > > > > > >=20
+> > > > > > > and still there would be conflicting codepaths (and does not =
+seem
+> > > > > > > right).
+> > > > > > >=20
+> > > > > > > Chuck, Benjamin, Trond, is there anything we can provive on r=
+eporters
+> > > > > > > side that we can try to tackle this issue better?
+> > > > > >=20
+> > > > > > As I've indicated before, NFSD should not block no matter what =
+the
+> > > > > > client may or may not be doing. I'd like to focus on the server=
+ first.
+> > > > > >=20
+> > > > > > What is the result of:
+> > > > > >=20
+> > > > > > $ cd <Bookworm's v6.1.90 kernel source >
+> > > > > > $ unset KBUILD_OUTPUT
+> > > > > > $ make -j `nproc`
+> > > > > > $ scripts/faddr2line \
+> > > > > > 	fs/nfsd/nfs4state.o \
+> > > > > > 	nfsd4_destroy_session+0x16d
+> > > > > >=20
+> > > > > > Since this issue appeared after v6.1.1, is it possible to bisec=
+t
+> > > > > > between v6.1.1 and v6.1.90 ?
+> > > > >=20
+> > > > > First please note, at least speaking of triggering the issue in
+> > > > > Debian, Debian has moved to 6.1.119 based kernel already (and soo=
+n in
+> > > > > the weekends point release move to 6.1.123).
+> > > > >=20
+> > > > > That said, one of the users which regularly seems to be hit by th=
+e
+> > > > > issue was able to provide the above requested information, based =
+for
+> > > > > 6.1.119:
+> > > > >=20
+> > > > > ~/kernel/linux-source-6.1# make kernelversion
+> > > > > 6.1.119
+> > > > > ~/kernel/linux-source-6.1# scripts/faddr2line fs/nfsd/nfs4state.o=
+ nfsd4_destroy_session+0x16d
+> > > > > nfsd4_destroy_session+0x16d/0x250:
+> > > > > __list_del_entry at /root/kernel/linux-source-6.1/./include/linux=
+/list.h:134
+> > > > > (inlined by) list_del at /root/kernel/linux-source-6.1/./include/=
+linux/list.h:148
+> > > > > (inlined by) unhash_session at /root/kernel/linux-source-6.1/fs/n=
+fsd/nfs4state.c:2062
+> > > > > (inlined by) nfsd4_destroy_session at /root/kernel/linux-source-6=
+.1/fs/nfsd/nfs4state.c:3856
+> > > > >=20
+> > > > > They could provide as well a decode_stacktrace output for the rec=
+ent
+> > > > > hit (if that is helpful for you):
+> > > > >=20
+> > > > > [Mon Jan 6 13:25:28 2025] INFO: task nfsd:55306 blocked for more =
+than 6883 seconds.
+> > > > > [Mon Jan 6 13:25:28 2025]       Not tainted 6.1.0-28-amd64 #1 Deb=
+ian 6.1.119-1
+> > > > > [Mon Jan 6 13:25:28 2025] "echo 0 > /proc/sys/kernel/hung_task_ti=
+meout_secs" disables this message.
+> > > > > [Mon Jan 6 13:25:28 2025] task:nfsd            state:D stack:0   =
+  pid:55306 ppid:2      flags:0x00004000
+> > > > > [Mon Jan 6 13:25:28 2025] Call Trace:
+> > > > > [Mon Jan 6 13:25:28 2025]  <TASK>
+> > > > > [Mon Jan 6 13:25:28 2025] __schedule+0x34d/0x9e0
+> > > > > [Mon Jan 6 13:25:28 2025] schedule+0x5a/0xd0
+> > > > > [Mon Jan 6 13:25:28 2025] schedule_timeout+0x118/0x150
+> > > > > [Mon Jan 6 13:25:28 2025] wait_for_completion+0x86/0x160
+> > > > > [Mon Jan 6 13:25:28 2025] __flush_workqueue+0x152/0x420
+> > > > > [Mon Jan 6 13:25:28 2025] nfsd4_destroy_session (debian/build/bui=
+ld_amd64_none_amd64/include/linux/spinlock.h:351 debian/build/build_amd64_n=
+one_amd64/fs/nfsd/nfs4state.c:3861) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] nfsd4_proc_compound (debian/build/build=
+_amd64_none_amd64/fs/nfsd/nfs4proc.c:2680) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] nfsd_dispatch (debian/build/build_amd64=
+_none_amd64/fs/nfsd/nfssvc.c:1022) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] svc_process_common (debian/build/build_=
+amd64_none_amd64/net/sunrpc/svc.c:1344) sunrpc
+> > > > > [Mon Jan 6 13:25:28 2025] ? svc_recv (debian/build/build_amd64_no=
+ne_amd64/net/sunrpc/svc_xprt.c:897) sunrpc
+> > > > > [Mon Jan 6 13:25:28 2025] ? nfsd_svc (debian/build/build_amd64_no=
+ne_amd64/fs/nfsd/nfssvc.c:983) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] ? nfsd_inet6addr_event (debian/build/bu=
+ild_amd64_none_amd64/fs/nfsd/nfssvc.c:922) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] svc_process (debian/build/build_amd64_n=
+one_amd64/net/sunrpc/svc.c:1474) sunrpc
+> > > > > [Mon Jan 6 13:25:28 2025] nfsd (debian/build/build_amd64_none_amd=
+64/fs/nfsd/nfssvc.c:960) nfsd
+> > > > > [Mon Jan 6 13:25:28 2025] kthread+0xd7/0x100
+> > > > > [Mon Jan 6 13:25:28 2025] ? kthread_complete_and_exit+0x20/0x20
+> > > > > [Mon Jan 6 13:25:28 2025] ret_from_fork+0x1f/0x30
+> > > > > [Mon Jan  6 13:25:28 2025]  </TASK>
+> > > > >=20
+> > > > > The question about bisection is actually harder, those are produc=
+tion
+> > > > > systems and I understand it's not possible to do bisect there, wh=
+ile
+> > > > > unfortunately not reprodcing the issue on "lab conditions".
+> > > > >=20
+> > > > > Does the above give us still a clue on what you were looking for?
+> > > >=20
+> > > > Thanks for the update.
+> > > >=20
+> > > > It's possible that 38f080f3cd19 ("NFSD: Move callback_wq into struc=
+t
+> > > > nfs4_client"), while not a specific fix for this issue, might offer=
+ some
+> > > > relief by preventing the DESTROY_SESSION hang from affecting all ot=
+her
+> > > > clients of the degraded server.
+> > > >=20
+> > > > Not having a reproducer or the ability to bisect puts a damper on
+> > > > things. The next step, then, is to enable tracing on servers where =
+this
+> > > > issue can come up, and wait for the hang to occur. The following co=
+mmand
+> > > > captures information only about callback operation, so it should no=
+t
+> > > > generate much data or impact server performance.
+> > > >=20
+> > > >    # trace-cmd record -e nfsd:nfsd_cb\*
+> > > >=20
+> > > > Let that run until the problem occurs, then ^C, compress the result=
+ing
+> > > > trace.dat file, and either attach it to 1071562 or email it to me
+> > > > privately.
+> > > thanks for the follow-up.
+> > >=20
+> > > I am the "customer" with two affected file servers. We have since mov=
+ed those
+> > > servers to the backports kernel (6.11.10) in the hope of forward fixi=
+ng the
+> > > issue. If this kernel is stable, I'm afraid I can't go back to the 'b=
+ad'
+> > > kernel (700+ researchers affected..), and we're also not able to trig=
+ger the
+> > > issue on our test environment.
+> >=20
+> > Hello Dr. Herzog -
+> >=20
+> > If the problem recurs on 6.11, the trace-cmd I suggest above works
+> > there as well.
+> the bad news is: it just happened again with the bpo kernel.
+>=20
+> We then immediately started trace-cmd since usually there are several cal=
+l
+> traces in a row and we did get a trace.dat:
+> http://people.phys.ethz.ch/~daduke/trace.dat
+>=20
+> we did notice however that the stack trace looked a bit different this ti=
+me:
+>=20
+>     INFO: task nfsd:2566 blocked for more than 5799 seconds.
+>     Tainted: G        W          6.11.10+bpo-amd64 #1 Debia>
+>     "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables t>
+>     task:nfsd            state:D stack:0     pid:2566  tgid:2566 >
+>     Call Trace:
+>     <TASK>
+>     __schedule+0x400/0xad0
+>     schedule+0x27/0xf0
+>     nfsd4_shutdown_callback+0xfe/0x140 [nfsd]
+>     ? __pfx_var_wake_function+0x10/0x10
+>     __destroy_client+0x1f0/0x290 [nfsd]
+>     nfsd4_destroy_clientid+0xf1/0x1e0 [nfsd]
+>     ? svcauth_unix_set_client+0x586/0x5f0 [sunrpc]
+>     nfsd4_proc_compound+0x34d/0x670 [nfsd]
+>     nfsd_dispatch+0xfd/0x220 [nfsd]
+>     svc_process_common+0x2f7/0x700 [sunrpc]
+>     ? __pfx_nfsd_dispatch+0x10/0x10 [nfsd]
+>     svc_process+0x131/0x180 [sunrpc]
+>     svc_recv+0x830/0xa10 [sunrpc]
+>     ? __pfx_nfsd+0x10/0x10 [nfsd]
+>     nfsd+0x87/0xf0 [nfsd]
+>     kthread+0xcf/0x100
+>     ? __pfx_kthread+0x10/0x10
+>     ret_from_fork+0x31/0x50
+>     ? __pfx_kthread+0x10/0x10
+>     ret_from_fork_asm+0x1a/0x30
+>     </TASK>
+>=20
+> and also the state of the offending client in `/proc/fs/nfsd/clients/*/in=
+fo`
+> used to be callback state: UNKNOWN while now it is DOWN or FAULT. No idea
+> what it means, but I thought it was worth mentioning.
 >=20
 
-The question is: do we want to mirror that particular quirk in the
-interface? I'm not sure if there was a logical reason for making +4
-work that way in the /proc interface, so it's not clear to me that we
-want to replicate that here.
+Looks like this is hung in nfsd41_cb_inflight_wait_complete() ? That
+probably means that the cl_cb_inflight counter is stuck at >0. I'm
+guessing that means that there is some callback that it's expecting to
+complete that isn't. From nfsd4_shutdown_callback():
 
-Honestly, it may be better to just require explicit minorversions in
-this interface and not worry about trying to interpret what +4
-means.=C2=A0You'd need to specify "+4.1 +4.2" instead of just saying "+4",
-but that doesn't seem too onerous.
+        /*
+         * Note this won't actually result in a null callback;
+         * instead, nfsd4_run_cb_null() will detect the killed
+         * client, destroy the rpc client, and stop:
+         */
+        nfsd4_run_cb(&clp->cl_cb_null);
+        flush_workqueue(clp->cl_callback_wq);
+        nfsd41_cb_inflight_wait_complete(clp);
 
-Thoughts?
+...it sounds like that isn't happening properly though.
 
-> Link: https://issues.redhat.com/browse/RHEL-72477
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  utils/nfsdctl/nfsdctl.8    |  9 ++++--
->  utils/nfsdctl/nfsdctl.adoc |  5 +++-
->  utils/nfsdctl/nfsdctl.c    | 58 +++++++++++++++++++++++++++++++++++---
->  3 files changed, 64 insertions(+), 8 deletions(-)
->=20
-> diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
-> index b08fe803..835d60b4 100644
-> --- a/utils/nfsdctl/nfsdctl.8
-> +++ b/utils/nfsdctl/nfsdctl.8
-> @@ -2,12 +2,12 @@
->  .\"     Title: nfsdctl
->  .\"    Author: Jeff Layton
->  .\" Generator: Asciidoctor 2.0.20
-> -.\"      Date: 2024-12-30
-> +.\"      Date: 2025-01-08
->  .\"    Manual: \ \&
->  .\"    Source: \ \&
->  .\"  Language: English
->  .\"
-> -.TH "NFSDCTL" "8" "2024-12-30" "\ \&" "\ \&"
-> +.TH "NFSDCTL" "8" "2025-01-08" "\ \&" "\ \&"
->  .ie \n(.g .ds Aq \(aq
->  .el       .ds Aq '
->  .ss \n[.ss] 0
-> @@ -172,7 +172,10 @@ MINOR: the minor version integer value
->  .nf
->  .fam C
->  The minorversion field is optional. If not given, it will disable or ena=
-ble
-> -all minorversions for that major version.
-> +all minorversions for that major version.  Note however that if NFSv4.0 =
-was
-> +previously disabled, it can only be re\-enabled by explicitly specifying=
- the
-> +minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
-> +interface).
->  .fam
->  .fi
->  .if n .RE
-> diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
-> index c5921458..20e9bf8e 100644
-> --- a/utils/nfsdctl/nfsdctl.adoc
-> +++ b/utils/nfsdctl/nfsdctl.adoc
-> @@ -91,7 +91,10 @@ Each subcommand can also accept its own set of options=
- and arguments. The
->      MINOR: the minor version integer value
-> =20
->    The minorversion field is optional. If not given, it will disable or e=
-nable
-> -  all minorversions for that major version.
-> +  all minorversions for that major version.  Note however that if NFSv4.=
-0 was
-> +  previously disabled, it can only be re-enabled by explicitly specifyin=
-g the
-> +  minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
-> +  interface).
-> =20
->    Note that versions can only be set when there are no nfsd threads runn=
-ing.
-> =20
-> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-> index 722bf4a0..d86ff80e 100644
-> --- a/utils/nfsdctl/nfsdctl.c
-> +++ b/utils/nfsdctl/nfsdctl.c
-> @@ -761,6 +761,32 @@ static int update_nfsd_version(int major, int minor,=
- bool enabled)
->  	return -EINVAL;
->  }
-> =20
-> +static bool v40_is_disabled(void)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
-> +		if (nfsd_versions[i].major =3D=3D 0)
-> +			break;
-> +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor =3D=3D 0=
-)
-> +			return !nfsd_versions[i].enabled;
-> +	}
-> +	return false;
-> +}
-> +
-> +static int get_max_minorversion(void)
-> +{
-> +	int i, max =3D 0;
-> +
-> +	for (i =3D 0; i < MAX_NFS_VERSIONS; ++i) {
-> +		if (nfsd_versions[i].major =3D=3D 0)
-> +			break;
-> +		if (nfsd_versions[i].major =3D=3D 4 && nfsd_versions[i].minor > max)
-> +			max =3D nfsd_versions[i].minor;
-> +	}
-> +	return max;
-> +}
-> +
->  static void version_usage(void)
->  {
->  	printf("Usage: %s version { {+,-}major.minor } ...\n", taskname);
-> @@ -778,7 +804,8 @@ static void version_usage(void)
-> =20
->  static int version_func(struct nl_sock *sock, int argc, char ** argv)
->  {
-> -	int ret, i;
-> +	int ret, i, j, max_minor;
-> +	bool v40_disabled;
-> =20
->  	/* help is only valid as first argument after command */
->  	if (argc > 1 &&
-> @@ -792,6 +819,9 @@ static int version_func(struct nl_sock *sock, int arg=
-c, char ** argv)
->  		return ret;
-> =20
->  	if (argc > 1) {
-> +		v40_disabled =3D v40_is_disabled();
-> +		max_minor =3D get_max_minorversion();
-> +
->  		for (i =3D 1; i < argc; ++i) {
->  			int ret, major, minor =3D 0;
->  			char sign =3D '\0', *str =3D argv[i];
-> @@ -815,9 +845,29 @@ static int version_func(struct nl_sock *sock, int ar=
-gc, char ** argv)
->  				return -EINVAL;
->  			}
-> =20
-> -			ret =3D update_nfsd_version(major, minor, enabled);
-> -			if (ret)
-> -				return ret;
-> +			/*
-> +			 * The minorversion field is optional. If omitted, it should
-> +			 * cause all the minor versions for that major version to be
-> +			 * enabled/disabled.
-> +			 *
-> +			 * HOWEVER, we do not enable v4.0 in this manner if it was
-> +			 * previously disabled - it has to be explicitly enabled
-> +			 * instead.  This is to retain the behavior of the old
-> +			 * /proc/fs/nfsd/versions interface.
-> +			 */
-> +			if (major =3D=3D 4 && ret =3D=3D 2) {
-> +				for (j =3D 0; j <=3D max_minor; ++j) {
-> +					if (j =3D=3D 0 && enabled && v40_disabled)
-> +						continue;
-> +					ret =3D update_nfsd_version(major, j, enabled);
-> +					if (ret)
-> +						return ret;
-> +				}
-> +			} else {
-> +				ret =3D update_nfsd_version(major, minor, enabled);
-> +				if (ret)
-> +					return ret;
-> +			}
->  		}
->  		return set_nfsd_versions(sock);
->  	}
-
+It might be interesting to see if you can track down the callback
+client in /sys/kernel/debug/sunrpc and see what it's doing.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
