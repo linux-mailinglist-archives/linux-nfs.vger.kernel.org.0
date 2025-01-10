@@ -1,256 +1,186 @@
-Return-Path: <linux-nfs+bounces-9042-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9043-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9555BA083AC
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 00:50:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70C4BA083C1
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 01:01:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73CA4166D44
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Jan 2025 23:50:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1D4D8188BDD2
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 00:01:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33031A2C0B;
-	Thu,  9 Jan 2025 23:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FA0038DE1;
+	Fri, 10 Jan 2025 00:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NbzRwjJI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0QGr0jjm";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zJ9WllMw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ahQr6HYN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhBOGj0I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D31718132A
-	for <linux-nfs@vger.kernel.org>; Thu,  9 Jan 2025 23:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEFC14286
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2025 00:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736466607; cv=none; b=cNDeaycoGCkwakGAUSNUgVxXscKIL385iez4Zw5mMSA4JxLFBvOtzdfdjKgvtrMlLXBYo/cjAz4pN9cYhE/I/zcUMadFRLvFV8nVh3vo5mOoTfG7f7p64Mx9+gizfhQ818GT05gxtfHLErDPjwBb+GxMqU21s3ERCQjSctJZz00=
+	t=1736467297; cv=none; b=oL/HLrbMgO86/LLvxkLrmqr9wnJsC/Gjmj4Rz7b4ShrWlg6BfUp5Os+tq/jArCvxAe2nS0OsgAbmKnBAo2lTuGcX2Lsd60xlOyf7IFVi/TeBTv9X/N65qRUCIADH/voK2FmG6J+nWJWcIpc0pudIK/RouEvCtnWWVct9O7pP+Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736466607; c=relaxed/simple;
-	bh=woimwLyeZYg5yDbbxlecfaRWeMdF5pPiFhA2dyD5S3o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=gfmWIYi1yNEnHNjCVWjoyzRQ2L3vMD+tU0W+ibiSme1NVniJ/0TZI9o/yTeWsoDgJpjH+akgkJaeoQVwj0Rc2MXSoMHzUQW0D3vEKV2lx3ia+CBncMGy5DTMF5pAP9KCgJC5H5R0rjs1rCDfRKt/nZW7GCJMxF21U8gp/zmkkuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NbzRwjJI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0QGr0jjm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zJ9WllMw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ahQr6HYN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 896582116D;
-	Thu,  9 Jan 2025 23:50:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736466603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4zpvzAOishLi9lLAMy23GTa63e97IbeiWA7XTQjmovg=;
-	b=NbzRwjJI6bD3oQRhloLDluagEuuInMH0ows3+XPOH/4OnTHGfDT9Psv8fdIcK+ASdO5blt
-	Tu1X7eL2ZcHHT3PoED7qY2JjzJOdcavYR9dmfOCk0INonjds6Qt0T9Oli3AfhiUliweGst
-	2uZRY5T8vQbj9ldDhfugOkaRo67IhNQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736466603;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4zpvzAOishLi9lLAMy23GTa63e97IbeiWA7XTQjmovg=;
-	b=0QGr0jjmtx/TMBBN4e8Y51zI5iavQVi67Smkq3cLuPDapfTeOPKDC0br2k5oorcLFPTCWt
-	jJqjgJSlMJ6J1mCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zJ9WllMw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ahQr6HYN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736466602; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4zpvzAOishLi9lLAMy23GTa63e97IbeiWA7XTQjmovg=;
-	b=zJ9WllMwLGrUHYsFnLODdFZBqIYv7GLpgqY5DMrN6Ah8FnP1d4Y4E125xqPcnJBT7bE4rF
-	6axt/sW5ms+LuHUltTIQ8ZYBetu89Phf+d3SXa7rvZx4I2Xx5d6r51zop1yAD3y0jM3RLZ
-	TMOmB2yFCq/ZYhOxxZKka31JIB8TVP4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736466602;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4zpvzAOishLi9lLAMy23GTa63e97IbeiWA7XTQjmovg=;
-	b=ahQr6HYNT5umhPMgBPMm4YxD4aZs0saJ4fkYy1K84suQ5+yOY5MjfZgP6PQFzYvnHs4wRU
-	nx5U8ESsSWF2jrDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A69813876;
-	Thu,  9 Jan 2025 23:50:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yNnTB6hggGdXfAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 09 Jan 2025 23:50:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1736467297; c=relaxed/simple;
+	bh=J9pqbGdn6h9iFXO7zIpcPLhCgKAT45zgaiRQ7OtZCyk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=OV8xNdAivyWnHmHxiwumnb5axDkkvTjtbfWQAn5EMf8VjomD9ZzkrVOVu2MvmBjMjhOYdpT9ZpziEHMD2sq59WGUuaQrOBLZbyx8lPKsiE6znvqPA/tcsOK1YvgykNI+4Bdig2a+EbROPfFmM5N5YZPNOS9QDPYBoql8KiUCyL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhBOGj0I; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3ebadbb14dcso604617b6e.3
+        for <linux-nfs@vger.kernel.org>; Thu, 09 Jan 2025 16:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736467294; x=1737072094; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J9pqbGdn6h9iFXO7zIpcPLhCgKAT45zgaiRQ7OtZCyk=;
+        b=EhBOGj0IclKOyZD6eoUh3BzcFfx1sE1wIsgVJca2GJ/hndq0FmCNygzzNEjtXDLQZ9
+         GIOqHTn6RsV2tu1m81P+IYS6LYXZ91tpgCBN+NsK65tT9NvS17FdEB38mrOgdOJXZrt/
+         6KF62yKTGLPHKwWRDLYzYyhxcTDfuik7Cvgp2Db2snAgWzdqEJtcHN+1AzeP4Ze+Jmsp
+         zAEuUqJn0NXgtg+KHFC4OQ1ZxM8u6k9fRu0I4lCQ+WdNeZpXUpeeHfnVLUS2zoiyKP7j
+         ypf9bVgEdovA1swltZ0Y//qzuczwXbqc4rbREjqztIXwvUEGGO37h39JpoZKXbrmUY/q
+         NJZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736467294; x=1737072094;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J9pqbGdn6h9iFXO7zIpcPLhCgKAT45zgaiRQ7OtZCyk=;
+        b=jvL/HcxPdJzUpsD9YadBESoCnUNOzwe4Q6xomgOfJWPay8CIoIx21HNZxiuP/FswLE
+         rHy0eBs5gEC7N1CwMUe977+rz0GIo/mCU/dB/PlfEqeXGSvhGFRfD98nRH37HfR5sq+t
+         V6P01XepDU0W2/RBfSUqw+T9dNvW7UbWW8q2BTjJ4V3WrJWTjb0RuxrFr2SG7FAZTFRq
+         l4DaVqpTRYWHGEHs7cdiAvBZ1btIfybQPSo5n5s9yWStSQoVm4XztAOF7fMBV/1ASlMI
+         K2acttNn0Z10gekZLu2nu3BobWtoDGqmHNpTu+IZ5s14gJWxixjERXcupqD5QXsXmQeW
+         t2oQ==
+X-Gm-Message-State: AOJu0Yz2wm9+gmVrGYFNH4uaf8fV5zzrYzRIC8S8c7crBkY/BlxHCrD0
+	ddBJituBanh+IgjHQ4kTfwTXpQj+tYYreXolLtsE/oRhOyfTaSe1hoShgF1FhF3q0FMOXTrMtNJ
+	0AEcNX9eOGyFpi+yVS4Y1ZjOEO74i4hQo
+X-Gm-Gg: ASbGncsNARL9+VQHgO7mfWgd32pVgQdaeN7o/doGlVn8FYn/u6NWPwCwAli3ph29B8e
+	Oe1omto2hiDmnmwxVU4Ll4smxGkJodGRsgB+Xrfw=
+X-Google-Smtp-Source: AGHT+IEzVVHNAYL+qtZh9nFX4svZ1rLLmVBLgIXeRtplKBy+hgsBCbzRpqz80vtbCEYd0dGFAHGobEXtAstTcq2wWTY=
+X-Received: by 2002:a05:6871:7882:b0:29f:de75:d178 with SMTP id
+ 586e51a60fabf-2aa0675551amr4608760fac.19.1736467294507; Thu, 09 Jan 2025
+ 16:01:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: cel@kernel.org
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1] nfsd: drop the lock during filecache LRU scans
-In-reply-to: <20250109142438.18689-2-cel@kernel.org>
-References: <20250109142438.18689-1-cel@kernel.org>,
- <20250109142438.18689-2-cel@kernel.org>
-Date: Fri, 10 Jan 2025 10:49:48 +1100
-Message-id: <173646658816.22054.11289202472152079862@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 896582116D
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+References: <CALWcw=Gg33HWRLCrj9QLXMPME=pnuZx_tE4+Pw8gwutQM4M=vw@mail.gmail.com>
+ <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com> <CALWcw=G-TV19UPmL=oy-HE9wc0q-VpHBVyuYcVQ8b9OQq-8Lqg@mail.gmail.com>
+ <5c928bae-38e4-490a-a9e7-f52b27a462c9@oracle.com>
+In-Reply-To: <5c928bae-38e4-490a-a9e7-f52b27a462c9@oracle.com>
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Fri, 10 Jan 2025 01:00:58 +0100
+X-Gm-Features: AbW1kvahVW3KA4xO-_rfzLnexmtb_uqlTJEClifUkRB7TM8hRAok8VDgGUZyNZU
+Message-ID: <CAAvCNcAoCJBgYBWjtvHYeE5Rk4w3JSqCSJMaHWhrUbrbB4QfLg@mail.gmail.com>
+Subject: Re: Needed: ADB (WRITE_SAME) support in Linux nfsd
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 10 Jan 2025, cel@kernel.org wrote:
-> From: NeilBrown <neilb@suse.de>
->=20
-> Under a high NFSv3 load with lots of different file being accessed,
-> the LRU list of garbage-collectable files can become quite long.
->=20
-> Asking list_lru_scan() to scan the whole list can result in a long
-> period during which a spinlock is held, blocking the addition and
-> removal of LRU items.
->=20
-> So ask list_lru_scan() to scan only a few entries at a time, and
-> repeat until the scan is complete.
->=20
-> Fixes: edead3a55804 ("NFSD: Fix the filecache LRU shrinker")
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/filecache.c | 14 ++++++++++----
->  fs/nfsd/filecache.h |  6 ++++++
->  2 files changed, 16 insertions(+), 4 deletions(-)
->=20
-> Updated version of Neil's patch to break up filecache LRU scans.
-> This can be backported to LTS kernels -- a Fixes tag has been
-> proposed.
->=20
-> Subsequent work can replace the list_lru mechanism. That would
-> be more substantial and thus more challenging to backport.
->=20
-> There are two concerns here:
->=20
->  - The number of items in the LRU can now change while this loop is
->    operating. We might need a "if (!ret) break;" or some other exit
->    condition to prevent an infinite loop.
+On Tue, 7 Jan 2025 at 17:56, Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> On 1/7/25 10:36 AM, Takeshi Nishimura wrote:
+> > On Tue, Jan 7, 2025 at 4:10=E2=80=AFPM Anna Schumaker <anna.schumaker@o=
+racle.com> wrote:
+> >>
+> >> Hi Takeshi,
+> >>
+> >> On 1/6/25 6:56 PM, Takeshi Nishimura wrote:
+> >>> Dear list,
+> >>>
+> >>> how can we get ADB (WRITE_SAME) support in (Debian) Linux nfsd, and a=
+n
+> >>> ioct() in Linux nfsd client to use it?
+> >>
+> >> Thanks for the request! Just so you're aware of the process, this emai=
+l list is for upstream Linux kernel development. If we decide to go ahead w=
+ith adding WRITE_SAME support it'll be up to Debian later to enable it (tha=
+t part is out of our hands, and isn't up to us).
+> >
+> > I assume WRITE_SAME will not have a separate build flag, right?
+> >
+> >>
+> >>>
+> >>> We have a set of custom "big data" applications which could greatly
+> >>> benefit from such an acceleration ABI, both for implementing "zero
+> >>> data" (fill blocks with 0 bytes), and fill blocks with identical data
+> >>> patterns, without sending the same pattern over and over again over
+> >>> the network wire.
+> >>
+> >> Having said that, I'm not opposed to implementing WRITE_SAME. I wonder=
+ if we could somehow use it to build support for fallocate's FALLOC_FL_ZERO=
+_RANGE flag at the same time.
+> >
+> > No, I am asking really for WRITE_SAME support to write identical data
+> > to multiple locations. Like https://linux.die.net/man/8/sg_write_same
+> > Writing zero bytes is just a subset, and not what we need. WRITE_SAME
+> > is intended as "big data" and database accelerator function.
+> >
+> >>
+> >> I'm also wondering if there would be any advantage to local filesystem=
+s if this were to be implemented as a generic system call, rather than as a=
+n NFS-specific ioctl(), since some storage devices have a WRITE_SAME operat=
+ion that could be used for acceleration. But I haven't convinced myself eit=
+her way yet.
+> >
+> > Getting a new, generic syscall in Linux takes 3-5 years on average. By
+> > then our project will be finished, or renewed with new funding, but
+> > all without getting a boost from WRITE_SAME support in NFS-
+>
+> For comparison:
+>
+> Adding WRITE_SAME to the Linux NFS client and server implementation is
+> on the same order of time -- a year (or perhaps less), then getting it
+> into Debian stable will be more than 1 year, probably 2 or 3 (at a
+> guess).
+>
+> A better approach would be for your team to implement what they need,
+> use it for your project (ie, custom build your kernels), then contribute
+> it to upstream so others can use it too. That would demonstrate there is
+> real user demand for this facility, and your code will have gained some
+> miles in production.
 
-Not infinite - it is still bounded by the original list size.
-You would expect the list walk to see all the "REFERENCED" files first.
-These return LRU_ROTATE so the return value (which is count of
-"isolated") will not increase, but nr_to_skip will decrease.  So you
-would expect the first few results to be zero until all the REFERENCED
-bits are cleared and those are rotated to the end.  Aborting then would
-not be good.
+How should this work? The Linux nfs subsystem has become so incredibly
+complex that there are only a few people who actually can work on it.
+So "implement it yourself" is basically saying "it will never happen".
 
->=20
->  - The list_lru_walk() always starts at the tail of the LRU, rather
->    than picking up where it left off. So it might only visit the
->    same handful of items on the list repeatedly, reintroducing the
->    bug fixed by edead3a55804.
+>
+> You could hire a consultant to implement it for you on a time frame that
+> is your choosing.
 
-If you change the remaining LRU_SKIP to LRU_ROTATE then it will always
-remove the first few entries, either freeing them or rotating them to
-the head of the list.  So it won't repeat unless items have been
-removed.  In that case things might be freed more quickly than we would
-like.  Maybe it would help to only process 80% of the list size, as it
-is better to leave a few for the next time around, rather than close too
-early.
+Could you please send me a list of qualified people? We've tried Tech
+Recruiters in NYC, but the results were not good, so absurdly
+expensive that just using Windows with SMB3.1 is a cheaper option, or
+just people who plainly have no idea what they are talking about
 
-NeilBrown
+> In addition, NFSD is responsible only for the network protocol. The
+> local file system implementations have to handle the heavy lifting.
+> It's not clear to me what infrastructure is already available in Linux
+> file systems; that will take some research. (I think that is what
+> Anna was hinting at).
 
+No, this thinking is wrong. The main bottleneck is the network, or
+better, the overhead of sending repeated data (pattern fill for big
+data, zero fill and 0xff/0xdd fill for databases) over the wire, which
+reduces the network traffic DRAMATICALLY (factor 70 with SMB3.1).
 
->=20
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index a1cdba42c4fa..fcd751cb7c76 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -541,13 +541,19 @@ nfsd_file_lru_cb(struct list_head *item, struct list_=
-lru_one *lru,
->  static void
->  nfsd_file_gc(void)
->  {
-> +	unsigned long remaining =3D list_lru_count(&nfsd_file_lru);
->  	LIST_HEAD(dispose);
->  	unsigned long ret;
-> =20
-> -	ret =3D list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
-> -			    &dispose, list_lru_count(&nfsd_file_lru));
-> -	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> -	nfsd_file_dispose_list_delayed(&dispose);
-> +	while (remaining > 0) {
-> +		unsigned long num_to_scan =3D min(remaining, NFSD_FILE_GC_BATCH);
-> +
-> +		ret =3D list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
-> +				    &dispose, num_to_scan);
-> +		trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> +		nfsd_file_dispose_list_delayed(&dispose);
-> +		remaining -=3D num_to_scan;
-> +	}
->  }
-> =20
->  static void
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index d5db6b34ba30..463bd60b98b4 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -3,6 +3,12 @@
-> =20
->  #include <linux/fsnotify_backend.h>
-> =20
-> +/*
-> + * Limit the time that the list_lru_one lock is held during
-> + * an LRU scan.
-> + */
-> +#define NFSD_FILE_GC_BATCH	(32UL)
-> +
->  /*
->   * This is the fsnotify_mark container that nfsd attaches to the files tha=
-t it
->   * is holding open. Note that we have a separate refcount here aside from =
-the
-> --=20
-> 2.47.0
->=20
->=20
->=20
+So tacking WRITE_SAME as ioctl() on client side, and expansion as loop
+over write() in nfsd would be reasonable as the first implementation
+of WRITE_SAME.
 
+What IMO is not reasonable is to say we have to add a super-API which
+covers all filesystems and all use cases, and somehow even connects to
+sg_write_same(8) too, and all that in a single patch.
+That would really take a year, and really would involve everyone at
+kernel.org, becoming a F-35-like job generator for everyone.
+--=20
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
