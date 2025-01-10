@@ -1,93 +1,82 @@
-Return-Path: <linux-nfs+bounces-9106-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9107-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 194C1A097C6
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 17:46:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67E7BA097CD
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 17:49:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24B5916AAA4
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 16:46:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 710991663D8
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 16:49:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98876212D71;
-	Fri, 10 Jan 2025 16:46:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6B46212B3F;
+	Fri, 10 Jan 2025 16:49:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="FMqALCww"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lf2NJqYx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35E3210F6D;
-	Fri, 10 Jan 2025 16:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01FB210F6D
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2025 16:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736527601; cv=none; b=moMI2wdZlsH84tOEg8DXryDpiHmyXEJokaM5do5vueypOzLoE5bWJPR0Gk2bblqdOlEKIh0x6Mgxf2ZoDy2MIfK78uF9d/+O363eu7rxpgA2H9XsbBl/4DDMryqnRmkEjFcPn9vZdXTDoSr8UWTDUeq+55wR9Yr9N1c9EV9PPNk=
+	t=1736527785; cv=none; b=K01MBMm2v49GzmU+mRTaCr+pdmdLBAoX0jYpacCf6yquZ9/jKxemWD41qniV3d7rGSIALAVHFKeJsbrq1H0s0C3y1EFnM3hZLsS8X68+aZl1KSM4RYMXm0TcgXdc/rwGERXXsXyYDdaSY8bOcVhKaNbo+FQxuz5SApBL5JxE6jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736527601; c=relaxed/simple;
-	bh=mC5WEjxjPlLXt5NGRY3gU1gtoiQoz2WChcIzJzjdeyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nDgn2jA8mI5dmcBkaryOYNrDPZFUZ9B6J11kxQvtRbSWi8S+1axdaaT98mBsq0MpcnCQ1vreU25uQWXQbZG+UY11gTfN13k93/muq44UJ82kEnNppKF9BjLYoK3QZZGVZj0njaX0ZsXUoAt1rS8NplaOzxIZn4Dnl28xUkrYdwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=FMqALCww; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Rnj4JwveGd20pP/SVmf5TX/F7gZngqQd8a1sgs58r+4=; b=FMqALCwwol1roK740NnBmzrcnL
-	4gFg69KwcHsB+FWlWL7QKc4z2xrtEYdEi47FV0O9ZgZlXbYl0Yz5Yfdubmk2coWKEZqkQjJwmv1ba
-	mmC+vHVmuVknDV/DW0YYM6MGKYqiEwZkMv8JBGB4XKzDRtBbHryx1pjmXLfZa9Svuc7GVKWP/rm3I
-	hKuJrAj0phbBKUpRo2dhh01O4upJX5vFDEUQas0jfOJ/ECAD5y3nKCIuKz8XZTFvMe6wKMECtXXCY
-	SKGC0WX4xZasMv3VIijmeyETlVL0Mnolwy/7FOxjpV6bK8R9UcaYdzfBAZM6q0GrfLptmeZPaCaUF
-	K8MIWx8w==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWI9c-000000002zj-2HAk;
-	Fri, 10 Jan 2025 16:46:36 +0000
-Date: Fri, 10 Jan 2025 16:46:36 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: David Howells <dhowells@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, agruenba@redhat.com, amir73il@gmail.com,
-	brauner@kernel.org, ceph-devel@vger.kernel.org, hubcap@omnibond.com,
-	jack@suse.cz, krisman@kernel.org, linux-nfs@vger.kernel.org,
-	miklos@szeredi.hu, torvalds@linux-foundation.org
-Subject: Re: [PATCH 04/20] dissolve external_name.u into separate members
-Message-ID: <20250110164636.GW1977892@ZenIV>
-References: <20250110024303.4157645-4-viro@zeniv.linux.org.uk>
- <20250110023854.GS1977892@ZenIV>
- <20250110024303.4157645-1-viro@zeniv.linux.org.uk>
- <1479433.1736494451@warthog.procyon.org.uk>
+	s=arc-20240116; t=1736527785; c=relaxed/simple;
+	bh=aGHTA4XuS3ZwP3k2RJVthAWPozrMWdWjm/9oYySGJR4=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=NllbbiJ2mlQDpang9f5eRepByrZxL8tzyg40bZp/9pAqtIqw6sqz/EfCILj0qxTjXivmaESHhN+cSvt3ATtX/lqieUQFaQO1NnHYvDs7wjBtLjhasC0tGta3FUBOGm6eVKa1Ode7tei/LQurSnQyga8RusWwP5Fj1ijlHogOS3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lf2NJqYx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCC6C4CED6;
+	Fri, 10 Jan 2025 16:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736527785;
+	bh=aGHTA4XuS3ZwP3k2RJVthAWPozrMWdWjm/9oYySGJR4=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=lf2NJqYxbzPS32/me+bZYH7JFQtgnry6cVGOAqNRxxtF6chg0c9byJONhwx2n7bol
+	 mYr/J31gKLfK9Wr9r2kCdKQfYAJVg1AnPA06IrdECI3U3y1yyYyaIfxcWV9ZYkoLrq
+	 uCVQKQC9HZwJValQED25ePZ+DI1G/5fSUYMqxeCWfmk4tCO56tTrsZ/VaJrq5KluOH
+	 xfYE7Zl5t3DZLU81VA/Hu56U8d94Qj0zjkn0LJZasmxLY8P18s9Ex4+xptxs2kn3Bu
+	 JQHnslWmz9fWuO5AP0GX+ot9Lm+f2SAA3oENqUawzAh7CTjGlChXtXUib2r0lHsY09
+	 4Z6PVsqdSN2SQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3C61D380AA55;
+	Fri, 10 Jan 2025 16:50:08 +0000 (UTC)
+From: Chen Chen via Bugspray Bot <bugbot@kernel.org>
+Date: Fri, 10 Jan 2025 16:50:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1479433.1736494451@warthog.procyon.org.uk>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: anna@kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
+ chuck.lever@oracle.com, jlayton@kernel.org, cel@kernel.org, 
+ trondmy@kernel.org
+Message-ID: <20250110-b219535c15-7cebc629b312@bugzilla.kernel.org>
+In-Reply-To: <20241127-b219535c0-4d5445e74947@bugzilla.kernel.org>
+References: <20241127-b219535c0-4d5445e74947@bugzilla.kernel.org>
+Subject: Re: Possible memory leak on nfsd
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-On Fri, Jan 10, 2025 at 07:34:11AM +0000, David Howells wrote:
-> Al Viro <viro@zeniv.linux.org.uk> wrote:
-> 
-> >  struct external_name {
-> > -	struct {
-> > -		atomic_t count;		// ->count and ->head can't be combined
-> > -		struct rcu_head head;	// see take_dentry_name_snapshot()
-> > -	} u;
-> > +	atomic_t count;		// ->count and ->head can't be combined
-> > +	struct rcu_head head;	// see take_dentry_name_snapshot()
-> >  	unsigned char name[];
-> >  };
-> 
-> This gets you a 4-byte hole between count and head on a 64-bit system.  Did
-> you want to flip the order of count and head?
+Chen Chen writes via Kernel.org Bugzilla:
 
-Umm...  Could do, but that probably wouldn't be that much of a win - we use
-those for names >= 40 characters long, and currently the size is 25 + len
-bytes.  And it's kmalloc'ed, so anything in range 40...71 goes into kmalloc-96.
+Sorry for my rudeness in my previous discussion.
 
-Reordering those would have 40..43 land in kmalloc-64, leaving the rest as-is.
-Might as well...
+After switching to 6.12.4, the server stayed stable for 30 days. So whatever caused the memleak should have been resolved between 6.1.119 to 6.12.
+
+You might want to close this bug if backport is not worthwhile.
+
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219535#c15
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
+
 
