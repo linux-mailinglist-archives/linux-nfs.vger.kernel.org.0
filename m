@@ -1,63 +1,62 @@
-Return-Path: <linux-nfs+bounces-9105-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9106-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45B47A09745
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 17:25:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 194C1A097C6
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 17:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC92D188EC7D
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 16:25:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 24B5916AAA4
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 16:46:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75191212FB9;
-	Fri, 10 Jan 2025 16:25:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98876212D71;
+	Fri, 10 Jan 2025 16:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="UycWsP7X"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="FMqALCww"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F12211293;
-	Fri, 10 Jan 2025 16:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35E3210F6D;
+	Fri, 10 Jan 2025 16:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736526303; cv=none; b=ZapT+j4c4AF/W2/5kSVGxfnLJEmpHxS8XaBDEs0C0c7e0/7RNMZPqi2fCAihWrxZTgCXRd7X3I0Zyv5Q3k+HMslqQo2O55ZWNxKU/mfggUpVm31Zr6Fxeo1XxfLftGSodUzr2WWv0B/dbKgUEXTX7cGFFoDPqPdA2vEpv7L9Hp4=
+	t=1736527601; cv=none; b=moMI2wdZlsH84tOEg8DXryDpiHmyXEJokaM5do5vueypOzLoE5bWJPR0Gk2bblqdOlEKIh0x6Mgxf2ZoDy2MIfK78uF9d/+O363eu7rxpgA2H9XsbBl/4DDMryqnRmkEjFcPn9vZdXTDoSr8UWTDUeq+55wR9Yr9N1c9EV9PPNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736526303; c=relaxed/simple;
-	bh=x2WD5AONv/eNiPs8X3iMErRMhbnhjNePWMgmqYN7BJI=;
+	s=arc-20240116; t=1736527601; c=relaxed/simple;
+	bh=mC5WEjxjPlLXt5NGRY3gU1gtoiQoz2WChcIzJzjdeyI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUhuhi6UQjuiko7eHFdLCRF52bjNY91UD1jHk3ZgvWVITY0sj7y3n3Lzf5hyOuQg0MhjSUsoMtfdSWcsDJCNAyGqWg+aJH7NhWNPHNSGzmLzdiHE0k6LiRsiiUWklXu9AEvVqr6OODgYQvTnOuPKOJpI24ekl0kmWiGU3KM7tPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=UycWsP7X; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=nDgn2jA8mI5dmcBkaryOYNrDPZFUZ9B6J11kxQvtRbSWi8S+1axdaaT98mBsq0MpcnCQ1vreU25uQWXQbZG+UY11gTfN13k93/muq44UJ82kEnNppKF9BjLYoK3QZZGVZj0njaX0ZsXUoAt1rS8NplaOzxIZn4Dnl28xUkrYdwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=FMqALCww; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=x2WD5AONv/eNiPs8X3iMErRMhbnhjNePWMgmqYN7BJI=; b=UycWsP7X9ycNqZLbYgOrBFnuln
-	nnwRP6KR5KOeICR2voKH946ZhldsZZ4i1yJxVobzZECPic/yYv4+7P46g98ZC7EInqiBcJph8xlGx
-	m2NLgjJcLI9YVqRpTOdt81vGt6TTeIY89pbLyo37BaF2gDgPso8TQlxML6zcG61ul3dHQd+4LE07M
-	+1no8UscNJrnp4JVUi5L2xwwPIvx3twlhWUT42OuJCru8elLnWTCD8llrsC2n7VJKafq+3nYQN/QO
-	VTNZPxa6kOJnaVcyaMXtBXI3yWTJ6KJqxbogtvjp3MkiR3tOt2q19TAEdaQT7QW5Bjwhu5wE5Yaeo
-	d27Oj6TA==;
+	bh=Rnj4JwveGd20pP/SVmf5TX/F7gZngqQd8a1sgs58r+4=; b=FMqALCwwol1roK740NnBmzrcnL
+	4gFg69KwcHsB+FWlWL7QKc4z2xrtEYdEi47FV0O9ZgZlXbYl0Yz5Yfdubmk2coWKEZqkQjJwmv1ba
+	mmC+vHVmuVknDV/DW0YYM6MGKYqiEwZkMv8JBGB4XKzDRtBbHryx1pjmXLfZa9Svuc7GVKWP/rm3I
+	hKuJrAj0phbBKUpRo2dhh01O4upJX5vFDEUQas0jfOJ/ECAD5y3nKCIuKz8XZTFvMe6wKMECtXXCY
+	SKGC0WX4xZasMv3VIijmeyETlVL0Mnolwy/7FOxjpV6bK8R9UcaYdzfBAZM6q0GrfLptmeZPaCaUF
+	K8MIWx8w==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWHof-000000002cK-0psH;
-	Fri, 10 Jan 2025 16:24:57 +0000
-Date: Fri, 10 Jan 2025 16:24:57 +0000
+	id 1tWI9c-000000002zj-2HAk;
+	Fri, 10 Jan 2025 16:46:36 +0000
+Date: Fri, 10 Jan 2025 16:46:36 +0000
 From: Al Viro <viro@zeniv.linux.org.uk>
-To: Jan Kara <jack@suse.cz>
+To: David Howells <dhowells@redhat.com>
 Cc: linux-fsdevel@vger.kernel.org, agruenba@redhat.com, amir73il@gmail.com,
-	brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com,
-	hubcap@omnibond.com, krisman@kernel.org, linux-nfs@vger.kernel.org,
+	brauner@kernel.org, ceph-devel@vger.kernel.org, hubcap@omnibond.com,
+	jack@suse.cz, krisman@kernel.org, linux-nfs@vger.kernel.org,
 	miklos@szeredi.hu, torvalds@linux-foundation.org
-Subject: Re: [PATCH 02/20] dcache: back inline names with a struct-wrapped
- array of unsigned long
-Message-ID: <20250110162457.GV1977892@ZenIV>
-References: <20250110023854.GS1977892@ZenIV>
+Subject: Re: [PATCH 04/20] dissolve external_name.u into separate members
+Message-ID: <20250110164636.GW1977892@ZenIV>
+References: <20250110024303.4157645-4-viro@zeniv.linux.org.uk>
+ <20250110023854.GS1977892@ZenIV>
  <20250110024303.4157645-1-viro@zeniv.linux.org.uk>
- <20250110024303.4157645-2-viro@zeniv.linux.org.uk>
- <4mqzkypsznfnkohe5yqz57p5sz5y4x6ftdsgiylbbf6jsu63qm@krbsv3jwdn4w>
+ <1479433.1736494451@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -66,17 +65,29 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4mqzkypsznfnkohe5yqz57p5sz5y4x6ftdsgiylbbf6jsu63qm@krbsv3jwdn4w>
+In-Reply-To: <1479433.1736494451@warthog.procyon.org.uk>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, Jan 10, 2025 at 10:35:14AM +0100, Jan Kara wrote:
+On Fri, Jan 10, 2025 at 07:34:11AM +0000, David Howells wrote:
+> Al Viro <viro@zeniv.linux.org.uk> wrote:
+> 
+> >  struct external_name {
+> > -	struct {
+> > -		atomic_t count;		// ->count and ->head can't be combined
+> > -		struct rcu_head head;	// see take_dentry_name_snapshot()
+> > -	} u;
+> > +	atomic_t count;		// ->count and ->head can't be combined
+> > +	struct rcu_head head;	// see take_dentry_name_snapshot()
+> >  	unsigned char name[];
+> >  };
+> 
+> This gets you a 4-byte hole between count and head on a 64-bit system.  Did
+> you want to flip the order of count and head?
 
-> I was thinking for a while whether if you now always copy 40 bytes instead
-> of only d_name.len bytes cannot have any adverse performance effects
-> (additional cacheline fetched / dirtied) but I don't think any path copying
-> the name is that performance critical to matter if it would be noticeable
-> at all.
+Umm...  Could do, but that probably wouldn't be that much of a win - we use
+those for names >= 40 characters long, and currently the size is 25 + len
+bytes.  And it's kmalloc'ed, so anything in range 40...71 goes into kmalloc-96.
 
-FWIW, I'd expect it to be a slight win overall; we'll see if profiling shows
-otherwise, but...
+Reordering those would have 40..43 land in kmalloc-64, leaving the rest as-is.
+Might as well...
 
