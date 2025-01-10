@@ -1,154 +1,123 @@
-Return-Path: <linux-nfs+bounces-9095-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9096-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9BF3A08EDA
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 12:10:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD42A09264
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 14:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4E0FD7A2B82
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 11:10:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B0D43A1AEE
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 13:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A1D120ADFF;
-	Fri, 10 Jan 2025 11:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A600020D4F2;
+	Fri, 10 Jan 2025 13:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OHeCkiun"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbtrsbI1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E073205AA8
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2025 11:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F51720B804
+	for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2025 13:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736507403; cv=none; b=MGAn5Zue8zqeqFkAuB8Ebv3Q0DON4SrO+/V7iRWcaVND22Cy6g442cC7WiNiauxGFobEFk4yWgVzBBpyW5srM1/+BjIjemuh2+pPdrR4gycZHVCnWT7g9iqs4r1yn8PzxOM6LgwPPYhobsnhkJyPv12IWz3o4z7U+S04weKllRg=
+	t=1736516803; cv=none; b=Xg2ClkjxI+YJ+uzOOoi8IozBrUleVj0UrdYbxvPTZ0YvRiA6GfQGJdMCxOnbXngFP2DuaNXB2aQoRvgMPM596xE8g3YRSQ5m1TpJNX8O+HPiDYsfDUsBOdQRXiRObAuMakSN8GUp6v/JfVVwdYlCZmFVAsnmqxLR6wPFsGN91wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736507403; c=relaxed/simple;
-	bh=fYBMx6/W+Y63QdmCsvCX4sRxROZreOBO/jOOtxkMZ8c=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=r7PR+fi/nxCHqbe0ETdnkBhd2Wq4L5xBPxXXCRRVspFdm4gMwjOgxoLaHXwRXaRh+YM9gcEkGBIjzmsopochQZhV11QYGs4okItqVKqILxbDv5zdXIlL/GplRaRFxu0h/L2bF2fF2B3wQbFopKDMPabSGskFn3CtSjh8WTRtWE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OHeCkiun; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736507400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nD5UCcIZbhJA8p0YUT2WLXyXLAGi/VYDZnjWOeOQtro=;
-	b=OHeCkiunQA+72Xur5FtO8xcGuc3hYM5zB1GA7rlJesXWV1j75uREB/BHuV5pkeI+XjQPaB
-	sADOTmck2jxYTYqwH1YZSRD/yp0FY1gb84n+wB+/R0/j37dvfPMruKDztlAKFIMT/hdcEL
-	O2Ihcxg4BAkvzr+SAkrDXOd7NR98gNk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-646-pY4G9-5mOHG6UBaCweusXQ-1; Fri,
- 10 Jan 2025 06:09:57 -0500
-X-MC-Unique: pY4G9-5mOHG6UBaCweusXQ-1
-X-Mimecast-MFC-AGG-ID: pY4G9-5mOHG6UBaCweusXQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AE4C195605B;
-	Fri, 10 Jan 2025 11:09:55 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 09D6619560AB;
-	Fri, 10 Jan 2025 11:09:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <Z4D2uC-kcSzQJS-H@gondor.apana.org.au>
-References: <Z4D2uC-kcSzQJS-H@gondor.apana.org.au> <Z4Ds9NBiXUti-idl@gondor.apana.org.au> <20250110010313.1471063-1-dhowells@redhat.com> <20250110010313.1471063-3-dhowells@redhat.com> <1485676.1736504798@warthog.procyon.org.uk>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: dhowells@redhat.com, Chuck Lever <chuck.lever@oracle.com>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    "David S. Miller" <davem@davemloft.net>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
-    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/8] crypto/krb5: Provide Kerberos 5 crypto through AEAD API
+	s=arc-20240116; t=1736516803; c=relaxed/simple;
+	bh=ZmT68ZG0P5V+4hp4HZ/3Dh/wMEYNYU/5su3wATzv2+s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oxH1+RBYA70qxPxjvL5K9knO+ctnU910BbENvUPfUGd3WjlO1o6XfnTxP98GoWNVQ5xmrA4lPbBiniyLOWdEKzQLezu1TDeVpIfY2jZwo0F3wISxijgqrHl6dMiHUc4YRhJKFkci2aWsGbAt/LC82qIaLF0Or4rBZKWwBFsAKAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbtrsbI1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96EA0C4CED6;
+	Fri, 10 Jan 2025 13:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736516803;
+	bh=ZmT68ZG0P5V+4hp4HZ/3Dh/wMEYNYU/5su3wATzv2+s=;
+	h=From:Subject:Date:To:Cc:From;
+	b=NbtrsbI13E7PWRhZXL8+3QT1/tq1xbXg0uIrfzR4WkqMZq/ovNY/HH3IColDiCRtw
+	 oogasAhBjyVsmR7XPVFtn/WbMp49lbDpJmbLq8nrKWwWGTObS1BJoz8n5K8v/w3IXp
+	 Qux4M47yCrgurDDP4OcWKm0iNIbFvQsYBpkHTitmihsQRYwaBkXYknYcDSyjqsJ37v
+	 7+G/Cd5c9rkyM+DgoOc/NttO4DEPQ0d0bhjfwFhoo3+GSVafrcI5h8XdmbxlYt/W4h
+	 XZD7ol2ITijW+EhFjoUSI1BX8PF95eGsaUgfk9EImPzk/2LCUdRtRt3XEogwkUbINI
+	 FjKraSvDoaGpg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/3] nfsdctl: add support for new lockd configuration
+ interface
+Date: Fri, 10 Jan 2025 08:46:20 -0500
+Message-Id: <20250110-lockd-nl-v2-0-e3abe78cc7fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1488633.1736507389.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Jan 2025 11:09:49 +0000
-Message-ID: <1488634.1736507389@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKwkgWcC/23MQQ7CIBCF4as0sxYDRCp15T1MF1Cm7aQEDBiia
+ bi72LXL/+Xl2yFjIsxw63ZIWChTDC3kqYNpNWFBRq41SC4VF3xgPk6bY8GzXl7lbAbURjlo92f
+ Cmd4H9Rhbr5RfMX0OuYjf+gcpgnEmuFYXbSy3vb1vmAL6c0wLjLXWL/bCqwChAAAA
+X-Change-ID: 20250109-lockd-nl-6272fa9e8a5d
+To: Steve Dickson <steved@redhat.com>
+Cc: Scott Mayhew <smayhew@redhat.com>, Yongcheng Yang <yoyang@redhat.com>, 
+ linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1447; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ZmT68ZG0P5V+4hp4HZ/3Dh/wMEYNYU/5su3wATzv2+s=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBngSS8BqaumdNAoewqzSpgOoZcFLQXbU2cth+I5
+ jlvUmi3kMWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ4EkvAAKCRAADmhBGVaC
+ FR74D/wOJUzg7Ab2NMim6yLoL6ULbpuYM3mEwOLv+FTNXPxLUvvQ5/Zqpis1qz9gDLFMIbuaAfi
+ zEhd8LbBZheWrmR4j9JBP6kX9hpY05+K1Iy90Tn6nEgHju5pFrqs4pTBeLhOwqV0AtUX9Y5OTIb
+ tiwQZFmg0hR6JJaPIVqLGHinBudhcXvJsAbbfkOFw3/7QNgF62kaMf0gf6bsiTK3vByi9s8buWU
+ SZovpoy+6ks6ikIYaeZArWrBka/8B6cAvPsL0fVdwXV2xr92dMHB3QXC+Z0zUrsyRH8JDs2NSIW
+ qJO7sldF/XU5yYMbyFYylLNpnfsWOO83BOSzvHxqYHn5bzmxxBAEA+9znEK+ed9gHJztmfA45B3
+ 88FfxUCP0k+21LFLix7RLrh9+NKTrQ2J12iCVwr6eN4ufYCNxeS73iLtoWJPfe/OCvjmLGvV1Sq
+ jEBtj1T+yMAwAMjVfba4DyNx3S4qojOI6kyVSP+p2l37tXilwALhsnYB6nw29hApwIlF4eeViW0
+ Gtg5bNtls0LFYZYql5HJNejwq88Gr77s39v1JcZ/tdZyxyelr4t0kC0bXLpht0UFAI1DoNxQmnG
+ NQB4XgYl7/uPhKq2Mj8wLVAbUkReVunEKNS032YgTmq/7MPG/h7qG7f7WpDsTHmacztOMVMQk88
+ h5/7fwVikHA7HUA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Herbert Xu <herbert@gondor.apana.org.au> wrote:
+v2 is just a small update to fix the problems that Scott spotted.
 
-> On Fri, Jan 10, 2025 at 10:26:38AM +0000, David Howells wrote:
-> >
-> > However the point of having a library is to abstract those details fro=
-m the
-> > callers.  You wanted me to rewrite the library as AEAD algorithms, whi=
-ch I
-> > have done as far as I can.  This makes the object for each kerberos en=
-ctype
-> > look the same from the PoV of the clients.
-> =
+This patch series adds support for the new lockd configuration interface
+that should fix this RH bug:
 
-> I think there is some misunderstanding here.  For a library outside
-> of the Crypto API you can do whatever you want.
-> =
+    https://issues.redhat.com/browse/RHEL-71698
 
-> I only suggested AEAD because I thought you wanted to bring this within
-> the Crypto API.
+There are some other improvements here too, notably a switch to xlog.
+Only lightly tested, but seems to do the right thing.
 
-Not precisely.  What I (and Chuck when I discussed it with him) were think=
-ing
-is that the kerberos crypto stuff probably belongs in the crypto/ *directo=
-ry*
-rather than in the net/ directory - but not necessarily as part of the cry=
-pto
-API.  It mediates use of the crypto API on the part of its users (probably
-just sunrpc and rxrpc's rxgk).
+Port handling with lockd still needs more work. Currently that is
+usually configured by rpc.statd. I think we need to convert it to
+use netlink to configure the ports as well, when it's able.
 
-That said, I kind of like the implementation of the pure crypto part as AE=
-AD
-crypto algorithms as it provides a number of advantages:
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- properly regenerate manpages
+- fix up bogus merge conflict
+- add D_GENERAL xlog messages when nfsdctl starts and exits
+- Link to v1: https://lore.kernel.org/r/20250109-lockd-nl-v1-0-108548ab0b6b@kernel.org
 
- (1) The client can be given a single AEAD object to use for each usage an=
-d
-     call the encrypt and decrypt on that directly, no matter what enctype=
- or
-     mode of operation it is doing.
+---
+Jeff Layton (3):
+      nfsdctl: convert to xlog()
+      nfsdctl: fix the --version option
+      nfsdctl: add necessary bits to configure lockd
 
-     Of course, it's not quite so simple that I can just share the code fo=
-r
-     encrypt-mode and checksum-mode at the client level (eg. rxgk).  In th=
-e
-     former, some metadata is placed in the message; in the latter it's ju=
-st
-     added into the hash.
+ configure.ac                  |   4 +
+ utils/nfsdctl/lockd_netlink.h |  29 ++++
+ utils/nfsdctl/nfsdctl.8       |  15 +-
+ utils/nfsdctl/nfsdctl.adoc    |   8 +
+ utils/nfsdctl/nfsdctl.c       | 331 ++++++++++++++++++++++++++++++++++--------
+ 5 files changed, 321 insertions(+), 66 deletions(-)
+---
+base-commit: 65f4cc3a6ce1472ee4092c4bbf4b19beb0a8217b
+change-id: 20250109-lockd-nl-6272fa9e8a5d
 
- (2) The AEAD object looks after inserting the checksum into the right pla=
-ce
-     for the enctype, which means the client doesn't have to do that and c=
-ould
-     therefore more easily asynchronise it through the crypto API.
-
- (3) Since these do just the crypto and not the laying out, it may be feas=
-ible
-     to substitute the AES2 encrypt-mode kerberos AEAD driver with an
-     authenc() AEAD object.
-
- (4) The possibility exists of providing optimised drivers to directly
-     substitute the kerberos AEAD algorithms.
-
-David
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
