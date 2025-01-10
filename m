@@ -1,263 +1,360 @@
-Return-Path: <linux-nfs+bounces-9051-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9054-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97EA2A0845E
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 02:06:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 252E5A08567
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 03:39:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37E3418802AB
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 01:06:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1E97B167DF2
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jan 2025 02:39:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D3152066EB;
-	Fri, 10 Jan 2025 01:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877211E25F7;
+	Fri, 10 Jan 2025 02:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="dtqofj5t"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="l5vJoJ2u"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BF819D07A
-	for <linux-nfs@vger.kernel.org>; Fri, 10 Jan 2025 01:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736471047; cv=fail; b=laIfaoAVfe2jLxUUBcLk68kTOSVg4pXsGVRnkq2QDqP4+v8pQtzmqQvQVUMHhyXzj/u9JOdhyTTkeLwZliNLSi2t+bR921j74iUAS7rL7QCPlsNcMYp9/0xuAVwxHTDwPICuHDyVMdLcrExtDrrtDemQvdS49xCXysRQADlzJwY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736471047; c=relaxed/simple;
-	bh=scKDbCuAa8TAyAqu9si/6V4wPv62cV4WGY65iIyQgig=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=N7X8Nvyg6l9tzbmpf82OyAhh3bWn151zvgeCM+jDz5X3fsHfELS+wmvUh9vOUowG9WVMN/p1H4zEU1DWLOyea/5QGCAXloNowwfjGg5ISU7hdZiEArT23NlDwsi2qRcBJOo5kWax/xVcmyuojDPuoXkxfik6L2G45FZqccAMhiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=dtqofj5t; arc=fail smtp.client-ip=40.107.236.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UKE24CPGMEF8qPEaNaS3kdM1SSBSC8xCnUElE7GpRFqhfdjnCCmau6ykH0tWuBkkixKNQ3x1ktkiXp0V4DxYudWwbNQvZd1fz5dmtbnxwxGfT1+pPpJDtTAvWowtxqASTVcrMmArUFfCdW2HlyWfVg2Ch2P3tTc8BAFOcuqcOCAeg2dB0hGdUGQPuNDZqQftc2Oe4sJn9b6918+0lZnbjFUk2eFk4mXBCYCMUAXUW9CdKP05lNX6HW0dCxIToqVawHBusExMWBC5IEN9kTDURZm55IwXFH2rk/A8dyfoREvYPMQLnEvRj013jyI3VpKOw4R3qFohOVj5iKZVIUB7fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=scKDbCuAa8TAyAqu9si/6V4wPv62cV4WGY65iIyQgig=;
- b=k4dzlReFopODZsJlyuZmBv23D1KxltS2Ub5ValJgEsDfHT5KnnpGbG1+OwxGOSvr4/s0RyX1NtjYLJQxVDGDfSUVHzgcIvDOnqWc+/RFkVslM7BQ/L1SUqB5inR7hdmDqFfVZSaFoHxxvQgUozDWjhFrUQ6BfZcvfvwoIS5jExQVykL5IedSA0MMUY+eJjufvfZBi0iE1ckIxnRhfJNaDKBHOUufXuWI4/SlPdX1MSKeKOLqgt7+AImSMt77/pdtbT4yD906S6E4REY6BvtrrwT6I9ayozUhshckXORAxXxYiM82C2qQgJAqRczOXIkkFtg8a8+fWnzdOTmilatMjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=scKDbCuAa8TAyAqu9si/6V4wPv62cV4WGY65iIyQgig=;
- b=dtqofj5tnxVMt4oJrmfdFhYgXHmow7p6P6X7IbwftbiKOSP2mHnKIAu9ZTOl0XAW/yqID0GCkAIvFhF5RgSOBnxa9BhFW7iaB4M54FPsdl4HaaoFf0rLHX0mq7XqtoLtR5U4qcMADGpwuodo6jyNdct/i2fEbvt2ulQQ6ad7fFk=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MN0PR13MB6801.namprd13.prod.outlook.com (2603:10b6:208:4be::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8335.12; Fri, 10 Jan
- 2025 01:04:00 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::67bb:bacd:2321:1ecb%4]) with mapi id 15.20.8335.011; Fri, 10 Jan 2025
- 01:04:00 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "takeshi.nishimura.linux@gmail.com" <takeshi.nishimura.linux@gmail.com>,
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Needed: ADB (WRITE_SAME) support in Linux nfsd
-Thread-Topic: Needed: ADB (WRITE_SAME) support in Linux nfsd
-Thread-Index: AQHbYJaq3MygkbCfP0CN7hucB1iK17MLa3AAgAAHR4CAABYkgIADrQeA
-Date: Fri, 10 Jan 2025 01:04:00 +0000
-Message-ID: <978d12deaa44ee896d0f1cf42f6745c2b9c9ee6e.camel@hammerspace.com>
-References:
- <CALWcw=Gg33HWRLCrj9QLXMPME=pnuZx_tE4+Pw8gwutQM4M=vw@mail.gmail.com>
-	 <e3d4839b-0aa0-42f5-b3d1-4fd2d150da75@oracle.com>
-	 <CALWcw=G-TV19UPmL=oy-HE9wc0q-VpHBVyuYcVQ8b9OQq-8Lqg@mail.gmail.com>
-	 <5c928bae-38e4-490a-a9e7-f52b27a462c9@oracle.com>
-In-Reply-To: <5c928bae-38e4-490a-a9e7-f52b27a462c9@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MN0PR13MB6801:EE_
-x-ms-office365-filtering-correlation-id: 2f50fd8d-7ffd-43eb-4c56-08dd3112aae3
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|10070799003|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Mmp0SlRpYWM4b3E1d29xaHlNaW9NcU1vT1ljQ05ZMDF5NXhJWENCcGVEUzMv?=
- =?utf-8?B?ZklnQXhVY2t5a2RYY0JoYndQdmxoL0FDTnZuOTRDUEFFdmczdmtxNTYwait1?=
- =?utf-8?B?aFJ4S0sxcGhXL2xuaFR2cEpjWTRqOE1vR0F2NUpLbHQ1aEptSE1aelFOV25u?=
- =?utf-8?B?LzZkeW80dEpJOTBkUm0veVlQdjhpNUlHZlYxYVZzS054YjZmU0U1YnhvcTVi?=
- =?utf-8?B?b09JK29Qb0F5RTY1R2k5OVlPWVp1cEVDbjIxTFUvQmpHTktBdWRvcGRhOFFC?=
- =?utf-8?B?VWxYcVIveGpaYVB3UU1acHVtSERaMXoxRTZJbWdqMXNpK1VsU2lYRGRpYVpB?=
- =?utf-8?B?bDdsanBEK0p3Q1c0RDdhRkwvL0NZNXVoZVBGNmM1L0V4LzJWeUxSVWl4ZWty?=
- =?utf-8?B?VUs3Rmx3OW9xU0I0UFVab3NQditPdm03M2FDMStqR3AzVnQya2VEaktOditB?=
- =?utf-8?B?OXVZVTE4ZHhyUHpQbUY5VWJMcDQyaUx1eHN3WXVkWHZ0WmZpdjhhV0lwQ00z?=
- =?utf-8?B?dUcrcWV0YTQwK05lWlE0WkRaY2M4eW5DcjlwM01VTVEranFIUENIVnpGRk5T?=
- =?utf-8?B?MUdxS2kvTHd3S1Z5dWF5UWsxU2RrQTgra0tjN2dvOXU1OWRxYUlJZm5MNDBh?=
- =?utf-8?B?SHhXd1JDbDVFUmJJS1RuWWFxWm1OK1M1elJnbmhLbGpodE1aKzY3WG1saVFk?=
- =?utf-8?B?UHU3SlRTc0tLNjl1YlRwTlN4Y3pnZDdBcXZNTWwzZXd5dXdCUDU0SEVsNk1i?=
- =?utf-8?B?Uit1dTR2ejlRN3lqMXkrdzlmU0lDUFZ2UjdMMVJZKzUwQnF4QVdGODFvR3FQ?=
- =?utf-8?B?M29aNzZ2dFVDSVZsS3ZReitDWk9mNDNUQTZJS21DSXNFc2Q3SXhOSHhlRFhS?=
- =?utf-8?B?OWlTckwzWWhqdytwNEkyOGpSWE9SSnVYdjczaWRLQk01NnRxSzY3eUxxOG1U?=
- =?utf-8?B?Nk5hbXZjQXlmNzFTSHhybSt3V1Y5VGdIMHZYUWZSMnV0OHNCYWdVaUlVY2xq?=
- =?utf-8?B?eERpcXB1OUVxeEwyZHRGdUZiVHNnL3p6dmYzaEN6enQ5d2RESmVKN1hHdjlZ?=
- =?utf-8?B?Q3RTWG1vM3F0QitsRkMxdUJMYWRvNEtNS3Ywbit5NHZWR2pMaHdDWDFyVTBX?=
- =?utf-8?B?LzhVa1pLc1hFOWFkT3E2TUNpTUlBQUhONy84MloyZUNWVW9uMWJVNnVoVGR0?=
- =?utf-8?B?MU45cSswVG5meXZDbnYyYmp5UzJXU1Y2cEszUHBReDlNdnloVGFGSDBvRlBZ?=
- =?utf-8?B?eXZxOXZhb012eVYvN3k4YlRnNWRDaHBiY0VyWmo2R2lyZU1vd1NFZGRvdXpN?=
- =?utf-8?B?ZmJBL080dVgrL09pd1p1ZEtYQ2ZEZHJWaURoTzEyUEtrMXZoTGttajNFSWlX?=
- =?utf-8?B?dGZvUFJCSExLTG9ncWFTY3ZhZ3JXQ3RYZEFPZmNIamNQdEhSd2puNXBCSUF6?=
- =?utf-8?B?Nkw3RE84dWlRbG9EZmtkY2xYdng4QURyN3A0cXBNeFJSQTNTVHdOa2dTYXlL?=
- =?utf-8?B?YW4xVG1yempjT2Rha3Z4TTJNZEh2ak9UMjBvakpKbFNrRjE0RUozdUxaOEZo?=
- =?utf-8?B?cUVlajRpUjRsWXMyc3JzWUovL1A5LytsL3N3amxCaEpUeVR5V3YzVUtKL2k3?=
- =?utf-8?B?YkF1b3BoS3U0LzVUZkZPdUY0T0NSWDV4ZjZsdVpwSzlYRU05OUhOTDZKamx3?=
- =?utf-8?B?K2NoMjRXc3JMYUhEKzBzMHUrQ29WejhrRzJ0YXlKYVhVbTl3TGxKU2dHdisy?=
- =?utf-8?B?eDlqV0pTRGovYzgzMU5sVXg2Q0NFK1VaNko5TUo3cUl5SjN6L2FzWGxhNDcr?=
- =?utf-8?B?NmQrUkZ5YkREL2kyL3JvQTQwSVBkWDBxa24rOUt1czQ1UTNMaUlLSDJUelhL?=
- =?utf-8?B?aUZuazNidmJjL3BBZVM3TWxSbVB3eThkOUxZN243bzl2eXNFQTBsTmMybXFO?=
- =?utf-8?Q?P3RNDQaARZS6hdIonlw4qw5HG+lP4M+x?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TVVFZFpnOTRqeXZpMTRvbXIycGxCTWR3QzM5eEVKeGxZYWRnMFR4eXcvMm9a?=
- =?utf-8?B?OVg3WFdFQTh2NzM4ai9iM0U2akl4eEtLZ1ZuTFg1UklsdXFqMWJ2U1VpcUhT?=
- =?utf-8?B?Y0NRS3lNRFFEZHNrRXhhc3RIMDVqVFVNN2Q1SFFSUFV3dkR4KzB0VXA0Z0xJ?=
- =?utf-8?B?aHo4dWxIRTlyaXcwZzE0b2IrMzF0YkdYMFE0TU1VVFEyVXUyQm5SejRaZzJu?=
- =?utf-8?B?dTFXMnBmdU5XUHBrWTVtTFZjYUJyQU9SdTNKZ2NUVWhIbTlxdXJFNHM4QzFa?=
- =?utf-8?B?S1JPWGc5WUcyVnRZcUw0N2RuVTAzVkgzdmRMRXRiU1ZRM1hCcS9Zb0JTem5D?=
- =?utf-8?B?dDd3T3A0TldHZHFnbU1QRDdvd2lKczdzKzF1RWhucDVWUVI5c2JLdzNSbTB6?=
- =?utf-8?B?Vm9EMFZBd2Fsd2UyclNmQ2lucVBRdHl1aVJlY2QyT0dkb3AzamZYKy9CUzIv?=
- =?utf-8?B?S20wMGNDMUNBVVl5VzJaTkg0MlFhQ2tISU1sV2ZZdGhRMi9idDVweWd5YUJB?=
- =?utf-8?B?UndUVzNkSEhneW9HMDNSd2VZeDRBRWEzL2hhVldtUEo1UC8vN3QvWFgrYjZL?=
- =?utf-8?B?SGxqN0E1UkF0N0x5YXIvUTZmNkNoblU4ZVpxaFExVXFLWjJxZzJxcjgwZFB4?=
- =?utf-8?B?R0NWWDRxYlVVaTkxWlppajljekk1OFlkbjBtNGJ6eXBEOHVBdEhlM2V1L2JU?=
- =?utf-8?B?LzVvS09lZUx1M0pxeFB2M0dHVmpvSyt1OG1YNHl1TVRKbjBXZlpPbHd2MEdW?=
- =?utf-8?B?MW5KQlA0dXJDRmUvNDB2dWdoNUNDcUpLbkVwcGRtcFRkNVk1Wnh1V1FBb0pS?=
- =?utf-8?B?TFh2NkxJd0JvTXBhSmlJMnVsS3d0ajQ4Z2RmR29ydDVKZzM5VGZkMG5jclV6?=
- =?utf-8?B?bFNQQ0w1ZTU1Z2FqMlF0OWxPcFl0RVpDNzl0RFp2MGhBT2lCa0N3WEMwSldw?=
- =?utf-8?B?VC9EWlVQeEgveTlYazI4cC9tVmg3VXBFaHRMMDZQWWRkOEhKZ3hnU2xLV2w2?=
- =?utf-8?B?RHZreFljSVgwRW9QWCtqUmhVeVYzTDA1VXlSTjBPM0tIenBSalZ3TUcwN1Zr?=
- =?utf-8?B?enZjM2dzU3o1SnAyY0Y2NHFmWDNOelNNdVpNSUFEN0lTeVZtK01nMTYxUzNs?=
- =?utf-8?B?SWRkQ0dRcXVmMW5mdWRFZzExVEViWEVRdUFhVTRob0JrLzVzRml2ZWg4bE91?=
- =?utf-8?B?VG5OMVpQKzZxVXBNRG5DNTlkaGUxZ2JPaHJGZzFmZER5YkRxWVJlVzcyVlQx?=
- =?utf-8?B?Zi9PWUtLd1BpU3NQV1VXZTV0eXJEbE96VXU2cGtQZ3pkdVpYUGVEL0F6Wm02?=
- =?utf-8?B?MGQ4V29lQVFOakpucFRPekQ5MUZpNnpBdFo1Z21CR2R3NVZFZDdjNkdmdE5J?=
- =?utf-8?B?YWRXSVFHcE9CcVVvRjR1ZDZNSDBHYlA2VTNSa25zSi9SbzNITVpQTXhwZDJx?=
- =?utf-8?B?eHRjdnJwbHE0Ung5Sll0UTBraGwzZUVhd1ZkU1daZmIvQWRBVnFOZFV5MHZP?=
- =?utf-8?B?S1FWV2l1ZFVvaFVVYU1ua1FRVi9lQlhOMWJaL2ZYY0RsVXFPMWVHTmxSb2hQ?=
- =?utf-8?B?bUlLWExoNzBTaEc2dGo1U0FFRHd4WnpNdG84bmZHeThvbjNNVjN1UFpseGV1?=
- =?utf-8?B?UVZoYzZDODFTTlMvcGhjTHF6RjF5M2hUNk1OWUQzOVcwMzFPUCtmUzU2bDFL?=
- =?utf-8?B?aXZ4NUxHZTY5TnZjQURYSml6bThHOFZIL0JVWjFDckcwaTErL1BVTFRlSENY?=
- =?utf-8?B?MTBvaWJ4QW0zNTFaZE5yQ3JNVllLUkpXRml0dVl5bHIrWjJ4ZTNLekxDcGYw?=
- =?utf-8?B?eVlFdGZrdVhQUERqMEZhQ0ZnVk5UUlpwT29sNUMxREhnc1YrdlJPWHBBZjB5?=
- =?utf-8?B?R3Yyam1jaEk4bUJWdDlVL3RQVytYbkhLQmtqTUd6T2FmMTFTbGlSMnFGSWZK?=
- =?utf-8?B?QldTUUM2RnA3a0dOYnU5bnZRZ3RGV3R5bGdXcEl3NERaSjRKclZuRi9iK2la?=
- =?utf-8?B?anNoQjlZQXk1RGQvdmltZ1NhUG9vQmpCL0xLZHpNUHRFS2ZxamhXN1B3M1hl?=
- =?utf-8?B?NU1oTFB2YVJFenRubXdQeXJKUUxLTHZDUXB0dUZoakM3Umw3dGg0UG1PTG1L?=
- =?utf-8?B?RHRYbS9JK24zL0d4b1U1U0FyL1FOWWlOTVJXbWxrNCtsc2lqZzFmbVVpNnBq?=
- =?utf-8?B?MXNqVHZLTHFZbnREY2VFN3ZGam1WREQ2K1N3Q1FKT05QajJaWkpRR0RidURI?=
- =?utf-8?B?V0RIVkRuYndON0d6UnZ6ckMrZ1VnPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5542323737D68744A277B353389A3012@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4994E1E1A18;
+	Fri, 10 Jan 2025 02:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736476741; cv=none; b=kup10a35N4lp1D1z4mDc2wjLUgjeaS8vf0hEbPbSVIPg9d4xlOBiTI2pazBue+qIZmYUTvF7Ux6+yB81o9mz/C4ggei4CzDGkajyf7uDqYJaja4sw4yL51dPg3GrtoL2+5vMZKL2uWOaNaGzmBqPaArjhWC0n7oYu4GMuPVcT74=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736476741; c=relaxed/simple;
+	bh=ArsVe4uCp/mkm5cIi5o9H5W+vRhAT5bl4i3CGSNeJME=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jaGUTIT73QZc9CbeBFc8CTH1oEIUwzbyy41hcXowGWDaXekPYnjljsVdYgaYQfsEvrgmTJjVmjWp2jej40GSm+Z5T4B9CTBJ+vjJI4Gh68uu93yTX9MfmKW1g/XN1RAJMS/l+NO0QXbJLfreErN9tBH0hXLjJfHJH9QDF4hHORg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=l5vJoJ2u; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=5kSDVbu8ir4RQFEVW4OLsyQRvGGzqq8qrfXa4TRN1g0=; b=l5vJoJ2uHoO8TvP5dyi6uCfRmk
+	BYPMWphHJjmm5lhpFOuyhp0QmTvV9KhGAeZWk+tufm5qAvq3AiXpcCpzyuKaT77gmPKtnJs7h9pdw
+	1MgTS1I9bExdJot084MtbENNCH9NSm2Md4WXhkTHsu7s0QCpnFLzXln64SYKwfIlupUGqEHYG76QV
+	c/vywIkcahbtqAJ64Ubh9yxCVs8h1iPPAHIAtWRv0GxostgxCw7vZmcrS2ULaSwvfBifsQtMpQK+W
+	mWM2WcGiZMNxZlufxcK5aLnP6GFiuGFUuZV49yh5khjDuy/trWhMM+eyfCLYQvPQ4JhuPLx+G8fF5
+	yWw78XxQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tW4vG-0000000HRTP-281f;
+	Fri, 10 Jan 2025 02:38:54 +0000
+Date: Fri, 10 Jan 2025 02:38:54 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: linux-fsdevel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Gabriel Krisman Bertazi <krisman@kernel.org>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	David Howells <dhowells@redhat.com>, ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Mike Marshall <hubcap@omnibond.com>
+Subject: [PATCHES][RFC][CFT] ->d_revalidate() calling conventions changes
+ (->d_parent/->d_name stability problems)
+Message-ID: <20250110023854.GS1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f50fd8d-7ffd-43eb-4c56-08dd3112aae3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2025 01:04:00.2634
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hplwLfkCdk4EOjWD4fn/PdRihmFVeOY0AAw7jl3gXQAGcbzt0mGIFcdQyh5NvF3btKiebBZ2xAarxtgaoDu0gw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR13MB6801
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-T24gVHVlLCAyMDI1LTAxLTA3IGF0IDExOjU1IC0wNTAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4g
-T24gMS83LzI1IDEwOjM2IEFNLCBUYWtlc2hpIE5pc2hpbXVyYSB3cm90ZToNCj4gPiBPbiBUdWUs
-IEphbiA3LCAyMDI1IGF0IDQ6MTDigK9QTSBBbm5hIFNjaHVtYWtlcg0KPiA+IDxhbm5hLnNjaHVt
-YWtlckBvcmFjbGUuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBIaSBUYWtlc2hpLA0KPiA+ID4N
-Cj4gPiA+IE9uIDEvNi8yNSA2OjU2IFBNLCBUYWtlc2hpIE5pc2hpbXVyYSB3cm90ZToNCj4gPiA+
-ID4gRGVhciBsaXN0LA0KPiA+ID4gPg0KPiA+ID4gPiBob3cgY2FuIHdlIGdldCBBREIgKFdSSVRF
-X1NBTUUpIHN1cHBvcnQgaW4gKERlYmlhbikgTGludXggbmZzZCwNCj4gPiA+ID4gYW5kIGFuDQo+
-ID4gPiA+IGlvY3QoKSBpbiBMaW51eCBuZnNkIGNsaWVudCB0byB1c2UgaXQ/DQo+ID4gPg0KPiA+
-ID4gVGhhbmtzIGZvciB0aGUgcmVxdWVzdCEgSnVzdCBzbyB5b3UncmUgYXdhcmUgb2YgdGhlIHBy
-b2Nlc3MsIHRoaXMNCj4gPiA+IGVtYWlsIGxpc3QgaXMgZm9yIHVwc3RyZWFtIExpbnV4IGtlcm5l
-bCBkZXZlbG9wbWVudC4gSWYgd2UgZGVjaWRlDQo+ID4gPiB0byBnbyBhaGVhZCB3aXRoIGFkZGlu
-ZyBXUklURV9TQU1FIHN1cHBvcnQgaXQnbGwgYmUgdXAgdG8gRGViaWFuDQo+ID4gPiBsYXRlciB0
-byBlbmFibGUgaXQgKHRoYXQgcGFydCBpcyBvdXQgb2Ygb3VyIGhhbmRzLCBhbmQgaXNuJ3QgdXAN
-Cj4gPiA+IHRvIHVzKS4NCj4gPg0KPiA+IEkgYXNzdW1lIFdSSVRFX1NBTUUgd2lsbCBub3QgaGF2
-ZSBhIHNlcGFyYXRlIGJ1aWxkIGZsYWcsIHJpZ2h0Pw0KPiA+DQo+ID4gPg0KPiA+ID4gPg0KPiA+
-ID4gPiBXZSBoYXZlIGEgc2V0IG9mIGN1c3RvbSAiYmlnIGRhdGEiIGFwcGxpY2F0aW9ucyB3aGlj
-aCBjb3VsZA0KPiA+ID4gPiBncmVhdGx5DQo+ID4gPiA+IGJlbmVmaXQgZnJvbSBzdWNoIGFuIGFj
-Y2VsZXJhdGlvbiBBQkksIGJvdGggZm9yIGltcGxlbWVudGluZw0KPiA+ID4gPiAiemVybw0KPiA+
-ID4gPiBkYXRhIiAoZmlsbCBibG9ja3Mgd2l0aCAwIGJ5dGVzKSwgYW5kIGZpbGwgYmxvY2tzIHdp
-dGgNCj4gPiA+ID4gaWRlbnRpY2FsIGRhdGENCj4gPiA+ID4gcGF0dGVybnMsIHdpdGhvdXQgc2Vu
-ZGluZyB0aGUgc2FtZSBwYXR0ZXJuIG92ZXIgYW5kIG92ZXIgYWdhaW4NCj4gPiA+ID4gb3Zlcg0K
-PiA+ID4gPiB0aGUgbmV0d29yayB3aXJlLg0KPiA+ID4NCj4gPiA+IEhhdmluZyBzYWlkIHRoYXQs
-IEknbSBub3Qgb3Bwb3NlZCB0byBpbXBsZW1lbnRpbmcgV1JJVEVfU0FNRS4gSQ0KPiA+ID4gd29u
-ZGVyIGlmIHdlIGNvdWxkIHNvbWVob3cgdXNlIGl0IHRvIGJ1aWxkIHN1cHBvcnQgZm9yDQo+ID4g
-PiBmYWxsb2NhdGUncyBGQUxMT0NfRkxfWkVST19SQU5HRSBmbGFnIGF0IHRoZSBzYW1lIHRpbWUu
-DQo+ID4NCj4gPiBObywgSSBhbSBhc2tpbmcgcmVhbGx5IGZvciBXUklURV9TQU1FIHN1cHBvcnQg
-dG8gd3JpdGUgaWRlbnRpY2FsDQo+ID4gZGF0YQ0KPiA+IHRvIG11bHRpcGxlIGxvY2F0aW9ucy4g
-TGlrZQ0KPiA+IGh0dHBzOi8vbGludXguZGllLm5ldC9tYW4vOC9zZ193cml0ZV9zYW1lDQo+ID4g
-V3JpdGluZyB6ZXJvIGJ5dGVzIGlzIGp1c3QgYSBzdWJzZXQsIGFuZCBub3Qgd2hhdCB3ZSBuZWVk
-Lg0KPiA+IFdSSVRFX1NBTUUNCj4gPiBpcyBpbnRlbmRlZCBhcyAiYmlnIGRhdGEiIGFuZCBkYXRh
-YmFzZSBhY2NlbGVyYXRvciBmdW5jdGlvbi4NCj4gPg0KPiA+ID4NCj4gPiA+IEknbSBhbHNvIHdv
-bmRlcmluZyBpZiB0aGVyZSB3b3VsZCBiZSBhbnkgYWR2YW50YWdlIHRvIGxvY2FsDQo+ID4gPiBm
-aWxlc3lzdGVtcyBpZiB0aGlzIHdlcmUgdG8gYmUgaW1wbGVtZW50ZWQgYXMgYSBnZW5lcmljIHN5
-c3RlbQ0KPiA+ID4gY2FsbCwgcmF0aGVyIHRoYW4gYXMgYW4gTkZTLXNwZWNpZmljIGlvY3RsKCks
-IHNpbmNlIHNvbWUgc3RvcmFnZQ0KPiA+ID4gZGV2aWNlcyBoYXZlIGEgV1JJVEVfU0FNRSBvcGVy
-YXRpb24gdGhhdCBjb3VsZCBiZSB1c2VkIGZvcg0KPiA+ID4gYWNjZWxlcmF0aW9uLiBCdXQgSSBo
-YXZlbid0IGNvbnZpbmNlZCBteXNlbGYgZWl0aGVyIHdheSB5ZXQuDQo+ID4NCj4gPiBHZXR0aW5n
-IGEgbmV3LCBnZW5lcmljIHN5c2NhbGwgaW4gTGludXggdGFrZXMgMy01IHllYXJzIG9uIGF2ZXJh
-Z2UuDQo+ID4gQnkNCj4gPiB0aGVuIG91ciBwcm9qZWN0IHdpbGwgYmUgZmluaXNoZWQsIG9yIHJl
-bmV3ZWQgd2l0aCBuZXcgZnVuZGluZywgYnV0DQo+ID4gYWxsIHdpdGhvdXQgZ2V0dGluZyBhIGJv
-b3N0IGZyb20gV1JJVEVfU0FNRSBzdXBwb3J0IGluIE5GUy0NCj4NCj4gRm9yIGNvbXBhcmlzb246
-DQo+DQo+IEFkZGluZyBXUklURV9TQU1FIHRvIHRoZSBMaW51eCBORlMgY2xpZW50IGFuZCBzZXJ2
-ZXIgaW1wbGVtZW50YXRpb24NCj4gaXMNCj4gb24gdGhlIHNhbWUgb3JkZXIgb2YgdGltZSAtLSBh
-IHllYXIgKG9yIHBlcmhhcHMgbGVzcyksIHRoZW4gZ2V0dGluZw0KPiBpdA0KPiBpbnRvIERlYmlh
-biBzdGFibGUgd2lsbCBiZSBtb3JlIHRoYW4gMSB5ZWFyLCBwcm9iYWJseSAyIG9yIDMgKGF0IGEN
-Cj4gZ3Vlc3MpLg0KPg0KPiBBIGJldHRlciBhcHByb2FjaCB3b3VsZCBiZSBmb3IgeW91ciB0ZWFt
-IHRvIGltcGxlbWVudCB3aGF0IHRoZXkgbmVlZCwNCj4gdXNlIGl0IGZvciB5b3VyIHByb2plY3Qg
-KGllLCBjdXN0b20gYnVpbGQgeW91ciBrZXJuZWxzKSwgdGhlbg0KPiBjb250cmlidXRlDQo+IGl0
-IHRvIHVwc3RyZWFtIHNvIG90aGVycyBjYW4gdXNlIGl0IHRvby4gVGhhdCB3b3VsZCBkZW1vbnN0
-cmF0ZSB0aGVyZQ0KPiBpcw0KPiByZWFsIHVzZXIgZGVtYW5kIGZvciB0aGlzIGZhY2lsaXR5LCBh
-bmQgeW91ciBjb2RlIHdpbGwgaGF2ZSBnYWluZWQNCj4gc29tZQ0KPiBtaWxlcyBpbiBwcm9kdWN0
-aW9uLg0KPg0KPiBZb3UgY291bGQgaGlyZSBhIGNvbnN1bHRhbnQgdG8gaW1wbGVtZW50IGl0IGZv
-ciB5b3Ugb24gYSB0aW1lIGZyYW1lDQo+IHRoYXQNCj4gaXMgeW91ciBjaG9vc2luZy4NCj4NCj4g
-VXBzdHJlYW0gcHJpb3JpdGl6ZXMgZWNvbm9teSBvZiBtYWludGVuYW5jZSBvdmVyIGNvZGUgdmVs
-b2NpdHk7DQo+IG1lYW5pbmcsDQo+IGhvdyBxdWlja2x5IGEgZmVhdHVyZSBjYW4gYmUgcHJvdG90
-eXBlZCBhbmQgcHJvZHVjdGl6ZWQgaXMgbGVzcw0KPiBpbXBvcnRhbnQgdG8gdXMgdGhhbiBob3cg
-bXVjaCB0aGUgZmVhdHVyZSB3aWxsIGNvc3QgdXMgdG8gbWFpbnRhaW4gaW4NCj4gdGhlIGxvbmcg
-cnVuLg0KPg0KPiBXaXRoIG15IE5GU0QgY28tbWFpbnRhaW5lciBoYXQgb246IEkgd291bGQgYWNj
-ZXB0IGEgV1JJVEVfU0FNRQ0KPiBpbXBsZW1lbnRhdGlvbiwgYnV0IGl0IHdvdWxkIGhhdmUgdG8g
-Y29tZSB3aXRoIHRlc3RzIC0tIHB5bmZzIGFuZA0KPiB4ZnN0ZXN0cyBhcmUgdGhlIHVzdWFsIHRl
-c3QgaGFybmVzc2VzIHRoYXQgY2FuIGFjY29tbW9kYXRlIHRob3NlLg0KPg0KPiBJbiBhZGRpdGlv
-biwgTkZTRCBpcyByZXNwb25zaWJsZSBvbmx5IGZvciB0aGUgbmV0d29yayBwcm90b2NvbC4gVGhl
-DQo+IGxvY2FsIGZpbGUgc3lzdGVtIGltcGxlbWVudGF0aW9ucyBoYXZlIHRvIGhhbmRsZSB0aGUg
-aGVhdnkgbGlmdGluZy4NCj4gSXQncyBub3QgY2xlYXIgdG8gbWUgd2hhdCBpbmZyYXN0cnVjdHVy
-ZSBpcyBhbHJlYWR5IGF2YWlsYWJsZSBpbg0KPiBMaW51eA0KPiBmaWxlIHN5c3RlbXM7IHRoYXQg
-d2lsbCB0YWtlIHNvbWUgcmVzZWFyY2guIChJIHRoaW5rIHRoYXQgaXMgd2hhdA0KPiBBbm5hIHdh
-cyBoaW50aW5nIGF0KS4NCj4NCg0KVGhpcyBmdW5jdGlvbmFsaXR5IHNob3VsZCBiZSBwb3NzaWJs
-ZSB0byBpbXBsZW1lbnQgdXNpbmcgdGhlDQpjbG9uZV9yYW5nZSBpb2N0bCgpIG9uIHRoZSBzZXJ2
-ZXIgb3Igb24gdGhlIGNsaWVudCBmb3IgdGhhdCBtYXR0ZXIuDQoNClllcywgeW91J2xsIGhhdmUg
-dG8gdXNlIG11bHRpcGxlIGNsb25lX3JhbmdlIGNhbGxzLCBidXQgeW91IGNhbiB1c2UgYQ0KZ2Vv
-bWV0cmljIHNlcmllcyB0byBkbyBpdCBlZmZpY2llbnRseSAoaS5lLiB3cml0ZSBwYXR0ZXJuLCBj
-bG9uZQ0KcGF0dGVybiwgY2xvbmUgMipwYXR0ZXJuLCBjbG9uZSA0KnBhdHRlcm4sIGV0Yy4uLi4p
-Lg0KDQpJdCdzIG5vdCBoYXJkIHRvIGRvLCBhbmQgdGhlIGFkdmFudGFnZSBpcyB0aGF0IGl0IGNh
-biB3b3JrIGZvciBhbGwNCmZpbGVzeXN0ZW1zIHRoYXQgaW1wbGVtZW50IGNsb25lX3JhbmdlLiBZ
-b3UnZCBub3QgYmUgbGltaXRlZCB0byBqdXN0DQp1c2luZyBORlMgd2l0aCBhIHNwZWNpYWwgV1JJ
-VEVfU0FNRSBpb2N0bC4gRnVydGhlcm1vcmUsIGRvaW5nIGl0IHRoaXMNCndheSBpcyBzcGFjZS1l
-ZmZpY2VudCBvbiBtb3N0IGZpbGVzeXN0ZW1zLg0KDQotLQ0KVHJvbmQgTXlrbGVidXN0DQpMaW51
-eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFt
-bWVyc3BhY2UuY29tDQoNCg0K
+[this had been more than a year in making; my apologies for getting sidetracked
+several times]
+
+	Locking rules for dentry->d_name and dentry->d_parent are seriously
+unpleasant and historically we had quite a few races in that area.  Filesystem
+methods mostly don't have to care about that since the locking in VFS callers
+is enough to guarantee that dentries passed to the methods won't be renamed
+or moved behind the method's back.
+
+	Directory-modifying methods (->mknod(), ->mkdir(), ->unlink(), ->rename(),
+->link(), etc.) are guaranteed that their dentry arguments will have names and
+parents unchanging through the method exectuction.  For ->lookup() the warranties
+are slightly weaker (they disappear once an inode has been attached to dentry),
+but they still cover most of the execution.  As the result, all these methods
+can safely access ->d_parent and ->d_name.
+
+	->d_revalidate() is an exception - the caller might be holding no locks
+whatsoever and both the name and parent may be changing right under us.
+Locally you can hold dentry->d_lock - that'll stabilize both ->d_parent and
+->d_name, but you obviously can't hold that over any IO and as soon as you drop
+->d_lock, you are on your own.
+
+	There is a rather convoluted dance needed to get a safe reference
+to parent -
+	if not in RCU mode
+		parent = dget_parent(dentry)
+		dir = d_inode(parent)
+	else
+		parent = READ_ONCE(dentry->d_parent)
+		dir = d_inode_rcu(parent)
+		if (!dir)
+			return -ECHILD
+	<do actual work>
+	if not in RCU mode
+		dput(parent)
+and it's duplicated in a bunch of instances (not all of them - quite a few
+->d_revalidate() instances do not care about the parent *or* name in the
+first place).  For names... you can safely access that under ->d_lock
+(including copying it someplace safe) or you can use take_dentry_name_snapshot(),
+but blind dereferencing of ->d_name.name is really asking for trouble -
+for a long name you might end up accessing freed memory.
+
+	An obvious improvement would be to pass safe references to parent
+and name as explicit arguments of ->d_revalidate().  Examining the in-tree
+instances shows that we have 4 groups:
+	1) really don't care about parent at all: hfs, jfs, all procfs ones,
+tracefs.
+	2) want only the inode of parent directory: afs, ceph, exfat and
+vfat ones, fscrypt, fuse, gfs2, nfs, ocfs2, orangefs
+	3) don't use the parent directly, no help from that calling conventions
+change: smb, 9p, vboxsf, coda, kernfs.
+	4) really special: ecryptfs, overlayfs.
+In other words, passing the parent's inode is more useful than passing its
+dentry, ending up with
+	int (*d_revalidate)(struct inode *dir, const struct qstr *name,
+                            struct dentry *dentry, unsigned int flags);
+
+	That, however, presumes that we can get these stable references in
+the callers without a serious overhead.  Thankfully, there are only 3 callers
+of ->d_revalidate() in the entire tree.  The regular one is in
+fs/namei.c:d_revalidate() and that's what the pathname resolution is using.
+Additionally, ecryptfs and overlayfs instances of ->d_revalidate() may
+want to call that method for dentries in underlying filesystems.
+
+	fs/namei.c:d_revalidate() callers already have stable references
+to parent and name - we are calling that right after we'd found our dentry
+in dcache and we bloody well know which parent/name combination we'd been
+looking for.  So in this case no convolutions are needed - we already have
+the values of extra arguments for ->d_revalidate().
+
+	In case of ecryptfs and overlayfs deciding to call ->d_revalidate()
+for underlying dentries we can just use take_dentry_name_snapshot() on that
+underlying dentry to get the stable name and either do the aforementioned
+convoluted dance to get a stable reference to parent (in case of overlayfs)
+or use the directory underlying the parent of our dentry (in case of ecryptfs).
+
+	That allows to get rid of boilerplate in the instances and allows
+to close some actual races wrt ->d_name uses.  The series below attempts to
+do just that.  It lives in
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #work.d_revalidate
+itself on top of #work.dcache.
+
+	Individual patches in followups; please, review.
+
+Shortlog (including #work.dcache):
+Al Viro (20):
+      make sure that DNAME_INLINE_LEN is a multiple of word size
+      dcache: back inline names with a struct-wrapped array of unsigned long
+      make take_dentry_name_snapshot() lockless
+      dissolve external_name.u into separate members
+      ext4 fast_commit: make use of name_snapshot primitives
+      generic_ci_d_compare(): use shortname_storage
+      Pass parent directory inode and expected name to ->d_revalidate()
+      afs_d_revalidate(): use stable name and parent inode passed by caller
+      ceph_d_revalidate(): use stable parent inode passed by caller
+      ceph_d_revalidate(): propagate stable name down into request enconding
+      fscrypt_d_revalidate(): use stable parent inode passed by caller
+      exfat_d_revalidate(): use stable parent inode passed by caller
+      vfat_revalidate{,_ci}(): use stable parent inode passed by caller
+      fuse_dentry_revalidate(): use stable parent inode and name passed by caller
+      gfs2_drevalidate(): use stable parent inode and name passed by caller
+      nfs{,4}_lookup_validate(): use stable parent inode passed by caller
+      nfs: fix ->d_revalidate() UAF on ->d_name accesses
+      ocfs2_dentry_revalidate(): use stable parent inode and name passed by caller
+      orangefs_d_revalidate(): use stable parent inode and name passed by caller
+      9p: fix ->rename_sem exclusion
+
+Diffstat (again, including #work.dcache):
+ Documentation/filesystems/locking.rst        |  5 +-
+ Documentation/filesystems/porting.rst        | 13 ++++
+ Documentation/filesystems/vfs.rst            | 22 ++++++-
+ fs/9p/v9fs.h                                 |  2 +-
+ fs/9p/vfs_dentry.c                           | 23 ++++++-
+ fs/afs/dir.c                                 | 40 ++++--------
+ fs/ceph/dir.c                                | 25 ++------
+ fs/ceph/mds_client.c                         |  9 ++-
+ fs/ceph/mds_client.h                         |  2 +
+ fs/coda/dir.c                                |  3 +-
+ fs/crypto/fname.c                            | 22 ++-----
+ fs/dcache.c                                  | 96 ++++++++++++++++------------
+ fs/ecryptfs/dentry.c                         | 18 ++++--
+ fs/exfat/namei.c                             | 11 +---
+ fs/ext4/fast_commit.c                        | 29 ++-------
+ fs/ext4/fast_commit.h                        |  3 +-
+ fs/fat/namei_vfat.c                          | 19 +++---
+ fs/fuse/dir.c                                | 14 ++--
+ fs/gfs2/dentry.c                             | 31 ++++-----
+ fs/hfs/sysdep.c                              |  3 +-
+ fs/jfs/namei.c                               |  3 +-
+ fs/kernfs/dir.c                              |  3 +-
+ fs/libfs.c                                   | 15 +++--
+ fs/namei.c                                   | 18 +++---
+ fs/nfs/dir.c                                 | 62 ++++++++----------
+ fs/nfs/namespace.c                           |  2 +-
+ fs/nfs/nfs3proc.c                            |  5 +-
+ fs/nfs/nfs4proc.c                            | 20 +++---
+ fs/nfs/proc.c                                |  6 +-
+ fs/ocfs2/dcache.c                            | 14 ++--
+ fs/orangefs/dcache.c                         | 20 +++---
+ fs/overlayfs/super.c                         | 22 ++++++-
+ fs/proc/base.c                               |  6 +-
+ fs/proc/fd.c                                 |  3 +-
+ fs/proc/generic.c                            |  6 +-
+ fs/proc/proc_sysctl.c                        |  3 +-
+ fs/smb/client/dir.c                          |  3 +-
+ fs/tracefs/inode.c                           |  3 +-
+ fs/vboxsf/dir.c                              |  3 +-
+ include/linux/dcache.h                       | 22 +++++--
+ include/linux/fscrypt.h                      |  7 +-
+ include/linux/nfs_xdr.h                      |  2 +-
+ tools/testing/selftests/bpf/progs/find_vma.c |  2 +-
+ 43 files changed, 336 insertions(+), 304 deletions(-)
+
+	Overview (#work.dcache is the first 6 commits in there):
+
+Part 1: hopefully cheaper take_dentry_name_snapshot() and handling of inline
+(short) names.  One surprising thing was that gcc __builtin_memcpy() does
+*not* make use of the alignment information; turns out that it's better to
+wrap the entire short name into an object that can be copied by assignment.
+
+01/20)   make sure that DNAME_INLINE_LEN is a multiple of word size
+	Linus' suggestion to define the size of shortname in terms of
+unsigned long words and derive its size in bytes from that.  Cleaner
+that way.
+02/20)   dcache: back inline names with a struct-wrapped array of unsigned long
+	... so that they can be copied with struct assignment (which
+generates better code) and accessed word-by-word.
+	The type is union shortname_storage; it's a union of arrays of
+unsigned char and unsigned long.
+	struct name_snapshot.inline_name turned into union
+shortname_storage; users (all in fs/dcache.c) adjusted.
+	struct dentry.d_iname has some users outside of fs/dcache.c;
+to reduce the amount of noise in commit, it is replaced with union
+shortname_storage d_shortname and d_iname is turned into a macro that
+expands to d_shortname.string (similar to d_lock handling)
+03/20)   make take_dentry_name_snapshot() lockless
+	Use ->d_seq instead of grabbing ->d_lock; in case of shortname
+dentries that avoids any stores to shared data objects and in case of
+long names we are down to (unavoidable) atomic_inc on the external_name
+refcount.  Makes the thing safer as well - the areas where ->d_seq is held
+odd are all nested inside the areas where ->d_lock is held, and the latter
+are much more numerous.  NOTE: now that there is a lockless path where
+we might try to grab a reference to an already doomed external_name
+instance, it is no longer possible for external_name.u.count and
+external_name.u.head to share space (kudos to Linus for spotting that).
+To reduce the noice this commit just make external_name.u a struct
+(instead of union); the next commit will dissolve it.
+04/20)   dissolve external_name.u into separate members
+	kept separate from the previous commit to keep the noise separate
+from actual changes...
+05/20)   ext4 fast_commit: make use of name_snapshot primitives
+	... rather than open-coding them.  As a bonus, that avoids the
+pointless work with extra allocations, etc. for long names.
+06/20)   generic_ci_d_compare(): use shortname_storage
+	... and check the "name might be unstable" predicate the right way.
+
+Part 2: ->d_revalidate() calling conventions change.  The first commit
+adds the method prototype and has the extra arguments supplied by the callers;
+making use of those extra arguments is done in followup patches, so that
+they can be reviewed separately.
+
+07/20)   Pass parent directory inode and expected name to ->d_revalidate()
+	->d_revalidate() often needs to access dentry parent and name;
+that has to be done carefully, since the locking environment varies from
+caller to caller.  We are not guaranteed that dentry in question will
+not be moved right under us - not unless the filesystem is such that
+nothing on it ever gets renamed.
+	It can be dealt with, but that results in boilerplate code that
+isn't even needed - the callers normally have just found the dentry
+via dcache lookup and want to verify that it's in the right place; they
+already have the values of ->d_parent and ->d_name stable.  There is a
+couple of exceptions (overlayfs and, to less extent, ecryptfs), but for
+the majority of calls that song and dance is not needed at all.
+	It's easier to make ecryptfs and overlayfs find and pass those
+values if there's a ->d_revalidate() instance to be called, rather than
+doing that in the instances.
+	This commit only changes the calling conventions; making use of
+supplied values is left to followups.
+	NOTE: some instances need more than just the parent - things like
+CIFS may need to build an entire path from filesystem root, so they need
+more precautions than the usual boilerplate.  This series doesn't
+do anything to that need - these filesystems have to keep their locking
+mechanisms (rename_lock loops, use of dentry_path_raw(), private rwsem
+a-la v9fs).
+
+
+Part 3: making use of the new arguments - getting rid of parent-obtaining
+boilerplate in the instances and getting rid of racy uses of ->d_name in
+some of those.  Split on per-filesystem basis.
+
+08/20)   afs_d_revalidate(): use stable name and parent inode passed by caller
+09/20)   ceph_d_revalidate(): use stable parent inode passed by caller
+10/20)   ceph_d_revalidate(): propagate stable name down into request enconding
+11/20)   fscrypt_d_revalidate(): use stable parent inode passed by caller
+12/20)   exfat_d_revalidate(): use stable parent inode passed by caller
+13/20)   vfat_revalidate{,_ci}(): use stable parent inode passed by caller
+14/20)   fuse_dentry_revalidate(): use stable parent inode and name passed by caller
+15/20)   gfs2_drevalidate(): use stable parent inode and name passed by caller
+16/20)   nfs{,4}_lookup_validate(): use stable parent inode passed by caller
+17/20)   nfs: fix ->d_revalidate() UAF on ->d_name accesses
+18/20)   ocfs2_dentry_revalidate(): use stable parent inode and name passed by caller
+19/20)   orangefs_d_revalidate(): use stable parent inode and name passed by caller
+
+
+Part 4: dealing with races in access to ancestors' names/parents.  Changing the
+calling conventions above helps with the name and parent of dentry being revalidated;
+it doesn't do anything for its ancestors and some instances want to deal with the
+entire path to filesystem root.  The way it's done varies from filesystem to
+filesystem and often isn't limited to ->d_revalidate().  There is a safe helper
+(dentry_path()) and e.g. smb avoids the races by using it.  9p and ceph do not,
+for various reasons, and both have problems.  I've done a 9p fix (see below);
+ceph one is trickier and I'd prefer to discuss it with ceph folks first.
+
+20/20)   9p: fix ->rename_sem exclusion
+	9p wants to be able to build a path from given dentry to fs root
+and keep it valid over a blocking operation.
+	->s_vfs_rename_mutex would be a natural candidate, but there
+are places where we want that and where we have no way to tell if
+->s_vfs_rename_mutex has already been taken deeper in callchain.
+Moreover, it's only held for cross-directory renames; name changes within
+the same directory happen without touching that lock.
+Current mainline solution:
+	* have d_move() done in ->rename() rather than in its caller
+	* maintain a 9p-private rwsem (->rename_sem, per-filesystem)
+	* hold it exclusive over the relevant part of ->rename()
+	* hold it shared over the places where we want the path.
+That almost works.  FS_RENAME_DOES_D_MOVE is enough to put all d_move()
+and d_exchange() calls under filesystem's control.  However, there's
+also __d_unalias(), which isn't covered by any of that.
+	If ->lookup() hits a directory inode with preexisting dentry
+elsewhere (due to e.g. rename done on server behind our back),
+d_splice_alias() called by ->lookup() will move/rename that alias.
+	One approach to fixing that would be to add a couple of optional
+methods, so that __d_unalias() would do
+	if alias->d_op->d_unalias_trylock != NULL
+		if (!alias->d_op->d_unalias_trylock(alias))
+			fail (resulting in -ESTALE from lookup)
+	__d_move(...)
+	if alias->d_op->d_unalias_unlock != NULL
+		alias->d_unalias_unlock(alias)
+where it currently does __d_move().  9p instances would be down_write_trylock()
+and up_write() of ->rename_sem.
+	However, to reduce dentry_operations bloat, let's add one method
+instead - ->d_want_unalias(alias, true) instead of ->d_unalias_trylock(alias)
+and ->d_want_unalias(alias, false) instead of ->d_unalias_unlock(alias).
+	Another possible variant would be to hold ->rename_sem exclusive
+around d_splice_alias() calls in 9p ->lookup(), but that would cause a lot
+of contention on that rwsem (every lookup rather than only ones that end
+up with __d_unalias()) and rwsem is filesystem-wide.  Let's not go there.
 
