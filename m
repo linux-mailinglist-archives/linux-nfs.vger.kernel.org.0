@@ -1,193 +1,93 @@
-Return-Path: <linux-nfs+bounces-9141-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9142-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5E80A0A3A6
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 13:46:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC7AFA0A5C5
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 21:08:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3B193AA07E
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 12:46:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 085AA168625
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 20:08:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EC418FDD0;
-	Sat, 11 Jan 2025 12:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A33F61B78F3;
+	Sat, 11 Jan 2025 20:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swYrS8Q3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZbRF7X/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79F1EB44
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 12:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0321817C68
+	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 20:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736599603; cv=none; b=Q8Yu6xpfCNM/J3+10vYRgDLr4R2CqV2wFASwvrkn2uRoCqMwm/UA+8dk7y1XsE6+aut6TE8kMIQXGEVY2su17xl/sCkd6j3r6uj5O2D+1WmaqLeb0Oa6OvWjWoy+Oa+orPMf0mUZNr4RLtuyG3DxxEMX8+nXUIUu+Bah07FtVQc=
+	t=1736626133; cv=none; b=P+YFNRXbPgyiPnhtPAmrPpIj3JZC8SDbsMaN3PhZgVnyXjr+jWNa4ZU9tb/kVkQxqS4raC40adhjseoLPshW86BVPPMCFHSFU7xDzWa/hztdn0OIEbOBIzx9TW71FY+Fk0SAN6nbCfI46xCtNpgkU5lZetMM7rtaMNjUA649Dq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736599603; c=relaxed/simple;
-	bh=qBZQ+LRSRZYAlHYTMCDKyCFAaRLxpidOl+VjrT2+3o8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O9OaqYzmr+VB/sxeP1+I0slvNgXwjTWZTN9JktOS7pM8zCfUN5zcAOs1IV4p0dyxpPPd70f46j2Fq5af3PJgA3LWJA8QLvGvue86d5tBmHH3MLhj5Z1z8P0RV+yghhQEByKRtnD2kv6n8pVqaIa8hFLz46x2LcqIBaFN9phElEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swYrS8Q3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABA9C4CED2;
-	Sat, 11 Jan 2025 12:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736599602;
-	bh=qBZQ+LRSRZYAlHYTMCDKyCFAaRLxpidOl+VjrT2+3o8=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=swYrS8Q3ZstjUu3TIfulWM5wuksWjJhIsQCbO0dh0Erjr7xkGnw+tvIbJx512F/Eg
-	 BAfXeZpDMLHjy6hWqBvKIV+DRwoN4Pg8Nned91B2PTcvrxSfVgp06r0vjKkA8zjuMu
-	 hCYuOqGYJwpgJsw2I45R9QglXoCZHNRsu8aYNtT+WQclyAK/SXnMq29PGQSsfeW0um
-	 UtZ3x1e4tKrAoutRjIybDa06zYVjXtGhT20OrMU8epWLng6e/4Z0GkKxzpHbDu9rBx
-	 GkKnDkDoWkQgFQOEZrvxA8n21SETQNisaWgUiW79zO60DjsUgUCLA+W11kp1zc6Cqh
-	 q8vzV18Lw/vTA==
-Message-ID: <f485d4ffc7a843800997df830987251bbf0f6804.camel@kernel.org>
-Subject: Re: [PATCH] nfsdcltrack related manpage and configure file cleanup
-From: Jeff Layton <jlayton@kernel.org>
-To: Steve Dickson <steved@redhat.com>, Linux NFS Mailing list
-	 <linux-nfs@vger.kernel.org>
-Date: Sat, 11 Jan 2025 07:46:41 -0500
-In-Reply-To: <20250111095509.61461-1-steved@redhat.com>
-References: <20250111095509.61461-1-steved@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	s=arc-20240116; t=1736626133; c=relaxed/simple;
+	bh=wtZpotcZhpKYlglxc1ewIhsB0m9+S8g+eQ8nc0ewfyY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=eaCAy5xL9m21y2PA97b6BjWHk2C/wGsPzzHaRwD2VWJfgftg+67THodwxv29MRRqUSomtQELZ5M70rqWOsh9Sov1lninSqSLw+1K2ckBH2n84m41VjKj6gfV7eJpPByG7x6rld/Qeb7OV3eOzB20WC+AamZPCzdENyfXoLypz14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZbRF7X/; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aa689a37dd4so579517266b.3
+        for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 12:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736626129; x=1737230929; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtZpotcZhpKYlglxc1ewIhsB0m9+S8g+eQ8nc0ewfyY=;
+        b=OZbRF7X/s+8eURyzd3MKWZr42yxkGShIVz4Pkf5GJ+gCJM1Cv6bMgBvkNe9ufnalpH
+         P2dZ7X0xB0pO9wre14n9tYzs25QsniIoS7GFcLTgnlpo30oQmw0iVLQyhCQlj5iUuxBs
+         vQFplPZ58I+w97mmMo0lTgT7yQleZCXhGXmZRlqM4BCkTg78BuOD83WMm0GoSGXUT5AA
+         9X2anYelHa8W6bGEt34TYPoL7bDdOKUkprIX3mTWbnvfH+CaHe+Dg56GqN8vsrS03t9n
+         AU309REWWpFQpC+sckbILZvWyANHQvgy2RThmEfgJrzSDiUcfVEEawfrbolhS5Mt19PE
+         t0HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736626129; x=1737230929;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wtZpotcZhpKYlglxc1ewIhsB0m9+S8g+eQ8nc0ewfyY=;
+        b=RaHhGH599qjR0HqtAzi48X304/XtdLLjcBNSq0RBh8Xn8SBcJlgzX/cKmi/8P6i+nc
+         ta1Rw31opvKkVSyT9rniozDqhjzAkgrk7Dvrlk5BLXNiGVcorgnCGw1bBqwWqgwXBh08
+         OkP/j04PzilO26WfWbKZPRjvmUMeNIYPZphXpsqW0j9wAB/qzfX/5Bf8Cx1Tei5YIAQX
+         VlxTs1R5RK9bG0hMs0s7j6gJmMQBmId8dbQfkx08aeVryRsWEnN/+AEXTa8//9SsmaO5
+         do6fivPDPqMiK7v67i+EnbZmpBcrCbYJsTeq0mFqvOddNYl7L6mTWne2Ruw0PTFOIKo0
+         jqaQ==
+X-Gm-Message-State: AOJu0YxJAb4W9r8wbf6bjVc4RmtfT4mUK3lY0saWWZ2iYVNQ5JGHdQ5+
+	TPC3jD3MQEngLN4jcgmpj9w6m7uAe92bWN/Cy2OpgaixS9n6kX3ZYMFYv+3+RixxZkbw5RAFUXy
+	mIXkx5+7DMFs/VHo+taor1DpY9sn/Fy2c
+X-Gm-Gg: ASbGncti2nziTesKFf6ELuPkMsnBqWdP3k9CBVVcdsHihl+6t4CeIWgjy1gZXwAUV+6
+	fc7XDT5E8AYPbj6bzx2Vvctp+NTi+NKPlpuPPR/k=
+X-Google-Smtp-Source: AGHT+IFF2Mm9IsoV/U/6Zuhn7Zqs6Q53AUf/Cv1SZNuv7el3kWomS/u4wHzns8gt/u1glg7R1NM2/1+vt174wgLucvQ=
+X-Received: by 2002:a17:907:c10:b0:aa6:77e6:ea3d with SMTP id
+ a640c23a62f3a-ab2abc92415mr1451608466b.45.1736626129031; Sat, 11 Jan 2025
+ 12:08:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
+Date: Sat, 11 Jan 2025 21:08:13 +0100
+X-Gm-Features: AbW1kvYTPtJMc9V-hR83-k7IDSseZGySq9auMRli70U1i1sLP_Fc0FhZwPEt1Qo
+Message-ID: <CALWcw=EPJk3XFNfXG95v4A3Dq7=spqh5aLYru05r9Lm-eVep6w@mail.gmail.com>
+Subject: BUG: Linux 6.12 nfsd does not support FATTR4_WORD2_CHANGE_ATTR_TYPE
+ in NFSv4.2 mode!!
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-01-11 at 04:55 -0500, Steve Dickson wrote:
-> Fixes: https://issues.redhat.com/browse/RHEL-73500
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-> ---
->  nfs.conf             |  4 ----
->  systemd/nfs.conf.man | 14 --------------
->  2 files changed, 18 deletions(-)
->=20
-> diff --git a/nfs.conf b/nfs.conf
-> index 087d7372..3cca68c3 100644
-> --- a/nfs.conf
-> +++ b/nfs.conf
-> @@ -60,10 +60,6 @@
->  # debug=3D0
->  # storagedir=3D/var/lib/nfs/nfsdcld
->  #
-> -[nfsdcltrack]
-> -# debug=3D0
-> -# storagedir=3D/var/lib/nfs/nfsdcltrack
-> -#
->  [nfsd]
->  # debug=3D0
->  # threads=3D16
-> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-> index d03fc887..e6a84a97 100644
-> --- a/systemd/nfs.conf.man
-> +++ b/systemd/nfs.conf.man
-> @@ -158,19 +158,6 @@ is equivalent to providing the
->  .B \-\-log\-auth
->  option.
-> =20
-> -.TP
-> -.B nfsdcltrack
-> -Recognized values:
-> -.BR storagedir .
-> -
-> -The
-> -.B nfsdcltrack
-> -program is run directly by the Linux kernel and there is no
-> -opportunity to provide command line arguments, so the configuration
-> -file is the only way to configure this program.  See
-> -.BR nfsdcltrack (8)
-> -for details.
-> -
->  .TP
->  .B nfsd
->  Recognized values:
-> @@ -329,7 +316,6 @@ for deatils.
->  Various configuration files read in order.  Later settings override
->  earlier settings.
->  .SH SEE ALSO
-> -.BR nfsdcltrack (8),
->  .BR rpc.nfsd (8),
->  .BR rpc.mountd (8),
->  .BR nfsmount.conf (5).
+Dear list,
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+We tried to use FATTR4_WORD2_CHANGE_ATTR_TYPE with Linux 6.12 nfsd,
+but the server does not set that attribute, while it is mandatory for
+NFSv4.2.
+Could this please be fixed?
+--=20
+Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
+=A6
+Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
 
