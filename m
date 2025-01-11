@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-9140-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9141-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2ACB4A0A39A
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 13:30:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5E80A0A3A6
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 13:46:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 246CC167826
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3B193AA07E
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 12:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA040199921;
-	Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45EC418FDD0;
+	Sat, 11 Jan 2025 12:46:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQFeiC/V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="swYrS8Q3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A83192D87
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79F1EB44
+	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 12:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736598625; cv=none; b=iQ5S1fH15ZwZ2ReRi8uT8qrJN6y+hRdxzlO/GYMX/MTcAyS2tqeRZf5xiUJhKtTRvSMT2yHWzTvz62TsvAOFSsmkob7IGoaJvRZxdqBC2mFIW8LhZ7+mX5ORtirg2mvALlDPZB81Yr1raKapIx0fxxnw7cSdGjCq7aVTTYKcruA=
+	t=1736599603; cv=none; b=Q8Yu6xpfCNM/J3+10vYRgDLr4R2CqV2wFASwvrkn2uRoCqMwm/UA+8dk7y1XsE6+aut6TE8kMIQXGEVY2su17xl/sCkd6j3r6uj5O2D+1WmaqLeb0Oa6OvWjWoy+Oa+orPMf0mUZNr4RLtuyG3DxxEMX8+nXUIUu+Bah07FtVQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736598625; c=relaxed/simple;
-	bh=SN+JtzR5Zjw5ToHVHy/il+sAW7PuV1I57N7r1/cDFu4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C+FtPYJJx0m5YqWCXEWo6JXsuThkM229p1w6CvbIzSDXyV98v1Tc+ch6joawwQo/+FtFPRx4FqND12m11NvVsVQF/Ol11g4NyPo6co2TCBVpycjw1USzMXWpL+rmDQmhA5yFk1VEbHVPU41k8yY8L/T/1jebyAwq3H/Kxay3jXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQFeiC/V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1E5C4CED2;
-	Sat, 11 Jan 2025 12:30:24 +0000 (UTC)
+	s=arc-20240116; t=1736599603; c=relaxed/simple;
+	bh=qBZQ+LRSRZYAlHYTMCDKyCFAaRLxpidOl+VjrT2+3o8=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=O9OaqYzmr+VB/sxeP1+I0slvNgXwjTWZTN9JktOS7pM8zCfUN5zcAOs1IV4p0dyxpPPd70f46j2Fq5af3PJgA3LWJA8QLvGvue86d5tBmHH3MLhj5Z1z8P0RV+yghhQEByKRtnD2kv6n8pVqaIa8hFLz46x2LcqIBaFN9phElEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=swYrS8Q3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABA9C4CED2;
+	Sat, 11 Jan 2025 12:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736598625;
-	bh=SN+JtzR5Zjw5ToHVHy/il+sAW7PuV1I57N7r1/cDFu4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=sQFeiC/V9L/ooIVbLX7GPyN1c3Un6inAn9FXirUP+FbRIiG9inEnIJYn7xJBhx9ds
-	 oZGX6U4h4qTJTIn87H+XF6izst4bwml7LyD7fOWWSMAhdvd2zJbFS6V0aYpXZtjAnu
-	 ayEn+hOR4EL4D7c2wNVSb35Hbj0yoLxhDa+O10ssG44jomsnX5U4itnm8exsgkxDPK
-	 XjQGm/Diro7FqLOPdzPLY5l4+R+qNMSA6Qjqlp0+Dk/P5sHqrruboxPIGwdI+/oQCq
-	 Xbueycg+iu6gBW9LXVRxAbR2iSrk5G+hQAwELbfeFRIYRXThn1LjZKzYv1osns7Pur
-	 YbTl5jUZep2zw==
-Message-ID: <6553ee0f1fd57c64db76333efb47fca007f61693.camel@kernel.org>
-Subject: Re: [nfs-utils PATCH v2 0/2] nfsdctl version handling fixes
+	s=k20201202; t=1736599602;
+	bh=qBZQ+LRSRZYAlHYTMCDKyCFAaRLxpidOl+VjrT2+3o8=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=swYrS8Q3ZstjUu3TIfulWM5wuksWjJhIsQCbO0dh0Erjr7xkGnw+tvIbJx512F/Eg
+	 BAfXeZpDMLHjy6hWqBvKIV+DRwoN4Pg8Nned91B2PTcvrxSfVgp06r0vjKkA8zjuMu
+	 hCYuOqGYJwpgJsw2I45R9QglXoCZHNRsu8aYNtT+WQclyAK/SXnMq29PGQSsfeW0um
+	 UtZ3x1e4tKrAoutRjIybDa06zYVjXtGhT20OrMU8epWLng6e/4Z0GkKxzpHbDu9rBx
+	 GkKnDkDoWkQgFQOEZrvxA8n21SETQNisaWgUiW79zO60DjsUgUCLA+W11kp1zc6Cqh
+	 q8vzV18Lw/vTA==
+Message-ID: <f485d4ffc7a843800997df830987251bbf0f6804.camel@kernel.org>
+Subject: Re: [PATCH] nfsdcltrack related manpage and configure file cleanup
 From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>, steved@redhat.com
-Cc: yoyang@redhat.com, linux-nfs@vger.kernel.org
-Date: Sat, 11 Jan 2025 07:30:23 -0500
-In-Reply-To: <20250110201746.869995-1-smayhew@redhat.com>
-References: <20250110201746.869995-1-smayhew@redhat.com>
+To: Steve Dickson <steved@redhat.com>, Linux NFS Mailing list
+	 <linux-nfs@vger.kernel.org>
+Date: Sat, 11 Jan 2025 07:46:41 -0500
+In-Reply-To: <20250111095509.61461-1-steved@redhat.com>
+References: <20250111095509.61461-1-steved@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -133,42 +133,61 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-01-10 at 15:17 -0500, Scott Mayhew wrote:
-> Two changes in how nfsdctl does version handling.  The first patch makes
-> the 'nfsdctl version' command behave according to the man page for w.r.t
-> handling +4/-4, e.g.
+On Sat, 2025-01-11 at 04:55 -0500, Steve Dickson wrote:
+> Fixes: https://issues.redhat.com/browse/RHEL-73500
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+> ---
+>  nfs.conf             |  4 ----
+>  systemd/nfs.conf.man | 14 --------------
+>  2 files changed, 18 deletions(-)
 >=20
-> # utils/nfsdctl/nfsdctl
-> nfsdctl> threads 0
-> nfsdctl> version
-> +3.0 +4.0 +4.1 +4.2
-> nfsdctl> version -4
-> nfsdctl> version
-> +3.0 -4.0 -4.1 -4.2
-> nfsdctl> version +4
-> nfsdctl> version
-> +3.0 +4.0 +4.1 +4.2
-> nfsdctl> version -4 +4.2
-> nfsdctl> version
-> +3.0 -4.0 -4.1 +4.2
-> nfsdctl> ^D
->=20
-> The second patch makes nfsdctl's handling of the nfsd version options in
-> nfs.conf behave like rpc.nfsd's.  This is important since the systemd
-> service file will fall back to rpc.nfsd if nfsdctl fails.  I'll send a
-> test script and test results in a followup email.
->=20
-> -Scott
->=20
-> Scott Mayhew (2):
->   nfsdctl: tweak the version subcommand behavior
->   nfsdctl: tweak the nfs.conf version handling
->=20
->  utils/nfsdctl/nfsdctl.c | 69 +++++++++++++++++++++++++++++++++++------
->  1 file changed, 59 insertions(+), 10 deletions(-)
->=20
-
-LGTM!
+> diff --git a/nfs.conf b/nfs.conf
+> index 087d7372..3cca68c3 100644
+> --- a/nfs.conf
+> +++ b/nfs.conf
+> @@ -60,10 +60,6 @@
+>  # debug=3D0
+>  # storagedir=3D/var/lib/nfs/nfsdcld
+>  #
+> -[nfsdcltrack]
+> -# debug=3D0
+> -# storagedir=3D/var/lib/nfs/nfsdcltrack
+> -#
+>  [nfsd]
+>  # debug=3D0
+>  # threads=3D16
+> diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+> index d03fc887..e6a84a97 100644
+> --- a/systemd/nfs.conf.man
+> +++ b/systemd/nfs.conf.man
+> @@ -158,19 +158,6 @@ is equivalent to providing the
+>  .B \-\-log\-auth
+>  option.
+> =20
+> -.TP
+> -.B nfsdcltrack
+> -Recognized values:
+> -.BR storagedir .
+> -
+> -The
+> -.B nfsdcltrack
+> -program is run directly by the Linux kernel and there is no
+> -opportunity to provide command line arguments, so the configuration
+> -file is the only way to configure this program.  See
+> -.BR nfsdcltrack (8)
+> -for details.
+> -
+>  .TP
+>  .B nfsd
+>  Recognized values:
+> @@ -329,7 +316,6 @@ for deatils.
+>  Various configuration files read in order.  Later settings override
+>  earlier settings.
+>  .SH SEE ALSO
+> -.BR nfsdcltrack (8),
+>  .BR rpc.nfsd (8),
+>  .BR rpc.mountd (8),
+>  .BR nfsmount.conf (5).
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
