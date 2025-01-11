@@ -1,129 +1,174 @@
-Return-Path: <linux-nfs+bounces-9139-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9140-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CFE2A0A276
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 10:55:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ACB4A0A39A
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 13:30:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AC90D1658A5
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 09:55:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 246CC167826
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36227156F54;
-	Sat, 11 Jan 2025 09:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA040199921;
+	Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRoBKw1K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQFeiC/V"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E62018A931
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 09:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A83192D87
+	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 12:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736589317; cv=none; b=V2gmX9VCfXz18Uzz0qLaGdJBwHFpNmoH3LoY9soYOLWXglIQjMjyTMOThEybamai8xOr6hcjRFkB6nro3nEOCwCoN5dbKdM4zdrt+MXUS8LVH1cUvYY33ZNgVdd6iido5pIObeD6MUsnwlOqBSppYp0J9Kxv0rsxlTc5084P4Ws=
+	t=1736598625; cv=none; b=iQ5S1fH15ZwZ2ReRi8uT8qrJN6y+hRdxzlO/GYMX/MTcAyS2tqeRZf5xiUJhKtTRvSMT2yHWzTvz62TsvAOFSsmkob7IGoaJvRZxdqBC2mFIW8LhZ7+mX5ORtirg2mvALlDPZB81Yr1raKapIx0fxxnw7cSdGjCq7aVTTYKcruA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736589317; c=relaxed/simple;
-	bh=rrO0TAF+d/kSc9UBkA55BU2G/J97Tb0oQNmmsBDMTZ0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=BZUnAor3aHmA2gB86UM7KdrYgccnDQ/9VnpC6gtjAgYg65mHBOl2lKW0e9K7QjnMmLlBbrbNxE/NIydbn400Y8wQHqZQQ3L2X6WzkNVR47mKM9aQ1uFSt6pz0YtKa7vWrOHJzerRAjlQ3hH6LoTKkUkZaCpGUJr/1QSaIZMIcxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WRoBKw1K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736589314;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zm3aVuxYa27QqSa4SryBiyty1vmNBXA1S9TRd/V/NGk=;
-	b=WRoBKw1KFvy5Ry2qp2erP8zTdtbH4Z5SJx5bDt9XJiVuqJpJlYTCr9hX+/vbgpynRbAlFR
-	CIN2MoarX17DMbXHOQM24aOTCf2hSsHpr77wxD9F3pnlqzFt0AA9g5TSwJIMNcu5Pvu8V4
-	cAjXW7pCeccQJYfJi1TifW/Qc+3Poos=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-mgD4d__0NUeC13eNDZ6aFg-1; Sat,
- 11 Jan 2025 04:55:12 -0500
-X-MC-Unique: mgD4d__0NUeC13eNDZ6aFg-1
-X-Mimecast-MFC-AGG-ID: mgD4d__0NUeC13eNDZ6aFg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D124195608F
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 09:55:11 +0000 (UTC)
-Received: from bighat.boston.devel.redhat.com (unknown [10.22.88.6])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C080B30001BE
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 09:55:10 +0000 (UTC)
-From: Steve Dickson <steved@redhat.com>
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] nfsdcltrack related manpage and configure file cleanup
-Date: Sat, 11 Jan 2025 04:55:09 -0500
-Message-ID: <20250111095509.61461-1-steved@redhat.com>
+	s=arc-20240116; t=1736598625; c=relaxed/simple;
+	bh=SN+JtzR5Zjw5ToHVHy/il+sAW7PuV1I57N7r1/cDFu4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C+FtPYJJx0m5YqWCXEWo6JXsuThkM229p1w6CvbIzSDXyV98v1Tc+ch6joawwQo/+FtFPRx4FqND12m11NvVsVQF/Ol11g4NyPo6co2TCBVpycjw1USzMXWpL+rmDQmhA5yFk1VEbHVPU41k8yY8L/T/1jebyAwq3H/Kxay3jXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQFeiC/V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1E5C4CED2;
+	Sat, 11 Jan 2025 12:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736598625;
+	bh=SN+JtzR5Zjw5ToHVHy/il+sAW7PuV1I57N7r1/cDFu4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sQFeiC/V9L/ooIVbLX7GPyN1c3Un6inAn9FXirUP+FbRIiG9inEnIJYn7xJBhx9ds
+	 oZGX6U4h4qTJTIn87H+XF6izst4bwml7LyD7fOWWSMAhdvd2zJbFS6V0aYpXZtjAnu
+	 ayEn+hOR4EL4D7c2wNVSb35Hbj0yoLxhDa+O10ssG44jomsnX5U4itnm8exsgkxDPK
+	 XjQGm/Diro7FqLOPdzPLY5l4+R+qNMSA6Qjqlp0+Dk/P5sHqrruboxPIGwdI+/oQCq
+	 Xbueycg+iu6gBW9LXVRxAbR2iSrk5G+hQAwELbfeFRIYRXThn1LjZKzYv1osns7Pur
+	 YbTl5jUZep2zw==
+Message-ID: <6553ee0f1fd57c64db76333efb47fca007f61693.camel@kernel.org>
+Subject: Re: [nfs-utils PATCH v2 0/2] nfsdctl version handling fixes
+From: Jeff Layton <jlayton@kernel.org>
+To: Scott Mayhew <smayhew@redhat.com>, steved@redhat.com
+Cc: yoyang@redhat.com, linux-nfs@vger.kernel.org
+Date: Sat, 11 Jan 2025 07:30:23 -0500
+In-Reply-To: <20250110201746.869995-1-smayhew@redhat.com>
+References: <20250110201746.869995-1-smayhew@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Fixes: https://issues.redhat.com/browse/RHEL-73500
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- nfs.conf             |  4 ----
- systemd/nfs.conf.man | 14 --------------
- 2 files changed, 18 deletions(-)
+On Fri, 2025-01-10 at 15:17 -0500, Scott Mayhew wrote:
+> Two changes in how nfsdctl does version handling.  The first patch makes
+> the 'nfsdctl version' command behave according to the man page for w.r.t
+> handling +4/-4, e.g.
+>=20
+> # utils/nfsdctl/nfsdctl
+> nfsdctl> threads 0
+> nfsdctl> version
+> +3.0 +4.0 +4.1 +4.2
+> nfsdctl> version -4
+> nfsdctl> version
+> +3.0 -4.0 -4.1 -4.2
+> nfsdctl> version +4
+> nfsdctl> version
+> +3.0 +4.0 +4.1 +4.2
+> nfsdctl> version -4 +4.2
+> nfsdctl> version
+> +3.0 -4.0 -4.1 +4.2
+> nfsdctl> ^D
+>=20
+> The second patch makes nfsdctl's handling of the nfsd version options in
+> nfs.conf behave like rpc.nfsd's.  This is important since the systemd
+> service file will fall back to rpc.nfsd if nfsdctl fails.  I'll send a
+> test script and test results in a followup email.
+>=20
+> -Scott
+>=20
+> Scott Mayhew (2):
+>   nfsdctl: tweak the version subcommand behavior
+>   nfsdctl: tweak the nfs.conf version handling
+>=20
+>  utils/nfsdctl/nfsdctl.c | 69 +++++++++++++++++++++++++++++++++++------
+>  1 file changed, 59 insertions(+), 10 deletions(-)
+>=20
 
-diff --git a/nfs.conf b/nfs.conf
-index 087d7372..3cca68c3 100644
---- a/nfs.conf
-+++ b/nfs.conf
-@@ -60,10 +60,6 @@
- # debug=0
- # storagedir=/var/lib/nfs/nfsdcld
- #
--[nfsdcltrack]
--# debug=0
--# storagedir=/var/lib/nfs/nfsdcltrack
--#
- [nfsd]
- # debug=0
- # threads=16
-diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index d03fc887..e6a84a97 100644
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -158,19 +158,6 @@ is equivalent to providing the
- .B \-\-log\-auth
- option.
- 
--.TP
--.B nfsdcltrack
--Recognized values:
--.BR storagedir .
--
--The
--.B nfsdcltrack
--program is run directly by the Linux kernel and there is no
--opportunity to provide command line arguments, so the configuration
--file is the only way to configure this program.  See
--.BR nfsdcltrack (8)
--for details.
--
- .TP
- .B nfsd
- Recognized values:
-@@ -329,7 +316,6 @@ for deatils.
- Various configuration files read in order.  Later settings override
- earlier settings.
- .SH SEE ALSO
--.BR nfsdcltrack (8),
- .BR rpc.nfsd (8),
- .BR rpc.mountd (8),
- .BR nfsmount.conf (5).
--- 
-2.47.1
+LGTM!
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
