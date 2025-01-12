@@ -1,114 +1,122 @@
-Return-Path: <linux-nfs+bounces-9143-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9144-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 817ECA0A61B
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 22:17:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AA05A0A840
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jan 2025 11:36:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C880B7A2258
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jan 2025 21:17:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20B433A8230
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jan 2025 10:36:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4001B87C4;
-	Sat, 11 Jan 2025 21:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE871A8415;
+	Sun, 12 Jan 2025 10:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsF4e6UY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goh6LFI0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577D279D2
-	for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 21:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629D719E968
+	for <linux-nfs@vger.kernel.org>; Sun, 12 Jan 2025 10:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736630256; cv=none; b=ESMukRjqgQfTuR8RxjBzhcSHHsGXIxHnbMOmZFUjAoEs+2sUVmqr5XDihBqKa5zGU3KLSg7S5RHxBZ9yBocGEyGt/NHg6A74V9vcHYKNimL8xUQzVm/gzo16Sgmh+dKyz6kFOUDPYkC6mOapEBzzJNrmaVc+Ws92Esh/TBcBZZ8=
+	t=1736678210; cv=none; b=YUedG0EtayC0bWv01qB0PgT9teB4aDMtlqF+bI17WaIRMxpW3q/W965WAfJqTicUFHXgvP62jU1XPkQide0qDTJq2OcvldvIBAbIhf+aisNI9TGsOzo2Y12qO2EhFlAv8APEKb6YWrbHaoSgk4T1Wj6CA2t7G8quQQlRve7q/zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736630256; c=relaxed/simple;
-	bh=uEsaLxosfO1bHwzS1JH1VWhLh8MPsSEm+jG+cVRtZAQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=shqPE/ULfPvDpg4oMHGqTQkLqsBgA53+eO2gOBO5x5DukJO2NWrch/wXwHaejL4gYKwT7ku5vnknql0wFZv2Gt6udESKefmvC12O4PJs3M9bTmykUHcWd9H6u00dk1/2an4bzMP7h/JMpishyiBVJQCqfHUZcdaY0MfvOTequ2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WsF4e6UY; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8e52so5157030a12.1
-        for <linux-nfs@vger.kernel.org>; Sat, 11 Jan 2025 13:17:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736630254; x=1737235054; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uEsaLxosfO1bHwzS1JH1VWhLh8MPsSEm+jG+cVRtZAQ=;
-        b=WsF4e6UYvNAmOjYEOuwLQjA4b4sDkoKAk8VGHQSFdt5Y8xtE2pUqp38ZoscM+zkvOK
-         izt7DYtyHxeSCrbmNb8LWe/g92W+po8c15lg8f7mkpdThDCEJ5qDmG9ej9ppRibu2QzD
-         x7yfcm0DcgWUhSTe9XK9nNZbeGC/Des0elWiuo+UDwDeHfyGVehInBSMrUWXAwl9xhv7
-         AmhYzzIr3b5DNUJYote2BcI4CMLxLqONXXJs+2DKsxMlsm1aXfjEQAvAXTwo4UDdAYk+
-         6WdjbEtRTYGQq1bMMsDQMNrFBlawzrxQ1RBJZ9spgRJyCQemnJXhLTsrA6oNZ0WTg+Kh
-         s6lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736630254; x=1737235054;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uEsaLxosfO1bHwzS1JH1VWhLh8MPsSEm+jG+cVRtZAQ=;
-        b=vdt/wkKK1IdZ2C45kjwh+imtrVq5DQEG/k7UOY0mB9WxMK7W/9XczpuECVizVQ+oOJ
-         x0gGutXA+pwSCNANJEuPMlCCYNin3HRuCrBJ1jo9UrqbTBmFZsCHQa6M39WyMgzCZiHp
-         ++pyrPFiH+ZCZGOCmavUzeThNwGlBwrMVIdqn+p5Q0XS9KjfYm4Er5YcxruFesis9Y13
-         Y8+0nRJoNf/u1Ebqb7ncez+OmfGN1ItAzpUkeNK05TErm2ZfoiX5GLScvEFMvVG0v7Su
-         NFzMDiGFLgKVSp8Y8vibKKwk5DDvj2QLViGCupFRZs7ml54cE+pXrLzAfJQ3WZx9+bAA
-         HL7w==
-X-Gm-Message-State: AOJu0YyHrAPKI0LIAvopJ9DfpsOARSSIBs0sG92aqeHJ7tpqinV10yvc
-	+Q9lTU8VOxpUueZtWv7nBoXmvtyjcBREZzskebzrjM5H3FRQcvOZRVexO2daQ/OdisewvZDZ/0m
-	8Y9miN/1Jdx53bbNLCoGKtDcls0Ga
-X-Gm-Gg: ASbGncuo/cw2KdcgPI/q5zDnRgSi1LxWCj9adnVTa8XXl++YNareCw5f+nIklrScRiB
-	3P22Ur4PdXYUX4tbhlgF70tb15CUSn2Duy8FO0KP0FOAYYy4AMjRQVB2VbXX3ok9HDKdyLEM=
-X-Google-Smtp-Source: AGHT+IG2StgbmBOOtUuJS8+zNaLDj9AXiHQdhfFIZQ5tKd1GjghlEPZCOf1YXZ68k5aKA2v6BP1KRPSSjt44nlOgz54=
-X-Received: by 2002:a05:6402:50c6:b0:5d0:b2c8:8d04 with SMTP id
- 4fb4d7f45d1cf-5d972e147famr15733600a12.18.1736630253157; Sat, 11 Jan 2025
- 13:17:33 -0800 (PST)
+	s=arc-20240116; t=1736678210; c=relaxed/simple;
+	bh=REgFctRGG2i+aWyJ1ZRxJ6TwTZBV1cOPjFQdvPEnzK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mziqdLOPSk3ZIutYqPi8wSUsNG3+Y1Ke5RNj9Oc/wFu1GeF95x6yIAfq9nWO56VFBu1ODpBhUjRhaaZJmn/7tXCm9e5a6eMnHHyEtlk8DWi5URUFHRMXssLoOr9roN+PKVb0y4guqJXm418bMQmniOiiGnqVokPhlhyfEg/PtLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=goh6LFI0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736678207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sjZIf+MqzlX40O8hdTacUc+jXg2UIC0x4trWd6422To=;
+	b=goh6LFI0BorCJNDiSrzjPNHTJPbuCbid6WOTNGhx7jU99Bm5zzdEvIo168uYZTDDpGuBp7
+	UnSKNw3LiOYAUyn9/jY+Hj8q5VKzPF7uEs6j9R1lDkNz92IQ3905eGmtInMMCNrgQLCm/E
+	LGMY9P8MDhWMPusJynLhGLHCy3iH3k8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-543-0DSN8VPiNBSr_DA-YHIeIA-1; Sun,
+ 12 Jan 2025 05:36:43 -0500
+X-MC-Unique: 0DSN8VPiNBSr_DA-YHIeIA-1
+X-Mimecast-MFC-AGG-ID: 0DSN8VPiNBSr_DA-YHIeIA
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2F3A19560BB;
+	Sun, 12 Jan 2025 10:36:36 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.4])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5808B195608A;
+	Sun, 12 Jan 2025 10:36:31 +0000 (UTC)
+Date: Sun, 12 Jan 2025 18:36:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+	io-uring@vger.kernel.org, bpf@vger.kernel.org,
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
+Message-ID: <Z4ObK5hkQ7qjWgbf@MiWiFi-R3L-srv>
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALWcw=EPJk3XFNfXG95v4A3Dq7=spqh5aLYru05r9Lm-eVep6w@mail.gmail.com>
-In-Reply-To: <CALWcw=EPJk3XFNfXG95v4A3Dq7=spqh5aLYru05r9Lm-eVep6w@mail.gmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sat, 11 Jan 2025 13:17:13 -0800
-X-Gm-Features: AbW1kvYJLObqVOlSg6XFeRKIIsTLhCDA3OcKmte122vtKpvSt50SO4Dnjx8lmkA
-Message-ID: <CAM5tNy5QamjN6xab3vESQmZJGD2+JgjXvn+qQit=AncG=fTPGg@mail.gmail.com>
-Subject: Re: BUG: Linux 6.12 nfsd does not support FATTR4_WORD2_CHANGE_ATTR_TYPE
- in NFSv4.2 mode!!
-To: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Sat, Jan 11, 2025 at 12:08=E2=80=AFPM Takeshi Nishimura
-<takeshi.nishimura.linux@gmail.com> wrote:
->
-> Dear list,
->
-> We tried to use FATTR4_WORD2_CHANGE_ATTR_TYPE with Linux 6.12 nfsd,
-> but the server does not set that attribute, while it is mandatory for
-> NFSv4.2.
-My understand is that nothing is mandatory in NFSv4.2. Everything is consid=
-ered
-optional extensions. I doubt any extant 4.2 server supports all of the opti=
-onal
-extensions in NFSv4.2.
+On 01/10/25 at 03:16pm, Joel Granados wrote:
+...snip...
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index c0caa14880c3..71b0809e06d6 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -925,7 +925,7 @@ static int kexec_limit_handler(const struct ctl_table *table, int write,
+>  	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
+>  }
+>  
+> -static struct ctl_table kexec_core_sysctls[] = {
+> +static const struct ctl_table kexec_core_sysctls[] = {
+>  	{
+>  		.procname	= "kexec_load_disabled",
+>  		.data		= &kexec_load_disabled,
 
-> Could this please be fixed?
-I'll leave if/when this optional extension will be added to the Linux
-knfsd to the
-Linux folk.
+For the kexec/kdump part,
 
-rick
+Acked-by: Baoquan He <bhe@redhat.com>
+......
 
-> --
-> Internationalization&localization dev / =E5=A4=A7=E9=98=AA=E5=A4=A7=E5=AD=
-=A6
-> Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>
->
 
