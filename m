@@ -1,128 +1,171 @@
-Return-Path: <linux-nfs+bounces-9170-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9171-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6A91A0BC18
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 16:33:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B24FA0BD2D
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 17:23:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFCD7163AF8
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 15:33:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 844DB18891FB
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 16:23:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BFD21FBBE6;
-	Mon, 13 Jan 2025 15:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A3D614A4D1;
+	Mon, 13 Jan 2025 16:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SABFvM3r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DuvsPHas"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E241FBBE7
-	for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 15:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D404814F115
+	for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 16:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736782373; cv=none; b=fBMHD/5LfCAhEoSN19/wdpX4RVFn4FNiUaAFOVcMr2cfQP8CSyM2apuer9iYN/MYhGx6VwHV4uof27nI67fuJ0Seh7cMtqlMYQomtm4cwZtM2OENU/oPBtAwJKdf3782SzgGfmBTfboKIihSxgDrbo/GgaYb75rdkTS1ht7mfIc=
+	t=1736785396; cv=none; b=QPGreUCbFLXQXzdnGhcRN0THnePh5LnYiAM74s1p1g39PHx6b/MueZ1sIhu4J6N5i6D37HH8HjQQ9Q0nPfaDJyq2q6C2ZTBjaZT+MygoiRdxa3KaQS2z3HZvFPGsb7ZhcIDRhmlrUlNF1cbDaiUzk7vxXMXd9V8vFIOGbCFgOLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736782373; c=relaxed/simple;
-	bh=Z09/2VuvQ3zxAG1O6Wkbe4RdL66Mg44UjtK5uMkgSvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WwIszeEsjRZMARv+ryo1kl/gRCrourir/5TjQLQCr6oEEDImKjy5V8MZTiQgkKpbnjOf0rzlG96u62wTZazF73xuNyPHYB4pfMahhP0lhirZdKWaseifJPvn6jUhX4NhDFWmJA9WFjAZhVj5CWrr0jZXH9L449qk1O9YMGITdTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SABFvM3r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00782C4CEE4;
-	Mon, 13 Jan 2025 15:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736782372;
-	bh=Z09/2VuvQ3zxAG1O6Wkbe4RdL66Mg44UjtK5uMkgSvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SABFvM3reoUizAegEU0Z4bkac1SqzyonHhIVpBjdw6QYfaPftJdqk3OQWz+KeFh95
-	 6I08aMHSLzMD64lGwWbNqZZEybXSd5nUZWeefWTnL4MZ/1XvWABefkHQLgUv4nXUuC
-	 6eTId4BAjaizjk1mr5fKvY6ztfIheUffosGzXQYVoYUO5D2qgWyD5tr8mIW3pPwacq
-	 +lDtRDGiyufXKMEZ9GGvctK5Q0OtPwErT1stPieQRi/nhPIfpUjDpyaVVAKRkXQk+Z
-	 alC6vMqn519CzOUWTc8QvfyE2mk1L3KX6lGxG4ZFCNoWqDJyaOec522m2H0kJO5HAN
-	 BjUps8iMqGQMQ==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 7/7] NFS: Refactor trace_nfs4_offload_cancel
-Date: Mon, 13 Jan 2025 10:32:42 -0500
-Message-ID: <20250113153235.48706-16-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250113153235.48706-9-cel@kernel.org>
-References: <20250113153235.48706-9-cel@kernel.org>
+	s=arc-20240116; t=1736785396; c=relaxed/simple;
+	bh=yMp1XJCl0/XCAdeCTLUMC31lemSnUmSoXfcA85zWj1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jeWRlXfa2kvJ6jeZjrUH1RJGIEYWWWMASGppDXlYfLdTSauh8vMg1+CcLb3rE3BVBpzv2cdRKUasheK3RBqeASq2gK04Up3dyGsqAnVYA+f53XHqnSDiWIY/u6c9ghd47gVmSzxM4dZBpNsiUBvwAx1SvWtKAp6BxMeb+PIigWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DuvsPHas; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736785393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yrFiIBZe4Dvbi4gXBRnaokjzuIGz9NXd+OJcks+UTC8=;
+	b=DuvsPHaswKZ6edJUMBb5C7B7vXi0g8AFbmVU+IJsjDLIfD8bmr30PIpJ4MUIIk7FYarT9h
+	7K3Psnp5Y0A8aX2qChq4d9hbmmJzaJMjWtDeiySz45R/mH3Lv03kaclreRmYIH2ZsPnMIq
+	OE3OgB0KvYxTeGRpCtjYk7OQiDbmExY=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-jgbJhD6vMIW6LbQmm6QohQ-1; Mon, 13 Jan 2025 11:23:12 -0500
+X-MC-Unique: jgbJhD6vMIW6LbQmm6QohQ-1
+X-Mimecast-MFC-AGG-ID: jgbJhD6vMIW6LbQmm6QohQ
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2166f9f52fbso137486485ad.2
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 08:23:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736785390; x=1737390190;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yrFiIBZe4Dvbi4gXBRnaokjzuIGz9NXd+OJcks+UTC8=;
+        b=I4lVCMBNTfUnPurcVaQJnGS6W43WlKsZmdSmN3zSQDApxab7R8uxeoES4sKMVr3xOn
+         qLvT8EaYT2NTvPIx0B37z/hiFq+SgE5QvgjX0u/rfo36SzVFqYSVhJs6/ymxhYWH6YW/
+         gW2suN0HAj1yoFOcsnik/0bbzlf5Fbhg4GqDK9OKQDki/Geds90rcVoOcjJq4Br7Nsbr
+         IacHNDs+AAxKqxV7SgM/ARbuF59/MBU3LE+yyKdil1GwODZCZbk8+zqUvEYaVXq3iUC5
+         mNrDRvKv1qq6kSw8PoVklVpQuWlR24pfrqAzZCSjPI3WuTP6ETuEJsv4ltdxaqv4prE0
+         uMOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOaCSiCpO0pGsG867e38idj9YNRwC6jcoykOfMY6TAKl/UgPKaARkTpiYPgdvwDea9riFH1ozn9uY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvDer1llcd7axTX02e/CI/bWXiOrrnH564n9181ODpG1iWapBy
+	hv+B+fDUAijq17W0+v51zwRvrg1APQSqXRqOfaUP6hjwl2mDhkShYJbEW4SW3Xxp3yWQ1/ZSFeE
+	RVsxOjsruR0C7yCXDCdoxXErXRhi0wSXVXKrdTinoSQsU4gbcFPWD3gXMh0x2SAImGg==
+X-Gm-Gg: ASbGnct3EY2IpxNLvlzT3puC8EZt6cG0NJrSbpOHGUVIn7wrbjdojunkP50ZbdPrp4A
+	Cgm1PeUwNt41nzWhsyRBfAMIBmXd1Zrn6YxjqeKh++QfMOK7yGwsLY+LBjqhYT4cK4LtU+b47Dr
+	NYq2+aFj/DmPyK3cdO5D6hlBDs6rCvvj40gkAed8bfVBZneL5gnJ3rTvrAK4317FJPNSVELKKgF
+	a8LeFject+ayaCqg+QT/VGQWF8wzUmc84kirtdAjVJ+86D/0hGQLsdF
+X-Received: by 2002:a17:903:2452:b0:215:63a0:b58c with SMTP id d9443c01a7336-21a83fdecffmr330362195ad.46.1736785390336;
+        Mon, 13 Jan 2025 08:23:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGFEa4PFqk1EpJ5l34jheTSjXXJC/t0aewM/GP4p08IU6s8zZuglSjDKFoZjRlmmkn1WD65Qw==
+X-Received: by 2002:a17:903:2452:b0:215:63a0:b58c with SMTP id d9443c01a7336-21a83fdecffmr330361845ad.46.1736785389965;
+        Mon, 13 Jan 2025 08:23:09 -0800 (PST)
+Received: from [172.31.1.150] ([70.109.132.27])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f25cc1esm54771215ad.213.2025.01.13.08.23.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2025 08:23:08 -0800 (PST)
+Message-ID: <2ac43d80-3623-4be6-8d3f-b2dffa485b12@redhat.com>
+Date: Mon, 13 Jan 2025 11:23:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1841; i=chuck.lever@oracle.com; h=from:subject; bh=lS7gLKxLV6e35cAwmz+7g8/4d/Vm+xpaV7ZAzDdK8gM=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBnhTIbh+yLG8krlIp/tYnQNbc5i47MlJlTzkCK0 MFrpBCdENuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCZ4UyGwAKCRAzarMzb2Z/ l7DmEACbXHKbJUvNn1FW38yJiZ/z34HRvk4sXArThUrZO4Tp0jSD3RMQy9Jkq8Etp/MOMwpB2/e 42yVtruJc+lSIPenP9A7BSkhuIxzyLX3dXLXpodeqC0/ImNu5GxQgdsbpcYw8I8KS44OUDPoT+4 IV0WIjFw2OUlnVLVhX2OckAMLAx9HPuCavgA649Yd2OB6oiMRACNPRRgyfLSlpeVud16zOjIual EPjOJUjxMcjwOcJ54zT/z8SEsq8/u/OkIx/k/J8PDFvbfBlFjIp4rF8mCGwxETGlWcslgQ3nIwr YmWqvboOU7ozp2EmS+HAj0XQ0l7yJXOf/+MLKLRAsvjwf212CXz61OE1bEr+jM+A7csdhXh6yCt E7p0QMd6UYPC49n1oZWHPQdeDa3LhhCun/qNikMWEb6RD+bUGoDnrtyKbREJG0pjLAj+E/MdBtH xCWF8/JhQV0Jrs4JZTdTk63ES6Dc8hpKuMn5uWVW5NBszbi905m7a5X6NLqcvFaZYf6SmHNJ5D7 1FwOQHDXLJtmjt/tQEOnr9PfTUCdZ5dhRsze5TiF83PRHUlskt0cfj9jfHYMvJfVazAt8xnEA4X MNN67mHgmLrmcUg8Dqrm5LGoojSX8zmBr5tKQ7Zf2ZFJHFQwZScYFnMNXmLAnBwyU3jJtO3RCfb gsdSSZqzXE8ruaQ==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH NFS-UTILS 10/10] rpcctl: Add support for `rpcctl switch
+ add-xprt`
+To: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+References: <20250108213726.260664-1-anna@kernel.org>
+ <20250108213726.260664-11-anna@kernel.org>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20250108213726.260664-11-anna@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hey Anna,
 
-Add a trace_nfs4_offload_status trace point that looks just like
-trace_nfs4_offload_cancel. Promote that event to an event class to
-avoid duplicating code.
+On 1/8/25 4:37 PM, Anna Schumaker wrote:
+> From: Anna Schumaker <anna.schumaker@oracle.com>
+> 
+> This is used to add an xprt to the switch at runtime.
+> 
+> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+> ---
+>   tools/rpcctl/rpcctl.man |  4 ++++
+>   tools/rpcctl/rpcctl.py  | 11 +++++++++++
+>   2 files changed, 15 insertions(+)
+> 
+> diff --git a/tools/rpcctl/rpcctl.man b/tools/rpcctl/rpcctl.man
+> index b87ba0df41c0..2ee168c8f3c5 100644
+> --- a/tools/rpcctl/rpcctl.man
+> +++ b/tools/rpcctl/rpcctl.man
+> @@ -12,6 +12,7 @@ rpcctl \- Displays SunRPC connection information
+>   .BR "rpcctl client show " "\fR[ \fB\-h \f| \fB\-\-help \fR] [ \fIXPRT \fR]"
+>   .P
+>   .BR "rpcctl switch" " \fR[ \fB\-h \fR| \fB\-\-help \fR] { \fBset \fR| \fBshow \fR}"
+> +.BR "rpcctl switch add-xprt" " \fR[ \fB\-h \fR| \fB\-\-help \fR] [ \fISWITCH \fR]"
+>   .BR "rpcctl switch set" " \fR[ \fB\-h \fR| \fB\-\-help \fR] \fISWITCH \fBdstaddr \fINEWADDR"
+>   .BR "rpcctl switch show" " \fR[ \fB\-h \fR| \fB\-\-help \fR] [ \fISWITCH \fR]"
+>   .P
+> @@ -29,6 +30,9 @@ Show detailed information about the RPC clients on this system.
+>   If \fICLIENT \fRwas provided, then only show information about a single RPC client.
+>   .P
+>   .SS rpcctl switch \fR- \fBCommands operating on groups of transports
+> +.IP "\fBadd-xprt \fISWITCH"
+> +Add an aditional transport to the \fISWITCH\fR.
+> +Note that the new transport will take its values from the "main" transport.
+>   .IP "\fBset \fISWITCH \fBdstaddr \fINEWADDR"
+>   Change the destination address of all transports in the \fISWITCH \fRto \fINEWADDR\fR.
+>   \fINEWADDR \fRcan be an IP address, DNS name, or anything else resolvable by \fBgethostbyname\fR(3).
+> diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
+> index 20f90d6ca796..8722c259e909 100755
+> --- a/tools/rpcctl/rpcctl.py
+> +++ b/tools/rpcctl/rpcctl.py
+> @@ -223,6 +223,12 @@ class XprtSwitch:
+>           parser.set_defaults(func=XprtSwitch.show, switch=None)
+>           subparser = parser.add_subparsers()
+>   
+> +        add = subparser.add_parser("add-xprt",
+> +                                   help="Add an xprt to the switch")
+> +        add.add_argument("switch", metavar="SWITCH", nargs=1,
+> +                         help="Name of a specific xprt switch to modify")
+> +        add.set_defaults(func=XprtSwitch.add_xprt)
+> +
+>           show = subparser.add_parser("show", help="Show xprt switches")
+>           show.add_argument("switch", metavar="SWITCH", nargs='?',
+>                             help="Name of a specific switch to show")
+> @@ -246,6 +252,11 @@ class XprtSwitch:
+>               return [XprtSwitch(xprt_switches / name)]
+>           return [XprtSwitch(f) for f in sorted(xprt_switches.iterdir())]
+>   
+> +    def add_xprt(args):
+> +        """Handle the `rpcctl switch add-xprt` command."""
+> +        for switch in XprtSwitch.get_by_name(args.switch[0]):
+> +            write_sysfs_file(switch.path / "xprt_switch_add_xprt", "1")
+> +
+>       def show(args):
+>           """Handle the `rpcctl switch show` command."""
+>           for switch in XprtSwitch.get_by_name(args.switch):
 
-An alternative approach would be to expand trace_nfs4_offload_status
-to report more of the actual OFFLOAD_STATUS result.
+Quick Question... Is this patch dependent on the previous
+posted kernel patches (aka NFS & SUNRPC Sysfs Improvements)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfs/nfs42proc.c |  1 +
- fs/nfs/nfs4trace.h | 11 ++++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 4baa66cd966a..9dbb93dc3839 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -648,6 +648,7 @@ _nfs42_proc_offload_status(struct nfs_server *server, struct file *file,
- 	status = nfs4_call_sync(server->client, server, &msg,
- 				&data->args.osa_seq_args,
- 				&data->res.osr_seq_res, 1);
-+	trace_nfs4_offload_status(&data->args, status);
- 	switch (status) {
- 	case 0:
- 		break;
-diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 22c973316f0b..bc67fe6801b1 100644
---- a/fs/nfs/nfs4trace.h
-+++ b/fs/nfs/nfs4trace.h
-@@ -2608,7 +2608,7 @@ TRACE_EVENT(nfs4_copy_notify,
- 		)
- );
- 
--TRACE_EVENT(nfs4_offload_cancel,
-+DECLARE_EVENT_CLASS(nfs4_offload_class,
- 		TP_PROTO(
- 			const struct nfs42_offload_status_args *args,
- 			int error
-@@ -2640,6 +2640,15 @@ TRACE_EVENT(nfs4_offload_cancel,
- 			__entry->stateid_seq, __entry->stateid_hash
- 		)
- );
-+#define DEFINE_NFS4_OFFLOAD_EVENT(name) \
-+	DEFINE_EVENT(nfs4_offload_class, name,  \
-+			TP_PROTO( \
-+				const struct nfs42_offload_status_args *args, \
-+				int error \
-+			), \
-+			TP_ARGS(args, error))
-+DEFINE_NFS4_OFFLOAD_EVENT(nfs4_offload_cancel);
-+DEFINE_NFS4_OFFLOAD_EVENT(nfs4_offload_status);
- 
- DECLARE_EVENT_CLASS(nfs4_xattr_event,
- 		TP_PROTO(
--- 
-2.47.0
+steved.
 
 
