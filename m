@@ -1,175 +1,468 @@
-Return-Path: <linux-nfs+bounces-9154-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9155-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E5B0A0B6F7
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 13:29:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25C0AA0B6FD
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 13:30:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9FB63A7170
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 12:29:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E767E3A375C
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 12:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7055B231A37;
-	Mon, 13 Jan 2025 12:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6659622AE7B;
+	Mon, 13 Jan 2025 12:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+x3hdll"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IvCzjAda"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A70A230D3D
-	for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 12:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5891BEF7A
+	for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 12:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736771249; cv=none; b=hK13pL17aFuTZpH+9qAuv8O97RWKNIKOPxLx7j25tsfJ2WgXMeJDkIRqXLOncpdpR8F22W5L3mQB+8Q/tC0PBrn0zTb0gzUaAz7r+SzKBAF4fecWj40MEizAGa4gOBVowHEnggiubMovbxqPak3tpCkl0MnHdb5uaUz7EijRn2o=
+	t=1736771432; cv=none; b=gcFvpgHaIY8ckK4SxVRcuXDOKnG9nvdkfDFhkyXTWDLDUHUISGwoBewXNoh2izSDlVtvAl3VYb7FbZK9zC0QteWjZf2BNjaQyboMm766mu5D+p5aj4DJbb2O+ffjxC59wJy8sD+fNO35qen+caGZz16niQ2IMqczpsUsTaDqlEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736771249; c=relaxed/simple;
-	bh=AtLcId2gCfmvdYSp9dgwHVgrgXQ0UodBgoBzkkD49u4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V2Ulz+4tog0zGbit37k/m2sNIioHZC7epTfbKP7HMLubmI5Q4uw3m0x4V065MSN7mxWrOCciUfkGuZkxFXGiHvcTwnUz89O1cVkH4+AXvAcrJYU/Mzz/B6DsZ2tPA230aaDiSDHJH2Chx55xIep71ndyE9S/zl8MRpsMrHbg3QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+x3hdll; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D37DC4CEE2;
-	Mon, 13 Jan 2025 12:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736771245;
-	bh=AtLcId2gCfmvdYSp9dgwHVgrgXQ0UodBgoBzkkD49u4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=s+x3hdllaAePJDRRB8B2AnLarpeukCR/o+K+NKx0LzBw3lSEsTrq83O9R9Dfb33Rc
-	 N2m23dUMsdRyuqESbfHoBIHNqJAy7LmS3fzPXEPvnBXBVMUSDHetBnT/lYQHTioxTy
-	 kexcvomfKb76YNlNwna4aFVkbDi6pInsBcJ6Rg9fHLED9pdBZ8lBmCLrnjLbFFwZOY
-	 C+x0Xt9q1trstX6AWLEAqS/llPdZmkT9cGer2pe5iCJzj1ESywn4pX6ZqJlNWkT7L1
-	 ootebqQbrFfiS7WZEjG24FJABsaeOapoRH4hii+SKQGCoy1yFA11QEeKSDHuuXkjty
-	 cpmZIq0/8jiuw==
-Message-ID: <e94cda033ea733f5aca11538a97bec6bc1608165.camel@kernel.org>
-Subject: Re: BUG: Linux 6.12 nfsd does not support
- FATTR4_WORD2_CHANGE_ATTR_TYPE in NFSv4.2 mode!!
-From: Jeff Layton <jlayton@kernel.org>
-To: Rick Macklem <rick.macklem@gmail.com>, Takeshi Nishimura
-	 <takeshi.nishimura.linux@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date: Mon, 13 Jan 2025 07:27:24 -0500
-In-Reply-To: <CAM5tNy5QamjN6xab3vESQmZJGD2+JgjXvn+qQit=AncG=fTPGg@mail.gmail.com>
-References: 
-	<CALWcw=EPJk3XFNfXG95v4A3Dq7=spqh5aLYru05r9Lm-eVep6w@mail.gmail.com>
-	 <CAM5tNy5QamjN6xab3vESQmZJGD2+JgjXvn+qQit=AncG=fTPGg@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	s=arc-20240116; t=1736771432; c=relaxed/simple;
+	bh=luJk1Glw8Fce36tE+Gk4gPmvIEpPqImQDIFnRJ7p32Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qq+a2DOW/dfSqpSNixySyZB3RsYJBbE1qtX06Yb0H6cwUhn3YsmWIDCvaTB7fJAdW9duBCqdjSiJjhlvJEp0F7q7jc01Q2VZudWaq2doldMHAbEUpVOXdazx64wpkp6nKg6kZmAVHl9Z3RSFd9B9poeP64BtAVxgF6bwcosAINw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IvCzjAda; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d90a5581fcso7118843a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jan 2025 04:30:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736771428; x=1737376228; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KugaIDcnl9/pyX7Gc5nqBp2entqxZORVfGMf0jmmSlc=;
+        b=IvCzjAdaRTgTCB0auc6PXiGN+r0npLgtrWlZ5lJj2j53pkRLUnVUVwyhYp9r7HjBvh
+         6Grszs+evo6tdrWNVtMM0uf4DDsjLpX71CdstoI0JfcAVF94xf7T1zIGlXSsxEL9ET1H
+         gEeBzz5iW9B6VbrkDlsHIE7eEIebGJJCc8EFgMa4mSjOf8Zvq6/TT1b7qBkysGzr5M6b
+         V6eIV/vb4oLI4eyUWQcB2q3zXotZfWfqelzYoTKoNk4fZOclRZBp0BB6Gam5rruaut5A
+         rq26Cn2JiWfL2ZRnVZBBLnsQ93/0tsLst1hZlJHBj2GGmknNmrwxGmf8sjQzpKqYw7+z
+         i5Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736771428; x=1737376228;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KugaIDcnl9/pyX7Gc5nqBp2entqxZORVfGMf0jmmSlc=;
+        b=YPTpq3BWyrWOEEg+ymTSr2/jmFj7SCAP3RO3lOOsQFMdvbge6GK6WxS00lniSR33OT
+         ggJEdT+UjPasJMMKkYLqu6Qc+/wbTN41TSfrqvDbBf7PWOkQmYoLzAI5ndSJPgWb63ug
+         n88fQjtmWMhVdDL8mBVprrt2zBKwBhbom1Tddf3LAyyDoHXzb4A34O1uyo3DBfDeDniI
+         mVmXrRUVtFekX3uUnGZPDdgl8ANFOaHy2zhbOxMLppIVBBef4PiSuXqyyTl0QXLUx/RK
+         3kfh+oom7/XEeNDnWA26gxpkG4kxAih8TeN1/avWAbKq1cE6rC3VrmRt020b23L4+iAq
+         jPkA==
+X-Gm-Message-State: AOJu0YzHnyK19Oic9+1nj8gdlroWSdr//6z0wMD8Yrd1fRPTQAwS/6UV
+	ej3SQN9CQzn1255FlgWnaDkeScmnTIe21Ly81FZ8wmFttyXb9f0rkIQIGVWjgRjsqh8jYtXfVow
+	tAPQotzwl1YUZ7M70rz9fGXtD4r5BPSNANV4=
+X-Gm-Gg: ASbGncv0CxnDxB1bjhOJWbbxCOv/Wp7dunJHy+kFqQRRubMm0t7EPmCmgbHw8krztkm
+	+Zrl6rSs7PjcumDeAbOUTQ+Zno4eaCygfp7ULchfQ
+X-Google-Smtp-Source: AGHT+IEjWcxWzdAQ0J2fWg1fXfS0qLCXNF+Sfn+8dE3uUq9d/v7FJ8NcDV8MDHnVpyUOgq93ZjBxezKATHprH8kssqA=
+X-Received: by 2002:a05:6402:26d2:b0:5d2:2768:4ee9 with SMTP id
+ 4fb4d7f45d1cf-5d972e15c99mr19812784a12.15.1736771427625; Mon, 13 Jan 2025
+ 04:30:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAPwv0JnSQ=hsmUMy0VY-8k+dANBLNkJdFJ75q9EEE+Hj0XXB8A@mail.gmail.com>
+ <d54d71f7-9bdb-49a4-8687-563558eca95e@oracle.com> <CAPwv0J=oKBnCia_mmhm-tYLPqw03jO=LxfUbShSyXFp-mKET5A@mail.gmail.com>
+ <49654519-9166-4593-ac62-77400cebebb4@oracle.com> <CAPwv0J=ju3fZ8C_FFeDnzzKT-ppXaLCde64hQof3=g641Daudw@mail.gmail.com>
+ <365e7037-733b-40d7-8046-b19ef3d803a8@oracle.com>
+In-Reply-To: <365e7037-733b-40d7-8046-b19ef3d803a8@oracle.com>
+From: Rik Theys <rik.theys@gmail.com>
+Date: Mon, 13 Jan 2025 13:30:16 +0100
+X-Gm-Features: AbW1kvZA6M7EZUiWhFZyEv58VS71EcnN6UVzeosFaGBCTe-jWF4C_ZROh34XRXU
+Message-ID: <CAPwv0JmJErKaquZMApyUkpkFn9_x6C+32Dcfxeg0a4-=iR9wEQ@mail.gmail.com>
+Subject: Re: nfsd4 laundromat_main hung tasks
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2025-01-11 at 13:17 -0800, Rick Macklem wrote:
-> On Sat, Jan 11, 2025 at 12:08=E2=80=AFPM Takeshi Nishimura
-> <takeshi.nishimura.linux@gmail.com> wrote:
-> >=20
-> > Dear list,
-> >=20
-> > We tried to use FATTR4_WORD2_CHANGE_ATTR_TYPE with Linux 6.12 nfsd,
-> > but the server does not set that attribute, while it is mandatory for
-> > NFSv4.2.
-> My understand is that nothing is mandatory in NFSv4.2. Everything is cons=
-idered
-> optional extensions. I doubt any extant 4.2 server supports all of the op=
-tional
-> extensions in NFSv4.2.
->=20
+Hi,
 
-Correct. This attr is completely optional.
+On Sun, Jan 12, 2025 at 7:57=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+>
+> On 1/12/25 7:42 AM, Rik Theys wrote:
+> > Hi,
+> >
+> > On Fri, Jan 10, 2025 at 11:07=E2=80=AFPM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>
+> >> On 1/10/25 3:51 PM, Rik Theys wrote:
+> >>> Hi,
+> >>>
+> >>> Thanks for your prompt reply.
+> >>>
+> >>> On Fri, Jan 10, 2025 at 9:30=E2=80=AFPM Chuck Lever <chuck.lever@orac=
+le.com> wrote:
+> >>>>
+> >>>> On 1/10/25 2:49 PM, Rik Theys wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> Our Rocky 9 NFS server running the upstream 6.11.11 kernel is start=
+ing
+> >>>>> to log the following hung task messages:
+> >>>>>
+> >>>>> INFO: task kworker/u194:11:1677933 blocked for more than 215285 sec=
+onds.
+> >>>>>          Tainted: G        W   E      6.11.11-1.el9.esat.x86_64 #1
+> >>>>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this me=
+ssage.
+> >>>>> task:kworker/u194:11 state:D stack:0     pid:1677933 tgid:1677933
+> >>>>> ppid:2      flags:0x00004000
+> >>>>> Workqueue: nfsd4 laundromat_main [nfsd]
+> >>>>> Call Trace:
+> >>>>>     <TASK>
+> >>>>>     __schedule+0x21c/0x5d0
+> >>>>>     ? preempt_count_add+0x47/0xa0
+> >>>>>     schedule+0x26/0xa0
+> >>>>>     nfsd4_shutdown_callback+0xea/0x120 [nfsd]
+> >>>>>     ? __pfx_var_wake_function+0x10/0x10
+> >>>>>     __destroy_client+0x1f0/0x290 [nfsd]
+> >>>>>     nfs4_process_client_reaplist+0xa1/0x110 [nfsd]
+> >>>>>     nfs4_laundromat+0x126/0x7a0 [nfsd]
+> >>>>>     ? _raw_spin_unlock_irqrestore+0x23/0x40
+> >>>>>     laundromat_main+0x16/0x40 [nfsd]
+> >>>>>     process_one_work+0x179/0x390
+> >>>>>     worker_thread+0x239/0x340
+> >>>>>     ? __pfx_worker_thread+0x10/0x10
+> >>>>>     kthread+0xdb/0x110
+> >>>>>     ? __pfx_kthread+0x10/0x10
+> >>>>>     ret_from_fork+0x2d/0x50
+> >>>>>     ? __pfx_kthread+0x10/0x10
+> >>>>>     ret_from_fork_asm+0x1a/0x30
+> >>>>>     </TASK>
+> >>>>>
+> >>>>> If I read this correctly, it seems to be blocked on a callback
+> >>>>> operation during shutdown of a client connection?
+> >>>>>
+> >>>>> Is this a known issue that may be fixed in the 6.12.x kernel? Could
+> >>>>> the following commit be relevant?
+> >>>>
+> >>>> It is a known issue that we're just beginning to work. It's not
+> >>>> addressed in any kernel at the moment.
+> >>>>
+> >>>>
+> >>>>> 8dd91e8d31febf4d9cca3ae1bb4771d33ae7ee5a    nfsd: fix race between
+> >>>>> laundromat and free_stateid
+> >>>>>
+> >>>>> If I increase the hung_task_warnings sysctl and wait a few minutes,
+> >>>>> the hung task message appears again, so the issue is still present =
+on
+> >>>>> the system. How can I debug which client is causing this issue?
+> >>>>>
+> >>>>> Is there any other information I can provide?
+> >>>>
+> >>>> Yes. We badly need a simple reproducer for this issue so that we
+> >>>> can test and confirm that it is fixed before requesting that any
+> >>>> fix is merged.
+> >>>
+> >>> Unfortunately, we've been unable to reliably reproduce the issue on
+> >>> our test systems. Sometimes the server works fine for weeks, and
+> >>> sometimes these (or other) issues pop up within hours. Similar to the
+> >>> users from the mentioned thread, we let a few hundred engineers and
+> >>> students loose. Our clients are both EL8/9 based, and also Fedora 41,
+> >>> and they (auto)mount home directories from the NFS server. So clients
+> >>> frequently mount and unmount file systems, students uncleanly shut
+> >>> down systems,...
+> >>>
+> >>> We switched to the mainline kernel in the hope this would include a
+> >>> fix for the issue.
+> >>>
+> >>> Are there any debugging commands we can run once the issue happens
+> >>> that can help to determine the cause of this issue?
+> >>
+> >> Once the issue happens, the precipitating bug has already done its
+> >> damage, so at that point it is too late.
+> >>
+> >> If you can start a trace command on the server before clients mount
+> >> it, try this:
+> >>
+> >>     # trace-cmd record -e nfsd:nfsd_cb_\*
+> >>
+> >> After the issue has occurred, wait a few minutes then ^C this command
+> >> and send me the trace.dat.
+> >>
+> > I can create a systemd unit to start this command when the system
+> > boots and stop it when the issue happens.
+>
+> It would help to include "-p function -l nfsd4_destroy_session" as
+> well on the trace-cmd command line so that DESTROY_SESSION operations
+> are annotated in the log as well.
+>
+I've created a systemd unit to run trace-cmd on boot. I've started it
+(before rebooting the system) to see how much disk space would be in
+use by having it running.
+When I stopped it and ran "trace-cmd report", it showed a lot of
+[FAILED TO PARSE] lines, such as:
 
-> > Could this please be fixed?
-> I'll leave if/when this optional extension will be added to the Linux
-> knfsd to the
-> Linux folk.
->=20
+            nfsd-6279  [035] 2560643.942059: nfsd_cb_queue:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245597
+cb=3D0xffff94488e9c8d90 need_restart=3D0 addr=3DARRAY[]
+  kworker/u192:4-4169949 [032] 2560643.942079: nfsd_cb_start:
+[FAILED TO PARSE] state=3D0x1 cl_boot=3D1734210227 cl_id=3D1829245597
+addr=3DARRAY[]
+  kworker/u192:4-4169949 [032] 2560643.942081: nfsd_cb_bc_update:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245597
+cb=3D0xffff94488e9c8d90 need_restart=3D0 addr=3DARRAY[]
+  kworker/u192:4-4169949 [032] 2560643.942082: nfsd_cb_destroy:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245597
+cb=3D0xffff94488e9c8d90 need_restart=3D0 addr=3DARRAY[]
+            nfsd-6328  [028] 2560643.942503: nfsd_cb_probe:
+[FAILED TO PARSE] state=3D0x1 cl_boot=3D1734210227 cl_id=3D1829245598
+addr=3DARRAY[02, 00, 00, 00, 0a, 57, 18, a4, 00, 00, 00, 00, 00, 00, 00,
+00]
+            nfsd-6328  [028] 2560643.942504: nfsd_cb_queue:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245598
+cb=3D0xffff94488e9c8300 need_restart=3D0 addr=3DARRAY[02, 00, 00, 00, 0a,
+57, 18, a4, 00, 00, 00, 00, 00, 00, 00, 00]
+  kworker/u192:4-4169949 [032] 2560643.942515: nfsd_cb_start:
+[FAILED TO PARSE] state=3D0x1 cl_boot=3D1734210227 cl_id=3D1829245598
+addr=3DARRAY[02, 00, 00, 00, 0a, 57, 18, a4, 00, 00, 00, 00, 00, 00, 00,
+00]
+  kworker/u192:4-4169949 [032] 2560643.942515: nfsd_cb_bc_update:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245598
+cb=3D0xffff94488e9c8300 need_restart=3D0 addr=3DARRAY[02, 00, 00, 00, 0a,
+57, 18, a4, 00, 00, 00, 00, 00, 00, 00, 00]
+  kworker/u192:4-4169949 [032] 2560643.942769: nfsd_cb_setup:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245598 authflavor=3D0x1
+addr=3DARRAY[02, 00, 00, 00, 0a, 57, 18, a4, 00, 00, 00, 00, 00, 00, 00,
+00] netid=3Dtcp
+  kworker/u192:4-4169949 [032] 2560643.942770: nfsd_cb_new_state:
+[FAILED TO PARSE] state=3D0x0 cl_boot=3D1734210227 cl_id=3D1829245598
+addr=3DARRAY[02, 00, 00, 00, 0a, 57, 18, a4, 00, 00, 00, 00, 00, 00, 00,
+00]
+  kworker/u192:4-4169949 [032] 2560643.942770: nfsd_cb_destroy:
+[FAILED TO PARSE] cl_boot=3D1734210227 cl_id=3D1829245598
+cb=3D0xffff94488e9c8300 need_restart=3D0 addr=3DARRAY[02, 00, 00, 00, 0a,
+57, 18, a4, 00, 00, 00, 00, 00, 00, 00, 00]
 
-See:
+Is there any additional option I need to specify, or can these items be ign=
+ored?
 
-    1631087ba872 Revert "nfsd4: support change_attr_type attribute"
+>
+> > What is the expected performance impact of keeping this tracing
+> > running? Is there an easy way to rotate the trace.dat file as I assume
+> > it will grow quite large?
+>
+> Callback traffic should be light. I don't expect a huge amount of data
+> will be generated unless the trace runs for weeks without incident, and
+> therefore I expect any performance impact will be unnoticeable.
+>
+>
+> >> The current theory is that deleg_reaper() is running concurrently with
+> >> the client's DESTROY_SESSION request, and that leaves callback RPCs
+> >> outstanding when the callback RPC client is destroyed. Session shutdow=
+n
+> >> then hangs waiting for a completion that will never fire.
+> >
+> > Would it be possible to capture this using a bpftrace script? If so,
+> > which events would be interesting to capture to confirm this theory?
+>
+> You can capture this information however you like. I'm familiar with
+> trace points, so that's the command I can give you.
+>
+>
+> > Is there an easy way to forcefully trigger the deleg_reaper to run so
+> > we can try running it in a loop and then reboot/unmount the client in
+> > an attempt to trigger the issue?
+>
+> Reduce the server's lease time. deleg_reaper() is run during every pass
+> of the server's NFSv4 state laundromat.
+>
+> It is also run via a shrinker. Forcing memory exhaustion might also
+> result in more calls to deleg_reaper(), but that can have some less
+> desirable side effects.
+>
+>
+> >> If your server runs chronically short on physical memory, that might
+> >> be a trigger.
+> >
+> > Before the server was upgraded to EL9, it ran CentOS 7 for 5 years
+> > without any issue and we never experienced any physical memory
+> > shortage.  Why does the system think it's running low on memory
+>
+> Different kernels have different memory requirements, different memory
+> watermarks, and different bugs. Sometimes what barely fits within a
+> server's RSS and throughput envelope with one kernel does not fit at
+> all with another kernel.
+>
+> I'm trying not to make assumptions. Some folks like running NFS servers
+> with less than 4GB of RAM in virtual environments.
+>
+> So what I'm asking is how much physical RAM is available on your server,
+> and do you see other symptoms of memory shortages?
 
-Upshot: we had this at one point, but ripped it out because it was't
-terribly useful and could be problematic if the clock jumps backward.
-We could add it back in again, but we'd need to understand how to
-address the problems that Bruce points out.
+The system has 192GB ram and runs nfsd and samba. Most memory is used
+for cache and buffers. There are no symptoms of memory shortage.
+
+
+>
+>
+> > and
+> > needs to send the RECALL_ANY callbacks? It never did in the past and
+> > the system seemed to do fine.
+>
+> CB_RECALL_ANY is a new feature in recent kernels.
+>
+>
+> > Is there a way to turn off the
+> > RECALL_ANY callbacks (at runtime)?
+>
+> No.
+>
+>
+> >>>> An environment where we can test patches against the upstream
+> >>>> kernel would also be welcome.
+> >
+> > Our current plan is to run the 6.12 kernel as this is an LTS kernel.
+> > If there are patches for this kernel version we can try, we may be
+> > able to apply them. But we can't reboot the system every few days as
+> > hundreds of people depend on it. It can also take quite some time to
+> > actually trigger it (or assume it was fixed by a patch).
+>
+> Any code change has to go into the upstream kernel first before it is
+> backported to LTS kernels.
+>
+> What I'm hearing is that you are not able to provide any testing for
+> an upstream patch. Fair enough.
+
+If there's a patch you can certainly let me know and we can see then
+if we can try it on our system.
+
+Regards,
+Rik
+
+>
+>
+> > Regards,
+> > Rik
+> >
+> >>>>
+> >>>>
+> >>>>> Could this be related to the following thread:
+> >>>>> https://lore.kernel.org/linux-nfs/Z2vNQ6HXfG_LqBQc@eldamar.lan/T/#u=
+ ?
+> >>>>
+> >>>> Yes.
+> >>>>
+> >>>>
+> >>>>> I don't know if this is relevant but I've noticed that some clients
+> >>>>> have multiple entries in the /proc/fs/nfsd/clients directory, so I
+> >>>>> assume these clients are not cleaned up correctly?
+> >>>
+> >>> You don't think this is relevant for this issue? Is this normal?
+> >>
+> >> It might be a bug, but I can't say whether it's related.
+> >>
+> >>
+> >>>>> For example:
+> >>>>>
+> >>>>> clientid: 0x6d077c99675df2b3
+> >>>>> address: "10.87.29.32:864"
+> >>>>> status: confirmed
+> >>>>> seconds from last renew: 0
+> >>>>> name: "Linux NFSv4.2 betelgeuse.esat.kuleuven.be"
+> >>>>> minor version: 2
+> >>>>> Implementation domain: "kernel.org"
+> >>>>> Implementation name: "Linux 4.18.0-553.32.1.el8_10.x86_64 #1 SMP We=
+d
+> >>>>> Dec 11 16:33:48 UTC 2024 x86_64"
+> >>>>> Implementation time: [0, 0]
+> >>>>> callback state: UP
+> >>>>> callback address: 10.87.29.32:0
+> >>>>> admin-revoked states: 0
+> >>>>> ***
+> >>>>> clientid: 0x6d0596d0675df2b3
+> >>>>> address: "10.87.29.32:864"
+> >>>>> status: courtesy
+> >>>>> seconds from last renew: 2288446
+> >>>>> name: "Linux NFSv4.2 betelgeuse.esat.kuleuven.be"
+> >>>>> minor version: 2
+> >>>>> Implementation domain: "kernel.org"
+> >>>>> Implementation name: "Linux 4.18.0-553.32.1.el8_10.x86_64 #1 SMP We=
+d
+> >>>>> Dec 11 16:33:48 UTC 2024 x86_64"
+> >>>>> Implementation time: [0, 0]
+> >>>>> callback state: UP
+> >>>>> callback address: 10.87.29.32:0
+> >>>>> admin-revoked states: 0
+> >>>>>
+> >>>>> The first one has status confirmed and the second one "courtesy" wi=
+th
+> >>>>> a high "seconds from last renew". The address and port matches for
+> >>>>> both client entries and the callback state is both UP.
+> >>>>>
+> >>>>> For another client, there's a different output:
+> >>>>>
+> >>>>> clientid: 0x6d078a79675df2b3
+> >>>>> address: "10.33.130.34:864"
+> >>>>> status: unconfirmed
+> >>>>> seconds from last renew: 158910
+> >>>>> name: "Linux NFSv4.2 bujarski.esat.kuleuven.be"
+> >>>>> minor version: 2
+> >>>>> Implementation domain: "kernel.org"
+> >>>>> Implementation name: "Linux 5.14.0-503.19.1.el9_5.x86_64 #1 SMP
+> >>>>> PREEMPT_DYNAMIC Thu Dec 19 12:55:03 UTC 2024 x86_64"
+> >>>>> Implementation time: [0, 0]
+> >>>>> callback state: UNKNOWN
+> >>>>> callback address: (einval)
+> >>>>> admin-revoked states: 0
+> >>>>> ***
+> >>>>> clientid: 0x6d078a7a675df2b3
+> >>>>> address: "10.33.130.34:864"
+> >>>>> status: confirmed
+> >>>>> seconds from last renew: 2
+> >>>>> name: "Linux NFSv4.2 bujarski.esat.kuleuven.be"
+> >>>>> minor version: 2
+> >>>>> Implementation domain: "kernel.org"
+> >>>>> Implementation name: "Linux 5.14.0-503.19.1.el9_5.x86_64 #1 SMP
+> >>>>> PREEMPT_DYNAMIC Thu Dec 19 12:55:03 UTC 2024 x86_64"
+> >>>>> Implementation time: [0, 0]
+> >>>>> callback state: UP
+> >>>>> callback address: 10.33.130.34:0
+> >>>>> admin-revoked states: 0
+> >>>>>
+> >>>>>
+> >>>>> Here the first status is unconfirmed and the callback state is UNKN=
+OWN.
+> >>>>>
+> >>>>> The clients are Rocky 8, Rocky 9 and Fedora 41 clients.
+> >>>>>
+> >>>>> Regards,
+> >>>>>
+> >>>>> Rik
+> >>>>>
+> >>>>
+> >>>>
+> >>>> --
+> >>>> Chuck Lever
+> >>>
+> >>
+> >>
+> >> --
+> >> Chuck Lever
+> >
+> >
+> >
+>
+>
+> --
+> Chuck Lever
+
+
 
 --=20
-Jeff Layton <jlayton@kernel.org>
+
+Rik
 
