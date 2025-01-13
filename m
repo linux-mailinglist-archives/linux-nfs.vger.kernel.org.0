@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-9178-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9179-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAE3EA0C04E
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 19:42:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 217DBA0C070
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 19:45:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECD381887E39
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 18:43:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 381DE18820DA
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 18:45:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5394B20CCC4;
-	Mon, 13 Jan 2025 18:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0EE215047;
+	Mon, 13 Jan 2025 18:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNTjw58a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ai8U5LSD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E5B20C49F;
-	Mon, 13 Jan 2025 18:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B2D214A93;
+	Mon, 13 Jan 2025 18:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736793348; cv=none; b=AvLWqDetV1MuW6Ex3T36+daBAoIQLqPzks7N3JibRuXHWzsXerfa7QKJE4CIGVv8Ep0SQR5962ZhZyEqdoqjPsO5NQhsznMNfGy5pkvNBeHl9h9JIXhEuse0+ndbhkXNF32vDSpFQfT+xbo4eweTd2SaVtyZDrEO60wdr6b/uXs=
+	t=1736793374; cv=none; b=OPFGQDTE07tQZ1TBGFNLLnvqtuRtJSJ45I+Bh2YvabZKPw6B+A2KvLqbpVS+9skbEnG0ucd6VJrePKs28DjyWgM7kabwj/3EPjZOmEZve5BO4KJqhLca4KY4ujPdG+6h7uKkCgg9cQWcvw0k0fQa8u1c7RN8bbuX/bXGm8UfZB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736793348; c=relaxed/simple;
-	bh=NweWt3/VFkOQG4Bzl/1bOMVfAobk9wNdlubl0XEoTUs=;
+	s=arc-20240116; t=1736793374; c=relaxed/simple;
+	bh=3b48l85dvIUMxPN97cnDejNJMgKXH/p1dqq279eatcU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H28zBXRqLrof1m2thFRoERH7/Yesbi4xYlzEL/dTGyQKjWdO3fm3XMTw/f/cmiAdOhJNQ+TYYZp5zLRPuY37cYWsz+OVUU7ShdpO3MET7gotoP1oNCKt4go98dzUnLcB96R9O0nVdKMdxbQfKFdAijp77rKKFGeALEBON5NBBMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNTjw58a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BDDC4CED6;
-	Mon, 13 Jan 2025 18:35:46 +0000 (UTC)
+	 MIME-Version; b=j0Y5eISP95Q3kZYIVT1qTmaIhLJF2vNtpA6bOqrQ26tw69CBfAPcnQ9H+HC+9KMLgCzqWeKWvd3IaaJYfRtMvQOeeDbkHajjjNnVxhL2kROJ8t9kTp0ab7ocOBz01dmGTxrfAUd/M2mD+VFGaKnl2OOaxW1iUlfeVZ7X2U30A6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ai8U5LSD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C05C4CED6;
+	Mon, 13 Jan 2025 18:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736793348;
-	bh=NweWt3/VFkOQG4Bzl/1bOMVfAobk9wNdlubl0XEoTUs=;
+	s=k20201202; t=1736793374;
+	bh=3b48l85dvIUMxPN97cnDejNJMgKXH/p1dqq279eatcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aNTjw58awZxiNFhLX15R328lOKibNBUFU4mE2ece64nuQzyyxDcY6yJrwkDEIqThe
-	 FwKPkr95Ywy+w+N4dqGm5B5CMYoflCwYNNS0avHppQm0OeyWsTOGUoqporpFjgK5hu
-	 EufZGu3ealEqPmhDLpVEtip3DDT+2CmLxidQ1c60ylPrVIsy7xyrVGRZXuDVbiBSSh
-	 Dh8fN9j8d3AIT4tLTBWPkN+A3yCZlnSRuoOO1scS/U1XJ3BMxwWZsxJDoaowHPFkI4
-	 KlRu3sWStQLqC+5/S7KAwEEA8Ol9TdRDoB7Gqm1bM3rrLNR5nUz51PLLdSx74Z5rMJ
-	 OrE96fb1AznAg==
+	b=Ai8U5LSDSUNV8443s7Hl3bphm5wzSqnbNIFfdglBx5BYF9CkY/+4Rs8HkG2mpuHty
+	 O+GWiUB2nU/i4Kd3olp3J8qC1Hw8QIiarkcfmIfeMUNtdEgOnoupcdXHXAmPYKiiLE
+	 WcgFi5l9aQdlXydyC5rUphNYuaALdrWmeLuyZIMrN7m954lcHQDOT1pV7JvX4/MeI/
+	 s4EeM5m9ctRV7PEufjTWlsDi8sYS3sPeZiDZEs+KIO7y1/owW/6YdJ6v2WPKgD/xft
+	 eOODTc3aHmnINyAyxd9kpDbYwrXlp5d8Kn6DsqGyCHuG29+6lQ2rFXhBmiE8rHIh7t
+	 7lXxuwM4ZBaFQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: David Howells <dhowells@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ojeda@kernel.org,
 	maennich@google.com
-Subject: [PATCH AUTOSEL 6.1 04/10] kheaders: Ignore silly-rename files
-Date: Mon, 13 Jan 2025 13:35:30 -0500
-Message-Id: <20250113183537.1784136-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 4/6] kheaders: Ignore silly-rename files
+Date: Mon, 13 Jan 2025 13:35:58 -0500
+Message-Id: <20250113183601.1784402-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250113183537.1784136-1-sashal@kernel.org>
-References: <20250113183537.1784136-1-sashal@kernel.org>
+In-Reply-To: <20250113183601.1784402-1-sashal@kernel.org>
+References: <20250113183601.1784402-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.124
+X-stable-base: Linux 5.15.176
 Content-Transfer-Encoding: 8bit
 
 From: David Howells <dhowells@redhat.com>
@@ -111,7 +111,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
-index 12bcd08fe79d..5d506c6e8c0e 100755
+index c618e37ccea9..1b2b61ca8065 100755
 --- a/kernel/gen_kheaders.sh
 +++ b/kernel/gen_kheaders.sh
 @@ -82,6 +82,7 @@ find $cpio_dir -type f -print0 |
