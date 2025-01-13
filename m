@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-9176-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9177-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E200FA0BFF3
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 19:36:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F0D8A0C02E
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 19:40:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE9923A3CBF
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 18:36:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5C963A6EEF
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jan 2025 18:40:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C5331CEADC;
-	Mon, 13 Jan 2025 18:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 343B61FBEB0;
+	Mon, 13 Jan 2025 18:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9imxn5O"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oyngInFW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624371CEACD;
-	Mon, 13 Jan 2025 18:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8961FBEAB;
+	Mon, 13 Jan 2025 18:35:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736793282; cv=none; b=QkvcB8H018N+/++jpe2FwQlG0fhe/jmmyssVzEqm5zq6sT8fp+mP7F0IbCA2lzR1Fa+s2khIAeWVqgxLnkYOnzJt8SnLYXhxL6cIeLmsis5P/12kp7JYGK06H0W1zn07H/XH2+yirQvu/whKS7t+0GTs98Zjk1umsm+rOQOCOds=
+	t=1736793324; cv=none; b=d+u/uckHBFRZayq5+tL2xS2Va74jg0TLtHVOXBV7krXjEszCG6yEtIJfhLHyDR8sweLBgkM4YTNzK3FzL6Ua40yFUJC2WEXId/kueksXpDjDw4w85aqmFlzwvqE5i2u0bFHC0e6sv1A6CeKtmeeVlbNiSowByBifXbFNvtwc9UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736793282; c=relaxed/simple;
+	s=arc-20240116; t=1736793324; c=relaxed/simple;
 	bh=VjE3G0TqKaM4vPHhhvCg5TjYTjlJr9vUxzyyIOUBKc4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=o+eidsYAWDEsPAfN2qLE3Mlr+mwb/5WndlHO0EqbQREcIkYwqA3GKNlhTya0cvQfJUk5Ukt5uT8c6BIvH4Ko4xorHwntkPacVKqSAlODwiDE0jNpYB8S86xS5iOuSvh5N7MqDfMBahQGbojsGvR6wUi320+0g5+xNoP9VomMpz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9imxn5O; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB612C4CEE7;
-	Mon, 13 Jan 2025 18:34:40 +0000 (UTC)
+	 MIME-Version; b=e8Kmeym02SznseFyXgCXMhPS6HDO3jNwJKWv1+tVROOErBN9vhTIrGmNjOm/fzixkBijIyDLoltBaGx3qSKs8f6Bq9OGItL2g00ZJN10MUhHfooX3IYLWLqCZYFIL6hcIyfEOa/cd6ebi/E6vql7pwXZtyq7zQMJdwdtBDtRKeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oyngInFW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6898EC4CED6;
+	Mon, 13 Jan 2025 18:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736793281;
+	s=k20201202; t=1736793323;
 	bh=VjE3G0TqKaM4vPHhhvCg5TjYTjlJr9vUxzyyIOUBKc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d9imxn5O7i5dc1xGGyzFG2jWeEM5Nf87csewHfeiRM91et99r5bICZXSRgA6HecxI
-	 6qMKiuAYDrns72CeAbb7r4dOTBLlBv0CX475oLVnfofa/tsqma4BLX9WdHb5Du6qyb
-	 XuZtcpGNghfnZt4/9ZSR6BVNnAW1bnbL1AvNq/ce/hzwMPS17lSjMbVMFTCRuDBoaQ
-	 BoUoetX8dTPSJWvn1vrsuV1wTzFcy/j9bzxcO+xvP2G2oBT0XPRaG/DL31+0DRqKsl
-	 gw4r+0pteQAJfv+en+iWG58xENz+k1BrImJlXHlPPdZzHUtZqs1VrPI+xC5HE6f/pD
-	 ueb1tf89ugS2A==
+	b=oyngInFW5MfO3CBGedvwOLOJ++/hRG3sDKK12s1US1PAbHbjcqqfnqCXTxoIwW7Y3
+	 x2Wz13XYbSxRMbBzqkMSkiz+4xesUM4rEfVw6ra3lOhQPXN7RWwZvok1/x5I+1axw5
+	 A24aAGU/93TjI1JnAY2N3z1JQfj+w5kReAWcIhwTDUrVuWw1YD/jk1D2loWGUXw7fG
+	 JTPc1EAjDuKI1yHtZEcRwamNdafISmejiYCJB6vfxZrp9aXsbymyqU4BK1IiWnsMEl
+	 ex09GxfnRbQB5k6BWqo/2WDxsre/2DSN4Z55qx9ZPmusaYGs7aLcrILfSGLnesIgGK
+	 vNvC0Mid6ml5g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -51,14 +51,14 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-nfs@vger.kernel.org,
 	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	ojeda@kernel.org,
-	maennich@google.com
-Subject: [PATCH AUTOSEL 6.12 06/20] kheaders: Ignore silly-rename files
-Date: Mon, 13 Jan 2025 13:34:11 -0500
-Message-Id: <20250113183425.1783715-6-sashal@kernel.org>
+	maennich@google.com,
+	ojeda@kernel.org
+Subject: [PATCH AUTOSEL 6.6 04/10] kheaders: Ignore silly-rename files
+Date: Mon, 13 Jan 2025 13:35:05 -0500
+Message-Id: <20250113183511.1783990-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250113183425.1783715-1-sashal@kernel.org>
-References: <20250113183425.1783715-1-sashal@kernel.org>
+In-Reply-To: <20250113183511.1783990-1-sashal@kernel.org>
+References: <20250113183511.1783990-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.9
+X-stable-base: Linux 6.6.71
 Content-Transfer-Encoding: 8bit
 
 From: David Howells <dhowells@redhat.com>
