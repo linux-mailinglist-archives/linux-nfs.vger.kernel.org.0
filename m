@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-9204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 671B4A1112A
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 20:28:11 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD428A11145
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 20:39:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2E357A0F6A
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 19:28:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3BF8164057
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 19:39:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C66205AAE;
-	Tue, 14 Jan 2025 19:27:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85B7204587;
+	Tue, 14 Jan 2025 19:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AIhOrpjn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0HLhw7k"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94391FAC29;
-	Tue, 14 Jan 2025 19:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE9620013A;
+	Tue, 14 Jan 2025 19:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736882873; cv=none; b=WOQzySdYanTDDc+0lgNYrbE3FoF6L81P/Bk11WcdEewfiE5tmszBWPQ9ZOc9hVMzZNJ9pvZmlXRmwbPXVHfXXGjydus9Y6zroVRcNnWVG3ouFO3Q0ZwckBxVrFrlkzvh20roTcXDw1q2b/n0VJLKB16kI4jxrIdsFlT7vBWt0Fw=
+	t=1736883587; cv=none; b=JUoWX/NOjHinr26U9W5G9K+E28Hmvn33sQdtJA35NYiNznqrujMNeFZC1xG0aUBDpvFIwiOBwMR5AygJb4abvXoCiZg/JZ7/Rj6AkQSRJA7X5r6qpYYk+8Rz3zQzvZk+qjE7WeIwu8nGTN8k9D46s9F66m/87Y4LNJlgbQt7yYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736882873; c=relaxed/simple;
-	bh=GZdGtAQK0Lu1HKDFmrTlLUDpUdXyPKFX4fODXIAxX2A=;
+	s=arc-20240116; t=1736883587; c=relaxed/simple;
+	bh=Vou3AeUsPN6ylNTnMOdHzmfBBgDC277By/KKTN655LI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DhsYPyMMj4n93hzatbZcwnX077YzA7NqQf7qNMO7Bmmk6pFe8Ul48mqgQ85bcmhbZ0JyftrnsjiJScvJqquZhVna0m1vvFOxzq6vnxHTSm6Lj3uXgJG2LcOmhygLbfGfVTNR38P8KgUkE679DDM/XSIjT18NrENPH7Jb3+vNy6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AIhOrpjn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E721C4CEDD;
-	Tue, 14 Jan 2025 19:27:51 +0000 (UTC)
+	 Content-Type:MIME-Version; b=RzXG7vEjQO6RjoK2FcXHJ+SCUXXk5zu9F7+h4XXGhhkmEMb1ToLgvmYByL6z7BM65G6L5973Mk8MZP4lUje2gXVKPBcZVsXg72Su7TrNdW/ovnG9DRUcdOw1XaHBEPkF+yW5k3qRZ2yZFvPvUxn+6ypa72WO5LFxHYs3cxGxlnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0HLhw7k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C6BCC4CEDD;
+	Tue, 14 Jan 2025 19:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736882872;
-	bh=GZdGtAQK0Lu1HKDFmrTlLUDpUdXyPKFX4fODXIAxX2A=;
+	s=k20201202; t=1736883587;
+	bh=Vou3AeUsPN6ylNTnMOdHzmfBBgDC277By/KKTN655LI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AIhOrpjnO28NMdWiSThvIv7MUOn3ZrG6TROxgac5pIJ/GWwEbO7J7mlutxTEm/Zy5
-	 K5cQ6ciSsJMRf6IlNU9EqllsBUk2AlmxyoKwMuGH1fgCXpQzpS6tU0Hm46fhvDDLHd
-	 jl7bd2pVwkBDmeVsQZXLT5cEChpS5LT5ddOG8I7BzzRNKsOJKhGQEhtmiOijFR0g7u
-	 s8uCb10kZ/3HYW2s/GrGDfJPSapvhbSh+BsmblkIRSqBZ2Y+vABiZX4zpFN3RWTSxb
-	 gtgeBEQFXEYJDG3AApq7AR5QFlwB/OitogbTSL8jdVgkLhqZBYWiFMPU1jPm51WIZa
-	 82AZbDMCSjZtQ==
-Message-ID: <8864761c99553a7f18adc13e98b4ef6255da1d9e.camel@kernel.org>
+	b=u0HLhw7kZ1AtC+X3khyC3mfgxtsBRBWN8+820HEp5gX95bl6p6VgY1ZOQkDXn9Lt7
+	 e47i58Ev/Pl68hEHWNx1GQEsHFU7vqeqTzCqc3ry5OuEDXRa3j0G9kAikmRzxzkjhB
+	 7W9u7JF3ZlyIEdw1HgMcn+FxSv2P2BJoULreUEarRbwDx0y1PGLTTssz1GBxdHhGou
+	 WnScgPK+WlcO78i0JcLgr95AFA0rVicD8xvKela+EIYEF0UIzxv3A85D+0wvsAPI/2
+	 GNs3KA6wMnIlY/K6oJF11qVfeCatqSUGSLJBdFdOAO9FlOmEeK+NTwtismYLbLiVeO
+	 XfR+qxtWDo6Cg==
+Message-ID: <a32d4eefe27757de6ad8761e8de740e8d0968561.camel@kernel.org>
 Subject: Re: [PATCH] nfsd: free nfsd_file by gc after adding it to lru list
 From: Jeff Layton <jlayton@kernel.org>
 To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
@@ -49,9 +49,10 @@ To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
 	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Tue, 14 Jan 2025 14:27:50 -0500
-In-Reply-To: <20250113025957.1253214-1-lilingfeng3@huawei.com>
+Date: Tue, 14 Jan 2025 14:39:44 -0500
+In-Reply-To: <8864761c99553a7f18adc13e98b4ef6255da1d9e.camel@kernel.org>
 References: <20250113025957.1253214-1-lilingfeng3@huawei.com>
+	 <8864761c99553a7f18adc13e98b4ef6255da1d9e.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,51 +137,71 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-01-13 at 10:59 +0800, Li Lingfeng wrote:
-> In nfsd_file_put, after inserting the nfsd_file into the nfsd_file_lru
-> list, gc may be triggered in another thread and immediately release this
-> nfsd_file, which will lead to a UAF when accessing this nfsd_file again.
+On Tue, 2025-01-14 at 14:27 -0500, Jeff Layton wrote:
+> On Mon, 2025-01-13 at 10:59 +0800, Li Lingfeng wrote:
+> > In nfsd_file_put, after inserting the nfsd_file into the nfsd_file_lru
+> > list, gc may be triggered in another thread and immediately release thi=
+s
+> > nfsd_file, which will lead to a UAF when accessing this nfsd_file again=
+.
+> >=20
+> > All the places where unhash is done will also perform lru_remove, so th=
+ere
+> > is no need to do lru_remove separately here. After inserting the nfsd_f=
+ile
+> > into the nfsd_file_lru list, it can be released by relying on gc.
+> >=20
+> > Fixes: 4a0e73e635e3 ("NFSD: Leave open files out of the filecache LRU")
+> > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > ---
+> >  fs/nfsd/filecache.c | 12 ++----------
+> >  1 file changed, 2 insertions(+), 10 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index a1cdba42c4fa..37b65cb1579a 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -372,18 +372,10 @@ nfsd_file_put(struct nfsd_file *nf)
+> >  		/* Try to add it to the LRU.  If that fails, decrement. */
+> >  		if (nfsd_file_lru_add(nf)) {
+> >  			/* If it's still hashed, we're done */
+> > -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> > +			if (list_lru_count(&nfsd_file_lru))
+> >  				nfsd_file_schedule_laundrette();
+> > -				return;
+> > -			}
+> > =20
+> > -			/*
+> > -			 * We're racing with unhashing, so try to remove it from
+> > -			 * the LRU. If removal fails, then someone else already
+> > -			 * has our reference.
+> > -			 */
+> > -			if (!nfsd_file_lru_remove(nf))
+> > -				return;
+> > +			return;
+> >  		}
+> >  	}
+> >  	if (refcount_dec_and_test(&nf->nf_ref))
 >=20
-> All the places where unhash is done will also perform lru_remove, so ther=
-e
-> is no need to do lru_remove separately here. After inserting the nfsd_fil=
-e
-> into the nfsd_file_lru list, it can be released by relying on gc.
+> I think this looks OK. Filecache bugs are particularly nasty though, so
+> let's run this through a nice long testing cycle.
 >=20
-> Fixes: 4a0e73e635e3 ("NFSD: Leave open files out of the filecache LRU")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->  fs/nfsd/filecache.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index a1cdba42c4fa..37b65cb1579a 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -372,18 +372,10 @@ nfsd_file_put(struct nfsd_file *nf)
->  		/* Try to add it to the LRU.  If that fails, decrement. */
->  		if (nfsd_file_lru_add(nf)) {
->  			/* If it's still hashed, we're done */
-> -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> +			if (list_lru_count(&nfsd_file_lru))
->  				nfsd_file_schedule_laundrette();
-> -				return;
-> -			}
-> =20
-> -			/*
-> -			 * We're racing with unhashing, so try to remove it from
-> -			 * the LRU. If removal fails, then someone else already
-> -			 * has our reference.
-> -			 */
-> -			if (!nfsd_file_lru_remove(nf))
-> -				return;
-> +			return;
->  		}
->  	}
->  	if (refcount_dec_and_test(&nf->nf_ref))
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-I think this looks OK. Filecache bugs are particularly nasty though, so
-let's run this through a nice long testing cycle.
+Actually, I take it back. This is problematic in another way.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+In this case, we're racing with another task that is unhashing the
+object, but we've put it on the LRU ourselves. What guarantee do we
+have that the unhashing and removal from the LRU didn't occur before
+this task called nfsd_file_lru_add()? That's why we attempt to remove
+it here -- we can't rely on the task that unhashed it to do so at that
+point.
+
+What might be best is to take and hold the rcu_read_lock() before doing
+the nfsd_file_lru_add, and just release it after we do these racy
+checks. That should make it safe to access the object.
+
+Thoughts?
+--=20
+Jeff Layton <jlayton@kernel.org>
 
