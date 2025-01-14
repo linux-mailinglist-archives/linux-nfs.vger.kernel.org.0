@@ -1,128 +1,179 @@
-Return-Path: <linux-nfs+bounces-9195-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9196-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0ABEAA10822
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 14:50:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADD91A10943
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 15:28:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D66118878ED
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 13:50:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB90A16788E
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 14:28:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EAA21A29A;
-	Tue, 14 Jan 2025 13:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3WYSv8m"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE3813A87C;
+	Tue, 14 Jan 2025 14:28:26 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC2D382;
-	Tue, 14 Jan 2025 13:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABDA14AD0E;
+	Tue, 14 Jan 2025 14:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736862618; cv=none; b=uYDd7FKgMKuf+hKD3yX7Tn9Xe3GA2gFPwcNzXOqd7VvaPvgmqXRzXeRF+Cdb7tZRlFE4wLjIDHu1b6rQbJlojQ6tWrGbESBPJVHQ5VhqrxSmped+cvyH04sClzrVdL3o1azSKBpl4P1Fjv2SApKvtIXM7gdYhxhLcYMuH1/dzCA=
+	t=1736864906; cv=none; b=VlGeFoCGELjN5fPgS0XT6BDS40Fo3S++A+XPEr0uHAzkRKl+ybt1hTaDjp1Rp7xp0nXtb5agLYAEHAMcz6PBVlGHwKmwmeUasTfgq+b3uGxpTkBovE1oRRoNWT+lSZ840klx9NMfHyhGPfasmIQ3feRvD6Dm6gQvmmtrLBC3NmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736862618; c=relaxed/simple;
-	bh=E9WCKWqZDdWrhuOJ8T3MRR+Wdu7159qHRnRM7zfR6Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzEIY8nVUCaC1PEBMeN3I1t31ktPu3cWlty5aoyxoh2PeOW498cBwJ0n7cbIeAZtVBKnuPDkVEnPgiMX7jCsctZi7L+iAOBWwVSpakwfhlg87o3vByRrYPl295PjvYEkqUq+mbK4X0cW/rpBsceDqtAv6MeRV1Q6eUXUr8IGvrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3WYSv8m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6FC1C4CEDD;
-	Tue, 14 Jan 2025 13:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736862617;
-	bh=E9WCKWqZDdWrhuOJ8T3MRR+Wdu7159qHRnRM7zfR6Ps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B3WYSv8m4sWSylXp9W3Sf17zPbMaNvU2ichDqWJ/pV+WhqBkiLI/x0mixcZekP/aV
-	 7IPatKNy77Ep4aVGaq7/e5nrblpErKiiUZ0utc/rib3Bb7eqQylyqJOPn+a5aoJ7tS
-	 9V3/DBK6XIWKUe4dkKp3i//29eH+tgB4F5QfCjIbsRhJjyAxbB1ba2DCm6IHk8nw2P
-	 biqr9P1Wy+gXBaNqjgJGV/r23EWsD8jZNVMdkIPnxyCBU1x/TMKREi0xDCXR0DRQIH
-	 PLualSGnHYpy1D1fcUUvDGZRtkr+MQKg+IlH4/HDClH4Ly4UOEfuXu0coYhf2di1Dr
-	 Kcz4QrkfD9Z0w==
-Date: Tue, 14 Jan 2025 14:50:12 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Kaixiong Yu <yukaixiong@huawei.com>
-Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	hpa@zytor.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kees@kernel.org, j.granados@samsung.com, willy@infradead.org, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
-	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, 
-	jmorris@namei.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, dhowells@redhat.com, 
-	haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com, shikemeng@huaweicloud.com, 
-	dchinner@redhat.com, bfoster@redhat.com, souravpanda@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, pasha.tatashin@soleen.com, david@redhat.com, 
-	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
-	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
-	wangkefeng.wang@huawei.com
-Subject: Re: [PATCH v5 -next 00/16] sysctl: move sysctls from vm_table into
- its own files
-Message-ID: <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
-References: <20250111070751.2588654-1-yukaixiong@huawei.com>
+	s=arc-20240116; t=1736864906; c=relaxed/simple;
+	bh=oM7NzRJJN/8EUgwpdktZfnTOKbasx76P5FUuF4NtChg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iYCcYM/7YXc+4I2VYn9e8HPEIf0XaAFXfmR9mgyit24FzsGCtBlPZ+R12t4UV2ar91C7McNBFtPeh7fgYJ7NHaMDRbHAIPvqXojLI2JNePpG3mpJcAi72HP73KBtn/0+uHAelQeSQsAlTAo03lxQLnhH+nTdvsq1OiSjoiMcfCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YXWf71wHfzrSLl;
+	Tue, 14 Jan 2025 22:26:39 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9B2EE1402C4;
+	Tue, 14 Jan 2025 22:28:19 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 14 Jan
+ 2025 22:28:18 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <trondmy@kernel.org>, <anna@kernel.org>, <chuck.lever@oracle.com>,
+	<jlayton@kernel.org>, <neilb@suse.de>, <okorniev@redhat.com>,
+	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<horms@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <yukuai1@huaweicloud.com>, <houtao1@huawei.com>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH] SUNRPC: Set tk_rpc_status when RPC_TASK_SIGNALLED is detected
+Date: Tue, 14 Jan 2025 22:41:01 +0800
+Message-ID: <20250114144101.2511043-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250111070751.2588654-1-yukaixiong@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On Sat, Jan 11, 2025 at 03:07:35PM +0800, Kaixiong Yu wrote:
-> This patch series moves sysctls of vm_table in kernel/sysctl.c to
-> places where they actually belong, and do some related code clean-ups.
-> After this patch series, all sysctls in vm_table have been moved into its
-> own files, meanwhile, delete vm_table.
-> 
-> All the modifications of this patch series base on
-> linux-next(tags/next-20250110). To test this patch series, the code was
-> compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
-> x86_64 architectures. After this patch series is applied, all files
-> under /proc/sys/vm can be read or written normally.
+Commit 39494194f93b("SUNRPC: Fix races with rpc_killall_tasks()") adds
+rpc_task_set_rpc_status before setting RPC_TASK_SIGNALLED in
+rpc_signal_task, ensuring that rpc_status is definitely set when
+RPC_TASK_SIGNALLED is set.
+Therefore, it seems unnecessary to set rpc_status again after detecting
+RPC_TASK_SIGNALLED in rpc_check_timeout.
 
-It is looking good! Here is how I think we should move it upstream:
+However, in some exceptional cases, invalid and endlessly looping
+rpc_tasks may be generated. The rpc_call_rpcerror in rpc_check_timeout can
+timely terminate such rpc_tasks. Removing rpc_call_rpcerror may cause the
+rpc_task to fall into an infinite loop.
 
-1. These should queued in for 6.15 instead of the next merge window.
-   It is too late in the current cycle and if we put it in now, it will
-   not properly tested in linux-next.
+For example, in the following situation:
+nfs4_close_done
+ // get err from server
+ nfs4_async_handle_exception
+ // goto out_restart
+                            // umount -f
+                            nfs_umount_begin
+                             rpc_killall_tasks
+                              rpc_signal_task
+                               rpc_task_set_rpc_status
+                                task->tk_rpc_status = -ERESTARTSYS
+                                set_bit
+                                // set RPC_TASK_SIGNALLED to tk_runstate
+ rpc_restart_call_prepare
+  __rpc_restart_call
+   task->tk_rpc_status = 0
+   // clear tk_rpc_status
+  ...
+  rpc_prepare_task
+   nfs4_close_prepare
+    nfs4_setup_sequence
+     rpc_call_start
+      task->tk_action = call_start
 
-2. I am putting this in sysctl-testing with the expectation of pushing this
-   up for the 6.15 merge window. Please tell me if you want this to go
-   through some other tree.
+At this point, an rpc_task with RPC_TASK_SIGNALLED set but tk_rpc_status
+as 0 will be generated. This rpc_task will fall into the following loop:
+call_encode --> call_transmit --> call_transmit_status --> call_status
+--> call_encode.
 
-Thx for the contribution
+Since RPC_TASK_SIGNALLED is set, no request will be sent in call_transmit.
+Similarly, since RPC_TASK_SIGNALLED is set, rq_majortimeo will not be
+updated in call_status --> rpc_check_timeout, which will cause -ETIMEDOUT
+to be directly set to tk_status in call_transmit_status -->
+xprt_request_wait_receive --> xprt_wait_for_reply_request_def -->
+rpc_sleep_on_timeout --> __rpc_sleep_on_priority_timeout.
 
-Best
-> 
-> my test steps as below listed:
-> 
-> Step 1: Set CONFIG_SYSCTL to 'n' and compile the Linux kernel on the
-> arm64 architecture. The kernel compiles successfully without any errors
-> or warnings.
-> 
-...
->  mm/swap.c                          |  16 ++-
->  mm/swap.h                          |   1 +
->  mm/util.c                          |  67 +++++++--
->  mm/vmscan.c                        |  23 +++
->  mm/vmstat.c                        |  44 +++++-
->  net/sunrpc/auth.c                  |   2 +-
->  security/min_addr.c                |  11 ++
->  23 files changed, 336 insertions(+), 312 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+Here is the state and loop process of the rpc_task:
+tk_runstate:
+RPC_TASK_RUNNING RPC_TASK_ACTIVE RPC_TASK_NEED_RECV RPC_TASK_SIGNALLED
+tk_xprt->state:
+XPRT_CONNECTED XPRT_BOUND
+tk_flags
+RPC_TASK_ASYNC RPC_TASK_MOVEABLE RPC_TASK_DYNAMIC RPC_TASK_SOFT
+RPC_TASK_NO_RETRANS_TIMEOUT RPC_TASK_CRED_NOREF
 
+call_encode
+ xprt_request_enqueue_transmit
+  set_bit // RPC_TASK_NEED_XMIT
+ task->tk_action = call_transmit
+
+call_transmit
+ task->tk_action = call_transmit_status
+ xprt_transmit
+  xprt_request_transmit
+   // check RPC_TASK_SIGNALLED and goto out_dequeue
+   xprt_request_dequeue_transmit
+    xprt_request_dequeue_transmit_locked
+     test_and_clear_bit // RPC_TASK_NEED_XMIT
+
+call_transmit_status
+ task->tk_action = call_status
+ xprt_request_wait_receive
+  xprt_wait_for_reply_request_def
+   xprt_request_timeout // get timeout
+    req->rq_majortimeo // rq_majortimeo will not be updated
+   rpc_sleep_on_timeout
+    __rpc_sleep_on_priority_timeout
+     task->tk_status = -ETIMEDOUT // set ETIMEDOUT
+
+call_status
+ task->tk_action = call_encode
+ rpc_check_timeout
+  // check RPC_TASK_SIGNALLED and skip xprt_reset_majortimeo
+
+Fix it by adding rpc_call_rpcerror back.
+
+Fixes: 39494194f93b ("SUNRPC: Fix races with rpc_killall_tasks()")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ net/sunrpc/clnt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 0090162ee8c3..0acdff19a37c 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2509,8 +2509,10 @@ rpc_check_timeout(struct rpc_task *task)
+ {
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 
+-	if (RPC_SIGNALLED(task))
++	if (RPC_SIGNALLED(task)) {
++		rpc_call_rpcerror(task, -ERESTARTSYS);
+ 		return;
++	}
+ 
+ 	if (xprt_adjust_timeout(task->tk_rqstp) == 0)
+ 		return;
 -- 
+2.31.1
 
-Joel Granados
 
