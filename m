@@ -1,273 +1,213 @@
-Return-Path: <linux-nfs+bounces-9198-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9199-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EDFEA10A5B
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 16:09:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DD4FA10AD8
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 16:31:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D5FB7A02C7
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 15:09:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D622162E08
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 15:31:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D848E156257;
-	Tue, 14 Jan 2025 15:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A9A3232424;
+	Tue, 14 Jan 2025 15:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="BZTaF8sC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gkbyz9hJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93298156644
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 15:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7C5232422
+	for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 15:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736867376; cv=none; b=kxFwsahZ2ssdEH+g+QQYRAGlr1Y/95BAl3ZfpgVIw+l0lK1BLaZZ3YeK7hyKOGbibAhvaXaiMZ3uozohjE5GDVFXgf+HdE9zJNc23EkQvHjGKrxZPKXifAaVWD1YJ6ezAn6Vrs/CoWi3UepltyU2lFjPZdJlOxVjg7HqtslgWug=
+	t=1736868659; cv=none; b=iTrTPT/RhE3+VkKzNaCbJrEtfw3D5yieYyfr2qbxzaLY1Vh3ylhmThQshot2wJJZfTSpDFqbD4okNHVrceFMbvml2+6IUereJhpjAFFWs0k7+9+Ilxdq/1vzMBeM3AwGuGZVpzqderqNgT9wlq5tEnjd7NBDBovaBbGPfCvgkMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736867376; c=relaxed/simple;
-	bh=rc02AALFEspTuThZmTGtedZ4D2/bmQW6+eG3p6PncTA=;
+	s=arc-20240116; t=1736868659; c=relaxed/simple;
+	bh=jqD0x3WtpuCNtWhiFsZYn4n+8ZKc54w+ePsL/2KfNEc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FLhegyzF/MIVXi0B7DQdhmXjlfwQrLaZmlS1rs8Q9PwR206n2SmRVVrT/PdOcrsr7vn08uk/imQwg17tZC6U8HX7C9y6m4qU0raqmd7FD5UrsijjnyR2CZFPX5aD0kmnHrpyVD/UgP5YEoJ+ldZ1gcwHSUd2V6EXKtw6EZ246Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=BZTaF8sC; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
+	 To:Cc:Content-Type; b=SZvHG2+zUgYQjS1EJwE4dtkosekR8pXvjyc/uwLcrGjnWLUlWB42OLUmxtvkIP/ruLhcjh7PuDJkqlPvDqCefDV7amNgPP/OXJCwKf4gHQAIwwyjGeaVqIFhfpZb+0t3xRtfeZQWDMovceLqFJ/BRz1KuZcGXPwh8qc5pFC2c8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gkbyz9hJ; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3003c82c95cso41176401fa.3
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 07:09:34 -0800 (PST)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5d41848901bso3439740a12.0
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 07:30:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1736867373; x=1737472173; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736868656; x=1737473456; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KpI3yKKAzjs+5quxef+oLP6vXtkIHrfYkvco4de/Nms=;
-        b=BZTaF8sCMp6DdIvwMXdf+L8bv1Ko7qd2ZllXXZS6Vv9JvQUejWcApbJeAv1votuFAj
-         kuLjUDd0PUg3Yz7fcU5QySvYBbbDbuuBehG7L8+xcLiQLTfV80rFOqZ9i8W7el7U3SqB
-         4ZawrwTi1jEZkFlHL+vnNDhtJHXpIxfZelSFJ/K3lEqP9v0wQoVn7pm1+JCAdkHasCzh
-         RWLwHE+k6EsRt9triO/h15mrJethpy6f6gGV95TTLr9MlZb0JrAa/aWU2QxmjUOHpty8
-         SD6FPnC99i94YuwsKDNHM3DWTQJtgoN3wA85XPEl2tjYWXXqes7Veh9RJEcNfXfux3Tz
-         uLlw==
+        bh=P461tIUJzrGsONM43Po1HEfvGYmn5Uzb2u7rf1sB+HY=;
+        b=Gkbyz9hJueMLYA1GLCZ13gJlwruwalDXCQkWkKcs8i5xtHIjLboAlIj/ZUqGK9XXzh
+         TvjYpAn6l9ySo/jxTLN/b9XE+lCxo4280+odAM5marQfm3Oaq8UaGj7a0NapcPlvQQtl
+         uH7LMNAuNrNSKSBL95f4Rv+mF3e54FDMIABmPXeiYOHL1te63kL6EtQSaJwfx4oe3gGh
+         aMcOyCBImht5hzyWqTyDrb8lnmoOjO2wjxlwjvq4wFyN/2xGBO4KWRZ6S9sDQLXQtJLL
+         ZGXOlJ4DFlNwx6vGJ3tSHC23BtB0pfGAjGYW4Iq2LTN203L5mkPeKUFYiKMM1g3W5Z3C
+         vHWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736867373; x=1737472173;
+        d=1e100.net; s=20230601; t=1736868656; x=1737473456;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KpI3yKKAzjs+5quxef+oLP6vXtkIHrfYkvco4de/Nms=;
-        b=htDby+ki+IGA/oxq/TsRatW2h1/pGBk4JBya9VF27MMmtulhTtBs8wBqytbgHbuH8J
-         OSXC20ax7MAvKrEghom77hqNfHVk11ZcQRCFmaxcyZKSnu/ygzQyhvDP3CAoQh9Rc0iL
-         bv1XhIaoxJCTl2cT3/v2RH403hvN+DlgouxZQZ5CZJvA+Q1vExASAlEbkVNgZhoNiXBN
-         Vh9Tbl/KrAmCMNAflqopPUxzFxOo/+YnV9J8+cPiHfbi0sYGd/8A4+gBpqGYQ1tlJjhJ
-         aOAgHYzy69VLzvdMEnncngNEXgxjfl9qXME5/d9ayvMQU33tWu+z3pz5LcgfGmt+nQ1S
-         RbMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwRBH0r+ipxNrluO7vBAfhahL6xmATlp8SnfmL06HnK8GrVUOmh9xoVYySSuEoxhAnSBMODy02EKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1LAVj96ew9k3ZEdnQIBEudnt8i+bDb97javVv/I6nqqoJCjZf
-	mfnuyXAucC+RWKbl/849yH+HZUcV5Vy9bIFOxWCLgbAwolz5l1leu3YDjNGA7nDXFBkUIY4+hwQ
-	Emz8zo6OyD4h3BDU3YSQaFs57E7k=
-X-Gm-Gg: ASbGnctM5B/HL/bOyVfcJ4Pw0ohVRixHRn0dEtOyeb+DJgs4mb+QzU9ROpSGRvWpe7Z
-	6uegSRQ2P52pEuyGYjfjqY2RtwQfbjMwEbR71/oTP1hpZwBY4Mc2OueBfZfc1o/AT41FKUgrX
-X-Google-Smtp-Source: AGHT+IE2Ds/DJYdG0/dzUdgzeONyWpZyekNp5wOdQ686452MTa8LQiSaKmOWjeADG8d4Nq71kafMhd58XyqH0cOekHk=
-X-Received: by 2002:a2e:bea3:0:b0:300:de99:fcc7 with SMTP id
- 38308e7fff4ca-305f46042c4mr77697121fa.36.1736867372229; Tue, 14 Jan 2025
- 07:09:32 -0800 (PST)
+        bh=P461tIUJzrGsONM43Po1HEfvGYmn5Uzb2u7rf1sB+HY=;
+        b=D2i8f4+6kr6d76RksbDU6hm8w00NA3tk9oMQLONA7cxLEK8eLCEnGJt7MDmNX9qg6N
+         Jv7ubgYYiWdoMXMoinGE3eKf6Ap53d7VgNIzVUfqq0A8FzUvpVHRU+go5iErVqfQj0FU
+         e07FF1HJ6wP/g2e9VUJenhiZWjVZc+VGn7JOvIJ9Sjlf99AL8G5AmD7Q7LVlUBxe0a1J
+         i44Bv8KdE0EhiKlUxS3qJjkOet5FNUXWW/e8mRMIOIUtKWDKOUZ0iw/px05nW4wGbBeE
+         0lmrQjoSPfmS9wQ9Lf6S7nAOKgDypSDthnbmyNtCIgL6D7EuN0lzH674lCwJtBqKgoUR
+         TAug==
+X-Forwarded-Encrypted: i=1; AJvYcCUmkOOOeiY2PABfdhYphbZByZ1WmSM23FsOQsDg3AvuIE14Uuh1Dx4OT/id4NNy2sO8ZxT5LWTfSdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa+WKTv5MO4fFjFEZqAfOMG0STgSSCXtNiDPa6iqqY3fCjSjMb
+	XOmV5eNa2JY782dCwUz+vNEJo3k49fp0LACESZ8jjopjV/7fe4GVuk3ISvCGQ7jdqsSUdzDsrI5
+	bMcKep76JuCqr/nC7SAGi5X3/HII=
+X-Gm-Gg: ASbGnctxalNOgo6j8mSprKlSLcO7W61+stUFbZBXya5Cv5KjEMhQzsr6pKnzSa3FrSQ
+	ClX1+mfdRI2diJdviLxS5vNgLVaT85AnN9Ee6/jbx
+X-Google-Smtp-Source: AGHT+IF2vyeLciT7GPLwKqv/v5wLZL76zPhz+wCzWI+yT9XH3RcYmBqBMN7Yxm3ICKeB7Aa38vu8jc7DpBzV9+T0Soc=
+X-Received: by 2002:a05:6402:4315:b0:5d9:f8d3:6e62 with SMTP id
+ 4fb4d7f45d1cf-5d9f8d37133mr2711828a12.12.1736868655590; Tue, 14 Jan 2025
+ 07:30:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108213632.260498-1-anna@kernel.org> <20250108213632.260498-4-anna@kernel.org>
- <CAN-5tyGk_Nh4u_m=gEEGH8DbdzoU7XU-2PhOWC3xbBdvEi-SDQ@mail.gmail.com> <15a6d57c-569c-46c9-ade9-59e274226d88@oracle.com>
-In-Reply-To: <15a6d57c-569c-46c9-ade9-59e274226d88@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 14 Jan 2025 10:09:20 -0500
-X-Gm-Features: AbW1kvb1NZi0XvjLQCCEP9kBMgtF7E5MnJla8QrzOyH8Uh3Af4_YOiAlQF5eAM8
-Message-ID: <CAN-5tyGrzO_A4PQZr4MuOOZwHH17EywnJiZUf1ms-6MSnsQqgg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] sunrpc: Add a sysfs file for adding a new xprt
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	trond.myklebust@hammerspace.com
+References: <CAPwv0JnSQ=hsmUMy0VY-8k+dANBLNkJdFJ75q9EEE+Hj0XXB8A@mail.gmail.com>
+ <d54d71f7-9bdb-49a4-8687-563558eca95e@oracle.com> <CAPwv0J=oKBnCia_mmhm-tYLPqw03jO=LxfUbShSyXFp-mKET5A@mail.gmail.com>
+ <49654519-9166-4593-ac62-77400cebebb4@oracle.com> <CAPwv0J=ju3fZ8C_FFeDnzzKT-ppXaLCde64hQof3=g641Daudw@mail.gmail.com>
+ <cbc55c4a-ac98-4121-b590-13f32a257d65@oracle.com> <CAPwv0JmA+29fujmmrugY0AFdtDDqjSvn6RTHzwYNR9a4skXfeQ@mail.gmail.com>
+ <75633e31-53ae-4525-ae84-1400ae802359@oracle.com>
+In-Reply-To: <75633e31-53ae-4525-ae84-1400ae802359@oracle.com>
+From: Rik Theys <rik.theys@gmail.com>
+Date: Tue, 14 Jan 2025 16:30:44 +0100
+X-Gm-Features: AbW1kvZ_HEncYvMm4foGYIBWN5tGXf9H6PFC9LrDPNgiSE5Xgo-mO4eyadkoI5o
+Message-ID: <CAPwv0Jk1UaHqNX27AtR+sPrCdVbckpR5ayQ-u+kZ=w3C+sOsgQ@mail.gmail.com>
+Subject: Re: nfsd4 laundromat_main hung tasks
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Christian Herzog <herzog@phys.ethz.ch>, Salvatore Bonaccorso <carnil@debian.org>, linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 13, 2025 at 4:52=E2=80=AFPM Anna Schumaker
-<anna.schumaker@oracle.com> wrote:
+Hi,
+
+On Tue, Jan 14, 2025 at 3:51=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
 >
-> Hi Olga,
->
-> On 1/13/25 9:10 AM, Olga Kornievskaia wrote:
-> > On Wed, Jan 8, 2025 at 4:36=E2=80=AFPM Anna Schumaker <anna@kernel.org>=
- wrote:
-> >>
-> >> From: Anna Schumaker <anna.schumaker@oracle.com>
-> >>
-> >> Writing to this file will clone the 'main' xprt of an xprt_switch and
-> >> add it to be used as an additional connection.
-> >>
-> >> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
-> >> ---
-> >>  include/linux/sunrpc/xprtmultipath.h |  1 +
-> >>  net/sunrpc/sysfs.c                   | 54 +++++++++++++++++++++++++++=
-+
-> >>  net/sunrpc/xprtmultipath.c           | 21 +++++++++++
-> >>  3 files changed, 76 insertions(+)
-> >>
-> >> diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunr=
-pc/xprtmultipath.h
-> >> index c0514c684b2c..c827c6ef0bc5 100644
-> >> --- a/include/linux/sunrpc/xprtmultipath.h
-> >> +++ b/include/linux/sunrpc/xprtmultipath.h
-> >> @@ -56,6 +56,7 @@ extern void rpc_xprt_switch_add_xprt(struct rpc_xprt=
-_switch *xps,
-> >>                 struct rpc_xprt *xprt);
-> >>  extern void rpc_xprt_switch_remove_xprt(struct rpc_xprt_switch *xps,
-> >>                 struct rpc_xprt *xprt, bool offline);
-> >> +extern struct rpc_xprt *rpc_xprt_switch_get_main_xprt(struct rpc_xprt=
-_switch *xps);
-> >>
-> >>  extern void xprt_iter_init(struct rpc_xprt_iter *xpi,
-> >>                 struct rpc_xprt_switch *xps);
-> >> diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-> >> index dc3b7cd70000..ce7dae140770 100644
-> >> --- a/net/sunrpc/sysfs.c
-> >> +++ b/net/sunrpc/sysfs.c
-> >> @@ -250,6 +250,55 @@ static ssize_t rpc_sysfs_xprt_switch_info_show(st=
-ruct kobject *kobj,
-> >>         return ret;
-> >>  }
-> >>
-> >> +static ssize_t rpc_sysfs_xprt_switch_add_xprt_show(struct kobject *ko=
-bj,
-> >> +                                                  struct kobj_attribu=
-te *attr,
-> >> +                                                  char *buf)
-> >> +{
-> >> +       return sprintf(buf, "# add one xprt to this xprt_switch\n");
-> >> +}
-> >> +
-> >> +static ssize_t rpc_sysfs_xprt_switch_add_xprt_store(struct kobject *k=
-obj,
-> >> +                                                   struct kobj_attrib=
-ute *attr,
-> >> +                                                   const char *buf, s=
-ize_t count)
-> >> +{
-> >> +       struct rpc_xprt_switch *xprt_switch =3D
-> >> +               rpc_sysfs_xprt_switch_kobj_get_xprt(kobj);
-> >> +       struct xprt_create xprt_create_args;
-> >> +       struct rpc_xprt *xprt, *new;
-> >> +
-> >> +       if (!xprt_switch)
-> >> +               return 0;
-> >> +
-> >> +       xprt =3D rpc_xprt_switch_get_main_xprt(xprt_switch);
-> >> +       if (!xprt)
-> >> +               goto out;
-> >> +
-> >> +       xprt_create_args.ident =3D xprt->xprt_class->ident;
-> >> +       xprt_create_args.net =3D xprt->xprt_net;
-> >> +       xprt_create_args.dstaddr =3D (struct sockaddr *)&xprt->addr;
-> >> +       xprt_create_args.addrlen =3D xprt->addrlen;
-> >> +       xprt_create_args.servername =3D xprt->servername;
-> >> +       xprt_create_args.bc_xprt =3D xprt->bc_xprt;
-> >> +       xprt_create_args.xprtsec =3D xprt->xprtsec;
-> >> +       xprt_create_args.connect_timeout =3D xprt->connect_timeout;
-> >> +       xprt_create_args.reconnect_timeout =3D xprt->max_reconnect_tim=
-eout;
-> >> +
-> >> +       new =3D xprt_create_transport(&xprt_create_args);
-> >> +       if (IS_ERR_OR_NULL(new)) {
-> >> +               count =3D PTR_ERR(new);
-> >> +               goto out_put_xprt;
-> >> +       }
-> >> +
-> >> +       rpc_xprt_switch_add_xprt(xprt_switch, new);
+> On 1/14/25 3:23 AM, Rik Theys wrote:
+> > Hi,
 > >
-> > Before adding a new transport don't we need to check that we are not
-> > at or over the limit of how many connections we currently have (not
-> > over nconnect limit and/or over the session trunking limit)?
->
-> That's a good thought, but I'm not really seeing how to do that from insi=
-de the sunrpc code. Those are configuration values for the NFS client, and =
-don't get passed down to sunrpc, so sunrpc has no knownledge of them. If yo=
-u think that'll be a problem, I can look into adding those checks for the n=
-ext posting.
-
-Seems incorrect to allow going over a limit we enforce at the nfs
-layer? So I think it is a problem.
-
-The other thing that sticks out. Given that this is version agnostic
-what happens for v3/v4 and the bc_xprt?
-
->
-> Anna
->
+> > On Mon, Jan 13, 2025 at 11:12=E2=80=AFPM Chuck Lever <chuck.lever@oracl=
+e.com> wrote:
+> >>
+> >> On 1/12/25 7:42 AM, Rik Theys wrote:
+> >>> On Fri, Jan 10, 2025 at 11:07=E2=80=AFPM Chuck Lever <chuck.lever@ora=
+cle.com> wrote:
+> >>>>
+> >>>> On 1/10/25 3:51 PM, Rik Theys wrote:
+> >>>>> Are there any debugging commands we can run once the issue happens
+> >>>>> that can help to determine the cause of this issue?
+> >>>>
+> >>>> Once the issue happens, the precipitating bug has already done its
+> >>>> damage, so at that point it is too late.
+> >>
+> >> I've studied the code and bug reports a bit. I see one intriguing
+> >> mention in comment #5:
+> >>
+> >> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1071562#5
+> >>
+> >> /proc/130/stack:
+> >> [<0>] rpc_shutdown_client+0xf2/0x150 [sunrpc]
+> >> [<0>] nfsd4_process_cb_update+0x4c/0x270 [nfsd]
+> >> [<0>] nfsd4_run_cb_work+0x9f/0x150 [nfsd]
+> >> [<0>] process_one_work+0x1c7/0x380
+> >> [<0>] worker_thread+0x4d/0x380
+> >> [<0>] kthread+0xda/0x100
+> >> [<0>] ret_from_fork+0x22/0x30
+> >>
+> >> This tells me that the active item on the callback_wq is waiting for t=
+he
+> >> backchannel RPC client to shut down. This is probably the proximal cau=
+se
+> >> of the callback workqueue stall.
+> >>
+> >> rpc_shutdown_client() is waiting for the client's cl_tasks to become
+> >> empty. Typically this is a short wait. But here, there's one or more R=
+PC
+> >> requests that are not completing.
+> >>
+> >> Please issue these two commands on your server once it gets into the
+> >> hung state:
+> >>
+> >> # rpcdebug -m rpc -c
+> >> # echo t > /proc/sysrq-trigger
 > >
-> >> +       xprt_put(new);
-> >> +
-> >> +out_put_xprt:
-> >> +       xprt_put(xprt);
-> >> +out:
-> >> +       xprt_switch_put(xprt_switch);
-> >> +       return count;
-> >> +}
-> >> +
-> >>  static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
-> >>                                             struct kobj_attribute *att=
-r,
-> >>                                             const char *buf, size_t co=
-unt)
-> >> @@ -451,8 +500,13 @@ ATTRIBUTE_GROUPS(rpc_sysfs_xprt);
-> >>  static struct kobj_attribute rpc_sysfs_xprt_switch_info =3D
-> >>         __ATTR(xprt_switch_info, 0444, rpc_sysfs_xprt_switch_info_show=
-, NULL);
+> > There were no rpcdebug entries configured, so I don't think the first
+> > command did much.
+> >
+> > You can find the output from the second command in attach.
+>
+> I don't see any output for "echo t > /proc/sysrq-trigger" here. What I
+> do see is a large number of OOM-killer notices. So, your server is out
+> of memory. But I think this is due to a memory leak bug, probably this
+> one:
+
+I'm confused. Where do you see the OOM-killer notices in the log I provided=
+?
+
+The first lines of the file is after increasing the hung_task_warnings
+and waiting a few minutes. This triggered the hun task on the nfsd4
+laundromat_main workqueue:
+
+Workqueue: nfsd4 laundromat_main [nfsd]
+Jan 14 09:06:45 kwak.esat.kuleuven.be kernel: Call Trace:
+
+Then I executed the commands you provided. Are the lines after the
+
+Jan 14 09:07:00 kwak.esat.kuleuven.be kernel: sysrq: Show State
+
+Line not the output you're looking for?
+
+Regards,
+Rik
+
+>
+>     https://bugzilla.kernel.org/show_bug.cgi?id=3D219535
+>
+> So that explains the source of the frequent deleg_reaper() calls on your
+> system; it's the shrinker. (Note these calls are not the actual problem.
+> The real bug is somewhere in the callback code, but frequent callbacks
+> are making it easy to hit the callback bug).
+>
+> Please try again, but wait until you see "INFO: task nfsd:XXXX blocked
+> for more than 120 seconds." in the journal before issuing the rpcdebug
+> and "echo t" commands.
+>
+>
+> > Regards,
+> > Rik
+> >
 > >>
-> >> +static struct kobj_attribute rpc_sysfs_xprt_switch_add_xprt =3D
-> >> +       __ATTR(xprt_switch_add_xprt, 0644, rpc_sysfs_xprt_switch_add_x=
-prt_show,
-> >> +               rpc_sysfs_xprt_switch_add_xprt_store);
-> >> +
-> >>  static struct attribute *rpc_sysfs_xprt_switch_attrs[] =3D {
-> >>         &rpc_sysfs_xprt_switch_info.attr,
-> >> +       &rpc_sysfs_xprt_switch_add_xprt.attr,
-> >>         NULL,
-> >>  };
-> >>  ATTRIBUTE_GROUPS(rpc_sysfs_xprt_switch);
-> >> diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-> >> index 720d3ba742ec..a07b81ce93c3 100644
-> >> --- a/net/sunrpc/xprtmultipath.c
-> >> +++ b/net/sunrpc/xprtmultipath.c
-> >> @@ -92,6 +92,27 @@ void rpc_xprt_switch_remove_xprt(struct rpc_xprt_sw=
-itch *xps,
-> >>         xprt_put(xprt);
-> >>  }
+> >> Then gift-wrap the server's system journal and send it to me. I need t=
+o
+> >> see only the output from these two commands, so if you want to
+> >> anonymize the journal and truncate it to just the day of the failure,
+> >> I think that should be fine.
 > >>
-> >> +/**
-> >> + * rpc_xprt_switch_get_main_xprt - Get the 'main' xprt for an xprt sw=
-itch.
-> >> + * @xps: pointer to struct rpc_xprt_switch.
-> >> + */
-> >> +struct rpc_xprt *rpc_xprt_switch_get_main_xprt(struct rpc_xprt_switch=
- *xps)
-> >> +{
-> >> +       struct rpc_xprt_iter xpi;
-> >> +       struct rpc_xprt *xprt;
-> >> +
-> >> +       xprt_iter_init_listall(&xpi, xps);
-> >> +
-> >> +       xprt =3D xprt_iter_get_xprt(&xpi);
-> >> +       while (xprt && !xprt->main) {
-> >> +               xprt_put(xprt);
-> >> +               xprt =3D xprt_iter_get_next(&xpi);
-> >> +       }
-> >> +
-> >> +       xprt_iter_destroy(&xpi);
-> >> +       return xprt;
-> >> +}
-> >> +
-> >>  static DEFINE_IDA(rpc_xprtswitch_ids);
 > >>
-> >>  void xprt_multipath_cleanup_ids(void)
 > >> --
-> >> 2.47.1
-> >>
-> >>
+> >> Chuck Lever
+> >
+> >
+> >
 >
+>
+> --
+> Chuck Lever
+
+
+
+--=20
+
+Rik
 
