@@ -1,180 +1,171 @@
-Return-Path: <linux-nfs+bounces-9213-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9214-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 079A7A1145B
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 23:47:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17E08A1152B
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 00:15:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D44B03A5ADF
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 22:47:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8DA188A09F
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 23:15:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00F98215059;
-	Tue, 14 Jan 2025 22:47:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF302147EE;
+	Tue, 14 Jan 2025 23:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjgAMiqJ"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ercJg6pM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0F42144AE
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 22:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB32135D0
+	for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 23:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736894820; cv=none; b=XP6VeVWKusOPHQ8ZsDfXyIHZ8uH6RptwoeKWAlgR7AfChxL2VHlXsYQNPNBsPr/IaMRSnYaSsNrup6juxf+8G9r8HKZF6quwHj29OrFeR+YkDkNNiIsOYziMIpFYLq4b6tdh9q/DqVmhdUgJN7qk4zGpOCVjzWwm5NuqlLKanQ4=
+	t=1736896502; cv=none; b=Ve0vgCbrBfeSEYPW6A3/TwABBQO3Lgo1ogg/pGyBzr2oGgBtifAyCkwv9NL18LvCDrxMXM+53lLF6syrKxpzvUI473GJuJx0NB27kCwff0FgQEun1IVEuz0mQ4iBW6t3hZqEIMDtjog7oixnt4HAB9Uj//IRb1FAxccc9bX2Ss8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736894820; c=relaxed/simple;
-	bh=KYvzk3JK90KlW3XKcT4H9QKNkDRb1uXDoVOZ6ak8wys=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uZ4AwmLn1HOKBYEtd2AKFfkurg8FKh6Ew/J7dBpf44uRHzY8mVtDVd9Sfe/zwYyuzbylQZj3bEgQssHya0JYsM6GlYfACfCLpu1qxE6tp/XpD+Tn05AumHa/0HsLVVTxDJAFaLl6GyZp4vYlPriWR6UcKLeU3UZfV/BWKQx1Db4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjgAMiqJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA314C4CEE3;
-	Tue, 14 Jan 2025 22:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736894820;
-	bh=KYvzk3JK90KlW3XKcT4H9QKNkDRb1uXDoVOZ6ak8wys=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kjgAMiqJM8edRNIgQ/qsWqvgM9/130ilF7FdtU4ouwOJ7qZewPfr4CIsuvC8i+aDf
-	 nE9UwfF3CfCcZ4ejhdzLLynbLljJ6IvPDmgy0m5eU1hkD0ScNsbWcpBT2VosaWKrfa
-	 DiQmyda0oQT2boP1as/OSlq+I/q7fv9jNPIB/iUh1TLrL2Y6fw2ELj1CJDwwCakhXt
-	 0e9rky5PflhqKtruGXI36kVL889HDPOzDH9mCGCO7h9UHV1SUCXL6pFLdZ8/b9fbFS
-	 m3VY8T+B61kQk8JR5cnqCxy2XaCX5m0mHrlFH1U7hYJhV5cXdYRpcl5k8DKcevaTbr
-	 28OEOB8Cx20MQ==
-Message-ID: <1d9b4fb46f6eef50de04b22e31165eea132e0d8d.camel@kernel.org>
-Subject: Re: [RFC PATCH] NFSD: Skip sending CB_RECALL_ANY when the
- backchannel isn't up
-From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Tue, 14 Jan 2025 17:46:58 -0500
-In-Reply-To: <20250114220924.2437687-1-cel@kernel.org>
-References: <20250114220924.2437687-1-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
+	s=arc-20240116; t=1736896502; c=relaxed/simple;
+	bh=Ku6IWsTkFsv6GMoIpnDvn94d1zg54qScIiut5gwfQng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQE+fHjmxFmEaDiR5jNYNoch+t1kMLS+I4bv4xyTHVJD/5ytsgU2GU8uQNQHOQrad08ehkjVqa8plhRDMZqtb4lNVeIGgFNasjBOpBduyfFnG6DFjsrceAvGE1Q6TWo5Sy+M1nDfQ+nuhLivTCYMKkMsGYLJaGgYroPgdjQkBZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ercJg6pM; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2167141dfa1so4853875ad.1
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 15:15:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1736896500; x=1737501300; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EeZxW1zCzlr+JrfmRQmFydF0o1xRvBF9Y2l5yWErmxw=;
+        b=ercJg6pMVxbdKdR+0bXWok8JN/GhbGpY1VDreApfIFwJRPozSWW46ZuQVa8+GEDebQ
+         YBC6faQah+nJfuxqpA8OqnEibnPqaV86bxe9Z0brZoAEbMSTnwyjb9AjL9rC8xX9b0VB
+         vWxWKrS9Sa6TgdRCqZTRLB2Gj2JIeO6JqvJgDceiOpz9/dkVcnllL1a1N1xC154b9fOe
+         1d+pI4q7qi3mMY4hWypLl4hhCzRSx67L3P7jlVQulWfgZEsEFLhkWcLZnjyTpNT8vwZ7
+         plqe9RCCCGKFLZbDCzDYXXfKedywPUxI7cve2Xm026rYe51dGg3LkxZ19Cf9yNPSeEzB
+         yKvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736896500; x=1737501300;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EeZxW1zCzlr+JrfmRQmFydF0o1xRvBF9Y2l5yWErmxw=;
+        b=tBrJ3r5kQup/UcaCrKk46Ybby/O83cVpsuhCzP/QTjn6dzDSq0yOomaM/IIsufy73Q
+         qty2MF9YuJY/ny71xunEZRKw1QEJVJZDba17v1UA44IGjJtYTCdcE8ftNkzgBF3eQXku
+         CpuNDHrCPXZ8dQLc+tSiKAyQPe1z3sxkrZEL8Ouaewxfp+g6PqxjG1/2nlJSxmk/aELB
+         aY5ny0gEgDuolZu6d/GUuJYLc1MIWIdET3gNd2gZsE0avWxONZEjytKTeLcoFi3mo5I5
+         rb8hqhnWUYnXrsTGjQzvrgqh/pMj75zdcUtV8h+K04RAL9GYFCH2SGAuL/28wTJESy4c
+         YgaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX2v8aHh46i1D+3WiLHRPxtOCCmIYLkzJ7f1vQR1bdkb045hMWN9Sv0bjL2yFcRkJJPSchlUzdR3dw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRmB26cKZU1YFoICkgecAgMbF8rsMz36krTWP9mYUVNyt4tr8X
+	1C0UGDDsqSJVXsDB6LbjeLcx2TETwSjs9UUayRH54Wrl2e4fLghtbRYDMxhS9OM=
+X-Gm-Gg: ASbGncsHxj97TByyTqnT36W2mYMIx0qBkKtWjhKC0MOHqYZz9DCperKOZmPxXXx8FQD
+	3FdkKRobquH3/EBHn5GXJ+VjNmDKmUYXXtbFlrlNcFULc8Pe8RxtlqyAp63meRRycnocaXM9Dbd
+	1ftF4aHk7gKGY3eejuV4YX2LvQUFguFciqz9kfJaCls0GJLqkIb17q/yxgaFYSC86GkEbUC2qQS
+	+2BBxK12i3vgJF/OdVmWT2NyhPgJGd6w9eMFeHxun4vmVmXIuIRtnRai6D/uRy9i6Pilos6SOzb
+	++YUwxaNsT/xWG9DnFaCWQOnXsy0Qa8S
+X-Google-Smtp-Source: AGHT+IGPe701b0TiJbUgOXs5XC6XzeWPSLFYvyoyE234qjSY/ozCb65VqSGjAJ1Qx7pa4gIqb0AXpQ==
+X-Received: by 2002:a17:902:ecc1:b0:21a:874f:1de1 with SMTP id d9443c01a7336-21bf0ce086emr10791965ad.21.1736896499802;
+        Tue, 14 Jan 2025 15:14:59 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10f839sm71626055ad.15.2025.01.14.15.14.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 15:14:59 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tXq7c-00000005wYY-26ph;
+	Wed, 15 Jan 2025 10:14:56 +1100
+Date: Wed, 15 Jan 2025 10:14:56 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Anna Schumaker <anna.schumaker@oracle.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
+ operation: VFS or NFS ioctl() ?
+Message-ID: <Z4bv8FkvCn9zwgH0@dread.disaster.area>
+References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
 
-On Tue, 2025-01-14 at 17:09 -0500, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> NFSD sends CB_RECALL_ANY to clients when the server is low on
-> memory or that client has a large number of delegations outstanding.
->=20
-> We've seen cases where NFSD attempts to send CB_RECALL_ANY requests
-> to disconnected clients, and gets confused. These calls never go
-> anywhere if a backchannel transport to the target client isn't
-> available. Before the server can send any backchannel operation, the
-> client has to connect first and then do a BIND_CONN_TO_SESSION.
->=20
-> This patch doesn't address the root cause of the confusion, but
-> there's no need to queue up these optional operations if they can't
-> go anywhere.
->=20
-> Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low memory =
-condition")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b7a0cfd05401..9ef32b19198c 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6867,7 +6867,8 @@ deleg_reaper(struct nfsd_net *nn)
->  				clp->cl_ra_time < 5)) {
->  			continue;
->  		}
-> -		list_add(&clp->cl_ra_cblist, &cblist);
-> +		if (clp->cl_cb_state =3D=3D NFSD4_CB_UP)
-> +			list_add(&clp->cl_ra_cblist, &cblist);
-> =20
->  		/* release in nfsd4_cb_recall_any_release */
->  		kref_get(&clp->cl_nfsdfs.cl_ref);
+[Please word wrap email text at 68-72 columns]
 
-Sounds like a reasonable thing to do.
+Anna, I think we need to consider how to integrate this
+functionality across then entire storage stack, not just for NFS
+client/server optimisation.  My comments are made with this in mind.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+On Tue, Jan 14, 2025 at 04:38:03PM -0500, Anna Schumaker wrote:
+> I've seen a few requests for implementing the NFS v4.2 WRITE_SAME
+> [1] operation over the last few months [2][3] to accelerate
+> writing patterns of data on the server, so it's been in the back
+> of my mind for a future project. I'll need to write some code
+> somewhere so NFS & NFSD can handle this request. I could keep any
+> implementation internal to NFS / NFSD, but I'd like to find out if
+> local filesystems would find this sort of feature useful and if I
+> should put it in the VFS instead.
+
+How closely does this match to the block device WRITE_SAME
+(SCSI/NVMe) commands? I note there is a reference to this in the
+RFC, but there are no details given.
+
+i.e. is this NFS request something we can pass straight through to
+the server side storage hardware if it supports hardware WRITE_SAME
+commands, or do they have incompatible semantics?
+
+If the two are compatible, then I think we really want server side
+hardware offload to be possible. That requires the filesystem to
+allocate/map the physical storage and then call into the block layer
+to either offload it to the hardware or emulate it in software
+(similar to how blkdev_issue_zeroout() works).
+
+> I was thinking I could keep it simple, and model a function call
+> based on write(3) / pwrite(3) to write some pattern N times
+> starting at either the file's current offset or at a user-provide
+> offset. Something like:
+>
+> write_pattern(int filedes, const void *pattern, size_t nbytes, size_t count);
+> pwrite_pattern(int filedes, const void *pattern, size_t nbytes, size_t count, offset_t offset);
+
+Apart from noting that pwritev2(RWF_ENCODED) would have been able to
+support this, I'll let other people decide what the best
+user/syscall API will be for this.
+
+> I could then construct a WRITE_SAME call in the NFS client using
+> this information. This seems "good enough" to me for what people
+> have asked for, at least as a client-side interface. It wouldn't
+> really help the server, which would still need to do several
+> writes in a loop to be spec-compliant with writing the pattern to
+> an offset inside the "application data block" [4] structure.
+
+Right, so we need both NFS client side and server side local fs
+support for the WRITE_SAME operation.
+
+That implies we should implement it at the VFS as a file method.
+i.e. ->write_same() at a similar layer to ->write_iter().
+
+If we do that, then both the NFS client and the NFS server can use
+the same VFS interface, and applications can use WRITE_SAME on both
+NFS and local filesystems directly...
+
+> But maybe I'm simplifying this too much, and others would find the
+> additional application data block fields useful? Or should I keep
+> it all inside NFS, and call it with an ioctl instead of putting it
+> into the VFS?
+
+I think a file method for VFS implementation is the right way to do
+this because it allows both client side server offload and server
+side hardware offload through the local filesystem. It also provides
+a simple way to check if the filesystem supports the functionality
+or not...
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
