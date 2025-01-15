@@ -1,61 +1,60 @@
-Return-Path: <linux-nfs+bounces-9230-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9231-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EAF7A12767
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 16:27:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDCEDA1276B
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 16:28:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59FA8161848
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 15:27:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5ACD63A1399
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 15:28:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 203A614B959;
-	Wed, 15 Jan 2025 15:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E14F144D1A;
+	Wed, 15 Jan 2025 15:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ct8+Z7EB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ncso5VyH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAD2144D1A;
-	Wed, 15 Jan 2025 15:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F3386348
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 15:28:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954838; cv=none; b=iCxa7at+mvKNLU1j+WuWC2p4tCfFCEY96BFmkwl/C5Z8P4RoevBeJ0CdXu+EWAJflDkGlF9VAKGeid84twk0CPNNdNthQk/C0f/T28+kTBSOoI3JJhHA/ZyLHgmUY07Fj2zwXpp31xjRmGCe/i6TS9a/NbffLFWoJU4BQF7CKZo=
+	t=1736954898; cv=none; b=Ik9fsBA+gD75XC3cTMiUcRvCdsg26rN4Yao6uyiVH/LAdHLl7/adLfKxm7v8dTE/VO9CBbPxyhiEonIkM2OsBNMsVUrCy5/KampiOwMKVtePE3oSibrVzi8F7PK1wUhEuBIVCfdP63wcqyTA0eYXgoRoyghwzNNbzcZ9YdKiyfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954838; c=relaxed/simple;
-	bh=KXA0zNOz68AYOgkfExKQ2f4Zs8rdcol1iaKtpHP+eaA=;
+	s=arc-20240116; t=1736954898; c=relaxed/simple;
+	bh=Nta6X5JcLUBcKeMSk1aK121t+/nWGRCXXRyJpXcD60k=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WAplm/mUTHAA1CQ/a4ZPj74WWzHaLLY1QOLBkkPR4E0zyI740G9qhSHRbOggD8EQRIkshXu4YYjzdv5tju6lkEZJL7h7PjYIpY7AZx2e++gW8CrDPGMZ9FaaYIDUi9779d+li/LrgEVJ0MDE69WKPJLMDo2o1eb2V3Ru3a6EAdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ct8+Z7EB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 622C2C4CED1;
-	Wed, 15 Jan 2025 15:27:15 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ERx2DdBfZ7QuQWIDhD6nm9BCmsPXIk975NPFNZqgwOrkAIOWj1AOp0DkViDQmoQfUEAJn1zwP/5/nXtlbmTV9gsJqejejQBHfXpW3DTrhdQA/LVRjVRMI4kfC6teU4yHaAa99oPdsDaY9Ieatfa3ObC3uGwWBlr0V3zOZ5MkU4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ncso5VyH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4974FC4CEE1;
+	Wed, 15 Jan 2025 15:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736954836;
-	bh=KXA0zNOz68AYOgkfExKQ2f4Zs8rdcol1iaKtpHP+eaA=;
+	s=k20201202; t=1736954896;
+	bh=Nta6X5JcLUBcKeMSk1aK121t+/nWGRCXXRyJpXcD60k=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ct8+Z7EB/bdKu3sHidWohMn+0FHtBzYeTuvhJbTe1NLct7mUOX1mozlNW+oHVQHRg
-	 HTmx7x6AApPrvDBjYXCsiUJZ//EOrzLeU+al7+rV2wxQ59lYaoH8aH/3CThVkycynP
-	 136A4i/uFPKa9RB7lZhc9aO8b8dDW0+zpPFBWGWpMUQ/BcT4uCbvR8AY9cxeDtshXU
-	 UktQ/MR+aXecgEv+K5CmglG6UO7n19boukHE9iRjlbOGORiMU/9F+4St0QhaaUrV53
-	 HyzyE4WbWPH/FXjXDYpHk5rwBp1UdrVNZwKrFNtuAB3SL9ajlhJOz82xHhZgCSRfrk
-	 /NtFcBBBUYvYg==
-Message-ID: <b8c6a8abc67e2039c374f1178e73208ccf2ce10b.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: free nfsd_file by gc after adding it to lru list
+	b=ncso5VyHwkTicKNPGsEVnO+bwrQvFPbLQFbUKGCef8cBrZAHGQ7KZShgkbp+tZq8e
+	 9tyvfDMkzzNdTg7OCxFJt7HSJ9nfHnsgjCv46GP1VlAeYAv9KyT98AeH7DNkLNuc2p
+	 gaIbtGkbiTwWyt8w6drYxwRc24/OioeVNfElYOj36A7iqBBrZ/yp+/FGA+nOeEdmW8
+	 p8giROotW0m+PZPaGpLulwSrf6YytQPxyckZ/9QruJRs8gHO9kyqvlcNMyFHlFeLr0
+	 GcdjJYZzNSn/WHVVN/8qR22JvzWZk4KBO50Be45MYSgbZ7lH0DbYni69zaJEhPKQje
+	 d5cWM6imuUAFw==
+Message-ID: <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
+Subject: Re: [PATCH v2 0/3] nfsdctl: add support for new lockd configuration
+ interface
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Li Lingfeng
- <lilingfeng3@huawei.com>, 	neilb@suse.de, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Wed, 15 Jan 2025 10:27:14 -0500
-In-Reply-To: <a453c201-7dd4-49e7-a90a-5dc4c9359f2b@oracle.com>
-References: <20250113025957.1253214-1-lilingfeng3@huawei.com>
-	 <8864761c99553a7f18adc13e98b4ef6255da1d9e.camel@kernel.org>
-	 <a32d4eefe27757de6ad8761e8de740e8d0968561.camel@kernel.org>
-	 <a453c201-7dd4-49e7-a90a-5dc4c9359f2b@oracle.com>
+To: Steve Dickson <steved@redhat.com>, Scott Mayhew <smayhew@redhat.com>
+Cc: Yongcheng Yang <yoyang@redhat.com>, linux-nfs@vger.kernel.org
+Date: Wed, 15 Jan 2025 10:28:15 -0500
+In-Reply-To: <532ea7d0-afe9-47c0-8436-6891a4b63da4@redhat.com>
+References: <20250110-lockd-nl-v2-0-e3abe78cc7fb@kernel.org>
+	 <Z4bScYOgDwbpyXjt@aion>
+	 <659d6f0153daf83ebfcad8d7bdb80adb6aa319b5.camel@kernel.org>
+	 <Z4fJz4re4iFyM2FE@aion>
+	 <5487afbab2acfe396e1ccc8ba3dfd1256fa00c7b.camel@kernel.org>
+	 <532ea7d0-afe9-47c0-8436-6891a4b63da4@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,95 +139,99 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-01-15 at 10:03 -0500, Chuck Lever wrote:
-> On 1/14/25 2:39 PM, Jeff Layton wrote:
-> > On Tue, 2025-01-14 at 14:27 -0500, Jeff Layton wrote:
-> > > On Mon, 2025-01-13 at 10:59 +0800, Li Lingfeng wrote:
-> > > > In nfsd_file_put, after inserting the nfsd_file into the nfsd_file_=
-lru
-> > > > list, gc may be triggered in another thread and immediately release=
- this
-> > > > nfsd_file, which will lead to a UAF when accessing this nfsd_file a=
-gain.
-> > > >=20
-> > > > All the places where unhash is done will also perform lru_remove, s=
-o there
-> > > > is no need to do lru_remove separately here. After inserting the nf=
-sd_file
-> > > > into the nfsd_file_lru list, it can be released by relying on gc.
-> > > >=20
-> > > > Fixes: 4a0e73e635e3 ("NFSD: Leave open files out of the filecache L=
-RU")
-> > > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > > > ---
-> > > >   fs/nfsd/filecache.c | 12 ++----------
-> > > >   1 file changed, 2 insertions(+), 10 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > index a1cdba42c4fa..37b65cb1579a 100644
-> > > > --- a/fs/nfsd/filecache.c
-> > > > +++ b/fs/nfsd/filecache.c
-> > > > @@ -372,18 +372,10 @@ nfsd_file_put(struct nfsd_file *nf)
-> > > >   		/* Try to add it to the LRU.  If that fails, decrement. */
-> > > >   		if (nfsd_file_lru_add(nf)) {
-> > > >   			/* If it's still hashed, we're done */
-> > > > -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> > > > +			if (list_lru_count(&nfsd_file_lru))
-> > > >   				nfsd_file_schedule_laundrette();
-> > > > -				return;
-> > > > -			}
-> > > >  =20
-> > > > -			/*
-> > > > -			 * We're racing with unhashing, so try to remove it from
-> > > > -			 * the LRU. If removal fails, then someone else already
-> > > > -			 * has our reference.
-> > > > -			 */
-> > > > -			if (!nfsd_file_lru_remove(nf))
-> > > > -				return;
-> > > > +			return;
-> > > >   		}
-> > > >   	}
-> > > >   	if (refcount_dec_and_test(&nf->nf_ref))
-> > >=20
-> > > I think this looks OK. Filecache bugs are particularly nasty though, =
-so
-> > > let's run this through a nice long testing cycle.
-> > >=20
-> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >=20
-> > Actually, I take it back. This is problematic in another way.
-> >=20
-> > In this case, we're racing with another task that is unhashing the
-> > object, but we've put it on the LRU ourselves. What guarantee do we
-> > have that the unhashing and removal from the LRU didn't occur before
-> > this task called nfsd_file_lru_add()? That's why we attempt to remove
-> > it here -- we can't rely on the task that unhashed it to do so at that
-> > point.
-> >=20
-> > What might be best is to take and hold the rcu_read_lock() before doing
-> > the nfsd_file_lru_add, and just release it after we do these racy
-> > checks. That should make it safe to access the object.
-> >=20
-> > Thoughts?
+On Wed, 2025-01-15 at 10:12 -0500, Steve Dickson wrote:
 >=20
-> Holding the RCU read lock will keep the dereferences safe since
-> nfsd_file objects are freed only after an RCU grace period. But will the
-> logic in nfsd_file_put() work properly on totally dead nfsd_file
-> objects? I don't see a specific failure mode there, but I'm not very
-> imaginative.
+> On 1/15/25 9:56 AM, Jeff Layton wrote:
+> > On Wed, 2025-01-15 at 09:44 -0500, Scott Mayhew wrote:
+> > > On Tue, 14 Jan 2025, Jeff Layton wrote:
+> > >=20
+> > > > On Tue, 2025-01-14 at 16:09 -0500, Scott Mayhew wrote:
+> > > > > On Fri, 10 Jan 2025, Jeff Layton wrote:
+> > > > >=20
+> > > > > > v2 is just a small update to fix the problems that Scott spotte=
+d.
+> > > > > >=20
+> > > > > > This patch series adds support for the new lockd configuration =
+interface
+> > > > > > that should fix this RH bug:
+> > > > > >=20
+> > > > > >      https://issues.redhat.com/browse/RHEL-71698
+> > > > > >=20
+> > > > > > There are some other improvements here too, notably a switch to=
+ xlog.
+> > > > > > Only lightly tested, but seems to do the right thing.
+> > > > > >=20
+> > > > > > Port handling with lockd still needs more work. Currently that =
+is
+> > > > > > usually configured by rpc.statd. I think we need to convert it =
+to
+> > > > > > use netlink to configure the ports as well, when it's able.
+> > > > > >=20
+> > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > >=20
+> > > > > I think the read_nfsd_conf call should be moved out of autostart_=
+func
+> > > > > and into main (right before the command-line options are parsed).=
+  Right
+> > > > > now if you enable debugging in nfs.conf, you get the "configuring
+> > > > > listeners" and "nfsdctl exiting" messages, but not the "nfsdctl s=
+tarted"
+> > > > > message.  It's not a big deal though and could be done if additio=
+nal
+> > > > > debug logging is added in the future.
+> > > > >=20
+> > > >=20
+> > > > That sounds good. We can do that in a separate patch.
+> > > >=20
+> > > > > Reviewed-by: Scott Mayhew <smayhew@redhat.com>
+> > > >=20
+> > > > Thanks!
+> > >=20
+> > > Hey, Jeff.  I was testing this against a kernel without the lockd
+> > > netlink patch, and I get this:
+> > >=20
+> > > Jan 15 09:39:16 systemd[1]: Starting nfs-server.service - NFS server =
+and services...
+> > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl started
+> > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsd not found
+> > > Jan 15 09:39:17 sh[1603]: nfsdctl: lockd configuration failure
+> > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl exiting
+> > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: knfsd is currently down
+> > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Writing version string to kernel:=
+ -2 +3 +4 +4.1 +4.2
+> > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET TCP socket.
+> > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET6 TCP socket.
+> > >=20
+> > > Do we really want it falling back to rpc.nfsd if it can't configure
+> > > lockd?  Maybe it should emit a warning instead?
+> > >=20
+> >=20
+> > I thought about that, and I think it's better to error out here.
+> >=20
+> > Falling back to rpc.nfsd is harmless, and only people who are trying to
+> > set the grace period or lockd ports will ever hit this. lockd
+> > configuration is a no-op if none of those settings are set.
+> >=20
+> > > At the very least, NFSD_FAMILY_NAME should no longer be hard-coded in
+> > > that "not found" error message in netlink_msg_alloc().
+> > >=20
+> >=20
+> > Yeah, that would be good to fix.
+> >=20
 >=20
-> Overall, I think RCU would help.
+> On a rawhide kernel (6.13.0-0.rc6) the server does
+> come up with 'nfsdctl autostart' but with the
+> new argument 'nlm' I'm getting
+>=20
+> $ nfsdctl nlm
+> nfsdctl: nfsd not found
 >=20
 
-It should be safe to call nfsd_file_lru_add() with the rcu_read_lock()
-held. After that we're just looking at the nf_flags() and the nf_lru
-list head. On a dead file, HASHED will be clear and the
-nfsd_file_lru_remove() call will be a no-op (the list_head will be
-empty).
+Yeah, that's what Scott pointed out too. We should make that error
+message a bit more friendly. It may be a bit before I can get to it. Do
+you guys want to propose a patch to fix that?
 
-Li Lingfeng, do you want to propose a patch for this? Unfortunately,
-your reproducer won't work after that, since you can't sleep with the
-rcu_read_lock held.
+Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
