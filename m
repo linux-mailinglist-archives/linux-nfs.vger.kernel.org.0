@@ -1,171 +1,138 @@
-Return-Path: <linux-nfs+bounces-9214-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9215-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17E08A1152B
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 00:15:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD559A116DF
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 02:54:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8DA188A09F
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jan 2025 23:15:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 678423A1FA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 01:54:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF302147EE;
-	Tue, 14 Jan 2025 23:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="ercJg6pM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1253822DC30;
+	Wed, 15 Jan 2025 01:54:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AB32135D0
-	for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 23:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A220723243D;
+	Wed, 15 Jan 2025 01:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736896502; cv=none; b=Ve0vgCbrBfeSEYPW6A3/TwABBQO3Lgo1ogg/pGyBzr2oGgBtifAyCkwv9NL18LvCDrxMXM+53lLF6syrKxpzvUI473GJuJx0NB27kCwff0FgQEun1IVEuz0mQ4iBW6t3hZqEIMDtjog7oixnt4HAB9Uj//IRb1FAxccc9bX2Ss8=
+	t=1736906049; cv=none; b=sjhbpbGoh6QXlofHjjLsEEqfeIqvUzaStXFbr628yd6aLFkmf4WIDK1yE2OsNfrLRDanKzwS2Wfn4kLLojjpodXx6F+ZRQ9HvOZXEEVlK/XLqxgVb8gPcr4kjwUb31fm2meViGhuyqhB5Ilbu89091xlB16SDmfBVdJrbmUW5gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736896502; c=relaxed/simple;
-	bh=Ku6IWsTkFsv6GMoIpnDvn94d1zg54qScIiut5gwfQng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QQE+fHjmxFmEaDiR5jNYNoch+t1kMLS+I4bv4xyTHVJD/5ytsgU2GU8uQNQHOQrad08ehkjVqa8plhRDMZqtb4lNVeIGgFNasjBOpBduyfFnG6DFjsrceAvGE1Q6TWo5Sy+M1nDfQ+nuhLivTCYMKkMsGYLJaGgYroPgdjQkBZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=ercJg6pM; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2167141dfa1so4853875ad.1
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Jan 2025 15:15:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1736896500; x=1737501300; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EeZxW1zCzlr+JrfmRQmFydF0o1xRvBF9Y2l5yWErmxw=;
-        b=ercJg6pMVxbdKdR+0bXWok8JN/GhbGpY1VDreApfIFwJRPozSWW46ZuQVa8+GEDebQ
-         YBC6faQah+nJfuxqpA8OqnEibnPqaV86bxe9Z0brZoAEbMSTnwyjb9AjL9rC8xX9b0VB
-         vWxWKrS9Sa6TgdRCqZTRLB2Gj2JIeO6JqvJgDceiOpz9/dkVcnllL1a1N1xC154b9fOe
-         1d+pI4q7qi3mMY4hWypLl4hhCzRSx67L3P7jlVQulWfgZEsEFLhkWcLZnjyTpNT8vwZ7
-         plqe9RCCCGKFLZbDCzDYXXfKedywPUxI7cve2Xm026rYe51dGg3LkxZ19Cf9yNPSeEzB
-         yKvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736896500; x=1737501300;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EeZxW1zCzlr+JrfmRQmFydF0o1xRvBF9Y2l5yWErmxw=;
-        b=tBrJ3r5kQup/UcaCrKk46Ybby/O83cVpsuhCzP/QTjn6dzDSq0yOomaM/IIsufy73Q
-         qty2MF9YuJY/ny71xunEZRKw1QEJVJZDba17v1UA44IGjJtYTCdcE8ftNkzgBF3eQXku
-         CpuNDHrCPXZ8dQLc+tSiKAyQPe1z3sxkrZEL8Ouaewxfp+g6PqxjG1/2nlJSxmk/aELB
-         aY5ny0gEgDuolZu6d/GUuJYLc1MIWIdET3gNd2gZsE0avWxONZEjytKTeLcoFi3mo5I5
-         rb8hqhnWUYnXrsTGjQzvrgqh/pMj75zdcUtV8h+K04RAL9GYFCH2SGAuL/28wTJESy4c
-         YgaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2v8aHh46i1D+3WiLHRPxtOCCmIYLkzJ7f1vQR1bdkb045hMWN9Sv0bjL2yFcRkJJPSchlUzdR3dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRmB26cKZU1YFoICkgecAgMbF8rsMz36krTWP9mYUVNyt4tr8X
-	1C0UGDDsqSJVXsDB6LbjeLcx2TETwSjs9UUayRH54Wrl2e4fLghtbRYDMxhS9OM=
-X-Gm-Gg: ASbGncsHxj97TByyTqnT36W2mYMIx0qBkKtWjhKC0MOHqYZz9DCperKOZmPxXXx8FQD
-	3FdkKRobquH3/EBHn5GXJ+VjNmDKmUYXXtbFlrlNcFULc8Pe8RxtlqyAp63meRRycnocaXM9Dbd
-	1ftF4aHk7gKGY3eejuV4YX2LvQUFguFciqz9kfJaCls0GJLqkIb17q/yxgaFYSC86GkEbUC2qQS
-	+2BBxK12i3vgJF/OdVmWT2NyhPgJGd6w9eMFeHxun4vmVmXIuIRtnRai6D/uRy9i6Pilos6SOzb
-	++YUwxaNsT/xWG9DnFaCWQOnXsy0Qa8S
-X-Google-Smtp-Source: AGHT+IGPe701b0TiJbUgOXs5XC6XzeWPSLFYvyoyE234qjSY/ozCb65VqSGjAJ1Qx7pa4gIqb0AXpQ==
-X-Received: by 2002:a17:902:ecc1:b0:21a:874f:1de1 with SMTP id d9443c01a7336-21bf0ce086emr10791965ad.21.1736896499802;
-        Tue, 14 Jan 2025 15:14:59 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10f839sm71626055ad.15.2025.01.14.15.14.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 15:14:59 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1tXq7c-00000005wYY-26ph;
-	Wed, 15 Jan 2025 10:14:56 +1100
-Date: Wed, 15 Jan 2025 10:14:56 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
- operation: VFS or NFS ioctl() ?
-Message-ID: <Z4bv8FkvCn9zwgH0@dread.disaster.area>
-References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
+	s=arc-20240116; t=1736906049; c=relaxed/simple;
+	bh=s5wf0PvE8iMPtIJdgC3i2u0xGI6W6jQCAYEtoonO+4w=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=UXg3un3y/J+N9pCS0SSXJ3b0E7Sr39FzWXySCpw44ejg4/rtFba1abjrYBK7FoS13L5CznpCyZfulhJSoyvsffUyuEmL2utFGMbOgo8+OgCI8j+Wk/HgqSvmSu5KXSvAm1obiiVqGBco6IVuPUeMGhkc5vzOLecdeFaZcoMNXIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YXppl4sWPz11PCY;
+	Wed, 15 Jan 2025 09:50:07 +0800 (CST)
+Received: from kwepemh100016.china.huawei.com (unknown [7.202.181.102])
+	by mail.maildlp.com (Postfix) with ESMTPS id 48739180101;
+	Wed, 15 Jan 2025 09:53:58 +0800 (CST)
+Received: from [10.174.179.93] (10.174.179.93) by
+ kwepemh100016.china.huawei.com (7.202.181.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 15 Jan 2025 09:53:54 +0800
+Subject: Re: [PATCH v5 -next 00/16] sysctl: move sysctls from vm_table into
+ its own files
+To: Joel Granados <joel.granados@kernel.org>
+References: <20250111070751.2588654-1-yukaixiong@huawei.com>
+ <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
+CC: <akpm@linux-foundation.org>, <mcgrof@kernel.org>,
+	<ysato@users.sourceforge.jp>, <dalias@libc.org>,
+	<glaubitz@physik.fu-berlin.de>, <luto@kernel.org>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
+	<jack@suse.cz>, <kees@kernel.org>, <j.granados@samsung.com>,
+	<willy@infradead.org>, <Liam.Howlett@oracle.com>, <vbabka@suse.cz>,
+	<lorenzo.stoakes@oracle.com>, <trondmy@kernel.org>, <anna@kernel.org>,
+	<chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
+	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <paul@paul-moore.com>, <jmorris@namei.org>,
+	<linux-sh@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>, <dhowells@redhat.com>,
+	<haifeng.xu@shopee.com>, <baolin.wang@linux.alibaba.com>,
+	<shikemeng@huaweicloud.com>, <dchinner@redhat.com>, <bfoster@redhat.com>,
+	<souravpanda@google.com>, <hannes@cmpxchg.org>, <rientjes@google.com>,
+	<pasha.tatashin@soleen.com>, <david@redhat.com>, <ryan.roberts@arm.com>,
+	<ying.huang@intel.com>, <yang@os.amperecomputing.com>,
+	<zev@bewilderbeest.net>, <serge@hallyn.com>, <vegard.nossum@oracle.com>,
+	<wangkefeng.wang@huawei.com>
+From: yukaixiong <yukaixiong@huawei.com>
+Message-ID: <a3b4dcf9-7055-33f9-396c-c90b8cfa68d6@huawei.com>
+Date: Wed, 15 Jan 2025 09:53:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
+In-Reply-To: <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggpeml500008.china.huawei.com (7.185.36.147) To
+ kwepemh100016.china.huawei.com (7.202.181.102)
 
-[Please word wrap email text at 68-72 columns]
 
-Anna, I think we need to consider how to integrate this
-functionality across then entire storage stack, not just for NFS
-client/server optimisation.  My comments are made with this in mind.
 
-On Tue, Jan 14, 2025 at 04:38:03PM -0500, Anna Schumaker wrote:
-> I've seen a few requests for implementing the NFS v4.2 WRITE_SAME
-> [1] operation over the last few months [2][3] to accelerate
-> writing patterns of data on the server, so it's been in the back
-> of my mind for a future project. I'll need to write some code
-> somewhere so NFS & NFSD can handle this request. I could keep any
-> implementation internal to NFS / NFSD, but I'd like to find out if
-> local filesystems would find this sort of feature useful and if I
-> should put it in the VFS instead.
-
-How closely does this match to the block device WRITE_SAME
-(SCSI/NVMe) commands? I note there is a reference to this in the
-RFC, but there are no details given.
-
-i.e. is this NFS request something we can pass straight through to
-the server side storage hardware if it supports hardware WRITE_SAME
-commands, or do they have incompatible semantics?
-
-If the two are compatible, then I think we really want server side
-hardware offload to be possible. That requires the filesystem to
-allocate/map the physical storage and then call into the block layer
-to either offload it to the hardware or emulate it in software
-(similar to how blkdev_issue_zeroout() works).
-
-> I was thinking I could keep it simple, and model a function call
-> based on write(3) / pwrite(3) to write some pattern N times
-> starting at either the file's current offset or at a user-provide
-> offset. Something like:
+On 2025/1/14 21:50, Joel Granados wrote:
+> On Sat, Jan 11, 2025 at 03:07:35PM +0800, Kaixiong Yu wrote:
+>> This patch series moves sysctls of vm_table in kernel/sysctl.c to
+>> places where they actually belong, and do some related code clean-ups.
+>> After this patch series, all sysctls in vm_table have been moved into its
+>> own files, meanwhile, delete vm_table.
+>>
+>> All the modifications of this patch series base on
+>> linux-next(tags/next-20250110). To test this patch series, the code was
+>> compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
+>> x86_64 architectures. After this patch series is applied, all files
+>> under /proc/sys/vm can be read or written normally.
+> It is looking good! Here is how I think we should move it upstream:
 >
-> write_pattern(int filedes, const void *pattern, size_t nbytes, size_t count);
-> pwrite_pattern(int filedes, const void *pattern, size_t nbytes, size_t count, offset_t offset);
+> 1. These should queued in for 6.15 instead of the next merge window.
+>     It is too late in the current cycle and if we put it in now, it will
+>     not properly tested in linux-next.
+>
+> 2. I am putting this in sysctl-testing with the expectation of pushing this
+>     up for the 6.15 merge window. Please tell me if you want this to go
+>     through some other tree.
+>
+> Thx for the contribution
+>
+> Best
 
-Apart from noting that pwritev2(RWF_ENCODED) would have been able to
-support this, I'll let other people decide what the best
-user/syscall API will be for this.
+Thank you! I don't want this to go through some other tree.
 
-> I could then construct a WRITE_SAME call in the NFS client using
-> this information. This seems "good enough" to me for what people
-> have asked for, at least as a client-side interface. It wouldn't
-> really help the server, which would still need to do several
-> writes in a loop to be spec-compliant with writing the pattern to
-> an offset inside the "application data block" [4] structure.
+Best ...
+>> my test steps as below listed:
+>>
+>> Step 1: Set CONFIG_SYSCTL to 'n' and compile the Linux kernel on the
+>> arm64 architecture. The kernel compiles successfully without any errors
+>> or warnings.
+>>
+> ...
+>>   mm/swap.c                          |  16 ++-
+>>   mm/swap.h                          |   1 +
+>>   mm/util.c                          |  67 +++++++--
+>>   mm/vmscan.c                        |  23 +++
+>>   mm/vmstat.c                        |  44 +++++-
+>>   net/sunrpc/auth.c                  |   2 +-
+>>   security/min_addr.c                |  11 ++
+>>   23 files changed, 336 insertions(+), 312 deletions(-)
+>>
+>> -- 
+>> 2.34.1
+>>
 
-Right, so we need both NFS client side and server side local fs
-support for the WRITE_SAME operation.
-
-That implies we should implement it at the VFS as a file method.
-i.e. ->write_same() at a similar layer to ->write_iter().
-
-If we do that, then both the NFS client and the NFS server can use
-the same VFS interface, and applications can use WRITE_SAME on both
-NFS and local filesystems directly...
-
-> But maybe I'm simplifying this too much, and others would find the
-> additional application data block fields useful? Or should I keep
-> it all inside NFS, and call it with an ioctl instead of putting it
-> into the VFS?
-
-I think a file method for VFS implementation is the right way to do
-this because it allows both client side server offload and server
-side hardware offload through the local filesystem. It also provides
-a simple way to check if the filesystem supports the functionality
-or not...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
 
