@@ -1,81 +1,183 @@
-Return-Path: <linux-nfs+bounces-9228-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9229-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 479ECA126D9
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 16:06:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A1DAA126FA
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 16:13:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D73D71889CBC
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 15:06:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6EAC11884E23
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 15:13:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6B814037F;
-	Wed, 15 Jan 2025 15:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E63F24A7D4;
+	Wed, 15 Jan 2025 15:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJa0jRTp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dPeH894t"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86474148314;
-	Wed, 15 Jan 2025 15:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B78624A7D3
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 15:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736953569; cv=none; b=GshxltjKMqNR8/ld5N/1X74yPnwY6K5OMSus+nEg/dMuRvROedEuo8r2CzlwNtYIZlK7h4qBdJkoG3dq7FiNMjDoZQsavNkHliGaYXyiqprq1nvMIniW/+wJZtejQd3vfWofuclg+TWLeOLWMRmFCS/+EVVtDzXkAiTvV7Hoq+s=
+	t=1736953981; cv=none; b=oe+ytiJ1NOCYZ3qV8gq8xiHlOMbl61QRpPHKEVTcAyHCYi3Tg/52jqPOjhTBwfSiF/0DFx1sDtFcX3DGDo7cCQinzIVY/cIm5MQp1VaiybCkG9VxPpr1yHXRPJSIS4M9VN/K9a0+9418ZT5MP3dUM71MmFDvxmuFaZIUV4lLnOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736953569; c=relaxed/simple;
-	bh=fS/+8PTxfzKGzpeSiSEf0M4Lc5v4WLS/2swkcSztKEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FiIe++ddAqug6ANLLQuraKvdZ85L9BjBVYz8AZqTmCIa7HeA4rCn3vkdoB357QrLdguZ3a8C4stxcmYacmsWWihdgMdDT8YEieJP57k0G5cf2rxJsxQux1Df2UXyS5Y62TnzPXrgCcmnYM9Te+1Uw22J3VOmK8dWWLCCvosIDSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SJa0jRTp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sw7AwLjGYCLfUzN3yggRfXx5hCWfQG6x7l3lxngdIks=; b=SJa0jRTpc21wfGuKAM9Rf4apzN
-	nYMAMkNgGxIqPXR1V380/NYHRUqmkN8+TV0AtIrzyCFJ9JePMQj8u7tGqzVc6IDszY5S84fBW1hEz
-	T7s71povMTPDJ3LmOwti8FNyZ1S+o1VfVyPqckWNETD0ytiZJ3No4+NyhIyTuLKjA4mYr/tYU9iwf
-	ZRvA0A6YFeS7bWKe/HXfcilGGcFY8Y9YjtKAcu2dkeLmp6AFRkYO+0WjxGQqnGr8NG9LoC6WrlPom
-	hNIkTaxCmU4v/sppfQAodUg10M3Rd2snfpYIIaO1ur0g3sCjnSLFwe6kneLVoJlaT+XJy2lUD91b3
-	0rsL30vw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tY4y3-0000000F6yS-2Q0o;
-	Wed, 15 Jan 2025 15:06:03 +0000
-Date: Wed, 15 Jan 2025 15:06:03 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Anna Schumaker <anna.schumaker@oracle.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
- operation: VFS or NFS ioctl() ?
-Message-ID: <Z4fO2_WZEO39jupG@casper.infradead.org>
-References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
+	s=arc-20240116; t=1736953981; c=relaxed/simple;
+	bh=FmadufUSplUmRzXlCaz8urVLAFh8cbIERQZD3qvv0Bk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CLMrI08wlp7vWCJnOr9P8V3f0u31Za8B3uI7wLLhRc4KK8zxDffnSENS9ODS1T/7DlpHTwocnp4OoeXBmSdPqDCSQPUyg0Z9gwHaSsYbj9bgfv6LX8wexFrzDQ9Iy9uKxdhxKMm/5pWWJFo/pJYAxxPnCFQq2MZTav28sZOCaGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dPeH894t; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736953978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H6MAEsOyaF6wYciFkY2/9GhEOY0dPyA6Z6ECr6ONBIs=;
+	b=dPeH894twchqYRi0w3pG/bBHjgJ1a7DAfzZW609Pao9jzAVFIDPf8kjUqlUk/YRIAMuxHE
+	E02/sCtWLdiqW7MYEXOc/1ni3uZbbeWiuzMvfqBRvFQ9RzF35BttmRTgiQkZ6VuNBsYgzE
+	8lqf6X+dyk2N3M++UqxcmYMDNvStUOM=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-116-9aQQTtNxNhqgrGHqFap8lg-1; Wed, 15 Jan 2025 10:12:57 -0500
+X-MC-Unique: 9aQQTtNxNhqgrGHqFap8lg-1
+X-Mimecast-MFC-AGG-ID: 9aQQTtNxNhqgrGHqFap8lg
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-21640607349so148541025ad.0
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 07:12:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736953976; x=1737558776;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H6MAEsOyaF6wYciFkY2/9GhEOY0dPyA6Z6ECr6ONBIs=;
+        b=t1eXzilGhzvqdsiyMV101aBm6jYQnIiPwsXLOqPZgwsn7Nm+DVMej3j7UUUx7tCR/r
+         774LfKihVMz9k9nCXbhtMTxy2mJyPpL9cSqBjaJvkRZKCfwbPanbzNEc2ss52xQUtFqx
+         Zi39hl3lTrRwtnt16OSlZ74gLv8eQtVcJaYiu4hc6nfZmLVCpxA24OO0d3OZR1FmArBM
+         zbsiz00ZkZgTB8nknLzzc/Qnxep3VJ2jhRZqwu3Hc+tGDvkFr643Aib4p0aQB+1rtCG5
+         ciQxyIsP4CQQnSjcG3Canrr657MeX+hLPDxHHkBxnwA1U2UfvcNPCxqvwgBtlpWeqcnT
+         Pl5w==
+X-Forwarded-Encrypted: i=1; AJvYcCX1vdtKIxiB4DOd7wNY5YIX+t3qPc00IiJfEtlSHFlFtOcaZpq/0S7eVpwnuulA4kWW2Z9NcpXekbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtJacXXz5+GQySuDGagftbxa7Kti7NBu18m2mIsp0bzPnea6+P
+	zRFez1ayV3lhcQS7zmm8onokJsWY1xicf8R5BcyErDElt5nuCOic7YjplyZs73UWiC7lDdHEA/k
+	dRlr1260FRwKIwRmqSiWHGHcV8zeE/S5H4KcrXr1c4G7wZThOa+xr2b3Fjw==
+X-Gm-Gg: ASbGncvSrRgv6kVTKzUep5TeOiOR+ZKio9Ffs6xbm4PycSPmLL+pvwd0L2f1c4/fDvg
+	WCuWtTLxBUW7352tksnjnIo1FpThLWjy4HhoRVIO18TAB4LZr0TpOA8OwJG4eTtTIJgzanqOGRz
+	TYfMekkUDHEXyG2TRan+bWzYdpXgVOAuIbYZjK5KP3E8iXDP6E7xfgo7sSFJtYj52A1R31w4us0
+	Tq6ZEotj5dggsaUybIuwj7OVUXcUDV8ZxZ+zaDAm18IJGXbyOgBT/ND
+X-Received: by 2002:a17:902:ea03:b0:216:31aa:12fc with SMTP id d9443c01a7336-21a83f6c665mr540083455ad.24.1736953976168;
+        Wed, 15 Jan 2025 07:12:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGs8tfZ9O+vfr1oGQ8MVYUfoCDyCsFTlvoUcKYQaTV9NP/Q90uQEhwiY7BvVP+Y2aFLQLhx7g==
+X-Received: by 2002:a17:902:ea03:b0:216:31aa:12fc with SMTP id d9443c01a7336-21a83f6c665mr540082905ad.24.1736953975824;
+        Wed, 15 Jan 2025 07:12:55 -0800 (PST)
+Received: from [172.31.1.150] ([70.109.132.27])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f2199ebsm84365775ad.143.2025.01.15.07.12.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2025 07:12:55 -0800 (PST)
+Message-ID: <532ea7d0-afe9-47c0-8436-6891a4b63da4@redhat.com>
+Date: Wed, 15 Jan 2025 10:12:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] nfsdctl: add support for new lockd configuration
+ interface
+To: Jeff Layton <jlayton@kernel.org>, Scott Mayhew <smayhew@redhat.com>
+Cc: Yongcheng Yang <yoyang@redhat.com>, linux-nfs@vger.kernel.org
+References: <20250110-lockd-nl-v2-0-e3abe78cc7fb@kernel.org>
+ <Z4bScYOgDwbpyXjt@aion>
+ <659d6f0153daf83ebfcad8d7bdb80adb6aa319b5.camel@kernel.org>
+ <Z4fJz4re4iFyM2FE@aion>
+ <5487afbab2acfe396e1ccc8ba3dfd1256fa00c7b.camel@kernel.org>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <5487afbab2acfe396e1ccc8ba3dfd1256fa00c7b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 14, 2025 at 04:38:03PM -0500, Anna Schumaker wrote:
-> I've seen a few requests for implementing the NFS v4.2 WRITE_SAME [1] operation over the last few months [2][3] to accelerate writing patterns of data on the server, so it's been in the back of my mind for a future project. I'll need to write some code somewhere so NFS & NFSD can handle this request. I could keep any implementation internal to NFS / NFSD, but I'd like to find out if local filesystems would find this sort of feature useful and if I should put it in the VFS instead.
 
-I think we need more information.  I read over the [2] and [3] threads
-and the spec.  It _seems like_ the intent in the spec is to expose the
-underlying SCSI WRITE SAME command over NFS, but at least one other
-response in this thread has been to design an all-singing, all-dancing
-superset that can write arbitrary sized blocks to arbitrary locations
-in every file on every filesystem, and I think we're going to design
-ourselves into an awful implementation if we do that.
 
-Can we confirm with the people who actually want to use this that all
-they really want is to be able to do WRITE SAME as if they were on a
-local disc, and then we can implement that in a matter of weeks instead
-of taking a trip via Uranus.
+On 1/15/25 9:56 AM, Jeff Layton wrote:
+> On Wed, 2025-01-15 at 09:44 -0500, Scott Mayhew wrote:
+>> On Tue, 14 Jan 2025, Jeff Layton wrote:
+>>
+>>> On Tue, 2025-01-14 at 16:09 -0500, Scott Mayhew wrote:
+>>>> On Fri, 10 Jan 2025, Jeff Layton wrote:
+>>>>
+>>>>> v2 is just a small update to fix the problems that Scott spotted.
+>>>>>
+>>>>> This patch series adds support for the new lockd configuration interface
+>>>>> that should fix this RH bug:
+>>>>>
+>>>>>      https://issues.redhat.com/browse/RHEL-71698
+>>>>>
+>>>>> There are some other improvements here too, notably a switch to xlog.
+>>>>> Only lightly tested, but seems to do the right thing.
+>>>>>
+>>>>> Port handling with lockd still needs more work. Currently that is
+>>>>> usually configured by rpc.statd. I think we need to convert it to
+>>>>> use netlink to configure the ports as well, when it's able.
+>>>>>
+>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>>
+>>>> I think the read_nfsd_conf call should be moved out of autostart_func
+>>>> and into main (right before the command-line options are parsed).  Right
+>>>> now if you enable debugging in nfs.conf, you get the "configuring
+>>>> listeners" and "nfsdctl exiting" messages, but not the "nfsdctl started"
+>>>> message.  It's not a big deal though and could be done if additional
+>>>> debug logging is added in the future.
+>>>>
+>>>
+>>> That sounds good. We can do that in a separate patch.
+>>>
+>>>> Reviewed-by: Scott Mayhew <smayhew@redhat.com>
+>>>
+>>> Thanks!
+>>
+>> Hey, Jeff.  I was testing this against a kernel without the lockd
+>> netlink patch, and I get this:
+>>
+>> Jan 15 09:39:16 systemd[1]: Starting nfs-server.service - NFS server and services...
+>> Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl started
+>> Jan 15 09:39:17 sh[1603]: nfsdctl: nfsd not found
+>> Jan 15 09:39:17 sh[1603]: nfsdctl: lockd configuration failure
+>> Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl exiting
+>> Jan 15 09:39:17 sh[1601]: rpc.nfsd: knfsd is currently down
+>> Jan 15 09:39:17 sh[1601]: rpc.nfsd: Writing version string to kernel: -2 +3 +4 +4.1 +4.2
+>> Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET TCP socket.
+>> Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET6 TCP socket.
+>>
+>> Do we really want it falling back to rpc.nfsd if it can't configure
+>> lockd?  Maybe it should emit a warning instead?
+>>
+> 
+> I thought about that, and I think it's better to error out here.
+> 
+> Falling back to rpc.nfsd is harmless, and only people who are trying to
+> set the grace period or lockd ports will ever hit this. lockd
+> configuration is a no-op if none of those settings are set.
+> 
+>> At the very least, NFSD_FAMILY_NAME should no longer be hard-coded in
+>> that "not found" error message in netlink_msg_alloc().
+>>
+> 
+> Yeah, that would be good to fix.
+> 
+
+On a rawhide kernel (6.13.0-0.rc6) the server does
+come up with 'nfsdctl autostart' but with the
+new argument 'nlm' I'm getting
+
+$ nfsdctl nlm
+nfsdctl: nfsd not found
+
+steved.
+
 
