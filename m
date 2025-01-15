@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-9251-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9252-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AB83A12C71
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 21:20:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC0A1A12C72
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 21:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0B8B3A5BFE
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 20:20:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C816F161924
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 20:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9971D90AD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13F11D9320;
 	Wed, 15 Jan 2025 20:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsFw2J6t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYhdkrkk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173B41D9320
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 20:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5A51D9337
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 20:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736972440; cv=none; b=YwzaYdQ+Ony/JBhW9qukdni7qBP2piBMMYY1DjRcM7qN6R/kOAjqkQO0YfzK1y8DYQYGSVcaQ5uDu4KAYisZ8u7lZtLLaOE/UhfIUsfuHHICdbRKtNuEeCIBss6lkLEfPZ5B2F0OPN94cR9elSkjSc87LjRJDmeOoTPANaHBzbA=
+	t=1736972440; cv=none; b=FgCkCmtWiNrjA2ARXR3r6KTkO/nAeCtMIVSmvy9g1rr1rktNIb4acW4/sQ34M+gC3Z11z5BK4dw4+8LK280lCDQgg2QwAmKTy6NDqa28L85nLPm5YWjmpuLld2YidVpWVnC84U6/jk53yFkywtGeT0SMuSdpoiB2sF1MDHM+8ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736972440; c=relaxed/simple;
-	bh=aKlE/uab/3R8C3BPeGxr8V73nq7hA/zceATf6X2HUSI=;
+	bh=yjkDiLX5hhYPH6CbLSaMhXE49j7uLj8uXTgK9uVGAMk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZwqWDdcCbhlLqH+tVjgvyrWT7O/sT6GB5tf9KIpOSSFtpmyJ9ka0AXIbcV12Ukw6Cmu2azSrP0wWT0BTjyf+sVKQFYMa0PX3ITKFOJU/i2rLY/4384sPRsCAFMPqTekovoTprg/JZ2wSTVREB3clsgHES1isYiJKhd5YuvuqpcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsFw2J6t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BACFC4CEE2;
+	 MIME-Version; b=B4QdV69JA/e2xPzNZZx4D9xFKRedmahMSgiELt2+ET8Esxm+KI+gF6foVE9l0wBo2W/9nbLVOq3H8hzAtiOvrYP5tlO9yOBV82pJjydZqhgHtcIJvfsXQmyyRxCyK53HsWZ1C++z7f/NnKnLvtyM0RZYjCoCHkMEiYbwGjDvbpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYhdkrkk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B1BC4CED1;
 	Wed, 15 Jan 2025 20:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736972439;
-	bh=aKlE/uab/3R8C3BPeGxr8V73nq7hA/zceATf6X2HUSI=;
+	s=k20201202; t=1736972440;
+	bh=yjkDiLX5hhYPH6CbLSaMhXE49j7uLj8uXTgK9uVGAMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZsFw2J6t88eK4ZvLMukHkIh/MTaDUn8HTJboH5HZcySCW4sxLS8psS8yZOw0hmjbm
-	 RqoHUyhmON/t7Q1RsR4F8bQXtuf5XJF7pBsVM2VBSohg+V/UV/GqZw0W3TjFA8DWtp
-	 wNK2EQ77fZGz70Cu1eS1RajqaleecdBSKRedCNrCl45ISshgCAcM98bY/IhKcMbnHy
-	 d8ipAdWSaX7LnK9ojMkKOb/eReQyxpXiPnUZWJmL7j/kKhw0BccJSPnkn1+rSpvISD
-	 LQVJ7sWzMynIncwuHlBlhUU9HO+QPLs4SR0lbYcjtN0R07f7RQBmxpw8ryFc/VPzlS
-	 BZkTSUNvBW5/w==
+	b=kYhdkrkkPtWXB9HtwawS60eTgjPntioy/0y4JtY3PAyk0uhnQFJE1HuCh2yHRwVcg
+	 xyNEAYmGDlCQpFhdL/marjgc9ji2uQFpvVHBHkDVvyg3yNgsvZoG/wAe8Icfg0+O5n
+	 CmVvVtYN43KXSd6qIXeWVpEA28mZsVI5cIGk6ly7I7QkPxQBff+ym3QGqyz790Gwbz
+	 7OwNIcvm65ixqP6vPij/D1RiioykAfdLyg1F4Nab/rR5DSvHfNqebe3TWHUTl/+4Lz
+	 kFpp28wYlJIunnoR1lFwne+vtldqFcGtvbOxDCOPhKCpKHLFKX35YWjXncZIwm4VHj
+	 jc2v2kbIp4Jbg==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	steved@redhat.com
 Cc: anna@kernel.org
-Subject: [PATCH nfs-utils v2 5/8] rpcctl: Fix flake8 ambiguous-variable-name error
-Date: Wed, 15 Jan 2025 15:20:32 -0500
-Message-ID: <20250115202035.112122-6-anna@kernel.org>
+Subject: [PATCH nfs-utils v2 6/8] rpcctl: Add missing docstrings to the Xprt class
+Date: Wed, 15 Jan 2025 15:20:33 -0500
+Message-ID: <20250115202035.112122-7-anna@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250115202035.112122-1-anna@kernel.org>
 References: <20250115202035.112122-1-anna@kernel.org>
@@ -63,22 +63,98 @@ From: Anna Schumaker <anna.schumaker@oracle.com>
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- tools/rpcctl/rpcctl.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/rpcctl/rpcctl.py | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index c6e73aad8bb9..435f4be6623a 100755
+index 435f4be6623a..b8808787b51d 100755
 --- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -37,7 +37,7 @@ def read_info_file(path):
-     res = collections.defaultdict(int)
-     try:
-         with open(path) as info:
--            lines = [l.split("=", 1) for l in info if "=" in l]
-+            lines = [line.split("=", 1) for line in info if "=" in line]
-             res.update({key: int(val.strip()) for (key, val) in lines})
-     finally:
-         return res
+@@ -44,7 +44,10 @@ def read_info_file(path):
+ 
+ 
+ class Xprt:
++    """Represents a single sunrpc connection."""
++
+     def __init__(self, path):
++        """Read in xprt information from sysfs."""
+         self.path = path
+         self.name = path.stem.rsplit("-", 1)[0]
+         self.type = path.stem.split("-")[2]
+@@ -54,6 +57,7 @@ class Xprt:
+         self.read_state()
+ 
+     def __lt__(self, rhs):
++        """Compare the names of two xprt instances."""
+         return self.name < rhs.name
+ 
+     def _xprt(self):
+@@ -79,24 +83,29 @@ class Xprt:
+                f"tasks {self.info['tasks_queuelen']}"
+ 
+     def __str__(self):
++        """Return a string representation of an xprt."""
+         if not self.path.exists():
+             return f"{self.name}: has been removed"
+         return "\n".join([self._xprt(), self._src_reqs(),
+                           self._cong_slots(), self._queues()])
+ 
+     def read_state(self):
++        """Read in the xprt_state file."""
+         if self.path.exists():
+             with open(self.path / "xprt_state") as f:
+                 self.state = ','.join(f.readline().split()[1:])
+ 
+     def small_str(self):
++        """Return a short string summary of an xprt."""
+         main = " [main]" if self.info.get("main_xprt") else ""
+         return f"{self.name}: {self.type}, {self.dstaddr}{main}"
+ 
+     def set_dstaddr(self, newaddr):
++        """Change the dstaddr of an xprt."""
+         self.dstaddr = write_addr_file(self.path / "dstaddr", newaddr)
+ 
+     def set_state(self, state):
++        """Change the state of an xprt."""
+         if self.info.get("main_xprt"):
+             raise Exception(f"Main xprts cannot be set {state}")
+         with open(self.path / "xprt_state", 'w') as f:
+@@ -104,12 +113,14 @@ class Xprt:
+         self.read_state()
+ 
+     def remove(self):
++        """Remove an xprt."""
+         if self.info.get("main_xprt"):
+             raise Exception("Main xprts cannot be removed")
+         self.set_state("offline")
+         self.set_state("remove")
+ 
+     def add_command(subparser):
++        """Add parser options for the `rpcctl xprt` command."""
+         parser = subparser.add_parser("xprt",
+                                       help="Commands for individual xprts")
+         parser.set_defaults(func=Xprt.show, xprt=None)
+@@ -140,6 +151,7 @@ class Xprt:
+         dstaddr.set_defaults(func=Xprt.set_property, property="dstaddr")
+ 
+     def get_by_name(name):
++        """Find a (sorted) list of Xprts matching the given name."""
+         glob = f"**/{name}-*" if name else "**/xprt-*"
+         res = [Xprt(x) for x in (sunrpc / "xprt-switches").glob(glob)]
+         if name and len(res) == 0:
+@@ -148,10 +160,12 @@ class Xprt:
+         return sorted(res)
+ 
+     def show(args):
++        """Handle the `rpcctl xprt show` command."""
+         for xprt in Xprt.get_by_name(args.xprt):
+             print(xprt)
+ 
+     def set_property(args):
++        """Handle the `rpcctl xprt set` command."""
+         for xprt in Xprt.get_by_name(args.xprt[0]):
+             if args.property == "dstaddr":
+                 xprt.set_dstaddr(socket.gethostbyname(args.newaddr[0]))
 -- 
 2.48.1
 
