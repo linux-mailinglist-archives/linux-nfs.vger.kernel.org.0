@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-9256-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9257-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33EF1A12C92
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 21:30:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 822F5A12C93
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 21:30:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C19F03A5F26
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 20:29:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C43951887C75
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 20:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ABF01D90DF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FB0E1D9337;
 	Wed, 15 Jan 2025 20:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQzslfyp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6XF8Lxj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454628F77
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 20:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795B71D9320
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 20:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736972999; cv=none; b=XO4jpxx0/Rp1drGd/MAbB61GLZl2RKv5J90BVdxBQ5ow8CPuNRReJShHlSIGNq5ZVpsyYNwiDnAxvHI4yEJjWPg92ibwCf8z/PD7/WknyqOrYmMIL3ZpwO5j8eD+/ixi1L0rgcX4hk6soYtTfRboj1HF+REhg+k6Em/5y3kj9ZI=
+	t=1736972999; cv=none; b=DsEjMvLFbvYc6ITIzIvXkXNSUIxchYcLdASoH6923sZiSXdlwdpjNi9J1VYLhZhrtW3YgV/zzevFM0HOAqkV+YaAP02FCZwdwsTgAQ3O5BxU1GT/yzyRptu4aLjzLeU6hzN1d0hiCgkf7oLo9anc7ElS3/8bq1JytNF+HTqlPZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736972999; c=relaxed/simple;
-	bh=lPEmA6ck3pSMyWC7cY1+5R4MNAM+1KDdJol1heDUFFo=;
+	bh=xW70Aucnop/TXo6NJMtzRw2LYQdaei3qhN+R3YKWe9E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XN7/APpa0HHs3RZcAnixlHx65iU8mITJuI2V3k7QBUJDrQHn6uMU2gCIacmE0Hdk5L+NhQEdITuNbcDl5gr3BGjtlflbZrshUifihg3YyxojXoW3qssa/ECDBoSg6J4Ve6K9rkVZZ55fOPF6wB2H9hjzg4qWlIRnlReIKzNXdk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQzslfyp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727BCC4CEE3;
+	 MIME-Version; b=O3+4h3CM/WDEsnN5CNAvLYHFnjbmUgWkQoLQK+U8DbbJJaPMQDj9VVi08grGHNWCUcbmt3Er3h7pkilN6M30BwHaIiZvYO7N9VwDbed5fprlQNVjMUIKWp6ixA6o2o7WlwSWcybS+KOd4WdAdh0VfOrUoOTZPBTA5jilvR2OPE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6XF8Lxj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 084F5C4CED1;
 	Wed, 15 Jan 2025 20:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736972998;
-	bh=lPEmA6ck3pSMyWC7cY1+5R4MNAM+1KDdJol1heDUFFo=;
+	s=k20201202; t=1736972999;
+	bh=xW70Aucnop/TXo6NJMtzRw2LYQdaei3qhN+R3YKWe9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZQzslfypj0tejuVt/5R6PdCJ3cXTi2yA000S44vr+2lQGz3Yx1gDREPJJO9Tt1rd5
-	 Gg9K22egZBq0hmVD/gf3zii3bTbHCAos1tjiuBnVa9tR32ifl0Aak1gJm472vOjkY3
-	 cyJQY1GGBD5xrYyolk5u+6xx1NA3A8owsOcOIq9j7SVN8sVm0AX98dknc3H+6pg5/V
-	 aQiO2utm5WFBvKvhgYbg4iF811MwJFg9wXJsMSjcKoxC8sPLw1PPF40qN6wwLjCKFI
-	 hlxbrwPtClqIIgGynrPQtovkhXbf6eVrDa9Axzrzd4hKuXEBDiV/JLfdx2ePuu2DkJ
-	 XG5c8MSCNVYGw==
+	b=l6XF8LxjbBn/QFgpKoQzQqzkWwivW3MCicTti3oGMd/9cyGqq1wmc1KMwO+r2G55v
+	 ETb5A1LjIALrplPP4HLIzMquluJppB7DmycyMUehWnZgz3+qXOmUhD0Z3LAMZRvCa/
+	 wmd7Dqecgl2w6bAA1UtZWGbdv2sZOp3kcogAFYkbgsijmcch9YjNYYlZUAaGf7LCf3
+	 k50BAmmlirwl66VfOROEvw5ID7zcA6msw5BmwDjsKDJ8VkAbpqPkKkY84DPhGVMkeJ
+	 Y092+75qn0EDYE6KGHKQEhUyPDltkD37YRWFFnBlIXSO4V4fGRxGzbqr+KzChL0GCT
+	 UJmozFLyZEg4Q==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	steved@redhat.com
 Cc: anna@kernel.org
-Subject: [PATCH nfs-utils v3 1/7] rpcctl: Fix flake8 whitespace errors
-Date: Wed, 15 Jan 2025 15:29:50 -0500
-Message-ID: <20250115202957.113352-2-anna@kernel.org>
+Subject: [PATCH nfs-utils v3 2/7] rpcctl: Fix flake8 line-too-long errors
+Date: Wed, 15 Jan 2025 15:29:51 -0500
+Message-ID: <20250115202957.113352-3-anna@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250115202957.113352-1-anna@kernel.org>
 References: <20250115202957.113352-1-anna@kernel.org>
@@ -63,132 +63,101 @@ From: Anna Schumaker <anna.schumaker@oracle.com>
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- tools/rpcctl/rpcctl.py | 38 ++++++++++++++++++++++----------------
- 1 file changed, 22 insertions(+), 16 deletions(-)
+ tools/rpcctl/rpcctl.py | 33 ++++++++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 11 deletions(-)
 
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index d2110ad6de93..92a851c2278b 100755
+index 92a851c2278b..ec43d12afc41 100755
 --- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -8,7 +8,7 @@ import socket
- import sys
+@@ -66,13 +66,17 @@ class Xprt:
+                f"Requests: {self.info['num_reqs']}"
  
- with open("/proc/mounts", 'r') as f:
--    mount = [ line.split()[1] for line in f if "sysfs" in line ]
-+    mount = [line.split()[1] for line in f if "sysfs" in line]
-     if len(mount) == 0:
-         print("ERROR: sysfs is not mounted")
-         sys.exit(1)
-@@ -18,6 +18,7 @@ if not sunrpc.is_dir():
-     print("ERROR: sysfs does not have sunrpc directory")
-     sys.exit(1)
+     def _cong_slots(self):
+-        return f"	Congestion: cur {self.info['cur_cong']}, win {self.info['cong_win']}, " \
+-               f"Slots: min {self.info['min_num_slots']}, max {self.info['max_num_slots']}"
++        return f"	Congestion: cur {self.info['cur_cong']}, " \
++               f"win {self.info['cong_win']}, " \
++               f"Slots: min {self.info['min_num_slots']}, " \
++               f"max {self.info['max_num_slots']}"
  
-+
- def read_addr_file(path):
-     try:
-         with open(path, 'r') as f:
-@@ -25,17 +26,19 @@ def read_addr_file(path):
-     except:
-         return "(enoent)"
+     def _queues(self):
+         return f"	Queues: binding {self.info['binding_q_len']}, " \
+-               f"sending {self.info['sending_q_len']}, pending {self.info['pending_q_len']}, " \
+-               f"backlog {self.info['backlog_q_len']}, tasks {self.info['tasks_queuelen']}"
++               f"sending {self.info['sending_q_len']}, " \
++               f"pending {self.info['pending_q_len']}, " \
++               f"backlog {self.info['backlog_q_len']}, " \
++               f"tasks {self.info['tasks_queuelen']}"
  
-+
- def write_addr_file(path, newaddr):
-     with open(path, 'w') as f:
-         f.write(newaddr)
-     return read_addr_file(path)
- 
-+
- def read_info_file(path):
-     res = collections.defaultdict(int)
-     try:
-         with open(path) as info:
--            lines = [ l.split("=", 1) for l in info if "=" in l ]
--            res.update({ key:int(val.strip()) for (key, val) in lines })
-+            lines = [l.split("=", 1) for l in info if "=" in l]
-+            res.update({key: int(val.strip()) for (key, val) in lines})
-     finally:
-         return res
- 
-@@ -75,7 +78,7 @@ class Xprt:
+     def __str__(self):
          if not self.path.exists():
-             return f"{self.name}: has been removed"
-         return "\n".join([self._xprt(), self._src_reqs(),
--                          self._cong_slots(), self._queues() ])
-+                          self._cong_slots(), self._queues()])
+@@ -106,7 +110,8 @@ class Xprt:
+         self.set_state("remove")
  
-     def read_state(self):
-         if self.path.exists():
-@@ -132,7 +135,7 @@ class Xprt:
+     def add_command(subparser):
+-        parser = subparser.add_parser("xprt", help="Commands for individual xprts")
++        parser = subparser.add_parser("xprt",
++                                      help="Commands for individual xprts")
+         parser.set_defaults(func=Xprt.show, xprt=None)
+         subparser = parser.add_subparsers()
  
-     def get_by_name(name):
-         glob = f"**/{name}-*" if name else "**/xprt-*"
--        res = [ Xprt(x) for x in (sunrpc / "xprt-switches").glob(glob) ]
-+        res = [Xprt(x) for x in (sunrpc / "xprt-switches").glob(glob)]
-         if name and len(res) == 0:
-             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT),
-                                     f"{sunrpc / 'xprt-switches' / glob}")
-@@ -158,19 +161,19 @@ class XprtSwitch:
+@@ -128,7 +133,8 @@ class Xprt:
+         online.set_defaults(func=Xprt.set_property, property="online")
+         offline = subparser.add_parser("offline", help="Set an xprt offline")
+         offline.set_defaults(func=Xprt.set_property, property="offline")
+-        dstaddr = subparser.add_parser("dstaddr", help="Change an xprt's dstaddr")
++        dstaddr = subparser.add_parser("dstaddr",
++                                       help="Change an xprt's dstaddr")
+         dstaddr.add_argument("newaddr", metavar="NEWADDR", nargs=1,
+                              help="The new address for the xprt")
+         dstaddr.set_defaults(func=Xprt.set_property, property="dstaddr")
+@@ -161,7 +167,8 @@ class XprtSwitch:
          self.path = path
          self.name = path.stem
          self.info = read_info_file(path / "xprt_switch_info")
--        self.xprts = sorted([ Xprt(p) for p in self.path.iterdir() if p.is_dir() ])
-+        self.xprts = sorted([Xprt(p) for p in self.path.iterdir() if p.is_dir()])
+-        self.xprts = sorted([Xprt(p) for p in self.path.iterdir() if p.is_dir()])
++        self.xprts = sorted([Xprt(p) for p in self.path.iterdir()
++                             if p.is_dir()])
          self.sep = sep
  
      def __lt__(self, rhs):
-         return self.name < rhs.name
- 
-     def __str__(self):
--        switch =  f"{self.name}{self.sep} " \
--                  f"xprts {self.info['num_xprts']}, " \
--                  f"active {self.info['num_active']}, " \
--                  f"queue {self.info['queue_len']}"
--        xprts = [ f"	{x.small_str()}" for x in self.xprts ]
--        return "\n".join([ switch ] + xprts)
-+        switch = f"{self.name}{self.sep} " \
-+                 f"xprts {self.info['num_xprts']}, " \
-+                 f"active {self.info['num_active']}, " \
-+                 f"queue {self.info['queue_len']}"
-+        xprts = [f"	{x.small_str()}" for x in self.xprts]
-+        return "\n".join([switch] + xprts)
+@@ -176,7 +183,8 @@ class XprtSwitch:
+         return "\n".join([switch] + xprts)
  
      def add_command(subparser):
-         parser = subparser.add_parser("switch", help="Commands for xprt switches")
-@@ -194,8 +197,8 @@ class XprtSwitch:
-     def get_by_name(name):
-         xprt_switches = sunrpc / "xprt-switches"
-         if name:
--            return [ XprtSwitch(xprt_switches / name) ]
--        return [ XprtSwitch(f) for f in sorted(xprt_switches.iterdir()) ]
-+            return [XprtSwitch(xprt_switches / name)]
-+        return [XprtSwitch(f) for f in sorted(xprt_switches.iterdir())]
+-        parser = subparser.add_parser("switch", help="Commands for xprt switches")
++        parser = subparser.add_parser("switch",
++                                      help="Commands for xprt switches")
+         parser.set_defaults(func=XprtSwitch.show, switch=None)
+         subparser = parser.add_subparsers()
  
-     def show(args):
-         for switch in XprtSwitch.get_by_name(args.switch):
-@@ -234,8 +237,8 @@ class RpcClient:
-     def get_by_name(name):
-         rpc_clients = sunrpc / "rpc-clients"
-         if name:
--            return [ RpcClient(rpc_clients / name) ]
--        return [ RpcClient(f) for f in sorted(rpc_clients.iterdir()) ]
-+            return [RpcClient(rpc_clients / name)]
-+        return [RpcClient(f) for f in sorted(rpc_clients.iterdir())]
+@@ -185,11 +193,13 @@ class XprtSwitch:
+                           help="Name of a specific switch to show")
+         show.set_defaults(func=XprtSwitch.show)
  
-     def show(args):
-         for client in RpcClient.get_by_name(args.client):
-@@ -244,9 +247,12 @@ class RpcClient:
+-        set = subparser.add_parser("set", help="Change an xprt switch property")
++        set = subparser.add_parser("set",
++                                   help="Change an xprt switch property")
+         set.add_argument("switch", metavar="SWITCH", nargs=1,
+                          help="Name of a specific xprt switch to modify")
+         subparser = set.add_subparsers(required=True)
+-        dstaddr = subparser.add_parser("dstaddr", help="Change an xprt switch's dstaddr")
++        dstaddr = subparser.add_parser("dstaddr",
++                                       help="Change an xprt switch's dstaddr")
+         dstaddr.add_argument("newaddr", metavar="NEWADDR", nargs=1,
+                              help="The new address for the xprt switch")
+         dstaddr.set_defaults(func=XprtSwitch.set_property, property="dstaddr")
+@@ -225,7 +235,8 @@ class RpcClient:
+         return f"{self.name}: {self.switch}"
  
- parser = argparse.ArgumentParser()
+     def add_command(subparser):
+-        parser = subparser.add_parser("client", help="Commands for rpc clients")
++        parser = subparser.add_parser("client",
++                                      help="Commands for rpc clients")
+         parser.set_defaults(func=RpcClient.show, client=None)
+         subparser = parser.add_subparsers()
  
-+
- def show_small_help(args):
-     parser.print_usage()
-     print("sunrpc dir:", sunrpc)
-+
-+
- parser.set_defaults(func=show_small_help)
- 
- subparser = parser.add_subparsers(title="commands")
 -- 
 2.48.1
 
