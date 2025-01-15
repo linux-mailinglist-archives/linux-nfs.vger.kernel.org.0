@@ -1,178 +1,266 @@
-Return-Path: <linux-nfs+bounces-9220-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9221-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7805DA123E3
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 13:39:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E5F8A123F9
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 13:48:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B551164D3B
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 12:38:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5335C168C8D
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 12:48:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7951BEF9E;
-	Wed, 15 Jan 2025 12:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB0C2475D6;
+	Wed, 15 Jan 2025 12:48:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b="rTFXIt7e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AddfHwwd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104592475C7
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 12:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736944738; cv=pass; b=hRxck+vfSNKJApxSSJ77YF4ITCSEjJMP+N9mChAqs4TH0ZkZvQuuspa8+an4m6BRntpBxZS0x6bnARf/IHLdOW2KklQ2M0bkk4VL3BJ4gLLYF5JdGPI53lPoDPOB3jOMGyrYtZHF6sU7Tty7Q35vcV9S0V8/+eE8rQE5TMNVVgk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736944738; c=relaxed/simple;
-	bh=2ozHutiBf20o1fbs50DU188oKrzxXO2HwSOveAmioD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=NXaOcrppVSwTo0pUQrzzV9Ft73n4s0Dnn4qUpzpmhheefr1bV0mkhTX8aRueeFkCUTOSz/LtCyYXsom6HD2vBIHeILIBIzoh3iIxeT+Wu8Rfeu6PoRTzh2m/vBkAvUZTqD8BrCmoSMdnDdL5TOV+NALo6SMkIiYsQV2J8k37uKo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=nrubsig.org; dkim=pass (2048-bit key) header.d=nrubsig.org header.i=@nrubsig.org header.b=rTFXIt7e; arc=pass smtp.client-ip=23.83.223.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nrubsig.org
-X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id C4B8B24AB3
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 12:31:24 +0000 (UTC)
-Received: from pdx1-sub0-mail-a259.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.109.217.76])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 4EC41242CD
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 12:31:24 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1736944284; a=rsa-sha256;
-	cv=none;
-	b=0vcfjTYw97yAWjyjcI5epWc/JAWdMdO38RX52v1cmhbEU9kzI7/KWX11599J7O3/z4/GI5
-	6Y9RSiEe2kWACzC+LgUGr7IpjzdQ8rw+sHqo0aTddlYQE9WWLjfnQ8NxRr7wOQd4uvcei1
-	VHbBG3ByVfWuD8/Q6KOsSi1UTxRl4XXSHgFA5VTtk3LdSgMrYOEaHKWpFJqBQBvUmHdKSa
-	EALQx5RVn6nADeUq7udN81EMwSYM/MCBpI2qqkistUXkqJeOVPp//Aiwxs5FlEFPh3MxCk
-	Poxz6zFxzL1J49LO7CkNv4WCaDwJFPsd2HqIJgEPwEZxJUc7h/V53dEXDz5Q5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1736944284;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12DC2475ED
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 12:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1736945335; cv=none; b=Zd20YccnMe0K/vb/JVOxWIQu+fooIzM6otxTgaoxaLiYs/fwup+/S+KUHND3S3A7gutpHoHRLBmS9CNPhvxd4JSM4gomWOHLxVsQGIwI4Go3ptmBpGxyMzAnSrcxvuezDiopA9aGsbsX0FoANG21C2cu2OV5Y7Do1QU8D/8H4dw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1736945335; c=relaxed/simple;
+	bh=OBBo91up06niEdXQz7Ogryh6u62hMnamKzJUNhCIbU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LeVhcdD7X1RnfXrpqn0/G3fgn37SCOjCJLAgmm6YU4TPsyPkMa86NntUgNhVGvRE6FNv2ofY0dL4YGh69UmXc61l5Oe02FKKIC6wY9vgipaKHtTtijVNYlwS+qpMVn1WFBnx1PXi00znw+tG3perBwYbhrAeHDZg3Ct8WK+PhoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AddfHwwd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736945333;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=IA8nXJw59zgnglQP9IkSVTLTg5XToxazwu3GiYJXlMI=;
-	b=l094J6sAVxCf6hSV81POUKFGocvm2ix++gQR8FAsPBznfJeLD/YZaO5wN1s2E+JFFmorIx
-	h17cqwdLjLiRfzP3Y3NvcQmJ605RhFH53dzTP86S4zrq86x/HF/j1c0nY4a4bQa9TeLWHe
-	hZSIXowp+Pd7OBmllxUiU3jffGHdO+t7jl+LDbJqAstm30ei9OS4JQdKAQ3KvZlOa1/KQN
-	s/mRhiBsSfMMHRIcGiQ++hV9ih3v+SWt0PsZXGq3Rb1G6ncoR4MzqT/hLgVEJQAZnmWLWJ
-	JER3VPBk7vJLDDdQKHeMq/xFy/YKvyxLcZ8GjyV9ms3vJfZ1U47jRDTstt7icg==
-ARC-Authentication-Results: i=1;
-	rspamd-b5645c5d4-g45n4;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=roland.mainz@nrubsig.org
-X-Sender-Id: dreamhost|x-authsender|gisburn@nrubsig.org
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|gisburn@nrubsig.org
-X-MailChannels-Auth-Id: dreamhost
-X-Tasty-Trail: 08acc3284bb92e3b_1736944284530_1972896737
-X-MC-Loop-Signature: 1736944284530:298954594
-X-MC-Ingress-Time: 1736944284530
-Received: from pdx1-sub0-mail-a259.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.109.217.76 (trex/7.0.2);
-	Wed, 15 Jan 2025 12:31:24 +0000
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: gisburn@nrubsig.org)
-	by pdx1-sub0-mail-a259.dreamhost.com (Postfix) with ESMTPSA id 4YY52f1vpnzGq
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 04:31:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nrubsig.org;
-	s=dreamhost; t=1736944282;
-	bh=IA8nXJw59zgnglQP9IkSVTLTg5XToxazwu3GiYJXlMI=;
-	h=From:Date:Subject:To:Content-Type:Content-Transfer-Encoding;
-	b=rTFXIt7eefLd8WKhNGKxjDPUYhBJPVepIG2GxpMGE+w3pSAkqDS/X/v6QWO4MOKfH
-	 rUKts7A/3k06L6F/KM+rjalutb7aXg+Hwez41hEydlevz9p53BCh0PbrptEw3H1aUE
-	 5xBbyZWPH6CsH3QK2AbAbq3yliX5EZ02AANarYj4F/ejgfeEPOWv4xGq6w6DEoMvhX
-	 UGkqmhtWJTslVdfcDJcfwSUJwA83oVxd8EexnssRKgN/uRR5/upUK55c24DYOzJv3j
-	 aBpFx0DiYW1TmX3U0so4bUWKV8VBJDoPRmEe38dHlOM/RyGUFrN4hCTn8zuy8wh0hG
-	 LL0tDBx1vsVnQ==
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so475122f8f.0
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 04:31:22 -0800 (PST)
-X-Gm-Message-State: AOJu0Ywi+s03jQMOI7qmh7GooLv48fNb+JD0OEIMV+DwzNnm2ALXyBGu
-	W26/kEn9E8McpSf2U2Mka2kz4d1Mk0erLaqsr0ib8A3xR3QxPbaKHxmI9K4/NxxV3ZjVyg3zwbG
-	wZPnovOXINsRoevfibfpzuwqSzUI=
-X-Google-Smtp-Source: AGHT+IFQzhv8V/vDot4XummhfKGKDynELxhONqOcb/nkCmGHtFxZSPkvBmZiN0VcoB4iYaVP+xxdLl1l3dGIDdfKQnA=
-X-Received: by 2002:a05:6000:4712:b0:38a:8b34:76b0 with SMTP id
- ffacd0b85a97d-38a8b3476c0mr20104335f8f.27.1736944279354; Wed, 15 Jan 2025
- 04:31:19 -0800 (PST)
+	 in-reply-to:in-reply-to:references:references;
+	bh=z/vbvkAS9JxlsrDb6kxTEmhM6JZCJMkyb4sGf5DOUww=;
+	b=AddfHwwd+NSTKPsf+gsKE5hZIfobECZXQBalLybd5CayYr2TIQsNcJvUYlN+bXoDfkhSgW
+	v/N9FLLvpbheVmBTn7CgNxdVdn1DfeIbuQ76tMsTX85sN7EAHfeG1Ipyo4jdd4EDhzKxff
+	Vsn4LVlBihnkBg2XveszdE20W/2b4CQ=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-245-JGc05pSePKuuEnWyCUg8qQ-1; Wed, 15 Jan 2025 07:48:51 -0500
+X-MC-Unique: JGc05pSePKuuEnWyCUg8qQ-1
+X-Mimecast-MFC-AGG-ID: JGc05pSePKuuEnWyCUg8qQ
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2efa0eb9dacso12185242a91.1
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 04:48:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736945330; x=1737550130;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z/vbvkAS9JxlsrDb6kxTEmhM6JZCJMkyb4sGf5DOUww=;
+        b=h/7QwV4puy03IsRQaaTcw9yJkr9xsu2kxJBiAh7KU7VXG5+LAzzwYQwipt6WHUh8Bn
+         oYx9Xf/xAT4vmHGW7n78QWhd+A2opqG+YiHsOhkMwvBG/LOzOQTEDW2F9YDRbYNs3AyN
+         NxaHvS1SPsNuSmJ//eRJuqWmc7AnKrfov5V2RuMb3sdPAwX+UYBYunS6mfts2kWWiso5
+         uy5v+c/tFzD/EGtFJ6MFTw4LY8GrzsyvH7Y2zNBeHJxfk6M80PCLQ3MmVjqJdu+D1M+4
+         Oy7jCLgArz7JnuC3EWr9QApWdIDwmXaaQEhbdDkmx16WtEBcbb6jhAh7bXUAaFTR8Sri
+         5mKQ==
+X-Gm-Message-State: AOJu0YzwTdTO9zADpEaSLHJ0jgKf0epecD3Q70LHcGRHWSv5+NDkjyfB
+	rMVPeGCr0/4E0r9KcBmX9XmGnDrkvw3wwR2/jXh7GE/pxH5EmTY/xhhpkEmnZdt4AMauK7+xcGg
+	ugQ0hWr5xOKJ9o9MsFymsFc5xdVDkR6fc+ppryYjkp5cEm+dvelJzQJPNXArGr04srA==
+X-Gm-Gg: ASbGncty8nJJenQTbBAlwic7FqfU9cj3VfSRTrF0unI2FS2srQ9+j8xoXkXyJGZ58Bu
+	lZDc9Sy79iAJn/Y28jYiFTbVDDj5SzhL+Za+GT0SGQsX2YPPpZ0vd+mONuMGEqQ0iyfVQcoics+
+	ER+B+P2vHxnbq+Pl47VMfbHB3/7R/sAjaEctsEHbRiAnCmgpBVz0X8EhuP3AesEFB3iOl44FrS4
+	tdf8D9jkq8uamVLg0kw41BeevYkYrBxCM49hr+ihjOKvEcwD8Lme6dN
+X-Received: by 2002:a17:90a:d64b:b0:2ee:8aa7:94a0 with SMTP id 98e67ed59e1d1-2f548f42490mr35465340a91.32.1736945329766;
+        Wed, 15 Jan 2025 04:48:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGjxTXCBzZGFLE2c9QopBdWskMhg8LVn2kaj54gMSuUryPKpqSFR6iIdC2Lu3ZfrcACeZ8qaQ==
+X-Received: by 2002:a17:90a:d64b:b0:2ee:8aa7:94a0 with SMTP id 98e67ed59e1d1-2f548f42490mr35465300a91.32.1736945329311;
+        Wed, 15 Jan 2025 04:48:49 -0800 (PST)
+Received: from [172.31.1.150] ([70.109.132.27])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f72c1cd5b0sm1306623a91.26.2025.01.15.04.48.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2025 04:48:48 -0800 (PST)
+Message-ID: <62c6a307-e17a-4c1a-a66f-1068bd4c2daf@redhat.com>
+Date: Wed, 15 Jan 2025 07:48:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
-In-Reply-To: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Wed, 15 Jan 2025 13:30:52 +0100
-X-Gmail-Original-Message-ID: <CAKAoaQ=WEgJGRJ8LtDw+sKMeAo3i8ppirFnkHCwpiT5NLebR5w@mail.gmail.com>
-X-Gm-Features: AbW1kvbSkWBkSEmetVsxvcVoIBLRAJQLktbYg4ldt0VYBgVU10bpho1oRAHulqo
-Message-ID: <CAKAoaQ=WEgJGRJ8LtDw+sKMeAo3i8ppirFnkHCwpiT5NLebR5w@mail.gmail.com>
-Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
- operation: VFS or NFS ioctl() ?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [nfs-utils PATCH] nfsdctl: tweak the version subcommand behavior
+To: Scott Mayhew <smayhew@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20250108225439.814872-1-smayhew@redhat.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20250108225439.814872-1-smayhew@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 14, 2025 at 10:38=E2=80=AFPM Anna Schumaker
-<anna.schumaker@oracle.com> wrote:
->
-> I've seen a few requests for implementing the NFS v4.2 WRITE_SAME [1] ope=
-ration over the last few months [2][3] to accelerate writing patterns of da=
-ta on the server, so it's been in the back of my mind for a future project.=
- I'll need to write some code somewhere so NFS & NFSD can handle this reque=
-st. I could keep any implementation internal to NFS / NFSD, but I'd like to=
- find out if local filesystems would find this sort of feature useful and i=
-f I should put it in the VFS instead.
->
-> I was thinking I could keep it simple, and model a function call based on=
- write(3) / pwrite(3) to write some pattern N times starting at either the =
-file's current offset or at a user-provide offset. Something like:
->     write_pattern(int filedes, const void *pattern, size_t nbytes, size_t=
- count);
->     pwrite_pattern(int filedes, const void *pattern, size_t nbytes, size_=
-t count, offset_t offset);
->
-> I could then construct a WRITE_SAME call in the NFS client using this inf=
-ormation. This seems "good enough" to me for what people have asked for, at=
- least as a client-side interface. It wouldn't really help the server, whic=
-h would still need to do several writes in a loop to be spec-compliant with=
- writing the pattern to an offset inside the "application data block" [4] s=
-tructure.
->
-> But maybe I'm simplifying this too much, and others would find the additi=
-onal application data block fields useful? Or should I keep it all inside N=
-FS, and call it with an ioctl instead of putting it into the VFS?
 
-API questions:
-1. Can WRITE_SAME requests be split up if the adb_pattern (see
-https://datatracker.ietf.org/doc/html/rfc7862#section-15.12.1) is very
-large (e.g. 50MB), e.g. turn one WRITE_SAME request into two requests,
-where each half request writes only 1/2 of the pattern ?
 
-2. Is it possible to write patterns with WRITE_SAME, but skip a number
-of bytes which is larger than the size of the pattern ?
-Example: Repeat writing adb_pattern=3D"X" (size=3D1), start at file
-position 0, and write four times at every 2nd position, e.g. turn
-"abcdefghijklm"
-into
-"XbXdXfXhijklm"
+On 1/8/25 5:54 PM, Scott Mayhew wrote:
+> The section for the 'nfsdctl version' subcommand on the man page states
+> that the minorversion is optional, and if omitted it will cause all
+> minorversions to be enabled/disabled, but it currently doesn't work that
+> way.
+> 
+> Make it work that way, with one exception.  If v4.0 is disabled, then
+> 'nfsdctl version +4' will not re-enable it; instead it must be
+> explicitly re-enabled via 'nfsdctl version +4.0'.  This mirrors the way
+> /proc/fs/nfsd/versions works.
+> 
+> Link: https://issues.redhat.com/browse/RHEL-72477
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>   utils/nfsdctl/nfsdctl.8    |  9 ++++--
+>   utils/nfsdctl/nfsdctl.adoc |  5 +++-
+>   utils/nfsdctl/nfsdctl.c    | 58 +++++++++++++++++++++++++++++++++++---
+>   3 files changed, 64 insertions(+), 8 deletions(-)
+> 
+> diff --git a/utils/nfsdctl/nfsdctl.8 b/utils/nfsdctl/nfsdctl.8
+> index b08fe803..835d60b4 100644
+> --- a/utils/nfsdctl/nfsdctl.8
+> +++ b/utils/nfsdctl/nfsdctl.8
+> @@ -2,12 +2,12 @@
+>   .\"     Title: nfsdctl
+>   .\"    Author: Jeff Layton
+>   .\" Generator: Asciidoctor 2.0.20
+> -.\"      Date: 2024-12-30
+> +.\"      Date: 2025-01-08
+>   .\"    Manual: \ \&
+>   .\"    Source: \ \&
+>   .\"  Language: English
+>   .\"
+> -.TH "NFSDCTL" "8" "2024-12-30" "\ \&" "\ \&"
+> +.TH "NFSDCTL" "8" "2025-01-08" "\ \&" "\ \&"
+>   .ie \n(.g .ds Aq \(aq
+>   .el       .ds Aq '
+>   .ss \n[.ss] 0
+> @@ -172,7 +172,10 @@ MINOR: the minor version integer value
+>   .nf
+>   .fam C
+>   The minorversion field is optional. If not given, it will disable or enable
+> -all minorversions for that major version.
+> +all minorversions for that major version.  Note however that if NFSv4.0 was
+> +previously disabled, it can only be re\-enabled by explicitly specifying the
+> +minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
+> +interface).
+>   .fam
+>   .fi
+>   .if n .RE
+> diff --git a/utils/nfsdctl/nfsdctl.adoc b/utils/nfsdctl/nfsdctl.adoc
+> index c5921458..20e9bf8e 100644
+> --- a/utils/nfsdctl/nfsdctl.adoc
+> +++ b/utils/nfsdctl/nfsdctl.adoc
+> @@ -91,7 +91,10 @@ Each subcommand can also accept its own set of options and arguments. The
+>       MINOR: the minor version integer value
+>   
+>     The minorversion field is optional. If not given, it will disable or enable
+> -  all minorversions for that major version.
+> +  all minorversions for that major version.  Note however that if NFSv4.0 was
+> +  previously disabled, it can only be re-enabled by explicitly specifying the
+> +  minorversion (this mirrors the behavior of the /proc/fs/nfsd/versions
+> +  interface).
+>   
+>     Note that versions can only be set when there are no nfsd threads running.
+>   
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index 722bf4a0..d86ff80e 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -761,6 +761,32 @@ static int update_nfsd_version(int major, int minor, bool enabled)
+>   	return -EINVAL;
+>   }
+>   
+> +static bool v40_is_disabled(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < MAX_NFS_VERSIONS; ++i) {
+> +		if (nfsd_versions[i].major == 0)
+> +			break;
+> +		if (nfsd_versions[i].major == 4 && nfsd_versions[i].minor == 0)
+> +			return !nfsd_versions[i].enabled;
+> +	}
+> +	return false;
+> +}
+> +
+> +static int get_max_minorversion(void)
+> +{
+> +	int i, max = 0;
+> +
+> +	for (i = 0; i < MAX_NFS_VERSIONS; ++i) {
+> +		if (nfsd_versions[i].major == 0)
+> +			break;
+> +		if (nfsd_versions[i].major == 4 && nfsd_versions[i].minor > max)
+> +			max = nfsd_versions[i].minor;
+> +	}
+> +	return max;
+> +}
+> +
+>   static void version_usage(void)
+>   {
+>   	printf("Usage: %s version { {+,-}major.minor } ...\n", taskname);
+> @@ -778,7 +804,8 @@ static void version_usage(void)
+>   
+>   static int version_func(struct nl_sock *sock, int argc, char ** argv)
+>   {
+> -	int ret, i;
+> +	int ret, i, j, max_minor;
+> +	bool v40_disabled;
+>   
+>   	/* help is only valid as first argument after command */
+>   	if (argc > 1 &&
+> @@ -792,6 +819,9 @@ static int version_func(struct nl_sock *sock, int argc, char ** argv)
+>   		return ret;
+>   
+>   	if (argc > 1) {
+> +		v40_disabled = v40_is_disabled();
+> +		max_minor = get_max_minorversion();
+> +
+>   		for (i = 1; i < argc; ++i) {
+>   			int ret, major, minor = 0;
+>   			char sign = '\0', *str = argv[i];
+> @@ -815,9 +845,29 @@ static int version_func(struct nl_sock *sock, int argc, char ** argv)
+>   				return -EINVAL;
+>   			}
+>   
+> -			ret = update_nfsd_version(major, minor, enabled);
+> -			if (ret)
+> -				return ret;
+> +			/*
+> +			 * The minorversion field is optional. If omitted, it should
+> +			 * cause all the minor versions for that major version to be
+> +			 * enabled/disabled.
+> +			 *
+> +			 * HOWEVER, we do not enable v4.0 in this manner if it was
+> +			 * previously disabled - it has to be explicitly enabled
+> +			 * instead.  This is to retain the behavior of the old
+> +			 * /proc/fs/nfsd/versions interface.
+> +			 */
+> +			if (major == 4 && ret == 2) {
+> +				for (j = 0; j <= max_minor; ++j) {
+> +					if (j == 0 && enabled && v40_disabled)
+> +						continue;
+> +					ret = update_nfsd_version(major, j, enabled);
+> +					if (ret)
+> +						return ret;
+> +				}
+> +			} else {
+> +				ret = update_nfsd_version(major, minor, enabled);
+> +				if (ret)
+> +					return ret;
+> +			}
+>   		}
+>   		return set_nfsd_versions(sock);
+>   	}
+So nfsdctl version -4 turns of all v4 versions
+and nfsdctl version +4 only turns on +4.1 +4.2.
+nfsdctl version +4.0 is needed to turn on 4.0
+leaving the rest of the minor versions on
 
-Can the API do that ?
+Is this intended?
 
-----
+steved.
 
-Bye,
-Roland
---=20
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /=3D=3D\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
 
