@@ -1,177 +1,138 @@
-Return-Path: <linux-nfs+bounces-9234-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9235-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBB68A128E9
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 17:40:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83A5EA12955
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 18:01:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F18F91649BD
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 16:40:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 223A53A30A7
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 17:00:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4452E143C63;
-	Wed, 15 Jan 2025 16:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C750155C96;
+	Wed, 15 Jan 2025 17:01:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQD5hVWs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eZVLb0lV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675961553BB
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 16:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CD915957D
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 17:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736959218; cv=none; b=K8xLHX7U/T7lxlgi+Fx4ikmO5+LiF2ClzxG1VGnbjxySpqm7Uyc491sSiQ1iBV6y6UTe2whXeqypWi0MCmaMRPPgNGgxpYwchbH0I+hqUGxXramjpVo1TTX3gCsfvmd700bjT+K/OZ/pXanZucamv9rFcOPBtarcFsNsUL/435s=
+	t=1736960461; cv=none; b=QR0kTg0Y8wjTm+coOv9wJ6/0hjCGlatEGrqQqHcfWccYUs6MnjhKPbQoTvaASVgXMLFeMqxPpiAHeEN6SeZzgoxEG2/vsElm3E4MRuk+siE73vjtKFt669++p19ekhT6810/0ncCoERPerOwt0p5MKi2oa7hhqAmL0vyFnNhgcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736959218; c=relaxed/simple;
-	bh=Ufw374dPPmP1HT2FrDPPTHkotA+5b4RcipQqpnFP0bY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZqx/uzYmUg9G20wJA8YK5MX0ncTKb9yhE5cVa7AdE8ecEbW5Rwlz1lz8AhjEwiEvKgeKwtSz5KiqCoIZr26UHohxJo+R5d4BYT0wFYi2DzTtnaY5Or16IeUZIWSmPtNxrdieFWg5N/HDNhjcjbNV350zyxyNCAThS6oq+O1k2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQD5hVWs; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1736960461; c=relaxed/simple;
+	bh=T5eMvrrLLc1rR+IiAjBxHgFC+OhvsIJ+6A2BpPwJJl4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NG1cuYdmSkYq0ILDbm8QIMiorLKCGfBjUurTlsm+j9d+p+xBYLEu695KK8ptVTqI7JMxdMXHg3zJht4YYwUq/s8nGFZv1SlIFRT+6baSnmPn3bJBy1fBeUdaIZLlE4KOEb2XQkap8MW4vRN7wy+TpVDdZTk9yXkBwh5SVG3te50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eZVLb0lV; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736959215;
+	s=mimecast20190719; t=1736960457;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HNoipceIMSNgv2/C3kziFV/nnWEaM8IoPvEO0RRfsgI=;
-	b=ZQD5hVWsS8bbR4+Z2hCxi5xgcaOt2zFmUuCJWoxPSrKI4JUsqnX1zwBUZ6kZONHCa1jR1r
-	jnQg1HYBHrcJLEtxGm4v1aRS/BIhg5ipfQV1BvehczCuJvUBEZ6gXmSzeMcwZcaISZGXor
-	206k4d19+i2YTUAnYUTod6NFQW0nILM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=9vktX/UYNAyEWeF68kBbqe7pZFMmcUe0Ay7931QAzz0=;
+	b=eZVLb0lVs8uPz74Mjxo265Xo0g8WOprPRvAAqfFooW54RxPH1aeRrgusp1ftDFaIuM8jF6
+	eXxXakq5qD725Gc0ip4D52RWvqFU8WxtHlB52y/b4pmuo4MF+pUzswn3pYtV5JDQhmgU9e
+	FX7nbEDfSQsJu5u640vcxooeFQnj8cU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-447-yjRBaU4iP2S9rDJz5sBgtQ-1; Wed,
- 15 Jan 2025 11:40:11 -0500
-X-MC-Unique: yjRBaU4iP2S9rDJz5sBgtQ-1
-X-Mimecast-MFC-AGG-ID: yjRBaU4iP2S9rDJz5sBgtQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-652-1Lk72sweM--amXFvkttRlA-1; Wed,
+ 15 Jan 2025 12:00:54 -0500
+X-MC-Unique: 1Lk72sweM--amXFvkttRlA-1
+X-Mimecast-MFC-AGG-ID: 1Lk72sweM--amXFvkttRlA
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC80D19560B7;
-	Wed, 15 Jan 2025 16:40:10 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 79EED1955DE9;
+	Wed, 15 Jan 2025 17:00:53 +0000 (UTC)
 Received: from aion.redhat.com (unknown [10.22.89.167])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87C4719560A3;
-	Wed, 15 Jan 2025 16:40:10 +0000 (UTC)
-Received: by aion.redhat.com (Postfix, from userid 1000)
-	id EC7FA312B61; Wed, 15 Jan 2025 11:40:03 -0500 (EST)
-Date: Wed, 15 Jan 2025 11:40:03 -0500
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C527195E3EA;
+	Wed, 15 Jan 2025 17:00:53 +0000 (UTC)
+Received: from aion.redhat.com (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id 39E50312C4A;
+	Wed, 15 Jan 2025 12:00:51 -0500 (EST)
 From: Scott Mayhew <smayhew@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Steve Dickson <steved@redhat.com>, Yongcheng Yang <yoyang@redhat.com>,
+To: steved@redhat.com
+Cc: jlayton@kernel.org,
+	yoyang@redhat.com,
 	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] nfsdctl: add support for new lockd configuration
- interface
-Message-ID: <Z4fk45I76B6IM1R_@aion>
-References: <20250110-lockd-nl-v2-0-e3abe78cc7fb@kernel.org>
- <Z4bScYOgDwbpyXjt@aion>
- <659d6f0153daf83ebfcad8d7bdb80adb6aa319b5.camel@kernel.org>
- <Z4fJz4re4iFyM2FE@aion>
- <5487afbab2acfe396e1ccc8ba3dfd1256fa00c7b.camel@kernel.org>
- <532ea7d0-afe9-47c0-8436-6891a4b63da4@redhat.com>
- <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
+Subject: [nfs-utils PATCH] nfsdctl: debug logging fixups
+Date: Wed, 15 Jan 2025 12:00:51 -0500
+Message-ID: <20250115170051.8947-1-smayhew@redhat.com>
+In-Reply-To: <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
+References: <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, 15 Jan 2025, Jeff Layton wrote:
+Move read_nfsd_conf() out of autostart_func() and into main().  Remove
+hard-coded NFSD_FAMILY_NAME in the first error message in
+netlink_msg_alloc() and make the error messages in netlink_msg_alloc()
+more descriptive/unique.
 
-> On Wed, 2025-01-15 at 10:12 -0500, Steve Dickson wrote:
-> > 
-> > On 1/15/25 9:56 AM, Jeff Layton wrote:
-> > > On Wed, 2025-01-15 at 09:44 -0500, Scott Mayhew wrote:
-> > > > On Tue, 14 Jan 2025, Jeff Layton wrote:
-> > > > 
-> > > > > On Tue, 2025-01-14 at 16:09 -0500, Scott Mayhew wrote:
-> > > > > > On Fri, 10 Jan 2025, Jeff Layton wrote:
-> > > > > > 
-> > > > > > > v2 is just a small update to fix the problems that Scott spotted.
-> > > > > > > 
-> > > > > > > This patch series adds support for the new lockd configuration interface
-> > > > > > > that should fix this RH bug:
-> > > > > > > 
-> > > > > > >      https://issues.redhat.com/browse/RHEL-71698
-> > > > > > > 
-> > > > > > > There are some other improvements here too, notably a switch to xlog.
-> > > > > > > Only lightly tested, but seems to do the right thing.
-> > > > > > > 
-> > > > > > > Port handling with lockd still needs more work. Currently that is
-> > > > > > > usually configured by rpc.statd. I think we need to convert it to
-> > > > > > > use netlink to configure the ports as well, when it's able.
-> > > > > > > 
-> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > 
-> > > > > > I think the read_nfsd_conf call should be moved out of autostart_func
-> > > > > > and into main (right before the command-line options are parsed).  Right
-> > > > > > now if you enable debugging in nfs.conf, you get the "configuring
-> > > > > > listeners" and "nfsdctl exiting" messages, but not the "nfsdctl started"
-> > > > > > message.  It's not a big deal though and could be done if additional
-> > > > > > debug logging is added in the future.
-> > > > > > 
-> > > > > 
-> > > > > That sounds good. We can do that in a separate patch.
-> > > > > 
-> > > > > > Reviewed-by: Scott Mayhew <smayhew@redhat.com>
-> > > > > 
-> > > > > Thanks!
-> > > > 
-> > > > Hey, Jeff.  I was testing this against a kernel without the lockd
-> > > > netlink patch, and I get this:
-> > > > 
-> > > > Jan 15 09:39:16 systemd[1]: Starting nfs-server.service - NFS server and services...
-> > > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl started
-> > > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsd not found
-> > > > Jan 15 09:39:17 sh[1603]: nfsdctl: lockd configuration failure
-> > > > Jan 15 09:39:17 sh[1603]: nfsdctl: nfsdctl exiting
-> > > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: knfsd is currently down
-> > > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Writing version string to kernel: -2 +3 +4 +4.1 +4.2
-> > > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET TCP socket.
-> > > > Jan 15 09:39:17 sh[1601]: rpc.nfsd: Created AF_INET6 TCP socket.
-> > > > 
-> > > > Do we really want it falling back to rpc.nfsd if it can't configure
-> > > > lockd?  Maybe it should emit a warning instead?
-> > > > 
-> > > 
-> > > I thought about that, and I think it's better to error out here.
-> > > 
-> > > Falling back to rpc.nfsd is harmless, and only people who are trying to
-> > > set the grace period or lockd ports will ever hit this. lockd
-> > > configuration is a no-op if none of those settings are set.
-> > > 
-> > > > At the very least, NFSD_FAMILY_NAME should no longer be hard-coded in
-> > > > that "not found" error message in netlink_msg_alloc().
-> > > > 
-> > > 
-> > > Yeah, that would be good to fix.
-> > > 
-> > 
-> > On a rawhide kernel (6.13.0-0.rc6) the server does
-> > come up with 'nfsdctl autostart' but with the
-> > new argument 'nlm' I'm getting
-> > 
-> > $ nfsdctl nlm
-> > nfsdctl: nfsd not found
-> > 
-> 
-> Yeah, that's what Scott pointed out too. We should make that error
-> message a bit more friendly. It may be a bit before I can get to it. Do
-> you guys want to propose a patch to fix that?
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+SteveD - this would go on top of Jeff's "nfsdctl: add support for new
+lockd configuration interface" patches.
 
-Sure, I can do that.
-> 
-> Thanks,
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
+ utils/nfsdctl/nfsdctl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+index 003daba5..f81c78ae 100644
+--- a/utils/nfsdctl/nfsdctl.c
++++ b/utils/nfsdctl/nfsdctl.c
+@@ -436,7 +436,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
+ 
+ 	id = genl_ctrl_resolve(sock, family);
+ 	if (id < 0) {
+-		xlog(L_ERROR, "%s not found", NFSD_FAMILY_NAME);
++		xlog(L_ERROR, "failed to resolve %s generic netlink family", family);
+ 		return NULL;
+ 	}
+ 
+@@ -447,7 +447,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
+ 	}
+ 
+ 	if (!genlmsg_put(msg, 0, 0, id, 0, 0, 0, 0)) {
+-		xlog(L_ERROR, "failed to allocate netlink message");
++		xlog(L_ERROR, "failed to add generic netlink headers to netlink message");
+ 		nlmsg_free(msg);
+ 		return NULL;
+ 	}
+@@ -1509,8 +1509,6 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+ 		}
+ 	}
+ 
+-	read_nfsd_conf();
+-
+ 	grace = conf_get_num("nfsd", "grace-time", 0);
+ 	ret = lockd_configure(sock, grace);
+ 	if (ret) {
+@@ -1728,6 +1726,8 @@ int main(int argc, char **argv)
+ 	xlog_syslog(0);
+ 	xlog_stderr(1);
+ 
++	read_nfsd_conf();
++
+ 	/* Parse the preliminary options */
+ 	while ((opt = getopt_long(argc, argv, "+hdsV", pre_options, NULL)) != -1) {
+ 		switch (opt) {
+-- 
+2.48.0
 
 
