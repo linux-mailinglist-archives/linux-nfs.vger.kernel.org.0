@@ -1,228 +1,135 @@
-Return-Path: <linux-nfs+bounces-9264-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9265-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FC71A12D08
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 21:54:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA78AA12F25
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 00:24:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3D3018893DF
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 20:54:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2B1771886CA8
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jan 2025 23:24:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E908D1D9A78;
-	Wed, 15 Jan 2025 20:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0A6A1DCB2D;
+	Wed, 15 Jan 2025 23:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DQHLsXg4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYGigPdE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEB21D88BE
-	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 20:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29611D89F1
+	for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 23:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736974438; cv=none; b=Q1UykCtuqLiN7dtHFbFJ8JOjusXlA1z6dwEca1KlX2jgzme2eYl/EZhTjuPxh+uPE3pCVensf10hMxJogEIpyoj6BNCucLUwvmFyg5ihZ3Nd8kOsSsM6bwPHgw45eprSi4mZXTbDXkfilp+fTiyKox/xUgm2KywQp9SU1yl9zcQ=
+	t=1736983455; cv=none; b=UOsnXsLI6so734edPD2Yq5l8DGznoWjN0eFTPM0GZlt9IZSOXYCTEhXdsWgE5ZqgMirWSI2vAp9Z6SY0rqG/+N+yqoyfzKi5cdq75t/u5CGrWb6On2YVyBCFr4Cn4DjXLuoCpJR76B9MMWuihdOflc+UfGe3zII+2q5ycJwSnC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736974438; c=relaxed/simple;
-	bh=6XYheyQ435PILcJUE/anXZaKjT8iP+M7/vZNlYd/NiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tm9UcuIDYCKsC6WU0tRu6A/eB1o4NlkT3W2SFwxrek6EUhUiOEfsV31EdWZ1LL7OP6TLtyC65KrYjyeIrI5MsgrJ6hCzXZqsCVhWkbLmnIi8E2RSe+jtB0eEqo4wid5mdhZQy5SYsCCGRiujvTF9ZNbCIyCrWIdDlPgK/8p/634=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DQHLsXg4; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1736983455; c=relaxed/simple;
+	bh=paxS0srLq4U30Pc9LLxf5Im5wQBC5X0FGePpsMgPKjU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rOwkXHnRO32KfW8YIUcTQO+jHWMphxCEg1dwo0udOb9OlVZWXPh2fWO6R57biPpiAI5foEYgHoaIuo0OlQwy3g/U1v7Jb2WUj73HSlvF6Cepkn6+JEPKWyUwC3hBcQv32cmQm+DjcbNf/Bkjr4fgSgeA5JAQIXYIOzjBj2cPYrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cYGigPdE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736974435;
+	s=mimecast20190719; t=1736983452;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g5yyVfqMXpGd4AIKyV/rglAW9tSUP9VJVWhI4ychDT0=;
-	b=DQHLsXg4HHcomFlaooHtbfl3QBX3mMTnV3svdFCHa10ie5a9TE0kzfhUxM1fDTt+yUahVA
-	d68AcT65Pp/fOwrk3MMawNrOyM0leXDnalcGFXuCYu9efx0HEy3bZCfpKK78ztTWaz31sX
-	K3086+0fPcWn0n8tHaDVPgU+L0etGuw=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-686-l7TO25adMjGLF0XLmKCRjA-1; Wed, 15 Jan 2025 15:53:54 -0500
-X-MC-Unique: l7TO25adMjGLF0XLmKCRjA-1
-X-Mimecast-MFC-AGG-ID: l7TO25adMjGLF0XLmKCRjA
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2166e907b5eso1810395ad.3
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jan 2025 12:53:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736974433; x=1737579233;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g5yyVfqMXpGd4AIKyV/rglAW9tSUP9VJVWhI4ychDT0=;
-        b=tca/yGhEZAuuFT+9ZLYPlQJIBMgnNPUDGGr+1w9ymAqiVBsrEyH95RSu61869O+vJN
-         e9Ey5beQSj0JYFEvfba8P3C/x3JzrK8SP/0ADEk9lj0IKWEdjiXsiYYvYrnNQoKcPsGM
-         Yvayfr9t04DJWYrcCFiHf2i7MWF1Vp0t/nG74HkFC4Oc3sR2E8E87i3MVUYF9aN1Z8Vg
-         8wxEX8j6tSGgLRf0DrYJeZuApw70j36wSd6CiNuujj81E0ajkJmu3tpknkPnOvVNq3Gh
-         fmDQx0pkxw8al6MJz/uLJSre4sQMwmdoPOhA+bGIrG23WKjkGAxsXEaCwsSUYtlWMc5V
-         0ZnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7yDKIas7lD3m7+p0ejaelzsO3JbkWRuQdfvpVx6Q0IdQFYG/6pPwlmYDyR+guocKnqVaKOmwunt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhdX0Q+L3eIaWCukF1/ypJBVgbKVDn2TbYVq3B2+q+CnQuuk2f
-	7OVcGAvsVs3aPtqP1T1nVAX6xNvtEeQCebh4gFyi7TViOPCrAGq5Ow3FhbUQJZ78TbTyav3YB1e
-	6PTtTWz2ZhpwGsNp04jr0NjddFZCmRBX7Pq0A6KO1QCbtbeoWuPofI03HPKDS68X+9w==
-X-Gm-Gg: ASbGnctV4Y+RCLXIzXq/WsC7LTSCGZobHz0Wtc89pDhOE5oRuFCb0acJAQYHN9quUN3
-	vOPXT6G/xYmXiRK7BtYjGpnMFDXtviaSmVQ7W5DZF1U9i/bAQkITxOFRCJoFkoUG844XQO56cl3
-	Sylkc962FmJJINLsEZXelZEgV0WHNxvuRtlpqC05BctIzNxFZftPa673DqG6OSlvN4F7dVcVwtV
-	bl6utCgW9NFZBNuoqsSCnXCtl8nn+bqgWGCs9izqzQJbUjMasefqoSX
-X-Received: by 2002:a17:902:d2ca:b0:216:56d5:d87 with SMTP id d9443c01a7336-21a83f8ea52mr482578735ad.34.1736974432591;
-        Wed, 15 Jan 2025 12:53:52 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHyXQ3+JQD5u0CtzUvROrfh5mO4WcgrQy/rC2EFzGFjj4j3iGg7/0cTjuY40o5jqGE0/Kg+0Q==
-X-Received: by 2002:a17:902:d2ca:b0:216:56d5:d87 with SMTP id d9443c01a7336-21a83f8ea52mr482578345ad.34.1736974432142;
-        Wed, 15 Jan 2025 12:53:52 -0800 (PST)
-Received: from [172.31.1.150] ([70.109.132.27])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10f839sm86062785ad.15.2025.01.15.12.53.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2025 12:53:51 -0800 (PST)
-Message-ID: <45246f77-40ce-43c7-bdbf-c8cb2b4dea68@redhat.com>
-Date: Wed, 15 Jan 2025 15:53:48 -0500
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jc/f26k7/LLTlZOHbfhfVJ6L37BQA/9YWk0Ct41T9m0=;
+	b=cYGigPdEUdZMGMDDxMi8uKXePrTNznl08cwVjsAXlgLT/4DgWy+W4o6thHqst4fPScMf5/
+	dMHu2DE7i6L6mJQYjSMshzlGSj2qXtYr/GeIg5ZSlcpaGGB5J7/iGufhsBbUU0W4TXBKfC
+	J5j9IpZreAfstTNvcoWcwqvQwoB4Q9c=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-683-HGNGUvLuN82Grvi0a3zEWg-1; Wed,
+ 15 Jan 2025 18:24:11 -0500
+X-MC-Unique: HGNGUvLuN82Grvi0a3zEWg-1
+X-Mimecast-MFC-AGG-ID: HGNGUvLuN82Grvi0a3zEWg
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A4071955D82;
+	Wed, 15 Jan 2025 23:24:10 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.64.125])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1248530001BE;
+	Wed, 15 Jan 2025 23:24:08 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <okorniev@redhat.com>
+Subject: [PATCH 0/3] fix removal of nfsd listeners
+Date: Wed, 15 Jan 2025 18:24:03 -0500
+Message-Id: <20250115232406.44815-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH] nfsdctl: debug logging fixups
-To: Jeff Layton <jlayton@kernel.org>, Scott Mayhew <smayhew@redhat.com>
-Cc: yoyang@redhat.com, linux-nfs@vger.kernel.org
-References: <0068c0d811976aca15818b60192a96ca017893f8.camel@kernel.org>
- <20250115170051.8947-1-smayhew@redhat.com>
- <590522bf-77f6-4e31-a2fb-5613f68c87da@redhat.com>
- <d38c1f357704e0b1a5b1ec47d3a84d47f8976d80.camel@kernel.org>
- <00fd29bc-205a-4c02-8c98-3c3876a2d0a7@redhat.com>
- <a3b6842838d9d32c93879ddf803a1f1cd37fb370.camel@kernel.org>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <a3b6842838d9d32c93879ddf803a1f1cd37fb370.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+Currently if a root user using nfsdctl command tries to remove a particular
+listener from the list of previously added ones, then starting the nfsd
+leads to the following problem:
 
+[  158.835354] refcount_t: addition on 0; use-after-free.
+[  158.835603] WARNING: CPU: 2 PID: 9145 at lib/refcount.c:25 refcount_warn_saturate+0x160/0x1a0
+[  158.836017] Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd grace overlay isofs uinput snd_seq_dummy snd_hrtimer nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_set nf_tables qrtr sunrpc vfat fat uvcvideo videobuf2_vmalloc videobuf2_memops uvc videobuf2_v4l2 videodev videobuf2_common snd_hda_codec_generic mc e1000e snd_hda_intel snd_intel_dspcfg snd_hda_codec snd_hda_core snd_hwdep snd_seq snd_seq_device snd_pcm snd_timer snd soundcore sg loop dm_multipath dm_mod nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vmw_vmci vsock xfs libcrc32c crct10dif_ce ghash_ce vmwgfx sha2_ce sha256_arm64 sr_mod sha1_ce cdrom nvme drm_client_lib drm_ttm_helper ttm nvme_core drm_kms_helper nvme_auth drm fuse
+[  158.840093] CPU: 2 UID: 0 PID: 9145 Comm: nfsd Kdump: loaded Tainted: G    B   W          6.13.0-rc6+ #7
+[  158.840624] Tainted: [B]=BAD_PAGE, [W]=WARN
+[  158.840802] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.24006586.BA64.2406042154 06/04/2024
+[  158.841220] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[  158.841563] pc : refcount_warn_saturate+0x160/0x1a0
+[  158.841780] lr : refcount_warn_saturate+0x160/0x1a0
+[  158.842000] sp : ffff800089be7d80
+[  158.842147] x29: ffff800089be7d80 x28: ffff00008e68c148 x27: ffff00008e68c148
+[  158.842492] x26: ffff0002e3b5c000 x25: ffff600011cd1829 x24: ffff00008653c010
+[  158.842832] x23: ffff00008653c000 x22: 1fffe00011cd1829 x21: ffff00008653c028
+[  158.843175] x20: 0000000000000002 x19: ffff00008653c010 x18: 0000000000000000
+[  158.843505] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[  158.843836] x14: 0000000000000000 x13: 0000000000000001 x12: ffff600050a26493
+[  158.844143] x11: 1fffe00050a26492 x10: ffff600050a26492 x9 : dfff800000000000
+[  158.844475] x8 : 00009fffaf5d9b6e x7 : ffff000285132493 x6 : 0000000000000001
+[  158.844823] x5 : ffff000285132490 x4 : ffff600050a26493 x3 : ffff8000805e72bc
+[  158.845174] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000098588000
+[  158.845528] Call trace:
+[  158.845658]  refcount_warn_saturate+0x160/0x1a0 (P)
+[  158.845894]  svc_recv+0x58c/0x680 [sunrpc]
+[  158.846183]  nfsd+0x1fc/0x348 [nfsd]
+[  158.846390]  kthread+0x274/0x2f8
+[  158.846546]  ret_from_fork+0x10/0x20
+[  158.846714] ---[ end trace 0000000000000000 ]---
 
-On 1/15/25 1:33 PM, Jeff Layton wrote:
-> On Wed, 2025-01-15 at 12:47 -0500, Steve Dickson wrote:
->>
->> On 1/15/25 12:35 PM, Jeff Layton wrote:
->>> On Wed, 2025-01-15 at 12:32 -0500, Steve Dickson wrote:
->>>>
->>>> On 1/15/25 12:00 PM, Scott Mayhew wrote:
->>>>> Move read_nfsd_conf() out of autostart_func() and into main().  Remove
->>>>> hard-coded NFSD_FAMILY_NAME in the first error message in
->>>>> netlink_msg_alloc() and make the error messages in netlink_msg_alloc()
->>>>> more descriptive/unique.
->>>>>
->>>>> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
->>>>> ---
->>>>> SteveD - this would go on top of Jeff's "nfsdctl: add support for new
->>>>> lockd configuration interface" patches.
->>>> Got it...
->>>>
->>>>>
->>>>>     utils/nfsdctl/nfsdctl.c | 8 ++++----
->>>>>     1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
->>>>> index 003daba5..f81c78ae 100644
->>>>> --- a/utils/nfsdctl/nfsdctl.c
->>>>> +++ b/utils/nfsdctl/nfsdctl.c
->>>>> @@ -436,7 +436,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
->>>>>     
->>>>>     	id = genl_ctrl_resolve(sock, family);
->>>>>     	if (id < 0) {
->>>>> -		xlog(L_ERROR, "%s not found", NFSD_FAMILY_NAME);
->>>>> +		xlog(L_ERROR, "failed to resolve %s generic netlink family", family);
->>>>>     		return NULL;
->>>>>     	}
->>>>>     
->>>>> @@ -447,7 +447,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
->>>>>     	}
->>>>>     
->>>>>     	if (!genlmsg_put(msg, 0, 0, id, 0, 0, 0, 0)) {
->>>>> -		xlog(L_ERROR, "failed to allocate netlink message");
->>>>> +		xlog(L_ERROR, "failed to add generic netlink headers to netlink message");
->>>>>     		nlmsg_free(msg);
->>>>>     		return NULL;
->>>>>     	}
->>>>> @@ -1509,8 +1509,6 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
->>>>>     		}
->>>>>     	}
->>>>>     
->>>>> -	read_nfsd_conf();
->>>>> -
->>>>>     	grace = conf_get_num("nfsd", "grace-time", 0);
->>>>>     	ret = lockd_configure(sock, grace);
->>>>>     	if (ret) {
->>>>> @@ -1728,6 +1726,8 @@ int main(int argc, char **argv)
->>>>>     	xlog_syslog(0);
->>>>>     	xlog_stderr(1);
->>>>>     
->>>>> +	read_nfsd_conf();
->>>>> +
->>>>>     	/* Parse the preliminary options */
->>>>>     	while ((opt = getopt_long(argc, argv, "+hdsV", pre_options, NULL)) != -1) {
->>>>>     		switch (opt) {
->>>> Ok... at this point we a prettier error message
->>>> $ nfsdctl nlm
->>>> nfsdctl: failed to resolve lockd generic netlink family
->>>>
->>>> But the point of this argument is:
->>>>
->>>> Get information about NLM (lockd) settings in the current net
->>>> namespace. This subcommand takes no arguments.
->>>>
->>>> How is that giving information from the running lockd?
->>>>
->>>> What am I missing??
->>>>
->>>
->>> You're missing a kernel that has the required netlink interface. To
->>> test this properly, you'll need to patch your kernel, until that patch
->>> makes it upstream.
->> Okay... I figured it was something like that. But doesn't make sense to
->> wait until the patch is in upstream so the argument can be properly
->> tested? Why add an argument that will always fail?
->>
-> 
-> Why can't it be properly tested? It's just a matter of running a more
-> recent kernel that has the right interfaces. That should be in linux-
-> next soon (if not already).
-I'm doing my testing on a 6.13.0-0.rc6 which will soon be
-a 6.14 kernel... its my understanding the needed kernel
-patch will be in the 6.15 kernel... Please correct me
-if that is not true.
+nfsd_nl_listener_set_doit() would manipulate the list of transports of
+server's sv_permsocks and svc_xprt_close() the specified listener but
+the other list of transports (server's sp_xprts list) would not be
+changed leading to the problem.
 
-> 
-> I think the question is whether we want to wait until the kernel
-> interfaces trickle out into downstream distro kernels before we ship
-> any userland support in an upstream project (nfs-utils).
-Yes! As soon as the kernel support hits the upstream kernel,
-we will be good to go. I just don't want to put a feature
-in that will fail %100 of the time.
+the other problem is that sp_xprt is a lwq structure of lockless
+list which does not have an ability to remove a single entry from
+the list.
 
-> 
-> If you want to wait until it hits Fedora Rawhide kernels, then you're
-> looking at about 10-12 weeks from now. If you want to wait until it
-> makes it into a stable Fedora release kernel then we're looking at
-> about 6 months from now.
-nfsdctl is in all current Fedora stable releases, which
-is the reason I'm pushing back. I do not want to put something
-in that will make it fail. That just does not make sense to me.
+this patch series addis a function to remove a single entry, then modifies
+nfsd_nl_listener_set_doit() to make sure the to-be-removed listener is
+removed from both lists and then it also ensures that the remaining
+listeners are added back in the correct state.
 
-> 
-> I'll note that that it took 6 months to get the original nfsdctl
-> patches merged because of the lag on kernel patches making it into
-> distros, and I think that was way too long.
-It took that long because there were issues with the command.
-In which I was glad to help debug some of the issues...
+Olga Kornievskaia (3):
+  llist: add ability to remove a particular entry from the list
+  SUNRPC: add ability to remove specific server transport
+  nfsd: fix management of listener transports
 
-New technology takes time to develop... I just think this
-is one of those cases.
+ fs/nfsd/nfsctl.c           |  4 +++-
+ include/linux/llist.h      | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/sunrpc/svc.h |  1 +
+ net/sunrpc/svc_xprt.c      | 11 +++++++++++
+ 4 files changed, 51 insertions(+), 1 deletion(-)
 
-steved.
+-- 
+2.47.1
 
 
