@@ -1,197 +1,119 @@
-Return-Path: <linux-nfs+bounces-9310-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9311-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0FF0A13DBF
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 16:35:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AF01A13DD5
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 16:37:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC7DE1886081
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 15:35:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 924AF3ACB85
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 15:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E46D022AE55;
-	Thu, 16 Jan 2025 15:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D8A22B8D7;
+	Thu, 16 Jan 2025 15:37:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BXqjU318"
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="BwPEVphx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D3C24A7F6
-	for <linux-nfs@vger.kernel.org>; Thu, 16 Jan 2025 15:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDFC22B8C7
+	for <linux-nfs@vger.kernel.org>; Thu, 16 Jan 2025 15:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737041696; cv=none; b=suiwD5Lte16nVECprhXbivqdQckSzEqG1bFVzXhwL+HjsMOZCcE3kwibs9EtnmTmsWkf1er6AuWw0CxWssfBjJKKVeNLV3Mvpurv8vJlVlvEai13V09gCQDMSYSaf0srH9/syQtChIElExwkswpOc6rz2S1J+mor2sGRNApsN2M=
+	t=1737041830; cv=none; b=SfrDw0Lpk3Ybw100Skq+10u7oxQ9oE4dvyoeUrJ7gNBdcOsUYTc5bDB2vJpQ0HMjk9buYnaXMjQfEv9vhTDaRk9RAu/QRsMH85QkeAjST/YAJYxlP7FqZCb+fc/OW15yaJNO6EAey6hUgozSGa3e4pyEF+xXAkUfd0at/1owxNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737041696; c=relaxed/simple;
-	bh=9NQd9bOSgxd64gIMirq2tNi2m+/vB6+CfDFhCH/AWBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BVle0Y4/0447MuLPD7C0MA0bzSwnTIO/LKcEeARPG/i5y6jXY5SDWZYfmvjE5opV12Jvh4wjEphraKebvFI5V+dnUlLTj+Nd5jxSot6zr8EpFPVqpUJVylRXeC5yk42+0mNUoavY3LHHNViZXImWiBq4zCIKAgbyKPxI4wNWit0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BXqjU318; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737041694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ko1b+1xrU9oCU28xHm68XjLRBtyEbHCEKh42MNQqM+s=;
-	b=BXqjU318btcvJYubMD60psMC/STrwMYP5niM6l3AAG6HLKWaH4f0PEWyN8kaH2SfWa2RCf
-	o1Q+iINDGOle/kb/UI40xFUuozel6rTu75Hk1vkZW8ryNkHPVBX5mVVRwpmsngMDgT4y11
-	rgz3CE6gMX9AsXNP0PFBoZbRRqJ5Els=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-YsCDQzewNpWasqW0tCf6vQ-1; Thu, 16 Jan 2025 10:34:52 -0500
-X-MC-Unique: YsCDQzewNpWasqW0tCf6vQ-1
-X-Mimecast-MFC-AGG-ID: YsCDQzewNpWasqW0tCf6vQ
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5da15447991so967264a12.3
-        for <linux-nfs@vger.kernel.org>; Thu, 16 Jan 2025 07:34:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737041691; x=1737646491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ko1b+1xrU9oCU28xHm68XjLRBtyEbHCEKh42MNQqM+s=;
-        b=Td85OVyaJqgEbza6PBQJiIqhwGJzHWJfcg1nWljp3gqLbZHE30gpQSnpAOffuEAQw1
-         vZLs/EIolgQp3sAwRvro4ti5EzNow701kjiuz4sCFS4bPXpdDWlAVLyIjiI6lwaOvXu3
-         K5EwPHBzV1Pxv89I4O3ht/8jucpf1zqv6kHObWU3V52IVUyUMdehpki/67fT3puMgIey
-         QMkK8epG3jFbsQ0bEQY4wjqFMiUbVw/t9MKNa/F2zg50DxCtVMqPY2uMJD8yFCrYOSNL
-         pb0bnvtbp2c9UtR43EHx0ep8twN9rISvrsORFF9P5uYDVc4O/o22PITd5HipdaK/oBy7
-         1k+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWCPo0pXVtVy1HvaIkc9dZ7u+2xzX3+8VEWUJ6SZG/i8IdS2c6Cu9SgMqCSDA0GSChHselnIZZb/o8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcAyC+FyughqZn5ETs+cSelBwMmn13VEz9mlkDpKCKGephRal7
-	P4oI9Gfh+smu9dfhCE1ws7hE/6Z6nvp+erFQLoTdOdwKrcYQm9xiiZTv9n+2CP+3fHcqg4hzbds
-	+zWP9QIKFaVeuvnwquLagEp2w84cbInCnBga99ypAo8ZudCehY9vysGxLOHCDywpup8g2ABAf6m
-	zCDpVVR82hO/EEplrJPcbewdkRGkXtdqAD
-X-Gm-Gg: ASbGncvOKtMMb3MJD78G1OmkoRbipcILp4lKKYoKAtBL9AGZNgBqsUNpLx+N+cArjY8
-	6WMZR8ir0p4s09NuhHFuYJd3XNM7a6WQRrLa4CVwSL0WHMwfCV954fWAXkcIFKbP9IbOE+bfV
-X-Received: by 2002:a05:6402:3549:b0:5d0:e73c:b7f0 with SMTP id 4fb4d7f45d1cf-5d972e70945mr79260367a12.28.1737041691401;
-        Thu, 16 Jan 2025 07:34:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHJRYk4/NKDK1eVNxtvOhaLg9OArdR29GCXOGAkC/7aiRl2+00cTR6oJ8XBMkKNbkFxTMLUhVsdc+g0zI2t08c=
-X-Received: by 2002:a05:6402:3549:b0:5d0:e73c:b7f0 with SMTP id
- 4fb4d7f45d1cf-5d972e70945mr79260312a12.28.1737041691060; Thu, 16 Jan 2025
- 07:34:51 -0800 (PST)
+	s=arc-20240116; t=1737041830; c=relaxed/simple;
+	bh=t24c0eM8KHh8FGiRorWZ685Ub1GrK6Uip0R3+DvkbWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fb7byEO2el2sTKkVf4oJhZtYpKmUJ5etwUcP98PND/awP/BTpao/N3CalV4NOjsV3odcqLMyjTSeFqD9V70CvhaCzwP2I0aKBdeqzkSqHEwE2HhwE8A6VFsxMscb3RRbYdN8rR4fPM6xAJy/61p18VnRW91d1x01r6KBMCPzXUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=BwPEVphx; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from cwcc.thunk.org (pool-108-26-156-113.bstnma.fios.verizon.net [108.26.156.113])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 50GFanwH009842
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Jan 2025 10:36:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1737041812; bh=iPKdQs8uflu2Stql2atdadH5H0PtUFQgOadTLW8ZP4o=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=BwPEVphxAoGYgAhF8WUXU3E0mia640CpS+30LLb1S5DqeQQxsDiiP3yGW8mN5eqw5
+	 33ZBRGUem6nqLELYJo3FjZJ52yfrMUPM2nmWplOyZ8kWrXj9zd0EvS/akc2yp5wsgr
+	 b60nk/qRWsTWGBQAWz5O/ZEfIHM537Hik0opvjJQnzre+KAxE+ZjPirW7+X7Wo3tz+
+	 va5bpfTa7wH4K8rklNuRNPo1S7W0v2vrlxciKOx8SyQrSulYr3uJ16SkLSM0+BV88k
+	 hCG5VTCdIpAMU4iHc81ZOLBXQiy98wjmodh+9HauI1mGbTMb6lthbzGZx98ufb04gU
+	 jT7W8VcThqqdQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id D212F15C0108; Thu, 16 Jan 2025 10:36:49 -0500 (EST)
+Date: Thu, 16 Jan 2025 10:36:49 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Dave Chinner <david@fromorbit.com>,
+        Anna Schumaker <anna.schumaker@oracle.com>,
+        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
+ operation: VFS or NFS ioctl() ?
+Message-ID: <20250116153649.GC2446278@mit.edu>
+References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
+ <Z4bv8FkvCn9zwgH0@dread.disaster.area>
+ <Z4icRdIpG4v64QDR@infradead.org>
+ <20250116133701.GB2446278@mit.edu>
+ <21c7789f-2d59-42ce-8fcc-fd4c08bcb06f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115232406.44815-1-okorniev@redhat.com> <20250115232406.44815-4-okorniev@redhat.com>
- <62d3ced2-8c90-4699-b3c4-c58489ec9f19@oracle.com> <62694be2aea08c40af7b0cea9d8c1b67a7b2cbe7.camel@kernel.org>
- <1db5da8c-6608-4f0b-967b-a7ba564af6b0@oracle.com>
-In-Reply-To: <1db5da8c-6608-4f0b-967b-a7ba564af6b0@oracle.com>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Thu, 16 Jan 2025 10:34:40 -0500
-X-Gm-Features: AbW1kvaPcckh0KFtLKr6Y2ZnWFVgUrv7nMWvfVN1M9a7-2psuMI2EclG87oQXNQ
-Message-ID: <CACSpFtAWK-JWY5T9FK1m+2+s4Jecy1nJOrCtTUFZL7D6YdyO6A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] nfsd: fix management of listener transports
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21c7789f-2d59-42ce-8fcc-fd4c08bcb06f@oracle.com>
 
-On Thu, Jan 16, 2025 at 9:55=E2=80=AFAM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
->
-> On 1/16/25 9:46 AM, Jeff Layton wrote:
-> > On Thu, 2025-01-16 at 09:27 -0500, Chuck Lever wrote:
-> >> On 1/15/25 6:24 PM, Olga Kornievskaia wrote:
-> >>> When a particular listener is being removed we need to make sure
-> >>> that we delete the entry from the list of permanent sockets
-> >>> (sv_permsocks) as well as remove it from the listener transports
-> >>> (sp_xprts). When adding back the leftover transports not being
-> >>> removed we need to clear XPT_BUSY flag so that it can be used.
-> >>>
-> >>> Fixes: 16a471177496 ("NFSD: add listener-{set,get} netlink command")
-> >>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> >>> ---
-> >>>    fs/nfsd/nfsctl.c | 4 +++-
-> >>>    1 file changed, 3 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> >>> index 95ea4393305b..3deedd511e83 100644
-> >>> --- a/fs/nfsd/nfsctl.c
-> >>> +++ b/fs/nfsd/nfsctl.c
-> >>> @@ -1988,7 +1988,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *s=
-kb, struct genl_info *info)
-> >>>     /* Close the remaining sockets on the permsocks list */
-> >>>     while (!list_empty(&permsocks)) {
-> >>>             xprt =3D list_first_entry(&permsocks, struct svc_xprt, xp=
-t_list);
-> >>> -           list_move(&xprt->xpt_list, &serv->sv_permsocks);
-> >>> +           list_del_init(&xprt->xpt_list);
-> >>>
-> >>>             /*
-> >>>              * Newly-created sockets are born with the BUSY bit set. =
-Clear
-> >>> @@ -2000,6 +2000,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *s=
-kb, struct genl_info *info)
-> >>>
-> >>>             set_bit(XPT_CLOSE, &xprt->xpt_flags);
-> >>>             spin_unlock_bh(&serv->sv_lock);
-> >>> +           svc_xprt_dequeue_entry(xprt);
-> >>
-> >> The kdoc comment in front of llist_del_entry() says:
-> >>
-> >> + * The caller must ensure that nothing can race in and change the
-> >> + * list while this is running.
-> >>
-> >> In this caller, I don't see how such a race is prevented.
-> >>
-> >
-> > This caller holds the nfsd_mutex, and prior to this, it does:
-> >
-> >          /* For now, no removing old sockets while server is running */
-> >          if (serv->sv_nrthreads && !list_empty(&permsocks)) {
-> >                  list_splice_init(&permsocks, &serv->sv_permsocks);
-> >                  spin_unlock_bh(&serv->sv_lock);
-> >                  err =3D -EBUSY;
-> >                  goto out_unlock_mtx;
-> >          }
-> >
-> > No nfsd threads are running and none can be started, so nothing is
-> > processing the queue at this time. Some comments explaining that would
-> > be a welcome addition here.
->
-> So this would also block incoming accepts on another (active) socket?
->
-> Yeah, that's not obvious.
+On Thu, Jan 16, 2025 at 08:59:19AM -0500, Chuck Lever wrote:
+> 
+> See my previous reply in this thread: WRITE_SAME has a long-standing
+> existing use case in the database world. The NFSv4.2 WRITE_SAME
+> operation was designed around this use case.
+> 
+> You remember database workloads, right? ;-)
 
-I read these 2 comments as "more comments are needed" but I'm failing
-to see what is not obvious about knowing that nothing can be running
-because in the beginning of the function nfsd_mutex was acquired? And
-there is already a comment in the quoted code.
+My understanding is that the database use case maps onto BLKZEROOUT
+--- specifically, databases want to be able to extend a tablespace
+file, and what they want to be able to do is to allocate a contiguous
+range using fallocate(2), but then want to make sure that the blocks
+in the block are marked as initialized so that future writes to the
+file do not require metadata updates when fsync(2) is called.
+Enterprise databases like Oracle and db2 have been doing this for
+decades; and just in the past two months recently I've had
+representatives from certain open source databases ask for something
+like the FALLOC_FL_WRITE_ZEROES.
 
-I have contemplated that instead of introducing a new function into
-code that isn't NFS (ie llist.h), perhaps we re-write the
-nfsd_nl_listener_set_doit() to remove all from the existing transports
-from lists (permsocks and sp_xprts) and create all new instead? But it
-does seem an overkill for simply needing to remove something from the
-list instead.
+So yes, I'm very much aware of database workloads --- but all they
+need is to write zeros to mark a file range that was freshly allocated
+using fallocate to be initialized.  They do not need the more
+expansive features which as defined by the SCSI or NFSv4.2.  All of
+the use cases done by enterprise Oracle, db2, and various open source
+databases which have approached me are typically allocating a chunk
+of aligned space (say, 32MiB) and then they want to initalize this
+range of blocks.
 
-> >>>             svc_xprt_close(xprt);
-> >>>             spin_lock_bh(&serv->sv_lock);
-> >>>     }
-> >>> @@ -2031,6 +2032,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *s=
-kb, struct genl_info *info)
-> >>>
-> >>>             xprt =3D svc_find_listener(serv, xcl_name, net, sa);
-> >>>             if (xprt) {
-> >>> +                   clear_bit(XPT_BUSY, &xprt->xpt_flags);
-> >>>                     svc_xprt_put(xprt);
-> >>>                     continue;
-> >>>             }
-> >>
-> >>
-> >
->
->
-> --
-> Chuck Lever
->
+This then doesn't require poison sentinals, since it's strictly
+speaking an optimization.  The extent tree doesn't get marked as
+initalized until the zero-write has been commited to the block device
+via a CACHE FLUSH.  If we crash before this happens, reads from the
+file will get zeros, and writes to the blocks that didn't get
+initialized will still work, but the fsync(2) might trigger a
+filesystem-level journal commit.  This isn't a disaster....
 
+Now, there might be some database that needs something more
+complicated, but I'm not aware of them.  If you know of any, is that
+something that you are able to share?
+
+Cheers,
+
+					- Ted
 
