@@ -1,119 +1,139 @@
-Return-Path: <linux-nfs+bounces-9311-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9312-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AF01A13DD5
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 16:37:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 283C3A13DDF
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 16:39:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 924AF3ACB85
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 15:37:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5199716223B
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 15:39:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D8A22B8D7;
-	Thu, 16 Jan 2025 15:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7941122B59C;
+	Thu, 16 Jan 2025 15:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="BwPEVphx"
+	dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b="j3YRDj3r"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDFC22B8C7
-	for <linux-nfs@vger.kernel.org>; Thu, 16 Jan 2025 15:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F45D1DDC12;
+	Thu, 16 Jan 2025 15:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737041830; cv=none; b=SfrDw0Lpk3Ybw100Skq+10u7oxQ9oE4dvyoeUrJ7gNBdcOsUYTc5bDB2vJpQ0HMjk9buYnaXMjQfEv9vhTDaRk9RAu/QRsMH85QkeAjST/YAJYxlP7FqZCb+fc/OW15yaJNO6EAey6hUgozSGa3e4pyEF+xXAkUfd0at/1owxNg=
+	t=1737041941; cv=none; b=TCaPg6wdG1ZcXC+LZ9q+kEzLfVOPwjHcGoEP82DzRjS3DH8Cnr6yL7wPJ+xkAVU12FQR+gYwuKLPdP1vSrSAMZkjL0efk4/fNAY0YTyCQghoaDNOszyLlm8N7RICTs/5WHXLpwBx40399Y14GgnAnyMqOtr552MOYRM1kFAvNJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737041830; c=relaxed/simple;
-	bh=t24c0eM8KHh8FGiRorWZ685Ub1GrK6Uip0R3+DvkbWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fb7byEO2el2sTKkVf4oJhZtYpKmUJ5etwUcP98PND/awP/BTpao/N3CalV4NOjsV3odcqLMyjTSeFqD9V70CvhaCzwP2I0aKBdeqzkSqHEwE2HhwE8A6VFsxMscb3RRbYdN8rR4fPM6xAJy/61p18VnRW91d1x01r6KBMCPzXUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=BwPEVphx; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from cwcc.thunk.org (pool-108-26-156-113.bstnma.fios.verizon.net [108.26.156.113])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 50GFanwH009842
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 16 Jan 2025 10:36:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1737041812; bh=iPKdQs8uflu2Stql2atdadH5H0PtUFQgOadTLW8ZP4o=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=BwPEVphxAoGYgAhF8WUXU3E0mia640CpS+30LLb1S5DqeQQxsDiiP3yGW8mN5eqw5
-	 33ZBRGUem6nqLELYJo3FjZJ52yfrMUPM2nmWplOyZ8kWrXj9zd0EvS/akc2yp5wsgr
-	 b60nk/qRWsTWGBQAWz5O/ZEfIHM537Hik0opvjJQnzre+KAxE+ZjPirW7+X7Wo3tz+
-	 va5bpfTa7wH4K8rklNuRNPo1S7W0v2vrlxciKOx8SyQrSulYr3uJ16SkLSM0+BV88k
-	 hCG5VTCdIpAMU4iHc81ZOLBXQiy98wjmodh+9HauI1mGbTMb6lthbzGZx98ufb04gU
-	 jT7W8VcThqqdQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id D212F15C0108; Thu, 16 Jan 2025 10:36:49 -0500 (EST)
-Date: Thu, 16 Jan 2025 10:36:49 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Dave Chinner <david@fromorbit.com>,
-        Anna Schumaker <anna.schumaker@oracle.com>,
-        lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
- operation: VFS or NFS ioctl() ?
-Message-ID: <20250116153649.GC2446278@mit.edu>
-References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
- <Z4bv8FkvCn9zwgH0@dread.disaster.area>
- <Z4icRdIpG4v64QDR@infradead.org>
- <20250116133701.GB2446278@mit.edu>
- <21c7789f-2d59-42ce-8fcc-fd4c08bcb06f@oracle.com>
+	s=arc-20240116; t=1737041941; c=relaxed/simple;
+	bh=awwHzI1Z1/x3HyInkRgOMr1h572tgiAEaGwaKELzOdM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gak/VnRsC7oZ3dWiBJaJZAS/Bhd4OmqiUoV1KefJ6ENq0Ntg0M/2QWeYxFkZzLc6OZdElMxSFsYb4f/MFmpqnzCLc0iy0CoZbWwYOf9knFOggtIqISoYk/llvQa2QAOC0zW8J7z4Ih6GWKdSSeZHwH8em4SpbfbQvbwXBv19AkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be; spf=pass smtp.mailfrom=krisman.be; dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b=j3YRDj3r; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=krisman.be
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8340AFF808;
+	Thu, 16 Jan 2025 15:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=krisman.be; s=gm1;
+	t=1737041936;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MmKv0Rf0wv9cIc2vKkICHbEQe1aK7ETgo4BrVAmd2x0=;
+	b=j3YRDj3reFI7El+9v37BTiRXv413bpugh7FunWxxPAHgmjxv7JhhtJ1h5tEF2v7xku2jMJ
+	K43/F515o4G4keeEPTl5opN2ki8kfw8YFOA9yQpUU9Z0JRBpILmjvqivrBv76NoVNvpX3Q
+	yRNNInjP7+i4yyAxaZ1Be4d96Z2iVnnl/dXZQ3rS19d1/VtLWm7MT8lNOQIehMJfD6J7ie
+	Lt6UHqtoPGfEKLw36oAzZXM7RAD1GqsnvniRjpvjV5lI/pdCxn6HRIbQxK9TEpRMGH0n9H
+	kUA2x8DtxPTHjzBgXfocZAMfE4JBfj/Ji/NSYvGQzODuHtNWCJVxiYePHB4rbg==
+From: Gabriel Krisman Bertazi <gabriel@krisman.be>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org,  agruenba@redhat.com,
+  amir73il@gmail.com,  brauner@kernel.org,  ceph-devel@vger.kernel.org,
+  dhowells@redhat.com,  hubcap@omnibond.com,  jack@suse.cz,
+  linux-nfs@vger.kernel.org,  miklos@szeredi.hu,
+  torvalds@linux-foundation.org
+Subject: Re: [PATCH v2 06/20] generic_ci_d_compare(): use shortname_storage
+In-Reply-To: <20250116052317.485356-6-viro@zeniv.linux.org.uk> (Al Viro's
+	message of "Thu, 16 Jan 2025 05:23:03 +0000")
+References: <20250116052103.GF1977892@ZenIV>
+	<20250116052317.485356-1-viro@zeniv.linux.org.uk>
+	<20250116052317.485356-6-viro@zeniv.linux.org.uk>
+Date: Thu, 16 Jan 2025 10:38:53 -0500
+Message-ID: <87cygmlqeq.fsf@mailhost.krisman.be>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21c7789f-2d59-42ce-8fcc-fd4c08bcb06f@oracle.com>
+Content-Type: text/plain
+X-GND-Sasl: gabriel@krisman.be
 
-On Thu, Jan 16, 2025 at 08:59:19AM -0500, Chuck Lever wrote:
-> 
-> See my previous reply in this thread: WRITE_SAME has a long-standing
-> existing use case in the database world. The NFSv4.2 WRITE_SAME
-> operation was designed around this use case.
-> 
-> You remember database workloads, right? ;-)
+Al Viro <viro@zeniv.linux.org.uk> writes:
 
-My understanding is that the database use case maps onto BLKZEROOUT
---- specifically, databases want to be able to extend a tablespace
-file, and what they want to be able to do is to allocate a contiguous
-range using fallocate(2), but then want to make sure that the blocks
-in the block are marked as initialized so that future writes to the
-file do not require metadata updates when fsync(2) is called.
-Enterprise databases like Oracle and db2 have been doing this for
-decades; and just in the past two months recently I've had
-representatives from certain open source databases ask for something
-like the FALLOC_FL_WRITE_ZEROES.
+> ... and check the "name might be unstable" predicate
+> the right way.
+>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>  fs/libfs.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index 748ac5923154..3ad1b1b7fed6 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -1789,7 +1789,7 @@ int generic_ci_d_compare(const struct dentry *dentry, unsigned int len,
+>  {
+>  	const struct dentry *parent;
+>  	const struct inode *dir;
+> -	char strbuf[DNAME_INLINE_LEN];
+> +	union shortname_store strbuf;
+>  	struct qstr qstr;
+>  
+>  	/*
+> @@ -1809,22 +1809,23 @@ int generic_ci_d_compare(const struct dentry *dentry, unsigned int len,
+>  	if (!dir || !IS_CASEFOLDED(dir))
+>  		return 1;
+>  
+> +	qstr.len = len;
+> +	qstr.name = str;
+>  	/*
+>  	 * If the dentry name is stored in-line, then it may be concurrently
+>  	 * modified by a rename.  If this happens, the VFS will eventually retry
+>  	 * the lookup, so it doesn't matter what ->d_compare() returns.
+>  	 * However, it's unsafe to call utf8_strncasecmp() with an unstable
+>  	 * string.  Therefore, we have to copy the name into a temporary buffer.
 
-So yes, I'm very much aware of database workloads --- but all they
-need is to write zeros to mark a file range that was freshly allocated
-using fallocate to be initialized.  They do not need the more
-expansive features which as defined by the SCSI or NFSv4.2.  All of
-the use cases done by enterprise Oracle, db2, and various open source
-databases which have approached me are typically allocating a chunk
-of aligned space (say, 32MiB) and then they want to initalize this
-range of blocks.
+This part of the comment needs updating since there is no more copying.
 
-This then doesn't require poison sentinals, since it's strictly
-speaking an optimization.  The extent tree doesn't get marked as
-initalized until the zero-write has been commited to the block device
-via a CACHE FLUSH.  If we crash before this happens, reads from the
-file will get zeros, and writes to the blocks that didn't get
-initialized will still work, but the fsync(2) might trigger a
-filesystem-level journal commit.  This isn't a disaster....
+> +	 * As above, len is guaranteed to match str, so the shortname case
+> +	 * is exactly when str points to ->d_shortname.
+>  	 */
+> -	if (len <= DNAME_INLINE_LEN - 1) {
+> -		memcpy(strbuf, str, len);
+> -		strbuf[len] = 0;
+> -		str = strbuf;
+> +	if (qstr.name == dentry->d_shortname.string) {
+> +		strbuf = dentry->d_shortname; // NUL is guaranteed to be in there
+> +		qstr.name = strbuf.string;
+>  		/* prevent compiler from optimizing out the temporary buffer */
+>  		barrier();
 
-Now, there might be some database that needs something more
-complicated, but I'm not aware of them.  If you know of any, is that
-something that you are able to share?
+If I read the code correctly, I admit I don't understand how this
+guarantees the stability.  Aren't you just assigning qstr.name back the
+same value it had in case of an inlined name through a bounce pointer?
+The previous implementation made sense to me, since the memcpy only
+accessed each character once, and we guaranteed the terminating
+character explicitly, but I'm having a hard time with this version.
 
-Cheers,
+>  	}
+> -	qstr.len = len;
+> -	qstr.name = str;
+>  
+>  	return utf8_strncasecmp(dentry->d_sb->s_encoding, name, &qstr);
+>  }
 
-					- Ted
+-- 
+Gabriel Krisman Bertazi
 
