@@ -1,232 +1,195 @@
-Return-Path: <linux-nfs+bounces-9295-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9296-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A3BFA13763
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 11:06:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5913A13954
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 12:43:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8906A16430A
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 10:06:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 596293A4B87
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 11:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1584E139566;
-	Thu, 16 Jan 2025 10:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4OtRqt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a7EWIuQJ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4OtRqt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a7EWIuQJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83DD51DE887;
+	Thu, 16 Jan 2025 11:43:17 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A621156C76;
-	Thu, 16 Jan 2025 10:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA88F1DE4FF;
+	Thu, 16 Jan 2025 11:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737021984; cv=none; b=FwBNJp7DBsTYtAGU8kDwOrwtzpbizWJYxyOsXFVrKf8UuQUF5Zy2F7sCYhix/vb1bXe/o3gmjTPxHLyyWGRvjYOUNYzdvr05yNBdIlBpG9QjdWSvjlXM3VUFNUkuDE4EFmMYgHpEAu5QUX/VsRS5P9WUdUWP/jDu3VTc7IfzJhM=
+	t=1737027797; cv=none; b=gaVaeuA4xpXEBjRwXmzgq8+EVURA05gdsVHlgy7W5qec8sweYj6A2K8tYr0J5kdT+WeJCbR7tbWes4+CV6F+W2RElpucqcCmd9QfTK8B+oCVAXQTDRzihH+u3RB3u1jlL+zlNe15n7GU1ZHjzXj59T5OFu99t8uW+1WwdjcbVqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737021984; c=relaxed/simple;
-	bh=kaFgQcnk6WlYe7pfq08jmdgw5+Z1z/+zioMakFLI9io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laobbXVorr8LQUUk+dLDesOjyHcDeX3Ys7/M+T6lRJt4/j8hcTlGP92fmdQI3/ojXcqdYBhPMYvAC7g7saqE2tuU45pXOoFoUV3okPAHu9fknopsyr0t6M1XgGxIxS0JPYM0+SOwqZJ/dMKekSIK4ERA+41/iJGQp0FB81sdPd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4OtRqt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a7EWIuQJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4OtRqt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a7EWIuQJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7DA2C211C7;
-	Thu, 16 Jan 2025 10:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1737021980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
-	b=MK4OtRqtRx3QneHmrVf60GXFWHNz5LOnFSYkbJLWqi5ty3Qg5sRE5bzYWoEBG36zreoXVl
-	S2LJl+1OCCI/QLhhX1YSwHPoREAu4b/K8x2oPylYwSuBWGMQtLTeQSWsyjT545/wJzbClg
-	8uXwtOAXTlXoIXSV4qmDpxZ70On0knQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1737021980;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
-	b=a7EWIuQJS12/MogplZHAW00dFUdFG8jzuSJTerDWLuu4TpaHNJR4PoZuZXIIIjdegsjVQw
-	JtESwAjnKjM8DWDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1737021980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
-	b=MK4OtRqtRx3QneHmrVf60GXFWHNz5LOnFSYkbJLWqi5ty3Qg5sRE5bzYWoEBG36zreoXVl
-	S2LJl+1OCCI/QLhhX1YSwHPoREAu4b/K8x2oPylYwSuBWGMQtLTeQSWsyjT545/wJzbClg
-	8uXwtOAXTlXoIXSV4qmDpxZ70On0knQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1737021980;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
-	b=a7EWIuQJS12/MogplZHAW00dFUdFG8jzuSJTerDWLuu4TpaHNJR4PoZuZXIIIjdegsjVQw
-	JtESwAjnKjM8DWDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7039D13A57;
-	Thu, 16 Jan 2025 10:06:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vHRZGxzaiGcmIAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 16 Jan 2025 10:06:20 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 2F793A08E0; Thu, 16 Jan 2025 11:06:20 +0100 (CET)
-Date: Thu, 16 Jan 2025 11:06:20 +0100
-From: Jan Kara <jack@suse.cz>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org, agruenba@redhat.com, amir73il@gmail.com, 
-	brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com, 
-	hubcap@omnibond.com, jack@suse.cz, krisman@kernel.org, linux-nfs@vger.kernel.org, 
-	miklos@szeredi.hu, torvalds@linux-foundation.org
-Subject: Re: [PATCH v2 04/20] dissolve external_name.u into separate members
-Message-ID: <p2e3b3ygbr6p2xxy62opacwspphbxaufdsaoyhmpzfeuqw7gzd@22tpnvoudooc>
-References: <20250116052103.GF1977892@ZenIV>
- <20250116052317.485356-1-viro@zeniv.linux.org.uk>
- <20250116052317.485356-4-viro@zeniv.linux.org.uk>
+	s=arc-20240116; t=1737027797; c=relaxed/simple;
+	bh=eIj+V3eF624jD5grwIHMeLFukrAphaI3SnVgjSHt1XM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uIK1kG8U3HwPK5m4lsAeRzSBx4IaOwCE0DTLq7ggErbnsXVwW+2ck2FUPResIyQjboVfLxGUiebiK6FtMv17ic2Pm8JpenWrezb8/Ny6GN/tz+Mu4f8STGgNu8YNoJD+Gv7thsSXD3mhCJfpMj6dIoy6Mup8TCND2O09IHLBKY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YYgr63j3Hz1W4Dm;
+	Thu, 16 Jan 2025 19:39:18 +0800 (CST)
+Received: from kwepemf100006.china.huawei.com (unknown [7.202.181.220])
+	by mail.maildlp.com (Postfix) with ESMTPS id A80601800D9;
+	Thu, 16 Jan 2025 19:43:10 +0800 (CST)
+Received: from [10.174.177.210] (10.174.177.210) by
+ kwepemf100006.china.huawei.com (7.202.181.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 16 Jan 2025 19:43:09 +0800
+Message-ID: <fed3cd85-0a15-ae30-b167-84881d6a5efd@huawei.com>
+Date: Thu, 16 Jan 2025 19:43:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250116052317.485356-4-viro@zeniv.linux.org.uk>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,redhat.com,gmail.com,kernel.org,omnibond.com,suse.cz,szeredi.hu,linux-foundation.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH] SUNRPC: Set tk_rpc_status when RPC_TASK_SIGNALLED is
+ detected
+To: Li Lingfeng <lilingfeng3@huawei.com>, <trondmy@kernel.org>,
+	<anna@kernel.org>, <chuck.lever@oracle.com>, <jlayton@kernel.org>,
+	<neilb@suse.de>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
+	<tom@talpey.com>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <yukuai1@huaweicloud.com>, <houtao1@huawei.com>,
+	<yi.zhang@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250114144101.2511043-1-lilingfeng3@huawei.com>
+From: yangerkun <yangerkun@huawei.com>
+In-Reply-To: <20250114144101.2511043-1-lilingfeng3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemf100006.china.huawei.com (7.202.181.220)
 
-On Thu 16-01-25 05:23:01, Al Viro wrote:
-> kept separate from the previous commit to keep the noise separate
-> from actual changes...
+Hi,
+
+Thanks for the patch.
+
+Before 39494194f93b("SUNRPC: Fix races with rpc_killall_tasks()", every
+time we set RPC_TASK_SIGNALLED, when we go through __rpc_execute, this
+rpc_task will immediate break and exist.
+
+However after that, __rpc_execute won't judge RPC_TASK_SIGNNALED, so for
+the case like you point out below, even after your commit
+rpc_check_timeout will help break and exist eventually, but this
+rpc_task has already do some work. I prefer reintroduce judging
+RPC_TASK_SIGNNALED in __rpc_execute to help exist immediatly.
+
+在 2025/1/14 22:41, Li Lingfeng 写道:
+> Commit 39494194f93b("SUNRPC: Fix races with rpc_killall_tasks()") adds
+> rpc_task_set_rpc_status before setting RPC_TASK_SIGNALLED in
+> rpc_signal_task, ensuring that rpc_status is definitely set when
+> RPC_TASK_SIGNALLED is set.
+> Therefore, it seems unnecessary to set rpc_status again after detecting
+> RPC_TASK_SIGNALLED in rpc_check_timeout.
 > 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+> However, in some exceptional cases, invalid and endlessly looping
+> rpc_tasks may be generated. The rpc_call_rpcerror in rpc_check_timeout can
+> timely terminate such rpc_tasks. Removing rpc_call_rpcerror may cause the
+> rpc_task to fall into an infinite loop.
+> 
+> For example, in the following situation:
+> nfs4_close_done
+>   // get err from server
+>   nfs4_async_handle_exception
+>   // goto out_restart
+>                              // umount -f
+>                              nfs_umount_begin
+>                               rpc_killall_tasks
+>                                rpc_signal_task
+>                                 rpc_task_set_rpc_status
+>                                  task->tk_rpc_status = -ERESTARTSYS
+>                                  set_bit
+>                                  // set RPC_TASK_SIGNALLED to tk_runstate
+>   rpc_restart_call_prepare
+>    __rpc_restart_call
+>     task->tk_rpc_status = 0
+>     // clear tk_rpc_status
+>    ...
+>    rpc_prepare_task
+>     nfs4_close_prepare
+>      nfs4_setup_sequence
+>       rpc_call_start
+>        task->tk_action = call_start
+> 
+> At this point, an rpc_task with RPC_TASK_SIGNALLED set but tk_rpc_status
+> as 0 will be generated. This rpc_task will fall into the following loop:
+> call_encode --> call_transmit --> call_transmit_status --> call_status
+> --> call_encode.
+> 
+> Since RPC_TASK_SIGNALLED is set, no request will be sent in call_transmit.
+> Similarly, since RPC_TASK_SIGNALLED is set, rq_majortimeo will not be
+> updated in call_status --> rpc_check_timeout, which will cause -ETIMEDOUT
+> to be directly set to tk_status in call_transmit_status -->
+> xprt_request_wait_receive --> xprt_wait_for_reply_request_def -->
+> rpc_sleep_on_timeout --> __rpc_sleep_on_priority_timeout.
+> 
+> Here is the state and loop process of the rpc_task:
+> tk_runstate:
+> RPC_TASK_RUNNING RPC_TASK_ACTIVE RPC_TASK_NEED_RECV RPC_TASK_SIGNALLED
+> tk_xprt->state:
+> XPRT_CONNECTED XPRT_BOUND
+> tk_flags
+> RPC_TASK_ASYNC RPC_TASK_MOVEABLE RPC_TASK_DYNAMIC RPC_TASK_SOFT
+> RPC_TASK_NO_RETRANS_TIMEOUT RPC_TASK_CRED_NOREF
+> 
+> call_encode
+>   xprt_request_enqueue_transmit
+>    set_bit // RPC_TASK_NEED_XMIT
+>   task->tk_action = call_transmit
+> 
+> call_transmit
+>   task->tk_action = call_transmit_status
+>   xprt_transmit
+>    xprt_request_transmit
+>     // check RPC_TASK_SIGNALLED and goto out_dequeue
+>     xprt_request_dequeue_transmit
+>      xprt_request_dequeue_transmit_locked
+>       test_and_clear_bit // RPC_TASK_NEED_XMIT
+> 
+> call_transmit_status
+>   task->tk_action = call_status
+>   xprt_request_wait_receive
+>    xprt_wait_for_reply_request_def
+>     xprt_request_timeout // get timeout
+>      req->rq_majortimeo // rq_majortimeo will not be updated
+>     rpc_sleep_on_timeout
+>      __rpc_sleep_on_priority_timeout
+>       task->tk_status = -ETIMEDOUT // set ETIMEDOUT
+> 
+> call_status
+>   task->tk_action = call_encode
+>   rpc_check_timeout
+>    // check RPC_TASK_SIGNALLED and skip xprt_reset_majortimeo
+> 
+> Fix it by adding rpc_call_rpcerror back.
+> 
+> Fixes: 39494194f93b ("SUNRPC: Fix races with rpc_killall_tasks()")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 > ---
->  fs/dcache.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
+>   net/sunrpc/clnt.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index f387dc97df86..6f36d3e8c739 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -296,10 +296,8 @@ static inline int dentry_cmp(const struct dentry *dentry, const unsigned char *c
->  }
->  
->  struct external_name {
-> -	struct {
-> -		atomic_t count;		// ->count and ->head can't be combined
-> -		struct rcu_head head;	// see take_dentry_name_snapshot()
-> -	} u;
-> +	struct rcu_head head;	// ->head and ->count can't be combined
-> +	atomic_t count;		// see take_dentry_name_snapshot()
->  	unsigned char name[];
->  };
->  
-> @@ -344,7 +342,7 @@ void take_dentry_name_snapshot(struct name_snapshot *name, struct dentry *dentry
->  		struct external_name *p;
->  		p = container_of(s, struct external_name, name[0]);
->  		// get a valid reference
-> -		if (unlikely(!atomic_inc_not_zero(&p->u.count)))
-> +		if (unlikely(!atomic_inc_not_zero(&p->count)))
->  			goto retry;
->  		name->name.name = s;
->  	}
-> @@ -361,8 +359,8 @@ void release_dentry_name_snapshot(struct name_snapshot *name)
->  	if (unlikely(name->name.name != name->inline_name.string)) {
->  		struct external_name *p;
->  		p = container_of(name->name.name, struct external_name, name[0]);
-> -		if (unlikely(atomic_dec_and_test(&p->u.count)))
-> -			kfree_rcu(p, u.head);
-> +		if (unlikely(atomic_dec_and_test(&p->count)))
-> +			kfree_rcu(p, head);
->  	}
->  }
->  EXPORT_SYMBOL(release_dentry_name_snapshot);
-> @@ -400,7 +398,7 @@ static void dentry_free(struct dentry *dentry)
->  	WARN_ON(!hlist_unhashed(&dentry->d_u.d_alias));
->  	if (unlikely(dname_external(dentry))) {
->  		struct external_name *p = external_name(dentry);
-> -		if (likely(atomic_dec_and_test(&p->u.count))) {
-> +		if (likely(atomic_dec_and_test(&p->count))) {
->  			call_rcu(&dentry->d_u.d_rcu, __d_free_external);
->  			return;
->  		}
-> @@ -1681,7 +1679,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
->  			kmem_cache_free(dentry_cache, dentry); 
->  			return NULL;
->  		}
-> -		atomic_set(&p->u.count, 1);
-> +		atomic_set(&p->count, 1);
->  		dname = p->name;
->  	} else  {
->  		dname = dentry->d_shortname.string;
-> @@ -2774,15 +2772,15 @@ static void copy_name(struct dentry *dentry, struct dentry *target)
->  	if (unlikely(dname_external(dentry)))
->  		old_name = external_name(dentry);
->  	if (unlikely(dname_external(target))) {
-> -		atomic_inc(&external_name(target)->u.count);
-> +		atomic_inc(&external_name(target)->count);
->  		dentry->d_name = target->d_name;
->  	} else {
->  		dentry->d_shortname = target->d_shortname;
->  		dentry->d_name.name = dentry->d_shortname.string;
->  		dentry->d_name.hash_len = target->d_name.hash_len;
->  	}
-> -	if (old_name && likely(atomic_dec_and_test(&old_name->u.count)))
-> -		kfree_rcu(old_name, u.head);
-> +	if (old_name && likely(atomic_dec_and_test(&old_name->count)))
-> +		kfree_rcu(old_name, head);
->  }
->  
->  /*
-> -- 
-> 2.39.5
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index 0090162ee8c3..0acdff19a37c 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -2509,8 +2509,10 @@ rpc_check_timeout(struct rpc_task *task)
+>   {
+>   	struct rpc_clnt	*clnt = task->tk_client;
+>   
+> -	if (RPC_SIGNALLED(task))
+> +	if (RPC_SIGNALLED(task)) {
+> +		rpc_call_rpcerror(task, -ERESTARTSYS);
+>   		return;
+> +	}
+>   
+>   	if (xprt_adjust_timeout(task->tk_rqstp) == 0)
+>   		return;
 
