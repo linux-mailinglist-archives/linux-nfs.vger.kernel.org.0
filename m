@@ -1,79 +1,192 @@
-Return-Path: <linux-nfs+bounces-9291-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9292-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5925DA132B3
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 06:42:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24F48A13466
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 08:55:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF1B21887384
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 05:42:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F45C163B87
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 07:55:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F9EB158A09;
-	Thu, 16 Jan 2025 05:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tNVlfNOG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35B2C19CC06;
+	Thu, 16 Jan 2025 07:55:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF88B7346F;
-	Thu, 16 Jan 2025 05:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4305215252D
+	for <linux-nfs@vger.kernel.org>; Thu, 16 Jan 2025 07:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737006151; cv=none; b=FCbwqljE4EJv121h7HarpXMB1Sd49haVQrJ8ofrk8X5T343rG0baOcD3UN5keK1FoEWo5XcIK8jS5GDE+/PSDWsXXUSSM4ZaQ39bZxfKj9PtCDPQ8FccLHvk3Bvas55aMwXWe2zvBFDH9FgZFED4VLWheUPKZG5/+rCxqKNnc48=
+	t=1737014100; cv=none; b=LQnobQ6VLIacHiioGJBitG1cHdkqjJvrYWKbvOjl/UzIoPbECQVAqrx/onmdBdx8/P0TcxHevocrgF55WmEziP5t/g4wVAd+8vUZ69V3KHH922La9cGT4aEark67sq9ZtGKjNQWr3r1302VySlV4NXAmV/CoaJMeLCsV8aBf7G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737006151; c=relaxed/simple;
-	bh=qBtIqKbPYLQDzRLYEL+GnEA4r0PMl400HhRevUspdqQ=;
+	s=arc-20240116; t=1737014100; c=relaxed/simple;
+	bh=7M65RmMX3Ry4OaGybSFFVt26wFFfaatRGurZ9wLro+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRRftLjdztCCNjI5n3JcQmaWPHtyK1V+tDU2daKUZo029Zz8EwtvvAUvLQuljYh1P7+mz5yshwFHgxrCIrQwNGCOmW+fs46kOCFH4eoy1DeTD/MDwznZ1Wy59aEC7Fpq7PFRxvTyWH1AMTqLtsdf0sS6jKp5OSBl1OHOcpFvBGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tNVlfNOG; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=oq12XYVIy0vKReS7B9XEMqCqZJpn3crY8ZLl/z7O9oQ=; b=tNVlfNOG8A7NCs5Sn+R3RSzibx
-	+440KJlre66dy38PFNq+PZLV+39uq6ASK+KxOmF5w/vAP5RrLoUf9JzPuRFJ1l0bSr7didGcpFdOd
-	52ymXzxFgciQS4OM1T5x+V+2RCnWR79F3q7JP6Sp15FLmq3oevtSYUJautd3nDOE1aORAdf+PNHs/
-	RUSx51HIObTfSxiuQvWlCUD0NRrnIxbWouZmUe/GnWy9T3KBnJnQKbOkbvS1aFh3x9B4JbB8T58RF
-	LSf8Ubnitec6VMqJmmL3bIlpoobaroq4ONIImCIOFqOLr9b3lSIh+6j8QYobBCryuCOKjF2UEtR5J
-	iVTR4Q7g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tYIeD-0000000Dtl7-1Um9;
-	Thu, 16 Jan 2025 05:42:29 +0000
-Date: Wed, 15 Jan 2025 21:42:29 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Anna Schumaker <anna.schumaker@oracle.com>,
-	lsf-pc@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] Implementing the NFS v4.2 WRITE_SAME
- operation: VFS or NFS ioctl() ?
-Message-ID: <Z4icRdIpG4v64QDR@infradead.org>
-References: <f9ade3f0-6bfc-45da-a796-c22ceaeb4722@oracle.com>
- <Z4bv8FkvCn9zwgH0@dread.disaster.area>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oecro5mLeq2GQAySn03V5pI0EnB8z/lABlajf2dOto/2K9UoF1/gMpRCIX6uC+W/Bqq3Eyv0BrRb+w4Xt+HGhREWuPVl7M/K+x+Gazx2TQI2H3ME+ZZcKP9BplBc4VAo8EgTr5UYpwHNRaKJ2fXT/vZ9OZYaH8PmsJKN4XKSE54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tYKhe-00075B-4S; Thu, 16 Jan 2025 08:54:10 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tYKhT-000DS3-0I;
+	Thu, 16 Jan 2025 08:53:59 +0100
+Received: from pengutronix.de (pd9e59fec.dip0.t-ipconnect.de [217.229.159.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 165233A99BF;
+	Thu, 16 Jan 2025 07:53:43 +0000 (UTC)
+Date: Thu, 16 Jan 2025 08:53:42 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>, 
+	Cheng Xu <chengyou@linux.alibaba.com>, Kai Shen <kaishen@linux.alibaba.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Christian Benvenuti <benve@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
+	Bernard Metzler <bmt@zurich.ibm.com>, Karsten Keil <isdn@linux-pingi.de>, 
+	Michal Ostrowski <mostrows@earthlink.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>, 
+	Mike Christie <michael.christie@oracle.com>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Alexander Aring <aahringo@redhat.com>, 
+	David Teigland <teigland@redhat.com>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Tom Talpey <tom@talpey.com>, Simon Horman <horms@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, David Ahern <dsahern@kernel.org>, 
+	Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>, 
+	Johan Hedberg <johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Oliver Hartkopp <socketcan@hartkopp.net>, Robin van der Gracht <robin@protonic.nl>, 
+	Oleksij Rempel <o.rempel@pengutronix.de>, Alexandra Winter <wintera@linux.ibm.com>, 
+	Thorsten Winkler <twinkler@linux.ibm.com>, James Chapman <jchapman@katalix.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	Remi Denis-Courmont <courmisch@gmail.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Allison Henderson <allison.henderson@oracle.com>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, 
+	Xin Long <lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, 
+	Jan Karcher <jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, 
+	Tony Lu <tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>, 
+	Ying Xue <ying.xue@windriver.com>, Stefano Garzarella <sgarzare@redhat.com>, 
+	Martin Schiller <ms@dev.tdt.de>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Guillaume Nault <gnault@redhat.com>, 
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>, Andrew Morton <akpm@linux-foundation.org>, 
+	Wu Yunchuan <yunchuan@nfschina.com>, Max Gurtovoy <mgurtovoy@nvidia.com>, 
+	Maurizio Lombardi <mlombard@redhat.com>, David Howells <dhowells@redhat.com>, 
+	Atte =?utf-8?B?SGVpa2tpbMOk?= <atteh.mailbox@gmail.com>, Vincent Duvert <vincent.ldev@duvert.net>, 
+	Denis Kirjanov <kirjanov@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Thomas Huth <thuth@redhat.com>, 
+	Andrew Waterman <waterman@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Andrej Shadura <andrew.shadura@collabora.co.uk>, Ying Hsu <yinghsu@chromium.org>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Tom Parkin <tparkin@katalix.com>, 
+	Jason Xing <kernelxing@tencent.com>, Dan Carpenter <error27@gmail.com>, Hyunwoo Kim <v4bel@theori.io>, 
+	Bernard Pidoux <f6bvp@free.fr>, Sangsoo Lee <constant.lee@samsung.com>, 
+	Doug Brown <doug@schmorgal.com>, Ignat Korchagin <ignat@cloudflare.com>, 
+	Gou Hao <gouhao@uniontech.com>, Mina Almasry <almasrymina@google.com>, 
+	Abhishek Chauhan <quic_abchauha@quicinc.com>, Yajun Deng <yajun.deng@linux.dev>, Michal Luczaj <mhal@rbox.co>, 
+	Jiri Pirko <jiri@resnulli.us>, syzbot <syzkaller@googlegroups.com>, 
+	linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-rdma@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com, 
+	linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, target-devel@vger.kernel.org, 
+	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
+	linux-cifs@vger.kernel.org, linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-can@vger.kernel.org, linux-s390@vger.kernel.org, rds-devel@oss.oracle.com, 
+	linux-sctp@vger.kernel.org, tipc-discussion@lists.sourceforge.net, 
+	virtualization@lists.linux.dev, linux-x25@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	syzbot+d7ce59b06b3eb14fd218@syzkaller.appspotmail.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: Convert proto_ops::getname to sockaddr_storage
+Message-ID: <20250116-light-panda-of-reverence-2f5da8-mkl@pengutronix.de>
+References: <20241217023417.work.145-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nbdyd5ky7ajuduf3"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z4bv8FkvCn9zwgH0@dread.disaster.area>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20241217023417.work.145-kees@kernel.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-nfs@vger.kernel.org
 
-On Wed, Jan 15, 2025 at 10:14:56AM +1100, Dave Chinner wrote:
-> How closely does this match to the block device WRITE_SAME
-> (SCSI/NVMe) commands? I note there is a reference to this in the
-> RFC, but there are no details given.
 
-There is no write same in NVMe.  In one of the few wiѕe choices in
-NVMe the protocol only does a write zeroes for zeroing instead of the
-overly complex write zeroes.  And no one has complained about that so
-far.
+--nbdyd5ky7ajuduf3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] net: Convert proto_ops::getname to sockaddr_storage
+MIME-Version: 1.0
+
+On 16.12.2024 18:34:28, Kees Cook wrote:
+> The proto_ops::getname callback was long ago backed by sockaddr_storage,
+> but the replacement of it for sockaddr was never done. Plumb it through
+> all the getname() callbacks, adjust prototypes, and fix casts.
+>=20
+> There are a few cases where the backing object is _not_ a sockaddr_storage
+> and converting it looks painful. In those cases, they use a cast to
+> struct sockaddr_storage. They appear well bounds-checked, so the risk
+> is no worse that we have currently.
+>=20
+> Other casts to sockaddr are removed, though to avoid spilling this
+> change into BPF (which becomes a much larger set of changes), cast the
+> sockaddr_storage instances there to sockaddr for the time being.
+>=20
+> In theory this could be split up into per-caller patches that add more
+> casts that all later get removed, but it seemed like there are few
+> enough callers that it seems feasible to do this in a single patch. Most
+> conversions are mechanical, so review should be fairly easy. (Famous
+> last words.)
+>=20
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+>  net/can/isotp.c                               |  3 +-
+>  net/can/j1939/socket.c                        |  2 +-
+>  net/can/raw.c                                 |  2 +-
+
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de> # for net/can
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--nbdyd5ky7ajuduf3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmeIuv8ACgkQKDiiPnot
+vG/tCQgAnoYMQthE5qhN4islXZibYx3HOEVpQp20V/CdVVRH56MNpoQvsjN0F5I9
+Pe8FiGuyUR9fNqhHJPDV5qTZfzq6vRSoc7PpwLTwF9ReyzpbKcMrYcmv/Wkbso1k
+faQaG0U/F/5wp2/nsK1h/PUHRvlwFfLs41wCCmlXQDks5vvt1U+8F/0mUiM/L0yT
+SQG9iudLNDMEv22xlkR1e90s94ARgRIKcBcOZ9LudgYLwGmT8I3JAenyHET3Q8d2
+GWVaepqliLBxoq7pfWcJm1yFL8DFp2xSUy/gP7BqrfKIJoJhRqOR2EXGSgAZ6rek
+c/YmUBVaGDu2ZBkxhzlB6NKXFu9dBA==
+=LAEY
+-----END PGP SIGNATURE-----
+
+--nbdyd5ky7ajuduf3--
 
