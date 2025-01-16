@@ -1,73 +1,103 @@
-Return-Path: <linux-nfs+bounces-9294-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9295-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABE8AA13750
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 11:04:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A3BFA13763
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 11:06:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3363B3A1EC2
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 10:04:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8906A16430A
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jan 2025 10:06:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44971DD874;
-	Thu, 16 Jan 2025 10:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1584E139566;
+	Thu, 16 Jan 2025 10:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAgqR2f6"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4OtRqt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a7EWIuQJ";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MK4OtRqt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="a7EWIuQJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA3319259A;
-	Thu, 16 Jan 2025 10:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A621156C76;
+	Thu, 16 Jan 2025 10:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737021843; cv=none; b=d4N9JCIUGro4IBgT5bbU2MOqgoOyZAYyIwqxPN20xNH/xU5NNKZk6BL6/7gqzN3YcQ/SwnQAOSMZv5H/JVuBN6gpyhIRwTGmto9xPbGBVCeuOZ9NcFfzMcBcB8G9/nPUI9cRGJOytLt1+Nyf+/sgrT63YxfwPQDlK6qnVoaj1dY=
+	t=1737021984; cv=none; b=FwBNJp7DBsTYtAGU8kDwOrwtzpbizWJYxyOsXFVrKf8UuQUF5Zy2F7sCYhix/vb1bXe/o3gmjTPxHLyyWGRvjYOUNYzdvr05yNBdIlBpG9QjdWSvjlXM3VUFNUkuDE4EFmMYgHpEAu5QUX/VsRS5P9WUdUWP/jDu3VTc7IfzJhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737021843; c=relaxed/simple;
-	bh=vOWQM+I3YRBGjUYDIowHfBe+kql+W0wxpSJ3h1dp89U=;
+	s=arc-20240116; t=1737021984; c=relaxed/simple;
+	bh=kaFgQcnk6WlYe7pfq08jmdgw5+Z1z/+zioMakFLI9io=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTTt3fL1i6hDd/AeZSkB7i+ORX0KuUwxO0QEalyG/UhFginyJiToOZ5ry4DSe1Pvk0lnn7JSKM3q4oiWFRCqQWSI7JJO3tVpU+hJEX2f9A1bZxMHmDHJTzsb+YqKA4r2DMgYW7bCEqDq9mm2jOmTXqWTrh+IAU8+K3lnhn2vRAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAgqR2f6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8394EC4CED6;
-	Thu, 16 Jan 2025 10:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737021843;
-	bh=vOWQM+I3YRBGjUYDIowHfBe+kql+W0wxpSJ3h1dp89U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IAgqR2f66QLIyDnlJbSk0pURydWNxseM1FJspSLBkNINi0tBhfM9rafMRa8Fh7jXI
-	 X/IP3yQAnuTRRWVUMeZreOqI759pDr0UfGfwD6rxNXDM8bopEelBPpsrHjqB0dq8+Z
-	 f7INV4NNHfjOuSUxgJvNmSniqiSaAOd/F4iyTma5i6Vp7kMzpIK5WuY4DJjAJYUGV5
-	 SybOjcbKgQOt6adDDGmfohqQAh2Wurvyjc4q5ngWeI4K+I/El+T/pSa1BmM0z6vulg
-	 JaRJP2M2hymQq+cuTQPeXzoDhAFUTQvtWiPUncRVXrccXXxEnHYXgKekjrM1OSnKQS
-	 grprVO8ZExbiQ==
-Date: Thu, 16 Jan 2025 11:03:58 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: yukaixiong <yukaixiong@huawei.com>
-Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
-	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	hpa@zytor.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	kees@kernel.org, j.granados@samsung.com, willy@infradead.org, 
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
-	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, 
-	jmorris@namei.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, dhowells@redhat.com, 
-	haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com, shikemeng@huaweicloud.com, 
-	dchinner@redhat.com, bfoster@redhat.com, souravpanda@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, pasha.tatashin@soleen.com, david@redhat.com, 
-	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
-	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
-	wangkefeng.wang@huawei.com
-Subject: Re: Re: [PATCH v5 -next 00/16] sysctl: move sysctls from vm_table
- into its own files
-Message-ID: <lxskw5notxchwlmwl2bspjqsxl52yjd6gknfyssr6xggnj2nll@2nqm5b3itvjh>
-References: <20250111070751.2588654-1-yukaixiong@huawei.com>
- <2asuqwd4rpml6ylxce7mpz2vpvlm2gpdtwpp4lwuf4mdlylig2@dxdj4a73x2sb>
- <a3b4dcf9-7055-33f9-396c-c90b8cfa68d6@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=laobbXVorr8LQUUk+dLDesOjyHcDeX3Ys7/M+T6lRJt4/j8hcTlGP92fmdQI3/ojXcqdYBhPMYvAC7g7saqE2tuU45pXOoFoUV3okPAHu9fknopsyr0t6M1XgGxIxS0JPYM0+SOwqZJ/dMKekSIK4ERA+41/iJGQp0FB81sdPd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4OtRqt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a7EWIuQJ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MK4OtRqt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=a7EWIuQJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7DA2C211C7;
+	Thu, 16 Jan 2025 10:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1737021980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
+	b=MK4OtRqtRx3QneHmrVf60GXFWHNz5LOnFSYkbJLWqi5ty3Qg5sRE5bzYWoEBG36zreoXVl
+	S2LJl+1OCCI/QLhhX1YSwHPoREAu4b/K8x2oPylYwSuBWGMQtLTeQSWsyjT545/wJzbClg
+	8uXwtOAXTlXoIXSV4qmDpxZ70On0knQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1737021980;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
+	b=a7EWIuQJS12/MogplZHAW00dFUdFG8jzuSJTerDWLuu4TpaHNJR4PoZuZXIIIjdegsjVQw
+	JtESwAjnKjM8DWDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1737021980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
+	b=MK4OtRqtRx3QneHmrVf60GXFWHNz5LOnFSYkbJLWqi5ty3Qg5sRE5bzYWoEBG36zreoXVl
+	S2LJl+1OCCI/QLhhX1YSwHPoREAu4b/K8x2oPylYwSuBWGMQtLTeQSWsyjT545/wJzbClg
+	8uXwtOAXTlXoIXSV4qmDpxZ70On0knQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1737021980;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kEdGUUt3mUFMDsvAmnmoM/6NwvZPX9RyXclX3IF7Tk=;
+	b=a7EWIuQJS12/MogplZHAW00dFUdFG8jzuSJTerDWLuu4TpaHNJR4PoZuZXIIIjdegsjVQw
+	JtESwAjnKjM8DWDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7039D13A57;
+	Thu, 16 Jan 2025 10:06:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vHRZGxzaiGcmIAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 16 Jan 2025 10:06:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2F793A08E0; Thu, 16 Jan 2025 11:06:20 +0100 (CET)
+Date: Thu, 16 Jan 2025 11:06:20 +0100
+From: Jan Kara <jack@suse.cz>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org, agruenba@redhat.com, amir73il@gmail.com, 
+	brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com, 
+	hubcap@omnibond.com, jack@suse.cz, krisman@kernel.org, linux-nfs@vger.kernel.org, 
+	miklos@szeredi.hu, torvalds@linux-foundation.org
+Subject: Re: [PATCH v2 04/20] dissolve external_name.u into separate members
+Message-ID: <p2e3b3ygbr6p2xxy62opacwspphbxaufdsaoyhmpzfeuqw7gzd@22tpnvoudooc>
+References: <20250116052103.GF1977892@ZenIV>
+ <20250116052317.485356-1-viro@zeniv.linux.org.uk>
+ <20250116052317.485356-4-viro@zeniv.linux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,65 +106,127 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a3b4dcf9-7055-33f9-396c-c90b8cfa68d6@huawei.com>
+In-Reply-To: <20250116052317.485356-4-viro@zeniv.linux.org.uk>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,redhat.com,gmail.com,kernel.org,omnibond.com,suse.cz,szeredi.hu,linux-foundation.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Jan 15, 2025 at 09:53:53AM +0800, yukaixiong wrote:
+On Thu 16-01-25 05:23:01, Al Viro wrote:
+> kept separate from the previous commit to keep the noise separate
+> from actual changes...
 > 
-> 
-> On 2025/1/14 21:50, Joel Granados wrote:
-> > On Sat, Jan 11, 2025 at 03:07:35PM +0800, Kaixiong Yu wrote:
-> > > This patch series moves sysctls of vm_table in kernel/sysctl.c to
-> > > places where they actually belong, and do some related code clean-ups.
-> > > After this patch series, all sysctls in vm_table have been moved into its
-> > > own files, meanwhile, delete vm_table.
-> > > 
-> > > All the modifications of this patch series base on
-> > > linux-next(tags/next-20250110). To test this patch series, the code was
-> > > compiled with both the CONFIG_SYSCTL enabled and disabled on arm64 and
-> > > x86_64 architectures. After this patch series is applied, all files
-> > > under /proc/sys/vm can be read or written normally.
-> > It is looking good! Here is how I think we should move it upstream:
-> > 
-> > 1. These should queued in for 6.15 instead of the next merge window.
-> >     It is too late in the current cycle and if we put it in now, it will
-> >     not properly tested in linux-next.
-> > 
-> > 2. I am putting this in sysctl-testing with the expectation of pushing this
-> >     up for the 6.15 merge window. Please tell me if you want this to go
-> >     through some other tree.
-> > 
-> > Thx for the contribution
-> > 
-> > Best
-> 
-> Thank you! I don't want this to go through some other tree.
-This was more for the mm, net and security maintainers :)
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
+Looks good. Feel free to add:
 
-> 
-> Best ...
-> > > my test steps as below listed:
-> > > 
-> > > Step 1: Set CONFIG_SYSCTL to 'n' and compile the Linux kernel on the
-> > > arm64 architecture. The kernel compiles successfully without any errors
-> > > or warnings.
-> > > 
-> > ...
-> > >   mm/swap.c                          |  16 ++-
-> > >   mm/swap.h                          |   1 +
-> > >   mm/util.c                          |  67 +++++++--
-> > >   mm/vmscan.c                        |  23 +++
-> > >   mm/vmstat.c                        |  44 +++++-
-> > >   net/sunrpc/auth.c                  |   2 +-
-> > >   security/min_addr.c                |  11 ++
-> > >   23 files changed, 336 insertions(+), 312 deletions(-)
-> > > 
-> > > -- 
-> > > 2.34.1
-> > > 
-> 
+Reviewed-by: Jan Kara <jack@suse.cz>
 
+								Honza
+
+> ---
+>  fs/dcache.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index f387dc97df86..6f36d3e8c739 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -296,10 +296,8 @@ static inline int dentry_cmp(const struct dentry *dentry, const unsigned char *c
+>  }
+>  
+>  struct external_name {
+> -	struct {
+> -		atomic_t count;		// ->count and ->head can't be combined
+> -		struct rcu_head head;	// see take_dentry_name_snapshot()
+> -	} u;
+> +	struct rcu_head head;	// ->head and ->count can't be combined
+> +	atomic_t count;		// see take_dentry_name_snapshot()
+>  	unsigned char name[];
+>  };
+>  
+> @@ -344,7 +342,7 @@ void take_dentry_name_snapshot(struct name_snapshot *name, struct dentry *dentry
+>  		struct external_name *p;
+>  		p = container_of(s, struct external_name, name[0]);
+>  		// get a valid reference
+> -		if (unlikely(!atomic_inc_not_zero(&p->u.count)))
+> +		if (unlikely(!atomic_inc_not_zero(&p->count)))
+>  			goto retry;
+>  		name->name.name = s;
+>  	}
+> @@ -361,8 +359,8 @@ void release_dentry_name_snapshot(struct name_snapshot *name)
+>  	if (unlikely(name->name.name != name->inline_name.string)) {
+>  		struct external_name *p;
+>  		p = container_of(name->name.name, struct external_name, name[0]);
+> -		if (unlikely(atomic_dec_and_test(&p->u.count)))
+> -			kfree_rcu(p, u.head);
+> +		if (unlikely(atomic_dec_and_test(&p->count)))
+> +			kfree_rcu(p, head);
+>  	}
+>  }
+>  EXPORT_SYMBOL(release_dentry_name_snapshot);
+> @@ -400,7 +398,7 @@ static void dentry_free(struct dentry *dentry)
+>  	WARN_ON(!hlist_unhashed(&dentry->d_u.d_alias));
+>  	if (unlikely(dname_external(dentry))) {
+>  		struct external_name *p = external_name(dentry);
+> -		if (likely(atomic_dec_and_test(&p->u.count))) {
+> +		if (likely(atomic_dec_and_test(&p->count))) {
+>  			call_rcu(&dentry->d_u.d_rcu, __d_free_external);
+>  			return;
+>  		}
+> @@ -1681,7 +1679,7 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
+>  			kmem_cache_free(dentry_cache, dentry); 
+>  			return NULL;
+>  		}
+> -		atomic_set(&p->u.count, 1);
+> +		atomic_set(&p->count, 1);
+>  		dname = p->name;
+>  	} else  {
+>  		dname = dentry->d_shortname.string;
+> @@ -2774,15 +2772,15 @@ static void copy_name(struct dentry *dentry, struct dentry *target)
+>  	if (unlikely(dname_external(dentry)))
+>  		old_name = external_name(dentry);
+>  	if (unlikely(dname_external(target))) {
+> -		atomic_inc(&external_name(target)->u.count);
+> +		atomic_inc(&external_name(target)->count);
+>  		dentry->d_name = target->d_name;
+>  	} else {
+>  		dentry->d_shortname = target->d_shortname;
+>  		dentry->d_name.name = dentry->d_shortname.string;
+>  		dentry->d_name.hash_len = target->d_name.hash_len;
+>  	}
+> -	if (old_name && likely(atomic_dec_and_test(&old_name->u.count)))
+> -		kfree_rcu(old_name, u.head);
+> +	if (old_name && likely(atomic_dec_and_test(&old_name->count)))
+> +		kfree_rcu(old_name, head);
+>  }
+>  
+>  /*
+> -- 
+> 2.39.5
+> 
 -- 
-
-Joel Granados
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
