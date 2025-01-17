@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-9337-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9338-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7DD9A15125
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 15:05:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2648AA15292
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 16:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E9A237A0321
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 14:05:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 44C7C16B731
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 15:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 407AF1FFC7E;
-	Fri, 17 Jan 2025 14:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03A8E190468;
+	Fri, 17 Jan 2025 15:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2FzkpTg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pferPUaQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3E01FFC67;
-	Fri, 17 Jan 2025 14:05:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E8F18D626;
+	Fri, 17 Jan 2025 15:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737122728; cv=none; b=ZIGQBG/25Cwe/Y56UHfrk4Ve9VkPqtLq5eS8DHTD0nkSfhoVLZmLYPy8FX0tFGgCc6DuxfayTJCpWWGdruIlM5pkxt3O9Su++nqlXEofFUkzssH6s8EAI0PMEFT93/1uMOGtce0rVLc1vnxxyrsGGeIh9fiyInZjUX99lb9sI/w=
+	t=1737126758; cv=none; b=mnlz2y+bE4UFKmgmUKbFX8u7y6ZMD10sLl48PhmSwVfQ5ZqN8219RkSfN4A9ENCIiCIhlZQ4p7oTd0kJo4OaHaDyDKJyg6yf/OWXXSCpnLe9ngHVjdhN+VYT/OkvDkZp9m4xDT9jSmfXhEKTSG6zOT/UviooHbOvYhCiADvuDoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737122728; c=relaxed/simple;
-	bh=l+qiHU6T4rVjfgUUrI1egwfzPnw2yJEOOvd1gn166NY=;
+	s=arc-20240116; t=1737126758; c=relaxed/simple;
+	bh=j0/9jTWWYd8RMR82gwYG27SebDRFj9SceoBtOxDVplk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZbjcNmF27mrneC+YgxvO4XiEYjq18NjWtWRMqI8xzDkYvczdULbK/Cfx5Es0e1nfshvX6g1G8m+Y4+njTLtl6ZUs38JYrgHgu/xYPF3FRi93rwA4F6bCOyAF4wTONGDm19rUx5qvdKOfb+x9N2+xhC0tP+7qMRyPzgQmwzkEjxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2FzkpTg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6575BC4CEE1;
-	Fri, 17 Jan 2025 14:05:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gi01ouGsGelFYoA/qIqnm5Nu8FBDdJI2iI7w/M9iH3414Bfzldjl6TPMtu2x9o02f9ec6MUS1Ha8sIqizJN+45refNDomB94zF9gzAmk/JTtPXjoeffvvYbqXK42g/zqfpYnXFMKUCZysqlJGVbomc+fWnGSJDVs6tm4Fsn7KKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pferPUaQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25181C4CEDD;
+	Fri, 17 Jan 2025 15:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737122727;
-	bh=l+qiHU6T4rVjfgUUrI1egwfzPnw2yJEOOvd1gn166NY=;
+	s=k20201202; t=1737126758;
+	bh=j0/9jTWWYd8RMR82gwYG27SebDRFj9SceoBtOxDVplk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=S2FzkpTg5w8bOvlGmbZ4H0AwSDfHjzHFLyyX/bl7pJvLaOIXmQLuHDz1lig+G1Brl
-	 Xh/18OAoL8zYtzw9v4EiQIlSsFdvUW9sdqGcJLkuEszyWTEnoxbTtOpzCZ/wR4M879
-	 UZB872+cF3GnP5/nqApNVOKTCA3/N4HMVfuMddkUK3TBJs3mikjBZ2iXKl05mow+k9
-	 SgElR9c2pB5fc5bjncLBYP3vXQdBG3rtxOpp3/rE98rD1wY1r2jXmHjApEYWbWj771
-	 dWoDyj0vEgqf7z90v1VmyWfSLQOCUt1vxeCdK+usOxkdXeCLME3VN4HLqhGfWJs8KI
-	 kejzwf21EvxZQ==
-Message-ID: <f35e66eaada0e85a2586cfe6e990e924bc1933e9.camel@kernel.org>
-Subject: Re: [PATCH v2 16/20] nfs{,4}_lookup_validate(): use stable parent
- inode passed by caller
+	b=pferPUaQfigH4KGx1K7Xrp55DUIf+HZN7TQdksnhbyjH96/i5DtgCZYY2CS8OgDZj
+	 6GFLKnE7nFVwjXX+o0WUlODgJZONQESHeV22gVcNmbWG//9hWd4PcLEercEX6qLgOV
+	 6m8AecbIGOlZllgcn/zn5FSW4CFWMieAhu/uXzhSMGK5Sq65TS0LqJyeNGOC2mPjXK
+	 xxwzybCa6cXnuAIwrYOpl11+fDrPckmXYCp2gTcG+n2hDDTqqfx6Z7ueXpreshoF0G
+	 ZnmY38YtHeAEaZMhw1xmFnuZnaUcwvFdSfwIXLKhcMuS+w+6huoflQN+of2MgSm/Ij
+	 +Qc32f9FNyLvA==
+Message-ID: <e5ce27122c9c37d63420a37319d2d610f6cc6fd2.camel@kernel.org>
+Subject: Re: [PATCH v2 17/20] nfs: fix ->d_revalidate() UAF on ->d_name
+ accesses
 From: Jeff Layton <jlayton@kernel.org>
 To: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org
 Cc: agruenba@redhat.com, amir73il@gmail.com, brauner@kernel.org, 
 	ceph-devel@vger.kernel.org, dhowells@redhat.com, hubcap@omnibond.com,
  jack@suse.cz, 	krisman@kernel.org, linux-nfs@vger.kernel.org,
  miklos@szeredi.hu, 	torvalds@linux-foundation.org
-Date: Fri, 17 Jan 2025 09:05:25 -0500
-In-Reply-To: <20250116052317.485356-16-viro@zeniv.linux.org.uk>
+Date: Fri, 17 Jan 2025 10:12:35 -0500
+In-Reply-To: <20250116052317.485356-17-viro@zeniv.linux.org.uk>
 References: <20250116052103.GF1977892@ZenIV>
 	 <20250116052317.485356-1-viro@zeniv.linux.org.uk>
-	 <20250116052317.485356-16-viro@zeniv.linux.org.uk>
+	 <20250116052317.485356-17-viro@zeniv.linux.org.uk>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,117 +140,257 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-01-16 at 05:23 +0000, Al Viro wrote:
-> we can't kill __nfs_lookup_revalidate() completely, but ->d_parent boiler=
-plate
-> in it is gone
+> Pass the stable name all the way down to ->rpc_ops->lookup() instances.
+>=20
+> Note that passing &dentry->d_name is safe in e.g. nfs_lookup() - it *is*
+> stable there, as it is in ->create() et.al.
+>=20
+> dget_parent() in nfs_instantiate() should be redundant - it'd better be
+> stable there; if it's not, we have more trouble, since ->d_name would
+> also be unsafe in such case.
+>=20
+> nfs_submount() and nfs4_submount() may or may not require fixes - if
+> they ever get moved on server with fhandle preserved, we are in trouble
+> there...
+>=20
+> UAF window is fairly narrow here and exfiltration requires the ability
+> to watch the traffic.
 >=20
 > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 > ---
->  fs/nfs/dir.c | 43 +++++++++++++------------------------------
->  1 file changed, 13 insertions(+), 30 deletions(-)
+>  fs/nfs/dir.c            | 14 ++++++++------
+>  fs/nfs/namespace.c      |  2 +-
+>  fs/nfs/nfs3proc.c       |  5 ++---
+>  fs/nfs/nfs4proc.c       | 20 ++++++++++----------
+>  fs/nfs/proc.c           |  6 +++---
+>  include/linux/nfs_xdr.h |  2 +-
+>  6 files changed, 25 insertions(+), 24 deletions(-)
 >=20
 > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 9910d9796f4c..c28983ee75ca 100644
+> index c28983ee75ca..2b04038b0e40 100644
 > --- a/fs/nfs/dir.c
 > +++ b/fs/nfs/dir.c
-> @@ -1732,8 +1732,8 @@ static int nfs_lookup_revalidate_dentry(struct inod=
+> @@ -1672,7 +1672,7 @@ nfs_lookup_revalidate_delegated(struct inode *dir, =
+struct dentry *dentry,
+>  	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
+>  }
+> =20
+> -static int nfs_lookup_revalidate_dentry(struct inode *dir,
+> +static int nfs_lookup_revalidate_dentry(struct inode *dir, const struct =
+qstr *name,
+>  					struct dentry *dentry,
+>  					struct inode *inode, unsigned int flags)
+>  {
+> @@ -1690,7 +1690,7 @@ static int nfs_lookup_revalidate_dentry(struct inod=
 e *dir,
->   * cached dentry and do a new lookup.
->   */
->  static int
-> -nfs_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
-> -			 unsigned int flags)
-> +nfs_do_lookup_revalidate(struct inode *dir, const struct qstr *name,
-> +			 struct dentry *dentry, unsigned int flags)
->  {
->  	struct inode *inode;
->  	int error =3D 0;
-> @@ -1785,39 +1785,26 @@ nfs_do_lookup_revalidate(struct inode *dir, struc=
-t dentry *dentry,
->  }
+>  		goto out;
 > =20
->  static int
-> -__nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags,
-> -			int (*reval)(struct inode *, struct dentry *, unsigned int))
-> +__nfs_lookup_revalidate(struct dentry *dentry, unsigned int flags)
->  {
-> -	struct dentry *parent;
-> -	struct inode *dir;
-> -	int ret;
-> -
->  	if (flags & LOOKUP_RCU) {
->  		if (dentry->d_fsdata =3D=3D NFS_FSDATA_BLOCKED)
->  			return -ECHILD;
-> -		parent =3D READ_ONCE(dentry->d_parent);
-> -		dir =3D d_inode_rcu(parent);
-> -		if (!dir)
-> -			return -ECHILD;
-> -		ret =3D reval(dir, dentry, flags);
-> -		if (parent !=3D READ_ONCE(dentry->d_parent))
-> -			return -ECHILD;
->  	} else {
->  		/* Wait for unlink to complete - see unblock_revalidate() */
->  		wait_var_event(&dentry->d_fsdata,
->  			       smp_load_acquire(&dentry->d_fsdata)
->  			       !=3D NFS_FSDATA_BLOCKED);
-> -		parent =3D dget_parent(dentry);
-> -		ret =3D reval(d_inode(parent), dentry, flags);
-> -		dput(parent);
->  	}
-> -	return ret;
-> +	return 0;
->  }
+>  	dir_verifier =3D nfs_save_change_attribute(dir);
+> -	ret =3D NFS_PROTO(dir)->lookup(dir, dentry, fhandle, fattr);
+> +	ret =3D NFS_PROTO(dir)->lookup(dir, dentry, name, fhandle, fattr);
+>  	if (ret < 0)
+>  		goto out;
 > =20
->  static int nfs_lookup_revalidate(struct inode *dir, const struct qstr *n=
-ame,
->  				 struct dentry *dentry, unsigned int flags)
->  {
-> -	return __nfs_lookup_revalidate(dentry, flags, nfs_do_lookup_revalidate)=
-;
-> +	if (__nfs_lookup_revalidate(dentry, flags))
-> +		return -ECHILD;
-> +	return nfs_do_lookup_revalidate(dir, name, dentry, flags);
->  }
+> @@ -1775,7 +1775,7 @@ nfs_do_lookup_revalidate(struct inode *dir, const s=
+truct qstr *name,
+>  	if (NFS_STALE(inode))
+>  		goto out_bad;
 > =20
->  static void block_revalidate(struct dentry *dentry)
-> @@ -2216,11 +2203,14 @@ int nfs_atomic_open(struct inode *dir, struct den=
-try *dentry,
->  EXPORT_SYMBOL_GPL(nfs_atomic_open);
+> -	return nfs_lookup_revalidate_dentry(dir, dentry, inode, flags);
+> +	return nfs_lookup_revalidate_dentry(dir, name, dentry, inode, flags);
+>  out_valid:
+>  	return nfs_lookup_revalidate_done(dir, dentry, inode, 1);
+>  out_bad:
+> @@ -1970,7 +1970,8 @@ struct dentry *nfs_lookup(struct inode *dir, struct=
+ dentry * dentry, unsigned in
 > =20
->  static int
-> -nfs4_do_lookup_revalidate(struct inode *dir, struct dentry *dentry,
-> -			  unsigned int flags)
-> +nfs4_lookup_revalidate(struct inode *dir, const struct qstr *name,
-> +		       struct dentry *dentry, unsigned int flags)
->  {
->  	struct inode *inode;
-> =20
-> +	if (__nfs_lookup_revalidate(dentry, flags))
-> +		return -ECHILD;
-> +
->  	trace_nfs_lookup_revalidate_enter(dir, dentry, flags);
-> =20
->  	if (!(flags & LOOKUP_OPEN) || (flags & LOOKUP_DIRECTORY))
-> @@ -2259,14 +2249,7 @@ nfs4_do_lookup_revalidate(struct inode *dir, struc=
-t dentry *dentry,
->  	return nfs_lookup_revalidate_dentry(dir, dentry, inode, flags);
+>  	dir_verifier =3D nfs_save_change_attribute(dir);
+>  	trace_nfs_lookup_enter(dir, dentry, flags);
+> -	error =3D NFS_PROTO(dir)->lookup(dir, dentry, fhandle, fattr);
+> +	error =3D NFS_PROTO(dir)->lookup(dir, dentry, &dentry->d_name,
+> +				       fhandle, fattr);
+>  	if (error =3D=3D -ENOENT) {
+>  		if (nfs_server_capable(dir, NFS_CAP_CASE_INSENSITIVE))
+>  			dir_verifier =3D inode_peek_iversion_raw(dir);
+> @@ -2246,7 +2247,7 @@ nfs4_lookup_revalidate(struct inode *dir, const str=
+uct qstr *name,
+>  reval_dentry:
+>  	if (flags & LOOKUP_RCU)
+>  		return -ECHILD;
+> -	return nfs_lookup_revalidate_dentry(dir, dentry, inode, flags);
+> +	return nfs_lookup_revalidate_dentry(dir, name, dentry, inode, flags);
 > =20
 >  full_reval:
-> -	return nfs_do_lookup_revalidate(dir, dentry, flags);
-> -}
-> -
-> -static int nfs4_lookup_revalidate(struct inode *dir, const struct qstr *=
-name,
-> -				  struct dentry *dentry, unsigned int flags)
-> -{
-> -	return __nfs_lookup_revalidate(dentry, flags,
-> -			nfs4_do_lookup_revalidate);
-> +	return nfs_do_lookup_revalidate(dir, name, dentry, flags);
+>  	return nfs_do_lookup_revalidate(dir, name, dentry, flags);
+> @@ -2305,7 +2306,8 @@ nfs_add_or_obtain(struct dentry *dentry, struct nfs=
+_fh *fhandle,
+>  	d_drop(dentry);
+> =20
+>  	if (fhandle->size =3D=3D 0) {
+> -		error =3D NFS_PROTO(dir)->lookup(dir, dentry, fhandle, fattr);
+> +		error =3D NFS_PROTO(dir)->lookup(dir, dentry, &dentry->d_name,
+> +					       fhandle, fattr);
+>  		if (error)
+>  			goto out_error;
+>  	}
+> diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+> index 2d53574da605..973aed9cc5fe 100644
+> --- a/fs/nfs/namespace.c
+> +++ b/fs/nfs/namespace.c
+> @@ -308,7 +308,7 @@ int nfs_submount(struct fs_context *fc, struct nfs_se=
+rver *server)
+>  	int err;
+> =20
+>  	/* Look it up again to get its attributes */
+> -	err =3D server->nfs_client->rpc_ops->lookup(d_inode(parent), dentry,
+> +	err =3D server->nfs_client->rpc_ops->lookup(d_inode(parent), dentry, &d=
+entry->d_name,
+>  						  ctx->mntfh, ctx->clone_data.fattr);
+>  	dput(parent);
+>  	if (err !=3D 0)
+> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+> index 1566163c6d85..ce70768e0201 100644
+> --- a/fs/nfs/nfs3proc.c
+> +++ b/fs/nfs/nfs3proc.c
+> @@ -192,7 +192,7 @@ __nfs3_proc_lookup(struct inode *dir, const char *nam=
+e, size_t len,
 >  }
 > =20
->  #endif /* CONFIG_NFSV4 */
-
-Much nicer without the "reval" callback.
+>  static int
+> -nfs3_proc_lookup(struct inode *dir, struct dentry *dentry,
+> +nfs3_proc_lookup(struct inode *dir, struct dentry *dentry, const struct =
+qstr *name,
+>  		 struct nfs_fh *fhandle, struct nfs_fattr *fattr)
+>  {
+>  	unsigned short task_flags =3D 0;
+> @@ -202,8 +202,7 @@ nfs3_proc_lookup(struct inode *dir, struct dentry *de=
+ntry,
+>  		task_flags |=3D RPC_TASK_TIMEOUT;
+> =20
+>  	dprintk("NFS call  lookup %pd2\n", dentry);
+> -	return __nfs3_proc_lookup(dir, dentry->d_name.name,
+> -				  dentry->d_name.len, fhandle, fattr,
+> +	return __nfs3_proc_lookup(dir, name->name, name->len, fhandle, fattr,
+>  				  task_flags);
+>  }
+> =20
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 405f17e6e0b4..4d85068e820d 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -4536,15 +4536,15 @@ nfs4_proc_setattr(struct dentry *dentry, struct n=
+fs_fattr *fattr,
+>  }
+> =20
+>  static int _nfs4_proc_lookup(struct rpc_clnt *clnt, struct inode *dir,
+> -		struct dentry *dentry, struct nfs_fh *fhandle,
+> -		struct nfs_fattr *fattr)
+> +		struct dentry *dentry, const struct qstr *name,
+> +		struct nfs_fh *fhandle, struct nfs_fattr *fattr)
+>  {
+>  	struct nfs_server *server =3D NFS_SERVER(dir);
+>  	int		       status;
+>  	struct nfs4_lookup_arg args =3D {
+>  		.bitmask =3D server->attr_bitmask,
+>  		.dir_fh =3D NFS_FH(dir),
+> -		.name =3D &dentry->d_name,
+> +		.name =3D name,
+>  	};
+>  	struct nfs4_lookup_res res =3D {
+>  		.server =3D server,
+> @@ -4586,17 +4586,16 @@ static void nfs_fixup_secinfo_attributes(struct n=
+fs_fattr *fattr)
+>  }
+> =20
+>  static int nfs4_proc_lookup_common(struct rpc_clnt **clnt, struct inode =
+*dir,
+> -				   struct dentry *dentry, struct nfs_fh *fhandle,
+> -				   struct nfs_fattr *fattr)
+> +				   struct dentry *dentry, const struct qstr *name,
+> +				   struct nfs_fh *fhandle, struct nfs_fattr *fattr)
+>  {
+>  	struct nfs4_exception exception =3D {
+>  		.interruptible =3D true,
+>  	};
+>  	struct rpc_clnt *client =3D *clnt;
+> -	const struct qstr *name =3D &dentry->d_name;
+>  	int err;
+>  	do {
+> -		err =3D _nfs4_proc_lookup(client, dir, dentry, fhandle, fattr);
+> +		err =3D _nfs4_proc_lookup(client, dir, dentry, name, fhandle, fattr);
+>  		trace_nfs4_lookup(dir, name, err);
+>  		switch (err) {
+>  		case -NFS4ERR_BADNAME:
+> @@ -4631,13 +4630,13 @@ static int nfs4_proc_lookup_common(struct rpc_cln=
+t **clnt, struct inode *dir,
+>  	return err;
+>  }
+> =20
+> -static int nfs4_proc_lookup(struct inode *dir, struct dentry *dentry,
+> +static int nfs4_proc_lookup(struct inode *dir, struct dentry *dentry, co=
+nst struct qstr *name,
+>  			    struct nfs_fh *fhandle, struct nfs_fattr *fattr)
+>  {
+>  	int status;
+>  	struct rpc_clnt *client =3D NFS_CLIENT(dir);
+> =20
+> -	status =3D nfs4_proc_lookup_common(&client, dir, dentry, fhandle, fattr=
+);
+> +	status =3D nfs4_proc_lookup_common(&client, dir, dentry, name, fhandle,=
+ fattr);
+>  	if (client !=3D NFS_CLIENT(dir)) {
+>  		rpc_shutdown_client(client);
+>  		nfs_fixup_secinfo_attributes(fattr);
+> @@ -4652,7 +4651,8 @@ nfs4_proc_lookup_mountpoint(struct inode *dir, stru=
+ct dentry *dentry,
+>  	struct rpc_clnt *client =3D NFS_CLIENT(dir);
+>  	int status;
+> =20
+> -	status =3D nfs4_proc_lookup_common(&client, dir, dentry, fhandle, fattr=
+);
+> +	status =3D nfs4_proc_lookup_common(&client, dir, dentry, &dentry->d_nam=
+e,
+> +					 fhandle, fattr);
+>  	if (status < 0)
+>  		return ERR_PTR(status);
+>  	return (client =3D=3D NFS_CLIENT(dir)) ? rpc_clone_client(client) : cli=
+ent;
+> diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+> index 6c09cd090c34..77920a2e3cef 100644
+> --- a/fs/nfs/proc.c
+> +++ b/fs/nfs/proc.c
+> @@ -153,13 +153,13 @@ nfs_proc_setattr(struct dentry *dentry, struct nfs_=
+fattr *fattr,
+>  }
+> =20
+>  static int
+> -nfs_proc_lookup(struct inode *dir, struct dentry *dentry,
+> +nfs_proc_lookup(struct inode *dir, struct dentry *dentry, const struct q=
+str *name,
+>  		struct nfs_fh *fhandle, struct nfs_fattr *fattr)
+>  {
+>  	struct nfs_diropargs	arg =3D {
+>  		.fh		=3D NFS_FH(dir),
+> -		.name		=3D dentry->d_name.name,
+> -		.len		=3D dentry->d_name.len
+> +		.name		=3D name->name,
+> +		.len		=3D name->len
+>  	};
+>  	struct nfs_diropok	res =3D {
+>  		.fh		=3D fhandle,
+> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> index 559273a0f16d..08b62bbf59f0 100644
+> --- a/include/linux/nfs_xdr.h
+> +++ b/include/linux/nfs_xdr.h
+> @@ -1785,7 +1785,7 @@ struct nfs_rpc_ops {
+>  			    struct nfs_fattr *, struct inode *);
+>  	int	(*setattr) (struct dentry *, struct nfs_fattr *,
+>  			    struct iattr *);
+> -	int	(*lookup)  (struct inode *, struct dentry *,
+> +	int	(*lookup)  (struct inode *, struct dentry *, const struct qstr *,
+>  			    struct nfs_fh *, struct nfs_fattr *);
+>  	int	(*lookupp) (struct inode *, struct nfs_fh *,
+>  			    struct nfs_fattr *);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
