@@ -1,111 +1,125 @@
-Return-Path: <linux-nfs+bounces-9334-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9335-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB6EA14B33
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 09:30:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 000FDA14C99
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 10:55:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C6EC3A827E
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 08:30:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3887A7A080A
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 09:55:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44831F91FF;
-	Fri, 17 Jan 2025 08:30:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A94C1FCD07;
+	Fri, 17 Jan 2025 09:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MgQdy7mT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vR7rTmvc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302571F91EF
-	for <linux-nfs@vger.kernel.org>; Fri, 17 Jan 2025 08:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196E01FBC99;
+	Fri, 17 Jan 2025 09:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737102631; cv=none; b=Mfb5+pdQ/3PVKoisDiooimRmArzA6lgUzV6Ml8XBcnW/HNObDH8bD/zj9/OJPHCzOweHvSY0T/but1CwzxdqxFaX5xwudzJn8kh+3JKMaX8pPUcGWReK7dMKT9UZV9x6Fjbiqp++Cx4DI9vPR+p/08douFLagO3/jXteN+V4wyo=
+	t=1737107720; cv=none; b=HSjmaH5GtLOf03XrfwRR5qe7JkHTc8LvHHgu9A/PZK27Qni4FpUL6IRZITFw55V+r7Gke6jOA3FAjx0pcqspBogRwM/E8Wtb/xSJGbVUR+dQQyfvbZjpImPP1ZlQOyQZznvHdmuP4Xf8LEPOCpnlzKKeP2LUV74UirMMVmlF+ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737102631; c=relaxed/simple;
-	bh=d/g53UtwtoeMdjaT+R1dbBcyNXXLezqX3/UcNtC6vm0=;
-	h=From:In-Reply-To:References:Cc:Subject:MIME-Version:Content-Type:
-	 Date:Message-ID; b=FbqLRmGUxxC7iL0kVwz0D0zXz/xsgeADUuYMEV3s7qQCUS60BGcMvV0n4/ZmdZi8KKDslQtDJGUztYOlezvTRPKJM7MZE3+DIoejMs8JIiyGmCcCAm33d3BRqzmcKq+M2X1Gmg67XoDHcNA1vBlbZ8dbkGS7y59jYLi9kY4/cjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MgQdy7mT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737102629;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HDiFi/c6f0Cw5829523ALaPbNuqbpB2s/qFVysdO5PY=;
-	b=MgQdy7mTdJ1gX7UMrHv8q6FgSZt8x9Fe48pOasrd4BuLZkpQ8TXc4Rx67sHZ/FEvhAsUQM
-	QgzQjpyi5K27YeCPuOAROsfwEmb2hfAvsyaPcY3WBCxGkutBXz+zpUi5xPHi8Dc/1vn2et
-	MJC7pVnoU0/kfx2eKKTir/+Gva+kRbs=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-558-a2EhEHctOkyte2ur2SK5Cg-1; Fri,
- 17 Jan 2025 03:30:24 -0500
-X-MC-Unique: a2EhEHctOkyte2ur2SK5Cg-1
-X-Mimecast-MFC-AGG-ID: a2EhEHctOkyte2ur2SK5Cg
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2EFD51955D72;
-	Fri, 17 Jan 2025 08:30:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.5])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3B92C19560BF;
-	Fri, 17 Jan 2025 08:30:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <477969.1737101629@warthog.procyon.org.uk>
-References: <477969.1737101629@warthog.procyon.org.uk> <Z4Ds9NBiXUti-idl@gondor.apana.org.au> <20250110010313.1471063-1-dhowells@redhat.com> <20250110010313.1471063-3-dhowells@redhat.com>
-Cc: dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    "David S. Miller" <davem@davemloft.net>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
-    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/8] crypto/krb5: Provide Kerberos 5 crypto through AEAD API
+	s=arc-20240116; t=1737107720; c=relaxed/simple;
+	bh=b2+5I4Ol2pXJvkBZ25q9n0ksWds8r5RzMGcUkZNXIng=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZMMUTgiQA0fOBYP+TcDzey7guNED6Za1VllrGmrkDlngth5FeeOZQIys/2yfQV6y+vv3NjL1Hd1/WSnw+YQHjKS9NXAodRuwyeJbUVg5AgigUwOSUye2muRzzl1dZqz87U4tl2PRSFK1tElJI7Y/l8Pyv74hcRVwGD0powZ6++8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vR7rTmvc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A99C4CEDD;
+	Fri, 17 Jan 2025 09:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737107719;
+	bh=b2+5I4Ol2pXJvkBZ25q9n0ksWds8r5RzMGcUkZNXIng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vR7rTmvchnyfzF5H2XyPp+s5v4UNzLMt8hLgNgt0BW9Av3EJtMTzYNgzU8yBYQf6O
+	 MJ2az8kCy+MMGnAQM3b0/4sOVDdU5hd4bwn+kCZRAcL9IIgc/L6LYaz0Jcac90tBUY
+	 XSiwKHtvtallUo+yeHR18MAlGtVbe84A4/kWJypY7x7QNSELNudlnMiqd95GL2WpyC
+	 nvjxxXZsVKR75XEyCu62Yp+i0UWzN9vrcIMM22DUkBDucC5HmEE9ABy4ZeFP/4awU2
+	 bNWXqLsaqYQFUf4U/ETOqNBv3TfJhoLm+PBLt7l5Sx1S4OiORnc1D+Yjs/J/CX8xG+
+	 2JiCJfr4mNPZQ==
+Date: Fri, 17 Jan 2025 10:55:14 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Kaixiong Yu <yukaixiong@huawei.com>
+Cc: akpm@linux-foundation.org, mcgrof@kernel.org, 
+	ysato@users.sourceforge.jp, dalias@libc.org, glaubitz@physik.fu-berlin.de, luto@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	hpa@zytor.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kees@kernel.org, j.granados@samsung.com, willy@infradead.org, 
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lorenzo.stoakes@oracle.com, trondmy@kernel.org, 
+	anna@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de, 
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, paul@paul-moore.com, 
+	jmorris@namei.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-security-module@vger.kernel.org, dhowells@redhat.com, 
+	haifeng.xu@shopee.com, baolin.wang@linux.alibaba.com, shikemeng@huaweicloud.com, 
+	dchinner@redhat.com, bfoster@redhat.com, souravpanda@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, pasha.tatashin@soleen.com, david@redhat.com, 
+	ryan.roberts@arm.com, ying.huang@intel.com, yang@os.amperecomputing.com, 
+	zev@bewilderbeest.net, serge@hallyn.com, vegard.nossum@oracle.com, 
+	wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v5 -next 11/16] sunrpc: simplify
+ rpcauth_cache_shrink_count()
+Message-ID: <cvhm3wxsuzptwhensumidxykuzgzzhp4u3ypwv4sicmssznxzk@xwfwpjclkzrf>
+References: <20250111070751.2588654-1-yukaixiong@huawei.com>
+ <20250111070751.2588654-12-yukaixiong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <493306.1737102616.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jan 2025 08:30:16 +0000
-Message-ID: <493307.1737102616@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250111070751.2588654-12-yukaixiong@huawei.com>
 
-David Howells <dhowells@redhat.com> wrote:
+On Sat, Jan 11, 2025 at 03:07:46PM +0800, Kaixiong Yu wrote:
+> It is inappropriate to use sysctl_vfs_cache_pressure here.
+> The sysctl is documented as: This percentage value controls
+> the tendency of the kernel to reclaim the memory which is used
+> for caching of directory and inode objects.
+> 
+> So, simplify result of rpcauth_cache_shrink_count() to
+> "return number_cred_unused;".
+> 
+> Signed-off-by: Kaixiong Yu <yukaixiong@huawei.com>
+> Reviewed-by: Kees Cook <kees@kernel.org>
+> Acked-by: Anna Schumaker <anna.schumaker@oracle.com>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> v4:
+>  - Simplify result of rpcauth_cache_shrink_count().
+> ---
+> ---
+>  net/sunrpc/auth.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
+> index 04534ea537c8..5a827afd8e3b 100644
+> --- a/net/sunrpc/auth.c
+> +++ b/net/sunrpc/auth.c
+> @@ -489,7 +489,7 @@ static unsigned long
+>  rpcauth_cache_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+>  
+>  {
+> -	return number_cred_unused * sysctl_vfs_cache_pressure / 100;
+> +	return number_cred_unused;
+This one is not related to the "moving sysctls out of kenrel/sysctl.c"
+but I'll keep it here because of the Acks received.
 
-> > rfc8009 is basically the same as authenc.
-> =
 
-> Actually, it's not quite the same :-/
-> =
+>  }
+>  
+>  static void
+> -- 
+> 2.34.1
+> 
 
-> rfc8009 chucks the IV from the encryption into the hash first, but authe=
-nc()
-> does not.  It may be possible to arrange the buffer so that the assoc da=
-ta is
-> also the IV buffer.
+-- 
 
-Actually actually, it's the starting IV, so I just need to chuck in a bloc=
-k of
-zeroes.
-
-David
-
+Joel Granados
 
