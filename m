@@ -1,292 +1,214 @@
-Return-Path: <linux-nfs+bounces-9365-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9350-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C09A6A15722
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 19:42:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE7A6A156D3
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 19:35:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E7BA188B079
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 18:42:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29F1F188C680
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jan 2025 18:35:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD5A1E0086;
-	Fri, 17 Jan 2025 18:37:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E264C1A3056;
+	Fri, 17 Jan 2025 18:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QAx+LCw/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qnRntgaU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E82F1ACEBA
-	for <linux-nfs@vger.kernel.org>; Fri, 17 Jan 2025 18:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B494E1A262D;
+	Fri, 17 Jan 2025 18:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737139037; cv=none; b=qjzgE86LuJfIrVo0kIYD8nq9bwiem0s9trErUw9SEiA+NASbZVWrN8cyqns5lw+ts/Nwelp2d/2zFvW3de9A3kGI73GPaMwLCdHC3b5wdem5iMHeJAZONwuNCBhzKHyaVpLllZlvpDvcsu4n4cHNfUuAxad2YS52SxQAurAn41s=
+	t=1737138926; cv=none; b=GDclGStfcjo2zZ+XAfkTDGyNp81f7FGa0GQEc0Ze0L7k0blTl1SSsLu7GcdXAKuHBL9+0UhmGAy5vFnQ9FpEbOM/fO/i1PnMguLLKovYz5OQiLONku3plzxnXBy4FfuB92C5lATfra3OGK0msyj8r5ESqCOQLClt2dAtnipzz08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737139037; c=relaxed/simple;
-	bh=AcjzwFfER9fAVxq3SyROBl1zIyoplV2SVDljZfoZeFs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZxPr5+VcHySlYrKeQXwuRM1dPaIbWWFjweyvLVSqKMkEs1hqUh0zQax5I4l+yhZ0tJDmLkhXDN/neyUsA2eDMGWQPXxG5EkCOtULWNCtH0nxeDbgTTjEn4LraqAnyoRcDHlvKCYdodwRua+XbHskCUx/0lp7uR3OZcEidglgAF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QAx+LCw/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737139035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SDKG3K16UoaY78bdEX3PXrnLUR+2z6e/POcbWX8aB1Y=;
-	b=QAx+LCw/5ZcANHUz4Hoj9+CyUCXGQyas4R/4xupSzwuFCn2wFtvi4QzRszHLlLtAV44851
-	inhcTFpozSENzVr1P6iOr2LnxFOF99AfDA43GZSHprLz0QIUJ1hekWioudo8sxl/xx2ttT
-	e+x0L8QK07Wx7wmcf/raxItKOvPA9DM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-442-xvjxmQz0NB-uC4TtOfOwCw-1; Fri,
- 17 Jan 2025 13:37:11 -0500
-X-MC-Unique: xvjxmQz0NB-uC4TtOfOwCw-1
-X-Mimecast-MFC-AGG-ID: xvjxmQz0NB-uC4TtOfOwCw
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60F99195608A;
-	Fri, 17 Jan 2025 18:37:09 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.5])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 120C819560BF;
-	Fri, 17 Jan 2025 18:37:04 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-	Chuck Lever <chuck.lever@oracle.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org,
-	linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 14/24] crypto/krb5: Implement the AES enctypes from rfc3962
-Date: Fri, 17 Jan 2025 18:35:23 +0000
-Message-ID: <20250117183538.881618-15-dhowells@redhat.com>
-In-Reply-To: <20250117183538.881618-1-dhowells@redhat.com>
-References: <20250117183538.881618-1-dhowells@redhat.com>
+	s=arc-20240116; t=1737138926; c=relaxed/simple;
+	bh=/Jstp5gZO677+u/4vPSLNL3kWUSGzxhVWPCnm4def1c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=p4kRHZqTpMnZ4zy6jtZaH9KohIW7xRE31fCXwA2dNA1RbJYNJtIDX61712yUOgbJ0rL9qVQEfB9Ivuq8jsL0W+X0/vcOivbdSUOZu3H1gPZVHefC17i86sBbjndIgWl1CB/EuJkjbZdrb0HVkvXeQICaBkcsqMfsWjE4sk0ovmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qnRntgaU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B13BC4CEDD;
+	Fri, 17 Jan 2025 18:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737138926;
+	bh=/Jstp5gZO677+u/4vPSLNL3kWUSGzxhVWPCnm4def1c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=qnRntgaUHgS7PlEYgCEw0awZJuO10MrJ7y3GiuK0jq7c1UUQMg16nK/edv+jSR6hU
+	 GV36ngng5xyvbbC1FbYvfLR5v9VKJIEzO3d7LOr0op+2d6OFLJLQJtG75VEB5ZmJ6U
+	 0wuQfxj6cZ6T5KIHBJGzL9LkQrkj1OD2bdva0A8qfkP+Pyjw2lNWCuQ3gHdKe/Gt2Z
+	 ZZt2Vq46plRoCdFcC0ML8xTNnZkSseQbMzu3iLSuZFDW7W1HGjiuBFjN/df8WunMnK
+	 HZgH20csE14txxFFgge1kwTWl4c+9z8ANnzGw+XWIk9Vi3I5xJklXS6D6fjT9puZU1
+	 MXJVvCN0rx4Pg==
+Message-ID: <c19c77ae49446ae30076bd6cc6ec3851755891f5.camel@kernel.org>
+Subject: Re: [PATCH v2 09/20] ceph_d_revalidate(): use stable parent inode
+ passed by caller
+From: Jeff Layton <jlayton@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org
+Cc: agruenba@redhat.com, amir73il@gmail.com, brauner@kernel.org, 
+	ceph-devel@vger.kernel.org, dhowells@redhat.com, hubcap@omnibond.com,
+ jack@suse.cz, 	krisman@kernel.org, linux-nfs@vger.kernel.org,
+ miklos@szeredi.hu, 	torvalds@linux-foundation.org
+Date: Fri, 17 Jan 2025 13:35:24 -0500
+In-Reply-To: <20250116052317.485356-9-viro@zeniv.linux.org.uk>
+References: <20250116052103.GF1977892@ZenIV>
+	 <20250116052317.485356-1-viro@zeniv.linux.org.uk>
+	 <20250116052317.485356-9-viro@zeniv.linux.org.uk>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Implement the aes128-cts-hmac-sha1-96 and aes256-cts-hmac-sha1-96 enctypes
-from rfc3962, using the rfc3961 kerberos 5 simplified crypto scheme.
+On Thu, 2025-01-16 at 05:23 +0000, Al Viro wrote:
+> No need to mess with the boilerplate for obtaining what we already
+> have.  Note that ceph is one of the "will want a path from filesystem
+> root if we want to talk to server" cases, so the name of the last
+> component is of little use - it is passed to fscrypt_d_revalidate()
+> and it's used to deal with (also crypt-related) case in request
+> marshalling, when encrypted name turns out to be too long.  The former
+> is not a problem, but the latter is racy; that part will be handled
+> in the next commit.
+>=20
+> Reviewed-by: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+>  fs/ceph/dir.c | 22 ++++------------------
+>  1 file changed, 4 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> index c4c71c24221b..dc5f55bebad7 100644
+> --- a/fs/ceph/dir.c
+> +++ b/fs/ceph/dir.c
+> @@ -1940,30 +1940,19 @@ static int dir_lease_is_valid(struct inode *dir, =
+struct dentry *dentry,
+>  /*
+>   * Check if cached dentry can be trusted.
+>   */
+> -static int ceph_d_revalidate(struct inode *parent_dir, const struct qstr=
+ *name,
+> +static int ceph_d_revalidate(struct inode *dir, const struct qstr *name,
+>  			     struct dentry *dentry, unsigned int flags)
+>  {
+>  	struct ceph_mds_client *mdsc =3D ceph_sb_to_fs_client(dentry->d_sb)->md=
+sc;
+>  	struct ceph_client *cl =3D mdsc->fsc->client;
+>  	int valid =3D 0;
+> -	struct dentry *parent;
+> -	struct inode *dir, *inode;
+> +	struct inode *inode;
+> =20
+> -	valid =3D fscrypt_d_revalidate(parent_dir, name, dentry, flags);
+> +	valid =3D fscrypt_d_revalidate(dir, name, dentry, flags);
+>  	if (valid <=3D 0)
+>  		return valid;
+> =20
+> -	if (flags & LOOKUP_RCU) {
+> -		parent =3D READ_ONCE(dentry->d_parent);
+> -		dir =3D d_inode_rcu(parent);
+> -		if (!dir)
+> -			return -ECHILD;
+> -		inode =3D d_inode_rcu(dentry);
+> -	} else {
+> -		parent =3D dget_parent(dentry);
+> -		dir =3D d_inode(parent);
+> -		inode =3D d_inode(dentry);
+> -	}
+> +	inode =3D d_inode_rcu(dentry);
+> =20
+>  	doutc(cl, "%p '%pd' inode %p offset 0x%llx nokey %d\n",
+>  	      dentry, dentry, inode, ceph_dentry(dentry)->offset,
+> @@ -2039,9 +2028,6 @@ static int ceph_d_revalidate(struct inode *parent_d=
+ir, const struct qstr *name,
+>  	doutc(cl, "%p '%pd' %s\n", dentry, dentry, valid ? "valid" : "invalid")=
+;
+>  	if (!valid)
+>  		ceph_dir_clear_complete(dir);
+> -
+> -	if (!(flags & LOOKUP_RCU))
+> -		dput(parent);
+>  	return valid;
+>  }
+> =20
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Simon Horman <horms@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- crypto/krb5/Kconfig       |   1 +
- crypto/krb5/Makefile      |   3 +-
- crypto/krb5/internal.h    |   6 ++
- crypto/krb5/krb5_api.c    |   2 +
- crypto/krb5/rfc3962_aes.c | 115 ++++++++++++++++++++++++++++++++++++++
- 5 files changed, 126 insertions(+), 1 deletion(-)
- create mode 100644 crypto/krb5/rfc3962_aes.c
-
-diff --git a/crypto/krb5/Kconfig b/crypto/krb5/Kconfig
-index 079873618abf..2ad874990dc8 100644
---- a/crypto/krb5/Kconfig
-+++ b/crypto/krb5/Kconfig
-@@ -5,6 +5,7 @@ config CRYPTO_KRB5
- 	select CRYPTO_AUTHENC
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_HASH_INFO
-+	select CRYPTO_HMAC
- 	select CRYPTO_SHA1
- 	select CRYPTO_CBC
- 	select CRYPTO_CTS
-diff --git a/crypto/krb5/Makefile b/crypto/krb5/Makefile
-index 8dad8e3bf086..35f21411abf8 100644
---- a/crypto/krb5/Makefile
-+++ b/crypto/krb5/Makefile
-@@ -6,6 +6,7 @@
- krb5-y += \
- 	krb5_kdf.o \
- 	krb5_api.o \
--	rfc3961_simplified.o
-+	rfc3961_simplified.o \
-+	rfc3962_aes.o
- 
- obj-$(CONFIG_CRYPTO_KRB5) += krb5.o
-diff --git a/crypto/krb5/internal.h b/crypto/krb5/internal.h
-index eaaa9c13c8b3..267ca978bda5 100644
---- a/crypto/krb5/internal.h
-+++ b/crypto/krb5/internal.h
-@@ -179,3 +179,9 @@ int rfc3961_verify_mic(const struct krb5_enctype *krb5,
- 		       const struct krb5_buffer *metadata,
- 		       struct scatterlist *sg, unsigned int nr_sg,
- 		       size_t *_offset, size_t *_len);
-+
-+/*
-+ * rfc3962_aes.c
-+ */
-+extern const struct krb5_enctype krb5_aes128_cts_hmac_sha1_96;
-+extern const struct krb5_enctype krb5_aes256_cts_hmac_sha1_96;
-diff --git a/crypto/krb5/krb5_api.c b/crypto/krb5/krb5_api.c
-index 8fc3a1b9d4ad..ecc6655953d5 100644
---- a/crypto/krb5/krb5_api.c
-+++ b/crypto/krb5/krb5_api.c
-@@ -17,6 +17,8 @@ MODULE_AUTHOR("Red Hat, Inc.");
- MODULE_LICENSE("GPL");
- 
- static const struct krb5_enctype *const krb5_supported_enctypes[] = {
-+	&krb5_aes128_cts_hmac_sha1_96,
-+	&krb5_aes256_cts_hmac_sha1_96,
- };
- 
- /**
-diff --git a/crypto/krb5/rfc3962_aes.c b/crypto/krb5/rfc3962_aes.c
-new file mode 100644
-index 000000000000..5cbf8f4638b9
---- /dev/null
-+++ b/crypto/krb5/rfc3962_aes.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/* rfc3962 Advanced Encryption Standard (AES) Encryption for Kerberos 5
-+ *
-+ * Parts borrowed from net/sunrpc/auth_gss/.
-+ */
-+/*
-+ * COPYRIGHT (c) 2008
-+ * The Regents of the University of Michigan
-+ * ALL RIGHTS RESERVED
-+ *
-+ * Permission is granted to use, copy, create derivative works
-+ * and redistribute this software and such derivative works
-+ * for any purpose, so long as the name of The University of
-+ * Michigan is not used in any advertising or publicity
-+ * pertaining to the use of distribution of this software
-+ * without specific, written prior authorization.  If the
-+ * above copyright notice or any other identification of the
-+ * University of Michigan is included in any copy of any
-+ * portion of this software, then the disclaimer below must
-+ * also be included.
-+ *
-+ * THIS SOFTWARE IS PROVIDED AS IS, WITHOUT REPRESENTATION
-+ * FROM THE UNIVERSITY OF MICHIGAN AS TO ITS FITNESS FOR ANY
-+ * PURPOSE, AND WITHOUT WARRANTY BY THE UNIVERSITY OF
-+ * MICHIGAN OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
-+ * WITHOUT LIMITATION THE IMPLIED WARRANTIES OF
-+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-+ * REGENTS OF THE UNIVERSITY OF MICHIGAN SHALL NOT BE LIABLE
-+ * FOR ANY DAMAGES, INCLUDING SPECIAL, INDIRECT, INCIDENTAL, OR
-+ * CONSEQUENTIAL DAMAGES, WITH RESPECT TO ANY CLAIM ARISING
-+ * OUT OF OR IN CONNECTION WITH THE USE OF THE SOFTWARE, EVEN
-+ * IF IT HAS BEEN OR IS HEREAFTER ADVISED OF THE POSSIBILITY OF
-+ * SUCH DAMAGES.
-+ */
-+
-+/*
-+ * Copyright (C) 1998 by the FundsXpress, INC.
-+ *
-+ * All rights reserved.
-+ *
-+ * Export of this software from the United States of America may require
-+ * a specific license from the United States Government.  It is the
-+ * responsibility of any person or organization contemplating export to
-+ * obtain such a license before exporting.
-+ *
-+ * WITHIN THAT CONSTRAINT, permission to use, copy, modify, and
-+ * distribute this software and its documentation for any purpose and
-+ * without fee is hereby granted, provided that the above copyright
-+ * notice appear in all copies and that both that copyright notice and
-+ * this permission notice appear in supporting documentation, and that
-+ * the name of FundsXpress. not be used in advertising or publicity pertaining
-+ * to distribution of the software without specific, written prior
-+ * permission.  FundsXpress makes no representations about the suitability of
-+ * this software for any purpose.  It is provided "as is" without express
-+ * or implied warranty.
-+ *
-+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
-+ * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
-+ * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-+ */
-+
-+/*
-+ * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include "internal.h"
-+
-+const struct krb5_enctype krb5_aes128_cts_hmac_sha1_96 = {
-+	.etype		= KRB5_ENCTYPE_AES128_CTS_HMAC_SHA1_96,
-+	.ctype		= KRB5_CKSUMTYPE_HMAC_SHA1_96_AES128,
-+	.name		= "aes128-cts-hmac-sha1-96",
-+	.encrypt_name	= "krb5enc(hmac(sha1),cts(cbc(aes)))",
-+	.cksum_name	= "hmac(sha1)",
-+	.hash_name	= "sha1",
-+	.derivation_enc	= "cts(cbc(aes))",
-+	.key_bytes	= 16,
-+	.key_len	= 16,
-+	.Kc_len		= 16,
-+	.Ke_len		= 16,
-+	.Ki_len		= 16,
-+	.block_len	= 16,
-+	.conf_len	= 16,
-+	.cksum_len	= 12,
-+	.hash_len	= 20,
-+	.prf_len	= 16,
-+	.keyed_cksum	= true,
-+	.random_to_key	= NULL, /* Identity */
-+	.profile	= &rfc3961_simplified_profile,
-+};
-+
-+const struct krb5_enctype krb5_aes256_cts_hmac_sha1_96 = {
-+	.etype		= KRB5_ENCTYPE_AES256_CTS_HMAC_SHA1_96,
-+	.ctype		= KRB5_CKSUMTYPE_HMAC_SHA1_96_AES256,
-+	.name		= "aes256-cts-hmac-sha1-96",
-+	.encrypt_name	= "krb5enc(hmac(sha1),cts(cbc(aes)))",
-+	.cksum_name	= "hmac(sha1)",
-+	.hash_name	= "sha1",
-+	.derivation_enc	= "cts(cbc(aes))",
-+	.key_bytes	= 32,
-+	.key_len	= 32,
-+	.Kc_len		= 32,
-+	.Ke_len		= 32,
-+	.Ki_len		= 32,
-+	.block_len	= 16,
-+	.conf_len	= 16,
-+	.cksum_len	= 12,
-+	.hash_len	= 20,
-+	.prf_len	= 16,
-+	.keyed_cksum	= true,
-+	.random_to_key	= NULL, /* Identity */
-+	.profile	= &rfc3961_simplified_profile,
-+};
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
