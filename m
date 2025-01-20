@@ -1,87 +1,97 @@
-Return-Path: <linux-nfs+bounces-9403-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9405-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25DFBA172F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 20:01:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93377A1730A
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 20:12:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 20F603AA30F
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 19:01:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C018188866F
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 19:13:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001521F190F;
-	Mon, 20 Jan 2025 18:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E0151EE7A1;
+	Mon, 20 Jan 2025 19:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/1uNpCI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDPEHSdu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF81E1F1914
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 18:59:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D1C8479;
+	Mon, 20 Jan 2025 19:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737399582; cv=none; b=E4KTUZ0M1t4cTzbmxQucu0eV3E6IeGfa2i95mVb/u+HpaxejUwKRrXyaYotSg7CCrgCICwzQt6FDpZXmljlEDSaaLf96I5Wl1YPUsqAS4shTAQyWDfG+1KrBYM5gRluQz2BQBe6qjEnShlnqJn5T+Y4F0dN6OJEiWFkavRSOh00=
+	t=1737400373; cv=none; b=THRp4TMOZJ2Xi7WaWvA2Y3b9ojFT+Oh/g7WAk8Cjbe6MiS1jEAtZGPb7v3nDHcQMLjrBJAH4x7/ogmxdWQHvbUnLwcrGWSSP40pTXLPn/5TWAtUQRmFuIvwCZ+pmwZjGxx06tMipWuh7OTOtstpAzogmREdRST1t+5a1emOysDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737399582; c=relaxed/simple;
-	bh=jo4/etqlVP7GcbUYup13bI+WRTgBFRooXjx663D46Dk=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=rvCg08YzG+X3D7vIGmaGqenHRd87/JIuCXeTEaS91gZvc0ECYd65aM5hsLmG8weeSy7yUdaF+YjvoBqgYtKYtcJ6krbEprKsd9RAYovkzWmqT5/+iSCzou3BzLcPUCgaMRU0ZXThx/uyseOpqr4olAXFG2W/8OwPxzjlipMbh/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/1uNpCI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA4EC4CEDD;
-	Mon, 20 Jan 2025 18:59:42 +0000 (UTC)
+	s=arc-20240116; t=1737400373; c=relaxed/simple;
+	bh=Kh+DQwLKyClDbQ2S17AysOYPnYbZz9VzwkaJnYw2NEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H2Ay+GiLfcfSP/lvktwp8jLdey1tmJEChlx5IDxVTZFn/o9ahdESK3T4yJz1rGyyfLfIhUikIZXm658WHS5B13sp9NKj+eLL9Fo1bVKCClX6u/9AjZXqKOhMNMU+AYikXij9GDZrb9n3994Mruc8gWE5aqUfoOjOFrCy1515ffA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDPEHSdu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CA7EC4CEDD;
+	Mon, 20 Jan 2025 19:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737399582;
-	bh=jo4/etqlVP7GcbUYup13bI+WRTgBFRooXjx663D46Dk=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=U/1uNpCI0qlUUKSK5/fMlVP24n5DI/+0NgKzCgeZpdl4zqLqQBoMOnXvpr0uNmZKc
-	 virbFSKnYsNxD/OO4n5SmfMjYN7f/0nywWrJJ0LNryAmMrDXGKOedTbeO6MW8q5r6i
-	 UvqEHOTwdHBCi1iAuRUs14we1qpRIzOqbBG37HEs9Swe3KQH8Rf6PQZlpVr2fTHSPZ
-	 d1kXvmb/XSFVeMef6TIwSdQv/qUr+l+g7chnZ6H1l1bxUATC0AgzQljcg7VJstupLU
-	 dP2IA63Dc5C0AguTXlAh8H+ZoG9pX4bUM0ZHs2F+m+ftzWXpfz3cJAIZGmSg8FWO0k
-	 ZVjE2goU5n9vg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ED4C3380AA62;
-	Mon, 20 Jan 2025 19:00:07 +0000 (UTC)
-From: Chuck Lever via Bugspray Bot <bugbot@kernel.org>
-Date: Mon, 20 Jan 2025 19:00:07 +0000
+	s=k20201202; t=1737400372;
+	bh=Kh+DQwLKyClDbQ2S17AysOYPnYbZz9VzwkaJnYw2NEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QDPEHSdu3KTXUtaudpyWdDO47omeskF37v7TUI3r61654dgTZREwK5kkE3QiQ1wtv
+	 Xv++u0RBs1QM7StarZtKfbgVEdi+HGtTzjOs3B86lUv81kgICkMryEZ7bW4oeiLz3R
+	 TJexhwlQegF74MwXknPzfnlq10JGTVm6bNkL2yeoKju4cNE/RGTn2nGoli2m5DoLK0
+	 Kv9CTAkFhJWwp7vAiqtyujSwZx/D3CmbSRI+Ux0MDJ+tOMalmKThSa7LK/TSHkIN91
+	 yvwRoSL8HYMQRSwHvT3yQ2++GMkRBFF+uVpLikXETdCSVr8GRfrsXzcVTp1QcTHZFg
+	 gWKPADSacovBw==
+Date: Mon, 20 Jan 2025 11:12:50 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Simon Horman <horms@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
+ algorithm
+Message-ID: <20250120191250.GA39025@sol.localdomain>
+References: <20250120173937.GA2268@sol.localdomain>
+ <20250120135754.GX6206@kernel.org>
+ <20250117183538.881618-1-dhowells@redhat.com>
+ <20250117183538.881618-4-dhowells@redhat.com>
+ <1201143.1737383111@warthog.procyon.org.uk>
+ <1212970.1737399580@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: chuck.lever@oracle.com, carnil@debian.org, 
- baptiste.pellegrin@ac-grenoble.fr, anna@kernel.org, jlayton@kernel.org, 
- herzog@phys.ethz.ch, trondmy@kernel.org, cel@kernel.org, 
- harald.dunkel@aixigo.com, linux-nfs@vger.kernel.org, 
- benoit.gschwind@minesparis.psl.eu
-Message-ID: <20250120-b219710c4-c009d53d69fd@bugzilla.kernel.org>
-In-Reply-To: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-References: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-Subject: Re: NFSD threads hang when destroying a session or client ID
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1212970.1737399580@warthog.procyon.org.uk>
 
-Chuck Lever writes via Kernel.org Bugzilla:
+On Mon, Jan 20, 2025 at 06:59:40PM +0000, David Howells wrote:
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > Multiple requests in parallel, I think you mean?  No, it doesn't, but it
+> > should.
+> 
+> Not so much.  This bug is on the asynchronous path and not tested by my
+> rxrpc/rxgk code which only exercises the synchronous path.  I haven't tried to
+> make that asynchronous yet.  I presume testmgr also only tests the sync path.
+> 
+> David
+> 
 
-origin/linux-6.1.y is missing this commit:
+I'm not sure I understand your question.  Users of the crypto API can exclude
+asynchronous algorithms when selecting one, but the self-tests do not do that.
 
-> 961b4b5e86bf ("NFSD: Reset cb_seq_status after NFS4ERR_DELAY")
+In any case, why would you need anything to do asynchronous at all here?
 
-which is related to the problem reported in this bug, though it might not be a fix. This branch is based on 6.1.126 and has 961b4b5 applied to it for easy testing.
-
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/log/?h=nfsd-6.1.y
-
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c4
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
-
+- Eric
 
