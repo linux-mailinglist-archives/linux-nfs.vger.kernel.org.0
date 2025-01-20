@@ -1,88 +1,118 @@
-Return-Path: <linux-nfs+bounces-9392-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9393-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0403EA16E27
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 15:10:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDBA2A16E6A
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 15:25:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B4563A3808
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 14:10:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A96561884110
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 14:25:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22F91E1C36;
-	Mon, 20 Jan 2025 14:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125721E32B6;
+	Mon, 20 Jan 2025 14:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH6oKGYJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flxffZEh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7CE1E2847
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 14:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6CD1E104E
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 14:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737382234; cv=none; b=fEUcujLP1bOqR6wvw9Xn4t7qK/qLErrLyD9+RsDZL0ZuQelbmrjaT0b8wGTyADszoaPRmjbO+2O9mXyfPVyidQmClFpzIiu7j7etTPF2WxNyA97VvDqH4f9tA92/MNbgVNvT+Gwy1ono9Cy9sgDToGLDZwTTltrovb5xYuoC4xI=
+	t=1737383126; cv=none; b=PhtCgGFlqQTo97udlaLyPgkz8cF/CMcwNDmGMIIJ9e56YvLpGF/nSlH1qLX0L+OkT8U4Ard9EVNSwxeXL+8yb+nNPCOPqfHbHugRxNEyAfxZ21BhxyfZ2rvmAp4YjkQ1DWC2XdVVFG3vB5ebqXeeHjqfvEWPL0P/19B7qF9LVak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737382234; c=relaxed/simple;
-	bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=mdn9dg1+wepYAtNL1a/OvgmQbbrTEVgx4S3hUWG2fpKOVNQRn1Zo0eYEoYokQF74R+Dfyczi1ogj6JZf8NSfobVsv9J6xkiFzC2gqC9EfF2Gim4DP8QU0NI7FrS8DOwh9b0Bs9Zra92rSz16OJgkXzsWFxtVlYsqeAfhWVwcHA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DH6oKGYJ; arc=none smtp.client-ip=209.85.208.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso5550487a12.1
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 06:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737382231; x=1737987031; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
-        b=DH6oKGYJkDnf7K+7K4B5SAcuEw2ia4X3tWAQPd2f+uFmxw0sxZxJwI6HH/src31KsA
-         WXz8bgsB42n6B3F/H2fuxyXgQI1rHp++JnlPfaD7lWezdxCIAa3FUai0KeVSsMKSRN+s
-         7OJ7QhDvrEGTlbmFF2P6wMkq+cranqGSlkP8Ct4YJQhALCHqXNMsPYQR7uw+nSnHEDh6
-         M4E5rKpBXu5jJpcrReFZg9PrP0fbIlldJpSZgYVacv6s4wyXSUaPkhqhwQGjOC+CJcay
-         YjFmMB52IcWqb+WdqaYcPyz1Yl9tapEIm972gaJ38byeCzEl8Rj6UtTSq9NY8kJLqiiK
-         vzKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737382231; x=1737987031;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
-        b=rytR59kGqg72nxlqlfFsxisqzivN1TijQuSIpTLxKqAtrKEc6bGZkPkDbwp+KtIWnY
-         +AD2pBiLC/xHRCAyDpCj2ANBLb/G6noa2qMw8AUus1S/2uvRdKJXa+8h4NBzXrt5BsV8
-         nKGDNzxEraX8Ptsv/ZPVPlRCvfrtx+LXxZ5DzihYXIQput0W/FYF8Cg20k0219mSQ1wq
-         qArNcNA/hGqiA76AUinwywE81frsgUXetrKArQHCz0DXTO7ak7Chw96ZPadm+mLkHxoc
-         iTG9CykXW7OwmIhGAObn9bwQawsvHiJEi6SF2Kzk1/dsQ4sZI3a4rbJDqE2EJjJtJMAW
-         fbOQ==
-X-Gm-Message-State: AOJu0YzuRnAcUM83OBlOUIQ4K3XsGADs8TgAzBduK0DK7WUAmeYYeTXt
-	c9GwJeqMr2+/7JqlcRHIqrcZCYLHcXTOCoC8r8OI++JGRrU3mOB4wK39YGOOeCg1Zb8rntdYQds
-	IuDEfYTNpgNOp8vsr7J5COaKJXqt5hS2dx+lBvw==
-X-Gm-Gg: ASbGncveWc7JtCsicxQ2zTc5erOPUT6bLsjftmFAciQU1++CeihUtVMSPcpDHKMN28r
-	fsNWK3fBeyd2ZERaTwfVXNvpJOspdQSu3AGV9IaepQh0t5U/LPV0=
-X-Google-Smtp-Source: AGHT+IEyZynyoDSt7qIbK5xydi+Ja0PS7c59XR2cK6+xbKQ2uaXCCwPm64A83Tb+Hk+QAnqephtua79+s7aynl35gM8=
-X-Received: by 2002:a05:6402:13ce:b0:5d9:6633:8e9b with SMTP id
- 4fb4d7f45d1cf-5db7dc3ba04mr11357801a12.1.1737382230621; Mon, 20 Jan 2025
- 06:10:30 -0800 (PST)
+	s=arc-20240116; t=1737383126; c=relaxed/simple;
+	bh=1jqY2F+d7VafsuCep+G9kl1oILdjWO4f+217zkn9+7c=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=GgdhR/1U5g8z8OCMXg0ot/pMGrONSgp54HDINSGO6JIlYR1EkMyw4FSwvp6pxKuWuq4Xdx2IU/ihULq9PMWXJekpsIVscvfgfhx3wWy12jOgyY+Kji1DfttR2iTcswNgniY/xyIrUP/3uJ9kvcsGrK5cyJY1ZeBIfzOodTVLW/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=flxffZEh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737383123;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=91OCaOldgb4lF7g54QI98f4ovcpRBeXwcL2UnR4rY5s=;
+	b=flxffZEhF8uDnrXHkmvZR8djqqy/He+Mjq3h3gYu/IUNzmbByC80Zo2t0VgzeIN9q+wNRh
+	F3f3/VKF9kdeO2L170IHPJsQa/p5GH7IrCYY/m9x+l22AmnR7r4YFKbn91hXomUrETf1My
+	ttFoM/OHqj7oIl30ZbDzF+6R+DjYIC0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-_-yZFx4XPyGlmqzgG0ATIg-1; Mon,
+ 20 Jan 2025 09:25:20 -0500
+X-MC-Unique: _-yZFx4XPyGlmqzgG0ATIg-1
+X-Mimecast-MFC-AGG-ID: _-yZFx4XPyGlmqzgG0ATIg
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CAE5B1955F79;
+	Mon, 20 Jan 2025 14:25:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.5])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2D22419560A3;
+	Mon, 20 Jan 2025 14:25:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250120135754.GX6206@kernel.org>
+References: <20250120135754.GX6206@kernel.org> <20250117183538.881618-1-dhowells@redhat.com> <20250117183538.881618-4-dhowells@redhat.com>
+To: Simon Horman <horms@kernel.org>
+Cc: dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
+    Chuck Lever <chuck.lever@oracle.com>,
+    Trond Myklebust <trond.myklebust@hammerspace.com>,
+    "David S. Miller" <davem@davemloft.net>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, Eric Biggers <ebiggers@kernel.org>,
+    Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+    linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 03/24] crypto: Add 'krb5enc' hash and cipher AEAD algorithm
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Lionel Cons <lionelcons1972@gmail.com>
-Date: Mon, 20 Jan 2025 15:09:54 +0100
-X-Gm-Features: AbW1kvbrtBElUkML5ayMRgGxflwN3nugM1gNthKMT1ayMt4XhboxRi-etbYpGys
-Message-ID: <CAPJSo4V9TssdPre+Xps6s3qa0dBAuAadJqT8=+DLzvJk-2P8CQ@mail.gmail.com>
-Subject: Linux nfsd always returns { .minor=0, .major=0 } for
- FATTR4_WORD0_FSID, why?
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1201142.1737383111.1@warthog.procyon.org.uk>
+Date: Mon, 20 Jan 2025 14:25:11 +0000
+Message-ID: <1201143.1737383111@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Does anyone know why the per-fileobjet attribute FATTR4_WORD0_FSID
- always returns { .minor=0, .major=0 } for a Linux nfsd?
-This does not sound right.
+Simon Horman <horms@kernel.org> wrote:
 
-Ref https://datatracker.ietf.org/doc/html/rfc5661#section-5.8.1.9
+> > +static void krb5enc_decrypt_hash_done(void *data, int err)
+> > +{
+> > +	struct aead_request *req = data;
+> > +
+> > +	if (err)
+> > +		return krb5enc_request_complete(req, err);
+> > +
+> > +	err = krb5enc_verify_hash(req, 0);
+> 
+> Hi David,
+> 
+> Sparse complains that the second argument to krb5enc_verify_hash should be
+> a pointer rather than an integer. So perhaps this would be slightly better
+> expressed as (completely untested!):
+> 
+> 	err = krb5enc_verify_hash(req, NULL);
 
-Lionel
+Actually, no.  It should be "ahreq->result + authsize" and
+krb5enc_verify_hash() shouldn't calculate ihash, but use its hash parameter.
+
+I wonder if the testmgr driver tests running the algorithms asynchronously...
+
+Thanks,
+David
+
 
