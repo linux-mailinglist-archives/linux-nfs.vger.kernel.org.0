@@ -1,140 +1,88 @@
-Return-Path: <linux-nfs+bounces-9391-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9392-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D956A16DE5
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 14:58:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0403EA16E27
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 15:10:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CD2A1882D41
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 13:58:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B4563A3808
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 14:10:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E84AB1E32A2;
-	Mon, 20 Jan 2025 13:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22F91E1C36;
+	Mon, 20 Jan 2025 14:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuJZpKyP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH6oKGYJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98041E2838;
-	Mon, 20 Jan 2025 13:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7CE1E2847
+	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 14:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737381479; cv=none; b=kIaaZARwrUfzFnRm6Y+w/NxEJKZOT96wIXsPyhXF2bzpDFgB02YuiQUKmn9+yhoVOBgq8IUJqyauO1ybT+QnkRVNgwTylSv6LGweZY8Tn6Rch6rQPzs0tpiGeDhnK6dAQo2yB/pKhHxS/6L2V3jxdUsFX47MXexcQteUPPSIS44=
+	t=1737382234; cv=none; b=fEUcujLP1bOqR6wvw9Xn4t7qK/qLErrLyD9+RsDZL0ZuQelbmrjaT0b8wGTyADszoaPRmjbO+2O9mXyfPVyidQmClFpzIiu7j7etTPF2WxNyA97VvDqH4f9tA92/MNbgVNvT+Gwy1ono9Cy9sgDToGLDZwTTltrovb5xYuoC4xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737381479; c=relaxed/simple;
-	bh=mMnF1rH8r/RyTbYhURrLkiK4JarAbi2ujmmaTjR3WKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UG590U1NkvHUdC3b0rUhdAnGqj2fr8XjEFr2v7O4u94MKUHnU5EkK4hvmHCB56LvHiS6K895UB7LR8EeLWlZx8WTWr2AccQ9/WeOOOD/ZJXoXxkyLADIqWKGQcaGI/ibOVS1WyqHQ2VBNic8c7e+oIALLJVp7xk66nNdKbwooFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuJZpKyP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49094C4CEDD;
-	Mon, 20 Jan 2025 13:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737381479;
-	bh=mMnF1rH8r/RyTbYhURrLkiK4JarAbi2ujmmaTjR3WKo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NuJZpKyPx7ny0GSbeehDbouPHXimJr0RgfJE+hx6Q4fg+QRcvvInO7rf1BGVKvVAJ
-	 D2QL3N10JPkWgv6H49sp0CxmdwGPw6gyPkUgyD+yslIxtjv87p35D5gWXVG+vVU7Bj
-	 4smk6TeGY9hii3l0EJK+grE6/2JBBod2xX5R02orL23gee8qA55XrCTSDkfCq0fcH7
-	 f2wx3JGzMxSLc+0ly6E8I1dYqLg3APFHy3LsiP+NR47Ap3O2RTgOEP3F0vRyMYhhjy
-	 2TMc3ZJ/tfL8hh8h3bknAlIEfpYIu9eZ7eeIzG9jmfAxty8suUSUpYqcepx7DwPsAz
-	 C/VQhW0CuySUQ==
-Date: Mon, 20 Jan 2025 13:57:54 +0000
-From: Simon Horman <horms@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <20250120135754.GX6206@kernel.org>
-References: <20250117183538.881618-1-dhowells@redhat.com>
- <20250117183538.881618-4-dhowells@redhat.com>
+	s=arc-20240116; t=1737382234; c=relaxed/simple;
+	bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=mdn9dg1+wepYAtNL1a/OvgmQbbrTEVgx4S3hUWG2fpKOVNQRn1Zo0eYEoYokQF74R+Dfyczi1ogj6JZf8NSfobVsv9J6xkiFzC2gqC9EfF2Gim4DP8QU0NI7FrS8DOwh9b0Bs9Zra92rSz16OJgkXzsWFxtVlYsqeAfhWVwcHA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DH6oKGYJ; arc=none smtp.client-ip=209.85.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso5550487a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 06:10:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737382231; x=1737987031; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
+        b=DH6oKGYJkDnf7K+7K4B5SAcuEw2ia4X3tWAQPd2f+uFmxw0sxZxJwI6HH/src31KsA
+         WXz8bgsB42n6B3F/H2fuxyXgQI1rHp++JnlPfaD7lWezdxCIAa3FUai0KeVSsMKSRN+s
+         7OJ7QhDvrEGTlbmFF2P6wMkq+cranqGSlkP8Ct4YJQhALCHqXNMsPYQR7uw+nSnHEDh6
+         M4E5rKpBXu5jJpcrReFZg9PrP0fbIlldJpSZgYVacv6s4wyXSUaPkhqhwQGjOC+CJcay
+         YjFmMB52IcWqb+WdqaYcPyz1Yl9tapEIm972gaJ38byeCzEl8Rj6UtTSq9NY8kJLqiiK
+         vzKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737382231; x=1737987031;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qt/Qayq19OXdKyPfXCtFn8H59qMxc17PoCb7fgfmbgY=;
+        b=rytR59kGqg72nxlqlfFsxisqzivN1TijQuSIpTLxKqAtrKEc6bGZkPkDbwp+KtIWnY
+         +AD2pBiLC/xHRCAyDpCj2ANBLb/G6noa2qMw8AUus1S/2uvRdKJXa+8h4NBzXrt5BsV8
+         nKGDNzxEraX8Ptsv/ZPVPlRCvfrtx+LXxZ5DzihYXIQput0W/FYF8Cg20k0219mSQ1wq
+         qArNcNA/hGqiA76AUinwywE81frsgUXetrKArQHCz0DXTO7ak7Chw96ZPadm+mLkHxoc
+         iTG9CykXW7OwmIhGAObn9bwQawsvHiJEi6SF2Kzk1/dsQ4sZI3a4rbJDqE2EJjJtJMAW
+         fbOQ==
+X-Gm-Message-State: AOJu0YzuRnAcUM83OBlOUIQ4K3XsGADs8TgAzBduK0DK7WUAmeYYeTXt
+	c9GwJeqMr2+/7JqlcRHIqrcZCYLHcXTOCoC8r8OI++JGRrU3mOB4wK39YGOOeCg1Zb8rntdYQds
+	IuDEfYTNpgNOp8vsr7J5COaKJXqt5hS2dx+lBvw==
+X-Gm-Gg: ASbGncveWc7JtCsicxQ2zTc5erOPUT6bLsjftmFAciQU1++CeihUtVMSPcpDHKMN28r
+	fsNWK3fBeyd2ZERaTwfVXNvpJOspdQSu3AGV9IaepQh0t5U/LPV0=
+X-Google-Smtp-Source: AGHT+IEyZynyoDSt7qIbK5xydi+Ja0PS7c59XR2cK6+xbKQ2uaXCCwPm64A83Tb+Hk+QAnqephtua79+s7aynl35gM8=
+X-Received: by 2002:a05:6402:13ce:b0:5d9:6633:8e9b with SMTP id
+ 4fb4d7f45d1cf-5db7dc3ba04mr11357801a12.1.1737382230621; Mon, 20 Jan 2025
+ 06:10:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250117183538.881618-4-dhowells@redhat.com>
+From: Lionel Cons <lionelcons1972@gmail.com>
+Date: Mon, 20 Jan 2025 15:09:54 +0100
+X-Gm-Features: AbW1kvbrtBElUkML5ayMRgGxflwN3nugM1gNthKMT1ayMt4XhboxRi-etbYpGys
+Message-ID: <CAPJSo4V9TssdPre+Xps6s3qa0dBAuAadJqT8=+DLzvJk-2P8CQ@mail.gmail.com>
+Subject: Linux nfsd always returns { .minor=0, .major=0 } for
+ FATTR4_WORD0_FSID, why?
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 17, 2025 at 06:35:12PM +0000, David Howells wrote:
-> Add an AEAD template that does hash-then-cipher (unlike authenc that does
-> cipher-then-hash).  This is required for a number of Kerberos 5 encoding
-> types.
-> 
-> [!] Note that the net/sunrpc/auth_gss/ implementation gets a pair of
-> ciphers, one non-CTS and one CTS, using the former to do all the aligned
-> blocks and the latter to do the last two blocks if they aren't also
-> aligned.  It may be necessary to do this here too for performance reasons -
-> but there are considerations both ways:
-> 
->  (1) firstly, there is an optimised assembly version of cts(cbc(aes)) on
->      x86_64 that should be used instead of having two ciphers;
-> 
->  (2) secondly, none of the hardware offload drivers seem to offer CTS
->      support (Intel QAT does not, for instance).
-> 
-> However, I don't know if it's possible to query the crypto API to find out
-> whether there's an optimised CTS algorithm available.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Does anyone know why the per-fileobjet attribute FATTR4_WORD0_FSID
+ always returns { .minor=0, .major=0 } for a Linux nfsd?
+This does not sound right.
 
-...
+Ref https://datatracker.ietf.org/doc/html/rfc5661#section-5.8.1.9
 
-> diff --git a/crypto/krb5enc.c b/crypto/krb5enc.c
-
-...
-
-> +static int krb5enc_verify_hash(struct aead_request *req, void *hash)
-> +{
-> +	struct crypto_aead *krb5enc = crypto_aead_reqtfm(req);
-> +	struct aead_instance *inst = aead_alg_instance(krb5enc);
-> +	struct krb5enc_instance_ctx *ictx = aead_instance_ctx(inst);
-> +	struct krb5enc_request_ctx *areq_ctx = aead_request_ctx(req);
-> +	struct ahash_request *ahreq = (void *)(areq_ctx->tail + ictx->reqoff);
-> +	unsigned int authsize = crypto_aead_authsize(krb5enc);
-> +	u8 *ihash = ahreq->result + authsize;
-> +
-> +	scatterwalk_map_and_copy(ihash, req->src, ahreq->nbytes, authsize, 0);
-> +
-> +	if (crypto_memneq(ihash, ahreq->result, authsize))
-> +		return -EBADMSG;
-> +	return 0;
-> +}
-> +
-> +static void krb5enc_decrypt_hash_done(void *data, int err)
-> +{
-> +	struct aead_request *req = data;
-> +
-> +	if (err)
-> +		return krb5enc_request_complete(req, err);
-> +
-> +	err = krb5enc_verify_hash(req, 0);
-
-Hi David,
-
-Sparse complains that the second argument to krb5enc_verify_hash should be
-a pointer rather than an integer. So perhaps this would be slightly better
-expressed as (completely untested!):
-
-	err = krb5enc_verify_hash(req, NULL);
-
-> +	krb5enc_request_complete(req, err);
-
-...
-> +}
+Lionel
 
