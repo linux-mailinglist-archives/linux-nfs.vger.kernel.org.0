@@ -1,105 +1,144 @@
-Return-Path: <linux-nfs+bounces-9397-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9398-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1BF0A16F62
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 16:39:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B03A0A17134
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 18:20:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A16533A8384
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 15:39:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DCD03160AB9
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 17:20:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF83A1E9B02;
-	Mon, 20 Jan 2025 15:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0EFB155316;
+	Mon, 20 Jan 2025 17:20:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6vvO+NT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccLg0N9d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADA11E98E3
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 15:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E46E17E4;
+	Mon, 20 Jan 2025 17:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737387584; cv=none; b=bGLBdymmhEaYJMIYGb68xpwggo99g4vj0jn52XcO+ZldACGWvseSM6xLvJw5yo3VS2zXxFcuWaTJ66qaNVnijZLc1FKESldk/SRcENFEvLF8S0Cpsz8fnJEYd6M0HCeOC4quNbOYxyTfOvXY5/ZjA5EjWmF7VwY5FPUWbBZDRTI=
+	t=1737393624; cv=none; b=IWFPc3RhPB/5PC44Pghrn69kjilvueBKG0qOLCLrWqhVAvlf0nrr0eXWu01uwkXEZVmfcsF+ubozXW474Y+KNdO1/XZnhcmXqDQR+M6kQTaF8C21TJdvPdaS2UDCDnZW042vscvEIX5EK9+JAExD5OLh8DZPQHsYA06Et163hf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737387584; c=relaxed/simple;
-	bh=AHJDPgdPm4ez1h4hLxY2xHIwOAZu2UtDoq6eAGqtrvE=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=R0+L9pxx0V8DE1qrejuCc3YgG7CIxsecKl/ueGvSUI9mDwAzE4KrkFcuKKyH5vyA0llxBSVEpR5Pbj5IReTAtFuFBxIILBYqCq4fSsKezcItlVJs3AuLv6tY9JyehJKP5UtXfpsO+/EbWLy5ganKwHq8SIQMgaXYbF9hzsMrerI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6vvO+NT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64320C4CEDD;
-	Mon, 20 Jan 2025 15:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737387584;
-	bh=AHJDPgdPm4ez1h4hLxY2xHIwOAZu2UtDoq6eAGqtrvE=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=Z6vvO+NTt5WxV+vbkWEHel1jWMUOXU2eEnbK68tF3LEEOs0rSpyjGRaYlWXVG9WY7
-	 FgdW+uNNpeV1Wjd0bSqZ/Ld9dYVOHYKQWP1RDuScnxI6CjxSgeGxLkgwme54TSHhRS
-	 TJfOlvtrXUwt7oJE5B80rPdiQ/bcBIIRr6hAw0U9+kanIur+LtFU8s8Mo1LflxAu+A
-	 U/eGhqcMuOX9mfdza+x5isje3k7r6uZSBzwhMcluloDGdqRvNUYgN64VY6iig5VE18
-	 qXgjmd0nEeNLkcLz5KZIt88ekUsLTwjrT3xeKlfu2ZfNvPUocz9bDe22kowfQkgrEv
-	 rjR1WBMN3xf0w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 76396380AA62;
-	Mon, 20 Jan 2025 15:40:09 +0000 (UTC)
-From: Chuck Lever via Bugspray Bot <bugbot@kernel.org>
-Date: Mon, 20 Jan 2025 15:40:07 +0000
+	s=arc-20240116; t=1737393624; c=relaxed/simple;
+	bh=YmNOImJMW44nOI1mrUv40N8RDQOd3IK+LKDNVg3cDGU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OcIBsTlx91UgYBwcAUI0JjlX/JUBOB5F8+g045YLpjt/5lQGsyCeJSEQHVPD/8/6MVdMl9Rp5q/CeSflc13/G3s1Sjn8NNl4/k2LZ5CraDp+1e1vX3MsOcqCpxovQUA7nIwGOY/eSFJpjfCtvGypW+nh1q71RqEoaDTx/0l23Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ccLg0N9d; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso34059235e9.1;
+        Mon, 20 Jan 2025 09:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737393621; x=1737998421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6eym3f06tjGimIT8VwM5vM+A0hCcYV8o7Ee4Frx1+bA=;
+        b=ccLg0N9dKU0fOqxrBAmUhuHKz7WoaqFXTb6nPoR3LYNVeRHBKnuHZ1j69VptpQLVnH
+         0i4zSsM5+suSb9v6mYevCOxEGihLJmOgpV9ODVmd+c9cZyg6WN7YLIWAgrH+nvU9GyGu
+         cHdpF99fmcbsDeFcRc36Kw12JZCmTo4xKksfZDApOS2xRCkUoZJQw1maz+Y2aQRi5edv
+         SkE+GhqGJew6f1HcPt4fTVDcCTO/Z9Qf/PhdtY6piB11Aq7TWYTmdpmkfSCkygDLik4Q
+         2TK1UuOgcPJnejrstlCPPz42N/EOU5qco3xLG/CN0ZFehj+RBb/GMK6wvBTT0JMdP8bt
+         jXXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737393621; x=1737998421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6eym3f06tjGimIT8VwM5vM+A0hCcYV8o7Ee4Frx1+bA=;
+        b=erZuLW31wQT7i+ezEFqx3RRwXXhLwjDWVcErhSO6rdmtCySHaLusmM/Ba92CHQCwVP
+         ivnhWXkijT4KiJwz715qohN+ZZXOsEjnHFLAGNsG+smeWUvkLbMhUY59WrKx80VKdo6G
+         vciSoGEg1DvvN9Me1ZV4NE/ift33sOPul5Zi9rAqbvgJ/E8wWGejfkkDig8NgrVENYZI
+         GAlwREfcFipVYCWTWpJS2rGixCzyo6qqBIMYuf5BNYABAmX9ixWVA2Y/+Bbd7XoGE7Hm
+         Orz+Wf55SE/npT7bOLqNKcmQvHBjtyPP+csLdepPOp3TET7w57D8ZhALkfY6Hiyngplg
+         l58g==
+X-Forwarded-Encrypted: i=1; AJvYcCUpq62at/m521TYhPU5LXpKl/5PaKejZgxP4fiH4Jxe3t4KJwLnx1CwceWoybOubwMFtvoUnKuszN3mArIX@vger.kernel.org, AJvYcCVgfO7m+bZHRwqP+9mYz4wQbwvNIgFSDWD/Kw4bUHVPseDb4F/u2lPP5Q8x37hxHDvdscrwFo5H1qxs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVmOXg0I6l4AbVUwEbAklCHYz6riqIzQPqU3rhBeERXEhfl5v1
+	m2+MKNBFSrh3OpVF/SVn/y34eZbPdKBVaWhrropefipCs27mePCW
+X-Gm-Gg: ASbGnctOw5WTrCkNIMbosNZF6dQXMQEfxWfhbQ2fcsfbdWdAgUGmmua1U1xL2bGwF1W
+	zgG4Cu2u4RPiN8ql0I/kumEeQS3nZeo9c1oGWXHk6urrWMq29k6sZTJb201jj0RS59wgbiimoMO
+	DRIkvig6u7eEvY5j7kHJIr7AG2A5/f8fEsa5MiaHqUzr3Wlr7YEWqNFMNJ4Y510R2uWSS3QE7mH
+	VAl0wm1cL2MiyhdQDN2b3lS7cUhq368RbxsnNjzPiDQTsoGz5qy5mflEUMJeCMcZAzrRAzyL3Yp
+	LFzNXoCIlIhB1MCogn6PUzgJMOCtnsW1OEpX4qFnbTqK3iT/eEkkdwzYzxpCUe60Mqw=
+X-Google-Smtp-Source: AGHT+IFZaJJhMaheNcRMA4nRMIbFHI8Zzypf9JsNebayS9KX4iwMXHs7kQVJWg0xS0joEQrQJJEZ7A==
+X-Received: by 2002:a05:6000:18ab:b0:38a:88a0:2234 with SMTP id ffacd0b85a97d-38bf5655328mr10793980f8f.4.1737393620976;
+        Mon, 20 Jan 2025 09:20:20 -0800 (PST)
+Received: from amir-ThinkPad-T480.arnhem.chello.nl (92-109-99-123.cable.dynamic.v4.ziggo.nl. [92.109.99.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf328864esm11242813f8f.99.2025.01.20.09.20.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2025 09:20:20 -0800 (PST)
+From: Amir Goldstein <amir73il@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: map EBUSY for all operations
+Date: Mon, 20 Jan 2025 18:20:16 +0100
+Message-Id: <20250120172016.397916-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: chuck.lever@oracle.com, harald.dunkel@aixigo.com, anna@kernel.org, 
- carnil@debian.org, herzog@phys.ethz.ch, jlayton@kernel.org, 
- linux-nfs@vger.kernel.org, trondmy@kernel.org, 
- baptiste.pellegrin@ac-grenoble.fr, cel@kernel.org, 
- benoit.gschwind@minesparis.psl.eu
-Message-ID: <20250120-b219710c3-639e348b9df3@bugzilla.kernel.org>
-In-Reply-To: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-References: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-Subject: Re: NFSD threads hang when destroying a session or client ID
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+Content-Transfer-Encoding: 8bit
 
-Chuck Lever writes via Kernel.org Bugzilla:
+v4 client maps NFS4ERR_FILE_OPEN => EBUSY for all operations.
 
-v6.1 symptomology:
+v4 server only maps EBUSY => NFS4ERR_FILE_OPEN for rmdir()/unlink()
+although it is also possible to get EBUSY from rename() for the same
+reason (victim is a local mount point).
 
-The following stack trace shows that the active callback workqueue item is stuck in rpc_shutdown_client() waiting for RPC operations to complete. Because the callback workqueue is single-threaded (max_active = 1) and this work item never completes, it prevents subsequent flush_workqueue() calls on the callback work queue from completing.
+Filesystems could return EBUSY for other operations, so just map it
+in server for all operations.
 
-> [7257352.347503] task:kworker/u32:6   state:D stack:0     pid:173983 ppid:2  
->    flags:0x00004000
-> [7257352.347511] Workqueue: nfsd4_callbacks nfsd4_run_cb_work [nfsd]
-> [7257352.347568] Call Trace:
-> [7257352.347571]  <TASK>
-> [7257352.347577]  __schedule+0x34d/0x9e0
-> [7257352.347589]  schedule+0x5a/0xd0
-> [7257352.347597]  schedule_timeout+0x94/0x150
-> [7257352.347606]  ? __bpf_trace_tick_stop+0x10/0x10
-> [7257352.347616]  rpc_shutdown_client+0xf2/0x150 [sunrpc]
-> [7257352.347683]  ? cpuusage_read+0x10/0x10
-> [7257352.347694]  nfsd4_process_cb_update+0x4c/0x270 [nfsd]
-> [7257352.347763]  nfsd4_run_cb_work+0x9f/0x150 [nfsd]
-> [7257352.347812]  process_one_work+0x1c7/0x380
-> [7257352.347824]  worker_thread+0x4d/0x380
-> [7257352.347835]  ? rescuer_thread+0x3a0/0x3a0
-> [7257352.347843]  kthread+0xda/0x100
-> [7257352.347849]  ? kthread_complete_and_exit+0x20/0x20
-> [7257352.347859]  ret_from_fork+0x22/0x30
-> [7257352.347875]  </TASK>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
 
-Based on the full stack trace output, there do not appear to be any outstanding RPC operations.
+Chuck,
 
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c3
-You can reply to this message to join the discussion.
+I ran into this error with a FUSE filesystem and returns -EBUSY on open,
+but I noticed that vfs can also return EBUSY at least for rename().
+
+Thanks,
+Amir.
+
+ fs/nfsd/vfs.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 29cb7b812d713..a61f99c081894 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -100,6 +100,7 @@ nfserrno (int errno)
+ 		{ nfserr_perm, -ENOKEY },
+ 		{ nfserr_no_grace, -ENOGRACE},
+ 		{ nfserr_io, -EBADMSG },
++		{ nfserr_file_open, -EBUSY},
+ 	};
+ 	int	i;
+ 
+@@ -2006,14 +2007,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ out_drop_write:
+ 	fh_drop_write(fhp);
+ out_nfserr:
+-	if (host_err == -EBUSY) {
+-		/* name is mounted-on. There is no perfect
+-		 * error status.
+-		 */
+-		err = nfserr_file_open;
+-	} else {
+-		err = nfserrno(host_err);
+-	}
++	err = nfserrno(host_err);
+ out:
+ 	return err;
+ out_unlock:
 -- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
+2.34.1
 
 
