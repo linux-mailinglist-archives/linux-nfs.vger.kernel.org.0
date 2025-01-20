@@ -1,87 +1,124 @@
-Return-Path: <linux-nfs+bounces-9411-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9412-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B398A173A2
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 21:34:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F408A173C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 21:47:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 294B01885CC8
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 20:35:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED8481885485
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 20:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52AC41F03F4;
-	Mon, 20 Jan 2025 20:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927061F03E7;
+	Mon, 20 Jan 2025 20:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJ+1cCkI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMqMYQjM"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D14D1F03F1
-	for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 20:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B701F03DF;
+	Mon, 20 Jan 2025 20:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737405284; cv=none; b=CSJhijbkzI/h1w+APGTeEoGfPniU4jvG8roYdYfarTlUwoeUGuNEIWWHzolRZBXZ3lY8Wkzi79QkkcVWHSp0l9EDtAPANxuxnRoGmljhpZwcJHybsz5s3uy2wA9Fbx7YVM7Y4Oi4+N4umEOGaTmY6ERgFYziabYFJLrMZOcBgl4=
+	t=1737406044; cv=none; b=NNJv9Xg9tSgaDdLwnk1S05O6b981wz+lQvxFKx4+1dFaeolcOsEUQG4i7nMdkpIfQUUKauxg2dzpxQlr1Tg48BrRbTn83684WpmuCFn2dkIjfPjmb4bcjC5fqMo/1Z5c0xNJZeQQwxMoUeulfmtixpHxpqCb85hrS/5G1/XI6Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737405284; c=relaxed/simple;
-	bh=nR9DMuDJTWDbj7OMPPtjbQt74IRTytDeSgM0zolh4Bs=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=iTbVTgk0UM6kvx80WLrhPno9bi32DpX7uA5IiERLmL25mj9SKQanhKhhvpu/ElIA1BbJrnMhfelmLvvxasLomN9gGFCQE8uDMFwv21zUobDPhhvzkGGR3HtGND7QllM8M8+2Oc1ronzoG78nSlYv5pcOcQeKZ2s1a2UcIakJFkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJ+1cCkI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98867C4CEE0;
-	Mon, 20 Jan 2025 20:34:43 +0000 (UTC)
+	s=arc-20240116; t=1737406044; c=relaxed/simple;
+	bh=MoDpvrlbktc0ZMsXkSWxxY4ig0rqpNF5iThW90x655o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TzU2Rm0q7qJ+nvaXH1mw7vvAKYu5SKFONbEtYvINnXI2C6mm77efelFQ1K28YUMeq6J+gYpaPTD5Ff4GOUpcyWv8pT4omuzr4aTffWgQda6z/nFJgniZUwysGcOF5OcruGh3Ti0DRFMtZ+HPCjVQ10MpNQqq3GiVcnH7MbN0J6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMqMYQjM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C32C4CEE3;
+	Mon, 20 Jan 2025 20:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737405283;
-	bh=nR9DMuDJTWDbj7OMPPtjbQt74IRTytDeSgM0zolh4Bs=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=bJ+1cCkI0GllAWny8BXAriYbia5kU1IsNaF8gVR2DuGFJaHUYPMsZ/Y+2/vNPlIWO
-	 skC6AWS5uSOE4Av94HQgJmRmB3W7ZhMOBG1iaM+kc7LBfpxGU18tUvMMtQGY+CiBdR
-	 YqunrN+Vso5oNxaHBIexnVJaAZyIkHiVb7Ea8HOjaN3nP4ehXfL547xlgJZ7LzFt6B
-	 BsG9EXYSjYTC1esTeXz6h8W4rFNiHAp25oFRcrHBvZ0UYlYYTPPZxaYOz21B2K60+r
-	 lSXoNiQH9tJ3AU83myt7y2oMzFD06RSQgQZyPjV6SViNbIy/dMBbrFXTxHIIbEfNo0
-	 Xqiwdoem34fuw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B43E8380AA62;
-	Mon, 20 Jan 2025 20:35:08 +0000 (UTC)
-From: Baptiste PELLEGRIN via Bugspray Bot <bugbot@kernel.org>
-Date: Mon, 20 Jan 2025 20:35:08 +0000
+	s=k20201202; t=1737406043;
+	bh=MoDpvrlbktc0ZMsXkSWxxY4ig0rqpNF5iThW90x655o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YMqMYQjMaJTRuMTACTw6Wyc8xEn4k+gJEGHaBdNyb2+6mlms2HLtHSjue6lnLaxsc
+	 UXtxQSJoN8EKXj9dWA5B/oYvNfhd3sTyhUQMWfQgJPAz43gu90LzOJ3Lix+86N/yZR
+	 LcHRurorkvLdGQ+UeW35HHYwMIp8HP6qjr6LunkG1atLLn0cFVQtKCm6sV9oXWTF3C
+	 qpwdcChDm5sHrqdPc7P5W2CxSOqdvlu5ds/LWbHqBdbuRGi5CBvwId3pd2zku1/0sv
+	 07N6zDqAnNRwQeIcVPJwbP+zRZ6ykBUmwe9S9cOo0m2aPKQO8p3+VAvN01TUVVyGKr
+	 9reSJ22Cz+BRw==
+Date: Mon, 20 Jan 2025 12:47:21 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Simon Horman <horms@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
+ algorithm
+Message-ID: <20250120204721.GA53305@sol.localdomain>
+References: <20250120191250.GA39025@sol.localdomain>
+ <20250120173937.GA2268@sol.localdomain>
+ <20250120135754.GX6206@kernel.org>
+ <20250117183538.881618-1-dhowells@redhat.com>
+ <20250117183538.881618-4-dhowells@redhat.com>
+ <1201143.1737383111@warthog.procyon.org.uk>
+ <1212970.1737399580@warthog.procyon.org.uk>
+ <1215834.1737404294@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: linux-nfs@vger.kernel.org, benoit.gschwind@minesparis.psl.eu, 
- jlayton@kernel.org, carnil@debian.org, baptiste.pellegrin@ac-grenoble.fr, 
- herzog@phys.ethz.ch, anna@kernel.org, cel@kernel.org, 
- harald.dunkel@aixigo.com, trondmy@kernel.org, chuck.lever@oracle.com
-Message-ID: <20250120-b219710c5-280ffab13560@bugzilla.kernel.org>
-In-Reply-To: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-References: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-Subject: Re: NFSD threads hang when destroying a session or client ID
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1215834.1737404294@warthog.procyon.org.uk>
 
-Baptiste PELLEGRIN added an attachment on Kernel.org Bugzilla:
+On Mon, Jan 20, 2025 at 08:18:14PM +0000, David Howells wrote:
+> Eric Biggers <ebiggers@kernel.org> wrote:
+> 
+> > In any case, why would you need anything to do asynchronous at all here?
+> 
+> Because authenc, which I copied, passes the asynchronocity mode onto the two
+> algos it runs (one encrypt, one hash).  If authenc is run synchronously, then
+> the algos are run synchronously and serially; but if authenc is run async,
+> then the algos are run asynchronously - but they may still have to be run
+> serially[*] and the second is dispatched from the completion handler of the
+> first.  So two different paths through the code exist, and rxgk and testmgr
+> only test the synchronous path.
 
-Created attachment 307511
-Recorded trace 20250120 (syslog + trace-cmd)
+No, it goes in the other direction.  The underlying algorithms decide whether
+they are asynchronous or not, and that gets passed up.  It sounds like what you
+want to do is test your template in the case where the underlying algorithms are
+asynchronous.  There is a way to do that by wrapping the underlying algorithms
+with cryptd.  For example the following works with gcm:
 
-Sorry no rpcdebug logs. I will try to record next crash.
+python3 <<EOF
+import socket
+s = socket.socket(socket.AF_ALG, 5, 0)
+s.bind(("aead", "gcm_base(cryptd(ctr(aes-generic)),cryptd(ghash-generic))"))
+EOF
 
-File: record_nfsdc_20250120.tar.gz (application/gzip)
-Size: 2.93 MiB
-Link: https://bugzilla.kernel.org/attachment.cgi?id=307511
----
-Recorded trace 20250120 (syslog + trace-cmd)
+This really should just be thought of as complying with the outdated design of
+the crypto API, though.  In practice synchronous is the only case that really
+matters.
 
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
+> [*] Because in authenc-compatible encoding types, the output of the encryption
+> is hashed.  Older krb5 encodings hash the plaintext and the hash generation
+> and the encrypt can be run in parallel.  For decrypting, the reverse is true;
+> authenc may be able to do the decrypt and the hash in parallel...  But
+> parallellisation also requires that the input and output buffers are not the
+> same.
 
+The right way to optimize cases like that is to interleave the two computations.
+Look at how the AES-GCM assembly code interleaves AES-CTR and GHASH for example.
+Doing something with async threads is the completely wrong solution here and
+would be much slower.  The amount of time needed to process a single message is
+simply far too short for multithreading to be appropriate on a per message
+basis.
+
+- Eric
 
