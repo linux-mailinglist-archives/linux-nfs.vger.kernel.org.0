@@ -1,200 +1,300 @@
-Return-Path: <linux-nfs+bounces-9420-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9421-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDB0AA1767E
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 05:25:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39CE8A17B26
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 11:15:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B98413A88A9
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 04:25:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CEB73A2427
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 10:15:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B32014D2A0;
-	Tue, 21 Jan 2025 04:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35A0D1EE03C;
+	Tue, 21 Jan 2025 10:14:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="UKJys4Kt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+03zYpp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCFF15C0
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Jan 2025 04:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD311EF08A;
+	Tue, 21 Jan 2025 10:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737433504; cv=none; b=CmUCqmscBWa5ni0rFaGFnU5Xax7L5JkwJAVAqT/iDnWkkcxH8sGPQMTxLYyYvFfPoI+tkV+fzg29rD21fmoZLy0L8uy76Cz8Fz2m0X+UFvRCYHi1izdwk17+dOUWcYUYftbqUonNvQNGFGueavsIb9VceI/2fuV9PiUFldH0LKA=
+	t=1737454493; cv=none; b=C2p22iHMm1akiTrBfat1BoSZVt8FbZYwz1z+g02BLcy+BYKKXH6wsgiTSXDKYRSWIKj34hXVlQHsajEJlFiBLs+KqwcwuI+ykLhz+0yDjWltLI09AZzmbtNq4m6rcYBOxuVC3HLi76CvkHyaTvL3Qr12cBDJh+om/gfHh2Yxg90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737433504; c=relaxed/simple;
-	bh=uNVO6v9VMA5yt50QMSh9AREJ7QEzkg75sptZlOxfpro=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qHl7I06oKLMTQzXmmZe1daFG/v+h2OwL4IclQfYaAjnBm0MZsEzeaXv4VGgcu5bilcS43aj2qi0jbkFiMRbGyrIaMnBo4w4w1X6ijvzGJMaU4QqR0HPBJtMW5MIx+g3p3QvKvFz8+fgYK66ozih2wjLuSRSyPeMbv3V+ySKR0RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=UKJys4Kt; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 77FC33F167
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Jan 2025 04:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1737433495;
-	bh=mtHLkls10lFy085rJGyCFTWe4vtfW2+/d9oBNR5EoMw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
-	b=UKJys4KtsVDJGza7jOo0D2InHIhpckOJrvb06pLEl3Tge+Rz7KtL+0x9nlBvV1SA1
-	 BbQjZL1P+euws9xvjJMA5luP9V0G9GCmAQ/oEB1By51j4wN9Aok889Qd8maS6JrqY7
-	 8e+Mx6TWHOu29nnkuZQistuLxfv4q471Or9ZbktYd1n2AI58oCxMUUI8MIWg236kE5
-	 4VUPsqt0Led7sSOR5FIeMrWTglH4VRPrNvTvhwMCDZrgYoMPwk4BW6KAKMpdbSF81s
-	 LSNqY9EU7vdSXVaY8WkoKc9WuDoqe7T3rkvWeb0V8ABJTv6MYxwB3aH+oJeGT80+tv
-	 qAekLtDSYRU9g==
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa6732a1af5so562601566b.3
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jan 2025 20:24:55 -0800 (PST)
+	s=arc-20240116; t=1737454493; c=relaxed/simple;
+	bh=cV4bLORwr4F4du8QcuRycftA1pl8gNFVZJzX7hzMyfc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oza1V/Jor7M7Xg7cv9Iby7NxvxF0eH9rvTufhPdvUOgqpoIfe2BNxq4klAmIJxGDVqFNZzNCUzvNFPjjZTZWy764vFGKIVB+j4s1hYBVrM1+vd9C6OUGGGqGeQ2hgFQV5yWcnfg4W6FUYCVz7TyLPg+ySSBQ0ho530HZ9i6zH1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H+03zYpp; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab322ecd75dso954823466b.0;
+        Tue, 21 Jan 2025 02:14:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737454489; x=1738059289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BuEtKeQpgLFLLMDeF63QGCMsK3CX26cpME0Sh3NqfxI=;
+        b=H+03zYpptTEooIz78C0OKIi4xc/hUClWX2sz9FuN8A7NHsulJBE3JsTh7lprl3q04O
+         7cE2VbnJh5tPzvZDSf8sXykuQBE4g7xpgcVZv3baawyIGE3RDE58HLVsA75IDIOaJD3s
+         Y7joZWIddZLuSS4O+fizHawWIekDhLWwSQup3arCnSzW/uEYu81FP1nJvBzvww1hz828
+         XT7O046Ywa+w9DlJ8LvFSNGpro/vynGvH2tn+zAeAv/TRInd2xh5mSVtr7HaSeljJurX
+         ibHk0/Tv5FTxo28i1AaON0o+F5rjrGIEAKLgBh2zjsgFh59tnuOfNVO7SOGtcxrePI9Y
+         n6qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737433493; x=1738038293;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mtHLkls10lFy085rJGyCFTWe4vtfW2+/d9oBNR5EoMw=;
-        b=Exul9ucLrD746THgp284+9zyui5T28bhR05KepFmEx0ew6ITILuyNk4JTAqf+Lrm9Y
-         N8ymr4djLewstIoxM8TGwwlF1/xpPdIC+bW/U9q9gPUtZlq6Ua/WdMaY82iM4VuAIqoZ
-         3iZxyEXUTtB1gB/GhfawmSLnCasZ9UiwEgcjZV1RN496yJ14yH/HyL18xjROkecTlCn2
-         svcBDqXlaZU8GwOQnKUUu1KDb6jsXgy2hilO1GCFtBUZNOm3zG1Y7g3R2VYJqi9UfYkS
-         wmAaLUwu0USk7OY95uFKr09z1fuhcgxzoYgaKCcWUbEJW++BSBjYgqBqNSEo6cEUzZmy
-         Nmgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5ya/UHSfE3nArL0Gm2Jz4DitXrzj4JZEJ31aV6dC6L7HgEu6ixY/fSkKe7qImM81yQncydq0qnA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1rPjj1ln56N5NrAE4pwy7tBhVorjpWyirrga19jvKrrvgqSQp
-	EFFSUQIjQ4mXmij7xTyMbkpb2fCbYhCzDHiEH/w/QpDs7FIL1qakmzoMkbJTWntGJ7+S/yz1S39
-	GRmpIBn/JhMr0LCC5IeFi/RhoYYhVsr+q3jI5lIhMBDN+Wt4/mRGSSsCP2dczstOHJ0h6eSGIco
-	FdaHVqYGoxjY3E9KdVXPens/gDuOZdZ9GYylVi/sroZfBK5whkZaIx++dOfFA=
-X-Gm-Gg: ASbGnctjbOsU8DsWKODpt3h8EyH3H109emuVPvvHI39BdwjaBYUp1tUrotKQmqEkD79
-	058GwoyQpcZF/HIjE+RFSwY4ACoQMZPAKJrAPK2VlNUUlpNy/ZYmy
-X-Received: by 2002:a17:907:3f0b:b0:aa6:ab70:4a78 with SMTP id a640c23a62f3a-ab38b44de69mr1638521966b.37.1737433493365;
-        Mon, 20 Jan 2025 20:24:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH6xbpsYSq6Ir9rAMuQrjst4Vqu7PjcUBVwxUxLYvaYlyHWBt31djoW91D9mg7Xsf4shAxa+rLrBHfP63QS8iU=
-X-Received: by 2002:a17:907:3f0b:b0:aa6:ab70:4a78 with SMTP id
- a640c23a62f3a-ab38b44de69mr1638520266b.37.1737433492979; Mon, 20 Jan 2025
- 20:24:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737454489; x=1738059289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BuEtKeQpgLFLLMDeF63QGCMsK3CX26cpME0Sh3NqfxI=;
+        b=xU7tAK3ARgNvLvpzvxeVJn5V0yPZ0ARdPrRMEAyDB20AW1oRzqekZOeVAuZX7qSlD6
+         2PXFy8UUtu3YihEUSBgb7I1NCXNF7jI2qrhXyFNHuG/mwz6iWCkSq3a2ZfvqlOYHnr3i
+         mYGWrPVXY9LbQc0yazzaCtqLninHWgr4thzX/nLY6cAvhdAzlxrUB6h/XARVR/16AXLE
+         O7fbnola7byufu9Sfg7wdZjcfK3+czUmrjGMwP63rREP22aaY8S2Rw/MSs1Hf0Rb5TvG
+         J77Nc6bdtL019EyoI6o61mLXurdMZP2frYV0K8uWiRH314Ygdxoq4GpD3mP81SuXBAk5
+         ejyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUiPQaUZ+LpkPNtIWPZb3uj0eaYyfMZAHHxXOcnj0za708fy932BH/B3YrYQVivYs6TmcDnafxsqyOa3Din@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoQ/8upnD4DUsESMKN5is0A7DBoVt6rlQzC4sIbUphIO3xqith
+	2x/OoHYhHxYWKT5fPfaUsLjTESGc6xEkC6z831fXz9i2d/67yGAFjHywe2aTaXHVVtHkJsI52vG
+	1EHOYoXEPQRE2YEwVDa1UBo142gk=
+X-Gm-Gg: ASbGncvkdlzSWiheOWMD8koIObo4KTjHb6ek9d0kSRpDnKTjDlq5a2m1F8R1/pL7r/F
+	gmyPQKO5jD+lvylzfr3dMo0UUyV0f0ydkmJd1y7isoITX1CeOJHI=
+X-Google-Smtp-Source: AGHT+IHSQn/YsyC7DxRyHJeMq0bBsg/h8l78N8u/8N2eSpqxA35IlgBci4WecJ3vSWVgKXaKu9AGuQkuF9B6CFVYWfU=
+X-Received: by 2002:a17:907:72c3:b0:aab:882e:921e with SMTP id
+ a640c23a62f3a-ab38cbabdd0mr1565273066b.2.1737454488868; Tue, 21 Jan 2025
+ 02:14:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Chengen Du <chengen.du@canonical.com>
-Date: Tue, 21 Jan 2025 12:24:42 +0800
-X-Gm-Features: AbW1kvaplc9NwF_zUfxXcesBUOwWNgXOrve7n6urpM7FOfyVZH9jmh7-omsPMAc
-Message-ID: <CAPza5qc1tiBD4pbqq7GLGfbW6vNfJyJ7dC0fxBCWr2xppG=C=w@mail.gmail.com>
-Subject: [NFS Session Trunking] Failure to Function When One Connection is Disconnected
-To: trondmy@kernel.org, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+References: <20250120172016.397916-1-amir73il@gmail.com> <c47d74711fc88bda03ef06c390ef342d00ca4cba.camel@hammerspace.com>
+ <CAOQ4uxgQbEwww8QFHo2wHMm2K2XR+UmOL3qTbr-gJuxqZxqnsQ@mail.gmail.com>
+ <9fc1d00dc27daad851f8152572764ae6fe604374.camel@hammerspace.com>
+ <CAOQ4uxiLsfK0zRGdMCqsvUzsQ05gkvQCJbsUiRcrS3o-sCPf1A@mail.gmail.com>
+ <f7c76f0e70762a731de62f2db67cddba79ad03d0.camel@hammerspace.com>
+ <CAOQ4uxhXuHPsaqzH7SJ-W93dX4ZCJip3CN_P9ZY5f5eb95k6Qg@mail.gmail.com> <c439ea3a925b237c9b2fb127a17819ccef898a58.camel@hammerspace.com>
+In-Reply-To: <c439ea3a925b237c9b2fb127a17819ccef898a58.camel@hammerspace.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 21 Jan 2025 11:14:36 +0100
+X-Gm-Features: AbW1kvbk9HN6gScXsJH_mjra6RY_GfR0Q0YZOlmVnsPBPygSRe78PJVpyLeLhwM
+Message-ID: <CAOQ4uxgheec3hw3GOVSx41A1c8hOrjN08_=DrzpwWob7VFSHxA@mail.gmail.com>
+Subject: Re: [PATCH] nfsd: map EBUSY for all operations
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "jlayton@kernel.org" <jlayton@kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "neilb@suse.de" <neilb@suse.de>, 
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, Jan 20, 2025 at 11:15=E2=80=AFPM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Mon, 2025-01-20 at 22:11 +0100, Amir Goldstein wrote:
+> > On Mon, Jan 20, 2025 at 8:29=E2=80=AFPM Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Mon, 2025-01-20 at 20:14 +0100, Amir Goldstein wrote:
+> > > > On Mon, Jan 20, 2025 at 7:45=E2=80=AFPM Trond Myklebust
+> > > > <trondmy@hammerspace.com> wrote:
+> > > > >
+> > > > > On Mon, 2025-01-20 at 19:21 +0100, Amir Goldstein wrote:
+> > > > > > On Mon, Jan 20, 2025 at 6:28=E2=80=AFPM Trond Myklebust
+> > > > > > <trondmy@hammerspace.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, 2025-01-20 at 18:20 +0100, Amir Goldstein wrote:
+> > > > > > > > v4 client maps NFS4ERR_FILE_OPEN =3D> EBUSY for all
+> > > > > > > > operations.
+> > > > > > > >
+> > > > > > > > v4 server only maps EBUSY =3D> NFS4ERR_FILE_OPEN for
+> > > > > > > > rmdir()/unlink()
+> > > > > > > > although it is also possible to get EBUSY from rename()
+> > > > > > > > for
+> > > > > > > > the
+> > > > > > > > same
+> > > > > > > > reason (victim is a local mount point).
+> > > > > > > >
+> > > > > > > > Filesystems could return EBUSY for other operations, so
+> > > > > > > > just
+> > > > > > > > map
+> > > > > > > > it
+> > > > > > > > in server for all operations.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > > > > > > > ---
+> > > > > > > >
+> > > > > > > > Chuck,
+> > > > > > > >
+> > > > > > > > I ran into this error with a FUSE filesystem and returns
+> > > > > > > > -
+> > > > > > > > EBUSY
+> > > > > > > > on
+> > > > > > > > open,
+> > > > > > > > but I noticed that vfs can also return EBUSY at least for
+> > > > > > > > rename().
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > > Amir.
+> > > > > > > >
+> > > > > > > >  fs/nfsd/vfs.c | 10 ++--------
+> > > > > > > >  1 file changed, 2 insertions(+), 8 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> > > > > > > > index 29cb7b812d713..a61f99c081894 100644
+> > > > > > > > --- a/fs/nfsd/vfs.c
+> > > > > > > > +++ b/fs/nfsd/vfs.c
+> > > > > > > > @@ -100,6 +100,7 @@ nfserrno (int errno)
+> > > > > > > >               { nfserr_perm, -ENOKEY },
+> > > > > > > >               { nfserr_no_grace, -ENOGRACE},
+> > > > > > > >               { nfserr_io, -EBADMSG },
+> > > > > > > > +             { nfserr_file_open, -EBUSY},
+> > > > > > > >       };
+> > > > > > > >       int     i;
+> > > > > > > >
+> > > > > > > > @@ -2006,14 +2007,7 @@ nfsd_unlink(struct svc_rqst
+> > > > > > > > *rqstp,
+> > > > > > > > struct
+> > > > > > > > svc_fh *fhp, int type,
+> > > > > > > >  out_drop_write:
+> > > > > > > >       fh_drop_write(fhp);
+> > > > > > > >  out_nfserr:
+> > > > > > > > -     if (host_err =3D=3D -EBUSY) {
+> > > > > > > > -             /* name is mounted-on. There is no perfect
+> > > > > > > > -              * error status.
+> > > > > > > > -              */
+> > > > > > > > -             err =3D nfserr_file_open;
+> > > > > > > > -     } else {
+> > > > > > > > -             err =3D nfserrno(host_err);
+> > > > > > > > -     }
+> > > > > > > > +     err =3D nfserrno(host_err);
+> > > > > > > >  out:
+> > > > > > > >       return err;
+> > > > > > > >  out_unlock:
+> > > > > > >
+> > > > > > > If this is a transient error, then it would seem that
+> > > > > > > NFS4ERR_DELAY
+> > > > > > > would be more appropriate.
+> > > > > >
+> > > > > > It is not a transient error, not in the case of a fuse file
+> > > > > > open
+> > > > > > (it is busy as in locked for as long as it is going to be
+> > > > > > locked)
+> > > > > > and not in the case of failure to unlink/rename a local
+> > > > > > mountpoint.
+> > > > > > NFS4ERR_DELAY will cause the client to retry for a long time?
+> > > > > >
+> > > > > > > NFS4ERR_FILE_OPEN is not supposed to apply
+> > > > > > > to directories, and so clients would be very confused about
+> > > > > > > how
+> > > > > > > to
+> > > > > > > recover if you were to return it in this situation.
+> > > > > >
+> > > > > > Do you mean specifically for OPEN command, because commit
+> > > > > > 466e16f0920f3 ("nfsd: check for EBUSY from
+> > > > > > vfs_rmdir/vfs_unink.")
+> > > > > > added the NFS4ERR_FILE_OPEN response for directories five
+> > > > > > years
+> > > > > > ago and vfs_rmdir can certainly return a non-transient EBUSY.
+> > > > > >
+> > > > >
+> > > > > I'm saying that clients expect NFS4ERR_FILE_OPEN to be returned
+> > > > > in
+> > > > > response to LINK, REMOVE or RENAME only in situations where the
+> > > > > error
+> > > > > itself applies to a regular file.
+> > > >
+> > > > This is very far from what upstream nfsd code implements (since
+> > > > 2019)
+> > > > 1. out of the above, only REMOVE returns NFS4ERR_FILE_OPEN
+> > > > 2. NFS4ERR_FILE_OPEN is not limited to non-dir
+> > > > 3. NFS4ERR_FILE_OPEN is not limited to silly renamed file -
+> > > >     it will also be the response for trying to rmdir a mount
+> > > > point
+> > > >     or trying to unlink a file which is a bind mount point
+> > >
+> > > Fair enough. I believe the name given to this kind of server
+> > > behaviour
+> > > is "bug".
+> > >
+> > > >
+> > > > > The protocol says that the client can expect this return value
+> > > > > to
+> > > > > mean
+> > > > > it is dealing with a server with Windows-like semantics that
+> > > > > doesn't
+> > > > > allow these particular operations while the file is being held
+> > > > > open. It
+> > > > > says nothing about expecting the same behaviour for
+> > > > > mountpoints,
+> > > > > and
+> > > > > since the latter have a very different life cycle than file
+> > > > > open
+> > > > > state
+> > > > > does, you should not treat those cases as being the same.
+> > > >
+> > > > The two cases are currently indistinguishable in nfsd_unlink(),
+> > > > but
+> > > > it could check DCACHE_NFSFS_RENAMED flag if we want to
+> > > > limit NFS4ERR_FILE_OPEN to this specific case - again, this is
+> > > > upstream code - nothing to do with my patch.
+> > > >
+> > > > FWIW, my observed behavior of Linux nfs client for this error
+> > > > is about 1 second retries and failure with -EBUSY, which is fine
+> > > > for my use case, but if you think there is a better error to map
+> > > > EBUSY it's fine with me. nfsv3 maps it to EACCES anyway.
+> > > >
+> > > >
+> > >
+> > > When doing LINK, RENAME, REMOVE on a mount point, I'd suggest
+> > > returning
+> > > NFS4ERR_XDEV, since that is literally a case of trying to perform
+> > > the
+> > > operation across a filesystem boundary.
+> >
+> > I would not recommend doing that. vfs hides those tests in
+> > vfs_rename(), etc
+> > I don't think that nfsd should repeat them for this specialize
+> > interpretation,
+> > because to be clear, this is specially not an EXDEV situation as far
+> > as vfs
+> > is concerned.
+>
+> That's not how protocols work.
+>
+> The server is required to use the appropriate error as determined by
+> the protocol spec. It is then up to the client to interpret that error
+> according to its context.
+>
+> IOW: It doesn't matter what POSIX may say here, or what errors the VFS
+> may want to see on the client. The server should be using NFS4ERR_XDEV
+> because the spec says it should use that error to signal this
+> condition.
+>
 
-We have a customer experiencing an issue with session trunking.
-The NFS client is utilizing two connections with different IPs to
-connect to the NFS server as outlined below:
-root@nfs-client:~# mount -t nfs -o vers=4.1,max_connect=2
-192.168.122.77:/share /mnt
-root@nfs-client:~# mount -t nfs -o vers=4.1,max_connect=2
-192.168.122.13:/share /mnt
+Which condition exactly?
+I really doubt that the spec know and refers to bind mounts
+wrt NFS4ERR_XDEV
 
-If one of the connections is disconnected, network traffic ceases on
-both links, and access to the NFS share is no longer possible.
+~# mount /dev/vdf /vdf
+~# mount --bind /vdf /mnt/
+~# mount --make-private /mnt/
+~# mkdir /mnt/emptydir
+~# mount -t tmpfs none /mnt/emptydir
+~# rmdir /vdf/emptydir/
+rmdir: failed to remove '/vdf/emptydir/': Device or resource busy
+~# touch /vdf/a
+~# strace -e renameat2 mv /vdf/a /vdf/emptydir/a
+renameat2(AT_FDCWD, "/vdf/a", AT_FDCWD, "/vdf/emptydir/a", RENAME_NOREPLACE=
+) =3D 0
 
-I have conducted a preliminary analysis and would greatly appreciate
-additional opinions on this matter.
-NFS relies on the Linux SUNRPC subsystem to facilitate communication
-between the client and server.
-When session trunking is enabled, multiple transport handles can be
-identified using the `rpcctl xprt` command:
-root@nfs-client:~# rpcctl xprt
-xprt-0: tcp, 192.168.122.13, port 2049, state <CONNECTED,BOUND>
-Source: 192.168.122.138, port 1023, Requests: 2
-Congestion: cur 0, win 256, Slots: min 2, max 65536
-Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
-xprt-1: tcp, 192.168.122.77, port 2049, state <CONNECTED,BOUND>, main
-Source: 192.168.122.138, port 1000, Requests: 2
-Congestion: cur 0, win 256, Slots: min 2, max 65536
-Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+The definition of this condition is outside the scope of the NFS protocol,
+so I'd rather not special case it for nfsd.
 
-When the client accesses an NFS share, the rpc_run_task() function is
-called to handle RPC operations.
-Within this function, rpc_task_set_transport() is invoked to select a
-transport for communication.
-The transport selection occurs in a round-robin fashion, which may
-result in a broken connection being chosen.
-This can cause the RPC operation to block until the connection is restored.
-However, the XPRT_OFFLINE flag can be utilized to avoid selecting a
-disconnected transport.
-The XPRT_OFFLINE flag can be set via a corresponding sysfs entry.
-By marking the disconnected transport as offline, we have confirmed
-that the NFS share continues to function as expected.
-
-[NFS Server]
-root@nfs-server:~# ip addr
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN
-group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host noprefixroute
-       valid_lft forever preferred_lft forever
-2: enp1s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast
-state UP group default qlen 1000
-    link/ether 52:54:00:af:98:14 brd ff:ff:ff:ff:ff:ff
-    inet 192.168.122.46/24 metric 100 brd 192.168.122.255 scope global
-dynamic enp1s0
-       valid_lft 2369sec preferred_lft 2369sec
-    inet6 fe80::5054:ff:feaf:9814/64 scope link
-       valid_lft forever preferred_lft forever
-3: enp7s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast
-state UP group default qlen 1000
-    link/ether 52:54:00:a5:9f:e6 brd ff:ff:ff:ff:ff:ff
-    inet 192.168.122.77/24 metric 100 brd 192.168.122.255 scope global
-dynamic enp7s0
-       valid_lft 3591sec preferred_lft 3591sec
-    inet6 fe80::5054:ff:fea5:9fe6/64 scope link
-       valid_lft forever preferred_lft forever
-4: enp8s0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc
-pfifo_fast state DOWN group default qlen 1000
-    link/ether 52:54:00:91:20:32 brd ff:ff:ff:ff:ff:ff
-    inet6 fe80::5054:ff:fe91:2032/64 scope link
-       valid_lft forever preferred_lft forever
-
-[NFS Client]
-root@nfs-client:/sys/kernel/sunrpc/xprt-switches/switch-0/xprt-0-tcp#
-cat dstaddr
-192.168.122.13 (The IP address assigned to the enp8s0 interface on the
-NFS server.)
-root@nfs-client:/sys/kernel/sunrpc/xprt-switches/switch-0/xprt-0-tcp#
-echo offline > xprt_state
-root@nfs-client:/sys/kernel/sunrpc/xprt-switches/switch-0/xprt-0-tcp#
-cat xprt_state
-state= CONNECTED   BOUND      OFFLINE
-root@nfs-client:/sys/kernel/sunrpc/xprt-switches/switch-0/xprt-0-tcp#
-mount | grep share
-192.168.122.77:/share on /mnt type nfs4
-(rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,max_connect=2,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.138,local_lock=none,addr=192.168.122.77)
-root@nfs-client:/sys/kernel/sunrpc/xprt-switches/switch-0/xprt-0-tcp# ls /mnt/
-rw.test
-
-This approach is not practical for users to manage, as the status of
-the main transport cannot be modified.
-While the XPRT_OFFLINE flag is helpful, the NFS mechanism does not
-offer an automated method to set it.
-
-I understand that this behavior may not have been explicitly defined in the RFC.
-A possible solution could involve detecting the link status before
-processing RPC operations and using the XPRT_OFFLINE flag to control
-the behavior.
-Alternatively, introducing a new method in the SUNRPC subsystem to
-constrain transport targets by providing a list of candidates might
-also be effective.
-As I am not an expert in this area, I would greatly appreciate any
-insights or suggestions regarding this issue.
-If this is identified as an issue requiring a fix, I would be
-delighted to contribute to its resolution.
-
-Your feedback on this matter is highly valued.
-
-Best regards,
-Chengen Du
+Thanks,
+Amir.
 
