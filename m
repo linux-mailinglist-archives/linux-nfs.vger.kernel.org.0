@@ -1,148 +1,176 @@
-Return-Path: <linux-nfs+bounces-9417-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9418-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A12A17509
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 00:34:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64408A175DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 02:49:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 943493AA33C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jan 2025 23:34:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 647903A8047
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 01:49:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF5F51B87EB;
-	Mon, 20 Jan 2025 23:34:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F63612C499;
+	Tue, 21 Jan 2025 01:49:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K+VZqfF9"
+	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="igX2CbDy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from hyub.org (hyub.org [45.33.94.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B6D155A52;
-	Mon, 20 Jan 2025 23:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ED04A32
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Jan 2025 01:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737416044; cv=none; b=RtMbUIBkg06+iYAplmXBq+mSsnSV3v4qTREMMTwu0g5RaJJfaOa8/OcXL4SBjIC+E6Uc8Hkh9A1h3BE45n2VtvUwyCfUWSOQM/+fido/RiK9sf9RdShJTNcFBd9EE4LSL3VilWjl8cp9fGLAjXs1fjdOHajFsCidPqJf8aInfNI=
+	t=1737424172; cv=none; b=UXgekG9YElZdqABk1YJNi+0pA5+Pxen7kTiCPv70CwMF5Nwidv2V/TyarXs9TaDGyKoKp4/wfH8QeMKPXLfd7CQT4NNyuD1H6M6gFurmj1gJKPX9DtDx4X6oT0Vb00u9ei7O7siB1PnBD39TIaxhU6a6B/816BqD31I2qKzmTqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737416044; c=relaxed/simple;
-	bh=q2+z/AgrVg9lawfRF/HooN7I+8BGHSJn+qg8UYQub/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u7RsKBeu+IsswviTwxzWln15Me1kVAGRx5TYT/a6XYQAT1xtRnipZxC3z+153rR6mrgyM65ILiAVClazyQQUPCtqSXgOR8iput3lKb+Ffyl3jj1WgsWzjZzpD+uTEroDRxMiIvxR4+AclX4M3mPxPC9Qqc2kvjGOYjCmBKGYBaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=K+VZqfF9; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1737416029;
-	bh=i1JYFYbVyeyYAlFOmNEBG1xB/oZu928Wo1ZuODRiPIQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K+VZqfF9cMMN5NWU8yMt4t9oBZKvuWRTEhVQPOBAypMhut8pTtfEATcx5+ocvgEdI
-	 JXklTH5EakT/2c4YlYtAMQ9+kGQ4iWbwRTo8xxfe6LhYa5gRul5P+HO5votcWALU5S
-	 YG592Io7FVQBmvmP51wDvDImv2ppe80Rz6QHVWiK3tSnV/zjS3BwGTBHsSD3gQc0pz
-	 4gvirZPScznHc2wQSWoPtGsc2Cd25VDx3uvz/r10CE5bVpUCS1gAP/T8WW6bcc4RRw
-	 +4meYOIl+zZmjPzz+8P/fs6JsozOhBc9JnTOQHPXH4v398g7JtcOMDO7VFsIaGJ4I9
-	 rHpk+uIlkmJVQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YcRVj0vntz4wcD;
-	Tue, 21 Jan 2025 10:33:49 +1100 (AEDT)
-Date: Tue, 21 Jan 2025 10:33:56 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, NFS Mailing List
- <linux-nfs@vger.kernel.org>, Anna Schumaker <anna.schumaker@oracle.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Mike Snitzer
- <snitzer@kernel.org>
-Subject: Re: linux-next: manual merge of the vfs-brauner tree with the
- nfs-anna tree
-Message-ID: <20250121103356.10d8a15c@canb.auug.org.au>
-In-Reply-To: <20250109084503.1e046ef7@canb.auug.org.au>
-References: <20250109084503.1e046ef7@canb.auug.org.au>
+	s=arc-20240116; t=1737424172; c=relaxed/simple;
+	bh=g1YTQq9kTn8DX97gWE1kSbBzUFNTd3JwaFjuQIZeBHI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XgKoqxjKqTUG+e+sdtI0zjQZimJyqyng05GXACaPcd7Lbu9lXuwMRbHpuJ8SGEt7hDZB1NOZbKH6kCix4xbUFsZO2OTgKFFg/zjSxdhzjIx1IGvyv0Vfd0jJNtbgqfL0i9nN14gpHfvfh3at6Xsu6Q3FqRa7XdCLSF6M2SiYoUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=igX2CbDy; arc=none smtp.client-ip=45.33.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
+	t=1737419315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=I9vj3RGxp9gkK1EpnHyeWkej3RZk6/LyZi83tfDpFUw=;
+	b=igX2CbDytBjOAm2HkwAy3OsCGFVyOJu1MrQoPZC3ZxQibZH95zCpZGj5n1vGuDKax9A1Od
+	9R5t7aSkZhyaw4OMwAooeaYAeWxoNDoflt42EaB4ZXiYDqHNNydvcxDX7jjDdJzPf0oEBp
+	meMoYMAh3z382ZBxSciNTWy9WS1jGKoPNsLHnShsaag0KGIpggrarxZUPO8+48HZHmDnfS
+	tAsNpbKA3/rRYHh1+/PiIxelXtUzlgnX2zhHArP5Tn2lgqOd2iP5Ms5vNofwdCqnA218gL
+	JFvzBm5cxtQTEU4poR9AMiE3GITpGN12ATJNR2NxlzWr/baEnX8soIDk+CXUzg==
+From: Christopher Bii <christopherbii@hyub.org>
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org,
+	Christopher Bii <christopherbii@hyub.org>
+Subject: [PATCH] Removed nfsd_path_(read|write) methods as they are pointless.
+Date: Mon, 20 Jan 2025 20:48:54 -0500
+Message-ID: <20250121014853.7428-2-christopherbii@hyub.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=IcfgXVQE4sfyNzIqvH4xt3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/=IcfgXVQE4sfyNzIqvH4xt3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christopher Bii <christopherbii@hyub.org>
+---
+ support/export/cache.c      |  4 +--
+ support/export/export.c     |  2 +-
+ support/include/nfsd_path.h |  3 ---
+ support/misc/nfsd_path.c    | 49 -------------------------------------
+ 4 files changed, 3 insertions(+), 55 deletions(-)
 
-Hi all,
+diff --git a/support/export/cache.c b/support/export/cache.c
+index 6859a55b..0f6cf443 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -59,12 +59,12 @@ static int is_mountpoint(const char *path)
+ 
+ static ssize_t cache_read(int fd, char *buf, size_t len)
+ {
+-	return nfsd_path_read(fd, buf, len);
++	return read(fd, buf, len);
+ }
+ 
+ static ssize_t cache_write(int fd, void *buf, size_t len)
+ {
+-	return nfsd_path_write(fd, buf, len);
++	return write(fd, buf, len);
+ }
+ 
+ static bool path_lookup_error(int err)
+diff --git a/support/export/export.c b/support/export/export.c
+index 2c8c3335..e50af371 100644
+--- a/support/export/export.c
++++ b/support/export/export.c
+@@ -463,7 +463,7 @@ int export_test(struct exportent *eep, int with_fsid)
+ 	fd = open("/proc/net/rpc/nfsd.export/channel", O_WRONLY);
+ 	if (fd < 0)
+ 		return 0;
+-	n = nfsd_path_write(fd, buf, strlen(buf));
++	n = write(fd, buf, strlen(buf));
+ 	close(fd);
+ 	if (n < 0)
+ 		return 0;
+diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
+index f600fb5a..f43040d5 100644
+--- a/support/include/nfsd_path.h
++++ b/support/include/nfsd_path.h
+@@ -24,9 +24,6 @@ int		nfsd_path_statfs(const char *pathname,
+ 
+ char *		nfsd_realpath(const char *path, char *resolved_path);
+ 
+-ssize_t		nfsd_path_read(int fd, void* buf, size_t len);
+-ssize_t		nfsd_path_write(int fd, void* buf, size_t len);
+-
+ int		nfsd_name_to_handle_at(int fd, const char *path,
+ 				       struct file_handle *fh,
+ 				       int *mount_id, int flags);
+diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
+index caec33ca..99c41206 100644
+--- a/support/misc/nfsd_path.c
++++ b/support/misc/nfsd_path.c
+@@ -203,55 +203,6 @@ nfsd_realpath(const char *path, char *resolved_buf)
+         return realpath_buf.res_ptr;
+ }
+ 
+-struct nfsd_rw_data {
+-	int             fd;
+-	void*           buf;
+-	size_t          len;
+-        ssize_t         bytes_read;
+-};
+-
+-static void
+-nfsd_readfunc(void *data)
+-{
+-        struct nfsd_rw_data* t = (struct nfsd_rw_data*)data;
+-        t->bytes_read = read(t->fd, t->buf, t->len);
+-}
+-
+-static ssize_t
+-nfsd_run_read(int fd, void* buf, size_t len)
+-{
+-        struct nfsd_rw_data d = { .fd = fd, .buf = buf, .len = len };
+-        nfsd_run_task(nfsd_readfunc, &d);
+-	return d.bytes_read;
+-}
+-
+-ssize_t
+-nfsd_path_read(int fd, void* buf, size_t len)
+-{
+-	return nfsd_run_read(fd, buf, len);
+-}
+-
+-static void
+-nfsd_writefunc(void *data)
+-{
+-	struct nfsd_rw_data* d = data;
+-	d->bytes_read = write(d->fd, d->buf, d->len);
+-}
+-
+-static ssize_t
+-nfsd_run_write(int fd, void* buf, size_t len)
+-{
+-        struct nfsd_rw_data d = { .fd = fd, .buf = buf, .len = len };
+-        nfsd_run_task(nfsd_writefunc, &d);
+-	return d.bytes_read;
+-}
+-
+-ssize_t
+-nfsd_path_write(int fd, void* buf, size_t len)
+-{
+-	return nfsd_run_write(fd, buf, len);
+-}
+-
+ #if defined(HAVE_NAME_TO_HANDLE_AT)
+ struct nfsd_handle_data {
+ 	int fd;
+-- 
+2.48.0
 
-On Thu, 9 Jan 2025 08:45:03 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> Today's linux-next merge of the vfs-brauner tree got a conflict in:
->=20
->   fs/nfsd/filecache.c
->=20
-> between commit:
->=20
->   735aab1241ea ("nfsd: nfsd_file_acquire_local no longer returns GC'd nfs=
-d_file")
->=20
-> from the nfs-anna tree and commits:
->=20
->   f905e00904cc ("tree-wide: s/revert_creds()/put_cred(revert_creds_light(=
-))/g")
->   51c0bcf0973a ("tree-wide: s/revert_creds_light()/revert_creds()/g")
->=20
-> from the vfs-brauner tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc fs/nfsd/filecache.c
-> index 2adf95e2b379,dc5c9d8e8202..000000000000
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@@ -1255,8 -1247,8 +1255,8 @@@ nfsd_file_acquire_local(struct net *net
->   	__be32 beres;
->  =20
->   	beres =3D nfsd_file_do_acquire(NULL, net, cred, client,
->  -				     fhp, may_flags, NULL, pnf, true);
->  +				     fhp, may_flags, NULL, pnf, false);
-> - 	revert_creds(save_cred);
-> + 	put_cred(revert_creds(save_cred));
->   	return beres;
->   }
->  =20
-
-This is now a conflict between the nfs-anna tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=IcfgXVQE4sfyNzIqvH4xt3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmeO3WQACgkQAVBC80lX
-0Gz87Qf/Uz3fxZOFqYzAhWcHcdRwV+3nfDH8UXcAop/wnPRVewSoNFgvuJk9MxRU
-Ci829lmxn8qCMWjpaLiKcIX2mQHDW+aKwooqiUZqWu8EQpQ3fOEnPj1UtxfJizA5
-VhpgDUvqeX++315iVmyWprkSjySDykibDDs91anIogpF3WlY29xa0s40dLYfPAqU
-L35DRShk84KiscXV+5xFwCIH6zcP3771NyQiLzYDmA8AnUL43tqFhg2qzS3WMKvr
-mJoQVNcPt3CVMMjxz18tgurNYVVb55G//epbKFDw0K8TgddFOYzynOEs2cP8VmJz
-HPjUKgQ5C9uWbAxayugdghl5leYamQ==
-=P5kQ
------END PGP SIGNATURE-----
-
---Sig_/=IcfgXVQE4sfyNzIqvH4xt3--
 
