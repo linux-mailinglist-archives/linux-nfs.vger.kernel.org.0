@@ -1,316 +1,234 @@
-Return-Path: <linux-nfs+bounces-9441-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9442-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69C41A185CE
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 20:45:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D84CA18640
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 21:51:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5BCE63A140D
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 19:45:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 089CE1889232
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 20:51:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B521F4E20;
-	Tue, 21 Jan 2025 19:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A9AE1F4285;
+	Tue, 21 Jan 2025 20:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Zx3vX/78";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xIy2+XoT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ut/up3/q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892FB1AC88B;
-	Tue, 21 Jan 2025 19:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737488744; cv=fail; b=cU3z+s6lEPchGDk3u7kjCUbHF6m64ybz2jOHopwQHnRG7uvhR+mD83HqLw4E+E67cyilWzWz3aHc4wg6cnWJXFXCZ+sagyB5Zm7OLqaOpCwS0zAuOEOkmH8Xqb6afZMLSQE4woXkBpW6dZxwhV9f/ov61mDNYDv2+/rwJUrfM5o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737488744; c=relaxed/simple;
-	bh=Rd+P/A/TVd6j0DlOPCBg6hiTxvbTPP0YNHp2m3OHcaw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=L4GOiBYrrw64FxiVmf1BNdcz8IXW1lVoaatBoVyx8zcOybtYo7loDQcWYEg38gSxMiYgl/7KelRQ6Rml+WVddeSq3cXJmeAQ5K0V+iAvuHPDSx7DPeXMOusv74UBZGdoza8b1nRr3DBvao+oPRDIXitYF1lKeTLO5yv+Zb0+BIE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Zx3vX/78; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xIy2+XoT; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50LJJtlb020660;
-	Tue, 21 Jan 2025 19:45:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=NfoEEBXNuqioXypBs9N1ZE466hMnqegEaIS0p7J2EoQ=; b=
-	Zx3vX/78Hr02B1ddI1jQMye9X76rPhq9vaUFeS4TOaU/Jnsf6dfpGuemaaCNAOpj
-	aeZTZqVmnS7o2kIf89e48PYEJrf1+yWfyGqg9Peq/2YYPP5gwDPkyVNDoW3zxXHT
-	JYzniWC6P2ea6YXxWPfGcAENd3OHArFgWOCXuBJxb7cV030kJ6sP2pUF9+3eKEly
-	AYJTEpNr+1BkLPLVxSDJk79fuT53GFEsMUeYI8UW6YhglXEHbp3WpefpdtLy1X7t
-	o5hBajY0vtFLMPKpqI27kYY8jOIulP8iv0GJSO3dAlltofOISikTLF9T0LwwtQ1j
-	zv7WIWmKQFkJW42paf8UaQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4485nse62d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Jan 2025 19:45:18 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50LJELwp030420;
-	Tue, 21 Jan 2025 19:45:18 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4491fj8ys2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Jan 2025 19:45:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v8WrQHSjbSEFv1eJZUkIS6DKj81OFr49of2ZOieIZMXbrnEFzSMRPZWJvG52DuWE+Aku/fP9GFOWqk3zlRUMlbcgnn0/7kR9todeixjARQT7KX9bcJjEXWHbDprgVC5H65fPA1ZAfjIQLDSr9MtQmplETX3GnXDHjx88uZmSosJyLhf1vvpb7+iGXV76BY6H9nkEO0IIjbMRDs1J7JtsahtHzz5Kjm2oOSo3yWayQbT/ZNMr1I8C2LJdxcifb0I4Oh2l4ImvDnc+Z8uBB/aC0JuoG/dq/1q3rYOtHUjdFNzn+QXKHfhbbv4rywikyaHbxqi1jYR/h2thGz8+Jvpycw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NfoEEBXNuqioXypBs9N1ZE466hMnqegEaIS0p7J2EoQ=;
- b=G/6eI57++Pjx1t3WqnJOgEG2Ox7FS17a1y+yAqssw0c2gK6tRJ3dGcIPNlq9ohibLOPhNxTEz9gSzI3QrBVCFGjzgHyljKH7f+2hRDtU35FuiXdbbbTwdWwRVfvbkifMSTNp+l/jQcul1h74bCZmeLxHXwXHyMBZuhM+v6shh33Ryv59zUnkiEmWSVPfwSTxyLqrOJzF2m/80CtY9aFsU3eMXpd5fUH/NtqG5rjaUyv9FPpWOq6TK3a1l1NLu0bc76z5YA1qr4HEeh7l3EAIt/3Uam76w0ePbZsE/gUoV6p/1vdSYcx1tcgtLs/itTrFYvfuVXVJs+M/H8PbCIGvdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NfoEEBXNuqioXypBs9N1ZE466hMnqegEaIS0p7J2EoQ=;
- b=xIy2+XoTkjL6bITkBHXhCuDNr04xMG2JJktNqLd+ckzN+gmLbjw/ksuWSKpp0AKGwnIhA6mRxQZyZKeZEILyupNrZgBKmLe4T4rCUAAD/YUvirK+iDUfBVNn6c2+UCfMBTohNZT/xMC59LU1pSQtiT+Pn2L+DqjDpH2pUrayvn0=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB6591.namprd10.prod.outlook.com (2603:10b6:806:2bb::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.20; Tue, 21 Jan
- 2025 19:45:15 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Tue, 21 Jan 2025
- 19:45:15 +0000
-Message-ID: <7d2299dc-b91a-4e23-924a-f3462b69d4bc@oracle.com>
-Date: Tue, 21 Jan 2025 14:45:14 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>, NeilBrown <neilb@suse.de>
-References: <20250121103954.415462-1-amir73il@gmail.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20250121103954.415462-1-amir73il@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR08CA0025.namprd08.prod.outlook.com
- (2603:10b6:610:33::30) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26DE1AF0A6;
+	Tue, 21 Jan 2025 20:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737492657; cv=none; b=rPsVsTwgH5PQAGkV+2pX5FkMJNX2xnK7RN0ZA1Eu6rttac7Ut4/hO2YgaPyRltnABPENdrFgwXCGuiL+XRqsewwziR19qfhY8C/CAO1/xn7JF4Ve0A/995wBzAoCLsaWFyeajR0gHlzC2Mdm8W/yuQQIYVGn6v5Z+Y+lV9q881I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737492657; c=relaxed/simple;
+	bh=L4QsSvUNTuj/BD8oDyelC4osbKQ4lwJhci9EGZVvoDQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tcq4GPl3cVoPEoUZ7nTC7W+lIbgtTIcRt3cX1uoAIXhhRZxXcJrquvzUU+Obzv1eYP8IuCAIhUql8KuttAG5TzVJLaLPU7ia7hRZdR+RHJo/W18ABSUYXCsJiSEZcvkYTBksPqwhWMX8s7KLcBThwGrZmj57Bm6XIxNbZj01E8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ut/up3/q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A629C4CEDF;
+	Tue, 21 Jan 2025 20:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737492656;
+	bh=L4QsSvUNTuj/BD8oDyelC4osbKQ4lwJhci9EGZVvoDQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ut/up3/qCL5+kpEcZu+6sJacaOho45ONUGysrLO7ExFJi3N3heGvo3bAp8wY5iSzh
+	 ngOdHngWnWDfutwjZeSE/D0Fbu5RHmJm9fYMQRvqzv3+6eXav1k39tyV0yFFZSVp9C
+	 Q+VcKfGOK9S1L8pd3IrbOSDb4YdSVKWZCNxN5Uag7N5SJHVfEiPiUnXTN6O2f21Am0
+	 oTNdsjQV+mpuvZEXtvPhRIhQyaVCKV2dEob/fTzMNLYKcJmm2o66SFN7F2VQyoLvdy
+	 gJhEhzBdiswEVbrex3q/I0iFlTvwGY0Ycstqn6/4zKAClPPO60pW+eJXgMuZWCGhqY
+	 2jTkuiUvdZxGQ==
+Message-ID: <6fb21e60487273864136b4912951b5a4fb5b3ae0.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: free nfsd_file by gc after adding it to lru list
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Li Lingfeng
+ <lilingfeng3@huawei.com>, 	neilb@suse.de, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Date: Tue, 21 Jan 2025 15:50:53 -0500
+In-Reply-To: <a453c201-7dd4-49e7-a90a-5dc4c9359f2b@oracle.com>
+References: <20250113025957.1253214-1-lilingfeng3@huawei.com>
+	 <8864761c99553a7f18adc13e98b4ef6255da1d9e.camel@kernel.org>
+	 <a32d4eefe27757de6ad8761e8de740e8d0968561.camel@kernel.org>
+	 <a453c201-7dd4-49e7-a90a-5dc4c9359f2b@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2 (3.54.2-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB6591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8066e6ac-022b-47f1-94ea-08dd3a5420a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dk1RbCtPQjIxRHh1QnJ4R2NqZnZXOEIvMzc5bUpDTVFMb25XRCtSVnpsc05K?=
- =?utf-8?B?T0lzSHJjZkVQWms1RGdPMUQyN3U4bVRRNGlhdWh3WktVZVBqanl2TS9sa0V5?=
- =?utf-8?B?NW5RaFhEajJxUzBQbkNERzFtaGRqanlIMTExS3FheG5RRDdLekxNMGRPVEdT?=
- =?utf-8?B?b21OWS9lNk5veFdtRWdET1IweTdoRXpxZ2pldCtqelFxUDk3Mk5ZMFVkRnRS?=
- =?utf-8?B?bi9ZTXZxNDM1ZEN2Tlk0aUorRjJFaHUyNkI3TGJuWGg4dnltS1JROE55Z2Qw?=
- =?utf-8?B?MzJiM2dFNkw3Z2syK3J0Vmc2SXRiRmE4V3lnZ3ozQnhDZzRoblVLVVUydkNY?=
- =?utf-8?B?RXR4OWJ0QmZjVVBVcHlNeEw1a05DdXkvU1BPcC9mTzVMd0lMNUViZ25CRTJj?=
- =?utf-8?B?MjQ4cFBySG02SVk1TndOcER0dFJMd3J3RjdyWEw0S2dCU2pzL1Y4ZytIZ3B1?=
- =?utf-8?B?Q1ViQmlIZVVSclVEWE1zSmh6clRSTFA4QWJGNEswS0pFYktWV25TbnYybmRi?=
- =?utf-8?B?SVBsTWJBYjUyaGp6ZTYrSHdWQjBCMzJwckl6bU5oRkZUSTNPOVhEMm05dW5C?=
- =?utf-8?B?OHZNRU9Nbmc2YUxaYjNmbG5vZWF4MjMzNkE2MFh0MmVpSmRlZzM2RkEyOCs2?=
- =?utf-8?B?QS9yOGg4d3BNZ2xHRTdPRE9iZmU4RDhFKzBOQmZKcUxyUCsveXRaMzBRZ3lH?=
- =?utf-8?B?UFEvamhoNmFuS3p6ckVYRXZuYVJ4TEc5SnlxQ2g4akdiWEszYTQ3SXlHbVpW?=
- =?utf-8?B?Z2s5c0M5UmhHRlVqanRvSDV5TkZIZEJPbzFEMVFsY3hPN09FcEFnaGhwOTdD?=
- =?utf-8?B?eCsyNXVib2F3MG5EYXFRSVdNKzZyUWM1MDBIRzlBYThoK2oxL2ZUa0Zzb3BV?=
- =?utf-8?B?MEJLMGRKVktJb3Q3OXNkTm04UkpVMTMwT0JQOFpQeTN3Qll1SUFFR3NKeVBS?=
- =?utf-8?B?NFZ3TFYwcjlPSzhmVUl0eG5zU21wZXYzdkYrRVpoMFpYUjhFM1REbGt1eEh1?=
- =?utf-8?B?akdVNTZsKzZaWi9xZFhKWGlxZjVhMmZGVkM4TVN4OE1LODVhcXdrc0ovQkNa?=
- =?utf-8?B?cG9qVmhtY1lzV0dhWlYvVzlQVWtpUzJ6dVp0RWZrRFlNb2JaNVBiVGtUbExZ?=
- =?utf-8?B?d3JlR2Z2L3hEOUx5bWdZNDVpOVZSTDIxU210MHROWmh1VUxRTkhzSHZSVFFF?=
- =?utf-8?B?c3EwRXdOd1dDbFRIVjVCblNDQk9QY1NqVlBzZmlZaGtzTU95RUNla09XbVhV?=
- =?utf-8?B?SWVQQVh1aUx0SnRCTVhRZjAyckQzSGQxUlRzMms1L2ZTYWZsZXpVOCtKM1Vl?=
- =?utf-8?B?d3F0TzFqWjFtOUpFTDR6TFRBR3crOFhRaC9vZFYyT0p5Z29SSExmUFpFSHRY?=
- =?utf-8?B?bDJFZ1RHWHFYaHhTRVA2M0lNWmE5U1FyUVhBaWFFTGpGeWF4L3pRMVVaL0Vz?=
- =?utf-8?B?ZWwvdTEyREhXdTRyRW9mNis0QU9kMUtHMEorc0ZpTWtxSUdoanRRTUREajhX?=
- =?utf-8?B?WGlabWFGK3A3WFJ4aUpKUldwMTJYMmdTZUhwTmM1VUkzVXdVQWgxeVk3RzIz?=
- =?utf-8?B?cWpDOCsyY29YRVIrWmxIZVkxeHhaNEZBeTdvVWFiUEMzRzJBMDZBUU9VNG5j?=
- =?utf-8?B?bXVtOHY1WS93QVMxcUlzbk1hT0ZqWit2QUYvemxsdFE1b0t5RzlRN0hVSzlj?=
- =?utf-8?B?YmhZeWg5RHZIbGhjT0lCSU1FZ2RMdFpqa0trN3hJc1BFVDh2dFRZWkV5WEJI?=
- =?utf-8?B?SE9NUmRiNndzTmVvTGhaZE5idGVtNnF0WDZVQTE2TmN0QVBKMmRKcGtuSHh3?=
- =?utf-8?B?QnJsbEdvMVRZSm1wY1g1dz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?elEzelc2SU9jQXhsU0ovbjRXaEIyTENaMDZTdmN6ZHRJUTN1cmdxeGJpaDNa?=
- =?utf-8?B?OU5PRENWZHhhVDc4eXZjTFp0dDJlUk9DaFYxM0dLdGNkektCbDY4QkZlN2o4?=
- =?utf-8?B?Z2ZXRU85cGpkOCszRHN3d3FVMEN6M0ZvRU5TNHVZTXZwRFBQdGxPeXhZeXky?=
- =?utf-8?B?d2UyZVpOWGdkWFJaMjNCQm1tU1dyWllYOVM1enovK2pLNjFVQnI3Q3JYZkx4?=
- =?utf-8?B?c09LYnJBSDRuRlhsc2FuZzlsNStBTlBFdndEYStIdGFvM3NhdUJQOTNiMjBI?=
- =?utf-8?B?Wm9JcXVMTXp0M1FtdzhrUTdsZU1sYjhYcDJHd25meUVyeHZWMlNEcGlrVXp5?=
- =?utf-8?B?RHBsWkJaRGJaTWg1RHJ5KzRlMUJXcmRWTVBmaytRbSsxZnJCL1A2ZHovOUtn?=
- =?utf-8?B?SjBHRytlTjNEc2k4ZzczeXF4RExqS2RCcjNwUUtaazVQR2hIWmlBV0lEbWhB?=
- =?utf-8?B?SVhHTzRPQ3ZINUNtTUxORUUvTWxtdFJGLzlEeC9pU0NNdlZIbHN3YXE2UWY0?=
- =?utf-8?B?RGlOQ2poc0VZanNvaysvdkF3RmRWN2FwVi9tVmVPMUtWa3V1bHlpWi81TkV3?=
- =?utf-8?B?UUJzL3RQLzlrbFp3MzF0WGw1NXYybFRFRnE0dXRLaWdQa1prVVZKQTVFcW9F?=
- =?utf-8?B?QXY2dVZjcGh0djJvRDF6czJaL0dUUHFyTFZGdk8xRG1nd3dVTG9sUUJlSXUy?=
- =?utf-8?B?ckhZVXhTZDV6Y0hMdnNhTGx0OVUzZE5zMTJmTjdKUzVMWmNqeWZBcDE2UGNj?=
- =?utf-8?B?WjZUNms5eWNRTFlHZHBmTEZ0QmZWQkJDV0c0NmhXb3N6UVE5bmRDOUtyc0Ru?=
- =?utf-8?B?MTZJUzVKY1hyMmJTaDFuUGJTZ2d0Z0pwY2Q5b2V2N1dGajBoUWllcXo4RE5k?=
- =?utf-8?B?SW5kOTRjd0RIbjlpVCtBNC94VjBUd0k4YXR6RzJEWklFeE9TUjZCc0RTYWpN?=
- =?utf-8?B?WUh5QnRncENFQzlrdlZ6WWplM3BQYVhqaWVvOEg2WmxWeEJseUdQekhySUdz?=
- =?utf-8?B?Nk03TGsyVXRGbXl0NzVsWTRxUmJGMUZNZE1ZYjNTMGo3YW04R1BueG8yTjB1?=
- =?utf-8?B?WkRNZEF1VE5vUkNYbkxOVHI5ZjlXdmNMZEM1UjJrOFo3Rm5EeDh2K0MzTXd0?=
- =?utf-8?B?SjEzV1RyZTU2RWJYZGxjc3ExYXVKbGhaR25xZE45TDZRTC9rL0FoeWVYUXpz?=
- =?utf-8?B?UVBuU2lLWlVvRWs5KzlYbytxd3NvWHZWODVHNVhBYkp5ZmcrL0txY1FqbnhM?=
- =?utf-8?B?NWdTTk1IVGxvYytIS1JHcGYvRjY1TitOeFQxd3I0NmJpS3ZaQVFwTU5wQkJ6?=
- =?utf-8?B?R01VdVlKMUFBa3RlNEpGTDk0ZDZRQ2pIdmd5WW44UFlvQmEwNjVMTk1LOEJP?=
- =?utf-8?B?bGYwWE5tUCs5MnhjQ1dsMHNFQzkySEFnS0wwaEt0MENsY0EwT3NvN2NadUpW?=
- =?utf-8?B?OUJRN2pEbnN3RG5HZHB4M3dEeVZmWFJWWGpIVlpVQmxmSTZGZ3ZXWmJQMEND?=
- =?utf-8?B?VVgwUG9GVEtxNS9FRnd5NnJ1dnVIcVlLYWVQNXBEOG05YXhHenF3N2ZqUDda?=
- =?utf-8?B?YTB3OWxUNnhBZWlScDJYem1oUjdLdnVXdEJLUS82Um93VTkyVzRkT0htUFc4?=
- =?utf-8?B?eHA1WTVKRjJZeGJQVlZaYkhnZ3BKSWtwY25URkF4dFJ6dmxCS0xnQlh5VjVS?=
- =?utf-8?B?L2xnbWNFd1lIVnFYdFh3VkRBYWVOa1J0a2NpRjZpc2s2QmxkQ0JoOWhVYlZL?=
- =?utf-8?B?bWhjd3d1TFFZUDhtV2N5amdUeDMwQjd4Z0h1UWZzUVVMVDNSMEpybkszSUR0?=
- =?utf-8?B?SGFsWHZCOWZ0OVhsUnovVG1mNXd0SVZpamF3TDQvd2QvdFkxVXI1RnZ6MnRj?=
- =?utf-8?B?dU85clY2QzcybGNTZjZNeDhFYlgzUlpFbSthL1VkSTFCR1NiTWtkU2NoMmxu?=
- =?utf-8?B?TWF4Z09vUEhXeEhEYWlPemJWemt5MTBGRFNrSU9jK0lVeUVUSFE4emdXMzVP?=
- =?utf-8?B?aE9mc0V3NUFJQ3VQLzNnTHpwbzdNdVVFNE1sUk9XcTI3cVFUaU9jN1p0N1pq?=
- =?utf-8?B?c2drcjZFbzRybFlPTndTNHEzdWM5a0FveWpMR2RMZis4WHk2dU1ORkdiUCs3?=
- =?utf-8?B?U3JTMk4ydnl3N2JyY3BScDdyMnppbTUxMFpYemZvT1dMb05Ba2tkZVhhYkl5?=
- =?utf-8?B?c1E9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	e80r6mF5NnQ2/XZ+ONBBvFqWemQ2a2FgTXsqL/WqIaC0sPk3J/TAbON8qZHyXH2n4rVxg5nVm3cocfZusWjkXAxsoOw+VC4cbjAPVLeSiTMmRbuyUMeXAvZWg7DwCOimr7MtwHVjLkSNpd9/shJzdHk5s+t13QgAudpU+eY0euuHDi3prRr6Vx1TQunycg1PJI6QeDnnJnFsBNM9m/T9M5wZ7evTCxlFDBFFtuRdylPRBV3JgWCYW1DkaHlxctOylxh/dHb/DuRYGwb5rkxqBmeiPG9EAKI1xRQoOFb67UtD5TYmn4b9olBYKTHJhujl17qHqb9m/URAN2tcrllhqeBxJvKp3RotLbyNMTdE8+ezppq0pQfnDGU2Viw+x9rB/kb3MWotbFOlX9T+dopEyygy/4AcZLfJpCOLgn8ygfFF8zMW2gmknWTKK91sTiNMKRfUt0rCLqTkqzl7H04YAHlHdssqczWZkN5fOWdrXlLJs1MwuE4atgi5b3tgU2hf+AFBMPvmlrD0tDxo2mE2o20oc7ATkdtKtbO5yb7IOuQ7ccwV/XF0cAQ/mnzG0dccNpmbd2zxR+Ct3ZbIUmpInUCd+2K3kdFLraFfW8ssKjs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8066e6ac-022b-47f1-94ea-08dd3a5420a4
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2025 19:45:15.7024
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1+bazmYG33wOp7tUoPmmc22TxK8hT2hLj+hOKwAINJwgtwrOhlDI1QOsxJQisBwrunsHcy76Xo90zc9cIbGVPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6591
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-21_08,2025-01-21_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2501210157
-X-Proofpoint-GUID: X6Do08KsRHoEopd1uFiCCSUjO33ZOqyF
-X-Proofpoint-ORIG-GUID: X6Do08KsRHoEopd1uFiCCSUjO33ZOqyF
 
-Please send patches To: the NFSD reviewers listed in MAINTAINERS and
-Cc: linux-nfs and others. Thanks!
+On Wed, 2025-01-15 at 10:03 -0500, Chuck Lever wrote:
+> On 1/14/25 2:39 PM, Jeff Layton wrote:
+> > On Tue, 2025-01-14 at 14:27 -0500, Jeff Layton wrote:
+> > > On Mon, 2025-01-13 at 10:59 +0800, Li Lingfeng wrote:
+> > > > In nfsd_file_put, after inserting the nfsd_file into the nfsd_file_=
+lru
+> > > > list, gc may be triggered in another thread and immediately release=
+ this
+> > > > nfsd_file, which will lead to a UAF when accessing this nfsd_file a=
+gain.
+> > > >=20
+> > > > All the places where unhash is done will also perform lru_remove, s=
+o there
+> > > > is no need to do lru_remove separately here. After inserting the nf=
+sd_file
+> > > > into the nfsd_file_lru list, it can be released by relying on gc.
+> > > >=20
+> > > > Fixes: 4a0e73e635e3 ("NFSD: Leave open files out of the filecache L=
+RU")
+> > > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > > > ---
+> > > >   fs/nfsd/filecache.c | 12 ++----------
+> > > >   1 file changed, 2 insertions(+), 10 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > > index a1cdba42c4fa..37b65cb1579a 100644
+> > > > --- a/fs/nfsd/filecache.c
+> > > > +++ b/fs/nfsd/filecache.c
+> > > > @@ -372,18 +372,10 @@ nfsd_file_put(struct nfsd_file *nf)
+> > > >   		/* Try to add it to the LRU.  If that fails, decrement. */
+> > > >   		if (nfsd_file_lru_add(nf)) {
+> > > >   			/* If it's still hashed, we're done */
+> > > > -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> > > > +			if (list_lru_count(&nfsd_file_lru))
+> > > >   				nfsd_file_schedule_laundrette();
+> > > > -				return;
+> > > > -			}
+> > > >  =20
+> > > > -			/*
+> > > > -			 * We're racing with unhashing, so try to remove it from
+> > > > -			 * the LRU. If removal fails, then someone else already
+> > > > -			 * has our reference.
+> > > > -			 */
+> > > > -			if (!nfsd_file_lru_remove(nf))
+> > > > -				return;
+> > > > +			return;
+> > > >   		}
+> > > >   	}
+> > > >   	if (refcount_dec_and_test(&nf->nf_ref))
+> > >=20
+> > > I think this looks OK. Filecache bugs are particularly nasty though, =
+so
+> > > let's run this through a nice long testing cycle.
+> > >=20
+> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > Actually, I take it back. This is problematic in another way.
+> >=20
+> > In this case, we're racing with another task that is unhashing the
+> > object, but we've put it on the LRU ourselves. What guarantee do we
+> > have that the unhashing and removal from the LRU didn't occur before
+> > this task called nfsd_file_lru_add()? That's why we attempt to remove
+> > it here -- we can't rely on the task that unhashed it to do so at that
+> > point.
+> >=20
+> > What might be best is to take and hold the rcu_read_lock() before doing
+> > the nfsd_file_lru_add, and just release it after we do these racy
+> > checks. That should make it safe to access the object.
+> >=20
+> > Thoughts?
+>=20
+> Holding the RCU read lock will keep the dereferences safe since
+> nfsd_file objects are freed only after an RCU grace period. But will the
+> logic in nfsd_file_put() work properly on totally dead nfsd_file
+> objects? I don't see a specific failure mode there, but I'm not very
+> imaginative.
+>=20
+> Overall, I think RCU would help.
+>=20
+>=20
 
+To be clear, I think we need to drop e57420be100ab from your nfsd-
+testing branch. The race I identified above is quite likely to occur
+and could lead to leaks.
 
-On 1/21/25 5:39 AM, Amir Goldstein wrote:
-> Commit 466e16f0920f3 ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink.")
-> mapped EBUSY host error from rmdir/unlink operation to avoid unknown
-> error server warning.
+If Li Lingfeng doesn't propose a patch, I'll spin one up tomorrow. I
+think the RCU approach is safe.
 
-> The same reason that casued the reported EBUSY on rmdir() (dir is a
-> local mount point in some other bind mount) could also cause EBUSY on
-> rename and some filesystems (e.g. FUSE) can return EBUSY on other
-> operations like open().
-> 
-> Therefore, to avoid unknown error warning in server, we need to map
-> EBUSY for all operations.
-> 
-> The original fix mapped EBUSY to NFS4ERR_FILE_OPEN in v4 server and
-> to NFS4ERR_ACCESS in v2/v3 server.
-> 
-> During the discussion on this issue, Trond claimed that the mapping
-> made from EBUSY to NFS4ERR_FILE_OPEN was incorrect according to the
-> protocol spec and specifically, NFS4ERR_FILE_OPEN is not expected
-> for directories.
-
-NFS4ERR_FILE_OPEN might be incorrect when removing certain types of
-file system objects. Here's what I find in RFC 8881 Section 18.25.4:
-
- > If a file has an outstanding OPEN and this prevents the removal of the
- > file's directory entry, the error NFS4ERR_FILE_OPEN is returned.
-
-It's not normative, but it does suggest that any object that cannot be
-associated with an OPEN state ID should never cause REMOVE to return
-NFS4ERR_FILE_OPEN.
-
-
-> To keep things simple and consistent and avoid the server warning,
-> map EBUSY to NFS4ERR_ACCESS for all operations in all protocol versions.
-
-Generally a "one size fits all" mapping for these status codes is
-not going to cut it. That's why we have nfsd3_map_status() and
-nfsd_map_status() -- the set of permitted status codes for each
-operation is different for each NFS version.
-
-NFSv3 has REMOVE and RMDIR. You can't pass a directory to NFSv3 REMOVE.
-
-NFSv4 has only REMOVE, and it removes the directory entry for the
-object no matter its type. The set of failure modes is different for
-this operation compared to NFSv3 REMOVE.
-
-Adding a specific mapping for -EBUSY in nfserrno() is going to have
-unintended consequences for any VFS call NFSD might make that returns
--EBUSY.
-
-I think I prefer that the NFSv4 cases be dealt with in nfsd4_remove(),
-nfsd4_rename(), and nfsd4_link(), and that -EBUSY should continue to
-trigger a warning.
-
-
-> Note that the mapping of NFS4ERR_FILE_OPEN to NFSERR_ACCESS in
-> nfsd3_map_status() and nfsd_map_status() remains for possible future
-> return of NFS4ERR_FILE_OPEN in a more specific use case (e.g. an unlink
-> of a sillyrenamed non-dir).
-> 
-> Fixes: 466e16f0920f3 ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink.")
-> Link: https://lore.kernel.org/linux-nfs/20250120172016.397916-1-amir73il@gmail.com/
-> Cc: Trond Myklebust <trondmy@hammerspace.com>
-> Cc: NeilBrown <neilb@suse.de>
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> ---
->   fs/nfsd/vfs.c | 10 ++--------
->   1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 29cb7b812d713..290c7db8a6180 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -69,6 +69,7 @@ nfserrno (int errno)
->   		{ nfserr_fbig, -E2BIG },
->   		{ nfserr_stale, -EBADF },
->   		{ nfserr_acces, -EACCES },
-> +		{ nfserr_acces, -EBUSY},
->   		{ nfserr_exist, -EEXIST },
->   		{ nfserr_xdev, -EXDEV },
->   		{ nfserr_mlink, -EMLINK },
-
-> @@ -2006,14 +2007,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
->   out_drop_write:
->   	fh_drop_write(fhp);
->   out_nfserr:
-> -	if (host_err == -EBUSY) {
-> -		/* name is mounted-on. There is no perfect
-> -		 * error status.
-> -		 */
-> -		err = nfserr_file_open;
-> -	} else {
-> -		err = nfserrno(host_err);
-> -	}
-> +	err = nfserrno(host_err);
->   out:
->   	return err;
->   out_unlock:
-
-
--- 
-Chuck Lever
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
 
