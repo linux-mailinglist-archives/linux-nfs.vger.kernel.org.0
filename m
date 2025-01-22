@@ -1,94 +1,93 @@
-Return-Path: <linux-nfs+bounces-9444-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9445-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 990CBA187F8
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 23:59:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69572A1896F
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 02:15:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88B0D3A4FFC
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jan 2025 22:59:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E256168393
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 01:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BDF1F8AF9;
-	Tue, 21 Jan 2025 22:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCDA76034;
+	Wed, 22 Jan 2025 01:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z1243yu1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0O+Gu05j";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z1243yu1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0O+Gu05j"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D27X8t7j";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ww97wG1h";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SFP1C1/1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bMnhTAGK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F091F8901;
-	Tue, 21 Jan 2025 22:59:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D982954670;
+	Wed, 22 Jan 2025 01:15:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737500364; cv=none; b=ucHUC3iXMxhKBIzUSfaz/8tL94eDC6EIQDH2mn6QrxnGYM/Et6XKVmJ0Ng9JF4xrdUDpAfWnyfG3Yfn77/7+SsuWrv6vZy402RpTiYiwu7kIXxk5EkeoElYeQBIzzvWyTRfehSq14Hpt8fpxq08DMWgoBGQeUcH4uDYSibDWN1s=
+	t=1737508545; cv=none; b=bH8j1IfsQf/4HxDKjgMaxlaj3qdfE+M4R44Etbj/a6l88LGj41XzKV6iSXay3qZxghI9XmCkJjQrhJlNzOzuEfygn6ts1/yXNdTaxoQD48ip7pv6wpVLjmFx6kUBMjWZEskpuQjfGdyVIKfAd3MwVVsZO5ABESLBb0EjGQ+mcB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737500364; c=relaxed/simple;
-	bh=NE1K7/EfR0OLAbsoFsB66+lGGFQK2Cqa6U3NJXbQgwA=;
+	s=arc-20240116; t=1737508545; c=relaxed/simple;
+	bh=a5HBxBv4QzyARLICrVYwvh61RFE3Mhc9Cgwo29C8udU=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Ckrs/zpF3HRhDrXFWmiI+1IbP0M052DHlJJiX9J0zbN6L0oztgdx/L6BI9RgZD6MY+G16bZ0+048Q+tFKc08yIdIPsKolmk2p0WojxUzuv2PruUTp31nq83wfchX9iOPLKdKQSxYiYiUNEE0gW7zPhfM/LGKeFw00pLJfkeNzOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z1243yu1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0O+Gu05j; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z1243yu1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0O+Gu05j; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=Q+jOEJgXGSx42j2KtnUyPlaa27zcmVFErrX2dkwDAXAmNtnXSz6jDvULmLw5tXx8WsjPqallwsM9/wTwP10irqn8t+mengrYe52FfEl/w9m9Ove27yp5VnkeNQyPZ0EiM3qQw4rb/UyMHi96jvlaaIkSr1bRuxleSi9NaGJfmEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D27X8t7j; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ww97wG1h; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SFP1C1/1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bMnhTAGK; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4716F1F391;
-	Tue, 21 Jan 2025 22:59:18 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DC0991F785;
+	Wed, 22 Jan 2025 01:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737500358; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1737508542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oPFZqVyR8tMuCZQo63k6WvpkcMgpQEahSeqcjs/1/zs=;
-	b=z1243yu13wsjkyPJMMIiuWEukNof9b8vM3wwAf0eIH7y1KmLzAc7+tkeQ6ezlFikltuPN5
-	qDK2W4Pz48HDnDHO5wKxo7DvcmF6L/2C46v6MEJiseqiT/RT/hKE5RgVHske/FXTLNZF8O
-	XQhkBuAR9hYZNRUMyaFsH1BiYjXlVMw=
+	bh=AO9w+3yc0+vK5qayIASvBeFYqf6Vo8yRLv+APWAUgkE=;
+	b=D27X8t7j66xCXUjTod6SRNKcVJqUIJ1mIaO//eaNvnUm3qzsn5svxrPrOWPrH3v0+pxW5M
+	e/SX9G85NnU2x1nIIRwmZh/zQmFXTlOop2Zp9SFTdLPbxfXkd5PiPq9uQMC8L5JWpNFkFY
+	H2tR+SQAnvGB3NmCERVfxiv5xqyc9bQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737500358;
+	s=susede2_ed25519; t=1737508542;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oPFZqVyR8tMuCZQo63k6WvpkcMgpQEahSeqcjs/1/zs=;
-	b=0O+Gu05jZfdMPHlt+wiNs+V/p878vufoGmLu/NZXWY/5nCOAGj5JDgjgYDC2tyMjEbMPxe
-	EIit9fKrOBd+54Aw==
+	bh=AO9w+3yc0+vK5qayIASvBeFYqf6Vo8yRLv+APWAUgkE=;
+	b=ww97wG1h9rVPEug4NED96CTGZU8+vT4JGyWV5Q6vHPXodgw5gl8p4hrd6CiWHUt/JJ7823
+	odDvZhkSnXL/meCQ==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=z1243yu1;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=0O+Gu05j
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737500358; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1737508541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oPFZqVyR8tMuCZQo63k6WvpkcMgpQEahSeqcjs/1/zs=;
-	b=z1243yu13wsjkyPJMMIiuWEukNof9b8vM3wwAf0eIH7y1KmLzAc7+tkeQ6ezlFikltuPN5
-	qDK2W4Pz48HDnDHO5wKxo7DvcmF6L/2C46v6MEJiseqiT/RT/hKE5RgVHske/FXTLNZF8O
-	XQhkBuAR9hYZNRUMyaFsH1BiYjXlVMw=
+	bh=AO9w+3yc0+vK5qayIASvBeFYqf6Vo8yRLv+APWAUgkE=;
+	b=SFP1C1/1Ln6EMQH8J76o9MAmameDfbvN2h0wb0Dv7/W20bmYSs/6ItylJ8cdAqkCLe5/ED
+	4hJLsWQqZuvPf4wQf2ousCpYaqzs92Zpjf/6drnT2HYjifovK58CS6ReTUVjRqC6ABf/ZK
+	zKTzOf8fVUvKHMqmv6tejNWlNzTnUVA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737500358;
+	s=susede2_ed25519; t=1737508541;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oPFZqVyR8tMuCZQo63k6WvpkcMgpQEahSeqcjs/1/zs=;
-	b=0O+Gu05jZfdMPHlt+wiNs+V/p878vufoGmLu/NZXWY/5nCOAGj5JDgjgYDC2tyMjEbMPxe
-	EIit9fKrOBd+54Aw==
+	bh=AO9w+3yc0+vK5qayIASvBeFYqf6Vo8yRLv+APWAUgkE=;
+	b=bMnhTAGKpb2BS70J/1iQppJjJnAlgn9/vrTmRWJ9oZVYrgO/pqeP1eSy34zjTstsbJq+gc
+	tEWfSdMF6ZWy1fBA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C9C41387C;
-	Tue, 21 Jan 2025 22:59:15 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 96F351387C;
+	Wed, 22 Jan 2025 01:15:37 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iFatL8MmkGe4HAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 21 Jan 2025 22:59:15 +0000
+	id hC0nErlGkGffKgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 22 Jan 2025 01:15:37 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -98,149 +97,141 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Amir Goldstein" <amir73il@gmail.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "Trond Myklebust" <trondmy@hammerspace.com>
-Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
-In-reply-to:
- <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
-References:
- <>, <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
-Date: Wed, 22 Jan 2025 09:59:08 +1100
-Message-id: <173750034870.22054.1620003974639602049@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 4716F1F391
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Li Lingfeng" <lilingfeng3@huawei.com>, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com, houtao1@huawei.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Subject: Re: [PATCH] nfsd: free nfsd_file by gc after adding it to lru list
+In-reply-to: <6fb21e60487273864136b4912951b5a4fb5b3ae0.camel@kernel.org>
+References: <>, <6fb21e60487273864136b4912951b5a4fb5b3ae0.camel@kernel.org>
+Date: Wed, 22 Jan 2025 12:15:34 +1100
+Message-id: <173750853452.22054.17347206263008180503@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
+	MISSING_XM_UA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-On Wed, 22 Jan 2025, Amir Goldstein wrote:
-> On Tue, Jan 21, 2025 at 8:45=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
-> >
-> > Please send patches To: the NFSD reviewers listed in MAINTAINERS and
-> > Cc: linux-nfs and others. Thanks!
-> >
-> >
-> > On 1/21/25 5:39 AM, Amir Goldstein wrote:
-> > > Commit 466e16f0920f3 ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink.")
-> > > mapped EBUSY host error from rmdir/unlink operation to avoid unknown
-> > > error server warning.
-> >
-> > > The same reason that casued the reported EBUSY on rmdir() (dir is a
-> > > local mount point in some other bind mount) could also cause EBUSY on
-> > > rename and some filesystems (e.g. FUSE) can return EBUSY on other
-> > > operations like open().
-> > >
-> > > Therefore, to avoid unknown error warning in server, we need to map
-> > > EBUSY for all operations.
-> > >
-> > > The original fix mapped EBUSY to NFS4ERR_FILE_OPEN in v4 server and
-> > > to NFS4ERR_ACCESS in v2/v3 server.
-> > >
-> > > During the discussion on this issue, Trond claimed that the mapping
-> > > made from EBUSY to NFS4ERR_FILE_OPEN was incorrect according to the
-> > > protocol spec and specifically, NFS4ERR_FILE_OPEN is not expected
-> > > for directories.
-> >
-> > NFS4ERR_FILE_OPEN might be incorrect when removing certain types of
-> > file system objects. Here's what I find in RFC 8881 Section 18.25.4:
-> >
-> >  > If a file has an outstanding OPEN and this prevents the removal of the
-> >  > file's directory entry, the error NFS4ERR_FILE_OPEN is returned.
-> >
-> > It's not normative, but it does suggest that any object that cannot be
-> > associated with an OPEN state ID should never cause REMOVE to return
-> > NFS4ERR_FILE_OPEN.
-> >
-> >
-> > > To keep things simple and consistent and avoid the server warning,
-> > > map EBUSY to NFS4ERR_ACCESS for all operations in all protocol versions.
-> >
-> > Generally a "one size fits all" mapping for these status codes is
-> > not going to cut it. That's why we have nfsd3_map_status() and
-> > nfsd_map_status() -- the set of permitted status codes for each
-> > operation is different for each NFS version.
-> >
-> > NFSv3 has REMOVE and RMDIR. You can't pass a directory to NFSv3 REMOVE.
-> >
-> > NFSv4 has only REMOVE, and it removes the directory entry for the
-> > object no matter its type. The set of failure modes is different for
-> > this operation compared to NFSv3 REMOVE.
-> >
-> > Adding a specific mapping for -EBUSY in nfserrno() is going to have
-> > unintended consequences for any VFS call NFSD might make that returns
-> > -EBUSY.
-> >
-> > I think I prefer that the NFSv4 cases be dealt with in nfsd4_remove(),
-> > nfsd4_rename(), and nfsd4_link(), and that -EBUSY should continue to
-> > trigger a warning.
-> >
-> >
+On Wed, 22 Jan 2025, Jeff Layton wrote:
+> On Wed, 2025-01-15 at 10:03 -0500, Chuck Lever wrote:
+> > On 1/14/25 2:39 PM, Jeff Layton wrote:
+> > > On Tue, 2025-01-14 at 14:27 -0500, Jeff Layton wrote:
+> > > > On Mon, 2025-01-13 at 10:59 +0800, Li Lingfeng wrote:
+> > > > > In nfsd_file_put, after inserting the nfsd_file into the nfsd_file_=
+lru
+> > > > > list, gc may be triggered in another thread and immediately release=
+ this
+> > > > > nfsd_file, which will lead to a UAF when accessing this nfsd_file a=
+gain.
+> > > > >=20
+> > > > > All the places where unhash is done will also perform lru_remove, s=
+o there
+> > > > > is no need to do lru_remove separately here. After inserting the nf=
+sd_file
+> > > > > into the nfsd_file_lru list, it can be released by relying on gc.
+> > > > >=20
+> > > > > Fixes: 4a0e73e635e3 ("NFSD: Leave open files out of the filecache L=
+RU")
+> > > > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > > > > ---
+> > > > >   fs/nfsd/filecache.c | 12 ++----------
+> > > > >   1 file changed, 2 insertions(+), 10 deletions(-)
+> > > > >=20
+> > > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > > > index a1cdba42c4fa..37b65cb1579a 100644
+> > > > > --- a/fs/nfsd/filecache.c
+> > > > > +++ b/fs/nfsd/filecache.c
+> > > > > @@ -372,18 +372,10 @@ nfsd_file_put(struct nfsd_file *nf)
+> > > > >   		/* Try to add it to the LRU.  If that fails, decrement. */
+> > > > >   		if (nfsd_file_lru_add(nf)) {
+> > > > >   			/* If it's still hashed, we're done */
+> > > > > -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> > > > > +			if (list_lru_count(&nfsd_file_lru))
+> > > > >   				nfsd_file_schedule_laundrette();
+> > > > > -				return;
+> > > > > -			}
+> > > > >  =20
+> > > > > -			/*
+> > > > > -			 * We're racing with unhashing, so try to remove it from
+> > > > > -			 * the LRU. If removal fails, then someone else already
+> > > > > -			 * has our reference.
+> > > > > -			 */
+> > > > > -			if (!nfsd_file_lru_remove(nf))
+> > > > > -				return;
+> > > > > +			return;
+> > > > >   		}
+> > > > >   	}
+> > > > >   	if (refcount_dec_and_test(&nf->nf_ref))
+> > > >=20
+> > > > I think this looks OK. Filecache bugs are particularly nasty though, =
+so
+> > > > let's run this through a nice long testing cycle.
+> > > >=20
+> > > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > >=20
+> > > Actually, I take it back. This is problematic in another way.
+> > >=20
+> > > In this case, we're racing with another task that is unhashing the
+> > > object, but we've put it on the LRU ourselves. What guarantee do we
+> > > have that the unhashing and removal from the LRU didn't occur before
+> > > this task called nfsd_file_lru_add()? That's why we attempt to remove
+> > > it here -- we can't rely on the task that unhashed it to do so at that
+> > > point.
+> > >=20
+> > > What might be best is to take and hold the rcu_read_lock() before doing
+> > > the nfsd_file_lru_add, and just release it after we do these racy
+> > > checks. That should make it safe to access the object.
+> > >=20
+> > > Thoughts?
+> >=20
+> > Holding the RCU read lock will keep the dereferences safe since
+> > nfsd_file objects are freed only after an RCU grace period. But will the
+> > logic in nfsd_file_put() work properly on totally dead nfsd_file
+> > objects? I don't see a specific failure mode there, but I'm not very
+> > imaginative.
+> >=20
+> > Overall, I think RCU would help.
+> >=20
+> >=20
 >=20
-> Sorry, I didn't understand what you are suggesting.
+> To be clear, I think we need to drop e57420be100ab from your nfsd-
+> testing branch. The race I identified above is quite likely to occur
+> and could lead to leaks.
 >=20
-> FUSE can return EBUSY for open().
-> What do you suggest to do when nfsd encounters EBUSY on open()?
->=20
-> vfs_rename() can return EBUSY.
-> What do you suggest to do when nfsd v3 encounters EBUSY on rename()?
->=20
-> This sort of assertion:
->         WARN_ONCE(1, "nfsd: non-standard errno: %d\n", errno);
->=20
-> Is a code assertion for a situation that should not be possible in the
-> code and certainly not possible to trigger by userspace.
->=20
-> Both cases above could trigger the warning from userspace.
-> If you want to leave the warning it should not be a WARN_ONCE()
-> assertion, but I must say that I did not understand the explanation
-> for not mapping EBUSY by default to NFS4ERR_ACCESS in nfserrno().
+> If Li Lingfeng doesn't propose a patch, I'll spin one up tomorrow. I
+> think the RCU approach is safe.
 
-My answer to this last question is that it isn't obvious that EBUSY
-should map to NFS4ERR_ACCESS.
-I would rather that nfsd explicitly checked the error from unlink/rmdir and
-mapped EBUSY to NFS4ERR_ACCESS (if we all agree that is best) with a
-comment (like we have now) explaining why it is best.
-And nfsd should explicitly check the error from open() and map EBUSY to
-whatever seems appropriate.  Maybe that is also NS4ERR_ACCESS but if it
-is, the reason is likely different to the reason that it is best for
-rmdir.
-So again, I would like a comment in the code explaining the choice with
-a reference to FUSE.
+I'm not convinced this is the right approach.
+I cannot see how nfsd_file_put() can race with unhashing.  If it cannot
+then we can simply unconditionally call nfsd_file_schedule_laundrette().
 
-Then if some other function that we haven't thought about starts
-returning EBUSY, we'll get warning and have a change to think about it.
+Can describe how the race can happen - if indeed it can.
+
+Note that we also need rcu protection in nfsd_file_lru_add() so that the
+nf doesn't get freed after it is added the the lru and before the trace
+point.  If we don't end up needing rcu round the call, we will need it
+in the call.
 
 Thanks,
 NeilBrown
-
 
