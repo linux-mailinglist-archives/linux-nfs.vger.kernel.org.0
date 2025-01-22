@@ -1,255 +1,251 @@
-Return-Path: <linux-nfs+bounces-9486-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9487-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0961CA19922
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 20:22:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DE0DA19983
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 21:11:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BC50C188B952
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 19:22:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A5DF188D5B6
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 20:12:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54218215182;
-	Wed, 22 Jan 2025 19:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43D0621576D;
+	Wed, 22 Jan 2025 20:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J/agCvzg";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ocCeHp17"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GipBCVNx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EEAAD4B
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 19:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737573754; cv=fail; b=BnVP8a2Qw9RwcEDhqZKVz60OyUGTJUC8akxskaVBu2QTBzjix4JAyWIAJ2mjzb6xtegSYntXoFcdGqOkweAYMwnAfPVqn3pYCFc1Saey1H9A0yHOx7OGGFs8v0jQWUy6eq1QygP7kb5F0sVmMT4kGn/64iPNfCVOn+3BRJqRVJI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737573754; c=relaxed/simple;
-	bh=pmR0CkAhkKL/FtaBReCPpWNL74VFHf5mHOwRPPU71a8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=s5yMeoxLNJLLRJg9DY6PUwKlyCQLByvFGVBd45GzPOtFJinE1ksq00DEwENZHYKZgy+YHpgMFcoGKXLtj6zu1bRjDnBV6Ir9+9kdBfqJI+KBCcKHJaojAJmWPOvmIZjfLhH++6Jf2lshHEGb82bMGUZjzGC2iHUbb71E52ee3G0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=J/agCvzg; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ocCeHp17; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50MGXjOV005592;
-	Wed, 22 Jan 2025 19:22:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=sxpTEuaBa4DDYJq3AB6rN9lfzaVCoPFAfI1sSg0XSKU=; b=
-	J/agCvzgoks7VE0ayJJUUyrKFgoX7P+mbLlUXAfaZe9vMvsNam+5e5/ulBBRVNh+
-	bvQjnbKbbjUPJpDvzARO3kA91h66/03t0lVSoNqmYGkdzhbt09p8Wc669iDeTegU
-	zgOS7irBQWwHGktttZP+JbDNWgMy6AkOczd2/R+p/R6b2+wBBZcc7MugAkrAnoqI
-	4oYwkK3kdw78d0DIvJfLKnwm/R1sPKDx9pS1dm4fcRZ8v+P2Ejg0Rxri+3SM+c8n
-	/JGHXCutMsx3dYU48w8mkUDOEvB79xGowJ9e7puE8xapKgVZxzksLHGMARiiMHwg
-	gOrOkelC18LN1bmDYutI/w==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44awyh1608-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jan 2025 19:22:21 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50MHYGMH036739;
-	Wed, 22 Jan 2025 19:22:21 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44917r85js-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jan 2025 19:22:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hpqtfhP2gSdGOfk9/j2oUDPtUZ6FmCNGKpH0Br61nMeBoydKMX0bJI0hcvt3YNJdCI0loMaKAtupLqcnUoiaYaqwN+7L4RoMtjj+3yDIj1tZqqL9uq+v9tx/ES0xYdhkkYFZI1rCNsmp8OSfSOoYpguThGbOVP15xYDipQWR2Puu55gh/ii6VdS4LlbUuKCRO0i/3fED4URU5BbJz3PKHbVcOtJHctuezFE+HYed5rGfm4BNhWwSlzbmZxcpL+CujFPkzNzp/2r0gLyHwfNu2Mg/DuJ6CzgVNMfhuErsJKM66juXU42fMkRLwdwS1gmU2VyjktBDZxSfrrcelOrVLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sxpTEuaBa4DDYJq3AB6rN9lfzaVCoPFAfI1sSg0XSKU=;
- b=E/Q3Od07xPSHutJPqB6sny08bDPyMO7zKDxzXkXF3iiBymVHTJFAHZe/sFi9BUtjuzykUFae4xGv85oyq/2CSw5GthyOJOO0vVGt/J+wgSbBAZKgQa9HSOIlxOOaUqSa06qGhdguRH6Lv/+sjGOCRanIlRhjLziFrAMN6uwkzGVRkXZHIbp427oRXA/U10Qzt0csTF8Knri9ZNcAMKHdWIJ7DBYdY7HS5kN8y/3+d/G5uodSTEQggBJorGhZXxh1wf6wXr1w8ZxYXuKtAX6lqJ1e2rRLyDZnhFLCuwwRV/Rr8NSzSb3ctrJHJqc7LoxoNPaE7RAW1cZjAeN1+kQV4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630291607AC;
+	Wed, 22 Jan 2025 20:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737576714; cv=none; b=OpufJfJUF3kYvexJK+Uoxe1T/J2Ez2U8n2jDkavFLLfvt0eX+tUegyA8q43uW4bwUGiO1yihVUlzFrPb5ZfqeEy65T8jf6QvNvT2h15CzKnAI4ixg4Mkc7R/Bx6Je5kBe4Nn5IZGdUmFjJWralmgCVkdwzS1O/rcz4dRmxGeTiQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737576714; c=relaxed/simple;
+	bh=xBihi7dNreWMzaceKWKxWPtRKMk+hiSWNyQ9CmdGQO8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZwbJz/HdZUTURB9aPjEHW7iewrd0XRCFpbQ58j10t10A91e9ekkM8jJkJOS1TnIJ2wknzAHM8OkpnXgj9WBED2COpJeQis5vccAv5AmdCJb0OQuwuI8NqWIbHAujPecg3gtE4VbHWZzWWwZn0l1oLZmVsHJXef3JrW1TIyykz6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GipBCVNx; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso2467129a12.0;
+        Wed, 22 Jan 2025 12:11:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sxpTEuaBa4DDYJq3AB6rN9lfzaVCoPFAfI1sSg0XSKU=;
- b=ocCeHp17Va/vhTjwoPkWbb3AkyVkvoo1laDB7XF+jl8/4bj0XoPaquyXWz6VZN8IcNBkDstzNi/OdEiR0Xhg4Was6X25vDM0q7Jhulgk+cv0Z1/J+ye+TCCWwCrFzGmMBlTgYmcmntq9pA0eaED0RGPNC9uXC6W51W8qBlNRk0Q=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB4973.namprd10.prod.outlook.com (2603:10b6:5:38d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8356.22; Wed, 22 Jan
- 2025 19:22:18 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
- 19:22:18 +0000
-Message-ID: <83ed7510-0a0c-4048-beb5-c4a10c38ca06@oracle.com>
-Date: Wed, 22 Jan 2025 14:22:16 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] nfsd: filecache: change garbage collect lists
-To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Jeff Layton <jlayton@kernel.org>
-References: <20250122035615.2893754-1-neilb@suse.de>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20250122035615.2893754-1-neilb@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0099.namprd03.prod.outlook.com
- (2603:10b6:610:cd::14) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        d=gmail.com; s=20230601; t=1737576710; x=1738181510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qTPkI92GuTCrKXb0d1+FDO10PR5BjBDuYslaw6jsxdg=;
+        b=GipBCVNxom/Ic6IyW6weGwe6bQKIk3ETL+V530wjB1XEikMDfBdf1mOtWgXAxpx8iT
+         y6gnS2oCVGhMmARXPoUDSkjNEClxJOnUydvjUbTHuf6dmrap0fy5gl4rDtz1K9QkRTKE
+         o4kcNaJ4m3CD+lbIf2j7EAJhCUQVAso9nRjXKh8jD+3+3GRsMwu0KGWyvRkQjBWjU/9u
+         9iHwqRxhr+iHV4TbzDp/Hc6U3FlhRGrUHCFpqeMEUI2ZTwgPOuasiIoB0JgQLf928Lju
+         JmvvAsCLSojRNp+PXIbbbeRvtetnjehjYnIQIKho4U8yu5CA6ql3liVPLIVczfMV5mRS
+         YPwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737576710; x=1738181510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qTPkI92GuTCrKXb0d1+FDO10PR5BjBDuYslaw6jsxdg=;
+        b=MCeptN8mCbj7ZkLVdz4woLXAxDpdj7rPaUTTtMEh0CjCku+CmWg0NVf85t31I4W1Xi
+         SL1lD93bDmYfVib1Pep0xX9lHiyPjG7ZXydsgC2Q8qULrvWbA61s887Rx9KPGytHt06A
+         cIOB7RcVg6jnzgdyzYV0SYHteKqsOreBy7/J198gzRvd257NAjlmtv0hcJM9SVYl7CuE
+         3tAcWbfSWrifxa8cFHDn9WSxlJlWIYtoZ+XpG6EQeae5MnHS9GgJZ6l5HjjE86EKnUAp
+         svDnKGMBzvvlVtOncb9V+CmoMU8p8R072sabZiaCGwBAFs9zHV/5mtCIAkdYC/afBQWN
+         YiNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEQevFTTUqH0g7ugbBm32vClYALCbuC37JcsAMl/n1UafkpRV49obm8WX96hnqED9Rc0vtEZfKmfgc7x51@vger.kernel.org, AJvYcCVO9EU5jh6lx7W9/M4dtWZ0eZqW5K6YidyJE3pkIaDdZXpbCjj1xHkZxszie1q4PqJXZl4RI0ylE80R@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXwNO6IO2f7DeBa8zz4fS83ZxATbXvxsIEXnsnOLJfJLDulkKC
+	XtAIkT+Vx/ZoqDiNY2xitqRh0+cGA1WJXKfT2tC6Be9m6IMidbloHN+sepIFMNVSej56FYgvWDC
+	+25TPOOOBpHGIwuQiR55jvyhxbqU=
+X-Gm-Gg: ASbGncvcCUMIGYwB488JmYUr2oq7pHHSJaw26jEYLa4CMmNE1lMhL0P1lsEeWNyjBwA
+	HCO6jMAOLdVdemAKiPWi773uJs9SSS3hZpr4gOyEO108GWXfDQHo=
+X-Google-Smtp-Source: AGHT+IHK2/ameRjIgPI1iNsY5XznymEDMCSrff0kyjQwGh6dHT1ykdsmr6yvVuOd8Chi2FmU7pZobn42Q+BIsy4vSzI=
+X-Received: by 2002:a17:907:7e82:b0:aa5:1d68:1f43 with SMTP id
+ a640c23a62f3a-ab662968428mr63938666b.11.1737576710058; Wed, 22 Jan 2025
+ 12:11:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB4973:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7867d570-8b7d-4501-498b-08dd3b1a15df
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dEZBa2RPeXlWY1VGMkdaZEw1TXNaSUViOG5DdzlaZjVHbTJnbVZyeEZsbDIx?=
- =?utf-8?B?eFhGRDB5R1JaVGkvVEVJNUlvaWI4dW1UWTJRajRreVFDWVFpTEtJbVZLTkwx?=
- =?utf-8?B?THFWb1B2Y08vNnZBbXhTMWcrNTl3dmRrck5WZFNGYXJnZ2VZYWd0TXVYUG85?=
- =?utf-8?B?MDhwRi9KWGgrNXVDVU8xc0l5NW9pMURuQllpSFU2cFdPaGZnaG9PdU1ueUtu?=
- =?utf-8?B?dys4TWJERnUxTVlUM29DVGxNQmVWOXBEck41MmZPY0pqS1h5OGc5NkRUeU53?=
- =?utf-8?B?YXJCTDcwZVV2UksySzJBeDV6bXRkSDgrcXVqRUw1R3U1SHJjZlR6azZMYUdu?=
- =?utf-8?B?ZWhCVUY3QkorRmdFY3gzdHJadHpOVDVaaE5VaERtWHIyMUI2eTdETnRPM2xL?=
- =?utf-8?B?N1RUVnhXUmgxakMrTzJjTVhXRmMrd1NFUnlmUTdCYUpGK0w5V29jMVN3OExz?=
- =?utf-8?B?TUJxNnFiNkFiUkNCK29mcm16UEQzK2FGVGE5emIyNHAzNUh4R2d4U3d0Z3Jx?=
- =?utf-8?B?VjZvVk1vb0E3WThCQ2NTVDlMNHkxRnJicXh1eE9ZU290SWtXWkw1dGFRSm1E?=
- =?utf-8?B?SDBnbExDNWxkMzVQRTlINUx3K1p4OFIxcDBCMEtuUHlRQ2cyVE1nU01Denl4?=
- =?utf-8?B?OGMzNFZHdWwwOWM4eEllRlViSDR3V0tzbmVLVjlqeURUUk1nMDNycGloQ0Ir?=
- =?utf-8?B?blVmMXZXSXJSNXBxOHpacTFIcUhxSEZkbXJQdXBWUHdXMGluOVI5bHlVTWpD?=
- =?utf-8?B?MkoxeHB3MjZHZ01VSkpWaHZFVzAvUnBHbXJEYnptVGpFS1Z2NThIdkZ1ZSts?=
- =?utf-8?B?Q1dtcDRneGc1M3g3YmQ3WFo5dnBuYXN6YjdLMXRIRVZSbVBNV1J2Q01hbzJR?=
- =?utf-8?B?YnRrR1hxcU9FdndlNlNQVWpYQis4bUxVa3U5U3MvTkZ6QnhEaVBLY20vSENo?=
- =?utf-8?B?Tm1CYSt2TkJrWWNSeEJ3YmJTTjVkWXU5QjBkOUR0bVlIY3JGYUpMaEtkSExZ?=
- =?utf-8?B?S1MxNmwwTWt6UndPMUY1R3o4NHo4NzNCb2RSR08zN0tPWXVhSEpHQ25DQy91?=
- =?utf-8?B?cG53cmZod3V6TUppbCtudkQ5ejlFWlYrWWtKTzZrNU9PNklMd2VYdHdaVzY4?=
- =?utf-8?B?TjhZTmpLWTRjbHVJazR5dGRqZ0R6TmJjWTlhUTFrL2lmem5NTFJIcFVMSlZx?=
- =?utf-8?B?cW1EVksvdXF4Q3E2OE10T1oyczF4MFo2L1Nhb1ZjSW5iOVViZUJLZU9QY1ZE?=
- =?utf-8?B?MmU1YnVtdkRWc0xOclRtYXJXRFNMS0FXN3J3WlpjV0lYZ3VjMDUxcGlZSHEz?=
- =?utf-8?B?TFpCUkkzdW1kWlI0MUhURWJRMU04RzdWckpWenhwTmQ0VlFubC9rbGxHcnJL?=
- =?utf-8?B?bkk5enR0NUF4RWxTSk13ZG0yakZVZC9GY1AxWk9HT01ockdnQkRhR2xLQ21S?=
- =?utf-8?B?M04wR0JOcFpwVE5sZ01XUll0Z0I4a2RlY2dCWFlLNmx6Sk93bEhSUmpOTW5C?=
- =?utf-8?B?VlNoQVBlRDlvM0VWckJxWVFlZE5LWTI2citqTk0rV3JXMHhZVmFxZmMwQnlN?=
- =?utf-8?B?ZnhSS1loTXBUT2pZV3RKaW9PTHBuTVk2MHhDQ0xpSS8xallKQXZrOHpwSDBi?=
- =?utf-8?B?QnlnMWkrUXMvNE5aeFRvT1lIMVhpWGlSdEM1TEgyZjVZZHd5S0dVR3VxUXJj?=
- =?utf-8?B?NUtGbTJXbVZVVkZ2V2NVdGxsODZXVE9aQ1FLRWFsV1hUdkRuK0dnSE96ZjA0?=
- =?utf-8?B?NVNzWDNJTitOV1V3c096ejNIb2pUQmRUeFlvZkNiUGR4bmQwUEd5TDdwcGhy?=
- =?utf-8?B?M3Jxei85L3RCNWhDcXZpZGloeFFGYytSV256QW84QXpRaWp2ZUxYVEJEV0VP?=
- =?utf-8?Q?j4M4jDgw0qwQd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QkdKK2oyWlVqZ1plUFlyV0Q5V2lYR2V0bjN3RXBDNDgvY2liV0c1dDNPcWI4?=
- =?utf-8?B?Z2FaVWkyc0M3TWNmUStYeUZIelgvUStJV3A2SkNlV09JeFRIcTFtQytPblZo?=
- =?utf-8?B?YlJpaDhVSXdkYllXcW5yUWllRGRHam1McVovYXc3SVpicGhERTI5Rnh1TFdH?=
- =?utf-8?B?WXQ5Mm5Pa3JHTm11Z0NqOFdrd3F2eGtOV0YxR21aS1RjMFp2UlNTaEMxS3Fs?=
- =?utf-8?B?SEd2dzhudjB0NDRCNnpOS3RQRk9nV2VVS2QzZUEyVFBhYzlCY3dyMzE5bFNC?=
- =?utf-8?B?UW5iVE1ab1BudVJXeUZsbitGMWVUdnFBN0c4Vk8xNDRPbVJxYmJER093dmFv?=
- =?utf-8?B?dWk1bFhzL0NNcDJHTnRub1lpTnlDZ0NrbTJlWWxDTUt2NncwRDhqbWJma3A1?=
- =?utf-8?B?ZkJKMWo0ZTdPYmhEOWYyRDNPbmtzR2pJYkdjaThIRlZFQUlma0QyV01VaUd3?=
- =?utf-8?B?QTBqdlJhRGR1VTVZU3FSOVNOcUlVa2Y3cmZLY0J6eVhPbG4rOU41aXVndFNh?=
- =?utf-8?B?ODFETWFBa0RYZjhSSnBjaUpUL0dLT0tBbXhjbGsrdHVDa3BxWG8xWFJSU0pJ?=
- =?utf-8?B?dm1Ca2pvdzRlUVBPUEw3bzBkeTRJQ1FrWE93aDdKQ3BlOW1hT3Job0tzYTVS?=
- =?utf-8?B?b1dQbG1QekhaY2t1Nko0WmlNeXdwUU0yNXlqU1JjVldjUEVBaHo2Mnh3RmEr?=
- =?utf-8?B?ZEg4MTAxSXQxdE85dEpkSlE5blkydCs3bGREWTh3ZVJyekpHaGt4NGtHRDcz?=
- =?utf-8?B?SFZhUitWMlh0SWdjeldYZThXWUNDM1ZqYW1IWURPT2RxTWZIaGNlNWsxVThZ?=
- =?utf-8?B?ZFpvN1VnNS9rYUwxdkJWc2ltNUpiR0pwRGUxK1B0LzZTdHpPV3ZpMTBEc1I1?=
- =?utf-8?B?WWpSSWdvUk96SFdDMDRuRitnUnJ6cVAvVEFMUFRHRGtWQXFHbjVQQ1hSaDlz?=
- =?utf-8?B?MktpRXN1ZnR0MHkrYW1IbHorWjBXK05lVEdtRFNiNlA2RG5ZUkZzajQvcWIy?=
- =?utf-8?B?QTNvd01Jdk9ZdnAyVFhtNU9HVC9mVFdhRlFwR1kzaFpHUFpQZnFxdVZnWU1O?=
- =?utf-8?B?VXRiTWlaV2VNSWF4SGx3NlJFTUZXV21BcE04ZXdqb2Zrdkd2R2RyRDFkZnRK?=
- =?utf-8?B?TFo4bUs2V2RQT05zWVRKbi9jYlF5MjJSOEJPREU4RU5ubDVGcjc3QlpPaU1E?=
- =?utf-8?B?c0FrdFhjcVRDZ01wZko3SlZhWm9hOG1PTVV3SFVaYU9TM0lYNjYwV2ZFcGVk?=
- =?utf-8?B?UWJwVVAxL09sZWYzRzFqbDk4TDAwZ0YrNUtlUnlqUC8yWEdkQTBaTkxIME12?=
- =?utf-8?B?UnFmMkV2ei8yamFPalNkNzMrNDBXVEhmQ0dCUkc5ZU5IVHV4YkNEbEhYOG1M?=
- =?utf-8?B?OXdpOW9LUjcrS1k0VVBjQTBhbmRlK29vR3M2cGhNdUdWVEdKZS9kQUtTTXVK?=
- =?utf-8?B?eTh4VmY4L0hoa096WkU0WGh6ZWM2TkNBb3NwS05TS2JEcnlZQUF0V3hxdFVy?=
- =?utf-8?B?MVoxcW9jaDd2VVdMQ0dIL0ZhTU1SbkxvQllWc0xlc3pWNEwzYmZ1Kys1aUEy?=
- =?utf-8?B?dFZEVzkzdUNjcTJwcTY4WTU3VkRwNGpYdjRnNUZSTk9rWTF6dHpkNWxMWGZN?=
- =?utf-8?B?dHZQQWplME04VllqRjZGZy9TVTBCcThQTEdTYk1wZlI4TkVSNG5UZUlVNmFq?=
- =?utf-8?B?bTFGZ0R4ZDZvY0ZCQkFUdFJaOUEwTkQyeWFseWZEVWR0VTVqOUxHKzVLdkF0?=
- =?utf-8?B?akNlNUdhS05yUTZ3TTR1bGNma3RVM1BSZDJ5clV3NlJ5WGErVGc0RTVPY3dl?=
- =?utf-8?B?QW1ZSG5qc1l6MHVxbUlkTHdWbnV3UVp3NnozWGxvQlpnaEFNQjhFL01Jaitn?=
- =?utf-8?B?aVA1SExROTlWUVc3cmdsZlNmNHdGRVBQZjdNeUxKYVRRTVBkNWdwSVpoWUFO?=
- =?utf-8?B?dTBEaFZEcmt3bmJISkw0NWtwYkpxVlduMk1GNXZwTHpobzRWZmVCM1JsRmIr?=
- =?utf-8?B?b20rRWgrRnZOTldQbnh4YU5EcHUxV1laWUtWVllYcCtCcTRhZWljLzVKbmhl?=
- =?utf-8?B?S0V6SnBxT3VhZEhTQlRDcmQzUXVuTDlKVjAzM0hzY3c2d0FRQ2FISkJTS2Fv?=
- =?utf-8?B?U21YVFVIK0dCWGFlOEMyQ08zeFVqaTdLckJpYy9yWmVhSFZhSmxuY3dPK2ts?=
- =?utf-8?B?Zmc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	A8F2ktKNOKLAZywGU9Sot23ArjN9LrvnYuJchxayZMXQaJzZTaIZeYnoNFO7kum8cAmg9jDz7PRpRws3xdcsCW57ZYnizwS45VbLgAoPobjt0FN18yuF9iHXbViz5X3p2QxjEoAKrLDwJ7YOXIqJkLLLIhm8zfE7tr6ZIjUbMBFX1I1+bnsf1WJNw5mh76PmK6KcTHMEt6Fa7c0+RlYYj/vP5G7xi9FhzUr97CaeI4ucYxTD/3ZuYsuox3ZWsvzKIf1d+d+gW+qraHh8PCWTR7fkW55QHpuSBG21f0Uzu6UdgHjQxpSkOqgck+WXl+n+T35IyA5k1b4QGO5u+uuH149+Z9aNAjebmsvpvdbrNl5KCdPI/anE3h/RIUXJtMl8gkdM4VPaviMG5KjYpX2mecz8r1lRtR+4Kc57++eSpJG0NgSevxP+nfQ2xCWspZAauToZWHGqjV4Jfmm9335mRF2JyJgGq6xhBQtefex/FIaSJKDHtq9OL8DSIsoF8yudzOoAXf7dHDy2tcRNaYTnViSsXypNubfGau+gsiLkYBpORZDdld4rfSjL7vWnpxuWl10/VQG3673HNB8zNxvMBQcWiZdQPHgUbKyQVEWia5Q=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7867d570-8b7d-4501-498b-08dd3b1a15df
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 19:22:18.0157
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sXKnD50ZGGM66EzQWasoBmtJIdsZLwCYRkSiUndpbBcZbt1YgP8tyPHd1ctySyf/Ca7Li0GcCYeitStoccVR6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4973
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-22_08,2025-01-22_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501220141
-X-Proofpoint-ORIG-GUID: QdT3gpolSEvZRQy6CF8xurGmlyYxTX7l
-X-Proofpoint-GUID: QdT3gpolSEvZRQy6CF8xurGmlyYxTX7l
+References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
+ <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+ <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+ <c2401cbe-eae9-44ab-b36c-5f91b42c430d@oracle.com> <CAOQ4uxi3=tLsRNyoJk4WPWK5fZrZG=o_8wYBM6f4Cc5Y48DbrA@mail.gmail.com>
+ <50c4f76e-0d5b-41a7-921e-32c812bd92f3@oracle.com> <CAOQ4uxiVLTv94=Xkiqw4NJHa8RysE3bGDx64TLuLF+nxkOh-Eg@mail.gmail.com>
+ <d36de874-7603-478b-a01e-b7d1eb7110d3@oracle.com>
+In-Reply-To: <d36de874-7603-478b-a01e-b7d1eb7110d3@oracle.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 22 Jan 2025 21:11:38 +0100
+X-Gm-Features: AbW1kvYYiGXA_LgUmU7rKfDIG6HRKT2LXkqHprUsv9YrvW-Occ32Em3B-z90fEI
+Message-ID: <CAOQ4uxgnQ-4azkpsPm+tyd7zgXWUxXq7vWCfksPPF864rpN27Q@mail.gmail.com>
+Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@hammerspace.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/21/25 10:54 PM, NeilBrown wrote:
-> 
-> The nfsd filecache currently uses  list_lru for tracking files recently
-> used in NFSv3 requests which need to be "garbage collected" when they
-> have becoming idle - unused for 2-4 seconds.
-> 
-> I do not believe list_lru is a good tool for this.  It does no allow the
-> timeout which filecache requires so we have to add a timeout mechanism
-> which holds the list_lru for while the whole list is scanned looking for
-> entries that haven't been recently accessed.  When the list is largish
-> (even a few hundred) this can block new requests which need the lock to
-> remove a file to access it.
-> 
-> This patch removes the list_lru and instead uses 2 simple linked lists.
-> When a file is accessed it is removed from whichever list it is one,
-> then added to the tail of the first list.  Every 2 seconds the second
-> list is moved to the "freeme" list and the first list is moved to the
-> second list.  This avoids any need to walk a list to find old entries.
-> 
-> These lists are per-netns rather than global as the freeme list is
-> per-netns as the actual freeing is done in nfsd threads which are
-> per-netns.
-> 
-> This should not be applied until we resolve how to handle the
-> race-detection code in nfsd_file_put().  However I'm posting it now to
-> get any feedback so that a final version can be posted as soon as that
-> issue is resolved.
-> 
-> Thanks,
-> NeilBrown
-> 
-> 
->   [PATCH 1/4] nfsd: filecache: use nfsd_file_dispose_list() in
->   [PATCH 2/4] nfsd: filecache: move globals nfsd_file_lru and
->   [PATCH 3/4] nfsd: filecache: change garbage collection list
->   [PATCH 4/4] nfsd: filecache: change garbage collection to a timer.
+On Wed, Jan 22, 2025 at 8:20=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+>
+> On 1/22/25 1:53 PM, Amir Goldstein wrote:
+> >>> I am fine with handling EBUSY in unlink/rmdir/rename/open
+> >>> only for now if that is what everyone prefers.
+> >>
+> >> As far as I can tell, NFSv2 and NFSv3 REMOVE/RMDIR are working
+> >> correctly. NFSv4 REMOVE needs to return a status code that depends
+> >> on whether the target object is a file or not. Probably not much more
+> >> than something like this:
+> >>
+> >>          status =3D vfs_unlink( ... );
+> >> +       /* RFC 8881 Section 18.25.4 paragraph 5 */
+> >> +       if (status =3D=3D nfserr_file_open && !S_ISREG(...))
+> >> +               status =3D nfserr_access;
+> >>
+> >> added to nfsd4_remove().
+> >
+> > Don't you think it's a bit awkward mapping back and forth like this?
+>
+> Yes, it's awkward. It's an artifact of the way NFSD's VFS helpers have
+> been co-opted for new versions of the NFS protocol over the years.
+>
+> With NFSv2 and NFSv3, the operations and their permitted status codes
+> are roughly similar so that these VFS helpers can be re-used without
+> a lot of fuss. This is also why, internally, the symbolic status codes
+> are named without the version number in them (ie, nfserr_inval).
+>
+> With NFSv4, the world is more complicated.
+>
+> The NFSv4 code was prototyped 20 years ago using these NFSv2/3 helpers,
+> and is never revisited until there's a bug. Thus there is quite a bit of
+> technical debt in fs/nfsd/vfs.c that we're replacing over time.
+>
+> IMO it would be better if these VFS helpers returned errno values and
+> then the callers should figure out the conversion to an NFS status code.
+> I suspect that's difficult because some of the functions invoked by the
+> VFS helpers (like fh_verify() ) also return NFS status codes. We just
+> spent some time extracting NFS version-specific code from fh_verify().
+>
+>
+> > Don't you think something like this is a more sane way to keep the
+> > mapping rules in one place:
+> >
+> > @@ -111,6 +111,26 @@ nfserrno (int errno)
+> >          return nfserr_io;
+> >   }
+> >
+> > +static __be32
+> > +nfsd_map_errno(int host_err, int may_flags, int type)
+> > +{
+> > +       switch (host_err) {
+> > +       case -EBUSY:
+> > +               /*
+> > +                * According to RFC 8881 Section 18.25.4 paragraph 5,
+> > +                * removal of regular file can fail with NFS4ERR_FILE_O=
+PEN.
+> > +                * For failure to remove directory we return NFS4ERR_AC=
+CESS,
+> > +                * same as NFS4ERR_FILE_OPEN is mapped in v3 and v2.
+> > +                */
+> > +               if (may_flags =3D=3D NFSD_MAY_REMOVE && type =3D=3D S_I=
+FREG)
+> > +                       return nfserr_file_open;
+> > +               else
+> > +                       return nfserr_acces;
+> > +       }
+> > +
+> > +       return nfserrno(host_err);
+> > +}
+> > +
+> >   /*
+> >    * Called from nfsd_lookup and encode_dirent. Check if we have crosse=
+d
+> >    * a mount point.
+> > @@ -2006,14 +2026,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+> > svc_fh *fhp, int type,
+> >   out_drop_write:
+> >          fh_drop_write(fhp);
+> >   out_nfserr:
+> > -       if (host_err =3D=3D -EBUSY) {
+> > -               /* name is mounted-on. There is no perfect
+> > -                * error status.
+> > -                */
+> > -               err =3D nfserr_file_open;
+> > -       } else {
+> > -               err =3D nfserrno(host_err);
+> > -       }
+> > +       err =3D nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+> >   out:
+> >          return err;
+>
+> No, I don't.
+>
+> NFSD has Kconfig options that disable support for some versions of NFS.
+> The code that manages which status code to return really needs to be
+> inside the functions that are enabled or disabled by Kconfig.
+>
+> As I keep repeating: there is no good way to handle the NFS status codes
+> in one set of functions. Each NFS version has its variations that
+> require special handling.
+>
+>
 
-Hi Neil -
+ok.
 
-I would like Dave Chinner to chime in on this approach. When you
-resend, please Cc: him. Thanks!
+> >> Let's visit RENAME once that is addressed.
+> >
+> > And then next patch would be:
+> >
+> > @@ -1828,6 +1828,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+> > svc_fh *ffhp, char *fname, int flen,
+> >          __be32          err;
+> >          int             host_err;
+> >          bool            close_cached =3D false;
+> > +       int             type;
+> >
+> >          err =3D fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
+> >          if (err)
+> > @@ -1922,8 +1923,10 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+> > svc_fh *ffhp, char *fname, int flen,
+> >    out_dput_new:
+> >          dput(ndentry);
+> >    out_dput_old:
+> > +       type =3D d_inode(odentry)->i_mode & S_IFMT;
+> >          dput(odentry);
+> >    out_nfserr:
+> > -        err =3D nfserrno(host_err);
+> > +       err =3D nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+>
+> Same problem here: the NFS version-specific status codes have to be
+> figured out in the callers, not in nfsd_rename(). The status codes
+> are not common to all NFS versions.
+>
+>
 
+ok.
 
--- 
-Chuck Lever
+> >> Then handle OPEN as a third patch, because I bet we are going to meet
+> >> some complications there.
+> >
+> > Did you think of anything better to do for OPEN other than NFS4ERR_ACCE=
+SS?
+>
+> I haven't even started to think about that yet.
+>
+
+ok. Let me know when you have any ideas about that.
+
+My goal is to fix EBUSY WARN for open from FUSE.
+The rest is cleanup that I don't mind doing on the way.
+
+Thanks,
+Amir.
 
