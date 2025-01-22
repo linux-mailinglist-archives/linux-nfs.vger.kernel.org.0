@@ -1,193 +1,243 @@
-Return-Path: <linux-nfs+bounces-9507-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9508-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B8FDA19AC2
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 23:16:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97679A19B45
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 00:02:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BB6A165856
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 22:16:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5568C188D5DB
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 23:02:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6EAE1C461F;
-	Wed, 22 Jan 2025 22:16:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D9CB1C54BF;
+	Wed, 22 Jan 2025 23:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1VAnYRBr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NB6Ume0B";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1VAnYRBr";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NB6Ume0B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P/2gKH10"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68394C9F
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 22:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593C21C4A02
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 23:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737584183; cv=none; b=Ghutj+J+XCiE+b8OeQPHyqL0LZ3kDNsjFqT4WM9HwDBzPefBEfo75cBngKoZTp/iqjNLDfqZEcu9ykQXpMMFnXo6YitDNntTix2Wv26b3uA528g0IFkDNeSdWOP8AIPwsCG2lz/e/+lfIXciYHthHkRS/9+QAMbxLwwrYLLeLRg=
+	t=1737586934; cv=none; b=Yj76l0og488RloYEQ9YCt2KxBHUIZjLaeSLApmp0pH8i1541DOAV1XX9a9oC5l0V3/FffjDIs+7cupy0obTc4vX9Ab0YHQQSbbufxHgIj/jEWLCiv1+/rS8/pcKWElnKopzcJTKMhu4mSsHnrsRmhBMaH4GEld3h3JnNBdf9DhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737584183; c=relaxed/simple;
-	bh=SOnkSXQnsJMIp4y0UQakeLZXcqWSiX9OGBiKc1qtBkk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=PUwablau/xFf2PyihC4NuCYX5bQ2gt4T9pSjgUG2iRQ1OtK+3/va5jszglF6+tdOny6csq2TEzVXx+/LAXZnCwdW8+vxq8Xa8LE9ZJ/wRR2eVw9jZ3lDeJs9bVaMhKwkS7Pl2Z3YaOG8WLTN9WsdUcTCtas9futWFeWAN1oXMTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1VAnYRBr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NB6Ume0B; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1VAnYRBr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NB6Ume0B; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B24F71F391;
-	Wed, 22 Jan 2025 22:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737584179; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1737586934; c=relaxed/simple;
+	bh=KaZlTvIPdvtcyiqJTb0H5sNbKS2ijhgp3gfBGSMp+j8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UXeZjAIh8Wdh99VFZBtuQGukwkBwbab1qMGjaabvBDUFg3LF+BTPf+BVmr97HBjSXiWqnQWmX/y1eJ95grKAXXV+KJQZJVcvm/x9llFKr76ShjOlTQdwT9rjpwjofpv8cpyM6g6bmIEbzW58bbRXRnIerD8kbODlQcXTJBtPrvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P/2gKH10; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737586931;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D+elPziQabNxUQ36mR8t8fvvffZgRKVy2IB3Q8ndBXk=;
-	b=1VAnYRBrR4sn8jlfCDsSo4ZlT+XwOjtS+VPPDwNFyul7Gtor0HKxagktRAiO6kyVoyvhJw
-	DI+m/k/3epCCLlwvuJ7V9KrXWKHoXvXZB577PoNRxesskAvloWT0PjmGAKflOKbTLOAcHv
-	dka8czG0W/SN24hcVtaa1K1yZkN6eKg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737584179;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+elPziQabNxUQ36mR8t8fvvffZgRKVy2IB3Q8ndBXk=;
-	b=NB6Ume0B+tyuZDiTVl5J0QxN4TlTH7xa0GQZfEM1qyTN9ieHGV9RWiNivndYG+dM9Zrj5f
-	mPGAINsaZKTghECQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1VAnYRBr;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NB6Ume0B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737584179; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+elPziQabNxUQ36mR8t8fvvffZgRKVy2IB3Q8ndBXk=;
-	b=1VAnYRBrR4sn8jlfCDsSo4ZlT+XwOjtS+VPPDwNFyul7Gtor0HKxagktRAiO6kyVoyvhJw
-	DI+m/k/3epCCLlwvuJ7V9KrXWKHoXvXZB577PoNRxesskAvloWT0PjmGAKflOKbTLOAcHv
-	dka8czG0W/SN24hcVtaa1K1yZkN6eKg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737584179;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D+elPziQabNxUQ36mR8t8fvvffZgRKVy2IB3Q8ndBXk=;
-	b=NB6Ume0B+tyuZDiTVl5J0QxN4TlTH7xa0GQZfEM1qyTN9ieHGV9RWiNivndYG+dM9Zrj5f
-	mPGAINsaZKTghECQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 93DB11397D;
-	Wed, 22 Jan 2025 22:16:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ERNREjFukWdzPgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 22 Jan 2025 22:16:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	bh=g+HSyUlDWACkG+soFDDKY+wDMzodl21lxsUABOOkCKI=;
+	b=P/2gKH10IQZlWW1rQ9ycSm89TzJlDZmLMhGORCBXPakcato10QDEaS53BiznePfV0h5NP4
+	Guc9a1HHDExK/MGXDaIracj3qLtQVX4GPHg0aViEzTzALDfIa8uSK7oAJ10lrKyq6b2N8z
+	zkby98HtFWGQ0737QcKD7bNmIO7kTFw=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-548-N4UcOU6LPUyT6iYDLNOnpQ-1; Wed, 22 Jan 2025 18:02:09 -0500
+X-MC-Unique: N4UcOU6LPUyT6iYDLNOnpQ-1
+X-Mimecast-MFC-AGG-ID: N4UcOU6LPUyT6iYDLNOnpQ
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7bcdb02f43cso27793085a.3
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 15:02:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737586929; x=1738191729;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g+HSyUlDWACkG+soFDDKY+wDMzodl21lxsUABOOkCKI=;
+        b=CxWEY95ujaoVESP6zFXB36iGv/ix3QpfzUjWsWhDXIN9lK5Z58w2OzGiGa2qbGFZ0Z
+         pbCB3sMFTW0ObB7kGS7kpyXKAoYwE94UjUVI+UEJ3HD6R0GPH7xkYLX2Q6Lz9QllgK0r
+         xy2LI6aNtMpdXGxmxKXqblTXja04ymHXHuo+fwpMQPbpICT8108JsL313N+ydnveuTxp
+         CZNcU1Eb7a9KfMuKI+TGu4Xbn9q55OkMt/lPAIR5nLUAYudfGio3TIduVJeu9W+gwzdL
+         20tGmrXtOYrPJdGwFxuymUbfw5NZd/pzKZ17DygT0Bhlvle/KlV5oznIaSYSydc1Ltqa
+         HWmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD0E/07icysxwDGZuN3uPkr1B855G34+avrhlgB1K1qg5fTchgqs8YNsV66riyX33g3T/crfL9pkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfdDH5RYgTRNoJWNJoL3W5z9W2Ee101qvx0WcpLN/5PGihwInb
+	1HiAz+xTOV7WMRFQheb4xdG5MVzKEaLoE4d+mCVQGOT+7BON/xn7iZlrPmxhyEt6h3c3Q5QaDEg
+	gzBIRkUT9Ch4U9WLxapvEvRk5w497rA5ei6IgZuxc/+RSyXm5uiix2lKplQ==
+X-Gm-Gg: ASbGnctdJWc2ChF+FivSPcBW9sh4+3ryxsOTAK6IpIe9yBgknwECM7snogtSh5OV2M4
+	O78E9Tn3IQtPok3B/pJ7LbPA6eo5fkuI/Ck24vfT92d0fHIM/r4KXj0vMsXi+tReL3B4eoz+YBm
+	l0SsECxPhyVKO4qy2VNTRotqfuv43K/iZEB7hWUH80YOoqNpUqiDntfWL/GJzZq20vAvzfeBOGY
+	g5wwtKC6tUMd0V45qnq8NpjjhYpIVrOtdbaWeeQB6+Ui4g25F2ThFSWdNt7nxhHVeVWAZhMx4mN
+	RE46nb43wPlZaduitgPBOJtvvhSwqcXl2Q==
+X-Received: by 2002:a05:620a:2705:b0:7b6:7618:d7ce with SMTP id af79cd13be357-7be631e7286mr3215345985a.10.1737586928845;
+        Wed, 22 Jan 2025 15:02:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEYZwN+yBKoUx963m3Hczo7Uw36iMkWH3AYHfz5PDfRsDo3mFvmKfsH84cRkAgEQygDPmnAgg==
+X-Received: by 2002:a05:620a:2705:b0:7b6:7618:d7ce with SMTP id af79cd13be357-7be631e7286mr3215342585a.10.1737586928505;
+        Wed, 22 Jan 2025 15:02:08 -0800 (PST)
+Received: from [172.16.0.69] (c-98-227-24-213.hsd1.il.comcast.net. [98.227.24.213])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7be614d9989sm706013085a.83.2025.01.22.15.02.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jan 2025 15:02:07 -0800 (PST)
+Message-ID: <345e5521-2429-471e-b282-87e39a89d5f7@redhat.com>
+Date: Wed, 22 Jan 2025 17:02:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH 0/4] nfsd: filecache: change garbage collect lists
-In-reply-to: <83ed7510-0a0c-4048-beb5-c4a10c38ca06@oracle.com>
-References: <20250122035615.2893754-1-neilb@suse.de>,
- <83ed7510-0a0c-4048-beb5-c4a10c38ca06@oracle.com>
-Date: Thu, 23 Jan 2025 09:16:10 +1100
-Message-id: <173758417063.22054.674648092957982688@noble.neil.brown.name>
-X-Rspamd-Queue-Id: B24F71F391
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Reply-To: sorenson@redhat.com
+Subject: Re: [nfs-utils PATCH] mountstats/nfsiostat: when parsing the
+ mountstats file, only keep the nfs mounts
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: steved@redhat.com, linux-nfs@vger.kernel.org
+References: <20250122033408.1586852-1-sorenson@redhat.com>
+ <7bc09d3e-ad27-449c-b555-24f2647dc281@oracle.com>
+From: Frank Sorenson <sorenson@redhat.com>
+Content-Language: en-US
+In-Reply-To: <7bc09d3e-ad27-449c-b555-24f2647dc281@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 23 Jan 2025, Chuck Lever wrote:
-> On 1/21/25 10:54 PM, NeilBrown wrote:
-> > 
-> > The nfsd filecache currently uses  list_lru for tracking files recently
-> > used in NFSv3 requests which need to be "garbage collected" when they
-> > have becoming idle - unused for 2-4 seconds.
-> > 
-> > I do not believe list_lru is a good tool for this.  It does no allow the
-> > timeout which filecache requires so we have to add a timeout mechanism
-> > which holds the list_lru for while the whole list is scanned looking for
-> > entries that haven't been recently accessed.  When the list is largish
-> > (even a few hundred) this can block new requests which need the lock to
-> > remove a file to access it.
-> > 
-> > This patch removes the list_lru and instead uses 2 simple linked lists.
-> > When a file is accessed it is removed from whichever list it is one,
-> > then added to the tail of the first list.  Every 2 seconds the second
-> > list is moved to the "freeme" list and the first list is moved to the
-> > second list.  This avoids any need to walk a list to find old entries.
-> > 
-> > These lists are per-netns rather than global as the freeme list is
-> > per-netns as the actual freeing is done in nfsd threads which are
-> > per-netns.
-> > 
-> > This should not be applied until we resolve how to handle the
-> > race-detection code in nfsd_file_put().  However I'm posting it now to
-> > get any feedback so that a final version can be posted as soon as that
-> > issue is resolved.
-> > 
-> > Thanks,
-> > NeilBrown
-> > 
-> > 
-> >   [PATCH 1/4] nfsd: filecache: use nfsd_file_dispose_list() in
-> >   [PATCH 2/4] nfsd: filecache: move globals nfsd_file_lru and
-> >   [PATCH 3/4] nfsd: filecache: change garbage collection list
-> >   [PATCH 4/4] nfsd: filecache: change garbage collection to a timer.
-> 
-> Hi Neil -
-> 
-> I would like Dave Chinner to chime in on this approach. When you
-> resend, please Cc: him. Thanks!
+On 1/22/25 08:30, Chuck Lever wrote:
+> Hi Frank -
+>
+> On 1/21/25 10:34 PM, Frank Sorenson wrote:
+>> Don't store the mountstats if the fstype is not nfs
+>
+> The original intent of mountstats is to be agnostic to the file system
+Ah, I see.  Yes, this patch certainly would have taken things the 
+opposite direction then.  Thank you for the correction.
 
-Sure, I can do that.  But why Dave in particular?
-I would like to add a comment to the cover letter explaining to Dave
-what he was added to see and I don't know what to say.
+This patch would have made fixing some nfs-related bugs easier 
+('mountstats iostat' crashes after unmount, and 'nfsiostat' crashes 
+after new mount), but it doesn't directly fix either.  I'll re-evaluate 
+my approach, and see if I can fix them without making them (at least 
+mountstats) nfs-specific.
 
-Thanks,
-NeilBrown
+
+> type. The description must provide a reason why the proposed change
+> needs to be made.
+>
+> This patch doesn't provide a bug or email link either. There's no
+> context we reviewers can use to help understand the purpose of this
+> patch.
+>
+> Generally, a patch description needs to explain, among other things, why
+> the change is necessary. The diff already shows /what/ the patch is
+> doing, thus a patch description typically does not need to repeat that.
+Understood; explain the problem leading to the need for the fix, 
+instead.  I failed to do that.
+
+There was a purpose, but I neglected to explain it.  In light of my 
+misunderstanding of the intent of mountstats, it's not important at this 
+point.
+
+Sorry, I'll do better.
+
+Frank
+
+
+>
+>> Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+>> ---
+>>   tools/mountstats/mountstats.py | 18 +++++++++++++-----
+>>   tools/nfs-iostat/nfs-iostat.py | 16 +++++++++++-----
+>>   2 files changed, 24 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/tools/mountstats/mountstats.py 
+>> b/tools/mountstats/mountstats.py
+>> index 8e129c83..326b35c3 100755
+>> --- a/tools/mountstats/mountstats.py
+>> +++ b/tools/mountstats/mountstats.py
+>> @@ -783,25 +783,33 @@ def parse_stats_file(f):
+>>       """pop the contents of a mountstats file into a dictionary,
+>>       keyed by mount point.  each value object is a list of the
+>>       lines in the mountstats file corresponding to the mount
+>> -    point named in the key.
+>> +    point named in the key.  Only return nfs mounts.
+>>       """
+>>       ms_dict = dict()
+>>       key = ''
+>> +    fstype = ''
+>>         f.seek(0)
+>>       for line in f.readlines():
+>>           words = line.split()
+>>           if len(words) == 0:
+>> +            fstype = ''
+>> +            continue
+>> +        if line.startswith("no device mounted"):
+>> +            fstype = ''
+>>               continue
+>>           if words[0] == 'device':
+>> +            if 'with fstype nfs' in line:
+>> +                fstype = words[-2]
+>> +            else:
+>> +                fstype = words[-1]
+>> +
+>>               key = words[4]
+>>               new = [ line.strip() ]
+>> -        elif 'nfs' in words or 'nfs4' in words:
+>> -            key = words[3]
+>> -            new = [ line.strip() ]
+>>           else:
+>>               new += [ line.strip() ]
+>> -        ms_dict[key] = new
+>> +        if fstype in ('nfs', 'nfs4'):
+>> +            ms_dict[key] = new
+>>         return ms_dict
+>>   diff --git a/tools/nfs-iostat/nfs-iostat.py 
+>> b/tools/nfs-iostat/nfs-iostat.py
+>> index 31587370..f97b23c0 100755
+>> --- a/tools/nfs-iostat/nfs-iostat.py
+>> +++ b/tools/nfs-iostat/nfs-iostat.py
+>> @@ -445,27 +445,33 @@ def parse_stats_file(filename):
+>>       """pop the contents of a mountstats file into a dictionary,
+>>       keyed by mount point.  each value object is a list of the
+>>       lines in the mountstats file corresponding to the mount
+>> -    point named in the key.
+>> +    point named in the key.  Only return nfs mounts.
+>>       """
+>>       ms_dict = dict()
+>>       key = ''
+>> +    fstype = ''
+>>         f = open(filename)
+>>       for line in f.readlines():
+>>           words = line.split()
+>>           if len(words) == 0:
+>> +            fstype = ''
+>>               continue
+>>           if line.startswith("no device mounted"):
+>> +            fstype = ''
+>>               continue
+>>           if words[0] == 'device':
+>> +            if 'with fstype nfs' in line:
+>> +                fstype = words[-2]
+>> +            else:
+>> +                fstype = words[-1]
+>> +
+>>               key = words[4]
+>>               new = [ line.strip() ]
+>> -        elif 'nfs' in words or 'nfs4' in words:
+>> -            key = words[3]
+>> -            new = [ line.strip() ]
+>>           else:
+>>               new += [ line.strip() ]
+>> -        ms_dict[key] = new
+>> +        if fstype in ('nfs', 'nfs4'):
+>> +            ms_dict[key] = new
+>>       f.close
+>>         return ms_dict
+>
+>
+-- 
+Frank Sorenson
+sorenson@redhat.com
+Principal Software Maintenance Engineer, filesystems
+Red Hat
+
 
