@@ -1,92 +1,103 @@
-Return-Path: <linux-nfs+bounces-9459-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9460-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C660A18F43
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 11:08:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0062A190C6
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 12:39:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E13316884C
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 10:07:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B3C016790A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 11:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B502017A5BD;
-	Wed, 22 Jan 2025 10:07:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE78212B13;
+	Wed, 22 Jan 2025 11:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/77Yk4F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6xIh1f8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A65E16BE3A
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 10:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32CF212B11
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 11:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737540471; cv=none; b=FJqqa+MeLA/EshmyDrQUb5QlBkTvC44bp0DZZGkOhCDk1QC/fnTaQueWCtSAgvlAc+Y6rA57VyzRhFxmbokQZgZMjQriKncWmp6RdVKAQK+nCTMNBA4sIu3mzVJfEB+xCxgpHcb9r13Tc2tDd5TsTd2fKn7Vi5hVzwRKnjTFw0U=
+	t=1737545984; cv=none; b=r6tOh/OSv6LXJdiO7pNbaw5GhF/3fkEIo0mgnTRVSU3wzSq44pFuegr0HBjoqcbQDwd6+X8r0Nxtla7LMP45j3di2Zze4M7dRrto7YdrV1HZo9gLQi/YKYl/GPihm1Vh/OyB+CZNhBZhhCxGA7t/P6xKgUKopJXkLF70hZtjJzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737540471; c=relaxed/simple;
-	bh=fOMhC0gzwpMGcrp4AW957K16Tx5y7mfY9/xeNQ3iyi0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=sY3fzsLWsDw7wpzOYp12qEoq9Lb1jKV1fhXK+ArdyV9ymFoz+LWyZVHMXYFSoA8lQbx5bL3gV0ZlHTK1YKDIYpDO8uxmMd7VM2DiNtacnD8qIHmIeujMluGHOgy5URN25+r+lP+PVSxdw4gbBrPjpqJwENkQd3/QDcagaM+txQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/77Yk4F; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21634338cfdso156444125ad.2
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 02:07:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737540469; x=1738145269; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HaQ+uAG7KeZLBcyRI5KW5dqGdxqEwe6U44Bz89dto6Y=;
-        b=Q/77Yk4Fxh6bHYZ3bMxWLrWXaDmFYvMrrBlunrTkFWsDu9YR93s8Cy7prqembZC1sV
-         1dgUgXeUBul2tq0CmiTBi7V+3+qihbENnog7Hed8TGKP0+X4w8Xjj++0/AUPXKeEL2nR
-         gDWc8M6O1fWQ/E/M9QsmU+JNXo/WQKT+5pGUjxxiAIllzhnoxdc4TaaqXWyGctHYgA1J
-         6rAOlE/Hjn7vU7+zLP1+zsHKEa6j6KGtgbYeWw+XBBl2SGJ8wK5HObP6n8EDFw/Ojh3C
-         vDOtgWy+KH8pLoriAuGSZ4rjAYAsFdrjsjN0X9FjTopcq14x2qP0BNiia3WZR5pb9xnG
-         Aaxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737540469; x=1738145269;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HaQ+uAG7KeZLBcyRI5KW5dqGdxqEwe6U44Bz89dto6Y=;
-        b=lkgPO6IMZSKxnLrifT6VXvL0+q9F/3Ca8lMdT09TZmK6nJU7kUmSH1aqfMn6b8WeYK
-         zX5vJnj/9ocJz2fq/f369W/4/9elgUoTjJ9l3btXHXkV6wpqdyzwLvsLdZeUPm7aO5ef
-         X+CmbAtRHSHIO1VODEL0r8kaVmqhDOU7UEgpZJSnnYscMLA+iUmSYl5Olt9WACyswsqo
-         4OuNCDj098XvgmvCEl76YzhXJccYrhy0J7nP3rTu7pSwNHn/lR5gZe+1LNRacvh5wju7
-         7AHz+RIjG+ixIPnY3naH/Ism+LvdtkffBD3l0mnWq4N+xX26B+oZCWeyDEAgACYUrK2M
-         AA2g==
-X-Gm-Message-State: AOJu0YyI34Up5eDZQz63FiVthZhIgsp8xvmurRDT17GDSq1lQn2TRoou
-	32PQr2mTp0mDDbbgvh4uwYUSU3ru5sR3rbzlBAPxxwcXaHPA0UxRSZtGE6l9YZe+spe4/pnIlsd
-	p06wmZkPe2c00UJYaaC4rlPK3+rG0/B61
-X-Gm-Gg: ASbGncsd4vXOdo3qZs7EZAIR7Dy6AjELDCDIkQMBNv25o9VwuICGp5xyllZNm0dJO/i
-	P3ploKJ1X2ZBCFyFtl8VZ4vBfOFg2XsyV+tamxcr4TGvMGdlvGj4=
-X-Google-Smtp-Source: AGHT+IFME4JvisyAR15vlaYUmOTDDaDdDburaShGrgCkSOk+Is6pS8eolM+NkHH4n8D17TIuOWRoEtzDTEQimV3mi+I=
-X-Received: by 2002:a17:903:24d:b0:216:4cc0:aa4e with SMTP id
- d9443c01a7336-21c3578a2damr257914655ad.47.1737540469306; Wed, 22 Jan 2025
- 02:07:49 -0800 (PST)
+	s=arc-20240116; t=1737545984; c=relaxed/simple;
+	bh=cnoYvqV8+erZ8z0OeTXxklEHb6mE/XBAvoSr5iyppTI=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=oMwTVWnuITKlIT9/vCrr9YGSnKwtML2OID+oE8nfFzU1Jfug9ERRukgkUAupswSGFOmv3OmcHFSSXHitCbOs5XsKbRylA/x3+ezR13antuR79aF2DtYrCQF9uXP4bhbq/sfX57VanP0mcTT52CRqxe8auqFhd3Z1j28MJFikcoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6xIh1f8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 446A3C4CEE0;
+	Wed, 22 Jan 2025 11:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737545983;
+	bh=cnoYvqV8+erZ8z0OeTXxklEHb6mE/XBAvoSr5iyppTI=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=J6xIh1f8gLeBQWh1Bc7NL5CAzeVOyy3Hik43z3jbFX7Z5IoXoqyZWOJ1rZUskpkBs
+	 ibnJaWYRUb9fggJZRKD+YcyKzT5cFQ7Pk/pi0DIgfUIUstbaueSMd2K6ydVVrhAuH5
+	 y2L4OVjUsn2cxIg1S5wi4rpj7kWfijf8PsgR0y3vtXDmU2ugWRviZQUfvIxKG4c/9I
+	 aVqtMJMDgHpRh3zEcWndxbYzl/sQroLaozooE+/HadCoIJtJrOVsyKUTdC8yW/frHj
+	 f3jvkPQYly6JcvwQfLKsMM9PRNjXp8yaCeKcYfFkL0tISaJWnO7yacnqDjgCx7jzW+
+	 JHjCzXqG+Ofug==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B69BA380AA62;
+	Wed, 22 Jan 2025 11:40:08 +0000 (UTC)
+From: Baptiste PELLEGRIN via Bugspray Bot <bugbot@kernel.org>
+Date: Wed, 22 Jan 2025 11:40:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 22 Jan 2025 11:07:13 +0100
-X-Gm-Features: AbW1kvYpaBLm1VEsmgm_wssjokpa1M98RXweNwcFYQ0BT_-wMOGbX5tZ5ow0wQI
-Message-ID: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
-Subject: Increase RPCSVC_MAXPAYLOAD to 8M?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: benoit.gschwind@minesparis.psl.eu, linux-nfs@vger.kernel.org, 
+ harald.dunkel@aixigo.com, trondmy@kernel.org, carnil@debian.org, 
+ baptiste.pellegrin@ac-grenoble.fr, anna@kernel.org, tom@talpey.com, 
+ jlayton@kernel.org, cel@kernel.org, chuck.lever@oracle.com, 
+ herzog@phys.ethz.ch
+Message-ID: <20250122-b219710c13-b7767e78d1ec@bugzilla.kernel.org>
+In-Reply-To: <20250121-b219710c9-24c03eb0cb57@bugzilla.kernel.org>
+References: <20250121-b219710c9-24c03eb0cb57@bugzilla.kernel.org>
+Subject: Re: NFSD threads hang when destroying a session or client ID
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-Good morning!
+Baptiste PELLEGRIN writes via Kernel.org Bugzilla:
 
-IMO it might be good to increase RPCSVC_MAXPAYLOAD to at least 8M,
-giving the NFSv4.1 session mechanism some headroom for negotiation.
-For over a decade the default value is 1M (1*1024*1024u), which IMO
-causes problems with anything faster than 2500baseT.
+(In reply to Chuck Lever from comment #9)
+> 
+> The server generates a CB_RECALL_ANY message for each active client. If the
+> number of active clients increases from zero at server boot time to a few
+> dozen, that would also explain why you see more of these over time.
 
-Ced
+This mean that something can stay active overnight ? In my case, no client are running outside opening hour. They are all suspended or power off.
+
+> 
+> "-e sunrpc:xprt_reserve" for example would help us match the XIDs in the
+> callback operations to the messages you see in the server's system journal.
+
+
+I will try to help you I much as I can. Is not really a problem for me to run trace-cmd on all clients as they are all managed with Puppet. I will try as soon as possible.
+
+You confirm to me that I need to run "trace-cmd record -e sunrpc:xprt_reserve" on all my clients ? No more flags ?
+
+Did you see that I have added the "-e sunrpc:svc_xprt_detach -p function -l nfsd4_destroy_session" flags in my last recorded trace ? Do I need to add new one for the next crash ?
+
+I will also send to you the dump of current kernel task next time.
+
+Regards,
+
+Baptiste.
+
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c13
+You can reply to this message to join the discussion.
 -- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
+
 
