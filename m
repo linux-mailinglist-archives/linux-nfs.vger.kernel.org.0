@@ -1,207 +1,191 @@
-Return-Path: <linux-nfs+bounces-9479-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9480-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83F93A19740
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 18:14:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34AA8A198D1
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 19:53:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FD593AA409
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 17:13:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D4B516BA5A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 18:53:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAC131BEF79;
-	Wed, 22 Jan 2025 17:14:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A94D2153F3;
+	Wed, 22 Jan 2025 18:53:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cO9szfVq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaKuLSFh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EFC74C14
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Jan 2025 17:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C71215166;
+	Wed, 22 Jan 2025 18:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737566041; cv=none; b=BXuQ3Ax8zTqXxZvyKJiGgvgJEDZAEZR9JBJA4jROJ07jWYCFkuIR6ayv4girgW6hgSBppejafe1LnLuzPYDzkHLZ3iwOBllNuoNTXl8oYLAE//9zJUg+VZ396zv92rfHWNS5eVvlPVaUGzJG6uHvQ7arAA+SZGJnYMf1C0LYYVU=
+	t=1737572024; cv=none; b=dn+LoOm+to3Ftfj2o9KnN6lXNF+VEeEt6L2/ZNZodE6TVU+N3KcFzY77zeMeZX2fZ8xVWha3o9Mt4Ip4WGTQZGaCCq5Z7eit2qzkCnIoTLBwOs/yPuo5a87Exxdm5Ubq6pz6sgk23OkHEDIjyycjrwwqYoHilTZTaePFwJjnWug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737566041; c=relaxed/simple;
-	bh=83jz6n7zZ7PM0z70seJ3iIseZ0KsZY3abKHIyLzBlKc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q2lamVb6bdyKwWwp404cpAGQ4K5qte84XkztXNREPL/RmlUT46xc7IOiqMQmKFtu/wDOQpDOuigxhiVioNVkRdCaxNd8QP3QHlUX3FUufcTRSyKhECyD7tKwlv7JV8la/ZpnORiUAjQxumF8FGjW6LRc0BubBxo3UFVT+VVF6uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cO9szfVq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CA6C4CED2;
-	Wed, 22 Jan 2025 17:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737566041;
-	bh=83jz6n7zZ7PM0z70seJ3iIseZ0KsZY3abKHIyLzBlKc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=cO9szfVqdbahFIbLr7DR3LPXiSCTlONrt9NDF26WKqFmnWf9Bxuh6NbIcr2p4l3U3
-	 cdAFt+aJXlODkMqHSJqbDBi7zj7bU0lQqVMSBqj8YYnCCRjLV9V5y1TG+kW5PbDhow
-	 2jSO0BVskRTUHnP2v/ImTMaARs2rAZPO0nX3kdWf4x6Trtwj47KNsCL3Hioee/nIAF
-	 HKm3lI7VkshwhVsSMpjBO5ZkXiZ4Zkl3Z9u+OHIUvvEs3z2uhnporeXwraNBBJPO+d
-	 1rnR0XPNF4uKDpUzNX4DgSFjLGxc/A3WWP5LCgFwnAX2FSTTrccmatmPYrYOC1Ydu8
-	 1L43HXwF3XvsQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 22 Jan 2025 12:13:54 -0500
-Subject: [PATCH pynfs] Move to xdrlib3
+	s=arc-20240116; t=1737572024; c=relaxed/simple;
+	bh=6lkaNw8QxvHTPmA+G7VVF+NulwF+SEA37Tdn2huntXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rHDra1NSheg1uzodckF8TuvN598ESpnizihd7a9A3Chm2dWhC5oRhZX0RDQIHgiSSCaGw3U/k5SR0ZXu8bnmbpbQmHTEt8iAxQBpC302o5Bh0bi+kTyajGu7KoovoQojnYJ6B7RZ0HQFYbbcBF2069zPjcJn5HSjOHeVmflWOT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BaKuLSFh; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab651f1dd36so26325766b.0;
+        Wed, 22 Jan 2025 10:53:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737572021; x=1738176821; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iJ5sZs+6TaySGO3RPSE9eCNoBfNNb/HbNo21ute/ZHU=;
+        b=BaKuLSFhldOGKrx8MKdM2dqvuRFFe7ewv0RX7R7aMtOflUFpA+BUv4gx/832mIAiiO
+         uigEnteB4R6VlHsgjG5V8gdX+awyHOiI2vp2SVoRq+II6iTq0SaLA2zqscGz2Jts3atA
+         Sb7kPDCaDA2DE+NEbaC4WptJkf1VLdA/32qAMdCQfiebL1FcEgi2TiyMgxgxIjTesCti
+         txgPA+kBIlrDUjywOYRn7uqHj/O7yNkMoNFVN0dFYq9m0crgMMZHfJb6c+AG8d+ssEet
+         RG3gGZ70XFwKyFiz+uTWL3m5InS6zjgLZm2TGOEgXclX9y9srNIRC/305s4m8i9MmQ/Y
+         VMhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737572021; x=1738176821;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iJ5sZs+6TaySGO3RPSE9eCNoBfNNb/HbNo21ute/ZHU=;
+        b=EMTGrRnVfCm1Eg76AQEVYkj8zTRU2lmXD99A1JCmlqnSg3GUC/uWmU3vATeBvjA627
+         8SkhLzS9bxOyEpgmZ9XpXZUdlSdF+cGH3en9ZXZuth6dAwnKip6bO2Bu4E/h/QF1EfdL
+         0eczM0vrbFFVyfxofERA98mDi4eI9L7/wypH6cUscpF64KmGRZ8y1Kny1qCt3ErzzE0q
+         6/tTIT9k3183RRDHKfTkCfe7MaSy28l1l7yZZ5LQ5Sd3rjNtgtW19/UdVqeEaiv6JOJL
+         Z7X9xmn0mCQZObw5FYFdqEh+w5+qoleVD9qzxLE4rLZXOyZeTgzjw06PQdb7g6o4+l78
+         xk9w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5IKGl3ZdP8PH2bXdyo/JjnheuWft3Ep7Q7JUySSN/cwL139AXiD+DGmIo9qH8VEwYxXNk/Har3rJGSXmt@vger.kernel.org, AJvYcCXGUaUUTD7kXwVbLMDAr/wv81egVyv/5FQRfO/pwV8F39eZxEskjEZ7B7WS1RtsPKY+yM3xIQ0BrLdC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSdcNcKy13k++ls2bnDE2f29/oI/w4FUg1sV3jj6YeWCE1KQEZ
+	bIhEROFTx3ij2+Ir1AOZ76uoQIUNUd0/kKoFbhXB9rc/R3pmzaaKvdvFx5YROTuNs+23Jlrum+Z
+	1A0OnWSmlsorSQGT2o7YUEZVp0ug=
+X-Gm-Gg: ASbGncueo3bdPg7uGn7ZG4M+Motq9NmOUKSrA+ccnItiVycU3CXCGaSLL8/dn6kPz15
+	1pbR2GRYaKmo0MSh4OZ1XkAk4pa2xP+RJmvD+/mGztpOAqNIvDSo=
+X-Google-Smtp-Source: AGHT+IEalPkZChw6AcZLgevhrn3pNRowLBVy27Pnl7AdXloTuPCPHaL/IBPSqSuGOQaBtXbrxsGMgu294cHNUUsFaGU=
+X-Received: by 2002:a17:906:6a26:b0:aa6:873b:ed8a with SMTP id
+ a640c23a62f3a-ab38b4aa1aemr1909040866b.47.1737572020592; Wed, 22 Jan 2025
+ 10:53:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250122-master-v1-1-3c6c66a66fe5@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFEnkWcC/x3MMQqAMAxA0auUzBZs0FK8ijgUTTWDVRIRRby7x
- fHB5z+gJEwKnXlA6GTlLRe4ysC4xDyT5akYsMa2doh2jXqQWB8a11BIfmoTlHgXSnz9ox72Oye
- F4X0/v0hqQ18AAAA=
-X-Change-ID: 20250122-master-68414e8f6d5f
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4451; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=83jz6n7zZ7PM0z70seJ3iIseZ0KsZY3abKHIyLzBlKc=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnkSdY3P6erHcB2FJNYBgs2tLFZlIauGMehbN3z
- x0iLXIun9CJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5EnWAAKCRAADmhBGVaC
- FVRDD/9vqVlxn87VxsqcQGvi/dQWmr0d0bB5/boGPhtSn5v22vBBAkcW4Wgb50khbCVZGDVKhHC
- hsnnk6PuQ+N+QFyE6lCQu7Ek6VuhqtK2HCNwxDhCXdcT71iJBoLi6dDP4WO0apG4geqqkGtKVlt
- ixWnmF46oUeafMubvKCFOonJjZY79/BovmbaZckEYO1BBe5JCX2hbOrVXEPmE7mO+ZVIXs5rL6b
- yG/Kohr90gMtVGyB/X8VuKl0w6NzOzVy5c9inDDlceCgC8G4X8P4v+hL5x1S6dkE1oTWjwRNqs1
- kaIbsieBBkyVavo9P6eQsrVeb51BQ2NfovJ1NzKoeSfPebjObMg6sOpTcfDrCeIRq9J90ccBDOl
- HqRDUNSYHpCkj8cgQVy9iA6RViHK4alG4TPAkq0W3GcDJxjLBAbpPchga0Q6ITQ93h6wnPFhBg5
- yVMY8qLRNLF+MaXwlJRKkSgtWhMFwvdsi9YHv8XkrVgvV/X0E7cHYKFLpZf1+hhuDuuSXH8o/lz
- E2eSrXrAydRPOdW2UCq9X0VhSNeUuOI6bt638lxdqIrv/9AUSe/D5+Ny5TjkYF9RwZSIdCCSDWE
- 0vu7D4SqEf0rovgSmzaD8gXIS2+nBNvolmAwfNOmY8GBG5swJ9yuovuLXD46/vMS6/i7rnf2Wjb
- wE+GqGvLK5nFAOg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
+ <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+ <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+ <c2401cbe-eae9-44ab-b36c-5f91b42c430d@oracle.com> <CAOQ4uxi3=tLsRNyoJk4WPWK5fZrZG=o_8wYBM6f4Cc5Y48DbrA@mail.gmail.com>
+ <50c4f76e-0d5b-41a7-921e-32c812bd92f3@oracle.com>
+In-Reply-To: <50c4f76e-0d5b-41a7-921e-32c812bd92f3@oracle.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 22 Jan 2025 19:53:29 +0100
+X-Gm-Features: AWEUYZl9AsmnMiSSa5gRC4g6-j4zUfXV71i1azOd7R7MILWRjLqo4_2FjGz8l_I
+Message-ID: <CAOQ4uxiVLTv94=Xkiqw4NJHa8RysE3bGDx64TLuLF+nxkOh-Eg@mail.gmail.com>
+Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@hammerspace.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
 
-As of python 3.13, the xdrlib module is no longer included. Fortunately
-there is an xdrlib3 module, which is a fork of the bundled module:
+> > I am fine with handling EBUSY in unlink/rmdir/rename/open
+> > only for now if that is what everyone prefers.
+>
+> As far as I can tell, NFSv2 and NFSv3 REMOVE/RMDIR are working
+> correctly. NFSv4 REMOVE needs to return a status code that depends
+> on whether the target object is a file or not. Probably not much more
+> than something like this:
+>
+>         status = vfs_unlink( ... );
+> +       /* RFC 8881 Section 18.25.4 paragraph 5 */
+> +       if (status == nfserr_file_open && !S_ISREG(...))
+> +               status = nfserr_access;
+>
+> added to nfsd4_remove().
 
-    https://pypi.org/project/xdrlib3/
+Don't you think it's a bit awkward mapping back and forth like this?
+Don't you think something like this is a more sane way to keep the
+mapping rules in one place:
 
-Change pynfs to use that instead and revise the documentation to include
-a step to install that module.
+@@ -111,6 +111,26 @@ nfserrno (int errno)
+        return nfserr_io;
+ }
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- README                                | 8 +++++++-
- nfs4.0/lib/rpc/rpc.py                 | 2 +-
- nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py | 2 +-
- nfs4.0/nfs4lib.py                     | 2 +-
- nfs4.0/nfs4server.py                  | 2 +-
- rpc/security.py                       | 2 +-
- xdr/xdrgen.py                         | 4 ++--
- 7 files changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/README b/README
-index b8b4e775f7766086f870f2dda4a60b3e9f9bac6f..efdc23807e8107b8fcd575e8a4c80b9c73e3cd07 100644
---- a/README
-+++ b/README
-@@ -14,8 +14,14 @@ Install dependent modules:
- * openSUSE
- 	zypper install krb5-devel python3-devel swig python3-gssapi python3-ply
- 
--You can prepare both for use with
-+Install the xdrlib3 module:
++static __be32
++nfsd_map_errno(int host_err, int may_flags, int type)
++{
++       switch (host_err) {
++       case -EBUSY:
++               /*
++                * According to RFC 8881 Section 18.25.4 paragraph 5,
++                * removal of regular file can fail with NFS4ERR_FILE_OPEN.
++                * For failure to remove directory we return NFS4ERR_ACCESS,
++                * same as NFS4ERR_FILE_OPEN is mapped in v3 and v2.
++                */
++               if (may_flags == NFSD_MAY_REMOVE && type == S_IFREG)
++                       return nfserr_file_open;
++               else
++                       return nfserr_acces;
++       }
 +
-+	pip install xdrlib3
++       return nfserrno(host_err);
++}
 +
-+You can prepare both versions for use with
-+
- 	./setup.py build
-+
- which will create auto-generated files and compile any shared libraries
- in place.
- 
-diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
-index 243ef9e31aa83eb6be18800065b63cf78d99f833..475179042530a8d602a51e7bad1af7958ff5dd56 100644
---- a/nfs4.0/lib/rpc/rpc.py
-+++ b/nfs4.0/lib/rpc/rpc.py
-@@ -9,7 +9,7 @@
- 
- from __future__ import absolute_import
- import struct
--import xdrlib
-+import xdrlib3 as xdrlib
- import socket
- import select
- import threading
-diff --git a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
-index 1e990a369e6588f24dff75e9569c104d775ff710..2581a1e1dca22f637dc32144a05c88c66c57665e 100644
---- a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
-+++ b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
-@@ -1,7 +1,7 @@
- from .base import SecFlavor, SecError
- from rpc.rpc_const import AUTH_SYS
- from rpc.rpc_type import opaque_auth
--from xdrlib import Packer, Error
-+from xdrlib3 import Packer, Error
- 
- class SecAuthSys(SecFlavor):
-     # XXX need better defaults
-diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
-index eddcd862bc2fe2061414fb4de61e52aed93495ae..2337d8cd190de90e4d158b3ef9e3dfd6a61027c5 100644
---- a/nfs4.0/nfs4lib.py
-+++ b/nfs4.0/nfs4lib.py
-@@ -41,7 +41,7 @@ import xdrdef.nfs4_const as nfs4_const
- from  xdrdef.nfs4_const import *
- import xdrdef.nfs4_type as nfs4_type
- from xdrdef.nfs4_type import *
--from xdrlib import Error as XDRError
-+from xdrlib3 import Error as XDRError
- import xdrdef.nfs4_pack as nfs4_pack
- 
- import nfs_ops
-diff --git a/nfs4.0/nfs4server.py b/nfs4.0/nfs4server.py
-index 2dbad3046709ea57c1503a36649d85c25e6301a8..10bf28ee5794684912fa8e6d19406e06bf88b742 100755
---- a/nfs4.0/nfs4server.py
-+++ b/nfs4.0/nfs4server.py
-@@ -34,7 +34,7 @@ import time, StringIO, random, traceback, codecs
- import StringIO
- import nfs4state
- from nfs4state import NFS4Error, printverf
--from xdrlib import Error as XDRError
-+from xdrlib3 import Error as XDRError
- 
- unacceptable_names = [ "", ".", ".." ]
- unacceptable_characters = [ "/", "~", "#", ]
-diff --git a/rpc/security.py b/rpc/security.py
-index 0682f438cd6237334c59e7cb280c8b192e7c8a76..789280c5d7328a928b2f6c1af95397d17180eff9 100644
---- a/rpc/security.py
-+++ b/rpc/security.py
-@@ -3,7 +3,7 @@ from .rpc_const import AUTH_NONE, AUTH_SYS, RPCSEC_GSS, SUCCESS, CALL, \
- from .rpc_type import opaque_auth, authsys_parms
- from .rpc_pack import RPCPacker, RPCUnpacker
- from .gss_pack import GSSPacker, GSSUnpacker
--from xdrlib import Packer, Unpacker
-+from xdrlib3 import Packer, Unpacker
- from . import rpclib
- from .gss_const import *
- from . import gss_type
-diff --git a/xdr/xdrgen.py b/xdr/xdrgen.py
-index b472e50676799915ea3b6a14f6686a5973484fb2..f802ba80045e79716a71fa7a64d72f1b8831128d 100755
---- a/xdr/xdrgen.py
-+++ b/xdr/xdrgen.py
-@@ -1357,8 +1357,8 @@ pack_header = """\
- import sys,os
- from . import %s as const
- from . import %s as types
--import xdrlib
--from xdrlib import Error as XDRError
-+import xdrlib3 as xdrlib
-+from xdrlib3 import Error as XDRError
- 
- class nullclass(object):
-     pass
+ /*
+  * Called from nfsd_lookup and encode_dirent. Check if we have crossed
+  * a mount point.
+@@ -2006,14 +2026,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+svc_fh *fhp, int type,
+ out_drop_write:
+        fh_drop_write(fhp);
+ out_nfserr:
+-       if (host_err == -EBUSY) {
+-               /* name is mounted-on. There is no perfect
+-                * error status.
+-                */
+-               err = nfserr_file_open;
+-       } else {
+-               err = nfserrno(host_err);
+-       }
++       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+ out:
+        return err;
 
----
-base-commit: d042a1f6421985b7c9d17edf8eb0d59bcf7f5908
-change-id: 20250122-master-68414e8f6d5f
+>
+> Let's visit RENAME once that is addressed.
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+And then next patch would be:
 
+@@ -1828,6 +1828,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+svc_fh *ffhp, char *fname, int flen,
+        __be32          err;
+        int             host_err;
+        bool            close_cached = false;
++       int             type;
+
+        err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
+        if (err)
+@@ -1922,8 +1923,10 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+svc_fh *ffhp, char *fname, int flen,
+  out_dput_new:
+        dput(ndentry);
+  out_dput_old:
++       type = d_inode(odentry)->i_mode & S_IFMT;
+        dput(odentry);
+  out_nfserr:
+-        err = nfserrno(host_err);
++       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+
+>
+> Then handle OPEN as a third patch, because I bet we are going to meet
+> some complications there.
+>
+>
+
+Did you think of anything better to do for OPEN other than NFS4ERR_ACCESS?
+
+Thanks,
+Amir.
 
