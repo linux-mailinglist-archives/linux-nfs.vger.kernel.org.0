@@ -1,157 +1,235 @@
-Return-Path: <linux-nfs+bounces-9457-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9458-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C108BA18CC8
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 08:31:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81FF9A18E0E
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 10:05:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 590F03A6E37
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 07:31:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B8EE416B06A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 09:05:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93CB5154420;
-	Wed, 22 Jan 2025 07:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FACF20FA86;
+	Wed, 22 Jan 2025 09:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ute6+765"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68F91607AC;
-	Wed, 22 Jan 2025 07:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693C11BC9F6;
+	Wed, 22 Jan 2025 09:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737531097; cv=none; b=knuFvOUprTYXemnVegZS93gBqXTnepUsRxP6FEdl08P+gPfADQd02zoA+a8IBgWcioA6o0t1emfQXgp7/d2RyOXaGuVPe2deWBmkGTN+9t3vDeAQK3Jhp48pc6GB5s4hgcmTyRGQsaTtfspryzZ0T6w/UZS3NYdXbRYgNHbBezc=
+	t=1737536751; cv=none; b=jepNJNZKoylaan8ne0lssnSX0LWbb+LrAsgoR4sCOmrPKyal01Y/jMuJjOeycAw7xyEE23/bwY2U/NOOXPmGmp/sHCv1MNGdH4VzZgVtAwSiQvgCOXZAwtNiikHl/LGxexC/93XjBglpGFm3YYHSOsPg5njWp6Ue60a9FIAFNTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737531097; c=relaxed/simple;
-	bh=LIiOTgjKWhFz77PF2e0k/N4zN1NuQj5EeDMOhMZzZTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VuJrXB3Ynb53iuo7ok5rVZeIUd5OrkZ60FDGPTXAYsg3E5VYn+6C327Mkl8sy4YodRM90OGKi98Xc64cevH5F7FCnsoC+aYvf/HDA6wbgS30JbQaHy4yLS0CHy71KQKDsbzA2nMJjuKJPo2HEHLW6P6U7dSuY/dV2ZouNZShZ1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YdG1Y21vLzmZ92;
-	Wed, 22 Jan 2025 15:29:53 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 27E571403D2;
-	Wed, 22 Jan 2025 15:31:32 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 22 Jan 2025 15:31:31 +0800
-Message-ID: <b90d5ba2-69a6-4373-8aea-16eff78a3419@huawei.com>
-Date: Wed, 22 Jan 2025 15:31:30 +0800
+	s=arc-20240116; t=1737536751; c=relaxed/simple;
+	bh=3RRmpZxmAoe1uIw4WI7VUakriYibc2DFuvjmFJ3pSeU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TzOds5N62lFP1g20Ypq0dvRcoXIPnLTd48WVwdSTcpb6RCSCgMN+GBDOSufcxL9XbHVf74HzaJ3Lu1weJ1XFFBkp9rvRONey6BOIdXPU9eYHvWTwwCS2cib8ODpZ9YKeFjYJ7YUTXl3qC1rG/20XX2NttnkCLspMy/a7zbEgSdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ute6+765; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5d9f0a6ad83so4398223a12.2;
+        Wed, 22 Jan 2025 01:05:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737536748; x=1738141548; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0vRmHoSrgU1nPWeuH0WqSKgeGcll17yciHQbL0asNDA=;
+        b=Ute6+765jFyodSC2PffP4yGGT8NXVAag1dk5o/mDzCflG/U+Jppn06DzUc2GhgmADX
+         LA70pKhmkUAQzkK8sIq8Cpb5WBYh+bWddUhCtyGL248vScUYZHPZ6fs9YFAGGP8Mw5Bg
+         BVOqhki8ofdTL5D3lXh3T+MSL88nyECjXfdxy6rIIsrnCIjJ8KHRcQyJJtS07XlEIClW
+         kByhKd4cuSs8Kx+bLwrtPG39KyxGFHDJ+XvwxCqhWRmiubbvDc5PvNaHrmVoeELxzABi
+         r2FrdxO+pfTuc/ENY59B/m+nFCwFwXjlnXX5TEM3rNZhw6lsBSZZh7UyZXqQ0K0XvMOJ
+         q2mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737536748; x=1738141548;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0vRmHoSrgU1nPWeuH0WqSKgeGcll17yciHQbL0asNDA=;
+        b=pMkNmY3DX4uVjU4elKp8mdz5nk4zOrOTqYeV8z4WvjGfvYPzPZkVI9xEC671+sA9zp
+         yvvamRgxujp6lCHlBG+WDxH6im6GBro02pyEslox/qg8W+rVgS5HUaTarZsx8MvgqANq
+         mj0w+M3WVGqA4X6T0QDX2L9VywLXgOmMtrfE54+ThXw9f1fgQDxvpUPnLooV75FlLwCr
+         MLyaJGF3DfXG4zilvk/GVDLSr7mz5cFboqT9/w0O0lv4d1tS6CNiX1TYcsO9lOuKWOrb
+         ghLULFp9MdAJo0hqw+TUeKYT/JU/uJXBhUuGX2KKCK5WhqZ5SeIXOdTRbp4cjver2NKs
+         Cxaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUikTIQGFoeeHu4UtHkrre8D2Fu1SMVquRcOJokhULb1N2tRBzVNs8CHpWlxp4yb+Exjhm+U9MUAQOmRfDm@vger.kernel.org, AJvYcCX4l0fsSF7d3ZzWByu+zQeVA5LA7T1YaAS4PARb5EbYCC7CfqJPyHKycZF/p2bs67WKlLfle6PL6Muc@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg9VPd27WTCRzoDXa3BJqDFIBXknmMr/d5mudEvw48IdkX5Fdc
+	QolXAJrPOVZHQduAtmDSZD718r/J8remUFegZ72FVoTsOs5H9mEJ+PjA4DPT7D9brYQ4abewO7O
+	5XDbhHTJ0iPd/2EYQSOjle1vopao=
+X-Gm-Gg: ASbGncva8l4kNci7nEC0isKh+lCA93UeHBrKqToLbr5O3Cd544Htl/1pyuSXUu02fKp
+	Th6rixbTaYnNzFHYSGrvi1n2oMMwTtFH1fX2OICtsjxgRBRH//KI=
+X-Google-Smtp-Source: AGHT+IETsyA++uT3CJZEqDhwbzFtZoINbmEq0iZs6sydjpak197Sd0WPTWd0YlrQn2O8yq8bvZ7nCiWGneC+NIiDnDE=
+X-Received: by 2002:a17:906:7953:b0:aa6:6885:e2fa with SMTP id
+ a640c23a62f3a-ab38b26f4acmr1722528766b.14.1737536747162; Wed, 22 Jan 2025
+ 01:05:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] nfsd: free nfsd_file by gc after adding it to lru list
-To: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>
-CC: Chuck Lever <chuck.lever@oracle.com>, <okorniev@redhat.com>,
-	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <yukuai1@huaweicloud.com>,
-	<houtao1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>,
-	<lilingfeng@huaweicloud.com>
-References: <> <6fb21e60487273864136b4912951b5a4fb5b3ae0.camel@kernel.org>
- <173750853452.22054.17347206263008180503@noble.neil.brown.name>
- <173751770796.22054.11065694028641211869@noble.neil.brown.name>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <173751770796.22054.11065694028641211869@noble.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
+ <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+In-Reply-To: <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 22 Jan 2025 10:05:35 +0100
+X-Gm-Features: AbW1kvY23JMUBUXQOt8kQHHyYSxHI09hU7DHT8V2lCY2VddmflSX8bjQa04cMQo
+Message-ID: <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, Trond Myklebust <trondmy@hammerspace.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 21, 2025 at 11:59=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
+>
+> On Wed, 22 Jan 2025, Amir Goldstein wrote:
+> > On Tue, Jan 21, 2025 at 8:45=E2=80=AFPM Chuck Lever <chuck.lever@oracle=
+.com> wrote:
+> > >
+> > > Please send patches To: the NFSD reviewers listed in MAINTAINERS and
+> > > Cc: linux-nfs and others. Thanks!
+> > >
+> > >
+> > > On 1/21/25 5:39 AM, Amir Goldstein wrote:
+> > > > Commit 466e16f0920f3 ("nfsd: check for EBUSY from vfs_rmdir/vfs_uni=
+nk.")
+> > > > mapped EBUSY host error from rmdir/unlink operation to avoid unknow=
+n
+> > > > error server warning.
+> > >
+> > > > The same reason that casued the reported EBUSY on rmdir() (dir is a
+> > > > local mount point in some other bind mount) could also cause EBUSY =
+on
+> > > > rename and some filesystems (e.g. FUSE) can return EBUSY on other
+> > > > operations like open().
+> > > >
+> > > > Therefore, to avoid unknown error warning in server, we need to map
+> > > > EBUSY for all operations.
+> > > >
+> > > > The original fix mapped EBUSY to NFS4ERR_FILE_OPEN in v4 server and
+> > > > to NFS4ERR_ACCESS in v2/v3 server.
+> > > >
+> > > > During the discussion on this issue, Trond claimed that the mapping
+> > > > made from EBUSY to NFS4ERR_FILE_OPEN was incorrect according to the
+> > > > protocol spec and specifically, NFS4ERR_FILE_OPEN is not expected
+> > > > for directories.
+> > >
+> > > NFS4ERR_FILE_OPEN might be incorrect when removing certain types of
+> > > file system objects. Here's what I find in RFC 8881 Section 18.25.4:
+> > >
+> > >  > If a file has an outstanding OPEN and this prevents the removal of=
+ the
+> > >  > file's directory entry, the error NFS4ERR_FILE_OPEN is returned.
+> > >
+> > > It's not normative, but it does suggest that any object that cannot b=
+e
+> > > associated with an OPEN state ID should never cause REMOVE to return
+> > > NFS4ERR_FILE_OPEN.
+> > >
+> > >
+> > > > To keep things simple and consistent and avoid the server warning,
+> > > > map EBUSY to NFS4ERR_ACCESS for all operations in all protocol vers=
+ions.
+> > >
+> > > Generally a "one size fits all" mapping for these status codes is
+> > > not going to cut it. That's why we have nfsd3_map_status() and
+> > > nfsd_map_status() -- the set of permitted status codes for each
+> > > operation is different for each NFS version.
+> > >
+> > > NFSv3 has REMOVE and RMDIR. You can't pass a directory to NFSv3 REMOV=
+E.
+> > >
+> > > NFSv4 has only REMOVE, and it removes the directory entry for the
+> > > object no matter its type. The set of failure modes is different for
+> > > this operation compared to NFSv3 REMOVE.
+> > >
+> > > Adding a specific mapping for -EBUSY in nfserrno() is going to have
+> > > unintended consequences for any VFS call NFSD might make that returns
+> > > -EBUSY.
+> > >
+> > > I think I prefer that the NFSv4 cases be dealt with in nfsd4_remove()=
+,
+> > > nfsd4_rename(), and nfsd4_link(), and that -EBUSY should continue to
+> > > trigger a warning.
+> > >
+> > >
+> >
+> > Sorry, I didn't understand what you are suggesting.
+> >
+> > FUSE can return EBUSY for open().
+> > What do you suggest to do when nfsd encounters EBUSY on open()?
+> >
+> > vfs_rename() can return EBUSY.
+> > What do you suggest to do when nfsd v3 encounters EBUSY on rename()?
+> >
+> > This sort of assertion:
+> >         WARN_ONCE(1, "nfsd: non-standard errno: %d\n", errno);
+> >
+> > Is a code assertion for a situation that should not be possible in the
+> > code and certainly not possible to trigger by userspace.
+> >
+> > Both cases above could trigger the warning from userspace.
+> > If you want to leave the warning it should not be a WARN_ONCE()
+> > assertion, but I must say that I did not understand the explanation
+> > for not mapping EBUSY by default to NFS4ERR_ACCESS in nfserrno().
+>
+> My answer to this last question is that it isn't obvious that EBUSY
+> should map to NFS4ERR_ACCESS.
+> I would rather that nfsd explicitly checked the error from unlink/rmdir a=
+nd
+> mapped EBUSY to NFS4ERR_ACCESS (if we all agree that is best) with a
+> comment (like we have now) explaining why it is best.
 
-在 2025/1/22 11:48, NeilBrown 写道:
-> On Wed, 22 Jan 2025, NeilBrown wrote:
->> On Wed, 22 Jan 2025, Jeff Layton wrote:
->>> To be clear, I think we need to drop e57420be100ab from your nfsd-
->>> testing branch. The race I identified above is quite likely to occur
->>> and could lead to leaks.
->>>
->>> If Li Lingfeng doesn't propose a patch, I'll spin one up tomorrow. I
->>> think the RCU approach is safe.
->> I'm not convinced this is the right approach.
->> I cannot see how nfsd_file_put() can race with unhashing.  If it cannot
->> then we can simply unconditionally call nfsd_file_schedule_laundrette().
->>
->> Can describe how the race can happen - if indeed it can.
-> I thought I should explore this more and explain what I think actually
-> happens ...
->
-> Certainly nfsd_file_unhash() might race with nfsd_file_put().  At this
-> point in nfsd_file_put() we have the only reference but a hash lookup
-> could gain another reference and the immediately unhash it.
-> nfsd_file_queue_for_close() can do this.  There might be other paths.
->
-> But why does this mean we need to remove it from the lru and free it
-> immediately?  If we leave it on the lru it will be freed in a couple of
-> seconds.
->
-> The reason might be nfsd_file_close_inode_sync().  This needs to close
-> files before returning.
-> But if nfsd_file_close_inode_sync() is called while some other thread
-> holds a reference to the file and might want to call nfsd_file_put(),
-> then it isn't going to succeed anyway so any race here doesn't make any
-> difference.
->
-> So I think the following might be the best fix
-Agree.
-I ignored the trace point in nfsd_file_lru_add(), this one looks better.
-And I have tested it.
+Can you please suggest the text for this comment because I did not
+understand the reasoning for the error.
+All I argued for is conformity to NFSv2/3, but you are the one who chose
+NFS3ERR_ACCES for v2/3 mapping and I don't know what is the
+reasoning for this error code. All I have is:
+"For NFSv3, the best we can do is probably NFS3ERR_ACCES,
+  which isn't true, but is not less true than the other options."
 
-Thanks.
+> And nfsd should explicitly check the error from open() and map EBUSY to
+> whatever seems appropriate.  Maybe that is also NS4ERR_ACCESS but if it
+> is, the reason is likely different to the reason that it is best for
+> rmdir.
+> So again, I would like a comment in the code explaining the choice with
+> a reference to FUSE.
+
+My specific FUSE filesystem can return EBUSY for open(), but FUSE
+filesystem in general can return EBUSY for any operation if that is what
+the userspace server returns.
 
 >
-> ???
+> Then if some other function that we haven't thought about starts
+> returning EBUSY, we'll get warning and have a change to think about it.
 >
-> Thanks,
-> NeilBrown
->
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index fcd751cb7c76..773788a50e56 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -322,10 +322,13 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
->   static bool nfsd_file_lru_add(struct nfsd_file *nf)
->   {
->   	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> +	rcu_read_lock();
->   	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
->   		trace_nfsd_file_lru_add(nf);
-> +		rcu_read_unlock();
->   		return true;
->   	}
-> +	rcu_read_unlock();
->   	return false;
->   }
->   
-> @@ -371,19 +374,8 @@ nfsd_file_put(struct nfsd_file *nf)
->   
->   		/* Try to add it to the LRU.  If that fails, decrement. */
->   		if (nfsd_file_lru_add(nf)) {
-> -			/* If it's still hashed, we're done */
-> -			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> -				nfsd_file_schedule_laundrette();
-> -				return;
-> -			}
-> -
-> -			/*
-> -			 * We're racing with unhashing, so try to remove it from
-> -			 * the LRU. If removal fails, then someone else already
-> -			 * has our reference.
-> -			 */
-> -			if (!nfsd_file_lru_remove(nf))
-> -				return;
-> +			nfsd_file_schedule_laundrette();
-> +			return;
->   		}
->   	}
->   	if (refcount_dec_and_test(&nf->nf_ref))
->
->
+
+I have no objection to that, but I think that the WARN_ONCE should be
+converted to pr_warn_once() or pr_warn_ratelimited() because userspace
+should not be able to trigger a WARN_ON in any case.
+
+I realize the great value of the stack trace that WARN_ON provides in
+this scenario, but if we include in the warning the operation id and the
+filesystem sid I think that would be enough information to understand
+where the unmapped error is coming from.
+
+This is not expected stop the whack-a-mole of patches like mine and this on=
+e:
+340e61e44c1d2 ("nfsd: map the EBADMSG to nfserr_io to avoid warning")
+but at least the severity of the issues will be reduced without the scary
+WARN_ON splat.
+
+I can write a patch if there is an agreement on that.
+
+Thanks,
+Amir.
 
