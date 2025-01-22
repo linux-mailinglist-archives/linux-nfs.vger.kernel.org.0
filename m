@@ -1,200 +1,397 @@
-Return-Path: <linux-nfs+bounces-9467-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9468-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B148A19493
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 16:03:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 034FAA1949A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 16:04:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8A2D188313A
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 15:03:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0BCA188BB66
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 15:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12510213E86;
-	Wed, 22 Jan 2025 15:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B970213E86;
+	Wed, 22 Jan 2025 15:04:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUDeKcAl"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ojM0RYRB";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="tyZorGGK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5876212B37;
-	Wed, 22 Jan 2025 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737558226; cv=none; b=fdtbDsp+9h6jGaGEShOB+E33wNXosa+uSUIQK4p707fFJyaYDZml6eFfQ1U5iNb2YooZi5XlceVRfLx0plKpjBu1jz3pOco+FdncVci+rkAwaBh03+km5C/p0L8Yia6PtVH41C66699E7I4WMXNBYpUGZscc9uNw2OHwbn9I93I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737558226; c=relaxed/simple;
-	bh=mJw6JC6a2nBLtrdMMJVE8kVkFyTBFjr137WrzE7y1Qo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lamJBJG9o3ehpIM8e75+dyoJnPCpZFVkCWDlJRGjLYHglK3VHSRETYhZoud7mVDeG2/tbF2XtSIrShgJr751IlmGP4/H/1gsIqtWGQPpCHI58c9kUyiAm86irCpvLwIlUhsUaQ73/kQhNdbC9IuzFmS62SL+ArwEKbmhy6XH4/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUDeKcAl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE62C4CED2;
-	Wed, 22 Jan 2025 15:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737558225;
-	bh=mJw6JC6a2nBLtrdMMJVE8kVkFyTBFjr137WrzE7y1Qo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=mUDeKcAlwvcNjTnWBevT2B/Vu097QsXTQpdk2l7SezPkpc0eG8OJO7YJYiepLjm6T
-	 Ex3gHVXRXaWqDweFqrL8EmJm1p5fC5wng48YcntKMT5HNm7/075Uc/t5fdRsBHStX9
-	 +p4mIaFICRKMp4RMP7Hg5Zb7Bacjja6NOFYbY8UdYY+pf6qNL8G4iaJjA6ihpvm6uU
-	 oKUrpiC1OHashIfFipRDAUU3qBUSjqEl/iz6ztuFo9DUFj7L6LPLLE2GQsrnnqCr3T
-	 jQovwDgqVr6a7kI58kIP3J1diadnw7Qr4z9s9Y2YeIZtZd8DggXzl6QgazbcA2KAee
-	 HpI8TDMyuaR7Q==
-Message-ID: <1593dfc45d62eec78978b4890842c9b7f84c5d31.camel@kernel.org>
-Subject: Re: [PATCH] sunrpc: add netns inum and srcaddr to debugfs rpc_xprt
- info
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, "David S. Miller"	 <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 22 Jan 2025 10:03:42 -0500
-In-Reply-To: <20250122-nfs-6-14-v1-1-164b0b5aa330@kernel.org>
-References: <20250122-nfs-6-14-v1-1-164b0b5aa330@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F26213E91;
+	Wed, 22 Jan 2025 15:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737558260; cv=fail; b=YOCs1CKgXTvZLtFmzG8jMvkhr7BFs1AEvsNfk6IoURvzxf3WSAAi2TVUNJqBi+P+A3U/QmNO4Q0bfb+ODVVQ5kPvlZc+q1rrpr/UDDxIaHEwTTxnUv0ZMYjEzC0GAmSnnHn1Gyx6tf63Y7JIVIJu8Kg/das/yUuXJS3ESsAASNU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737558260; c=relaxed/simple;
+	bh=znDc+mP/r+w+pwJIMbKqGS6wQDJfZ7OL73gj4pEkZ+o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qgyLhNdGQ9hQjN/ZWUtIrJ32BmnLheQzx4VAp9H18GxLWtxNzCDP5UUOIJloa1UejPizsXG0fm/WoB/JWT91P6Z2asfUuZpT6lV+AdsTzIUHGmqk0MfHjwtEsweX5dpdedXZTmJv4+yWeSuE78lt+kC4K+zGwZIf82Ix+lZ587M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ojM0RYRB; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=tyZorGGK; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50MEXlIW023239;
+	Wed, 22 Jan 2025 15:04:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=PwClu42LlbdXxZ9Pi1+S6EZI7ptPj57YLb0CsavD0tk=; b=
+	ojM0RYRBhwhr9ksWQTP2Mzmt3vlKbNmwDnwUnY9bS9D/OY4goAXuLd9weXlzmAhd
+	XMDuf0wLa+zCH5KYu/Hg6CQhgiGwmqmmPfDR1ybeH+793VRwgw/E01kWD/ElxS/Z
+	SAsKCddF03Q5tlzraMFcOwKVW9cPxQSUoHyuUGQ/shyZYqFZ4Hj9thGus872ASJZ
+	rs+HJZGY93R+QYoWlDi5jDKPt12BwP81osu0VafKc6q3e2lrfIwgoZsTfDRl1D13
+	nBVaPdnT5FLxckPVVwqdyMVORUvVpw3JyVrwjbCSi7flFK2yTqVZEfM0ZmyzIea3
+	/AhsiX1FDsk0SXNvaj1+5A==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4485rdfxpn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Jan 2025 15:04:07 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50MEV0Jp038143;
+	Wed, 22 Jan 2025 15:04:06 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4491a1eakn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Jan 2025 15:04:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cS4FlaC9uJYLp0jPXsoxKFZ0v1s4ul2G0GFO0y7N6QysRXBAaWF8gKqWzfU0+C55G9iPLSxK1HuuZqTj0uU5VdOBrdySyQpxfkkN1WM2l/0bVX0ZywQlHOPUJtAdpaBSo0woiOBDxbI8+o6zAkjeOxIT+IsRTsVhyIYcrOmRKXuahVCmBpeIH7ZlYh1rHifNwPMc65IP7i/s5TVxFixDjByXcaaJvcW7uq43hls2sHLBVlMgujhSg2JPn5PRjKpkNuipH7lbY3hWmSIHLuDaliQNQCpJIFMC2EJAxqnZoSzwOqK6upkFnxuR3VC9RA2PFUNigw8ffzDYOssfycM3/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PwClu42LlbdXxZ9Pi1+S6EZI7ptPj57YLb0CsavD0tk=;
+ b=HNlRiX35RrugOIliIO5WgC8VShDdIIO5VH9HpOs+AsvSmoCcgT6PwgX+84F9eBRR0vFQS82t9Ty6BtU+jenb19wc+N6Pw5zjAfvnlJJshhmLONrwiliC3qqWdLhTOuQ5Tj/1Sd8JmPI1ygA50qyINkTgbbzq2Z+ogcrvvmkeYf1l3kR8RhHcAA+KIJHOVcpyo2A+TKJIyKe/osUd4gVo8eUIqmI4O9XZyrvzgl7R91X5OhdC73RMFpTF1j+WKX+cu6a5kYvgCesNDcafDEvTNO8Di8ldzpdVDF35x07RKzHnGEoP+uKuJT9CDNj/OSV7jtyGMXA3IAG2kQadSrrZYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PwClu42LlbdXxZ9Pi1+S6EZI7ptPj57YLb0CsavD0tk=;
+ b=tyZorGGKCcKNm3bKBY62QTOFpRgZkP7t0VwBzjJMj4VB0P4f1OaqdfWzl/FEl8OU3DFjbaQd8BRBTfcEkyzZS1Vd04rnQ7zvK4QHyP6apuHIbnlZIUkgkVCO0GXs2ZIm7qi3Ge9Hvh6jX05la7SVU0k6IB/zatjhZJkCmqTFkFs=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH0PR10MB7440.namprd10.prod.outlook.com (2603:10b6:610:18c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Wed, 22 Jan
+ 2025 15:04:04 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Wed, 22 Jan 2025
+ 15:04:03 +0000
+Message-ID: <c2401cbe-eae9-44ab-b36c-5f91b42c430d@oracle.com>
+Date: Wed, 22 Jan 2025 10:04:01 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
+To: Amir Goldstein <amir73il@gmail.com>, NeilBrown <neilb@suse.de>
+Cc: Jeff Layton <jlayton@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
+ <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+ <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR03CA0295.namprd03.prod.outlook.com
+ (2603:10b6:610:e6::30) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH0PR10MB7440:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9feb7e6f-3f37-4f13-ad72-08dd3af6029b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?K2hQVkVZLzZNbTJZei9MZm45R1h0aUJVK3o2MUNqeDNybUd2cFNkR04zR0FQ?=
+ =?utf-8?B?KzZTaDdFN0tYNEFnRGxzZ2U2WHNUQTZOYkx6M0FQRDI3bWNTckp1czN3T2g1?=
+ =?utf-8?B?U2pOWHVDRkpYbXhhNFEyRTlwRDhXRGplNkNoWk5UMGI2RGFjd3dQZ2VOa3NL?=
+ =?utf-8?B?enhZVUtaVVZGM0h3REcvZEdKNUU5ZkRBK0NrejRJSmVGZDlBM0dETGM2MndC?=
+ =?utf-8?B?SWFTODlybEcwKzBjRzQ5VmxvWDdrcGJ2WnYxQjFjc2cxdzdVamVnSGN4Zmt2?=
+ =?utf-8?B?U3NkZCtLK0E3RkswL0JnQkUxcklLM3A3WUNmczRBZ1RLaHEvcjArVlVkNVhh?=
+ =?utf-8?B?Ti9pV0Q0aXJvMjlLZlhuaWhsakN5emZNbFJwVjJBZzZ4OFRMbnNMQXpuWklE?=
+ =?utf-8?B?SVcwbW1sNnNhay9jK2ZiMWhaNWpGRTlRM2RuVkVhbkFtWVhqNlQ2Q0pWQUxW?=
+ =?utf-8?B?aEZYbEJVL1ZpSTl2NkZyVjJlSC9WREJoT0dxaGNPdTRWbHhrZ3lZMmRxU1VV?=
+ =?utf-8?B?aE1Dbll6YkpTS3lSY0lLTWJOR01vU3VjeTJvQ2V3L1U2Uk5mTmVBU2pWcUg5?=
+ =?utf-8?B?M1VsSFNjVmZBZ2pRS29CVWF3aU5HaUlpbzA3RVlGMHdobGFlTklUd3lUSjlK?=
+ =?utf-8?B?c0VzRkhRVksvR0ZEb1RoMDdDT1M3QTk3TUVuaDVmM1RtelUySnRkOUJJR3Zj?=
+ =?utf-8?B?clJFdFNoOUtZR2ljeS92ZVpTTEphM01TTDRxZThaeWJQT085dExJK2NTTXZy?=
+ =?utf-8?B?ODFCbDNrdURFdWxKVXpVNVFXbEdpRStZMndlZjJSZ29BUTRabUNJYVlGeWlR?=
+ =?utf-8?B?c2hoY21QemdabnozblBDSXM4MFI1K1Z0M2JpTTNlaTYzb1NoN2I0L29vQ1g3?=
+ =?utf-8?B?K0RrdEMwSDhWY2VYaU5JK0VMMzFvbFIrb1hBWmoyN01sbjR4SzBUY2ZkQ0xR?=
+ =?utf-8?B?UkdRVzNGeFA1TElOcDA1Tm91UzNQWnM4S2t4WHBtZEtFK3U4VGw5cjg5eDAv?=
+ =?utf-8?B?eldyTk1oKzJ6Tk8yTEtzTFJLWXhJZXduUnB1TERrb0hJZGJZMk15SGhNQmxB?=
+ =?utf-8?B?RTVrTzJVQnNEdWtUdm0wYXNYdkx2SE5IRlR4M0tPcThKaEdwemYzaVRESlhZ?=
+ =?utf-8?B?STRMdFkzWmlRcmxZV0hKWUZqZmVTdHdxQ1ZYdTdXNVlDM0JqWEp1cmZOME5X?=
+ =?utf-8?B?aHhuc0dZaXhBU0h3WmVrZldNT3RkQ3Zwc1ExaktDaUlVUWJBWk5SbktUK3lv?=
+ =?utf-8?B?ZnNGK1pkV3BUbDRpUWdZODFSaW9uUGEza0ppeUZIK2c4a1BKcFRNbkswblQ3?=
+ =?utf-8?B?R2dtUndhcnA3U2ZWTElYbFFKZUhvZVZHYlVYdmVVUXdKUHdJcmZsckFwQlNI?=
+ =?utf-8?B?bGhFZHZGR1h5MU9TN1lwS2t6K0MzMzhjWGJVbERwT0M4anQrdFZMZlNCcVVD?=
+ =?utf-8?B?R1p5QnE1ZEdSdXowZ0VFSFZxK0ZWZk56UkxlM0sxTm5pL0lkZXRJQ1FUS0JO?=
+ =?utf-8?B?UGtwMTJ0YVYrY3pveGhJWnJ2TlB1bFQyZzMrNHdDdkMwaGxaME84SzVIenRO?=
+ =?utf-8?B?SXkzWWpPT2VGWlVEQ3FBQU1ud0xOSVRiMEVpVEFCNkVkZkhzajVyTy9VTTZH?=
+ =?utf-8?B?WitPVUVKVDJTSWpYSGJmNmhnc1BodE1XdzRuY1pzRjRWTWZacjVzL2FhNUxh?=
+ =?utf-8?B?M1BYdUtIVTFSY3ZqcUh3YVpGbGlDVEorSDQ3QjBJTmM3N0YrOHdsYjlyeGl0?=
+ =?utf-8?B?OGNzYXUwaVZOcVRGODVxakJIc0RjREVsQXBRM3Zyams1NTJEdGQvdW1JOTdr?=
+ =?utf-8?B?eUxGT3pPTFFoRDZpYXUvTkNXYytQYzZvUnNRZUFRUGZva2JxR1RjOXZSd0d0?=
+ =?utf-8?Q?wh8iBzdt4LJ0U?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T3ZDNFVtWUwwTFlNd1EzYzdpN0xiTTErVTVaejVIV3FSWEVaNFg3RGRnMmlj?=
+ =?utf-8?B?ZmFpZ2w3WkhhaTFYUUozaUpXblRNaDF5NUNxaElXbVFNeDk5SWZpbzE1VmFm?=
+ =?utf-8?B?QTU1RFpsZlJGVSthVzJiVkhDYXVZcnQzc1I5RWs4Y3lWNFlNeS82M2dESzRL?=
+ =?utf-8?B?TmU5NzNGemlsTkhmSE9zdkN1VS96cHAxK3RhZFdzTUEwY21HV1NORzVwcUE1?=
+ =?utf-8?B?TlRDc2ptUG12K3BsV3MzZTA0bUNqUlNtTjRUWWlJYnlvYW5qeHZjWi84V1RU?=
+ =?utf-8?B?MzRwVEVyLy9LSDk1VUVuZlZ1Y1lPNHREZDBLdnVPMlExRGt1UVg4NW12S2x4?=
+ =?utf-8?B?RkR6T2c0VVBVRGFocmNEcDNJUFh2MUJYV2VnbXhGSFVpd1laa0ZrS3pnaUZY?=
+ =?utf-8?B?c0ZlbG4zY2Nxdk4zZ25QemI1Y1RzOTNVUWdpSmdjSHd6dDE5TE5Scm1lSTRF?=
+ =?utf-8?B?WCtNbmFpTHNyTUF1WmlwZTRYOExITVdpYzNneGhoS1JlK0d3NE5Rdmd0MklR?=
+ =?utf-8?B?YklSRE1palpkNi9CMyszZ2Z0bEFsV3RyQWxyaE5RZTQrYjVtQ1lVNG05Vll2?=
+ =?utf-8?B?VkJDOEg2RXNkTEEzbEhmbmpRaENNZ0F5RTU5Y1h3cDdZeGg4R0xGNXE3Y2pa?=
+ =?utf-8?B?b2w2WjNJWnMwZ1lmOUtjdFkrUDUrZWR5eFVDc1Aya1hwY04xL2J4NW1Va0dz?=
+ =?utf-8?B?Qk1qcnE5UHRSOFFUTndVNUY5TmRDbjh2QjRGS2g1U2xhZGJwOW1lcDZhVjhU?=
+ =?utf-8?B?dVdwYTdad2M5akVwVWlHWFIrMUhXMlhXV2U5ZDltWHpmWFRYT1l1aFlBbVJB?=
+ =?utf-8?B?VUNQZDFrSGF3K0xTcEZlMC9JRjBnMkMyTlA5VGloRnJ2TVRBdFh4UHNDQURm?=
+ =?utf-8?B?Q1Y2TmxPT3dEWThHZUlwbXhCSzBlRVpFREFkckZkQjBpaTk3MDcyQlNpVGVP?=
+ =?utf-8?B?bFhua3M0b0p6NTlSb0tML3RtNmdQSjVnK0htcXdKUlZYQXdUTkRvMFgrUFJR?=
+ =?utf-8?B?N0RuRHYyR3psRzdFZW4waEt1NVAybGRtOVNPeEFaV09QdnUxcDV5aGpQL2dO?=
+ =?utf-8?B?K0NaMkxPQW1pYWZtWXZGWGp4VUhWZHQvVFFWWXE4REJGZitOVHhmUit5MDd6?=
+ =?utf-8?B?YjhnUm5JLzVWOGVFZjVHUm5na0VPUUdJNGhFTk1kbGVJWTBRVjhIc2ErV21m?=
+ =?utf-8?B?VkliZzJWUHd0RWFvRDJnZkhBWlNnbFpla1hadVJYMUQzclYzRlFpaUxNMHRF?=
+ =?utf-8?B?cDRzbUVGdW9MZk11TEF0ZHFKZEJDWFFyNXNlaVJWVndKeFY5WnJkSzM1TGNq?=
+ =?utf-8?B?T1IxS0lSeU03ZEpvSmNlN0ExdjJ6azZmLzBvNzlVRkkrNGhTWmJrOUlOcGZy?=
+ =?utf-8?B?eUJRdUFrYk1rbFpjOS9sYlF6RnVjL2Q2NlcvcnAwVGorSHY2Z1R5Z0dVaHlC?=
+ =?utf-8?B?a1VpbVgwVHZOTWRnUzdveUNqQmZ1VFU2c1JialNvaTVlb0cwVkxmU2gxQXUr?=
+ =?utf-8?B?YWtxemFTWkhOUVlkQmZKcThReVU0eHpWM1NSYjdLTE1lTVJRbVVkemhFaGJ4?=
+ =?utf-8?B?K0J5enNXOTVQQ2JiVlR2WHlFZ3g0WDNnMkpSVmplNUJ1RXdER2UzOUV0aTVY?=
+ =?utf-8?B?Q0hpK1YwQllYeGd0UzhUQkowQVpNTTJwYy93VWpqVHF6MEpUOTQ4Y2U3STRr?=
+ =?utf-8?B?Sk5HUVNKVURTVlFpWGhHK2dMaGYwaUF4aWY1dFFlNkc4TkhON1d1c2syWlFm?=
+ =?utf-8?B?NzJqaHJDU3BSaW5pa2wyYnhJTG1JMGs1Ym5pM0orZ1FYVmJDa05xL1A5ckdW?=
+ =?utf-8?B?am9TOThvQlRrWUdEQ2t1RVFPK0tOeG9ZOHRVMUNwWGkrRGhLM29XMmlEWWgx?=
+ =?utf-8?B?dGFzR1dNN0lvVDJEc1JJN1FsSm9BTHpvLzlZck9VYkVVRC9KNlJwY2JPSmxt?=
+ =?utf-8?B?UXViSVZLS1I0dkJIcDVacDRicTZneDRacnB5ZUZuMnI4UWRneHlQV3RVT2J0?=
+ =?utf-8?B?NW1ZYjBBWjZHYWdXdVJCVlZQTzhCOThUTFIxSkdFWFZZaGFNWlhaVzhFOVp5?=
+ =?utf-8?B?eHlmL0JNeXN0RzVPTGRRMUcvYXZwTjJQcUkvTm5nVVphTVZoWG0zN2dyUnpY?=
+ =?utf-8?B?RTl2SnhKTHR6d0N2dVRLdnd1SHI4bTE2ckczMTk5ZVdJVmN2OEpLWDBXU01M?=
+ =?utf-8?B?cHc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0zmSlR3Gp3gS3PCFku8607Zno55DYqapWSIZoE591FDHBSiws9TmB8olUuDUtjlBP/UCaXRNZD+Ner+mJdkCvp6HsDjN/+3MelKbmrGG+l6SA3p4GPvsb7SWMmyhse7pa2unXCoNt4KGxrvvd8lW79uv3Xty8llbgFKN6EIDUU8PZjoWXDzV4p66u/oAjSQvmy9Or/Y++P0feOdl9ho1au35L6VSUpCvnyf33Y40b7CO48EK7EatEjmuS3rEfBHCSDDwQrcMk5smzYbyK43EBIlg9iVOvnH4LTt+BNwWrTJUPYF0HQN5Pi7u7bV+OkrO10kvynQ98VCMqiJJJAt/fu8MlkPLR0PRZcrmJlUTtYYpBHeko1nR7F3d4qKNp/sJXGXEDZvBk31KPAstLAEgQNCFGDsMtg2ujM616fGxExjz2gNa8M02uj3zyZBWtoUImFOW7biFVTWCdCE8k9HfNwi4dRMCN2mcn4VCRbn9ucizEEZro75F7+b4vgPvSw0JvSaNsvmwlv5OVI2AFj4XcbW45fO7AWYURBQU4gj6BFgoNJsHliDlXaRbMb8FeWbcmle6iLzM3DSSkbJM4iuwkAn9zF7QN/2JwTGFAAplo5E=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9feb7e6f-3f37-4f13-ad72-08dd3af6029b
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 15:04:03.8100
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BhR5HLko5IMVM+4cHNcUfJa8fGs+XKR4XsIMWFctU0cQBWWHKHBhb0KdqzPw2qlpVk7waEhfU/v5pNpCOHwjxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7440
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-22_06,2025-01-22_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2501220111
+X-Proofpoint-ORIG-GUID: 1J77mmZ6OYOM9E-wm9zb6pWtoLgb5eax
+X-Proofpoint-GUID: 1J77mmZ6OYOM9E-wm9zb6pWtoLgb5eax
 
-On Wed, 2025-01-22 at 09:59 -0500, Jeff Layton wrote:
-> The output format should provide a value that matches the one in
-> the /proc/<pid>/ns/net symlink. This makes it simpler to match the
-> rpc_xprt and rpc_clnt to a particular container.
->=20
-> Also, when the xprt defines the get_srcaddr operation, use that to
-> display the source address as well.
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> This is more client-side code, so I figure this should go in via the NFS
-> client tree, but if Chuck would rather pick it up, then that's fine too.
-> ---
->  net/sunrpc/debugfs.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-> index a176d5a0b0ee9a2c0ca1d1ed3131b67b782c3296..3b39493234d7079ff762a862b=
-dd51725f36472dc 100644
-> --- a/net/sunrpc/debugfs.c
-> +++ b/net/sunrpc/debugfs.c
-> @@ -179,6 +179,22 @@ xprt_info_show(struct seq_file *f, void *v)
->  	seq_printf(f, "addr:  %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
->  	seq_printf(f, "port:  %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
->  	seq_printf(f, "state: 0x%lx\n", xprt->state);
-> +	seq_printf(f, "netns: %u\n", xprt->xprt_net->ns.inum);
-> +
-> +	if (xprt->ops->get_srcaddr) {
-> +		int ret, buflen;
-> +		char buf[INET6_ADDRSTRLEN];
-> +
-> +		buflen =3D ARRAY_SIZE(buf);
-> +		ret =3D xprt->ops->get_srcaddr(xprt, buf, buflen);
-> +		if (ret > 0) {
-> +			if (ret < buflen - 1)
-> +				buf[ret] =3D '\0';
-> +		} else {
-> +			ret =3D sprintf(buf, "<closed>");
-> +		}
-> +		seq_printf(f, "saddr: %s\n", buf);
+On 1/22/25 4:05 AM, Amir Goldstein wrote:
+> On Tue, Jan 21, 2025 at 11:59 PM NeilBrown <neilb@suse.de> wrote:
+>>
+>> On Wed, 22 Jan 2025, Amir Goldstein wrote:
+>>> On Tue, Jan 21, 2025 at 8:45 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> Please send patches To: the NFSD reviewers listed in MAINTAINERS and
+>>>> Cc: linux-nfs and others. Thanks!
+>>>>
+>>>>
+>>>> On 1/21/25 5:39 AM, Amir Goldstein wrote:
+>>>>> Commit 466e16f0920f3 ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink.")
+>>>>> mapped EBUSY host error from rmdir/unlink operation to avoid unknown
+>>>>> error server warning.
+>>>>
+>>>>> The same reason that casued the reported EBUSY on rmdir() (dir is a
+>>>>> local mount point in some other bind mount) could also cause EBUSY on
+>>>>> rename and some filesystems (e.g. FUSE) can return EBUSY on other
+>>>>> operations like open().
+>>>>>
+>>>>> Therefore, to avoid unknown error warning in server, we need to map
+>>>>> EBUSY for all operations.
+>>>>>
+>>>>> The original fix mapped EBUSY to NFS4ERR_FILE_OPEN in v4 server and
+>>>>> to NFS4ERR_ACCESS in v2/v3 server.
+>>>>>
+>>>>> During the discussion on this issue, Trond claimed that the mapping
+>>>>> made from EBUSY to NFS4ERR_FILE_OPEN was incorrect according to the
+>>>>> protocol spec and specifically, NFS4ERR_FILE_OPEN is not expected
+>>>>> for directories.
+>>>>
+>>>> NFS4ERR_FILE_OPEN might be incorrect when removing certain types of
+>>>> file system objects. Here's what I find in RFC 8881 Section 18.25.4:
+>>>>
+>>>>   > If a file has an outstanding OPEN and this prevents the removal of the
+>>>>   > file's directory entry, the error NFS4ERR_FILE_OPEN is returned.
+>>>>
+>>>> It's not normative, but it does suggest that any object that cannot be
+>>>> associated with an OPEN state ID should never cause REMOVE to return
+>>>> NFS4ERR_FILE_OPEN.
+>>>>
+>>>>
+>>>>> To keep things simple and consistent and avoid the server warning,
+>>>>> map EBUSY to NFS4ERR_ACCESS for all operations in all protocol versions.
+>>>>
+>>>> Generally a "one size fits all" mapping for these status codes is
+>>>> not going to cut it. That's why we have nfsd3_map_status() and
+>>>> nfsd_map_status() -- the set of permitted status codes for each
+>>>> operation is different for each NFS version.
+>>>>
+>>>> NFSv3 has REMOVE and RMDIR. You can't pass a directory to NFSv3 REMOVE.
+>>>>
+>>>> NFSv4 has only REMOVE, and it removes the directory entry for the
+>>>> object no matter its type. The set of failure modes is different for
+>>>> this operation compared to NFSv3 REMOVE.
+>>>>
+>>>> Adding a specific mapping for -EBUSY in nfserrno() is going to have
+>>>> unintended consequences for any VFS call NFSD might make that returns
+>>>> -EBUSY.
+>>>>
+>>>> I think I prefer that the NFSv4 cases be dealt with in nfsd4_remove(),
+>>>> nfsd4_rename(), and nfsd4_link(), and that -EBUSY should continue to
+>>>> trigger a warning.
+>>>>
+>>>>
+>>>
+>>> Sorry, I didn't understand what you are suggesting.
 
-Now that I've sent this, I think we're better off using ret as a length
-specifier for the %s argument. I'll send a v2 in a bit.
+I'm saying that we need to consider the errno -> NFS status code
+mapping on a case-by-case basis first.
 
-> +	}
->  	return 0;
->  }
-> =20
->=20
-> ---
-> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> change-id: 20250122-nfs-6-14-7f737deb6356
->=20
-> Best regards,
 
---=20
-Jeff Layton <jlayton@kernel.org>
+>>> FUSE can return EBUSY for open().
+>>> What do you suggest to do when nfsd encounters EBUSY on open()?
+>>>
+>>> vfs_rename() can return EBUSY.
+>>> What do you suggest to do when nfsd v3 encounters EBUSY on rename()?
+
+I totally agree that we do not want NFSD to leak -EBUSY to NFS clients.
+
+But we do need to examine all the ways -EBUSY can leak through to the
+NFS protocol layers (nfs?proc.c). The mapping is not going to be the
+same for every NFS operation in every NFS version. (or, at least we
+need to examine these cases closely and decide that nfserr_access is
+the closest we can get for /every/ case).
+
+
+>>> This sort of assertion:
+>>>          WARN_ONCE(1, "nfsd: non-standard errno: %d\n", errno);
+>>>
+>>> Is a code assertion for a situation that should not be possible in the
+>>> code and certainly not possible to trigger by userspace.
+>>>
+>>> Both cases above could trigger the warning from userspace.
+>>> If you want to leave the warning it should not be a WARN_ONCE()
+>>> assertion, but I must say that I did not understand the explanation
+>>> for not mapping EBUSY by default to NFS4ERR_ACCESS in nfserrno().
+>>
+>> My answer to this last question is that it isn't obvious that EBUSY
+>> should map to NFS4ERR_ACCESS.
+>> I would rather that nfsd explicitly checked the error from unlink/rmdir and
+>> mapped EBUSY to NFS4ERR_ACCESS (if we all agree that is best) with a
+>> comment (like we have now) explaining why it is best.
+> 
+> Can you please suggest the text for this comment because I did not
+> understand the reasoning for the error.
+> All I argued for is conformity to NFSv2/3, but you are the one who chose
+> NFS3ERR_ACCES for v2/3 mapping and I don't know what is the
+> reasoning for this error code. All I have is:
+> "For NFSv3, the best we can do is probably NFS3ERR_ACCES,
+>    which isn't true, but is not less true than the other options."
+
+You're proposing to change the behavior of NFSv4 to match NFSv2/3, and
+that's where we might need to take a moment. The NFSv4 protocol provides
+a richer set of status codes to report this situation.
+
+
+>> And nfsd should explicitly check the error from open() and map EBUSY to
+>> whatever seems appropriate.  Maybe that is also NS4ERR_ACCESS but if it
+>> is, the reason is likely different to the reason that it is best for
+>> rmdir.
+>> So again, I would like a comment in the code explaining the choice with
+>> a reference to FUSE.
+> 
+> My specific FUSE filesystem can return EBUSY for open(), but FUSE
+> filesystem in general can return EBUSY for any operation if that is what
+> the userspace server returns.
+
+Fair, that suggests that eventually we might need the general nfserrno
+mapping in addition to some individual checking in NFS operation- and
+version-specific code. I'm not ready to leap to that conclusion yet.
+
+
+>> Then if some other function that we haven't thought about starts
+>> returning EBUSY, we'll get warning and have a change to think about it.
+>>
+> 
+> I have no objection to that, but I think that the WARN_ONCE should be
+> converted to pr_warn_once() or pr_warn_ratelimited() because userspace
+> should not be able to trigger a WARN_ON in any case.
+
+It isn't user space that's the concern -- it's that NFS clients can
+trigger this warning. If a client accidentally or maliciously triggers
+it repeatedly, it can fill the NFS server's system journal.
+
+Our general policy is that we use the _ONCE variants to prevent a remote
+attack from overflowing the server's root partition.
+
+
+> I realize the great value of the stack trace that WARN_ON provides in
+> this scenario, but if we include in the warning the operation id and the
+> filesystem sid I think that would be enough information to understand
+> where the unmapped error is coming from.
+
+Hm. The stack trace tells us all that without having to add the extra
+(rarely used) arguments to nfserrno. I'm OK with a stack trace here
+because this is information for developers, who can make sense of it.
+It's not a message that a system admin or user needs to understand.
+
+
+> This is not expected stop the whack-a-mole of patches like mine and this one:
+
+It will be whack-a-mole. Unfortunately there is no way around that
+because of the case-by-case auditing that is necessary.
+
+
+> 340e61e44c1d2 ("nfsd: map the EBADMSG to nfserr_io to avoid warning")
+> but at least the severity of the issues will be reduced without the scary
+> WARN_ON splat.
+
+340e61e44c1d2 is one tactic for dealing with these issues, but we do
+need case-by-case audit to have confidence that this tactic is
+appropriate for each errno value.
+
+
+> I can write a patch if there is an agreement on that.
+> 
+> Thanks,
+> Amir.
+
+
+-- 
+Chuck Lever
 
