@@ -1,273 +1,257 @@
-Return-Path: <linux-nfs+bounces-9474-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9475-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D0E9A19559
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 16:35:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18AE2A19587
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 16:44:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D419E16271B
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 15:35:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBCE81886807
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Jan 2025 15:44:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CBD62135C4;
-	Wed, 22 Jan 2025 15:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0DD2147F1;
+	Wed, 22 Jan 2025 15:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKNucROz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2130.outbound.protection.outlook.com [40.107.93.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5002716BE3A;
-	Wed, 22 Jan 2025 15:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.130
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737560142; cv=fail; b=O2MEvm25i9WW+0UL4QPCpsZE9T/hlm/pz4uwDBwGvUGm9PMXD/pRFFoEKutss3iCIaEiAO71yWOQ9F7IuqZR6wg6V41r8RdcY5W9lajhrnPd6+KXe9o37LF1dyyHacdauiSds6ZItzxTkvlHC6ZVs4yjuqenT+9CkIXyVGPSx4I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737560142; c=relaxed/simple;
-	bh=DIOmd0IAUwB1oeJhl0w0UsBSujBSIdlZ+rFfhyxB4Yk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KtJkA54LvhyVs7sp3It0G9lDKaPW3YDzBExuW4QmUGsGEo8U3q6oL0eio91SgB5/ZO+Qjv4AymKDRcYTz7HvF1V80XIkxN2TI3suw/wguwwZIYgKsMgOEHwS2FeZCX/uWPw3O1g8UkUqe/rogAOuQIU2xmh60w28Q0TxKrtguNs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.93.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KY7PjfYRhw1Z4ryYLeBCrxmapoXRgKPdtXu3GS7ZuZSDNoyzbDys2gHUIqzqb9NIWK9t/4rIv6vyBYSBiOk1PWZIP0NZI66suWZJEiHdWvzHqeAB5TK4DHZEJiie7n6WbcRe3MeMH1+AMbgsJUTBkKVj0xEdKi9damU6ucnBnulBLFs1ri0gB5oMlZypbON0u443nBVTBHChxPJ6e49PRlnMXqK1Mt2Dl/yVyP7E5zs8ALbVQgBGvfMccTZWV7Ao6ZFUDGNhxLdi0YE1FklQisl/mo0YQ+8Fwo4PPk1Im3tETG+w4GucfCJK8zNKuUbfR3rA4Nit575bEhFTYMILjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BeUkSQHANOLqvk9g3Ufl0OWgPVsxiMDU546Vf42LcnM=;
- b=evKhRmtuU7RBaLSuTqpwudMt4XyF7O4TdFCm+Vs7HWEPQ0RnvBEyW2+B60+fhH+eGJE3ZasFF4W+AUIOkxm1dQttcaUo3OKK2Txy4RiB7IQvZj5odC4K8mK095WLcbAgLSlc9Ee9p2aBWEI8hfMzT2w9TaEjw/bz0IHUaVASf+NXsU9v2SwxpRvEjGT9DaoFeKBNuuq9G1akxuEyFENiQvSccA4fji91ggpy5LzhEHY7bxV8XrgYG089Mw0Xy3bW+1e1ChbMnfQ4bBfxNcZXLI7Qqm2kL/vyCqpvOon1EUR3vL1P2BvGFIRUHK2jWK346I1fL6Cfjhk9PW3cGiHqUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- BL3PR01MB7116.prod.exchangelabs.com (2603:10b6:208:33b::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8377.16; Wed, 22 Jan 2025 15:35:34 +0000
-Received: from SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90%5]) with mapi id 15.20.8377.009; Wed, 22 Jan 2025
- 15:35:34 +0000
-Message-ID: <ec156ccf-9d6c-44be-bd1d-5f3e9b166e77@talpey.com>
-Date: Wed, 22 Jan 2025 10:35:32 -0500
-User-Agent: Mozilla Thunderbird
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60880187553;
+	Wed, 22 Jan 2025 15:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737560686; cv=none; b=hzukE1WUJjyMpLGHpYpHkdhI8H8AdpbaSgTcWlvRC5lyyfJZMRCAaY57YS165OcpQJg/rgGI/NY7Yj2W1qsCNEZfG6RqZ0tfpTFgb53mMetFsXhPOLAs4Ibp0jGUUn/4SIpy4vecuhgtNljUBe43uMLpcG10gy6rgD+zHarlKkQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737560686; c=relaxed/simple;
+	bh=p8idTzD8KFlG/b8mfoboFG4wbeZ1FzbVWgapto/q5+o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rEyXKeeFmvxbnWdX45kIYh7Ebj3HISs1FK/RVwoJ0ycYWG4piEHfRpt3LaF0nwIeyuYHrqg6ehARpgQkcNHsCSrEbzL7CXCcLt//JKUim6beQuDAR3l77qY3KqSvH0OWgbLcV0iZuSWaaVU2+iC/tuWabSixWZly3TUmMDGByQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKNucROz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F880C4CED2;
+	Wed, 22 Jan 2025 15:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737560685;
+	bh=p8idTzD8KFlG/b8mfoboFG4wbeZ1FzbVWgapto/q5+o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LKNucROztJEn8j3xao2zmcBsy26x4ems91wpbbC6NSD3rGroKMimEvHeVKx57b6Tc
+	 hA6nI0l5QSCt1ODwNxZesYkRLEXr4DMggSoZz/00+6l2ubN9CCVywHU1lii9hJfqej
+	 zocLn96UGJuIDPF3a/csHNZyFrybjust2FZwKfgj5bmRLJYpEyb1QX+u+EUzffYnMp
+	 d1p4MKgrkIjLb2eCv62fblSrfKWw1aj73TcUVE6OX8c2T43xWLj/B35omnrHfBLni8
+	 U05HJVZ5/7AAq6AZ2zHvi6QJktlYEjH1Hvl3GVTxLoCO2eDxq+R1WudEC2IUaDM/qI
+	 y9Evu/vOm2YeQ==
+Message-ID: <6196ed07e6db1bf664d2f10280cbe0e80857583e.camel@kernel.org>
 Subject: Re: [PATCH] nfsd: always handle RPC_SIGNALLED earlier in
  nfsd4_cb_sequence_done()
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250122-nfsd-6-14-v1-1-6e1fb49ac545@kernel.org>
- <e85a0515-7972-4428-9270-a982073adcb4@oracle.com>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
+Date: Wed, 22 Jan 2025 10:44:43 -0500
 In-Reply-To: <e85a0515-7972-4428-9270-a982073adcb4@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN2PR01CA0048.prod.exchangelabs.com (2603:10b6:208:23f::17)
- To SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14)
+References: <20250122-nfsd-6-14-v1-1-6e1fb49ac545@kernel.org>
+	 <e85a0515-7972-4428-9270-a982073adcb4@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|BL3PR01MB7116:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45207d4f-4e95-4a87-3b71-08dd3afa6985
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZkNQR1ZVRGg4WkUxaEszSzNGM0tuMzNhZjZOMWNXU1cyaGIxV3RBOHdRK0xz?=
- =?utf-8?B?WUR0a3J2cS83WVlVeU1oK01BSEFlZ2xBTjdjMHR0dUkxcjhhZnRaWHp2T2lh?=
- =?utf-8?B?R0lQTjFOZzNSYjV4aTd2U3J5bURZT2owNTd1SkdJOWhHVHR6blR2MEdFZ3JZ?=
- =?utf-8?B?UmxmMldHS3ZFWE1peXhGdlRtQUVoRnpPVnVtU3dLV0hBRmExUGZwOFhIUjd3?=
- =?utf-8?B?YzZ2MEY4WE5Jd1RBeXpRbEduS3ZjN29Dd01PaTBRTTc3VFBSR2tJcUs0WDl5?=
- =?utf-8?B?TndaWmRFc1RpZk9nQkpiSHlob1NEUzF0WGdKNHlxSWU5WnFoTUk0RTdpV2lU?=
- =?utf-8?B?T1VLTGtqL3NzZlVhcXEwWVJ5SmhHU0s2OFZJVllPQjBaaFpaSjZkQnhYWlJP?=
- =?utf-8?B?bTJMTmQybnd0bFJDb1lsTnZQdTVqK1pwbzA2RU9PSDc2VHhxa3dHK0wrenFt?=
- =?utf-8?B?bk5JUG41S1JoVkk0VVh0TWd1V3A4ZUtDR1NlbkRuYjhIdDVtZDlMZFMydXVp?=
- =?utf-8?B?d0FvWUxlNlRmREVRMlp6Zk5FUDFISlF6QWhWN3VSdjdmRUJMNTNKM0hZbUda?=
- =?utf-8?B?LzA2eFNGZ3RFdWg3TFZ3MGdJK3IwS09MaHBEakJ4Z0U4ZjNTem4vU1JRY3BG?=
- =?utf-8?B?KzZZTDFyZVpxQ1Q3cVlyZWhycjZQa2l3Si9rSkt1RGJEZWtjcHYrMjZrY1Vq?=
- =?utf-8?B?Qm1ZdkdjTWRhWEw3d0pVb1JrN1lWNlZ3MTVDdGhNeWtpdDR0WjFOWFd5bE4y?=
- =?utf-8?B?dFVsRllzODliV2ZRbStreXV5TlJmVSsrMk4yZlBCakNnMDlBWnhmcFliTDNU?=
- =?utf-8?B?bHlyQXR3WFkzYmVLNG1yVE1CaWRNYUwzc1ZnNWNhd2ViejJhQWlyTmdLa1JJ?=
- =?utf-8?B?cUxaMWhEd3N2bGVaSFlCSFRneklnczlQTXFMakFKbUdpVUk3L1RUd01rOC94?=
- =?utf-8?B?K0RKNDQxeExCenRlVVU5VHZkanEyQlZMWkRSTjFMQitRV0o2bG9GOE15cVBC?=
- =?utf-8?B?U0ZZOXFTWk5YZnFGOEQ5YzhPcDZWWjZFcTVFYnB2Y1l6NlRvL0YrOVFEVlg4?=
- =?utf-8?B?SmFsWnFzWDhwSjh1L09tTExsOFJubkFQRUNiaDBwdVB6ZW1rUEF3cXp0Ri8w?=
- =?utf-8?B?MkZnTGtWUnVjZkFubnI0MUpSN1pNZ1g5VXByTk5oSFl0UGhqd0dSV1ArT2lZ?=
- =?utf-8?B?eDYzUGNTY3l0YndiSjgxVGV0Q1MxY213UEkzVjJTT25ZaldrakJsdVE0bk8r?=
- =?utf-8?B?L25oMVBaM1QwS3Rsb2thQnp5Skl2NEk5TGlheGdSc09NQXY2d25aa2lRYXE5?=
- =?utf-8?B?cmo3cy9seU4yTk9pb3N0Vm9LTUZNVUNWUitWUVRzem1TWTZhZGZVbTJjV1Zs?=
- =?utf-8?B?enNBZUh3TThZd0llMkNOOXI5eEE1TzlaMlNSb2l2TXBxc2ZQSEVCSjl4ZjNo?=
- =?utf-8?B?NHllcXZGU1JKQklJTDZhbnQ2VXNIVll1OWwvYVBUQ3pQR1lsUGpjQ0RDa3oy?=
- =?utf-8?B?WklscHZ3OEtvNGdwQXl3TFBLM0g5Vk0xVDN5b1RHWDNxVFJjWW9aOG52WWNU?=
- =?utf-8?B?dyt3Tkd5YkowYmFOOGNFVnROdlJhM3k2eDdZQVVLZjJXM0pwV0c2VVJSUnph?=
- =?utf-8?B?Y3UzMHNLdGtkUExyOVJ6WlJIc2hRM1Bhc2RPa0tpcGZ0OER6THJ6MWR6RjVs?=
- =?utf-8?B?YzIzOFdZTHVLTkJ5clNaUlpnSmMzckI1MVRrNGRiTkNSamRFU2U3emI0NTZn?=
- =?utf-8?B?ck91R0ViVTUrSys5S1kzV2V1SGFKZWp5TVo1YnBYemZTVnh5M1pwc0RXeEZ5?=
- =?utf-8?B?L2VLZVN4SEY4aUpYL1hqcmJQbG9uY1RMMlBSMTdEMmZkZXZ0ekZrS0lvWG5r?=
- =?utf-8?Q?iIY5wxIoYCe2y?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RVg2aHY2VjFTazlsd3A5L1pONHFocFMvZTV0dGZpbmxiWnVCNm95RVp0RzBL?=
- =?utf-8?B?cTZMMytYZ3lON3JHMHF1TFNuUUxLWXpZOTB4eUFLUmlrUVV5R2ZlMWE3anRx?=
- =?utf-8?B?S2tubG93L0ZEMUNkdmRwd3I4Q0luRlcxM0FDc3o1SkR3QzgxRzRNQ3pCRm5P?=
- =?utf-8?B?Nm9YaGwzTzFNakhaaHNFbzBDazRVRTFNbHpqdkh5TDZaQXpCYklORGw1TWEx?=
- =?utf-8?B?UStiRWhNSDFOdG9aWkhYSWx2c2hISWN0VXNaRFRPRzdjTFNHTEFneXg1blRQ?=
- =?utf-8?B?YlkrNjVMU3N0MzUrSXhXV1d4U3dZSFRodkIzRFduWmlMbHhISnk0OG8zNmhy?=
- =?utf-8?B?dEJJYVlUdWdRSnpUcHlabnNuWnhDbUUwYzF0Z0VQSStQdVc0czM3WnhjOE43?=
- =?utf-8?B?WkNUNjNkeWxsUnhtaGxuWXN0ZWlpajlRaG9JQUxOOEJ2MEhPQ1JDYW02dS9Q?=
- =?utf-8?B?MnlYZUlXdzhzRC9kaEV0RUlyQ3Z3OWxlNTRNT2ZqYmRIMTJacWtnYXZMNzZL?=
- =?utf-8?B?R3R6cVpjdGxOY001Q3ZXRktOUFROSmpmbGYvTEszTFhHT2ZHaVY1bUx4UmR4?=
- =?utf-8?B?SWtEamgxWG4yYU12SE5FV3JGdjIrcVliNzVvY0JuYUtBYXduTC9VSVA1bE9o?=
- =?utf-8?B?bWhlZDJSTWlKOXR5eFNhaXJGcUcxRkw4TTdBSTcwYzFMb2czVkVyV25kbHdp?=
- =?utf-8?B?dGN5TE9EMC9MVjU0eEZrMk5COWNERDZGV2FjQlg0d0xEa1NvOHVuTVVMV3R1?=
- =?utf-8?B?K24vcmp0cnFWekwwNTJFUVdnNGVyRkdYZFZ5ZlRIUmUzT2x1VDJCTmRaQmJh?=
- =?utf-8?B?ODJmMVFnbmNWdTU5YlR4U0VlcEI2eWljVzg4eFdYWlduaW9mNmpIQXA5S09Q?=
- =?utf-8?B?TWNZenI5ZVp2VjZEdlowYng4d3U1ZVpYaUl5RnZPSDViRExjVHdwMERYVTJS?=
- =?utf-8?B?eUFJTmIyZVBhcGxjanRzTFBrNzJNcmpqZExTenBQaWt3RGpMYVpyZzlBNCtq?=
- =?utf-8?B?QlpOUjJyWFFGSU1OczZLS2phK1dINTAzYlZBS3JzWkJUSVNZNVVDbW4wa0xH?=
- =?utf-8?B?TVdYSnY0V2tKS05uVXZhenExQWU4T1ZzVDJWMUc0Q0xqa1p5eFhHcy9IQUJp?=
- =?utf-8?B?UnZlcjNrcDZ2aGhLUUt1Z1h2YitkOStUc2lSS1lKdXN2V2Nwdk5wNjc2angw?=
- =?utf-8?B?eWxDTFZ6WGhjZ2c1Rmh1RGZTWXB6dFJTS3YzZEJOSWxwaUZiMjUxMzBzdE8y?=
- =?utf-8?B?eXhIWWY2STJhZnN5UW51ZHJnUXdhczludURnbUgzWFZqWkxQMXZTZS9PZU1V?=
- =?utf-8?B?YTZVK1F6WHNoV01zS1I0N1BBZDJsVnFCeDBYaEFNUjhBcTJEenVmZW9kalRQ?=
- =?utf-8?B?S1UrekdtTEo0c1NwOWhiWWhJbmhMMlh1ODF1Vnl1cGJTTEhSTFlISkdUUUVF?=
- =?utf-8?B?eGplTjZYcWkrZkd2Y0NQNlVTcGNJQWFjdnY2TDg3RjBFY29UcTJ6ZjVxeEdC?=
- =?utf-8?B?cWMweTl0QTBNMUV4TDF4Zy9Kai9NZzNuNGJtTWFrbUdKQVRmT2gzazdDb2Nt?=
- =?utf-8?B?MnFMd2c4L2p0anVqL1JYUmFvanUrOXQ2dklMU1Nhc0hpRzYyRUd3dG5VRUIy?=
- =?utf-8?B?K0xiUzczRUJ2c1BFWFFXSWtQR2lwdUIrVGFVRHltTXZzUHRNcHVxeGNXM2Nw?=
- =?utf-8?B?STRpQUNOYnRFNDErNzRFcUVTRnVpVlA2bGs1SkZnY01tYmV6OUpJck95YVhB?=
- =?utf-8?B?U1Z3TW1ySy9taTduWlBxQ2ZGdW1qZnFpM0RnWDFuRlpmWk1OOW1tZUNiK2N4?=
- =?utf-8?B?MHJacWt4aFhHa294QmlSeUl6UTJDTnRvL3VPZTJ1N2t3b1dCVEw5azhzZEpR?=
- =?utf-8?B?Z29jOHRaVU84WkZxSVF3RVdiYjZMRHNKY1Z1MjZVa3JKc0hCU2RRWm51NzIw?=
- =?utf-8?B?V1F6V1ZjS0FiYm5HOGZwTjVLOUZTcG5FWSszSmJSZmZnTE1DWEVFclVwVHhF?=
- =?utf-8?B?OW1qUTV6Y1dqM1R5NUJUVG4vcmI5R1Z2OEtSbzdSaWhDM0dMaDEyTFR6MlhS?=
- =?utf-8?B?dUJ6RUlWV2t5Q0l3YlRSYXByMkhYZXV4Sy9uK29PQWh2ZGRPL0d3QTROVFYy?=
- =?utf-8?Q?96Ul8xK0F6ENIH7RJXYs/Cern?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45207d4f-4e95-4a87-3b71-08dd3afa6985
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2025 15:35:34.5355
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n1AoPgNrhyQ+UTtQV8fP0c3yHWeBSuPJKBhXXHUwAfxjGln4AIJkcy50Bh4am5Hz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR01MB7116
 
-On 1/22/2025 10:20 AM, Chuck Lever wrote:
+On Wed, 2025-01-22 at 10:20 -0500, Chuck Lever wrote:
 > On 1/22/25 10:10 AM, Jeff Layton wrote:
->> The v4.0 client always restarts the callback when the connection is shut
->> down (which is indicated by RPC_SIGNALLED()). The RPC is then requeued
->> and the result eventually should complete (or be aborted).
->>
->> The v4.1 code instead processes the result and only later decides to
->> restart the call. Even more problematic is the fact that it releases the
->> slot beforehand. The restarted call may get a new slot, which would
->> could break DRC handling.
-> 
+> > The v4.0 client always restarts the callback when the connection is shu=
+t
+> > down (which is indicated by RPC_SIGNALLED()). The RPC is then requeued
+> > and the result eventually should complete (or be aborted).
+> >=20
+> > The v4.1 code instead processes the result and only later decides to
+> > restart the call. Even more problematic is the fact that it releases th=
+e
+> > slot beforehand. The restarted call may get a new slot, which would
+> > could break DRC handling.
+>=20
 > "break DRC handling" -- I'd like to understand this.
-> 
+>=20
 > NFSD always sets cachethis to false in CB_SEQUENCE, so there is no DRC
 > for these operations. The only thing the client saves is the slot
 > sequence number IIUC.
-> 
+>=20
 > Is retrying an uncached operation via a different slot a problem?
+>=20
 
-The server would ignore any in-progress status and therefore might
-cause two requests to be processed in parallel. It might also
-rearrange the order of replies. Other than those, maybe not!
+Ahh, I missed that we always set cachethis to false. So, there is
+probably now a problem with the DRC after all. Still, I don't see a
+good argument for processing the CB_SEQUENCE result, when we intend to
+retransmit the call anyway.
 
-I do think it's safest to not reallocate the slot in the 4.1 case.
-The slot sequence number is only meaningful in the context of the
-original slot.
-
-Tom.
-
->> Change nfsd4_cb_sequence_done() such that RPC_SIGNALLED() is handled the
->> same way irrespective of the minorversion. Check it early, before
->> processing the CB_SEQUENCE result, and immediately restart the call.
-> 
+>=20
+> > Change nfsd4_cb_sequence_done() such that RPC_SIGNALLED() is handled th=
+e
+> > same way irrespective of the minorversion. Check it early, before
+> > processing the CB_SEQUENCE result, and immediately restart the call.
+>=20
 > It would be lovely to have some test cases that exercise the server's
 > backchannel retry logic.
-> 
-> 
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> ---
->>   fs/nfsd/nfs4callback.c | 32 ++++++++++++++++----------------
->>   1 file changed, 16 insertions(+), 16 deletions(-)
->>
->> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
->> index 
->> 50e468bdb8d4838b5217346dcc2bd0fec1765c1a..05afdf94c6478c7d698b059fa33dd9e7af49b91e 100644
->> --- a/fs/nfsd/nfs4callback.c
->> +++ b/fs/nfsd/nfs4callback.c
->> @@ -1334,21 +1334,24 @@ static bool nfsd4_cb_sequence_done(struct 
->> rpc_task *task, struct nfsd4_callback
->>       struct nfsd4_session *session = clp->cl_cb_session;
->>       bool ret = true;
->> -    if (!clp->cl_minorversion) {
->> -        /*
->> -         * If the backchannel connection was shut down while this
->> -         * task was queued, we need to resubmit it after setting up
->> -         * a new backchannel connection.
->> -         *
->> -         * Note that if we lost our callback connection permanently
->> -         * the submission code will error out, so we don't need to
->> -         * handle that case here.
->> -         */
->> -        if (RPC_SIGNALLED(task))
->> -            goto need_restart;
->> +    /*
->> +     * If the backchannel connection was shut down while this
->> +     * task was queued, resubmit it after setting up a new backchannel
->> +     * connection.
->> +     *
->> +     * If the backchannel connection is permanently lost, the submission
->> +     * code will error out, so there is no need to handle that case 
->> here.
->> +     *
->> +     * For the v4.1+ case, do this without releasing the slot or doing
->> +     * any further processing. It's possible that the restarted call 
->> will
->> +     * be a retransmission of an earlier call to the server and that 
->> will
->> +     * help ensure that the DRC works correctly.
->> +     */
->> +    if (RPC_SIGNALLED(task))
->> +        goto need_restart;
->> +    if (!clp->cl_minorversion)
->>           return true;
->> -    }
->>       if (cb->cb_held_slot < 0)
->>           goto need_restart;
->> @@ -1403,9 +1406,6 @@ static bool nfsd4_cb_sequence_done(struct 
->> rpc_task *task, struct nfsd4_callback
->>       }
->>       trace_nfsd_cb_free_slot(task, cb);
->>       nfsd41_cb_release_slot(cb);
->> -
->> -    if (RPC_SIGNALLED(task))
->> -        goto need_restart;
->>   out:
->>       return ret;
->>   retry_nowait:
->>
->> ---
->> base-commit: a8acd0de47f22619d62d548b86bcfc9a4de2b2c6
->> change-id: 20250122-nfsd-6-14-77c1ad5d9f01
->>
->> Best regards,
-> 
-> 
+>=20
 
+It sure would. I think that sort of thing would require a synthetic
+client (like pynfs).
+
+Since we're on the subject too, pynfs is broken on Fedora 41. That
+moved to python 3.13, which dropped support for the the xdrlib module.
+There is a forked xdrlib3 module which may be a suitable replacement,
+but I need to see if I can get it to work.
+
+>=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >   fs/nfsd/nfs4callback.c | 32 ++++++++++++++++----------------
+> >   1 file changed, 16 insertions(+), 16 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > index 50e468bdb8d4838b5217346dcc2bd0fec1765c1a..05afdf94c6478c7d698b059=
+fa33dd9e7af49b91e 100644
+> > --- a/fs/nfsd/nfs4callback.c
+> > +++ b/fs/nfsd/nfs4callback.c
+> > @@ -1334,21 +1334,24 @@ static bool nfsd4_cb_sequence_done(struct rpc_t=
+ask *task, struct nfsd4_callback
+> >   	struct nfsd4_session *session =3D clp->cl_cb_session;
+> >   	bool ret =3D true;
+> >  =20
+> > -	if (!clp->cl_minorversion) {
+> > -		/*
+> > -		 * If the backchannel connection was shut down while this
+> > -		 * task was queued, we need to resubmit it after setting up
+> > -		 * a new backchannel connection.
+> > -		 *
+> > -		 * Note that if we lost our callback connection permanently
+> > -		 * the submission code will error out, so we don't need to
+> > -		 * handle that case here.
+> > -		 */
+> > -		if (RPC_SIGNALLED(task))
+> > -			goto need_restart;
+> > +	/*
+> > +	 * If the backchannel connection was shut down while this
+> > +	 * task was queued, resubmit it after setting up a new backchannel
+> > +	 * connection.
+> > +	 *
+> > +	 * If the backchannel connection is permanently lost, the submission
+> > +	 * code will error out, so there is no need to handle that case here.
+> > +	 *
+> > +	 * For the v4.1+ case, do this without releasing the slot or doing
+> > +	 * any further processing. It's possible that the restarted call will
+> > +	 * be a retransmission of an earlier call to the server and that will
+> > +	 * help ensure that the DRC works correctly.
+> > +	 */
+> > +	if (RPC_SIGNALLED(task))
+> > +		goto need_restart;
+> >  =20
+> > +	if (!clp->cl_minorversion)
+> >   		return true;
+> > -	}
+> >  =20
+> >   	if (cb->cb_held_slot < 0)
+> >   		goto need_restart;
+> > @@ -1403,9 +1406,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
+k *task, struct nfsd4_callback
+> >   	}
+> >   	trace_nfsd_cb_free_slot(task, cb);
+> >   	nfsd41_cb_release_slot(cb);
+> > -
+> > -	if (RPC_SIGNALLED(task))
+> > -		goto need_restart;
+> >   out:
+> >   	return ret;
+> >   retry_nowait:
+> >=20
+> > ---
+> > base-commit: a8acd0de47f22619d62d548b86bcfc9a4de2b2c6
+> > change-id: 20250122-nfsd-6-14-77c1ad5d9f01
+> >=20
+> > Best regards,
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
