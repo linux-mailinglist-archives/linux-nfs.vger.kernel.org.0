@@ -1,103 +1,103 @@
-Return-Path: <linux-nfs+bounces-9535-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9536-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB702A1A5C1
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 15:29:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EC696A1A5C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 15:30:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF2E33A8A0A
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 14:29:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A808A3AA3CB
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 14:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78CF913212A;
-	Thu, 23 Jan 2025 14:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2ADB22EE4;
+	Thu, 23 Jan 2025 14:30:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YfBDyqkE";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="mriKauB9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fwgqJgyd";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="vh5HS5Jy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF3A1E4A6
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 14:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C0C1CA8D
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 14:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737642562; cv=fail; b=J/P38+Xrtjjd56eHEeITDgI0UN3koGmAqiXqSdCMfFXnyRcGs3uf8Sn+DfNnHcuoMWZI0VZdXk7C+yDLvA/1/Y+R+PpnQZn4kXDN/YW7gqlmdlowHA5Wo+Iupjrv79O0834naHoRhz8deILxK4dPoPEfuDLUuyJnjgLGFycjrao=
+	t=1737642657; cv=fail; b=hpGWP5agFzFOpaOC9HM/b2q3XiW2Y/A/JIGSjtzwRbFx6lc2yrvz2yfP3AowglnOc3O/3cFDZbU7B+/bJjL8K/SyDYIICf9A8gFOIpOAqFYzcEaXglyfWVHUpKrAv7p+6JqbltwYhd00aB9h0NKQzFgFlAp/OuWECcFdJdMQSb0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737642562; c=relaxed/simple;
-	bh=HwYQAVxmhuMNaPVmtaEAGLl7c9DgcVUsbh0euHF6zdo=;
+	s=arc-20240116; t=1737642657; c=relaxed/simple;
+	bh=GaAol5CvxDIn/NCeGgMcDWhu3/BtY9gV+uuus2f3YE4=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CPcSqTYHbUmLqWqsUUVhjFgbki4VesnKwwZZRnJT2EERSm7ZxgDf/nnFEHWNwIceNZnBBTQgm2Xpd2QmGGDk/VsTuOUFkvb/U/UvjVX9iFq8jFvYh/ASQSqne3qConYDAlNLVwFLpIar6Cij8lvTh00AxFaDM+VuF4cWp12GI2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YfBDyqkE; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=mriKauB9; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=IwS/IH/ASr58KcOYIpMjRRHPgsmKrYUnKqsGKP3hmTeYLHVw89jCfwHfLh2lieGEqKVIszf9pZ04ir89Hnu+4qryMER71XOixfFX0EbLZ2oPYX9WdG7ZWZ/ZfGbSuQfz3gpbZUf/dEYOhc3bOKOiFkpTQBb1rqz1+nQeAFshdiw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fwgqJgyd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=vh5HS5Jy; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDaMEF032178;
-	Thu, 23 Jan 2025 14:29:10 GMT
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDaOLW006796;
+	Thu, 23 Jan 2025 14:30:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=F1VjNHOtp9nOKntKd/6syd4IJI3z/2wQd6sMwOY86QI=; b=
-	YfBDyqkEpnIR0pFHNs76zi0Pg6IdacF+TOesTuDuYZYiqU2N6H5vj7ISv0xwrV8e
-	pGZoTdS27kAoSd3VaOtPHB32wPebJ6Dz/21g3zg5+hfZfFTZ3DNSkpx0B5oq2flH
-	cfjvp0VtKgb3/87hYn9zNG0Q6bmYCI9lJSrOQdWWpqjCtWUiN4quR13ta5S6luJf
-	M6ZwuRYQfYgGq5yY/jbwbt0D6s0ArcRMAZ/jLCxM3Od6PZbkpGhaZEh0L5tupFPj
-	atGxlNKeWQohOVT2Ge3UUmn66w0Ar0p3NYoBp82azBLRyBA5wFS2Yxhs+XbY/t56
-	j8Lb9TwD3qyswUkoVULErw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44awpx2sbc-1
+	corp-2023-11-20; bh=l8a2GpQkIGqFSlTBXueQMAdeSQg99XsM2/OeCT+YRjI=; b=
+	fwgqJgyd3uyhDjJZiCOtRPPmZkvA8EXsbJwwJMCfcX9Uj3gbkNro/3Qm8s1Yaf82
+	McgGvTeOrh8db0l1dOisZEcmh/qUQVp+0ixd1Ibd2OtxMBNRsJBP1t0mOneyYt4P
+	RoZT74fdSzWUhffvCG/YEgJyRJ0FzIM5HyLNK66Dnx8WoAAvKMLQa7CbJrrt0Ss+
+	XLED8sjW++MWAJVf5VnjSQzG4X7IhsC3oWyGLJO3iTrgsQ2Ynwdmfp4fq1wV8QSl
+	bBCQtwegJIAcjH/7b3wf19IYAvIAni2A0/Haj16WO016hYjnQTjUviT/D1sC/ZF+
+	eCawRGeRDo2XoKkDtK/ugw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44awyh2q0r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 14:29:10 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDBdDJ030587;
-	Thu, 23 Jan 2025 14:29:09 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4491956cfy-1
+	Thu, 23 Jan 2025 14:30:44 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50NClfN1036432;
+	Thu, 23 Jan 2025 14:30:42 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2048.outbound.protection.outlook.com [104.47.58.48])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44917s7058-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 14:29:09 +0000
+	Thu, 23 Jan 2025 14:30:42 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KZnuZCqplyV8WEmGM6U9AXY0GNFAVdul5bssi4xoox/5cwTORRDEjxMBOi1/sLF3QHipmAmxQZkPWy6crX/s/EIwd4gUsO4pyuwkN94nJfah+XMyJMMXb4Any30q2v2/dEEozZdnWFYPukjg+6WQAjiGZ74cM3BdFJtNv9wNPBa+0OQPLNDUiGRfKyGOGpxBcoKjOfLbRTZMsgyd8E+TELDg+VCsWFU0uzs7pjOHycmU+JpJCKpQOrfR5z632wKT1vyyojzeM4QBLzM+md9Z/3FV+aMEcxLUEFnSqDBFjFnViAoSBagfybaDIxWUDd4Hp+68OlYrylX16CMtcrR5Vg==
+ b=o7km2V+BWEPVDDninIS2XJ1khY0Jme6US4LuoO7niQF4SViS2+RkUKt6ApDpV4nnY+8cu7m25acJRye3Gi7Ozdxh3n0JppS2Pax7TFmsCh/XBCMVDOsQ0XFIsOEfMplqMvzUN0e30zqMWkgFqM6F1GEwVpnOrYDXm1754JFwTr60iMtEBST5mS0yKFntXHQnVgTKbfV0cZq2IgHjR09MgQfETOJkTdwV/mOWmndkFFe9eyECabRUt2NXmDt42HqoOsskDfEWn/YdEuT0JadCw0k1YEr9HpPJvvS754V0Aj8mSWRZZFRaJ4BgfFQrInbI4nB8SoV2KSXErdPCvKmhJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F1VjNHOtp9nOKntKd/6syd4IJI3z/2wQd6sMwOY86QI=;
- b=ZmtjNs1IrIa169aanxMadiXPNo2ucrC6Jl0/ma89U7NF4XxVLFyfyvl2AOdM3ssQohoHDTm8TipZ1k53xUGqnlcQi8PHvThbrwUEP7YdYfVi+JQxvmjAVzbkHLfqWxXdvXA+Ur5O06jqb//oWze8gLXYhZUPcH1giSAW06u/2BVigeSYNymaj9bcYY2/TX91hX8v5b1euWjPw95A6aRLVOpQZya3+BqlbhTv9o0+ZRZBGB41Ig4RO0/CahBiZ4IAjZOmzAC0/wA0P61VzF/LNY0yiKcu9/vK+PkQ0SrOrHpaw9K3K10MreMgkPJ3cGq6CoRWWLdewPJsFpOZ7bFT+w==
+ bh=l8a2GpQkIGqFSlTBXueQMAdeSQg99XsM2/OeCT+YRjI=;
+ b=tg01588HTE9MA3UxoYgqkPqEgX6wU0wLRFHOvPgN8j0giT/tKrFRTvvS9ZS5qfgFFBzdCuVdWl6w9GvhRw3c+Q0yLIL2vlcD+Pr2Qa/hQbWT6UMH8F0UgZvYrd/xifSxxOG34Drz9uPAlrxuBKWXh28uckapQIGyHYEVOBCHWbwGu8+1okgqiPQ84BPRlnieaRieG81VH5ByDVGRQ1Xp+YIIaAEFh9e99gHZhji6W+cMi6/FYuEsbueAvGEJc0ygVYhIB4iwX2vw+ezzHAycOWdHTN6yvNbbDyKHmR4ZoMmLTS9eIUi0wYuSBUEiaU03lLvaTflcoqmt5gx9QmLZWw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F1VjNHOtp9nOKntKd/6syd4IJI3z/2wQd6sMwOY86QI=;
- b=mriKauB9r2IZXEkoxQbNBxlAMg1ekyXC6/zl5lPo8Xuzh8M2IeLNogjP4D18c2RkaG0Mm1wRn+MPPT61Oks/oGDe+3oDdcEO2MDY8cSb7Ol51D2gE/fZLf+b+1M3eGw9Bm6aCTO9S6MjI70ORmlXIO7G9K3yGHPl0h9QaVvd4A8=
+ bh=l8a2GpQkIGqFSlTBXueQMAdeSQg99XsM2/OeCT+YRjI=;
+ b=vh5HS5JyPKDij118K3G5GFA/sa/kZy9eIG1Syp3S+FvgZevn+ShDpuKJS4X+T8kIRlmZCz2Aza7KnQQKxSDTJX7XC2A3EPzmVlSAROF+PFALWeaUArM0lguMCB3wkidAB9MADuFbLfZiik1iLFhSR/QOmBS7oYUrK9430rib3tU=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH7PR10MB6106.namprd10.prod.outlook.com (2603:10b6:510:1fa::7) with
+ by BY5PR10MB4196.namprd10.prod.outlook.com (2603:10b6:a03:20d::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.17; Thu, 23 Jan
- 2025 14:29:07 +0000
+ 2025 14:30:40 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Thu, 23 Jan 2025
- 14:29:07 +0000
-Message-ID: <22f89ff9-5fe5-4691-943c-28fbc291677f@oracle.com>
-Date: Thu, 23 Jan 2025 09:29:05 -0500
+ 14:30:40 +0000
+Message-ID: <c9adeaa6-0d6d-4b20-ad70-61d7a4cf344b@oracle.com>
+Date: Thu, 23 Jan 2025 09:30:38 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] nfsd: filecache: change garbage collect lists
+Subject: Re: [PATCH 2/4] nfsd: filecache: move globals nfsd_file_lru and
+ nfsd_file_shrinker to be per-net
 To: NeilBrown <neilb@suse.de>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Jeff Layton <jlayton@kernel.org>
-References: <20250122035615.2893754-1-neilb@suse.de>
- <83ed7510-0a0c-4048-beb5-c4a10c38ca06@oracle.com>
- <173758417063.22054.674648092957982688@noble.neil.brown.name>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>
+References: <> <e24e9a9d-1416-460b-ad22-b15f9e9e5e6d@oracle.com>
+ <173758380546.22054.5803528057434555102@noble.neil.brown.name>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <173758417063.22054.674648092957982688@noble.neil.brown.name>
+In-Reply-To: <173758380546.22054.5803528057434555102@noble.neil.brown.name>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR11CA0013.namprd11.prod.outlook.com
- (2603:10b6:610:54::23) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR11CA0006.namprd11.prod.outlook.com
+ (2603:10b6:610:54::16) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -106,163 +106,442 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6106:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd690caa-2e03-44e4-733e-08dd3bba4b51
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|BY5PR10MB4196:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f13556a-75fa-4209-90bf-08dd3bba829f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aHRGRGdQRVlrMlU2ekI3Skt4RXRNN0FHTjYrTjROZEJxVGpQaHVEdnVHVHdC?=
- =?utf-8?B?dnlRVXdlR2lhRjJ5dG1iVkxmL0lzaFpTaFZwelFBcENHZm9BMEhCcUlaUVJR?=
- =?utf-8?B?ZE9XNTVCNVdpUkNBRzBzWWxzeXB1SExYeFpkd2NmQzZNeXlhRjUyVWRPanV4?=
- =?utf-8?B?Z2R1UzhjMi82Mnk4RElqdTRQY1Q1dDRpUVpUc0UwSmlxTkkwZUkxOCtEbjU5?=
- =?utf-8?B?ZkJtWlhWZE1WZjZrZ0JDS2tuMklMV3ZYbHQ3WGJrOHVuSU05TjJWckdQV1pp?=
- =?utf-8?B?WFhHL0psSGhFdldoUmQrbmR2RzlucWFpd3NhdTFsSXkxR2pyT1dibFE5NEQ4?=
- =?utf-8?B?UU1mdWZHOW95TmJORzl2M2NRMnFxMFJwRkRQYnNBVllxdzJqVkpLWk1vd2xB?=
- =?utf-8?B?cEludjVVcmtLT2NaTWwwTzgvcHM4WXoydFBjWGg1bGtpaHNxZGFhaTRTZFhS?=
- =?utf-8?B?VnZXT25yc3VVMHR4UUV0aHorNVV2VlVYSU01ellNSHRoUE5CVWx6cXd5WEcy?=
- =?utf-8?B?Z1JhUzZ6U3B1OG9kUktCOUtrdDYxemtoN3FPa1RBQXNlTnlwWjFMSVErZFdv?=
- =?utf-8?B?UW4zc3RMUDRQS1NFMnBwQXdCTGpVZWhKemRUUTRieGkrVGRqYTl4MFNleUpS?=
- =?utf-8?B?cjBLTW52aUQxemZUYTVuTjBBVnJ4MlVsRzZraWRDWEFIelpWUTh6UTZMcmFs?=
- =?utf-8?B?ZXVvTEs1TmV1NTJrbEtlTzlGdmJjVXg5TWZmS2loek8wMVZoMGR3S3RvNUF6?=
- =?utf-8?B?Vndva3IxRXVrQmV3TzBPRG5ScGI0OFNKUnhpQ0k1MFZDU3JJWENTMU9BK3Nw?=
- =?utf-8?B?S3NsVEtRUTREL0E2OEN0b0ZyL0FSakxNelZGVnJDWExTc0REOFhlNUxJZFRV?=
- =?utf-8?B?aTNzRDd2eldLdDA5NzdMeU5DTmtkLzA4Z25iUkh4VnJuczNOUTRzOG9jMWs5?=
- =?utf-8?B?RVF0R3NNOGJ6TUxQdGpBZXRlYlc1L25MeWFZNk9kdmZ0TkF4VDZFTlRVejZ5?=
- =?utf-8?B?NXA0bnJ1QW9FVWZrTGNqcDVJTzVQR1BVd05JOWFZMjl6NlRMWVRTMGhIdngz?=
- =?utf-8?B?TWNVdjVRelM1YXMza3hnZWlKeFU3Nm03dlc2ZDRMbGpSdWIyMTF6QnFDQjFy?=
- =?utf-8?B?cStZMWN4MFphQ04rVmI4Lzh3eFhqbDhNSkFZaUxTNHA3cU1xZXBRMS93R01T?=
- =?utf-8?B?M0FNSDY3dVpsV1VkNk5POExJbWYzckl5WHBaT1NZOVp5L2wxK1JacktoNndR?=
- =?utf-8?B?QnhNb29Qc1RZRVkrTFpjdSs2YkF4elovWmt5OUlJSDA2NFVFVHhVZkozajAx?=
- =?utf-8?B?bjRBTEpVaXdVV0hEbDJUVzBMQVo2VFJ0ckNReUdtQ3BsbW1RWVlVYUJjazdk?=
- =?utf-8?B?NnJJOUp4VmFBdTg4Wk5LUFNHZkQ5WlRkLzNkT3RSS04zREF5bm1KeUd4MkNU?=
- =?utf-8?B?blIybmNxc01tcVNpZW5ZZHhzU0cxNzFBRDZmNzJ6QzhTSThFclNxQXdpdk95?=
- =?utf-8?B?Z2VxaGx0MGw0VGE1MUNlWjZyL2haQXVFeHlPcVVGNTI0eW94b09rTWxBcWpx?=
- =?utf-8?B?SVpQZFNYMGhqaHdldWcyaDhlY2pxelE2UVN0RmEvbldRTVVNbXRtVHdieW5F?=
- =?utf-8?B?Vk9ESHVVWUtTU3VOZHFRMXNRU3Q5elBScndrS2lBTm13U3hDVUMvRVVMQUxH?=
- =?utf-8?B?YjRXZ3BoRGxReFI1UTNwNnh0UlcrNnphQXFEZFZQZDZWNm8ralIzYWVtSi9G?=
- =?utf-8?B?bVhxYTVmbEJiRCt6N2hZL1pKbzV3WFFjcU9ocWJ6VGNvaWZTaFBlOXNZRmE0?=
- =?utf-8?B?d0MyejJCVExnUHFOQWk1eWhKa1RSNWF1dStZbmNBLytsSms1NTJ2ZHFabUxx?=
- =?utf-8?Q?IoRgzMcLWkR8P?=
+	=?utf-8?B?RG9oRHRZUitwcFU1bUE2VDdhQTlwTDZVU2xmMDhxbE1vTnJSeVFqZDdueE1n?=
+ =?utf-8?B?ejlURmRmMURxQlc4cVNlUGhYQ2twd0JlNkFsQllWQVNtdDRxRG9WTFkwc2Rx?=
+ =?utf-8?B?NE9qOXFNN0lTL0gxM21mOWR3cTdHWExESFcvd2dZRS9FN1hKVkEva1NPYWw1?=
+ =?utf-8?B?RGdCS3F4UFhtaWMwSi84NDIwa1hoYkptSVMyWlZ2WHpSZEVWdXhYeWVKTENp?=
+ =?utf-8?B?NUFjZGI0UytyVnRlS2t3QnZnOGJGdk9MaFNldGtzTTRnbCtDVzdqaDN2c0dM?=
+ =?utf-8?B?ejljb2lIUjNVcldMK0JnQjhWMDcyNEFIR0RIQU56SFZQZ0d4VW5EcUljYlY3?=
+ =?utf-8?B?cDZCanhNTE9WUDdxdkd4QSsvdmJxWVM4Q0dqcDVDK2hEcURiaGxHaWMrYmds?=
+ =?utf-8?B?ZkVyQ2NxMUVKQ3lWTWlQdGtlTzZLS0JwSXUrSUQwWmZSN3VFdStIWkhacUNT?=
+ =?utf-8?B?TGtHUU5CS2owL0dzSitnaWZqWU80Rm0zWjFuMVdFR2VkYU1QU0cySUl1ajRL?=
+ =?utf-8?B?T2VjU0JYcHh2V3c3UnRrRVRadGRnajRuMS9jVkVpbWltUFNGT2QwbUtlaWlB?=
+ =?utf-8?B?Qk1tTStCakJYczlkOVVEd2NJRXptZ0ZDQ0wwaTVWMFB5Z1ZzTUhtZVZLS05P?=
+ =?utf-8?B?MkVlL1BvYkkzMTh5ZTMzVk9jdWErM0VjY2xTTWR4enpBRWJYR2RmU1QxSk1R?=
+ =?utf-8?B?TEp3eitEdW0rTVZoVXVFTGgvNERMVnM3WWxPK1QyRmJjazV4M2pKS05NMzZT?=
+ =?utf-8?B?RGZNeDBLZlV5SmIwNnpxVE9neWVLdFpkbUQwaSs2ZURzWUZrdlUyOUtocUJy?=
+ =?utf-8?B?eU1mdWZvWTNoczNDSmFiQkxyb2hvWG1BUThwT1lMdnhJOXlIdko2RVg5VVhH?=
+ =?utf-8?B?MzlhM0NKalpUdnNjdUxjbnlJa3liQmtuYnRJWVo3Z29uMG1uVDdKSU9uK3l0?=
+ =?utf-8?B?bEFBWC9Wbzc3VzdZbytSbHl2WkpjdXJ6eWxwNU9pdnhoV1BjQTJLSVBMVXls?=
+ =?utf-8?B?bTlWUlVoR1Z4S2hEMGRyYVlwaFgycmZMZ2tieWVUUmF5c0hlaWUwM1cxbC82?=
+ =?utf-8?B?V3pGU2VZc0pSN2dhYUFoeUtlSGlSRHRSU0s0ZGxTYThtMSs2L3J3OGlHc0R4?=
+ =?utf-8?B?VDB1S0Q1WHU4SE50YXNOOHRDb09RNTlUQjgxcHpiQjdnRE9zSUc4QmRGREJH?=
+ =?utf-8?B?OXVrZTUzYmJZOWt4a0FCS2NEVW5SQkFzLzRHSmZhT1F5RyswTTNtbXNYQm9y?=
+ =?utf-8?B?THAvYVA4aDg4MyszSGdJclExRUpscm1mY1E0ZWwyVHpiendIOWdBTDVwdHVI?=
+ =?utf-8?B?RUtELzh5eUlLWHMvQVAzSGIvK3d1SWVXUTNZUVpPUkx1RzMvV3VTTDY0R3Fw?=
+ =?utf-8?B?dUE4N2kzZVRnKzB4cmJPMmdNU01DRzNFVnNBVWgxb1Y1eVpnUmlsT2RPTjgr?=
+ =?utf-8?B?dkRVMTNlT2tROGtXM0ZsU3AvY1oxTmdtQXI0bHI2dmFpR3B6L0F5am9GUDVO?=
+ =?utf-8?B?dmFsdnlUVHFZRm5VQm5sejZ6VzFXcFJNY2VrYjBQZTVvVnZuOTA0cHVIbGhC?=
+ =?utf-8?B?SkIzM3BjaHVUNlA5dkN5WEtSYTk4UXU2YXRJdVBnN1pPNHJiRks0alA0RHF5?=
+ =?utf-8?B?S25BSTFuZTlER3YybEcxaW5MRTJLYTM4SGsxdFhrMUtnZ1pFNGxyZFZndzBM?=
+ =?utf-8?B?WFFFRmkyVEh3R3VzUlFRQnFwRVFja3JaMUxjRW1jUS9vSHl4b1I3Zmx1b2g2?=
+ =?utf-8?B?bXp6aW1sSGdBUDYvdU9scDFiemhLaHBNVUpJUFZqQ1Y4RXUwOEFidHNiT1VK?=
+ =?utf-8?B?WEJjbUhIWEJUV1JoN3FuRjBEc2l1T1Rvazk2aDRmc1NGd0ZCZHd3UXVaUHhx?=
+ =?utf-8?Q?YbpnAROQd1q7g?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TG54SFlKbm05YXVqbDFvSTM2aFJNSDI3OUlsTXRxeVg2aGNuZ2NBSGdRS01M?=
- =?utf-8?B?Q1Z6K1I4Y3FXMFZFcWhWQ3gwMG5mSkd4WDRkRjBaRDdZejVnWXdsZnBNbXRu?=
- =?utf-8?B?OVM2eXc1N1l2cG5GaVlsMlVVVFZqYTBITHRhdFk5WStiOCszWmxLT2U3eXJ6?=
- =?utf-8?B?NlF2L1FjaFVlWWpVM3p5QUtHcDUvS055Sm1QN2gzT212aXZmYytYbHZndCtM?=
- =?utf-8?B?WHJBWjBqSlpxTjBlSGRWZkpwenBCcWNONjZZdC9Oc3hUQTNseE0rYk9GRFhF?=
- =?utf-8?B?QU51eTE1enIySjBrNmwxb1QwYUp1S0dIOCswNDVad1BCS0VRemxrRFNwNy9X?=
- =?utf-8?B?TmlUMlhlaHg4MGwwZURMcGpjRFlBMUw3a1RvZ1krZ0paVXovZ3FOeGVsK2Ix?=
- =?utf-8?B?S05SdkY5VGs4L1ZhSy94bGV1dWN3RW51ZkJwUWRtWCtJYk1CR0NaKysrQ1lP?=
- =?utf-8?B?WVk5dlh3VjVNWGVBZnZRVE9kN2gza3RHa0Z6NmdtcTJjVjM5eERUWURXNGx2?=
- =?utf-8?B?aGxLeTBRWlN3NXJaVGNmeWNvNHh1NUZnWCtqL1RMdXpaV2xJbStyWkl6Vlpk?=
- =?utf-8?B?eGlCN3B4ZDNNNVR5L1VBR1dXd0JRV05vTHc4Qm1XSXRjMUlLeEt5NnVIbHdh?=
- =?utf-8?B?MzFZUjBYZFpaak1TUmMwL0duNzFJbnMzaU4rWWFsNnFJRmJCNTQvRTZPamhO?=
- =?utf-8?B?bWJtQTZ3L2RVRUROcTVSMXBlMEpHQzY5T3RYelNRWnRDQ0hPSnhMVTc2MnFE?=
- =?utf-8?B?Y05HMU1FMnRlRFZCMzR6c2lqamxoNEJFTHpHVm9WQjU4UlhyOXU2NXVwckxG?=
- =?utf-8?B?WGV3M3ZtOVBJaTRqMGV0ZWRvK1VWR2gvY3hiL0ZtZnRuaHBpNHVCWUEvUXZs?=
- =?utf-8?B?Nm1kc0xPYkNYQVJBUHJaNjV0NVp2K3BlaVJISEZwVFU1REREdEJvN1BvV2NX?=
- =?utf-8?B?Zi95cG1EUXliSURxUzJpcHVXdG1FMHROUjhKN2VHclhrcUZoV2JoZXF4M2p6?=
- =?utf-8?B?d01Ob0xRTmpkMm1JNC9LTEk0bHE1NVRiRmlsdmQvcHRjOTdhOXF6WnoxSXRL?=
- =?utf-8?B?OUVVTllRMXFwemMvUVA5bnVySTdEQzZwOUpvQ0d2T1diUlpIdXltMElXcmNX?=
- =?utf-8?B?MTFzNzlDK2JvUUN0YWhKMEVBcjN4M3dUQ0R0dFVsMUJ6U3NSYmZ2Rlh2OFhW?=
- =?utf-8?B?ZFdGMUlmYTFkYkpCOExQYTh1OHprdUdGVnIzeTMxblVkMTltcUsxQTJ1czl3?=
- =?utf-8?B?Z0tydlpjd04rcHFsVm5jR1RrSGpsOVpVQkh3ZUQ3Qy9JSkVqdkpaeU5kNFRj?=
- =?utf-8?B?dGlJV2QwbWJjdUdURytlQkVzOWtkSC91SFErQ3N3WVFhdGhVcFc0VHlHdlR6?=
- =?utf-8?B?UVFXamxpK1htOHc2S1IvaFZKWktPQ05XM2RaMTlEa1g3SlhZZ2dYeU1LQ1lR?=
- =?utf-8?B?TVZiQ0NtWmZLdS9NR1ZiMW0rbWxPK0hKbk5MZkhORHp2M3JoV211K0dYZDZZ?=
- =?utf-8?B?QWVuclV0WFZpaWZqbzl2VjhCaUpCamM4K2FUWFJLTWZRamxxTU9zN3h2Rkk1?=
- =?utf-8?B?cUsyaUhxcWJPem9oSWRqMmFOcUJnUGgySFFoMnI0SlVhVCtjdlcxRnVvQ1M1?=
- =?utf-8?B?TzAwUEEwR2NYUFhwUXpWQTlVYVZtZlpqcXM1QkdOckNLRmxRem83cTBKcjZM?=
- =?utf-8?B?anZKVFhOU3ZKUDlBYm9YbWJlQ2xZcmJkbEJjYjIyZ2RnV3RRMGgyN3Ardll5?=
- =?utf-8?B?VERqdk9HUTlhMExSV01kOG9wQ2FKWVcvUHlzaXQ0bXI0cTlNUDJsZVE1MXhF?=
- =?utf-8?B?cnB1TWN0U0tzdXNJTlhQc2FEbkxiN0RKVzVCQjdNTUp6ZlpydTYwU3EwNnp4?=
- =?utf-8?B?RlRmc0I4Vll0by9pOFlQRzJ0NWVkSG85NENkK0p5RkZqM0NtdDFock1Od2pa?=
- =?utf-8?B?citHTEg1aUYvQW1jbElUbkpaNDR2MHBNRXgxaFlBSTdqcHF2N1B6WmF4ZHRz?=
- =?utf-8?B?aVFad0pONW9UQ0RkT2tXNVV4MzZpSFVFQnJkZ2YxcytrbW1WL291RXp0MFJW?=
- =?utf-8?B?Z0s4c1hBWmUwUHBqZVdmT3RoT0taMktXckNkcjlvVTh2bUY3ZFEvcVhsb1NJ?=
- =?utf-8?B?QUVEVmdLNytpaVlHYngrT2NYRUc2eTdPcThJemhTa0h1NlpvVUJIcmdaNkdp?=
- =?utf-8?B?WVE9PQ==?=
+	=?utf-8?B?S1Q2aTBwamlUWUpBQnVCdVlweWVSMDM2RXhlYXFhSDR2cWR1cVhsY0NCb2RZ?=
+ =?utf-8?B?QUJIaUs3ZWpLUHNGWU4wcjNSUXdmMmpIN1lWbGtOU21EbmhaZm52TkxHN0VL?=
+ =?utf-8?B?dEZEbjg1czU1RlpDbFpZWGg3RkNFSzdOdEZCZ2NZb1JDeHprMFNrNDM0YWxw?=
+ =?utf-8?B?M1dmcUxMS0tacC9vSFExMzhBdGJNazhqMTNjcEswL2paZGhBamJBUUdJRXgx?=
+ =?utf-8?B?alJtaTJMUEp3N3k0NWluS1FjaWhyQTV2cHVCNFprUC9laVdYbnlCeDc5Y2Y3?=
+ =?utf-8?B?UUx1T1JhVWVCVVkzQjRyRm5kTGdKWXBuWklJelpNMHk0VnZvc3pXZmxGeFRz?=
+ =?utf-8?B?T2tYYUVpOCtFTElEbWY3OU5tUnBLVzlCQkhLMldYRVdpYmhHSWVmMUZQWFR0?=
+ =?utf-8?B?NlRFUFBsZkN0ZDJxc2pLbFpoSTVtaER1SmZYanJaNXNzR0E3bW43aVlEVEJa?=
+ =?utf-8?B?dW1GcGFOQTNxTUVnclNPeDc0aXErOXRZRDJnZlpEa2EwWndsZG1FdFdOZWNu?=
+ =?utf-8?B?NGJMUS9ESUVTMmhneWNxUXlyRGRtU3pzTVErVUc0MGkvNjVBRzExOGw3cFJC?=
+ =?utf-8?B?OGQvZVNINUNQams0UUxuaDFEV2d3ZGJmWXBCWDMvNVVVZmZyTXBVOVpvT1pD?=
+ =?utf-8?B?RnhqRlhJWTNPT1VRLy9GWURNU0NGUy9wVCtOYlVUQ0h0cndmMXlWS1FXOTR3?=
+ =?utf-8?B?N3MzWG9CMmJHdGhibldtdHVaODdEOWVLWnp3MTBBR3cyWUxWOGtKdUVjdjRI?=
+ =?utf-8?B?RFFRaVVMUGNBWGR0RkFzS3VzZURucFFEa1U4Wkt3clZXZ0lvN1RWdmg2OVVF?=
+ =?utf-8?B?eHA0ME1KM3ZPdG8yK2lpUDhXdjcwUkxoRnY5ZVRKT0x1bEFzczVUYUZRZDNY?=
+ =?utf-8?B?VEJHMHh2Vzd0SzVvOTNaR3M3cmlUd2dEMG9HSUs4OXpxRExYcDhiU0dTTzBI?=
+ =?utf-8?B?K0F2d1NXYklZczM5MXlselZHUzE2NWJMaFdQRlI1Y1EyQkVON0hWQ05TSmZy?=
+ =?utf-8?B?bmZseGdpZzVxa1ZpSFlDd1pmbmt2TU9qVGNYbkhxY0V4ZlVJODVLaitYQzNJ?=
+ =?utf-8?B?U3k4RjczR0FZbnJYajNhZ09ndDc3ZFdjM2VyU2ZudlQ3dkxYVEZjR043K1pC?=
+ =?utf-8?B?bklVSW9SNFZUR09QbiswZjdFTnFMaDg5V3Q5RXFlOHRBclJhK1FrOExheHZw?=
+ =?utf-8?B?WlJHblRvd0I1ZTkzWXJ4R2tocElGRUFNek1DSVFVbFlieUJPVU5jSEVBbk81?=
+ =?utf-8?B?ZkxoNGdvU0Q4czllUGxaUXdoYk5TT3FNenNwUjZ1eXh5dG9pN3Bqcit3M2ZO?=
+ =?utf-8?B?SE94UXB4N2ZVVldlSzZtSWRkWkdLeXJORjRFbVAzdjUzR2VDVjF5ci83cUtY?=
+ =?utf-8?B?aEhpZmM1bHB1dTRxSW1DaWF2eFBOOElRUFU1elJ0TXRzbi94azlkTk5DOTI5?=
+ =?utf-8?B?WHdVZ1VFNnBoUVJRQnZHN2JzL1puSE5Rb3YwaExEb1hyU0RPa0cwUmFJelFR?=
+ =?utf-8?B?dVVLMUY4NHdSZ3NJT1haZTZBTE9QRGRaWDlOU2diZXNodDNvaFVTeStJNmNV?=
+ =?utf-8?B?SnZtV2VUMnVDYTJiMGpCZ1JVMmdqNkYzbUE4WEkyK01mVjNEUW1Bbmxlc3k2?=
+ =?utf-8?B?MFVKUjZYVjhpYTFlWmNCdnR3WCthRUVVOTYzNkpUZkRtSmVUZm9zWWZBOUpR?=
+ =?utf-8?B?Z2FuUS9MYVQ0WUtWVE92RlZvWUh5Y2ZuTVd3K3RxY1JCYVo3VzhEenhpRDhS?=
+ =?utf-8?B?b3YzOXIySEJrR2kyNmdWL0JTNHFYS1lkU0YrbEVad20zRWE0eDU3TDJ0cVd4?=
+ =?utf-8?B?VTlJQmkrQ2R5NXNyOGRJMzhMYTAyZWp5MXpWMlVxMEw0QmJsWG9YWjk2Qkky?=
+ =?utf-8?B?WXJsb3pSK2Eyb1IrdWl4VzNNb0xYcHhGNmVGUTNjaXRlN242anBXMzRtNzRn?=
+ =?utf-8?B?MHM0T3BVSmtTRzlqMWFwR0htdGFrZkdBYldlMTNuMm1ZcmVkdHZKNWREWmNE?=
+ =?utf-8?B?T3JvWXJlY3kwYTQyL2I3dXpnR2RKRUErNVFMa1ljbG1INjFCb291NFdZWGUr?=
+ =?utf-8?B?ZGM1cXhRQ09sVGNSckZtdjZLdnRXemorbUUrVWJ6MjExaDR4bzBGZExOOCs0?=
+ =?utf-8?B?UUk1VlJFek44cFRwWEhrdXlMWC9MbkZtOTlBWUVNeHphSFFySWdKWlBXV045?=
+ =?utf-8?B?dlE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	j+Cz6sMpqzvjUu1DnmeQ13k3FqD79wd/8Aq9GOLx2uPJw/0SwCERdTBE4xRkWUhU4rnSwwg4jXFCUvz/cYx3+bBhjDs5V/bH3ulme0AUezjmM5VvcHPSSdzEEJKmx6flcvSTFsM7E7qEYWXzzgvSV5sCiZ1zGrZ1JF+SP3bwNBC6Uux5vXCxJnSYMLJj6O3stVhlvXMXuoVs3hVkwoO4ORBP1+OpR1mySXmi2qPhQZtaGgnWeq7EwY0a9fKUWjrgkq5ARHmj/rlt1kNLRh79oT2CPgSNkVNMaVUEkIELvXOO/GAnMzMRI8iuCk+DdObcH6T8a22S47y4LXSV8OIjQCYlfVXcbSMYo8e6bNF1r8ZMsoUeqZRAyAl4j9pjd3aVMa75wosWzwO3u8rvV633OIFWllhknOoE0zVjfOfjetxtYf00SomW2s9RMn9XFpTeGeIKN6IBcmyRu7MXw+nTMq2p9lDfW9/3gWM6AC3N/8w8xtxKSq7/7FkD64la+WRUBIL/J9HU70bGOTTbY9WSwz/tKnko3VcJHQnjoidM9WA70JmAnXRMZDrsVMrDV8UqOSGRl67nlXiTIwkN0GkEPO8Whwco/GrOeJihGuGapYM=
+	trp3GcWnFfbR+HBdAGF7ZHeYOeIV1pAM6x7j8ccpdXtvcA/TndSDr4Z4Km+CxaEiqwjxT06XLJb58VyZdZdE4ylp+MyM/z2kf4HmUzeNH7fBFVE80bjxei9XIge3M/3Uz41nubYvr/qz/WIHv3q0LCjqME9qOVlQdr1EEYztWyy3ARwVGhEjDKqJki0uEHQHq7O01lO1UVLFWpOyxhG2GLkmFY3H99QfXpRzzStoQPJu9k3TZi8b0OOXv5X5HtA0u2mtBJUi77nVXo6Vl0K2UxgXnNcZQE5P6bsCSSE2VJtLf7kInXbHz9a09lkl9Yl3Z/jSQ/L1g3nsWngaJLrgNOOJy+uuZeQkHdwCA9lgkUrDrlk5vkcrPqqlft7xF1JAKxZLKFgYh4a2tuFanl/Lup0QMtM0hcAPNwOeuqeBDjYr2vDOa0iu98C+0daHMJrpBTBQbq2yUUpYn3zYPgYwmpWFb6bMXDbPFMW/eOsWQwllh8wNh2ivPvkmB4kL+ZzvvL2oV1CofOsh6uk6KUYAqEuIleKyWF9PRdDAdT7lr1BHYIq3EQos1KPs6J2if6FnclHEaiWUFyM6kP/F+bEnc0DvJDmymkN3ExYh+k4nt1Y=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd690caa-2e03-44e4-733e-08dd3bba4b51
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f13556a-75fa-4209-90bf-08dd3bba829f
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 14:29:07.1717
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 14:30:39.9479
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u+2Z8CdtUevUIvLP2ZcnVkFDaRDLdUSEyczPaPdxOiSC08O+FdMx/OHKBTjheRPkYTCX2n1zoQBK7UM5FPpQWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6106
+X-MS-Exchange-CrossTenant-UserPrincipalName: KLf/n/hNhe74BNhOjo4bJ22F0CpS8+/JlrchZwEN7E6oiZDiHOUMcjTGixSQpwIHazAQxzCbA52fGaHluPbtpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4196
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-23_06,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 suspectscore=0 mlxscore=0 spamscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2501230108
-X-Proofpoint-ORIG-GUID: dvyRszcyUB8DTJaQKPb1fiYeG0rp5hj7
-X-Proofpoint-GUID: dvyRszcyUB8DTJaQKPb1fiYeG0rp5hj7
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501230108
+X-Proofpoint-ORIG-GUID: 47oHNTZYoqEvKZTxcHnVIGqNXJ9YzFSp
+X-Proofpoint-GUID: 47oHNTZYoqEvKZTxcHnVIGqNXJ9YzFSp
 
-On 1/22/25 5:16 PM, NeilBrown wrote:
+On 1/22/25 5:10 PM, NeilBrown wrote:
 > On Thu, 23 Jan 2025, Chuck Lever wrote:
 >> On 1/21/25 10:54 PM, NeilBrown wrote:
+>>> The final freeing of nfsd files is done by per-net nfsd threads (which
+>>> call nfsd_file_net_dispose()) so it makes some sense to make more of the
+>>> freeing infrastructure to be per-net - in struct nfsd_fcache_disposal.
 >>>
->>> The nfsd filecache currently uses  list_lru for tracking files recently
->>> used in NFSv3 requests which need to be "garbage collected" when they
->>> have becoming idle - unused for 2-4 seconds.
+>>> This is a step towards replacing the list_lru with simple lists which
+>>> each share the per-net lock in nfsd_fcache_disposal and will require
+>>> less list walking.
 >>>
->>> I do not believe list_lru is a good tool for this.  It does no allow the
->>> timeout which filecache requires so we have to add a timeout mechanism
->>> which holds the list_lru for while the whole list is scanned looking for
->>> entries that haven't been recently accessed.  When the list is largish
->>> (even a few hundred) this can block new requests which need the lock to
->>> remove a file to access it.
+>>> As the net is always shutdown before there is any chance that the rest
+>>> of the filecache is shut down we can removed the tests on
+>>> NFSD_FILE_CACHE_UP.
 >>>
->>> This patch removes the list_lru and instead uses 2 simple linked lists.
->>> When a file is accessed it is removed from whichever list it is one,
->>> then added to the tail of the first list.  Every 2 seconds the second
->>> list is moved to the "freeme" list and the first list is moved to the
->>> second list.  This avoids any need to walk a list to find old entries.
->>>
->>> These lists are per-netns rather than global as the freeme list is
->>> per-netns as the actual freeing is done in nfsd threads which are
->>> per-netns.
->>>
->>> This should not be applied until we resolve how to handle the
->>> race-detection code in nfsd_file_put().  However I'm posting it now to
->>> get any feedback so that a final version can be posted as soon as that
->>> issue is resolved.
->>>
->>> Thanks,
->>> NeilBrown
->>>
->>>
->>>    [PATCH 1/4] nfsd: filecache: use nfsd_file_dispose_list() in
->>>    [PATCH 2/4] nfsd: filecache: move globals nfsd_file_lru and
->>>    [PATCH 3/4] nfsd: filecache: change garbage collection list
->>>    [PATCH 4/4] nfsd: filecache: change garbage collection to a timer.
+>>> For the filecache stats file, which assumes a global lru, we keep a
+>>> separate counter which includes all files in all netns lrus.
 >>
->> Hi Neil -
+>> Hey Neil -
 >>
->> I would like Dave Chinner to chime in on this approach. When you
->> resend, please Cc: him. Thanks!
+>> One of the issues with the current code is that the contention for
+>> the LRU lock has been effectively buried. It would be nice to have a
+>> way to expose that contention in the new code.
+>>
+>> Can this patch or this series add some lock class infrastructure to
+>> help account for the time spent contending for these dynamically
+>> allocated spin locks?
 > 
-> Sure, I can do that.  But why Dave in particular?
-> I would like to add a comment to the cover letter explaining to Dave
-> what he was added to see and I don't know what to say.
+> Unfortunately I don't know anything about accounting for lock contention
+> time.
+> 
+> I know about lock classes for the purpose of lockdep checking but not
+> how they relate to contention tracking.
+> Could you give me some pointers?
 
-Dave helped me with edead3a55804 ("NFSD: Fix the filecache LRU
-shrinker") and a few other related fixes, and he is the original
-author of the list_lru facility (see a38e40824844 ("list: add a new LRU
-list type"). He might have additional insight on whether the filecache's
-use of list_lru is salvageable or how a replacement of that mechanism
-should work.
+Sticking these locks into a class is all you need to do. When lockstat
+is enabled, it automatically accumulates the statistics for all locks
+in a class, and treats that as a single lock in /proc/lock_stat.
+
+
+> Thanks,
+> NeilBrown
+> 
+> 
+>>
+>>
+>>> Signed-off-by: NeilBrown <neilb@suse.de>
+>>> ---
+>>>    fs/nfsd/filecache.c | 125 ++++++++++++++++++++++++--------------------
+>>>    1 file changed, 68 insertions(+), 57 deletions(-)
+>>>
+>>> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+>>> index d8f98e847dc0..4f39f6632b35 100644
+>>> --- a/fs/nfsd/filecache.c
+>>> +++ b/fs/nfsd/filecache.c
+>>> @@ -63,17 +63,19 @@ static DEFINE_PER_CPU(unsigned long, nfsd_file_evictions);
+>>>    
+>>>    struct nfsd_fcache_disposal {
+>>>    	spinlock_t lock;
+>>> +	struct list_lru file_lru;
+>>>    	struct list_head freeme;
+>>> +	struct delayed_work filecache_laundrette;
+>>> +	struct shrinker *file_shrinker;
+>>>    };
+>>>    
+>>>    static struct kmem_cache		*nfsd_file_slab;
+>>>    static struct kmem_cache		*nfsd_file_mark_slab;
+>>> -static struct list_lru			nfsd_file_lru;
+>>>    static unsigned long			nfsd_file_flags;
+>>>    static struct fsnotify_group		*nfsd_file_fsnotify_group;
+>>> -static struct delayed_work		nfsd_filecache_laundrette;
+>>>    static struct rhltable			nfsd_file_rhltable
+>>>    						____cacheline_aligned_in_smp;
+>>> +static atomic_long_t			nfsd_lru_total = ATOMIC_LONG_INIT(0);
+>>>    
+>>>    static bool
+>>>    nfsd_match_cred(const struct cred *c1, const struct cred *c2)
+>>> @@ -109,11 +111,18 @@ static const struct rhashtable_params nfsd_file_rhash_params = {
+>>>    };
+>>>    
+>>>    static void
+>>> -nfsd_file_schedule_laundrette(void)
+>>> +nfsd_file_schedule_laundrette(struct nfsd_fcache_disposal *l)
+>>>    {
+>>> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
+>>> -		queue_delayed_work(system_unbound_wq, &nfsd_filecache_laundrette,
+>>> -				   NFSD_LAUNDRETTE_DELAY);
+>>> +	queue_delayed_work(system_unbound_wq, &l->filecache_laundrette,
+>>> +			   NFSD_LAUNDRETTE_DELAY);
+>>> +}
+>>> +
+>>> +static void
+>>> +nfsd_file_schedule_laundrette_net(struct net *net)
+>>> +{
+>>> +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>>> +
+>>> +	nfsd_file_schedule_laundrette(nn->fcache_disposal);
+>>>    }
+>>>    
+>>>    static void
+>>> @@ -318,11 +327,14 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
+>>>    		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
+>>>    }
+>>>    
+>>> -
+>>>    static bool nfsd_file_lru_add(struct nfsd_file *nf)
+>>>    {
+>>> +	struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
+>>> +	struct nfsd_fcache_disposal *l = nn->fcache_disposal;
+>>> +
+>>>    	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+>>> -	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
+>>> +	if (list_lru_add_obj(&l->file_lru, &nf->nf_lru)) {
+>>> +		atomic_long_inc(&nfsd_lru_total);
+>>>    		trace_nfsd_file_lru_add(nf);
+>>>    		return true;
+>>>    	}
+>>> @@ -331,7 +343,11 @@ static bool nfsd_file_lru_add(struct nfsd_file *nf)
+>>>    
+>>>    static bool nfsd_file_lru_remove(struct nfsd_file *nf)
+>>>    {
+>>> -	if (list_lru_del_obj(&nfsd_file_lru, &nf->nf_lru)) {
+>>> +	struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
+>>> +	struct nfsd_fcache_disposal *l = nn->fcache_disposal;
+>>> +
+>>> +	if (list_lru_del_obj(&l->file_lru, &nf->nf_lru)) {
+>>> +		atomic_long_dec(&nfsd_lru_total);
+>>>    		trace_nfsd_file_lru_del(nf);
+>>>    		return true;
+>>>    	}
+>>> @@ -373,7 +389,7 @@ nfsd_file_put(struct nfsd_file *nf)
+>>>    		if (nfsd_file_lru_add(nf)) {
+>>>    			/* If it's still hashed, we're done */
+>>>    			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+>>> -				nfsd_file_schedule_laundrette();
+>>> +				nfsd_file_schedule_laundrette_net(nf->nf_net);
+>>>    				return;
+>>>    			}
+>>>    
+>>> @@ -539,18 +555,18 @@ nfsd_file_lru_cb(struct list_head *item, struct list_lru_one *lru,
+>>>    }
+>>>    
+>>>    static void
+>>> -nfsd_file_gc(void)
+>>> +nfsd_file_gc(struct nfsd_fcache_disposal *l)
+>>>    {
+>>> -	unsigned long remaining = list_lru_count(&nfsd_file_lru);
+>>> +	unsigned long remaining = list_lru_count(&l->file_lru);
+>>>    	LIST_HEAD(dispose);
+>>>    	unsigned long ret;
+>>>    
+>>>    	while (remaining > 0) {
+>>>    		unsigned long num_to_scan = min(remaining, NFSD_FILE_GC_BATCH);
+>>>    
+>>> -		ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+>>> +		ret = list_lru_walk(&l->file_lru, nfsd_file_lru_cb,
+>>>    				    &dispose, num_to_scan);
+>>> -		trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+>>> +		trace_nfsd_file_gc_removed(ret, list_lru_count(&l->file_lru));
+>>>    		nfsd_file_dispose_list_delayed(&dispose);
+>>>    		remaining -= num_to_scan;
+>>>    	}
+>>> @@ -559,32 +575,36 @@ nfsd_file_gc(void)
+>>>    static void
+>>>    nfsd_file_gc_worker(struct work_struct *work)
+>>>    {
+>>> -	nfsd_file_gc();
+>>> -	if (list_lru_count(&nfsd_file_lru))
+>>> -		nfsd_file_schedule_laundrette();
+>>> +	struct nfsd_fcache_disposal *l = container_of(
+>>> +		work, struct nfsd_fcache_disposal, filecache_laundrette.work);
+>>> +	nfsd_file_gc(l);
+>>> +	if (list_lru_count(&l->file_lru))
+>>> +		nfsd_file_schedule_laundrette(l);
+>>>    }
+>>>    
+>>>    static unsigned long
+>>>    nfsd_file_lru_count(struct shrinker *s, struct shrink_control *sc)
+>>>    {
+>>> -	return list_lru_count(&nfsd_file_lru);
+>>> +	struct nfsd_fcache_disposal *l = s->private_data;
+>>> +
+>>> +	return list_lru_count(&l->file_lru);
+>>>    }
+>>>    
+>>>    static unsigned long
+>>>    nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
+>>>    {
+>>> +	struct nfsd_fcache_disposal *l = s->private_data;
+>>> +
+>>>    	LIST_HEAD(dispose);
+>>>    	unsigned long ret;
+>>>    
+>>> -	ret = list_lru_shrink_walk(&nfsd_file_lru, sc,
+>>> +	ret = list_lru_shrink_walk(&l->file_lru, sc,
+>>>    				   nfsd_file_lru_cb, &dispose);
+>>> -	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru));
+>>> +	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&l->file_lru));
+>>>    	nfsd_file_dispose_list_delayed(&dispose);
+>>>    	return ret;
+>>>    }
+>>>    
+>>> -static struct shrinker *nfsd_file_shrinker;
+>>> -
+>>>    /**
+>>>     * nfsd_file_cond_queue - conditionally unhash and queue a nfsd_file
+>>>     * @nf: nfsd_file to attempt to queue
+>>> @@ -764,29 +784,10 @@ nfsd_file_cache_init(void)
+>>>    		goto out_err;
+>>>    	}
+>>>    
+>>> -	ret = list_lru_init(&nfsd_file_lru);
+>>> -	if (ret) {
+>>> -		pr_err("nfsd: failed to init nfsd_file_lru: %d\n", ret);
+>>> -		goto out_err;
+>>> -	}
+>>> -
+>>> -	nfsd_file_shrinker = shrinker_alloc(0, "nfsd-filecache");
+>>> -	if (!nfsd_file_shrinker) {
+>>> -		ret = -ENOMEM;
+>>> -		pr_err("nfsd: failed to allocate nfsd_file_shrinker\n");
+>>> -		goto out_lru;
+>>> -	}
+>>> -
+>>> -	nfsd_file_shrinker->count_objects = nfsd_file_lru_count;
+>>> -	nfsd_file_shrinker->scan_objects = nfsd_file_lru_scan;
+>>> -	nfsd_file_shrinker->seeks = 1;
+>>> -
+>>> -	shrinker_register(nfsd_file_shrinker);
+>>> -
+>>>    	ret = lease_register_notifier(&nfsd_file_lease_notifier);
+>>>    	if (ret) {
+>>>    		pr_err("nfsd: unable to register lease notifier: %d\n", ret);
+>>> -		goto out_shrinker;
+>>> +		goto out_err;
+>>>    	}
+>>>    
+>>>    	nfsd_file_fsnotify_group = fsnotify_alloc_group(&nfsd_file_fsnotify_ops,
+>>> @@ -799,17 +800,12 @@ nfsd_file_cache_init(void)
+>>>    		goto out_notifier;
+>>>    	}
+>>>    
+>>> -	INIT_DELAYED_WORK(&nfsd_filecache_laundrette, nfsd_file_gc_worker);
+>>>    out:
+>>>    	if (ret)
+>>>    		clear_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags);
+>>>    	return ret;
+>>>    out_notifier:
+>>>    	lease_unregister_notifier(&nfsd_file_lease_notifier);
+>>> -out_shrinker:
+>>> -	shrinker_free(nfsd_file_shrinker);
+>>> -out_lru:
+>>> -	list_lru_destroy(&nfsd_file_lru);
+>>>    out_err:
+>>>    	kmem_cache_destroy(nfsd_file_slab);
+>>>    	nfsd_file_slab = NULL;
+>>> @@ -861,13 +857,36 @@ nfsd_alloc_fcache_disposal(void)
+>>>    	if (!l)
+>>>    		return NULL;
+>>>    	spin_lock_init(&l->lock);
+>>> +	INIT_DELAYED_WORK(&l->filecache_laundrette, nfsd_file_gc_worker);
+>>>    	INIT_LIST_HEAD(&l->freeme);
+>>> +	l->file_shrinker = shrinker_alloc(0, "nfsd-filecache");
+>>> +	if (!l->file_shrinker) {
+>>> +		pr_err("nfsd: failed to allocate nfsd_file_shrinker\n");
+>>> +		kfree(l);
+>>> +		return NULL;
+>>> +	}
+>>> +	l->file_shrinker->count_objects = nfsd_file_lru_count;
+>>> +	l->file_shrinker->scan_objects = nfsd_file_lru_scan;
+>>> +	l->file_shrinker->seeks = 1;
+>>> +	l->file_shrinker->private_data = l;
+>>> +
+>>> +	if (list_lru_init(&l->file_lru)) {
+>>> +		pr_err("nfsd: failed to init nfsd_file_lru\n");
+>>> +		shrinker_free(l->file_shrinker);
+>>> +		kfree(l);
+>>> +		return NULL;
+>>> +	}
+>>> +
+>>> +	shrinker_register(l->file_shrinker);
+>>>    	return l;
+>>>    }
+>>>    
+>>>    static void
+>>>    nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
+>>>    {
+>>> +	cancel_delayed_work_sync(&l->filecache_laundrette);
+>>> +	shrinker_free(l->file_shrinker);
+>>> +	list_lru_destroy(&l->file_lru);
+>>>    	nfsd_file_dispose_list(&l->freeme);
+>>>    	kfree(l);
+>>>    }
+>>> @@ -899,8 +918,7 @@ void
+>>>    nfsd_file_cache_purge(struct net *net)
+>>>    {
+>>>    	lockdep_assert_held(&nfsd_mutex);
+>>> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) == 1)
+>>> -		__nfsd_file_cache_purge(net);
+>>> +	__nfsd_file_cache_purge(net);
+>>>    }
+>>>    
+>>>    void
+>>> @@ -920,14 +938,7 @@ nfsd_file_cache_shutdown(void)
+>>>    		return;
+>>>    
+>>>    	lease_unregister_notifier(&nfsd_file_lease_notifier);
+>>> -	shrinker_free(nfsd_file_shrinker);
+>>> -	/*
+>>> -	 * make sure all callers of nfsd_file_lru_cb are done before
+>>> -	 * calling nfsd_file_cache_purge
+>>> -	 */
+>>> -	cancel_delayed_work_sync(&nfsd_filecache_laundrette);
+>>>    	__nfsd_file_cache_purge(NULL);
+>>> -	list_lru_destroy(&nfsd_file_lru);
+>>>    	rcu_barrier();
+>>>    	fsnotify_put_group(nfsd_file_fsnotify_group);
+>>>    	nfsd_file_fsnotify_group = NULL;
+>>> @@ -1298,7 +1309,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, void *v)
+>>>    		struct bucket_table *tbl;
+>>>    		struct rhashtable *ht;
+>>>    
+>>> -		lru = list_lru_count(&nfsd_file_lru);
+>>> +		lru = atomic_long_read(&nfsd_lru_total);
+>>>    
+>>>    		rcu_read_lock();
+>>>    		ht = &nfsd_file_rhltable.ht;
+>>
+>>
+>> -- 
+>> Chuck Lever
+>>
+> 
 
 
 -- 
