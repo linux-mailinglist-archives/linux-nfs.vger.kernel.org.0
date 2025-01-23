@@ -1,245 +1,404 @@
-Return-Path: <linux-nfs+bounces-9541-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9542-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 836D6A1A77D
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 17:03:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67A41A1A8FB
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 18:37:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEAD416A0D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 16:03:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24F0C3A7E4D
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 17:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C0835950;
-	Thu, 23 Jan 2025 16:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A0D11474A2;
+	Thu, 23 Jan 2025 17:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ktRSIGWW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="d3ejiZTB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D4523CB
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 16:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737648217; cv=none; b=Zf+JgS+aZQ7S84ChMRDwIw8BZpc2B/SzlEKn0cbvaQm04UXiZ2OFy8pWZEl1+Z44WTFaOYEeb1Oc+7jhSY43+K3jVymjn7TUR4Gg6EBo2sv0503LFtfmvpQn3gP1SSwreB5L5y2g+pnB4zD+fG4/dP4jwfh536ZE5fFOshx/edI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737648217; c=relaxed/simple;
-	bh=nlqNKlHzsPimr1wcOYgqlr0Ec17XrZBl1QUXfVA/D2g=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CWL5MheEb4vhKFQZsfAOvPMbH01R2pPQz4ZkH2JaK0h5m3g58SsOxf6XA/UtAtZ5ToiGGBxaNu+luk/lDk47ITkBZwO15yf1iTA4hnMXSKpvBKsycYJ9mg4vnmGW+mC01vVw9O+wJ6EGQKeFYEwKkciuloQkGlxQl8uGgu7xWIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-844e3943987so66974639f.3
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 08:03:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737648214; x=1738253014;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EARnHFlnBGfXqerIzv7/6vOzyy/tHss9otquSvON5Lc=;
-        b=i+6HAnE3Wre3Yj/aaIzfAs5j9B0T385K4ctsfI/V5s2lHrZsn/FGwX8XZHOTbK1HF/
-         U1p8lyzGV5vyZClsn71h12ndu2eYoOdxYVFE94nP8ywj+EaPEhlcmr/Y7ICxn7/+I7Y+
-         3zTEQnR+aceB5bWIxUumk7QmXEIS+dgHtxI+IK6wxCbkyqeo9aD8mGIeY9QD2ZvnzNX0
-         G1dHhSNNn0in6gE1YbrKQbHhOhwMpF/3wocpjzljyL7HwNYG4ZazC3fH/56L4KcElbOa
-         8UQyTSJPGpHFuTRvV73OdGogF8IWndWSEMG9jCm1l7/z1dw9hcbcKeyK7HlS7Clow4M+
-         CnWg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Z8KG2sfE1ynpVRsOXW+lBAtBSRu6Cwir1ER+Sp3M+zdgIwWqOH6PnVOY3tzpHp0kKPBzHDUmiCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk7ZmWt/2kcQ2dTkbMhfc6IJrDIfmGmYo0SULPQ+VgeX9AkFh8
-	bG15oYej3qJ8+8IQkunaW6qHZqni8lcyDsiPkobPAK0Bzai7pB0PBx7TZh6gkxxCOCruL1L0WKc
-	5isM7YtTU8Xpm4YzvNS0ZYjl+5BFVnLt3+dTFgWzSAzuGPfehQ7OBVJk=
-X-Google-Smtp-Source: AGHT+IGcVMW7Vw+26cxLh/QwlQdPCMVSVgPbFeLPn0/1tc849ohoxjwuJAwb0Vq06/olTAsE+rOab44kcG4e2PJ6SJqKKeTVgi49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8218AEC5;
+	Thu, 23 Jan 2025 17:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737653854; cv=fail; b=jNG62EojDN2GAbkIWNn5wRoeJsAszosQYOMcZPR0B+M4fUPIL33To7GKGU3a3bYHKzjaRyNGdw++4zelIjJ+LZ5tvFS28l/WSKySR2u0+eQW1WLIrEKlQ+aLS2WdYnEm+1jm+EamLTZBAOaXFfhGe4Qi+ILow3IzfHD4WyS880E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737653854; c=relaxed/simple;
+	bh=eheY3Dhf5lem+AocBhrM84kJFtAGuDT1zbLw3W6gK2g=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P19vLeIYDvY3Jz9RyFyMfyaxqOLD4H/wrD2ae3DUclUMFtJOLTwKscEh4AjnnXSyhWTCCY/BCVyrz+aYDjO8u6ZKPZBITsZVXAhCARfTbdR8ZeB079Q0uq6qiMR343JhlbRtqsSRlsl8SEBRFGSLqTQws6H1OydXCz9fn93AS4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ktRSIGWW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=d3ejiZTB; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDaMSF006906;
+	Thu, 23 Jan 2025 17:37:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=; b=
+	ktRSIGWW7UmNkCOdKrFMZoHOiBSlXNjitWL0WAvN5awanXxQPPjhjfXzp/uue0GK
+	ji6hiwmfv0CT1EN9gva897c3Ik4dF8oXt4lyBz3INKHBYH8kLE2B64SczM3rXHgL
+	0f0Iz6YjW9TUyPsZkLhRm9wmRO3AO3o+a9JUP7PEYkO6JLDTJCxWZQVwlH3s8KVH
+	bCQFRSU/LlE0nJfFS6nBeZBSJsS32fVDBbtA3FsKyUGW+V6G1LMvYGHDBbC48CuM
+	qLtAMh5xXSzVOo7GJc8f3FViKL53BTZxOYzDfsm3kNrbV0qg4Nu2kkeoqkWRTck3
+	uvSHA/P9KsBrCIeJFkEStA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4485qatg6y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Jan 2025 17:37:18 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50NH2QZF030477;
+	Thu, 23 Jan 2025 17:37:17 GMT
+Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2046.outbound.protection.outlook.com [104.47.74.46])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4491fmtcs8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Jan 2025 17:37:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IUpmTx5Oq3h39IGk9BlZp1f7wQfF8EPc8pbqOxr7kaUMWkjTzJOVqZkFwpEnptQ9v89yqNjUsBhdrOUoLcnJcz3LMCHkrC8kQCEmWEn8nNqtB4ti93FRqcWKcRgfvR/xso8nGHaJkPaizHwZeMo42jL0BWuf+u6Zn/hPbRE8Pj7V2WSFLIxzCR0nXiqxdP3K8KIt0DN7j4z+pDd5EDAPyIAgNL0tyjBzSBB1bWS4hkKgSfd0559VlS+9djgdOoD/rXkOlWiz236UcWL7cIr5Fsm1m3QLmxxyQEh+aBWb7aw0Jf0YSNHJSFKK6SdKCBWtcm4wOflAAZzI6n20zrbQDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=;
+ b=PrbkTkct8jTGNDRljPCus8ksFARCgSd7AdaDPHcLlmRdX0IALf5Myw8RIDwQxGtuvqj5kl0APDfEyd94Ha7npYb9C04QJTOtACo+toZbck77vjM4h5ny7ndDF2wuJaZJqB6ESwcRtpYhqFEUDcBucmfsnxJi2n+It7mjJd9qrvofT23CBVsVqrI8lyro5GZQ8RcVcI0DObX2MAuu7sEFHyqsA9n9M8J8nc9VT4fDv5h8Tmol38lUAEbV5jyUW9PkFiGEOYTQXWpwDsMk/7zbNqsgHUbfRqhpw3NxLUBaPIL/7o/4kcXV01fD6Y11upHj/aDdGapdu2X/mlkkrYoHyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=;
+ b=d3ejiZTBtmx5qgE6NKpZx7Oh35k37O2lAk5ZR1SktRuFoqwCpmxPCq3UqEgisT8XTrG5t8g0dPq6vNSMmPRi/UAfUyRvbH1IeKNgZQgDJLaqjWtQ1I9tUo3RXT4kn1Dp/5ZAK7GYOzC26lqdJgGrQR1LAijybYnjfsxZfwYgG0I=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB6493.namprd10.prod.outlook.com (2603:10b6:806:29c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Thu, 23 Jan
+ 2025 17:37:15 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Thu, 23 Jan 2025
+ 17:37:15 +0000
+Message-ID: <bd6e8c08-8914-4b24-ba51-78c2afedeed6@oracle.com>
+Date: Thu, 23 Jan 2025 12:37:13 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
+ <173750034870.22054.1620003974639602049@noble.neil.brown.name>
+ <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
+ <c2401cbe-eae9-44ab-b36c-5f91b42c430d@oracle.com>
+ <CAOQ4uxi3=tLsRNyoJk4WPWK5fZrZG=o_8wYBM6f4Cc5Y48DbrA@mail.gmail.com>
+ <50c4f76e-0d5b-41a7-921e-32c812bd92f3@oracle.com>
+ <CAOQ4uxiVLTv94=Xkiqw4NJHa8RysE3bGDx64TLuLF+nxkOh-Eg@mail.gmail.com>
+ <d36de874-7603-478b-a01e-b7d1eb7110d3@oracle.com>
+ <CAOQ4uxgnQ-4azkpsPm+tyd7zgXWUxXq7vWCfksPPF864rpN27Q@mail.gmail.com>
+ <6d3bdbf1-fab5-48f6-9664-ef27fb742c55@oracle.com>
+ <CAOQ4uxiXEJzQLaOCiUfee6P5+NUp3yP-KksxaMsZJB2PRLfzUw@mail.gmail.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <CAOQ4uxiXEJzQLaOCiUfee6P5+NUp3yP-KksxaMsZJB2PRLfzUw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH2PR12CA0025.namprd12.prod.outlook.com
+ (2603:10b6:610:57::35) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:190c:b0:3cf:b6ae:913d with SMTP id
- e9e14a558f8ab-3cfb6ae9172mr53971365ab.21.1737648214576; Thu, 23 Jan 2025
- 08:03:34 -0800 (PST)
-Date: Thu, 23 Jan 2025 08:03:34 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67926856.050a0220.2eae65.000b.GAE@google.com>
-Subject: [syzbot] [nfs?] INFO: task hung in nfsd_nl_version_set_doit
-From: syzbot <syzbot+f56732cee5a3c93a262f@syzkaller.appspotmail.com>
-To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
-	okorniev@redhat.com, syzkaller-bugs@googlegroups.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB6493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 901c0d21-2190-4f64-ad5e-08dd3bd4939a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Si9lNlF2dXYyTXBEV2E0ZElOdGtrV1lPSU1UMldtbzU4TmhqQWdkZFFzemc3?=
+ =?utf-8?B?YlJtVVlrSGxka2E3bi9iY21jMWNxMitDbEM3TlNFYWVqaEtYTzI4blBCc1VB?=
+ =?utf-8?B?UVRISVlGc0pmaVJKbzhpeW5ENzQ0Z0puUURYS3ZQeEZQT2xYSTZNVjJ1Rllv?=
+ =?utf-8?B?RVhFYXNwLzdMRVNNVDc4TEZPYkh2NlU1WktKdzJFSVdtbVViTnozcWFRV0xx?=
+ =?utf-8?B?MFNnOWtlTWt0VE0rZWRHTnVKZkNNekRBci9YVUhOdEVHQmtMYkhvaW5jQjlL?=
+ =?utf-8?B?RExaTEtVK2JqazZIOW1zc0w3OUhucjFVcVdyTEltaDRHY0lEVEJDZ3pWbFlJ?=
+ =?utf-8?B?Wm5uZDcvMjNhMlJIUEJKS3dxejFHcWtwdjc3S3FRViszc244bWxNLytCUlFM?=
+ =?utf-8?B?WmpBODlmUWNXTFNwSXpVa0tpVCtjL3RNTmFrOWFSaStlcFh4cjBnT2NGQ2pN?=
+ =?utf-8?B?eWQ2UkZtL05acThmV2YxNElOb2ZXTGVJNFF4c2JoY09sWEh1ODhZVyswUUlY?=
+ =?utf-8?B?bjRpdU5IZ2RUUmVmZmpYQS8zNzcrbU13YlRWV3p6QXVYWVZtZmtXNVMzalVU?=
+ =?utf-8?B?WWtIWWpWL29ITUFHTlQ5cXhCZVZSanQ0bVNXUjMweSswcDdZdDFudUUvVlhK?=
+ =?utf-8?B?czNrYkthQXRKK2Vpc0Y1cFlXRCtxZnF6TlZPMERudE5mZG83QktydTNKZE1m?=
+ =?utf-8?B?UVo0M05qUnRqS2V2czNFOUJ4T1NGbzhiSEY0YWQxVXFta1c0SEhQaVRXN2Ix?=
+ =?utf-8?B?WG5NYmRlS0t2WUtjeDVDZE9DTEsrK1Z0R3NiVWhMbGl0RW9KNnV5T1QrSWVl?=
+ =?utf-8?B?RzdETW9acWh3VGRzcTVkT3UzL3cxUFdwRnZ6U0l2aytSeGxqdFlPNVc4YVJM?=
+ =?utf-8?B?Z0pqN3BDQk01S2pzZTZOWWtSU1QwL05HRHMydno3bzhTaEFXOU1VbjBkOEhW?=
+ =?utf-8?B?U1JVRUVlcUdRSWQ5U1oxSm5EUVVobWg0T2RuQ0FkdUNWZjJHTnBsckZxSUhQ?=
+ =?utf-8?B?Ni95M3ErTmh2c3F1SU5WUjdCd0p4UjdrSVk3VDVhNDdiQVBoQk10ck9zbTln?=
+ =?utf-8?B?cGdndmpyeFR3cDV2elRmRG9FZnpDR3llRWM5NVNscjhSbERtMFpPSDVDK1Jq?=
+ =?utf-8?B?YngxT01pZldBTWRPQ0xHeFFidEhkZ3cyblBZYmxFUkh2NUNQMzMrcSszdE1m?=
+ =?utf-8?B?NGxmczNaS3lTNWliYnA3aS9GOStmTVZkcmV2R3RyQWdKQVJOSW1GK2dPVVo3?=
+ =?utf-8?B?bWFDdFlNUTlLWXhsbmdEcXJEMzNLNnExMERBK2dmQ2VOako1UzQ5d2FwM0J6?=
+ =?utf-8?B?dnRiY3FHUUpzSTZEaWNybjFSK2Rzd3BKTTNvWGhoNUg5SHA2eFRBaWpkU1Fo?=
+ =?utf-8?B?NmJJQkRlUjJNR0kvTHE3RXVZOUp4TUtJN2dKejJjNE5DM0thcjlvUTB0bStI?=
+ =?utf-8?B?UTNOR1NjSVZ1RXM3VEw2UEdkN3c2RHhRN28zZW5GZFFqUmxlTGZibE1pdzk3?=
+ =?utf-8?B?Q1F0OTZHWUVoR0Q1U1RKWUFsa1ljUVh5QnNzSWtwcWVXRTI3VWtTSFNWb0NY?=
+ =?utf-8?B?RHJibDVwUUJkTkJOWWVOVXQzdENoSXh1VWU4c2QrZXk2MWVoalg2NGdnUmN1?=
+ =?utf-8?B?SGFVZmZpWGNxclF5NVVjSmpDVG9Ic0lvZEpRQmw4b016UStUNHI3YjM3NFdP?=
+ =?utf-8?B?SmhqMFFlOWRVVXlHS2ZHUmx1YkhaL2pVbHRGa2FrMHEwSlpvK0x6MHZxS0xq?=
+ =?utf-8?B?Q0pSa3h1Zm9ZNWVndno4cjBkUUhwams5WitQYWdObmFVRTRjbnY0eTg2US90?=
+ =?utf-8?B?VFR0dllOZHJUMy91MThzY0FJSkk5Rk5DYmxTeC94MjhURlQ1aDRaVUdVSFhD?=
+ =?utf-8?Q?5I1FoUEgaAozN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UHdVc0cyb25IN0RKbmYvc3lEd0dqd00yN0pCUkpydTRYbjBpTGovd2ZjZlpy?=
+ =?utf-8?B?Wld1TXkxRnFRSC92NXBveTV2ckhiWkIxQnBpdkw0MDB1RGFEdVo4RnBmY3dS?=
+ =?utf-8?B?aDVOTlNSY0p4M1NPb2lEWTYrVmJ4eFZ5VTZYQ2lYQW1TeURhSlB1M0c1N01J?=
+ =?utf-8?B?T0tZc3Z5eE5TbEMyVFdJZFpvQ2tVUHpoT3Q5VWR4TEVXV2srV1F0MjlXajVB?=
+ =?utf-8?B?cjNuTHhrT2xsK3NJWE9GcXhJd0dCeGtJT21NWGNVVk1VMkdBbnhlT05QWGRz?=
+ =?utf-8?B?YzFDaDVKVGRDTUdYaWlVdzhkbG1iQ3pXSE5hYUFraWJ6VEw1RW9FY3dlY2NR?=
+ =?utf-8?B?eTZ5TlRpVHJSbm1EWW1GUXZMRVZQZjd0endwZmZBZXh6QkgyMktDaXVkZkZS?=
+ =?utf-8?B?RWFHTm03ZE9jYWFkQytMaVcwWERjZzE4b0xsN1B0U1Q3c0p1UDd4UFFPbFhS?=
+ =?utf-8?B?c0RoMVZrZTdta21TbDFjaEZhSjJ5emRpUk5ZZE1HQkJNN2VkeENVTUdERkJP?=
+ =?utf-8?B?ZVdIWlo4Tk82WFRPaWRqYUtoQ3pyNFN0Znh2bmFrOEI1R0pIS1hqbnZmN1RC?=
+ =?utf-8?B?dmRRSHpvZG9wTUhoeThVZ3d0QW84dGFrNm1zNzZjbEJ3aEUvZDgwblhwK2JY?=
+ =?utf-8?B?NzgydytDaDNMZFBwREdMWjExUjJHK3MrVktWd2VFOUtWU2ljMzF4SFh2QzNS?=
+ =?utf-8?B?Z0NwdXdqRWw5dGFTVGw0eVJSWFRPL096QTIzUHZNeGs4aDNicUhaL0hyN1pt?=
+ =?utf-8?B?dUVPZTNsR0xHNWcyNEZFVFJDZ2UxbmIxSExQL2pBMnJ2eVlUYVJMQThaWFpE?=
+ =?utf-8?B?Y0o5VlpDbVpJYS9BWTJNYWNDckhnN1NlSWVOSmJYdUhINTZ6NXBzWFJjOE81?=
+ =?utf-8?B?ZVE1SlM2NGZ0K0kvcXc0d2ZBbUNIalgyWmlTczNqVE5YamRRenNGb3lKSEtZ?=
+ =?utf-8?B?cG1oSSs1WlpRZlZRYU83QTBOSndqV25QOHZoNFFoYjMxUjA5am5oNWNtU2NT?=
+ =?utf-8?B?L0xSSEZYMDc3VWlGYU52LzRLU3REcGRTL29CclNZOUZwekVKTUw3bDdaamNk?=
+ =?utf-8?B?Y1A0ZmdVVmhSdURJaSt2cnhMOCt3bUVweklLN1g1bmw5Z2ViN0QrbEhwTVAz?=
+ =?utf-8?B?YWRQSnpsVytDNmtjYXhqVHJLbGJzaE82UGw5b2FpYzBVTDFTVmV1MnNHQmtk?=
+ =?utf-8?B?alFjNG9lMmNiMklmUmpIVFJ3SHZ3cmNDYlYvcUkxL3BTMTc5TTBFVGJnLy9u?=
+ =?utf-8?B?QjNtNnNDeGR3SCsyTFZ1VzNsSWxnTS9RWXdMUm9kSmFrcis2b0dJVDh2enVZ?=
+ =?utf-8?B?cVRRVStReG5OYzI5T2ZZSnNwbGRTQUJOemRlUU8vNmxISFZFbFp1QzRSUzg0?=
+ =?utf-8?B?Vk5xb2k5eEFvRThHUkFZT0pDWTRVVEYxczFoTm1OWlBqNjB0VS9sTjZ4eUpN?=
+ =?utf-8?B?VlY1TzNYdE5MVDRTODFUVFVHT2NzN2dSOWdvWFVmVHEyUGx3akQvV042dFl0?=
+ =?utf-8?B?TVZjMlEvYTdQUG5JemYvWkx4N0xJVUQrT05Za256VjUxMlpNMG0xZlE4VHJU?=
+ =?utf-8?B?dVpmS0pjck9FVHFmcElzaGg4SjRpNEhRNlFud1ZIVThoaGRRVUoxY0V2Mmw2?=
+ =?utf-8?B?UUJrVlJXeXRwcVczQk42cHdGdnNDZFgvOThPY3pTRmJOUmhaSjNpYmF6azBn?=
+ =?utf-8?B?NHUvdXN3ZUJwLzlqVW1aVWFBTzErK3Q2NExTaTc3QXFlTU9JYWl3YWRuWXRZ?=
+ =?utf-8?B?enBHZTlvZ2c3Kys4RHE1QlYraUF4anhiVk5vZTY0eHhPcGlydnRvdEJYUmMy?=
+ =?utf-8?B?RHZPUDhLZ3VCN3lLWGdqSUl1cVZ5Tjg4WlFBdS9aSVBXaWVMWk4vLzVjWjgy?=
+ =?utf-8?B?eTJWa3RUdTArbmYyUjRxaXdNaUJIeTMvQ3F4Tm1ySTNDbVFFblJpN1B1TXpE?=
+ =?utf-8?B?ZXFXMGVYcHhxOVcxcnRnTUdTemc1UjZCa2tDbUVsQ0tEaE1UcmdxVEgxeHlH?=
+ =?utf-8?B?S1RiaFl1YVgwOFhnSEZCTHhRTzYyVHJTVlhJM0xsVnpSQUo3UUN1Ty9jdzQy?=
+ =?utf-8?B?VFdkZnNycjlJTStYbkN2dDZRaGpqczlXbEtBTHk3aEkvQ1ErTUlWVW5KYWF4?=
+ =?utf-8?B?ZFluRjNuTENrdnZOZWJTb3E2VDZSTWkraHByd0h5bldoUkJSMkp3WnNSTVdl?=
+ =?utf-8?B?clE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	5AKjOgu6ROpbLJGQlqN7x9+82UmSo1PHQEYaMieQi37ltnWkoXB1JbP1fzLOwH7pvIJD0kZmvOv8fNmgufaNJxiX7BZKQi+byREvaP6cWU0ELL9rB4i4FUYU0rItvT7qko22PQBjQ0HRnPbQg4CkK1UZrQSXKU1cDfh87PTHpbXUHg8ijRTJPJlDx5Z1O0387Ksj+jbwg33PjLQE8FZqqhksKb1/EgRqBmfHDUpvjl2WXDj7B3JoosPxnZ7VGgzsV3iWSJygRtH2j+MJR5VjMSwhQ5uNgVWZS/zNMp2CasKV2J47HTFi9NJSLxqXHbT/nU96dNyNONcvi88q52JPjc7seMBtarR4OZ5NCkaLc376YbMoMNQ32xDAp/5Twq0YpO5BXtwgRn/tYAUshvbBTdPk51CDBrSAVQ63keOCcglbWdW/bMbWXdtHn3whVmXe74sy84Brd56dPUMF3s8NOou9YS/VvvAtW9J7v6bKgmGZQn+7fS7vMzKDnOzMES58FxAUxWesv0BzNRMKNCTDh+epplxOT0QqUfzGduFYeUlbSIz4vvv3vgLV9TYeWpMSKsmQDoJm9+ZqpAsoy/x2zdua3ciOjlImXc6NeTSl7io=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 901c0d21-2190-4f64-ad5e-08dd3bd4939a
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 17:37:15.4072
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v+BymHZ+sep42wHXYFZ9TCcx6xAxNae5QIOmUl1Y7wn7GQjxUe8wVcyi5HVdAhXYWVEbMExCmUN/3x6ZicPqwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6493
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-23_07,2025-01-23_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2411120000 definitions=main-2501230129
+X-Proofpoint-GUID: 534r2DR1szV-O0a76CQ3gjVj1rwJY-WP
+X-Proofpoint-ORIG-GUID: 534r2DR1szV-O0a76CQ3gjVj1rwJY-WP
 
-Hello,
+On 1/23/25 10:29 AM, Amir Goldstein wrote:
+> On Thu, Jan 23, 2025 at 3:59 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>
+>> On 1/22/25 3:11 PM, Amir Goldstein wrote:
+>>> On Wed, Jan 22, 2025 at 8:20 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> On 1/22/25 1:53 PM, Amir Goldstein wrote:
+>>>>>>> I am fine with handling EBUSY in unlink/rmdir/rename/open
+>>>>>>> only for now if that is what everyone prefers.
+>>>>>>
+>>>>>> As far as I can tell, NFSv2 and NFSv3 REMOVE/RMDIR are working
+>>>>>> correctly. NFSv4 REMOVE needs to return a status code that depends
+>>>>>> on whether the target object is a file or not. Probably not much more
+>>>>>> than something like this:
+>>>>>>
+>>>>>>            status = vfs_unlink( ... );
+>>>>>> +       /* RFC 8881 Section 18.25.4 paragraph 5 */
+>>>>>> +       if (status == nfserr_file_open && !S_ISREG(...))
+>>>>>> +               status = nfserr_access;
+>>>>>>
+>>>>>> added to nfsd4_remove().
+>>>>>
+>>>>> Don't you think it's a bit awkward mapping back and forth like this?
+>>>>
+>>>> Yes, it's awkward. It's an artifact of the way NFSD's VFS helpers have
+>>>> been co-opted for new versions of the NFS protocol over the years.
+>>>>
+>>>> With NFSv2 and NFSv3, the operations and their permitted status codes
+>>>> are roughly similar so that these VFS helpers can be re-used without
+>>>> a lot of fuss. This is also why, internally, the symbolic status codes
+>>>> are named without the version number in them (ie, nfserr_inval).
+>>>>
+>>>> With NFSv4, the world is more complicated.
+>>>>
+>>>> The NFSv4 code was prototyped 20 years ago using these NFSv2/3 helpers,
+>>>> and is never revisited until there's a bug. Thus there is quite a bit of
+>>>> technical debt in fs/nfsd/vfs.c that we're replacing over time.
+>>>>
+>>>> IMO it would be better if these VFS helpers returned errno values and
+>>>> then the callers should figure out the conversion to an NFS status code.
+>>>> I suspect that's difficult because some of the functions invoked by the
+>>>> VFS helpers (like fh_verify() ) also return NFS status codes. We just
+>>>> spent some time extracting NFS version-specific code from fh_verify().
+>>>>
+>>>>
+>>>>> Don't you think something like this is a more sane way to keep the
+>>>>> mapping rules in one place:
+>>>>>
+>>>>> @@ -111,6 +111,26 @@ nfserrno (int errno)
+>>>>>            return nfserr_io;
+>>>>>     }
+>>>>>
+>>>>> +static __be32
+>>>>> +nfsd_map_errno(int host_err, int may_flags, int type)
+>>>>> +{
+>>>>> +       switch (host_err) {
+>>>>> +       case -EBUSY:
+>>>>> +               /*
+>>>>> +                * According to RFC 8881 Section 18.25.4 paragraph 5,
+>>>>> +                * removal of regular file can fail with NFS4ERR_FILE_OPEN.
+>>>>> +                * For failure to remove directory we return NFS4ERR_ACCESS,
+>>>>> +                * same as NFS4ERR_FILE_OPEN is mapped in v3 and v2.
+>>>>> +                */
+>>>>> +               if (may_flags == NFSD_MAY_REMOVE && type == S_IFREG)
+>>>>> +                       return nfserr_file_open;
+>>>>> +               else
+>>>>> +                       return nfserr_acces;
+>>>>> +       }
+>>>>> +
+>>>>> +       return nfserrno(host_err);
+>>>>> +}
+>>>>> +
+>>>>>     /*
+>>>>>      * Called from nfsd_lookup and encode_dirent. Check if we have crossed
+>>>>>      * a mount point.
+>>>>> @@ -2006,14 +2026,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
+>>>>> svc_fh *fhp, int type,
+>>>>>     out_drop_write:
+>>>>>            fh_drop_write(fhp);
+>>>>>     out_nfserr:
+>>>>> -       if (host_err == -EBUSY) {
+>>>>> -               /* name is mounted-on. There is no perfect
+>>>>> -                * error status.
+>>>>> -                */
+>>>>> -               err = nfserr_file_open;
+>>>>> -       } else {
+>>>>> -               err = nfserrno(host_err);
+>>>>> -       }
+>>>>> +       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+>>>>>     out:
+>>>>>            return err;
+>>>>
+>>>> No, I don't.
+>>>>
+>>>> NFSD has Kconfig options that disable support for some versions of NFS.
+>>>> The code that manages which status code to return really needs to be
+>>>> inside the functions that are enabled or disabled by Kconfig.
+>>>>
+>>>> As I keep repeating: there is no good way to handle the NFS status codes
+>>>> in one set of functions. Each NFS version has its variations that
+>>>> require special handling.
+>>>>
+>>>>
+>>>
+>>> ok.
+>>>
+>>>>>> Let's visit RENAME once that is addressed.
+>>>>>
+>>>>> And then next patch would be:
+>>>>>
+>>>>> @@ -1828,6 +1828,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+>>>>> svc_fh *ffhp, char *fname, int flen,
+>>>>>            __be32          err;
+>>>>>            int             host_err;
+>>>>>            bool            close_cached = false;
+>>>>> +       int             type;
+>>>>>
+>>>>>            err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
+>>>>>            if (err)
+>>>>> @@ -1922,8 +1923,10 @@ nfsd_rename(struct svc_rqst *rqstp, struct
+>>>>> svc_fh *ffhp, char *fname, int flen,
+>>>>>      out_dput_new:
+>>>>>            dput(ndentry);
+>>>>>      out_dput_old:
+>>>>> +       type = d_inode(odentry)->i_mode & S_IFMT;
+>>>>>            dput(odentry);
+>>>>>      out_nfserr:
+>>>>> -        err = nfserrno(host_err);
+>>>>> +       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
+>>>>
+>>>> Same problem here: the NFS version-specific status codes have to be
+>>>> figured out in the callers, not in nfsd_rename(). The status codes
+>>>> are not common to all NFS versions.
+>>>>
+>>>>
+>>>
+>>> ok.
+>>>
+>>>>>> Then handle OPEN as a third patch, because I bet we are going to meet
+>>>>>> some complications there.
+>>>>>
+>>>>> Did you think of anything better to do for OPEN other than NFS4ERR_ACCESS?
+>>>>
+>>>> I haven't even started to think about that yet.
+>>>>
+>>>
+>>> ok. Let me know when you have any ideas about that.
+>>>
+>>> My goal is to fix EBUSY WARN for open from FUSE.
+>>> The rest is cleanup that I don't mind doing on the way.
+>>
+>> I've poked at nfsd4_remove(). It's not going to work the way I prefer.
+> 
+> Do you mean because the file type is not available there?
 
-syzbot found the following issue on:
-
-HEAD commit:    9528d418de4d Merge tag 'x86_urgent_for_v6.13' of git://git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10938618580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d2d420fd940cbc8
-dashboard link: https://syzkaller.appspot.com/bug?extid=f56732cee5a3c93a262f
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/78c275cb1f61/disk-9528d418.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/13bf64551a18/vmlinux-9528d418.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/08ff578f80f7/bzImage-9528d418.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+f56732cee5a3c93a262f@syzkaller.appspotmail.com
-
-INFO: task syz.6.2550:17606 blocked for more than 143 seconds.
-      Not tainted 6.13.0-rc7-syzkaller-00209-g9528d418de4d #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.6.2550      state:D stack:27248 pid:17606 tgid:17605 ppid:15038  flags:0x00000004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5369 [inline]
- __schedule+0xe58/0x5ad0 kernel/sched/core.c:6756
- __schedule_loop kernel/sched/core.c:6833 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6848
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6905
- __mutex_lock_common kernel/locking/mutex.c:665 [inline]
- __mutex_lock+0x62b/0xa60 kernel/locking/mutex.c:735
- nfsd_nl_version_set_doit+0xc5/0x7a0 fs/nfsd/nfsctl.c:1813
- genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2542
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1347
- netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1891
- sock_sendmsg_nosec net/socket.c:711 [inline]
- __sock_sendmsg net/socket.c:726 [inline]
- ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2583
- ___sys_sendmsg+0x135/0x1e0 net/socket.c:2637
- __sys_sendmsg+0x16e/0x220 net/socket.c:2669
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f3b3a785d29
-RSP: 002b:00007f3b3b53d038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f3b3a975fa0 RCX: 00007f3b3a785d29
-RDX: 0000000000004010 RSI: 00000000200004c0 RDI: 0000000000000008
-RBP: 00007f3b3a801b08 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f3b3a975fa0 R15: 00007ffe55472c78
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/30:
- #0: ffffffff8ddbad40 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8ddbad40 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8ddbad40 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x7f/0x390 kernel/locking/lockdep.c:6744
-4 locks held by kworker/u8:8/3510:
- #0: ffff88801baed948 ((wq_completion)netns){+.+.}-{0:0}, at: process_one_work+0x12cd/0x1b30 kernel/workqueue.c:3211
- #1: ffffc9000d727d80 (net_cleanup_work){+.+.}-{0:0}, at: process_one_work+0x8bb/0x1b30 kernel/workqueue.c:3212
- #2: ffffffff8faad250 (pernet_ops_rwsem){++++}-{4:4}, at: cleanup_net+0xbb/0xbd0 net/core/net_namespace.c:602
- #3: ffffffff8ddc6540 (rcu_state.barrier_mutex){+.+.}-{4:4}, at: rcu_barrier+0x48/0x700 kernel/rcu/tree.c:4565
-2 locks held by kworker/u8:54/7298:
-2 locks held by syz-executor/15509:
- #0: ffff8880351b80e0 (&type->s_umount_key#50){++++}-{4:4}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff8880351b80e0 (&type->s_umount_key#50){++++}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff8880351b80e0 (&type->s_umount_key#50){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:505
- #1: ffffffff8e1bd508 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:625
-2 locks held by syz-executor/17072:
- #0: ffff8880129060e0 (&type->s_umount_key#50){++++}-{4:4}, at: __super_lock fs/super.c:56 [inline]
- #0: ffff8880129060e0 (&type->s_umount_key#50){++++}-{4:4}, at: __super_lock_excl fs/super.c:71 [inline]
- #0: ffff8880129060e0 (&type->s_umount_key#50){++++}-{4:4}, at: deactivate_super+0xd6/0x100 fs/super.c:505
- #1: ffffffff8e1bd508 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_shutdown_threads+0x5b/0xf0 fs/nfsd/nfssvc.c:625
-2 locks held by syz.5.2536/17543:
- #0: ffffffff8fb62850 (cb_lock){++++}-{4:4}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8e1bd508 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_nl_listener_set_doit+0xe3/0x1b40 fs/nfsd/nfsctl.c:1964
-2 locks held by syz.6.2550/17606:
- #0: ffffffff8fb62850 (cb_lock){++++}-{4:4}, at: genl_rcv+0x19/0x40 net/netlink/genetlink.c:1218
- #1: ffffffff8e1bd508 (nfsd_mutex){+.+.}-{4:4}, at: nfsd_nl_version_set_doit+0xc5/0x7a0 fs/nfsd/nfsctl.c:1813
-3 locks held by syz.1.2957/20062:
-3 locks held by syz.4.2962/20075:
-2 locks held by getty/20109:
- #0: ffff88803564a0a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
- #1: ffffc90003e2d2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0xfba/0x1480 drivers/tty/n_tty.c:2211
-2 locks held by syz.0.2983/20256:
- #0: ffffffff8faad250 (pernet_ops_rwsem){++++}-{4:4}, at: copy_net_ns+0x292/0x6c0 net/core/net_namespace.c:512
- #1: ffffffff8ddc6678 (rcu_state.exp_mutex){+.+.}-{4:4}, at: exp_funnel_lock+0x282/0x3b0 kernel/rcu/tree_exp.h:297
-1 lock held by dhcpcd-run-hook/20286:
- #0: ffff8880b873ed18 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x29/0x130 kernel/sched/core.c:598
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.13.0-rc7-syzkaller-00209-g9528d418de4d #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:234 [inline]
- watchdog+0xf14/0x1240 kernel/hung_task.c:397
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 7298 Comm: kworker/u8:54 Not tainted 6.13.0-rc7-syzkaller-00209-g9528d418de4d #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: events_unbound cfg80211_wiphy_work
-RIP: 0010:lock_acquire+0x51/0xb0 kernel/locking/lockdep.c:5822
-Code: 3c 24 53 e8 61 11 ff ff 48 c7 c0 d4 5c 1d 90 48 ba 00 00 00 00 00 fc ff df 48 89 c1 83 e0 07 48 c1 e9 03 83 c0 03 0f b6 14 11 <59> 38 d0 7c 04 84 d2 75 47 8b 05 24 04 a7 0e 85 c0 74 2a 48 89 5c
-RSP: 0018:ffffc90003707888 EFLAGS: 00000202
-RAX: 0000000000000007 RBX: ffffffff8a90694f RCX: 1ffffffff203ab9a
-RDX: 0000000000000000 RSI: ffffffff8bb19b00 RDI: ffffffff8d837ce0
-RBP: 0000000000000000 R08: 0000000000000000 R09: fffffbfff203a53a
-R10: ffffffff901d29d7 R11: 0000000000000004 R12: 0000000000000000
-R13: 0000000000000002 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffd767e6468 CR3: 0000000034f4e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <NMI>
- </NMI>
- <TASK>
- rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- rcu_read_lock include/linux/rcupdate.h:849 [inline]
- ieee80211_bss_info_update+0x1d5/0xab0 net/mac80211/scan.c:192
- ieee80211_rx_bss_info net/mac80211/ibss.c:1101 [inline]
- ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1580 [inline]
- ieee80211_ibss_rx_queued_mgmt+0x1956/0x3040 net/mac80211/ibss.c:1607
- ieee80211_iface_process_skb net/mac80211/iface.c:1613 [inline]
- ieee80211_iface_work+0xc0b/0xf00 net/mac80211/iface.c:1667
- cfg80211_wiphy_work+0x3de/0x560 net/wireless/core.c:440
- process_one_work+0x958/0x1b30 kernel/workqueue.c:3236
- process_scheduled_works kernel/workqueue.c:3317 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+Yes.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> But I'll take care of the clean up for remove, rename, and link.
+>>
+> 
+> FWIW, this is how I was going to solve this,
+> but I admit it is quite awkward:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+I'll deal with it. In the long run, making fh_verify() return an errno
+so all of these helpers can return an errno rather than status code
+is where I want to take this. But for now, a simple approach is best
+because that can be cleanly backported.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> I now realized that truncate can also return EBUSY in my FUSE fs :/
+> That's why I am disappointed that there is no "fall back"
+> mapping for EBUSY that fits all without a warning, but I will
+> wait to see how the cleanup goes and we will take it from there.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+It's better for us if we can identify the particular system call
+that returns -EBUSY. Auditing these cases might show that a blanket
+approach is fine, but we still need to do the audit no matter what.
 
-If you want to undo deduplication, reply with:
-#syz undup
+
+-- 
+Chuck Lever
 
