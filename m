@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-9545-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9546-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57EA4A1AAB9
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A6D4A1AABA
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3F01162AA7
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:52:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FAA31646E2
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:52:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CA35191F8E;
-	Thu, 23 Jan 2025 19:52:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EB81ADC77;
+	Thu, 23 Jan 2025 19:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POgrvVb+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpS86fff"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E687E105
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9277E105
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737661967; cv=none; b=Jcza5mqMwP6vd7Aheq/UgbB68aozljyR+XW8/DbsKX2aCSWc9Bs0BL9yRSRrt4YzMAXTNcXvZlkrhQ1YzH4KQcecio5pvPNuegL9wSHOQ/gl0VK6WrvSaDpOT//mIzSwZdVqY+QTMb2ngqB4UqtSkymbQu80FbRDeEkbY2OIzl0=
+	t=1737661968; cv=none; b=igXhE6lWi5Tk6jccvc0vjuwK2kv80VscJidGdfbp7bmiYVhVxyiKjgyNW5Oh8ECAHJAg2uEpr9zNT8nKlhSkA23ed5Lx5GhETqh6afKBSXQI72u/KIElAGS2r8bxBi6aKIs1rpwzHNKXMIrz0NkzdkZhb8jGPkKfwRyjFKsqEzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737661967; c=relaxed/simple;
-	bh=6w7SDhFnGDkWT7TMYJfIxEhPREgkUf90bXYKr5SVKFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fKwLzvGukgKjfveptf2miGSj0PdS91t1ea28xVXyYKzO0Cv0T67af/2ux0enUa15HjRATV8p0iyA9w0OGH0JK1HTJ4ZIkURvf0EeLJGhXU89V3JSCftgIIMv0s/zkNeRuRx5o+9iOs3zi68vMJcpYFKAzdBGdNoy3TZp+Hc77uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POgrvVb+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7E1C4CED3;
-	Thu, 23 Jan 2025 19:52:45 +0000 (UTC)
+	s=arc-20240116; t=1737661968; c=relaxed/simple;
+	bh=XlwZPYpGxHV1byldpoOY4wzN2rz/uZBFH3IV4T33LpQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bmO0cOjOMex/dvNGYENkDIpwACisvQvCzKNNOCjfCoFgxk3mYrM218puIMzPFyaXJ1UoV5XhRghxjbdO4DzsBTTlCVmb6iN1Z0LStQQe+jqcU6PRhn1n+F/B00n0LqmbSHjjdJXyveViWjXZwCIOe1GivbAm2zB/KH06CFnfQnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpS86fff; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD36C4CEE2;
+	Thu, 23 Jan 2025 19:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737661966;
-	bh=6w7SDhFnGDkWT7TMYJfIxEhPREgkUf90bXYKr5SVKFM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=POgrvVb+CiNCl7sLi6cD40cKwgK/z4ZvjPnchITYO/3LaCzVKobzjgI3lcgbY7zdL
-	 +FnpCNSxvJreIky3Rz5P3Rn0o4k530gcOf0Bcl8tcKYM/1lmZ3GohuOVUNjlfU1PPb
-	 G9aGxmb9zY5GS06u1n7O048KpXPPFtIMo2onx3oZKdMCtel+MYMplWASAduHygb5fV
-	 6paE/dK2XMZwE88ugAlLXnNgRLO5Q23hzyPjtHVGB6Zb7IoFUuSf+TSrXpBD3hpgli
-	 ZNw3AMFBclFUfmQWyBokuj6XwV8bC5kDX9kKjf4/t293ubmqe/cwCbRVi4GkvO0Ixl
-	 TjBOhQ0LlN8hg==
+	s=k20201202; t=1737661967;
+	bh=XlwZPYpGxHV1byldpoOY4wzN2rz/uZBFH3IV4T33LpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kpS86fffG4nHpXYDlEv0RxfgiKrKKmpMJLnfK3BqfW5pasPMDvS3BfJYPMUWZ2ygD
+	 aV6mNVHeSg/Vm+Q5eImnsI/RAYMCOZCZydYbjyYYiHQVxcIgPnX3IzyiNbPdwAUaWu
+	 WLLARTwCCEIS3xwn+67iRcqWrPW2w6U/kZUZvOaNfGrj6GdaroX9aiPuJ0gBJzXzp2
+	 GLXImV9AF0noe3eJ4NyCXeR0kpdsuVnimmRVq0ys3HUVAX3lz3uewJGJkb59NL7Z1m
+	 k5aKDwvnG+nxPDMipFSgj+TfkBFBNCqCfA5ao4l7bn+AyizDDoDlLsmSusDjlIHiJg
+	 EdrE52nYur1CA==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,10 +49,12 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 0/4] Avoid returning NFS4ERR_FILE_OPEN when not appropriate
-Date: Thu, 23 Jan 2025 14:52:38 -0500
-Message-ID: <20250123195242.1378601-1-cel@kernel.org>
+Subject: [RFC PATCH 1/4] NFSD: nfsd_unlink() clobbers non-zero status returned from fh_fill_pre_attrs()
+Date: Thu, 23 Jan 2025 14:52:39 -0500
+Message-ID: <20250123195242.1378601-2-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250123195242.1378601-1-cel@kernel.org>
+References: <20250123195242.1378601-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -62,44 +65,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-This short series aims to prevent NFSD from returning
-NFS4ERR_FILE_OPEN when an NFSv4 LINK, RENAME, or REMOVE operation
-targets a directory.  The only time the protocol spec permits a
-server to return FILE_OPEN is when the target of the operation is a
-file that is open and cannot be closed immediately to satisfy the
-request.
+If fh_fill_pre_attrs() returns a non-zero status, the error flow
+takes it through out_unlock, which then overwrites the returned
+status code with
 
-I would have preferred these fixes go into NFSv4-specific sections
-of NFSD, but the current structure of the code prevents doing that
-while maintaining operational efficiency. Plus, these small patches
-should be able to apply cleanly to LTS kernels.
+	err = nfserrno(host_err);
 
-We can defer deeper restructuring for later. For example,
-fh_verify() could be made to return an errno instead of a generic
-NFS status code; then the VFS utility functions in fs/nfsd/vfs.c
-could be made to do the same, making their callers responsible for
-the proper NFS version-specific translation of the errno into a
-status code.
+Fixes: a332018a91c4 ("nfsd: handle failure to collect pre/post-op attrs more sanely")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/vfs.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-This series has been only compile tested. I'm posting early for
-review and comment about this approach, but please do test these if
-you have the ability to trigger -EBUSY easily.
-
-Amir notes that NFSv4 OPEN is also affected. nfsd4_open() is a
-pretty deep stack of code. If there are stack traces available, we
-should be able to see where to start digging for errno leaks in
-that operation.
-
-Chuck Lever (4):
-  NFSD: nfsd_unlink() clobbers non-zero status returned from
-    fh_fill_pre_attrs()
-  NFSD: Never return NFS4ERR_FILE_OPEN when removing a directory
-  NFSD: Return NFS4ERR_FILE_OPEN only when renaming over an open file
-  NFSD: Return NFS4ERR_FILE_OPEN only when linking an open file
-
- fs/nfsd/vfs.c | 102 +++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 76 insertions(+), 26 deletions(-)
-
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 29cb7b812d71..2d8e27c225f9 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -2011,11 +2011,9 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 		 * error status.
+ 		 */
+ 		err = nfserr_file_open;
+-	} else {
+-		err = nfserrno(host_err);
+ 	}
+ out:
+-	return err;
++	return err != nfs_ok ? err : nfserrno(host_err);
+ out_unlock:
+ 	inode_unlock(dirp);
+ 	goto out_drop_write;
 -- 
 2.47.0
 
