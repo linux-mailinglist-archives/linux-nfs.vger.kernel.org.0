@@ -1,114 +1,145 @@
-Return-Path: <linux-nfs+bounces-9542-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9543-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67A41A1A8FB
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 18:37:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC1DEA1AA66
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:36:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24F0C3A7E4D
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 17:37:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7927E7A4627
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:36:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A0D11474A2;
-	Thu, 23 Jan 2025 17:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83FAB156F2B;
+	Thu, 23 Jan 2025 19:36:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ktRSIGWW";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="d3ejiZTB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WtjoY8jR";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WMSs9q0m"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8218AEC5;
-	Thu, 23 Jan 2025 17:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624A7156228
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737653854; cv=fail; b=jNG62EojDN2GAbkIWNn5wRoeJsAszosQYOMcZPR0B+M4fUPIL33To7GKGU3a3bYHKzjaRyNGdw++4zelIjJ+LZ5tvFS28l/WSKySR2u0+eQW1WLIrEKlQ+aLS2WdYnEm+1jm+EamLTZBAOaXFfhGe4Qi+ILow3IzfHD4WyS880E=
+	t=1737660992; cv=fail; b=kJGt8O1CQIFsJm3cEylfmkl+1+pj0v5aeRZ8LqKhWdFEDv9DlG61Q+POozHiGua9iK3M1rlVDMel1co1mP+n6u6U6d1ZWFewYqt/LUMaGTnZdlB72AJ9G/iwAbOGPOKxo9+BSOKW/FOW5rpAivRAKJaO70NZW/D79c26GkCxAJc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737653854; c=relaxed/simple;
-	bh=eheY3Dhf5lem+AocBhrM84kJFtAGuDT1zbLw3W6gK2g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=P19vLeIYDvY3Jz9RyFyMfyaxqOLD4H/wrD2ae3DUclUMFtJOLTwKscEh4AjnnXSyhWTCCY/BCVyrz+aYDjO8u6ZKPZBITsZVXAhCARfTbdR8ZeB079Q0uq6qiMR343JhlbRtqsSRlsl8SEBRFGSLqTQws6H1OydXCz9fn93AS4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ktRSIGWW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=d3ejiZTB; arc=fail smtp.client-ip=205.220.165.32
+	s=arc-20240116; t=1737660992; c=relaxed/simple;
+	bh=IVsqKGVCkrNuqHP+k10lBxAsWAk8xNC2wszBI7LaOas=;
+	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T//ISsfheoHRj7hZXjhhE4EPVjGutaEhhmfza6t/jej1zNxy6H3Kf+gdl7ko102oGPcTPlIin3OQGbFWii7PFomxydZ4MEe6TEfge2aLjtVwBRSvnLMh6Oxazh2Bly96kATuOTD57E0R3nO0W4T+AjuREw3wcZ14lEcKUT+WExk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WtjoY8jR; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WMSs9q0m; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDaMSF006906;
-	Thu, 23 Jan 2025 17:37:18 GMT
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50NDaMmR030496;
+	Thu, 23 Jan 2025 19:36:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=; b=
-	ktRSIGWW7UmNkCOdKrFMZoHOiBSlXNjitWL0WAvN5awanXxQPPjhjfXzp/uue0GK
-	ji6hiwmfv0CT1EN9gva897c3Ik4dF8oXt4lyBz3INKHBYH8kLE2B64SczM3rXHgL
-	0f0Iz6YjW9TUyPsZkLhRm9wmRO3AO3o+a9JUP7PEYkO6JLDTJCxWZQVwlH3s8KVH
-	bCQFRSU/LlE0nJfFS6nBeZBSJsS32fVDBbtA3FsKyUGW+V6G1LMvYGHDBbC48CuM
-	qLtAMh5xXSzVOo7GJc8f3FViKL53BTZxOYzDfsm3kNrbV0qg4Nu2kkeoqkWRTck3
-	uvSHA/P9KsBrCIeJFkEStA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4485qatg6y-1
+	corp-2023-11-20; bh=mCpYYHnDPrD08O4uPt9tPIZa8Q0RMUKvh/0mWzrCGvk=; b=
+	WtjoY8jRDEAtcAmQtYLiRdrKQX/KaXaqbFaPFrkTHbRoRb/uKLh4oOHhOeKiAEX3
+	Q22k8DVF63mcmTlt2xi8yXA5SXxqCC4cmEbWlBPBZcyl/FU7IfakF8MyvrcDIWL6
+	dP3LghTqhmtDE5EdpCgcB3ZUBTCij/22bmMOyw9L+mzfYUrXg9SER8dkb9QzcH5x
+	zs9hBmQuv4tvDaLM08T584XgO/bimswaCtwBavoPgiFwSP3bO1O9KgVLT1JNLs0z
+	G1+PlyMlLb3hWRsY9jKFy03VXk7HTRPQ7JB72KOfyKy5+XDtW5FVjv61z6iYZobr
+	qLJHvKfW54na8bczd5Y6MQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44b96ahxf8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 17:37:18 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50NH2QZF030477;
-	Thu, 23 Jan 2025 17:37:17 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2046.outbound.protection.outlook.com [104.47.74.46])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4491fmtcs8-1
+	Thu, 23 Jan 2025 19:36:25 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50NI0IM9019473;
+	Thu, 23 Jan 2025 19:36:25 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4491c5e5qm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 17:37:16 +0000
+	Thu, 23 Jan 2025 19:36:25 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IUpmTx5Oq3h39IGk9BlZp1f7wQfF8EPc8pbqOxr7kaUMWkjTzJOVqZkFwpEnptQ9v89yqNjUsBhdrOUoLcnJcz3LMCHkrC8kQCEmWEn8nNqtB4ti93FRqcWKcRgfvR/xso8nGHaJkPaizHwZeMo42jL0BWuf+u6Zn/hPbRE8Pj7V2WSFLIxzCR0nXiqxdP3K8KIt0DN7j4z+pDd5EDAPyIAgNL0tyjBzSBB1bWS4hkKgSfd0559VlS+9djgdOoD/rXkOlWiz236UcWL7cIr5Fsm1m3QLmxxyQEh+aBWb7aw0Jf0YSNHJSFKK6SdKCBWtcm4wOflAAZzI6n20zrbQDQ==
+ b=C+ics+lwx96fU1MPjKaumNZX1deAIXrJOmXgHR2Kb69lrqNmNakNgOqF3tNKTLJZ6oXt0ntnC6bcbWtPN4CH3fPeNUwIUrTnazTgZYMaCsjSenOZtAnawkGpFYsoak//+Zv1gyk/wokQR0FSN0irRHfNRt3ueajTHmiCCx1R+2PNRo0720ioPvJ7aJcuC7EK7TVoWOSWoZ3m10hYQqiKMIWn/99zz8wTrFrZ4YXrpwSNtzCTLnCRQuEYHWPXG4O93r7YNuWBdku8TFZ1CDNLa3B1GAYaYcrpX+vJqL3si6UM3TZF9l77+bsSSD4gGMT1ENa8qQVny9+Vc7viEs3HRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=;
- b=PrbkTkct8jTGNDRljPCus8ksFARCgSd7AdaDPHcLlmRdX0IALf5Myw8RIDwQxGtuvqj5kl0APDfEyd94Ha7npYb9C04QJTOtACo+toZbck77vjM4h5ny7ndDF2wuJaZJqB6ESwcRtpYhqFEUDcBucmfsnxJi2n+It7mjJd9qrvofT23CBVsVqrI8lyro5GZQ8RcVcI0DObX2MAuu7sEFHyqsA9n9M8J8nc9VT4fDv5h8Tmol38lUAEbV5jyUW9PkFiGEOYTQXWpwDsMk/7zbNqsgHUbfRqhpw3NxLUBaPIL/7o/4kcXV01fD6Y11upHj/aDdGapdu2X/mlkkrYoHyQ==
+ bh=mCpYYHnDPrD08O4uPt9tPIZa8Q0RMUKvh/0mWzrCGvk=;
+ b=goD2FeZ15jWQqVmOUY5xbAE4B4HOJSF8cF9EJJL3Zl21AX5cZtVGNBZ6JOFYL0DPyLv6akiPGirTjI/IZr4mimdO4LMROiFAPrimYFUO+5lkvY/QBmPoRjUByre6+wwOmpHyXtnTQINrZd01dY+u4BCWnL8QamBQdX6+JCVrK9nNVs0FKbQQleh24ZFew/56EKTq2Z8aX3fMW7w2yntbGpOGoYAMf8qRNXSJ2ZDH5reDT9nQ78tRpIlRJhK6qjMZstDVlix4TPYNJ/jWHpvL3wvQ4oMSXTy+MoTT+0sa2NP6W0jd0ItnN8eOKJrblW4LBiUY21l67zVEYdBnMiPjjw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qeypH8k3lNPmjLx9sssN5IO82uaeeJglke33aKaLnks=;
- b=d3ejiZTBtmx5qgE6NKpZx7Oh35k37O2lAk5ZR1SktRuFoqwCpmxPCq3UqEgisT8XTrG5t8g0dPq6vNSMmPRi/UAfUyRvbH1IeKNgZQgDJLaqjWtQ1I9tUo3RXT4kn1Dp/5ZAK7GYOzC26lqdJgGrQR1LAijybYnjfsxZfwYgG0I=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB6493.namprd10.prod.outlook.com (2603:10b6:806:29c::21) with
+ bh=mCpYYHnDPrD08O4uPt9tPIZa8Q0RMUKvh/0mWzrCGvk=;
+ b=WMSs9q0m7dL+WJH1uN1UC6Wjyd814klgo52UD2WcjMoikYhT4IpKi/fSUlkG4fK8bzwaS6902a/qAs0zZbvlQg3oj4y08FtKtS6vH8jf3I+Kg1Y1Pcj7O3vgBarzvam0JyS0xLSDtgQ9G/hK7Q84g2VSGaWIWJqwxJ3dKNBxHqU=
+Received: from BN0PR10MB5143.namprd10.prod.outlook.com (2603:10b6:408:12c::7)
+ by CH4PR10MB8172.namprd10.prod.outlook.com (2603:10b6:610:239::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.19; Thu, 23 Jan
- 2025 17:37:15 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%3]) with mapi id 15.20.8356.020; Thu, 23 Jan 2025
- 17:37:15 +0000
-Message-ID: <bd6e8c08-8914-4b24-ba51-78c2afedeed6@oracle.com>
-Date: Thu, 23 Jan 2025 12:37:13 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] nfsd: map EBUSY to NFS4ERR_ACCESS for all operations
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-References: <CAOQ4uxh4PS0d6HuHCM_GTfNDpkM1EJ5G55Fs83tDRW0bGu2v-A@mail.gmail.com>
- <173750034870.22054.1620003974639602049@noble.neil.brown.name>
- <CAOQ4uxiXC8Xa7zEKYeJ0pADg3Mq19jpA6uEtZfG1QORzuZy9gQ@mail.gmail.com>
- <c2401cbe-eae9-44ab-b36c-5f91b42c430d@oracle.com>
- <CAOQ4uxi3=tLsRNyoJk4WPWK5fZrZG=o_8wYBM6f4Cc5Y48DbrA@mail.gmail.com>
- <50c4f76e-0d5b-41a7-921e-32c812bd92f3@oracle.com>
- <CAOQ4uxiVLTv94=Xkiqw4NJHa8RysE3bGDx64TLuLF+nxkOh-Eg@mail.gmail.com>
- <d36de874-7603-478b-a01e-b7d1eb7110d3@oracle.com>
- <CAOQ4uxgnQ-4azkpsPm+tyd7zgXWUxXq7vWCfksPPF864rpN27Q@mail.gmail.com>
- <6d3bdbf1-fab5-48f6-9664-ef27fb742c55@oracle.com>
- <CAOQ4uxiXEJzQLaOCiUfee6P5+NUp3yP-KksxaMsZJB2PRLfzUw@mail.gmail.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAOQ4uxiXEJzQLaOCiUfee6P5+NUp3yP-KksxaMsZJB2PRLfzUw@mail.gmail.com>
+ 2025 19:36:22 +0000
+Received: from BN0PR10MB5143.namprd10.prod.outlook.com
+ ([fe80::783:503f:ea07:74c7]) by BN0PR10MB5143.namprd10.prod.outlook.com
+ ([fe80::783:503f:ea07:74c7%5]) with mapi id 15.20.8377.009; Thu, 23 Jan 2025
+ 19:36:22 +0000
+Message-ID: <020c8945-51e3-4783-b852-c89bc7917b67@oracle.com>
+Date: Thu, 23 Jan 2025 19:36:19 +0000
+User-Agent: Thunderbird Daily
+Cc: Calum Mackay <calum.mackay@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH pynfs] Move to xdrlib3
+To: Jeff Layton <jlayton@kernel.org>
+References: <20250122-master-v1-1-3c6c66a66fe5@kernel.org>
+Content-Language: en-GB
+From: Calum Mackay <calum.mackay@oracle.com>
+Autocrypt: addr=calum.mackay@oracle.com; keydata=
+ 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
+ smRifw1wGg==
+Organization: Oracle
+In-Reply-To: <20250122-master-v1-1-3c6c66a66fe5@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR12CA0025.namprd12.prod.outlook.com
- (2603:10b6:610:57::35) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+X-ClientProxiedBy: LO4P123CA0696.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:37b::10) To BN0PR10MB5143.namprd10.prod.outlook.com
+ (2603:10b6:408:12c::7)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -116,289 +147,252 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB6493:EE_
-X-MS-Office365-Filtering-Correlation-Id: 901c0d21-2190-4f64-ad5e-08dd3bd4939a
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5143:EE_|CH4PR10MB8172:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67142e4a-99aa-49fb-f770-08dd3be5376e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Si9lNlF2dXYyTXBEV2E0ZElOdGtrV1lPSU1UMldtbzU4TmhqQWdkZFFzemc3?=
- =?utf-8?B?YlJtVVlrSGxka2E3bi9iY21jMWNxMitDbEM3TlNFYWVqaEtYTzI4blBCc1VB?=
- =?utf-8?B?UVRISVlGc0pmaVJKbzhpeW5ENzQ0Z0puUURYS3ZQeEZQT2xYSTZNVjJ1Rllv?=
- =?utf-8?B?RVhFYXNwLzdMRVNNVDc4TEZPYkh2NlU1WktKdzJFSVdtbVViTnozcWFRV0xx?=
- =?utf-8?B?MFNnOWtlTWt0VE0rZWRHTnVKZkNNekRBci9YVUhOdEVHQmtMYkhvaW5jQjlL?=
- =?utf-8?B?RExaTEtVK2JqazZIOW1zc0w3OUhucjFVcVdyTEltaDRHY0lEVEJDZ3pWbFlJ?=
- =?utf-8?B?Wm5uZDcvMjNhMlJIUEJKS3dxejFHcWtwdjc3S3FRViszc244bWxNLytCUlFM?=
- =?utf-8?B?WmpBODlmUWNXTFNwSXpVa0tpVCtjL3RNTmFrOWFSaStlcFh4cjBnT2NGQ2pN?=
- =?utf-8?B?eWQ2UkZtL05acThmV2YxNElOb2ZXTGVJNFF4c2JoY09sWEh1ODhZVyswUUlY?=
- =?utf-8?B?bjRpdU5IZ2RUUmVmZmpYQS8zNzcrbU13YlRWV3p6QXVYWVZtZmtXNVMzalVU?=
- =?utf-8?B?WWtIWWpWL29ITUFHTlQ5cXhCZVZSanQ0bVNXUjMweSswcDdZdDFudUUvVlhK?=
- =?utf-8?B?czNrYkthQXRKK2Vpc0Y1cFlXRCtxZnF6TlZPMERudE5mZG83QktydTNKZE1m?=
- =?utf-8?B?UVo0M05qUnRqS2V2czNFOUJ4T1NGbzhiSEY0YWQxVXFta1c0SEhQaVRXN2Ix?=
- =?utf-8?B?WG5NYmRlS0t2WUtjeDVDZE9DTEsrK1Z0R3NiVWhMbGl0RW9KNnV5T1QrSWVl?=
- =?utf-8?B?RzdETW9acWh3VGRzcTVkT3UzL3cxUFdwRnZ6U0l2aytSeGxqdFlPNVc4YVJM?=
- =?utf-8?B?Z0pqN3BDQk01S2pzZTZOWWtSU1QwL05HRHMydno3bzhTaEFXOU1VbjBkOEhW?=
- =?utf-8?B?U1JVRUVlcUdRSWQ5U1oxSm5EUVVobWg0T2RuQ0FkdUNWZjJHTnBsckZxSUhQ?=
- =?utf-8?B?Ni95M3ErTmh2c3F1SU5WUjdCd0p4UjdrSVk3VDVhNDdiQVBoQk10ck9zbTln?=
- =?utf-8?B?cGdndmpyeFR3cDV2elRmRG9FZnpDR3llRWM5NVNscjhSbERtMFpPSDVDK1Jq?=
- =?utf-8?B?YngxT01pZldBTWRPQ0xHeFFidEhkZ3cyblBZYmxFUkh2NUNQMzMrcSszdE1m?=
- =?utf-8?B?NGxmczNaS3lTNWliYnA3aS9GOStmTVZkcmV2R3RyQWdKQVJOSW1GK2dPVVo3?=
- =?utf-8?B?bWFDdFlNUTlLWXhsbmdEcXJEMzNLNnExMERBK2dmQ2VOako1UzQ5d2FwM0J6?=
- =?utf-8?B?dnRiY3FHUUpzSTZEaWNybjFSK2Rzd3BKTTNvWGhoNUg5SHA2eFRBaWpkU1Fo?=
- =?utf-8?B?NmJJQkRlUjJNR0kvTHE3RXVZOUp4TUtJN2dKejJjNE5DM0thcjlvUTB0bStI?=
- =?utf-8?B?UTNOR1NjSVZ1RXM3VEw2UEdkN3c2RHhRN28zZW5GZFFqUmxlTGZibE1pdzk3?=
- =?utf-8?B?Q1F0OTZHWUVoR0Q1U1RKWUFsa1ljUVh5QnNzSWtwcWVXRTI3VWtTSFNWb0NY?=
- =?utf-8?B?RHJibDVwUUJkTkJOWWVOVXQzdENoSXh1VWU4c2QrZXk2MWVoalg2NGdnUmN1?=
- =?utf-8?B?SGFVZmZpWGNxclF5NVVjSmpDVG9Ic0lvZEpRQmw4b016UStUNHI3YjM3NFdP?=
- =?utf-8?B?SmhqMFFlOWRVVXlHS2ZHUmx1YkhaL2pVbHRGa2FrMHEwSlpvK0x6MHZxS0xq?=
- =?utf-8?B?Q0pSa3h1Zm9ZNWVndno4cjBkUUhwams5WitQYWdObmFVRTRjbnY0eTg2US90?=
- =?utf-8?B?VFR0dllOZHJUMy91MThzY0FJSkk5Rk5DYmxTeC94MjhURlQ1aDRaVUdVSFhD?=
- =?utf-8?Q?5I1FoUEgaAozN?=
+	=?utf-8?B?ZHZiWWk5ckhnQ1JRaUo2a29WZkdKdmVPSVUyZU5FL3N6Z3pGU08vSzFjZjlR?=
+ =?utf-8?B?ZFgyVjlJMFVrQnVSZEduRjBidnV4clpWVzN0Q2Z6bDBDai8vM3IySkVCL3Q5?=
+ =?utf-8?B?elVHcDZ0ZllmZXBVQm1IaXBmaDlubmxWbHgwT1JTS1BZVFdpRmdTVkxVc2xN?=
+ =?utf-8?B?L21oeFBFR1JiSitBNDVBbFNXNTl0bFcycUk4OXlKV0NJUzY5d1kxQ1JKak1V?=
+ =?utf-8?B?WmdQN2VuSFl2MzMvZ1p1d2plQUdmaithUWlIUkFRWlRSMVk1RTVsUmJ5NTZY?=
+ =?utf-8?B?K0FUdllWRHVWaVZYYk9KalVSNG9VR2lkQWR3U05kV2VmUkRQS21BOStkaWdp?=
+ =?utf-8?B?MldZUnJJSmk3a0NTTWxXLzYxU2tOTDZxOFdYanczQzBHV0p2ckhnRXlqOEpa?=
+ =?utf-8?B?T2k2dlEwc0dDWEFaSTJiNnZrNXBlUGU3QlFvS0FJOHdaTlZCQ3FnOGpLYXB6?=
+ =?utf-8?B?eXI4cUxEMVVXSmh0YXh2cG9HWC9wRExtcWhlQ0p0ZFlQeEM5Z29UVUx1b0xH?=
+ =?utf-8?B?cUF4Ky9MWHlPcVQyeDJVTHMzekFDVUFqeE1sSTdkRmNDTGYxNEpiVFJSd2RB?=
+ =?utf-8?B?cG1DZjk4dmxwT0hJNXhQNGk0WUlkc2ZYdGV4dXVvVmNxMVNwVTg5WVIrVlN6?=
+ =?utf-8?B?dUI1S2RiTDA1eW1mdExaYWk0UTVXRWc1UDFERWg0dW9JeUFhQUc2bStUd1Mv?=
+ =?utf-8?B?SUx3UFZzUGIvMHA5Q1R2aU5OV0NMUHJ5cnp3WjdyK2FxZ0RTRVAyQ1Fwek1F?=
+ =?utf-8?B?WjBEaUxKdG1xejVIWlo1ZnhZMXRvN2lET3NXMFNZcERHWWV6K0YvTkhPWkFa?=
+ =?utf-8?B?VW1sY3BZeE5jZlkxM0ZTdSsxRlU4aGhiYWg2a0VyT0syNmJ3WkZBQ0dhU3hw?=
+ =?utf-8?B?VjJOMTY2dWdQMTVhUVMyWXM4K092eHVDbDRQejF4Ykl3VlN0YmV5M0xhaWl4?=
+ =?utf-8?B?MmVWQzJmcUlVcm52R0didGo1NzVOTXhLdElBOXl2SnN2OWgrMzRaMGdCbDJn?=
+ =?utf-8?B?YloyYlFqY0twZzZqaUI4Q2ZmbHFpR0EyZEtNdVRCOVdLRmRjblllZnd5RUsy?=
+ =?utf-8?B?U3M0ZXpZaDNCQlVxVHB2bHVieDlwTkRKalFPa09NNFhlbE1wTnYyUjZSb0l4?=
+ =?utf-8?B?ZndMcCtCUEx5K0o2NGZFMWYrVHBNSEw3eDBHWUNQdWZ1M2dWek4vMGFxZW9D?=
+ =?utf-8?B?a2crZ01HSW45YnlpeDBQVkUwbmxLRkpTOFl2NDhnelZoVjRCeWJCaURzWXp2?=
+ =?utf-8?B?dkZpdjJqejRwQm9mSkRhUXBucWtqaDlrbUIzRno4LzdMZXh2S0UveXRNMWpT?=
+ =?utf-8?B?cTZuMFEveFNKbjFMaFVxVnFFR3BnRjZQN29pZUlGYVBBQWdZb3pnakRVMFd0?=
+ =?utf-8?B?OVJ5QTZiUElMZmlOUWlGMjY1QUFkRDRZZTNuVXFLcm5KcHRZWWY5eVZFcE9R?=
+ =?utf-8?B?aDZOeEdtaUk1ODRlYVhEZTZFZmxRdWFaczBjeGhQM3RpZVpjYU9nTzc1Q2Vs?=
+ =?utf-8?B?K25MS3FhREFGaWJ6ZjRmVnNXOW9Ec1pvMGhyNzR5Z2ZyTHJpN3ZmYW4wdjNx?=
+ =?utf-8?B?TmJsNHM3L0E2aDdlemc5MFk5eGlKNEJVS25OMk1kTURqNmg4ckRaaXQzMVpr?=
+ =?utf-8?B?ZWlOdzVaSXZXT1FCb0VPbjNmSVJiVFZTYnpHd0ExVnFKQ1NtRWdKRVB5YnpT?=
+ =?utf-8?B?MWtjUWJCa3RJSlAzQ3FWZmdjMUpwYUVlKzJVaHlOa1daNGRvWWFNN1NvSFdi?=
+ =?utf-8?B?ckNxQm1UdHhYNTJ1K3crd20rR1p0eVFIM0JsTHo3T0lWMTd5OUpvdGdIeFlx?=
+ =?utf-8?B?Z251Qkc3N0k2RHI3ZE5zZz09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5143.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UHdVc0cyb25IN0RKbmYvc3lEd0dqd00yN0pCUkpydTRYbjBpTGovd2ZjZlpy?=
- =?utf-8?B?Wld1TXkxRnFRSC92NXBveTV2ckhiWkIxQnBpdkw0MDB1RGFEdVo4RnBmY3dS?=
- =?utf-8?B?aDVOTlNSY0p4M1NPb2lEWTYrVmJ4eFZ5VTZYQ2lYQW1TeURhSlB1M0c1N01J?=
- =?utf-8?B?T0tZc3Z5eE5TbEMyVFdJZFpvQ2tVUHpoT3Q5VWR4TEVXV2srV1F0MjlXajVB?=
- =?utf-8?B?cjNuTHhrT2xsK3NJWE9GcXhJd0dCeGtJT21NWGNVVk1VMkdBbnhlT05QWGRz?=
- =?utf-8?B?YzFDaDVKVGRDTUdYaWlVdzhkbG1iQ3pXSE5hYUFraWJ6VEw1RW9FY3dlY2NR?=
- =?utf-8?B?eTZ5TlRpVHJSbm1EWW1GUXZMRVZQZjd0endwZmZBZXh6QkgyMktDaXVkZkZS?=
- =?utf-8?B?RWFHTm03ZE9jYWFkQytMaVcwWERjZzE4b0xsN1B0U1Q3c0p1UDd4UFFPbFhS?=
- =?utf-8?B?c0RoMVZrZTdta21TbDFjaEZhSjJ5emRpUk5ZZE1HQkJNN2VkeENVTUdERkJP?=
- =?utf-8?B?ZVdIWlo4Tk82WFRPaWRqYUtoQ3pyNFN0Znh2bmFrOEI1R0pIS1hqbnZmN1RC?=
- =?utf-8?B?dmRRSHpvZG9wTUhoeThVZ3d0QW84dGFrNm1zNzZjbEJ3aEUvZDgwblhwK2JY?=
- =?utf-8?B?NzgydytDaDNMZFBwREdMWjExUjJHK3MrVktWd2VFOUtWU2ljMzF4SFh2QzNS?=
- =?utf-8?B?Z0NwdXdqRWw5dGFTVGw0eVJSWFRPL096QTIzUHZNeGs4aDNicUhaL0hyN1pt?=
- =?utf-8?B?dUVPZTNsR0xHNWcyNEZFVFJDZ2UxbmIxSExQL2pBMnJ2eVlUYVJMQThaWFpE?=
- =?utf-8?B?Y0o5VlpDbVpJYS9BWTJNYWNDckhnN1NlSWVOSmJYdUhINTZ6NXBzWFJjOE81?=
- =?utf-8?B?ZVE1SlM2NGZ0K0kvcXc0d2ZBbUNIalgyWmlTczNqVE5YamRRenNGb3lKSEtZ?=
- =?utf-8?B?cG1oSSs1WlpRZlZRYU83QTBOSndqV25QOHZoNFFoYjMxUjA5am5oNWNtU2NT?=
- =?utf-8?B?L0xSSEZYMDc3VWlGYU52LzRLU3REcGRTL29CclNZOUZwekVKTUw3bDdaamNk?=
- =?utf-8?B?Y1A0ZmdVVmhSdURJaSt2cnhMOCt3bUVweklLN1g1bmw5Z2ViN0QrbEhwTVAz?=
- =?utf-8?B?YWRQSnpsVytDNmtjYXhqVHJLbGJzaE82UGw5b2FpYzBVTDFTVmV1MnNHQmtk?=
- =?utf-8?B?alFjNG9lMmNiMklmUmpIVFJ3SHZ3cmNDYlYvcUkxL3BTMTc5TTBFVGJnLy9u?=
- =?utf-8?B?QjNtNnNDeGR3SCsyTFZ1VzNsSWxnTS9RWXdMUm9kSmFrcis2b0dJVDh2enVZ?=
- =?utf-8?B?cVRRVStReG5OYzI5T2ZZSnNwbGRTQUJOemRlUU8vNmxISFZFbFp1QzRSUzg0?=
- =?utf-8?B?Vk5xb2k5eEFvRThHUkFZT0pDWTRVVEYxczFoTm1OWlBqNjB0VS9sTjZ4eUpN?=
- =?utf-8?B?VlY1TzNYdE5MVDRTODFUVFVHT2NzN2dSOWdvWFVmVHEyUGx3akQvV042dFl0?=
- =?utf-8?B?TVZjMlEvYTdQUG5JemYvWkx4N0xJVUQrT05Za256VjUxMlpNMG0xZlE4VHJU?=
- =?utf-8?B?dVpmS0pjck9FVHFmcElzaGg4SjRpNEhRNlFud1ZIVThoaGRRVUoxY0V2Mmw2?=
- =?utf-8?B?UUJrVlJXeXRwcVczQk42cHdGdnNDZFgvOThPY3pTRmJOUmhaSjNpYmF6azBn?=
- =?utf-8?B?NHUvdXN3ZUJwLzlqVW1aVWFBTzErK3Q2NExTaTc3QXFlTU9JYWl3YWRuWXRZ?=
- =?utf-8?B?enBHZTlvZ2c3Kys4RHE1QlYraUF4anhiVk5vZTY0eHhPcGlydnRvdEJYUmMy?=
- =?utf-8?B?RHZPUDhLZ3VCN3lLWGdqSUl1cVZ5Tjg4WlFBdS9aSVBXaWVMWk4vLzVjWjgy?=
- =?utf-8?B?eTJWa3RUdTArbmYyUjRxaXdNaUJIeTMvQ3F4Tm1ySTNDbVFFblJpN1B1TXpE?=
- =?utf-8?B?ZXFXMGVYcHhxOVcxcnRnTUdTemc1UjZCa2tDbUVsQ0tEaE1UcmdxVEgxeHlH?=
- =?utf-8?B?S1RiaFl1YVgwOFhnSEZCTHhRTzYyVHJTVlhJM0xsVnpSQUo3UUN1Ty9jdzQy?=
- =?utf-8?B?VFdkZnNycjlJTStYbkN2dDZRaGpqczlXbEtBTHk3aEkvQ1ErTUlWVW5KYWF4?=
- =?utf-8?B?ZFluRjNuTENrdnZOZWJTb3E2VDZSTWkraHByd0h5bldoUkJSMkp3WnNSTVdl?=
- =?utf-8?B?clE9PQ==?=
+	=?utf-8?B?Q3pSRjgvUUtGR1RRdGNValYwQkVISXdvOEs2bHROK0J6cXVLN3grdWZQbUJv?=
+ =?utf-8?B?UkJ2Q1pVcWRwOVloOXFZS1kvSmI3QVRjUVFNT2EzZTFpQnIwb2FsMDRqZVlN?=
+ =?utf-8?B?UzgxdnM5THltV3FzRU91bHV3RTVUSlJuS1Y2YWk3YkFJOHFCY05aWDJFMVNV?=
+ =?utf-8?B?UkR5bGlyWWsvMjdIOFJHSmxXbVVmaHFKWHRONWU3RFovOG42R01xUWMvdUFQ?=
+ =?utf-8?B?ZHI3TzZOUWx4SE9lMjA2NFg5OThiTGpIRUlrOFRqdjZiUXE4MEl3aFVtUHFH?=
+ =?utf-8?B?Q0hQaVBlUC9ZZ05TSkx2Y2x3cVg5UzUxUHhHenhQS0lJUnk1SkhLbktTYy94?=
+ =?utf-8?B?Z1N0RllKT1JJMmZUVWxxaDBCRlFlaGZDcFFLL2ViVkZMMEtuNG1vOVlULzd5?=
+ =?utf-8?B?NUJRRHk1SExPVHN0dDNHamdQNzVlK1YwbFc5YlRvaG90Z3hFS09VbXkzZTIz?=
+ =?utf-8?B?RHMrS1JBdmxXL2ZsSWw2cVFKckNSZkhBMXl2K2NWWUpHa3BmdHZHUnRaS3F5?=
+ =?utf-8?B?VU1Od05MREhBV21uci82MGhPbFU5Ujd0d0NLakEvVnV3NVd1RTg0cTlJQitu?=
+ =?utf-8?B?NmJIWmJZaXZSaW1vTmZtNnJna0RvYzY1Tmo2anoyUHZxeUdPR3FPeDJHc1FJ?=
+ =?utf-8?B?d2dHMFF5Skc3eXpYb1VSZWFUblFSMDdlY0xIS3lMYmVSNmliL3RzSmtyYVg2?=
+ =?utf-8?B?K0VkcUlvbVNYZTQ3Q2NMMENrcXk0aHo1a1NqV0NmZ2hhRHZxM0JmZlYwMTFS?=
+ =?utf-8?B?eFVrbGZjcVAzN0hMZ0Q4WTlzSHR0TnU1czhES3lQU1pWd09IamhyRHgwQUM0?=
+ =?utf-8?B?a1V3aVdVWmZUYjVHZDhrcnhZOFZYT2pIQ2ZNaVhKOG1WUmxlMk44SVMxZkFZ?=
+ =?utf-8?B?Mm5LcHBCZXBnczZkUGhVZzk4dVB5bmRXSkJSanNNTE9CTnIxQVFnZHN2RTYx?=
+ =?utf-8?B?RG1nZk9obkhOZUlIQlI5UmFXSTgwcFVlN3FzZVBuZVorcThNeWh2T0dNR2Zw?=
+ =?utf-8?B?RDU4MVprMEFKdHpiT1pKQmpKN1ZVejYwck1EZzFBS0FEZzlvVjY3N0cwOTVP?=
+ =?utf-8?B?VUNEdW4rWEJ3ekprVmU5ZHhBNTc4ZlFpb2ZHUjJMNSttS0hSR0hRenBTRzZS?=
+ =?utf-8?B?U1YwL3NPV0JjNGpNRWlYOVFFZDFDOEFnZjhyWTM4cFlsbVZnOGMwcHVvcjBN?=
+ =?utf-8?B?Y0IzSFluVEg2QVkxaWVkK3oxNURQSmJvUHJxcmJPNWp0RDdYZmtVd3lINnFj?=
+ =?utf-8?B?YW9vNEk2WFp3YmFPTXRWRFMwK2Z2R3ZXbmV2NGxkSmNwYVhSamFCYVJENndJ?=
+ =?utf-8?B?a21pWWFRZVg0N1JUMU0waEZpSVhsSHdMQkxibnFQNmhqTEJyTDhVeDZacklD?=
+ =?utf-8?B?aE00MGtLSW5ibkRUY3dCblIvWDhpRVhhei9ZUFE1cjBQYlhTOGQzTmtDS3Nq?=
+ =?utf-8?B?UHhPQ0xqZ2M1R1laTncxU09WaXRCSW9uWEVtcjRPUGIvVVUxMndDOTl3eUcr?=
+ =?utf-8?B?VXIwVzU1TURZWitRMTV3U3NoV2VnZjM5YmhKVmlubzJDQ3pKTnRxYTIwWFNZ?=
+ =?utf-8?B?ZG1rUFNhdFVoU1Rrb1hUaVhBRWRJUWJ2L3E3c0hlbWxTVlY5czc0RWVnQkJZ?=
+ =?utf-8?B?dHQ0VzMzY01FMEk0KzFwNjNVUVlTRkUyU2ZndEFsMVdXK21WSmozNkRPQWRm?=
+ =?utf-8?B?TGxCb3NUY0lkM1A4YU1zWXc1dFVYdWt3Q01QQjFsbkJLL2JtcWN6Tlc3T1pk?=
+ =?utf-8?B?ajZrZWNSVDB1bDZXVFFuRGNZRGVpWGZtYXh6aUU1Mkh6cGdvTUdVVk1lRm5V?=
+ =?utf-8?B?d1hkYmZwR1hEUllLbkQwWkJDempDZ0ZpOGpoRzR4WVZWVUhoK0l3UzhaZHN3?=
+ =?utf-8?B?cUNMN2gvRVFYZFlmbVQ3OGtVVUl5VGIxdEp0eGR5aitYYkZWZnkvMk1JZGFQ?=
+ =?utf-8?B?QnhiK3VhTTZTTjdvZkxiWEx0aGRCd0tVekxiaXBhTThBSldJVFVSa3UwVmRI?=
+ =?utf-8?B?cHlyNWIzODd1UEwxVkJFNkdmYjRTT1VGVVpZWURLUy9mZFhndVBiUGFlM2F6?=
+ =?utf-8?B?MkFsRUo2N3czUUZKUFhnN1o1RVJlK2wwNkxKUHRNbzJKN0pNVVg2bDBIbDRk?=
+ =?utf-8?B?NGNNdE4zTDZiRWdiaGNQVnJ0RnVKYUFPMzVkZjA1cURuYVhXSHZhNHFSUjVW?=
+ =?utf-8?B?ZFE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	5AKjOgu6ROpbLJGQlqN7x9+82UmSo1PHQEYaMieQi37ltnWkoXB1JbP1fzLOwH7pvIJD0kZmvOv8fNmgufaNJxiX7BZKQi+byREvaP6cWU0ELL9rB4i4FUYU0rItvT7qko22PQBjQ0HRnPbQg4CkK1UZrQSXKU1cDfh87PTHpbXUHg8ijRTJPJlDx5Z1O0387Ksj+jbwg33PjLQE8FZqqhksKb1/EgRqBmfHDUpvjl2WXDj7B3JoosPxnZ7VGgzsV3iWSJygRtH2j+MJR5VjMSwhQ5uNgVWZS/zNMp2CasKV2J47HTFi9NJSLxqXHbT/nU96dNyNONcvi88q52JPjc7seMBtarR4OZ5NCkaLc376YbMoMNQ32xDAp/5Twq0YpO5BXtwgRn/tYAUshvbBTdPk51CDBrSAVQ63keOCcglbWdW/bMbWXdtHn3whVmXe74sy84Brd56dPUMF3s8NOou9YS/VvvAtW9J7v6bKgmGZQn+7fS7vMzKDnOzMES58FxAUxWesv0BzNRMKNCTDh+epplxOT0QqUfzGduFYeUlbSIz4vvv3vgLV9TYeWpMSKsmQDoJm9+ZqpAsoy/x2zdua3ciOjlImXc6NeTSl7io=
+	5jgAfBJ4tFi87eqtIqW52yb5QRHhxfFEaK3RbLri4//9fcQdGWWw8JwrJh3NoI+AL8cB8QSPW5F9bHclYTL6PkFdAGEOZVf7blngJcbtqDQ9oOx/zKB/wfYJRvPoZtSmtxAUO5h8rPIw6J/+p2qr8wtlryozsY8wY/Wke0Pfjrd0nSaeWLYsoHAnN8u7NJcU+L4N53Vt7vjgv6Gc8XgYvqymiaG+sfbiShNXJ37YUYizCvbsVi8TBI2lnYfDbWwFQ9LIGoIVX6b4SZbD0mz6U6pyEnxi1ruEnewG0lQN4gW4gdMScF2BkF/sm+CwvJORWXdk6WlwENlpwUvtweuIqWZvbGUICe7bpj/1rgpsVW+B67GhoJfaq9kIuLnWmWt6HuvGUBalKsH6SSy6EsAC5Cif0+D88oqp8PUz9o39RposJLcrFzXvgf3O2EiXTCn37dW6hTCtOWfWcGe/PcE1ykxkFDT1kw7tbRisdvLrAtioBk4nKWqWsz08tKWsBB1CtGUYq5EfGw2akuRcOx4f/yTvsnmmt795s/ZELqcCPrRvc1r6Rugsf+cudsCBkpifRks3iho2wp535+j+E5a8s7TzSxBUV/3FKJme1+PIS0g=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 901c0d21-2190-4f64-ad5e-08dd3bd4939a
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67142e4a-99aa-49fb-f770-08dd3be5376e
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5143.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 17:37:15.4072
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2025 19:36:22.2646
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: v+BymHZ+sep42wHXYFZ9TCcx6xAxNae5QIOmUl1Y7wn7GQjxUe8wVcyi5HVdAhXYWVEbMExCmUN/3x6ZicPqwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6493
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2vjIBUwtASbMvKTszpV7F44v/gGBwlX9NF2zpAqvhpsDCoQvDKNtmUfcmbJQCIEqqVM26WRMeJ2shEOcc3pGuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR10MB8172
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-23_07,2025-01-23_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2501230129
-X-Proofpoint-GUID: 534r2DR1szV-O0a76CQ3gjVj1rwJY-WP
-X-Proofpoint-ORIG-GUID: 534r2DR1szV-O0a76CQ3gjVj1rwJY-WP
+ definitions=2025-01-23_08,2025-01-23_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
+ adultscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501230142
+X-Proofpoint-GUID: uQ_CQxSjyc6xuAt4uLP5EwS5e5lhxkNc
+X-Proofpoint-ORIG-GUID: uQ_CQxSjyc6xuAt4uLP5EwS5e5lhxkNc
 
-On 1/23/25 10:29 AM, Amir Goldstein wrote:
-> On Thu, Jan 23, 2025 at 3:59 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->>
->> On 1/22/25 3:11 PM, Amir Goldstein wrote:
->>> On Wed, Jan 22, 2025 at 8:20 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->>>>
->>>> On 1/22/25 1:53 PM, Amir Goldstein wrote:
->>>>>>> I am fine with handling EBUSY in unlink/rmdir/rename/open
->>>>>>> only for now if that is what everyone prefers.
->>>>>>
->>>>>> As far as I can tell, NFSv2 and NFSv3 REMOVE/RMDIR are working
->>>>>> correctly. NFSv4 REMOVE needs to return a status code that depends
->>>>>> on whether the target object is a file or not. Probably not much more
->>>>>> than something like this:
->>>>>>
->>>>>>            status = vfs_unlink( ... );
->>>>>> +       /* RFC 8881 Section 18.25.4 paragraph 5 */
->>>>>> +       if (status == nfserr_file_open && !S_ISREG(...))
->>>>>> +               status = nfserr_access;
->>>>>>
->>>>>> added to nfsd4_remove().
->>>>>
->>>>> Don't you think it's a bit awkward mapping back and forth like this?
->>>>
->>>> Yes, it's awkward. It's an artifact of the way NFSD's VFS helpers have
->>>> been co-opted for new versions of the NFS protocol over the years.
->>>>
->>>> With NFSv2 and NFSv3, the operations and their permitted status codes
->>>> are roughly similar so that these VFS helpers can be re-used without
->>>> a lot of fuss. This is also why, internally, the symbolic status codes
->>>> are named without the version number in them (ie, nfserr_inval).
->>>>
->>>> With NFSv4, the world is more complicated.
->>>>
->>>> The NFSv4 code was prototyped 20 years ago using these NFSv2/3 helpers,
->>>> and is never revisited until there's a bug. Thus there is quite a bit of
->>>> technical debt in fs/nfsd/vfs.c that we're replacing over time.
->>>>
->>>> IMO it would be better if these VFS helpers returned errno values and
->>>> then the callers should figure out the conversion to an NFS status code.
->>>> I suspect that's difficult because some of the functions invoked by the
->>>> VFS helpers (like fh_verify() ) also return NFS status codes. We just
->>>> spent some time extracting NFS version-specific code from fh_verify().
->>>>
->>>>
->>>>> Don't you think something like this is a more sane way to keep the
->>>>> mapping rules in one place:
->>>>>
->>>>> @@ -111,6 +111,26 @@ nfserrno (int errno)
->>>>>            return nfserr_io;
->>>>>     }
->>>>>
->>>>> +static __be32
->>>>> +nfsd_map_errno(int host_err, int may_flags, int type)
->>>>> +{
->>>>> +       switch (host_err) {
->>>>> +       case -EBUSY:
->>>>> +               /*
->>>>> +                * According to RFC 8881 Section 18.25.4 paragraph 5,
->>>>> +                * removal of regular file can fail with NFS4ERR_FILE_OPEN.
->>>>> +                * For failure to remove directory we return NFS4ERR_ACCESS,
->>>>> +                * same as NFS4ERR_FILE_OPEN is mapped in v3 and v2.
->>>>> +                */
->>>>> +               if (may_flags == NFSD_MAY_REMOVE && type == S_IFREG)
->>>>> +                       return nfserr_file_open;
->>>>> +               else
->>>>> +                       return nfserr_acces;
->>>>> +       }
->>>>> +
->>>>> +       return nfserrno(host_err);
->>>>> +}
->>>>> +
->>>>>     /*
->>>>>      * Called from nfsd_lookup and encode_dirent. Check if we have crossed
->>>>>      * a mount point.
->>>>> @@ -2006,14 +2026,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct
->>>>> svc_fh *fhp, int type,
->>>>>     out_drop_write:
->>>>>            fh_drop_write(fhp);
->>>>>     out_nfserr:
->>>>> -       if (host_err == -EBUSY) {
->>>>> -               /* name is mounted-on. There is no perfect
->>>>> -                * error status.
->>>>> -                */
->>>>> -               err = nfserr_file_open;
->>>>> -       } else {
->>>>> -               err = nfserrno(host_err);
->>>>> -       }
->>>>> +       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
->>>>>     out:
->>>>>            return err;
->>>>
->>>> No, I don't.
->>>>
->>>> NFSD has Kconfig options that disable support for some versions of NFS.
->>>> The code that manages which status code to return really needs to be
->>>> inside the functions that are enabled or disabled by Kconfig.
->>>>
->>>> As I keep repeating: there is no good way to handle the NFS status codes
->>>> in one set of functions. Each NFS version has its variations that
->>>> require special handling.
->>>>
->>>>
->>>
->>> ok.
->>>
->>>>>> Let's visit RENAME once that is addressed.
->>>>>
->>>>> And then next patch would be:
->>>>>
->>>>> @@ -1828,6 +1828,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct
->>>>> svc_fh *ffhp, char *fname, int flen,
->>>>>            __be32          err;
->>>>>            int             host_err;
->>>>>            bool            close_cached = false;
->>>>> +       int             type;
->>>>>
->>>>>            err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
->>>>>            if (err)
->>>>> @@ -1922,8 +1923,10 @@ nfsd_rename(struct svc_rqst *rqstp, struct
->>>>> svc_fh *ffhp, char *fname, int flen,
->>>>>      out_dput_new:
->>>>>            dput(ndentry);
->>>>>      out_dput_old:
->>>>> +       type = d_inode(odentry)->i_mode & S_IFMT;
->>>>>            dput(odentry);
->>>>>      out_nfserr:
->>>>> -        err = nfserrno(host_err);
->>>>> +       err = nfsd_map_errno(host_err, NFSD_MAY_REMOVE, type);
->>>>
->>>> Same problem here: the NFS version-specific status codes have to be
->>>> figured out in the callers, not in nfsd_rename(). The status codes
->>>> are not common to all NFS versions.
->>>>
->>>>
->>>
->>> ok.
->>>
->>>>>> Then handle OPEN as a third patch, because I bet we are going to meet
->>>>>> some complications there.
->>>>>
->>>>> Did you think of anything better to do for OPEN other than NFS4ERR_ACCESS?
->>>>
->>>> I haven't even started to think about that yet.
->>>>
->>>
->>> ok. Let me know when you have any ideas about that.
->>>
->>> My goal is to fix EBUSY WARN for open from FUSE.
->>> The rest is cleanup that I don't mind doing on the way.
->>
->> I've poked at nfsd4_remove(). It's not going to work the way I prefer.
+On 22/01/2025 5:13 pm, Jeff Layton wrote:
+> As of python 3.13, the xdrlib module is no longer included. Fortunately
+> there is an xdrlib3 module, which is a fork of the bundled module:
 > 
-> Do you mean because the file type is not available there?
-
-Yes.
-
-
->> But I'll take care of the clean up for remove, rename, and link.
->>
+>      https://pypi.org/project/xdrlib3/
 > 
-> FWIW, this is how I was going to solve this,
-> but I admit it is quite awkward:
+> Change pynfs to use that instead and revise the documentation to include
+> a step to install that module.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   README                                | 8 +++++++-
+>   nfs4.0/lib/rpc/rpc.py                 | 2 +-
+>   nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py | 2 +-
+>   nfs4.0/nfs4lib.py                     | 2 +-
+>   nfs4.0/nfs4server.py                  | 2 +-
+>   rpc/security.py                       | 2 +-
+>   xdr/xdrgen.py                         | 4 ++--
+>   7 files changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/README b/README
+> index b8b4e775f7766086f870f2dda4a60b3e9f9bac6f..efdc23807e8107b8fcd575e8a4c80b9c73e3cd07 100644
+> --- a/README
+> +++ b/README
+> @@ -14,8 +14,14 @@ Install dependent modules:
+>   * openSUSE
+>   	zypper install krb5-devel python3-devel swig python3-gssapi python3-ply
+>   
+> -You can prepare both for use with
+> +Install the xdrlib3 module:
+> +
+> +	pip install xdrlib3
 
-I'll deal with it. In the long run, making fh_verify() return an errno
-so all of these helpers can return an errno rather than status code
-is where I want to take this. But for now, a simple approach is best
-because that can be cleanly backported.
+Thanks Jeff,
+
+I see that Debian's unstable & testing suites have a pkg 
+(python3-standard-xdrlib) to provide this post-removal from standard 
+Python. Of course, that's not in general release, yet, but then neither 
+is 3.13 itself. Not sure if we should mention it?
+
+e.g: your distro may provide xdrlib3 via a pkg (details…), or you may 
+install it via pip…
+
+or similar?
+
+cheers,
+c.
 
 
-> I now realized that truncate can also return EBUSY in my FUSE fs :/
-> That's why I am disappointed that there is no "fall back"
-> mapping for EBUSY that fits all without a warning, but I will
-> wait to see how the cleanup goes and we will take it from there.
 
-It's better for us if we can identify the particular system call
-that returns -EBUSY. Auditing these cases might show that a blanket
-approach is fine, but we still need to do the audit no matter what.
+> +
+> +You can prepare both versions for use with
+> +
+>   	./setup.py build
+> +
+>   which will create auto-generated files and compile any shared libraries
+>   in place.
+>   
+> diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
+> index 243ef9e31aa83eb6be18800065b63cf78d99f833..475179042530a8d602a51e7bad1af7958ff5dd56 100644
+> --- a/nfs4.0/lib/rpc/rpc.py
+> +++ b/nfs4.0/lib/rpc/rpc.py
+> @@ -9,7 +9,7 @@
+>   
+>   from __future__ import absolute_import
+>   import struct
+> -import xdrlib
+> +import xdrlib3 as xdrlib
+>   import socket
+>   import select
+>   import threading
+> diff --git a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
+> index 1e990a369e6588f24dff75e9569c104d775ff710..2581a1e1dca22f637dc32144a05c88c66c57665e 100644
+> --- a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
+> +++ b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
+> @@ -1,7 +1,7 @@
+>   from .base import SecFlavor, SecError
+>   from rpc.rpc_const import AUTH_SYS
+>   from rpc.rpc_type import opaque_auth
+> -from xdrlib import Packer, Error
+> +from xdrlib3 import Packer, Error
+>   
+>   class SecAuthSys(SecFlavor):
+>       # XXX need better defaults
+> diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+> index eddcd862bc2fe2061414fb4de61e52aed93495ae..2337d8cd190de90e4d158b3ef9e3dfd6a61027c5 100644
+> --- a/nfs4.0/nfs4lib.py
+> +++ b/nfs4.0/nfs4lib.py
+> @@ -41,7 +41,7 @@ import xdrdef.nfs4_const as nfs4_const
+>   from  xdrdef.nfs4_const import *
+>   import xdrdef.nfs4_type as nfs4_type
+>   from xdrdef.nfs4_type import *
+> -from xdrlib import Error as XDRError
+> +from xdrlib3 import Error as XDRError
+>   import xdrdef.nfs4_pack as nfs4_pack
+>   
+>   import nfs_ops
+> diff --git a/nfs4.0/nfs4server.py b/nfs4.0/nfs4server.py
+> index 2dbad3046709ea57c1503a36649d85c25e6301a8..10bf28ee5794684912fa8e6d19406e06bf88b742 100755
+> --- a/nfs4.0/nfs4server.py
+> +++ b/nfs4.0/nfs4server.py
+> @@ -34,7 +34,7 @@ import time, StringIO, random, traceback, codecs
+>   import StringIO
+>   import nfs4state
+>   from nfs4state import NFS4Error, printverf
+> -from xdrlib import Error as XDRError
+> +from xdrlib3 import Error as XDRError
+>   
+>   unacceptable_names = [ "", ".", ".." ]
+>   unacceptable_characters = [ "/", "~", "#", ]
+> diff --git a/rpc/security.py b/rpc/security.py
+> index 0682f438cd6237334c59e7cb280c8b192e7c8a76..789280c5d7328a928b2f6c1af95397d17180eff9 100644
+> --- a/rpc/security.py
+> +++ b/rpc/security.py
+> @@ -3,7 +3,7 @@ from .rpc_const import AUTH_NONE, AUTH_SYS, RPCSEC_GSS, SUCCESS, CALL, \
+>   from .rpc_type import opaque_auth, authsys_parms
+>   from .rpc_pack import RPCPacker, RPCUnpacker
+>   from .gss_pack import GSSPacker, GSSUnpacker
+> -from xdrlib import Packer, Unpacker
+> +from xdrlib3 import Packer, Unpacker
+>   from . import rpclib
+>   from .gss_const import *
+>   from . import gss_type
+> diff --git a/xdr/xdrgen.py b/xdr/xdrgen.py
+> index b472e50676799915ea3b6a14f6686a5973484fb2..f802ba80045e79716a71fa7a64d72f1b8831128d 100755
+> --- a/xdr/xdrgen.py
+> +++ b/xdr/xdrgen.py
+> @@ -1357,8 +1357,8 @@ pack_header = """\
+>   import sys,os
+>   from . import %s as const
+>   from . import %s as types
+> -import xdrlib
+> -from xdrlib import Error as XDRError
+> +import xdrlib3 as xdrlib
+> +from xdrlib3 import Error as XDRError
+>   
+>   class nullclass(object):
+>       pass
+> 
+> ---
+> base-commit: d042a1f6421985b7c9d17edf8eb0d59bcf7f5908
+> change-id: 20250122-master-68414e8f6d5f
+> 
+> Best regards,
 
 
--- 
-Chuck Lever
 
