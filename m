@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-9547-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9548-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29C6DA1AABB
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 255E2A1AABD
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A9413A294A
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:52:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 05E6D166320
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CBFB1ADC8D;
-	Thu, 23 Jan 2025 19:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A1A81ADC90;
+	Thu, 23 Jan 2025 19:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjL1FFaW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgHIMSre"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072057E105
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A7C7E105
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737661969; cv=none; b=St8XDHLk8I3SKZsDaz1LRuWlGjXxYWGI7PLv+vMDcJ2Cr3I5Xolfk59k3NlxoEvyiUX8LFmrLS77ZX74tf3Pf2vEghijw+vCl78PnN7SQVkluxVIxFqulYWQIj6mpgXrmD5vwZQRKOJX8sCrbP3AOeFVz9Mj5OQPYf/ED4cgMRw=
+	t=1737661969; cv=none; b=ilGyg2Rlfyr3DDn0BUeoVDYSBZZJI/IVcC+lSk4DN1DXLPkVQSqvNyFmMQoasFj5rjOLuL2L3sY1WRFrUsP+bTZ+J30ohy66O6EpuAddEuuWoy/+Ie6iCuCvnVIjF2FmLiwzThsSl2QYUR3yVXhvSrSuLyt+fiNu5yFYMzu9LF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737661969; c=relaxed/simple;
-	bh=yaLWrPP93PZLkFvbMLciRxhsYrSzSc/L9aVzzoE56aw=;
+	bh=Spytuyccow0fo6u3nkrQ6bjUCKHsP46lrURrpOBvSYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c7d775XJSDIflZKTnhgfNerksBwh5hDj2mM2ZoSqJSmaj4xAX7ENhqOvGdqzNGk6OeWfhR/+F4GzRa1GckrPo3LwMiSqiPUph68A/0Nt8ohTpRd4WclLKi62WPZumvDXGpcqE5VAHetzZrRqVByIlkQ2t3JVWLayAWsUxHfHVAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjL1FFaW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8EA5C4CED3;
-	Thu, 23 Jan 2025 19:52:47 +0000 (UTC)
+	 MIME-Version; b=pmoFkPa/AryOsXWvL28lkKHZJ15cnr5s1bEgy2xjo9BXilOfXfylhZYwteedF8J+C+e5BlCunjG+xLxxK9Gy0o+qz9yPFVuXZXdgGfh7lG4dhSJvv/qR5vKvNJ300byrmEY5dsxLYUW8YUB2Gf7UbI8wbiMwSPs/5X/BIbjnZHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgHIMSre; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2548C4CEE2;
+	Thu, 23 Jan 2025 19:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737661968;
-	bh=yaLWrPP93PZLkFvbMLciRxhsYrSzSc/L9aVzzoE56aw=;
+	s=k20201202; t=1737661969;
+	bh=Spytuyccow0fo6u3nkrQ6bjUCKHsP46lrURrpOBvSYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pjL1FFaWZdBlxI/KsKk78+gOnScAci1JDQK708e428y9NjNUkppYBX8D/614O0LVY
-	 dL/yKmzR+JYPxLst4KsQPl0CA+RDfFv04UqqRhgJMy/9u3TZHrv8vsM4YDmqoXVMl7
-	 aGOJG++Vunm0MaZVLQJPVSXAvGzGLRX2cpzU9k5nYn4j5DLgVLhISQEzCAU6BQRT3q
-	 eus363DK9xF8nMiGnn3zcRx4JeRimGu3tuZvqoknpE0DSEhCVqTfCyeyhSndX69foh
-	 HkrgKq0ZBBQ9ThgOxLRVkjvdyU2RLjV67j/P9lvRL9FjRfxhm7zO4YXUo02yJwx2Dh
-	 RyuHVwXsqjXWA==
+	b=XgHIMSreSYL27cb5JdSS0SwkeQYjZoCHKd9AwXmBv4/GZqAjd8mNaAUsignMyc93l
+	 ugIVoyhBCOoRs75xnp1/jEBkGwByllDSnwRIvTiL+KFxwLnMUXYLcy3YqDj2KsbkjI
+	 dARYfoMAlgwIHkk2F27cYzfuUfwMqgeDfttacezPaCdeZDKEu+x1EKlUZUmsiPjESJ
+	 li+br83jSLyn/up0EVjMiV2edmTZl3xgMwhb9x86+yrLqbC7sG7YG4s0Hfe34pbded
+	 TYFN9VNXhMqGPSac3vm+lQkbQrZMZGlnMwtbQJXchmcS2DUctAS4/NyxiMS639q/Mx
+	 ZyfGUcvNzOodg==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +48,10 @@ To: Neil Brown <neilb@suse.de>,
 	Dai Ngo <dai.ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@hammerspace.com>
-Subject: [RFC PATCH 2/4] NFSD: Never return NFS4ERR_FILE_OPEN when removing a directory
-Date: Thu, 23 Jan 2025 14:52:40 -0500
-Message-ID: <20250123195242.1378601-3-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 3/4] NFSD: Return NFS4ERR_FILE_OPEN only when renaming over an open file
+Date: Thu, 23 Jan 2025 14:52:41 -0500
+Message-ID: <20250123195242.1378601-4-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250123195242.1378601-1-cel@kernel.org>
 References: <20250123195242.1378601-1-cel@kernel.org>
@@ -66,69 +65,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-RFC 8881 Section 18.25.4 paragraph 5 tells us that the server
-should return NFS4ERR_FILE_OPEN only if the target object is an
-opened file. This suggests that returning this status when removing
-a directory will confuse NFS clients.
+RFC 8881 Section 18.26.4 paragraphs 1 - 3 tell us that RENAME should
+return NFS4ERR_FILE_OPEN only when the target object is a file that
+is currently open. If the target is a directory, some other status
+must be returned.
 
-This is a version-specific issue; nfsd_proc_remove/rmdir() and
-nfsd3_proc_remove/rmdir() already return nfserr_access as
-appropriate.
+Generally I expect that a delegation recall will be triggered in
+some of these circumstances. In other cases, the VFS might return
+-EBUSY for other reasons, and NFSD has to ensure that errno does
+not leak to clients as a status code that is not permitted by spec.
 
-Unfortunately there is no quick way for nfsd4_remove() to determine
-whether the target object is a file or not, so the check is done in
-to nfsd_unlink() for now.
+There are some error flows where the target dentry hasn't been
+found yet. The default value for @type therefore is S_IFDIR to return
+an alternate status code in those cases.
 
-Reported-by: Trond Myklebust <trondmy@hammerspace.com>
-Fixes: 466e16f0920f ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink.")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/vfs.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ fs/nfsd/vfs.c | 30 ++++++++++++++++++++++++++----
+ 1 file changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 2d8e27c225f9..3ead7fb3bf04 100644
+index 3ead7fb3bf04..5cfb5eb54c23 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1931,9 +1931,17 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
- 	return err;
+@@ -1795,9 +1795,19 @@ nfsd_has_cached_files(struct dentry *dentry)
+ 	return ret;
  }
  
 -/*
-- * Unlink a file or directory
-- * N.B. After this call fhp needs an fh_put
+- * Rename a file
+- * N.B. After this call _both_ ffhp and tfhp need an fh_put
 +/**
-+ * nfsd_unlink - remove a directory entry
++ * nfsd_rename - rename a directory entry
 + * @rqstp: RPC transaction context
-+ * @fhp: the file handle of the parent directory to be modified
-+ * @type: enforced file type of the object to be removed
-+ * @fname: the name of directory entry to be removed
-+ * @flen: length of @fname in octets
++ * @ffhp: the file handle of parent directory containing the entry to be renamed
++ * @fname: the filename of directory entry to be renamed
++ * @flen: the length of @fname in octets
++ * @tfhp: the file handle of parent directory to contain the renamed entry
++ * @tname: the filename of the new entry
++ * @tlen: the length of @tlen in octets
 + *
-+ * After this call fhp needs an fh_put.
++ * After this call _both_ ffhp and tfhp need an fh_put.
 + *
 + * Returns a generic NFS status code in network byte-order.
   */
  __be32
- nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
-@@ -2007,10 +2015,14 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
- 	fh_drop_write(fhp);
- out_nfserr:
- 	if (host_err == -EBUSY) {
--		/* name is mounted-on. There is no perfect
--		 * error status.
+ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+@@ -1805,6 +1815,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ {
+ 	struct dentry	*fdentry, *tdentry, *odentry, *ndentry, *trap;
+ 	struct inode	*fdir, *tdir;
++	int		type = S_IFDIR;
+ 	__be32		err;
+ 	int		host_err;
+ 	bool		close_cached = false;
+@@ -1867,6 +1878,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	host_err = PTR_ERR(ndentry);
+ 	if (IS_ERR(ndentry))
+ 		goto out_dput_old;
++	type = d_inode(ndentry)->i_mode & S_IFMT;
+ 	host_err = -ENOTEMPTY;
+ 	if (ndentry == trap)
+ 		goto out_dput_new;
+@@ -1904,7 +1916,17 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+  out_dput_old:
+ 	dput(odentry);
+  out_nfserr:
+-	err = nfserrno(host_err);
++	if (host_err == -EBUSY) {
 +		/*
-+		 * See RFC 8881 Section 18.25.4 para 4: NFSv4 REMOVE
-+		 * distinguishes between reg file and dir.
- 		 */
--		err = nfserr_file_open;
++		 * See RFC 8881 Section 18.26.4 para 1-3: NFSv4 RENAME
++		 * status distinguishes between reg file and dir.
++		 */
 +		if (type != S_IFDIR)
 +			err = nfserr_file_open;
 +		else
 +			err = nfserr_acces;
- 	}
- out:
- 	return err != nfs_ok ? err : nfserrno(host_err);
++	} else
++		err = nfserrno(host_err);
+ 
+ 	if (!close_cached) {
+ 		fh_fill_post_attrs(ffhp);
 -- 
 2.47.0
 
