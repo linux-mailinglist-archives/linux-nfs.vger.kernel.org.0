@@ -1,55 +1,58 @@
-Return-Path: <linux-nfs+bounces-9561-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9562-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D1AAA1AB96
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 21:50:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68323A1AB97
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 21:52:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 60CBB3ACD85
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:50:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 073237A3E71
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A330018C02E;
-	Thu, 23 Jan 2025 20:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE5E418C02E;
+	Thu, 23 Jan 2025 20:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqWuWbyh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5Aauu44"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D15A15A843
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 20:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F5F15A843
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 20:52:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737665428; cv=none; b=mv0EhA6PoOKhS2MVnCF2V3ehBjJu131yw52h8wxPeNVxl8zjEdbOjkCpirJUN1l2cyCckx6EC+cZ4Xp494zmh6Ft+XS73UqeSDkzk3o83wPOgga0BJcwQr2D5kmmp74J26MaiFxld1Zk4vdSQOj22MWGH7Wt+/KRfUF90ZMQKN4=
+	t=1737665548; cv=none; b=biasfyVc8w6+TKj4Sbr9KYN/LZtv7BBHLOvxZ+AIRMd7S3x9eNsT6KS2ix43uCJm4qrXtQQtJM49f32VtvNc/8fg+Qp3lXyruQqjehuvvuHDJd3ZH9NFVtsCe/d/7IfZvKwViwa0T9AIZ7r/PakkhnXQYuhfabl2pAVhwF2OdIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737665428; c=relaxed/simple;
-	bh=JILWKiMuP7VpiFE9DV7hlNrtAOakGPtMqACV2nkCye8=;
+	s=arc-20240116; t=1737665548; c=relaxed/simple;
+	bh=5+I0R856AIYGf8kbwXopHJjQNGQC2q0n9LMe/dn93ZM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jnjn4W9ehPumk1kCKwTR9P6sdjOC+hNAfWml3+PVeIk4k8v74fSZ0k59NhnpRlUNAuS5ZQBR4GHesi77eFf62qfKrZGI0QKEjhNKPerNlExl8nf0OePLLXrs0/XzFwKO6ABnUzuaeDwziqp/PZpeLYolBujoh2ZJV20Dq+cBseo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqWuWbyh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84093C4CED3;
-	Thu, 23 Jan 2025 20:50:27 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HXY0uH+VPlViDc0UAn8HB0+Bx/AeeTlwdSlrLIdVU2pr9r9obxJ95Hu6kCyeVc9czYEFiRPZiR0SbZP6N6IhnXsm+VnO2a27B5SS32WwSfWIVZYxLs+Wy/3+3LdpO3N737TZ3J288e3PAOc+Anoocls/f7lxWC01OOZe9oAfnpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5Aauu44; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B28C4CED3;
+	Thu, 23 Jan 2025 20:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737665427;
-	bh=JILWKiMuP7VpiFE9DV7hlNrtAOakGPtMqACV2nkCye8=;
+	s=k20201202; t=1737665548;
+	bh=5+I0R856AIYGf8kbwXopHJjQNGQC2q0n9LMe/dn93ZM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NqWuWbyho9NgSibUMcNZxrC7LcENILxDr1MzRKDjKzT+kuhyaLc6Zp+OXpRCi93KV
-	 UYyulABRy62FDrPjeFvzAQgxsey6pdA+GN3i7A2eYqAS7UDL/KrPgJYb4fvC3W6K37
-	 WY7wn3r9L66/4bAlptPWcuSpRB9WwNlf0B52yzxE4lDq1rS1E3skxhaRgwkFhyZ9R8
-	 e1D8ByjkCPvJYyVVAkEOW4pt6k2/5ObsB1bVH/gW9QkZYcHx3TaJuki/L9L22o4lVX
-	 Qtbe5aSJ3iR89l06pAUBhmuTOabsu/3cJgA1o8qVU8WJCPdtFGHfZ2FRfFApkIXr1G
-	 S0iXx0iZlxxjw==
-Message-ID: <d409eae2976c25f0121b1011bb2d1aff181aa4fa.camel@kernel.org>
-Subject: Re: [PATCH pynfs] Move to xdrlib3
+	b=u5Aauu44P7wfyWXfU3X9JN+e0x5wqwCxYpXkPVXWGsbyKiTTsT05oxHnOe996QL0g
+	 YlgrsmkHuBMG7Yf/QUu/oo747AX/dGKE6kOk8cCckVzIfR1V2ajq/CsYfcc7KMfwXk
+	 Q+brk/eD819renJKnsVeAyKSNme2pxnV3K80FMI4ren7i96DubOT59L7Heqv/DdX7R
+	 9CJFQs1KCO3PZ8DDJ3GU0HIQugyVIWVuMkoHoTQoN85P07w4OvnvxyEEPd4YYuxh/H
+	 ZJFWTd5jpL0aVev/vVnr3XioP8A98ZSKRQBz86KalBjtRZs7U5fdVIP+562hblM4ej
+	 qwPN9ObrVEfQQ==
+Message-ID: <0a1607952bc35549c925da8599ce366feb951850.camel@kernel.org>
+Subject: Re: [RFC PATCH 4/4] NFSD: Return NFS4ERR_FILE_OPEN only when
+ linking an open file
 From: Jeff Layton <jlayton@kernel.org>
-To: Calum Mackay <calum.mackay@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Thu, 23 Jan 2025 15:50:26 -0500
-In-Reply-To: <020c8945-51e3-4783-b852-c89bc7917b67@oracle.com>
-References: <20250122-master-v1-1-3c6c66a66fe5@kernel.org>
-	 <020c8945-51e3-4783-b852-c89bc7917b67@oracle.com>
+To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Thu, 23 Jan 2025 15:52:26 -0500
+In-Reply-To: <20250123195242.1378601-5-cel@kernel.org>
+References: <20250123195242.1378601-1-cel@kernel.org>
+	 <20250123195242.1378601-5-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -134,174 +137,126 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-01-23 at 19:36 +0000, Calum Mackay wrote:
-> On 22/01/2025 5:13 pm, Jeff Layton wrote:
-> > As of python 3.13, the xdrlib module is no longer included. Fortunately
-> > there is an xdrlib3 module, which is a fork of the bundled module:
-> >=20
-> >      https://pypi.org/project/xdrlib3/
-> >=20
-> > Change pynfs to use that instead and revise the documentation to includ=
-e
-> > a step to install that module.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >   README                                | 8 +++++++-
-> >   nfs4.0/lib/rpc/rpc.py                 | 2 +-
-> >   nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py | 2 +-
-> >   nfs4.0/nfs4lib.py                     | 2 +-
-> >   nfs4.0/nfs4server.py                  | 2 +-
-> >   rpc/security.py                       | 2 +-
-> >   xdr/xdrgen.py                         | 4 ++--
-> >   7 files changed, 14 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/README b/README
-> > index b8b4e775f7766086f870f2dda4a60b3e9f9bac6f..efdc23807e8107b8fcd575e=
-8a4c80b9c73e3cd07 100644
-> > --- a/README
-> > +++ b/README
-> > @@ -14,8 +14,14 @@ Install dependent modules:
-> >   * openSUSE
-> >   	zypper install krb5-devel python3-devel swig python3-gssapi python3-=
-ply
-> >  =20
-> > -You can prepare both for use with
-> > +Install the xdrlib3 module:
-> > +
-> > +	pip install xdrlib3
+On Thu, 2025-01-23 at 14:52 -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Thanks Jeff,
+> RFC 8881 Section 18.9.4 paragraphs 1 - 2 tell us that RENAME should
+> return NFS4ERR_FILE_OPEN only when the target object is a file that
+> is currently open. If the target is a directory, some other status
+> must be returned.
 >=20
-> I see that Debian's unstable & testing suites have a pkg=20
-> (python3-standard-xdrlib) to provide this post-removal from standard=20
-> Python. Of course, that's not in general release, yet, but then neither=
-=20
-> is 3.13 itself. Not sure if we should mention it?
+> Generally I expect that a delegation recall will be triggered in
+> some of these circumstances. In other cases, the VFS might return
+> -EBUSY for other reasons, and NFSD has to ensure that errno does
+> not leak to clients as a status code that is not permitted by spec.
 >=20
-> e.g: your distro may provide xdrlib3 via a pkg (details=E2=80=A6), or you=
- may=20
-> install it via pip=E2=80=A6
-> or similar?
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c | 44 +++++++++++++++++++++++++++++++-------------
+>  1 file changed, 31 insertions(+), 13 deletions(-)
 >=20
-> cheers,
-> c.
->=20
->=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 5cfb5eb54c23..566b9adf2259 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1699,9 +1699,17 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh=
+ *fhp,
+>  	return err;
+>  }
+> =20
+> -/*
+> - * Create a hardlink
+> - * N.B. After this call _both_ ffhp and tfhp need an fh_put
+> +/**
+> + * nfsd_link - create a link
+> + * @rqstp: RPC transaction context
+> + * @ffhp: the file handle of the directory where the new link is to be c=
+reated
+> + * @name: the filename of the new link
+> + * @len: the length of @name in octets
+> + * @tfhp: the file handle of an existing file object
+> + *
+> + * After this call _both_ ffhp and tfhp need an fh_put.
+> + *
+> + * Returns a generic NFS status code in network byte-order.
+>   */
+>  __be32
+>  nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+> @@ -1709,6 +1717,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
+hp,
+>  {
+>  	struct dentry	*ddir, *dnew, *dold;
+>  	struct inode	*dirp;
+> +	int		type;
+>  	__be32		err;
+>  	int		host_err;
+> =20
+> @@ -1728,11 +1737,11 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *=
+ffhp,
+>  	if (isdotent(name, len))
+>  		goto out;
+> =20
+> +	err =3D nfs_ok;
+> +	type =3D d_inode(tfhp->fh_dentry)->i_mode & S_IFMT;
+>  	host_err =3D fh_want_write(tfhp);
+> -	if (host_err) {
+> -		err =3D nfserrno(host_err);
+> +	if (host_err)
+>  		goto out;
+> -	}
+> =20
+>  	ddir =3D ffhp->fh_dentry;
+>  	dirp =3D d_inode(ddir);
+> @@ -1740,7 +1749,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
+hp,
+> =20
+>  	dnew =3D lookup_one_len(name, ddir, len);
+>  	if (IS_ERR(dnew)) {
+> -		err =3D nfserrno(PTR_ERR(dnew));
+> +		host_err =3D PTR_ERR(dnew);
+>  		goto out_unlock;
+>  	}
+> =20
+> @@ -1756,17 +1765,26 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *=
+ffhp,
+>  	fh_fill_post_attrs(ffhp);
+>  	inode_unlock(dirp);
+>  	if (!host_err) {
+> -		err =3D nfserrno(commit_metadata(ffhp));
+> -		if (!err)
+> -			err =3D nfserrno(commit_metadata(tfhp));
+> -	} else {
+> -		err =3D nfserrno(host_err);
+> +		host_err =3D commit_metadata(ffhp);
+> +		if (!host_err)
+> +			host_err =3D commit_metadata(tfhp);
+>  	}
+> +
+>  	dput(dnew);
+>  out_drop_write:
+>  	fh_drop_write(tfhp);
+> +	if (host_err =3D=3D -EBUSY) {
+> +		/*
+> +		 * See RFC 8881 Section 18.9.4 para 1-2: NFSv4 LINK
+> +		 * status distinguishes between reg file and dir.
+> +		 */
+> +		if (type !=3D S_IFDIR)
+> +			err =3D nfserr_file_open;
+> +		else
+> +			err =3D nfserr_acces;
 
-Sure, I'm fine with phrasing it that way. Mind fixing it up when you
-merge it?
+I guess nothing in NFS protocol spec prohibits you from hardlinking a
+directory, but hopefully any Linux filesystem will be returning -EPERM
+when someone tries it! IOW, I suspect the above will probably be dead
+code, but I don't think it'll hurt anything.
 
-I'm on Fedora 41 which ships with python 3.13, so I think it is in
-general release now. Fedora doesn't have xdrlib3 packaged however, so I
-just used pip.
-
->=20
-> > +
-> > +You can prepare both versions for use with
-> > +
-> >   	./setup.py build
-> > +
-> >   which will create auto-generated files and compile any shared librari=
-es
-> >   in place.
-> >  =20
-> > diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
-> > index 243ef9e31aa83eb6be18800065b63cf78d99f833..475179042530a8d602a51e7=
-bad1af7958ff5dd56 100644
-> > --- a/nfs4.0/lib/rpc/rpc.py
-> > +++ b/nfs4.0/lib/rpc/rpc.py
-> > @@ -9,7 +9,7 @@
-> >  =20
-> >   from __future__ import absolute_import
-> >   import struct
-> > -import xdrlib
-> > +import xdrlib3 as xdrlib
-> >   import socket
-> >   import select
-> >   import threading
-> > diff --git a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py b/nfs4.0/lib/rpc/rpc=
-sec/sec_auth_sys.py
-> > index 1e990a369e6588f24dff75e9569c104d775ff710..2581a1e1dca22f637dc3214=
-4a05c88c66c57665e 100644
-> > --- a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
-> > +++ b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
-> > @@ -1,7 +1,7 @@
-> >   from .base import SecFlavor, SecError
-> >   from rpc.rpc_const import AUTH_SYS
-> >   from rpc.rpc_type import opaque_auth
-> > -from xdrlib import Packer, Error
-> > +from xdrlib3 import Packer, Error
-> >  =20
-> >   class SecAuthSys(SecFlavor):
-> >       # XXX need better defaults
-> > diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
-> > index eddcd862bc2fe2061414fb4de61e52aed93495ae..2337d8cd190de90e4d158b3=
-ef9e3dfd6a61027c5 100644
-> > --- a/nfs4.0/nfs4lib.py
-> > +++ b/nfs4.0/nfs4lib.py
-> > @@ -41,7 +41,7 @@ import xdrdef.nfs4_const as nfs4_const
-> >   from  xdrdef.nfs4_const import *
-> >   import xdrdef.nfs4_type as nfs4_type
-> >   from xdrdef.nfs4_type import *
-> > -from xdrlib import Error as XDRError
-> > +from xdrlib3 import Error as XDRError
-> >   import xdrdef.nfs4_pack as nfs4_pack
-> >  =20
-> >   import nfs_ops
-> > diff --git a/nfs4.0/nfs4server.py b/nfs4.0/nfs4server.py
-> > index 2dbad3046709ea57c1503a36649d85c25e6301a8..10bf28ee5794684912fa8e6=
-d19406e06bf88b742 100755
-> > --- a/nfs4.0/nfs4server.py
-> > +++ b/nfs4.0/nfs4server.py
-> > @@ -34,7 +34,7 @@ import time, StringIO, random, traceback, codecs
-> >   import StringIO
-> >   import nfs4state
-> >   from nfs4state import NFS4Error, printverf
-> > -from xdrlib import Error as XDRError
-> > +from xdrlib3 import Error as XDRError
-> >  =20
-> >   unacceptable_names =3D [ "", ".", ".." ]
-> >   unacceptable_characters =3D [ "/", "~", "#", ]
-> > diff --git a/rpc/security.py b/rpc/security.py
-> > index 0682f438cd6237334c59e7cb280c8b192e7c8a76..789280c5d7328a928b2f6c1=
-af95397d17180eff9 100644
-> > --- a/rpc/security.py
-> > +++ b/rpc/security.py
-> > @@ -3,7 +3,7 @@ from .rpc_const import AUTH_NONE, AUTH_SYS, RPCSEC_GSS,=
- SUCCESS, CALL, \
-> >   from .rpc_type import opaque_auth, authsys_parms
-> >   from .rpc_pack import RPCPacker, RPCUnpacker
-> >   from .gss_pack import GSSPacker, GSSUnpacker
-> > -from xdrlib import Packer, Unpacker
-> > +from xdrlib3 import Packer, Unpacker
-> >   from . import rpclib
-> >   from .gss_const import *
-> >   from . import gss_type
-> > diff --git a/xdr/xdrgen.py b/xdr/xdrgen.py
-> > index b472e50676799915ea3b6a14f6686a5973484fb2..f802ba80045e79716a71fa7=
-a64d72f1b8831128d 100755
-> > --- a/xdr/xdrgen.py
-> > +++ b/xdr/xdrgen.py
-> > @@ -1357,8 +1357,8 @@ pack_header =3D """\
-> >   import sys,os
-> >   from . import %s as const
-> >   from . import %s as types
-> > -import xdrlib
-> > -from xdrlib import Error as XDRError
-> > +import xdrlib3 as xdrlib
-> > +from xdrlib3 import Error as XDRError
-> >  =20
-> >   class nullclass(object):
-> >       pass
-> >=20
-> > ---
-> > base-commit: d042a1f6421985b7c9d17edf8eb0d59bcf7f5908
-> > change-id: 20250122-master-68414e8f6d5f
-> >=20
-> > Best regards,
->=20
->=20
+> +	}
+>  out:
+> -	return err;
+> +	return err !=3D nfs_ok ? err : nfserrno(host_err);
+> =20
+>  out_dput:
+>  	dput(dnew);
 
 --=20
 Jeff Layton <jlayton@kernel.org>
