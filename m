@@ -1,176 +1,122 @@
-Return-Path: <linux-nfs+bounces-9549-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9551-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87FECA1AABC
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:52:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F69BA1AB3C
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 21:28:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2F9D1883103
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 19:53:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 03DD71883A8F
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 20:28:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DC2191F8E;
-	Thu, 23 Jan 2025 19:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C68C81C5F20;
+	Thu, 23 Jan 2025 20:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jUOWysSh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1l8/HJv"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E137E105
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Jan 2025 19:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C6C1C5D62;
+	Thu, 23 Jan 2025 20:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737661970; cv=none; b=kg+bEtN7f4DWqaMDC5OYW7feqEvVLMCopnE+zweEIAUCUVk7c2k52VJw0bTLlWnvnfbRPrsQpgeFmqQd6M05JhX0uuY74CgJ1TfBzzjXxuiiFefAR/Jo9O9PUzYChAIY+vPGeU2SQqzhqRrRsv6RXJcuo3GFIBG0h8/5NKGm0Fk=
+	t=1737663935; cv=none; b=q9lcFpTlAtuZAI8Ws62Cs1xRlApG6rLOGSgENAdafLOGgZx4F8eWhkwk3mRO0OqeidRxWtoAorfa2JqxEKV+Rnk6/yTIWOJLm1TONx+a8CWNWEXAJT1weyl5oxGYtDbQGby8pdPS6YL9sipzhB7sN23lw9qfT/g1KI+4rTGmCoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737661970; c=relaxed/simple;
-	bh=RdLHGc4i0BeNbFMb4ZVieqeEJEHPiEWqsizdAmF6Du4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dcOXlRSPWqOxddR2YBpLPjuXarpkRTo6Yyl9zCAg5VGiiJet6L0m35+ts1GOwp3ew8nR2OX71C8YxvkwkH2tdaMRE2wRJPcqxq9aoDTzkJ5GSOsNCi5WyNUGRMWQxLj8YyB4X16z8BfsA0UNstKtHsCY9QcIo47mVGtSKKdl8bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jUOWysSh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BF57C4CEDF;
-	Thu, 23 Jan 2025 19:52:49 +0000 (UTC)
+	s=arc-20240116; t=1737663935; c=relaxed/simple;
+	bh=InyBiJX/ZrPVjzxsBNdprnqCrCMGTNTHttu2kN3J+3A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ikp59aOM7lo5t/Mu1fYqQYs4Bhs5LKvLAvDjDdy+YW8uVfArsDMUbMPFJlitvOZ+lHwtQc/fB4TSTczM8ZND4/5KR7NIdY5ytfxm1IZa/1A8OPmoYawqf5Xr9ZJo6cfj+/MvHIN7u8dY+utrKIBM6hc9owgQGL1Pa2lo8V7+4Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1l8/HJv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A761C4CED3;
+	Thu, 23 Jan 2025 20:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737661970;
-	bh=RdLHGc4i0BeNbFMb4ZVieqeEJEHPiEWqsizdAmF6Du4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jUOWysShEVLUdfh2TwM2FsePewZGme80kgRiRbn9VoeDoUg4d29xLgspS/5dn7zf/
-	 82qTnGDvDc22g/nzkixH/zfdBzDs1VIgIsE0Djd7fqWPfQt6ecdBBKWQ3RQxBFa9dY
-	 rWmf9ZfjZU+4rYcGjE07A9h4rgRuT7UpPsmhkRGs5qoozov0o81JjnZGpFvfBsbvdE
-	 /UHr31eHkBU4zndHiTsZG2KRlGLevsqU/WBXXuoLWm2RslVpA5eL/HLTigUPRqzuvr
-	 UHC4yfEdgFigwNNWW/oncPJGEZ4xpiwhCJSSs6s8VA+IoMdLtu3cFYHG6VpL/K+RJe
-	 4uPJhVZm9NtpA==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 4/4] NFSD: Return NFS4ERR_FILE_OPEN only when linking an open file
-Date: Thu, 23 Jan 2025 14:52:42 -0500
-Message-ID: <20250123195242.1378601-5-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250123195242.1378601-1-cel@kernel.org>
-References: <20250123195242.1378601-1-cel@kernel.org>
+	s=k20201202; t=1737663935;
+	bh=InyBiJX/ZrPVjzxsBNdprnqCrCMGTNTHttu2kN3J+3A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=B1l8/HJvYp9w4oLdxgo+rfXkz/Zioh3JQkn6IDo5THV2cTKOxhhr+OIxBH7Quc1X4
+	 JgGQ21jabilC3K/GVCzJIFDF/McctbkqYcf4Dx5M8PkuL6PORsPfnL7pDV+DnPoZHW
+	 FItMdaUT5ayLp1dwoDZlpYSDbDG1byfjCplFK8I55HeyKOstLeqMMtZBLYS/omjIyj
+	 uHoEPJapT6Qe9HseNqlWbcQDJjBp3eBwgfi1ZWIHfafpZc1NC1MKnLEjkllujDR3JX
+	 sKvm0nVh8TpKpuuOrp5EUctGCliG4Kkl7ZW4sDGo62mzbs/huHB776IEg5XJcFKrLW
+	 VzFCuDMIy/+hA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/8] nfsd: CB_SEQUENCE error handling fixes and cleanups
+Date: Thu, 23 Jan 2025 15:25:17 -0500
+Message-Id: <20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK2lkmcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDQyNj3by04hRdM11DE90kA3NL81RjC9OUZAMloPqCotS0zAqwWdGxtbU
+ AdfVgblsAAAA=
+X-Change-ID: 20250123-nfsd-6-14-b0797e385dc0
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, 
+ Kinglong Mee <kinglongmee@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
+ Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1550; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=InyBiJX/ZrPVjzxsBNdprnqCrCMGTNTHttu2kN3J+3A=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnkqW7DC5ulbQLNbJnWLLi0FuKmMGANycWQr5Gb
+ LIS97fL8kCJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5KluwAKCRAADmhBGVaC
+ FfGBD/96BcnS1gx7z1ubD5AbyZcZOJ/QAu/MfqBIB+AXp6XzgRjjlAVkA690Z4LEQA+mliKQAEo
+ Pzq11f8MYGyfumQqIn+i2EL3sH+lGVHkeTDCU0AyIYkkYiyOGh1sUAOGoX63oHibB78+KT7DXVG
+ JfIT1/lWbbNBcL5wXpgReVP65iH4XvgE8tSfuoTswPvn31eZEKdq+d9BDycNO7RBq46k610FAzz
+ 8kZ0egcYoM65qz+hCngg6eZtmRMiCcZ8A1l2S3X2o2Ok/pJapwANNN1ThF37KuzudYfxyGoo9V8
+ Iu+2a7t5KVFHs7eRqhecqO5eHtJG4ZWDhLFerNvPqxDsPfAzlpQV1LdGk+Ay3PWvjYI9oSNGvH2
+ y7auyU6YphWMlcaOmWhqD2GLc5TaJci05qJdmff8jOElY/abStpaKYF7Ql9gEqKJprSSpk8iXsD
+ T8vGogOD/HAlxtnrNsNNlLYHH/NtkPgypCoXbW6BjU4l9rBpvC7DlWJBpXHEAfk6LMWQ4f78gn0
+ A14I1cHUxJpeK4Y7zRU1VN5+BrL9CaHNozyKjixlJlU/5vx6odPOQXEojgeg2mm2gQoTCohLx79
+ iaJG4vkL32y5xzlZC4j1wygYpXzYdtMVUURMBz90n5fH45gPBmOI5MzDPEiy3X1kekwGeNiuuSp
+ JLiGOKSes7EHtPg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-From: Chuck Lever <chuck.lever@oracle.com>
+The first four patches fix bugs in the CB_SEQUENCE error handling. The
+last patches are cleanups.
 
-RFC 8881 Section 18.9.4 paragraphs 1 - 2 tell us that RENAME should
-return NFS4ERR_FILE_OPEN only when the target object is a file that
-is currently open. If the target is a directory, some other status
-must be returned.
+These are only lightly tested, mostly because we don't have a great way
+to test backchannel error handling. I tried to keep these very small so
+that we could bisect if there are problems.
 
-Generally I expect that a delegation recall will be triggered in
-some of these circumstances. In other cases, the VFS might return
--EBUSY for other reasons, and NFSD has to ensure that errno does
-not leak to clients as a status code that is not permitted by spec.
+These should probably go in via Chuck's tree, but the last patch touches
+some NFS client code, so it'd be good to have R-b's or A-b's from Trond
+and/or Anna on that one.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/vfs.c | 44 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 31 insertions(+), 13 deletions(-)
+Jeff Layton (8):
+      nfsd: don't restart v4.1+ callback when RPC_SIGNALLED is set
+      nfsd: fix CB_SEQUENCE error handling of NFS4ERR_{BADSLOT,BADSESSION,SEQ_MISORDERED}
+      nfsd: when CB_SEQUENCE gets NFS4ERR_DELAY, release the slot
+      nfsd: fix default case in nfsd4_cb_sequence_done()
+      nfsd: reverse default of "ret" variable in nfsd4_cb_sequence_done()
+      nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault()
+      nfsd: clean up and amend comments around nfsd4_cb_sequence_done()
+      sunrpc: make rpc_restart_call() and rpc_restart_call_prepare() void return
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 5cfb5eb54c23..566b9adf2259 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1699,9 +1699,17 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	return err;
- }
- 
--/*
-- * Create a hardlink
-- * N.B. After this call _both_ ffhp and tfhp need an fh_put
-+/**
-+ * nfsd_link - create a link
-+ * @rqstp: RPC transaction context
-+ * @ffhp: the file handle of the directory where the new link is to be created
-+ * @name: the filename of the new link
-+ * @len: the length of @name in octets
-+ * @tfhp: the file handle of an existing file object
-+ *
-+ * After this call _both_ ffhp and tfhp need an fh_put.
-+ *
-+ * Returns a generic NFS status code in network byte-order.
-  */
- __be32
- nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
-@@ -1709,6 +1717,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- {
- 	struct dentry	*ddir, *dnew, *dold;
- 	struct inode	*dirp;
-+	int		type;
- 	__be32		err;
- 	int		host_err;
- 
-@@ -1728,11 +1737,11 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- 	if (isdotent(name, len))
- 		goto out;
- 
-+	err = nfs_ok;
-+	type = d_inode(tfhp->fh_dentry)->i_mode & S_IFMT;
- 	host_err = fh_want_write(tfhp);
--	if (host_err) {
--		err = nfserrno(host_err);
-+	if (host_err)
- 		goto out;
--	}
- 
- 	ddir = ffhp->fh_dentry;
- 	dirp = d_inode(ddir);
-@@ -1740,7 +1749,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- 
- 	dnew = lookup_one_len(name, ddir, len);
- 	if (IS_ERR(dnew)) {
--		err = nfserrno(PTR_ERR(dnew));
-+		host_err = PTR_ERR(dnew);
- 		goto out_unlock;
- 	}
- 
-@@ -1756,17 +1765,26 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
- 	fh_fill_post_attrs(ffhp);
- 	inode_unlock(dirp);
- 	if (!host_err) {
--		err = nfserrno(commit_metadata(ffhp));
--		if (!err)
--			err = nfserrno(commit_metadata(tfhp));
--	} else {
--		err = nfserrno(host_err);
-+		host_err = commit_metadata(ffhp);
-+		if (!host_err)
-+			host_err = commit_metadata(tfhp);
- 	}
-+
- 	dput(dnew);
- out_drop_write:
- 	fh_drop_write(tfhp);
-+	if (host_err == -EBUSY) {
-+		/*
-+		 * See RFC 8881 Section 18.9.4 para 1-2: NFSv4 LINK
-+		 * status distinguishes between reg file and dir.
-+		 */
-+		if (type != S_IFDIR)
-+			err = nfserr_file_open;
-+		else
-+			err = nfserr_acces;
-+	}
- out:
--	return err;
-+	return err != nfs_ok ? err : nfserrno(host_err);
- 
- out_dput:
- 	dput(dnew);
+ fs/nfs/nfs4proc.c           | 12 ++++----
+ fs/nfsd/nfs4callback.c      | 69 +++++++++++++++++++++++----------------------
+ include/linux/sunrpc/clnt.h |  4 +--
+ net/sunrpc/clnt.c           |  7 ++---
+ 4 files changed, 45 insertions(+), 47 deletions(-)
+---
+base-commit: 0ab8e05a5a694a1e4c6854a98f08a477d16b6aeb
+change-id: 20250123-nfsd-6-14-b0797e385dc0
+
+Best regards,
 -- 
-2.47.0
+Jeff Layton <jlayton@kernel.org>
 
 
