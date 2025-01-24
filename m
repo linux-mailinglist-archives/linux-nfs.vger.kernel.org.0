@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-9580-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9581-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51490A1B817
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 15:46:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B8CA1B830
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 15:51:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9151D16C867
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 14:46:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A2663A2FAD
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 14:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFCED78F55;
-	Fri, 24 Jan 2025 14:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A121A1411C8;
+	Fri, 24 Jan 2025 14:50:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oO6el5oT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKruqKev"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8232970816;
-	Fri, 24 Jan 2025 14:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C9D3C0B;
+	Fri, 24 Jan 2025 14:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737729988; cv=none; b=UhQBEluCuz1aO3Xop0D6o7zI3V2Sm9Oq+Q1H3g4ts4ePR0VT+49YRPmVkusyHU83qSN9ScAGc46VHQGU0ueKXAFRVITaYasEy29QeMhmwebYSUSTtONJIZSc74c4A06w9NEDQsLWgmWUXTCGnqdFHlZgJVT4Ej+SYRfMlUfeMD4=
+	t=1737730259; cv=none; b=L+LIH/MyGRnT2vo+0EjsqQTgIGKETXm/l7k0nMAR2bDKxXM60dvPb/VPzGwQ7igRoNKa+HeBZw1Q161ug6tg+PyoDaiFTscsaaSdw26fVxzziqUoOpua40QLcfSUfMcJqYl7yT2I1f7UkQgMI6CrxjHQBmBQ3qq5V5WDh2N6tx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737729988; c=relaxed/simple;
-	bh=eDREnnbQ/L3Qu//yraZ9cTXNgbpZQhd+7d3z/h8OVPg=;
+	s=arc-20240116; t=1737730259; c=relaxed/simple;
+	bh=OofFb5mlNBK9MWGMswFDml4P8TkCD6gs9PQwmH5aGdc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hMuv4bNak37qgEPKmxxM91pRZA4sudhvbRffZtA/nC0D4pvbnnZpFCDqUv5SYFNmQg62NXrmg2uLwQLvqj3SzvK1lyU/Al1hQJCA6P7FJpDhn4BNeOlyH+MiLH95ycnWxJx0thYP4VuPEupNpEvlxnURT34WrOB/7Fuu03M3zIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oO6el5oT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEE0C4CED2;
-	Fri, 24 Jan 2025 14:46:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Nto+sucBklZFO6+DAgNXhFnd16f831Vx+WS/TQTaq8G8vNJP8DEQemlQ44xvuEHgUVIVaaoIFl7HrMk+oQn6ClEI2uH4KvUPY+cxPXndkjgrgn9CNsbw160QLqMmuhO5c/o/TIrmEWKFkD2/AbIOZQUkSdg0WICQ/aj2vS+toUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKruqKev; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF08C4CED2;
+	Fri, 24 Jan 2025 14:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737729988;
-	bh=eDREnnbQ/L3Qu//yraZ9cTXNgbpZQhd+7d3z/h8OVPg=;
+	s=k20201202; t=1737730258;
+	bh=OofFb5mlNBK9MWGMswFDml4P8TkCD6gs9PQwmH5aGdc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oO6el5oTbJBJAL0H1etshe5dk8NT0ePh3PBAw/yibYfVzeNcaiPnPrsMFzYPeB6xN
-	 ENJ3DP0GINYObErkUuB0gNzairyGuVHWtbt0Eog6QUmSermUGKaqIKk8VtTu3VQr8h
-	 gG7NsqSuFpsNmDOhqAuyhugCBHR8k8M1Qu+vbvBnSl9W+ihPaVcoibQ1cL7SkU+YbS
-	 6tk9g2xlP1mux6Ij4h25PhGSdyJ+alxry1R6csrcsfkSZS/X/uKwvFsN2XZSyQLcyP
-	 6m83ugQL6JatnmQ1Fq//l62vFUiMXk0TKPwl82TUGYxMnvbV86p8ZWN7t4s/QfNan3
-	 Sre1yKP+sMg9A==
-Message-ID: <66e5e5e74487a274a069539dc14fb10d7832044f.camel@kernel.org>
-Subject: Re: [PATCH 2/8] nfsd: fix CB_SEQUENCE error handling of
- NFS4ERR_{BADSLOT,BADSESSION,SEQ_MISORDERED}
+	b=fKruqKevXnTh4gH0xgORN6B4u+gCFMHnIYmbShFSuNrQi3ycDI5c6YxkPKoxgxBF8
+	 29RoTwq6Cxj+viNVNfBIGUbv1GKGHjxlETJjo25UkvPT5HJG+t27ixrF56eCi7VkSH
+	 cBCMsi6zpojY4JLSqoxm4Z4efQazqlrgCP2EwOvoAs0aSu4a+owrTsIOxinIyzRINA
+	 NJCcjawBtnWXJgREbKK+yAk4Q+7fY8gos3MX+g/taYsG5Bw87ztDxphPSHXuLnwtDm
+	 0HIU4vHR1P2at1DB605WkijNei2c4PpeTnNDr+D+kwVlwxdM3Kz+zMjmMw3HD4Km75
+	 k1BWOM0HMxt4w==
+Message-ID: <42ef9ff65c27fb7347f72e85b583ff74b2200bd6.camel@kernel.org>
+Subject: Re: [PATCH 7/8] nfsd: clean up and amend comments around
+ nfsd4_cb_sequence_done()
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
@@ -54,11 +54,11 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Abeni <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	netdev@vger.kernel.org
-Date: Fri, 24 Jan 2025 09:46:24 -0500
-In-Reply-To: <c87e5353-d933-47fa-a4e2-9153d243d61c@oracle.com>
+Date: Fri, 24 Jan 2025 09:50:56 -0500
+In-Reply-To: <8a6e1930-feee-47f8-8260-874b9c47f20e@oracle.com>
 References: <20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org>
-	 <20250123-nfsd-6-14-v1-2-c1137a4fa2ae@kernel.org>
-	 <c87e5353-d933-47fa-a4e2-9153d243d61c@oracle.com>
+	 <20250123-nfsd-6-14-v1-7-c1137a4fa2ae@kernel.org>
+	 <8a6e1930-feee-47f8-8260-874b9c47f20e@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -143,121 +143,114 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-01-24 at 09:32 -0500, Chuck Lever wrote:
+On Fri, 2025-01-24 at 09:43 -0500, Chuck Lever wrote:
 > On 1/23/25 3:25 PM, Jeff Layton wrote:
-> > The current error handling has some problems:
-> >=20
-> > BADSLOT and BADSESSION: don't release the slot before retrying the call
-> >=20
-> > SEQ_MISORDERED: does some sketchy resetting of the seqid? I can't find =
-any
-> > recommendation about doing that in the spec, and it seems wrong.
+> > Add a new kerneldoc header, and clean up the comments a bit.
 >=20
-> Random thought: You might use the Linux NFS client's forechannel session
-> implementation as a code reference.
->=20
->=20
-> > Handle all three errors the same way: release the slot, but then handle
-> > it just like we would as if we hadn't gotten a reply; mark the session
-> > as faulty, and retry the call.
->=20
-> Some questions:
->=20
-> Why does it matter whether NFSD keeps the slot if both sides plan to
-> destroy the session?
+> Usually I'm in favor of kdoc headers, but here, it's a static function
+> whose address is not shared outside of this source file. The only
+> documentation need is the meaning of the return code, IMO.
 >=20
 
-It may not be required, but there is no reason to hold onto the slot in
-these cases. Also, at this point, only nfsd has declared that it needs
-a new session (see below).
-
-> Also, AFAICT marking CB_FAULT does not destroy the session, it simply
-> tries to recreate backchannel's rpc_clnt. Perhaps NFSD's callback code
-> should actively destroy the session and let the client drive a fresh
-> CREATE_SESSION to recover?
->=20
-
-Marking it with a fault just sets the cl_cb_state to NFSD4_CB_FAULT.
-Then, on the next SEQUENCE call, that makes nfsd set
-SEQ4_STATUS_BACKCHANNEL_FAULT, which should make the client recreate
-the session. Obviously, there is some delay involved there since we
-might have to wait for the client to do a lease renewal before this
-happens.
+If you like. I figured it wouldn't hurt to do a full kdoc comment.
 
 >=20
-> > Fixes: 7ba6cad6c88f ("nfsd: New helper nfsd4_cb_sequence_done() for pro=
-cessing more cb errors")
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >   fs/nfsd/nfs4callback.c | 27 +++++++++++----------------
-> >   1 file changed, 11 insertions(+), 16 deletions(-)
+> >   fs/nfsd/nfs4callback.c | 26 ++++++++++++++++++++------
+> >   1 file changed, 20 insertions(+), 6 deletions(-)
 > >=20
 > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index e12205ef16ca932ffbcc86d67b0817aec2436c89..bfc9de1fcb67b4f05ed2f7a=
-28038cd8290809c17 100644
+> > index 6e0561f3b21bd850b0387b5af7084eb05e818231..415fc8aae0f47c36f00b238=
+4805c7a996fb1feb0 100644
 > > --- a/fs/nfsd/nfs4callback.c
 > > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -1371,17 +1371,24 @@ static bool nfsd4_cb_sequence_done(struct rpc_t=
-ask *task, struct nfsd4_callback
-> >   		nfsd4_mark_cb_fault(cb->cb_clp);
-> >   		ret =3D false;
-> >   		break;
-> > +	case -NFS4ERR_BADSESSION:
-> > +	case -NFS4ERR_BADSLOT:
-> > +	case -NFS4ERR_SEQ_MISORDERED:
-> > +		/*
-> > +		 * These errors indicate that something has gone wrong
-> > +		 * with the server and client's synchronization. Release
-> > +		 * the slot, but handle it as if we hadn't gotten a reply.
-> > +		 */
-> > +		nfsd41_cb_release_slot(cb);
-> > +		fallthrough;
-> >   	case 1:
-> >   		/*
-> >   		 * cb_seq_status remains 1 if an RPC Reply was never
-> >   		 * received. NFSD can't know if the client processed
-> >   		 * the CB_SEQUENCE operation. Ask the client to send a
-> > -		 * DESTROY_SESSION to recover.
-> > +		 * DESTROY_SESSION to recover, but keep the slot.
-> >   		 */
-> > -		fallthrough;
-> > -	case -NFS4ERR_BADSESSION:
-> >   		nfsd4_mark_cb_fault(cb->cb_clp);
-> > -		ret =3D false;
-> >   		goto need_restart;
-> >   	case -NFS4ERR_DELAY:
-> >   		cb->cb_seq_status =3D 1;
-> > @@ -1390,14 +1397,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
-sk *task, struct nfsd4_callback
+> > @@ -1325,6 +1325,17 @@ static void nfsd4_cb_prepare(struct rpc_task *ta=
+sk, void *calldata)
+> >   	rpc_call_start(task);
+> >   }
 > >  =20
-> >   		rpc_delay(task, 2 * HZ);
-> >   		return false;
-> > -	case -NFS4ERR_BADSLOT:
-> > -		goto retry_nowait;
-> > -	case -NFS4ERR_SEQ_MISORDERED:
-> > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
-> > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
-> > -			goto retry_nowait;
-> > -		}
-> > -		break;
-> >   	default:
-> >   		nfsd4_mark_cb_fault(cb->cb_clp);
-> >   	}
-> > @@ -1405,10 +1404,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
+> > +/**
+> > + * nfsd4_cb_sequence_done - process the result of a CB_SEQUENCE
+> > + * @task: rpc_task
+> > + * @cb: nfsd4_callback for this call
+> > + *
+> > + * For minorversion 0, there is no CB_SEQUENCE. Only restart the call
+> > + * if the callback RPC client was killed. For v4.1+ the error handling
+> > + * is more sophisticated.
+>=20
+> It would be much clearer to pull the 4.0 error handling out of this
+> function, which is named "cb_/sequence/_done".
+>=20
+> Perhaps the need_restart label can be hoisted into nfsd4_cb_done() ?
+>=20
+
+If we do that then we'll need to change this function to return
+something other than a bool, and that's a larger change than I wanted
+to make here. I really wanted to keep these as small, targeted patches
+that can be backported easily.
+
+I wouldn't object to further cleanup here on top of that though.
+
+
+>=20
+> > + *
+> > + * Returns true if reply processing should continue.
+> > + */
+> >   static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd=
+4_callback *cb)
+> >   {
+> >   	struct nfs4_client *clp =3D cb->cb_clp;
+> > @@ -1334,11 +1345,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_t=
+ask *task, struct nfsd4_callback
+> >   	if (!clp->cl_minorversion) {
+> >   		/*
+> >   		 * If the backchannel connection was shut down while this
+> > -		 * task was queued, we need to resubmit it after setting up
+> > -		 * a new backchannel connection.
+> > +		 * task was queued, resubmit it after setting up a new
+> > +		 * backchannel connection.
+> >   		 *
+> > -		 * Note that if we lost our callback connection permanently
+> > -		 * the submission code will error out, so we don't need to
+> > +		 * Note that if the callback connection is permanently lost,
+> > +		 * the submission code will error out. There is no need to
+> >   		 * handle that case here.
+> >   		 */
+> >   		if (RPC_SIGNALLED(task))
+> > @@ -1355,8 +1366,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
+k *task, struct nfsd4_callback
+> >   	switch (cb->cb_seq_status) {
+> >   	case 0:
+> >   		/*
+> > -		 * No need for lock, access serialized in nfsd4_cb_prepare
+> > -		 *
+> >   		 * RFC5661 20.9.3
+> >   		 * If CB_SEQUENCE returns an error, then the state of the slot
+> >   		 * (sequence ID, cached reply) MUST NOT change.
+> > @@ -1365,6 +1374,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
 sk *task, struct nfsd4_callback
-> >   	nfsd41_cb_release_slot(cb);
-> >   out:
-> >   	return ret;
-> > -retry_nowait:
-> > -	if (rpc_restart_call_prepare(task))
-> > -		ret =3D false;
-> > -	goto out;
-> >   need_restart:
-> >   	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
-> >   		trace_nfsd_cb_restart(clp, cb);
-> >=20
+> >   		ret =3D true;
+> >   		break;
+> >   	case -ESERVERFAULT:
+> > +		/*
+> > +		 * Client returned NFS4_OK, but decoding failed. Mark the
+> > +		 * backchannel as faulty, but don't retransmit since the
+> > +		 * call was successful.
+> > +		 */
+> >   		++session->se_cb_seq_nr[cb->cb_held_slot];
+> >   		nfsd4_mark_cb_fault(cb->cb_clp);
+> >   		break;
+>=20
+> This old code abuses the meaning of ESERVERFAULT IMO. NFS4ERR_BADXDR is
+> a better choice. But why call mark_cb_fault in this case?
+>=20
+> Maybe split this clean-up into a separate patch.
 >=20
 >=20
+
+I'm only altering comments in this patch. Do you really want separate
+patches for the different comments?
 
 --=20
 Jeff Layton <jlayton@kernel.org>
