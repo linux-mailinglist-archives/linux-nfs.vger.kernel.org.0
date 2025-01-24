@@ -1,225 +1,173 @@
-Return-Path: <linux-nfs+bounces-9567-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9568-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3448A1AD32
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 00:20:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAA86A1AE05
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 01:58:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 85CF33ABB1D
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Jan 2025 23:20:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05E1E7A4A24
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 00:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 794D11D5142;
-	Thu, 23 Jan 2025 23:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A95D62CA8;
+	Fri, 24 Jan 2025 00:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MLqpD/qf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XDOhq5Qn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483E31CAA83;
-	Thu, 23 Jan 2025 23:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBE224CC
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Jan 2025 00:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737674419; cv=none; b=a8Ld5W/7tI+NMgycjAoPfZTmtNEx5HDUN/kz4dI21KA9BXh/0HgQcyWO7w+fIkO/kaVeGcmmo5VIU4uFeT8HagrKr69vhpStXYkyH1JqfZw/f2mE9/IDIpGuaDBqzIKNBJK3miDwG8ldiG33ZO12J4Kby5sy52O4xL1RlFqkcfk=
+	t=1737680298; cv=none; b=mMp3wR2tnwkDd2mwFmK5hgtyLVzguz0kuyY/Tikx/93dwUzu55U1TJqWYfeycGWcN4BkmS1vlCdCENA+HRFujmWF3vzSXOfo6rA9DofUXZlW5Qmk1mx0Lyu7UCDWGzTcA0bY4UAM01kv+6j7Dq6weViVURltNvJJ12OUNRWl1NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737674419; c=relaxed/simple;
-	bh=UoeGWKdJqRT1ctOK5N3/4dzYiV4QJoKwEW5108MpNEI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BkDErMZ3Lnru6DrJZAqWMsi7QVJyUakXHyfw66c6ag7sUyWsbm13GwwgFNRl18keB7sP+bl9LyRTW3arNv/Go01W7vei0OKGKhekOVGQGwU03+byz5/SfBjujug1/Ml+xBW2kqYhbbpJ++QejB8DD+v/vfI8q/qHFxoS6ZY8eZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MLqpD/qf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8375C4CED3;
-	Thu, 23 Jan 2025 23:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737674415;
-	bh=UoeGWKdJqRT1ctOK5N3/4dzYiV4QJoKwEW5108MpNEI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MLqpD/qfyT1cQi09C0RppS9/Mt8o9Kg+8lMxfQ7I/dEZQkLOJvJUMD0MBqRmd/1j7
-	 ZjykIY+3oLHcYKcXhjXblhZppPRj9QkpNlE2CxvXzIgXPjGbk18lKlV+XeD2zMZAEo
-	 XvnW1mQWFEBW4YLDn+EsrGfJvrEh+8LOl4yD+mWnBLJxnimZV2iW7tUHD+pV6uTwDI
-	 kJeoLlcL5aPPiPUAeQTGvrGlGQxtqOfAMfeyzJ13xRwZONlPXCqp34POhI9cRSSCgA
-	 nb/edENyWA4kPlDz5iDuPqBqZim0TAfmk75A+3YvAhMJmmeYVO+cUpQmDIBmwcjbzN
-	 gC8WGN7SPABHg==
-Message-ID: <4f89125253d82233b5b14c6e0c4fd7565b1824e0.camel@kernel.org>
-Subject: Re: [PATCH 3/8] nfsd: when CB_SEQUENCE gets NFS4ERR_DELAY, release
- the slot
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, Kinglong
- Mee <kinglongmee@gmail.com>, Trond Myklebust	 <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, "David S. Miller"	 <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Date: Thu, 23 Jan 2025 18:20:08 -0500
-In-Reply-To: <a95521d2-18a2-48d2-b770-6db25bca5cab@oracle.com>
-References: <20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org>
-	 <20250123-nfsd-6-14-v1-3-c1137a4fa2ae@kernel.org>
-	 <a95521d2-18a2-48d2-b770-6db25bca5cab@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1737680298; c=relaxed/simple;
+	bh=LJBWz7gpPx6pYor80sUUmn3yFQaUSRq1SmFUxTQS2wY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDpbz3U/b64ln3R1oalokUQ0rVfI2MUHF9jl6sODVB1IVpVtnhUEqDlZGYN6Y0rrfQHPP63f7wYU+EfUaVlJOS2M1ICT2D2bqeWww3Ee82LoOQehNgq4A0FUVbvsBtBW5ll58Q3K0HZprv03/oGqQnCaHVZ8tcBc7hBrmp0he2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XDOhq5Qn; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1737680297; x=1769216297;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LJBWz7gpPx6pYor80sUUmn3yFQaUSRq1SmFUxTQS2wY=;
+  b=XDOhq5QnuhHEvTa+6KpajxUXvsgIGrpSa2UGK3eHkwDkkZqrTdbMWpGC
+   ZRDYD2K8H+6o3/FOkwNpgRfQ2IcI2FeSJTs+q43vq7yek5Il7Ati/JUok
+   PveGMfBNv72bRhKolZZdiqvMIi470ECyhnfifggVogkWPozZShFU6uO3H
+   f+fNgaXA2lP3THUce+D7ZpXHDA+U9RJ74jw9OCxBIexl86EEQeZZzQfdT
+   +aT3O56w7r6GhmMFw5zIK51RthhKOsuVqRBvvbHO/JBaa31mVpQzV/myW
+   1j4pW5iSkG0gHIbAyI0W104e4Msur7UFmZkRIJDPCGNkAQRylMH+XU93g
+   g==;
+X-CSE-ConnectionGUID: N5W5Lec1TPaW72rCJSClOA==
+X-CSE-MsgGUID: LvFF1bVhTzaaQm5UgD+GWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11324"; a="25811788"
+X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
+   d="scan'208";a="25811788"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2025 16:58:15 -0800
+X-CSE-ConnectionGUID: 4UsT8Xz8R32ht4pJyvthmg==
+X-CSE-MsgGUID: ELh5nu3KRZCA+ABFH0wYDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,230,1732608000"; 
+   d="scan'208";a="138490980"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 23 Jan 2025 16:58:14 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tb81S-000bvn-30;
+	Fri, 24 Jan 2025 00:58:10 +0000
+Date: Fri, 24 Jan 2025 08:57:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>
+Subject: Re: [PATCH 1/3] llist: add ability to remove a particular entry from
+ the list
+Message-ID: <202501240848.ZH81rjTD-lkp@intel.com>
+References: <20250115232406.44815-2-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250115232406.44815-2-okorniev@redhat.com>
 
-On Thu, 2025-01-23 at 17:18 -0500, Chuck Lever wrote:
-> On 1/23/25 3:25 PM, Jeff Layton wrote:
-> > RFC8881, 15.1.1.3 says this about NFS4ERR_DELAY:
-> >=20
-> > "For any of a number of reasons, the replier could not process this
-> >   operation in what was deemed a reasonable time. The client should wai=
-t
-> >   and then try the request with a new slot and sequence value."
->=20
-> A little farther down, Section 15.1.1.3 says this:
->=20
-> "If NFS4ERR_DELAY is returned on a SEQUENCE operation, the request is
->   retried in full with the SEQUENCE operation containing the same slot
->   and sequence values."
->=20
-> And:
->=20
-> "If NFS4ERR_DELAY is returned on an operation other than the first in
->   the request, the request when retried MUST contain a SEQUENCE operation
->   that is different than the original one, with either the slot ID or the
->   sequence value different from that in the original request."
->=20
-> My impression is that the slot needs to be held and used again only if
-> the server responded with NFS4ERR_DELAY on the SEQUENCE operation. If
-> the NFS4ERR_DELAY was the status of the 2nd or later operation in the
-> COMPOUND, then yes, a different slot, or the same slot with a bumped
-> sequence number, must be used.
->=20
-> The current code in nfsd4_cb_sequence_done() appears to be correct in
-> this regard.
->=20
+Hi Olga,
 
-Ok! I stand corrected. We should be able to just drop this patch, but
-some of the later patches may need some trivial merge conflicts fixed
-up.
+kernel test robot noticed the following build errors:
 
-Any idea why SEQUENCE is different in this regard? This rule seems a
-bit arbitrary. If the response is NFS4ERR_DELAY, then why would it
-matter which slot you use when retransmitting? The responder is just
-saying "go away and come back later".
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on brauner-vfs/vfs.all linus/master v6.13 next-20250123]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-What if the responder repeatedly returns NFS4ERR_DELAY (maybe because
-it's under resource pressure), and also shrinks the slot table in the
-meantime? It seems like that might put the requestor in an untenable
-position.
+url:    https://github.com/intel-lab-lkp/linux/commits/Olga-Kornievskaia/llist-add-ability-to-remove-a-particular-entry-from-the-list/20250116-072951
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20250115232406.44815-2-okorniev%40redhat.com
+patch subject: [PATCH 1/3] llist: add ability to remove a particular entry from the list
+config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250124/202501240848.ZH81rjTD-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project 19306351a2c45e266fa11b41eb1362b20b6ca56d)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250124/202501240848.ZH81rjTD-lkp@intel.com/reproduce)
 
-Maybe we should lobby to get this changed in the spec?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501240848.ZH81rjTD-lkp@intel.com/
 
->=20
-> > This is CB_SEQUENCE, but I believe the same rule applies. Release the
-> > slot before submitting the delayed RPC.
-> >=20
-> > Fixes: 7ba6cad6c88f ("nfsd: New helper nfsd4_cb_sequence_done() for pro=
-cessing more cb errors")
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >   fs/nfsd/nfs4callback.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> >=20
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index bfc9de1fcb67b4f05ed2f7a28038cd8290809c17..c26ccb9485b95499fc90883=
-3a384d741e966a8db 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -1392,6 +1392,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
-k *task, struct nfsd4_callback
-> >   		goto need_restart;
-> >   	case -NFS4ERR_DELAY:
-> >   		cb->cb_seq_status =3D 1;
-> > +		nfsd41_cb_release_slot(cb);
-> >   		if (!rpc_restart_call(task))
-> >   			goto out;
-> >  =20
-> >=20
->=20
->=20
+All errors (new ones prefixed by >>):
 
---=20
-Jeff Layton <jlayton@kernel.org>
+   In file included from lib/test_bitops.c:10:
+   In file included from include/linux/module.h:17:
+   In file included from include/linux/kmod.h:9:
+   In file included from include/linux/umh.h:4:
+   In file included from include/linux/gfp.h:7:
+   In file included from include/linux/mmzone.h:8:
+   In file included from include/linux/spinlock.h:63:
+   In file included from include/linux/lockdep.h:14:
+   In file included from include/linux/smp.h:15:
+   In file included from include/linux/smp_types.h:5:
+>> include/linux/llist.h:283:7: error: variable 'pos' is uninitialized when used here [-Werror,-Wuninitialized]
+     283 |                 if (pos->next == entry) {
+         |                     ^~~
+   include/linux/llist.h:269:24: note: initialize the variable 'pos' to silence this warning
+     269 |         struct llist_node *pos;
+         |                               ^
+         |                                = NULL
+   1 error generated.
+
+
+vim +/pos +283 include/linux/llist.h
+
+   255	
+   256	/**
+   257	 * llist_del_entry - remove a particular entry from a lock-less list
+   258	 * @head: head of the list to remove the entry from
+   259	 * @entry: entry to be removed from the list
+   260	 *
+   261	 * Walk the list, find the given entry and remove it from the list.
+   262	 * The caller must ensure that nothing can race in and change the
+   263	 * list while this is running.
+   264	 *
+   265	 * Returns true if the entry was found and removed.
+   266	 */
+   267	static inline bool llist_del_entry(struct llist_head *head, struct llist_node *entry)
+   268	{
+   269		struct llist_node *pos;
+   270	
+   271		if (!head->first)
+   272			return false;
+   273	
+   274		/* Is it the first entry? */
+   275		if (head->first == entry) {
+   276			head->first = entry->next;
+   277			entry->next = entry;
+   278			return true;
+   279		}
+   280	
+   281		/* Find it in the list */
+   282		llist_for_each(head->first, pos) {
+ > 283			if (pos->next == entry) {
+   284				pos->next = entry->next;
+   285				entry->next = entry;
+   286				return true;
+   287			}
+   288		}
+   289		return false;
+   290	}
+   291	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
