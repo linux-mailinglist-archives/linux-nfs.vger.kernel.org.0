@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-9592-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9593-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEF91A1B9EC
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 17:05:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AADE2A1BA00
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 17:09:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 960817A4D8C
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 16:05:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB096160EA1
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 16:09:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ECB216191B;
-	Fri, 24 Jan 2025 16:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B7016190B;
+	Fri, 24 Jan 2025 16:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCevB+Ns"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwO7Ip3y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A82153BF7;
-	Fri, 24 Jan 2025 16:04:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1749D1531EF;
+	Fri, 24 Jan 2025 16:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737734695; cv=none; b=pkgpPuuRUc26GdqB4bI9Rcdjsxmdn9COJnG7J4BVpPVkh1Z5Ow3LAF+wuqnau671UaIUsaqK0eMg3kBEQkRVXGjsEbcouW94+8m2CKBsGC4f84Ps9o1AncGTZqbnQvksHNKO7awNwDGikGxPauDdCeaQRQu1C+tk8g3XYs4QykY=
+	t=1737734941; cv=none; b=ik2uaWX6jOg9jyTaF27BfjmZL2DEOYIL5DpCssxjBHjMivifsgUpdOX8ma/1KOh2zI7KXoGaPFUM74fzwweWjH/21t4NXBJReM6lzSmQvzB9dRlRBYcipBvjgE/TgOj1PHQwYt2GDugyVSG+nnGKRCgcbtYSs8M4yAI7k3YyMZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737734695; c=relaxed/simple;
-	bh=TPA434fY7lux6XnYf1clstY4nCFfIk5DH1SOpMjVHVI=;
+	s=arc-20240116; t=1737734941; c=relaxed/simple;
+	bh=3HENn+h8ggKv2ts40UC/08YJ87CGc1HzF8Sdu5haBII=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WfFQSGGAbpRuPMgNBcsXN8rFVLw60gMvve+0ukFDO2HKCMSeNMv8id7nRdb611T6gb/K4zKwR54L0lZ5L/klIvIi4ENmNQ7vOocN5DFdQTvu6oyrsNhP7C+JUIf+BNI5WJSUcDKBOlyavK0w6yPhEVfVv49A28d2Wl8cUsFRr4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCevB+Ns; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69460C4CED2;
-	Fri, 24 Jan 2025 16:04:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=JqhVCTaBD9iaRg43fd4tS6r6Jnzp2bLxXUbVqV1NsdoilEEQZ4U7JWRsj5yeqQM9jIN/yyI49rfUvy89Z4MCwKoWqPgkeRTlnJra0UFXeEij1jg1/IIIijNuccjcvriFOk+8I0OE3mFJQ12aavqbmHEIhI5KqRTRfosFbFxffvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwO7Ip3y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14700C4CEDD;
+	Fri, 24 Jan 2025 16:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737734694;
-	bh=TPA434fY7lux6XnYf1clstY4nCFfIk5DH1SOpMjVHVI=;
+	s=k20201202; t=1737734940;
+	bh=3HENn+h8ggKv2ts40UC/08YJ87CGc1HzF8Sdu5haBII=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KCevB+Ns2FRk7n1PoeY9NsTiTg90kWA+kmsmeOvo7mnD3CfaSF5twxpQAKIXJhNMc
-	 b3rn6nNuoIbJe3saF8Jn2WRm82ufKmBnmCqg5oeD/xixd7t1RcLfQHDVAKat9YAvOT
-	 9+b/EPvSVHFaBrhCOD7JMddzNtEYNJCaqw3ebGyUeIR5p9zpe4EP8u1wLcusaAAPs1
-	 bNAzgCMCT5vHssZ4lTA/1j2uJKidce2ur/YKZM/8WPF9cfi+4Ve0G6xYLhIKE+/NpX
-	 Ox2TSDJLjaaLomDPZJP9DkVnhe0zAlClfyE/bh9tDN17OpuxTEgE/YdTyGPUBxzRKk
-	 13PZJBxH63rqA==
-Message-ID: <9237d52f30f63cbe6450fcbbbeaf259250554814.camel@kernel.org>
+	b=MwO7Ip3yFUbtY2HSiYVLI5MuXi0g+W+/3hg4lBi9oZ/jKSOsQ8pP9L/FfRm3jyasa
+	 DXxQSb/g0imEXy/1Q9U9dkWzqhqssx+GgPbn4Ec3T1OdAv1rRKvJA0vkNu9hOeDyLh
+	 NAP8zOLRwYReYB/r7rZM7srfxE3FXc7zoTBR365BjSfpZESrJXiObgeA1UakRgiQjJ
+	 wcRK7uvHHrkUfZVQ/FIBdiFO7V+t3PTS6eDlXpNrp5eTBL52LyOzZvUccV0nUW0zdF
+	 nzCKuCvFlzMdOfYXbjg4y1SjVQdtxHScVY0G+w8Z2eu8Tn1Fsm6wkF/5GHz8JkjwgI
+	 Qk/XfDnciH4YQ==
+Message-ID: <00baf78e7d483930ddac4129fb91828707d89769.camel@kernel.org>
 Subject: Re: [PATCH 2/8] nfsd: fix CB_SEQUENCE error handling of
  NFS4ERR_{BADSLOT,BADSESSION,SEQ_MISORDERED}
 From: Jeff Layton <jlayton@kernel.org>
@@ -54,7 +54,7 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Abeni <pabeni@redhat.com>, Simon Horman	 <horms@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	netdev@vger.kernel.org
-Date: Fri, 24 Jan 2025 11:04:52 -0500
+Date: Fri, 24 Jan 2025 11:08:58 -0500
 In-Reply-To: <e8b4f46a-2c4b-43b3-bf82-dc5d8f6af171@oracle.com>
 References: <20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org>
 	 <20250123-nfsd-6-14-v1-2-c1137a4fa2ae@kernel.org>
@@ -182,19 +182,19 @@ ion
 > consumer on the NFS server can use it and will encounter the same error.
 > Best to keep it in the penalty box, IMO.
 >=20
+
+There is another problem here too. Once the session is reconstituted,
+there is no guarantee that the slot that the call is sitting on will
+still be valid. The new CB slot table may be smaller than before. I
+think we do need to release the slot in these cases for that reason
+alone.
+
 > If there are other slots, they are likely still usable. An
 > implementation can choose to continue using the session rather than
 > scuttling it immediately. In the past, with a single backchannel slot,
 > NFSD had no choice but to replace the session. But now it can be more
 > conservative.
 >=20
-
-It may still be usable, but if we got BADSLOT, then it's still
-indicative of a faulty session. Best to mark it as such, IMO.
-
-It's worth noting that these things should really _never_ happen, so
-being somewhat heavy-handed in this situation seems reasonable.
-
 >=20
 > > Also, at this point, only nfsd has declared that it needs
 > > a new session (see below).
@@ -202,11 +202,6 @@ being somewhat heavy-handed in this situation seems reasonable.
 > If the client's backchannel service has returned BADSESSION, then the
 > client already knows this session is unusable.
 >=20
-
-Fair point. I still think it's reasonable to mark it CB_FAULT in that
-case. That status is also displayed via the client_info file, so that's
-helpful info.
-
 >=20
 > > > Also, AFAICT marking CB_FAULT does not destroy the session, it simply
 > > > tries to recreate backchannel's rpc_clnt. Perhaps NFSD's callback cod=
