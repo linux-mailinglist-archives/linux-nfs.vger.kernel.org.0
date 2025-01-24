@@ -1,175 +1,188 @@
-Return-Path: <linux-nfs+bounces-9570-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9571-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2DC9A1B3A9
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 11:43:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44A45A1B3BE
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 11:47:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C3077A1241
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 10:42:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6A2D3A1552
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jan 2025 10:47:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF11B1CEE8E;
-	Fri, 24 Jan 2025 10:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD6A23B0;
+	Fri, 24 Jan 2025 10:47:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6V+5idt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5lToEX9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E187A155759
-	for <linux-nfs@vger.kernel.org>; Fri, 24 Jan 2025 10:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE1A17FE
+	for <linux-nfs@vger.kernel.org>; Fri, 24 Jan 2025 10:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737715378; cv=none; b=oZm7QBJqQfuGZ9slV2j+pZ+8sTxZ986dlW2RmDc7Nd4LA4JbsJUPgrZvUyz+G7XLrutcvZ0g2asck/rZZuQmdusrYr0BNSTMHFcyJiBmKC3pyhfne1wunm8zj/2dQW5KCpnbKkuLBzkLjygX+0qedv/dDryuD9TFuljUirllZoM=
+	t=1737715647; cv=none; b=f/rdgztRiptYVS1mTwrjM5W3LljQRL/OD1xPhT4kaKqFMXBgi1ErZdhQVBUbu+ZSj1jKVA0wfqbzgiovt7L1+0S6n2r0nNoMcDXbA7yAwQ45E+fv+dqGDS1PzVNyJ1AnK8c9XwmzhfqMSjIrelDiPBq0h0/FzTfxa8cnSuxfe08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737715378; c=relaxed/simple;
-	bh=aVsDP5dM3APKtRJKuELHKwJyRgd1+RzasVEgG55lyD8=;
+	s=arc-20240116; t=1737715647; c=relaxed/simple;
+	bh=RYmTT0r4uT5NE8nax7wNCaqb5cqJQp8qh/rv2Lnu7J4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mLChf4SCrxhpJRFQeVfx6Ik6lcJPwxGTde4bwu75ed3rmYNZnIbQUpn8Htu74FM79KeHaGMI+UZAajz+iceV79fL4cBHeiP96/s5LGVwVLigEwjv0/EJ6UQLzD5psrf0jWhLEjY5TmWVhH2ZVHcYzWahT6SpHOa0Hn7JA6mk6qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6V+5idt; arc=none smtp.client-ip=209.85.208.42
+	 To:Cc:Content-Type; b=VpJBhrCt2qQa5QRI6Zj9copBRayDSaM0/DBt5oTDI9w/1imbohmO4ggU+KHiyDU07DAyeuDpLZLfF+rixQiQgfpXyEqZyXobEmjdkU1ejqPRqQSa+Nw0dCdPVl9qGOGfGMoqf7jOLGPKq26h11H5fFn+sTQN0EXOYlMJogaj44k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5lToEX9; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5d3cf094768so3785736a12.0
-        for <linux-nfs@vger.kernel.org>; Fri, 24 Jan 2025 02:42:56 -0800 (PST)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d3e6274015so3616457a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 24 Jan 2025 02:47:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737715375; x=1738320175; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1737715644; x=1738320444; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hwsxtSdk4KNSUBdxKOfR63ssLEWfYLhnH849c9s4R78=;
-        b=X6V+5idt+coaxaOo+pMR2UjqzVKCJzkcP4T/4dbWWmLG6bd/6P3rvrr1J99wssGMrT
-         IEsbrpzsn73Yq48rFMAlIuEBBSCJOBxkCLgehxMjgqha/Iidave28Z2rEVoE+oXOT9QH
-         v9XCjenOIWG8uN1S7edITSdcblbSaHesk5sMmk6LUteCmx85VzXMqAEkAM4m4jEb4EOM
-         QbjOq+RXd8cQQU5G7Sz16wE51PmmQ8CFPzfubsXxG5rb1q6rx3isaoiRDuWs8wkpvIf1
-         sNDmoUu4XW0Pq8BkOkvL5aAowIKQO50hTGlKhi8d3H8tefl5faZfWC5s3KfghMEOEtUm
-         ANwA==
+        bh=z4GBuLkhv4jVWEGTfh7xan3AGSmg1wAWutHHDFlibm0=;
+        b=I5lToEX91LJbKjMOS7P2qjnzFwz9mRD89A/Er7cdfjG+ohD3k6iJz9BNmMB2J/qkZT
+         xkmMrnLYfpmzXWL6BErIrNBklP+OVx6OiyLt6XgFva62nLLPgdTbrTYIphAYgO52hw53
+         ANUFRYdh4JFW4eXZ7Fvk5S2q7BEXb7qc4J/OXdq3M5WGw3Bppt0+Jlk0Ce484E5xQfu0
+         39iKmJkFMR+u7VfGa0KqJbPg4UworH9FF9uaA7fSjbdR+fqIlUywKKxFWBqA66eDDbiW
+         02Gns63GJlp4ev7uoB9gBsPFe9xj4Tn3dD6tOxznC4Nd1vKZUn4dtcUDcT8/m/wo3vDo
+         JTgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737715375; x=1738320175;
+        d=1e100.net; s=20230601; t=1737715644; x=1738320444;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hwsxtSdk4KNSUBdxKOfR63ssLEWfYLhnH849c9s4R78=;
-        b=Px3/DW0nJyG7OMbzo6AyEvAh9dxqkPEtCPNh/vt3J/I+4xDVUrVgE0yO31UBODnDUQ
-         MB7pfPSXIndXIWt+ntPWNC5g/quueILxVddgetRhGV2FKV2Yv1wj0Z9PHw8ZVlaJUDlg
-         ZKOt4U42HBil8eiOJQsUp5Az7am1x+MgAAiJQbQBPSvbfPZJMZJgdeWjD0dUqHR4UUkv
-         X3oQ3AhHb0qYyYlGalwpLISqeHrUdSYWCb8tS7Vbfe/hrWQMJ5s7gFnArHLLLzMNnDqY
-         tGBzNgdLRS0Fmvik/qHtK7tQHQHdSaVN4LsKPEJtF56vLbV+LcUH8qsOrIK6O5ILW6uB
-         KoMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsFcjoc7AiXW5STb1Q6SpGTtW6eDnMOzDG8AxAvZRTVCJx5wcEgMCAMeUIYKrm5mQT8hFLO826QoU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/QnDir+pSESXCEY0VbyEB7AItzTPaLieDJ2dNDpn/x4w019H8
-	rjQ8L50nnU7fH/djp5NZdlAzFPLLL9knAJIbxi7mbSp3YbP7aJD3YAquM3AtGh0FBjyiYSuODjL
-	ELbcxa1qVfWD5+Sd/I5iET87Yioc=
-X-Gm-Gg: ASbGncucP3G6PXNriHo1OQcyeZ0BEUtNQPBSoire3gOVMx/XBtcr1nEscpUtCtakm7w
-	tJr8wTNCoqbVzlwA4swSfMRg/Qwuj/q4whIZl8ZTyzccoCvEhugb+7tou0JpZIQ==
-X-Google-Smtp-Source: AGHT+IGPlgwDmXqIvTXt5lOTI/gooy/xG7LAFEl1HCKq/pjpYegQN+9OeLuHvxmRb9AymSVVJDhVx3dfQRi5XHKTch4=
-X-Received: by 2002:a17:907:da0:b0:aab:cdbd:595a with SMTP id
- a640c23a62f3a-ab38b0a12bcmr2796359266b.3.1737715374764; Fri, 24 Jan 2025
- 02:42:54 -0800 (PST)
+        bh=z4GBuLkhv4jVWEGTfh7xan3AGSmg1wAWutHHDFlibm0=;
+        b=hUeKhX80ZAouqVU7IdGWJl5kNFfX1Okaekkg32Yl7rjCqMf+b42dZe0aTzpavVfb/W
+         N5E6nCLegRCnKUtR9HUDvockApT5Nrn5RNQQpWMwoe0vcG7ip6dzZTmU7vkY71JOW1Il
+         y3ytDF0TtgUg/ykJUPUqOD2KGSLYVJoJdIhTgUQ+jp3mSiG+7qIxMRZuNP2Vnic9iaDB
+         zYl6CXihrsZMtgxWk9DGvYNd2gHkCCkoHZvvTeOmsvk79Rh33dm2kVEE29ek2Djn18rp
+         W1L3AmCQPLI8mu3WsjXP+5MKJ7vUH/QJkf5mryebWEjeEnLrxFbvW6/ZPWDGukQk3l32
+         NA7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBccb6nzDRw/BGniS+1tFZ1M04spd1oPdbDVOUdwbXXHCtP1bkgNgBMtxvXf+d7hRPmcGxbs6tGV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrUPuklyqbSeH+UbHa2dqbz0A9nGkXmKvg+gy+BxSM3ZrzWcNH
+	U4Bpi+tfn9tLqu4DEdcS0EMj9FBvA2YVIxdrYUnLbwL1F1hOVFQaPHZHuEbOwfOAzM/a6178RvI
+	zGQRfu7sMdtynf0oi914jns1fthc=
+X-Gm-Gg: ASbGncsz77KnQ7AcGcTo6isP7w+6zAQ+ltqtdIfRTqEn5j0SIUNk2Dsx1FE1uutQiID
+	lFDUMGQW/D3FDQFSYvsJZvhK8KgPlrEZ3kQTlNf8KhmW0Nfn9LVKYzi1D3n7zuQ==
+X-Google-Smtp-Source: AGHT+IHq6Ktz50wkrziEoY+s6bpo2yvc19tSl7IUl6mT5hroELVcXDNSIvoyBdglQOHEOtKQBQd4I83nfKx7ReJ4FQI=
+X-Received: by 2002:a05:6402:2813:b0:5db:731d:4456 with SMTP id
+ 4fb4d7f45d1cf-5db7db07839mr30306325a12.28.1737715644041; Fri, 24 Jan 2025
+ 02:47:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123195242.1378601-1-cel@kernel.org> <20250123195242.1378601-3-cel@kernel.org>
- <8565d8e45073f76705a23e00eedd4d911f24a360.camel@kernel.org> <2a55bf53-dc35-49bf-bcd0-b76999e1ef34@oracle.com>
-In-Reply-To: <2a55bf53-dc35-49bf-bcd0-b76999e1ef34@oracle.com>
+References: <20250123195242.1378601-1-cel@kernel.org> <20250123195242.1378601-4-cel@kernel.org>
+In-Reply-To: <20250123195242.1378601-4-cel@kernel.org>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 24 Jan 2025 11:42:43 +0100
-X-Gm-Features: AWEUYZmW4TfKj574icrBWjHl25cDwB6kxXA-xcK_QwcnxAXfOf5zCwaqIvvTjTc
-Message-ID: <CAOQ4uxhZByoddDLqFnSfSri7wBLFnVORjh+8t6FfekHh8d4MOA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/4] NFSD: Never return NFS4ERR_FILE_OPEN when
- removing a directory
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, cel@kernel.org, Neil Brown <neilb@suse.de>, 
+Date: Fri, 24 Jan 2025 11:47:13 +0100
+X-Gm-Features: AWEUYZlEE5m-k2-KlRCdqw2dCWtmNTwMlwV6DDF5rMON4lM4imDT3y1YFsDsbLk
+Message-ID: <CAOQ4uxhww-==KTaN-81XF5ke+D18=yLL6BjoSM9oQYJhB9DA3Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/4] NFSD: Return NFS4ERR_FILE_OPEN only when renaming
+ over an open file
+To: cel@kernel.org
+Cc: Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>, 
 	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@hammerspace.com>
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2025 at 10:07=E2=80=AFPM Chuck Lever <chuck.lever@oracle.co=
-m> wrote:
+On Thu, Jan 23, 2025 at 8:52=E2=80=AFPM <cel@kernel.org> wrote:
 >
-> On 1/23/25 3:43 PM, Jeff Layton wrote:
-> > On Thu, 2025-01-23 at 14:52 -0500, cel@kernel.org wrote:
-> >> From: Chuck Lever <chuck.lever@oracle.com>
-> >>
-> >> RFC 8881 Section 18.25.4 paragraph 5 tells us that the server
-> >> should return NFS4ERR_FILE_OPEN only if the target object is an
-> >> opened file. This suggests that returning this status when removing
-> >> a directory will confuse NFS clients.
-> >>
-> >> This is a version-specific issue; nfsd_proc_remove/rmdir() and
-> >> nfsd3_proc_remove/rmdir() already return nfserr_access as
-> >> appropriate.
-> >>
-> >> Unfortunately there is no quick way for nfsd4_remove() to determine
-> >> whether the target object is a file or not, so the check is done in
-> >> to nfsd_unlink() for now.
-> >>
-> >> Reported-by: Trond Myklebust <trondmy@hammerspace.com>
-> >> Fixes: 466e16f0920f ("nfsd: check for EBUSY from vfs_rmdir/vfs_unink."=
-)
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >>   fs/nfsd/vfs.c | 24 ++++++++++++++++++------
-> >>   1 file changed, 18 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> >> index 2d8e27c225f9..3ead7fb3bf04 100644
-> >> --- a/fs/nfsd/vfs.c
-> >> +++ b/fs/nfsd/vfs.c
-> >> @@ -1931,9 +1931,17 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_=
-fh *ffhp, char *fname, int flen,
-> >>      return err;
-> >>   }
-> >>
-> >> -/*
-> >> - * Unlink a file or directory
-> >> - * N.B. After this call fhp needs an fh_put
-> >> +/**
-> >> + * nfsd_unlink - remove a directory entry
-> >> + * @rqstp: RPC transaction context
-> >> + * @fhp: the file handle of the parent directory to be modified
-> >> + * @type: enforced file type of the object to be removed
-> >> + * @fname: the name of directory entry to be removed
-> >> + * @flen: length of @fname in octets
-> >> + *
-> >> + * After this call fhp needs an fh_put.
-> >> + *
-> >> + * Returns a generic NFS status code in network byte-order.
-> >>    */
-> >>   __be32
-> >>   nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
-> >> @@ -2007,10 +2015,14 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc=
-_fh *fhp, int type,
-> >>      fh_drop_write(fhp);
-> >>   out_nfserr:
-> >>      if (host_err =3D=3D -EBUSY) {
-> >> -            /* name is mounted-on. There is no perfect
-> >> -             * error status.
-> >> +            /*
-> >> +             * See RFC 8881 Section 18.25.4 para 4: NFSv4 REMOVE
-> >> +             * distinguishes between reg file and dir.
-> >>               */
-> >> -            err =3D nfserr_file_open;
-> >> +            if (type !=3D S_IFDIR)
-> >
-> > Should that be "if (type =3D=3D S_ISREG)" instead? What if the inode is=
- a
-> > named pipe or device file? I'm not sure you can ever get EBUSY with
-> > those, but in case you can, what's the right error in those cases?
+> From: Chuck Lever <chuck.lever@oracle.com>
 >
-> Check out nfsd_unlink()'s callers to see what they pass as the type
-> parameter. Unfortunately we have to compare against S_IFDIR here.
+> RFC 8881 Section 18.26.4 paragraphs 1 - 3 tell us that RENAME should
+> return NFS4ERR_FILE_OPEN only when the target object is a file that
+> is currently open. If the target is a directory, some other status
+> must be returned.
+>
+> Generally I expect that a delegation recall will be triggered in
+> some of these circumstances. In other cases, the VFS might return
+> -EBUSY for other reasons, and NFSD has to ensure that errno does
+> not leak to clients as a status code that is not permitted by spec.
+>
+> There are some error flows where the target dentry hasn't been
+> found yet. The default value for @type therefore is S_IFDIR to return
+> an alternate status code in those cases.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/vfs.c | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 3ead7fb3bf04..5cfb5eb54c23 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1795,9 +1795,19 @@ nfsd_has_cached_files(struct dentry *dentry)
+>         return ret;
+>  }
+>
+> -/*
+> - * Rename a file
+> - * N.B. After this call _both_ ffhp and tfhp need an fh_put
+> +/**
+> + * nfsd_rename - rename a directory entry
+> + * @rqstp: RPC transaction context
+> + * @ffhp: the file handle of parent directory containing the entry to be=
+ renamed
+> + * @fname: the filename of directory entry to be renamed
+> + * @flen: the length of @fname in octets
+> + * @tfhp: the file handle of parent directory to contain the renamed ent=
+ry
+> + * @tname: the filename of the new entry
+> + * @tlen: the length of @tlen in octets
+> + *
+> + * After this call _both_ ffhp and tfhp need an fh_put.
+> + *
+> + * Returns a generic NFS status code in network byte-order.
+>   */
+>  __be32
+>  nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, in=
+t flen,
+> @@ -1805,6 +1815,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *=
+ffhp, char *fname, int flen,
+>  {
+>         struct dentry   *fdentry, *tdentry, *odentry, *ndentry, *trap;
+>         struct inode    *fdir, *tdir;
+> +       int             type =3D S_IFDIR;
+>         __be32          err;
+>         int             host_err;
+>         bool            close_cached =3D false;
+> @@ -1867,6 +1878,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *=
+ffhp, char *fname, int flen,
+>         host_err =3D PTR_ERR(ndentry);
+>         if (IS_ERR(ndentry))
+>                 goto out_dput_old;
+> +       type =3D d_inode(ndentry)->i_mode & S_IFMT;
+>         host_err =3D -ENOTEMPTY;
+>         if (ndentry =3D=3D trap)
+>                 goto out_dput_new;
+> @@ -1904,7 +1916,17 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh =
+*ffhp, char *fname, int flen,
+>   out_dput_old:
+>         dput(odentry);
+>   out_nfserr:
+> -       err =3D nfserrno(host_err);
+> +       if (host_err =3D=3D -EBUSY) {
+> +               /*
+> +                * See RFC 8881 Section 18.26.4 para 1-3: NFSv4 RENAME
+> +                * status distinguishes between reg file and dir.
+> +                */
+> +               if (type !=3D S_IFDIR)
+
+Maybe (type =3D=3D S_IFREG) here as well?
+
+> +                       err =3D nfserr_file_open;
+> +               else
+> +                       err =3D nfserr_acces;
+> +       } else
+> +               err =3D nfserrno(host_err);
 >
 
-Not exactly. nfsd4_remove() is the only caller that needs to get
-nfserr_file_open and this caller calls with type =3D 0, so type here
-is going to be the actual type of the inode and (type =3D=3D S_ISREG)
-would be correct. No?
+if {} else ; is a code smell with high potential for human
+misreading of code.
 
 Thanks,
 Amir.
