@@ -1,210 +1,201 @@
-Return-Path: <linux-nfs+bounces-9614-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9615-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C797DA1C629
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:40:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13DB8A1C630
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 04:00:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42C193A877A
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 02:39:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47FBB166443
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6103713B5A0;
-	Sun, 26 Jan 2025 02:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0SZzvM3W";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tIaox188";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TXjauzDd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SEGJ6X40"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F0AA22092;
+	Sun, 26 Jan 2025 03:00:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2544A08;
-	Sun, 26 Jan 2025 02:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A5833FE;
+	Sun, 26 Jan 2025 03:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737859200; cv=none; b=fIXL8Cwhq1e5qmYzBVCD4+/TbzhuLwniUtzVL0OHjfFdN5pR4PBAEzdM2Acoy3xbkgi9/xaIYBo2Elx3gR6YHV1KLmK/RnbRHkij1y89AH9iH6LlKBAtlDlmwAKzDnmj3usmtWj0A2zqcYxBMvsrnR234TjRebZOOlQ05JkpCVM=
+	t=1737860425; cv=none; b=nU4zR0GSv5Ark4BsUIQILTHMo4zHn2V1mPD/xgiKkD7hqYndrBeiwecJBxgR9zgFpaDL6GEk5CKNjxwDwWKcpHt/5k0AcunyhfrORrAnORkgm4PYecB9MBofSRTTlJC2IJk0UibdKAjJXWTRUa8mlgKk5Nqiwe32dXtT86pxFgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737859200; c=relaxed/simple;
-	bh=QFMBjsoLWWWoWOgJHwEHdUEwl0VsQK1oKZnKsFVOxIw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ao9fXqqlxHOvy6vQXxtNynje9zW1ZFFApLXnw1FtbFo/qFLjZQdFxHW7k69YLV+WpUjS1kpptlnNX+t6yyjU5FvKtb6371jhuUgL/emS1/M91QVPzH1hcQqKhuCB/wCOBiwVojb6juVqQxXEWjMx44iGazgkgjRuVsVgoX6x810=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0SZzvM3W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tIaox188; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TXjauzDd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SEGJ6X40; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 48F061F38F;
-	Sun, 26 Jan 2025 02:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737859190; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
-	b=0SZzvM3W437wmXQKrP70A1Mk0PNkNnfgXmaPs7HfoXAAfitBkF6K87aHXL+ntzGdSoVjtM
-	eX9EFwKXDGQdeOMVfZfVKZl4p7RB9mO/XWJ3idwwr3mQjvyn6Jz4+XvHRisRfpW939jeD4
-	px56e/8lf4zm5gQg+rcRo3y/q41/Qj8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737859190;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
-	b=tIaox188X/KitKsEVFJGDGtJOAQwzeTsfEm5M1aOL2N8NX6ruNxkmJRKKCQxsr2YUjJiYF
-	9Hipfz29phBQTHBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1737859189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
-	b=TXjauzDdmVMPTLR6OzAS0jcEgT5W7V7Id5tL2EL/18791G/uGk/Zyyr9dbB6/ge1iUEmBr
-	CGMzfHh/LzqPzhf5ULvqpSc+sW+D2IiHdtZ9q8r7qba0n+XEwqZKkSOD5jYdXpgaDeJ0Hx
-	i5jwcCtEVRDUPDLC8ibibP5hJfPh4qI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1737859189;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
-	b=SEGJ6X40A46Pi2lhhJEOAR2V/SL1j8IY+xVnEkALWKI1Ri0oWO21YK/GdCu+UsPDAUIZUM
-	+HkMsKGHLkl8aoCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FB4913782;
-	Sun, 26 Jan 2025 02:39:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +pnuDHKglWc0LgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sun, 26 Jan 2025 02:39:46 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1737860425; c=relaxed/simple;
+	bh=6u2LGL+Pff+hU6u9FzgTTO6EosgCng5DZloNo9btRaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HDMZSjH2OYq6b9g+SdFIZFxwr3wUJdDmoabyN54mxAlbMMe6FuJMj5Y+5NNrW8MBrb5o0sxF4psJWCmZPRhlBkgBi9lyD28gP2NFySl5cEuux1Tv56Tbun2Igr7vXZZvSnl0hxwMpBZ6Fh851QVBZ0BLSwPGj5fV3JLAfrGRanc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ygblr2Yzfz11PDj;
+	Sun, 26 Jan 2025 10:56:08 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 439A61802D1;
+	Sun, 26 Jan 2025 11:00:13 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sun, 26 Jan 2025 11:00:12 +0800
+Message-ID: <d38a53d6-1f10-4c72-b5f0-88d612093e83@huawei.com>
+Date: Sun, 26 Jan 2025 11:00:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Salvatore Bonaccorso" <carnil@debian.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Jeff Layton" <jlayton@kernel.org>
-Subject:
- Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling svc_wake_up
-In-reply-to: <20250125-kdevops-v1-1-a76cf79127b8@kernel.org>
-References: <20250125-kdevops-v1-1-a76cf79127b8@kernel.org>
-Date: Sun, 26 Jan 2025 13:39:38 +1100
-Message-id: <173785917824.22054.15604701394410740651@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-On Sun, 26 Jan 2025, Jeff Layton wrote:
-> nfsd_file_dispose_list_delayed can be called from the filecache
-> laundrette, which is shut down after the nfsd threads are shut down and
-> the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then there
-> are no threads to wake.
->=20
-> Ensure that the nn->nfsd_serv pointer is non-NULL before calling
-> svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since the
-> svc_serv is not freed until after the filecache laundrette is cancelled.
->=20
-> Fixes: ffb402596147 ("nfsd: Don't leave work of closing files to a work que=
-ue")
-> Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-> Closes: https://lore.kernel.org/linux-nfs/7d9f2a8aede4f7ca9935a47e1d4056432=
-20d7946.camel@kernel.org/
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> This is only lightly tested, but I think it will fix the bug that
-> Salvatore reported.
-> ---
->  fs/nfsd/filecache.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2dd750f43=
-239b4af6d37b0 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct list_head *disp=
-ose)
->  						struct nfsd_file, nf_gc);
->  		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
->  		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
-> +		struct svc_serv *serv;
-> =20
->  		spin_lock(&l->lock);
->  		list_move_tail(&nf->nf_gc, &l->freeme);
->  		spin_unlock(&l->lock);
-> -		svc_wake_up(nn->nfsd_serv);
-> +
-> +		/*
-> +		 * The filecache laundrette is shut down after the
-> +		 * nn->nfsd_serv pointer is cleared, but before the
-> +		 * svc_serv is freed.
-> +		 */
-> +		serv =3D nn->nfsd_serv;
-
-I wonder if this should be READ_ONCE() to tell the compiler that we
-could race with clearing nn->nfsd_serv.  Would the comment still be
-needed?
-
-Otherwise:
-
- Reviewed-by: NeilBrown <neilb@suse.de>
-
-Thanks,
-NeilBrown
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] NFSv4: Fix deadlock during the running of state manager
+To: Trond Myklebust <trondmy@hammerspace.com>, "anna@kernel.org"
+	<anna@kernel.org>
+CC: "houtao1@huawei.com" <houtao1@huawei.com>, "yukuai1@huaweicloud.com"
+	<yukuai1@huaweicloud.com>, "yangerkun@huawei.com" <yangerkun@huawei.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"lilingfeng@huaweicloud.com" <lilingfeng@huaweicloud.com>,
+	"jlayton@kernel.org" <jlayton@kernel.org>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+References: <20241213035908.1789132-1-lilingfeng3@huawei.com>
+ <baa76c7946676fccafb1dbf658905a0ab3e3bdec.camel@hammerspace.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <baa76c7946676fccafb1dbf658905a0ab3e3bdec.camel@hammerspace.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
 
-> +		if (serv)
-> +			svc_wake_up(serv);
->  	}
->  }
-> =20
->=20
-> ---
-> base-commit: 7541a5b8073cf0d9e2d288cac581f1aa6c11671d
-> change-id: 20250125-kdevops-0989825ae8db
->=20
-> Best regards,
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
->=20
+在 2024/12/18 1:00, Trond Myklebust 写道:
+> On Fri, 2024-12-13 at 11:59 +0800, Li Lingfeng wrote:
+>> Unlinking file may cause the following deadlock in state manager:
+>> [root@localhost test]# cat /proc/2943/stack
+>> [<0>] rpc_wait_bit_killable+0x1a/0x90
+>> [<0>] _nfs4_proc_delegreturn+0x60f/0x760
+>> [<0>] nfs4_proc_delegreturn+0x13d/0x2a0
+>> [<0>] nfs_do_return_delegation+0xba/0x110
+>> [<0>] nfs_end_delegation_return+0x32c/0x620
+>> [<0>] nfs_complete_unlink+0xc7/0x290
+>> [<0>] nfs_dentry_iput+0x36/0x50
+>> [<0>] __dentry_kill+0xaa/0x250
+>> [<0>] dput.part.0+0x26c/0x4d0
+>> [<0>] __put_nfs_open_context+0x1d9/0x260
+>> [<0>] nfs4_open_reclaim+0x77/0xa0
+>> [<0>] nfs4_do_reclaim+0x385/0xf40
+>> [<0>] nfs4_state_manager+0x762/0x14e0
+>> [<0>] nfs4_run_state_manager+0x181/0x330
+>> [<0>] kthread+0x1a7/0x1f0
+>> [<0>] ret_from_fork+0x34/0x60
+>> [<0>] ret_from_fork_asm+0x1a/0x30
+>> [root@localhost test]#
+>>
+>> It can be reproduced by following steps:
+>> 1) client: open file
+>> 2) client: unlink file
+>> 3) server: service restart(trigger state manager in client)
+>> 4) client: close file(in nfs4_open_reclaim, between
+>> nfs4_do_open_reclaim
+>> and put_nfs_open_context)
+>>
+>> Since the file has been open, unlinking will just set
+>> DCACHE_NFSFS_RENAMED
+>> for the dentry like this:
+>> nfs_unlink
+>>   nfs_sillyrename
+>>    nfs_async_unlink
+>>     // set DCACHE_NFSFS_RENAMED
+>>
+>> Restarting service will trigger state manager in client.
+>> (1) NFS4_SLOT_TBL_DRAINING will be set to nfs4_slot_table since
+>> session
+>> has been reset.
+>> (2) DCACHE_NFSFS_RENAMED is detected in nfs_dentry_iput. Therefore,
+>> nfs_complete_unlink is called to trigger delegation return.
+>> (3) Due to the slot table being in draining state and sa_privileged
+>> being
+>> 0, the delegation return will be queued and wait.
+>> nfs4_state_manager
+>>   nfs4_reset_session
+>>    nfs4_begin_drain_session
+>>     nfs4_drain_slot_tbl
+>>      // set NFS4_SLOT_TBL_DRAINING (1)
+>>   nfs4_do_reclaim
+>>    nfs4_open_reclaim
+>>     __put_nfs_open_context
+>>      __dentry_kill
+>>       nfs_dentry_iput // check DCACHE_NFSFS_RENAMED (2)
+>>        nfs_complete_unlink
+>>         nfs_end_delegation_return
+>>          nfs_do_return_delegation
+>>           nfs4_proc_delegreturn
+>>            _nfs4_proc_delegreturn
+>>             rpc_run_task
+>>              ...
+>>              nfs4_delegreturn_prepare
+>>               nfs4_setup_sequence
+>>                nfs4_slot_tbl_draining // check NFS4_SLOT_TBL_DRAINING
+>>                                       // and sa_privileged is 0 (3)
+>>                 rpc_sleep_on // set queued and add to slot_tbl_waitq
+>>                  // rpc_task is async and wait in __rpc_execute
+>>             rpc_wait_for_completion_task
+>>              __rpc_wait_for_completion_task
+>>               out_of_line_wait_on_bit
+>>                rpc_wait_bit_killable // wait for rpc_task to complete
+>>   <-------- can not get here to wake up rpc_task -------->
+>>   nfs4_end_drain_session
+>>    nfs4_end_drain_slot_table
+>>     nfs41_wake_slot_table
+>>
+>> On the one hand, the state manager is blocked by the unfinished
+>> delegation
+>> return. As a result, nfs4_end_drain_session cannot be invoked to
+>> clear
+>> NFS4_SLOT_TBL_DRAINING and wake up waiting tasks.
+>> On the other hand, since NFS4_SLOT_TBL_DRAINING is not cleared,
+>> delegation return can only wait in the queue, resulting in a
+>> deadlock.
+>>
+>> Fix it by turning the delegation return into a privileged operation
+>> for
+>> the case where the nfs_client is in NFS4CLNT_RECLAIM_REBOOT state.
+>>
+>> Fixes: 977fcc2b0b41 ("NFS: Add a delegation return into
+>> nfs4_proc_unlink_setup()")
+>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>> ---
+>>   fs/nfs/nfs4proc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index 405f17e6e0b4..f3b1f2725c4e 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -6878,7 +6878,7 @@ static int _nfs4_proc_delegreturn(struct inode
+>> *inode, const struct cred *cred,
+>>   		data->res.sattr_res = true;
+>>   	}
+>>   
+>> -	if (!data->inode)
+>> +	if (!data->inode || test_bit(NFS4CLNT_RECLAIM_REBOOT,
+>> &server->nfs_client->cl_state))
+>>   		nfs4_init_sequence(&data->args.seq_args, &data-
+>>> res.seq_res, 1,
+>>   				   1);
+>>   	else
+> Rather than make the delegreturn be privileged, it seems better to make
+> that delegreturn be asynchronous, just like the unlink itself.
 
+Hi,
+
+In my understanding, the rpc_task in delegreturn has the RPC_TASK_ASYNC
+flag set, which means it is already asynchronous.
+In the described scenario, delegreturn waiting for this asynchronous
+rpc_task to complete caused the deadlock. I'm not entirely clear on what
+you mean by 'make that delegreturn be asynchronous.' Could you please
+elaborate a bit more on that for better clarity?
+
+Thanks.
+
+>
 
