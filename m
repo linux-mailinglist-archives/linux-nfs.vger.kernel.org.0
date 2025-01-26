@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-9615-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9616-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13DB8A1C630
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 04:00:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE3D6A1C63E
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 04:45:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47FBB166443
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:00:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52FE73A7EB7
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:45:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F0AA22092;
-	Sun, 26 Jan 2025 03:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C837418D620;
+	Sun, 26 Jan 2025 03:45:16 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A5833FE;
-	Sun, 26 Jan 2025 03:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F65718991E;
+	Sun, 26 Jan 2025 03:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737860425; cv=none; b=nU4zR0GSv5Ark4BsUIQILTHMo4zHn2V1mPD/xgiKkD7hqYndrBeiwecJBxgR9zgFpaDL6GEk5CKNjxwDwWKcpHt/5k0AcunyhfrORrAnORkgm4PYecB9MBofSRTTlJC2IJk0UibdKAjJXWTRUa8mlgKk5Nqiwe32dXtT86pxFgI=
+	t=1737863116; cv=none; b=ZEjUqZFFYF52BObAwMKCRHw1uHfw4tGkO0nyy/O8MMzIQ5vlC2ai6X45lmSkHP/HiJ/ZTsEMd6HbfC9WIVSHbQbOidzwGNHFoSRQwtKxVNKuHh1U43KQKHbxUEZFysx+dsMfGq2JNFDxxpVD70Rn60gBITFYHgB7kWGzfsqmcpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737860425; c=relaxed/simple;
-	bh=6u2LGL+Pff+hU6u9FzgTTO6EosgCng5DZloNo9btRaw=;
+	s=arc-20240116; t=1737863116; c=relaxed/simple;
+	bh=Mp2HSW7ScroK20xtHp0zTEtQadQgYfzLOtqrggvOstM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HDMZSjH2OYq6b9g+SdFIZFxwr3wUJdDmoabyN54mxAlbMMe6FuJMj5Y+5NNrW8MBrb5o0sxF4psJWCmZPRhlBkgBi9lyD28gP2NFySl5cEuux1Tv56Tbun2Igr7vXZZvSnl0hxwMpBZ6Fh851QVBZ0BLSwPGj5fV3JLAfrGRanc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 In-Reply-To:Content-Type; b=BdK1HbbP4TeZf5AeRwW3oW8dEVMebPKsKE4F5WEFlGM+8iHpfqS3f8BOQhJkNCQYw3WmANc2hFz13WDEEAipS6rl1Ww3yCYPwJ8SycHrfF/0Gb+VynO3WKKQ6nwCfwdhbdzwwti1RVnyrcSUqWMetDGzeYITDz6MJ22sa+JUJHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Ygblr2Yzfz11PDj;
-	Sun, 26 Jan 2025 10:56:08 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4YgcmP6F1Fz1l06N;
+	Sun, 26 Jan 2025 11:41:41 +0800 (CST)
 Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 439A61802D1;
-	Sun, 26 Jan 2025 11:00:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 95F361A016C;
+	Sun, 26 Jan 2025 11:45:05 +0800 (CST)
 Received: from [10.174.179.155] (10.174.179.155) by
  kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sun, 26 Jan 2025 11:00:12 +0800
-Message-ID: <d38a53d6-1f10-4c72-b5f0-88d612093e83@huawei.com>
-Date: Sun, 26 Jan 2025 11:00:11 +0800
+ 15.2.1544.11; Sun, 26 Jan 2025 11:45:04 +0800
+Message-ID: <c3180839-a103-4f15-8a8d-ad8b654c4294@huawei.com>
+Date: Sun, 26 Jan 2025 11:45:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -48,154 +48,149 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] NFSv4: Fix deadlock during the running of state manager
-To: Trond Myklebust <trondmy@hammerspace.com>, "anna@kernel.org"
-	<anna@kernel.org>
-CC: "houtao1@huawei.com" <houtao1@huawei.com>, "yukuai1@huaweicloud.com"
-	<yukuai1@huaweicloud.com>, "yangerkun@huawei.com" <yangerkun@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lilingfeng@huaweicloud.com" <lilingfeng@huaweicloud.com>,
-	"jlayton@kernel.org" <jlayton@kernel.org>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>
-References: <20241213035908.1789132-1-lilingfeng3@huawei.com>
- <baa76c7946676fccafb1dbf658905a0ab3e3bdec.camel@hammerspace.com>
+Subject: Re: [PATCH] nfsd: set acl_access/acl_default after getting successful
+To: "zhangjian (CG)" <zhangjian496@huawei.com>, Li Lingfeng
+	<lilingfeng@huaweicloud.com>, <chuck.lever@oracle.com>, <jlayton@kernel.org>,
+	<neilb@suse.de>, <okorniev@redhat.com>, <kolga@netapp.com>,
+	<Dai.Ngo@oracle.com>, <tom@talpey.com>, <Trond.Myklebust@netapp.com>,
+	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>
+References: <20241107014705.2509463-1-lilingfeng@huaweicloud.com>
+ <93fd0f1c-812f-4393-ad73-4d07ecebf979@huawei.com>
 From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <baa76c7946676fccafb1dbf658905a0ab3e3bdec.camel@hammerspace.com>
+In-Reply-To: <93fd0f1c-812f-4393-ad73-4d07ecebf979@huawei.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemg500017.china.huawei.com (7.202.181.81)
 
 
-在 2024/12/18 1:00, Trond Myklebust 写道:
-> On Fri, 2024-12-13 at 11:59 +0800, Li Lingfeng wrote:
->> Unlinking file may cause the following deadlock in state manager:
->> [root@localhost test]# cat /proc/2943/stack
->> [<0>] rpc_wait_bit_killable+0x1a/0x90
->> [<0>] _nfs4_proc_delegreturn+0x60f/0x760
->> [<0>] nfs4_proc_delegreturn+0x13d/0x2a0
->> [<0>] nfs_do_return_delegation+0xba/0x110
->> [<0>] nfs_end_delegation_return+0x32c/0x620
->> [<0>] nfs_complete_unlink+0xc7/0x290
->> [<0>] nfs_dentry_iput+0x36/0x50
->> [<0>] __dentry_kill+0xaa/0x250
->> [<0>] dput.part.0+0x26c/0x4d0
->> [<0>] __put_nfs_open_context+0x1d9/0x260
->> [<0>] nfs4_open_reclaim+0x77/0xa0
->> [<0>] nfs4_do_reclaim+0x385/0xf40
->> [<0>] nfs4_state_manager+0x762/0x14e0
->> [<0>] nfs4_run_state_manager+0x181/0x330
->> [<0>] kthread+0x1a7/0x1f0
->> [<0>] ret_from_fork+0x34/0x60
->> [<0>] ret_from_fork_asm+0x1a/0x30
->> [root@localhost test]#
->>
->> It can be reproduced by following steps:
->> 1) client: open file
->> 2) client: unlink file
->> 3) server: service restart(trigger state manager in client)
->> 4) client: close file(in nfs4_open_reclaim, between
->> nfs4_do_open_reclaim
->> and put_nfs_open_context)
->>
->> Since the file has been open, unlinking will just set
->> DCACHE_NFSFS_RENAMED
->> for the dentry like this:
->> nfs_unlink
->>   nfs_sillyrename
->>    nfs_async_unlink
->>     // set DCACHE_NFSFS_RENAMED
->>
->> Restarting service will trigger state manager in client.
->> (1) NFS4_SLOT_TBL_DRAINING will be set to nfs4_slot_table since
->> session
->> has been reset.
->> (2) DCACHE_NFSFS_RENAMED is detected in nfs_dentry_iput. Therefore,
->> nfs_complete_unlink is called to trigger delegation return.
->> (3) Due to the slot table being in draining state and sa_privileged
->> being
->> 0, the delegation return will be queued and wait.
->> nfs4_state_manager
->>   nfs4_reset_session
->>    nfs4_begin_drain_session
->>     nfs4_drain_slot_tbl
->>      // set NFS4_SLOT_TBL_DRAINING (1)
->>   nfs4_do_reclaim
->>    nfs4_open_reclaim
->>     __put_nfs_open_context
->>      __dentry_kill
->>       nfs_dentry_iput // check DCACHE_NFSFS_RENAMED (2)
->>        nfs_complete_unlink
->>         nfs_end_delegation_return
->>          nfs_do_return_delegation
->>           nfs4_proc_delegreturn
->>            _nfs4_proc_delegreturn
->>             rpc_run_task
->>              ...
->>              nfs4_delegreturn_prepare
->>               nfs4_setup_sequence
->>                nfs4_slot_tbl_draining // check NFS4_SLOT_TBL_DRAINING
->>                                       // and sa_privileged is 0 (3)
->>                 rpc_sleep_on // set queued and add to slot_tbl_waitq
->>                  // rpc_task is async and wait in __rpc_execute
->>             rpc_wait_for_completion_task
->>              __rpc_wait_for_completion_task
->>               out_of_line_wait_on_bit
->>                rpc_wait_bit_killable // wait for rpc_task to complete
->>   <-------- can not get here to wake up rpc_task -------->
->>   nfs4_end_drain_session
->>    nfs4_end_drain_slot_table
->>     nfs41_wake_slot_table
->>
->> On the one hand, the state manager is blocked by the unfinished
->> delegation
->> return. As a result, nfs4_end_drain_session cannot be invoked to
->> clear
->> NFS4_SLOT_TBL_DRAINING and wake up waiting tasks.
->> On the other hand, since NFS4_SLOT_TBL_DRAINING is not cleared,
->> delegation return can only wait in the queue, resulting in a
->> deadlock.
->>
->> Fix it by turning the delegation return into a privileged operation
->> for
->> the case where the nfs_client is in NFS4CLNT_RECLAIM_REBOOT state.
->>
->> Fixes: 977fcc2b0b41 ("NFS: Add a delegation return into
->> nfs4_proc_unlink_setup()")
->> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
->> ---
->>   fs/nfs/nfs4proc.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->> index 405f17e6e0b4..f3b1f2725c4e 100644
->> --- a/fs/nfs/nfs4proc.c
->> +++ b/fs/nfs/nfs4proc.c
->> @@ -6878,7 +6878,7 @@ static int _nfs4_proc_delegreturn(struct inode
->> *inode, const struct cred *cred,
->>   		data->res.sattr_res = true;
->>   	}
->>   
->> -	if (!data->inode)
->> +	if (!data->inode || test_bit(NFS4CLNT_RECLAIM_REBOOT,
->> &server->nfs_client->cl_state))
->>   		nfs4_init_sequence(&data->args.seq_args, &data-
->>> res.seq_res, 1,
->>   				   1);
->>   	else
-> Rather than make the delegreturn be privileged, it seems better to make
-> that delegreturn be asynchronous, just like the unlink itself.
-
-Hi,
-
-In my understanding, the rpc_task in delegreturn has the RPC_TASK_ASYNC
-flag set, which means it is already asynchronous.
-In the described scenario, delegreturn waiting for this asynchronous
-rpc_task to complete caused the deadlock. I'm not entirely clear on what
-you mean by 'make that delegreturn be asynchronous.' Could you please
-elaborate a bit more on that for better clarity?
-
-Thanks.
-
+在 2024/11/28 9:17, zhangjian (CG) 写道:
+> there is one case when disk error cause get_inode_acl(inode, 
+> ACL_TYPE_DEFAULT) return EIO,
+> resp->acl_access will not be null. 
+> posix_acl_release(resp->acl_default) will trigger this warning.
 >
+Yes, in the problematic scenario, resp->acl_access would not be NULL.
+The memory pointed to by resp->acl_access would be freed and then accessed
+again, thereby triggering the issue.
+>
+>> If getting acl_default fails, acl_access and acl_default will be 
+>> released
+>> simultaneously. However, acl_access will still retain a pointer pointing
+>> to the released posix_acl, which will trigger a WARNING in
+>> nfs3svc_release_getacl like this:
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 26 PID: 3199 at lib/refcount.c:28
+>> refcount_warn_saturate+0xb5/0x170
+>> Modules linked in:
+>> CPU: 26 UID: 0 PID: 3199 Comm: nfsd Not tainted
+>> 6.12.0-rc6-00079-g04ae226af01f-dirty #8
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+>> 1.16.1-2.fc37 04/01/2014
+>> RIP: 0010:refcount_warn_saturate+0xb5/0x170
+>> Code: cc cc 0f b6 1d b3 20 a5 03 80 fb 01 0f 87 65 48 d8 00 83 e3 01 75
+>> e4 48 c7 c7 c0 3b 9b 85 c6 05 97 20 a5 03 01 e8 fb 3e 30 ff <0f> 0b eb
+>> cd 0f b6 1d 8a3
+>> RSP: 0018:ffffc90008637cd8 EFLAGS: 00010282
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff83904fde
+>> RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88871ed36380
+>> RBP: ffff888158beeb40 R08: 0000000000000001 R09: fffff520010c6f56
+>> R10: ffffc90008637ab7 R11: 0000000000000001 R12: 0000000000000001
+>> R13: ffff888140e77400 R14: ffff888140e77408 R15: ffffffff858b42c0
+>> FS:  0000000000000000(0000) GS:ffff88871ed00000(0000)
+>> knlGS:0000000000000000
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 0000562384d32158 CR3: 000000055cc6a000 CR4: 00000000000006f0
+>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>> Call Trace:
+>>   <TASK>
+>>   ? refcount_warn_saturate+0xb5/0x170
+>>   ? __warn+0xa5/0x140
+>>   ? refcount_warn_saturate+0xb5/0x170
+>>   ? report_bug+0x1b1/0x1e0
+>>   ? handle_bug+0x53/0xa0
+>>   ? exc_invalid_op+0x17/0x40
+>>   ? asm_exc_invalid_op+0x1a/0x20
+>>   ? tick_nohz_tick_stopped+0x1e/0x40
+>>   ? refcount_warn_saturate+0xb5/0x170
+>>   ? refcount_warn_saturate+0xb5/0x170
+>>   nfs3svc_release_getacl+0xc9/0xe0
+>>   svc_process_common+0x5db/0xb60
+>>   ? __pfx_svc_process_common+0x10/0x10
+>>   ? __rcu_read_unlock+0x69/0xa0
+>>   ? __pfx_nfsd_dispatch+0x10/0x10
+>>   ? svc_xprt_received+0xa1/0x120
+>>   ? xdr_init_decode+0x11d/0x190
+>>   svc_process+0x2a7/0x330
+>>   svc_handle_xprt+0x69d/0x940
+>>   svc_recv+0x180/0x2d0
+>>   nfsd+0x168/0x200
+>>   ? __pfx_nfsd+0x10/0x10
+>>   kthread+0x1a2/0x1e0
+>>   ? kthread+0xf4/0x1e0
+>>   ? __pfx_kthread+0x10/0x10
+>>   ret_from_fork+0x34/0x60
+>>   ? __pfx_kthread+0x10/0x10
+>>   ret_from_fork_asm+0x1a/0x30
+>>   </TASK>
+>> Kernel panic - not syncing: kernel: panic_on_warn set ...
+>>
+>> Clear acl_access/acl_default first and set both of them only when both
+>> ACLs are successfully obtained.
+>>
+>> Fixes: a257cdd0e217 ("[PATCH] NFSD: Add server support for NFSv3 ACLs.")
+>> Signed-off-by: Li Lingfeng <lilingfeng@huaweicloud.com>
+>> ---
+>>   fs/nfsd/nfs3acl.c | 14 ++++++++------
+>>   1 file changed, 8 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
+>> index 5e34e98db969..17579a032a5b 100644
+>> --- a/fs/nfsd/nfs3acl.c
+>> +++ b/fs/nfsd/nfs3acl.c
+>> @@ -29,10 +29,12 @@ static __be32 nfsd3_proc_getacl(struct svc_rqst 
+>> *rqstp)
+>>   {
+>>       struct nfsd3_getaclargs *argp = rqstp->rq_argp;
+>>       struct nfsd3_getaclres *resp = rqstp->rq_resp;
+>> -    struct posix_acl *acl;
+>> +    struct posix_acl *acl = NULL, *dacl = NULL;
+>>       struct inode *inode;
+>>       svc_fh *fh;
+>>   +    resp->acl_access = NULL;
+>> +    resp->acl_default = NULL;
+>>       fh = fh_copy(&resp->fh, &argp->fh);
+>>       resp->status = fh_verify(rqstp, &resp->fh, 0, NFSD_MAY_NOP);
+>>       if (resp->status != nfs_ok)
+>> @@ -56,19 +58,19 @@ static __be32 nfsd3_proc_getacl(struct svc_rqst 
+>> *rqstp)
+>>               resp->status = nfserrno(PTR_ERR(acl));
+>>               goto fail;
+>>           }
+>> -        resp->acl_access = acl;
+>>       }
+>>       if (resp->mask & (NFS_DFACL|NFS_DFACLCNT)) {
+>>           /* Check how Solaris handles requests for the Default ACL
+>>              of a non-directory! */
+>> -        acl = get_inode_acl(inode, ACL_TYPE_DEFAULT);
+>> -        if (IS_ERR(acl)) {
+>> -            resp->status = nfserrno(PTR_ERR(acl));
+>> +        dacl = get_inode_acl(inode, ACL_TYPE_DEFAULT);
+>> +        if (IS_ERR(dacl)) {
+>> +            resp->status = nfserrno(PTR_ERR(dacl));
+>>               goto fail;
+>>           }
+>> -        resp->acl_default = acl;
+>>       }
+>>   +    resp->acl_access = acl;
+>> +    resp->acl_default = dacl;
+>>       /* resp->acl_{access,default} are released in 
+>> nfs3svc_release_getacl. */
+>>   out:
+>>       return rpc_success;
 
