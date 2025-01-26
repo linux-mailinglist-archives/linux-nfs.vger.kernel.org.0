@@ -1,65 +1,60 @@
-Return-Path: <linux-nfs+bounces-9624-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9625-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F72CA1C779
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 12:18:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BEEBA1C7A3
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 13:06:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA2583A7054
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 11:18:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFE9B16532F
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 12:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85377082D;
-	Sun, 26 Jan 2025 11:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E65070805;
+	Sun, 26 Jan 2025 12:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mb/BOctZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xy4wZXi7"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661D025A624;
-	Sun, 26 Jan 2025 11:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D502B3D81;
+	Sun, 26 Jan 2025 12:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737890304; cv=none; b=AfgAez1fs0v6OxJP0Jz1on+SkiwSyMdCQHDtrhGbkQrXj+OitsR0YJ5v3DlqchjPOUYggsYX5Fna7obghYIcqqNcUt84Y6u9FmEBMB3xHEC/leD6jmMlvec16w04fRXsH0l0AJHpG3R88TpXRTzIoV1AHUXg3DMpuxE8dWIqeB4=
+	t=1737893171; cv=none; b=ZTEX+eKC4lTSecNT/CSLwU2+iryB+SRiuQgXrkuhap/OzrZ9XH/ReISFrMLTDUgTbI74jcVAj4pIRYBA55Ow7PN5MjVeVTEMmKFvAmXZa79PIrSqdJ4lS3YxVvfyfSiyoH6is+fGpK3XOA+Yl39vGIKFt7JogZid1wk6ssqyImU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737890304; c=relaxed/simple;
-	bh=hrOUKmqCrVTpXsUOcQzsiqAb+RLwDDWzgsOzHFQRaP4=;
+	s=arc-20240116; t=1737893171; c=relaxed/simple;
+	bh=8w9yy0qIo4JBg8oU5fWo8FhvNfpsY5b4bWhdsTY5puk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fWFQp9IfawFnLIgv/Ma4i0u74mCqoBNpYPZZjsWVm17BKlzozPcWqqXc1SiZJsYf9BVhtAOfyKC+jsIHRv9/oMH045EAjEkIZkvMJTmkFMnsCAzbdk96c756ZHEl4mT47wOqpbM7QZ3+gvXQch5e71K2fse8EhbjRSILovFBkHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mb/BOctZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C9AC4CED3;
-	Sun, 26 Jan 2025 11:18:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=oPorQ0In8CgVkVn/miK57HnRMAr0dgYBRKfMdV11u7BI9SqDUt48zB/FsY/+IdmNU4ZXEzZCBj5eBlrJAYVT7UdsZ2Jd9+glaHNTBzdJiyJGI1kCZUkupP4MsIcWCQu4Ru4FD3/jvSbDjLyAFW+89OLvzIGhpoOs8U/oUvHqk1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xy4wZXi7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A022C4CEDF;
+	Sun, 26 Jan 2025 12:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737890303;
-	bh=hrOUKmqCrVTpXsUOcQzsiqAb+RLwDDWzgsOzHFQRaP4=;
+	s=k20201202; t=1737893171;
+	bh=8w9yy0qIo4JBg8oU5fWo8FhvNfpsY5b4bWhdsTY5puk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Mb/BOctZcse1z0vcVpBXEBXqzhC0mJVtIIpqk/xkKfbDLlI+IvQV9x7nEJ7NteO9a
-	 BhCpbtk8DdkZLZyPL15MwCQDYFtvQTfSwdnG414xvRao6obLs6GRtFWNHh6ggRzxXZ
-	 pDoZLT8nqLRuiwulGsEoMth8ONNF6QqvciUPyPMW9oIo3Kv+Waajs8gGQVRKBozQ2i
-	 8pNHR1FcqUyStFnYWU6mYRj4JLC/Hd3/0xT1M1zsnQBByxTxCAbSfrWZQcAsyryqAX
-	 bb0qq1VmOX3rpkgRSW9BQaz7L2FiTGit3BuCR+yVwSUiF4wK4aja0h2zalcWa6BvLo
-	 bweW+zQk+qq1w==
-Message-ID: <d52cf9b9b83753434c1b0098afe1b77bf65590d4.camel@kernel.org>
-Subject: Re: [PATCH 1/8] nfsd: don't restart v4.1+ callback when
- RPC_SIGNALLED is set
+	b=Xy4wZXi7JLSJHNOhEyfaPsLGPhIdz80Sbo57eCmPNx1srqF+ubbjjmArA9aVFFGim
+	 iDHwPz/8WyTjJom+rIiwDDNElsbSpCmKYfoZy6t9Gopjsp8BcAoTAj1oLVSNskRL8i
+	 iGcIQOomd1YvjsIdxDjy6KLxg4uORJZtug5PzNkhBwaTpDXqAAjZ+tilh+lD4ea7B+
+	 o5VsirKBcaX5T3SjDRbEuU0v3DA6RkNQcvA0W3y5k5Px9lMFiIOGtjTEnni4mIT0Pf
+	 ocb/uYvPByTOHAd+11bu+wIu2jtfY5DtWIiuaATWwP7m8U0LxSjoC1PCQ3K8gBM3sQ
+	 jP3nJa62h6qjA==
+Message-ID: <8d8de0b77a258e1c7e7fbcde956c8eba415d4b22.camel@kernel.org>
+Subject: Re: kernel NULL pointer dereference: Workqueue: events_unbound
+ nfsd_file_gc_worker, RIP: 0010:svc_wake_up+0x9/0x20
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  "J. Bruce Fields" <bfields@fieldses.org>, Kinglong Mee
- <kinglongmee@gmail.com>, Trond Myklebust <trondmy@kernel.org>,  Anna
- Schumaker	 <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni	 <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Date: Sun, 26 Jan 2025 06:18:21 -0500
-In-Reply-To: <173784610046.22054.813567864998956753@noble.neil.brown.name>
-References: <20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org>
-	, <20250123-nfsd-6-14-v1-1-c1137a4fa2ae@kernel.org>
-	 <173784610046.22054.813567864998956753@noble.neil.brown.name>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Sun, 26 Jan 2025 07:06:09 -0500
+In-Reply-To: <Z5Xq4KOWcF3Z-GZT@eldamar.lan>
+References: <Z5VNJJUuCwFrl2Pj@eldamar.lan>
+	 <7d9f2a8aede4f7ca9935a47e1d405643220d7946.camel@kernel.org>
+	 <Z5Xq4KOWcF3Z-GZT@eldamar.lan>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -144,83 +139,81 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-01-26 at 10:01 +1100, NeilBrown wrote:
-> On Fri, 24 Jan 2025, Jeff Layton wrote:
-> > This is problematic, since the RPC might have been entirely successful.
-> > There is no point in restarting a v4.1+ callback just because
-> > RPC_SIGNALLED is true. The v4.1+ error handling has other mechanisms fo=
-r
-> > detecting when it should retransmit the RPC.
+On Sun, 2025-01-26 at 08:57 +0100, Salvatore Bonaccorso wrote:
+> Hi Jeff,
 >=20
-> But why might RPC_SIGNALLED() ever be true?
-> The flag RPC_TASK_SIGNALLED is only ever set by rpc_signal_task() which
-> is only called from rpc_killall_tasks() and __rpc_execute() for
-> non-async tasks which doesn't apply to nfsd callbacks as they are
-> started with rpc_call_async().
+> On Sat, Jan 25, 2025 at 05:55:50PM -0500, Jeff Layton wrote:
+> > On Sat, 2025-01-25 at 21:44 +0100, Salvatore Bonaccorso wrote:
+> > > Hi Chuck, Jeff, NFSD maintainers,
+> > >=20
+> > > In Debian we got a report from a user which triggered an issue during
+> > > package updates hwere nfs-kernel-server restart was involved, then
+> > > hanging and included a kernel trace of a NULL pointer dereference.
+> > >=20
+> > > The full report is at:
+> > > https://bugs.debian.org/1093734
+> > >=20
+> > > While I was not able to trigger the issue, the provided log is as
+> > > follows:
+> > >=20
+> > > 2025-01-21T12:07:01.516291+01:00 $HOST kernel: device-mapper: core: C=
+ONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not b=
+e recorded in the IMA log.
+> > > 2025-01-21T12:07:01.516310+01:00 $HOST kernel: device-mapper: uevent:=
+ version 1.0.3
+> > > 2025-01-21T12:07:01.516312+01:00 $HOST kernel: device-mapper: ioctl: =
+4.48.0-ioctl (2023-03-01) initialised: dm-devel@lists.linux.dev
+> > > 2025-01-21T12:07:13.528044+01:00 $HOST kernel: NFSD: Using nfsdcld cl=
+ient tracking operations.
+> > > 2025-01-21T12:07:13.528061+01:00 $HOST kernel: NFSD: no clients to re=
+claim, skipping NFSv4 grace period (net f0000000)
+> > > 2025-01-21T12:07:17.558915+01:00 $HOST blkmapd[1148]: exit on signal(=
+15)
+> > > 2025-01-21T12:07:17.574410+01:00 $HOST blkmapd[239859]: open pipe fil=
+e /run/rpc_pipefs/nfs/blocklayout failed: No such file or directory
+> > > 2025-01-21T12:07:18.015541+01:00 $HOST kernel: BUG: kernel NULL point=
+er dereference, address: 0000000000000090
+> >=20
+> > Thanks for the bug report. It's getting late here, so I can only take a
+> > quick look. svc_wake_up is pretty small:
+> >=20
+> > void svc_wake_up(struct svc_serv *serv)
+> > {
+> >         struct svc_pool *pool =3D &serv->sv_pools[0];
+> >=20
+> >         set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> >         svc_pool_wake_idle_thread(pool);
+> > }
+> >=20
+> > pahole on my machine says that struct svc_serv has this at offset 0x90:
+> >=20
+> > 	struct svc_pool *          sv_pools;             /*  0x90   0x8 */
+> >=20
+> > So it looks like the nn->nfsd_serv was a NULL pointer. That only
+> > happens when we shut down the server, so this looks like a race between
+> > filecache garbage collection with shutdown.
+> >=20
+> > The filecache gets shut down in nfsd_shutdown_net, which gets called
+> > _after_ setting the nn->nfsd_serv pointer to NULL. We'll have to look
+> > at whether we can reorder the NULL pointer setting to later, or work
+> > around this some other way.
+> >=20
+> > Could I trouble you to open a bug for this at bugzilla.kernel.org?
 >=20
-> rpc_killall_tasks() is called by fs/nfs/ which isn't relevant for us,
-> and from rpc_shutdown_client().  In those cases we certainly don't want
-> the request to be retried, though the nfsd4_process_cb_update() case is
-> a little interesting as we do want it to be retried, but in a different
-> client.
+> Thanks a lot for your quick response on it and the analysis.
+>=20
+> Sure I can fill a bug in bugzilla.kernel.org, I see you submitted a
+> patch already, do you still want me to do it?
 >
-> So the code you are removing is either dead code because something else
-> will prevent the restart when a client is being shut down, or it is bad
-> code because it would delay rpc_shutdown_client() while the request is
-> retried.=20
+> If so I try to reference as well all followups so that the information
+> is not spread around threads.
 >=20
-> I haven't dug the extra step to figure out which, but either way I think
-> the code should go.
->=20
+> Thanks a lot for your work!
 >=20
 
-Thanks. That was my analysis too.
+I think you can skip the BZ for now.
 
-rpc_shutdown_client() is called when we tear down and rebuild the
-rpc_client. nfsd does this in setup_callback_client(), which gets
-called from nfsd4_process_cb_update() (basically when we detect that
-the backchannel is having problems).
-
-There are really only two states: We either got a reply from the server
-before the client went down, or we didn't. In the case where we got a
-reply, there is no need to retry anything. In the case where we didn't,
-the tk_status will be '1', so there is no need to check RPC_SIGNALLED()
-at all here.
-
-The existing code could lead to the call being retried when we had
-already gotten a perfectly valid reply.
-
-> >=20
-> > Fixes: 7ba6cad6c88f ("nfsd: New helper nfsd4_cb_sequence_done() for pro=
-cessing more cb errors")
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/nfsd/nfs4callback.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index 50e468bdb8d4838b5217346dcc2bd0fec1765c1a..e12205ef16ca932ffbcc86d=
-67b0817aec2436c89 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -1403,9 +1403,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
-k *task, struct nfsd4_callback
-> >  	}
-> >  	trace_nfsd_cb_free_slot(task, cb);
-> >  	nfsd41_cb_release_slot(cb);
-> > -
-> > -	if (RPC_SIGNALLED(task))
-> > -		goto need_restart;
-> >  out:
-> >  	return ret;
-> >  retry_nowait:
-> >=20
-> > --=20
-> > 2.48.1
-> >=20
-> >=20
->=20
-
+Thanks again for the bug report!
 --=20
 Jeff Layton <jlayton@kernel.org>
 
