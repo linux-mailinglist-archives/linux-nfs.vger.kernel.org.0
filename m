@@ -1,145 +1,210 @@
-Return-Path: <linux-nfs+bounces-9613-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9614-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FC96A1C61F
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:20:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C797DA1C629
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 03:40:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E4D483A876B
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 02:20:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42C193A877A
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 02:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97C9A42AA6;
-	Sun, 26 Jan 2025 02:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6103713B5A0;
+	Sun, 26 Jan 2025 02:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0SZzvM3W";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tIaox188";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TXjauzDd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SEGJ6X40"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4621D8828;
-	Sun, 26 Jan 2025 02:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2544A08;
+	Sun, 26 Jan 2025 02:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737858015; cv=none; b=EZxgKDM8fHh5U2G6b+V7J6e8rIs3UjLxxgULH11dC89Shd/L4e8GbUyJuLpMZ6yta+U9/+rMUycW6SLhwbH1oHSPIrTfa4dst9f86RORJK67Ns1etu+Ep9oDNBrV3fop0KZsqfE9LmonVs9KkqOEwHEhFh7mJVRPfRCpD7BDYvg=
+	t=1737859200; cv=none; b=fIXL8Cwhq1e5qmYzBVCD4+/TbzhuLwniUtzVL0OHjfFdN5pR4PBAEzdM2Acoy3xbkgi9/xaIYBo2Elx3gR6YHV1KLmK/RnbRHkij1y89AH9iH6LlKBAtlDlmwAKzDnmj3usmtWj0A2zqcYxBMvsrnR234TjRebZOOlQ05JkpCVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737858015; c=relaxed/simple;
-	bh=3R9vtvzA2fnGngFx7Exo7oKdsmC2U3/VpD/JY68oUkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PpPHZtIPn5TMtL+zvh9+dnc6MZI17NWAzFel/Uq51UcWnSwDXtov/VUW+vbx0KXKnwYG3QD4zgUneBqH/B/+6L0XHXC450qRNYPkS2ev4GB5bOmr3Tq7ZZu8VMU/CS03YdKsOCrEYbEcbIgARSHFsBRyEis8nUwkQ6Tr3Q9w8G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4YgZvL0dGVzRlnl;
-	Sun, 26 Jan 2025 10:17:34 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 64A861402C1;
-	Sun, 26 Jan 2025 10:20:08 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sun, 26 Jan 2025 10:20:06 +0800
-Message-ID: <e4510b86-e8d9-4550-bcca-9f8f03769be2@huawei.com>
-Date: Sun, 26 Jan 2025 10:20:05 +0800
+	s=arc-20240116; t=1737859200; c=relaxed/simple;
+	bh=QFMBjsoLWWWoWOgJHwEHdUEwl0VsQK1oKZnKsFVOxIw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ao9fXqqlxHOvy6vQXxtNynje9zW1ZFFApLXnw1FtbFo/qFLjZQdFxHW7k69YLV+WpUjS1kpptlnNX+t6yyjU5FvKtb6371jhuUgL/emS1/M91QVPzH1hcQqKhuCB/wCOBiwVojb6juVqQxXEWjMx44iGazgkgjRuVsVgoX6x810=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0SZzvM3W; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tIaox188; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TXjauzDd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SEGJ6X40; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 48F061F38F;
+	Sun, 26 Jan 2025 02:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737859190; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
+	b=0SZzvM3W437wmXQKrP70A1Mk0PNkNnfgXmaPs7HfoXAAfitBkF6K87aHXL+ntzGdSoVjtM
+	eX9EFwKXDGQdeOMVfZfVKZl4p7RB9mO/XWJ3idwwr3mQjvyn6Jz4+XvHRisRfpW939jeD4
+	px56e/8lf4zm5gQg+rcRo3y/q41/Qj8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737859190;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
+	b=tIaox188X/KitKsEVFJGDGtJOAQwzeTsfEm5M1aOL2N8NX6ruNxkmJRKKCQxsr2YUjJiYF
+	9Hipfz29phBQTHBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737859189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
+	b=TXjauzDdmVMPTLR6OzAS0jcEgT5W7V7Id5tL2EL/18791G/uGk/Zyyr9dbB6/ge1iUEmBr
+	CGMzfHh/LzqPzhf5ULvqpSc+sW+D2IiHdtZ9q8r7qba0n+XEwqZKkSOD5jYdXpgaDeJ0Hx
+	i5jwcCtEVRDUPDLC8ibibP5hJfPh4qI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737859189;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gCQJUUBiO3dOGrsJphYrnfke3LHTbRseA+TVYS2+6Kg=;
+	b=SEGJ6X40A46Pi2lhhJEOAR2V/SL1j8IY+xVnEkALWKI1Ri0oWO21YK/GdCu+UsPDAUIZUM
+	+HkMsKGHLkl8aoCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FB4913782;
+	Sun, 26 Jan 2025 02:39:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +pnuDHKglWc0LgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Sun, 26 Jan 2025 02:39:46 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] SUNRPC: Set tk_rpc_status when RPC_TASK_SIGNALLED is
- detected
-To: Trond Myklebust <trondmy@hammerspace.com>, "tom@talpey.com"
-	<tom@talpey.com>, "davem@davemloft.net" <davem@davemloft.net>,
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "okorniev@redhat.com" <okorniev@redhat.com>,
-	"anna@kernel.org" <anna@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
-	"horms@kernel.org" <horms@kernel.org>, "Dai.Ngo@oracle.com"
-	<Dai.Ngo@oracle.com>, "yangerkun@huawei.com" <yangerkun@huawei.com>,
-	"jlayton@kernel.org" <jlayton@kernel.org>, "edumazet@google.com"
-	<edumazet@google.com>, "neilb@suse.de" <neilb@suse.de>
-CC: "houtao1@huawei.com" <houtao1@huawei.com>, "linux-nfs@vger.kernel.org"
-	<linux-nfs@vger.kernel.org>, "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lilingfeng@huaweicloud.com" <lilingfeng@huaweicloud.com>,
-	"yukuai1@huaweicloud.com" <yukuai1@huaweicloud.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-References: <20250114144101.2511043-1-lilingfeng3@huawei.com>
- <fed3cd85-0a15-ae30-b167-84881d6a5efd@huawei.com>
- <642413c4bdbe296db722f0091ffa5190c992eb8e.camel@hammerspace.com>
- <58bf9d83-b58d-e5a6-4096-64eb96f3854a@huawei.com>
- <4d3e8d4385a511860ec9018b3ca864e7ef3a7b48.camel@hammerspace.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <4d3e8d4385a511860ec9018b3ca864e7ef3a7b48.camel@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Salvatore Bonaccorso" <carnil@debian.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject:
+ Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling svc_wake_up
+In-reply-to: <20250125-kdevops-v1-1-a76cf79127b8@kernel.org>
+References: <20250125-kdevops-v1-1-a76cf79127b8@kernel.org>
+Date: Sun, 26 Jan 2025 13:39:38 +1100
+Message-id: <173785917824.22054.15604701394410740651@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
+
+On Sun, 26 Jan 2025, Jeff Layton wrote:
+> nfsd_file_dispose_list_delayed can be called from the filecache
+> laundrette, which is shut down after the nfsd threads are shut down and
+> the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then there
+> are no threads to wake.
+>=20
+> Ensure that the nn->nfsd_serv pointer is non-NULL before calling
+> svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since the
+> svc_serv is not freed until after the filecache laundrette is cancelled.
+>=20
+> Fixes: ffb402596147 ("nfsd: Don't leave work of closing files to a work que=
+ue")
+> Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+> Closes: https://lore.kernel.org/linux-nfs/7d9f2a8aede4f7ca9935a47e1d4056432=
+20d7946.camel@kernel.org/
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> This is only lightly tested, but I think it will fix the bug that
+> Salvatore reported.
+> ---
+>  fs/nfsd/filecache.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2dd750f43=
+239b4af6d37b0 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct list_head *disp=
+ose)
+>  						struct nfsd_file, nf_gc);
+>  		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+>  		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> +		struct svc_serv *serv;
+> =20
+>  		spin_lock(&l->lock);
+>  		list_move_tail(&nf->nf_gc, &l->freeme);
+>  		spin_unlock(&l->lock);
+> -		svc_wake_up(nn->nfsd_serv);
+> +
+> +		/*
+> +		 * The filecache laundrette is shut down after the
+> +		 * nn->nfsd_serv pointer is cleared, but before the
+> +		 * svc_serv is freed.
+> +		 */
+> +		serv =3D nn->nfsd_serv;
+
+I wonder if this should be READ_ONCE() to tell the compiler that we
+could race with clearing nn->nfsd_serv.  Would the comment still be
+needed?
+
+Otherwise:
+
+ Reviewed-by: NeilBrown <neilb@suse.de>
+
+Thanks,
+NeilBrown
 
 
-在 2025/1/17 11:15, Trond Myklebust 写道:
-> On Fri, 2025-01-17 at 10:29 +0800, yangerkun wrote:
->>
->> 在 2025/1/17 4:52, Trond Myklebust 写道:
->>> On Thu, 2025-01-16 at 19:43 +0800, yangerkun wrote:
->>>> Hi,
->>>>
->>>> Thanks for the patch.
->>>>
->>>> Before 39494194f93b("SUNRPC: Fix races with rpc_killall_tasks()",
->>>> every
->>>> time we set RPC_TASK_SIGNALLED, when we go through __rpc_execute,
->>>> this
->>>> rpc_task will immediate break and exist.
->>>>
->>>> However after that, __rpc_execute won't judge RPC_TASK_SIGNNALED,
->>>> so
->>>> for
->>>> the case like you point out below, even after your commit
->>>> rpc_check_timeout will help break and exist eventually, but this
->>>> rpc_task has already do some work. I prefer reintroduce judging
->>>> RPC_TASK_SIGNNALED in __rpc_execute to help exist immediatly.
->>>>
->>> Better yet... Let's get rid of the RPC_TASK_SIGNALLED flag
->>> altogether
->>> and just replace
->>>
->>> #define RPC_TASK_SIGNALLED(task) (READ_ONCE(task->tk_rpc_status) ==
->>> -ERESTARTSYS)
+> +		if (serv)
+> +			svc_wake_up(serv);
+>  	}
+>  }
+> =20
+>=20
+> ---
+> base-commit: 7541a5b8073cf0d9e2d288cac581f1aa6c11671d
+> change-id: 20250125-kdevops-0989825ae8db
+>=20
+> Best regards,
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
 
-Hi,
-
-I'm not quite clear on how this can resolve the issue.
-If we remove the RPC_TASK_SIGNALLED flag and replace setting tk_runstate
-to RPC_TASK_SIGNALLED with setting tk_rpc_status to -ERESTARTSYS in
-rpc_signal_task, wouldn't setting tk_rpc_status back to 0 in
-__rpc_restart_call still lead to an infinite loop in the rpc_task?
-Could you please provide a more detailed explanation?
-
-Thanks.
-
->> Hi,
->>
->> Thanks for your reply! Yeah, if all the places where tk_rpc_status is
->> updated are by calling rpc_task_set_rpc_status, we can use
->> task->tk_rpc_status == -ERESTARTSYS to determine whether rpc_task is
->> RPC_TASK_SIGNALLED. But for the case like Li has provided,
->> __rpc_restart_call won't do this, and will overwrite tk_rpc_status
->> unconditionally. This won't be a stable solution. Maybe it's better
->> to
->> change __rpc_restart_call calling rpc_task_set_rpc_status too? And
->> __rpc_execute will be enough to help solve this case.
->>
->>
-> That would break __rpc_restart_call() to the point of rendering it
-> completely useless.
-> The whole purpose of that call is to give the NFS layer a chance to
-> handle errors in the exit callback, and then kick off a fresh call.
-> Your suggestion would mean that any RPC level error sticks around, and
-> causes the new call to immediately fail.
->
-> I see no point in doing anything more than fixing the looping
-> behaviour. Eliminating the redundant flag will do that.
->
 
