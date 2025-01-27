@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-9686-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9687-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFD75A1D8BB
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:51:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4EEFA1D8C2
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:52:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 217B33A50B5
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:51:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 011C81886A50
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:52:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 159785B211;
-	Mon, 27 Jan 2025 14:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640E8EED7;
+	Mon, 27 Jan 2025 14:52:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skL/OWKe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Za5mNuYJ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9EB55887;
-	Mon, 27 Jan 2025 14:51:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392603D64;
+	Mon, 27 Jan 2025 14:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737989462; cv=none; b=kKCugr+jcj4hQFnsQfEKQzFWTtO3Mqpo4YH9esjakgEA2wKP19pglNg3GaYyI9sIuGiRl2RYwgM3Kx7vaGy+kpfbeInjUcoD7ZFWw7ThdCZPHCw11MhWiVG0U/+HNB536/Hd0CPmntLz+T8LpwoEE/wuxOMxv/8+VcbgDluKP+U=
+	t=1737989565; cv=none; b=cOD3xYgVwg9I9CCKv1HHzdktnMBGRN8IZ0n7EFvF4DL4eS15pxSkevTwMfdKWAie3/OeGqhQVyzcKwZXA8bSvZJNHGeAdQ069NZ4FSZ7VXIcEZWGT6uGZ3EtC2CjZf0Os41LfCypfWuc3Gj+PV9ouXFoqs+oGaC03EH6RahPh0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737989462; c=relaxed/simple;
-	bh=iNoxg0PLRlCXZNFpo0ojPHSZVpecRkRiMv7DxJtLwjU=;
+	s=arc-20240116; t=1737989565; c=relaxed/simple;
+	bh=OYS2BxANUUmtAHJhPVXiS84sGecWQEgf/A48F9V314Y=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KqcV5OKkjRBCScDZzqUKSYge2mbzfqFUe+5Ytg7bPpQeR8NBZdDYy8/CbO5rWVOh9R6n+U9IHCKycRSzG+Z3pZdBKAMgoraUWPIHOjO/TFe9LvRMPnw5Ff8BbeEbi5rs2aYqU3NRCejsoBJYDkEoKPxqsftdsXVWtgpgX3kbqPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skL/OWKe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 436DFC4CEE1;
-	Mon, 27 Jan 2025 14:51:00 +0000 (UTC)
+	 Content-Type:MIME-Version; b=gZHaedjAb4SeB6V5R0shZgZHUloDyYqFODvz8VQ0Y3k8yvAFCrhSypaOPAJpLSaw852dXg42n+TiNp8x6M/bDayhzIGZxAp/NmaMONwmPKnt3PnqUl8vPLM8n89bM3EK9Y9I5GGQGReY6SwMa6UZq17wS7FRi2SCchKZvrbLVok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Za5mNuYJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 660AEC4CED2;
+	Mon, 27 Jan 2025 14:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737989461;
-	bh=iNoxg0PLRlCXZNFpo0ojPHSZVpecRkRiMv7DxJtLwjU=;
+	s=k20201202; t=1737989564;
+	bh=OYS2BxANUUmtAHJhPVXiS84sGecWQEgf/A48F9V314Y=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=skL/OWKel8NwKhWAxd2Bu7Wk9yoq+YIoVfxiX9DdZoOX7bUTuPPXKgOLuYx+t98/I
-	 8yaOzDoLdPbRS5Jh2z0tH8f+WWUvgZS46Yr+JKra6pgc+4hnC26xatPdl02FwvyJnf
-	 qXU1xjg6ZCfV9BFXTvns584g1KKMbzILSYcbF/C5LraBqPsSMB9T+HLXewRGdqflja
-	 aOAeuDoJX8OP883moSPxmkk7S4VT2n9lYvyM7nGUfKW57/v/JBlVHVC2DPd+2VMB1p
-	 /Jzf2/Cb8jK0fFZq8BupUWsfutSDIjbMiHUj3ck+aO2kGaRw3dLOosuVRnGyLTyiYI
-	 rxNa+ZAINb0vA==
-Message-ID: <34922f8d915c7d10f04d65fd44a50ba6d9b1615b.camel@kernel.org>
-Subject: Re: [PATCH v2] nfsd: clear acl_access/acl_default after releasing
- them
+	b=Za5mNuYJh6MnB3SZlgnPKXDCXW75dVMH4ofp4tRb2Jgl2L8A+tcFiiTn4s300k9wr
+	 WIHTOIlF4Hnv53mM6vAESoQNAXgYofaZg6nGjS5+I+Z2udkq5CjL7TCoUFx8nMZxUL
+	 DwDT5TloZROAxpoZNSo+UmQV9OlvKhrvks02jMLiZ6huE4BP1/mdIhuRZQR5V0dI3h
+	 jsqs4ks0ep2mAnwAhxx1BYT6QcPDoZkA7/lXRZtsogwbvmMUzzLDglOOgrlJGLJcJE
+	 2TVPKpONhayzIWayRfWTtcL5fm7n5DDnbz1l6d+VAa3nvOelRiVh1t1SVmfek/A22u
+	 We5azjHORF5nw==
+Message-ID: <2f2cc7c86601328a458dc32482681364b4a22fca.camel@kernel.org>
+Subject: Re: [PATCH 0/2] nfsd: add a new mapping and remove the redundant one
 From: Jeff Layton <jlayton@kernel.org>
 To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
  neilb@suse.de, 	okorniev@redhat.com, kolga@netapp.com, Dai.Ngo@oracle.com,
- tom@talpey.com, 	Trond.Myklebust@netapp.com, rick.macklem@gmail.com,
- zhangjian496@huawei.com, 	linux-nfs@vger.kernel.org,
+ tom@talpey.com, 	trondmy@hammerspace.com, linux-nfs@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
 	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Mon, 27 Jan 2025 09:50:59 -0500
-In-Reply-To: <20250126094722.738358-1-lilingfeng3@huawei.com>
-References: <20250126094722.738358-1-lilingfeng3@huawei.com>
+Date: Mon, 27 Jan 2025 09:52:42 -0500
+In-Reply-To: <20250126095045.738902-1-lilingfeng3@huawei.com>
+References: <20250126095045.738902-1-lilingfeng3@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,116 +137,16 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-01-26 at 17:47 +0800, Li Lingfeng wrote:
-> If getting acl_default fails, acl_access and acl_default will be released
-> simultaneously. However, acl_access will still retain a pointer pointing
-> to the released posix_acl, which will trigger a WARNING in
-> nfs3svc_release_getacl like this:
+On Sun, 2025-01-26 at 17:50 +0800, Li Lingfeng wrote:
+> Add a new mapping and delete a redundant one.
 >=20
-> ------------[ cut here ]------------
-> refcount_t: underflow; use-after-free.
-> WARNING: CPU: 26 PID: 3199 at lib/refcount.c:28
-> refcount_warn_saturate+0xb5/0x170
-> Modules linked in:
-> CPU: 26 UID: 0 PID: 3199 Comm: nfsd Not tainted
-> 6.12.0-rc6-00079-g04ae226af01f-dirty #8
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-> 1.16.1-2.fc37 04/01/2014
-> RIP: 0010:refcount_warn_saturate+0xb5/0x170
-> Code: cc cc 0f b6 1d b3 20 a5 03 80 fb 01 0f 87 65 48 d8 00 83 e3 01 75
-> e4 48 c7 c7 c0 3b 9b 85 c6 05 97 20 a5 03 01 e8 fb 3e 30 ff <0f> 0b eb
-> cd 0f b6 1d 8a3
-> RSP: 0018:ffffc90008637cd8 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff83904fde
-> RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88871ed36380
-> RBP: ffff888158beeb40 R08: 0000000000000001 R09: fffff520010c6f56
-> R10: ffffc90008637ab7 R11: 0000000000000001 R12: 0000000000000001
-> R13: ffff888140e77400 R14: ffff888140e77408 R15: ffffffff858b42c0
-> FS:  0000000000000000(0000) GS:ffff88871ed00000(0000)
-> knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000562384d32158 CR3: 000000055cc6a000 CR4: 00000000000006f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  ? refcount_warn_saturate+0xb5/0x170
->  ? __warn+0xa5/0x140
->  ? refcount_warn_saturate+0xb5/0x170
->  ? report_bug+0x1b1/0x1e0
->  ? handle_bug+0x53/0xa0
->  ? exc_invalid_op+0x17/0x40
->  ? asm_exc_invalid_op+0x1a/0x20
->  ? tick_nohz_tick_stopped+0x1e/0x40
->  ? refcount_warn_saturate+0xb5/0x170
->  ? refcount_warn_saturate+0xb5/0x170
->  nfs3svc_release_getacl+0xc9/0xe0
->  svc_process_common+0x5db/0xb60
->  ? __pfx_svc_process_common+0x10/0x10
->  ? __rcu_read_unlock+0x69/0xa0
->  ? __pfx_nfsd_dispatch+0x10/0x10
->  ? svc_xprt_received+0xa1/0x120
->  ? xdr_init_decode+0x11d/0x190
->  svc_process+0x2a7/0x330
->  svc_handle_xprt+0x69d/0x940
->  svc_recv+0x180/0x2d0
->  nfsd+0x168/0x200
->  ? __pfx_nfsd+0x10/0x10
->  kthread+0x1a2/0x1e0
->  ? kthread+0xf4/0x1e0
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork+0x34/0x60
->  ? __pfx_kthread+0x10/0x10
->  ret_from_fork_asm+0x1a/0x30
->  </TASK>
-> Kernel panic - not syncing: kernel: panic_on_warn set ...
+> Li Lingfeng (2):
+>   nfsd: map the ELOOP to nfserr_symlink to avoid warning
+>   nfsd: remove the redundant mapping of nfserr_mlink
 >=20
-> Clear acl_access/acl_default after posix_acl_release is called to prevent
-> UAF from being triggered.
+>  fs/nfsd/vfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> Fixes: a257cdd0e217 ("[PATCH] NFSD: Add server support for NFSv3 ACLs.")
-> Link: https://lore.kernel.org/all/20241107014705.2509463-1-lilingfeng@hua=
-weicloud.com/
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
-> Changes in v2:
-> - Clear acl_access/acl_default after releasing them, instead of
->   modifying the logic for setting them.
-> - Clear acl_access/acl_default in nfs2acl.c.
-> ---
->  fs/nfsd/nfs2acl.c | 2 ++
->  fs/nfsd/nfs3acl.c | 2 ++
->  2 files changed, 4 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
-> index 4e3be7201b1c..5fb202acb0fd 100644
-> --- a/fs/nfsd/nfs2acl.c
-> +++ b/fs/nfsd/nfs2acl.c
-> @@ -84,6 +84,8 @@ static __be32 nfsacld_proc_getacl(struct svc_rqst *rqst=
-p)
->  fail:
->  	posix_acl_release(resp->acl_access);
->  	posix_acl_release(resp->acl_default);
-> +	resp->acl_access =3D NULL;
-> +	resp->acl_default =3D NULL;
->  	goto out;
->  }
-> =20
-> diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
-> index 5e34e98db969..7b5433bd3019 100644
-> --- a/fs/nfsd/nfs3acl.c
-> +++ b/fs/nfsd/nfs3acl.c
-> @@ -76,6 +76,8 @@ static __be32 nfsd3_proc_getacl(struct svc_rqst *rqstp)
->  fail:
->  	posix_acl_release(resp->acl_access);
->  	posix_acl_release(resp->acl_default);
-> +	resp->acl_access =3D NULL;
-> +	resp->acl_default =3D NULL;
->  	goto out;
->  }
-> =20
-
-Nice catch.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
