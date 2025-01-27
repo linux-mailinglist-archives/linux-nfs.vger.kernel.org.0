@@ -1,103 +1,106 @@
-Return-Path: <linux-nfs+bounces-9662-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9663-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F1BAA1D6F0
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:36:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65D55A1D702
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:40:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CA566164F9B
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 13:36:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8C963A3F22
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 13:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91C071FF1DD;
-	Mon, 27 Jan 2025 13:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CE31FF5EF;
+	Mon, 27 Jan 2025 13:40:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gn2ohyTs";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="nNtvKPwv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mYjH6ZCX";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="zTjxdv8k"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BAF1FF601
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 13:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2D71FDA84;
+	Mon, 27 Jan 2025 13:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737984964; cv=fail; b=hCQFcM5T3UnubXthruIaIFMn10xBR7F4YASnOnv5vK5ZGbmtSCBvi8pzqKWcxvEEINgtaRTqLAhSL1LGwkqkQQ82ND5pYwPKYjoifzvKPjEFntkEm7IY8/s3ldZVGh4BghQXYB8OT5WvAYPV/znkU0Ec+DFwGSIHRVpSTi6p4zI=
+	t=1737985208; cv=fail; b=ef566bQvMW27wrwwAtABlftirrUwzHCTUZzctrME4hm9TFD7qNWW3921UyJQlyikujAV0JX8nJLCGX6vFmQu8/k3sZH40+A4eVHGFrULc7Tq/cr6UVDpa548QOjQrAyXj1IIwAJs0pJeTowFTVYTpc8KGHhRBPRoh9sKvUz9o6k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737984964; c=relaxed/simple;
-	bh=EfgZa6puCBlsFnkKTpNNnjYZzVUv5/c+HsXcspEo04g=;
+	s=arc-20240116; t=1737985208; c=relaxed/simple;
+	bh=QUPYaUNdWl9TiCWg7Ir/QhcsWgKbKZgLqlarzmkx9bo=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Jq9aYAKiw4vDzumOHANXBIl4w3nK+nkyipo2epX34+be364bQVG/nYghCEjfKbUOyWBRV8GOml48YPKjvvgUF71mlJc1+D6HoQOMg5NY+IksEIC07HTM/0iKaU7GbyMZLw8Z20Gn+LrF/y6/NetYycnWJspC4NkA1QmeNZHDtXE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Gn2ohyTs; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=nNtvKPwv; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=THW6DjlbyANKZKc29mvn8zbPNHaV5FRw9TsCX5wHvnDsovxFeGYz0s9gOuNzmuZemTD8uKhdbV7VKk48kPn9gVdV8CR4T6AN6C1XTV5K5sy+u1fz3unz26mDtHckYbaqy8z5lfPSzMSW3DZyospYD6B+x4ehyeDFHGc8lVAF/N8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mYjH6ZCX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=zTjxdv8k; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50RDM1hj021749;
-	Mon, 27 Jan 2025 13:35:52 GMT
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50RDM8Ob011147;
+	Mon, 27 Jan 2025 13:39:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=NWDAPAB17sOgsP0Vitvqte9U0cw/eDyt/6R5U12WdY8=; b=
-	Gn2ohyTsNCuZfEFxSowBCnP7YlJVx+7oWgrTvWFGcACz+qGldJelhp2xo2K8EI3g
-	Qx29YFPzNJ9hIWecldHVCFwPnFlEy0tyBGR+dBSKvChk9q4Po+VAXfeEgbgvD6xG
-	cVVubKy2n436DkSe4S7D3oEwJFLsHl/C54jvonMuHUIhSG3cZaKbDcS71oLToCQX
-	vBLqqufyHxR7NN9ilcyjaL4xJdtaKYdU7uQx5iKG/BtF2YQzxESEl76lvmiFapXT
-	3fqlIdKwFWqIVeQXJUJIHrgDNvp53LeaLQczQvrlHkIa9+w9QIntgF2BYILVSGdg
-	h8e+qdeYTwYhITNDeTjxQw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44eay780p6-1
+	corp-2023-11-20; bh=YReve5oauD68F9wWWPoZpafu27ugROS5HW2YBCqy8zg=; b=
+	mYjH6ZCXH4Cy171iQG8oUVT0kCg1ZLFrrWm4GP4uqhBGQWQoebJRtkiV7fgv+opm
+	7IzMkryVr/5qs9JKiUpVFZuTXX9KMDun1oNoIRs0dD6WkUPtxP6OVP5w6ErFbpdV
+	F7dNZyvsYI8ZtgoObEiTyGWwgVKs1Uc7lkXm0ITsd+r7bxhSlRABbUAUnNHwO6rx
+	NAZ/9SGuBx3UahrNPtc2CUYEFyr9nJrgB1evD6KJb9VuaOZsqMFV39b+AsIhIYQ3
+	GMGW667UPCBxhOZgUabo55oZvV2C9ZNsvihrVjlGOT/HtJMOvhoeXehhGamlaJfc
+	aRmb3WEDIDrlqZxgF2GaZw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44eay6g0ut-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Jan 2025 13:35:52 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50RBMALY024087;
-	Mon, 27 Jan 2025 13:35:52 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2046.outbound.protection.outlook.com [104.47.70.46])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44cpd6y6yg-1
+	Mon, 27 Jan 2025 13:39:50 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50RBk6mS036730;
+	Mon, 27 Jan 2025 13:39:49 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44cpd6y4p7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Jan 2025 13:35:52 +0000
+	Mon, 27 Jan 2025 13:39:49 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aE11CwG1nKQvwf7TzlhzJWY0r6ViGH4aQishaLJ7at9d1NqgPi71r88rlkX49826VbfRgenoxCkPvaxJBXFRX3DAZWTMCD3kto1VJiuEDUxyG6JiK2iGzH0LpiLgqaxYPuO0mK4TxCXBjRSbA6QlawoSRAcNUEbtxis1UD1m9BWPbqwoMi0lYIlfVWfrsHiM3TuO7wSOEbt6LbsFz2rUrclmqIU7ZE+TPXquT7V4C8op2c+mrikey1ii/FLMigtqTTf2b4ZAYdkZnxpGLVmCmXojDg4onCsAdKYQOaoYrXWDIsRhPKvuFF00isFyrEiDO5s/7tSiVA3X3Ag60qLM8w==
+ b=otxlU2S4T8dJndTQvWzJUbtLT17XspRJYZUBKRJyOf6DW+N35glmu4PeFqxMkNoJgRh7ln8zNjy8RLrLU+qwNPQEfAojW8PwwLVrZ+3RDN97U0d+lLVNzO7QYMR+Xv7ccIZ8I/NQAe3FeNgVjozl2oFV99FkOlf1u29cwAlhlNg1FDhi+NkrMkNOIddiYCtk2ei4J3cEcN/5z9zZKzoQnv7SqHk5yZ8324ybnj+tOTyvrnR8ZwsVirgusgiSDhuLSOhZCWx5Z6iZ9inoXaFb3gFTBUEKVOt/BGnTtMXtSi3mb1SvDZTNINqnWmEZlrsZrwtSe0D8gCZTi7HMqmpqdA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NWDAPAB17sOgsP0Vitvqte9U0cw/eDyt/6R5U12WdY8=;
- b=uNLffkxdcnggTsW8yXifpEvq/6xpjZw92CKUxQybpZ16UR5AOeaBaUtGwyTm3nVw/DP/wrgXuGlN6wOefyF5aYvGlg4BFMlw6QGIrp79qyoaAL6B2Jkt6yjyiLEaiaSJjDTPt13bUIqGBSVL2vvDlHHAilcpoyUfUghtiPzXrLXp/2VdzVymIuPakRIp0zyO1UCo6db5bULuKKZjkcwcA0Xr45HxXjFFxGgo7+hAdm+isYUcVfjWVJErGXnKJrqcnHsIfA29VMiLZQmeiLtnkbUv8gaddi0kJ4RRT59hNsQzIiE/Sc6v+JzmCvqdXDAiWFzPiAhNlH/xgpqCbUUvNw==
+ bh=YReve5oauD68F9wWWPoZpafu27ugROS5HW2YBCqy8zg=;
+ b=c04TS80Umkj0ALXO0FuLPnA1usq1Dvu225n34us/EWW5r2Hqd+elh3KZ9Kz1/nRMkSOM/InBS3lfZ/RGGEiOQgwvysnXq4BoclExmAcFCpUkytRMBgccLsmYfDFyovOfNMdwzwLBDwXofPO180mb+sKNiWw9KwMmPQFPPVgrSYV7TrYrddQrre6iZGQkKRPxY23BGfL0/BCwnqn/JrWeKW7qzkL0lBKqUS/yjcfxrh8vRuLyMfrQY0v4NGuwzAc0pihO4yU46VIIvtpwycq+ftPDVF1Xs3OmP7jQSLY1cAifvQgZ/tYrsjYiSmZzF19PJYXkWfE687qe0V6jgz+V3w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NWDAPAB17sOgsP0Vitvqte9U0cw/eDyt/6R5U12WdY8=;
- b=nNtvKPwv/y//9FxGgDkZHC0MoJM26lNy18J3wBRllQzDjXiP7ZWEoli69/aUHjWGiijNQ+OLrZPazshNkNanrdI82vT1tQ3EUBt7/zH1zO1ug/npp+psSNG5BflZmaUYnOH41Xs10OtQGlCDd4jYxFw+HSx5VFc3TW8U6X+NUCM=
+ bh=YReve5oauD68F9wWWPoZpafu27ugROS5HW2YBCqy8zg=;
+ b=zTjxdv8kZ4556VkD1zET61OIktNa5ssgvOHq1tHZNDziD/uPVfqnDyK4jQae3B6LeLGCo/DSnDOFPsd61CLEP8vnEEQRIIVXh0H/g1KZKz5UGnGdW7nAKJofNUeG1fCCO0IBM8RoFhf0ZdBZqF+KaBaAcP5Se5gRjQJsw2efepA=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY8PR10MB6875.namprd10.prod.outlook.com (2603:10b6:930:86::9) with
+ by DS0PR10MB6198.namprd10.prod.outlook.com (2603:10b6:8:c2::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.22; Mon, 27 Jan
- 2025 13:35:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.20; Mon, 27 Jan
+ 2025 13:39:42 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8377.021; Mon, 27 Jan 2025
- 13:35:48 +0000
-Message-ID: <d4183be8-5ef0-4db1-adf8-f27a576714e6@oracle.com>
-Date: Mon, 27 Jan 2025 08:35:46 -0500
+ 13:39:42 +0000
+Message-ID: <ac965f67-db15-4f93-be03-878e6a3d171b@oracle.com>
+Date: Mon, 27 Jan 2025 08:39:40 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] nfsd: filecache: move globals nfsd_file_lru and
- nfsd_file_shrinker to be per-net
-To: NeilBrown <neilb@suse.de>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>
-References: <> <c9adeaa6-0d6d-4b20-ad70-61d7a4cf344b@oracle.com>
- <173793081107.22054.1714283530462488590@noble.neil.brown.name>
+Subject: Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling
+ svc_wake_up
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>
+Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Salvatore Bonaccorso <carnil@debian.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <> <a3ca70c78e48e1a36d29741eb8913ce85e3f51a2.camel@kernel.org>
+ <173793694589.22054.1830112177481945773@noble.neil.brown.name>
+ <06379c169fb0e891dae9d444ef0a06ea57e9af38.camel@kernel.org>
+ <c70d155c-22e0-43f7-af23-241088317d94@oracle.com>
+ <5923519a4c8f6bb6d5ccd2697447b313fb61bba3.camel@kernel.org>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <173793081107.22054.1714283530462488590@noble.neil.brown.name>
+In-Reply-To: <5923519a4c8f6bb6d5ccd2697447b313fb61bba3.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR03CA0226.namprd03.prod.outlook.com
- (2603:10b6:610:e7::21) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR05CA0059.namprd05.prod.outlook.com
+ (2603:10b6:610:38::36) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -106,182 +109,262 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CY8PR10MB6875:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1ecbe947-aa71-45b1-4101-08dd3ed78282
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS0PR10MB6198:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8cce59ab-a29a-4456-3c4b-08dd3ed80dc8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MTNqZ1ozbEM4NC9aaUs0Q3NSMnVSRzF4V0Rqc28yZEt1MEU4UWlXQW44KzJW?=
- =?utf-8?B?ZERPMjhlNlJaWHBRbENXYlY5NFg3T09McEpRaGM4cUdOdFdrRysyNnBIczFi?=
- =?utf-8?B?RlBQYVYra1FyZ2t4bXZoZnJHYmlVc3hVMXkwd2ZzZ2tCU3Bsc3BhNDhLeU5p?=
- =?utf-8?B?endFd200c3VRMUtuN0IyaHRUUitSbExKazd0VDBvUzBKdkU3ZVVnYVZOQk91?=
- =?utf-8?B?V3NZM1JqenZlT0dFZWNNWUx6QTFsM2tmQlNsMVA4eFBHRzFrSTNkY2U4SnBt?=
- =?utf-8?B?NE43SXBYZmZUUjZyTG5HQTVPY1BoQlRNcG9pUjQ1TDZSSDNocWhVUG9kWEI4?=
- =?utf-8?B?VkJ3cUFUSHlkeGY0VmFOMEJza0FQMVVLKzFNbHNzWlQ3cXo2bEppczBwVEty?=
- =?utf-8?B?VUZ0OGlsZEtuSGg5T1JuczV4aDNhcXdTS1dLRTlVQ2N5emF0Sm1hdUFxZjV4?=
- =?utf-8?B?UG9JckMrOXdZYkFrUlhiZWhFQVhuUkJuUXZzcHp4M1Yxb1NmclN1VGRMTzhw?=
- =?utf-8?B?cUxaZnhwQmhGYWJKMWRJdjRscmZQVWt0bEp1QVdOcW5CUWtPTk5sdmJrZ1li?=
- =?utf-8?B?bmpGbnRaa2ZLUUR4SzN6NWhHZmRmMlVKbll4MkxCSHlzR2hFeDFZWUhzVWlo?=
- =?utf-8?B?NzRNYmJnMEQrM1Rjc3J1Q0RrVkx6OTFyNFpPL09mdnc1bW95WXNmUTRkSHNr?=
- =?utf-8?B?ZTkwczF3V3JmT0RsVDlzYXBnQ1VoOCtDd2srWm1LNHNWQTFhV0d5bmo2K3Vt?=
- =?utf-8?B?NEhyNWY1SXd4eWhXMGNLZG5wMm92aEtFcG9LTVRwaVFQbUV2Y1dnTkhGMjNv?=
- =?utf-8?B?eWVUOUJqMERjcEZ0Q1dQTWtYYmtaU1ByL0t3UlZYeXZ5b2x0WTgwNFBEcUdq?=
- =?utf-8?B?MTFRUU1aZi9NMURneWZaTWY1TUZFQ1ZuZERDU0lLc0kzSzl3V2hqbEdoV3Jr?=
- =?utf-8?B?dmtsSm85UmhUcXpVUjJySjh0OEN6d0JPWXFxK3h2cFZZS29VUkJMNjUvUU91?=
- =?utf-8?B?MFBvenhqK3Zvay90bDU0RWNReDN6cEpOWHJiT29xUDdpRWVBcFdHWjFERWRV?=
- =?utf-8?B?M0lLakZMeFhjdEFVNU1RNzJoQzdUcTFnbHR2NFZSZk5WaHkzV0RoZWtWSnpS?=
- =?utf-8?B?NGtOQzllVjhiUEpLSVhlaGRmN2hablBKVGFSTEcrQTR0SUNIdEdtREU5NEVy?=
- =?utf-8?B?TmR2UWFIbGVVN1NUSzFtTUpnRHBETzFuSDh4clByUlVDR3ZOUFg4L2VFVUpz?=
- =?utf-8?B?cG1QQkFGYysrWFZzeVgwNTNJVjF1ZlZtSUdOdFVmNmZqNW96SFdqU0xQdm9w?=
- =?utf-8?B?MzEzZGp4d3FZeDJsdlV3eE9Cc3BCWDdPQ0g1TngzaVlMaWhJa0RYdVhsOFU5?=
- =?utf-8?B?NDdHVWJFakZGZERjL0xPckJrbkYwNlRWYVFDd3NneXllbDlEcHFzZDI2dFVq?=
- =?utf-8?B?cVZteSt4bWRzYWs2UFYrcHFMR254QURTWGh3M3pNTkhpaENQV0k5NmhIQk5T?=
- =?utf-8?B?c3QrU0dLSmJ2a0xrMDdpcm1uYUg4Uk1nVVVJWS90U3lPRUNMZytydXVpMXEx?=
- =?utf-8?B?NkNKOU54dlo1QzQwb3podytTeDBqMWZVa0orWHNISGpUdlVJSnpKNnFxS1JK?=
- =?utf-8?B?Z2N2cEk3QUZ6dVpFaFBrSmNac1I0VnBNTldZNnlwQlRsSmZxNFRMRVAxdGR1?=
- =?utf-8?B?N2Q0UUxVWkNTbmFwNDRDakJWVG1ZVUp6eFVIRUN4QnkrN0dTZndiR3FUeXFO?=
- =?utf-8?B?RTF0eUVUbmM5TE1Mc2pNb2R1dmpNTUdtV0FlRnhhLzZUcGtubDFZTnB6RU5x?=
- =?utf-8?B?MGpha0kxOHMzeHlCaFJrbVRLR1UxeC9tMUNOVlZ6U3U2T09CNjBFZ1RWdmJN?=
- =?utf-8?Q?0av5O7OWuZqU3?=
+	=?utf-8?B?bm52S2cvc3A4TlUxSURJV0xQK0tCUEJPSHNnOXluOFN1R0xJdDBMWk80V1JZ?=
+ =?utf-8?B?cFNtUDBEUzBjYkxkK2pnbno1MEdKa2RuL01nOVRkTndZRG9QSGJocjR2Nkla?=
+ =?utf-8?B?WHd1RjRPekx6eWo1Uzhtb0krYjVKdkFpWU5CZWxDQ2h4c25lSVE4dklBdUZ3?=
+ =?utf-8?B?dUJMeDJyMyt4NUNTWWR6L0hPTm9nVTVFQkh4ZzdubC9BdzlKVVQydUpPaFMz?=
+ =?utf-8?B?bEdtSHlZZWFWTDVGZ0VoUHd5eUZqenBnc0lzUmUyRE5kMHBKT2xxWmpYZ0s5?=
+ =?utf-8?B?RWd3QVFzNXVJRktLVEJ2STBtR2JIT2QxcHRkQlJRcXJBWVZBTXc3UmNFZFlT?=
+ =?utf-8?B?VkdYUkdPVjd6ZmpPL0htSDVmV2t1WlJITXIvemNNVzZVZ1IrZC9YaDdrcHA5?=
+ =?utf-8?B?OVFTVkVscFBhaEFIMzE2OWFUQWF2NzJkWEtOWW41Q1dPL0puazF2MHZQQWhr?=
+ =?utf-8?B?U3JCUStZN3lNWnR6RzhUUWk5UGYzNUl2cC9rMGljRFgxOWx4OXR6cW0rZDBX?=
+ =?utf-8?B?d1NxRjBCdHVreTFoWG1iSnpCbTZnY2g2UCtzR3VsanpxSi9nT1JaVnRKVVdG?=
+ =?utf-8?B?MUlwaHJodFBEYzNLRGVVaWlkc3N3cjMzcFdqQXRIaGkyRDI5WG5PZXNFWnVQ?=
+ =?utf-8?B?TGpnWkltUGFhYjhVdmdqY2hzNStFOWZoMVJoTHVpSXcwMGNrOW5RVGRxYWpu?=
+ =?utf-8?B?WDdjYXBMTUFVZzV2RDNzalZEWE9WQ1hGc1dFZDFRd2VudTgyL3ZIaURnZW50?=
+ =?utf-8?B?QjRmU3ZJRTJqQmw2YVJGanhxYTdPakhBOW5zSE9vTWF5UllGekkrYkh1ZGhP?=
+ =?utf-8?B?NnJGM1g2QmdOZHYxbWxPNTQzTU9xVzd3OWlESExuVVExbzJ2ZEtkM2phWTY3?=
+ =?utf-8?B?dGdEbkZMVXUwK09VUkhPaW41aEF5WlNkT1dtcTRLaThpNERBaDIyNHV0Wmlj?=
+ =?utf-8?B?UUVmQ0hsTHBxcVY4cGdKVW9RQW1vL2cwSGtia2RxTzFNNmU0WkdHcHA3QURE?=
+ =?utf-8?B?MGdEdGIxTUdXM1JVSzhHekc4aTE2NUFWV0RPby9QeGlBV01icDlMTEo4aCtm?=
+ =?utf-8?B?NDdrWG5tVTh0UHUwanFMejZua09HOUE4ZUdHZ1hFbWpiNXpnQ3ZrSHNndW1E?=
+ =?utf-8?B?SWp1c0JTaEwrZzlISTJiZDN5Ynlja1BaNjAxMVE3RXBGSHJpZGZHYlJwcFZJ?=
+ =?utf-8?B?VGJnTFV0akROc2hIcmpvRUJmVnRCNkpvanZkOEk1NWxiSzkvWCtmcXpiUCt0?=
+ =?utf-8?B?NE9nREVhWFlEcnVJL28vd0Q3TjhvSFNGZGZXLzA2aGI2TGNLalg5OXJRN3lS?=
+ =?utf-8?B?ZGtqbDRrNHk3SVJtQWh1bEE2dWxwSTkwaE12ejA1TlM3aThUTkp1V3ZHaXVa?=
+ =?utf-8?B?SjR6SHg1azdTaGV2NVpCQ2lmLzdBWjVpL0RJYldQWmFlUlBGZmIzeUhGU2xa?=
+ =?utf-8?B?c1hpV2FOa3NjSWVJcGFRNkFCQlVJVWx4enlzL0RKOVBHL2dsVEJ5eHJsNmg5?=
+ =?utf-8?B?bzlnY2xtNUw1OUNmZDdRYW01OUJnNm53eGh2aHBNQVdZQ1QxdFdGa01SdEd6?=
+ =?utf-8?B?L0k2V2VsTHhrS0paRnJIaW9mT3FXWHg4ZThGS0lzcTVTWERsK005bldCajJs?=
+ =?utf-8?B?SXpRN0FadWduQVlUT2ZYNjJCcXRtbEkwMExlUlJhK2RTY0k2M2U2UUNkK2t4?=
+ =?utf-8?B?b3hiWWRaRDgvL2pOMTR4ODVlWDRNeGtLMnpYcFZkRC9rVU9HRXUxVXQzNlBE?=
+ =?utf-8?B?bGNtVDJjRXlBQTltTTlCbzJLbk9GMXBORkFKeXJWcFB4V0NNNC9uUnNyRWNS?=
+ =?utf-8?B?QzhxQTQ2Z3A0VjBvaU5DRVFTajNZRU81cDdkQ0h3TktzeWhPeTJ1ZzVUZmUw?=
+ =?utf-8?Q?lWXQUK9+mpKNP?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ejM3U0xQbUFBRFc0NHFJU0hVY3RaZzluZ0pwaEU5WDk1cktzNGthY1FFQklS?=
- =?utf-8?B?ellMZzVHSEZNbHlUQ092cGpXd3NlYjZ2dzMyY2xxSjdrRGFLRzVtakZaTzBq?=
- =?utf-8?B?d1E1Ky9STmlRU20yV0pLUE5mZEVVNDZmdnRWbHZuSW9GRkh2aXgwdXFYTTZ2?=
- =?utf-8?B?S1MycWdjcGhQZWthNGsvcmN5ZHNwV2FIWFNlTDIwZzkyUUdCQlk4c3NhYXRP?=
- =?utf-8?B?ZU1sdTlDby8ydlNrek9DWTRiSzdhMXk5Rjc4SHY5cjJGbVlzRnZUSHllZWNR?=
- =?utf-8?B?Mm9pVGgwR0dtbDNPRnEwS25GTkVwNEdnREhHRGdYYXZZamY3UWxLM3FxNXl4?=
- =?utf-8?B?eE1MVHVaUmIrV0tFbjE3STR6N3pWaVl4UGZtaVI0Q3B4TEpZNTdwc3NJaisy?=
- =?utf-8?B?dnhkZWsvS1NWcVBQZVZISk44MkJaYVhzeGluY093MW1RYnVEeXRzd01VQWoy?=
- =?utf-8?B?Qk1oNVNjOGplWXd2VVpJRmRZWEhiWU9ybzNJNHJGRnNsWVZGa0d0blZmMFVh?=
- =?utf-8?B?S0ptSHdsenB4cjF4WDhxOEg3VU1ySUZlNEVRTE5UYUkvRUtiSWd0ZFRaMmNn?=
- =?utf-8?B?YUwxMklxd0svUi9kR0NuQjJ4N2piWUtzZlNiOWpIQTMzZmxUclFtSVRlYTNK?=
- =?utf-8?B?RzBWRlJzbTNjYnh6MWpjNkx3Z1RmV3F6cExXbE95cHo3M01DTzJ2dDNJL2dk?=
- =?utf-8?B?M1pRbTFpc05tN2trd2FhNVhBYS9kT1A5YzhBcHB0ekV3WE02aSsrSXhreG9m?=
- =?utf-8?B?dkZTYUlJMGR6ZllQN3VLbmgwdkJIaUZPV1UySEdLcWJvOEp3anZuQUE2Q1V0?=
- =?utf-8?B?S1pNWjRHbEJjU05TL2x3Ky85RzhmUlFaOFpHU3d0a1czcXdHTmp1dlhNS0R0?=
- =?utf-8?B?eE9MTFVVV3I1U0o3VjdGb3VLcFZESHRRbGl6TE9vbE9mQWRqS3JRd2MvazdJ?=
- =?utf-8?B?a1lnK0oxQU1DZjc2MHFONzZaM0Y0ZVZGR3E3bDE5OG5lV2ZrZERiSTQxeDR6?=
- =?utf-8?B?akY0b1B3eWJtOTVwOEJDaHRScnpDSUxwaUJIMUw1am5uMmh0cmJxZXlFRW4x?=
- =?utf-8?B?YnllT2RDVHBtbUN1S0Jkck50Rjg4NGllRWJ1TXBDU2wrTmdhUGZFY3hhV2hW?=
- =?utf-8?B?K2dSbnRaV1g4c2xEZ1NTQS82YzR3dWdhWHc2b3FjUGFJSXJqSFNPK2pGSWlH?=
- =?utf-8?B?QzBId3hnUVVxT2F0cUV0Q2E2b0xpS25hbTc5VXVFWGhTY2JlWEsrcERvcitm?=
- =?utf-8?B?QWU2c29OOTZjV3FrK3VaUkdKa09zQzlNOTR4MTQ1Z0NyVVhWNXp3bTFxdGt5?=
- =?utf-8?B?NHFZVCtHSEVGMWRMWC9FUUhoeDB2QVhWdEpSdkRITS9sTFk5ci9ncnR1WDFD?=
- =?utf-8?B?c01aVDdHVHN3SGNEYU02cUw5T1YyOGpzbVp4NFNBR2JDUUhuT0lSem9WRjVs?=
- =?utf-8?B?QmVFWERrME5pVllvcTlPdDJ3cUdqZGNVVTEweGw4alhVc28yOUlGendkNVpB?=
- =?utf-8?B?d3o3ZmxUamJrVWFWd3dOSnphTnRjTmlSVVhoaHNLRDZOWDcrdHJGL0Exb0dS?=
- =?utf-8?B?SjF6Qy82dSsvQUlTRXNLZHczcWVndUdXMVJjZkhqQXNUaVRXMUN4RWRhYXY1?=
- =?utf-8?B?amtlZ3JTT2VnUEVUa1NyQ3FWc0dyWWNiakpudFpuMFV6cmZTV1UyYlZieS9R?=
- =?utf-8?B?OGlQVnl2ZCtmQ3RUVExiRUZCSnNNd3B4M0U5cjhhTytqLzgweHB5ZmJJVGRK?=
- =?utf-8?B?Tzc5bXMvMFNlYUJjbTlmZXE5eVdWNGhPMUtocHRvZ0pKcm1yWkRJVytuNVBq?=
- =?utf-8?B?OXhKVWM0djdid0IvTzBBOGtOTmJqamVTZFp5M3lGZGRBbk51R3B5blhDT1Ix?=
- =?utf-8?B?Z1pkTUk2OHp0Z1BZQ2tnUDZ6WXliQkZxUGdiU2p3TjR4Z1JjQ1Y0NjIzNmsx?=
- =?utf-8?B?NnZCYTV5NHJrYmJDek9QS1gyTFZaNG9pZFVKaHVwZlhLMjBVOUNJc2lRZFJL?=
- =?utf-8?B?aEtLY1NtWC9rdUo4Ty9la2V5QTVwaFhSRGZoazl5WTNxOVBZWm9sWGtkREFW?=
- =?utf-8?B?bjFxZXN6eUhFVTYwNHNvQkQzVTJ4ZVNSWnptOENBT1lQaG1mMkV5NUQzR0dP?=
- =?utf-8?B?N1NXM0VJZGFkYUIvc2xpQmEwYlpvVmIrd3ZWYWtKMlZZMm1BN1NqV285OWgv?=
- =?utf-8?B?L0E9PQ==?=
+	=?utf-8?B?SVJCU2x4MlJTcDRmWSt1S09MdUFMcjl5dEUzcW5yNVQ4WVFDeEtyTm1iL093?=
+ =?utf-8?B?Y0hHS2FyREttbzI3bGswVXZIb2VUVm9QRFREYS9rbk9zMzA2WEtXV0hRR0M3?=
+ =?utf-8?B?UlhhSjJXK3NFZFV1Vmc3R0s2MEUzWXhaZE9vR3h1dHMzbHBnMTkxWlhYQ2FP?=
+ =?utf-8?B?NE5KMldwUTZCWlJxS3ZHSnE3NHZKeVpFZ3MvOS8rWWpEbmx6d3JOSnJia2NP?=
+ =?utf-8?B?Y0tHeTlTMHNXNll5WnljSVdoMlRmKzN4SFMzbVVRRnJ5clNJSG9iLzRSQllS?=
+ =?utf-8?B?Z1kyeEJYYmFDbjdEdnBLZGo5eUU0R3hyOGo1SUplQ3ZNRGYyTFl0TnhJT1I2?=
+ =?utf-8?B?OHlSZXJHNXppV3Y3d3o0Y2VzZzl2L1o4bmE4MjNLMGhlMVdIOFQzKys2U2cy?=
+ =?utf-8?B?Nnpvd3p5aTRBN2doaEZUdUg5V1h0anVKWG1DVm1HVDcvWHlLSFhpT25XVmZH?=
+ =?utf-8?B?TGFMbTBFWEt6MkVYZWtXbkVQdVNOc3pPRllHN1FzWk5ydHBRTEJZdGxGSDlJ?=
+ =?utf-8?B?MjFhVXFSV1dRNFV5MlhqNXY5TGFxZVU1QmJPY3BRdDYveTRzcks1QThYMFBn?=
+ =?utf-8?B?WTliOGx1YkJJZXBUczdtQXd5UVdMVTNobXRoUUpaakd1Q0xGWUhLVy9LMHVh?=
+ =?utf-8?B?c3U0UEx1Uk1GZUZQczNQbkpIU29GN3ZIeEx0T2dzeUZMVG4xaHI3Z2hOTGVJ?=
+ =?utf-8?B?d0YwZWJxQmVyU2tPcXBPQjNOODhacFJXZ3BnZWRwdFhYUGFWVVpRbGMwL3Bh?=
+ =?utf-8?B?bzBVYmpqaVR5VEptSE0rbEhCQTh1L1BYTVltOUpFczNncjNDckx5K2lWNWcz?=
+ =?utf-8?B?eGNJNHpzMUh3S0pMZ2RacDVjV0RBNk5MR0tRNTNyNk5Pb25QZjNUVmZiaVZZ?=
+ =?utf-8?B?ei93NEJDZEZmVmhIQU54Y01TQkdKZ3lWS29NNGFlVnRtMkgyM3gzamkxSXNE?=
+ =?utf-8?B?NTVCVnBKMUhGVTJSQ2M4TzFJc0RLMHVnOUpOWTdTS2VvU2dmL1dsZDFNbDMy?=
+ =?utf-8?B?eHlFUUxuR05ldWNSMVJvY3dNKzY3NnlSbm91YVF4WG1DTDFjV1ViNWlSWDNI?=
+ =?utf-8?B?VU1yQWY2anV6OHpnWU5VTm55eFA1TzltVWJtSE5OQTJvMWpZbnFybnEwNVZq?=
+ =?utf-8?B?emY0UDlMS1hycmhTRWF5WHFUTllqNmJBTUd6MERvMHNLTmU5U0phanhObWJJ?=
+ =?utf-8?B?ZVhaWis0bml4eENtRE9ORjlrUDc0UVJja1NmdHlQVWE2a3BvMk04V2p4VWJF?=
+ =?utf-8?B?blh1QmY4OWRaWWdmUmFUUFdINUlWZndKbjVWaXNqcjNLMCs3OFBtc1V1TGpx?=
+ =?utf-8?B?b3pUUHl2SXNpcEJmNzNmVndDQjZSOXByekxTVlZDeE5WRDRKZzdFY1JXSzJ6?=
+ =?utf-8?B?YVFVN1QzR1ZzQXBFQkZuejd0YTd3bWR3THc5bTVzdzdGSWVOUE1QVGtpd0VI?=
+ =?utf-8?B?Yks1aFJzQTRtcDF1a0lnQjNPazhYNEVUWXBOaDhva0Ivd3lyWEhRdHU3ODNz?=
+ =?utf-8?B?enlBQlNjVTNIaUpHK3hKMnJOUU5Qck9BaExJWVdkT3kxeEI4dERIUDVtUDNy?=
+ =?utf-8?B?WlJrNC9qSUlXR2lhb09kS0VKTFRUWDhIelRTb0dQcGFiOUV2R1R6aWx2NGNi?=
+ =?utf-8?B?SE9XdXFVUm84aSsvZnhoV2NVQTFib3RETk9Vbk5xaEtaRDkyOFlZRWxDRFlt?=
+ =?utf-8?B?TWNUeWczTEVkLzFURlc5ZVRyTjlMT05uRFo0M21wbFpvMkJlTFN5NzVNK1lQ?=
+ =?utf-8?B?b2hsZ1IxaW5DRUs0ZzR4Q1lOSTg1NEJTbkZuci80QUJNbE5PMjdJNktnMnNl?=
+ =?utf-8?B?Rzd3SXI2T1dQWWFVa2pYbHdYOENObE5sMjdGN1YzUS9UK2J5bjRZWnU3OHJu?=
+ =?utf-8?B?eGl6ayszSmZPUkNydVFsc1lDZkVhMENkU3NNOVVzVlR1cVR3SzFXNXo4YkJJ?=
+ =?utf-8?B?VDN0U2pJUlVQdWtOK0NNd1NUZWlWWS8rY2ZFNkJpRURwU1plTXBnazl6cThw?=
+ =?utf-8?B?TUNQc1ZtdWNadUN4Z0duM2VRVHFyNDNYeDFSd1U4Q2kyQytDbXlDdkJIRFpZ?=
+ =?utf-8?B?TERpTmt6eDgzdHZreG90WWlRa2tFUkFVWG53Ni8wMS9Tdko3Z2REbVh2TXJS?=
+ =?utf-8?B?azJxMkFsWEtIZVJIZXoxNnZVTGdxajFFcS8waWZWMFV1TzZQcFhwaXJvOXo4?=
+ =?utf-8?B?NUE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	60pukp/IMIPFwpga25WdjhMTh8SZfVRdr7BspLTNm/205n5ij6HaaG63cM1uVmZtdk9v/31JXeKB90HjkSsmWnL/Tnb4zUoEIgqRQb8z63bXFQk63SALBUHPOL1DFrB1nsKLyjBac1cO+9/MaAXNDzcv2t1NaiyXID5pw0QrTIKWMW0kIlZQi/mEpnu2aO+3qRnyAsblrb9k7mjOs5p8cX/aj2Hi11ZjOq2ZLrv+2sn7QzADdl3cYLB5sSOKaMBpshOyLAbFDZEKceHuOSPL6BTt/QfRfN62/zs1P3IlWQDjEDJDoeLRHcdwVx57xWmCdiIhg3imeJ6wRWOJ1GSov6cDWMQDmD3kNWsnb1NnCxcXACfbgPeXmxKDxYyedDP1EuSEpWBTPx3SZzpXBPb7fczfRejWz4SD2XoBVa/PF50JTWRlljG752S1PcZKbBE1kb86NAri50Sl949G0kGP6JSQ7Fl/nP41qel41WP54tYnUqbKEeSI31ydqlCt6DdXccJke3YxgIVcxsJEZ43RtEUsa6WfaQIIpN6xU5wLpfhpMrvz5lZ2RJkpwNo6zdhrZcXko1HrtS2AdYphxT0Wm5+WHoKhMRAp0ve2e2C9gl8=
+	vvqo5bkrzhH2//GvjOVbJu5gfGPKaVHE2ISsaBexIIMOIiS/352cF3G6VaedajXm4McQkN8LYPMLIBhhgbbpWsLPKGr5nl1jZVSaZsxEREvcyDeK924ovedFrG6akzJUfyAf2tQZPdagp3OazZC+v1Q1b5ojRVEVs9ET1jHwUe3LlLWm+Oz5/vwrirSS9du25ccs9u8ko93bE/dHEgdqpVzCUhDESHruFRA7DoCyw7zjerUDNiO2AryBi8IWlmRluIFKsTihrAK7oRHB1FBfU5tJqHHvBF54KEcMvIa6SU5/LcAZGRnxsSgf2rHTlk8Ecc78GLCqgSHa5bPm9B5cXsGvsoqmoEZdHoSor1OAhOie2MD8yCs28SA0LpiHwkN+iTv6bRaPPW9o6PeAzLmx9wc7aU2zCC05ruAWwE6E04FZ3zjE8x/jg07pJ2VCc12Y+t+TXxajPt1ltltsceQTc+487lgSGpTnvixdmhmwh5hGAPcKMrWH4bCBV6tUndaA0o2mA884L7lf00vkATMbrlMFEt2CdqiwnN23k/ufsIc3pv/fBnHMo1Ajfb/j8bLkxzKtfmRR9lZPnxzMvgYkvIXNjAifFWcF00J91/l2RUE=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1ecbe947-aa71-45b1-4101-08dd3ed78282
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8cce59ab-a29a-4456-3c4b-08dd3ed80dc8
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 13:35:48.6373
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 13:39:42.2679
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CLB6YokJOsBwlj955hWc1R/68E80A9QjwoMw+vDn8h3UsGamf+Z0+SpbcwQcbQXeprLJN0MweQ1HkOooppe3qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6875
+X-MS-Exchange-CrossTenant-UserPrincipalName: q8i46eD+bZkKKNH1Q0dJGkbkBaGJU6V4T4NwsCrfUwSEmjYgt13AfkcHk6mdarwE+dTxeXIjvJF9eDi2x+yfPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6198
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-01-27_06,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2411120000 definitions=main-2501270109
-X-Proofpoint-GUID: iBQDTmx70wt0TwW4b0Z6qh5sbHaL7pdP
-X-Proofpoint-ORIG-GUID: iBQDTmx70wt0TwW4b0Z6qh5sbHaL7pdP
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
+ definitions=main-2501270109
+X-Proofpoint-GUID: 2mrERs-WLlwoLkm9LKC4lXind9OoLt4R
+X-Proofpoint-ORIG-GUID: 2mrERs-WLlwoLkm9LKC4lXind9OoLt4R
 
-On 1/26/25 5:33 PM, NeilBrown wrote:
-> On Fri, 24 Jan 2025, Chuck Lever wrote:
->> On 1/22/25 5:10 PM, NeilBrown wrote:
->>> On Thu, 23 Jan 2025, Chuck Lever wrote:
->>>> On 1/21/25 10:54 PM, NeilBrown wrote:
->>>>> The final freeing of nfsd files is done by per-net nfsd threads (which
->>>>> call nfsd_file_net_dispose()) so it makes some sense to make more of the
->>>>> freeing infrastructure to be per-net - in struct nfsd_fcache_disposal.
+On 1/27/25 8:32 AM, Jeff Layton wrote:
+> On Mon, 2025-01-27 at 08:22 -0500, Chuck Lever wrote:
+>> On 1/27/25 8:07 AM, Jeff Layton wrote:
+>>> On Mon, 2025-01-27 at 11:15 +1100, NeilBrown wrote:
+>>>> On Mon, 27 Jan 2025, Jeff Layton wrote:
+>>>>> On Mon, 2025-01-27 at 08:53 +1100, NeilBrown wrote:
+>>>>>> On Sun, 26 Jan 2025, Jeff Layton wrote:
+>>>>>>> On Sun, 2025-01-26 at 13:39 +1100, NeilBrown wrote:
+>>>>>>>> On Sun, 26 Jan 2025, Jeff Layton wrote:
+>>>>>>>>> nfsd_file_dispose_list_delayed can be called from the filecache
+>>>>>>>>> laundrette, which is shut down after the nfsd threads are shut down and
+>>>>>>>>> the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then there
+>>>>>>>>> are no threads to wake.
+>>>>>>>>>
+>>>>>>>>> Ensure that the nn->nfsd_serv pointer is non-NULL before calling
+>>>>>>>>> svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since the
+>>>>>>>>> svc_serv is not freed until after the filecache laundrette is cancelled.
+>>>>>>>>>
+>>>>>>>>> Fixes: ffb402596147 ("nfsd: Don't leave work of closing files to a work queue")
+>>>>>>>>> Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+>>>>>>>>> Closes: https://lore.kernel.org/linux-nfs/7d9f2a8aede4f7ca9935a47e1d405643220d7946.camel@kernel.org/
+>>>>>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>>>>>>> ---
+>>>>>>>>> This is only lightly tested, but I think it will fix the bug that
+>>>>>>>>> Salvatore reported.
+>>>>>>>>> ---
+>>>>>>>>>    fs/nfsd/filecache.c | 11 ++++++++++-
+>>>>>>>>>    1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+>>>>>>>>> index e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2dd750f43239b4af6d37b0 100644
+>>>>>>>>> --- a/fs/nfsd/filecache.c
+>>>>>>>>> +++ b/fs/nfsd/filecache.c
+>>>>>>>>> @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
+>>>>>>>>>    						struct nfsd_file, nf_gc);
+>>>>>>>>>    		struct nfsd_net *nn = net_generic(nf->nf_net, nfsd_net_id);
+>>>>>>>>>    		struct nfsd_fcache_disposal *l = nn->fcache_disposal;
+>>>>>>>>> +		struct svc_serv *serv;
+>>>>>>>>>    
+>>>>>>>>>    		spin_lock(&l->lock);
+>>>>>>>>>    		list_move_tail(&nf->nf_gc, &l->freeme);
+>>>>>>>>>    		spin_unlock(&l->lock);
+>>>>>>>>> -		svc_wake_up(nn->nfsd_serv);
+>>>>>>>>> +
+>>>>>>>>> +		/*
+>>>>>>>>> +		 * The filecache laundrette is shut down after the
+>>>>>>>>> +		 * nn->nfsd_serv pointer is cleared, but before the
+>>>>>>>>> +		 * svc_serv is freed.
+>>>>>>>>> +		 */
+>>>>>>>>> +		serv = nn->nfsd_serv;
+>>>>>>>>
+>>>>>>>> I wonder if this should be READ_ONCE() to tell the compiler that we
+>>>>>>>> could race with clearing nn->nfsd_serv.  Would the comment still be
+>>>>>>>> needed?
+>>>>>>>>
+>>>>>>>
+>>>>>>> I think we need a comment at least. The linkage between the laundrette
+>>>>>>> and the nfsd_serv being set to NULL is very subtle. A READ_ONCE()
+>>>>>>> doesn't convey that well, and is unnecessary here.
+>>>>>>
+>>>>>> Why do you say "is unnecessary here" ?
+>>>>>> If the code were
+>>>>>>      if (nn->nfsd_serv)
+>>>>>>               svc_wake_up(nn->nfsd_serv);
+>>>>>> that would be wrong as nn->nfds_serv could be set to NULL between the
+>>>>>> two.
+>>>>>> And the C compile is allowed to load the value twice because the C memory
+>>>>>> model declares that would have the same effect.
+>>>>>> While I doubt it would actually change how the code is compiled, I think
+>>>>>> we should have READ_ONCE() here (and I've been wrong before about what
+>>>>>> the compiler will actually do).
+>>>>>>
+>>>>>>
 >>>>>
->>>>> This is a step towards replacing the list_lru with simple lists which
->>>>> each share the per-net lock in nfsd_fcache_disposal and will require
->>>>> less list walking.
+>>>>> It's unnecessary because the outcome of either case is acceptable.
 >>>>>
->>>>> As the net is always shutdown before there is any chance that the rest
->>>>> of the filecache is shut down we can removed the tests on
->>>>> NFSD_FILE_CACHE_UP.
+>>>>> When racing with shutdown, either it's NULL and the laundrette won't
+>>>>> call svc_wake_up(), or it's non-NULL and it will. In the non-NULL case,
+>>>>> the call to svc_wake_up() will be a no-op because the threads are shut
+>>>>> down.
 >>>>>
->>>>> For the filecache stats file, which assumes a global lru, we keep a
->>>>> separate counter which includes all files in all netns lrus.
+>>>>> The vastly common case in this code is that this pointer will be non-
+>>>>> NULL, because the server is running (i.e. not racing with shutdown). I
+>>>>> don't see the need in making all of those accesses volatile.
 >>>>
->>>> Hey Neil -
+>>>> One of us is confused.  I hope it isn't me.
 >>>>
->>>> One of the issues with the current code is that the contention for
->>>> the LRU lock has been effectively buried. It would be nice to have a
->>>> way to expose that contention in the new code.
->>>>
->>>> Can this patch or this series add some lock class infrastructure to
->>>> help account for the time spent contending for these dynamically
->>>> allocated spin locks?
 >>>
->>> Unfortunately I don't know anything about accounting for lock contention
->>> time.
+>>> It's probably me. I think you have a much better understanding of
+>>> compiler design than I do. Still...
 >>>
->>> I know about lock classes for the purpose of lockdep checking but not
->>> how they relate to contention tracking.
->>> Could you give me some pointers?
+>>>> The hypothetical problem I see is that the C compiler could generate
+>>>> code to load the value "nn->nfsd_serv" twice.  The first time it is not
+>>>> NULL, the second time it is NULL.
+>>>> The first is used for the test, the second is passed to svc_wake_up().
+>>>>
+>>>> Unlikely though this is, it is possible and READ_ONCE() is designed
+>>>> precisely to prevent this.
+>>>> To quote from include/asm-generic/rwonce.h it will
+>>>>    "Prevent the compiler from merging or refetching reads"
+>>>>
+>>>> A "volatile" access does not add any cost (in this case).  What it does
+>>>> is break any aliasing that the compile might have deduced.
+>>>> Even if the compiler thinks it has "nn->nfsd_serv" in a register, it
+>>>> won't think it has the result of READ_ONCE(nn->nfsd_serv) in that register.
+>>>> And if it needs the result of a previous READ_ONCE(nn->nfsd_serv) it
+>>>> won't decide that it can just read nn->nfsd_serv again.  It MUST keep
+>>>> the result of READ_ONCE(nn->nfsd_serv) somewhere until it is not needed
+>>>> any more.
+>>>
+>>> I'm mainly just considering the resulting pointer. There are two
+>>> possible outcomes to the fetch of nn->nfsd_serv. Either it's a valid
+>>> pointer that points to the svc_serv, or it's NULL. The resulting code
+>>> can handle either case, so it doesn't seem like adding READ_ONCE() will
+>>> create any material difference here.
+>>>
+>>> Maybe I should ask it this way: What bad outcome could result if we
+>>> don't add READ_ONCE() here?
 >>
->> Sticking these locks into a class is all you need to do. When lockstat
->> is enabled, it automatically accumulates the statistics for all locks
->> in a class, and treats that as a single lock in /proc/lock_stat.
+>> Neil just described it. The compiler would generate two load operations,
+>> one for the test and one for the function call argument. The first load
+>> can retrieve a non-NULL address, and the second a NULL address.
+>>
+>> I agree a READ_ONCE() is necessary.
+>>
 >>
 > 
-> Ahh thanks.  So I don't need to do anything as this lock has it's own
-> spin_lock_init() so it already has it's own class.
-> However.... the init call is :
+> Now I'm confused:
 > 
-> 	spin_lock_init(&l->lock);
+>                  struct svc_serv *serv;
 > 
-> so that appear in /proc/lock_stat as
+> 		[...]
 > 
->        &l->lock:
-> or maybe
->        &l->lock/1:
-> or even
->        &l->lock/2:
+>                  /*
+>                   * The filecache laundrette is shut down after the
+>                   * nn->nfsd_serv pointer is cleared, but before the
+>                   * svc_serv is freed.
+>                   */
+>                  serv = nn->nfsd_serv;
+>                  if (serv)
+>                          svc_wake_up(serv);
+> 
+> This code is explicitly asking to fetch nn->nfsd_serv into the serv
+> variable, and then is testing that copy of the pointer and passing it
+> into svc_wake_up().
+> 
+> How is the compiler allowed to suddenly refetch a NULL pointer into
+> serv after testing that serv is non-NULL?
 
-Well, that's the problem, as I see it. They might all appear separately,
-but we want lock_stat to group them together so we can see the aggregate
-wait time and contention metrics.
-
-Have a look at svc_reclassify_socket().
-
-
-> Maybe I should change the "l" to something more unique. "nfd" ??
-> Or I could actually define a lock_class_key and call __spin_lock_init:
-> 
->     __skin_lock_init(&l->lock, "nfsd_fcache_disposal->lock", &key,
->       false);
-> 
-> There is no precedent for that though.
-> 
-> NeilBrown
-> 
+There's nothing here that tells the compiler it is not allowed to
+optimize this into two separate fetches if it feels that is better
+code. READ_ONCE is what tells the compiler we do not want that re-
+organization /ever/.
 
 
 -- 
