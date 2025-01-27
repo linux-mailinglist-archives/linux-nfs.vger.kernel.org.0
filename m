@@ -1,211 +1,263 @@
-Return-Path: <linux-nfs+bounces-9681-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9682-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93DF6A1D88B
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:39:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AA18A1D88D
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:39:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD82F3A3B83
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:39:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E7B13A3C1E
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:39:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 667D33D64;
-	Mon, 27 Jan 2025 14:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB6D757F3;
+	Mon, 27 Jan 2025 14:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4aID6Xo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xs5LJS0t"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD5C1EB3E;
-	Mon, 27 Jan 2025 14:39:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD45E6F30F
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737988749; cv=none; b=t1ZFopKxean/wFsexIIBs3SJ9WnOYJ5j+4Zq/LvhKWBaf9q7SsyvkoeZJS4IgHtHTfoueNBgBWp+0K8JBkhtAQMq7pHsM9jToah3K/YJOo5iouVOpoJBqpzltQDG0LZWIPRLmHg59ZV6tq+b1fY+0ter99io+nov87zsHPhdrTg=
+	t=1737988751; cv=none; b=c5buLmULmrDM8JiwBX/EWE2PfI87JbcVF4rOxlm7B0hXxfB6bAezPQrEX7FuA/JwMi3WEHrfqU7cEwpdByIrCypogZQ6XXUYQBE96Bby83C+ewNPjusdOyKJPYDkERiE3MEAhNhpJttGJ+VMeEITZap52veOu2LgRaupUcZBdAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737988749; c=relaxed/simple;
-	bh=LfnHHGbeKdmpI3o6gKE0/9J1lYyAuLS65r0EzXiC80w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O8UIvs503QisopPwHelcJjV1ZQlE6iMX2U8VzQa8bvqq4m5vvobZYN1q4yz68ONjrFiVcEuPQichQhyBQ5Up75i91J6HMEOBPFc4dtoaYZKH6G4QpQvzHs/uslL5f0tRY/B5/2cK6VTQOBxpS0Dirlpzn33Jbup4ZklxcIWTaOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4aID6Xo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47493C4CED2;
-	Mon, 27 Jan 2025 14:39:08 +0000 (UTC)
+	s=arc-20240116; t=1737988751; c=relaxed/simple;
+	bh=p4gLaNHRawYXb54OD27ZHGjc582vr6PGPZj7IZDyCKI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=U2eC6XwfJn+WsTwEdxDVCUkPDye2w+LmSMe8tK6GtUuS0aUfRqoPS4il9Jz/3ZUc+c5k2ubKDzZxFkC4tX8UY/jk57piQ58/E4p2T+bfnvJCBSjxro3XJiCtOLC3/3TAt9kuAyr2X7+2Z7i9koolap6Z51Ebat4Ukn8zRF6dc7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xs5LJS0t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42F4C4CED2;
+	Mon, 27 Jan 2025 14:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737988748;
-	bh=LfnHHGbeKdmpI3o6gKE0/9J1lYyAuLS65r0EzXiC80w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=m4aID6Xoc+QkPvpdbjtdIrl+pbJX3qTBfGNkfyTT5iViHkJFqYJ9Iqx5Syt62dzAH
-	 KLHUIcu0pypPeQxiIA9z0i2gyUvN5/j7FdyfQ0Edk5Q53yCyrgcrszI7XtBEZFbGo5
-	 JZZjgQivqisqT1UUUnihxj3QVlG7vGps0PF4+swhKphp/78hrO+DQxWlndY2IW3ngH
-	 JV+e7Y2BHNn1yOnIIh+xl4HlPJNKfrTXMdGcs2ABw123W8jx6uDIbh/M9ehvha01/C
-	 NOaj+6SvO1x+3w/9JE6pwmNd1BDQ9HU67PCoyzt484H2nHjaLoBCex037bgQ3kKtl8
-	 BTKj42JCU+cqg==
-From: cel@kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-nfs@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD changes for v6.14
-Date: Mon, 27 Jan 2025 09:39:07 -0500
-Message-ID: <20250127143907.5349-1-cel@kernel.org>
-X-Mailer: git-send-email 2.47.0
+	s=k20201202; t=1737988751;
+	bh=p4gLaNHRawYXb54OD27ZHGjc582vr6PGPZj7IZDyCKI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Xs5LJS0twt7azjVGRQDZEq3gTPfrSwk0EyMwRr6dfEaAp+cqp/351N9zhsg1CC/+z
+	 GIkZIA/dp2riG1k/zCNKRSIIXRkT+BlGY0jDszajAkZVP5HjhubwUKwCjYqO3hNsXS
+	 wtBqVNaR8xNvWzoGkHlXMYn6gldjiIUM4DUjiu8AeZcOzTkxzBcUOhzY6QKdvIsdT6
+	 3Gh/bjjMbNkTkilMu6r+a28uwqzNy8M2554VceMn5qMYNeY8U0xLaUanN2s6Pjsx5n
+	 47cn+5+NFRUx69cm7F/DI6DI7Apsfg/3epB+lNCHFuUerCja7ZLf+bb10spoGoiu1x
+	 0v3SNOmzOFWxA==
+Message-ID: <7735374ea376d966042160332bb8e9012a54187e.camel@kernel.org>
+Subject: Re: [PATCH 6/7] nfsd: filecache: change garbage collection to a
+ timer.
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Dave Chinner	
+ <david@fromorbit.com>
+Date: Mon, 27 Jan 2025 09:39:09 -0500
+In-Reply-To: <20250127012257.1803314-7-neilb@suse.de>
+References: <20250127012257.1803314-1-neilb@suse.de>
+	 <20250127012257.1803314-7-neilb@suse.de>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The following changes since commit 9d89551994a430b50c4fffcb1e617a057fa76e20:
+On Mon, 2025-01-27 at 12:20 +1100, NeilBrown wrote:
+> garbage collection never sleeps and no longer walks a list so it runs
+> quickly only requiring a spinlock.
+>=20
+> This means we don't need to use a workqueue, we can use a simple timer
+> instead.
+>=20
+> Rather than taking the lock in the timer callback, which would require
+> using _bh locking, simply test a flag and wake an nfsd thread.  That
+> thread checks the flag and ages the lists when needed.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfsd/filecache.c | 43 ++++++++++++++++++++++++-------------------
+>  1 file changed, 24 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 7264faa57280..eb95a53f806f 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -67,10 +67,12 @@ struct nfsd_fcache_disposal {
+>  	struct list_head older;	/* haven't been used in last 0-2 seconds */
+>  	struct list_head freeme; /* ready to be discarded */
+>  	unsigned long num_gc; /* Approximate size of recent plus older */
 
-  Linux 6.13-rc6 (2025-01-05 14:13:40 -0800)
+Dang, adding flags would push this into=20
+> -	struct delayed_work filecache_laundrette;
+> +	struct timer_list timer;
+>  	struct shrinker *file_shrinker;
+>  	struct nfsd_net *nn;
+> +	unsigned long flags;
+>  };
+> +#define NFSD_FCACHE_DO_AGE	BIT(0)	/* time to age the lists */
+> =20
+>  static struct kmem_cache		*nfsd_file_slab;
+>  static struct kmem_cache		*nfsd_file_mark_slab;
+> @@ -115,8 +117,8 @@ static const struct rhashtable_params nfsd_file_rhash=
+_params =3D {
+>  static void
+>  nfsd_file_schedule_laundrette(struct nfsd_fcache_disposal *l)
+>  {
+> -	queue_delayed_work(system_unbound_wq, &l->filecache_laundrette,
+> -			   NFSD_LAUNDRETTE_DELAY);
+> +	if (!timer_pending(&l->timer))
+> +		mod_timer(&l->timer, jiffies + NFSD_LAUNDRETTE_DELAY);
+>  }
+> =20
+>  static void
+> @@ -521,6 +523,19 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+>  {
+>  	struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> =20
+> +	if (test_and_clear_bit(NFSD_FCACHE_DO_AGE, &l->flags)) {
+> +		spin_lock(&l->lock);
+> +		list_splice_init(&l->older, &l->freeme);
+> +		list_splice_init(&l->recent, &l->older);
+> +		/* We don't know how many were moved to 'freeme' and don't want
+> +		 * to waste time counting - guess a half.  This is only used
+> +		 * for the shrinker which doesn't need complete precision.
+> +		 */
+> +		l->num_gc /=3D 2;
+> +		if (!list_empty(&l->older) || !list_empty(&l->recent))
+> +			mod_timer(&l->timer, jiffies + NFSD_LAUNDRETTE_DELAY);
+> +		spin_unlock(&l->lock);
+> +	}
+>  	if (!list_empty(&l->freeme)) {
+>  		LIST_HEAD(dispose);
+>  		int i;
+> @@ -557,23 +572,13 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+>  }
+> =20
+>  static void
+> -nfsd_file_gc_worker(struct work_struct *work)
+> +nfsd_file_gc_worker(struct timer_list *t)
+>  {
+>  	struct nfsd_fcache_disposal *l =3D container_of(
+> -		work, struct nfsd_fcache_disposal, filecache_laundrette.work);
+> +		t, struct nfsd_fcache_disposal, timer);
+> =20
+> -	spin_lock(&l->lock);
+> -	list_splice_init(&l->older, &l->freeme);
+> -	list_splice_init(&l->recent, &l->older);
+> -	/* We don't know how many were moved to 'freeme' and don't want
+> -	 * to waste time counting - guess a half.
+> -	 */
+> -	l->num_gc /=3D 2;
+> -	if (!list_empty(&l->freeme))
+> -		svc_wake_up(l->nn->nfsd_serv);
+> -	if (!list_empty(&l->older) || !list_empty(&l->recent))
+> -		nfsd_file_schedule_laundrette(l);
+> -	spin_unlock(&l->lock);
+> +	set_bit(NFSD_FCACHE_DO_AGE, &l->flags);
+> +	svc_wake_up(l->nn->nfsd_serv);
 
-are available in the Git repository at:
+Disregard my earlier comment about the cacheline. It still wouldn't
+hurt to do, but since you're not actually taking the lock inside the
+timer callback in this version, it's not as big a deal.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14
+This seems better.
 
-for you to fetch changes up to c92066e78600b058638785288274a1f1426fe268:
+>  }
+> =20
+>  static unsigned long
+> @@ -868,7 +873,7 @@ nfsd_alloc_fcache_disposal(void)
+>  	if (!l)
+>  		return NULL;
+>  	spin_lock_init(&l->lock);
+> -	INIT_DELAYED_WORK(&l->filecache_laundrette, nfsd_file_gc_worker);
+> +	timer_setup(&l->timer, nfsd_file_gc_worker, 0);
+>  	INIT_LIST_HEAD(&l->recent);
+>  	INIT_LIST_HEAD(&l->older);
+>  	INIT_LIST_HEAD(&l->freeme);
+> @@ -891,7 +896,7 @@ nfsd_alloc_fcache_disposal(void)
+>  static void
+>  nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
+>  {
+> -	cancel_delayed_work_sync(&l->filecache_laundrette);
+> +	del_timer_sync(&l->timer);
+>  	shrinker_free(l->file_shrinker);
+>  	nfsd_file_release_list(&l->recent);
+>  	WARN_ON_ONCE(!list_empty(&l->recent));
 
-  sunrpc: Remove gss_{de,en}crypt_xdr_buf deadcode (2025-01-21 15:30:01 -0500)
-
-----------------------------------------------------------------
-NFSD 6.14 Release Notes
-
-Jeff Layton contributed an implementation of NFSv4.2+ attribute
-delegation, as described here:
-
-https://www.ietf.org/archive/id/draft-ietf-nfsv4-delstid-08.html
-
-This interoperates with similar functionality introduced into the
-Linux NFS client in v6.11. An attribute delegation permits an NFS
-client to manage a file's mtime, rather than flushing dirty data to
-the NFS server so that the file's mtime reflects the last write,
-which is considerably slower.
-
-Neil Brown contributed dynamic NFSv4.1 session slot table resizing.
-This facility enables NFSD to increase or decrease the number of
-slots per NFS session depending on server memory availability. More
-session slots means greater parallelism.
-
-Chuck Lever fixed a long-standing latent bug where NFSv4 COMPOUND
-encoding screws up when crossing a page boundary in the encoding
-buffer. This is a zero-day bug, but hitting it is rare and depends
-on the NFS client implementation. The Linux NFS client does not
-happen to trigger this issue.
-
-A variety of bug fixes and other incremental improvements fill out
-the list of commits in this release. Great thanks to all
-contributors, reviewers, testers, and bug reporters who participated
-during this development cycle.
-
-----------------------------------------------------------------
-Chen Hanxiao (1):
-      nfsd: trace: remove redundant stateid even deleg_recall
-
-Chuck Lever (11):
-      NFSD: Clean up unused variable
-      NFSD: Encode COMPOUND operation status on page boundaries
-      NFSD: Insulate nfsd4_encode_read() from page boundaries in the encode buffer
-      NFSD: Insulate nfsd4_encode_read_plus() from page boundaries in the encode buffer
-      NFSD: Insulate nfsd4_encode_read_plus_data() from page boundaries in the encode buffer
-      NFSD: Insulate nfsd4_encode_readlink() from page boundaries in the encode buffer
-      NFSD: Refactor nfsd4_do_encode_secinfo() again
-      NFSD: Insulate nfsd4_encode_secinfo() from page boundaries in the encode buffer
-      NFSD: Insulate nfsd4_encode_fattr4() from page boundaries in the encode buffer
-      SUNRPC: Document validity guarantees of the pointer returned by reserve_space
-      Revert "SUNRPC: Reduce thread wake-up rate when receiving large RPC messages"
-
-Dr. David Alan Gilbert (3):
-      sunrpc: Remove unused xprt_iter_get_xprt
-      sunrpc: Remove gss_generic_token deadcode
-      sunrpc: Remove gss_{de,en}crypt_xdr_buf deadcode
-
-Jeff Layton (10):
-      nfsd: fix handling of delegated change attr in CB_GETATTR
-      nfs_common: make include/linux/nfs4.h include generated nfs4_1.h
-      nfsd: switch to autogenerated definitions for open_delegation_type4
-      nfsd: rename NFS4_SHARE_WANT_* constants to OPEN4_SHARE_ACCESS_WANT_*
-      nfsd: prepare delegation code for handing out *_ATTRS_DELEG delegations
-      nfsd: add support for FATTR4_OPEN_ARGUMENTS
-      nfsd: rework NFS4_SHARE_WANT_* flag handling
-      nfsd: add support for delegated timestamps
-      nfsd: handle delegated timestamps in SETATTR
-      nfsd: implement OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
-
-NeilBrown (10):
-      nfsd: use new wake_up_var interfaces.
-      sunrpc/svc: use store_release_wake_up()
-      nfsd: don't use sv_nrthreads in connection limiting calculations.
-      sunrpc: remove all connection limit configuration
-      nfsd: use an xarray to store v4.1 session slots
-      nfsd: remove artificial limits on the session-based DRC
-      nfsd: add session slot count to /proc/fs/nfsd/clients/*/info
-      nfsd: allocate new session-based DRC slots on demand.
-      nfsd: add support for freeing unused session-DRC slots
-      nfsd: add shrinker to reduce number of slots allocated per session
-
-Olga Kornievskaia (2):
-      NFSD: fix decoding in nfs4_xdr_dec_cb_getattr
-      NFSD: add cb opcode to WARN_ONCE on failed callback
-
-Scott Mayhew (1):
-      nfsd: fix legacy client tracking initialization
-
-Yang Erkun (4):
-      SUNRPC: introduce cache_check_rcu to help check in rcu context
-      nfsd: no need get cache ref when protected by rcu
-      SUNRPC: no need get cache ref when protected by rcu
-      nfsd: fix UAF when access ex_uuid or ex_stats
-
- Documentation/sunrpc/xdr/nfs4_1.x       | 186 +++++++++++
- fs/lockd/svc.c                          |   8 -
- fs/nfs/callback.c                       |   4 -
- fs/nfs/callback_xdr.c                   |   1 +
- fs/nfsd/Makefile                        |  16 +-
- fs/nfsd/export.c                        |  25 +-
- fs/nfsd/netns.h                         |   6 -
- fs/nfsd/nfs4callback.c                  |  60 +++-
- fs/nfsd/nfs4proc.c                      |  31 +-
- fs/nfsd/nfs4recover.c                   |   1 -
- fs/nfsd/nfs4state.c                     | 526 +++++++++++++++++++++++---------
- fs/nfsd/nfs4xdr.c                       | 338 +++++++++++++-------
- fs/nfsd/nfs4xdr_gen.c                   | 256 ++++++++++++++++
- fs/nfsd/nfs4xdr_gen.h                   |  25 ++
- fs/nfsd/nfsctl.c                        |  42 ---
- fs/nfsd/nfsd.h                          |  13 +-
- fs/nfsd/nfsfh.c                         |   2 +
- fs/nfsd/nfssvc.c                        |  37 ---
- fs/nfsd/state.h                         |  36 ++-
- fs/nfsd/trace.h                         |   1 -
- fs/nfsd/xdr4.h                          |   2 -
- fs/nfsd/xdr4cb.h                        |  10 +-
- include/linux/nfs4.h                    |   9 +-
- include/linux/nfs_xdr.h                 |   5 -
- include/linux/sunrpc/cache.h            |   2 +
- include/linux/sunrpc/gss_asn1.h         |  81 -----
- include/linux/sunrpc/gss_krb5.h         |   1 -
- include/linux/sunrpc/svc.h              |  13 +-
- include/linux/sunrpc/svc_xprt.h         |  22 ++
- include/linux/sunrpc/xdrgen/nfs4_1.h    | 153 ++++++++++
- include/linux/sunrpc/xprtmultipath.h    |   1 -
- include/linux/time64.h                  |   5 +
- include/uapi/linux/nfs4.h               |   7 +-
- net/sunrpc/auth_gss/Makefile            |   2 +-
- net/sunrpc/auth_gss/gss_generic_token.c | 231 --------------
- net/sunrpc/auth_gss/gss_krb5_crypto.c   |  55 ----
- net/sunrpc/auth_gss/gss_krb5_internal.h |   7 -
- net/sunrpc/auth_gss/gss_mech_switch.c   |   1 -
- net/sunrpc/cache.c                      |  53 ++--
- net/sunrpc/svc_xprt.c                   |  38 +--
- net/sunrpc/svcsock.c                    |  12 +-
- net/sunrpc/xdr.c                        |   6 +
- net/sunrpc/xprtmultipath.c              |  17 --
- 43 files changed, 1462 insertions(+), 885 deletions(-)
- create mode 100644 Documentation/sunrpc/xdr/nfs4_1.x
- create mode 100644 fs/nfsd/nfs4xdr_gen.c
- create mode 100644 fs/nfsd/nfs4xdr_gen.h
- delete mode 100644 include/linux/sunrpc/gss_asn1.h
- create mode 100644 include/linux/sunrpc/xdrgen/nfs4_1.h
- delete mode 100644 net/sunrpc/auth_gss/gss_generic_token.c
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
