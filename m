@@ -1,48 +1,50 @@
-Return-Path: <linux-nfs+bounces-9670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA01AA1D7F9
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:21:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DCF6A1D802
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:21:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D224E1887AD0
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:21:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3933D7A1534
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:21:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26B3524B26;
-	Mon, 27 Jan 2025 14:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31EC4757F3;
+	Mon, 27 Jan 2025 14:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="ne/w0z5I"
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="KD4QmWXb"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from relay0.mail.gandi.net (relay0.mail.gandi.net [217.70.178.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC75812B94;
-	Mon, 27 Jan 2025 14:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F79A5672;
+	Mon, 27 Jan 2025 14:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737987641; cv=none; b=komskIEBP1+TTlU2dOZG4OBWYbxz7yVdwePbt1TWl0pkt3jCTSqK+jufxNNwjVcAkfuPo6KAqZff/6DIAHU6ECk4EqzE5SvFFidWGuwa+MCNLmlu4TAhhL2/oBndtea7u03DQl75AV4s35mmrxVJ4+oG58ViVu9epn34ykipgT4=
+	t=1737987642; cv=none; b=c4wzwdBS0Kcm5l1AePe6OXpH5pKnBcbkxkbZfCBEhUhNlrsrJTPMM21DLRhLR3f35HaBsD4kZdODN4hJrOqXihRxW4NKKRcaOJcWvxdpmM015yEDliYBRK8QkfJp2QlFSSVfnaiD6obSAQWrWkzSodbWVB8B/C+56+lwcU6w98U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737987641; c=relaxed/simple;
-	bh=guyZ/MKlXIsvQlOpF2wFMhfgN/7gqK/EDP70Q870oR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JPsEZv0uZSARYyOmymo7JEC25gJK0OfcZPhLJ0hKGEHOCj6XiHvcsXh6Zec4k4dNpmLT2RSqwlG9dvQNkC7LK3I/BarVtdLofEQYi8ecrNrz0IEmRTd25M2KFTy4DERQveHD2thZ2gYC9ASD56myaTdAz0qzPI31HMej7k+0ga0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=ne/w0z5I; arc=none smtp.client-ip=217.70.178.220
+	s=arc-20240116; t=1737987642; c=relaxed/simple;
+	bh=GDWPCGSt/7zsfTvMtYIvQY+Y/5xyDeZGGp9EKlQf3wo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m4sgOLrN8E6mbRUxhVSTgh1p6lWDBtcOhjPaPt63cQ4vxQxCWpZP6gYDEnYPFNpLPfN/QmHgb97SrnscYJ0J08bfkqcuNOFkFbYe61szOuHCkBP1VpwA5kBAs9GOE7b7rjFSL3kCj0Xhe/3Y3G/WHzdKonPUDFLQRYdMPr7co3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=KD4QmWXb; arc=none smtp.client-ip=217.70.178.220
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1EFE144072;
-	Mon, 27 Jan 2025 14:20:26 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C879440FC;
+	Mon, 27 Jan 2025 14:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
-	t=1737987629;
+	t=1737987632;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=u8wm5rMnmAnyi9AFWZeRK7rLAfXC2gHYAuN/gOs/kNo=;
-	b=ne/w0z5IU96ErSqVbgSgHiBBjPWJZ238V3evVvEwux7Pa0/w3b6qrbAHsxEn2n7HsCrsdu
-	VguJQ+lKMsl2etTXJUm9peImKnJ3zRACD2QkPVwiXnu7kGHXq1bbmVSQzghUiJz7hqXXyN
-	BGgu4H/UtqFfijplFgctu85tRT7j0ZTe3zJ6tM/6/OLG5heKSpjWec1fEMgMnp0p+YQ+8J
-	QMBVb1Uf+scCSwJM01zbPrSYVa4dOcfBCCl/GqzjUYAAccY8KTHBVxV7vOAcyOPNq8KUFc
-	4KPIrNgCtgTwb/APbt351AIjFqMUKZDlmXblQGhduTqdfgzY8BBRkm77MZTj1g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WbOGTsm14785asGLdNSxUyJMisFCbnrzbdzQwYCGMkg=;
+	b=KD4QmWXbuOnUfqiu5m2nVVbqKQxGR3JOrAsXs5h9ggDWhfwxx7+vN5g867yT74zwv1DeuA
+	zD8LvITxrnB52CURxNY6C3KcEzFYheIHrjZpIRAxdBTIzc5X8b6yEkUK8qKD339Alva4zR
+	wGeD+Y4It9s8aC1FbiFT9lpWlXyjTxu2TwzIHNfPEOfP1d5YvdxHD+ITyuA6qBVtQiwpRL
+	nNYD3bKfDWaHTsy+4hSVC0MxUUjSIU5b+6QXD+n4ATqFW/ANjbnpVmP1OMXKgUiwDkCdFP
+	tbdQW/djpXcyJ5i+LB2HnaaJfF0GnsH7DU7CtXhR1sHGK7Sh3e5f23Da7BOL4A==
 From: nicolas.bouchinet@clip-os.org
 To: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
@@ -60,10 +62,12 @@ Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
 	Jason Gunthorpe <jgg@ziepe.ca>,
 	Al Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v1 0/9] Fixes multiple sysctl bound checks
-Date: Mon, 27 Jan 2025 15:19:57 +0100
-Message-ID: <20250127142014.37834-1-nicolas.bouchinet@clip-os.org>
+Subject: [PATCH v1 1/9] sysctl: Fixes nf_conntrack_max bounds
+Date: Mon, 27 Jan 2025 15:19:58 +0100
+Message-ID: <20250127142014.37834-2-nicolas.bouchinet@clip-os.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250127142014.37834-1-nicolas.bouchinet@clip-os.org>
+References: <20250127142014.37834-1-nicolas.bouchinet@clip-os.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -73,64 +77,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -60
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudejgedgudefgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghenucggtffrrghtthgvrhhnpeeiieegheetheeftedutdeifeeugfefveehvedviedutedvleeljeevkeekvdelkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrieefrddvgeeirddukeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdeifedrvdegiedrudekjedphhgvlhhopegrrhgthhhlihhnuhigrddrpdhmrghilhhfrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghdpnhgspghrtghpthhtohepudeipdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghouggrlhhishhts
- egtohgurgdrtghsrdgtmhhurdgvughupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtfhhilhhtvghrqdguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgvthgvrghmsehnvghtfhhilhhtvghrrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudejgedgudefgedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuohhrthgvugftvggtihhpvdculdegtddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghenucggtffrrghtthgvrhhnpeetheefteekueejtefhheeilefhjeefudetjeeileevgeeffeeiueehieettefhveenucfkphepledtrdeifedrvdegiedrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrieefrddvgeeirddukeejpdhhvghloheprghrtghhlhhinhhugidrrddpmhgrihhlfhhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrughmrgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhstghsihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohgurghlihhsthestghouggrrdgtshdrtghmuhdrvgguuhdpr
+ hgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthhfihhlthgvrhdquggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrvghtvggrmhesnhgvthhfihhlthgvrhdrohhrgh
 X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
 From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-Hi,
+Bound nf_conntrack_max sysctl writings between SYSCTL_ZERO
+and SYSCTL_INT_MAX.
 
-This patchset adds some bound checks to sysctls to avoid negative
-value writes.
+The proc_handler has thus been updated to proc_dointvec_minmax.
 
-The patched sysctls were storing the result of the proc_dointvec
-proc_handler into an unsigned int data. proc_dointvec being able to
-parse negative value, and it return value being a signed int, this could
-lead to undefined behaviors.
-This has led to kernel crash in the past as described in commit
-3b3376f222e3 ("sysctl.c: fix underflow value setting risk in vm_table")
-
-Most of them are now bounded between SYSCTL_ZERO and SYSCTL_INT_MAX.
-nf_conntrack_expect_max is bounded between SYSCTL_ONE and SYSCTL_INT_MAX
-as defined by its documentation.
-
-This patchset has been written over sysctl-testing branch [1].
-See [2] for similar sysctl fixes currently in review.
-
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-testing
-[2]: https://lore.kernel.org/all/20250115132211.25400-1-nicolas.bouchinet@clip-os.org/
-
-Best regards,
-
-Nicolas
-
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 ---
+ net/netfilter/nf_conntrack_standalone.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Nicolas Bouchinet (9):
-  sysctl: Fixes nf_conntrack_max bounds
-  sysctl: Fixes nf_conntrack_expect_max bounds
-  sysctl: Fixes gc_thresh bounds
-  sysctl: Fixes idmap_cache_timeout bounds
-  sysctl: Fixes nsm_local_state bounds
-  sysctl/coda: Fixes timeout bounds
-  sysctl: Fixes scsi_logging_level bounds
-  sysctl/infiniband: Fixes infiniband sysctl bounds
-  sysctl: Fixes max-user-freq bounds
-
- drivers/char/hpet.c                     |  4 +++-
- drivers/infiniband/core/iwcm.c          |  4 +++-
- drivers/infiniband/core/ucma.c          |  4 +++-
- drivers/scsi/scsi_sysctl.c              |  4 +++-
- fs/coda/sysctl.c                        |  4 +++-
- fs/lockd/svc.c                          |  4 +++-
- fs/nfs/nfs4sysctl.c                     |  4 +++-
- net/ipv4/route.c                        |  4 +++-
- net/ipv6/route.c                        |  4 +++-
- net/ipv6/xfrm6_policy.c                 |  4 +++-
- net/netfilter/nf_conntrack_standalone.c | 12 +++++++++---
- 11 files changed, 39 insertions(+), 13 deletions(-)
-
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 7d4f0fa8b609d..40ed3ef9cb22d 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -619,7 +619,9 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ 	[NF_SYSCTL_CT_COUNT] = {
+ 		.procname	= "nf_conntrack_count",
+@@ -948,7 +950,9 @@ static struct ctl_table nf_ct_netfilter_table[] = {
+ 		.data		= &nf_conntrack_max,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_INT_MAX,
+ 	},
+ };
+ 
 -- 
 2.48.1
 
