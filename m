@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-9684-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9685-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 536D5A1D892
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:40:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BE23A1D8B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:50:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6018B1884826
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:40:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2169C1886AFC
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:50:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67954757F3;
-	Mon, 27 Jan 2025 14:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893E382866;
+	Mon, 27 Jan 2025 14:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkYTZOB8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqWktKVg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F2171747
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:40:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6418178F41
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737988831; cv=none; b=PbvK/xN1HCCueQRFyex6wpHe+/OwYQIF/nLAhmH9ZI0GPnDTw67h/bSDB+Pq/ID9krOtRsD2tq6FLLlQj3ywijPOmqNeAB7lhYgrBgOO9RSbkIZeZr9vZipRoRf9OEBGJOzvJBWozUs6QJdFPa/g1XRK5c2B0qbhAM+xpLlSaPc=
+	t=1737989421; cv=none; b=kplHamY0WWB507hLFXYDk1X2La756QFqIrSJ7iI49M1QwV+7yuHxgQvcwmPGkHBg9LoXLZeJKGc3JkjMPdJk8Yd3H5OBFgNQ1RjDOfE3uVtEddbj4v4usCFuldsutE2svkTBZAiIlKW5oAlxn0VE4y4OCpawRsNLGkd26BKtogk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737988831; c=relaxed/simple;
-	bh=tyYeAb+rq7O0A6JFSQQJR0ZYu+HpytVli0ObPmlQXd8=;
+	s=arc-20240116; t=1737989421; c=relaxed/simple;
+	bh=6na6GIWjypgguBH9W4t3171YJws4FjAhK5dKuhcgPGk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KFVnkjiTbIvs2caBgrQaXXFLxs0GadGWE+WHHQayielEeEMQ4rihQWQO1KGg9KfPFMbOuectj6pQPm/XtxXoKkgokzFPlTaOckCq1SR8iHRaDu7k89Zga0PUQsp6bms4w2ullqQ8+SPY/QOhTCpLyBF47ofchIXYdaQhW+ZvhnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkYTZOB8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58203C4CED2;
-	Mon, 27 Jan 2025 14:40:30 +0000 (UTC)
+	 Content-Type:MIME-Version; b=g1+dZdjiKz/96+Dq7Q/3YhGCxU2daZOCLZZywvhL8XWBtOECfw313mW8K4WPJNXvAApFIWJUYL5U0jRn/cdljaP+BV6k9PoGvfBCMkEwRbasHIPjtCSCHLp0ZRYMobu2aaz7FhVNqL5FcdJyH0ubuUmRWQN/e6rhJ9+MIrRqoOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqWktKVg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34623C4CEE1;
+	Mon, 27 Jan 2025 14:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737988831;
-	bh=tyYeAb+rq7O0A6JFSQQJR0ZYu+HpytVli0ObPmlQXd8=;
+	s=k20201202; t=1737989420;
+	bh=6na6GIWjypgguBH9W4t3171YJws4FjAhK5dKuhcgPGk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AkYTZOB8qB0IJIlnStYcX0nHEvVRTwjMi7fiN5LhC9s0sCzBO6GpDrWjtHaKhxdUC
-	 ePuT1o5XkF4SOZnnXqSCjwCSaD9G29KLgmJqT0+UryB489n60RQ7NWVTmsuOpCVJQc
-	 F9qkbrlSnWJcGYdwYCqDAyw3hx12scdhrsvxt02DBI18+sbiTmO7KnCbvMdz/kQA5N
-	 tw9HtSn1TZ0nlyxnKg8MP+YGXQzeY9nxH80644AfpY8vUnf9Nk8+515QPkmnfUxbkS
-	 g7FAMAFk7rT3yhlQKc8cgnHy8Ra1bzcSCojCDKvf4GKo53B7Iw67FLtdWfD2a0Jqzv
-	 t+AY0KU0GbY4w==
-Message-ID: <aa9b98a41a588aca0a47e545e04bda78b2f8191c.camel@kernel.org>
-Subject: Re: [PATCH 7/7] nfsd: filecache: give disposal lock a unique class
- name.
+	b=kqWktKVgCQ5CLuVmZ+ZxF4Ca4FDI7uFMgX0LFLhYmbu53KQux3UWyuHJYevsK9nxQ
+	 c7ChQIv1NlTMPp/fny3V2ru6v0jrymBxd2xUIqT37yC3AaaqDuMX+/9C1cqXKrr0Pm
+	 YR7ehhjQNbnHde4ov0pMHgcGVb4Skj4ANJJuRHBueW9go2/SUQB5ajHqvMX/1L8Q9S
+	 htZAdS/G1IcGZ2SSOUfCgbDZPDadk/SdatFKK2dklzC3vXkOQWqLm47KHY5VpCqEGp
+	 vg+rcqtPyB8xRZBoNxOGedrLvXH7hUmEcykhjkWisDnDQb8dcSPNPrxlHEYBK27RUu
+	 geNat8kKUXC/w==
+Message-ID: <b6badc6c55d60a1be4046ae0af53628c0a7f2020.camel@kernel.org>
+Subject: Re: [PATCH v3 0/4] Avoid returning NFS4ERR_FILE_OPEN when not
+ appropriate
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Dave Chinner	
- <david@fromorbit.com>
-Date: Mon, 27 Jan 2025 09:40:29 -0500
-In-Reply-To: <20250127012257.1803314-8-neilb@suse.de>
-References: <20250127012257.1803314-1-neilb@suse.de>
-	 <20250127012257.1803314-8-neilb@suse.de>
+To: cel@kernel.org, Amir Goldstein <amir73il@gmail.com>, Neil Brown
+	 <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	 <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 27 Jan 2025 09:50:19 -0500
+In-Reply-To: <20250126215020.2466-1-cel@kernel.org>
+References: <20250126215020.2466-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,47 +136,56 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-01-27 at 12:20 +1100, NeilBrown wrote:
-> There are at least three locks in the kernel which are initialised as
+On Sun, 2025-01-26 at 16:50 -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
->   spin_Lock_init(&l->lock);
+> This short series aims to prevent NFSD from returning
+> NFS4ERR_FILE_OPEN when an NFSv4 LINK, RENAME, or REMOVE operation
+> targets a directory.  The only time the protocol spec permits a
+> server to return FILE_OPEN is when the target of the operation is an
+> object that is open and cannot be closed immediately to satisfy the
+> request.
 >=20
-> This makes them hard to differential in /proc/lock_stat.
+> I would have preferred these fixes go into NFSv4-specific sections
+> of NFSD, but the current structure of the code prevents doing that
+> while maintaining operational efficiency. Plus, these small patches
+> should be able to apply cleanly to LTS kernels.
 >=20
-> For the lock in nfsd/filecache.c introduce a variable with a more
-> descriptve name so we can:
+> We can defer deeper restructuring for later. For example,
+> fh_verify() could be made to return an errno instead of a generic
+> NFS status code; then the VFS utility functions in fs/nfsd/vfs.c
+> could be made to do the same, making their callers responsible for
+> the proper NFS version-specific translation of the errno into a
+> status code.
+>
+> This series has passed git regression and xfstests. I'm interested
+> in review and comment about this approach, but please do test these
+> if you have the ability to trigger -EBUSY easily.
 >=20
->   spin_lock_init(&nfsd_fcache_disposal->lock);
+> NFSv4 OPEN is also affected, but because of its complexity will
+> require careful audit (ie, a separate patch set). Please send a copy
+> of the output of WARN_ONCE so we can see where to start digging in
+> that area.
 >=20
-> and easily identify this in /proc/lock_stat.
+> Changes since v2:
+> - Fix crash when renaming to a non-existent object
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/filecache.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Changes since RFC:
+> - Address a minor code odor
+> - Clarify some code comments
 >=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index eb95a53f806f..af95bc381753 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -867,12 +867,13 @@ __nfsd_file_cache_purge(struct net *net)
->  static struct nfsd_fcache_disposal *
->  nfsd_alloc_fcache_disposal(void)
->  {
-> -	struct nfsd_fcache_disposal *l;
-> +	struct nfsd_fcache_disposal *l, *nfsd_fcache_disposal;
-> =20
->  	l =3D kmalloc(sizeof(*l), GFP_KERNEL);
->  	if (!l)
->  		return NULL;
-> -	spin_lock_init(&l->lock);
-> +	nfsd_fcache_disposal =3D l;
-> +	spin_lock_init(&nfsd_fcache_disposal->lock);
->  	timer_setup(&l->timer, nfsd_file_gc_worker, 0);
->  	INIT_LIST_HEAD(&l->recent);
->  	INIT_LIST_HEAD(&l->older);
+> Chuck Lever (4):
+>   NFSD: nfsd_unlink() clobbers non-zero status returned from
+>     fh_fill_pre_attrs()
+>   NFSD: Never return NFS4ERR_FILE_OPEN when removing a directory
+>   NFSD: Return NFS4ERR_FILE_OPEN only when renaming over an open file
+>   NFSD: Return NFS4ERR_FILE_OPEN only when linking an open file
+>=20
+>  fs/nfsd/vfs.c | 105 +++++++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 79 insertions(+), 26 deletions(-)
+>=20
 
-Weird, but ok.
+This all looks pretty reasonable to me.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
