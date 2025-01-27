@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-9682-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AA18A1D88D
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:39:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E084A1D88E
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:40:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E7B13A3C1E
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:39:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F8A81883F27
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:40:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB6D757F3;
-	Mon, 27 Jan 2025 14:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55ED52746B;
+	Mon, 27 Jan 2025 14:40:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xs5LJS0t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THacuavZ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD45E6F30F
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3088327466
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:40:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737988751; cv=none; b=c5buLmULmrDM8JiwBX/EWE2PfI87JbcVF4rOxlm7B0hXxfB6bAezPQrEX7FuA/JwMi3WEHrfqU7cEwpdByIrCypogZQ6XXUYQBE96Bby83C+ewNPjusdOyKJPYDkERiE3MEAhNhpJttGJ+VMeEITZap52veOu2LgRaupUcZBdAE=
+	t=1737988811; cv=none; b=uYS4E2JuuGqfii8LofnsXyCoxXZH7QTP4U0KCtH+XW20s/a0v0iWBN7VxXsLSXaoPdJNzPm3F30WKYK/myIy6tRPA1QwDzCOfJMnrldyL8tm5jWvYAwFIylXYu5rmN4OELXyVxOR3M4pywzhl013/Wo1U0VjA/lIKb2WSRv/qj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737988751; c=relaxed/simple;
-	bh=p4gLaNHRawYXb54OD27ZHGjc582vr6PGPZj7IZDyCKI=;
+	s=arc-20240116; t=1737988811; c=relaxed/simple;
+	bh=3waeSRUEuJhpv6evrvqC0vJILveMGGni/lpnhx/SIt8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U2eC6XwfJn+WsTwEdxDVCUkPDye2w+LmSMe8tK6GtUuS0aUfRqoPS4il9Jz/3ZUc+c5k2ubKDzZxFkC4tX8UY/jk57piQ58/E4p2T+bfnvJCBSjxro3XJiCtOLC3/3TAt9kuAyr2X7+2Z7i9koolap6Z51Ebat4Ukn8zRF6dc7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xs5LJS0t; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42F4C4CED2;
-	Mon, 27 Jan 2025 14:39:10 +0000 (UTC)
+	 Content-Type:MIME-Version; b=t0HJeBVf7XH8Erv93Tduz7cwbXsCT10UU5AlPIbsw6Ua8KISN8afB3dCEOhu2orobSH7jfeFhXz/eesTnM+1lqeVqyYhz8bDwwoZoMV07VB+KcNJnGwU12vDVGwM8JrqOH7Dvfd6rnX9pfsEblRdiW0OnU1mq2Voy7bWr6HhrLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THacuavZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA41C4CED2;
+	Mon, 27 Jan 2025 14:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737988751;
-	bh=p4gLaNHRawYXb54OD27ZHGjc582vr6PGPZj7IZDyCKI=;
+	s=k20201202; t=1737988810;
+	bh=3waeSRUEuJhpv6evrvqC0vJILveMGGni/lpnhx/SIt8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Xs5LJS0twt7azjVGRQDZEq3gTPfrSwk0EyMwRr6dfEaAp+cqp/351N9zhsg1CC/+z
-	 GIkZIA/dp2riG1k/zCNKRSIIXRkT+BlGY0jDszajAkZVP5HjhubwUKwCjYqO3hNsXS
-	 wtBqVNaR8xNvWzoGkHlXMYn6gldjiIUM4DUjiu8AeZcOzTkxzBcUOhzY6QKdvIsdT6
-	 3Gh/bjjMbNkTkilMu6r+a28uwqzNy8M2554VceMn5qMYNeY8U0xLaUanN2s6Pjsx5n
-	 47cn+5+NFRUx69cm7F/DI6DI7Apsfg/3epB+lNCHFuUerCja7ZLf+bb10spoGoiu1x
-	 0v3SNOmzOFWxA==
-Message-ID: <7735374ea376d966042160332bb8e9012a54187e.camel@kernel.org>
-Subject: Re: [PATCH 6/7] nfsd: filecache: change garbage collection to a
- timer.
+	b=THacuavZgxKr+ap8YTwKVrm7LIllHZWMBaTRMzI7/5KYl91Y3PJ4C65Fj/+NJLwXc
+	 X/W54MACk6tB5r1gbUbwYGLljXGohvT6Auili5CeHAob391BojVxXqO3kRwANV267j
+	 12/5jYj+LEXYe9Qomjde2hPlJptS59U0GjjeEMWkV04KKxLFD3/03l9vV1Ijak5Am3
+	 XtcvzznXH86r91KdZxs3kih6CGnnP8GbXPFQWtXW1NlQL/7NKla2L65Z6umH0e4e5a
+	 O9HAGjZmJS9m6Aug7mCj4Q4pJc3+Riq50qCHneyLJWj9fR+d9LPrnYRLIC+fJIVca6
+	 o7yj5i8glvVYA==
+Message-ID: <acb2c69ce2ef0f4fe0e2ba91397e9c9d3ef4aa89.camel@kernel.org>
+Subject: Re: [PATCH 5/7] nfsd: filecache: document the arbitrary limit on
+ file-disposes-per-loop
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Dave Chinner	
  <david@fromorbit.com>
-Date: Mon, 27 Jan 2025 09:39:09 -0500
-In-Reply-To: <20250127012257.1803314-7-neilb@suse.de>
+Date: Mon, 27 Jan 2025 09:40:09 -0500
+In-Reply-To: <20250127012257.1803314-6-neilb@suse.de>
 References: <20250127012257.1803314-1-neilb@suse.de>
-	 <20250127012257.1803314-7-neilb@suse.de>
+	 <20250127012257.1803314-6-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,126 +138,53 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2025-01-27 at 12:20 +1100, NeilBrown wrote:
-> garbage collection never sleeps and no longer walks a list so it runs
-> quickly only requiring a spinlock.
->=20
-> This means we don't need to use a workqueue, we can use a simple timer
-> instead.
->=20
-> Rather than taking the lock in the timer callback, which would require
-> using _bh locking, simply test a flag and wake an nfsd thread.  That
-> thread checks the flag and ages the lists when needed.
+> Rather than having the bare number "8" use a named constant and explain
+> the tradeoffs that lead to the choice.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/filecache.c | 43 ++++++++++++++++++++++++-------------------
->  1 file changed, 24 insertions(+), 19 deletions(-)
+>  fs/nfsd/filecache.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 7264faa57280..eb95a53f806f 100644
+> index 1e90da507152..7264faa57280 100644
 > --- a/fs/nfsd/filecache.c
 > +++ b/fs/nfsd/filecache.c
-> @@ -67,10 +67,12 @@ struct nfsd_fcache_disposal {
->  	struct list_head older;	/* haven't been used in last 0-2 seconds */
->  	struct list_head freeme; /* ready to be discarded */
->  	unsigned long num_gc; /* Approximate size of recent plus older */
-
-Dang, adding flags would push this into=20
-> -	struct delayed_work filecache_laundrette;
-> +	struct timer_list timer;
->  	struct shrinker *file_shrinker;
->  	struct nfsd_net *nn;
-> +	unsigned long flags;
->  };
-> +#define NFSD_FCACHE_DO_AGE	BIT(0)	/* time to age the lists */
-> =20
->  static struct kmem_cache		*nfsd_file_slab;
->  static struct kmem_cache		*nfsd_file_mark_slab;
-> @@ -115,8 +117,8 @@ static const struct rhashtable_params nfsd_file_rhash=
-_params =3D {
->  static void
->  nfsd_file_schedule_laundrette(struct nfsd_fcache_disposal *l)
->  {
-> -	queue_delayed_work(system_unbound_wq, &l->filecache_laundrette,
-> -			   NFSD_LAUNDRETTE_DELAY);
-> +	if (!timer_pending(&l->timer))
-> +		mod_timer(&l->timer, jiffies + NFSD_LAUNDRETTE_DELAY);
+> @@ -493,6 +493,21 @@ nfsd_file_dispose_list_delayed(struct list_head *dis=
+pose)
+>  	}
 >  }
 > =20
->  static void
-> @@ -521,6 +523,19 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
->  {
->  	struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
-> =20
-> +	if (test_and_clear_bit(NFSD_FCACHE_DO_AGE, &l->flags)) {
-> +		spin_lock(&l->lock);
-> +		list_splice_init(&l->older, &l->freeme);
-> +		list_splice_init(&l->recent, &l->older);
-> +		/* We don't know how many were moved to 'freeme' and don't want
-> +		 * to waste time counting - guess a half.  This is only used
-> +		 * for the shrinker which doesn't need complete precision.
-> +		 */
-> +		l->num_gc /=3D 2;
-> +		if (!list_empty(&l->older) || !list_empty(&l->recent))
-> +			mod_timer(&l->timer, jiffies + NFSD_LAUNDRETTE_DELAY);
-> +		spin_unlock(&l->lock);
-> +	}
->  	if (!list_empty(&l->freeme)) {
->  		LIST_HEAD(dispose);
+> +/*
+> + * Disposing of files can involve non-trivial work, and they
+> + * can appear in batches.  So we don't want to try handling them
+> + * all in one thread - if there are lots it would be better to allow
+> + * several nfsd threads to handle them in parallel.
+> + * On average one RPC request can create at most 1 file to be disposed
+> + * so handling one each time around the nfsd loop should keep the list
+> + * under control.  However there are often benefits of batching so
+> + * 2 at a time will likely be more efficient than 1.  4 more so.
+> + * We need to choose a number which will often handle all the files,
+> + * but will allow other threads to help when the list gets long.
+> + * The current choice is:
+> + */
+> +#define NFSD_FILE_DISPOSE_BATCH	8
+> +
+>  /**
+>   * nfsd_file_net_dispose - deal with nfsd_files waiting to be disposed.
+>   * @nn: nfsd_net in which to find files to be disposed.
+> @@ -511,7 +526,8 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
 >  		int i;
-> @@ -557,23 +572,13 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
->  }
 > =20
->  static void
-> -nfsd_file_gc_worker(struct work_struct *work)
-> +nfsd_file_gc_worker(struct timer_list *t)
->  {
->  	struct nfsd_fcache_disposal *l =3D container_of(
-> -		work, struct nfsd_fcache_disposal, filecache_laundrette.work);
-> +		t, struct nfsd_fcache_disposal, timer);
+>  		spin_lock(&l->lock);
+> -		for (i =3D 0; i < 8 && !list_empty(&l->freeme); i++) {
+> +		for (i =3D 0; i < NFSD_FILE_DISPOSE_BATCH &&
+> +		     !list_empty(&l->freeme); i++) {
+>  			struct nfsd_file *nf =3D list_first_entry(
+>  				&l->freeme, struct nfsd_file, nf_lru);
 > =20
-> -	spin_lock(&l->lock);
-> -	list_splice_init(&l->older, &l->freeme);
-> -	list_splice_init(&l->recent, &l->older);
-> -	/* We don't know how many were moved to 'freeme' and don't want
-> -	 * to waste time counting - guess a half.
-> -	 */
-> -	l->num_gc /=3D 2;
-> -	if (!list_empty(&l->freeme))
-> -		svc_wake_up(l->nn->nfsd_serv);
-> -	if (!list_empty(&l->older) || !list_empty(&l->recent))
-> -		nfsd_file_schedule_laundrette(l);
-> -	spin_unlock(&l->lock);
-> +	set_bit(NFSD_FCACHE_DO_AGE, &l->flags);
-> +	svc_wake_up(l->nn->nfsd_serv);
 
-Disregard my earlier comment about the cacheline. It still wouldn't
-hurt to do, but since you're not actually taking the lock inside the
-timer callback in this version, it's not as big a deal.
-
-This seems better.
-
->  }
-> =20
->  static unsigned long
-> @@ -868,7 +873,7 @@ nfsd_alloc_fcache_disposal(void)
->  	if (!l)
->  		return NULL;
->  	spin_lock_init(&l->lock);
-> -	INIT_DELAYED_WORK(&l->filecache_laundrette, nfsd_file_gc_worker);
-> +	timer_setup(&l->timer, nfsd_file_gc_worker, 0);
->  	INIT_LIST_HEAD(&l->recent);
->  	INIT_LIST_HEAD(&l->older);
->  	INIT_LIST_HEAD(&l->freeme);
-> @@ -891,7 +896,7 @@ nfsd_alloc_fcache_disposal(void)
->  static void
->  nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
->  {
-> -	cancel_delayed_work_sync(&l->filecache_laundrette);
-> +	del_timer_sync(&l->timer);
->  	shrinker_free(l->file_shrinker);
->  	nfsd_file_release_list(&l->recent);
->  	WARN_ON_ONCE(!list_empty(&l->recent));
+Thanks for doing this.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
