@@ -1,230 +1,244 @@
-Return-Path: <linux-nfs+bounces-9644-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9645-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DCF5A1CF09
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 23:48:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F378A1CF46
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 01:16:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F205C3A4D1C
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Jan 2025 22:48:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEE84165DB1
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 00:16:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F19042056;
-	Sun, 26 Jan 2025 22:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4887517D2;
+	Mon, 27 Jan 2025 00:16:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJoknvgZ"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bUkpRfJP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hRwvAZkM";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bUkpRfJP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hRwvAZkM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD1525A655;
-	Sun, 26 Jan 2025 22:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6383610E3;
+	Mon, 27 Jan 2025 00:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737931702; cv=none; b=tHRTL4jK9Cxd6szCKwtnSl1tassGq80VbiPYHYwQUt7VyYx6i0mFuCRHUo5vYafQTooF2XJiDyUyxcfiZoTeEoP+2NnFgQD1ojCUe1IAbBC3CgqxBzDwGpKT+ilBR9xFn+akh6n2SuYBHYRt01rjpmcg0IGPdeoTkAPapT2mG0k=
+	t=1737936973; cv=none; b=CCx8AN751HX6uKovWvqFATUCkKUZd76/sDX93Ibru9++BASFLp41fMsOrepmBJF437/eAO1Gtp/J/hKXKKaxMfg3dOXADDJYU1qK5l2GgC5l6ZxiOp1LrBtR8ZFmi6HG91MV+g94jEdFTHf6S3fmYQsDPVoPA+jwi5Ma/V/vz1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737931702; c=relaxed/simple;
-	bh=NHE6XMjrFuFFmlf7zL32G31E7kdJMv7mncAuKs69y9A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S3JQQp73yM2kl8E6cXux/CtOtG9qVMRYtYkndwVjvmG/QtFkXarAiyrsL0o5v6L8siLVt9Fb9Y7HomSWkWUZcK0Axb1+tlrpSvtv+nE1UgZ1MTXA+JIZw2elacinHP+E7s6DlUxIU+5nNsQ5Q0JjqSFvQ61uJLD0cZrGJiI+RSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJoknvgZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17B5C4CED3;
-	Sun, 26 Jan 2025 22:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737931701;
-	bh=NHE6XMjrFuFFmlf7zL32G31E7kdJMv7mncAuKs69y9A=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UJoknvgZcLMiakd7u4mtkV0Iz3VNGNAFYCYEeREwtRAnoZqDHgbaZEoHv42HQ53Ek
-	 pRZ8kgdtoAInLhxMcWPQHLxor3V88XDJfog9Cl8JIPVMaXwBCa957KGlH8HmF+BWKj
-	 6K11Vn0B8CQs4/oMb2QSUYseHKnU9DfjvN1d7Lm8dv+5SEMUH0IJdpCmaG6WbbxqcS
-	 x9ei4T5ZUOeS+2BZKLtuMp8OMWCEw4A6nzf74NgNtahe3Q9dq2gKzYqKPvkWtPO+Bg
-	 66+zlUAQdgvn7U19WYODj/mXpVL6P5cGjX+A1i/YVJq6bmpb9h2VssvNlbsH3Nh37/
-	 pMmB0hznKdXNg==
-Message-ID: <a3ca70c78e48e1a36d29741eb8913ce85e3f51a2.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling
- svc_wake_up
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  Salvatore Bonaccorso	 <carnil@debian.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sun, 26 Jan 2025 17:48:19 -0500
-In-Reply-To: <173792843626.22054.10399301406267899224@noble.neil.brown.name>
-References: <>, <02eefb82ddff92f3797c346033300b7d259267d6.camel@kernel.org>
-	 <173792843626.22054.10399301406267899224@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
- n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
- egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
- T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
- 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
- YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
- VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
- cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
- CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
- LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
- MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
- gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
- 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
- R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
- rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
- ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
- Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
- lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
- iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
- QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
- YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
- wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
- LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
- 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
- c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
- LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
- TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
- 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
- xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
- +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
- Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
- BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
- N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
- naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
- RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
- FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
- 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
- P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
- aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
- T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
- dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
- 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
- kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
- uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
- AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
- FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
- 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
- sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
- qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
- sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
- IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
- UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
- dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
- EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
- apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
- M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
- dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
- 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
- jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
- flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
- BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
- AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
- 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
- HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
- 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
- uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
- DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
- CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
- Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
- AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
- aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
- f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
+	s=arc-20240116; t=1737936973; c=relaxed/simple;
+	bh=Fsa0pr6mWcIYPIPCCbVhRW2kDXkFubnEgKJ/0y7FV+E=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=JU6gbDQ8NTek+Y3bmLonqEWJJ1UNnWqdgv0a/BkQhH0hNj8dPjYX8MGb335cMHNZg9cCcap52ymRGJsMd3tjiH5P6u2zzrOdyMN6+nCiVVk0lA0AryC3+FWPyhxfYV7hHQQuxHjuyD8nUtfeg6LkcvFupbRLsYjvnb4ru7XFuxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bUkpRfJP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hRwvAZkM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bUkpRfJP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hRwvAZkM; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 626481F38F;
+	Mon, 27 Jan 2025 00:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737936968; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEkyjxI7wOT8NfaeOw5cuMNbmp7JtIN8hBzKqRwd4K4=;
+	b=bUkpRfJPlY+qO/7yJ0gGgfDdN6oYw2A6bEV5uoopn0dpeYuB1uz0FbAIoPmFNSHoH4R8Vm
+	tmTvkpl2mQVorfAH5MkJJdeq/ys+vBMYqd6LsFGr6p3x9VCGUSlRo9H0mYzwBRxnAGpvw4
+	6uBDyIu0JLEhaPodPu/aDHwyKpkr/64=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737936968;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEkyjxI7wOT8NfaeOw5cuMNbmp7JtIN8hBzKqRwd4K4=;
+	b=hRwvAZkM5yoGuP6OnnlaaiIXprvV5gFZXZyPx2r8ctsBodXLkZMWIDIyT31Gk9ybFqIYBj
+	GOJToJtPGXxgLYDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737936968; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEkyjxI7wOT8NfaeOw5cuMNbmp7JtIN8hBzKqRwd4K4=;
+	b=bUkpRfJPlY+qO/7yJ0gGgfDdN6oYw2A6bEV5uoopn0dpeYuB1uz0FbAIoPmFNSHoH4R8Vm
+	tmTvkpl2mQVorfAH5MkJJdeq/ys+vBMYqd6LsFGr6p3x9VCGUSlRo9H0mYzwBRxnAGpvw4
+	6uBDyIu0JLEhaPodPu/aDHwyKpkr/64=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737936968;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TEkyjxI7wOT8NfaeOw5cuMNbmp7JtIN8hBzKqRwd4K4=;
+	b=hRwvAZkM5yoGuP6OnnlaaiIXprvV5gFZXZyPx2r8ctsBodXLkZMWIDIyT31Gk9ybFqIYBj
+	GOJToJtPGXxgLYDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C59613715;
+	Mon, 27 Jan 2025 00:16:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ek3NE0XQlmfqFgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 27 Jan 2025 00:16:05 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Salvatore Bonaccorso" <carnil@debian.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling svc_wake_up
+In-reply-to: <a3ca70c78e48e1a36d29741eb8913ce85e3f51a2.camel@kernel.org>
+References: <>, <a3ca70c78e48e1a36d29741eb8913ce85e3f51a2.camel@kernel.org>
+Date: Mon, 27 Jan 2025 11:15:45 +1100
+Message-id: <173793694589.22054.1830112177481945773@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, 2025-01-27 at 08:53 +1100, NeilBrown wrote:
-> On Sun, 26 Jan 2025, Jeff Layton wrote:
-> > On Sun, 2025-01-26 at 13:39 +1100, NeilBrown wrote:
-> > > On Sun, 26 Jan 2025, Jeff Layton wrote:
-> > > > nfsd_file_dispose_list_delayed can be called from the filecache
-> > > > laundrette, which is shut down after the nfsd threads are shut down=
+On Mon, 27 Jan 2025, Jeff Layton wrote:
+> On Mon, 2025-01-27 at 08:53 +1100, NeilBrown wrote:
+> > On Sun, 26 Jan 2025, Jeff Layton wrote:
+> > > On Sun, 2025-01-26 at 13:39 +1100, NeilBrown wrote:
+> > > > On Sun, 26 Jan 2025, Jeff Layton wrote:
+> > > > > nfsd_file_dispose_list_delayed can be called from the filecache
+> > > > > laundrette, which is shut down after the nfsd threads are shut down=
  and
-> > > > the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then the=
+> > > > > the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then the=
 re
-> > > > are no threads to wake.
-> > > >=20
-> > > > Ensure that the nn->nfsd_serv pointer is non-NULL before calling
-> > > > svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since t=
+> > > > > are no threads to wake.
+> > > > >=20
+> > > > > Ensure that the nn->nfsd_serv pointer is non-NULL before calling
+> > > > > svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since t=
 he
-> > > > svc_serv is not freed until after the filecache laundrette is cance=
+> > > > > svc_serv is not freed until after the filecache laundrette is cance=
 lled.
-> > > >=20
-> > > > Fixes: ffb402596147 ("nfsd: Don't leave work of closing files to a =
+> > > > >=20
+> > > > > Fixes: ffb402596147 ("nfsd: Don't leave work of closing files to a =
 work queue")
-> > > > Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-> > > > Closes: https://lore.kernel.org/linux-nfs/7d9f2a8aede4f7ca9935a47e1=
+> > > > > Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+> > > > > Closes: https://lore.kernel.org/linux-nfs/7d9f2a8aede4f7ca9935a47e1=
 d405643220d7946.camel@kernel.org/
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > This is only lightly tested, but I think it will fix the bug that
-> > > > Salvatore reported.
-> > > > ---
-> > > >  fs/nfsd/filecache.c | 11 ++++++++++-
-> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > index e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2=
+> > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > ---
+> > > > > This is only lightly tested, but I think it will fix the bug that
+> > > > > Salvatore reported.
+> > > > > ---
+> > > > >  fs/nfsd/filecache.c | 11 ++++++++++-
+> > > > >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > > > index e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2=
 dd750f43239b4af6d37b0 100644
-> > > > --- a/fs/nfsd/filecache.c
-> > > > +++ b/fs/nfsd/filecache.c
-> > > > @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct list_he=
+> > > > > --- a/fs/nfsd/filecache.c
+> > > > > +++ b/fs/nfsd/filecache.c
+> > > > > @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct list_he=
 ad *dispose)
-> > > >  						struct nfsd_file, nf_gc);
-> > > >  		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
-> > > >  		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
-> > > > +		struct svc_serv *serv;
-> > > > =20
-> > > >  		spin_lock(&l->lock);
-> > > >  		list_move_tail(&nf->nf_gc, &l->freeme);
-> > > >  		spin_unlock(&l->lock);
-> > > > -		svc_wake_up(nn->nfsd_serv);
-> > > > +
-> > > > +		/*
-> > > > +		 * The filecache laundrette is shut down after the
-> > > > +		 * nn->nfsd_serv pointer is cleared, but before the
-> > > > +		 * svc_serv is freed.
-> > > > +		 */
-> > > > +		serv =3D nn->nfsd_serv;
+> > > > >  						struct nfsd_file, nf_gc);
+> > > > >  		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+> > > > >  		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> > > > > +		struct svc_serv *serv;
+> > > > > =20
+> > > > >  		spin_lock(&l->lock);
+> > > > >  		list_move_tail(&nf->nf_gc, &l->freeme);
+> > > > >  		spin_unlock(&l->lock);
+> > > > > -		svc_wake_up(nn->nfsd_serv);
+> > > > > +
+> > > > > +		/*
+> > > > > +		 * The filecache laundrette is shut down after the
+> > > > > +		 * nn->nfsd_serv pointer is cleared, but before the
+> > > > > +		 * svc_serv is freed.
+> > > > > +		 */
+> > > > > +		serv =3D nn->nfsd_serv;
+> > > >=20
+> > > > I wonder if this should be READ_ONCE() to tell the compiler that we
+> > > > could race with clearing nn->nfsd_serv.  Would the comment still be
+> > > > needed?
+> > > >=20
 > > >=20
-> > > I wonder if this should be READ_ONCE() to tell the compiler that we
-> > > could race with clearing nn->nfsd_serv.  Would the comment still be
-> > > needed?
-> > >=20
+> > > I think we need a comment at least. The linkage between the laundrette
+> > > and the nfsd_serv being set to NULL is very subtle. A READ_ONCE()
+> > > doesn't convey that well, and is unnecessary here.
 > >=20
-> > I think we need a comment at least. The linkage between the laundrette
-> > and the nfsd_serv being set to NULL is very subtle. A READ_ONCE()
-> > doesn't convey that well, and is unnecessary here.
+> > Why do you say "is unnecessary here" ?
+> > If the code were
+> >    if (nn->nfsd_serv)
+> >             svc_wake_up(nn->nfsd_serv);
+> > that would be wrong as nn->nfds_serv could be set to NULL between the
+> > two.
+> > And the C compile is allowed to load the value twice because the C memory
+> > model declares that would have the same effect.
+> > While I doubt it would actually change how the code is compiled, I think
+> > we should have READ_ONCE() here (and I've been wrong before about what
+> > the compiler will actually do).
+> >=20
+> >=20
 >=20
-> Why do you say "is unnecessary here" ?
-> If the code were
->    if (nn->nfsd_serv)
->             svc_wake_up(nn->nfsd_serv);
-> that would be wrong as nn->nfds_serv could be set to NULL between the
-> two.
-> And the C compile is allowed to load the value twice because the C memory
-> model declares that would have the same effect.
-> While I doubt it would actually change how the code is compiled, I think
-> we should have READ_ONCE() here (and I've been wrong before about what
-> the compiler will actually do).
+> It's unnecessary because the outcome of either case is acceptable.
 >=20
+> When racing with shutdown, either it's NULL and the laundrette won't
+> call svc_wake_up(), or it's non-NULL and it will. In the non-NULL case,
+> the call to svc_wake_up() will be a no-op because the threads are shut
+> down.
 >=20
+> The vastly common case in this code is that this pointer will be non-
+> NULL, because the server is running (i.e. not racing with shutdown). I
+> don't see the need in making all of those accesses volatile.
 
-It's unnecessary because the outcome of either case is acceptable.
+One of us is confused.  I hope it isn't me.
 
-When racing with shutdown, either it's NULL and the laundrette won't
-call svc_wake_up(), or it's non-NULL and it will. In the non-NULL case,
-the call to svc_wake_up() will be a no-op because the threads are shut
-down.
+The hypothetical problem I see is that the C compiler could generate
+code to load the value "nn->nfsd_serv" twice.  The first time it is not
+NULL, the second time it is NULL.
+The first is used for the test, the second is passed to svc_wake_up().
 
-The vastly common case in this code is that this pointer will be non-
-NULL, because the server is running (i.e. not racing with shutdown). I
-don't see the need in making all of those accesses volatile.
---=20
-Jeff Layton <jlayton@kernel.org>
+Unlikely though this is, it is possible and READ_ONCE() is designed
+precisely to prevent this.
+To quote from include/asm-generic/rwonce.h it will
+ "Prevent the compiler from merging or refetching reads"
+
+A "volatile" access does not add any cost (in this case).  What it does
+is break any aliasing that the compile might have deduced.
+Even if the compiler thinks it has "nn->nfsd_serv" in a register, it
+won't think it has the result of READ_ONCE(nn->nfsd_serv) in that register.
+And if it needs the result of a previous READ_ONCE(nn->nfsd_serv) it
+won't decide that it can just read nn->nfsd_serv again.  It MUST keep
+the result of READ_ONCE(nn->nfsd_serv) somewhere until it is not needed
+any more.
+
+NeilBrown
 
