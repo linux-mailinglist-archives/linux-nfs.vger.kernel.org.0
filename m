@@ -1,405 +1,632 @@
-Return-Path: <linux-nfs+bounces-9666-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9668-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8605A1D7A6
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:04:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E9F1AA1D7E7
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 15:16:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8C3D7A2B6E
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:03:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F049C7A05CD
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 14:15:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A598F5E;
-	Mon, 27 Jan 2025 14:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C534C6E;
+	Mon, 27 Jan 2025 14:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pr82t65W";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NZPcnh9q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DduGZCd6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC6C23CE;
-	Mon, 27 Jan 2025 14:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737986640; cv=fail; b=Liku8Nk/qnnJj+lnlDN440771+Jp9hOfS8uJCKsfnerISAvZkiiotb5/oQwLfzqwuj5KhNj1/1DLjXqrKnipycR5SNV+sXdSymaJgvwcvLRPH/gVoQ6rP5c+mBAAb3kH5sgdeQtOF6udShEbOZLRixUYhIChpFlA92iO/0lOeUQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737986640; c=relaxed/simple;
-	bh=4lxJhij/cdXxLAWD890G6mSWGmircr9gpX7GOdyKHkQ=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KWJwetZ0XPEUHRKV/9tINyfvEfsfkXmPd5nbI0BzPg6O+F1KiJLUVarRDFc/XyMN3SYkKBFmPvkCvWD8lHr6ihW7vS5fgbQ5QsGpNgNyekala4rFinrvYWoo/8H5l9jQfmyyXNnap66/1jYzS9ef+SvfkrmzME6EJjRs23ArIYw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Pr82t65W; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NZPcnh9q; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50RDxe5K011847;
-	Mon, 27 Jan 2025 14:03:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=QM/i5cFrSU55W+gF1ir7Io8+ScesYW9t03ELdlhhE0w=; b=
-	Pr82t65WgQCLIJJJAAPMkLTXVt7bL+n09hqmq4tAdXxfVDMGYb0dkjJU5kgupM3I
-	xVK88fI2k+nWjl8vffWJrKHegcwJTsIex1vqC6I2TMe8Gxvpd0Wk6mkUKTfthR2H
-	Ovv4mfm6cf/hHboiBmro4bp9dWIh/xfwRGpQW0JSizWU5oS3xrSNcMzoYquFpqhl
-	GhSnd2f8gYn1OkUVwGnA78nIoMx3Y6/lGa89dpgHoRfTUeP22JRx2KtsfWVh6sep
-	U4CdHRYZqGh5cWukQG/emPSxjpLkoD/ulyI9PtzRLVczklJmFhSnZUBT+Vd4cQcd
-	FpSc+i9gHIOjxGXSwc2VfA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44ebgk809p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Jan 2025 14:03:44 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50RCmMeg004169;
-	Mon, 27 Jan 2025 14:03:43 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2174.outbound.protection.outlook.com [104.47.56.174])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44cpd716md-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Jan 2025 14:03:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JNrNBX0M9XDi3J0VLPe+Z3O/BlAbKAMFMEPmX7xliV5rAOQLQqVBDQE/x/AITQD6M4taUypXFcWgX+CvrkDgeygzWaB45NPq1fjXEzbKtY/lWtcpWcREezEvdvvUJk9OUf1drZtfZbzv1uJk8GW+lbG1aZRWvDX8krsz+AWiNlUBKDdbb6Jf/JWzhL5YttJdtJqZVMdetf2Z05R/qOXycHsjNLlQ7x4MxUdRLN8dwRZWvwInoaVh0TAfDotoramISzT9rlTZYDFvNpz9hmPOERh64cycqGPtkJJkY2K/OH8rDlxU02AMIWPWUO7icl4qSS5BNGgz2Fwq/sUb8ykgMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QM/i5cFrSU55W+gF1ir7Io8+ScesYW9t03ELdlhhE0w=;
- b=LDtPNjCqm6jSqzX89sI6Unhsrl9OzDjfbn5oRGNJeNFg+Ay+NBOGS/Oe84UAbfeZP0mbTuP3m9cwFU7b5SLmIvHVQBGOIaNeoDta4egZiTJkDOj3xtI+rFiN9thfY12gc/4VOQQZ5bVS2FG5r9neLAuuTqJ2WJiBK71Yt6N09d7SPTLvzM8l0e2EjGKcJDJ/XZUvKTPJzETp0kpr5RZA2FRmIYPns/rezIe7CASNCp9gevf5vvLAhLvItyxOkx13u/h9+Z/A2+yfY5yXAeN0lDum1cHjoR9SlII18fYRr27K4FebwUmP8mep/TbmOYuuC29IicPMJx7jV5SuEpleGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QM/i5cFrSU55W+gF1ir7Io8+ScesYW9t03ELdlhhE0w=;
- b=NZPcnh9qBXXKoQLpB4xnsLqQaK02edH+YeAC2gZGy+oY4LRLrb8Hn79WlwkixV8PyyqOh14Nr2fL6HYSKWUY0cZib/G/OJT5Q0bWD6ZfyVxwCHaH4djZHWDWVa+RYNVxT077D+c/4wXWQbkLLel9Xl3+rIyMrxsqY557a/HmKMM=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM4PR10MB6253.namprd10.prod.outlook.com (2603:10b6:8:b7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8377.23; Mon, 27 Jan
- 2025 14:03:40 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8377.021; Mon, 27 Jan 2025
- 14:03:40 +0000
-Message-ID: <37fb186b-ffb6-44dc-a097-ec669079c801@oracle.com>
-Date: Mon, 27 Jan 2025 09:03:38 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling
- svc_wake_up
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Salvatore Bonaccorso <carnil@debian.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <> <a3ca70c78e48e1a36d29741eb8913ce85e3f51a2.camel@kernel.org>
- <173793694589.22054.1830112177481945773@noble.neil.brown.name>
- <06379c169fb0e891dae9d444ef0a06ea57e9af38.camel@kernel.org>
- <c70d155c-22e0-43f7-af23-241088317d94@oracle.com>
- <5923519a4c8f6bb6d5ccd2697447b313fb61bba3.camel@kernel.org>
- <ac965f67-db15-4f93-be03-878e6a3d171b@oracle.com>
-Content-Language: en-US
-In-Reply-To: <ac965f67-db15-4f93-be03-878e6a3d171b@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR03CA0227.namprd03.prod.outlook.com
- (2603:10b6:610:e7::22) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DC717D2
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 14:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1737987357; cv=none; b=QJB1aUweVTzUoImjauCmtDTDbxTRueVZaAET1OzIiQ+R5Tym1zYqgb0Vog/AFdJADux7D3NvJs0aoS0e4gHkdQ0b766YzOW6ZDeS1FQc7GjFbmLbX+H+3WSJYDmEFHmVOg4zEtuf+ksIXJ8XXWhCRGGj9b0UsoiSHacfy0knidU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1737987357; c=relaxed/simple;
+	bh=HTmuGxwOmLr1RGOQP1oqmD6Jzm1dk8hTg/6qd3nYSvI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qz8o586a+5nGtmm5fTvocZdVqeBTDIhKgA8S9MvW7o7ipqqTSyyJGLKeHoNYKXrsu3etQ5El2OzVZiM+bu53w2t21mE0cpZjvtTIZfpmaLKTTZsdqwHGnePJE2ECE1TKM/gX1SWx6lIjZEtMD/5B0T+zXQCGdU6wYDFRFG7z3TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DduGZCd6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22546C4CED2;
+	Mon, 27 Jan 2025 14:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737987356;
+	bh=HTmuGxwOmLr1RGOQP1oqmD6Jzm1dk8hTg/6qd3nYSvI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=DduGZCd6yCLwUT+arLOBzd/DC9YjBgw/sVs28u2Cm6tUUv/J0cdbmfhtNp13yYsyu
+	 mq/lmJiAuQ0IQttlLlvOdst87+b/KlMVGSH06XLmdrQIC/VKvphVlJmRJpJ3UbPrwp
+	 RVIYGPxwLOpoBJX6XOAvnJdKt6n/0TWRNp2kPECIbpQ5fXhiC8HywkVLTquGkS7tMw
+	 G7mrOR1NT0jgN5lN8jQvmpSOKrndWXKHj6miw8Brroy5l651i0WYPDANvm6CIKVm17
+	 VSFBEoFX7Y1xhX3FPz72+cHBEwb3SoQTivKpDijLH5v3AncxsXl9fd9xY7+hPO/r5z
+	 gQr/UBxiBP1Ag==
+Message-ID: <eb5a149d9a9f39896df23f203f8ee33d346aa485.camel@kernel.org>
+Subject: Re: [PATCH 4/7] nfsd: filecache: change garbage collection list
+ management.
+From: Jeff Layton <jlayton@kernel.org>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
+ Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Dave Chinner	
+ <david@fromorbit.com>
+Date: Mon, 27 Jan 2025 09:15:54 -0500
+In-Reply-To: <20250127012257.1803314-5-neilb@suse.de>
+References: <20250127012257.1803314-1-neilb@suse.de>
+	 <20250127012257.1803314-5-neilb@suse.de>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB6253:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ec88104-f899-469f-66b4-08dd3edb66e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dXpCWXFnL251MDNOc1c1MmNOYWdrakt6a3d3aUpZUnNrdkxHNWNGS3l6dnp4?=
- =?utf-8?B?Z3dOR3lYRkkrd0FQWENSU3JlY3Ixa05IVjBJb21mVGEzN3hnakhhcE1XQkVk?=
- =?utf-8?B?OGVzMzMxVkFwSVJBVXlrK093bW5yV3l6OU9mN3hDT1JvZWdxWjFidGZDQzRs?=
- =?utf-8?B?c2RYbUJ1Vk1wdlpyN2Iycm8zMnU3cm14S1UwSUxRWHBZQ21KWkhSWTcyek9t?=
- =?utf-8?B?RlBwVFpsTDFsOHNPMTZsSTBESElWUzByVm45Wjd5QXdKZEFrVEdUeDk5Q04x?=
- =?utf-8?B?UDc1ZkIvOU93RHR5U1VtUXBtZmpTMDNaazRVWWYwYXpVanN1OUtmb1kxeGlm?=
- =?utf-8?B?Q0NnditTdms4MEZSa3g3TWJYSkVvR3Iyd0JhdWJqeWZmQW9aRWhMbStjSDMr?=
- =?utf-8?B?TUwzRkdCbXlZQk45SzEyQ28rN2loS2diTXV3TGpONi9KQ3ZLcFM3MW9DcmFG?=
- =?utf-8?B?QWs3dFp1VU1vRTMyS3NuYXBpUDRNS0dud0xBT3pGUWZ0SkJJU3Z0VGxHRnVy?=
- =?utf-8?B?Tk9YaDBHZXc5djRiSXgvZEVjbllwTnUrelBuNFkxQ2RaeXJuVUtJZnhMeGxW?=
- =?utf-8?B?TVh6bWNNOWs5RXdDVlc5U3k1QTZmOEpIZFpINzVHUDVuTTJiWVEzNHE3Qmdx?=
- =?utf-8?B?ckRLS0Yyd2p2QUpESVE3elNWd05QNk4rd0RwVFIzWGJVK1pVSlNyRVNlZWQ4?=
- =?utf-8?B?VnE0S0pwZmJNY1RyK1Q0N250SmFodE1hRXJCVWRoVkpKVWZDeEdrUmRndmZX?=
- =?utf-8?B?Tk9jRStDeHBLUFpYK1R0TlorVWZLaCtMamtDN0d1c2ZQTWJsS3J2WDlIdmdX?=
- =?utf-8?B?QjhnWVQ3OVMwRTVqMktMaHA5RmRWT3JzdU9EclRBMjBNMTJSRTAxYWdCQWRi?=
- =?utf-8?B?WmpzYmRray90b2xmTEZsKzQ0cGdNNnB1bTQxdUNZVnJYNEpXRS9kQW15dk1r?=
- =?utf-8?B?OG5uc1BXenhLT1NUWHk4NlBhWVRZbGdsL3RxTVFqVmNUNmRLOFpiZlpqYldT?=
- =?utf-8?B?M3hHUEdlL2xVMEJ5dGozdnFnWTJlWE5WMklKNVdoMUpIL1ZlODV0Zy9FUFVv?=
- =?utf-8?B?clNUSWJjczl2anRLbVRRQ3ZpeUdMS3hkbGhqRG9yaGVDQkU2WUxTckdUWG9X?=
- =?utf-8?B?Mlo3OXpzem9wMEk3eEpoeVQrVjhBM09nT0pDSTZMU2N3eVk5VlZhTGRJYzI3?=
- =?utf-8?B?aFVXYTZtV29WSUUzL0REbE5XMkgvelJFWTVrdm00TDBSY1psNzJCL2E3MUd5?=
- =?utf-8?B?TlhGakE2VnhYODRRUk4xVVJCSkszd3Q4NXNCNUI5dEdXek9mTG5kcGdoY0ZO?=
- =?utf-8?B?WEVGcFNCRFFlQTZiOGRxcUYzU1lFL05xWFZNc1ZsVmd3amE0L3ZjWjFUS1Ja?=
- =?utf-8?B?RjRHWW1TK2llSE9zMnc2VE9HSTI2TFZyS245Zi9JSmMvY09aU1czTjZWZzcv?=
- =?utf-8?B?aVBQNmYzMXhLcDJMc3c2SUZxTVJNdEk4THFaVEorVzFUQzBvT01PbHI4Wk9Z?=
- =?utf-8?B?RWd3UUE3VVFkVGkwM3NKeDk0eVQ5L3dCNkdSU3BNck1pTmJBNGRDY1JVODdX?=
- =?utf-8?B?ZVhNa0R2NFc3VWRZNU9hcW9uazEyZnVMWFZPUFlKL3pIUFFHcVJJZkRpOHRY?=
- =?utf-8?B?VExPTEFMYW1ZbWdwcmVtWkNRZXV3WW9Yc3hFTytvOEh5NTNtejVXVUlnT0M5?=
- =?utf-8?B?cENZUHVna0UwN05obHlRRHdHVzYwMExid1pVYVZqZFB0L0NKalpCUU9qaWkv?=
- =?utf-8?B?RjhhTXV0R3J3THQzT3NvS05WRVB3ODBBOTN6UkkxUXp3L0FJcENtSUY4Z3Rr?=
- =?utf-8?B?aHlPWUxjMkZHMW5rb1BmQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UTBwS3VrZ29GNnQrcnBKMDNvZmFtUjBzNlBrY0VwbnBaMUVFdGlrY0xwY212?=
- =?utf-8?B?eHYrb1VKM25WbFQ5M0xnTUxWYXdXc2t3NUtVQithQ1FUS2cycDd1Y1d3aVBr?=
- =?utf-8?B?OFhPa1FOejRJQTVwV21uVGZZVll5RC9pUll1WjJVeGsvcENZYUxoMlIraUkw?=
- =?utf-8?B?MEpWNEM4ZEtHbFhhd0dRZnFCMUNuVVlURXZSK1J6Z2dxZHBEVlpzaUp2aEd0?=
- =?utf-8?B?K2gzaktEMno2ZmdvZnR1TmMvN2RKWGppKzZkY2V5MTE0TXFMbE1wZldjbzRP?=
- =?utf-8?B?OUZrc0taejBGaEoxaW9odSs0R2NQdmRvUVRWaE15ZktEM3FTYUtSc3FEQ2sz?=
- =?utf-8?B?dkJDY0U5QzdrM0o1cDMxa1RYd2NwS0RLa0oxeHlPbGtPUk9pOEx6R2p0VHBv?=
- =?utf-8?B?YXNKSE1OSGNFQWhNTi9kbHhZanZWNFRQbTFvSmUrTVhQcm9zZ3lFQ0JYdHNN?=
- =?utf-8?B?bTQ3V0JrSnIvaTllSjRQUTB0UytiUkVVdUp0YW5WS2RsMGNxVlFIQXNUZ1FZ?=
- =?utf-8?B?NXQzOWpCL3hkbDI2VmhyTzduY2wyRmdwM1ppVEFnMWVheEpqbGlTWTAyZFhD?=
- =?utf-8?B?S1dLMk11akpKUDk1N1ZBVFlJR1Y1ejhVbUh6V0F4Y05LMkVlOU1XemdkKzhB?=
- =?utf-8?B?eUVNYzMvZEhIS0dVb29zMjFNSjBnTnZrSTh3ZjRucGdZVVZrWm53UE1HbVZG?=
- =?utf-8?B?VWt6ZU9rbDFWK1UrckZzTnQxMWhEY0YrVVpkSGhQN2RVTzNjT08yLzFMaDdC?=
- =?utf-8?B?dnRiTTFlVHRxRy8xUGttK25XM0JwWDZCbGg3MnhGN0ZycThwSUFqS21PL005?=
- =?utf-8?B?T29qbDduaVVoUkhSakRRck5UUllhNE1UbjBtWm9La0FzZmU1WVJwWVBlNHl5?=
- =?utf-8?B?UU1xdEVDbUNBUSt2ekdrVys2RGFGUGd0eWZkK3c3cm1OenA3RDVEM3RHSDJU?=
- =?utf-8?B?VE9udkpjNHlKSjZFc3FQamkwdGZNQVdlZlVzcjRwemZITk9HcHFlb2tabHc0?=
- =?utf-8?B?a0dlWDFETUpyaDRzVGY0bVF1WGRrRW5DWCtDeFRrTy9CRUx6MEJSZFhJTm83?=
- =?utf-8?B?QUIzTTVqS2xGZjNWTk9LWFdFRk1DUTZER01RWFMwTGU4K202RXZYa1RyR1hh?=
- =?utf-8?B?WjJRRytwQ0M2Mi9LS2FtYjFWRGhzWXNYME5wQ1dFaVRseEZ6VTc5NFBhQXh3?=
- =?utf-8?B?Y3ZlQzVxTUF4U1NWYW1VNXRPWHc2cVdyd1I2RE1INk4rdGhhWmJHMkh3R0kz?=
- =?utf-8?B?SXdOSzdmTDFpWFFGR3V1aTQvRi83b1lFakJ4VjVuTU1YVXpBeEtaSWdGQWxr?=
- =?utf-8?B?WDgyYjNDZFErS1pJTU9qY1YwSjg1NzNKSEN6MlZHdTB6anBQVkFhRjNOSGlI?=
- =?utf-8?B?SnR3RjlHMC9pTnhuanVZV2NoeEkzOE5BODdaOUZmazQ1Nmw1aUdvblF1aStp?=
- =?utf-8?B?VWw2U2h1b2FnelBkc1d1emlQalE3WVd5S3ovMmRWOHk2cVpIMEM0VXovc0Q1?=
- =?utf-8?B?ejhTS1lkTjFLMS9tSDRXWWxBT0IxSWhvK1I3RWFzTUVLWjFZK0xhNE5YajhJ?=
- =?utf-8?B?UnJ0QXlJbExlc1kyQmxrenhXKzVaMTFkcXdGUm50Z3dLSXpxYW9pRnFxbEly?=
- =?utf-8?B?MUw1MDR5ck9MUGgxVmVJSERlc2JIR3ZCbFRFOUxXTDAvOTZzUGlNeXEzOEtV?=
- =?utf-8?B?SGlHeHg2VkdteDZ6QnNCWUFQUmlXeTJRem1BenJBSVBQWW83eFc2SEREd1Vk?=
- =?utf-8?B?TWxsU3RNbThEUzlRWWVSaTBkUE5lYjdYd3NUNGZVeDBvcTFzQTZDRThwcG9a?=
- =?utf-8?B?UXRKV1FBNlRwcTltTzNSOHVZa3JlQXlxMzZaUEhMcEhEZDBYZHpDZC9ZZk5T?=
- =?utf-8?B?c2xBdk5aSitLZmRwUE9LazlzUXhNZmY1ck5DczJWa3I2L0Z2SW5QVnE4aDNr?=
- =?utf-8?B?K0tMSUxyMjlJc2oxckMxdGJFVXlvb1E4UG4rMzlFVzdhOXF0ejd0cThIN2Ez?=
- =?utf-8?B?VEswZE1PcGU0WWc2ZEU5b2FxZ1A1ZFpjY3k1Y3pISlBGRWtGWTVoU3pXMlQx?=
- =?utf-8?B?ZlBqVThHdkRiSm5OSzE2YzFkUTlKbGxhdXBDb1R2U21SRFYwdnp5eHUzbGxM?=
- =?utf-8?B?S3JEdmhqQkd4L1VjOWUyVzhzKzJSVGJSalhCSjc2U2c3MEpPdkVVWGo0Q0RJ?=
- =?utf-8?B?bkE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	PbsDuIDnCWPuzH031txrdw2WKJsCkShoyxTen7USx+J+HPL5tNaa1mJfpNnVmXbtywgrStX+BzY6YIAfLne4mrNG9ue+cJlJVPtDBRXNlaFmCrW2Bzg1h7yo+0evrFaoY2E0lIqdtu4L2EsbAVOL5BWWSgKhktzvbS8l7cjJhW4cNYNgT2mE/44rxqDjJ2Ju6HDhqAVQ6gNTSHedlNxC9VqVMw2cG7IqpR4SmKcBrT1/SJ7JxO/NfTXuRNVS77tSt/ESS9o3RpeggFdzUTWT8yx0Nb+XbLVriuoMjwX44SgSWCkxB+DjcM2EsGDBAOWRPl565MW4cV4ICnTKlB3y0w3TCEOx79209QYBHoM6mnTW7tQDtm4bfNdbeDo2UTnUTsNsuWVPuUwOXb5bQvlJ+anqa7kOREMtfBOMAbreuFaQHxHswugcIzdksx9Psx2iSAf2lEmWymd5YdWFnE0qg1VJJE34j3N8Rovf5fZrmwxxCalALCVUKb4FxNHZzUk4aMqz/ziu9COXwkxofSDmreafVUHA8E0pv9zb6JMVyQGvnaP/5zCnB5IU95cpZ7bVCYdneHL8vVU8uQVbOAJCjqFu1qTHEIorbEKw5V/5cFs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ec88104-f899-469f-66b4-08dd3edb66e5
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2025 14:03:40.2826
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NXaZ2XoWxFszHGqnhmdtQ9isSq+ayhPSrVohiAAkgHUmRIKT4lCfXHzbF7hlpkJ7GjIy3SDAGHbmGcBPvnDWfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6253
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-27_07,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
- malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2411120000
- definitions=main-2501270113
-X-Proofpoint-GUID: BJgTtEEEsOIpxAUrcZyi78RodCB7PMfC
-X-Proofpoint-ORIG-GUID: BJgTtEEEsOIpxAUrcZyi78RodCB7PMfC
 
-On 1/27/25 8:39 AM, Chuck Lever wrote:
-> On 1/27/25 8:32 AM, Jeff Layton wrote:
->> On Mon, 2025-01-27 at 08:22 -0500, Chuck Lever wrote:
->>> On 1/27/25 8:07 AM, Jeff Layton wrote:
->>>> On Mon, 2025-01-27 at 11:15 +1100, NeilBrown wrote:
->>>>> On Mon, 27 Jan 2025, Jeff Layton wrote:
->>>>>> On Mon, 2025-01-27 at 08:53 +1100, NeilBrown wrote:
->>>>>>> On Sun, 26 Jan 2025, Jeff Layton wrote:
->>>>>>>> On Sun, 2025-01-26 at 13:39 +1100, NeilBrown wrote:
->>>>>>>>> On Sun, 26 Jan 2025, Jeff Layton wrote:
->>>>>>>>>> nfsd_file_dispose_list_delayed can be called from the filecache
->>>>>>>>>> laundrette, which is shut down after the nfsd threads are shut 
->>>>>>>>>> down and
->>>>>>>>>> the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL 
->>>>>>>>>> then there
->>>>>>>>>> are no threads to wake.
->>>>>>>>>>
->>>>>>>>>> Ensure that the nn->nfsd_serv pointer is non-NULL before calling
->>>>>>>>>> svc_wake_up in nfsd_file_dispose_list_delayed. This is safe 
->>>>>>>>>> since the
->>>>>>>>>> svc_serv is not freed until after the filecache laundrette is 
->>>>>>>>>> cancelled.
->>>>>>>>>>
->>>>>>>>>> Fixes: ffb402596147 ("nfsd: Don't leave work of closing files 
->>>>>>>>>> to a work queue")
->>>>>>>>>> Reported-by: Salvatore Bonaccorso <carnil@debian.org>
->>>>>>>>>> Closes: https://lore.kernel.org/linux- 
->>>>>>>>>> nfs/7d9f2a8aede4f7ca9935a47e1d405643220d7946.camel@kernel.org/
->>>>>>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>>>>>>> ---
->>>>>>>>>> This is only lightly tested, but I think it will fix the bug that
->>>>>>>>>> Salvatore reported.
->>>>>>>>>> ---
->>>>>>>>>>    fs/nfsd/filecache.c | 11 ++++++++++-
->>>>>>>>>>    1 file changed, 10 insertions(+), 1 deletion(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
->>>>>>>>>> index 
->>>>>>>>>> e91c164b5ea21507659904690533a19ca43b1b64..fb2a4469b7a3c077de2dd750f43239b4af6d37b0 100644
->>>>>>>>>> --- a/fs/nfsd/filecache.c
->>>>>>>>>> +++ b/fs/nfsd/filecache.c
->>>>>>>>>> @@ -445,11 +445,20 @@ nfsd_file_dispose_list_delayed(struct 
->>>>>>>>>> list_head *dispose)
->>>>>>>>>>                            struct nfsd_file, nf_gc);
->>>>>>>>>>            struct nfsd_net *nn = net_generic(nf->nf_net, 
->>>>>>>>>> nfsd_net_id);
->>>>>>>>>>            struct nfsd_fcache_disposal *l = nn->fcache_disposal;
->>>>>>>>>> +        struct svc_serv *serv;
->>>>>>>>>>            spin_lock(&l->lock);
->>>>>>>>>>            list_move_tail(&nf->nf_gc, &l->freeme);
->>>>>>>>>>            spin_unlock(&l->lock);
->>>>>>>>>> -        svc_wake_up(nn->nfsd_serv);
->>>>>>>>>> +
->>>>>>>>>> +        /*
->>>>>>>>>> +         * The filecache laundrette is shut down after the
->>>>>>>>>> +         * nn->nfsd_serv pointer is cleared, but before the
->>>>>>>>>> +         * svc_serv is freed.
->>>>>>>>>> +         */
->>>>>>>>>> +        serv = nn->nfsd_serv;
->>>>>>>>>
->>>>>>>>> I wonder if this should be READ_ONCE() to tell the compiler 
->>>>>>>>> that we
->>>>>>>>> could race with clearing nn->nfsd_serv.  Would the comment 
->>>>>>>>> still be
->>>>>>>>> needed?
->>>>>>>>>
->>>>>>>>
->>>>>>>> I think we need a comment at least. The linkage between the 
->>>>>>>> laundrette
->>>>>>>> and the nfsd_serv being set to NULL is very subtle. A READ_ONCE()
->>>>>>>> doesn't convey that well, and is unnecessary here.
->>>>>>>
->>>>>>> Why do you say "is unnecessary here" ?
->>>>>>> If the code were
->>>>>>>      if (nn->nfsd_serv)
->>>>>>>               svc_wake_up(nn->nfsd_serv);
->>>>>>> that would be wrong as nn->nfds_serv could be set to NULL between 
->>>>>>> the
->>>>>>> two.
->>>>>>> And the C compile is allowed to load the value twice because the 
->>>>>>> C memory
->>>>>>> model declares that would have the same effect.
->>>>>>> While I doubt it would actually change how the code is compiled, 
->>>>>>> I think
->>>>>>> we should have READ_ONCE() here (and I've been wrong before about 
->>>>>>> what
->>>>>>> the compiler will actually do).
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> It's unnecessary because the outcome of either case is acceptable.
->>>>>>
->>>>>> When racing with shutdown, either it's NULL and the laundrette won't
->>>>>> call svc_wake_up(), or it's non-NULL and it will. In the non-NULL 
->>>>>> case,
->>>>>> the call to svc_wake_up() will be a no-op because the threads are 
->>>>>> shut
->>>>>> down.
->>>>>>
->>>>>> The vastly common case in this code is that this pointer will be non-
->>>>>> NULL, because the server is running (i.e. not racing with 
->>>>>> shutdown). I
->>>>>> don't see the need in making all of those accesses volatile.
->>>>>
->>>>> One of us is confused.  I hope it isn't me.
->>>>>
->>>>
->>>> It's probably me. I think you have a much better understanding of
->>>> compiler design than I do. Still...
->>>>
->>>>> The hypothetical problem I see is that the C compiler could generate
->>>>> code to load the value "nn->nfsd_serv" twice.  The first time it is 
->>>>> not
->>>>> NULL, the second time it is NULL.
->>>>> The first is used for the test, the second is passed to svc_wake_up().
->>>>>
->>>>> Unlikely though this is, it is possible and READ_ONCE() is designed
->>>>> precisely to prevent this.
->>>>> To quote from include/asm-generic/rwonce.h it will
->>>>>    "Prevent the compiler from merging or refetching reads"
->>>>>
->>>>> A "volatile" access does not add any cost (in this case).  What it 
->>>>> does
->>>>> is break any aliasing that the compile might have deduced.
->>>>> Even if the compiler thinks it has "nn->nfsd_serv" in a register, it
->>>>> won't think it has the result of READ_ONCE(nn->nfsd_serv) in that 
->>>>> register.
->>>>> And if it needs the result of a previous READ_ONCE(nn->nfsd_serv) it
->>>>> won't decide that it can just read nn->nfsd_serv again.  It MUST keep
->>>>> the result of READ_ONCE(nn->nfsd_serv) somewhere until it is not 
->>>>> needed
->>>>> any more.
->>>>
->>>> I'm mainly just considering the resulting pointer. There are two
->>>> possible outcomes to the fetch of nn->nfsd_serv. Either it's a valid
->>>> pointer that points to the svc_serv, or it's NULL. The resulting code
->>>> can handle either case, so it doesn't seem like adding READ_ONCE() will
->>>> create any material difference here.
->>>>
->>>> Maybe I should ask it this way: What bad outcome could result if we
->>>> don't add READ_ONCE() here?
->>>
->>> Neil just described it. The compiler would generate two load operations,
->>> one for the test and one for the function call argument. The first load
->>> can retrieve a non-NULL address, and the second a NULL address.
->>>
->>> I agree a READ_ONCE() is necessary.
->>>
->>>
->>
->> Now I'm confused:
->>
->>                  struct svc_serv *serv;
->>
->>         [...]
->>
->>                  /*
->>                   * The filecache laundrette is shut down after the
->>                   * nn->nfsd_serv pointer is cleared, but before the
->>                   * svc_serv is freed.
->>                   */
->>                  serv = nn->nfsd_serv;
->>                  if (serv)
->>                          svc_wake_up(serv);
->>
->> This code is explicitly asking to fetch nn->nfsd_serv into the serv
->> variable, and then is testing that copy of the pointer and passing it
->> into svc_wake_up().
->>
->> How is the compiler allowed to suddenly refetch a NULL pointer into
->> serv after testing that serv is non-NULL?
-> 
-> There's nothing here that tells the compiler it is not allowed to
-> optimize this into two separate fetches if it feels that is better
-> code. READ_ONCE is what tells the compiler we do not want that re-
-> organization /ever/.
-> 
-> 
+On Mon, 2025-01-27 at 12:20 +1100, NeilBrown wrote:
+> The nfsd filecache currently uses  list_lru for tracking files recently
+> used in NFSv3 requests which need to be "garbage collected" when they
+> have becoming idle - unused for 2-4 seconds.
+>=20
+> I do not believe list_lru is a good tool for this.  It does not allow the
+> timeout which filecache requires so we have to add a timeout mechanism
+> which holds the list_lru lock while the whole list is scanned looking for
+> entries that haven't been recently accessed.  When the list is largish
+> (even a few hundred) this can block new requests which need the lock to
+> remove a file to access it.
+>=20
+> This patch removes the list_lru and instead uses 2 simple linked lists.
+> When a file is accessed it is removed from whichever list it is on,
+> then added to the tail of the first list.  Every 2 seconds the second
+> list is moved to the "freeme" list and the first list is moved to the
+> second list.  This avoids any need to walk a list to find old entries.
+>=20
+> Previously a file would be unhashed before being moved to the freeme
+> list.  We don't do that any more.  The freeme list is much like the
+> other two lists (recent and older) in that they all hold a reference to
+> the file and the file is still hashed.  When the nfsd thread processes
+> the freeme list it now uses the new nfsd_file_release_list() which uses
+> nfsd_file_cond_queue() to unhash and drop the refcount.
+>=20
+> We no longer have a precise count of the size of the lru (recent +
+> older) as we don't know how big "older" is when it is moved to "freeme".
+> However the shrinker can cope with an approximation.  So we keep a
+> count of number in the lru and when "older" is moved to "freeme" we
+> divide that count by 2.  When we remove anything from the lru we
+> decrement that counter but ensure it never goes negative.  Naturally
+> when we add to the lru we increase the counter.
+>=20
+> For the filecache stats file, which assumes a global lru, we keep a
+> separate counter which includes all files in all netns in recent or
+> older or freeme.
+>=20
+> We discard the nf_gc linkage in an nfsd_file and only use nf_lru.
+> We discard NFSD_FILE_REFERENCED.
+>=20
+> This patch drops the nfsd_file_gc_removed() trace point.  I couldn't
+> think of useful information to provide.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfsd/filecache.c | 218 +++++++++++++++++++++-----------------------
+>  fs/nfsd/filecache.h |   4 +-
+>  fs/nfsd/trace.h     |   4 -
+>  3 files changed, 107 insertions(+), 119 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 55f69bcde500..1e90da507152 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -34,7 +34,6 @@
+>  #include <linux/file.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/sched.h>
+> -#include <linux/list_lru.h>
+>  #include <linux/fsnotify_backend.h>
+>  #include <linux/fsnotify.h>
+>  #include <linux/seq_file.h>
+> @@ -64,10 +63,13 @@ static DEFINE_PER_CPU(unsigned long, nfsd_file_lru_to=
+tal);
+> =20
+>  struct nfsd_fcache_disposal {
+>  	spinlock_t lock;
+> -	struct list_lru file_lru;
+> -	struct list_head freeme;
+> +	struct list_head recent; /* have been used in last 0-2 seconds */
+> +	struct list_head older;	/* haven't been used in last 0-2 seconds */
+> +	struct list_head freeme; /* ready to be discarded */
+> +	unsigned long num_gc; /* Approximate size of recent plus older */
 
-Well, I think you can argue that even if the compiler does split this
-code into two reads of nn->nfsd_serv, it is guaranteed that the read
-value is always the same both times -- I guess that's that the comment
-is arguing, yes?
+It looks like the above fields should cover one cacheline on x86_64.
 
-I just wonder what will happen if that guarantee should happen to change
-in the future.
+Given that you're planning to change these fields to be manipulated
+directly in IRQ context, maybe we should ensure that those fields are
+all part of the same cacheline?
+
+>  	struct delayed_work filecache_laundrette;
+>  	struct shrinker *file_shrinker;
+> +	struct nfsd_net *nn;
+>  };
+> =20
+>  static struct kmem_cache		*nfsd_file_slab;
+> @@ -227,7 +229,6 @@ nfsd_file_alloc(struct net *net, struct inode *inode,=
+ unsigned char need,
+> =20
+>  	this_cpu_inc(nfsd_file_allocations);
+>  	INIT_LIST_HEAD(&nf->nf_lru);
+> -	INIT_LIST_HEAD(&nf->nf_gc);
+>  	nf->nf_birthtime =3D ktime_get();
+>  	nf->nf_file =3D NULL;
+>  	nf->nf_cred =3D get_current_cred();
+> @@ -332,12 +333,16 @@ static bool nfsd_file_lru_add(struct nfsd_file *nf)
+>  	struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+>  	struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> =20
+> -	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> -	if (list_lru_add_obj(&l->file_lru, &nf->nf_lru)) {
+> +	spin_lock(&l->lock);
+> +	if (list_empty(&nf->nf_lru)) {
+> +		list_add_tail(&nf->nf_lru, &l->recent);
+> +		l->num_gc +=3D 1;
+>  		this_cpu_inc(nfsd_file_lru_total);
+>  		trace_nfsd_file_lru_add(nf);
+> +		spin_unlock(&l->lock);
+>  		return true;
+>  	}
+> +	spin_unlock(&l->lock);
+>  	return false;
+>  }
+> =20
+> @@ -346,11 +351,17 @@ static bool nfsd_file_lru_remove(struct nfsd_file *=
+nf)
+>  	struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+>  	struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> =20
+> -	if (list_lru_del_obj(&l->file_lru, &nf->nf_lru)) {
+> +	spin_lock(&l->lock);
+> +	if (!list_empty(&nf->nf_lru)) {
+> +		list_del_init(&nf->nf_lru);
+>  		this_cpu_dec(nfsd_file_lru_total);
+> +		if (l->num_gc > 0)
+> +			l->num_gc -=3D 1;
+>  		trace_nfsd_file_lru_del(nf);
+> +		spin_unlock(&l->lock);
+>  		return true;
+>  	}
+> +	spin_unlock(&l->lock);
+>  	return false;
+>  }
+> =20
+> @@ -430,12 +441,26 @@ nfsd_file_dispose_list(struct list_head *dispose)
+>  	struct nfsd_file *nf;
+> =20
+>  	while (!list_empty(dispose)) {
+> -		nf =3D list_first_entry(dispose, struct nfsd_file, nf_gc);
+> -		list_del_init(&nf->nf_gc);
+> +		nf =3D list_first_entry(dispose, struct nfsd_file, nf_lru);
+> +		list_del_init(&nf->nf_lru);
+>  		nfsd_file_free(nf);
+>  	}
+>  }
+> =20
+> +static void
+> +nfsd_file_cond_queue(struct nfsd_file *nf, struct list_head *dispose);
+> +
+> +static void
+> +nfsd_file_release_list(struct list_head *dispose)
+> +{
+> +	LIST_HEAD(dispose2);
+> +	struct nfsd_file *nf, *nf2;
+> +
+> +	list_for_each_entry_safe(nf, nf2, dispose, nf_lru)
+> +		nfsd_file_cond_queue(nf, &dispose2);
+> +	nfsd_file_dispose_list(&dispose2);
+> +}
+> +
+>  /**
+>   * nfsd_file_dispose_list_delayed - move list of dead files to net's fre=
+eme list
+>   * @dispose: list of nfsd_files to be disposed
+> @@ -448,13 +473,13 @@ nfsd_file_dispose_list_delayed(struct list_head *di=
+spose)
+>  {
+>  	while(!list_empty(dispose)) {
+>  		struct nfsd_file *nf =3D list_first_entry(dispose,
+> -						struct nfsd_file, nf_gc);
+> +						struct nfsd_file, nf_lru);
+>  		struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+>  		struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+>  		struct svc_serv *serv;
+> =20
+>  		spin_lock(&l->lock);
+> -		list_move_tail(&nf->nf_gc, &l->freeme);
+> +		list_move_tail(&nf->nf_lru, &l->freeme);
+>  		spin_unlock(&l->lock);
+> =20
+>  		/*
+> @@ -486,90 +511,32 @@ void nfsd_file_net_dispose(struct nfsd_net *nn)
+>  		int i;
+> =20
+>  		spin_lock(&l->lock);
+> -		for (i =3D 0; i < 8 && !list_empty(&l->freeme); i++)
+> -			list_move(l->freeme.next, &dispose);
+> +		for (i =3D 0; i < 8 && !list_empty(&l->freeme); i++) {
+> +			struct nfsd_file *nf =3D list_first_entry(
+> +				&l->freeme, struct nfsd_file, nf_lru);
+> +
+> +			/*
+> +			 * Don't throw out files that are still
+> +			 * undergoing I/O or that have uncleared errors
+> +			 * pending.
+> +			 */
+> +			if (nfsd_file_check_writeback(nf)) {
+> +				trace_nfsd_file_gc_writeback(nf);
+> +				list_move(&nf->nf_lru, &l->recent);
+> +				l->num_gc +=3D 1;
+> +			} else {
+> +				trace_nfsd_file_gc_disposed(nf);
+> +				list_move(&nf->nf_lru, &dispose);
+> +				this_cpu_inc(nfsd_file_evictions);
+> +			}
+> +		}
+>  		spin_unlock(&l->lock);
+>  		if (!list_empty(&l->freeme))
+>  			/* Wake up another thread to share the work
+>  			 * *before* doing any actual disposing.
+>  			 */
+>  			svc_wake_up(nn->nfsd_serv);
+> -		nfsd_file_dispose_list(&dispose);
+> -	}
+> -}
+> -
+> -/**
+> - * nfsd_file_lru_cb - Examine an entry on the LRU list
+> - * @item: LRU entry to examine
+> - * @lru: controlling LRU
+> - * @arg: dispose list
+> - *
+> - * Return values:
+> - *   %LRU_REMOVED: @item was removed from the LRU
+> - *   %LRU_ROTATE: @item is to be moved to the LRU tail
+> - *   %LRU_SKIP: @item cannot be evicted
+> - */
+> -static enum lru_status
+> -nfsd_file_lru_cb(struct list_head *item, struct list_lru_one *lru,
+> -		 void *arg)
+> -{
+> -	struct list_head *head =3D arg;
+> -	struct nfsd_file *nf =3D list_entry(item, struct nfsd_file, nf_lru);
+> -
+> -	/* We should only be dealing with GC entries here */
+> -	WARN_ON_ONCE(!test_bit(NFSD_FILE_GC, &nf->nf_flags));
+> -
+> -	/*
+> -	 * Don't throw out files that are still undergoing I/O or
+> -	 * that have uncleared errors pending.
+> -	 */
+> -	if (nfsd_file_check_writeback(nf)) {
+> -		trace_nfsd_file_gc_writeback(nf);
+> -		return LRU_SKIP;
+> -	}
+> -
+> -	/* If it was recently added to the list, skip it */
+> -	if (test_and_clear_bit(NFSD_FILE_REFERENCED, &nf->nf_flags)) {
+> -		trace_nfsd_file_gc_referenced(nf);
+> -		return LRU_ROTATE;
+> -	}
+> -
+> -	/*
+> -	 * Put the reference held on behalf of the LRU. If it wasn't the last
+> -	 * one, then just remove it from the LRU and ignore it.
+> -	 */
+> -	if (!refcount_dec_and_test(&nf->nf_ref)) {
+> -		trace_nfsd_file_gc_in_use(nf);
+> -		list_lru_isolate(lru, &nf->nf_lru);
+> -		this_cpu_dec(nfsd_file_lru_total);
+> -		return LRU_REMOVED;
+> -	}
+> -
+> -	/* Refcount went to zero. Unhash it and queue it to the dispose list */
+> -	nfsd_file_unhash(nf);
+> -	list_lru_isolate(lru, &nf->nf_lru);
+> -	this_cpu_dec(nfsd_file_lru_total);
+> -	list_add(&nf->nf_gc, head);
+> -	this_cpu_inc(nfsd_file_evictions);
+> -	trace_nfsd_file_gc_disposed(nf);
+> -	return LRU_REMOVED;
+> -}
+> -
+> -static void
+> -nfsd_file_gc(struct nfsd_fcache_disposal *l)
+> -{
+> -	unsigned long remaining =3D list_lru_count(&l->file_lru);
+> -	LIST_HEAD(dispose);
+> -	unsigned long ret;
+> -
+> -	while (remaining > 0) {
+> -		unsigned long num_to_scan =3D min(remaining, NFSD_FILE_GC_BATCH);
+> -
+> -		ret =3D list_lru_walk(&l->file_lru, nfsd_file_lru_cb,
+> -				    &dispose, num_to_scan);
+> -		trace_nfsd_file_gc_removed(ret, list_lru_count(&l->file_lru));
+> -		nfsd_file_dispose_list_delayed(&dispose);
+> -		remaining -=3D num_to_scan;
+> +		nfsd_file_release_list(&dispose);
+>  	}
+>  }
+> =20
+> @@ -578,9 +545,19 @@ nfsd_file_gc_worker(struct work_struct *work)
+>  {
+>  	struct nfsd_fcache_disposal *l =3D container_of(
+>  		work, struct nfsd_fcache_disposal, filecache_laundrette.work);
+> -	nfsd_file_gc(l);
+> -	if (list_lru_count(&l->file_lru))
+> +
+> +	spin_lock(&l->lock);
+> +	list_splice_init(&l->older, &l->freeme);
+> +	list_splice_init(&l->recent, &l->older);
+> +	/* We don't know how many were moved to 'freeme' and don't want
+> +	 * to waste time counting - guess a half.
+> +	 */
+> +	l->num_gc /=3D 2;
+> +	if (!list_empty(&l->freeme))
+> +		svc_wake_up(l->nn->nfsd_serv);
+> +	if (!list_empty(&l->older) || !list_empty(&l->recent))
+>  		nfsd_file_schedule_laundrette(l);
+> +	spin_unlock(&l->lock);
+>  }
+> =20
+>  static unsigned long
+> @@ -588,22 +565,40 @@ nfsd_file_lru_count(struct shrinker *s, struct shri=
+nk_control *sc)
+>  {
+>  	struct nfsd_fcache_disposal *l =3D s->private_data;
+> =20
+> -	return list_lru_count(&l->file_lru);
+> +	return l->num_gc;
+>  }
+> =20
+>  static unsigned long
+>  nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
+>  {
+>  	struct nfsd_fcache_disposal *l =3D s->private_data;
+> +	struct nfsd_file *nf;
+> +	int scanned =3D 0;
+> +
+> +	spin_lock(&l->lock);
+> +	while (scanned < sc->nr_to_scan &&
+> +	       (nf =3D list_first_entry_or_null(&l->older,
+> +					      struct nfsd_file, nf_lru)) !=3D NULL) {
+> +		list_del_init(&nf->nf_lru);
+> +		list_add_tail(&nf->nf_lru, &l->freeme);
+> +		if (l->num_gc > 0)
+> +			l->num_gc -=3D 1;
+> +		scanned +=3D 1;
+> +	}
+> +	if (scanned > 0)
+> +		svc_wake_up(l->nn->nfsd_serv);
+> =20
+> -	LIST_HEAD(dispose);
+> -	unsigned long ret;
+> +	trace_nfsd_file_shrinker_removed(scanned, l->num_gc);
+> =20
+> -	ret =3D list_lru_shrink_walk(&l->file_lru, sc,
+> -				   nfsd_file_lru_cb, &dispose);
+> -	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&l->file_lru));
+> -	nfsd_file_dispose_list_delayed(&dispose);
+> -	return ret;
+> +	while (scanned < sc->nr_to_scan &&
+> +	       (nf =3D list_first_entry_or_null(&l->recent,
+> +					      struct nfsd_file, nf_lru)) !=3D NULL) {
+> +		list_del_init(&nf->nf_lru);
+> +		list_add_tail(&nf->nf_lru, &l->older);
+> +		scanned +=3D 1;
+> +	}
+> +	spin_unlock(&l->lock);
+> +	return scanned;
+>  }
+> =20
+>  /**
+> @@ -616,7 +611,6 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink_=
+control *sc)
+>   */
+>  static void
+>  nfsd_file_cond_queue(struct nfsd_file *nf, struct list_head *dispose)
+> -	__must_hold(RCU)
+>  {
+>  	int decrement =3D 1;
+> =20
+> @@ -634,7 +628,7 @@ nfsd_file_cond_queue(struct nfsd_file *nf, struct lis=
+t_head *dispose)
+> =20
+>  	/* If refcount goes to 0, then put on the dispose list */
+>  	if (refcount_sub_and_test(decrement, &nf->nf_ref)) {
+> -		list_add(&nf->nf_gc, dispose);
+> +		list_add(&nf->nf_lru, dispose);
+>  		trace_nfsd_file_closing(nf);
+>  	}
+>  }
+> @@ -859,7 +853,10 @@ nfsd_alloc_fcache_disposal(void)
+>  		return NULL;
+>  	spin_lock_init(&l->lock);
+>  	INIT_DELAYED_WORK(&l->filecache_laundrette, nfsd_file_gc_worker);
+> +	INIT_LIST_HEAD(&l->recent);
+> +	INIT_LIST_HEAD(&l->older);
+>  	INIT_LIST_HEAD(&l->freeme);
+> +	l->num_gc =3D 0;
+>  	l->file_shrinker =3D shrinker_alloc(0, "nfsd-filecache");
+>  	if (!l->file_shrinker) {
+>  		pr_err("nfsd: failed to allocate nfsd_file_shrinker\n");
+> @@ -871,15 +868,6 @@ nfsd_alloc_fcache_disposal(void)
+>  	l->file_shrinker->seeks =3D 1;
+>  	l->file_shrinker->private_data =3D l;
+> =20
+> -	/* if file_lru is not zeroed it can trigger a bug: ->key is the problem=
+ */
+> -	memset(&l->file_lru, 0, sizeof(l->file_lru));
+> -	if (list_lru_init(&l->file_lru)) {
+> -		pr_err("nfsd: failed to init nfsd_file_lru\n");
+> -		shrinker_free(l->file_shrinker);
+> -		kfree(l);
+> -		return NULL;
+> -	}
+> -
+>  	shrinker_register(l->file_shrinker);
+>  	return l;
+>  }
+> @@ -889,8 +877,12 @@ nfsd_free_fcache_disposal(struct nfsd_fcache_disposa=
+l *l)
+>  {
+>  	cancel_delayed_work_sync(&l->filecache_laundrette);
+>  	shrinker_free(l->file_shrinker);
+> -	list_lru_destroy(&l->file_lru);
+> -	nfsd_file_dispose_list(&l->freeme);
+> +	nfsd_file_release_list(&l->recent);
+> +	WARN_ON_ONCE(!list_empty(&l->recent));
+> +	nfsd_file_release_list(&l->older);
+> +	WARN_ON_ONCE(!list_empty(&l->older));
+> +	nfsd_file_release_list(&l->freeme);
+> +	WARN_ON_ONCE(!list_empty(&l->freeme));
+>  	kfree(l);
+>  }
+> =20
+> @@ -909,6 +901,8 @@ nfsd_file_cache_start_net(struct net *net)
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+>  	nn->fcache_disposal =3D nfsd_alloc_fcache_disposal();
+> +	if (nn->fcache_disposal)
+> +		nn->fcache_disposal->nn =3D nn;
+>  	return nn->fcache_disposal ? 0 : -ENOMEM;
+>  }
+> =20
+> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> index a09a851d510e..02059b6c5e9a 100644
+> --- a/fs/nfsd/filecache.h
+> +++ b/fs/nfsd/filecache.h
+> @@ -42,15 +42,13 @@ struct nfsd_file {
+>  	struct net		*nf_net;
+>  #define NFSD_FILE_HASHED	(0)
+>  #define NFSD_FILE_PENDING	(1)
+> -#define NFSD_FILE_REFERENCED	(2)
+> -#define NFSD_FILE_GC		(3)
+> +#define NFSD_FILE_GC		(2)
+>  	unsigned long		nf_flags;
+>  	refcount_t		nf_ref;
+>  	unsigned char		nf_may;
+> =20
+>  	struct nfsd_file_mark	*nf_mark;
+>  	struct list_head	nf_lru;
+> -	struct list_head	nf_gc;
+>  	struct rcu_head		nf_rcu;
+>  	ktime_t			nf_birthtime;
+>  };
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index ad2c0c432d08..efa683541ed5 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -1038,7 +1038,6 @@ DEFINE_CLID_EVENT(confirmed_r);
+>  	__print_flags(val, "|",						\
+>  		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
+>  		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
+> -		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED" },		\
+>  		{ 1 << NFSD_FILE_GC,		"GC" })
+> =20
+>  DECLARE_EVENT_CLASS(nfsd_file_class,
+> @@ -1314,9 +1313,7 @@ DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_add);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_add_disposed);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del_disposed);
+> -DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_in_use);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_writeback);
+> -DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_referenced);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_disposed);
+> =20
+>  DECLARE_EVENT_CLASS(nfsd_file_lruwalk_class,
+> @@ -1345,7 +1342,6 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, name,				\
+>  	),								\
+>  	TP_ARGS(removed, remaining))
+> =20
+> -DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_removed);
+>  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_shrinker_removed);
+> =20
+>  TRACE_EVENT(nfsd_file_close,
 
 
--- 
-Chuck Lever
+This new method does seem a lot cleaner.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
