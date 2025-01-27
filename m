@@ -1,53 +1,56 @@
-Return-Path: <linux-nfs+bounces-9696-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9697-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A570BA20018
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 22:50:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0801DA20019
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 22:50:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E44787A2384
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 21:50:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19E8018857A9
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 21:50:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA4518FDBD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B561DA4E;
 	Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O4GPWXvD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soNqyQNe"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4682C1DA4E
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 21:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB27B1C5F13
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738014621; cv=none; b=smFW0IrYWbz6RxTFevjZ3SU245ZCJSv3tvpnBSGHR4Ki6nH/JrdRH5RxLpYy/bLLEEhD7Spk6OMSEvmD/7iYMocYGlBCU/6K+7mDiGcu9FNlSg/Dvs+yJAW/vrBUwK1zDD/pjkAm4YQK68EdjRTuS7YaYlbNnQWIAM8H31vyVK0=
+	t=1738014621; cv=none; b=KazUYR6lu2blkncaiCb25PcIZd/cM2pEADsCkLGpB27DF1VuFJ7n9MdRpJthTm8Q2Rv0JUcDq3NsOdYZMRERhvUeWEMWe5gALGTjlmKeHTzmSQus9Wc8OspYzOEbTBmm4VmpLUF6kMhwxAzQ4NktHu0+bqudnBhSwdSOMWDsqek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738014621; c=relaxed/simple;
-	bh=DVWczIPahLVhvwgNiiIJKspMVPQ3swNAw1Y1cpOscc8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e+EEVfEb3VL+qYNC9fM0oy9qce7PGkH566tZNQY6WPLMF2/u+0YSivtnvw6zxjqXp5KBY4EMPTh9HLfcqBNw7Fsq6miHEEBmcaMR7mWP7R1GWLfSTRpmDxUiaF+s89XmjgCsZHFPEtVurLz5+2sWNIGfhUejNDoz10K5XdrVY2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O4GPWXvD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61046C4CED2;
+	bh=V2zE9tB1Mo8K52AFDQE2/bkiWId9FRqyOcRK8qOur2s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KkJQMYQKFdLogmgY0/TNmBfXTl+8bJ3JZHdHzT0vCbC4FInhDEGudbomjy0FcIWFGtJ3l34obVS145qAlCxXzCR1dHg3c/E36veu0gDeK45T8xUw/Sih5iykj6bpOWSWy8Y67xDfRMavFPgYo9BlDCGWPvTc9ByfU+IZZanvbQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soNqyQNe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7CAC4CEE3;
 	Mon, 27 Jan 2025 21:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738014620;
-	bh=DVWczIPahLVhvwgNiiIJKspMVPQ3swNAw1Y1cpOscc8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=O4GPWXvDvV6hdCvI7r4sKCaf2jAELzuh9ueMx63cRpoHyLzLk/KSGSqPEIYKRDY57
-	 d8CKBUFN0pSIg8UTintUvXs8GCMHxqzQc9nb82wj7qkz7w5NF3dJVIguIlNaKXlJ8q
-	 SvoT7nNAYJjMb20Y6UpuIrOOU8WWpSYd0jRfH5FOUktyY9Lyn1WwCKXysVmBfqe+Y4
-	 sWlfJLMUIDBh9ja43TjOhL/a26/ZSDajNn3yruMObWx48L2QlcuD75JIkdfT8cq55o
-	 hn+NGo8+H4nBN+dLBlSAWUi6UCe174g5LPHbUjQ866IUMzIaKqVedzlfSQDvPaEahn
-	 GpXStaVOI05ag==
+	s=k20201202; t=1738014621;
+	bh=V2zE9tB1Mo8K52AFDQE2/bkiWId9FRqyOcRK8qOur2s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=soNqyQNenW3eS8g6NfHcAOoLtgCiAcik9S4mIHt+fBbb83W+VUnjoUr7KV3s/qePB
+	 yVdu9Z1zXjrQjrR7O9rlCEDdSOMz29/8RmBGIUbChXAAvYazWFn8oIZiImlgZ5UbQI
+	 FO1PGJxBF2jbO1/fnZc4BrM61wDlN+Eo6MO7b9z1GI3oYF0Lc9YoO+yMx17nO9XBUb
+	 CNXPbD17KdEsIMhdMd/8pOOvcxT3c5EO7jv6xUVT0v/GF6yJH81DTKO3rSl8/I6ptL
+	 Z5eeADZA19kIrKfRASzEepxFuACyXKOfbyfM2p+CQAkcoCQwq5XzZ1UUVGNCTF7kWl
+	 QYsNqfgNlaWZg==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	trond.myklebust@hammerspace.com
 Cc: anna@kernel.org
-Subject: [PATCH v2 0/5] NFS & SUNRPC: Sysfs Improvements
-Date: Mon, 27 Jan 2025 16:50:14 -0500
-Message-ID: <20250127215019.352509-1-anna@kernel.org>
+Subject: [PATCH v2 1/5] NFS: Add implid to sysfs
+Date: Mon, 27 Jan 2025 16:50:15 -0500
+Message-ID: <20250127215019.352509-2-anna@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250127215019.352509-1-anna@kernel.org>
+References: <20250127215019.352509-1-anna@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,40 +61,104 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
-These are a handful of improvements that have been in the back of my
-mind for a while. The first patch adds a (read-only) file to the NFS
-client's sysfs collection to check the server's implementation id. The
-remaining patches are on the sunrpc side.
+The Linux NFS server added support for returning this information during
+an EXCHANGE_ID in Linux v6.13. This is something and admin might want to
+query, so let's add it to sysfs.
 
-I did look into the 'nconnect' and 'max_connect' NFS client mount
-options and how they interact with adding a new xprt in patch 4. My
-reading is that 'nconnect' is just the initial number of connections
-made by the NFS client during mounting. That shouldn't disallow adding a
-new connection. The 'max_connect' parameter refers to the maximum number
-of unique IP addresses in an xprt switch. The new connection I generate
-is a clone of the main xprt, not a new address, so this doesn't come
-into play either. So I'm convinced adding a new xprt is okay to do here.
+Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+---
+v2: * Removed accidentally included (but commented out) code block
+    * Unconditionally display the files (with empty contents) for NFS v4.1,
+      even if the server does not set these values.
+---
+ fs/nfs/sysfs.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Thoughts?
-Anna
-
-Changes for v2:
-- Added a file for rpc_clnt information
-- Added a file for on-step xprt deletion
-
-Anna Schumaker (5):
-  NFS: Add implid to sysfs
-  sunrpc: Add a sysfs attr for xprtsec
-  sunrpc: Add a sysfs files for rpc_clnt information
-  sunrpc: Add a sysfs file for adding a new xprt
-  sunrpc: Add a sysfs file for one-step xprt deletion
-
- fs/nfs/sysfs.c                       |  60 ++++++++
- include/linux/sunrpc/xprtmultipath.h |   1 +
- net/sunrpc/sysfs.c                   | 202 +++++++++++++++++++++++++++
- net/sunrpc/xprtmultipath.c           |  21 +++
- 4 files changed, 284 insertions(+)
-
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index 7b59a40d40c0..b30401b2c939 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -272,6 +272,38 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 
+ static struct kobj_attribute nfs_sysfs_attr_shutdown = __ATTR_RW(shutdown);
+ 
++#if IS_ENABLED(CONFIG_NFS_V4_1)
++static ssize_t
++implid_domain_show(struct kobject *kobj, struct kobj_attribute *attr,
++				char *buf)
++{
++	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
++	struct nfs41_impl_id *impl_id = server->nfs_client->cl_implid;
++
++	if (!impl_id || strlen(impl_id->domain) == 0)
++		return 0; //sysfs_emit(buf, "");
++	return sysfs_emit(buf, "%s\n", impl_id->domain);
++}
++
++static struct kobj_attribute nfs_sysfs_attr_implid_domain = __ATTR_RO(implid_domain);
++
++
++static ssize_t
++implid_name_show(struct kobject *kobj, struct kobj_attribute *attr,
++				char *buf)
++{
++	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
++	struct nfs41_impl_id *impl_id = server->nfs_client->cl_implid;
++
++	if (!impl_id || strlen(impl_id->name) == 0)
++		return 0; //sysfs_emit(buf, "");
++	return sysfs_emit(buf, "%s\n", impl_id->name);
++}
++
++static struct kobj_attribute nfs_sysfs_attr_implid_name = __ATTR_RO(implid_name);
++
++#endif /* IS_ENABLED(CONFIG_NFS_V4_1) */
++
+ #define RPC_CLIENT_NAME_SIZE 64
+ 
+ void nfs_sysfs_link_rpc_client(struct nfs_server *server,
+@@ -309,6 +341,32 @@ static struct kobj_type nfs_sb_ktype = {
+ 	.child_ns_type = nfs_netns_object_child_ns_type,
+ };
+ 
++#if IS_ENABLED(CONFIG_NFS_V4_1)
++static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
++{
++	int ret;
++
++	if (!server->nfs_client->cl_implid)
++		return;
++
++	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_domain.attr,
++					   nfs_netns_server_namespace(&server->kobj));
++	if (ret < 0)
++		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
++			server->s_sysfs_id, ret);
++
++	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_name.attr,
++				   nfs_netns_server_namespace(&server->kobj));
++	if (ret < 0)
++		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
++			server->s_sysfs_id, ret);
++}
++#else /* CONFIG_NFS_V4_1 */
++static inline void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
++{
++}
++#endif /* CONFIG_NFS_V4_1 */
++
+ void nfs_sysfs_add_server(struct nfs_server *server)
+ {
+ 	int ret;
+@@ -325,6 +383,8 @@ void nfs_sysfs_add_server(struct nfs_server *server)
+ 	if (ret < 0)
+ 		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
+ 			server->s_sysfs_id, ret);
++
++	nfs_sysfs_add_nfsv41_server(server);
+ }
+ EXPORT_SYMBOL_GPL(nfs_sysfs_add_server);
+ 
 -- 
 2.48.1
 
