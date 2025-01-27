@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-9697-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9698-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0801DA20019
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 22:50:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68E1BA2001A
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 22:50:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19E8018857A9
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 21:50:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AFFB33A3878
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B561DA4E;
-	Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9151D1D932F;
+	Mon, 27 Jan 2025 21:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soNqyQNe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gx7E6hyg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB27B1C5F13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0791C5F13
 	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738014621; cv=none; b=KazUYR6lu2blkncaiCb25PcIZd/cM2pEADsCkLGpB27DF1VuFJ7n9MdRpJthTm8Q2Rv0JUcDq3NsOdYZMRERhvUeWEMWe5gALGTjlmKeHTzmSQus9Wc8OspYzOEbTBmm4VmpLUF6kMhwxAzQ4NktHu0+bqudnBhSwdSOMWDsqek=
+	t=1738014622; cv=none; b=o+OuELiYblCsgB3IoBIWPXPXQGEK6FYdJ7KtERilbQAwcFQuSDaHXio20KzolLal1Sj8iznxNi81rtffEtZwBRLbI23XlOJwCBrSrdivaHQj0oJyqXNf2X3qFBDh2lWZekGYsVW64gfh+JmhGxxERcnjOR75kRWgprbtGb4U96Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738014621; c=relaxed/simple;
-	bh=V2zE9tB1Mo8K52AFDQE2/bkiWId9FRqyOcRK8qOur2s=;
+	s=arc-20240116; t=1738014622; c=relaxed/simple;
+	bh=LW++IZXmbaSsERqMxIOWwEVGWj0Uk6rC4ec5eXtd/k4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KkJQMYQKFdLogmgY0/TNmBfXTl+8bJ3JZHdHzT0vCbC4FInhDEGudbomjy0FcIWFGtJ3l34obVS145qAlCxXzCR1dHg3c/E36veu0gDeK45T8xUw/Sih5iykj6bpOWSWy8Y67xDfRMavFPgYo9BlDCGWPvTc9ByfU+IZZanvbQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soNqyQNe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF7CAC4CEE3;
-	Mon, 27 Jan 2025 21:50:20 +0000 (UTC)
+	 MIME-Version; b=Go3yiLkVrubSAJ3gfXwnBu9Xx+VCsMn7Hr9YGBXvdKsjnkokyorQVSx0WFYPuLTaotRIy8dmKb1C/jKodk14QuIC6N7ddjo4gzDGs1Uf2By9hhOc4H00qHum9O5UsdSo+6wPbCeDIJFIZXFBW00uyq0E6H1CR0CWShAsICzJH+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gx7E6hyg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 848C6C4CED2;
+	Mon, 27 Jan 2025 21:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1738014621;
-	bh=V2zE9tB1Mo8K52AFDQE2/bkiWId9FRqyOcRK8qOur2s=;
+	bh=LW++IZXmbaSsERqMxIOWwEVGWj0Uk6rC4ec5eXtd/k4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=soNqyQNenW3eS8g6NfHcAOoLtgCiAcik9S4mIHt+fBbb83W+VUnjoUr7KV3s/qePB
-	 yVdu9Z1zXjrQjrR7O9rlCEDdSOMz29/8RmBGIUbChXAAvYazWFn8oIZiImlgZ5UbQI
-	 FO1PGJxBF2jbO1/fnZc4BrM61wDlN+Eo6MO7b9z1GI3oYF0Lc9YoO+yMx17nO9XBUb
-	 CNXPbD17KdEsIMhdMd/8pOOvcxT3c5EO7jv6xUVT0v/GF6yJH81DTKO3rSl8/I6ptL
-	 Z5eeADZA19kIrKfRASzEepxFuACyXKOfbyfM2p+CQAkcoCQwq5XzZ1UUVGNCTF7kWl
-	 QYsNqfgNlaWZg==
+	b=Gx7E6hygCKad368/1SRsizo3Uivmt3SJfVLs9OdEP9covaz6IdsyUka7o0QzRq57b
+	 N8YG6Wyk7eqIiVhCoUk0qZBuZPB3t0vuQlgP13bcgv1Td+XEgHxBpSGxYfQKAW8y2L
+	 zVmJxZXrTWyeUJAeiAJCEBVD1d7cCnkXjDx4J6ukPSea8iQLRiDl2BeMzFATbJhuZ2
+	 A2Eq7P8QjrYLqYoSh06zZjn2MI2Q7HTHnQCZxgyXU58NtvF7aEkMLcLt/7osmsolVa
+	 xcFoU76DhGJgLOte92WsPZ7SCHabDmJkuc+s/hWXX2nt6SxaBmCPPRtF/GoJtOzY1F
+	 6fxxLlr6PfZSw==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	trond.myklebust@hammerspace.com
 Cc: anna@kernel.org
-Subject: [PATCH v2 1/5] NFS: Add implid to sysfs
-Date: Mon, 27 Jan 2025 16:50:15 -0500
-Message-ID: <20250127215019.352509-2-anna@kernel.org>
+Subject: [PATCH v2 2/5] sunrpc: Add a sysfs attr for xprtsec
+Date: Mon, 27 Jan 2025 16:50:16 -0500
+Message-ID: <20250127215019.352509-3-anna@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250127215019.352509-1-anna@kernel.org>
 References: <20250127215019.352509-1-anna@kernel.org>
@@ -61,104 +61,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
-The Linux NFS server added support for returning this information during
-an EXCHANGE_ID in Linux v6.13. This is something and admin might want to
-query, so let's add it to sysfs.
+This allows the admin to check the TLS configuration for each xprt.
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
-v2: * Removed accidentally included (but commented out) code block
-    * Unconditionally display the files (with empty contents) for NFS v4.1,
-      even if the server does not set these values.
----
- fs/nfs/sysfs.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ net/sunrpc/sysfs.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index 7b59a40d40c0..b30401b2c939 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -272,6 +272,38 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static struct kobj_attribute nfs_sysfs_attr_shutdown = __ATTR_RW(shutdown);
- 
-+#if IS_ENABLED(CONFIG_NFS_V4_1)
-+static ssize_t
-+implid_domain_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				char *buf)
-+{
-+	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
-+	struct nfs41_impl_id *impl_id = server->nfs_client->cl_implid;
-+
-+	if (!impl_id || strlen(impl_id->domain) == 0)
-+		return 0; //sysfs_emit(buf, "");
-+	return sysfs_emit(buf, "%s\n", impl_id->domain);
-+}
-+
-+static struct kobj_attribute nfs_sysfs_attr_implid_domain = __ATTR_RO(implid_domain);
-+
-+
-+static ssize_t
-+implid_name_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				char *buf)
-+{
-+	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
-+	struct nfs41_impl_id *impl_id = server->nfs_client->cl_implid;
-+
-+	if (!impl_id || strlen(impl_id->name) == 0)
-+		return 0; //sysfs_emit(buf, "");
-+	return sysfs_emit(buf, "%s\n", impl_id->name);
-+}
-+
-+static struct kobj_attribute nfs_sysfs_attr_implid_name = __ATTR_RO(implid_name);
-+
-+#endif /* IS_ENABLED(CONFIG_NFS_V4_1) */
-+
- #define RPC_CLIENT_NAME_SIZE 64
- 
- void nfs_sysfs_link_rpc_client(struct nfs_server *server,
-@@ -309,6 +341,32 @@ static struct kobj_type nfs_sb_ktype = {
- 	.child_ns_type = nfs_netns_object_child_ns_type,
- };
- 
-+#if IS_ENABLED(CONFIG_NFS_V4_1)
-+static void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
-+{
-+	int ret;
-+
-+	if (!server->nfs_client->cl_implid)
-+		return;
-+
-+	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_domain.attr,
-+					   nfs_netns_server_namespace(&server->kobj));
-+	if (ret < 0)
-+		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-+			server->s_sysfs_id, ret);
-+
-+	ret = sysfs_create_file_ns(&server->kobj, &nfs_sysfs_attr_implid_name.attr,
-+				   nfs_netns_server_namespace(&server->kobj));
-+	if (ret < 0)
-+		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
-+			server->s_sysfs_id, ret);
-+}
-+#else /* CONFIG_NFS_V4_1 */
-+static inline void nfs_sysfs_add_nfsv41_server(struct nfs_server *server)
-+{
-+}
-+#endif /* CONFIG_NFS_V4_1 */
-+
- void nfs_sysfs_add_server(struct nfs_server *server)
- {
- 	int ret;
-@@ -325,6 +383,8 @@ void nfs_sysfs_add_server(struct nfs_server *server)
- 	if (ret < 0)
- 		pr_warn("NFS: sysfs_create_file_ns for server-%d failed (%d)\n",
- 			server->s_sysfs_id, ret);
-+
-+	nfs_sysfs_add_nfsv41_server(server);
+diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+index 5c8ecdaaa985..dc3b7cd70000 100644
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -129,6 +129,31 @@ static ssize_t rpc_sysfs_xprt_srcaddr_show(struct kobject *kobj,
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(nfs_sysfs_add_server);
  
++static const char *xprtsec_strings[] = {
++	[RPC_XPRTSEC_NONE] = "none",
++	[RPC_XPRTSEC_TLS_ANON] = "tls-anon",
++	[RPC_XPRTSEC_TLS_X509] = "tls-x509",
++};
++
++static ssize_t rpc_sysfs_xprt_xprtsec_show(struct kobject *kobj,
++					   struct kobj_attribute *attr,
++					   char *buf)
++{
++	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
++	ssize_t ret;
++
++	if (!xprt) {
++		ret = sprintf(buf, "<closed>\n");
++		goto out;
++	}
++
++	ret = sprintf(buf, "%s\n", xprtsec_strings[xprt->xprtsec.policy]);
++	xprt_put(xprt);
++out:
++	return ret;
++
++}
++
+ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
+ 					struct kobj_attribute *attr, char *buf)
+ {
+@@ -404,6 +429,9 @@ static struct kobj_attribute rpc_sysfs_xprt_dstaddr = __ATTR(dstaddr,
+ static struct kobj_attribute rpc_sysfs_xprt_srcaddr = __ATTR(srcaddr,
+ 	0644, rpc_sysfs_xprt_srcaddr_show, NULL);
+ 
++static struct kobj_attribute rpc_sysfs_xprt_xprtsec = __ATTR(xprtsec,
++	0644, rpc_sysfs_xprt_xprtsec_show, NULL);
++
+ static struct kobj_attribute rpc_sysfs_xprt_info = __ATTR(xprt_info,
+ 	0444, rpc_sysfs_xprt_info_show, NULL);
+ 
+@@ -413,6 +441,7 @@ static struct kobj_attribute rpc_sysfs_xprt_change_state = __ATTR(xprt_state,
+ static struct attribute *rpc_sysfs_xprt_attrs[] = {
+ 	&rpc_sysfs_xprt_dstaddr.attr,
+ 	&rpc_sysfs_xprt_srcaddr.attr,
++	&rpc_sysfs_xprt_xprtsec.attr,
+ 	&rpc_sysfs_xprt_info.attr,
+ 	&rpc_sysfs_xprt_change_state.attr,
+ 	NULL,
 -- 
 2.48.1
 
