@@ -1,168 +1,79 @@
-Return-Path: <linux-nfs+bounces-9711-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9712-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26A77A20159
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 00:05:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90C93A2031A
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 02:56:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E67918860B2
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Jan 2025 23:05:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D7D3A1887FBD
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 01:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3241EB2A;
-	Mon, 27 Jan 2025 23:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2023151C4A;
+	Tue, 28 Jan 2025 01:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bj5v+7C5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+fxscE2z";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bj5v+7C5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+fxscE2z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMWfKwAB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B061DD0F6
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Jan 2025 23:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB81D1F5FA;
+	Tue, 28 Jan 2025 01:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738019126; cv=none; b=PJXL+PMeXWr98taU3P9ubRBz93iH4Vrk5WKscbLu7dFYANyltvmZpIW3DeoJ1buziKv5XMO1ODZX5gVGjeglIw09bhJvNmKRMv694K2FhLqp0yXo33qVCBcwkRjasmlzjq7Rfxcc+FtXGxrlwhHWJKOjsvVZd/Dj1LeVpykZsfU=
+	t=1738029379; cv=none; b=hTL/BzkQgyFOF8FMQTwZ9azmrRBqh6rfQXfoyiTIkCvS/3qQ0LF8B3mCnWi50P1bZrUZrsGK/HAlVyfCzIH1hnqbLKuLVLl8nKldZ2FRdTZDS000ZvYc7enPEHCmZDt86yNXOZlD/W1kq57RHEqaa+6O/EabC1x0XU02syzkzr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738019126; c=relaxed/simple;
-	bh=0j2geOmVFui2ykSCwJW0ou8c+au1zPmZi8lMKqGpEQk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=rxjPzymBmDHffeW06vfNBwcSsfoDMGES6H0jkD5v4arYOy1uw6f8YTuc/wCWRVQ1Xp4E4KIpppWudEeoJGwnPPR6iUWfoDCtHG70EqlBMqtNn7FwBIZFGOedEGd3HYPgPFpT+ijLiK0D3HRXo4O5VN/Yum/Zn4wen7aRera6dNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bj5v+7C5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+fxscE2z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bj5v+7C5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+fxscE2z; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E14DE21108;
-	Mon, 27 Jan 2025 23:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738019122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Yt1OQgmx3n4EVoLSLC3o7DBMIw3+C9LJRmoDxZdFHpY=;
-	b=bj5v+7C5QvZKADZYN7ntRNz+pAt1gx75wiHh4RfLfif7nFsk7u1ejGGXDm9pKdh4Luh1BR
-	HxvKnwIxn7Ge6g8B5ETRK8Df/72JZfcxaRmgPN88SNghic+8TROhtzBkAWzcHCrJN5+uXu
-	WBtaT6RGnHT99DdhmIIZb+npMMaoYic=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738019122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Yt1OQgmx3n4EVoLSLC3o7DBMIw3+C9LJRmoDxZdFHpY=;
-	b=+fxscE2zbs2xvciVG57JfQzMzJovdmA8iKot+plyPSG/qzEcMJJ0YaEbFJK4mayGLhOCUp
-	HfCUit/gJxlrrPDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738019122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Yt1OQgmx3n4EVoLSLC3o7DBMIw3+C9LJRmoDxZdFHpY=;
-	b=bj5v+7C5QvZKADZYN7ntRNz+pAt1gx75wiHh4RfLfif7nFsk7u1ejGGXDm9pKdh4Luh1BR
-	HxvKnwIxn7Ge6g8B5ETRK8Df/72JZfcxaRmgPN88SNghic+8TROhtzBkAWzcHCrJN5+uXu
-	WBtaT6RGnHT99DdhmIIZb+npMMaoYic=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738019122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Yt1OQgmx3n4EVoLSLC3o7DBMIw3+C9LJRmoDxZdFHpY=;
-	b=+fxscE2zbs2xvciVG57JfQzMzJovdmA8iKot+plyPSG/qzEcMJJ0YaEbFJK4mayGLhOCUp
-	HfCUit/gJxlrrPDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6CF113715;
-	Mon, 27 Jan 2025 23:05:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id p7VxFjERmGdrPAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 27 Jan 2025 23:05:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1738029379; c=relaxed/simple;
+	bh=KobeCKGsuS3nf1OXeHYhkl4A9QGhsAcX5Vy+rYb6pIU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GypuH/eI2ZnhOF1fMtaPCR6N/OUOJqHTWRG3sZZLvu8rfsxASh855VodyOiEl7SRGDbYZuKKpfm0yldIxte5srEsQi4mMK/mj0p786bt23LGUoyEIGg+JDSBhLIP8LAT6Ho4Sy+r7w8JGiLTIzencOAWI+wdp2tpDZp9nDEsQ08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMWfKwAB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA954C4CED2;
+	Tue, 28 Jan 2025 01:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738029378;
+	bh=KobeCKGsuS3nf1OXeHYhkl4A9QGhsAcX5Vy+rYb6pIU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=MMWfKwABKSxplyH2gSuCk35JNh6rNhfoman60vnv6n3bnqLOnw+eZ+8yOVcabWMON
+	 3qe5v1Cct749iWUlmWzVQvDShZhwtf24XMDwVvUZtMn64zYuOajHkzu9f2hKnQDW7I
+	 TzbXSfBVZbRJSwmuVEixXg5KkNmVivlQzdSvWT9HhKna9mJgT6KwsSbJNEvAIRwsMp
+	 GRls3FjsER6T4h7Pjvix9BvYaHYRb0e62ikn4eSZFAfU4CgRpLfehTq0W8WLQHiRL3
+	 xTYtUbxqqKjmPZlb9y3p15ny/V6qKTJBy8+uXBPDYqvncNx+SxshTkE3BQ6oyIF8EY
+	 bB39O6azPS0pw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF02380AA63;
+	Tue, 28 Jan 2025 01:56:45 +0000 (UTC)
+Subject: Re: [GIT PULL] NFSD changes for v6.14
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250127143907.5349-1-cel@kernel.org>
+References: <20250127143907.5349-1-cel@kernel.org>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250127143907.5349-1-cel@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14
+X-PR-Tracked-Commit-Id: c92066e78600b058638785288274a1f1426fe268
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f34b580514c9816a317764e6b138ec66a4adab25
+Message-Id: <173802940435.3293641.6471359663140543795.pr-tracker-bot@kernel.org>
+Date: Tue, 28 Jan 2025 01:56:44 +0000
+To: cel@kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject:
- [PATCH nfsd-next] nfsd: fix uninitialised slot info when a request is retried
-Date: Tue, 28 Jan 2025 10:05:03 +1100
-Message-id: <173801910367.22054.5749156945763150749@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
 
+The pull request you sent on Mon, 27 Jan 2025 09:39:07 -0500:
 
-A recent patch moved the assignment of seq->maxslots from before the
-test for a resent request (which ends with a goto) to after, resulting
-in it not being run in that case.  This results in the server returning
-bogus "high slot id" and "target high slot id" values.
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.14
 
-The assignments to ->maxslots and ->target_maxslots need to be *after*
-the out: label so that the correct values are returned in replies to
-requests that are served from cache.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f34b580514c9816a317764e6b138ec66a4adab25
 
-Fixes: 60aa6564317d ("nfsd: allocate new session-based DRC slots on demand.")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
+Thank you!
 
-Feel free to squash this into the offending patch, though subsequent
-patches will need to be refreshed carefully.  Or just add it as-is.
-Thanks.
-
- fs/nfsd/nfs4state.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index cc819b8e8acd..b42e2ab7a042 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4460,10 +4460,11 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
- 			}
- 		} while (slot && --cnt > 0);
- 	}
-+
-+out:
- 	seq->maxslots =3D max(session->se_target_maxslots, seq->maxslots);
- 	seq->target_maxslots =3D session->se_target_maxslots;
-=20
--out:
- 	switch (clp->cl_cb_state) {
- 	case NFSD4_CB_DOWN:
- 		seq->status_flags =3D SEQ4_STATUS_CB_PATH_DOWN;
-
-base-commit: c1d6e5f7635895b5e9b2e4a9e4b7cdb9cc07eaf7
---=20
-2.47.1
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
