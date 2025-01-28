@@ -1,170 +1,201 @@
-Return-Path: <linux-nfs+bounces-9725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8013DA20F73
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 18:10:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA3BBA21095
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 19:14:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B728B3A1FA2
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 17:10:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 132747A41F5
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 18:13:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC00199E94;
-	Tue, 28 Jan 2025 17:10:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E08BE1DE4F6;
+	Tue, 28 Jan 2025 18:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgTHy0kz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rB3vptfE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E4D27452
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Jan 2025 17:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD991DE3C4;
+	Tue, 28 Jan 2025 18:14:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738084207; cv=none; b=itDs0wYCvdNHcSdlAJxjQWHf4/m+ICP6M2agS+6S3yz62h1MSb69KW770jrey0vfo4pvMHijJ4eknznbxOcwJzwTEayjgiPRZla+S6p/Ram1RURpv7tiAOABHLyayfAdrVrolIrWNvpP8dg2FFtuQ/fzyDjfA6qvYx/aN9iXBjc=
+	t=1738088057; cv=none; b=ay9ySIUCyBfFdg3+iACbA/3XZJnTGASl/M+rfuW0OkANv85aid5JZLylsFmFe8K31KBAelxtVviugS2UcNa5vapfwaYPB91RPPv0Z17RVldSMxgluzfyDZNBYWVF/0wQxOGkqpV+TrtVwnkJs5jnn4dIR5+jfQd53aGlSicQpRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738084207; c=relaxed/simple;
-	bh=amS/2jMMaaAVCZSWiOXaUEqT9BEFbTG5wzVIl4wsdiA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e04q/Y02Mxi+gLW1bdMijnk8Ih4hB6qFJD1hOFfUQ+3EepUO40sa4hQOJDkFNzGiyhF/SadmwJLmgULpWa7hTuBktnyGCv8xsRhgSHbK2RLVHc9rVjGzFP4gp0sUVqFoVqKlULtBqDc98FUyYvdqDbFogIkL9tN+G6U4eXY7EMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgTHy0kz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52755C4CED3;
-	Tue, 28 Jan 2025 17:10:06 +0000 (UTC)
+	s=arc-20240116; t=1738088057; c=relaxed/simple;
+	bh=2DZvKYB5G50NQ+Qn2CyJG4KaVvg154qst0Jbn39SO8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YV/5J/4/woUJ9LgTkS+EI5Wa6McObJ9ohfGu1p29STTaDXjTjb/dLJvZUCEBlFeM2SEs+3BV808EuDmbsyZsOnLyCapAqHxNdnBIrM7xBGPH1VdmVmZCABsRWPc/Z7ogrqL884h07FNtLzvItf9ctJ2pUQK0+SilfN7piCDwA+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rB3vptfE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B498C4CED3;
+	Tue, 28 Jan 2025 18:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738084206;
-	bh=amS/2jMMaaAVCZSWiOXaUEqT9BEFbTG5wzVIl4wsdiA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=lgTHy0kztg5RnUrakzIZtx0pzbuoe/utuTJrqoNBCtiMuoIQIgHAeoDskzbvNJFcg
-	 2Ns897thgsRdRIABvKkQ8oXlUegFbL373SscChbzvs7l9TLrS/nv8PAFMa6yT+dK/M
-	 aXOz/dNWvFlgfjb+13k6wiqwUQJ7o8WQnb7N3xx4dHfCzwyRJwtqFvkaWnuzGOuLEO
-	 5dvOsWIESbInLyTyGbNFTnsMUuyGwZHsw9wFvxS3H9RHUgI4u3XUdApfWOKBbCKu6A
-	 KW6tfcMfKS6eQz5AkcmD08PDguqBuE1A4MP8T+h2aTtO8QF8B1YvHJvbUXHhKlK9DE
-	 WHRWLG77PLIaQ==
-Message-ID: <e3dca75f18db11b2cc1c7da5b1e6441821533497.camel@kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: fix __fh_verify for localio
-From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, neilb@suse.de, Dai.Ngo@oracle.com,
- tom@talpey.com
-Date: Tue, 28 Jan 2025 12:10:05 -0500
-In-Reply-To: <20250128165806.15153-1-okorniev@redhat.com>
-References: <20250128165806.15153-1-okorniev@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=k20201202; t=1738088057;
+	bh=2DZvKYB5G50NQ+Qn2CyJG4KaVvg154qst0Jbn39SO8g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rB3vptfER9pddELVlIO3e0BuM3ENfRz3/D4XRxWCfFshXTUg9NtB0q8kCve5XUz4V
+	 V2TuTd2YFC09gJe3a80qI2/lYm1hAmXm6LgQDWEEvS2gnpz7zxZqtq9AtiyAL6UaLP
+	 lEZP3ryuD4idNI34xRHNcK9YbrR9O9MgKEC4fxpcy6Avh2l1Y1XFFmEVJ8YZIEyoX7
+	 ZCJj1HaR6JUgt4Xx8rJDz6zkrijyMh1Qih7ADgBj10ZubltQWOOTWECnX+uJXcGVRV
+	 Ig7r0m2A4sggU8pqScR+DQaGRKz+vo60X3bOh9/OX3xJGhlIr61dzoppDh8d5JiKLE
+	 9m4YBt50Z5G1Q==
+Message-ID: <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
+Date: Tue, 28 Jan 2025 19:14:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: gnoack@google.com, willemdebruijn.kernel@gmail.com, matthieu@buffet.re,
+ linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, yusongping@huawei.com,
+ artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com,
+ MPTCP Linux <mptcp@lists.linux.dev>, linux-nfs@vger.kernel.org,
+ Paul Moore <paul@paul-moore.com>
+References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
+ <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
+ <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+ <20241018.Kahdeik0aaCh@digikod.net>
+ <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
+ <20241212.qua0Os3sheev@digikod.net>
+ <f480bbea-989d-378a-9493-c2bee412db00@huawei-partners.com>
+ <20250124.gaegoo0Ayahn@digikod.net>
+ <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
+ <20250127.Uph4aiph9jae@digikod.net>
+ <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-01-28 at 11:58 -0500, Olga Kornievskaia wrote:
-> __fh_verify() added a call to svc_xprt_set_valid() to help do connection
-> management but during LOCALIO path rqstp argument is NULL, leading to
-> NULL pointer dereferencing and a crash.
->=20
-> Fixes: eccbbc7c00a5 ("nfsd: don't use sv_nrthreads in connection limiting=
- calculations.")
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> ---
->  fs/nfsd/nfsfh.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index bf59f83c6224..91bf0e6d5895 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -381,8 +381,9 @@ __fh_verify(struct svc_rqst *rqstp,
->  	error =3D check_nfsd_access(exp, rqstp, may_bypass_gss);
->  	if (error)
->  		goto out;
-> -
-> -	svc_xprt_set_valid(rqstp->rq_xprt);
-> +	/* During LOCALIO call to fh_verify will be called with a NULL rqstp */
-> +	if (rqstp)
-> +		svc_xprt_set_valid(rqstp->rq_xprt);
-> =20
->  	/* Finally, check access permissions. */
->  	error =3D nfsd_permission(cred, exp, dentry, access);
+Hi Mikhail,
 
+Sorry, I didn't follow all the discussions in this thread, but here are
+some comments, hoping this can help to clarify the MPTCP case.
 
-Nice catch!
+On 28/01/2025 11:56, Mikhail Ivanov wrote:
+> On 1/27/2025 10:48 PM, Mickaël Salaün wrote:
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+(...)
+
+>> I'm a bit worried that we miss some of these places (now or in future
+>> kernel versions).  We'll need a new LSM hook for that.
+>>
+>> Could you list the current locations?
+> 
+> Currently, I know only about TCP-related transformations:
+> 
+> * SMC can fallback to TCP during connection. TCP connection is used
+>   (1) to exchange CLC control messages in default case and (2) for the
+>   communication in the case of fallback. If socket was connected or
+>   connection failed, socket can not be reconnected again. There is no
+>   existing security hook to control the fallback case,
+> 
+> * MPTCP uses TCP for communication between two network interfaces in the
+>   default case and can fallback to plain TCP if remote peer does not
+>   support MPTCP. AFAICS, there is also no security hook to control the
+>   fallback transformation,
+
+There are security hooks to control the path creation, but not to
+control the "fallback transformation".
+
+Technically, with MPTCP, the userspace will create an IPPROTO_MPTCP
+socket. This is only used "internally": to communicate between the
+userspace and the kernelspace, but not directly used between network
+interfaces. This "external" communication is done via one or multiple
+kernel TCP sockets carrying extra TCP options for the mapping. The
+userspace cannot directly control these sockets created by the kernel.
+
+In case of fallback, the kernel TCP socket "simply" drop the extra TCP
+options needed for MPTCP, and carry on like normal TCP. So on the wire
+and in the Linux network stack, it is the same TCP connection, without
+the MPTCP options in the TCP header. The userspace continue to
+communicate with the same socket.
+
+I'm not sure if there is a need to block the fallback: it means only one
+path can be used at a time.
+
+> * IPv6 -> IPv4 transformation for TCP and UDP sockets with
+>   IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+> 
+> As I said before, I wonder if user may want to use SMC or MPTCP and deny
+> TCP communication, since he should rely on fallback transformation
+> during the connection in the common case. It may be unexpected for
+> connect(2) to fail during the fallback due to security politics.
+
+With MPTCP, fallbacks can happen at the beginning of a connection, when
+there is only one path. This is done after the userspace's connect(). If
+the fallback is blocked, I guess the userspace will get the same errors
+as when an open connection is reset.
+
+(Note that on the listener side, the fallback can happen before the
+userspace's accept() which can even get an IPPROTO_TCP socket in return)
+
+> Theoretically, any TCP restriction should cause similar SMC and MPTCP
+> restriction. If we deny creation of TCP sockets, we should also deny
+> creation of SMC and MPTCP sockets. I thought that such dependencies may
+> be too complex and it will be better to leave them for the user and not
+> provide any transformation control at all. What do you think?
+I guess the creation of "kernel" TCP sockets used by MPTCP (and SMC?)
+can be restricted, it depends on where this hook is placed I suppose.
+
+(...)
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
 
