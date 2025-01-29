@@ -1,93 +1,173 @@
-Return-Path: <linux-nfs+bounces-9762-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9763-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF03FA224AD
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 20:49:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77906A22585
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 22:13:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5137316645D
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 19:49:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFF55165E0E
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 21:13:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7077419340B;
-	Wed, 29 Jan 2025 19:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25FF71B040B;
+	Wed, 29 Jan 2025 21:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHbkVutP"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h79oVO6F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a7UeeZs5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h79oVO6F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="a7UeeZs5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A438191499
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2025 19:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2820F190072;
+	Wed, 29 Jan 2025 21:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738180183; cv=none; b=JNykrvwl11LsS5g0gIi2s2AlkEzYqbpZFeWyplZ/H4E8bY/ngTc5DdQGZaXgs+c1RhJNprKfKjxrrc/2zGtYe+R5URG22kFnmJONfbvAB3ykFevTOUqQHLN2w/d+PNMWIcINOx/ygiVFQgop4DKm0xadQpRiWPoWHEHYB3ASr1A=
+	t=1738185228; cv=none; b=n0jttyUvDl0ip2suJp37pUBTQ9CqN26/MKo1ptZbVZiOC8loDqdw/8NPpK+WjFKZr0FuBeTcMozOanuso7FQYUcTxOboVlsaw2IcW+ilb+BqkiSB6YXnIH2GX4OZzdYmBCrbfm1cT4FXTzd6vtDUPcY0XQykIBr0RXxJH5gqB2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738180183; c=relaxed/simple;
-	bh=UZqN856Uf7dbAa7XoJN09RiuenOBQi+BNBywygHORFs=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=lns2RfCyCK3z+FcUXxO54NHpHgEHbwH9vNB3QPcOLRljgNkSdzLwLHRhQiRvvQDmlTmN1NbCkeMMJB7nJOja8iSogJCEPqmc6BOUzQfuYXqt/G+eOpxw7tmhGOteNzHDKTClxO8WHZuR4NhRrakS/d1ECrKLwLJiXbdHosnzbA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHbkVutP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F6FC4CED1;
-	Wed, 29 Jan 2025 19:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738180181;
-	bh=UZqN856Uf7dbAa7XoJN09RiuenOBQi+BNBywygHORFs=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=UHbkVutPokFzw/Ir09i0z06gK1v3Ue3LA0vi6xM+U3Cn+sTtyBYt5JmtnVr6mMIES
-	 dqXCDu3iYyf/aDPkrDMCOAu7gpX6go/EMrvA05Zjt2ggcZt3DEFhlu34TxTT4taIh+
-	 XMF7YAj/caMWodNRHEqMX1jpADkoZxYtQq0uoJb7JxTHjtjUVtgBFXK84brDwCIonN
-	 i+G7DfX1/Riel2AlObXIND4/fJYmVADh/WQy6xikD75bBq0TjOTQC4tycnOgWbkQFi
-	 NY+kMapsRZqRefkVUNHbkN7uXyCxZPmUjoLIRnwbZ75DiK3W73x7ATJ29rJzJmj0d/
-	 PY0XO3dqiK4XQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B8130380AA66;
-	Wed, 29 Jan 2025 19:50:08 +0000 (UTC)
-From: Chuck Lever via Bugspray Bot <bugbot@kernel.org>
-Date: Wed, 29 Jan 2025 19:50:30 +0000
+	s=arc-20240116; t=1738185228; c=relaxed/simple;
+	bh=0UG6CC7XIfMHVtKJ9owiwWhGASrQSE/6prDZMcxN8Ys=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=D4z5sbcz0YlQ5JmzxRkQIVdI//8d3yytNp/QLIe/+5dTbyqSd+HbYKjJITn9Wi6ZwAt73hXqSvkc5oMkWdGw7m5eoH1MMCNdXSrrb8lt6fhhDpjXeUbmAb//JSXVWgrLlpt4Ouq7SkPWbuLmrHN+e2UdKvdlhfVevao31K1m2h0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h79oVO6F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a7UeeZs5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h79oVO6F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=a7UeeZs5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B01E210F7;
+	Wed, 29 Jan 2025 21:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738185218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngRSYEs/wyAhTMpT/Ds1sDh7+RSLWhoeEnwvOFO/D4o=;
+	b=h79oVO6FxLJ/PE99PC4Lbq8CEaBOQ0oyHU/xFu8B5YHRX7yQ0V9H2Gk76FACNuTSjhEFGj
+	yHLaD+9usT6JIHOcNDQzMJvAR07HyLflkWnN2Zlfb8Ri10g12fyimsdf/bIcWybQ6fAG09
+	BYneIns5kxWDyIQ6U2D0DB4zEdDwRbo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738185218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngRSYEs/wyAhTMpT/Ds1sDh7+RSLWhoeEnwvOFO/D4o=;
+	b=a7UeeZs54debVWHGRR4noZXXbrg8wneqIYUgerDXj2UdJfe1qZ2qgCYg/m/rkP2YNz54lG
+	tYN4cM524T/as4Ag==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738185218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngRSYEs/wyAhTMpT/Ds1sDh7+RSLWhoeEnwvOFO/D4o=;
+	b=h79oVO6FxLJ/PE99PC4Lbq8CEaBOQ0oyHU/xFu8B5YHRX7yQ0V9H2Gk76FACNuTSjhEFGj
+	yHLaD+9usT6JIHOcNDQzMJvAR07HyLflkWnN2Zlfb8Ri10g12fyimsdf/bIcWybQ6fAG09
+	BYneIns5kxWDyIQ6U2D0DB4zEdDwRbo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738185218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngRSYEs/wyAhTMpT/Ds1sDh7+RSLWhoeEnwvOFO/D4o=;
+	b=a7UeeZs54debVWHGRR4noZXXbrg8wneqIYUgerDXj2UdJfe1qZ2qgCYg/m/rkP2YNz54lG
+	tYN4cM524T/as4Ag==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1ADB5132FD;
+	Wed, 29 Jan 2025 21:13:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ph+AL/6ZmmelEgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 29 Jan 2025 21:13:34 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: benoit.gschwind@minesparis.psl.eu, cel@kernel.org, herzog@phys.ethz.ch, 
- baptiste.pellegrin@ac-grenoble.fr, jlayton@kernel.org, anna@kernel.org, 
- harald.dunkel@aixigo.com, tom@talpey.com, trondmy@kernel.org, 
- carnil@debian.org, chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Message-ID: <20250129-b219710c26-8889e93df099@bugzilla.kernel.org>
-In-Reply-To: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-References: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
-Subject: Re: NFSD threads hang when destroying a session or client ID
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+From: "NeilBrown" <neilb@suse.de>
+To: cel@kernel.org
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Salvatore Bonaccorso" <carnil@debian.org>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH] nfsd: validate the nfsd_serv pointer before calling svc_wake_up
+In-reply-to: <173808393439.39052.5320146579477812509.b4-ty@oracle.com>
+References: <20250125-kdevops-v1-1-a76cf79127b8@kernel.org>,
+ <173808393439.39052.5320146579477812509.b4-ty@oracle.com>
+Date: Thu, 30 Jan 2025 08:13:26 +1100
+Message-id: <173818520688.22054.4135013466624893151@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Chuck Lever writes via Kernel.org Bugzilla:
+On Wed, 29 Jan 2025, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> On Sat, 25 Jan 2025 20:13:18 -0500, Jeff Layton wrote:
+> > nfsd_file_dispose_list_delayed can be called from the filecache
+> > laundrette, which is shut down after the nfsd threads are shut down and
+> > the nfsd_serv pointer is cleared. If nn->nfsd_serv is NULL then there
+> > are no threads to wake.
+> >=20
+> > Ensure that the nn->nfsd_serv pointer is non-NULL before calling
+> > svc_wake_up in nfsd_file_dispose_list_delayed. This is safe since the
+> > svc_serv is not freed until after the filecache laundrette is cancelled.
+> >=20
+> > [...]
+>=20
+> Applied to nfsd-testing, thanks!
+>=20
+> Test experience should demonstrate whether more strict memory
+> ordering semantics are needed.
 
-Looking further back in trace.dat:
+No it won't.  The need for READ_ONCE is theoretical, not - in this case
+- practical.
 
-  kworker/u194:9-1629754 [033] 309447.521022: nfsd_cb_free_slot:    task:00001fa3@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 new slot seqno=8100
-  kworker/u193:6-1630755 [004] 309468.053064: nfsd_cb_seq_status:   task:00001fa4@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=0 seq_status=0
-  kworker/u193:6-1630755 [004] 309468.053066: nfsd_cb_free_slot:    task:00001fa4@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 new slot seqno=8101
- kworker/u194:13-1634037 [013] 309549.519294: nfsd_cb_seq_status:   task:00001fa5@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
- kworker/u194:13-1634037 [037] 309558.734930: nfsd_cb_seq_status:   task:00001fa6@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
-  kworker/u194:0-1662968 [047] 309567.950612: nfsd_cb_seq_status:   task:00001fa7@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
- kworker/u194:13-1634037 [043] 309577.167133: nfsd_cb_seq_status:   task:00001fa8@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
- kworker/u193:14-1658519 [008] 309586.381715: nfsd_cb_seq_status:   task:00001fa9@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
-  kworker/u194:6-1659115 [045] 309588.599171: nfsd_cb_seq_status:   task:00001faa@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-512 seq_status=1
+=E2=80=9CProgram testing can be used to show the presence of bugs, but never =
+to show their absence!=E2=80=9D
+=E2=80=95 Edsger W. Dijkstra=20
 
-(Not shown here) this is a CB_RECALL_ANY operation that was sent several times but timed out. The retry mechanism could have dropped this operation after the first timeout, or it could have noticed that the callback transport was marked FAULT.
+NeilBrown
 
-This situation appears to resolve itself.
-
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c26
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
+>=20
+> [1/1] nfsd: validate the nfsd_serv pointer before calling svc_wake_up
+>       commit: 363683ced1718d66ad54e1bdf52d41d544f783b2
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
 
