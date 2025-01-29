@@ -1,296 +1,275 @@
-Return-Path: <linux-nfs+bounces-9755-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9756-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC77A21FAB
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 15:51:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4298FA21FE6
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 16:01:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 104B91884FCD
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 14:52:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58D673A3FE4
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 15:01:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EFA51B4250;
-	Wed, 29 Jan 2025 14:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B708318F2EA;
+	Wed, 29 Jan 2025 15:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="cNHnr2G6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/GbYdmC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF7CDDCD
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2025 14:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A54F199B8;
+	Wed, 29 Jan 2025 15:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738162311; cv=none; b=DPUlut3RpEjFX4j8yUcpji4qnz765dCM4TffeL+cirhHDsBAhY+qQrtIXa0wLybw0n0hcvorIO1ExJDAZH6CGMCnFpHe2LhA8yFPkAOrWEjdmS4b+V/wuEeC0bu7xnUEXeBMTKVx+CIulmpBCKVgDf0cPUWV49jpjhiKbOb9hmY=
+	t=1738162912; cv=none; b=hRyXtTvBpbpEmk2MatEkONlxfTl72+C9KmLLwFbeiJ/vyBqwNCm5IXzYRZkKR6Klg3UHD2BDu6siAUzJnJKdnmhGlAtZeI+keHM2KQqI9hPnsqnamJOn93FIry9OljHijF0NoHRiE3DITjXcZuz93puL2t3dQWWqPXumEI671gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738162311; c=relaxed/simple;
-	bh=uuQ4gUyr4T98j5sQ5sSoBuo1/xncsxBUuh+PdKyTBVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CnlXlYztSO+Dtuo+larVbKugtQ4VMtBNyCzaiufSMwqgTcXGhg+KwxH6QcTv239CBrTyGTdkp7yMRLq80wAV8ZqhL1wyOkCGLsExmZthMLN4gcjR7jcUL2Di7EmqvGPHRqrLFBepAzRucJHhBKsGmOp6JLehk0V5mY4JPaFVwFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=cNHnr2G6; arc=none smtp.client-ip=185.125.25.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YjlV3415nzfSj;
-	Wed, 29 Jan 2025 15:51:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1738162299;
-	bh=2erhwkosldZzlYXN0aQNMdfWuWfgAvD7dxnnGlGxpL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cNHnr2G6Ooekqbm7My2q4rIn6J5wICpi8LnTdj8sUbTTzAjmOAJn/sG4LRLNklStU
-	 zRWF09DWvM60RwwRH2PNVKsQwGwQ/Gt/X5XfujgsE3ea+VdEfDJ2RIdDV8GE0+NK7S
-	 OBX9jIzjJkIpCtrxhEVxuW31Dzl8dkiNl1HWwDS0=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YjlV26H4hzX82;
-	Wed, 29 Jan 2025 15:51:38 +0100 (CET)
-Date: Wed, 29 Jan 2025 15:51:37 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
-Cc: Matthieu Baerts <matttbe@kernel.org>, gnoack@google.com, 
-	willemdebruijn.kernel@gmail.com, matthieu@buffet.re, linux-security-module@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, yusongping@huawei.com, 
-	artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
-	MPTCP Linux <mptcp@lists.linux.dev>, linux-nfs@vger.kernel.org, Paul Moore <paul@paul-moore.com>
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Message-ID: <20250129.Oo1xou8ieche@digikod.net>
-References: <20250124.gaegoo0Ayahn@digikod.net>
- <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
- <20250127.Uph4aiph9jae@digikod.net>
- <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
- <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
- <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
- <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
- <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
- <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
- <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
+	s=arc-20240116; t=1738162912; c=relaxed/simple;
+	bh=FZK/pnGNMkDVIhbB5xWjy0PhrcIiQPlzg2J7f+yQZUM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qFv/hcPN2WS+kI0s5cUKhhkq/QI2g892yICWkhk3BuimZYgtwQ20uWEaM/8lGQqXKEwqvHTCj3u3bRqewax8vOOXwp5LpWYQ1OzysB5V/QiPg5X00aHq/bN6KjW8f3wx4jPzCEsUK5VG7CIEb9wzo9gHCTRNpsPfeo91H7b2jSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/GbYdmC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C726C4CED1;
+	Wed, 29 Jan 2025 15:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738162912;
+	bh=FZK/pnGNMkDVIhbB5xWjy0PhrcIiQPlzg2J7f+yQZUM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=N/GbYdmC+cJHflkXgsRu+giPgslyE/Q1zXG/lOxDNZp2OO7uPNNDpihaBEJzxEVEW
+	 m+2Rv5QGh9/ioeS+G15+/b1R+urE1WXz26/xcV4cg9bae//a2bRBhhaE5I5R5iPUjm
+	 okSrReA2TR1FOibkfvqZYoa/BHTAmjfH3A8qvRD+hWEIeLJ71WNEzFQjF9BRY5aEx4
+	 DBLatt24JpIzt/OxzKFW82mn8T1cZh6m+loZK1KgqvuGnoMz+DfwP/1eINbLT5TH3L
+	 UDyxdylsD+hj7nlIt/vtaAL/O2a0365ehEFcUPvEGa2p6Wy5IYh9WypHAAKy/Li5cJ
+	 PFnUh0BycwK+Q==
+Message-ID: <0722b556a8b01ca4f99e5d3ac5285efc666d69ec.camel@kernel.org>
+Subject: Re: [PATCH v2 0/7] nfsd: CB_SEQUENCE error handling fixes and
+ cleanups
+From: Jeff Layton <jlayton@kernel.org>
+To: "J. Bruce Fields" <bfields@fieldses.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Kinglong Mee	 <kinglongmee@gmail.com>, Trond
+ Myklebust <trondmy@kernel.org>, Anna Schumaker	 <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 29 Jan 2025 10:01:49 -0500
+In-Reply-To: <Z5o93QZJ35z8Zkyh@poldevia.fieldses.org>
+References: <20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org>
+	 <Z5o5ZBaYgrmrNseU@poldevia.fieldses.org>
+	 <5760673a9adc597c1b235dd6a1670ed801d2feb1.camel@kernel.org>
+	 <Z5o93QZJ35z8Zkyh@poldevia.fieldses.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
-X-Infomaniak-Routing: alpha
 
-On Wed, Jan 29, 2025 at 02:47:19PM +0300, Mikhail Ivanov wrote:
-> On 1/29/2025 2:33 PM, Matthieu Baerts wrote:
-> > On 29/01/2025 12:02, Mikhail Ivanov wrote:
-> > > On 1/29/2025 1:25 PM, Matthieu Baerts wrote:
-> > > > Hi Mikhail,
-> > > > 
-> > > > On 29/01/2025 10:52, Mikhail Ivanov wrote:
-> > > > > On 1/28/2025 9:14 PM, Matthieu Baerts wrote:
-> > > > > > Hi Mikhail,
-> > > > > > 
-> > > > > > Sorry, I didn't follow all the discussions in this thread, but here are
-> > > > > > some comments, hoping this can help to clarify the MPTCP case.
-> > > > > 
-> > > > > Thanks a lot for sharing your knowledge, Matthieu!
-> > > > > 
-> > > > > > 
-> > > > > > On 28/01/2025 11:56, Mikhail Ivanov wrote:
-> > > > > > > On 1/27/2025 10:48 PM, Mickaël Salaün wrote:
-> > > > > > 
-> > > > > > (...)
-> > > > > > 
-> > > > > > > > I'm a bit worried that we miss some of these places (now or in future
-> > > > > > > > kernel versions).  We'll need a new LSM hook for that.
-> > > > > > > > 
-> > > > > > > > Could you list the current locations?
-> > > > > > > 
-> > > > > > > Currently, I know only about TCP-related transformations:
-> > > > > > > 
-> > > > > > > * SMC can fallback to TCP during connection. TCP connection is used
-> > > > > > >      (1) to exchange CLC control messages in default case and (2)
-> > > > > > > for the
-> > > > > > >      communication in the case of fallback. If socket was connected or
-> > > > > > >      connection failed, socket can not be reconnected again. There
-> > > > > > > is no
-> > > > > > >      existing security hook to control the fallback case,
-> > > > > > > 
-> > > > > > > * MPTCP uses TCP for communication between two network interfaces
-> > > > > > > in the
-> > > > > > >      default case and can fallback to plain TCP if remote peer does not
-> > > > > > >      support MPTCP. AFAICS, there is also no security hook to
-> > > > > > > control the
-> > > > > > >      fallback transformation,
-> > > > > > 
-> > > > > > There are security hooks to control the path creation, but not to
-> > > > > > control the "fallback transformation".
-> > > > > > 
-> > > > > > Technically, with MPTCP, the userspace will create an IPPROTO_MPTCP
-> > > > > > socket. This is only used "internally": to communicate between the
-> > > > > > userspace and the kernelspace, but not directly used between network
-> > > > > > interfaces. This "external" communication is done via one or multiple
-> > > > > > kernel TCP sockets carrying extra TCP options for the mapping. The
-> > > > > > userspace cannot directly control these sockets created by the kernel.
-> > > > > > 
-> > > > > > In case of fallback, the kernel TCP socket "simply" drop the extra TCP
-> > > > > > options needed for MPTCP, and carry on like normal TCP. So on the wire
-> > > > > > and in the Linux network stack, it is the same TCP connection, without
-> > > > > > the MPTCP options in the TCP header. The userspace continue to
-> > > > > > communicate with the same socket.
-> > > > > > 
-> > > > > > I'm not sure if there is a need to block the fallback: it means only
-> > > > > > one
-> > > > > > path can be used at a time.
+On Wed, 2025-01-29 at 09:40 -0500, J. Bruce Fields wrote:
+> On Wed, Jan 29, 2025 at 09:27:02AM -0500, Jeff Layton wrote:
+> > On Wed, 2025-01-29 at 09:21 -0500, J. Bruce Fields wrote:
+> > > On Wed, Jan 29, 2025 at 08:39:53AM -0500, Jeff Layton wrote:
+> > > > While looking over the CB_SEQUENCE error handling, I discovered tha=
+t
+> > > > callbacks don't hold a reference to a session, and the
+> > > > clp->cl_cb_session could easily change between request and response=
+.
+> > > > If that happens at an inopportune time, there could be UAFs or weir=
+d
+> > > > slot/sequence handling problems.
+> > >=20
+> > > Nobody should place too much faith in my understanding of how any of
+> > > this works at this point, but....  My vague memory is that a lot of
+> > > things are serialized simply by being run only on the cl_callback_wq.
+> > > Modifying clp->cl_cb_session is such a thing.
+> >=20
+> > It is, but that doesn't save us here. The workqueue is just there to
+> > submit jobs to the RPC client. Once that happens they are run via
+> > rpciod's workqueue (and in parallel with one another since they're
+> > async RPC calls).
+> >=20
+> > So, it's possible that while we're waiting for a response from one
+> > callback, another is submitted, and that workqueue job changes the
+> > clp->cl_cb_session.
+>=20
+> I think it calls rpc_shutdown_client() before changing
+> clp->cl_cb_session.
+>=20
 
-Thanks Matthieu.
+It does, but the cl_cb_session doesn't carry a reference. My worry was
+that the client could call a DESTROY_SESSION at any time.
 
-So user space needs to specific IPPROTO_MPTCP to use MPTCP, but on the
-network this socket can translate to "augmented" or plain TCP.
+Now that I look though, you may be right that that's enough to ensure
+it because nfsd4_destroy_session() calls nfsd4_probe_callback_sync()
+before putting the session reference.
 
-From Landlock point of view, what matters is to have a consistent policy
-that maps to user space code.  The fear was that a malicious user space
-that is only allowed to use MPTCP could still transform an MPTCP socket
-to a TCP socket, while it wasn't allowed to create a TCP socket in the
-first place.  I now think this should not be an issue because:
-1. MPTCP is kind of a superset of TCP
-2. user space legitimately using MPTCP should not get any error related
-   to a Landlock policy because of TCP/any automatic fallback.  To say
-   it another way, such fallback is independent of user space requests
-   and may not be predicted because it is related to the current network
-   path.  This follows the principle of least astonishment (at least
-   from user space point of view).
+Still, that is a lot of reliance on these things happening in a
+particular order.
 
-So, if I understand correctly, this should be simple for the Landlock
-socket creation control:  we only check socket properties at creation
-time and we ignore potential fallbacks.  This should be documented
-though.
+> (Though I'm not sure whether rpc_shutdown_client guarantees that all rpc
+> processing for the client is completed before returning?)
+>=20
 
-As an example, if a Landlock policies only allows MPTCP: socket(...,
-IPPROTO_MPTCP) should be allowed and any legitimate use of the returned
-socket (according to MPTCP) should be allowed, including TCP fallback.
-However, socket(..., IPPROTO_TCP/0), should only be allowed if TCP is
-explicitly allowed.  This means that we might end up with an MPTCP
-socket only using TCP, which is OK.
+FWIW, it does wait for them to be killed:
 
-I guess this should be the same for other protocols, except if user
-space can explicitly transform a specific socket type to use an
-*arbitrary* protocol, but I think this is not possible.
+        while (!list_empty(&clnt->cl_tasks)) {
+                rpc_killall_tasks(clnt);
+                wait_event_timeout(destroy_wait,
+                        list_empty(&clnt->cl_tasks), 1*HZ);
+        }
 
-> > > > > 
-> > > > > You mean that users always rely on a plain TCP communication in the case
-> > > > > the connection of MPTCP multipath communication fails?
-> > > > 
-> > > > Yes, that's the same TCP connection, just without extra bit to be able
-> > > > to use multiple TCP connections associated to the same MPTCP one.
-> > > 
-> > > Indeed, so MPTCP communication should be restricted the same way as TCP.
-> > > AFAICS this should be intuitive for MPTCP users and it'll be better
-> > > to let userland define this dependency.
-> > 
-> > Yes, I think that would make more sense.
-> > 
-> > I guess we can look at MPTCP as TCP with extra features.
-> 
-> Yeap
-> 
-> > 
-> > So if TCP is blocked, MPTCP should be blocked as well. (And eventually
-> > having the possibility to block only TCP but not MPTCP and the opposite,
-> > but that's a different topic: a possible new feature, but not a bug-fix)
-> What do you mean by the "bug fix"?
-> 
-> > 
-> > > > > > > * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
-> > > > > > >      IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+I'm not crazy about the fact that it does that synchronously in the
+workqueue job, but I guess not much else can be happening with
+callbacks until this completes.
 
-According to the man page: "It is allowed only for IPv6 sockets that are
-connected and bound to a v4-mapped-on-v6 address."
+> --b.
+>=20
+> >=20
+> > Thanks for taking a look, Bruce!
+> >=20
+> > >=20
+> > > > This series changes the nfsd4_session to be RCU-freed, and then add=
+s a
+> > > > new method of session refcounting that is compatible with the old.
+> > > > nfsd4_callback RPCs will now hold a lightweight reference to the se=
+ssion
+> > > > in addition to the slot. Then, all of the callback handling is swit=
+ched
+> > > > to use that session instead of dereferencing clp->cb_cb_session.
+> > > > I've also reworked the error handling in nfsd4_cb_sequence_done()
+> > > > based on review comments, and lifted the v4.0 handing out of that
+> > > > function.
+> > > >=20
+> > > > This passes pynfs, nfstests, and fstests for me, but I'm not sure h=
+ow
+> > > > much any of that stresses the backchannel's error handling.
+> > > >=20
+> > > > These should probably go in via Chuck's tree, but the last patch to=
+uches
+> > > > some NFS cnd sunrpc client code, so it'd be good to have R-b's or A=
+-b's
+> > > > from Trond and/or Anna on that one.
+> > > >=20
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > > Changes in v2:
+> > > > - make nfsd4_session be RCU-freed
+> > > > - change code to keep reference to session over callback RPCs
+> > > > - rework error handling in nfsd4_cb_sequence_done()
+> > > > - move NFSv4.0 handling out of nfsd4_cb_sequence_done()
+> > > > - Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c11=
+37a4fa2ae@kernel.org
+> > > >=20
+> > > > ---
+> > > > Jeff Layton (7):
+> > > >       nfsd: add routines to get/put session references for callback=
+s
+> > > >       nfsd: make clp->cl_cb_session be an RCU managed pointer
+> > > >       nfsd: add a cb_ses pointer to nfsd4_callback and use it inste=
+ad of clp->cb_cb_session
+> > > >       nfsd: overhaul CB_SEQUENCE error handling
+> > > >       nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fa=
+ult()
+> > > >       nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+> > > >       sunrpc: make rpc_restart_call() and rpc_restart_call_prepare(=
+) void return
+> > > >=20
+> > > >  fs/nfs/nfs4proc.c           |  12 ++-
+> > > >  fs/nfsd/nfs4callback.c      | 212 ++++++++++++++++++++++++++++++++=
+------------
+> > > >  fs/nfsd/nfs4state.c         |  43 ++++++++-
+> > > >  fs/nfsd/state.h             |   6 +-
+> > > >  fs/nfsd/trace.h             |   6 +-
+> > > >  include/linux/sunrpc/clnt.h |   4 +-
+> > > >  net/sunrpc/clnt.c           |   7 +-
+> > > >  7 files changed, 210 insertions(+), 80 deletions(-)
+> > > > ---
+> > > > base-commit: a05af3c6103b703d1d38d8180b3ebbe0a03c2f07
+> > > > change-id: 20250123-nfsd-6-14-b0797e385dc0
+> > > >=20
+> > > > Best regards,
+> > > > --=20
+> > > > Jeff Layton <jlayton@kernel.org>
+> >=20
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
 
-This compatibility feature makes sense from user space point of view and
-should not result in an error because of Landlock.
-
-> > > > > > > 
-> > > > > > > As I said before, I wonder if user may want to use SMC or MPTCP and
-> > > > > > > deny
-> > > > > > > TCP communication, since he should rely on fallback transformation
-> > > > > > > during the connection in the common case. It may be unexpected for
-> > > > > > > connect(2) to fail during the fallback due to security politics.
-> > > > > > 
-> > > > > > With MPTCP, fallbacks can happen at the beginning of a connection, when
-> > > > > > there is only one path. This is done after the userspace's
-> > > > > > connect(). If
-
-A remaining question is then, can we repurpose an MPTCP socket that did
-fallback to TCP, to (re)connect to another destination (this time
-directly with TCP)?
-
-I guess this is possible.  If it is the case, I think it should be OK
-anyway.  That could be used by an attacker, but that should not give
-more access because of the MPTCP fallback mechanism anyway.  We should
-see MPTCP as a superset of TCP.  At the end, security policy is in the
-hands of user space.
-
-> > > > > > the fallback is blocked, I guess the userspace will get the same errors
-> > > > > > as when an open connection is reset.
-> > > > > 
-> > > > > In the case of blocking due to security policy, userspace should get
-> > > > > -EACESS. I mean, the user might not expect the fallback path to be
-> > > > > blocked during the connection if he has allowed only MPTCP communication
-> > > > > using the Landlock policy.
-> > > > 
-> > > > A "fallback" can happen on different occasions as mentioned in the
-> > > > RFC8684 [1], e.g.
-> > > > 
-> > > > - The client asks to use MPTCP, but the other peer doesn't support it:
-> > > > 
-> > > >     Client                Server
-> > > >     |     SYN + MP_CAPABLE     |
-> > > >     |------------------------->|
-> > > >     |         SYN/ACK          |
-> > > >     |<-------------------------|  => Fallback on the client side
-> > > >     |           ACK            |
-> > > >     |------------------------->|
-> > > > 
-> > > > - A middle box doesn't touch the 3WHS, but intercept the communication
-> > > > just after:
-> > > > 
-> > > >     Client                Server
-> > > >     |     SYN + MP_CAPABLE     |
-> > > >     |------------------------->|
-> > > >     |   SYN/ACK + MP_CAPABLE   |
-> > > >     |<-------------------------|
-> > > >     |     ACK + MP_CAPABLE     |
-> > > >     |------------------------->|
-> > > >     |        DSS + data        | => but the server doesn't receive the DSS
-> > > >     |------------------------->| => So fallback on the server side
-> > > >     |           ACK            |
-> > > >     |<-------------------------| => Fallback on the client side
-> > > > 
-> > > > - etc.
-> > > > 
-> > > > So the connect(), even in blocking mode, can be OK, but the "fallback"
-> > > > will happen later.
-> > > 
-> > > Thanks! Theoretical "socket transformation" control should cover all
-> > > these cases.
-> > > 
-> > > You mean that it might be reasonable for a Landlock policy to block
-> > > MPTCP fallback when establishing first sublflow (when client does not
-> > > receive MP_CAPABLE)?
-> > 
-> > Personally, I don't even know if there is really a need for such
-> > policies. The fallback is there not to block a connection if the other
-> > peer doesn't support MPTCP, or if a middlebox decides to mess-up with
-> > MPTCP options. So instead of an error, the connection continues but is
-> > "degraded" by not being able to create multiple paths later on.
-
-I agree, this kind of compatibility feature should not be denied.
-
-> > 
-> > Maybe best to wait for a concrete use-case before implementing this?
-> 
-> Ok, got it! I agree that such policies does not seem to be useful.
-> 
-> > 
-> > (...)
-> > 
-> > Cheers,
-> > Matt
-> 
+--=20
+Jeff Layton <jlayton@kernel.org>
 
