@@ -1,79 +1,109 @@
-Return-Path: <linux-nfs+bounces-9728-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9729-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72CE4A2147D
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 23:38:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 369A3A21837
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 08:33:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD71518860D2
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jan 2025 22:38:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6096C3A30E3
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 07:33:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4F211DFE12;
-	Tue, 28 Jan 2025 22:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2B9C198A19;
+	Wed, 29 Jan 2025 07:33:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6lO8MV6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcvLJSzy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FF918FDD2
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Jan 2025 22:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AB21799F
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2025 07:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738103879; cv=none; b=Qdu4BDn1bOrG/3SeKcRyq+DgrMHUcWQdnQzayrr8DCVJ75ZBdz2wUbI8hXUAf79851Kixitnn0Oi1upSCbWEOgmCflOtYi9cKPMm1CF2ZLfHqCSSIMbXaSUKSFPAjFBvf9xf2tTlNqQlZ3ElWYUU33Zu2FAH30cqaitATO7VDe0=
+	t=1738135996; cv=none; b=DCJr5vNiHj9ltKLfAr1kG//AY84N9GfuJqs4pML89FzfVoF8rO92m2iqJmRGtgpDjxPGnqeLnalRXgrButp432i2jpB2Q0YgPLMFNHRn+LZqys4kiY4+1Pxe914+6XRxeL4LI5DGcrO18NZudtKWoLy7Dg/2S2TabEk+hZwDzWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738103879; c=relaxed/simple;
-	bh=Cahc6OhfHDgSTQV5xYWs4WtDli0UgqeuZ+Ffsu9Nj9w=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WjJ9tZ2Ab4TsERXGdSt08tgG1z/UsMLzCSvrhnfbOy2mz5HxuQ3XfSrOw0YXtygwKR5N0bDqL60at3uVqTH2ONAafLUlmXpKCZayTC9tT8e6oLzDqLeUBATvqD0KI8efis3Bnh79mNUR1snKSdcX71ck6r8/BdkyA8U2fQ+eMeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6lO8MV6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24746C4CED3;
-	Tue, 28 Jan 2025 22:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738103879;
-	bh=Cahc6OhfHDgSTQV5xYWs4WtDli0UgqeuZ+Ffsu9Nj9w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=C6lO8MV6Dqta/MVZPBuMxBs8DgEVkYdGFC6Ot+kEfjrYOjFO+Cmw1GGKc6jbwO29s
-	 5rWJLgEvanxOhOak4Gx7BJ6uIpGoxTT6h82Uwojlud7zqgRBAWaz0zQ6yncjOxPLie
-	 FBkOqAyhpgHZE1wXBY3vtsVnj41f7/hWPkFak93iCE/rYXpu+yuRPJbq2zXFBAUeDH
-	 zlD675gALPfEFgwg2vh2a6byMvVuTCyhJcZs5b4Lj+X/m8fOWVEv0A5SgIII7jUfJn
-	 PUJsn4eLxLVSua3A67hyAhThDw+Ow/fUsANULSuAJ2vNfXAZ6TxX+1DZ/FWhxAhbf8
-	 udhIjmAM8YNyg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34CE1380AA66;
-	Tue, 28 Jan 2025 22:38:26 +0000 (UTC)
-Subject: Re: [GIT PULL] Please Pull NFS Client Updates for Linux 6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250128220429.377435-1-anna@kernel.org>
-References: <20250128220429.377435-1-anna@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250128220429.377435-1-anna@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.14-1
-X-PR-Tracked-Commit-Id: 6f56971841a178e99c502f4150fa28b9d699ed31
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b88fe2b5dd018c2b856fd6c32b82f25033e908d4
-Message-Id: <173810390475.3944426.14717347728766778857.pr-tracker-bot@kernel.org>
-Date: Tue, 28 Jan 2025 22:38:24 +0000
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, torvalds@linux-foundation.org, anna@kernel.org
+	s=arc-20240116; t=1738135996; c=relaxed/simple;
+	bh=BCDNf02Im6sKSyZYpKgkFnxOBY7Jqc4OXbhJXoDxNOQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=jqu1bPV/icgt0xqquq4SmLjOGXoMTCrzuYYUi011KwRTweOFgBVjkX8iqMrmzzXkjjSRRhoA422PXFh+9BosFSYXNiX+n984wZ1SdHTwEWPnASd931cI8rC4zY2DyRXxunYB6r1ltHi8dDWVXyeG8kdjVVVPo6omy5HBaUWwhms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcvLJSzy; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ee51f8c47dso9098984a91.1
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Jan 2025 23:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738135994; x=1738740794; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LJpt70HhAwb7NUZU+3L5/dGiIe0V7lUx+tITGKm+q48=;
+        b=hcvLJSzybasPJewIzP4+AiDr+EMx/pcYFEhWChUMD3orsYoPRCq9HwBYrsbgLqmkUR
+         ewmfE1TW2qxCBebCoheC9Z2cEz593ZtzYEclMPyPyhYKAWPmdnWA6PKDSzLYbib1OdBK
+         wm/MYOw4hUrn2hkd2rVcQMzLWDzqHfz0jj62kyuzZrCXr3aCLaQtUmMSSUO7EKzzB8VR
+         bcrf0KQkv8oTFy4WU2GBbnm7uzmgG/WSQXiIo9tB5DgHZOp0+SXX2BDYpGMWoZG4aWGM
+         DbgQIxUmzlritsl0aBwYmxnOINUcUtSMfDcVmMw7t7YhXVm8GEnI7vAznnGJhLLNZNHc
+         gB5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738135994; x=1738740794;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LJpt70HhAwb7NUZU+3L5/dGiIe0V7lUx+tITGKm+q48=;
+        b=etCe1lXYXzW99QAKzXIVKDPVz/iEh9C7olph2nOf6Rlx7OsrgKm5zNFYq0zd1jSJwD
+         3D91OFlu74OdnwES2FTQ9oAxST0DZMRdrVVy3kCXmsCKD/FzykFd8mTc3cngVj4Q0oHu
+         EPtSvLzT95bijctPk+iqoKMhtEY6i/SbjV4YE0nT3YwgL6eEkrqU0R8FcbE8KA52vuy9
+         XgL9T/m9I9/1N2EYKevd0wAFA2kfCTJDhgFXYjvdig9PiO7yYr/uYE2WbN/DEEiwKoKQ
+         g6wF4xdXPqXdUE54KDuETypilLF4IVaQ5FFuCTMh4amrA0YkYL0SAQLsHIszSSoqx/Vd
+         rA+Q==
+X-Gm-Message-State: AOJu0YzPGoaZn06s24WpoVv75g5UeDD7Hlcg1gY6SRsFzuWRV149D42/
+	tK4mKzwWEArgpgnbIa0f0YM2pPJPXrjuEgSNi7PVRLBVnHeF11t8BxqXHbcTuPvgZze4ZzArlg7
+	RIHeF3jbYJhaCyKuwcZHVFW/LClTtd1s+
+X-Gm-Gg: ASbGncssTx26b+0GtyIW1q7bckjA+Aykko7o7cwx5F9KlZcVwMUpOYOX7zHF3X7eoZF
+	ckzuBT1KpNYOFXXvBzbwPmDwuBv/SbciB4bikKiX6IBOo03U4ZN4GbovRuuFSLVSQZQUFnBfACR
+	IDaWC+CQO9
+X-Google-Smtp-Source: AGHT+IGtcvEcdc3/yKYPXPkJkVq1fsBnhy42Qc1VRz6wyICda+nu0LlQN5hNQ68mfM782FGwjCz9tt2NWISjhFQkIAM=
+X-Received: by 2002:a17:90b:264e:b0:2ee:964e:67ce with SMTP id
+ 98e67ed59e1d1-2f83abb3574mr2946172a91.3.1738135994351; Tue, 28 Jan 2025
+ 23:33:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
+In-Reply-To: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Wed, 29 Jan 2025 08:32:00 +0100
+X-Gm-Features: AWEUYZm7YBaUdgjWGYudP96kpo-aDCDjYgT6HF5IsyGb3u1Aqfev5Emyhjx_748
+Message-ID: <CALXu0Ue+w_P6P_yyVR1y85bKXxkorGrctJ4jiTBctQd8ei1_kw@mail.gmail.com>
+Subject: Re: Increase RPCSVC_MAXPAYLOAD to 8M?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Tue, 28 Jan 2025 17:04:29 -0500:
+On Wed, 22 Jan 2025 at 11:07, Cedric Blancher <cedric.blancher@gmail.com> wrote:
+>
+> Good morning!
+>
+> IMO it might be good to increase RPCSVC_MAXPAYLOAD to at least 8M,
+> giving the NFSv4.1 session mechanism some headroom for negotiation.
+> For over a decade the default value is 1M (1*1024*1024u), which IMO
+> causes problems with anything faster than 2500baseT.
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.14-1
+The 1MB limit was defined when 10base5/10baseT was the norm, and
+100baseT (100mbit) was "fast".
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b88fe2b5dd018c2b856fd6c32b82f25033e908d4
+Nowadays 1000baseT is the norm, 2500baseT is in premium *laptops*, and
+10000baseT is fast.
+Just the 1MB limit is now in the way of EVERYTHING, including "large
+send offload" and other acceleration features.
 
-Thank you!
+So my suggestion is to increase the buffer to 4MB by default (2*2MB
+hugepages on x86), and allow a tuneable to select up to 16MB.
 
+Ced
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
