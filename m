@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-9738-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9739-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5651A21DF8
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 14:40:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78ECCA21DFA
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 14:40:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CCE41662CA
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 13:40:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE2321665FC
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 13:40:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A985D14830F;
-	Wed, 29 Jan 2025 13:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A11D214BFA2;
+	Wed, 29 Jan 2025 13:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puzRM5+D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH8e3GgN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E53A143748;
-	Wed, 29 Jan 2025 13:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768E414A4F9;
+	Wed, 29 Jan 2025 13:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738158012; cv=none; b=sg9AEgycdqMRuiU8xha//1abhI9FHfrCWG497Oy35bh9QRVZpYQdHGTwg6zFthkT+F6+cjCrPA4471uM3e+5NV70JxX0wBrVAvsgaYvyTIuGKL+dkIXKPWkUTLyIMpHC9jLzxCE9+ApU9LaSRua+EuzOWsem+l3mrZLNWBzdFgE=
+	t=1738158013; cv=none; b=WngEuFla8zXGyE1P2gNSu1wolJ/9JQUPeKrqMuQgB8+3qJ7dRcRdCq5/r6jm40/BUaSprN5PWGoaJfFhOVIxczA2YNFUZn1DzMlD3tCDUJnx3IOqSZSyfWoi4rifqMseMXhQ1CmtV1qqmEx0b2OESnccev2MEbrCMjeydHCWso0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738158012; c=relaxed/simple;
-	bh=7OxW7/Wi/bFyhogJ6Ud+oSPLufipYoOYvEZZOvY6Xts=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Tnyn/ovcGRTNaB+XDqaHT8U7Nj1TRpUYO/QSdW1oGed0xnr3W5IyjVh7/tJy89qDxmaadKMlhDzouHod6/FuiNCF4ZY27j4OL0isWevkyPKCNaM5C7IJh+oVOoOtfHhcVpbdx1sLyTmmUTxd3XcxChDJOu6bPpiOBC+wmJVUM5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puzRM5+D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED222C4CEDF;
-	Wed, 29 Jan 2025 13:40:10 +0000 (UTC)
+	s=arc-20240116; t=1738158013; c=relaxed/simple;
+	bh=hqukJEYZB9obqZ4JDfojP1bNtJgCbankSnq7ZVy2Glo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EZoEpk+wVlMjp8lXf2q4I8ptvnFm6+fWgHGfLPc96NN5LyQvHvI+RmqtFT+93YIKuOzQuEU1vU2MCzqkgjYUuYXUmvaIPicvUdxaiFuV0je7TSBFhDomRi5bKhmEfSYHvHfBIicHtfkn2sqgApq5g5bWOsgem8UAIrIPGBYahqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH8e3GgN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3914AC4CEE5;
+	Wed, 29 Jan 2025 13:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738158012;
-	bh=7OxW7/Wi/bFyhogJ6Ud+oSPLufipYoOYvEZZOvY6Xts=;
-	h=From:Subject:Date:To:Cc:From;
-	b=puzRM5+DH85Xm9cDGQX2xij24V2Wgvf4zrPoF45s5Px+4/o1v0moFmde5SIPbDosb
-	 DO+B6UmeLe7n+l7fFL6oaGoF+yfGMwl/GN3hqgR5qRPqD+OURA7EZegstjWCAn8F1J
-	 T8rygKVnl3vonKFyzeV3DlI7HaVWzDzSQQElP46I/iFwHTrXOM3zMBpN98Nj3co8lf
-	 rBtkiXbIFU6XTYLP4RjL8c7dTRVfy6wiPCNxHlLwVaLgwaylEHyixgxu4DpenJ9ZBm
-	 H5K83WMA02nLUyTqCQE5kfXW6Xr9kRZoEpFPciVeBtKdSGZ+/a7f2DvgFVUcuS552s
-	 OqTUaubyy6ADQ==
+	s=k20201202; t=1738158013;
+	bh=hqukJEYZB9obqZ4JDfojP1bNtJgCbankSnq7ZVy2Glo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=hH8e3GgNSiLmGu7bdvFDqAE9kS71uLb0Dr2fzOnwS1jot9iHJYmNkBeaxYISYLuR5
+	 jVfAfu2SCW3ZzYYobhLUPFFeWuKhxNBb/cYOEoLoNMB48H3ZMBGyuEEi8oLYiu9gZF
+	 QMK9ltgVqxZxI6w7g/JEDO4xfsLP0ICEJ+T1itxuwbZgcod7mCeojIPAvWTbOoss3p
+	 KbfruwV9A4HFIjZ6W331yn7R242+cxCAvhLLYFnlw8d7c7JcsHzGgjXSfGRhEbt4c+
+	 OItF1aLK/mACqZx/VJrsYttl07sYbA0FDhxSEXLuUaU5Ylf50omFVvGlOgLoFZtzP4
+	 hPSqCqk+TcAkw==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 0/7] nfsd: CB_SEQUENCE error handling fixes and cleanups
-Date: Wed, 29 Jan 2025 08:39:53 -0500
-Message-Id: <20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org>
+Date: Wed, 29 Jan 2025 08:39:54 -0500
+Subject: [PATCH v2 1/7] nfsd: add routines to get/put session references
+ for callbacks
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,10 +53,9 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKkvmmcC/23MQQ7CIBCF4as0s3YMA62oK+9husAytEQDBgzRN
- Nxd7Nrl//LyrZA5ec5w7lZIXHz2MbSQuw6mxYSZ0dvWIIUcBEmFwWWLB6Qeb0KfNKvjYCcB7f9
- M7Px7s65j68XnV0yfjS70W/8phVDgRKS06Z2Rhi93ToEf+5hmGGutX56cZamjAAAA
-X-Change-ID: 20250123-nfsd-6-14-b0797e385dc0
+Message-Id: <20250129-nfsd-6-14-v2-1-2700c92f3e44@kernel.org>
+References: <20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org>
+In-Reply-To: <20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, 
@@ -64,78 +64,103 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2551; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=7OxW7/Wi/bFyhogJ6Ud+oSPLufipYoOYvEZZOvY6Xts=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmi+z3Qtu7IRnKK70YKNMsVOaebNeW0DJsb3dW
- irYbdsTwkWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5ovswAKCRAADmhBGVaC
- FYR5D/0XI4gjo99tW5F7hUL8yK4p/MeTnf4fokXIBAdewDYz5sOSP6+EzD4u+ChZm/euuWdcWd8
- j79PNrrv0e5kq4FU0gBzYazSYHcCOPG4Y6ujZm8+Q1gyhK4P4gCm/kinS0saEbwqYr/FLqf6mPN
- pthydrSiOsoqtR0XMAxVAEqLfMG/+CecBkXrJNJ7PLHfh1uyBEWEkmfjgqF2c8FZV0jkFgHL/SY
- DD7ivDgLN+x4UrRKBNCKhuXfYtPivgJaae7B7rBts63wDyeGA25bQYk9R0ScnwQ3wDQcRhK93Hf
- Mgq02mm2YbfvRbFGXYEaRVgedj+y0U6PMaOqjDoH2uT4OtHJPp5p9uUkKKXyfOchSM6e++aEDKF
- /fB3iKJuBfVrEaQpy95NPR7Jh8EDFsSB3I+6goEHYoXsyDM/S1VsCy744f9oKXkHRVfgGN/Udvn
- PWIngqItPMn3QI4ED3VuBlhUoTlLgi9WGPPjIDYdC6ShekpwK3ferfBZ4IuNO3LaQkkUTBDiw6q
- lSyEgofBczInbbFErAlgqQi/PG+8vC+vYzn5siqkvjDmU2eZt33g6k6E7fLd3sbyfm8hP4qFYGO
- V3gpuwEMR4GRpZuJbgDUZREfM4XgXK5Y4f1ikLAWJJblCyb8KmzLisOHNCvmXqIngl0VAkmPJJv
- s1KCmH8bGiibELg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2893; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=hqukJEYZB9obqZ4JDfojP1bNtJgCbankSnq7ZVy2Glo=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmi+584re5+OuIM6wgkhBMfnfavohgqkq0l07A
+ 7oECFJmABSJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5ovuQAKCRAADmhBGVaC
+ FXkKD/9wOd5QGkRZltA+FvjQWt7iXElInI2n8sU7I2+HVuJaeLC9qJKa87NzHgGm+VVOe9GeADm
+ byxwwK1csyTiOOLn2fS+W0nOR+gCdJThqW0VuTR5OiIIioIHfLF1vYKd6xWb0NlkB83Bj9M8WBa
+ phqXYXiy5g65HYSxg9S1Kj7B76O9HIWsz5K6ObnNZE1j9tJxlOHPIHhPLHLEDXDwMGRy0SqBqYR
+ YfDSAXETKOTYgNMrxkTHCYEypO7HRiMngnfzfy7nlGN32yBGkyx0izo89p8LKNsw/dug0Kf4RaK
+ DE1tTFIE1PiJIQiTkxqo+81uWIR5HaFL2xpzsr0+AisWoIfZt2eWEazRFnwH/kkUzTeClvQNNyH
+ 3J7azZ75fMrGfJjdegfXUuwFHHYAJ4GnlwU9i7MGd3gvxZ3Z86Gl0b0OKtru/Jm4/RnDTFBBpYC
+ GLiZwdioZtMqTVYol4GCm//4e6UdiHqR4N+CdR+v0oI+jM8NHodF7LkKy2Ozpul+yDkDZmKoGHQ
+ zimIFhOdojF9WKRRgj4zFqh9YKPqfwkSaqwUNK3Umol+609hxObF4hvObhPvlkYMKvKcXZmttrz
+ IV1xgarj00KUOrcA4naS6ekDEL7qc+0z7BZb1q0KZWbu8IIZENalZvABxvXF65j18Ak/C6KrhXb
+ 6tUXBA3WkGqS2JQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-While looking over the CB_SEQUENCE error handling, I discovered that
-callbacks don't hold a reference to a session, and the
-clp->cl_cb_session could easily change between request and response.
-If that happens at an inopportune time, there could be UAFs or weird
-slot/sequence handling problems.
+The existing session reference counting is too heavyweight for
+callbacks. There is an atomic refcount in nfsd4_session (se_ref), but
+the existing functions take a client reference alongside it, and require
+the nn->client_lock. This is unnecessary for callbacks as they are
+already owned by the client.
 
-This series changes the nfsd4_session to be RCU-freed, and then adds a
-new method of session refcounting that is compatible with the old.
-nfsd4_callback RPCs will now hold a lightweight reference to the session
-in addition to the slot. Then, all of the callback handling is switched
-to use that session instead of dereferencing clp->cb_cb_session.
-I've also reworked the error handling in nfsd4_cb_sequence_done()
-based on review comments, and lifted the v4.0 handing out of that
-function.
-
-This passes pynfs, nfstests, and fstests for me, but I'm not sure how
-much any of that stresses the backchannel's error handling.
-
-These should probably go in via Chuck's tree, but the last patch touches
-some NFS cnd sunrpc client code, so it'd be good to have R-b's or A-b's
-from Trond and/or Anna on that one.
+Add new nfsd4_cb_get_session() and nfsd4_cb_put_session() calls that
+take and put a session reference on behalf of a callback.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- make nfsd4_session be RCU-freed
-- change code to keep reference to session over callback RPCs
-- rework error handling in nfsd4_cb_sequence_done()
-- move NFSv4.0 handling out of nfsd4_cb_sequence_done()
-- Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org
+ fs/nfsd/nfs4state.c | 32 ++++++++++++++++++++++++++++++--
+ fs/nfsd/state.h     |  2 ++
+ 2 files changed, 32 insertions(+), 2 deletions(-)
 
----
-Jeff Layton (7):
-      nfsd: add routines to get/put session references for callbacks
-      nfsd: make clp->cl_cb_session be an RCU managed pointer
-      nfsd: add a cb_ses pointer to nfsd4_callback and use it instead of clp->cb_cb_session
-      nfsd: overhaul CB_SEQUENCE error handling
-      nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault()
-      nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
-      sunrpc: make rpc_restart_call() and rpc_restart_call_prepare() void return
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index cc819b8e8acdf5dcfe44c5bae45c6233f7b695e9..2c26c6aaea93e3e1eb438e7e23dc881c7bf35fe2 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -234,6 +234,35 @@ static void put_client_renew(struct nfs4_client *clp)
+ 	spin_unlock(&nn->client_lock);
+ }
+ 
++/**
++ * nfsd4_cb_get_session - get a session reference for a callback
++ * @ses: session of which to get a reference
++ *
++ * Callbacks are different than client-driven RPCs. The caller doesn't
++ * need a reference to the nfs4_client, and doesn't want to renew the
++ * lease when putting the reference.
++ */
++bool nfsd4_cb_get_session(struct nfsd4_session *ses)
++{
++	if (is_session_dead(ses))
++		return false;
++	return atomic_inc_not_zero(&ses->se_ref);
++}
++
++/**
++ * nfsd4_cb_put_session - put a session reference for a callback
++ * @ses: session of which to put a reference
++ *
++ * Callbacks are different than client-driven RPCs. The caller doesn't
++ * need a reference to the nfs4_client, and doesn't want to renew the
++ * lease when putting the reference.
++ */
++void nfsd4_cb_put_session(struct nfsd4_session *ses)
++{
++	if (ses && atomic_dec_and_test(&ses->se_ref) && is_session_dead(ses))
++		free_session(ses);
++}
++
+ static __be32 nfsd4_get_session_locked(struct nfsd4_session *ses)
+ {
+ 	__be32 status;
+@@ -254,8 +283,7 @@ static void nfsd4_put_session_locked(struct nfsd4_session *ses)
+ 
+ 	lockdep_assert_held(&nn->client_lock);
+ 
+-	if (atomic_dec_and_test(&ses->se_ref) && is_session_dead(ses))
+-		free_session(ses);
++	nfsd4_cb_put_session(ses);
+ 	put_client_renew_locked(clp);
+ }
+ 
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 74d2d7b42676d907bec9159b927aeed223d668c3..79d985d2a656e1a5b22a6a9c88f309515725e847 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -753,6 +753,8 @@ struct nfsd4_compound_state;
+ struct nfsd_net;
+ struct nfsd4_copy;
+ 
++bool nfsd4_cb_get_session(struct nfsd4_session *ses);
++void nfsd4_cb_put_session(struct nfsd4_session *ses);
+ extern __be32 nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
+ 		struct nfsd4_compound_state *cstate, struct svc_fh *fhp,
+ 		stateid_t *stateid, int flags, struct nfsd_file **filp,
 
- fs/nfs/nfs4proc.c           |  12 ++-
- fs/nfsd/nfs4callback.c      | 212 ++++++++++++++++++++++++++++++++------------
- fs/nfsd/nfs4state.c         |  43 ++++++++-
- fs/nfsd/state.h             |   6 +-
- fs/nfsd/trace.h             |   6 +-
- include/linux/sunrpc/clnt.h |   4 +-
- net/sunrpc/clnt.c           |   7 +-
- 7 files changed, 210 insertions(+), 80 deletions(-)
----
-base-commit: a05af3c6103b703d1d38d8180b3ebbe0a03c2f07
-change-id: 20250123-nfsd-6-14-b0797e385dc0
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.48.1
 
 
