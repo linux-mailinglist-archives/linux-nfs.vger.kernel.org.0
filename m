@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-9772-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9773-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD348A226D9
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 00:21:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E135EA226DB
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 00:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D412E3A6EFC
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 23:21:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E7607A29A5
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 23:20:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E9371E4929;
-	Wed, 29 Jan 2025 23:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A9A81E7C25;
+	Wed, 29 Jan 2025 23:20:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgPKWZZF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkCZcX80"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1615B1E47CA;
-	Wed, 29 Jan 2025 23:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BF21E7640;
+	Wed, 29 Jan 2025 23:20:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738192857; cv=none; b=WzQ5miC/aSIa1Up55dCVW+kyircGq6mk2GLPxmIflqyxLK0+dw9ijwOiufaYjXfF/ag3KauW2jtRl6UOnfIV7GYEtaAIzfwH0U0baBw2QChe8nUDPBzUc4K7WxAD5WC/jmi+PQ9yGBovsniBtTXbw5hJCpu1WXeokwf2QsAE1FQ=
+	t=1738192858; cv=none; b=C99sWkMDO9AuCjHqzbAdhBg8bxAL9UflygYcMqC5HvTps/j/WRcnfuuAYO4/zei07I6eoPnjON52lv/PnLsbmq9e4G6Oah+USfxlzqlgdfuO/OYi2nrxBcvO5Rg/HEVyNBK9vizkssQB/i4F731c9axFjyg3k+SUpABBTjzIQv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738192857; c=relaxed/simple;
-	bh=yQ+thEBAqsSgndfez3KwbQk4kYB4c0YOyYwqV2evsgk=;
+	s=arc-20240116; t=1738192858; c=relaxed/simple;
+	bh=QhwaF3Zpw2Ay8YmeGNGfXktwX3M8UrnOUWFD85Hkp/0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tS2whnru8fEydlXV1fkJtJTOhD0UiLLdilNr7KPH4LTheGuiXSK1OwqAPsHcpi5E3V0XWSF8GHYNInpTT8F8REp7wKBiZc2C1lrHkpQ7AF/XaNCdcIk7p07qy4j8L0aGRsxLXXO9b6UPnkEVGYkwgF06LjUYXkIR35Kv+3piqAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgPKWZZF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36004C4CED1;
-	Wed, 29 Jan 2025 23:20:56 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=BtRjswEWhQw66oQ4p+ot/BC4GAsk+dVrNjbGA59TMxI67O0GYTtUMW/uUqDBr3HPELZrjYHcAxZtDd+q9tiZuOvi75FFKel/hkhThTCPh6LNUCMiTb9uItpo8HU0JORAoQff5j0isJ41fI1XroZFU09w0C9EC9XiQhExi2kwpt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZkCZcX80; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FB96C4CED3;
+	Wed, 29 Jan 2025 23:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738192856;
-	bh=yQ+thEBAqsSgndfez3KwbQk4kYB4c0YOyYwqV2evsgk=;
+	s=k20201202; t=1738192857;
+	bh=QhwaF3Zpw2Ay8YmeGNGfXktwX3M8UrnOUWFD85Hkp/0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XgPKWZZFHCCf70nsoqKggpaiJSsB3KuG3svIVGrabB9CQUdRl9DQaiZVsx028qL1j
-	 LMVInpqAJovk/Cd8C9GqlLQucALYDAcAdaNJYYJMk6HEyhS8DZ/+RhDRzO7j5o8YCX
-	 hfcT2esakQKgcpspG+VangBxHKTwTtIIPHCWuVj7IVfKS8HPwQ/8iS/uqx3UTtcpWX
-	 2gO8/wGyat65E8PW8QufaTQAc3lhcx8Oxf0W0envuprX30KHZnhcJTciiTSYiQIS1w
-	 XYpuS6X2QuGaSYML/jsXWJfg8aiRlSc2JKO8x9qh8zCtvnRuGG7iUWvdufcrhfsIt9
-	 lHK6BKsMuGS/A==
+	b=ZkCZcX80nuvAsTLretbvNn4+TDFmewSTb38E51fuVVpt0B3q9HGE3SG90RUmDP8jj
+	 2RxHNoaDD7Rh86VGwdRv01XcgCOSXuU4G3lcHop/W2EcWvu4QRJ+MOsAu5Emg9LyRV
+	 tihxmP50XtpVNM8aYfbmYd/t8ArwK1NaxZNbrDO/07APj9IknNHG3A2ty+6BUv2hfP
+	 2pyC1yMzwof2A+yTylA9Y/ISjdOw4cQydLDBYGThKf74FvqDxquysiUgI1gh52+Dq+
+	 cRjLELsPeS0i2+KyjNr/b1/PR7oNE4Hx7famQmZdrVjjIiRP8DeR91xhMNfMFLMQGw
+	 Oa8RYMMmt4nAw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 29 Jan 2025 18:20:43 -0500
-Subject: [PATCH v3 3/6] nfsd: add a cb_ses pointer to nfsd4_callback and
- use it instead of clp->cb_cb_session
+Date: Wed, 29 Jan 2025 18:20:44 -0500
+Subject: [PATCH v3 4/6] nfsd: overhaul CB_SEQUENCE error handling
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250129-nfsd-6-14-v3-3-506e71e39e6b@kernel.org>
+Message-Id: <20250129-nfsd-6-14-v3-4-506e71e39e6b@kernel.org>
 References: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
 In-Reply-To: <20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,232 +61,190 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7124; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=yQ+thEBAqsSgndfez3KwbQk4kYB4c0YOyYwqV2evsgk=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmrfUhuAxs1o8Iou6bEixCslvz95wtP0VQ+ngC
- /pb4MkfNLCJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5q31AAKCRAADmhBGVaC
- FaMyD/sHWNUs1UNFM+v57UebnsthnWP1ay5AEOHNriLUvNrWJO93B3wepZ8MLu4xt3KLzkb2358
- SyIHyL3ZJHqc81O+m2BnSILjW6Q1oUJRKH2dAFPOnMfJpEIhLmGO1ho0BoRaAC4OMYQ47oqknYz
- hmkJhx33TIvLqxiSFz8nA84kIKJOkIR4QJi3K0BF+0hy8MO4dp180bBp/bGKwZ5gq4ot1b288hK
- 2xtRu96hhC7LuByIiR+kLWK3zW5OUDGn1pHHuxCatMQ4i1fJuQ6dwcviIQNTZ4BQnzu0NI5rELD
- HzokmweFEcs/mdswru6KzlGs8IxW5+nGqQj1abxivZ+dUel+KfGKMgMZxpzHsIfxhom8PnDhBXW
- dhWwcf5Wb5eqLWB5QMruODgK3jFX7gD6LmzeLj9+GPPbjIQYd5R6M0e3LxoA4FGQVPAwdZrOP/V
- zhmCVJhZ6wmU6UOJ3C5g8/w01rlP0Oz/8r6YMTW2TPA7BPfbqpbB0p3fp9hJzDkkPJv+Mdupy0D
- Y0liPZQkDCYm6mydjNunAjbKof4e78rap+bkbiYPuasl1mVzd6rKuyTY/KD8xKfNXOytf8TVABm
- YBxvO0150BJWXSfh/dsPj5VMlNx0QlWDCzs8C2qblisne3nTLEMQ1+pfxCfEtIQA8tPSVwl+dFh
- ewdzjRspGR4L0yw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5263; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=QhwaF3Zpw2Ay8YmeGNGfXktwX3M8UrnOUWFD85Hkp/0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnmrfUO58CW3cQ0DoQ5miTyBByZVB35/TTJyuh0
+ 2Sge0l7Fg6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ5q31AAKCRAADmhBGVaC
+ FYP0D/9RI8DDcxgXCx8EGXbsAsFoO5pCo0tIDsuWBfbPwGo0gjfUGTSokvOwc+Ls3LHcwcJzsZ2
+ alv0NZjQ9dYEZPHyhbb5PwuWSHjNDATGB3XJpvNhflX0aTr69ViPwC6rwlP5pAOrgT5ZCrOGEVv
+ Ecbag9YkmWbYsUMBbbAhQEcfjNy91s+BijMwlke8i0LU2FNqjGrTgH1OmEGOFiE0Ft4JL3PSOR2
+ SthsI+JIuzdNuWsAf2VrgoTBTFr0YpUqPESFrVHfIJYcluFWM9PeQzAAHcLglGgxpCgGIV8Hsl3
+ SJJAu86xLMtG0Trovm03KJ+GdKpeIa2evCgbYOVz2U4Jd13Q2E0yUny/hfWk1Ij4qEjpMDVEXQ8
+ IdWHk+37HB+aKAgO7B9kVPAZ1vySNvrDkXXjZMq1+9JvBmgyqjtoiU2iumQQLOIrpNRZDgnjPaj
+ ollkoTuZAcfCtTc3x/V/RAWAX00n7KBzdSPib9twSROtn7igEEKQjMBoGOCNdlFpd8xmayIheQI
+ FXFo+4S9WbxjuSl1L7Zuwzv39vSbkAWiDl34CfKs7AIiwm0AhcCXoIccWbv9dHKY4KlqeYD0LGu
+ TsZiuNNV9oDBRt+vk9fmymVk74WZ10M7hHAEXEQQoYr7vTkdIsLTEU2MrWq/rk3uCzIia9B66b2
+ ghwV6O0oBOh6TxQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Once a callback workqueue job has completed, the cl_cb_session could
-change to a completely different session, if there is more than one
-callback in flight at a time.
+Some of the existing error handling in nfsd4_cb_sequence_done is
+incorrect. This patch first does some general cleanup and then reworks
+some of the error handling cases.
 
-Have the callback hold its own cb reference to the session, and fix the
-slot acquisition routines to get/put a session reference. This ensures
-that the call and reply handling are working with the same session.
+There is only one case where we want to proceed with processing the rest
+of the CB_COMPOUND, and that's when the cb_seq_status is 0. Make the
+default return value be false, and only set it to true in that case.
 
-In the event that rpc_prepare can't get a session reference, allow the
-rpc_task to sleep until the session reference changes.
+Now that there is a clear record of the session used to handle the
+CB_COMPOUND, we can take changes to the cl_cb_session into account
+when reattempting a call.
+
+When restarting the RPC (but not the entire callback), test
+RPC_SIGNALLED(). If it has been, then fall through to restart the
+callback instead of just restarting the RPC.
+
+Whenever restarting the entire callback, release the slot and session,
+in case there have been changes in the interim.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 67 +++++++++++++++++++++++++++++++++++++++++---------
- fs/nfsd/state.h        |  1 +
- fs/nfsd/trace.h        |  6 ++---
- 3 files changed, 58 insertions(+), 16 deletions(-)
+ fs/nfsd/nfs4callback.c | 85 ++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 61 insertions(+), 24 deletions(-)
 
 diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index e55bf66a33d6efb56d2f75f0a49a60307e3807ac..9f4838a6d9c668cdf66a77793f63c064586f2b22 100644
+index 9f4838a6d9c668cdf66a77793f63c064586f2b22..109e8f872eaf2227ee30a1df3df86ab1ad88c384 100644
 --- a/fs/nfsd/nfs4callback.c
 +++ b/fs/nfsd/nfs4callback.c
-@@ -435,7 +435,7 @@ static void encode_cb_sequence4args(struct xdr_stream *xdr,
- 				    const struct nfsd4_callback *cb,
- 				    struct nfs4_cb_compound_hdr *hdr)
- {
--	struct nfsd4_session *session = cb->cb_clp->cl_cb_session;
-+	struct nfsd4_session *session = cb->cb_ses;
- 	__be32 *p;
- 
- 	if (hdr->minorversion == 0)
-@@ -503,7 +503,7 @@ static void update_cb_slot_table(struct nfsd4_session *ses, u32 target)
- static int decode_cb_sequence4resok(struct xdr_stream *xdr,
- 				    struct nfsd4_callback *cb)
- {
--	struct nfsd4_session *session = cb->cb_clp->cl_cb_session;
-+	struct nfsd4_session *session = cb->cb_ses;
- 	int status = -ESERVERFAULT;
- 	__be32 *p;
- 	u32 seqid, slotid, target;
-@@ -1142,7 +1142,7 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 			return -EINVAL;
- 		rcu_assign_pointer(clp->cl_cb_session, ses);
- 		args.bc_xprt = conn->cb_xprt;
--		args.prognumber = clp->cl_cb_session->se_cb_prog;
-+		args.prognumber = ses->se_cb_prog;
- 		args.protocol = conn->cb_xprt->xpt_class->xcl_ident |
- 				XPRT_TRANSPORT_BC;
- 		args.authflavor = ses->se_cb_sec.flavor;
-@@ -1161,9 +1161,10 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 		ret = -ENOMEM;
- 		goto out_put_ses;
- 	}
--
--	if (clp->cl_minorversion != 0)
-+	if (clp->cl_minorversion != 0) {
- 		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
-+		rpc_wake_up(&clp->cl_cb_waitq);
-+	}
- 	clp->cl_cb_client = client;
- 	clp->cl_cb_cred = cred;
- 	rcu_read_lock();
-@@ -1252,6 +1253,34 @@ void nfsd4_change_callback(struct nfs4_client *clp, struct nfs4_cb_conn *conn)
- 	spin_unlock(&clp->cl_lock);
+@@ -1381,11 +1381,16 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
+ 	rpc_call_start(task);
  }
  
-+static bool grab_cb_ses(struct nfsd4_callback *cb)
++static bool nfsd4_cb_session_changed(struct nfsd4_callback *cb)
 +{
-+	struct nfs4_client *clp = cb->cb_clp;
-+	struct nfsd4_session *ses;
-+	bool ret = false;
-+
-+	if (cb->cb_ses)
-+		return true;
-+
-+	rcu_read_lock();
-+	ses = rcu_dereference(clp->cl_cb_session);
-+	if (ses && nfsd4_cb_get_session(ses)) {
-+		cb->cb_ses = ses;
-+		ret = true;
-+	}
-+	rcu_read_unlock();
-+
-+	return ret;
++	return cb->cb_ses != rcu_access_pointer(cb->cb_clp->cl_cb_session);
 +}
 +
-+static void put_cb_ses(struct nfsd4_callback *cb)
-+{
-+	if (cb->cb_ses) {
-+		nfsd4_cb_put_session(cb->cb_ses);
-+		cb->cb_ses = NULL;
-+	}
-+}
-+
- static int grab_slot(struct nfsd4_session *ses)
- {
- 	int idx;
-@@ -1269,24 +1298,33 @@ static int grab_slot(struct nfsd4_session *ses)
- }
- 
- /*
-- * There's currently a single callback channel slot.
-- * If the slot is available, then mark it busy.  Otherwise, set the
-- * thread for sleeping on the callback RPC wait queue.
-+ * Get both a session reference and a slot.
-  */
- static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct rpc_task *task)
- {
- 	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *ses = clp->cl_cb_session;
-+	struct nfsd4_session *ses;
-+
-+	if (!grab_cb_ses(cb)) {
-+		rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
-+		if (!grab_cb_ses(cb))
-+			return false;
-+		rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
-+	}
- 
- 	if (cb->cb_held_slot >= 0)
- 		return true;
-+
-+	ses = cb->cb_ses;
- 	cb->cb_held_slot = grab_slot(ses);
- 	if (cb->cb_held_slot < 0) {
- 		rpc_sleep_on(&clp->cl_cb_waitq, task, NULL);
- 		/* Race breaker */
- 		cb->cb_held_slot = grab_slot(ses);
--		if (cb->cb_held_slot < 0)
-+		if (cb->cb_held_slot < 0) {
-+			put_cb_ses(cb);
- 			return false;
-+		}
- 		rpc_wake_up_queued_task(&clp->cl_cb_waitq, task);
- 	}
- 	return true;
-@@ -1295,7 +1333,10 @@ static bool nfsd41_cb_get_slot(struct nfsd4_callback *cb, struct rpc_task *task)
- static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
- {
- 	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *ses = clp->cl_cb_session;
-+	struct nfsd4_session *ses = cb->cb_ses;
-+
-+	if (!ses)
-+		return;
- 
- 	if (cb->cb_held_slot >= 0) {
- 		spin_lock(&ses->se_lock);
-@@ -1304,6 +1345,7 @@ static void nfsd41_cb_release_slot(struct nfsd4_callback *cb)
- 		cb->cb_held_slot = -1;
- 		rpc_wake_up_next(&clp->cl_cb_waitq);
- 	}
-+	put_cb_ses(cb);
- }
- 
- static void nfsd41_destroy_cb(struct nfsd4_callback *cb)
-@@ -1342,7 +1384,7 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
  static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
  {
  	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *session = clp->cl_cb_session;
-+	struct nfsd4_session *session = cb->cb_ses;
- 	bool ret = true;
+ 	struct nfsd4_session *session = cb->cb_ses;
+-	bool ret = true;
++	bool ret = false;
  
  	if (!clp->cl_minorversion) {
-@@ -1629,6 +1671,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
- 		const struct nfsd4_callback_ops *ops, enum nfsd4_cb_op op)
- {
- 	cb->cb_clp = clp;
-+	cb->cb_ses = NULL;
- 	cb->cb_msg.rpc_proc = &nfs4_cb_procedures[op];
- 	cb->cb_msg.rpc_argp = cb;
- 	cb->cb_msg.rpc_resp = cb;
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 0faa367c9fa3280fa4a8a982f974804bb89f2035..56fe34d8dd90344404512114113c00a027aeb6a4 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -66,6 +66,7 @@ typedef struct {
+ 		/*
+@@ -1398,13 +1403,13 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 * handle that case here.
+ 		 */
+ 		if (RPC_SIGNALLED(task))
+-			goto need_restart;
++			goto requeue;
  
- struct nfsd4_callback {
- 	struct nfs4_client *cb_clp;
-+	struct nfsd4_session *cb_ses;
- 	struct rpc_message cb_msg;
- 	const struct nfsd4_callback_ops *cb_ops;
- 	struct work_struct cb_work;
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index ad2c0c432d08705bcebf00f7309f19267afcae03..fff665bac3b252387f92139b5f868cf1b034d1c9 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -1644,8 +1644,7 @@ TRACE_EVENT(nfsd_cb_seq_status,
- 		__field(int, seq_status)
- 	),
- 	TP_fast_assign(
--		const struct nfs4_client *clp = cb->cb_clp;
--		const struct nfsd4_session *session = clp->cl_cb_session;
-+		const struct nfsd4_session *session = cb->cb_ses;
- 		const struct nfsd4_sessionid *sid =
- 			(struct nfsd4_sessionid *)&session->se_sessionid;
+ 		return true;
+ 	}
  
-@@ -1684,8 +1683,7 @@ TRACE_EVENT(nfsd_cb_free_slot,
- 		__field(u32, slot_seqno)
- 	),
- 	TP_fast_assign(
--		const struct nfs4_client *clp = cb->cb_clp;
--		const struct nfsd4_session *session = clp->cl_cb_session;
-+		const struct nfsd4_session *session = cb->cb_ses;
- 		const struct nfsd4_sessionid *sid =
- 			(struct nfsd4_sessionid *)&session->se_sessionid;
+ 	if (cb->cb_held_slot < 0)
+-		goto need_restart;
++		goto requeue;
  
+ 	/* This is the operation status code for CB_SEQUENCE */
+ 	trace_nfsd_cb_seq_status(task, cb);
+@@ -1418,11 +1423,15 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 * (sequence ID, cached reply) MUST NOT change.
+ 		 */
+ 		++session->se_cb_seq_nr[cb->cb_held_slot];
++		ret = true;
+ 		break;
+ 	case -ESERVERFAULT:
+-		++session->se_cb_seq_nr[cb->cb_held_slot];
++		/*
++		 * Call succeeded, but CB_SEQUENCE reply failed sanity checks.
++		 * The client has gone insane. Mark the BC faulty, since there
++		 * isn't much else we can do.
++		 */
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+-		ret = false;
+ 		break;
+ 	case 1:
+ 		/*
+@@ -1433,39 +1442,67 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 */
+ 		fallthrough;
+ 	case -NFS4ERR_BADSESSION:
+-		nfsd4_mark_cb_fault(cb->cb_clp);
+-		ret = false;
+-		goto need_restart;
++		/*
++		 * If the session hasn't changed, mark it faulty. Restart
++		 * the call.
++		 */
++		if (!nfsd4_cb_session_changed(cb))
++			nfsd4_mark_cb_fault(cb->cb_clp);
++		goto requeue;
+ 	case -NFS4ERR_DELAY:
++		/*
++		 * If the rpc_clnt is being torn down, then we must restart
++		 * the call from scratch.
++		 */
++		if (RPC_SIGNALLED(task))
++			goto requeue;
+ 		cb->cb_seq_status = 1;
+-		if (!rpc_restart_call(task))
+-			goto out;
+-
++		rpc_restart_call(task);
+ 		rpc_delay(task, 2 * HZ);
+ 		return false;
+-	case -NFS4ERR_BADSLOT:
+-		goto retry_nowait;
+ 	case -NFS4ERR_SEQ_MISORDERED:
+-		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
+-			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
++		/*
++		 * Reattempt once with seq_nr 1. If that fails, treat this
++		 * like BADSLOT.
++		 */
++		if (!nfsd4_cb_session_changed(cb)) {
++			if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
++				session->se_cb_seq_nr[cb->cb_held_slot] = 1;
++				goto retry_nowait;
++			}
++		}
++		fallthrough;
++	case -NFS4ERR_BADSLOT:
++		/*
++		 * BADSLOT means that the client and server are out of sync
++		 * on the BC parameters. In this case, we want to mark the
++		 * backchannel faulty and then try it again, but _leak_ the
++		 * slot so no one uses it. If the callback session has
++		 * changed since then though, don't mark it.
++		 */
++		if (!nfsd4_cb_session_changed(cb)) {
++			nfsd4_mark_cb_fault(cb->cb_clp);
++			cb->cb_held_slot = -1;
+ 			goto retry_nowait;
+ 		}
+-		break;
++		goto requeue;
+ 	default:
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+ 	}
+ 	trace_nfsd_cb_free_slot(task, cb);
+ 	nfsd41_cb_release_slot(cb);
+-
+-	if (RPC_SIGNALLED(task))
+-		goto need_restart;
+-out:
+ 	return ret;
+ retry_nowait:
+-	if (rpc_restart_call_prepare(task))
+-		ret = false;
+-	goto out;
+-need_restart:
++	/*
++	 * RPC_SIGNALLED() means that the rpc_client is being torn down and
++	 * (possibly) recreated. Restart the call completely in that case.
++	 */
++	if (!RPC_SIGNALLED(task)) {
++		rpc_restart_call_prepare(task);
++		return false;
++	}
++requeue:
++	nfsd41_cb_release_slot(cb);
+ 	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
+ 		trace_nfsd_cb_restart(clp, cb);
+ 		task->tk_status = 0;
 
 -- 
 2.48.1
