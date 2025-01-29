@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-9761-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9762-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D913A2249B
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 20:39:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF03FA224AD
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 20:49:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C807818881D1
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 19:39:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5137316645D
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 19:49:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 740EC1E2312;
-	Wed, 29 Jan 2025 19:39:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7077419340B;
+	Wed, 29 Jan 2025 19:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eTc1AWNe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHbkVutP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7341E0E11
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2025 19:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A438191499
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Jan 2025 19:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738179582; cv=none; b=AoThlJ84UdcYfjvdWiXn9eC8W7sg0LwZUFwf2C7P28RTY+RSk5WKghzv1/ok9dZ+YC9QZwT9fNokCAhlFlJFNwrhcygQEmhy38mdVG1jSRdFEgL8SXGhvmkw60kQJF30gQkGnHpGD3PlvDg3QJE4lS+0VhsS10QHb8YCgbm+7/0=
+	t=1738180183; cv=none; b=JNykrvwl11LsS5g0gIi2s2AlkEzYqbpZFeWyplZ/H4E8bY/ngTc5DdQGZaXgs+c1RhJNprKfKjxrrc/2zGtYe+R5URG22kFnmJONfbvAB3ykFevTOUqQHLN2w/d+PNMWIcINOx/ygiVFQgop4DKm0xadQpRiWPoWHEHYB3ASr1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738179582; c=relaxed/simple;
-	bh=M4Xchd9/yVAlsmibSuM3hxJASedep+TGo0GofqZfmYA=;
+	s=arc-20240116; t=1738180183; c=relaxed/simple;
+	bh=UZqN856Uf7dbAa7XoJN09RiuenOBQi+BNBywygHORFs=;
 	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=TWJAd486/eDhUnwAtT3yUNIZEHp0nMYegLp1LDEpgtxvg8NsesJ6CFSeZm+vqAf/9iRDGPQ3euS2wFyyJA3xFoLIjTMF21fhDWTBZQii7jZC8oD5G2NwfNTopv8oOe9nXp+Ss+88zr0Vep/Br6QGDHQECdtmwT3DbH+IttU3qOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eTc1AWNe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC05C4CED1;
-	Wed, 29 Jan 2025 19:39:41 +0000 (UTC)
+	 References:Subject; b=lns2RfCyCK3z+FcUXxO54NHpHgEHbwH9vNB3QPcOLRljgNkSdzLwLHRhQiRvvQDmlTmN1NbCkeMMJB7nJOja8iSogJCEPqmc6BOUzQfuYXqt/G+eOpxw7tmhGOteNzHDKTClxO8WHZuR4NhRrakS/d1ECrKLwLJiXbdHosnzbA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHbkVutP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F6FC4CED1;
+	Wed, 29 Jan 2025 19:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738179581;
-	bh=M4Xchd9/yVAlsmibSuM3hxJASedep+TGo0GofqZfmYA=;
+	s=k20201202; t=1738180181;
+	bh=UZqN856Uf7dbAa7XoJN09RiuenOBQi+BNBywygHORFs=;
 	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=eTc1AWNeEpQuIIKttaHc+Yp5ssnw8cfqGQPtSwK298nH6oR63nUjCiqY+69xI/UDN
-	 he1hGciU4wCUiOdX5umxVuBAsyJuPd/5C3v4QnspjdBm21WaZs6y1IzkF5ECyBYfD0
-	 XUuc/oNyKQX+B/+SV/f4jB0tYytwjKR8k9Z3368RGp8LmWZBGO5B7W8z1j029fnHF7
-	 raLb1bgnKkKS1XQYvwHElxWFLUqMLoHTQeNQHfo1W1U9h5ofVlsWU3Vwlfww2ZKceZ
-	 GBTHKst3qytlnVLWtQIu9FULVbCq4q5dHk1aX7+338Lf/icF1DNUYIkBJqutw0P8Mq
-	 XeNV1u6lLS/sA==
+	b=UHbkVutPokFzw/Ir09i0z06gK1v3Ue3LA0vi6xM+U3Cn+sTtyBYt5JmtnVr6mMIES
+	 dqXCDu3iYyf/aDPkrDMCOAu7gpX6go/EMrvA05Zjt2ggcZt3DEFhlu34TxTT4taIh+
+	 XMF7YAj/caMWodNRHEqMX1jpADkoZxYtQq0uoJb7JxTHjtjUVtgBFXK84brDwCIonN
+	 i+G7DfX1/Riel2AlObXIND4/fJYmVADh/WQy6xikD75bBq0TjOTQC4tycnOgWbkQFi
+	 NY+kMapsRZqRefkVUNHbkN7uXyCxZPmUjoLIRnwbZ75DiK3W73x7ATJ29rJzJmj0d/
+	 PY0XO3dqiK4XQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B5326380AA66;
-	Wed, 29 Jan 2025 19:40:08 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id B8130380AA66;
+	Wed, 29 Jan 2025 19:50:08 +0000 (UTC)
 From: Chuck Lever via Bugspray Bot <bugbot@kernel.org>
-Date: Wed, 29 Jan 2025 19:40:29 +0000
+Date: Wed, 29 Jan 2025 19:50:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,11 +54,11 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-To: herzog@phys.ethz.ch, trondmy@kernel.org, linux-nfs@vger.kernel.org, 
- jlayton@kernel.org, tom@talpey.com, baptiste.pellegrin@ac-grenoble.fr, 
- chuck.lever@oracle.com, anna@kernel.org, benoit.gschwind@minesparis.psl.eu, 
- carnil@debian.org, harald.dunkel@aixigo.com, cel@kernel.org
-Message-ID: <20250129-b219710c25-59fffd877fe9@bugzilla.kernel.org>
+To: benoit.gschwind@minesparis.psl.eu, cel@kernel.org, herzog@phys.ethz.ch, 
+ baptiste.pellegrin@ac-grenoble.fr, jlayton@kernel.org, anna@kernel.org, 
+ harald.dunkel@aixigo.com, tom@talpey.com, trondmy@kernel.org, 
+ carnil@debian.org, chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Message-ID: <20250129-b219710c26-8889e93df099@bugzilla.kernel.org>
 In-Reply-To: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
 References: <20250120-b219710c0-da932078cddb@bugzilla.kernel.org>
 Subject: Re: NFSD threads hang when destroying a session or client ID
@@ -68,23 +68,23 @@ X-Mailer: bugspray 0.1-dev
 
 Chuck Lever writes via Kernel.org Bugzilla:
 
-> [Wed Jan 29 10:11:17 2025] cb_status=-521 tk_status=-10036
+Looking further back in trace.dat:
 
--521 = -EBADHANDLE (NFS4ERR_BADHANDLE)
+  kworker/u194:9-1629754 [033] 309447.521022: nfsd_cb_free_slot:    task:00001fa3@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 new slot seqno=8100
+  kworker/u193:6-1630755 [004] 309468.053064: nfsd_cb_seq_status:   task:00001fa4@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=0 seq_status=0
+  kworker/u193:6-1630755 [004] 309468.053066: nfsd_cb_free_slot:    task:00001fa4@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 new slot seqno=8101
+ kworker/u194:13-1634037 [013] 309549.519294: nfsd_cb_seq_status:   task:00001fa5@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
+ kworker/u194:13-1634037 [037] 309558.734930: nfsd_cb_seq_status:   task:00001fa6@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
+  kworker/u194:0-1662968 [047] 309567.950612: nfsd_cb_seq_status:   task:00001fa7@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
+ kworker/u194:13-1634037 [043] 309577.167133: nfsd_cb_seq_status:   task:00001fa8@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
+ kworker/u193:14-1658519 [008] 309586.381715: nfsd_cb_seq_status:   task:00001fa9@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-5 seq_status=1
+  kworker/u194:6-1659115 [045] 309588.599171: nfsd_cb_seq_status:   task:00001faa@0000009a sessionid=67952a7d:4dd6ab1d:00000fb0:00000000 tk_status=-512 seq_status=1
 
--10036 = -NFS4ERR_BAD_XDR
+(Not shown here) this is a CB_RECALL_ANY operation that was sent several times but timed out. The retry mechanism could have dropped this operation after the first timeout, or it could have noticed that the callback transport was marked FAULT.
 
-I see several similar events in the trace.dat report. My guess is the client is generating BADHANDLE (nfs4_callback_getattr) but the server is having some trouble decoding that result.
+This situation appears to resolve itself.
 
-My first impression is that XDR result decoders are supposed to return -EIO in this case. NFS4ERR_BAD_XDR is supposed to mean the /remote side/ was not able to decode a Call, not the local side couldn't decode the Reply.
-
-RFC 8881 Section 20.1.3 states:
-
-"If the filehandle specified is not one for which the client holds an OPEN_DELEGATE_WRITE delegation, an NFS4ERR_BADHANDLE error is returned."
-
-This appears to be a bug in the new CB_GETATTR implementation. It might or might not cause the callback workqueue to stall, but it should probably be filed as a separate bug.
-
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c25
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219710#c26
 You can reply to this message to join the discussion.
 -- 
 Deet-doot-dot, I am a bot.
