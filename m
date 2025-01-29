@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-9751-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9752-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51F35A21F17
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 15:27:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5492A21F58
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 15:39:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7236F3A26DA
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 14:27:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09B6C1880227
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Jan 2025 14:39:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 720A514BF8F;
-	Wed, 29 Jan 2025 14:27:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6983D1A08DB;
+	Wed, 29 Jan 2025 14:39:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyfqdkc+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dx5V6ags"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4886129CE8;
-	Wed, 29 Jan 2025 14:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4116342049;
+	Wed, 29 Jan 2025 14:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738160825; cv=none; b=bHDMO1+QQ1dJzl89FmAW7CczPewutrp1HfYVPR72MFWXmIJTicq9hddsF2pDVLSuHS05WrWX21cyXndZuq11tigPcpGAgX7AADpreHZyzXiUh/YVSfe8f8QyMLeKj48pz1NOs+G4lkty4nAcy4/WpLORorEYtCVfARscW/hToXQ=
+	t=1738161552; cv=none; b=ceNCrHG5qnVNR6+OC3e2qDvNR0UT3PipK4mD8W5Yft7qtAtxryH4iFZsH0ccPVUYkPAAr5UOXXGyw3FGowQshbYbqBAAoLwssmu2QWUH81zRGQ+zlf/Om3ZEste+4A54KQE3mmOjh6GSRzvf/m9NuaXFmiVpK0CIFt6RfZzGffA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738160825; c=relaxed/simple;
-	bh=fcWJqGLNvLSrnvhEpX52ESvfMuqHR3WJC5nvK7+53rY=;
+	s=arc-20240116; t=1738161552; c=relaxed/simple;
+	bh=8oSoujiQvWMZRWE4d+kFdjQtEAuSGGAHWGMoHqRjvnY=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GQbuxA/9VaBDS9cCjU9H1muwaAiIBjE+zMTeCXl6VQRCaOMZc9Y1ksCcZo4xGOfZYheVX/FulwSi108oKiBz9+Qf9cax8Dk3wqX1gRRfsD+u1i6/tsiileMOZeMylVqz6UZZJnld3BAo7eG6+DyuFadX4YtI982mofK0NpeEsJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyfqdkc+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1353C4CED1;
-	Wed, 29 Jan 2025 14:27:03 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ulw2g0huU86isY4jjKM+/yqYgeqPLXL18dzZhHaQbKqBVMO//VzxnaLkjLBFb3bS8v97ZM7D1QObdiiPQ9JRdsALcl5PVgX+NSNymi4ToFWQFhwwhgB839tV/20jRN7G/CtV2jWsLut5mHMz3UjBL+KfwczW1r4hr3qJ80G8LY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dx5V6ags; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB80C4CED1;
+	Wed, 29 Jan 2025 14:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738160824;
-	bh=fcWJqGLNvLSrnvhEpX52ESvfMuqHR3WJC5nvK7+53rY=;
+	s=k20201202; t=1738161551;
+	bh=8oSoujiQvWMZRWE4d+kFdjQtEAuSGGAHWGMoHqRjvnY=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kyfqdkc+nv/+LUav0ms1/+WfzL3Tr31yv6wu89uoFfdzedtU9M32JJLPR9AQ5fMMr
-	 Ud8bhobFYcbiyttLZfkaAZy+G04GmqNd4qKxmwIeZk4JFQpJaD736q93+dnLzbyFUG
-	 qNriT7CEPXEJwri+UN6ZOiExAMOsZ5RVgDR0uAkz1hO0Fr3rSM+U5uEfiAA/Joxy1k
-	 d5HyGV+wQA7RvID42pM9yvVt87jdHX/VjNY7lLh3jmIyKlGXe37cmFSNMHqchtAIFW
-	 GhRDaolHwgWzXjvzpxEFIJEzDsXpIEJgSCp62lop8Wh/zTzUAqDM45qh6F1uKpJKXw
-	 9GipAknqYKSRw==
-Message-ID: <5760673a9adc597c1b235dd6a1670ed801d2feb1.camel@kernel.org>
+	b=dx5V6agsyZ/cesol9Y3gaLGQj3FOyTpLtfwPrcPPkOAmqO1VkVwVTmGf3K+Eyn58Y
+	 j4brYJ0BiaRYb9pwzzlFIWPENGsplfqEV3tvodRTiLLhOer7awjHZqNgmA5iroudmv
+	 6UKI30R/Yp2XaQArWzMnhy4zSY6CpOpXio/jxAeXL6NY9n0ZdvvIKnvx14JggxeV+c
+	 BeBsEWkXFNmWF+/8nWh/Gq3p7I/YdC9BxcP16CI5n/Q7PjjZiJQG2jtVFfZO1QehEQ
+	 VbYUpgkvUMMG+3tDhOyED0j7ndsk9doO9bLDPr4keYY+5JUleDAgvuw8AwvVuHFWuS
+	 Xsdqf3g/M8rwQ==
+Message-ID: <e7bac9378168056a7000959cd920e8c703b0c7fe.camel@kernel.org>
 Subject: Re: [PATCH v2 0/7] nfsd: CB_SEQUENCE error handling fixes and
  cleanups
 From: Jeff Layton <jlayton@kernel.org>
-To: "J. Bruce Fields" <bfields@fieldses.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Kinglong Mee	 <kinglongmee@gmail.com>, Trond
- Myklebust <trondmy@kernel.org>, Anna Schumaker	 <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 29 Jan 2025 09:27:02 -0500
-In-Reply-To: <Z5o5ZBaYgrmrNseU@poldevia.fieldses.org>
+ Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>, Kinglong
+ Mee <kinglongmee@gmail.com>, Trond Myklebust	 <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 29 Jan 2025 09:39:09 -0500
+In-Reply-To: <2f2c7a8b-d44b-4f41-99db-f3401108198c@oracle.com>
 References: <20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org>
-	 <Z5o5ZBaYgrmrNseU@poldevia.fieldses.org>
+	 <2f2c7a8b-d44b-4f41-99db-f3401108198c@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,33 +139,14 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-01-29 at 09:21 -0500, J. Bruce Fields wrote:
-> On Wed, Jan 29, 2025 at 08:39:53AM -0500, Jeff Layton wrote:
+On Wed, 2025-01-29 at 09:22 -0500, Chuck Lever wrote:
+> On 1/29/25 8:39 AM, Jeff Layton wrote:
 > > While looking over the CB_SEQUENCE error handling, I discovered that
 > > callbacks don't hold a reference to a session, and the
 > > clp->cl_cb_session could easily change between request and response.
 > > If that happens at an inopportune time, there could be UAFs or weird
 > > slot/sequence handling problems.
->=20
-> Nobody should place too much faith in my understanding of how any of
-> this works at this point, but....  My vague memory is that a lot of
-> things are serialized simply by being run only on the cl_callback_wq.
-> Modifying clp->cl_cb_session is such a thing.
->=20
->=20
-
-It is, but that doesn't save us here. The workqueue is just there to
-submit jobs to the RPC client. Once that happens they are run via
-rpciod's workqueue (and in parallel with one another since they're
-async RPC calls).
-
-So, it's possible that while we're waiting for a response from one
-callback, another is submitted, and that workqueue job changes the
-clp->cl_cb_session.
-
-Thanks for taking a look, Bruce!
-
->=20
+> >=20
 > > This series changes the nfsd4_session to be RCU-freed, and then adds a
 > > new method of session refcounting that is compatible with the old.
 > > nfsd4_callback RPCs will now hold a lightweight reference to the sessio=
@@ -183,7 +164,56 @@ n
 s
 > > some NFS cnd sunrpc client code, so it'd be good to have R-b's or A-b's
 > > from Trond and/or Anna on that one.
-> >=20
+>=20
+> A few initial reactions as I get to know this new revision.
+>=20
+> - I have no objection to 7/7, but it does seem a bit out of place in
+>    this series. Maybe hold it back and send it separately after this
+>    series goes in?
+>=20
+> - The fact that the session can be replaced while a callback operation
+>    is pending suggests that, IIUC, decode_cb_sequence() sanity checking
+>    will fail in such cases, and it's not because of a bug in the client's
+>    callback server. Or maybe I'm overthinking it - that is exactly what
+>    you are trying to prevent?
+>=20
+
+That's the best-case scenario, but callbacks can run at any time. If
+this happens at the wrong time this could crash or cause more subtle
+problems than just a spurious ESERVERFAULT. IOW, we could pass
+decode_cb_sequence(), then the pointer changes and then
+nfsd4_cb_sequence_done() ends up working with a different session.
+
+> - In 1/7, the kdoc comment for "get" should enumerate the return values
+>    and their meanings.
+>=20
+
+Ack
+
+> - cb_session_changed =3D> nfsd4_cb_session_changed.
+>=20
+
+Ack
+
+> - I'm still not convinced it's wise to bump the slot number in the
+>    ESERVERFAULT case.
+>=20
+
+It's debatable for sure. The client _did_ respond with NFS4_OK in this
+case, but it is a bit sketchy since something else didn't match. I'm
+fine with removing that seq bump if you prefer.
+
+> - IMO the cb_sequence_done rework should rename "need_restart" to
+>    "need_requeue" or just "requeue" -- there is a call to
+>    rpc_restart_call_prepare() here that is a little confusing and
+>    could do with some disambiguation.
+>=20
+
+Good point. I'll change that too.
+
+Thanks for the review!
+
+>=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
 > > Changes in v2:
@@ -196,33 +226,33 @@ fa2ae@kernel.org
 > >=20
 > > ---
 > > Jeff Layton (7):
-> >       nfsd: add routines to get/put session references for callbacks
-> >       nfsd: make clp->cl_cb_session be an RCU managed pointer
-> >       nfsd: add a cb_ses pointer to nfsd4_callback and use it instead o=
-f clp->cb_cb_session
-> >       nfsd: overhaul CB_SEQUENCE error handling
-> >       nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault(=
-)
-> >       nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
-> >       sunrpc: make rpc_restart_call() and rpc_restart_call_prepare() vo=
-id return
+> >        nfsd: add routines to get/put session references for callbacks
+> >        nfsd: make clp->cl_cb_session be an RCU managed pointer
+> >        nfsd: add a cb_ses pointer to nfsd4_callback and use it instead =
+of clp->cb_cb_session
+> >        nfsd: overhaul CB_SEQUENCE error handling
+> >        nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault=
+()
+> >        nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+> >        sunrpc: make rpc_restart_call() and rpc_restart_call_prepare() v=
+oid return
 > >=20
-> >  fs/nfs/nfs4proc.c           |  12 ++-
-> >  fs/nfsd/nfs4callback.c      | 212 ++++++++++++++++++++++++++++++++----=
---------
-> >  fs/nfsd/nfs4state.c         |  43 ++++++++-
-> >  fs/nfsd/state.h             |   6 +-
-> >  fs/nfsd/trace.h             |   6 +-
-> >  include/linux/sunrpc/clnt.h |   4 +-
-> >  net/sunrpc/clnt.c           |   7 +-
-> >  7 files changed, 210 insertions(+), 80 deletions(-)
+> >   fs/nfs/nfs4proc.c           |  12 ++-
+> >   fs/nfsd/nfs4callback.c      | 212 ++++++++++++++++++++++++++++++++---=
+---------
+> >   fs/nfsd/nfs4state.c         |  43 ++++++++-
+> >   fs/nfsd/state.h             |   6 +-
+> >   fs/nfsd/trace.h             |   6 +-
+> >   include/linux/sunrpc/clnt.h |   4 +-
+> >   net/sunrpc/clnt.c           |   7 +-
+> >   7 files changed, 210 insertions(+), 80 deletions(-)
 > > ---
 > > base-commit: a05af3c6103b703d1d38d8180b3ebbe0a03c2f07
 > > change-id: 20250123-nfsd-6-14-b0797e385dc0
 > >=20
 > > Best regards,
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
