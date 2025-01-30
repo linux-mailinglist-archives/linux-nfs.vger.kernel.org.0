@@ -1,53 +1,64 @@
-Return-Path: <linux-nfs+bounces-9780-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9795-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3835A22C8A
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 12:33:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F597A22FC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 15:25:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0482D1888937
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 11:33:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E95716842E
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 14:25:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28511DEFF8;
-	Thu, 30 Jan 2025 11:33:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288EF1E9916;
+	Thu, 30 Jan 2025 14:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=andrej.kozemcak@siemens.com header.b="ST+KoKUO"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bUuon1/d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA651A8F60
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Jan 2025 11:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D976B1E522;
+	Thu, 30 Jan 2025 14:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738236804; cv=none; b=raW07YgOY+gij/YTQH5fNwFdIbbBjkA5ksRftXCHnm4GjVoOAwpZ14xE8v8yVj5i3qEhjyruxMc6TxUPemeDiPJF7IuY5zWuOE3rq+zWtIj2AZyWylBpuEFq/nD2Vo79KZkvgYHvCwtIwX9JoTXHERKYD4ignYWICxI88BjYp9Q=
+	t=1738247119; cv=none; b=p3HsT/tOkKb+c1YZSDdJKZDLOKF7Byl6qMBAyWuAkcxhcguu6taYsz5IjlCW6xCb3+NWChkZOeOov2wCffB2TYLhHJPkQ76oNeaU9pGZKwgtozq1aG3xcUT/tu7Wfw1VRZjOHB4xz7v/khMkkke/VXs3jsAMaY2ZvynshoV4+Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738236804; c=relaxed/simple;
-	bh=pWVccBLf3gWqHO20uJVcGO9c7co2LQjC5zKpo0V5rbI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Oa+V/uTYVaa1z/Xce693gYGY9aRJJ4N/LOWCKfcq/86bzXQg3peSOrSOe+6ZHvyr1Bswm0cZG9ezk8uR7XlB1knRWiaOld2KQ1EL88p3OLhhptsN/0/8BWJu68LBQdA22zkRZUTmrecm9C4Zsmvjgyh0euMyzsLxF14ma+YzWHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=andrej.kozemcak@siemens.com header.b=ST+KoKUO; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 2025013011331516c3039f547c77d21e
-        for <linux-nfs@vger.kernel.org>;
-        Thu, 30 Jan 2025 12:33:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=andrej.kozemcak@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
- bh=q2s58ipvCgIOOBt2bahLRIzFuNewfiUnAi5BlGQI6zI=;
- b=ST+KoKUOks47nzGOxiFQVdXFxuv8+vFhkLd4ebXhScfMod3kO15+ua2c6J4PNeiYjvM3Vl
- BYW/Cf7TfsP5BXcOVtGQq+1AU0lcKkFAM7zyT9HTReIrqU3wXI5L8OfR8v+SGclSMKy99lAT
- 7XF9BOkTeJ7Mk/6BcvtCShTrS75V6BXkLu6aexzuofaDplNnjBYsnabUrvSuS7tiL4t+UQDr
- kQmww0pMLi9yD1B7mYJ8QQ88dJkTXGL76JXj18zsQyOYS+GJILT+kz0Nlu+4eorMjp4Ci8YN
- nd67v7L61fYi8kSVeqJkaneNwHy4XC6j3cB3j7xWzM+o2X6ng1N2KR6g==;
-From: Andrej Kozemcak <andrej.kozemcak@siemens.com>
-To: linux-nfs@vger.kernel.org
-Cc: Andrej Kozemcak <andrej.kozemcak@siemens.com>
-Subject: [PATCH] systemd: mount nfsd after load kernel module
-Date: Thu, 30 Jan 2025 12:32:34 +0100
-Message-Id: <20250130113234.885998-1-andrej.kozemcak@siemens.com>
+	s=arc-20240116; t=1738247119; c=relaxed/simple;
+	bh=ZRgpEW34JMjQh3hedWGfqmmuz6l889KGJ7H7rlpzn/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=He/+GPLaBCV/iGcsd4IfXWpTisXHMrSREk6hFjd8MBz7yBKKf/ydz65Y0YlvjtqlTLdGD1U63AMmdKxxfKGdL8f1QyN4jP6amsKYlCTqvApJBaW16y2hHq1YQ42nuzrKnBrno19xMSmnWCBCa7JLOQvpTgI3y22CG8qK0fM1imA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bUuon1/d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B45C4CED2;
+	Thu, 30 Jan 2025 14:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738247118;
+	bh=ZRgpEW34JMjQh3hedWGfqmmuz6l889KGJ7H7rlpzn/4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bUuon1/dcX9Y/dRuQYRLKtIUDpRWsvSomT0c47PLN2hg6y/0Hhltsm+MoXsJ6s8Cc
+	 D+xRJvguZWlEJCGH8HSAbcd8xatucjak764TD2cm1bKKc1D7S35cwdKV7Tdzeevjog
+	 BYLZtUEKl9Laxe/uKY52GT9W9ZQKsOnu8nHsTeWU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	David Howells <dhowells@redhat.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.10 088/133] kheaders: Ignore silly-rename files
+Date: Thu, 30 Jan 2025 15:01:17 +0100
+Message-ID: <20250130140146.063287842@linuxfoundation.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250130140142.491490528@linuxfoundation.org>
+References: <20250130140142.491490528@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,30 +66,66 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1328795:519-21489:flowmailer
 
-Systemd should load nfs kernel module before it try mount nfsd file systemd.
-In some systems systemd try mount nfsd file system before the nfs
-kernel module was loaded, which end with error.
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Andrej Kozemcak <andrej.kozemcak@siemens.com>
+------------------
+
+From: David Howells <dhowells@redhat.com>
+
+[ Upstream commit 973b710b8821c3401ad7a25360c89e94b26884ac ]
+
+Tell tar to ignore silly-rename files (".__afs*" and ".nfs*") when building
+the header archive.  These occur when a file that is open is unlinked
+locally, but hasn't yet been closed.  Such files are visible to the user
+via the getdents() syscall and so programs may want to do things with them.
+
+During the kernel build, such files may be made during the processing of
+header files and the cleanup may get deferred by fput() which may result in
+tar seeing these files when it reads the directory, but they may have
+disappeared by the time it tries to open them, causing tar to fail with an
+error.  Further, we don't want to include them in the tarball if they still
+exist.
+
+With CONFIG_HEADERS_INSTALL=y, something like the following may be seen:
+
+   find: './kernel/.tmp_cpio_dir/include/dt-bindings/reset/.__afs2080': No such file or directory
+   tar: ./include/linux/greybus/.__afs3C95: File removed before we read it
+
+The find warning doesn't seem to cause a problem.
+
+Fix this by telling tar when called from in gen_kheaders.sh to exclude such
+files.  This only affects afs and nfs; cifs uses the Windows Hidden
+attribute to prevent the file from being seen.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/r/20241213135013.2964079-2-dhowells@redhat.com
+cc: Masahiro Yamada <masahiroy@kernel.org>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-kernel@vger.kernel.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- systemd/proc-fs-nfsd.mount | 1 +
+ kernel/gen_kheaders.sh | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/systemd/proc-fs-nfsd.mount b/systemd/proc-fs-nfsd.mount
-index 931a5cee..630801b3 100644
---- a/systemd/proc-fs-nfsd.mount
-+++ b/systemd/proc-fs-nfsd.mount
-@@ -1,5 +1,6 @@
- [Unit]
- Description=NFSD configuration filesystem
-+After=systemd-modules-load.service
+diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+index 206ab3d41ee76..7fc44d8da2052 100755
+--- a/kernel/gen_kheaders.sh
++++ b/kernel/gen_kheaders.sh
+@@ -84,6 +84,7 @@ find $cpio_dir -type f -print0 |
  
- [Mount]
- What=nfsd
+ # Create archive and try to normalize metadata for reproducibility.
+ tar "${KBUILD_BUILD_TIMESTAMP:+--mtime=$KBUILD_BUILD_TIMESTAMP}" \
++    --exclude=".__afs*" --exclude=".nfs*" \
+     --owner=0 --group=0 --sort=name --numeric-owner --mode=u=rw,go=r,a+X \
+     -I $XZ -cf $tarfile -C $cpio_dir/ . > /dev/null
+ 
 -- 
 2.39.5
+
+
 
 
