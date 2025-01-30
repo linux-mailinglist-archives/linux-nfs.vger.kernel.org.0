@@ -1,43 +1,43 @@
-Return-Path: <linux-nfs+bounces-9795-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9785-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F597A22FC8
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 15:25:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97C87A22F39
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 15:19:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E95716842E
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 14:25:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1CB4B7A1435
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 14:18:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288EF1E9916;
-	Thu, 30 Jan 2025 14:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D737B1E98F9;
+	Thu, 30 Jan 2025 14:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bUuon1/d"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EefcbhtR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D976B1E522;
-	Thu, 30 Jan 2025 14:25:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB05F1E3DC8;
+	Thu, 30 Jan 2025 14:19:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738247119; cv=none; b=p3HsT/tOkKb+c1YZSDdJKZDLOKF7Byl6qMBAyWuAkcxhcguu6taYsz5IjlCW6xCb3+NWChkZOeOov2wCffB2TYLhHJPkQ76oNeaU9pGZKwgtozq1aG3xcUT/tu7Wfw1VRZjOHB4xz7v/khMkkke/VXs3jsAMaY2ZvynshoV4+Ts=
+	t=1738246782; cv=none; b=XbZw56gnhL2KkkYzm7lA50jsEl+N+0Rt/v2sN/JOceckFiey4VrfPxIx4H66x5Mnn6mYAH+F4WaRW/MPdCEffiNRxYhs0WqCv8j51IgMUVLa/mvaW7m4nSNvVni+P4pMEP/tOyrIaBPWQFaMnweBsNzgDrUeXY2Yzc5l6v+hcKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738247119; c=relaxed/simple;
-	bh=ZRgpEW34JMjQh3hedWGfqmmuz6l889KGJ7H7rlpzn/4=;
+	s=arc-20240116; t=1738246782; c=relaxed/simple;
+	bh=Bsv2iW63WoGZ0KDHVebw9lAh6mApNHHvA7ec+yONvMI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=He/+GPLaBCV/iGcsd4IfXWpTisXHMrSREk6hFjd8MBz7yBKKf/ydz65Y0YlvjtqlTLdGD1U63AMmdKxxfKGdL8f1QyN4jP6amsKYlCTqvApJBaW16y2hHq1YQ42nuzrKnBrno19xMSmnWCBCa7JLOQvpTgI3y22CG8qK0fM1imA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bUuon1/d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B45C4CED2;
-	Thu, 30 Jan 2025 14:25:18 +0000 (UTC)
+	 MIME-Version; b=o7MNtg3XlX/qefNJe2yb8PUuacsYJsm+fxAuSRv4eV8td8IflVgVJbI/yVya0e+ZZJemT3usj6Ay8xQIARqiH/+3WBPHQRTu/N4/gN0+VKtstyDuvy/kZxDX/8xEZbzVKQPVQPawudpDjoId88Y95q74+QhAdLL3uBLD0+q+W0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EefcbhtR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38DECC4CED2;
+	Thu, 30 Jan 2025 14:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738247118;
-	bh=ZRgpEW34JMjQh3hedWGfqmmuz6l889KGJ7H7rlpzn/4=;
+	s=korg; t=1738246782;
+	bh=Bsv2iW63WoGZ0KDHVebw9lAh6mApNHHvA7ec+yONvMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bUuon1/dcX9Y/dRuQYRLKtIUDpRWsvSomT0c47PLN2hg6y/0Hhltsm+MoXsJ6s8Cc
-	 D+xRJvguZWlEJCGH8HSAbcd8xatucjak764TD2cm1bKKc1D7S35cwdKV7Tdzeevjog
-	 BYLZtUEKl9Laxe/uKY52GT9W9ZQKsOnu8nHsTeWU=
+	b=EefcbhtR44DhcdKa6E9/2GIJJbimTUz85PWezw6rndsQ0uOPSfgf6oCWtjAIpKu3V
+	 z/YXckvkh+Lt2InU4etX23B5vWXlPsA8Tjb6r8tF98N8wXdT+dxpHkRZeEw5G2TDE9
+	 NauWqQTSo5IWfSpZBJzzcDDD9E4tZXHY0xP6FINM=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,12 +50,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org,
 	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.10 088/133] kheaders: Ignore silly-rename files
-Date: Thu, 30 Jan 2025 15:01:17 +0100
-Message-ID: <20250130140146.063287842@linuxfoundation.org>
+Subject: [PATCH 5.4 65/91] kheaders: Ignore silly-rename files
+Date: Thu, 30 Jan 2025 15:01:24 +0100
+Message-ID: <20250130140136.291051235@linuxfoundation.org>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250130140142.491490528@linuxfoundation.org>
-References: <20250130140142.491490528@linuxfoundation.org>
+In-Reply-To: <20250130140133.662535583@linuxfoundation.org>
+References: <20250130140133.662535583@linuxfoundation.org>
 User-Agent: quilt/0.68
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-5.10-stable review patch.  If anyone has any objections, please let me know.
+5.4-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
