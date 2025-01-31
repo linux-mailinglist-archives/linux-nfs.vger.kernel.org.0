@@ -1,120 +1,129 @@
-Return-Path: <linux-nfs+bounces-9806-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9807-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0438BA23649
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 22:05:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49252A23CA7
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2025 12:05:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7477E1885A3C
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jan 2025 21:05:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B96E2168739
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Jan 2025 11:05:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6116D1AF0CA;
-	Thu, 30 Jan 2025 21:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dbgXX1+L"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D0CA1BE86A;
+	Fri, 31 Jan 2025 11:05:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73161AC884
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Jan 2025 21:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0A31BBBF4;
+	Fri, 31 Jan 2025 11:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738271097; cv=none; b=aCisgLummCNhS4McgZmgnpzosOoJ9E6zQ+Qvw92c0u5hPxx8dd9O6HyztJKkEl3niwuTw35vb6aoHQfthZo8T4yypbOfrp6wfnt2J5vnqxLcLI741EAZ/qs/tzZF24EcBzvmrfGn6BSf5mQBxu8h9Xa6zPOKVP942mHxJ676dgw=
+	t=1738321500; cv=none; b=B6WIMx/vXpe697SeSLGWdOfNhWG09j3yIkVnhFLYzNvXGJqbeJs/bELtlb3WSZSfNyfIblAy6KKAm7P5Er81rVSm5VmfO3POHbRuI71PAPrSZPThN0FEShMNVE1h3+fbG3mtWUNYAHUytKidEREBuIG4RzOtQZpI+VBHnaG/7DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738271097; c=relaxed/simple;
-	bh=Q+5bH8fTnow1uLjHZweTXv3FKjGDYF5QObfGwURk1bw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=avkwpI4RGZMkhrMZeidLTaHyMjVOkXAtXfD2I0yD6KFH5Pxp0d4X6BAW8bOqG1nH+/e0RdUBIaTV3NuReWeoslrvk/dXmxvhkhPU6cK7QcsRY3oSTBiqCeIE3QbpZ9z3/7GttGRByKopKbWkj8wG7/hfUI+IF9PWAPxiXLIWd74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dbgXX1+L; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UL1UK6003214;
-	Thu, 30 Jan 2025 21:04:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=+Ib3IlmC
-	X43rZ2+CVGV+lw+Wp59sfV/HCm1Vi6EXjxk=; b=dbgXX1+LMCqLp6So60sG7i/S
-	vsxHtmBruyd+AtEdpBQl9m7WyVxEuCOPfDEQoIXXowVx3ygap7QGxEBxJHPsT+SP
-	4G2H2RvRjUoLV4BHBv/iP4wgRTYpiHQxpAVfAtDU6+cp8cSxjj7b+t48Hd9Q+uYL
-	PGG7+vrkTahmymvhV+qAUAugPnj/g+fmNfezuUmdAVkI40VWvI/yyB8ZuwhGdlLw
-	/MJUnhFUDt92oWlaVLUC1Dm1wfbubBtl9iaNLOFSYlOOV15FJXZilOO9BavJAdII
-	Mbk0+NF8ZRxn8gi+oU9KYzphSCHXkweqFoe4hpJQH+VC0jSNTXuGmboBcJqCYQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44ggaqg379-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 21:04:46 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 50UKsibs016732;
-	Thu, 30 Jan 2025 21:04:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44ggvjgb2d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 21:04:45 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 50UL4jes009207;
-	Thu, 30 Jan 2025 21:04:45 GMT
-Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44ggvjgb15-1;
-	Thu, 30 Jan 2025 21:04:44 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        okorniev@redhat.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v3 1/1] NFSD: fix hang in nfsd4_shutdown_callback
-Date: Thu, 30 Jan 2025 13:04:26 -0800
-Message-Id: <1738271066-6727-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_09,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
- definitions=main-2501300162
-X-Proofpoint-ORIG-GUID: ZuU99TYiPMm8sGUhg3z2DjnYWNKsSgRn
-X-Proofpoint-GUID: ZuU99TYiPMm8sGUhg3z2DjnYWNKsSgRn
+	s=arc-20240116; t=1738321500; c=relaxed/simple;
+	bh=74zBxMbZtOF6IzL5eYn1BT1WP7txMHcRiO9uVjesNWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VTNDZgPBzRAaoI3/yuYnBK05P1eRIoYq34s2UF9tjT7ABjvkyQe/IQkmMR/nqNswxyVrJvVWVi+ktezVgSavLUKnoOQg85DcXHIxkmWbYfRW2eksED/Lccu+nzc3YbG6rgcrRpDJG/lfGhdsVWMaSHXfbPclDmDgp4MAzROtgNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YktJn3zRrz6G90H;
+	Fri, 31 Jan 2025 19:02:33 +0800 (CST)
+Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5B5E21400DB;
+	Fri, 31 Jan 2025 19:04:55 +0800 (CST)
+Received: from [10.123.123.159] (10.123.123.159) by
+ mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 31 Jan 2025 14:04:53 +0300
+Message-ID: <9f7f282b-95c2-8849-7b71-e77213558fd4@huawei-partners.com>
+Date: Fri, 31 Jan 2025 14:04:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Content-Language: ru
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+CC: Matthieu Baerts <matttbe@kernel.org>, <gnoack@google.com>,
+	<willemdebruijn.kernel@gmail.com>, <matthieu@buffet.re>,
+	<linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <yusongping@huawei.com>,
+	<artem.kuzin@huawei.com>, <konstantin.meskhidze@huawei.com>, MPTCP Linux
+	<mptcp@lists.linux.dev>, <linux-nfs@vger.kernel.org>, Paul Moore
+	<paul@paul-moore.com>
+References: <20250124.gaegoo0Ayahn@digikod.net>
+ <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
+ <20250127.Uph4aiph9jae@digikod.net>
+ <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+ <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
+ <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
+ <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
+ <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
+ <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
+ <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
+ <20250129.Oo1xou8ieche@digikod.net>
+From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+In-Reply-To: <20250129.Oo1xou8ieche@digikod.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ mscpeml500004.china.huawei.com (7.188.26.250)
 
-If nfs4_client is in courtesy state then there is no point to send
-the callback. This causes nfsd4_shutdown_callback to hang since
-cl_cb_inflight is not 0. This hang lasts about 15 minutes until TCP
-notifies NFSD that the connection was dropped.
+On 1/29/2025 5:51 PM, Mickaël Salaün wrote:>>>>>>> On 28/01/2025 11:56, 
+Mikhail Ivanov wrote:
 
-This patch modifies nnfsd4_run_cb_work to skip the RPC call if
-nfs4_client is in courtesy state.
+[...]
 
-Fixes: 66af25799940 ("NFSD: add courteous server support for thread with only delegation")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4callback.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>>>> * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
+>>>>>>>>       IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+> 
+> According to the man page: "It is allowed only for IPv6 sockets that are
+> connected and bound to a v4-mapped-on-v6 address."
+> 
+> This compatibility feature makes sense from user space point of view and
+> should not result in an error because of Landlock.
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 50e468bdb8d4..cf6d29828f4e 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1583,8 +1583,11 @@ nfsd4_run_cb_work(struct work_struct *work)
- 		nfsd4_process_cb_update(cb);
- 
- 	clnt = clp->cl_cb_client;
--	if (!clnt) {
--		/* Callback channel broken, or client killed; give up: */
-+	if (!clnt || clp->cl_state == NFSD4_COURTESY) {
-+		/*
-+		 * Callback channel broken, client killed or
-+		 * nfs4_client in courtesy state; give up.
-+		 */
- 		nfsd41_destroy_cb(cb);
- 		return;
- 	}
--- 
-2.43.5
+IPV6_ADDRFORM is useful to pass IPv6 sockets binded and connected to
+v4-mapped-on-v6 addresses to pure IPv4 applications [1].
+
+I just realized we first need to consider restriction of IPv4 access
+for IPv4/v6 dual stack. It's possible to communicate with IPv4 peer
+using IPv6 socket (on client or server side) that is mapped on
+v4-mapped-on-v6 address (RFC 3493 [2]). If socket access rights provide
+separate control over IPv6 and IPv4, v4-mapped-on-v6 looks like possible
+bypass of IPv4 restriction and violation of the least astonishment
+principle.
+
+This can be controlled with IPV6_V6ONLY socket option or with
+net.ipv6.bindv6only sysctl knob. Restriction with sysctl knob is applied
+globally and may break some dual-stack dependent applications.
+
+I'm currently trying to collect real-world examples in which user may
+want to allow IPv6-only communication in a sandboxed environment.
+Theoretically, this can be seen as unprivileged reduction of attack
+surface for IPv6-only programs in dual-stack network (disallow to open
+IPv4 connections and communicate with loopback via IPv4 stack).
+
+Earlier, it was also discussed about possible security issues on the
+userland side related to different address representation and address
+filtering [3]. But, I don't really think these are the good examples for
+the motivation.
+
+If the v4-mapped-on-v6 addressing control is deemed reasonable, it
+should be better implemented with a new access right for
+LANDLOCK_RULE_NET_PORT rather than a part of socket creation control.
+
+[1] https://man7.org/linux/man-pages/man7/ipv6.7.html
+[2] https://datatracker.ietf.org/doc/html/rfc3493#section-3.7
+[3] https://lwn.net/Articles/688462/
+
+
 
 
