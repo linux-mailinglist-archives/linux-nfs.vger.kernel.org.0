@@ -1,55 +1,52 @@
-Return-Path: <linux-nfs+bounces-9825-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9826-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5F28A24BB7
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 20:59:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08944A24BB8
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 21:00:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B9CD7A3946
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 19:58:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4B75A7A2463
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 19:59:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E07371CD1FD;
-	Sat,  1 Feb 2025 19:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B72D1CB518;
+	Sat,  1 Feb 2025 20:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEgP50k0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QI2NqKYt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31921CD1F1
-	for <linux-nfs@vger.kernel.org>; Sat,  1 Feb 2025 19:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361E41CC881
+	for <linux-nfs@vger.kernel.org>; Sat,  1 Feb 2025 20:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738439945; cv=none; b=j+iplmIFeMzl6nsG9auHVJgiDWyd3zr/q92D2EXoBY0aDU88nU2zyZTHGwPfAO5eS+EZaDc29PMKTy+k8uQCj+UijydUj2VjgcWprKKBxI1rkZj5BLjxmkWSdJ45xLmcIOhdyNDgBuxT0V9ix0w8VLylTzN4qf9a2Ml4PNgf5Pk=
+	t=1738440004; cv=none; b=TzeutieY5OP1gq8A25VDNY+vyRRFGkLrpJApcfmSLz0Oy87ZRvPpZX/JdIfmvIoTR0FhCZJEfl+j8abPLKY4NcHJ5nL8mVlfnb/LtNnlYTbwsWbtlvJHV9063NIIPM4v5/HE0VVei/IezWVf/3gIprzLs5HGuEQeEOVMh6Ba51c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738439945; c=relaxed/simple;
-	bh=rWexCuC8cWY34tKPFVsYPSk8TRIWxLPG1Qt44hqc4cY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yi8lQTpz52awLyFtvvekmZsnZsHew5GPAyWv/mrehzQF4sRVzBnkbSNLWMKaA5UnM9jsXWvccRFOrELO5ceb8Nruim68eEs8DEis2Qt8pAymAiC4+lG8gch+ifKVf/LklXf7C1/RVBqHB2DNZHz6u6C1ZEFr6jhJSNbIW4gnWEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NEgP50k0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B68C4CEE1;
-	Sat,  1 Feb 2025 19:59:04 +0000 (UTC)
+	s=arc-20240116; t=1738440004; c=relaxed/simple;
+	bh=3BrkU+X0syuLjt/C4NGrcOc925m1K8QX+KwESIksBew=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zjno76SaVqhil48aCgUtr8wVBKTVwxL71BZUO7lrn5S2Q5c4xQYfyyyyhrbiJ7oSsqv0e2BYMDoC12AvVOvwEoyz4kA6D2iCS4vG6dAWaZKbzNlAl37sV3Gay5Nj2TOW73P8PHF8x2mWbG18PQGiYIhUAVg5/PgwTXbdAzkAumQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QI2NqKYt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C008C4CED3;
+	Sat,  1 Feb 2025 20:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738439945;
-	bh=rWexCuC8cWY34tKPFVsYPSk8TRIWxLPG1Qt44hqc4cY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NEgP50k0i/sMNFSHfJ+ziVe+TE6cnU6hQf9ksGpqbkFRY39mrgs+VioVnvzXjzV0w
-	 IpGyWobCNbscIww/Utrid8jEdh/wnMviBmOyh2T2+fpRiqZhwLG8KZB0a2l2N8uryi
-	 toTfQIXRqZPqxPFyeOAjbnzQBP3m9jrwgriO2tgWFxDB7rdm+zQKfWmxkSwqpYDWDS
-	 E2wsgayAckS1FrNvog3ITGuGZd0JYeOrH6PxGkINq849QNxE6UxdNJ0uR/J8n7N/+a
-	 qWxpaP3f3RYy4kVwyTkbL78aqMN3CWWf0i/BN0gutzy/ReehlCoeEbhukcxWMf80Fe
-	 jsAS/QS8TuAnw==
+	s=k20201202; t=1738440003;
+	bh=3BrkU+X0syuLjt/C4NGrcOc925m1K8QX+KwESIksBew=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QI2NqKYta0QkyorYpnfifV68NGeWyVuGHgauZAfK1QJHx2crjnEoPA2gZe3hSIDDI
+	 +hYUBm2IEX0gMgeCYlxan5bVrzB37vl0J4sb/9Adu5hNZL1vA+5G5KEwAjVrjPFCYS
+	 ZKK9wnQMgzXW6kybi/YOaVVQAOh+abWHvARVQVdx9cRosmFcZK11nuREcB19/Sy3lf
+	 XPI2/YvVUA0T3r6lyc+lMu62nDelNUwSPFsNniQEtFrXnhAP+epSfktev/QkiG62Mz
+	 AyHkTK4DFgqw5Kp2VffVrAAJd9f1wdEnFxbem/jgG+c8+be5mX1+1VwzpTRy5fJk0B
+	 1IYr1mdzxRlzg==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH 2/2] NFS: Adjust delegated timestamps for O_DIRECT reads and writes
-Date: Sat,  1 Feb 2025 14:59:03 -0500
-Message-ID: <dc9d3f8c31c383022907a6c27d7eb12a3d1a46d7.1738439818.git.trond.myklebust@hammerspace.com>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>
+Subject: [PATCH] SUNRPC: Prevent looping due to rpc_signal_task() races
+Date: Sat,  1 Feb 2025 15:00:02 -0500
+Message-ID: <69b6cd8f9689e84e1db8eb7e5da46946015dd1b5.1738439878.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <2e064c1d4ebaa8a58267fcd4f474e1a1e0089f38.1738439818.git.trond.myklebust@hammerspace.com>
-References: <2e064c1d4ebaa8a58267fcd4f474e1a1e0089f38.1738439818.git.trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -60,44 +57,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Adjust the timestamps if O_DIRECT is being combined with attribute
-delegations.
+If rpc_signal_task() is called while a task is in an rpc_call_done()
+callback function, and the latter calls rpc_restart_call(), the task can
+end up looping due to the RPC_TASK_SIGNALLED flag being set without the
+tk_rpc_status being set.
+Removing the redundant mechanism for signalling the task fixes the
+looping behaviour.
 
-Fixes: e12912d94137 ("NFSv4: Add support for delegated atime and mtime attributes")
+Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+Fixes: 39494194f93b ("SUNRPC: Fix races with rpc_killall_tasks()")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/direct.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/sunrpc/sched.h  | 3 +--
+ include/trace/events/sunrpc.h | 3 +--
+ net/sunrpc/sched.c            | 2 --
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 40e13c9a2873..f32f8d7c9122 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -56,6 +56,7 @@
- #include <linux/uaccess.h>
- #include <linux/atomic.h>
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index fec1e8a1570c..eac57914dcf3 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -158,7 +158,6 @@ enum {
+ 	RPC_TASK_NEED_XMIT,
+ 	RPC_TASK_NEED_RECV,
+ 	RPC_TASK_MSG_PIN_WAIT,
+-	RPC_TASK_SIGNALLED,
+ };
  
-+#include "delegation.h"
- #include "internal.h"
- #include "iostat.h"
- #include "pnfs.h"
-@@ -286,6 +287,8 @@ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
- 	nfs_direct_count_bytes(dreq, hdr);
- 	spin_unlock(&dreq->lock);
+ #define rpc_test_and_set_running(t) \
+@@ -171,7 +170,7 @@ enum {
  
-+	nfs_update_delegated_atime(dreq->inode);
-+
- 	while (!list_empty(&hdr->pages)) {
- 		struct nfs_page *req = nfs_list_entry(hdr->pages.next);
- 		struct page *page = req->wb_page;
-@@ -779,6 +782,7 @@ static void nfs_direct_write_completion(struct nfs_pgio_header *hdr)
+ #define RPC_IS_ACTIVATED(t)	test_bit(RPC_TASK_ACTIVE, &(t)->tk_runstate)
  
- 	spin_lock(&inode->i_lock);
- 	nfs_direct_file_adjust_size_locked(inode, dreq->io_start, dreq->count);
-+	nfs_update_delegated_mtime_locked(dreq->inode);
- 	spin_unlock(&inode->i_lock);
+-#define RPC_SIGNALLED(t)	test_bit(RPC_TASK_SIGNALLED, &(t)->tk_runstate)
++#define RPC_SIGNALLED(t)	(READ_ONCE(task->tk_rpc_status) == -ERESTARTSYS)
  
- 	while (!list_empty(&hdr->pages)) {
+ /*
+  * Task priorities.
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index b13dc275ef4a..851841336ee6 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -360,8 +360,7 @@ TRACE_EVENT(rpc_request,
+ 		{ (1UL << RPC_TASK_ACTIVE), "ACTIVE" },			\
+ 		{ (1UL << RPC_TASK_NEED_XMIT), "NEED_XMIT" },		\
+ 		{ (1UL << RPC_TASK_NEED_RECV), "NEED_RECV" },		\
+-		{ (1UL << RPC_TASK_MSG_PIN_WAIT), "MSG_PIN_WAIT" },	\
+-		{ (1UL << RPC_TASK_SIGNALLED), "SIGNALLED" })
++		{ (1UL << RPC_TASK_MSG_PIN_WAIT), "MSG_PIN_WAIT" })
+ 
+ DECLARE_EVENT_CLASS(rpc_task_running,
+ 
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index cef623ea1506..9b45fbdc90ca 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -864,8 +864,6 @@ void rpc_signal_task(struct rpc_task *task)
+ 	if (!rpc_task_set_rpc_status(task, -ERESTARTSYS))
+ 		return;
+ 	trace_rpc_task_signalled(task, task->tk_action);
+-	set_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
+-	smp_mb__after_atomic();
+ 	queue = READ_ONCE(task->tk_waitqueue);
+ 	if (queue)
+ 		rpc_wake_up_queued_task(queue, task);
 -- 
 2.48.1
 
