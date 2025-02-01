@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-9821-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9822-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5F29A245F6
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 01:35:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D2A7A245F7
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 01:35:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5013A3A87E8
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 00:35:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0EC218891BB
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Feb 2025 00:35:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD94C35957;
-	Sat,  1 Feb 2025 00:34:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CEC335953;
+	Sat,  1 Feb 2025 00:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKQCmomx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xlgqbn2L"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89FCE35953
-	for <linux-nfs@vger.kernel.org>; Sat,  1 Feb 2025 00:34:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1889335964
+	for <linux-nfs@vger.kernel.org>; Sat,  1 Feb 2025 00:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738370095; cv=none; b=Q+iNfsGBKSSt4spOAMM16ysmNBU5TlIA3VK7biJBXJwISqZOACdO7O+mn17hRg5/a06FxsOio8BwopHU6g6PORZ+BjMskUspfTIW9KWAU8zEDYmVzeDgxSO+V8l+kARgMaDXI6Jz8uXs80WG6Krht7GUSHZ5r8KYNKvlLR53WxQ=
+	t=1738370096; cv=none; b=L+xZyK1CwsQ+ifCazGkzJGwRSBvtZUWCLj76EgsToMO0H+OLr4SfUmjXKWrRiPTKRQXJCkfglFYLqVaSLXsqUvTAQ4qa3mQNurF0YEMmL74PmXS3Gvvvalbp3zA8IE1XjxS4+ndXKi4V7nbfmUyvHEw+z5Y86uvwcHO8tCw0xQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738370095; c=relaxed/simple;
-	bh=MHGuVLz9VxHkBAxBM7GbE5N2RvoQrav56x72QdK5EbU=;
+	s=arc-20240116; t=1738370096; c=relaxed/simple;
+	bh=t5NWF/sD9H5YoFVzqWylKFiG+MF1UKbZq35GsDK/08w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JYu62F0k7WDrFIshhwPVSBteEaNxQog5YcrqYYum3Tb63sjrZAWhSN8XLKEO5/fBodOZR5yk9Yo1XaFK158/6dmbcgOofHqVJaeKWfWvSDbMrDzpQliKX1M/5IJD8mhkn+Inwi6Oer3yUEPZ7mJeAUEY7EIOhleV0pIzp4987LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKQCmomx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53EFFC4CED1;
-	Sat,  1 Feb 2025 00:34:54 +0000 (UTC)
+	 MIME-Version; b=E1eeBLbrwLZ3JPIk7P4nez7qMQRZ7WuoWTcQmk+MJwR1yqBG8WGyN0gF2qQp4TUZDWKq1iS/obsqjxruLrFg124jTmyEx1HYqMEiXxa2GWuccu978ouSUgIUEnD/odovpxV97f+UxjxUYktfFLl+RKNUAq2DlOW4d/uaRLVEj6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xlgqbn2L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491E2C4CEE1;
+	Sat,  1 Feb 2025 00:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738370095;
-	bh=MHGuVLz9VxHkBAxBM7GbE5N2RvoQrav56x72QdK5EbU=;
+	s=k20201202; t=1738370096;
+	bh=t5NWF/sD9H5YoFVzqWylKFiG+MF1UKbZq35GsDK/08w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eKQCmomxmv/Ht+s01CtlaHTgfTIyAzNvIzgzyflHY16F06ASWjk3frVW2PzkFCz//
-	 29bpCWQQCniMbfII5HRnQvT4jAmIA614+7JzoSRC35Z395+HFxCMkj/I5736Tl26nx
-	 tCaI1L5tDTCL0tQxZK0Y26GwFuXagkVCD9cSnc5EB6jnXg/gGqUlcY1hVFni+x6rZk
-	 aPqzupUEc5qaTllNYYQqoII5MxfFDvk8et94lVw2OQbuk2UmfY5PXLvClWIOO0N/+X
-	 LEwqWKac8EEd9rjMbGOfmgsrASyAiEV99seQ8EssA40WkHYmLAOaUQRXzfYPuyP/5i
-	 zGKnnsQJ0K96A==
+	b=Xlgqbn2L/8CA922DP0MWF/Xzn/cbwRl3njxOCUo6LLTDl5ouxpl1DXl/iHL4azjID
+	 6eRqXa9+xRCuGZlSbx4iNHF1D4+H3TRbFWeCsxyODEmC3+ClEmKgT6G1przFhrGkic
+	 /YkAD9ls1U8ZIY8eWgRW2Vtb5A4h+5f6MRj3dmrUBrjfitf1z1/zBrInM9GSWTKZZZ
+	 laCiVmy0xS9KuGRnf2q54F3wUTubgSsWrpPMWMFqLeKZ3VhvErJuPGBG1Gkbk49p5p
+	 XYSWGWKWB2lIAdHKKCUqCsG1yEJcHcCr58rRhQnM/FiNv/Uc7FpnDDnkj1zQMYPMlf
+	 yT37R7hsH3nIw==
 From: cel@kernel.org
 To: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Anna Schumaker <anna@kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,
 	Jeff Layton <jlayton@kernel.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH v4 5/7] NFS: Implement NFSv4.2's OFFLOAD_STATUS operation
-Date: Fri, 31 Jan 2025 19:34:45 -0500
-Message-ID: <20250201003447.54614-6-cel@kernel.org>
+	Benjamin Coddington <bcodding@redhat.com>
+Subject: [PATCH v4 6/7] NFS: Use NFSv4.2's OFFLOAD_STATUS operation
+Date: Fri, 31 Jan 2025 19:34:46 -0500
+Message-ID: <20250201003447.54614-7-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250201003447.54614-1-cel@kernel.org>
 References: <20250201003447.54614-1-cel@kernel.org>
@@ -65,170 +65,156 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Enable the Linux NFS client to observe the progress of an offloaded
-asynchronous COPY operation. This new operation will be put to use
-in a subsequent patch.
+We've found that there are cases where a transport disconnection
+results in the loss of callback RPCs. NFS servers typically do not
+retransmit callback operations after a disconnect.
 
+This can be a problem for the Linux NFS client's current
+implementation of asynchronous COPY, which waits indefinitely for a
+CB_OFFLOAD callback. If a transport disconnect occurs while an async
+COPY is running, there's a good chance the client will never get the
+completing CB_OFFLOAD.
+
+Fix this by implementing the OFFLOAD_STATUS operation so that the
+Linux NFS client can probe the NFS server if it doesn't see a
+CB_OFFLOAD in a reasonable amount of time.
+
+This patch implements a simplistic check. As future work, the client
+might also be able to detect whether there is no forward progress on
+the request asynchronous COPY operation, and CANCEL it.
+
+Suggested-by: Olga Kornievskaia <okorniev@redhat.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218735
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Reviewed-by: Olga Kornievskaia <okorniev@redhat.com>
 Tested-by: Olga Kornievskaia <okorniev@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfs42proc.c        | 105 ++++++++++++++++++++++++++++++++++++++
- fs/nfs/nfs4proc.c         |   3 +-
- include/linux/nfs_fs_sb.h |   1 +
- 3 files changed, 108 insertions(+), 1 deletion(-)
+ fs/nfs/nfs42proc.c | 73 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 62 insertions(+), 11 deletions(-)
 
 diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 9d716907cf30..c560801aae96 100644
+index c560801aae96..f56558c58fe9 100644
 --- a/fs/nfs/nfs42proc.c
 +++ b/fs/nfs/nfs42proc.c
-@@ -21,6 +21,8 @@
- 
- #define NFSDBG_FACILITY NFSDBG_PROC
- static int nfs42_do_offload_cancel_async(struct file *dst, nfs4_stateid *std);
-+static int nfs42_proc_offload_status(struct file *file, nfs4_stateid *stateid,
-+				     u64 *copied);
- 
- static void nfs42_set_netaddr(struct file *filep, struct nfs42_netaddr *naddr)
- {
-@@ -582,6 +584,109 @@ static int nfs42_do_offload_cancel_async(struct file *dst,
- 	return status;
+@@ -175,6 +175,20 @@ int nfs42_proc_deallocate(struct file *filep, loff_t offset, loff_t len)
+ 	return err;
  }
  
-+static int
-+_nfs42_proc_offload_status(struct nfs_server *server, struct file *file,
-+			   struct nfs42_offload_data *data)
++static void nfs4_copy_dequeue_callback(struct nfs_server *dst_server,
++				       struct nfs_server *src_server,
++				       struct nfs4_copy_state *copy)
 +{
-+	struct nfs_open_context *ctx = nfs_file_open_context(file);
-+	struct rpc_message msg = {
-+		.rpc_proc	= &nfs4_procedures[NFSPROC4_CLNT_OFFLOAD_STATUS],
-+		.rpc_argp	= &data->args,
-+		.rpc_resp	= &data->res,
-+		.rpc_cred	= ctx->cred,
-+	};
-+	int status;
++	spin_lock(&dst_server->nfs_client->cl_lock);
++	list_del_init(&copy->copies);
++	spin_unlock(&dst_server->nfs_client->cl_lock);
++	if (dst_server != src_server) {
++		spin_lock(&src_server->nfs_client->cl_lock);
++		list_del_init(&copy->src_copies);
++		spin_unlock(&src_server->nfs_client->cl_lock);
++	}
++}
 +
-+	status = nfs4_call_sync(server->client, server, &msg,
-+				&data->args.osa_seq_args,
-+				&data->res.osr_seq_res, 1);
+ static int handle_async_copy(struct nfs42_copy_res *res,
+ 			     struct nfs_server *dst_server,
+ 			     struct nfs_server *src_server,
+@@ -184,9 +198,13 @@ static int handle_async_copy(struct nfs42_copy_res *res,
+ 			     bool *restart)
+ {
+ 	struct nfs4_copy_state *copy, *tmp_copy = NULL, *iter;
+-	int status = NFS4_OK;
+ 	struct nfs_open_context *dst_ctx = nfs_file_open_context(dst);
+ 	struct nfs_open_context *src_ctx = nfs_file_open_context(src);
++	struct nfs_client *clp = dst_server->nfs_client;
++	unsigned long timeout = clp->cl_lease_time >> 1;
++	int status = NFS4_OK;
++	bool retry = false;
++	u64 copied;
+ 
+ 	copy = kzalloc(sizeof(struct nfs4_copy_state), GFP_KERNEL);
+ 	if (!copy)
+@@ -224,15 +242,12 @@ static int handle_async_copy(struct nfs42_copy_res *res,
+ 		spin_unlock(&src_server->nfs_client->cl_lock);
+ 	}
+ 
+-	status = wait_for_completion_interruptible(&copy->completion);
+-	spin_lock(&dst_server->nfs_client->cl_lock);
+-	list_del_init(&copy->copies);
+-	spin_unlock(&dst_server->nfs_client->cl_lock);
+-	if (dst_server != src_server) {
+-		spin_lock(&src_server->nfs_client->cl_lock);
+-		list_del_init(&copy->src_copies);
+-		spin_unlock(&src_server->nfs_client->cl_lock);
+-	}
++wait:
++	status = wait_for_completion_interruptible_timeout(&copy->completion,
++							   timeout);
++	if (!status)
++		goto timeout;
++	nfs4_copy_dequeue_callback(dst_server, src_server, copy);
+ 	if (status == -ERESTARTSYS) {
+ 		goto out_cancel;
+ 	} else if (copy->flags || copy->error == NFS4ERR_PARTNER_NO_AUTH) {
+@@ -242,6 +257,7 @@ static int handle_async_copy(struct nfs42_copy_res *res,
+ 	}
+ out:
+ 	res->write_res.count = copy->count;
++	/* Copy out the updated write verifier provided by CB_OFFLOAD. */
+ 	memcpy(&res->write_res.verifier, &copy->verf, sizeof(copy->verf));
+ 	status = -copy->error;
+ 
+@@ -253,6 +269,41 @@ static int handle_async_copy(struct nfs42_copy_res *res,
+ 	if (!nfs42_files_from_same_server(src, dst))
+ 		nfs42_do_offload_cancel_async(src, src_stateid);
+ 	goto out_free;
++timeout:
++	if (retry) {
++		res->write_res.count = 0;
++		status = -EOPNOTSUPP;	/* Fall back to READ/WRITE copy. */
++		goto out_free;
++	}
++	status = nfs42_proc_offload_status(dst, &copy->stateid, &copied);
++	if (status == -EINPROGRESS)
++		goto wait;
++	nfs4_copy_dequeue_callback(dst_server, src_server, copy);
 +	switch (status) {
 +	case 0:
++		/* The server recognized the copy stateid. Don't overwrite
++		 * the verifier returned in the COPY result. */
++		res->write_res.count = copied;
 +		break;
-+
-+	case -NFS4ERR_ADMIN_REVOKED:
-+	case -NFS4ERR_BAD_STATEID:
-+	case -NFS4ERR_OLD_STATEID:
-+		/*
-+		 * Server does not recognize the COPY stateid. CB_OFFLOAD
-+		 * could have purged it, or server might have rebooted.
-+		 * Since COPY stateids don't have an associated inode,
-+		 * avoid triggering state recovery.
-+		 */
-+		status = -EBADF;
++	case -EREMOTEIO:
++		/* COPY operation failed on the server, though it could
++		 * have made some progress. */
++		res->write_res.count = copied;
++		status = -EOPNOTSUPP;	/* Fall back to READ/WRITE copy. */
 +		break;
-+	case -NFS4ERR_NOTSUPP:
-+	case -ENOTSUPP:
++	case -EBADF:
++		/* Server did not recognize the copy stateid, but the
++		 * CB_OFFLOAD request could have been received while the
++		 * client waited for OFFLOAD_STATUS reply. */
++		retry = true;
++		goto wait;
 +	case -EOPNOTSUPP:
-+		server->caps &= ~NFS_CAP_OFFLOAD_STATUS;
-+		status = -EOPNOTSUPP;
-+		break;
++		/* RFC 7862 REQUIREs server to support OFFLOAD_STATUS when
++		 * it has signed up for an async COPY, so server is not
++		 * spec-compliant. Fall back to READ/WRITE copy. */
++		res->write_res.count = 0;
 +	}
-+
-+	return status;
-+}
-+
-+/**
-+ * nfs42_proc_offload_status - Poll completion status of an async copy operation
-+ * @dst: handle of file being copied into
-+ * @stateid: copy stateid (from async COPY result)
-+ * @copied: OUT: number of bytes copied so far
-+ *
-+ * Return values:
-+ *   %0: Server returned an NFS4_OK completion status
-+ *   %-EINPROGRESS: Server returned no completion status
-+ *   %-EREMOTEIO: Server returned an error completion status
-+ *   %-EBADF: Server did not recognize the copy stateid
-+ *   %-EOPNOTSUPP: Server does not support OFFLOAD_STATUS
-+ *   %-ERESTARTSYS: Wait interrupted by signal
-+ *
-+ * Other negative errnos indicate the client could not complete the
-+ * request.
-+ */
-+static int __maybe_unused
-+nfs42_proc_offload_status(struct file *dst, nfs4_stateid *stateid, u64 *copied)
-+{
-+	struct inode *inode = file_inode(dst);
-+	struct nfs_server *server = NFS_SERVER(inode);
-+	struct nfs4_exception exception = {
-+		.inode = inode,
-+	};
-+	struct nfs42_offload_data *data;
-+	int status;
-+
-+	*copied = 0;
-+
-+	if (!(server->caps & NFS_CAP_OFFLOAD_STATUS))
-+		return -EOPNOTSUPP;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+	data->seq_server = server;
-+	data->args.osa_src_fh = NFS_FH(inode);
-+	memcpy(&data->args.osa_stateid, stateid,
-+		sizeof(data->args.osa_stateid));
-+	exception.stateid = &data->args.osa_stateid;
-+	do {
-+		status = _nfs42_proc_offload_status(server, dst, data);
-+		if (status == -EOPNOTSUPP)
-+			goto out;
-+		status = nfs4_handle_exception(server, status, &exception);
-+	} while (exception.retry);
-+	if (status)
-+		goto out;
-+
-+	*copied = data->res.osr_count;
-+	if (!data->res.complete_count)
-+		status = -EINPROGRESS;
-+	else if (data->res.osr_complete != NFS_OK)
-+		status = -EREMOTEIO;
-+
-+out:
-+	kfree(data);
-+	return status;
-+}
-+
- static int _nfs42_proc_copy_notify(struct file *src, struct file *dst,
- 				   struct nfs42_copy_notify_args *args,
- 				   struct nfs42_copy_notify_res *res)
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 405f17e6e0b4..973b8d8fa98b 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10769,7 +10769,8 @@ static const struct nfs4_minor_version_ops nfs_v4_2_minor_ops = {
- 		| NFS_CAP_CLONE
- 		| NFS_CAP_LAYOUTERROR
- 		| NFS_CAP_READ_PLUS
--		| NFS_CAP_MOVEABLE,
-+		| NFS_CAP_MOVEABLE
-+		| NFS_CAP_OFFLOAD_STATUS,
- 	.init_client = nfs41_init_client,
- 	.shutdown_client = nfs41_shutdown_client,
- 	.match_stateid = nfs41_match_stateid,
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index b804346a9741..946ca1c28773 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -290,6 +290,7 @@ struct nfs_server {
- #define NFS_CAP_CASE_INSENSITIVE	(1U << 6)
- #define NFS_CAP_CASE_PRESERVING	(1U << 7)
- #define NFS_CAP_REBOOT_LAYOUTRETURN	(1U << 8)
-+#define NFS_CAP_OFFLOAD_STATUS	(1U << 9)
- #define NFS_CAP_OPEN_XOR	(1U << 12)
- #define NFS_CAP_DELEGTIME	(1U << 13)
- #define NFS_CAP_POSIX_LOCK	(1U << 14)
++	goto out_free;
+ }
+ 
+ static int process_copy_commit(struct file *dst, loff_t pos_dst,
+@@ -643,7 +694,7 @@ _nfs42_proc_offload_status(struct nfs_server *server, struct file *file,
+  * Other negative errnos indicate the client could not complete the
+  * request.
+  */
+-static int __maybe_unused
++static int
+ nfs42_proc_offload_status(struct file *dst, nfs4_stateid *stateid, u64 *copied)
+ {
+ 	struct inode *inode = file_inode(dst);
 -- 
 2.47.0
 
