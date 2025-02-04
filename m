@@ -1,165 +1,104 @@
-Return-Path: <linux-nfs+bounces-9867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A08A9A26A81
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2025 04:05:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E419BA2737B
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2025 14:55:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD3E17A3EDC
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2025 03:04:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BD7C7A485B
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Feb 2025 13:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5734155759;
-	Tue,  4 Feb 2025 03:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CBCA20D504;
+	Tue,  4 Feb 2025 13:29:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkwJURUI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YznYaHKn"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651C714AD20;
-	Tue,  4 Feb 2025 03:03:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5778320C494
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Feb 2025 13:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738638225; cv=none; b=LJgwz4cRPVNMymt7w2mJY6FkTYg/ih3JGFP+EH3FWW3saIkWmNjiSY2T/cKm2si1LcR+ycBAacMqDGxqr3Uu3RZCKXIVvxqUZrnKzNJnNZLsUtm3tRirIUbERr59wTXadvTzYiyEnm3bivxN1hSx4gIeoLs0F9vLY6jU5dZctJ0=
+	t=1738675780; cv=none; b=QN04ZjOEXyy6gbBcKCFVqu+pJV4wNmwcA4ljntP7TrZ51u/OJFTlRKP5PlDEompt8VAanUdjlub3ypE1t49yO13L+JBHhZvkpB7+XrchVS/17GjOvuQvPZHTpdW6xEykhd5uLhOE4lR+gm02jsKX5h7Df/jLA0QiabhqSDyn5pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738638225; c=relaxed/simple;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eoHO131zES5aG6T3E0F/N6pqtPPP/vbXLnLugyokXY/qcMdsg6ohz/RVCbjoFNTywGcbvo7d2K9vNEIOMHal7w1/ojXFVRVRlHWpRME5J9C+FY8FEo6/wHAotYXVxbj/t6EPIBOLWDxUfhJxJChvHvflyBfHKV72GndVMxLAF9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkwJURUI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322B7C4CEE0;
-	Tue,  4 Feb 2025 03:03:39 +0000 (UTC)
+	s=arc-20240116; t=1738675780; c=relaxed/simple;
+	bh=PY/07+fcfLRpPtWcZdrXgrHu0OD5sEI6Rb3Frq8x2jM=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=u1ugx47b4qbZnlr/t6OzjpjsMbP0Yv1oI4hMob9zEDrPqDUm9T69EcCyKVj09SquHrZBk9XKpWWVIGGSj3Z16vppgHSBlP9F9YMr26ECP4yexkVgBLlqfh+F2243IJMeYrJjzm6LQVvPiodPO6MmgqjzanrPN2/J1f1KgvucAWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YznYaHKn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96FAC4CEE2;
+	Tue,  4 Feb 2025 13:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738638224;
-	bh=zfB93JeM7MiYyZSDcH+Cv62cIp0qVV5wlF6CFxF1K18=;
-	h=Date:From:To:Cc:Subject:From;
-	b=CkwJURUI28A9HkD3AJVyabrekuC939zg3Z/0a4mA95JiCLvxBk3jOwJi8KXYT+4Ge
-	 x/pQKjlbJLCMz7nvIiqVEgfxhb1exR/wthN/l6owOa7xG93iyWdbOILNYlEi+YJ27X
-	 6QOONtrPNxrETRW5XsvXAOV5dPkygHvqEtSHVU9votsedau7dBYeZEWgj2tOlK6rG5
-	 xWDkIy1jP3K/IvtzYaHj/NfjqMlziVLJzDzBdoZn2gJLduCp9sWy/vJUk1wzGmM4uP
-	 wHZShmNwGxwdiFf8/ZFKL50Eo0QhFI9RoW06gB9FHXv1wMLLwwfjdrfbKr9AS1RO9M
-	 gfKwJnmsYtQBQ==
-Date: Tue, 4 Feb 2025 13:33:36 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [RESEND PATCH][next] fs: nfs: acl: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z6GDiLZo5u4CqxBr@kspp>
+	s=k20201202; t=1738675779;
+	bh=PY/07+fcfLRpPtWcZdrXgrHu0OD5sEI6Rb3Frq8x2jM=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=YznYaHKnv7N/+kdy0yHFz+sd5eF24YeyHYvouHkJvEFkddqEN8zyVS509FIk6FZhY
+	 0ErVdoQUBtMwb0YL6mf9qRuImXo5O9gIlaYSSuwCBM1g4Kej5kCUD6r0X6hgXmphDk
+	 dAtb6JDibvSvAzzzGuA/ljZhUeLhANnWgj9oXkxGw4XBpFd/oFRAoH485/91eRU2qX
+	 4DzKSUX7Z67mTFfWlcZUBwIDUR/qrLTOQAv1BqBo1aOoDwKs65nvFULTbffMDvFr5b
+	 T4omc7i5PoJtk9HKxOFzSAgRGX4YAQJ/Q27fcHk/co1reU42BMCu0FVWOjzHFP+6YV
+	 4VmIvhsO9EI8Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F0393380AA67;
+	Tue,  4 Feb 2025 13:30:07 +0000 (UTC)
+From: "rik.theys via Bugspray Bot" <bugbot@kernel.org>
+Date: Tue, 04 Feb 2025 13:30:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: linux-nfs@vger.kernel.org, cel@kernel.org, aglo@umich.edu, 
+ trondmy@kernel.org, anna@kernel.org, jlayton@kernel.org
+Message-ID: <20250204-b219737c7-947e192554be@bugzilla.kernel.org>
+In-Reply-To: <20250130-b219737c0-091f27de8b7a@bugzilla.kernel.org>
+References: <20250130-b219737c0-091f27de8b7a@bugzilla.kernel.org>
+Subject: Re: warning in nfsd4_cb_done
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+rik.theys writes via Kernel.org Bugzilla:
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of other structs, we use the `struct_group_tagged()` helper
-to create a new tagged `struct posix_acl_hdr`. This structure
-groups together all the members of the flexible `struct posix_acl`
-except the flexible array.
+Hi,
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct member currently causing
-trouble from `struct posix_acl` to `struct posix_acl_hdr`.
+(In reply to Chuck Lever from comment #4)
+> (In reply to Bugspray Bot from comment #3)
+> > Olga Kornievskaia <aglo@umich.edu> replies to comment #1:
+> > 
+> > > First issue is the explicit use of NFS4ERR_BAD_XDR in the CB_GETATTR
+> reply
+> > > decoder. Should be EIO instead.
+> > >
+> > > Second issue is the CB_GETATTR reply decoder does not seem capable of
+> > > handling a non-zero status code in the reply.
+> > >
+> > > Third issue is whether NFS4ERR_BADHANDLE means the server requested a
+> > > CB_GETATTR for the wrong file, or if it is an expected situation.
+> > 
+> > Isn't this because 6.12.x is still missing the patch "NFSD: fix
+> > decoding in nfs4_xdr_dec_cb_getattr" that just went into 6.14?
+> 
+> Yes, second and third issues are addressed by 1b3e26a5ccbf ("NFSD: fix
+> decoding in nfs4_xdr_dec_cb_getattr").
+> 
+> The first issue has not yet been addressed upstream.
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+Is it possible this patch has not (yet) been sent to stable@vger.kernel.org so it ends up in 6.12.y?
 
-This approach avoids having to implement `struct posix_acl_hdr` as a
-completely separate structure, thus preventing having to maintain two
-independent but basically identical structures, closing the door to
-potential bugs in the future.
+Regards,
+Rik
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
-
-So, with these changes, fix the following warning:
-
-fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/nfs_common/nfsacl.c    |  8 +++++---
- include/linux/posix_acl.h | 11 ++++++++---
- 2 files changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
-index ea382b75b26c..e2eaac14fd8e 100644
---- a/fs/nfs_common/nfsacl.c
-+++ b/fs/nfs_common/nfsacl.c
-@@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
- };
- 
- struct nfsacl_simple_acl {
--	struct posix_acl acl;
-+	struct posix_acl_hdr acl;
- 	struct posix_acl_entry ace[4];
- };
- 
-@@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int base, struct inode *inode,
- 	    xdr_encode_word(buf, base, entries))
- 		return -EINVAL;
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-@@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, struct inode *inode,
- 		return false;
- 
- 	if (encode_entries && acl && acl->a_count == 3) {
--		struct posix_acl *acl2 = &aclbuf.acl;
-+		struct posix_acl *acl2 =
-+			container_of(&aclbuf.acl, struct posix_acl, hdr);
- 
- 		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
- 		 * invoked in contexts where a memory allocation failure is
-diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
-index e2d47eb1a7f3..62d497763e25 100644
---- a/include/linux/posix_acl.h
-+++ b/include/linux/posix_acl.h
-@@ -27,11 +27,16 @@ struct posix_acl_entry {
- };
- 
- struct posix_acl {
--	refcount_t		a_refcount;
--	unsigned int		a_count;
--	struct rcu_head		a_rcu;
-+	/* New members MUST be added within the struct_group() macro below. */
-+	struct_group_tagged(posix_acl_hdr, hdr,
-+		refcount_t		a_refcount;
-+		unsigned int		a_count;
-+		struct rcu_head		a_rcu;
-+	);
- 	struct posix_acl_entry	a_entries[] __counted_by(a_count);
- };
-+static_assert(offsetof(struct posix_acl, a_entries) == sizeof(struct posix_acl_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- #define FOREACH_ACL_ENTRY(pa, acl, pe) \
- 	for(pa=(acl)->a_entries, pe=pa+(acl)->a_count; pa<pe; pa++)
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219737#c7
+You can reply to this message to join the discussion.
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
 
