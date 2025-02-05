@@ -1,69 +1,69 @@
-Return-Path: <linux-nfs+bounces-9886-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9887-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63781A2952A
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 16:46:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E776AA29519
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 16:43:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BB7BB3A28A7
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 15:43:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 784BF165F6D
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 15:43:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4903F1494DF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A227118A6BD;
 	Wed,  5 Feb 2025 15:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NI5qX61p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9Umfx9+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF9015FA7B
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 15:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094AB18952C
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 15:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738770231; cv=none; b=LTdnDSB3ZMRiVODWro2ccvVhGEQJQpEFh51O2HvQFzIptvtNsNydo6PIEuRroMYCuZIMRq4ZrdwYzkN0wKnd9iEgPId8YsP8L9IsmQOBuBi5EWb9+LhRai+4nBbIg1CUWaql4ACGQDE1JZLS2pS0sGQUocvoB+fAzLI4w+O3TFA=
+	t=1738770231; cv=none; b=sXyIWVtG4Fe+7Lxu21h39Ozp2wjCEfh0tMW+f+3y5xy4wsS7PKp+Wya/e5Z5P0+49v3ZJWePwzU27tEtB5g2LjHRCnqgrYfecOey/PQ9oEchkHPXYru8W0+gQyvlYm7rgQlbWjeK4h0veAhEtrXKm3OukRcWF5k/fYEvqKl1zfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738770231; c=relaxed/simple;
-	bh=351tppkOywBRvVcFmrA7iYU0pm3YcCeEvcDR4U3+ZhU=;
+	bh=d5gRQRQJHc7bCxRTVTalqlk70Zkgm6gwkVcduipd9iE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fo2IotkY4YT4iiYolFULwjJ/W3iJwU5mf+e/4aEpE76gRh5TEneCbGZAp7Wc03CjhJrXAAmSt6ZMGy60XojmwX7BkX0vklIFTHxujtUF9FzXUe9/Bi+B+oKQkHVNf+ac0k001Kk+GsNYNWqyqu+s6XwRj7vXQaM5dCwRin3Nvck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NI5qX61p; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=NeMyvGRvI6Zo1ZM/AiOGew4Saw7wrq4KuQXGFlKcNJzj2WO2XImUnkRGlbtiGEhfpUfgbH3uE8rCEanx3Unq1+Qlt5XEoTaVfDbbB8BAPJj5yjzjeacAlc1XQVv10rqgZwigIpik+LDV5gtXrBBLWh2U+eDZD9aMQg358fIhyjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z9Umfx9+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738770226;
+	s=mimecast20190719; t=1738770228;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9ue53weQJz0q6CJxCblQXAliUuP9Z0KF8YdE7C3UHcw=;
-	b=NI5qX61pIFT5kz07ONWjMz3Wt/uWP7WoXQxtkhnuW0ez2E3bwx7GBek2HKnp9BTAzlcsIa
-	zxuT41yOyndsRS6V+6nUZabagVzIPRhkidUkPZ0qmvfp8D09RlA1nPjlKFVXg7X/mE3iZi
-	00fmim2Hg0QeeiSqnsNr69/RuouvnKs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=qiECIRWiChw3CvjpDSmrgdHpXeGdFVubGgfvtUUJPu0=;
+	b=Z9Umfx9+gZliQyY01s58LmEAt3VfXnOP3ojimcnwfO64o90mX/lxPvO0QucyDTACNQoRmm
+	rIsvHjWFQCNv7yrkwgVALNzmlpGwq2F/VhF2B9GZ0932vO2cCnKepq1H1kuCouJ4ePBhKN
+	Q2R3ZFUtcZR+AJ7fD8ddt4nOhA3Ycgg=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-SmjP17B2O4GcU8a2hqWPfA-1; Wed,
- 05 Feb 2025 10:43:45 -0500
-X-MC-Unique: SmjP17B2O4GcU8a2hqWPfA-1
-X-Mimecast-MFC-AGG-ID: SmjP17B2O4GcU8a2hqWPfA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-208-Yxpgh8KFNpGBKeBx7j_6xA-1; Wed,
+ 05 Feb 2025 10:43:47 -0500
+X-MC-Unique: Yxpgh8KFNpGBKeBx7j_6xA-1
+X-Mimecast-MFC-AGG-ID: Yxpgh8KFNpGBKeBx7j_6xA
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 713D51956094
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 15:43:44 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D144B1956086
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 15:43:46 +0000 (UTC)
 Received: from okorniev-mac.redhat.com (unknown [10.22.82.81])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8804E1956051;
-	Wed,  5 Feb 2025 15:43:43 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E7E73195608D;
+	Wed,  5 Feb 2025 15:43:45 +0000 (UTC)
 From: Olga Kornievskaia <okorniev@redhat.com>
 To: steved@redhat.com
 Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH 3/4] nfs-utils: nfsdctl: cleanup listeners if some failed
-Date: Wed,  5 Feb 2025 10:43:32 -0500
-Message-Id: <20250205154333.58646-4-okorniev@redhat.com>
+Subject: [PATCH 4/4] nfs-utils: nfsdctl: fix host-limited add listener
+Date: Wed,  5 Feb 2025 10:43:33 -0500
+Message-Id: <20250205154333.58646-5-okorniev@redhat.com>
 In-Reply-To: <20250205154333.58646-1-okorniev@redhat.com>
 References: <20250205154333.58646-1-okorniev@redhat.com>
 Precedence: bulk
@@ -75,48 +75,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-If we couldn't start some listeners, then make sure to remove
-already added listeners.
+If in nfs.conf there was "host=<hostname>" configuration that
+limited knfsd to listen on a particular hostname, then
+add_listener() had to fit <type>:<hostname>:<port> into
+144bytes to create a listener or be truncated which leads
+to failure of said listener creation.
+
+Instead allocate needed memory dynamically to allow for
+long hostname values.
 
 Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
 ---
- utils/nfsdctl/nfsdctl.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ utils/nfsdctl/nfsdctl.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index 624243dc..64ce44a1 100644
+index 64ce44a1..05fecc71 100644
 --- a/utils/nfsdctl/nfsdctl.c
 +++ b/utils/nfsdctl/nfsdctl.c
-@@ -1413,6 +1413,7 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- 	struct conf_list *thread_str;
- 	struct conf_list_node *n;
- 	char *scope, *pool_mode;
-+	bool failed_listeners = false;
+@@ -1283,21 +1283,26 @@ static int pool_mode_func(struct nl_sock *sock, int argc, char **argv)
+ 	return pool_mode_doit(sock, cmd, pool_mode);
+ }
  
- 	optind = 1;
- 	while ((opt = getopt_long(argc, argv, "h", help_only_options, NULL)) != -1) {
-@@ -1447,7 +1448,7 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- 		return ret;
- 	ret = set_listeners(sock);
- 	if (ret)
--		return ret;
-+		failed_listeners = true;
+-#define MAX_LISTENER_LEN (64 * 2 + 16)
+-
+ static int
+ add_listener(const char *netid, const char *addr, const char *port)
+ {
+-		char buf[MAX_LISTENER_LEN];
++		char *buf;
++		int ret;
++		int size = strlen(addr) + 1 + 16;
  
- 	grace = conf_get_num("nfsd", "grace-time", 0);
- 	lease = conf_get_num("nfsd", "lease-time", 0);
-@@ -1456,6 +1457,12 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
- 	thread_str = conf_get_list("nfsd", "threads");
- 	pools = thread_str ? thread_str->cnt : 1;
++		buf = calloc(size, sizeof(int));
++		if (!buf)
++			return -ENOMEM;
+ 		if (strchr(addr, ':'))
+-			snprintf(buf, MAX_LISTENER_LEN, "+%s:[%s]:%s",
++			snprintf(buf, size, "+%s:[%s]:%s",
+ 				 netid, addr, port);
+ 		else
+-			snprintf(buf, MAX_LISTENER_LEN, "+%s:%s:%s",
++			snprintf(buf, size, "+%s:%s:%s",
+ 				 netid, addr, port);
+-		buf[MAX_LISTENER_LEN - 1] = '\0';
+-		return update_listeners(buf);
++		buf[size - 1] = '\0';
++		ret = update_listeners(buf);
++		free(buf);
++		return ret;
+ }
  
-+	/* if we fail to start one or more listeners, then cleanup by
-+	 * starting 0 knfsd threads
-+	 */
-+	if (failed_listeners)
-+		pools = 0;
-+
- 	threads = calloc(pools, sizeof(int));
- 	if (!threads)
- 		return -ENOMEM;
+ static void
 -- 
 2.47.1
 
