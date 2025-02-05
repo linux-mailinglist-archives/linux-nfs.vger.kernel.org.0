@@ -1,186 +1,201 @@
-Return-Path: <linux-nfs+bounces-9889-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9890-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEECEA29CF0
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 23:53:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48B8AA29D22
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 00:04:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35B1E3A861C
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 22:53:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98CF81888F00
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 23:04:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97F6321772B;
-	Wed,  5 Feb 2025 22:53:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08AC91519B4;
+	Wed,  5 Feb 2025 23:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N7IJhA7I"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mxCJV1HR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vDtca0E0";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mxCJV1HR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vDtca0E0"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8A01DD526
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 22:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1621121C198
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Feb 2025 23:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738796009; cv=none; b=gZWS0LeIsUTDwcmb/wQcsI6+E+EwFa0ifEOinHx+8tdIwtNsokAd68md9MbPWCNheu97YhTcWLyL0xSQJiBANixD4hIux+SeyytI0+s42KUoVAggmCpBjLfUkOPKfKvuKLz6C+xlW8gWsosWSeqEoEJLMJaQUE1+n3Bp3ixmyq0=
+	t=1738796674; cv=none; b=ImaPFCoXQ9Z2AgGgaL6DHR+uizvSXDSxonaMzgTnVbY+9G6fsJso/dVE/8ECvmKev6Axq29B8SoyGnTzgXYQqWes631+UCRSpIg68hW4CNfDz3T1zF07yqs5bIyHYYNSrLsZ2/tF61/aV2Xurs1AoCukmX86lXlZNFpByM2GPok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738796009; c=relaxed/simple;
-	bh=mtDpfiVo4tTjylot6OS7Ks/3ddPyFsUwYn/UAEx63vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S/nuOh/cOcENkExj5jEGrwbXuCSb00lb4Oc+V/gRKjwVP/26d8JzR9G2tqC+FUdqpv+temDclmwGkjepIS0kHclXGJOB12s7Ijbw3p+DZuFbJijqEVe3VCBMgmC00HcRWdef8kQV+6oGr4TpZzj0u88QkS9HZ2nYeZmjV5BY4q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N7IJhA7I; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738796006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	s=arc-20240116; t=1738796674; c=relaxed/simple;
+	bh=XHHXVm0/MYdanNmkfTo8OnCOVEhKrsKjzrsHuFcNxNQ=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=l9VgBB03M7d9G3EzBhHMkbJEMYoRPw2w/22GmF557nvHKVxyHXlNONjWIaLSR6ysEo4HX134rhEjEGKh/bD4/pPM2wQ3q5B4t5ulovSrvexQ+OSJr6yyEmRDqWFQDhIV+sOxAt7Yjza/PDhpFawj0aJjd0O7EZkZbd17/pRZFCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mxCJV1HR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vDtca0E0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mxCJV1HR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vDtca0E0; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2F9AE1F381;
+	Wed,  5 Feb 2025 23:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738796671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=okf+fjYrtjoS/qwV6U7aSDZ7id+MsBcC+hJk5BMNvuQ=;
-	b=N7IJhA7IVEYUdi9plDalTBeb3k6hu9K/hwMddt33zRApoWH8wU/PeAHIWo03+IC2+cDxbN
-	kxMcscHyRPIAZjAXj9aNnLZUrQmoDMnlh9b2pQStwq9GTEMEzpQ+2TIQKQMGSrWCJjgxYm
-	4VZ8SxR9rI7vE75fPVeV+p94KvQvF/k=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-NQFv1m9CPxOtoc18njUrIQ-1; Wed, 05 Feb 2025 17:53:25 -0500
-X-MC-Unique: NQFv1m9CPxOtoc18njUrIQ-1
-X-Mimecast-MFC-AGG-ID: NQFv1m9CPxOtoc18njUrIQ
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7b6e7f0735aso45064685a.1
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Feb 2025 14:53:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738796005; x=1739400805;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=okf+fjYrtjoS/qwV6U7aSDZ7id+MsBcC+hJk5BMNvuQ=;
-        b=itnCIPAzV5AH6q6xlHmpZZd6AiuXUhIYQ/ysSa4g2hAVzAfTZtwjcj6IpV1d3qbXU7
-         eQ8PwewA6DyI0dbgXy1lO7SqkSL/RSeks9i/6G4Ma6bUidenidvevcdJk+fTBoXtWHoO
-         fjvKcrZGF7nfas+RZ1Kyvx9q3jJWR5QSK+eBUElGdux29TA0ZGIvPY2VFTDXe8pwgfgw
-         +P4raimz3EEJ8OgfpPna4tuN7cPjl3jrT5XT+SIpmki3Z/XdS+iNQx5d1YTZhVYLZsyB
-         yczl8WEDMbWzniH8Gl1ctQZK6kssnPHJWwYs+S9QpVhMOSSuSBHXxNxd5JcIMpuSv4vG
-         DqOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCvEZjl6NbtN+0PydLOotfmDYuWpRutdg3yKga7cCPHKs6OisZo0g2FCHU8oVzbG710fE8TPCth7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEE/3BmYSivbcHxu2G9+bIEUp5wpAzlR99ZcW6Nlsil98gsqmb
-	VLjS1SFubafXYaEiSxR7ePTFxkF6AplyVtOdleHYX6pPdpLbnATWnorPskhbsxYBG3AWQrwddFi
-	nkTbDNHxkFcl0UPItaa6OXO2XxsnLMgu+L4kplg0dfx2BmcijvLkyzL7ZyA==
-X-Gm-Gg: ASbGncttCHu1+b8h4JqtzOzqSYYLr0dItzNd+popuvFV6wJNQ3tFyiuqc9MG+uuqNMT
-	XhMRc3B+Dvvf8dVryNYfmLSr/KyJhQTgnANzc1BgmTirFyAyx0xtvr7WlRHJxIh9Deo0XmUDNcd
-	ykAM/s7Uwh6lguTL+CWX5IicHI0qoNhVoA/qnExRmZWZGhoe2Ag7ZfnHVFOb1fCx5GkMl9g5Xfx
-	BZWh48vMscwJCOgrdt+gd9EUswlz2Y+892KqzBEkQPMeoEDzAS37bP4pDqzCtgBj6J5eTx7dql9
-	zOTA2g==
-X-Received: by 2002:a05:620a:278e:b0:7b6:e8c3:4b60 with SMTP id af79cd13be357-7c039fc3ef0mr576874485a.28.1738796004838;
-        Wed, 05 Feb 2025 14:53:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEubxBAgIdalzdDotzSe6k/lUZIsr3AB9y5F9NG+G0glWQCXjp7meSligR2YJMTh7oe15jb0w==
-X-Received: by 2002:a05:620a:278e:b0:7b6:e8c3:4b60 with SMTP id af79cd13be357-7c039fc3ef0mr576872785a.28.1738796004544;
-        Wed, 05 Feb 2025 14:53:24 -0800 (PST)
-Received: from [172.31.1.150] ([70.105.251.239])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c00a8d05ddsm797018885a.39.2025.02.05.14.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 14:53:23 -0800 (PST)
-Message-ID: <00dac34a-5123-4d65-ba4c-c5df481b69ef@redhat.com>
-Date: Wed, 5 Feb 2025 17:53:23 -0500
+	bh=5228Goui4mazjLfK2TThFdbjozqecMoeJg+S9cUbBlg=;
+	b=mxCJV1HRt0dwlHPoIvhTzRNBrs4XHsC0cAWNzQ/Cpu9aJUTAFLrkQQHNt2YJmDn4SNAfBk
+	nh/B7oSCa+8xuD8Zg+Pb5LOq+RXbOI+L2bighHM7+qMbfILgCGLrnju1i+fj97Q4kki1NO
+	ubrBIwzM5uXacUkdKWqiD0GedhgzA90=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738796671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5228Goui4mazjLfK2TThFdbjozqecMoeJg+S9cUbBlg=;
+	b=vDtca0E0B4G5YcP5mQKiLV1r0OOF5deyTHaUqfFWWf/h7WkgvYHDPzynzhX7K4v4BNqLeK
+	5LAGQG/WjXrZRAAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738796671; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5228Goui4mazjLfK2TThFdbjozqecMoeJg+S9cUbBlg=;
+	b=mxCJV1HRt0dwlHPoIvhTzRNBrs4XHsC0cAWNzQ/Cpu9aJUTAFLrkQQHNt2YJmDn4SNAfBk
+	nh/B7oSCa+8xuD8Zg+Pb5LOq+RXbOI+L2bighHM7+qMbfILgCGLrnju1i+fj97Q4kki1NO
+	ubrBIwzM5uXacUkdKWqiD0GedhgzA90=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738796671;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5228Goui4mazjLfK2TThFdbjozqecMoeJg+S9cUbBlg=;
+	b=vDtca0E0B4G5YcP5mQKiLV1r0OOF5deyTHaUqfFWWf/h7WkgvYHDPzynzhX7K4v4BNqLeK
+	5LAGQG/WjXrZRAAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B77D613694;
+	Wed,  5 Feb 2025 23:04:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 09TBGnzuo2c/IwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 05 Feb 2025 23:04:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH 0/8] mountstats/nfsiostat: bugfixes for iostat
-To: Frank Sorenson <sorenson@redhat.com>, linux-nfs@vger.kernel.org
-Cc: chuck.lever@oracle.com
-References: <20250130142008.3600334-1-sorenson@redhat.com>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250130142008.3600334-1-sorenson@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Dave Chinner" <david@fromorbit.com>
+Subject: Re: [PATCH 0/7] nfsd: filecache: change garbage collection lists
+In-reply-to: <20250127012257.1803314-1-neilb@suse.de>
+References: <20250127012257.1803314-1-neilb@suse.de>
+Date: Thu, 06 Feb 2025 10:04:25 +1100
+Message-id: <173879666534.22054.7515430207159287196@noble.neil.brown.name>
+X-Spam-Score: -4.28
+X-Spamd-Result: default: False [-4.28 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.18)[-0.882];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
 
+Hi Chuck,
+ what are you current thoughts on merging this series?
 
-On 1/30/25 9:19 AM, Frank Sorenson wrote:
-> This patchset is intended to fix several bugs in nfsiostat and
-> 'mountstats iostat', in particular when an <interval> is specified.
-> 
-> Specifically, the patches address the following issues when printing
-> multiple times:
-> 
-> * both nfsiostat and 'mountstats iostat':
->     - if <count> is also specified, the scripts sleep an additional
->       <interval> after printing <count> times, and parse mountstats
->       unnecessarily before checking the <count>
-> 
->     - if no nfs mounts are present when printing, the scripts output
->       a message that there are no nfs mounts, and exit immediately.
-> 
->       However, if multiple intervals are indicated, it makes more sense
->       to output the message and sleep until the next iteration; there
->       may be nfs mounts the next time through.
-> 
->     - if mountpoints are specified on the command-line, but are not
->       present during an iteration, the scripts crash.
-> 
-> 
->   * 'mountstats iostat':
->     - if an nfs filesystem is unmounted between iterations, the
->       script will crash attempting to reference the non-existent
->       mountpoint in the new mountstats file (or if another filesystem
->       type is mounted at that location, will instead crash while
->       comparing old and new stats)
-> 
->     - new nfs mounts are not detected
-> 
-> 
->   * nfsiostat:
->     - if a new nfs filesystem is mounted between iterations, the
->       script will crash attempting to reference the non-existent
->       mountpoint in the old mountstats file
-> 
->     - if a mountpoint is specified on the command-line, but topmost
->       mount there is not nfs, the script crashes while trying to
->       compare old and new stats
-> 
-> 
-> To address these issues, the patches do the following:
->   * when printing diff stats from previous iteration:
->     - verify that a device exists in the old mountstats before referencing it
->     - verify that both old and new fstypes are the same
-> 
->   * when filtering the current mountstats file:
->     - verify the device exists in the mountstats file before referencing it
->     - filter the list of nfs mountpoints each iostat iteration
-> 
->   * check for empty device list and output the 'No NFS mount points found'
->      message, but don't immediately exit the script
-> 
->   * merge the infinite loop and counted loop, and (for the counted loop)
->      decrement and check the count before sleeping and parsing the mountstats
->      file
-> 
-> 
-> Frank Sorenson (8):
->    mountstats/nfsiostat: add a function to return the fstype
->    mountstats: when printing iostats, verify that old and new types are
->      the same
->    nfsiostat: mirror how mountstats iostat prints the stats
->    nfsiostat: fix crash when filtering mountstats after unmount
->    nfsiostat: make comment explain mount/unmount more broadly
->    mountstats: filter for nfs mounts in a function, each iostat iteration
->    mountstats/nfsiostat: Move the checks for empty mountpoint list into
->      the print function
->    mountstats/nfsiostat: merge and rework the infinite and counted loops
-> 
->   tools/mountstats/mountstats.py | 102 ++++++++++++++++--------------
->   tools/nfs-iostat/nfs-iostat.py | 110 +++++++++++++--------------------
->   2 files changed, 100 insertions(+), 112 deletions(-)
-> 
-Frank... nice work... but I hate to break the news... with all
-these changes... You now own these commands! :-) Just ask mrchuck ;-)
+ One of my thoughts is that I now realise that
 
-Committed... (tag nfs-utils-2-8-3-rc5)
+Commit 0758a7212628 ("nfsd: drop the lock during filecache LRU scans")
 
-steved.
+in nfsd-next is bad.  If there are multiple nodes (and so multiple
+sublits in the list_lru) and if there are more than a few dozen files in
+the lru, then that patch results in the first sublist being completely
+freed before anything is done to the next.
+I think the best fix for backporting to -stable is to wrap a
+for_each_node_state((nid) around the while loop and using
+list_lru_count_node() and list_lru_walk_node().
+
+I could send a SQUASH patch for that and rebase this series on it.
+
+Thanks,
+NeilBrown
+
+
+On Mon, 27 Jan 2025, NeilBrown wrote:
+> [
+> davec added to cc incase I've said something incorrect about list_lru
+> 
+> Changes in this version:
+>   - no _bh locking
+>   - add name for a magic constant
+>   - remove unnecessary race-handling code
+>   - give a more meaningfule name for a lock for /proc/lock_stat
+>   - minor cleanups suggested by Jeff
+> 
+> ]
+> 
+> The nfsd filecache currently uses  list_lru for tracking files recently
+> used in NFSv3 requests which need to be "garbage collected" when they
+> have becoming idle - unused for 2-4 seconds.
+> 
+> I do not believe list_lru is a good tool for this.  It does not allow
+> the timeout which filecache requires so we have to add a timeout
+> mechanism which holds the list_lru lock while the whole list is scanned
+> looking for entries that haven't been recently accessed.  When the list
+> is largish (even a few hundred) this can block new requests noticably
+> which need the lock to remove a file to access it.
+> 
+> This patch removes the list_lru and instead uses 2 simple linked lists.
+> When a file is accessed it is removed from whichever list it is on,
+> then added to the tail of the first list.  Every 2 seconds the second
+> list is moved to the "freeme" list and the first list is moved to the
+> second list.  This avoids any need to walk a list to find old entries.
+> 
+> These lists are per-netns rather than global as the freeme list is
+> per-netns as the actual freeing is done in nfsd threads which are
+> per-netns.
+> 
+> Thanks,
+> NeilBrown
+> 
+>  [PATCH 1/7] nfsd: filecache: remove race handling.
+>  [PATCH 2/7] nfsd: filecache: use nfsd_file_dispose_list() in
+>  [PATCH 3/7] nfsd: filecache: move globals nfsd_file_lru and
+>  [PATCH 4/7] nfsd: filecache: change garbage collection list
+>  [PATCH 5/7] nfsd: filecache: document the arbitrary limit on
+>  [PATCH 6/7] nfsd: filecache: change garbage collection to a timer.
+>  [PATCH 7/7] nfsd: filecache: give disposal lock a unique class name.
+> 
+> 
+> 
 
 
