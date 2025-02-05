@@ -1,58 +1,60 @@
-Return-Path: <linux-nfs+bounces-9879-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9880-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C8B5A28D9E
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 15:03:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39986A28E47
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 15:11:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3EC6718848A7
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 14:03:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65C8116899E
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Feb 2025 14:11:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CFEF510;
-	Wed,  5 Feb 2025 14:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709781537AC;
+	Wed,  5 Feb 2025 14:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDQ2SIsq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzrnztJ6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FEB15198D;
-	Wed,  5 Feb 2025 14:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F8115198D;
+	Wed,  5 Feb 2025 14:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738764185; cv=none; b=DT+xTyprA+KxDUlgRPhGxVvPggiaFkNYbeSO2dIaCKn7xDYif+GeA0HjQDFngzzJa4/ZCGi8YxX5C4rxqYxiFjDzhFpDLlUGLj8nQy/x35y86pghV2XGjZIZ+g9J/5ErGaeWfXrCmRSYUVm2cJb+1EOo2Xh0R1SoajNKmn4L+Ow=
+	t=1738764670; cv=none; b=BMqXZE71pYjsh0U1dnnhG/nxnrR0vF/Kj/8EempbL74chx8jQUZMlduq72/A3lNxLai/uEmEmfSXoxWnbFR1PI7TXvlQnvdQOtDXkjHyfrUxCtfct1lWwL2podSqNXgC4jqFyL9AbQnSzwv1eyjlDVbBFXaqyFGe/pwXJ5z9JiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738764185; c=relaxed/simple;
-	bh=0UgdQM/Flqqa3xjQxdnbKC8Z9itU7PMXP+fof6DD1cU=;
+	s=arc-20240116; t=1738764670; c=relaxed/simple;
+	bh=MkBrW83E83JxBCXrhFthWYfVkvOxdS1yoeVlbf0Rmpo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AIg6p1zUVAAvygEdq1v83M7atO9C7vglyQYNQtZKK7VlnC5kcbivIQA+hRRDVSocIz9c+UOe4SlhLWbm5HGi2x9HOuaxJhBA+Zu4dr6V/0/XGRwiothq4WDP3xvKJYklHY8orAmBcu8gwQgFwr8rmQfBwNZl/O3AIzS3kd17ovI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDQ2SIsq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E87C4CEE2;
-	Wed,  5 Feb 2025 14:03:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Mn9lKkjspW0W3OJ5OphQQKlTuIyvAkpe4OwKvIa8uWtVf0yJ7srWmHvN3niGEq8ugF9ME3C3P5+5W/MPBkVS1lPLYTF1BcTqoJRCmBnOMn6imZAhyLyWYe2qTC67NtE/kOezO8LPJZzIHVLJAfcp4eaCBefY8uvUN5uYGCOQpMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzrnztJ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150FCC4CED1;
+	Wed,  5 Feb 2025 14:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738764185;
-	bh=0UgdQM/Flqqa3xjQxdnbKC8Z9itU7PMXP+fof6DD1cU=;
+	s=k20201202; t=1738764670;
+	bh=MkBrW83E83JxBCXrhFthWYfVkvOxdS1yoeVlbf0Rmpo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WDQ2SIsq23kx+D2wltiiRq+tc3VciUv5doPFOTasN9AJWwUoFgzJ7/LOYisFHRIcq
-	 MF94FGOLf0l9QXKLEKOMblx63uxKjr6L41ZWqqwxavZ1IM4OFYowJEaS33BGcEc/Ve
-	 7We95QJJvY+AhHwPsRb4nRbJqZR4lBFu6ij8gqVKxqzOFexnCqqRonSPaJQrIXZg2I
-	 s4EGfu3W2+Hp232jBEQlWohPtAwkrxv0vzPolw7fTTFmWo/9MjF0ThnrAxbsEUFpEn
-	 YnJptctSfEjpEZm4cSF+G5YD1/Mw/IW8N4MZWoQL+LzNeLe2junEI4IZcl4bS5JHNW
-	 p62+a47OTpm1A==
-Message-ID: <70b3bc567e56572d8c8ba816ce263b92ed4ce2d1.camel@kernel.org>
-Subject: Re: [PATCH RESEND v2] sunrpc: add netns inum and srcaddr to debugfs
- rpc_xprt info
+	b=uzrnztJ6wVL4IFcAqlwATtZc1rxSoYPwnpX42GwlzzaYWInOXGiNCyKBQsbftt0In
+	 hvdhUFhgBb8rZutvamDxr9Xx6d+c8FXi6tEaqQZGeAvQRCmyKXJ1XqFuCFxMD2XJlJ
+	 TG/qWiL/wtQkkBnI4mt/kOCWJpq4HazDpdOJXK5/fRjmhdtyoMKnV1FFbz3Q4vg0mb
+	 EclE5jlfD5KYm6Fdo9vlExlx9iSegZ/jRVA6UFPeWCfWBTowo4V6OEvcDLTbYNg8BN
+	 ngedUOcIiGF9RACnYdaNPC4PWaJmvV2YiK6L7T2o7lEyct30nCMOO1qZuB+Nt6um/c
+	 6xD+AFC5DCiDw==
+Message-ID: <2f98596d5403080ac3d2757482207d84ce1502a9.camel@kernel.org>
+Subject: Re: [RESEND PATCH][next] fs: nfs: acl: Avoid
+ -Wflex-array-member-not-at-end warning
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, 	linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Wed, 05 Feb 2025 09:03:03 -0500
-In-Reply-To: <20250205-nfs-6-14-v2-1-402e8072661f@kernel.org>
-References: <20250205-nfs-6-14-v2-1-402e8072661f@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Chuck Lever	
+ <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>,  Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+ <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Date: Wed, 05 Feb 2025 09:11:08 -0500
+In-Reply-To: <Z6GDiLZo5u4CqxBr@kspp>
+References: <Z6GDiLZo5u4CqxBr@kspp>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,59 +139,108 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-02-05 at 08:43 -0500, Jeff Layton wrote:
-> The output format should provide a value that matches the one in
-> the /proc/<pid>/ns/net symlink. This makes it simpler to match the
-> rpc_xprt and rpc_clnt to a particular container.
+On Tue, 2025-02-04 at 13:33 +1030, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 >=20
-> Also, when the xprt defines the get_srcaddr operation, use that to
-> display the source address as well.
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of other structs, we use the `struct_group_tagged()` helper
+> to create a new tagged `struct posix_acl_hdr`. This structure
+> groups together all the members of the flexible `struct posix_acl`
+> except the flexible array.
 >=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct member currently causing
+> trouble from `struct posix_acl` to `struct posix_acl_hdr`.
+>=20
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+>=20
+> This approach avoids having to implement `struct posix_acl_hdr` as a
+> completely separate structure, thus preventing having to maintain two
+> independent but basically identical structures, closing the door to
+> potential bugs in the future.
+>=20
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure, through which we can access the flexible-array
+> member, if necessary.
+>=20
+> So, with these changes, fix the following warning:
+>=20
+> fs/nfs_common/nfsacl.c:45:26: warning: structure containing a flexible ar=
+ray member is not at the end of another structure [-Wflex-array-member-not-=
+at-end]
+>=20
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Changes in v2:
-> - Don't bother with NUL termination, just use a length specifier
-> - Link to v1: https://lore.kernel.org/r/20250122-nfs-6-14-v1-1-164b0b5aa3=
-30@kernel.org
-> ---
->  net/sunrpc/debugfs.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  fs/nfs_common/nfsacl.c    |  8 +++++---
+>  include/linux/posix_acl.h | 11 ++++++++---
+>  2 files changed, 13 insertions(+), 6 deletions(-)
 >=20
-> diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-> index a176d5a0b0ee9a2c0ca1d1ed3131b67b782c3296..9498f385716d5eab1c5766a2a=
-4ef5218155432e0 100644
-> --- a/net/sunrpc/debugfs.c
-> +++ b/net/sunrpc/debugfs.c
-> @@ -179,6 +179,18 @@ xprt_info_show(struct seq_file *f, void *v)
->  	seq_printf(f, "addr:  %s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
->  	seq_printf(f, "port:  %s\n", xprt->address_strings[RPC_DISPLAY_PORT]);
->  	seq_printf(f, "state: 0x%lx\n", xprt->state);
-> +	seq_printf(f, "netns: %u\n", xprt->xprt_net->ns.inum);
-> +
-> +	if (xprt->ops->get_srcaddr) {
-> +		int ret, buflen;
-> +		char buf[INET6_ADDRSTRLEN];
-> +
-> +		buflen =3D ARRAY_SIZE(buf);
-> +		ret =3D xprt->ops->get_srcaddr(xprt, buf, buflen);
-> +		if (ret < 0)
-> +			ret =3D sprintf(buf, "<closed>");
-> +		seq_printf(f, "saddr: %.*s\n", ret, buf);
-> +	}
->  	return 0;
->  }
+> diff --git a/fs/nfs_common/nfsacl.c b/fs/nfs_common/nfsacl.c
+> index ea382b75b26c..e2eaac14fd8e 100644
+> --- a/fs/nfs_common/nfsacl.c
+> +++ b/fs/nfs_common/nfsacl.c
+> @@ -42,7 +42,7 @@ struct nfsacl_encode_desc {
+>  };
 > =20
->=20
-> ---
-> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> change-id: 20250122-nfs-6-14-7f737deb6356
->=20
-> Best regards,
+>  struct nfsacl_simple_acl {
+> -	struct posix_acl acl;
+> +	struct posix_acl_hdr acl;
+>  	struct posix_acl_entry ace[4];
+>  };
+> =20
+> @@ -112,7 +112,8 @@ int nfsacl_encode(struct xdr_buf *buf, unsigned int b=
+ase, struct inode *inode,
+>  	    xdr_encode_word(buf, base, entries))
+>  		return -EINVAL;
+>  	if (encode_entries && acl && acl->a_count =3D=3D 3) {
+> -		struct posix_acl *acl2 =3D &aclbuf.acl;
+> +		struct posix_acl *acl2 =3D
+> +			container_of(&aclbuf.acl, struct posix_acl, hdr);
+> =20
+>  		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+>  		 * invoked in contexts where a memory allocation failure is
+> @@ -177,7 +178,8 @@ bool nfs_stream_encode_acl(struct xdr_stream *xdr, st=
+ruct inode *inode,
+>  		return false;
+> =20
+>  	if (encode_entries && acl && acl->a_count =3D=3D 3) {
+> -		struct posix_acl *acl2 =3D &aclbuf.acl;
+> +		struct posix_acl *acl2 =3D
+> +			container_of(&aclbuf.acl, struct posix_acl, hdr);
+> =20
+>  		/* Avoid the use of posix_acl_alloc().  nfsacl_encode() is
+>  		 * invoked in contexts where a memory allocation failure is
+> diff --git a/include/linux/posix_acl.h b/include/linux/posix_acl.h
+> index e2d47eb1a7f3..62d497763e25 100644
+> --- a/include/linux/posix_acl.h
+> +++ b/include/linux/posix_acl.h
+> @@ -27,11 +27,16 @@ struct posix_acl_entry {
+>  };
+> =20
+>  struct posix_acl {
+> -	refcount_t		a_refcount;
+> -	unsigned int		a_count;
+> -	struct rcu_head		a_rcu;
+> +	/* New members MUST be added within the struct_group() macro below. */
+> +	struct_group_tagged(posix_acl_hdr, hdr,
+> +		refcount_t		a_refcount;
+> +		unsigned int		a_count;
+> +		struct rcu_head		a_rcu;
+> +	);
+>  	struct posix_acl_entry	a_entries[] __counted_by(a_count);
+>  };
+> +static_assert(offsetof(struct posix_acl, a_entries) =3D=3D sizeof(struct=
+ posix_acl_hdr),
+> +	      "struct member likely outside of struct_group_tagged()");
+> =20
+>  #define FOREACH_ACL_ENTRY(pa, acl, pe) \
+>  	for(pa=3D(acl)->a_entries, pe=3Dpa+(acl)->a_count; pa<pe; pa++)
 
-Please disregard this patch. I didn't realize Anna had picked this up
-for v6.14.
-
-Cheers,
---=20
-Jeff Layton <jlayton@kernel.org>
+Acked-by: Jeff Layton <jlayton@kernel.org>
 
