@@ -1,208 +1,147 @@
-Return-Path: <linux-nfs+bounces-9897-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9898-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06ED7A2A257
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 08:34:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB96DA2A352
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 09:38:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E8757A174A
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 07:33:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D24F1160E67
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 08:38:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C55C1FF61A;
-	Thu,  6 Feb 2025 07:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C85322576F;
+	Thu,  6 Feb 2025 08:38:28 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC26513AD18;
-	Thu,  6 Feb 2025 07:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F822488E
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Feb 2025 08:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738827274; cv=none; b=DDMFfFclHssV9tEVWcWXajWsl6qiQk1pGmwPV7Ni9Acb/0yyq1zS0mq6OUnDMHNd4dQXG0A8yIwMdo2RY5caiFHYdzLmFsP/B5bgc4Bk9X7+cbqB/nqpEQFN0HXf/0OFaQwxrdy6PveCMKz85NITV/VaWsFj6jqc907PkpucRJk=
+	t=1738831108; cv=none; b=Xbh2O5VwwrPw9mSv7rzF7uLIifsye8WV++RLDV7kqS38qZ3PdL1EaKypXYDfY+/dPo/U6jswSp4XH7RIjVpxW6xE26gsURKVtJdiryUQoAbesObc9PlHymSK1i9Zcek4PgC7ppkNBUVvKPI4uo6IKgk2xFv+5wg3PmT23PnvE6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738827274; c=relaxed/simple;
-	bh=ZqC215pGfYAb7flXSAc08+IrFcFj62WGS6CVa6R7k4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dRj70tATdZNtogNYh83igyOMIjqstO+CqiMwmYGLfLUkmYvPbWz7PC0/RxAVANmpS/W1V4i74gGUJFbXBVHZxFL1lg7aw6ga4DN/ds6xLtWRg6GUj6w9Iv3ZtwEjQIkYALtZ9ome381aH4UT1IIRPuhz2LGezTQIBw6wtH1v7Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-51f2830aa01so19822e0c.3;
-        Wed, 05 Feb 2025 23:34:31 -0800 (PST)
+	s=arc-20240116; t=1738831108; c=relaxed/simple;
+	bh=GotyDy/3hixvnVJ+W495VcYzvSyIL2tMCytTVnnxr6g=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=msgUhBZs0faWgMNkmGHpJPbV8Mj4fqYPknVsNCjo2mCIw80UeaPg+WeChch6nOhuW5DIGY8yAcrwrSoSM6ds5xpaGVy3O0OzJng+xJ8VI1pPk8oCy1TvjaU16ghFCMOKmwRPqX3TVP20TNUB1xWJQpuw9o/WoD8Sa/e7EJI6sI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d0579bada2so4297845ab.1
+        for <linux-nfs@vger.kernel.org>; Thu, 06 Feb 2025 00:38:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738827269; x=1739432069;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kYqxjen2ckyh6AMFJqNUH79gwyV2vSuAN69CefkfgXQ=;
-        b=X/f3ogkiJEQqtMGb1heI0ygtjfdNZ6as9aXYxUp9zWRI7su4sXGj44MqyYDTJ/meNf
-         iyta9+yw+76XXVS3JnNbWk7L1AZzQNpMIn1iWICfYwzK0RewyVjvejPCVH29Iq8aSHXX
-         cisYUegs+bJdW850sgv70HUp7Wjk2FOADMAxjURtHCiQuGhjygdzhVHAoj0QB6BBNO0c
-         J+bKw0XojJNIC5HXBIIHD02dqKSxH/R2wTlbNEXkZjP/o45FPKcNv1KPkN8atqIK9s2G
-         XlY455PuqaekMeSyINfv3HMrjFmzl+QxcF5QHqKmSebiC/RUdF2rX+vbwGQbsfkz56pA
-         xBxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUFAkGzmbH9WFngC5R1qWjZENsq2lMJwOewBuO8tODOpZmPnjNfkQoYFx+N8sSUa859H1t4DyIHLjn@vger.kernel.org, AJvYcCWCBJD+qcJ7oKEPvhAhB1WMaeRtIgZ95ujy1Vty5XkUw0/4dDqrLWp6TFNJw+zQn6ZuQsV54eJyFm1jnMib@vger.kernel.org, AJvYcCWJ8jYk/jTdWJdV2IMB5J/tZrq2bdQ15DFstZTiwZT38kCumKSZdI+z1nzK1TUI0g0ze4vzfL4Bv+wBq915@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKNKG3HaeATfUQQLCWp26xMOnwVaSeBAjY+h9YtXctsL4PalDZ
-	uLjDLRPAIz4qOtOLsy4sPF3v3PAHIQWhizU0GXZygDztco+sGbNb1Fw5rGDm
-X-Gm-Gg: ASbGncuVJLpGpf6RV/Ciu+qv1cMNKSEqjnRDzc0l+1NkIFxT1hkWA3EGF5yuiy6ya9H
-	2EUNdqV8tffGkUTNoBJ5JM1P/9iasMYhUiet2i9f2BKB81FkF3BkKJlFsFjG3nwA+SNPrKQiblp
-	M2LL00Wyh9rTn7S4u5IQDY6Kv/J+pROq6tyX+FA19QiLUWGSAqnU2yXYdKScvR8YPWrKYS8Ccyl
-	Yn/yoXzFcbsmN4SkR4mnuTkdn6UFb3lYJ2RdxhLHJYmnrWRMb1J1RYrZbBu9xVwsM1OhUpu7qFP
-	oD7fryKsRGLYxgqzW1DfShbsUWj2EwUR3rlO9jFgQ8tUsmfyaCjttg==
-X-Google-Smtp-Source: AGHT+IF9+B00D50HGqOy1mIN4fzg7WnjfsZJYzaZ08kFw+IQMPZ5iF1jeQ0WRxh19V9LoKjVuuxTIg==
-X-Received: by 2002:a05:6122:238c:b0:50c:9834:57b3 with SMTP id 71dfb90a1353d-51f0c383ea5mr3817133e0c.4.1738827269486;
-        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f228dabdfsm98727e0c.33.2025.02.05.23.34.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-866dc3cd96eso138467241.3;
-        Wed, 05 Feb 2025 23:34:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUW8cP4sY2fjDCpyp/DEuULSHXihuVGEbVLcN1HP/3tdWRf0y16KhvbEinL9a273OYGyFJ55+gP4TNqVCNA@vger.kernel.org, AJvYcCVJ3n1AuZar6+s9gRixuQTAmnFkLbPVOVNrJcV2bcwcXRKv2lhxC4FfStyH+GZthSIi5Nkcs0Benpe0@vger.kernel.org, AJvYcCXZ/y2oqgsPeO75yxcGrDf39CWsCzbGnPCVnPRpSHWXBfK97nLK3ZYGH0ts2m+eXf4hoAtKQ6ulAT16yrOU@vger.kernel.org
-X-Received: by 2002:a05:6102:cd3:b0:4b2:5c4b:b0aa with SMTP id
- ada2fe7eead31-4ba47a69fd7mr3852490137.17.1738827268953; Wed, 05 Feb 2025
- 23:34:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738831105; x=1739435905;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MNU0XucLC8CzlRubQHYRv8FWriq2+A0FqQsY5s+cVis=;
+        b=qAJWhpYA/pSbYwJePRs1Ql2zSyX0RS8wgxGrLMpeMbYwPbm0nEICFWv23V+YoFCV2x
+         FTawmsopvLO5Dy9TW1kYXboi6tTZ0GxACQmr5Mt9f+NRKrCq8Nl6jSq28MyCIp3+kYxE
+         nG9XEYE14Fx3oTeK4bmrlJC70NUVgzomMPnjv1Kbg6qUNLtz33OcFulwKr1Vjw7SFnHF
+         koJccKGkoeaUwTjJCdd1XCQ7oekdclmlV29Fo76nRmnyYzHGGXJ2o+aWBhPu6jvTdO1A
+         TyxaabU6o/BAmylHk7ddWj6J6yABkQNnLNZ4x5ktThbTDErwWJ9m5aIJv0ewpgOST1AG
+         IaTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVolDTCVOUxkaqo4b/MJ82jx0OIYRgSGV/5SSv3MBssJAxrJflX7i5lj+RFKSPgRIBeMj+KKd+cuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpqjm+fwthuJRCpfy7pyJvGBZlP+N7mAkdZ1oxcPOTa2Yf91mG
+	hhJuRpqctnvoM56F8Qg6QEOfP55OT69SgESq2rFUX7lGEwNYati81aDZVijSsxcNkI6LxQ2cA+6
+	U141m59dS4MoEXnO37BxXz7nxRR0layF7wBTvPCHVoB2krmAxrQO60D0=
+X-Google-Smtp-Source: AGHT+IFHHumyfEON0maZgp5NQ+/WAh0tAs/W4saltkncAIefLIH/HkpzkaMlHiy8M/kjjKtdwO5NBcpm7m7CroRdZcJuv64+Qnpk
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241218154613.58754-1-shikemeng@huaweicloud.com>
- <20241218154613.58754-3-shikemeng@huaweicloud.com> <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
- <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
-In-Reply-To: <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 6 Feb 2025 08:34:17 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWT05uMjEassapuFr7podb_eH=T14SOyS4yW4Wh7DUcTQ@mail.gmail.com>
-X-Gm-Features: AWEUYZlF1WKVp8XKeZEs4N8gBdQGzZtMTGkdvJadBBpYovB0_UlZtliJmtMLsz0
-Message-ID: <CAMuHMdWT05uMjEassapuFr7podb_eH=T14SOyS4yW4Wh7DUcTQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] Xarray: move forward index correctly in xas_pause()
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	linux-m68k <linux-m68k@lists.linux-m68k.org>
+X-Received: by 2002:a92:cda5:0:b0:3d0:4d38:4e5b with SMTP id
+ e9e14a558f8ab-3d04f922983mr61266865ab.22.1738831105064; Thu, 06 Feb 2025
+ 00:38:25 -0800 (PST)
+Date: Thu, 06 Feb 2025 00:38:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a47501.050a0220.19061f.05f9.GAE@google.com>
+Subject: [syzbot] [nfs?] [net?] WARNING in remove_proc_entry (7)
+From: syzbot <syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com>
+To: Dai.Ngo@oracle.com, chuck.lever@oracle.com, jlayton@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de, 
+	netdev@vger.kernel.org, okorniev@redhat.com, syzkaller-bugs@googlegroups.com, 
+	tom@talpey.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Kemeng,
+Hello,
 
-On Thu, 6 Feb 2025 at 07:13, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
-> on 1/28/2025 12:21 AM, Geert Uytterhoeven wrote:
-> > On Wed, 18 Dec 2024 at 07:58, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
-> >> After xas_load(), xas->index could point to mid of found multi-index entry
-> >> and xas->index's bits under node->shift maybe non-zero. The afterward
-> >> xas_pause() will move forward xas->index with xa->node->shift with bits
-> >> under node->shift un-masked and thus skip some index unexpectedly.
-> >>
-> >> Consider following case:
-> >> Assume XA_CHUNK_SHIFT is 4.
-> >> xa_store_range(xa, 16, 31, ...)
-> >> xa_store(xa, 32, ...)
-> >> XA_STATE(xas, xa, 17);
-> >> xas_for_each(&xas,...)
-> >> xas_load(&xas)
-> >> /* xas->index = 17, xas->xa_offset = 1, xas->xa_node->xa_shift = 4 */
-> >> xas_pause()
-> >> /* xas->index = 33, xas->xa_offset = 2, xas->xa_node->xa_shift = 4 */
-> >> As we can see, index of 32 is skipped unexpectedly.
-> >>
-> >> Fix this by mask bit under node->xa_shift when move forward index in
-> >> xas_pause().
-> >>
-> >> For now, this will not cause serious problems. Only minor problem
-> >> like cachestat return less number of page status could happen.
-> >>
-> >> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> >
-> > Thanks for your patch, which is now commit c9ba5249ef8b080c ("Xarray:
-> > move forward index correctly in xas_pause()") upstream.
-> >
-> >> --- a/lib/test_xarray.c
-> >> +++ b/lib/test_xarray.c
-> >> @@ -1448,6 +1448,41 @@ static noinline void check_pause(struct xarray *xa)
-> >>         XA_BUG_ON(xa, count != order_limit);
-> >>
-> >>         xa_destroy(xa);
-> >> +
-> >> +       index = 0;
-> >> +       for (order = XA_CHUNK_SHIFT; order > 0; order--) {
-> >> +               XA_BUG_ON(xa, xa_store_order(xa, index, order,
-> >> +                                       xa_mk_index(index), GFP_KERNEL));
-> >> +               index += 1UL << order;
-> >> +       }
-> >> +
-> >> +       index = 0;
-> >> +       count = 0;
-> >> +       xas_set(&xas, 0);
-> >> +       rcu_read_lock();
-> >> +       xas_for_each(&xas, entry, ULONG_MAX) {
-> >> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
-> >> +               index += 1UL << (XA_CHUNK_SHIFT - count);
-> >> +               count++;
-> >> +       }
-> >> +       rcu_read_unlock();
-> >> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
-> >> +
-> >> +       index = 0;
-> >> +       count = 0;
-> >> +       xas_set(&xas, XA_CHUNK_SIZE / 2 + 1);
-> >> +       rcu_read_lock();
-> >> +       xas_for_each(&xas, entry, ULONG_MAX) {
-> >> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
-> >> +               index += 1UL << (XA_CHUNK_SHIFT - count);
-> >> +               count++;
-> >> +               xas_pause(&xas);
-> >> +       }
-> >> +       rcu_read_unlock();
-> >> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
-> >> +
-> >> +       xa_destroy(xa);
-> >> +
-> >>  }
-> >
-> > On m68k, the last four XA_BUG_ON() checks above are triggered when
-> > running the test.  With extra debug prints added:
-> >
-> >     entry = 00000002 xa_mk_index(index) = 000000c1
-> >     entry = 00000002 xa_mk_index(index) = 000000e1
-> >     entry = 00000002 xa_mk_index(index) = 000000f1
-> >     ...
-> >     entry = 000000e2 xa_mk_index(index) = fffff0ff
-> >     entry = 000000f9 xa_mk_index(index) = fffff8ff
-> >     entry = 000000f2 xa_mk_index(index) = fffffcff
-> >     count = 63 XA_CHUNK_SHIFT = 6
-> >     entry = 00000081 xa_mk_index(index) = 00000001
-> >     entry = 00000002 xa_mk_index(index) = 00000081
-> >     entry = 00000002 xa_mk_index(index) = 000000c1
-> >     ...
-> >     entry = 000000e2 xa_mk_index(index) = ffffe0ff
-> >     entry = 000000f9 xa_mk_index(index) = fffff0ff
-> >     entry = 000000f2 xa_mk_index(index) = fffff8ff
-> >      count = 62 XA_CHUNK_SHIFT = 6
-> >
-> > On arm32, the test succeeds, so it's probably not a 32-vs-64-bit issue.
-> > Perhaps a big-endian or alignment issue (alignof(int/long) = 2)?
-> Hi Geert,
-> Sorry for late reply. After check the debug info and the code, I think
-> the test is failed because CONFIG_XARRAY_MULTI is off. I guess
-> CONFIG_XARRAY_MULTI is on arm32 and is off on m68k so the test result
-> diffs. Luckly it's only a problem of of test code.
-> I will send patch to correct the test code soon. Thanks!
+syzbot found the following issue on:
 
-You are right: CONFIG_XARRAY_MULTI is enabled in my arm32 build,
-but not in my m68k build.
+HEAD commit:    92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=151e9318580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c48f582603dcb16c
+dashboard link: https://syzkaller.appspot.com/bug?extid=e34ad04f27991521104c
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131e9318580000
 
-Gr{oetje,eeting}s,
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b3df3b128344/disk-92514ef2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/30f6f3763191/vmlinux-92514ef2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/caeb03ac3f9c/bzImage-92514ef2.xz
 
-                        Geert
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+name 'nfsd'
+WARNING: CPU: 1 PID: 6518 at fs/proc/generic.c:713 remove_proc_entry+0x268/0x470 fs/proc/generic.c:713
+Modules linked in:
+CPU: 1 UID: 0 PID: 6518 Comm: kworker/u8:8 Not tainted 6.14.0-rc1-syzkaller-00034-g92514ef226f5 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Workqueue: netns cleanup_net
+RIP: 0010:remove_proc_entry+0x268/0x470 fs/proc/generic.c:713
+Code: 08 eb a2 e8 1a 9c 62 ff 48 c7 c7 20 7e 41 8e e8 4e c4 f2 08 e8 09 9c 62 ff 90 48 c7 c7 c0 db 81 8b 4c 89 e6 e8 29 76 23 ff 90 <0f> 0b 90 90 e9 72 ff ff ff e8 ea 9b 62 ff 49 8d be 98 00 00 00 48
+RSP: 0018:ffffc9000bec7a80 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 1ffff920017d8f52 RCX: ffffffff8179c889
+RDX: ffff888031a35a00 RSI: ffffffff8179c896 RDI: 0000000000000001
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 00000000000ca440 R12: ffffffff8b8f7460
+R13: dffffc0000000000 R14: ffff88807e22da00 R15: fffffbfff1cb7dc4
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000237ba000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ nfsd_net_exit+0x27/0x50 fs/nfsd/nfsctl.c:2259
+ ops_exit_list+0xb0/0x180 net/core/net_namespace.c:172
+ cleanup_net+0x5c6/0xbf0 net/core/net_namespace.c:652
+ process_one_work+0x958/0x1b30 kernel/workqueue.c:3236
+ process_scheduled_works kernel/workqueue.c:3317 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
+ kthread+0x3af/0x750 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
