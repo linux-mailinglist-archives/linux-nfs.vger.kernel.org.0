@@ -1,352 +1,216 @@
-Return-Path: <linux-nfs+bounces-9894-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9895-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4C1BA29F2A
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 04:05:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EC1DA2A0BE
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 07:13:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09D253A605C
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 03:05:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F9E03A7CA6
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 06:13:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ABDA3B1A4;
-	Thu,  6 Feb 2025 03:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xPdTJ+fC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SbKQWpYx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z1s7hr4B";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="+/Cqy3es"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EC152248BF;
+	Thu,  6 Feb 2025 06:13:24 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCE82745E
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Feb 2025 03:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D0822332E;
+	Thu,  6 Feb 2025 06:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811107; cv=none; b=bHjhjiwnSKILpQIv0MRW/qMoiI0a/W30PtUHBOJejOLCnF7tB7iP6qxWMKcMtol1JA91MdfAaCMJISlyUllBkPZW0yeZOkupaxbceuo9aYyFJqpo1K1O4iyWaTSfkBH2nN3dIhbgFqlMSVpn2/A1/BojmpAIJFqFwpPwNCuU3rw=
+	t=1738822404; cv=none; b=BC0Ew2dc1cQRxL0e0RQ9H3DwOhdpXExJSjYre5bGbhmn+ObTPZ0cglIbfje3E84jHNwuexmnzD25H/FUIKqGDtfpLKZBDVBOqaPmxDTt/JqOv3dSl6ay2jO02oyjjZa7EUpf9m8Eht8oQojmKpHRFhPXPYQPfNqNccSG29AKyJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811107; c=relaxed/simple;
-	bh=cg2bTiBK1aLekXp3BMxdoGlXD2zfihQmxWpTCbF3sxw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ay/KWZySM+7DNORnq+LWBAWU2QLRQ934oHddvSBgWd9jRERSL9DgoHCD5ZvKBHT24THUiudyYHklzrRG2JK62KfFeNf9sOwUNI1elYNFuHRuAQp70Kd3TzMmX8iHk4KLLZyl4jyDgxzGG0VLCZH3FuNZsvJEWx1halJWXdW8t+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xPdTJ+fC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SbKQWpYx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z1s7hr4B; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=+/Cqy3es; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CC0EE1F381;
-	Thu,  6 Feb 2025 03:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738811103; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NvK2nLzO2qibc5e07Z4+BIJcofai1LpI3ZN4MSXAyUU=;
-	b=xPdTJ+fCceoiKTsgq3ORN1xxVutfyqqydj23aZRvY+21wMLcJcGmKasORjY2pij/Z1rXn1
-	qh2gqg8Llxn9IZNVKjHvXovuYNHC0zIXukb/9Omxu+Pb203Q1mekV+kYoVxhLgV+WWYt1O
-	cgVrH2F5wc2xkplEZ8LdICfF24fkARc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738811103;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NvK2nLzO2qibc5e07Z4+BIJcofai1LpI3ZN4MSXAyUU=;
-	b=SbKQWpYxGYdJOEVWCZJcytQoi7oRYRArnUfXw/5WZPCAk+t5Dij+rx2MNX+qi+yqWdv6Rp
-	9Jvaj/iwq0ue0SDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738811101; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NvK2nLzO2qibc5e07Z4+BIJcofai1LpI3ZN4MSXAyUU=;
-	b=Z1s7hr4BxtGjHIyxwO0p4Ae6S4FQ7W+oK2Fm2eugXz1FJcOlQ1tbWyrw5wrIpErNgZ/aVe
-	Vb+h3JEkm3+pTdo23EoERoMXaLiUdTocobMvw2VPipDv/ryyxlCmQbwC2razb/uA2uDf8H
-	yXm8sh3Tm+jYliFAy7KKGBSAy7qF+jo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738811101;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NvK2nLzO2qibc5e07Z4+BIJcofai1LpI3ZN4MSXAyUU=;
-	b=+/Cqy3esllQtsGe3BFQo35hcVOiKAnSxPzjWuy42JEv9W1dj9Jg+7y1q0TsMkHnbARn8Jt
-	U75GmwmcZ3/1ZLDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 558F513694;
-	Thu,  6 Feb 2025 03:04:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 44DcAtsmpGfzXwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 06 Feb 2025 03:04:59 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1738822404; c=relaxed/simple;
+	bh=QPSFVvim1khGndp9G0sS+Fqd4kfhnsgI0vmM66bRMGI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JqsMcCboFPObI9STZSicRvhYp2US7S7TI8NHtdWglwovu2Lcp1f05oog2aOciCO9tG2Zq7Rd3VvoC2pCHR0Xf6hTmof/kmYAxKCau6Bgwn/+dMzCwNnkqKx1ODJ8rC/WZCm7dVXFHQmpuCLl5cGEpk0KKA+td9JBSWJdRgoDbo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YpRbs61Zhz4f3jks;
+	Thu,  6 Feb 2025 14:12:57 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id ABE591A058E;
+	Thu,  6 Feb 2025 14:13:13 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCF34UqRnpFU0DA--.34331S2;
+	Thu, 06 Feb 2025 14:13:13 +0800 (CST)
+Subject: Re: [PATCH v4 2/5] Xarray: move forward index correctly in
+ xas_pause()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: akpm@linux-foundation.org, willy@infradead.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ linux-m68k <linux-m68k@lists.linux-m68k.org>
+References: <20241218154613.58754-1-shikemeng@huaweicloud.com>
+ <20241218154613.58754-3-shikemeng@huaweicloud.com>
+ <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <82014768-2ea7-2a28-cade-99d5d8ebe59e@huaweicloud.com>
+Date: Thu, 6 Feb 2025 14:13:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Dave Chinner" <david@fromorbit.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 0/7] nfsd: filecache: change garbage collection lists
-In-reply-to: <Z6QcwbsFfOahoJ1P@dread.disaster.area>
-References: <>, <Z6QcwbsFfOahoJ1P@dread.disaster.area>
-Date: Thu, 06 Feb 2025 14:04:55 +1100
-Message-id: <173881109569.22054.7095290604295647912@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,noble.neil.brown.name:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
-
-On Thu, 06 Feb 2025, Dave Chinner wrote:
-> On Thu, Jan 30, 2025 at 08:34:15AM +1100, NeilBrown wrote:
-> > On Tue, 28 Jan 2025, Dave Chinner wrote:
-> > > On Mon, Jan 27, 2025 at 12:20:31PM +1100, NeilBrown wrote:
-> > > > [
-> > > > davec added to cc incase I've said something incorrect about list_lru
-> > > >=20
-> > > > Changes in this version:
-> > > >   - no _bh locking
-> > > >   - add name for a magic constant
-> > > >   - remove unnecessary race-handling code
-> > > >   - give a more meaningfule name for a lock for /proc/lock_stat
-> > > >   - minor cleanups suggested by Jeff
-> > > >=20
-> > > > ]
-> > > >=20
-> > > > The nfsd filecache currently uses  list_lru for tracking files recent=
-ly
-> > > > used in NFSv3 requests which need to be "garbage collected" when they
-> > > > have becoming idle - unused for 2-4 seconds.
-> > > >=20
-> > > > I do not believe list_lru is a good tool for this.  It does not allow
-> > > > the timeout which filecache requires so we have to add a timeout
-> > > > mechanism which holds the list_lru lock while the whole list is scann=
-ed
-> > > > looking for entries that haven't been recently accessed.  When the li=
-st
-> > > > is largish (even a few hundred) this can block new requests noticably
-> > > > which need the lock to remove a file to access it.
-> > >=20
-> > > Looks entirely like a trivial implementation bug in how the list_lru
-> > > is walked in nfsd_file_gc().
-> > >=20
-> > > static void
-> > > nfsd_file_gc(void)
-> > > {
-> > >         LIST_HEAD(dispose);
-> > >         unsigned long ret;
-> > >=20
-> > >         ret =3D list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
-> > >                             &dispose, list_lru_count(&nfsd_file_lru));
-> > > 			              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > >=20
-> > >         trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> > >         nfsd_file_dispose_list_delayed(&dispose);
-> > > }
-> > >=20
-> > > i.e. the list_lru_walk() has been told to walk the entire list in a
-> > > single lock hold if nothing blocks it.
-> > >=20
-> > > We've known this for a long, long time, and it's something we've
-> > > handled for a long time with shrinkers, too. here's the typical way
-> > > of doing a full list aging and GC pass in one go without excessively
-> > > long lock holds:
-> >=20
-> > "Typical"?? Can you please point me to an existing example?
->=20
-> Of the top of my head: shrink_dcache_sb().
-
-shrink_dcache_sb() contains:
-
-	} while (list_lru_count(&sb->s_dentry_lru) > 0);
-
-i.e. it removes *everything* from the list_lru.
-
-There are 5 callers of list_all_walk() in the kernel.
-
-binder_shrink_scan() appears to be buggy.  Other _scan functions
-   use list_lru_shrink_walk which is per-node as you say.
-binder_selftest_free_page() calls until the list is empty
-shrink_dcache_sb() calls until the list is empty
-nfsd_file_gc() call for the whole list but does NOT want the
-  list to necessarily be empty
-xfs_bufarg_drain() calls until the list is empty
-
-So three call until the list is empty, one should use
-list_lru_shrink_walk(), and nfsd wants something quite different.
+In-Reply-To: <CAMuHMdU_bfadUO=0OZ=AoQ9EAmQPA4wsLCBqohXR+QCeCKRn4A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCnCF34UqRnpFU0DA--.34331S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7Ww15Kw18XryUAF17GFg_yoWrCFWDpF
+	WDJa4xKFW8Jr1Ikr18ta10q3409w1Yka13KrW5GF10yrsrCrnaya1jgrZ8uFyDuF4qvry2
+	yF4vgw1qgw4DJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
 
->=20
-> However, *every single shrinker implementation in the kernel* uses
-> this algorithm whether they use list-lru or not.
 
-Yes, but we aren't doing shrinking here.  We are doing ageing.  We want
-a firm upper limit to how long things remain cached after the last use.
+on 1/28/2025 12:21 AM, Geert Uytterhoeven wrote:
+> Hi Kemeng,
+> 
+> On Wed, 18 Dec 2024 at 07:58, Kemeng Shi <shikemeng@huaweicloud.com> wrote:
+>> After xas_load(), xas->index could point to mid of found multi-index entry
+>> and xas->index's bits under node->shift maybe non-zero. The afterward
+>> xas_pause() will move forward xas->index with xa->node->shift with bits
+>> under node->shift un-masked and thus skip some index unexpectedly.
+>>
+>> Consider following case:
+>> Assume XA_CHUNK_SHIFT is 4.
+>> xa_store_range(xa, 16, 31, ...)
+>> xa_store(xa, 32, ...)
+>> XA_STATE(xas, xa, 17);
+>> xas_for_each(&xas,...)
+>> xas_load(&xas)
+>> /* xas->index = 17, xas->xa_offset = 1, xas->xa_node->xa_shift = 4 */
+>> xas_pause()
+>> /* xas->index = 33, xas->xa_offset = 2, xas->xa_node->xa_shift = 4 */
+>> As we can see, index of 32 is skipped unexpectedly.
+>>
+>> Fix this by mask bit under node->xa_shift when move forward index in
+>> xas_pause().
+>>
+>> For now, this will not cause serious problems. Only minor problem
+>> like cachestat return less number of page status could happen.
+>>
+>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> 
+> Thanks for your patch, which is now commit c9ba5249ef8b080c ("Xarray:
+> move forward index correctly in xas_pause()") upstream.
+> 
+>> --- a/lib/test_xarray.c
+>> +++ b/lib/test_xarray.c
+>> @@ -1448,6 +1448,41 @@ static noinline void check_pause(struct xarray *xa)
+>>         XA_BUG_ON(xa, count != order_limit);
+>>
+>>         xa_destroy(xa);
+>> +
+>> +       index = 0;
+>> +       for (order = XA_CHUNK_SHIFT; order > 0; order--) {
+>> +               XA_BUG_ON(xa, xa_store_order(xa, index, order,
+>> +                                       xa_mk_index(index), GFP_KERNEL));
+>> +               index += 1UL << order;
+>> +       }
+>> +
+>> +       index = 0;
+>> +       count = 0;
+>> +       xas_set(&xas, 0);
+>> +       rcu_read_lock();
+>> +       xas_for_each(&xas, entry, ULONG_MAX) {
+>> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+>> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+>> +               count++;
+>> +       }
+>> +       rcu_read_unlock();
+>> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+>> +
+>> +       index = 0;
+>> +       count = 0;
+>> +       xas_set(&xas, XA_CHUNK_SIZE / 2 + 1);
+>> +       rcu_read_lock();
+>> +       xas_for_each(&xas, entry, ULONG_MAX) {
+>> +               XA_BUG_ON(xa, entry != xa_mk_index(index));
+>> +               index += 1UL << (XA_CHUNK_SHIFT - count);
+>> +               count++;
+>> +               xas_pause(&xas);
+>> +       }
+>> +       rcu_read_unlock();
+>> +       XA_BUG_ON(xa, count != XA_CHUNK_SHIFT);
+>> +
+>> +       xa_destroy(xa);
+>> +
+>>  }
+> 
+> On m68k, the last four XA_BUG_ON() checks above are triggered when
+> running the test.  With extra debug prints added:
+> 
+>     entry = 00000002 xa_mk_index(index) = 000000c1
+>     entry = 00000002 xa_mk_index(index) = 000000e1
+>     entry = 00000002 xa_mk_index(index) = 000000f1
+>     ...
+>     entry = 000000e2 xa_mk_index(index) = fffff0ff
+>     entry = 000000f9 xa_mk_index(index) = fffff8ff
+>     entry = 000000f2 xa_mk_index(index) = fffffcff
+>     count = 63 XA_CHUNK_SHIFT = 6
+>     entry = 00000081 xa_mk_index(index) = 00000001
+>     entry = 00000002 xa_mk_index(index) = 00000081
+>     entry = 00000002 xa_mk_index(index) = 000000c1
+>     ...
+>     entry = 000000e2 xa_mk_index(index) = ffffe0ff
+>     entry = 000000f9 xa_mk_index(index) = fffff0ff
+>     entry = 000000f2 xa_mk_index(index) = fffff8ff
+>      count = 62 XA_CHUNK_SHIFT = 6
+> 
+> On arm32, the test succeeds, so it's probably not a 32-vs-64-bit issue.
+> Perhaps a big-endian or alignment issue (alignof(int/long) = 2)?
+Hi Geert,
+Sorry for late reply. After check the debug info and the code, I think
+the test is failed because CONFIG_XARRAY_MULTI is off. I guess
+CONFIG_XARRAY_MULTI is on arm32 and is off on m68k so the test result
+diffs. Luckly it's only a problem of of test code.
+I will send patch to correct the test code soon. Thanks!
 
->=20
-> > list_lru_walk() iterates over the multiple node lists in a fixed order.
-> > Suppose you have 4 nodes, each with 32 items, all of them referenced, and
-> > a batch size of 64.
-> > The first batch will process the 32 items on the first list clearing the
-> > referenced bit and moving them to the end of that list.  Then continue
-> > through those 32 again and freeing them all.  The second batch will do the
-> > same for the second list.  The last two lists won't be touched.
-> >=20
-> > list_lru_walk() is only ever used (correctly) for clearing out a
-> > list_lru.  It should probably be replaced by a function with a more apt
-> > name which is targeted at this: no spinlocks, no return value from the
-> > call-back.
-> >=20
-> > Yes, we could change the above code to use list_lru_walk_node and wrap a
-> > for loop around the whole, but then I wonder if list_lru is really
-> > giving us anything of value.
->=20
-> Apart from scalability and the ability for memory reclaim to do sane
-> per-node object reclaim? What about the fact that anyone familiar
-> with list-lru doesn't need to look at how the lists are implemented
-> to know how the code behaves?
+Kemeng
 
-What an odd thing to say...  how does one become familiar except by
-looking at the code?
+> 
+>> --- a/lib/xarray.c
+>> +++ b/lib/xarray.c
+>> @@ -1147,6 +1147,7 @@ void xas_pause(struct xa_state *xas)
+>>                         if (!xa_is_sibling(xa_entry(xas->xa, node, offset)))
+>>                                 break;
+>>                 }
+>> +               xas->xa_index &= ~0UL << node->shift;
+>>                 xas->xa_index += (offset - xas->xa_offset) << node->shift;
+>>                 if (xas->xa_index == 0)
+>>                         xas->xa_node = XAS_BOUNDS;
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
 
-I accept that my current approach loses per-node object reclaim.  I
-don't know how important that is.  I believe the primary cost of nfsd
-leaving files on the lru is not the memory usage, but the fact the file
-file is held open while not is use.
-
-As I said before, nfsd already has some per-node awareness.  Linking the
-file ageing into that would be easy enough.
-
->=20
-> Using common infrastructure, even when it's not an exact perfect
-> fit, holds a lot more value to the wider community than a one-off
-> special snowflake implementation that only one or two people
-> understand....
-
-While there is certainly truth in that, it is also true that using
-common infrastructure in a non-ideomatic way can cause confusion.
-Sometimes things that are different should look different.
-
-From my perspective the nfsd filecache lru is primarily about again, not
-about garbage collection.
-
->=20
-> > Walking a linked list just to set a bit in ever entry is a lot more work
-> > that a few list manipulation in 5 cache-lines.
->=20
-> Maybe so, but the cache gc isn't a performance critical path.
-
-Any yet it was the "gc", which was really "aging", which highlighted the
-problem for us.
-
-Normal list_lru never walks the entire list (unless it is short) except
-when freeing everything.  With the "reference" bit approach, nfsd needs
-to walk the entire lru frequently.  That can make the aging more of a
-performance issue.
-dcache uses DCACHE_REFERENCED effectively, but in a different way.  It
-is only cleared by the shrinker for those entries that are one the lru
-before the ones that can be freed - it doesn't want to clear the
-DCACHE_REFERENCED bits on everything in the lru (which has it set).
-nfsd DOES want to clear the referenced bit on everything for the aging.
-
->=20
-> > > > This patch removes the list_lru and instead uses 2 simple linked list=
-s.
-> > > > When a file is accessed it is removed from whichever list it is on,
-> > > > then added to the tail of the first list.  Every 2 seconds the second
-> > > > list is moved to the "freeme" list and the first list is moved to the
-> > > > second list.  This avoids any need to walk a list to find old entries.
-> > >=20
-> > > Yup, that's exactly what the current code does via the laundrette
-> > > work that schedules nfsd_file_gc() to run every two seconds does.
-> > >=20
-> > > > These lists are per-netns rather than global as the freeme list is
-> > > > per-netns as the actual freeing is done in nfsd threads which are
-> > > > per-netns.
-> > >=20
-> > > The list_lru is actually multiple lists - it is a per-numa node list
-> > > and so moving to global scope linked lists per netns is going to
-> > > reduce scalability and increase lock contention on large machines.
-> >=20
-> > Possibly we could duplicate the filecache_disposal structure across
-> > svc_pools instead of net namespaces.  That would fix the scalability
-> > issue.  Probably we should avoid removing and re-adding the file in
-> > the lru for every access as that probably causes more spinlock
-> > contention.  We would need to adjust the ageing mechanism but i suspect
-> > it could be made to work.
->=20
-> Typical usage of list-lru is lazy removal. i.e. we only add it to
-> the LRU list if it's not already there, and only reclaim/gc removes
-> it from the list.  This is how the inode and dentry caches have
-> worked since before list_lru even existed, and it's a pattern that
-> is replicated across many subsystems that use LRUs for gc
-> purposes...
->=20
-> IOWs, the "object in cache" lookup fast path should never touch
-> the LRU at all.
-
-Yes, I agree.  Whichever way we go, this is a change we need to make to
-the nfss filecache - not to remove on each access.
-
->=20
-> > > i.e. It's kinda hard to make any real comment on "I do not believe
-> > > list_lru is a good tool for this" when there is no actual
-> > > measurements provided to back the statement one way or the other...
-> >=20
-> > It's not about measurements, its about behavioural correctness.  Yes, I
-> > should have spelled that out better.  Thanks for encouraging me to do
-> > so.
->=20
-> So you are saying that you don't care that the existing code can
-> easily be fixed, that your one-off solution won't scale as well and
-> is less functional from memory reclaim POV, and that the new
-> implementation is less maintainable than using generic
-> infrastructure to do the same work.
-
-No, I'm saying that it isn't clear to me that the existing code can be
-easily fixed.  Certainly there are easy improvements.  But list_lru is
-designed for an important access pattern which is different from what
-the nfsd filecache needs.
-
->=20
-> If that's the approach you are taking, then I don't know why you
-> asked me to point out all the stuff about list_lru that you didn't
-> seem to know about in the first place...
-
-It is always useful to have intelligent review, even when one doesn't
-agree with all of it.  Thanks!
-
-NeilBrown
 
