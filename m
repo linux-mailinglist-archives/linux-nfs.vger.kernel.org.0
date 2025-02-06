@@ -1,166 +1,275 @@
-Return-Path: <linux-nfs+bounces-9891-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9892-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72075A29E41
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 02:09:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33A11A29EB6
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 03:22:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE2173A11FB
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 01:09:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 394327A2AC5
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 02:21:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5E41C68F;
-	Thu,  6 Feb 2025 01:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03CE044C94;
+	Thu,  6 Feb 2025 02:22:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BFcK0FMO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GDXU5ftS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0vBvXXB8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Mdu34yvH"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="lh2eWSTQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1283B10F2;
-	Thu,  6 Feb 2025 01:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E4326ACD
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Feb 2025 02:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738804187; cv=none; b=b3Qdh+yj0nC0/EwiuXk79WCSc67Hy/uquXef/B4/L8CwT/rNHv3K0sJMted9VhdFlUB2MZFV9EmMhrPiPzetJjmeVHndssnLEmaQ3ufg6u6CXpfakbMkjdZ0o/NZNbjdnScJ6fPLwOsV/u22jfVszfppQ5zGk/owaV+AdZ3eHb0=
+	t=1738808520; cv=none; b=o3WbLWidXlsPdduQoNRd0fvHMSTvs79zDNMsUuno7l3k7/K+EcdVI1BNVVzTDjYQ61N9prgB9Tf7G55BooPoFaCb2rUfVW5Dhze1J1Wkaz57e2G2eTCuMQGh8Gyp6NJdULdNpIpNbCfyf2DmsW1XmO2fC1dmfXHtLmPJS4SyaMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738804187; c=relaxed/simple;
-	bh=2W7xGAvwEKREc2mmCCyJDKIVOQ00sNgjnc36dfk/5gc=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=n1ScImbVdWCkllAdYGDF4DGWz1Fi6ReMwjAoR6bei8Yg3Cb8wxGRHg67WRod/BSC7JMdjhl0ZdPpu+Qxov3i5xF5g6vPmho+MplbMHm/GmfcKZ4DOF63iie/pJHDfqJOu7R7dfxuxB/KKIo0KyoGXz0y3ycX1rh83OrYDmY4ANo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BFcK0FMO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GDXU5ftS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0vBvXXB8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Mdu34yvH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EB27C21114;
-	Thu,  6 Feb 2025 01:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738804183; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/K7GM68i/5RNp4Wq0Hmnk5pC72IEeShaFSY6FGnYRJE=;
-	b=BFcK0FMOsbYhJG6H4W7Vea0FTOXYdhreyz11HQNYnY8RMlwuk6zSUKt0/kvSpD+kre6OiT
-	IpPx6hl+waB/jehnjgtoVmX4XPpv9c5Y87jPRunDHpCMumISM00ZYSG0qCj82RLMLUyhu0
-	kUGhHBsqtLaUrkdqPOIfjxlTInNkUTw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738804183;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/K7GM68i/5RNp4Wq0Hmnk5pC72IEeShaFSY6FGnYRJE=;
-	b=GDXU5ftSX/hFDi5ovK4v774DaWqUo/Eem6iOGqFUsbRa65E638mZAWNJbs6rU+l5UAsBNW
-	kiJ3X7zbtMkW81Dg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0vBvXXB8;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Mdu34yvH
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738804182; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/K7GM68i/5RNp4Wq0Hmnk5pC72IEeShaFSY6FGnYRJE=;
-	b=0vBvXXB8l8ojhhPdg3vzTFJ+RqF9Twes2GvLF90YMDITiqpqzROjlv6B1GkpXyph4/cnJ2
-	EKeD2X61Wqf/XzuJTvZ0C5t5HQ246RypdLh4WxxNXd21r+dzNNMMQIV2FUZwRuISWfTL1b
-	MzC00Nk7+ZyeNGkP3e0nTQgRAiu1nMs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738804182;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/K7GM68i/5RNp4Wq0Hmnk5pC72IEeShaFSY6FGnYRJE=;
-	b=Mdu34yvHtk8lDFOURScQjl4t5C9PUtPCpDi88STNmNpwkVWtoqs8wsJCx6glY74u0MQb5k
-	qz4CZzk86PjYULAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48C7113694;
-	Thu,  6 Feb 2025 01:09:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aqqeOtELpGeJQgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 06 Feb 2025 01:09:37 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1738808520; c=relaxed/simple;
+	bh=qBFtQO+gpY4y1V3swgi0Dkpr26Ufn3OR75HhhYuv02Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OqUWac5/fW9+8BxM4PUi9sdcAkI9rDgOI+5X+QWI2TqP5uBqLv4QV99BxrrioODvLNpK3btKoaoSBmhH7CAr0WijqrD5PIGYYB2H3ORmZyvlT+5wWEB1u2kUSNcR9pw3ZBN6x62qtOPdwV9t/Aq5dZIcVw3jzYfNEbtv24C47JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=lh2eWSTQ; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9d74037a7so682584a91.2
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Feb 2025 18:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1738808518; x=1739413318; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ZkA+Cp3/kVEWu01CBo6XIgceYf3Cy9F2m23xIQEOjo=;
+        b=lh2eWSTQI43tFvAtzaSMLUhfI/ewK1+dOdGJs+15mVOoz1Xhcq1CJXkXip+Xi6oyBU
+         5USxOV9BIGDPsbTrd+/r4GEdT8BchOag15zsInCjAvw3vTYFQ4qiY8S0VJdXNJZweyjL
+         8XNMBOKyryvxQL/yT1P/sy8rW/WT14YiRiQNntay5n0bRSfo0U+cREccBERbgcwoQoo2
+         ZpohUW+ZaJqQDmfBjzEmNe0+nzjyCLgQ0I8OXhDxvuxHpNWNet40+ysNFszfX8bl85n2
+         lNODVCcpX4+5uENibI77yzmKE1p83QtL3pH5TOQjTvnx+QHXSZ0llExCBH9cCgQy3IpB
+         Dj9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738808518; x=1739413318;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ZkA+Cp3/kVEWu01CBo6XIgceYf3Cy9F2m23xIQEOjo=;
+        b=Z8ZgRb4CafAokeRJET7F2iSv152tF/W6VwLRJ7Aivbk03omY4Nc5IjIINCD9jMMyP3
+         y6NNlsiDe7aunjrsDei3fWPu61yFN9eut2BWmJ1NW2Mt3ryP60C1Bc4JWgKUyjN7qon5
+         mT8B16echlBHDQWbiMRHDDLT9o1XRccr7MNbcghjJ2RlkN8XkMyJkzfwPJyTRCRVueTc
+         RnFeaCoqCDJcFLloTBz5CTafesw/bTsr66Zm4H4Dr6DPL4p39/qBxKolCso0cXDrNuKj
+         boEYHB+f89asFXpc4/bj8MHu3bemGfZ+/qEPJW5hEixqK0JJpEvr7q2zBMDhYyezH7WE
+         eqPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaw0FN5bPa2ik/ifbhlXZ+xM5aFHmkMVZV59T+iU1B7j/kF2IVGrKZJR4Bj2nI6dfG2IY06Ou45gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEqyvwcaKJ61pcuo3UXfuEi8HMZ7fmK1wKs1UE7Z2RobSyxkAC
+	65ECTtbG75t7+YAAi0J7Fa/7iwiop1QJm3MIKxMhuhTitHXMPW2QupcWZrAELkQ6rBrDY0piyHY
+	l
+X-Gm-Gg: ASbGnctAD7isIjA0BY+bpbBjGrHySLWt1En66N5yyfIK2o7YSuSYypFJigK347pLCED
+	2FLoGq52/h7Acskf02nApc7CVxrEcHAXmwTNH5K9eRxCkj38cOebE7Vn17Tb4sGRTaNXw6sZBZV
+	fMJn9UrlJQ62xY8TETxhTJEuOPrNRKp7kjYJahx7JKC1g2RTMrCdeweAUadgcpiDx5JgnWXqn0d
+	FcX5fWHOwkB7Wbzd5+b2AwYRU+yDZwQa+ae+YCR3fT0uqwKJMPJW26wu7uEFE0hdRdm4LfnddvV
+	EgPYpejqaS4EyZMrhxoxgCKCqSXLsK83SfTZJFH8ioRaiCts4EzeW9oaawiDah4Rbu4=
+X-Google-Smtp-Source: AGHT+IHbrkqaj5zKg0f2SbzFiG4A8qy3SVjcTKkWVhtQPB3/fIwN7UCOPDuDOD5idBm9pngDGvvY6w==
+X-Received: by 2002:a17:90b:3c8d:b0:2f9:9ddd:689c with SMTP id 98e67ed59e1d1-2f9e08107ffmr7773615a91.25.1738808518209;
+        Wed, 05 Feb 2025 18:21:58 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09b5d0b6sm133278a91.46.2025.02.05.18.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 18:21:57 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tfrWb-0000000FBLn-3s4d;
+	Thu, 06 Feb 2025 13:21:53 +1100
+Date: Thu, 6 Feb 2025 13:21:53 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Subject: Re: [PATCH 0/7] nfsd: filecache: change garbage collection lists
+Message-ID: <Z6QcwbsFfOahoJ1P@dread.disaster.area>
+References: <20250127012257.1803314-1-neilb@suse.de>
+ <Z5h7HOogTsM4ysZx@dread.disaster.area>
+ <173818645556.22054.17713237842941971206@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Li Lingfeng" <lilingfeng3@huawei.com>, jlayton@kernel.org,
- okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- trondmy@hammerspace.com, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com, houtao1@huawei.com,
- yi.zhang@huawei.com, yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Subject:
- Re: [PATCH 1/2] nfsd: map the ELOOP to nfserr_symlink to avoid warning
-In-reply-to: <8a05743a-5da9-46d1-bd89-c56cdc38fcdc@oracle.com>
-References: <>, <8a05743a-5da9-46d1-bd89-c56cdc38fcdc@oracle.com>
-Date: Thu, 06 Feb 2025 12:09:29 +1100
-Message-id: <173880416944.22054.14559337357110702284@noble.neil.brown.name>
-X-Rspamd-Queue-Id: EB27C21114
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173818645556.22054.17713237842941971206@noble.neil.brown.name>
 
-On Thu, 06 Feb 2025, Chuck Lever wrote:
+On Thu, Jan 30, 2025 at 08:34:15AM +1100, NeilBrown wrote:
+> On Tue, 28 Jan 2025, Dave Chinner wrote:
+> > On Mon, Jan 27, 2025 at 12:20:31PM +1100, NeilBrown wrote:
+> > > [
+> > > davec added to cc incase I've said something incorrect about list_lru
+> > > 
+> > > Changes in this version:
+> > >   - no _bh locking
+> > >   - add name for a magic constant
+> > >   - remove unnecessary race-handling code
+> > >   - give a more meaningfule name for a lock for /proc/lock_stat
+> > >   - minor cleanups suggested by Jeff
+> > > 
+> > > ]
+> > > 
+> > > The nfsd filecache currently uses  list_lru for tracking files recently
+> > > used in NFSv3 requests which need to be "garbage collected" when they
+> > > have becoming idle - unused for 2-4 seconds.
+> > > 
+> > > I do not believe list_lru is a good tool for this.  It does not allow
+> > > the timeout which filecache requires so we have to add a timeout
+> > > mechanism which holds the list_lru lock while the whole list is scanned
+> > > looking for entries that haven't been recently accessed.  When the list
+> > > is largish (even a few hundred) this can block new requests noticably
+> > > which need the lock to remove a file to access it.
+> > 
+> > Looks entirely like a trivial implementation bug in how the list_lru
+> > is walked in nfsd_file_gc().
+> > 
+> > static void
+> > nfsd_file_gc(void)
+> > {
+> >         LIST_HEAD(dispose);
+> >         unsigned long ret;
+> > 
+> >         ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+> >                             &dispose, list_lru_count(&nfsd_file_lru));
+> > 			              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > 
+> >         trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+> >         nfsd_file_dispose_list_delayed(&dispose);
+> > }
+> > 
+> > i.e. the list_lru_walk() has been told to walk the entire list in a
+> > single lock hold if nothing blocks it.
+> > 
+> > We've known this for a long, long time, and it's something we've
+> > handled for a long time with shrinkers, too. here's the typical way
+> > of doing a full list aging and GC pass in one go without excessively
+> > long lock holds:
 > 
-> It's kind of interesting that there hasn't been a need to add an ELOOP
-> mapping to nfserrno() until now. I'm a little hesitant to add a generic
-> mapping without checking the thousand other places nfserrno() is called,
-> but that might end up being a necessary part of this fix.
+> "Typical"?? Can you please point me to an existing example?
 
+Of the top of my head: shrink_dcache_sb().
 
-This ELOOP error is surprising on a local filesystem.  It means that the
-lookup of the given name found an inode for a directory which already
-existed in the dcache as an ancestor of the directory being listed - or
-possibly as the directory itself.  For ext4, that means a corrupt
-filesystem.
+However, *every single shrinker implementation in the kernel* uses
+this algorithm whether they use list-lru or not.
 
-If the exported filesystem was NFS, then I think it is credible that a
-complex race could result in this.
+i.e. this "iterate list in small batchs to minimise lock hold
+latency" algorithm has been used by the shrinker infrastructure
+since the 2.5.x days.
 
-So we certainly need to handle ELOOP cleanly but we don't need to try
-too hard to find a perfect solution.  Returning nfserr_io would be
-defensible.  Nothing else really suits, certainly not NFS4ERR_SYMLINK
-because there is no symlink involved here.
+list-lru was designed explicitly for use with shrinker walk
+algorithms, so -typical- usage it to walk in small batches unless
+it is known that there are no concurrent accesses to the list
+possible. (e.g. during teardown).
 
-NeilBrown
+Just because you don't know about how list_lru is typically used,
+doesn't mean that there aren't typical uses...
+
+> > IOWs, a batched walk like above resumes the walk exactly where it
+> > left off, because it is always either reclaiming or rotating the
+> > object at the head of the list.
+> 
+> "rotating the object" to the head of the per-node list, not the head of
+> the whole list_Lru (except in the trivial single-node case).
+
+Yup. That's because shrinkers are numa node specific. i.e. memory
+reclaim is not global, it is per-node and we have one list_lru list
+per node. IOWs, the structure of list-lru is intended to be optimal
+for NUMA aware memory reclaim algorithms.
+
+Most important VFS and filesystem caches ceased to have global LRU
+ordering a -long- time ago. Scalability to really large machines is
+far more important than strict global LRU maintenance.
+
+> list_lru_walk() iterates over the multiple node lists in a fixed order.
+> Suppose you have 4 nodes, each with 32 items, all of them referenced, and
+> a batch size of 64.
+> The first batch will process the 32 items on the first list clearing the
+> referenced bit and moving them to the end of that list.  Then continue
+> through those 32 again and freeing them all.  The second batch will do the
+> same for the second list.  The last two lists won't be touched.
+> 
+> list_lru_walk() is only ever used (correctly) for clearing out a
+> list_lru.  It should probably be replaced by a function with a more apt
+> name which is targeted at this: no spinlocks, no return value from the
+> call-back.
+> 
+> Yes, we could change the above code to use list_lru_walk_node and wrap a
+> for loop around the whole, but then I wonder if list_lru is really
+> giving us anything of value.
+
+Apart from scalability and the ability for memory reclaim to do sane
+per-node object reclaim? What about the fact that anyone familiar
+with list-lru doesn't need to look at how the lists are implemented
+to know how the code behaves?
+
+Using common infrastructure, even when it's not an exact perfect
+fit, holds a lot more value to the wider community than a one-off
+special snowflake implementation that only one or two people
+understand....
+
+> Walking a linked list just to set a bit in ever entry is a lot more work
+> that a few list manipulation in 5 cache-lines.
+
+Maybe so, but the cache gc isn't a performance critical path.
+
+> > > This patch removes the list_lru and instead uses 2 simple linked lists.
+> > > When a file is accessed it is removed from whichever list it is on,
+> > > then added to the tail of the first list.  Every 2 seconds the second
+> > > list is moved to the "freeme" list and the first list is moved to the
+> > > second list.  This avoids any need to walk a list to find old entries.
+> > 
+> > Yup, that's exactly what the current code does via the laundrette
+> > work that schedules nfsd_file_gc() to run every two seconds does.
+> > 
+> > > These lists are per-netns rather than global as the freeme list is
+> > > per-netns as the actual freeing is done in nfsd threads which are
+> > > per-netns.
+> > 
+> > The list_lru is actually multiple lists - it is a per-numa node list
+> > and so moving to global scope linked lists per netns is going to
+> > reduce scalability and increase lock contention on large machines.
+> 
+> Possibly we could duplicate the filecache_disposal structure across
+> svc_pools instead of net namespaces.  That would fix the scalability
+> issue.  Probably we should avoid removing and re-adding the file in
+> the lru for every access as that probably causes more spinlock
+> contention.  We would need to adjust the ageing mechanism but i suspect
+> it could be made to work.
+
+Typical usage of list-lru is lazy removal. i.e. we only add it to
+the LRU list if it's not already there, and only reclaim/gc removes
+it from the list.  This is how the inode and dentry caches have
+worked since before list_lru even existed, and it's a pattern that
+is replicated across many subsystems that use LRUs for gc
+purposes...
+
+IOWs, the "object in cache" lookup fast path should never touch
+the LRU at all.
+
+> > i.e. It's kinda hard to make any real comment on "I do not believe
+> > list_lru is a good tool for this" when there is no actual
+> > measurements provided to back the statement one way or the other...
+> 
+> It's not about measurements, its about behavioural correctness.  Yes, I
+> should have spelled that out better.  Thanks for encouraging me to do
+> so.
+
+So you are saying that you don't care that the existing code can
+easily be fixed, that your one-off solution won't scale as well and
+is less functional from memory reclaim POV, and that the new
+implementation is less maintainable than using generic
+infrastructure to do the same work.
+
+If that's the approach you are taking, then I don't know why you
+asked me to point out all the stuff about list_lru that you didn't
+seem to know about in the first place...
+
+-Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
 
