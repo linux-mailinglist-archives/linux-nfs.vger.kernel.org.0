@@ -1,149 +1,282 @@
-Return-Path: <linux-nfs+bounces-9899-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9900-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89D72A2A371
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 09:45:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F7E3A2A565
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 11:01:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8948A7A1DC7
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 08:44:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 281CE7A2982
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Feb 2025 10:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7B916CD1D;
-	Thu,  6 Feb 2025 08:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F58D224AFE;
+	Thu,  6 Feb 2025 10:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZLH91XXU"
+	dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="Ujp/jdWX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.ad.secure-endpoints.com [208.125.0.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB6B163
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Feb 2025 08:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6979722619D
+	for <linux-nfs@vger.kernel.org>; Thu,  6 Feb 2025 10:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.125.0.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738831549; cv=none; b=YjUmmrGjNkLv15iTc4gtH7+Tzoww4NmFTh5Sx7mzzjBHFNIQQuXqSdrOWYuKGgEeUJhIL+9R7ZTvRZTGD9vCAa6MikZM8/9oulUzXZ4qSHlX2dkkBX3x82lEwO3rpc3jA7VKgGi8RPQlhwKkPLQtYTVLHhIMJYjCqT631qKTVwk=
+	t=1738836026; cv=none; b=Tf8cjHy3Y7bLEteg/+mrgw7qxtBni9ljy0rIpgDVEtrcSi5G/GmPRLHAsu+pUY20dOvmcd6MNslxHtzHiVeMYZevUrjtl2ozrPhEUemIXzFhHTd/ptumk4iR5KN8C2ZKRFf5Tsqz70mo5TgpUTBv/d3sTxuu5XhMANKXL1xbdZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738831549; c=relaxed/simple;
-	bh=SS1IVKzS4MF7XAsLJlHC7iIrB1Il+6UHnOD4QOZt5BA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GsD+3SbnZfexQLmitqx8y9LfhNMIuc+6/jVSdTruC530vM/PQs8AVWxONn8akMt2lXO4t+3Hd1Vp521ZOf+HQshyqL4o0WLcM7hBxo1z3DgBURUAKcCjJ7917hR4IjQT8yotuFozd8e5MBAkLeVdUc9do0ZbpgEZYXknGXDmjQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZLH91XXU; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso971760a91.0
-        for <linux-nfs@vger.kernel.org>; Thu, 06 Feb 2025 00:45:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738831547; x=1739436347; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4STdj3UJNFJcnuFe4+jt5RdTZnfO8fVkpIPHScirFXY=;
-        b=ZLH91XXUpSYchX6ISLq29CpF1qcgjWshr6oKESCx/EihoIeqOdiqDS2wALZZJr76ey
-         GJWLKACS3I5ub0hs0KTU7vZ2qszytgjaVUfWQ39qrAWi0r1Nf2zolmj9lqhx40X5ycCi
-         xddgDmpC5K/6LJCnJ1uN3e45MN5giBaw6UKaG6A0xDuJY5vUPLCfNLJBwdozR3/Oemrn
-         5mxjwXURxkSQgbZX1pRuak6LdXbr1Ovu1iplSm9VVn9kk05IkSVSxWyur0QbglHii6ss
-         cfZF3w7TMBpdtGC1DDtE0Sp6kf7p3qCLKsGK9psvjijd8ufcNCMgdciLFPykCpF+URD+
-         bx/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738831547; x=1739436347;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4STdj3UJNFJcnuFe4+jt5RdTZnfO8fVkpIPHScirFXY=;
-        b=VnUuS2J0BlFhohVtP0m+6hvx2D/fD+kzGqTdV/HPzXok8ILfMDYRftAc9wttIqq3HM
-         qBi5Ls1Snax6hda6YEIHooAGBJv460yhlzOtCu4f18aCSR3r9Qwbm8OVwwsXsEmRHiRL
-         99B23c4ioRW0BzEPnDUDJAb3SEUrJ3WlVnMOWyZXjpRVWcf0Sm2ZO3T7evy+hGvmrvrE
-         MeHV99+pPl0Qkviayrsr+y79JNn2Zt42yLzLnqubD8HBuV6EyMaGNJsAXUdaGbc2h66Y
-         yObk2hPFW7THhGtXy45adxhWmx52XSYcLFNqBHVjaarU4UjtzdMi+H9wrPE5onHpVlAf
-         /AqQ==
-X-Gm-Message-State: AOJu0Ywdq6yTNsipJr738xvujnU284PP3w27cG33U23fFxSCZY58mBjD
-	ko1RBhacBo+OPq468pSXgnQzGlUVHD4YRvzEFINq59irImoqfYkHqWXD+haee/pbLxQ5wu10dzQ
-	8sQw1C/Gtrsb2iGDwrFwk0dJi56/qiA==
-X-Gm-Gg: ASbGnctxxRZkMKDjQDvGKHznKFOOqStdpjmJlDB3kWZ/+HU9r2zwmO/I6Ul825yw8pG
-	iyF2c+YaVmbyv9wyVYkck3JllizWV+hisMALAs8YIDcB54OCTRqVdQcsrPwS0b/+4XibeM3K1tw
-	==
-X-Google-Smtp-Source: AGHT+IFi1yWdXiF9CT4EMnf/Bn7Q2a1l4hTqm5cuWKPcaX/YBvIpmCTONxP3ePF1wZhMN0PhW5h2X5BBKrzlbybSdFc=
-X-Received: by 2002:a17:90b:2243:b0:2f2:e905:d5ff with SMTP id
- 98e67ed59e1d1-2f9ff8b47c7mr4518272a91.6.1738831546836; Thu, 06 Feb 2025
- 00:45:46 -0800 (PST)
+	s=arc-20240116; t=1738836026; c=relaxed/simple;
+	bh=Of5A+G8sdWDfz+zrx7EDIxmehXI4NK589ZgoS/GMUDU=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=fWceVYeacfNC7E0H4yPnnE9Dyec9fcdThOCESEw8BwRtEMunlAgefF4mAoVy4OzLLPQ0iWApTCvuwg2OxHzQ2StMfvJJS0cxu2uDC3cl8Q9D+XPKaPrtNb69jcVP60rpP6ZV8Vj/iF1C3ZZTtslLFJJ2hObjJWay2JNynBMc6Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=auristor.com; dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b=Ujp/jdWX; arc=none smtp.client-ip=208.125.0.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auristor.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
+	d=auristor.com; s=MDaemon; r=y; t=1738835692; x=1739440492;
+	i=jaltman@auristor.com; q=dns/txt; h=Content-Type:Mime-Version:
+	Subject:From:In-Reply-To:Date:Cc:Content-Transfer-Encoding:
+	Message-Id:References:To; bh=dAf/Uezzq9o7A6VyZsf5tFZSMRcpAiuKGsc
+	dI9VdD8c=; b=Ujp/jdWX1P9IXJD2xT73KD4Q6HrORtP/2W/EB2T4tbETy8CMwWk
+	9UuFRs9Ka4VgWL16jHWZ+H+NeDwwHEHrtWpaROVNRA3JooqjPS5/5ON8Qztt+aOB
+	1nfOpnyoYjmKC7O9QZGdFdR+N095oxCSS67ZT7sqM8DX0UlkRdWnoZvs=
+X-MDAV-Result: clean
+X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Thu, 06 Feb 2025 04:54:52 -0500
+Received: from smtpclient.apple by auristor.com (208.125.0.235) (MDaemon PRO v25.0.0d) 
+	with ESMTPSA id md5001004467811.msg; Thu, 06 Feb 2025 04:54:52 -0500
+X-Spam-Processed: sequoia-grove.ad.secure-endpoints.com, Thu, 06 Feb 2025 04:54:52 -0500
+	(not processed: message from trusted or authenticated source)
+X-MDRemoteIP: 2603:7000:73c:bb00:1e8:cc30:74b8:af7f
+X-MDHelo: smtpclient.apple
+X-MDArrival-Date: Thu, 06 Feb 2025 04:54:52 -0500
+X-MDOrigin-Country: US, NA
+X-Authenticated-Sender: jaltman@auristor.com
+X-Return-Path: prvs=1132283e2d=jaltman@auristor.com
+X-Envelope-From: jaltman@auristor.com
+X-MDaemon-Deliver-To: linux-nfs@vger.kernel.org
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_E12BB6A8-0B65-4404-9637-08E1D4D9F4EE";
+	protocol="application/pkcs7-signature";
+	micalg=sha-256
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
- <CALXu0Ue+w_P6P_yyVR1y85bKXxkorGrctJ4jiTBctQd8ei1_kw@mail.gmail.com> <9138cbb9-b373-477e-bcc4-5a7cc4e16ed5@oracle.com>
-In-Reply-To: <9138cbb9-b373-477e-bcc4-5a7cc4e16ed5@oracle.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Thu, 6 Feb 2025 09:45:10 +0100
-X-Gm-Features: AWEUYZkA00nWQsh8vSmXJy6okFbQ26dL6g37Ki1sxeIxUheBNvH2KEXTuiQn9zk
-Message-ID: <CALXu0Uew5qUxvH7wum7xC1TBaP43tmrYAbU6iS6yuwJVF6rBrg@mail.gmail.com>
-Subject: Re: Increase RPCSVC_MAXPAYLOAD to 8M?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH net 20/24] rxrpc: Add the security index for yfs-rxgk
+From: Jeffrey Altman <jaltman@auristor.com>
+In-Reply-To: <20250203142343.248839-21-dhowells@redhat.com>
+Date: Thu, 6 Feb 2025 04:54:43 -0500
+Cc: netdev@vger.kernel.org,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Marc Dionne <marc.dionne@auristor.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Chuck Lever <chuck.lever@oracle.com>,
+ Eric Biggers <ebiggers@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ linux-crypto@vger.kernel.org,
+ linux-afs@lists.infradead.org,
+ linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5EF4D194-76D8-4DDD-B977-2D0E4AA5D549@auristor.com>
+References: <20250203142343.248839-1-dhowells@redhat.com>
+ <20250203142343.248839-21-dhowells@redhat.com>
+To: David Howells <dhowells@redhat.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-MDCFSigsAdded: auristor.com
 
-On Wed, 29 Jan 2025 at 16:02, Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> On 1/29/25 2:32 AM, Cedric Blancher wrote:
-> > On Wed, 22 Jan 2025 at 11:07, Cedric Blancher <cedric.blancher@gmail.com> wrote:
-> >>
-> >> Good morning!
-> >>
-> >> IMO it might be good to increase RPCSVC_MAXPAYLOAD to at least 8M,
-> >> giving the NFSv4.1 session mechanism some headroom for negotiation.
-> >> For over a decade the default value is 1M (1*1024*1024u), which IMO
-> >> causes problems with anything faster than 2500baseT.
-> >
-> > The 1MB limit was defined when 10base5/10baseT was the norm, and
-> > 100baseT (100mbit) was "fast".
-> >
-> > Nowadays 1000baseT is the norm, 2500baseT is in premium *laptops*, and
-> > 10000baseT is fast.
-> > Just the 1MB limit is now in the way of EVERYTHING, including "large
-> > send offload" and other acceleration features.
-> >
-> > So my suggestion is to increase the buffer to 4MB by default (2*2MB
-> > hugepages on x86), and allow a tuneable to select up to 16MB.
->
-> TL;DR: This has been on the long-term to-do list for NFSD for quite some
-> time.
->
-> We certainly want to support larger COMPOUNDs, but increasing
-> RPCSVC_MAXPAYLOAD is only the first step.
->
-> The biggest obstacle is the rq_pages[] array in struct svc_rqst. Today
-> it has 259 entries. Quadrupling that would make the array itself
-> multiple pages in size, and there's one of these for each nfsd thread.
->
-> We are working on replacing the use of page arrays with folios, which
-> would make this infrastructure significantly smaller and faster, but it
-> depends on folio support in all the kernel APIs that NFSD makes use of.
-> That situation continues to evolve.
->
-> An equivalent issue exists in the Linux NFS client.
->
-> Increasing this capability on the server without having a client that
-> can make use of it doesn't seem wise.
->
-> You can try increasing the value of RPCSVC_MAXPAYLOAD yourself and try
-> some measurements to help make the case (and analyze the operational
-> costs). I think we need some confidence that increasing the maximum
-> payload size will not unduly impact small I/O.
->
-> Re: a tunable: I'm not sure why someone would want to tune this number
-> down from the maximum. You can control how much total memory the server
-> consumes by reducing the number of nfsd threads.
->
 
-I want a tuneable for TESTING, i.e. lower default (for now), but allow
-people to grab a stock Linux kernel, increase tunable, and do testing.
-Not everyone is happy with doing the voodoo of self-build testing,
-even more so in the (dark) "Age Of SecureBoot", where a signed kernel
-is mandatory. Therefore: Tuneable.
+--Apple-Mail=_E12BB6A8-0B65-4404-9637-08E1D4D9F4EE
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-Ced
--- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+
+
+> On Feb 3, 2025, at 9:23=E2=80=AFAM, David Howells =
+<dhowells@redhat.com> wrote:
+>=20
+> Add the security index and abort codes for the YFS variant of rxgk.
+>=20
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> fs/afs/misc.c              | 13 +++++++++++++
+> include/uapi/linux/rxrpc.h | 17 +++++++++++++++++
+> 2 files changed, 30 insertions(+)
+>=20
+> diff --git a/fs/afs/misc.c b/fs/afs/misc.c
+> index b8180bf2281f..57f779804d50 100644
+...
+> diff --git a/include/uapi/linux/rxrpc.h b/include/uapi/linux/rxrpc.h
+> index eac460d37598..cdf97c3f8637 100644
+> --- a/include/uapi/linux/rxrpc.h
+> +++ b/include/uapi/linux/rxrpc.h
+> @@ -80,6 +80,7 @@ enum rxrpc_cmsg_type {
+> #define RXRPC_SECURITY_RXKAD 2 /* kaserver or kerberos 4 */
+> #define RXRPC_SECURITY_RXGK 4 /* gssapi-based */
+> #define RXRPC_SECURITY_RXK5 5 /* kerberos 5 */
+> +#define RXRPC_SECURITY_YFS_RXGK 6 /* YFS gssapi-based */
+>=20
+> /*
+>  * RxRPC-level abort codes
+> @@ -125,6 +126,22 @@ enum rxrpc_cmsg_type {
+> #define RXKADDATALEN 19270411 /* user data too long */
+> #define RXKADILLEGALLEVEL 19270412 /* caller not authorised to use =
+encrypted conns */
+>=20
+> +/*
+> + * RxGK GSSAPI security abort codes.
+> + */
+> +#define RXGK_INCONSISTENCY 1233242880 /* Security module structure =
+inconsistent */
+> +#define RXGK_PACKETSHORT 1233242881 /* Packet too short for security =
+challenge */
+> +#define RXGK_BADCHALLENGE 1233242882 /* Invalid security challenge */
+> +#define RXGK_BADETYPE 1233242883 /* Invalid or impermissible =
+encryption type */
+> +#define RXGK_BADLEVEL 1233242884 /* Invalid or impermissible security =
+level */
+> +#define RXGK_BADKEYNO 1233242885 /* Key version number not found */
+> +#define RXGK_EXPIRED 1233242886 /* Token has expired */
+> +#define RXGK_NOTAUTH 1233242887 /* Caller not authorized */
+> +#define RXGK_BAD_TOKEN 1233242888 /* Security object was passed a bad =
+token */
+> +#define RXGK_SEALED_INCON 1233242889 /* Sealed data inconsistent */
+> +#define RXGK_DATA_LEN 1233242890 /* User data too long */
+> +#define RXGK_BAD_QOP 1233242891 /* Inadequate quality of protection =
+available */
+> +
+> /*
+>  * Challenge information in the RXRPC_CHALLENGED control message.
+>  */
+
+David,
+
+Unfortunately these are not the RXGK error code assignments used by =
+YFS_RXGK.  =20
+The correct assignments are documented at
+
+  https://registrar.central.org/et/RXGK_auristorfs.html
+
+RXGKINCONSISTENCY (1233242880L) Security module structure inconsistent
+RXGKPACKETSHORT (1233242881L) Packet too short for security challenge
+RXGKBADCHALLENGE (1233242882L) Security challenge/response failed
+RXGKSEALEDINCON (1233242883L) Sealed data is inconsistent
+RXGKNOTAUTH (1233242884L) Caller not authorised
+RXGKEXPIRED (1233242885L) Authentication expired
+RXGKBADLEVEL (1233242886L) Unsupported or not permitted security level
+RXGKBADKEYNO (1233242887L) Bad transport key number
+RXGKNOTRXGK (1233242888L) Security layer is not rxgk
+RXGKUNSUPPORTED (1233242889L) Endpoint does not support rxgk
+RXGKGSSERROR (1233242890L) GSSAPI mechanism error
+
+The YFS_RXGK variant of the RXGK error table conflicts with the error =
+table=20
+documented in rxgk: GSSAPI based security class for RX.=20
+
+  https://datatracker.ietf.org/doc/draft-wilkinson-afs3-rxgk/
+
+The RXGK error table used in conjunction with the yfs-rxgk security =
+class=20
+predates the error table in the Internet-Draft by more than two years.
+
+A request that OpenAFS renumber was submitted in June 2023 but has yet =
+to be acted upon.
+
+  https://gerrit.openafs.org/#/c/15467/
+
+Sorry for the inconvenience.
+
+Jeffrey Altman
+
+
+
+
+
+
+--Apple-Mail=_E12BB6A8-0B65-4404-9637-08E1D4D9F4EE
+Content-Disposition: attachment;
+	filename=smime.p7s
+Content-Type: application/pkcs7-signature;
+	name=smime.p7s
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDHEw
+ggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJBgNVBAYT
+AlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMB4XDTIyMDgw
+NDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0EwMTQxMEQwMDAwMDE4
+MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRtYW4xFTATBgNVBAoTDEF1
+cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCk
+C7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3xHZRtv179LHKAOcsY2jIctzieMxf
+82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyNfO/wJ0rX7G+ges22Dd7goZul8rPaTJBI
+xbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kIEEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq
+4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6
+W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjGIcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAw
+gYQGCCsGAQUFBwEBBHgwdjAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
+dHJ1c3QuY29tMEIGCCsGAQUFBzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2Nl
+cnRzL3RydXN0aWRjYWExMy5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYD
+VR0TBAIwADCCASsGA1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIB
+Fj5odHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5k
+ZXguaHRtbDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJl
+ZW4gaXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
+YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmlj
+YXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8vdmFsaWRh
+dGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQYMBaBFGphbHRt
+YW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2sgjAdBgNVHSUEFjAU
+BggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwVeycprp8Ox1npiTyfwc5Q
+aVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4cWLeQfaMrnyNeEuvHx/2CT44c
+dLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYqutYF4Chkxu4KzIpq90eDMw5ajkex
+w+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJoQle4wDxrdXdnIhCP7g87InXKefWgZBF4
+VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXta8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRk
+gIGb319a7FjslV8wggaXMIIEf6ADAgECAhBAAXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUA
+MEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBD
+b21tZXJjaWFsIFJvb3QgQ0EgMTAeFw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJ
+BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6i
+xaNP0JKSjTd+SG5LwqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6i
+qgB63OdHxBN/15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxl
+g+m1Vjgno1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi
+2un03bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
+VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkGCCsG
+AQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3Qu
+Y29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL3Jvb3RzL2Nv
+bW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C5yZUyI42djCCASQG
+A1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0dHBzOi8vc2VjdXJlLmlk
+ZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMIG6BggrBgEFBQcC
+AjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMgYmVlbiBpc3N1ZWQgaW4gYWNjb3Jk
+YW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2VydGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0
+IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
+eC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20v
+Y3JsL2NvbW1lcmNpYWxyb290Y2ExLmNybDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQw
+HQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX
+6Nl4a03cDHt7TLdPxCzFvDF2bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN
+95jUXLdLPRToNxyaoB5s0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24
+GBqqVudvPRLyMJ7u6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azN
+BkfnbRq+0e88QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8Hvgn
+LCBFK2s4Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXF
+C9budb9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
+rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4dUsZy
+Tk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJnp/BscizY
+dNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eAMDGCAqYwggKi
+AgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMOVHJ1c3RJ
+RCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCgggEpMBgGCSqGSIb3DQEJ
+AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDIwNjA5NTQ0M1owLwYJKoZIhvcNAQkE
+MSIEINpPSRSQlcIfsyMoAqOSyhZGoIPXIUgrHfLpdIR8lc/WMF0GCSsGAQQBgjcQBDFQME4wOjEL
+MAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMC
+EEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQAgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYD
+VQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzM
+MA0GCSqGSIb3DQEBCwUABIIBAEFiLcM2RpTq8Jd7tGeFzzRybqjKMcFuIinUvF1wgtY260aL91zZ
+0hpvTxcER+LGsE9FF24gr5V/4sWDjt0CAX5+ga9mmeGUR9bAZ1kR1ZR0TbpN0+ne3lzOCMZND0We
+vc5UufW83eDz2kKvuWaw73PWFaH50DQFK7M1VuIV4GtPZz4C26dcnJve2XOoc+mO3YQbKO7Zf/T+
+E5YsoXWdlWKbFz2iBE7BRlQR7FsDMbAspcmBBwbiacN7x8NTBOMGyVPRKX6GElO7fDvI0DhodTtb
+oxrWPtp4ZAmmMBuGoSic8OeY/uOI/8eKvH9+oj6z9p85C05hscBCQCbMxR2Uf7cAAAAAAAA=
+--Apple-Mail=_E12BB6A8-0B65-4404-9637-08E1D4D9F4EE--
+
 
