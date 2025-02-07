@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-9928-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9929-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43956A2BBDF
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 07:57:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46DC0A2BC44
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 08:30:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F3F53A7B6E
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:56:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D48207A2CE4
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 07:29:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5F118E02A;
-	Fri,  7 Feb 2025 06:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB82B1A83EF;
+	Fri,  7 Feb 2025 07:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mdoH9hHQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LFyY7PfD";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mdoH9hHQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LFyY7PfD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12D615539D;
-	Fri,  7 Feb 2025 06:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170671A2C0B;
+	Fri,  7 Feb 2025 07:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911422; cv=none; b=JWas6kVsd6R+WwMqtcpefHX21yhncD26OKx4hgj56XMSr0QIiXydapMv3PKdMMLy5tVMAlfs3HWSM9/kk8id3+M/Dl1zJZPb9wFqxUuWSRIt0Pwj3j2Q/3Z1Np7zm854DR4Og7SgQYTGUxCUCuGRUVZFNurwKBgvWv49GOog5sQ=
+	t=1738913421; cv=none; b=oHgQ2EIZ4sFMQpaSjB4aDCp5Ts80yvi202PJqJQdwBB8/oCvpx1aEkOIteomk98C/D7/wlHpMIA94m+SyBiIT/ro2W8nEjS0ApMAhiHJ7b2pMB4nxKzYETv/gZUNI5ZOwJ6cnEcyeL/J9ctBNQWrX9tUBaVNpOjj8cgd4+PCiIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911422; c=relaxed/simple;
-	bh=a+ZrqQ7/dxIQo/7BABs6hf+fQbkXeAcGoBpGTTHuav4=;
+	s=arc-20240116; t=1738913421; c=relaxed/simple;
+	bh=Ypa6JVpcLYsHkslflRSol+aoU3IqgScPIjxA3Tar2nI=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ApZeG3nxs7PnrQsnlGoRrlKL7n3gFh118rVsK4k4RgPWFgMiS4O3eGLlKIE+RmiZsOe++W8LPFHmwbhxRe5XaNTSZ7SqyBqXuUyOuUyDfJBZOws/sPhTXp7w80Jr5KN6PoSh5bwK4R3ZHAc+Dgz7cZ5TTa4krAAXy73rOQSeXtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; arc=none smtp.client-ip=195.135.223.130
+	 References:Date:Message-id; b=XIs2doni6njZsJdIBZX7pa8bEi3TsUECA/jjfLo19vX4bWYyX2dewNhQgqhJe7eIIrb7MwA8NKjex8iPomjt7tbePlieA8K0kSL93my2GelwNQRHJkLISV49CnhHcDO9P/nBu9QaTAUpTqLENcJFcU8DHiTXJI4KUb8JHr/1e1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mdoH9hHQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LFyY7PfD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mdoH9hHQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LFyY7PfD; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B243C21163;
-	Fri,  7 Feb 2025 06:56:58 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4ACF31F443;
+	Fri,  7 Feb 2025 07:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1738913418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
-	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
-	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
+	bh=azGmcD+lFtdjZRrYJSsfQju7n1gQphxNEq9pNxlsrbc=;
+	b=mdoH9hHQz5RshyD3oqq6k19PGCXSLwuZ1Z6SpFXH6dFev9Lmg7f2q4Ve5A8/Z6fWiV0Q/J
+	OXOzQNPQcmIW+FwQFwZylqH4vJ1yk0GPxjYpgmnIJX4Zeoz+WxIlhC+cofQe/rNWcU2cKS
+	m462jBcyqHjghtCA4f/ntoAyD4Z6uAY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738911418;
+	s=susede2_ed25519; t=1738913418;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
-	5es7VmQ1c05X+oAQ==
-Authentication-Results: smtp-out1.suse.de;
+	bh=azGmcD+lFtdjZRrYJSsfQju7n1gQphxNEq9pNxlsrbc=;
+	b=LFyY7PfD7zJ0yaUcy7beyg93gzA1j0CzccDXrZ7Y7y9VAXcB/X5qFIp/3iIuEOp3nX1kv9
+	BLSw3/VTxrVuSBAg==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1738913418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
-	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
-	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
+	bh=azGmcD+lFtdjZRrYJSsfQju7n1gQphxNEq9pNxlsrbc=;
+	b=mdoH9hHQz5RshyD3oqq6k19PGCXSLwuZ1Z6SpFXH6dFev9Lmg7f2q4Ve5A8/Z6fWiV0Q/J
+	OXOzQNPQcmIW+FwQFwZylqH4vJ1yk0GPxjYpgmnIJX4Zeoz+WxIlhC+cofQe/rNWcU2cKS
+	m462jBcyqHjghtCA4f/ntoAyD4Z6uAY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738911418;
+	s=susede2_ed25519; t=1738913418;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
-	5es7VmQ1c05X+oAQ==
+	bh=azGmcD+lFtdjZRrYJSsfQju7n1gQphxNEq9pNxlsrbc=;
+	b=LFyY7PfD7zJ0yaUcy7beyg93gzA1j0CzccDXrZ7Y7y9VAXcB/X5qFIp/3iIuEOp3nX1kv9
+	BLSw3/VTxrVuSBAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE1CA13694;
-	Fri,  7 Feb 2025 06:56:51 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9093B13694;
+	Fri,  7 Feb 2025 07:30:11 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nm3JJ7OupWdYMAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 06:56:51 +0000
+	id QxfhEIO2pWd4OQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 07:30:11 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -111,17 +111,16 @@ Cc: "Christian Brauner" <brauner@kernel.org>,
  linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
 Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
  user_path_locked_at() to never return negative dentry
-In-reply-to: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
-References: <>,
- <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>,
- <173890403265.22054.8267826472424760232@noble.neil.brown.name>
-Date: Fri, 07 Feb 2025 17:53:43 +1100
-Message-id: <173891122321.22054.758548441508211924@noble.neil.brown.name>
+In-reply-to: <lfzaikkzt46fatqzqjeanxx2m2cwll46mqdcbizph22cck6stw@rhdne3332qdx>
+References:
+ <>, <lfzaikkzt46fatqzqjeanxx2m2cwll46mqdcbizph22cck6stw@rhdne3332qdx>
+Date: Fri, 07 Feb 2025 18:30:00 +1100
+Message-id: <173891340026.22054.12085488968187293785@noble.neil.brown.name>
 X-Spam-Score: -4.30
 X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+	BAYES_HAM(-3.00)[99.99%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MISSING_XM_UA(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -141,76 +140,37 @@ X-Spamd-Result: default: False [-4.30 / 50.00];
 X-Spam-Flag: NO
 X-Spam-Level: 
 
-On Fri, 07 Feb 2025, NeilBrown wrote:
-> On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
-> > > No callers of kern_path_locked() or user_path_locked_at() want a
-> > > negative dentry.  So change them to return -ENOENT instead.  This
-> > > simplifies callers.
+On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> On Fri, Feb 07, 2025 at 05:34:23PM +1100, NeilBrown wrote:
+> > On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > > On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
+> > > > Do you think there could be a problem with changing the error returned
+> > > > in this circumstance? i.e. if you try to destroy a subvolume with a
+> > > > non-existant name on a different filesystem could getting -ENOENT
+> > > > instead of -EXDEV be noticed?
 > > > 
-> > > This results in a subtle change to bcachefs in that an ioctl will now
-> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
-> > > behaviour to what it was prior to
+> > > -EXDEV is the standard error code for "we're crossing a filesystem
+> > > boundary and we can't or aren't supposed to be", so no, let's not change
+> > > that.
+> > > 
 > > 
-> > I'm not following how the code change matches the commit message?
+> > OK.  As bcachefs is the only user of user_path_locked_at() it shouldn't
+> > be too hard.
 > 
-> Maybe it doesn't.  Let me checked.
+> Hang on, why does that require keeping user_path_locked_at()? Just
+> compare i_sb...
 > 
-> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
-> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
-> -EXDEV.
-> 
-> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
-> -EXDEV is returned if the filesystem on which that path exists is not
->  the one that the ioctl is called on.
-> 
-> If the target filesystem is "/foo" and the path given is "/bar/baz" and
-> /bar exists but /bar/baz does not, then user_path_locked_at or
-> user_path_at will return a negative dentry corresponding to the
-> (non-existent) name "baz" in /bar.
-> 
-> In this case the dentry exists so the filesystem on which it was found
-> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
-> are credible return values.
-> 
-> 
-> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
->   to user_path_at() so there is no chance that ENOENT will be returned.
->   I cannot actually find where ENOENT could be returned ...  but that
->   doesn't really matter now.
 
-No, that's not right.  user_path_at() never returns a negative dentry.
-It isn't documented and I tried reading the code instead of looking at
-callers.
+I changed user_path_locked_at() to not return a dentry at all when the
+full path couldn't be found.  If there is no dentry, then there is no
+->d_sb.
+(if there was an ->i_sb, there would be an inode and this all wouldn't
+be an issue).
 
-So before that commit it DID return ENOENT rather than -EXDEV where as
-after that commit it returns -EXDEV rather than -ENOENT.
+To recap: the difference happens if the path DOESN'T exist but the
+parent DOES exist on a DIFFERENT filesystem.  It is very much a corner
+case and the error code shouldn't matter.  But I had to ask...
 
-So my patch IS restoring the old behaviour.  Are you *sure* you want
--EXDEV when given a non-existent path?
-
-Thanks,
 NeilBrown
-
-
-> 
-> - after that patch .... again the -EXDEV test comes first. That isn't
->   what I remember.  I must have misread it.
-> 
-> - after my patch user_path_locked_at() will return -ENOENT if the whole
->   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
-> 
-> So with my patch, ENOENT always wins, and it was never like that before.
-> Thanks for challenging me!
-> 
-> Do you think there could be a problem with changing the error returned
-> in this circumstance? i.e. if you try to destroy a subvolume with a
-> non-existant name on a different filesystem could getting -ENOENT
-> instead of -EXDEV be noticed?
-> 
-> Thanks,
-> NeilBrown
-> 
-> 
 
 
