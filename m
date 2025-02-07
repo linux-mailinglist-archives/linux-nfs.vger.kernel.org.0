@@ -1,240 +1,131 @@
-Return-Path: <linux-nfs+bounces-9924-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9925-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 807D2A2BA95
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:18:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B09AA2BB3E
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 07:15:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A70613A7747
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 05:17:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7EEF73A6CAF
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:14:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB5163D;
-	Fri,  7 Feb 2025 05:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B555233D7C;
+	Fri,  7 Feb 2025 06:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cqVqqPrE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Yocfy0o6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E/V9emz4";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="amaDs3YJ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jFlX92+O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F8B14F9C4
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 05:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F82233D8C
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 06:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738905479; cv=none; b=sp2FaHjvDczxWI4fZy0w7shdTGzC/T4XAP0xUdkPZ3EeVmUGc7/9IDjXwEUVCRX/JVo8sf3BF9BTCrBMsuQOp9E8TsBuUSjJOG0qkOJIQ196IimcRksh0zioGSFb0VXGTUo9qEzTkrkkwctQP5R/lS/lpWmg/WaSW0gbw7sik/w=
+	t=1738908798; cv=none; b=G4X9Jqb+WVAWGtnzf4FC713T956QXRohrRfSkrxKW7FkfWJ5oCTY5BsYO73+J47XQy7OyfQftfzyF68Am7GYcKOZKozCjMPxBDptq4Vh/dCslJ2JXccIvKEBa7tBVnT/QlFPdMRbKcaSLQQWsJWaGF5gRRP82WIrhbuNEOHx2e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738905479; c=relaxed/simple;
-	bh=gG7CdlQKviFJzEOM5RuuOe2cC5NxRie4hTd9xCT0XOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U1NE2OuqcK1i22v05x/Mvg3KvUB6Nv04OHF0i+oL2uFTiasdQ10G4IwS8hQ612JvTCgWxvPkzRC326JuU0MtxkZPM5xD8Kt/vAtq14YJV/LMG4Wn0Q4IPoc0GP9vrVlvTbBP207S5bG0DXRVxRrygUzqZIKXv2voJkKqZjexD+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cqVqqPrE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Yocfy0o6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E/V9emz4; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=amaDs3YJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EB02921133;
-	Fri,  7 Feb 2025 05:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905476; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=arc-20240116; t=1738908798; c=relaxed/simple;
+	bh=Y06M5hCOP0MaetwKFX4R2tbficSbU9BmACGKYWMJz24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B5GhmgINZ2EVXv1+9m96eYbCY7jhjdheyNULTzmkvcCw9sk0o27upIQ3N5g5ra/SU/DAPuCNT9t+VYis/0cFklzHsfg0qhKBjb4K2CT52OeWI3hkgxx8LASwEKEqchr8nIQK4AuLZkwCyg/AxOsjEfxuEdqVfmYjPWQKwinhxuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jFlX92+O; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Date: Fri, 7 Feb 2025 01:13:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738908788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g6wzLGMXv76tyWMql3E+wb6WTpmcsY+i+ln/Az0yDQk=;
-	b=cqVqqPrEEgwnZLTvmVIL2XNTStxEFQlcJiUvJ7/dQnqrEy7kMv/SopedFBPyerp9q6s12K
-	Q73vSF0+wtszAoaCMOF/OH5Mveg/tOUpFA5/vy+CQwzKHB1qZeeYxkhYy9gmGFrwtjltqm
-	AzfsO6ho2pWPwoNL80J7tcRWEEAv5PM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905476;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g6wzLGMXv76tyWMql3E+wb6WTpmcsY+i+ln/Az0yDQk=;
-	b=Yocfy0o6sE4fKgzdG9J/SBvug5yB/rLPM5HWIPJ2/jOUr/pJpP1NNa6dYF5W2plmYCNPQp
-	Zoj8qgZ1VB0CnzAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="E/V9emz4";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=amaDs3YJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905475; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g6wzLGMXv76tyWMql3E+wb6WTpmcsY+i+ln/Az0yDQk=;
-	b=E/V9emz4cG7CBb0jtePV/1fh2ZiqHrxPCdqzQZHUxc6Ys1tZYipJCXKEsZ+DsTwoEavHNm
-	dJsin7cwBDya/5VGG6m9XJ14NU/hMcjB1LZM6S3MHrewYfUd5qVmNoOnSHdn6a1uDUg7mK
-	JlHOlb1jxxn6FR0TyzqvNsIPBN1qB/0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905475;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g6wzLGMXv76tyWMql3E+wb6WTpmcsY+i+ln/Az0yDQk=;
-	b=amaDs3YJlTImEx9wJreBqtzGHc+OFfbrIgJcNgdpM+8O/VliKzoH9CD3iGx1X2dC7myRSN
-	CNx4daA+jA5M8PCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7ED2813694;
-	Fri,  7 Feb 2025 05:17:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id M8HtDIGXpWcpFwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 05:17:53 +0000
-From: NeilBrown <neilb@suse.de>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 6/6] nfsd: filecache: drop the list_lru lock during lock gc scans
-Date: Fri,  7 Feb 2025 16:15:16 +1100
-Message-ID: <20250207051701.3467505-7-neilb@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250207051701.3467505-1-neilb@suse.de>
-References: <20250207051701.3467505-1-neilb@suse.de>
+	bh=Vp/7w+5+gHtLzNMyTTGU+CF/tisriG9HJKcgsxxRakM=;
+	b=jFlX92+OnE8ydenzK+ydzPLb2u1I4HqC5s95spytTfGnNCMvKP0vIUChpgrFUlEkEKY6ch
+	1gy8ha+LqcX1vRvEwZHpCbeGrOnBxrPmWqX0vLRUp4kG5KDNYr/kaA2AHfDl2xxXA8xEFU
+	Neb7kDfKR6Kbtwq39lPVcy/uwj/6D8M=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+Message-ID: <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
+References: <>
+ <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>
+ <173890403265.22054.8267826472424760232@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EB02921133
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+X-Migadu-Flow: FLOW_OUT
 
-Under a high NFSv3 load with lots of different files being accessed,
-the LRU list of garbage-collectable files can become quite long.
+On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
+> On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
+> > > No callers of kern_path_locked() or user_path_locked_at() want a
+> > > negative dentry.  So change them to return -ENOENT instead.  This
+> > > simplifies callers.
+> > > 
+> > > This results in a subtle change to bcachefs in that an ioctl will now
+> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
+> > > behaviour to what it was prior to
+> > 
+> > I'm not following how the code change matches the commit message?
+> 
+> Maybe it doesn't.  Let me checked.
+> 
+> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
+> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
+> -EXDEV.
+> 
+> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
+> -EXDEV is returned if the filesystem on which that path exists is not
+>  the one that the ioctl is called on.
+> 
+> If the target filesystem is "/foo" and the path given is "/bar/baz" and
+> /bar exists but /bar/baz does not, then user_path_locked_at or
+> user_path_at will return a negative dentry corresponding to the
+> (non-existent) name "baz" in /bar.
+> 
+> In this case the dentry exists so the filesystem on which it was found
+> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
+> are credible return values.
+> 
+> 
+> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
+>   to user_path_att() so there is no chance that ENOENT will be returned.
+>   I cannot actually find where ENOENT could be returned ...  but that
+>   doesn't really matter now.
+> 
+> - after that patch .... again the -EXDEV test comes first. That isn't
+>   what I remember.  I must have misread it.
+> 
+> - after my patch user_path_locked_at() will return -ENOENT if the whole
+>   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
+> 
+> So with my patch, ENOENT always wins, and it was never like that before.
+> Thanks for challenging me!
 
-Asking list_lru_scan_node() to scan the whole list can result in a long
-period during which a spinlock is held, blocking the addition of new LRU
-items.
+How do you always manage to be unfailingly polite? :)
 
-So ask list_lru_scan_node() to scan only a few entries at a time, and
-repeat until the scan is complete.
+> 
+> Do you think there could be a problem with changing the error returned
+> in this circumstance? i.e. if you try to destroy a subvolume with a
+> non-existant name on a different filesystem could getting -ENOENT
+> instead of -EXDEV be noticed?
 
-If the shrinker runs between two consecutive calls of
-list_lru_scan_node() it could invalidate the "remaining" counter which
-could lead to premature freeing.  So add a spinlock to avoid that.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/filecache.c | 27 ++++++++++++++++++++++++---
- fs/nfsd/filecache.h |  6 ++++++
- 2 files changed, 30 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index d1ce0bc86ff7..54df5e23f119 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -533,6 +533,13 @@ nfsd_file_gc_cb(struct list_head *item, struct list_lru_one *lru,
- 	return nfsd_file_lru_cb(item, lru, arg);
- }
- 
-+/* If the shrinker runs between calls to list_lru_walk_node() in
-+ * nfsd_file_gc(), the "remaining" count will be wrong.  This could
-+ * result in premature freeing of some files.  This may not matter much
-+ * but is easy to fix with this spinlock which temporarily disables
-+ * the shrinker.
-+ */
-+static DEFINE_SPINLOCK(nfsd_gc_lock);
- static void
- nfsd_file_gc(void)
- {
-@@ -540,11 +547,21 @@ nfsd_file_gc(void)
- 	unsigned long ret = 0;
- 	int nid;
- 
-+	spin_lock(&nfsd_gc_lock);
- 	for_each_node_state(nid, N_NORMAL_MEMORY) {
--		unsigned long nr = list_lru_count_node(&nfsd_file_lru, nid);
--		ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
--					  &dispose, &nr);
-+		unsigned long remaining = list_lru_count_node(&nfsd_file_lru, nid);
-+
-+		while (remaining > 0) {
-+			unsigned long nr = min(remaining, NFSD_FILE_GC_BATCH);
-+			remaining -= nr;
-+			ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
-+						  &dispose, &nr);
-+			if (nr)
-+				/* walk aborted early */
-+				remaining = 0;
-+		}
- 	}
-+	spin_unlock(&nfsd_gc_lock);
- 	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
- 	nfsd_file_dispose_list_delayed(&dispose);
- }
-@@ -569,8 +586,12 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
- 	LIST_HEAD(dispose);
- 	unsigned long ret;
- 
-+	if (!spin_trylock(&nfsd_gc_lock))
-+		return SHRINK_STOP;
-+
- 	ret = list_lru_shrink_walk(&nfsd_file_lru, sc,
- 				   nfsd_file_lru_cb, &dispose);
-+	spin_unlock(&nfsd_gc_lock);
- 	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru));
- 	nfsd_file_dispose_list_delayed(&dispose);
- 	return ret;
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index de5b8aa7fcb0..5865f9c72712 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -3,6 +3,12 @@
- 
- #include <linux/fsnotify_backend.h>
- 
-+/*
-+ * Limit the time that the list_lru_one lock is held during
-+ * an LRU scan.
-+ */
-+#define NFSD_FILE_GC_BATCH     (16UL)
-+
- /*
-  * This is the fsnotify_mark container that nfsd attaches to the files that it
-  * is holding open. Note that we have a separate refcount here aside from the
--- 
-2.47.1
-
+-EXDEV is the standard error code for "we're crossing a filesystem
+boundary and we can't or aren't supposed to be", so no, let's not change
+that.
 
