@@ -1,85 +1,93 @@
-Return-Path: <linux-nfs+bounces-9918-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9919-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90F69A2BA8D
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:17:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C469A2BA8F
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:17:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A73317A2C51
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 05:16:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C1013A774A
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 05:17:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A59D614F9C4;
-	Fri,  7 Feb 2025 05:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92AE014F9C4;
+	Fri,  7 Feb 2025 05:17:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xvFxJ78v";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="08HKjXm6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xvFxJ78v";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="08HKjXm6"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DME1VThq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kagxxzki";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DME1VThq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kagxxzki"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062F963D
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 05:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F4D63D
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 05:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738905436; cv=none; b=Qs9g2h3bHoizuIE9wAi9q0qNCC8uNZ0ODG+SSFLdRZ4/xGSOra9ccYwdV8LmCy/f4WNA/j5nPCSP3NSMcn54WuHfTMOsPxN5PfJVUsL4JJQN5IjEg1XYRRAfTCJWUsns0W01V4bu27aHsBrdqjfHwkfzs1krRn8lvn++XXdBnCg=
+	t=1738905441; cv=none; b=A4N1giCwoDzZJ6Uv/D+V3DcGptnjcXk1eT+whrMV24PhTI5/1Ok7gKXBVW4JhQXqA4iJJCzemsc/J/JmGPjj6ls9mu8NEjzjqsIxL7gWK9Se1NmLxMx1+eNV4TJOfV71u6rr/PpZMDPLwin39hcIDqm9zL4SmlJv8sTKL60lrGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738905436; c=relaxed/simple;
-	bh=gkxN/iqdd66sdjlrEpOn2fppvL0GLaCxU+ab3NdQKxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kqeCY1Mi7Nj+DMEk9G78/97jdLDVfraYw2/8CuFnKzFik5QbLjke4b2ODBhnVYlEvtl7TuF+UGwLC8IglEjFGekKjPGcq5rpL1Q5KruDkyOi5IBMxTGWcXMCMGvTH+mM3titM/XxqAO/ZahfvvDNRR03R+RgxSdaucM/OznmIMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xvFxJ78v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=08HKjXm6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xvFxJ78v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=08HKjXm6; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1738905441; c=relaxed/simple;
+	bh=P58Z1clrmoR8B9QFLaCAYX5Z3bc0GI8/X9ODmnHVcCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=So1E/C1AyBKbw7np3tSNXlJTTVRPhrFwLyoKXwz6/KGdYGT937quekTK8+trwt/XlLtYToMDrcw8MXLsQj37TcPo3uxrr41FhiRD5gKMgzCgDe/Y0LupFLcXZpQYE73L5Gr5LcgoKipnR8CrBaTeaui4wM6qbGIk850299B3nVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DME1VThq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kagxxzki; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DME1VThq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kagxxzki; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0C4DC21133;
-	Fri,  7 Feb 2025 05:17:12 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 04E9B1F38D;
+	Fri,  7 Feb 2025 05:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905432; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=gkxN/iqdd66sdjlrEpOn2fppvL0GLaCxU+ab3NdQKxw=;
-	b=xvFxJ78v9jPtkNfEixe6wmu1UyxMeGxtF9M/BeBU3N15PWgILzO07ctj5tkAzFHm3IzzwU
-	4pUkSiwgQAJ2IKTmVF+0sQI16HOLPnuzcIxTb7fM6uD9wmcW6bS1gIH92Nc+RtasrYTYBG
-	pcrZjfHAJHQXDD/RBMQJXvXwBR93G3o=
+	t=1738905438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VI54pzrJtIgzOmCySuFeZgjbA1rlXuRQdxYMMtme1fw=;
+	b=DME1VThqCMUlI++YfScAXu+wz43Ajfib8BZr0jpfzOkEXwytx/53xI1n8H0PElatzkyDRV
+	vijfq4jGmmB8CVTpnOh7pAMljnDxRnf4upQQ1WHpkw+qwxhFO7NmgQhNHE7oWvRBVz/q6x
+	2Vpvooyro1NJWdv61uBkyta2fgoHSDI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905432;
+	s=susede2_ed25519; t=1738905438;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=gkxN/iqdd66sdjlrEpOn2fppvL0GLaCxU+ab3NdQKxw=;
-	b=08HKjXm6YyFXhe7LuvhzoBWo/ZHekRjHsQ3YVa25bmcp61Hgy/rx8q2Vh2/r/+JwfVXMnL
-	l+njtsT/rJ/M4wAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xvFxJ78v;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=08HKjXm6
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VI54pzrJtIgzOmCySuFeZgjbA1rlXuRQdxYMMtme1fw=;
+	b=kagxxzkiJoYCufjD83sVLrpADmmiqdUgMBMmVnfXzRVYWjerXcN9/3iJIOFuySYmezqUN5
+	g109zE9YYWYHvACg==
+Authentication-Results: smtp-out2.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905432; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=gkxN/iqdd66sdjlrEpOn2fppvL0GLaCxU+ab3NdQKxw=;
-	b=xvFxJ78v9jPtkNfEixe6wmu1UyxMeGxtF9M/BeBU3N15PWgILzO07ctj5tkAzFHm3IzzwU
-	4pUkSiwgQAJ2IKTmVF+0sQI16HOLPnuzcIxTb7fM6uD9wmcW6bS1gIH92Nc+RtasrYTYBG
-	pcrZjfHAJHQXDD/RBMQJXvXwBR93G3o=
+	t=1738905438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VI54pzrJtIgzOmCySuFeZgjbA1rlXuRQdxYMMtme1fw=;
+	b=DME1VThqCMUlI++YfScAXu+wz43Ajfib8BZr0jpfzOkEXwytx/53xI1n8H0PElatzkyDRV
+	vijfq4jGmmB8CVTpnOh7pAMljnDxRnf4upQQ1WHpkw+qwxhFO7NmgQhNHE7oWvRBVz/q6x
+	2Vpvooyro1NJWdv61uBkyta2fgoHSDI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905432;
+	s=susede2_ed25519; t=1738905438;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=gkxN/iqdd66sdjlrEpOn2fppvL0GLaCxU+ab3NdQKxw=;
-	b=08HKjXm6YyFXhe7LuvhzoBWo/ZHekRjHsQ3YVa25bmcp61Hgy/rx8q2Vh2/r/+JwfVXMnL
-	l+njtsT/rJ/M4wAA==
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VI54pzrJtIgzOmCySuFeZgjbA1rlXuRQdxYMMtme1fw=;
+	b=kagxxzkiJoYCufjD83sVLrpADmmiqdUgMBMmVnfXzRVYWjerXcN9/3iJIOFuySYmezqUN5
+	g109zE9YYWYHvACg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 936B813694;
-	Fri,  7 Feb 2025 05:17:09 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8A6A113694;
+	Fri,  7 Feb 2025 05:17:15 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W9fyEVWXpWfsFgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 05:17:09 +0000
+	id xXXJD1uXpWf2FgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 05:17:15 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -88,10 +96,12 @@ Cc: linux-nfs@vger.kernel.org,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 0/6] nfsd: filecache: various fixes
-Date: Fri,  7 Feb 2025 16:15:10 +1100
-Message-ID: <20250207051701.3467505-1-neilb@suse.de>
+Subject: [PATCH 1/6] nfsd: filecache: remove race handling.
+Date: Fri,  7 Feb 2025 16:15:11 +1100
+Message-ID: <20250207051701.3467505-2-neilb@suse.de>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250207051701.3467505-1-neilb@suse.de>
+References: <20250207051701.3467505-1-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,43 +109,88 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 0C4DC21133
 X-Spam-Level: 
-X-Spamd-Result: default: False [-2.99 / 50.00];
-	BAYES_HAM(-2.98)[99.92%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
 	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -2.99
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -2.80
 X-Spam-Flag: NO
 
-hi all,
- following is my attempt to fix up shrinking and gc of the NFSv3 filecache entries.
- There series is against nfsd-next.
+The race that this code tries to protect against is not interesting.
+The code is problematic as we access the "nf" after we have given our
+reference to the lru system.  While that take 2+ seconds to free things
+it is still poor form.
 
- What do you think?
+The only interesting race I can find would be with
+nfsd_file_close_inode_sync();
+This is the only place that really doesn't want the file to stay on the
+LRU when unhashed (which is the direct consequence of the race).
 
-Thanks,
-NeilBrown
+However for the race to happen, some other thread must own a reference
+to a file and be putting in while nfsd_file_close_inode_sync() is trying
+to close all files for an inode.  If this is possible, that other thread
+could simply call nfsd_file_put() a little bit later and the result
+would be the same: not all files are closed when
+nfsd_file_close_inode_sync() completes.
 
+If this was really a problem, we would need to wait in close_inode_sync
+for the other references to be dropped.  We probably don't want to do
+that.
+
+So it is best to simply remove this code.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfsd/filecache.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index a1cdba42c4fa..b13255bcbb96 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -371,20 +371,10 @@ nfsd_file_put(struct nfsd_file *nf)
+ 
+ 		/* Try to add it to the LRU.  If that fails, decrement. */
+ 		if (nfsd_file_lru_add(nf)) {
+-			/* If it's still hashed, we're done */
+-			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+-				nfsd_file_schedule_laundrette();
+-				return;
+-			}
+-
+-			/*
+-			 * We're racing with unhashing, so try to remove it from
+-			 * the LRU. If removal fails, then someone else already
+-			 * has our reference.
+-			 */
+-			if (!nfsd_file_lru_remove(nf))
+-				return;
++			nfsd_file_schedule_laundrette();
++			return;
+ 		}
++
+ 	}
+ 	if (refcount_dec_and_test(&nf->nf_ref))
+ 		nfsd_file_free(nf);
+-- 
+2.47.1
 
 
