@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-9952-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9953-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0104A2D00F
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 22:54:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD61A2D011
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 22:54:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBAF6188D62D
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 21:54:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B0AA188CD0D
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 21:54:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFB421B87CC;
-	Fri,  7 Feb 2025 21:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E611C6FED;
+	Fri,  7 Feb 2025 21:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgT7niFf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDeCWKjU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862761B85F8;
-	Fri,  7 Feb 2025 21:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9827D1C6FE3;
+	Fri,  7 Feb 2025 21:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965251; cv=none; b=nALN5tmpNl/uKnhuBZasuFVNM0Xq6AII9smmtS2pkhifKfrJFeiSVNNr+0jwDdrg+wO4UH9Zl19j9mhUa/ri6EV+Jvxx2GACguweMT2mK+x2/CfRBD6oYLCHv7ZaEmo5DDNQeKf72zZUnzOnkG81sTvPj3lgH7fBgHxqVlX5b2w=
+	t=1738965252; cv=none; b=e6+ITlmXsvIs5TLwyJKpadeNaisj9mWqx/c1W5kdl5/ja+L5EovcR/eqXTcjM/rtUM7YDIhutJTpLCYEgH/2iM6Gd3J+Rp6dFxcQcyBzOyb7eyMEalVgHoKwnxCdI8PxzrmyJy90aqBHEt+DOUw7XJZsyTkeFiYXQ7kB0cxnJ5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965251; c=relaxed/simple;
-	bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
+	s=arc-20240116; t=1738965252; c=relaxed/simple;
+	bh=rYE4tMKbZCuJ2rA0LApyDiYeYob5TLUFY8D5uTiHLxw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DERPoR+FxDOBPj4Ilxr9m7EBJk5NL8BuZNOQ2QIfz9GGjg3VJV6920n8QhDo2/JVhEb3SBMI745ZxXBbzOEFQ1jZ9J/Ex8gX2K7r6hsqiBDrTaCx7NSvYG338xeCGJVjd6YKPXKIbE3jeUs3JJZhyeaMEPuZW4PopW7dsxEQIEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgT7niFf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35EA2C4CEE2;
-	Fri,  7 Feb 2025 21:54:10 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=MC/z6p9QYfC55Z+kUx6KdZYtDTnq4xfrtbKaMmbnOn/2mZaofslDMTuleBKiC2+IK0pDICDxC3it0n2LPig2mODnkN0EJRHwQ1vUwhxOOsdjTqKFiEXC92oYIwbWrF8DOQN9HDQBd/hzn75NXqxNI0nrKii1a/VJfbH7274NFmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDeCWKjU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398A9C4CEEA;
+	Fri,  7 Feb 2025 21:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738965251;
-	bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
+	s=k20201202; t=1738965252;
+	bh=rYE4tMKbZCuJ2rA0LApyDiYeYob5TLUFY8D5uTiHLxw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fgT7niFfRUjelhCc4P3AhBbeH2eHCiXiUpzH5aZ1tGYl/jnrpSFLpRCaJ6Owl9Cpn
-	 S0KhQ0DyOeyoZaRx1oQEiHOk226849Ra68rtKBU3STAMvYTZJyqf/B1cGZCLoa1sPJ
-	 mfzTkEuwG0pYXup9stjbr7taP88T1VJRvL7TyT0brZrxPu5vrI/4KG7wzr7Gd7zCq5
-	 +VSh15yL9/Y4zIpIbpMigsGdIJ3XxmkJoAdw81JhGCT2THwu8d2y7dgkGuWeyQzpmp
-	 OF7H95u3OZ0Bl787iinPqnWD3iRI3Qc379oni1edhvQcfXLgGoNAIMiMnBqqGn3+5R
-	 bxmtPd/A8Sg3A==
+	b=pDeCWKjUUxRak9aQhP977kJN5vCDcUAqusO2SbFqUypksUB7BKG3oV3MGO/PULRdK
+	 knOYPjUXPJgyZQNxGAqc3WKJhoUR1FBw8GYEXmKY0GzVpi6ejtEsptfGOb74CqonCy
+	 kRtuYZ017JOyoe9NZqhBUAI51v7xCckk+Hi4k0C8KCu7a46k7ReNlDWxMHvmRlZtfN
+	 XHicle2XqZUiti0X5CIbBTUjk8rOWO1LNkFksvf5hHjOF2C63lWsoPtZIKG1U7t5ND
+	 fVyOECNvZ09HDw/KscON2ZH99RvLalPvW0QQ2UsjVgZzHIMH/niTS/wJp9MJsxixtA
+	 Ot8xcRjMsdjSg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 07 Feb 2025 16:53:48 -0500
-Subject: [PATCH v5 1/7] nfsd: prepare nfsd4_cb_sequence_done() for error
- handling rework
+Date: Fri, 07 Feb 2025 16:53:49 -0500
+Subject: [PATCH v5 2/7] nfsd: always release slot when requeueing callback
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-nfsd-6-14-v5-1-f3b54fb60dc0@kernel.org>
+Message-Id: <20250207-nfsd-6-14-v5-2-f3b54fb60dc0@kernel.org>
 References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
 In-Reply-To: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,112 +61,41 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2901; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpoD/WGlod4lP0+DqO02oPhK7wN+u7mmWdcaCE
- fc8Us81GsGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6aA/wAKCRAADmhBGVaC
- FU5zD/0fH071PzKUBwi3Hb6uXLKZUajW25tY87rsY6xUMnKcNVN+1MpRvFcKZj3gCqTIjl8QXnY
- H2eYdtmV2zD6lJ0HcGpC3aTfxxY/IbyIZx6os7wi95hAeSTNTa8H/MCrV3hMFSiJHt1IcBAyWcr
- A0CNTFfhTHNr2N97WfAU+cXDYs09oNtQaAuuiUZm6PqP5AoxMfoBPhmEeX5Aq+01oWYYVLpq0FB
- jfB5KV3j/K6FG2iKsTq0a6UsOr2K5YCyDAW3IHsPsSJneMWqBpWwetXb1bfzWMOCcaXI8uT/6Jp
- F4Go2k9ZVdTQmaAcbz6x/mBCYZGq9MsPkGICkYrilItU7IlX1Dr71SFIM1aT6q/riw1rBm1tGK8
- bT9do0ilOCLOM6vKhRpnkQyXOVfSBJ6jdfGZxSDzmy1vEsXsQy1n0zhcTyUcoTbTvG21bJch1WR
- vOLvHHFNN9b3t1wprjNEFrVqvpQ6nSe0cxOUQMlwaRAwYDjseSO061raQP+V3/08hl2nhK8AqpO
- EMp+RfSbEXxrHD6/wlmbGEnTyjW8lvO62PZ8Q0flIV6swjm3GSLiS/+TgznFAJRmQPPbEulTYbs
- MSalKI+pXC8n01JWKpkwI9GoUNg3VwyQTi6v6gWoi7eoABVJjKqIoaN/CzVXD4rtgOtvblmmyNN
- gGAOwTE34EqinRQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=851; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=rYE4tMKbZCuJ2rA0LApyDiYeYob5TLUFY8D5uTiHLxw=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpoD/LVLzAB0xbkqJvMrCMkDu31EnQPMS2VWoR
+ hkX0SeavpGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6aA/wAKCRAADmhBGVaC
+ FW0KEADFmws4QYmEHY864MGTRyco6si6KjYIc1y+9qBmxwObmBbspi+GIZnySKb4Dz3wvMMTvWN
+ O9zAV19oo5U9ZKj22fo+7ez9xwmKbnUmiB7R4XJ2w3TyApbPvy5fyvv5W3BCbGFlDUrYR+T4iI5
+ TiYMvOeM4sQNHRsZYgNJ8nrUnFHEFcuSqRTKmLj78XFffPty/EiQGPmz+KESFUgE3LCld761up0
+ pafRCo6LXqlIbmoZUjhQEPhLaQYQGphPyFoRLHo15V5Nm1R/a32osU5hLbXO4GwccyT5zmqb1Ko
+ j6EtPJonKJhiXUPLoXHoeiSuRBkWyw0X44PNcrD/IXtrap7hs0QpeZtNFEmGkTmhiWa4RDp+tdV
+ yuAGWzKPSofmyYB1ApyJPl87JTWUkfQo/JDnF+wA4hgHFD8bYeJWvfN3TLrb9YMt3DNUgmDJ3g/
+ GjII/BJ1qk2BsWp4RW+Wr0o2RcfsUf4ui/3wfpbeV2TzEB0ZnjCoQzdC8DOnDFG+1HpkQqoRmID
+ CADX8EZ8IXvp8LVNahAs1F9Rs/0DONDB2JuBrrqQdBKmxpDGTMram3Zm2/8STMTyrFFegpmCWTT
+ sADFIm2cvGTDvxXdrIMnUW18o9GbMfXbN+8zVoNZ48C3VbN9DjhOHD+rFfMUvhUlHf2n8SYtqCo
+ fwFHsYJC5XfmfXA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-There is only one case where we want to proceed with processing the rest
-of the CB_COMPOUND, and that's when the cb_seq_status is 0. Make the
-default return value be false, and only set it to true in that case.
-
-Rename the "need_restart" label to "requeue", to better indicate that
-it's being requeued to the workqueue.
+If the callback is going to be requeued to the workqueue, then release
+the slot. The callback client and session could change and the slot may
+no longer be valid after that point.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4callback.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ fs/nfsd/nfs4callback.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index cf6d29828f4e561418b812ea2c9402929dd52bd0..79abc981e6416a88d9a81497e03e12faa3ce6d0e 100644
+index 79abc981e6416a88d9a81497e03e12faa3ce6d0e..bb5356e8713a8840bb714859618ff88130825efd 100644
 --- a/fs/nfsd/nfs4callback.c
 +++ b/fs/nfsd/nfs4callback.c
-@@ -1328,11 +1328,12 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
- 	rpc_call_start(task);
- }
- 
-+/* Returns true if CB_COMPOUND processing should continue */
- static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
- {
- 	struct nfs4_client *clp = cb->cb_clp;
- 	struct nfsd4_session *session = clp->cl_cb_session;
--	bool ret = true;
-+	bool ret = false;
- 
- 	if (!clp->cl_minorversion) {
- 		/*
-@@ -1345,13 +1346,13 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 		 * handle that case here.
- 		 */
- 		if (RPC_SIGNALLED(task))
--			goto need_restart;
-+			goto requeue;
- 
- 		return true;
- 	}
- 
- 	if (cb->cb_held_slot < 0)
--		goto need_restart;
-+		goto requeue;
- 
- 	/* This is the operation status code for CB_SEQUENCE */
- 	trace_nfsd_cb_seq_status(task, cb);
-@@ -1365,11 +1366,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 		 * (sequence ID, cached reply) MUST NOT change.
- 		 */
- 		++session->se_cb_seq_nr[cb->cb_held_slot];
-+		ret = true;
- 		break;
- 	case -ESERVERFAULT:
- 		++session->se_cb_seq_nr[cb->cb_held_slot];
- 		nfsd4_mark_cb_fault(cb->cb_clp);
--		ret = false;
- 		break;
- 	case 1:
- 		/*
-@@ -1381,13 +1382,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 		fallthrough;
- 	case -NFS4ERR_BADSESSION:
- 		nfsd4_mark_cb_fault(cb->cb_clp);
--		ret = false;
--		goto need_restart;
-+		goto requeue;
- 	case -NFS4ERR_DELAY:
- 		cb->cb_seq_status = 1;
- 		if (!rpc_restart_call(task))
- 			goto out;
--
- 		rpc_delay(task, 2 * HZ);
- 		return false;
- 	case -NFS4ERR_BADSLOT:
-@@ -1405,14 +1404,13 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 	nfsd41_cb_release_slot(cb);
- 
- 	if (RPC_SIGNALLED(task))
--		goto need_restart;
-+		goto requeue;
- out:
- 	return ret;
- retry_nowait:
--	if (rpc_restart_call_prepare(task))
--		ret = false;
-+	rpc_restart_call_prepare(task);
+@@ -1411,6 +1411,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 	rpc_restart_call_prepare(task);
  	goto out;
--need_restart:
-+requeue:
+ requeue:
++	nfsd41_cb_release_slot(cb);
  	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
  		trace_nfsd_cb_restart(clp, cb);
  		task->tk_status = 0;
