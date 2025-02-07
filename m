@@ -1,171 +1,107 @@
-Return-Path: <linux-nfs+bounces-9943-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9944-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDF7CA2CC52
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 20:10:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B353A2CD7F
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 21:04:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D52B53A5B67
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 19:10:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 391153ABD7A
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 20:04:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D880192B6D;
-	Fri,  7 Feb 2025 19:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782721A0731;
+	Fri,  7 Feb 2025 20:04:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GKim8lt4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5IPLDS1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BFC10E5
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1FC18C930;
+	Fri,  7 Feb 2025 20:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955410; cv=none; b=su9lMVClNiqUIGRx1whH00wNbplP6zfcAzCM/Yi9VYBTplB95M+Ji4piYbWIrTqVaeof4oca5PJ6H1QQ8M0ZeChCuq78VOvuRENc31Ad9wPIlr2Dr2IFdKiuz3AamMy2u2D9iJBCJp3erJ0aQXWDlnZz26E7Z2bXRRRW1GIEE3c=
+	t=1738958662; cv=none; b=q6sgQqFxE8LPlBdSD67UoigQV+QkPWEfU5AZGau43yfai0xmyw5IJKdZjMZzHyg8X8qQMCs9zRXcFxQ97lWzelDKPYN2Q6kjyCtZP76atAibNqwXAJMqdYTk/iJA32L5cFOu4py489xTkxXtKjTOrlW21Tw2/bEhV6mVTQa3QjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955410; c=relaxed/simple;
-	bh=L3hBF+iQrBKTRIa3wKiXJJ/OQyIh4KsyTMz0Xy+5S4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YtKR52/rkp/CPfFCHSbuGeFUW+U8Lc9qyqold1xPbFK2w96n4AcItWT3t9ipkV3PGpPj41hFxULO+uMw7urse7BVe1Z2NkxiEBrxr7Q7aw6Zt6FQCgtdGwJvu2I43EVn0TYc37qW5U/IKdtqI9+o4kGFubJEdHb1/dJ22bCN63k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GKim8lt4; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f6715734d9so22297127b3.3
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Feb 2025 11:10:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1738955406; x=1739560206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
-        b=GKim8lt4SXP5kCoh/4cTxGCOS0NFKc37s/H8tESJs+gNOMv7ToQFj9aCC6gXDOyZFW
-         HLxSttUGftYuYAnyZLRg40Zjxvlf+AWJp8XZhkFbbWk1U2XHw2B6BMJCaOy4FE3fPdpW
-         Unfpfmv2KhLrQ0n6jpymXy/CUq2x15XKxIBQ0mhxWAURjkNVKfJwfsEDRlZ88+bThbLy
-         S7h6oS6qz2gkxd30lZv9rMUCNFRCH6fquC2+bZCWmiLNNARvDStxMgbCi1NfsA9chIbC
-         +jyROlyUVDutZjFEJL45IVc2NMcmVq07hYptArEUCcGxbrzeWHvGJD2J5f1lTQrXqPxp
-         7fhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738955406; x=1739560206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
-        b=w4C1GafR5my2ozxpnGtSiOSNKrwsralxwyWoQ9m9F84U0tHwJhV0ClA4OXohr5pyAi
-         52iOPr7wEdj+iUfycixgaROxKTJmuHD9RL7Vp/FK71R/EpYet2WhxzILo/Azvf7EXyvT
-         FWGSlzKLfao+fDs4sUorVXD/g16KTMKcabdLpNg2FlgCPrtwk6niGqstp/i03yal3gI4
-         gk0dcGEGEnCK5cI9Ya6PXP/BI9jEBv5XpFiOukimXlivap2OG5v179u+993CzsF8jhCl
-         o/PVYslXguFiOYeEuzJhK/1YEB1pjIniRBT/DjVtK7s5w/Ax/25gb2uyOi/o4IoSOEwp
-         hz5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVuZA4JF8lCIs5sQr/HIteX6Bcbvu5D0DJURKlFaR/J3rvoJgUY5+Ol0cscNdtAhJRsxtykWYg3BmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0SkqJQfxgMlLYpdsULJeudeYm7cEGrFsM7gqcmpzl0JOHW6/n
-	wA+SmCH5hpQry8RQOLY/XWr5KW3iqss6Lqz0DJ89ssNG1SpqkAJPdlSv6869Zto1b5NOXLSq1DB
-	mMzaf5qQ3spe6hQlwEJt8LasWzfbuBKB8jmia
-X-Gm-Gg: ASbGnctnuKDdFmzYYWWpcboSj+ZJOfV4vV4MGwR2G/75UdWJZKLHUY8bd8skhsa7e2i
-	9Bg0X3kiakvb3BrbjO+oFDVYRyL57om612VFbplZjDgxrsPCiv4N8ikDaAu1KBTEN6rExEQk=
-X-Google-Smtp-Source: AGHT+IGK+1YaMF/yB5tZ88LHxwIuQM3/Gj8AOscWWTmOeYR+q9GoKPuGwr2TcabPJS4LqujSyvfXsbiPIUAyuUzPzSo=
-X-Received: by 2002:a05:690c:3804:b0:6f9:97bd:5a63 with SMTP id
- 00721157ae682-6f9b2844e3cmr39923927b3.4.1738955406214; Fri, 07 Feb 2025
- 11:10:06 -0800 (PST)
+	s=arc-20240116; t=1738958662; c=relaxed/simple;
+	bh=V/d0cHVmH87BvmOD994J3enMdP4akQHipKqVYK9lI+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKKKSUOkvhAzx34fQAnlCwHcUwpvikTyx65VL1lIT3Mr/BtXT3BrKH2dFUNMwgKIK43p8jWQXdSAzjkkCSANVQLkEJr17WzMJsC5Hn4SozCJL4zh7pVpAWwHBLK0CG0sShTj8HvG9PocWe7rKi9WS360BzvVxOu/GSy2ZTWLgvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5IPLDS1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C742C4CED1;
+	Fri,  7 Feb 2025 20:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738958661;
+	bh=V/d0cHVmH87BvmOD994J3enMdP4akQHipKqVYK9lI+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r5IPLDS1OfDoymxXg1xTZN0El7zvLcoyuS18V+fkNQyxEQyMCBRZPn7hbKjNuwYOB
+	 brbI/QyMHmPyQnUTKkz6tV7c90QQeIxyYg53bH3NVtJePTiRpjvRVdGJftED+97zMZ
+	 aQH1e+IB+APL3n4or51dNWIHUa6VGWa5rzgrfzN79itYImyABatpR9uPwiww/UvhL1
+	 kTOiiNoOvG5bScnHYzyDOtWsK3dXk/F9aQLSg5fSbZ+gQsWgKUIcXce0pIqJpHw30b
+	 R5fm/5WgoxPIk5fJKM8z8icyI4pjH08MBnD3XK8cTnCzQr3VM8Hsi/y4V6CdFD9KUD
+	 3gRfoXesMl7nQ==
+Date: Fri, 7 Feb 2025 20:04:19 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
+ algorithm
+Message-ID: <20250207200419.GA2819332@google.com>
+References: <20250203142343.248839-1-dhowells@redhat.com>
+ <20250203142343.248839-4-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207034040.3402438-1-neilb@suse.de> <20250207034040.3402438-2-neilb@suse.de>
-In-Reply-To: <20250207034040.3402438-2-neilb@suse.de>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 7 Feb 2025 14:09:55 -0500
-X-Gm-Features: AWEUYZl_WdQaatK919wx4Q8t6Nn6ccb6OCvCp4tV_BELcL0JYxwXteOCsEvAF2g
-Message-ID: <CAHC9VhTnVg-5C75qY8NkfKs4tjbVz62Vk=SVXS2mwH0f3ftLhQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-To: NeilBrown <neilb@suse.de>
-Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Steve French <sfrench@samba.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Tom Talpey <tom@talpey.com>, 
-	Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203142343.248839-4-dhowells@redhat.com>
 
-On Thu, Feb 6, 2025 at 10:41=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> No callers of kern_path_locked() or user_path_locked_at() want a
-> negative dentry.  So change them to return -ENOENT instead.  This
-> simplifies callers.
->
-> This results in a subtle change to bcachefs in that an ioctl will now
-> return -ENOENT in preference to -EXDEV.  I believe this restores the
-> behaviour to what it was prior to
->  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
->
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  drivers/base/devtmpfs.c | 65 +++++++++++++++++++----------------------
->  fs/bcachefs/fs-ioctl.c  |  4 ---
->  fs/namei.c              |  4 +++
->  kernel/audit_watch.c    | 12 ++++----
->  4 files changed, 40 insertions(+), 45 deletions(-)
+On Mon, Feb 03, 2025 at 02:23:19PM +0000, David Howells wrote:
+> [!] Note that the net/sunrpc/auth_gss/ implementation gets a pair of
+> ciphers, one non-CTS and one CTS, using the former to do all the aligned
+> blocks and the latter to do the last two blocks if they aren't also
+> aligned.  It may be necessary to do this here too for performance reasons -
+> but there are considerations both ways:
+> 
+>  (1) firstly, there is an optimised assembly version of cts(cbc(aes)) on
+>      x86_64 that should be used instead of having two ciphers;
+> 
+>  (2) secondly, none of the hardware offload drivers seem to offer CTS
+>      support (Intel QAT does not, for instance).
+> 
+> However, I don't know if it's possible to query the crypto API to find out
+> whether there's an optimised CTS algorithm available.
 
-...
+Linux's "cts" is specifically the CS3 variant of CTS (using the terminology of
+NIST SP800-38A https://dl.acm.org/doi/pdf/10.5555/2206248) which unconditionally
+swaps the last two blocks.  Is that the variant that is needed here?  SP800-38A
+mentions that CS3 is the variant used in Kerberos 5, so I assume yes.  If yes,
+then you need to use cts(cbc(aes)) unconditionally.  (BTW, I hope you have some
+test that shows that you actually implemented the Kerberos protocol correctly?)
 
-> diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-> index 7f358740e958..e3130675ee6b 100644
-> --- a/kernel/audit_watch.c
-> +++ b/kernel/audit_watch.c
-> @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, =
-struct path *parent)
->         struct dentry *d =3D kern_path_locked(watch->path, parent);
->         if (IS_ERR(d))
->                 return PTR_ERR(d);
-> -       if (d_is_positive(d)) {
-> -               /* update watch filter fields */
-> -               watch->dev =3D d->d_sb->s_dev;
-> -               watch->ino =3D d_backing_inode(d)->i_ino;
-> -       }
-> +       /* update watch filter fields */
-> +       watch->dev =3D d->d_sb->s_dev;
-> +       watch->ino =3D d_backing_inode(d)->i_ino;
-> +
->         inode_unlock(d_backing_inode(parent->dentry));
->         dput(d);
->         return 0;
-> @@ -419,7 +418,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
- list_head **list)
->         /* caller expects mutex locked */
->         mutex_lock(&audit_filter_mutex);
->
-> -       if (ret) {
-> +       if (ret && ret !=3D -ENOENT) {
->                 audit_put_watch(watch);
->                 return ret;
->         }
-> @@ -438,6 +437,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
- list_head **list)
->
->         h =3D audit_hash_ino((u32)watch->ino);
->         *list =3D &audit_inode_hash[h];
-> +       ret =3D 0;
+x86_64 already has an AES-NI assembly optimized cts(cbc(aes)), as you mentioned.
+I will probably add a VAES optimized cts(cbc(aes)) at some point; I've just been
+doing other modes first.  I don't see why off-CPU hardware offload support
+should deserve much attention here, given the extremely high speed of on-CPU
+crypto these days and the great difficulty of integrating off-CPU acceleration
+efficiently.  In particular it seems weird to consider Intel QAT a reasonable
+thing to use over VAES.  Regardless, absent direct support for cts(cbc(aes)) the
+cts template will build it on top of cbc(aes) anyway.
 
-If you have to respin this patch for any reason I'd prefer to move the
-'ret =3D 0' up to just after the if block you're modifying in the chunk
-above, but that's a trivial nitpick so please don't respin only for
-that.  Otherwise it looks fine to me from an audit perspective.
+- Eric
 
-Acked-by: Paul Moore <paul@paul-moore.com> (Audit)
-
->  error:
->         path_put(&parent_path);
->         audit_put_watch(watch);
-> --
-> 2.47.1
-
---=20
-paul-moore.com
 
