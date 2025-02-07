@@ -1,98 +1,130 @@
-Return-Path: <linux-nfs+bounces-9930-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9931-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CF44A2BFB3
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 10:42:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 284C6A2C0A2
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 11:32:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8253E3A1A81
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 09:42:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E82B63AB138
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 10:31:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67AF91DDA31;
-	Fri,  7 Feb 2025 09:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4571DE899;
+	Fri,  7 Feb 2025 10:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZXDaVjrD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YmC7cvEs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49F41DE2CD;
-	Fri,  7 Feb 2025 09:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A151DE2CD
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 10:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921334; cv=none; b=BIRGhLVOeyjPGUS7iXKOfULlTWGCLKTeKA+HXshPh9dekyIQa3zZsmdOXAWYw9ksD1KBrmR79x4C3TfUxfQ13bDaECr5aZ4NHch9HG5k3NaArAcB+7EgfGv0U2FEFWkp8f1KqOYY9h0V49ELDMTNF3v3pFmFY0K3/+iu8rVdBzg=
+	t=1738924308; cv=none; b=O+jynXTs6qED7ww33ASlXjy2s0JAw0egi6sTk1J/2c64jD1c6aNSDLaMq8dqnIcIDfVgIoNXUeWeqauBaEyelWAicR0N9GRHXM5SzR5dEJJQwmZVcWjLV56AjMbmar26km393EgS7pZ/hfkKYzd52vL9mvYHStp8LpBPVjKamgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921334; c=relaxed/simple;
-	bh=EewjN7nUhhtBPJOdfrZj64y7+JiFITVsxY5wBikw+WQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YaroOi9OJkcqxJ9pYjTXQxe+jCnMiVL5EaSqPN+qPZmqjpyqzyHTLW5qPZ2Qgg6qBgPXC+8QhWtvu+1i9KvhTRsMLH+7y/KCHmDQDp0DpIduj6eMAMiROjfeh8UZwp+VotxJumfMdG+Vopzp1DpRq6TuRtRxp24wPLu+OWvjadw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZXDaVjrD; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=MhA1jDIfQ8iLGh9WfIUR3+LgFXMnqWm6EVDsj31vync=; b=ZXDaVjrDmJbS9jssNlbQ3D9Elb
-	r5Xsr+O3eH47BnThcCfwS3N8+p4zkexJmJG/747y6dDuOu7tkQkOCvKJ/GIuRunQjUD6KD25n0+X3
-	kcG1BAZ7Itvv9TbLunVGLSNIL1mtgJ3nUXgMX0L0AqAZcAaGEdBVjoDUsKQTUOzpRXN09nHvpZUNL
-	gxmLUvE2bu1GrU38+PRWbHHxCXP/OkHk9Ra1tn1ik0thv5vZatZna2CGm8jwG8HBcv9Yy+l75vUsS
-	o1ViSi5mUUyx6WHm0LR1XrsNS8UhS0DYuuJvLTJx0/gsGGdfUYRudFcqYM/d22WAdImA1rarkFFsF
-	lnfvqmgw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tgJwx-00FpRv-2r;
-	Fri, 07 Feb 2025 16:56:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Feb 2025 16:56:20 +0800
-Date: Fri, 7 Feb 2025 16:56:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <Z6XKtPKryJsRfYvK@gondor.apana.org.au>
-References: <20250203142343.248839-1-dhowells@redhat.com>
- <20250203142343.248839-4-dhowells@redhat.com>
+	s=arc-20240116; t=1738924308; c=relaxed/simple;
+	bh=EimbVFxXz3PXiSA12gLq3C32WS+iYW4Um9zMoqXJGUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KExvdHVscgTArJje1/hVn1xySfHuUDruJyFY0MXTL8f/HxJEK0aJHeThkd3bBoNXki1xeP9Weick7VcAVRzKN8BxkgQLiglwxyTe3posuzUd0lj3AqIgTQru4GXLIaXz2V6YaZC3zU6o8OcZjoneW96YNTwXIPP1YyOfGfL7ZTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YmC7cvEs; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738924303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uTCfoIluBkd2hmuVQ37KolRiD7UKeIdoxiXw4vJWCJk=;
+	b=YmC7cvEsLUunV6vhRHhcaBT+NQR5RCVMaqmP9/lujqiq0eqZZS8zZYJV/NAwj48w1InEjx
+	PCgrlYNv0cBls8piAY68TBAW7tuixCBCEEom4lVimhtsGdFCa0Q7KcSPzdRaEeuPXDYPL8
+	K0EOPey29J3+LfDQqYbjRIZ+EqxWtQ4=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-592-brY3S5o4NImEK5hprqPoog-1; Fri, 07 Feb 2025 05:31:41 -0500
+X-MC-Unique: brY3S5o4NImEK5hprqPoog-1
+X-Mimecast-MFC-AGG-ID: brY3S5o4NImEK5hprqPoog
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-467a4f0b53bso66519991cf.3
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Feb 2025 02:31:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738924301; x=1739529101;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uTCfoIluBkd2hmuVQ37KolRiD7UKeIdoxiXw4vJWCJk=;
+        b=BAJ2eoZnBesOG0cGy//cIpmp1ySEYaQio0NhTk8UYkBAibXOMv6DIXbC4NJxXcRRU0
+         g/x3BawetXAbE7/iE3f7FZmXB6bC+KzhrJ8Wqdkk87cgHT5/vievdDJrhpcuYDWRtXZW
+         R08zDejo+HxMQHa+7bYcK94g9QmnPl29tvu60rsv84f4kwQcTOpqFU4aCXgpBqt8hdCX
+         NTu/8j1GSoCY7NDV+b9dvebSyjkBwduBPSTvdxfDt9tSnpK4ms1Nr8NeoDQjLgeLOZ0B
+         p1rlULj//LYKTXXeI56olxFI2wVZlcXf85WaBTDdeQPxGybQ4n7ojOUkX9RaMPjxxzMK
+         AksA==
+X-Gm-Message-State: AOJu0Yw/zmiqpcBLIty9g21ZN3NRNNFsKg2e77OtOLRzp8maHAs80Lg4
+	3o99o0ceix2rZqlkP0Yb3MiwPXJ/ZoiMYtN8a2CwxjugV7XV3Te13/hEMyoCxkfg4/F68uz6joS
+	MlTLj/SI35iJfnuyBYEzSy73fgOJbZUgxFlZaiSWtnvtNBRnvj73oB+m/Rw==
+X-Gm-Gg: ASbGncvPEaE0hNUgfMkTRCDu3tDrcI5KStrwDuonDRaGJWc/UJxFek4zIzeajVSd6W4
+	lhATzivzKHzLqjArX45A+xz+mgP0plAt9J0OFoxDwRXQi3XumRviLwCQa2e64caJbkMyIfNFTBq
+	s62QJ7pEVJrupuBmFXlLKAFyhrHAgJ2hyxsMGPV5RZWC3SfRKAADq/WNHzFvD2ze1F3SYwUEEjy
+	WXLoIS0xpjOwBDdvNp5fqoS5XkZOL9/ExJ97S7kB/KgrlzJw6eBJofCi4fBU2974lLdcv1/qVdn
+	nQdOWA==
+X-Received: by 2002:ac8:57d1:0:b0:465:3a62:a8f9 with SMTP id d75a77b69052e-47167b24a9dmr40160031cf.50.1738924301111;
+        Fri, 07 Feb 2025 02:31:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE+phjQNDSCHHRmNcLiyvwYpNEpsrlCuRBfkQEnSMlM70811nVbetbleT4hJMMJYeSDAwgcbQ==
+X-Received: by 2002:ac8:57d1:0:b0:465:3a62:a8f9 with SMTP id d75a77b69052e-47167b24a9dmr40159801cf.50.1738924300826;
+        Fri, 07 Feb 2025 02:31:40 -0800 (PST)
+Received: from [172.31.1.150] ([70.105.251.239])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4714928d06dsm15168341cf.21.2025.02.07.02.31.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 02:31:39 -0800 (PST)
+Message-ID: <74a50d3f-9672-46e3-abe8-aee309e9a84f@redhat.com>
+Date: Fri, 7 Feb 2025 05:31:38 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203142343.248839-4-dhowells@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] nfs-utils: nfsdctl fixups
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20250205154333.58646-1-okorniev@redhat.com>
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20250205154333.58646-1-okorniev@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 03, 2025 at 02:23:19PM +0000, David Howells wrote:
->
-> [!] Note that the net/sunrpc/auth_gss/ implementation gets a pair of
-> ciphers, one non-CTS and one CTS, using the former to do all the aligned
-> blocks and the latter to do the last two blocks if they aren't also
-> aligned.  It may be necessary to do this here too for performance reasons -
-> but there are considerations both ways:
 
-The CTS template will take any hardware accelerated CBC implementation
-and turn it into CTS.
 
-So there is no reason to do the CTS/CBC thing by hand at all.
+On 2/5/25 10:43 AM, Olga Kornievskaia wrote:
+> Static memory allocations in the path of creating knfsd listeners
+> has lead to either buffer over flow errors or failure to start
+> the listener when really long hostname are being used.
+> 
+> Furthermore, when listeners were failed to be created knfsd
+> threads were still started (with no working listeners). Also,
+> when threads were not started but we still had already added
+> they were not cleaned up.
+> 
+> This patch series attempts to address the said issues.
+> 
+> (note first patch was set as standalone previous and included
+> here without change).
+> 
+> Olga Kornievskaia (4):
+>    nfs-utils: nfsdctl: fix update_listeners
+>    nfs-utils: nfsdctl: fix autostart
+>    nfs-utils: nfsdctl: cleanup listeners if some failed
+>    nfs-utils: nfsdctl: fix host-limited add listener
+> 
+>   utils/nfsdctl/nfsdctl.c | 68 +++++++++++++++++++++++++++--------------
+>   1 file changed, 45 insertions(+), 23 deletions(-)
+> 
+Committed (tag: nfs-utils-2-8-3-rc6)
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+steved.
+
 
