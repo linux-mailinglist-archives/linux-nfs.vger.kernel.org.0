@@ -1,107 +1,99 @@
-Return-Path: <linux-nfs+bounces-9944-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9945-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B353A2CD7F
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 21:04:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0553FA2CE5A
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 21:43:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 391153ABD7A
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 20:04:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 97A1C1638D3
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 20:43:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782721A0731;
-	Fri,  7 Feb 2025 20:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CFBD1AB528;
+	Fri,  7 Feb 2025 20:42:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5IPLDS1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CL5JH9yP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1FC18C930;
-	Fri,  7 Feb 2025 20:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084FF1A5B94
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 20:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958662; cv=none; b=q6sgQqFxE8LPlBdSD67UoigQV+QkPWEfU5AZGau43yfai0xmyw5IJKdZjMZzHyg8X8qQMCs9zRXcFxQ97lWzelDKPYN2Q6kjyCtZP76atAibNqwXAJMqdYTk/iJA32L5cFOu4py489xTkxXtKjTOrlW21Tw2/bEhV6mVTQa3QjM=
+	t=1738960947; cv=none; b=pe8xyu2pPHpiX4VBHioDrJBBidwOUw+YExZUkroPaXK9icN4iNAr5mY65F+3LAWcUWtT2QlSI3sIISleLeFMF9M56sXZHILVMQuCpiBclUKETdG7qB09Yu1xBTc27awrM7u+ndMQZx2Sd4EEuCn0tRIl+NeUa8ruAz6HLqvrH2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958662; c=relaxed/simple;
-	bh=V/d0cHVmH87BvmOD994J3enMdP4akQHipKqVYK9lI+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKKKSUOkvhAzx34fQAnlCwHcUwpvikTyx65VL1lIT3Mr/BtXT3BrKH2dFUNMwgKIK43p8jWQXdSAzjkkCSANVQLkEJr17WzMJsC5Hn4SozCJL4zh7pVpAWwHBLK0CG0sShTj8HvG9PocWe7rKi9WS360BzvVxOu/GSy2ZTWLgvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5IPLDS1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C742C4CED1;
-	Fri,  7 Feb 2025 20:04:21 +0000 (UTC)
+	s=arc-20240116; t=1738960947; c=relaxed/simple;
+	bh=DR8TuVqg0hUKhBnmyahto5VFc4XTJ4O6FwxwwiTxAvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ATzfz8MSxYuHbZaEj/wBXVx+Bax9ppwXUa0CU5PwiW/GvCp3kJWJqyfZdQlY0pVYN4KDLug1Nb/JJm9POCzTuxvj9w5SaLJvNcX4aW8I/359rlW4hcXGLA2ynMfwuKcjSKcAksnlK9+eexAOKGJ4T9igqkVfZeQROOKpFlTnPrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CL5JH9yP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C17AC4CED1;
+	Fri,  7 Feb 2025 20:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738958661;
-	bh=V/d0cHVmH87BvmOD994J3enMdP4akQHipKqVYK9lI+E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r5IPLDS1OfDoymxXg1xTZN0El7zvLcoyuS18V+fkNQyxEQyMCBRZPn7hbKjNuwYOB
-	 brbI/QyMHmPyQnUTKkz6tV7c90QQeIxyYg53bH3NVtJePTiRpjvRVdGJftED+97zMZ
-	 aQH1e+IB+APL3n4or51dNWIHUa6VGWa5rzgrfzN79itYImyABatpR9uPwiww/UvhL1
-	 kTOiiNoOvG5bScnHYzyDOtWsK3dXk/F9aQLSg5fSbZ+gQsWgKUIcXce0pIqJpHw30b
-	 R5fm/5WgoxPIk5fJKM8z8icyI4pjH08MBnD3XK8cTnCzQr3VM8Hsi/y4V6CdFD9KUD
-	 3gRfoXesMl7nQ==
-Date: Fri, 7 Feb 2025 20:04:19 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <20250207200419.GA2819332@google.com>
-References: <20250203142343.248839-1-dhowells@redhat.com>
- <20250203142343.248839-4-dhowells@redhat.com>
+	s=k20201202; t=1738960946;
+	bh=DR8TuVqg0hUKhBnmyahto5VFc4XTJ4O6FwxwwiTxAvs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CL5JH9yPck6kXUu2lnKX9mHKtrokqHFG2nbLK53MqX+ZZZifBObiF2xPknFjUYZfd
+	 9SzNRS5rhTqv5dbVMclC2TCyytYzhivoE+aruGandbMgco3U1sHIWYuOKJ+a1HQ1Xh
+	 qJaE8O2QIASJ38IoZnPRvaBgonC0k0zjkNyygll+nuB6mV49wIphZ4eMz7t7fyn2pm
+	 JopNUSPE07x5GbolMM6t6LqQCoMDWfBqzjPvawwParKQ2VH7/GsiEERR7YcsTKPvns
+	 RRgZDi1U9WCZXzfCzscxz/ki43LCdNE3SdxMqE5Ho/euRmboZRuDRkLNIgUpkN2Eu7
+	 b0q7Oiw3IQlGQ==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	trond.myklebust@hammerspace.com
+Cc: anna@kernel.org
+Subject: [PATCH v3 0/5] NFS & SUNRPC: Sysfs Improvements
+Date: Fri,  7 Feb 2025 15:42:20 -0500
+Message-ID: <20250207204225.594002-1-anna@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203142343.248839-4-dhowells@redhat.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 02:23:19PM +0000, David Howells wrote:
-> [!] Note that the net/sunrpc/auth_gss/ implementation gets a pair of
-> ciphers, one non-CTS and one CTS, using the former to do all the aligned
-> blocks and the latter to do the last two blocks if they aren't also
-> aligned.  It may be necessary to do this here too for performance reasons -
-> but there are considerations both ways:
-> 
->  (1) firstly, there is an optimised assembly version of cts(cbc(aes)) on
->      x86_64 that should be used instead of having two ciphers;
-> 
->  (2) secondly, none of the hardware offload drivers seem to offer CTS
->      support (Intel QAT does not, for instance).
-> 
-> However, I don't know if it's possible to query the crypto API to find out
-> whether there's an optimised CTS algorithm available.
+From: Anna Schumaker <anna.schumaker@oracle.com>
 
-Linux's "cts" is specifically the CS3 variant of CTS (using the terminology of
-NIST SP800-38A https://dl.acm.org/doi/pdf/10.5555/2206248) which unconditionally
-swaps the last two blocks.  Is that the variant that is needed here?  SP800-38A
-mentions that CS3 is the variant used in Kerberos 5, so I assume yes.  If yes,
-then you need to use cts(cbc(aes)) unconditionally.  (BTW, I hope you have some
-test that shows that you actually implemented the Kerberos protocol correctly?)
+These are a handful of improvements that have been in the back of my
+mind for a while. The first patch adds a (read-only) file to the NFS
+client's sysfs collection to check the server's implementation id. The
+remaining patches are on the sunrpc side.
 
-x86_64 already has an AES-NI assembly optimized cts(cbc(aes)), as you mentioned.
-I will probably add a VAES optimized cts(cbc(aes)) at some point; I've just been
-doing other modes first.  I don't see why off-CPU hardware offload support
-should deserve much attention here, given the extremely high speed of on-CPU
-crypto these days and the great difficulty of integrating off-CPU acceleration
-efficiently.  In particular it seems weird to consider Intel QAT a reasonable
-thing to use over VAES.  Regardless, absent direct support for cts(cbc(aes)) the
-cts template will build it on top of cbc(aes) anyway.
+I did look into the 'nconnect' and 'max_connect' NFS client mount
+options and how they interact with adding a new xprt in patch 4. My
+reading is that 'nconnect' is just the initial number of connections
+made by the NFS client during mounting. That shouldn't disallow adding a
+new connection. The 'max_connect' parameter refers to the maximum number
+of unique IP addresses in an xprt switch. The new connection I generate
+is a clone of the main xprt, not a new address, so this doesn't come
+into play either. So I'm convinced adding a new xprt is okay to do here.
 
-- Eric
+Changes in v3:
+  * Fix up the mode bits for the max_connect file
+  * Replace call to xprt_iter_get_xprt() with xprt_iter_get_next()
+
+Thoughts?
+Anna
+
+
+Anna Schumaker (5):
+  NFS: Add implid to sysfs
+  sunrpc: Add a sysfs attr for xprtsec
+  sunrpc: Add a sysfs files for rpc_clnt information
+  sunrpc: Add a sysfs file for adding a new xprt
+  sunrpc: Add a sysfs file for one-step xprt deletion
+
+ fs/nfs/sysfs.c                       |  60 ++++++++
+ include/linux/sunrpc/xprtmultipath.h |   1 +
+ net/sunrpc/sysfs.c                   | 202 +++++++++++++++++++++++++++
+ net/sunrpc/xprtmultipath.c           |  21 +++
+ 4 files changed, 284 insertions(+)
+
+-- 
+2.48.1
 
 
