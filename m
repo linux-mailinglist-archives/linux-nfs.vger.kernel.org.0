@@ -1,159 +1,171 @@
-Return-Path: <linux-nfs+bounces-9942-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9943-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 522B3A2CB9C
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 19:42:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF7CA2CC52
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 20:10:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1DE37A5B60
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 18:41:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D52B53A5B67
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 19:10:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58ADE19D8B2;
-	Fri,  7 Feb 2025 18:40:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D880192B6D;
+	Fri,  7 Feb 2025 19:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="UGaLwyll"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GKim8lt4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDFA1A3141
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 18:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BFC10E5
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 19:10:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953638; cv=none; b=bZlYFixAMJ82arFF6tksAXneQjFmKAydUZ84mkJqyFOuv2/Ihjp0G1awVIxrAzoX+RbMO+y2fioThrz4M8kuB2bOTwEMY28MdN53+TGc8jsV5hv5R3WLDuyqcwuZoxUo+/SXos/FmbyAfMEeHSbBAB6D+Ud/bBHIpBk1DuCKG1Q=
+	t=1738955410; cv=none; b=su9lMVClNiqUIGRx1whH00wNbplP6zfcAzCM/Yi9VYBTplB95M+Ji4piYbWIrTqVaeof4oca5PJ6H1QQ8M0ZeChCuq78VOvuRENc31Ad9wPIlr2Dr2IFdKiuz3AamMy2u2D9iJBCJp3erJ0aQXWDlnZz26E7Z2bXRRRW1GIEE3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953638; c=relaxed/simple;
-	bh=VTB46/0sISArTiJeOu2Tixa/98RJnTC76varRmbdaas=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=cdzXvpc7prZTJ5hYhqYSQcxHMdF5oXFjiP9H9x9d2tawABmDOhr7m05bpBMB56ocGUJMnsmS9H64KGt0ZML5jg+bOdfrS2cPZYF+PVZDWOjmsYcTRxBncbgMlWnEzeQDhZSWhQO3N6ZIupWcchrCbh5gGyCUPgasbammGnUXfOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=UGaLwyll; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab78d9c5542so169892566b.1
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Feb 2025 10:40:35 -0800 (PST)
+	s=arc-20240116; t=1738955410; c=relaxed/simple;
+	bh=L3hBF+iQrBKTRIa3wKiXJJ/OQyIh4KsyTMz0Xy+5S4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YtKR52/rkp/CPfFCHSbuGeFUW+U8Lc9qyqold1xPbFK2w96n4AcItWT3t9ipkV3PGpPj41hFxULO+uMw7urse7BVe1Z2NkxiEBrxr7Q7aw6Zt6FQCgtdGwJvu2I43EVn0TYc37qW5U/IKdtqI9+o4kGFubJEdHb1/dJ22bCN63k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GKim8lt4; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f6715734d9so22297127b3.3
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Feb 2025 11:10:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1738953634; x=1739558434; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=N7UQx8ofkruRoZGyQgvBGKJ0B34UHRuZDuLQLSOhp+8=;
-        b=UGaLwyllS3RYgF7GlJqtZpADDjAzz6fXVi23LCOUAm9AB/FHS6mocnV/f1bnGRVcm9
-         LHacHX4I+1wd8zs0VrS3flu+TSjyJql5KFG4bT5+jSRJX/tZxHcUusUvspASp+5eh5kn
-         bb5lftu0mq63IyKjlvLnjqs454kA+DHE18UeEzwFWJC1Ijqpka1WtuhmBwyg0JXHJndt
-         ZAGgKTFQ6cFtBhwn+nN5JuLzKUe7Zu9a1llxDMEqKalRUdRMqCcm9bqkVpzGzmHi7xWE
-         SGebAroR57ksJtaibV2nXUwU7mMjNsIaBHh48HsqEXYhxfrJCpCTefPdDv23GNuwshLv
-         wckQ==
+        d=paul-moore.com; s=google; t=1738955406; x=1739560206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
+        b=GKim8lt4SXP5kCoh/4cTxGCOS0NFKc37s/H8tESJs+gNOMv7ToQFj9aCC6gXDOyZFW
+         HLxSttUGftYuYAnyZLRg40Zjxvlf+AWJp8XZhkFbbWk1U2XHw2B6BMJCaOy4FE3fPdpW
+         Unfpfmv2KhLrQ0n6jpymXy/CUq2x15XKxIBQ0mhxWAURjkNVKfJwfsEDRlZ88+bThbLy
+         S7h6oS6qz2gkxd30lZv9rMUCNFRCH6fquC2+bZCWmiLNNARvDStxMgbCi1NfsA9chIbC
+         +jyROlyUVDutZjFEJL45IVc2NMcmVq07hYptArEUCcGxbrzeWHvGJD2J5f1lTQrXqPxp
+         7fhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738953634; x=1739558434;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N7UQx8ofkruRoZGyQgvBGKJ0B34UHRuZDuLQLSOhp+8=;
-        b=sNGJtihhp9N0YNgxjRc2x4n90RZcQ/Mu4cPbY+Y5eX7xAFLoKT6avrrLE6GMpDqB05
-         TN2vd+x9959aMTzLfTBk7bXe9uZ0+sLm9sgI0CxvwOgr7GqlZnV+Bu2PvSrQg8zidhT7
-         7tVv2PrcyolwHQS2uU5YXvQtoNH+dtAVJXnFs25fszc/+cA0goizQwGOIhB90tv/FvRt
-         EplJMW8kQiDP5hFlRWcl0/75jW9led2rtQbJ4G5rU1OsbDxHtlKfeIh01QTQ50PLMUmc
-         U8qzMDxYroSb4XzxFuJ6sfb+qVa8AC4oTxN4Xg3wiJ17J54EChfbAYDPz1imWLJECUxx
-         S1Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPHC/sua60VJESQEsQ4vRqO6Kbuz6PtjKYGTKM8wLLyfljFI/sCK04U7wA/2qMbOiyOwbEeqQf5NQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDoVeUmKaqbPCjdICtSEvYpIPaPe4HdlsVKXSK2XS1M8BQX6Fw
-	n/C7eENzabjOpgjIBb4GEtncs057NorUgPgrEWKem+Y+1JS0kW2f4FnROq8ngpqcEIBBS+XoA7F
-	ZC+LRT8GTY1Y7oMa/CF4Zwk96U8pBIFpSejO5fA==
-X-Gm-Gg: ASbGncvs0hJCXTwyxVbdimaVrrJCAtB9mSZQyIzQUjzexZIg9RFeBcRHc0i+CR5Hnbx
-	x/jrY5HB/kR8AitBZ950daIi77alI2Hc8NrfF0D34Haner7SLZHC+PFt0xBA8VYmejli4InZn08
-	JvhwWaA4U0Qy/z8ki37ZWl4hERPw==
-X-Google-Smtp-Source: AGHT+IF+rdiRwpjE2SYvjnMVb7c5EyeDPHUuoHbmLbCjryYQnZ3NOp27ohv8g5IHTGnjgTTuzlsBWDMzy/gISWA1Nnw=
-X-Received: by 2002:a17:906:ef0d:b0:ab3:4b0c:ea44 with SMTP id
- a640c23a62f3a-ab789a67db2mr496614966b.9.1738953633765; Fri, 07 Feb 2025
- 10:40:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738955406; x=1739560206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
+        b=w4C1GafR5my2ozxpnGtSiOSNKrwsralxwyWoQ9m9F84U0tHwJhV0ClA4OXohr5pyAi
+         52iOPr7wEdj+iUfycixgaROxKTJmuHD9RL7Vp/FK71R/EpYet2WhxzILo/Azvf7EXyvT
+         FWGSlzKLfao+fDs4sUorVXD/g16KTMKcabdLpNg2FlgCPrtwk6niGqstp/i03yal3gI4
+         gk0dcGEGEnCK5cI9Ya6PXP/BI9jEBv5XpFiOukimXlivap2OG5v179u+993CzsF8jhCl
+         o/PVYslXguFiOYeEuzJhK/1YEB1pjIniRBT/DjVtK7s5w/Ax/25gb2uyOi/o4IoSOEwp
+         hz5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVuZA4JF8lCIs5sQr/HIteX6Bcbvu5D0DJURKlFaR/J3rvoJgUY5+Ol0cscNdtAhJRsxtykWYg3BmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0SkqJQfxgMlLYpdsULJeudeYm7cEGrFsM7gqcmpzl0JOHW6/n
+	wA+SmCH5hpQry8RQOLY/XWr5KW3iqss6Lqz0DJ89ssNG1SpqkAJPdlSv6869Zto1b5NOXLSq1DB
+	mMzaf5qQ3spe6hQlwEJt8LasWzfbuBKB8jmia
+X-Gm-Gg: ASbGnctnuKDdFmzYYWWpcboSj+ZJOfV4vV4MGwR2G/75UdWJZKLHUY8bd8skhsa7e2i
+	9Bg0X3kiakvb3BrbjO+oFDVYRyL57om612VFbplZjDgxrsPCiv4N8ikDaAu1KBTEN6rExEQk=
+X-Google-Smtp-Source: AGHT+IGK+1YaMF/yB5tZ88LHxwIuQM3/Gj8AOscWWTmOeYR+q9GoKPuGwr2TcabPJS4LqujSyvfXsbiPIUAyuUzPzSo=
+X-Received: by 2002:a05:690c:3804:b0:6f9:97bd:5a63 with SMTP id
+ 00721157ae682-6f9b2844e3cmr39923927b3.4.1738955406214; Fri, 07 Feb 2025
+ 11:10:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Fri, 7 Feb 2025 19:40:23 +0100
-X-Gm-Features: AWEUYZkCyX8DjjF12TNsjDfa6XpP_u6-S4Qa_aFIAHNlLhxJKVB5hDN6wSQeBYU
-Message-ID: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
-Subject: "netfs: Can't donate prior to front"
-To: David Howells <dhowells@redhat.com>, netfs@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
+References: <20250207034040.3402438-1-neilb@suse.de> <20250207034040.3402438-2-neilb@suse.de>
+In-Reply-To: <20250207034040.3402438-2-neilb@suse.de>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 7 Feb 2025 14:09:55 -0500
+X-Gm-Features: AWEUYZl_WdQaatK919wx4Q8t6Nn6ccb6OCvCp4tV_BELcL0JYxwXteOCsEvAF2g
+Message-ID: <CAHC9VhTnVg-5C75qY8NkfKs4tjbVz62Vk=SVXS2mwH0f3ftLhQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Steve French <sfrench@samba.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Tom Talpey <tom@talpey.com>, 
+	Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Feb 6, 2025 at 10:41=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
+>
+> No callers of kern_path_locked() or user_path_locked_at() want a
+> negative dentry.  So change them to return -ENOENT instead.  This
+> simplifies callers.
+>
+> This results in a subtle change to bcachefs in that an ioctl will now
+> return -ENOENT in preference to -EXDEV.  I believe this restores the
+> behaviour to what it was prior to
+>  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
+>
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  drivers/base/devtmpfs.c | 65 +++++++++++++++++++----------------------
+>  fs/bcachefs/fs-ioctl.c  |  4 ---
+>  fs/namei.c              |  4 +++
+>  kernel/audit_watch.c    | 12 ++++----
+>  4 files changed, 40 insertions(+), 45 deletions(-)
 
-the following crash occurs with 6.13.1 on our servers every 20 minutes or so:
+...
 
- netfs: Can't donate prior to front
- R=00070d30[3] s=9a000-9bfff 0/2000/2000
- folio: 98000-9bfff
- donated: prev=0 next=0
- s=9a000 av=2000 part=2000
- ------------[ cut here ]------------
- kernel BUG at fs/netfs/read_collect.c:315!
- Oops: invalid opcode: 0000 [#1] SMP PTI
- CPU: 7 UID: 0 PID: 0 Comm: swapper/7 Not tainted 6.13.1-cm4all2-hp #416
- Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 11/23/2021
- RIP: 0010:netfs_consume_read_data.isra.0+0xa72/0xab0
- Code: 48 89 ea 31 f6 48 c7 c7 bb 7a d0 ae e8 b7 d2 d1 ff 48 8b 4c 24
-20 4c 89 e2 48 c7 c7 d7 7a d0 ae 48 8b 74 24 18 e8 9e d2 d1 ff <0f> 0b
-4c 89 ef 48 89 54 24 10 4c 89 44 24 08 e8 1a 4e b5 00 48 c7
- RSP: 0018:ffffb434cc448db0 EFLAGS: 00010246
- RAX: 0000000000000019 RBX: ffff8fa63d9cbec0 RCX: 0000000000000027
- RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8fbb1f9db840
- RBP: 0000000000000000 R08: 00000000ffffbfff R09: 0000000000000001
- R10: 0000000000000003 R11: ffff8fd31f6a0000 R12: 0000000000002000
- R13: ffff8fa5350aaee8 R14: 0000000000004000 R15: ffff8fa5350aaee8
- FS:  0000000000000000(0000) GS:ffff8fbb1f9c0000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f9c5000ef48 CR3: 0000000bcee2e001 CR4: 00000000001706f0
- Call Trace:
-  <IRQ>
-  ? die+0x32/0x80
-  ? do_trap+0xd8/0x100
-  ? do_error_trap+0x65/0x80
-  ? netfs_consume_read_data.isra.0+0xa72/0xab0
-  ? exc_invalid_op+0x4c/0x60
-  ? netfs_consume_read_data.isra.0+0xa72/0xab0
-  ? asm_exc_invalid_op+0x16/0x20
-  ? netfs_consume_read_data.isra.0+0xa72/0xab0
-  ? __pfx_cachefiles_read_complete+0x10/0x10
-  netfs_read_subreq_terminated+0x22d/0x370
-  cachefiles_read_complete+0x48/0xf0
-  iomap_dio_bio_end_io+0x125/0x160
-  blk_update_request+0xea/0x3e0
-  scsi_end_request+0x27/0x190
-  scsi_io_completion+0x43/0x6c0
-  blk_complete_reqs+0x40/0x50
-  handle_softirqs+0xd1/0x280
-  irq_exit_rcu+0x91/0xb0
-  common_interrupt+0x79/0xa0
-  </IRQ>
-  <TASK>
-  asm_common_interrupt+0x22/0x40
- RIP: 0010:cpuidle_enter_state+0xba/0x3b0
- Code: 00 e8 ea 86 1c ff e8 45 f7 ff ff 8b 53 04 49 89 c5 0f 1f 44 00
-00 31 ff e8 73 b9 1b ff 45 84 ff 0f 85 f8 01 00 00 fb 45 85 f6 <0f> 88
-46 01 00 00 48 8b 04 24 49 63 ce 48 6b d1 68 49 29 c5 48 89
- RSP: 0018:ffffb434c018be98 EFLAGS: 00000202
- RAX: ffff8fbb1f9c0000 RBX: ffffd41cbe7e3448 RCX: 000000000000001f
- RDX: 0000000000000007 RSI: 000000003149acb2 RDI: 0000000000000000
- RBP: 0000000000000004 R08: 0000000000000002 R09: 0000000000000000
- R10: 0000000000000004 R11: 000000000000001f R12: ffffffffaf660060
- R13: 0000030f6179fa73 R14: 0000000000000004 R15: 0000000000000000
-  ? cpuidle_enter_state+0xad/0x3b0
-  cpuidle_enter+0x29/0x40
-  do_idle+0x19c/0x200
-  cpu_startup_entry+0x25/0x30
-  start_secondary+0xf3/0x100
-  common_startup_64+0x13e/0x148
-  </TASK>
- Modules linked in:
- ---[ end trace 0000000000000000 ]---
+> diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+> index 7f358740e958..e3130675ee6b 100644
+> --- a/kernel/audit_watch.c
+> +++ b/kernel/audit_watch.c
+> @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, =
+struct path *parent)
+>         struct dentry *d =3D kern_path_locked(watch->path, parent);
+>         if (IS_ERR(d))
+>                 return PTR_ERR(d);
+> -       if (d_is_positive(d)) {
+> -               /* update watch filter fields */
+> -               watch->dev =3D d->d_sb->s_dev;
+> -               watch->ino =3D d_backing_inode(d)->i_ino;
+> -       }
+> +       /* update watch filter fields */
+> +       watch->dev =3D d->d_sb->s_dev;
+> +       watch->ino =3D d_backing_inode(d)->i_ino;
+> +
+>         inode_unlock(d_backing_inode(parent->dentry));
+>         dput(d);
+>         return 0;
+> @@ -419,7 +418,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
+ list_head **list)
+>         /* caller expects mutex locked */
+>         mutex_lock(&audit_filter_mutex);
+>
+> -       if (ret) {
+> +       if (ret && ret !=3D -ENOENT) {
+>                 audit_put_watch(watch);
+>                 return ret;
+>         }
+> @@ -438,6 +437,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
+ list_head **list)
+>
+>         h =3D audit_hash_ino((u32)watch->ino);
+>         *list =3D &audit_inode_hash[h];
+> +       ret =3D 0;
 
-This is a server with heavy NFS traffic (with fscache enabled).
+If you have to respin this patch for any reason I'd prefer to move the
+'ret =3D 0' up to just after the if block you're modifying in the chunk
+above, but that's a trivial nitpick so please don't respin only for
+that.  Otherwise it looks fine to me from an audit perspective.
 
-Please help - and let me know if you need more information.
+Acked-by: Paul Moore <paul@paul-moore.com> (Audit)
 
-Max
+>  error:
+>         path_put(&parent_path);
+>         audit_put_watch(watch);
+> --
+> 2.47.1
+
+--=20
+paul-moore.com
 
