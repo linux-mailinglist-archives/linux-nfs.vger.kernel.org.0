@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-9920-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9921-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDAD1A2BA90
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:17:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53837A2BA91
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 06:17:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DEDF918895D5
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 05:17:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 714013A7764
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Feb 2025 05:17:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 685F014F9C4;
-	Fri,  7 Feb 2025 05:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47ACF17B421;
+	Fri,  7 Feb 2025 05:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tsgTtIXZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N9bo/xDu";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tsgTtIXZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="N9bo/xDu"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VOD3aDka";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UzWZGOSp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BRWS4iG3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AcVl84BB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C830E63D
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 05:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B566214F9C4
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Feb 2025 05:17:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738905447; cv=none; b=ZA7zWivBYt7L8/9QjB86TVOWE1HKMMcimHUmziiJRsSQfxC1u9UxQ7YzI/9vEQQCJiFOoThH0y6dJYcLuZ2po2ZS00wdfAX+w8qGxODDUNt85opyKovlTzTqNXhJk/seUu8vj0fGi9ZJT7nlvNB+fUTOBlc6/6BU6wSc6brbMs0=
+	t=1738905458; cv=none; b=ApkPuXhAI/KbkXkNKmNByC7JsrEU+uMm+OfhXky6Ni43ra+2gEMa48bl9lq4lUuILjOXOk7tCnTnWSXrYwFnY6xjGGajHCpCZDszvpGbDfEtHD5wG1B4Mv51fp+1H+76VWld+0J/5qPYVv/iE+6VYSJzcV3k4nXMdS0Uzd/qgOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738905447; c=relaxed/simple;
-	bh=equMA7yXGGv1zxOSRqamOEKqs21phBtiEgE2QnzQYJ0=;
+	s=arc-20240116; t=1738905458; c=relaxed/simple;
+	bh=KC6nTzpRfm0bzN7DfpVBGHyIPHAIcuS5GJXYc37UfM4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k78fPuFD28PsA4rjv7VTaPl0bLGj/4QANFZLp5DroVVbI/o2K853T/Kf5VqLUbBKcGWUa306k3nkc0CDk3GECzqCGbkiI9XTW0K5PtNjlKzpxzbLjYWiuBXHyE56IiPbWfbt3yM511kLQevNoL91VsP8rtPc2hmJu5BL6ghbiV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tsgTtIXZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N9bo/xDu; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tsgTtIXZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=N9bo/xDu; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=Ex/jis/D4KOcPJWH7y+B4CkJmWVClIW/Q+vjZl90AFsj88P/ayQMkDLeqI/ahpOGjekHD0Tamy4m0jMf7LL1ytV+eGcvpd6o05nBin6SXvIaVDmAVKDNBHZor8qdA/Tv3EHcMmCEojiL7SwKyvlKn0+NBh4zcmEkqMFcyL4/tf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VOD3aDka; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UzWZGOSp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BRWS4iG3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=AcVl84BB; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 046F621133;
-	Fri,  7 Feb 2025 05:17:24 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F2A681F38D;
+	Fri,  7 Feb 2025 05:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1738905455; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tRIrh/TYxUKaMGRbEpT7gGZ3zPSuoMMG7o/Hi0VbAYY=;
-	b=tsgTtIXZsjvEue0GU7uAFh+2tVduKGtTbJNrsg0AteoC/hOcab03oyovJMLGyYk3H2rhGm
-	UynXxne3HJiDQIlSnJIKy4mjJ1Gt9mpnA22Y4dNOaV2Hkxtzgy6aMBM8bIBStB+uWNvHhN
-	+FLjn12+si2nUnMqpvA9Kd51k4HIc+U=
+	bh=RGQmne6MLxrqXqQde476+/Bu4qVQH5In4NR8Qgo5FDA=;
+	b=VOD3aDka0C5Xod1Dvq3czjpiRHLoVd5VWX2m4D/hrb0gD5kFghqTdLL2PIo4YRAWALo03c
+	/ljhaxpBshhijTE5sXS9Ds67GCnsqo0GW4FRUBrXxPm755LON7DN8WFMfpPKx0QXkqxeWE
+	emQhl4oA6P+dsEtfWDj333btW8KunqM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905444;
+	s=susede2_ed25519; t=1738905455;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tRIrh/TYxUKaMGRbEpT7gGZ3zPSuoMMG7o/Hi0VbAYY=;
-	b=N9bo/xDuY3hIkgofWK3tjWaO3KxjqMphYveqRK5waMQr+fzS5FWOe1MleQjk4+ktCPep8R
-	bkKDY/FbCyns3SDw==
-Authentication-Results: smtp-out1.suse.de;
+	bh=RGQmne6MLxrqXqQde476+/Bu4qVQH5In4NR8Qgo5FDA=;
+	b=UzWZGOSpl9TlhUMP2dLhH2O0/WK6xKzIfCfomKHuuD/Fsth/7Q3Vd2nfdhoq0Lta1jXwEa
+	pTWTz1c+fVgsKsBQ==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738905444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1738905454; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tRIrh/TYxUKaMGRbEpT7gGZ3zPSuoMMG7o/Hi0VbAYY=;
-	b=tsgTtIXZsjvEue0GU7uAFh+2tVduKGtTbJNrsg0AteoC/hOcab03oyovJMLGyYk3H2rhGm
-	UynXxne3HJiDQIlSnJIKy4mjJ1Gt9mpnA22Y4dNOaV2Hkxtzgy6aMBM8bIBStB+uWNvHhN
-	+FLjn12+si2nUnMqpvA9Kd51k4HIc+U=
+	bh=RGQmne6MLxrqXqQde476+/Bu4qVQH5In4NR8Qgo5FDA=;
+	b=BRWS4iG3HY7kyszK+yY+5Oe7eYYP0Y18+JQC9qZh34El+H0TP2sUaQW/KMEz9dJPZX7ttO
+	0n4DrlRs0d6xtmTMWaX+CnvCOWhJf8DCi47x2oi5l/1jnN8nOKjuwSfR/q5vhMs0dCMTMZ
+	DvGOW7W8pWsMvVf/JcvAKMpmJ/OZsuw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738905444;
+	s=susede2_ed25519; t=1738905454;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tRIrh/TYxUKaMGRbEpT7gGZ3zPSuoMMG7o/Hi0VbAYY=;
-	b=N9bo/xDuY3hIkgofWK3tjWaO3KxjqMphYveqRK5waMQr+fzS5FWOe1MleQjk4+ktCPep8R
-	bkKDY/FbCyns3SDw==
+	bh=RGQmne6MLxrqXqQde476+/Bu4qVQH5In4NR8Qgo5FDA=;
+	b=AcVl84BBcPWt+o6jmzZenF7JR5Ffr1uJ9QezPUMvH+r0FCZqMC+28p/gsuR8r/xVeVUrQR
+	9R2uNcZuV0NTv6Bw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 81EBC13694;
-	Fri,  7 Feb 2025 05:17:21 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7ADCE13694;
+	Fri,  7 Feb 2025 05:17:31 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LJ1NDWGXpWf6FgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 05:17:21 +0000
+	id zS3xC2uXpWcBFwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 05:17:31 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -96,9 +96,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 2/6] nfsd: filecache: use nfsd_file_dispose_list() in nfsd_file_close_inode_sync()
-Date: Fri,  7 Feb 2025 16:15:12 +1100
-Message-ID: <20250207051701.3467505-3-neilb@suse.de>
+Subject: [PATCH 3/6] nfsd: filecache: use list_lru_walk_node() in nfsd_file_gc()
+Date: Fri,  7 Feb 2025 16:15:13 +1100
+Message-ID: <20250207051701.3467505-4-neilb@suse.de>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250207051701.3467505-1-neilb@suse.de>
 References: <20250207051701.3467505-1-neilb@suse.de>
@@ -111,7 +111,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
 X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+	BAYES_HAM(-3.00)[99.99%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
@@ -134,40 +134,40 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 X-Spam-Score: -2.80
 X-Spam-Flag: NO
 
-nfsd_file_close_inode_sync() contains an exactly copy of
-nfsd_file_dispose_list().
+list_lru_walk() is only useful when the aim is to remove all elements
+from the list_lru.  It will repeated visit rotated element of the first
+per-node sublist before proceeding to subsrequent sublists.
 
-This patch removes it and calls nfsd_file_dispose_list() instead.
+This patch changes to use list_lru_walk_node() and list_lru_count_node()
+on each individual node.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/filecache.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ fs/nfsd/filecache.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index b13255bcbb96..7dc20143c854 100644
+index 7dc20143c854..04588c03bdfe 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -666,17 +666,12 @@ nfsd_file_close_inode(struct inode *inode)
- void
- nfsd_file_close_inode_sync(struct inode *inode)
+@@ -532,10 +532,14 @@ static void
+ nfsd_file_gc(void)
  {
--	struct nfsd_file *nf;
  	LIST_HEAD(dispose);
+-	unsigned long ret;
++	unsigned long ret = 0;
++	int nid;
  
- 	trace_nfsd_file_close(inode);
- 
- 	nfsd_file_queue_for_close(inode, &dispose);
--	while (!list_empty(&dispose)) {
--		nf = list_first_entry(&dispose, struct nfsd_file, nf_gc);
--		list_del_init(&nf->nf_gc);
--		nfsd_file_free(nf);
--	}
-+	nfsd_file_dispose_list(&dispose);
+-	ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+-			    &dispose, list_lru_count(&nfsd_file_lru));
++	for_each_node_state(nid, N_NORMAL_MEMORY) {
++		unsigned long nr = list_lru_count_node(&nfsd_file_lru, nid);
++		ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_lru_cb,
++					  &dispose, &nr);
++	}
+ 	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+ 	nfsd_file_dispose_list_delayed(&dispose);
  }
- 
- static int
 -- 
 2.47.1
 
