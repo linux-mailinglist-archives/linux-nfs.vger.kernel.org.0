@@ -1,263 +1,260 @@
-Return-Path: <linux-nfs+bounces-9967-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9968-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF4A4A2D80C
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 19:40:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B990A2D83D
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 20:08:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 79BFB162362
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 18:40:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 047917A1DFF
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 19:07:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC316187848;
-	Sat,  8 Feb 2025 18:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB8551925AF;
+	Sat,  8 Feb 2025 19:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ4tjGGI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2123.outbound.protection.outlook.com [40.107.223.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94BF24111A;
-	Sat,  8 Feb 2025 18:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739040042; cv=fail; b=u/hGIq7X+qbA8sv4vDNb5SqShdrd9KFXbEUPpbuNc/HjkAKJ5lJHNgm+MUDPBErE6QIU3qYHsWOjGfXP8GbGqbV6pk/D/Xfwmqc4oHAiHBKxOWPM+d4lLpIlIiHLWVCfJypRxQXPMaUoFO8CcKMrN7zoIYnpFDvQPncJdm9qP+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739040042; c=relaxed/simple;
-	bh=tZVPeax55rHhPSwRe1vQEK4yriPopEsnpxfKR0BDRBY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uDV3RvwLDntAG/pjVcOcylxAGbMp/gKhi3mDcVDZb/ib/akH0E1cRLGv6tAofcmcgDrGAZi0G7k0/I3xuiFIEXC0Iz9oJVJ/NNWzb+Mn6nIqTWfj3FiJhm1hrV5HhCNjWEirU/yPlk8ehJH3mlieDzn57HM2yN4MkA08/HvayTw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.223.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jra0vIsPuaoNCLrNri8uugiUysuPKYXpp7fTDGlwlX0z8QNrtdRbwSsHY0k3rLi5DLBn5evat5W8HawLXVSeVzYW9/B2s9NBtsY3mWppRugkMXBK0gmBz0wZJulywWKYHiISpy+eUXszMd57kgXOeklkO7UWnxeGIYWZd2jFUEkTGlrk7HMZCPladv+DsVETEzMjPnNVvY6Q2wqyIdy6RJ29lslIufvDCwvh7b6MyG2tEU92u5KvZe4xcTQQV8Y65a+/pc2s213tZYWmxYBhqkPdVQ+mBP/9UeepYnw70lnPHqGj+AY72y6Jj22P/lDKz4O79q1U8W5y/F10hJ77Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+fddCiW6B2DALc//EKY8MYmbvLPZ3LnaiNEoHB0V/fA=;
- b=uOOm9Axer1K2KeYUClnH6KkxpD/gWIiK2Vm0UgyBbyxpuGa62XJJrcfIIeLS+9rLyiWww9ufpBolozpG8g4BeJ1Hng6TpsDuOInADQ26Bto5HsYImSgBPaRFKrdfHERdhdaKXxdr70fvsnu98v+Hr67vwDdAqNpZy3CD/xvcIdTJ7jfz6W09iqzOu8M3XTItuSR7XE+AqoWdoCojuv0xrh8Vih3HsSS4U1KA8Da4WDz2lCk7ilLbIk/g7Eqy3EsFPulJOm9G/wPbr3pxh5LPgpcPGO5L6NdL2rOPogr2SayH4DunvKxFH6G3rOWNtrhXDbFh1+L09pmjXSzG0stIGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- CH0PR01MB7186.prod.exchangelabs.com (2603:10b6:610:f8::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.8; Sat, 8 Feb 2025 18:40:35 +0000
-Received: from SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90%6]) with mapi id 15.20.8445.005; Sat, 8 Feb 2025
- 18:40:35 +0000
-Message-ID: <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
-Date: Sat, 8 Feb 2025 13:40:32 -0500
-User-Agent: Mozilla Thunderbird
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF159241129;
+	Sat,  8 Feb 2025 19:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739041698; cv=none; b=mxRxVM1DLvHpCjzwW9jXyEEX4rZAHePL1T+ApzSL58zOvSaIcAXy9VDg4Q+Sv3REmiBo7ebjRMwZtj8Vvr+9SO+4BwpqTLBqZY+aUgN6pUKOIY0/N+JdgNLntwIxIHJCxOEVPcuyL1/M+An4xB6l5se/AJBBfeIWeYxdvySJhgQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739041698; c=relaxed/simple;
+	bh=mJbmyC/Li5WBFgIKRPhOichJhVoxLzWWpIK9evqE+m8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=snp5LSdkZVCbpnoSSfbXHCPvOne1E04zmyXfAwU9PGcyBC5J5RuthFNlKeCCIbjXwy1bUx7yiDVREzxINHzgeFr/68wk+WTzFDGxmXVnUwf/3gVpWrBNlBAhxgj1B9C6EHmnZ9aI0vCNHuQnPVzEaJ9Yyi3sjvUMcMkFd7rsljw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJ4tjGGI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8391FC4CED6;
+	Sat,  8 Feb 2025 19:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739041698;
+	bh=mJbmyC/Li5WBFgIKRPhOichJhVoxLzWWpIK9evqE+m8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=HJ4tjGGIT+GNS76tpjyzhB0tC3vIOziMoYaZ7n/rHI9JTmADKoGW2WVt+TjtcmYde
+	 7PqPUNyVYi1lObemVIj22sFSH3Xx+Uj1RN3NY6pPdBaPYitMxR82StpCL7PPkDNkSz
+	 0ebn5peJQUeztYzbLDq/EhCn1MnWdCOur4yEz5jSJk7ElDBJogOpgOVIK4HNujpzrJ
+	 ykRx7UXB9pAAVNlO2+Z7O2JRA4ybinLNnOeNNqwNXZ/Sg/RWvNALZkPUtaBrSHYFUQ
+	 ZbFwaJJclmUp1U28hHZRn54lHbwHK3UT9aXg7/10nQ/QA2n8qCS9He6o1C+WwNL+i2
+	 FZKDbTtckUIjA==
+Message-ID: <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
 Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
  error better
-To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, "J. Bruce Fields" <bfields@fieldses.org>
+From: Jeff Layton <jlayton@kernel.org>
+To: Tom Talpey <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>,  "J. Bruce Fields" <bfields@fieldses.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 08 Feb 2025 14:08:16 -0500
+In-Reply-To: <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
 References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
- <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
- <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
- <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR18CA0007.namprd18.prod.outlook.com
- (2603:10b6:208:23c::12) To SN6PR01MB5246.prod.exchangelabs.com
- (2603:10b6:805:d8::14)
+	 <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
+	 <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
+	 <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
+	 <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|CH0PR01MB7186:EE_
-X-MS-Office365-Filtering-Correlation-Id: c3e9743e-62dc-452a-3801-08dd48701337
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c2hJZENwN1Vpb1h5dllqZlR2RE80RkNQa3V6R01Lb045SmJaakJmNVgrWUJw?=
- =?utf-8?B?aVNHUXZ1YTZVV1IwWWZQYW1RbHVmTWlRaklWaFFOVWhMVUZ3NCtLUnVUR1JQ?=
- =?utf-8?B?d3p5RVBNSk40dk8rOFFIcEY0T2tiN0Y0R0JEcGwybjJYb2lWSy9uWTl3TEpX?=
- =?utf-8?B?elRka1hWYWFOSmhiUHZSWDFpTXdlNURCSmR5b2U0RzZTQWdKakE4MmgrM29y?=
- =?utf-8?B?eGsxUyt4ZXgvUlZnR3VRNTB1dGNXUDN6TGVoY3NUcElZbHhFcUxjcHhGeS9V?=
- =?utf-8?B?Q2RucjhCZ29ic3NqMExwVG43a0gvMXMwb2hXT1ZseC93K2pmNXlrS2E1QXRN?=
- =?utf-8?B?Y3ZFUGxCbGNUYUtUM3NRRFRhcVFlWGVWRno2cXE4R2hObVQrbkpFUGZWTzdt?=
- =?utf-8?B?b2t6OFNoeWJMemFHbTRzZkdUbHU1WXROaXJkdTNSWXdVMEQ5dGhYU0llcG0y?=
- =?utf-8?B?L2tkSG1FN0pEVVViQU1HdDVmcW5NaUNJcUJXR0luOFlkWGt1amcxS2dYZlBG?=
- =?utf-8?B?YVFicTVyUE9KMGVSckIwQkR2OEhjWktMU05FZDRQYnVaUlJXaWVLcGRNcjhP?=
- =?utf-8?B?cjVRVmVsQ0VUaDFoZlFsVkFPclZzekMyL2lCOHpwNm53dnZ2dVZQQk85b3B1?=
- =?utf-8?B?U3pEZnZVZWtPZjMvcG52bm9nRTRaaUt3c2k3UFMyMmRyMld6QXVNamMwQTB4?=
- =?utf-8?B?cU92Y1FDRUg0RHBFWmxZOElBUUF3V2Y2RVlWT0xWOVYzWGhIWmZUaWxya3lv?=
- =?utf-8?B?K1JXM1JtMkpnR3pRWEVzQWROTmIybFZrbXBmSDY0V29YR2tTUVRGM0JpMGlV?=
- =?utf-8?B?VWJyUmpxTkRRcE9aazh2eTZ0M3h4bnorUnR4VnV6ZEhMSjJxQ0NucFd6ck10?=
- =?utf-8?B?Qld5RUxGVnJHdUNCN1JmZlEyTmF4MjFGUkIvQlA0YlhtQ0xNS2NnbXpnemRq?=
- =?utf-8?B?WG41T2pBNDRLVmJwWjFmbHlvQi85RlJ5NXhkS015bzd1ek9DZnkyN1UvUU00?=
- =?utf-8?B?SC93QTluVlRvMUNTUWQ2NTRIbi9jdTlxcTVhRUg1aVJselRIY256Z0gxVU5r?=
- =?utf-8?B?bjdRdTNoRFdwcmNmcmd2YXNSWE5TamFHQ1FMY0lvUFRsQ0NJVWFZSlAzeHkx?=
- =?utf-8?B?QlBvNEd3SlI1aHRJZ2M2Y3d0QnZaclc2TWZMblFiY01PM2FyeCtQcjd1a1Rh?=
- =?utf-8?B?MExvWVcrM21BL0dtWDdBRWNub2k2bk1iczFFWWtpSDdNbDM5OFZHRkYwUHpH?=
- =?utf-8?B?eDVEK2FFZ1VkdVFzK2dwNlpYTjUxWVJGQ2kzOSs4REw4bUJkN1JSWVdzeXJZ?=
- =?utf-8?B?akFJSUdLWGhoWFUwcGFMem12NWFSL0lTUTFrQ05SbzFRS1psajl3Qy9nNWF3?=
- =?utf-8?B?UzJvcmRXV0tVWTFCYTVXbHlOcFB3Y3F3amRMSCtQSWdndVZaUzF1REFaT1Zo?=
- =?utf-8?B?RVNGVWw3MTk3SUthMks1ckVWRVpCeGN3QW55TFdtUFIrNG5zZ1lickEzaXc5?=
- =?utf-8?B?OXZhZUNEWVpKTENYU0FGT1QxdXp0YVVrS1o4M0lZbG84QkhDYThESnRLOGM5?=
- =?utf-8?B?Um5NWGdyQmw5WjNnbkZlTHY2KzRFN25wdndseGVLTm1rUDlIcFZoTjVWRU82?=
- =?utf-8?B?aGVIM3UxSDlPRUlwamRvN0hPcFYxRmJwemx1eDU1UVBYa2FIL3I3TUtmK0t6?=
- =?utf-8?B?TVdHSlN4VUEwZTNrYW5JSjRLL29SdXdtdHd5WWNpZEpiWVdGNytNR051Vnd5?=
- =?utf-8?B?cFY5QVRaeTlDYlhPRHEzNEJJaVZMUEJFa2VCREo2YTMvN3BWcXhkTm1ZVUps?=
- =?utf-8?B?QzVmRGxobWhXRDFpMXJ4Nms3V1paMnJxVjhHbXIvcEhKdW1YK1JGN1Y0a3Az?=
- =?utf-8?Q?P9ERueRXNof04?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WVcwaG8zTnlCV1hURFZaUnh4T0wrSERvWjhzcVBpNE5RSlg5dDNpRWliT09N?=
- =?utf-8?B?WG9qL2hFNVlIam1MT1ZQYjRUVEpjelMrN3VURFlDekhucU9aTFd1eDMzK3RO?=
- =?utf-8?B?U09CY0c0RStLRDhia1lseXhYOVIvNVZuYWt5ZEovZjh1RHFrZ0NsSmFxQUtN?=
- =?utf-8?B?ODNEcUdYTVFzQjFyc2RzZ09UNVFCT0pCMGxOT2ZMYVEyZG1Wa0ZZWVQ1V0Zn?=
- =?utf-8?B?alNLbzBTUE9BTTliSlErS05NNTB1UmxVTWluUkxaenFCUG1XdUg5UUMxQUlC?=
- =?utf-8?B?YXJ1cmVQd2IyY0M5Rlh5QUZnSS8xbVYvVW4rcFZ4RGNvMXF2V0JCVm4yMExq?=
- =?utf-8?B?K3psNmxYdHpBQVp6YnZadWlXZ2F6S2krYlFJcW8xT1RZd085c0pLSGs0V1h4?=
- =?utf-8?B?M3N2R2VsUEN6SjJBSjlDYVovdEVlQmhsdkJlL1pTL01jQ0s0c3U0dEdGdS9H?=
- =?utf-8?B?NjE5L3hjS09zYTRqK1JIeTZGcjF0cWFZODVQY2tEN3FycGwxWkgxbXVPY1Jy?=
- =?utf-8?B?TzFLWGh5NWd4OGQvT21XK1gxY2Y5MEdqMnRYRWk1cGcvVnh6R0grdmJyUzBr?=
- =?utf-8?B?bkNqNmVMS3hmRXducmJvdkFQd2w4eVRwVGlIU05xelNNUWdzWUx0dzdidVBv?=
- =?utf-8?B?Y3NxYmszMW9JMTdRTThLTGpiV0lwbXVDVFZOWnBXYWxua0pOWlJ2SDREKzNh?=
- =?utf-8?B?eHRHSjdMSnhvMStyM1Zpb1Bla2pGSG1rd3JqNkRLWFRnYkZTV3dDV3BIa1ND?=
- =?utf-8?B?bms0TmNaM2FkT24xeWUxd3JhbE1OZU9NYm1uL0h4Q0FrMFFxaXNXT29ORDlY?=
- =?utf-8?B?ZU8wVG5BTittWW9yQjV6YTlkT2txc2FpVHZuOHFWT3dxaXZMblB6Um1RTXhh?=
- =?utf-8?B?NUFVN2cwNmVHYmgzN3ozZUI4MFpHOHhwcGVja25WTzVkSGFLazk3em5mQWcr?=
- =?utf-8?B?aXA2bmUweXVxVkRsNHJIMVhLNHllSlhNcUJxa09LVXZLRFY2REIwdG5mK0Na?=
- =?utf-8?B?UG42MHFTOEMzdTB2dEkzZzRJeTNPMEdTUFgxc05jaGZGWCs3ckQyQUxBTE9m?=
- =?utf-8?B?cHEyOTlCZE9VUmppQ2NJY3FJS3dBMW9EMTFvTzI0UGduU3pXUUJXb0hTcWkr?=
- =?utf-8?B?clhyWW9DQk5iM1lxdEZTV1hRVktqTENjZFZYUGVpOThiaUVTS0xldGtQSjVO?=
- =?utf-8?B?R3NZQ0NSU0NHbWdheC9zNnJSZzArNTFKMlJJellMVU5JTHIxeGFoTFFpbEwz?=
- =?utf-8?B?VkliWTl4ZmQwWE9BcFB2WlJXbEpza0IwZnJPa3RDbWtMcmxqQUlMQ05hcE0y?=
- =?utf-8?B?c2Y2emhFSFFCR2tGVHBsYm5wZlVpMVdUZ1F4eHAxZVNTUkNVMFFaQlVxM1lk?=
- =?utf-8?B?b0c5WjF3TUlBaGNQbGxjVUU4aE04NnkxbDVVcC9kc2dpYXIzWEcxWUVRdER5?=
- =?utf-8?B?aHBXOE9PNVQzNlY1RDZUK3RNUmk3WnpQT1pJYU4xSHdJaUdvdS8yd0VYM3Na?=
- =?utf-8?B?SlVGenZvZjJCOGRDUmFFem81VjlBSzB0WFBLQkNuOVVWdWNUeFlFZGhESVpW?=
- =?utf-8?B?QVNqLzlmYVUrMnoySTFNaC9GV0IwVFlxU0lqOTZvWXpQakZ0MGF6OUxxaEk2?=
- =?utf-8?B?dWRHcThxZS9xQmFFMXg0bFl5N0lzemM2UVA5VHlqZGxZZGc4TWprSUhWTkpL?=
- =?utf-8?B?SldZb1J6b0M0TGlYTWRQdDJsbmNrejVvTFhMYTd2WmlUTnUrbzhXZVRlK25v?=
- =?utf-8?B?VW9jc09UVGwxWG44N3dJSFlIeXE5S0Z0dWdWTTU1NWJCcDkzVCtYWHNwajk0?=
- =?utf-8?B?U1B2S0VDV3Z4cndhOFpKWk1sNk0xSjBFZnRkZXBRTEdOZGE3TmtkQm10TS9I?=
- =?utf-8?B?dDE3R2svQlVYTXJMM1ZJSEFZNzJFK0JPdHZ0NUp3Vzh5WGd1MytyZkdiMGdK?=
- =?utf-8?B?dC9ONndIZ0krYzNoRnZMVEZ5MzJUeEtqbW9zRVpGM21lZUphZnhvdlB4bHgv?=
- =?utf-8?B?VmpzK2QzTkN4bzR0cE5sKzhDT2FqM3NlbUIrUE5ON1VLS0RHMDd6R2hsS0No?=
- =?utf-8?B?S0FsdDV0YkgzKzA2bERGN00wTHc2c0MvVW5zYmZDSjlONFZEcm1UUE1teHp1?=
- =?utf-8?Q?coYs=3D?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e9743e-62dc-452a-3801-08dd48701337
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 18:40:35.5345
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G9UGLdvD50C00DdscDdb6VgCGBmAA66yTz5EsLcFZO4dnDv4wjcrCzVR3vuyJwdQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR01MB7186
 
-On 2/8/2025 10:02 AM, Jeff Layton wrote:
-> On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
->> On 2/7/25 4:53 PM, Jeff Layton wrote:
->>> For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and then
->>> fall back to treating it like a BADSLOT if that fails.
->>>
->>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>> ---
->>>   fs/nfsd/nfs4callback.c | 16 ++++++++++------
->>>   1 file changed, 10 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
->>> index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f922318880e12e1cb2c23f 100644
->>> --- a/fs/nfsd/nfs4callback.c
->>> +++ b/fs/nfsd/nfs4callback.c
->>> @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>   			goto requeue;
->>>   		rpc_delay(task, 2 * HZ);
->>>   		return false;
->>> +	case -NFS4ERR_SEQ_MISORDERED:
->>> +		/*
->>> +		 * Reattempt once with seq_nr 1. If that fails, treat this
->>> +		 * like BADSLOT.
->>> +		 */
->>
->> Nit: this comment says exactly what the code says. If it were me, I'd
->> remove it. Is there a "why" statement that could be made here? Like,
->> why retry with a seq_nr of 1 instead of just failing immediately?
->>
-> 
-> There isn't one that I know of. It looks like Kinglong Mee added it in
-> 7ba6cad6c88f, but there is no real mention of that in the changelog.
-> 
-> TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
-> when we got this error, and we then retry with a seq_nr of 1? Does the
-> server then treat that as a retransmission? 
+On Sat, 2025-02-08 at 13:40 -0500, Tom Talpey wrote:
+> On 2/8/2025 10:02 AM, Jeff Layton wrote:
+> > On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
+> > > On 2/7/25 4:53 PM, Jeff Layton wrote:
+> > > > For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and t=
+hen
+> > > > fall back to treating it like a BADSLOT if that fails.
+> > > >=20
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > >   fs/nfsd/nfs4callback.c | 16 ++++++++++------
+> > > >   1 file changed, 10 insertions(+), 6 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > > index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f=
+922318880e12e1cb2c23f 100644
+> > > > --- a/fs/nfsd/nfs4callback.c
+> > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rp=
+c_task *task, struct nfsd4_callback
+> > > >   			goto requeue;
+> > > >   		rpc_delay(task, 2 * HZ);
+> > > >   		return false;
+> > > > +	case -NFS4ERR_SEQ_MISORDERED:
+> > > > +		/*
+> > > > +		 * Reattempt once with seq_nr 1. If that fails, treat this
+> > > > +		 * like BADSLOT.
+> > > > +		 */
+> > >=20
+> > > Nit: this comment says exactly what the code says. If it were me, I'd
+> > > remove it. Is there a "why" statement that could be made here? Like,
+> > > why retry with a seq_nr of 1 instead of just failing immediately?
+> > >=20
+> >=20
+> > There isn't one that I know of. It looks like Kinglong Mee added it in
+> > 7ba6cad6c88f, but there is no real mention of that in the changelog.
+> >=20
+> > TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
+> > when we got this error, and we then retry with a seq_nr of 1? Does the
+> > server then treat that as a retransmission?=20
+>=20
+> So I assume you mean the requester sent seq_nr 1, saw a reply and sent a
+> subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
+>=20
+> If so, yes definitely backing up the seq_nr to 1 will result in the
+> peer considering it to be a retransmission, which will be bad.
+>=20
 
-So I assume you mean the requester sent seq_nr 1, saw a reply and sent a
-subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
+Yes, that's what I meant.
 
-If so, yes definitely backing up the seq_nr to 1 will result in the
-peer considering it to be a retransmission, which will be bad.
+> > We might be best off
+> > dropping this and just always treating it like BADSLOT.
+>=20
+> But, why would this happen? Usually I'd think the peer sent seq_nr X
+> before it received a reply to seq_nr X-1, which would be a peer bug.
+>=20
+> OTOH, SEQ_MISORDERED is a valid response to an in-progress retry. So,
+> how does the requester know the difference?
+>=20
+> If treating it as BADSLOT completely resets the sequence, then sure,
+> but either a) the request is still in-progress, or b) if a bug is
+> causing the situation, well it's not going to converge on a functional
+> session.
+>=20
 
-> We might be best off
-> dropping this and just always treating it like BADSLOT.
+With this patchset, on BADSLOT, we'll set SEQ4_STATUS_BACKCHANNEL_FAULT
+in the next forechannel SEQUENCE on the session. That should cause the
+client to (eventually) send a DESTROY_SESSION and create a new one.=20
 
-But, why would this happen? Usually I'd think the peer sent seq_nr X
-before it received a reply to seq_nr X-1, which would be a peer bug.
+Unfortunately, in the meantime, because of the way the callback channel
+update works, the server can end up trying to send the callback again
+on the same session (and maybe more than once). I'm not sure that
+that's a real problem per-se, but it's less than ideal.
 
-OTOH, SEQ_MISORDERED is a valid response to an in-progress retry. So,
-how does the requester know the difference?
+> Not sure I have a solid suggestion right now. Whatever the fix, it
+> should capture any subtlety in a comment.
+>=20
 
-If treating it as BADSLOT completely resets the sequence, then sure,
-but either a) the request is still in-progress, or b) if a bug is
-causing the situation, well it's not going to converge on a functional
-session.
+At this point, I'm leaning toward just treating it like BADSLOT.
+Basically, mark the backchannel faulty, and leak the slot so that
+nothing else uses it. That allows us to send backchannel requests on
+the other slots until the session gets recreated.
 
-Not sure I have a solid suggestion right now. Whatever the fix, it
-should capture any subtlety in a comment.
+> >=20
+> > Thoughts?
+> >=20
+> > >=20
+> > > > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > +			goto retry_nowait;
+> > > > +		}
+> > > > +		fallthrough;
+> > > >   	case -NFS4ERR_BADSLOT:
+> > > >   		/*
+> > > >   		 * BADSLOT means that the client and server are out of sync
+> > > > @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rp=
+c_task *task, struct nfsd4_callback
+> > > >   		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > >   		cb->cb_held_slot =3D -1;
+> > > >   		goto retry_nowait;
+> > > > -	case -NFS4ERR_SEQ_MISORDERED:
+> > > > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > -			goto retry_nowait;
+> > > > -		}
+> > > > -		break;
+> > > >   	default:
+> > > >   		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > >   	}
+> > > >=20
+> > >=20
+> > >=20
+> >=20
+>=20
 
-Tom.
-
-
-> 
-> Thoughts?
-> 
->>
->>> +		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>> +			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>> +			goto retry_nowait;
->>> +		}
->>> +		fallthrough;
->>>   	case -NFS4ERR_BADSLOT:
->>>   		/*
->>>   		 * BADSLOT means that the client and server are out of sync
->>> @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>   		nfsd4_mark_cb_fault(cb->cb_clp);
->>>   		cb->cb_held_slot = -1;
->>>   		goto retry_nowait;
->>> -	case -NFS4ERR_SEQ_MISORDERED:
->>> -		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>> -			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>> -			goto retry_nowait;
->>> -		}
->>> -		break;
->>>   	default:
->>>   		nfsd4_mark_cb_fault(cb->cb_clp);
->>>   	}
->>>
->>
->>
-> 
-
+--=20
+Jeff Layton <jlayton@kernel.org>
 
