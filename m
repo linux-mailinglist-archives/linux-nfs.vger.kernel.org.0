@@ -1,59 +1,59 @@
-Return-Path: <linux-nfs+bounces-9965-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9966-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CFFEA2D7E1
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 18:56:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D26DA2D7EF
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 19:02:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 94D6A1889482
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 17:56:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 350CA3A7C81
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Feb 2025 18:02:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10991190665;
-	Sat,  8 Feb 2025 17:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD40241129;
+	Sat,  8 Feb 2025 18:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbWUZd08"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNN54UYw"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0B5241103;
-	Sat,  8 Feb 2025 17:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816DE241120;
+	Sat,  8 Feb 2025 18:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739037362; cv=none; b=Fjuz6WbICdV44nGwiu1Kwq+vBYGtBprWdIc0IdjaQDyME6hmlUaG1S8EUTO6W5kLH4mAqDTPq8W0KXOzKcngZA/aqG5BS7UxSEZ5lXCsdw//0MVy1gYYSPxs3K+70kLUq1FhVJykjqfgh7VA8pFa9ZrK/y+lHDkdNX06BGUigUY=
+	t=1739037733; cv=none; b=Kn+4FSKSDUIx9ugQoYrXW53bNO8nUFtcjXWIs7JI01h5pjYjpmpm1FB3GV+fRKjqWi903waWERIrqvc99MR1oi20hgc+km9PdXS6DkxjU2k/DMK9pwXiPRWPLBm16nS2v/QP6+2eS10Vi2P/gakpRwIK0Ga3ORXLdG/G+0IYMpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739037362; c=relaxed/simple;
-	bh=T94cf0Zk7OYlpyIMRXMD2FjPWHWqYROcw0NfFfks06Q=;
+	s=arc-20240116; t=1739037733; c=relaxed/simple;
+	bh=4+thuqXVSxj6O03R4ZOaJqV+IxG7zKTBleSi3XSoJxQ=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fu6EtNcdEzmcbze3poWJgGQ3AkSLcH73Mb9lZV5OOU1qcwzxsMKtjaXdF36YCOe+7kaZ4XdDPGPh0dJyMpinb2MeLA2aEkITPcZ/jmnSkkXQH2Mb3612hhQJ0HIMr2bMrNC3Dxg9kDkb3i20MeHmlTig4QeDVjJUYAz7mZjTAyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbWUZd08; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B142DC4CED6;
-	Sat,  8 Feb 2025 17:56:00 +0000 (UTC)
+	 Content-Type:MIME-Version; b=hQZ7X97pNBbSItbNAxAgiW7gn+HzA4J4xnUiS6DJgk4sB7DdBCXyTLe+vH0fnnbO3dbULvB8WWjxyaLasEunwaE1JTsdhjxlgbGBUqo1fapvrEQJk8HTULZu4NDah7ngkz+du9n5EtSTReJipz3sTwi849zNqR3788b6nXIZfhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNN54UYw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A642C4CED6;
+	Sat,  8 Feb 2025 18:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739037361;
-	bh=T94cf0Zk7OYlpyIMRXMD2FjPWHWqYROcw0NfFfks06Q=;
+	s=k20201202; t=1739037733;
+	bh=4+thuqXVSxj6O03R4ZOaJqV+IxG7zKTBleSi3XSoJxQ=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TbWUZd085MGe+wrKii+FSR88i3ajFWmz4aIC87YIxg+2r5AfACReiF5dS7uWV4B01
-	 RqkDmLm9JcokTueZ+f2wMpDi3JYkDHYzyzkziQn0OPd1p4ngSHTMa7LJVL0qH04HZC
-	 8iBGbcvC8mhKxtSeu+pDJwnXVE3U0GYAvQv0ya4Te0VRbIWechMWuop3ufqvHal0s8
-	 D81mWvYzRPeUf0eP2FeWfFhrtQbcQ43M/6d5VF+BTOAPRm7VcNAXlqHGBnm8r118g1
-	 CJyjfwm0vZr+R+xzNEBuJx+qB3o2P+QJ32xqlbLqRLbW7M3+ZFxlEES7CGbPYRZc7G
-	 4CXM1IUzftG5A==
-Message-ID: <223fe6cde92d9b47d12fa47e48f0bc6b8960c1f0.camel@kernel.org>
-Subject: Re: [PATCH v5 2/7] nfsd: always release slot when requeueing
- callback
+	b=BNN54UYwh18XaZVQqQrXXBtlahkb4CvQZwjkBvBmIl/vop3OQ78yYjKf3Os1Ff6He
+	 HDPGh+7vW+HvH13vNG9j7RbdPvHQUWui4k0Y0wCbJy1QgxOBFl8GBqdP75+PEw/UAU
+	 pntoDPzgyQkmvRkOr1OT4fQ22Ne0BNebRKnurYqwIBF1A+OTLOfSGBo74i3fh3+lXc
+	 QM0gUZiDSZm1LoobA/b/F/TWWcEno2iNTK3nqVx/OnZItpcDFftHFMobfEPnp1dOB3
+	 Tgof0jsfY5eR4AjRgP5Ufd/JjlHBhq2y3mO3ZWu91FDMzTKQDiFw0DQrSR/dEjOX9K
+	 R92sRLFb4bcxw==
+Message-ID: <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
+Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
+ error better
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sat, 08 Feb 2025 12:55:59 -0500
-In-Reply-To: <184cf63f-d9c3-4948-aae0-efb23a49e188@oracle.com>
+Date: Sat, 08 Feb 2025 13:02:11 -0500
+In-Reply-To: <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
 References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
-	 <20250207-nfsd-6-14-v5-2-f3b54fb60dc0@kernel.org>
-	 <184cf63f-d9c3-4948-aae0-efb23a49e188@oracle.com>
+	 <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
+	 <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,51 +138,74 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-02-08 at 11:57 -0500, Chuck Lever wrote:
+On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
 > On 2/7/25 4:53 PM, Jeff Layton wrote:
-> > If the callback is going to be requeued to the workqueue, then release
-> > the slot. The callback client and session could change and the slot may
-> > no longer be valid after that point.
+> > For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and then
+> > fall back to treating it like a BADSLOT if that fails.
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >  fs/nfsd/nfs4callback.c | 1 +
-> >  1 file changed, 1 insertion(+)
+> >  fs/nfsd/nfs4callback.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
 > >=20
 > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index 79abc981e6416a88d9a81497e03e12faa3ce6d0e..bb5356e8713a8840bb71485=
-9618ff88130825efd 100644
+> > index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f9223=
+18880e12e1cb2c23f 100644
 > > --- a/fs/nfsd/nfs4callback.c
 > > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -1411,6 +1411,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
-k *task, struct nfsd4_callback
-> >  	rpc_restart_call_prepare(task);
-> >  	goto out;
-> >  requeue:
-> > +	nfsd41_cb_release_slot(cb);
-> >  	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
-> >  		trace_nfsd_cb_restart(clp, cb);
-> >  		task->tk_status =3D 0;
+> > @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
+sk *task, struct nfsd4_callback
+> >  			goto requeue;
+> >  		rpc_delay(task, 2 * HZ);
+> >  		return false;
+> > +	case -NFS4ERR_SEQ_MISORDERED:
+> > +		/*
+> > +		 * Reattempt once with seq_nr 1. If that fails, treat this
+> > +		 * like BADSLOT.
+> > +		 */
+>=20
+> Nit: this comment says exactly what the code says. If it were me, I'd
+> remove it. Is there a "why" statement that could be made here? Like,
+> why retry with a seq_nr of 1 instead of just failing immediately?
+>=20
+
+There isn't one that I know of. It looks like Kinglong Mee added it in
+7ba6cad6c88f, but there is no real mention of that in the changelog.
+
+TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
+when we got this error, and we then retry with a seq_nr of 1? Does the
+server then treat that as a retransmission? We might be best off
+dropping this and just always treating it like BADSLOT.
+
+Thoughts?
+
+>=20
+> > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > +			goto retry_nowait;
+> > +		}
+> > +		fallthrough;
+> >  	case -NFS4ERR_BADSLOT:
+> >  		/*
+> >  		 * BADSLOT means that the client and server are out of sync
+> > @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
+sk *task, struct nfsd4_callback
+> >  		nfsd4_mark_cb_fault(cb->cb_clp);
+> >  		cb->cb_held_slot =3D -1;
+> >  		goto retry_nowait;
+> > -	case -NFS4ERR_SEQ_MISORDERED:
+> > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > -			goto retry_nowait;
+> > -		}
+> > -		break;
+> >  	default:
+> >  		nfsd4_mark_cb_fault(cb->cb_clp);
+> >  	}
 > >=20
 >=20
-> The NFSv4.0 case also goes to the requeue label. Is
-> nfsd41_cb_release_slot() a no-op for NFSv4.0?
 >=20
 
-Yes.
-
-> Even if it is, this is a
-> little confusing. Later, in 7/7, the nfsd41_cb_release_slot() call is
-> carried into the helper that is called by both NFSv4.0 and NFSv4.1, and
-> that doesn't seem necessary.
->=20
-> Perhaps this change should be done /after/ the NFSv4.0 error flow is
-> hoisted into nfsd4_cb_done().
->=20
-
-Fair point. I'll move the v4.0 rework ahead of this patch and only call
-nfsd41_cb_release_slot for v4.1+. I'll also fix the changelog of #3
-like you suggested.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
