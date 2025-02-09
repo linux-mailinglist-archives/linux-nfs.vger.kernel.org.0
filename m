@@ -1,50 +1,62 @@
-Return-Path: <linux-nfs+bounces-9983-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9984-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C867DA2DDC5
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 13:32:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C192EA2DF0E
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 17:14:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E31ED7A36AA
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 12:31:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D2661648ED
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 16:14:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A04F14B950;
-	Sun,  9 Feb 2025 12:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42231DF737;
+	Sun,  9 Feb 2025 16:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ViYKZzih"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spXQ7zNq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312191DFD94;
-	Sun,  9 Feb 2025 12:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0A91CAA94;
+	Sun,  9 Feb 2025 16:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739104300; cv=none; b=uuDdv53KwAqREmN4IToQfY5I8bqfDz3HeZ5ps4ICABZwyeBrUQatrA87qzmQqrFU75CYynbByC8r1KBtMnMOhxaWMN1sg3Id1RdJUIerdxuEDUFQFoxRs5pQJHChRmcXHxOcjhZFTG6lCP62UeQ3nTljnXAc/VN7CjA156Zq8rk=
+	t=1739117688; cv=none; b=NOo63B3wYdrtnYmcuZiXynv5iPYGSGq/L/8PwcWEvbD/kRQFDmtgJvtePPPU8KDATOeNURLxY6WogHjb5TixKnun6XwJbmRjh4ssBm/wuM/qiAgFW8moDqANVqlUdqyZssfJKvlJ/97yod511tYpkM/UMs6LG8cXPOYNgAJ0EUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739104300; c=relaxed/simple;
-	bh=VLx4Uh4kR6QXzO5q5nJQUcywtXXEOUq/AbwIxjkBtsI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aeKfvIUU3vtowdm7fSMlWpPlNKNjiZv6icvYhRl60QlXwVjlOWdIKSCXbrFxb0fdubzXOl4Y+JAWoH6it4YhHdODpysnh/AYNY7R2vU6FvF2eB6RucbdQWq4nojewYQKLZ8L71dDmHDK7VhyFqLeS9ITzhhNmXRzHrmyOiQXQJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ViYKZzih; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55070C4CEEA;
-	Sun,  9 Feb 2025 12:31:39 +0000 (UTC)
+	s=arc-20240116; t=1739117688; c=relaxed/simple;
+	bh=o7t3GlfNmSmomEmhzTP7sg+4ra8TNBtvuC45jw3kd4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D+Q1vHG/d9n/gg3Dzz6hBOXjvTcEk2lKxd3c1a5TbPsKX2KrYkQlLLMPMHtp0eGQLc/g+qyz0pm7buv6fctiCwxAPyHMN2808ENRKIGQMuKiOjULhx6SQk2Bidol9YSOhzithAOHMw8OHycDngA4yR2ZAJ2OKgXCr0Z3XDrcpow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spXQ7zNq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534A9C4CEDD;
+	Sun,  9 Feb 2025 16:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739104300;
-	bh=VLx4Uh4kR6QXzO5q5nJQUcywtXXEOUq/AbwIxjkBtsI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ViYKZzihqW48BiMv++Zz6D4YZo/8MkZb0GalgDgBR+a4jAOXx0dtD5vMzp5PV4e8l
-	 YXmuJ3QqAyUv+4zzVI8hP3H446A60AEgpGsGh/De+LTD2p6eFBSL08oF1U5w+q58Fz
-	 Nx8uhyZN7BAnFlSQGVWFYq52R0opKx3Ct6AcxRiA9nHpj/QPQ/lSE4SD7W0Yducze9
-	 GNme7TiUsiE65buil+knEiHtIdWM+jX/j9rn35eMEm+im7Gh5/godZH4rSZ2W5L50m
-	 OvNsfhZl0s7tDEtweUxdGWI0wPg2AV6ddobVrpB2K471szCvWhY94Ysis+ivVAYASU
-	 dIdLPliwQWlZg==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Sun, 09 Feb 2025 07:31:28 -0500
-Subject: [PATCH v6 7/7] nfsd: eliminate special handling of
- NFS4ERR_SEQ_MISORDERED
+	s=k20201202; t=1739117688;
+	bh=o7t3GlfNmSmomEmhzTP7sg+4ra8TNBtvuC45jw3kd4A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=spXQ7zNqdGlHJ6VNwtu5K0UJw1oTcqo1FgBbgh7/MazLofvkDyrAwagYvZOPCH19y
+	 AXyQZgqZp3fL061PYLQbegVhhCfGhFTO0feLvQnDnvZgdMUH3VZPCYu4hE5fZwCYmI
+	 KoI1WfYmDV4rJR9SdL+hwCEkchztnbe6SpwMe4H/ylVlU6EYIGx4O1PmI3jhYSx8zs
+	 Xm1GTcheEc/qfMDtPgnPzsWi1eyPDrJjfoNJewyu2FiKB2eUgzHUUa0rNeEkPRBES8
+	 38DrgCRbmWA+IZxqxrniH2l0Uvp6gyE/bRhxXoh3sUTCAKIiWc4m2WY4fM/X5In+49
+	 kfvJFDfnAX7rw==
+From: cel@kernel.org
+To: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	"J. Bruce Fields" <bfields@fieldses.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] nfsd: CB_SEQUENCE error handling fixes and cleanups
+Date: Sun,  9 Feb 2025 11:14:44 -0500
+Message-ID: <173911760206.97922.9559360232269811403.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
+References: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,80 +64,38 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-nfsd-6-14-v6-7-396dd1bed647@kernel.org>
-References: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
-In-Reply-To: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1842; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=VLx4Uh4kR6QXzO5q5nJQUcywtXXEOUq/AbwIxjkBtsI=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnqKAkp+y+zE3S1pj0cMhOfClcZsuke2Qg+YEZl
- iSsOl7bF7CJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6igJAAKCRAADmhBGVaC
- FTndD/9o7zxRnEVQdfak2A0/8TCVCrU+mXlAA7s4sQeC6B9QM40Da7+2MvhcUhD/JDHHQaJi/0R
- baEY+MXCBnIOqRmzlMfBut6TPKgjh0+hKRZkXZkUquimtC83D/Ak6ToUu/q9iQKGZepYU5s7kQB
- 4d33EICT8EcX3cDW5YPfGSlHHx1etw6UvMgGlHHBbKWfRgeLJbnFBo9/SudJCtkTCy5KPQ9LlY3
- oK8HCuBIDRciFB3crrgkDoQRFySjhZDdfJWDOK5gb7BjQRGnTx7TjiLICsfQlQA7TNhcg5P7LI6
- FAkSMIl/zsEv5VENEtg/grykMrdUiehrtjopbtnIqBPx5+3+HLrsNOG4PhEiT5x1D6OphbLCvyO
- T1RN96X8b3swBbfDcxRkpihGcgJXI29De7RIBVfln3h7ri3mt5ZDesD59jex4rdJ9nnpYuCPP+C
- ulHjgaommWyEpYJSFVAm7ZpUiZNA8anU8wX2vTT6IvT/j7Y3540R6ck03zCWnvipsrvosWs0aUI
- qnXoMTwEjR+eQtYB2v+T4N60fdtfpd4uw+O1l4ZLV93soKWpY2+3txtb8rsdDDEObHUf2KwHpZg
- FxgVfonX7AYaflISCEMzM+h8pH542FmzRDAgHda2xxDB/+L8VBpuozHUuYn4aIj4BtJJAOk8hi9
- f/DvxxVKVYTXLRQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
 
-On a SEQ_MISORDERED error, the current code will reattempt the call, but
-set the slot sequence ID to 1. I can find no mention of this remedy in
-the spec, and it seems potentially dangerous. It's possible that the
-last call was sent with seqid 1, and doing this will cause a
-retransmission of the reply.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Drop this special handling, and always treat SEQ_MISORDERED like
-BADSLOT. Retry the call, but leak the slot so that it is no longer used.
+On Sun, 09 Feb 2025 07:31:21 -0500, Jeff Layton wrote:
+> This patch is mostly the same as the v5 series. Just small cleanups
+> and dropping of special NFS4ERR_SEQ_MISORDERED handling.
+> 
+> 
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4callback.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+Nice work. The comments and change logs contain good rationale
+for the code modifications, and the new code should be easier
+to maintain.
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 8ba1a2831e8601ac3af9c5f147d3dcddcc1bec77..2c7ce787eea5a7200022511fe03e269cee43bf7c 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1388,21 +1388,17 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 			goto requeue;
- 		rpc_delay(task, 2 * HZ);
- 		return false;
-+	case -NFS4ERR_SEQ_MISORDERED:
- 	case -NFS4ERR_BADSLOT:
- 		/*
--		 * BADSLOT means that the client and server are out of sync
--		 * as to the backchannel parameters. Mark the backchannel faulty
--		 * and restart the RPC, but leak the slot so no one uses it.
-+		 * A SEQ_MISORDERED or BADSLOT error means that the client and
-+		 * server are out of sync as to the backchannel parameters. Mark
-+		 * the backchannel faulty and restart the RPC, but leak the slot
-+		 * so that it's no longer used.
- 		 */
- 		nfsd4_mark_cb_fault(cb->cb_clp);
- 		cb->cb_held_slot = -1;
- 		goto retry_nowait;
--	case -NFS4ERR_SEQ_MISORDERED:
--		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
--			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
--			goto retry_nowait;
--		}
--		break;
- 	default:
- 		nfsd4_mark_cb_fault(cb->cb_clp);
- 	}
+Applied to nfsd-testing, thanks!
 
--- 
-2.48.1
+[1/7] nfsd: prepare nfsd4_cb_sequence_done() for error handling rework
+      commit: 61d4e0b9d8e47ec93a90f57f8ec76a5b7ba970ea
+[2/7] nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+      commit: 62dc8f549352ed1a38738112f9cf946b7e97e10a
+[3/7] nfsd: always release slot when requeueing callback
+      commit: 8d09824221012b221cfc1caa76215c6b4bba3e24
+[4/7] nfsd: only check RPC_SIGNALLED() when restarting rpc_task
+      commit: dde7c58af30ee0dc13cc47c7d57da9102124597d
+[5/7] nfsd: when CB_SEQUENCE gets ESERVERFAULT don't increment seq_nr
+      commit: 90b44566f9024e0edc8373ef72e39bc162286bc5
+[6/7] nfsd: handle NFS4ERR_BADSLOT on CB_SEQUENCE better
+      commit: 7f7c89cb74dd8d5484837256bc14a77de8d91075
+[7/7] nfsd: eliminate special handling of NFS4ERR_SEQ_MISORDERED
+      commit: 58e65798b82f31aeb6c85c8db13179a0a1bf2b2f
+
+--
+Chuck Lever
 
 
