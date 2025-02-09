@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-9976-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9977-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC565A2DDB7
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 13:31:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07DBFA2DDB9
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 13:31:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA5FB3A5CA3
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 12:31:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4843164ECD
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 12:31:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB18E1E502;
-	Sun,  9 Feb 2025 12:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7371D89E3;
+	Sun,  9 Feb 2025 12:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bm6/JGEi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1DblK69"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28551DFFC;
-	Sun,  9 Feb 2025 12:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79A81D5CEE;
+	Sun,  9 Feb 2025 12:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739104293; cv=none; b=XXwzlIk/oH+lEPZ1nkayNqUhwCxxo+m1xg/2KYvANJBKz4FVLQC3Hk8YkuIRgnm9e4C/qoVj9xVWi0aP4gvuvHXm1jRAI92RlOkcOY7xLv034vT8MLfpkg0XuZOuI/5SBwFDAVKnDF38JiSGeS1SyDBVSw/kvSc7J8K0L6A4Rq8=
+	t=1739104294; cv=none; b=icpYApelq2EJzOMWJcfEeuMmdpC+ivUeSfFN+e7qoadFBRjvwLEwBw/41O6u1NxlpdnVgy+FSli4P+aFXeGVwVVk2sSBPYda4tlXJlzLVNmhvTm6e9DukuhcajW7AdnNd1uKBj6zUqDizxB275urhHx42JmdLRGZFnusU8AHrtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739104293; c=relaxed/simple;
-	bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lLyw0DrFMLlrjAUXcgpKq4IOLh0szQyO+ysRarQRkwztzgdC7wgSmwWBFMeoE1sQLPSR2puLealGpEfRUw36UqDtG/T8zLn0e+lkM64957B4VfDDJ1HESMeiII7zNLG3ciYzoiF0KGTM07So9DnXl02zIRfwrTAOpa/HZJHPXl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bm6/JGEi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72341C4CEDD;
-	Sun,  9 Feb 2025 12:31:32 +0000 (UTC)
+	s=arc-20240116; t=1739104294; c=relaxed/simple;
+	bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D/kQ+zv56LTyvGDl+COk8JjjAghZb3O/rpQh+Krl/cVSF7mfF2ASEYWewABZqkyu2moj+XFIJ7fQ4bvKdmZIuaENxmXTwlFIQcu9xJqYRk0+u6w+6iCDLK9wwiRGiQ28qUDwAvf1ucYR7IoLNv8RlsUpYyrRq8spXr8pSJBfteI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1DblK69; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C6CC4CEE2;
+	Sun,  9 Feb 2025 12:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739104293;
-	bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Bm6/JGEiHWYbxOyqCAmgmj/tK0yuEJ28OU+dRqWNIBE1L6xGCSVBiCHM8c10fzNFZ
-	 LNXOb5ttpCsXQ3Hiayby9gh8BWf/9qpsn0M0+WUhWIJXBgQ8Cy9WDDBSzPemfWy+Hc
-	 9yeBPbHf2BowbBH3f3fhZ5PE9Rk+LB5HiT0mtp6bFLQlLZiqGjK5yxo5ftDS6xU4bW
-	 mwb+l3vNzil8XiAsTY9CM2h78j4MQWLUBwb03YIjZnDJmPsEWPWfgufrwR76Egx7uO
-	 ie7oabgLIXRo/vXciAFd6CovL3j7mGoPrHAFqzUlekrzB7pdR3oCmKEnRwbmOq/NlY
-	 ZZQWcuSZr4aWA==
+	s=k20201202; t=1739104294;
+	bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=p1DblK69SwX5c+ZlY+dyqTTXsUIv3Q1zXDKy7Uc+baQ4HgmviLQZYom19NVGthuP/
+	 s9PNt76vh04hMzHJmaL2oSOdHdog/hn6PlpdTb0Hg6QgOFunbrjh8sr750OU/7fvJ0
+	 w5lgyTi0hmWtrVqH/5fp5HvUeogvZj/XKZbuao6KirC3Rmu++D+5R7o4InkmlVzm2x
+	 t9EtUV/7bjVs3vM54qrjr5GYi3XJd2LS4O8ueGh4FsLPF4yxXvFx+dfzzzr2TYUfz7
+	 IXDShQ7gE7hQKE0ZUPK2dhADF+hXBNod7hVX9bTO6EdTvJXM3sM+ykCmRUmWJhrwqZ
+	 eThQX8q/IxAzw==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v6 0/7] nfsd: CB_SEQUENCE error handling fixes and cleanups
-Date: Sun, 09 Feb 2025 07:31:21 -0500
-Message-Id: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
+Date: Sun, 09 Feb 2025 07:31:22 -0500
+Subject: [PATCH v6 1/7] nfsd: prepare nfsd4_cb_sequence_done() for error
+ handling rework
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,91 +53,126 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABmgqGcC/3XQQW7DIBCF4atErEs1DAPUWeUeVRcYDwlqZUdQW
- a0i372TbOrIyfKN+P4FF9W4Fm5qv7uoynNpZRpl+JedSqc4HlmXQbZCQAcGrR5zG7TXhnQPoQt
- s39yQQMn7c+Vcfm6t9w/Zp9K+p/p7S8/men1UmY0GnYyxIVKOGPnwyXXkr9epHtU1M+OadmuKQ
- jEApA6zZaINtU+pFerAczBsO/b9htI/RQhrSkJNjISJIKB3G+qeUic0295R7j3It93RZVn+APC
- UrZ6PAQAA
-X-Change-ID: 20250123-nfsd-6-14-b0797e385dc0
+Message-Id: <20250209-nfsd-6-14-v6-1-396dd1bed647@kernel.org>
+References: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
+In-Reply-To: <20250209-nfsd-6-14-v6-0-396dd1bed647@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2467; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=xgyMYunAKrmLnsZ2HxhpB/hj1jNPZs7g3kNXrwB1ZHs=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnqKAepepsTgc6o+inHrzoiGEhDhg0xLGSqqT/5
- m2HrLubsm+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6igHgAKCRAADmhBGVaC
- FYnvD/9knj251AkFXgyGebpO9EfZS1FWsWRxM1qZi7zGQgt1j9YYaq1G4v4xTwwNCgAvkm7V6C6
- rHngopv0kSyaZQ/NJxmj1gdWzJeeEItVzqnIUhsUkdTdvNlTZj763KVSA3tvvO7chOkdC5oTjdm
- xV3n6HfwfPeUO1vB5lZbI+idzq+DL+5GQeaMZXPZUL/LOiRVeLRuSSSDzIesjVxQKCvsSsAEsis
- LhSnwGJVZftPXIqF4nWuOV8T2u854GQhZfOZ/ap3cV94mGSmMdB7iKuGYQFvcMeGbJtwGDbbAvG
- O13A4ESaAcKlsLFnefd70EPtnZ7CC5xyJfFXbLNtujsQom2zAQsisMYlSje/XJzLvGVPisCuqKj
- mhZkoBFK0Id4eranP1pYc+CvTLczHVnLB0EzWWQ8LKxZ2ImqsleQV1wh/4ARlSVY8TBaUI55U8s
- m0Ilv4Ffa+Dy6ybE/lAu4zFg5+UHD6DvRg4xTQhRniQiWU1jbNVZSj7qqBxMzS42K3E680FcWAc
- nS4cjz7Skp5KWklzT/ZzmmGt/liE7qe7VqQqbLVpwIQWflvZLEhOeFS/e6hZZETLy/dVS6spiUz
- 7xzgXKdudi6EvODOLS/ANUsvnReN9jN4Ad145ngl+41HXssyGq0TCVpoiMCqxK3tEzW7q9sr2UE
- 0ukAl04g3krfiuQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2901; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=ACNGifbeZ+ONtm0L1jnSjfGOWX8cYHgyykUgaWIEXow=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnqKAj4I0B+qPTlCBua2UigOyMta9SVHnf1LyBo
+ RnY26kellGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6igIwAKCRAADmhBGVaC
+ FSnrD/4u8P5iLppXkkYoWH6KTzOrdDAq/2aa7yuudhzjSin9ZEpJdgS6LNcyNo8iUvUAqAKwF+q
+ NTlPngMzX2V4CRXWsX8xjeBJR9xda370PEyujeMUA9ZO9ToqMqIRiG1MAmcdJKfWnLFd1kq3bh6
+ I+aZwQ0/Ip3+jV5dw66JQLQunw87XAA1CkDyTTtiJkWjz/WVSTxV1vi0kLzJL4c210iNu3Rwdbh
+ ToT/puScOcjBLvFij1/ZHjUUH6RQL0FAy2ojiVu2brHe76+nzA3eeZACTP3L+uqcKPV7WTmOLJx
+ XdaJG5KzSul1FFEa97Neixo+UaYH6iyL87Cp5ljEv6LmIoJWVSsSglzrHYmqJeMi8h101YMt2fT
+ pQNBu6Ox4niKLqcvrBA4vckKy+qPrKCUeKC2sWskom7iw8iUQ/rUkDpVnX0l80eajbkHeysFFLt
+ Av4VKrj64JDPQqsDxb8llNQEx6VzorpHTYu59V4vsxdXzPcCzi8weWurbRbHVxptsiOKurhgQTx
+ DohfKQbhdzrJHc6H2EYlEDfR0aKc6msyGPpFoHfvd4uwpCJrUZCAf5gRtGrZ0eP2o+FJPCh9eOr
+ qriU4vB/ACMLP2mHuOOImv/w2bcdo7YZPnkxkB7TUsFARa9Unjem9CxRaws+1b2RPWeAlGT3e4T
+ tIKck5PLtbXl2Ig==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This patch is mostly the same as the v5 series. Just small cleanups
-and dropping of special NFS4ERR_SEQ_MISORDERED handling.
+There is only one case where we want to proceed with processing the rest
+of the CB_COMPOUND, and that's when the cb_seq_status is 0. Make the
+default return value be false, and only set it to true in that case.
+
+Rename the "need_restart" label to "requeue", to better indicate that
+it's being requeued to the workqueue.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v6:
-- Reorder patch to move v4.0 handling to earlier in series
-- Drop special handling of NFS4ERR_SEQ_MISORDERED. Always treat it like NFS4ERR_BADSLOT.
-- rename requeue_callback() to nfsd4_queue_cb()
-- Comment and changelog cleanups
-- Link to v5: https://lore.kernel.org/r/20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org
+ fs/nfsd/nfs4callback.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Changes in v5:
-- don't ignore return of rpc_restart_call() and rpc_restart_call_prepare()
-- Break up the nfsd4_cb_sequence_done() error handling changes into multiple patches
-- Link to v4: https://lore.kernel.org/r/20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index cf6d29828f4e561418b812ea2c9402929dd52bd0..79abc981e6416a88d9a81497e03e12faa3ce6d0e 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1328,11 +1328,12 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
+ 	rpc_call_start(task);
+ }
+ 
++/* Returns true if CB_COMPOUND processing should continue */
+ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
+ {
+ 	struct nfs4_client *clp = cb->cb_clp;
+ 	struct nfsd4_session *session = clp->cl_cb_session;
+-	bool ret = true;
++	bool ret = false;
+ 
+ 	if (!clp->cl_minorversion) {
+ 		/*
+@@ -1345,13 +1346,13 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 * handle that case here.
+ 		 */
+ 		if (RPC_SIGNALLED(task))
+-			goto need_restart;
++			goto requeue;
+ 
+ 		return true;
+ 	}
+ 
+ 	if (cb->cb_held_slot < 0)
+-		goto need_restart;
++		goto requeue;
+ 
+ 	/* This is the operation status code for CB_SEQUENCE */
+ 	trace_nfsd_cb_seq_status(task, cb);
+@@ -1365,11 +1366,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		 * (sequence ID, cached reply) MUST NOT change.
+ 		 */
+ 		++session->se_cb_seq_nr[cb->cb_held_slot];
++		ret = true;
+ 		break;
+ 	case -ESERVERFAULT:
+ 		++session->se_cb_seq_nr[cb->cb_held_slot];
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+-		ret = false;
+ 		break;
+ 	case 1:
+ 		/*
+@@ -1381,13 +1382,11 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		fallthrough;
+ 	case -NFS4ERR_BADSESSION:
+ 		nfsd4_mark_cb_fault(cb->cb_clp);
+-		ret = false;
+-		goto need_restart;
++		goto requeue;
+ 	case -NFS4ERR_DELAY:
+ 		cb->cb_seq_status = 1;
+ 		if (!rpc_restart_call(task))
+ 			goto out;
+-
+ 		rpc_delay(task, 2 * HZ);
+ 		return false;
+ 	case -NFS4ERR_BADSLOT:
+@@ -1405,14 +1404,13 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 	nfsd41_cb_release_slot(cb);
+ 
+ 	if (RPC_SIGNALLED(task))
+-		goto need_restart;
++		goto requeue;
+ out:
+ 	return ret;
+ retry_nowait:
+-	if (rpc_restart_call_prepare(task))
+-		ret = false;
++	rpc_restart_call_prepare(task);
+ 	goto out;
+-need_restart:
++requeue:
+ 	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
+ 		trace_nfsd_cb_restart(clp, cb);
+ 		task->tk_status = 0;
 
-Changes in v4:
-- Hold back on session refcounting changes for now and just send CB_SEQUENCE
-  error handling rework.
-- Link to v3: https://lore.kernel.org/r/20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org
-
-Changes in v3:
-- rename cb_session_changed to nfsd4_cb_session_changed
-- rename restart_callback to requeue_callback, and rename need_restart:
-  label to requeue:
-- don't increment seq_nr on -ESERVERFAULT
-- comment cleanups
-- drop client-side rpc patch (will send separately)
-- Link to v2: https://lore.kernel.org/r/20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org
-
-Changes in v2:
-- make nfsd4_session be RCU-freed
-- change code to keep reference to session over callback RPCs
-- rework error handling in nfsd4_cb_sequence_done()
-- move NFSv4.0 handling out of nfsd4_cb_sequence_done()
-- Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org
-
----
-Jeff Layton (7):
-      nfsd: prepare nfsd4_cb_sequence_done() for error handling rework
-      nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
-      nfsd: always release slot when requeueing callback
-      nfsd: only check RPC_SIGNALLED() when restarting rpc_task
-      nfsd: when CB_SEQUENCE gets ESERVERFAULT don't increment seq_nr
-      nfsd: handle NFS4ERR_BADSLOT on CB_SEQUENCE better
-      nfsd: eliminate special handling of NFS4ERR_SEQ_MISORDERED
-
- fs/nfsd/nfs4callback.c | 100 +++++++++++++++++++++++++++----------------------
- 1 file changed, 56 insertions(+), 44 deletions(-)
----
-base-commit: 50934b1a613cabba2b917879c3e722882b72f628
-change-id: 20250123-nfsd-6-14-b0797e385dc0
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.48.1
 
 
