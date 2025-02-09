@@ -1,348 +1,380 @@
-Return-Path: <linux-nfs+bounces-9973-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9974-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2FEEA2DA24
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 02:24:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 724D3A2DA60
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 03:14:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 976A61662B6
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 01:24:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C3061659FA
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Feb 2025 02:14:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59FD4243386;
-	Sun,  9 Feb 2025 01:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5640A2F30;
+	Sun,  9 Feb 2025 02:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niiLaXvo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020096.outbound.protection.outlook.com [52.101.61.96])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372A4819;
-	Sun,  9 Feb 2025 01:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739064295; cv=fail; b=kUxEkRghqFyIg1nuwTr4ES7CiQsPJ5rL/4GrzVMdbo4DfUL8dgCBv9uJmwMshYU82BBTf8whOmcpxtwMjiV+xpDFY4s7nmwxUeHbwA0h6mBJ78tLFDgBTtjAZeQ1tA+LVX7G7k8KQcxf+kZ7Y445Us02PbknbsIAo4r/KdQa7Eg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739064295; c=relaxed/simple;
-	bh=WeffZpISub/M9a6gIJWRgPmMfZhwWCKWVef/Vy7lP4c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=G+1mLp6SzHxN0NXz6yBQgaPzr11vXYn3I6pb4iBTT+HTVTbxGxO0oFmfgclPz0n/o5ndeRUaoo8Sva9h7jPjgGaxlTIHcr0Z5KXolkXlhl4xOyNra+BjGpc8ascB3h1KHgxzLEqqN7/fPnlxz4l0K+z6aW8vjbWifbTf3e3UzFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=52.101.61.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GyzRPALsGxM/+9PQRS1Jx+4y4Ttgq46lVzLtmwwzh7EJFOwbCsDf7rFxfdvbfBWPt8HwlpSO5LvM6bOoD8C55A9PjPvMOHtAhJ6m8Mq23sa2sbXRIJJtEnmDAfgsQFRCkajWgl7jyiZGoBUiKnV/8WCrE/zvJKuLhNMMMcpR1Q4F5bEHWPYMV4bzdGeP2+FHZ11GBHKMG0u36Ig9kNKt38T8URSBgLRppdG8eph+A+zadM1e1jnk4p7X8wA+6Vqaj2OEQQqZxDlX6X8eD6qIU6P418OPq3no3PN2RxRtVEK57D5KoJEfJseVdLoGvq20ZXFjBSlCw1QLlhUOmGi8zA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wEu9l7uq0sfBe9Pm6aCRypJVOhejmqBU65wZ7T7n9Ag=;
- b=aj+7G61eCAqjajVs7yUaUD0m7nGGiChnTZTt3Q82vgkQQF++ftXSwMARU9xbNA0ZX9oZoUeVpORkRl7uK4UjjrvB1MgPDRgz2XJSEUwKXNfPRt5TSTVavL+Au4k7CWzeiWoVV/x18dr+Czn6GTkqnxC17nk1zugq1H5r1eI6UOfQ86ediDz0TQKQfReTiZ8Ek6Hp7zh6mA5QbstcUrF0ATUCeY9ofy+sks+OOrDNsdVCIOr+VkLjn99Yrrbx/yykkSuavdmjDY1zlCJRvp7ERUxOwancIisd8n+xqHNu1vyDaAEzU7zYYKX1BXka465QibfPd+vaPBBsCEZ2R7+kfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- DM8PR01MB7112.prod.exchangelabs.com (2603:10b6:5:315::21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.9; Sun, 9 Feb 2025 01:24:49 +0000
-Received: from SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90%6]) with mapi id 15.20.8445.005; Sun, 9 Feb 2025
- 01:24:49 +0000
-Message-ID: <ad26cab0-8f63-4ff7-a786-1d0ec51da490@talpey.com>
-Date: Sat, 8 Feb 2025 20:24:40 -0500
-User-Agent: Mozilla Thunderbird
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29701243397;
+	Sun,  9 Feb 2025 02:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739067270; cv=none; b=QhVukv/uKVWpOxwVdR4HX0euPIJpk+oTWPuP9AhXl7NCUMT6YwqV1ymZa0/WRaicn0h+D8QPditWSEXfwxEYFm20/Vs9I4LvsOelNXzNI9bJRTGUj87tBgx7XKautLTjVrhrGR41BnsF3iwjGCdSUUPgrHGzWHo9QFN6rP6gR4k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739067270; c=relaxed/simple;
+	bh=+5VPMaYkNSCw3GauppovCB4+LCvmyrzzvLshGOlr29I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PMQTAdqD/u2rbU5DxDFURoDw/dxte8R7qZg7cNjL3E41w3g8FBpH6O0aS/VzCstsLrH+ZP+UHrj/t7phVnZxdVJo6u++7686P01pRKAFAXg/NNP3C3rGuR3MeghPLtua6wDPvnKhGMt7LsQWIhi91mbYE3uDYsaNU4jdZoXnFZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niiLaXvo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2A2CC4CED6;
+	Sun,  9 Feb 2025 02:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739067269;
+	bh=+5VPMaYkNSCw3GauppovCB4+LCvmyrzzvLshGOlr29I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=niiLaXvoyGSiKbexpxDBhjkb2ebW5R67P0vw4oijBK20ODBlH7zsQsOXmvYh6jQ0H
+	 hfM5lptDtzzedyXinQOoTClwye7rUcGg3Uc3tHvc1reA35XCbjGyDnsPTy477k8YUR
+	 0iJmTobc7iK70GD0uQG2aGyYpiiP9tUuuTLip8N38W7//75TPMH42V3TjRV6xRUrB1
+	 YS+A7nQxp9DSh/WmQbUTL5aAzS6D90HBDCB/PW8fV6sp2qCnKl4YxtlGEqvOk6Z0vN
+	 cshIGAimQTDscRxpJaghdpXNfiJTYmdgiVN/Je6AEXJUpy8xzVto3m1FH1cxxZPa2p
+	 rWAJAfqcdRh0A==
+Message-ID: <d6fdb3ba346ef606f630441de1a34cb00030cb4d.camel@kernel.org>
 Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
  error better
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, "J. Bruce Fields" <bfields@fieldses.org>
+From: Jeff Layton <jlayton@kernel.org>
+To: Tom Talpey <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>,  "J. Bruce Fields" <bfields@fieldses.org>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 08 Feb 2025 21:14:27 -0500
+In-Reply-To: <ad26cab0-8f63-4ff7-a786-1d0ec51da490@talpey.com>
 References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
- <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
- <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
- <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
- <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
- <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
- <29e739f1-2d85-40c2-a549-5ab9d71686b0@talpey.com>
- <35cae0eb73781bb36c49aed2c2bc49a808698635.camel@kernel.org>
- <2f9fe86f-b49c-460c-bf2e-fed97970952d@oracle.com>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <2f9fe86f-b49c-460c-bf2e-fed97970952d@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9PR03CA0477.namprd03.prod.outlook.com
- (2603:10b6:408:139::32) To SN6PR01MB5246.prod.exchangelabs.com
- (2603:10b6:805:d8::14)
+	 <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
+	 <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
+	 <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
+	 <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
+	 <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
+	 <29e739f1-2d85-40c2-a549-5ab9d71686b0@talpey.com>
+	 <35cae0eb73781bb36c49aed2c2bc49a808698635.camel@kernel.org>
+	 <2f9fe86f-b49c-460c-bf2e-fed97970952d@oracle.com>
+	 <ad26cab0-8f63-4ff7-a786-1d0ec51da490@talpey.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|DM8PR01MB7112:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a783d92-d54c-4530-779b-08dd48a88b8a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnJ4T3RIRjVlYVJkVmE0bU1WUUwyakNxeWRpNUJtWXIyMFgyMjN5ek5RWXM5?=
- =?utf-8?B?SVlkWFNVL3hlYmFIREtDR0s5eHhzS0FEVXFmcjZSaUtZYnEvVGk0RkVWdHYw?=
- =?utf-8?B?MnRxOFFFUmx6bTR0Q2Z3anU2NVk0L3A5TTk4VzQxc3FwakNWNDN6UWNhczdw?=
- =?utf-8?B?MUI2bjJKc0haazlTRSsyM2RDZzI0Tm9JWGhLUmNBVUZtSXdxTW5yZTJYU0s2?=
- =?utf-8?B?ckJnNVh4WGd1YUZFcGNGSkxiblBzWGJKNVRLanp4MHFGTXNXRERKTGh0bE96?=
- =?utf-8?B?RkJIUUJFZzBkMGYwRUlHaVZYSFRWMnRPNGNHUHRaNk9nQVI4NnkvQm1OU0NN?=
- =?utf-8?B?YjdVd3drWVFXZ1hQYzZVdkljdTJ0b2NROVFSeWpsS1FQMmE5TU9ESFd6bnl2?=
- =?utf-8?B?R1JSdHFRSUZPY3UrVE9hOWJpM04rL1cwd2p4WFo1U0hrWDBtSjFiRTVKd0pK?=
- =?utf-8?B?ZW5QYzlKRCt5MW5rKzdaQVZhYm9rQVQzN1Q4dytwZTRNOTNtSGFXbkJnUk90?=
- =?utf-8?B?a0x0NVVpMVZuWGFPN2pIM29IcGdVVlhHeEZIYnl2VHlVbFgxTkVUUVhzZGd0?=
- =?utf-8?B?aGFlMUhxenRHNWxmNEx1cHlYakx4bytKdTNJcnQzR3JkSy9nenExWENBUGJm?=
- =?utf-8?B?dW4rRVl6dGxwWFVDMFdzNGtrak9vZklMclJUNXIvdkIzQlpHMkFNQU5EVU1I?=
- =?utf-8?B?Q1hWY1d6WTBVZ3F6M0J2NnFqZGtyZHpQMVorVU45ZEMyVlBMWHk1U21ldFhp?=
- =?utf-8?B?VDdHVTRYek85dFhTbGRXSjNPNmJST1hCc2JYMjhNNmRwTUhGUi96bnZFR3pM?=
- =?utf-8?B?L21wMGxMMW95MTB3VXg5cFF0Y01PMmtrY3RjNUZYeWRXdlhqNkR1N3ZHQ2Qy?=
- =?utf-8?B?bkFGMEMvQUdMOU5BTm5ReExlaWNKYWphZVA3Mmg4SUU1RDFVS05uSXBYRE0y?=
- =?utf-8?B?VUZnRlI4b2lSZFc2TnAzKzdXU3VtSHVWanBtUlV6cUlkUGhwL0JibkI5c2FH?=
- =?utf-8?B?cW5IODhKUnpyM1JtcW9YWllHMnFZa1dNM21ya2JNR0c2VkRLcU5SbUNITzB0?=
- =?utf-8?B?Z0dwVWNMTTFHSUVubUpnNnphMzJsdXVQOGFmdXRydzdrTEVCSC9RdXpHV0ox?=
- =?utf-8?B?TWFNa2Q2enV6enJrUXdQNWVuVm9ZNFFNT1NRQVdvT3dqNG5pcHFsbVhlSmRW?=
- =?utf-8?B?dmtDRXlIWjVVMHR1K2s0TFdoTjhXaEVYY0swMCt2bkFZVzFlaExEWEp0WTRa?=
- =?utf-8?B?d21QREx4ekkxVENUWkh1TDBRaDRGTERHbXR4dzY3djVlbVFFNXE2N2xRSkFr?=
- =?utf-8?B?K1dWSjAzbzRsdzhId0tpMGMxY3RDdW5NSzRtU3YrdHA0andlUWxEU2IxeEFt?=
- =?utf-8?B?QWhzc0RnSy9yWGZ3Tnc3eUlRVCtlUHJ5ODV5T1ZLR2kzUENFRzBqRjFjdUhr?=
- =?utf-8?B?NFQ2a1lpaElkRm1jR05Ra2p6VWFWNjJadnVTSVp5MFlKd3E5V0pxMkREcmRm?=
- =?utf-8?B?UkVxS3RCNWZVV0MrY1Bja3FTakRzS2JJL2lhV2VCZTZ4ak9GQ0NxbTVDL2RQ?=
- =?utf-8?B?cFRGQ1dOajVzZVRqMkp1STRDZldDdXB6Um9mRS95THNIekNwUkI4SW9uRnNj?=
- =?utf-8?B?Y21uSks3RWlWNVpmU3prWkNUc2VrYmJzY2tqRGdLd3dpOVNJcWZCY3FWVFhz?=
- =?utf-8?B?a1pqdFcyNmRvWGIybDZsTlRRdityQXlYWUVMZmFsWHNMM2Ryc1FzNVNiZ2lm?=
- =?utf-8?B?K0xoZnYyM0NybFVvNGJBazZ5NHk2ajlNRWdBWlVoeHpVSHhtK1g1cDJxYmVx?=
- =?utf-8?B?Q2tGZVU0VUpEVkxLSjdkeUYwNmZybVg5a3k1MnREZFVBbHpsSUtHcUxmMTFU?=
- =?utf-8?Q?lgNt7gzvV7eLw?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SHFyakkxUFA3TUl6cllHOFdkOFhmQkwwVjBQbW4xSVFQb2pPZjUrb2hxblE3?=
- =?utf-8?B?ZkhuSWVUMzZieW9Wakt5NEE4Q0tVSDNkaXg5VlJ5QXl6L0hyWkVnNjhIUnpl?=
- =?utf-8?B?YzZ0OVhjZVFEekNPaWVJVUpPV0RlZ0M1bkMwRmdBUkF1UnRDTk80c2NmanpX?=
- =?utf-8?B?RWFXZTk2TlNvMUI2ZTVGNEUycGFsRUhoeHdhKzVtYlBYN2NsN29MZklnaHVX?=
- =?utf-8?B?MXppekRaVDdpcDRkU25PSEw4bCtwc2ljcTZiZmtyeC9BUEw5c0t6Q3RoaFFN?=
- =?utf-8?B?RU1MZlJjUUxMSzhLTTZDVkNOK1RUUXBMNGdFNFc3ZG5jdmM3Tmx3K2VFZzd1?=
- =?utf-8?B?WEFHVzVPTnhDN1dZbWtaZjRoMTkyakx6OHUrd016UUQ1R2dLTkFjSjByb2Vq?=
- =?utf-8?B?TnRFUExyVHpkeVE1TmdpcHVQUGowcnhnRzBqSExNcjUrYWZkNHV6U1pNOFRv?=
- =?utf-8?B?dThkVFN5bFFNQy9xM3hRWktEZkR3MVdPeXoyb2h1WitsRkRsQ1ptR051Rklj?=
- =?utf-8?B?TDMyNzY0eVlGNWxQbEhwVTBjaUllV25ZUFVPNU83WFc2MWFSM3FrNkJyODd5?=
- =?utf-8?B?cGh2eTN1MXk1RUgvUVFLblROMGVvdDBNazlHS1dJN0Nvem5RdGJiVENIZTlP?=
- =?utf-8?B?QjdxeDRRUzk4SktMeFZZbUo5Vi8yM0J5YXl6dG5sbURvSWFTQ2tWaGgzSnB4?=
- =?utf-8?B?ZHZzMDBZN2VreS9YNkpReUIxVlB0T0ZLZ0VtazlLdXAxSTc1Mlg1aUpZcWlI?=
- =?utf-8?B?VHd5V1hBZUNnUlBCcWN1YUJQc3hJUkpYVmI5WGhxTXlMSjhrT3lBc3RXbTFj?=
- =?utf-8?B?aUVTNDJ3L053STNOU09rbzc1TFFmOW1jc1htSEZiUWRhSVlhM0ExYy85RkUv?=
- =?utf-8?B?V04zY2N0ckpBdGNmd0FOMG9uc1FEZnB1blFINXhxT2tWUW5rdXd1UGZHSTRs?=
- =?utf-8?B?OGcvdTllTWx0TGNrTUpOMURWcktKVGtPaTVPZDlLUjdEdGVvYXJmRFdFclFy?=
- =?utf-8?B?YndLaWJ6SHdjZUhjWXJDVnBrV0k1Vm1xWERyd2N6RjkveDh0eDB5OWlNc2hK?=
- =?utf-8?B?eXNjckZMUWEyZFRDNGJSaE41RGJyeE90OGFOak9zMWE2MUY5UW4rdFRudVZL?=
- =?utf-8?B?RlpmZlNtb0gvWnNyVkZHdnU4Zmp6NUhiTlVuZGswUGpXMFRsaGdvcnh2azRL?=
- =?utf-8?B?aStrOHpLa0hqOGIrd3JId29LTWVmSVN4U3Q3anNkNG1VYjVRRUp0THNZcW9Y?=
- =?utf-8?B?d1l5V0huQkorTUJ0d0dpSFRFZW1tMk9JN01vYlZkWC94ZStwYnZtaVRkM2N1?=
- =?utf-8?B?QVdQakhScUhVU2VhdmVHbUhjSjFkbk9QNGNKVXF2OS9EMEFucWc1RjViOGRY?=
- =?utf-8?B?VlpMWmJlRG9GcjROUGFvazdJM2IxME1sM1BIdnJRR1pjVXRNdU1GNnh3eFJv?=
- =?utf-8?B?Q1lDbHU0T2diWGN6UWM2RytLa2FNVzZVZktKSWZZYVd5eElJMDBuWUtOOGlt?=
- =?utf-8?B?YU1namR3SlNuYzRyOHNHZ01zVXVCcXVwZW5JTDhnUE5XK2dOZEtOUUQwY3Z5?=
- =?utf-8?B?cmpzeW1NUnMzRlgvaEJnd2FNdklUT2FHZ3NMaHk1WjVjUkxxTklWWG13QW14?=
- =?utf-8?B?cHFhUnduTDdBdWVWcWhjTzNGcFB1NldST0JWdnVSRlJnTUFRRW1kdHI0KzVi?=
- =?utf-8?B?S1hRaDFaZUF5QnlqOHV0eUczbkdXdGNLWTZ4b1JmbHJBMytuUm42aU5NWmhm?=
- =?utf-8?B?cGZLOWZaeWdxVzQ5dWRGNlc4dVNiOTBZdnV3T2FFcVJaa3VVd1loaitmUkU2?=
- =?utf-8?B?UDliZkZLSStsOElVWm5CY1pyODZVRlQ3MUlVZjZNVktYMjFyRS9RWkxwQ1pR?=
- =?utf-8?B?K1lLVS9tZ1J6WWhWNlhqeHN1UzRPdkRwUW1adExvTGZraDhaVUZqTzRXZEls?=
- =?utf-8?B?ZmhYNGdlRzJhMGtzcVZZY1VRMU9jWUd6NkRaQkdGL3ljekVRS082TFdPYjc1?=
- =?utf-8?B?TEZidEdpcFB2dkxFbnVFMEhsckw3QjdRMEkrcm5NeGkxMUlkdXdJSE1HT0d3?=
- =?utf-8?B?QkdzcEh6N1Roa1N2UCszQmh1ZGthRndRaEdsRjJONDdTaDlGNW83ZGpoa09Y?=
- =?utf-8?Q?b3Bo=3D?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a783d92-d54c-4530-779b-08dd48a88b8a
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2025 01:24:49.0765
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W/6NrPhow7hHGIaNuDbsufmCStK3rCMOSHHtijDyYWwdlmD5DHYF/8xkSGY4+dVL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB7112
 
-On 2/8/2025 4:07 PM, Chuck Lever wrote:
-> On 2/8/25 3:45 PM, Jeff Layton wrote:
->> On Sat, 2025-02-08 at 14:18 -0500, Tom Talpey wrote:
->>> On 2/8/2025 11:08 AM, Jeff Layton wrote:
->>>> On Sat, 2025-02-08 at 13:40 -0500, Tom Talpey wrote:
->>>>> On 2/8/2025 10:02 AM, Jeff Layton wrote:
->>>>>> On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
->>>>>>> On 2/7/25 4:53 PM, Jeff Layton wrote:
->>>>>>>> For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and then
->>>>>>>> fall back to treating it like a BADSLOT if that fails.
->>>>>>>>
->>>>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>>>>> ---
->>>>>>>>     fs/nfsd/nfs4callback.c | 16 ++++++++++------
->>>>>>>>     1 file changed, 10 insertions(+), 6 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
->>>>>>>> index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f922318880e12e1cb2c23f 100644
->>>>>>>> --- a/fs/nfsd/nfs4callback.c
->>>>>>>> +++ b/fs/nfsd/nfs4callback.c
->>>>>>>> @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>>>>>>     			goto requeue;
->>>>>>>>     		rpc_delay(task, 2 * HZ);
->>>>>>>>     		return false;
->>>>>>>> +	case -NFS4ERR_SEQ_MISORDERED:
->>>>>>>> +		/*
->>>>>>>> +		 * Reattempt once with seq_nr 1. If that fails, treat this
->>>>>>>> +		 * like BADSLOT.
->>>>>>>> +		 */
->>>>>>>
->>>>>>> Nit: this comment says exactly what the code says. If it were me, I'd
->>>>>>> remove it. Is there a "why" statement that could be made here? Like,
->>>>>>> why retry with a seq_nr of 1 instead of just failing immediately?
->>>>>>>
->>>>>>
->>>>>> There isn't one that I know of. It looks like Kinglong Mee added it in
->>>>>> 7ba6cad6c88f, but there is no real mention of that in the changelog.
->>>>>>
->>>>>> TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
->>>>>> when we got this error, and we then retry with a seq_nr of 1? Does the
->>>>>> server then treat that as a retransmission?
->>>>>
->>>>> So I assume you mean the requester sent seq_nr 1, saw a reply and sent a
->>>>> subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
->>>>>
->>>>> If so, yes definitely backing up the seq_nr to 1 will result in the
->>>>> peer considering it to be a retransmission, which will be bad.
->>>>>
->>>>
->>>> Yes, that's what I meant.
->>>>
->>>>>> We might be best off
->>>>>> dropping this and just always treating it like BADSLOT.
->>>>>
->>>>> But, why would this happen? Usually I'd think the peer sent seq_nr X
->>>>> before it received a reply to seq_nr X-1, which would be a peer bug.
->>>>>
->>>>> OTOH, SEQ_MISORDERED is a valid response to an in-progress retry. So,
->>>>> how does the requester know the difference?
->>>>>
->>>>> If treating it as BADSLOT completely resets the sequence, then sure,
->>>>> but either a) the request is still in-progress, or b) if a bug is
->>>>> causing the situation, well it's not going to converge on a functional
->>>>> session.
->>>>>
->>>>
->>>> With this patchset, on BADSLOT, we'll set SEQ4_STATUS_BACKCHANNEL_FAULT
->>>> in the next forechannel SEQUENCE on the session. That should cause the
->>>> client to (eventually) send a DESTROY_SESSION and create a new one.
->>>>
->>>> Unfortunately, in the meantime, because of the way the callback channel
->>>> update works, the server can end up trying to send the callback again
->>>> on the same session (and maybe more than once). I'm not sure that
->>>> that's a real problem per-se, but it's less than ideal.
->>>>
->>>>> Not sure I have a solid suggestion right now. Whatever the fix, it
->>>>> should capture any subtlety in a comment.
->>>>>
->>>>
->>>> At this point, I'm leaning toward just treating it like BADSLOT.
->>>> Basically, mark the backchannel faulty, and leak the slot so that
->>>> nothing else uses it. That allows us to send backchannel requests on
->>>> the other slots until the session gets recreated.
->>>
->>> Hmm, leaking the slot is a workable approach, as long as it doesn't
->>> cascade more than a time or two. Some sort of trigger should be armed
->>> to prevent runaway retries.
->>>
->>> It's maybe worth considering what state the peer might be in when this
->>> happens. It too may effectively leak a slot, and if is retaining some
->>> bogus state either as a result of or because of the previous exchange(s)
->>> then this may lead to future hangs/failures. Not pretty, and maybe not
->>> worth trying to guess.
->>>
->>> Tom.
->>>
->>
->>
->> The idea here is that eventually the client should figure out that
->> something is wrong and reestablish the session. Currently we don't
->> limit the number of retries on a callback.
->>
->> Maybe they should time out after a while? If we've retried a callback
->> for more than two lease periods, give up and log something?
->>
->> Either way, I'd consider that to be follow-on work to this set.
-> 
-> As a general comment, I think making a heroic effort to recover in any
-> of these cases is probably not worth the additional complexity. Where it
-> is required or where we believe it is worth the trouble, that's where we
-> want a detailed comment.
-> 
-> What we want to do is ensure forward progress. I'm guessing that error
-> conditions are going to be rare, so leaking the slot until a certain
-> portion of them are gone, and then indicating a session fault to force
-> the client to start over from scratch, is probably the most
-> straightforward approach.
-> 
-> So, is there a good reason to retry? There doesn't appear to be any
-> reasoning mentioned in the commit log or in nearby comments.
+On Sat, 2025-02-08 at 20:24 -0500, Tom Talpey wrote:
+> On 2/8/2025 4:07 PM, Chuck Lever wrote:
+> > On 2/8/25 3:45 PM, Jeff Layton wrote:
+> > > On Sat, 2025-02-08 at 14:18 -0500, Tom Talpey wrote:
+> > > > On 2/8/2025 11:08 AM, Jeff Layton wrote:
+> > > > > On Sat, 2025-02-08 at 13:40 -0500, Tom Talpey wrote:
+> > > > > > On 2/8/2025 10:02 AM, Jeff Layton wrote:
+> > > > > > > On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
+> > > > > > > > On 2/7/25 4:53 PM, Jeff Layton wrote:
+> > > > > > > > > For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid o=
+f 1, and then
+> > > > > > > > > fall back to treating it like a BADSLOT if that fails.
+> > > > > > > > >=20
+> > > > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > > > > ---
+> > > > > > > > >     fs/nfsd/nfs4callback.c | 16 ++++++++++------
+> > > > > > > > >     1 file changed, 10 insertions(+), 6 deletions(-)
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callbac=
+k.c
+> > > > > > > > > index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2=
+efabadda9f922318880e12e1cb2c23f 100644
+> > > > > > > > > --- a/fs/nfsd/nfs4callback.c
+> > > > > > > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > > > > > > @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done=
+(struct rpc_task *task, struct nfsd4_callback
+> > > > > > > > >     			goto requeue;
+> > > > > > > > >     		rpc_delay(task, 2 * HZ);
+> > > > > > > > >     		return false;
+> > > > > > > > > +	case -NFS4ERR_SEQ_MISORDERED:
+> > > > > > > > > +		/*
+> > > > > > > > > +		 * Reattempt once with seq_nr 1. If that fails, treat =
+this
+> > > > > > > > > +		 * like BADSLOT.
+> > > > > > > > > +		 */
+> > > > > > > >=20
+> > > > > > > > Nit: this comment says exactly what the code says. If it we=
+re me, I'd
+> > > > > > > > remove it. Is there a "why" statement that could be made he=
+re? Like,
+> > > > > > > > why retry with a seq_nr of 1 instead of just failing immedi=
+ately?
+> > > > > > > >=20
+> > > > > > >=20
+> > > > > > > There isn't one that I know of. It looks like Kinglong Mee ad=
+ded it in
+> > > > > > > 7ba6cad6c88f, but there is no real mention of that in the cha=
+ngelog.
+> > > > > > >=20
+> > > > > > > TBH, I'm not enamored with this remedy either. What if the se=
+q_nr was 2
+> > > > > > > when we got this error, and we then retry with a seq_nr of 1?=
+ Does the
+> > > > > > > server then treat that as a retransmission?
+> > > > > >=20
+> > > > > > So I assume you mean the requester sent seq_nr 1, saw a reply a=
+nd sent a
+> > > > > > subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
+> > > > > >=20
+> > > > > > If so, yes definitely backing up the seq_nr to 1 will result in=
+ the
+> > > > > > peer considering it to be a retransmission, which will be bad.
+> > > > > >=20
+> > > > >=20
+> > > > > Yes, that's what I meant.
+> > > > >=20
+> > > > > > > We might be best off
+> > > > > > > dropping this and just always treating it like BADSLOT.
+> > > > > >=20
+> > > > > > But, why would this happen? Usually I'd think the peer sent seq=
+_nr X
+> > > > > > before it received a reply to seq_nr X-1, which would be a peer=
+ bug.
+> > > > > >=20
+> > > > > > OTOH, SEQ_MISORDERED is a valid response to an in-progress retr=
+y. So,
+> > > > > > how does the requester know the difference?
+> > > > > >=20
+> > > > > > If treating it as BADSLOT completely resets the sequence, then =
+sure,
+> > > > > > but either a) the request is still in-progress, or b) if a bug =
+is
+> > > > > > causing the situation, well it's not going to converge on a fun=
+ctional
+> > > > > > session.
+> > > > > >=20
+> > > > >=20
+> > > > > With this patchset, on BADSLOT, we'll set SEQ4_STATUS_BACKCHANNEL=
+_FAULT
+> > > > > in the next forechannel SEQUENCE on the session. That should caus=
+e the
+> > > > > client to (eventually) send a DESTROY_SESSION and create a new on=
+e.
+> > > > >=20
+> > > > > Unfortunately, in the meantime, because of the way the callback c=
+hannel
+> > > > > update works, the server can end up trying to send the callback a=
+gain
+> > > > > on the same session (and maybe more than once). I'm not sure that
+> > > > > that's a real problem per-se, but it's less than ideal.
+> > > > >=20
+> > > > > > Not sure I have a solid suggestion right now. Whatever the fix,=
+ it
+> > > > > > should capture any subtlety in a comment.
+> > > > > >=20
+> > > > >=20
+> > > > > At this point, I'm leaning toward just treating it like BADSLOT.
+> > > > > Basically, mark the backchannel faulty, and leak the slot so that
+> > > > > nothing else uses it. That allows us to send backchannel requests=
+ on
+> > > > > the other slots until the session gets recreated.
+> > > >=20
+> > > > Hmm, leaking the slot is a workable approach, as long as it doesn't
+> > > > cascade more than a time or two. Some sort of trigger should be arm=
+ed
+> > > > to prevent runaway retries.
+> > > >=20
+> > > > It's maybe worth considering what state the peer might be in when t=
+his
+> > > > happens. It too may effectively leak a slot, and if is retaining so=
+me
+> > > > bogus state either as a result of or because of the previous exchan=
+ge(s)
+> > > > then this may lead to future hangs/failures. Not pretty, and maybe =
+not
+> > > > worth trying to guess.
+> > > >=20
+> > > > Tom.
+> > > >=20
+> > >=20
+> > >=20
+> > > The idea here is that eventually the client should figure out that
+> > > something is wrong and reestablish the session. Currently we don't
+> > > limit the number of retries on a callback.
+> > >=20
+> > > Maybe they should time out after a while? If we've retried a callback
+> > > for more than two lease periods, give up and log something?
+> > >=20
+> > > Either way, I'd consider that to be follow-on work to this set.
+> >=20
+> > As a general comment, I think making a heroic effort to recover in any
+> > of these cases is probably not worth the additional complexity. Where i=
+t
+> > is required or where we believe it is worth the trouble, that's where w=
+e
+> > want a detailed comment.
+> >=20
+> > What we want to do is ensure forward progress. I'm guessing that error
+> > conditions are going to be rare, so leaking the slot until a certain
+> > portion of them are gone, and then indicating a session fault to force
+> > the client to start over from scratch, is probably the most
+> > straightforward approach.
+> >=20
+> > So, is there a good reason to retry? There doesn't appear to be any
+> > reasoning mentioned in the commit log or in nearby comments.
+>=20
+> Agreed on the general comment.
+>=20
+> As for the "any reason to retry" - maybe. If it's a transient error we
+> don't want to give up early. Unfortunately that appears to be an
+> ambiguous situation, because SEQ_MISORDERED is allowed in place of
+> ERR_DELAY. I don't have any great suggestion however.
+>=20
 
-Agreed on the general comment.
+IMO, we should retry callbacks (basically) indefinitely, unless the
+NFSv4 client is being torn down (i.e. lease expires or an unmount
+happened, etc).
 
-As for the "any reason to retry" - maybe. If it's a transient error we
-don't want to give up early. Unfortunately that appears to be an
-ambiguous situation, because SEQ_MISORDERED is allowed in place of
-ERR_DELAY. I don't have any great suggestion however.
+> Jeff, to your point that the "client should figure out something is
+> wrong", I'm not sure how you think that will happen. If the server is
+> making a delegation recall and the client receive code chooses to reject=
+=20
+> it at the sequence check, how would that eventually cause the client to
+> reestablish the session (on the forechannel)?
+>=20
+>=20
 
-Jeff, to your point that the "client should figure out something is
-wrong", I'm not sure how you think that will happen. If the server is
-making a delegation recall and the client receive code chooses to reject 
-it at the sequence check, how would that eventually cause the client to
-reestablish the session (on the forechannel)?
+In the BADSLOT case, it calls nfsd4_mark_cb_fault(cb->cb_clp), which
+sets a flag in the client that makes it set
+SEQ4_STATUS_BACKCHANNEL_FAULT in the next SEQUENCE call.
 
-Tom.
+The client should take that as an indication that there is a problem
+and reestablish a new session (and maybe a new connection). Granted, it
+might take up to the next lease renewal, but there's not much else we
+can do if the client won't talk to us.
 
-> 
-> 
->>>>>> Thoughts?
->>>>>>
->>>>>>>
->>>>>>>> +		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>>>>>>> +			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>>>>>>> +			goto retry_nowait;
->>>>>>>> +		}
->>>>>>>> +		fallthrough;
->>>>>>>>     	case -NFS4ERR_BADSLOT:
->>>>>>>>     		/*
->>>>>>>>     		 * BADSLOT means that the client and server are out of sync
->>>>>>>> @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>>>>>>     		nfsd4_mark_cb_fault(cb->cb_clp);
->>>>>>>>     		cb->cb_held_slot = -1;
->>>>>>>>     		goto retry_nowait;
->>>>>>>> -	case -NFS4ERR_SEQ_MISORDERED:
->>>>>>>> -		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>>>>>>> -			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>>>>>>> -			goto retry_nowait;
->>>>>>>> -		}
->>>>>>>> -		break;
->>>>>>>>     	default:
->>>>>>>>     		nfsd4_mark_cb_fault(cb->cb_clp);
->>>>>>>>     	}
->>>>>>>>
->>>>>>>
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
-> 
-> 
+That's why I was suggesting that we might time out the backchannel
+calls after two lease periods. OTOH, maybe it's sufficient to not queue
+any callbacks for courtesy clients?
 
+> >=20
+> >=20
+> > > > > > > Thoughts?
+> > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > > > > > > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > > > > > > +			goto retry_nowait;
+> > > > > > > > > +		}
+> > > > > > > > > +		fallthrough;
+> > > > > > > > >     	case -NFS4ERR_BADSLOT:
+> > > > > > > > >     		/*
+> > > > > > > > >     		 * BADSLOT means that the client and server are out=
+ of sync
+> > > > > > > > > @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done=
+(struct rpc_task *task, struct nfsd4_callback
+> > > > > > > > >     		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > > > > > > >     		cb->cb_held_slot =3D -1;
+> > > > > > > > >     		goto retry_nowait;
+> > > > > > > > > -	case -NFS4ERR_SEQ_MISORDERED:
+> > > > > > > > > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > > > > > > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > > > > > > -			goto retry_nowait;
+> > > > > > > > > -		}
+> > > > > > > > > -		break;
+> > > > > > > > >     	default:
+> > > > > > > > >     		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > > > > > > >     	}
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > >=20
+> > > > > > >=20
+> > > > > >=20
+> > > > >=20
+> > > >=20
+> > >=20
+> >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
