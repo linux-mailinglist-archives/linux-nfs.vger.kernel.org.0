@@ -1,220 +1,154 @@
-Return-Path: <linux-nfs+bounces-9998-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-9999-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F60AA2E1F5
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 02:20:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C40B2A2E20A
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 02:34:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18AC43A4CF4
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 01:20:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A4A5163D6E
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 01:34:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4EC115AF6;
-	Mon, 10 Feb 2025 01:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E336323CB;
+	Mon, 10 Feb 2025 01:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GVvg4m6O";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RbVKTVRS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XhlteEde"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2CC125;
-	Mon, 10 Feb 2025 01:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A5B1A28D
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2025 01:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739150428; cv=none; b=VLzZMzsfkdP+PAV7fLf88jx91oPhXaD9B9awUi8do18ctYrzCcjm2VZLSr20xbDgaLjOtGqLcZ+YECJHNMdgXvUJqftgpJ6WURDcRDMPSBkgK9hzFU4Y9ckc5fKoEuqf1xScEms0i4bSmBWKSezJJTViePCv91USBjLdqpHB+54=
+	t=1739151292; cv=none; b=XEnff1wIi5mUfy1rUEGssHduuv/UeQgFMDlBeFklA4X2iJvEamG+reCKurxX8EN/dGrwo0aiUQ0Afi9CjUO2nnPmTX9z4a7qxBobdeKR2CbSqlMJ+S6gfHNUEElztXF9KUw+1D5+t3DYYdDBWc2NpydhXMzvQoL9e+2UAsGezNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739150428; c=relaxed/simple;
-	bh=6vm4jw6wg9RdZqCVO4c/MR5vasxo/EaDKybb5J4L5A0=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ErxwaYqR5tt2wVL0MTQnCrGEIgt7P7S9LFbYz3+/RxZioKigOCTnn1Uq/Tofa3QYkFFal0CiQBbKCXq3JRlyDG1XcBJS94kZ3n7yiZ8TARzeMm7Zfx49J9Mskk4RyJXS1AtF8wnfLGI3fsPumEkslyRWRoNnVUCwberXIR8J3Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GVvg4m6O; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RbVKTVRS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2B82921102;
-	Mon, 10 Feb 2025 01:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
-	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
-	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739150425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
-	CXfKlMNq8eRzBqDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739150425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=GVvg4m6Oi+5Nf73A3l4nea6uMla+aAQMPpYPlG8SWuZ7oRQepMR8R9VmmtKyM73xUIh4X8
-	470qmg9kUKy1tnAru1Wrl9o4Tv+dVCprIlazwc2A4YvAKbYdNOP86tNqxDPENlx58ONqeW
-	oPeqOtzaGLovzCA95Uyfv78PZECyg7k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739150425;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kNHkLWb8LhlVxwfN71tab7fM7Ihwg66qglqKNi6jmFg=;
-	b=RbVKTVRSav7aiYPr8v8nupZZlw+Bdw+DsmKbdWDU8HAdGceAvEXvrFVD8+hjZxcIymRl2T
-	CXfKlMNq8eRzBqDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B2BF13AA4;
-	Mon, 10 Feb 2025 01:20:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gKKtC1JUqWcyNgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 10 Feb 2025 01:20:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1739151292; c=relaxed/simple;
+	bh=WMn7jp4NFouO2gNnIfZfZVmFXxbdIx+KYEkK1k8Ay6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RCkO1KpB6iU6GTHEnGZXaFDfFLoQaGtRuiyKri443qb3O5Bhz03BIs85pwJTQrw25LNR1JQbED6qIASEIresvPtdrQYudcG170H1f7RBG1Nm7HcomrTJcEjr7bMWoC94VlKok4j2XON6uJzLXbMVLmwmjIAPeObUi+XvM1y85fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XhlteEde; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5de4d4adac9so4653650a12.3
+        for <linux-nfs@vger.kernel.org>; Sun, 09 Feb 2025 17:34:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739151289; x=1739756089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SlPzA2DARq/4iEWMxSGxTDYQ3luiJwJCB6SAtil1wN0=;
+        b=XhlteEdeaJ5ioQmWf/vLN9/QVmyAHpkfDHGd2JsVSi+qk3dgfsWd7HYamN9x9rfoFU
+         p4aVR678D3Uux4IPnCGpSz/d0E0j3edhufsUz3c0X+wwJViPtQrWDSHs42PJlzh4FG6Q
+         q8qsn+Zfk0JEyqYEz9cjFQmV3kpEWo7Bovds9zcFdyoY2kmBrPAB2oa52craBnLOjevR
+         78KA/H5rkL4MRc3oaVKsscUISv5KHk2rgbYj3CEdtn3/3vNjlsnzflyjZGHnFr3/V0dB
+         KL9FX/dvn63xAGEv+UGif9V/Ne1Qeg+kF/IMoHzOdeGjw7TFnXt0r64OQ6lCd0AaqY4h
+         4yuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739151289; x=1739756089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SlPzA2DARq/4iEWMxSGxTDYQ3luiJwJCB6SAtil1wN0=;
+        b=cesSafDi+4b8EAPU4oem5f7PKA3Xal0ak5l6YpSlrt7C56QQ6FRd4lQJ5SF92Kl0bB
+         BneSJgmBCGALOiD1kuXM8uMXDNN/rWM1HzLjuzXsRwxqn3fQGaKyi8GpfCfxO1WcdcB4
+         Iwut5XjiBktvbgqwCtHp2P/O1+Lqolfh2WFnoJX/O3iK3xuK3ym71D4JuU6B+q9IA/Hh
+         mypu1FnvZkbgmXXruc8loZkJ5xRAkVAHELInY6t10I+/3Bn52+OSqNTXlMsUu/M2DEZa
+         MH4qYn72f0EFK7xUVsU81qE34nepaEY1HKlhyWz3lOLngYfzxUjH2Jh2NSKo+ckilsgm
+         gscw==
+X-Gm-Message-State: AOJu0Yzq5lxiuQPBp4HNU7Z6bH7ZOluxcV64YhncTCOJz15ur4O/7+nm
+	5El7C1hF4PGDSg8AVWuKCv4zVAjnGTXmtRAeFxQ5Am86DG9owS55mcuiYZqlsiRMXG1bMP0wDFY
+	bC562BhqAqLmvamWfS+sA1oDtoaYq
+X-Gm-Gg: ASbGncuNkIOqHo/t/dr9LVIPNvkQ1dMwngXhR2ScZ2X+IuTYSBxQ4T0Z2A/+6TArQPf
+	dE1X49ShVMfZW47i5iwWF1iHrr8pQS4n68I5A/MpDmHnPPmHJJN5w7sQUo7gjGfyKMmTXBqfpTB
+	hdGE2l8nlXkloC3E3JgWj6UttPg196
+X-Google-Smtp-Source: AGHT+IEP+SwwRDii+uopxe3racWqeG4n7qSTqXVaTeBZocPBqbpFbDmkxU8UYaq1JPUWcsOj0WwQa6vxvybTJL/TExM=
+X-Received: by 2002:a05:6402:360d:b0:5de:5864:6628 with SMTP id
+ 4fb4d7f45d1cf-5de586466d5mr7885739a12.26.1739151289121; Sun, 09 Feb 2025
+ 17:34:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
- "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-In-reply-to: <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
-References:
- <>, <4bxqnnpfau5sq2h7oexvrvazqqpn55e7vsjlj44epdcas2clzf@424354eeo6dl>
-Date: Mon, 10 Feb 2025 12:20:15 +1100
-Message-id: <173915041509.22054.12649815796390080222@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <CAM5tNy4f9YyMhYRydudNkCqzVp5f8Np6N25NOT=-+TjJN2ewqg@mail.gmail.com>
+ <884876492c56e76fd6fbb4c5c4fb08ee14de9fe1.camel@hammerspace.com>
+In-Reply-To: <884876492c56e76fd6fbb4c5c4fb08ee14de9fe1.camel@hammerspace.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Sun, 9 Feb 2025 17:34:37 -0800
+X-Gm-Features: AWEUYZm0wBifqfWNhbYerQca_fXcn9o1QgezOxe3NQ47NAg6dn9Ejw_9huBIOYc
+Message-ID: <CAM5tNy5yv1CkVc3z0dTJ_Fed9mP-ZBug1L39Jnau48s=OnSPvA@mail.gmail.com>
+Subject: Re: resizing slot tables for sessions
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 08 Feb 2025, Kent Overstreet wrote:
-> On Fri, Feb 07, 2025 at 06:30:00PM +1100, NeilBrown wrote:
-> > On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > > On Fri, Feb 07, 2025 at 05:34:23PM +1100, NeilBrown wrote:
-> > > > On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > > > > On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
-> > > > > > Do you think there could be a problem with changing the error ret=
-urned
-> > > > > > in this circumstance? i.e. if you try to destroy a subvolume with=
- a
-> > > > > > non-existant name on a different filesystem could getting -ENOENT
-> > > > > > instead of -EXDEV be noticed?
-> > > > >=20
-> > > > > -EXDEV is the standard error code for "we're crossing a filesystem
-> > > > > boundary and we can't or aren't supposed to be", so no, let's not c=
-hange
-> > > > > that.
-> > > > >=20
-> > > >=20
-> > > > OK.  As bcachefs is the only user of user_path_locked_at() it shouldn=
-'t
-> > > > be too hard.
-> > >=20
-> > > Hang on, why does that require keeping user_path_locked_at()? Just
-> > > compare i_sb...
-> > >=20
-> >=20
-> > I changed user_path_locked_at() to not return a dentry at all when the
-> > full path couldn't be found.  If there is no dentry, then there is no
-> > ->d_sb.
-> > (if there was an ->i_sb, there would be an inode and this all wouldn't
-> > be an issue).
-> >=20
-> > To recap: the difference happens if the path DOESN'T exist but the
-> > parent DOES exist on a DIFFERENT filesystem.  It is very much a corner
-> > case and the error code shouldn't matter.  But I had to ask...
->=20
-> Ahh...
->=20
-> Well, if I've scanned the series correctly (sorry, we're on different
-> timezones and I haven't had much caffeine yet) I hope you don't have to
-> keep that function just for bcachefs - but I do think the error code is
-> important.
->=20
-> Userspace getting -ENOENT and reporting -ENOENT to the user will
-> inevitably lead to head banging frustration by someone, somewhere, when
-> they're trying to delete something and the system is tell them it
-> doesn't exist when they can see it very much does exist, right there :)
-> the more precise error code is a very helpful cue...
->=20
+On Sun, Feb 9, 2025 at 3:34=E2=80=AFPM Trond Myklebust <trondmy@hammerspace=
+.com> wrote:
+>
+> On Sun, 2025-02-09 at 13:39 -0800, Rick Macklem wrote:
+> > Hi,
+> >
+> > I thought I'd post here instead of nfsv4@ietf.org since I
+> > think the Linux server has been implementing this recently.
+> >
+> > I am not interested in making the FreeBSD NFSv4.1/4.2
+> > server dynamically resize slot tables in sessions, but I do
+> > want to make sure the FreeBSD handles this case correctly.
+> >
+> > Here is what I believe is supposed to be done:
+> > For growing the slot table...
+> > - Server/replier sends SEQUENCE replies with both
+> >    sr_highest_slot and sr_target_highest_slot set to a larger value.
+> > --> The client can then use those slots with
+> >       sa_sequenceid set to 1 for the first SEQUENCE operation on
+> >       each of them.
+> >
+> > For shrinking the slot table...
+> > - Server/replier sends SEQUENCE replies with a smaller
+> >   value for sr_target_highest_slot.
+> >   - The server/replier waits for the client to do a SEQUENCE
+> >      operation on one of the slot(s) where the server has replied
+> >      with the smaller value for sr_target_highest_slot with a
+> >      sa_highest_slot value <=3D to the new smaller
+> >       sr_target_highest_slot
+> >      - Once this happens, the server/replier can set sr_highest_slot
+> >         to the lower value of sr_target_highest_slot and throw the
+> >          slot table entries above that value away.
+> > --> Once the client sees a reply with sr_target_highest_slot set
+> >       to the lower value, it should not do any additional SEQUENCE
+> >       operations with a sa_slotid > sr_target_highest_slot
+> >
+> > Does the above sound correct?
+>
+> The above captures the case where the server is adjusting using
+> OP_SEQUENCE. However there is another potential mode where the server
+> sends out a CB_RECALL_SLOT.
+Ouch. I completely forgot about this one and I'll admit the FreeBSD client
+doesn't have it implemented.
 
-???
-You will only get -ENOENT if there is no ent.  There is no question of a
-confusing error message.
-If you ask for a non-exist name on the correct filesystem, you get -ENOENT
-If you ask for an existing name of the wrong filesystem, you get -EXDEV
-That all works as expected and always has.
+Just fyi, does the Linux server do this, or do I have some time to implemen=
+t it?
 
-But what if you ask for a non-existing name in a directory on the
-wrong filesystem? =20
-The code you originally wrote in 42d237320e9817a9 would return
--ENOENT because that it what user_path_at() would return.
-But using user_path_at() is "wrong" because it doesn't lock the directory
-so ->d_parent is not guaranteed to be stable.
-Al fixed that in bbe6a7c899e7f265c using user_path_locked_at(), but
-that doesn't check for a negative dentry so Al added a check to return
--ENOENT, but that was added *after* the test that returns -EXDEV.
+Thanks, rick
 
-So now if you call subvolume_destroy on a non-existing name in a
-directory on the wrong filesystem, you get -EXDEV.  I think that is
-a bit weird but not a lot weird.
-My patch will change it back to -ENOENT - the way you originally wrote
-it.
-
-I hope you are ok with that.
-
-NeilBrown
-
+>
+> In the latter case, it is up to the client to send out enough SEQUENCE
+> operations on the forward channel to implicitly acknowledges the change
+> in slots using the sa_highestslot field (see RFC8881, Section 20.8.3).
+>
+> If the client was completely idle when it received the CB_RECALL_SLOT,
+> it should only need to send out 1 extra SEQUENCE op, but if using RDMA,
+> then it has to keep pounding out "RDMA send" messages until the RDMA
+> credit count has been brought down too.
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
