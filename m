@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-10022-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10023-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46CB1A2F509
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 18:21:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7AC2A2F51F
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 18:23:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D61571687E9
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 17:21:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16106188A442
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 17:23:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EB80255E34;
-	Mon, 10 Feb 2025 17:20:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98017255E37;
+	Mon, 10 Feb 2025 17:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dY2HXXZ5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFneTzZ3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEFD24BD0B
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2025 17:20:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BB3255E47
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2025 17:23:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208054; cv=none; b=UCzQeLRQW7h2dr7K/oATpPn6++tMtw8VGihOSf1uVTNFRoeiZLjpMgPhNGzw+VVesv3HFvfS3YryhRLCzNBmeSe/YNT2iQqFLv2H21Ae4msCLnIKwc3CxZuLfLswWp7ZS/0pqaDZ/4p/uoHd3y4rfJXrN2R97pSnyF3Brg1/nXM=
+	t=1739208189; cv=none; b=eAyekjg7vA883xPcyk0gvUugOOKbYvOxLE9Foo7lcZsEh3SdLjTvp0ciuUexSK7Qjluu1H45q9R2jD7TOObHCa77F87dkwKNsJhWQcKWswG00H89bhqJghIssMj3kZtWz9gDYr6u+ySAt8jVmqovmYQ+ZxCQyFetIwBzfO+AXDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208054; c=relaxed/simple;
-	bh=nu2CNJMBDsCc5bi3XQry8yMmOGDpbWrDSQfdCEvXzq0=;
+	s=arc-20240116; t=1739208189; c=relaxed/simple;
+	bh=vrJ16Z6L09QUEvuBJF6oy3GMhu4bEcH+aYAMJk87jeA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rNdAQFiBSUKDfZXcL1BJ5Qu3OO7vWVo38PgO5i5aDmo3SW64U/FpRiJZURP44HR5JgYylxtWOGgqGlL+ipS640TqqsojOoEzyvOctZgDAWqN8T/pW7hPPnquRplB0QhnG04PixKHuJG/lYBYMvdG7xGqUxDliKjk8vHdEGdbyJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY2HXXZ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EC6C4CEE6;
-	Mon, 10 Feb 2025 17:20:53 +0000 (UTC)
+	 Content-Type:MIME-Version; b=u4AwRXpZR/CXbXNkOPYDNV4nhiIsFaObghFkPzePLQkryg8FLWAx+6DOA1O309EK1Zz2UfinewnLbDxLA3lXiUlCCozYRN7f60Kaj1PqA9oVUfff0hwhb17Pu/3ob5uA7jwfE1ffqoIEeb342x7Dnq0chfLVx8lNIgoWlHcGvvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFneTzZ3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B50C0C4CED1;
+	Mon, 10 Feb 2025 17:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739208054;
-	bh=nu2CNJMBDsCc5bi3XQry8yMmOGDpbWrDSQfdCEvXzq0=;
+	s=k20201202; t=1739208189;
+	bh=vrJ16Z6L09QUEvuBJF6oy3GMhu4bEcH+aYAMJk87jeA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dY2HXXZ5pqTnPwTfPyqYF/zoWsNLYqCUl6ITIkYh8zE72whEyZvay+TuelIcbWdOR
-	 lTpeQybu6D9qDnjpzyAqu4LiZVUkH28OTk5QLl9CFOb6wikO1b3oxPy18dfhHuMKVu
-	 r9sAmVXFK9HNR1L+Gtr1w6wMovvIlG3lH0AhAneUnQpiqDJ+7wGy7HOhAVUwLeskn3
-	 7AbkfwnxSO4ypM5yqhEklPb7PVZB88MGCAhkjoke9JQ8t7U5ZqIelBvs6HC2tmvyFG
-	 Wr4j7T8qyj9UQDZiJ7fCiTHz63NDcPMfNNe7unX6ylWtNGioQjog9riInxnYrEsioQ
-	 NtzMDgiS3o2BQ==
-Message-ID: <10f2778fe0efd8f081a19d5a3200eb1d49147a06.camel@kernel.org>
-Subject: Re: [PATCH v4] nfsd: disallow file locking and delegations for
- NFSv4 reexport
+	b=lFneTzZ3Q8UvwExm2eSe+d6Dc13kKixcSUieahdUWw/oK4CRo1e3h9GRic6ScqaXl
+	 GnTFZd56xSEquEeVpUj2RCq/Sd7k9VcNMc5+zq8Uuup6FHa1G/0GBXhdQ9b8pUEUEn
+	 bHZDd6CJ03pffv0iAQX7eU/L3XHEkBkwhSbJ6havyUXwz2MO/538fhWlNxjk9PNaLU
+	 wtsq9FVXMtmMQzDNr7o2u/EUIE4y6OoWQK1ynOW40x5p9AM461ncqHyKcaHBeyaiNm
+	 2GYK0e9RgQ8/3yGewVOLbEVVJdHIvbVqv5bpRybnJPuhoAWku4uBuTAuLPrfiz0J3I
+	 v233HrN7RIxbQ==
+Message-ID: <099cb10ef3399d7ebb9179eb3a6415562d409077.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Fix callback decoder status codes
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>
-Date: Mon, 10 Feb 2025 12:20:52 -0500
-In-Reply-To: <20250210162553.112705-1-cel@kernel.org>
-References: <20250210162553.112705-1-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 10 Feb 2025 12:23:07 -0500
+In-Reply-To: <20250210170332.115051-1-cel@kernel.org>
+References: <20250210170332.115051-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,165 +135,84 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-02-10 at 11:25 -0500, cel@kernel.org wrote:
-> From: Mike Snitzer <snitzer@kernel.org>
+On Mon, 2025-02-10 at 12:03 -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> We do not and cannot support file locking with NFS reexport over
-> NFSv4.x for the same reason we don't do it for NFSv3: NFS reexport
-> server reboot cannot allow clients to recover locks because the source
-> NFS server has not rebooted, and so it is not in grace.=C2=A0
+> fs/nfsd/nfs4callback.c implements a callback client. Thus its XDR
+> decoders are decoding replies, not calls.
 >=20
-
-Refresh my memory: how do we prevent this in v3? It seems like NLM
-should use the same mechanism.
-
->  Since the
-> source NFS server is not in grace, it cannot offer any guarantees that
-> the file won't have been changed between the locks getting lost and
-> any attempt to recover/reclaim them.  The same applies to delegations
-> and any associated locks, so disallow them too.
+> NFS4ERR_BAD_XDR is an on-the-wire status code that reports that the
+> client sent a corrupted RPC /call/. It's not used as the internal
+> error code when a /reply/ can't be decoded, since that kind of
+> failure is never reported to the sender of that RPC message.
 >=20
-> Clients are no longer allowed to get file locks or delegations from a
-> reexport server, any attempts will fail with operation not supported.
+> Instead, a reply decoder should return -EIO, as the reply decoders
+> in the NFS client do.
 >=20
-> Update the "Reboot recovery" section accordingly in
-> Documentation/filesystems/nfs/reexport.rst
->=20
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> Fixes: 6487a13b5c6b ("NFSD: add support for CB_GETATTR callback")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  Documentation/filesystems/nfs/reexport.rst | 10 +++++++---
->  fs/nfs/export.c                            |  3 ++-
->  fs/nfsd/nfs4state.c                        | 18 ++++++++++++++++++
->  include/linux/exportfs.h                   | 14 +++++++++++++-
->  4 files changed, 40 insertions(+), 5 deletions(-)
+>  fs/nfsd/nfs4callback.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> This is only compile-tested, but I'm thinking of throwing this on
+> the "for v6.15" pile.
 >=20
 >=20
-> Jeff and I believe that it is better to prevent data corruption for
-> now than to continue to enable risky use cases. Thus I've forward-
-> ported this patch to v6.14-rc2 and intend to include it in the
-> nfsd-6.15 pull request.
->=20
-> We remain open to considering solutions that enable locking through
-> to the back-end NFS server with appropriate lock recovery.
->=20
->=20
-> diff --git a/Documentation/filesystems/nfs/reexport.rst b/Documentation/f=
-ilesystems/nfs/reexport.rst
-> index ff9ae4a46530..044be965d75e 100644
-> --- a/Documentation/filesystems/nfs/reexport.rst
-> +++ b/Documentation/filesystems/nfs/reexport.rst
-> @@ -26,9 +26,13 @@ Reboot recovery
->  ---------------
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 961b1defcb1a..ae4b7b6df47f 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -101,15 +101,15 @@ static int decode_cb_fattr4(struct xdr_stream *xdr,=
+ uint32_t *bitmap,
 > =20
->  The NFS protocol's normal reboot recovery mechanisms don't work for the
-> -case when the reexport server reboots.  Clients will lose any locks
-> -they held before the reboot, and further IO will result in errors.
-> -Closing and reopening files should clear the errors.
-> +case when the reexport server reboots because the source server has not
-> +rebooted, and so it is not in grace.  Since the source server is not in
-> +grace, it cannot offer any guarantees that the file won't have been
-> +changed between the locks getting lost and any attempt to recover them.
-> +The same applies to delegations and any associated locks.  Clients are
-> +not allowed to get file locks or delegations from a reexport server, any
-> +attempts will fail with operation not supported.
+>  	if (bitmap[0] & FATTR4_WORD0_CHANGE)
+>  		if (xdr_stream_decode_u64(xdr, &fattr->ncf_cb_change) < 0)
+> -			return -NFSERR_BAD_XDR;
+> +			return -EIO;
+>  	if (bitmap[0] & FATTR4_WORD0_SIZE)
+>  		if (xdr_stream_decode_u64(xdr, &fattr->ncf_cb_fsize) < 0)
+> -			return -NFSERR_BAD_XDR;
+> +			return -EIO;
+>  	if (bitmap[2] & FATTR4_WORD2_TIME_DELEG_ACCESS) {
+>  		fattr4_time_deleg_access access;
 > =20
->  Filehandle limits
->  -----------------
-> diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-> index be686b8e0c54..e9c233b6fd20 100644
-> --- a/fs/nfs/export.c
-> +++ b/fs/nfs/export.c
-> @@ -154,5 +154,6 @@ const struct export_operations nfs_export_ops =3D {
->  		 EXPORT_OP_CLOSE_BEFORE_UNLINK	|
->  		 EXPORT_OP_REMOTE_FS		|
->  		 EXPORT_OP_NOATOMIC_ATTR	|
-> -		 EXPORT_OP_FLUSH_ON_CLOSE,
-> +		 EXPORT_OP_FLUSH_ON_CLOSE	|
-> +		 EXPORT_OP_NOLOCKS,
->  };
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b42e2ab7a042..f0fb6ca4b70c 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6000,6 +6000,15 @@ nfs4_set_delegation(struct nfsd4_open *open, struc=
-t nfs4_ol_stateid *stp,
->  	if (!nf)
->  		return ERR_PTR(-EAGAIN);
+>  		if (!xdrgen_decode_fattr4_time_deleg_access(xdr, &access))
+> -			return -NFSERR_BAD_XDR;
+> +			return -EIO;
+>  		fattr->ncf_cb_atime.tv_sec =3D access.seconds;
+>  		fattr->ncf_cb_atime.tv_nsec =3D access.nseconds;
 > =20
-> +	/*
-> +	 * File delegations and associated locks cannot be recovered if the
-> +	 * export is from an NFS proxy server.
-> +	 */
-> +	if (exportfs_cannot_lock(nf->nf_file->f_path.mnt->mnt_sb->s_export_op))=
- {
-> +		nfsd_file_put(nf);
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	}
-> +
->  	spin_lock(&state_lock);
->  	spin_lock(&fp->fi_lock);
->  	if (nfs4_delegation_exists(clp, fp))
-> @@ -8140,6 +8149,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_co=
-mpound_state *cstate,
->  	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0);
->  	if (status !=3D nfs_ok)
+> @@ -118,7 +118,7 @@ static int decode_cb_fattr4(struct xdr_stream *xdr, u=
+int32_t *bitmap,
+>  		fattr4_time_deleg_modify modify;
+> =20
+>  		if (!xdrgen_decode_fattr4_time_deleg_modify(xdr, &modify))
+> -			return -NFSERR_BAD_XDR;
+> +			return -EIO;
+>  		fattr->ncf_cb_mtime.tv_sec =3D modify.seconds;
+>  		fattr->ncf_cb_mtime.tv_nsec =3D modify.nseconds;
+> =20
+> @@ -682,15 +682,15 @@ static int nfs4_xdr_dec_cb_getattr(struct rpc_rqst =
+*rqstp,
+>  	if (unlikely(status || cb->cb_status))
 >  		return status;
-> +	if (exportfs_cannot_lock(cstate->current_fh.fh_dentry->d_sb->s_export_o=
-p)) {
-> +		status =3D nfserr_notsupp;
-> +		goto out;
-> +	}
-> =20
->  	if (lock->lk_is_new) {
->  		if (nfsd4_has_session(cstate))
-> @@ -8479,6 +8492,11 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
->  		status =3D nfserr_lock_range;
->  		goto put_stateid;
->  	}
-> +	if (exportfs_cannot_lock(nf->nf_file->f_path.mnt->mnt_sb->s_export_op))=
- {
-> +		status =3D nfserr_notsupp;
-> +		goto put_file;
-> +	}
-> +
->  	file_lock =3D locks_alloc_lock();
->  	if (!file_lock) {
->  		dprintk("NFSD: %s: unable to allocate lock!\n", __func__);
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 4cc8801e50e3..ca6c605072c7 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -259,10 +259,22 @@ struct export_operations {
->  						  atomic attribute updates
->  						*/
->  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close=
- */
-> -#define EXPORT_OP_ASYNC_LOCK		(0x40) /* fs can do async lock request */
-> +#define EXPORT_OP_NOLOCKS		(0x40) /* no file locking support */
->  	unsigned long	flags;
->  };
-> =20
-> +/**
-> + * exportfs_cannot_lock() - check if export implements file locking
-> + * @export_ops:	the nfs export operations to check
-> + *
-> + * Returns true if the export does not support file locking.
-> + */
-> +static inline bool
-> +exportfs_cannot_lock(const struct export_operations *export_ops)
-> +{
-> +	return export_ops->flags & EXPORT_OP_NOLOCKS;
-> +}
-> +
->  extern int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid=
-,
->  				    int *max_len, struct inode *parent,
->  				    int flags);
-
-
-Aside from the question about NLM, this looks good:
+>  	if (xdr_stream_decode_uint32_array(xdr, bitmap, 3) < 0)
+> -		return -NFSERR_BAD_XDR;
+> +		return -EIO;
+>  	if (xdr_stream_decode_u32(xdr, &attrlen) < 0)
+> -		return -NFSERR_BAD_XDR;
+> +		return -EIO;
+>  	maxlen =3D sizeof(ncf->ncf_cb_change) + sizeof(ncf->ncf_cb_fsize);
+>  	if (bitmap[2] !=3D 0)
+>  		maxlen +=3D (sizeof(ncf->ncf_cb_mtime.tv_sec) +
+>  			   sizeof(ncf->ncf_cb_mtime.tv_nsec)) * 2;
+>  	if (attrlen > maxlen)
+> -		return -NFSERR_BAD_XDR;
+> +		return -EIO;
+>  	status =3D decode_cb_fattr4(xdr, bitmap, ncf);
+>  	return status;
+>  }
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
