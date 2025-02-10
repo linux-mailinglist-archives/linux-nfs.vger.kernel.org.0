@@ -1,292 +1,113 @@
-Return-Path: <linux-nfs+bounces-10008-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10009-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E73CA2EF22
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 15:02:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 091ADA2EF39
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 15:08:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2F2D164DE0
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 14:02:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A447D7A22B1
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Feb 2025 14:07:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AA4F2744C;
-	Mon, 10 Feb 2025 14:01:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76FEC231A43;
+	Mon, 10 Feb 2025 14:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ga3F4OYc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLk8t7Df"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B401C2432
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2025 14:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C161B231A56
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Feb 2025 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739196104; cv=none; b=GNOOaWe4ROWo3K8GXPda/Y9Fy0QaXD4wOXnOJESIJnuCi56VjXRqhSGDy0qHiwPLg1ZL0+45J98Arnef3xpSzOK0pzdtGdVDNpyWULEILPXm8kVr0ZKnuakWeX/vvl6xTkQk0NeWFLdoBKjYVc5Ovw13Fh810XiUGtsJ+blMT1s=
+	t=1739196484; cv=none; b=MLJB3kULZvxvQnxCNoVEiWIKAmAgS4NmrGQKR9VGRMANDFGv+HMl9glR50FLKe7QBnXok/msx0lBEuw9f2z+BIlJbns5cX90ber4xzn22brzAyUkS9oInPfPabu5FHviZN5mEDgUm4/jVxNUTtmnUOuP/gi9LFBeHS7H6UNGfYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739196104; c=relaxed/simple;
-	bh=jZ45VJM1FkUFWBWnJA/W8+INLQ9eu+cYDQWx5ccXMhg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MWuqpCKC7byPjOAOunnzou5jpVgYnWxHzEX6lD2YXNEmZDdkJmusOeyssnHa43y5jEFComU9tPCYUQXaHRvdlkY+E0pZPx7+9/l7j01vABfDKdM5ljEhkbn62Mr3AVlGGmpAqECIL22aUFBbI5hw/HXBj/rpD06/gAuNMidYu7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ga3F4OYc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C189C4CED1;
-	Mon, 10 Feb 2025 14:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739196103;
-	bh=jZ45VJM1FkUFWBWnJA/W8+INLQ9eu+cYDQWx5ccXMhg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ga3F4OYc2I27f5PzW7R7wwie0uwzxbWlS48Ba++HWl+UzLhN461lbPYMEPXe9LDSc
-	 50pJQRETf6aNUXZTTaytJVg5M35jFC2xt8TfPHfYUC4624eJoRNm3E2+DrpL7Gf6Iv
-	 +uSqF7n/IfqPZE7ehSt0nVvV+t8tdoN2RDQSBK/OcGZVTKxEwQCrgwNvDlObVOCroa
-	 FGmSF7nz5224GGEEyQWCM0GSnpJrueH6iqzxs7m0xjkFAp/+NZPWuCM9V2hjcqII3S
-	 rgqUAadFJAzKXdaLK6Q9LoVqW+E4+T+fYpE7t/hXz2sUc7cKCk58AAxNnZrrCHtlOx
-	 layKlYE7PRqmQ==
-Message-ID: <5e6060d79e247a7e97443f200399061da8d558f9.camel@kernel.org>
-Subject: Re: [PATCH 4/6] nfsd: filecache: introduce NFSD_FILE_RECENT
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Dave Chinner	
- <david@fromorbit.com>
-Date: Mon, 10 Feb 2025 09:01:41 -0500
-In-Reply-To: <20250207051701.3467505-5-neilb@suse.de>
-References: <20250207051701.3467505-1-neilb@suse.de>
-	 <20250207051701.3467505-5-neilb@suse.de>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1739196484; c=relaxed/simple;
+	bh=Qnyg4AhO7AlWzaAjgnfboS2ahykzojmyYz/dy7vhqn4=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=hD4mdWCHjaeesjq9XbYhrXK4DytSnXt4a/T81nRo3T41Hh9vh8qNcPjzlKTpwkOZ9cN9QEgRBNszdzODV3wYqBw7E3+CL1GM5wNtRnw1CkoeOyjREGHb9ABk5diXAGU1KtHqnQT3SC/As3Y8k9zOOfLYN8YQADAC9em15V2dlPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jLk8t7Df; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739196481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sNF2zPwPgiY6vDrjo37ivtvlQa7hoNvAO5mHqkBo7W0=;
+	b=jLk8t7Dfp5MffAU0liQagjeBwKsoXvDxSzVi7NFqlphOECD6C5E/s2HczLNXdqGDVqP5HV
+	Y17f6ipS/SjWBRYgxprS+i7ZAa32Erg9BQ5zVPgSx45bVI0wxjaWt84o4/9yWqA3KkDBzB
+	EOQB1M91XVHqwfDMm4ORcI2uEaYHO6g=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-SyPxNyfjPEedBtdoOq5Ryw-1; Mon,
+ 10 Feb 2025 09:07:58 -0500
+X-MC-Unique: SyPxNyfjPEedBtdoOq5Ryw-1
+X-Mimecast-MFC-AGG-ID: SyPxNyfjPEedBtdoOq5Ryw
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9FC581955D8E;
+	Mon, 10 Feb 2025 14:07:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.92])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38B7B3001D19;
+	Mon, 10 Feb 2025 14:07:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: dhowells@redhat.com, netfs@lists.linux.dev,
+    LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: "netfs: Can't donate prior to front"
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3052001.1739196466.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 10 Feb 2025 14:07:46 +0000
+Message-ID: <3052002.1739196466@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Fri, 2025-02-07 at 16:15 +1100, NeilBrown wrote:
-> The filecache lru is walked in 2 circumstances for 2 different reasons.
->=20
-> 1/ When called from the shrinker we want to discard the first few
->    entries on the list, ignoring any with NFSD_FILE_REFERENCED set
->    because they should really be at the end of the LRU as they have been
->    referenced recently.  So those ones are ROTATED.
->=20
-> 2/ When called from the nfsd_file_gc() timer function we want to discard
->    anything that hasn't been used since before the previous call, and
->    mark everything else as unused at this point in time.
->=20
-> Using the same flag for both of these can result in some unexpected
-> outcomes.  If the shrinker callback clears NFSD_FILE_REFERENCED then the
-> nfsd_file_gc() will think the file hasn't been used in a while, while
-> really it has.
->=20
-> I think it is easier to reason about the behaviour if we instead have
-> two flags.
->=20
->  NFSD_FILE_REFERENCED means "this should be at the end of the LRU, please
->      put it there when convenient"
->  NFSD_FILE_RECENT means "this has been used recently - since the last
->      run of nfsd_file_gc()
->=20
-> When either caller finds an NFSD_FILE_REFERENCED entry, that entry
-> should be moved to the end of the LRU and the flag cleared.  This can
-> safely happen at any time.  The actual order on the lru might not be
-> strictly least-recently-used, but that is normal for linux lrus.
->=20
-> The shrinker callback can ignore the "recent" flag.  If it ends up
-> freeing something that is "recent" that simply means that memory
-> pressure is sufficient to limit the acceptable cache age to less than
-> the nfsd_file_gc frequency.
->=20
-> The gc caller should primarily focus on NFSD_FILE_RECENT.  It should
-> free everything that doesn't have this flag set, and should clear the
-> flag on everything else.  When it clears the flag it is convenient to
-> clear the "REFERENCED" flag and move to the end of the LRU too.
->=20
-> With this, calls from the shrinker do not prematurely age files.  It
-> will focus only on freeing those that are least recently used.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/filecache.c | 21 +++++++++++++++++++--
->  fs/nfsd/filecache.h |  1 +
->  fs/nfsd/trace.h     |  3 +++
->  3 files changed, 23 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 04588c03bdfe..9faf469354a5 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -318,10 +318,10 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
->  		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
->  }
-> =20
-> -
->  static bool nfsd_file_lru_add(struct nfsd_file *nf)
->  {
->  	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> +	set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
+Can you apply the attached patch to your kernel, and then run with:
 
-Technically, I don't think you need the REFERENCED bit at all. This is
-the only place it's set, and below this is calling list_lru_add_obj().
-That returns false if the object was already on a per-node LRU.
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_read/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_rreq/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_sreq/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_failure/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_donate/enable
+   echo 1 >/sys/kernel/debug/tracing/events/netfs/netfs_progress/enable
 
-Instead of that, you could add a list_lru helper that will rotate the
-object to the end of its nodelist if it's already on one. OTOH, that
-might mean more cross NUMA-node accesses to the spinlocks than we get
-by using a flag and doing this at GC time.
+enabled.  If you can capture the trace output (and compress it!), that sho=
+uld
+hopefully help debug this.
 
->  	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
->  		trace_nfsd_file_lru_add(nf);
->  		return true;
-> @@ -528,6 +528,23 @@ nfsd_file_lru_cb(struct list_head *item, struct list=
-_lru_one *lru,
->  	return LRU_REMOVED;
->  }
-> =20
-> +static enum lru_status
-> +nfsd_file_gc_cb(struct list_head *item, struct list_lru_one *lru,
-> +		 void *arg)
-> +{
-> +	struct nfsd_file *nf =3D list_entry(item, struct nfsd_file, nf_lru);
-> +
-> +	if (test_and_clear_bit(NFSD_FILE_RECENT, &nf->nf_flags)) {
-> +		/* "REFERENCED" really means "should be at the end of the LRU.
-> +		 * As we are putting it there we can clear the flag
-> +		 */
-> +		clear_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> +		trace_nfsd_file_gc_aged(nf);
-> +		return LRU_ROTATE;
-> +	}
-> +	return nfsd_file_lru_cb(item, lru, arg);
-> +}
-> +
->  static void
->  nfsd_file_gc(void)
->  {
-> @@ -537,7 +554,7 @@ nfsd_file_gc(void)
-> =20
->  	for_each_node_state(nid, N_NORMAL_MEMORY) {
->  		unsigned long nr =3D list_lru_count_node(&nfsd_file_lru, nid);
-> -		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_lru_cb,
-> +		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
->  					  &dispose, &nr);
->  	}
->  	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index d5db6b34ba30..de5b8aa7fcb0 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -38,6 +38,7 @@ struct nfsd_file {
->  #define NFSD_FILE_PENDING	(1)
->  #define NFSD_FILE_REFERENCED	(2)
->  #define NFSD_FILE_GC		(3)
-> +#define NFSD_FILE_RECENT	(4)
->  	unsigned long		nf_flags;
->  	refcount_t		nf_ref;
->  	unsigned char		nf_may;
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index ad2c0c432d08..9af723eeb2b0 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -1039,6 +1039,7 @@ DEFINE_CLID_EVENT(confirmed_r);
->  		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
->  		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
->  		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED" },		\
-> +		{ 1 << NFSD_FILE_RECENT,	"RECENT" },		\
->  		{ 1 << NFSD_FILE_GC,		"GC" })
-> =20
->  DECLARE_EVENT_CLASS(nfsd_file_class,
-> @@ -1317,6 +1318,7 @@ DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del_dispose=
-d);
->  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_in_use);
->  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_writeback);
->  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_referenced);
-> +DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_aged);
->  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_disposed);
-> =20
->  DECLARE_EVENT_CLASS(nfsd_file_lruwalk_class,
-> @@ -1346,6 +1348,7 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, name,				\
->  	TP_ARGS(removed, remaining))
-> =20
->  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_removed);
-> +DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_recent);
->  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_shrinker_removed);
-> =20
->  TRACE_EVENT(nfsd_file_close,
+David
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index e8624f5c7fcc..8b78c1ec0677 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -312,6 +312,7 @@ static bool netfs_consume_read_data(struct netfs_io_su=
+brequest *subreq, bool was
+ 	printk("folio: %llx-%llx\n", fpos, fend - 1);
+ 	printk("donated: prev=3D%zx next=3D%zx\n", prev_donated, next_donated);
+ 	printk("s=3D%llx av=3D%zx part=3D%zx\n", start, avail, part);
++	tracing_off();
+ 	BUG();
+ }
+ =
+
 
