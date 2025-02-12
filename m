@@ -1,95 +1,94 @@
-Return-Path: <linux-nfs+bounces-10065-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10066-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45BB3A3317E
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2025 22:33:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 746C9A33199
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2025 22:35:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6B353A8033
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2025 21:32:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C8D4167897
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Feb 2025 21:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D5AB1FF5EB;
-	Wed, 12 Feb 2025 21:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A96202C5B;
+	Wed, 12 Feb 2025 21:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FQJlFqYv";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="R4x3t8iS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E9T+Vt9G";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NRa86Qo8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3273B1FBC81
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2025 21:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069FD202C5D
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Feb 2025 21:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739395979; cv=fail; b=lhYGu0aqnsFd7DOyw6zek8EmQWddM7++DEnhsqSrpdykibhDRh0wJjW4rqByiUDsgPfAvjIabHiD4VrzfyHW6D6Bvmxo122iXlfHET7UNRdD55qviJXMSAKAXODwVRRD6ZsEmXbwwfMAEbEwjtTxocwT3QoXVEjuj1MjqmPLw7M=
+	t=1739396117; cv=fail; b=JJC+GsA06i0V1hteJky+SuLYcOZj5Tmwxe+AWFBr4hNURUj5OwYTAmdQVvradyVuhi87VFh34qejFusb9LPOI4SySu7VoAjcnpdrK1rxOX+e+NPqMsymXu+6J5vU/8NG+2WR8wgrHtdrzGl9iHAyWrqgyZS98KjzzM5TE6hwC6g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739395979; c=relaxed/simple;
-	bh=GaKaVjjwMdg459RzHQuTKNHAluQNYYCP8NDfoB+qM+g=;
+	s=arc-20240116; t=1739396117; c=relaxed/simple;
+	bh=OWmkauYk4+vsuUdCm3oi3n03QtzwX+9OH++vlDfP6/c=;
 	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tuUgtVRPXSRsxWogyIHXqxIroKMfWa5tgoEVKCwu3eY8o2O0C1zr2ujI4MPozukEGBMCEsHwY9x78mkUq9KbgeZSfOC2f0oaH9T4XY4zIOW/Ln47hLKARLAzkFUJ89OZAx2H0m35jDVBBpSn4Z8tsZbrpmcmNwukoWXj8v1wcYI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=FQJlFqYv; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=R4x3t8iS; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=sdItkKFTZyVUfUehqavAETe7DN7sTVM3XKOJWEuzY8noA3bWeivvZ5At2Bg4aef0MQU6uPbQL8XusTA6TuMjFzNnYox+UEPy4741mOb88ydrLDU2z8KYtD8SC9XH9pKDCeNNmOtADAu1c8zbD/s5YhkrBAkVJbuE1wlbZuXoqz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=E9T+Vt9G; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NRa86Qo8; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CEtl3S008993;
-	Wed, 12 Feb 2025 21:32:50 GMT
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CEtY3g006318;
+	Wed, 12 Feb 2025 21:35:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=4mvkymS7dEk2GDhrPDr3U41FXzVcbjNQS/HlTqD1BFA=; b=
-	FQJlFqYvLhzAxdBkZP36MBGuvfE1Z3fWWnXjFCczt48QhAYX9/UftEGnuTNdK2JP
-	nCwJ0m+xSIBkxjAeeHYynzEQgo1z/zkE+JGf0LaANppBOBtULm3p6aLO3WsTSCnJ
-	Ns6x/wf0eMy95OdEgSF0chappr8NMVLQ9aaec4RbYTB+M/WbJD2lopXQ9xF873dx
-	DKb2qPz2nOowFiANnDDdhoN8B6DL1d72MlR5vpZh7ogjbmrQAC65pkTcIvObjgii
-	Hpcl+1aU66QDjs872u2mCxlzEOH+t+i/DhZkeuVkJNM7IVtyiLqqrqkTo7+c7ngZ
-	Sn0k8IYtmMZ+Zl4QP/7nzQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0qagbeu-1
+	corp-2023-11-20; bh=erSbZ1p8Dd4w/CTwIfuJ0T2wvrYwYi2LYURceU8ODZ4=; b=
+	E9T+Vt9GWzXdeS0+tzhCNGa1qzBLH5Xr0ls7xlpqm8O+pKywvsHzq8hZgdc1BJO3
+	m7a914rO6TDJcGtWFO8pxtrXgQoXcD6KUnOde21uv2miPl4f8cQ/np7R/gJhn6gP
+	UwOcJI8mRFk/A0F7gr5E3jycVl4nMz8GFYfEJ9Vu6khpLqFan16OQ8tLTI6O8PeW
+	U6rXOKemTOilQf5Yfbpobe7aONqyqE+v0Wie6SYlMTd8Wfr6W+AdDKERhC7VHp8v
+	1j7OLI2SLgkMtVgLYNDiZF/z1njaESWeyXb2Q/2s4WmNzr8W1d766Rip5hzsRGOO
+	u5PqtGkN2qQwpNRSLtLrjg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0tg8fug-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 21:32:49 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51CJttVp012700;
-	Wed, 12 Feb 2025 21:32:48 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44nwqav080-1
+	Wed, 12 Feb 2025 21:35:08 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51CLFgPG026995;
+	Wed, 12 Feb 2025 21:35:07 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44nwqauynd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 21:32:48 +0000
+	Wed, 12 Feb 2025 21:35:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rD6n9ozy3vNoH9J3hv2Jr7QlSJscn8B+q6XfViP64q8hf3XSw7aZTOk36zUyiFM59kFyk88llwbdSAv9PK5X3u84Ftw4YQAnOcdDt5Hh697Amy8F3qWxhB5xtUvi1SDoO1iJJ/NrdbrvnW9w/6o3bEx25+bzsNhS0FD6MNijvDoaEa4YlKdUuy5n/T5H17cbdibjmMnJ6Ofxd87awKZX6Fji4PiFRgdR9DVdSuGUdM0qRw+oBUbup2vn1rR5eLAsmTmYWg3suHqv5wU+ZZUlNd8K8cX/Wz7wQTRqFCoZ8NWRy/Susp4f6pfBlAUx+4g9MLrBSf7KtY1P3fesIUSIuw==
+ b=S45aFLjX+KHG+WIEpv6OTIJ3X98zEKOoHjsRmovSPkVZ8meaBWbeq1SSxHDmt5lhxjP7peRgZbr/KKJMC6R1Li/DzOu7Ma5R8Gv30UXhsvYrfjDm9qvzgxbuMtLKtrnU77OZz2rvjVwGC8nIxxoKqZYd26ibwYkMaN5+4yOkCFpqOlsTub1C5PQtRJiMd0y2CSAUpghWyTa/o097AdT2JCxeBblv/bDiPziZ1fmqxykdXN2onUD3aHzXAeqdmk8xm+SQuOj1wpyZ10pZ+98UEco2SAnsfUkcYEEXvhpGpIVfIXVWr1eRsl/umTZVQEVXLemywcDX10x41UbKY22WWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4mvkymS7dEk2GDhrPDr3U41FXzVcbjNQS/HlTqD1BFA=;
- b=hhR1Cdvw/RaxPE07sHzOdEfH6segse4WzwaHko4z3IcB22GNAURDPKdzhpyoVAwg4dvllP9H2QXchU6KiC8XjrT8C6bv08K/ObwrOYMa8Uchh6CSNHA0OSiuTSXZKgDlaLu2qdqkZKKZGtF+wdqDeKL4s5v1y60I6RjCZgq5HrP7Wu8VRHosuSs3Sh6Qcz7vB89z3/k6+A8/d7gFwReciAXvuboQZG+X7DuWVWq4wIYQw/NzIPkieWPDQ1CbzeGOD2wutUQqYMYO5QH22spFicakbN9IM7l+BIxOUaDEqAAWGK3u1bPDSxiUqmitTFbXVb0HyKJN7zs4W5C6JMLivQ==
+ bh=erSbZ1p8Dd4w/CTwIfuJ0T2wvrYwYi2LYURceU8ODZ4=;
+ b=S92dyQDTijAXNltK17zZM5DB5OFbA0AE37ihPxvWBOC4Pxt5pqRJ66vLOZNiwq5juP21DC6b9DZ0XFoA71ZqnvX22OBXnnOqc2HAmWqjzBce4tBkoo7mybr5mHKHPNKxuOlYw2jkZRU6YqLF9FOYTBs5zx9Ot4jNEtPliJ4vlgNbwXdO8mahJh4l5NuvTu+Du7dKr7vN+tiuDMO8rt3KIhmUnkL+xwa5Hufzv7tYPLYmldRd4Hz/nAbtt/kGAPaS9SWJddfJIX0gW7J4JFt2MsceEKz87sjPXbfLdmWwmgJ0z+/FKXwFa2LnPoubAr+T6IYeum/NwJIboasBrKVLYg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4mvkymS7dEk2GDhrPDr3U41FXzVcbjNQS/HlTqD1BFA=;
- b=R4x3t8iS4y/GXVh2ivK+qktG4W/w/si29YsUheTBImzJ3B7y9xtoDnzGgxeb36nT9jhGSKNPZZsXSbr/svY8m1IDoOIDOzl1d+pwJ1TeS+4YKqQsCt6s1xteunN0Vg9bI7IkGIMc8N4ewN+hB/Cu+GP6/1wRA/0C7xwuztTm5D0=
+ bh=erSbZ1p8Dd4w/CTwIfuJ0T2wvrYwYi2LYURceU8ODZ4=;
+ b=NRa86Qo81Y+b5inN6hLYLpT3mkKcdLrr80FFHL9oNfX0ZBzOTaNjnGCBa7P0SDpfTWdzAiEsUeCg8jfptWcQf9szC64Hcp15KivoUkI/RURNGmjYGIXbdFecvfR6ZpS+nwXz9LdzwuiYXiyBONhLUkV9AqAEJfxibYTAdrZs0zI=
 Received: from BN0PR10MB5143.namprd10.prod.outlook.com (2603:10b6:408:12c::7)
- by DS0PR10MB6750.namprd10.prod.outlook.com (2603:10b6:8:133::12) with
+ by MW4PR10MB6680.namprd10.prod.outlook.com (2603:10b6:303:21a::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Wed, 12 Feb
- 2025 21:32:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Wed, 12 Feb
+ 2025 21:35:04 +0000
 Received: from BN0PR10MB5143.namprd10.prod.outlook.com
  ([fe80::783:503f:ea07:74c7]) by BN0PR10MB5143.namprd10.prod.outlook.com
  ([fe80::783:503f:ea07:74c7%5]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
- 21:32:45 +0000
-Message-ID: <35de0448-befe-4bc8-b6d2-7063e7a2d08d@oracle.com>
-Date: Wed, 12 Feb 2025 21:32:42 +0000
+ 21:35:04 +0000
+Message-ID: <7efde156-c39e-452e-bd3b-6c6d1964b692@oracle.com>
+Date: Wed, 12 Feb 2025 21:35:02 +0000
 User-Agent: Thunderbird Daily
-Cc: Calum Mackay <calum.mackay@oracle.com>, linux-nfs@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>, Michael Moese <mmoese@suse.com>
-Subject: Re: [PATCH 1/1] Allow to fallback to xdrlib if xdrlib3 not available
-To: Petr Vorel <pvorel@suse.cz>
-References: <20250212132346.2043091-1-pvorel@suse.cz>
- <0b73e27f-9b1f-4840-af10-b687c90759ad@oracle.com>
- <20250212210135.GA2141194@pevik>
+Cc: Calum Mackay <calum.mackay@oracle.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>
+Subject: Re: [PATCH pynfs] build: convert from deprecated distutils to
+ setuptools
+To: Thomas Bertschinger <tahbertschinger@gmail.com>, linux-nfs@vger.kernel.org
+References: <20250211202432.20356-1-tahbertschinger@gmail.com>
 Content-Language: en-GB
 From: Calum Mackay <calum.mackay@oracle.com>
 Autocrypt: addr=calum.mackay@oracle.com; keydata=
@@ -137,11 +136,11 @@ Autocrypt: addr=calum.mackay@oracle.com; keydata=
  FRB7zTVxmpqVkYS673d1UWIe4y3SQgl3fnN6pIUyWEgse0a3RZS7jJ0clsX1hKC7yZGDhHMz
  smRifw1wGg==
 Organization: Oracle
-In-Reply-To: <20250212210135.GA2141194@pevik>
+In-Reply-To: <20250211202432.20356-1-tahbertschinger@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0164.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18a::7) To BN0PR10MB5143.namprd10.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0653.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:296::23) To BN0PR10MB5143.namprd10.prod.outlook.com
  (2603:10b6:408:12c::7)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -150,287 +149,246 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5143:EE_|DS0PR10MB6750:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5bf21185-f655-47da-8c32-08dd4bacc9d3
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5143:EE_|MW4PR10MB6680:EE_
+X-MS-Office365-Filtering-Correlation-Id: f363d7bd-fdc2-4aff-d805-08dd4bad1d0e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnV0TktZZmNaRDFkVk16dEhhSDhtb2pCVVhqdjB5UExiY0tCcGFOTnpHWTk3?=
- =?utf-8?B?amdZVVgyWEFWZ1lsQUlRUzFsUWdmdkpMcEFsdGZnKzkxOUxPZjVkOHExVFZE?=
- =?utf-8?B?eklDWDNFTDNkNTJwR3JlMUNic0JPd1R1VGtMZ3kxb3pOR2ErUkJkVUNrOUZO?=
- =?utf-8?B?LzZRTlZUclJ1WkRPNnVCcVZhNnpEcUNKRFJmc3ByN2lBY2RKeXl5RFJRK2lC?=
- =?utf-8?B?N3MrcEpZeWVaTml5c1dEVjhDSS8zVldCbTdtamc2aUdDYkw4QlBUbGVUU2pp?=
- =?utf-8?B?ZUpDTzFtdC9UM1F4c1hzemNmeEoyRE5kSHlodHdLQjVaMWlWN0R1UStBM3dw?=
- =?utf-8?B?TjA2Q1dEUVp5QkFtWnJNY0VKVnY1Tys1OHBHeEpjbS9uZnluZ21HMWQ2QW01?=
- =?utf-8?B?QXA3NU0wbG9QQ3ppeVJqTDNwcmZwS2tPTk9CZUhHV1BxRVpCM1lTbmJYT1JJ?=
- =?utf-8?B?aXlYc0szWm5CWU0vaVRYRjRGcW9OU3RyYkZqK1dqUE1GUVBldTNJN3dUTElu?=
- =?utf-8?B?T3ptdU1naEZHUlFkbENpR2llMmQ4MWtWWWJFS3JXWVJKU2JFbU1ZRlhvSGJT?=
- =?utf-8?B?aEhMa0krd3B4Z00vbERMMUwvQnBCMUQ4cjVxSktyUGljYXFXSjJQK051ekRX?=
- =?utf-8?B?VE5YL2svQS9sN25oUlZFZHNqNDNnZ05qRmlwclcrRWNtUGF0SnJqZ3ZSdm4v?=
- =?utf-8?B?dWRZUmx0VXczNXhoNW5nQXlPaE9laXlyMVhwc21RL05Ya1dHQ1NUeHVvTzBV?=
- =?utf-8?B?dFphQi9WUGt6elhRRTJjR2NUOFJac3BGRjhpczQySk9IM0pla2JQYWNOaS9Z?=
- =?utf-8?B?djdjeG5VaWxQdTA1a2FVd2pDdmVkdCtkVEZNcmYrVlhTMk1xZEJGNEdIR055?=
- =?utf-8?B?My9Sb0VNeDdtb1cxcjhJS3kyZzNkQXNiUDJwMmxuTVFKWUJyeWpEdmRtOU5o?=
- =?utf-8?B?aWNvQ3phR0dmZkMwNEdiSi80UUNMemM3ZmRuazQvTEtZR25sME9VSEN6UnlJ?=
- =?utf-8?B?ZmZWMVBZWDgxRkZSa3ExU01ScURFbGdURUNhL3M1cnI2UU1EbDgrTmFFVG9Z?=
- =?utf-8?B?cndReGV3MEQyeGhZUXlyaGZaYU9WZjQrT2ZmeDJBa0R5Ty9UcDdVbzRCWnpC?=
- =?utf-8?B?dE83cUVrcGl5RWZDRktnM3MyM052MFJtR2NRcjhNZ0lUcWM5OWlhaFRWTTdl?=
- =?utf-8?B?a0ZVUWEvenJTcmJzVmlaSW5kQVM3QUJEV3J4My9icWxuY1BwSHgvS3hzUFpq?=
- =?utf-8?B?a0VNZmhNbmdUQlloRkQ4MjBUYmcxcUZmalZDaHE5aXhTcTJlUkpsNmVTeEV2?=
- =?utf-8?B?WGs3c1dkKzlhUHFQbExmc2JPczRXc1VvTFF4d1E1Zm43bjAvM0xWaUlyd1E4?=
- =?utf-8?B?OFAxTlBMeWhGUG9DTzBDbzhKNG43ZTg2clJjMndKL2Jlc2xGN0tIZ0x2cXE0?=
- =?utf-8?B?aWk2enRCbi9TT04yOCtORExNTGZCZ2RzT3ErcHJ3M01jbmt6NER0Si9HdHU5?=
- =?utf-8?B?Rm5idkFXQmJFVXBscmhHTW9idWNxeDBQcnMzMDFKRnZqUFUrN0IrU1dCZFo1?=
- =?utf-8?B?TFNPcFRnOTVUSDI0N0ZDM2dzN05pLzVHS0FMY3pHd2tjajNMRHVnSFpCK01r?=
- =?utf-8?B?SDRHc1plMElhdXc4UmpHVTc4Nlo2NER3MklDQ2F6WjROSDVlcWlZN1VQLzE2?=
- =?utf-8?B?MG8xR1dKdEN5UVhGclpaejQvZjJ4LzdsQWM2V3I1alZ4UzhZV1lsUjVQSDQ5?=
- =?utf-8?B?Q29PZUVhcjBzL1RyUThxQUxHNTBqWFFwSWFlYmtEajdJTHlqSVhLYlVKN2lw?=
- =?utf-8?B?NDlPUzZ5SmRKSWNrY3daSXo0bmNLWElyTDFydzBCNW8wY2pYVENpZXh3dzF3?=
- =?utf-8?Q?n1d9j+P+xefb1?=
+	=?utf-8?B?Wkw3bEdGTjg2UUhsN2JSaHlPaVRUWUlkRlY3VEFlcGMxMWo1N2h6TzFPdmFt?=
+ =?utf-8?B?WXdnSjRCWWpwdWNvZkp6Z0t4S2J2R3ppcW1mbHQvTHBmMXI4VUVkWGNNaFY2?=
+ =?utf-8?B?L2pTNnR0Y09Bcnd4K1UxaEpZbjhNNnlFV0ZPOHZiN0VjZGl2Z2Z5UDFFZDNM?=
+ =?utf-8?B?WVdLWThsQVV5T3hwMVJMWW0wWnFtQ0Z0RURRMnUrWlJMS3RHaDZHVjdEaGkv?=
+ =?utf-8?B?aHdBWWFWUnQ5YXdSOGRsUTAzMDlzc01HaVpIelIrd1VVREpuaWhJTUh2WmJM?=
+ =?utf-8?B?eWF1cmk1UXhjK01aZDlmOE5xcVV1UTZHVUxnU2psQ1dMaUppdWdaOGdtS3ZI?=
+ =?utf-8?B?VWJQdmtGWll1NGIzT1prMmpzZGsxa1lkeE05K1dwYUFoYnlBS1lRR1hHSjh6?=
+ =?utf-8?B?SWwvTDlVclZJbHZRRkhXcHhlczlKUG02MENJem5LTmsybExLdm5YRXA0OGVZ?=
+ =?utf-8?B?QVRDRktyRllxNDJLSWFZdUwybDJoUjhPUisvREhKRnFuNlNzL254K1prakpu?=
+ =?utf-8?B?V2YzUTlRZGJ5Z2pRZHhvNHl1Rjc4TEJMM2NMaTE2S0FNN25jdEtpTWZna2ZF?=
+ =?utf-8?B?eTl5T3R0OTFhcWF6cUMzRHc4Q3U3K2Y2TzhkOWIrWGxBOHRpWWtyeU9xWDBR?=
+ =?utf-8?B?Mm15blViWHhrcVJocFZ3OCtlU0hiSEtDN3RWNWlFNGtma25pS1BrT3Y3QlhI?=
+ =?utf-8?B?V1dPcDBWMGk5ZjB4QTk2ODJETVVwZ1M5WHBWVjNXRVpndnMxSmM2SEdyM1Rh?=
+ =?utf-8?B?V21obGNjWUZkbk1pdGtacGVRNVJ5US9LTTRVdXVsVFVudFFvZDB0WUd5WUZx?=
+ =?utf-8?B?bHRVMlN0MDJPQlM1dklSdzA0cjRUa3VjQXlIUlF2L0Y4MEhqWlNOZzR4S0hp?=
+ =?utf-8?B?NjE4cFdhOWVMSTEzTzFNaEJEaTBUTzJuOXVNaUZjRjh0WHNNR1Y3QnY3U0p2?=
+ =?utf-8?B?TklON3oyT0tHSGd1ejJrODRiNWErdXdKb01JdThtdFVZejZHVm1BVGxGYmxk?=
+ =?utf-8?B?dHJqTi82aWVLNDljWkZTSUZOY2xaODFITmFQalJrdVM0UkgyWlZycDFWK0d5?=
+ =?utf-8?B?WXhuUnhmVFNiWjBLcnJKK1ZaVWI2MkgweTIyeEMwYVpoclVLRzlHbE1vdEpJ?=
+ =?utf-8?B?TXFGbitsQ3BIbUVLUDdPeEZ4TktBK2VMU2dmR3JWUmplc0JyTkp0TUNVb0NK?=
+ =?utf-8?B?L2hNL1RmaWhrRnM5bEVuQTM4cU1BeHBndVJWdDArcWM4SGc1aXppMy84UWln?=
+ =?utf-8?B?eDhHRUtRM0VaUHJYKzRnUjYrK2I4QncyeEtXN1pHV2ZtT2JZR0tUeEpmMDY5?=
+ =?utf-8?B?SU9BdWJxbVRxdzU0UzkrUDhLaGY1eExIV2dsTmFKVVpzSzA1NGhaR2ZxN1FB?=
+ =?utf-8?B?RFJubVBHcFdvU2FOaFJHaHFQMHZxelcxSkg0Nk84cVJ5ZGl6UkFUL0gyVk9Q?=
+ =?utf-8?B?NFlMZjViMzFFbEJlSWlXbWRwZFdiM0hPNGFPbGc5UWRPWjlCek9FeWdya29J?=
+ =?utf-8?B?dWxpZ3cyZjhqbCt3aWoyd1JiZmNFdSt3R21CMjJ2TWxkVzNJeHg1dEYxRnl2?=
+ =?utf-8?B?RjI4eERnNkJXYWd1R1NGanZLWmVkYkEzclBHWER1MWZLMmhPMFlOUnRHTFN5?=
+ =?utf-8?B?Y09yU01XZjRwN1RnUkpNUWxCUEdIT2kvU1B6OFZ4QStCUXdSWWt2TzVnSVBM?=
+ =?utf-8?B?OG9sZy80aThLVitGMm1GZzM2MzI1RDlaYTRZUGh2cldjM1hDSXV0TlJsbDRV?=
+ =?utf-8?B?ODRJR2RPV1dGYWJycDhRM2xoell0VS9ERDVRZjY3VUtnZWpneWQ0YWpoUVBo?=
+ =?utf-8?B?U1QydDdTWFZ3NzJZWXZnZz09?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5143.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dVVQR0hGVWpBajdVeXg3SjJjUVNGcDBqd0IrenZvVkNuN2FmZ0xwVXo3U1Rs?=
- =?utf-8?B?NERWaXZLcDVRb3JJVHVhNkg3T3J1Mm9JbFR1blJqWlNRR2w3WnBMeFNYckQ2?=
- =?utf-8?B?TEdjaFEwYTVuc2hXN2dHdTN0MTFvbmExWlVFdEhXVHdleko3VHNNcEhqeHZi?=
- =?utf-8?B?bzNucFFidWtGbHVxMlRIbHdvRHpVb3RqUVl5Wm1HU1dEU0d5bmE4WndhRCtJ?=
- =?utf-8?B?eDRGUW15ZW9zQWxpejU0Z0p3eE1hYXlGdHkwRnFsMlNaZllnM1g4c1AzOVE3?=
- =?utf-8?B?YitSZDNDbUJBNHpxYm43ZVVYK01tMHpjNHI4TTZ4dFo0MFBUUTRKaTB1a0p3?=
- =?utf-8?B?UC92L0FOamhqVGtuTDQ2Y1hWM2swWXdEZkVIcUZkRm1PMGhNNWxCbmxmUTlw?=
- =?utf-8?B?L0xvLzNnbXMxbjZMY2xFQklsNllEVkRiTmVqZFd5THY1RFh4RWFBTVhWSWdq?=
- =?utf-8?B?Unp3ZDkvOXlVc0R2dzQ4L1ZnR0hWekZYL3R5b0xkVVFHTm9BaUYvWjhaYWhj?=
- =?utf-8?B?UysyK1c3L0lFZUIxenhhWk5DeWRGdnRVQ1BQalh1a3JTQlUvQmVkb3BNTEo2?=
- =?utf-8?B?WlZUQmhEakg5OHI2N0oySXZkcU5NRnp2RFNlbGkxWGRvUlRsZmwrWVUwbnFO?=
- =?utf-8?B?b3JKWm5YS0hCM3VRSWJxY2Q0aGhaNjgxaVhTUjZVZTdHZ0tnRnBHeEc0Q3FZ?=
- =?utf-8?B?Umx3eVZSY3FEN2V3bS93OXV5NmE4TWw0QnR4dklqSmpHSmF3M3ZSUmd2aU1r?=
- =?utf-8?B?aGMrNzFtODc3WHRqa0tqd3NDNGpNZ2MyK3k5RnZXTHdhUXBhTHQ4L2IyMTV5?=
- =?utf-8?B?V3g0L2s3SlBGczRKOUV3UHJ6dzk3QU1vbU1wbkFUT054dXc4K0ZQeHFrbDBI?=
- =?utf-8?B?RnM1RjNLTUQwOGNvZDZQdlJ1V0NYRmV4a2t1UVBDWjNMeFBrY3ZUWVpRVGIy?=
- =?utf-8?B?eVZianI4RGJsaXpIbDcrOXNFakR3eFQ2a3JRTTZ6RHE0dzRzREpWMW02R3hk?=
- =?utf-8?B?QXJIRE85aEVLemc1V2djblZWM2tRcXlNVFZsRTRsTXhCK1BRb2czb0Y4UVdB?=
- =?utf-8?B?dnVHNUphTFdSNmdMWmZ1SEk5MGdqcjN4ODhiRHNGU2hUMFJmVWkyZE5FOTcz?=
- =?utf-8?B?ZWNVS0ZjdjI2Zk1mN3ZCMHJ5cE1Cem9pTUNXb3ZyNW0rRE1tVnJkcGJvWDJI?=
- =?utf-8?B?QkVBMzhPNWxjbHBHUm9yUllFdFlsd1hON1VTZFFUNjdIaVhQWUZNTEZ1eDlS?=
- =?utf-8?B?U0trUFlEK1pDRytObzBNLy84UW5lRWlTQ3AwckNWRUhQR1NieVFFQWxqTzk1?=
- =?utf-8?B?ZkVheVR4Y1ExRzR2Qk1VZDJySnVJK3dqUjZ4Z1JvQU1oT2ZvTXZQQ0RrWDRu?=
- =?utf-8?B?R0VneDFGNWtwU1RBRHVQVVJaeFNHUTN5Y3V0bUVxbW5NMFRsVzFmeFlERXpL?=
- =?utf-8?B?Z1dxY3VoV1gzaVdsdkRvYmM2QXhJVjYwdk4wQlY4UnlidllrUWRESUNUSE1t?=
- =?utf-8?B?Y3EzZy9Kd2tpZHY1RUk1a2JxUzh0dzRIbUlqOW1zcEJjaXM3TjFrQXJsclNJ?=
- =?utf-8?B?R0UyWjhDOWFwaWMzR0pFbGtOK3ZHKzM5QnZrUHozTXkrNVFoekdSWitVT0xq?=
- =?utf-8?B?eXB6cG1UaXNsTHRIMjJRYVVtZTU2Q0dSczRZYTVBOGFVcmFEa0xmMVIxUDNh?=
- =?utf-8?B?RVZhVUQ3VzdETzdGcVI5M1BEanRoVkZZMWdQSktyVTZWY21UMllCOUhTelow?=
- =?utf-8?B?Z3pGc1RWWEZOR3A0ZUlIZDVRQ1c1RXJSN1g4WWd2bVA0c0ZIRkc5QlFBMHlX?=
- =?utf-8?B?czN3UUJhWjJScW1ZcDViWlhaTkZGWXJqQUc0a0xkMWhqSDhWYlVqOHpIQ0xa?=
- =?utf-8?B?dWZaTXRZNTRFTlMvNlJOZXJ2aEMrOW1VNlRSdno4RXpZSTh6SGpsZlA5QWNw?=
- =?utf-8?B?OStJMVhvN2RTTjNpV01mK0ViWXpaR2dZUjg5UUlObDc0Q0dnV0tFYWtERjlh?=
- =?utf-8?B?RyszM09zYnYwUVhpeVhjb0hwRVZoOVV5RG1oWFpYaXR3V0V6R2VvREh4cVNw?=
- =?utf-8?B?KzM4b3VzNVFGWUozU29jSUNnaThyRWJ2ZWphMkNtN05pQzFKSjhuMi9KRFlN?=
- =?utf-8?B?VTRrWGRpUHJBZUJNRmhBb0ZPMHNlT3pScHhucDVMdWgxQWhWZElBQ1poa0Ja?=
- =?utf-8?B?WGc9PQ==?=
+	=?utf-8?B?L1dRZ3VCcEROQ2dETisyRmJJdVpMK1lOazBaakdMNzc4RUtDRnZWYTFmTUVp?=
+ =?utf-8?B?YnRicFZvQ1Yvdk1PdXZUbkxHRWhBekFhNUZsU05GK0JjUTZmcFlzNGNJRVl6?=
+ =?utf-8?B?d0tDL2lQK2IrMWNHdW5TQjlzUHlSTXNWL1gzZjVMakNhVTB1Z3RtNzRPRDR1?=
+ =?utf-8?B?ZXUwd1FqZmZzYlc1ZDhMclFibi8rRExJcXR3K2JCRVZYMXpiaEVtYVAxTUxp?=
+ =?utf-8?B?Q1RJdGNNUFlxMFhwWEJ1c3VCb1RKQnduWTVqNW5xL0V0QitoNm9pb1YyN0Mw?=
+ =?utf-8?B?ZGRRalNLaXVvUzRVcWxLK0dqZWtYQXlMdjhya1o2ODl3ajZQdEdKblhOckpx?=
+ =?utf-8?B?RkNyWW9tUGFCb2tBaGozcUJDelJ1Ymw4dGE3b1VuajFHWnFiZWNMZU9CT2Vx?=
+ =?utf-8?B?cEpjU2xkdlNCMHdJNEYwNGhibWluOThSczVwS1d6R3JveTFISElGUHlHY3o0?=
+ =?utf-8?B?cWxPSm12aXhPWWhZZHFzdTVoUWxyZWpHMnF4SzdVeG1RNGtsSGUwdEhwMGdW?=
+ =?utf-8?B?WmtwWXB3UUNwSkNiWmp4b2NVaHp5N0hlUW11QVVrcklGS3llY2dBMEpHMTRi?=
+ =?utf-8?B?VGwxcUNDL2NUL0FQRTY4azl4WkpiclA2azF4TjdlZVVwcm1URFJkYWhNcE5X?=
+ =?utf-8?B?Q1c5cGIyU0s4RExqdE81M1hOUDdKM2VKdHdGTXBIdklYSDFpOXl6K3NNakJt?=
+ =?utf-8?B?Um5Xd08rUHk2RTFIR0Vqdnd1L3U4anBKZmVueXFpc1JHQUErOTNCc2JXVyth?=
+ =?utf-8?B?amRsS0FERU8vQ1pZV0dWc09XVzYrTFhZdnV3QURDZGI5VXE0dk52MVBnMHdW?=
+ =?utf-8?B?U3dwNXoyWTREVlZlcTR1ZHl4SEhsQ1RTOXRaSkN1aUVGajAzM2lvcFFQUThq?=
+ =?utf-8?B?eGllUTN5SHkxdE9RalRqVis0R1daeVFuZGxuV0xuTEJ3UWNQdWtuWlRqaERC?=
+ =?utf-8?B?Rmx2RUJaZTlmVDkvL1A3eVh2T1NWMk9KRnZDT1RJSkRaRkRZQVJ6anNBS3Mv?=
+ =?utf-8?B?M21xOWxMamJIT0ErU0srOFZXdVZWVkRSZVpOWWl4Z1AxR21EandVcEJOamFh?=
+ =?utf-8?B?aDJWNTlPUEIvZXhtcmVLcks0TmpremN4OUZOcFlxUzFncU9iNExIT3VLaGl6?=
+ =?utf-8?B?UEVKNDRnSFZ4Q3ZzcWhiR3l2UVoxY2xFYWR2WW5FQjdrREFpWHhoWUt0K0dH?=
+ =?utf-8?B?NG8vN0ZHcUdjRVNOY2t6TFRyM3JERzZOQlNSQlJVRHpYMnVDeklYMGJZMzNv?=
+ =?utf-8?B?eVhPN0NGU0ZwYVByRzNBS3V4YXdwTjNKYll2elFyN1hWVzJ3WkYzN09uQitz?=
+ =?utf-8?B?MkNBTnNOL2MwU3dubmM4VkVzV1hKd0RKMFd1YWovUnlrTWVZSnNEZXZnQ0dh?=
+ =?utf-8?B?czY5MU5uUy9uRGxqeGtYWE5ubFo5SE9wa3VjUTQxMm1Sakk0aTJCOTdkem5m?=
+ =?utf-8?B?L1VGbngzMmRoVVlkVnFvOTR3QTN3eHQ0RWVETG1zSm1QWUQxOVVSalRxZ2tX?=
+ =?utf-8?B?RDV4QWNWWUxkN1BVcGJuRFlDR2NwNzFid1BjcUVvb3NpcHFaaEkyTTlkd21a?=
+ =?utf-8?B?RnJqdzZTaEVSYXZ4RFl4bHJCNlRoc2xhWENhRk50NFFqempqOW5Ddk81QmdX?=
+ =?utf-8?B?dVQrYjlMTExIcHQxN0lCWndxVWlzQy83VGNQdWExZk95OC9KU3hDT0plajVH?=
+ =?utf-8?B?bkJVVW45VVdCMTRQb1Jmc2FlRUcvTTJHaFpRalpUd2gydlAzWGxEUXFHQjg5?=
+ =?utf-8?B?MGdYZHRsek1xdkZxMmVnMG54bmRLbHNmZ25XalcyN01GUzNqVVFWa1hIL1Bw?=
+ =?utf-8?B?QzJ1TmNqOXQxNXVTZWloZEVmSnlMMGhHbXJUK1ppenk1WGdsNnF5cGtiQnBz?=
+ =?utf-8?B?eTVWS2V0Z3VyTk43U1YyU3BhNTJWRE5wdGhyZlpTQTd4YktIalRxcWh2YUFU?=
+ =?utf-8?B?TStIeUVlbjBWZWlpdytQdTF1bjdrcWJKVmNPME5aL3Q4ZTlnc1lxN09JOVcz?=
+ =?utf-8?B?bHpJbXdNbFd1eDczTTZsMEppbUJMZTRwdlFxbW1Ba1RkTm9iWnkyMHNCTFUz?=
+ =?utf-8?B?aUs2b3dlcnBYMUkvZTVWUEdFbHhCK053QVpFQi9Pb3o1YkxNRVhYUHh1eWtP?=
+ =?utf-8?B?dVFVc2hXWldTdWVvNkFoTHp4RFFaSHh3QTN2WGp5cWxwR0krNm0rS0V0VkNV?=
+ =?utf-8?B?Z2c9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	vM4tcjrqfr6R5LPNfiLC6DMXRvIcCpUkElfx0aRSLmojbvFQ2lZRvutIEIjeUL5D8s66u0z1FYifIYtJJAq+0FqrQZrB7HqY4TBbsmr23O9p5Yj+JvzdLGhSdCG83SsekHQmVkSI9hka4yE1Wc0ncrbs16nGs7O92F5+O4p/ZgrKNwsd8jO1CkzuNDnTOZAxAbqm+vN5LGLu37eNqSdPAReBdVinkJTVelPPpKNYkNDBxBnEJq48ilkfLOugFcOk9+vTeUtP7L5cog+vA/oTni8WOwNfsmIZ4NuiUnHAbv1Pj2pMZqoQia+ihmhGLn4OH5N2Iam6gX8AnSv3kOs3r28on9g0yLNsU9RRduohsgfDuUfuCp9lyvJhXD3nstme7oM7BH9VWvDgU4HyYX8P/hvCRNnis3EtkhhWTJnVyfRo4h4NvZ7kLo/H5t7NtVmCCHSU4wuxktQXQoqhQwgBa5heIvmJNrNQKHLFRowym4jFEuVTu8rPa1d5xLdXq8fqk12z4JqTNLqRDJOAosT+enpfSbEjch1VB19Q7LHBTkSFqp4Bv/XV7bFEqoooRmOCuiq0E/mRimUHrW31CC8vEpTgE8wIamMHgT7jH0cJrUo=
+	o+GXUpxzEgHVSrARZGDP3PX6POWtay0qcJjKmYRJPkeMTsInXkHc7yzVfUvHYiCouq7wHfBXSgaimsIE3FxCsG9scaFLYYFChRYaHHZ6ht8GEhUpjEEKKXCAqKRk3Cp5iJ4RKbNAvso7+qH5OrIDwt5nnt2pC5fVnFq3bGIKXgUXMZM3YFR247wAKRF7K7k4lxRLS9lF0T4klAwYKuDRwjFkw7Dy7Y55i/OYdXxqceUAo34f/MbPRDcacAsVE45vvZrvBwfRBkzC83hjTlhH5sN1Q44pw18zcfN1rBk6JEPnTIvpiCxkfl5D3kjz5hPipqchFuC8IsTAj3t4jOtwmy3iJ9ERSH3ubnH+ZwmF25PTWT07J/LrsFmGOa07DsYkVQRyKaH5ZAAp1WG+q9cQGD8oM2Xc1lm4k7Q36/FQVvEV+2MbgEbhKDki/EXYSLJiAdVLmxf5JW20dUUO/LvlAKHalza0AZt50xSwV/5S5kE2IUVNnmhpwWgn/2Meh4mo7RQPnOSShOXLRD5CV9nMXaIPmfW0wiqqs717YCCowZp5DWyNM/1csNy4G/jMUVSQ0CrjFYGuW2UJmKGV6pCC0ozt8yN7fZfOBlmEiDlWeaQ=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bf21185-f655-47da-8c32-08dd4bacc9d3
+X-MS-Exchange-CrossTenant-Network-Message-Id: f363d7bd-fdc2-4aff-d805-08dd4bad1d0e
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5143.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 21:32:45.1342
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 21:35:04.7343
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nyfXvrdlZlPuUjuISZ9forqAzP6aMcglrzLifXfMjAjyr8ChrB3UoQrSBeeIoXua1qwkU0oQ4Yh+q5B5GSdVOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6750
+X-MS-Exchange-CrossTenant-UserPrincipalName: KOgHsmP/LwgLOLIWTjB7+uxF29wA7S0dgzXT+MN6bgJNDjoEOYTvWp759Bdn5jHHyYXW661cmF+WJMKqANj2+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6680
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-12_06,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502120152
-X-Proofpoint-GUID: czkGLWM34o0oWIJ2PcYOCrVXVz0KwjUx
-X-Proofpoint-ORIG-GUID: czkGLWM34o0oWIJ2PcYOCrVXVz0KwjUx
+ engine=8.12.0-2501170000 definitions=main-2502120153
+X-Proofpoint-GUID: bmsf0_AnRfpFYYPr5ofTzbieRHlyH75q
+X-Proofpoint-ORIG-GUID: bmsf0_AnRfpFYYPr5ofTzbieRHlyH75q
 
-On 12/02/2025 9:01 pm, Petr Vorel wrote:
->> On 12/02/2025 1:23 pm, Petr Vorel wrote:
->>> On certain environments it might be difficult to install xdrlib3 via pip
->>> (e.g. python 3.11, which is a default on current Tumbleweed).
+On 11/02/2025 8:24 pm, Thomas Bertschinger wrote:
+> According to PEP 632 [1], distutils is obsolete and removed after Python
+> v3.12. Setuptools is the replacement.
 > 
->>> Fixes: dfb0b07 ("Move to xdrlib3")
->>> Suggested-by: Michael Moese <mmoese@suse.com>
->>> Signed-off-by: Petr Vorel <pvorel@suse.cz>
->>> ---
->>> Hi,
+> There is a migration guide at [2] that suggests the following
+> replacements:
 > 
->>> I admit it would be safer to check if python is really < 3.13.
+>      {distutils.core => setuptools}.setup
+>      {distutils => setuptools}.command
+>      distutils.dep_util => setuptools.modified
 > 
->>> Kind regards,
->>> Petr
+> Prior to setuptools v69.0.0 [3], `newer_group` was exposed through
+> the now-deprecated `setuptools.dep_util` instead of
+> `setuptools.modified`.
 > 
->>>    README                                | 2 ++
->>>    nfs4.0/lib/rpc/rpc.py                 | 6 +++++-
->>>    nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py | 7 ++++++-
->>>    nfs4.0/nfs4lib.py                     | 6 +++++-
->>>    nfs4.0/nfs4server.py                  | 6 +++++-
->>>    rpc/security.py                       | 6 +++++-
->>>    xdr/xdrgen.py                         | 9 +++++++--
->>>    7 files changed, 35 insertions(+), 7 deletions(-)
+> Rather than updating distutils.core.Extension, I remove it as it does
+> not appear to be used.
 > 
->>> diff --git a/README b/README
->>> index 8c3ac27..d5214b4 100644
->>> --- a/README
->>> +++ b/README
->>> @@ -19,6 +19,8 @@ python3-standard-xdrlib) or you may install it via pip:
->>>    	pip install xdrlib3
->>> +If xdrlib3 is not available fallback to old xdrlib (useful for python < 3.13).
+> Link: https://peps.python.org/pep-0632/ [1]
+> Link: https://setuptools.pypa.io/en/latest/deprecated/distutils-legacy.html [2]
+> Link: https://setuptools.pypa.io/en/latest/history.html#v69-0-0 [3]
+> Signed-off-by: Thomas Bertschinger <tahbertschinger@gmail.com>
+> ---
+> I'm not deeply familiar with the Python ecosystem, so it'd be good to
+> have this patch reviewed by someone who is.
 > 
->> It sounds a little like the above is an instruction for the user; if you
->> don't mind I'll fix this up, adding "the code will fallback…", just to make
->> it obvious?
+> I needed these changes to get pynfs to build on an Arch linux system
+> with Python version 3.13.1.
 > 
-> Yes, please, fix it.
-> 
->> Thanks for the fix Petr, I'll get this in today.
-> 
-> Thanks a lot for accepting this. FYI we test with pynfs also various SLES kernels
-> (including very old ones), which obviously have older python3. Probably on all
-> would xdrlib3 installation via pip+virtualenv worked, but safest way is to avoid
-> it and use python stock xdrlib.
+> I also tested on an AlmaLinux 8.10 system with Python version 3.6.8 and
+> setuptools version 59.6.0, and it built succesfully for me there.
 
 Applied.
 
-thanks again, Petr.
+
+I asked a colleague with greater Python expertise than me to review it:
+
+Reviewed-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+
+
+thanks very much for this, Thomas.
 
 cheers,
 c.
 
+
+> ---
+>   nfs4.0/setup.py | 8 ++++++--
+>   nfs4.1/setup.py | 4 ++--
+>   rpc/setup.py    | 4 ++--
+>   setup.py        | 2 +-
+>   xdr/setup.py    | 2 +-
+>   5 files changed, 12 insertions(+), 8 deletions(-)
 > 
-> Kind regards,
-> Petr
-> 
->> cheers,
->> c.
-> 
-> 
-> 
->>> +
->>>    You can prepare both versions for use with
->>>    	./setup.py build
->>> diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
->>> index 4751790..7a80241 100644
->>> --- a/nfs4.0/lib/rpc/rpc.py
->>> +++ b/nfs4.0/lib/rpc/rpc.py
->>> @@ -9,12 +9,16 @@
->>>    from __future__ import absolute_import
->>>    import struct
->>> -import xdrlib3 as xdrlib
->>>    import socket
->>>    import select
->>>    import threading
->>>    import errno
->>> +try:
->>> +    import xdrlib3 as xdrlib
->>> +except:
->>> +    import xdrlib
->>> +
->>>    from rpc.rpc_const import *
->>>    from rpc.rpc_type import *
->>>    import rpc.rpc_pack as rpc_pack
->>> diff --git a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
->>> index 2581a1e..41c6d54 100644
->>> --- a/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
->>> +++ b/nfs4.0/lib/rpc/rpcsec/sec_auth_sys.py
->>> @@ -1,7 +1,12 @@
->>>    from .base import SecFlavor, SecError
->>>    from rpc.rpc_const import AUTH_SYS
->>>    from rpc.rpc_type import opaque_auth
->>> -from xdrlib3 import Packer, Error
->>> +import struct
->>> +
->>> +try:
->>> +    from xdrlib3 import Packer, Error
->>> +except:
->>> +    from xdrlib import Packer, Error
->>>    class SecAuthSys(SecFlavor):
->>>        # XXX need better defaults
->>> diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
->>> index 2337d8c..92b3c11 100644
->>> --- a/nfs4.0/nfs4lib.py
->>> +++ b/nfs4.0/nfs4lib.py
->>> @@ -41,9 +41,13 @@ import xdrdef.nfs4_const as nfs4_const
->>>    from  xdrdef.nfs4_const import *
->>>    import xdrdef.nfs4_type as nfs4_type
->>>    from xdrdef.nfs4_type import *
->>> -from xdrlib3 import Error as XDRError
->>>    import xdrdef.nfs4_pack as nfs4_pack
->>> +try:
->>> +    from xdrlib3 import Error as XDRError
->>> +except:
->>> +    from xdrlib import Error as XDRError
->>> +
->>>    import nfs_ops
->>>    op4 = nfs_ops.NFS4ops()
->>> diff --git a/nfs4.0/nfs4server.py b/nfs4.0/nfs4server.py
->>> index 10bf28e..e26cecd 100755
->>> --- a/nfs4.0/nfs4server.py
->>> +++ b/nfs4.0/nfs4server.py
->>> @@ -34,7 +34,11 @@ import time, StringIO, random, traceback, codecs
->>>    import StringIO
->>>    import nfs4state
->>>    from nfs4state import NFS4Error, printverf
->>> -from xdrlib3 import Error as XDRError
->>> +
->>> +try:
->>> +    from xdrlib3 import Error as XDRError
->>> +except:
->>> +    from xdrlib import Error as XDRError
->>>    unacceptable_names = [ "", ".", ".." ]
->>>    unacceptable_characters = [ "/", "~", "#", ]
->>> diff --git a/rpc/security.py b/rpc/security.py
->>> index 789280c..79e746b 100644
->>> --- a/rpc/security.py
->>> +++ b/rpc/security.py
->>> @@ -3,7 +3,6 @@ from .rpc_const import AUTH_NONE, AUTH_SYS, RPCSEC_GSS, SUCCESS, CALL, \
->>>    from .rpc_type import opaque_auth, authsys_parms
->>>    from .rpc_pack import RPCPacker, RPCUnpacker
->>>    from .gss_pack import GSSPacker, GSSUnpacker
->>> -from xdrlib3 import Packer, Unpacker
->>>    from . import rpclib
->>>    from .gss_const import *
->>>    from . import gss_type
->>> @@ -17,6 +16,11 @@ except ImportError:
->>>    import threading
->>>    import logging
->>> +try:
->>> +    from xdrlib3 import Packer, Unpacker
->>> +except:
->>> +    from xdrlib import Packer, Unpacker
->>> +
->>>    log_gss = logging.getLogger("rpc.sec.gss")
->>>    log_gss.setLevel(logging.INFO)
->>> diff --git a/xdr/xdrgen.py b/xdr/xdrgen.py
->>> index f802ba8..970ae9d 100755
->>> --- a/xdr/xdrgen.py
->>> +++ b/xdr/xdrgen.py
->>> @@ -1357,8 +1357,13 @@ pack_header = """\
->>>    import sys,os
->>>    from . import %s as const
->>>    from . import %s as types
->>> -import xdrlib3 as xdrlib
->>> -from xdrlib3 import Error as XDRError
->>> +
->>> +try:
->>> +    import xdrlib3 as xdrlib
->>> +    from xdrlib3 import Error as XDRError
->>> +except:
->>> +    import xdrlib as xdrlib
->>> +    from xdrlib import Error as XDRError
->>>    class nullclass(object):
->>>        pass
-> 
-> 
+> diff --git a/nfs4.0/setup.py b/nfs4.0/setup.py
+> index 58349d9..0f8380e 100755
+> --- a/nfs4.0/setup.py
+> +++ b/nfs4.0/setup.py
+> @@ -3,8 +3,12 @@
+>   from __future__ import print_function
+>   from __future__ import absolute_import
+>   import sys
+> -from distutils.core import setup, Extension
+> -from distutils.dep_util import newer_group
+> +from setuptools import setup
+> +try:
+> +    from setuptools.modified import newer_group
+> +except ImportError:
+> +    # for older (before v69.0.0) versions of setuptools:
+> +    from setuptools.dep_util import newer_group
+>   import os
+>   import glob
+>   try:
+> diff --git a/nfs4.1/setup.py b/nfs4.1/setup.py
+> index e13170e..bfadea1 100644
+> --- a/nfs4.1/setup.py
+> +++ b/nfs4.1/setup.py
+> @@ -1,5 +1,5 @@
+>   
+> -from distutils.core import setup
+> +from setuptools import setup
+>   
+>   DESCRIPTION = """
+>   nfs4
+> @@ -8,7 +8,7 @@ nfs4
+>   Add stuff here.
+>   """
+>   
+> -from distutils.command.build_py import build_py as _build_py
+> +from setuptools.command.build_py import build_py as _build_py
+>   import os
+>   from glob import glob
+>   try:
+> diff --git a/rpc/setup.py b/rpc/setup.py
+> index 99dad5a..922838f 100644
+> --- a/rpc/setup.py
+> +++ b/rpc/setup.py
+> @@ -1,5 +1,5 @@
+>   
+> -from distutils.core import setup
+> +from setuptools import setup
+>   
+>   DESCRIPTION = """
+>   rpc
+> @@ -8,7 +8,7 @@ rpc
+>   Add stuff here.
+>   """
+>   
+> -from distutils.command.build_py import build_py as _build_py
+> +from setuptools.command.build_py import build_py as _build_py
+>   import os
+>   from glob import glob
+>   try:
+> diff --git a/setup.py b/setup.py
+> index 83dc6b5..203514d 100755
+> --- a/setup.py
+> +++ b/setup.py
+> @@ -2,7 +2,7 @@
+>   
+>   from __future__ import print_function
+>   
+> -from distutils.core import setup
+> +from setuptools import setup
+>   
+>   import sys
+>   import os
+> diff --git a/xdr/setup.py b/xdr/setup.py
+> index 3acb8a2..3778abb 100644
+> --- a/xdr/setup.py
+> +++ b/xdr/setup.py
+> @@ -1,6 +1,6 @@
+>   #!/usr/bin/env python3
+>   
+> -from distutils.core import setup
+> +from setuptools import setup
+>   
+>   DESCRIPTION = """
+>   xdrgen
 
 
 
