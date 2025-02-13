@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-10077-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10078-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66FB3A33E10
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:29:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3FE8A33E6B
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:49:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13F46188D1D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 11:28:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 762A63A1453
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 11:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 166A321D3F6;
-	Thu, 13 Feb 2025 11:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F755211A06;
+	Thu, 13 Feb 2025 11:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Joi8eXao"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UACKrXhC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E5720E70C
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Feb 2025 11:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2ED420B1E0;
+	Thu, 13 Feb 2025 11:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739446045; cv=none; b=In7y+NBW/cjCG00qd6Z3mVOtGGv9ft74/J3M5BW+R17vBkpQ/GkUHUq3L8iVyqicU4eqNFZw45oz3WWb+A+WYT0GLFfLvovHMhPF7zvzVTuaxLCkY73dgxSknBTkZcDqFzFPHiz8tbnfbGKqSlbuOVaadnMRVAE8c/D5oBXSZKs=
+	t=1739447344; cv=none; b=ENSGbSBXOo1KxsHnL4mneTa6Dt39KY6Oc7/3p0BFNHhpD05bEieG2y1ecZsqai3Xa9cz4aixDzdVbCua+7jhz2Tz1Bq7cqHIUyoqKn/graaC5Ph9rFQF7U7RU6BK0ST2TqrtSxUa1PevxVScycpzILIUbBttiupyj4nTiKu3cdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739446045; c=relaxed/simple;
-	bh=UVSNZAAwZ0vt04ZeqJFNgTU84MkMXv4EOqC7KuYp9+8=;
+	s=arc-20240116; t=1739447344; c=relaxed/simple;
+	bh=8WAUb4Kq0+vRY86ceefUx0E7WGxhFXz0rWfEl2ylpvc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ppRGVDYp0VuA1ZpRnheMOsDE2x0sGcotnMWNC7FGP5Bl4HWu3HiqBPMnY+PXx8WOexV/1kY7GgGq9Ukq6UGX3YzHnnrw+Mwh8Y2iqY6doT6jpGgd6gmomQIPAPnE+/3LsiEi+1Z7S2PWGoKCV4o835HFD0EdUgJnhFp1H7Jb6Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Joi8eXao; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE51AC4CED1;
-	Thu, 13 Feb 2025 11:27:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IRsUGNgUY4Ege//oizyseO9RWtK8GJydu16TccWepbtAmRpAlhQynQcd153LN38bakg9eb4QaTqvW1CIHmxCNl6LjiL9q5b0kHjOs4FZkmgTjCqHDBmWkjDetOX8BMOEzokHCKxPckISGfRT4Tp47EtaQTD65KPUNddgZYP+fag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UACKrXhC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BFE9C4CED1;
+	Thu, 13 Feb 2025 11:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739446044;
-	bh=UVSNZAAwZ0vt04ZeqJFNgTU84MkMXv4EOqC7KuYp9+8=;
+	s=k20201202; t=1739447344;
+	bh=8WAUb4Kq0+vRY86ceefUx0E7WGxhFXz0rWfEl2ylpvc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Joi8eXaovswhRWyZN6NtuJ1AXHR4sCN+PIfU6XAO8nALwT7bfTrkwfvsvvY6hoE9h
-	 eq52ZMS011pMDLqN96y9EIOdTPW5OH+yk2cbtRvezPvWxcHIg9W3bKyi2ct6cIs2MV
-	 KjoAwKkheadSKZnvodo4XaMOnNMn8Qr+9t3CeuKa3ZO6uoGmjXhytGY5XKPz5QVyzR
-	 CnhW2pOlNUU1Atpjju3VedlQM/HJY1fB7KY2xVJc1Q+FK7DvY302bJIHB9UD7BeWih
-	 Hn2XG6oECv4xwNKme56UMYHjI5bJvU/1Vl5osubBja5MOn9i4X13ZxIXrf8a6+z1WW
-	 uqYQMRfQBZdAQ==
-Message-ID: <44d97a844b595f8665c34562cd0e986fe8f02672.camel@kernel.org>
-Subject: Re: [PATCH 4/6] nfsd: filecache: introduce NFSD_FILE_RECENT
+	b=UACKrXhCZQyTx5RpADwKKPqdi9DUDwV+RIF9XFp337WUvd+cAlQLvQkcim6PJdv8O
+	 cmTSEdW9AhZvHh2N6tBUg5ojOdlbVr1mUQv6bNYNZ6pEffmc5ymtT7Jtf/9fdyxjkY
+	 Yxfyp5uElUb1jGi1nQQ9b5copyYNL2ogBmv/gq8R1/YQDLD5pLDX+bxNI4Bt2WecLq
+	 +tLGmHdOgZ7CmnI0rdYOu2gn+Q+gmbBoQH8knELQ/TxjDbcvt6ZlBmZS4VSgwCzHGJ
+	 puLttwTwd0/wsERLLEAGRL13sutpXKWXobGnU5Qql/DicW1UZZNHFoeks8oeWu8eKd
+	 8UAYtu8cOoy+A==
+Message-ID: <7df4de2bff617dc5c2bb482df6dbc5ef21ba0d01.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: put dl_stid if fail to queue dl_recall
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Dave Chinner	 <david@fromorbit.com>
-Date: Thu, 13 Feb 2025 06:27:22 -0500
-In-Reply-To: <173939997256.22054.14991770209667672699@noble.neil.brown.name>
-References: <>, <861990916fdd98170abb7b15188dc360566a8937.camel@kernel.org>
-	 <173939997256.22054.14991770209667672699@noble.neil.brown.name>
+To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
+ neilb@suse.de, 	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+ linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Date: Thu, 13 Feb 2025 06:49:02 -0500
+In-Reply-To: <20250213072536.69986-1-lilingfeng3@huawei.com>
+References: <20250213072536.69986-1-lilingfeng3@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,390 +136,96 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-02-13 at 09:39 +1100, NeilBrown wrote:
-> On Tue, 11 Feb 2025, Jeff Layton wrote:
-> > On Mon, 2025-02-10 at 13:31 +1100, NeilBrown wrote:
-> > > On Mon, 10 Feb 2025, Chuck Lever wrote:
-> > > > On 2/9/25 6:23 PM, NeilBrown wrote:
-> > > > > On Sat, 08 Feb 2025, Chuck Lever wrote:
-> > > > > > On 2/7/25 12:15 AM, NeilBrown wrote:
-> > > > > > > The filecache lru is walked in 2 circumstances for 2 differen=
-t reasons.
-> > > > > > >=20
-> > > > > > > 1/ When called from the shrinker we want to discard the first=
- few
-> > > > > > >    entries on the list, ignoring any with NFSD_FILE_REFERENCE=
-D set
-> > > > > > >    because they should really be at the end of the LRU as the=
-y have been
-> > > > > > >    referenced recently.  So those ones are ROTATED.
-> > > > > > >=20
-> > > > > > > 2/ When called from the nfsd_file_gc() timer function we want=
- to discard
-> > > > > > >    anything that hasn't been used since before the previous c=
-all, and
-> > > > > > >    mark everything else as unused at this point in time.
-> > > > > > >=20
-> > > > > > > Using the same flag for both of these can result in some unex=
-pected
-> > > > > > > outcomes.  If the shrinker callback clears NFSD_FILE_REFERENC=
-ED then the
-> > > > > > > nfsd_file_gc() will think the file hasn't been used in a whil=
-e, while
-> > > > > > > really it has.
-> > > > > > >=20
-> > > > > > > I think it is easier to reason about the behaviour if we inst=
-ead have
-> > > > > > > two flags.
-> > > > > > >=20
-> > > > > > >  NFSD_FILE_REFERENCED means "this should be at the end of the=
- LRU, please
-> > > > > > >      put it there when convenient"
-> > > > > > >  NFSD_FILE_RECENT means "this has been used recently - since =
-the last
-> > > > > > >      run of nfsd_file_gc()
-> > > > > > >=20
-> > > > > > > When either caller finds an NFSD_FILE_REFERENCED entry, that =
-entry
-> > > > > > > should be moved to the end of the LRU and the flag cleared.  =
-This can
-> > > > > > > safely happen at any time.  The actual order on the lru might=
- not be
-> > > > > > > strictly least-recently-used, but that is normal for linux lr=
-us.
-> > > > > > >=20
-> > > > > > > The shrinker callback can ignore the "recent" flag.  If it en=
-ds up
-> > > > > > > freeing something that is "recent" that simply means that mem=
-ory
-> > > > > > > pressure is sufficient to limit the acceptable cache age to l=
-ess than
-> > > > > > > the nfsd_file_gc frequency.
-> > > > > > >=20
-> > > > > > > The gc caller should primarily focus on NFSD_FILE_RECENT.  It=
- should
-> > > > > > > free everything that doesn't have this flag set, and should c=
-lear the
-> > > > > > > flag on everything else.  When it clears the flag it is conve=
-nient to
-> > > > > > > clear the "REFERENCED" flag and move to the end of the LRU to=
-o.
-> > > > > > >=20
-> > > > > > > With this, calls from the shrinker do not prematurely age fil=
-es.  It
-> > > > > > > will focus only on freeing those that are least recently used=
-.
-> > > > > > >=20
-> > > > > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > > > > ---
-> > > > > > >  fs/nfsd/filecache.c | 21 +++++++++++++++++++--
-> > > > > > >  fs/nfsd/filecache.h |  1 +
-> > > > > > >  fs/nfsd/trace.h     |  3 +++
-> > > > > > >  3 files changed, 23 insertions(+), 2 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > > > > index 04588c03bdfe..9faf469354a5 100644
-> > > > > > > --- a/fs/nfsd/filecache.c
-> > > > > > > +++ b/fs/nfsd/filecache.c
-> > > > > > > @@ -318,10 +318,10 @@ nfsd_file_check_writeback(struct nfsd_f=
-ile *nf)
-> > > > > > >  		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
-> > > > > > >  }
-> > > > > > > =20
-> > > > > > > -
-> > > > > > >  static bool nfsd_file_lru_add(struct nfsd_file *nf)
-> > > > > > >  {
-> > > > > > >  	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> > > > > > > +	set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
-> > > > > > >  	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
-> > > > > > >  		trace_nfsd_file_lru_add(nf);
-> > > > > > >  		return true;
-> > > > > > > @@ -528,6 +528,23 @@ nfsd_file_lru_cb(struct list_head *item,=
- struct list_lru_one *lru,
-> > > > > > >  	return LRU_REMOVED;
-> > > > > > >  }
-> > > > > > > =20
-> > > > > > > +static enum lru_status
-> > > > > > > +nfsd_file_gc_cb(struct list_head *item, struct list_lru_one =
-*lru,
-> > > > > > > +		 void *arg)
-> > > > > > > +{
-> > > > > > > +	struct nfsd_file *nf =3D list_entry(item, struct nfsd_file,=
- nf_lru);
-> > > > > > > +
-> > > > > > > +	if (test_and_clear_bit(NFSD_FILE_RECENT, &nf->nf_flags)) {
-> > > > > > > +		/* "REFERENCED" really means "should be at the end of the =
-LRU.
-> > > > > > > +		 * As we are putting it there we can clear the flag
-> > > > > > > +		 */
-> > > > > > > +		clear_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> > > > > > > +		trace_nfsd_file_gc_aged(nf);
-> > > > > > > +		return LRU_ROTATE;
-> > > > > > > +	}
-> > > > > > > +	return nfsd_file_lru_cb(item, lru, arg);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  static void
-> > > > > > >  nfsd_file_gc(void)
-> > > > > > >  {
-> > > > > > > @@ -537,7 +554,7 @@ nfsd_file_gc(void)
-> > > > > > > =20
-> > > > > > >  	for_each_node_state(nid, N_NORMAL_MEMORY) {
-> > > > > > >  		unsigned long nr =3D list_lru_count_node(&nfsd_file_lru, n=
-id);
-> > > > > > > -		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file=
-_lru_cb,
-> > > > > > > +		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file=
-_gc_cb,
-> > > > > > >  					  &dispose, &nr);
-> > > > > > >  	}
-> > > > > > >  	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_l=
-ru));
-> > > > > > > diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> > > > > > > index d5db6b34ba30..de5b8aa7fcb0 100644
-> > > > > > > --- a/fs/nfsd/filecache.h
-> > > > > > > +++ b/fs/nfsd/filecache.h
-> > > > > > > @@ -38,6 +38,7 @@ struct nfsd_file {
-> > > > > > >  #define NFSD_FILE_PENDING	(1)
-> > > > > > >  #define NFSD_FILE_REFERENCED	(2)
-> > > > > > >  #define NFSD_FILE_GC		(3)
-> > > > > > > +#define NFSD_FILE_RECENT	(4)
-> > > > > > >  	unsigned long		nf_flags;
-> > > > > > >  	refcount_t		nf_ref;
-> > > > > > >  	unsigned char		nf_may;
-> > > > > > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > > > > > > index ad2c0c432d08..9af723eeb2b0 100644
-> > > > > > > --- a/fs/nfsd/trace.h
-> > > > > > > +++ b/fs/nfsd/trace.h
-> > > > > > > @@ -1039,6 +1039,7 @@ DEFINE_CLID_EVENT(confirmed_r);
-> > > > > > >  		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
-> > > > > > >  		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
-> > > > > > >  		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED" },		\
-> > > > > > > +		{ 1 << NFSD_FILE_RECENT,	"RECENT" },		\
-> > > > > > >  		{ 1 << NFSD_FILE_GC,		"GC" })
-> > > > > > > =20
-> > > > > > >  DECLARE_EVENT_CLASS(nfsd_file_class,
-> > > > > > > @@ -1317,6 +1318,7 @@ DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru=
-_del_disposed);
-> > > > > > >  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_in_use);
-> > > > > > >  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_writeback);
-> > > > > > >  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_referenced);
-> > > > > > > +DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_aged);
-> > > > > > >  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_disposed);
-> > > > > > > =20
-> > > > > > >  DECLARE_EVENT_CLASS(nfsd_file_lruwalk_class,
-> > > > > > > @@ -1346,6 +1348,7 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, n=
-ame,				\
-> > > > > > >  	TP_ARGS(removed, remaining))
-> > > > > > > =20
-> > > > > > >  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_removed);
-> > > > > > > +DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_recent);
-> > > > > > >  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_shrinker_removed);
-> > > > > > > =20
-> > > > > > >  TRACE_EVENT(nfsd_file_close,
-> > > > > >=20
-> > > > > > The other patches in this series look like solid improvements. =
-This one
-> > > > > > could be as well, but it will take me some time to understand i=
-t.
-> > > > > >=20
-> > > > > > I am generally in favor of replacing the logic that removes and=
- adds
-> > > > > > these items with a single atomic bitop, and I'm happy to see NF=
-SD stick
-> > > > > > with the use of an existing LRU facility while documenting its =
-unique
-> > > > > > requirements ("nfsd_file_gc_aged" and so on).
-> > > > > >=20
-> > > > > > I would still prefer the backport to be lighter -- looks like t=
-he key
-> > > > > > changes are 3/6 and 6/6. Is there any chance the series can be
-> > > > > > reorganized to facilitate backporting? I have to ask, and the a=
-nswer
-> > > > > > might be "no", I realize.
-> > > > >=20
-> > > > > I'm going with "no".
-> > > > > To be honest, I was hoping that the complexity displayed here nee=
-ded
-> > > > > to work around the assumptions of list_lru what don't match our n=
-eeds
-> > > > > would be sufficient to convince you that list_lru isn't worth pur=
-suing.=20
-> > > > > I see that didn't work.
-> > > >=20
-> > > > Fair enough.
-> > > >=20
-> > > >=20
-> > > > > So I am no longer invested in this patch set.  You are welcome to=
- use it
-> > > > > if you wish and to make any changes that you think are suitable, =
-but I
-> > > > > don't think it is a good direction to go and will not be offering=
- any
-> > > > > more code changes to support the use of list_lru here.
-> > > >=20
-> > > > If I may observe, you haven't offered a compelling explanation of w=
-hy an
-> > > > imperfect fit between list_lru and the filecache adds more technica=
-l
-> > > > debt than does the introduction of a bespoke LRU mechanism.
-> > > >=20
-> > > > I'm open to that argument, but I need stronger rationale (or perfor=
-mance
-> > > > data) to back it up. So far I can agree that the defect rate in thi=
-s
-> > > > area is somewhat abnormal, but that seems to be because we don't
-> > > > understand how to use the list_lru API to its best advantage.
-> > > >=20
-> > >=20
-> > > I would characterise the cause of the defect rate differently.
-> > > I would say it is because we are treating this as an lru-style proble=
-m
-> > > when it isn't an lru-style problem.  list_lru is great for lrus.  Tha=
-t
-> > > isn't what we have.
-> > >=20
-> > > What we have is a desire to keep files open between consecutive IO
-> > > requests without any clear indication of when we have seen the last i=
-n a
-> > > series of IO requests.  So we make a policy decision "keep files open
-> > > until there have been no IOs for 2 seconds - then close them".
-> > > This is a good and sensible policy that nothing to do with the "LRU"
-> > > concept.=20
-> > >=20
-> > > We implement this policy by keeping all unused files on a list, set a
-> > > flag every time the file is used, clearing the flag on a timer tick
-> > > (every 2 seconds) and closing anything which still has the flag clear=
-ed
-> > > 2 seconds later.
-> > >=20
-> > > Still nothing in this description that is at all related to LRU
-> > > concepts.
-> > >=20
-> > > Now we decide that it would be good the add a shinker - fair enough a=
-s
-> > > we don't *need* these to remain.  How should the shrinker choose file=
-s
-> > > to close?  It probably doesn't matter beyond avoiding files that stil=
-l
-> > > have the not-timed-out flag set.
-> > >=20
-> > > But we try to also impose an LRU disciple over the list, and we use
-> > > list_lru.
-> > > The interfaces for list_lru() are well documented but the intent is
-> > > not.  Most users of list_lru (gfs2/quota might be an exception) only
-> > > explicitly delete things from the lru when it is time to discard them
-> > > completely.  They rely on the shrinker to detect things that are in u=
-se
-> > > again, and to remove them.  And possibly to detect things that have b=
-een
-> > > referenced and to rotate them.  But if the shrinker doesn't run becau=
-se
-> > > there isn't much memory pressure they are just left alone.
-> > >=20
-> > > This is what list_lru is optimised for - for shrinker driven scanning
-> > > which skips or removes or rotates things that can't or shouldn't
-> > > be freed, and frees others.  You would expect to normally only scan a
-> > > small fraction of the list, because realistically you want to keep mo=
-st
-> > > of them.
-> > >=20
-> > > For filecache we don't want to keep them very long.  So I think it
-> > > matters a lot less what we choose for shrinking.  I'm tempted to sugg=
-est
-> > > we don't bother with the shrinker.  Old files will be discarded soon
-> > > anyway if they aren't used, and slowness in memory allocation (due to
-> > > any memory pressure) will naturally slow down the addition of new fil=
-es
-> > > to the cache.  So the cache will shrink naturally.
-> > >=20
-> > > I'm not 100% certain of that, but I do think that the needs of the
-> > > shrinker should not dominate the design as they currently do.
-> > >=20
-> > > Note that maybe we *don't* need to close files so quickly.  Maybe we
-> > > could discard the whole timer thing, and then it would make sense to =
-use
-> > > list_lru().  What is the cost of keeping them open?
-> > >=20
-> > > All I can think of is that it affects unlink.  An unlinked file won't=
- be
-> > > removed while there is a reference to the inode.  Maybe we should
-> > > address that by taking a lease on the file while it is in the
-> > > filecache??  When the lease is broken, we discard the file from the
-> > > cache.=20
-> >=20
-> >=20
-> > It may also affect other applications trying to take out leases. The
-> > filecache has the  nfsd_file_lease_notifier that tells it when someone
-> > is trying to take out a lease on a file. That happens then it will try
-> > to close the file first.
+On Thu, 2025-02-13 at 15:25 +0800, Li Lingfeng wrote:
+> Before calling nfsd4_run_cb to queue dl_recall to the callback_wq, we
+> increment the reference count of dl_stid.
+> We expect that after the corresponding work_struct is processed, the
+> reference count of dl_stid will be decremented through the callback
+> function nfsd4_cb_recall_release.
+> However, if the call to nfsd4_run_cb fails, the incremented reference
+> count of dl_stid will not be decremented correspondingly, leading to the
+> following nfs4_stid leak:
+> unreferenced object 0xffff88812067b578 (size 344):
+>   comm "nfsd", pid 2761, jiffies 4295044002 (age 5541.241s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b b8 02 c0 e2 81 88 ff ff  ....kkkk........
+>     00 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  .kkkkkkk.....N..
+>   backtrace:
+>     kmem_cache_alloc+0x4b9/0x700
+>     nfsd4_process_open1+0x34/0x300
+>     nfsd4_open+0x2d1/0x9d0
+>     nfsd4_proc_compound+0x7a2/0xe30
+>     nfsd_dispatch+0x241/0x3e0
+>     svc_process_common+0x5d3/0xcc0
+>     svc_process+0x2a3/0x320
+>     nfsd+0x180/0x2e0
+>     kthread+0x199/0x1d0
+>     ret_from_fork+0x30/0x50
+>     ret_from_fork_asm+0x1b/0x30
+> unreferenced object 0xffff8881499f4d28 (size 368):
+>   comm "nfsd", pid 2761, jiffies 4295044005 (age 5541.239s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 00 00 00 00 30 4d 9f 49 81 88 ff ff  ........0M.I....
+>     30 4d 9f 49 81 88 ff ff 20 00 00 00 01 00 00 00  0M.I.... .......
+>   backtrace:
+>     kmem_cache_alloc+0x4b9/0x700
+>     nfs4_alloc_stid+0x29/0x210
+>     alloc_init_deleg+0x92/0x2e0
+>     nfs4_set_delegation+0x284/0xc00
+>     nfs4_open_delegation+0x216/0x3f0
+>     nfsd4_process_open2+0x2b3/0xee0
+>     nfsd4_open+0x770/0x9d0
+>     nfsd4_proc_compound+0x7a2/0xe30
+>     nfsd_dispatch+0x241/0x3e0
+>     svc_process_common+0x5d3/0xcc0
+>     svc_process+0x2a3/0x320
+>     nfsd+0x180/0x2e0
+>     kthread+0x199/0x1d0
+>     ret_from_fork+0x30/0x50
+>     ret_from_fork_asm+0x1b/0x30
+> Fix it by checking the result of nfsd4_run_cb and call nfs4_put_stid if
+> fail to queue dl_recall.
 >=20
-> It wouldn't have to be an FL_LEASE lease.  We could invent a new thing:
-> FL_CACHED which gets added to the locks list and triggers a notification
-> whenever anyone tries to break leases.
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> ---
+>  fs/nfsd/nfs4state.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 >=20
-> The nfsd_file_lease_notifier is interesting... I wasn't aware of that.
->=20
->=20
-> >=20
-> > >=20
-> > > If that could work (which might involve creating a new internal lease
-> > > type that is only broken on unlink), then we could remove the timeout
-> > > and leave files in the cache indefinitely.  Then it would make perfec=
-t
-> > > sense to use list_lru() because the problem would start to look exact=
-ly
-> > > like an LRU problem.  But I don't think that is what we have today.
-> > >=20
-> >=20
-> > The filecache already sets a fsnotify_mark on the inode to watch for
-> > its i_nlink to go to 0, and then removes it from the cache when that
-> > happens. I think we could keep these files open for quite a bit longer
-> > if we chose to do so.
->=20
-> Chuck mentioned that holding he v3 files open longer could interfere
-> with v4 DENY_READ etc opens.  But I think they only every test for other
-> v4 opens.  A v3 (or local) open never blocks a v4 DENY open.  Does that
-> match your understanding?
->=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 153eeea2c7c9..0ccb87be47b7 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5414,6 +5414,7 @@ static const struct nfsd4_callback_ops nfsd4_cb_rec=
+all_ops =3D {
+> =20
+>  static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
+>  {
+> +	bool queued;
+>  	/*
+>  	 * We're assuming the state code never drops its reference
+>  	 * without first removing the lease.  Since we're in this lease
+> @@ -5422,7 +5423,10 @@ static void nfsd_break_one_deleg(struct nfs4_deleg=
+ation *dp)
+>  	 * we know it's safe to take a reference.
+>  	 */
+>  	refcount_inc(&dp->dl_stid.sc_count);
+> -	WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall));
+> +	queued =3D nfsd4_run_cb(&dp->dl_recall);
+> +	WARN_ON_ONCE(!queued);
+> +	if (!queued)
+> +		nfs4_put_stid(&dp->dl_stid);
+>  }
+> =20
+>  /* Called from break_lease() with flc_lock held. */
 
-Yes, that's correct. nfsd's share/deny locking doesn't extend past
-other NFSv4 files, so that shouldn't be a problem.
 
-> Do you know of any other reason that we currently time out files after
-> 2-4 seconds?
->=20
+Have you actually seen the WARN_ON_ONCE() pop under normal usage, or
+was the problem you reproduced done via fault injection?
 
-No. The basic idea was to keep files open for "a little while" so that
-when we're doing v3 READ/WRITE operations we can avoid having to do the
-entire open/close. ~2-4s was considered long enough for that "little
-while". We could easily keep them open longer, particularly since we
-have some mechanisms to close them when needed for competing access
-(leases and unlink activity, mostly).
-
-> >=20
-> > One thing that Chuck has brought up a few times is that maybe we should
-> > consider making v4 not use the filecache at all. If that simplifies
-> > things then that might be a good thing to consider as well.
->=20
-> As v4 stores the file with the open state it shouldn't need the cache.
-> Maybe the filecache makes life a bit easier for localio?
->=20
-> I don't know that it would make the garbage-collection/shrinking any
-> simpler but it does superficially seem like an unnecessary indirection.=
-=20
-> Do you know of any specific benefit it brings v4?
->=20
-
-None that I can think of.
-
-Originally, I had thought that we would keep both v2/3 and v4 files in
-the cache and that they would be shared. It hasn't really worked out
-that way, so we could drop v4 files from the filecache altogether.
-
-The only real "problem" is that struct nfsd_file is referenced in a lot
-of nfsv4 code, so we'd need to do a big conversion back to it using
-regular struct file pointers instead.=20
+Unfortunately, this won't work. nfsd_break_one_deleg() is called from
+the ->break_lease callback with the flc->flc_lock held, and
+nfs4_put_stid can sleep in the sc_free callbacks.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
