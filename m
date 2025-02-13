@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-10081-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10082-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92BE1A33F83
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 13:52:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1B52A33F96
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 13:56:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AF5B16812E
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:52:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63D5C1885B01
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:56:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9CA21D3FC;
-	Thu, 13 Feb 2025 12:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D1C61FFE;
+	Thu, 13 Feb 2025 12:55:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KANtS2w5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqGAS16D"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B0A2C182;
-	Thu, 13 Feb 2025 12:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DDD1A5AA;
+	Thu, 13 Feb 2025 12:55:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739451128; cv=none; b=Rgs9l2nb3Km6Y7d9Z2wHzXwniFB4sdNmaJkniIaa8tco4KYBZoalatrDF8Jzx8Mxq1zpna0czbXCad3tWGQL5EC8V7lQNqOaZWt+tUFcHI6JuC2NOHdlGxNMQ1XUt948VFbDzL+3J++35PyP+NBU5Fss/odYr2kUTrp3UaTQQ6Y=
+	t=1739451358; cv=none; b=d0VMhEUCkdWPdv+JYcr4i+kXDF33NJE9v9ZS4iH73IvlxVC2IuqqlHXhPzw8PJs7WwPKP6icZOyXjhaFKNMWnNJ8+dPPTF5jPYhjCOvVz6HtrfOBudU62GFA+igP2j6REXgep9dV0/WsCMNmgSDa5Mv7MGWAxAG+F2QaaV9VT7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739451128; c=relaxed/simple;
-	bh=/NuwupbRwbFWh6zeCRnnzipQ+Urflj6c06IEygBcVI0=;
+	s=arc-20240116; t=1739451358; c=relaxed/simple;
+	bh=/u2hivNrHbJw8EzOJDx95fC6uE1zEertTPNz4B7wGgo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RSrEfEpp2WYk1THJ5RYmJroFhkY/wHYZg85AOR81CO4lDWVqIIRODxiRGRoq9kabet0mcm0kKl9y285OEAzyNr2wc5MqGNbm6wDW/ZUz5HyHiG0crW04HhUYqBtHqnjSoInTxE+fCu9UgRKiBAYFLVq0GWeEvf5GW/ls09I3RuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KANtS2w5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358FAC4CED1;
-	Thu, 13 Feb 2025 12:52:07 +0000 (UTC)
+	 Content-Type:MIME-Version; b=UEoNpATcL+KWMp6zwHYrHivihZvyCpOE6lHoTHExKmC+T8re4zZEMnhrB7w1vmmzoEivdnySRVfGR654OewLgbjoeT6SCshFLlo1rut2PqMXPkLzYe7rFyjJkiSXwr1hO1HO+5qzDi7Fm1DwqGY9fVy/i0+Bj4tDE6eRim+auEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqGAS16D; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B1B8C4CED1;
+	Thu, 13 Feb 2025 12:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739451127;
-	bh=/NuwupbRwbFWh6zeCRnnzipQ+Urflj6c06IEygBcVI0=;
+	s=k20201202; t=1739451358;
+	bh=/u2hivNrHbJw8EzOJDx95fC6uE1zEertTPNz4B7wGgo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=KANtS2w5nm9si5cv0+ZZoBC/PpJGYo1Ozy0iT4HI1RN9vEiPP5A58s4vGOqv0qjLv
-	 ukB6DJROgKQRRXEAUUtpFS3YS58zWWt4+2TqxsJMF9Zxh4FG2F6+8rxlGmzBauuI2/
-	 FLIcVITWTvFSLN8TvdVnMf8IjQvNy6U7ihblGZHQ17qS25dHToHtdI/wumXSQSPO8n
-	 06Tc422Jb2B56RbI5GjBi2D81SgPtKjC3zhNyYtZxeHM9IfJ98byaUQp1zcUVYqp1J
-	 Huw9ZFqmwZaKckU3wJvNGE/xJWnaMeMLmNxlBvWkPapNiBc50KRA2uc6KyLrX+VfX3
-	 MQiyho8cC3VhQ==
-Message-ID: <a4bdb6dd9d20fecce52a3fd35650aadc52d2e05e.camel@kernel.org>
+	b=MqGAS16DGrH1KF5AzdyZvnGh087HwpMq3FAWi0qOXoANfItmQaVgQPusd8qBURBVQ
+	 FrOYbwDwbqG7w7DdyrQ6HKDRudThoHbIgoyAieyBRY/VC1jh0UKMPY0vMrqT1PA5x0
+	 hqS8yWZsNOiZl/z5bZPkEm+Ze/jjB0rNXps5QT/umlCDIrAIu3qgUJubnEnRbtgIVC
+	 E1q3VyYySZ3im4UF7yKHm6JmGTDsSfBqLClg2bp00n0Qh655GhUJGRs+pGBu55PLv0
+	 lCyhP++eHnbgcKXakyu2Q1apvaaTGTUfJb2HmYbeaPu20Ko1O2jrINc3HtiKCByVVN
+	 1Do0gUOgRIkZQ==
+Message-ID: <e6be9dea9084e8c8c46ba3c1d487d3466d51cbc7.camel@kernel.org>
 Subject: Re: [PATCH] nfsd: allow SC_STATUS_FREEABLE when searching via
  nfs4_lookup_stateid()
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 13 Feb 2025 07:52:05 -0500
-In-Reply-To: <173939479366.22054.8896171620747680077@noble.neil.brown.name>
+To: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 13 Feb 2025 07:55:56 -0500
+In-Reply-To: <41f5a8cc-8a8e-4a67-b889-7dc7fa39fb19@oracle.com>
 References: <20250212-nfsd-fixes-v1-1-935e3a4919fc@kernel.org>
-	 <173939479366.22054.8896171620747680077@noble.neil.brown.name>
+	 <41f5a8cc-8a8e-4a67-b889-7dc7fa39fb19@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,8 +137,8 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-02-13 at 08:13 +1100, NeilBrown wrote:
-> On Thu, 13 Feb 2025, Jeff Layton wrote:
+On Wed, 2025-02-12 at 13:41 -0800, Dai Ngo wrote:
+> On 2/12/25 8:29 AM, Jeff Layton wrote:
 > > When a delegation is revoked, it's initially marked with
 > > SC_STATUS_REVOKED, or SC_STATUS_ADMIN_REVOKED and later, it's marked
 > > with the SC_STATUS_FREEABLE flag, which denotes that it is waiting for
@@ -150,46 +150,13 @@ On Thu, 2025-02-13 at 08:13 +1100, NeilBrown wrote:
 > > are (almost) never found.
 > >=20
 > > Add SC_STATUS_FREEABLE to the always-allowed status flags.
->=20
-> There are 4 calls to nfsd4_lookup_stateid().  One already has
-> SC_STATUS_FREEABLE passed.  Which of the others need it?
-=20
-> If all of them, then this patch is sensible but should also remove the
-> flag in the one place it is already passed.
-> If only one other call needs it, then maybe we should just pass it
-> there?
->=20
-> Could you at least include in the description some detail of what
-> request is failing and which particular nfsd4_lookup_stateid() call is
-> relevant in that case?
->=20
-> Thanks,
-> NeilBrown
->=20
-
-I think they all need it.
-
-The DELEG8 test gets a delegation, and then lets the lease time out. It
-then does a READ op and tests that it gets back NFS4ERR_DELEG_REVOKED.
-The read path calls nfs4_preprocess_stateid_op(), so it's needed there
-specifically to fix that bug.
-
-1ac3629bf0125 ensures that SC_STATUS_ADMIN_REVOKED is always set in the
-allowed mask. If that's always allowed, then FREEABLE must be too.
-There is only a very narrow window of time when ADMIN_REVOKED or
-REVOKED is set, and FREEABLE is not.
-
-I'll respin and remove the other FREEABLE flag, since I think it should
-be implied everywhere.
-
->=20
 > >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
 > > This fixes the pynfs DELEG8 test.
 > > ---
-> >  fs/nfsd/nfs4state.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >   fs/nfsd/nfs4state.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
 > >=20
 > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
 > > index 153eeea2c7c999d003cd1f36cecb0dd4f6e049b8..56bf07d623d085589823f3f=
@@ -198,25 +165,37 @@ ba18afa62c0b3dbd2 100644
 > > +++ b/fs/nfsd/nfs4state.c
 > > @@ -7051,7 +7051,7 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state =
 *cstate,
-> >  		 */
-> >  		statusmask |=3D SC_STATUS_REVOKED;
-> > =20
+> >   		 */
+> >   		statusmask |=3D SC_STATUS_REVOKED;
+> >  =20
 > > -	statusmask |=3D SC_STATUS_ADMIN_REVOKED;
 > > +	statusmask |=3D SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
-> > =20
-> >  	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
-> >  		CLOSE_STATEID(stateid))
+>=20
+> I think it's safer to add the SC_STATUS_FREEABLE inside the if statement
+> that checks for SC_TYPE_DELEG above.
+>=20
+
+That's not enough. SC_STATUS_ADMIN_REVOKED is always allowed, and for
+that to work properly, we need to always allow SC_STATUS_FREEABLE too.
+
+> Also, don't we also need to mark the delegation with SC_STATUS_REVOKED in
+> revoke_delegation()?
+>=20
+
+No. The idea is that the REVOKED flag should be set before calling
+revoke_delegation(). Typically they get marked REVOKED or ADMIN_REVOKED
+under spinlock, and then we call revoke_delegation() afterward to
+finish the job.
+=20
+> >  =20
+> >   	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> >   		CLOSE_STATEID(stateid))
 > >=20
 > > ---
 > > base-commit: 4990d098433db18c854e75fb0f90d941eb7d479e
 > > change-id: 20250212-nfsd-fixes-fa8047082335
 > >=20
 > > Best regards,
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
-> >=20
->=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
