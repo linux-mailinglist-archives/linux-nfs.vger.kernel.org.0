@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-10107-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10108-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06738A35033
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 22:07:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B298A35232
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Feb 2025 00:29:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A5542188C704
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 21:08:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B6811890737
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 23:29:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E103C2661A8;
-	Thu, 13 Feb 2025 21:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B23822D7A3;
+	Thu, 13 Feb 2025 23:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxK+qoU4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqL1L9W/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD61266198
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Feb 2025 21:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258E222D7A2
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Feb 2025 23:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739480843; cv=none; b=hTxrVkq6uV6Dusxcr7m5i6xsGRgFiEvTNIfvVET15jaq1M01HpBa+Fl1nCIU0FaRM3JI/Mu8O1foUUNTNeSrKeHir4a06a484jE0T7Cw3rpTolnuC9YlZiMCkIuwKnMveTL13nz1NcqgdgaIeAvLBBkU4sbpOKv0LwzRTi3kI14=
+	t=1739489369; cv=none; b=LiYbK25lpT8l97vKoKoFIHYbUHWcdF97t7H+Hy3Mg9uVUWOWdlOmpBUKAF77m300af7yfP+6/j7a1SL9AIVPRm6GRc13sGpZ1u/LevKXtW+Ao0jcS88hbwR8k9Ye2Kc9c7yOyjpmmblBmrMOGFKICuJIMPcEMYL4VU/El2hXYDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739480843; c=relaxed/simple;
-	bh=6ucaStKmS4kFrrIOq5m7nrlNOcpOO7vV1RtEP1D3jKw=;
+	s=arc-20240116; t=1739489369; c=relaxed/simple;
+	bh=ROa3RujU5C5WGUX3MVfLv9WTL9Tnz+1cXzmjqjmAD/g=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ss4wfWHFujJJFGUUstUM00kgpGqpHJirdKkXYD/tVlnMD2um0XYuTsuDUtKaOafSIeSogkg3jJubx1fVjbbXBJEfM+IHeFJQWCwQ0aC9fneP1F1YajB65M6tNzIVKWVHXb9GHgrYg3VmD33g76gxGMZQVYb1cSHVItJDl8VJf+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxK+qoU4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A383FC4CED1;
-	Thu, 13 Feb 2025 21:07:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=lKhkFXnscZsKB7kXOGCETBseBX30pSiXnefBPtY+9QCxwWd6dKaLDBYi2I5M5lYu/I6MTtm/oMXV5+i5hqtazxNzvQ5tzzLeFsbv0uUYo4KhuaZHYkeGoAPkqi8prfRYRB6Lj/s4wKC26foc6m0TT6b2fpvWbONX1CshGxSwgOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqL1L9W/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E38C8C4CED1;
+	Thu, 13 Feb 2025 23:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739480843;
-	bh=6ucaStKmS4kFrrIOq5m7nrlNOcpOO7vV1RtEP1D3jKw=;
+	s=k20201202; t=1739489368;
+	bh=ROa3RujU5C5WGUX3MVfLv9WTL9Tnz+1cXzmjqjmAD/g=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LxK+qoU4RMd/JMhgtBE0OBo6m6tK5Z45zf+5GV6ltovH8vLsFGcsZlLGZyb1rg9q+
-	 iedyGfGrzoo4cDh9FES5zg78O+GUBupZVRp778lt/MKaES0JDuNjLKkSKicONwr2bY
-	 yOElGqlSe0tR1x/cLrl81vO5HVYdHH01IAEpzoNgq5A6C22xOAKuqTv4O10qBfPs8m
-	 2dituEF1GNdTS68bJcyK5maCHRMuy874E0tIc6Fe2BeQlul7CJonpddoE1B5sSniVa
-	 TXQyXgnOV+tzyFeGbAzDXbfxRl0k1k4rzCjq8sDeCw/Xyb7LPhvh+nTgWvCupbrQ1n
-	 UW6BK0uNENb/A==
-Message-ID: <5eeb042a0a6c69bba89e1334d6ceac872eda03e3.camel@kernel.org>
+	b=mqL1L9W/UcuzVnY9mx8qE5cAWiMbfOJ9qq2c9msbod0Sj+8k9jeriQ15DFoVfbpii
+	 yc5WeNcj3W/sKF1LlQth1eMSRGoiEZPehMwtMECw9lnmkD8OsvdxGENjKz+ErQJUpP
+	 eZgJJs+TMHYPtCeYDwC8hJalslUcgmqvts4OAitZu3cJpFstq64rn0oBjbzZK9Y0tv
+	 OMUSoVd3DC4QOkhDlo0cE3Iv0oN75ynZSnusoYML3hojS0Y7hYu8GA5pDTwPNrsrPg
+	 AOFF1W4UndnihV5qIHz0EYrr/XH2SlqSd7tPdDkgtks2aB7J/0EnZBMys/4LSUPla7
+	 OYnmQDGopEdaQ==
+Message-ID: <41f344362f8d1c7a3a3f72dbc8a904ffbccec189.camel@kernel.org>
 Subject: Re: [PATCH 2/2] NFSD: allow client to use write delegation stateid
  for READ
 From: Jeff Layton <jlayton@kernel.org>
 To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@suse.de, 
 	okorniev@redhat.com, tom@talpey.com
 Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
-Date: Thu, 13 Feb 2025 16:07:21 -0500
-In-Reply-To: <1739475438-5640-3-git-send-email-dai.ngo@oracle.com>
+Date: Thu, 13 Feb 2025 18:29:26 -0500
+In-Reply-To: <5eeb042a0a6c69bba89e1334d6ceac872eda03e3.camel@kernel.org>
 References: <1739475438-5640-1-git-send-email-dai.ngo@oracle.com>
-	 <1739475438-5640-3-git-send-email-dai.ngo@oracle.com>
+		 <1739475438-5640-3-git-send-email-dai.ngo@oracle.com>
+	 <5eeb042a0a6c69bba89e1334d6ceac872eda03e3.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,113 +137,130 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-02-13 at 11:37 -0800, Dai Ngo wrote:
-> Allow read using write delegation stateid granted on OPENs with
-> OPEN4_SHARE_ACCESS_WRITE only, to accommodate clients whose WRITE
-> implementation may unavoidably do (e.g., due to buffer cache
-> constraints).
->=20
-> When this condition is detected in nfsd4_encode_read the access
-> mode FMODE_READ is temporarily added to the file's f_mode and is
-> removed when the read is done.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/nfsd/nfs4proc.c | 15 ++++++++++++++-
->  fs/nfsd/nfs4xdr.c  |  8 ++++++++
->  fs/nfsd/xdr4.h     |  1 +
->  3 files changed, 23 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index f6e06c779d09..be43627bbf78 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -973,7 +973,18 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_comp=
-ound_state *cstate,
->  	/* check stateid */
->  	status =3D nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_f=
-h,
->  					&read->rd_stateid, RD_STATE,
-> -					&read->rd_nf, NULL);
-> +					&read->rd_nf, &read->rd_wd_stid);
-> +	/*
-> +	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
-> +	 * delegation stateid used for read. Its refcount is decremented
-> +	 * by nfsd4_read_release when read is done.
-> +	 */
-> +	if (!status && read->rd_wd_stid &&
-> +		(read->rd_wd_stid->sc_type !=3D SC_TYPE_DELEG ||
-> +		delegstateid(read->rd_wd_stid)->dl_type !=3D NFS4_OPEN_DELEGATE_WRITE)=
-) {
-> +		nfs4_put_stid(read->rd_wd_stid);
-> +		read->rd_wd_stid =3D NULL;
-> +	}
-> =20
->  	read->rd_rqstp =3D rqstp;
->  	read->rd_fhp =3D &cstate->current_fh;
-> @@ -984,6 +995,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compo=
-und_state *cstate,
->  static void
->  nfsd4_read_release(union nfsd4_op_u *u)
->  {
-> +	if (u->read.rd_wd_stid)
-> +		nfs4_put_stid(u->read.rd_wd_stid);
->  	if (u->read.rd_nf)
->  		nfsd_file_put(u->read.rd_nf);
->  	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index e67420729ecd..3996678bab3f 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4498,6 +4498,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, _=
-_be32 nfserr,
->  	unsigned long maxcount;
->  	__be32 wire_data[2];
->  	struct file *file;
-> +	bool wronly =3D false;
-> =20
->  	if (nfserr)
->  		return nfserr;
-> @@ -4515,10 +4516,17 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp,=
+On Thu, 2025-02-13 at 16:07 -0500, Jeff Layton wrote:
+> On Thu, 2025-02-13 at 11:37 -0800, Dai Ngo wrote:
+> > Allow read using write delegation stateid granted on OPENs with
+> > OPEN4_SHARE_ACCESS_WRITE only, to accommodate clients whose WRITE
+> > implementation may unavoidably do (e.g., due to buffer cache
+> > constraints).
+> >=20
+> > When this condition is detected in nfsd4_encode_read the access
+> > mode FMODE_READ is temporarily added to the file's f_mode and is
+> > removed when the read is done.
+> >=20
+> > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> > ---
+> >  fs/nfsd/nfs4proc.c | 15 ++++++++++++++-
+> >  fs/nfsd/nfs4xdr.c  |  8 ++++++++
+> >  fs/nfsd/xdr4.h     |  1 +
+> >  3 files changed, 23 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index f6e06c779d09..be43627bbf78 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -973,7 +973,18 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_co=
+mpound_state *cstate,
+> >  	/* check stateid */
+> >  	status =3D nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current=
+_fh,
+> >  					&read->rd_stateid, RD_STATE,
+> > -					&read->rd_nf, NULL);
+> > +					&read->rd_nf, &read->rd_wd_stid);
+> > +	/*
+> > +	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
+> > +	 * delegation stateid used for read. Its refcount is decremented
+> > +	 * by nfsd4_read_release when read is done.
+> > +	 */
+> > +	if (!status && read->rd_wd_stid &&
+> > +		(read->rd_wd_stid->sc_type !=3D SC_TYPE_DELEG ||
+> > +		delegstateid(read->rd_wd_stid)->dl_type !=3D NFS4_OPEN_DELEGATE_WRIT=
+E)) {
+> > +		nfs4_put_stid(read->rd_wd_stid);
+> > +		read->rd_wd_stid =3D NULL;
+> > +	}
+> > =20
+> >  	read->rd_rqstp =3D rqstp;
+> >  	read->rd_fhp =3D &cstate->current_fh;
+> > @@ -984,6 +995,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+> >  static void
+> >  nfsd4_read_release(union nfsd4_op_u *u)
+> >  {
+> > +	if (u->read.rd_wd_stid)
+> > +		nfs4_put_stid(u->read.rd_wd_stid);
+> >  	if (u->read.rd_nf)
+> >  		nfsd_file_put(u->read.rd_nf);
+> >  	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
+> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > index e67420729ecd..3996678bab3f 100644
+> > --- a/fs/nfsd/nfs4xdr.c
+> > +++ b/fs/nfsd/nfs4xdr.c
+> > @@ -4498,6 +4498,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp,=
  __be32 nfserr,
->  	maxcount =3D min_t(unsigned long, read->rd_length,
->  			 (xdr->buf->buflen - xdr->buf->len));
-> =20
-> +	if (!(file->f_mode & FMODE_READ) && read->rd_wd_stid) {
-> +		/* allow READ using write delegation stateid */
-> +		wronly =3D true;
-> +		file->f_mode |=3D FMODE_READ;
-> +	}
+> >  	unsigned long maxcount;
+> >  	__be32 wire_data[2];
+> >  	struct file *file;
+> > +	bool wronly =3D false;
+> > =20
+> >  	if (nfserr)
+> >  		return nfserr;
+> > @@ -4515,10 +4516,17 @@ nfsd4_encode_read(struct nfsd4_compoundres *res=
+p, __be32 nfserr,
+> >  	maxcount =3D min_t(unsigned long, read->rd_length,
+> >  			 (xdr->buf->buflen - xdr->buf->len));
+> > =20
+> > +	if (!(file->f_mode & FMODE_READ) && read->rd_wd_stid) {
+> > +		/* allow READ using write delegation stateid */
+> > +		wronly =3D true;
+> > +		file->f_mode |=3D FMODE_READ;
+> > +	}
+>=20
+> Is that really OK? Can we just upgrade the f_mode like that?
+>=20
+> Also, what happens with more exotic exported filesystems like NFS?=C2=A0
+>=20
+> For example, if I'm reexporting NFS, the backend NFS server may not
+> allow you to do a READ operation using a OPEN4_SHARE_ACCESS_WRITE only
+> stateid. Won't this break in that case?
+>=20
 
-Is that really OK? Can we just upgrade the f_mode like that?
+Hmm...bad example since we don't allow delegations on reexported NFS
+these days. Reexporting Ceph or SMB might be a better example. They'll
+likely both have problems if you try to issue a read on the result from
+a O_WRONLY open. I think you will probably need to rework the way
+nfs4_file's track their struct files.
 
-Also, what happens with more exotic exported filesystems like NFS?=C2=A0
+IOW, when the client does a OPEN4_SHARE_ACCESS_WRITE-only open, you
+need to get a struct file that is FMODE_READ|FMODE_WRITE to hang off
+the delegation. But, you'll also need to fix up the accounting for the
+share/deny mode locking to ignore that you _actually_ have it open for
+read too in that case.
 
-For example, if I'm reexporting NFS, the backend NFS server may not
-allow you to do a READ operation using a OPEN4_SHARE_ACCESS_WRITE only
-stateid. Won't this break in that case?
+Smoke and mirrors...
 
->  	if (file->f_op->splice_read && splice_ok)
->  		nfserr =3D nfsd4_encode_splice_read(resp, read, file, maxcount);
->  	else
->  		nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount);
-> +	if (wronly)
-> +		file->f_mode &=3D ~FMODE_READ;
->  	if (nfserr) {
->  		xdr_truncate_encode(xdr, eof_offset);
->  		return nfserr;
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index c26ba86dbdfd..2f053beed899 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -426,6 +426,7 @@ struct nfsd4_read {
->  	struct svc_rqst		*rd_rqstp;          /* response */
->  	struct svc_fh		*rd_fhp;            /* response */
->  	u32			rd_eof;             /* response */
-> +	struct nfs4_stid	*rd_wd_stid;        /* internal */
->  };
-> =20
->  struct nfsd4_readdir {
+> >  	if (file->f_op->splice_read && splice_ok)
+> >  		nfserr =3D nfsd4_encode_splice_read(resp, read, file, maxcount);
+> >  	else
+> >  		nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount);
+> > +	if (wronly)
+> > +		file->f_mode &=3D ~FMODE_READ;
+> >  	if (nfserr) {
+> >  		xdr_truncate_encode(xdr, eof_offset);
+> >  		return nfserr;
+> > diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> > index c26ba86dbdfd..2f053beed899 100644
+> > --- a/fs/nfsd/xdr4.h
+> > +++ b/fs/nfsd/xdr4.h
+> > @@ -426,6 +426,7 @@ struct nfsd4_read {
+> >  	struct svc_rqst		*rd_rqstp;          /* response */
+> >  	struct svc_fh		*rd_fhp;            /* response */
+> >  	u32			rd_eof;             /* response */
+> > +	struct nfs4_stid	*rd_wd_stid;        /* internal */
+> >  };
+> > =20
+> >  struct nfsd4_readdir {
+>=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
