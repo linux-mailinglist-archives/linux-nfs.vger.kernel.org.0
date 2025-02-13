@@ -1,59 +1,58 @@
-Return-Path: <linux-nfs+bounces-10080-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10081-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BE1AA33F35
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 13:34:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92BE1A33F83
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 13:52:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17219161A40
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:34:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AF5B16812E
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Feb 2025 12:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1961E86E;
-	Thu, 13 Feb 2025 12:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F9CA21D3FC;
+	Thu, 13 Feb 2025 12:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLZdKOKB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KANtS2w5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE30227E90;
-	Thu, 13 Feb 2025 12:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B0A2C182;
+	Thu, 13 Feb 2025 12:52:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739450057; cv=none; b=lo0erzQbzKzvdvqOspHC0JcX6qtjRmJ09Uc0LuB/u3XPunqfvnTQZCOkgypSeeMw9sfkuail2DC1ExUff6nCMmaILptbBJGeGLs/5u5fG09s0Y05j54bkEPyXP6tsFSsfZV3xMK2wHz4bG1hANDETWZZX7LCSeQR4pXLCzZwvQg=
+	t=1739451128; cv=none; b=Rgs9l2nb3Km6Y7d9Z2wHzXwniFB4sdNmaJkniIaa8tco4KYBZoalatrDF8Jzx8Mxq1zpna0czbXCad3tWGQL5EC8V7lQNqOaZWt+tUFcHI6JuC2NOHdlGxNMQ1XUt948VFbDzL+3J++35PyP+NBU5Fss/odYr2kUTrp3UaTQQ6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739450057; c=relaxed/simple;
-	bh=Rlklv7dis1m5I3+W2vsCMfTfiQ0cg681MxJRqeW4QvU=;
+	s=arc-20240116; t=1739451128; c=relaxed/simple;
+	bh=/NuwupbRwbFWh6zeCRnnzipQ+Urflj6c06IEygBcVI0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tHyfbUjshdc3jggiynuK+6pYx/emZxI3WNe72VXhhPLsRwbZiIO+FYqrnMhxPfBuAsbygRk7sNLZYUDB47W/+EDDpN9aJoly4yVoeP7Mrw6AXr2jlt1KSMIEoFZAru8UP7Wu0hANrpsXnU5Yx1GPb2yMCLHdgJRPCPyHTkrf8JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLZdKOKB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3735C4CED1;
-	Thu, 13 Feb 2025 12:34:13 +0000 (UTC)
+	 Content-Type:MIME-Version; b=RSrEfEpp2WYk1THJ5RYmJroFhkY/wHYZg85AOR81CO4lDWVqIIRODxiRGRoq9kabet0mcm0kKl9y285OEAzyNr2wc5MqGNbm6wDW/ZUz5HyHiG0crW04HhUYqBtHqnjSoInTxE+fCu9UgRKiBAYFLVq0GWeEvf5GW/ls09I3RuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KANtS2w5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358FAC4CED1;
+	Thu, 13 Feb 2025 12:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739450054;
-	bh=Rlklv7dis1m5I3+W2vsCMfTfiQ0cg681MxJRqeW4QvU=;
+	s=k20201202; t=1739451127;
+	bh=/NuwupbRwbFWh6zeCRnnzipQ+Urflj6c06IEygBcVI0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cLZdKOKBFNVZDAzdBU9llTQQ4nFYOOwjzmQ4Y7cqxqY4bBuoMZ7FAkY7BrKV/agF0
-	 Usg3I/tE4r2J36IPcXL+SPgCppdnZKT6ePqOLoRJhNZFElwmKpWSfW8+iLwZaToDzV
-	 DMFo2UX2obhBbxjqO9T7KeX3k27CXf7HmjvZOCxUefAzOsrGZVNEDvDxcu33VQGowN
-	 9xDCw8dBMxbLfXH7M40rwxXGZ3+G4w4WGK+3y6tq+BK29ihz5qeR8qe2UPUAJSdcPU
-	 8f+Q7+ILG0hworDhAcDNkEFH9hlk3q3BsZZzGoaWg40VztYAQ2X31MZ7kVwev2zIcW
-	 aRGlImqAOg6Hw==
-Message-ID: <c29d47560629ca8866b0604abba60fda96ac0fbb.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: put dl_stid if fail to queue dl_recall
+	b=KANtS2w5nm9si5cv0+ZZoBC/PpJGYo1Ozy0iT4HI1RN9vEiPP5A58s4vGOqv0qjLv
+	 ukB6DJROgKQRRXEAUUtpFS3YS58zWWt4+2TqxsJMF9Zxh4FG2F6+8rxlGmzBauuI2/
+	 FLIcVITWTvFSLN8TvdVnMf8IjQvNy6U7ihblGZHQ17qS25dHToHtdI/wumXSQSPO8n
+	 06Tc422Jb2B56RbI5GjBi2D81SgPtKjC3zhNyYtZxeHM9IfJ98byaUQp1zcUVYqp1J
+	 Huw9ZFqmwZaKckU3wJvNGE/xJWnaMeMLmNxlBvWkPapNiBc50KRA2uc6KyLrX+VfX3
+	 MQiyho8cC3VhQ==
+Message-ID: <a4bdb6dd9d20fecce52a3fd35650aadc52d2e05e.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: allow SC_STATUS_FREEABLE when searching via
+ nfs4_lookup_stateid()
 From: Jeff Layton <jlayton@kernel.org>
-To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
- neilb@suse.de, 	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
- linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Thu, 13 Feb 2025 07:34:12 -0500
-In-Reply-To: <d4c3b347-477f-4016-8093-edac22213cec@huawei.com>
-References: <20250213072536.69986-1-lilingfeng3@huawei.com>
-	 <7df4de2bff617dc5c2bb482df6dbc5ef21ba0d01.camel@kernel.org>
-	 <d4c3b347-477f-4016-8093-edac22213cec@huawei.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 13 Feb 2025 07:52:05 -0500
+In-Reply-To: <173939479366.22054.8896171620747680077@noble.neil.brown.name>
+References: <20250212-nfsd-fixes-v1-1-935e3a4919fc@kernel.org>
+	 <173939479366.22054.8896171620747680077@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,189 +137,87 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-02-13 at 20:28 +0800, Li Lingfeng wrote:
-> =E5=9C=A8 2025/2/13 19:49, Jeff Layton =E5=86=99=E9=81=93:
-> > On Thu, 2025-02-13 at 15:25 +0800, Li Lingfeng wrote:
-> > > Before calling nfsd4_run_cb to queue dl_recall to the callback_wq, we
-> > > increment the reference count of dl_stid.
-> > > We expect that after the corresponding work_struct is processed, the
-> > > reference count of dl_stid will be decremented through the callback
-> > > function nfsd4_cb_recall_release.
-> > > However, if the call to nfsd4_run_cb fails, the incremented reference
-> > > count of dl_stid will not be decremented correspondingly, leading to =
-the
-> > > following nfs4_stid leak:
-> > > unreferenced object 0xffff88812067b578 (size 344):
-> > >    comm "nfsd", pid 2761, jiffies 4295044002 (age 5541.241s)
-> > >    hex dump (first 32 bytes):
-> > >      01 00 00 00 6b 6b 6b 6b b8 02 c0 e2 81 88 ff ff  ....kkkk.......=
-.
-> > >      00 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  .kkkkkkk.....N.=
-.
-> > >    backtrace:
-> > >      kmem_cache_alloc+0x4b9/0x700
-> > >      nfsd4_process_open1+0x34/0x300
-> > >      nfsd4_open+0x2d1/0x9d0
-> > >      nfsd4_proc_compound+0x7a2/0xe30
-> > >      nfsd_dispatch+0x241/0x3e0
-> > >      svc_process_common+0x5d3/0xcc0
-> > >      svc_process+0x2a3/0x320
-> > >      nfsd+0x180/0x2e0
-> > >      kthread+0x199/0x1d0
-> > >      ret_from_fork+0x30/0x50
-> > >      ret_from_fork_asm+0x1b/0x30
-> > > unreferenced object 0xffff8881499f4d28 (size 368):
-> > >    comm "nfsd", pid 2761, jiffies 4295044005 (age 5541.239s)
-> > >    hex dump (first 32 bytes):
-> > >      01 00 00 00 00 00 00 00 30 4d 9f 49 81 88 ff ff  ........0M.I...=
-.
-> > >      30 4d 9f 49 81 88 ff ff 20 00 00 00 01 00 00 00  0M.I.... ......=
-.
-> > >    backtrace:
-> > >      kmem_cache_alloc+0x4b9/0x700
-> > >      nfs4_alloc_stid+0x29/0x210
-> > >      alloc_init_deleg+0x92/0x2e0
-> > >      nfs4_set_delegation+0x284/0xc00
-> > >      nfs4_open_delegation+0x216/0x3f0
-> > >      nfsd4_process_open2+0x2b3/0xee0
-> > >      nfsd4_open+0x770/0x9d0
-> > >      nfsd4_proc_compound+0x7a2/0xe30
-> > >      nfsd_dispatch+0x241/0x3e0
-> > >      svc_process_common+0x5d3/0xcc0
-> > >      svc_process+0x2a3/0x320
-> > >      nfsd+0x180/0x2e0
-> > >      kthread+0x199/0x1d0
-> > >      ret_from_fork+0x30/0x50
-> > >      ret_from_fork_asm+0x1b/0x30
-> > > Fix it by checking the result of nfsd4_run_cb and call nfs4_put_stid =
-if
-> > > fail to queue dl_recall.
-> > >=20
-> > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > > ---
-> > >   fs/nfsd/nfs4state.c | 6 +++++-
-> > >   1 file changed, 5 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 153eeea2c7c9..0ccb87be47b7 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -5414,6 +5414,7 @@ static const struct nfsd4_callback_ops nfsd4_cb=
-_recall_ops =3D {
-> > >  =20
-> > >   static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
-> > >   {
-> > > +	bool queued;
-> > >   	/*
-> > >   	 * We're assuming the state code never drops its reference
-> > >   	 * without first removing the lease.  Since we're in this lease
-> > > @@ -5422,7 +5423,10 @@ static void nfsd_break_one_deleg(struct nfs4_d=
-elegation *dp)
-> > >   	 * we know it's safe to take a reference.
-> > >   	 */
-> > >   	refcount_inc(&dp->dl_stid.sc_count);
-> > > -	WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall));
-> > > +	queued =3D nfsd4_run_cb(&dp->dl_recall);
-> > > +	WARN_ON_ONCE(!queued);
-> > > +	if (!queued)
-> > > +		nfs4_put_stid(&dp->dl_stid);
-> > >   }
-> > >  =20
-> > >   /* Called from break_lease() with flc_lock held. */
+On Thu, 2025-02-13 at 08:13 +1100, NeilBrown wrote:
+> On Thu, 13 Feb 2025, Jeff Layton wrote:
+> > When a delegation is revoked, it's initially marked with
+> > SC_STATUS_REVOKED, or SC_STATUS_ADMIN_REVOKED and later, it's marked
+> > with the SC_STATUS_FREEABLE flag, which denotes that it is waiting for
+> > s FREE_STATEID call.
 > >=20
-> > Have you actually seen the WARN_ON_ONCE() pop under normal usage, or
-> > was the problem you reproduced done via fault injection?
+> > nfs4_lookup_stateid() accepts a statusmask that includes the status
+> > flags that a found stateid is allowed to have. Currently, that mask
+> > never includes SC_STATUS_FREEABLE, which means that revoked delegations
+> > are (almost) never found.
+> >=20
+> > Add SC_STATUS_FREEABLE to the always-allowed status flags.
 >=20
-> Hi,
->=20
-> I add mdelay for cb_work before processing it and add msleep in=20
-> nfs_do_return_delegation to reproduce it.
->=20
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1188,6 +1188,8 @@ alloc_init_deleg(struct nfs4_client *clp, struct=
+> There are 4 calls to nfsd4_lookup_stateid().  One already has
+> SC_STATUS_FREEABLE passed.  Which of the others need it?
 =20
-> nfs4_file *fp,
->  =C2=A0=C2=A0=C2=A0=C2=A0 dp->dl_recalled =3D false;
->  =C2=A0=C2=A0=C2=A0=C2=A0 nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_cl=
-ient,
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
-> +=C2=A0=C2=A0=C2=A0 dp->dl_recall.cb_work.debug_flag =3D 0x1234;
-> +=C2=A0=C2=A0=C2=A0 printk("%s init work func %px\n", __func__,=20
-> dp->dl_recall.cb_work.func);
->  =C2=A0=C2=A0=C2=A0=C2=A0 get_nfs4_file(fp);
->  =C2=A0=C2=A0=C2=A0=C2=A0 dp->dl_stid.sc_file =3D fp;
->  =C2=A0=C2=A0=C2=A0=C2=A0 return dp;
+> If all of them, then this patch is sensible but should also remove the
+> flag in the one place it is already passed.
+> If only one other call needs it, then maybe we should just pass it
+> there?
 >=20
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -2708,6 +2708,12 @@ static void process_scheduled_works(struct worker=
-=20
-> *worker)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- worker->pool->watchdog_ts =3D jiffies;
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- first =3D false;
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (work->debug_flag =3D=3D 0=
-x1234) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
-k("%s func %px\n", __func__, work->func);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
-k("%s delay before clear pending...\n", __func__);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mdela=
-y(10 * 1000);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
-k("%s delay done\n", __func__);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 process_one_work(worker=
-, work);
->  =C2=A0=C2=A0=C2=A0=C2=A0 }
->  =C2=A0}
+> Could you at least include in the description some detail of what
+> request is failing and which particular nfsd4_lookup_stateid() call is
+> relevant in that case?
 >=20
-> --- a/fs/nfs/delegation.c
-> +++ b/fs/nfs/delegation.c
-> @@ -263,6 +263,15 @@ static int nfs_do_return_delegation(struct inode=20
-> *inode, struct nfs_delegation *
->  =C2=A0=C2=A0=C2=A0=C2=A0 const struct cred *cred;
->  =C2=A0=C2=A0=C2=A0=C2=A0 int res =3D 0;
->=20
-> +=C2=A0=C2=A0=C2=A0 printk("sleep before deleg return...\n");
-> +=C2=A0=C2=A0=C2=A0 while (1) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ifdebug(PROC)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mslee=
-p(10 * 1000);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break=
-;
-> +=C2=A0=C2=A0=C2=A0 }
-> +=C2=A0=C2=A0=C2=A0 printk("sleep done\n");
-> +
->  =C2=A0=C2=A0=C2=A0=C2=A0 if (!test_bit(NFS_DELEGATION_REVOKED, &delegati=
-on-flags)) {
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&delegation->=
-lock);
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cred =3D get_cred(deleg=
-ation->cred);
->=20
-> > Unfortunately, this won't work. nfsd_break_one_deleg() is called from
-> > the ->break_lease callback with the flc->flc_lock held, and
-> > nfs4_put_stid can sleep in the sc_free callbacks.
->=20
-> Are you referring to nfs4_free_deleg? I didn't quite see where it might=
-=20
-> sleep. Could you please explain it to me?
+> Thanks,
+> NeilBrown
 >=20
 
-I stand corrected. nfs4_free_deleg() won't sleep, but
-nfs4_free_lock_stateid() can. In this case, you know that this is a
-deleg stateid, so this should actually be safe after all.
+I think they all need it.
 
-If you do this though, please add a comment to nfs4_free_deleg()
-mentioning that it mustn't ever sleep, since it can be called from that
-context.
+The DELEG8 test gets a delegation, and then lets the lease time out. It
+then does a READ op and tests that it gets back NFS4ERR_DELEG_REVOKED.
+The read path calls nfs4_preprocess_stateid_op(), so it's needed there
+specifically to fix that bug.
+
+1ac3629bf0125 ensures that SC_STATUS_ADMIN_REVOKED is always set in the
+allowed mask. If that's always allowed, then FREEABLE must be too.
+There is only a very narrow window of time when ADMIN_REVOKED or
+REVOKED is set, and FREEABLE is not.
+
+I'll respin and remove the other FREEABLE flag, since I think it should
+be implied everywhere.
+
+>=20
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > This fixes the pynfs DELEG8 test.
+> > ---
+> >  fs/nfsd/nfs4state.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index 153eeea2c7c999d003cd1f36cecb0dd4f6e049b8..56bf07d623d085589823f3f=
+ba18afa62c0b3dbd2 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -7051,7 +7051,7 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state =
+*cstate,
+> >  		 */
+> >  		statusmask |=3D SC_STATUS_REVOKED;
+> > =20
+> > -	statusmask |=3D SC_STATUS_ADMIN_REVOKED;
+> > +	statusmask |=3D SC_STATUS_ADMIN_REVOKED | SC_STATUS_FREEABLE;
+> > =20
+> >  	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+> >  		CLOSE_STATEID(stateid))
+> >=20
+> > ---
+> > base-commit: 4990d098433db18c854e75fb0f90d941eb7d479e
+> > change-id: 20250212-nfsd-fixes-fa8047082335
+> >=20
+> > Best regards,
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
+> >=20
+>=20
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
