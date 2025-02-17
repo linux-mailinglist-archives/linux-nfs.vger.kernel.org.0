@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-10150-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10151-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33E64A384FC
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 14:44:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DE52A38507
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 14:46:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B82E3ABE32
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 13:41:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A3BE166459
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 13:46:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A637D21CA0B;
-	Mon, 17 Feb 2025 13:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E74286A1;
+	Mon, 17 Feb 2025 13:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6GR+J9h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EUESlwcH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C51C2185A3;
-	Mon, 17 Feb 2025 13:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4DE35968;
+	Mon, 17 Feb 2025 13:46:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739799688; cv=none; b=dd/4tmlYMf35D35i5WpeHzwFLyXyAzrxRd19EpqNtGvYGubW/jiCOhJ8LsPxVdRNzPySLSJhCOkN+IQpN4W02kMLC3b1xTkYl4m4EN+4WdfC6am7S6wP5RTuKtx37UVIVeapbA26xiHvKEum3SIvgq32JPY8uKnJJ2EzmP18nXc=
+	t=1739799970; cv=none; b=c5YZZOOJmeMr/5rQ3suhhvVH6pNJ2AtdDopIhMBrY6NNf5n0SWhmEGYb2DxNm6zFlB40yJ9a9ROnmSg5SaIVsz/Nfe4CvM/EGgZdldGlozrAiLi/KN/w8Of9/UsqY5D+N9snhO3os3zJWmHolVEqqgSAzX5ImMGQrA7qpQIzLmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739799688; c=relaxed/simple;
-	bh=rBwrjkL9co38iiv0yMfI8v7rsMDtLj8VL1CWIGBeP2E=;
+	s=arc-20240116; t=1739799970; c=relaxed/simple;
+	bh=7TxLHOVC3V5bqSKGhlAvU4A9SPRMEy7Rrc14AVYj+q8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JCWjH+hIzhWYa9FVMHbJR5jWYwzypMkq+2iBY8qRO/y4fkKdY4CZ/iC15LooS0oz7mVYeoIglZIVIgjKrzlcXPdHcpsFSvLbycsHaYgR/M12iQMDDgS+YdsyLnTJSOMyN5ksyADgJyGqQtdY2KU1rvGnjFFCQnIX5MgcEkRqb0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6GR+J9h; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5574BC4CED1;
-	Mon, 17 Feb 2025 13:41:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=MPqUCtgUuZX7p6aBDGbTGdc23gypm9c4TYzZsDRepE8vFAU5s8V3Pf8YsnSOjRuimPMOZaVi61tVnrWEHPt0GEJIPT7Bx+rU0YpnRae2y/YZ9jURn9tazfxqrqP0NhwexMTRPbx2ydOL33phzkglNyjhFkqp5s90J61uwzOw//s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EUESlwcH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD41C4CED1;
+	Mon, 17 Feb 2025 13:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739799686;
-	bh=rBwrjkL9co38iiv0yMfI8v7rsMDtLj8VL1CWIGBeP2E=;
+	s=k20201202; t=1739799970;
+	bh=7TxLHOVC3V5bqSKGhlAvU4A9SPRMEy7Rrc14AVYj+q8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Z6GR+J9hbqjnFBzXj5DZa+HmK9OxMsn2nDTvTNldz2/PheVlYmUqIXWjHDCvE8Sr9
-	 hd8b8+c8suRSTyTp6r7aXACgtnlyjIqZpXy+YOOfVwJeWswjAxeU5z6c/u2Yfsytam
-	 fscEDw9oknYSpnO8Zdu1zCoTFhafa5rIBFAphc6gnBUiZ7arLFUZxmPQIc4wkKzSMJ
-	 Sc+5QYNVb6scw+i7ikJr8woDo02LcDnvlcWptn7onp77w7exHqb7N3HCQCuXcGfZbU
-	 LU6fS1JM2oYGoMbg3qrOqlZGj3uIPKLFeak+LHNmNQaV5vRzzDBTgCQjeiiPz9aAxx
-	 XxJSXbQSitxOA==
-Message-ID: <10c30f15c0405ce0536146c9b3f099c9773b2f5d.camel@kernel.org>
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
+	b=EUESlwcH+AlUnTS0VPqrfhYt/+63Egn0gngYilYFJ29JpgN8LOi6NEu+SwZFOMe8j
+	 qUjvmGmvSJAgKRf/xlas04VmkHUPZDxY9Xz34qSij6So8yhQiCc7hsTU9BQ3SSR8Vv
+	 lT69Rfs98H1QidcO89h64BW48h0NH8EGluDuyUKiKU9jv8NQUZdYZnZESvKSbJmjB2
+	 LUYJHkf7uW4wH9z5tOHgRDNsrnk1Is/yjVHrWKKdCQ3eKWCJxr3OgWXrUT8N7BjPB1
+	 SFfIvsxMnIkxEK9+MKm6BKZoCXepvbIHq5YGSj0+GN0hRDDqaHVc7biXDMJEezPk7b
+	 9FHCn7JERE1dw==
+Message-ID: <60046587aa303d9264b90b66986b2538485270dd.camel@kernel.org>
+Subject: Re: [PATCH 2/2] VFS: add common error checks to
+ lookup_one_qstr_excl()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Christian Brauner <brauner@kernel.org>, 
  Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>
 Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Date: Mon, 17 Feb 2025 08:41:25 -0500
-In-Reply-To: <20250217003020.3170652-2-neilb@suse.de>
+Date: Mon, 17 Feb 2025 08:46:08 -0500
+In-Reply-To: <20250217003020.3170652-3-neilb@suse.de>
 References: <20250217003020.3170652-1-neilb@suse.de>
-	 <20250217003020.3170652-2-neilb@suse.de>
+	 <20250217003020.3170652-3-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,204 +137,307 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2025-02-17 at 11:27 +1100, NeilBrown wrote:
-> No callers of kern_path_locked() or user_path_locked_at() want a
-> negative dentry.  So change them to return -ENOENT instead.  This
-> simplifies callers.
+> Callers of lookup_one_qstr_excl() often check if the result is negative o=
+r
+> positive.
+> These changes can easily be moved into lookup_one_qstr_excl() by checking=
+ the
+> lookup flags:
+> LOOKUP_CREATE means it is NOT an error if the name doesn't exist.
+> LOOKUP_EXCL means it IS an error if the name DOES exist.
 >=20
-> This results in a subtle change to bcachefs in that an ioctl will now
-> return -ENOENT in preference to -EXDEV.  I believe this restores the
-> behaviour to what it was prior to
->  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
+> This patch adds these checks, then removes error checks from callers,
+> and ensures that appropriate flags are passed.
+>=20
+> This subtly changes the meaning of LOOKUP_EXCL.  Previously it could
+> only accompany LOOKUP_CREATE.  Now it can accompany LOOKUP_RENAME_TARGET
+> as well.  A couple of small changes are needed to accommodate this.  The
+> NFS change is functionally a no-op but ensures nfs_is_exclusive_create() =
+does
+> exactly what the name says.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
-> Link: https://lore.kernel.org/r/20250207034040.3402438-2-neilb@suse.de
-> Acked-by: Paul Moore <paul@paul-moore.com>
+> Link: https://lore.kernel.org/r/20250207034040.3402438-3-neilb@suse.de
 > Signed-off-by: Christian Brauner <brauner@kernel.org>
 > ---
->  Documentation/filesystems/porting.rst |  8 ++++
->  drivers/base/devtmpfs.c               | 65 +++++++++++++--------------
->  fs/bcachefs/fs-ioctl.c                |  4 --
->  fs/namei.c                            |  4 ++
->  kernel/audit_watch.c                  | 12 ++---
->  5 files changed, 48 insertions(+), 45 deletions(-)
+>  Documentation/filesystems/porting.rst | 12 ++++++
+>  fs/namei.c                            | 61 +++++++++------------------
+>  fs/nfs/dir.c                          |  3 +-
+>  fs/smb/server/vfs.c                   | 26 +++++-------
+>  4 files changed, 45 insertions(+), 57 deletions(-)
 >=20
 > diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesy=
 stems/porting.rst
-> index 1639e78e3146..2ead47e20677 100644
+> index 2ead47e20677..3b6622fbd66b 100644
 > --- a/Documentation/filesystems/porting.rst
 > +++ b/Documentation/filesystems/porting.rst
-> @@ -1157,3 +1157,11 @@ in normal case it points into the pathname being l=
-ooked up.
->  NOTE: if you need something like full path from the root of filesystem,
->  you are still on your own - this assists with simple cases, but it's not
->  magic.
+> @@ -1165,3 +1165,15 @@ magic.
+>  kern_path_locked() and user_path_locked() no longer return a negative
+>  dentry so this doesn't need to be checked.  If the name cannot be found,
+>  ERR_PTR(-ENOENT) is returned.
 > +
-> +---
+> +** recommend**
 > +
-> +** recommended**
+> +lookup_one_qstr_excl() is changed to return errors in more cases, so
+> +these conditions don't require explicit checks.
+> + - if LOOKUP_CREATE is NOT given, then the dentry won't be negative,
+> +   ERR_PTR(-ENOENT) is returned instead
+> + - if LOOKUP_EXCL IS given, then the dentry won't be positive,
+> +   ERR_PTR(-EEXIST) is rreturned instread
 > +
-> +kern_path_locked() and user_path_locked() no longer return a negative
-> +dentry so this doesn't need to be checked.  If the name cannot be found,
-> +ERR_PTR(-ENOENT) is returned.
-> diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-> index b848764ef018..c9e34842139f 100644
-> --- a/drivers/base/devtmpfs.c
-> +++ b/drivers/base/devtmpfs.c
-> @@ -245,15 +245,12 @@ static int dev_rmdir(const char *name)
->  	dentry =3D kern_path_locked(name, &parent);
->  	if (IS_ERR(dentry))
->  		return PTR_ERR(dentry);
-> -	if (d_really_is_positive(dentry)) {
-> -		if (d_inode(dentry)->i_private =3D=3D &thread)
-> -			err =3D vfs_rmdir(&nop_mnt_idmap, d_inode(parent.dentry),
-> -					dentry);
-> -		else
-> -			err =3D -EPERM;
-> -	} else {
-> -		err =3D -ENOENT;
-> -	}
-> +	if (d_inode(dentry)->i_private =3D=3D &thread)
-> +		err =3D vfs_rmdir(&nop_mnt_idmap, d_inode(parent.dentry),
-> +				dentry);
-> +	else
-> +		err =3D -EPERM;
-> +
->  	dput(dentry);
->  	inode_unlock(d_inode(parent.dentry));
->  	path_put(&parent);
-> @@ -310,6 +307,8 @@ static int handle_remove(const char *nodename, struct=
- device *dev)
->  {
->  	struct path parent;
->  	struct dentry *dentry;
-> +	struct kstat stat;
-> +	struct path p;
->  	int deleted =3D 0;
->  	int err;
-> =20
-> @@ -317,32 +316,28 @@ static int handle_remove(const char *nodename, stru=
-ct device *dev)
->  	if (IS_ERR(dentry))
->  		return PTR_ERR(dentry);
-> =20
-> -	if (d_really_is_positive(dentry)) {
-> -		struct kstat stat;
-> -		struct path p =3D {.mnt =3D parent.mnt, .dentry =3D dentry};
-> -		err =3D vfs_getattr(&p, &stat, STATX_TYPE | STATX_MODE,
-> -				  AT_STATX_SYNC_AS_STAT);
-> -		if (!err && dev_mynode(dev, d_inode(dentry), &stat)) {
-> -			struct iattr newattrs;
-> -			/*
-> -			 * before unlinking this node, reset permissions
-> -			 * of possible references like hardlinks
-> -			 */
-> -			newattrs.ia_uid =3D GLOBAL_ROOT_UID;
-> -			newattrs.ia_gid =3D GLOBAL_ROOT_GID;
-> -			newattrs.ia_mode =3D stat.mode & ~0777;
-> -			newattrs.ia_valid =3D
-> -				ATTR_UID|ATTR_GID|ATTR_MODE;
-> -			inode_lock(d_inode(dentry));
-> -			notify_change(&nop_mnt_idmap, dentry, &newattrs, NULL);
-> -			inode_unlock(d_inode(dentry));
-> -			err =3D vfs_unlink(&nop_mnt_idmap, d_inode(parent.dentry),
-> -					 dentry, NULL);
-> -			if (!err || err =3D=3D -ENOENT)
-> -				deleted =3D 1;
-> -		}
-> -	} else {
-> -		err =3D -ENOENT;
-> +	p.mnt =3D parent.mnt;
-> +	p.dentry =3D dentry;
-> +	err =3D vfs_getattr(&p, &stat, STATX_TYPE | STATX_MODE,
-> +			  AT_STATX_SYNC_AS_STAT);
-> +	if (!err && dev_mynode(dev, d_inode(dentry), &stat)) {
-> +		struct iattr newattrs;
-> +		/*
-> +		 * before unlinking this node, reset permissions
-> +		 * of possible references like hardlinks
-> +		 */
-> +		newattrs.ia_uid =3D GLOBAL_ROOT_UID;
-> +		newattrs.ia_gid =3D GLOBAL_ROOT_GID;
-> +		newattrs.ia_mode =3D stat.mode & ~0777;
-> +		newattrs.ia_valid =3D
-> +			ATTR_UID|ATTR_GID|ATTR_MODE;
-> +		inode_lock(d_inode(dentry));
-> +		notify_change(&nop_mnt_idmap, dentry, &newattrs, NULL);
-> +		inode_unlock(d_inode(dentry));
-> +		err =3D vfs_unlink(&nop_mnt_idmap, d_inode(parent.dentry),
-> +				 dentry, NULL);
-> +		if (!err || err =3D=3D -ENOENT)
-> +			deleted =3D 1;
->  	}
->  	dput(dentry);
->  	inode_unlock(d_inode(parent.dentry));
-> diff --git a/fs/bcachefs/fs-ioctl.c b/fs/bcachefs/fs-ioctl.c
-> index 15725b4ce393..595b57fabc9a 100644
-> --- a/fs/bcachefs/fs-ioctl.c
-> +++ b/fs/bcachefs/fs-ioctl.c
-> @@ -511,10 +511,6 @@ static long bch2_ioctl_subvolume_destroy(struct bch_=
-fs *c, struct file *filp,
->  		ret =3D -EXDEV;
->  		goto err;
->  	}
-> -	if (!d_is_positive(victim)) {
-> -		ret =3D -ENOENT;
-> -		goto err;
-> -	}
->  	ret =3D __bch2_unlink(dir, victim, true);
->  	if (!ret) {
->  		fsnotify_rmdir(dir, victim);
+> +LOOKUP_EXCL now means "target must not exist".  It can be combined with=
+=20
+> +LOOK_CREATE or LOOKUP_RENAME_TARGET.
 > diff --git a/fs/namei.c b/fs/namei.c
-> index 3ab9440c5b93..fb6da3ca0ca5 100644
+> index fb6da3ca0ca5..b7cdca902803 100644
 > --- a/fs/namei.c
 > +++ b/fs/namei.c
-> @@ -2741,6 +2741,10 @@ static struct dentry *__kern_path_locked(int dfd, =
+> @@ -1670,6 +1670,8 @@ static struct dentry *lookup_dcache(const struct qs=
+tr *name,
+>   * dentries - as the matter of fact, this only gets called
+>   * when directory is guaranteed to have no in-lookup children
+>   * at all.
+> + * Will return -ENOENT if name isn't found and LOOKUP_CREATE wasn't pass=
+ed.
+> + * Will return -EEXIST if name is found and LOOKUP_EXCL was passed.
+>   */
+>  struct dentry *lookup_one_qstr_excl(const struct qstr *name,
+>  				    struct dentry *base,
+> @@ -1680,7 +1682,7 @@ struct dentry *lookup_one_qstr_excl(const struct qs=
+tr *name,
+>  	struct inode *dir =3D base->d_inode;
+> =20
+>  	if (dentry)
+> -		return dentry;
+> +		goto found;
+> =20
+>  	/* Don't create child dentry for a dead directory. */
+>  	if (unlikely(IS_DEADDIR(dir)))
+> @@ -1695,6 +1697,17 @@ struct dentry *lookup_one_qstr_excl(const struct q=
+str *name,
+>  		dput(dentry);
+>  		dentry =3D old;
+>  	}
+> +found:
+> +	if (IS_ERR(dentry))
+> +		return dentry;
+> +	if (d_is_negative(dentry) && !(flags & LOOKUP_CREATE)) {
+> +		dput(dentry);
+> +		return ERR_PTR(-ENOENT);
+> +	}
+> +	if (d_is_positive(dentry) && (flags & LOOKUP_EXCL)) {
+> +		dput(dentry);
+> +		return ERR_PTR(-EEXIST);
+> +	}
+>  	return dentry;
+>  }
+>  EXPORT_SYMBOL(lookup_one_qstr_excl);
+> @@ -2741,10 +2754,6 @@ static struct dentry *__kern_path_locked(int dfd, =
 struct filename *name, struct
 >  	}
 >  	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
 >  	d =3D lookup_one_qstr_excl(&last, path->dentry, 0);
-> +	if (!IS_ERR(d) && d_is_negative(d)) {
-> +		dput(d);
-> +		d =3D ERR_PTR(-ENOENT);
-> +	}
+> -	if (!IS_ERR(d) && d_is_negative(d)) {
+> -		dput(d);
+> -		d =3D ERR_PTR(-ENOENT);
+> -	}
 >  	if (IS_ERR(d)) {
 >  		inode_unlock(path->dentry->d_inode);
 >  		path_put(path);
-> diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-> index 7f358740e958..367eaf2c78b7 100644
-> --- a/kernel/audit_watch.c
-> +++ b/kernel/audit_watch.c
-> @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, =
-struct path *parent)
->  	struct dentry *d =3D kern_path_locked(watch->path, parent);
->  	if (IS_ERR(d))
->  		return PTR_ERR(d);
-> -	if (d_is_positive(d)) {
-> -		/* update watch filter fields */
-> -		watch->dev =3D d->d_sb->s_dev;
-> -		watch->ino =3D d_backing_inode(d)->i_ino;
+> @@ -4082,27 +4091,13 @@ static struct dentry *filename_create(int dfd, st=
+ruct filename *name,
+>  	 * '/', and a directory wasn't requested.
+>  	 */
+>  	if (last.name[last.len] && !want_dir)
+> -		create_flags =3D 0;
+> +		create_flags &=3D ~LOOKUP_CREATE;
+>  	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
+>  	dentry =3D lookup_one_qstr_excl(&last, path->dentry,
+>  				      reval_flag | create_flags);
+>  	if (IS_ERR(dentry))
+>  		goto unlock;
+> =20
+> -	error =3D -EEXIST;
+> -	if (d_is_positive(dentry))
+> -		goto fail;
+> -
+> -	/*
+> -	 * Special case - lookup gave negative, but... we had foo/bar/
+> -	 * From the vfs_mknod() POV we just have a negative dentry -
+> -	 * all is fine. Let's be bastards - you had / on the end, you've
+> -	 * been asking for (non-existent) directory. -ENOENT for you.
+> -	 */
+> -	if (unlikely(!create_flags)) {
+> -		error =3D -ENOENT;
+> -		goto fail;
 > -	}
-> +	/* update watch filter fields */
-> +	watch->dev =3D d->d_sb->s_dev;
-> +	watch->ino =3D d_backing_inode(d)->i_ino;
-> +
->  	inode_unlock(d_backing_inode(parent->dentry));
->  	dput(d);
->  	return 0;
-> @@ -419,10 +418,11 @@ int audit_add_watch(struct audit_krule *krule, stru=
-ct list_head **list)
->  	/* caller expects mutex locked */
->  	mutex_lock(&audit_filter_mutex);
+>  	if (unlikely(err2)) {
+>  		error =3D err2;
+>  		goto fail;
+> @@ -4449,10 +4444,6 @@ int do_rmdir(int dfd, struct filename *name)
+>  	error =3D PTR_ERR(dentry);
+>  	if (IS_ERR(dentry))
+>  		goto exit3;
+> -	if (!dentry->d_inode) {
+> -		error =3D -ENOENT;
+> -		goto exit4;
+> -	}
+>  	error =3D security_path_rmdir(&path, dentry);
+>  	if (error)
+>  		goto exit4;
+> @@ -4583,7 +4574,7 @@ int do_unlinkat(int dfd, struct filename *name)
+>  	if (!IS_ERR(dentry)) {
 > =20
-> -	if (ret) {
-> +	if (ret && ret !=3D -ENOENT) {
->  		audit_put_watch(watch);
->  		return ret;
+>  		/* Why not before? Because we want correct error value */
+> -		if (last.name[last.len] || d_is_negative(dentry))
+> +		if (last.name[last.len])
+>  			goto slashes;
+>  		inode =3D dentry->d_inode;
+>  		ihold(inode);
+> @@ -4617,9 +4608,7 @@ int do_unlinkat(int dfd, struct filename *name)
+>  	return error;
+> =20
+>  slashes:
+> -	if (d_is_negative(dentry))
+> -		error =3D -ENOENT;
+> -	else if (d_is_dir(dentry))
+> +	if (d_is_dir(dentry))
+>  		error =3D -EISDIR;
+>  	else
+>  		error =3D -ENOTDIR;
+> @@ -5119,7 +5108,8 @@ int do_renameat2(int olddfd, struct filename *from,=
+ int newdfd,
+>  	struct qstr old_last, new_last;
+>  	int old_type, new_type;
+>  	struct inode *delegated_inode =3D NULL;
+> -	unsigned int lookup_flags =3D 0, target_flags =3D LOOKUP_RENAME_TARGET;
+> +	unsigned int lookup_flags =3D 0, target_flags =3D
+> +		LOOKUP_RENAME_TARGET | LOOKUP_CREATE;
+>  	bool should_retry =3D false;
+>  	int error =3D -EINVAL;
+> =20
+> @@ -5132,6 +5122,8 @@ int do_renameat2(int olddfd, struct filename *from,=
+ int newdfd,
+> =20
+>  	if (flags & RENAME_EXCHANGE)
+>  		target_flags =3D 0;
+> +	if (flags & RENAME_NOREPLACE)
+> +		target_flags |=3D LOOKUP_EXCL;
+> =20
+>  retry:
+>  	error =3D filename_parentat(olddfd, from, lookup_flags, &old_path,
+> @@ -5173,23 +5165,12 @@ int do_renameat2(int olddfd, struct filename *fro=
+m, int newdfd,
+>  	error =3D PTR_ERR(old_dentry);
+>  	if (IS_ERR(old_dentry))
+>  		goto exit3;
+> -	/* source must exist */
+> -	error =3D -ENOENT;
+> -	if (d_is_negative(old_dentry))
+> -		goto exit4;
+>  	new_dentry =3D lookup_one_qstr_excl(&new_last, new_path.dentry,
+>  					  lookup_flags | target_flags);
+>  	error =3D PTR_ERR(new_dentry);
+>  	if (IS_ERR(new_dentry))
+>  		goto exit4;
+> -	error =3D -EEXIST;
+> -	if ((flags & RENAME_NOREPLACE) && d_is_positive(new_dentry))
+> -		goto exit5;
+>  	if (flags & RENAME_EXCHANGE) {
+> -		error =3D -ENOENT;
+> -		if (d_is_negative(new_dentry))
+> -			goto exit5;
+> -
+>  		if (!d_is_dir(new_dentry)) {
+>  			error =3D -ENOTDIR;
+>  			if (new_last.name[new_last.len])
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 2b04038b0e40..56cf16a72334 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -1532,7 +1532,8 @@ static int nfs_is_exclusive_create(struct inode *di=
+r, unsigned int flags)
+>  {
+>  	if (NFS_PROTO(dir)->version =3D=3D 2)
+>  		return 0;
+> -	return flags & LOOKUP_EXCL;
+> +	return (flags & (LOOKUP_CREATE | LOOKUP_EXCL)) =3D=3D
+> +		(LOOKUP_CREATE | LOOKUP_EXCL);
+>  }
+> =20
+>  /*
+> diff --git a/fs/smb/server/vfs.c b/fs/smb/server/vfs.c
+> index 6890016e1923..fe29acef5872 100644
+> --- a/fs/smb/server/vfs.c
+> +++ b/fs/smb/server/vfs.c
+> @@ -113,11 +113,6 @@ static int ksmbd_vfs_path_lookup_locked(struct ksmbd=
+_share_config *share_conf,
+>  	if (IS_ERR(d))
+>  		goto err_out;
+> =20
+> -	if (d_is_negative(d)) {
+> -		dput(d);
+> -		goto err_out;
+> -	}
+> -
+>  	path->dentry =3D d;
+>  	path->mnt =3D mntget(parent_path->mnt);
+> =20
+> @@ -693,6 +688,7 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const s=
+truct path *old_path,
+>  	struct ksmbd_file *parent_fp;
+>  	int new_type;
+>  	int err, lookup_flags =3D LOOKUP_NO_SYMLINKS;
+> +	int target_lookup_flags =3D LOOKUP_RENAME_TARGET;
+> =20
+>  	if (ksmbd_override_fsids(work))
+>  		return -ENOMEM;
+> @@ -703,6 +699,14 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const =
+struct path *old_path,
+>  		goto revert_fsids;
 >  	}
-> +	ret =3D 0;
 > =20
->  	/* either find an old parent or attach a new one */
->  	parent =3D audit_find_parent(d_backing_inode(parent_path.dentry));
+> +	/*
+> +	 * explicitly handle file overwrite case, for compatibility with
+> +	 * filesystems that may not support rename flags (e.g: fuse)
+> +	 */
+> +	if (flags & RENAME_NOREPLACE)
+> +		target_lookup_flags |=3D LOOKUP_EXCL;
+> +	flags &=3D ~(RENAME_NOREPLACE);
+> +
+>  retry:
+>  	err =3D vfs_path_parent_lookup(to, lookup_flags | LOOKUP_BENEATH,
+>  				     &new_path, &new_last, &new_type,
+> @@ -743,7 +747,7 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const s=
+truct path *old_path,
+>  	}
+> =20
+>  	new_dentry =3D lookup_one_qstr_excl(&new_last, new_path.dentry,
+> -					  lookup_flags | LOOKUP_RENAME_TARGET);
+> +					  lookup_flags | target_lookup_flags);
+>  	if (IS_ERR(new_dentry)) {
+>  		err =3D PTR_ERR(new_dentry);
+>  		goto out3;
+> @@ -754,16 +758,6 @@ int ksmbd_vfs_rename(struct ksmbd_work *work, const =
+struct path *old_path,
+>  		goto out4;
+>  	}
+> =20
+> -	/*
+> -	 * explicitly handle file overwrite case, for compatibility with
+> -	 * filesystems that may not support rename flags (e.g: fuse)
+> -	 */
+> -	if ((flags & RENAME_NOREPLACE) && d_is_positive(new_dentry)) {
+> -		err =3D -EEXIST;
+> -		goto out4;
+> -	}
+> -	flags &=3D ~(RENAME_NOREPLACE);
+> -
+>  	if (old_child =3D=3D trap) {
+>  		err =3D -EINVAL;
+>  		goto out4;
+
+Nice simplification.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
