@@ -1,187 +1,117 @@
-Return-Path: <linux-nfs+bounces-10146-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10147-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9FED6A37A34
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 04:54:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F5D3A37C56
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 08:35:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43021188C7FE
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 03:54:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98FF73B1354
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 07:34:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E308D14D433;
-	Mon, 17 Feb 2025 03:54:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923B019D081;
+	Mon, 17 Feb 2025 07:33:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SbtO2gjl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pC/UAdbo";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SbtO2gjl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="pC/UAdbo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAIbeN7y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285405C603
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Feb 2025 03:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EC419ABAC
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Feb 2025 07:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739764442; cv=none; b=reaKbhRxYh0zbZS5rjs77caqlu5QMYQ2cSg5lGrYOpbx0Ws9LuAXriWhp7YPbK8L3qxlJwkQOHZ4xJ6hdpVpMFtD+g1yBtyRj+C0yLOxi3fFZkw6Es0qof76CY8wuf0dJujcZbl/taa90x896oRIO8J2HwW22y6psOuvAsiwiSQ=
+	t=1739777618; cv=none; b=A2ax4jtUgjQ21t/YaRDyYMJ6UWWX50FLsh2k1JikqzCBRrrx57gXmTGJs4ATG5n7DGe1t056sQhGfALjhOJMBeDWKKBmm1eCxeyD/F9uZ50N1qJisATH9SdJTY5aZRRdae2likUkT+C9OWo1xzOu+UFQC8P7nH7+bQayeYZE1oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739764442; c=relaxed/simple;
-	bh=xQedsCPSFhtHw6QVp+EHduhxYmC5oWUg5T7GxRBi3IY=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=mofWwwrmBiCQodwHINKJbbuKDVbmFNLlGo3fxZ+3MviM6COQ+kjJoydSa23pjCoCPYkSzw6Hr5a7NoabMSGpPgUKC7NSZkYJSZV33DBzkD0iXYQ5a74dxTOprUf5zWGfOSwKhJOt3foj6CUecAYzT/m3k/TT47Xh0nWm8/d6HUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SbtO2gjl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pC/UAdbo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SbtO2gjl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=pC/UAdbo; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 04A4D2115F;
-	Mon, 17 Feb 2025 03:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739764439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=keg1qJuuA789j7Ba4lkiMaAbdgqyTR7GNNcXfWjDZGE=;
-	b=SbtO2gjlRW4a5ChiHpK4R3YV8cXedBUMCUIuZny0PbSY0u293kTdYS7Lizopb2xd07E92h
-	m/jQK623tU9QPGmkJow+L5eIJuMBhAe2Z0s9F/tzS2jhmOyiAozK9LoG1nIZfdERLlRyQC
-	oNBOBzul4HP1CYRx2bjna7HaEO8ARho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739764439;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=keg1qJuuA789j7Ba4lkiMaAbdgqyTR7GNNcXfWjDZGE=;
-	b=pC/UAdboh2TmGXFGrInv2kNMRoOIT6xqTa7MDwreFRAfmnUfm0hla0tF8Zd9WVg5MzzJHt
-	+uscuXdjYm5lNtCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=SbtO2gjl;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="pC/UAdbo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739764439; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=keg1qJuuA789j7Ba4lkiMaAbdgqyTR7GNNcXfWjDZGE=;
-	b=SbtO2gjlRW4a5ChiHpK4R3YV8cXedBUMCUIuZny0PbSY0u293kTdYS7Lizopb2xd07E92h
-	m/jQK623tU9QPGmkJow+L5eIJuMBhAe2Z0s9F/tzS2jhmOyiAozK9LoG1nIZfdERLlRyQC
-	oNBOBzul4HP1CYRx2bjna7HaEO8ARho=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739764439;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=keg1qJuuA789j7Ba4lkiMaAbdgqyTR7GNNcXfWjDZGE=;
-	b=pC/UAdboh2TmGXFGrInv2kNMRoOIT6xqTa7MDwreFRAfmnUfm0hla0tF8Zd9WVg5MzzJHt
-	+uscuXdjYm5lNtCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9607E1363A;
-	Mon, 17 Feb 2025 03:53:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nY2BEtSysmfPWgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 17 Feb 2025 03:53:56 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1739777618; c=relaxed/simple;
+	bh=zcM0c0V1GS3TZJGed3LcwXT+koAZctVBP1JWt1wC7bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=G6u48Dc656R6matR9VISJbdaBooraRuO6z1+J9hc4TAmF6brdxBH3VpXSfBxaywTx8GO5sEGVX6wKbFnqFXYTi0uO9SdSj0+q2VpBtuZNOTh9ZvlUdQ2M6s5HR47yqlCpga364SSb0+XpWc0/e29ITQBFO4SeXRVuIwIznaeWg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DAIbeN7y; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb8045c3f3so165396666b.2
+        for <linux-nfs@vger.kernel.org>; Sun, 16 Feb 2025 23:33:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739777615; x=1740382415; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d4LcgUMXB/Wz2DoEL+bbrP94KZi1QyVcM8jrNwIU/TI=;
+        b=DAIbeN7yi3FYa7O7TITI1BtUZEFdMsSqQR7IT8S3AuisRtxSU6zkig4Rh9LsplObPi
+         fsJ8qNAltGfR0KqX0P56PX8aBqBh17uhah8GcPd3JSuLVvbRnBaG/CMsHFTUYThZAtGj
+         kWEjb0FTaqcUBd8nEHSEck3dP8ZpMU+gPrEoFinQWt5Vnx8mn6f+1rB5O+Zv9g7jLDlD
+         Y+EzHiOqBU2eQ+SMl8S7jBAUyBK6rfPAcC96G90bvh+Yy/Yy0aWc8yqTOwVMIMEP9yjx
+         neKrFb3d5+nGNBG2CReMURnD0w2BPWmVG00dDbc5ZG0MVm96ur2NcmAUWXSny6QCQs4v
+         9WPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739777615; x=1740382415;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d4LcgUMXB/Wz2DoEL+bbrP94KZi1QyVcM8jrNwIU/TI=;
+        b=iUPnNup8HKDaGqjYC9nll2+wDf1vTHaKPUrLirJcfMh9kidUCjymlelVXtvUTXJyk6
+         A6dqTjb/SpHx23rBPvRMLigXAwcCVWjwHxW7es6MouGVBe9J1MQ745/yUo5ZFCyj32ea
+         EuPulkRnVxqKSl5dtXW73P77aaM98FOCxogLTv3KkzTXB79SUlSK0gyS8rjbOtTmXdBk
+         NDfBQWYlSNVBwIVYJ2Gw1PENdDMoSzgAkDE1A2ErUs5OSo3ZSGVdtRoWZC6crfCNXmgm
+         L5B8s3b6wQr2chEphRp8WztgORzxwLX3hqtTLwxBZPNhv2tf7v9db5wbW6gDzIpOZfwB
+         N5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+MDEq2i7j8hxIezVDJJXOz7ZH8+vBZVeMS9pazK++SeQwnAUDc1ISfL+6vpJ9fHEFy+2jLV414uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydXPXXe7kGSBNkdlAwpKUIJ9iT0bpdzz/YV3k4K1RXrPolIZWb
+	PbGPel0be2fL2Bs0CfNwceccepWPUsZrLdz88/2sbcB85u4Ht20K7skC3PRM5eQ=
+X-Gm-Gg: ASbGncvJwhwBeQwQfgzZSx7eN6tL7ht+BNw0aKwNNVRWv1cgnjgIoTY3K/nssJMlGr4
+	RPEVzxKCak2Mhvgs3vGVjuhvF6UPVjjsJ0ShrE0/JwMMAd4ZtvoNVEUVGNByi2wZcR5LSV3/H/V
+	Qg20DHs/od5s6zQakmVZKIc0vKNMCjnPwyBa1BPKHijvndVLwqaEZpHQwNEt/SfVYV8cz/dkaP7
+	c1FuR87I/mXlgIEL/gLZljbUVYSwVC44iPrut5WKSNV96mBCks+8JbLmk3rU5wEPZPAdgL3XNO2
+	fO/MJdv2Ti+uIfLtpa6Q
+X-Google-Smtp-Source: AGHT+IF7SQDPhS34NSoyAyl0oz3XF6hgO/dLFCbg4PL3cGhqcXdyTG7Koy72X0FHVW9/sFD79dcHNA==
+X-Received: by 2002:a17:907:9802:b0:ab7:bcc0:9067 with SMTP id a640c23a62f3a-abb70dd72f8mr973363966b.40.1739777615128;
+        Sun, 16 Feb 2025 23:33:35 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abba9657249sm41281166b.38.2025.02.16.23.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 23:33:34 -0800 (PST)
+Date: Mon, 17 Feb 2025 10:33:31 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] nfsd: Fix a WARN_ONCE() message
+Message-ID: <39691ae0-124e-48ea-8a1a-1a7f26423236@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3} Change ->mkdir() and vfs_mkdir() to return a dentry
-In-reply-to: <20250214060039.GB1977892@ZenIV>
-References:
- <20250214052204.3105610-1-neilb@suse.de>, <20250214060039.GB1977892@ZenIV>
-Date: Mon, 17 Feb 2025 14:53:52 +1100
-Message-id: <173976443235.3118120.11496260792280593655@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 04A4D2115F
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Fri, 14 Feb 2025, Al Viro wrote:
-> On Fri, Feb 14, 2025 at 04:16:40PM +1100, NeilBrown wrote:
-> > This is a small set of patches which are needed before we can make the
-> > locking on directory operations more fine grained.  I think they are
-> > useful even if we don't go that direction.
-> > 
-> > Some callers of vfs_mkdir() need to operation on the resulting directory
-> > but cannot be guaranteed that the dentry will be hashed and positive on
-> > success - another dentry might have been used.
-> > 
-> > This patch changes ->mkdir to return a dentry, changes NFS in particular
-> > to return the correct dentry (I believe it is the only filesystem to
-> > possibly not use the given dentry), and changes vfs_mkdir() to return
-> > that dentry, removing the look that a few callers currently need.
-> > 
-> > I have not Cc: the developers of all the individual filesystems - only
-> > NFS.  I have build-tested all the changes except hostfs.  I can email
-> > them explicitly if/when this is otherwise acceptable.  If anyone sees
-> > this on fs-devel and wants to provide a pre-emptive ack I will collect
-> > those and avoid further posting for those fs.
-> 
-> 1) please, don't sprinkle the PTR_ERR_OR_ZERO() shite all over the place.
-> Almost always the same thing can be done without it and it ends up
-> being cleaner.  Seriously.
+The first parameter of WARN_ONCE() is supposed to be the condition but
+it's missing here.  This WARN_ONCE() will only print the "xcl_name".
 
-I've removed several PTR_ERR_OR_ZERO() calls.  Some times that could be
-seen as a slight improvement, other times possibly a slight negative
-(depending on how one feels about PTR_ERR_OR_ZERO of course).  I have
-left three as I cannot see how to remove them without making the code
-significant more clumsy.  If you find the remaining few to still be
-objectionable I would be happy to see what alternate you would propose.
+Fixes: 61b490d48618 ("nfsd: fix management of listener transports")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ fs/nfsd/nfsctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Your other feedback has been quite helpful - thanks.
-
-NeilBrown
-
-
-> 
-> 2) I suspect that having method instances return NULL for "just use the
-> argument" would would be harder to fuck up; basically, the same as for
-> ->lookup() instances.  I'll try to tweak it and see what falls out...
-> 
-> 3) I'm pretty sure that NFS is *not* the only filesystem that returns
-> unhashed negative in some success cases; will need to go over the instances
-> to verify that, though.
-> 
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 2cd540b26965..ac265d6fde35 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2027,7 +2027,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 		xprt = svc_find_listener(serv, xcl_name, net, sa);
+ 		if (xprt) {
+ 			if (delete)
+-				WARN_ONCE("Transport type=%s already exists\n",
++				WARN_ONCE(1, "Transport type=%s already exists\n",
+ 					  xcl_name);
+ 			svc_xprt_put(xprt);
+ 			continue;
+-- 
+2.47.2
 
 
