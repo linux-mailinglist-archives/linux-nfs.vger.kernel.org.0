@@ -1,117 +1,99 @@
-Return-Path: <linux-nfs+bounces-10147-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10148-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F5D3A37C56
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 08:35:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AEF7A37D28
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 09:27:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98FF73B1354
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 07:34:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D39517091D
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 08:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 923B019D081;
-	Mon, 17 Feb 2025 07:33:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7361C19F487;
+	Mon, 17 Feb 2025 08:27:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAIbeN7y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyKrXC3B"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EC419ABAC
-	for <linux-nfs@vger.kernel.org>; Mon, 17 Feb 2025 07:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3C8192B63;
+	Mon, 17 Feb 2025 08:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739777618; cv=none; b=A2ax4jtUgjQ21t/YaRDyYMJ6UWWX50FLsh2k1JikqzCBRrrx57gXmTGJs4ATG5n7DGe1t056sQhGfALjhOJMBeDWKKBmm1eCxeyD/F9uZ50N1qJisATH9SdJTY5aZRRdae2likUkT+C9OWo1xzOu+UFQC8P7nH7+bQayeYZE1oA=
+	t=1739780820; cv=none; b=X+hm7RkuycSqsYVK0tbvnEinbZu5CVNeHoW/dv4oaeGzkuB57nUi58veBRAsJyMvFGXPlJ1DULcrCu1zyuc4ihTIbxYvr9qXVqplX9VuWfc/8w2oZFnTLnDERvzv4OkeNcu1GEYrBdkh9HAjDowW0TH7+RkQGLWdxqSgErYbFxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739777618; c=relaxed/simple;
-	bh=zcM0c0V1GS3TZJGed3LcwXT+koAZctVBP1JWt1wC7bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=G6u48Dc656R6matR9VISJbdaBooraRuO6z1+J9hc4TAmF6brdxBH3VpXSfBxaywTx8GO5sEGVX6wKbFnqFXYTi0uO9SdSj0+q2VpBtuZNOTh9ZvlUdQ2M6s5HR47yqlCpga364SSb0+XpWc0/e29ITQBFO4SeXRVuIwIznaeWg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DAIbeN7y; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb8045c3f3so165396666b.2
-        for <linux-nfs@vger.kernel.org>; Sun, 16 Feb 2025 23:33:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739777615; x=1740382415; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=d4LcgUMXB/Wz2DoEL+bbrP94KZi1QyVcM8jrNwIU/TI=;
-        b=DAIbeN7yi3FYa7O7TITI1BtUZEFdMsSqQR7IT8S3AuisRtxSU6zkig4Rh9LsplObPi
-         fsJ8qNAltGfR0KqX0P56PX8aBqBh17uhah8GcPd3JSuLVvbRnBaG/CMsHFTUYThZAtGj
-         kWEjb0FTaqcUBd8nEHSEck3dP8ZpMU+gPrEoFinQWt5Vnx8mn6f+1rB5O+Zv9g7jLDlD
-         Y+EzHiOqBU2eQ+SMl8S7jBAUyBK6rfPAcC96G90bvh+Yy/Yy0aWc8yqTOwVMIMEP9yjx
-         neKrFb3d5+nGNBG2CReMURnD0w2BPWmVG00dDbc5ZG0MVm96ur2NcmAUWXSny6QCQs4v
-         9WPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739777615; x=1740382415;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4LcgUMXB/Wz2DoEL+bbrP94KZi1QyVcM8jrNwIU/TI=;
-        b=iUPnNup8HKDaGqjYC9nll2+wDf1vTHaKPUrLirJcfMh9kidUCjymlelVXtvUTXJyk6
-         A6dqTjb/SpHx23rBPvRMLigXAwcCVWjwHxW7es6MouGVBe9J1MQ745/yUo5ZFCyj32ea
-         EuPulkRnVxqKSl5dtXW73P77aaM98FOCxogLTv3KkzTXB79SUlSK0gyS8rjbOtTmXdBk
-         NDfBQWYlSNVBwIVYJ2Gw1PENdDMoSzgAkDE1A2ErUs5OSo3ZSGVdtRoWZC6crfCNXmgm
-         L5B8s3b6wQr2chEphRp8WztgORzxwLX3hqtTLwxBZPNhv2tf7v9db5wbW6gDzIpOZfwB
-         N5LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+MDEq2i7j8hxIezVDJJXOz7ZH8+vBZVeMS9pazK++SeQwnAUDc1ISfL+6vpJ9fHEFy+2jLV414uc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydXPXXe7kGSBNkdlAwpKUIJ9iT0bpdzz/YV3k4K1RXrPolIZWb
-	PbGPel0be2fL2Bs0CfNwceccepWPUsZrLdz88/2sbcB85u4Ht20K7skC3PRM5eQ=
-X-Gm-Gg: ASbGncvJwhwBeQwQfgzZSx7eN6tL7ht+BNw0aKwNNVRWv1cgnjgIoTY3K/nssJMlGr4
-	RPEVzxKCak2Mhvgs3vGVjuhvF6UPVjjsJ0ShrE0/JwMMAd4ZtvoNVEUVGNByi2wZcR5LSV3/H/V
-	Qg20DHs/od5s6zQakmVZKIc0vKNMCjnPwyBa1BPKHijvndVLwqaEZpHQwNEt/SfVYV8cz/dkaP7
-	c1FuR87I/mXlgIEL/gLZljbUVYSwVC44iPrut5WKSNV96mBCks+8JbLmk3rU5wEPZPAdgL3XNO2
-	fO/MJdv2Ti+uIfLtpa6Q
-X-Google-Smtp-Source: AGHT+IF7SQDPhS34NSoyAyl0oz3XF6hgO/dLFCbg4PL3cGhqcXdyTG7Koy72X0FHVW9/sFD79dcHNA==
-X-Received: by 2002:a17:907:9802:b0:ab7:bcc0:9067 with SMTP id a640c23a62f3a-abb70dd72f8mr973363966b.40.1739777615128;
-        Sun, 16 Feb 2025 23:33:35 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abba9657249sm41281166b.38.2025.02.16.23.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 23:33:34 -0800 (PST)
-Date: Mon, 17 Feb 2025 10:33:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Olga Kornievskaia <okorniev@redhat.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] nfsd: Fix a WARN_ONCE() message
-Message-ID: <39691ae0-124e-48ea-8a1a-1a7f26423236@stanley.mountain>
+	s=arc-20240116; t=1739780820; c=relaxed/simple;
+	bh=sm2EZjnhx6J7VSpn7U999FYUOZrMabD6174jywXnIiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HHyJIST7A/JRWUDYNMlRMZjseKK8yKnaFgJ7lSekPEIZ19bo7az7c05GKcsawJth4hhyPabfswGeGhGbvROOBYmnaQHONBAw5KaR0yOC/TOYWOrQ/UuLmUZKb1/eVQRPJXfbI31CotOHT0HwGvof1MNbqSfGHtKDSrRBsphvf+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyKrXC3B; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F8CC4CED1;
+	Mon, 17 Feb 2025 08:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739780819;
+	bh=sm2EZjnhx6J7VSpn7U999FYUOZrMabD6174jywXnIiY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RyKrXC3BlJTtlOqrfoIFRDb+MTcVuuuGbWZAOkpXFhOZC8HewxgZg4MVnn8CpduMw
+	 ZKhhIp+j+rtPDGnZSHv7uX2x5T896AW/DG2Et7sr9db+iGApNej2QTCtvX6Xvzeg+X
+	 n0yr3BpZX0gFNCAGtP7OjaFP43q3K6uJcCXNakyrG+6hjsuepWhs+1RqFVUPGB4wKj
+	 KvOZXVHaNYaYdqxagbj8yLT7J2Evc6Fuup7zXa8+mDrjYyNGWicxzjFjdr+DynbORk
+	 /tCdirZyg2IpCoa92eBQ+AudWLDIPP6v1bDkwCkxe7fc8IHQskG0FCKGVmIVwnVOZD
+	 u0J3O8ux5Kv3w==
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and user_path_locked_at() to never return negative dentry
+Date: Mon, 17 Feb 2025 09:26:46 +0100
+Message-ID: <20250217-summen-fuhren-b46dddda6d71@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250217003020.3170652-2-neilb@suse.de>
+References: <20250217003020.3170652-1-neilb@suse.de> <20250217003020.3170652-2-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1430; i=brauner@kernel.org; h=from:subject:message-id; bh=sm2EZjnhx6J7VSpn7U999FYUOZrMabD6174jywXnIiY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRv+nTu9Jr/l7+ZWDxfIcYqKMQfZZCWnV60RmFr9j+LR V9Y9yfs7ChlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhIShHDXzHL5SxR2+7GS816 53NPNGzmFabsizVeW/3XdN68utH1zntGhp9c+bvPR6j3a7lPm/1Vlckh/MHJ220+crNTFkfP3yD zlBcA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-The first parameter of WARN_ONCE() is supposed to be the condition but
-it's missing here.  This WARN_ONCE() will only print the "xcl_name".
+On Mon, 17 Feb 2025 11:27:20 +1100, NeilBrown wrote:
+> No callers of kern_path_locked() or user_path_locked_at() want a
+> negative dentry.  So change them to return -ENOENT instead.  This
+> simplifies callers.
+> 
+> This results in a subtle change to bcachefs in that an ioctl will now
+> return -ENOENT in preference to -EXDEV.  I believe this restores the
+> behaviour to what it was prior to
+>  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
+> 
+> [...]
 
-Fixes: 61b490d48618 ("nfsd: fix management of listener transports")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- fs/nfsd/nfsctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied to the vfs-6.15.async.dir branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.async.dir branch should appear in linux-next soon.
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 2cd540b26965..ac265d6fde35 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -2027,7 +2027,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info *info)
- 		xprt = svc_find_listener(serv, xcl_name, net, sa);
- 		if (xprt) {
- 			if (delete)
--				WARN_ONCE("Transport type=%s already exists\n",
-+				WARN_ONCE(1, "Transport type=%s already exists\n",
- 					  xcl_name);
- 			svc_xprt_put(xprt);
- 			continue;
--- 
-2.47.2
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.async.dir
+
+[1/2] VFS: change kern_path_locked() and user_path_locked_at() to never return negative dentry
+      https://git.kernel.org/vfs/vfs/c/a97b8bfbb9f1
+[2/2] VFS: add common error checks to lookup_one_qstr_excl()
+      https://git.kernel.org/vfs/vfs/c/20c2c1baa9ab
 
