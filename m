@@ -1,185 +1,145 @@
-Return-Path: <linux-nfs+bounces-10142-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10143-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E117FA36F8E
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Feb 2025 17:51:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DCAC4A37930
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 01:30:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A225E189122F
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Feb 2025 16:51:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B475E1887AFE
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Feb 2025 00:30:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EAF71A5BB8;
-	Sat, 15 Feb 2025 16:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46758479;
+	Mon, 17 Feb 2025 00:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjroG7Lm"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CldnGQCD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IvNy51ya";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CldnGQCD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IvNy51ya"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3D61991B8
-	for <linux-nfs@vger.kernel.org>; Sat, 15 Feb 2025 16:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE4A4689
+	for <linux-nfs@vger.kernel.org>; Mon, 17 Feb 2025 00:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739638278; cv=none; b=ocDc+FzPiq+flZU6wfTS84Co/fwrvOsW1XRCo4aZNQit6d6lQNxiCLml8ijU4uQYBzBo8w0M5As2xNNswjE8JbgRIvhk8hAIUPqppmD5N4je3k/4zxmIrZ5er7Z0O0yHho5OFSgJZko0uoTE0g5LoON3zNLv+jPzizZxT0nLjAE=
+	t=1739752236; cv=none; b=mmZfEY4rN8VpPNPRrFRL5uKWfcmzL4bknDNXUNxMjGNOn+hNaqLFBONpXDYK5LmlMu0itJhj5SOzUfvH9NY4LYCtsjU/znBR82GXPeVTNJvEX118hvKS3KTnYoUNS2ukJIOUtwgFblD4Aa0/DLbNakfKMtPyHy5Z/DDHkGh3f+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739638278; c=relaxed/simple;
-	bh=Jo9cF7pAhN2YFZUmdxCbT4J0O+zQ5h1EjLAFlcSJa9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aRqrXvDlqxvQ9LuGQzK+FhQJPDy1DgghP1dJwVVlGTpEGRcy+LCBenOhmc1KnKmcZWac6+dYfugwpYP93ke1jg6hWPuNTbqteknor4pM/F43SWjxV7Gh/RiPrLnWAjnIsMuUrw4Y5W7MnYib+5C/oLK7wUFW/zBW84CkxGlsfC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjroG7Lm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 894BCC4CEDF;
-	Sat, 15 Feb 2025 16:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739638273;
-	bh=Jo9cF7pAhN2YFZUmdxCbT4J0O+zQ5h1EjLAFlcSJa9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UjroG7Lm5+CEGKjQk35eUkAh2aO1qGrE6WwlE46EhgAbOykaNbxx4Qjx2kevGnryz
-	 KgEP8sg/Gf4ZduKIpXDL70rrpLo4AIJF2VO40lmfduoGaKNbHXKOSW5Rw8TCYcyM3P
-	 Nybt2vFaQcEwQ73Cot/e1KeA5N9ihh3u5kAe+Wj9DO8qRKq4sCPgOwRPfuBpVR+dwI
-	 zgzQPT8hivD51cfRvT8ZGOoYl2DTyzuzYSHP1oWt0kuVnFxSVlLXu5mwPlJ1wGgnBI
-	 8xYDLRQCUsYYBQkHeq+AN8JuLkGsDHlCS6Df7LDo3P31i7Nyw4fpBpiZlgXeyIacbT
-	 s4kIDpXOfjpTA==
-Received: by pali.im (Postfix)
-	id D8F4A676; Sat, 15 Feb 2025 17:51:00 +0100 (CET)
-Date: Sat, 15 Feb 2025 17:51:00 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Mike Snitzer <snitzer@redhat.com>, linux-nfs@vger.kernel.org
-Subject: Re: nfs compile error nfslocalio.o and localio.o since v6.14-rc1
-Message-ID: <20250215165100.jlibe46qwwdfgau5@pali>
-References: <20250215120054.mfvr2fzs5426bthx@pali>
- <4c790142-7126-413d-a2f3-bb080bb26ce6@oracle.com>
- <20250215163800.v4qdyum6slbzbmts@pali>
- <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
+	s=arc-20240116; t=1739752236; c=relaxed/simple;
+	bh=7hm4UYiSQKJ02Kivb5z8jPOK2HBumg9Bq9KQ8RW3GoY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLfllTAVOeBQcm2c2qwyxP2OP3Ox6cp6V0X4CHNWynLKxtNjXOnW/Ywh5Bytlmq+kkkewwnvIymAXMyXpENDv2tkISrqQEJVu8NduphHSYCsC9cLEUPxC+M5TA3Po9z83WIvrjlABpkxYGlidSQZUKpjW5LGWzIZP1339y5T+D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CldnGQCD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IvNy51ya; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CldnGQCD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IvNy51ya; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C423F2115D;
+	Mon, 17 Feb 2025 00:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739752232; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=63ymESUZ1VswTVkk6f5VJa6KSQecuRbSvUUtgUBjJNk=;
+	b=CldnGQCDCYZhXCSh2xS46l+IIrnv0zLHt3FxYGj06n+Vp+3gXzSYbo03GUaaI+BgKxc6yH
+	TapVa1jkOIk+YcCH3AAsfTQXsAQpU/lpbfQ+WAi184zgWAX+dbyTO3oR5xIOasfnvr6GhS
+	TSNNRGN2r5hOPyJPBCV3Nggd3ADjIJY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739752232;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=63ymESUZ1VswTVkk6f5VJa6KSQecuRbSvUUtgUBjJNk=;
+	b=IvNy51yaFUotsZVwzKACLbsCqStty2csPcD30iluHLnSy5JfnJPikLtVD+vMxXe3AhNL8e
+	WvhiDoifxacUO+CQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CldnGQCD;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=IvNy51ya
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739752232; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=63ymESUZ1VswTVkk6f5VJa6KSQecuRbSvUUtgUBjJNk=;
+	b=CldnGQCDCYZhXCSh2xS46l+IIrnv0zLHt3FxYGj06n+Vp+3gXzSYbo03GUaaI+BgKxc6yH
+	TapVa1jkOIk+YcCH3AAsfTQXsAQpU/lpbfQ+WAi184zgWAX+dbyTO3oR5xIOasfnvr6GhS
+	TSNNRGN2r5hOPyJPBCV3Nggd3ADjIJY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739752232;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=63ymESUZ1VswTVkk6f5VJa6KSQecuRbSvUUtgUBjJNk=;
+	b=IvNy51yaFUotsZVwzKACLbsCqStty2csPcD30iluHLnSy5JfnJPikLtVD+vMxXe3AhNL8e
+	WvhiDoifxacUO+CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0310E136AD;
+	Mon, 17 Feb 2025 00:30:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3QfLKiaDsmeyJwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 17 Feb 2025 00:30:30 +0000
+From: NeilBrown <neilb@suse.de>
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2 v2] VFS: minor improvements to a couple of interfaces
+Date: Mon, 17 Feb 2025 11:27:19 +1100
+Message-ID: <20250217003020.3170652-1-neilb@suse.de>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
-User-Agent: NeoMutt/20180716
+X-Rspamd-Queue-Id: C423F2115D
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Saturday 15 February 2025 11:41:25 Chuck Lever wrote:
-> On 2/15/25 11:38 AM, Pali Rohár wrote:
-> > On Saturday 15 February 2025 11:29:45 Chuck Lever wrote:
-> >> Hi Pali -
-> >>
-> >> On 2/15/25 7:00 AM, Pali Rohár wrote:
-> >>> Hello, since v6.14-rc1, file nfslocalio.c cannot be compiled with
-> >>> gcc-8.3 and attached .config file. Same problem is with localio.c.
-> >>
-> >> If the interwebs are correct, gcc-8.3 was released in 2014. ISTR that
-> >> recent releases of the Linux kernel no longer support gcc versions that
-> >> old.
-> > 
-> > Hello, I know that this is old version, and I specially used it just to
-> > check if everything compiles correctly. And it failed.
-> > 
-> > Per https://docs.kernel.org/process/changes.html the minimal version of
-> > gcc is 5.1, so I think that compilation with gcc 8.3 should still be
-> > supported.
-> > 
-> >> It appears to be snagging on kernel-wide utility helpers, not code
-> >> specific to NFS.
-> > 
-> > It looks like that, but only those two nfs files cause compile errors.
-> > Everything else compiles without problem. So it is quite suspicious and
-> > maybe it could signal that those helper are used incorrectly in nfs
-> > code? I'm not sure, I have not investigated it.
-> 
-> A bisect would be helpful.
-> 
-> Also, what is the CPU platform architecture? x86_64?
+Hi,
+ please replace the top two patches in vfs/vfs-6.15.async.dir
+with these two revised versions.
 
-Yes, it is x86_64, I hope that all details/configuration is in the
-.config file. I took generic gcc 8.3 version which was distributed by
-some debian version. So nothing special.
+Both add text to filesytems/porting.rst
 
-> 
-> >> If that's the case, it might not be possible for us to address this
-> >> breakage.
-> >>
-> >> Adding Mike, who contributed this code.
-> >>
-> >>> Error is:
-> >>>
-> >>> $ make bzImage
-> >>>   CALL    scripts/checksyscalls.sh
-> >>>   DESCEND objtool
-> >>>   INSTALL libsubcmd_headers
-> >>>   CC      fs/nfs_common/nfslocalio.o
-> >>> In file included from ./include/linux/rbtree.h:24,
-> >>>                  from ./include/linux/mm_types.h:11,
-> >>>                  from ./include/linux/mmzone.h:22,
-> >>>                  from ./include/linux/gfp.h:7,
-> >>>                  from ./include/linux/umh.h:4,
-> >>>                  from ./include/linux/kmod.h:9,
-> >>>                  from ./include/linux/module.h:17,
-> >>>                  from fs/nfs_common/nfslocalio.c:7:
-> >>> fs/nfs_common/nfslocalio.c: In function ‘nfs_close_local_fh’:
-> >>> ./include/linux/rcupdate.h:531:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
-> >>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-> >>>          ^
-> >>> ./include/linux/rcupdate.h:650:31: note: in expansion of macro ‘__rcu_access_pointer’
-> >>>  #define rcu_access_pointer(p) __rcu_access_pointer((p), __UNIQUE_ID(rcu), __rcu)
-> >>>                                ^~~~~~~~~~~~~~~~~~~~
-> >>> fs/nfs_common/nfslocalio.c:288:10: note: in expansion of macro ‘rcu_access_pointer’
-> >>>   ro_nf = rcu_access_pointer(nfl->ro_file);
-> >>>           ^~~~~~~~~~~~~~~~~~
-> >>> make[4]: *** [scripts/Makefile.build:207: fs/nfs_common/nfslocalio.o] Error 1
-> >>> make[3]: *** [scripts/Makefile.build:465: fs/nfs_common] Error 2
-> >>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
-> >>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
-> >>> make: *** [Makefile:251: __sub-make] Error 2
-> >>>
-> >>>
-> >>> $ make fs/nfs/localio.o
-> >>>   CALL    scripts/checksyscalls.sh
-> >>>   DESCEND objtool
-> >>>   INSTALL libsubcmd_headers
-> >>>   CC      fs/nfs/localio.o
-> >>> In file included from ./include/linux/rbtree.h:24,
-> >>>                  from ./include/linux/mm_types.h:11,
-> >>>                  from ./include/linux/mmzone.h:22,
-> >>>                  from ./include/linux/gfp.h:7,
-> >>>                  from ./include/linux/umh.h:4,
-> >>>                  from ./include/linux/kmod.h:9,
-> >>>                  from ./include/linux/module.h:17,
-> >>>                  from fs/nfs/localio.c:11:
-> >>> fs/nfs/localio.c: In function ‘nfs_local_open_fh’:
-> >>> ./include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
-> >>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-> >>>          ^
-> >>> ./include/linux/rcupdate.h:686:2: note: in expansion of macro ‘__rcu_dereference_check’
-> >>>   __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-> >>>   ^~~~~~~~~~~~~~~~~~~~~~~
-> >>> ./include/linux/rcupdate.h:758:28: note: in expansion of macro ‘rcu_dereference_check’
-> >>>  #define rcu_dereference(p) rcu_dereference_check(p, 0)
-> >>>                             ^~~~~~~~~~~~~~~~~~~~~
-> >>> fs/nfs/localio.c:275:7: note: in expansion of macro ‘rcu_dereference’
-> >>>   nf = rcu_dereference(*pnf);
-> >>>        ^~~~~~~~~~~~~~~
-> >>> make[4]: *** [scripts/Makefile.build:207: fs/nfs/localio.o] Error 1
-> >>> make[3]: *** [scripts/Makefile.build:465: fs/nfs] Error 2
-> >>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
-> >>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
-> >>> make: *** [Makefile:251: __sub-make] Error 2
-> >>>
-> >>>
-> >>> Reproduced from commit 7ff71e6d9239 ("Merge tag 'alpha-fixes-v6.14-rc2'
-> >>> of git://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha").
-> >>
-> >>
-> >> -- 
-> >> Chuck Lever
-> 
-> 
-> -- 
-> Chuck Lever
+The first moves an 'err = 0' as was requested if any refresh is needed.
+The second adds a check for errors from ->lookup.  This omission is
+triggering various error reports.
+
+Thanks,
+NeilBrown
+
+ [PATCH 1/2] VFS: change kern_path_locked() and user_path_locked_at()
+ [PATCH 2/2] VFS: add common error checks to lookup_one_qstr_excl()
 
