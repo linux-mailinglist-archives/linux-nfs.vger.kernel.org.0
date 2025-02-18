@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-10179-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10180-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B123EA3A836
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 20:59:52 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E16BA3A957
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 21:39:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D256188D08E
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 19:59:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E77DC7A27E7
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 20:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1C61EFF8F;
-	Tue, 18 Feb 2025 19:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 109F52144CF;
+	Tue, 18 Feb 2025 20:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdyeWeCk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czVagdTa"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5575A1E51E3
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 19:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBB82144CC
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 20:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739908785; cv=none; b=AsTYUHlU0x/f69ygJrRSrrErvvyXI//gJ2++vyXTClPnXwxBhEE2xsCj7yO2lZR4jR7f587MrQ037uQBSWpC9UtFdjnkaM/US1znSb4Vj7MqE9V3l9e870EmkLSel45XnFKETRXdOxrt7kaisPZLOpiXiXZMtzH/24+ugb+d7HM=
+	t=1739910439; cv=none; b=lhu5Bbt6PKwgIRjm4ftpOjkt7hDrp3PPuVHOU6xJoezWaLAjWbVWXx51z/aPPdh17gm9T6RfWSqCl1Sa50q8HwoOniDQrnuyu71niNnT2HO3AHtEw3tP/1Te2h1gAigKUPzuYME6hjoPT1FiIjm7jOTNg1QEW87O58Iz2LaWkrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739908785; c=relaxed/simple;
-	bh=I//8QIp5q5fPvPjeS4RiBhgvhFgk06E04z6yFvXF72Y=;
+	s=arc-20240116; t=1739910439; c=relaxed/simple;
+	bh=tCH3qOzddToM7368OENl5+1wcTGhw4fxmBQKlwWi5Oo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DBvrJIPFRRVMuiD45WK7cvENzAKrcOzhMFi1BKMMshntawwXnIpu7reURxh9LW/QhBNdWFjAnDM2ThevhBCVEv63wQddV6FA74uZxz+0MfIK0teGBVVGxskeOzgvk3d0sDJ/N+zgsCrqbyfzDecGiIFNfsU+5EL0jzFl74rkrPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdyeWeCk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D857BC4CEE4;
-	Tue, 18 Feb 2025 19:59:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=dwCoL8KS4gfvcgoNfild3Ez+fqX67c6bwrYB3N44k7oYuBoeCWd8RCtKjzaebvNyjgFJPFJXsXnynpi/NvrDLCEVWnFVAbEVDYWmZMLYKbpdngV2X+14oLorV4/NOfd/q+1/j7nIA5Yixj2Zj4AWgIuMN21IOxRCVsjmfTrV9uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czVagdTa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D96C4CEE4;
+	Tue, 18 Feb 2025 20:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739908784;
-	bh=I//8QIp5q5fPvPjeS4RiBhgvhFgk06E04z6yFvXF72Y=;
+	s=k20201202; t=1739910436;
+	bh=tCH3qOzddToM7368OENl5+1wcTGhw4fxmBQKlwWi5Oo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VdyeWeCkGa2Mc5BOqAJPVY1EHoHOcU2jCykK+1Y8MMloynRGqcl4FMIYDHcF+DZmN
-	 oSWUTUWYZQmwOjA7N7bz7Jq7hoar2t0iGFma04CvsIyHfz9YFlR7uo5qdPofqP8FC/
-	 TZ5KD7Mhz5nSXhJIUSEX7FU3QHad2ydz75qWVaJBMPrRosFNUFrnJTFjc7ttNOMlPj
-	 vwAs9mDdNf7VVvh/4x5rDEt78Zyi8s5pom5/JYfZrKDuqn/PqltnyX1/Vv9D2yTcAz
-	 xY0+mMeKdzpqnVJuYYrd4trjXQXNjNztnZcoBEPoqFgT0OzWcS1MHwB0R5aUopPxLB
-	 KvF+josTumOiQ==
-Message-ID: <a3393f7a210ee467749f3fabc7490fb17e3ef6e5.camel@kernel.org>
-Subject: Re: [PATCH v2 2/7] NFSD: Re-organize nfsd_file_gc_worker()
+	b=czVagdTaB4ifCnZ7wDlA82lfwbz42AIcFt0hmBW3KE1rrutE8+N/1A3KmMG7Jy1mh
+	 Znl6mtgY9IzLUd9maG+F3/D3vg2+AaQiZML0MHrHzlzviTFXOQdswNB0a+gzXOB1rb
+	 XJNfXjZuhX+d+IfbSEKbnZgi+5YHjRSuwzqpnaKmbxs+oq3cHXe5ZswakM9ucrambO
+	 jU34snlZTQvUV4K5yMThlca8t3BJP9EExB26FB6yc0M+Z1Yhr4XVE7d0Jtl9nMhI/e
+	 TWFVpzApDPI5yNqaKqKvisqtLnWJJkH0nmeLKWgXieUcPB92/GpqyZ+96fm4kzmGV+
+	 DIEHpYEZT5LzA==
+Message-ID: <873bd6625529442989754e38e27e23286505bcfe.camel@kernel.org>
+Subject: Re: [PATCH v2 6/7] nfsd: filecache: don't repeatedly add/remove
+ files on the lru list
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>, Chuck
- Lever	 <chuck.lever@oracle.com>
-Date: Tue, 18 Feb 2025 14:59:42 -0500
-In-Reply-To: <20250218153937.6125-3-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Date: Tue, 18 Feb 2025 15:27:14 -0500
+In-Reply-To: <20250218153937.6125-7-cel@kernel.org>
 References: <20250218153937.6125-1-cel@kernel.org>
-	 <20250218153937.6125-3-cel@kernel.org>
+	 <20250218153937.6125-7-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,56 +138,122 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-02-18 at 10:39 -0500, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+> From: NeilBrown <neilb@suse.de>
 >=20
-> Dave opines:
+> There is no need to remove a file from the lru every time we access it,
+> and then add it back.  It is sufficient to set the REFERENCED flag every
+> time we put the file.  The order in the lru of REFERENCED files is
+> largely irrelevant as they will all be moved to the end.
 >=20
-> IMO, there is no need to do this unnecessary work on every object
-> that is added to the LRU.  Changing the gc worker to always run
-> every 2s and check if it has work to do like so:
+> With this patch, files are added only when they are allocated (if
+> want_gc) and they are removed only by the list_lru_(shrink_)walk
+> callback or when forcibly removing a file.
 >=20
->  static void
->  nfsd_file_gc_worker(struct work_struct *work)
->  {
-> -	nfsd_file_gc();
-> -	if (list_lru_count(&nfsd_file_lru))
-> -		nfsd_file_schedule_laundrette();
-> +	if (list_lru_count(&nfsd_file_lru))
-> +		nfsd_file_gc();
-> +	nfsd_file_schedule_laundrette();
->  }
+> This should reduce contention on the list_lru spinlock(s) and reduce
+> memory traffic a little.
 >=20
-> means that nfsd_file_gc() will be run the same way and have the same
-> behaviour as the current code. When the system it idle, it does a
-> list_lru_count() check every 2 seconds and goes back to sleep.
-> That's going to be pretty much unnoticable on most machines that run
-> NFS servers.
->=20
-> Suggested-by: Dave Chinner <david@fromorbit.com>
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/filecache.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/nfsd/filecache.c | 47 ++++++++++++++++-----------------------------
+>  1 file changed, 17 insertions(+), 30 deletions(-)
 >=20
 > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 909b5bc72bd3..2933cba1e5f4 100644
+> index 0d621833a9f2..56935349f0e4 100644
 > --- a/fs/nfsd/filecache.c
 > +++ b/fs/nfsd/filecache.c
-> @@ -549,9 +549,9 @@ nfsd_file_gc(void)
->  static void
->  nfsd_file_gc_worker(struct work_struct *work)
->  {
-> -	nfsd_file_gc();
-> +	nfsd_file_schedule_laundrette();
->  	if (list_lru_count(&nfsd_file_lru))
-> -		nfsd_file_schedule_laundrette();
-> +		nfsd_file_gc();
+> @@ -319,15 +319,14 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
+>  		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
 >  }
 > =20
->  static unsigned long
+> -static bool nfsd_file_lru_add(struct nfsd_file *nf)
+> +static void nfsd_file_lru_add(struct nfsd_file *nf)
+>  {
+> -	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> -	set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
+> -	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
+> +	refcount_inc(&nf->nf_ref);
+> +	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru))
+>  		trace_nfsd_file_lru_add(nf);
+> -		return true;
+> -	}
+> -	return false;
+> +	else
+> +		WARN_ON(1);
+> +	nfsd_file_schedule_laundrette();
+>  }
+> =20
+>  static bool nfsd_file_lru_remove(struct nfsd_file *nf)
+> @@ -363,16 +362,10 @@ nfsd_file_put(struct nfsd_file *nf)
+> =20
+>  	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
+>  	    test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> -		/*
+> -		 * If this is the last reference (nf_ref =3D=3D 1), then try to
+> -		 * transfer it to the LRU.
+> -		 */
+> -		if (refcount_dec_not_one(&nf->nf_ref))
+> -			return;
+> -
+> -		if (nfsd_file_lru_add(nf))
+> -			return;
+> +		set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> +		set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
+>  	}
+> +
+>  	if (refcount_dec_and_test(&nf->nf_ref))
+>  		nfsd_file_free(nf);
+>  }
+> @@ -516,13 +509,12 @@ nfsd_file_lru_cb(struct list_head *item, struct lis=
+t_lru_one *lru,
+>  	}
+> =20
+>  	/*
+> -	 * Put the reference held on behalf of the LRU. If it wasn't the last
+> -	 * one, then just remove it from the LRU and ignore it.
+> +	 * Put the reference held on behalf of the LRU if it is the last
+> +	 * reference, else rotate.
+>  	 */
+> -	if (!refcount_dec_and_test(&nf->nf_ref)) {
+> +	if (!refcount_dec_if_one(&nf->nf_ref)) {
+>  		trace_nfsd_file_gc_in_use(nf);
+> -		list_lru_isolate(lru, &nf->nf_lru);
+> -		return LRU_REMOVED;
+> +		return LRU_ROTATE;
+>  	}
+> =20
+>  	/* Refcount went to zero. Unhash it and queue it to the dispose list */
+> @@ -1062,16 +1054,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
+t net *net,
+>  	nf =3D nfsd_file_lookup_locked(net, current_cred(), inode, need, want_g=
+c);
+>  	rcu_read_unlock();
+> =20
+> -	if (nf) {
+> -		/*
+> -		 * If the nf is on the LRU then it holds an extra reference
+> -		 * that must be put if it's removed. It had better not be
+> -		 * the last one however, since we should hold another.
+> -		 */
+> -		if (nfsd_file_lru_remove(nf))
+> -			refcount_dec(&nf->nf_ref);
+> +	if (nf)
+>  		goto wait_for_construction;
+> -	}
+> =20
+>  	new =3D nfsd_file_alloc(net, inode, need, want_gc);
+>  	if (!new) {
+> @@ -1165,6 +1149,9 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ net *net,
+>  	 */
+>  	if (status !=3D nfs_ok || inode->i_nlink =3D=3D 0)
+>  		nfsd_file_unhash(nf);
+> +	else if (want_gc)
+> +		nfsd_file_lru_add(nf);
+> +
+>  	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+>  	if (status =3D=3D nfs_ok)
+>  		goto out;
 
-Given that it's a delayed workqueue job, it probably doesn't matter,
-but why schedule the laundrette before doing the nfsd_file_gc() call?
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
