@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-10171-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10172-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B300FA3A179
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 16:39:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A5D5A3A189
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 16:41:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45D49188305A
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 15:39:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D16C43AED4F
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 15:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86BC26D5D8;
-	Tue, 18 Feb 2025 15:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB5E026E142;
+	Tue, 18 Feb 2025 15:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nb2jmZpB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtRk5xnB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C6A26D5CC
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 15:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C745126D5CC
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 15:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739893183; cv=none; b=OSq9eohk6E5cYSqgORxtISSOmIrg5FLh6bWBntf9srqdu+LeBoRMnmNRaj3+74oihnsrc9aW7aqU8NOp1uJJYgCgcQZRgzGIsh16nPjv3R4KdhTWxG+mKUCS5NKmDHD3qnPGsuW5Y93L5CBIfkJEaCNk1BNGLc90B5z0/fi8lfY=
+	t=1739893185; cv=none; b=TnXp3lTHNbdE/g8thi2hz03K8L0bwtgKfjrtc4k2qdxlDw2kD8Jh7ePxRr93C4WZCwAOByOydZocf2BwkxQk4RxPEjg4djdKUW7mZu/SYNek7jCxDWsIHLsRU0tR+MXGBtA3Eo7mhI7J+hV572lixPq+GjlbWtMVBwiRf7q4og0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739893183; c=relaxed/simple;
-	bh=K0kbCsQ5aFEWuQlRov3HGKilBt63WoBIbVoqgj8bdvE=;
+	s=arc-20240116; t=1739893185; c=relaxed/simple;
+	bh=1k2PgSxTzE2sJtExkePSUbe2IWZcR1pB82e08Xr8iSo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EqDOPgVOD/ZRsF1POvwZLDQbdZC4c8vicC2yvAp+EuI8c6um2eUTA68kDKf7zLRsEQFAUPuP546mWW3XouFBQPnddmFTKc3z3Pg6+V/CGlJHqrDnhTGs/W4wMsnVNzeh7HIfr6HzycA9QMNrer2TnTxFE9y9K1Ek9TDsjdKFHQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nb2jmZpB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD60C4CEEA;
-	Tue, 18 Feb 2025 15:39:42 +0000 (UTC)
+	 MIME-Version; b=TmpMxBfF0mgCnhLZkWkfluWWfW1G5yXO9Svbr+tv/gE8XYCs0f2fLzjCvJAPyjxHRD/jRrZ677l8x4hTyvru4lfiwVNpjH1CCDNmUSEZGDWS8xkXqZgcy7wMFoRzD068ZZcGr9otojVc6h/rQt5GXshsmWEp9bbjc/tVqHdMack=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtRk5xnB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C668AC4CEE2;
+	Tue, 18 Feb 2025 15:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739893183;
-	bh=K0kbCsQ5aFEWuQlRov3HGKilBt63WoBIbVoqgj8bdvE=;
+	s=k20201202; t=1739893184;
+	bh=1k2PgSxTzE2sJtExkePSUbe2IWZcR1pB82e08Xr8iSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nb2jmZpB1MQiw95CY370h2oIkFlmtm5MMFBfKcmr8P2jm0/cezwBP5/3ThZ+/VInd
-	 6UN5lGO7F8U61uZO50rejbkUgB51vr3HcuedqrzHf96A1jbwB9g8QbNfp/n4nULnfD
-	 xW7tDdUXPPypMqT0k56ZM4t2S0aiUKxd0mLQl6bQyRopi7A7MzhGaBt5sgOpaNevd2
-	 fmsTK7PD2b9UEVXrfaNwMKgNjTnbtJF1Fw9dLZ2yfXFcwKDYzkDqF5dxD6rlBePtKJ
-	 p97FSuaygrDHK/rW/ZdBy7+YVQEr/zlo9Yce7kYG6lf/ySdeE6yb3gGyOWz1BzA9vI
-	 FuoiM0G/Euwyw==
+	b=VtRk5xnBtWBBfrzspWhA8xedoj1iyiHTRPnzGYk+Fc4vmTdlJiMsiF9Mbda/tvpvT
+	 Tuk1HyGmRW5zDZdRUBKygsb3CfjRPlkaQkGFr1d72tD4Xy2uL9XbBixtKsZVlAiwNf
+	 FDBmP3cOlPwn1JJg5XJRZTqSUhOZ6/cvtVlML+T4YIf0EDOGNZ3C5P4rvnlcITFk6N
+	 ianyCacg3pYDa/GESDZXCCDjpBqhSOr0J+mPqL6Xi75PmXDEBFmqpToBZphrV3a2Q3
+	 A3XYdoMRftmUA+FxEyle1UgX9lwxcZmrU6GRvMQknAu0jLEegrHsYjVcjEs2cPl393
+	 zA5jLObHyki3w==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Dave Chinner <david@fromorbit.com>
-Subject: [PATCH v2 3/7] nfsd: filecache: use nfsd_file_dispose_list() in nfsd_file_close_inode_sync()
-Date: Tue, 18 Feb 2025 10:39:33 -0500
-Message-ID: <20250218153937.6125-4-cel@kernel.org>
+Subject: [PATCH v2 4/7] nfsd: filecache: use list_lru_walk_node() in nfsd_file_gc()
+Date: Tue, 18 Feb 2025 10:39:34 -0500
+Message-ID: <20250218153937.6125-5-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250218153937.6125-1-cel@kernel.org>
 References: <20250218153937.6125-1-cel@kernel.org>
@@ -65,42 +65,44 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neilb@suse.de>
 
-nfsd_file_close_inode_sync() contains an exact copy of
-nfsd_file_dispose_list().
+list_lru_walk() is only useful when the aim is to remove all elements
+from the list_lru.  It will repeatedly visit rotated elements of the
+first per-node sublist before proceeding to subsequent sublists.
 
-This patch removes that copy and calls nfsd_file_dispose_list()
-instead.
+This patch changes nfsd_file_gc() to use list_lru_walk_node() and
+list_lru_count_node() on each NUMA node.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: NeilBrown <neilb@suse.de>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/filecache.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ fs/nfsd/filecache.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 2933cba1e5f4..143b5993a437 100644
+index 143b5993a437..747929c8c0d5 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -672,17 +672,12 @@ nfsd_file_close_inode(struct inode *inode)
- void
- nfsd_file_close_inode_sync(struct inode *inode)
+@@ -537,11 +537,16 @@ nfsd_file_lru_cb(struct list_head *item, struct list_lru_one *lru,
+ static void
+ nfsd_file_gc(void)
  {
--	struct nfsd_file *nf;
++	unsigned long ret = 0;
  	LIST_HEAD(dispose);
+-	unsigned long ret;
++	int nid;
  
- 	trace_nfsd_file_close(inode);
- 
- 	nfsd_file_queue_for_close(inode, &dispose);
--	while (!list_empty(&dispose)) {
--		nf = list_first_entry(&dispose, struct nfsd_file, nf_gc);
--		list_del_init(&nf->nf_gc);
--		nfsd_file_free(nf);
--	}
-+	nfsd_file_dispose_list(&dispose);
+-	ret = list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+-			    &dispose, list_lru_count(&nfsd_file_lru));
++	for_each_node_state(nid, N_NORMAL_MEMORY) {
++		unsigned long nr = list_lru_count_node(&nfsd_file_lru, nid);
++
++		ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_lru_cb,
++					  &dispose, &nr);
++	}
+ 	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+ 	nfsd_file_dispose_list_delayed(&dispose);
  }
- 
- static int
 -- 
 2.47.0
 
