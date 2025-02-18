@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-10174-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB565A3A18A
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 16:41:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0B94A3A18B
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 16:41:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6910C3AF340
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 15:39:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE95D3AF615
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 15:39:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A2A526B968;
-	Tue, 18 Feb 2025 15:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7638626E14C;
+	Tue, 18 Feb 2025 15:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhxmGDTm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHdKgL41"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E9226E14C
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 15:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50082262811
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 15:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739893186; cv=none; b=N1A+SF6CyR/q8q8JMsxxOtwevuycML6orZWTbFipeLrK1ObYqz4pZKKzdzaPQjbIjCbwKFEwqFqDzpZqWzbjA60nVTdC4WntoJsqRayqG58RpAsNkJ8/BtrcSEaowijNg/iVnfDrNG542GybN43mpcJnMwWFL7gRWOJQO2APJVg=
+	t=1739893187; cv=none; b=k/3mQGomoJhGkFW6G3WGxE9G6IHQeuX80UNbvqbEM3+wAtr7+pSfC5F+DRcDHm2tRcxay5ai3BYRdWF2a3jtR9im7u6OurgmWmdnuCucnKPmrQXJw0U+D2zHdvIsz0IXni/U0lrMz5rcQOSkB0i7jLJRykv8oXQQratmkwIjAe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739893186; c=relaxed/simple;
-	bh=KgD8olzpy3uRadg0WZIMzpp3j/wHnbKkAWaFarN6yuU=;
+	s=arc-20240116; t=1739893187; c=relaxed/simple;
+	bh=WCmHZN7hoYJGUWLVypvb4UKXeYsh5UC0n/+MvyCK65E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TbV7Bfw70Wpe2F3R6PwmIdDgGp1+R5SrrkDqSZFmasSwdx/RZKIprZauBYY462EVnl0ZtTljknXpb+XwQ7gg/xq1svzxO25EIf9K2n/f2Jb66wlUyKSTiCm1crTpgvgMQ8M8t38QEitRvbMKKVJoqqmjpVUath2ynJEHsr3b3cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhxmGDTm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95AEBC4CEEA;
-	Tue, 18 Feb 2025 15:39:45 +0000 (UTC)
+	 MIME-Version; b=Hd6UPukFJQEnLB+ya1OAPJRRaFSrnLTPZ0/GLfGt9Tze3zBnRic79B1LV9MiLuqH5YSV02whG7/p7NX7y4OSbe8K0qndDplvhctFJpR47IwMzExkYj1usc64DcdjsgRDxlIVvU8GaGFIkWW1I1cLza7b/Oi/PT8JQehcgL0BedQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHdKgL41; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D76C4CEE7;
+	Tue, 18 Feb 2025 15:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739893186;
-	bh=KgD8olzpy3uRadg0WZIMzpp3j/wHnbKkAWaFarN6yuU=;
+	s=k20201202; t=1739893187;
+	bh=WCmHZN7hoYJGUWLVypvb4UKXeYsh5UC0n/+MvyCK65E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uhxmGDTmLDuFfzfVx11C9f2dK4XLJyz7Aiapjg2wRium4DUz1IYRWoh/lD1Bd/V09
-	 aAHIKzVgsVGvcWfJeASbB9aY75h5tHK2rHoSyrYQaeJu4y5kh6J8q2uON4b4sLoS4x
-	 fwjdKc4d+Kd0XKSb9Ey8AJjMU24UYKkCfivOhzTHvix6FWlNvV/cU5jtXvY1NdUobF
-	 p1wN4962ccpEv8b9MGC/H9i06CUWh4lo6nhOWiqMr0lTwyaSg/oNiJy/0drHeSmVfh
-	 oYGvtEsetznByongR0aGndib95GruQQbk5pTZBmry8FJUK0wADSvKUicGtvsF7G/yE
-	 E9mVkyX80Hfmw==
+	b=VHdKgL41CjaNGjqnpxd/gRtuMWlyzJ+xqr7o+qM4ayt8lP3uqTpi9+qmlZ6eKYkjc
+	 /dIlV9W8YXR5EgS8jrohV5yVTBVgocD1WZlg9jPh9aqgZf6I8rKU+IMRFJovci9W3I
+	 pF2soHucegoCGelkytnQrX5OsLtxBaRNr9DAg0dPQZ5NJhA34UjbJw2EYbeWcitRz9
+	 qZtPTQcKEXZgM9igGVkidmlicf62MGy/6LAJDVF9goSGHDm4fli/JJ6+YPjc4iGVT2
+	 hmpGN8VQ1wF8M2Q5p/qvgS9DhsipAUSsy2F8nQZ5NuFzdV1TBwV0AXNx+oNgZlExsU
+	 lcByvzUTUIUtQ==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Dave Chinner <david@fromorbit.com>
-Subject: [PATCH v2 6/7] nfsd: filecache: don't repeatedly add/remove files on the lru list
-Date: Tue, 18 Feb 2025 10:39:36 -0500
-Message-ID: <20250218153937.6125-7-cel@kernel.org>
+Subject: [PATCH v2 7/7] nfsd: filecache: drop the list_lru lock during lock gc scans
+Date: Tue, 18 Feb 2025 10:39:37 -0500
+Message-ID: <20250218153937.6125-8-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250218153937.6125-1-cel@kernel.org>
 References: <20250218153937.6125-1-cel@kernel.org>
@@ -65,116 +65,101 @@ Content-Transfer-Encoding: 8bit
 
 From: NeilBrown <neilb@suse.de>
 
-There is no need to remove a file from the lru every time we access it,
-and then add it back.  It is sufficient to set the REFERENCED flag every
-time we put the file.  The order in the lru of REFERENCED files is
-largely irrelevant as they will all be moved to the end.
+Under a high NFSv3 load with lots of different files being accessed,
+the LRU list of garbage-collectable files can become quite long.
 
-With this patch, files are added only when they are allocated (if
-want_gc) and they are removed only by the list_lru_(shrink_)walk
-callback or when forcibly removing a file.
+Asking list_lru_scan_node() to scan the whole list can result in a long
+period during which a spinlock is held, blocking the addition of new LRU
+items.
 
-This should reduce contention on the list_lru spinlock(s) and reduce
-memory traffic a little.
+So ask list_lru_scan_node() to scan only a few entries at a time, and
+repeat until the scan is complete.
+
+If the shrinker runs between two consecutive calls of
+list_lru_scan_node() it could invalidate the "remaining" counter which
+could lead to premature freeing.  So add a spinlock to avoid that.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/filecache.c | 47 ++++++++++++++++-----------------------------
- 1 file changed, 17 insertions(+), 30 deletions(-)
+ fs/nfsd/filecache.c | 27 ++++++++++++++++++++++++---
+ fs/nfsd/filecache.h |  6 ++++++
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 0d621833a9f2..56935349f0e4 100644
+index 56935349f0e4..9a41ccfc2df6 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -319,15 +319,14 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
- 		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
+@@ -544,6 +544,13 @@ nfsd_file_gc_cb(struct list_head *item, struct list_lru_one *lru,
+ 	return nfsd_file_lru_cb(item, lru, arg);
  }
  
--static bool nfsd_file_lru_add(struct nfsd_file *nf)
-+static void nfsd_file_lru_add(struct nfsd_file *nf)
++/* If the shrinker runs between calls to list_lru_walk_node() in
++ * nfsd_file_gc(), the "remaining" count will be wrong.  This could
++ * result in premature freeing of some files.  This may not matter much
++ * but is easy to fix with this spinlock which temporarily disables
++ * the shrinker.
++ */
++static DEFINE_SPINLOCK(nfsd_gc_lock);
+ static void
+ nfsd_file_gc(void)
  {
--	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
--	set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
--	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
-+	refcount_inc(&nf->nf_ref);
-+	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru))
- 		trace_nfsd_file_lru_add(nf);
--		return true;
--	}
--	return false;
-+	else
-+		WARN_ON(1);
-+	nfsd_file_schedule_laundrette();
- }
+@@ -551,12 +558,22 @@ nfsd_file_gc(void)
+ 	LIST_HEAD(dispose);
+ 	int nid;
  
- static bool nfsd_file_lru_remove(struct nfsd_file *nf)
-@@ -363,16 +362,10 @@ nfsd_file_put(struct nfsd_file *nf)
++	spin_lock(&nfsd_gc_lock);
+ 	for_each_node_state(nid, N_NORMAL_MEMORY) {
+-		unsigned long nr = list_lru_count_node(&nfsd_file_lru, nid);
++		unsigned long remaining = list_lru_count_node(&nfsd_file_lru, nid);
  
- 	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
- 	    test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
--		/*
--		 * If this is the last reference (nf_ref == 1), then try to
--		 * transfer it to the LRU.
--		 */
--		if (refcount_dec_not_one(&nf->nf_ref))
--			return;
--
--		if (nfsd_file_lru_add(nf))
--			return;
-+		set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-+		set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
- 	}
+-		ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
+-					  &dispose, &nr);
++		while (remaining > 0) {
++			unsigned long nr = min(remaining, NFSD_FILE_GC_BATCH);
 +
- 	if (refcount_dec_and_test(&nf->nf_ref))
- 		nfsd_file_free(nf);
++			remaining -= nr;
++			ret += list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
++						  &dispose, &nr);
++			if (nr)
++				/* walk aborted early */
++				remaining = 0;
++		}
+ 	}
++	spin_unlock(&nfsd_gc_lock);
+ 	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+ 	nfsd_file_dispose_list_delayed(&dispose);
  }
-@@ -516,13 +509,12 @@ nfsd_file_lru_cb(struct list_head *item, struct list_lru_one *lru,
- 	}
+@@ -581,8 +598,12 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
+ 	LIST_HEAD(dispose);
+ 	unsigned long ret;
  
- 	/*
--	 * Put the reference held on behalf of the LRU. If it wasn't the last
--	 * one, then just remove it from the LRU and ignore it.
-+	 * Put the reference held on behalf of the LRU if it is the last
-+	 * reference, else rotate.
- 	 */
--	if (!refcount_dec_and_test(&nf->nf_ref)) {
-+	if (!refcount_dec_if_one(&nf->nf_ref)) {
- 		trace_nfsd_file_gc_in_use(nf);
--		list_lru_isolate(lru, &nf->nf_lru);
--		return LRU_REMOVED;
-+		return LRU_ROTATE;
- 	}
- 
- 	/* Refcount went to zero. Unhash it and queue it to the dispose list */
-@@ -1062,16 +1054,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 	nf = nfsd_file_lookup_locked(net, current_cred(), inode, need, want_gc);
- 	rcu_read_unlock();
- 
--	if (nf) {
--		/*
--		 * If the nf is on the LRU then it holds an extra reference
--		 * that must be put if it's removed. It had better not be
--		 * the last one however, since we should hold another.
--		 */
--		if (nfsd_file_lru_remove(nf))
--			refcount_dec(&nf->nf_ref);
-+	if (nf)
- 		goto wait_for_construction;
--	}
- 
- 	new = nfsd_file_alloc(net, inode, need, want_gc);
- 	if (!new) {
-@@ -1165,6 +1149,9 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct net *net,
- 	 */
- 	if (status != nfs_ok || inode->i_nlink == 0)
- 		nfsd_file_unhash(nf);
-+	else if (want_gc)
-+		nfsd_file_lru_add(nf);
++	if (!spin_trylock(&nfsd_gc_lock))
++		return SHRINK_STOP;
 +
- 	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
- 	if (status == nfs_ok)
- 		goto out;
+ 	ret = list_lru_shrink_walk(&nfsd_file_lru, sc,
+ 				   nfsd_file_lru_cb, &dispose);
++	spin_unlock(&nfsd_gc_lock);
+ 	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru));
+ 	nfsd_file_dispose_list_delayed(&dispose);
+ 	return ret;
+diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+index de5b8aa7fcb0..5865f9c72712 100644
+--- a/fs/nfsd/filecache.h
++++ b/fs/nfsd/filecache.h
+@@ -3,6 +3,12 @@
+ 
+ #include <linux/fsnotify_backend.h>
+ 
++/*
++ * Limit the time that the list_lru_one lock is held during
++ * an LRU scan.
++ */
++#define NFSD_FILE_GC_BATCH     (16UL)
++
+ /*
+  * This is the fsnotify_mark container that nfsd attaches to the files that it
+  * is holding open. Note that we have a separate refcount here aside from the
 -- 
 2.47.0
 
