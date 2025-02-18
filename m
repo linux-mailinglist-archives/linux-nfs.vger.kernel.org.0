@@ -1,172 +1,202 @@
-Return-Path: <linux-nfs+bounces-10188-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10187-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71535A3ABB0
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 23:31:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2BA6AA3ABA6
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 23:27:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 652A91714CB
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 22:31:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C24E7A1304
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 22:26:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F9A1D9A50;
-	Tue, 18 Feb 2025 22:31:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ACE21D6DBC;
+	Tue, 18 Feb 2025 22:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="i3zglil0"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zjd16IS+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ImofqmNp";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Zjd16IS+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ImofqmNp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794281D9587;
-	Tue, 18 Feb 2025 22:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF6F28629B
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 22:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739917869; cv=none; b=dKdcgGozN2tUEpurrhTOjstUktnfH6gK1JRqeTdykUmb1ggby3dPNLI6aKBTuj4e8MgQUZVrPPAeuZ719WdvRNyG0bawWBvBVhS283SsYs1CxdWbiM53On67vw66SVDOi65knBO0JQY8cffY+O673nlpIadhewED0paualp4DI0=
+	t=1739917634; cv=none; b=hizw6ZRC45mPl1f4+/JyptMt8xyVqJiG/N4U9opPbLU/70tVN/v1LctmHY4bBZ0VYM5sol7MHKzIi+jcRMu9RZQfcsDWdS5CmYYDFcq8sKEljCCEg1I2swYvzfdL94AUO1fu1GWqQUWFcwJGjZd5zG5m3zywG47BPKttu1l3P8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739917869; c=relaxed/simple;
-	bh=QrexZmZp5Pa+qGgO2/S3nAg6IHlh6SMfpEqr89qoqyA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBvi6IrUoj3yzJfhE6/svIlB0fIBqsFbzxxTan8vAcKEEDKoJ+i74qKVWecck8OytKDrY9ckQJAcz5SxP5wR1i774piN1TLrZ/86fmn8Mkot7ZFQf+cKDyuIKhjfOLvcWinLs+BVUC61endvzBIlGwatvswxjg/02k/TUpWXLnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=i3zglil0; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=uFEZd17Q2NrrbJs8WKzmWUXkQNoKRppRgUwSdcJH8/A=; b=i3zglil07rpiSapd
-	PdMbBC02A1C9F2/tBNyRDEIV1p36u6b4xdqSJyAAKUHVk/Oj21wagH4p6Bhk3dEZ/FuyOnC5/RVvw
-	YrSZhddB3UnVnPxX2j6v+pUxLVUyDRtp3NBhB+xSd2qTC7c+LOd49UJezZoAUqpNJyXRvamE5Sj0n
-	hcqE1iEY83gGWemG5ISfYWkCfq4AUM3Qf8L/hoMDbI6Pt3ix0O/66UUN2Ol2YULdFbb0GGBAs8okx
-	OPfwoXCPKpTmYW2sMVLid4KcopH5xwQ6T/ESqQ0DvalnPxYZAtYYBlBOABkRBmoVc1Qo/lf+PYPSh
-	YvNdH2QEl1fLpNsszw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1tkVWN-00GkMP-2Y;
-	Tue, 18 Feb 2025 21:52:51 +0000
-From: linux@treblig.org
-To: trondmy@kernel.org,
-	anna@kernel.org,
-	linux-nfs@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] NFS: Remove unused function nfs_umount
-Date: Tue, 18 Feb 2025 21:52:50 +0000
-Message-ID: <20250218215250.263709-1-linux@treblig.org>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1739917634; c=relaxed/simple;
+	bh=V1gGI3XvX5MCCgrYLHp85uoDkyNvQtWgmp6p6apcOXU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=vFTHa2UyxYJtFl14gJPhc6ZxvWIUEk/H9Z6ST33jyE08oozMMvSXHUrpvLTEOHcze+wgqRpfAgM5WdTz6LlMj5Z4z4XrQvvQRq1fPN7D9KaRYTInotpZ0XPqX5wnRCJgUgPmGrR+2BtzHIodIVyC3YN2BSAdyv7DpQo6xJ7w66s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=fail smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zjd16IS+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ImofqmNp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Zjd16IS+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ImofqmNp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9CF1D1F396;
+	Tue, 18 Feb 2025 22:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739917630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2VyOLn0+pTGux40SRgGbccItWcU6fEoLbEoJszf/5E=;
+	b=Zjd16IS+3rrOab0NEgb1+z137x5IB/oxrDa/UKzBQIYYIHr2QLGJHXU7OXn4zt4CQsYpUK
+	a58wdbV0ohUJtsYSHH3MMSAU5WrrhZ4wbrhy/IBC2x/Vng9pz/89BzhRfLKxfis9Tp7gAu
+	fcaWSnT+OwYIcXqYvHevWNm/reOCpTQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739917630;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2VyOLn0+pTGux40SRgGbccItWcU6fEoLbEoJszf/5E=;
+	b=ImofqmNpDE100XD9zr2QxkbigWZP5ApAOEHkEyrMkez/jTbgolpIkmYqJ16i/YzjmqIRsy
+	2T2dzpP74PpXXTBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Zjd16IS+;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ImofqmNp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1739917630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2VyOLn0+pTGux40SRgGbccItWcU6fEoLbEoJszf/5E=;
+	b=Zjd16IS+3rrOab0NEgb1+z137x5IB/oxrDa/UKzBQIYYIHr2QLGJHXU7OXn4zt4CQsYpUK
+	a58wdbV0ohUJtsYSHH3MMSAU5WrrhZ4wbrhy/IBC2x/Vng9pz/89BzhRfLKxfis9Tp7gAu
+	fcaWSnT+OwYIcXqYvHevWNm/reOCpTQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1739917630;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2VyOLn0+pTGux40SRgGbccItWcU6fEoLbEoJszf/5E=;
+	b=ImofqmNpDE100XD9zr2QxkbigWZP5ApAOEHkEyrMkez/jTbgolpIkmYqJ16i/YzjmqIRsy
+	2T2dzpP74PpXXTBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA347132C7;
+	Tue, 18 Feb 2025 22:27:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ag2gJzsJtWfzcwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 18 Feb 2025 22:27:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "Li Lingfeng" <lilingfeng3@huawei.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "Jeff Layton" <jlayton@kernel.org>
+Subject:
+ Re: [PATCH 0/3] nfsd: don't allow concurrent queueing of workqueue jobs
+In-reply-to: <20250218-nfsd-callback-v1-0-14f966967dd8@kernel.org>
+References: <20250218-nfsd-callback-v1-0-14f966967dd8@kernel.org>
+Date: Wed, 19 Feb 2025 09:26:59 +1100
+Message-id: <173991761979.3118120.3421996111713215488@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 9CF1D1F396
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Wed, 19 Feb 2025, Jeff Layton wrote:
+> While looking at the problem that Li Lingfeng reported [1] around
+> callback queueing failures, I noticed that there were potential
+> scenarios where the callback workqueue jobs could run concurrently with
+> an rpc_task. Since they touch some of the same fields, this is incorrect
+> at best and potentially dangerous.
 
-nfs_umount() has been unused since 2013's
-commit 4580a92d44e2 ("NFS: Use server-recommended security flavor by
-default (NFSv3)")
+If the problem is that workqueue jobs might run concurrently with
+rpc_tasks and that we don't want that, could we simply run all the cb
+tasks as "sync" rpc tasks in the workqueue??
 
-Remove it.
+i.e. change rpc_call_async() in nfsd4_run_cb_work() to rpc_call_sync ...
+and fix any breakage because I doubt it is really as simple as that.
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- fs/nfs/internal.h   |  1 -
- fs/nfs/mount_clnt.c | 68 ---------------------------------------------
- 2 files changed, 69 deletions(-)
+This would fully serialise all the callbacks.  Is that what to goal is
+here, or is the goal more subtle?
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index fae2c7ae4acc..36dcbb928c5f 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -207,7 +207,6 @@ struct nfs_mount_request {
- };
- 
- extern int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans);
--extern void nfs_umount(const struct nfs_mount_request *info);
- 
- /* client.c */
- extern const struct rpc_program nfs_program;
-diff --git a/fs/nfs/mount_clnt.c b/fs/nfs/mount_clnt.c
-index 57c9dd700b58..db8dfb920394 100644
---- a/fs/nfs/mount_clnt.c
-+++ b/fs/nfs/mount_clnt.c
-@@ -223,74 +223,6 @@ int nfs_mount(struct nfs_mount_request *info, int timeo, int retrans)
- 	goto out;
- }
- 
--/**
-- * nfs_umount - Notify a server that we have unmounted this export
-- * @info: pointer to umount request arguments
-- *
-- * MOUNTPROC_UMNT is advisory, so we set a short timeout, and always
-- * use UDP.
-- */
--void nfs_umount(const struct nfs_mount_request *info)
--{
--	static const struct rpc_timeout nfs_umnt_timeout = {
--		.to_initval = 1 * HZ,
--		.to_maxval = 3 * HZ,
--		.to_retries = 2,
--	};
--	struct rpc_create_args args = {
--		.net		= info->net,
--		.protocol	= IPPROTO_UDP,
--		.address	= (struct sockaddr *)info->sap,
--		.addrsize	= info->salen,
--		.timeout	= &nfs_umnt_timeout,
--		.servername	= info->hostname,
--		.program	= &mnt_program,
--		.version	= info->version,
--		.authflavor	= RPC_AUTH_UNIX,
--		.flags		= RPC_CLNT_CREATE_NOPING,
--		.cred		= current_cred(),
--	};
--	struct rpc_message msg	= {
--		.rpc_argp	= info->dirpath,
--	};
--	struct rpc_clnt *clnt;
--	int status;
--
--	if (strlen(info->dirpath) > MNTPATHLEN)
--		return;
--
--	if (info->noresvport)
--		args.flags |= RPC_CLNT_CREATE_NONPRIVPORT;
--
--	clnt = rpc_create(&args);
--	if (IS_ERR(clnt))
--		goto out_clnt_err;
--
--	dprintk("NFS: sending UMNT request for %s:%s\n",
--		(info->hostname ? info->hostname : "server"), info->dirpath);
--
--	if (info->version == NFS_MNT3_VERSION)
--		msg.rpc_proc = &clnt->cl_procinfo[MOUNTPROC3_UMNT];
--	else
--		msg.rpc_proc = &clnt->cl_procinfo[MOUNTPROC_UMNT];
--
--	status = rpc_call_sync(clnt, &msg, 0);
--	rpc_shutdown_client(clnt);
--
--	if (unlikely(status < 0))
--		goto out_call_err;
--
--	return;
--
--out_clnt_err:
--	dprintk("NFS: failed to create UMNT RPC client, status=%ld\n",
--			PTR_ERR(clnt));
--	return;
--
--out_call_err:
--	dprintk("NFS: UMNT request failed, status=%d\n", status);
--}
--
- /*
-  * XDR encode/decode functions for MOUNT
-  */
--- 
-2.48.1
+Thanks,
+NeilBrown
+
+
+>=20
+> This patchset adds a new mechanism for ensuring that the same
+> nfsd4_callback can't run concurrently with itself, regardless of where
+> it is in its execution. This also gives us a more sure mechanism for
+> handling the places where we need to take and hold a reference on an
+> object while the callback is running.
+>=20
+> This should also fix the problem that Li Lingfeng reported, since
+> queueing the work from nfsd4_cb_release() should never fail. Note that
+> the patch they sent earlier (fdf5c9413ea) should be dropped from
+> nfsd-testing before this will apply cleanly.
+>=20
+> [1]: https://lore.kernel.org/linux-nfs/20250218135423.1487309-1-lilingfeng3=
+@huawei.com/
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Jeff Layton (3):
+>       nfsd: prevent callback tasks running concurrently
+>       nfsd: eliminate cl_ra_cblist and NFSD4_CLIENT_CB_RECALL_ANY
+>       nfsd: move cb_need_restart flag into cb_flags
+>=20
+>  fs/nfsd/nfs4callback.c | 12 ++++++------
+>  fs/nfsd/nfs4layouts.c  |  7 ++++---
+>  fs/nfsd/nfs4proc.c     |  2 +-
+>  fs/nfsd/nfs4state.c    | 26 +++++++++++---------------
+>  fs/nfsd/state.h        | 13 ++++++++++---
+>  fs/nfsd/trace.h        |  2 +-
+>  6 files changed, 33 insertions(+), 29 deletions(-)
+> ---
+> base-commit: 4a52e5e49d1b50fcb584e434cced6d0547ddea42
+> change-id: 20250218-nfsd-callback-f723b8498c78
+>=20
+> Best regards,
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
 
 
