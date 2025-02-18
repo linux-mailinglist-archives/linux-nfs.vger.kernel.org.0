@@ -1,194 +1,129 @@
-Return-Path: <linux-nfs+bounces-10159-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10160-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61C5EA396EE
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 10:22:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E92BA39DC7
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 14:44:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FE3D1711BE
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 09:22:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C86ED7A51A6
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 13:37:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6A8232787;
-	Tue, 18 Feb 2025 09:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3F62698B8;
+	Tue, 18 Feb 2025 13:37:10 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1F422FE0C;
-	Tue, 18 Feb 2025 09:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B9A246326;
+	Tue, 18 Feb 2025 13:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870496; cv=none; b=qtC2F061rk0OpIfBU2JYml89nsoNSG5JX56M6Q3TN0dd9BHUUCOpQr/ynwD9QdnrYPxbkyZdIBEZzrneu9pd7FWgyc7Yy3STd7a+GjdaePq4BOrq5iwIbbeIvugdtW1tmCuReJdeNLyG1nxWiFk0eEwtf2QG2TPvkcj54dBhycg=
+	t=1739885830; cv=none; b=ivbczuF+UUgYgV3GxwEmM7J8CnL+Wt27pETfr7dNT64jjZjDpyxiyZOe7wpDVtCUrErUgZs/bPd5zt6B0+GpHu7igZrjs7JXDxwOVGWccT47dW7x1pwYlRP7kduQA7CErgK8gvKfLfoI+Z8HuF6dnNiEJlen07BI5QGkysOwmYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870496; c=relaxed/simple;
-	bh=CzZAcJv9dbjAo8bjJjXHZhCE9Q36XfB/XgaktEm5Lwg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bd/GrqhmVsgagw68BMamOEWqNu/GMNjInS9xi5BewTRB/8VM7NZiqyGZntIYi+x5JBL2OqfSNB3b4/NTR9Jb67QyWFZAJr5gvnsDFRE8/nIkeY0mo6pK0dumKv79Pgi3D1Vm9EweKuWupVJ15vRmKhwj93/m0Yr+guyc4o/Jm1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+	s=arc-20240116; t=1739885830; c=relaxed/simple;
+	bh=RgZzlg6Ld/avdXkpvLKLeXpzWvHVcfkymWlll9vVukw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SBXFU2IwzkacvfMN3N1SZsnVIg+Uqtjs541b/acbak3ZaeicsqnUHJlo8WVAA0yhu0cLQcLzoZTTkWKHR0zGCTfW9vY+8UbcCHcvWd73V/h0OwvTuU9if0gaGQg7/aSG0zCR3sBKo7QMApVB85Rzsy+/eHjVNDi1YyjY7mCH/kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxv7P5668z1wn7M;
-	Tue, 18 Feb 2025 17:17:37 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id B723E1A016C;
-	Tue, 18 Feb 2025 17:21:31 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 17:21:27 +0800
-Message-ID: <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
-Date: Tue, 18 Feb 2025 17:21:27 +0800
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Yy0ps3l8lzhZtG;
+	Tue, 18 Feb 2025 21:33:41 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id B37EC1800DB;
+	Tue, 18 Feb 2025 21:37:04 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
+ (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Feb
+ 2025 21:37:03 +0800
+From: Li Lingfeng <lilingfeng3@huawei.com>
+To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
+	<okorniev@redhat.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
+	<linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
+	<lilingfeng3@huawei.com>
+Subject: [PATCH] nfsd: decrease cl_cb_inflight if fail to queue cb_work
+Date: Tue, 18 Feb 2025 21:54:23 +0800
+Message-ID: <20250218135423.1487309-1-lilingfeng3@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
- NULL elements
-To: Dave Chinner <david@fromorbit.com>
-CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
-	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
- Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
-	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>, "Darrick J.
- Wong" <djwong@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jesper
- Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas
-	<ilias.apalodimas@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Trond Myklebust
-	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
-	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Luiz Capitulino
-	<luizcap@redhat.com>, Mel Gorman <mgorman@techsingularity.net>,
-	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
-	<linux-erofs@lists.ozlabs.org>, <linux-xfs@vger.kernel.org>,
-	<linux-mm@kvack.org>, <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-References: <20250217123127.3674033-1-linyunsheng@huawei.com>
- <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-On 2025/2/18 5:31, Dave Chinner wrote:
+In nfsd4_run_cb, cl_cb_inflight is increased before attempting to queue
+cb_work to callback_wq. This count can be decreased in three situations:
+1) If queuing fails in nfsd4_run_cb, the count will be decremented
+accordingly.
+2) After cb_work is running, the count is decreased in the exception
+branch of nfsd4_run_cb_work via nfsd41_destroy_cb.
+3) The count is decreased in the release callback of rpc_task — either
+directly calling nfsd41_cb_inflight_end in nfsd4_cb_probe_release, or
+calling nfsd41_destroy_cb in nfsd4_cb_release.
 
-...
+However, in nfsd4_cb_release, if the current cb_work needs to restart, the
+count will not be decreased, with the expectation that it will be reduced
+once cb_work is running.
+If queuing fails here, then the count will leak, ultimately causing the
+nfsd service to be unable to exit as shown below:
+[root@nfs_test2 ~]# cat /proc/2271/stack
+[<0>] nfsd4_shutdown_callback+0x22b/0x290
+[<0>] __destroy_client+0x3cd/0x5c0
+[<0>] nfs4_state_destroy_net+0xd2/0x330
+[<0>] nfs4_state_shutdown_net+0x2ad/0x410
+[<0>] nfsd_shutdown_net+0xb7/0x250
+[<0>] nfsd_last_thread+0x15f/0x2a0
+[<0>] nfsd_svc+0x388/0x3f0
+[<0>] write_threads+0x17e/0x2b0
+[<0>] nfsctl_transaction_write+0x91/0xf0
+[<0>] vfs_write+0x1c4/0x750
+[<0>] ksys_write+0xcb/0x170
+[<0>] do_syscall_64+0x70/0x120
+[<0>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
+[root@nfs_test2 ~]#
 
-> .....
-> 
->> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
->> index 15bb790359f8..9e1ce0ab9c35 100644
->> --- a/fs/xfs/xfs_buf.c
->> +++ b/fs/xfs/xfs_buf.c
->> @@ -377,16 +377,17 @@ xfs_buf_alloc_pages(
->>  	 * least one extra page.
->>  	 */
->>  	for (;;) {
->> -		long	last = filled;
->> +		long	alloc;
->>  
->> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
->> -					  bp->b_pages);
->> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
->> +					 bp->b_pages + refill);
->> +		refill += alloc;
->>  		if (filled == bp->b_page_count) {
->>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
->>  			break;
->>  		}
->>  
->> -		if (filled != last)
->> +		if (alloc)
->>  			continue;
-> 
-> You didn't even compile this code - refill is not defined
-> anywhere.
-> 
-> Even if it did complile, you clearly didn't test it. The logic is
-> broken (what updates filled?) and will result in the first
-> allocation attempt succeeding and then falling into an endless retry
-> loop.
+Fix this by decreasing cl_cb_inflight if the restart fails.
 
-Ah, the 'refill' is a typo, it should be 'filled' instead of 'refill'.
-The below should fix the compile error:
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -379,9 +379,9 @@ xfs_buf_alloc_pages(
-        for (;;) {
-                long    alloc;
+Fixes: cba5f62b1830 ("nfsd: fix callback restarts")
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfsd/nfs4callback.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
--               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
--                                        bp->b_pages + refill);
--               refill += alloc;
-+               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
-+                                        bp->b_pages + filled);
-+               filled += alloc;
-                if (filled == bp->b_page_count) {
-                        XFS_STATS_INC(bp->b_mount, xb_page_found);
-                        break;
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 484077200c5d..8a7d24efdd08 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1459,12 +1459,16 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
+ static void nfsd4_cb_release(void *calldata)
+ {
+ 	struct nfsd4_callback *cb = calldata;
++	struct nfs4_client *clp = cb->cb_clp;
++	int queued;
+ 
+ 	trace_nfsd_cb_rpc_release(cb->cb_clp);
+ 
+-	if (cb->cb_need_restart)
+-		nfsd4_queue_cb(cb);
+-	else
++	if (cb->cb_need_restart) {
++		queued = nfsd4_queue_cb(cb);
++		if (!queued)
++			nfsd41_cb_inflight_end(clp);
++	} else
+ 		nfsd41_destroy_cb(cb);
+ 
+ }
+-- 
+2.31.1
 
-> 
-> i.e. you stepped on the API landmine of your own creation where
-> it is impossible to tell the difference between alloc_pages_bulk()
-> returning "memory allocation failed, you need to retry" and
-> it returning "array is full, nothing more to allocate". Both these
-> cases now return 0.
-
-As my understanding, alloc_pages_bulk() will not be called when
-"array is full" as the above 'filled == bp->b_page_count' checking
-has ensured that if the array is not passed in with holes in the
-middle for xfs.
-
-> 
-> The existing code returns nr_populated in both cases, so it doesn't
-> matter why alloc_pages_bulk() returns with nr_populated != full, it
-> is very clear that we still need to allocate more memory to fill it.
-
-I am not sure if the array will be passed in with holes in the
-middle for the xfs fs as mentioned above, if not, it seems to be
-a typical use case like the one in mempolicy.c as below:
-
-https://elixir.bootlin.com/linux/v6.14-rc1/source/mm/mempolicy.c#L2525
-
-> 
-> The whole point of the existing API is to prevent callers from
-> making stupid, hard to spot logic mistakes like this. Forcing
-> callers to track both empty slots and how full the array is itself,
-> whilst also constraining where in the array empty slots can occur
-> greatly reduces both the safety and functionality that
-> alloc_pages_bulk() provides. Anyone that has code that wants to
-> steal a random page from the array and then refill it now has a heap
-> more complex code to add to their allocator wrapper.
-
-Yes, I am agreed that it might be better to provide a common API or
-wrapper if there is some clear use case that need to pass in an array
-with holes in the middle by adding a new API like refill_pages_bulk()
-as below.
-
-> 
-> IOWs, you just demonstrated why the existing API is more desirable
-> than a highly constrained, slightly faster API that requires callers
-> to get every detail right. i.e. it's hard to get it wrong with the
-> existing API, yet it's so easy to make mistakes with the proposed
-> API that the patch proposing the change has serious bugs in it.
-
-IMHO, if the API is about refilling pages for the only NULL elements,
-it seems better to add a API like refill_pages_bulk() for that, as
-the current API seems to be prone to error of not initializing the
-array to zero before calling alloc_pages_bulk().
-
-> 
-> -Dave.
 
