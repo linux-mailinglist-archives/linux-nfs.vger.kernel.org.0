@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-10180-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10181-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E16BA3A957
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 21:39:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59AA4A3AA64
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 22:03:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E77DC7A27E7
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 20:38:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D3733AB2E7
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 20:57:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 109F52144CF;
-	Tue, 18 Feb 2025 20:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 722332862A5;
+	Tue, 18 Feb 2025 20:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czVagdTa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERwJe2tJ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBB82144CC
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 20:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C262286281
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 20:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910439; cv=none; b=lhu5Bbt6PKwgIRjm4ftpOjkt7hDrp3PPuVHOU6xJoezWaLAjWbVWXx51z/aPPdh17gm9T6RfWSqCl1Sa50q8HwoOniDQrnuyu71niNnT2HO3AHtEw3tP/1Te2h1gAigKUPzuYME6hjoPT1FiIjm7jOTNg1QEW87O58Iz2LaWkrc=
+	t=1739911907; cv=none; b=QLo+J5BOoeCb7x96SPnkhHI5s5+O9ehPXyFs5jYcwllNaTcxePPVdD66LAjuYJ0XoQn9cZDXFOphok6sGXybQdx59uvYSv9blZuzE95hMfZakczkrueBPCowxFh8FR8GGTqvDPnb0ZDJSJxzHxAFOIStGRcpqLGRGKjbMO+Y464=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910439; c=relaxed/simple;
-	bh=tCH3qOzddToM7368OENl5+1wcTGhw4fxmBQKlwWi5Oo=;
+	s=arc-20240116; t=1739911907; c=relaxed/simple;
+	bh=cKW3HEFyck4+D3GvB/fCkP5yG02JSXzd06+4bfS+8So=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dwCoL8KS4gfvcgoNfild3Ez+fqX67c6bwrYB3N44k7oYuBoeCWd8RCtKjzaebvNyjgFJPFJXsXnynpi/NvrDLCEVWnFVAbEVDYWmZMLYKbpdngV2X+14oLorV4/NOfd/q+1/j7nIA5Yixj2Zj4AWgIuMN21IOxRCVsjmfTrV9uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czVagdTa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D96C4CEE4;
-	Tue, 18 Feb 2025 20:27:16 +0000 (UTC)
+	 Content-Type:MIME-Version; b=VZucpYZlKsVg2PSnRMrcL+3cdLSjo6s5alvKS2yc2JmrO1nd3GuouIJhcv0m61OMpB7/o6PxSC+w1JNrbJltIF/eC/Sjq3S6Vddr8DHnkm38XD8f3R1OLPF02rfTY9CJIw9Gsq0m2d3zbYq7uSkKwHCLTmSwDDZeqnBcVvWGqYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERwJe2tJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F2CC4CEE2;
+	Tue, 18 Feb 2025 20:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910436;
-	bh=tCH3qOzddToM7368OENl5+1wcTGhw4fxmBQKlwWi5Oo=;
+	s=k20201202; t=1739911906;
+	bh=cKW3HEFyck4+D3GvB/fCkP5yG02JSXzd06+4bfS+8So=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=czVagdTaB4ifCnZ7wDlA82lfwbz42AIcFt0hmBW3KE1rrutE8+N/1A3KmMG7Jy1mh
-	 Znl6mtgY9IzLUd9maG+F3/D3vg2+AaQiZML0MHrHzlzviTFXOQdswNB0a+gzXOB1rb
-	 XJNfXjZuhX+d+IfbSEKbnZgi+5YHjRSuwzqpnaKmbxs+oq3cHXe5ZswakM9ucrambO
-	 jU34snlZTQvUV4K5yMThlca8t3BJP9EExB26FB6yc0M+Z1Yhr4XVE7d0Jtl9nMhI/e
-	 TWFVpzApDPI5yNqaKqKvisqtLnWJJkH0nmeLKWgXieUcPB92/GpqyZ+96fm4kzmGV+
-	 DIEHpYEZT5LzA==
-Message-ID: <873bd6625529442989754e38e27e23286505bcfe.camel@kernel.org>
-Subject: Re: [PATCH v2 6/7] nfsd: filecache: don't repeatedly add/remove
- files on the lru list
+	b=ERwJe2tJwbwm1ltnHX0kxip4BYdBQB47t8wZbcrxzK5/PfsoE92lFNSXkOOSZb7Fs
+	 I5j1LecYU1ie+bduAheSoIS9NxNag+1kOD5TbYdT/Jjy7TzSx50NFErBa57ep9pMRK
+	 bM6PIc5ty/GlJjHNNsBLRfObPPisnmNBHc+dFn+OSzd/+IZRHlJaeh0DCC1L5a/3Sg
+	 Z8LlB6YpEMAVimyTroirk2ZjgH5SXAnqXiFVYQ9ypqGwqu9RQbx61NtRekH71WuKmz
+	 xaOVuxohHthd7t8T08YG9hIj5xVrWhwsq0/cAM2vp+oirjbY1WDfGJnKRyLfIJjkkp
+	 8nEmFtQkonYKA==
+Message-ID: <baaf325e37f07a49e0369c68eeb88ef7384414eb.camel@kernel.org>
+Subject: Re: [PATCH v2 7/7] nfsd: filecache: drop the list_lru lock during
+ lock gc scans
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
-Date: Tue, 18 Feb 2025 15:27:14 -0500
-In-Reply-To: <20250218153937.6125-7-cel@kernel.org>
+Date: Tue, 18 Feb 2025 15:51:44 -0500
+In-Reply-To: <20250218153937.6125-8-cel@kernel.org>
 References: <20250218153937.6125-1-cel@kernel.org>
-	 <20250218153937.6125-7-cel@kernel.org>
+	 <20250218153937.6125-8-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,120 +140,124 @@ MIME-Version: 1.0
 On Tue, 2025-02-18 at 10:39 -0500, cel@kernel.org wrote:
 > From: NeilBrown <neilb@suse.de>
 >=20
-> There is no need to remove a file from the lru every time we access it,
-> and then add it back.  It is sufficient to set the REFERENCED flag every
-> time we put the file.  The order in the lru of REFERENCED files is
-> largely irrelevant as they will all be moved to the end.
+> Under a high NFSv3 load with lots of different files being accessed,
+> the LRU list of garbage-collectable files can become quite long.
 >=20
-> With this patch, files are added only when they are allocated (if
-> want_gc) and they are removed only by the list_lru_(shrink_)walk
-> callback or when forcibly removing a file.
+> Asking list_lru_scan_node() to scan the whole list can result in a long
+> period during which a spinlock is held, blocking the addition of new LRU
+> items.
 >=20
-> This should reduce contention on the list_lru spinlock(s) and reduce
-> memory traffic a little.
+> So ask list_lru_scan_node() to scan only a few entries at a time, and
+> repeat until the scan is complete.
+>=20
+> If the shrinker runs between two consecutive calls of
+> list_lru_scan_node() it could invalidate the "remaining" counter which
+> could lead to premature freeing.  So add a spinlock to avoid that.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/filecache.c | 47 ++++++++++++++++-----------------------------
->  1 file changed, 17 insertions(+), 30 deletions(-)
+>  fs/nfsd/filecache.c | 27 ++++++++++++++++++++++++---
+>  fs/nfsd/filecache.h |  6 ++++++
+>  2 files changed, 30 insertions(+), 3 deletions(-)
 >=20
 > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 0d621833a9f2..56935349f0e4 100644
+> index 56935349f0e4..9a41ccfc2df6 100644
 > --- a/fs/nfsd/filecache.c
 > +++ b/fs/nfsd/filecache.c
-> @@ -319,15 +319,14 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
->  		mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK);
+> @@ -544,6 +544,13 @@ nfsd_file_gc_cb(struct list_head *item, struct list_=
+lru_one *lru,
+>  	return nfsd_file_lru_cb(item, lru, arg);
 >  }
 > =20
-> -static bool nfsd_file_lru_add(struct nfsd_file *nf)
-> +static void nfsd_file_lru_add(struct nfsd_file *nf)
+> +/* If the shrinker runs between calls to list_lru_walk_node() in
+> + * nfsd_file_gc(), the "remaining" count will be wrong.  This could
+> + * result in premature freeing of some files.  This may not matter much
+> + * but is easy to fix with this spinlock which temporarily disables
+> + * the shrinker.
+> + */
+> +static DEFINE_SPINLOCK(nfsd_gc_lock);
+
+Having this as a global lock makes sense since there is just a single
+shrinker and laundrette for the whole kernel. I don't think it's
+worthwhile to make them per-net or anything either.
+=20
+>  static void
+>  nfsd_file_gc(void)
 >  {
-> -	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> -	set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
-> -	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru)) {
-> +	refcount_inc(&nf->nf_ref);
-> +	if (list_lru_add_obj(&nfsd_file_lru, &nf->nf_lru))
->  		trace_nfsd_file_lru_add(nf);
-> -		return true;
-> -	}
-> -	return false;
-> +	else
-> +		WARN_ON(1);
-> +	nfsd_file_schedule_laundrette();
->  }
+> @@ -551,12 +558,22 @@ nfsd_file_gc(void)
+>  	LIST_HEAD(dispose);
+>  	int nid;
 > =20
->  static bool nfsd_file_lru_remove(struct nfsd_file *nf)
-> @@ -363,16 +362,10 @@ nfsd_file_put(struct nfsd_file *nf)
+> +	spin_lock(&nfsd_gc_lock);
+>  	for_each_node_state(nid, N_NORMAL_MEMORY) {
+> -		unsigned long nr =3D list_lru_count_node(&nfsd_file_lru, nid);
+> +		unsigned long remaining =3D list_lru_count_node(&nfsd_file_lru, nid);
 > =20
->  	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
->  	    test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> -		/*
-> -		 * If this is the last reference (nf_ref =3D=3D 1), then try to
-> -		 * transfer it to the LRU.
-> -		 */
-> -		if (refcount_dec_not_one(&nf->nf_ref))
-> -			return;
-> -
-> -		if (nfsd_file_lru_add(nf))
-> -			return;
-> +		set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> +		set_bit(NFSD_FILE_RECENT, &nf->nf_flags);
->  	}
+> -		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
+> -					  &dispose, &nr);
+> +		while (remaining > 0) {
+> +			unsigned long nr =3D min(remaining, NFSD_FILE_GC_BATCH);
 > +
->  	if (refcount_dec_and_test(&nf->nf_ref))
->  		nfsd_file_free(nf);
+> +			remaining -=3D nr;
+> +			ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
+> +						  &dispose, &nr);
+> +			if (nr)
+> +				/* walk aborted early */
+> +				remaining =3D 0;
+> +		}
+>  	}
+
+Now that I look, if we end up walking a long list on a different NUMA
+node, this could mean a lot of cross-node calls.
+
+This is probably in the "further work" category, but...
+
+Maybe we should switch the laundrette to have a work struct per-node,
+and then schedule all of them on their respective nodes when we start
+the laundrette.
+
+If you do that, then the nfsd_gc_lock could also be per-node.
+
+> +	spin_unlock(&nfsd_gc_lock);
+>  	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+>  	nfsd_file_dispose_list_delayed(&dispose);
 >  }
-> @@ -516,13 +509,12 @@ nfsd_file_lru_cb(struct list_head *item, struct lis=
-t_lru_one *lru,
->  	}
+> @@ -581,8 +598,12 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink=
+_control *sc)
+>  	LIST_HEAD(dispose);
+>  	unsigned long ret;
 > =20
->  	/*
-> -	 * Put the reference held on behalf of the LRU. If it wasn't the last
-> -	 * one, then just remove it from the LRU and ignore it.
-> +	 * Put the reference held on behalf of the LRU if it is the last
-> +	 * reference, else rotate.
->  	 */
-> -	if (!refcount_dec_and_test(&nf->nf_ref)) {
-> +	if (!refcount_dec_if_one(&nf->nf_ref)) {
->  		trace_nfsd_file_gc_in_use(nf);
-> -		list_lru_isolate(lru, &nf->nf_lru);
-> -		return LRU_REMOVED;
-> +		return LRU_ROTATE;
->  	}
-> =20
->  	/* Refcount went to zero. Unhash it and queue it to the dispose list */
-> @@ -1062,16 +1054,8 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
-t net *net,
->  	nf =3D nfsd_file_lookup_locked(net, current_cred(), inode, need, want_g=
-c);
->  	rcu_read_unlock();
-> =20
-> -	if (nf) {
-> -		/*
-> -		 * If the nf is on the LRU then it holds an extra reference
-> -		 * that must be put if it's removed. It had better not be
-> -		 * the last one however, since we should hold another.
-> -		 */
-> -		if (nfsd_file_lru_remove(nf))
-> -			refcount_dec(&nf->nf_ref);
-> +	if (nf)
->  		goto wait_for_construction;
-> -	}
-> =20
->  	new =3D nfsd_file_alloc(net, inode, need, want_gc);
->  	if (!new) {
-> @@ -1165,6 +1149,9 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- net *net,
->  	 */
->  	if (status !=3D nfs_ok || inode->i_nlink =3D=3D 0)
->  		nfsd_file_unhash(nf);
-> +	else if (want_gc)
-> +		nfsd_file_lru_add(nf);
+> +	if (!spin_trylock(&nfsd_gc_lock))
+> +		return SHRINK_STOP;
 > +
->  	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
->  	if (status =3D=3D nfs_ok)
->  		goto out;
+>  	ret =3D list_lru_shrink_walk(&nfsd_file_lru, sc,
+>  				   nfsd_file_lru_cb, &dispose);
+> +	spin_unlock(&nfsd_gc_lock);
+>  	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru));
+>  	nfsd_file_dispose_list_delayed(&dispose);
+>  	return ret;
+> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> index de5b8aa7fcb0..5865f9c72712 100644
+> --- a/fs/nfsd/filecache.h
+> +++ b/fs/nfsd/filecache.h
+> @@ -3,6 +3,12 @@
+> =20
+>  #include <linux/fsnotify_backend.h>
+> =20
+> +/*
+> + * Limit the time that the list_lru_one lock is held during
+> + * an LRU scan.
+> + */
+> +#define NFSD_FILE_GC_BATCH     (16UL)
+> +
+>  /*
+>   * This is the fsnotify_mark container that nfsd attaches to the files t=
+hat it
+>   * is holding open. Note that we have a separate refcount here aside fro=
+m the
+
+No objection to this patch as an interim step though.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
