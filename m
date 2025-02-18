@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-10158-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10159-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A1BA396F1
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 10:23:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61C5EA396EE
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 10:22:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 008433AE381
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 09:16:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FE3D1711BE
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 09:22:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52F0C22F15B;
-	Tue, 18 Feb 2025 09:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6A8232787;
+	Tue, 18 Feb 2025 09:21:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6246522AE4E;
-	Tue, 18 Feb 2025 09:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1F422FE0C;
+	Tue, 18 Feb 2025 09:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870167; cv=none; b=TjVib/fdEUuJ8q3fgeY2oog1cZ4bd7muRGaIKLmAsSboe2M9hOxeKI2dui7/kng0H2YSoDZYHKskaRq9hnD8FcuX9Nh0JiYR0X3DX265X/9JvrXwt9ycMF+iU7PcLQ71HTfMEG42Wo92odNtn9C+mx+5mdDGVbX92xNYTMoiEjU=
+	t=1739870496; cv=none; b=qtC2F061rk0OpIfBU2JYml89nsoNSG5JX56M6Q3TN0dd9BHUUCOpQr/ynwD9QdnrYPxbkyZdIBEZzrneu9pd7FWgyc7Yy3STd7a+GjdaePq4BOrq5iwIbbeIvugdtW1tmCuReJdeNLyG1nxWiFk0eEwtf2QG2TPvkcj54dBhycg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870167; c=relaxed/simple;
-	bh=Z7vfeOXnRzH2MUW83NJ1BOZujFaF7BTid+tQ6g1426k=;
+	s=arc-20240116; t=1739870496; c=relaxed/simple;
+	bh=CzZAcJv9dbjAo8bjJjXHZhCE9Q36XfB/XgaktEm5Lwg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZlcHEK4MQ2xfYBeE0nkwjxhFpMZklpq2fgS6VeIl73CTHpIzZFATFdcJ4DR3s8xfVDyBNqRkwvy+IQFPEprETr9M74HAsgcK1eNX49hJhkSujkc6qGlq4ZHioWDKGczohqo4pMvEvNTgFzUXYv5pj2iRxb5joR4BWkXbbS4K9vE=
+	 In-Reply-To:Content-Type; b=bd/GrqhmVsgagw68BMamOEWqNu/GMNjInS9xi5BewTRB/8VM7NZiqyGZntIYi+x5JBL2OqfSNB3b4/NTR9Jb67QyWFZAJr5gvnsDFRE8/nIkeY0mo6pK0dumKv79Pgi3D1Vm9EweKuWupVJ15vRmKhwj93/m0Yr+guyc4o/Jm1A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxv141mCDz1wn7M;
-	Tue, 18 Feb 2025 17:12:08 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxv7P5668z1wn7M;
+	Tue, 18 Feb 2025 17:17:37 +0800 (CST)
 Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46C8E180214;
-	Tue, 18 Feb 2025 17:16:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id B723E1A016C;
+	Tue, 18 Feb 2025 17:21:31 +0800 (CST)
 Received: from [10.67.120.129] (10.67.120.129) by
  dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 17:16:01 +0800
-Message-ID: <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
-Date: Tue, 18 Feb 2025 17:16:00 +0800
+ 15.2.1544.11; Tue, 18 Feb 2025 17:21:27 +0800
+Message-ID: <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
+Date: Tue, 18 Feb 2025 17:21:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,88 +50,145 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
  NULL elements
-To: Chuck Lever <chuck.lever@oracle.com>, Yishai Hadas <yishaih@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
- Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
-	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
-	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
+To: Dave Chinner <david@fromorbit.com>
+CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
+ Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
+	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
+ Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>, "Darrick J.
+ Wong" <djwong@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Trond Myklebust
+	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
+	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
 	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-CC: Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
-	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
-	<virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-xfs@vger.kernel.org>, <linux-mm@kvack.org>, <netdev@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Luiz Capitulino
+	<luizcap@redhat.com>, Mel Gorman <mgorman@techsingularity.net>,
+	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+	<linux-erofs@lists.ozlabs.org>, <linux-xfs@vger.kernel.org>,
+	<linux-mm@kvack.org>, <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>
 References: <20250217123127.3674033-1-linyunsheng@huawei.com>
- <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+ <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
 Content-Language: en-US
 From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+In-Reply-To: <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 2025/2/17 22:20, Chuck Lever wrote:
-> On 2/17/25 7:31 AM, Yunsheng Lin wrote:
->> As mentioned in [1], it seems odd to check NULL elements in
->> the middle of page bulk allocating,
+On 2025/2/18 5:31, Dave Chinner wrote:
+
+...
+
+> .....
 > 
-> I think I requested that check to be added to the bulk page allocator.
+>> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+>> index 15bb790359f8..9e1ce0ab9c35 100644
+>> --- a/fs/xfs/xfs_buf.c
+>> +++ b/fs/xfs/xfs_buf.c
+>> @@ -377,16 +377,17 @@ xfs_buf_alloc_pages(
+>>  	 * least one extra page.
+>>  	 */
+>>  	for (;;) {
+>> -		long	last = filled;
+>> +		long	alloc;
+>>  
+>> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
+>> -					  bp->b_pages);
+>> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+>> +					 bp->b_pages + refill);
+>> +		refill += alloc;
+>>  		if (filled == bp->b_page_count) {
+>>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
+>>  			break;
+>>  		}
+>>  
+>> -		if (filled != last)
+>> +		if (alloc)
+>>  			continue;
 > 
-> When sending an RPC reply, NFSD might release pages in the middle of
-
-It seems there is no usage of the page bulk allocation API in fs/nfsd/
-or fs/nfs/, which specific fs the above 'NFSD' is referring to?
-
-> the rq_pages array, marking each of those array entries with a NULL
-> pointer. We want to ensure that the array is refilled completely in this
-> case.
+> You didn't even compile this code - refill is not defined
+> anywhere.
 > 
+> Even if it did complile, you clearly didn't test it. The logic is
+> broken (what updates filled?) and will result in the first
+> allocation attempt succeeding and then falling into an endless retry
+> loop.
 
-I did some researching, it seems you requested that in [1]?
-It seems the 'holes are always at the start' for the case in that
-discussion too, I am not sure if the case is referring to the caller
-in net/sunrpc/svc_xprt.c? If yes, it seems caller can do a better
-job of bulk allocating pages into a whole array sequentially without
-checking NULL elements first before doing the page bulk allocation
-as something below:
+Ah, the 'refill' is a typo, it should be 'filled' instead of 'refill'.
+The below should fix the compile error:
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -379,9 +379,9 @@ xfs_buf_alloc_pages(
+        for (;;) {
+                long    alloc;
 
-+++ b/net/sunrpc/svc_xprt.c
-@@ -663,9 +663,10 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
-                pages = RPCSVC_MAXPAGES;
-        }
+-               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+-                                        bp->b_pages + refill);
+-               refill += alloc;
++               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
++                                        bp->b_pages + filled);
++               filled += alloc;
+                if (filled == bp->b_page_count) {
+                        XFS_STATS_INC(bp->b_mount, xb_page_found);
+                        break;
 
--       for (filled = 0; filled < pages; filled = ret) {
--               ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
--               if (ret > filled)
-+       for (filled = 0; filled < pages; filled += ret) {
-+               ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
-+                                      rqstp->rq_pages + filled);
-+               if (ret)
-                        /* Made progress, don't sleep yet */
-                        continue;
+> 
+> i.e. you stepped on the API landmine of your own creation where
+> it is impossible to tell the difference between alloc_pages_bulk()
+> returning "memory allocation failed, you need to retry" and
+> it returning "array is full, nothing more to allocate". Both these
+> cases now return 0.
 
-@@ -674,7 +675,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
-                        set_current_state(TASK_RUNNING);
-                        return false;
-                }
--               trace_svc_alloc_arg_err(pages, ret);
-+               trace_svc_alloc_arg_err(pages, filled);
-                memalloc_retry_wait(GFP_KERNEL);
-        }
-        rqstp->rq_page_end = &rqstp->rq_pages[pages];
+As my understanding, alloc_pages_bulk() will not be called when
+"array is full" as the above 'filled == bp->b_page_count' checking
+has ensured that if the array is not passed in with holes in the
+middle for xfs.
 
+> 
+> The existing code returns nr_populated in both cases, so it doesn't
+> matter why alloc_pages_bulk() returns with nr_populated != full, it
+> is very clear that we still need to allocate more memory to fill it.
 
-1. https://lkml.iu.edu/hypermail/linux/kernel/2103.2/09060.html
+I am not sure if the array will be passed in with holes in the
+middle for the xfs fs as mentioned above, if not, it seems to be
+a typical use case like the one in mempolicy.c as below:
+
+https://elixir.bootlin.com/linux/v6.14-rc1/source/mm/mempolicy.c#L2525
+
+> 
+> The whole point of the existing API is to prevent callers from
+> making stupid, hard to spot logic mistakes like this. Forcing
+> callers to track both empty slots and how full the array is itself,
+> whilst also constraining where in the array empty slots can occur
+> greatly reduces both the safety and functionality that
+> alloc_pages_bulk() provides. Anyone that has code that wants to
+> steal a random page from the array and then refill it now has a heap
+> more complex code to add to their allocator wrapper.
+
+Yes, I am agreed that it might be better to provide a common API or
+wrapper if there is some clear use case that need to pass in an array
+with holes in the middle by adding a new API like refill_pages_bulk()
+as below.
+
+> 
+> IOWs, you just demonstrated why the existing API is more desirable
+> than a highly constrained, slightly faster API that requires callers
+> to get every detail right. i.e. it's hard to get it wrong with the
+> existing API, yet it's so easy to make mistakes with the proposed
+> API that the patch proposing the change has serious bugs in it.
+
+IMHO, if the API is about refilling pages for the only NULL elements,
+it seems better to add a API like refill_pages_bulk() for that, as
+the current API seems to be prone to error of not initializing the
+array to zero before calling alloc_pages_bulk().
+
+> 
+> -Dave.
 
