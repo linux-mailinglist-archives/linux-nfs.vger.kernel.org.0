@@ -1,263 +1,266 @@
-Return-Path: <linux-nfs+bounces-10181-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10182-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59AA4A3AA64
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 22:03:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1036A3AA92
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 22:14:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D3733AB2E7
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 20:57:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CA521884BAC
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Feb 2025 21:14:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 722332862A5;
-	Tue, 18 Feb 2025 20:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDF591BEF74;
+	Tue, 18 Feb 2025 21:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERwJe2tJ"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="zX4fDzmJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C262286281
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 20:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ADC286290
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 21:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739911907; cv=none; b=QLo+J5BOoeCb7x96SPnkhHI5s5+O9ehPXyFs5jYcwllNaTcxePPVdD66LAjuYJ0XoQn9cZDXFOphok6sGXybQdx59uvYSv9blZuzE95hMfZakczkrueBPCowxFh8FR8GGTqvDPnb0ZDJSJxzHxAFOIStGRcpqLGRGKjbMO+Y464=
+	t=1739913275; cv=none; b=T/EYW3+1+hBHQ1600fTJSGEOnNZKfk+utOIoPWE85llYTzWNZ5lG73RbmXhx+usdfalWUhqZPmHOQ016SD9joLYcROo0S19UcGYSAmKbWhCMl734B/INhYnpHkWJ67mre33/GYiV8mJlWwSs54LGbA4Y60Zbn/RqZ3QT0d9OESY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739911907; c=relaxed/simple;
-	bh=cKW3HEFyck4+D3GvB/fCkP5yG02JSXzd06+4bfS+8So=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VZucpYZlKsVg2PSnRMrcL+3cdLSjo6s5alvKS2yc2JmrO1nd3GuouIJhcv0m61OMpB7/o6PxSC+w1JNrbJltIF/eC/Sjq3S6Vddr8DHnkm38XD8f3R1OLPF02rfTY9CJIw9Gsq0m2d3zbYq7uSkKwHCLTmSwDDZeqnBcVvWGqYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERwJe2tJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22F2CC4CEE2;
-	Tue, 18 Feb 2025 20:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739911906;
-	bh=cKW3HEFyck4+D3GvB/fCkP5yG02JSXzd06+4bfS+8So=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ERwJe2tJwbwm1ltnHX0kxip4BYdBQB47t8wZbcrxzK5/PfsoE92lFNSXkOOSZb7Fs
-	 I5j1LecYU1ie+bduAheSoIS9NxNag+1kOD5TbYdT/Jjy7TzSx50NFErBa57ep9pMRK
-	 bM6PIc5ty/GlJjHNNsBLRfObPPisnmNBHc+dFn+OSzd/+IZRHlJaeh0DCC1L5a/3Sg
-	 Z8LlB6YpEMAVimyTroirk2ZjgH5SXAnqXiFVYQ9ypqGwqu9RQbx61NtRekH71WuKmz
-	 xaOVuxohHthd7t8T08YG9hIj5xVrWhwsq0/cAM2vp+oirjbY1WDfGJnKRyLfIJjkkp
-	 8nEmFtQkonYKA==
-Message-ID: <baaf325e37f07a49e0369c68eeb88ef7384414eb.camel@kernel.org>
-Subject: Re: [PATCH v2 7/7] nfsd: filecache: drop the list_lru lock during
- lock gc scans
-From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>
-Date: Tue, 18 Feb 2025 15:51:44 -0500
-In-Reply-To: <20250218153937.6125-8-cel@kernel.org>
-References: <20250218153937.6125-1-cel@kernel.org>
-	 <20250218153937.6125-8-cel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1739913275; c=relaxed/simple;
+	bh=oGy55IJcEGgdNiLxbkXY33fp8cTKqWt1BWnOffz4MJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PQ55od7QFwF2uaFItbXqMPtGiXEWxYKPaEEm2fwdHzk78BqPNvINaqsaXKB0r7t0QYQs9QEHN4Vd9rw0l0Tj9LKL4E8Zl0zWS/sl+ouYjIOFzTRQGcJn/nfiNcrFxOUpf+oOaCDwxBFcrkiK3mZq1yhO1vc07crntbEnJbh7Jsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=zX4fDzmJ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2210d92292eso91661075ad.1
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Feb 2025 13:14:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1739913273; x=1740518073; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i/TFjjFVKbDA3nMhW4Nd4g/ebT5hNi/7fITiKNmhUzM=;
+        b=zX4fDzmJf8D3IULJy+9ORjlF9LToVRyBLuE84gl+G8m+Ts4ZSYvbYsLztE09+FfYhF
+         MD8Dsj7cy4xJmTVNsO+dE2gXiDSbgO7tEoXIu7wQl7VW67l3dBAlQxmEO1KGLSNT+obn
+         mgwF5SWNyovCACiopowquMcQAEbntciPJQpQmalkOLFH1mOFOajOXl+5VYNKjq2LM2xo
+         ZhOpXI9tHP+0y2g9BLoFgpAuXgcOuqow8VX7Dy8/VHeu7WUgH1rs5jlQOj/5sbpGkeBt
+         yfLmubUErFF//vGT+rOKzQaXkTTHQ1qVNyO0Yx47UosSny+hfW9O+PR4u6XWibPUvr8f
+         1+Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739913273; x=1740518073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i/TFjjFVKbDA3nMhW4Nd4g/ebT5hNi/7fITiKNmhUzM=;
+        b=EWrNz1R6jreZUemc0vK15cYPJboLInoXNt8vvGyA9GyGv+D8ClGDCVZn5IHQoPK2UB
+         ZmqtIthnPrwIjkCQQarMycRYRtlpFJ+uYPgbSrKflwjIe9kZb+oQ4/yJmWP2fVk+3kEJ
+         EZuV54YqLUicQqN+L8maGPM0dCzgY7EQeA7DYfooRYzk5JHJkb7GMVhkTDa4/c1aMAx3
+         Izr7949/UpbIAP3Y4ZJnSZJNU+kzOvy3+U0MzMYw5Os7lxAGrp5UlxUzU3ALxTkQSyq6
+         GZROUE0Tjzi/uhwZdQHrEHwIq5C6EFY5G0X6KjsnlYQVz5R8zWUkWXIZqemWoJ95pXUM
+         rPrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxRnbpJ/PqyG9rwXfGpROXYvftdv2/LK0XqUfJlIw6F3LqHon04k55fwqrRTLsFj5t2S5u0ukXqhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH+6Zts3DrssRBN6EuaGtGKZL+mnk/njpL3mKfyw6z1O8Wx0dG
+	u8IYRxj6VYVXmwCa3MDXHSU0XqLaBjPSLRpy/ZO7Ezlf7cV21EyuXWuDKB4AGHM=
+X-Gm-Gg: ASbGncvMJfXIvMOKCcabI63fC9sTmdS+JO7Opg17F42+vV27LowOuUVQ9a0ivIYG1Om
+	jAka/8aUpLoihIn9i0FV1zSL8XXj5wd/JawjKnlC7gJongHDabCBbk8KUsM9sgZj6SHFuyHZplb
+	NKEiqpRpFkllinydGcZnBu5aG02WEsti4O5tQXRh8XiX0T5zbI1vDgrFn2fcGTLDUZuL8IKLTeV
+	1MWQ2E2NhZbB8WM/LHmw1n2IiYLKTWZCh6iO4NQdjQHg+rmklBIw4zFQX9A5Njf4rZ1F9OE8ymC
+	MyUIUGVIYGpw3njadMVJPO+GVFYQQUkCzYAnquvMpioAhWbzYi4EE/wG7c7IUasQTns=
+X-Google-Smtp-Source: AGHT+IE4cq05OkjYUSAgnZzqAzKf40dxIlYKr7v+HOFdczvTt57phu0weZ5JY1SWVHQCE16yV/OTUA==
+X-Received: by 2002:a17:902:d50e:b0:221:337:4862 with SMTP id d9443c01a7336-2217086de01mr12977035ad.15.1739913273049;
+        Tue, 18 Feb 2025 13:14:33 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5348f34sm93829725ad.10.2025.02.18.13.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 13:14:32 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tkUvF-00000002xpK-2NTA;
+	Wed, 19 Feb 2025 08:14:29 +1100
+Date: Wed, 19 Feb 2025 08:14:29 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Luiz Capitulino <luizcap@redhat.com>,
+	Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+	netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
+ NULL elements
+Message-ID: <Z7T4NZAn4wD_DLTl@dread.disaster.area>
+References: <20250217123127.3674033-1-linyunsheng@huawei.com>
+ <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
+ <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
 
-On Tue, 2025-02-18 at 10:39 -0500, cel@kernel.org wrote:
-> From: NeilBrown <neilb@suse.de>
->=20
-> Under a high NFSv3 load with lots of different files being accessed,
-> the LRU list of garbage-collectable files can become quite long.
->=20
-> Asking list_lru_scan_node() to scan the whole list can result in a long
-> period during which a spinlock is held, blocking the addition of new LRU
-> items.
->=20
-> So ask list_lru_scan_node() to scan only a few entries at a time, and
-> repeat until the scan is complete.
->=20
-> If the shrinker runs between two consecutive calls of
-> list_lru_scan_node() it could invalidate the "remaining" counter which
-> could lead to premature freeing.  So add a spinlock to avoid that.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/filecache.c | 27 ++++++++++++++++++++++++---
->  fs/nfsd/filecache.h |  6 ++++++
->  2 files changed, 30 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 56935349f0e4..9a41ccfc2df6 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -544,6 +544,13 @@ nfsd_file_gc_cb(struct list_head *item, struct list_=
-lru_one *lru,
->  	return nfsd_file_lru_cb(item, lru, arg);
->  }
-> =20
-> +/* If the shrinker runs between calls to list_lru_walk_node() in
-> + * nfsd_file_gc(), the "remaining" count will be wrong.  This could
-> + * result in premature freeing of some files.  This may not matter much
-> + * but is easy to fix with this spinlock which temporarily disables
-> + * the shrinker.
-> + */
-> +static DEFINE_SPINLOCK(nfsd_gc_lock);
+On Tue, Feb 18, 2025 at 05:21:27PM +0800, Yunsheng Lin wrote:
+> On 2025/2/18 5:31, Dave Chinner wrote:
+> 
+> ...
+> 
+> > .....
+> > 
+> >> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> >> index 15bb790359f8..9e1ce0ab9c35 100644
+> >> --- a/fs/xfs/xfs_buf.c
+> >> +++ b/fs/xfs/xfs_buf.c
+> >> @@ -377,16 +377,17 @@ xfs_buf_alloc_pages(
+> >>  	 * least one extra page.
+> >>  	 */
+> >>  	for (;;) {
+> >> -		long	last = filled;
+> >> +		long	alloc;
+> >>  
+> >> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
+> >> -					  bp->b_pages);
+> >> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+> >> +					 bp->b_pages + refill);
+> >> +		refill += alloc;
+> >>  		if (filled == bp->b_page_count) {
+> >>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
+> >>  			break;
+> >>  		}
+> >>  
+> >> -		if (filled != last)
+> >> +		if (alloc)
+> >>  			continue;
+> > 
+> > You didn't even compile this code - refill is not defined
+> > anywhere.
+> > 
+> > Even if it did complile, you clearly didn't test it. The logic is
+> > broken (what updates filled?) and will result in the first
+> > allocation attempt succeeding and then falling into an endless retry
+> > loop.
+> 
+> Ah, the 'refill' is a typo, it should be 'filled' instead of 'refill'.
+> The below should fix the compile error:
+> --- a/fs/xfs/xfs_buf.c
+> +++ b/fs/xfs/xfs_buf.c
+> @@ -379,9 +379,9 @@ xfs_buf_alloc_pages(
+>         for (;;) {
+>                 long    alloc;
+> 
+> -               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+> -                                        bp->b_pages + refill);
+> -               refill += alloc;
+> +               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
+> +                                        bp->b_pages + filled);
+> +               filled += alloc;
+>                 if (filled == bp->b_page_count) {
+>                         XFS_STATS_INC(bp->b_mount, xb_page_found);
+>                         break;
+> 
+> > 
+> > i.e. you stepped on the API landmine of your own creation where
+> > it is impossible to tell the difference between alloc_pages_bulk()
+> > returning "memory allocation failed, you need to retry" and
+> > it returning "array is full, nothing more to allocate". Both these
+> > cases now return 0.
+> 
+> As my understanding, alloc_pages_bulk() will not be called when
+> "array is full" as the above 'filled == bp->b_page_count' checking
+> has ensured that if the array is not passed in with holes in the
+> middle for xfs.
 
-Having this as a global lock makes sense since there is just a single
-shrinker and laundrette for the whole kernel. I don't think it's
-worthwhile to make them per-net or anything either.
-=20
->  static void
->  nfsd_file_gc(void)
->  {
-> @@ -551,12 +558,22 @@ nfsd_file_gc(void)
->  	LIST_HEAD(dispose);
->  	int nid;
-> =20
-> +	spin_lock(&nfsd_gc_lock);
->  	for_each_node_state(nid, N_NORMAL_MEMORY) {
-> -		unsigned long nr =3D list_lru_count_node(&nfsd_file_lru, nid);
-> +		unsigned long remaining =3D list_lru_count_node(&nfsd_file_lru, nid);
-> =20
-> -		ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
-> -					  &dispose, &nr);
-> +		while (remaining > 0) {
-> +			unsigned long nr =3D min(remaining, NFSD_FILE_GC_BATCH);
-> +
-> +			remaining -=3D nr;
-> +			ret +=3D list_lru_walk_node(&nfsd_file_lru, nid, nfsd_file_gc_cb,
-> +						  &dispose, &nr);
-> +			if (nr)
-> +				/* walk aborted early */
-> +				remaining =3D 0;
-> +		}
->  	}
+You miss the point entirely. Previously, alloc_pages_bulk() would
+return a value that would tell us the array is full, even if we
+call it with a full array to begin with.
 
-Now that I look, if we end up walking a long list on a different NUMA
-node, this could mean a lot of cross-node calls.
+Now it fails to tell us that the array is full, and we have to track
+that precisely ourselves - it is impossible to tell the difference
+between "array is full" and "allocation failed". Not being able to
+determine from the allocation return value whether the array is
+ready for use or whether another go-around to fill it is needed is a
+very poor API choice, regardless of anything else.
 
-This is probably in the "further work" category, but...
+You've already demonstrated this: tracking array usage in every
+caller is error-prone and much harder to get right than just having
+alloc_pages_bulk() do everything for us.
 
-Maybe we should switch the laundrette to have a work struct per-node,
-and then schedule all of them on their respective nodes when we start
-the laundrette.
+> > The existing code returns nr_populated in both cases, so it doesn't
+> > matter why alloc_pages_bulk() returns with nr_populated != full, it
+> > is very clear that we still need to allocate more memory to fill it.
+> 
+> I am not sure if the array will be passed in with holes in the
+> middle for the xfs fs as mentioned above, if not, it seems to be
+> a typical use case like the one in mempolicy.c as below:
+> 
+> https://elixir.bootlin.com/linux/v6.14-rc1/source/mm/mempolicy.c#L2525
 
-If you do that, then the nfsd_gc_lock could also be per-node.
+That's not "typical" usage. That is implementing "try alloc" fast
+path that avoids memory reclaim with a slow path fallback to fill
+the rest of the array when the fast path fails.
 
-> +	spin_unlock(&nfsd_gc_lock);
->  	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
->  	nfsd_file_dispose_list_delayed(&dispose);
->  }
-> @@ -581,8 +598,12 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink=
-_control *sc)
->  	LIST_HEAD(dispose);
->  	unsigned long ret;
-> =20
-> +	if (!spin_trylock(&nfsd_gc_lock))
-> +		return SHRINK_STOP;
-> +
->  	ret =3D list_lru_shrink_walk(&nfsd_file_lru, sc,
->  				   nfsd_file_lru_cb, &dispose);
-> +	spin_unlock(&nfsd_gc_lock);
->  	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru));
->  	nfsd_file_dispose_list_delayed(&dispose);
->  	return ret;
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index de5b8aa7fcb0..5865f9c72712 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -3,6 +3,12 @@
-> =20
->  #include <linux/fsnotify_backend.h>
-> =20
-> +/*
-> + * Limit the time that the list_lru_one lock is held during
-> + * an LRU scan.
-> + */
-> +#define NFSD_FILE_GC_BATCH     (16UL)
-> +
->  /*
->   * This is the fsnotify_mark container that nfsd attaches to the files t=
-hat it
->   * is holding open. Note that we have a separate refcount here aside fro=
-m the
+No other users of alloc_pages_bulk() is trying to do this.
 
-No objection to this patch as an interim step though.
+Indeed, it looks somewhat pointless to do this here (i.e. premature
+optimisation!), because the only caller of
+alloc_pages_bulk_mempolicy_noprof() has it's own fallback slowpath
+for when alloc_pages_bulk() can't fill the entire request.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > IOWs, you just demonstrated why the existing API is more desirable
+> > than a highly constrained, slightly faster API that requires callers
+> > to get every detail right. i.e. it's hard to get it wrong with the
+> > existing API, yet it's so easy to make mistakes with the proposed
+> > API that the patch proposing the change has serious bugs in it.
+> 
+> IMHO, if the API is about refilling pages for the only NULL elements,
+> it seems better to add a API like refill_pages_bulk() for that, as
+> the current API seems to be prone to error of not initializing the
+> array to zero before calling alloc_pages_bulk().
+
+How is requiring a well defined initial state for API parameters
+"error prone"?  What code is failing to do the well known, defined
+initialisation before calling alloc_pages_bulk()?
+
+Allowing uninitialised structures in an API (i.e. unknown initial
+conditions) means we cannot make assumptions about the structure
+contents within the API implementation.  We cannot assume that all
+variables are zero on the first use, nor can we assume that anything
+that is zero has a valid state.
+
+Again, this is poor API design - structures passed to interfaces
+-should- have a well defined initial state, either set by a *_init()
+function or by defining the initial state to be all zeros (i.e. via
+memset, kzalloc, etc).
+
+Performance and speed is not an excuse for writing fragile, easy to
+break code and APIs.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
