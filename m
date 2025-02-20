@@ -1,169 +1,133 @@
-Return-Path: <linux-nfs+bounces-10209-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10210-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D92A3E11C
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 17:44:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D66FBA3E14B
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 17:48:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59BE4177CD8
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 16:43:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 73463188BC56
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 16:48:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE69720DD4C;
-	Thu, 20 Feb 2025 16:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1B312139C9;
+	Thu, 20 Feb 2025 16:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRzEymQz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGWGbma/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5E820C00D;
-	Thu, 20 Feb 2025 16:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DC8211A0B;
+	Thu, 20 Feb 2025 16:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069808; cv=none; b=EfiHvV36kl2GodIMT3S3BChxRScBlH0PTCIEiBJpf6JGcmNsm6AvnOxhpU5O0ue1t/pBWCNY3rJQmA6sxNaGlGy6WXjN3+yI4eUuqYcKXNDJ3ZlF3oqWd0by9C6QT5f7rUWg3zQLMcOO51I1h2tQfRvwuXc1kkahATdv6ph7Y14=
+	t=1740070048; cv=none; b=OOF4P2kW7Y6InBzm163zAGyW+2c7neKLjpGCoeX+XJCPOHXqqNGqy4VyZIX4s1Gsv6/l85QMHt9Sr7YGg7biU6mzfHkXeSI5c4/Y1eR+ejAQX7szBqTblJJNzbjypMGw4JcRXSSeXaZiDc4Lv9gp4NiVUsOAx1bV415QlqojInk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069808; c=relaxed/simple;
-	bh=vVECa4utTX4xbUhcnJWoWLUVHp/KMDoJ9zPavXCFBLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ekUH/UimQ5T4+8c8T71IF9Y14fZfUw93GV+j31yINhdsT1yyds59ttasQd7plh7eqtnT0GrF4NuN5GI+rvIZ4+oo5jqraIQLytmHknr5RJfuPse+XA8+2Sp3fMEDaGltc7ahaNv5i5X4v69lIhlV1PP3h8iY5k4icpmE2Ygf4EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRzEymQz; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc4418c0e1so4005513a91.1;
-        Thu, 20 Feb 2025 08:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740069806; x=1740674606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TGKStiuvmu6PZ8iLcfPINnLEtELIaRoHYvov97O+LS8=;
-        b=IRzEymQzOj9QOg7SyFdfAictqfazKy2RYm2Tv58CbPI8i1RS4TFQQD/Omw9qfU3gPa
-         ePuZdhTVv3SjyKJS6lxm4wRAY+Mo6u5FtZ6awXGIZ9Gj+h86Fdn6lIpee21MACG3gaeG
-         77jnyncXD3YNCy6piVffOPYVltJ+j9Vv7rZzDIDo7FSnP2zMJkwl2ILvtybcBwusZ49B
-         188wj8UdlnXKmQIQABmn7VRF1mIiPAPr/gakgcqtxtN4i0JppJ7mOMZDp7NcZY0JHrXF
-         SzqVdjO6BpekgAXljpuUbrJH3r6y98490+7QJ7dqLQu81OfODHYsn0QI3jwpIdvw6qyc
-         uxmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740069806; x=1740674606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TGKStiuvmu6PZ8iLcfPINnLEtELIaRoHYvov97O+LS8=;
-        b=GdeUqfxt+ENqZH6v/NbNC49xvMowj+nRwOE3EwZUvsx/YJ3Olb9TBtBguGkMdER4JR
-         QCGUEpqH06V3c/Pu4Pv1cyuzMlbL+4QWcMA+6sLHkv5ifK28qt8YcQSfaBerSjzV+JMA
-         wGVimMbZWB32obGchImKWOqVw/o6hLPAKWPN2BNu10JGnVdnoWrAuAepBpPyMhQSRaqU
-         YPyQe6xtBLi1vvpbFIWXmSBJ94RPtPh+G+DtMQzuM1W4jK4/W7U+KEtuBhonqipMC3n1
-         WOX6fMVzz5nb9Lyu2Ymbe8Nk3lV3uMJ4U9lkB0XGza22wb+zRY6/NKBoD+er/+OsojCS
-         nWbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoq8ohybFccddFxRNqwdFzBZH5yQduaLH/hSIy9bvBCwbXjYuiByJ2NR2X3OAhQTGGz9vYQbJhPKNpVQAVTmcHqrNBntd@vger.kernel.org, AJvYcCVUnfWeWNvjLwSg0rpQ+LNqLqaeQET/WGHzZluvLNRT3zy58HVcrrDakopXlHM8WCKcyxRt/AXwBXG0@vger.kernel.org, AJvYcCVWPW3Kp75ZlCYM4vUc8tNBu0kq/mVA/VdIMo4XzLUTdOtdcHs3cF+ro/LTcdtDWc6hoiIBe9dLTTpz@vger.kernel.org, AJvYcCWxbZqBmWxHeZV1CgNzsfUbiZHqG6uSfcreonewHxdUWoLRQBo+mpmZYI3B5+10q16VmeE08EPJrI1XcB+5@vger.kernel.org, AJvYcCX6bfJmksfn/IubZ47/ZxUCCWxL9WreeXl2oanaLxG4KQBG3Rr4cknZXkuc88RWg0v3VKtMcDYWmg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW8GIbYUMJsIBBIKFXyhTPErtihLU4mjmnjEMaaqscL0ym/hbG
-	Ya6VKAWMBlz1xaCEutoH2lHQJxxVVUXXs8njWxwv5Ey7qcYnBC09vmR3Sv0Asvr3CliuNEoB5qw
-	9gmwcAykLUtlzJpJs4HyxXa7GwaE=
-X-Gm-Gg: ASbGnctRQmWH2lAwzmYgrYZYOqY/ab1PgpM0aU1HpFfXt5ZVqM1oF2aWTq2GZXvXnWk
-	h5YCEQ9lgHCsnxdKnam6ufKHo3vnm72U0Nstqm4ThyMa+T3tKGMfWrnVZJRZhuVNJ+yxImvWb
-X-Google-Smtp-Source: AGHT+IGbA2Q+XEnVZAQ4NEP7BEgN3IdARfcH5GHq6FTupNzUVVzv1CrxmhQmgth2w7JIYa+zxno9NRI2IlvxRC+uy/8=
-X-Received: by 2002:a17:90b:2d46:b0:2ee:8cbb:de28 with SMTP id
- 98e67ed59e1d1-2fccc1287e9mr7457400a91.8.1740069806451; Thu, 20 Feb 2025
- 08:43:26 -0800 (PST)
+	s=arc-20240116; t=1740070048; c=relaxed/simple;
+	bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BP9i5yEkzTgl+sGONhMayOtyHGFYMTtS8gqZmLskA7b6zt+Sk6gcV04ZLgoW9jny1a2lEP+jxsb/B0tfM0G3xLSDwZdYYmb/Piu2fbzhEW7Ha13q3hpKAq8yspJjm5blw50r3A2/qZxQO1srQ1r7PNipbf+gDKVzuNFVgfVwCcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGWGbma/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A8EC4CED1;
+	Thu, 20 Feb 2025 16:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740070047;
+	bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CGWGbma/2m6e3p5frqXg8A57Bj7nJ5u+W/FJtb4NSzwtzngyTqCipaoF0iek5XMmi
+	 +1H6iIPL64tCVlp4DvjDNXLD/VOITyCC57K2LnrdYe/Fn4VITZwKJVVZbN26cuDax8
+	 8/syzH/8t0sqCTjor8rbVLLNevpQu4vtvcsP46jnp9HpGFPVhhiD0owy0qBs4cCcNP
+	 XlSjD8gVp0okq533aK0sXseGuQzS5Ult4yGJvsC/w9AWPhyLVA9axsu99+3UUIzCbE
+	 gPleLuY+nfft2Yeex7FttY15TBwrr7t4KosAAAyaISoLbRQ9au9+ptOMd8uD2GNH25
+	 /MZwLnW0Dj+SA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/5] nfsd: don't allow concurrent queueing of workqueue
+ jobs
+Date: Thu, 20 Feb 2025 11:47:12 -0500
+Message-Id: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241023212158.18718-1-casey@schaufler-ca.com> <20241023212158.18718-5-casey@schaufler-ca.com>
-In-Reply-To: <20241023212158.18718-5-casey@schaufler-ca.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Thu, 20 Feb 2025 11:43:15 -0500
-X-Gm-Features: AWEUYZk5wAy-pDKUyIeTJwZ9O0NtnaTtHtgvwhFaZG6kHfsbWwV584YyTGAvgfs
-Message-ID: <CAEjxPJ56H_Y-ObgNHrCggDK28NOARZ0CDmLDRvY5qgzu=YgE=A@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] LSM: lsm_context in security_dentry_init_security
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: paul@paul-moore.com, linux-security-module@vger.kernel.org, 
-	jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, 
-	john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, 
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org, mic@digikod.net, 
-	ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJBct2cC/3XMQQ7CIBRF0a00fywGsAJ15D5MBxQ+LWkDBgzRN
+ Oxd7Nzhfck7O2RMHjPcuh0SFp99DC34qQOz6DAj8bY1cMqvlDNFgsuWGL1tkzYrcZJfJtUPykg
+ F7fNM6Pz78B5j68XnV0yfgy/st/6TCiOUsN4NQgxCWqvuK6aA2zmmGcZa6xfkVP6mqwAAAA==
+X-Change-ID: 20250218-nfsd-callback-f723b8498c78
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2116; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=C5p/ojW3QfHFyvcxVtc9cHreBC7v/KQwFhn3nzGhpEk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnt1yZ6kX4I9MSfm+jtr2Ija35JdQx9LrKP4IuD
+ gg38AGdRLOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ7dcmQAKCRAADmhBGVaC
+ FQRwEADPhXqfHOWJH4PaK6HRJCcfOPYMiY+S9T4vJScKVFrns5+qirVozTX6Vn2+O2V7xyhu0LU
+ qBLJYlmoWNk2xLl7GaQIj8k1yFOXHDa6+InP4qgwaVHOp6g0gyAWHZMOIgjMub9vhdFU2Maky4/
+ W1TC31NiZS60Oguwb66tvCzNrw1HFhqCBUYGjwK+ZOP5wfRTgAFlLvvVnkr+hPERpFyEYHdK+hr
+ pIn/pmWSBFbQdXMUTFFeYNO38AfM0BkRMUr0rEdlrMTxbmUEEs/TqtSTWCmNws8sVfjD/cB3UXb
+ dOSoqQpWkWoNvt26eFdBgaP3Ymi9ieIso2WwwfpUzJVcZAv1YDkujS3czIClhIIlvIiPqP9sSVI
+ j/YRN02VcXXJH9pXDJ6imxb6Rk8oV9WSTGTGiyfM0WdqjB+VXH2SAKrSOd5+pitzpCtv9egQsLA
+ iWm5BPZEd1p5uoKTLJQ9oBMy69HBZt2G0WcIYlRSo+uY65T9UfWTU/7xysDR3uX6AiagsX/AatQ
+ S4WinM3aAZL5VDMGtHn4K9siw8gfPjoILsZ0otD4SHuqITDWXjfGQ6SYIz8dtEk5O5bgozS2E2w
+ 1VSda0Vl/KtnzgNuHIwoN3juJSPhPraru+yhHR+lS5DWvk0sjjlFS78eErxNzOsjvVcAkzbYUsB
+ Sn4jAbK4XUwSOtQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, Oct 23, 2024 at 5:23=E2=80=AFPM Casey Schaufler <casey@schaufler-ca=
-.com> wrote:
->
-> Replace the (secctx,seclen) pointer pair with a single lsm_context
-> pointer to allow return of the LSM identifier along with the context
-> and context length. This allows security_release_secctx() to know how
-> to release the context. Callers have been modified to use or save the
-> returned data from the new structure.
->
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> Cc: ceph-devel@vger.kernel.org
-> Cc: linux-nfs@vger.kernel.org
-> ---
->  fs/ceph/super.h               |  3 +--
->  fs/ceph/xattr.c               | 16 ++++++----------
->  fs/fuse/dir.c                 | 35 ++++++++++++++++++-----------------
->  fs/nfs/nfs4proc.c             | 20 ++++++++++++--------
->  include/linux/lsm_hook_defs.h |  2 +-
->  include/linux/security.h      | 26 +++-----------------------
->  security/security.c           |  9 ++++-----
->  security/selinux/hooks.c      |  9 +++++----
->  8 files changed, 50 insertions(+), 70 deletions(-)
->
+While looking at the problem that Li Lingfeng reported [1] around
+callback queueing failures, I noticed that there were potential
+scenarios where the callback workqueue jobs could run concurrently with
+an rpc_task. Since they touch some of the same fields, this is incorrect
+at best and potentially dangerous.
 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 76776d716744..0b116ef3a752 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -114,6 +114,7 @@ static inline struct nfs4_label *
->  nfs4_label_init_security(struct inode *dir, struct dentry *dentry,
->         struct iattr *sattr, struct nfs4_label *label)
->  {
-> +       struct lsm_context shim;
->         int err;
->
->         if (label =3D=3D NULL)
-> @@ -128,21 +129,24 @@ nfs4_label_init_security(struct inode *dir, struct =
-dentry *dentry,
->         label->label =3D NULL;
->
->         err =3D security_dentry_init_security(dentry, sattr->ia_mode,
-> -                               &dentry->d_name, NULL,
-> -                               (void **)&label->label, &label->len);
-> -       if (err =3D=3D 0)
-> -               return label;
-> +                               &dentry->d_name, NULL, &shim);
-> +       if (err)
-> +               return NULL;
->
-> -       return NULL;
-> +       label->label =3D shim.context;
-> +       label->len =3D shim.len;
-> +       return label;
->  }
->  static inline void
->  nfs4_label_release_security(struct nfs4_label *label)
->  {
-> -       struct lsm_context scaff; /* scaffolding */
-> +       struct lsm_context shim;
->
->         if (label) {
-> -               lsmcontext_init(&scaff, label->label, label->len, 0);
-> -               security_release_secctx(&scaff);
-> +               shim.context =3D label->label;
-> +               shim.len =3D label->len;
-> +               shim.id =3D LSM_ID_UNDEF;
+This patchset adds a new mechanism for ensuring that the same
+nfsd4_callback can't run concurrently with itself, regardless of where
+it is in its execution. This also gives us a more sure mechanism for
+handling the places where we need to take and hold a reference on an
+object while the callback is running.
 
-Is there a patch that follows this one to fix this? Otherwise, setting
-this to UNDEF causes SELinux to NOT free the context, which produces a
-memory leak for every NFS inode security context. Reported by kmemleak
-when running the selinux-testsuite NFS tests.
+This should also fix the problem that Li Lingfeng reported, since
+queueing the work from nfsd4_cb_release() should never fail. Note that
+their earlier patch (fdf5c9413ea) should be dropped from nfsd-testing
+before this will apply cleanly.
 
-> +               security_release_secctx(&shim);
->         }
->  }
->  static inline u32 *nfs4_bitmask(struct nfs_server *server, struct nfs4_l=
-abel *label)
+[1]: https://lore.kernel.org/linux-nfs/20250218135423.1487309-1-lilingfeng3@huawei.com/
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- added patche to handle rpc_call_async() errors
+- rename NFSD4_CALLBACK_RESTART to NFSD4_CALLBACK_REQUEUE
+- add patch to replace CB_GETATTR_BUSY with NFSD4_CALLBACK_REQUEUE
+- Link to v1: https://lore.kernel.org/r/20250218-nfsd-callback-v1-0-14f966967dd8@kernel.org
+
+---
+Jeff Layton (5):
+      nfsd: prevent callback tasks running concurrently
+      nfsd: eliminate cl_ra_cblist and NFSD4_CLIENT_CB_RECALL_ANY
+      nfsd: replace CB_GETATTR_BUSY with NFSD4_CALLBACK_RUNNING
+      nfsd: move cb_need_restart flag into cb_flags
+      nfsd: handle errors from rpc_call_async()
+
+ fs/nfsd/nfs4callback.c | 26 +++++++++++++++++---------
+ fs/nfsd/nfs4layouts.c  |  7 ++++---
+ fs/nfsd/nfs4proc.c     |  2 +-
+ fs/nfsd/nfs4state.c    | 31 ++++++++++++++-----------------
+ fs/nfsd/state.h        | 18 +++++++++++-------
+ fs/nfsd/trace.h        |  2 +-
+ 6 files changed, 48 insertions(+), 38 deletions(-)
+---
+base-commit: b7e85fd7c8964e31f8fa1cf7333b12f442b642f1
+change-id: 20250218-nfsd-callback-f723b8498c78
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
