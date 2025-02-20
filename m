@@ -1,106 +1,158 @@
-Return-Path: <linux-nfs+bounces-10228-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10229-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01FA3A3E4F6
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 20:21:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A8EBA3E510
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 20:31:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D99CE17FE84
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 19:21:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5920770072F
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 19:30:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33CD020B1F1;
-	Thu, 20 Feb 2025 19:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71A82638AE;
+	Thu, 20 Feb 2025 19:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH2Tdof4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hn+Py7Wl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCEC15A858;
-	Thu, 20 Feb 2025 19:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0C363A9;
+	Thu, 20 Feb 2025 19:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079280; cv=none; b=ncmtyvGoce7QNF7fChgNyJjGRs01yO/Reom957tcYUfSz5yLUQwbVWgkNTL1nOYVBJg2NYz4YNng4F1vmapeY+soD9X3WXQDeSV9LoE60DhKyfGQWnkJ3kDCYTJhgMIZ08BTDV3/12IWyjLNxhLBArS3K/2RvRFOK/JHCuCi7x0=
+	t=1740079858; cv=none; b=I9ucHivfylxBIsNmcVFWjbblOa5Nt5l1W/jkvqBO0uHX4NxBwvBOwfOr77r3pyZuLhVJpJjrk47OPJ5QPZKR2YLrwWkw2COPU9QNrmMA/H0K4ZRkszY3dnx5DdKF7108wNDMFY1DvDeooE/eveXdQjp7ujPNihdScPkJQrI0+Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079280; c=relaxed/simple;
-	bh=xijanZ/YLwO40IngxhirU15paKuTo6pFuPDfECza+w0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EAk5F064Lzh9OyTEZPatXwovchR6damyyaqweC1hD1fqH/0hA8QWwl0bmsg28STsU7X6lX69c7gg+HJO9L6Z+S82XuKivbxu+s0hd5bA3BVqcwu/SE5QDywiYFjRuZ1YxcmLC2nOpsFgD7mcAS32MaUL5wtA8JTqfmKFrFi9ovo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH2Tdof4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A395AC4CED1;
-	Thu, 20 Feb 2025 19:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740079279;
-	bh=xijanZ/YLwO40IngxhirU15paKuTo6pFuPDfECza+w0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KH2Tdof45LYDDz/wAUkn438Yb+egn8SQ53QcjMgQm895HOBsId/GD21f/iNKLLmo9
-	 Z3O9lE5gtKcTPlY/Rdw84Ja54wkEkssdLPtHtMpNM9cGBW+U+W7J5EPrr5lHfRKOpk
-	 i4ZBBWQsSa4LiGRBkzd3PwOXvX2F9ryhFwDiznYfKbLmbQXY40o99PnlkpZhmjVZzY
-	 xojaPhu6NS+g4BxLvKojkXGo2E8kP+y4HmDbMkG95nmMSGQPWN2Wr0sAsqZ2T8yDlm
-	 JGI9jowaEcPKxXKo8muqMyTQ9fZshxFcei7l2F8T0Y0VHeb5WLrGsCGlBodUkb/Vtk
-	 uYS0gFZt+bDbA==
-From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Li Lingfeng <lilingfeng3@huawei.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] nfsd: don't allow concurrent queueing of workqueue jobs
-Date: Thu, 20 Feb 2025 14:21:15 -0500
-Message-ID: <174007920440.104075.11286565001428092466.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
-References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
+	s=arc-20240116; t=1740079858; c=relaxed/simple;
+	bh=5ONRHpMprZ0wN4zA/gIwbZWbUDkCqIaKx/wjTTQgKKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VBGixs9FIczRVtibQpuMEVgjY72jQTNA4noyuvg3tlDoH8yJPVZ+8wBwJ1b7ZbaNlqA6Hxk49hvh2ItKsx8girCXu0c/mM0pESajXsAWYXVKqd6T4ZRVHSLTbi06folQHTRobUPqO+El948nHcQe05o1BFBa7gXRij4DuPLzJq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hn+Py7Wl; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c0a1c4780bso128223785a.3;
+        Thu, 20 Feb 2025 11:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740079856; x=1740684656; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ruQE5LE0LHj53CdJ1m1i9Ompn3HmodUV4eVZZpvzC7U=;
+        b=hn+Py7WlN3OTUDfVP0mDM3UtsC4B9w6JQWCdYOmCSn70K7XV+UoGSoSu2jiWxi1DqA
+         Ho0yPVNBUs+cyKvCt17cB2I69qaDPWA31hPEXOfLR+/QRgkjqnXWe3INzs0S+Enqekj6
+         K0XEXuoV1hO38AUPxH8PQ8wLZzXubNPSORhF90+Yp9cqzw8Kt+vzmudOOt6eLMQ/4WUN
+         tpLQz0gs6gJ3Bx9/spsM2f61K0rmy9F4pcwqHUNEGKp0r4JNXnfqJSYrKWG/P4o8AvE6
+         fvzzZBzj9J3k34ljkM+8yVHBug4GUKlJnsAYFRDsm965w87ajsu+o9O2llcauIG7bGQl
+         206g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740079856; x=1740684656;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ruQE5LE0LHj53CdJ1m1i9Ompn3HmodUV4eVZZpvzC7U=;
+        b=TZUSDNdW53UKjpcw+lpCRYZftagBPk3/nKq3opbsFae28wIuz/nzhBD3NxBQiplE6l
+         UCEqv+Q9j0dCVeevuC0adF9VupO2TG2oRo/DFIvui3zrKqrtsAd21l7mjBESiDD2HtVT
+         IIm9WYBY5YyQaM9FgWRuIpfdyCdz5ZFTk1hr1aEDD/YUAmBvxB0ZiDuJ4X8a3E8njkBB
+         vXpN7MtmklBXx4HFNuA0XV0iuX63kaFTjUdXZ/y3xzrRFpwrLCsdwQ/dG9fO+5dosjJ1
+         WwYFFKCwBiLeqh2gX6LUeD6gKbufegAFIt4csX/4LttWoO4KsIoh4MpzrpV60jhyn2YX
+         Ie3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWJPu7w4G8n87XQJDCG8U9COoBwo+KZBDPScLW5HJ9ElOPgJTSeiFgn495fq0F/l69nBeSfD3lXaVPNvK3JPEzYYqT3Keo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX+OshdfYfAcV7daUqF8670ozr6wq3VwbXaeoSghd7or9/7B2E
+	0ruhGuY7s6F0DYjb1rPxeWfhw1Ejn/f9iMSXaT655jza/p0UpT6Ho7L97w==
+X-Gm-Gg: ASbGncufrzUf0oUUsZNaFW1Fvenb/OLtfyC20HaHw6YBMcTNZeTsJ2gQB/cFuTizeRl
+	LEfHDgrWkE4ZBFxdhkotQrY7ADDO/MzaWpBq25/ooYW7Gx+3hLYq4/MV7QyILt2KOFnU2Tk/nqE
+	JSoWcA6u75QLeDWyadhE6TS0G4Z//CpT1s+SLLi0d2JB6Gmzv2Ljzu4A0n780Pe90qmLgR6V4T0
+	cmYbxgHwLjlQB4+XnQuQZQFxjywgvlygWy9p87MTc/tkMa3nRnHnbWUTwdPM8X3eWpR31gdS9Go
+	XRLs0h2Rdy2xKXw+omrpFGCC+gM0x7ukJBmLwgEUhnUbYFqBPEckNULYA8DpeEO1bXND4h7SwOj
+	hqOmM97KYBsZZ9bLFabU+CBrEq2e/
+X-Google-Smtp-Source: AGHT+IFfr9JtiD5Yf9tAAYIKaaJ9SrkkUsgXQ0tpumr/zpoDkLOS0rQwFrben/L55d3d5ve5geSTdg==
+X-Received: by 2002:a05:620a:2456:b0:7c0:a260:ec24 with SMTP id af79cd13be357-7c0ceeec55fmr76639585a.10.1740079856064;
+        Thu, 20 Feb 2025 11:30:56 -0800 (PST)
+Received: from a-gady2p56i3do.evoforge.org (ec2-52-70-167-183.compute-1.amazonaws.com. [52.70.167.183])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65dcf9645sm89459826d6.123.2025.02.20.11.30.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Feb 2025 11:30:55 -0800 (PST)
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+To: paul@paul-moore.com,
+	linux-security-module@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	casey@schaufler-ca.com,
+	Stephen Smalley <stephen.smalley.work@gmail.com>
+Subject: [PATCH] lsm,nfs: fix memory leak of lsm_context
+Date: Thu, 20 Feb 2025 14:29:36 -0500
+Message-ID: <20250220192935.9014-2-stephen.smalley.work@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+commit b530104f50e8 ("lsm: lsm_context in security_dentry_init_security")
+did not preserve the lsm id for subsequent release calls, which results
+in a memory leak. Fix it by saving the lsm id in the nfs4_label and
+providing it on the subsequent release call.
 
-On Thu, 20 Feb 2025 11:47:12 -0500, Jeff Layton wrote:
-> While looking at the problem that Li Lingfeng reported [1] around
-> callback queueing failures, I noticed that there were potential
-> scenarios where the callback workqueue jobs could run concurrently with
-> an rpc_task. Since they touch some of the same fields, this is incorrect
-> at best and potentially dangerous.
-> 
-> This patchset adds a new mechanism for ensuring that the same
-> nfsd4_callback can't run concurrently with itself, regardless of where
-> it is in its execution. This also gives us a more sure mechanism for
-> handling the places where we need to take and hold a reference on an
-> object while the callback is running.
-> 
-> [...]
+Fixes: b530104f50e8 ("lsm: lsm_context in security_dentry_init_security")
+Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+---
+ fs/nfs/nfs4proc.c    | 7 ++++---
+ include/linux/nfs4.h | 1 +
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-Applied to nfsd-testing, thanks! This series replaces:
-
-https://lore.kernel.org/linux-nfs/20250218135423.1487309-1-lilingfeng3@huawei.com/
-
-Review is still open.
-
-[1/5] nfsd: prevent callback tasks running concurrently
-      commit: 9a03a9d82410bdb758a6b342689e0c235bba94f1
-[2/5] nfsd: eliminate cl_ra_cblist and NFSD4_CLIENT_CB_RECALL_ANY
-      commit: 743fda103062626c828dbac774716e718a74f81b
-[3/5] nfsd: replace CB_GETATTR_BUSY with NFSD4_CALLBACK_RUNNING
-      commit: d2d94554567f486eba111e953e75745eca09bee3
-[4/5] nfsd: move cb_need_restart flag into cb_flags
-      commit: 355f1ec5ce21ab324d9b3978d2d5abe6d0c84024
-[5/5] nfsd: handle errors from rpc_call_async()
-      commit: d0f1ba5ed270fbda06248ef8af822a9e14708ee1
-
---
-Chuck Lever
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index df9669d4ded7..c0caaec7bd20 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -133,6 +133,7 @@ nfs4_label_init_security(struct inode *dir, struct dentry *dentry,
+ 	if (err)
+ 		return NULL;
+ 
++	label->lsmid = shim.id;
+ 	label->label = shim.context;
+ 	label->len = shim.len;
+ 	return label;
+@@ -145,7 +146,7 @@ nfs4_label_release_security(struct nfs4_label *label)
+ 	if (label) {
+ 		shim.context = label->label;
+ 		shim.len = label->len;
+-		shim.id = LSM_ID_UNDEF;
++		shim.id = label->lsmid;
+ 		security_release_secctx(&shim);
+ 	}
+ }
+@@ -6269,7 +6270,7 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
+ 					size_t buflen)
+ {
+ 	struct nfs_server *server = NFS_SERVER(inode);
+-	struct nfs4_label label = {0, 0, buflen, buf};
++	struct nfs4_label label = {0, 0, 0, buflen, buf};
+ 
+ 	u32 bitmask[3] = { 0, 0, FATTR4_WORD2_SECURITY_LABEL };
+ 	struct nfs_fattr fattr = {
+@@ -6374,7 +6375,7 @@ static int nfs4_do_set_security_label(struct inode *inode,
+ static int
+ nfs4_set_security_label(struct inode *inode, const void *buf, size_t buflen)
+ {
+-	struct nfs4_label ilabel = {0, 0, buflen, (char *)buf };
++	struct nfs4_label ilabel = {0, 0, 0, buflen, (char *)buf };
+ 	struct nfs_fattr *fattr;
+ 	int status;
+ 
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index 71fbebfa43c7..9ac83ca88326 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -47,6 +47,7 @@ struct nfs4_acl {
+ struct nfs4_label {
+ 	uint32_t	lfs;
+ 	uint32_t	pi;
++	u32		lsmid;
+ 	u32		len;
+ 	char	*label;
+ };
+-- 
+2.47.1
 
 
