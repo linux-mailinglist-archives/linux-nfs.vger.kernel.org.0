@@ -1,98 +1,97 @@
-Return-Path: <linux-nfs+bounces-10199-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10200-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 665BCA3CBA6
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2025 22:40:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AEE2A3DAF2
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 14:11:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0E7EC3B0240
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Feb 2025 21:39:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F405A3B979F
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Feb 2025 13:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F8A2580CA;
-	Wed, 19 Feb 2025 21:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E178B1F584A;
+	Thu, 20 Feb 2025 13:09:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tQgXeAfh"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="C+R/Hau2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1976F1C5F35;
-	Wed, 19 Feb 2025 21:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720201F7916
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Feb 2025 13:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740001203; cv=none; b=ed+Koxpx4oadr6HZiV/b/0zRyLClOqAdZENJzc6CFe3RQ0Csu0fd++U8vjRO+UreMFIKHTeo9962j++ggLW/NwyvPtibT6N/q1GDKIJdDtnnhPlCU2D5nUJHJmjPpEEihjI7GazjsKpsV/4pb6s3rkpqSQQQTr2Ee6xZBCPcdXU=
+	t=1740056974; cv=none; b=NRAVUDXXOMoiqGM+m/ErjVF+f6KuD7YRLC8L6FfpQcTM1wBh+fOASxgYyD+dveL3HyC9UgVzzB0/WPjPiHq9KKdL5V/s+fXjDmYOXKXQ9FZjI0m8a9p3Z9lbTZDdYEHtFWIpcRLP8W7omNi5SEBb5jeje3+dc5749obhVoAbiaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740001203; c=relaxed/simple;
-	bh=D5yQRlgjz8pIf0S3EvuJaVVxsdibweNfwCw0CARbfq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=judr84lYDmpS48eb4Jv3nvz3fzxkZ91qY1mCI2wLRf/3U2K6uu0mtJWQMXqtf/pyQp87nXfhReR+1yiQug7o7xbP7OWS8jD3iHk36KCM5HITd1eHfVD2dksUIVSMGg21bVqrj25OVbHEuJ7n5E4z5vV6wyub9lyCqLCYZIjaK3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=tQgXeAfh; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1740001194;
-	bh=cIogJHhgqGA5f5yLXpjO29DTGRFoxWFnIadtsybhlqQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=tQgXeAfhhUkXRbZ/gaw9IWQKawVcPwHCiM6M0zlb9kuMGYtsInxP6W3gXDl8eaCno
-	 k/ZnqbcPadEsHSwowZOHLR2vii2EpckOd6GB3oQwobcrpVLPb1i8FPI3H8R5jUueyx
-	 ME3BjCFN4m6yZHQNV2sOiEiJ0TMu83qeoWx9FeinbB0zz9NdYVVYiRclHTEOqeL6mo
-	 9iOq/7LjKUgxzTNCB6sRuTGAqo0jD6DNemb36Km0qhgGTCjmzBt0/SFjIfDxDo/NLs
-	 /wnuGaomqpHNxOkEmLQh1oqn5bmy2Uk3bphQekWJc46jhaEnr0doXhL7+niFeTEQD1
-	 ZNZpBHYySBRRw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YyqYQ4CQGz4x2c;
-	Thu, 20 Feb 2025 08:39:54 +1100 (AEDT)
-Date: Thu, 20 Feb 2025 08:39:53 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>,
- NFS Mailing List <linux-nfs@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patches in the nfs-anna tree
-Message-ID: <20250220083953.12e3ad01@canb.auug.org.au>
+	s=arc-20240116; t=1740056974; c=relaxed/simple;
+	bh=659Z5MgEmFp3Njkp+0t+ptDcYZt275fHIOylgA3dWnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KJskdN4Mk7C7Dgk5uIyWSR7fGSHP1gGUXKUxkkrchE6JVYiGxPhyE6Sf7txkgpSZnBx44hJbYvhiBS6TFW2MGda7akjvKriuoguxQR/x8qBPQoDvIwS5oFEfMGqOSMAiitKxbP99PtlG/kp9sJw9hnPwT+yivSSoZDEbqBG278s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=C+R/Hau2; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ded368fcd9so1341594a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Feb 2025 05:09:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1740056970; x=1740661770; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=659Z5MgEmFp3Njkp+0t+ptDcYZt275fHIOylgA3dWnI=;
+        b=C+R/Hau2g+pBGqJmjAtbmtdL4dsKHvh6W7yvQnKEdbklRIwFMFGdYGhITZMoWdp/3v
+         T1XbuvI1Ii71umHss37hwhdik1dlBn7Da8j4n0Rj9iiiHEIFgRwrrUAFPKDfimtm/Tiw
+         EmtVGn5CMNJ8V68pMFv4F8tsCO2YOh1cSRKHUYXOnGP5Cm4cjKeDMkdgbBe5zkRej0QQ
+         G+cB0eZxXc/RTvXLGu748Tflpv15LVix8Fik43Fsg+LowGVYwwUImusgeh5lPcVJqufh
+         gnctRt3OjZWL5bgd5y4llre2YSRXbTUzNsRKm/cdRNjyuyljn9TMJYCrKw/UGh36wo2k
+         a50A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740056970; x=1740661770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=659Z5MgEmFp3Njkp+0t+ptDcYZt275fHIOylgA3dWnI=;
+        b=qigyZVMVztPXIA6AywW+ZeS4k0lBf3vAh5S5wmeM3a634VUipcE/yfBdguRNJ3CwnR
+         UQwhqSJQ4XkPmapVo37/6F1au0Qyu5PLkXaUo34ycli3VnLh87lDksnn7s7IQSLdqwgC
+         nM6MjhlrrVDGVVu4tBYnTNIvT7eWt3ey7tkpdU64BGVAmccnINqOR33D34VCcLy61kQy
+         5Rx3LIGaTC8J9Z9roDJctuvppMt8cy5WbxDMm81VeYPUB8U4hPSxwNgSbWf2r5NH4K5e
+         RolrA4rawviA898Y1fWixvhSTTDIXmFvD8+duDQkcJE/ghHvHAyosOSdJ2MFMGOlqPUH
+         zgkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUANbjVT0XPyVt7YJaQ56TXcOyAumlzt5Cr+FtRkFeLAke5uSHI7Csy8jv7/yEuyovogk+R6g449Zw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZnQCSmCdN4lB3FK75H7lMR8WA3cRj0voe4knS7JX/+QE1CSCp
+	lVxcDzME5qCprg1IcWA/ZioSfVxnwGLm+43KseO7swaMCNcIqurOtcpQ3hv7B96r/zTxprv0T7A
+	UW1Hwc0J/4k+Bq0efx33EP1SUh4ZFlClvjQwlcQ==
+X-Gm-Gg: ASbGncuOcN/bvgFB++TL9zdSGJbhdtINDPBampytgfLoD34/DToXma0RsnnT+6igVBu
+	JSdldJ1MLJ3Q3nDS14AHJuMZLmyfP2pPogSUkRa0P4tJNF/PwpAwwTPF1Qj8NjjRaoHuWc6/IqH
+	XiGzSsR9csqxCjDrzIp3aezJDgqg==
+X-Google-Smtp-Source: AGHT+IGPoX+5794U07EydT48UEKhGOyMUOF2FtzKyULbqoGRP0V32LcSKq9unFMC783mM102XE9wLcWd7UMwvlaZCoY=
+X-Received: by 2002:a17:906:dc90:b0:ab7:86af:9e19 with SMTP id
+ a640c23a62f3a-abbcd05a611mr799771966b.43.1740056969659; Thu, 20 Feb 2025
+ 05:09:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/V=bh8+aeNG+zXVz8hrEld.k";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/V=bh8+aeNG+zXVz8hrEld.k
-Content-Type: text/plain; charset=US-ASCII
+References: <CAKPOu+_4mUwYgQtRTbXCmi+-k3PGvLysnPadkmHOyB7Gz0iSMA@mail.gmail.com>
+ <20250210191118.3444416-1-max.kellermann@ionos.com> <3978045.1739537266@warthog.procyon.org.uk>
+In-Reply-To: <3978045.1739537266@warthog.procyon.org.uk>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Thu, 20 Feb 2025 14:09:17 +0100
+X-Gm-Features: AWEUYZmpP9P0Gfh3rezBjkEnKqpCWeO7xkkWonrM0Uq7UsX6pZI6C3FwpwtpoBk
+Message-ID: <CAKPOu+8cD=HkoNYYknivDJnb6Pfxv+KF28SBUDEqha4NE5sxhg@mail.gmail.com>
+Subject: Re: [PATCH] fs/netfs/read_collect: add to next->prev_donated
+To: David Howells <dhowells@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: netfs@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Fri, Feb 14, 2025 at 1:47=E2=80=AFPM David Howells <dhowells@redhat.com>=
+ wrote:
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
-There are 2923 patches duplicated from Linus Torvalds' tree in the
-nfs-anna tree.  It is unusable in this state, so I will drop it today
-unless it is updated very soon.  It looks like an attempted rebase onto
-v6.14-rc2 went badly wrong :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/V=bh8+aeNG+zXVz8hrEld.k
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme2T6kACgkQAVBC80lX
-0Gzd4ggAjS2kcHFzQFQGuKtc4LdcsIgxBhNYrkzfhCM2MW12uu7HKH6rKZTT5A2w
-YyiUNBRagVBh4Ao3OMuKGlQrYZVK9vHDvib0TUxmI53Lva2c+pqIF40+8hn0kNHf
-fnICQsF+rGkjh0g3Yru6Z0LBE8lLOI1eMvIGtyzKUHopwzO1KRnigxHHTU6nRZn7
-FhmEQUn2o4dW01SciUnxCYQvECrnZeCkgZvKiEC4khTBYB887UA0ZKQA9nFQK5hS
-26CS65iMOYFBhl27LHni90RMn/sI7qUe3Of5QDKJQ1MEs0Bv+BlIV5KH8hpfivid
-NbfJKz2PRfwl3pEn8qKYOfpExANp5A==
-=AZTQ
------END PGP SIGNATURE-----
-
---Sig_/V=bh8+aeNG+zXVz8hrEld.k--
+Greg, you merged my other two netfs fixes into 6.13.3, but omitted
+this one. Did you miss it, or was there another reason?
 
