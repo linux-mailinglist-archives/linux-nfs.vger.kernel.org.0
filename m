@@ -1,61 +1,60 @@
-Return-Path: <linux-nfs+bounces-10268-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10269-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9294CA3F93F
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 16:44:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D64B4A3F96C
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 16:52:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1B493B7D8A
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 15:42:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B9B519E2C8D
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 15:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B8E1D5172;
-	Fri, 21 Feb 2025 15:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 152871DBB0C;
+	Fri, 21 Feb 2025 15:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWbgpCHx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaTYaqle"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714C31A23B7
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 15:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BB81DB958
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 15:46:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152541; cv=none; b=SWBpXZGI5sPe0iBRG/fvOXfCuu4L56xaVP48bPupaDyacGpDwpJQ9LRrlMwmRZngh6GRmKBF6QxPA6899iFeC51auT5lW8QChT2jTZrRlD9gwKvFzikGe4hYzaULBUfOzK8DWiCq8mZVFDM3P7e0PBLkBARAUDQoTKv2Zv0TJFE=
+	t=1740152793; cv=none; b=hG9D4nUOf+WA51mNpugH8JCFqxPv1CAMG95vBT0sFoQmfGSv+pQGJhLd2OPNlfpRiQxnyZ5qugBaWLSPx8ZbJeYOHDpE4hGJsZwAXzZcJRgoPAF+3elMxbdcwjisDeghmj2xOiHenh94thDO9K8L+eNOEf7xWfOP/B/IfCU28qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152541; c=relaxed/simple;
-	bh=YziY3Yf0AVna8mtsiV1EFfFKd1PEbsd0LECb/dp78As=;
+	s=arc-20240116; t=1740152793; c=relaxed/simple;
+	bh=hJK3sx8QpE4Z2mmbD7JIhcYZcECkqlCej0Dc8JgfJ3E=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FHon2fuWbUDYS3jNsquGFdb0sv6oU3T8epy88zNigxeosWntFjDKaHpQXTif24kjzbh0JoQfuiXBvzAUIaJqNhT5q/q3xkb37zOk6W8xKED5I3lrIYKkUqYYvv8YdyQjT9S9XMHVhQfVk8ethcreaz7ojIngrn28R5c1Ac8aeGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWbgpCHx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35502C4CED6;
-	Fri, 21 Feb 2025 15:42:20 +0000 (UTC)
+	 Content-Type:MIME-Version; b=D+hZVPmhaiOVVDe/8HpggIpeL3tAB3lQQOb1THUj1Afvva8Qbm9etZPG16iXTwNV3trJANNDDvlgo/nAphroESAw8E1+wl0eF66q/b33jFSmrftM2om8aggE2GkTpaiPh67T+LAbvoH/GyISgcvpzGAkVKwF8o/brjPTGTa2gvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaTYaqle; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA877C4CED6;
+	Fri, 21 Feb 2025 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740152540;
-	bh=YziY3Yf0AVna8mtsiV1EFfFKd1PEbsd0LECb/dp78As=;
+	s=k20201202; t=1740152792;
+	bh=hJK3sx8QpE4Z2mmbD7JIhcYZcECkqlCej0Dc8JgfJ3E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IWbgpCHxPzYuouNatO31SH7xrO0eNoIUrIc8Fzp3rD/HHjd0YIFwng1GbJuPxPBtt
-	 XnzhbxEPPBE/a8HJSRvmvS4fiFfNvMulNB2XWkVh1+DN9IuFHIC9BA37S8HB7bX1Hv
-	 gFQEmstfWv5jnsnO0x9VFWQkU9VdPL7yiWUQf9+ynDBDpXWgbCeaT/Mc5a9Q066lia
-	 GxdJl2zaQ2puTQUvvvdU4sKSTApvqURjMgCRLSxhz7fmEcVrRHgV+ebbmFINWvW1xN
-	 zgA7Z6ODxWW4CmFVHhe4z2oBiuVZMU5ZCI/QUsfdusb5qA/FuKIOj6H3GwuuHmihim
-	 WP/n5phPkvn+g==
-Message-ID: <a8485604f64de456269f56793403c4f91a04a010.camel@kernel.org>
+	b=DaTYaqlemBGW221JtvRKDc7jz+EBzcJ4qp2aqeaFM2yDRwn0blFEP1kBOJM33Uffp
+	 TI4N5OzhST0tBa1RqgeIK6U8jt250RKtVjNyPdL6jMf7cfRKXW64nR+zPbHpaTw77q
+	 j6Tq3sY45IbsxUMu2cI+UKlzPL+foi78inm2GzP1vV8JMKqgh1fK02TbLU6bfBA/yW
+	 EQMjJV3N7Kjs5czKaXhlGRQL3pczxXF9gXPI45Z2JE++sBQo4JavRRbdYZkIiaaek/
+	 va1yuUscivYIF2+imlSXejM93PCfZSEWwqTJ+T3bzbdagUUvySO08LGCBQAUnbhAsA
+	 ioJx8ZIDbwOfw==
+Message-ID: <bb0c5102c1004b896a8d3350dcbea9ba7a8accd3.camel@kernel.org>
 Subject: Re: nfsd: add the ability to enable use of RWF_DONTCACHE for all
  nfsd IO
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, Neil
- Brown	 <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo	
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, axboe@kernel.dk
-Date: Fri, 21 Feb 2025 10:42:19 -0500
-In-Reply-To: <Z7idYDSHD_hcLL9b@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+	 <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, 	axboe@kernel.dk
+Date: Fri, 21 Feb 2025 10:46:30 -0500
+In-Reply-To: <64d7e00d-e025-481a-9145-7038e9ee7fdf@oracle.com>
 References: <20250220171205.12092-1-snitzer@kernel.org>
 	 <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
 	 <Z7iVdHcnGveg-gbg@kernel.org>
-	 <b101b927807cc30ce284d6be9aca5cbb92da8f94.camel@kernel.org>
-	 <Z7idYDSHD_hcLL9b@kernel.org>
+	 <64d7e00d-e025-481a-9145-7038e9ee7fdf@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,100 +139,32 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-02-21 at 10:36 -0500, Mike Snitzer wrote:
-> On Fri, Feb 21, 2025 at 10:25:03AM -0500, Jeff Layton wrote:
-> > On Fri, 2025-02-21 at 10:02 -0500, Mike Snitzer wrote:
-> > > On Thu, Feb 20, 2025 at 01:17:42PM -0500, Chuck Lever wrote:
-> > > > [ Adding NFSD reviewers ... ]
-> > > >=20
-> > > > On 2/20/25 12:12 PM, Mike Snitzer wrote:
-> > > > > Add nfsd 'nfsd_dontcache' modparam so that "Any data read or writ=
-ten
-> > > > > by nfsd will be removed from the page cache upon completion."
-> > > > >=20
-> > > > > nfsd_dontcache is disabled by default.  It may be enabled with:
-> > > > >   echo Y > /sys/module/nfsd/parameters/nfsd_dontcache
-> > > >=20
-> > > > A per-export setting like an export option would be nicer. Also, do=
-es
-> > > > it make sense to make it a separate control for READ and one for WR=
-ITE?
-> > > > My trick knee suggests caching read results is still going to add
-> > > > significant value, but write, not so much.
-> > >=20
-> > > My intent was to make 6.14's DONTCACHE feature able to be tested in
-> > > the context of nfsd in a no-frills way.  I realize adding the
-> > > nfsd_dontcache knob skews toward too raw, lacks polish.  But I'm
-> > > inclined to expose such course-grained opt-in knobs to encourage
-> > > others' discovery (and answers to some of the questions you pose
-> > > below).  I also hope to enlist all NFSD reviewers' help in
-> > > categorizing/documenting where DONTCACHE helps/hurts. ;)
-> > >=20
-> > > And I agree that ultimately per-export control is needed.  I'll take
-> > > the time to implement that, hopeful to have something more suitable i=
-n
-> > > time for LSF.
-> > >=20
+On Fri, 2025-02-21 at 10:39 -0500, Chuck Lever wrote:
+> On 2/21/25 10:02 AM, Mike Snitzer wrote:
+> > On Thu, Feb 20, 2025 at 01:17:42PM -0500, Chuck Lever wrote:
+> > > * It might be argued that putting these experimental tunables under /=
+sys
+> > >   eliminates the support longevity question, since there aren't stric=
+t
+> > >   rules about removing files under /sys.
 > >=20
-> > Would it make more sense to hook DONTCACHE up to the IO_ADVISE
-> > operation in RFC7862? IO_ADVISE4_NOREUSE sounds like it has similar
-> > meaning? That would give the clients a way to do this on a per-open
-> > basis.
+> > Right, I do think a sysfs knob (that defaults to disabled, requires
+> > user opt-in) is a pretty useful and benign means to expose
+> > experimental functionality.
 >=20
-> Just thinking aloud here but: Using a DONTCACHE scalpel on a per open
-> basis quite likely wouldn't provide the required page reclaim relief
-> if the server is being hammered with normal buffered IO.  Sure that
-> particular DONTCACHE IO wouldn't contribute to the problem but it
-> would still be impacted by those not opting to use DONTCACHE on entry
-> to the server due to needing pages for its DONTCACHE buffered IO.
+> Seems like we want to figure out a blessed way to add this kind of
+> experimental "hidden" tunable in a way that can be easily removed
+> once we have the answers we need.
+>=20
+> I'd really like to keep the documented administrative interface as
+> straightforward as possible, but I agree that having a way to
+> experiment is valuable.
 >=20
 
-Actually, now that I read the spec, it looks like you could just embed
-an IO_ADVISE operation in the read compound:
+We do have this fancy new netlink interface that is extensible.
 
-    PUTFH + IO_ADVISE(for the range that you're reading) + READ() operation
-
-That said, that does nothing for v3 reads, which I imagine you're
-interested in hooking up here too.
-
-> > > > However, to add any such administrative control, I'd like to see so=
-me
-> > > > performance numbers. I think we need to enumerate the cases (I/O ty=
-pes)
-> > > > that are most interesting to examine: small memory NFS servers; lot=
-s of
-> > > > small unaligned I/O; server-side CPU per byte; storage interrupt ra=
-tes;
-> > > > any others?
-> > > >=20
-> > > > And let's see some user/admin documentation (eg when should this se=
-tting
-> > > > be enabled? when would it be contra-indicated?)
-> > > >=20
-> > > > The same arguments that applied to Cedric's request to make maximum=
- RPC
-> > > > size a tunable setting apply here. Do we want to carry a manual set=
-ting
-> > > > for this mechanism for a long time, or do we expect that the settin=
-g can
-> > > > become automatic/uninteresting after a period of experimentation?
-> > > >=20
-> > > > * It might be argued that putting these experimental tunables under=
- /sys
-> > > >   eliminates the support longevity question, since there aren't str=
-ict
-> > > >   rules about removing files under /sys.
-> >=20
-> > Isn't /sys covered by the same ABI guarantees? I know debugfs isn't,
-> > but I'm not sure about /sys.
->=20
-> Only if you add them to the ABI docs as supported (at least that is my
-> experience relative to various block limits knobs, etc).  But yeah,
-> invariably that invites a cat and mouse game of users using the knob
-> and then complaining loudly if/when it goes away.
->=20
-> Mike
-
+You could extend the "threads" call to add a server-wide boolean for
+this and then extend nfsdctl to set that value in some cases.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
