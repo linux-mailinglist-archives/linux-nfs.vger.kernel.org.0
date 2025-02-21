@@ -1,210 +1,120 @@
-Return-Path: <linux-nfs+bounces-10262-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10263-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB261A3F7F1
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 16:02:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9435A3F81E
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 16:12:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C4BA21620FE
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 15:02:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DAA9A17345B
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 15:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB666208962;
-	Fri, 21 Feb 2025 15:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B4DC20A5C3;
+	Fri, 21 Feb 2025 15:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMphExus"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SnZJ7qiD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C571F208960
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 15:02:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4452101BE
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 15:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740150134; cv=none; b=mgX1tvzD71tXbVQf5A83kU/gIum4yiZTU+JF7FhAh4OfGOy44GmkJkC4uLyFzh09uY6UcJOXUxW++W2ANy3Z1XIopwtIoyH8a7AyCNUpk9mC1VNff7F1SGNiH4QWLJLQmVtytP49mejDgJL26eKSA9ode218J1y3/H+aDlmoS2w=
+	t=1740150710; cv=none; b=IguR0DmbZY57/C/npAitFIRrVwGGMyvudtgoMimJWltcLtAMO9LOBIzZoYBHCwW58KdYZBOOD3Fj+umsZLBxa5kbAmwKjOUZuSafJBX5pNQknWR1IJYMPj1A2B3XLnLpMgVfCtyqRuEGY705i0D/WdDZhuhzq8Pmp78pQyrIDr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740150134; c=relaxed/simple;
-	bh=BSgVNp0N3Ui1VueJuQlWrFtRuJcUkGhGKI1Syp+ouZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2PkcCQBEzyrn6OVGay+T/wAuhTCTP/dEPr9FlvXmrNkxKA6oaOTgb68KBpC9xqFSDWgZI7MbuuPtLEq6ld0SUe6ANrdf2LElasSzfIrWClPS4NgcmPErzvtC5ToIiEEjG1fS6e6vNW+V+tU/DR8CBbDNYfay9CBsrph32AmBdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMphExus; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F072BC4CED6;
-	Fri, 21 Feb 2025 15:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740150134;
-	bh=BSgVNp0N3Ui1VueJuQlWrFtRuJcUkGhGKI1Syp+ouZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gMphExusq9IVInQwNAX6zgwFFzCoE8tk40tEhf36Uio1soOoyi/QJKHk71mtCupjc
-	 6cBZOv18ygJNkw05ANIKuB2IKzdAw3ugA0QVZfxw46lhoVK88SgtvkvZpP8rnKY4BD
-	 dclpIzhVTkRQ4eP8mWeH90gbkrXxelEayAVPQO3u8RyXiqWhL+3KN5tXbceC31JTV3
-	 oNkeOYLu6mRcI0d1IPlZYOmxXlX82sgE8/D4eapvenUs+lkhAkpKtDmYjBnzLeoXjd
-	 pAYajJAZ/XJ/GSrX/m4grPzv61vK8tkrwXb+MtaWACg2mMJcOr/DMH+Oqik05Tldiu
-	 wudIF4xa8VYKg==
-Date: Fri, 21 Feb 2025 10:02:12 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	axboe@kernel.dk
-Subject: Re: nfsd: add the ability to enable use of RWF_DONTCACHE for all
- nfsd IO
-Message-ID: <Z7iVdHcnGveg-gbg@kernel.org>
-References: <20250220171205.12092-1-snitzer@kernel.org>
- <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
+	s=arc-20240116; t=1740150710; c=relaxed/simple;
+	bh=arLh/I4lsr6ZGjo0XHkaCX6T2Wo1BV4LDhM14P7asug=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SzmPiM2qDiPlMnejpgr0G64t/Lpt0e4+82Ng8XZmawRCO81+DgwpQu7ziSVuoSMr2221P+RkWs1zFIjDGzzd7NvpWs4CQrrt6JQG92z5wq5DyJ/0sFr5uIdEGfno3atkHAhNNh727c7z4tN/nvhGF/xBHHB2HJnK1TXMiDQ4mVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SnZJ7qiD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740150707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TJ9r/+kHRjV8toBGSoqWth/+wWu7waaSvaA44C2U1Cs=;
+	b=SnZJ7qiDw7rXtdqUMgV2y6X+jaWkliSzYSXl5sy/ltC+a/mUhYTdr7efD9IEV+Nm5AWvHF
+	DhMjsf9TU+fGJec6PVX4ZbQ0Pg5/4W1fp3wF1WUpak2fKVE3JO3el2j24UNFTbY0k/nngV
+	dyZWWmlnS4m7eK1u1j5KA9dcgxbJNBM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-662-4xRsXt3dNl-4ElKcQwhPrg-1; Fri,
+ 21 Feb 2025 10:11:40 -0500
+X-MC-Unique: 4xRsXt3dNl-4ElKcQwhPrg-1
+X-Mimecast-MFC-AGG-ID: 4xRsXt3dNl-4ElKcQwhPrg_1740150698
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10B151800875;
+	Fri, 21 Feb 2025 15:11:37 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.11])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0575B180087E;
+	Fri, 21 Feb 2025 15:11:32 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+ Li Lingfeng <lilingfeng3@huawei.com>, neilb@suse.de, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com, houtao1@huawei.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Subject: Re: [PATCH] nfsd: decrease cl_cb_inflight if fail to queue cb_work
+Date: Fri, 21 Feb 2025 10:11:30 -0500
+Message-ID: <7034A7D2-7AE3-4704-B30A-7D0D477307B0@redhat.com>
+In-Reply-To: <6bdec87c369b61b515a29a6d661b1e9473fba24c.camel@kernel.org>
+References: <20250218135423.1487309-1-lilingfeng3@huawei.com>
+ <0ae8a05272c2eb8a503102788341e1d9c49109dd.camel@kernel.org>
+ <04ed0c70b85a1e8b66c25b9ad4d0aa4c2fb91198.camel@kernel.org>
+ <9cea3133-d17c-48c5-8eb9-265fbfc5708b@oracle.com>
+ <8afc09d0728c4b71397d6b055dc86ab12310c297.camel@kernel.org>
+ <C9BBD33C-0077-44B0-BCE9-7E4962428382@redhat.com>
+ <c3f3c740498368905dd4adbabb75ee9e6728730b.camel@kernel.org>
+ <9272C75B-F102-4D42-9970-DF3D267E0629@redhat.com>
+ <6bdec87c369b61b515a29a6d661b1e9473fba24c.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, Feb 20, 2025 at 01:17:42PM -0500, Chuck Lever wrote:
-> [ Adding NFSD reviewers ... ]
-> 
-> On 2/20/25 12:12 PM, Mike Snitzer wrote:
-> > Add nfsd 'nfsd_dontcache' modparam so that "Any data read or written
-> > by nfsd will be removed from the page cache upon completion."
-> > 
-> > nfsd_dontcache is disabled by default.  It may be enabled with:
-> >   echo Y > /sys/module/nfsd/parameters/nfsd_dontcache
-> 
-> A per-export setting like an export option would be nicer. Also, does
-> it make sense to make it a separate control for READ and one for WRITE?
-> My trick knee suggests caching read results is still going to add
-> significant value, but write, not so much.
+On 21 Feb 2025, at 9:58, Jeff Layton wrote:
 
-My intent was to make 6.14's DONTCACHE feature able to be tested in
-the context of nfsd in a no-frills way.  I realize adding the
-nfsd_dontcache knob skews toward too raw, lacks polish.  But I'm
-inclined to expose such course-grained opt-in knobs to encourage
-others' discovery (and answers to some of the questions you pose
-below).  I also hope to enlist all NFSD reviewers' help in
-categorizing/documenting where DONTCACHE helps/hurts. ;)
+> On Fri, 2025-02-21 at 09:46 -0500, Benjamin Coddington wrote:
+>> On 21 Feb 2025, at 9:37, Jeff Layton wrote:
+>>
+>>> On Fri, 2025-02-21 at 09:06 -0500, Benjamin Coddington wrote:
+>>>> On 18 Feb 2025, at 9:40, Jeff Layton wrote:
+>>>
+>>> lease_breaking() is only checked when want_write is false. IOW, if
+>>> you're breaking the lease for write, then lm_break is always called.
+>>>
+>>> Is that a bug or a feature? I'm not sure, but it's been that way since
+>>> ~2011.
+>>
+>> Yeah.. why?
+>>
+>> Thanks I missed that detail when I refreshed my memory of it just now.
+>> Seems like you'd want to avoid constantly calling lm_break for both cases,
+>> spamming the lock manager adds nothing.  2 cents.
+>>
+>
+> Sorry, it doesn't get called every time. If want_write is called then
+> we _do_ check FL_UNLOCK_PENDING. IOW, you can get a downgrade attempt
+> first, and then a full unlock request later.
+>
+> nfsd doesn't do downgrades. It recalls the object either way. So,
+> ignoring subsequent lm_break calls is the right thing to do, I think.
 
-And I agree that ultimately per-export control is needed.  I'll take
-the time to implement that, hopeful to have something more suitable in
-time for LSF.
+Got it, thanks for clarifying this behavior for me!
 
-> However, to add any such administrative control, I'd like to see some
-> performance numbers. I think we need to enumerate the cases (I/O types)
-> that are most interesting to examine: small memory NFS servers; lots of
-> small unaligned I/O; server-side CPU per byte; storage interrupt rates;
-> any others?
-> 
-> And let's see some user/admin documentation (eg when should this setting
-> be enabled? when would it be contra-indicated?)
-> 
-> The same arguments that applied to Cedric's request to make maximum RPC
-> size a tunable setting apply here. Do we want to carry a manual setting
-> for this mechanism for a long time, or do we expect that the setting can
-> become automatic/uninteresting after a period of experimentation?
-> 
-> * It might be argued that putting these experimental tunables under /sys
->   eliminates the support longevity question, since there aren't strict
->   rules about removing files under /sys.
+Ben
 
-Right, I do think a sysfs knob (that defaults to disabled, requires
-user opt-in) is a pretty useful and benign means to expose
-experimental functionality.
-
-And I agree with all you said needed above, I haven't had the time to
-focus on DONTCACHE since ~Decemeber, I just picked up my old patches
-from that time and decided to send the NFSD one since DONTCACHE has
-been merged for 6.14.
- 
-> > FOP_DONTCACHE must be advertised as supported by the underlying
-> > filesystem (e.g. XFS), otherwise if/when 'nfsd_dontcache' is enabled
-> > all IO will fail with -EOPNOTSUPP.
-> 
-> It would be better all around if NFSD simply ignored the setting in the
-> cases where the underlying file system doesn't implement DONTCACHE.
-
-I'll work on making it so.
-
-> 
-> 
-> > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > ---
-> >  fs/nfsd/vfs.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 29cb7b812d71..d7e49004e93d 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -955,6 +955,11 @@ nfsd_open_verified(struct svc_fh *fhp, int may_flags, struct file **filp)
-> >  	return __nfsd_open(fhp, S_IFREG, may_flags, filp);
-> >  }
-> >  
-> > +static bool nfsd_dontcache __read_mostly = false;
-> > +module_param(nfsd_dontcache, bool, 0644);
-> > +MODULE_PARM_DESC(nfsd_dontcache,
-> > +		 "Any data read or written by nfsd will be removed from the page cache upon completion.");
-> > +
-> >  /*
-> >   * Grab and keep cached pages associated with a file in the svc_rqst
-> >   * so that they can be passed to the network sendmsg routines
-> > @@ -1084,6 +1089,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> >  	loff_t ppos = offset;
-> >  	struct page *page;
-> >  	ssize_t host_err;
-> > +	rwf_t flags = 0;
-> >  
-> >  	v = 0;
-> >  	total = *count;
-> > @@ -1097,9 +1103,12 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> >  	}
-> >  	WARN_ON_ONCE(v > ARRAY_SIZE(rqstp->rq_vec));
-> >  
-> > +	if (nfsd_dontcache)
-> > +		flags |= RWF_DONTCACHE;
-> > +
-> >  	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
-> >  	iov_iter_kvec(&iter, ITER_DEST, rqstp->rq_vec, v, *count);
-> > -	host_err = vfs_iter_read(file, &iter, &ppos, 0);
-> > +	host_err = vfs_iter_read(file, &iter, &ppos, flags);
-> >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
-> >  }
-> >  
-> > @@ -1186,6 +1195,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
-> >  	if (stable && !fhp->fh_use_wgather)
-> >  		flags |= RWF_SYNC;
-> >  
-> > +	if (nfsd_dontcache)
-> > +		flags |= RWF_DONTCACHE;
-> > +
-> >  	iov_iter_kvec(&iter, ITER_SOURCE, vec, vlen, *cnt);
-> >  	since = READ_ONCE(file->f_wb_err);
-> >  	if (verf)
-> > @@ -1237,6 +1249,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
-> >   */
-> >  bool nfsd_read_splice_ok(struct svc_rqst *rqstp)
-> >  {
-> > +	if (nfsd_dontcache) /* force the use of vfs_iter_read for reads */
-> > +		return false;
-> > +
-> 
-> Urgh.
-
-Heh, yeah, bypassing splice was needed given dontcache hooks off vfs_iter_read.
-
-> So I've been mulling over simply removing the splice read path.
-> 
->  - Less code, less complexity, smaller test matrix
-> 
->  - How much of a performance loss would result?
-> 
->  - Would such a change make it easier to pass whole folios from
->    the file system directly to the network layer?
-
-Good to know.
-
-Thanks,
-Mike
 
