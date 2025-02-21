@@ -1,155 +1,118 @@
-Return-Path: <linux-nfs+bounces-10283-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10284-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52C8AA4016F
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 21:56:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A91C2A4039D
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Feb 2025 00:43:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 202053A9CE7
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 20:55:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 844537A7DBB
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 23:42:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62B8253326;
-	Fri, 21 Feb 2025 20:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94F85250BF3;
+	Fri, 21 Feb 2025 23:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQSxg1V1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lXB3XRxo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3176E1EE028;
-	Fri, 21 Feb 2025 20:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00492500B1
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 23:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740171355; cv=none; b=bx5sIxWZav5/piICDF4CoNKxm56g3eddQUXGJ/UqRWd7uUKQrAWRL0XhNZH9MU2cQIf+gmnfj4PORkKw1YRvq2IKu4BTAl3CTz6EyYC0ut8NQDyrDjlDBSRoCK6+eTjHrQwLmEafDI2DTaHFP+6Tnvy5GpU6rE6c0SJwOWe1E3U=
+	t=1740181377; cv=none; b=J7ERiPO+hiE+pilynDhBMYEOStiiV3fzuJO9OQNy0vDuSfImeuGQzllUUQiaaRx1P16R1RV7NKJxVvbZOFMpzxq6b6YALWs5+btewffEqGqv1JqJheIa/JqVaHCeNU9QTLswYBWIV37gsOskePRoqTHiU7YURjeGEmbnw0X+0hU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740171355; c=relaxed/simple;
-	bh=37WpLW3oAzfgtH8aj+4lVOFw/YVOpIINjRGUzhY4sHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uPEWITOcI+P4X+ZWdq4LmzSUvu71MoqOlWEh+cKighqw6zxQweQzsSxCqvMLa006t8YcWVAiZrqzTDMjKkoF05xO9tC99DKvbzxSspabLfZzNOShJwqzkvLp964p9H3mvU8K7EBsC9bkTl+T8ckR2XaZbHnCN2R8IBWq2Loumic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQSxg1V1; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fc3027c7aeso5188353a91.0;
-        Fri, 21 Feb 2025 12:55:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740171353; x=1740776153; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=90i7bzYrYHAptL72LiQEPDIHG0tWzBixtnIqNxFuxWE=;
-        b=dQSxg1V18cKv+18DQG6p5dWCk/zVzFUHJk9LkXHDRI/fFDt7Ij0GnXnN4oIX4Q8y8j
-         KXfZ13v2rCPn/u9MZmYPhKEU7OjvUifL936tnAY9omxT3novv01dX1xo7RmQtrGB9spx
-         q+42BoE/PNFrAGabDwJgyUC59aschjYGiy+KrV1s1gBMzUtdBpkiphZtHolwa/1UaUr3
-         xo9I6ZRpT5RUpamAQ6edBfwNKd5KXHa59hdyisOWRmNri2CIm2rPokQCvmBwnkIfNu93
-         aNxptnV/dPMcGgXfq2nZGM2ce9nX0rHoThNvkd/P+13C3YaHW5XyHTpsxMlv4hkRv+az
-         dKwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740171353; x=1740776153;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=90i7bzYrYHAptL72LiQEPDIHG0tWzBixtnIqNxFuxWE=;
-        b=gQHVI9NuM+G9jdQWzc1M2v6GSQV7UMFR1RPwZdN1ITanN205oyT0X75XB0nPYd0uHa
-         rjoUlf4zDrAsDORX754v8Jk+2QXjGk8oF0OrDuqkVvMsKjyNPT6HEZrshCU1r7UAIZaD
-         fXVifLVONpLGxiwnBGx+Pp8bzyvknLXnF4B4Ko7fCGHzzdMxvQzsftBOPOxOsyQMcs0U
-         3h9ii5aND4C3hHXLd/zQkjJ3jN6/0eEIjWM/dak9KxTzm5pTdgGPejLJlUeLhbyoXzIX
-         AlHwkIwwbech3QDa7865j3Kqic5LQvLx3suwXTCSPt4jLf8KERTMFquXgMs+yYVFKuIe
-         4iXg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ENalwmiAHMPGXnEGIU2PPN2r+cTvHE7l5T7FVl9IJKGMaX37haImve+MQTlNdcDHRXlTkyc3wWA=@vger.kernel.org, AJvYcCWsudrb/COLIrAxa/Y+7N5RQvNcVhokmf8Fwm2evs6VVMdppCkVXi1yojQCSJ1d5aA3yKqhTkUdDkAT/CBHxB1SeqAwkjqC@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg/tORraixr5hV5m7hQL2Gc8meKukQPY5qcL3Ig+H0DEQ8GhF3
-	T7xzCdIMoRaoDH42oI4X1lKlp1xpmVJzRGvLsUNH61y5rmAJU4fjqGibd8IjCIrGuXUghkdQZX3
-	Yu3SNlq79+A2E6+cJhjfB6XjNQIA=
-X-Gm-Gg: ASbGncu7Ip5m574ru9HyQDiQva5/tTPN0KgEzEINKgzT8y2+3Nw9x9GhbbpF54uHmdq
-	aKrRYXG/H9hEboQLLIkj6llOsebOugH2eBy0PWkQLxL0wlByt1tLh/yHbQp+1/SOy4VI8kT0otM
-	eZonHltx4=
-X-Google-Smtp-Source: AGHT+IGNIlRlpRHWNL8F9GOOYjAkfMxbXL8fbNAki6RBGtVYOc0rxXte51IyL/u0p7/yEV/282i8d2TqXRYOIVxho7k=
-X-Received: by 2002:a17:90b:1b05:b0:2ea:9ccb:d1f4 with SMTP id
- 98e67ed59e1d1-2fce85982bemr8375627a91.0.1740171353331; Fri, 21 Feb 2025
- 12:55:53 -0800 (PST)
+	s=arc-20240116; t=1740181377; c=relaxed/simple;
+	bh=Oc9XIAr8kNHYPytz5APE7eG2DHKBSYeIUaKhKRCKjM4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=DSWG7TlTOTUkx9XxPA1yFu1MQEVycbmHRXQR1Y5ifkNgVcmKihVcHTE+AdX8u1o2W35f7DxRNa2BmsucqWLt0NngVT1p/wKQXfg74BiX5XqzyswrDxB0Xd23YN1r7gd9BfQdnNxwuUuwdzpKk8diG4Ubu26GqRIE1YD8wJbaLdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lXB3XRxo; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LMBd6o030223;
+	Fri, 21 Feb 2025 23:42:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:date:from:message-id:subject:to; s=corp-2023-11-20; bh=Jolp7xbS
+	FrzWso5M90xSlBCMT4mXiuLu5Qxr8M8J/yQ=; b=lXB3XRxovNCxYMm1VSTWGseS
+	EIu72cEDY9t0I0bAj2TlEK6KKmk+7nQvgUJC6NJveO2t5bdEb6lr9EQePhaE3xg4
+	Wd517SalZcnCQzgqPXMiAr+NE56iqdb9Yt7t0Q29yhsc8oIAEiixXGPaQbNNjR+y
+	s6lBoXZrneJeSVP3hDzqInyMUMYQlibnjm+oa553YzwDIR7TJDHImhPMpB4HP3Kl
+	Dl/bK6H/9k54GcHyBUlP4HLWx7Sn1crEvcyqq0Adp2eaWCmkVWSI24/qgwTwIrzP
+	VrJZOiFWq4Kr/CSOwcCIP4+3mLrtRS5NTH0Y4s+jlEExPAk/BI7UWa2VsTzrGw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w02yqafh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 23:42:43 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51LL271o026196;
+	Fri, 21 Feb 2025 23:42:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44w0ssumcv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 23:42:42 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51LNbkJJ037041;
+	Fri, 21 Feb 2025 23:42:41 GMT
+Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44w0ssumcp-1;
+	Fri, 21 Feb 2025 23:42:41 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        okorniev@redhat.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
+Subject: [PATCH V2 0/2] NFSD: offer write delegation for OPEN with OPEN4_SHARE_ACCESS only
+Date: Fri, 21 Feb 2025 15:42:18 -0800
+Message-Id: <1740181340-14562-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_09,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ mlxlogscore=771 phishscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502210162
+X-Proofpoint-ORIG-GUID: NFw9_mJCgpoUvC9G8P2DNrfUr8XlMb8Z
+X-Proofpoint-GUID: NFw9_mJCgpoUvC9G8P2DNrfUr8XlMb8Z
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <d5fa8ace-8bc4-4261-bf34-c32e7c948bb8.ref@schaufler-ca.com>
- <d5fa8ace-8bc4-4261-bf34-c32e7c948bb8@schaufler-ca.com> <CAEjxPJ6SnFnp773P-OP9VDjgs-D7XOC9Ygfk_MexKs9UdX73dw@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6SnFnp773P-OP9VDjgs-D7XOC9Ygfk_MexKs9UdX73dw@mail.gmail.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Fri, 21 Feb 2025 15:55:42 -0500
-X-Gm-Features: AWEUYZmPGLqQfR_wMrabUL3s9rkuy1s1nurw4SnvBxnZQxesL2yyDsPvqB0ZVx4
-Message-ID: <CAEjxPJ50YbWXB1DV65U-vFW-5mVkjwFjXQcEbULW3m3ZE3AM6g@mail.gmail.com>
-Subject: Re: [PATCH] lsm,nfs: fix NFS4 memory leak of lsm_context
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Paul Moore <paul@paul-moore.com>, LSM List <linux-security-module@vger.kernel.org>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 12:49=E2=80=AFPM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Fri, Feb 21, 2025 at 10:59=E2=80=AFAM Casey Schaufler <casey@schaufler=
--ca.com> wrote:
-> >
-> > The NFS4 security label code does not support multiple labels, and
-> > is intentionally unaware of which LSM is providing them. It is also
-> > the case that currently only one LSM that use security contexts is
-> > permitted to be active, as enforced by LSM_FLAG_EXCLUSIVE. Any LSM
-> > that receives a release_secctx that is not explicitly designated as
-> > for another LSM can safely carry out the release process. The NFS4
-> > code identifies the lsm_context as LSM_ID_UNDEF, so allowing the
-> > called LSM to perform the release is safe. Additional sophistication
-> > will be required when context using LSMs are allowed to be used
-> > together.
->
-> Shrug. This seems less safe to me but I will give it a try with
-> SELinux labeled NFS tests.
+From RFC8881 does not explicitly state that server must grant write
+delegation to OPEN with OPEN4_SHARE_ACCESS_WRITE only. However there
+are text in the RFC that implies it is up to the server implementation
+to offer write delegation for OPEN with OPEN4_SHARE_ACCESS_WRITE only.
 
-My kernel with this patch seems to be crashing during the NFS tests
-but not 100% sure yet if it is your patch's fault or something else.
+Section 9.1.2:
 
->
-> >
-> > Fixes: b530104f50e8 ("lsm: lsm_context in security_dentry_init_security=
-")
-> > Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> > ---
-> >  security/apparmor/secid.c | 2 +-
-> >  security/selinux/hooks.c  | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/security/apparmor/secid.c b/security/apparmor/secid.c
-> > index 28caf66b9033..db484c214cda 100644
-> > --- a/security/apparmor/secid.c
-> > +++ b/security/apparmor/secid.c
-> > @@ -108,7 +108,7 @@ int apparmor_secctx_to_secid(const char *secdata, u=
-32 seclen, u32 *secid)
-> >
-> >  void apparmor_release_secctx(struct lsm_context *cp)
-> >  {
-> > -       if (cp->id =3D=3D LSM_ID_APPARMOR) {
-> > +       if (cp->id =3D=3D LSM_ID_APPARMOR || cp->id =3D=3D LSM_ID_UNDEF=
-) {
-> >                 kfree(cp->context);
-> >                 cp->context =3D NULL;
-> >                 cp->id =3D LSM_ID_UNDEF;
-> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> > index 7b867dfec88b..b89d3438b3df 100644
-> > --- a/security/selinux/hooks.c
-> > +++ b/security/selinux/hooks.c
-> > @@ -6673,7 +6673,7 @@ static int selinux_secctx_to_secid(const char *se=
-cdata, u32 seclen, u32 *secid)
-> >
-> >  static void selinux_release_secctx(struct lsm_context *cp)
-> >  {
-> > -       if (cp->id =3D=3D LSM_ID_SELINUX) {
-> > +       if (cp->id =3D=3D LSM_ID_SELINUX || cp->id =3D=3D LSM_ID_UNDEF)=
- {
-> >                 kfree(cp->context);
-> >                 cp->context =3D NULL;
-> >                 cp->id =3D LSM_ID_UNDEF;
-> >
+  "In the case of READ, the server may perform the corresponding
+   check on the access mode, or it may choose to allow READ for
+   OPEN4_SHARE_ACCESS_WRITE, to accommodate clients whose WRITE
+   implementation may unavoidably do (e.g., due to buffer cache
+   constraints)."
+
+Also in section 10.4.1
+
+  "Similarly, when closing a file opened for OPEN4_SHARE_ACCESS_WRITE/
+   OPEN4_SHARE_ACCESS_BOTH and if an OPEN_DELEGATE_WRITE delegation
+   is in effect"
+
+This patch series offers write delegation for OPEN with OPEN4_SHARE_ACCESS_WRITE
+only. The file struct, nfs4_file and nfs4_ol_stateid are upgraded
+accordingly from write only access to read/write access. When the
+delegation is returned, the file struct, nfs4_file and nfs4_ol_stateid
+are downgraded according to remove the read access.
+
+-- changes from v1:
+0002: The file access mode is upgraded to include read access at the time
+      the delegation is granted and read access is removed when the delegation
+      is returned.
+
+ fs/nfsd/nfs4state.c | 96 +++++++++++++++++++++++++++++++++++++-----------
+ fs/nfsd/state.h     |  2 +
+ 2 files changed, 77 insertions(+), 21 deletions(-)
+
 
