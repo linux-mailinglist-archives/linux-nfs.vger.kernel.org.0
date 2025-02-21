@@ -1,247 +1,207 @@
-Return-Path: <linux-nfs+bounces-10276-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10277-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46569A3FF02
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 19:43:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C3AAA3FF94
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 20:18:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E30F422C95
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 18:43:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6ED5719C7A34
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 19:18:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A191C253330;
-	Fri, 21 Feb 2025 18:42:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C687A1F12EC;
+	Fri, 21 Feb 2025 19:18:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri4FxxOL"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="Ce3ncT5I"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2105.outbound.protection.outlook.com [40.107.94.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B293253332
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 18:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740163373; cv=none; b=WAynxW4Z5elp7htZMBV3RuzqvVjsUDFIbyaWCIRV+3BtDjhF2IDvp2mJXqRiofGSkAnDWE+XfjV53tKujfttpTrknoW/mcFm9FaseGmHviRjbXNfwqXSs+14un4vxbunjiP4dI4gId3lLzrp5NDFg8/2aXnRy7X/LKpder0i9Eg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740163373; c=relaxed/simple;
-	bh=9T+Bu1KAKuB3d1ZhNWvshL6O9sVqY8leEIKv+i0gU7c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Oop809MWNjQdD+UqvYEpIh6gVsG7To/eF7qTcCfc1EyxbD4lajUB4goxwwJpOJfQ+Tfjk5fXdPd/gYwvLIz4BwxfuOV7mhtaNvM1HB9hqv/vPoBl/NW86iEFg555oDR2VHEbLxAnuAwgdjvE7BEHdnZ7GEWhYoirGuMjqwwmeDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri4FxxOL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB42C4CEE4;
-	Fri, 21 Feb 2025 18:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740163373;
-	bh=9T+Bu1KAKuB3d1ZhNWvshL6O9sVqY8leEIKv+i0gU7c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ri4FxxOL9kJoLB6pt3B+yDWjrHEhjrHgE00QjLcVSRh8OLSuuF74tstzhznoD3Pqd
-	 dCZ04kwgAwqzqLdWkY4BTKD5ovJERr3ZSBmO6sgReR/K7IN7bvlyTxc8ZCZXtNrsSb
-	 jYYXmF+3Tv/PUEWsJKRKG28hygqD8JJzEz1dGcnyhaQxIQ0+103HsvqfUFF1zxoEU4
-	 elH+aiLgMBUnimBoLJw0GDoR5rBjII6DyJLOAn9QmEZtoJSW0x94KrM1dK/Kdo7lQM
-	 neFCYfZkWMBVgR9JdON8mZ2GzXHJPiHWN/3EUySPP2RhZgMBe3uj1ESM/f5ZJDOgf5
-	 UsouxwpJOIEfA==
-Message-ID: <42400116f9098ec7f5acc70c2450dd52a2bf8f21.camel@kernel.org>
-Subject: Re: nfsd: add the ability to enable use of RWF_DONTCACHE for all
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49FC5223
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 19:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740165511; cv=fail; b=VtUjX5J8EKGVxNDX4H3IiO3vGisH23JdzDISIb42K2qMtuTUb3JpyU1ZXKoNmGQ0rFO68+cD7fA6yOkmDZeg7clPBb5cgGaBcKtW/SZL5HRITCvmvD3Dw5RwMcRFexpd2u+upOZT6MoAXxod00vaAakOWoMi4gAJISpPrnreE3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740165511; c=relaxed/simple;
+	bh=SAeF/JE8w4rRTADVC1RMLB/ZHDvI8y/YBEPkqCCeuDg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AhxrAEM+x587FMJQNOxRQwWIIW34MgqGOMmxNHUQetF1Hes9KBLWX7UyO2hPGnVFNIj2kIBKDfTlmnK1B4OFGpkhCoBypcD8cBKcwcG8MXArGze/KXOkGxoonCchG1e+RrdqUAj+oBvTRgS4qdKAkxVKU0jVQRzB/7SPydK2/+s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com; spf=pass smtp.mailfrom=hammerspace.com; dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b=Ce3ncT5I; arc=fail smtp.client-ip=40.107.94.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DAoyW0izf9rH6K9AJ1lUz0WEN2qGv9xb5XgGQ76GmzYxaGh4OCYvaGtauW7CfdXeDjtYPjF0UcykcV0OU8Ug7GCcucsHX/uxS1Xuy93MYKHlp+XdBMfcJu+y5u4gSqRR2EzesM0YPWwl836mwSNsDN0lKSIJXG594ujKSYJx/96EBF1nb47ILmh2dP+Iy37crIFhQtjU9Hs6dN341LGGc/0L2VZy9bSmJ8BjGPHnSXl4C7DJlTGjGlez4ifm4YiRePMH+ho5hHAFoEU6Sp7OIHTwq04IHd52zX7LLskvB14tF7g3yu5dLYAXpYeu4Jwp41wxCWzLpNgsRf/7xU6saw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SAeF/JE8w4rRTADVC1RMLB/ZHDvI8y/YBEPkqCCeuDg=;
+ b=NAdf0aOeKPy77Ylhqvr3xFFtxChGWXxRJSBarOCjeLk8xCGNuYcD/bUDLUr6xc2fYw7KWRvNX4zsT3CwjBaYDb/QpUddepbwBKkWdNQtd9Sb8JOFmE0DGgvmXT5ybBxPIMCDefY9Fd8xMgxz5MmA4KxbrSt4FRzixsolxTNsWV4t3swzf4FVUtlG8YdVJszo3ID+Ezpkm7IThB5Rq0EXVlDL898Qbw1kKSVo13r36YBXf4+MYDUWSBaYsrHbQ3P2noKg1eXUO277lyIA6NZexybufMSFF1y7EfUij1CV0ZSzkBvHaCUgkpH8RFoLuEmz4KJm+QWG1s2ZewsRm1ftcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SAeF/JE8w4rRTADVC1RMLB/ZHDvI8y/YBEPkqCCeuDg=;
+ b=Ce3ncT5IJIAYcgD5WKdLj+fL+owy24JlzgTz66n3V33GdCfzF7032R/bVO66Esn0SVQs4ofyjQzdtxx9MGkDbJ3ljnuvJ8d/EGdzDsgQDVvWfJLXSkpMHA/0RnyrD+yBT2xP7dRDZ7vNESPpiQYIQJYw6cOxJ+6ga+FthMkWlkY=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by MN0PR13MB6695.namprd13.prod.outlook.com (2603:10b6:208:4c6::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Fri, 21 Feb
+ 2025 19:18:21 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::67bb:bacd:2321:1ecb]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::67bb:bacd:2321:1ecb%3]) with mapi id 15.20.8466.016; Fri, 21 Feb 2025
+ 19:18:21 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "snitzer@kernel.org" <snitzer@kernel.org>, "jlayton@kernel.org"
+	<jlayton@kernel.org>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC: "okorniev@redhat.com" <okorniev@redhat.com>, "tom@talpey.com"
+	<tom@talpey.com>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>, "neilb@suse.de" <neilb@suse.de>,
+	"axboe@kernel.dk" <axboe@kernel.dk>
+Subject: Re: nfsd: add the ability to enable use of RWF_DONTCACHE for all nfsd
+ IO
+Thread-Topic: nfsd: add the ability to enable use of RWF_DONTCACHE for all
  nfsd IO
-From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>, "snitzer@kernel.org"
-	 <snitzer@kernel.org>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Cc: "okorniev@redhat.com" <okorniev@redhat.com>, "tom@talpey.com"	
- <tom@talpey.com>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
- "Dai.Ngo@oracle.com"	 <Dai.Ngo@oracle.com>, "neilb@suse.de"
- <neilb@suse.de>, "axboe@kernel.dk"	 <axboe@kernel.dk>
-Date: Fri, 21 Feb 2025 13:42:50 -0500
-In-Reply-To: <7b1574e2499da99986c432f815abccb2e5a6c7f5.camel@hammerspace.com>
+Thread-Index:
+ AQHbhHG829RmuJMFp0e5I1R2FeBUXbNR4KqAgAADEACAAAMGAIAAB26AgAApvwCAAAnrAA==
+Date: Fri, 21 Feb 2025 19:18:21 +0000
+Message-ID: <4351756085f94489329c6065d7eeff22f5079d0d.camel@hammerspace.com>
 References: <20250220171205.12092-1-snitzer@kernel.org>
-		 <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
-		 <Z7iVdHcnGveg-gbg@kernel.org>
-		 <b101b927807cc30ce284d6be9aca5cbb92da8f94.camel@kernel.org>
-		 <Z7idYDSHD_hcLL9b@kernel.org>
-		 <6bd2aa18-e52b-47e6-9151-4ff80d1a39b8@oracle.com>
-	 <7b1574e2499da99986c432f815abccb2e5a6c7f5.camel@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+			 <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
+			 <Z7iVdHcnGveg-gbg@kernel.org>
+			 <b101b927807cc30ce284d6be9aca5cbb92da8f94.camel@kernel.org>
+			 <Z7idYDSHD_hcLL9b@kernel.org>
+			 <6bd2aa18-e52b-47e6-9151-4ff80d1a39b8@oracle.com>
+		 <7b1574e2499da99986c432f815abccb2e5a6c7f5.camel@hammerspace.com>
+	 <42400116f9098ec7f5acc70c2450dd52a2bf8f21.camel@kernel.org>
+In-Reply-To: <42400116f9098ec7f5acc70c2450dd52a2bf8f21.camel@kernel.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MN0PR13MB6695:EE_
+x-ms-office365-filtering-correlation-id: 4adbffca-4008-407e-bd21-08dd52ac8176
+x-ms-exchange-atpmessageproperties: SA
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|10070799003|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?ejAzL2o2RWsyMUV0a3N6S1pJWlJXMzAwZjRhY2hseDluSjFEWEZLQ2I4dHIx?=
+ =?utf-8?B?UlFuSHJVNHpBeUVDS1Qyc1k4KzJ2cDVhYWNkNkZPQmtlc1VjUjZtLzNRU2Qw?=
+ =?utf-8?B?SjczRnVNK0ZSUldOQjlmYXBoQWhNcDNRMDJ5QzVDczFvcGlvdVRGSEttVXhI?=
+ =?utf-8?B?WUdPM000Ukhud0dZMS9YRGRyU3BrenhNVSs2TXdhOEZEU0x1S0JsZ1Z6T09t?=
+ =?utf-8?B?TkdSbUJFdlNMRU1YMTlqcDJyYmV4Z0pNYUlKRUF4ODU3SkFpYW9YaDhmT0th?=
+ =?utf-8?B?Tk9KZnZUWjRtSW5yM3dJYUJGbmRKOFcxRkRLNVI1ZmR3K1ZVWWlZajZLQ01E?=
+ =?utf-8?B?VHVCaHA4YzQ2K1lVcjFLVmVrN1RqeTlXeU1iTkl3V1hib0MwUTc0azljb2ZM?=
+ =?utf-8?B?cytqVHNIeElHRXRVcjZ2UmpvY2VSVEg4WG1vODBFRmE5ZjZxLzFDTGh5UzJU?=
+ =?utf-8?B?THJwdnloZW5zY2JhT2ZpMlVPSEFPdk1GazVDRGE1RXA0dmVTbWZzeWZmVU1L?=
+ =?utf-8?B?UzYvczFnUjl0V1lVditDMEpnbGJ5cnhCWHN3WDM1ekxKSHl0NHJJcUgxNEFN?=
+ =?utf-8?B?SE9pUXYwS3hCWnVuaE9EMkJtVDFBTUI4M0dJWE4wY25xZkdqV0ZGM1JDbHBI?=
+ =?utf-8?B?MGt0QXUxR1hSUkNXSURSL25XY0duRjlOeUZQWDMrc3BjeFBhVUdjeWw5SU1x?=
+ =?utf-8?B?ZVJZRVQwWkJJS3VNNXpxdjFXUDRmZitWcmwwL1dLM1l6NDEyMVpUcDg5cDFR?=
+ =?utf-8?B?SXdNM2xxc3N5TlUzZU53OVlLZHd3ZVNxRW5RMlEyRlV3VU5xZ2cwa2o2U2g3?=
+ =?utf-8?B?ZklqY2x5MFZSRnVvZVpYUmIwdmlobnNlenFnQUxXZnMweXFyRHZuazY2WHB1?=
+ =?utf-8?B?dEZRRzJXUnd1NGZaTzBkaUJaTXZLMm9MSGZPR20zYjZLd0NaWVovTTQ2aGpU?=
+ =?utf-8?B?azRSU1ROdlVpYUdlZkVhRm16TFN0OUUyeW02enlYZW1aazZ6MHNVU1ZYMUhG?=
+ =?utf-8?B?MlZSaHlGckgyTHJvM2QrZXZRbU96bXpJZGFhUXFNZzQyMStKQXZTaDZsRmg0?=
+ =?utf-8?B?bEkyUWJUVklScE8yeXdJb0VNOTllcUl0andidnh1M3FRRTh5VnVoRDljc05M?=
+ =?utf-8?B?RW51aUR0UHJNZGdCRjE4NGY0UnBZd0JqbnBOT2NqTnp2dUFsRGQ0UklPT1Mv?=
+ =?utf-8?B?WWtQSWQzRXhvWStxbEtvYmY3U1VuY2pBRkxDOW8zV21sOEs2QklaSm9GL0Zi?=
+ =?utf-8?B?ZGlYeGV4RFlVV0JNb0hoaVY3WXNPZXUwem43ZGdJTS9LVHNrR0RJRTZCcE5l?=
+ =?utf-8?B?c1htaDVvZ2EyeEVTNXlpT2g3dGxGZ2wxQ3lQWkhkcDgxb0hWL0xJb1lTNHhL?=
+ =?utf-8?B?NGJoMnBiRVlqVm5XdTBEWTlrZjZHNGxWbldXcGpZbnJ1V05xbnprRllZSGhL?=
+ =?utf-8?B?QWxPTGNWU3RpTE1FZW1YcG0xdlJPUGJiWHlSZGY5YzliOVFwczdJYW9aVXlH?=
+ =?utf-8?B?QXg4UDNONHB0VDVJbWtpZjZCMzIyUGhYblZWNWFEdFVZWDl6bURXMDBNWi83?=
+ =?utf-8?B?UVBhV0k1bnBlYk9yb2hkOS8ydGkxdmpuTjJiUVhOQWNnMmZ0dG1FSENpMmdR?=
+ =?utf-8?B?bFJYV0ZXQzI5dlEvRDZCZXdLaFNtRkd4em53cTBhek1EbStZa2V2VlJmdGtM?=
+ =?utf-8?B?TDdlM212RVVkV2VPdDVTYnV2ekl0Y1plMUpNSC80UTVYRGFEdzhyakVoL1Br?=
+ =?utf-8?B?a2pmREpYOUVReFp0dlJhUW5wUU1oRExlMHc0V2lGV285czhVcGw5VERURnhs?=
+ =?utf-8?B?VlQyRlFnSTI4K0Q4TUVOenF1UVA2RkxUakF0VXFkSC9FMG1FZ0pmUXU2a0cw?=
+ =?utf-8?B?VTNrMGhPMGVZYnl2aWRSWkczWEptaEZIUUM4dXBmNnB0RDRIa0RKY2hwQ2dW?=
+ =?utf-8?Q?lxaeJw9OzongDFGGK35PiI34Mo4gUX4U?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Q1F5RXJ1SWRON2FnWWc5V25zNFpFa2dUWjFnMlBTWHNiRWh5ajBmNEhUUkdp?=
+ =?utf-8?B?bHovK1p3S01adnVremtoNUtZT3JXM3pPQVJZZkhYbUJqTW9jYjRRQjNSbE1n?=
+ =?utf-8?B?Qm1rYkN0UDRPWXYxdkZQSDV3WXZRdWs4bTlCN0FGZDZhZEpMdTY5YWJWQUtp?=
+ =?utf-8?B?SlFWc1E4NEo5TWZOTStiaG9wMHpMVi8vZnlFWGtISUhQRTM4YlV4clVXbEdl?=
+ =?utf-8?B?Z0w2UkozdjhJejhJRmV2Y08xWElNd3JFSEkvN3grK0R6dUFCclZDNUhZVHhh?=
+ =?utf-8?B?Y2UwNHpaRDNoNEhqaU1MSXVhZk40N3BwQjJxNmpqdGxOVXpUWDBBM2h1dktl?=
+ =?utf-8?B?SEFEZnpsdTlvU0V4Mkc4VnV0elRhYlNRRVdjUEVDTm9ZM045dElJb3RkZFZU?=
+ =?utf-8?B?TkxMdzc0WVRPaHFnOGtxQXYxMkJ6a0dhdEt0SWU0Vk1INlplZHVBeGN6Lzl1?=
+ =?utf-8?B?NHpUWHJkQjMvMldPbFQzcnRpTjRsMTc4eW5iL2dRMGtSQ0NqRVBYaFJWYkVn?=
+ =?utf-8?B?ZFBXOTgrR3ZSeDBjR0RKRkxWOVFpVHhTbmlCRHlJZy8xa1MvU2JZSTZaUG9C?=
+ =?utf-8?B?SmU0SlIwUk5wZnZMeGJMTm9lZEttcGk1SUlObmVrMTZhQ0tvdVd2ekR0RzFY?=
+ =?utf-8?B?c0R4aGhHK1E0TkR4eTllSnVwNmp0cXV6RmtnWkwwd3grS29wSVVYMXR5YWNa?=
+ =?utf-8?B?dnhXelV2VUVKcTF6YmluYkxBcFpKRDkzU216SE10QWhsOW9VR3hoMzRLSFBv?=
+ =?utf-8?B?c3lma2cxYmFINSsyK1pmais4Z0hYdS9tdkROTzhpY0VuRlJUVi9ZdFIzejVi?=
+ =?utf-8?B?eVVmejBSM29oTEhibDNjUG5ncUZiQXVyUG9ibWd2bFBxWHFpbzZlcHk4Nklj?=
+ =?utf-8?B?VlZwUHNXcVBZanpkZkpkNlcxclZiR2xqNHgzSHJSbDdaLytoZTVKUlg0bXY1?=
+ =?utf-8?B?THRwK1lxSVNDNWM1a3p2TnZjMGRwUEFoM0JMUUFaOC8yT0FDdHc0S3pIdDZv?=
+ =?utf-8?B?OTlSS3Z5RlVoQlhCVUJJTTFTcHhDN3QwQng4Rm5kUjFiaU04d0xoeUZVbmxq?=
+ =?utf-8?B?UGJpUEhrWmdmVjRIUXg4VTBORWVaOSs5alEvakg1bk0xVzZWUExyT0Jja243?=
+ =?utf-8?B?Zi9vQzRQTXY4VkpDcVpuUmVGWVJQV1F6YW1ZaXA3RWJ2NWdHQnZXTERNWStW?=
+ =?utf-8?B?SzFsZy9KQ2l6cTZmNVhsaEJUazJzdlRSMUJ1dFgyS2lFVnZnZkhrRk9tNWpD?=
+ =?utf-8?B?T3J5R3MxL21BaENZRVNETmRRZmpsaFVvREFqQUp4aUFoN0lrNkp0b2dWeWN2?=
+ =?utf-8?B?Q2pyQlZLVjgvTE45bHRZWDlUY0trVCtHTFBOUGFrdk5ZMDNMblRMZzRvOXpa?=
+ =?utf-8?B?TFB0aWJXY1p0U0lUcVNhaE02amphU1ZQUDU4QmN6c2JDUVpQTXBVaGZwRlRl?=
+ =?utf-8?B?ZlNWWS9xYWZFQ2QrRU1uMzliZy9kZnV3RnFuRnJIRDF2bnQ1S3hGM2FDdE9D?=
+ =?utf-8?B?Q3lOdmlwcDdUUk9UZVNwSmdjdHFnQ3I0SVE3cTVMM2loREJjVlJKaGFEZUg5?=
+ =?utf-8?B?RzRKQ0ZHbWpPRWNHRGEzcGI0ZVhiNzNrL3FYYnlnK3gxTUhGTE1OWHlid0xX?=
+ =?utf-8?B?M1BtSUhEWE1NZTJPWnBwOXlwS084eW8vbmxYUFJwTkR3MmpjcVZDbWJ5T3p0?=
+ =?utf-8?B?R1JoUnprTFFXbGFMTGFFd2p5SFQzMU5Bcmp1NnhVYmhBK1kxaWs3d1BYaUFY?=
+ =?utf-8?B?cWFIRTB0S3ppSjdjbXJ5K3NYOU1Zalgxa2F4eWhXUk5obkIraTVYK25qcHdD?=
+ =?utf-8?B?eUEyemFUUlRRR2pUVHFVT2pENVJ0NEEwdGVEVG16eWovME5XSEFnKzZSZXBs?=
+ =?utf-8?B?WldPd1JoME9hTkpUZnVjSmpFN0JxMmhvWGUwY3ZZUzNpQzZrL3RiQk5xenZi?=
+ =?utf-8?B?N2ovZHYydkV4dEpZOXVWSjBFSmx3Z0FjYmYwZDZaSkxBYnNrdWdQa1hySUta?=
+ =?utf-8?B?YU85b0xhZ3hrVHU1TVE3Yk5teWNsYVk3WVRwbGJrNkRPNlFSWk1PVU1haFlx?=
+ =?utf-8?B?ZmRMNFo1N3RJeVBvV3ZGS2VJVVQ5Wm5zYVVzWSt4c2hGY2dOdFByRTRDWEpE?=
+ =?utf-8?B?dkFSa1haclFpenluaGE4cXBmTC9mUnhpdVB5RjNVTWhWQzBuZGMyOUlKTS9o?=
+ =?utf-8?B?UEZaZlBrYlFPdVY0ZjNLTFROU0JUVmdXc2pvRE5taHh5bU90TTlUcmc3WXVn?=
+ =?utf-8?B?RmZGWGhoejY0anZOTDJwNnBaWTl3PT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <47B9EFB7F246F645BF4E7DA5DB93440D@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4adbffca-4008-407e-bd21-08dd52ac8176
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2025 19:18:21.6201
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HjXGZZFupQvRj1vDgys5Pf3O1FsLq5ATLiLX3DG6AmzOcOH8tPa+6263EujJjJW19kMs0cHjsq11WnXC1TSDRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR13MB6695
 
-On Fri, 2025-02-21 at 16:13 +0000, Trond Myklebust wrote:
-> On Fri, 2025-02-21 at 10:46 -0500, Chuck Lever wrote:
-> > On 2/21/25 10:36 AM, Mike Snitzer wrote:
-> > > On Fri, Feb 21, 2025 at 10:25:03AM -0500, Jeff Layton wrote:
-> > > > On Fri, 2025-02-21 at 10:02 -0500, Mike Snitzer wrote:
-> > > > > My intent was to make 6.14's DONTCACHE feature able to be
-> > > > > tested in
-> > > > > the context of nfsd in a no-frills way.=C2=A0 I realize adding th=
-e
-> > > > > nfsd_dontcache knob skews toward too raw, lacks polish.=C2=A0 But
-> > > > > I'm
-> > > > > inclined to expose such course-grained opt-in knobs to
-> > > > > encourage
-> > > > > others' discovery (and answers to some of the questions you
-> > > > > pose
-> > > > > below).=C2=A0 I also hope to enlist all NFSD reviewers' help in
-> > > > > categorizing/documenting where DONTCACHE helps/hurts. ;)
-> > > > >=20
-> > > > > And I agree that ultimately per-export control is needed.=C2=A0 I=
-'ll
-> > > > > take
-> > > > > the time to implement that, hopeful to have something more
-> > > > > suitable in
-> > > > > time for LSF.
-> > > >=20
-> > > > Would it make more sense to hook DONTCACHE up to the IO_ADVISE
-> > > > operation in RFC7862? IO_ADVISE4_NOREUSE sounds like it has
-> > > > similar
-> > > > meaning? That would give the clients a way to do this on a per-
-> > > > open
-> > > > basis.
-> > >=20
-> > > Just thinking aloud here but: Using a DONTCACHE scalpel on a per
-> > > open
-> > > basis quite likely wouldn't provide the required page reclaim
-> > > relief
-> > > if the server is being hammered with normal buffered IO.=C2=A0 Sure t=
-hat
-> > > particular DONTCACHE IO wouldn't contribute to the problem but it
-> > > would still be impacted by those not opting to use DONTCACHE on
-> > > entry
-> > > to the server due to needing pages for its DONTCACHE buffered IO.
-> >=20
-> > For this initial work, which is to provide a mechanism for
-> > experimentation, IMO exposing the setting to clients won't be all
-> > that helpful.
-> >=20
-> > But there are some applications/workloads on clients where exposure
-> > could be beneficial -- for instance, a backup job, where NFSD would
-> > benefit by knowing it doesn't have to maintain the job's written data
-> > in
-> > its page cache. I regard that as a later evolutionary improvement,
-> > though.
-> >=20
-> > Jorge proposed adding the NFSv4.2 IO_ADVISE operation to NFSD, but I
-> > think we first need to a) work out and document appropriate semantics
-> > for each hint, because the spec does not provide specifics, and b)
-> > perform some extensive benchmarking to understand their value and
-> > impact.
-> >=20
-> >=20
->=20
-> That puts the onus on the application running on the client to decide
-> the caching semantics of the server which:
->    A. Is a terrible idea=E2=84=A2. The application may know how it wants =
-to use
->       the cached data, and be able to somewhat confidently manage its
->       own pagecache. However in almost all cases, it will have no basis
->       for understanding how the server should manage its cache. The
->       latter really is a job for the sysadmin to figure out.
->    B. Is impractical, because even if you can figure out a policy, it
->       requires rewriting the application to manage the server cache.
->    C. Will require additional APIs on the NFSv4.2 client to expose the
->       IO_ADVISE operation. You cannot just map it to posix_fadvise()
->       and/or posix_madvise(), because IO_ADVISE is designed to manage a
->       completely different caching layer. At best, we might be able to
->       rally one or two more distributed filesystems to implement
->       similar functionality and share an API, however there is no
->       chance this API will be useful for ordinary filesystems.
->=20
-
-You could map this to RWF_DONTCACHE itself. I know that's really
-intended as a hint to the local kernel, but it seems reasonable that if
-the application is giving the kernel a DONTCACHE hint, we could pass
-that along to the server as well. The server is under no obligation to
-do anything with it, just like the kernel with RWF_DONTCACHE.
-
-We could put an IO_ADVISE in a READ or READ_PLUS compound like so:
-
-    PUTFH + IO_ADVISE(IO_ADVISE_NOREUSE for ranges being read) + READ_PLUS =
-or READ ...
-
-On the server, we could track those ranges in the compound and enable
-RWF_DONTCACHE for any subsequent reads or writes.
-
-All that said, I don't object to some sort of mechanism to turn this on
-more globally, particularly since that would allow us to use this with
-v3 I/O as well.
---=20
-Jeff Layton <jlayton@kernel.org>
+T24gRnJpLCAyMDI1LTAyLTIxIGF0IDEzOjQyIC0wNTAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
+DQo+IEFsbCB0aGF0IHNhaWQsIEkgZG9uJ3Qgb2JqZWN0IHRvIHNvbWUgc29ydCBvZiBtZWNoYW5p
+c20gdG8gdHVybiB0aGlzDQo+IG9uDQo+IG1vcmUgZ2xvYmFsbHksIHBhcnRpY3VsYXJseSBzaW5j
+ZSB0aGF0IHdvdWxkIGFsbG93IHVzIHRvIHVzZSB0aGlzDQo+IHdpdGgNCj4gdjMgSS9PIGFzIHdl
+bGwuDQoNClBlcnNvbmFsbHksIEkgdGhpbmsgYW4gZXhwb3J0IG9wdGlvbiB3b3VsZCBnaXZlIHRo
+ZSBtb3N0IGZsZXhpYmlsaXR5Lg0KDQpUaGF0IHdvdWxkIGFsbG93IHRoZSBzeXNhZG1pbiB0bywg
+Zm9yIGluc3RhbmNlLCBwdXQgYSBzZXQgb2YgbGlicmFyaWVzDQorIGV4ZWN1dGFibGVzIHRoYXQg
+YXJlIHNoYXJlZCBieSBhbGwgY2xpZW50cyBvbiBvbmUgdm9sdW1lIHdoaWNoIGlzDQpleHBvcnRl
+ZCBpbiB0aGUgbm9ybWFsIGZhc2hpb24uIFRoZW4gcHV0dGluZyBmaWxlcyB0aGF0IGFyZSB0eXBp
+Y2FsbHkNCmp1c3QgYWNjZXNzZWQgYnkgYSBzaW5nbGUgY2xpZW50LCBvciB0aGF0IGFyZSB0b28g
+aHVnZSB0byBmaXQgaW4gY2FjaGUNCm1lbW9yeSBvbiBhIHNlcGFyYXRlIHZvbHVtZSB0aGF0IGNv
+dWxkIGJlIGV4cG9ydGVkIHdpdGggdGhlIG5ldyBvcHRpb24NCnNldC4NCg0KLS0gDQpUcm9uZCBN
+eWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25k
+Lm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
 
