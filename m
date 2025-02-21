@@ -1,145 +1,247 @@
-Return-Path: <linux-nfs+bounces-10275-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10276-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8476BA3FDDD
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 18:50:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46569A3FF02
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 19:43:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3D3B19C41DE
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 17:49:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E30F422C95
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 18:43:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBDB724E4C6;
-	Fri, 21 Feb 2025 17:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A191C253330;
+	Fri, 21 Feb 2025 18:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3Nvul3m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri4FxxOL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD9B2500B1;
-	Fri, 21 Feb 2025 17:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B293253332
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Feb 2025 18:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740160154; cv=none; b=a95TN3lkaTSzyeP/sfVZfrr7sZ6xhJFusj2X4pFkglMs2As1hKqdZEk7LhAgQB2vGR9MQPWdA32wvOWMO51aDL4G+bKXznIHm4RkIZChea/9hXqJH5eTjFL1ZoMJZ+ZZjKOo8uiKatwEYo2Z3NqYKUParMZuahKZ4OIdieS5RZ4=
+	t=1740163373; cv=none; b=WAynxW4Z5elp7htZMBV3RuzqvVjsUDFIbyaWCIRV+3BtDjhF2IDvp2mJXqRiofGSkAnDWE+XfjV53tKujfttpTrknoW/mcFm9FaseGmHviRjbXNfwqXSs+14un4vxbunjiP4dI4gId3lLzrp5NDFg8/2aXnRy7X/LKpder0i9Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740160154; c=relaxed/simple;
-	bh=u6nJOmyp7izbHBs1CCPil5A43HTqn8YbD4gxDNwomI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZxCA+UtMx4hHgWUuO/K53EScXIqxD7mNqINjgtx7IGih3wSKUr6L9eLkDKVwb5P9Iph85H7JvHAmmLTN887fXnfzPWgD4b1TD7faP+4sEgWIwknt9U9TmIOeYQbE86g+V53SLD6QGkgLy/ec8hZY3LZCaT2KwpZj0w0Yv7QP+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3Nvul3m; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so3979364a91.2;
-        Fri, 21 Feb 2025 09:49:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740160152; x=1740764952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GWPuj2YhQgRJTeYbcKezIFAIYdS2JuroZzEFPOXslew=;
-        b=a3Nvul3mFJYkglMpXuGXpIB1G6aEX+tPilgAqWprScWsjoNAaNs6c39a++b2GU58rK
-         jyzIGRqZAj5R57x9L/uOmx5WQvFz5l3CBmsc/vlHdoOqB8LqokkZ0eNoxxqjy9cwVfHx
-         e8w41AbpuX42tzq6CQNDj0HQwoKY0S1WS4wdMpbo3aDFEb++JFHPOd8MDkbNrdFKSFzh
-         UZDBd+EB6ZdWhqenMlPJK2BW4cTmhBHcJXLexPannbcL7hYZp4zLXWrKtixfn8kuqpNb
-         fm3nEFUq4QZSI455bwycX8NvQN6qoSqVSiHS2/ys0Mf3Z+7IAEGJaIN9ogZBT/2NG/SG
-         bBpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740160152; x=1740764952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GWPuj2YhQgRJTeYbcKezIFAIYdS2JuroZzEFPOXslew=;
-        b=IGll6yzqRr2H+WPNBSkwULIdZHQRYAL6rthTY28MjnWQbt9J6p6SrsyWKBR6yLF165
-         h8v3KBvoyWw6u8DXJVGOcLvLvxM/YaHusMX7dS+wm/g0GeIAeBYk/4Q7dwGEouEY5eLa
-         n+dgAjCrMV/ZnQ8G/vfQBrKXpIVpUd121ZX1l9LbjWoCfrMXhg7vKZ3VchlJ9rzZAFEN
-         eVasaXn9alJGYSdySEmuVc2aFFy/7GxUenqxKGx7END3+82zVYfj11Yy5hYbzIBC7qZY
-         Al6moqxC1UHmZrb/TqMsBVs0wH4zplSqBOUxH1dz3puNOC/gwnkSI/VwaZwdYylTvydZ
-         003g==
-X-Forwarded-Encrypted: i=1; AJvYcCWd1YSCk9tdrTWzn8fHRjAJ2nykEaE21Q7IRY9tk9B5tOn0iVESj3CgGtWn3M/S7ydQ2RQi0x0oeS0=@vger.kernel.org, AJvYcCWwJ9WA583uQlP14Df9G30lTgscktSwb59weYm7QKu4/YuXVNE0RBcB69smA9qnMSIq/qHdVOM1gZXyqQ6h0E1ZULyZReaZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsFbGwK8J/BebebV299Rv9JIUcIXTebOrxH4+YBn/rum29Q5tr
-	sKBJKs0r9rn6qdVRu6BMOXtNr7WWNQxkpLG6YGJv1kVnTFcBR8LRXIXO1+U62OKAo2VL8MC2Oea
-	2Q1YgV8YKX8EE/mBIUJLtJZ7RmLnpCA==
-X-Gm-Gg: ASbGncs/pAxWhqsp69vGzaTtu3u/Y6rH/nk6jEtDTYLm/PZmOZYASIoYNfPcu8uMzoc
-	02bFN/wrKUy9RXj6x4h+zD7UzHhbdRGnMGTETqax0x7ElwvPJXR8JxcT+bOgGNH0i2IJhuI0q0p
-	lWHN6ie6E=
-X-Google-Smtp-Source: AGHT+IEzL7k5s+6YpsRZE1VViRmEv4KUYpe6rKQpR6A7WIoTL1KC1p8B/26pxLNEyVPyTTXjqCFyUAfAdU5/K+AZ7KU=
-X-Received: by 2002:a17:90b:1c90:b0:2fa:13d9:39c with SMTP id
- 98e67ed59e1d1-2fce78ad73cmr7885485a91.14.1740160152475; Fri, 21 Feb 2025
- 09:49:12 -0800 (PST)
+	s=arc-20240116; t=1740163373; c=relaxed/simple;
+	bh=9T+Bu1KAKuB3d1ZhNWvshL6O9sVqY8leEIKv+i0gU7c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Oop809MWNjQdD+UqvYEpIh6gVsG7To/eF7qTcCfc1EyxbD4lajUB4goxwwJpOJfQ+Tfjk5fXdPd/gYwvLIz4BwxfuOV7mhtaNvM1HB9hqv/vPoBl/NW86iEFg555oDR2VHEbLxAnuAwgdjvE7BEHdnZ7GEWhYoirGuMjqwwmeDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri4FxxOL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB42C4CEE4;
+	Fri, 21 Feb 2025 18:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740163373;
+	bh=9T+Bu1KAKuB3d1ZhNWvshL6O9sVqY8leEIKv+i0gU7c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ri4FxxOL9kJoLB6pt3B+yDWjrHEhjrHgE00QjLcVSRh8OLSuuF74tstzhznoD3Pqd
+	 dCZ04kwgAwqzqLdWkY4BTKD5ovJERr3ZSBmO6sgReR/K7IN7bvlyTxc8ZCZXtNrsSb
+	 jYYXmF+3Tv/PUEWsJKRKG28hygqD8JJzEz1dGcnyhaQxIQ0+103HsvqfUFF1zxoEU4
+	 elH+aiLgMBUnimBoLJw0GDoR5rBjII6DyJLOAn9QmEZtoJSW0x94KrM1dK/Kdo7lQM
+	 neFCYfZkWMBVgR9JdON8mZ2GzXHJPiHWN/3EUySPP2RhZgMBe3uj1ESM/f5ZJDOgf5
+	 UsouxwpJOIEfA==
+Message-ID: <42400116f9098ec7f5acc70c2450dd52a2bf8f21.camel@kernel.org>
+Subject: Re: nfsd: add the ability to enable use of RWF_DONTCACHE for all
+ nfsd IO
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@hammerspace.com>, "snitzer@kernel.org"
+	 <snitzer@kernel.org>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Cc: "okorniev@redhat.com" <okorniev@redhat.com>, "tom@talpey.com"	
+ <tom@talpey.com>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+ "Dai.Ngo@oracle.com"	 <Dai.Ngo@oracle.com>, "neilb@suse.de"
+ <neilb@suse.de>, "axboe@kernel.dk"	 <axboe@kernel.dk>
+Date: Fri, 21 Feb 2025 13:42:50 -0500
+In-Reply-To: <7b1574e2499da99986c432f815abccb2e5a6c7f5.camel@hammerspace.com>
+References: <20250220171205.12092-1-snitzer@kernel.org>
+		 <ce92e5f6-d7cb-47ef-ad96-d334212a51f1@oracle.com>
+		 <Z7iVdHcnGveg-gbg@kernel.org>
+		 <b101b927807cc30ce284d6be9aca5cbb92da8f94.camel@kernel.org>
+		 <Z7idYDSHD_hcLL9b@kernel.org>
+		 <6bd2aa18-e52b-47e6-9151-4ff80d1a39b8@oracle.com>
+	 <7b1574e2499da99986c432f815abccb2e5a6c7f5.camel@hammerspace.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d5fa8ace-8bc4-4261-bf34-c32e7c948bb8.ref@schaufler-ca.com> <d5fa8ace-8bc4-4261-bf34-c32e7c948bb8@schaufler-ca.com>
-In-Reply-To: <d5fa8ace-8bc4-4261-bf34-c32e7c948bb8@schaufler-ca.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Fri, 21 Feb 2025 12:49:00 -0500
-X-Gm-Features: AWEUYZk83rDJfBrv7Ag4KlCoFsWZxKW0ondb4Ts6QG2MiSbGqfIf9yWBUDqzqls
-Message-ID: <CAEjxPJ6SnFnp773P-OP9VDjgs-D7XOC9Ygfk_MexKs9UdX73dw@mail.gmail.com>
-Subject: Re: [PATCH] lsm,nfs: fix NFS4 memory leak of lsm_context
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Paul Moore <paul@paul-moore.com>, LSM List <linux-security-module@vger.kernel.org>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 10:59=E2=80=AFAM Casey Schaufler <casey@schaufler-c=
-a.com> wrote:
->
-> The NFS4 security label code does not support multiple labels, and
-> is intentionally unaware of which LSM is providing them. It is also
-> the case that currently only one LSM that use security contexts is
-> permitted to be active, as enforced by LSM_FLAG_EXCLUSIVE. Any LSM
-> that receives a release_secctx that is not explicitly designated as
-> for another LSM can safely carry out the release process. The NFS4
-> code identifies the lsm_context as LSM_ID_UNDEF, so allowing the
-> called LSM to perform the release is safe. Additional sophistication
-> will be required when context using LSMs are allowed to be used
-> together.
+On Fri, 2025-02-21 at 16:13 +0000, Trond Myklebust wrote:
+> On Fri, 2025-02-21 at 10:46 -0500, Chuck Lever wrote:
+> > On 2/21/25 10:36 AM, Mike Snitzer wrote:
+> > > On Fri, Feb 21, 2025 at 10:25:03AM -0500, Jeff Layton wrote:
+> > > > On Fri, 2025-02-21 at 10:02 -0500, Mike Snitzer wrote:
+> > > > > My intent was to make 6.14's DONTCACHE feature able to be
+> > > > > tested in
+> > > > > the context of nfsd in a no-frills way.=C2=A0 I realize adding th=
+e
+> > > > > nfsd_dontcache knob skews toward too raw, lacks polish.=C2=A0 But
+> > > > > I'm
+> > > > > inclined to expose such course-grained opt-in knobs to
+> > > > > encourage
+> > > > > others' discovery (and answers to some of the questions you
+> > > > > pose
+> > > > > below).=C2=A0 I also hope to enlist all NFSD reviewers' help in
+> > > > > categorizing/documenting where DONTCACHE helps/hurts. ;)
+> > > > >=20
+> > > > > And I agree that ultimately per-export control is needed.=C2=A0 I=
+'ll
+> > > > > take
+> > > > > the time to implement that, hopeful to have something more
+> > > > > suitable in
+> > > > > time for LSF.
+> > > >=20
+> > > > Would it make more sense to hook DONTCACHE up to the IO_ADVISE
+> > > > operation in RFC7862? IO_ADVISE4_NOREUSE sounds like it has
+> > > > similar
+> > > > meaning? That would give the clients a way to do this on a per-
+> > > > open
+> > > > basis.
+> > >=20
+> > > Just thinking aloud here but: Using a DONTCACHE scalpel on a per
+> > > open
+> > > basis quite likely wouldn't provide the required page reclaim
+> > > relief
+> > > if the server is being hammered with normal buffered IO.=C2=A0 Sure t=
+hat
+> > > particular DONTCACHE IO wouldn't contribute to the problem but it
+> > > would still be impacted by those not opting to use DONTCACHE on
+> > > entry
+> > > to the server due to needing pages for its DONTCACHE buffered IO.
+> >=20
+> > For this initial work, which is to provide a mechanism for
+> > experimentation, IMO exposing the setting to clients won't be all
+> > that helpful.
+> >=20
+> > But there are some applications/workloads on clients where exposure
+> > could be beneficial -- for instance, a backup job, where NFSD would
+> > benefit by knowing it doesn't have to maintain the job's written data
+> > in
+> > its page cache. I regard that as a later evolutionary improvement,
+> > though.
+> >=20
+> > Jorge proposed adding the NFSv4.2 IO_ADVISE operation to NFSD, but I
+> > think we first need to a) work out and document appropriate semantics
+> > for each hint, because the spec does not provide specifics, and b)
+> > perform some extensive benchmarking to understand their value and
+> > impact.
+> >=20
+> >=20
+>=20
+> That puts the onus on the application running on the client to decide
+> the caching semantics of the server which:
+>    A. Is a terrible idea=E2=84=A2. The application may know how it wants =
+to use
+>       the cached data, and be able to somewhat confidently manage its
+>       own pagecache. However in almost all cases, it will have no basis
+>       for understanding how the server should manage its cache. The
+>       latter really is a job for the sysadmin to figure out.
+>    B. Is impractical, because even if you can figure out a policy, it
+>       requires rewriting the application to manage the server cache.
+>    C. Will require additional APIs on the NFSv4.2 client to expose the
+>       IO_ADVISE operation. You cannot just map it to posix_fadvise()
+>       and/or posix_madvise(), because IO_ADVISE is designed to manage a
+>       completely different caching layer. At best, we might be able to
+>       rally one or two more distributed filesystems to implement
+>       similar functionality and share an API, however there is no
+>       chance this API will be useful for ordinary filesystems.
+>=20
 
-Shrug. This seems less safe to me but I will give it a try with
-SELinux labeled NFS tests.
+You could map this to RWF_DONTCACHE itself. I know that's really
+intended as a hint to the local kernel, but it seems reasonable that if
+the application is giving the kernel a DONTCACHE hint, we could pass
+that along to the server as well. The server is under no obligation to
+do anything with it, just like the kernel with RWF_DONTCACHE.
 
->
-> Fixes: b530104f50e8 ("lsm: lsm_context in security_dentry_init_security")
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> ---
->  security/apparmor/secid.c | 2 +-
->  security/selinux/hooks.c  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/security/apparmor/secid.c b/security/apparmor/secid.c
-> index 28caf66b9033..db484c214cda 100644
-> --- a/security/apparmor/secid.c
-> +++ b/security/apparmor/secid.c
-> @@ -108,7 +108,7 @@ int apparmor_secctx_to_secid(const char *secdata, u32=
- seclen, u32 *secid)
->
->  void apparmor_release_secctx(struct lsm_context *cp)
->  {
-> -       if (cp->id =3D=3D LSM_ID_APPARMOR) {
-> +       if (cp->id =3D=3D LSM_ID_APPARMOR || cp->id =3D=3D LSM_ID_UNDEF) =
-{
->                 kfree(cp->context);
->                 cp->context =3D NULL;
->                 cp->id =3D LSM_ID_UNDEF;
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 7b867dfec88b..b89d3438b3df 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -6673,7 +6673,7 @@ static int selinux_secctx_to_secid(const char *secd=
-ata, u32 seclen, u32 *secid)
->
->  static void selinux_release_secctx(struct lsm_context *cp)
->  {
-> -       if (cp->id =3D=3D LSM_ID_SELINUX) {
-> +       if (cp->id =3D=3D LSM_ID_SELINUX || cp->id =3D=3D LSM_ID_UNDEF) {
->                 kfree(cp->context);
->                 cp->context =3D NULL;
->                 cp->id =3D LSM_ID_UNDEF;
->
+We could put an IO_ADVISE in a READ or READ_PLUS compound like so:
+
+    PUTFH + IO_ADVISE(IO_ADVISE_NOREUSE for ranges being read) + READ_PLUS =
+or READ ...
+
+On the server, we could track those ranges in the compound and enable
+RWF_DONTCACHE for any subsequent reads or writes.
+
+All that said, I don't object to some sort of mechanism to turn this on
+more globally, particularly since that would allow us to use this with
+v3 I/O as well.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
