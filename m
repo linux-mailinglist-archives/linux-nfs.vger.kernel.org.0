@@ -1,49 +1,48 @@
-Return-Path: <linux-nfs+bounces-10249-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10250-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4545A3F5D9
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 14:24:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FF86A3F612
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 14:34:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9FEB4417DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 13:18:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEBC37A29C8
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Feb 2025 13:31:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFE4120E038;
-	Fri, 21 Feb 2025 13:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D53A20DD4D;
+	Fri, 21 Feb 2025 13:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6FxsWnu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKQ+CUNI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775561EF01;
-	Fri, 21 Feb 2025 13:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068D7208AD;
+	Fri, 21 Feb 2025 13:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740143871; cv=none; b=A58mxQ6UhE3MqwxUCw5/08D2tYSfnI2jPG6IQVH538DdpHRZv6Vl9h1+VSfsYgUWjp1dSbgG+iArtX4/QDsQSKi2GY7aQ+uuV8boIvccLIp84TlMEFBmRf6ru8B3oytLvGldWm83VHIKv8i/Dw57CwIL9DKl6wtYUqeDsNbHqaY=
+	t=1740144678; cv=none; b=VfsIol8N/anEQ/1fXNlYteAbNvr02wgZ8Y8j1Vzu8oSMgwFMKwe1VVfJcEgIeRnmcz+ZWBDdLyXgX4BoHwDJ2EY59sw/dUvSUK7cStPeli1YyhBV9zaik3SrT+KyFr5Jj5n7XhRRJ7IUvDTHwW/YdAA16/SEj2weTgL2VPZbmJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740143871; c=relaxed/simple;
-	bh=t3KlSrZkxM3GA7aU/aRI6TvC1M/rDRXJpf8V9xasUh4=;
+	s=arc-20240116; t=1740144678; c=relaxed/simple;
+	bh=kyjVU15nTzpcXtCWhYxICHUjLRMJawW3kP28nGspfgg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M6u8Uv6IQvX7FjT7tez79B5LkgGzwaIAlp3ZpkjWoEV0oALXDUTEX/UOH8wfnhR3LrBvpRw3vBzdLeSV/9XWhEHGq3m21fX7/3L+/g0BXz6S25h5ose7nbKpDYzapP9qCdgrHMaF6q4MHqqe7JpxaJ0PzfQtPNutntsUHBawz9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6FxsWnu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092D9C4CEE4;
-	Fri, 21 Feb 2025 13:17:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iSNjaDAxlrVV+eeWOJ3VRUb9h8+HhpuVCQCtHBNE7Ztm9RKPDbNfnOeJYAVui3el9wu24V7H27vMY+I11At3V19IvjZIxidadVpWz/6VSCeC/LhDgEHraqCMVXPit9B2YVxZASsASDQ1px8/FHU1xPpvFYepsMgryRtT98jeScs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKQ+CUNI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBDC9C4CED6;
+	Fri, 21 Feb 2025 13:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740143871;
-	bh=t3KlSrZkxM3GA7aU/aRI6TvC1M/rDRXJpf8V9xasUh4=;
+	s=k20201202; t=1740144677;
+	bh=kyjVU15nTzpcXtCWhYxICHUjLRMJawW3kP28nGspfgg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=a6FxsWnuGMN+khO+rITXfn7XYCQKxylrkIw8jE8m2xeNnOjjO87LPOlN6bxYB4sTz
-	 Yy5Wx7lHiM7Gm0kkhcLeZ24OjFFW5Vi65BbhFKQ7XzqkIjRkE3H3XYMx8qHCOuioMh
-	 fJhofIxhwa4aZKUefs/nU+2GU1JADuzfPnVb22KjR6DzVaNW607cuowEaPg3XYr5t1
-	 l6W/tLuOu8+gdtqtWZDz2HHag4hnLCQWjIXWU8vtNt/lFsjHWJuKSHk9f4BvzZpJ3h
-	 CAzv0A5JOSnYFNfIxpHViC9mTOgYp0K8/V8ewEwLJ7wP551IxYJVmtVpCBQ7MWpFp4
-	 3YJ4tb1Rr8xWA==
-Message-ID: <6df6e94e5a8623182aa7ed398270e817d4102303.camel@kernel.org>
-Subject: Re: [PATCH 2/6] hostfs: store inode in dentry after mkdir if
- possible.
+	b=pKQ+CUNIxD9BBLKushQCjIsoWp8zgp5Pl4Q37KFUYsfKQaVJcwbew5jmsnNhAFqTP
+	 6amjyQyDte0lhlu6JSXTcjEilF8RDe3WrJbcfsLAGn8fr+0Xexa7ItSZDHWy1qDX2v
+	 xsJVsCKcWjSIFmxapm1yGl3uREQ9ycpi9Ork5+LMhNRFipNsEz8y+oxT6x+UhrQOhV
+	 nXynmAIfyltx2BI4Lyc9u+KdHVaHEYJTSLSz5XS+V7ScSnAbeQYl9bkjO3/d2Dssbm
+	 gh4Ou8N4JsYgw1mwBJ9ncwoJk+rh3nAnQf4qfalw02OLW/GGkK3FLDYOF4kA9lKucJ
+	 6K2Y2wwSfrTPw==
+Message-ID: <64248546def6697c52169b5255da5745753eeab0.camel@kernel.org>
+Subject: Re: [PATCH 3/6] ceph: return the correct dentry on mkdir
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Alexander Viro <viro@zeniv.linux.org.uk>, 
  Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Miklos
@@ -58,10 +57,10 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
  netfs@lists.linux.dev
-Date: Fri, 21 Feb 2025 08:17:47 -0500
-In-Reply-To: <20250220234630.983190-3-neilb@suse.de>
+Date: Fri, 21 Feb 2025 08:31:14 -0500
+In-Reply-To: <20250220234630.983190-4-neilb@suse.de>
 References: <20250220234630.983190-1-neilb@suse.de>
-	 <20250220234630.983190-3-neilb@suse.de>
+	 <20250220234630.983190-4-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -147,44 +146,57 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Fri, 2025-02-21 at 10:36 +1100, NeilBrown wrote:
-> After handling a mkdir, get the inode for the name and use
-> d_splice_alias() to store the correct dentry in the dcache.
+> ceph already splices the correct dentry (in splice_dentry()) from the
+> result of mkdir but does nothing more with it.
+>=20
+> Now that ->mkdir can return a dentry, return the correct dentry.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/hostfs/hostfs_kern.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>  fs/ceph/dir.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/fs/hostfs/hostfs_kern.c b/fs/hostfs/hostfs_kern.c
-> index ccbb48fe830d..a2c6b9051c5b 100644
-> --- a/fs/hostfs/hostfs_kern.c
-> +++ b/fs/hostfs/hostfs_kern.c
-> @@ -682,14 +682,22 @@ static int hostfs_symlink(struct mnt_idmap *idmap, =
-struct inode *ino,
->  static struct dentry *hostfs_mkdir(struct mnt_idmap *idmap, struct inode=
- *ino,
->  				   struct dentry *dentry, umode_t mode)
->  {
-> +	struct inode *inode;
->  	char *file;
+> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> index 39e0f240de06..c1a1c168bb27 100644
+> --- a/fs/ceph/dir.c
+> +++ b/fs/ceph/dir.c
+> @@ -1099,6 +1099,7 @@ static struct dentry *ceph_mkdir(struct mnt_idmap *=
+idmap, struct inode *dir,
+>  	struct ceph_client *cl =3D mdsc->fsc->client;
+>  	struct ceph_mds_request *req;
+>  	struct ceph_acl_sec_ctx as_ctx =3D {};
+> +	struct dentry *ret =3D NULL;
 >  	int err;
+>  	int op;
 > =20
->  	if ((file =3D dentry_name(dentry)) =3D=3D NULL)
->  		return ERR_PTR(-ENOMEM);
->  	err =3D do_mkdir(file, mode);
-> +	if (err) {
-> +		dentry =3D ERR_PTR(err);
-> +	} else {
-> +		inode =3D hostfs_iget(dentry->d_sb, file);
-> +		d_drop(dentry);
-> +		dentry =3D d_splice_alias(inode, dentry);
-> +	}
->  	__putname(file);
+> @@ -1166,14 +1167,20 @@ static struct dentry *ceph_mkdir(struct mnt_idmap=
+ *idmap, struct inode *dir,
+>  	    !req->r_reply_info.head->is_dentry)
+>  		err =3D ceph_handle_notrace_create(dir, dentry);
+>  out_req:
+> +	if (!err && req->r_dentry !=3D dentry)
+> +		/* Some other dentry was spliced in */
+> +		ret =3D dget(req->r_dentry);
+>  	ceph_mdsc_put_request(req);
+>  out:
+>  	if (!err)
+> +		/* Should this use 'ret' ?? */
+
+Probably? Is there a guarantee that "dentry" will even have an inode
+attached if it got replaced by an disconnected one in the dcache?
+
+>  		ceph_init_inode_acls(d_inode(dentry), &as_ctx);
+>  	else
+>  		d_drop(dentry);
+>  	ceph_release_acl_sec_ctx(&as_ctx);
 > -	return ERR_PTR(err);
-> +	return dentry;
+> +	if (err)
+> +		return ERR_PTR(err);
+> +	return ret;
 >  }
 > =20
->  static int hostfs_rmdir(struct inode *ino, struct dentry *dentry)
+>  static int ceph_link(struct dentry *old_dentry, struct inode *dir,
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
