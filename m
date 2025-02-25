@@ -1,46 +1,52 @@
-Return-Path: <linux-nfs+bounces-10329-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10330-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC057A4378C
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 09:26:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0C83A43BF6
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 11:42:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A810E3B721A
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 08:25:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D1BB169C80
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 10:38:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7AC220C01B;
-	Tue, 25 Feb 2025 08:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ED2526389C;
+	Tue, 25 Feb 2025 10:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="lCgQQNZx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFA6261384
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 08:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2C0260A26;
+	Tue, 25 Feb 2025 10:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740471780; cv=none; b=i57MIA8/WwQQW27KY7dG+1IF6z3VXN9jGkHGaQfuUC+q9/Tj4N+WFQ7DPScDdQTPAOhgemj+9ZEMfOZqCTppJJIj60XIU7BIr8isskwOn5crG6UE/ZUBs87lcDgDZPwiXyFlHnVhbuYXx+6BJA/8LfuL9UKOPnZwCYoBsblsI90=
+	t=1740479894; cv=none; b=nk4YoyNut7Pz86r4E7X12hGb737VJpEx420OgEJjUCxyvchTT5X3SQOw/KDQEgxpxg1IjUbhAVbzCjmup+d2CygGsHi851fLrSdcf72mTnI7pyYNfYF1Bq8zvZ1eVY1rzATIdf/XiQiedyLpqw+p4cVPKs8HLMF2wqF8ILcwVMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740471780; c=relaxed/simple;
-	bh=B9YgVCXrFKISHEEpSwCyziKRXHtrsRGP69rZXqmCr08=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:CC:
-	 In-Reply-To:Content-Type; b=dge0bgZ/CUQ1pddE0MW4T9Rg/PwLIlc2gb/IjwePZF27wSoTIbmb5FER3Df0aMFNAa1Ke5frNR2QgwxjU8Ftd4v/i0NXdACek2l88tOVu2nfPEoFjtJCoD32Iowtuans5nr1Q5Qbl2MPrBIUMtB1grzBnzsQcQJrwQRIk4cYwas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z29VN2CtVz2Cpfk;
-	Tue, 25 Feb 2025 16:18:52 +0800 (CST)
-Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
-	by mail.maildlp.com (Postfix) with ESMTPS id 993371402CA;
-	Tue, 25 Feb 2025 16:22:54 +0800 (CST)
-Received: from [10.174.179.184] (10.174.179.184) by
- kwepemp200004.china.huawei.com (7.202.195.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 25 Feb 2025 16:22:53 +0800
-Message-ID: <3e26c767-f347-4dbe-ae04-aabe8e87af12@huawei.com>
-Date: Tue, 25 Feb 2025 16:22:53 +0800
+	s=arc-20240116; t=1740479894; c=relaxed/simple;
+	bh=nmaIuLRIXhpvBAWF936BZrE5FfGSBBkqykB3EbSstac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dNZ0U25NCF0t3y9u0aFBDDH8fgIw7WqBv12a1qjAgkbt++ch1qvwhX1iRmAHuM72JJWyBfoKfbwI1SfrkcVDWWihazfvU4TgTBcjd+Jfk/PWGzhjAB3rqmvwdLBbuUYwP14TqJoaCFIdpNpuPqT57FAz6PXSlZcoQ0DVulPp4MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=lCgQQNZx; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3B271204D4;
+	Tue, 25 Feb 2025 10:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
+	t=1740479884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wt3UxvctVd0CM5VFAarheDiBUupuORfHc7HMZ4s/FLg=;
+	b=lCgQQNZxgWHBrWHRXrEHHn19LxurT/Plb8hRCvHTTWige0RFmZ/KJOTYVNyKDpDb6AJ4K4
+	nYFvnl11++m+d/uqjmxPOu/xMzyhRFpSv4O4ECi8FpgR3UWUQ/DcLoXv/EPudBIR4UFxL2
+	BzzhDlxbasTrOu9sZiVpkF7Wmt8FkYZgTM+8PuFyLSF+VNqTYalQ11fnprlOwCIUw0xJvd
+	COFFHYosuNm7nUlxHvl3WqywBR+W3Itsq6DvwDY93XvF18WP2jxD86glHZDDI5LzP1E64R
+	esdbFQCIQ8uAff9pRqX6LaIfKnRKKCpVkild1mAomruSExHmuhbtbrfZ6ElHGQ==
+Message-ID: <ac5742e1-7a2b-4d74-889c-0a0c434c16e5@clip-os.org>
+Date: Tue, 25 Feb 2025 11:37:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -48,129 +54,94 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] nfsdcld: fix cld pipe read size
-From: "zhangjian (CG)" <zhangjian496@huawei.com>
-To: <sorenson@redhat.com>, <s.ikarashi@fujitsu.com>, <smayhew@redhat.com>,
-	<jlayton@kernel.org>, <steved@redhat.com>
-References: <07ba7ede-5127-4978-9195-26c3d04679c4@huawei.com>
- <cfa8c2a3-4e2d-45c8-a605-c66d92412d41@huawei.com>
- <277a7a65-0aea-496c-beb5-e4b6f6afc10e@huawei.com>
-CC: <linux-nfs@vger.kernel.org>
-In-Reply-To: <277a7a65-0aea-496c-beb5-e4b6f6afc10e@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemp200004.china.huawei.com (7.202.195.99)
+Subject: Re: [PATCH v2 2/6] sysctl: Fixes nsm_local_state bounds
+To: Chuck Lever <chuck.lever@oracle.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+ codalist@coda.cs.cmu.edu, linux-nfs@vger.kernel.org
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+ Joel Granados <j.granados@samsung.com>, Clemens Ladisch
+ <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Jan Harkes <jaharkes@cs.cmu.edu>, Jeff Layton <jlayton@kernel.org>,
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ Bart Van Assche <bvanassche@acm.org>, Zhu Yanjun <yanjun.zhu@linux.dev>,
+ Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+ <20250224095826.16458-3-nicolas.bouchinet@clip-os.org>
+ <da418443-a98b-4b08-ad44-7d45d89b4173@oracle.com>
+Content-Language: en-US
+From: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
+In-Reply-To: <da418443-a98b-4b08-ad44-7d45d89b4173@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpefpihgtohhlrghsuceuohhutghhihhnvghtuceonhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrgheqnecuggftrfgrthhtvghrnheptdfggeejjefhleeuffetueektefhledukeegvefgteeugeeuhfekudffleehgfetnecukfhppeeltddrieefrddvgeeirddukeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdeifedrvdegiedrudekjedphhgvlhhopegludelvddrudeikedrfeefrdeihegnpdhmrghilhhfrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheptghhuhgtkhdrlhgvvhgvrhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheptghouggrlhhishhtsegtohgurgdrtghsrdgtmhhurdgvughupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdgsohhutghhihhnvghtsehsshhirdhgohhuvhdrfhhrpdhrtghpthhtohepjhdrghhrrghnrgguohhssehsrghmshhunhhgrdgtohhm
+X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
-Another thinking for that case: is it neccessory to write pipe with all possible xid to wake up all nfsd waiting for nfsdcld ? If nfsdcld is signaled SIGTERM in processing message, nfsdcld may also crash and nfsd wait for it forever too. 
 
-On Tue, 25 Feb 2025, zhangjian (CG) wrote:
-> When nfsd inits failed for detecting cld version in nfsd4_client_tracking_init, kernel may assume nfsdcld support version 1 message format and try to upcall with v1 message size to nfsdcld. There exists one error case in the following process, causeing nfsd hunging for nfsdcld replay: 
-> 
-> kernel write to pipe->msgs (v1 msg length)     
->     |--------- first msg --------|-------- second message -------|
-> 
-> nfsdcld read from pipe->msgs (v2 msg length)
->     |------------ first msg --------------|---second message-----|
->     |  valid message             | ignore |     wrong message    |
-> 
-> When two nfsd kernel thread add two upcall messages to cld pipe with v1 version cld_msg (size == 1034) concurrently，but nfsdcld reads with v2 version size(size == 1067), 33 bytes of the second message will be read and merged with first message. The 33 bytes in second message will be ignored. Nfsdcld will then read 1001 bytes in second message, which cause FATAL in cld_messaged_size checking. Nfsd kernel thread will hang for it forever until nfs server restarts.
-> 
-> Signed-off-by: zhangjian <zhangjian496@huawei.com>
-> ---
->  utils/nfsdcld/nfsdcld.c | 63 ++++++++++++++++++++++++++++-------------
->  1 file changed, 43 insertions(+), 20 deletions(-)
-> 
-> diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-> index dbc7a57..76308d1 100644
-> --- a/utils/nfsdcld/nfsdcld.c
-> +++ b/utils/nfsdcld/nfsdcld.c
-> @@ -716,35 +716,58 @@ reply:
->  	}
->  }
-> 
-> +static int cld_pipe_read_msg(struct cld_client *clnt) {
-> +	ssize_t len, left_len;
-> +	ssize_t hdr_len = sizeof(struct cld_msg_hdr);
-> +	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;;
-> +
-> +	len = atomicio(read, clnt->cl_fd, hdr, hdr_len);
-> +
-> +	if (len <= 0) {
-> +		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
-> +		goto fail_read;
-> +	}
-> +
-> +	switch (hdr->cm_vers) {
-> +	case 1:
-> +		left_len = sizeof(struct cld_msg) - hdr_len;
-> +		break;
-> +	case 2:
-> +		left_len = sizeof(struct cld_msg_v2) - hdr_len;
-> +		break;
-> +	default:
-> +		xlog(L_ERROR, "%s: unsupported upcall version: %hu",
-> +								__func__, hdr->cm_vers);
-> +		goto fail_read;
-> +	}
-> +
-> +	len = atomicio(read, clnt->cl_fd, hdr, left_len);
-> +
-> +	if (len <= 0) {
-> +		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
-> +		goto fail_read;
-> +	}
-> +
-> +	return 0;
-> +
-> +fail_read:
-> +	cld_pipe_open(clnt);
-> +	return -1;
-> +}
-> +
->  static void
->  cldcb(int UNUSED(fd), short which, void *data)
->  {
-> -	ssize_t len;
->  	struct cld_client *clnt = data;
-> -#if UPCALL_VERSION >= 2
-> -	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
-> -#else
-> -	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
-> -#endif
-> +	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;
-> 
->  	if (which != EV_READ)
->  		goto out;
-> 
-> -	len = atomicio(read, clnt->cl_fd, cmsg, sizeof(*cmsg));
-> -	if (len <= 0) {
-> -		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
-> -		cld_pipe_open(clnt);
-> +	if (cld_pipe_read_msg(clnt) < 0)
->  		goto out;
-> -	}
-> -
-> -	if (cmsg->cm_vers > UPCALL_VERSION) {
-> -		xlog(L_ERROR, "%s: unsupported upcall version: %hu",
-> -				__func__, cmsg->cm_vers);
-> -		cld_pipe_open(clnt);
-> -		goto out;
-> -	}
-> 
-> -	switch(cmsg->cm_cmd) {
-> +	switch (hdr->cm_cmd) {
->  	case Cld_Create:
->  		cld_create(clnt);
->  		break;
-> @@ -765,7 +788,7 @@ cldcb(int UNUSED(fd), short which, void *data)
->  		break;
->  	default:
->  		xlog(L_WARNING, "%s: command %u is not yet implemented",
-> -				__func__, cmsg->cm_cmd);
-> +				__func__, hdr->cm_cmd);
->  		cld_not_implemented(clnt);
->  	}
->  out:
+On 2/24/25 15:38, Chuck Lever wrote:
+> On 2/24/25 4:58 AM, nicolas.bouchinet@clip-os.org wrote:
+>> From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>>
+>> Bound nsm_local_state sysctl writings between SYSCTL_ZERO
+>> and SYSCTL_INT_MAX.
+>>
+>> The proc_handler has thus been updated to proc_dointvec_minmax.
+>>
+>> Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+>> ---
+>>   fs/lockd/svc.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+>> index 2c8eedc6c2cc9..984ab233af8b6 100644
+>> --- a/fs/lockd/svc.c
+>> +++ b/fs/lockd/svc.c
+>> @@ -461,7 +461,9 @@ static const struct ctl_table nlm_sysctls[] = {
+>>   		.data		= &nsm_local_state,
+>>   		.maxlen		= sizeof(int),
+>>   		.mode		= 0644,
+>> -		.proc_handler	= proc_dointvec,
+>> +		.proc_handler	= proc_dointvec_minmax,
+>> +		.extra1		= SYSCTL_ZERO,
+>> +		.extra2		= SYSCTL_INT_MAX,
+>>   	},
+>>   };
+>>   
+> Hi Nicolas -
+>
+> nsm_local_state is an unsigned 32-bit integer. The type of that value is
+> defined by spec, because this value is exchanged between peers on the
+> network.
+>
+> Perhaps this patch should replace proc_dointvec with proc_douintvec
+> instead.
+>
+>
+
+Hi Chuck,
+
+Thank's for your review.
+
+If `nsm_local_state` should be set to the
+full range of an uint32_t by a user writing in the sysctl, then yes it 
+should
+use `proc_douintvec` instead of limiting it to SYSCTL_INT_MAX value 
+(INT_MAX).
+
+I've used `proc_dointvec_minmax` since it already used `proc_dointvec` 
+and thus
+was already capped at INT_MAX.
+
+Best regards,
+
+Nicolas
 
 
