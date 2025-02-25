@@ -1,67 +1,71 @@
-Return-Path: <linux-nfs+bounces-10346-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10347-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0AC1A44F24
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AC9EA44F23
 	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 22:46:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD11C7A8643
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 21:45:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 529504202E2
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 21:46:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 485F7D517;
-	Tue, 25 Feb 2025 21:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4488420D506;
+	Tue, 25 Feb 2025 21:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKhn2Cb9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMGxfJPH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921A63209
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 21:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF383209
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 21:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740519976; cv=none; b=DX3xUEfMO3bba/yStmGXXi7Oka1J5t1LPKkbhotZzb3+6iNgTMuM6HD+yohbipE/mLstr6JI1uYN90UDpRV6dY4aHdTdfqm/h6/ds600R2WolVk3izlxt/lNpcmMOm7hK4bnEryRPNWE3QzH4b9YoX6tAs2r7l0JyiqSgLHH4sU=
+	t=1740519980; cv=none; b=a/y+DvcATOGyQGNlMlGgnE0wrqdfXgnpV9DQwpXiqSnA0soFiSRLRTO/XiSBZRiwOL9H1xNkbWfwSsWCu3r2v74XLDRLcr9B52R+ZX9uXUYqbVFCKUdKafU7yU1vFkGLvXbr4cYHJatyEKjrKIZbtOXZDTvc3pAKyAOBbRZ2xvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740519976; c=relaxed/simple;
-	bh=zSriwY16DTNnB01WqzILr9kXr0z5P5Br8JLt/ZLhr8E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FylsmRaD56ajyRDta9glht6DYPd3tFi1TIqe3AAE2S8R4ThXcLhSMeTeZWv2WL6x1E4WSGxzo06RJldXb42w9QeSSQ32rbeY0Hnvr0IWx9GnGXETYCfjm6VkJ/lc/3pB4IreNzNoMifPh4eiU8NHpAOl3n4rgUClgGwd+WF/Ias=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YKhn2Cb9; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1740519980; c=relaxed/simple;
+	bh=jjmJUedpe79OSqh9KVDnjthxbmNl9CGaunxmEKAIlw4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dbgYlJ+5xWZytv7O2l3e03+1CRnU5cTUjJeA7cYubV54A/m2WiyG9pL1vd4k6kMbrGrOhHdLQO36iQ9DvTlV0U3RkIx/fwQisEzDziaAfnz98XXQpd7PEgFL22Z7y0mHSxmcV3t5LKDKmTuhigsob2iFENBw4+z5RSYiyjdrft4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMGxfJPH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740519973;
+	s=mimecast20190719; t=1740519976;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8bBO1KQxiODSihgwCZywAr3+4imP+UNjdEv4NzSfD64=;
-	b=YKhn2Cb9jK9RGcofNkdqN3Zq2XxKXlY+iTHnnrnvWOHday54W9vdB7W0C/c2t2RDDrQQ1B
-	B1zT7QQj4rZigE2jMXYUR/0ICP8LQjDnen/LYFZO65IqTcPEuOr2+xSTbCqXHYwt9rITpQ
-	X8yCrvRbRYA2sl8navzRfopVQdH9W7I=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DFH8DhbpWHleEt+6Uu4bY4tFQ54LZ45dlCnksQcmETc=;
+	b=UMGxfJPH7VaiXpZzXgVOlKzEP7nlMQX4pm9OXJjmxOCdoN+sD64VQEAWsn+mvkdGHPhuDD
+	JvlUBisovvNnx6M4/na0eu/WQ0oHp1Tflnw+u/qBMqWFO264MNZquuqJU7p47EYTRlQAvI
+	n3wkzl9DjCh3RpewZEtCWLzTz/9B0lM=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-2el00xaDPzeog3Tu3qnmrA-1; Tue,
- 25 Feb 2025 16:46:11 -0500
-X-MC-Unique: 2el00xaDPzeog3Tu3qnmrA-1
-X-Mimecast-MFC-AGG-ID: 2el00xaDPzeog3Tu3qnmrA_1740519971
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-653-m4TvyeZwPDyUv3w4Q_w3sQ-1; Tue,
+ 25 Feb 2025 16:46:14 -0500
+X-MC-Unique: m4TvyeZwPDyUv3w4Q_w3sQ-1
+X-Mimecast-MFC-AGG-ID: m4TvyeZwPDyUv3w4Q_w3sQ_1740519973
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E926C1800373
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 21:46:10 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 463D61800874
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 21:46:13 +0000 (UTC)
 Received: from okorniev-mac.redhat.com (unknown [10.22.82.53])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB99C1800357;
-	Tue, 25 Feb 2025 21:46:09 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57B181800357;
+	Tue, 25 Feb 2025 21:46:12 +0000 (UTC)
 From: Olga Kornievskaia <okorniev@redhat.com>
 To: steved@redhat.com
 Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH 0/2] nfs-utils: gssd: do not use krb5_initialize
-Date: Tue, 25 Feb 2025 16:46:05 -0500
-Message-Id: <20250225214607.20449-1-okorniev@redhat.com>
+Subject: [PATCH 1/2] nfs-utils: gssd: unconditionally use krb5_get_init_creds_opt_alloc
+Date: Tue, 25 Feb 2025 16:46:06 -0500
+Message-Id: <20250225214607.20449-2-okorniev@redhat.com>
+In-Reply-To: <20250225214607.20449-1-okorniev@redhat.com>
+References: <20250225214607.20449-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -71,22 +75,86 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-It was discovered that on parallel upcalls to gssd for uid=0,
-one of the upcalls would fail because krb5_cc_initialize() is
-not concurrency safe.
+Modern kerberos API uses krb5_get_init_creds_opt_alloc() for managing
+its options for credential data structure.
 
-It was suggested that instead gssd is changed to use a different
-sequence of api calls that kinit uses.
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ utils/gssd/krb5_util.c | 37 ++++++++++---------------------------
+ 1 file changed, 10 insertions(+), 27 deletions(-)
 
-https://mailman.mit.edu/pipermail/krbdev/2025-February/013708.html
-
-Olga Kornievskaia (2):
-  nfs-utils: gssd: unconditionally use krb5_get_init_creds_opt_alloc
-  nfs-utils: gssd: do not use krb5_cc_initialize
-
- utils/gssd/krb5_util.c | 140 ++++++++++++++++++-----------------------
- 1 file changed, 60 insertions(+), 80 deletions(-)
-
+diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
+index d7116d93..201585ed 100644
+--- a/utils/gssd/krb5_util.c
++++ b/utils/gssd/krb5_util.c
+@@ -397,12 +397,7 @@ gssd_get_single_krb5_cred(krb5_context context,
+ 			  struct gssd_k5_kt_princ *ple,
+ 			  int force_renew)
+ {
+-#ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
+-	krb5_get_init_creds_opt *init_opts = NULL;
+-#else
+-	krb5_get_init_creds_opt options;
+-#endif
+-	krb5_get_init_creds_opt *opts;
++	krb5_get_init_creds_opt *opts = NULL;
+ 	krb5_creds my_creds;
+ 	krb5_ccache ccache = NULL;
+ 	char kt_name[BUFSIZ];
+@@ -443,33 +438,23 @@ gssd_get_single_krb5_cred(krb5_context context,
+ 	if ((krb5_unparse_name(context, ple->princ, &pname)))
+ 		pname = NULL;
+ 
+-#ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
+-	code = krb5_get_init_creds_opt_alloc(context, &init_opts);
++	code = krb5_get_init_creds_opt_alloc(context, &opts);
+ 	if (code) {
+ 		k5err = gssd_k5_err_msg(context, code);
+ 		printerr(0, "ERROR: %s allocating gic options\n", k5err);
+ 		goto out;
+ 	}
+-	if (krb5_get_init_creds_opt_set_addressless(context, init_opts, 1))
++#ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
++	if (krb5_get_init_creds_opt_set_addressless(context, opts, 1))
+ 		printerr(1, "WARNING: Unable to set option for addressless "
+ 			 "tickets.  May have problems behind a NAT.\n");
+-#ifdef TEST_SHORT_LIFETIME
+-	/* set a short lifetime (for debugging only!) */
+-	printerr(1, "WARNING: Using (debug) short machine cred lifetime!\n");
+-	krb5_get_init_creds_opt_set_tkt_life(init_opts, 5*60);
++#else
++	krb5_get_init_creds_opt_set_address_list(opts, NULL);
+ #endif
+-	opts = init_opts;
+-
+-#else	/* HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS */
+-
+-	krb5_get_init_creds_opt_init(&options);
+-	krb5_get_init_creds_opt_set_address_list(&options, NULL);
+ #ifdef TEST_SHORT_LIFETIME
+ 	/* set a short lifetime (for debugging only!) */
+-	printerr(0, "WARNING: Using (debug) short machine cred lifetime!\n");
+-	krb5_get_init_creds_opt_set_tkt_life(&options, 5*60);
+-#endif
+-	opts = &options;
++	printerr(1, "WARNING: Using (debug) short machine cred lifetime!\n");
++	krb5_get_init_creds_opt_set_tkt_life(opts, 5*60);
+ #endif
+ 
+ 	if ((code = krb5_get_init_creds_keytab(context, &my_creds, ple->princ,
+@@ -530,10 +515,8 @@ gssd_get_single_krb5_cred(krb5_context context,
+ 	printerr(2, "%s(0x%lx): principal '%s' ccache:'%s'\n", 
+ 		__func__, tid, pname, cc_name);
+   out:
+-#ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
+-	if (init_opts)
+-		krb5_get_init_creds_opt_free(context, init_opts);
+-#endif
++	if (opts)
++		krb5_get_init_creds_opt_free(context, opts);
+ 	if (pname)
+ 		k5_free_unparsed_name(context, pname);
+ 	if (ccache)
 -- 
 2.47.1
 
