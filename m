@@ -1,350 +1,173 @@
-Return-Path: <linux-nfs+bounces-10321-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10322-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13A0AA430DB
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 00:29:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8173AA431DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 01:33:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4E8443A42CA
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Feb 2025 23:29:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0452B160160
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Feb 2025 00:33:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E9D01F941;
-	Mon, 24 Feb 2025 23:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 412504A1E;
+	Tue, 25 Feb 2025 00:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="loBfTiR6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J3mvHyzY";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="loBfTiR6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J3mvHyzY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VlgcEdFS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061FD2054F8
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Feb 2025 23:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB023C38
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Feb 2025 00:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740439793; cv=none; b=rToHjWaDeVtV51qQ2CRYdDCcrXEM7FuiFJe2CWFJ1F6vEpVI7RCJljA4qvg1HvJi43ZFcnKNBdSV2rJq4RRfRrXqR42vDTQkXSnz1CCDKr6EXUJzKQx7nJm3mjolA8s0XYD+1p7ijCoVy/mhUP8st/YbCtUgdorOImchMbJUuEA=
+	t=1740443583; cv=none; b=VbvdTciiZdVP1fdMhyDS7mQwpbXnGwqTKWRLPYloB9AsC99nh6GqsbmM70oQm0m5KCjqkiPdCEPHr/IYzKD6Kx6azH2SKeAvjHuTvSh0jcXGy7rWhuHXbmtUwhLbc8/R417loAh5zoqB5brqz9a8u+NLB4BeZ2F5ykV4esD1/PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740439793; c=relaxed/simple;
-	bh=vt/y9E4/DcaZ9NV1EBDUcDNYGDvwjv/mQRtyYJZcYqk=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=rJKAGfRyYwq5M7OklXBAuVch6gY7JhFlF3sRdIJl1Ra+W69G8YTYT8eP6tuj1NISEurSFpGp0R4BJLEZJi8HdwsArCxjPLSts6ziak94ngKrjDJHMCQW2J29XvOj6UqZ1on8aJwu9J4AX7gFmGDgBUKeUX/ud0H8Tv2Bwmt2qMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=loBfTiR6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J3mvHyzY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=loBfTiR6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J3mvHyzY; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1769F1F44E;
-	Mon, 24 Feb 2025 23:29:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740439789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oj990YaLGkPA4ae4sIKmdEX5RxKU3jTg87RjSWSYeg=;
-	b=loBfTiR6kAlC/sS0ot1CDtcKEiKmB6GXrsHNK+SsrbeZzGdV6O2ZrsmO8jw3wvJPHK58Kj
-	glzLsVFTkUpcycBhzhfiLzoYOAwECgg5wubkGZIw8GCF2DWKEIFm9faiQIbZ45b9stImh9
-	J9FQoxLwzfFLcLMM4Nzxcdvxtbe/i94=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740439789;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oj990YaLGkPA4ae4sIKmdEX5RxKU3jTg87RjSWSYeg=;
-	b=J3mvHyzY65SyoNedSF0MYSEG2w3R6giaas15VW09Vb9TUfaAv1RMGveIpiZI1/xnVIoKU6
-	p9GIZjyHOh0bImAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740439789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oj990YaLGkPA4ae4sIKmdEX5RxKU3jTg87RjSWSYeg=;
-	b=loBfTiR6kAlC/sS0ot1CDtcKEiKmB6GXrsHNK+SsrbeZzGdV6O2ZrsmO8jw3wvJPHK58Kj
-	glzLsVFTkUpcycBhzhfiLzoYOAwECgg5wubkGZIw8GCF2DWKEIFm9faiQIbZ45b9stImh9
-	J9FQoxLwzfFLcLMM4Nzxcdvxtbe/i94=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740439789;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2oj990YaLGkPA4ae4sIKmdEX5RxKU3jTg87RjSWSYeg=;
-	b=J3mvHyzY65SyoNedSF0MYSEG2w3R6giaas15VW09Vb9TUfaAv1RMGveIpiZI1/xnVIoKU6
-	p9GIZjyHOh0bImAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A647613332;
-	Mon, 24 Feb 2025 23:29:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 5OlzEuQAvWc2awAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 24 Feb 2025 23:29:40 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1740443583; c=relaxed/simple;
+	bh=iUk8vuS00mFXlVwzB1SpgCt7QvulqbRuDdhWv4v09XU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BHGFasVQjtbgyWIyHQDmaIHr2Hpo77rIigDzI+hTw2wVokS+UzeUFDeeJQLkerh1dEDd5TjfZl/t6ScHRArb9h5irIwZmvI5+lDVoSWJ0gTbNvX/NpWlKcHJQGL1K66YH+gEbzuiZiJJrDtxMh7p6Kh3xHdNdVIRXEqgLl8g1Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VlgcEdFS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498F8C4CED6;
+	Tue, 25 Feb 2025 00:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740443582;
+	bh=iUk8vuS00mFXlVwzB1SpgCt7QvulqbRuDdhWv4v09XU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VlgcEdFSxazZikHjB7gXsLVlbX8mPdigeY4cZpcDYzhLhDindcDYsQ9OM12GoX6it
+	 lJQozJ2yOK1VAYy34B7KCvQlvh05uH8bRv/Op7Lyh2ubeLl36La5oCrTAVhyD0Ffvg
+	 nodeixrqCTRMxInzUFiClVzlpHxLIquRUoAVZM9WzqN1npOzVc32XpMs7vSGfM9cj5
+	 WolwKScTQX/hlAIWKarJwyCxPB0ef8W7yaPF7V4j0Za8byuHWCTbic8vg/Ste7EfAi
+	 TxinodL33c6tFb+kmiSxMYYnxJEafyY4uP9dElob2rZmLDaYxtqpukBEsvngsDzq83
+	 qwy6knX4A3mxw==
+From: Mike Snitzer <snitzer@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH for-akpm for-6.14-rcX] NFS: fix nfs_release_folio() to not call nfs_wb_folio() from kcompactd
+Date: Mon, 24 Feb 2025 19:33:01 -0500
+Message-ID: <20250225003301.25693-1-snitzer@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Viacheslav Dubeyko" <Slava.Dubeyko@ibm.com>
-Cc: "brauner@kernel.org" <brauner@kernel.org>, "Xiubo Li" <xiubli@redhat.com>,
- "idryomov@gmail.com" <idryomov@gmail.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
- "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
- "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
- "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
- "jlayton@kernel.org" <jlayton@kernel.org>,
- "anna@kernel.org" <anna@kernel.org>, "miklos@szeredi.hu" <miklos@szeredi.hu>,
- "trondmy@kernel.org" <trondmy@kernel.org>,
- "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
- "jack@suse.cz" <jack@suse.cz>, "tom@talpey.com" <tom@talpey.com>,
- "richard@nod.at" <richard@nod.at>,
- "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "netfs@lists.linux.dev" <netfs@lists.linux.dev>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
- "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
- "senozhatsky@chromium.org" <senozhatsky@chromium.org>
-Subject: RE:  [PATCH 3/6] ceph: return the correct dentry on mkdir
-In-reply-to: <f7d3e39f5ced7832d451de172004172b59a994eb.camel@ibm.com>
-References: <>, <f7d3e39f5ced7832d451de172004172b59a994eb.camel@ibm.com>
-Date: Tue, 25 Feb 2025 10:29:37 +1100
-Message-id: <174043977707.74271.6498110571534472585@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,gmail.com,vger.kernel.org,oracle.com,lists.infradead.org,sipsolutions.net,szeredi.hu,zeniv.linux.org.uk,suse.cz,talpey.com,nod.at,cambridgegreys.com,lists.linux.dev,chromium.org];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Feb 2025, Viacheslav Dubeyko wrote:
-> On Mon, 2025-02-24 at 13:15 +1100, NeilBrown wrote:
-> > On Fri, 21 Feb 2025, Viacheslav Dubeyko wrote:
-> > > On Fri, 2025-02-21 at 10:36 +1100, NeilBrown wrote:
-> > > > ceph already splices the correct dentry (in splice_dentry()) from the
-> > > > result of mkdir but does nothing more with it.
-> > > >=20
-> > > > Now that ->mkdir can return a dentry, return the correct dentry.
-> > > >=20
-> > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > ---
-> > > >  fs/ceph/dir.c | 9 ++++++++-
-> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-> > > > index 39e0f240de06..c1a1c168bb27 100644
-> > > > --- a/fs/ceph/dir.c
-> > > > +++ b/fs/ceph/dir.c
-> > > > @@ -1099,6 +1099,7 @@ static struct dentry *ceph_mkdir(struct mnt_idm=
-ap *idmap, struct inode *dir,
-> > > >  	struct ceph_client *cl =3D mdsc->fsc->client;
-> > > >  	struct ceph_mds_request *req;
-> > > >  	struct ceph_acl_sec_ctx as_ctx =3D {};
-> > > > +	struct dentry *ret =3D NULL;
-> > >=20
-> > > I believe that it makes sense to initialize pointer by error here and a=
-lways
-> > > return ret as output. If something goes wrong in the logic, then we alr=
-eady have
-> > > error.
-> >=20
-> > I'm not certain that I understand, but I have made a change which seems
-> > to be consistent with the above and included it below.  Please let me
-> > know if it is what you intended.
-> >=20
-> > >=20
-> > > >  	int err;
-> > > >  	int op;
-> > > > =20
-> > > > @@ -1166,14 +1167,20 @@ static struct dentry *ceph_mkdir(struct mnt_i=
-dmap *idmap, struct inode *dir,
-> > > >  	    !req->r_reply_info.head->is_dentry)
-> > > >  		err =3D ceph_handle_notrace_create(dir, dentry);
-> > > >  out_req:
-> > > > +	if (!err && req->r_dentry !=3D dentry)
-> > > > +		/* Some other dentry was spliced in */
-> > > > +		ret =3D dget(req->r_dentry);
-> > > >  	ceph_mdsc_put_request(req);
-> > > >  out:
-> > > >  	if (!err)
-> > > > +		/* Should this use 'ret' ?? */
-> > >=20
-> > > Could we make a decision should or shouldn't? :)
-> > > It looks not good to leave this comment instead of proper implementatio=
-n. Do we
-> > > have some obstacles to make this decision?
-> >=20
-> > I suspect we should use ret, but I didn't want to make a change which
-> > wasn't directly required by my needed.  So I highlighted this which
-> > looks to me like a possible bug, hoping that someone more familiar with
-> > the code would give an opinion.  Do you agree that 'ret' (i.e.
-> > ->r_dentry) should be used when ret is not NULL?
-> >=20
->=20
-> I think if we are going to return ret as a dentry, then it makes sense to c=
-all
-> the ceph_init_inode_acls() for d_inode(ret). I don't see the point to call
-> ceph_init_inode_acls() for d_inode(dentry) then.
+Add PF_KCOMPACTD flag and current_is_kcompactd() helper to check for
+it so nfs_release_folio() can skip calling nfs_wb_folio() from
+kcompactd.
 
-If the mkdir used the original dentry, then ->mkdir returns NULL so ret
-is NULL.  If the mkdir used a different dentry it returns that, so ret
-is not NULL.
+Otherwise NFS can deadlock waiting for kcompactd enduced writeback
+which recurses back to NFS (which triggers writeback to NFSD via
+NFS loopback mount on the same host, NFSD blocks waiting for XFS's
+call to __filemap_get_folio):
 
-I'll try to re-organise the code so that "dentry" is the correct dentry
-on success, and "ret" is the returned dentry, which might be NULL.
+6070.550357] INFO: task kcompactd0:58 blocked for more than 4435 seconds.
 
-Thanks,
-NeilBrown
+{---
+[58] "kcompactd0"
+[<0>] folio_wait_bit+0xe8/0x200
+[<0>] folio_wait_writeback+0x2b/0x80
+[<0>] nfs_wb_folio+0x80/0x1b0 [nfs]
+[<0>] nfs_release_folio+0x68/0x130 [nfs]
+[<0>] split_huge_page_to_list_to_order+0x362/0x840
+[<0>] migrate_pages_batch+0x43d/0xb90
+[<0>] migrate_pages_sync+0x9a/0x240
+[<0>] migrate_pages+0x93c/0x9f0
+[<0>] compact_zone+0x8e2/0x1030
+[<0>] compact_node+0xdb/0x120
+[<0>] kcompactd+0x121/0x2e0
+[<0>] kthread+0xcf/0x100
+[<0>] ret_from_fork+0x31/0x40
+[<0>] ret_from_fork_asm+0x1a/0x30
+---}
 
+Fixes: 96780ca55e3cb ("NFS: fix up nfs_release_folio() to try to release the page")
+Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+---
+ fs/nfs/file.c              | 3 ++-
+ include/linux/compaction.h | 5 +++++
+ include/linux/sched.h      | 2 +-
+ mm/compaction.c            | 3 +++
+ 4 files changed, 11 insertions(+), 2 deletions(-)
 
->=20
-> > >=20
-> > > >  		ceph_init_inode_acls(d_inode(dentry), &as_ctx);
-> > > >  	else
-> > > >  		d_drop(dentry);
-> > > >  	ceph_release_acl_sec_ctx(&as_ctx);
-> > > > -	return ERR_PTR(err);
-> > > > +	if (err)
-> > > > +		return ERR_PTR(err);
-> > > > +	return ret;
-> > >=20
-> > > What's about this?
-> > >=20
-> > > return err ? ERR_PTR(err) : ret;
-> >=20
-> > We could do that, but you said above that you thought we should always
-> > return 'ret' - which does make some sense.
-> >=20
-> > What do you think of the following alternate patch?
-> >=20
->=20
-> Patch looks good to me. Thanks.
->=20
-> Reviewed-by: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
->=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> > diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-> > index 39e0f240de06..d2e5c557df83 100644
-> > --- a/fs/ceph/dir.c
-> > +++ b/fs/ceph/dir.c
-> > @@ -1099,6 +1099,7 @@ static struct dentry *ceph_mkdir(struct mnt_idmap *=
-idmap, struct inode *dir,
-> >  	struct ceph_client *cl =3D mdsc->fsc->client;
-> >  	struct ceph_mds_request *req;
-> >  	struct ceph_acl_sec_ctx as_ctx =3D {};
-> > +	struct dentry *ret;
-> >  	int err;
-> >  	int op;
-> > =20
-> > @@ -1116,32 +1117,32 @@ static struct dentry *ceph_mkdir(struct mnt_idmap=
- *idmap, struct inode *dir,
-> >  		      ceph_vinop(dir), dentry, dentry, mode);
-> >  		op =3D CEPH_MDS_OP_MKDIR;
-> >  	} else {
-> > -		err =3D -EROFS;
-> > +		ret =3D ERR_PTR(-EROFS);
-> >  		goto out;
-> >  	}
-> > =20
-> >  	if (op =3D=3D CEPH_MDS_OP_MKDIR &&
-> >  	    ceph_quota_is_max_files_exceeded(dir)) {
-> > -		err =3D -EDQUOT;
-> > +		ret =3D ERR_PTR(-EDQUOT);
-> >  		goto out;
-> >  	}
-> >  	if ((op =3D=3D CEPH_MDS_OP_MKSNAP) && IS_ENCRYPTED(dir) &&
-> >  	    !fscrypt_has_encryption_key(dir)) {
-> > -		err =3D -ENOKEY;
-> > +		ret =3D ERR_PTR(-ENOKEY);
-> >  		goto out;
-> >  	}
-> > =20
-> > =20
-> >  	req =3D ceph_mdsc_create_request(mdsc, op, USE_AUTH_MDS);
-> >  	if (IS_ERR(req)) {
-> > -		err =3D PTR_ERR(req);
-> > +		ret =3D ERR_CAST(req);
-> >  		goto out;
-> >  	}
-> > =20
-> >  	mode |=3D S_IFDIR;
-> >  	req->r_new_inode =3D ceph_new_inode(dir, dentry, &mode, &as_ctx);
-> >  	if (IS_ERR(req->r_new_inode)) {
-> > -		err =3D PTR_ERR(req->r_new_inode);
-> > +		ret =3D ERR_CAST(req->r_new_inode);
-> >  		req->r_new_inode =3D NULL;
-> >  		goto out_req;
-> >  	}
-> > @@ -1165,15 +1166,23 @@ static struct dentry *ceph_mkdir(struct mnt_idmap=
- *idmap, struct inode *dir,
-> >  	    !req->r_reply_info.head->is_target &&
-> >  	    !req->r_reply_info.head->is_dentry)
-> >  		err =3D ceph_handle_notrace_create(dir, dentry);
-> > +	ret =3D ERR_PTR(err);
-> >  out_req:
-> > +	if (!IS_ERR(ret) && req->r_dentry !=3D dentry)
-> > +		/* Some other dentry was spliced in */
-> > +		ret =3D dget(req->r_dentry);
-> >  	ceph_mdsc_put_request(req);
-> >  out:
-> > -	if (!err)
-> > -		ceph_init_inode_acls(d_inode(dentry), &as_ctx);
-> > -	else
-> > +	if (!IS_ERR(ret)) {
-> > +		if (ret)
-> > +			ceph_init_inode_acls(d_inode(ret), &as_ctx);
-> > +		else
-> > +			ceph_init_inode_acls(d_inode(dentry), &as_ctx);
-> > +	} else {
-> >  		d_drop(dentry);
-> > +	}
-> >  	ceph_release_acl_sec_ctx(&as_ctx);
-> > -	return ERR_PTR(err);
-> > +	return ret;
-> >  }
-> > =20
-> >  static int ceph_link(struct dentry *old_dentry, struct inode *dir,
-> >=20
->=20
-> Thanks,
-> Slava.
->=20
->=20
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 1bb646752e466..033feeab8c346 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -29,6 +29,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/gfp.h>
+ #include <linux/swap.h>
++#include <linux/compaction.h>
+ 
+ #include <linux/uaccess.h>
+ #include <linux/filelock.h>
+@@ -457,7 +458,7 @@ static bool nfs_release_folio(struct folio *folio, gfp_t gfp)
+ 	/* If the private flag is set, then the folio is not freeable */
+ 	if (folio_test_private(folio)) {
+ 		if ((current_gfp_context(gfp) & GFP_KERNEL) != GFP_KERNEL ||
+-		    current_is_kswapd())
++		    current_is_kswapd() || current_is_kcompactd())
+ 			return false;
+ 		if (nfs_wb_folio(folio->mapping->host, folio) < 0)
+ 			return false;
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index e947764960496..7bf0c521db634 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -80,6 +80,11 @@ static inline unsigned long compact_gap(unsigned int order)
+ 	return 2UL << order;
+ }
+ 
++static inline int current_is_kcompactd(void)
++{
++	return current->flags & PF_KCOMPACTD;
++}
++
+ #ifdef CONFIG_COMPACTION
+ 
+ extern unsigned int extfrag_for_order(struct zone *zone, unsigned int order);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 8982820dae213..0d1d70aded38f 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1682,7 +1682,7 @@ extern struct pid *cad_pid;
+ #define PF_USED_MATH		0x00002000	/* If unset the fpu must be initialized before use */
+ #define PF_USER_WORKER		0x00004000	/* Kernel thread cloned from userspace thread */
+ #define PF_NOFREEZE		0x00008000	/* This thread should not be frozen */
+-#define PF__HOLE__00010000	0x00010000
++#define PF_KCOMPACTD		0x00010000	/* I am kcompactd */
+ #define PF_KSWAPD		0x00020000	/* I am kswapd */
+ #define PF_MEMALLOC_NOFS	0x00040000	/* All allocations inherit GFP_NOFS. See memalloc_nfs_save() */
+ #define PF_MEMALLOC_NOIO	0x00080000	/* All allocations inherit GFP_NOIO. See memalloc_noio_save() */
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 384e4672998e5..2dd03105e6898 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -3164,6 +3164,7 @@ static int kcompactd(void *p)
+ 	if (!cpumask_empty(cpumask))
+ 		set_cpus_allowed_ptr(tsk, cpumask);
+ 
++	tsk->flags | PF_KCOMPACTD;
+ 	set_freezable();
+ 
+ 	pgdat->kcompactd_max_order = 0;
+@@ -3220,6 +3221,8 @@ static int kcompactd(void *p)
+ 			pgdat->proactive_compact_trigger = false;
+ 	}
+ 
++	tsk->flags &= ~PF_KCOMPACTD;
++
+ 	return 0;
+ }
+ 
+-- 
+2.44.0
 
 
