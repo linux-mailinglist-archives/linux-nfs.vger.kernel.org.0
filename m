@@ -1,48 +1,49 @@
-Return-Path: <linux-nfs+bounces-10363-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10364-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 465BBA45FAA
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 13:46:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33D5CA45FAF
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 13:47:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 429201667C9
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 12:46:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F3C1166C1F
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 12:47:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FFB017BA6;
-	Wed, 26 Feb 2025 12:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD24F29CE8;
+	Wed, 26 Feb 2025 12:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RzbX4zXK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTJiU+p/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7911B634
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Feb 2025 12:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CDCE20DF4
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Feb 2025 12:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740573992; cv=none; b=l5tvZwXMW3qUY1maXWZOtqZoOVvVXalyRqhHSO6sAh8sPfgGyT5bDZagbtCEweGbJI5EHCBQhRQpEbWTfCx9G4iUOB3wOcRpEJJ3WQ+SCa5mMNGd5FBfLaQ4snsA+PQKLPuVY3mckSFsYavcq++lKRXR1rVUfiNljhPGoFXl42g=
+	t=1740574055; cv=none; b=nJjMjpUHFvhUg3IMp3wLHRUwK3wT9mIqjmhg6WK+ZPHmHyOnpMRAjKgdclWv7+KkUGznpk/tm1H2o6UwSRpgN4+6tUNMUugCHpA0U+59PNIgo2WV+vEVTsHyZKTVpjslcQi5coBiK9M0YXpfSCeD8l0REkHZX3d+1buvRMGEXAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740573992; c=relaxed/simple;
-	bh=qLd3g7ys5LnidPeIEKMfnB99gYuHtsR6RAastAruVXM=;
+	s=arc-20240116; t=1740574055; c=relaxed/simple;
+	bh=K8nozSbMfM32nXd6DAmYcsG5FkRW8CCSFJcl4BspFSs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Hgbp6YQclyWCzHnKwQws3FLqQOyUp7ug8DzoGN8UfVJZSsAtEGKhxnX7eQmL0SSVWi6CZ5ezIXfpp8tafy+qS6eaV2r+qIulUBHAWu7AIxC90A4J4cHunOePGYgmn6k0ezkd1g32EKIWevQC0fVtiBqgka/B+lF+qc3zlOXVFMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RzbX4zXK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B52C4CED6;
-	Wed, 26 Feb 2025 12:46:31 +0000 (UTC)
+	 Content-Type:MIME-Version; b=H3+IymU3vmaJzUZHR91y2sOO0kfEN6M/oZZ/MphVdfitfe3XV/sELkCvAKMBKdUgtzpLVQHxfcf08DdM8Hetg2lQlW9lQUoHlximKF2liAARhBW3gbdGqILVG+4Vjh4L7ADQWu2Zk8oiQaMJLrPSqwcXTak9gJnzv9COQjwr6OE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTJiU+p/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F93C4CED6;
+	Wed, 26 Feb 2025 12:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740573992;
-	bh=qLd3g7ys5LnidPeIEKMfnB99gYuHtsR6RAastAruVXM=;
+	s=k20201202; t=1740574055;
+	bh=K8nozSbMfM32nXd6DAmYcsG5FkRW8CCSFJcl4BspFSs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RzbX4zXKTouecvuVG0bhvK3zP8fZ0jc0SGqLhI7+TRL15cSZz83I0TAbfzaQfGtSR
-	 Eu9c0ElJ2WmDcAtpk4DODrG9j492w4tRsOvxS3IJvLqxvKgl0bNDWGXDs1sgbe6i+I
-	 eFvJjhPMaSPTrzl3RCyKqET/OK8xtHesZkgYV57RFkqBa2xQjY0cQstY/bs6schcVN
-	 yPV/DCRgq6vNV0ga6v+N1dKJaKg3UeQ6Y7BQKQN9sbLqn2rAZIDLWDCZWsypBNUSt5
-	 KyTqvaZX3GA7cPcu9Q1c5mfJf/0KtHN5FLWWgBqnxE3AcMgbb2MyIWghS0uN+Ti+e4
-	 bH2ZbTjXJWeYg==
-Message-ID: <afcbafcfa96927c158feb624c7122ec633d681a8.camel@kernel.org>
-Subject: Re: [PATCH 1/2] nfs/vfs: discard d_exact_alias()
+	b=nTJiU+p/bNT1EYYAvB2HeLY6/zhgFdeqyGnR3QBt+DMH77ix4AWI6MoCkK5MnI6cK
+	 hr5OB0aJD7c5A61lxZQEqtFk+dB6Yy4LFizESRkaN4YZOlzyKkB+BTyYivQ47We31I
+	 g9s69GBhhiIFV+n5G1ZHQ5tBAs+4Rqpzd3eGdoRHlJ3LBDgIBrWHs0sidZFl3dWmWF
+	 0IYKQTNe6GcPh3Zg9Hrfyjb1QLLYVeuLxtq3SiCMYicSpNqXD5xuOunPUI+IsAL+v3
+	 R/Nz8nDmd/PvBm2tsuCoX+mbzzDsSsCxe4YdrkIjluScfZ4mDXJTfmNE0UXEKA6jyz
+	 Z+tA9hQiDmLPg==
+Message-ID: <df0efa15ee231a8c204423bbc6c3e005c49fb6fe.camel@kernel.org>
+Subject: Re: [PATCH 2/2] nfsd: drop fh_update() from S_IFDIR branch of
+ nfsd_create_locked()
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Alexander Viro <viro@zeniv.linux.org.uk>, 
  Christian Brauner
@@ -50,10 +51,10 @@ To: NeilBrown <neilb@suse.de>, Alexander Viro <viro@zeniv.linux.org.uk>,
 Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
  <trondmy@kernel.org>,  Anna Schumaker	 <anna@kernel.org>,
  linux-nfs@vger.kernel.org
-Date: Wed, 26 Feb 2025 07:46:29 -0500
-In-Reply-To: <20250226062135.2043651-2-neilb@suse.de>
+Date: Wed, 26 Feb 2025 07:47:33 -0500
+In-Reply-To: <20250226062135.2043651-3-neilb@suse.de>
 References: <20250226062135.2043651-1-neilb@suse.de>
-	 <20250226062135.2043651-2-neilb@suse.de>
+	 <20250226062135.2043651-3-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,116 +140,36 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2025-02-26 at 17:18 +1100, NeilBrown wrote:
-> d_exact_alias() is a descendent of d_add_unique() which was introduced
-> 20 years ago mostly likely to work around problems with NFS servers of
-> the time.  It is now not used in several situations were it was
-> originally needed and there have been no reports of problems -
-> presumably the old NFS servers have been improved.  This only place it
-> is now use is in NFSv4 code and the old problematic servers are thought
-> to have been v2/v3 only.
+> nfsd_create_locked() doesn't need to explicitly call fh_update().
+> On success (which is the only time that fh_update() matters at all),
+> nfsd_create_setattr() will be called and it will call fh_update().
 >=20
-> There is no clear benefit in reusing a unhashed() dentry which happens
-> to have the same name as the dentry we are adding.
+> This extra call is not harmful, but is not necessary.
 >=20
-> So this patch removes d_exact_alias() and the one place that it is used.
->=20
-> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/dcache.c            | 46 ------------------------------------------
->  fs/nfs/nfs4proc.c      |  4 +---
->  include/linux/dcache.h |  1 -
->  3 files changed, 1 insertion(+), 50 deletions(-)
+>  fs/nfsd/vfs.c | 3 ---
+>  1 file changed, 3 deletions(-)
 >=20
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index e3634916ffb9..726a5be2747b 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -2687,52 +2687,6 @@ void d_add(struct dentry *entry, struct inode *ino=
-de)
->  }
->  EXPORT_SYMBOL(d_add);
-> =20
-> -/**
-> - * d_exact_alias - find and hash an exact unhashed alias
-> - * @entry: dentry to add
-> - * @inode: The inode to go with this dentry
-> - *
-> - * If an unhashed dentry with the same name/parent and desired
-> - * inode already exists, hash and return it.  Otherwise, return
-> - * NULL.
-> - *
-> - * Parent directory should be locked.
-> - */
-> -struct dentry *d_exact_alias(struct dentry *entry, struct inode *inode)
-> -{
-> -	struct dentry *alias;
-> -	unsigned int hash =3D entry->d_name.hash;
-> -
-> -	spin_lock(&inode->i_lock);
-> -	hlist_for_each_entry(alias, &inode->i_dentry, d_u.d_alias) {
-> -		/*
-> -		 * Don't need alias->d_lock here, because aliases with
-> -		 * d_parent =3D=3D entry->d_parent are not subject to name or
-> -		 * parent changes, because the parent inode i_mutex is held.
-> -		 */
-> -		if (alias->d_name.hash !=3D hash)
-> -			continue;
-> -		if (alias->d_parent !=3D entry->d_parent)
-> -			continue;
-> -		if (!d_same_name(alias, entry->d_parent, &entry->d_name))
-> -			continue;
-> -		spin_lock(&alias->d_lock);
-> -		if (!d_unhashed(alias)) {
-> -			spin_unlock(&alias->d_lock);
-> -			alias =3D NULL;
-> -		} else {
-> -			dget_dlock(alias);
-> -			__d_rehash(alias);
-> -			spin_unlock(&alias->d_lock);
-> -		}
-> -		spin_unlock(&inode->i_lock);
-> -		return alias;
-> -	}
-> -	spin_unlock(&inode->i_lock);
-> -	return NULL;
-> -}
-> -EXPORT_SYMBOL(d_exact_alias);
-> -
->  static void swap_names(struct dentry *dentry, struct dentry *target)
->  {
->  	if (unlikely(dname_external(target))) {
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index df9669d4ded7..0a46b193f18e 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -3153,9 +3153,7 @@ static int _nfs4_open_and_get_state(struct nfs4_ope=
-ndata *opendata,
->  	if (d_really_is_negative(dentry)) {
->  		struct dentry *alias;
->  		d_drop(dentry);
-> -		alias =3D d_exact_alias(dentry, state->inode);
-> -		if (!alias)
-> -			alias =3D d_splice_alias(igrab(state->inode), dentry);
-> +		alias =3D d_splice_alias(igrab(state->inode), dentry);
->  		/* d_splice_alias() can't fail here - it's a non-directory */
->  		if (alias) {
->  			dput(ctx->dentry);
-> diff --git a/include/linux/dcache.h b/include/linux/dcache.h
-> index 4afb60365675..8a63978187a4 100644
-> --- a/include/linux/dcache.h
-> +++ b/include/linux/dcache.h
-> @@ -253,7 +253,6 @@ extern struct dentry * d_splice_alias(struct inode *,=
- struct dentry *);
->  extern struct dentry * d_add_ci(struct dentry *, struct inode *, struct =
-qstr *);
->  extern bool d_same_name(const struct dentry *dentry, const struct dentry=
- *parent,
->  			const struct qstr *name);
-> -extern struct dentry * d_exact_alias(struct dentry *, struct inode *);
->  extern struct dentry *d_find_any_alias(struct inode *inode);
->  extern struct dentry * d_obtain_alias(struct inode *);
->  extern struct dentry * d_obtain_root(struct inode *);
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 29cb7b812d71..1035010f1198 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1505,11 +1505,8 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+>  			}
+>  			dput(resfhp->fh_dentry);
+>  			resfhp->fh_dentry =3D dget(d);
+> -			err =3D fh_update(resfhp);
+>  			dput(dchild);
+>  			dchild =3D d;
+> -			if (err)
+> -				goto out;
+>  		}
+>  		break;
+>  	case S_IFCHR:
+
+Not really related to 1/2 but ok.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
