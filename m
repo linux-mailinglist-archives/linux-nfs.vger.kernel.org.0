@@ -1,98 +1,194 @@
-Return-Path: <linux-nfs+bounces-10354-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10355-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4EC2A45406
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 04:35:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 67BBEA4544A
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 05:09:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A9E2A172AFE
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 03:35:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB56B189377E
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Feb 2025 04:09:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E82925A323;
-	Wed, 26 Feb 2025 03:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="tF0QJu5l"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE8020AF8E;
+	Wed, 26 Feb 2025 04:09:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70F121C9FD;
-	Wed, 26 Feb 2025 03:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC724438B
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Feb 2025 04:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740540915; cv=none; b=b853fEZ0WIVELV5fxNwQbiw+PSVEXf2oUo9TczIJd2oI+EdFgKBSCxd8/klLGflvrHdYUlYqJD93Unoayap7y3lIn1Y/QGR2L9VLMdDQNAlVm84x2pwGVEIH9YSBILTMlapgOTCzsC8JV5JenDsgMVKlbdR5F7+NfNfmCFNswS8=
+	t=1740542965; cv=none; b=GWf5z2iZ7ee4N0EBO56w69wbXrdiXCJUPAlaOMlMiCfm4JVurIC6PxY9ui6Rh+iWXYzz2xcAMej88fTwNAJY7FMu9CkKitiPROLUfNGLH+WklhH6CQhoTyEA0rBehZYDJIiL5wuVGP+mt61R9cZUFz8QdG+XMMs+jR5ECX65BqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740540915; c=relaxed/simple;
-	bh=M5VdN1L/4acqzoTRMzx7ccCFAgC7XTYQIX4QlM8CYp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gvBfn3ogASbxy6jDwcYQZA7kXZkrLVhED7Yzyx0nTyVd0vN7JxPiv7PlEJSiBKfojFBjHUZYLeUqLNF1pln35rTO3mJMpiiLV4DLS04Zh4vaGXUzel0+QaAYKj0+zm+UC4mNzP5dh5XxuDi5muRvaF1duYWOcc9ho3dz65qU9mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=tF0QJu5l; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gfLaod49ckkklrS5HkMhsUUQYxad/szdqQ5Z3G50Xxc=; b=tF0QJu5lrPkZBMtLbiLy4Bz1tH
-	WcfomiLvJTogVrL3Tm3HLUWsQkmVsguQ3kKBOQtM8U1GP7NJTm4ssI9t7V04farVLYkNl1rieqwyh
-	AYSqiINBHrXOLqT/4WE0ylXNEahosCIQYeUXTO05cznqwrBCaYnLaDJ4v/F2/+SMW77u27JkdVbk7
-	POrmBkRBps1JfVkaaZcTMMr9f1snr1/bo7w0g/WJqGnPjJENRjtAM1aQzSSkLMGj7I9isyfI6s1mj
-	u5K5s0hWNEvdijcR5mlFiz1dJ7GYBCwzTYwxiL+DTreVwX0/EmcMRkQcOUucQheqL6UTfDWQNlXXN
-	fRD4wEqA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tn8CQ-00000008k3i-3dIs;
-	Wed, 26 Feb 2025 03:35:06 +0000
-Date: Wed, 26 Feb 2025 03:35:06 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: NeilBrown <neilb@suse.de>
-Cc: Trond Myklebust <trondmy@hammerspace.com>,
-	"xiubli@redhat.com" <xiubli@redhat.com>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"idryomov@gmail.com" <idryomov@gmail.com>,
-	"okorniev@redhat.com" <okorniev@redhat.com>,
-	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-	"Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-	"jlayton@kernel.org" <jlayton@kernel.org>,
-	"anna@kernel.org" <anna@kernel.org>,
-	"miklos@szeredi.hu" <miklos@szeredi.hu>,
-	"anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
-	"jack@suse.cz" <jack@suse.cz>, "tom@talpey.com" <tom@talpey.com>,
-	"richard@nod.at" <richard@nod.at>,
-	"linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"netfs@lists.linux.dev" <netfs@lists.linux.dev>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>
-Subject: Re: [PATCH 1/6] Change inode_operations.mkdir to return struct
- dentry *
-Message-ID: <20250226033506.GE2023217@ZenIV>
-References: <>
- <50e6b21c644b050a29e159c9484a5e01061434f6.camel@hammerspace.com>
- <174053988113.102979.18024415194793753569@noble.neil.brown.name>
+	s=arc-20240116; t=1740542965; c=relaxed/simple;
+	bh=H6hGuE/ZNQtPl3OdNnrlxYt7WP9BsYjBlUYtio5peZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DVFl9cJOpcUZHtUM622z1T1Yk/yElAnOSnNyMTWp0MQtLs6x9Hfdax4UH+j1+3+6IVc8MkXiGHDon56mqzTgXngxB262KSbgZhuavnP259XYSFBgEBEIYdUFeM+nLzEl2FbA4yrwQvWl1mIdKJj9rsJRFW9QeKfnKBrwpnG5QzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z2gtB3CBTzTkbH;
+	Wed, 26 Feb 2025 12:07:46 +0800 (CST)
+Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7F8AB14034E;
+	Wed, 26 Feb 2025 12:09:18 +0800 (CST)
+Received: from [10.174.179.184] (10.174.179.184) by
+ kwepemp200004.china.huawei.com (7.202.195.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 26 Feb 2025 12:09:17 +0800
+Message-ID: <8fce833f-0f86-4d02-b038-5b890991ba4d@huawei.com>
+Date: Wed, 26 Feb 2025 12:09:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174053988113.102979.18024415194793753569@noble.neil.brown.name>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nfsdcld: fix cld pipe read size
+To: Scott Mayhew <smayhew@redhat.com>
+CC: <sorenson@redhat.com>, <s.ikarashi@fujitsu.com>, <jlayton@kernel.org>,
+	<steved@redhat.com>, <linux-nfs@vger.kernel.org>
+References: <07ba7ede-5127-4978-9195-26c3d04679c4@huawei.com>
+ <cfa8c2a3-4e2d-45c8-a605-c66d92412d41@huawei.com>
+ <277a7a65-0aea-496c-beb5-e4b6f6afc10e@huawei.com>
+ <3e26c767-f347-4dbe-ae04-aabe8e87af12@huawei.com> <Z7210sTaCaamBGFR@aion>
+From: "zhangjian (CG)" <zhangjian496@huawei.com>
+In-Reply-To: <Z7210sTaCaamBGFR@aion>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemp200004.china.huawei.com (7.202.195.99)
 
-On Wed, Feb 26, 2025 at 02:18:01PM +1100, NeilBrown wrote:
+on Tue, 25 Feb 2025,  Scott Mayhew wrote:
+> On Tue, 25 Feb 2025, zhangjian (CG) wrote:
+> 
+>> Another thinking for that case: is it neccessory to write pipe with all possible xid to wake up all nfsd waiting for nfsdcld ? If nfsdcld is signaled SIGTERM in processing message, nfsdcld may also crash and nfsd wait for it forever too. 
+> I'm not sure I understand.  Are you suggesting nfsdcld ignore signals in
+> cld_gracestart()?
+> 
+> -Scott
+Think of this case: cld_create has read message done and is killed
+before writing downcall message, nfsdcld exits and this message will not
+be read from pipe again by restarted nfsdcld. Nfsd will hung for nfsdcld
+forever. If we can make a tool to write status=-EAGIN replay to all
+possible upcalls, nfsd will put upcall message to pipe again and
+restarted nfsdcld can read it again.
 
-> Thanks.  I'll submit a patch through the VFS tree as I have other VFS
-> patches in the works that will depend on that so having them together
-> would be good.
+>>
+>> On Tue, 25 Feb 2025, zhangjian (CG) wrote:
+>>> When nfsd inits failed for detecting cld version in nfsd4_client_tracking_init, kernel may assume nfsdcld support version 1 message format and try to upcall with v1 message size to nfsdcld. There exists one error case in the following process, causeing nfsd hunging for nfsdcld replay: 
+>>>
+>>> kernel write to pipe->msgs (v1 msg length)     
+>>>     |--------- first msg --------|-------- second message -------|
+>>>
+>>> nfsdcld read from pipe->msgs (v2 msg length)
+>>>     |------------ first msg --------------|---second message-----|
+>>>     |  valid message             | ignore |     wrong message    |
+>>>
+>>> When two nfsd kernel thread add two upcall messages to cld pipe with v1 version cld_msg (size == 1034) concurrently，but nfsdcld reads with v2 version size(size == 1067), 33 bytes of the second message will be read and merged with first message. The 33 bytes in second message will be ignored. Nfsdcld will then read 1001 bytes in second message, which cause FATAL in cld_messaged_size checking. Nfsd kernel thread will hang for it forever until nfs server restarts.
+>>>
+>>> Signed-off-by: zhangjian <zhangjian496@huawei.com>
+>>> ---
+>>>  utils/nfsdcld/nfsdcld.c | 63 ++++++++++++++++++++++++++++-------------
+>>>  1 file changed, 43 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
+>>> index dbc7a57..76308d1 100644
+>>> --- a/utils/nfsdcld/nfsdcld.c
+>>> +++ b/utils/nfsdcld/nfsdcld.c
+>>> @@ -716,35 +716,58 @@ reply:
+>>>  	}
+>>>  }
+>>>
+>>> +static int cld_pipe_read_msg(struct cld_client *clnt) {
+>>> +	ssize_t len, left_len;
+>>> +	ssize_t hdr_len = sizeof(struct cld_msg_hdr);
+>>> +	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;;
+>>> +
+>>> +	len = atomicio(read, clnt->cl_fd, hdr, hdr_len);
+>>> +
+>>> +	if (len <= 0) {
+>>> +		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
+>>> +		goto fail_read;
+>>> +	}
+>>> +
+>>> +	switch (hdr->cm_vers) {
+>>> +	case 1:
+>>> +		left_len = sizeof(struct cld_msg) - hdr_len;
+>>> +		break;
+>>> +	case 2:
+>>> +		left_len = sizeof(struct cld_msg_v2) - hdr_len;
+>>> +		break;
+>>> +	default:
+>>> +		xlog(L_ERROR, "%s: unsupported upcall version: %hu",
+>>> +								__func__, hdr->cm_vers);
+>>> +		goto fail_read;
+>>> +	}
+>>> +
+>>> +	len = atomicio(read, clnt->cl_fd, hdr, left_len);
+>>> +
+>>> +	if (len <= 0) {
+>>> +		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
+>>> +		goto fail_read;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +
+>>> +fail_read:
+>>> +	cld_pipe_open(clnt);
+>>> +	return -1;
+>>> +}
+>>> +
+>>>  static void
+>>>  cldcb(int UNUSED(fd), short which, void *data)
+>>>  {
+>>> -	ssize_t len;
+>>>  	struct cld_client *clnt = data;
+>>> -#if UPCALL_VERSION >= 2
+>>> -	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
+>>> -#else
+>>> -	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
+>>> -#endif
+>>> +	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;
+>>>
+>>>  	if (which != EV_READ)
+>>>  		goto out;
+>>>
+>>> -	len = atomicio(read, clnt->cl_fd, cmsg, sizeof(*cmsg));
+>>> -	if (len <= 0) {
+>>> -		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
+>>> -		cld_pipe_open(clnt);
+>>> +	if (cld_pipe_read_msg(clnt) < 0)
+>>>  		goto out;
+>>> -	}
+>>> -
+>>> -	if (cmsg->cm_vers > UPCALL_VERSION) {
+>>> -		xlog(L_ERROR, "%s: unsupported upcall version: %hu",
+>>> -				__func__, cmsg->cm_vers);
+>>> -		cld_pipe_open(clnt);
+>>> -		goto out;
+>>> -	}
+>>>
+>>> -	switch(cmsg->cm_cmd) {
+>>> +	switch (hdr->cm_cmd) {
+>>>  	case Cld_Create:
+>>>  		cld_create(clnt);
+>>>  		break;
+>>> @@ -765,7 +788,7 @@ cldcb(int UNUSED(fd), short which, void *data)
+>>>  		break;
+>>>  	default:
+>>>  		xlog(L_WARNING, "%s: command %u is not yet implemented",
+>>> -				__func__, cmsg->cm_cmd);
+>>> +				__func__, hdr->cm_cmd);
+>>>  		cld_not_implemented(clnt);
+>>>  	}
+>>>  out:
+>>
+> 
+> 
 
-Do it on top of mainline, please (say, -rc4) and let's put it into
-a separate branch - easier that way to pull it into other branches
-without causing headache.
 
