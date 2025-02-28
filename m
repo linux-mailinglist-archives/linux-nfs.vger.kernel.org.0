@@ -1,202 +1,195 @@
-Return-Path: <linux-nfs+bounces-10390-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10391-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA9B4A4960F
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Feb 2025 10:56:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73228A4A159
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Feb 2025 19:22:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AA3281895E3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Feb 2025 09:56:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 733BB1735A0
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Feb 2025 18:22:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C886525A2C0;
-	Fri, 28 Feb 2025 09:56:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82EB81F4CBF;
+	Fri, 28 Feb 2025 18:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YX+sL6+J"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="nwq0LkQ3"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18DC25A2DE
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Feb 2025 09:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCBD1F0995
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Feb 2025 18:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736564; cv=none; b=Zmun0sS3Q8vnd772CdR0OKMbXoSAiuVbfeAjwEBMQgmCzLPamJMAqf1fxxPY3cDsiujzwSJrk1zOxzBhfl/ht5nPE4I4Gvyulzxbz54WFP/sbncydwKnKhxU6e35H803DS8WxNjIwC0OgTJHFHJmyskdSz78vgg7CCwHrTxTTXo=
+	t=1740766966; cv=none; b=LjEr7hGbTx9jB+8XdYX8x9Wep8KZ72SGPP6lA4wKlXywvC6v1o+qaUyXV4+yJL0sGYMSsUAprkinlZX1iARBUu3eHiOyR2mlnTcCQ5pp/XDqk6OAfgCZqTKyoCFAv8oTDP3yf2OaSXNbFM3KiyUo3q3n4zXmYilHB9vZ+GKYGFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736564; c=relaxed/simple;
-	bh=GDvWHbsfDV5zNWiJP1XmiPoJi4z6ZQmYIcUg8lclOGw=;
-	h=From:To:Cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=boa65Y0LlIv53+Py93K1Gq04JEbX4wut164sdt4UPPULpYtNi2MCi8KZiWI5NB05PDaCRWINziNdvD+VGWNAp95uxHH9VsR3cKSbPdwrQH6Si1At4xkt4xXEuJHaH/THIBPkeBQCUzRaIkkZGGUsnZIsLy95bmv9sPj4+BQSDgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YX+sL6+J; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740736562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=O08f6gdA0KrLInA95FMEo2ZIg0CleDMWQyitTzKQIpg=;
-	b=YX+sL6+J3sL1tZ5IowilrUCHiQkSLa6S9G1SOcdWY/5lhdi4vNlijFM2MqqnhogMhCxsyL
-	miyVQYn++FiNcFidQcR1FqK4arTzpybDdQFQH0S9MMBQLOtJsDuVJ1cnLXo0LEID1XF5rd
-	JTn/4v8SdJfXn7r1PfITgpGWWLhQg6U=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-svBPWvA2PHCXbUP18jwtKQ-1; Fri,
- 28 Feb 2025 04:55:57 -0500
-X-MC-Unique: svBPWvA2PHCXbUP18jwtKQ-1
-X-Mimecast-MFC-AGG-ID: svBPWvA2PHCXbUP18jwtKQ_1740736555
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D1E61955BFC;
-	Fri, 28 Feb 2025 09:55:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A1E59180087F;
-	Fri, 28 Feb 2025 09:55:48 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David Howells <dhowells@redhat.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
-    linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] crypto: Add Kerberos crypto lib
+	s=arc-20240116; t=1740766966; c=relaxed/simple;
+	bh=Wy3dyARGgrrTrpIuLxmuGw+cg/ABRhvBD3c/WpFFtn0=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=BqjM6JwTzB6TmCQfbUexGE5A1Zl1GTq87gR/1My2+b/alLk1qtY5tgeuatmCE1LLpptOxrHFB1+Wc8OaVJ3zIdvWa2abItkuCc05H6B5qzzafp73MBcflLw6W9XntZB+vKEPOuCBZTk29NjoiRKdIOgs7ulaEmhWR6cvYg+DffM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=nwq0LkQ3; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id C343311F8FA
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Feb 2025 19:13:51 +0100 (CET)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id ADDA613F647
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Feb 2025 19:13:43 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de ADDA613F647
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1740766423; bh=u6UNwY/YjLpQ2FUv/AMxFGh0RX1pCY766l/OKjJaE8E=;
+	h=Date:From:To:Cc:Subject:From;
+	b=nwq0LkQ3kr+6Rm258N4h7mzZg6W09YBUEsJ/KiYPEJT9vLZugBI/CvKEjTsreYxIe
+	 mFP2cHYNRanLl+vHWULwYzvCAit+VvUgOKwGXpWYQGZMvlTAKubveC5ipjru7n+EZm
+	 985ytHsJgXLiIxZms9C370SSn1zFvgBAwaPPxTlQ=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+	by smtp-buf-2.desy.de (Postfix) with ESMTP id A1023120043;
+	Fri, 28 Feb 2025 19:13:43 +0100 (CET)
+Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [IPv6:2001:638:d:c303:acdc:1979:2:e7])
+	by smtp-m-1.desy.de (Postfix) with ESMTP id 9567040044;
+	Fri, 28 Feb 2025 19:13:43 +0100 (CET)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
+	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id C0D46104AF0;
+	Fri, 28 Feb 2025 19:13:42 +0100 (CET)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-2.desy.de (Postfix) with ESMTP id 3E3F120044;
+	Fri, 28 Feb 2025 19:13:42 +0100 (CET)
+Date: Fri, 28 Feb 2025 19:13:42 +0100 (CET)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: trondmy <trondmy@kernel.org>, Olga Kornievskaia <aglo@umich.edu>
+Message-ID: <319477679.6763859.1740766422175.JavaMail.zimbra@desy.de>
+Subject: Unexpected low pNFS IO performance with parallel workload
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3193935.1740736547.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Feb 2025 09:55:47 +0000
-Message-ID: <3193936.1740736547@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_6763860_1500231424.1740766422188"
+X-Mailer: Zimbra 9.0.0_GA_4718 (ZimbraWebClient - FF135 (Linux)/9.0.0_GA_4737)
+Thread-Index: 3jnUn1Ic/xPZuCyLK5LAF+5KLWH+jA==
+Thread-Topic: Unexpected low pNFS IO performance with parallel workload
 
-Hi Herbert,
+------=_Part_6763860_1500231424.1740766422188
+Date: Fri, 28 Feb 2025 19:13:42 +0100 (CET)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: trondmy <trondmy@kernel.org>, Olga Kornievskaia <aglo@umich.edu>
+Message-ID: <319477679.6763859.1740766422175.JavaMail.zimbra@desy.de>
+Subject: Unexpected low pNFS IO performance with parallel workload
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_4718 (ZimbraWebClient - FF135 (Linux)/9.0.0_GA_4737)
+Thread-Index: 3jnUn1Ic/xPZuCyLK5LAF+5KLWH+jA==
+Thread-Topic: Unexpected low pNFS IO performance with parallel workload
 
-Could you pull this into the crypto tree please?  It does a couple of
-things:
 
- (1) Provide an AEAD crypto driver, krb5enc, that mirrors the authenc
-     driver, but that hashes the plaintext, not the ciphertext.  This was
-     made a separate module rather than just being a part of the authenc
-     driver because it has to do all of the constituent operations in the
-     opposite order - which impacts the async op handling.
+Dear NFS fellows,
 
-     Testmgr data is provided for AES+SHA2 and Camellia combinations of
-     authenc and krb5enc used by the krb5 library.  AES+SHA1 is not
-     provided as the RFCs don't contain usable test vectors.
+During HPC workloads on we notice that Linux NFS4.2/pNFS client menonstraits unexpected low performance.
+The application opens 55 files parallel reads the data with multiple threads. The server issues flexfile
+layout with tighly coupled NFSv4.1 DSes.
 
- (2) Provide a Kerberos 5 crypto library.  This is an extract from the
-     sunrpc driver as that code can be shared between sunrpc/nfs and
-     rxrpc/afs.  This provides encryption, decryption, get MIC and verify
-     MIC routines that use and wrap the crypto functions, along with some
-     functions to provide layout management.
+Oservations:
 
-     This supports AES+SHA1, AES+SHA2 and Camellia encryption types.
+- despite 1MB rsize/wsize returned by layout, client never issues reads bigger that 512k (offten much smaller)
+- client always uses slot 0 on DS, and
+- reads happen sequentialy, i.e. only one in-flight READ requests
+- following reads often just read the next 512k block
+- If instead of parallel application a simple dd is called, that multiple slots and 1MB READs are sent
 
-     Self-testing is provided that goes further than is possible with
-     testmgr, doing subkey derivation as well.
+$ dd if=/pnfs/xxxx/00054.h5 of=/dev/null
+45753381+1 records in
+45753381+1 records out
+23425731171 bytes (23 GB, 22 GiB) copied, 69.702 s, 336 MB/s
 
-The patches were previously posted here:
 
-    https://lore.kernel.org/r/20250203142343.248839-1-dhowells@redhat.com/
+The client has 80 cores on 2 sockets, 512BG of RAM and runs REHL 9.4
 
-as part of a larger series, but the networking guys would prefer these to
-go through the crypto tree.  If you want them reposting independently, I
-can do that.
+$ uname -r
+5.14.0-427.26.1.el9_4.x86_64
 
-David
----
-The following changes since commit 1e15510b71c99c6e49134d756df91069f7d1814=
-1:
+$ free -g
+               total        used        free      shared  buff/cache   available
+Mem:             503          84         392           0          29         419
 
-  Merge tag 'net-6.14-rc5' of git://git.kernel.org/pub/scm/linux/kernel/gi=
-t/netdev/net (2025-02-27 09:32:42 -0800)
+$ lscpu | head
+Architecture:                       x86_64
+CPU op-mode(s):                     32-bit, 64-bit
+Address sizes:                      46 bits physical, 48 bits virtual
+Byte Order:                         Little Endian
+CPU(s):                             80
+On-line CPU(s) list:                0-79
+Vendor ID:                          GenuineIntel
+BIOS Vendor ID:                     Intel(R) Corporation
+Model name:                         Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
+BIOS Model name:                    Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz
 
-are available in the Git repository at:
+The client and all DSes equiped  with 10GB/s NICs.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/crypto-krb5-20250228
+Any ideas where to look?
 
-for you to fetch changes up to 0dd8f8533a833eeb8e51034072a59930bcbec725:
+Best regards,
+   Tigran.
+------=_Part_6763860_1500231424.1740766422188
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-  crypto/krb5: Implement crypto self-testing (2025-02-28 09:42:42 +0000)
-
-----------------------------------------------------------------
-crypto: Add Kerberos crypto lib
-
-----------------------------------------------------------------
-David Howells (17):
-      crypto/krb5: Add API Documentation
-      crypto/krb5: Add some constants out of sunrpc headers
-      crypto: Add 'krb5enc' hash and cipher AEAD algorithm
-      crypto/krb5: Test manager data
-      crypto/krb5: Implement Kerberos crypto core
-      crypto/krb5: Add an API to query the layout of the crypto section
-      crypto/krb5: Add an API to alloc and prepare a crypto object
-      crypto/krb5: Add an API to perform requests
-      crypto/krb5: Provide infrastructure and key derivation
-      crypto/krb5: Implement the Kerberos5 rfc3961 key derivation
-      crypto/krb5: Provide RFC3961 setkey packaging functions
-      crypto/krb5: Implement the Kerberos5 rfc3961 encrypt and decrypt fun=
-ctions
-      crypto/krb5: Implement the Kerberos5 rfc3961 get_mic and verify_mic
-      crypto/krb5: Implement the AES enctypes from rfc3962
-      crypto/krb5: Implement the AES enctypes from rfc8009
-      crypto/krb5: Implement the Camellia enctypes from rfc6803
-      crypto/krb5: Implement crypto self-testing
-
- Documentation/crypto/index.rst   |   1 +
- Documentation/crypto/krb5.rst    | 262 +++++++++++++
- crypto/Kconfig                   |  13 +
- crypto/Makefile                  |   3 +
- crypto/krb5/Kconfig              |  26 ++
- crypto/krb5/Makefile             |  18 +
- crypto/krb5/internal.h           | 247 ++++++++++++
- crypto/krb5/krb5_api.c           | 452 ++++++++++++++++++++++
- crypto/krb5/krb5_kdf.c           | 145 +++++++
- crypto/krb5/rfc3961_simplified.c | 797 ++++++++++++++++++++++++++++++++++=
-+++++
- crypto/krb5/rfc3962_aes.c        | 115 ++++++
- crypto/krb5/rfc6803_camellia.c   | 237 ++++++++++++
- crypto/krb5/rfc8009_aes2.c       | 362 ++++++++++++++++++
- crypto/krb5/selftest.c           | 544 ++++++++++++++++++++++++++
- crypto/krb5/selftest_data.c      | 291 ++++++++++++++
- crypto/krb5enc.c                 | 504 +++++++++++++++++++++++++
- crypto/testmgr.c                 |  16 +
- crypto/testmgr.h                 | 351 +++++++++++++++++
- include/crypto/authenc.h         |   2 +
- include/crypto/krb5.h            | 160 ++++++++
- 20 files changed, 4546 insertions(+)
- create mode 100644 Documentation/crypto/krb5.rst
- create mode 100644 crypto/krb5/Kconfig
- create mode 100644 crypto/krb5/Makefile
- create mode 100644 crypto/krb5/internal.h
- create mode 100644 crypto/krb5/krb5_api.c
- create mode 100644 crypto/krb5/krb5_kdf.c
- create mode 100644 crypto/krb5/rfc3961_simplified.c
- create mode 100644 crypto/krb5/rfc3962_aes.c
- create mode 100644 crypto/krb5/rfc6803_camellia.c
- create mode 100644 crypto/krb5/rfc8009_aes2.c
- create mode 100644 crypto/krb5/selftest.c
- create mode 100644 crypto/krb5/selftest_data.c
- create mode 100644 crypto/krb5enc.c
- create mode 100644 include/crypto/krb5.h
-
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
+UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
+jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
+yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
+FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
+ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
+59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
+UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
+IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
+IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
+DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
+yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
+zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
+37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
+76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
+BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
+lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
+bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
+vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
+nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
+0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNTAyMjgxODEzNDJaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIFGlWpqev3uXZe3m1Djz+iwmULgr
+1Js/7ufoBfxVWnGRMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAC254dGlXCOs3OHVx2Sts7sLlzFuz8qjfXIJxVGw
+PjhHVnTygCLf2HJ3sR40YO5x10r/J3ti4z8S1bfk972cI2Gn75vNwd3HBNVxX95ZgK9QPPWy1aZx
+ksExKcmLAQhVPYgtC1v0BuTAGyU4WEHMBuXOtEYWfi0QKLfgnXbJz4NCcGLCqKopeao69NeQh4Ng
++rEK7k7GZwLGXPIE42i/udexHKZMXs8t2GRG/wCGp9yP0vRCLo5iLYzRnmST9KLGgmw82jFFX+wl
+rxC/SVu6SdhPmDH24EXpY6yqan469+aZcNaCyfNAlNgk3paOIaag4F65GUHFD5yFrHpAMGsGjGgU
+/80oucaB+k9Osie/Af9v735kDFXF3kji/blLvoEv4zkDjdJBjkmqvV1s/C85ZTdkIOUCc2uBmxWK
+bmDab5fpCU/QKg6ToEUyRdSkjftVcX3ADiG7GLxakQiNJ0ThDmnhy9vBdh2K2HleDfJkQare5Gy+
+PsmGIOIt9ZQP7vS+wrDNymOQNuLQgVyOz0UVKqHpCGm8kjZcUpdbik3X4r99b6VPumHD9+tYUPft
+Grb1cc5cBlFHbQF0vTibwa3euCkVxjygyixwcXyBswjd5MatOke4MBE22dm2lvExaa1M1AehLT4r
+DI0/e2WVqvP+bWc1bAid/76F7N/B96M5y69PAAAAAAAA
+------=_Part_6763860_1500231424.1740766422188--
 
