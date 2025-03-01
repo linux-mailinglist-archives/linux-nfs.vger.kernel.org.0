@@ -1,105 +1,103 @@
-Return-Path: <linux-nfs+bounces-10397-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10398-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A6A6A4AD2F
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 18:51:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCBE6A4AD5A
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 19:31:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DB763AE8F5
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 17:51:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70F251896C7F
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 18:32:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A153B1DF985;
-	Sat,  1 Mar 2025 17:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0643070808;
+	Sat,  1 Mar 2025 18:31:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXMEyzj6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0MsFbwW"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BFC8F7D;
-	Sat,  1 Mar 2025 17:51:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D421823F37C
+	for <linux-nfs@vger.kernel.org>; Sat,  1 Mar 2025 18:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740851485; cv=none; b=J+LJD1VW0qDs5RU2pG2WyAUylBjPe40CqKSmIWX7+jSSKn5r/MPG3CUR9tadAxVTZOQt3Ygjm44mQIXnv9LF1wb0wnCc8oAdKsiINQexyc/OcB/XEQ/Q5tzrb7SSOq/3LSaZtPnq0TiMkfJM3M+q7+8Qih3yJc8WIF8k2llR30Y=
+	t=1740853915; cv=none; b=qQlfRIPqWxxNrzlgvwG5dUGCIxgk4nmvjNcafLkA3xtPLSQA8eoJ9A4ImlP4XDNYFoi/deKvNR0FkUChl8HEziFVUQvM9hd4wKfMyrdNhuC821dUBuJeWa+95hVJbPTCiHVWRjq86+MIufKrtVtIwDEn9ociYw3vrF3GVoj1rpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740851485; c=relaxed/simple;
-	bh=2i3x9epA1D/2NaH6/1PZKzalbeifBD7Hd3d25GLxbq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V4QfQiiEGihrsYTI2p7cbVapegNmTm17l4oBTO1gAMUVim0DDT25cHws4h0wVtmLWfLFc4yELrUHu0uhGTGO3kIvKf6FPoF3RYShYkCEAHwL119yVwY71TerGzzsPbN9v+YKIAoV+JUMSr0oR2lGXjue5C91fcqiUE1pMnxj3R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXMEyzj6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A742C4CEDD;
-	Sat,  1 Mar 2025 17:51:23 +0000 (UTC)
+	s=arc-20240116; t=1740853915; c=relaxed/simple;
+	bh=Vk04tEd8JRTsftssTdNqtvOU/+Zz7FoEVLJ5XD23uP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tXIYZpOF7NR7/gxgUfiPFjKeQq9kA+7vHGlJvcym31slDmgFhIzaUzSg9plK2aDAerBboYbmesnvHQGqGrNC1qNJbQa67Pe5J/CFaoQ8FC7hwUG/o4zPkyr3m1n628I2+s7HjLSS8LVKOGCZ69nzjUCqtS/lTxXgBm8O6NEfZNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0MsFbwW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97435C4CEDD;
+	Sat,  1 Mar 2025 18:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740851484;
-	bh=2i3x9epA1D/2NaH6/1PZKzalbeifBD7Hd3d25GLxbq4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KXMEyzj6/0hdBTRfEU/90hrvZmdCoGagZz6ImVxjAUaB2YZx6xN3EPwmBryyzypGc
-	 5nTaOIgX2h64BXIlZgXidDIpOWCSfFiNnNmKGmk0QK5NNcg1HiOyVRzAycDSXv448H
-	 MmK0w7uD63ooH1KheqyU6vOJ3GyS8qB2mj8ebJVRqeQzOB6okEzTq/3q+WpnYdC/3Q
-	 eAuT4SLJL1eYYdOZ6DgV2BaPbHIOovHym+dKbEPTtR3gEOHBLc/XJYqH/kGOLQlyVk
-	 Z/Dk3d1R+qHxQceRaLDhyepERgBdMsI2ypynubrh8Ti+umMsxPGtOnyDCEXPBzied0
-	 B6z9upLeWlUWQ==
+	s=k20201202; t=1740853915;
+	bh=Vk04tEd8JRTsftssTdNqtvOU/+Zz7FoEVLJ5XD23uP8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S0MsFbwWrcl7iV0qZtoRe9BG2av/tuwFDiWXkEn57LbDOV6iHIczRVqR39qTQL1FF
+	 LQMX3XjZLx9YoA+YW266dYTTVSfYuDq5aOy+iM4W2XXfUGlGTlBSX1U+FvZ8SkKphN
+	 GNSDa7h5MTZVJjjyhjw5Fo6uufcq3VYsFi57s0a7ToQ4ElahlrhYAbL+pdUuOviXya
+	 U6ULaxnwy+d6PUKjGfJjV4+QRNrNUYrr1J6/yQC/1iZKEkL+DETx0GskuWi+zLZmLh
+	 /M14bgDN4NuyFzHU2B57hqj0g2X+Zz2qFCgSrmEDm45P0v9uuhH5ExBr2ilymuw5zv
+	 1CXLcHodYLwMg==
 From: cel@kernel.org
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
+To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	NeilBrown <neilb@suse.de>,
-	"J. Bruce Fields" <bfields@fieldses.org>,
-	Arnd Bergmann <arnd@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Simon Horman <horms@kernel.org>,
-	Yang Erkun <yangerkun@huawei.com>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [RESEND] sunrpc: suppress warnings for unused procfs functions
-Date: Sat,  1 Mar 2025 12:51:20 -0500
-Message-ID: <174085145847.10954.136116488472523421.b4-ty@oracle.com>
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2 0/5] Implement referring call lists for CB_OFFLOAD
+Date: Sat,  1 Mar 2025 13:31:46 -0500
+Message-ID: <20250301183151.11362-1-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250225145234.1097985-1-arnd@kernel.org>
-References: <20250225145234.1097985-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Tue, 25 Feb 2025 15:52:21 +0100, Arnd Bergmann wrote:
-> There is a warning about unused variables when building with W=1 and no procfs:
-> 
-> net/sunrpc/cache.c:1660:30: error: 'cache_flush_proc_ops' defined but not used [-Werror=unused-const-variable=]
->  1660 | static const struct proc_ops cache_flush_proc_ops = {
->       |                              ^~~~~~~~~~~~~~~~~~~~
-> net/sunrpc/cache.c:1622:30: error: 'content_proc_ops' defined but not used [-Werror=unused-const-variable=]
->  1622 | static const struct proc_ops content_proc_ops = {
->       |                              ^~~~~~~~~~~~~~~~
-> net/sunrpc/cache.c:1598:30: error: 'cache_channel_proc_ops' defined but not used [-Werror=unused-const-variable=]
->  1598 | static const struct proc_ops cache_channel_proc_ops = {
->       |                              ^~~~~~~~~~~~~~~~~~~~~~
-> 
-> [...]
+I've built a naive proof-of-concept of the csa_referring_call_list
+argument of the CB_SEQUENCE operation, and hooked it up for the
+CB_OFFLOAD callback operation.
 
-Applied to nfsd-testing, thanks!
+This has been pushed to my kernel.org "fix-async-copy" branch for
+folks to play around with.
 
-[1/1] sunrpc: suppress warnings for unused procfs functions
-      commit: 707f5c1dc5320be41b05d75624fa6423e058f4a8
+I've done some basic testing with a server that ensures the
+CB_OFFLOAD callback is sent before the COPY reply, while running a
+network capture. Operation appears correct, Wireshark is happy
+with the construction of the XDR, and the CB_SEQUENCE arguments
+match the SEQUENCE operation in the COPY COMPOUND.
 
---
-Chuck Lever
+I'd like to include this series in nfsd-testing.
+
+Changes since RFC:
+- Add a field to struct nfsd4_slot that records its table index
+- Include a few additional COPY-related fixes
+- Some operational testing has been done
+
+Chuck Lever (5):
+  NFSD: OFFLOAD_CANCEL should mark an async COPY as completed
+  NFSD: Shorten CB_OFFLOAD response to NFS4ERR_DELAY
+  NFSD: Implement CB_SEQUENCE referring call lists
+  NFSD: Record each NFSv4 call's session slot index
+  NFSD: Use a referring call list for CB_OFFLOAD
+
+ fs/nfsd/nfs4callback.c | 132 +++++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/nfs4proc.c     |  16 ++++-
+ fs/nfsd/nfs4state.c    |  38 ++++++------
+ fs/nfsd/state.h        |  23 +++++++
+ fs/nfsd/xdr4.h         |   4 ++
+ fs/nfsd/xdr4cb.h       |   5 +-
+ 6 files changed, 193 insertions(+), 25 deletions(-)
+
+-- 
+2.47.0
 
 
