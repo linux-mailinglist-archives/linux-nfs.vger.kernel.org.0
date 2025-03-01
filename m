@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-10401-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10399-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08C63A4AD5D
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 19:32:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48160A4AD5B
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 19:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 087BA3B50A5
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 18:31:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6046E17015C
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Mar 2025 18:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A301E1E5B6B;
-	Sat,  1 Mar 2025 18:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631691E32A2;
+	Sat,  1 Mar 2025 18:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghJUGgKp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7a0Rji2"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9131E5B65
-	for <linux-nfs@vger.kernel.org>; Sat,  1 Mar 2025 18:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D14423F37C
+	for <linux-nfs@vger.kernel.org>; Sat,  1 Mar 2025 18:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740853918; cv=none; b=hEcrq3QPcnL/unFlu/crK3jmImTf9p7DQXU3RXswA2noPoRfRnJ6kjm56p17YwloEc/aRcOwlu8/zR562P9czhcGO4mqh4Q4MjoS0gkfRrzQ2VCZM+jIEBInaQ7tUPOHbD1tDXekUFKtsE70odoyimtjgU/gWIfzIBWbjxJ0Uq0=
+	t=1740853917; cv=none; b=BsZXwW2uDJYbe6aYCjeAuK4DX7HlEYmWsGqfmtTXz9kxm/KyUJC/+mX6bpFQ93xhTDIZYgnCMiLizogQ9ChDlC6d2yUHgPmfIfYUfA3bNkuzcWyFPcnE6yW1+i8GT2a5/6bqbG0iat04zlBkkZy+OcpzGiYZEjRMDj9hx8GeOSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740853918; c=relaxed/simple;
-	bh=ShlpwZvS0/FdZJH/EwCVVZGCktVyn1oBkGmi/uM5D98=;
+	s=arc-20240116; t=1740853917; c=relaxed/simple;
+	bh=pXLkTue2agU9aUoirGM9pYc+ArZ6Ml0BGKW+n3BCSPw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MaOYZ2PLSxAyj6pOh7luG++46Vfbp8H/hFViaU6OebsjC88sHj2UZBOhcFJc5OCMOgpmnfdXBBE7UfsqNtMrFjQXeKXd7F9wsY0PJzeAts1VYqTfddAg3irlFEI+3huSwC0JIn4msUNqc5FcPs9QCTLvVpKHerImd3kCnhEIGN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghJUGgKp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847EAC4CEE2;
-	Sat,  1 Mar 2025 18:31:55 +0000 (UTC)
+	 MIME-Version; b=eCiPvuMmx71ezGD1/qASYaWa7yCPY1DL8C47IloKG/ZLcUqLmcpZltSI8Sa3cFZZEhDTo8giDbr0oHImKFiNZQLLMbNILgVZBVdy3wJt8QGV7Vj35iE3bVKs4ZUDJ181k8dchV5ImNfTb/62ANRnCSE5GiM8cB3NfI8nVIcJf7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7a0Rji2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DCAC4CEEA;
+	Sat,  1 Mar 2025 18:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740853916;
-	bh=ShlpwZvS0/FdZJH/EwCVVZGCktVyn1oBkGmi/uM5D98=;
+	s=k20201202; t=1740853917;
+	bh=pXLkTue2agU9aUoirGM9pYc+ArZ6Ml0BGKW+n3BCSPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ghJUGgKpRTG7sHSOY1Ua3iOmrbbHQKOtks/1dgGIkXtz1KUGIZgqGvVeJE/ZuyIZ8
-	 7tAZdldod3i0e2DCHa7P8ZT5w09tMFJQ46VitkQvpkHk7g8SPlUty4bFdjgj7ZW5up
-	 Q8yiysS821fs51hiZQr7oMJyUatj9Keyu8vbwSR7Dlz0lCfbRVEPvduBxVRfKRb8aM
-	 pRkShDrF6P47yF6PUmSpI7TPneymS6VPCPAwGqjKqSNp4Dd5WAeT0elu71GqfptYNC
-	 +uTFFAt1kzeB595SKgS3TYuXBfC5SRfynNSI1eCOwmhfRyEFZ3N+EkETr/eTtojDCG
-	 CLRKXWtCOd5yA==
+	b=i7a0Rji2oMYCanpFcZLXRZoeIdLqAtMHzIKndAL32sP5ts+VB403IqzNBPrJqnWBa
+	 dSU7v68xce7wLTLFDFNYzDp9Ecm81kQusgbOvwf/oaND+YPsmBJJPBDGFpjc8U0ykt
+	 RxFQOlfA3STJsajMy/V08Ij+n2+zH7sFxvyizbZS3593f+2gfQI4ZBXov17l4M7vBu
+	 ksYiSluT2LDzkvRlej+km3DnaoRe3pbMgGhczbwVj7YRzPhJThcvQ2ZzYda8D5XBK1
+	 7fmISQXTcC8CFs4hHIgqCBd+LXXJDOsyjpQojleIO6VfzRtjKCP3uIMUjpAFxEC4VZ
+	 247PkZEUiIuCA==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: Neil Brown <neilb@suse.de>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 1/5] NFSD: OFFLOAD_CANCEL should mark an async COPY as completed
-Date: Sat,  1 Mar 2025 13:31:47 -0500
-Message-ID: <20250301183151.11362-2-cel@kernel.org>
+Subject: [PATCH v2 2/5] NFSD: Shorten CB_OFFLOAD response to NFS4ERR_DELAY
+Date: Sat,  1 Mar 2025 13:31:48 -0500
+Message-ID: <20250301183151.11362-3-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250301183151.11362-1-cel@kernel.org>
 References: <20250301183151.11362-1-cel@kernel.org>
@@ -65,32 +65,27 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Update the status of an async COPY operation when it has been
-stopped. OFFLOAD_STATUS needs to indicate that the COPY is no longer
-running.
+Try not to prolong the wait for completion of a COPY or COPY_NOTIFY
+operation.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index f6e06c779d09..9a0e68aa246f 100644
+index 9a0e68aa246f..3431b695882d 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -1379,8 +1379,11 @@ static void nfs4_put_copy(struct nfsd4_copy *copy)
- static void nfsd4_stop_copy(struct nfsd4_copy *copy)
- {
- 	trace_nfsd_copy_async_cancel(copy);
--	if (!test_and_set_bit(NFSD4_COPY_F_STOPPED, &copy->cp_flags))
-+	if (!test_and_set_bit(NFSD4_COPY_F_STOPPED, &copy->cp_flags)) {
- 		kthread_stop(copy->copy_task);
-+		copy->nfserr = nfs_ok;
-+		set_bit(NFSD4_COPY_F_COMPLETED, &copy->cp_flags);
-+	}
- 	nfs4_put_copy(copy);
- }
- 
+@@ -1712,7 +1712,7 @@ static int nfsd4_cb_offload_done(struct nfsd4_callback *cb,
+ 	switch (task->tk_status) {
+ 	case -NFS4ERR_DELAY:
+ 		if (cbo->co_retries--) {
+-			rpc_delay(task, 1 * HZ);
++			rpc_delay(task, HZ / 5);
+ 			return 0;
+ 		}
+ 	}
 -- 
 2.47.0
 
