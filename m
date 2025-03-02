@@ -1,123 +1,123 @@
-Return-Path: <linux-nfs+bounces-10404-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10405-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94BA2A4AF60
-	for <lists+linux-nfs@lfdr.de>; Sun,  2 Mar 2025 07:10:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71386A4B2E3
+	for <lists+linux-nfs@lfdr.de>; Sun,  2 Mar 2025 17:08:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 376C43B25C2
-	for <lists+linux-nfs@lfdr.de>; Sun,  2 Mar 2025 06:10:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE96C161C5F
+	for <lists+linux-nfs@lfdr.de>; Sun,  2 Mar 2025 16:08:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 564C71ADC98;
-	Sun,  2 Mar 2025 06:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978331EBA0D;
+	Sun,  2 Mar 2025 16:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ER9PnGbj"
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="msLWUylx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6662315A8;
-	Sun,  2 Mar 2025 06:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AE41EB9EF;
+	Sun,  2 Mar 2025 16:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740895834; cv=none; b=jqyEEcDHxJz3fn/HDfcXSTki6ZwVFNK8EshpZo25nZMc8dksmfm3MKzbwHc1kyEfxNrj0Rox0bUqm6tfPn6jq4Nzueo2GZTdKZBCfcZXDWJ6d1N+1YcIRqEjy5pnZUpq/USYTipcKH58hQZ/hDQ74rW7pwKBx+MUrx93CDNvAOI=
+	t=1740931637; cv=none; b=KaXgUIPxQfASbcfyemA3BxwmtNrXi6NV1cLE3qM15jBCY6wL8V1ADOMcE6Av130tWxxdBpIEz9h0sp5fkzvy1mDGcNxKdJjyy39EwmyEvIhBHCxVR/zx/Pdi7BN0XYWFV0WQF5WonhQnaSdFbgcp5DxVIA7aIp9Vz+7xqYpKl8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740895834; c=relaxed/simple;
-	bh=JoCwhW2kedYhm5VZxvqYJTAzDu/galJk+5XSV8Q/EsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mvPFOu6v9u1vPZSl74EFa57x9bRviwHJ8kXN9hwkRDVjJ0yC4KlNsA2XnpBlAI8f8exdVxKygmSgruitbrhhs5Fy7IthHm3nXszoVzP0l2w/gSTDpEIrWT3r2gd7f3zvYmMWFSRKT8ibsHMTwHeFSfNGGQ2e+srp1XZchFB6eB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ER9PnGbj; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=4JDdLgOIRKP6MkDwL0d2OG9t1NrXyqQHEitlHLvr074=; b=ER9PnGbjfRxn1mAt7YKFNq8TmC
-	orXqJlek/iL3VRobrFCqBXwW9DvB3DORKVURCZ8VI4u1M7CZ7MZ1jSZgP3I5JLpcOU6uc9e3VLPqn
-	f5QrUwu8LVaxvFub0uNGhuIjnAo5Q6IAVUe5JnaxHOAe1Zk5ZvgWoLavvejX28kg5dsf8uIkIRqBr
-	3rfwraq9sBcRmfhQY0J1qA8dTtlgW2CBued7o2KKMCzckQZyneO0XfgxtS2QEV2tq3qg435eUWpdZ
-	UdwMKnf+Tmh2ONUorVluZRyoIIbJG4ryJog6cyqs2vQ8ex1xerrL1QnuY4RleK/x+iHDCCqvN/jvH
-	LvtlOnmA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tocWN-002zOO-0v;
-	Sun, 02 Mar 2025 14:09:52 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 02 Mar 2025 14:09:51 +0800
-Date: Sun, 2 Mar 2025 14:09:51 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Howells <dhowells@redhat.com>
-Cc: Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	s=arc-20240116; t=1740931637; c=relaxed/simple;
+	bh=MRV1BzXFzVKuXXCzfT8MZMYwjH+JUp8WlpwQIsq6O88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lxkUli/Z6yaa0S36/EjBivt5qVvYP73bOPuDORUaNbXuAyOPdqycJboSxIHm8OwdxEYOmpxcbr6gejanJDX5MP6Dk8WcQ4ukaWmA/OYUmmwsLsNxEzZDqQP50UeMMjs4jgS7KrRZyTRg/RVaHj30UvaHDxwPAo08viMPRBgyjWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=msLWUylx; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1740931634;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KRfdkDgvTkBq7bn29Gpn8MyAqWDeCH+tjzpw5UYm82I=;
+	b=msLWUylxKZrkZloeSFN5bZFcbLSbFE1cttvSkO/sbcFYzOZMJ7QrfX7q/KeJKDTCCqgTwE
+	Cmy7gxyKITqqPUSpsCS7G1MqMRTPEE0rGESChTm4bdOm11qcFfU19VdeWkGdCDRk2erDxx
+	kDdrSiGJC8bqVFfFWelDM4gaS0EX1FJAHjToIV4v7qro8N7Udd/eU2b50vvHw4+nCCyDVp
+	iMV4JdyinVFOmyN1MzYoME93xKcoQ8EPz6PyS8U/d1Bw/PaS5g5Ib0iiqfD+QrZDeUyCFv
+	aH0d4JvaWftIryzqqBPR8zUxtU31fm2LuQe5b2oX22cLwFz/FOLen82uN8NLOQ==
+To: 
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Serge Hallyn <serge@hallyn.com>,
+	Jan Kara <jack@suse.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	cocci@inria.fr,
+	Christian Brauner <brauner@kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] crypto: Add Kerberos crypto lib
-Message-ID: <Z8P2L6nZGUEUiNwS@gondor.apana.org.au>
-References: <3193936.1740736547@warthog.procyon.org.uk>
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH v2 09/11] fs: reorder capability check last
+Date: Sun,  2 Mar 2025 17:06:45 +0100
+Message-ID: <20250302160657.127253-8-cgoettsche@seltendoof.de>
+In-Reply-To: <20250302160657.127253-1-cgoettsche@seltendoof.de>
+References: <20250302160657.127253-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3193936.1740736547@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 09:55:47AM +0000, David Howells wrote:
-> Hi Herbert,
-> 
-> Could you pull this into the crypto tree please?  It does a couple of
-> things:
-> 
->  (1) Provide an AEAD crypto driver, krb5enc, that mirrors the authenc
->      driver, but that hashes the plaintext, not the ciphertext.  This was
->      made a separate module rather than just being a part of the authenc
->      driver because it has to do all of the constituent operations in the
->      opposite order - which impacts the async op handling.
-> 
->      Testmgr data is provided for AES+SHA2 and Camellia combinations of
->      authenc and krb5enc used by the krb5 library.  AES+SHA1 is not
->      provided as the RFCs don't contain usable test vectors.
-> 
->  (2) Provide a Kerberos 5 crypto library.  This is an extract from the
->      sunrpc driver as that code can be shared between sunrpc/nfs and
->      rxrpc/afs.  This provides encryption, decryption, get MIC and verify
->      MIC routines that use and wrap the crypto functions, along with some
->      functions to provide layout management.
-> 
->      This supports AES+SHA1, AES+SHA2 and Camellia encryption types.
-> 
->      Self-testing is provided that goes further than is possible with
->      testmgr, doing subkey derivation as well.
-> 
-> The patches were previously posted here:
-> 
->     https://lore.kernel.org/r/20250203142343.248839-1-dhowells@redhat.com/
-> 
-> as part of a larger series, but the networking guys would prefer these to
-> go through the crypto tree.  If you want them reposting independently, I
-> can do that.
+From: Christian Göttsche <cgzones@googlemail.com>
 
-I tried pulling it but it's not based on the cryptodev tree so
-it will create a mess when I push this upstream.  If you want me
-to pull it through cryptodev please rebase it on my tree.
+capable() calls refer to enabled LSMs whether to permit or deny the
+request.  This is relevant in connection with SELinux, where a
+capability check results in a policy decision and by default a denial
+message on insufficient permission is issued.
+It can lead to three undesired cases:
+  1. A denial message is generated, even in case the operation was an
+     unprivileged one and thus the syscall succeeded, creating noise.
+  2. To avoid the noise from 1. the policy writer adds a rule to ignore
+     those denial messages, hiding future syscalls, where the task
+     performs an actual privileged operation, leading to hidden limited
+     functionality of that task.
+  3. To avoid the noise from 1. the policy writer adds a rule to permit
+     the task the requested capability, while it does not need it,
+     violating the principle of least privilege.
 
-Thanks,
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
+Reviewed-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/fhandle.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 3e092ae6d142..5b77b38f0510 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -303,9 +303,9 @@ static inline int may_decode_fh(struct handle_to_path_ctx *ctx,
+ 	if (ns_capable(root->mnt->mnt_sb->s_user_ns, CAP_SYS_ADMIN))
+ 		ctx->flags = HANDLE_CHECK_PERMS;
+ 	else if (is_mounted(root->mnt) &&
++		 !has_locked_children(real_mount(root->mnt), root->dentry) &&
+ 		 ns_capable(real_mount(root->mnt)->mnt_ns->user_ns,
+-			    CAP_SYS_ADMIN) &&
+-		 !has_locked_children(real_mount(root->mnt), root->dentry))
++			    CAP_SYS_ADMIN))
+ 		ctx->flags = HANDLE_CHECK_PERMS | HANDLE_CHECK_SUBTREE;
+ 	else
+ 		return -EPERM;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.47.2
+
 
