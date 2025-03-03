@@ -1,138 +1,203 @@
-Return-Path: <linux-nfs+bounces-10410-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10411-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9808FA4B6C4
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 04:34:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E40BA4B9AB
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 09:45:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C271F18874A5
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 03:34:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E0B018903CB
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 08:45:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D731D517E;
-	Mon,  3 Mar 2025 03:34:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB6D51EF376;
+	Mon,  3 Mar 2025 08:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P3tWTBYp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5829078F54;
-	Mon,  3 Mar 2025 03:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BCC1EFFB9
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Mar 2025 08:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740972841; cv=none; b=s+0Vye2vWLBN+Y5xxmp64Bj46Ed8zBaDX2JJPoLNm8KBDcZ/4tFTLw3uIXBjaNFCKsd0ht51GB4SPgB6jbtUoRG/FdN53uLVD/D5xc2OTQMXuMJgsMqUJhWyFY3jsu4pKPJcpmqluDJArW6u06fd8IFQWabPW4sRdMO3Xw5h53c=
+	t=1740991521; cv=none; b=HcmaYBh8h38zq4WuucYRZaGnwmffhRwvG3i1wMuyQj0pM63AFgVNfmNkgWJKZPYCTMsc56wK7UM235eJST3rptb19e9saDugDvpSAHu/yIpWb/CghQO3mQK+c+lqH7LRKk1oLzk6zg0tuPxzCSzfXhEAaLbFPu1NC8mMYu6SYpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740972841; c=relaxed/simple;
-	bh=bmgWyZ5dxhv2OH9PEfh+oG70EmiwdOasmha5vumDgVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nzw5Xdx9ZCf4a+D95Iri82QrfoCQRmz5vBu8XlJbHY0eWWI1ejVHBgqwsS0zcTVBZvgF2qZvPIO14XvjJh2EEkUvZNs1i0U9D31MY5SxEtNggjevRWJS7B3RXi8SpjwpgSvYy1tnuyNFB4eI6Vyh4Y5I/tqhkRHYVZJ8zFvTDTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z5ktN4yCXz4f3mJF;
-	Mon,  3 Mar 2025 11:33:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id AFF111A06D7;
-	Mon,  3 Mar 2025 11:33:54 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgA3m18eI8Vnqo+QFQ--.30568S3;
-	Mon, 03 Mar 2025 11:33:52 +0800 (CST)
-Message-ID: <aaef9940-8510-404f-bbc5-f0260ef90d21@huaweicloud.com>
-Date: Mon, 3 Mar 2025 11:33:50 +0800
+	s=arc-20240116; t=1740991521; c=relaxed/simple;
+	bh=bUWqoIF0RSWTyZWSv8LwMFKJPtmJiM+TMfHwuR+g940=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=koAXy6hVpWvQRZw0xDtHZ/D/FxjRyNcPwYfBO9ue1YVUJP1flvi/Lop9uxr2EKu9gTXsGk0ZuY2L02+PZuKsaVn7sS/0k70gZHa8i2eK1VhwHLiepsM3P4Jzj9HT/i+WQjf89H/iuOvVhWsotqwkt4IsciCZ8ZHlDpROkeoBdDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P3tWTBYp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740991518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Mzc0zyxynm1zLc8lCgBdxcnpn7S2dpYemCwQOpKEfuk=;
+	b=P3tWTBYpUlNVmbjlyMNMmsShnvEvjp7RM53F2rCL9xbY756/PxnuD3dWD3R2DoEQGUziaI
+	qsGxJtjH0MP+Vb51XM0/SqUwV0XeCynymTWWmfkFlBtD73VfX/YY7MrmryeCUBidGfJsUJ
+	XevjPvyIHODagrymeXjRwG2nKmqTDoE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-7wrT26BSMJ6P7gbEEUKlQA-1; Mon,
+ 03 Mar 2025 03:45:00 -0500
+X-MC-Unique: 7wrT26BSMJ6P7gbEEUKlQA-1
+X-Mimecast-MFC-AGG-ID: 7wrT26BSMJ6P7gbEEUKlQA_1740991498
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1D019180087C;
+	Mon,  3 Mar 2025 08:44:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E569819560AA;
+	Mon,  3 Mar 2025 08:44:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+cc: David Howells <dhowells@redhat.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Jakub Kicinski <kuba@kernel.org>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    Simon Horman <horms@kernel.org>,
+    Trond Myklebust <trond.myklebust@hammerspace.com>,
+    Chuck Lever <chuck.lever@oracle.com>,
+    Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
+    linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL v2] crypto: Add Kerberos crypto lib
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nfs: remove SB_RDONLY when remounting nfs
-To: Li Lingfeng <lilingfeng3@huawei.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- ehagberg@janestreet.com, yukuai1@huaweicloud.com, houtao1@huawei.com,
- yangerkun@huawei.com, lilingfeng@huaweicloud.com, trondmy@kernel.org,
- anna@kernel.org
-References: <20250221082613.2674633-1-lilingfeng3@huawei.com>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250221082613.2674633-1-lilingfeng3@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgA3m18eI8Vnqo+QFQ--.30568S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1rCw1rAr1xAFy3tr1DWrg_yoW5Jr47pr
-	4xAF42krs5AF1agayvkF4rJ3WFqw48A3W5t3sxXw42vrWrK347XrZakr15W3yqgrZ3ua4f
-	Z3W7try7Ja4DXFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwI
-	DUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3709377.1740991489.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Mar 2025 08:44:49 +0000
+Message-ID: <3709378.1740991489@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 2025/2/21 16:26, Li Lingfeng wrote:
-> In some scenarios, when mounting NFS, more than one superblock may be
-> created. The final superblock used is the last one created, but only the
-> first superblock carries the ro flag passed from user space. If a ro flag
-> is added to the superblock via remount, it will trigger the issue
-> described in Link[1].
-> 
-> Link[2] attempted to address this by marking the superblock as ro during
-> the initial mount. However, this introduced a new problem in scenarios
-> where multiple mount points share the same superblock:
-> [root@a ~]# mount /dev/sdb /mnt/sdb
-> [root@a ~]# echo "/mnt/sdb *(rw,no_root_squash)" > /etc/exports
-> [root@a ~]# echo "/mnt/sdb/test_dir2 *(ro,no_root_squash)" >> /etc/exports
-> [root@a ~]# systemctl restart nfs-server
-> [root@a ~]# mount -t nfs -o rw 127.0.0.1:/mnt/sdb/test_dir1 /mnt/test_mp1
-> [root@a ~]# mount | grep nfs4
-> 127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (rw,relatime,...
-> [root@a ~]# mount -t nfs -o ro 127.0.0.1:/mnt/sdb/test_dir2 /mnt/test_mp2
-> [root@a ~]# mount | grep nfs4
-> 127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (ro,relatime,...
-> 127.0.0.1:/mnt/sdb/test_dir2 on /mnt/test_mp2 type nfs4 (ro,relatime,...
-> [root@a ~]#
-> 
-> When mounting the second NFS, the shared superblock is marked as ro,
-> causing the previous NFS mount to become read-only.
-> 
-> To resolve both issues, the ro flag is no longer applied to the superblock
-> during remount. Instead, the ro flag on the mount is used to control
-> whether the mount point is read-only.
-> 
-> Fixes: 281cad46b34d ("NFS: Create a submount rpc_op")
-> Link[1]: https://lore.kernel.org/all/20240604112636.236517-3-lilingfeng@huaweicloud.com/
-> Link[2]: https://lore.kernel.org/all/20241130035818.1459775-1-lilingfeng3@huawei.com/
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->  fs/nfs/super.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-> index aeb715b4a690..f08e1d7fb179 100644
-> --- a/fs/nfs/super.c
-> +++ b/fs/nfs/super.c
-> @@ -1047,6 +1047,7 @@ int nfs_reconfigure(struct fs_context *fc)
->  
->  	sync_filesystem(sb);
->  
-> +	fc->sb_flags &= ~SB_RDONLY;
+Hi Herbert,
 
-What about change sb_flags_mask instead? Something like below,
+Could you pull this into the crypto tree please?  v2 is just a rebase onto
+your cryptodev/master branch.  It does a couple of things:
 
-	fc->sb_flags_mask &= ~SB_RDONLY;
+ (1) Provide an AEAD crypto driver, krb5enc, that mirrors the authenc
+     driver, but that hashes the plaintext, not the ciphertext.  This was
+     made a separate module rather than just being a part of the authenc
+     driver because it has to do all of the constituent operations in the
+     opposite order - which impacts the async op handling.
 
-and I'd also suggested to add a comment to explain the reason in detail.
+     Testmgr data is provided for AES+SHA2 and Camellia combinations of
+     authenc and krb5enc used by the krb5 library.  AES+SHA1 is not
+     provided as the RFCs don't contain usable test vectors.
 
-Thanks,
-Yi.
+ (2) Provide a Kerberos 5 crypto library.  This is an extract from the
+     sunrpc driver as that code can be shared between sunrpc/nfs and
+     rxrpc/afs.  This provides encryption, decryption, get MIC and verify
+     MIC routines that use and wrap the crypto functions, along with some
+     functions to provide layout management.
+
+     This supports AES+SHA1, AES+SHA2 and Camellia encryption types.
+
+     Self-testing is provided that goes further than is possible with
+     testmgr, doing subkey derivation as well.
+
+The patches were previously posted here:
+
+    https://lore.kernel.org/r/20250203142343.248839-1-dhowells@redhat.com/
+
+as part of a larger series, but the networking guys would prefer these to
+go through the crypto tree.  If you want them reposting independently, I
+can do that.
+
+David
+---
+The following changes since commit 17ec3e71ba797cdb62164fea9532c81b60f4716=
+7:
+
+  crypto: lib/Kconfig - Hide arch options from user (2025-03-02 15:21:47 +=
+0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/crypto-krb5-20250303
+
+for you to fetch changes up to fc0cf10c04f49ddba1925b630467f49ea993569e:
+
+  crypto/krb5: Implement crypto self-testing (2025-03-02 21:56:47 +0000)
+
+----------------------------------------------------------------
+crypto: Add Kerberos crypto lib
+
+----------------------------------------------------------------
+David Howells (17):
+      crypto/krb5: Add API Documentation
+      crypto/krb5: Add some constants out of sunrpc headers
+      crypto: Add 'krb5enc' hash and cipher AEAD algorithm
+      crypto/krb5: Test manager data
+      crypto/krb5: Implement Kerberos crypto core
+      crypto/krb5: Add an API to query the layout of the crypto section
+      crypto/krb5: Add an API to alloc and prepare a crypto object
+      crypto/krb5: Add an API to perform requests
+      crypto/krb5: Provide infrastructure and key derivation
+      crypto/krb5: Implement the Kerberos5 rfc3961 key derivation
+      crypto/krb5: Provide RFC3961 setkey packaging functions
+      crypto/krb5: Implement the Kerberos5 rfc3961 encrypt and decrypt fun=
+ctions
+      crypto/krb5: Implement the Kerberos5 rfc3961 get_mic and verify_mic
+      crypto/krb5: Implement the AES enctypes from rfc3962
+      crypto/krb5: Implement the AES enctypes from rfc8009
+      crypto/krb5: Implement the Camellia enctypes from rfc6803
+      crypto/krb5: Implement crypto self-testing
+
+ Documentation/crypto/index.rst   |   1 +
+ Documentation/crypto/krb5.rst    | 262 +++++++++++++
+ crypto/Kconfig                   |  13 +
+ crypto/Makefile                  |   3 +
+ crypto/krb5/Kconfig              |  26 ++
+ crypto/krb5/Makefile             |  18 +
+ crypto/krb5/internal.h           | 247 ++++++++++++
+ crypto/krb5/krb5_api.c           | 452 ++++++++++++++++++++++
+ crypto/krb5/krb5_kdf.c           | 145 +++++++
+ crypto/krb5/rfc3961_simplified.c | 797 ++++++++++++++++++++++++++++++++++=
++++++
+ crypto/krb5/rfc3962_aes.c        | 115 ++++++
+ crypto/krb5/rfc6803_camellia.c   | 237 ++++++++++++
+ crypto/krb5/rfc8009_aes2.c       | 362 ++++++++++++++++++
+ crypto/krb5/selftest.c           | 544 ++++++++++++++++++++++++++
+ crypto/krb5/selftest_data.c      | 291 ++++++++++++++
+ crypto/krb5enc.c                 | 504 +++++++++++++++++++++++++
+ crypto/testmgr.c                 |  16 +
+ crypto/testmgr.h                 | 351 +++++++++++++++++
+ include/crypto/authenc.h         |   2 +
+ include/crypto/krb5.h            | 160 ++++++++
+ 20 files changed, 4546 insertions(+)
+ create mode 100644 Documentation/crypto/krb5.rst
+ create mode 100644 crypto/krb5/Kconfig
+ create mode 100644 crypto/krb5/Makefile
+ create mode 100644 crypto/krb5/internal.h
+ create mode 100644 crypto/krb5/krb5_api.c
+ create mode 100644 crypto/krb5/krb5_kdf.c
+ create mode 100644 crypto/krb5/rfc3961_simplified.c
+ create mode 100644 crypto/krb5/rfc3962_aes.c
+ create mode 100644 crypto/krb5/rfc6803_camellia.c
+ create mode 100644 crypto/krb5/rfc8009_aes2.c
+ create mode 100644 crypto/krb5/selftest.c
+ create mode 100644 crypto/krb5/selftest_data.c
+ create mode 100644 crypto/krb5enc.c
+ create mode 100644 include/crypto/krb5.h
 
 
