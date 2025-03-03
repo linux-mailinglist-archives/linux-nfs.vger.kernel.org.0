@@ -1,51 +1,51 @@
-Return-Path: <linux-nfs+bounces-10429-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10430-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E655DA4CA9A
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 19:01:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4C1EA4CA10
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:44:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 524E53BECE9
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:41:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96A9A7ABEF5
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C621531C8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FF422CBE9;
 	Mon,  3 Mar 2025 17:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeCSv0su"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fb6xYd7V"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C88229B07
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336822B5AB
 	for <linux-nfs@vger.kernel.org>; Mon,  3 Mar 2025 17:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741023332; cv=none; b=PV8nF2nz+qtnBW6x+YE2MRYAmJxfJMDNfyLTWSN/ZRGfrzYMs/BIIQd8qTIvKfp1NcDZh5uLq/sWpiqWWKpyoCEwSoPQuBgqHDNBoLBw8anWde5pZoKHcmWPfx8scWtlm5BaeO8EPCyglFdZ1wwND78dOCoXZbIdg9TxSa94goc=
+	t=1741023332; cv=none; b=EkvKXDxy0m4Eurelxj2jBBWyEPPh5uPueOYUbl+tTttTQ20dQ7hYCc/1uW1n5yRMlXiDDTV907lSH8cma6tVM4uCBuK9s5D0g2Xs3xbH+yV0Bk6rCD+4CQE5GTIb9KeKiSo9mDzsiQ9u/n2jc7mXOLKDHvDz9ojZpV+BV7EXbvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741023332; c=relaxed/simple;
-	bh=EpKWPQzTNBw177+7i7o4nHfA55aEQaK6Lpc7ifz2b9k=;
+	bh=viZH39/Hz7SX5oqB1O1obicG4xEf1225wzArudsgz+U=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k01DNgbXdktXG+6+hBSs5rwsARINlBc/nvKgtYos+97kY8jqVrq/fq0t+tdzmVNN2JsYXuMLW9YijdyudiXIGjmWFPmaE90nHq5HZ1Pc5vZmdXEDfC+tmpB/Hw5XnPNUxdjezwsGnr/fy7V40PSFsrPcL2tqZzukjESohTUFAlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeCSv0su; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20A6C4CEE6
-	for <linux-nfs@vger.kernel.org>; Mon,  3 Mar 2025 17:35:31 +0000 (UTC)
+	 MIME-Version; b=QK0XOoz2BkMuvt2GVcNLAIqRRg5YyfwsCTMNKKivGTaR0krtVjs3I22ZCWfeJDRO3W/S9SVg6GDxAfWlwhIIA41W5lKsIIjb7/twiZElRbh6q/GMcbWDTwqjSYY9c1kAZi4Vv3fL/y2ROxeRsoRQ6sMsC4+l5TcJA0Pqbo++jDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fb6xYd7V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2284DC4CEE5
+	for <linux-nfs@vger.kernel.org>; Mon,  3 Mar 2025 17:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741023331;
-	bh=EpKWPQzTNBw177+7i7o4nHfA55aEQaK6Lpc7ifz2b9k=;
+	s=k20201202; t=1741023332;
+	bh=viZH39/Hz7SX5oqB1O1obicG4xEf1225wzArudsgz+U=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=jeCSv0suN/YfGCvYugTxCw/KDAHERWzEwQzUa4VivzVbUI07tNouaxveM/myZkZqJ
-	 mSJmo6FPpns83YWNdqGVsdGJ0XOIxWEXufl34LXMQdqNEH4SdhI/w73yZm7Xjnph6u
-	 hBU4PHh+KIU+4w1e0oi1xzGKUqO1LYDZDNNbpNJ0PWo2WWWoevVt2J+/ONDCXqa7mH
-	 uCqBGiotvJt4HygDee8JamhA5GLIaCZNsfbrDvnSzFSYt6g/iEw4GFzJhtLk1dqE9z
-	 7/UmGRlNCJ/fKZKPtpcALZffthyJqaa5AfDyVNujyUEFJ5vFqJCpGRMbS/8xHbOSTm
-	 LZCWORHcPrtig==
+	b=fb6xYd7VLxDl4p6he8h2BfXhW2Vjeh2MZOXFx/rQqknyEptoccwDg+uE2BPo+7TvJ
+	 34sp5QVXscWt0u2Cmu820qVuYEgreTnf+IxzRHwNwUwTL8bErIXoDLc0ncnmGL7nR5
+	 fg+BbwiMgPoAiGxbqaYtSikk+Ih96Hgda+oUlgIAW0kNh1Jmr1No5ZNst61aymx1eN
+	 1Ab7aHSGHrRqLL6VxPmCEPxoSd38242kgjewPj4QXVBiq3nXJRxuoCV8I9VPKcB0KY
+	 VhHx9QwQSjzWOiN4DZnhWhUp/2+WVgKdXXWzTuk+kKSi6GfClIhPbwlw2LT4g7tHqy
+	 r4RVd50MQ9+gA==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/4] NFSv4: Don't trigger uneccessary scans for return-on-close delegations
-Date: Mon,  3 Mar 2025 12:35:26 -0500
-Message-ID: <045c99eddfe99f10c4c16675f7e6955a16a17810.1741023037.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH 2/4] NFSv4: Avoid unnecessary scans of filesystems for returning delegations
+Date: Mon,  3 Mar 2025 12:35:27 -0500
+Message-ID: <caf3b686044859b05606f2bc64e1f45b5ccbb57a.1741023037.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1741023037.git.trond.myklebust@hammerspace.com>
 References: <cover.1741023037.git.trond.myklebust@hammerspace.com>
@@ -60,70 +60,60 @@ Content-Transfer-Encoding: 8bit
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
 The amount of looping through the list of delegations is occasionally
-leading to soft lockups. Avoid at least some loops by not requiring the
-NFSv4 state manager to scan for delegations that are marked for
-return-on-close. Instead, either mark them for immediate return (if
-possible) or else leave it up to nfs4_inode_return_delegation_on_close()
-to return them once the file is closed by the application.
+leading to soft lockups. If the state manager was asked to return
+delegations asynchronously, it should only scan those filesystems that
+hold delegations that need to be returned.
 
-Fixes: b757144fd77c ("NFSv4: Be less aggressive about returning delegations for open files")
+Fixes: af3b61bf6131 ("NFSv4: Clean up nfs_client_return_marked_delegations()")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/delegation.c | 33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ fs/nfs/delegation.c       | 5 +++++
+ include/linux/nfs_fs_sb.h | 2 ++
+ 2 files changed, 7 insertions(+)
 
 diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-index 4db912f56230..df77d68d9ff9 100644
+index df77d68d9ff9..d1f5e497729c 100644
 --- a/fs/nfs/delegation.c
 +++ b/fs/nfs/delegation.c
-@@ -590,17 +590,6 @@ static bool nfs_delegation_need_return(struct nfs_delegation *delegation)
- 
- 	if (test_and_clear_bit(NFS_DELEGATION_RETURN, &delegation->flags))
- 		ret = true;
--	else if (test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags)) {
--		struct inode *inode;
--
--		spin_lock(&delegation->lock);
--		inode = delegation->inode;
--		if (inode && list_empty(&NFS_I(inode)->open_files))
--			ret = true;
--		spin_unlock(&delegation->lock);
--	}
--	if (ret)
--		clear_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags);
- 	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags) ||
- 	    test_bit(NFS_DELEGATION_RETURN_DELAYED, &delegation->flags) ||
- 	    test_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
-@@ -878,11 +867,25 @@ int nfs4_inode_make_writeable(struct inode *inode)
- 	return nfs4_inode_return_delegation(inode);
- }
- 
--static void nfs_mark_return_if_closed_delegation(struct nfs_server *server,
--		struct nfs_delegation *delegation)
-+static void
-+nfs_mark_return_if_closed_delegation(struct nfs_server *server,
-+				     struct nfs_delegation *delegation)
+@@ -79,6 +79,7 @@ static void nfs_mark_return_delegation(struct nfs_server *server,
+ 				       struct nfs_delegation *delegation)
  {
--	set_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags);
--	set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client->cl_state);
-+	struct inode *inode;
-+
-+	if (test_bit(NFS_DELEGATION_RETURN, &delegation->flags) ||
-+	    test_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags))
-+		return;
-+	spin_lock(&delegation->lock);
-+	inode = delegation->inode;
-+	if (!inode)
-+		goto out;
-+	if (list_empty(&NFS_I(inode)->open_files))
-+		nfs_mark_return_delegation(server, delegation);
-+	else
-+		set_bit(NFS_DELEGATION_RETURN_IF_CLOSED, &delegation->flags);
-+out:
-+	spin_unlock(&delegation->lock);
+ 	set_bit(NFS_DELEGATION_RETURN, &delegation->flags);
++	set_bit(NFS4SERV_DELEGRETURN, &server->delegation_flags);
+ 	set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client->cl_state);
  }
  
- static bool nfs_server_mark_return_all_delegations(struct nfs_server *server)
+@@ -608,6 +609,9 @@ static int nfs_server_return_marked_delegations(struct nfs_server *server,
+ 	struct nfs_delegation *place_holder_deleg = NULL;
+ 	int err = 0;
+ 
++	if (!test_and_clear_bit(NFS4SERV_DELEGRETURN,
++				&server->delegation_flags))
++		return 0;
+ restart:
+ 	/*
+ 	 * To avoid quadratic looping we hold a reference
+@@ -659,6 +663,7 @@ static int nfs_server_return_marked_delegations(struct nfs_server *server,
+ 		cond_resched();
+ 		if (!err)
+ 			goto restart;
++		set_bit(NFS4SERV_DELEGRETURN, &server->delegation_flags);
+ 		set_bit(NFS4CLNT_DELEGRETURN, &server->nfs_client->cl_state);
+ 		goto out;
+ 	}
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index f00bfcee7120..4e9ad6f6e907 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -250,6 +250,8 @@ struct nfs_server {
+ 	struct list_head	ss_copies;
+ 	struct list_head	ss_src_copies;
+ 
++	unsigned long		delegation_flags;
++#define NFS4SERV_DELEGRETURN		(1)
+ 	unsigned long		delegation_gen;
+ 	unsigned long		mig_gen;
+ 	unsigned long		mig_status;
 -- 
 2.48.1
 
