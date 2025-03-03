@@ -1,111 +1,106 @@
-Return-Path: <linux-nfs+bounces-10420-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10421-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FBAAA4C3C0
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 15:46:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EAC3A4C9ED
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:41:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C5A23A80DD
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 14:46:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3B1718867CC
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:36:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C56213E89;
-	Mon,  3 Mar 2025 14:46:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87DBA23F26B;
+	Mon,  3 Mar 2025 17:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="lLccm+L+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVFIW2aB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD510213E62
-	for <linux-nfs@vger.kernel.org>; Mon,  3 Mar 2025 14:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCB823ED76;
+	Mon,  3 Mar 2025 17:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741013182; cv=none; b=ng6tZK9yC9I5kkcfKRm2yhIfveO3A8AAxjzrclSENAL3OTznlsJM2yRMxicOySSKNF1aTotXfHT+oZJr5B/EhnDfV5NUGs5Q8qaThYRwrS4OEuEmk0+7ynKN5QCMLhmhoTOjCV6yREj0IlCDNNKvQSVeO5y+vnD5oNIcn64zhMw=
+	t=1741022777; cv=none; b=rRv48nCHhD8j/M4W15YojEq5Q3BRM1kfCDWQ+Uxd0TTCOtF1v70k34KMkzqKTAVAcMtq5jeqk28GBXcV3X1jsg6+bgG21FfdUAFnD8/OH8SO1hTCmmS6cK4DtVot5ModjJFq3+gAcpPWt3W7otj22xbiaqpAUIb2t6Ro2HvhkN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741013182; c=relaxed/simple;
-	bh=CSQeGS/UZUc31BUvv23G8CVIkT12nQMGyFgBEwHK2pc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YCd4cIyhplcHVAnqqBFykkp+lpNbmGbv5dPvnhT46fhu7OGDpT9XyHjRtxIB8u1oMZ5u+LWQ9NBEVI3CTWcVvST7bW07V4dAIoOihbQ022bZjuLYQxBra8/tSYfXBtHhvRnaAfsUn0uALJAQJuqv4YHnUF0CvF2+V4AUKXoJo8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=lLccm+L+; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-474d11c7f1cso5972641cf.2
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Mar 2025 06:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1741013179; x=1741617979; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qjaplGXAgQys6n43UvZfkCCurGUYwKZfvrBKCJx8kSQ=;
-        b=lLccm+L+C5gyQVjYsYDdL1zeNxIZuJZGkpcU6/9jM/EGmEqxoX9VEq8LeF0hguc262
-         OrZIVKmCGpEWYzV9XpeB++QZRuh7XVQ12POq2Tyc80nMnleI7zn72I1w46yYtznIxQfb
-         g0BdLTnqzhNoiDvBa4YtqzHg1bvB09UzU6OUI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741013179; x=1741617979;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qjaplGXAgQys6n43UvZfkCCurGUYwKZfvrBKCJx8kSQ=;
-        b=wWzaD3Bn7puqSPxBqwDW9GHXNWAoo2/LiR1ofp8msUEQklzqOWGMwzQYX0hmTU7zY+
-         +4ERB6xOqvSmSgdkxPGfEApJftzj0k8y38H3iOrsO7s/br/iK/ITzGciP8HOpQctTALB
-         7iiJwySGWnXZ5NMT3AMo5hk9015bu4Ecgc1+c3QNTxrAms5EpxZeUWSLXx8Z/EqBUGu3
-         VCOuFfq/zZeiUGqxc7faz6S0KCngIruFt6SgI/zZZEsjlQc9xDKn6+sA6ak+DBhHpgIy
-         APWztaTBYb+0XPKeDMszqhBIKdpUm/LMEOP0/V94X9TDmb9nbkXKdycnVnZ9CPI5SdpE
-         VQew==
-X-Forwarded-Encrypted: i=1; AJvYcCXSli1kdVoJZqBjJD5P1d9HgZzEdN6FI9Gu2Aebk3iMfFwq0oWW++9pzRLwHK1KRVcE9cQJCqL8pR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZbpjE8+DOmmbGIbwEtDtpe18zqlis5PdcQMK99ytTDyCcIzk9
-	h9vNcnlzLvFIALhw48VkLPUTQSXp/qEAY9Rc5wXxGkb02Rwth6Fhx1lxfd2BpzN1GtD0HiEg0zP
-	F9Hjb9CJyaujrehLTOoKbOm4/G+qHfwVFa2KBOQ==
-X-Gm-Gg: ASbGnct5O+aQrvIEx0D6zuqmDmEXG6fGn2oycWoYaOAKX48MDKNATOIY/Qf5I9pA8l5
-	kLqdRlWvWX97JW8b8AjytucGvLpWVD+y4odNWedglLjXEOBB+GltlNyF/Z2SlUUrq4Na2zqjso8
-	xoZKAXIIntSU0KBE8+veEgBO30wS8=
-X-Google-Smtp-Source: AGHT+IEc70lGyxC8HHKIoOrpie2Jx8XsivN2M9IFYtspzolVa0r9jSj5J487Smay6+rDx9jahhDHL5KyYqxP+yy2+fA=
-X-Received: by 2002:ac8:5806:0:b0:474:f484:1b4b with SMTP id
- d75a77b69052e-474f4841d3emr20114471cf.23.1741013178811; Mon, 03 Mar 2025
- 06:46:18 -0800 (PST)
+	s=arc-20240116; t=1741022777; c=relaxed/simple;
+	bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c+3GZGAmBs/cONlGAhHWKDiNeQwJqLoQFi/H8xlK2q7kfLthpRJXHYMYe6/3SrsD5LpySJykYvEMu6PnybDCZlOGZGihScqX+1EveYjrDK9t82LxH8PcFZF68Foumrursro8ZOFrIdu125oRmQQlw8VCAC+e7M5vGroD3clLb1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVFIW2aB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECAFC4CEE5;
+	Mon,  3 Mar 2025 17:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741022775;
+	bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=cVFIW2aBKZ1xdR79K2vD1mE4TJ1NBA+Jsb+SF1OeuCIe4pLAsRHV5d0zyTiN5lIKD
+	 EezndNkh55tDbx17Wp77fhrBFSnjTXVHb6+cCiibHqn19VNaTCx/TR5fL4iJCG+iOM
+	 52r5VSR0qJ0p0wz3JRZshcgxjqrr+eWWRbtnn3BBF9pEurX/sz9WKQMsRsdbmz0weD
+	 ZPs9m3wcyrwxibLrUSGcMQg9kjfe+P5b1nCZPmHr/bO+UFrrZI0IZk3gZIHwgIl4l8
+	 9TdBjnQ3EgeaIJ0CJqiRX4QWi70Eh3MDmub7R7OhULilDXoLIuec6A1nbyRmroFyWG
+	 rFIjwwVn/AlEA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/5] nfsd: some small cleanup patches
+Date: Mon, 03 Mar 2025 12:25:58 -0500
+Message-Id: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227013949.536172-1-neilb@suse.de> <20250227013949.536172-5-neilb@suse.de>
-In-Reply-To: <20250227013949.536172-5-neilb@suse.de>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Mon, 3 Mar 2025 15:46:06 +0100
-X-Gm-Features: AQ5f1JoUFcZgsP72xjJitgL04_WZu20xfL4s-mJeajhIk4Eeu4PYIyUzi4H_ijM
-Message-ID: <CAJfpegtu1xs-FifNfc2VpQuhBjbniTqUcE+H=uNpdYW=cOSGkw@mail.gmail.com>
-Subject: Re: [PATCH 4/6] fuse: return correct dentry for ->mkdir
-To: NeilBrown <neilb@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, ceph-devel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACbmxWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0Nj3by04hTd5JzUxLzSAt0kk6TUpCQLAxNzoxQloJaCotS0zAqwcdG
+ xtbUARkIY0F4AAAA=
+X-Change-ID: 20250213-nfsd-cleanup-b4bebb80472d
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=830; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeYwNYtLej2MmQHZsZXV8jPBurrGgEjWhRfMV
+ R6GiheOJoiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmMAAKCRAADmhBGVaC
+ FYfUEADGesxDUAYHX27SKNHsno2Xg8ydXb+ZwGhP8OuYB0tQO2B/piOZtT95PVYAAMWoEvq17fP
+ QExVkfEtNYEuoF/AQPQg+vKynW6eDeWXvrYiY42npakmVIm3s5dDAWbosgNva6qk/MqZpnzxIo0
+ UqWULr0bWj2ZHKOyFLz97/IxyH8WjjjdiqKCuXMfrfA0K3aGjyMLyanIe14y2LRhIDp3yLGKNfl
+ cQRGw8wqQ07nOi+0EmdyHcxK50HbytTr6IrbjLVMydG0qU+AYaSFowjxWRL+X/oS+C10dR5x7cj
+ vl2fR8ZBslXMsxya1OgTXRo8OgDojIxRliYlrSP4DRN885wi8DxJoWQD0xCRPmIsRk3VlGjwgPR
+ +i5kpgF9+ql1SEhejoXYXgijmyPzdZhKliE1idhd5jsl8+2Cd6FUgvDFucOf7dynVXuNNdSG4kR
+ 1CAnwNYI2uJ8ToJvPiwWBbwUeJUnCSO2ratPwPJKLD87G933j3Fq4nqWAnrExYSie+z71nigoRf
+ Q6y9hVXSm4Wz3BtLBWXApNhRjvHQhhZGFA4/TD0cD+kNb04+nKUsc9L29+XXCphubSxG+YTtQp5
+ DJ7lRS5llTqHDQj3o9tCfczdxe45Kh9GcsyCr5z4CcNM48dpJmCb9cJ1JfKzb1mpPBIYneonG0M
+ fudQXgYr5+e1OUQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, 27 Feb 2025 at 02:40, NeilBrown <neilb@suse.de> wrote:
->
-> fuse already uses d_splice_alias() to ensure an appropriate dentry is
-> found for a newly created dentry.  Now that ->mkdir can return that
-> dentry we do so.
->
-> This requires changing create_new_entry() to return a dentry and
-> handling that change in all callers.
->
-> Note that when create_new_entry() is asked to create anything other than
-> a directory we can be sure it will NOT return an alternate dentry as
-> d_splice_alias() only returns an alternate dentry for directories.
-> So we don't need to check for that case when passing one the result.
+This is a pile of small patches that I've been collecting. None are
+terribly critical.
 
-Still, I'd create a wrapper for non-dir callers with the above comment.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (5):
+      nfsd: reorganize struct nfs4_delegation for better packing
+      nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault()
+      nfsd: remove obsolete comment from nfs4_alloc_stid
+      nfsd: clean up if statement in nfsd4_close_open_stateid()
+      nfsd: use a long for the count in nfsd4_state_shrinker_count()
 
-As is, it's pretty confusing to deal with a "dentry", which is
-apparently "leaked" (no dput) but in reality it's just err or NULL.
+ fs/nfsd/nfs4callback.c |  2 --
+ fs/nfsd/nfs4state.c    | 20 +++++---------------
+ fs/nfsd/state.h        |  2 +-
+ 3 files changed, 6 insertions(+), 18 deletions(-)
+---
+base-commit: 7dc86d35a5f8a7ac24b53792c704b101e5041842
+change-id: 20250213-nfsd-cleanup-b4bebb80472d
 
-Thanks,
-Miklos
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
