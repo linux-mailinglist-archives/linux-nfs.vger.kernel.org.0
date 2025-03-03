@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-10425-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10426-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3E53A4CA50
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:51:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32C3DA4CA18
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:45:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C7FF3BF980
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:36:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E14F3177297
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:37:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 565B024110D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E73EE24168E;
 	Mon,  3 Mar 2025 17:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tvs4Qhdm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rd2F2hyo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E14B23ED77;
-	Mon,  3 Mar 2025 17:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF787241671;
+	Mon,  3 Mar 2025 17:26:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022779; cv=none; b=phOKRDp0pIuGZe1A0HWqpo5ABRJdDiSLrp/zXg0qXDgW2tveVibB3yg3RModjPT1wg2cmG2Y/VVNCUMV3xlu6tofUaiwN7JNfsZ5HFuM3Ohq3TJCxWaemEI6JU8xG2LMH4zX0pyCkbAIiDi3xv8DqufbByUmDpBEl40O9bynOBI=
+	t=1741022779; cv=none; b=e/G07GY8rSMmMpID0AydlxM4ETYuGjMBR7d0M6X5Oz6Bo/8um2Wgv8nhSEkZQgsgteradwOLKDZOA0yAWqjPCPHHGDuXbkBKt6c2pAcVBZjexRAVK8O2HPHs44qR/KTDG/vOhSv13nTo8YR4oNsXkhkndL+2ghLlt8ZiLlGWEMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741022779; c=relaxed/simple;
-	bh=3FsD+s45OjsIemR8o7iKS9geA8NlGbBjBb5uxzlcHL0=;
+	bh=gTD+8LQiPe09wmSKttRLRjWr3KGL3poPlvrnygqxXWs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AWxk2Yw3ng8FcJH+XOGFVpb0uTVrz+xuNU7/rCsUzOLz2uHZS5kOKqLOyVYj/KjXZMtpP1ZIA2R3IabG9+IrRrUmIHk7Q/dO88pgcGUSA6++FbTutA6foTlR0xvVWKlhuXCncR+r8IiOGWebgfrYdNEzNqx6TY9iFvkoD6I1xDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tvs4Qhdm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 100B9C19423;
-	Mon,  3 Mar 2025 17:26:17 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=DSP4zuNPrIXbKBGmlm55U1R6FL3Ykf34EJMuseAE3iLScoNlGHRDcdaToSwypM8kTnEHlUqO3H7oWZZx+kVlUFxA08zm7nmENQT+KJ2CgF/bsdTrWFwMYNwT07AsYbyDPTJzH5lgM8WwNXV4XJaRUxLxNHxdlDtcNH9Rq/A+dkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rd2F2hyo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F121FC4CEE6;
+	Mon,  3 Mar 2025 17:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741022778;
-	bh=3FsD+s45OjsIemR8o7iKS9geA8NlGbBjBb5uxzlcHL0=;
+	s=k20201202; t=1741022779;
+	bh=gTD+8LQiPe09wmSKttRLRjWr3KGL3poPlvrnygqxXWs=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Tvs4Qhdmrzes34y/dEXNLiKGl7fI+cexyPuZ9Y99c1LTSAeOKL1be1+GczvMEiLx1
-	 IpG80p2YQCwo7mQt30d8oes61zLANxKoHfmObW0g161t0dIUE2AGPWgpcFb615071s
-	 TCES/Z6rWU0BEYcDsC07vdk0dymlc1voAX7pmbGrih10GXNMjQ+PhGFrxG1eA86aRa
-	 UiVe5YRejMeyNgbMLKw+nsCi4Q3o/YUXc4XCBFUXPVPcUvIJFEp5gasSCkVFW4Rycb
-	 6288N2EDPTyMjbc9zq7TeHczhPLmLsyWD0aNV3X5aYbnCox4ss4skCOg4WKvDqeKMz
-	 HZfPT+iSA0B/g==
+	b=rd2F2hyo5vLpZtBlUe0qODEt21u6M5aDl3WpxW7Noz31Y7Pt2m2hTIvLrt7Pl5jZ4
+	 cwZsuzCvpq9dVXClNP7PJBarPU/Fpjtpp/5ii3Qdkme3moN0zMetbYfsUzVMRzAxaO
+	 qXuI+dl3664a+8fqwrtqsCF/xi1tj7gbrmf3gvkgjboOVovNIss8HOZXwf3Bj8s9Oa
+	 yHys+RfiuDD6ZB5kddPCQOwULDEVjxprWePWPnuIoJbzzlTxSITnboC/1x6vD20Qpv
+	 S1dqFf1sLhr87LQrLU/BwLsnw43GZmhXBSJnbA8KLR9AVkMfDntXWvTLKWHns1Ureh
+	 6jfNPK7F0fsZQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 03 Mar 2025 12:26:02 -0500
-Subject: [PATCH 4/5] nfsd: clean up if statement in
- nfsd4_close_open_stateid()
+Date: Mon, 03 Mar 2025 12:26:03 -0500
+Subject: [PATCH 5/5] nfsd: use a long for the count in
+ nfsd4_state_shrinker_count()
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250303-nfsd-cleanup-v1-4-14068e8f59c5@kernel.org>
+Message-Id: <20250303-nfsd-cleanup-v1-5-14068e8f59c5@kernel.org>
 References: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 In-Reply-To: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,52 +62,45 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=954; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=3FsD+s45OjsIemR8o7iKS9geA8NlGbBjBb5uxzlcHL0=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeY1wFXoJvoBuxkX8RXg5JR4IG8AbHHA+EZFZ
- VNE3dh0C4mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmNQAKCRAADmhBGVaC
- FSK7D/4uXU94dyrDE6NbpETObgXuOUvAeSY2eHnVHudkx3zmKBgGD740DFOh/wMTZUDKxVPwRIt
- Tf5esM75x7KQSzARS+0KAitZ5g6d+ktPx/LVRiyJFGObBSLDMTOy8byeAlCPgakSX3ZuLV2nIam
- CZwNbxhWvb/DvKYV4gCYZINT/yhO92kwb3tEKmfxLWrhXorpfszIKkgf++ltscq8i2bGfMzAo3y
- aoy3go1cepxHOvkogHo19igPdRX3YjVdsNAGsfCfsfk1ba/+ln+sW0IU1aqSID2V3WE3O534B9U
- mo7wTH6sTA+dtsS6VccYYeAoTfL10WZ/P4kO3MMnOelqQvYYPV4YxlDF4VBl+F7C/FS0OjXy/sC
- QN2k2IEuqK+xEGKkAxG9g+4+S+3Zu48b5Dk4uKmYqoA85z2LoTNSrtyRyeu2Q6cR0B5iU7PLjmJ
- 9LOE6/W4/zcse4HVujN5b5G18qWGs4SWxX19qQojfpuDSrkC6ipvpAvTylDSP3jzQCapfcDvl/C
- eRw42FyywMOO1bxq9NpL9cQtEngql2r8TbGD3ExPlqGeY15kojVcyEsOuaz9xMraPWCYyow2eCH
- Pa7AO4wyk2b7zkYVg6akAHn9NZ7WJNvHW7xWNdlLlT9scz8UDAGz2lrXYp0aGmMbhL5sP5lqX9/
- fdP0yZeXVDtu16g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=790; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=gTD+8LQiPe09wmSKttRLRjWr3KGL3poPlvrnygqxXWs=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeY2imXWq1pMPKaiX6eH1alev3H5J7YiMI+Wl
+ XjlIRwEr8KJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmNgAKCRAADmhBGVaC
+ FZV2EACfaphCJXUSUarWKsWVvZA1UTZJUJjQShT47sKIJxU1gpScLDbmMfUOuPxGXHd88IUXypd
+ kwGp4e0Tcl6GFfJZMLX5GjILKlXsYpcOGx2nvteM8gFSxwnpQWbkN0Uh9mpo4mthMgQgDtc5neX
+ UtCO/VyLfmMJQve5ZZwuSM7s1rLzILkEuBqGcAjN1m9LWeld1yippsaV197h+ISBpn4+dyEYASE
+ tHnSkYNP7L/90YbHY61zVJrrauD8KH3FqMQ9OkF2r+T73DcKtGdJIOAQs+7cCcLxSx/lU422w/6
+ MGbfW30ZNzO0QJqbDIjbRugBwWMUZJnLZG66CBVFOrKBl4PMei83LCGZk5p0fcgHVFObqTWr8B2
+ k7OCxGaF2y3cW+CQBVJldGlEciElcCD0Ge6S2vDmVRDgWcSqAS23juXGSvc+/eq8sVNMBcZY7Ri
+ DIFSsn+3C75J/Ajm0GbRHupbkmS/fDrEODYmT1JE7wJdnqpbONwY0J1NuijB2A0obVp9+DyGA48
+ 6PVNNA/rU2YssHm38Q4kyn3Q3cZXWveriZNYaYG+bPyOXw6qXca9+oNl1sfJBw31MQ3xjhpVFoF
+ 3SIsV+I/0hdOkLBIg5DbxHLbEVgNNwF5plDglZ1v9ldlK1MXIfFkEbFkjwK3oNqSbi0YAV39qGu
+ i6Dc1siB2lfKONA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Just set unhashed to false in the one case where we return that
-explicitly, and drop the else.
+If there are no courtesy clients then the return value from the
+atomic_long_read() could overflow an int. Use a long to store the value
+instead.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/nfsd/nfs4state.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a7bac93445e2fdbe743b77e66238d652094907cb..1f3e9d42fcd784ea8d101ad3549702a30dfe9058 100644
+index 1f3e9d42fcd784ea8d101ad3549702a30dfe9058..aa0afd1b19a254686ef1f15f5f11db1c79d69096 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -7644,12 +7644,11 @@ static bool nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
- 		list_for_each_entry(stp, &reaplist, st_locks)
- 			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
- 		free_ol_stateid_reaplist(&reaplist);
--		return false;
--	} else {
--		spin_unlock(&clp->cl_lock);
--		free_ol_stateid_reaplist(&reaplist);
--		return unhashed;
-+		unhashed = false;
- 	}
-+	spin_unlock(&clp->cl_lock);
-+	free_ol_stateid_reaplist(&reaplist);
-+	return unhashed;
- }
+@@ -4819,7 +4819,7 @@ nfsd4_init_slabs(void)
+ static unsigned long
+ nfsd4_state_shrinker_count(struct shrinker *shrink, struct shrink_control *sc)
+ {
+-	int count;
++	long count;
+ 	struct nfsd_net *nn = shrink->private_data;
  
- /*
+ 	count = atomic_read(&nn->nfsd_courtesy_clients);
 
 -- 
 2.48.1
