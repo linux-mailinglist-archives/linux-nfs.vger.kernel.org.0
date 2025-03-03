@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-10421-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10423-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EAC3A4C9ED
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:41:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FEAAA4C9EE
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 18:41:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3B1718867CC
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:36:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B683718848F4
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Mar 2025 17:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87DBA23F26B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89F1723F272;
 	Mon,  3 Mar 2025 17:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVFIW2aB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKxibQsr"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FCB823ED76;
-	Mon,  3 Mar 2025 17:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC5223ED75;
+	Mon,  3 Mar 2025 17:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741022777; cv=none; b=rRv48nCHhD8j/M4W15YojEq5Q3BRM1kfCDWQ+Uxd0TTCOtF1v70k34KMkzqKTAVAcMtq5jeqk28GBXcV3X1jsg6+bgG21FfdUAFnD8/OH8SO1hTCmmS6cK4DtVot5ModjJFq3+gAcpPWt3W7otj22xbiaqpAUIb2t6Ro2HvhkN8=
+	t=1741022777; cv=none; b=NwW6JB7TLEGy1QPEGC+lDy8gzxrqRujlp6qIgm29w2gsQtRibKsPmMawvLrvPJHjoVfm/ORPd0m465O6NgcNb4Au3irTw++jeHfHjeFIsf6Pj7CDlZeo2tG9+D9VOEt+UN7stODxP9ozQupay0cGA3fmUdqu07L87S3xtXXSAuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741022777; c=relaxed/simple;
-	bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c+3GZGAmBs/cONlGAhHWKDiNeQwJqLoQFi/H8xlK2q7kfLthpRJXHYMYe6/3SrsD5LpySJykYvEMu6PnybDCZlOGZGihScqX+1EveYjrDK9t82LxH8PcFZF68Foumrursro8ZOFrIdu125oRmQQlw8VCAC+e7M5vGroD3clLb1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVFIW2aB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECAFC4CEE5;
-	Mon,  3 Mar 2025 17:26:14 +0000 (UTC)
+	bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qRo/a+r4KGmfa5nNe3MP8+BCsOIWEvnucPU+fmzQ2Lvnn5BhzBB/uNrsN6MZxE/g6Rw4qgdBVTVtaDDFX3FOhVSugHix8DlDcTRuv5wgyEdMhp4YHzZw+WMImp84ICaFWjPGHAH6I8jivcgBTLRZzyzkzcFSQBvqXXDPjiiLxV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKxibQsr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B427C4CEEA;
+	Mon,  3 Mar 2025 17:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741022775;
-	bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
-	h=From:Subject:Date:To:Cc:From;
-	b=cVFIW2aBKZ1xdR79K2vD1mE4TJ1NBA+Jsb+SF1OeuCIe4pLAsRHV5d0zyTiN5lIKD
-	 EezndNkh55tDbx17Wp77fhrBFSnjTXVHb6+cCiibHqn19VNaTCx/TR5fL4iJCG+iOM
-	 52r5VSR0qJ0p0wz3JRZshcgxjqrr+eWWRbtnn3BBF9pEurX/sz9WKQMsRsdbmz0weD
-	 ZPs9m3wcyrwxibLrUSGcMQg9kjfe+P5b1nCZPmHr/bO+UFrrZI0IZk3gZIHwgIl4l8
-	 9TdBjnQ3EgeaIJ0CJqiRX4QWi70Eh3MDmub7R7OhULilDXoLIuec6A1nbyRmroFyWG
-	 rFIjwwVn/AlEA==
+	s=k20201202; t=1741022776;
+	bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=OKxibQsrqsSTlM968LNwlspsWF8Uy/fTD+rLkV7irdXi6/9OQ8qqhyZFKu3/P9xj5
+	 y72faIAopJY9IC59BdkC9iWfKlT8/ZegSEZJqAWQqF1sQMrcWt2bMbeff4vjXjUkkU
+	 kQWHrppB8ZCI0ErgE+VtucS2NEBNm3z3INO/RZfyX3KycdROBFie3ZV68bTEF4hpgq
+	 fPWcmKWODgIZlLTmWUk4QgvoKmKewb6MKmTBsQ5LvqYLbq2Ss24rS3xBeAXrM+1imt
+	 QK8EkU8Orqp2qoYSlJBVnVsU0ufpAXeFnhPtBRHQ62qJTw5ICV3Bk+/ViLjMfqiGKh
+	 9//8kiqIlkplg==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 0/5] nfsd: some small cleanup patches
-Date: Mon, 03 Mar 2025 12:25:58 -0500
-Message-Id: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
+Date: Mon, 03 Mar 2025 12:25:59 -0500
+Subject: [PATCH 1/5] nfsd: reorganize struct nfs4_delegation for better
+ packing
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,55 +53,55 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACbmxWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0Nj3by04hTd5JzUxLzSAt0kk6TUpCQLAxNzoxQloJaCotS0zAqwcdG
- xtbUARkIY0F4AAAA=
-X-Change-ID: 20250213-nfsd-cleanup-b4bebb80472d
+Message-Id: <20250303-nfsd-cleanup-v1-1-14068e8f59c5@kernel.org>
+References: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
+In-Reply-To: <20250303-nfsd-cleanup-v1-0-14068e8f59c5@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
  Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
  Tom Talpey <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=830; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=M3zwmPSFyDgRrbI26d67suhYPxb/JbKj+ArYoTc5fh4=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeYwNYtLej2MmQHZsZXV8jPBurrGgEjWhRfMV
- R6GiheOJoiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmMAAKCRAADmhBGVaC
- FYfUEADGesxDUAYHX27SKNHsno2Xg8ydXb+ZwGhP8OuYB0tQO2B/piOZtT95PVYAAMWoEvq17fP
- QExVkfEtNYEuoF/AQPQg+vKynW6eDeWXvrYiY42npakmVIm3s5dDAWbosgNva6qk/MqZpnzxIo0
- UqWULr0bWj2ZHKOyFLz97/IxyH8WjjjdiqKCuXMfrfA0K3aGjyMLyanIe14y2LRhIDp3yLGKNfl
- cQRGw8wqQ07nOi+0EmdyHcxK50HbytTr6IrbjLVMydG0qU+AYaSFowjxWRL+X/oS+C10dR5x7cj
- vl2fR8ZBslXMsxya1OgTXRo8OgDojIxRliYlrSP4DRN885wi8DxJoWQD0xCRPmIsRk3VlGjwgPR
- +i5kpgF9+ql1SEhejoXYXgijmyPzdZhKliE1idhd5jsl8+2Cd6FUgvDFucOf7dynVXuNNdSG4kR
- 1CAnwNYI2uJ8ToJvPiwWBbwUeJUnCSO2ratPwPJKLD87G933j3Fq4nqWAnrExYSie+z71nigoRf
- Q6y9hVXSm4Wz3BtLBWXApNhRjvHQhhZGFA4/TD0cD+kNb04+nKUsc9L29+XXCphubSxG+YTtQp5
- DJ7lRS5llTqHDQj3o9tCfczdxe45Kh9GcsyCr5z4CcNM48dpJmCb9cJ1JfKzb1mpPBIYneonG0M
- fudQXgYr5+e1OUQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=731; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=TLjwn8OvC2xRxNHgLGlT6YzixDeTdY+umrapqFPiZi0=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnxeY1vpggjGoEj3YtDf3e7GWM44RrbydQi9fQO
+ Yfp6tgzRPKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8XmNQAKCRAADmhBGVaC
+ FRKJD/9CpXM4lbJxvqIwY2WxIDJQFCHSJopqNTHXtjxmm6NZwkGcXNHRM/czh7P5n1fuvXHUZJY
+ uSFyzgpil3n1XHwFhisEfrzJJEGpPFQo7QrhykUM99K+M72bHjxXRw7idlxLD/m3cAHQa5fkXKN
+ f43ucScxXTc2z5dDo+cKieHJIEiLGPQjoWIzysv3SE6xjlqG1tItF0mrScYW4jdx/3mEctl7JmM
+ +H6a4JljVgNkDPoXQbg9pnNWCMaL2moQCGIxDRw6lf55ODJc1ToYV5d9TnoqusT0peul5DEShZd
+ yND58EAqTXxeHsZIKXvKmiasViraVv9PEQIJwARzNNkJv2V4H3WXV9mU2DS1JSwo7QkdmbtG8yq
+ kHUgVqOyin9S28NK8/43tSBA6W1p002EfxRsEhZMaO3YdI0AdU1TAkaq+/GK8xGF2KM2PolegP3
+ WEMFJrXk0k7gGi4ph1lJoZ0vr0si/rYGIK7Gs4FjHsDM2+3Rmm7MtDdPtgpA1+7ZQ1gjvA5qYw/
+ ApTkIETwtJVbnxTmsHwkb4G+buQpoMmYky9AL6D24dtfUs4YUpkVvjnE1+ns1kM6DqlLoWrJAUK
+ jQbi9caFjaBYxgHS31PTfyMcnXledj0ComQeXeha/Vy9IyUHCcndGXEb3S1PBbsyNM3XSVvOupa
+ QnlYCyTE4OyxW1g==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This is a pile of small patches that I've been collecting. None are
-terribly critical.
+Move dl_type field above dl_time, which shaves 8 bytes off this struct.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (5):
-      nfsd: reorganize struct nfs4_delegation for better packing
-      nfsd: remove unneeded forward declaration of nfsd4_mark_cb_fault()
-      nfsd: remove obsolete comment from nfs4_alloc_stid
-      nfsd: clean up if statement in nfsd4_close_open_stateid()
-      nfsd: use a long for the count in nfsd4_state_shrinker_count()
+ fs/nfsd/state.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- fs/nfsd/nfs4callback.c |  2 --
- fs/nfsd/nfs4state.c    | 20 +++++---------------
- fs/nfsd/state.h        |  2 +-
- 3 files changed, 6 insertions(+), 18 deletions(-)
----
-base-commit: 7dc86d35a5f8a7ac24b53792c704b101e5041842
-change-id: 20250213-nfsd-cleanup-b4bebb80472d
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index 0537f5c001a4d581433ca5aca235188fe68b14e5..625a77107d29121d630d456183e01c9f903f758a 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -215,8 +215,8 @@ struct nfs4_delegation {
+ 	struct list_head	dl_perclnt;
+ 	struct list_head	dl_recall_lru;  /* delegation recalled */
+ 	struct nfs4_clnt_odstate *dl_clnt_odstate;
+-	u32			dl_type;
+ 	time64_t		dl_time;
++	u32			dl_type;
+ /* For recall: */
+ 	int			dl_retries;
+ 	struct nfsd4_callback	dl_recall;
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.48.1
 
 
