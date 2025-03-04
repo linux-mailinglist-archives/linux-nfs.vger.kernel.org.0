@@ -1,194 +1,313 @@
-Return-Path: <linux-nfs+bounces-10468-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10469-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1220DA4EE88
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 21:39:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0C89A4EF8A
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 22:48:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6718A18936EA
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 20:39:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5AA516E149
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 21:48:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A13F259C83;
-	Tue,  4 Mar 2025 20:38:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DC32673BA;
+	Tue,  4 Mar 2025 21:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yv7cfkyw"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zBR//K0H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Sfyy+Wm5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vIA7yxbp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KS5YkmFr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977F120C039
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Mar 2025 20:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0239125F979
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Mar 2025 21:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741120737; cv=none; b=lwcgRDSkB/VPTPvv1PMmY8Sj7FHvhYQj7isJk3h4UlneF9ef3h6ioyIrTcCsTREthldZOejELqyDkL/yERyoAMu165ab042CofEk+TxnS9QXsBd8U/+dftYyn3P3/vPAtMXJP4yFP4vjJsM8Xy2lJcl9Pbc5sm0m6W5qoWfDvls=
+	t=1741124919; cv=none; b=bHOB7gWz59Mm8QTzEGTWxxwJMCknjc3Fbcy5oZDpoRPIB4ZfIzRQP6olaep91jIdc8i6Nbu+L8tmf8DWtL2ij6wvLA4wFZRuWapu6LTF9kB4DX6InHnLNcYstdiinOB7+ftthCqgDLsVdYl6m+K4/kiRZNsFQvO5kMCiZ+xXDgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741120737; c=relaxed/simple;
-	bh=BPCiGs9R2s9E3JoIE/f1A4djCFP1XRutOTV7QtsuckA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=QiZ5vetKx0a0aRwBTJNFIQ+emU80GL4iivBdNEZtW+RZB8bUo5P1Lf3V3tjFal1LEIjz1mqOIgRSnl9K5L1hfmlXVxwuZTpnZDmcUdKybDxaKGPM79opOiovirtmhzu5zgZnxtZgSBnhnKnYf+9n7y5qOG52XsFf7JJXv4Tq9qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Yv7cfkyw; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 524HMiLs011957;
-	Tue, 4 Mar 2025 20:38:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:date:from:in-reply-to:message-id:references:subject:to; s=
-	corp-2023-11-20; bh=YciVef/dX2xxyLfOkerz1IOcM2MPHy6FZKnepPfdp6s=; b=
-	Yv7cfkyw3sO0LbY1qjHcNiC+3XyqTW3jFuW4FF//Wn4A9Xue/xg7Vgi3Sec1H+cN
-	H6lc1l3h4Yy+cbpTX2koQKyjwMfWb6wieWTtB6xl8j36bG3C9fDPXcoXGK5mCpM8
-	v8zy3hdvHlLEYUvQ4tGLCDsODI2EN3jrWyAdoGSUi66gWwDFtXtsZCpFVNc9DuFZ
-	5y8/yqcLsVtDT5WvtABnPO5Fe3fCC4RQ8h4m4JPcYSAwbHEgHL4jIZ9mICxqsLnM
-	f1KYKYcu/3BGMiOQ/xWVlu8oCwmtp6WiqTwD1CatMcZJ75MAWPCxhYwiuRbYuXJE
-	N9+d2tijrbaR62zTCEYUcA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 453ub763t8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Mar 2025 20:38:40 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 524J4Pv7021934;
-	Tue, 4 Mar 2025 20:38:39 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 453rwvef4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Mar 2025 20:38:39 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 524KcbOg022127;
-	Tue, 4 Mar 2025 20:38:38 GMT
-Received: from ca-common-sca.us.oracle.com (ca-common-sca.us.oracle.com [10.132.20.202])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 453rwveeye-3;
-	Tue, 04 Mar 2025 20:38:38 +0000
-From: Dai Ngo <dai.ngo@oracle.com>
-To: chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        okorniev@redhat.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
-Subject: [PATCH V4 2/2] NFSD: allow client to use write delegation stateid for READ
-Date: Tue,  4 Mar 2025 12:38:13 -0800
-Message-Id: <1741120693-2517-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1741120693-2517-1-git-send-email-dai.ngo@oracle.com>
-References: <1741120693-2517-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-04_08,2025-03-04_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- bulkscore=0 adultscore=0 suspectscore=0 spamscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2503040166
-X-Proofpoint-GUID: 8xYTGRnZIRuRGsQb9r_nlPQ6LqGl6ao5
-X-Proofpoint-ORIG-GUID: 8xYTGRnZIRuRGsQb9r_nlPQ6LqGl6ao5
+	s=arc-20240116; t=1741124919; c=relaxed/simple;
+	bh=pCVLLuxek3bUk5qBpkIjOZF+Xauo1myEVPouhTYzhsE=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=vGkGimm1NHfgkch0K1clB5Tm2QR2xWofIQr4+QfY5YFrCJ/oZh7+yLkaKKpKaZ+ejodXwGV40GYYO87jyFFq5rAZlM52SmAuD2arHda+Ecxl55Zv8NFS4c/zb+ASwJDhdGIu4aemowG9idD84nRFMpmj7uHHKv8YhZAaCYTgR44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zBR//K0H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Sfyy+Wm5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vIA7yxbp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KS5YkmFr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EDD9F21168;
+	Tue,  4 Mar 2025 21:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741124915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bX4IMw/eYOxOFV044cg6lar1/3a+2fllXZS9auhZXXM=;
+	b=zBR//K0HMoJ/YhGdJs58LuvYxmik1loF9eqalRjgpnJv8HnmR8ytsQmTHP3UWKoNPZiQMZ
+	2ORendZN21tcpon13z4Nw6sXEtvKYosVaEwfghSUHUGRsQ4QOFJxb2Tz0oMhIivQFP/yp+
+	fOxuhVk4J5BL843lvhBp6ac8SrmG0pA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741124915;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bX4IMw/eYOxOFV044cg6lar1/3a+2fllXZS9auhZXXM=;
+	b=Sfyy+Wm52mc4tH5U7Qxjvw21CisT0gLAxP5cEnqXwIqSf0YlTZTOC0/YA+myxaLMX9h7Gp
+	1pdJQQxOfBpa4FDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vIA7yxbp;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=KS5YkmFr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741124913; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bX4IMw/eYOxOFV044cg6lar1/3a+2fllXZS9auhZXXM=;
+	b=vIA7yxbppBkUlNdlpIn5WyrLJDzCa6sxDiG1pXXbTq7svkbo0aXQ62E5ZP8PNO6qf5oxv8
+	XDxnR3rhV3lROd1nWOpovdoadE7hdtn6uElKC9cqgvGxOxBz8wXYoNoelmOkxs6xoLopka
+	cuJDkAj6A1eQyY/t68ibgShBYnHCxnM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741124913;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bX4IMw/eYOxOFV044cg6lar1/3a+2fllXZS9auhZXXM=;
+	b=KS5YkmFrakP+hBPlX/OaaPOX6hS9p9VCFeSjsg4IbH5tSBzgRDfB6wast/hKDJzXRKFveo
+	Nuf1PaTESxQDBnCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1E31C13967;
+	Tue,  4 Mar 2025 21:48:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /FE8MCt1x2cGNAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 04 Mar 2025 21:48:27 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Miklos Szeredi" <miklos@szeredi.hu>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, "Ilya Dryomov" <idryomov@gmail.com>,
+ "Xiubo Li" <xiubli@redhat.com>, ceph-devel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>, linux-um@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6 - REVISED] fuse: return correct dentry for ->mkdir
+In-reply-to:
+ <CAJfpegtu1xs-FifNfc2VpQuhBjbniTqUcE+H=uNpdYW=cOSGkw@mail.gmail.com>
+References:
+ <>, <CAJfpegtu1xs-FifNfc2VpQuhBjbniTqUcE+H=uNpdYW=cOSGkw@mail.gmail.com>
+Date: Wed, 05 Mar 2025 08:48:20 +1100
+Message-id: <174112490070.33508.15852253149143067890@noble.neil.brown.name>
+X-Rspamd-Queue-Id: EDD9F21168
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,oracle.com,vger.kernel.org,gmail.com,redhat.com,nod.at,cambridgegreys.com,sipsolutions.net,lists.infradead.org];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Allow READ using write delegation stateid granted on OPENs with
-OPEN4_SHARE_ACCESS_WRITE only, to accommodate clients whose WRITE
-implementation may unavoidably do (e.g., due to buffer cache
-constraints).
 
-For write delegation granted for OPEN with OPEN4_SHARE_ACCESS_WRITE
-a new nfsd_file and a struct file are allocated to use for reads.
-The nfsd_file is freed when the file is closed by release_all_access.
+Subject: [PATCH] fuse: return correct dentry for ->mkdir
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+fuse already uses d_splice_alias() to ensure an appropriate dentry is
+found for a newly created dentry.  Now that ->mkdir can return that
+dentry we do so.
+
+This requires changing create_new_entry() to return a dentry and
+handling that change in all callers.
+
+Note that when create_new_entry() is asked to create anything other than
+a directory we can be sure it will NOT return an alternate dentry as
+d_splice_alias() only returns an alternate dentry for directories.
+So we don't need to check for that case when passing one the result.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 44 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 36 insertions(+), 8 deletions(-)
+ fs/fuse/dir.c | 48 +++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b533225e57cf..35018af4e7fb 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6126,6 +6126,34 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, struct svc_fh *currentfh,
- 	return rc == 0;
- }
- 
-+/*
-+ * Add NFS4_SHARE_ACCESS_READ to the write delegation granted on OPEN
-+ * with NFS4_SHARE_ACCESS_WRITE by allocating separate nfsd_file and
-+ * struct file to be used for read with delegation stateid.
-+ *
-+ */
-+static bool
-+nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqstp, struct nfsd4_open *open,
-+			      struct svc_fh *fh, struct nfs4_ol_stateid *stp)
-+{
-+	struct nfs4_file *fp;
-+	struct nfsd_file *nf = NULL;
-+
-+	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) ==
-+			NFS4_SHARE_ACCESS_WRITE) {
-+		if (nfsd_file_acquire_opened(rqstp, fh, NFSD_MAY_READ, NULL, &nf))
-+			return (false);
-+		fp = stp->st_stid.sc_file;
-+		spin_lock(&fp->fi_lock);
-+		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
-+		set_access(NFS4_SHARE_ACCESS_READ, stp);
-+		fp = stp->st_stid.sc_file;
-+		fp->fi_fds[O_RDONLY] = nf;
-+		spin_unlock(&fp->fi_lock);
-+	}
-+	return (true);
+Thanks for the suggestion Miklos - this looks much better.
+
+Christian: could you please replace the fuse patch in your tree
+with this version?  Thanks.
+
+NeilBrown
+
+
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index d0289ce068ba..fa8f1141ea74 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -781,9 +781,9 @@ static int fuse_atomic_open(struct inode *dir, struct den=
+try *entry,
+ /*
+  * Code shared between mknod, mkdir, symlink and link
+  */
+-static int create_new_entry(struct mnt_idmap *idmap, struct fuse_mount *fm,
+-			    struct fuse_args *args, struct inode *dir,
+-			    struct dentry *entry, umode_t mode)
++static struct dentry *create_new_entry(struct mnt_idmap *idmap, struct fuse_=
+mount *fm,
++				       struct fuse_args *args, struct inode *dir,
++				       struct dentry *entry, umode_t mode)
+ {
+ 	struct fuse_entry_out outarg;
+ 	struct inode *inode;
+@@ -792,11 +792,11 @@ static int create_new_entry(struct mnt_idmap *idmap, st=
+ruct fuse_mount *fm,
+ 	struct fuse_forget_link *forget;
+=20
+ 	if (fuse_is_bad(dir))
+-		return -EIO;
++		return ERR_PTR(-EIO);
+=20
+ 	forget =3D fuse_alloc_forget();
+ 	if (!forget)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+=20
+ 	memset(&outarg, 0, sizeof(outarg));
+ 	args->nodeid =3D get_node_id(dir);
+@@ -826,29 +826,43 @@ static int create_new_entry(struct mnt_idmap *idmap, st=
+ruct fuse_mount *fm,
+ 			  &outarg.attr, ATTR_TIMEOUT(&outarg), 0, 0);
+ 	if (!inode) {
+ 		fuse_queue_forget(fm->fc, forget, outarg.nodeid, 1);
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 	}
+ 	kfree(forget);
+=20
+ 	d_drop(entry);
+ 	d =3D d_splice_alias(inode, entry);
+ 	if (IS_ERR(d))
+-		return PTR_ERR(d);
++		return d;
+=20
+-	if (d) {
++	if (d)
+ 		fuse_change_entry_timeout(d, &outarg);
+-		dput(d);
+-	} else {
++	else
+ 		fuse_change_entry_timeout(entry, &outarg);
+-	}
+ 	fuse_dir_changed(dir);
+-	return 0;
++	return d;
+=20
+  out_put_forget_req:
+ 	if (err =3D=3D -EEXIST)
+ 		fuse_invalidate_entry(entry);
+ 	kfree(forget);
+-	return err;
++	return ERR_PTR(err);
 +}
 +
- /*
-  * The Linux NFS server does not offer write delegations to NFSv4.0
-  * clients in order to avoid conflicts between write delegations and
-@@ -6151,8 +6179,9 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, struct svc_fh *currentfh,
-  * open or lock state.
-  */
- static void
--nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
--		     struct svc_fh *currentfh)
-+nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
-+		     struct nfs4_ol_stateid *stp, struct svc_fh *currentfh,
-+		     struct svc_fh *fh)
- {
- 	bool deleg_ts = open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS;
- 	struct nfs4_openowner *oo = openowner(stp->st_stateowner);
-@@ -6197,7 +6226,8 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
- 
- 	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
--		if (!nfs4_delegation_stat(dp, currentfh, &stat)) {
-+		if ((!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp)) ||
-+				!nfs4_delegation_stat(dp, currentfh, &stat)) {
- 			nfs4_put_stid(&dp->dl_stid);
- 			destroy_delegation(dp);
- 			goto out_no_deleg;
-@@ -6353,7 +6383,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	* Attempt to hand out a delegation. No error return, because the
- 	* OPEN succeeds even if we fail.
- 	*/
--	nfs4_open_delegation(open, stp, &resp->cstate.current_fh);
-+	nfs4_open_delegation(rqstp, open, stp,
-+		&resp->cstate.current_fh, current_fh);
- 
- 	/*
- 	 * If there is an existing open stateid, it must be updated and
-@@ -7098,10 +7129,6 @@ nfs4_find_file(struct nfs4_stid *s, int flags)
- 
- 	switch (s->sc_type) {
- 	case SC_TYPE_DELEG:
--		spin_lock(&s->sc_file->fi_lock);
--		ret = nfsd_file_get(s->sc_file->fi_deleg_file);
--		spin_unlock(&s->sc_file->fi_lock);
--		break;
- 	case SC_TYPE_OPEN:
- 	case SC_TYPE_LOCK:
- 		if (flags & RD_STATE)
-@@ -7277,6 +7304,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
- 		status = find_cpntf_state(nn, stateid, &s);
- 	if (status)
- 		return status;
++static int create_new_nondir(struct mnt_idmap *idmap, struct fuse_mount *fm,
++			     struct fuse_args *args, struct inode *dir,
++			     struct dentry *entry, umode_t mode)
++{
++	/*
++	 * Note that when creating anything other than a directory we
++	 * can be sure create_new_entry() will NOT return an alternate
++	 * dentry as d_splice_alias() only returns an alternate dentry
++	 * for directories.  So we don't need to check for that case
++	 * when passing back the result.
++	 */
++	WARN_ON_ONCE(S_ISDIR(mode));
 +
- 	status = nfsd4_stid_check_stateid_generation(stateid, s,
- 			nfsd4_has_session(cstate));
- 	if (status)
--- 
-2.43.5
++	return PTR_ERR(create_new_entry(idmap, fm, args, dir, entry, mode));
+ }
+=20
+ static int fuse_mknod(struct mnt_idmap *idmap, struct inode *dir,
+@@ -871,7 +885,7 @@ static int fuse_mknod(struct mnt_idmap *idmap, struct ino=
+de *dir,
+ 	args.in_args[0].value =3D &inarg;
+ 	args.in_args[1].size =3D entry->d_name.len + 1;
+ 	args.in_args[1].value =3D entry->d_name.name;
+-	return create_new_entry(idmap, fm, &args, dir, entry, mode);
++	return create_new_nondir(idmap, fm, &args, dir, entry, mode);
+ }
+=20
+ static int fuse_create(struct mnt_idmap *idmap, struct inode *dir,
+@@ -917,7 +931,7 @@ static struct dentry *fuse_mkdir(struct mnt_idmap *idmap,=
+ struct inode *dir,
+ 	args.in_args[0].value =3D &inarg;
+ 	args.in_args[1].size =3D entry->d_name.len + 1;
+ 	args.in_args[1].value =3D entry->d_name.name;
+-	return ERR_PTR(create_new_entry(idmap, fm, &args, dir, entry, S_IFDIR));
++	return create_new_entry(idmap, fm, &args, dir, entry, S_IFDIR);
+ }
+=20
+ static int fuse_symlink(struct mnt_idmap *idmap, struct inode *dir,
+@@ -934,7 +948,7 @@ static int fuse_symlink(struct mnt_idmap *idmap, struct i=
+node *dir,
+ 	args.in_args[1].value =3D entry->d_name.name;
+ 	args.in_args[2].size =3D len;
+ 	args.in_args[2].value =3D link;
+-	return create_new_entry(idmap, fm, &args, dir, entry, S_IFLNK);
++	return create_new_nondir(idmap, fm, &args, dir, entry, S_IFLNK);
+ }
+=20
+ void fuse_flush_time_update(struct inode *inode)
+@@ -1131,7 +1145,7 @@ static int fuse_link(struct dentry *entry, struct inode=
+ *newdir,
+ 	args.in_args[0].value =3D &inarg;
+ 	args.in_args[1].size =3D newent->d_name.len + 1;
+ 	args.in_args[1].value =3D newent->d_name.name;
+-	err =3D create_new_entry(&invalid_mnt_idmap, fm, &args, newdir, newent, ino=
+de->i_mode);
++	err =3D create_new_nondir(&invalid_mnt_idmap, fm, &args, newdir, newent, in=
+ode->i_mode);
+ 	if (!err)
+ 		fuse_update_ctime_in_cache(inode);
+ 	else if (err =3D=3D -EINTR)
+--=20
+2.48.1
 
 
