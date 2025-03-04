@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-10455-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10456-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F5CBA4DE3E
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 13:48:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 35FF6A4DE42
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 13:49:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 42AE1188937E
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 12:48:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D01E8188C494
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 12:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3315B202F8C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71C65204088;
 	Tue,  4 Mar 2025 12:48:37 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE98F78F33;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3361EA7CE;
 	Tue,  4 Mar 2025 12:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741092517; cv=none; b=NkQkVxMPWeaNZbQZSSn0NwIj+ESbU4/vwTfbuq7O4oVc5zShvzmfztpGnlxJ9fALutay58bLO8jX5zfMZH+mqBz2hna7PMzOvog+eo2kqnjOh/A99EC1obGDiKM83O/sW1f295O+ktDfJORal7qY1E7545B9CECQLb9xenBOCAc=
+	t=1741092517; cv=none; b=BPfpfqu7ZCbQB6d6ID370rSGAnQj9xwkld1lh5/VHGNEhXlWh4cXQC2b2gspLlxKAuOGrVnB8iMUGFxhvcD32FReuSszW10LvIEI6sYzXEGDeUTvKXmdvF1RpScbaSghaPVnT//ud5/WTzapELDk+WGBE7cwYKpjVoizsL0fENE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741092517; c=relaxed/simple;
-	bh=kjNK2jKld4KcF4Y0efWpkVK5wFuSz/egehvSXV1w8JM=;
+	bh=ODVFBe/e11v9wJrhnq4WBKSfBQBazIMfPT6QZbpiSN4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kaMMB8kQDftetW71hfGG9eWYtLSqEndZvcd1DagfEUBvNnJfO0UdDZUvu4TLH0OQm+kkQnxcs/tLQzn77Fl72YpeUiwzozsVbvdozCEPswY+d0C8Drsx7sup/IoWAyDETIfSsBFmaTasn0FeGctHRqij4IyrbWuOwmjOsdoxS9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=lYCRKF5ZlzRPJu48dX+G4/e+FZ1l8Tzt2/zuwYA2Ja5ohRFoT/3hMDxn01XiIoNNPHU5tHQL2xBrMmH7uYE+EdH9rAx9EwbnZtZBBH7IHpxkt/nyHaq2EPPG+dFvWurhF32HeQY38ox/nCHW5bx5a6OT9r7N1N8ulwLfTwpzMEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z6b4h1v4Wz21p0j;
-	Tue,  4 Mar 2025 20:45:24 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z6b6Y4rQKzpbTS;
+	Tue,  4 Mar 2025 20:47:01 +0800 (CST)
 Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8CE70140361;
-	Tue,  4 Mar 2025 20:48:31 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 7E7811800EB;
+	Tue,  4 Mar 2025 20:48:32 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
  (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 4 Mar
- 2025 20:48:30 +0800
+ 2025 20:48:31 +0800
 From: Li Lingfeng <lilingfeng3@huawei.com>
 To: <trondmy@kernel.org>, <anna@kernel.org>
 CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -46,9 +46,9 @@ CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
 	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
 	<lilingfeng3@huawei.com>
-Subject: [PATCH 1/2] nfs: clear SB_RDONLY before getting superblock
-Date: Tue, 4 Mar 2025 21:05:32 +0800
-Message-ID: <20250304130533.549840-2-lilingfeng3@huawei.com>
+Subject: [PATCH 2/2] nfs: ignore SB_RDONLY when remounting nfs
+Date: Tue, 4 Mar 2025 21:05:33 +0800
+Message-ID: <20250304130533.549840-3-lilingfeng3@huawei.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20250304130533.549840-1-lilingfeng3@huawei.com>
 References: <20250304130533.549840-1-lilingfeng3@huawei.com>
@@ -63,60 +63,64 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemg500017.china.huawei.com (7.202.181.81)
 
-As described in the link, commit 52cb7f8f1778 ("nfs: ignore SB_RDONLY when
-mounting nfs") removed the check for the ro flag when determining whether
-to share the superblock, which caused issues when mounting different
-subdirectories under the same export directory via NFSv3. However, this
-change did not affect NFSv4.
+In some scenarios, when mounting NFS, more than one superblock may be
+created. The final superblock used is the last one created, but only the
+first superblock carries the ro flag passed from user space. If a ro flag
+is added to the superblock via remount, it will trigger the issue
+described in Link[1].
 
-For NFSv3:
-1) A single superblock is created for the initial mount.
-2) When mounted read-only, this superblock carries the SB_RDONLY flag.
-3) Before commit 52cb7f8f1778 ("nfs: ignore SB_RDONLY when mounting nfs"):
-Subsequent rw mounts would not share the existing ro superblock due to
-flag mismatch, creating a new superblock without SB_RDONLY.
-After the commit:
-  The SB_RDONLY flag is ignored during superblock comparison, and this leads
-  to sharing the existing superblock even for rw mounts.
-  Ultimately results in write operations being rejected at the VFS layer.
+Link[2] attempted to address this by marking the superblock as ro during
+the initial mount. However, this introduced a new problem in scenarios
+where multiple mount points share the same superblock:
+[root@a ~]# mount /dev/sdb /mnt/sdb
+[root@a ~]# echo "/mnt/sdb *(rw,no_root_squash)" > /etc/exports
+[root@a ~]# echo "/mnt/sdb/test_dir2 *(ro,no_root_squash)" >> /etc/exports
+[root@a ~]# systemctl restart nfs-server
+[root@a ~]# mount -t nfs -o rw 127.0.0.1:/mnt/sdb/test_dir1 /mnt/test_mp1
+[root@a ~]# mount | grep nfs4
+127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (rw,relatime,...
+[root@a ~]# mount -t nfs -o ro 127.0.0.1:/mnt/sdb/test_dir2 /mnt/test_mp2
+[root@a ~]# mount | grep nfs4
+127.0.0.1:/mnt/sdb/test_dir1 on /mnt/test_mp1 type nfs4 (ro,relatime,...
+127.0.0.1:/mnt/sdb/test_dir2 on /mnt/test_mp2 type nfs4 (ro,relatime,...
+[root@a ~]#
 
-For NFSv4:
-1) Multiple superblocks are created and the last one will be kept.
-2) The actually used superblock for ro mounts doesn't carry SB_RDONLY flag.
-Therefore, commit 52cb7f8f1778 doesn't affect NFSv4 mounts.
+When mounting the second NFS, the shared superblock is marked as ro,
+causing the previous NFS mount to become read-only.
 
-Clear SB_RDONLY before getting superblock when NFS_MOUNT_UNSHARED is not
-set to fix it.
+To resolve both issues, the ro flag is no longer applied to the superblock
+during remount. Instead, the ro flag on the mount is used to control
+whether the mount point is read-only.
 
-Fixes: 52cb7f8f1778 ("nfs: ignore SB_RDONLY when mounting nfs")
-Closes: https://lore.kernel.org/all/12d7ea53-1202-4e21-a7ef-431c94758ce5@app.fastmail.com/T/
+Fixes: 281cad46b34d ("NFS: Create a submount rpc_op")
+Link[1]: https://lore.kernel.org/all/20240604112636.236517-3-lilingfeng@huaweicloud.com/
+Link[2]: https://lore.kernel.org/all/20241130035818.1459775-1-lilingfeng3@huawei.com/
 Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 ---
- fs/nfs/super.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/nfs/super.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index aeb715b4a690..3e5528c2c822 100644
+index 3e5528c2c822..8f50447eb5d0 100644
 --- a/fs/nfs/super.c
 +++ b/fs/nfs/super.c
-@@ -1304,8 +1304,17 @@ int nfs_get_tree_common(struct fs_context *fc)
- 	if (IS_ERR(server))
- 		return PTR_ERR(server);
+@@ -1047,6 +1047,16 @@ int nfs_reconfigure(struct fs_context *fc)
+ 
+ 	sync_filesystem(sb);
  
 +	/*
-+	 * When NFS_MOUNT_UNSHARED is not set, NFS forces the sharing of a
-+	 * superblock among each filesystem that mounts sub-directories
-+	 * belonging to a single exported root path.
-+	 * To prevent interference between different filesystems, the
-+	 * SB_RDONLY flag should be removed from the superblock.
++	 * The SB_RDONLY flag has been removed from the superblock during
++	 * mounts to prevent interference between different filesystems.
++	 * Similarly, it is also necessary to ignore the SB_RDONLY flag
++	 * during reconfiguration; otherwise, it may also result in the
++	 * creation of redundant superblocks when mounting a directory with
++	 * different rw and ro flags multiple times.
 +	 */
- 	if (server->flags & NFS_MOUNT_UNSHARED)
- 		compare_super = NULL;
-+	else
-+		fc->sb_flags &= ~SB_RDONLY;
- 
- 	/* -o noac implies -o sync */
- 	if (server->flags & NFS_MOUNT_NOAC)
++	fc->sb_flags_mask &= ~SB_RDONLY;
++
+ 	/*
+ 	 * Userspace mount programs that send binary options generally send
+ 	 * them populated with default values. We have no way to know which
 -- 
 2.31.1
 
