@@ -1,186 +1,224 @@
-Return-Path: <linux-nfs+bounces-10447-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10448-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74163A4D54F
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 08:48:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C201FA4D613
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 09:19:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8921D1695BF
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 07:47:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 074527A6A69
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 08:17:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B1C1FAC59;
-	Tue,  4 Mar 2025 07:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 258771FBEB7;
+	Tue,  4 Mar 2025 08:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PKq+Px3F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BF61F63F5
-	for <linux-nfs@vger.kernel.org>; Tue,  4 Mar 2025 07:46:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1491FBEA8
+	for <linux-nfs@vger.kernel.org>; Tue,  4 Mar 2025 08:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741074380; cv=none; b=oBhNjrV3LKJZUfYShhEWzjaM7fP1SBH02R2z5L+Uxl4XyRi/+GF0SOKWMc95Zx4ePcjK+0Ou+sCkhPR6vBrSn5vgoAU3NKhGyCv76bumn0PXP62/l4hGUXKrv+wiyIpvlAugvg/6EgXbH2W/eEbAFVGjtqDKFXfrqjW0u3Cwr/E=
+	t=1741076320; cv=none; b=HYUy20I1SOskY3yYPemmBaJwgMaZKV1zxXCJjRYa8KVQ5di1zX5CzNZMOeVx27a+8u1+aCZdJiw+sbCJb1KEVaoqbc0ZfXkFAtB2EaAgtH3WZqjDWJ1WRIwLEybAYXNGSuk1WnGIb4n0hF2gVgsSyrUVCgPy2Cxy6vir2+rz8Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741074380; c=relaxed/simple;
-	bh=CWjfxo+lqepkcZy7RY8Q0t4CY4gywe5o14w1KPriLCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:CC:
-	 In-Reply-To:Content-Type; b=FSgYMtbGfGD5JoQ7dHg+sFlqDgNgMsauHc6au6NR0Uiwa2LKixx+Jm4YOS55Ui23ayxcre1V8/hbS8Uxv7DaCImtm914ASY87kGNQ0PtdgyaAkGTIPuhYhdBuY9bNM3arig/3pLw7eQoFEQjaeMUSwEKPREXiXsJKs965LGbWOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z6SM60z3QzvWqJ;
-	Tue,  4 Mar 2025 15:42:26 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1FEBA14035E;
-	Tue,  4 Mar 2025 15:46:13 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 4 Mar 2025 15:46:12 +0800
-Message-ID: <4fd8d17a-b10a-4c4a-9a7c-8ccfb05c0fa9@huawei.com>
-Date: Tue, 4 Mar 2025 15:46:11 +0800
+	s=arc-20240116; t=1741076320; c=relaxed/simple;
+	bh=MZcygyW82kCp7u9tCYmO6hhj2Hxe6B9gWadL8462is8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gapBpDvKHrMmf7pm6MvlX2CXotsXQZGMqAmboddfMOFFf7VzCt4pU/kg+vsLIzKfMU2vGOEoj8dsDGK5gI4d1pIqWOQcLzWyC9ICHzkq6iQlPE1sGz1WCQY+EboAfpWTaZuAGlHUpkE6Pato52EE2lJs/b1cAoOmfd0sQ5EKBiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PKq+Px3F; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2237cf6a45dso48296115ad.2
+        for <linux-nfs@vger.kernel.org>; Tue, 04 Mar 2025 00:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1741076317; x=1741681117; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gc0xsYnTUQhvWodmw2ejFo3Ab0lc47BeE7G2ofWx65Q=;
+        b=PKq+Px3FNLwRkTOBwFJY58aZWZvV11Sn6sMDKdm902vRcOmgS4qetFZAK02QlQa3yV
+         +JNfVNuFSME4LwW0sUrTrp2lheqfsnWRgA8iuM1buaYkBtG1J+1OksVXyPAJFvMuc7gy
+         mhr0Gj6k5sxAHYB6uHOCGqIdHB8j7qatdlwcLlZZE3sKBIStbUh1k+yuCn+HQTygdmgN
+         8YWUsL/BoOUWRqBFPJIsEtwaDpaKGKwD1qRYQ1nuamuKVtE4vaB2RmOnMMGTxOtZTG4T
+         XwiUNNz2S8+P2Ny7RcqXuUj6clfZ5d6+x2GjeEKpZucDaA2eessGC7AXn5o8BubjFZys
+         c+zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741076317; x=1741681117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gc0xsYnTUQhvWodmw2ejFo3Ab0lc47BeE7G2ofWx65Q=;
+        b=wcAr95xms6L2U4VYyzxwFu9k0E1jMGOnYM+SxI105XzAkaaCeOBTjdEcY4NNxx1cgn
+         xMVyZ4vMlRx8jVKgmPVktC3L8E1JwZCxyAjiwmvcKbyLNYdDCZOONvn50gRelj6C5/06
+         8FAdJEAEltYFuSfqPLUJ9n+JJk7IwlUQ3jtvH8B40tEcx3H8dJemt/8kFZJWbCts8atZ
+         Jp5ACwChJz96+sFSZ2Slrqv6IBgrekH+Wa3pCvIPjrn202N9B8xDEduCeQqN9XnhlCve
+         NPpf+qV0rQ7+w/o+aNf9EsUSmSD+/8dLi0DmyaHihVz1AoVYjhnjBp/ifav/CSxYPwDg
+         EyYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX7AxayHUtbmU9PrdeSsOSdZGJ0DCHUc0GOQjK3kCyBAN72RuSsis6LFh7pg+cP1YVTQxconAWMuM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIvbWn3kW2SGw0QJMdkVG3AFl3BYHYIdy2A2oJS68sCKctVj0C
+	sz1j1FZsiIEnsR8KfFO84OfKb0hfCudkcSw9MJgIOwjjQxoLCQznqcE2dRvo3fw=
+X-Gm-Gg: ASbGnctQexp54cybmYQoybd75Z1hbhE+wHS+GtL+FMUr7LZlwIQgbgo6Ow3+lZOotR4
+	Ty7QwAwLhLOfIw0lYsirTbU6g0DJutCH9GVqBvF/M+0n004oi0I/ymeFZNwYwY6NHyuULS65AVi
+	lNkD8XLL/PoE9/a68WGdpflQBXysf7y0GUdZDIIJJVYIx+eANqhJHYH2OE1sUS2uGyGehjyhKW5
+	ngbhuhELYsHADHSFes3uxCctxEwOiY9GHvi7DApt/xbV3m/QnP2wX9Pjk97ayeK+R0YuSfHw+g0
+	VYQ8tLwW6yIx/8Siom5QTGKmIjE+o2qwJbvPPWWhkQmyaTrbhMZTgKhgNG1sRtTv9auuSMASYc/
+	Aj9prlbUSN7F8lkTz/9UY
+X-Google-Smtp-Source: AGHT+IFtDzCgImtuz8L9+GYRCY4LVCLrXbK0Bo8kgf88DL3yFokQ0qmw0lddBixblhsY0xBrKZj7tQ==
+X-Received: by 2002:a05:6a20:734a:b0:1ee:c390:58ad with SMTP id adf61e73a8af0-1f2f4e014f9mr29817034637.34.1741076317276;
+        Tue, 04 Mar 2025 00:18:37 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-89-135.pa.vic.optusnet.com.au. [49.186.89.135])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de19d3fsm9497416a12.18.2025.03.04.00.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 00:18:36 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1tpNU1-00000008fSI-4AHP;
+	Tue, 04 Mar 2025 19:18:34 +1100
+Date: Tue, 4 Mar 2025 19:18:33 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Luiz Capitulino <luizcap@redhat.com>,
+	Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+	netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+Message-ID: <Z8a3WSOrlY4n5_37@dread.disaster.area>
+References: <20250228094424.757465-1-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: Regression for client nfs_compare_super with NFS_SB_MASK
-To: Philip Rowlands <linux-nfs@dimebar.com>, <linux-nfs@vger.kernel.org>
-References: <12d7ea53-1202-4e21-a7ef-431c94758ce5@app.fastmail.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-CC: yangerkun <yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou
- Tao <houtao1@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>
-In-Reply-To: <12d7ea53-1202-4e21-a7ef-431c94758ce5@app.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228094424.757465-1-linyunsheng@huawei.com>
 
-Hi Philip,
+On Fri, Feb 28, 2025 at 05:44:20PM +0800, Yunsheng Lin wrote:
+> As mentioned in [1], it seems odd to check NULL elements in
+> the middle of page bulk allocating, and it seems caller can
+> do a better job of bulk allocating pages into a whole array
+> sequentially without checking NULL elements first before
+> doing the page bulk allocation for most of existing users.
+> 
+> Through analyzing of bulk allocation API used in fs, it
+> seems that the callers are depending on the assumption of
+> populating only NULL elements in fs/btrfs/extent_io.c and
+> net/sunrpc/svc_xprt.c while erofs and btrfs don't, see:
+> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
+> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
+> commit c9fa563072e1 ("xfs: use alloc_pages_bulk_array() for buffers")
+> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
+> 
+> Change SUNRPC and btrfs to not depend on the assumption.
+> Other existing callers seems to be passing all NULL elements
+> via memset, kzalloc, etc.
+> 
+> Remove assumption of populating only NULL elements and treat
+> page_array as output parameter like kmem_cache_alloc_bulk().
+> Remove the above assumption also enable the caller to not
+> zero the array before calling the page bulk allocating API,
+> which has about 1~2 ns performance improvement for the test
+> case of time_bench_page_pool03_slow() for page_pool in a
+> x86 vm system, this reduces some performance impact of
+> fixing the DMA API misuse problem in [2], performance
+> improves from 87.886 ns to 86.429 ns.
 
-In the future, if you have questions about my patches, please include me 
-on the CC list.
-This way, I won't accidentally miss the discussion and can address any 
-concerns promptly. :)
+How much slower did you make btrfs and sunrpc by adding all the
+defragmenting code there?
 
-Here's my reply:
+> 
+> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
+> 2. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
+> CC: Jesper Dangaard Brouer <hawk@kernel.org>
+> CC: Luiz Capitulino <luizcap@redhat.com>
+> CC: Mel Gorman <mgorman@techsingularity.net>
+> CC: Dave Chinner <david@fromorbit.com>
+> CC: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> V2:
+> 1. Drop RFC tag and rebased on latest linux-next.
+> 2. Fix a compile error for xfs.
 
-While investigating the non-root mount behavior differences between NFSv3
-and NFSv4, I observed some characteristics that might explain the issue.
+And you still haven't tested the code changes to XFS, because
+this patch is also broken.
 
-For NFSv3:
-1) A single superblock is created for the initial mount.
-2) When mounted read-only, this superblock carries the SB_RDONLY flag.
-3) Before commit 52cb7f8f1778 ("nfs: ignore SB_RDONLY when mounting nfs"):
-Subsequent rw mounts would not share the existing ro superblock due to
-flag mismatch, creating a new superblock without SB_RDONLY.
-After the commit:
-   The SB_RDONLY flag is ignored during superblock comparison, and this 
-leads
-   to sharing the existing superblock even for rw mounts.
-   Ultimately results in write operations being rejected at the VFS layer.
+> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> index 5d560e9073f4..b4e95b2dd0f0 100644
+> --- a/fs/xfs/xfs_buf.c
+> +++ b/fs/xfs/xfs_buf.c
+> @@ -319,16 +319,17 @@ xfs_buf_alloc_pages(
+>  	 * least one extra page.
+>  	 */
+>  	for (;;) {
+> -		long	last = filled;
+> +		long	alloc;
+>  
+> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
+> -					  bp->b_pages);
+> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
+> +					 bp->b_pages + filled);
+> +		filled += alloc;
+>  		if (filled == bp->b_page_count) {
+>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
+>  			break;
+>  		}
+>  
+> -		if (filled != last)
+> +		if (alloc)
+>  			continue;
 
-do_new_mount
-  vfs_get_tree
-   nfs_get_tree
-    nfs_fs_context_validate
-     nfs_parse_source
-    nfs_try_get_tree
-     nfs_try_mount_request
-      nfs_request_mount
-       nfs_mount
-       // "NFS: sending MNT request for localhost:/export/stuff"
-     nfs_get_tree_common
-      sget_fc // the only sb, with "ro"
+alloc_pages_bulk() now returns the number of pages allocated in the
+array. So if we ask for 4 pages, then get 2, filled is now 2. Then
+we loop, ask for another 2 pages, get those two pages and it returns
+4. Now filled is 6, and we continue.
 
-For NFSv4:
-1) Multiple superblocks are created and the last one will be kept.
-2) The actually used superblock for ro mounts doesn't carry SB_RDONLY flag.
-Therefore, commit 52cb7f8f1778 doesn't affect NFSv4 mounts.
+Now we ask alloc_pages_bulk() for -2 pages, which returns 4 pages...
 
-do_new_mount
-  vfs_get_tree
-   nfs4_try_get_tree
-    do_nfs4_mount
-     fc_mount
-      vfs_get_tree
-       nfs_get_tree_common
-        sget_fc // sb for root, with "ro", will be free
-     mount_subtree
-      vfs_path_lookup
-       filename_lookup
-        path_lookupat
-         link_path_walk
-          step_into
-           __traverse_mounts
-            nfs_d_automount
-             nfs4_submount
-              nfs_do_submount
-               vfs_get_tree
-                nfs_get_tree_common
-                 sget_fc // sb for subtree, without "ro"
+Worse behaviour: second time around, no page allocation succeeds
+so it returns 2 pages. Filled is now 4, which is the number of pages
+we need, so we break out of the loop with only 2 pages allocated.
+There's about to be kernel crashes occur.....
 
-This fundamental difference in superblock management between protocol 
-versions
-explains why the regression only manifests in NFSv3 use cases.
+Once is a mistake, twice is compeltely unacceptable.  When XFS stops
+using alloc_pages_bulk (probably 6.15) I won't care anymore. But
+until then, please stop trying to change this code.
 
-Perhaps avoiding the SB_RDONLY flag on the superblock during the initial 
-mount
-would be a good idea.
+NACK.
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index b069385eea17..67565e1fd3f0 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1514,6 +1514,9 @@ static int nfs_get_tree(struct fs_context *fc)
-
-         if (err)
-                 return err;
-+
-+       fc->sb_flags &= ~SB_RDONLY;
-+
-         if (!ctx->internal)
-                 return ctx->nfs_mod->rpc_ops->try_get_tree(fc);
-         else
-
-I'll have another round of discussions with the team on the solution 
-approach
-and perform more thorough testing.
-
-Thanks.
-
-在 2025/1/8 3:30, Philip Rowlands 写道:
-> Kernel 6.1.120 / 6.12.2 and others recently changed the definition of NFS_SB_MASK which is used by nfs_compare_super to find existing superblocks.
->     nfs: ignore SB_RDONLY when mounting nfs
->     [ Upstream commit 52cb7f8f177878b4f22397b9c4d2c8f743766be3 ]
->
-> As a result, we now see mount options shared at the superblock level which should not be shared, such as ro.
->
-> Steps to reproduce on Fedora 40:
->
-> mkdir -p /export/{stuff,things}/dir{1,2,3,4}
-> echo '/export/stuff  *(rw)' >> /etc/exports
-> echo '/export/things *(rw)' >> /etc/exports
-> systemctl restart nfs-server
->
-> mount -t nfs -o ro,vers=3 localhost:/export/stuff  /mnt/stuff
-> mount -t nfs -o rw,vers=3 localhost:/export/things /mnt/things
-> grep -w nfs /proc/mounts
->
-> # note that both mountpoints are ro, despite the explicit ro/rw options
-> # reversing the order of mounts gives a different result
->
-> I don’t fully understand the previous problem report regarding repeated mounts with different options to the same mountpoint, but by rolling back the specific patch, we no longer see the above unintended-ro issue.
->
-> Is there a reason that NFSv4 mounts don’t seem to trigger the bug?
->
->
-> Cheers,
-> Phil
->
->
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
