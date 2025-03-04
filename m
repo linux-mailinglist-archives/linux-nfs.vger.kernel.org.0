@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-10451-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10452-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9995BA4DD71
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 13:05:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CBB0A4DD85
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 13:09:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15C0A188B934
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 12:04:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD49517754F
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Mar 2025 12:09:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8685B1FF7AE;
-	Tue,  4 Mar 2025 12:04:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41F322010E3;
+	Tue,  4 Mar 2025 12:09:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EF101FAC50;
-	Tue,  4 Mar 2025 12:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB561FF601;
+	Tue,  4 Mar 2025 12:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089855; cv=none; b=ZA06hb44Am6/O/KsheMZyDQ2FdP+l4hx3dTR+RLvwd/HcUo2pkyppvZ/EDZOp6haovVTNR6lzQadB75vGoj+tolvcDrlQDOhIqdf9OZ3Onya0xcplb8Ezxtix9BDhL0p3NpRIIENUBRUKlIuJFdaTYnY2byQswrV6BfzgKAA5g4=
+	t=1741090182; cv=none; b=RSoKzq8IZ6xkbm4EjSDHCHWPUikvMJed6hIlfg7F5wWMVrgdvlw//asHOkjdWkongHt6+Um56kBF0gZt/R2H8Fu03TU3/t1Wsb7tHtDHM/PDCldUDOy1O91t2uZREouPfsr4KTelxmsxZQ8JNrukQqLE8QLSVc0W9IerCXYpmbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089855; c=relaxed/simple;
-	bh=u3ffzOOdDBdX+c9H5UtwM0oUgiysJs5s7b+QstcanWk=;
+	s=arc-20240116; t=1741090182; c=relaxed/simple;
+	bh=4S8tqaK0XJCLIv/7Rv3hJVe8rj1mH8s+KkdKMp6uzeo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YEfIO/LSWwnmhWpYm347NCz30txeg+murAYlouY9lPo0GELMDlN4LIBYUo2SyajGD4yi2XIjXg6TOeBO6Ly3HOYvJvbg7sgItFlrU+BRu1NDf/fUZ7zMzpCLI3Muz638oAsF+Q8T7d5ILRkZOnZ9whlfq13xrDU1WkiIpAV6s5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 In-Reply-To:Content-Type; b=DaXZqM0wD0MrA8Ot0rtwhQJD1l3t48U+XdoRWzCJZd2X9Xux6zoGaUno/KUm39M88Xu/y2sNlX4ZXXSKUlMCUSKXd6C4qLPVELtoZ5XYRJjeUDkDf9qmRSBzCjgNW0EI9btFvx1GPYZL8vOjBrFtOeDDynft8NV7oVub34d4d8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z6Z4d0yVCzvWqQ;
-	Tue,  4 Mar 2025 20:00:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z6ZBX3494z2DkHc;
+	Tue,  4 Mar 2025 20:05:24 +0800 (CST)
 Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 37B6C180116;
-	Tue,  4 Mar 2025 20:04:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D7E721A016C;
+	Tue,  4 Mar 2025 20:09:35 +0800 (CST)
 Received: from [10.67.120.129] (10.67.120.129) by
  dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 4 Mar 2025 20:04:03 +0800
-Message-ID: <74827bc7-ec6e-4e3a-9d19-61c4a9ba6b2c@huawei.com>
-Date: Tue, 4 Mar 2025 20:04:03 +0800
+ 15.2.1544.11; Tue, 4 Mar 2025 20:09:35 +0800
+Message-ID: <91fcdfca-3e7b-417c-ab26-7d5e37853431@huawei.com>
+Date: Tue, 4 Mar 2025 20:09:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -50,81 +50,43 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
  only NULL elements
-To: Chuck Lever <chuck.lever@oracle.com>, Yishai Hadas <yishaih@nvidia.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
- Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
-	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
-	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
+To: Dave Chinner <david@fromorbit.com>
+CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
+ Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
+	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
+ Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>, "Darrick J.
+ Wong" <djwong@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas
+	<ilias.apalodimas@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Trond Myklebust
+	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
+	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
 	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-CC: Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
-	<mgorman@techsingularity.net>, Dave Chinner <david@fromorbit.com>,
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Luiz Capitulino
+	<luizcap@redhat.com>, Mel Gorman <mgorman@techsingularity.net>,
 	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
 	<linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
 	<linux-erofs@lists.ozlabs.org>, <linux-xfs@vger.kernel.org>,
-	<linux-mm@kvack.org>, <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>
+	<linux-mm@kvack.org>, <netdev@vger.kernel.org>, <linux-nfs@vger.kernel.org>
 References: <20250228094424.757465-1-linyunsheng@huawei.com>
- <a81f9270-8fa8-4a05-a33a-901dd777a71f@oracle.com>
+ <Z8a3WSOrlY4n5_37@dread.disaster.area>
 Content-Language: en-US
 From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <a81f9270-8fa8-4a05-a33a-901dd777a71f@oracle.com>
+In-Reply-To: <Z8a3WSOrlY4n5_37@dread.disaster.area>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 2025/3/4 6:13, Chuck Lever wrote:
-> On 2/28/25 4:44 AM, Yunsheng Lin wrote:
->> As mentioned in [1], it seems odd to check NULL elements in
->> the middle of page bulk allocating, and it seems caller can
->> do a better job of bulk allocating pages into a whole array
->> sequentially without checking NULL elements first before
->> doing the page bulk allocation for most of existing users.
-> 
-> Sorry, but this still makes a claim without providing any data
-> to back it up. Why can callers "do a better job"?
+On 2025/3/4 16:18, Dave Chinner wrote:
 
-What I meant "do a better job" is that callers are already keeping
-track of how many pages have been allocated, and it seems convenient
-to just pass 'page_array + nr_allocated' and 'nr_pages - nr_allocated'
-when calling subsequent page bulk alloc API so that NULL checking
-can be avoided, which seems to be the pattern I see in
-alloc_pages_bulk_interleave().
+...
 
 > 
-> 
->> Through analyzing of bulk allocation API used in fs, it
->> seems that the callers are depending on the assumption of
->> populating only NULL elements in fs/btrfs/extent_io.c and
->> net/sunrpc/svc_xprt.c while erofs and btrfs don't, see:
->> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
->> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
->> commit c9fa563072e1 ("xfs: use alloc_pages_bulk_array() for buffers")
->> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
->>
->> Change SUNRPC and btrfs to not depend on the assumption.
->> Other existing callers seems to be passing all NULL elements
->> via memset, kzalloc, etc.
->>
->> Remove assumption of populating only NULL elements and treat
->> page_array as output parameter like kmem_cache_alloc_bulk().
->> Remove the above assumption also enable the caller to not
->> zero the array before calling the page bulk allocating API,
->> which has about 1~2 ns performance improvement for the test
->> case of time_bench_page_pool03_slow() for page_pool in a
->> x86 vm system, this reduces some performance impact of
->> fixing the DMA API misuse problem in [2], performance
->> improves from 87.886 ns to 86.429 ns.
 >>
 >> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
 >> 2. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
@@ -139,48 +101,122 @@ alloc_pages_bulk_interleave().
 >> V2:
 >> 1. Drop RFC tag and rebased on latest linux-next.
 >> 2. Fix a compile error for xfs.
->> 3. Defragmemt the page_array for SUNRPC and btrfs.
->> ---
->>  drivers/vfio/pci/virtio/migrate.c |  2 --
->>  fs/btrfs/extent_io.c              | 23 +++++++++++++++++-----
->>  fs/erofs/zutil.c                  | 12 ++++++------
->>  fs/xfs/xfs_buf.c                  |  9 +++++----
->>  mm/page_alloc.c                   | 32 +++++--------------------------
->>  net/core/page_pool.c              |  3 ---
->>  net/sunrpc/svc_xprt.c             | 22 +++++++++++++++++----
->>  7 files changed, 52 insertions(+), 51 deletions(-)
 > 
-> 52:51 is not an improvement. 1-2 ns is barely worth mentioning. The
-> sunrpc and btrfs callers are more complex and carry duplicated code.
+> And you still haven't tested the code changes to XFS, because
+> this patch is also broken.
 
-Yes, the hard part is to find common file to place the common function
-as something as below:
+I tested XFS using the below cmd and testcase, testing seems
+to be working fine, or am I missing something obvious here
+as I am not realy familiar with fs subsystem yet:
 
-void defragment_pointer_array(void** array, int size) {
-    int slow = 0;
-    for (int fast = 0; fast < size; fast++) {
-        if (array[fast] != NULL) {
-            swap(&array[fast], &array[slow]);
-            slow++;
-        }
-    }
-}
+Step to setup the xfs:
+dd if=/dev/zero of=xfs_image bs=1M count=1024
+losetup -f xfs_image
+losetup -a
+./mkfs.xfs /dev/loop0
+mkdir xfs_test
+mount /dev/loop0 xfs_test/
 
-Or introduce a function as something like alloc_pages_refill_array()
-for the usecase of sunrpc and xfs and do the array defragment in
-alloc_pages_refill_array() before calling alloc_pages_bulk()?
-Any suggestion?
+Test shell file:
+#!/bin/bash
+
+# Configuration parameters
+DIR="/home/xfs_test"              # Directory to perform file operations
+FILE_COUNT=100              # Maximum number of files to create in each loop
+MAX_FILE_SIZE=1024          # Maximum file size in KB
+MIN_FILE_SIZE=10            # Minimum file size in KB
+OPERATIONS=10               # Number of create/delete operations per loop
+TOTAL_RUNS=10000               # Total number of loops to run
+
+# Check if the directory exists
+if [ ! -d "$DIR" ]; then
+    echo "Directory $DIR does not exist. Please create the directory first!"
+    exit 1
+fi
+
+echo "Starting file system test on: $DIR"
+
+for ((run=1; run<=TOTAL_RUNS; run++)); do
+    echo "Run $run of $TOTAL_RUNS"
+
+    # Randomly create files
+    for ((i=1; i<=OPERATIONS; i++)); do
+        # Generate a random file size between MIN_FILE_SIZE and MAX_FILE_SIZE (in KB)
+        FILE_SIZE=$((RANDOM % (MAX_FILE_SIZE - MIN_FILE_SIZE + 1) + MIN_FILE_SIZE))
+        # Generate a unique file name using timestamp and random number
+        FILE_NAME="$DIR/file_$(date +%s)_$RANDOM"
+        # Create a file with random content
+        dd if=/dev/urandom of="$FILE_NAME" bs=1K count=$FILE_SIZE &>/dev/null
+        echo "Created file: $FILE_NAME, Size: $FILE_SIZE KB"
+    done
+
+    # Randomly delete files
+    for ((i=1; i<=OPERATIONS; i++)); do
+        # List all files in the directory
+        FILE_LIST=($(ls $DIR))
+        # Check if there are any files to delete
+        if [ ${#FILE_LIST[@]} -gt 0 ]; then
+            # Randomly select a file to delete
+            RANDOM_FILE=${FILE_LIST[$RANDOM % ${#FILE_LIST[@]}]}
+            rm -f "$DIR/$RANDOM_FILE"
+            echo "Deleted file: $DIR/$RANDOM_FILE"
+        fi
+    done
+
+    echo "Completed run $run"
+done
+
+echo "Test completed!"
+
 
 > 
-> Not an outright objection from me, but it's hard to justify this change.
+>> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+>> index 5d560e9073f4..b4e95b2dd0f0 100644
+>> --- a/fs/xfs/xfs_buf.c
+>> +++ b/fs/xfs/xfs_buf.c
+>> @@ -319,16 +319,17 @@ xfs_buf_alloc_pages(
+>>  	 * least one extra page.
+>>  	 */
+>>  	for (;;) {
+>> -		long	last = filled;
+>> +		long	alloc;
+>>  
+>> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
+>> -					  bp->b_pages);
+>> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
+>> +					 bp->b_pages + filled);
+>> +		filled += alloc;
+>>  		if (filled == bp->b_page_count) {
+>>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
+>>  			break;
+>>  		}
+>>  
+>> -		if (filled != last)
+>> +		if (alloc)
+>>  			continue;
+> 
+> alloc_pages_bulk() now returns the number of pages allocated in the
+> array. So if we ask for 4 pages, then get 2, filled is now 2. Then
+> we loop, ask for another 2 pages, get those two pages and it returns
+> 4. Now filled is 6, and we continue.
 
-The above should reduce the number to something like 40:51.
+It will be returning 2 instead of 4 for the second loop if I understand
+it correctly as 'bp->b_pages + filled' and 'bp->b_page_count - filled'
+is passing to alloc_pages_bulk() API now.
 
-Also, I looked more closely at other callers calling alloc_pages_bulk(),
-it seems vm_module_tags_populate() doesn't clear next_page[i] to NULL after
-__free_page() when doing 'Clean up and error out', I am not sure if
-vm_module_tags_populate() will be called multi-times as vm_module_tags->pages
-seems to be only set to all NULL once, see alloc_tag_init() -> alloc_mod_tags_mem().
-
-Cc Suren to see if there is some clarifying for the above.
+> 
+> Now we ask alloc_pages_bulk() for -2 pages, which returns 4 pages...
+> 
+> Worse behaviour: second time around, no page allocation succeeds
+> so it returns 2 pages. Filled is now 4, which is the number of pages
+> we need, so we break out of the loop with only 2 pages allocated.
+> There's about to be kernel crashes occur.....
+> 
+> Once is a mistake, twice is compeltely unacceptable.  When XFS stops
+> using alloc_pages_bulk (probably 6.15) I won't care anymore. But
+> until then, please stop trying to change this code.
+> 
+> NACK.
+> 
+> -Dave.
 
