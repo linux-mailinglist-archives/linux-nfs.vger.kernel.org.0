@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-10478-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10479-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id F38F5A5024F
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 15:40:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AA34A50243
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 15:38:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A05B1898338
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 14:37:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF64116A670
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 14:37:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF44C24EF9E;
-	Wed,  5 Mar 2025 14:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12C0924EA8A;
+	Wed,  5 Mar 2025 14:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcBgIWEj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s7ADzKos"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A0724EF99
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Mar 2025 14:34:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E049424E014
+	for <linux-nfs@vger.kernel.org>; Wed,  5 Mar 2025 14:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741185287; cv=none; b=lDuVRUGYSBr49r5ewgBRzPjromqIq1cilFdcBPOASDPHCy8busPM0lYEpRUD23iNvuwHi6QI6PqAnbRl0Us88SztnB5UsFzrxy9T9FUbd8WgkACGbRMlSRi3oDobl5HXgGKJUvajuZTooGZs3ZeeytJBVdSFs1Aqa59jdM1oxmc=
+	t=1741185399; cv=none; b=EPKGX87rV/q5PGy3Z8eOH4r/XSA/w3XAhbnWw34TMpDiXmaHC06CtSPH3tJ4RaTSx/eF9LPLvNUaF77igkoUr/2slSovFyQa7xbESz1r3vbtJ0pqzslWn6qK05IOOzEKJQBcRbz0J+qMNQrT8PxIpRDl4/YrnM/V3khG/CdMUV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741185287; c=relaxed/simple;
-	bh=SYEpFmorBfhvyHoDSPuyHa+brirUzcGnuB9MC4iYvvQ=;
+	s=arc-20240116; t=1741185399; c=relaxed/simple;
+	bh=2wCe1MbBRYWfWh1NokWYWv9NDSJ7p2okUp3WBwXr5G4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OGfXGGpVjQDv/4RQq5Ln11Yf+yheX6sr5sdaR4zy0l19u8W5KniwCfF9YNI14OU17bGMHo45+FN2TNc5BA5asMEXNYfUJ8AimN64r4AtIAgZJdK/n5eOHExwZMcJXh6tOfydYCGnHi2Q1MlfLPbZA8ntv9j88YqJtp4JCmTrHeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcBgIWEj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0263BC4CEE0;
-	Wed,  5 Mar 2025 14:34:46 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Vnwx2w3pUfz55GrjxIG2+h2bWCeBihl0yDYbY/kFbs1r4DuiqAv9aP90fPG7IXzbjxhVDo9hWdUnQaK3UdqgrF5raScwp5QDWq6YWcyw5kOSOfz6BJ7UxkbwREjsT4Rlc267uDtBS4vIMv6E3hGR/IG3VlcF03eqvUL41qDwI60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s7ADzKos; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D8CC4CED1;
+	Wed,  5 Mar 2025 14:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741185287;
-	bh=SYEpFmorBfhvyHoDSPuyHa+brirUzcGnuB9MC4iYvvQ=;
+	s=k20201202; t=1741185398;
+	bh=2wCe1MbBRYWfWh1NokWYWv9NDSJ7p2okUp3WBwXr5G4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IcBgIWEjSOxMl8lY1Ngz3n/qgCpLFGHzxm4uLN+5LB4eznJa0u790C8aaBI5gZ7ov
-	 N6G9OKKgps7Q3TlYP2WQ+WAHRmPeGfFmeNTDjM7KtLjHyVKCZGhrTrOvXCRAT8T5Zx
-	 IqYzKcKaMfIw7ANXx0WYDU1P2+xDcRFg6aML99axpL1bcVh4LHqMeyK/oXnyT5/U2e
-	 6ovyBtyNaBePDrbDr5CFUPfwffoJX+ygdyXE/pPoIiYlf+4z63ulPBp/qPGBsm+Nl9
-	 KT6dTz1SqIU+VT5qsx/wCKjGQUm2httK3nsXrMfHKFjip4K8cT1cN3OAkrIGfJweUD
-	 94K7/UKXcLdmQ==
-Message-ID: <22c1c21fde3a5b17851207664571341e3dcfc315.camel@kernel.org>
-Subject: Re: [PATCH V4 2/2] NFSD: allow client to use write delegation
- stateid for READ
+	b=s7ADzKos7v0yad+b7ZI7NRC49xSXTotaFm/sm6MkGEC1DRM88q8P+leef882+gQbv
+	 k/kJkUSZ9BfFv8dE8a9WoI1lfrFWr/OaRXbwm/sJBqpHko+aTBAxG6LpySuIXiYrxG
+	 3vWVRItNgXPK9sHlHvhS0zm2+PTbAyHXYkxkVrfakSVS9FEXbAsrXEbnGN9+/fMcVY
+	 XF0UB8ZyL9Xuostq96PyvvSPrsuJ0PzLkZD8TySugPBr3NmpE2ZpHyAYGFuE0nzCI+
+	 dxK+yL1gWuhE3wdgkwC/WTZBjVpjefX1x/iiFy2sWijQlEyiUYY/r8vlMW2PDcqHrf
+	 lZyABH4X7dDqw==
+Message-ID: <81bbbea01bb478cad8eb2ad85e10f13e4b433e34.camel@kernel.org>
+Subject: Re: [PATCH V4 1/2] NFSD: Offer write delegation for OPEN with
+ OPEN4_SHARE_ACCESS_WRITE
 From: Jeff Layton <jlayton@kernel.org>
 To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@suse.de, 
 	okorniev@redhat.com, tom@talpey.com
 Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
-Date: Wed, 05 Mar 2025 09:34:45 -0500
-In-Reply-To: <1741120693-2517-3-git-send-email-dai.ngo@oracle.com>
+Date: Wed, 05 Mar 2025 09:36:37 -0500
+In-Reply-To: <1741120693-2517-2-git-send-email-dai.ngo@oracle.com>
 References: <1741120693-2517-1-git-send-email-dai.ngo@oracle.com>
-	 <1741120693-2517-3-git-send-email-dai.ngo@oracle.com>
+	 <1741120693-2517-2-git-send-email-dai.ngo@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,126 +137,114 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-03-04 at 12:38 -0800, Dai Ngo wrote:
-> Allow READ using write delegation stateid granted on OPENs with
-> OPEN4_SHARE_ACCESS_WRITE only, to accommodate clients whose WRITE
-> implementation may unavoidably do (e.g., due to buffer cache
-> constraints).
+> RFC8881, section 9.1.2 says:
 >=20
-> For write delegation granted for OPEN with OPEN4_SHARE_ACCESS_WRITE
-> a new nfsd_file and a struct file are allocated to use for reads.
-> The nfsd_file is freed when the file is closed by release_all_access.
+>   "In the case of READ, the server may perform the corresponding
+>    check on the access mode, or it may choose to allow READ for
+>    OPEN4_SHARE_ACCESS_WRITE, to accommodate clients whose WRITE
+>    implementation may unavoidably do (e.g., due to buffer cache
+>    constraints)."
+>=20
+> and in section 10.4.1:
+>    "Similarly, when closing a file opened for OPEN4_SHARE_ACCESS_WRITE/
+>    OPEN4_SHARE_ACCESS_BOTH and if an OPEN_DELEGATE_WRITE delegation
+>    is in effect"
+>=20
+> This patch offers write delegation for OPEN with OPEN4_SHARE_ACCESS_WRITE
+> only. Also deleted no longer use find_rw_file().
 >=20
 > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 > ---
->  fs/nfsd/nfs4state.c | 44 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 36 insertions(+), 8 deletions(-)
+>  fs/nfsd/nfs4state.c | 34 +++++++++++++---------------------
+>  1 file changed, 13 insertions(+), 21 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b533225e57cf..35018af4e7fb 100644
+> index 0f97f2c62b3a..b533225e57cf 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -6126,6 +6126,34 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, s=
-truct svc_fh *currentfh,
->  	return rc =3D=3D 0;
+> @@ -633,18 +633,6 @@ find_readable_file(struct nfs4_file *f)
+>  	return ret;
 >  }
 > =20
-> +/*
-> + * Add NFS4_SHARE_ACCESS_READ to the write delegation granted on OPEN
-> + * with NFS4_SHARE_ACCESS_WRITE by allocating separate nfsd_file and
-> + * struct file to be used for read with delegation stateid.
-> + *
-> + */
-> +static bool
-> +nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqstp, struct nfsd4_open =
-*open,
-> +			      struct svc_fh *fh, struct nfs4_ol_stateid *stp)
-> +{
-> +	struct nfs4_file *fp;
-> +	struct nfsd_file *nf =3D NULL;
-> +
-> +	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) =3D=3D
-> +			NFS4_SHARE_ACCESS_WRITE) {
-> +		if (nfsd_file_acquire_opened(rqstp, fh, NFSD_MAY_READ, NULL, &nf))
-> +			return (false);
-> +		fp =3D stp->st_stid.sc_file;
-> +		spin_lock(&fp->fi_lock);
-> +		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
-> +		set_access(NFS4_SHARE_ACCESS_READ, stp);
-> +		fp =3D stp->st_stid.sc_file;
-> +		fp->fi_fds[O_RDONLY] =3D nf;
-> +		spin_unlock(&fp->fi_lock);
-> +	}
-> +	return (true);
-
-no need for parenthesis here ^^^
-
-> +}
-> +
->  /*
->   * The Linux NFS server does not offer write delegations to NFSv4.0
->   * clients in order to avoid conflicts between write delegations and
-> @@ -6151,8 +6179,9 @@ nfs4_delegation_stat(struct nfs4_delegation *dp, st=
-ruct svc_fh *currentfh,
->   * open or lock state.
->   */
->  static void
-> -nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *st=
-p,
-> -		     struct svc_fh *currentfh)
-> +nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open *open,
-> +		     struct nfs4_ol_stateid *stp, struct svc_fh *currentfh,
-> +		     struct svc_fh *fh)
+> -static struct nfsd_file *
+> -find_rw_file(struct nfs4_file *f)
+> -{
+> -	struct nfsd_file *ret;
+> -
+> -	spin_lock(&f->fi_lock);
+> -	ret =3D nfsd_file_get(f->fi_fds[O_RDWR]);
+> -	spin_unlock(&f->fi_lock);
+> -
+> -	return ret;
+> -}
+> -
+>  struct nfsd_file *
+>  find_any_file(struct nfs4_file *f)
 >  {
->  	bool deleg_ts =3D open->op_deleg_want & OPEN4_SHARE_ACCESS_WANT_DELEG_T=
-IMESTAMPS;
->  	struct nfs4_openowner *oo =3D openowner(stp->st_stateowner);
-> @@ -6197,7 +6226,8 @@ nfs4_open_delegation(struct nfsd4_open *open, struc=
-t nfs4_ol_stateid *stp,
->  	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->=
-dl_stid.sc_stateid));
+> @@ -5382,7 +5370,6 @@ static int nfsd4_cb_recall_done(struct nfsd4_callba=
+ck *cb,
+>  	if (dp->dl_stid.sc_status)
+>  		/* CLOSED or REVOKED */
+>  		return 1;
+> -
+>  	switch (task->tk_status) {
+>  	case 0:
+>  		return 1;
+> @@ -5987,14 +5974,19 @@ nfs4_set_delegation(struct nfsd4_open *open, stru=
+ct nfs4_ol_stateid *stp,
+>  	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
+>  	 *   on its own, all opens."
+>  	 *
+> -	 * Furthermore the client can use a write delegation for most READ
+> -	 * operations as well, so we require a O_RDWR file here.
+> +	 * Furthermore, section 9.1.2 says:
+> +	 *
+> +	 *  "In the case of READ, the server may perform the corresponding
+> +	 *  check on the access mode, or it may choose to allow READ for
+> +	 *  OPEN4_SHARE_ACCESS_WRITE, to accommodate clients whose WRITE
+> +	 *  implementation may unavoidably do (e.g., due to buffer cache
+> +	 *  constraints)."
+>  	 *
+> -	 * Offer a write delegation in the case of a BOTH open, and ensure
+> -	 * we get the O_RDWR descriptor.
+> +	 *  We choose to offer a write delegation for OPEN with the
+> +	 *  OPEN4_SHARE_ACCESS_WRITE access mode to accommodate such clients.
+>  	 */
+> -	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) =3D=3D NFS4_SHARE_=
+ACCESS_BOTH) {
+> -		nf =3D find_rw_file(fp);
+> +	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> +		nf =3D find_writeable_file(fp);
+>  		dl_type =3D deleg_ts ? OPEN_DELEGATE_WRITE_ATTRS_DELEG : OPEN_DELEGATE=
+_WRITE;
+>  	}
 > =20
->  	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-> -		if (!nfs4_delegation_stat(dp, currentfh, &stat)) {
-> +		if ((!nfsd4_add_rdaccess_to_wrdeleg(rqstp, open, fh, stp)) ||
-
-extra set of parens above too ^^^
-
-> +				!nfs4_delegation_stat(dp, currentfh, &stat)) {
->  			nfs4_put_stid(&dp->dl_stid);
->  			destroy_delegation(dp);
->  			goto out_no_deleg;
-> @@ -6353,7 +6383,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct =
-svc_fh *current_fh, struct nf
->  	* Attempt to hand out a delegation. No error return, because the
->  	* OPEN succeeds even if we fail.
->  	*/
-> -	nfs4_open_delegation(open, stp, &resp->cstate.current_fh);
-> +	nfs4_open_delegation(rqstp, open, stp,
-> +		&resp->cstate.current_fh, current_fh);
+> @@ -6116,7 +6108,7 @@ static bool
+>  nfs4_delegation_stat(struct nfs4_delegation *dp, struct svc_fh *currentf=
+h,
+>  		     struct kstat *stat)
+>  {
+> -	struct nfsd_file *nf =3D find_rw_file(dp->dl_stid.sc_file);
+> +	struct nfsd_file *nf =3D find_writeable_file(dp->dl_stid.sc_file);
+>  	struct path path;
+>  	int rc;
 > =20
->  	/*
->  	 * If there is an existing open stateid, it must be updated and
-> @@ -7098,10 +7129,6 @@ nfs4_find_file(struct nfs4_stid *s, int flags)
+> @@ -7063,7 +7055,7 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *c=
+state,
+>  		return_revoked =3D true;
+>  	if (typemask & SC_TYPE_DELEG)
+>  		/* Always allow REVOKED for DELEG so we can
+> -		 * retturn the appropriate error.
+> +		 * return the appropriate error.
+>  		 */
+>  		statusmask |=3D SC_STATUS_REVOKED;
 > =20
->  	switch (s->sc_type) {
->  	case SC_TYPE_DELEG:
-> -		spin_lock(&s->sc_file->fi_lock);
-> -		ret =3D nfsd_file_get(s->sc_file->fi_deleg_file);
-> -		spin_unlock(&s->sc_file->fi_lock);
-> -		break;
->  	case SC_TYPE_OPEN:
->  	case SC_TYPE_LOCK:
->  		if (flags & RD_STATE)
-> @@ -7277,6 +7304,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
->  		status =3D find_cpntf_state(nn, stateid, &s);
->  	if (status)
->  		return status;
-> +
->  	status =3D nfsd4_stid_check_stateid_generation(stateid, s,
->  			nfsd4_has_session(cstate));
->  	if (status)
 
-Patch itself looks good though, so with the nits fixed up, you can add:
+This patch also looks good.
+
+The only other issue I have with this is the patch ordering. If a
+bisect lands between these two patches then delegations won't work
+quite right. Is there a reason to order the patches this way?
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
