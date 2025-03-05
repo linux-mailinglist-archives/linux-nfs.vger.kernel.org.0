@@ -1,183 +1,97 @@
-Return-Path: <linux-nfs+bounces-10471-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10472-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E712A4F766
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 07:46:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6F2A4FCE1
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 11:55:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C338188DF93
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 06:46:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 000BC3A5475
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 10:53:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D71B8156F44;
-	Wed,  5 Mar 2025 06:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB7421931B;
+	Wed,  5 Mar 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbrRUreF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA0B1EA7F8
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Mar 2025 06:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58C21481E;
+	Wed,  5 Mar 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741157144; cv=none; b=jlms6Qjif7KaDqxBW0Zmn0wDxgW92pTtORdZuOzUUx63Szcp+alTJqm89GMyHruTZ/ECJnyOuOF7LIEK2Yrg4207RCuc6/4UE0t4KyzqKLX5PE1pr4aBdj2dlRflkb5KEKC1Lrgh3vJgedCdomlO3Hs+sQZsb1eLcTg2Sse8BpI=
+	t=1741172024; cv=none; b=iDufA7DC7jDUNj5sGLLKl9ra/vNea4BAUQtUVizUN+C/wOiem3iFLraWB7Ig8k1gI9m7qxdccRwMCOQMKx+REkcSFx2Ol6ae3+s+JKa8UR/QYbTd5ivS1hiYJK9LQ8YhmFyL5UdUJDZS2V0wKZ9ZnGLhmfw+3Neo0PKpN0kpcvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741157144; c=relaxed/simple;
-	bh=8oYKz/ewRr6nzZPNk/FwObgnHQ43xtf+deaFsgsQjiY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tufryp6VGNqkJJCbfGz/bfHv0DW/90nQI5C8KtTRUVMbtKD4nMVnQ4ZqrHgAGZstdMiFUn+1l3XQpWlw9bOyQUdH4uzub9Xfchh6wnjKyST0hOVh67xTTp0/oR6yS+xoyslb/xf2PpMgF3HUIZI1qoFHf2sfvDoF7IlrPwmHBds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z72yG4KSdz2Dkky;
-	Wed,  5 Mar 2025 14:41:26 +0800 (CST)
-Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C27A1400DC;
-	Wed,  5 Mar 2025 14:45:39 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
- (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 5 Mar
- 2025 14:45:38 +0800
-From: zhangjian <zhangjian496@huawei.com>
-To: <sorenson@redhat.com>, <s.ikarashi@fujitsu.com>, <jlayton@kernel.org>,
-	<steved@redhat.com>, <smayhew@redhat.com>
-CC: <lilingfeng3@huawei.com>, <linux-nfs@vger.kernel.org>
-Subject: [PATCH V4] nfsdcld: fix cld pipe read size
-Date: Thu, 6 Mar 2025 08:00:08 +0800
-Message-ID: <20250306000008.721274-1-zhangjian496@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1741172024; c=relaxed/simple;
+	bh=CyQYA8QT/E8saZLnr8xc7a8hcGKPEF3OXhBq+CgiyV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=keGvgSNCXGyN6yKBBbaAZ7SoSvGa5eD4mYyOgfSkderR0RrL9WTSEnRcRRpBo/bEJc8qSTEhh7sPQr6jr+YqFQMdcGui7tOds87cI6OZrLopvNuLgbXmfZJlzQoJvoki6w8EYR+60fbxTtATTzgS5t4aFu7ttQieRvancJ0s4As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbrRUreF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03325C4CEE2;
+	Wed,  5 Mar 2025 10:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741172023;
+	bh=CyQYA8QT/E8saZLnr8xc7a8hcGKPEF3OXhBq+CgiyV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GbrRUreFzF/8gWZ1gw8kq5+1oWNigoTczo7f8761DaHStemr0sBPjIFnQFM6H9Kih
+	 fjOtGawlN2afh472awfTFId60JqWqBZohE2cCTk/dVE6WMzcLafLuDPYsoe3LYmkxN
+	 +Dndx4cJyzqoeG76eVt0uk+aPh5gJiNwAW02GcofjnDMGNrSESCVrCScpbgE4SMiro
+	 MrGLd4o9FPpfmg3V1Vr4Mg0BWZKdl9+WdyuvH5QTUBgzVDzyfTx64UD0n1dmnG/aXp
+	 Tw6O9i3pStjmMcvnO84e99rU7s4VzyKe4W8+5OKZDGaE7DMPysM5uXp7V8+fEC2WQe
+	 34j/D3gVZi+FA==
+Date: Wed, 5 Mar 2025 11:53:37 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>, 
+	Xiubo Li <xiubli@redhat.com>, ceph-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6 - REVISED] fuse: return correct dentry for ->mkdir
+Message-ID: <20250305-bannen-zugriff-cd7508258062@brauner>
+References: <>
+ <CAJfpegtu1xs-FifNfc2VpQuhBjbniTqUcE+H=uNpdYW=cOSGkw@mail.gmail.com>
+ <174112490070.33508.15852253149143067890@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemp200004.china.huawei.com (7.202.195.99)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174112490070.33508.15852253149143067890@noble.neil.brown.name>
 
-When nfsd inits failed for detecting cld version in
-nfsd4_client_tracking_init, kernel may assume nfsdcld support version 1
-message format and try to upcall with v1 message size to nfsdcld.
-There exists one error case in the following process, causeing nfsd
-hunging for nfsdcld replay:
+On Wed, Mar 05, 2025 at 08:48:20AM +1100, NeilBrown wrote:
+> 
+> Subject: [PATCH] fuse: return correct dentry for ->mkdir
+> 
+> fuse already uses d_splice_alias() to ensure an appropriate dentry is
+> found for a newly created dentry.  Now that ->mkdir can return that
+> dentry we do so.
+> 
+> This requires changing create_new_entry() to return a dentry and
+> handling that change in all callers.
+> 
+> Note that when create_new_entry() is asked to create anything other than
+> a directory we can be sure it will NOT return an alternate dentry as
+> d_splice_alias() only returns an alternate dentry for directories.
+> So we don't need to check for that case when passing one the result.
+> 
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/fuse/dir.c | 48 +++++++++++++++++++++++++++++++-----------------
+>  1 file changed, 31 insertions(+), 17 deletions(-)
+> 
+> Thanks for the suggestion Miklos - this looks much better.
+> 
+> Christian: could you please replace the fuse patch in your tree
+> with this version?  Thanks.
 
-kernel write to pipe->msgs (v1 msg length)
-    |--------- first msg --------|-------- second message -------|
-
-nfsdcld read from pipe->msgs (v2 msg length)
-    |------------ first msg --------------|---second message-----|
-    |  valid message             | ignore |     wrong message    |
-
-When two nfsd kernel thread add two upcall messages to cld pipe with v1
-version cld_msg (size == 1034) concurrently，but nfsdcld reads with v2
-version size(size == 1067), 33 bytes of the second message will be read
-and merged with first message. The 33 bytes in second message will be
-ignored. Nfsdcld will then read 1001 bytes in second message, which cause
-FATAL in cld_messaged_size checking. Nfsd kernel thread will hang for
-it forever until nfs server restarts.
-
-Signed-off-by: zhangjian <zhangjian496@huawei.com>
-Reviewed-by: Scott Mayhew <smayhew@redhat.com>
----
- utils/nfsdcld/nfsdcld.c | 65 ++++++++++++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 20 deletions(-)
-
-diff --git a/utils/nfsdcld/nfsdcld.c b/utils/nfsdcld/nfsdcld.c
-index dbc7a57..f7737d9 100644
---- a/utils/nfsdcld/nfsdcld.c
-+++ b/utils/nfsdcld/nfsdcld.c
-@@ -716,35 +716,60 @@ reply:
- 	}
- }
- 
--static void
--cldcb(int UNUSED(fd), short which, void *data)
-+static int
-+cld_pipe_read_msg(struct cld_client *clnt)
- {
--	ssize_t len;
--	struct cld_client *clnt = data;
--#if UPCALL_VERSION >= 2
--	struct cld_msg_v2 *cmsg = &clnt->cl_u.cl_msg_v2;
--#else
--	struct cld_msg *cmsg = &clnt->cl_u.cl_msg;
--#endif
-+	ssize_t len, left_len;
-+	ssize_t hdr_len = sizeof(struct cld_msg_hdr);
-+	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;
- 
--	if (which != EV_READ)
--		goto out;
-+	len = atomicio(read, clnt->cl_fd, hdr, hdr_len);
- 
--	len = atomicio(read, clnt->cl_fd, cmsg, sizeof(*cmsg));
- 	if (len <= 0) {
- 		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
--		cld_pipe_open(clnt);
--		goto out;
-+		goto fail_read;
- 	}
- 
--	if (cmsg->cm_vers > UPCALL_VERSION) {
-+	switch (hdr->cm_vers) {
-+	case 1:
-+		left_len = sizeof(struct cld_msg) - hdr_len;
-+		break;
-+	case 2:
-+		left_len = sizeof(struct cld_msg_v2) - hdr_len;
-+		break;
-+	default:
- 		xlog(L_ERROR, "%s: unsupported upcall version: %hu",
--				__func__, cmsg->cm_vers);
--		cld_pipe_open(clnt);
--		goto out;
-+			__func__, hdr->cm_vers);
-+		goto fail_read;
- 	}
- 
--	switch(cmsg->cm_cmd) {
-+	len = atomicio(read, clnt->cl_fd, hdr + 1, left_len);
-+
-+	if (len <= 0) {
-+		xlog(L_ERROR, "%s: pipe read failed: %m", __func__);
-+		goto fail_read;
-+	}
-+
-+	return 0;
-+
-+fail_read:
-+	cld_pipe_open(clnt);
-+	return -1;
-+}
-+
-+static void
-+cldcb(int UNUSED(fd), short which, void *data)
-+{
-+	struct cld_client *clnt = data;
-+	struct cld_msg_hdr *hdr = (struct cld_msg_hdr *)&clnt->cl_u;
-+
-+	if (which != EV_READ)
-+		goto out;
-+
-+	if (cld_pipe_read_msg(clnt) < 0)
-+		goto out;
-+
-+	switch (hdr->cm_cmd) {
- 	case Cld_Create:
- 		cld_create(clnt);
- 		break;
-@@ -765,7 +790,7 @@ cldcb(int UNUSED(fd), short which, void *data)
- 		break;
- 	default:
- 		xlog(L_WARNING, "%s: command %u is not yet implemented",
--				__func__, cmsg->cm_cmd);
-+				__func__, hdr->cm_cmd);
- 		cld_not_implemented(clnt);
- 	}
- out:
--- 
-2.33.0
-
+Sure, done so now. Thanks!
 
