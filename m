@@ -1,312 +1,136 @@
-Return-Path: <linux-nfs+bounces-10499-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10500-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9068AA54A56
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 13:08:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A54AA54ACF
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 13:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EA2616C231
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:08:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 342C63A4861
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:35:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 203E520AF96;
-	Thu,  6 Mar 2025 12:08:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DF5C205E25;
+	Thu,  6 Mar 2025 12:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvV2RCBU"
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="i+ObyS3e"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA804201022;
-	Thu,  6 Mar 2025 12:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D09820A5E7;
+	Thu,  6 Mar 2025 12:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262889; cv=none; b=JJ+eCO91/u9s61tQac6baKQ4HMvCqyIQL0xGJa6aiZC9mDhdwRdQJRBTrl6770iraDfmPjO/EAvU0pbo60Q3daSiAagLoGnZZqXJ6uXS+4JKM/cEjX+BO1Ye5EtcHqjWhaEbd3YZCsXidGaCiwR7ciWbtOoudJPDHmIZAJUvEu8=
+	t=1741264534; cv=none; b=EKstqPSEy+mAdU05eC1JbLV+IjdvsWEF2BdbGDhllRk3Zn2ruXLAanKrcGv8jeUraTjfdwGbm8cWcbrqL36+R+M9AMRLnSFG7RgLY9//JVizVhiE+YO0vNK9Eujm4NrR/y7sbirgh7SEzcGz+nnZtueEsMmONI8WKoTVSrJRnJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262889; c=relaxed/simple;
-	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rUj1Y2T0Iys92+9oWAosZE8zjB+MhXHaXHBX5wZPWYEziNvfJPlw/PVkKsSiBmMyLfo1WOdcYCF5UGuZMa9TDn7drzS67DTG2ubVUhuOD4RhEWik8sB8bOumZgy/dof9JZpRAP1chYSimuNUvEsscZlFfLoDJIMdG89Xk3B2LFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvV2RCBU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FEBC4CEE0;
-	Thu,  6 Mar 2025 12:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741262888;
-	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VvV2RCBUgyAKtcOzcBcQ5VFPIpjskYij2cFQ5yWi0x5ZLrpF+Mnxp7N2qmEYa2Vk1
-	 xSohKONmubqMjrN8NxTJmqY/D/G0gK0WRcZhDqNuB/x7MWNUWE1Qy9Gig6eE5tnvOs
-	 K0hTnpdpXV7ZKmN0ZfltaB+QpGBxLtQhw3stmLEu6ZWWZQJmNKhxOSbi4g2KaHJe9D
-	 NlWKTc6UvDfSWTL4tHTw06gv1rgabQgopMuUgiuQhoM7DKjyADNg7NZcaXZXrYzBC4
-	 PlPfxBkoRh0LIFk1S1LnSsUFh1tkiI9oRlqY8PWuni8zCJNjNcJnGmEW2ZEj02pcnQ
-	 NTf2WPVjgPQLA==
-Message-ID: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
-Subject: Re: [PATCH 2/2] NFSD: fix race between nfsd registration and
- exports_proc
-From: Jeff Layton <jlayton@kernel.org>
-To: Maninder Singh <maninder1.s@samsung.com>, chuck.lever@oracle.com, 
-	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
-	lorenzo@kernel.org
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chungki0201.woo@samsung.com, Shubham Rana <s9.rana@samsung.com>
-Date: Thu, 06 Mar 2025 07:08:06 -0500
-In-Reply-To: <20250306092007.1419237-2-maninder1.s@samsung.com>
-References: <20250306092007.1419237-1-maninder1.s@samsung.com>
-		<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcas5p4.samsung.com>
-	 <20250306092007.1419237-2-maninder1.s@samsung.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1741264534; c=relaxed/simple;
+	bh=Yjc4g7I3W0q996AfPYrXozncDPv74eSiI3Za5orBClw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nl6Knv674N1w1MAcZFlz69z20VVGbW2lUNvCcXj2AdmkxWr6gjRRh/O4KlN/zvX9AR0Qktnw51nc/t7YX/15cPWOWInnK6KtdPZWeW3qx2lIz+zHzMaykDIiDddZnTQmxhvbD6PdB3aqo64D+RimR00Un7jogf+wxiHeAQbvvPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=i+ObyS3e; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B956041C84;
+	Thu,  6 Mar 2025 12:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
+	t=1741264529;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LIAupSyQFmMjLVkh2YfYSYCNekyDLDkOQLc1JGMLJy4=;
+	b=i+ObyS3e3eXqSSUU5kHwJ12fYtwUEIDyBKyXFObUolVpP5yTDwHgJrrIfPFGnJJotghqKK
+	70jNbwZYAHkr2AYZdxWAhKhkLvSCKDkEexz06lxNb5pY1TyC7eGq4giqbyQsaaPxjEUeRm
+	Q0J93+vvcuvHSJyDm8wb5Nyyep3R6fb7Vg4ojHuZ1K703GQpehq8IJh1bD3qIC0q+QEQ70
+	u8EAae+x95G9u2uDGxzVQvD2ereA+ApPEr5aKYLovTBe7WT61VR/M8TXS/K+4sz63/oM7h
+	M7TuWs7pQHh72G4Vw2HGVcQINFZ6a/+TrkWSzEjkjN3B3XteBFY52fH/sVIYWA==
+From: nicolas.bouchinet@clip-os.org
+To: coda@cs.cmu.edu,
+	linux-kernel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu,
+	linux-nfs@vger.kernel.org
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	Joel Granados <j.granados@samsung.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Subject: [PATCH v3 0/3] Fixes multiple sysctl bound checks
+Date: Thu,  6 Mar 2025 13:35:07 +0100
+Message-ID: <20250306123514.386434-1-nicolas.bouchinet@clip-os.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddutdejjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgnecuggftrfgrthhtvghrnhepieeigeehteehfeetuddtieefuefgfeevheevvdeiudetvdelleejveekkedvleeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdeifedrvdegiedrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrieefrddvgeeirddukeejpdhhvghloheprghrtghhlhhinhhugidrrddpmhgrihhlfhhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegtohgurgestghsrdgtmhhurdgvughupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghouggrlhhishhtsegtohgurgdrtghsrdgtmhhurdgvughupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsr
+ dgsohhutghhihhnvghtsehsshhirdhgohhuvhdrfhhrpdhrtghpthhtohepjhdrghhrrghnrgguohhssehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptghlvghmvghnsheslhgrughishgthhdruggvpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvg
+X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
-On Thu, 2025-03-06 at 14:50 +0530, Maninder Singh wrote:
-> As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
-> and cleanup by remove_proc_entry() at last of exit_nfsd.
->=20
-> Which causes kernel OOPs if there is race between below 2 operations:
-> (i) exportfs -r
-> (ii) mount -t nfsd none /proc/fs/nfsd
->=20
-> for 5.4 kernel ARM64:
->=20
-> CPU 1:
-> el1_irq+0xbc/0x180
-> arch_counter_get_cntvct+0x14/0x18
-> running_clock+0xc/0x18
-> preempt_count_add+0x88/0x110
-> prep_new_page+0xb0/0x220
-> get_page_from_freelist+0x2d8/0x1778
-> __alloc_pages_nodemask+0x15c/0xef0
-> __vmalloc_node_range+0x28c/0x478
-> __vmalloc_node_flags_caller+0x8c/0xb0
-> kvmalloc_node+0x88/0xe0
-> nfsd_init_net+0x6c/0x108 [nfsd]
-> ops_init+0x44/0x170
-> register_pernet_operations+0x114/0x270
-> register_pernet_subsys+0x34/0x50
-> init_nfsd+0xa8/0x718 [nfsd]
-> do_one_initcall+0x54/0x2e0
->=20
-> CPU 2 :
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-00000000010
->=20
-> PC is at : exports_net_open+0x50/0x68 [nfsd]
->=20
-> Call trace:
-> exports_net_open+0x50/0x68 [nfsd]
-> exports_proc_open+0x2c/0x38 [nfsd]
-> proc_reg_open+0xb8/0x198
-> do_dentry_open+0x1c4/0x418
-> vfs_open+0x38/0x48
-> path_openat+0x28c/0xf18
-> do_filp_open+0x70/0xe8
-> do_sys_open+0x154/0x248
->=20
-> Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_r=
-cu().
->=20
-> and same is happening on latest 6.14 kernel as well:
->=20
-> [    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
-> ...
-> [  285.455918] Unable to handle kernel paging request at virtual address =
-00001f4800001f48
-> ...
-> [  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
-> ...
-> [  285.469695] Call trace:
-> [  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
-> [  285.470488]  seq_read+0xe0/0x11c
-> [  285.470675]  proc_reg_read+0x9c/0xf0
-> [  285.470874]  vfs_read+0xc4/0x2fc
-> [  285.471057]  ksys_read+0x6c/0xf4
-> [  285.471231]  __arm64_sys_read+0x1c/0x28
-> [  285.471428]  invoke_syscall+0x44/0x100
-> [  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
-> [  285.471870]  do_el0_svc_compat+0x1c/0x34
-> [  285.472073]  el0_svc_compat+0x2c/0x80
-> [  285.472265]  el0t_32_sync_handler+0x90/0x140
-> [  285.472473]  el0t_32_sync+0x19c/0x1a0
-> [  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
-> [  285.473422] ---[ end trace 0000000000000000 ]---
->=20
-> It reproduced simply with below script:
-> while [ 1 ]
-> do
-> /exportfs -r
-> done &
->=20
-> while [ 1 ]
-> do
-> insmod /nfsd.ko
-> mount -t nfsd none /proc/fs/nfsd
-> umount /proc/fs/nfsd
-> rmmod nfsd
-> done &
->=20
-> So exporting interfaces to user space shall be done at last and
-> cleanup at first place.
->=20
-> With change there is no Kernel OOPs.
->=20
-> Co-developed-by: Shubham Rana <s9.rana@samsung.com>
-> Signed-off-by: Shubham Rana <s9.rana@samsung.com>
-> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
-> ---
->  fs/nfsd/nfsctl.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index d773481bcf10..f9763ced743d 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -2291,12 +2291,9 @@ static int __init init_nfsd(void)
->  	if (retval)
->  		goto out_free_pnfs;
->  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
-> -	retval =3D create_proc_exports_entry();
-> -	if (retval)
-> -		goto out_free_lockd;
->  	retval =3D register_pernet_subsys(&nfsd_net_ops);
->  	if (retval < 0)
-> -		goto out_free_exports;
-> +		goto out_free_lockd;
->  	retval =3D register_cld_notifier();
->  	if (retval)
->  		goto out_free_subsys;
-> @@ -2307,12 +2304,17 @@ static int __init init_nfsd(void)
->  	if (retval)
->  		goto out_free_nfsd4;
->  	retval =3D genl_register_family(&nfsd_nl_family);
-> +	if (retval)
-> +		goto out_free_filesystem;
-> +	retval =3D create_proc_exports_entry();
->  	if (retval)
->  		goto out_free_all;
->  	nfsd_localio_ops_init();
-> =20
->  	return 0;
->  out_free_all:
-> +	genl_unregister_family(&nfsd_nl_family);
-> +out_free_filesystem:
->  	unregister_filesystem(&nfsd_fs_type);
->  out_free_nfsd4:
->  	nfsd4_destroy_laundry_wq();
-> @@ -2320,9 +2322,6 @@ static int __init init_nfsd(void)
->  	unregister_cld_notifier();
->  out_free_subsys:
->  	unregister_pernet_subsys(&nfsd_net_ops);
-> -out_free_exports:
-> -	remove_proc_entry("fs/nfs/exports", NULL);
-> -	remove_proc_entry("fs/nfs", NULL);
->  out_free_lockd:
->  	nfsd_lockd_shutdown();
->  	nfsd_drc_slab_free();
-> @@ -2335,14 +2334,14 @@ static int __init init_nfsd(void)
-> =20
->  static void __exit exit_nfsd(void)
->  {
-> +	remove_proc_entry("fs/nfs/exports", NULL);
-> +	remove_proc_entry("fs/nfs", NULL);
->  	genl_unregister_family(&nfsd_nl_family);
->  	unregister_filesystem(&nfsd_fs_type);
->  	nfsd4_destroy_laundry_wq();
->  	unregister_cld_notifier();
->  	unregister_pernet_subsys(&nfsd_net_ops);
->  	nfsd_drc_slab_free();
-> -	remove_proc_entry("fs/nfs/exports", NULL);
-> -	remove_proc_entry("fs/nfs", NULL);
->  	nfsd_lockd_shutdown();
->  	nfsd4_free_slabs();
->  	nfsd4_exit_pnfs();
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
+Hi,
 
-To make sure I understand, the race is that sometimes the exports
-interface gets created before the net namespace is set up, and then
-that causes GPFs when exports_net_open tries to access the nfsd_net?
+This patchset adds some bound checks to sysctls to avoid negative
+value writes.
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+The patched sysctls were storing the result of the proc_dointvec
+proc_handler into an unsigned int data. proc_dointvec being able to
+parse negative value, and it return value being a signed int, this could
+lead to undefined behaviors.
+This has led to kernel crash in the past as described in commit
+3b3376f222e3 ("sysctl.c: fix underflow value setting risk in vm_table")
+
+They are now bounded between SYSCTL_ZERO and SYSCTL_INT_MAX.
+The proc_handlers have thus been updated to proc_dointvec_minmax.
+
+This patchset has been written over sysctl-testing branch [1].
+See [2] for similar sysctl fixes currently in review.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-testing
+[2]: https://lore.kernel.org/all/20250115132211.25400-1-nicolas.bouchinet@clip-os.org/
+
+Best regards,
+
+Nicolas
+
+---
+
+Changes since v2:
+https://lore.kernel.org/all/20250224095826.16458-1-nicolas.bouchinet@clip-os.org/
+
+* Detached patches 2/6, 4/6 and 5/6
+* Changed coda_timeout type from unsigned long to unsigned int as
+  suggested by Joel Granados and Jan Harkes.
+
+Changes since v1:
+https://lore.kernel.org/all/20250127142014.37834-1-nicolas.bouchinet@clip-os.org/
+
+* Detached patches 1/9, 2/9 [3] and 3/9 [4]
+* Adapted the cover-letter message to match the reduced patchset
+
+[3]: https://lore.kernel.org/all/20250129170633.88574-1-nicolas.bouchinet@clip-os.org/
+[4]: https://lore.kernel.org/all/20250128103821.29745-1-nicolas.bouchinet@clip-os.org/
+
+---
+
+Nicolas Bouchinet (3):
+  sysctl: Fixes idmap_cache_timeout bounds
+  sysctl/coda: Fixes timeout bounds
+  sysctl: Fixes max-user-freq bounds
+
+ drivers/char/hpet.c | 4 +++-
+ fs/coda/coda_int.h  | 2 +-
+ fs/coda/sysctl.c    | 4 +++-
+ fs/nfs/nfs4sysctl.c | 4 +++-
+ 4 files changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.48.1
 
