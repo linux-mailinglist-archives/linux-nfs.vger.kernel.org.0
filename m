@@ -1,62 +1,60 @@
-Return-Path: <linux-nfs+bounces-10498-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10499-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A998A54A0F
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:52:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9068AA54A56
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 13:08:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B65E169692
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 11:52:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EA2616C231
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:08:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D14161DC9BB;
-	Thu,  6 Mar 2025 11:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 203E520AF96;
+	Thu,  6 Mar 2025 12:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2Oi2n1j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvV2RCBU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC234156225
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Mar 2025 11:52:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA804201022;
+	Thu,  6 Mar 2025 12:08:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741261941; cv=none; b=uHoiL92yMG4cnjDWzrv66u40pOXpsy6rWVmG3qKTHLHksKLtK+BebU8tLFT6aqbLSWtQD44igA7k1zeq7/02IF+sCK/P06ON0S9UP2zU3fEQFbUdFWBi0Bx8APDgieHd2V3dqb+hwaR5xXZxzgwbx420wNUtKYc9DEgr2tGxsgM=
+	t=1741262889; cv=none; b=JJ+eCO91/u9s61tQac6baKQ4HMvCqyIQL0xGJa6aiZC9mDhdwRdQJRBTrl6770iraDfmPjO/EAvU0pbo60Q3daSiAagLoGnZZqXJ6uXS+4JKM/cEjX+BO1Ye5EtcHqjWhaEbd3YZCsXidGaCiwR7ciWbtOoudJPDHmIZAJUvEu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741261941; c=relaxed/simple;
-	bh=je9XwBiZyM0HhJoY/UCFFeddKRzYN3s9xMH4QOuofiA=;
+	s=arc-20240116; t=1741262889; c=relaxed/simple;
+	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aa+S3LGeb9s82KRxNyX4j6+rwvemvxnZiYAusclLIw6uS6a4uiHaQEWq/ymuQxDnEhJTlULeiwQhk1kNoiGZrufnvM/zUT+p1d7H77+Mc0fJpTDZ5v8t/s8rJUXvHVcr6bKs75BMcvbmMidmyglJVM/YIQqbISpHpYrSYi301Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2Oi2n1j; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B16C4CEE0;
-	Thu,  6 Mar 2025 11:52:20 +0000 (UTC)
+	 Content-Type:MIME-Version; b=rUj1Y2T0Iys92+9oWAosZE8zjB+MhXHaXHBX5wZPWYEziNvfJPlw/PVkKsSiBmMyLfo1WOdcYCF5UGuZMa9TDn7drzS67DTG2ubVUhuOD4RhEWik8sB8bOumZgy/dof9JZpRAP1chYSimuNUvEsscZlFfLoDJIMdG89Xk3B2LFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvV2RCBU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68FEBC4CEE0;
+	Thu,  6 Mar 2025 12:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741261941;
-	bh=je9XwBiZyM0HhJoY/UCFFeddKRzYN3s9xMH4QOuofiA=;
+	s=k20201202; t=1741262888;
+	bh=lobxsGXQH9XsJhkYc/IBFLm9ndnD9CqNtlDGa7DUloc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Z2Oi2n1jy0s/Hvgy4JnZBeedkwaX4cocxY7f2dZOi8zp5YdTbPAfj+cnBt+yDlBSZ
-	 KtnvzcbUdGTDqBg76ywOsAqzevk2RDfuC6p/MVx5um4HmX96841SRFbsBDMGTCdClw
-	 ng+lZrto4lvtvXeUj5mvFleYXM/OrCkphL3yE/d8BWlbjlQVdGdqQScOvFxvrENjsR
-	 UWW2LL6AzAAJybomeeK8evFhhZskCpBE5on/GPGb4+RHo/czFLFOHdROozjqOfhAQ9
-	 XOgim5sGsGuc1kQu9mVQVa7ESRP6gUfTHYKgcg+9qUpAhyAMeF88JNHNM5/h2eDarf
-	 v5FKuRjVmgi9g==
-Message-ID: <30e405d15a33d2fd809a6e8daa8c5bc01e677b84.camel@kernel.org>
-Subject: Re: [PATCH V4 2/2] NFSD: allow client to use write delegation
- stateid for READ
+	b=VvV2RCBUgyAKtcOzcBcQ5VFPIpjskYij2cFQ5yWi0x5ZLrpF+Mnxp7N2qmEYa2Vk1
+	 xSohKONmubqMjrN8NxTJmqY/D/G0gK0WRcZhDqNuB/x7MWNUWE1Qy9Gig6eE5tnvOs
+	 K0hTnpdpXV7ZKmN0ZfltaB+QpGBxLtQhw3stmLEu6ZWWZQJmNKhxOSbi4g2KaHJe9D
+	 NlWKTc6UvDfSWTL4tHTw06gv1rgabQgopMuUgiuQhoM7DKjyADNg7NZcaXZXrYzBC4
+	 PlPfxBkoRh0LIFk1S1LnSsUFh1tkiI9oRlqY8PWuni8zCJNjNcJnGmEW2ZEj02pcnQ
+	 NTf2WPVjgPQLA==
+Message-ID: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSD: fix race between nfsd registration and
+ exports_proc
 From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	neilb@suse.de, okorniev@redhat.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
-Date: Thu, 06 Mar 2025 06:52:19 -0500
-In-Reply-To: <deb67458-fe9e-4303-b310-587b404c9d80@oracle.com>
-References: <1741120693-2517-1-git-send-email-dai.ngo@oracle.com>
-	 <1741120693-2517-3-git-send-email-dai.ngo@oracle.com>
-	 <22c1c21fde3a5b17851207664571341e3dcfc315.camel@kernel.org>
-	 <ac7d9408-c1fd-4f4b-88a3-162a9f3cf176@oracle.com>
-	 <24582f1bb0778852feea0e676b7db163019c1b4b.camel@kernel.org>
-	 <96135388-c965-45b0-8c81-03b680136757@oracle.com>
-	 <deb67458-fe9e-4303-b310-587b404c9d80@oracle.com>
+To: Maninder Singh <maninder1.s@samsung.com>, chuck.lever@oracle.com, 
+	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
+	lorenzo@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chungki0201.woo@samsung.com, Shubham Rana <s9.rana@samsung.com>
+Date: Thu, 06 Mar 2025 07:08:06 -0500
+In-Reply-To: <20250306092007.1419237-2-maninder1.s@samsung.com>
+References: <20250306092007.1419237-1-maninder1.s@samsung.com>
+		<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcas5p4.samsung.com>
+	 <20250306092007.1419237-2-maninder1.s@samsung.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,257 +139,174 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-03-05 at 12:59 -0800, Dai Ngo wrote:
-> On 3/5/25 12:47 PM, Dai Ngo wrote:
-> >=20
-> > On 3/5/25 8:08 AM, Jeff Layton wrote:
-> > > On Wed, 2025-03-05 at 09:46 -0500, Chuck Lever wrote:
-> > > > On 3/5/25 9:34 AM, Jeff Layton wrote:
-> > > > > On Tue, 2025-03-04 at 12:38 -0800, Dai Ngo wrote:
-> > > > > > Allow READ using write delegation stateid granted on OPENs with
-> > > > > > OPEN4_SHARE_ACCESS_WRITE only, to accommodate clients whose WRI=
-TE
-> > > > > > implementation may unavoidably do (e.g., due to buffer cache
-> > > > > > constraints).
-> > > > > >=20
-> > > > > > For write delegation granted for OPEN with OPEN4_SHARE_ACCESS_W=
-RITE
-> > > > > > a new nfsd_file and a struct file are allocated to use for read=
-s.
-> > > > > > The nfsd_file is freed when the file is closed by release_all_a=
-ccess.
-> > > > > >=20
-> > > > > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > > > > ---
-> > > > > > =C2=A0 fs/nfsd/nfs4state.c | 44=20
-> > > > > > ++++++++++++++++++++++++++++++++++++--------
-> > > > > > =C2=A0 1 file changed, 36 insertions(+), 8 deletions(-)
-> > > > > >=20
-> > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > > > index b533225e57cf..35018af4e7fb 100644
-> > > > > > --- a/fs/nfsd/nfs4state.c
-> > > > > > +++ b/fs/nfsd/nfs4state.c
-> > > > > > @@ -6126,6 +6126,34 @@ nfs4_delegation_stat(struct nfs4_delegat=
-ion=20
-> > > > > > *dp, struct svc_fh *currentfh,
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return rc =3D=3D 0;
-> > > > > > =C2=A0 }
-> > > > > > =C2=A0 +/*
-> > > > > > + * Add NFS4_SHARE_ACCESS_READ to the write delegation granted =
-on=20
-> > > > > > OPEN
-> > > > > > + * with NFS4_SHARE_ACCESS_WRITE by allocating separate nfsd_fi=
-le and
-> > > > > > + * struct file to be used for read with delegation stateid.
-> > > > > > + *
-> > > > > > + */
-> > > > > > +static bool
-> > > > > > +nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqstp, struct=
-=20
-> > > > > > nfsd4_open *open,
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct svc_fh *fh, struct nfs4_o=
-l_stateid *stp)
-> > > > > > +{
-> > > > > > +=C2=A0=C2=A0=C2=A0 struct nfs4_file *fp;
-> > > > > > +=C2=A0=C2=A0=C2=A0 struct nfsd_file *nf =3D NULL;
-> > > > > > +
-> > > > > > +=C2=A0=C2=A0=C2=A0 if ((open->op_share_access & NFS4_SHARE_ACC=
-ESS_BOTH) =3D=3D
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 NFS4_SHARE_ACCESS_WRITE) {
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (nfsd_file_acqui=
-re_opened(rqstp, fh, NFSD_MAY_READ,=20
-> > > > > > NULL, &nf))
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 return (false);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fp =3D stp->st_stid=
-.sc_file;
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&fp->fi_l=
-ock);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __nfs4_file_get_acc=
-ess(fp, NFS4_SHARE_ACCESS_READ);
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 set_access(NFS4_SHA=
-RE_ACCESS_READ, stp);
-> > > The only other (minor) issue is that this might be problematic vs.
-> > > DENY_READ modes:
-> > >=20
-> > > Suppose someone opens the file SHARE_ACCESS_WRITE and gets back a r/w
-> > > delegation. Then someone else tries to open the file
-> > > SHARE_ACCESS_READ|SHARE_DENY_READ. That should succeed, AFAICT, but I
-> > > think with this patch that would fail because we check the deny mode
-> > > before doing the open (and revoking the delegation).
-> > >=20
-> > > It'd be good to test and see if that's the case.
-> >=20
-> > Yes, you're correct. The 2nd OPEN fails due to the read access set
-> > to the file in nfsd4_add_rdaccess_to_wrdeleg().
-> >=20
-> > I think the deny mode is used only by SMB and not Linux client, not
-> > sure though. What should we do about this, any thought?
-
-Deny modes are a Windows/DOS thing, but they are part of the NFSv4 spec
-too. Linux doesn't have a userland interface that allows you to set
-them, and they aren't plumbed through the VFS layer, so you can still
-do an open locally on the box, even if a deny mode is set. I _think_
-BSD might also have support at the VFS layer for share/deny locking but
-I don't know for sure.
-
+On Thu, 2025-03-06 at 14:50 +0530, Maninder Singh wrote:
+> As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+> and cleanup by remove_proc_entry() at last of exit_nfsd.
 >=20
-> Without this patch, nfsd does not hand out the write delegation and don't
-> set the read access so the 2nd OPEN would work. But is that the correct
-> behavior because the open stateid of the 1st OPEN is allowed to do read?
+> Which causes kernel OOPs if there is race between below 2 operations:
+> (i) exportfs -r
+> (ii) mount -t nfsd none /proc/fs/nfsd
 >=20
-
-That's a good question.
-
-The main reason the server might allow reads on an O_WRONLY open is
-because the client may need to do a RMW cycle if it's doing page-
-aligned buffered I/Os. The client really shouldn't allow userland to do
-an O_WRONLY open and start issuing read() calls on it, however. So,
-from that standpoint I think the original behavior of knfsd does
-conform to the spec.
-
-To fix this the right way, we probably need to make the implicit
-O_WRONLY -> O_RDRW upgrade for a delegation take some sort of "shadow"
-reference. IOW, we need to be able to use the O_RDONLY file internally
-and put its reference when the file is closed, but we don't want to
-count that reference toward share/deny mode enforcement.=20
-
+> for 5.4 kernel ARM64:
 >=20
-> >=20
-> > >=20
-> > >=20
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fp =3D stp->st_stid=
-.sc_file;
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fp->fi_fds[O_RDONLY=
-] =3D nf;
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&fp->fi=
-_lock);
-> > > > > > +=C2=A0=C2=A0=C2=A0 }
-> > > > > > +=C2=A0=C2=A0=C2=A0 return (true);
-> > > > > no need for parenthesis here ^^^
-> >=20
-> > Fixed.
-> >=20
-> > > > >=20
-> > > > > > +}
-> > > > > > +
-> > > > > > =C2=A0 /*
-> > > > > > =C2=A0=C2=A0 * The Linux NFS server does not offer write delega=
-tions to NFSv4.0
-> > > > > > =C2=A0=C2=A0 * clients in order to avoid conflicts between writ=
-e delegations=20
-> > > > > > and
-> > > > > > @@ -6151,8 +6179,9 @@ nfs4_delegation_stat(struct nfs4_delegati=
-on=20
-> > > > > > *dp, struct svc_fh *currentfh,
-> > > > > > =C2=A0=C2=A0 * open or lock state.
-> > > > > > =C2=A0=C2=A0 */
-> > > > > > =C2=A0 static void
-> > > > > > -nfs4_open_delegation(struct nfsd4_open *open, struct=20
-> > > > > > nfs4_ol_stateid *stp,
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct svc_fh *currentfh)
-> > > > > > +nfs4_open_delegation(struct svc_rqst *rqstp, struct nfsd4_open=
-=20
-> > > > > > *open,
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct nfs4_ol_stateid *stp, struct svc_fh *currentfh,
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 struct svc_fh *fh)
-> > > > > > =C2=A0 {
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool deleg_ts =3D open->op_deleg=
-_want &=20
-> > > > > > OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS;
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct nfs4_openowner *oo =3D op=
-enowner(stp->st_stateowner);
-> > > > > > @@ -6197,7 +6226,8 @@ nfs4_open_delegation(struct nfsd4_open=
-=20
-> > > > > > *open, struct nfs4_ol_stateid *stp,
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(&open->op_delegate_statei=
-d, &dp->dl_stid.sc_stateid,=20
-> > > > > > sizeof(dp->dl_stid.sc_stateid));
-> > > > > > =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (open->op_share_access=
- & NFS4_SHARE_ACCESS_WRITE) {
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!nfs4_delegatio=
-n_stat(dp, currentfh, &stat)) {
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((!nfsd4_add_rda=
-ccess_to_wrdeleg(rqstp, open, fh,=20
-> > > > > > stp)) ||
-> > > > > extra set of parens above too ^^^
-> >=20
-> > Fixed.
-> >=20
-> > > > >=20
-> > > > > > + !nfs4_delegation_stat(dp, currentfh, &stat)) {
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 nfs4_put_stid(&dp->dl_stid);
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 destroy_delegation(dp);
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 goto out_no_deleg;
-> > > > > > @@ -6353,7 +6383,8 @@ nfsd4_process_open2(struct svc_rqst *rqst=
-p,=20
-> > > > > > struct svc_fh *current_fh, struct nf
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Attempt to hand out a delegati=
-on. No error return, because=20
-> > > > > > the
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * OPEN succeeds even if we fail.
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> > > > > > -=C2=A0=C2=A0=C2=A0 nfs4_open_delegation(open, stp, &resp->csta=
-te.current_fh);
-> > > > > > +=C2=A0=C2=A0=C2=A0 nfs4_open_delegation(rqstp, open, stp,
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &resp->cstate.curre=
-nt_fh, current_fh);
-> > > > > > =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * If there is an existing =
-open stateid, it must be updated and
-> > > > > > @@ -7098,10 +7129,6 @@ nfs4_find_file(struct nfs4_stid *s, int =
-flags)
-> > > > > > =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (s->sc_type) {
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case SC_TYPE_DELEG:
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&s->sc_fi=
-le->fi_lock);
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D nfsd_file_g=
-et(s->sc_file->fi_deleg_file);
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&s->sc_=
-file->fi_lock);
-> > > > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case SC_TYPE_OPEN:
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case SC_TYPE_LOCK:
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (flag=
-s & RD_STATE)
-> > > > > > @@ -7277,6 +7304,7 @@ nfs4_preprocess_stateid_op(struct svc_rqs=
-t=20
-> > > > > > *rqstp,
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =
-=3D find_cpntf_state(nn, stateid, &s);
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (status)
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return s=
-tatus;
-> > > > > > +
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 status =3D nfsd4_stid_check_stat=
-eid_generation(stateid, s,
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 nfsd4_has_session(cstate));
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (status)
-> > > > > Patch itself looks good though, so with the nits fixed up, you ca=
-n=20
-> > > > > add:
-> > > > >=20
-> > > > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > > > Dai, I can fix the parentheses in my tree, no need for a v5.
-> >=20
-> > Thanks Chuck, I will fold these patches into one to avoid potential
-> > bisect issue before sending out v5.
-> >=20
-> > -Dai
-> >=20
-> > > >=20
-> > > >=20
-> >=20
+> CPU 1:
+> el1_irq+0xbc/0x180
+> arch_counter_get_cntvct+0x14/0x18
+> running_clock+0xc/0x18
+> preempt_count_add+0x88/0x110
+> prep_new_page+0xb0/0x220
+> get_page_from_freelist+0x2d8/0x1778
+> __alloc_pages_nodemask+0x15c/0xef0
+> __vmalloc_node_range+0x28c/0x478
+> __vmalloc_node_flags_caller+0x8c/0xb0
+> kvmalloc_node+0x88/0xe0
+> nfsd_init_net+0x6c/0x108 [nfsd]
+> ops_init+0x44/0x170
+> register_pernet_operations+0x114/0x270
+> register_pernet_subsys+0x34/0x50
+> init_nfsd+0xa8/0x718 [nfsd]
+> do_one_initcall+0x54/0x2e0
+>=20
+> CPU 2 :
+> Unable to handle kernel NULL pointer dereference at virtual address 00000=
+00000000010
+>=20
+> PC is at : exports_net_open+0x50/0x68 [nfsd]
+>=20
+> Call trace:
+> exports_net_open+0x50/0x68 [nfsd]
+> exports_proc_open+0x2c/0x38 [nfsd]
+> proc_reg_open+0xb8/0x198
+> do_dentry_open+0x1c4/0x418
+> vfs_open+0x38/0x48
+> path_openat+0x28c/0xf18
+> do_filp_open+0x70/0xe8
+> do_sys_open+0x154/0x248
+>=20
+> Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_r=
+cu().
+>=20
+> and same is happening on latest 6.14 kernel as well:
+>=20
+> [    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
+> ...
+> [  285.455918] Unable to handle kernel paging request at virtual address =
+00001f4800001f48
+> ...
+> [  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
+> ...
+> [  285.469695] Call trace:
+> [  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
+> [  285.470488]  seq_read+0xe0/0x11c
+> [  285.470675]  proc_reg_read+0x9c/0xf0
+> [  285.470874]  vfs_read+0xc4/0x2fc
+> [  285.471057]  ksys_read+0x6c/0xf4
+> [  285.471231]  __arm64_sys_read+0x1c/0x28
+> [  285.471428]  invoke_syscall+0x44/0x100
+> [  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
+> [  285.471870]  do_el0_svc_compat+0x1c/0x34
+> [  285.472073]  el0_svc_compat+0x2c/0x80
+> [  285.472265]  el0t_32_sync_handler+0x90/0x140
+> [  285.472473]  el0t_32_sync+0x19c/0x1a0
+> [  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
+> [  285.473422] ---[ end trace 0000000000000000 ]---
+>=20
+> It reproduced simply with below script:
+> while [ 1 ]
+> do
+> /exportfs -r
+> done &
+>=20
+> while [ 1 ]
+> do
+> insmod /nfsd.ko
+> mount -t nfsd none /proc/fs/nfsd
+> umount /proc/fs/nfsd
+> rmmod nfsd
+> done &
+>=20
+> So exporting interfaces to user space shall be done at last and
+> cleanup at first place.
+>=20
+> With change there is no Kernel OOPs.
+>=20
+> Co-developed-by: Shubham Rana <s9.rana@samsung.com>
+> Signed-off-by: Shubham Rana <s9.rana@samsung.com>
+> Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+> ---
+>  fs/nfsd/nfsctl.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index d773481bcf10..f9763ced743d 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -2291,12 +2291,9 @@ static int __init init_nfsd(void)
+>  	if (retval)
+>  		goto out_free_pnfs;
+>  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
+> -	retval =3D create_proc_exports_entry();
+> -	if (retval)
+> -		goto out_free_lockd;
+>  	retval =3D register_pernet_subsys(&nfsd_net_ops);
+>  	if (retval < 0)
+> -		goto out_free_exports;
+> +		goto out_free_lockd;
+>  	retval =3D register_cld_notifier();
+>  	if (retval)
+>  		goto out_free_subsys;
+> @@ -2307,12 +2304,17 @@ static int __init init_nfsd(void)
+>  	if (retval)
+>  		goto out_free_nfsd4;
+>  	retval =3D genl_register_family(&nfsd_nl_family);
+> +	if (retval)
+> +		goto out_free_filesystem;
+> +	retval =3D create_proc_exports_entry();
+>  	if (retval)
+>  		goto out_free_all;
+>  	nfsd_localio_ops_init();
+> =20
+>  	return 0;
+>  out_free_all:
+> +	genl_unregister_family(&nfsd_nl_family);
+> +out_free_filesystem:
+>  	unregister_filesystem(&nfsd_fs_type);
+>  out_free_nfsd4:
+>  	nfsd4_destroy_laundry_wq();
+> @@ -2320,9 +2322,6 @@ static int __init init_nfsd(void)
+>  	unregister_cld_notifier();
+>  out_free_subsys:
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+> -out_free_exports:
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  out_free_lockd:
+>  	nfsd_lockd_shutdown();
+>  	nfsd_drc_slab_free();
+> @@ -2335,14 +2334,14 @@ static int __init init_nfsd(void)
+> =20
+>  static void __exit exit_nfsd(void)
+>  {
+> +	remove_proc_entry("fs/nfs/exports", NULL);
+> +	remove_proc_entry("fs/nfs", NULL);
+>  	genl_unregister_family(&nfsd_nl_family);
+>  	unregister_filesystem(&nfsd_fs_type);
+>  	nfsd4_destroy_laundry_wq();
+>  	unregister_cld_notifier();
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+>  	nfsd_drc_slab_free();
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  	nfsd_lockd_shutdown();
+>  	nfsd4_free_slabs();
+>  	nfsd4_exit_pnfs();
 
+
+To make sure I understand, the race is that sometimes the exports
+interface gets created before the net namespace is set up, and then
+that causes GPFs when exports_net_open tries to access the nfsd_net?
+
+Thanks,
 --=20
 Jeff Layton <jlayton@kernel.org>
 
