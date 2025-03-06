@@ -1,174 +1,148 @@
-Return-Path: <linux-nfs+bounces-10492-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10493-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86C4AA53E96
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 00:41:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D98FA540C8
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 03:40:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBA7B3A59C8
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Mar 2025 23:41:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FA143AEEE5
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 02:40:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BC6E207A0F;
-	Wed,  5 Mar 2025 23:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YjCN5sm0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SeO+07Dw";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YjCN5sm0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SeO+07Dw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B58718DF89;
+	Thu,  6 Mar 2025 02:40:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49D720766D
-	for <linux-nfs@vger.kernel.org>; Wed,  5 Mar 2025 23:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC8BBE46;
+	Thu,  6 Mar 2025 02:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741218110; cv=none; b=dzGV23ocrqpl3+ZFLaB//z9pbZKiBJl7EuYqqQbtzOtVArqw7roA1oYA8rSqQ8OLzWmUe/nAJh3BGWYmDmmy7DThNycW3PTzqFgERgFL+3ltifRDLU71ekcz/7LP+SHdnPk5qk78xq1DqZ2CP/nJ1gwJNrOCLf21YDL3nQtkElU=
+	t=1741228842; cv=none; b=K20b3pv5bWoZtQty4CCRe8G/KJk9eOnF3twVh1FHPfz9Hpxfl2AS6BrSqJ3MV4fvIFBmYlFFSLDtb+4Etf78PUndlzUiIlkj8mMK+7itncZ+E6kWgUJpWFt1mAiKCpOUeFy7KVRL+05RRMhURG2jJM0xZsflt/8YXM+/0bjZ/QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741218110; c=relaxed/simple;
-	bh=79A9Xcxf22LN1wRxVN/wCq4MVv4De/k36OytnK/R+PU=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=aygVdK5QXbob8KaoIdybqtphyw2a8wqGccj2t9njJi7rzQcs8AOtv2kgFyebSqnPO7K1PIDvoxe0jH/Jc7k1wnzTooFTNC+jrR9za/z3xXh4QITfH3MIIcTBo/xcE3uEbEMCR/MfV+65Br4sj1V8psgtGdfS7wcwjl6aSAWbPD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YjCN5sm0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SeO+07Dw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YjCN5sm0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SeO+07Dw; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B7C171F385;
-	Wed,  5 Mar 2025 23:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741218106; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evnk/GxliDTjNMMgAFyfCNZGfvqVt47nI9LnubvMvxc=;
-	b=YjCN5sm09/Vik1hnIVgY/KAn9Bl+M9/Qo0xPTOFQNF8Y/8QdKDvee6BGLO7x9pn9iJ9kyi
-	n5vDga3YY2IqVkMq8j71+tXA/lQqxgbYINFt4chYC7lsJ2wAc09oTXOcOZ0cfwMxqE/8JT
-	f5K7ko5CR+elv4J6T28XRXDqa8DqvvY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741218106;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evnk/GxliDTjNMMgAFyfCNZGfvqVt47nI9LnubvMvxc=;
-	b=SeO+07DwVmMuxGIdJ6uBjWre+ET8YmfEvWdD+64YO1xDmbJOxMvVwYwNFQ+y51t6511CM8
-	Xk9d1WRKq6le82BQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741218106; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evnk/GxliDTjNMMgAFyfCNZGfvqVt47nI9LnubvMvxc=;
-	b=YjCN5sm09/Vik1hnIVgY/KAn9Bl+M9/Qo0xPTOFQNF8Y/8QdKDvee6BGLO7x9pn9iJ9kyi
-	n5vDga3YY2IqVkMq8j71+tXA/lQqxgbYINFt4chYC7lsJ2wAc09oTXOcOZ0cfwMxqE/8JT
-	f5K7ko5CR+elv4J6T28XRXDqa8DqvvY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741218106;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=evnk/GxliDTjNMMgAFyfCNZGfvqVt47nI9LnubvMvxc=;
-	b=SeO+07DwVmMuxGIdJ6uBjWre+ET8YmfEvWdD+64YO1xDmbJOxMvVwYwNFQ+y51t6511CM8
-	Xk9d1WRKq6le82BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E44A013939;
-	Wed,  5 Mar 2025 23:41:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zc4kJSzhyGdbdAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 05 Mar 2025 23:41:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1741228842; c=relaxed/simple;
+	bh=ONtAi5Sqk5d11lgQN9ofiQ1SwRaBMpb8UpGrlN+B3Dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XRfvxaY7/04IY01jcuqgSP/S6Z+sykL07mnR86Uop0ZZHoh2PFnh9mTHhvUhAPGP8FE2dNDVpMAWh/tkvOcl8U+Uitlswy4nCKhrMrbghoNN8mjsk8Qqwt9OeJQdASvgRB4eY+T4BB7MwI2YPMuu/QRLl277HE/wMD4oPrVqmpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z7YYR135vz4f3lW5;
+	Thu,  6 Mar 2025 10:40:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BB4DC1A058E;
+	Thu,  6 Mar 2025 10:40:34 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP4 (Coremail) with SMTP id gCh0CgDHKl8gC8lnRDSxFg--.7098S3;
+	Thu, 06 Mar 2025 10:40:34 +0800 (CST)
+Message-ID: <355c8355-a6bc-181f-73e7-1baf7749f984@huaweicloud.com>
+Date: Thu, 6 Mar 2025 10:40:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Yunsheng Lin" <linyunsheng@huawei.com>
-Cc: "Qu Wenruo" <wqu@suse.com>, "Yishai Hadas" <yishaih@nvidia.com>,
- "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Shameer Kolothum" <shameerali.kolothum.thodi@huawei.com>,
- "Kevin Tian" <kevin.tian@intel.com>,
- "Alex Williamson" <alex.williamson@redhat.com>, "Chris Mason" <clm@fb.com>,
- "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
- "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
- "Sandeep Dhavale" <dhavale@google.com>, "Carlos Maiolino" <cem@kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Luiz Capitulino" <luizcap@redhat.com>,
- "Mel Gorman" <mgorman@techsingularity.net>,
- "Dave Chinner" <david@fromorbit.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
- only NULL elements
-In-reply-to: <18c68e7a-88c9-49d1-8ff8-17c63bcc44f4@huawei.com>
-References: <>, <18c68e7a-88c9-49d1-8ff8-17c63bcc44f4@huawei.com>
-Date: Thu, 06 Mar 2025 10:41:24 +1100
-Message-id: <174121808436.33508.1242845473359255682@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.com,nvidia.com,ziepe.ca,huawei.com,intel.com,redhat.com,fb.com,toxicpanda.com,kernel.org,gmail.com,linux.alibaba.com,google.com,linux-foundation.org,linaro.org,davemloft.net,oracle.com,talpey.com,techsingularity.net,fromorbit.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn),to_ip_from(RL4q5k5kyydt8nhc3xa4shdp4c)]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [Bug report] NULL pointer dereference in frwr_unmap_sync()
+To: Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <Dai.Ngo@oracle.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-nfs@vger.kernel.org, trondmy@hammerspace.com, sagi@grimberg.me,
+ cel@kernel.org, "wanghai (M)" <wanghai38@huawei.com>, yanhaitao2@huawei.com,
+ chengjike.cheng@huawei.com, dingming09@huawei.com
+References: <e7c72dfc-ecbc-bd99-16f6-977afa642f18@huaweicloud.com>
+ <314f60a8-4b0d-45f9-87f4-5a4757d34aea@oracle.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <314f60a8-4b0d-45f9-87f4-5a4757d34aea@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHKl8gC8lnRDSxFg--.7098S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFWkCw1kuw18uFy5Cr4rKrg_yoW8tw15pF
+	yktrZ8GrW8Crn5Xr4DZ3WkAa40vFsYy3ZxJr1kGF97AF4DJry2qr4UWFyvgasrGr4xGa1r
+	WF1UXa13ur93Xw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBSb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aV
+	AFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E
+	8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82
+	IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+	0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMI
+	IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF
+	0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+	Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFDGOUUUUU
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On Wed, 05 Mar 2025, Yunsheng Lin wrote:
+
+
+在 2025/3/5 22:02, Chuck Lever 写道:
+> On 3/4/25 9:43 PM, Li Nan wrote:
+>> We found a following problem in kernel 5.10, and the same problem should
+>> exist in mainline:
+>>
+>> During NFS mount using 'soft' option over RoCE network, we observed kernel
+>> crash with below trace when network issues occur (congestion/disconnect):
+>>    nfs: server 10.10.253.211 not responding, timed out
+>>    BUG: kernel NULL pointer dereference, address: 00000000000000a0
+>>    RIP: 0010:frwr_unmap_sync+0x77/0x200 [rpcrdma]
+>>    Call Trace:
+>>     ? __die_body.cold+0x8/0xd
+>>     ? no_context+0x155/0x230
+>>     ? __bad_area_nosemaphore+0x52/0x1a0
+>>     ? exc_page_fault+0x2dc/0x550
+>>     ? asm_exc_page_fault+0x1e/0x30
+>>     ? frwr_unmap_sync+0x77/0x200 [rpcrdma]
+>>     xprt_release+0x9e/0x1a0 [sunrpc]
+>>     rpc_release_resources_task+0xe/0x50 [sunrpc]
+>>     rpc_release_task+0x19/0xa0 [sunrpc]
+>>     rpc_async_schedule+0x29/0x40 [sunrpc]
+>>     process_one_work+0x1b2/0x350
+>>     worker_thread+0x49/0x310
+>>     ? rescuer_thread+0x380/0x380
+>>     kthread+0xfb/0x140
+>>
+>> Problem analysis:
+>> The crash happens in frwr_unmap_sync() when accessing req->rl_registered
+>> list, caused by either NULL pointer or accessing freed MR resources.
+>> There's a race condition between:
+>> T1
+>> __ib_process_cq
+>>   wc->wr_cqe->done (frwr_wc_localinv)
+>>    rpcrdma_flush_disconnect
+>>     rpcrdma_force_disconnect
+>>      xprt_force_disconnect
+>>       xprt_autoclose
+>>        xprt_rdma_close
+>>         rpcrdma_xprt_disconnect
+>>          rpcrdma_reqs_reset
+>>           frwr_reset
+>>            rpcrdma_mr_pop(&req->rl_registered)
+>> T2
+>> rpc_async_schedule
+>>   rpc_release_task
+>>    rpc_release_resources_task
+>>     xprt_release
+>>      xprt_rdma_free
+>>       frwr_unmap_sync
+>>        rpcrdma_mr_pop(&req->rl_registered)
+>>                     
+>> This problem also exists in function rpcrdma_mrs_destroy().
+>>
 > 
-> For the existing btrfs and sunrpc case, I am agreed that there
-> might be valid use cases too, we just need to discuss how to
-> meet the requirements of different use cases using simpler, more
-> unified and effective APIs.
+> Dai, is this the same as the system test problem you've been looking at?
+> 
 
-We don't need "more unified".
+Thank you for looking into it. Is there a patch that needs to be tested? We
+are happy to help with the testing.
 
-If there are genuinely two different use cases with clearly different
-needs - even if only slightly different - then it is acceptable to have
-two different interfaces.  Be sure to choose names which emphasise the
-differences.
-
+-- 
 Thanks,
-NeilBrown
+Nan
+
 
