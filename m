@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-10506-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10507-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4158A54AE6
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 13:39:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0058BA54AED
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 13:40:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B042416D6E2
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:39:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8435E189201C
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 12:39:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E1B20E319;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE66720E33E;
 	Thu,  6 Mar 2025 12:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl75Zl7D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEDKBhqG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155DD20E30A;
-	Thu,  6 Mar 2025 12:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939E620E335;
+	Thu,  6 Mar 2025 12:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741264716; cv=none; b=IrvCLOiYsiftmJECv/VdKAyHxKv6x8LnDDFCGns19K/D9RMGvpyWAnHdw9eYr6jDRExnO407X5ppZ4/xv5n03QQQFQPZ4EBIsDSWKfybOm+816s2i0flB1hussT6MDK3EKOdWeI4KdOf5OxXJFTVv13iCNtx0b1CAC9iru5gQXc=
+	t=1741264716; cv=none; b=nSimPHGbZxgCz4k0WMEWlvLGOSFn8c32z4A/q7xqESr/Gnhwl1Kv6k0umGvBcjv4yDmVGEtpqzWB5kYv3S6gKFhEdyS/GewPcVFJSob7u8Joo+m36KtEO7OsbVJ3P0pzO90PDdlZiZtp7CT1uRwgk6veXZZVxVJCkkOXXJZniKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741264716; c=relaxed/simple;
-	bh=l94euaVl8GxBtZu2zgPXV0MuIFNOPdoJJNkFxgc1pP0=;
+	bh=P5cmtorr5cXrsFKmHnbpELmGLQ2FPiPZFr7M/Uw6dhM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cpWWyNVjidDELiF3qoemM9zQ6pbjf4hAyYL2JnV3Xu57v9IKjWx7Zfp/Qfk+LVxseJgJf9n9m7L6t9YmcQY4ld2ZlyYOBi3jq5lO7XIC4KzXdtiEDN2W08rUpgDaye0GupoI0UkZebVb7JqVbopixYY/ddul9m2QiJJ3CdBAHUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl75Zl7D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 253D0C4CEEE;
-	Thu,  6 Mar 2025 12:38:33 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=lgqZBf6vXyYlKs8qI3Hd/+H4MOjiR4DJlaIw4l2mUgkLi/g4YdTEahFTrSNGUpU2VYL1z27hauqigpiu9hyPE1hYScuzVuVDzc1COyRiOm1Z2Lay3Z+5BePME4WbIvFg/X+SgM4xieccAJjIOUeFxMWHPlxXQComZclcNCnVw5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEDKBhqG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C21C4CEEB;
+	Thu,  6 Mar 2025 12:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741264714;
-	bh=l94euaVl8GxBtZu2zgPXV0MuIFNOPdoJJNkFxgc1pP0=;
+	s=k20201202; t=1741264716;
+	bh=P5cmtorr5cXrsFKmHnbpELmGLQ2FPiPZFr7M/Uw6dhM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Sl75Zl7DPv5dUA9y3DUXMWsuudpr97g2t4qm5VAM9mtYQ86CKPjRcT3iekcgDXu/J
-	 KZU+n67DQaJXAsdl3YZlrjA53ThMHCvUU4rmZlvSiqezrxSlq06pT5eTtKSK2LhRLD
-	 RT627SrIWLBJAop3KYHPPnnPi1HL7gB0X6EF1tyQfoEgcEtwYnrY/Dzzc69czU4zUp
-	 sYIA4RJ1dmnNL6FHkj0qoH2xjx0l14fD7EOxfAyDRm0pF0XcmPTGtO2xcDbKkuIaLm
-	 ptzs8tiA7unPZJllskq9v3aCJOjeo3gM3sB4f3WerfA/i3f/CwHuIUfs1Z1aW9pAYG
-	 COVovqctvzPHg==
+	b=PEDKBhqGO7mMJfsRuF0wKfZVtfUBrQqRMrRdyVpXHght67b6NmsLjostMnegeCsAu
+	 UtBGK925gitKEmpA4as2D0HNd+MsVW0h9EM33iJVTPAbpI6fdiEV+4eRxx109hoPfb
+	 eKJYOzUE1LdAEThgThnntacMgplzowI+2JVH94kFGhZRPPlsEmOsMWZUtvEAiRc4dt
+	 nNYYsb3if2ozHXokwxUcJrVWzQBOuNcQlmNoH5x50FxUFlXmk2jRyPX9KpCeSgw2GO
+	 hqe+Q82kvZCBJuZYT3yK/yLkxOJ20KuUqz1qLYhTB2+Gr0+C6bidwF2nPUGrMtf31b
+	 n0m94STEMyhNw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 06 Mar 2025 07:38:14 -0500
-Subject: [PATCH 2/4] nfsd: add a tracepoint for nfsd_setattr
+Date: Thu, 06 Mar 2025 07:38:15 -0500
+Subject: [PATCH 3/4] nfsd: add some stub tracepoints around key vfs
+ functions
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250306-nfsd-tracepoints-v1-2-4405bf41b95f@kernel.org>
+Message-Id: <20250306-nfsd-tracepoints-v1-3-4405bf41b95f@kernel.org>
 References: <20250306-nfsd-tracepoints-v1-0-4405bf41b95f@kernel.org>
 In-Reply-To: <20250306-nfsd-tracepoints-v1-0-4405bf41b95f@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -65,111 +66,251 @@ Cc: Sargun Dillon <sargun@meta.com>, linux-nfs@vger.kernel.org,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3206; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=l94euaVl8GxBtZu2zgPXV0MuIFNOPdoJJNkFxgc1pP0=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnyZdFMugoBKetmmJe09DSMrKrLFoNVxnguUZ8A
- dcnk47sjoOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8mXRQAKCRAADmhBGVaC
- FWVhEAC0mRRQYap+gSU8KNMDxEvQ8KuEXcxfpN0scW/10eIL3bH4I5xFgtgTBFZ1nz2ceXxSEef
- YLfug41xz5gb3pgcQskUFHpiBAI5GJ6Z2vdRVad3RZLraBuOLic9Kr2AvEe4xUie6mE/CnpWG4S
- NcOZGCePkLcK6YwRuJ17aQRdyY9lvKWqOkjOXsgXE5c2A1SRY+mM56zU2fSPbShUVnELOqKzvEL
- wHDJSKQURyVBnfOZfT51X8v4s3SEm96AUE1OieUDy9/LYXGnmij8TNqPP4NtOq6buCh2bdl56Da
- 68BfkjeUxtck/K4TXwc9OaTwysCG0BF0u1QVjV7jWXxHPhx1mLAAq93Dt5l4s6bFFSA0J9tp4vp
- nPuqcR6SrsjiEHqFi/8no6RBhD55AoDogowyplUuqk5BtiB0Ng54HEDzcQp4UfyaUNRsk7BBhM2
- ygdBhxOfD//4bvFE4oeDR3gLzP+CQB8QXfjIYPWEhC609woafGVIG3nkQq6zBGZdlIky89FgVd0
- XuIx93yo9dovoz53tj2NdWQs1rXsWlO31jhoc/ge6SPlAOLLYEEHHwgpL+zaxDoUtuffUSWVLWF
- eohsP73fc/F1imoJE69pxkcX31zG8fNhrJ7A9RSH3kFfXgswAbBOI/0eowTme0SACoDuFiUAXS8
- tEGKySBtVYEAPYg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7290; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=P5cmtorr5cXrsFKmHnbpELmGLQ2FPiPZFr7M/Uw6dhM=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnyZdFA4872ZaQ4Gpa8va7ieWuQ96bO1fYNLLZD
+ efId0NkSgmJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ8mXRQAKCRAADmhBGVaC
+ FQDUEAC8HLAvBmiG2ZSGcMG5wpJIn/AWa0mZMYW/DS8ak+OFUThHiY5t3InyPaEVM15W7wHNXYU
+ 9Z/Rfu5M8lV/V3i87w9k9ZmjcgHLlMNFHk7+6tUmamp2ZOlcuxRgleKcatMpnmAGhMoZX8Lsy0r
+ WXE5tiFzOOKzS4uSI6hRz85niDX/zvHkItaT9+2XbRGdIsdphACCVEQQeFSkXR4jeP/QUhA8Fru
+ 7IBNC1cia/tBNlmgAzziAlTygqVAEWzFRxaM1hOwo5V2juTjUG4kJTLGlK1f4k/WRKO9kZl9HuD
+ 2AJIoyV3AmWUnCrN32HYJUVN8ldFdefyFKQPGsb0wV9Y8ahdMApipxIQG2ViVbiop2S48M2jJrb
+ DWcUh+uEWf5jy6WjmsYiFN2rkQYohqdTCMQK6ZifKNANLVJymlMPLcihD6e2v7odxEgozTBf5ZJ
+ wI4rmpZKHIYjExPBSbQrNZG20y7gIG/jcldd5eM9g7+DPq3xO8FFbdW4SAdQdndGc/MSuXdNI6O
+ /1pjsbabOhdVlOgvRfG1AlHoSpJVMUEB/YhbueDeESGEXRDyB2V62JEv+seeESP7R+CbeqLOyuh
+ JfASdby/5ZxgfqtifD+BismLMqj9MW9Z1pWrb+flKKaFpM1/bVMBJgs4zXWTSAv/eoMtT3zQy/S
+ jRpunDCaG3GqJmA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Turn Sargun's internal kprobe based implementation of this into a normal
-static tracepoint.
+Sargun set up kprobes to add some of these tracepoints. Convert them to
+simple static tracepoints. These are pretty sparse for now, but they
+could be expanded in the future as needed.
 
 Cc: Sargun Dillon <sargun@meta.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/trace.h | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/vfs.c   |  2 ++
- 2 files changed, 56 insertions(+)
+ fs/nfsd/nfs3proc.c |  3 +++
+ fs/nfsd/nfs4proc.c |  2 ++
+ fs/nfsd/nfsproc.c  |  2 ++
+ fs/nfsd/trace.h    | 35 +++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.c      | 26 ++++++++++++++++++++++++++
+ 5 files changed, 68 insertions(+)
 
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 372bdcf5e07a5c835da240ecebb02e3576eb2ca6..2a56cae4c78a7ca66d569637e9f0e7c0fdcfb826 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -14,6 +14,7 @@
+ #include "xdr3.h"
+ #include "vfs.h"
+ #include "filecache.h"
++#include "trace.h"
+ 
+ #define NFSDDBG_FACILITY		NFSDDBG_PROC
+ 
+@@ -69,6 +70,8 @@ nfsd3_proc_getattr(struct svc_rqst *rqstp)
+ 	struct nfsd_fhandle *argp = rqstp->rq_argp;
+ 	struct nfsd3_attrstat *resp = rqstp->rq_resp;
+ 
++	trace_nfsd_getattr(rqstp, &argp->fh);
++
+ 	dprintk("nfsd: GETATTR(3)  %s\n",
+ 		SVCFH_fmt(&argp->fh));
+ 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index c20f1abcb94f131b1ec898860ba2c394b22e61e1..87d241ff91920317e0122a58bf0cf71c5b28d264 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -876,6 +876,8 @@ nfsd4_getattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	struct nfsd4_getattr *getattr = &u->getattr;
+ 	__be32 status;
+ 
++	trace_nfsd_getattr(rqstp, &cstate->current_fh);
++
+ 	status = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_NOP);
+ 	if (status)
+ 		return status;
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 6dda081eb24c00b834ab0965c3a35a12115bceb7..9563372f0826b9580299144069f57664dbd2a079 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -54,6 +54,8 @@ nfsd_proc_getattr(struct svc_rqst *rqstp)
+ 	struct nfsd_fhandle *argp = rqstp->rq_argp;
+ 	struct nfsd_attrstat *resp = rqstp->rq_resp;
+ 
++	trace_nfsd_getattr(rqstp, &argp->fh);
++
+ 	dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+ 
+ 	fh_copy(&resp->fh, &argp->fh);
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 0d49fc064f7273f32c93732a993fd77bc0783f5d..117f7e1fd66a4838a048cc44bd5bf4dd8c6db958 100644
+index 117f7e1fd66a4838a048cc44bd5bf4dd8c6db958..d4a78fe1bab24b594b96cca8611c439da9ed6926 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -2337,6 +2337,60 @@ DEFINE_EVENT(nfsd_copy_async_done_class,		\
+@@ -2337,6 +2337,41 @@ DEFINE_EVENT(nfsd_copy_async_done_class,		\
  DEFINE_COPY_ASYNC_DONE_EVENT(done);
  DEFINE_COPY_ASYNC_DONE_EVENT(cancel);
  
-+#define show_ia_valid_flags(x)					\
-+	__print_flags(x, "|",					\
-+			{ ATTR_MODE, "MODE" },			\
-+			{ ATTR_UID, "UID" },			\
-+			{ ATTR_GID, "GID" },			\
-+			{ ATTR_SIZE, "SIZE" },			\
-+			{ ATTR_ATIME, "ATIME" },		\
-+			{ ATTR_MTIME, "MTIME" },		\
-+			{ ATTR_CTIME, "CTIME" },		\
-+			{ ATTR_ATIME_SET, "ATIME_SET" },	\
-+			{ ATTR_MTIME_SET, "MTIME_SET" },	\
-+			{ ATTR_FORCE, "FORCE" },		\
-+			{ ATTR_KILL_SUID, "KILL_SUID" },	\
-+			{ ATTR_KILL_SGID, "KILL_SGID" },	\
-+			{ ATTR_FILE, "FILE" },			\
-+			{ ATTR_KILL_PRIV, "KILL_PRIV" },	\
-+			{ ATTR_OPEN, "OPEN" },			\
-+			{ ATTR_TIMES_SET, "TIMES_SET" },	\
-+			{ ATTR_TOUCH, "TOUCH"})
-+
-+TRACE_EVENT(nfsd_setattr,
-+	TP_PROTO(const struct svc_rqst *rqstp, const struct svc_fh *fhp,
-+		 const struct iattr *iap, const struct timespec64 *guardtime),
-+	TP_ARGS(rqstp, fhp, iap, guardtime),
++DECLARE_EVENT_CLASS(nfsd_vfs_class,
++	TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp),
++	TP_ARGS(rqstp, fhp),
 +	TP_STRUCT__entry(
 +		__field(u32, xid)
 +		__field(u32, fh_hash)
-+		__field(s64, gtime_tv_sec)
-+		__field(u32, gtime_tv_nsec)
-+		__field(unsigned int, ia_valid)
-+		__field(umode_t, ia_mode)
-+		__field(uid_t, ia_uid)
-+		__field(gid_t, ia_gid)
-+		__field(loff_t, ia_size)
 +	),
-+	TP_fast_assign(__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+	       __entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-+	       __entry->gtime_tv_sec = guardtime ? guardtime->tv_sec : 0;
-+	       __entry->gtime_tv_nsec = guardtime ? guardtime->tv_nsec : 0;
-+	       __entry->ia_valid = iap->ia_valid;
-+	       __entry->ia_mode = iap->ia_mode;
-+	       __entry->ia_uid = __kuid_val(iap->ia_uid);
-+	       __entry->ia_gid = __kgid_val(iap->ia_gid);
-+	       __entry->ia_size = iap->ia_size;
-+
++	TP_fast_assign(
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
 +	),
-+	TP_printk(
-+		"xid=0x%08x fh_hash=0x%08x ia_valid=%s ia_mode=%o ia_uid=%u ia_gid=%u guard_time=%lld.%u",
-+		__entry->xid, __entry->fh_hash, show_ia_valid_flags(__entry->ia_valid),
-+		__entry->ia_mode, __entry->ia_uid, __entry->ia_gid,
-+		__entry->gtime_tv_sec, __entry->gtime_tv_nsec
-+	)
-+)
++	TP_printk("xid=0x%08x fh_hash=0x%08x",
++		  __entry->xid, __entry->fh_hash)
++);
 +
- #endif /* _NFSD_TRACE_H */
- 
- #undef TRACE_INCLUDE_PATH
++#define DEFINE_NFSD_VFS_EVENT(name)                                        \
++	DEFINE_EVENT(nfsd_vfs_class, nfsd_##name,                           \
++		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp), \
++		     TP_ARGS(rqstp, fhp))
++
++DEFINE_NFSD_VFS_EVENT(lookup);
++DEFINE_NFSD_VFS_EVENT(lookup_dentry);
++DEFINE_NFSD_VFS_EVENT(create_locked);
++DEFINE_NFSD_VFS_EVENT(create);
++DEFINE_NFSD_VFS_EVENT(access);
++DEFINE_NFSD_VFS_EVENT(create_setattr);
++DEFINE_NFSD_VFS_EVENT(readlink);
++DEFINE_NFSD_VFS_EVENT(symlink);
++DEFINE_NFSD_VFS_EVENT(link);
++DEFINE_NFSD_VFS_EVENT(rename);
++DEFINE_NFSD_VFS_EVENT(unlink);
++DEFINE_NFSD_VFS_EVENT(readdir);
++DEFINE_NFSD_VFS_EVENT(statfs);
++DEFINE_NFSD_VFS_EVENT(getattr);
++
+ #define show_ia_valid_flags(x)					\
+ 	__print_flags(x, "|",					\
+ 			{ ATTR_MODE, "MODE" },			\
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 390ddfb169083535faa3a2413389e247bdbf4a73..d755cc87a8670c491e55194de266d999ba1b337d 100644
+index d755cc87a8670c491e55194de266d999ba1b337d..772a4d32b09a4bd217a9258ec803c06618cf13c8 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -499,6 +499,8 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	bool		size_change = (iap->ia_valid & ATTR_SIZE);
- 	int		retries;
+@@ -244,6 +244,8 @@ nfsd_lookup_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct dentry		*dentry;
+ 	int			host_err;
  
-+	trace_nfsd_setattr(rqstp, fhp, iap, guardtime);
++	trace_nfsd_lookup(rqstp, fhp);
 +
- 	if (iap->ia_valid & ATTR_SIZE) {
- 		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
- 		ftype = S_IFREG;
+ 	dprintk("nfsd: nfsd_lookup(fh %s, %.*s)\n", SVCFH_fmt(fhp), len,name);
+ 
+ 	dparent = fhp->fh_dentry;
+@@ -313,6 +315,8 @@ nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
+ 	struct dentry		*dentry;
+ 	__be32 err;
+ 
++	trace_nfsd_lookup(rqstp, fhp);
++
+ 	err = fh_verify(rqstp, fhp, S_IFDIR, NFSD_MAY_EXEC);
+ 	if (err)
+ 		return err;
+@@ -794,6 +798,8 @@ nfsd_access(struct svc_rqst *rqstp, struct svc_fh *fhp, u32 *access, u32 *suppor
+ 	u32			query, result = 0, sresult = 0;
+ 	__be32			error;
+ 
++	trace_nfsd_create(rqstp, fhp);
++
+ 	error = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP);
+ 	if (error)
+ 		goto out;
+@@ -1401,6 +1407,8 @@ nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	struct iattr *iap = attrs->na_iattr;
+ 	__be32 status;
+ 
++	trace_nfsd_create_setattr(rqstp, fhp);
++
+ 	/*
+ 	 * Mode has already been set by file creation.
+ 	 */
+@@ -1467,6 +1475,8 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	__be32		err;
+ 	int		host_err;
+ 
++	trace_nfsd_create_locked(rqstp, fhp);
++
+ 	dentry = fhp->fh_dentry;
+ 	dirp = d_inode(dentry);
+ 
+@@ -1557,6 +1567,8 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	__be32		err;
+ 	int		host_err;
+ 
++	trace_nfsd_create(rqstp, fhp);
++
+ 	if (isdotent(fname, flen))
+ 		return nfserr_exist;
+ 
+@@ -1609,6 +1621,8 @@ nfsd_readlink(struct svc_rqst *rqstp, struct svc_fh *fhp, char *buf, int *lenp)
+ 	DEFINE_DELAYED_CALL(done);
+ 	int len;
+ 
++	trace_nfsd_readlink(rqstp, fhp);
++
+ 	err = fh_verify(rqstp, fhp, S_IFLNK, NFSD_MAY_NOP);
+ 	if (unlikely(err))
+ 		return err;
+@@ -1657,6 +1671,8 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	__be32		err, cerr;
+ 	int		host_err;
+ 
++	trace_nfsd_symlink(rqstp, fhp);
++
+ 	err = nfserr_noent;
+ 	if (!flen || path[0] == '\0')
+ 		goto out;
+@@ -1725,6 +1741,8 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 	__be32		err;
+ 	int		host_err;
+ 
++	trace_nfsd_link(rqstp, ffhp);
++
+ 	err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_CREATE);
+ 	if (err)
+ 		goto out;
+@@ -1842,6 +1860,8 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh *ffhp, char *fname, int flen,
+ 	int		host_err;
+ 	bool		close_cached = false;
+ 
++	trace_nfsd_rename(rqstp, ffhp);
++
+ 	err = fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_REMOVE);
+ 	if (err)
+ 		goto out;
+@@ -2000,6 +2020,8 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 	__be32		err;
+ 	int		host_err;
+ 
++	trace_nfsd_unlink(rqstp, fhp);
++
+ 	err = nfserr_acces;
+ 	if (!flen || isdotent(fname, flen))
+ 		goto out;
+@@ -2222,6 +2244,8 @@ nfsd_readdir(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t *offsetp,
+ 	loff_t		offset = *offsetp;
+ 	int             may_flags = NFSD_MAY_READ;
+ 
++	trace_nfsd_readdir(rqstp, fhp);
++
+ 	err = nfsd_open(rqstp, fhp, S_IFDIR, may_flags, &file);
+ 	if (err)
+ 		goto out;
+@@ -2288,6 +2312,8 @@ nfsd_statfs(struct svc_rqst *rqstp, struct svc_fh *fhp, struct kstatfs *stat, in
+ {
+ 	__be32 err;
+ 
++	trace_nfsd_statfs(rqstp, fhp);
++
+ 	err = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP | access);
+ 	if (!err) {
+ 		struct path path = {
 
 -- 
 2.48.1
