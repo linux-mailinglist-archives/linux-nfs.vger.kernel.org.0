@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-10521-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10522-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 158E1A56643
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 12:07:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4632AA56649
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 12:08:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 99AEF16A0A1
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 11:07:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCB793B20A3
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 11:07:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 568B82153CF;
-	Fri,  7 Mar 2025 11:07:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E0A82153E8;
+	Fri,  7 Mar 2025 11:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PiEGhJPK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0SJn+/N"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB3320E00F;
-	Fri,  7 Mar 2025 11:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156022153D4;
+	Fri,  7 Mar 2025 11:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741345670; cv=none; b=pcjUksTt9+ZYkztXSFX12/LVLjlyQ+4+U9qcer6V2t3yOdu7AXTRgCKG0XVfpPQctP5vXu/Q8cqvHMawp2tqJ1R1RlmQ7LyEe7/M32VFKHqjjJG93Mr9VkisvrWGjifo1sE5capzqLWsODDeESKqnkqzSr8Ks0xjhKnEBNofL7E=
+	t=1741345684; cv=none; b=XvoMWxok4/pATkbHVuXJu0ihEpTP0Uq8z6xJ1ezXgpL8o6WbA4pJ3bPH7fiTl5iEj9bjj9zJ6Pte62mqm04uSG8xmNsUTFxyh++37GM4NNr5sJuqKYrRdKcb9WPerc9UMN0VmAwkXO9QTI9GK8tmGXtYa1msTSMtimitFRrCrDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741345670; c=relaxed/simple;
-	bh=rgT8i8tyBP7pokCoQkNIYajjWNrb3s+Avn54oqy9LSE=;
+	s=arc-20240116; t=1741345684; c=relaxed/simple;
+	bh=hD8wrDk1lC23SkGKQcGIY74EdB41ZVYCnwxC+30BTko=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jz3/pYRwjWDj0J2l9dgpDdkuPAZFIMrN4o7SPz3oYDYrbla167R3jCtPl0f6mAHT2Nc7kS01W5jKfNtV+qDkrKJmXe7YjCi3Dl5vgM55ei3Xr/6RDqR+LLyFUPLoGSxbBq0PiQIEhoGFUdMdC+k+zNHSPkevmcXKiHo5plCgzv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PiEGhJPK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6669C4CED1;
-	Fri,  7 Mar 2025 11:07:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=qzPZMDT3VVkuSByFX42HHpkH/hgDLZknecrP0C3fBmKcI06nGjSx4codXoCY65QUqCm9bmIpNUI9augAuc04ruh2O/CIxtg2AlImmveVdaMR3KvfgLMp9PNc7Uy/ruXcz45iOExOv5etvKq5AQW0WmHmF1lqTrY2qEljiNNdEBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0SJn+/N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAC4C4CED1;
+	Fri,  7 Mar 2025 11:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741345669;
-	bh=rgT8i8tyBP7pokCoQkNIYajjWNrb3s+Avn54oqy9LSE=;
+	s=k20201202; t=1741345683;
+	bh=hD8wrDk1lC23SkGKQcGIY74EdB41ZVYCnwxC+30BTko=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PiEGhJPK/aoKV9R7q2VwalT0ZD42Dm5s3f7ypkNYshykx2hW/OfPZGhTrtais1rkk
-	 wk8KZQVnljHB7t6dOQvXD2QlKs7PtohW0W1xy72uERZSDtMWAzUcMBEZ0R20hgQ0Zl
-	 OtFeW5vwYvsHoz4iSLAF06/BNBN82ETA7CIX5kylZ2V9DHNeAGFzq+LH1Ytkg91I7n
-	 ekgK0FaGsEpMyRbfXrI9qwjgHYd3R8wdH9qsy3fteUMLnGYG3YLx69+vxgyjUBCEpJ
-	 jpjqvlO+4920NOb9T+EHd7rnK0KYJv7o9pUR+sMm/Zl86iBV+94O1KQ1FEyO1VOejz
-	 rTSww6iy+Mq+Q==
-Message-ID: <77acf3fbd9946522d1b18a6e8a05000465b72f40.camel@kernel.org>
-Subject: Re: [PATCH 1/2] NFSD: unregister filesystem in case
- genl_register_family() fails
+	b=F0SJn+/NQUK959FxNePOOIVlTiMqC/hL40hkRSwZrSDazQlnNUcez4SfcDcfdnpPu
+	 gbH3bknJy2W+5SWNkVMlAmbu6AUJiul2KTs7gyEMA8FYjxA4XZ4ujMyzAbCKDK/1c1
+	 K/Zvl8pONao+KBzvGJIr4ifMqV9YTBWc55VFp56CYP8i3FVKxGKBGL3QdoGdpt+7Np
+	 onyyPu05rQvcuw2Cy6onGAqAj9oMRP0HM51xFmmpHPIhubi3dHkE5dtKSsHVwRx5rD
+	 WID2qGxEsTh9x1JTQ2PGg3D89B4iKzgzbo2pKuTkOqJ+IgTgRthtc3OrzxsbBlPjaJ
+	 1A6KVD98BKJcQ==
+Message-ID: <397a94ea94169b54c58f9442b810090e960d5691.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSD: fix race between nfsd registration and
+ exports_proc
 From: Jeff Layton <jlayton@kernel.org>
 To: Maninder Singh <maninder1.s@samsung.com>, chuck.lever@oracle.com, 
 	neilb@suse.de, okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com, 
 	lorenzo@kernel.org
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chungki0201.woo@samsung.com
-Date: Fri, 07 Mar 2025 06:07:47 -0500
-In-Reply-To: <20250306092007.1419237-1-maninder1.s@samsung.com>
-References: 
-	<CGME20250306092017epcas5p30812b135b484fdea1f96739635df1d79@epcas5p3.samsung.com>
-	 <20250306092007.1419237-1-maninder1.s@samsung.com>
+	chungki0201.woo@samsung.com, Shubham Rana <s9.rana@samsung.com>
+Date: Fri, 07 Mar 2025 06:08:01 -0500
+In-Reply-To: <20250306092007.1419237-2-maninder1.s@samsung.com>
+References: <20250306092007.1419237-1-maninder1.s@samsung.com>
+		<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcas5p4.samsung.com>
+	 <20250306092007.1419237-2-maninder1.s@samsung.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,39 +140,166 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-03-06 at 14:50 +0530, Maninder Singh wrote:
-> With rpc_status netlink support, unregister of register_filesystem()
-> was missed in case of genl_register_family() fails.
+> As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+> and cleanup by remove_proc_entry() at last of exit_nfsd.
 >=20
-> Correcting it by making new label.
+> Which causes kernel OOPs if there is race between below 2 operations:
+> (i) exportfs -r
+> (ii) mount -t nfsd none /proc/fs/nfsd
 >=20
-> Fixes: bd9d6a3efa97 ("NFSD: add rpc_status netlink support")
+> for 5.4 kernel ARM64:
+>=20
+> CPU 1:
+> el1_irq+0xbc/0x180
+> arch_counter_get_cntvct+0x14/0x18
+> running_clock+0xc/0x18
+> preempt_count_add+0x88/0x110
+> prep_new_page+0xb0/0x220
+> get_page_from_freelist+0x2d8/0x1778
+> __alloc_pages_nodemask+0x15c/0xef0
+> __vmalloc_node_range+0x28c/0x478
+> __vmalloc_node_flags_caller+0x8c/0xb0
+> kvmalloc_node+0x88/0xe0
+> nfsd_init_net+0x6c/0x108 [nfsd]
+> ops_init+0x44/0x170
+> register_pernet_operations+0x114/0x270
+> register_pernet_subsys+0x34/0x50
+> init_nfsd+0xa8/0x718 [nfsd]
+> do_one_initcall+0x54/0x2e0
+>=20
+> CPU 2 :
+> Unable to handle kernel NULL pointer dereference at virtual address 00000=
+00000000010
+>=20
+> PC is at : exports_net_open+0x50/0x68 [nfsd]
+>=20
+> Call trace:
+> exports_net_open+0x50/0x68 [nfsd]
+> exports_proc_open+0x2c/0x38 [nfsd]
+> proc_reg_open+0xb8/0x198
+> do_dentry_open+0x1c4/0x418
+> vfs_open+0x38/0x48
+> path_openat+0x28c/0xf18
+> do_filp_open+0x70/0xe8
+> do_sys_open+0x154/0x248
+>=20
+> Sometimes it crashes at exports_net_open() and sometimes cache_seq_next_r=
+cu().
+>=20
+> and same is happening on latest 6.14 kernel as well:
+>=20
+> [    0.000000] Linux version 6.14.0-rc5-next-20250304-dirty
+> ...
+> [  285.455918] Unable to handle kernel paging request at virtual address =
+00001f4800001f48
+> ...
+> [  285.464902] pc : cache_seq_next_rcu+0x78/0xa4
+> ...
+> [  285.469695] Call trace:
+> [  285.470083]  cache_seq_next_rcu+0x78/0xa4 (P)
+> [  285.470488]  seq_read+0xe0/0x11c
+> [  285.470675]  proc_reg_read+0x9c/0xf0
+> [  285.470874]  vfs_read+0xc4/0x2fc
+> [  285.471057]  ksys_read+0x6c/0xf4
+> [  285.471231]  __arm64_sys_read+0x1c/0x28
+> [  285.471428]  invoke_syscall+0x44/0x100
+> [  285.471633]  el0_svc_common.constprop.0+0x40/0xe0
+> [  285.471870]  do_el0_svc_compat+0x1c/0x34
+> [  285.472073]  el0_svc_compat+0x2c/0x80
+> [  285.472265]  el0t_32_sync_handler+0x90/0x140
+> [  285.472473]  el0t_32_sync+0x19c/0x1a0
+> [  285.472887] Code: f9400885 93407c23 937d7c27 11000421 (f86378a3)
+> [  285.473422] ---[ end trace 0000000000000000 ]---
+>=20
+> It reproduced simply with below script:
+> while [ 1 ]
+> do
+> /exportfs -r
+> done &
+>=20
+> while [ 1 ]
+> do
+> insmod /nfsd.ko
+> mount -t nfsd none /proc/fs/nfsd
+> umount /proc/fs/nfsd
+> rmmod nfsd
+> done &
+>=20
+> So exporting interfaces to user space shall be done at last and
+> cleanup at first place.
+>=20
+> With change there is no Kernel OOPs.
+>=20
+> Co-developed-by: Shubham Rana <s9.rana@samsung.com>
+> Signed-off-by: Shubham Rana <s9.rana@samsung.com>
 > Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
 > ---
->  fs/nfsd/nfsctl.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  fs/nfsd/nfsctl.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index ac265d6fde35..d773481bcf10 100644
+> index d773481bcf10..f9763ced743d 100644
 > --- a/fs/nfsd/nfsctl.c
 > +++ b/fs/nfsd/nfsctl.c
-> @@ -2305,7 +2305,7 @@ static int __init init_nfsd(void)
->  		goto out_free_cld;
->  	retval =3D register_filesystem(&nfsd_fs_type);
+> @@ -2291,12 +2291,9 @@ static int __init init_nfsd(void)
 >  	if (retval)
-> -		goto out_free_all;
-> +		goto out_free_nfsd4;
+>  		goto out_free_pnfs;
+>  	nfsd_lockd_init();	/* lockd->nfsd callbacks */
+> -	retval =3D create_proc_exports_entry();
+> -	if (retval)
+> -		goto out_free_lockd;
+>  	retval =3D register_pernet_subsys(&nfsd_net_ops);
+>  	if (retval < 0)
+> -		goto out_free_exports;
+> +		goto out_free_lockd;
+>  	retval =3D register_cld_notifier();
+>  	if (retval)
+>  		goto out_free_subsys;
+> @@ -2307,12 +2304,17 @@ static int __init init_nfsd(void)
+>  	if (retval)
+>  		goto out_free_nfsd4;
 >  	retval =3D genl_register_family(&nfsd_nl_family);
+> +	if (retval)
+> +		goto out_free_filesystem;
+> +	retval =3D create_proc_exports_entry();
 >  	if (retval)
 >  		goto out_free_all;
-> @@ -2313,6 +2313,8 @@ static int __init init_nfsd(void)
+>  	nfsd_localio_ops_init();
 > =20
 >  	return 0;
 >  out_free_all:
-> +	unregister_filesystem(&nfsd_fs_type);
-> +out_free_nfsd4:
+> +	genl_unregister_family(&nfsd_nl_family);
+> +out_free_filesystem:
+>  	unregister_filesystem(&nfsd_fs_type);
+>  out_free_nfsd4:
 >  	nfsd4_destroy_laundry_wq();
->  out_free_cld:
+> @@ -2320,9 +2322,6 @@ static int __init init_nfsd(void)
 >  	unregister_cld_notifier();
+>  out_free_subsys:
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+> -out_free_exports:
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  out_free_lockd:
+>  	nfsd_lockd_shutdown();
+>  	nfsd_drc_slab_free();
+> @@ -2335,14 +2334,14 @@ static int __init init_nfsd(void)
+> =20
+>  static void __exit exit_nfsd(void)
+>  {
+> +	remove_proc_entry("fs/nfs/exports", NULL);
+> +	remove_proc_entry("fs/nfs", NULL);
+>  	genl_unregister_family(&nfsd_nl_family);
+>  	unregister_filesystem(&nfsd_fs_type);
+>  	nfsd4_destroy_laundry_wq();
+>  	unregister_cld_notifier();
+>  	unregister_pernet_subsys(&nfsd_net_ops);
+>  	nfsd_drc_slab_free();
+> -	remove_proc_entry("fs/nfs/exports", NULL);
+> -	remove_proc_entry("fs/nfs", NULL);
+>  	nfsd_lockd_shutdown();
+>  	nfsd4_free_slabs();
+>  	nfsd4_exit_pnfs();
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
