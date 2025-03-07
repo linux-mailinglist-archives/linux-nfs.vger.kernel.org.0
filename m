@@ -1,180 +1,176 @@
-Return-Path: <linux-nfs+bounces-10519-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10520-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7C80A55F0E
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 05:00:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC77EA5641D
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 10:41:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F0CA16A5BD
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 04:00:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D14AC3A841D
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 09:41:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F8E7DA7F;
-	Fri,  7 Mar 2025 04:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JCYWO7V+"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 217F2206F3F;
+	Fri,  7 Mar 2025 09:41:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E0F190485
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Mar 2025 04:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5641A8F97;
+	Fri,  7 Mar 2025 09:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741320010; cv=none; b=Zq/EucNypqz0rUorEsjLYfAvQVIatfJGAYOVFH7DPsfqPz8pSkb/wWytJzgHV5dzBSo1j5AnWLc1Gr0x4wPOqJZOhBK4WvajbU3cWJ82NrOQVaVgZ2Tl3Et95vz+JY5WyEdonPBMTGrNy+FfD1V5T+SAqSJj8B54UAGYLQjaQRM=
+	t=1741340492; cv=none; b=RFG9b4k9da65RdauouB8ggfGXSpYMBkXElxRz/hEssRaKo/JziAxOSuhWXb6IylxfhYN1u49VLuWw9XYaoOwBR6Xh/Ai2L0yuobU5jcsfv4qzwOz1EOcmkcib6mD6MHhnl95lPbb+53D3zP7CFzWUzwhpqUmmunsXiC1Ks2LcvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741320010; c=relaxed/simple;
-	bh=/EJHP+8TfDAtSkvGsyq8r00JUKNY7IZDhYhYCIDTFlg=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=K5GVqGBVgNW/abfG2UOQ0kztitpUcbNnrVQxIMP/le1S4G4TV1/s+HF0g4UrRi7JAbhEkCbeHtOcFyILJR1ZRMRoQXy7cocM7HsTOsp+Y6iLc7Bcs8Jtc4UymbJyCFtrga7HraxaRvDbL90ianVzK4+D60Ri9ZmBPe4rfXB1Vuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JCYWO7V+; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250307035959epoutp0387c97a4fa0f9bb52fb4cb2ec7171901d~qaVBmZxkQ1037510375epoutp030
-	for <linux-nfs@vger.kernel.org>; Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250307035959epoutp0387c97a4fa0f9bb52fb4cb2ec7171901d~qaVBmZxkQ1037510375epoutp030
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741320000;
-	bh=LzTQRzJ1HeapOI4JPtLfPUdsHjeO+Cq77SQ6lp2CbFM=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=JCYWO7V+45pdSoIjM5yHykB7KTzMwPfqt91RdpdncklmHEUKpAtYiYUxwXg4Lk4b9
-	 Nys3hI1DYMVdKKvoGyxPzPJUtkiRe0xK7jT23gtLk1Qo0tbBAxyi0i6015pckZpdCt
-	 bNwH3EZw3W7CrBMf5H+iEZqFVzUZ32xoGW0cc+Aw=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250307035959epcas5p44d3562a116c24c9a9f1f3305c3197fc5~qaVBGt9jN1240212402epcas5p4f;
-	Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
-X-AuditID: b6c32a4a-c1fda70000004ddd-74-67ca6f3f0db4
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	18.E7.19933.F3F6AC76; Fri,  7 Mar 2025 12:59:59 +0900 (KST)
+	s=arc-20240116; t=1741340492; c=relaxed/simple;
+	bh=sHnV9GEozz+Opv61zRjqJ4zv0AEgNaF9oXU1zOBaCs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ndrwAd1fq7Tsl7riwMoA7E/TYOw/91KKBiHw8TrW5ntAe3r89CEiJrCIsb2RaPziauW74h0qYI1CJ1ZwluBRT7mHQ/B3XozrtKFfms8QfQ9/P+ZkjxsjWd5RjR3UMDbrVSDB2uEAReCvP3Wk0J9vcoiKQmHtrXChmT4NvNW29k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z8LQ532WYz1R6Dn;
+	Fri,  7 Mar 2025 17:21:33 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59CC61402CE;
+	Fri,  7 Mar 2025 17:23:12 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 7 Mar 2025 17:23:11 +0800
+Message-ID: <180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com>
+Date: Fri, 7 Mar 2025 17:23:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: [PATCH 2/2] NFSD: fix race between nfsd registration and
- exports_proc
-Reply-To: maninder1.s@samsung.com
-Sender: Maninder Singh <maninder1.s@samsung.com>
-From: Maninder Singh <maninder1.s@samsung.com>
-To: Jeff Layton <jlayton@kernel.org>, "chuck.lever@oracle.com"
-	<chuck.lever@oracle.com>, "neilb@suse.de" <neilb@suse.de>,
-	"okorniev@redhat.com" <okorniev@redhat.com>, "Dai.Ngo@oracle.com"
-	<Dai.Ngo@oracle.com>, "tom@talpey.com" <tom@talpey.com>,
-	"lorenzo@kernel.org" <lorenzo@kernel.org>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chung-Ki Woo
-	<chungki0201.woo@samsung.com>, Shubham Rana <s9.rana@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20250307032948epcms5p5280f36a460ef7a4def620096699a1df2@epcms5p5>
-Date: Fri, 07 Mar 2025 08:59:48 +0530
-X-CMS-MailID: 20250307032948epcms5p5280f36a460ef7a4def620096699a1df2
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7bCmuq59/ql0g0fzxCz+333OZHH6+xV2
-	i/mLNrNZ/Fy2it3i8q45bBYXDpxmtehbPYvRYu/8BhaLSc8+sVt8f3yJ0eLUr1NMDtwem1Z1
-	snl8fHqLxeP9vqtsHn1bVjF6bD5d7XH5yRVGj8+b5ALYo7hsUlJzMstSi/TtErgyZvesZin4
-	J1yxa0svcwPjNYEuRk4OCQETiWXnbjF1MXJxCAnsZpT4uP8QcxcjBwevgKDE3x3CIDXCAiES
-	t44eYQOxhQQUJS7MWMMIUiIsYCDxa6sGSJhNQE9i1a49LCBjRASWMUns//CeGcRhFjjHKPFs
-	4hN2iGW8EjPan7JA2NIS25dvZQSxOQU8JC50/mCCiItK3Fz9lh3Gfn9sPiOELSLReu8sM4Qt
-	KPHg526ouIzE6s29UDOrJZ6+PscGslhCoIVRYt9umCJzifVLVoEN5RXwlfj7+wwriM0ioCrR
-	e/M9C8g3EgIuEjd+qYGEmQXkJba/nQMOB2YBTYn1u/QhpshKTD21jgmihE+i9/cTJpi3dsyD
-	sVUlWm5uYIV58fPHj1CneUi07jjJBgnnn4wSsy/dYJzAqDALEdSzkGyehbB5ASPzKkbJ1ILi
-	3PTUYtMCo7zUcr3ixNzi0rx0veT83E2M4BSl5bWD8eGDD3qHGJk4GA8xSnAwK4nwCm4+mS7E
-	m5JYWZValB9fVJqTWnyIUZqDRUmct3lnS7qQQHpiSWp2ampBahFMlomDU6qBiUWHuVfM6pzr
-	eVepyvWLlOfnyujeyHhrqnCDz4rrp9lvAaVkjznG0ZtFNXyLtjP6+4QFCHE8Z+MRynAM27TK
-	dv3vV9HzC7c91a5uaNj4ypd3Syfz9X+GjnG5z0+dfLxCmCv95Mfwvw86DLLa8rTavv0N/Zgx
-	9/Iew55ds09/P/kgf5u46kUh25+PQpbr6Rbnsr77F3li9Tw3jzdWjd+ahFUvBZlm9a0rnPWr
-	/rj6gvt27YcS60J5Luu2NKb1tSmeWTlL/NLn93slEmZu+9r8Q/z/MS6njT5/HdwdDTOmPmRf
-	7xjbrjSF8f75cNGwSI5vXtltX740RL5at80kK4DvsJVZH/uSY8eDiovV2aYqsRRnJBpqMRcV
-	JwIAMVpi/8ADAAA=
-X-CMS-RootMailID: 20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f
-References: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
-	<20250306092007.1419237-1-maninder1.s@samsung.com>
-	<20250306092007.1419237-2-maninder1.s@samsung.com>
-	<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcms5p5>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+To: NeilBrown <neilb@suse.de>
+CC: Qu Wenruo <wqu@suse.com>, Yishai Hadas <yishaih@nvidia.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
+	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
+ Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
+	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
+	<jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Luiz Capitulino
+	<luizcap@redhat.com>, Mel Gorman <mgorman@techsingularity.net>, Dave Chinner
+	<david@fromorbit.com>, <kvm@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-mm@kvack.org>, <netdev@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>
+References: <> <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
+ <174129565467.33508.7106343513316364028@noble.neil.brown.name>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <174129565467.33508.7106343513316364028@noble.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-Hi,
-
-> > As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
-> > and cleanup by remove_proc_entry() at last of exit_nfsd.
-> > 
-> > Which causes kernel OOPs if there is race between below 2 operations:
-> > (i) exportfs -r
-> > (ii) mount -t nfsd none /proc/fs/nfsd
-> > 
-> > for 5.4 kernel ARM64:
-> > 
-> > CPU 1:
-> > el1_irq+0xbc/0x180
-> > arch_counter_get_cntvct+0x14/0x18
-> > running_clock+0xc/0x18
-> > preempt_count_add+0x88/0x110
-> > prep_new_page+0xb0/0x220
-> > get_page_from_freelist+0x2d8/0x1778
-> > __alloc_pages_nodemask+0x15c/0xef0
-> > __vmalloc_node_range+0x28c/0x478
-> > __vmalloc_node_flags_caller+0x8c/0xb0
-> > kvmalloc_node+0x88/0xe0
-> > nfsd_init_net+0x6c/0x108 [nfsd]
-> > ops_init+0x44/0x170
-> > register_pernet_operations+0x114/0x270
-> > register_pernet_subsys+0x34/0x50
-> > init_nfsd+0xa8/0x718 [nfsd]
-> > do_one_initcall+0x54/0x2e0
-> > 
-> > CPU 2 :
-> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-> > 
-> > PC is at : exports_net_open+0x50/0x68 [nfsd]
-> > 
-> > Call trace:
-> > exports_net_open+0x50/0x68 [nfsd]
-> > exports_proc_open+0x2c/0x38 [nfsd]
-> > proc_reg_open+0xb8/0x198
-> > do_dentry_open+0x1c4/0x418
-> > vfs_open+0x38/0x48
-> > path_openat+0x28c/0xf18
-> > do_filp_open+0x70/0xe8
-> > do_sys_open+0x154/0x248
-
-
-
-> To make sure I understand, the race is that sometimes the exports
-> interface gets created before the net namespace is set up, and then
-> that causes GPFs when exports_net_open tries to access the nfsd_net?
+On 2025/3/7 5:14, NeilBrown wrote:
+> On Thu, 06 Mar 2025, Yunsheng Lin wrote:
+>> On 2025/3/6 7:41, NeilBrown wrote:
+>>> On Wed, 05 Mar 2025, Yunsheng Lin wrote:
+>>>>
+>>>> For the existing btrfs and sunrpc case, I am agreed that there
+>>>> might be valid use cases too, we just need to discuss how to
+>>>> meet the requirements of different use cases using simpler, more
+>>>> unified and effective APIs.
+>>>
+>>> We don't need "more unified".
+>>
+>> What I meant about 'more unified' is how to avoid duplicated code as
+>> much as possible for two different interfaces with similar‌ functionality.
+>>
+>> The best way I tried to avoid duplicated code as much as possible is
+>> to defragment the page_array before calling the alloc_pages_bulk()
+>> for the use case of btrfs and sunrpc so that alloc_pages_bulk() can
+>> be removed of the assumption populating only NULL elements, so that
+>> the API is simpler and more efficient.
+>>
+>>>
+>>> If there are genuinely two different use cases with clearly different
+>>> needs - even if only slightly different - then it is acceptable to have
+>>> two different interfaces.  Be sure to choose names which emphasise the
+>>> differences.
+>>
+>> The best name I can come up with for the use case of btrfs and sunrpc
+>> is something like alloc_pages_bulk_refill(), any better suggestion about
+>> the naming?
 > 
+> I think alloc_pages_bulk_refill() is a good name.
+> 
+> So:
+> - alloc_pages_bulk() would be given an uninitialised array of page
+>   pointers and a required count and would return the number of pages
+>   that were allocated
+> - alloc_pages_bulk_refill() would be given an initialised array of page
+>   pointers some of which might be NULL.  It would attempt to allocate
+>   pages for the non-NULL pointers and return the total number of
 
+You meant 'NULL pointers' instead of 'non-NULL pointers' above?
 
-Yes, Sometime at time of module init this happened as I shared state of 2 CPUs at
-time of crash.
-and sometimes it occurs when module was unloading and user space was accessing it.
+>   allocated pages in the array - just like the current
+>   alloc_pages_bulk().
 
-So I though interface to user shall be exported late during init and clean up early.
-But what is actual position for that I was not sure, So I moved to last at time of init
-and first at time of clean up.
+I guess 'the total number of allocated pages in the array ' include
+the pages which are already in the array before calling the above
+API?
 
-And originally at time of 4.13 kernel this cleanup was the first thing to do in exit time.
-but with time to fixing other issues, its position got changed.
+I guess it is worth mentioning that the current alloc_pages_bulk()
+may return different value with the same size of arrays, but with
+different layout of the same number of NULL pointers.
+For the same size of arrays with different layout for the NULL pointer
+below('*' indicate NULL pointer), and suppose buddy allocator is only
+able to allocate two pages:
+1. P**P*P: will return 4.
+2. P*PP**: will return 5.
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=027690c75e8fd91b60a634d31c4891a6e39d45bd
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=bd5ae9288d6451bd346a1b4a59d4fe7e62ba29b7
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6f6f84aa215f7b6665ccbb937db50860f9ec2989
+If the new API do the page defragmentation, then it will always return
+the same value for different layout of the same number of NULL pointers.
+I guess the new one is the more perfered behavior as it provides a more
+defined semantic.
 
-Which caused this kernel OOPs I think.
+> 
+> sunrpc could usefully use both of these interfaces.
+> 
+> alloc_pages_bulk() could be implemented by initialising the array and
+> then calling alloc_pages_bulk_refill().  Or alloc_pages_bulk_refill()
+> could be implemented by compacting the pages and then calling
+> alloc_pages_bulk().
+> If we could duplicate the code and have two similar but different
+> functions.
+> 
+> The documentation for _refill() should make it clear that the pages
+> might get re-ordered.
 
-Thanks,
-Maninder Singh
+Does 'the pages might get re-ordered' mean defragmenting the page_array?
+If yes, it makes sense to make it clear.
+
+> 
+> Having looked at some of the callers I agree that the current interface
+> is not ideal for many of them, and that providing a simpler interface
+> would help.
+
++1
+
+> 
+> Thanks,
+> NeilBrown
 
