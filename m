@@ -1,219 +1,180 @@
-Return-Path: <linux-nfs+bounces-10518-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10519-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20CC6A5587C
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 22:14:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7C80A55F0E
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 05:00:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 517BC1895E91
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Mar 2025 21:14:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F0CA16A5BD
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Mar 2025 04:00:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8711625A338;
-	Thu,  6 Mar 2025 21:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F8E7DA7F;
+	Fri,  7 Mar 2025 04:00:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tKlJ2CN0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cuwYJRYL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tKlJ2CN0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cuwYJRYL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JCYWO7V+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D0C1FCD1F
-	for <linux-nfs@vger.kernel.org>; Thu,  6 Mar 2025 21:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E0F190485
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Mar 2025 04:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741295679; cv=none; b=eBl4LOUxDAz/tjsJXCvV//6MeAya7di0ma9Azhz1RoFP0K1EritlVGHkr4QKt6hxRocjFs9irvaCVfZ00CRdurCcaqLxM3hFxdZr2ckXZxz6G+av4fCnSnBKgsJu9NgHdOujcgHiyT5oCFwXwTiEoCt8BaIlrhtricZAEMgZ6vw=
+	t=1741320010; cv=none; b=Zq/EucNypqz0rUorEsjLYfAvQVIatfJGAYOVFH7DPsfqPz8pSkb/wWytJzgHV5dzBSo1j5AnWLc1Gr0x4wPOqJZOhBK4WvajbU3cWJ82NrOQVaVgZ2Tl3Et95vz+JY5WyEdonPBMTGrNy+FfD1V5T+SAqSJj8B54UAGYLQjaQRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741295679; c=relaxed/simple;
-	bh=13kDV5whj4L1YS0AqHhMEuwczR+U+UAB5GvMyPo/ScA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pS28GSlo2Otu96LeRaiHfKoL962ysg3S30ilfPwt2bkxaZ3lNXrqez4iC3QqRn8OjZeRa/yTpyr2pTU3+LLZLmyNs4D7FLC25TMFmwP+L/8w+vkbeyoMS35tT++8lWQ/3wy7CNsvr7uTnhSlkuJ4m9vVKUjHp89Vohaf7Ll2BY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tKlJ2CN0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cuwYJRYL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tKlJ2CN0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cuwYJRYL; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D3BE321172;
-	Thu,  6 Mar 2025 21:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
-	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
-	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741295675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
-	TbH2enWt9B0YdnCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
-	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
-	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741295675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
-	TbH2enWt9B0YdnCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D40E13A61;
-	Thu,  6 Mar 2025 21:14:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MBkAMC0QymdSewAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 06 Mar 2025 21:14:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1741320010; c=relaxed/simple;
+	bh=/EJHP+8TfDAtSkvGsyq8r00JUKNY7IZDhYhYCIDTFlg=;
+	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
+	 Content-Type:References; b=K5GVqGBVgNW/abfG2UOQ0kztitpUcbNnrVQxIMP/le1S4G4TV1/s+HF0g4UrRi7JAbhEkCbeHtOcFyILJR1ZRMRoQXy7cocM7HsTOsp+Y6iLc7Bcs8Jtc4UymbJyCFtrga7HraxaRvDbL90ianVzK4+D60Ri9ZmBPe4rfXB1Vuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JCYWO7V+; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250307035959epoutp0387c97a4fa0f9bb52fb4cb2ec7171901d~qaVBmZxkQ1037510375epoutp030
+	for <linux-nfs@vger.kernel.org>; Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250307035959epoutp0387c97a4fa0f9bb52fb4cb2ec7171901d~qaVBmZxkQ1037510375epoutp030
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741320000;
+	bh=LzTQRzJ1HeapOI4JPtLfPUdsHjeO+Cq77SQ6lp2CbFM=;
+	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+	b=JCYWO7V+45pdSoIjM5yHykB7KTzMwPfqt91RdpdncklmHEUKpAtYiYUxwXg4Lk4b9
+	 Nys3hI1DYMVdKKvoGyxPzPJUtkiRe0xK7jT23gtLk1Qo0tbBAxyi0i6015pckZpdCt
+	 bNwH3EZw3W7CrBMf5H+iEZqFVzUZ32xoGW0cc+Aw=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250307035959epcas5p44d3562a116c24c9a9f1f3305c3197fc5~qaVBGt9jN1240212402epcas5p4f;
+	Fri,  7 Mar 2025 03:59:59 +0000 (GMT)
+X-AuditID: b6c32a4a-c1fda70000004ddd-74-67ca6f3f0db4
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	18.E7.19933.F3F6AC76; Fri,  7 Mar 2025 12:59:59 +0900 (KST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Yunsheng Lin" <linyunsheng@huawei.com>
-Cc: "Qu Wenruo" <wqu@suse.com>, "Yishai Hadas" <yishaih@nvidia.com>,
- "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Shameer Kolothum" <shameerali.kolothum.thodi@huawei.com>,
- "Kevin Tian" <kevin.tian@intel.com>,
- "Alex Williamson" <alex.williamson@redhat.com>, "Chris Mason" <clm@fb.com>,
- "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
- "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
- "Sandeep Dhavale" <dhavale@google.com>, "Carlos Maiolino" <cem@kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Luiz Capitulino" <luizcap@redhat.com>,
- "Mel Gorman" <mgorman@techsingularity.net>,
- "Dave Chinner" <david@fromorbit.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
- only NULL elements
-In-reply-to: <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
-References: <>, <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
-Date: Fri, 07 Mar 2025 08:14:14 +1100
-Message-id: <174129565467.33508.7106343513316364028@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.com,nvidia.com,ziepe.ca,huawei.com,intel.com,redhat.com,fb.com,toxicpanda.com,kernel.org,gmail.com,linux.alibaba.com,google.com,linux-foundation.org,linaro.org,davemloft.net,oracle.com,talpey.com,techsingularity.net,fromorbit.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
-	R_RATELIMIT(0.00)[to_ip_from(RL4q5k5kyydt8nhc3xa4shdp4c),from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Mime-Version: 1.0
+Subject: RE: [PATCH 2/2] NFSD: fix race between nfsd registration and
+ exports_proc
+Reply-To: maninder1.s@samsung.com
+Sender: Maninder Singh <maninder1.s@samsung.com>
+From: Maninder Singh <maninder1.s@samsung.com>
+To: Jeff Layton <jlayton@kernel.org>, "chuck.lever@oracle.com"
+	<chuck.lever@oracle.com>, "neilb@suse.de" <neilb@suse.de>,
+	"okorniev@redhat.com" <okorniev@redhat.com>, "Dai.Ngo@oracle.com"
+	<Dai.Ngo@oracle.com>, "tom@talpey.com" <tom@talpey.com>,
+	"lorenzo@kernel.org" <lorenzo@kernel.org>
+CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chung-Ki Woo
+	<chungki0201.woo@samsung.com>, Shubham Rana <s9.rana@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20250307032948epcms5p5280f36a460ef7a4def620096699a1df2@epcms5p5>
+Date: Fri, 07 Mar 2025 08:59:48 +0530
+X-CMS-MailID: 20250307032948epcms5p5280f36a460ef7a4def620096699a1df2
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7bCmuq59/ql0g0fzxCz+333OZHH6+xV2
+	i/mLNrNZ/Fy2it3i8q45bBYXDpxmtehbPYvRYu/8BhaLSc8+sVt8f3yJ0eLUr1NMDtwem1Z1
+	snl8fHqLxeP9vqtsHn1bVjF6bD5d7XH5yRVGj8+b5ALYo7hsUlJzMstSi/TtErgyZvesZin4
+	J1yxa0svcwPjNYEuRk4OCQETiWXnbjF1MXJxCAnsZpT4uP8QcxcjBwevgKDE3x3CIDXCAiES
+	t44eYQOxhQQUJS7MWMMIUiIsYCDxa6sGSJhNQE9i1a49LCBjRASWMUns//CeGcRhFjjHKPFs
+	4hN2iGW8EjPan7JA2NIS25dvZQSxOQU8JC50/mCCiItK3Fz9lh3Gfn9sPiOELSLReu8sM4Qt
+	KPHg526ouIzE6s29UDOrJZ6+PscGslhCoIVRYt9umCJzifVLVoEN5RXwlfj7+wwriM0ioCrR
+	e/M9C8g3EgIuEjd+qYGEmQXkJba/nQMOB2YBTYn1u/QhpshKTD21jgmihE+i9/cTJpi3dsyD
+	sVUlWm5uYIV58fPHj1CneUi07jjJBgnnn4wSsy/dYJzAqDALEdSzkGyehbB5ASPzKkbJ1ILi
+	3PTUYtMCo7zUcr3ixNzi0rx0veT83E2M4BSl5bWD8eGDD3qHGJk4GA8xSnAwK4nwCm4+mS7E
+	m5JYWZValB9fVJqTWnyIUZqDRUmct3lnS7qQQHpiSWp2ampBahFMlomDU6qBiUWHuVfM6pzr
+	eVepyvWLlOfnyujeyHhrqnCDz4rrp9lvAaVkjznG0ZtFNXyLtjP6+4QFCHE8Z+MRynAM27TK
+	dv3vV9HzC7c91a5uaNj4ypd3Syfz9X+GjnG5z0+dfLxCmCv95Mfwvw86DLLa8rTavv0N/Zgx
+	9/Iew55ds09/P/kgf5u46kUh25+PQpbr6Rbnsr77F3li9Tw3jzdWjd+ahFUvBZlm9a0rnPWr
+	/rj6gvt27YcS60J5Luu2NKb1tSmeWTlL/NLn93slEmZu+9r8Q/z/MS6njT5/HdwdDTOmPmRf
+	7xjbrjSF8f75cNGwSI5vXtltX740RL5at80kK4DvsJVZH/uSY8eDiovV2aYqsRRnJBpqMRcV
+	JwIAMVpi/8ADAAA=
+X-CMS-RootMailID: 20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f
+References: <c5d6d532ca6bb39f02629402ed289700589ded19.camel@kernel.org>
+	<20250306092007.1419237-1-maninder1.s@samsung.com>
+	<20250306092007.1419237-2-maninder1.s@samsung.com>
+	<CGME20250306092021epcas5p41133e5a273e547d39ae8b724c9eca23f@epcms5p5>
 
-On Thu, 06 Mar 2025, Yunsheng Lin wrote:
-> On 2025/3/6 7:41, NeilBrown wrote:
-> > On Wed, 05 Mar 2025, Yunsheng Lin wrote:
-> >>
-> >> For the existing btrfs and sunrpc case, I am agreed that there
-> >> might be valid use cases too, we just need to discuss how to
-> >> meet the requirements of different use cases using simpler, more
-> >> unified and effective APIs.
+Hi,
+
+> > As of now nfsd calls create_proc_exports_entry() at start of init_nfsd
+> > and cleanup by remove_proc_entry() at last of exit_nfsd.
 > > 
-> > We don't need "more unified".
-> 
-> What I meant about 'more unified' is how to avoid duplicated code as
-> much as possible for two different interfaces with similar‌ functionality.
-> 
-> The best way I tried to avoid duplicated code as much as possible is
-> to defragment the page_array before calling the alloc_pages_bulk()
-> for the use case of btrfs and sunrpc so that alloc_pages_bulk() can
-> be removed of the assumption populating only NULL elements, so that
-> the API is simpler and more efficient.
-> 
+> > Which causes kernel OOPs if there is race between below 2 operations:
+> > (i) exportfs -r
+> > (ii) mount -t nfsd none /proc/fs/nfsd
 > > 
-> > If there are genuinely two different use cases with clearly different
-> > needs - even if only slightly different - then it is acceptable to have
-> > two different interfaces.  Be sure to choose names which emphasise the
-> > differences.
+> > for 5.4 kernel ARM64:
+> > 
+> > CPU 1:
+> > el1_irq+0xbc/0x180
+> > arch_counter_get_cntvct+0x14/0x18
+> > running_clock+0xc/0x18
+> > preempt_count_add+0x88/0x110
+> > prep_new_page+0xb0/0x220
+> > get_page_from_freelist+0x2d8/0x1778
+> > __alloc_pages_nodemask+0x15c/0xef0
+> > __vmalloc_node_range+0x28c/0x478
+> > __vmalloc_node_flags_caller+0x8c/0xb0
+> > kvmalloc_node+0x88/0xe0
+> > nfsd_init_net+0x6c/0x108 [nfsd]
+> > ops_init+0x44/0x170
+> > register_pernet_operations+0x114/0x270
+> > register_pernet_subsys+0x34/0x50
+> > init_nfsd+0xa8/0x718 [nfsd]
+> > do_one_initcall+0x54/0x2e0
+> > 
+> > CPU 2 :
+> > Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
+> > 
+> > PC is at : exports_net_open+0x50/0x68 [nfsd]
+> > 
+> > Call trace:
+> > exports_net_open+0x50/0x68 [nfsd]
+> > exports_proc_open+0x2c/0x38 [nfsd]
+> > proc_reg_open+0xb8/0x198
+> > do_dentry_open+0x1c4/0x418
+> > vfs_open+0x38/0x48
+> > path_openat+0x28c/0xf18
+> > do_filp_open+0x70/0xe8
+> > do_sys_open+0x154/0x248
+
+
+
+> To make sure I understand, the race is that sometimes the exports
+> interface gets created before the net namespace is set up, and then
+> that causes GPFs when exports_net_open tries to access the nfsd_net?
 > 
-> The best name I can come up with for the use case of btrfs and sunrpc
-> is something like alloc_pages_bulk_refill(), any better suggestion about
-> the naming?
 
-I think alloc_pages_bulk_refill() is a good name.
 
-So:
-- alloc_pages_bulk() would be given an uninitialised array of page
-  pointers and a required count and would return the number of pages
-  that were allocated
-- alloc_pages_bulk_refill() would be given an initialised array of page
-  pointers some of which might be NULL.  It would attempt to allocate
-  pages for the non-NULL pointers and return the total number of
-  allocated pages in the array - just like the current
-  alloc_pages_bulk().
+Yes, Sometime at time of module init this happened as I shared state of 2 CPUs at
+time of crash.
+and sometimes it occurs when module was unloading and user space was accessing it.
 
-sunrpc could usefully use both of these interfaces.
+So I though interface to user shall be exported late during init and clean up early.
+But what is actual position for that I was not sure, So I moved to last at time of init
+and first at time of clean up.
 
-alloc_pages_bulk() could be implemented by initialising the array and
-then calling alloc_pages_bulk_refill().  Or alloc_pages_bulk_refill()
-could be implemented by compacting the pages and then calling
-alloc_pages_bulk().
-If we could duplicate the code and have two similar but different
-functions.
+And originally at time of 4.13 kernel this cleanup was the first thing to do in exit time.
+but with time to fixing other issues, its position got changed.
 
-The documentation for _refill() should make it clear that the pages
-might get re-ordered.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=027690c75e8fd91b60a634d31c4891a6e39d45bd
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=bd5ae9288d6451bd346a1b4a59d4fe7e62ba29b7
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6f6f84aa215f7b6665ccbb937db50860f9ec2989
 
-Having looked at some of the callers I agree that the current interface
-is not ideal for many of them, and that providing a simpler interface
-would help.
+Which caused this kernel OOPs I think.
 
 Thanks,
-NeilBrown
+Maninder Singh
 
