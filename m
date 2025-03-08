@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-10533-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10534-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53864A57E03
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Mar 2025 21:14:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AA40A57E04
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Mar 2025 21:14:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8102F16C16F
-	for <lists+linux-nfs@lfdr.de>; Sat,  8 Mar 2025 20:14:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 688A33B306E
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Mar 2025 20:14:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90D3318FC84;
-	Sat,  8 Mar 2025 20:14:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61D881EFF90;
+	Sat,  8 Mar 2025 20:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oo2SQgiK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss2CW70N"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609982A8C1
-	for <linux-nfs@vger.kernel.org>; Sat,  8 Mar 2025 20:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5882A8C1
+	for <linux-nfs@vger.kernel.org>; Sat,  8 Mar 2025 20:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741464882; cv=none; b=VvtM7Yvx9SPGFrqC/gqXfaqTZ8I1brLP67CfmvQQp6K4ECQXiOKEN4pNZK2xzRSfLCDfU0EuFTkNFz8cauqov62K74SaOXCL0o3Q2Ovl8KCnYrmrQvAoLIsai6Gx6PUOpsjSizh6CvdsZ5P2Vi+mznpa+Rml03Nw8eF6Qbd4b8Y=
+	t=1741464883; cv=none; b=QsTmsSAczy76WkjAWetO4gwg077OYCXIe/GKQydXdtjPeo+8CQAlmQSOOyd4mdVtML13PBRfR0vcUxwJ3radqFEZrbPbHrzbPKrDWNj0enZe2sUa+VVkS28EhX0lFo0kC7SWWggECNZua65IbzkxcJ2la9yDw7ZGtqwdzoCekJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741464882; c=relaxed/simple;
-	bh=FwI4KAWaRS0+KBvi0bX7HqFPwK2KuodN15E/0I+ZfLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mYYW0K94Mk/u6McSfvKXRWdBlJ9nGrBumf6TXmYVzOKjbndzKFQ/wCg594PFuJuYI5umc2mf3i+rRb02h6yyD29RN7dHpzCGGys12LWACTxCN0YK33mMTSb8Hx2Uwn5TnB2k8FrMDPBh2Dc/CsIkMskpB0I9WtsyI9HNlb2MHTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oo2SQgiK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007E7C4CEE0;
-	Sat,  8 Mar 2025 20:14:40 +0000 (UTC)
+	s=arc-20240116; t=1741464883; c=relaxed/simple;
+	bh=pF0S4nfw9HlMk6PSfld8LUhuSbuAdDR5p9p7zntb9uI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FLDWF9xmSPC3wZjm966Jk/4qrFAUc5i2/0GjPoCu8UXzQRpHE2GwVXja2TBBgsqw1H5SvVFtJWz4xVOP4BLy83sBhxsg1dmwj4SpDr4gC86TyheYaSLiExuBKYSgBd6tdvvcopa7iRYACpqFXrNeH+fsYtTpgQW49SkdUk+mDVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss2CW70N; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0716FC4CEE7;
+	Sat,  8 Mar 2025 20:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741464881;
-	bh=FwI4KAWaRS0+KBvi0bX7HqFPwK2KuodN15E/0I+ZfLM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oo2SQgiKjb7X1djjpjWdxqpI6Nkk0L3gip0a+R1naDnb7094BlHZhSv2336kC2Ztl
-	 dS6DizJd/8hcFr70DswRnyV5p7SY6enmtTIZYTVQdsavtZbpH62RiFw1PnYFStvwQq
-	 QrVVPgyFMmfjLHM/7rz/rj2kzCmsxvkJX1VDpMrd3Zueg9S4SQ8kz5zIjG8AQApFi3
-	 Vx5nwPohRf63CiAcNuA8DrWwABH4BL8pUu/W2T1lwts6PeeNSfgQGcGl4J0MuGZhTP
-	 itGW/uG6mQU5V92L17Ndm3L0C/RntjqjrJa0AqMPF9efDmIFRb5oImCFqfSVMmzU3f
-	 VRkbs5pWGki3Q==
+	s=k20201202; t=1741464882;
+	bh=pF0S4nfw9HlMk6PSfld8LUhuSbuAdDR5p9p7zntb9uI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ss2CW70N5XxIblkF9qVRijI2weJMgtuCPlpRkFx+Dk5gUTB0gcJvM+z6H9UyNOxtd
+	 sUs7rpMeqWXbKrNtFFNVs3M563Dmc8YshbDEkTpaZ9e6KdWfGmsd8BndlEIAWtRI6w
+	 QlHfXq9wGC7pIe9bHbC95uFwS7CS+LLN4ikH3tiOwq2LABV4IdJRw149GN0SSGvVsf
+	 ikkx1zv55+S6uWHRiQl2C3vXmA9QEuGZnPnA2KhuGHARx0ubLa+5Ot7wFJjp2DJhcZ
+	 UZ6hT+Ngv3K7Ueaytfh2OqXNGOV3ki6pdNxk2u3anenZf9R5H/heUkno11ffxBiTc5
+	 JTYvr3jh31Zjw==
 From: cel@kernel.org
 To: Neil Brown <neilb@suse.de>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,10 +50,12 @@ To: Neil Brown <neilb@suse.de>,
 Cc: <linux-nfs@vger.kernel.org>,
 	Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 0/2] NFSD: add a setting to disable splice reads
-Date: Sat,  8 Mar 2025 15:14:36 -0500
-Message-ID: <20250308201438.2217-1-cel@kernel.org>
+Subject: [RFC PATCH 1/2] NFSD: Add /sys/kernel/debug/nfsd
+Date: Sat,  8 Mar 2025 15:14:37 -0500
+Message-ID: <20250308201438.2217-2-cel@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250308201438.2217-1-cel@kernel.org>
+References: <20250308201438.2217-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -63,48 +66,106 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The usual policy for kernel-user space APIs is that once a public
-API appears, it is difficult to change or remove, in order to
-maintain backwards compatibility with user space software.
+Create a small sandbox under /sys/kernel/debug for experimental NFS
+server feature settings. There is no API/ABI compatibility guarantee
+for these settings.
 
-This series introduces /sys/kernel/debug/nfsd/ where we can
-hopefully place ephemeral and undocumented settings for testing NFSD
-features that are to be added or deprecated without the worry of
-having to support an administrative API forever without change,
-amen.
+The only documentation for such settings, if any documentation exists,
+is in the kernel source code.
 
-As a first consumer of this user-kernel API, the series adds a
-simple disable-splice-read setting, which can force all NFS READ
-operations to use vfs_iter_read() rather than page splicing to fill
-data content for an NFS reply.
-
-The splice read path is the default on most file systems, so it gets
-most of the test experience. The purpose of this new setting is to
-enable test runners to force the use of the iov iter path. We are
-also interested in comparing the performance of the splice and iter
-paths, as a prelude to potentially removing page splicing. This new
-setting makes it easy to benchmark either read mode without having
-to rebuild the kernel.
-
-We have an eye on a few other consumers, such as uncached I/O and
-increasing the maximum r/wsize, for which /sys/kernel/debug/nfsd
-might be suitable while their performance impact is studied before
-a concrete administrative interface is agreed upon.
-
-Opinions and code review are welcome, as always.
-
-Chuck Lever (2):
-  NFSD: Add /sys/kernel/debug/nfsd
-  NFSD: Add experimental setting to disable the use of splice read
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
  fs/nfsd/Makefile  |  1 +
- fs/nfsd/debugfs.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/debugfs.c | 18 ++++++++++++++++++
  fs/nfsd/nfsctl.c  |  4 ++++
- fs/nfsd/nfsd.h    | 10 ++++++++++
- fs/nfsd/vfs.c     |  4 ++++
- 5 files changed, 66 insertions(+)
+ fs/nfsd/nfsd.h    |  8 ++++++++
+ 4 files changed, 31 insertions(+)
  create mode 100644 fs/nfsd/debugfs.c
 
+diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+index 2f687619f65b..55744bb786c9 100644
+--- a/fs/nfsd/Makefile
++++ b/fs/nfsd/Makefile
+@@ -24,6 +24,7 @@ nfsd-$(CONFIG_NFSD_BLOCKLAYOUT) += blocklayout.o blocklayoutxdr.o
+ nfsd-$(CONFIG_NFSD_SCSILAYOUT) += blocklayout.o blocklayoutxdr.o
+ nfsd-$(CONFIG_NFSD_FLEXFILELAYOUT) += flexfilelayout.o flexfilelayoutxdr.o
+ nfsd-$(CONFIG_NFS_LOCALIO) += localio.o
++nfsd-$(CONFIG_DEBUG_FS) += debugfs.o
+ 
+ 
+ .PHONY: xdrgen
+diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+new file mode 100644
+index 000000000000..e913268d9c2d
+--- /dev/null
++++ b/fs/nfsd/debugfs.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/debugfs.h>
++
++#include "nfsd.h"
++
++static struct dentry *nfsd_top_dir __read_mostly;
++
++void nfsd_debugfs_exit(void)
++{
++	debugfs_remove_recursive(nfsd_top_dir);
++	nfsd_top_dir = NULL;
++}
++
++void nfsd_debugfs_init(void)
++{
++	nfsd_top_dir = debugfs_create_dir("nfsd", NULL);
++}
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index ce2a71e4904c..1919eafe500a 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -2276,6 +2276,8 @@ static int __init init_nfsd(void)
+ {
+ 	int retval;
+ 
++	nfsd_debugfs_init();
++
+ 	retval = nfsd4_init_slabs();
+ 	if (retval)
+ 		return retval;
+@@ -2323,6 +2325,7 @@ static int __init init_nfsd(void)
+ 	nfsd4_exit_pnfs();
+ out_free_slabs:
+ 	nfsd4_free_slabs();
++	nfsd_debugfs_exit();
+ 	return retval;
+ }
+ 
+@@ -2339,6 +2342,7 @@ static void __exit exit_nfsd(void)
+ 	nfsd_lockd_shutdown();
+ 	nfsd4_free_slabs();
+ 	nfsd4_exit_pnfs();
++	nfsd_debugfs_exit();
+ }
+ 
+ MODULE_AUTHOR("Olaf Kirch <okir@monad.swb.de>");
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index e2997f0ffbc5..8a53ddab5df0 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -156,6 +156,14 @@ void nfsd_reset_versions(struct nfsd_net *nn);
+ int nfsd_create_serv(struct net *net);
+ void nfsd_destroy_serv(struct net *net);
+ 
++#ifdef CONFIG_DEBUG_FS
++void nfsd_debugfs_init(void);
++void nfsd_debugfs_exit(void);
++#else
++static inline void nfsd_debugfs_init(void) {}
++static inline void nfsd_debugfs_exit(void) {}
++#endif
++
+ extern int nfsd_max_blksize;
+ 
+ static inline int nfsd_v4client(struct svc_rqst *rq)
 -- 
 2.48.1
 
