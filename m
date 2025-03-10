@@ -1,57 +1,54 @@
-Return-Path: <linux-nfs+bounces-10542-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10543-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E754CA593B2
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:10:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C26F6A593F4
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:14:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA7DB3A94B8
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:10:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD2133A9F33
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:13:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85D919342F;
-	Mon, 10 Mar 2025 12:08:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 993AC227E82;
+	Mon, 10 Mar 2025 12:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snPKvdz8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNm+uUpV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AE4175D53
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:08:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740A8226D02
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741608510; cv=none; b=lXd8CTJA6Y4RDcHvw3yGAD+hmdIC7fcypan0ktmg6+uIJjLFlmypm3SOfvJz0SJraUnT3U2ZF+CywIq0KCsj72k9INEynClExnvun5MrF9RbttZsH84C9FxtbQOA4//pM19Tcv3st3A9ygHl9nPPafJhSk4SQK+sP9m9uokT02A=
+	t=1741608748; cv=none; b=mzl68+zXoh9Hl5MOo53GXXvc5WrmD4IS4ANF37LdXEYr8Ub7KrcZ44/EnlYmbnxHDdNzUcJ6duna3tQHBk/0w64vvaKyeBswbOSsopPd153XOtot3VSU65wONgVOG7RT3NKwmuYGEsg/PdnlFnqtz2gIG73/k/WY7Ihh4N99ZqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741608510; c=relaxed/simple;
-	bh=fgnB41N8BLdf3IrjnLD8FrffgN1GUN9TyDSDjZ71Q1Y=;
+	s=arc-20240116; t=1741608748; c=relaxed/simple;
+	bh=cVlWc26GZpGyYrwIKYW75tRjAQZt5Hz1vnG8jmAF0O4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ehn4i4kz6wg+11zM85Tq6ftxuf34+aGwoVKf3Z5YNt+XDAEatYzKwasP/KlV/De5WasQkH7LuaxtRWb3iyEPTlCBsIn+x47ExPDpabqgPqnwrhkShEZ99OJ5t9NHJGDc1f20rmYirkmq+8TXOyT39ULQvrFfVJ72tlGTM0tWz00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snPKvdz8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6196BC4CEE5;
-	Mon, 10 Mar 2025 12:08:29 +0000 (UTC)
+	 Content-Type:MIME-Version; b=soHgPv82lHEAuwqD5DhvOV6IjacdeY7Q9fIgDUg6RbVJ/Ao5WlprUTJgdT17qKWB2SLsfDAnjtjobKNNdyDgEa4O8uRyqSc46H3GXsA5M3g6IJpEXjPfEVI5ECi/8ZxOkNTidmrDTzpq1xYDbWkgZU9BF3z9k4ST9wNq9C9S+Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNm+uUpV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1324C4CEE5;
+	Mon, 10 Mar 2025 12:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741608510;
-	bh=fgnB41N8BLdf3IrjnLD8FrffgN1GUN9TyDSDjZ71Q1Y=;
+	s=k20201202; t=1741608747;
+	bh=cVlWc26GZpGyYrwIKYW75tRjAQZt5Hz1vnG8jmAF0O4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=snPKvdz8AprMztDuvGVmKzsR0GALhEtTYkahpvotDnxadTbFcOSyk1S2rMBPlJNW9
-	 ZOokKmh5e2C8yQFL3IfBx53zGSkKem9b4WLJ1OZ5IPkpRUMIfZKyU4FXvFv9zcr9ZP
-	 b7ImUGGM0W9LMLWidr+zYKUIz1UNgo45mbtml4mNt0jA7cnQm0vzd3Ebb+ODW+bKXr
-	 D3+KOGUgYiExNEtQkyeaoV49DuXZMZqSbH++nl2WD8j8vr/UNXFuqd1vONcmy5RHVG
-	 rxLetVbj2QNZfMuvqjE/H3KLY7kXwiq9+6NoX6WHfYrWzccVj4bTzIRUimuTqcqYeX
-	 VWxT27BkP/PdQ==
-Message-ID: <c0bd53224cd26edd7f9c0dbca2b85563a87bed5e.camel@kernel.org>
-Subject: Re: [RFC PATCH 0/2] NFSD: add a setting to disable splice reads
+	b=bNm+uUpVbpwjy2dm4Nt7VKEoHpZGIV4bBBU2FWUTeXfQnleFCurPcAe+sta1763PU
+	 9Fe3EPeHOxhxrc+grahysXotKZDWuHxLIL6fyHo9hhujDz9zUBK0rX9duSgnfVlqBa
+	 50KBVFSblWqQKFwJXDg22NPlBbXTv256fa9utUyRbG+JFGYMAdalfBlDWGFaTbB0uZ
+	 bT+mof3aJ+H3gwXFqiunanQOnZQ2kdeEvv3c5/Kzkr8N6ngq9bP7vvknZ4vd3/iF74
+	 5HnZZDdFHn4jxZZ8HJY8ST6zETLd3jUCfZO8muicTMadIJAQkkLSeDGpxnwuYWOh+T
+	 tPlX3ynY0LA+w==
+Message-ID: <c1ba003f46c0d9b59dcb6d1bd0afdb94b5f7df3f.camel@kernel.org>
+Subject: Re: [PATCH] utils/mount/nfs.man: add noalignwrite
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Trond Myklebust
- <trond.myklebust@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 10 Mar 2025 08:08:28 -0400
-In-Reply-To: <20250308201438.2217-1-cel@kernel.org>
-References: <20250308201438.2217-1-cel@kernel.org>
+To: Dan Aloni <dan.aloni@vastdata.com>, steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 10 Mar 2025 08:12:26 -0400
+In-Reply-To: <20250310120414.2515090-1-dan.aloni@vastdata.com>
+References: <20250310120414.2515090-1-dan.aloni@vastdata.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,53 +133,41 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-03-08 at 15:14 -0500, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2025-03-10 at 14:04 +0200, Dan Aloni wrote:
+> Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+> ---
+>  utils/mount/nfs.man | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >=20
-> The usual policy for kernel-user space APIs is that once a public
-> API appears, it is difficult to change or remove, in order to
-> maintain backwards compatibility with user space software.
->=20
-> This series introduces /sys/kernel/debug/nfsd/ where we can
-> hopefully place ephemeral and undocumented settings for testing NFSD
-> features that are to be added or deprecated without the worry of
-> having to support an administrative API forever without change,
-> amen.
->=20
-> As a first consumer of this user-kernel API, the series adds a
-> simple disable-splice-read setting, which can force all NFS READ
-> operations to use vfs_iter_read() rather than page splicing to fill
-> data content for an NFS reply.
->=20
-> The splice read path is the default on most file systems, so it gets
-> most of the test experience. The purpose of this new setting is to
-> enable test runners to force the use of the iov iter path. We are
-> also interested in comparing the performance of the splice and iter
-> paths, as a prelude to potentially removing page splicing. This new
-> setting makes it easy to benchmark either read mode without having
-> to rebuild the kernel.
->=20
-> We have an eye on a few other consumers, such as uncached I/O and
-> increasing the maximum r/wsize, for which /sys/kernel/debug/nfsd
-> might be suitable while their performance impact is studied before
-> a concrete administrative interface is agreed upon.
->=20
-> Opinions and code review are welcome, as always.
->=20
-> Chuck Lever (2):
->   NFSD: Add /sys/kernel/debug/nfsd
->   NFSD: Add experimental setting to disable the use of splice read
->=20
->  fs/nfsd/Makefile  |  1 +
->  fs/nfsd/debugfs.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->  fs/nfsd/nfsctl.c  |  4 ++++
->  fs/nfsd/nfsd.h    | 10 ++++++++++
->  fs/nfsd/vfs.c     |  4 ++++
->  5 files changed, 66 insertions(+)
->  create mode 100644 fs/nfsd/debugfs.c
->=20
+> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> index eab4692a87de..744411688641 100644
+> --- a/utils/mount/nfs.man
+> +++ b/utils/mount/nfs.man
+> @@ -618,6 +618,17 @@ option is not specified,
+>  the default behavior depends on the kernel version,
+>  but is usually equivalent to
+>  .BR "xprtsec=3Dnone" .
+> +.TP 1.5i
+> +.BI noalignwrite
+> +This option disables the default behavior of extending write operations =
+to full
+> +page boundaries.
+> +.IP
+> +Normally, the NFS client rounds non-aligned writes up to the system page=
+ size,
 
-Looks good to me:
+Isn't that only true for buffered writes? That should probably be made
+clear if so.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> +which can lead to "lost writes" when multiple clients write concurrently
+> +to distinct non-overlapping regions. Use this option when your
+> +applications perform non-aligned writes and you can guarantee that file
+> +regions do not overlap, thus avoiding the need for file locking.
+> +.IP
+>  .SS "Options for NFS versions 2 and 3 only"
+>  Use these options, along with the options in the above subsection,
+>  for NFS versions 2 and 3 only.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
