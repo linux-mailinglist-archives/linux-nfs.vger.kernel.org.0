@@ -1,137 +1,119 @@
-Return-Path: <linux-nfs+bounces-10540-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10541-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30612A589AD
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 01:33:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A539A59363
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:04:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C3F7169E0D
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 00:33:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F029316C869
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:04:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966F41DA4E;
-	Mon, 10 Mar 2025 00:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 598AE221732;
+	Mon, 10 Mar 2025 12:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="l54C/qJC"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="AsiSVLXD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B46632;
-	Mon, 10 Mar 2025 00:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293C2236F6
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741566802; cv=none; b=gnBZT+TQr3TJ3+cRNC3lSSs6+xXeDdDZDIJfNkr5aO+L1mCTg/L2zcByaD6dDwGT9z8+GUJmep+4KO3PdIncjEwBVYJy2FaMElRutH3nDqkMYb6Epta4qx3Hc6mK6mju+t1M6VB3U39OZ882uygesEAE3n4b8wc1hHPampJV8wI=
+	t=1741608279; cv=none; b=GEroaiDAS/O8D66bWCih/ZdMDxRdFpIsOKS5h4uuAG2FvRW5l5jPUq7AvrZT8TDJ8FKAUSlCjyymzBRdKmfavxLxh1jcT2V9xcWyuPjQ7pQuMgHSIpb71ybbIQ6wOrIejdNi23/R3yMyu5nFo/C05Vuky86o/EqteTM6qmpBCG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741566802; c=relaxed/simple;
-	bh=8gtiSOPBeO2O6YcASdsqnV2fsibaolJ2lK9ihz7fKME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Om9I2WGSrpMovl+ToOoYrT42qHy3J0kR/WGMK6+B7rwkh7Qczd9sYjoHm5k1p+7pJINFdNoYnvbQHZ7PPwyxCLkGMFcodpfqYjfMfuVowAQQEsBXUOb3nZSpeXgiLgeyxAvQ/KEeSzZFtMH5s9bxCcEJCjKp+Udk3WerX0X8ANw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=l54C/qJC; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741566795; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=i9xoUJAz+Ulc3f5EECn+evsDiO91i2wyeFM4yQAvw+Q=;
-	b=l54C/qJCqjoLb2HMsxvD9kS4XgpLrA1qEEH3b8Hoon1p1tNMcRpBf2328jSpdnGZvuHHZf1TOjFufL5ER1O43HgSGrfveqL5OCZ6n/64bq/f8ucP7oJ62CgOza7e5bjBZlwwET39G2OvwMnLHi9ub0TEZ01S1QnFi+EKETryenU=
-Received: from 30.134.66.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WQy811n_1741566764 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Mar 2025 08:33:11 +0800
-Message-ID: <625983f8-7e52-4f6c-97bb-629596341181@linux.alibaba.com>
-Date: Mon, 10 Mar 2025 08:32:42 +0800
+	s=arc-20240116; t=1741608279; c=relaxed/simple;
+	bh=02m7HS8p3M2NVYThb+is6nxwVhkFs/922ZI/gp7lgJg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s6ntg/1OSBkkWXFnZ+JWPpAceMXa2WJY6KqgWHSlIMUU0sCfSlnziWSSCYAlRHAdcjDNL0e35NRoTsubOgnCOgsokmuHXP6KZmDqqvAwOdzyQNkZXL0c+Irg4sF7N8arHzWJg5SkyC64Z/FRxxeX0jGzn5J2ZtlbIBZMqOaNKG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=AsiSVLXD; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso406218f8f.2
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 05:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1741608256; x=1742213056; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g2y7BvTsTUHsoTkwoCfrOdlQ2HF7SbMnbZCz2hM5+uw=;
+        b=AsiSVLXDN8NI7JBhyUY6Pbyob1Rl2UzVciJeJRrwY/7VipKMCMYn4cCeZ+Rqz+/uxD
+         x+jjnLLgkG//jbkzK/IFPKLLPlFOV/P6xyjuRwbZPwb2ZRlDTe/I4UNYxb2n5bFz5GgD
+         sp0xnCw3rDFElKZxhYf68HS3x+LBmmEDDBBivbKI1kekbHHro4R6prS95zUAVsjn9FiR
+         0svgKJZIf+FLTJYcLMJ/TZaW7q3Z4cywy6kUqUCC7NX1m6zYyGzFPmS5fIuOc/b+WiI/
+         ELykhTtGQ22I+3Nqhv5XO72AWO7EyXOLJdYSE+ExnFmTi5HROcwjcGZrUwS4nO8bifhy
+         emwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741608256; x=1742213056;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g2y7BvTsTUHsoTkwoCfrOdlQ2HF7SbMnbZCz2hM5+uw=;
+        b=Z2liROySdjPPrXlQkh4Qle+zyodw9s9EOka1D5v4JP5VhGpuHXwSI766dx5+ASEzb4
+         IowgD791/P6MqqCwgLCRdMONWwLK+PHVd/vo6IyMt1ao4WhTd/M6my1fx8e+sre1AQgv
+         tWh5pTUR3OduVVx/aFJiKjZclpWNj4zdcY0k1dDghT4PS6ubIN7fd4jd5Yp4TpxJWuIj
+         BEth8FAD59sWQb/COImB//FKGCCQHA8YOYD90RgmHQdi5rp3yBv3FZPPSfCOCNCUxUWG
+         TnqXufeTiu1UlOA9/GHzTICc3GADA06WFEP5Gr3z5ckcUKq/dLxcV61CFalrI8s+tzUy
+         f9nw==
+X-Gm-Message-State: AOJu0YwaUi22I7/6xF/tjamk9gF0twoN0eJ7iSxkXcs9RtJ3UZ0BY4Ui
+	XBzV/uyQZuJ+fjZjm/ZKeDy3ih2jbMY/IMvDS2+iu1GbgWfHpECF3Ci0SLR2p+wxgi6pR3EU79t
+	b
+X-Gm-Gg: ASbGncsShQ9lzeg1t7ZtubQPeY3CF+HjCzzA9bYB3VHKX2SM3RJtg7E2qDumjFTlqXS
+	ZO7aU1cCyJoBv9M6jQ8/Ton0uAhfEHLozgBuAgaIhEDihgW9YLSlZWW9MZbvZSGp9Bd8g6eVd9m
+	0zYnxtZSy/uWpgciKNpU96h43igI7l5CMAmtJtJtWlRyVtiAqsFXltKHHHm6bJPQGlh0kcqqFcD
+	F83IsShlACO5+HUA4EVWQIBUO7amSHH9EXrsj4M8LeKahB6B9FJkCVaBkEditiJqVbpgdJos5oZ
+	At2GT2wr9Nvx5iaRHDzV180v2hVKvmqiBjQSh4ptHGU7Ta47pt0A1ruSC3WyvteUlcrXPnPPUqc
+	NyGZsAx99B6JfYReKhnNWNQ==
+X-Google-Smtp-Source: AGHT+IGf7ngd+Ob2ja8AkeKjk5suCmE107HS5+F92Tn7iReGULsMjOmCrx5LrF2YBK7vWRHtexfuwA==
+X-Received: by 2002:a05:6000:18a3:b0:391:2e19:9ab with SMTP id ffacd0b85a97d-39132da8e5dmr7473554f8f.47.1741608256234;
+        Mon, 10 Mar 2025 05:04:16 -0700 (PDT)
+Received: from jupiter.vstd.int (IGLD-84-229-89-124.inter.net.il. [84.229.89.124])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfe2bsm14590852f8f.24.2025.03.10.05.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 05:04:15 -0700 (PDT)
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: steved@redhat.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] utils/mount/nfs.man: add noalignwrite
+Date: Mon, 10 Mar 2025 14:04:14 +0200
+Message-ID: <20250310120414.2515090-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
- only NULL elements
-To: Yunsheng Lin <yunshenglin0825@gmail.com>,
- Dave Chinner <david@fromorbit.com>, Yunsheng Lin <linyunsheng@huawei.com>
-Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Luiz Capitulino <luizcap@redhat.com>,
- Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-nfs@vger.kernel.org
-References: <20250228094424.757465-1-linyunsheng@huawei.com>
- <Z8a3WSOrlY4n5_37@dread.disaster.area>
- <91fcdfca-3e7b-417c-ab26-7d5e37853431@huawei.com>
- <Z8vnKRJlP78DHEk6@dread.disaster.area>
- <cce03970-d66f-4344-b496-50ecf59483a6@gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <cce03970-d66f-4344-b496-50ecf59483a6@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+---
+ utils/mount/nfs.man | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-
-On 2025/3/9 21:40, Yunsheng Lin wrote:
-> On 3/8/2025 2:43 PM, Dave Chinner wrote:
-> 
-> ...
-> 
->>> I tested XFS using the below cmd and testcase, testing seems
->>> to be working fine, or am I missing something obvious here
->>> as I am not realy familiar with fs subsystem yet:
->>
->> That's hardly what I'd call a test. It barely touches the filesystem
->> at all, and it is not exercising memory allocation failure paths at
->> all.
->>
->> Go look up fstests and use that to test the filesystem changes you
->> are making. You can use that to test btrfs and NFS, too.
-> 
-> Thanks for the suggestion.
-> I used the below xfstests to do the testing in a VM, the smoke testing
-> seems fine for now, will do a full testing too:
-> https://github.com/tytso/xfstests-bld
-> 
-> Also, it seems the fstests doesn't support erofs yet?
-
-erofs is an read-only filesystem, and almost all xfstests
-cases is unsuitable for erofs since erofs needs to preset
-dataset in advance for runtime testing and only
-read-related interfaces are cared:
-
-You could check erofs-specfic test cases here:
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests
-
-Also the stress test:
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?id=6fa861e282408f8df9ab1654b77b563444b17ea1
-
-BTW, I don't like your new interface either, I don't know
-why you must insist on this work now that others are
-already nak this.  Why do you insist on it so much?
-
-Thanks,
-Gao Xiang
-
-> 
->>
->> -Dave.
->>
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index eab4692a87de..744411688641 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -618,6 +618,17 @@ option is not specified,
+ the default behavior depends on the kernel version,
+ but is usually equivalent to
+ .BR "xprtsec=none" .
++.TP 1.5i
++.BI noalignwrite
++This option disables the default behavior of extending write operations to full
++page boundaries.
++.IP
++Normally, the NFS client rounds non-aligned writes up to the system page size,
++which can lead to "lost writes" when multiple clients write concurrently
++to distinct non-overlapping regions. Use this option when your
++applications perform non-aligned writes and you can guarantee that file
++regions do not overlap, thus avoiding the need for file locking.
++.IP
+ .SS "Options for NFS versions 2 and 3 only"
+ Use these options, along with the options in the above subsection,
+ for NFS versions 2 and 3 only.
+-- 
+2.47.0
 
 
