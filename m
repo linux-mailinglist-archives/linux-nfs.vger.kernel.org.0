@@ -1,122 +1,176 @@
-Return-Path: <linux-nfs+bounces-10545-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10546-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0BCFA59526
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:52:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15D27A59573
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 14:00:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B3B116D11E
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:52:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89C4A188DAF2
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F3435963;
-	Mon, 10 Mar 2025 12:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BDB229B16;
+	Mon, 10 Mar 2025 13:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="cRuL5VHD"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nA+4lbcZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE71227E99
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8F722156E;
+	Mon, 10 Mar 2025 12:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741611140; cv=none; b=EiLEJN/RBOk4NrNF3pBnAbm3ewO3OUKf19AeAqoCGKRdGZhUD9RB7IyqE5odrt348pPuL74VB42bMwk6tQ22FhhsfX9mRcntKVeIXaZPW+yuzHHqcawC5hVmMtyxWU1HbSm2tHco17sOT8lw86fVBP8qql7VVheewKFngKV67+c=
+	t=1741611603; cv=none; b=GZMfzLBXh4miwoojilwe6fXieuBGWVe7I1yCt5tu+p71+HLJmjxO8tSMKahVJL6IjA/PUVyMy+W2/OJFwAq0XUFKpTmJAoquaanO9m0aXaNYZZlNSOApQF308qmqABwytG9J54nuYI4fUUxQdSG9V+eeVT4m1crzwlHHWEqhe8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741611140; c=relaxed/simple;
-	bh=eo8niHuNp1QPkRC+8VHeCRb7NBZ8f7c+023KrJxzT2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ldLp+mg6b5R4TuTw9w0CZnA2/sSDNPjKGRyi58Q9P4SL4GCoWLjBwUovNudeSImsz/opPir3j65g1EDjOSVXJ30B7VEr0RNopiq7CniIaLpLwoxu0uIK9uaNnltfOtGn5HRLnciJyPdmtfXzXBisYoKyiLHWzDySQWIFZzLpxGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=cRuL5VHD; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3912c09be7dso2231654f8f.1
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 05:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google; t=1741611136; x=1742215936; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WbvPBXjPkU/vWTQyJKU3YYiI8PPNp6kp3AITrSiEcko=;
-        b=cRuL5VHD5sUsp+xtXNI4kg2zfmv7CbFvrygtnG6XHJDkK9zNlrmEghfwEtq2VPl5GL
-         RvOP3PcjM4Dk0Y4N4rLzmf8dEyuITFyEV00lnEF/EfB7v5TDCjv+Va97it2veXCHDtpJ
-         BtZVL1gY64Fg5SaLSMsX9pvevRKaretK3xPDP/XXjmm9XTCFpKJgTdpG8O4ftZhtrSY2
-         p7/lVvu9FgcIMZkUT2g43STUhIbh0Hz+ny77q4HzWBWwPjrBnfUvy6U5kP4j6yNxHGUP
-         nsSN1u/wRMhtE8IbG7RfLFkirPBGBMgVB2Z48AMICSDQCX20YYngaOQswWB+VwbniWOm
-         NZeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741611136; x=1742215936;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WbvPBXjPkU/vWTQyJKU3YYiI8PPNp6kp3AITrSiEcko=;
-        b=QsHlp4HgVofRsH4A0XI8O6bHXtzdULUB7yCv1RlVgUNsz/oBgslaRYI6V3Bkcyr49U
-         jvZDnoYfg9AmqjG4v/UBqKyNe1C5u2ul4AyiGV2LunOspIP4e9agrnVh8NwuF4n81Mee
-         m5PMfPqTyj3BzSWz8nsm/EdY03PrMb/LZFmrF4vI0MRGkyH6NG3G5/fU8QVoaENzjXMB
-         n7I/Fac/5uhfxiO83Lck3Q/+mN0uut3/jYbAEUV6iKZ7CJs+S9Z2Fxg4Yd8UcQvzKRKP
-         IIToppgg5D8jC7s94XVYtKsBn0+ujqvzZQK4Re/z/5Db7INPpp3u0Nersj9lA4Yf/T7y
-         OsMQ==
-X-Gm-Message-State: AOJu0YzNk6m/lO9fE3r1+IM+vpJA8RWbTM78hjUmIdWdb+6HoFcYv2Xc
-	jmsmuQCHkJVZKMv73AsBFRAQolKtCxbghpKdNX07o+cGsvVp5Hw3DZ9OG8vUGPU=
-X-Gm-Gg: ASbGnctmfhiMeR4e6JN/R7aHaflHzBSUeMSntf07m/psp1DmS5jtLxQELxpC6cpUJ7V
-	4MhiNV1Tvt2DhSEukSBFu+YpZ+/Qqfxx0aYqU+ot5x54r0hi7odJsNBCsyIeIEKrwZP0LJRY3R3
-	IVKwlqgzgUIte97B1/MhXRKdpILxZLYnVjaanyppZzHjzaHNZvGqnt7clH/Ex6hrqC9k8ZMxLG1
-	d1jPlTW/401I44qHLq0kbU0WMfu1uLke+ajGt6t2NWsitIghiOvfqcTK4sHLFSDFArtJ6eDRWSM
-	VD/dBY9IfATZw6/t2VGBFzpT6HXw5RD10LEfQngAEH8Tg2ybicreDKEztnOcy7deLI1DMwbZq0v
-	3zxxQ5XogAGAVzbwQkypROw==
-X-Google-Smtp-Source: AGHT+IFVboGfJoqjJhfZi+dsfHavP5m9Lph+rLBZNrIGc495wO1VRiGqRsb3VqyIHntxDPW16N5v3w==
-X-Received: by 2002:a5d:588f:0:b0:390:f394:6274 with SMTP id ffacd0b85a97d-39132da9214mr8349821f8f.52.1741611135698;
-        Mon, 10 Mar 2025 05:52:15 -0700 (PDT)
-Received: from jupiter.vstd.int (IGLD-84-229-89-124.inter.net.il. [84.229.89.124])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ceed32e64sm62168675e9.5.2025.03.10.05.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 05:52:15 -0700 (PDT)
-From: Dan Aloni <dan.aloni@vastdata.com>
-To: steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2] utils/mount/nfs.man: add noalignwrite
-Date: Mon, 10 Mar 2025 14:52:14 +0200
-Message-ID: <20250310125214.2592313-1-dan.aloni@vastdata.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <c1ba003f46c0d9b59dcb6d1bd0afdb94b5f7df3f.camel@kernel.org>
-References: <c1ba003f46c0d9b59dcb6d1bd0afdb94b5f7df3f.camel@kernel.org>
+	s=arc-20240116; t=1741611603; c=relaxed/simple;
+	bh=suy1czGkUxH4ApgxauOBKdQ6mOTZxtAJl10IVykKPl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LmVFJ9cl8qTw8+wCxbQFrKrSOYxOxQGr0dQZAgWCpvIiSufOcC6GI3JIGYTBfUuWjzb0zR3XX+biYNb0Qd6q9VCzQy1DL6BkSAhkeR6C06D2UjsgeKGTAIr2Mmw+i+t5SfkozdcrKzPDBlletMQirSrOvKvjK7lt6Zt7JVdScMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nA+4lbcZ; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741611590; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=RBXViRbgYvu9SyQX3LTahN7Wc3wvAYaCUKId9eKui+E=;
+	b=nA+4lbcZa6zBlirYk6vuMbOh8gNs1V2LDvNYx4kgX1uAYEaQaaNzhNE/GlcLeLi8sMuIOklgWTrFeFxa/uwkjbZIG/C3JZQZY98oi5f50YbX1RNuX5XHIyJ5UobTAu2bf9kdGdFozGo5iLW3rClsz4DMUyGxVKE/63FG2AcLe8E=
+Received: from 30.74.129.235(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WR3.NYS_1741611585 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 10 Mar 2025 20:59:46 +0800
+Message-ID: <316d62c1-0e56-4b11-aacf-86235fba808d@linux.alibaba.com>
+Date: Mon, 10 Mar 2025 20:59:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+To: Yunsheng Lin <linyunsheng@huawei.com>,
+ Yunsheng Lin <yunshenglin0825@gmail.com>, Dave Chinner <david@fromorbit.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
+ "Darrick J. Wong" <djwong@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Luiz Capitulino <luizcap@redhat.com>,
+ Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+References: <20250228094424.757465-1-linyunsheng@huawei.com>
+ <Z8a3WSOrlY4n5_37@dread.disaster.area>
+ <91fcdfca-3e7b-417c-ab26-7d5e37853431@huawei.com>
+ <Z8vnKRJlP78DHEk6@dread.disaster.area>
+ <cce03970-d66f-4344-b496-50ecf59483a6@gmail.com>
+ <625983f8-7e52-4f6c-97bb-629596341181@linux.alibaba.com>
+ <14170f7f-97d0-40b4-9b07-92e74168e030@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <14170f7f-97d0-40b4-9b07-92e74168e030@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
----
- utils/mount/nfs.man | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index eab4692a87de..b5c5913bf315 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -618,6 +618,17 @@ option is not specified,
- the default behavior depends on the kernel version,
- but is usually equivalent to
- .BR "xprtsec=none" .
-+.TP 1.5i
-+.BI noalignwrite
-+This option disables the default behavior of extending buffered write operations
-+to full page boundaries.
-+.IP
-+Normally, the NFS client rounds non-aligned buffered writes up to the system
-+page size, which can lead to "lost writes" when multiple clients write
-+concurrently to distinct non-overlapping regions. Use this option when your
-+applications perform non-aligned buffered writes and you can guarantee that file
-+regions do not overlap, thus avoiding the need for file locking.
-+.IP
- .SS "Options for NFS versions 2 and 3 only"
- Use these options, along with the options in the above subsection,
- for NFS versions 2 and 3 only.
--- 
-2.47.0
 
+On 2025/3/10 20:31, Yunsheng Lin wrote:
+> On 2025/3/10 8:32, Gao Xiang wrote:
+> 
+> ...
+> 
+>>>
+>>> Also, it seems the fstests doesn't support erofs yet?
+>>
+>> erofs is an read-only filesystem, and almost all xfstests
+>> cases is unsuitable for erofs since erofs needs to preset
+>> dataset in advance for runtime testing and only
+>> read-related interfaces are cared:
+>>
+>> You could check erofs-specfic test cases here:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests
+>>
+>> Also the stress test:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?id=6fa861e282408f8df9ab1654b77b563444b17ea1
+> 
+> Thanks.
+> 
+>>
+>> BTW, I don't like your new interface either, I don't know
+>> why you must insist on this work now that others are
+>> already nak this.  Why do you insist on it so much?
+> 
+> If the idea was not making any sense to me and it was nack'ed
+> with clearer reasoning and without any supporting of the idea,
+> I would have stopped working on it.
+> 
+> The background I started working at is something like below
+> in the commit log:
+> "As mentioned in [1], it seems odd to check NULL elements in
+> the middle of page bulk allocating, and it seems caller can
+> do a better job of bulk allocating pages into a whole array
+> sequentially without checking NULL elements first before
+> doing the page bulk allocation for most of existing users."
+> 
+> "Remove assumption of populating only NULL elements and treat
+> page_array as output parameter like kmem_cache_alloc_bulk().
+> Remove the above assumption also enable the caller to not
+> zero the array before calling the page bulk allocating API,
+> which has about 1~2 ns performance improvement for the test
+> case of time_bench_page_pool03_slow() for page_pool in a
+> x86 vm system, this reduces some performance impact of
+> fixing the DMA API misuse problem in [2], performance
+> improves from 87.886 ns to 86.429 ns."
+> 
+> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
+> 2. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
+> 
+> There is no 'must' here, it is just me taking some of my
+> hoppy time and some of my work time trying to make the
+> alloc_pages_bulk API simpler and more efficient here, and I
+> also learnt a lot during that process.
+
+
+Here are my own premature thoughts just for reference:
+
+  - If you'd like to provide some performance gain, it would
+    be much better to get a better end-to-end case to show
+    your improvement is important and attractive to some
+    in-tree user (rather than show 1~2ns instruction-level
+    micro-benchmark margin, is it really important to some
+    end use case? At least, the new api is not important to
+    erofs since it may only impact our mount time by only
+    1~2ns, which is almost nothing, so I have no interest
+    to follow the whole thread) since it involves some api
+    behavior changes rather than some trivial cleanups.
+
+  - Your new api covers narrow cases compared to the existing
+    api, although all in-tree callers may be converted
+    properly, but it increases mental burden of all users.
+    And maybe complicate future potential users again which
+    really have to "check NULL elements in the middle of page
+    bulk allocating" again.
+
+To make it clearer, it's not nak from me. But I don't have
+any interest to follow your work due to "the real benefit vs
+behavior changes".
+
+Thanks,
+Gao Xiang
 
