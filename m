@@ -1,176 +1,102 @@
-Return-Path: <linux-nfs+bounces-10546-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10547-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15D27A59573
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 14:00:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E77D9A59939
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 16:11:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 89C4A188DAF2
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:00:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8819C1887C52
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 15:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19BDB229B16;
-	Mon, 10 Mar 2025 13:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D98B22A4EF;
+	Mon, 10 Mar 2025 15:11:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nA+4lbcZ"
+	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="M11WnA1F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8F722156E;
-	Mon, 10 Mar 2025 12:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3E0374EA
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 15:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.215.233.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741611603; cv=none; b=GZMfzLBXh4miwoojilwe6fXieuBGWVe7I1yCt5tu+p71+HLJmjxO8tSMKahVJL6IjA/PUVyMy+W2/OJFwAq0XUFKpTmJAoquaanO9m0aXaNYZZlNSOApQF308qmqABwytG9J54nuYI4fUUxQdSG9V+eeVT4m1crzwlHHWEqhe8c=
+	t=1741619470; cv=none; b=nIpTOG6kTqObzf/VwDZeXapM3wmS139EN1nU8OwTuaKwCIVlQdHZ7mIIhzZLxwNCPy2MUGWTvdauaqco75eARYsJ6661r3RVKYyNYP16fEjwsxzvCLTcUPAl1mToYNxR2LdRPeGVJ+59futL22IKsKyLztI9V0zIWx8cLksiSEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741611603; c=relaxed/simple;
-	bh=suy1czGkUxH4ApgxauOBKdQ6mOTZxtAJl10IVykKPl0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LmVFJ9cl8qTw8+wCxbQFrKrSOYxOxQGr0dQZAgWCpvIiSufOcC6GI3JIGYTBfUuWjzb0zR3XX+biYNb0Qd6q9VCzQy1DL6BkSAhkeR6C06D2UjsgeKGTAIr2Mmw+i+t5SfkozdcrKzPDBlletMQirSrOvKvjK7lt6Zt7JVdScMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nA+4lbcZ; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741611590; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=RBXViRbgYvu9SyQX3LTahN7Wc3wvAYaCUKId9eKui+E=;
-	b=nA+4lbcZa6zBlirYk6vuMbOh8gNs1V2LDvNYx4kgX1uAYEaQaaNzhNE/GlcLeLi8sMuIOklgWTrFeFxa/uwkjbZIG/C3JZQZY98oi5f50YbX1RNuX5XHIyJ5UobTAu2bf9kdGdFozGo5iLW3rClsz4DMUyGxVKE/63FG2AcLe8E=
-Received: from 30.74.129.235(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WR3.NYS_1741611585 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Mar 2025 20:59:46 +0800
-Message-ID: <316d62c1-0e56-4b11-aacf-86235fba808d@linux.alibaba.com>
-Date: Mon, 10 Mar 2025 20:59:45 +0800
+	s=arc-20240116; t=1741619470; c=relaxed/simple;
+	bh=sagrptvYS45f2KkZS4wyUyei87EBblAN2ua2KPLJjpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=q5VaLlphInaETn5u0X1JdxutbaCZWpoRhoMaczzK4ZpYKuNLPcoX7VeF+9wwNEJK8JafzNMNBEfgm85dC+VPY23SA262YapeusqS3WiLNiyLXz2LMgeMwvg1K1TmDM4jlOHPRN2E6VJHsjv3bMvMcBzwcSJt12Q7ow2fbb9IgjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=M11WnA1F; arc=none smtp.client-ip=64.215.233.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
+Date: Mon, 10 Mar 2025 11:11:02 -0400
+From: Nikhil Jha <njha@janestreet.com>
+To: njha@janestreet.com
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ 	Chuck Lever <chuck.lever@oracle.com>,
+ 	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ 	Olga Kornievskaia <okorniev@redhat.com>,
+ 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] fix gss seqno handling to be more rfc-compliant
+Message-ID: <20250310A15110284b71e58.njha@janestreet.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
- only NULL elements
-To: Yunsheng Lin <linyunsheng@huawei.com>,
- Yunsheng Lin <yunshenglin0825@gmail.com>, Dave Chinner <david@fromorbit.com>
-Cc: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- Kevin Tian <kevin.tian@intel.com>,
- Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Luiz Capitulino <luizcap@redhat.com>,
- Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-nfs@vger.kernel.org
-References: <20250228094424.757465-1-linyunsheng@huawei.com>
- <Z8a3WSOrlY4n5_37@dread.disaster.area>
- <91fcdfca-3e7b-417c-ab26-7d5e37853431@huawei.com>
- <Z8vnKRJlP78DHEk6@dread.disaster.area>
- <cce03970-d66f-4344-b496-50ecf59483a6@gmail.com>
- <625983f8-7e52-4f6c-97bb-629596341181@linux.alibaba.com>
- <14170f7f-97d0-40b4-9b07-92e74168e030@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <14170f7f-97d0-40b4-9b07-92e74168e030@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
+  s=waixah; t=1741619462;
+  bh=8+j4RZQxEvPp50n/z3AP4/HWcFwA5ubLD58W/xz/5cI=;
+  h=Date:From:To:Cc:Subject;
+  b=M11WnA1FgrQPOLsZ2FIwMG5sk/gf2v6X65fqWb+RvQbr33rTSTmP7ZuIzNHUlCMSY
+  tbqeEfHXmms1lM8CbnvQYCoPddYFarOb9qYNUeBdqyju2TpOoEoR7j0BhhGpIdqIUs
+  eB7zHoGMZQ/qd+5c2BBkNv1FUeGwH3MSIeu7H7zHpA3fVorQmz501gGOGcjJLCISou
+  H7Qeb5tB3Bd1fl51nzObEBmR2PStPo4Z0tTjaWIg918Ef810mMMjIveoGGMRfxE7pv
+  LYYrYyUHfQLAGdE0nr5gyEZsvNyq642CNABb5dBgcjNX3l/i+3kw2zOW58GOdsDu0O
+  4T/SnH2jjmVWQ==
 
+When the client retransmits an operation (for example, because the
+server is slow to respond), a new GSS sequence number is associated with
+the XID. In the current kernel code the original sequence number is
+discarded. Subsequently, if a response to the original request is
+received there will be a GSS sequence number mismatch. A mismatch will
+trigger another retransmit, possibly repeating the cycle, and after some
+number of failed retries EACCES is returned.
 
+RFC2203, section 5.3.3.1 suggests a possible solution... “cache the
+RPCSEC_GSS sequence number of each request it sends” and "compute the
+checksum of each sequence number in the cache to try to match the
+checksum in the reply's verifier." This is what FreeBSD’s implementation
+does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
 
-On 2025/3/10 20:31, Yunsheng Lin wrote:
-> On 2025/3/10 8:32, Gao Xiang wrote:
-> 
-> ...
-> 
->>>
->>> Also, it seems the fstests doesn't support erofs yet?
->>
->> erofs is an read-only filesystem, and almost all xfstests
->> cases is unsuitable for erofs since erofs needs to preset
->> dataset in advance for runtime testing and only
->> read-related interfaces are cared:
->>
->> You could check erofs-specfic test cases here:
->> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/log/?h=experimental-tests
->>
->> Also the stress test:
->> https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/commit/?id=6fa861e282408f8df9ab1654b77b563444b17ea1
-> 
-> Thanks.
-> 
->>
->> BTW, I don't like your new interface either, I don't know
->> why you must insist on this work now that others are
->> already nak this.  Why do you insist on it so much?
-> 
-> If the idea was not making any sense to me and it was nack'ed
-> with clearer reasoning and without any supporting of the idea,
-> I would have stopped working on it.
-> 
-> The background I started working at is something like below
-> in the commit log:
-> "As mentioned in [1], it seems odd to check NULL elements in
-> the middle of page bulk allocating, and it seems caller can
-> do a better job of bulk allocating pages into a whole array
-> sequentially without checking NULL elements first before
-> doing the page bulk allocation for most of existing users."
-> 
-> "Remove assumption of populating only NULL elements and treat
-> page_array as output parameter like kmem_cache_alloc_bulk().
-> Remove the above assumption also enable the caller to not
-> zero the array before calling the page bulk allocating API,
-> which has about 1~2 ns performance improvement for the test
-> case of time_bench_page_pool03_slow() for page_pool in a
-> x86 vm system, this reduces some performance impact of
-> fixing the DMA API misuse problem in [2], performance
-> improves from 87.886 ns to 86.429 ns."
-> 
-> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
-> 2. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
-> 
-> There is no 'must' here, it is just me taking some of my
-> hoppy time and some of my work time trying to make the
-> alloc_pages_bulk API simpler and more efficient here, and I
-> also learnt a lot during that process.
+However, even with this cache, retransmits directly caused by a seqno
+mismatch can still cause a bad message interleaving that results in this
+bug. The RFC already suggests ignoring incorrect seqnos on the server
+side, and this seems symmetric, so this patchset also applies that
+behavior to the client as well.
 
+These two patches are *not* dependent on each other. I tested them by
+delaying packets with a Python script hooked up to NFQUEUE. If it would
+be helpful I can send this script along as well.
 
-Here are my own premature thoughts just for reference:
+Nikhil Jha (2):
+  sunrpc: implement rfc2203 rpcsec_gss seqnum cache
+  sunrpc: don't retransmit on seqno events
 
-  - If you'd like to provide some performance gain, it would
-    be much better to get a better end-to-end case to show
-    your improvement is important and attractive to some
-    in-tree user (rather than show 1~2ns instruction-level
-    micro-benchmark margin, is it really important to some
-    end use case? At least, the new api is not important to
-    erofs since it may only impact our mount time by only
-    1~2ns, which is almost nothing, so I have no interest
-    to follow the whole thread) since it involves some api
-    behavior changes rather than some trivial cleanups.
+ include/linux/sunrpc/xprt.h    | 31 +++++++++++++++++++++++++++++-
+ net/sunrpc/auth_gss/auth_gss.c | 35 +++++++++++++++++++++++-----------
+ net/sunrpc/clnt.c              |  9 +++++++--
+ net/sunrpc/xprt.c              |  1 +
+ 4 files changed, 62 insertions(+), 14 deletions(-)
 
-  - Your new api covers narrow cases compared to the existing
-    api, although all in-tree callers may be converted
-    properly, but it increases mental burden of all users.
-    And maybe complicate future potential users again which
-    really have to "check NULL elements in the middle of page
-    bulk allocating" again.
+-- 
+2.39.3
 
-To make it clearer, it's not nak from me. But I don't have
-any interest to follow your work due to "the real benefit vs
-behavior changes".
-
-Thanks,
-Gao Xiang
 
