@@ -1,119 +1,188 @@
-Return-Path: <linux-nfs+bounces-10541-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10542-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A539A59363
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:04:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E754CA593B2
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 13:10:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F029316C869
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:04:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BA7DB3A94B8
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Mar 2025 12:10:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 598AE221732;
-	Mon, 10 Mar 2025 12:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B85D919342F;
+	Mon, 10 Mar 2025 12:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="AsiSVLXD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snPKvdz8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F293C2236F6
-	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AE4175D53
+	for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 12:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741608279; cv=none; b=GEroaiDAS/O8D66bWCih/ZdMDxRdFpIsOKS5h4uuAG2FvRW5l5jPUq7AvrZT8TDJ8FKAUSlCjyymzBRdKmfavxLxh1jcT2V9xcWyuPjQ7pQuMgHSIpb71ybbIQ6wOrIejdNi23/R3yMyu5nFo/C05Vuky86o/EqteTM6qmpBCG8=
+	t=1741608510; cv=none; b=lXd8CTJA6Y4RDcHvw3yGAD+hmdIC7fcypan0ktmg6+uIJjLFlmypm3SOfvJz0SJraUnT3U2ZF+CywIq0KCsj72k9INEynClExnvun5MrF9RbttZsH84C9FxtbQOA4//pM19Tcv3st3A9ygHl9nPPafJhSk4SQK+sP9m9uokT02A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741608279; c=relaxed/simple;
-	bh=02m7HS8p3M2NVYThb+is6nxwVhkFs/922ZI/gp7lgJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s6ntg/1OSBkkWXFnZ+JWPpAceMXa2WJY6KqgWHSlIMUU0sCfSlnziWSSCYAlRHAdcjDNL0e35NRoTsubOgnCOgsokmuHXP6KZmDqqvAwOdzyQNkZXL0c+Irg4sF7N8arHzWJg5SkyC64Z/FRxxeX0jGzn5J2ZtlbIBZMqOaNKG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=AsiSVLXD; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso406218f8f.2
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Mar 2025 05:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google; t=1741608256; x=1742213056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2y7BvTsTUHsoTkwoCfrOdlQ2HF7SbMnbZCz2hM5+uw=;
-        b=AsiSVLXDN8NI7JBhyUY6Pbyob1Rl2UzVciJeJRrwY/7VipKMCMYn4cCeZ+Rqz+/uxD
-         x+jjnLLgkG//jbkzK/IFPKLLPlFOV/P6xyjuRwbZPwb2ZRlDTe/I4UNYxb2n5bFz5GgD
-         sp0xnCw3rDFElKZxhYf68HS3x+LBmmEDDBBivbKI1kekbHHro4R6prS95zUAVsjn9FiR
-         0svgKJZIf+FLTJYcLMJ/TZaW7q3Z4cywy6kUqUCC7NX1m6zYyGzFPmS5fIuOc/b+WiI/
-         ELykhTtGQ22I+3Nqhv5XO72AWO7EyXOLJdYSE+ExnFmTi5HROcwjcGZrUwS4nO8bifhy
-         emwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741608256; x=1742213056;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g2y7BvTsTUHsoTkwoCfrOdlQ2HF7SbMnbZCz2hM5+uw=;
-        b=Z2liROySdjPPrXlQkh4Qle+zyodw9s9EOka1D5v4JP5VhGpuHXwSI766dx5+ASEzb4
-         IowgD791/P6MqqCwgLCRdMONWwLK+PHVd/vo6IyMt1ao4WhTd/M6my1fx8e+sre1AQgv
-         tWh5pTUR3OduVVx/aFJiKjZclpWNj4zdcY0k1dDghT4PS6ubIN7fd4jd5Yp4TpxJWuIj
-         BEth8FAD59sWQb/COImB//FKGCCQHA8YOYD90RgmHQdi5rp3yBv3FZPPSfCOCNCUxUWG
-         TnqXufeTiu1UlOA9/GHzTICc3GADA06WFEP5Gr3z5ckcUKq/dLxcV61CFalrI8s+tzUy
-         f9nw==
-X-Gm-Message-State: AOJu0YwaUi22I7/6xF/tjamk9gF0twoN0eJ7iSxkXcs9RtJ3UZ0BY4Ui
-	XBzV/uyQZuJ+fjZjm/ZKeDy3ih2jbMY/IMvDS2+iu1GbgWfHpECF3Ci0SLR2p+wxgi6pR3EU79t
-	b
-X-Gm-Gg: ASbGncsShQ9lzeg1t7ZtubQPeY3CF+HjCzzA9bYB3VHKX2SM3RJtg7E2qDumjFTlqXS
-	ZO7aU1cCyJoBv9M6jQ8/Ton0uAhfEHLozgBuAgaIhEDihgW9YLSlZWW9MZbvZSGp9Bd8g6eVd9m
-	0zYnxtZSy/uWpgciKNpU96h43igI7l5CMAmtJtJtWlRyVtiAqsFXltKHHHm6bJPQGlh0kcqqFcD
-	F83IsShlACO5+HUA4EVWQIBUO7amSHH9EXrsj4M8LeKahB6B9FJkCVaBkEditiJqVbpgdJos5oZ
-	At2GT2wr9Nvx5iaRHDzV180v2hVKvmqiBjQSh4ptHGU7Ta47pt0A1ruSC3WyvteUlcrXPnPPUqc
-	NyGZsAx99B6JfYReKhnNWNQ==
-X-Google-Smtp-Source: AGHT+IGf7ngd+Ob2ja8AkeKjk5suCmE107HS5+F92Tn7iReGULsMjOmCrx5LrF2YBK7vWRHtexfuwA==
-X-Received: by 2002:a05:6000:18a3:b0:391:2e19:9ab with SMTP id ffacd0b85a97d-39132da8e5dmr7473554f8f.47.1741608256234;
-        Mon, 10 Mar 2025 05:04:16 -0700 (PDT)
-Received: from jupiter.vstd.int (IGLD-84-229-89-124.inter.net.il. [84.229.89.124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912bfdfe2bsm14590852f8f.24.2025.03.10.05.04.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 05:04:15 -0700 (PDT)
-From: Dan Aloni <dan.aloni@vastdata.com>
-To: steved@redhat.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] utils/mount/nfs.man: add noalignwrite
-Date: Mon, 10 Mar 2025 14:04:14 +0200
-Message-ID: <20250310120414.2515090-1-dan.aloni@vastdata.com>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1741608510; c=relaxed/simple;
+	bh=fgnB41N8BLdf3IrjnLD8FrffgN1GUN9TyDSDjZ71Q1Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ehn4i4kz6wg+11zM85Tq6ftxuf34+aGwoVKf3Z5YNt+XDAEatYzKwasP/KlV/De5WasQkH7LuaxtRWb3iyEPTlCBsIn+x47ExPDpabqgPqnwrhkShEZ99OJ5t9NHJGDc1f20rmYirkmq+8TXOyT39ULQvrFfVJ72tlGTM0tWz00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snPKvdz8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6196BC4CEE5;
+	Mon, 10 Mar 2025 12:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741608510;
+	bh=fgnB41N8BLdf3IrjnLD8FrffgN1GUN9TyDSDjZ71Q1Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=snPKvdz8AprMztDuvGVmKzsR0GALhEtTYkahpvotDnxadTbFcOSyk1S2rMBPlJNW9
+	 ZOokKmh5e2C8yQFL3IfBx53zGSkKem9b4WLJ1OZ5IPkpRUMIfZKyU4FXvFv9zcr9ZP
+	 b7ImUGGM0W9LMLWidr+zYKUIz1UNgo45mbtml4mNt0jA7cnQm0vzd3Ebb+ODW+bKXr
+	 D3+KOGUgYiExNEtQkyeaoV49DuXZMZqSbH++nl2WD8j8vr/UNXFuqd1vONcmy5RHVG
+	 rxLetVbj2QNZfMuvqjE/H3KLY7kXwiq9+6NoX6WHfYrWzccVj4bTzIRUimuTqcqYeX
+	 VWxT27BkP/PdQ==
+Message-ID: <c0bd53224cd26edd7f9c0dbca2b85563a87bed5e.camel@kernel.org>
+Subject: Re: [RFC PATCH 0/2] NFSD: add a setting to disable splice reads
+From: Jeff Layton <jlayton@kernel.org>
+To: cel@kernel.org, Neil Brown <neilb@suse.de>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Trond Myklebust
+ <trond.myklebust@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 10 Mar 2025 08:08:28 -0400
+In-Reply-To: <20250308201438.2217-1-cel@kernel.org>
+References: <20250308201438.2217-1-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
----
- utils/mount/nfs.man | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Sat, 2025-03-08 at 15:14 -0500, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> The usual policy for kernel-user space APIs is that once a public
+> API appears, it is difficult to change or remove, in order to
+> maintain backwards compatibility with user space software.
+>=20
+> This series introduces /sys/kernel/debug/nfsd/ where we can
+> hopefully place ephemeral and undocumented settings for testing NFSD
+> features that are to be added or deprecated without the worry of
+> having to support an administrative API forever without change,
+> amen.
+>=20
+> As a first consumer of this user-kernel API, the series adds a
+> simple disable-splice-read setting, which can force all NFS READ
+> operations to use vfs_iter_read() rather than page splicing to fill
+> data content for an NFS reply.
+>=20
+> The splice read path is the default on most file systems, so it gets
+> most of the test experience. The purpose of this new setting is to
+> enable test runners to force the use of the iov iter path. We are
+> also interested in comparing the performance of the splice and iter
+> paths, as a prelude to potentially removing page splicing. This new
+> setting makes it easy to benchmark either read mode without having
+> to rebuild the kernel.
+>=20
+> We have an eye on a few other consumers, such as uncached I/O and
+> increasing the maximum r/wsize, for which /sys/kernel/debug/nfsd
+> might be suitable while their performance impact is studied before
+> a concrete administrative interface is agreed upon.
+>=20
+> Opinions and code review are welcome, as always.
+>=20
+> Chuck Lever (2):
+>   NFSD: Add /sys/kernel/debug/nfsd
+>   NFSD: Add experimental setting to disable the use of splice read
+>=20
+>  fs/nfsd/Makefile  |  1 +
+>  fs/nfsd/debugfs.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/nfsctl.c  |  4 ++++
+>  fs/nfsd/nfsd.h    | 10 ++++++++++
+>  fs/nfsd/vfs.c     |  4 ++++
+>  5 files changed, 66 insertions(+)
+>  create mode 100644 fs/nfsd/debugfs.c
+>=20
 
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index eab4692a87de..744411688641 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -618,6 +618,17 @@ option is not specified,
- the default behavior depends on the kernel version,
- but is usually equivalent to
- .BR "xprtsec=none" .
-+.TP 1.5i
-+.BI noalignwrite
-+This option disables the default behavior of extending write operations to full
-+page boundaries.
-+.IP
-+Normally, the NFS client rounds non-aligned writes up to the system page size,
-+which can lead to "lost writes" when multiple clients write concurrently
-+to distinct non-overlapping regions. Use this option when your
-+applications perform non-aligned writes and you can guarantee that file
-+regions do not overlap, thus avoiding the need for file locking.
-+.IP
- .SS "Options for NFS versions 2 and 3 only"
- Use these options, along with the options in the above subsection,
- for NFS versions 2 and 3 only.
--- 
-2.47.0
+Looks good to me:
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
