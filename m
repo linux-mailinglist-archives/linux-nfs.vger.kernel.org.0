@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-10553-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10554-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0092A5CAF9
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Mar 2025 17:36:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4557A5CDDB
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Mar 2025 19:26:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 733073B8134
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Mar 2025 16:35:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F78F3ADA6D
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Mar 2025 18:25:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75150260378;
-	Tue, 11 Mar 2025 16:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89028263C6B;
+	Tue, 11 Mar 2025 18:25:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="SdgOYKhX"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="ZLi5biPr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B4B25F7A9
-	for <linux-nfs@vger.kernel.org>; Tue, 11 Mar 2025 16:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF26225760
+	for <linux-nfs@vger.kernel.org>; Tue, 11 Mar 2025 18:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741710957; cv=none; b=AvWHdO4bkEniuSrkhGBdMjMA/4dkjMJ4bYxXvECbEEmRl724ohny1MLpn08VVgg70t1aTMrUAVmOpne3p9AqYe9BRO8PhJAMYRb5z49INXntrTrZzm6DJ/mQRBDbcw3fKAwGYQGzISbLU1czspoSO47mCTop87Rd7z8RKbBcoJA=
+	t=1741717555; cv=none; b=HQIs39eRnCApmp38cIuVvnSRWxr/z7C+OGNbcbdQr7VAc61nuTGrjGVB5nhY15upgwQnG39s7nEQ5o85mOvs1oHxb96PlS1YRhJ/Ui1M+1srhpp7b3wLsspp66v66zOD8d17C+I3+Sn9Sa2mlccEn2PhBvC9gJXk8WbT+m2H70k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741710957; c=relaxed/simple;
-	bh=lP6m0cZZxtNzmjQWBlP3K90nDAAwxsaacQVezwmOpYs=;
+	s=arc-20240116; t=1741717555; c=relaxed/simple;
+	bh=pWa/Y9H37PEkmzYjS/teONr/mDWaaMz86eJiSzCYmok=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8tJdLQL44q5K91qCyUb3ASj9SvHgBPsC8iE0euLr6RkYxHF/O+nMDbCrxT4F9gnwAqGthM9mmENaWJLfVxjHUl7vclA3ja++tnlyfZ6ygWMYONtksb+4aai3R62AZmr92fkIAyZBrRGi0jTbzroumbq6QzmC0eOtv04NCg5YYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=SdgOYKhX; arc=none smtp.client-ip=209.85.208.170
+	 To:Cc:Content-Type; b=rMdrLl92dtD3ASow+J9SHAOXzqoi8DCooqnT9kFiB9oU0LzyZDsYVF44ftJ5uUAktGbEc2uxFYLLIUOHAcHNFwvDcixTrEbcrGpTgqJ20qVWX66Kb2AbFLKpoJ6Nn3qhy1DU14EbRt7JQ6sWdcjgJbJh4p474nu5anaTPc64qKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=ZLi5biPr; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfca745c7so38749871fa.0
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Mar 2025 09:35:55 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso1043721fa.1
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Mar 2025 11:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1741710954; x=1742315754; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1741717551; x=1742322351; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cmrlqYXTyBPcP02wpgSdQOryaGme0pbpnMA8DPl0fDg=;
-        b=SdgOYKhXfJIK1qcUU07W0GiaBDUpdT9wOnP67nUkNxLYUVCXG7QkaBgcGSjDj4xke7
-         RVlo3x69PK53cZxwuAp8A65qO1u4HSM3EElfV4ntf7xE8h9nAFZW9F1ury1BBxjLhaLR
-         3iS6R1zloBMWmXJMb95FInmbUPMbRG/DHf88QximZMQdwW+kAUh0S+jTjsL7WVumY202
-         /aaajuhioFQCuNZXdhY/dhGswJJJxU5M5HcOAxT0JrTmEJJ3GcP7bLRMsaDn2oy3UR0Z
-         +yYfRbeTRfliuQt1OTiQR7/TH70GbpMvSn+MXufLQnwV5HJ0LysE2QrNARGDrWd85BoU
-         tp7g==
+        bh=cRTPVNt7euXowYRaci8qWQOJGEm3SA0tg1/ytQ7I+GI=;
+        b=ZLi5biPr/zAGnXd81sk/eDAt1fROOcOC/2b8qUB0QNEnOnRoTQ6jdua5j03w1Y4PNt
+         oAWVXAUNjDeMWN7WyIxOmoih/U92JaI24hFkSZF5VYS02kOzbULPKbTZUZPgdG+jq0so
+         c3h0EUa2ajvL+56/TsJ6N8xZ2ch0f7imxjSAJnHGtLrfXTCCwiFiYihiKDptE4qhsPoo
+         AcCi4rnsB5R0Keo3hvxvDVyH0Ilin6W91lagisaY6zn+la7nbF9EDYNMaJKn9QdsXQNy
+         wi/tAtrp2AqapmjMJrWux/P1hbL1e+VZDDehuv1m9KcFi8gsIBVi0gMuXZ2kku3GSIDL
+         adwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741710954; x=1742315754;
+        d=1e100.net; s=20230601; t=1741717551; x=1742322351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cmrlqYXTyBPcP02wpgSdQOryaGme0pbpnMA8DPl0fDg=;
-        b=WEzfEX6lWBrt+ejxMEg0BuTZvhLhZAyoVe10UIf/qKVN8YkMfiXrQqdldYbqOWDE2F
-         JSB09wjiZuStJIbE/kcGD1ljrCEkvuBgaJGcfKLYlIGucE7aBpTSD1K6GSTCX5VyokXi
-         MwJ/Mkw7YcX5exAgokHkKz+ttSiQ60gvstbzZ5nnXkFGWYCvvbLl+AScA9nPlzoZZuMC
-         E1NWbw8lA/27Y061xVwwmf4SgauSle/HexkANsRjJ/z0qXW+RW7qh1OQPS8fuf6WgSmH
-         k1htSeUST3p8VPICAiXlFqMSI3FcY7iWCpu8wYZ/8Xd9wh7sMgAfYOJXPllPvr2JsJyI
-         dppw==
-X-Forwarded-Encrypted: i=1; AJvYcCWaji/TDMD5eUNhhWX0VL6qtC/F8OmlmHg6tDoC6s5zoKSDkKf8xVimj3Zd34OCJnS3kgdP9YwlKgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC3XKUifXCv7SI9zAkS03+PrzVA8M8q+lL3yQKD7p3uUu4G7j3
-	kElMNun8vyuSj4FVnZZ83bdHc82Oi0wp9psNEAaOlYrGAETYPhVOYaCCxhEmyKRbxhA+4Z+CJmj
-	KTB0lmCJK68wZqE8wrebOPcfIY3Q=
-X-Gm-Gg: ASbGncvObQBoc0qpnyBQz1YHrh5FV7jgooQ8uTC6cQxxyLn8xHCYwbZXcF8gsOpdF0G
-	kiFjNOHP4lEMR0Fs365oRa4tCv+utKfLn1ONFKwalLJzk/zkvzWFiE45kuU0PFtx7xR3+JmBPOa
-	2X9Z2RkHuVzGcV5zOLN/yYFMWqezOYVsYS2FcGil2TJ46e5pvJ/aErzQHxqbc3
-X-Google-Smtp-Source: AGHT+IF46cU6USQ3ba6HDmbfkC5awOb+RHf322RZRC7h/d4JFTUySbtmjobPcHTonX27Pwd/GqJyxf8RIE0jFdtVmiY=
-X-Received: by 2002:a2e:bc23:0:b0:30c:1002:faac with SMTP id
- 38308e7fff4ca-30c1002ff65mr38796591fa.10.1741710953363; Tue, 11 Mar 2025
- 09:35:53 -0700 (PDT)
+        bh=cRTPVNt7euXowYRaci8qWQOJGEm3SA0tg1/ytQ7I+GI=;
+        b=vK+iEG1wtpmX28mD1D9bSA9TVvQWTm0IG97YK+CyD+DZ7hy/Dj1gHcc/ghllsYecuz
+         n2UKYwcjf4Ge1zyN1zwnvWEg2peDX2iBcW6dGdaXKU0XTOQqsoDI/aFq1t05sSzKI+MF
+         2VkeEjoUrl2pSNt6DDYDy30H+ddZZbPpgEZ3ZXEobgLTpX0nTvwtXAJH7dpDbxgZLNIB
+         3U2YZlvOyd7oby7AG8bROeXF5XpVExHl2+VDzDvjc/QG8XreN6hs03AeKZENDS29eQBU
+         K/Q5wfZSwzBfwSJM1VEEwfzAcdTkoUY0kgclGa4ScVmSF0mgWxGDhXz2nTQ9aHJa/4tQ
+         FLpg==
+X-Forwarded-Encrypted: i=1; AJvYcCURS0EOZYamMXZ0QQ1kqxXVJvKL72FaSlrJU3XDI/yyaW0JSS4M+FGBH7OCFD/cd1IQWy0QtVdDzPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjkVYLnKoE2XqqkHgbfjfuUX8DHuufRS9tVrcoBqzx10YgmhO5
+	z13hDHNtBXY9t9emOL8Z59DPS9rHrb5bj3l1cjvcLFi5vIjp2JD0CM54oO6In8cnLfCvPCauAAN
+	2HTgpb+PBo+XufXf3KXctohPXtSM=
+X-Gm-Gg: ASbGncvLbLecv7QU5mhYUF53jS7wPSJb7sOqraLMc7X5UyJd2D7PuOeHasN8HIy7OiU
+	S8zJ0tcFfbOATj2AIgiakyC60LIvv8DKoS1KnCX3w5r+FQ45bJeNPreZiLFRMQ4Owt1xCY1GvLU
+	xMq5VjnNch1WARPqt3QCJFKTx2rLxwbcNMsM3eTkvcpiaka7xcfP1z/c3YpRoj
+X-Google-Smtp-Source: AGHT+IEAm3dxlahro9uDLXox9db9icxr92rvp/8eZagJKy1tVOOeViGHNatOUxTl97ELNShmqTmTvBMuFQ/7vFtY9R0=
+X-Received: by 2002:a2e:9e45:0:b0:30b:9793:c1f6 with SMTP id
+ 38308e7fff4ca-30c20f75165mr14652851fa.17.1741717551113; Tue, 11 Mar 2025
+ 11:25:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -77,9 +77,9 @@ MIME-Version: 1.0
 References: <172920135149.81717.3501259644641160631@noble.neil.brown.name> <CAN-5tyHb5ZVtqPyVqjbG8gjdgPvrMQsnXmgTeN_4wphTaMkHkw@mail.gmail.com>
 In-Reply-To: <CAN-5tyHb5ZVtqPyVqjbG8gjdgPvrMQsnXmgTeN_4wphTaMkHkw@mail.gmail.com>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 11 Mar 2025 12:35:41 -0400
-X-Gm-Features: AQ5f1JrvjfORv9prgHP-Mb1TrzNLbS-E7H-uy7CZSwm9bQ5DySOUbGc9YKxIcYQ
-Message-ID: <CAN-5tyFZmWJ5-1gLyHDt5=o6GuiGKCJsyjMNon-WD4FR2RNZYQ@mail.gmail.com>
+Date: Tue, 11 Mar 2025 14:25:39 -0400
+X-Gm-Features: AQ5f1JpWFFytPpXSSzIcd827HlD-EUIkb8lmMGO1b_p-FtXuqvNO7rqD-LDcfY0
+Message-ID: <CAN-5tyH4E-qaK0TEtUMn3QpB0rYsDjm_erqRwVko7bAgYdmQBg@mail.gmail.com>
 Subject: Re: [PATCH v2] nfsd: refine and rename NFSD_MAY_LOCK
 To: NeilBrown <neilb@suse.de>
 Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
@@ -110,7 +110,12 @@ On Tue, Mar 11, 2025 at 11:28=E2=80=AFAM Olga Kornievskaia <aglo@umich.edu>=
 > >    happen.  nfsd_permission() can be called from other places than
 > >    fh_verify(), but none of these will have NFSD_MAY_NLM.
 >
-> This patch breaks NLM when used in combination with TLS. If exports
+> This patch breaks NLM when used in combination with TLS.
+
+I was too quick to link this to TLS. It's presence of security policy
+so sec=3Dkrb* causes the same problems.
+
+>  If exports
 > have xprtsec=3Dtls:mtls and mount is done with tls/mtls, the server
 > won't give any locks and client will get "no locks available" error.
 >
@@ -178,13 +183,15 @@ YPASS_GSS;
 > > -               goto skip_pseudoflavor_check;
 > > +       if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAUTHNL=
 M))
+
+I think this should either be an OR or the fact that "nlm but only
+with insecurelock export option and not other" is the only way to
+bypass checking is wrong. I think it's just a check for NLM that
+stays.
+
 > > +               /* NLM is allowed to fully bypass authentication */
 > > +               goto out;
 > > +
-
-I think it's not appropriate to add (exp->ex_flags & NFSEXP_NOAUTHNLM) here=
-.
-
 > >         if (access & NFSD_MAY_BYPASS_GSS)
 > >                 may_bypass_gss =3D true;
 > >         /*
