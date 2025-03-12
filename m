@@ -1,343 +1,227 @@
-Return-Path: <linux-nfs+bounces-10562-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10563-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B239A5DDD7
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 14:23:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 843BFA5DE25
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 14:37:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6028B3A765D
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 13:22:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9523A1897CD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 13:37:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9490F245027;
-	Wed, 12 Mar 2025 13:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A2C24501B;
+	Wed, 12 Mar 2025 13:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="dmu1e3Hg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YL4F1y/1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658DC243951
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 13:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E49924293B;
+	Wed, 12 Mar 2025 13:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741785773; cv=none; b=HIj6PN0c/b+1VvOPQxATLikXjqXv8CtLpX/CkL6IMbMsIZoshGzoeaL5eMi3Fn62m9uTvI6Dna755nT9FziS354rpzPxrRc95u54ILBgUo0t//X+ntjzNc8tyGqaLNcK39ZV4oxPmf+tcNh44hFh1MNDt/NfAExZGbZkF/P5ZsI=
+	t=1741786612; cv=none; b=o6ZT1Ol0YM4SoehQ05fUMcODS8ZYuq8Id+lEbl3VxAPMytI9Mj54KWvjPeSOIVKHEjSXvFhKN6P0gKXqskUZMFq5p9DlWWmr6OEuPV6gwa1+UsVBQLaIhRrA5d3duKrQmkAI+8Ja5p70NX3fUlPWmEeSQR3DpGlWhwNWqqA921I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741785773; c=relaxed/simple;
-	bh=mplocUEQubEWsXVyMLze838V1xVyign9V+UvoBt2Dho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q2BZO07ziRewUiXMSv4V/5+8/99YqKStFXQURnozJpXudDMk43FixrXSAyGknzr026f5j14qIa5wzjrh4vA1AbeVk8zmMSfyUR+tUcgp4S6Icy41Ul8AptR2xbMdFEpWtnZ8ilGijkRM6R+XEVHcMrAFYFzZxVM/HSuFYDl9T7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=dmu1e3Hg; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30c091b54aaso42249421fa.3
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 06:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1741785769; x=1742390569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kw7dKcGFzGJkW3IBMitbQFnsQ7sx/nKwPOz+ojjzDEQ=;
-        b=dmu1e3HgKgrRT+4Dz0GSW/c6pobX6h4VRO1Nl9u1X0CESrSWQOL2ddxYkKnf/2Hsrb
-         EE0AucjwFue8X1NIX4/ynGpeP+Tq9Kk4WigrUye1SODQmwbTRBR+DJ5CsyEFk8sQAR/J
-         BHjbOSWZJquRowffXfTj/fXe3oo0ckcTLIVtetrtCWjXQeip4MBGDc6VDjnAYoLkA+Tc
-         ScAz4cDuaV0l82ZIO+SYjngkBgbDKAzD7DMg3nvxNQOvIK3xMDiGyUAuH7H1Bp/3WxBQ
-         GhLaQmLC8ulriZ2coVUznIo7N6kC/fpZUhkI8/qESSOaUeLXSj5+fTVFQiuAm5ingbjM
-         vazQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741785769; x=1742390569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kw7dKcGFzGJkW3IBMitbQFnsQ7sx/nKwPOz+ojjzDEQ=;
-        b=jcf96nGrz42lQ+j2JW0x8WND/qo07XEC0BISqtoWJC+ZfWtVxlvOqPaq3nzuYYs7HL
-         vuAgFjBT2uQovsoIH1bpso2zWG/vOX601Z7BR1bwoYlmeA1OMtWc6++i7sA+1oHFGZiG
-         t23B11OfnNWxszTbR39pgLiEClpdoMosc9VTGDFeUF4fAemy9+nf8Q5Vpdw5Rz573vS9
-         Hg3Q/0Omu7JXrc2q0tmgl20PO3fOvGDy+ML7jTAMoJPG9LznP1TeRYaHoI9AuH/T5Or5
-         pIDT+gnWWqJQWM+y/0uM5UUbEi/QoidiAETy/9FZZDTYiDgg3rOZxRlyflvLB1TWoHxZ
-         g7kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwCNwPxKotkcCQ90d0zZMis/fxL+7+3uVU9mVHlLy502UyPnawP0nLa+saDPCMaB7QPXDbvsh6AkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCDl2TOATi+i4dTtNW+Wpeytl7nmvYGLLH0qOP76619zatFLoX
-	UvArqjWKQjQGLEBf1OBqviDZkTmFx2rYHLvxurLS2tqYmaVrLBVs2NkXCtj9lAWCk9dYXiucRxz
-	bITNOj85ez1bR7iOMd5WpCJj0d7M=
-X-Gm-Gg: ASbGnctVsLJRYKWptO+fS3BAlVOw1rA7FrrKSHYs55/Rel36SBouxairm3E39Vj0o4W
-	F3TqHs4o/7W7YPaD4xKaJ6caKPSYj+L+o3LXclLYvLYjYytnN3N5erELXlRugv1h5XBWl1PYwWA
-	rfBvC+hmulkfPzwMXlC/0irz8zsw9dTse3IS6MVWfUgrWxtuc88aDjNii1mmWR
-X-Google-Smtp-Source: AGHT+IFrMXC7SYXhEKQnPDtKZlDUW3qJ9xGndfREWIG34/wAxoEbLhBHIqlL0eiAFR181HNq0CtIIwO3NtqH0WWPA3k=
-X-Received: by 2002:a2e:94cb:0:b0:30b:f775:bae5 with SMTP id
- 38308e7fff4ca-30bf775bd9cmr55082101fa.6.1741785769045; Wed, 12 Mar 2025
- 06:22:49 -0700 (PDT)
+	s=arc-20240116; t=1741786612; c=relaxed/simple;
+	bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PGfs/7oMfrjS+4bA7XY8zb3YsgySNLjfluVY7nFdN8STVnU2Ls/hK5k3ZrWCJzSjVn+5q0pQzQdVyXqGahZQjUPNJOfzJoziTao1rPFgk+XrA7HKl54cmlf5TKEnkeRdgZDK8ps/7Sr05QnSyb+m09MYwliCfVBSj/rI3PZpzJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YL4F1y/1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D95AC4CEE3;
+	Wed, 12 Mar 2025 13:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741786611;
+	bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=YL4F1y/1IfKdLAcoJTo1QmOjbaGv6Ev/QiZKpgMqMOaPt6ZYDLdpwWMjd9ZXi0DlW
+	 V1CmpfoTg1GuDNseOfV63YoYi+I+bzCSkPZhterHaf6PfMAzJ/HHOE1GxBbUv4wR09
+	 ZS6U48bpv/VBLlBgo1s8cBv4i0pGYFzdVFS6UrwFDJ4fD/5yotidn+lFEeW648u/v+
+	 Itg0+U70DJoiOrdvMJIMoAxvomrMaVehVHdIqoQgWanwBlT81vPrHdidl2c7rCcu1i
+	 xY331HY4NT62Pv9HwPPAKkHhk+MoMVsJyVQZ1avUrcbIjNgIqu2FFfQSgENQN3mFIM
+	 BgbtAOEcZ1Hkw==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 12 Mar 2025 09:36:44 -0400
+Subject: [PATCH] sunrpc: add a rpc_clnt shutdown control in debugfs
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN-5tyH4E-qaK0TEtUMn3QpB0rYsDjm_erqRwVko7bAgYdmQBg@mail.gmail.com>
- <174172935674.33508.779551385082016505@noble.neil.brown.name>
-In-Reply-To: <174172935674.33508.779551385082016505@noble.neil.brown.name>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 12 Mar 2025 09:22:36 -0400
-X-Gm-Features: AQ5f1JqRqDWOBWaowuipKFmcyD1L5vLiwUoUJkjqgK-gtS7Mx7KZ1Q5z_24w0EE
-Message-ID: <CAN-5tyH0kqsm0pdcdaf=HRfm607OC6vmp4pa0Q07sAOEoHabBA@mail.gmail.com>
-Subject: Re: [PATCH v2] nfsd: refine and rename NFSD_MAY_LOCK
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250312-rpc-shutdown-v1-1-cc90d79a71c2@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAOuN0WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDY0Mj3aKCZN3ijNKSlPzyPN3kVMsksxRjU0vLlEQloJaCotS0zAqwcdG
+ xtbUAKyDmD14AAAA=
+X-Change-ID: 20250312-rpc-shutdown-ce9b6d3599da
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Benjamin Coddington <bcodding@redhat.com>, linux-nfs@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5057; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=y79pXJ4Od+2hvd3+4EHDD+A70nDTedAiKbF4hsrYSbI=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn0Y3yumawZjbtmMAMLA9iBl2LpgtfS9hAp5KBE
+ VK+7a/f5nOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9GN8gAKCRAADmhBGVaC
+ Fbh0D/9Pcr5ofMyB+vfLAx/Gcsww/YYNgKW0auT4fMdTxkHvZxjjnVAkUsmR7qVCGbnXDUm5qq2
+ cIkj3P0JCO8/V9HezNgSnsEUduNKjVu6rZJUz44Gwb9Hppf3HbjtsLFFYmP5/k43Rx1POcU66b9
+ nx8lXFioohDYfQ9ouq8w0LCBX8BxQ8dEoteug6CAWZM+DoMw7lqw8obYnJINwtKVv22QQHGDBww
+ OOl9FgHowRc+Mp1NA35tnnYARmv397ZkIsHiRKRbhBpKpYdI22afk8wbvb4t+vKKLXTego6WeuB
+ dMi9ScK1CToTIYJJC+FqQe1q2OtuJO6n3uh/qUUUi0G15WcmyS7CS4tkhV22MImTR9hWU4bSDJ6
+ BRbZT/FfOZhoNul+WWRMFG/5NepRKZOl1+ZaRHlLDscOgH9FsZuhdWgaZj6IISiw15FO2iu/cWj
+ BJ5Y56RG5p1L2PAl21FvEHfve+luwGJ6AuYNUj+VgLWa0y8uShNRZ82+HNda2pnh+cbjcSNvihS
+ vb1R1NBLv9W6bRXyixUvorgwg4ebKpVnbFOM5fBqmKY/VNibp5Mpcjk1Xt0DAcmAmrp59F51V1z
+ O65V0E1YeRv9KbYYY+tzay1nPiL3DM1SxQccrFpgCZ1U78EV7hxchmt4FAEZ0KaD1aup4WKSHFN
+ C+XhSETgjhPuOGg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Tue, Mar 11, 2025 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> On Wed, 12 Mar 2025, Olga Kornievskaia wrote:
-> > On Tue, Mar 11, 2025 at 11:28=E2=80=AFAM Olga Kornievskaia <aglo@umich.=
-edu> wrote:
-> > >
-> > > On Thu, Oct 17, 2024 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de> wro=
-te:
-> > > >
-> > > >
-> > > > NFSD_MAY_LOCK means a few different things.
-> > > > - it means that GSS is not required.
-> > > > - it means that with NFSEXP_NOAUTHNLM, authentication is not requir=
-ed
-> > > > - it means that OWNER_OVERRIDE is allowed.
-> > > >
-> > > > None of these are specific to locking, they are specific to the NLM
-> > > > protocol.
-> > > > So:
-> > > >  - rename to NFSD_MAY_NLM
-> > > >  - set NFSD_MAY_OWNER_OVERRIDE and NFSD_MAY_BYPASS_GSS in nlm_fopen=
-()
-> > > >    so that NFSD_MAY_NLM doesn't need to imply these.
-> > > >  - move the test on NFSEXP_NOAUTHNLM out of nfsd_permission() and
-> > > >    into fh_verify where other special-case tests on the MAY flags
-> > > >    happen.  nfsd_permission() can be called from other places than
-> > > >    fh_verify(), but none of these will have NFSD_MAY_NLM.
-> > >
-> > > This patch breaks NLM when used in combination with TLS.
-> >
-> > I was too quick to link this to TLS. It's presence of security policy
-> > so sec=3Dkrb* causes the same problems.
-> >
-> > >  If exports
-> > > have xprtsec=3Dtls:mtls and mount is done with tls/mtls, the server
-> > > won't give any locks and client will get "no locks available" error.
-> > >
-> > > >
-> > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > ---
-> > > >
-> > > > No change from previous patch - the corruption in the email has bee=
-n
-> > > > avoided (I hope).
-> > > >
-> > > >
-> > > >  fs/nfsd/lockd.c | 13 +++++++++++--
-> > > >  fs/nfsd/nfsfh.c | 12 ++++--------
-> > > >  fs/nfsd/trace.h |  2 +-
-> > > >  fs/nfsd/vfs.c   | 12 +-----------
-> > > >  fs/nfsd/vfs.h   |  2 +-
-> > > >  5 files changed, 18 insertions(+), 23 deletions(-)
-> > > >
-> > > > diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-> > > > index 46a7f9b813e5..edc9f75dc75c 100644
-> > > > --- a/fs/nfsd/lockd.c
-> > > > +++ b/fs/nfsd/lockd.c
-> > > > @@ -38,11 +38,20 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_fh=
- *f, struct file **filp,
-> > > >         memcpy(&fh.fh_handle.fh_raw, f->data, f->size);
-> > > >         fh.fh_export =3D NULL;
-> > > >
-> > > > +       /*
-> > > > +        * Allow BYPASS_GSS as some client implementations use AUTH=
-_SYS
-> > > > +        * for NLM even when GSS is used for NFS.
-> > > > +        * Allow OWNER_OVERRIDE as permission might have been chang=
-ed
-> > > > +        * after the file was opened.
-> > > > +        * Pass MAY_NLM so that authentication can be completely by=
-passed
-> > > > +        * if NFSEXP_NOAUTHNLM is set.  Some older clients use AUTH=
-_NULL
-> > > > +        * for NLM requests.
-> > > > +        */
-> > > >         access =3D (mode =3D=3D O_WRONLY) ? NFSD_MAY_WRITE : NFSD_M=
-AY_READ;
-> > > > -       access |=3D NFSD_MAY_LOCK;
-> > > > +       access |=3D NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE | NFSD_M=
-AY_BYPASS_GSS;
-> > > >         nfserr =3D nfsd_open(rqstp, &fh, S_IFREG, access, filp);
-> > > >         fh_put(&fh);
-> > > > -       /* We return nlm error codes as nlm doesn't know
-> > > > +       /* We return nlm error codes as nlm doesn't know
-> > > >          * about nfsd, but nfsd does know about nlm..
-> > > >          */
-> > > >         switch (nfserr) {
-> > > > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> > > > index 40533f7c7297..6a831cb242df 100644
-> > > > --- a/fs/nfsd/nfsfh.c
-> > > > +++ b/fs/nfsd/nfsfh.c
-> > > > @@ -363,13 +363,10 @@ __fh_verify(struct svc_rqst *rqstp,
-> > > >         if (error)
-> > > >                 goto out;
-> > > >
-> > > > -       /*
-> > > > -        * pseudoflavor restrictions are not enforced on NLM,
-> > > > -        * which clients virtually always use auth_sys for,
-> > > > -        * even while using RPCSEC_GSS for NFS.
-> > > > -        */
-> > > > -       if (access & NFSD_MAY_LOCK)
-> > > > -               goto skip_pseudoflavor_check;
-> > > > +       if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NOAU=
-THNLM))
-> >
-> > I think this should either be an OR or the fact that "nlm but only
-> > with insecurelock export option and not other" is the only way to
-> > bypass checking is wrong. I think it's just a check for NLM that
-> > stays.
->
-> I don't think that NLM gets a complete bypass unless no_auth_nlm is set.
-> For the case you are describing, I think NFSD_MAY_BYPASS_GSS is supposed
-> to make it work.
->
-> I assume the NLM request is arriving with AUTH_SYS authentication?
+There have been confirmed reports where a container with an NFS mount
+inside it dies abruptly, along with all of its processes, but the NFS
+client sticks around and keeps trying to send RPCs after the networking
+is gone.
 
-It does.
+We have a reproducer where if we SIGKILL a container with an NFS mount,
+the RPC clients will stick around indefinitely. The orchestrator
+does a MNT_DETACH unmount on the NFS mount, and then tears down the
+networking while there are still RPCs in flight.
 
-Just to give you a practical example. exports have
-(rw,...,sec=3Dkrb5:krb5i:krb5p). Client does mount with sec=3Dkrb5. Then
-does an flock() on the file. What's more I have just now hit Kasan's
-out-of-bounds warning on that. I'll have to see if that exists on 6.14
-(as I'm debugging the matter on the commit of the patch itself and
-thus on 6.12-rc now).
+Recently new controls were added[1] that allow shutting down an NFS
+mount. That doesn't help here since the mount namespace is detached from
+any tasks at this point.
 
-I will layout more reasoning but what allowed NLM to work was this
--       /*
--        * pseudoflavor restrictions are not enforced on NLM,
--        * which clients virtually always use auth_sys for,
--        * even while using RPCSEC_GSS for NFS.
--        */
--       if (access & NFSD_MAY_LOCK)
--               goto skip_pseudoflavor_check;
+Transplant shutdown_client() to the sunrpc module, and give it a more
+distinct name. Add a new debugfs sunrpc/rpc_clnt/*/shutdown knob that
+allows the same functionality as the one in /sys/fs/nfs, but at the
+rpc_clnt level.
 
-but I don't know why the replacement doesn't work.
+[1]: commit d9615d166c7e ("NFS: add sysfs shutdown knob").
 
-> So check_nfsd_access() is being called with may_bypass_gss and this:
->
->         if (may_bypass_gss && (
->              rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_NULL ||
->              rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_UNIX)) {
->                 for (f =3D exp->ex_flavors; f < end; f++) {
->                         if (f->pseudoflavor >=3D RPC_AUTH_DES)
->                                 return 0;
->                 }
->         }
->
-> in check_nfsd_access() should succeed.
-> Can you add some tracing and see what is happening in here?
-> Maybe the "goto denied" earlier in the function is being reached.  I
-> don't fully understand the TLS code yet - maybe it needs some test on
-> may_bypass_gss.
->
-> Thanks,
-> NeilBrown
->
->
-> >
-> > > > +               /* NLM is allowed to fully bypass authentication */
-> > > > +               goto out;
-> > > > +
-> > > >         if (access & NFSD_MAY_BYPASS_GSS)
-> > > >                 may_bypass_gss =3D true;
-> > > >         /*
-> > > > @@ -385,7 +382,6 @@ __fh_verify(struct svc_rqst *rqstp,
-> > > >         if (error)
-> > > >                 goto out;
-> > > >
-> > > > -skip_pseudoflavor_check:
-> > > >         /* Finally, check access permissions. */
-> > > >         error =3D nfsd_permission(cred, exp, dentry, access);
-> > > >  out:
-> > > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > > > index b8470d4cbe99..3448e444d410 100644
-> > > > --- a/fs/nfsd/trace.h
-> > > > +++ b/fs/nfsd/trace.h
-> > > > @@ -79,7 +79,7 @@ DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
-> > > >                 { NFSD_MAY_READ,                "READ" },          =
-     \
-> > > >                 { NFSD_MAY_SATTR,               "SATTR" },         =
-     \
-> > > >                 { NFSD_MAY_TRUNC,               "TRUNC" },         =
-     \
-> > > > -               { NFSD_MAY_LOCK,                "LOCK" },          =
-     \
-> > > > +               { NFSD_MAY_NLM,                 "NLM" },           =
-     \
-> > > >                 { NFSD_MAY_OWNER_OVERRIDE,      "OWNER_OVERRIDE" },=
-     \
-> > > >                 { NFSD_MAY_LOCAL_ACCESS,        "LOCAL_ACCESS" },  =
-     \
-> > > >                 { NFSD_MAY_BYPASS_GSS_ON_ROOT,  "BYPASS_GSS_ON_ROOT=
-" }, \
-> > > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > > > index 51f5a0b181f9..2610638f4301 100644
-> > > > --- a/fs/nfsd/vfs.c
-> > > > +++ b/fs/nfsd/vfs.c
-> > > > @@ -2509,7 +2509,7 @@ nfsd_permission(struct svc_cred *cred, struct=
- svc_export *exp,
-> > > >                 (acc & NFSD_MAY_EXEC)?  " exec"  : "",
-> > > >                 (acc & NFSD_MAY_SATTR)? " sattr" : "",
-> > > >                 (acc & NFSD_MAY_TRUNC)? " trunc" : "",
-> > > > -               (acc & NFSD_MAY_LOCK)?  " lock"  : "",
-> > > > +               (acc & NFSD_MAY_NLM)?   " nlm"  : "",
-> > > >                 (acc & NFSD_MAY_OWNER_OVERRIDE)? " owneroverride" :=
- "",
-> > > >                 inode->i_mode,
-> > > >                 IS_IMMUTABLE(inode)?    " immut" : "",
-> > > > @@ -2534,16 +2534,6 @@ nfsd_permission(struct svc_cred *cred, struc=
-t svc_export *exp,
-> > > >         if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
-> > > >                 return nfserr_perm;
-> > > >
-> > > > -       if (acc & NFSD_MAY_LOCK) {
-> > > > -               /* If we cannot rely on authentication in NLM reque=
-sts,
-> > > > -                * just allow locks, otherwise require read permiss=
-ion, or
-> > > > -                * ownership
-> > > > -                */
-> > > > -               if (exp->ex_flags & NFSEXP_NOAUTHNLM)
-> > > > -                       return 0;
-> > > > -               else
-> > > > -                       acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OVER=
-RIDE;
-> > > > -       }
-> > > >         /*
-> > > >          * The file owner always gets access permission for accesse=
-s that
-> > > >          * would normally be checked at open time. This is to make
-> > > > diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> > > > index 854fb95dfdca..f9b09b842856 100644
-> > > > --- a/fs/nfsd/vfs.h
-> > > > +++ b/fs/nfsd/vfs.h
-> > > > @@ -20,7 +20,7 @@
-> > > >  #define NFSD_MAY_READ                  0x004 /* =3D=3D MAY_READ */
-> > > >  #define NFSD_MAY_SATTR                 0x008
-> > > >  #define NFSD_MAY_TRUNC                 0x010
-> > > > -#define NFSD_MAY_LOCK                  0x020
-> > > > +#define NFSD_MAY_NLM                   0x020 /* request is from lo=
-ckd */
-> > > >  #define NFSD_MAY_MASK                  0x03f
-> > > >
-> > > >  /* extra hints to permission and open routines: */
-> > > >
-> > > > base-commit: c4e418a53fe30d8e1da68f5aabca352b682fd331
-> > > > --
-> > > > 2.46.0
-> > > >
-> > > >
-> >
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfs/sysfs.c               | 19 ++++---------------
+ include/linux/sunrpc/sched.h |  1 +
+ net/sunrpc/clnt.c            | 12 ++++++++++++
+ net/sunrpc/debugfs.c         | 15 +++++++++++++++
+ 4 files changed, 32 insertions(+), 15 deletions(-)
+
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index 7b59a40d40c061a41b0fbde91aa006314f02c1fb..c29c5fd639554461bdcd9ff612726194910d85b5 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -217,17 +217,6 @@ void nfs_netns_sysfs_destroy(struct nfs_net *netns)
+ 	}
+ }
+ 
+-static bool shutdown_match_client(const struct rpc_task *task, const void *data)
+-{
+-	return true;
+-}
+-
+-static void shutdown_client(struct rpc_clnt *clnt)
+-{
+-	clnt->cl_shutdown = 1;
+-	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
+-}
+-
+ static ssize_t
+ shutdown_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 				char *buf)
+@@ -258,14 +247,14 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 		goto out;
+ 
+ 	server->flags |= NFS_MOUNT_SHUTDOWN;
+-	shutdown_client(server->client);
+-	shutdown_client(server->nfs_client->cl_rpcclient);
++	rpc_clnt_shutdown(server->client);
++	rpc_clnt_shutdown(server->nfs_client->cl_rpcclient);
+ 
+ 	if (!IS_ERR(server->client_acl))
+-		shutdown_client(server->client_acl);
++		rpc_clnt_shutdown(server->client_acl);
+ 
+ 	if (server->nlm_host)
+-		shutdown_client(server->nlm_host->h_rpcclnt);
++		rpc_clnt_shutdown(server->nlm_host->h_rpcclnt);
+ out:
+ 	return count;
+ }
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index eac57914dcf3200c1a6ed39ab030e3fe8b4da3e1..fe7c39a17ce44ec68c0cf057133d0f8e7f0ae797 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -232,6 +232,7 @@ unsigned long	rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
+ 				 bool (*fnmatch)(const struct rpc_task *,
+ 						 const void *),
+ 				 const void *data);
++void		rpc_clnt_shutdown(struct rpc_clnt *clnt);
+ void		rpc_execute(struct rpc_task *);
+ void		rpc_init_priority_wait_queue(struct rpc_wait_queue *, const char *);
+ void		rpc_init_wait_queue(struct rpc_wait_queue *, const char *);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 2fe88ea79a70c134e58abfb03fca230883eddf1f..0028858b12d97e7b45f4c24cfbd761ba2a734b32 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -934,6 +934,18 @@ unsigned long rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
+ }
+ EXPORT_SYMBOL_GPL(rpc_cancel_tasks);
+ 
++static bool shutdown_match_client(const struct rpc_task *task, const void *data)
++{
++	return true;
++}
++
++void rpc_clnt_shutdown(struct rpc_clnt *clnt)
++{
++	clnt->cl_shutdown = 1;
++	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
++}
++EXPORT_SYMBOL_GPL(rpc_clnt_shutdown);
++
+ static int rpc_clnt_disconnect_xprt(struct rpc_clnt *clnt,
+ 				    struct rpc_xprt *xprt, void *dummy)
+ {
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 32417db340de3775c533d0ad683b5b37800d7fe5..4df31dcca2d747db6767c12ddfa29963ed7be204 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -145,6 +145,17 @@ static int do_xprt_debugfs(struct rpc_clnt *clnt, struct rpc_xprt *xprt, void *n
+ 	return 0;
+ }
+ 
++static int
++clnt_shutdown(void *data, u64 value)
++{
++	struct rpc_clnt *clnt = data;
++
++	rpc_clnt_shutdown(clnt);
++	return 0;
++}
++
++DEFINE_DEBUGFS_ATTRIBUTE(shutdown_fops, NULL, clnt_shutdown, "%llu\n");
++
+ void
+ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ {
+@@ -163,6 +174,10 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ 	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
+ 			    &tasks_fops);
+ 
++	/* make shutdown file */
++	debugfs_create_file("shutdown", S_IFREG | 0200, clnt->cl_debugfs, clnt,
++			    &shutdown_fops);
++
+ 	rpc_clnt_iterate_for_each_xprt(clnt, do_xprt_debugfs, &xprtnum);
+ }
+ 
+
+---
+base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+change-id: 20250312-rpc-shutdown-ce9b6d3599da
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
