@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-10574-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10575-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97DF2A5E7AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 23:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAD2AA5E7B5
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 23:55:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 457EC189966C
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 22:52:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92C591899BDC
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Mar 2025 22:55:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C82C71F0E3E;
-	Wed, 12 Mar 2025 22:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023CE1EFFA7;
+	Wed, 12 Mar 2025 22:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="jAxlCpmg"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="FiKWAFFj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2941F03E4
-	for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 22:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018681D5CC6
+	for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 22:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741819923; cv=none; b=C4LuArc0uGEe7wnREZ1shJ6ue4u8OnU9zT1fRydJzQhSkuzr0ybSAueWEptdWCzFspO8vxMuRN46gDMHQ/MGetkJ9N00L5v+E2Yp8ASTkUrhLQOE803tlfh2rmZWVQ2S6Mgw/pM/m6dU0JVEmO5fFJKxWiYbpJHUSni3ALR5aLg=
+	t=1741820096; cv=none; b=R1pfRZRLLgWOFT2klH+9NoOnUZSdxReYzhBFtzgF5EB0L3jA71owZG4wz7OeS+z+9FNd2Lb3408a/JdJDmQd81yAZ4lI+qF4JDzpldHA6BNGQ/ZupP+pFrQC46RJOKV6wlbZ20MM1vdafA+CjQgbwEJ54tOk6TomOLAdeOfKeYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741819923; c=relaxed/simple;
-	bh=UJJQiV394j4IxRUnbMSCHYMmYTsqVBFOXfcpgzcfgZs=;
+	s=arc-20240116; t=1741820096; c=relaxed/simple;
+	bh=DaFmI4Nw9cj93s2RprFaJtGG35ATf9KrPdA/QRs/ErY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kX2rwkKDOclGBFSrHUMtT7fC+Dr/rfWshhy5ZIVHQJwJUauxQq9VccDLTJgaqbNNq3Cy29g9Y/MW/kIeYDEBvoP8rEYSn+8xo2X13AXP2vybO9Pp+tLxHq2rGZtGjUD3bksjQNJEL9MzxYDlNQria0f4ZRfHsCBgpa9F3tx6M5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=jAxlCpmg; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=VRNKTlY+tj5O3PgZCMrdy/0320sSjaB/dgi+HwTRBtqLefockAWEHx27FkM7munBZJEjQBIjkSY38PyGVmUcLld5JTB3bSG/55rkJM15HLyXHx3S0FM+DpV0kF7Zwj7N7bZ8PQav3uPVtz1yvVgjgd4nCZ69txq2zl/VsOSxj7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b=FiKWAFFj; arc=none smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=umich.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-549946c5346so357692e87.2
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 15:52:01 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so377229e87.2
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Mar 2025 15:54:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1741819919; x=1742424719; darn=vger.kernel.org;
+        d=umich.edu; s=google-2016-06-03; t=1741820093; x=1742424893; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tWXf4pH/slOKYGX1qQ1Rt9aYWsF1E9nyWmIXq+l6cyM=;
-        b=jAxlCpmg6Nw8D6Zoqp4bY+aTHOijKUshSXORwBupXNSlkK++K8iltfmS+2Tk2yhfvP
-         jAnvtLFJhjD9mEawwu3T7uvHkgog3mbwZCiq5QhPLSNb7U/lFAgL4ZAdQ9NxSuloWfF7
-         7V5tCEbeU3XFwCQkolsqyRa4XskgQmcXK89WSqJzhcdpYfLj6oKlF3vSiOQkpfLWW7sg
-         TpxajNu9IuNN4m7/pYTrCFBmmMeSGV8W0aL7DuZUQVznSyjbrW7fbsMdAH4fE6NEOxzJ
-         k8SDfl/2RWQZ+o7TzPY5kuoli9Mk83vvKeHplR52Imi+4ISZCJ5xwRLEOhmoJw5WQazk
-         zCdA==
+        bh=MKxtjL7BGqYccA4dJkw81jDDIMMKajhFuz+X3eJGsAo=;
+        b=FiKWAFFjS/6kb7NsyFTCNapuINN/eYYiuRc1MvWJTMXgUtyx5kFBQNE2sfMg70rkL2
+         OYTKNvwAZ2/ID0dEOhGpLyy0t4T5HwfoZmoOmIPpWMFBbHmxrLBVBH94Rbn6v2/LOxih
+         7cNKwUZER+XllIV9yFmabaJnNuvW45H0OtHwdVFZrVo6czQsuZapKoxR0wHfGfMlhHX9
+         XEvpGuIeWsC9ai0BltjAh2Y8ST4pdBN8HFa6kmEksuIdP9kEu5msZnZJmuvNzSxpX5Kj
+         LkCRneIboW8tM1ftB4Lsn9k/Y0Nu4wlYI2riXxvJkgdQI3xPYesV2COUFRPdqVxwtdaq
+         1ZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741819919; x=1742424719;
+        d=1e100.net; s=20230601; t=1741820093; x=1742424893;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tWXf4pH/slOKYGX1qQ1Rt9aYWsF1E9nyWmIXq+l6cyM=;
-        b=YSLjV6eDjdrYg9sERJJEnPxtBs1AtBzd/DRwl48wdkW9VU5BUcVwpoRGazYqjC53z5
-         838f+ss3HbuYfXxLJYmxROSu9FdRKGTuc2AFWNuoN4XYxROpCxZRnGoJ5Y5eXxBS4C3A
-         vIDlllvjqGrFkjYV4TKkPsjH2lEfqBL/ksQeMM031ZV227cnenCcSQ2cXAA3Sj2pnLHc
-         KO4EMwk26bTFJdqeRoKwxMaC4A59iPFLNxxvdlpdLqzqZ1sClr2Qf4iYgxgtnY6fFq1K
-         /nSVdN0SjUsMqQr1CgtSWRB7NgFOBLAu7thLvR/awg3yaNg3I/PIGzawss+Ds5fvldK6
-         EpPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXw26YFdNkAmHy0qvumCFOffPaqzlVlrKfAHWfIbI8+4f/AmI2NE+mzNnau8BVlV00rkuM6bUN3Ogw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY2tq/Pj8RkM/8koaBoj6G6a9iM6Ep3olwASLIlyzSx/MpjkyG
-	FGH/jRMKXuuHdUHIzb+4lnIBQ1fL1KHRF1kfLf9hKzuAvn2iAdOq8zUtm96keyIwPgsBRvQ4+hW
-	7/bx8SfD9sxEcezF1NwbehxCff8s=
-X-Gm-Gg: ASbGncuzduLOrfXshrAc1mV0ERyWdEXAXiUlxMDPipUb9ZI0y6ngPzxD4UaUyDA/m0E
-	3o3uQig7RUR8g8VyethP8UR78YeQ/ZUE8/ayPI+e9UtrDv1Ca1j7p2Cp0imeeD0QJw+WO5Lymwj
-	Yg3kVMadowojF7LJUZaFdsggqFtZ9h7su/SxRAt/rae+8qnVBkcTD9WItEDxIlcOLWxuz5Lyg=
-X-Google-Smtp-Source: AGHT+IFl9zie0r4erdIj6OUZXJab06X48GXb+4kjUDziCvSL7EiRudznNv9cTDHI1Q1Hp2RAhLEGWWHNceKizF6KjgQ=
-X-Received: by 2002:a05:6512:114f:b0:545:1193:1256 with SMTP id
- 2adb3069b0e04-54990e29badmr6892838e87.1.1741819919312; Wed, 12 Mar 2025
- 15:51:59 -0700 (PDT)
+        bh=MKxtjL7BGqYccA4dJkw81jDDIMMKajhFuz+X3eJGsAo=;
+        b=FPWGwR49GOD8ZvF1AJRA7SCsfUUcu69Al9ysmbsCeCY6Qt6gDHLjU6cKldLtMQsQb1
+         khSfAoH6vaQXMECQK59hjIF/++fuMkADmKMBUtyIPMDl+sEtwEppLCJjWMepPdXQskCR
+         Us4yhgeFYgQ3A3G9bxvSCIZEvm4nnQEnYFAQ6ygJYMGjZsTZtZoPKREjrXI+q5KR9aLU
+         qvYVgDj9ftJ37LxYRKwbpM0igZWiiHGOlJMXFXCqb93KaZrPpMIkZFPggLSrOwv22+Fr
+         qXKFrpLTabTIT+9k5mAuT4D94mkoQnRC8nHG8jLWxvDCGycONvHq2o/HAkFCv8Kv5jDL
+         1v5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUtVYrXJdDfDaKrEowsEd+NbbG3Oj7lE3DsyuK5r17q1XGSLpLhwn8qgb2YdRpeAA6Ml+6pYl4eRvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPnnt6i8XqllEnAFuYXUeLONfODvV4dg9JJnB7to97SxmOinM6
+	8AT7REbOpwLYwLodfAFqVrtfqogtS7NXRX9cBuGlZmcVU9UTP1lruYXmfpsMtkcQ3LGIXE1KZ1U
+	uWXJAAtJH/WLmErSgv3/6RMiY2uQ=
+X-Gm-Gg: ASbGnctMXZcAPJ86UVgxZxnwdnhUs58uRvqxrS/LPnVm3xTyo0GiRSRZjpwnsRAkAKL
+	fnwpfMBH6evEWNAe+zdAHTzpcMNVXiRhdx91lyY2Q5L7pwdE25sDXGZmKzwmul+vo1SA9PPiUy3
+	iFFF4oRNQ3mJ77jbOdDh9+dzfgcpZ6jUHLCl2vsjiIotItWuMbVSmyrc49fPIh
+X-Google-Smtp-Source: AGHT+IHNuMp+GnNL7FwCK3KHP7vwnfospw0i3qOsq/z6yzU+nuHIiOAeNOx6BONWw38qsvw50T+afA6L/SVLVrLxGkg=
+X-Received: by 2002:a19:6408:0:b0:549:b0f3:439d with SMTP id
+ 2adb3069b0e04-549b0f34586mr1899902e87.12.1741820092974; Wed, 12 Mar 2025
+ 15:54:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN-5tyH4E-qaK0TEtUMn3QpB0rYsDjm_erqRwVko7bAgYdmQBg@mail.gmail.com>
- <174172935674.33508.779551385082016505@noble.neil.brown.name> <CAN-5tyH0kqsm0pdcdaf=HRfm607OC6vmp4pa0Q07sAOEoHabBA@mail.gmail.com>
-In-Reply-To: <CAN-5tyH0kqsm0pdcdaf=HRfm607OC6vmp4pa0Q07sAOEoHabBA@mail.gmail.com>
+References: <CAN-5tyH0kqsm0pdcdaf=HRfm607OC6vmp4pa0Q07sAOEoHabBA@mail.gmail.com>
+ <174181841557.33508.11810351442398748810@noble.neil.brown.name>
+In-Reply-To: <174181841557.33508.11810351442398748810@noble.neil.brown.name>
 From: Olga Kornievskaia <aglo@umich.edu>
-Date: Wed, 12 Mar 2025 18:51:47 -0400
-X-Gm-Features: AQ5f1JoWL7pP05fcgpi8uA9IUgD-zAEQighUpaLzy5vapM50SCXspEOJ9uvM82w
-Message-ID: <CAN-5tyHTpHE6QEtZkU74Y__XwaNLW5U-5hRNQLe4J18TyvcC3A@mail.gmail.com>
+Date: Wed, 12 Mar 2025 18:54:41 -0400
+X-Gm-Features: AQ5f1JpiDCn4jIxG3_13kRlRlcvt2hVSen0Ppd2ae2PeirkZ0ca-IN9TYB546Wo
+Message-ID: <CAN-5tyGak9WbYZtU6X_2cVLaMGfxTBsiTr3hZVmRyK3NqixJhg@mail.gmail.com>
 Subject: Re: [PATCH v2] nfsd: refine and rename NFSD_MAY_LOCK
 To: NeilBrown <neilb@suse.de>
 Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
@@ -89,280 +89,177 @@ Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 9:22=E2=80=AFAM Olga Kornievskaia <aglo@umich.edu> =
-wrote:
+On Wed, Mar 12, 2025 at 6:27=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
 >
-> On Tue, Mar 11, 2025 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
-> >
-> > On Wed, 12 Mar 2025, Olga Kornievskaia wrote:
-> > > On Tue, Mar 11, 2025 at 11:28=E2=80=AFAM Olga Kornievskaia <aglo@umic=
-h.edu> wrote:
+> On Thu, 13 Mar 2025, Olga Kornievskaia wrote:
+> > On Tue, Mar 11, 2025 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de> wrote=
+:
+> > >
+> > > On Wed, 12 Mar 2025, Olga Kornievskaia wrote:
+> > > > On Tue, Mar 11, 2025 at 11:28=E2=80=AFAM Olga Kornievskaia <aglo@um=
+ich.edu> wrote:
+> > > > >
+> > > > > On Thu, Oct 17, 2024 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de>=
+ wrote:
+> > > > > >
+> > > > > >
+> > > > > > NFSD_MAY_LOCK means a few different things.
+> > > > > > - it means that GSS is not required.
+> > > > > > - it means that with NFSEXP_NOAUTHNLM, authentication is not re=
+quired
+> > > > > > - it means that OWNER_OVERRIDE is allowed.
+> > > > > >
+> > > > > > None of these are specific to locking, they are specific to the=
+ NLM
+> > > > > > protocol.
+> > > > > > So:
+> > > > > >  - rename to NFSD_MAY_NLM
+> > > > > >  - set NFSD_MAY_OWNER_OVERRIDE and NFSD_MAY_BYPASS_GSS in nlm_f=
+open()
+> > > > > >    so that NFSD_MAY_NLM doesn't need to imply these.
+> > > > > >  - move the test on NFSEXP_NOAUTHNLM out of nfsd_permission() a=
+nd
+> > > > > >    into fh_verify where other special-case tests on the MAY fla=
+gs
+> > > > > >    happen.  nfsd_permission() can be called from other places t=
+han
+> > > > > >    fh_verify(), but none of these will have NFSD_MAY_NLM.
+> > > > >
+> > > > > This patch breaks NLM when used in combination with TLS.
 > > > >
-> > > > On Thu, Oct 17, 2024 at 5:42=E2=80=AFPM NeilBrown <neilb@suse.de> w=
-rote:
+> > > > I was too quick to link this to TLS. It's presence of security poli=
+cy
+> > > > so sec=3Dkrb* causes the same problems.
+> > > >
+> > > > >  If exports
+> > > > > have xprtsec=3Dtls:mtls and mount is done with tls/mtls, the serv=
+er
+> > > > > won't give any locks and client will get "no locks available" err=
+or.
 > > > > >
-> > > > >
-> > > > > NFSD_MAY_LOCK means a few different things.
-> > > > > - it means that GSS is not required.
-> > > > > - it means that with NFSEXP_NOAUTHNLM, authentication is not requ=
-ired
-> > > > > - it means that OWNER_OVERRIDE is allowed.
-> > > > >
-> > > > > None of these are specific to locking, they are specific to the N=
-LM
-> > > > > protocol.
-> > > > > So:
-> > > > >  - rename to NFSD_MAY_NLM
-> > > > >  - set NFSD_MAY_OWNER_OVERRIDE and NFSD_MAY_BYPASS_GSS in nlm_fop=
-en()
-> > > > >    so that NFSD_MAY_NLM doesn't need to imply these.
-> > > > >  - move the test on NFSEXP_NOAUTHNLM out of nfsd_permission() and
-> > > > >    into fh_verify where other special-case tests on the MAY flags
-> > > > >    happen.  nfsd_permission() can be called from other places tha=
+> > > > > >
+> > > > > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > > > > ---
+> > > > > >
+> > > > > > No change from previous patch - the corruption in the email has=
+ been
+> > > > > > avoided (I hope).
+> > > > > >
+> > > > > >
+> > > > > >  fs/nfsd/lockd.c | 13 +++++++++++--
+> > > > > >  fs/nfsd/nfsfh.c | 12 ++++--------
+> > > > > >  fs/nfsd/trace.h |  2 +-
+> > > > > >  fs/nfsd/vfs.c   | 12 +-----------
+> > > > > >  fs/nfsd/vfs.h   |  2 +-
+> > > > > >  5 files changed, 18 insertions(+), 23 deletions(-)
+> > > > > >
+> > > > > > diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
+> > > > > > index 46a7f9b813e5..edc9f75dc75c 100644
+> > > > > > --- a/fs/nfsd/lockd.c
+> > > > > > +++ b/fs/nfsd/lockd.c
+> > > > > > @@ -38,11 +38,20 @@ nlm_fopen(struct svc_rqst *rqstp, struct nf=
+s_fh *f, struct file **filp,
+> > > > > >         memcpy(&fh.fh_handle.fh_raw, f->data, f->size);
+> > > > > >         fh.fh_export =3D NULL;
+> > > > > >
+> > > > > > +       /*
+> > > > > > +        * Allow BYPASS_GSS as some client implementations use =
+AUTH_SYS
+> > > > > > +        * for NLM even when GSS is used for NFS.
+> > > > > > +        * Allow OWNER_OVERRIDE as permission might have been c=
+hanged
+> > > > > > +        * after the file was opened.
+> > > > > > +        * Pass MAY_NLM so that authentication can be completel=
+y bypassed
+> > > > > > +        * if NFSEXP_NOAUTHNLM is set.  Some older clients use =
+AUTH_NULL
+> > > > > > +        * for NLM requests.
+> > > > > > +        */
+> > > > > >         access =3D (mode =3D=3D O_WRONLY) ? NFSD_MAY_WRITE : NF=
+SD_MAY_READ;
+> > > > > > -       access |=3D NFSD_MAY_LOCK;
+> > > > > > +       access |=3D NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE | NF=
+SD_MAY_BYPASS_GSS;
+> > > > > >         nfserr =3D nfsd_open(rqstp, &fh, S_IFREG, access, filp)=
+;
+> > > > > >         fh_put(&fh);
+> > > > > > -       /* We return nlm error codes as nlm doesn't know
+> > > > > > +       /* We return nlm error codes as nlm doesn't know
+> > > > > >          * about nfsd, but nfsd does know about nlm..
+> > > > > >          */
+> > > > > >         switch (nfserr) {
+> > > > > > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> > > > > > index 40533f7c7297..6a831cb242df 100644
+> > > > > > --- a/fs/nfsd/nfsfh.c
+> > > > > > +++ b/fs/nfsd/nfsfh.c
+> > > > > > @@ -363,13 +363,10 @@ __fh_verify(struct svc_rqst *rqstp,
+> > > > > >         if (error)
+> > > > > >                 goto out;
+> > > > > >
+> > > > > > -       /*
+> > > > > > -        * pseudoflavor restrictions are not enforced on NLM,
+> > > > > > -        * which clients virtually always use auth_sys for,
+> > > > > > -        * even while using RPCSEC_GSS for NFS.
+> > > > > > -        */
+> > > > > > -       if (access & NFSD_MAY_LOCK)
+> > > > > > -               goto skip_pseudoflavor_check;
+> > > > > > +       if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_=
+NOAUTHNLM))
+> > > >
+> > > > I think this should either be an OR or the fact that "nlm but only
+> > > > with insecurelock export option and not other" is the only way to
+> > > > bypass checking is wrong. I think it's just a check for NLM that
+> > > > stays.
+> > >
+> > > I don't think that NLM gets a complete bypass unless no_auth_nlm is s=
+et.
+> > > For the case you are describing, I think NFSD_MAY_BYPASS_GSS is suppo=
+sed
+> > > to make it work.
+> > >
+> > > I assume the NLM request is arriving with AUTH_SYS authentication?
+> >
+> > It does.
+> >
+> > Just to give you a practical example. exports have
+> > (rw,...,sec=3Dkrb5:krb5i:krb5p). Client does mount with sec=3Dkrb5. The=
 n
-> > > > >    fh_verify(), but none of these will have NFSD_MAY_NLM.
-> > > >
-> > > > This patch breaks NLM when used in combination with TLS.
-> > >
-> > > I was too quick to link this to TLS. It's presence of security policy
-> > > so sec=3Dkrb* causes the same problems.
-> > >
-> > > >  If exports
-> > > > have xprtsec=3Dtls:mtls and mount is done with tls/mtls, the server
-> > > > won't give any locks and client will get "no locks available" error=
-.
-> > > >
-> > > > >
-> > > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > > ---
-> > > > >
-> > > > > No change from previous patch - the corruption in the email has b=
-een
-> > > > > avoided (I hope).
-> > > > >
-> > > > >
-> > > > >  fs/nfsd/lockd.c | 13 +++++++++++--
-> > > > >  fs/nfsd/nfsfh.c | 12 ++++--------
-> > > > >  fs/nfsd/trace.h |  2 +-
-> > > > >  fs/nfsd/vfs.c   | 12 +-----------
-> > > > >  fs/nfsd/vfs.h   |  2 +-
-> > > > >  5 files changed, 18 insertions(+), 23 deletions(-)
-> > > > >
-> > > > > diff --git a/fs/nfsd/lockd.c b/fs/nfsd/lockd.c
-> > > > > index 46a7f9b813e5..edc9f75dc75c 100644
-> > > > > --- a/fs/nfsd/lockd.c
-> > > > > +++ b/fs/nfsd/lockd.c
-> > > > > @@ -38,11 +38,20 @@ nlm_fopen(struct svc_rqst *rqstp, struct nfs_=
-fh *f, struct file **filp,
-> > > > >         memcpy(&fh.fh_handle.fh_raw, f->data, f->size);
-> > > > >         fh.fh_export =3D NULL;
-> > > > >
-> > > > > +       /*
-> > > > > +        * Allow BYPASS_GSS as some client implementations use AU=
-TH_SYS
-> > > > > +        * for NLM even when GSS is used for NFS.
-> > > > > +        * Allow OWNER_OVERRIDE as permission might have been cha=
-nged
-> > > > > +        * after the file was opened.
-> > > > > +        * Pass MAY_NLM so that authentication can be completely =
-bypassed
-> > > > > +        * if NFSEXP_NOAUTHNLM is set.  Some older clients use AU=
-TH_NULL
-> > > > > +        * for NLM requests.
-> > > > > +        */
-> > > > >         access =3D (mode =3D=3D O_WRONLY) ? NFSD_MAY_WRITE : NFSD=
-_MAY_READ;
-> > > > > -       access |=3D NFSD_MAY_LOCK;
-> > > > > +       access |=3D NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE | NFSD=
-_MAY_BYPASS_GSS;
-> > > > >         nfserr =3D nfsd_open(rqstp, &fh, S_IFREG, access, filp);
-> > > > >         fh_put(&fh);
-> > > > > -       /* We return nlm error codes as nlm doesn't know
-> > > > > +       /* We return nlm error codes as nlm doesn't know
-> > > > >          * about nfsd, but nfsd does know about nlm..
-> > > > >          */
-> > > > >         switch (nfserr) {
-> > > > > diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> > > > > index 40533f7c7297..6a831cb242df 100644
-> > > > > --- a/fs/nfsd/nfsfh.c
-> > > > > +++ b/fs/nfsd/nfsfh.c
-> > > > > @@ -363,13 +363,10 @@ __fh_verify(struct svc_rqst *rqstp,
-> > > > >         if (error)
-> > > > >                 goto out;
-> > > > >
-> > > > > -       /*
-> > > > > -        * pseudoflavor restrictions are not enforced on NLM,
-> > > > > -        * which clients virtually always use auth_sys for,
-> > > > > -        * even while using RPCSEC_GSS for NFS.
-> > > > > -        */
-> > > > > -       if (access & NFSD_MAY_LOCK)
-> > > > > -               goto skip_pseudoflavor_check;
-> > > > > +       if ((access & NFSD_MAY_NLM) && (exp->ex_flags & NFSEXP_NO=
-AUTHNLM))
-> > >
-> > > I think this should either be an OR or the fact that "nlm but only
-> > > with insecurelock export option and not other" is the only way to
-> > > bypass checking is wrong. I think it's just a check for NLM that
-> > > stays.
+> > does an flock() on the file. What's more I have just now hit Kasan's
+> > out-of-bounds warning on that. I'll have to see if that exists on 6.14
+> > (as I'm debugging the matter on the commit of the patch itself and
+> > thus on 6.12-rc now).
 > >
-> > I don't think that NLM gets a complete bypass unless no_auth_nlm is set=
-.
-> > For the case you are describing, I think NFSD_MAY_BYPASS_GSS is suppose=
-d
-> > to make it work.
+> > I will layout more reasoning but what allowed NLM to work was this
+> > -       /*
+> > -        * pseudoflavor restrictions are not enforced on NLM,
+> > -        * which clients virtually always use auth_sys for,
+> > -        * even while using RPCSEC_GSS for NFS.
+> > -        */
+> > -       if (access & NFSD_MAY_LOCK)
+> > -               goto skip_pseudoflavor_check;
 > >
-> > I assume the NLM request is arriving with AUTH_SYS authentication?
+> > but I don't know why the replacement doesn't work.
 >
-> It does.
+> Can you see if this fixes it?
+> Maybe we need to bypass tls as well as gss
 >
-> Just to give you a practical example. exports have
-> (rw,...,sec=3Dkrb5:krb5i:krb5p). Client does mount with sec=3Dkrb5. Then
-> does an flock() on the file. What's more I have just now hit Kasan's
-> out-of-bounds warning on that. I'll have to see if that exists on 6.14
-> (as I'm debugging the matter on the commit of the patch itself and
-> thus on 6.12-rc now).
+> Thanks,
+> NeilBrown
 >
-> I will layout more reasoning but what allowed NLM to work was this
-> -       /*
-> -        * pseudoflavor restrictions are not enforced on NLM,
-> -        * which clients virtually always use auth_sys for,
-> -        * even while using RPCSEC_GSS for NFS.
-> -        */
-> -       if (access & NFSD_MAY_LOCK)
-> -               goto skip_pseudoflavor_check;
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -1124,7 +1124,8 @@ __be32 check_nfsd_access(struct svc_export *exp, st=
+ruct svc_rqst *rqstp,
+>                     test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
+>                         goto ok;
+>         }
+> -       goto denied;
+> +       if (!may_bypass_gss)
+> +               goto denied;
 >
-> but I don't know why the replacement doesn't work.
 
-As I mentioned the patch removed the skip_pseudoflavor check (that for
-NLM) would have bypassed calling check_nfsd_access(). Instead, the
-problem is that even though may_bypass_gss is set to true it call into
-nfsd4_spo_must_allow(rqstp) which now wrongly assumes there is
-compound state (struct nfsd4_compound_state *cstate =3D &resp->cstate;)
-... (but this is NLM). So it proceed to deference it if
-(!cstate->minorversion) causing the KASAN to do the out-of-bound error
-that I mentioned. It most of the time now cause a crash. But on the
-off non-deterministic times when it completes it fails.
+I don't think this would help in any way as NLM does pass may_bypass_gss...
 
-I really don't think calling into check_nfsd_access() is appropriate for NL=
-M.
-
->
-> > So check_nfsd_access() is being called with may_bypass_gss and this:
-> >
-> >         if (may_bypass_gss && (
-> >              rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_NULL ||
-> >              rqstp->rq_cred.cr_flavor =3D=3D RPC_AUTH_UNIX)) {
-> >                 for (f =3D exp->ex_flavors; f < end; f++) {
-> >                         if (f->pseudoflavor >=3D RPC_AUTH_DES)
-> >                                 return 0;
-> >                 }
-> >         }
-> >
-> > in check_nfsd_access() should succeed.
-> > Can you add some tracing and see what is happening in here?
-> > Maybe the "goto denied" earlier in the function is being reached.  I
-> > don't fully understand the TLS code yet - maybe it needs some test on
-> > may_bypass_gss.
-> >
-> > Thanks,
-> > NeilBrown
-> >
-> >
-> > >
-> > > > > +               /* NLM is allowed to fully bypass authentication =
-*/
-> > > > > +               goto out;
-> > > > > +
-> > > > >         if (access & NFSD_MAY_BYPASS_GSS)
-> > > > >                 may_bypass_gss =3D true;
-> > > > >         /*
-> > > > > @@ -385,7 +382,6 @@ __fh_verify(struct svc_rqst *rqstp,
-> > > > >         if (error)
-> > > > >                 goto out;
-> > > > >
-> > > > > -skip_pseudoflavor_check:
-> > > > >         /* Finally, check access permissions. */
-> > > > >         error =3D nfsd_permission(cred, exp, dentry, access);
-> > > > >  out:
-> > > > > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > > > > index b8470d4cbe99..3448e444d410 100644
-> > > > > --- a/fs/nfsd/trace.h
-> > > > > +++ b/fs/nfsd/trace.h
-> > > > > @@ -79,7 +79,7 @@ DEFINE_NFSD_XDR_ERR_EVENT(cant_encode);
-> > > > >                 { NFSD_MAY_READ,                "READ" },        =
-       \
-> > > > >                 { NFSD_MAY_SATTR,               "SATTR" },       =
-       \
-> > > > >                 { NFSD_MAY_TRUNC,               "TRUNC" },       =
-       \
-> > > > > -               { NFSD_MAY_LOCK,                "LOCK" },        =
-       \
-> > > > > +               { NFSD_MAY_NLM,                 "NLM" },         =
-       \
-> > > > >                 { NFSD_MAY_OWNER_OVERRIDE,      "OWNER_OVERRIDE" =
-},     \
-> > > > >                 { NFSD_MAY_LOCAL_ACCESS,        "LOCAL_ACCESS" },=
-       \
-> > > > >                 { NFSD_MAY_BYPASS_GSS_ON_ROOT,  "BYPASS_GSS_ON_RO=
-OT" }, \
-> > > > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > > > > index 51f5a0b181f9..2610638f4301 100644
-> > > > > --- a/fs/nfsd/vfs.c
-> > > > > +++ b/fs/nfsd/vfs.c
-> > > > > @@ -2509,7 +2509,7 @@ nfsd_permission(struct svc_cred *cred, stru=
-ct svc_export *exp,
-> > > > >                 (acc & NFSD_MAY_EXEC)?  " exec"  : "",
-> > > > >                 (acc & NFSD_MAY_SATTR)? " sattr" : "",
-> > > > >                 (acc & NFSD_MAY_TRUNC)? " trunc" : "",
-> > > > > -               (acc & NFSD_MAY_LOCK)?  " lock"  : "",
-> > > > > +               (acc & NFSD_MAY_NLM)?   " nlm"  : "",
-> > > > >                 (acc & NFSD_MAY_OWNER_OVERRIDE)? " owneroverride"=
- : "",
-> > > > >                 inode->i_mode,
-> > > > >                 IS_IMMUTABLE(inode)?    " immut" : "",
-> > > > > @@ -2534,16 +2534,6 @@ nfsd_permission(struct svc_cred *cred, str=
-uct svc_export *exp,
-> > > > >         if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
-> > > > >                 return nfserr_perm;
-> > > > >
-> > > > > -       if (acc & NFSD_MAY_LOCK) {
-> > > > > -               /* If we cannot rely on authentication in NLM req=
-uests,
-> > > > > -                * just allow locks, otherwise require read permi=
-ssion, or
-> > > > > -                * ownership
-> > > > > -                */
-> > > > > -               if (exp->ex_flags & NFSEXP_NOAUTHNLM)
-> > > > > -                       return 0;
-> > > > > -               else
-> > > > > -                       acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OV=
-ERRIDE;
-> > > > > -       }
-> > > > >         /*
-> > > > >          * The file owner always gets access permission for acces=
-ses that
-> > > > >          * would normally be checked at open time. This is to mak=
-e
-> > > > > diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> > > > > index 854fb95dfdca..f9b09b842856 100644
-> > > > > --- a/fs/nfsd/vfs.h
-> > > > > +++ b/fs/nfsd/vfs.h
-> > > > > @@ -20,7 +20,7 @@
-> > > > >  #define NFSD_MAY_READ                  0x004 /* =3D=3D MAY_READ =
-*/
-> > > > >  #define NFSD_MAY_SATTR                 0x008
-> > > > >  #define NFSD_MAY_TRUNC                 0x010
-> > > > > -#define NFSD_MAY_LOCK                  0x020
-> > > > > +#define NFSD_MAY_NLM                   0x020 /* request is from =
-lockd */
-> > > > >  #define NFSD_MAY_MASK                  0x03f
-> > > > >
-> > > > >  /* extra hints to permission and open routines: */
-> > > > >
-> > > > > base-commit: c4e418a53fe30d8e1da68f5aabca352b682fd331
-> > > > > --
-> > > > > 2.46.0
-> > > > >
-> > > > >
-> > >
+>  ok:
+>         /* legacy gss-only clients are always OK: */
 
