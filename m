@@ -1,69 +1,68 @@
-Return-Path: <linux-nfs+bounces-10594-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10595-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00175A5F8C1
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 15:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1764DA5F98F
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 16:20:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 35E5E166C1B
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 14:43:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 40F3616FD07
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 15:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E821262BE;
-	Thu, 13 Mar 2025 14:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0D663B9;
+	Thu, 13 Mar 2025 15:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gJINz06W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AT0cNdLR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A33235371
-	for <linux-nfs@vger.kernel.org>; Thu, 13 Mar 2025 14:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFF7268C57
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Mar 2025 15:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741876988; cv=none; b=rk3lDRhN0tqfxwY60mqP3aYmlcrONOPftndjSrOXAdmZ5x/DN4izltxKDK4cKYvDkze8OQWQ/dihu8Hd5SDgEoqwqbVRAkv9f5iHH5EppLIwz55kfhCURnEuRzY53g5PjkmvEZt3HjF7gxrGOsdbbxks/CRTDevG3/2IThVCPlE=
+	t=1741879143; cv=none; b=VuaM18WJGPh3gYxjkDyarhSTVRPN1IdsQCmZgP6meyt2AGXGM2qwd+WQs4g+XBQLPHiZZmP9fPyixJg/qOomG1CnZLtrY9nCjxyR8pysziobGlGw6NuzlkHzCpsdhBq2KAhv8+vSw+NP/uIZ9lD4Z3sTMGx1LRjMyBHZWt029HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741876988; c=relaxed/simple;
-	bh=KBHHnoxWC5mqZfM8cDreahwv1X6nDDAn7XbJG1jDaVk=;
+	s=arc-20240116; t=1741879143; c=relaxed/simple;
+	bh=AHUC9tL4JFQzkZNMcKZ5gj9IiBSRu8W0ADyiGb/eTN4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EXZ/2AoVd0e2L6CL8F541ci8fNtsNfNYfhFoomlpk2ZuKV7WnCBET/G9RNHT1BME02RxRoLCXBlqn8BaaovN53mOLmlSIikqXQ0dwkps3P1RoMnJ0uG7wwJS4zxpDg7iPz+5OqPjppOVtNb/BZDqMHL8sCoB2h9w/jNtDLDFTkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gJINz06W; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ph6+VzUKBMX5YQb6B/0d5QjzQf+7tfViu0iKcG/52I9ydj4fH2o9j5oaUV4sGmo7O09GLChPjSCNnNU7UKgYJw2YlBKeVraAoVJlId+F8C3I44H2K3ePA/8jWYBRUuMhO4VnOZ9VyRCXS2jA9ox/s7WAbYLdiMUwHMBHfJealRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AT0cNdLR; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741876985;
+	s=mimecast20190719; t=1741879140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KPXGH+zsTkZffmIbXy58RFJ3aijKpK+nYYnuGL8gNt8=;
-	b=gJINz06WtM/DOiGcUoi8kk7qCjnjB8uecMrPr6YA8W5cbI6gQJqVIdyw4PAwnX/mwfatcl
-	HGGGROdVSyrlExl6PrhE9ReNasqxLKvqcZc3qXKVWTgRS0NeR2NrbzFfvZkibqer4qpLH/
-	gE8mea2Stt4bGnxzuyaw5rxxFKRNJ1A=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=YzEHfd1DBW9TXZV74mux9isWqfzG2cVZcbHfbCbbyCA=;
+	b=AT0cNdLR/bEYYuMTeKIeMwAoFlfg3MWKojKDnD81JXnF/RkjjsHuMjgydKBbh2SNIkzH+u
+	8cPj4jhVnWFg+JYnq1fZg4DKCEg++JeAmE46CKnWIhetIypvZYWPSEk+38IQ54o8ezkGOk
+	TvGTp0zvVqkqxoL2ndKBIIpLqL+tr/w=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-MqL_B7SsPnKODXaIHovp4A-1; Thu,
- 13 Mar 2025 10:43:03 -0400
-X-MC-Unique: MqL_B7SsPnKODXaIHovp4A-1
-X-Mimecast-MFC-AGG-ID: MqL_B7SsPnKODXaIHovp4A_1741876983
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-500-ojx8RSQuPJOPngXBDXyx-g-1; Thu,
+ 13 Mar 2025 11:18:59 -0400
+X-MC-Unique: ojx8RSQuPJOPngXBDXyx-g-1
+X-Mimecast-MFC-AGG-ID: ojx8RSQuPJOPngXBDXyx-g_1741879138
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 042DB19560B5;
-	Thu, 13 Mar 2025 14:43:03 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2619F19560BD
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Mar 2025 15:18:58 +0000 (UTC)
 Received: from bcodding.csb.redhat.com (unknown [10.22.76.7])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 55BDB18001DE;
-	Thu, 13 Mar 2025 14:43:02 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9602718001EF;
+	Thu, 13 Mar 2025 15:18:57 +0000 (UTC)
 From: Benjamin Coddington <bcodding@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
+To: steved@redhat.com
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v3 1/1] NFS: Extend rdirplus mount option with "force|none"
-Date: Thu, 13 Mar 2025 10:43:00 -0400
-Message-ID: <8c33cd92be52255b0dd0a7489c9e5cc35434ec95.1741876784.git.bcodding@redhat.com>
+Subject: [PATCH] nfs(5): Add new rdirplus functionality, clarify
+Date: Thu, 13 Mar 2025 11:18:56 -0400
+Message-ID: <149e91803c796d956f9b1d59189f612b59e144a1.1741878805.git.bcodding@redhat.com>
 In-Reply-To: <cover.1741876784.git.bcodding@redhat.com>
 References: <cover.1741876784.git.bcodding@redhat.com>
 Precedence: bulk
@@ -73,124 +72,46 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-There are certain users that wish to force the NFS client to choose
-READDIRPLUS over READDIR for a particular mount.  Update the "rdirplus" mount
-option to optionally accept values.  For "rdirplus=force", the NFS client
-will always attempt to use READDDIRPLUS.  The setting of "rdirplus=none" is
-aliased to the existing "nordirplus".
+The proposed kernel [patch][1] will modify the rdirplus mount option to
+accept optional string values of "none" and "force".  Update the man page
+to reflect these changes and clarify the current client's behavior for the
+default.
+
+[1]: https://lore.kernel.org/linux-nfs/8c33cd92be52255b0dd0a7489c9e5cc35434ec95.1741876784.git.bcodding@redhat.com/T/#u
 
 Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- fs/nfs/dir.c              |  2 ++
- fs/nfs/fs_context.c       | 32 ++++++++++++++++++++++++++++----
- fs/nfs/super.c            |  1 +
- include/linux/nfs_fs_sb.h |  1 +
- 4 files changed, 32 insertions(+), 4 deletions(-)
+ utils/mount/nfs.man | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 2b04038b0e40..c9de0e474cf5 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -666,6 +666,8 @@ static bool nfs_use_readdirplus(struct inode *dir, struct dir_context *ctx,
- {
- 	if (!nfs_server_capable(dir, NFS_CAP_READDIRPLUS))
- 		return false;
-+	if (NFS_SERVER(dir)->flags && NFS_MOUNT_FORCE_RDIRPLUS)
-+		return true;
- 	if (ctx->pos == 0 ||
- 	    cache_hits + cache_misses > NFS_READDIR_CACHE_USAGE_THRESHOLD)
- 		return true;
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index b069385eea17..1cabba1231d6 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -72,6 +72,8 @@ enum nfs_param {
- 	Opt_posix,
- 	Opt_proto,
- 	Opt_rdirplus,
-+	Opt_rdirplus_none,
-+	Opt_rdirplus_force,
- 	Opt_rdma,
- 	Opt_resvport,
- 	Opt_retrans,
-@@ -174,7 +176,8 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
- 	fsparam_u32   ("port",		Opt_port),
- 	fsparam_flag_no("posix",	Opt_posix),
- 	fsparam_string("proto",		Opt_proto),
--	fsparam_flag_no("rdirplus",	Opt_rdirplus),
-+	fsparam_flag_no("rdirplus", Opt_rdirplus), // rdirplus|nordirplus
-+	fsparam_string("rdirplus",  Opt_rdirplus), // rdirplus=...
- 	fsparam_flag  ("rdma",		Opt_rdma),
- 	fsparam_flag_no("resvport",	Opt_resvport),
- 	fsparam_u32   ("retrans",	Opt_retrans),
-@@ -288,6 +291,12 @@ static const struct constant_table nfs_xprtsec_policies[] = {
- 	{}
- };
- 
-+static const struct constant_table nfs_rdirplus_tokens[] = {
-+	{ "none",	Opt_rdirplus_none },
-+	{ "force",	Opt_rdirplus_force },
-+	{}
-+};
-+
- /*
-  * Sanity-check a server address provided by the mount command.
-  *
-@@ -636,10 +645,25 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			ctx->flags &= ~NFS_MOUNT_NOACL;
- 		break;
- 	case Opt_rdirplus:
--		if (result.negated)
-+		if (result.negated) {
-+			ctx->flags &= ~NFS_MOUNT_FORCE_RDIRPLUS;
- 			ctx->flags |= NFS_MOUNT_NORDIRPLUS;
--		else
--			ctx->flags &= ~NFS_MOUNT_NORDIRPLUS;
-+		} else if (!param->string) {
-+			ctx->flags &= ~(NFS_MOUNT_NORDIRPLUS | NFS_MOUNT_FORCE_RDIRPLUS);
-+		} else {
-+			switch (lookup_constant(nfs_rdirplus_tokens, param->string, -1)) {
-+			case Opt_rdirplus_none:
-+				ctx->flags &= ~NFS_MOUNT_FORCE_RDIRPLUS;
-+				ctx->flags |= NFS_MOUNT_NORDIRPLUS;
-+				break;
-+			case Opt_rdirplus_force:
-+				ctx->flags &= ~NFS_MOUNT_NORDIRPLUS;
-+				ctx->flags |= NFS_MOUNT_FORCE_RDIRPLUS;
-+				break;
-+			default:
-+				goto out_invalid_value;
-+			}
-+		}
- 		break;
- 	case Opt_sharecache:
- 		if (result.negated)
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index aeb715b4a690..9a747b224a9d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -456,6 +456,7 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
- 		{ NFS_MOUNT_NORDIRPLUS, ",nordirplus", "" },
- 		{ NFS_MOUNT_UNSHARED, ",nosharecache", "" },
- 		{ NFS_MOUNT_NORESVPORT, ",noresvport", "" },
-+		{ NFS_MOUNT_FORCE_RDIRPLUS, ",rdirplus=force", "" },
- 		{ 0, NULL, NULL }
- 	};
- 	const struct proc_nfs_info *nfs_infop;
-diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index f00bfcee7120..3774b2235a1e 100644
---- a/include/linux/nfs_fs_sb.h
-+++ b/include/linux/nfs_fs_sb.h
-@@ -167,6 +167,7 @@ struct nfs_server {
- #define NFS_MOUNT_TRUNK_DISCOVERY	0x04000000
- #define NFS_MOUNT_SHUTDOWN			0x08000000
- #define NFS_MOUNT_NO_ALIGNWRITE		0x10000000
-+#define NFS_MOUNT_FORCE_RDIRPLUS	0x20000000
- 
- 	unsigned int		fattr_valid;	/* Valid attributes */
- 	unsigned int		caps;		/* server capabilities */
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index eab4692a87de..91fc508de280 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -434,11 +434,16 @@ option may also be used by some pNFS drivers to decide how many
+ connections to set up to the data servers.
+ .TP 1.5i
+ .BR rdirplus " / " nordirplus
+-Selects whether to use NFS v3 or v4 READDIRPLUS requests.
+-If this option is not specified, the NFS client uses READDIRPLUS requests
+-on NFS v3 or v4 mounts to read small directories.
+-Some applications perform better if the client uses only READDIR requests
+-for all directories.
++Selects whether to use NFS v3 or v4 READDIRPLUS requests.  If this option is
++not specified, the NFS client uses a heuristic to optimize performance by
++choosing READDIR vs READDIRPLUS based on how often the calling process uses
++the additional attributes returned from READDIRPLUS.  Some applications
++perform better if the client uses only READDIR requests for all directories.
++.TP 1.5i
++.BR rdirplus={none|force}
++If set to "force", the NFS client always attempts to use READDIRPLUS
++requests.  If set to "none", the behavior is the same as
++.B nordirplus.
+ .TP 1.5i
+ .BI retry= n
+ The number of minutes that the
 -- 
 2.47.0
 
