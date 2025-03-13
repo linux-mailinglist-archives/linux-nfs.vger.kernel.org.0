@@ -1,313 +1,581 @@
-Return-Path: <linux-nfs+bounces-10588-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10589-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30B38A5F6B4
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 14:53:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C41BDA5F7DC
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 15:22:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65E2117EBC0
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 13:53:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 039BF3BF449
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Mar 2025 14:21:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C25267B9B;
-	Thu, 13 Mar 2025 13:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 056C5267B85;
+	Thu, 13 Mar 2025 14:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNFd9PbY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IwVkRVgK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4C4267B72;
-	Thu, 13 Mar 2025 13:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9497267B78
+	for <linux-nfs@vger.kernel.org>; Thu, 13 Mar 2025 14:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741873923; cv=none; b=g/EfHNk/J/HGIOn/6unDz+5+R0t85qcf+omCdpFdfrU19ryH7G4e/eNDxOVd7wQay91w5iE05hGb6HWjOp/OOr9zmWl1AuKA3rVn9TtcXNIsNzbwTzwS5N2b2AwGIJnAkljT0Yx+E5+FD+5wRwLkUQnXYE/nURvRo+nVuUV6kLY=
+	t=1741875711; cv=none; b=ZEHo5vlfI+GpqD2sVvyMjEgcqiCycFJBDChhOWwlslNiGHWIKc8s+zxzYkUo2v/K/jW/OUXhkIPY9LzDXXs9hgA+Z6uxvn6VaxQffZ5zRarwbrXatut0SjSdTKTSOJAradYs3KIYu8l2ZLH2tfusY0LG/DBNJ80OnSF/ntznU8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741873923; c=relaxed/simple;
-	bh=xoyDodBFvNvmguT9IBaqx5WxLExGYaUZYbOSWw3WeAM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aqZjVBTvAipbhOwrtnk60aXPk0VkJyeGyAubHbmzt2c2uZUOmGjIk6UN0U1D7xysBikv+bmIkCFrYEEEZ6Cw8AbMIZNJ3PBRDGBirFOIyRneeMujluoG8iKhKLiyLSd6ojF0rMqkHErA0U0qA7UIkpxK/0wgRjTHiOd5CdKeWRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNFd9PbY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7502C4CEE5;
-	Thu, 13 Mar 2025 13:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741873923;
-	bh=xoyDodBFvNvmguT9IBaqx5WxLExGYaUZYbOSWw3WeAM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=fNFd9PbYSlwvHXAweFPAWZH/AlJ7aS+fI5fv019D2PSu/qe+5Im8XZ3K2gEW1dkQI
-	 7fs5toLr7n0RzbFWto2De6njD2bAWxSlDFJBz3BvUgdK3As5ealFp5C0gJVqd4ud/9
-	 Yx5jrIZ0SK7kBq1aqJWG30HIbgmBJo5rHSsnBdUWLc0vqJ9l7gG+1qRbHVaEb3uEW8
-	 xmH3BatLLr03NnoI3hMESgXZj4tQ+v2ONnWLtqKHP6pEk1cDCb3Ge5oER8daaHjoL9
-	 DyJhJR6Fzd5FF0PsTnX1eyYD05+3cypQ4P4FuCUheVFqaVHjuqnZeFW0y1gbankVY6
-	 tdeiZAvDBQNxA==
-Message-ID: <e85ca4e841b8e5c5f7d0408caf99f404284da687.camel@kernel.org>
-Subject: Re: [PATCH] sunrpc: add a rpc_clnt shutdown control in debugfs
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, anna@kernel.org, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 13 Mar 2025 09:52:01 -0400
-In-Reply-To: <0E1E14E2-BD4B-433B-8355-EEF45384BE83@redhat.com>
-References: <20250312-rpc-shutdown-v1-1-cc90d79a71c2@kernel.org>
-	 <7906109F-91D2-4ECF-B868-5519B56D2CEE@redhat.com>
-	 <997f992f951bd235953c5f0e2959da6351a65adb.camel@kernel.org>
-	 <8bf55a6fb64ba9e21a1ec8c5644355ffd6496c6e.camel@hammerspace.com>
-	 <ee74d5920532d81f77e503d6ef8bc5fbfc66d04e.camel@kernel.org>
-	 <0E1E14E2-BD4B-433B-8355-EEF45384BE83@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1741875711; c=relaxed/simple;
+	bh=OpYwmQPmrqlJTZZ6sU8LZ7L9FwnCsY6dvYTHXKnIMfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uGMfaGk2kBFgqV2kOjBGqXFX2zG5Ux2peYIfNWjotndVbR7yyDtDT/L8hQEDA4uMLo5LUb5jYCuyL1mso6gJVnxpuJQXjUHggEejlYGqkBxX74mpDNLYQk9xIzZIt9e1FVjuslSL+j1T8gm/pXNc4OYGXMJAybEDO7z+gLVUIDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IwVkRVgK; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741875710; x=1773411710;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OpYwmQPmrqlJTZZ6sU8LZ7L9FwnCsY6dvYTHXKnIMfQ=;
+  b=IwVkRVgKUo4gI4lBCmGv2LrOsaORHjKasFrRT39lsYR1gI8twKHUIcke
+   5dxJ0jWwRXcf3+YSClSMmHq1h75qySrCHWiDuPB0u2851nxg292CRhGyp
+   cB60A5IICuEr8zi3aIqW75CoRcg0Htw70Qo/I/qfL0krw596j7U9o1d4v
+   mVoqTLoS5m87ILBR9ppox8sz2FjQnOpkHj2z+vRQkV2043D3Wp055YnPm
+   3hgPXRE/l+WyzRxjqtwKxk4uUSTLU2+zlDLOMYt8K7Ri8jOecPAcSO20I
+   6Rk47ImmzyiFCmJvfxqg3Oyvw9CHC/imyaQhT9LHcr5QorOAQYmWhjEfl
+   Q==;
+X-CSE-ConnectionGUID: pE5Hz5SvRC62ZXgE3sYKsA==
+X-CSE-MsgGUID: oQvfiudgRye/hr7epSS7JA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43173172"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="43173172"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:21:49 -0700
+X-CSE-ConnectionGUID: DA8+2EygTLKqTYIg6NYG4w==
+X-CSE-MsgGUID: BvUfFDhXR2C8Qpi6peqVXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="126026776"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 13 Mar 2025 07:21:47 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tsjRQ-0009Vg-32;
+	Thu, 13 Mar 2025 14:21:44 +0000
+Date: Thu, 13 Mar 2025 22:20:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Benjamin Coddington <bcodding@redhat.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] NFS: New mount option force_rdirplus
+Message-ID: <202503132212.aPAVQklX-lkp@intel.com>
+References: <4a471ab1bdea1052f45d894c967d0a6b6e38d4a6.1741806879.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a471ab1bdea1052f45d894c967d0a6b6e38d4a6.1741806879.git.bcodding@redhat.com>
 
-On Thu, 2025-03-13 at 09:35 -0400, Benjamin Coddington wrote:
-> On 13 Mar 2025, at 9:15, Jeff Layton wrote:
->=20
-> > On Wed, 2025-03-12 at 22:31 +0000, Trond Myklebust wrote:
-> > > On Wed, 2025-03-12 at 10:37 -0400, Jeff Layton wrote:
-> > > > On Wed, 2025-03-12 at 09:52 -0400, Benjamin Coddington wrote:
-> > > > > On 12 Mar 2025, at 9:36, Jeff Layton wrote:
-> > > > >=20
-> > > > > > There have been confirmed reports where a container with an NFS
-> > > > > > mount
-> > > > > > inside it dies abruptly, along with all of its processes, but t=
-he
-> > > > > > NFS
-> > > > > > client sticks around and keeps trying to send RPCs after the
-> > > > > > networking
-> > > > > > is gone.
-> > > > > >=20
-> > > > > > We have a reproducer where if we SIGKILL a container with an NF=
-S
-> > > > > > mount,
-> > > > > > the RPC clients will stick around indefinitely. The orchestrato=
-r
-> > > > > > does a MNT_DETACH unmount on the NFS mount, and then tears down
-> > > > > > the
-> > > > > > networking while there are still RPCs in flight.
-> > > > > >=20
-> > > > > > Recently new controls were added[1] that allow shutting down an
-> > > > > > NFS
-> > > > > > mount. That doesn't help here since the mount namespace is
-> > > > > > detached from
-> > > > > > any tasks at this point.
-> > > > >=20
-> > > > > That's interesting - seems like the orchestrator could just reord=
-er
-> > > > > its
-> > > > > request to shutdown before detaching the mount namespace.=C2=A0 N=
-ot an
-> > > > > objection,
-> > > > > just wondering why the MNT_DETACH must come first.
-> > > > >=20
-> > > >=20
-> > > > The reproducer we have is to systemd-nspawn a container, mount up a=
-n
-> > > > NFS mount inside it, start some I/O on it with fio and then kill -9
-> > > > the
-> > > > systemd running inside the container. There isn't much the
-> > > > orchestrator
-> > > > (root-level systemd) can do to at that point other than clean up
-> > > > what's
-> > > > left.
-> > > >=20
-> > > > I'm still working on a way to reliably detect when this has happene=
-d.
-> > > > For now, we just have to notice that some clients aren't dying.
-> > > >=20
-> > > > > > Transplant shutdown_client() to the sunrpc module, and give it =
-a
-> > > > > > more
-> > > > > > distinct name. Add a new debugfs sunrpc/rpc_clnt/*/shutdown kno=
-b
-> > > > > > that
-> > > > > > allows the same functionality as the one in /sys/fs/nfs, but at
-> > > > > > the
-> > > > > > rpc_clnt level.
-> > > > > >=20
-> > > > > > [1]: commit d9615d166c7e ("NFS: add sysfs shutdown knob").
-> > > > > >=20
-> > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > >=20
-> > > > > I have a TODO to patch Documentation/ for this knob mostly to wri=
-te
-> > > > > warnings
-> > > > > because there are some potential "gotchas" here - for example you
-> > > > > can have
-> > > > > shared RPC clients and shutting down one of those can cause
-> > > > > problems for a
-> > > > > different mount (this is true today with the
-> > > > > /sys/fs/nfs/[bdi]/shutdown
-> > > > > knob).=C2=A0 Shutting down aribitrary clients will definitely bre=
-ak
-> > > > > things in
-> > > > > weird ways, its not a safe place to explore.
-> > > > >=20
-> > > >=20
-> > > > Yes, you really do need to know what you're doing. 0200 permissions
-> > > > are
-> > > > essential for this file, IOW. Thanks for the R-b!
-> > >=20
-> > > Sorry, but NACK! We should not be adding control mechanisms to debugf=
-s.
-> > >=20
-> >=20
-> > Ok. Would adding sunrpc controls under sysfs be more acceptable? I do
-> > agree that this is a potential footgun, however. It would be nicer to
-> > clean this situation up automagically.
-> >=20
-> > > One thing that might work in situations like this is perhaps to make
-> > > use of the fact that we are monitoring whether or not rpc_pipefs is
-> > > mounted. So if the mount is containerised, and the orchestrator
-> > > unmounts everything, including rpc_pipefs, we might take that as a hi=
-nt
-> > > that we should treat any future connection errors as being fatal.
-> > >=20
-> >=20
-> > rpc_pipefs isn't being mounted at all in the container I'm using. I
-> > think that's not going to be a reliable test for this.
-> >=20
-> > > Otherwise, we'd have to be able to monitor the root task, and check i=
-f
-> > > it is still alive in order to figure out if out containerised world h=
-as
-> > > collapsed.
-> > >=20
-> >=20
-> > If by the root task, you mean the initial task in the container, then
-> > that method seems a little sketchy too. How would we determine that
-> > from the RPC layer?
-> >=20
-> > To be clear: the situation here is that we have a container with a veth
-> > device that is communicating with the outside world. Once all of the
-> > processes in the container exit, the veth device in the container
-> > disappears. The rpc_xprt holds a ref on the netns though, so that
-> > sticks around trying to retransmit indefinitely.
-> >=20
-> > I think what we really need is a lightweight reference on the netns.
-> > Something where we can tell that there are no userland tasks that care
-> > about it anymore, so we can be more aggressive about giving up on it.
-> >=20
-> > There is a "passive" refcount inside struct net, but that's not quite
-> > what we need as it won't keep the sunrpc_net in place.
-> >=20
-> > What if instead of holding a netns reference in the xprt, we have it
-> > hold a reference on a new refcount_t that lives in sunrpc_net? Then, we
-> > add a pre_exit pernet_ops callback that does a shutdown_client() on all
-> > of the rpc_clnt's attached to the xprts in that netns. The pre_exit can
-> > then just block until the sunrpc_net refcount goes to 0.
-> >=20
-> > I think that would allow everything to be cleaned up properly?
->=20
-> Do you think that might create unwanted behaviors for a netns that might
-> still be repairable?   Maybe that doesn't make a lot of sense if there ar=
-e no
-> processes in it, but I imagine a network namespace could be in this state
-> and we'd still want to try to use it.
->=20
+Hi Benjamin,
 
-I don't think so. Once there are no userland tasks holding a reference
-to a namespace, there is no way to reach it from outside the kernel,
-AFAICT, so there is no way repair it.
+kernel test robot noticed the following build warnings:
 
-It would actually be nice if we had a way to say "open net namespace
-with this inode number". I guess we could add filehandle and
-open_by_handle_at() support to nsfs...
+[auto build test WARNING on 2408a807bfc3f738850ef5ad5e3fd59d66168996]
 
-> which, if used, creates an explicit requirement for the orchestrator to
-> define exactly what should happen if the veth goes away.  When creating t=
-he
-> namespace, the orchestrator should insert a rule that says "when this vet=
-h
-> disappears, we shutdown this fs".
->
-> Again, I'm not sure if that's even possible, but I'm willing to muck arou=
-nd
-> a bit and give it a try.
->=20
+url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/NFS-New-mount-option-force_rdirplus/20250313-034816
+base:   2408a807bfc3f738850ef5ad5e3fd59d66168996
+patch link:    https://lore.kernel.org/r/4a471ab1bdea1052f45d894c967d0a6b6e38d4a6.1741806879.git.bcodding%40redhat.com
+patch subject: [PATCH 1/1] NFS: New mount option force_rdirplus
+config: i386-randconfig-003-20250313 (https://download.01.org/0day-ci/archive/20250313/202503132212.aPAVQklX-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250313/202503132212.aPAVQklX-lkp@intel.com/reproduce)
 
-I'd really prefer to do something that "just works" with existing
-userland applications, but if we have to do something like that, then
-so be it.
---=20
-Jeff Layton <jlayton@kernel.org>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503132212.aPAVQklX-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> fs/nfs/fs_context.c:642:19: warning: use of logical '&&' with constant operand [-Wconstant-logical-operand]
+     642 |                         if (ctx->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                        ^  ~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/fs_context.c:642:19: note: use '&' for a bitwise operation
+     642 |                         if (ctx->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                        ^~
+         |                                        &
+   fs/nfs/fs_context.c:642:19: note: remove constant to silence this warning
+     642 |                         if (ctx->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/fs_context.c:650:18: warning: use of logical '&&' with constant operand [-Wconstant-logical-operand]
+     650 |                 if (ctx->flags && NFS_MOUNT_NORDIRPLUS)
+         |                                ^  ~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/fs_context.c:650:18: note: use '&' for a bitwise operation
+     650 |                 if (ctx->flags && NFS_MOUNT_NORDIRPLUS)
+         |                                ^~
+         |                                &
+   fs/nfs/fs_context.c:650:18: note: remove constant to silence this warning
+     650 |                 if (ctx->flags && NFS_MOUNT_NORDIRPLUS)
+         |                                ^~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
+--
+>> fs/nfs/dir.c:669:29: warning: use of logical '&&' with constant operand [-Wconstant-logical-operand]
+     669 |         if (NFS_SERVER(dir)->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                    ^  ~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/dir.c:669:29: note: use '&' for a bitwise operation
+     669 |         if (NFS_SERVER(dir)->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                    ^~
+         |                                    &
+   fs/nfs/dir.c:669:29: note: remove constant to silence this warning
+     669 |         if (NFS_SERVER(dir)->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning generated.
+
+
+vim +642 fs/nfs/fs_context.c
+
+   529	
+   530	/*
+   531	 * Parse a single mount parameter.
+   532	 */
+   533	static int nfs_fs_context_parse_param(struct fs_context *fc,
+   534					      struct fs_parameter *param)
+   535	{
+   536		struct fs_parse_result result;
+   537		struct nfs_fs_context *ctx = nfs_fc2context(fc);
+   538		unsigned short protofamily, mountfamily;
+   539		unsigned int len;
+   540		int ret, opt;
+   541	
+   542		trace_nfs_mount_option(param);
+   543	
+   544		opt = fs_parse(fc, nfs_fs_parameters, param, &result);
+   545		if (opt < 0)
+   546			return (opt == -ENOPARAM && ctx->sloppy) ? 1 : opt;
+   547	
+   548		if (fc->security)
+   549			ctx->has_sec_mnt_opts = 1;
+   550	
+   551		switch (opt) {
+   552		case Opt_source:
+   553			if (fc->source)
+   554				return nfs_invalf(fc, "NFS: Multiple sources not supported");
+   555			fc->source = param->string;
+   556			param->string = NULL;
+   557			break;
+   558	
+   559			/*
+   560			 * boolean options:  foo/nofoo
+   561			 */
+   562		case Opt_soft:
+   563			ctx->flags |= NFS_MOUNT_SOFT;
+   564			ctx->flags &= ~NFS_MOUNT_SOFTERR;
+   565			break;
+   566		case Opt_softerr:
+   567			ctx->flags |= NFS_MOUNT_SOFTERR | NFS_MOUNT_SOFTREVAL;
+   568			ctx->flags &= ~NFS_MOUNT_SOFT;
+   569			break;
+   570		case Opt_hard:
+   571			ctx->flags &= ~(NFS_MOUNT_SOFT |
+   572					NFS_MOUNT_SOFTERR |
+   573					NFS_MOUNT_SOFTREVAL);
+   574			break;
+   575		case Opt_softreval:
+   576			if (result.negated)
+   577				ctx->flags &= ~NFS_MOUNT_SOFTREVAL;
+   578			else
+   579				ctx->flags |= NFS_MOUNT_SOFTREVAL;
+   580			break;
+   581		case Opt_posix:
+   582			if (result.negated)
+   583				ctx->flags &= ~NFS_MOUNT_POSIX;
+   584			else
+   585				ctx->flags |= NFS_MOUNT_POSIX;
+   586			break;
+   587		case Opt_cto:
+   588			if (result.negated)
+   589				ctx->flags |= NFS_MOUNT_NOCTO;
+   590			else
+   591				ctx->flags &= ~NFS_MOUNT_NOCTO;
+   592			break;
+   593		case Opt_trunkdiscovery:
+   594			if (result.negated)
+   595				ctx->flags &= ~NFS_MOUNT_TRUNK_DISCOVERY;
+   596			else
+   597				ctx->flags |= NFS_MOUNT_TRUNK_DISCOVERY;
+   598			break;
+   599		case Opt_alignwrite:
+   600			if (result.negated)
+   601				ctx->flags |= NFS_MOUNT_NO_ALIGNWRITE;
+   602			else
+   603				ctx->flags &= ~NFS_MOUNT_NO_ALIGNWRITE;
+   604			break;
+   605		case Opt_ac:
+   606			if (result.negated)
+   607				ctx->flags |= NFS_MOUNT_NOAC;
+   608			else
+   609				ctx->flags &= ~NFS_MOUNT_NOAC;
+   610			break;
+   611		case Opt_lock:
+   612			if (result.negated) {
+   613				ctx->lock_status = NFS_LOCK_NOLOCK;
+   614				ctx->flags |= NFS_MOUNT_NONLM;
+   615				ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
+   616			} else {
+   617				ctx->lock_status = NFS_LOCK_LOCK;
+   618				ctx->flags &= ~NFS_MOUNT_NONLM;
+   619				ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK | NFS_MOUNT_LOCAL_FCNTL);
+   620			}
+   621			break;
+   622		case Opt_udp:
+   623			ctx->flags &= ~NFS_MOUNT_TCP;
+   624			ctx->nfs_server.protocol = XPRT_TRANSPORT_UDP;
+   625			break;
+   626		case Opt_tcp:
+   627		case Opt_rdma:
+   628			ctx->flags |= NFS_MOUNT_TCP; /* for side protocols */
+   629			ret = xprt_find_transport_ident(param->key);
+   630			if (ret < 0)
+   631				goto out_bad_transport;
+   632			ctx->nfs_server.protocol = ret;
+   633			break;
+   634		case Opt_acl:
+   635			if (result.negated)
+   636				ctx->flags |= NFS_MOUNT_NOACL;
+   637			else
+   638				ctx->flags &= ~NFS_MOUNT_NOACL;
+   639			break;
+   640		case Opt_rdirplus:
+   641			if (result.negated) {
+ > 642				if (ctx->flags && NFS_MOUNT_FORCE_RDIRPLUS)
+   643					return nfs_invalf(fc, "NFS: Cannot both force and disable READDIR PLUS");
+   644				ctx->flags |= NFS_MOUNT_NORDIRPLUS;
+   645			} else {
+   646				ctx->flags &= ~NFS_MOUNT_NORDIRPLUS;
+   647			}
+   648			break;
+   649		case Opt_force_rdirplus:
+   650			if (ctx->flags && NFS_MOUNT_NORDIRPLUS)
+   651				return nfs_invalf(fc, "NFS: Cannot both force and disable READDIR PLUS");
+   652			ctx->flags |= NFS_MOUNT_FORCE_RDIRPLUS;
+   653			break;
+   654		case Opt_sharecache:
+   655			if (result.negated)
+   656				ctx->flags |= NFS_MOUNT_UNSHARED;
+   657			else
+   658				ctx->flags &= ~NFS_MOUNT_UNSHARED;
+   659			break;
+   660		case Opt_resvport:
+   661			if (result.negated)
+   662				ctx->flags |= NFS_MOUNT_NORESVPORT;
+   663			else
+   664				ctx->flags &= ~NFS_MOUNT_NORESVPORT;
+   665			break;
+   666		case Opt_fscache_flag:
+   667			if (result.negated)
+   668				ctx->options &= ~NFS_OPTION_FSCACHE;
+   669			else
+   670				ctx->options |= NFS_OPTION_FSCACHE;
+   671			kfree(ctx->fscache_uniq);
+   672			ctx->fscache_uniq = NULL;
+   673			break;
+   674		case Opt_fscache:
+   675			trace_nfs_mount_assign(param->key, param->string);
+   676			ctx->options |= NFS_OPTION_FSCACHE;
+   677			kfree(ctx->fscache_uniq);
+   678			ctx->fscache_uniq = param->string;
+   679			param->string = NULL;
+   680			break;
+   681		case Opt_migration:
+   682			if (result.negated)
+   683				ctx->options &= ~NFS_OPTION_MIGRATION;
+   684			else
+   685				ctx->options |= NFS_OPTION_MIGRATION;
+   686			break;
+   687	
+   688			/*
+   689			 * options that take numeric values
+   690			 */
+   691		case Opt_port:
+   692			if (result.uint_32 > USHRT_MAX)
+   693				goto out_of_bounds;
+   694			ctx->nfs_server.port = result.uint_32;
+   695			break;
+   696		case Opt_rsize:
+   697			ctx->rsize = result.uint_32;
+   698			break;
+   699		case Opt_wsize:
+   700			ctx->wsize = result.uint_32;
+   701			break;
+   702		case Opt_bsize:
+   703			ctx->bsize = result.uint_32;
+   704			break;
+   705		case Opt_timeo:
+   706			if (result.uint_32 < 1 || result.uint_32 > INT_MAX)
+   707				goto out_of_bounds;
+   708			ctx->timeo = result.uint_32;
+   709			break;
+   710		case Opt_retrans:
+   711			if (result.uint_32 > INT_MAX)
+   712				goto out_of_bounds;
+   713			ctx->retrans = result.uint_32;
+   714			break;
+   715		case Opt_acregmin:
+   716			ctx->acregmin = result.uint_32;
+   717			break;
+   718		case Opt_acregmax:
+   719			ctx->acregmax = result.uint_32;
+   720			break;
+   721		case Opt_acdirmin:
+   722			ctx->acdirmin = result.uint_32;
+   723			break;
+   724		case Opt_acdirmax:
+   725			ctx->acdirmax = result.uint_32;
+   726			break;
+   727		case Opt_actimeo:
+   728			ctx->acregmin = result.uint_32;
+   729			ctx->acregmax = result.uint_32;
+   730			ctx->acdirmin = result.uint_32;
+   731			ctx->acdirmax = result.uint_32;
+   732			break;
+   733		case Opt_namelen:
+   734			ctx->namlen = result.uint_32;
+   735			break;
+   736		case Opt_mountport:
+   737			if (result.uint_32 > USHRT_MAX)
+   738				goto out_of_bounds;
+   739			ctx->mount_server.port = result.uint_32;
+   740			break;
+   741		case Opt_mountvers:
+   742			if (result.uint_32 < NFS_MNT_VERSION ||
+   743			    result.uint_32 > NFS_MNT3_VERSION)
+   744				goto out_of_bounds;
+   745			ctx->mount_server.version = result.uint_32;
+   746			break;
+   747		case Opt_minorversion:
+   748			if (result.uint_32 > NFS4_MAX_MINOR_VERSION)
+   749				goto out_of_bounds;
+   750			ctx->minorversion = result.uint_32;
+   751			break;
+   752	
+   753			/*
+   754			 * options that take text values
+   755			 */
+   756		case Opt_v:
+   757			ret = nfs_parse_version_string(fc, param->key + 1);
+   758			if (ret < 0)
+   759				return ret;
+   760			break;
+   761		case Opt_vers:
+   762			if (!param->string)
+   763				goto out_invalid_value;
+   764			trace_nfs_mount_assign(param->key, param->string);
+   765			ret = nfs_parse_version_string(fc, param->string);
+   766			if (ret < 0)
+   767				return ret;
+   768			break;
+   769		case Opt_sec:
+   770			ret = nfs_parse_security_flavors(fc, param);
+   771			if (ret < 0)
+   772				return ret;
+   773			break;
+   774		case Opt_xprtsec:
+   775			ret = nfs_parse_xprtsec_policy(fc, param);
+   776			if (ret < 0)
+   777				return ret;
+   778			break;
+   779	
+   780		case Opt_proto:
+   781			if (!param->string)
+   782				goto out_invalid_value;
+   783			trace_nfs_mount_assign(param->key, param->string);
+   784			protofamily = AF_INET;
+   785			switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
+   786			case Opt_xprt_udp6:
+   787				protofamily = AF_INET6;
+   788				fallthrough;
+   789			case Opt_xprt_udp:
+   790				ctx->flags &= ~NFS_MOUNT_TCP;
+   791				ctx->nfs_server.protocol = XPRT_TRANSPORT_UDP;
+   792				break;
+   793			case Opt_xprt_tcp6:
+   794				protofamily = AF_INET6;
+   795				fallthrough;
+   796			case Opt_xprt_tcp:
+   797				ctx->flags |= NFS_MOUNT_TCP;
+   798				ctx->nfs_server.protocol = XPRT_TRANSPORT_TCP;
+   799				break;
+   800			case Opt_xprt_rdma6:
+   801				protofamily = AF_INET6;
+   802				fallthrough;
+   803			case Opt_xprt_rdma:
+   804				/* vector side protocols to TCP */
+   805				ctx->flags |= NFS_MOUNT_TCP;
+   806				ret = xprt_find_transport_ident(param->string);
+   807				if (ret < 0)
+   808					goto out_bad_transport;
+   809				ctx->nfs_server.protocol = ret;
+   810				break;
+   811			default:
+   812				goto out_bad_transport;
+   813			}
+   814	
+   815			ctx->protofamily = protofamily;
+   816			break;
+   817	
+   818		case Opt_mountproto:
+   819			if (!param->string)
+   820				goto out_invalid_value;
+   821			trace_nfs_mount_assign(param->key, param->string);
+   822			mountfamily = AF_INET;
+   823			switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
+   824			case Opt_xprt_udp6:
+   825				mountfamily = AF_INET6;
+   826				fallthrough;
+   827			case Opt_xprt_udp:
+   828				ctx->mount_server.protocol = XPRT_TRANSPORT_UDP;
+   829				break;
+   830			case Opt_xprt_tcp6:
+   831				mountfamily = AF_INET6;
+   832				fallthrough;
+   833			case Opt_xprt_tcp:
+   834				ctx->mount_server.protocol = XPRT_TRANSPORT_TCP;
+   835				break;
+   836			case Opt_xprt_rdma: /* not used for side protocols */
+   837			default:
+   838				goto out_bad_transport;
+   839			}
+   840			ctx->mountfamily = mountfamily;
+   841			break;
+   842	
+   843		case Opt_addr:
+   844			trace_nfs_mount_assign(param->key, param->string);
+   845			len = rpc_pton(fc->net_ns, param->string, param->size,
+   846				       &ctx->nfs_server.address,
+   847				       sizeof(ctx->nfs_server._address));
+   848			if (len == 0)
+   849				goto out_invalid_address;
+   850			ctx->nfs_server.addrlen = len;
+   851			break;
+   852		case Opt_clientaddr:
+   853			trace_nfs_mount_assign(param->key, param->string);
+   854			kfree(ctx->client_address);
+   855			ctx->client_address = param->string;
+   856			param->string = NULL;
+   857			break;
+   858		case Opt_mounthost:
+   859			trace_nfs_mount_assign(param->key, param->string);
+   860			kfree(ctx->mount_server.hostname);
+   861			ctx->mount_server.hostname = param->string;
+   862			param->string = NULL;
+   863			break;
+   864		case Opt_mountaddr:
+   865			trace_nfs_mount_assign(param->key, param->string);
+   866			len = rpc_pton(fc->net_ns, param->string, param->size,
+   867				       &ctx->mount_server.address,
+   868				       sizeof(ctx->mount_server._address));
+   869			if (len == 0)
+   870				goto out_invalid_address;
+   871			ctx->mount_server.addrlen = len;
+   872			break;
+   873		case Opt_nconnect:
+   874			trace_nfs_mount_assign(param->key, param->string);
+   875			if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_CONNECTIONS)
+   876				goto out_of_bounds;
+   877			ctx->nfs_server.nconnect = result.uint_32;
+   878			break;
+   879		case Opt_max_connect:
+   880			trace_nfs_mount_assign(param->key, param->string);
+   881			if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_TRANSPORTS)
+   882				goto out_of_bounds;
+   883			ctx->nfs_server.max_connect = result.uint_32;
+   884			break;
+   885		case Opt_lookupcache:
+   886			trace_nfs_mount_assign(param->key, param->string);
+   887			switch (result.uint_32) {
+   888			case Opt_lookupcache_all:
+   889				ctx->flags &= ~(NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE);
+   890				break;
+   891			case Opt_lookupcache_positive:
+   892				ctx->flags &= ~NFS_MOUNT_LOOKUP_CACHE_NONE;
+   893				ctx->flags |= NFS_MOUNT_LOOKUP_CACHE_NONEG;
+   894				break;
+   895			case Opt_lookupcache_none:
+   896				ctx->flags |= NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE;
+   897				break;
+   898			default:
+   899				goto out_invalid_value;
+   900			}
+   901			break;
+   902		case Opt_local_lock:
+   903			trace_nfs_mount_assign(param->key, param->string);
+   904			switch (result.uint_32) {
+   905			case Opt_local_lock_all:
+   906				ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK |
+   907					       NFS_MOUNT_LOCAL_FCNTL);
+   908				break;
+   909			case Opt_local_lock_flock:
+   910				ctx->flags |= NFS_MOUNT_LOCAL_FLOCK;
+   911				break;
+   912			case Opt_local_lock_posix:
+   913				ctx->flags |= NFS_MOUNT_LOCAL_FCNTL;
+   914				break;
+   915			case Opt_local_lock_none:
+   916				ctx->flags &= ~(NFS_MOUNT_LOCAL_FLOCK |
+   917						NFS_MOUNT_LOCAL_FCNTL);
+   918				break;
+   919			default:
+   920				goto out_invalid_value;
+   921			}
+   922			break;
+   923		case Opt_write:
+   924			trace_nfs_mount_assign(param->key, param->string);
+   925			switch (result.uint_32) {
+   926			case Opt_write_lazy:
+   927				ctx->flags &=
+   928					~(NFS_MOUNT_WRITE_EAGER | NFS_MOUNT_WRITE_WAIT);
+   929				break;
+   930			case Opt_write_eager:
+   931				ctx->flags |= NFS_MOUNT_WRITE_EAGER;
+   932				ctx->flags &= ~NFS_MOUNT_WRITE_WAIT;
+   933				break;
+   934			case Opt_write_wait:
+   935				ctx->flags |=
+   936					NFS_MOUNT_WRITE_EAGER | NFS_MOUNT_WRITE_WAIT;
+   937				break;
+   938			default:
+   939				goto out_invalid_value;
+   940			}
+   941			break;
+   942	
+   943			/*
+   944			 * Special options
+   945			 */
+   946		case Opt_sloppy:
+   947			ctx->sloppy = true;
+   948			break;
+   949		}
+   950	
+   951		return 0;
+   952	
+   953	out_invalid_value:
+   954		return nfs_invalf(fc, "NFS: Bad mount option value specified");
+   955	out_invalid_address:
+   956		return nfs_invalf(fc, "NFS: Bad IP address specified");
+   957	out_of_bounds:
+   958		return nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+   959	out_bad_transport:
+   960		return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
+   961	}
+   962	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
