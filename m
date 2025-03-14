@@ -1,54 +1,55 @@
-Return-Path: <linux-nfs+bounces-10612-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10613-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB1CBA6082C
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 05:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 155B9A60F27
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 11:39:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AE1317FFA7
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 04:57:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4C49916A5BA
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 10:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB9D15886C;
-	Fri, 14 Mar 2025 04:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8DE1F418A;
+	Fri, 14 Mar 2025 10:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfUKyGEp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3553136E37;
-	Fri, 14 Mar 2025 04:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF6F1F1934;
+	Fri, 14 Mar 2025 10:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741928234; cv=none; b=S5+vcuKPEVq+6jnd/CuUeHrOagT4LSHWhdt9EcM4QH2XchHsYkxmBruGRVEQLDPDXVJaEjb8CA9sDbCSuwnYE4jVOl5QioL+db0MFmCcclPfKN9apuHCrEc/oKaLtW3sNg6iDKW31xQBDKaK44A1+e04dR3HsmGjzogOIvMpYyk=
+	t=1741948744; cv=none; b=annqEmkVSYXqvKXbC5ldELaJXfLaErh2vgAl504ONY75qaAaMt102FcJeAWRLR9uUbWK+iYZMEJQvfQY7FaBMLu2XFybtgpPakJRLMK7Tu7g6UOazL/KkQ46H7K/tHlYgEA7DudlTKSkqNS5qyFk1YBZ/zoyf82PX/4gPs1RXhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741928234; c=relaxed/simple;
-	bh=JjL88J0aetZl6wvwQcctthuQv0BgyuVD/7xuRLQTZTQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QKnI55gAKu5Jv54Bt3jCzuIj/QGJzqX60gddw5HdOTDR8CChZr6vWjXZToHAHkPU6RDFQlbEG3r/3T8n2VvM5AJUQtZClFe/PrbHTNXplmtUk3DeK5szAInhHS/CAeyvg2SxAxOqvH5ybxaYMcf5GLY6C8+ywoiD7RWrQpc/l7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1tsx6b-00E3wD-0s;
-	Fri, 14 Mar 2025 04:57:09 +0000
-From: NeilBrown <neil@brown.name>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	David Howells <dhowells@redhat.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	netfs@lists.linux.dev,
+	s=arc-20240116; t=1741948744; c=relaxed/simple;
+	bh=ViuVFqdum2mxJWZUNzKOl9aYIxyVR8GlAtNOhK+gL84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BeQmqwOGheuZhSEZTYngiGW4TEBA+dS1tEH/YQi4adRdKNSMDXITScc22GEGQ+zoApNs+4WHeTtIdRb9Exk3n4eavveMqW5IruFxVuRWuwwQ4x91QSDjjO0AkD+6A306XRIotBc1oEh7qlXA3m6vIQwlncTQzUItvXNfl88bti0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfUKyGEp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F9EC4CEE3;
+	Fri, 14 Mar 2025 10:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741948744;
+	bh=ViuVFqdum2mxJWZUNzKOl9aYIxyVR8GlAtNOhK+gL84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tfUKyGEpWdoJUFDyizWtcR6MTcBD03ipKELIl9a2+429VyrZo0qU+WNG81OB5RcXA
+	 9NO4E/SWfO5gnwHwy1hyTciOFqNNpAL4qGVP7HhiQgVIOs/IR4VKfeLHdUGKbqOsjc
+	 9UZFhi7GAwPSAd3nhcnN8Iu+KHaKEtlPLGykS+5mfdloi+auywWOQDbGYEos/8+Qq0
+	 DHD/LPicakk5T/1iWPZ6GbiUzH8JSfEIjjEvT+IEfq2GT4xSquIYXnKKRQ6IpHTHqd
+	 VDwXSeYRKED+917tj82eDvROJYfAs1PC4DjMHNgzQ0dXG87df0711wtnhbkEVI1eqm
+	 yHS6q9D8PNVvg==
+Date: Fri, 14 Mar 2025 11:38:58 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	David Howells <dhowells@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, netfs@lists.linux.dev, 
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 8/8] VFS: change lookup_one_common and lookup_noperm_common to take a qstr
-Date: Fri, 14 Mar 2025 11:34:14 +1100
-Message-ID: <20250314045655.603377-9-neil@brown.name>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250314045655.603377-1-neil@brown.name>
+Subject: Re: [PATCH 0/8 RFC] tidy up various VFS lookup functions
+Message-ID: <20250314-geprobt-akademie-cae577d90899@brauner>
 References: <20250314045655.603377-1-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -56,146 +57,96 @@ List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250314045655.603377-1-neil@brown.name>
 
-These function already take a qstr of course, but they also currently
-take a name/len was well and fill in the qstr.
-Now they take a qstr that is already filled in, which is what all the
-callers have.
+On Fri, Mar 14, 2025 at 11:34:06AM +1100, NeilBrown wrote:
+> VFS has some functions with names containing "lookup_one_len" and others
+> without the "_len".  This difference has nothing to do with "len".
+> 
+> The functions without "_len" take a "mnt_idmap" pointer.  This is found
 
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/namei.c | 44 +++++++++++++++++++-------------------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
+When we added idmapped mounts there were all these *_len() helpers and I
+orignally had just ported them to pass mnt_idmap. But we decided to not
+do this. The argument might have been that most callers don't need to be
+switched (I'm not actually sure if that's still true now that we have
+quite a few filesystems that do support idmapped mounts.).
 
-diff --git a/fs/namei.c b/fs/namei.c
-index f89ed09c0b0b..a47a3795f2c7 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2833,13 +2833,12 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
- }
- EXPORT_SYMBOL(vfs_path_lookup);
- 
--static int lookup_noperm_common(const char *name, struct dentry *base,
--				  int len,
--				  struct qstr *this)
-+static int lookup_noperm_common(struct qstr *qname, struct dentry *base)
- {
--	this->name = name;
--	this->len = len;
--	this->hash = full_name_hash(base, name, len);
-+	const char *name = qname->name;
-+	u32 len = qname->len;
-+
-+	qname->hash = full_name_hash(base, name, len);
- 	if (!len)
- 		return -EACCES;
- 
-@@ -2856,7 +2855,7 @@ static int lookup_noperm_common(const char *name, struct dentry *base,
- 	 * to use its own hash..
- 	 */
- 	if (base->d_flags & DCACHE_OP_HASH) {
--		int err = base->d_op->d_hash(base, this);
-+		int err = base->d_op->d_hash(base, qname);
- 		if (err < 0)
- 			return err;
- 	}
-@@ -2864,10 +2863,10 @@ static int lookup_noperm_common(const char *name, struct dentry *base,
- }
- 
- static int lookup_one_common(struct mnt_idmap *idmap,
--			     const char *name, struct dentry *base, int len,
--			     struct qstr *this) {
-+			     struct qstr *qname, struct dentry *base)
-+{
- 	int err;
--	err = lookup_noperm_common(name, base, len, this);
-+	err = lookup_noperm_common(qname, base);
- 	if (err < 0)
- 		return err;
- 	return inode_permission(idmap, base->d_inode, MAY_EXEC);
-@@ -2888,16 +2887,14 @@ static int lookup_one_common(struct mnt_idmap *idmap,
-  */
- struct dentry *try_lookup_noperm(struct qstr *name, struct dentry *base)
- {
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_noperm_common(name->name, base, name->len, &this);
-+	err = lookup_noperm_common(name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	name->hash = this.hash;
- 	return lookup_dcache(name, base, 0);
- }
- EXPORT_SYMBOL(try_lookup_noperm);
-@@ -2915,17 +2912,16 @@ EXPORT_SYMBOL(try_lookup_noperm);
- struct dentry *lookup_noperm(struct qstr name, struct dentry *base)
- {
- 	struct dentry *dentry;
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_noperm_common(name.name, base, name.len, &this);
-+	err = lookup_noperm_common(&name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	dentry = lookup_dcache(&this, base, 0);
--	return dentry ? dentry : __lookup_slow(&this, base, 0);
-+	dentry = lookup_dcache(&name, base, 0);
-+	return dentry ? dentry : __lookup_slow(&name, base, 0);
- }
- EXPORT_SYMBOL(lookup_noperm);
- 
-@@ -2943,17 +2939,16 @@ struct dentry *lookup_one(struct vfsmount *mnt, struct qstr name,
- 			  struct dentry *base)
- {
- 	struct dentry *dentry;
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_one_common(mnt_idmap(mnt), name.name, base, name.len, &this);
-+	err = lookup_one_common(mnt_idmap(mnt), &name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	dentry = lookup_dcache(&this, base, 0);
--	return dentry ? dentry : __lookup_slow(&this, base, 0);
-+	dentry = lookup_dcache(&name, base, 0);
-+	return dentry ? dentry : __lookup_slow(&name, base, 0);
- }
- EXPORT_SYMBOL(lookup_one);
- 
-@@ -2971,17 +2966,16 @@ EXPORT_SYMBOL(lookup_one);
- struct dentry *lookup_one_unlocked(struct vfsmount *mnt,
- 				   struct qstr name, struct dentry *base)
- {
--	struct qstr this;
- 	int err;
- 	struct dentry *ret;
- 
--	err = lookup_one_common(mnt_idmap(mnt), name.name, base, name.len, &this);
-+	err = lookup_one_common(mnt_idmap(mnt), &name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	ret = lookup_dcache(&this, base, 0);
-+	ret = lookup_dcache(&name, base, 0);
- 	if (!ret)
--		ret = lookup_slow(&this, base, 0);
-+		ret = lookup_slow(&name, base, 0);
- 	return ret;
- }
- EXPORT_SYMBOL(lookup_one_unlocked);
--- 
-2.48.1
+So then we added new helper and then we decided to use better naming
+then that *_len() stuff. That's about it.
 
+> in the "vfsmount" and that is an important question when choosing which
+> to use: do you have a vfsmount, or are you "inside" the filesystem.  A
+> related question is "is permission checking relevant here?".
+> 
+> nfsd and cachefiles *do* have a vfsmount but *don't* use the non-_len
+> functions.  They pass nop_mnt_idmap which is not correct if the vfsmount
+> is actually idmaped.  For cachefiles it probably (?) doesn't matter as
+> the accesses to the backing filesystem are always does with elevated privileged (?).
+
+Cachefiles explicitly refuse being mounted on top of an idmapped mount
+and they require that the mount is attached (check_mnt()) and an
+attached mount can never be idmapped as it has already been exposed in
+the filesystem hierarchy.
+
+> 
+> For nfsd it would matter if anyone exported an idmapped filesystem.  I
+> wonder if anyone has tried...
+
+nfsd doesn't support exporting idmapped mounts. See check_export() where
+that's explicitly checked.
+
+If there are ways to circumvent this I'd be good to know.
+
+> 
+> These patches change the "lookup_one" functions to take a vfsmount
+> instead of a mnt_idmap because I think that makes the intention clearer.
+
+Please don't!
+
+These internal lookup helpers intentionally do not take a vfsmount.
+First, because they can be called in places where access to a vfsmount
+isn't possible and we don't want to pass vfsmounts down to filesystems
+ever!
+
+Second, the mnt_idmap pointer is - with few safe exceptions - is
+retrieved once in the VFS and then passed down so that e.g., permission
+checking and file creation are guaranteed to use the same mnt_idmap
+pointer.
+
+A caller may start out with a non-idmapped detached mount (e.g., via
+fsmount() or OPEN_TREE_CLONE) (nop_mnt_idmap) and call
+inode_permission(). Now someone idmaps that mount. Now further down the
+callchain someone calls lookup_one() which now retrieves the idmapping
+again and now it's an idmapped mount. Now permission checking is out of
+sync. That's an unlikely scenario but it's possible so lookup_one() is
+not supposed to retrieve the idmapping again. Please keep passing it
+explicitly. I've also written that down in the Documenation somewhere.
+
+> 
+> It also renames the "_one" functions to be "_noperm" and removes the
+> permission checking completely.  In all cases where they are (correctly)
+> used permission checking is irrelevant.
+
+Ok, that sounds fine. Though I haven't taken the time to check the
+callers yet. I'll try to do that during the weekend.
+
+> 
+> I haven't included changes to afs because there are patches in vfs.all
+> which make a lot of changes to lookup in afs.  I think (if they are seen
+> as a good idea) these patches should aim to land after the afs patches
+> and any further fixup in afs can happen then.
+> 
+> The nfsd and cachefiles patches probably should be separate.  Maybe I
+> should submit those to relevant maintainers first, and one afs,
+> cachefiles, and nfsd changes have landed I can submit this series with
+> appropriate modifications.
+> 
+> May main question for review is : have I understood mnt_idmap correctly?
+
+I mean, you didn't ask semantic questions so much as syntactic, I think.
+I hope I explained the reasoning sufficiently.
+
+Thanks for the cleanups.
 
