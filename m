@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-10622-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10623-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AF55A61690
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 17:43:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 779CDA61693
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 17:43:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5CF4046419D
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 16:42:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6A38464241
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Mar 2025 16:43:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 690E520469B;
-	Fri, 14 Mar 2025 16:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 087AC2040B6;
+	Fri, 14 Mar 2025 16:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3FEM6g3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OCNIRnie"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6ED20409B
-	for <linux-nfs@vger.kernel.org>; Fri, 14 Mar 2025 16:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643812040A8
+	for <linux-nfs@vger.kernel.org>; Fri, 14 Mar 2025 16:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741970548; cv=none; b=O51d2N7xK2pfws9FlaDvmo9/2rl0DrEYqM2PsfrrJdprU6x8hNVcNnTOwP6Dxa5LdlIpGlEdqwc6mr19CZTIbs0Mu1ni4qRRw8+JEdH3rLUkNSbRfRWtZZmJpKm853YW7/21kbJbhHpqgzD+DILH6neB9cPB7EZi3Opf4o2yeSA=
+	t=1741970550; cv=none; b=E3lE7wMH29U0hGyYXxs8Nb/e7ETXo6yEvabPoQlWPYtqe7B8OJvd/qiFxeRxfXDNhNAsKlhHxzZRTCSWTud3P0+uPkJhfKuUbnmbyjSq+Na8zulTORq5sSOkAxnHeO0Lh+prQYWTacoiPOX/9+tT998yEiFNY7H99jEw1vTWAK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741970548; c=relaxed/simple;
-	bh=bcuzJjM92SaHRB6hoSe8xIWoPbg8ScRbZsayAknw+7Q=;
+	s=arc-20240116; t=1741970550; c=relaxed/simple;
+	bh=Zfo7G8ZZVI56easMvzkUxJjm7RkyPqw27btY50SXyBE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dPG4KVVtjKPaZ9q0aEE5XUKKcTcO5tfKlYIUh8309D1ipzKuDRdGJPA9B928y1QknxWp9U6tk3MEuAf5gsZNysHEmPxQdN82m8fhbklodxhHrsHihRn6VAWhLGIm5/6NhWAZU1XmTIeI3B3Ou2qeoG/srBwtEw31IAUq05sgIt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I3FEM6g3; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=VL4pbWQ7V7Yn/fuNAz+3J/hjV093pg2J6iwSwVSR9yNkgun0ndI7dywMPldLhdbMZF4XKckndAY9IyTvoL9xFrlV2PxQh9axDXb0KvCtiB8/jliZEQ8h7apbWGlmObV6CfW/PFmvBQDInkrdUakKgsZ16tDKkueasbnF6RiFT/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OCNIRnie; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741970545;
+	s=mimecast20190719; t=1741970548;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n/cafhc4nnnQEwFVw0Q6oJte6Nc/tJJuXAQXURFTgx8=;
-	b=I3FEM6g3/hvG4yoDQVayDcGof0o1tEiFhB1l97hmeij1iEOULeo3y5eWYXRFQ9gKuV+T+X
-	CEceoOUyRiea6w/0n1kQXSZkQnmElDz00UiBn07ulD4sm9k+6EYftU3YWg/dLSBu+mG9Cb
-	Z7ETOxFK+MU0nAU/9W6CY7o11OfD0l4=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=kgs68JnbqfGZwJrqZ31YpM64s8X6n5iWQDAIZUpopD8=;
+	b=OCNIRnie4ogvH9J6Xp59PO5d4kVoQGiTt9/qIdwsrXtJl6WCXe9HSJrzPiJi7frYbHfBgA
+	1F72voT6kIWIru/CCRgecqUyJ76b7oqy8v0dAY83TMHaDtqxbMgXfvaYQJBO2TSolWtMPk
+	HsbEaYQYznvOIQG3QrunGxS/b3T17jU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-693-2zuPdtzHNfyUoe7oIN-B_Q-1; Fri,
- 14 Mar 2025 12:42:20 -0400
-X-MC-Unique: 2zuPdtzHNfyUoe7oIN-B_Q-1
-X-Mimecast-MFC-AGG-ID: 2zuPdtzHNfyUoe7oIN-B_Q_1741970538
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-526-ELC-7-6yMxSrihokJSDULg-1; Fri,
+ 14 Mar 2025 12:42:25 -0400
+X-MC-Unique: ELC-7-6yMxSrihokJSDULg-1
+X-Mimecast-MFC-AGG-ID: ELC-7-6yMxSrihokJSDULg_1741970543
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C82C61956087;
-	Fri, 14 Mar 2025 16:42:17 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19609195605E;
+	Fri, 14 Mar 2025 16:42:23 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.61])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5DA851955F2D;
-	Fri, 14 Mar 2025 16:42:13 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 485451955BCB;
+	Fri, 14 Mar 2025 16:42:19 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -70,10 +70,11 @@ Cc: David Howells <dhowells@redhat.com>,
 	v9fs@lists.linux.dev,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH 2/4] netfs: Call `invalidate_cache` only if implemented
-Date: Fri, 14 Mar 2025 16:41:57 +0000
-Message-ID: <20250314164201.1993231-3-dhowells@redhat.com>
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>
+Subject: [PATCH 3/4] netfs: Fix rolling_buffer_load_from_ra() to not clear mark bits
+Date: Fri, 14 Mar 2025 16:41:58 +0000
+Message-ID: <20250314164201.1993231-4-dhowells@redhat.com>
 In-Reply-To: <20250314164201.1993231-1-dhowells@redhat.com>
 References: <20250314164201.1993231-1-dhowells@redhat.com>
 Precedence: bulk
@@ -83,83 +84,41 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-From: Max Kellermann <max.kellermann@ionos.com>
+rolling_buffer_load_from_ra() looms large in the perf report because it
+loops around doing an atomic clear for each of the three mark bits per
+folio.  However, this is both inefficient (it would be better to build a
+mask and atomically AND them out) and unnecessary as they shouldn't be set.
 
-Many filesystems such as NFS and Ceph do not implement the
-`invalidate_cache` method.  On those filesystems, if writing to the
-cache (`NETFS_WRITE_TO_CACHE`) fails for some reason, the kernel
-crashes like this:
+Fix this by removing the loop.
 
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- #PF: supervisor instruction fetch in kernel mode
- #PF: error_code(0x0010) - not-present page
- PGD 0 P4D 0
- Oops: Oops: 0010 [#1] SMP PTI
- CPU: 9 UID: 0 PID: 3380 Comm: kworker/u193:11 Not tainted 6.13.3-cm4all1-hp #437
- Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 10/17/2018
- Workqueue: events_unbound netfs_write_collection_worker
- RIP: 0010:0x0
- Code: Unable to access opcode bytes at 0xffffffffffffffd6.
- RSP: 0018:ffff9b86e2ca7dc0 EFLAGS: 00010202
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 7fffffffffffffff
- RDX: 0000000000000001 RSI: ffff89259d576a18 RDI: ffff89259d576900
- RBP: ffff89259d5769b0 R08: ffff9b86e2ca7d28 R09: 0000000000000002
- R10: ffff89258ceaca80 R11: 0000000000000001 R12: 0000000000000020
- R13: ffff893d158b9338 R14: ffff89259d576900 R15: ffff89259d5769b0
- FS:  0000000000000000(0000) GS:ffff893c9fa40000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: ffffffffffffffd6 CR3: 000000054442e003 CR4: 00000000001706f0
- Call Trace:
-  <TASK>
-  ? __die+0x1f/0x60
-  ? page_fault_oops+0x15c/0x460
-  ? try_to_wake_up+0x2d2/0x530
-  ? exc_page_fault+0x5e/0x100
-  ? asm_exc_page_fault+0x22/0x30
-  netfs_write_collection_worker+0xe9f/0x12b0
-  ? xs_poll_check_readable+0x3f/0x80
-  ? xs_stream_data_receive_workfn+0x8d/0x110
-  process_one_work+0x134/0x2d0
-  worker_thread+0x299/0x3a0
-  ? __pfx_worker_thread+0x10/0x10
-  kthread+0xba/0xe0
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork+0x30/0x50
-  ? __pfx_kthread+0x10/0x10
-  ret_from_fork_asm+0x1a/0x30
-  </TASK>
- Modules linked in:
- CR2: 0000000000000000
-
-This patch adds the missing `NULL` check.
-
-Fixes: 0e0f2dfe880f ("netfs: Dispatch write requests to process a writeback slice")
-Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
-Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
 cc: netfs@lists.linux.dev
 cc: linux-cifs@vger.kernel.org
 cc: linux-fsdevel@vger.kernel.org
-cc: stable@vger.kernel.org
 ---
- fs/netfs/write_collect.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/netfs/rolling_buffer.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 294f67795f79..3fca59e6475d 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -400,7 +400,8 @@ void netfs_write_collection_worker(struct work_struct *work)
- 	trace_netfs_rreq(wreq, netfs_rreq_trace_write_done);
+diff --git a/fs/netfs/rolling_buffer.c b/fs/netfs/rolling_buffer.c
+index 75d97af14b4a..207b6a326651 100644
+--- a/fs/netfs/rolling_buffer.c
++++ b/fs/netfs/rolling_buffer.c
+@@ -146,10 +146,6 @@ ssize_t rolling_buffer_load_from_ra(struct rolling_buffer *roll,
  
- 	if (wreq->io_streams[1].active &&
--	    wreq->io_streams[1].failed) {
-+	    wreq->io_streams[1].failed &&
-+	    ictx->ops->invalidate_cache) {
- 		/* Cache write failure doesn't prevent writeback completion
- 		 * unless we're in disconnected mode.
- 		 */
+ 	/* Store the counter after setting the slot. */
+ 	smp_store_release(&roll->next_head_slot, to);
+-
+-	for (; ix < folioq_nr_slots(fq); ix++)
+-		folioq_clear(fq, ix);
+-
+ 	return size;
+ }
+ 
 
 
