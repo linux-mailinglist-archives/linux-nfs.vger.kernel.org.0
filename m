@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-10634-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10635-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D4FA65FF9
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:02:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94697A65FEF
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:01:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22578189806D
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:00:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F58F3ABCDF
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:00:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7536202C40;
-	Mon, 17 Mar 2025 21:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF3A02040BE;
+	Mon, 17 Mar 2025 21:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzQR6Vc+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Of15iLVt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E1320296C;
-	Mon, 17 Mar 2025 21:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4AA204588;
+	Mon, 17 Mar 2025 21:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742245209; cv=none; b=hXtFJRq2/V60rFIZYtCT/xA+34rvY/T/xowzKckxYKm3WqoK2DP07EtsihDE+DjTaHpkdoxDRuOQcgLXKRhqgN5xQB3KdVdcuSWKptJ5uNCyhJePJIr/yKomU51+cxE7Wp7oyzKWgs7E25hKlpzR92Sq1q2ANS6PJ5CO+Mo0Ahk=
+	t=1742245211; cv=none; b=Tgp6jXOVk+4gtF4fhTRtazWSKy3FB0vthkuPqBZFMPdbzxvhSTMuQ/PjEe50g8b+z3ZYrFey8K4taa7ux1531hOPIafAkEfD6rMwfJ5qmgn3Iy/gPUcWAs9SRsMJqwu3yGGEl9weP8TjkEU88uv3hHZjKeLNqKGde7Pnx75v2+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742245209; c=relaxed/simple;
-	bh=+G4GEs+C3F247y1XxEheT7t8MXEdbzC3dtqmXdncARw=;
+	s=arc-20240116; t=1742245211; c=relaxed/simple;
+	bh=Ns96+RGe273nraJ8gzjQKb0+xRtXkPKEmkrCxe31bqU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GJRMBu/pFuXw4ijg+eCjZmfaOnwWSXN9qSO1+x4/xBD0A0Vci4aN+KzrSUkD/TkYHqiHZnaqvNGTN0J4xAm58AjpqnPeIOjDO2cnq+glNgT9hCQviDX5uBnANTfpOcLGUv+izJjeHfC2x7BHXTC1PYAMP+ZeafQGw4CDZPts+1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzQR6Vc+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66DBC4CEEF;
-	Mon, 17 Mar 2025 21:00:07 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ssH440yc/orWZaTyuMET2QEZyJ2NnLOdB6RnEnDlUPkt/vMNiYc0Kb1g1QooF9OJb6fMxh1b2p9/+CwnZKHQEYDZsi4MW6Kp2Wodl1D7WzLFbOfSKu2aPWJtL6HUkb87bLqCufIpEMF+/Cf2DK+mSqtz3YxOOCw/1oGli6LmabE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Of15iLVt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91375C4CEE3;
+	Mon, 17 Mar 2025 21:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742245209;
-	bh=+G4GEs+C3F247y1XxEheT7t8MXEdbzC3dtqmXdncARw=;
+	s=k20201202; t=1742245211;
+	bh=Ns96+RGe273nraJ8gzjQKb0+xRtXkPKEmkrCxe31bqU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HzQR6Vc+47rQmBdPLXfcFpV3KmDrShA+dR+S2i3PFe4GPKGj8VsUF1kz081Tsk8Jx
-	 O688l3oKvCtLPIoxYFGH2pntRpzSqV0uezhSjSzalys1/QVXa8gT6HzoFgHH+s3fJR
-	 nP+kovuERymE3EFM8JCUtBBxfey7Eb33uqpoNZ67nv4aiwXMg4H5FI16NRZNTkCvN+
-	 sDC3VcE5PDS/4wEoxg+UX+2VYOSYiUOFtrpzjZkoQCiZk+5SRWy7wpD9WZ5Nnc1fG9
-	 mkUxvzoKf2w3uphqNdpV/etpczsWj34hxuuobJII6/IYq7/is0I+XuHy5Vumwjp5LW
-	 9ZjrORlBOuy5w==
+	b=Of15iLVtGgr69R2qx28PpV27sB0uz95koGBw/lW0QlinSb6F9Q93Y1kpF6O+S+IoW
+	 zYpp82zROcbYybjcEJSc44CWxs94ssKvbXY3F6vjO4AXawQ4J64v2zvTqeftbNnDxd
+	 +77igDWSQGtHUEgTHS5y0JV2XMKD7OO4d13jhk2PoviYjJvTo61kcxi69uciEB31xP
+	 UGieJyI5PJPMsaVe6GxqX3Hg5qssJW8Jev6FeqPSN1a0JNinRmW11EAgN4dNPg8JP0
+	 p6ZpIY+MJxk5R7UykWif/aQlsglgT//4UvRfeM0L+qbnxli+JaaLW4JgdCRnavZMUb
+	 pdL7+t0F3nMwQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 17 Mar 2025 16:59:53 -0400
-Subject: [PATCH RFC 1/9] sunrpc: transplant shutdown_client() to sunrpc
- module
+Date: Mon, 17 Mar 2025 16:59:54 -0400
+Subject: [PATCH RFC 2/9] lockd: add a helper to shut down rpc_clnt in
+ nlm_host
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-rpc-shutdown-v1-1-85ba8e20b75d@kernel.org>
+Message-Id: <20250317-rpc-shutdown-v1-2-85ba8e20b75d@kernel.org>
 References: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
 In-Reply-To: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -67,110 +67,74 @@ Cc: Josef Bacik <josef@toxicpanda.com>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3086; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+G4GEs+C3F247y1XxEheT7t8MXEdbzC3dtqmXdncARw=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn2I1Ufn1hQfrwvIELveta9eb6BpvxFGO9B1fp/
- ADErQVybXqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9iNVAAKCRAADmhBGVaC
- FdLRD/4zgiTqDasldmLP4CLSQQyQCbGPyo9GmUIFWygN19EJNbOdhs0AtGhLHEOwvkPecrFPlre
- 34HHVDpatRohB66nvvzC4UD4kHjxdq4MHHrbl5RXUcSZZBhdk7r9LzmWxn+8+wepCUyOu2zIKyc
- ohRZP+/+6sYv0BNbITH/BS7EcwAgwxObZEbfF5EluHE5YNH9BkEup11i4cxEHHFtZljf8whKVsH
- 9+aZksDsq074CcQYF7sGeRxdQR235p3nbMOuHstcOoVL2R/Bw1La4hIhxOR2jYtBS12NSilVmSm
- rIDMFrpa/r1dlvsblgaggYw0lvKTYY/4fzE/NdBgtZhn02pGU+IFv42spf0wOc+AlTOLu+U7rSE
- V/5PK/ElO+QzLXVNq6T5bSOq1JeHdG179wKtzezBAE+/e1rx+hdMOGp4TC/Iww0nYG+hISBQ5dV
- TkglMGbGt8/KPmhGl+WuNUYMWoVkoeizSmewaHRPRoKyGEAPhqAY1+gj30v+pWOh9Uh1CGNC1Bc
- IlTc+VIdQ+GbaWvDTf8UXQ8RGtTcWyxl8yH8rBMj1XBmbmgUfNCrmVo0PUxJbfE4NetehkSJGxA
- sZVHrhMA9KN4Dmw8t16XFeGONEcUwkQDxd9uBEOWuwAonv9cEak5RwNUzLKyQgnQ3j5izMlCeZf
- HgqIeG0aoSmLuKg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1812; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Ns96+RGe273nraJ8gzjQKb0+xRtXkPKEmkrCxe31bqU=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn2I1UTR7ayWfZAPvYwSItpsKRM5A3zab+g8/Za
+ 0503n0vxfmJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9iNVAAKCRAADmhBGVaC
+ FQeDD/4gNSL2p+8sfejzjr1xgyiVgmM0MswB4DtzBmLzO9ZuxMPBoaBbuwwLTg8wqdNaY9581le
+ xAUlmV3x7pQyJJoY3KHHWeZqlcjWtU9/gvnEp80kzGC0BBLGLUvcHKrW52OYlNxwtSTSZIOfS/G
+ 3EPYdFNQHdSnuFZkMtUOznVKMIr9GT7l4FYF/cHbM4DO4nOD0DAR1tsQy8nvQ6TI1B3wY0cGtGn
+ xgYQVG0CYp8NyTzJeakV6fFSuONPdxGtGtsd5hs0tjh/qvtqkP9n0vC+2nZ/6qzmZYGKNR+XQ46
+ O94gyG3CdjYaSbwRqNpCkswLuJY1buI5mHDy72BGzTuYjx0Ngau1RgYCcD4WZd141zyvrTR4sAZ
+ j119lU/Kq6gBu47kUgeEipXxcuyEAFjg0LopkpgNXNAIxcSLR1Pd2YI+sHrYnQkqw76v7gqblr3
+ sgs0aI7t+BvZA3qxRK19KJpjIJThMIcUEen4xlZG3SP+4valqPY7mmlETcobhWk/pxeCfUR3fN8
+ rSuYnoDEfAg1kw1TDQQ3eN+XE9QYQiLFfSS48LkGcx/Iz2IkxTSQp8YtIU3uDnumHKOjVshsWCD
+ qwZ7YK2ozNVjBtc3F5pjiaCsr/jXfHdzVfZP38HebxnSL8m231pr3dAaZ2upIwaW5gSNGdEccap
+ wSaKdKkCfV1ryaQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This is really a sunrpc-level function, and in later patches we'll need
-to call this routine from lockd as well. Move it to the sunrpc module,
-rename and export it.
+NFS reaching into struct nlm_host is at least a minor layering
+violation. Make an exported helper function and have nfs call that
+instead.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfs/sysfs.c               | 19 ++++---------------
- include/linux/sunrpc/sched.h |  1 +
- net/sunrpc/clnt.c            | 12 ++++++++++++
- 3 files changed, 17 insertions(+), 15 deletions(-)
+ fs/lockd/host.c             | 7 +++++++
+ fs/nfs/sysfs.c              | 2 +-
+ include/linux/lockd/lockd.h | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index 7b59a40d40c061a41b0fbde91aa006314f02c1fb..c29c5fd639554461bdcd9ff612726194910d85b5 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -217,17 +217,6 @@ void nfs_netns_sysfs_destroy(struct nfs_net *netns)
+diff --git a/fs/lockd/host.c b/fs/lockd/host.c
+index 5e6877c37f7303e7141fbb96bc278a207c8e5ddc..ed88c102eca0f999a9c5351467d823b806c30962 100644
+--- a/fs/lockd/host.c
++++ b/fs/lockd/host.c
+@@ -692,3 +692,10 @@ nlm_gc_hosts(struct net *net)
+ 		ln->next_gc = jiffies + NLM_HOST_COLLECT;
  	}
  }
- 
--static bool shutdown_match_client(const struct rpc_task *task, const void *data)
--{
--	return true;
--}
--
--static void shutdown_client(struct rpc_clnt *clnt)
--{
--	clnt->cl_shutdown = 1;
--	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
--}
--
- static ssize_t
- shutdown_show(struct kobject *kobj, struct kobj_attribute *attr,
- 				char *buf)
-@@ -258,14 +247,14 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
- 		goto out;
- 
- 	server->flags |= NFS_MOUNT_SHUTDOWN;
--	shutdown_client(server->client);
--	shutdown_client(server->nfs_client->cl_rpcclient);
-+	rpc_clnt_shutdown(server->client);
-+	rpc_clnt_shutdown(server->nfs_client->cl_rpcclient);
- 
- 	if (!IS_ERR(server->client_acl))
--		shutdown_client(server->client_acl);
-+		rpc_clnt_shutdown(server->client_acl);
++
++void
++nlm_host_shutdown_rpc(struct nlm_host *host)
++{
++	rpc_clnt_shutdown(host->h_rpcclnt);
++}
++EXPORT_SYMBOL_GPL(nlm_host_shutdown_rpc);
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index c29c5fd639554461bdcd9ff612726194910d85b5..c0bfe6df53b51c0fcc541c33ab7590813114d7ec 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -254,7 +254,7 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+ 		rpc_clnt_shutdown(server->client_acl);
  
  	if (server->nlm_host)
--		shutdown_client(server->nlm_host->h_rpcclnt);
-+		rpc_clnt_shutdown(server->nlm_host->h_rpcclnt);
+-		rpc_clnt_shutdown(server->nlm_host->h_rpcclnt);
++		nlm_host_shutdown_rpc(server->nlm_host);
  out:
  	return count;
  }
-diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-index eac57914dcf3200c1a6ed39ab030e3fe8b4da3e1..fe7c39a17ce44ec68c0cf057133d0f8e7f0ae797 100644
---- a/include/linux/sunrpc/sched.h
-+++ b/include/linux/sunrpc/sched.h
-@@ -232,6 +232,7 @@ unsigned long	rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
- 				 bool (*fnmatch)(const struct rpc_task *,
- 						 const void *),
- 				 const void *data);
-+void		rpc_clnt_shutdown(struct rpc_clnt *clnt);
- void		rpc_execute(struct rpc_task *);
- void		rpc_init_priority_wait_queue(struct rpc_wait_queue *, const char *);
- void		rpc_init_wait_queue(struct rpc_wait_queue *, const char *);
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 2fe88ea79a70c134e58abfb03fca230883eddf1f..0028858b12d97e7b45f4c24cfbd761ba2a734b32 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -934,6 +934,18 @@ unsigned long rpc_cancel_tasks(struct rpc_clnt *clnt, int error,
- }
- EXPORT_SYMBOL_GPL(rpc_cancel_tasks);
+diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+index c8f0f9458f2cc035fd9161f8f2486ba76084abf1..6b8c912f443c3b4130f49b8170070d0b794abb94 100644
+--- a/include/linux/lockd/lockd.h
++++ b/include/linux/lockd/lockd.h
+@@ -248,6 +248,7 @@ void		  nlm_shutdown_hosts(void);
+ void		  nlm_shutdown_hosts_net(struct net *net);
+ void		  nlm_host_rebooted(const struct net *net,
+ 					const struct nlm_reboot *);
++void		  nlm_host_shutdown_rpc(struct nlm_host *host);
  
-+static bool shutdown_match_client(const struct rpc_task *task, const void *data)
-+{
-+	return true;
-+}
-+
-+void rpc_clnt_shutdown(struct rpc_clnt *clnt)
-+{
-+	clnt->cl_shutdown = 1;
-+	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
-+}
-+EXPORT_SYMBOL_GPL(rpc_clnt_shutdown);
-+
- static int rpc_clnt_disconnect_xprt(struct rpc_clnt *clnt,
- 				    struct rpc_xprt *xprt, void *dummy)
- {
+ /*
+  * Host monitoring
 
 -- 
 2.48.1
