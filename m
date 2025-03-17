@@ -1,71 +1,68 @@
-Return-Path: <linux-nfs+bounces-10647-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10648-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 532A8A660CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:41:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74E51A66112
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:58:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9C7BE179FEE
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:41:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9DF257A86D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 363F6202C42;
-	Mon, 17 Mar 2025 21:41:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE2B2045B8;
+	Mon, 17 Mar 2025 21:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUXMA25p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClgwC4+t"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058FD1F790C;
-	Mon, 17 Mar 2025 21:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00BC2036E3;
+	Mon, 17 Mar 2025 21:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742247686; cv=none; b=sKqKq3OTE/kTnzJCfj9w0YN+USMOjlQyC+2BaSKxXWO4VdEC84Iz/Mpf3XqQHfgkh7rmPynIXS7G+3Yw2HGDb43DOwZbdXXUb17Y2AK4ld/BCmfovKxRDrI3ykV05Q75UDV1xj1P5Jwk4h8xMIJQOcus1CAHZQM7OvPIUr70OOo=
+	t=1742248677; cv=none; b=kryJa2qvwWeu6wyMap5BzRMWdUhrcl7VaWmB/d7UCogY+KIqyE5WY9KeNPVVN3O6q8lo0VEmul0wUlxNNKi3OVIbj8ztDUwbz1eHGcA8EP0V3jvFIHPc4fm1Loyc+sxOpbzoPMTZh0q+vvwavLOIeyaAvOV8w6cZQZkTYb6aVgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742247686; c=relaxed/simple;
-	bh=NxaQ2z5Ductc/Rc1Y6vuBh7CRWuBSDSiCQP76y8+9H0=;
+	s=arc-20240116; t=1742248677; c=relaxed/simple;
+	bh=j6K1dbve2oh+ujMZ6Cjo8r5HqBCZVAK11+rWi3CwU1s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A8hegDI19Op2fLZc2LNyaaRcv3ADGjqmGoIS6yftzEnFXE09Z9TXSg7FvpWwT75/h8eaizgIF179A7dtrp7DAqzcbCexuviVgj1vo+3080MNhKh4O9Op3nxv7rpHfoyjkDVw1F4L217NvkEagr65IZkTgtu4uaNgC0eLgL7bnH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUXMA25p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A0DC4CEE3;
-	Mon, 17 Mar 2025 21:41:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BBaLbUMxbqSKPE1kpytvDsaCuGp/eSigTkg8sFZfY5PYQBoJUsqSsmU5Lcd2CD7nTnLHBYPmEwSxxdP+DZsuL4CtuTLbz139IdUHrnKKmj3mO90OJaP8XL+vjG58MChCnRyq6q4XMXH/6TduUdN3TNIDlGkrbnl+6JZ0c9s2xKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClgwC4+t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BCDC4CEE3;
+	Mon, 17 Mar 2025 21:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742247685;
-	bh=NxaQ2z5Ductc/Rc1Y6vuBh7CRWuBSDSiCQP76y8+9H0=;
+	s=k20201202; t=1742248676;
+	bh=j6K1dbve2oh+ujMZ6Cjo8r5HqBCZVAK11+rWi3CwU1s=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=DUXMA25pMLqTMTmBwcFwvsFaiisFSwfyf5dGXoS6IMPohX0quvrxynX4CamQ+141Y
-	 BKLPS3cofE7T3Jm9HyAUcdB00ltELPh9Y+MefkZXChy7zAnnAgFu4uncPVZ+Apvqbx
-	 mRYtMqnxCfaHv601QSLtJF5iJeJr9KwRSbYNHYG8jhz+EVcRiBBB7gy5c1u4MN7gUu
-	 IeW/zR4iUeTWyKEZfyYdISaM2KxJHxIuRbnAOle2T+XrW98jpgms0mjzeQyvlNjMpz
-	 hxR+F+JWIAAXRriP+7ox2CDnBBphzUD27xlGjl9qdM5mZ7RlG5jVf6SxAcgBIeMYPL
-	 hdzAdb8F06BrQ==
-Message-ID: <a348dabadbe5611fcf4478b2103b7d8301c31ce5.camel@kernel.org>
-Subject: Re: [PATCH RFC 9/9] sunrpc: don't upgrade passive net reference in
- xs_create_sock
+	b=ClgwC4+ttqXzNyrUCvLO405euaZstznGAn8a21c27h+QkDpQQdPi1kZhxKpZWL5C9
+	 HdhxmgAX/+yIl7slplsWBHqW8QC+EyJ4qYk7ldUialraGFjQ1tAFiE9uFO5PQZLw5S
+	 cIGVtb9i2OP9Y7SSY6vBsdycQe8qnQO93J3hd5gsF5J19R0ldHljWbv1jUx891egU0
+	 EgSQWKVYorYalvM00ENzkFILasHQuxk1LAM51Umn5cdzSpC+KbMgNv2/FnL1CKskn8
+	 F7UTAtGA6KyvGErV/BKYptmLHWuTk9t1CmjeMHg7+Ek0gnd9q6GYwF5Zj6sk/mUhf9
+	 yvWZR8lFu8bLA==
+Message-ID: <05463008488b1fea6fb47a2d1a525096fecda861.camel@kernel.org>
+Subject: Re: [PATCH RFC 0/9] nfs/sunrpc: stop holding netns references in
+ client-side NFS and RPC objects
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>, "davem@davemloft.net"	
- <davem@davemloft.net>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
- "pabeni@redhat.com"	 <pabeni@redhat.com>, "okorniev@redhat.com"
- <okorniev@redhat.com>,  "tom@talpey.com"	 <tom@talpey.com>,
- "anna@kernel.org" <anna@kernel.org>, "horms@kernel.org"	
- <horms@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>,
- "Dai.Ngo@oracle.com"	 <Dai.Ngo@oracle.com>, "edumazet@google.com"
- <edumazet@google.com>,  "neilb@suse.de"	 <neilb@suse.de>
+To: Trond Myklebust <trondmy@hammerspace.com>, "horms@kernel.org"	
+ <horms@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
+ "chuck.lever@oracle.com"	 <chuck.lever@oracle.com>, "okorniev@redhat.com"
+ <okorniev@redhat.com>,  "anna@kernel.org"	 <anna@kernel.org>,
+ "kuba@kernel.org" <kuba@kernel.org>, "tom@talpey.com"	 <tom@talpey.com>,
+ "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>, "neilb@suse.de"	
+ <neilb@suse.de>, "edumazet@google.com" <edumazet@google.com>, 
+ "pabeni@redhat.com"	 <pabeni@redhat.com>
 Cc: "josef@toxicpanda.com" <josef@toxicpanda.com>, 
  "linux-nfs@vger.kernel.org"
 	 <linux-nfs@vger.kernel.org>, "bcodding@redhat.com" <bcodding@redhat.com>, 
  "linux-kernel@vger.kernel.org"
 	 <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
 	 <netdev@vger.kernel.org>
-Date: Mon, 17 Mar 2025 17:41:23 -0400
-In-Reply-To: <1c1a17caf13911270d02ae2fb0147136580f254c.camel@hammerspace.com>
+Date: Mon, 17 Mar 2025 17:57:53 -0400
+In-Reply-To: <b4a720542c9afcdf3d7cf8641893b448423e0a9b.camel@hammerspace.com>
 References: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
-				 <20250317-rpc-shutdown-v1-9-85ba8e20b75d@kernel.org>
-			 <8555e0cb4774bc1b225fe628cc4e07eb3c6e2a40.camel@hammerspace.com>
-		 <1b2824d29af8b23ed59db976420e048eff875159.camel@kernel.org>
-	 <1c1a17caf13911270d02ae2fb0147136580f254c.camel@hammerspace.com>
+	 <b4a720542c9afcdf3d7cf8641893b448423e0a9b.camel@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -150,80 +147,58 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-03-17 at 21:37 +0000, Trond Myklebust wrote:
-> On Mon, 2025-03-17 at 17:36 -0400, Jeff Layton wrote:
-> > On Mon, 2025-03-17 at 21:28 +0000, Trond Myklebust wrote:
-> > > On Mon, 2025-03-17 at 17:00 -0400, Jeff Layton wrote:
-> > > > With the move to having sunrpc client xprts not hold active
-> > > > references
-> > > > to the net namespace, there is no need to upgrade the socket's
-> > > > reference
-> > > > in xs_create_sock. Just keep the passive reference instead.
-> > > >=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > =C2=A0net/sunrpc/xprtsock.c | 3 ---
-> > > > =C2=A01 file changed, 3 deletions(-)
-> > > >=20
-> > > > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> > > > index
-> > > > 83cc095846d356f24aed26e2f98525662a6cff1f..0c3d7552f772d6f8477a3ae
-> > > > d8f0
-> > > > c513b62cdf589 100644
-> > > > --- a/net/sunrpc/xprtsock.c
-> > > > +++ b/net/sunrpc/xprtsock.c
-> > > > @@ -1941,9 +1941,6 @@ static struct socket *xs_create_sock(struct
-> > > > rpc_xprt *xprt,
-> > > > =C2=A0		goto out;
-> > > > =C2=A0	}
-> > > > =C2=A0
-> > > > -	if (protocol =3D=3D IPPROTO_TCP)
-> > > > -		sk_net_refcnt_upgrade(sock->sk);
-> > > > -
-> > > > =C2=A0	filp =3D sock_alloc_file(sock, O_NONBLOCK, NULL);
-> > > > =C2=A0	if (IS_ERR(filp))
-> > > > =C2=A0		return ERR_CAST(filp);
-> > > >=20
-> > >=20
-> > > Is this not going to reintroduce the bug described by
-> > > https://lore.kernel.org/netdev/67b72aeb.050a0220.14d86d.0283.GAE@goog=
-le.com/T/#u
-> > > ?
-> > >=20
-> > > As I understand it, the problem has nothing to do with whether or
-> > > not
-> > > NFS or the RPC layer holds a reference to the net namespace, but
-> > > rather
-> > > whether there are still packets in the socket queues at the time
-> > > when
-> > > that net namespace is being freed.
-> > >=20
-> > >=20
+On Mon, 2025-03-17 at 21:35 +0000, Trond Myklebust wrote:
+> On Mon, 2025-03-17 at 16:59 -0400, Jeff Layton wrote:
+> > We have a long-standing problem with containers that have NFS mounts
+> > in
+> > them. Best practice is to unmount gracefully, of course, but
+> > sometimes
+> > containers just spontaneously die (e.g. SIGSEGV in the init task in
+> > the
+> > container). When that happens the orchestrator will see that all of
+> > the
+> > tasks are dead, and will detach the mount namespace and kill off the
+> > network connection.
 > >=20
-> > I don't think so. That syzkaller report was closed by this patch:
+> > If there are RPCs in flight at the time, the rpc_clnt will try to
+> > retransmit them indefinitely, but there is no hope of them ever
+> > contacting the server since nothing in userland can reach the netns
+> > at that point to fix anything.
 > >=20
-> > =C2=A0=C2=A0=C2=A0 5c70eb5c593d net: better track kernel sockets lifeti=
-me
+> > This patchset takes the approach of changing various nfs client and
+> > sunrpc objects to not hold a netns reference. Instead, when a nfs_net
+> > or
+> > sunrpc_net is exiting, all nfs_server, nfs_client and rpc_clnt
+> > objects
+> > associated with it are shut down, and the pre_exit functions block
+> > until they are gone.
 > >=20
-> > That says:
+> > With this approach, when the last userland task in the container
+> > exits,
+> > the NFS and RPC clients get cleaned up automatically. As a bonus,
+> > this
+> > fixes another bug with the gssproxy RPC client that causes net
+> > namespace
+> > leaks in any container where it runs (details in the patch
+> > descriptions).
 > >=20
-> > =C2=A0=C2=A0=C2=A0 "To fix this, make sure that kernel sockets own a re=
-ference on
-> > net
-> > passive."
-> >=20
-> > With this, we still do keep a passive reference on the net in the
-> > socket, which I think is enough.
 >=20
-> No. You just removed that by reverting the patch that assigns the
-> passive reference.
+> So with this approach, what happens if the NFS mount was created in a
+> container, but got bind mounted somewhere else?
 >=20
 
-That's not how I read sk_net_refcnt_upgrade(). The socket already holds
-a passive reference on the netns. sk_net_refcnt_upgrade() puts that
-reference and then gets an active reference to the netns.
+The lifetime of these objects are tied to the net namespace. If it gets
+bind-mounted into a different mount namespace, while the tasks are
+setns()'ed into the correct net namespace, then I expect the mount
+would end up shut down at that point and be unusable, just like if you
+echo 1 into the shutdown file in sysfs.
 
-With this patchset, we just need to keep the passive one (I think).
+Hopefully no one is doing anything that silly. You wouldn't be able to
+upcall, for one thing, since there wouldn't be any more userland
+processes attached to the netns.
+
+I'll test that scenario and get back to you though. I do want to make
+sure that that's not going to lead to a crash or anything.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
