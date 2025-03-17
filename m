@@ -1,49 +1,50 @@
-Return-Path: <linux-nfs+bounces-10640-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10642-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB61CA6600B
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:04:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18B8FA6600F
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 22:04:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7B4519A280F
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:02:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 596EF19A0FFC
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Mar 2025 21:02:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E37232063D2;
-	Mon, 17 Mar 2025 21:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58ACD206F2C;
+	Mon, 17 Mar 2025 21:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rIxwAt6f"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mzh6aZRq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EEE2063C3;
-	Mon, 17 Mar 2025 21:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7B4206F23;
+	Mon, 17 Mar 2025 21:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742245219; cv=none; b=SAuslX/byX853RkP/rX+W73s2z0We2Rbu+FTcIJRVa4f37bNKsv+vUAZ6grendorZQusnFDhEqNI9tYBtsS7tL3Dz7yv6REJziDjbx/AgJu3rRsyV0e2R0LEpUyYaUMZaRt9RDL8OU++e7p++PK/WfmOTLXgfKEwxrlpuKa2vBE=
+	t=1742245223; cv=none; b=EhpzXlfKR0ptggqGmbed/qKE2Cw2kjPibz68Dz1D5cDZDei5ccGnoAPcXXdX989/02ff3TKzTgCm+UrZgdfeO5Yx5gGlpJRXwsEv7PghQ/RrSOBF7mwm74hagr9mjmaTz+i5DGyjgowVPHVn6TKi3hiMNvNNmFE4V3jZxK6+BVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742245219; c=relaxed/simple;
-	bh=FZgJlwD7q/KVkhllrSyqU3sWFbaUznyU5+XlxzH/Gu8=;
+	s=arc-20240116; t=1742245223; c=relaxed/simple;
+	bh=jM6hQB3KxGdlYpqgDDu0LJlP7dZIsC6hRFDyQ4A1hPY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qpr4O8Q3e9WxkHMTgVH8JFzWajHvnzBbMRuw9cMTcJUiXru0vElpOsgtuFipItkw7kazVcJ4s1xlKAgk1ZOsk5lmUXZaLAnu6XXhlpbQXYrvlUTopuFQ0bKck8TRv3by8Q31knbvpYFcXqJMAK9WgKrGVcXIh244+nJ+b7LZsEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rIxwAt6f; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 273FEC4CEF1;
-	Mon, 17 Mar 2025 21:00:18 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=KLtXACSiooIdZxDabxaVQwOhEOkhkAn+tm3jZtSdDN77Fg8p7YqSbKigvXF162Y9bHSH+BvgGiy09Uum70NqK5ZWjfMmuqRQVVwtM53u3Gq2P9nRVBWRcoxHwtdAmNTV7SOQyA8+dHCIih4OXPZcWlURh9r3Vd9hWODCImTLHt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mzh6aZRq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D932C4CEF1;
+	Mon, 17 Mar 2025 21:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742245219;
-	bh=FZgJlwD7q/KVkhllrSyqU3sWFbaUznyU5+XlxzH/Gu8=;
+	s=k20201202; t=1742245223;
+	bh=jM6hQB3KxGdlYpqgDDu0LJlP7dZIsC6hRFDyQ4A1hPY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rIxwAt6fr2y5XeH81YL7FXRqmGVCx7SoavWD56Dl7bBLvmnreN38RuFeY0718UbNT
-	 wrpnBbXyEvQi7VTzwEutZ7+00YDStUy+jaQ7M2mFtUxFmjq5mTRYoKMLba8s6WiDew
-	 e7E21YCo9+YxzGdLsWo9Qp1YOZU0SXqBxOON16j1cbJuSmYi/bfSXi/2JZ7ZIXOTKS
-	 9xFtjxvzylitoQqALz1v8PZ/ryIJoxgRsu9j9F/avvn8nwqBYMIpeBL4vsk4Ay/969
-	 qN0eh5fjkeFQ/NkKrR9rI+lfthUgNnMP3DhQUnZv2nMckLlOYlWWV70dVTnbaYIHDX
-	 4OmqGJk1Vb5gQ==
+	b=Mzh6aZRqfG2krE4LFAsF5dbxEUJR/6aFy43gZb/TkEhAnrPhiE/1zyVDd//CMXpYo
+	 TDj79lvKSYgNPMG+ntWnAajFOytb1DiQrLBmVMMQbjwClptCJ1wCerUMpuVAwlFfJd
+	 FRduzxhz0ddp6nV6UGvf41pTXFNerhc+owBa2yWFnnpL3eJhfwu6+tzxtNYhdqeB3K
+	 aQUXHEWFQkML+0ulD5USiomVOUlL+TZZExzyfFVKcEGgZb5Yz4FnBn5g7JJRnKo6Gl
+	 8oeAlwjaLfE7b9wL3gMxJquV7R1JoV/QBzW7PgXD24frNOSZAU+DCHuug4R/ojrGiO
+	 mqiMsF3BVDPlQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 17 Mar 2025 16:59:59 -0400
-Subject: [PATCH RFC 7/9] auth_gss: don't hold a net reference in gss_auth
+Date: Mon, 17 Mar 2025 17:00:01 -0400
+Subject: [PATCH RFC 9/9] sunrpc: don't upgrade passive net reference in
+ xs_create_sock
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250317-rpc-shutdown-v1-7-85ba8e20b75d@kernel.org>
+Message-Id: <20250317-rpc-shutdown-v1-9-85ba8e20b75d@kernel.org>
 References: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
 In-Reply-To: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -66,80 +67,46 @@ Cc: Josef Bacik <josef@toxicpanda.com>,
  linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2238; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=FZgJlwD7q/KVkhllrSyqU3sWFbaUznyU5+XlxzH/Gu8=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn2I1VPI8r7zGxukH/RwNzSdWwBI5QXfWDlhMDL
- /EB68xdHmiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ9iNVQAKCRAADmhBGVaC
- Fe3+D/9m/uy/A2wuVHMYADSwBcoYLZxk20mBOjp8qMXSH+EdJ/52UKcS/dauuVeOWtwlw+fUPu7
- wvRa9euPx9cbflNj67rGpCFRlynHicfSfukmLNEqYclDc84Dtw0P61ekDynYY3AuHVzTL0sBp0J
- KbixtyOCMB8Z7z1Q7tWXJIK7d2kecz+Ja8W9FR8FadAvtuhaO9HMGwdLkASeneUq0gzw4ZV2y3j
- fhsqsulm68M3T7mPQP28h3DfudyfC+BZIBmNaRRzEIJw7t9WcKXBdxNzzAqXUBeXeaDMF8nLooD
- n/vt4vXeNZua6rR+SHZoGSv8xsgBzoZRUEzJcf+rqAPAEhPgKgaIaUmNHDWn069VSHDIrIovNSK
- VfvYIJ4NKjY86diy+xU5mfTv9DMEVfVJvvbNM3ihuMKu9TtnzSdVZCl/j36CDUg22iz3qQphuQ1
- 5tqoi6jWbdmjcgSVutmGu5DgAMEHAHiYpIOUnEkw3pDK4B88vAZcGwJiEcbpmQHzsPVo/202Ua1
- b8KRq0g4OngyqvpwtsEXMyA16rPYLavup75HG9Gu6aiUD742isRTn4iiQWF9nrNzCxjTlxTwuqE
- ndyi5zCBbnqs9O5dsgK3es96LWHDjo3tkXAikBiJE9Euz/jFDHKlYySIl3Ohr0gKNsqb6fNnSBh
- 5L0fJf9nQiiQgLA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=836; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=jM6hQB3KxGdlYpqgDDu0LJlP7dZIsC6hRFDyQ4A1hPY=;
+ b=kA0DAAgBAA5oQRlWghUByyZiAGfYjVWiRKkxD6qwL79Bm7MvXbKxaKqHN3zIajad3pvAqXM3c
+ 4kCMwQAAQgAHRYhBEvA17JEcbKhhOr10wAOaEEZVoIVBQJn2I1VAAoJEAAOaEEZVoIV3loQAJMI
+ HnR/zomdrtqt3k0IG0M7q9Bqe8M8FtP8izUB5Ny0WlY84to4WT+HXgXxubH6hWDwv6swdi0MJQA
+ ztwnokr7fU3GNLmWGFgv7xRqezpOyThr8FgAD1F4MOcsSlOhIZC/0V3SqwfeQkHJjidtw2gC5Ks
+ ZzdynlUOq133ZKMOKi9P5Stq8T6wf5uaLIwYoutrhOWzGSHmes1wZOi58tJMYHKa9oBQVxsA0VH
+ ng818IoePQgBlKHzDxwD+Zzp9TO/SWND26I2/+kJB8mCt6oLXNoKPRD/65OOfPEZRQb9486I7J+
+ NBs/23felh7QEI85hAsSjM7C1lN4EUmTf91sRc9YaELlMa0dE/JNIolnox/6kco6FTeqLIGVkAU
+ W7Qy2e8dE89db2fdqQRt48vMwqIcezz+fcsLC4Y/t0foS9HMNoi29HaLQMfGXdgfi8l0Ym1/xUT
+ EOzW2WOc+m6791GGn+eDU8rIbXassJbZOYLpNJothbIQSZ+H1fEZoOeAMc3lNpaR/Qj/m3eNkY3
+ Kk9S8fGwTzgTrfS00vaFBnoXyyAafdelCEtmKIWGTbJ1VZfANRLIFa7No00bIlQkH8ZTWXwqyC5
+ mzn2923EPj+reJUqzhKS3pVeOIySpZtpyulq42I/v/GdyxLuuFMQhiz83/3n76GLvZgsmMXOlTj
+ zJeXK
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-It's not clear to me that these net references were ever needed. They
-were added in commit e726340ac9cf ("RPCSEC_GSS: Further cleanups"), but
-there no is explanation for taking it in the patch description and it's
-not clear what race this prevents.
-
-Now that the gssproxy client is shut down in pre_exit, there should be
-no need to keep a reference here.
+With the move to having sunrpc client xprts not hold active references
+to the net namespace, there is no need to upgrade the socket's reference
+in xs_create_sock. Just keep the passive reference instead.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/auth_gss/auth_gss.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ net/sunrpc/xprtsock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 78571776f446e2097bf25642c182d57546502803..9698914d7ed3e5674351f9cc4f43c08d7b746bc3 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -89,7 +89,6 @@ struct gss_auth {
- 	enum rpc_gss_svc service;
- 	struct rpc_clnt *client;
- 	struct net	*net;
--	netns_tracker	ns_tracker;
- 	/*
- 	 * There are two upcall pipes; dentry[1], named "gssd", is used
- 	 * for the new text-based upcall; dentry[0] is named after the
-@@ -1045,12 +1044,11 @@ gss_create_new(const struct rpc_auth_create_args *args, struct rpc_clnt *clnt)
- 			goto err_free;
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 83cc095846d356f24aed26e2f98525662a6cff1f..0c3d7552f772d6f8477a3aed8f0c513b62cdf589 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1941,9 +1941,6 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
+ 		goto out;
  	}
- 	gss_auth->client = clnt;
--	gss_auth->net = get_net_track(rpc_net_ns(clnt), &gss_auth->ns_tracker,
--				      GFP_KERNEL);
-+	gss_auth->net = rpc_net_ns(clnt);
- 	err = -EINVAL;
- 	gss_auth->mech = gss_mech_get_by_pseudoflavor(flavor);
- 	if (!gss_auth->mech)
--		goto err_put_net;
-+		goto err_free;
- 	gss_auth->service = gss_pseudoflavor_to_service(gss_auth->mech, flavor);
- 	if (gss_auth->service == 0)
- 		goto err_put_mech;
-@@ -1101,8 +1099,6 @@ gss_create_new(const struct rpc_auth_create_args *args, struct rpc_clnt *clnt)
- 	rpcauth_destroy_credcache(auth);
- err_put_mech:
- 	gss_mech_put(gss_auth->mech);
--err_put_net:
--	put_net_track(gss_auth->net, &gss_auth->ns_tracker);
- err_free:
- 	kfree(gss_auth->target_name);
- 	kfree(gss_auth);
-@@ -1118,7 +1114,6 @@ gss_free(struct gss_auth *gss_auth)
- 	gss_pipe_free(gss_auth->gss_pipe[0]);
- 	gss_pipe_free(gss_auth->gss_pipe[1]);
- 	gss_mech_put(gss_auth->mech);
--	put_net_track(gss_auth->net, &gss_auth->ns_tracker);
- 	kfree(gss_auth->target_name);
  
- 	kfree(gss_auth);
+-	if (protocol == IPPROTO_TCP)
+-		sk_net_refcnt_upgrade(sock->sk);
+-
+ 	filp = sock_alloc_file(sock, O_NONBLOCK, NULL);
+ 	if (IS_ERR(filp))
+ 		return ERR_CAST(filp);
 
 -- 
 2.48.1
