@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-10667-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10668-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3983A680D7
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 00:42:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E37B9A680EB
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 00:53:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5A3A3A93A9
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 23:42:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC5083ACC27
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 23:52:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A49D82080CD;
-	Tue, 18 Mar 2025 23:42:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 449DF1DD0D5;
+	Tue, 18 Mar 2025 23:52:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y94aRK9/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlQE02S9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13C020765F
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 23:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C94C1C5F2C
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 23:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742341348; cv=none; b=ILlGvQdVbBR9xb8fdtz0xLKqPJi4jrqI3TYyu/qWvz+BM/449aMQLuxzJmh5dXABR3Bt1PQHi55pqYSExOEmHi21WK58dj1xSI+PPtGm1iqeNNH1T2dwEFveXC5PDFp152/yZtFWzawtwX08goapV5Vl+yRKLBVsKwwFjKuRvMA=
+	t=1742341958; cv=none; b=gfCWFI11zWGOWAaouovHgvnGy7RaNyaaa+PCP582TU35QS1IiKaOqaZQL2/kGy5QqRe8tFJQMhujdZr117wzrlID8bEaYayC0C39ySxeWfuz1AErkxykjtnOt+vVUmcxNJFZSNchx8tIdxdycYhZu3KgVCkKTFxkxJidBWRgZXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742341348; c=relaxed/simple;
-	bh=RfbWfSDWuJkL92E4Xy0gyzmHWLTVS/PVthtLPo2mRyI=;
+	s=arc-20240116; t=1742341958; c=relaxed/simple;
+	bh=OlmqDL2RrETjYsGCjU830/2LcV2MsEtWx8EZhrEqz2s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uHnoc7MCbsg+Bp0dAtoOl/f8z59k9mvwqazSH61Q1rNRvpyG2ApWROZ1tWEHm3jyFp2GI6TrvN6B8B8Ih6QV0k/7RVHCbvb3gDmDZ4pN2KjkU7rnOwzVjMKHGCDn9cPLd2cy9BkJZQ9CLVhMubX3TYEePE8+27+dqrql6/xOTww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y94aRK9/; arc=none smtp.client-ip=209.85.208.47
+	 To:Cc:Content-Type; b=B2zUvSR8NtMVzu9L/Dzq5oevmG6O7mu7SA0s3xp1vcO9EI9PHjNq+v6mf9Kdo7luvo7EW1l1Zlf/ZyOLTcVpBIV6WdjeLeZXToODTD9OZaRvzrE1ggg68x1F+qyu/vrCaCxgPuMqtkTsyiEH8bIUENsy9W1W1t1ihPO6/kJ+WF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlQE02S9; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so8799350a12.0
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 16:42:26 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso10622671a12.3
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 16:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742341345; x=1742946145; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742341955; x=1742946755; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RfbWfSDWuJkL92E4Xy0gyzmHWLTVS/PVthtLPo2mRyI=;
-        b=Y94aRK9/URduBFLDQ3h0mkFsFPkQJEzLYWERsvO8ezN0fmNuWd0r9kZC13WNos3EUC
-         7RC4ovV4V1dczd7rKDHBqpvG/Bk/6qQpFzPPo7wQab5HWaQ78ZjG/FdAog6d8cnOTtrI
-         HIVIuqjm49H8yi8k0rxviN9QLKOnLgbwclTOVh+8wykntKGt05PTpDedrGt+de29KUBW
-         qqS6AACvj7Nf+b9SP3vuajug9FeOIBW0dY0GGa6C8E2QRHJ+6VXovpmLNApA6xnk8LOP
-         9I/7S7wpdCESKKZ5QG2RMbnF4UgRw+h5PSfjehh7h6hRyFJ2yafVvHL0Yzb2+c/6wquW
-         9nmg==
+        bh=L1HSu5qbfE3Sj/n4ap0qeyNwQ8qcPjHSrkmp0tceajk=;
+        b=jlQE02S9LZldO6dmm6BJDpAO0iQ70Qr0FZGxx7IPSXyKKfM02zHKR216gOMF5qxjBk
+         LehvACb+tvcMDpfvGJ2d1rMlk3pT/tahxSH6UQkMpONKkcLslNlQbkvjgzaYhHl1QrSJ
+         4xKOwMHniKXiu9XNS51/6f20YjhKGcXCK4NTaM/UMYwXO0BOkIm3ajo8tLe4fI7OOAnS
+         k1lDlSs7FvY4/v8RCWLI1KBcrKBsekPGu1NoibKtdXCe5oMLjWmqsOXiUrU3MzDuc/xn
+         B94jhyc1WOP3hgAZsKh35MEWXSIJTjNY/fkpIhHco12h7du6spky+kD8162eLe6t2r08
+         50HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742341345; x=1742946145;
+        d=1e100.net; s=20230601; t=1742341955; x=1742946755;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RfbWfSDWuJkL92E4Xy0gyzmHWLTVS/PVthtLPo2mRyI=;
-        b=bRtz/77KFUfnBaUQlmBKFvINSVqlAIYRgdKmiWGDodf78huZXhQWj6VaKb5WSqPakI
-         0G2T6dY8eRBE4POY8Buh05jxLfJob6tpLH8V4TbnNeAIjDQlyIkbFdg4T81Rpnvr0I4b
-         3JzMs9upZfF2xNft+p4SBz41CFNCNHMBzCfAlpvsnVnCdIVmP264rpa9NAVU6s0R/xdM
-         mC7Ro9nmfnOjEZJgSPNWSSdgCNS+lPGMIC8M5jV91qSS7wFgQefHU4RsKEMrHrUcNtTd
-         aTQ/QGKIbVSWjfl/pXjK8EU88iQ1p622kc1MMqaV0dYRNlV4AlAuE2vz8YKN0cN6zlLb
-         o+mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXse7DOxWMD/068aY66YF6rMU/zLhZ9sDvqmdEo1EN+RPf/OCK+tDv2RxkiCYRQX/gHOf6x96k/VI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys3Pinj/obV/ueVUKJe5U+QT4CXK4tflGzD7z8eH6QM26Rbk79
-	kh1PV1HubmV6pQN1DvlcAD36ddqMZPzBkSRnaWCgXFuptGAANQxmsu7i2KYSmicgA2Jun/IQYYM
-	re9jTdXF1zXski5ylD5PwMjyPSg==
-X-Gm-Gg: ASbGncso6Y7AAMHjnHvUVnObGpxHx/dip1EMmDnhSBiDgxi0bDwRveE73atBObTUPcf
-	9oAxS1l4jyuttOSPDJKIDItmo7dVw6SGurj6/EMPi65TSvnQVaLKmhIyWowaovWKOv7tC1SxUi7
-	nnOmACkPFI22hUZSBCD5+q3QXPmRJ2uBCywGm9lmk6us3QaW5Q3KCg6bx1V7Y=
-X-Google-Smtp-Source: AGHT+IGjJWe6K+vp8TRpwlZCIE1igkPxBTGPeq7lNQ7oAvQz+UwKhCblMLRyY1UDOCy0qh1jjfAaorzrIjuM1+lWcmQ=
-X-Received: by 2002:a05:6402:42c3:b0:5e7:8503:1a4b with SMTP id
- 4fb4d7f45d1cf-5eb80d1870dmr552114a12.18.1742341344740; Tue, 18 Mar 2025
- 16:42:24 -0700 (PDT)
+        bh=L1HSu5qbfE3Sj/n4ap0qeyNwQ8qcPjHSrkmp0tceajk=;
+        b=SEIwUMZ6KoxwY/jYIJdo4/UBcvL10d/KDSBjJR2zRnkA3mKDwF5XU5Ll1YVApy6FcU
+         uaTyG80ldW58Ug9EVfi/crzBRKhOI2SGedVhHLl906klCtTErahyzVbcfv26NkvcqW0f
+         a3w12aduNvspFvysus2BWKc13tJLau9I0JA5x5jW94mAStxkZYkZDV2hMo53DefQCPsS
+         jBa4kysePCgtusjeuRPt1gSMW6sQQ0dG8PZcqTN0UbXm7qSwTfs8ckYbhINSC08T/nXG
+         xBBdLLTlFZtuvFcxyzrfwDLVhbIiphCR29DhgxqJCi2Xs/yIx+hA+xKIDQlLRaCuBBDW
+         E/CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWg1TDCYWcpuXANN6LF1q/PsoqFnIy7VHMjFo3u9YG10xkFkKVr2c8VqKEaauutTrfsqs/wNnjMKmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtMUD22yjuORSN5lEWGU+XPlB8V2dxmntq1idF1YueamR2A3v+
+	iaw73/Eh0KHYkJEhy9q7lVtrXw8qytBeBuvFQ0qO1CPH2wDmNKLbRrUh4L0OqGm3D18eW8Yz+te
+	8wI91xCm5lsil5XkusSZd8g4cHQ==
+X-Gm-Gg: ASbGncsB99NhctoFbhnJDV3ZkbsJbG78vVWaHOiG4TFiXQdy0OLcAvly3+IyqiwAvc8
+	XSHt8Z/sZoBuKwVgP00XTZrlzjdya01szwN/+XAqcVy0iaiDyWn+wj+rgiGNXHbEhinWOJRdKhU
+	ODTT6xCrmDl8T1ARXu6ae6FAwFLxX95yBDfJuUqHDj+9Xq0XpW/Q3eomSXTys=
+X-Google-Smtp-Source: AGHT+IHWucOZKrAm1XYlwQ5MqOYrC961Bma+Fm1fw7pGyC4e8zpDBKaisNTuckzTASt3DL+23H2u7g+dmcyRUwMDiFE=
+X-Received: by 2002:a05:6402:42c7:b0:5e0:60ed:f355 with SMTP id
+ 4fb4d7f45d1cf-5eb80d4908fmr599142a12.18.1742341954377; Tue, 18 Mar 2025
+ 16:52:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,133 +76,135 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CALWcw=EeJ7rePwqv48mf8Se0B5tLE+Qu56pkS-fo0-X0R3DQ=Q@mail.gmail.com>
  <0ea71027-c0cb-436a-8dc7-6f261f0d9e0e@oracle.com> <89535c4a-7080-41cc-a0a3-1f66daa9287a@oracle.com>
- <CAM5tNy7FdNRC6i62jqyMs=A=03omztTk3YdgS=P3qJVersSFbg@mail.gmail.com> <37045667-d093-4dcb-ae63-5a577273e96c@oracle.com>
-In-Reply-To: <37045667-d093-4dcb-ae63-5a577273e96c@oracle.com>
+ <CAM5tNy7FdNRC6i62jqyMs=A=03omztTk3YdgS=P3qJVersSFbg@mail.gmail.com>
+ <e674d6ec96cc8598b079efd3b93612537f840a87.camel@hammerspace.com>
+ <CAPJSo4WrOnWfLzmfoCcj1MuYQQBHo434vTK=9qx+rh_FCVck=w@mail.gmail.com> <e21645871fd6249d93f9bb33b154c3663eaf0a70.camel@hammerspace.com>
+In-Reply-To: <e21645871fd6249d93f9bb33b154c3663eaf0a70.camel@hammerspace.com>
 From: Rick Macklem <rick.macklem@gmail.com>
-Date: Tue, 18 Mar 2025 16:42:10 -0700
-X-Gm-Features: AQ5f1Jr6eD4XyKl3EutRAqlNTR3S2yXMwMQNG5AxkPSv7Jg56H-m_qrPZJe8KFM
-Message-ID: <CAM5tNy6duANWDWiX=sdm3UjSy56LBC5JZLJmVSv5CHOvVwtc+g@mail.gmail.com>
+Date: Tue, 18 Mar 2025 16:52:20 -0700
+X-Gm-Features: AQ5f1Joz-cIbKGcQRREkDWsre3Pj1NOJZPdLxVs1FWWgcYcl_s_Y8JgV6uuPkcI
+Message-ID: <CAM5tNy5ZA5MKuCsFQHXE_uBkmMv3eBH7dgonaTrk9Rk-p2jA0g@mail.gmail.com>
 Subject: Re: Supporting FALLOC_FL_WRITE_ZEROES in NFS4.2 with WRITE_SAME?
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Takeshi Nishimura <takeshi.nishimura.linux@gmail.com>, 
-	Anna Schumaker <anna.schumaker@oracle.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "lionelcons1972@gmail.com" <lionelcons1972@gmail.com>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+	"takeshi.nishimura.linux@gmail.com" <takeshi.nishimura.linux@gmail.com>, 
+	"anna.schumaker@oracle.com" <anna.schumaker@oracle.com>, 
+	"chuck.lever@oracle.com" <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 2:15=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
+On Tue, Mar 18, 2025 at 4:40=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
 >
-> On 3/18/25 5:03 PM, Rick Macklem wrote:
-> > On Tue, Mar 18, 2025 at 9:01=E2=80=AFAM Chuck Lever <chuck.lever@oracle=
-.com> wrote:
-> >>
-> >> On 3/18/25 11:09 AM, Anna Schumaker wrote:
-> >>> Hi Takeshi,
-> >>>
-> >>> On 3/18/25 11:00 AM, Takeshi Nishimura wrote:
-> >>>> Zhang Yi <yi.zhang@huawei.com> wrote in linux-fsdevel@vger.kernel.or=
-g:
-> >>>>> Add support for FALLOC_FL_WRITE_ZEROES. This first allocates blocks=
- as
-> >>>>> unwritten, then issues a zero command outside of the running journa=
-l
-> >>>>> handle, and finally converts them to a written state.
-> >>>>
-> >>>> Picking up where the NFS4.2 WRITE_SAME discussion stalled:
-> >>>> FALLOC_FL_WRITE_ZEROES is coming, and IMO the only way to implement
-> >>>> that for NFS is via WRITE_SAME.
-> >>>>
-> >>>> How to proceed?
-> >>>
-> >>> I've been working on patches for implementing FALLOC_FL_ZERO_RANGE su=
-pport
-> >>> in the NFS client using WRITE_SAME. I've also been experimenting with=
- adding
-> >>> an ioctl for the generic pattern writing part. I'm expecting to talk =
-about
-> >>> what I have for ioctl API at LSF next week, and I'll post an initial =
-round
-> >>> of patches shortly after.
-> >>>
-> >>> I do still need to think through any edge cases and write tests for
-> >>> pynfs and fstests before anything can be merged.
-> >>
-> >> Takeshi, it would be immensely helpful to us if you could provide some
-> >> detail about how exactly you intend to make use of WRITE_SAME so we ca=
-n
-> >> focus the development, review, and testing efforts.
-> >>
-> >> So far we don't have any specific use cases, but there is some
-> >> skepticism (as voiced in the previous thread) about whether this
-> >> facility will actually be useful.
-> > Just fyi, there has been a similar discussion in FreeBSD land.
-> > The main use case in FreeBSD land sounded like writing zeros for NVME,
-> > if I followed it.
->
-> We were informed that NVMe devices do not support write_same at all.
-That is my understanding too. As I understand it, write_same is based on th=
-e
-SCSI command that is only supported by a fairly small number of high end
-drives.
-
-NVME does not have write_same, but some (I don't know how common
-it is?) have an optional command called Wr_Zero which writes zeros to a blo=
-ck.
-
-Hopefully I've gotten the above about correct? rick
-
->
-> But I'm more interested in why applications need to get the OS to write
-> patterns. What kind of performance and scalability expectations are
-> there? How big will the patterns be, how big will the target files be?
-> What is the target improvement needed over an application repeatedly
-> calling write(2) ?
->
-> After staring at COPY offload for some time, I can imagine that there
-> are some DoS footguns in here that NFS servers need to watch for. Can
-> WRITE_SAME return "I wrote only 16MB, please call me again to do more"?
->
->
-> > My impression is that the other pattern stuff isn't very useful, since =
-only some
-> > (a few?) SCSI devices know how to do it.
->
-> Well that tells us that hardware offload is a ways off, unless
-> someone has a specific device they want to support.
->
->
-> > The problem I see is that WRITE_SAME isn't defined in a way where the
-> > NFSv4 server can only implement zero'ng and fail the rest.
->
-> Writing repeating patterns isn't difficult to fake for file systems
-> or devices that don't have a native write_same facility. Trond suggested
-> a way to do it in the previous thread.
->
->
-> > As such. I am thinking that a new operation for NFSv4.2 that does writi=
-ng
-> > of zeros might be preferable to trying to (mis)use WROTE_SAME.
->
-> I don't really understand the difference, from an application's point of
-> view, between WRITE_SAME(zeroes) and DEALLOCATE. The storage behaves a
-> little differently in these two cases, but what difference does it make
-> to the app?
->
->
-> > rick
+> On Tue, 2025-03-18 at 23:37 +0100, Lionel Cons wrote:
+> > On Tue, 18 Mar 2025 at 22:17, Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Tue, 2025-03-18 at 14:03 -0700, Rick Macklem wrote:
+> > > >
+> > > > The problem I see is that WRITE_SAME isn't defined in a way where
+> > > > the
+> > > > NFSv4 server can only implement zero'ng and fail the rest.
+> > > > As such. I am thinking that a new operation for NFSv4.2 that does
+> > > > writing
+> > > > of zeros might be preferable to trying to (mis)use WROTE_SAME.
+> > >
+> > > Why wouldn't you just implement DEALLOCATE?
+> > >
 > >
-> >>
-> >> For example, do you expect to have SCSI devices that accelerate
-> >> WRITE_SAME? How will your applications use this? What kind (and size)
-> >> of patterns do you expect to need?
-> >>
-> >>
-> >> --
-> >> Chuck Lever
-> >>
+> > Oh my god.
+> >
+> > NFSv4.2 DEALLOCATE creates a hole in a sparse file, and does NOT
+> > write zeros.
+> >
+> > "holes" in sparse files (as created by NFSV4.2 DEALLOCATE) represent
+> > areas of "no data here". For backwards compatibility these holes do
+> > not produce read errors, they just read as 0x00 bytes. But they
+> > represent ranges where just no data are stored.
+> > Valid data (from allocated data ranges) can be 0x00, but there are
+> > NOT
+> > holes, they represent VALID DATA.
+> >
+> > This is an important difference!
+> > For example if we have files, one per week, 700TB file size (100TB
+> > per
+> > day). Each of those files start as a completely unallocated space
+> > (one
+> > big hole). The data ranges are gradually allocated by writes, and the
+> > position of the writes in the files represent the time when they were
+> > collected. If no data were collected during that time that space
+> > remains unallocated (hole), so we can see whether someone collected
+> > data in that timeframe.
+> >
+> > Do you understand the difference?
+> >
 >
+> Yes. I do understand the difference, but in this case you're literally
+> just talking about accounting. The sparse file created by DEALLOCATE
+> does not need to allocate the blocks (except possibly at the edges). If
+> you need to ensure that those empty blocks are allocated and accounted
+> for, then a follow up call to ALLOCATE will do that for you.
+Unfortunately ZFS knows how to deallocate, but not how to allocate.
+
+>
+> $ touch foo
+> $ stat foo
+>   File: foo
+>   Size: 0               Blocks: 0          IO Block: 4096   regular empty=
+ file
+> Device: 8,17    Inode: 410924125   Links: 1
+> Access: (0644/-rw-r--r--)  Uid: (0/ root)   Gid: (0/ root)
+> Context: unconfined_u:object_r:user_home_t:s0
+> Access: 2025-03-18 19:26:24.113181341 -0400
+> Modify: 2025-03-18 19:26:24.113181341 -0400
+> Change: 2025-03-18 19:26:24.113181341 -0400
+>  Birth: 2025-03-18 19:25:12.988344235 -0400
+> $ truncate -s 1GiB foo
+> $ stat foo
+>   File: foo
+>   Size: 1073741824      Blocks: 0          IO Block: 4096   regular file
+> Device: 8,17    Inode: 410924125   Links: 1
+> Access: (0644/-rw-r--r--)  Uid: (0/ root)   Gid: (0/ root)
+> Context: unconfined_u:object_r:user_home_t:s0
+> Access: 2025-03-18 19:26:24.113181341 -0400
+> Modify: 2025-03-18 19:27:35.161694301 -0400
+> Change: 2025-03-18 19:27:35.161694301 -0400
+>  Birth: 2025-03-18 19:25:12.988344235 -0400
+> $ fallocate -z -l 1GiB foo
+> $ stat foo
+>   File: foo
+>   Size: 1073741824      Blocks: 2097152    IO Block: 4096   regular file
+> Device: 8,17    Inode: 410924125   Links: 1
+> Access: (0644/-rw-r--r--)  Uid: (0/ root)   Gid: (0/ root)
+> Context: unconfined_u:object_r:user_home_t:s0
+> Access: 2025-03-18 19:26:24.113181341 -0400
+> Modify: 2025-03-18 19:27:54.462817356 -0400
+> Change: 2025-03-18 19:27:54.462817356 -0400
+>  Birth: 2025-03-18 19:25:12.988344235 -0400
+>
+>
+> Yes, I also realise that none of the above operations actually resulted
+> in blocks being physically filled with data, but all modern flash based
+> drives tend to have a log structured FTL. So while overwriting data in
+> the HDD era meant that you would usually (unless you had a log based
+> filesystem) overwrite the same physical space with data, today's drives
+> are free to shift the rewritten block to any new physical location in
+> order to ensure even wear levelling of the SSD.
+Yea. The Wr_zero operation writes 0s to the logical block. Does that
+guarantee there is no "old block for the logical block" that still holds
+the data? (It does say Wr_zero can be used for secure erasure, but??)
+
+Good question for which I don't have any idea what the answer is, rick
+
+>
+> IOW: there is no real advantage to physically writing out the data
+> unless you have a peculiar interest in wasting time.
 >
 > --
-> Chuck Lever
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
