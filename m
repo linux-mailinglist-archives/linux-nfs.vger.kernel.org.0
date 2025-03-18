@@ -1,72 +1,73 @@
-Return-Path: <linux-nfs+bounces-10664-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10665-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C69EAA67FDE
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 23:37:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 304B0A6805F
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 00:02:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23FEF19C200B
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 22:38:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 13C377A8961
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 23:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92FFB2066CF;
-	Tue, 18 Mar 2025 22:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18B321DFDB4;
+	Tue, 18 Mar 2025 23:02:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDULokIv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnKY73He"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DE01DDC21
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 22:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F401C173F
+	for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 23:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742337465; cv=none; b=V2OwS8rNaWrFdBMREF6Q1KHiXjM/sU6M4te6FElCKDKvTTWdMH37uUZqtqhVds9vK+5bRzU0qcgDIbexeNiBepcZ0zLo0LMk7rHaaulkvsE4v8JkmGzCHH81KbY+3/uaUU5bhjlNn6xj2jB0RpsjmON5KP7ywa4Nt4MK53JTYrs=
+	t=1742338929; cv=none; b=iofTOg5HfxCmUS1WuHOl/U2qClx7kD/raIgETfDVzyt6Z/ZPd3Re9U7tVmIawO3/j/yRoV6bEv5vS6tLjCjaZSYllQ7klRM2AauJcbLHmlNdo9glrbarJKjkRPoZhVjz19TSbRLwnwGg60SGfof44n2NquBp1BcLAWzMByw5Avg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742337465; c=relaxed/simple;
-	bh=3VeCnZvpbRj2PntNv88a59MhyTZ7BzrLRcV7mwHokmA=;
+	s=arc-20240116; t=1742338929; c=relaxed/simple;
+	bh=W5RdqqleI8Jd20HY2tLLnHb7V2dw31eSEow9TovhzK4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L2u/nSHkcWoNuWompv7s79cxdtXYVASgaSTQsQakt7VYaqTkMvapzQBd0ur6kDvioa3JO9V7U3BmWSmm4ffhQJJzxdDyW1eUNGfVfpHofTAKRXQqu8AUbc+2bkSkB8E47Fj0Xma1iHkj3jtzWLg+oDUFlwwS7HA81GmNjEePnxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EDULokIv; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=jqDHE0tN9SX1PsULFwF7isUL2c+BcmquAJBmfQDpNoYb3rmd5E1joTxuY0XXHJeWwkI4Cq1lgU9ERCi33FvWxawYZHo7i/H5oLBM/D5kwxMwJGjgWSkZzMcu7UX9oNX5xe39J4V2QRtYgzpQVZPpMOeEdjztbeQkZ4f0TqzgoWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TnKY73He; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso9049530a12.1
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 15:37:43 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so10711011a12.1
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 16:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742337462; x=1742942262; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VeCnZvpbRj2PntNv88a59MhyTZ7BzrLRcV7mwHokmA=;
-        b=EDULokIv8/y4qp7fOXecH1DwyPMMHFEsEB9rlJobVvDr5gqfdw+S6pJ6kUT0jqdwGB
-         w57Vur7XZ8IHuN3ClV8+4CNXdfnN8dIzLix+nk1gATYu82nU249L2/d6PusxX+CFeiLc
-         UmvmRkBAutt2oEYGix/97slcJYbBklYdA1o8BdzKnfHhqzKlLE7LLbRftPBkgxxwn3PV
-         TymcvZEpzHoczGFWPA1KZf7wkB6TEnCm22CXZ4BUBIGFwxTArtT3u0xvrJYE/BS7ZVTL
-         0yX0bRBnjambNIlX3FDuArndyiNVP22+QDDKVlvrT7RVHMSBiPm9GNV/cFmdol2h7tLG
-         4APQ==
+        d=gmail.com; s=20230601; t=1742338925; x=1742943725; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W5RdqqleI8Jd20HY2tLLnHb7V2dw31eSEow9TovhzK4=;
+        b=TnKY73HeYQNoX8s4/ahZ/e5md9Tv1xfzNK6R/AkTm752N/AnZWuqVewYr0p0S4APXE
+         Moa/pI81Xcp80zOBIaudWpqKkM2aKnLnZTNhrFlIh30t2Hi8QNXBWFXk0x8rU7LkrZoO
+         H4LMtQvMJYaLjle9sT9qLjAmBkwlEk/Vp1fU45T4mr+1X9xPje7AFILa4XmWLkcYYRen
+         quU93esUd7BSYbCqBNvvIpBqaf5eNcKcRaG38IAmtcSYUsXHxq7dCrzXOBD+6/iijLOa
+         Lb1ixMMP4h2wEjOpwf6DEvNC8tqgCXfLte2jlWLBfw+CcZD7f2Uh21RZ+UhNcuWnv5HH
+         uzEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742337462; x=1742942262;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3VeCnZvpbRj2PntNv88a59MhyTZ7BzrLRcV7mwHokmA=;
-        b=q7m0qodtt01tWveHQsjZO8+zLO6LD17Pw9ppd11yztY7kUqP+9dp3db23YZQfncAmd
-         Ufv3lmSFaAgiSvzAplMcd7xBFYNxNBO/Lhp532CxPfFY0PtYqSChAVpEtL3frMeYgciq
-         vKAFA7Fr7EMvQd7HNZFH8uqIdaPLzTMG1rRiZIz+YicyoI8E0A4q0UbmkkMEk0J773pd
-         BT3uyCbn4NPmExJodCHIq37yzpTSpJG539SLsoHdbPNd4il2z9gt4zJbDwPZjQFr5XaY
-         yItduHMtuzm29kFx7eCNuocGJIUSEVCttVGlbVVViT/cHHJpE2cDb0IX4PBMgnQEVQc0
-         /4uA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ+YmEQ5GvPCCxTddWKO4o9FNibe8AafSIXjrTvKn5SSLb2ITep6vj2ofoSt5mDQKRk6P0NZ+eXmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLNdb3cu45KeNC56krl4NDk6P/zbNQAPjUb+J4gq+lMg7pD8HI
-	wgtdjRUJbtrvUnP5FTZmqVcU3zFs+Otq/GRt4Ko9t6NYCCRQ6ikkRrVzrJb081GLhnEGqAGGvhN
-	va9CVJ4XfckU8GVVkrkxRYNzIv44jPw==
-X-Gm-Gg: ASbGnct/sxXEjAJOLP+NpC4x4MOEVLHwjGEDFQIon5bgc2Bxp2CjFcxXo8zfqPkWpKC
-	IUM7VDQH14HZGQOU4TNRuVKhwv8ZOMGIUQwZcpoevavAmiIuXbQFimDXg/U+9YOgd7kk+L9BBsv
-	yJq0gS/k9L40g604eXKlpNChPAAfs=
-X-Google-Smtp-Source: AGHT+IHaYNeGQRlk5O0i53KI4yUXqNQhwjItYQjhKUylpOcmEffD7zenAwZgZfyJUkaktE91fwf3cEowN3R9aw6TkGs=
-X-Received: by 2002:a05:6402:254d:b0:5e4:a88a:657 with SMTP id
- 4fb4d7f45d1cf-5eb80fcaeb0mr511051a12.28.1742337461973; Tue, 18 Mar 2025
- 15:37:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742338925; x=1742943725;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W5RdqqleI8Jd20HY2tLLnHb7V2dw31eSEow9TovhzK4=;
+        b=bsQKZLeqHC47VtNIul1H6HV5ELBkpZvIdglZBmHmiCZg4HID89+Jb4ItZvLpvT1bJu
+         w1yBz+XLYhp4ItFX+1tyFQ3rFeL6uAlC7OtQR09+B12VtV39cdujLuWtli4jlrNB1IpV
+         JvYoefgMB4DijtXaTM0bwOY+pgrSHYL83trxl6wKDz+ORD0+lsRworvcrswWWw9X8K/i
+         b7RAk49MajNKaupVYnt60hZd67NgAIcIJeHkm2AGEKwAFKVhCDnPjw98qnL+/JYMoKgZ
+         CUWFDaFmSf6mjm2lqGmz1abUnZBCeoxDDEz4sDWKtHTC/Xb/+ABvF8ogdqdMpBcOdJA9
+         dkTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6nYsMCEcC49qI5XuRfTVsamBcflJly0oxA/eaIqKsxIRToZ1DlzqaotkElnrr0fqY+u6iZFlA1wA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4dM/PaQqfIfvv6MtgAp+dWHtadFNfKSPBWspF5ldDMXsgPEdi
+	LDEAWrJntiCiIAdTP0ZTdd7ADc7rCR7F3OCC+RtHgw9877Ddzj3JJpb1JNseV+3JrbZr9wWNTfG
+	p5AIeLmyqhxNm81cp4S9zmO4sAQ==
+X-Gm-Gg: ASbGncueh9xq6OOKCKnz+H1M4Or5a293s/z90dpV6U0eMi22/KNWgIAt/ILT7ClLIBb
+	LSiZxXeVIHWD/KvOSozt4eX9etq0ka92pUgqKv7c+0AZ4gwYAT2j6eaGwtwahmXYx0eBcDIgJ8K
+	c+M3porynBfDXyT6/aC0gK48hSuqrmqh/T5qiLbmXB0qGDU8I5F2n/dRkkp8E=
+X-Google-Smtp-Source: AGHT+IE24T0VCOZdC2MrQxDvr33zFHmssXXIaQYb7fAQyzmbRYWU0K0HPu64kyJydxb8GqPwSwUj22f0d29jCg/C5mQ=
+X-Received: by 2002:a05:6402:358b:b0:5e6:4ac8:c361 with SMTP id
+ 4fb4d7f45d1cf-5eb80f97cd5mr464105a12.28.1742338925331; Tue, 18 Mar 2025
+ 16:02:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -77,20 +78,21 @@ References: <CALWcw=EeJ7rePwqv48mf8Se0B5tLE+Qu56pkS-fo0-X0R3DQ=Q@mail.gmail.com>
  <0ea71027-c0cb-436a-8dc7-6f261f0d9e0e@oracle.com> <89535c4a-7080-41cc-a0a3-1f66daa9287a@oracle.com>
  <CAM5tNy7FdNRC6i62jqyMs=A=03omztTk3YdgS=P3qJVersSFbg@mail.gmail.com> <e674d6ec96cc8598b079efd3b93612537f840a87.camel@hammerspace.com>
 In-Reply-To: <e674d6ec96cc8598b079efd3b93612537f840a87.camel@hammerspace.com>
-From: Lionel Cons <lionelcons1972@gmail.com>
-Date: Tue, 18 Mar 2025 23:37:05 +0100
-X-Gm-Features: AQ5f1JrGTGhEcmf7K853Viz2TiQeSX0jup9RrAmRlGPQdYKU1ZXqjbItDQZaJRg
-Message-ID: <CAPJSo4WrOnWfLzmfoCcj1MuYQQBHo434vTK=9qx+rh_FCVck=w@mail.gmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Tue, 18 Mar 2025 16:01:51 -0700
+X-Gm-Features: AQ5f1JqimfKdQa57eUn-v2zU0OcHKgYohN8xtA7XRYpskxldsSASSDNfCgIFQYc
+Message-ID: <CAM5tNy7AGHk+-H2BQpzB0r8LtSy37XdWvpjcNxPmOuG+v5zBtA@mail.gmail.com>
 Subject: Re: Supporting FALLOC_FL_WRITE_ZEROES in NFS4.2 with WRITE_SAME?
 To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "rick.macklem@gmail.com" <rick.macklem@gmail.com>, 
-	"chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
+Cc: "chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
 	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
 	"takeshi.nishimura.linux@gmail.com" <takeshi.nishimura.linux@gmail.com>, 
 	"anna.schumaker@oracle.com" <anna.schumaker@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Mar 2025 at 22:17, Trond Myklebust <trondmy@hammerspace.com> wrote:
+On Tue, Mar 18, 2025 at 2:17=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
 >
 > On Tue, 2025-03-18 at 14:03 -0700, Rick Macklem wrote:
 > >
@@ -101,29 +103,17 @@ On Tue, 18 Mar 2025 at 22:17, Trond Myklebust <trondmy@hammerspace.com> wrote:
 > > of zeros might be preferable to trying to (mis)use WROTE_SAME.
 >
 > Why wouldn't you just implement DEALLOCATE?
+Not my area of expertise, but I believe some like to know that
+zeros have overwritten the data instead of the data just being unallocated
+(blocks still sitting around with the data in it).
+
+rick
+
 >
-
-Oh my god.
-
-NFSv4.2 DEALLOCATE creates a hole in a sparse file, and does NOT write zeros.
-
-"holes" in sparse files (as created by NFSV4.2 DEALLOCATE) represent
-areas of "no data here". For backwards compatibility these holes do
-not produce read errors, they just read as 0x00 bytes. But they
-represent ranges where just no data are stored.
-Valid data (from allocated data ranges) can be 0x00, but there are NOT
-holes, they represent VALID DATA.
-
-This is an important difference!
-For example if we have files, one per week, 700TB file size (100TB per
-day). Each of those files start as a completely unallocated space (one
-big hole). The data ranges are gradually allocated by writes, and the
-position of the writes in the files represent the time when they were
-collected. If no data were collected during that time that space
-remains unallocated (hole), so we can see whether someone collected
-data in that timeframe.
-
-Do you understand the difference?
-
-Lionel
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
 
