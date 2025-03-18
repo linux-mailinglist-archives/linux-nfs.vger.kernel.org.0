@@ -1,235 +1,191 @@
-Return-Path: <linux-nfs+bounces-10652-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10653-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72DB4A672C0
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 12:31:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9425A675AE
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 14:57:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30B9A1889FFE
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 11:30:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CA7D171FE2
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 13:57:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C1E20ADEC;
-	Tue, 18 Mar 2025 11:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4779520D50F;
+	Tue, 18 Mar 2025 13:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdF9WdmV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bTFKbk6F"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C478820764E;
-	Tue, 18 Mar 2025 11:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7B276026;
+	Tue, 18 Mar 2025 13:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297416; cv=none; b=MHSl4GaNd2SSnM2bELZ7lw7VGIdJJDzW1QC69lap7zqupyl/H2z6YAgCvYIYuuctkXMU7pPbN3ufm3ez/VtLcw1Syy+WlcwhiDhxd7c7RZORTm+lZZRKFxf9dDb39B54FcfWqwqkWptUKGKAysjm6nY3+c++oAZB6TGJnIgSQos=
+	t=1742306259; cv=none; b=aWNvTHfIh9nlRcSmaNSm7cw8XT1nzLio7+A6TprYrBHkEXakLHdrtah43wrAOITE5AJR+yyN12mOpW9FS1bwwKnzQcdJnYOOQnhpbjkx74QEfAeb4f5vbQHSXJK3z2+JJrr33ZHEM3vAuOHL/xXHUt1M0m9nE8E+VoMU3qx04Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297416; c=relaxed/simple;
-	bh=hDZqpee3ghUYrFgRwUEn3lMKVn4rh6MX4hf18mA9WgA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZJsMH58PjUg6dJ3793fm/eyYSRcT7k+QTCKX3KNHYPd/ecWJa7Hjq4Xw4+jrpSlyT/t41Vc/S8eQTp0il+UXsZ7e0+Qg71hDVvVJj7zKBbNMN5skG+QkfRVZ/iXoZQu9sXqZaj95azJaQVe2cbYh7+flpGdOrI0ao0KdVq6crZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdF9WdmV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09663C4CEE3;
-	Tue, 18 Mar 2025 11:30:14 +0000 (UTC)
+	s=arc-20240116; t=1742306259; c=relaxed/simple;
+	bh=640pjyCCFM0HPbzddzhSVRq68zzvtQCSwus+WHQec5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPBObyI3J4VIC66T2iHS+WwJwX0LTVia1r6eyAS9ySy2Tdw2FjtyPYTlpxuxEnrrmZQnGdo2DtDlH+xdG0niBBshg9BIDIJ6sH2BZ8p0WwHkfz2qdZX0z9UO8V0gebHFiGcvjgLZJSi6eHBvB4TD+Y1zzn9rnY7CVJmchOVbkRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bTFKbk6F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54485C4CEDD;
+	Tue, 18 Mar 2025 13:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742297416;
-	bh=hDZqpee3ghUYrFgRwUEn3lMKVn4rh6MX4hf18mA9WgA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QdF9WdmVgPVeKnWlEORKj2j3IvX0AFn+jMsn/8jU6r3ZmB6TU471YOfBXxfYAuGdd
-	 wHdTPIFDREnCE3vswhwY0nGtkcMGN32CApK8XypVL7o7iQ7WT3DEzasLvu1XL3f3tV
-	 ZwXv8mVc3i9+Bn8KbU+QWDY39ZlMy5xo2lGechyJtyxeS4OfuqQ2mv87czR3X8l3by
-	 6K09r6hP6x8gyXF6A/BycNg0fDiOqLqJrPL1KnsapRE6IliIIZYj02D+CkPrLUE32y
-	 EZdKXDqv4VWKGFfeaBp/fQJAjpQpUYyAvnzbNs5t7QN0OUMEuOj/qUMaPisXOLWN4Y
-	 j31rZIrw9nehw==
-Message-ID: <d05913314baff82463eb67a26605a16659dc1862.camel@kernel.org>
-Subject: Re: [PATCH RFC 0/9] nfs/sunrpc: stop holding netns references in
- client-side NFS and RPC objects
-From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>, "davem@davemloft.net"	
- <davem@davemloft.net>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
- "pabeni@redhat.com"	 <pabeni@redhat.com>, "okorniev@redhat.com"
- <okorniev@redhat.com>,  "tom@talpey.com"	 <tom@talpey.com>,
- "anna@kernel.org" <anna@kernel.org>, "horms@kernel.org"	
- <horms@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>,
- "Dai.Ngo@oracle.com"	 <Dai.Ngo@oracle.com>, "edumazet@google.com"
- <edumazet@google.com>,  "neilb@suse.de"	 <neilb@suse.de>
-Cc: "josef@toxicpanda.com" <josef@toxicpanda.com>, 
- "linux-nfs@vger.kernel.org"
-	 <linux-nfs@vger.kernel.org>, "bcodding@redhat.com" <bcodding@redhat.com>, 
- "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
-	 <netdev@vger.kernel.org>
-Date: Tue, 18 Mar 2025 07:30:13 -0400
-In-Reply-To: <8e781348f00184205c38e96e9e8af046d4d2f500.camel@hammerspace.com>
-References: <20250317-rpc-shutdown-v1-0-85ba8e20b75d@kernel.org>
-			 <b4a720542c9afcdf3d7cf8641893b448423e0a9b.camel@hammerspace.com>
-		 <05463008488b1fea6fb47a2d1a525096fecda861.camel@kernel.org>
-	 <8e781348f00184205c38e96e9e8af046d4d2f500.camel@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=k20201202; t=1742306258;
+	bh=640pjyCCFM0HPbzddzhSVRq68zzvtQCSwus+WHQec5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bTFKbk6Ff6esbCcGPcwNLuOb+hbF+/KQNSgZC+9lnSqVL7spOORQk7xaJaV/SgWwV
+	 lUe4G2daxs42y8oQxvysaq9cfz3ff7YgkSladGBXFlT+XBZFk0jQPSPbDWrYHMjy1y
+	 nbEjnYoujX5Dht5dscgF1pVnL2QPjNLLQ4XSr9e5DSWj+gkrV/gkaa/1u5hxwK/Znm
+	 yVwsBmCokRmjNNS0u8vAFvwbomII5r9aHDqIvILjsVp+pdgIMvDr7KzbkALSoGln9z
+	 O2IaHMy7phH288PwjsADw4X2ll8luVCpTAHbyuxiVymjP4osSEwcBr0iiIowVeArn2
+	 eEHpBaa11B8XA==
+Date: Tue, 18 Mar 2025 14:57:33 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	David Howells <dhowells@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 0/8 RFC] tidy up various VFS lookup functions
+Message-ID: <20250318-audienz-radeln-17745f4c6b8e@brauner>
+References: <20250314045655.603377-1-neil@brown.name>
+ <20250314-geprobt-akademie-cae577d90899@brauner>
+ <174217721714.9342.9504907056839144338@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <174217721714.9342.9504907056839144338@noble.neil.brown.name>
 
-On Mon, 2025-03-17 at 22:11 +0000, Trond Myklebust wrote:
-> On Mon, 2025-03-17 at 17:57 -0400, Jeff Layton wrote:
-> > On Mon, 2025-03-17 at 21:35 +0000, Trond Myklebust wrote:
-> > > On Mon, 2025-03-17 at 16:59 -0400, Jeff Layton wrote:
-> > > > We have a long-standing problem with containers that have NFS
-> > > > mounts
-> > > > in
-> > > > them. Best practice is to unmount gracefully, of course, but
-> > > > sometimes
-> > > > containers just spontaneously die (e.g. SIGSEGV in the init task
-> > > > in
-> > > > the
-> > > > container). When that happens the orchestrator will see that all
-> > > > of
-> > > > the
-> > > > tasks are dead, and will detach the mount namespace and kill off
-> > > > the
-> > > > network connection.
-> > > >=20
-> > > > If there are RPCs in flight at the time, the rpc_clnt will try to
-> > > > retransmit them indefinitely, but there is no hope of them ever
-> > > > contacting the server since nothing in userland can reach the
-> > > > netns
-> > > > at that point to fix anything.
-> > > >=20
-> > > > This patchset takes the approach of changing various nfs client
-> > > > and
-> > > > sunrpc objects to not hold a netns reference. Instead, when a
-> > > > nfs_net
-> > > > or
-> > > > sunrpc_net is exiting, all nfs_server, nfs_client and rpc_clnt
-> > > > objects
-> > > > associated with it are shut down, and the pre_exit functions
-> > > > block
-> > > > until they are gone.
-> > > >=20
-> > > > With this approach, when the last userland task in the container
-> > > > exits,
-> > > > the NFS and RPC clients get cleaned up automatically. As a bonus,
-> > > > this
-> > > > fixes another bug with the gssproxy RPC client that causes net
-> > > > namespace
-> > > > leaks in any container where it runs (details in the patch
-> > > > descriptions).
-> > > >=20
-> > >=20
-> > > So with this approach, what happens if the NFS mount was created in
-> > > a
-> > > container, but got bind mounted somewhere else?
-> > >=20
-> >=20
-> > The lifetime of these objects are tied to the net namespace. If it
-> > gets
-> > bind-mounted into a different mount namespace, while the tasks are
-> > setns()'ed into the correct net namespace, then I expect the mount
-> > would end up shut down at that point and be unusable, just like if
-> > you
-> > echo 1 into the shutdown file in sysfs.
-> >=20
-> > Hopefully no one is doing anything that silly. You wouldn't be able
-> > to
-> > upcall, for one thing, since there wouldn't be any more userland
-> > processes attached to the netns.
-> >=20
-> > I'll test that scenario and get back to you though. I do want to make
-> > sure that that's not going to lead to a crash or anything.
->=20
-> I agree with you that it's not a sane scenario, and that there is no
-> need to try to make it work. However the user space tools are there to
-> allow it to happen, so we need to ensure that the kernel won't panic or
-> cause any new exotic hangs.
+On Mon, Mar 17, 2025 at 01:06:57PM +1100, NeilBrown wrote:
+> On Fri, 14 Mar 2025, Christian Brauner wrote:
+> > On Fri, Mar 14, 2025 at 11:34:06AM +1100, NeilBrown wrote:
+> > > VFS has some functions with names containing "lookup_one_len" and others
+> > > without the "_len".  This difference has nothing to do with "len".
+> > > 
+> > > The functions without "_len" take a "mnt_idmap" pointer.  This is found
+> > 
+> > When we added idmapped mounts there were all these *_len() helpers and I
+> > orignally had just ported them to pass mnt_idmap. But we decided to not
+> > do this. The argument might have been that most callers don't need to be
+> > switched (I'm not actually sure if that's still true now that we have
+> > quite a few filesystems that do support idmapped mounts.).
+> > 
+> > So then we added new helper and then we decided to use better naming
+> > then that *_len() stuff. That's about it.
+> > 
+> > > in the "vfsmount" and that is an important question when choosing which
+> > > to use: do you have a vfsmount, or are you "inside" the filesystem.  A
+> > > related question is "is permission checking relevant here?".
+> > > 
+> > > nfsd and cachefiles *do* have a vfsmount but *don't* use the non-_len
+> > > functions.  They pass nop_mnt_idmap which is not correct if the vfsmount
+> > > is actually idmaped.  For cachefiles it probably (?) doesn't matter as
+> > > the accesses to the backing filesystem are always does with elevated privileged (?).
+> > 
+> > Cachefiles explicitly refuse being mounted on top of an idmapped mount
+> > and they require that the mount is attached (check_mnt()) and an
+> > attached mount can never be idmapped as it has already been exposed in
+> > the filesystem hierarchy.
+> > 
+> > > 
+> > > For nfsd it would matter if anyone exported an idmapped filesystem.  I
+> > > wonder if anyone has tried...
+> > 
+> > nfsd doesn't support exporting idmapped mounts. See check_export() where
+> > that's explicitly checked.
+> > 
+> > If there are ways to circumvent this I'd be good to know.
+> 
+> I should have checked that they rejected idmapped mounts
+> (is_idmapped_mnt()).  But I think that just changes my justification for
+> the change, not my desire to make the change.
+> 
+> There are two contexts in which lookup is done.  One is the common
+> context when there is a vfsmount present and permission checking is
+> expected.  nfsd and cachefiles both fit this context.
+> 
+> The other is when there is no vfsmount and/or permission checking is not
+> relevant.  This happens after lookup_parentat when the permission check
+> has already been performed, and in various virtual filesystems when the
+> filesystem itself is adding/removing files or in normal filesystems
+> where dedicated names like "lost+found" and "quota" are being accessed.
+> 
+> I would like to make a clear distinction between these, and for that to
+> be done nfsd and cachefiles need to be changed to clearly fit the first
+> context.  Whether they should allow idmapped mounts or not is to some
+> extent a separate question.  They do want to do permission checking
+> (certainly nfsd does) so they should use the same API as other
+> permission-checking code.
+> 
+> > 
+> > > 
+> > > These patches change the "lookup_one" functions to take a vfsmount
+> > > instead of a mnt_idmap because I think that makes the intention clearer.
+> > 
+> > Please don't!
+> > 
+> > These internal lookup helpers intentionally do not take a vfsmount.
+> > First, because they can be called in places where access to a vfsmount
+> > isn't possible and we don't want to pass vfsmounts down to filesystems
+> > ever!
+> 
+> There are two sorts of internal lookup helpers.
+> Those that currently don't even take a mnt_idmap and are called, as you
+> say, in places where a vfsmount isn't available.
+> And those that are currently called with a mnt_idmap and called (after a
+> few cleanup) in places where a vfsmount is readily available.
 
-Unfortunately, this does create a hang.
+That's not the point. The vfsmount is the wrong data structure to pass
+to lookup_one(). The mount is completely immaterial to what it does. The
+only thing that matters is the idmap. Passing the vfsmount is actively
+misleading.
 
-Bind-mounting it will cause the superblock's refcount to increase,
-which keeps the nfs_server struct active. That holds a reference to the
-nfs_client, which prevents everything from coming down properly in
-pre_exit.
+> 
+> 
+> > 
+> > Second, the mnt_idmap pointer is - with few safe exceptions - is
+> > retrieved once in the VFS and then passed down so that e.g., permission
+> > checking and file creation are guaranteed to use the same mnt_idmap
+> > pointer.
+> 
+> In every case that I changed a call to pass a vfsmount instead of a
+> mnt_idmap, the mnt_idmap had recently been fetched from the vfsmount,
+> often by mnt_idmap() in the first argument to lookup_one().  Sometimes
+> by file_mnt_idmap() or similar.  So the patch never changed the safety
+> of the idmap.
 
-I'll have to think about how we can solve that. Let me know if you have
-ideas.
---=20
-Jeff Layton <jlayton@kernel.org>
+Taking btrfs:
+
+        dentry = lookup_one(parent->mnt, QSTR_LEN(name, namelen), parent->dentry);
+        error = PTR_ERR(dentry);
+        if (IS_ERR(dentry))
+                goto out_unlock;
+
+        error = btrfs_may_create(idmap, dir, dentry);
+        if (error)
+                goto out_dput;
+
+You fetch the idmap pointer twice here. The only reason that this is
+safe is because I made it so that while an active writer is on a mount
+the idmap cannot be changed. But that's subtle knowledge. By passing the
+idmap pointer directly it is visually trivial to figure out that it is
+guaranteed to be the same idmap without having to know how
+mnt_want_write_file() interacts with mount_setattr().
+
+The changes here also make following the logic complex. The idmap
+pointer is fetched once and passed down everywhere it is needed. But
+suddenly that's not true anymore for lookup_one() where its the
+vfsmount. First question this raises is whether the mount topology
+somehow matters for the lookup when really it doesn't.
+
+Your cleanup series is really good with or without stuffing vfsmount
+into all of these helpers. So please just either resend it and continue
+passing struct mnt_idmap or I'll change it when I apply.
 
