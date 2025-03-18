@@ -1,193 +1,137 @@
-Return-Path: <linux-nfs+bounces-10658-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10659-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA5DAA67CB7
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 20:08:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 771EFA67DCC
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 21:12:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B78EE3A5843
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 19:07:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D71C31677B4
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Mar 2025 20:12:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D89212B34;
-	Tue, 18 Mar 2025 19:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VoYBKe/0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39E66209686;
+	Tue, 18 Mar 2025 20:12:44 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E9A1D63CD
-	for <linux-nfs@vger.kernel.org>; Tue, 18 Mar 2025 19:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFAA1C5F3F;
+	Tue, 18 Mar 2025 20:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324736; cv=none; b=tQ2k1V0swlOTFVX7SbGQQmxQ1KNFlKFUgsum4Kbhg7Q/i6lHf1V/T0qPQ3gJ3FJ5vyMagtopOztslkzRQJx0ECUacuqBQPV9iWX5dO/emDHctAtxgWwkyDwgizVTGEPdMLjiRFkyM1qu49S0OgKcufl39ntKM1cZhMefOUEKaCQ=
+	t=1742328764; cv=none; b=DMzlS7a5/yaFFVtF1pAv3UlcdlwPQac1YiPzlgiaShkQsknkZzrmw0gs1L5s5Esf8Hcwp873M0r/vT7kf5xMfyCUs9f9R1iXt3AGTIEhNyrswUigpLS7le0XJxfGg6f8bj2p0szibmzAiaA3A3zHfQA2cOFKkPu4dddN8SXlsZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324736; c=relaxed/simple;
-	bh=CC8fwkuAKmYWIa0a4EC8EUNi1nRgxq5hSct8Sf9cHmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Id2PH1mAyuOFTc60ZY90MojnUetxLqoaSwaHVHpswOATDZnT9DF+/mcaCxlHoKhRPoPptsfDx7Pqa2LhwBg0bOKyNU9Xk8f1janipdQDTYRMJhZdu/jP4gfAtli4+0dPagrQf63HsDNAiU1RWhjo5efxPe+A8S5EjvHZYq7muvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VoYBKe/0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1619EC4CEDD;
-	Tue, 18 Mar 2025 19:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742324735;
-	bh=CC8fwkuAKmYWIa0a4EC8EUNi1nRgxq5hSct8Sf9cHmk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VoYBKe/0ttwglrw+5GydlGegBU+80neVQHvJMF27OTtUzI+WpJvG0T7HGbsaLnLeX
-	 9D+hHCsn5ZCussqoiI0+uwPe+oyg1+o2cwl3bKh5F9an7mVLQH7RAh+zrKymWsLhk8
-	 7eHZFOM+tRibd/Ecsk17vcmnSg/dA17fU+mbLTYRUYHaiLF86an+BXCveigwLoaYeC
-	 bR4DRktu/PrgBQuyeMs8oN+v3INGyMattBE62lG7Y77X5HzAHIsUtNe8kx/ewMG+i8
-	 mI4YqgHhMX5BTj4cEUI5hJzif7Qnj2JtnVB99MnZUtRTqQnpU20THuHYJ8ED76vHyH
-	 ly3gLH/7EWSIQ==
-Received: by pali.im (Postfix)
-	id 30FD7A4E; Tue, 18 Mar 2025 20:05:20 +0100 (CET)
-Date: Tue, 18 Mar 2025 20:05:20 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Mike Snitzer <snitzer@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Subject: Re: nfs compile error nfslocalio.o and localio.o since v6.14-rc1
-Message-ID: <20250318190520.efwb45jarbyacnw4@pali>
-References: <20250215120054.mfvr2fzs5426bthx@pali>
- <4c790142-7126-413d-a2f3-bb080bb26ce6@oracle.com>
- <20250215163800.v4qdyum6slbzbmts@pali>
- <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
- <20250215165100.jlibe46qwwdfgau5@pali>
- <20250223182746.do2irr7uxpwhjycd@pali>
+	s=arc-20240116; t=1742328764; c=relaxed/simple;
+	bh=DwTciTWioLC/efRZqFQubcLVfUXzAK1lbJgHP9X4rA8=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=IaRBtn+LLWQgF4DRXmqz6TCXOWUywvZUmjAFz3RHibIJAD3BJJgYeqmZ+XtSkhaqdDAI5fMjRB1N/B+umFf8qmZy6FfUT+VMBUBTi4OkmI1DHITwWkBTenBKe/H8n8t4sHtDrKnEhZRFwMSiqHbM8e7ra4U2LPXCqSaA7WLQqlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in01.mta.xmission.com ([166.70.13.51]:42030)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tudIl-000u1I-T2; Tue, 18 Mar 2025 14:12:39 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:60782 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1tudIi-00CP89-UK; Tue, 18 Mar 2025 14:12:38 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: trondmy@kernel.org
+Cc: Christian Brauner <brauner@kernel.org>,  Alexander Viro
+ <viro@zeniv.linux.org.uk>,  Jan Kara <jack@suse.cz>,
+  linux-fsdevel@vger.kernel.org,  linux-nfs@vger.kernel.org
+References: <12f212d4ef983714d065a6bb372fbb378753bf4c.1742315194.git.trond.myklebust@hammerspace.com>
+Date: Tue, 18 Mar 2025 15:12:30 -0500
+In-Reply-To: <12f212d4ef983714d065a6bb372fbb378753bf4c.1742315194.git.trond.myklebust@hammerspace.com>
+	(trondmy@kernel.org's message of "Tue, 18 Mar 2025 12:29:21 -0400")
+Message-ID: <87wmcmxfm9.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250223182746.do2irr7uxpwhjycd@pali>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-XM-SPF: eid=1tudIi-00CP89-UK;;;mid=<87wmcmxfm9.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18gEMRXdAIAt23DqmflYa+E0S1+/xmgGJo=
+X-Spam-Level: 
+X-Spam-Virus: No
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  1.0 XM_B_Investor BODY: Commonly used business phishing phrases
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa03 1397; Body=1 Fuz1=1 Fuz2=1]
+X-Spam-DCC: XMission; sa03 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;trondmy@kernel.org
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 349 ms - load_scoreonly_sql: 0.03 (0.0%),
+	signal_user_changed: 3.6 (1.0%), b_tie_ro: 2.5 (0.7%), parse: 0.63
+	(0.2%), extract_message_metadata: 11 (3.0%), get_uri_detail_list: 1.00
+	(0.3%), tests_pri_-2000: 11 (3.1%), tests_pri_-1000: 1.80 (0.5%),
+	tests_pri_-950: 1.04 (0.3%), tests_pri_-900: 0.78 (0.2%),
+	tests_pri_-90: 112 (32.1%), check_bayes: 108 (30.8%), b_tokenize: 4.8
+	(1.4%), b_tok_get_all: 6 (1.7%), b_comp_prob: 1.38 (0.4%),
+	b_tok_touch_all: 93 (26.5%), b_finish: 0.86 (0.2%), tests_pri_0: 195
+	(55.9%), check_dkim_signature: 0.37 (0.1%), check_dkim_adsp: 2.8
+	(0.8%), poll_dns_idle: 0.67 (0.2%), tests_pri_10: 2.5 (0.7%),
+	tests_pri_500: 8 (2.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] umount: Allow superblock owners to force umount
+X-SA-Exim-Connect-IP: 166.70.13.51
+X-SA-Exim-Rcpt-To: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk, brauner@kernel.org, trondmy@kernel.org
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
 
-PING?
+trondmy@kernel.org writes:
 
-On Sunday 23 February 2025 19:27:46 Pali Rohár wrote:
-> Mike, have you looked at this issue?
-> 
-> On Saturday 15 February 2025 17:51:00 Pali Rohár wrote:
-> > On Saturday 15 February 2025 11:41:25 Chuck Lever wrote:
-> > > On 2/15/25 11:38 AM, Pali Rohár wrote:
-> > > > On Saturday 15 February 2025 11:29:45 Chuck Lever wrote:
-> > > >> Hi Pali -
-> > > >>
-> > > >> On 2/15/25 7:00 AM, Pali Rohár wrote:
-> > > >>> Hello, since v6.14-rc1, file nfslocalio.c cannot be compiled with
-> > > >>> gcc-8.3 and attached .config file. Same problem is with localio.c.
-> > > >>
-> > > >> If the interwebs are correct, gcc-8.3 was released in 2014. ISTR that
-> > > >> recent releases of the Linux kernel no longer support gcc versions that
-> > > >> old.
-> > > > 
-> > > > Hello, I know that this is old version, and I specially used it just to
-> > > > check if everything compiles correctly. And it failed.
-> > > > 
-> > > > Per https://docs.kernel.org/process/changes.html the minimal version of
-> > > > gcc is 5.1, so I think that compilation with gcc 8.3 should still be
-> > > > supported.
-> > > > 
-> > > >> It appears to be snagging on kernel-wide utility helpers, not code
-> > > >> specific to NFS.
-> > > > 
-> > > > It looks like that, but only those two nfs files cause compile errors.
-> > > > Everything else compiles without problem. So it is quite suspicious and
-> > > > maybe it could signal that those helper are used incorrectly in nfs
-> > > > code? I'm not sure, I have not investigated it.
-> > > 
-> > > A bisect would be helpful.
-> > > 
-> > > Also, what is the CPU platform architecture? x86_64?
-> > 
-> > Yes, it is x86_64, I hope that all details/configuration is in the
-> > .config file. I took generic gcc 8.3 version which was distributed by
-> > some debian version. So nothing special.
-> > 
-> > > 
-> > > >> If that's the case, it might not be possible for us to address this
-> > > >> breakage.
-> > > >>
-> > > >> Adding Mike, who contributed this code.
-> > > >>
-> > > >>> Error is:
-> > > >>>
-> > > >>> $ make bzImage
-> > > >>>   CALL    scripts/checksyscalls.sh
-> > > >>>   DESCEND objtool
-> > > >>>   INSTALL libsubcmd_headers
-> > > >>>   CC      fs/nfs_common/nfslocalio.o
-> > > >>> In file included from ./include/linux/rbtree.h:24,
-> > > >>>                  from ./include/linux/mm_types.h:11,
-> > > >>>                  from ./include/linux/mmzone.h:22,
-> > > >>>                  from ./include/linux/gfp.h:7,
-> > > >>>                  from ./include/linux/umh.h:4,
-> > > >>>                  from ./include/linux/kmod.h:9,
-> > > >>>                  from ./include/linux/module.h:17,
-> > > >>>                  from fs/nfs_common/nfslocalio.c:7:
-> > > >>> fs/nfs_common/nfslocalio.c: In function ‘nfs_close_local_fh’:
-> > > >>> ./include/linux/rcupdate.h:531:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
-> > > >>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-> > > >>>          ^
-> > > >>> ./include/linux/rcupdate.h:650:31: note: in expansion of macro ‘__rcu_access_pointer’
-> > > >>>  #define rcu_access_pointer(p) __rcu_access_pointer((p), __UNIQUE_ID(rcu), __rcu)
-> > > >>>                                ^~~~~~~~~~~~~~~~~~~~
-> > > >>> fs/nfs_common/nfslocalio.c:288:10: note: in expansion of macro ‘rcu_access_pointer’
-> > > >>>   ro_nf = rcu_access_pointer(nfl->ro_file);
-> > > >>>           ^~~~~~~~~~~~~~~~~~
-> > > >>> make[4]: *** [scripts/Makefile.build:207: fs/nfs_common/nfslocalio.o] Error 1
-> > > >>> make[3]: *** [scripts/Makefile.build:465: fs/nfs_common] Error 2
-> > > >>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
-> > > >>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
-> > > >>> make: *** [Makefile:251: __sub-make] Error 2
-> > > >>>
-> > > >>>
-> > > >>> $ make fs/nfs/localio.o
-> > > >>>   CALL    scripts/checksyscalls.sh
-> > > >>>   DESCEND objtool
-> > > >>>   INSTALL libsubcmd_headers
-> > > >>>   CC      fs/nfs/localio.o
-> > > >>> In file included from ./include/linux/rbtree.h:24,
-> > > >>>                  from ./include/linux/mm_types.h:11,
-> > > >>>                  from ./include/linux/mmzone.h:22,
-> > > >>>                  from ./include/linux/gfp.h:7,
-> > > >>>                  from ./include/linux/umh.h:4,
-> > > >>>                  from ./include/linux/kmod.h:9,
-> > > >>>                  from ./include/linux/module.h:17,
-> > > >>>                  from fs/nfs/localio.c:11:
-> > > >>> fs/nfs/localio.c: In function ‘nfs_local_open_fh’:
-> > > >>> ./include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
-> > > >>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-> > > >>>          ^
-> > > >>> ./include/linux/rcupdate.h:686:2: note: in expansion of macro ‘__rcu_dereference_check’
-> > > >>>   __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-> > > >>>   ^~~~~~~~~~~~~~~~~~~~~~~
-> > > >>> ./include/linux/rcupdate.h:758:28: note: in expansion of macro ‘rcu_dereference_check’
-> > > >>>  #define rcu_dereference(p) rcu_dereference_check(p, 0)
-> > > >>>                             ^~~~~~~~~~~~~~~~~~~~~
-> > > >>> fs/nfs/localio.c:275:7: note: in expansion of macro ‘rcu_dereference’
-> > > >>>   nf = rcu_dereference(*pnf);
-> > > >>>        ^~~~~~~~~~~~~~~
-> > > >>> make[4]: *** [scripts/Makefile.build:207: fs/nfs/localio.o] Error 1
-> > > >>> make[3]: *** [scripts/Makefile.build:465: fs/nfs] Error 2
-> > > >>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
-> > > >>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
-> > > >>> make: *** [Makefile:251: __sub-make] Error 2
-> > > >>>
-> > > >>>
-> > > >>> Reproduced from commit 7ff71e6d9239 ("Merge tag 'alpha-fixes-v6.14-rc2'
-> > > >>> of git://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha").
-> > > >>
-> > > >>
-> > > >> -- 
-> > > >> Chuck Lever
-> > > 
-> > > 
-> > > -- 
-> > > Chuck Lever
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Loosen the permission check on forced umount to allow users holding
+> CAP_SYS_ADMIN privileges in namespaces that are privileged with respect
+> to the userns that originally mounted the filesystem.
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+Semantically this seems reasonable.  I think forced umounts just got
+overlooked when I was relaxing the other permission checks, to allow
+things if you own the superblock.
+
+The code has already checked you have permissions on the current mount
+namespace.  Which was my immediate concern looking at the code.
+
+Eric
+
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/namespace.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 8f1000f9f3df..d401486fe95d 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2026,6 +2026,7 @@ static void warn_mandlock(void)
+>  static int can_umount(const struct path *path, int flags)
+>  {
+>  	struct mount *mnt = real_mount(path->mnt);
+> +	struct super_block *sb = path->dentry->d_sb;
+>  
+>  	if (!may_mount())
+>  		return -EPERM;
+> @@ -2035,7 +2036,7 @@ static int can_umount(const struct path *path, int flags)
+>  		return -EINVAL;
+>  	if (mnt->mnt.mnt_flags & MNT_LOCKED) /* Check optimistically */
+>  		return -EINVAL;
+> -	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
+> +	if (flags & MNT_FORCE && !ns_capable(sb->s_user_ns, CAP_SYS_ADMIN))
+>  		return -EPERM;
+>  	return 0;
+>  }
 
