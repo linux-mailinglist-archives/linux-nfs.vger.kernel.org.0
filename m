@@ -1,55 +1,71 @@
-Return-Path: <linux-nfs+bounces-10676-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 322F6A6838E
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 04:16:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BDC9A683B1
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 04:24:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5B338805BD
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 03:16:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B1DD17ABD44
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 03:23:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70D881FB3;
-	Wed, 19 Mar 2025 03:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 845C820CCE5;
+	Wed, 19 Mar 2025 03:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="TD65pRA9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F249C215055;
-	Wed, 19 Mar 2025 03:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80022524F
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Mar 2025 03:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742354169; cv=none; b=s78hkf/Uok32P9kaweL/ooPnRnTCWN/xeVpl6LSF58O0uKPK41GV2UK+5UjrWF5MlIrNgF7CbvBFSC44J9EUNdaFrf/prNAfaSl32x8T04AwPQMsl7qwnEE/faA75/jzGl+ViWw+WHsVqnBCiztApPkd1n0ZXVZCE9oKQCqYpeE=
+	t=1742354662; cv=none; b=gZZ6y6MYsC0QXp5WxXLk0pKIQDnLe0KMuAQvGM7wCojAdhI8W7KOzYgXqRei9ND1+6XSafm8jPYxlo92xzpbNTmgY8rgm9I6zfaV5MkqzxZRDZZF0KgmFuNGEKBssEvIDPV1Wmy75lqvV7ABTFBzOH286pzQow8gLmYI58eFwoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742354169; c=relaxed/simple;
-	bh=9sLRRW7WxZK0FGujgs3vJrfX75dDldlyBqagS9MkTe8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ogE8yiF3B0A6EXg2C6cEuNS5rJG1OzXc+GvUl4LSpCR2FWNAqohAWgb5qNn82LrLH9qMynjXvIoDDBxR1ixLGUg7MmO+N15txCXmB51qAsFyi3DkBCr5ERWsNMNX66wfR23owuG8jpt7BBdxSQA7k+VJ2fXgjnscwaX7t2f3aik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1tujuQ-00G6ot-GH;
-	Wed, 19 Mar 2025 03:15:58 +0000
-From: NeilBrown <neil@brown.name>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	David Howells <dhowells@redhat.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	netfs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 6/6] VFS: change lookup_one_common and lookup_noperm_common to take a qstr
-Date: Wed, 19 Mar 2025 14:01:37 +1100
-Message-ID: <20250319031545.2999807-7-neil@brown.name>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250319031545.2999807-1-neil@brown.name>
-References: <20250319031545.2999807-1-neil@brown.name>
+	s=arc-20240116; t=1742354662; c=relaxed/simple;
+	bh=MN9oZmbNILNdEvoHmvsDnZPCG22sTovtr1MWMH+ia4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RIZyKNxKoTyBecPwrOJBxzi50gw2MX+zanFzkEkAAEMrleaGCmLWlHe9F9q9bg4CIaaC5a+3q2JOiIIBJ6xm6vGXCbtT+xzlT1CVg47A0/g6jDj+crYCnO3L3LMFYT6QsFt/KDT9gImsM7kMzrS1O0gF6JphXcdrDV4pj2Vx5cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=TD65pRA9; arc=none smtp.client-ip=139.138.37.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1742354660; x=1773890660;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=MN9oZmbNILNdEvoHmvsDnZPCG22sTovtr1MWMH+ia4A=;
+  b=TD65pRA9c+iVS6EoL4IFo/8+4EvJj7QNEC48/E54JRLjQXdAVCK0PmOk
+   QEwlIKL6KIuRpIpXuTF9ujI2ati1YDlFgH2iHZQNVXbsCEOUnxubTTyjt
+   p3y5BdceQITQWUVmu/bng4FVZJiMiRcjv0jfDPOVV3e8zXABpiBue5nTY
+   SDG6VK85YF9hmG3OxqU00AdbgHH/DW69UVYTtQB34wljS9n0lsKHPRRM0
+   ibI1+nF/MFiINKBVWkV6b94Nr+r3lQjVkP4q3mNu9ZSMBsJsiZ6gEPRLI
+   wrk5LTc3nthISkAvLeIwoaL5DOSz3fKZXI3PYSxDCmJv8GUyal2M/cbm9
+   A==;
+X-CSE-ConnectionGUID: Dnoj5PGtSlu/gGtOBTg/TA==
+X-CSE-MsgGUID: sfW3vGp8ShC2iJXcGWu2fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="172482630"
+X-IronPort-AV: E=Sophos;i="6.14,258,1736780400"; 
+   d="scan'208";a="172482630"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 12:24:12 +0900
+Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 305A6D4C33
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Mar 2025 12:24:10 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id EAE6BD8B6E
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Mar 2025 12:24:09 +0900 (JST)
+Received: from G08XZGSD200059.g08.fujitsu.local (unknown [10.167.135.156])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id 5826E1A009A;
+	Wed, 19 Mar 2025 11:24:09 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] pynfs: fix key error if FATTR4_OPEN_ARGUMENTS is not supported
+Date: Wed, 19 Mar 2025 11:23:43 +0800
+Message-ID: <20250319032402.1789-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.47.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -58,146 +74,32 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: NeilBrown <neilb@suse.de>
+If FATTR4_OPEN_ARGUMENTS is not supportd, DELEG24 and DELEG25
+will throw:
+	KeyError: 86
 
-These function already take a qstr of course, but they also currently
-take a name/len was well and fill in the qstr.
-Now they take a qstr that is already filled in, which is what all the
-callers have.
+Check FATTR4_OPEN_ARGUMENTS in caps from server
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 ---
- fs/namei.c | 44 +++++++++++++++++++-------------------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
+ nfs4.1/server41tests/st_delegation.py | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 16605f7108c0..e2fb61573f13 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2833,13 +2833,12 @@ int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
- }
- EXPORT_SYMBOL(vfs_path_lookup);
+diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
+index fa9b451..f27e852 100644
+--- a/nfs4.1/server41tests/st_delegation.py
++++ b/nfs4.1/server41tests/st_delegation.py
+@@ -311,6 +311,9 @@ def _testCbGetattr(t, env, change=0, size=0):
+                 OPEN4_SHARE_ACCESS_WRITE |
+                 OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
  
--static int lookup_noperm_common(const char *name, struct dentry *base,
--				  int len,
--				  struct qstr *this)
-+static int lookup_noperm_common(struct qstr *qname, struct dentry *base)
- {
--	this->name = name;
--	this->len = len;
--	this->hash = full_name_hash(base, name, len);
-+	const char *name = qname->name;
-+	u32 len = qname->len;
++    if FATTR4_OPEN_ARGUMENTS not in caps:
++        fail("FATTR4_OPEN_ARGUMENTS not supported")
 +
-+	qname->hash = full_name_hash(base, name, len);
- 	if (!len)
- 		return -EACCES;
- 
-@@ -2856,7 +2855,7 @@ static int lookup_noperm_common(const char *name, struct dentry *base,
- 	 * to use its own hash..
- 	 */
- 	if (base->d_flags & DCACHE_OP_HASH) {
--		int err = base->d_op->d_hash(base, this);
-+		int err = base->d_op->d_hash(base, qname);
- 		if (err < 0)
- 			return err;
- 	}
-@@ -2864,10 +2863,10 @@ static int lookup_noperm_common(const char *name, struct dentry *base,
- }
- 
- static int lookup_one_common(struct mnt_idmap *idmap,
--			     const char *name, struct dentry *base, int len,
--			     struct qstr *this) {
-+			     struct qstr *qname, struct dentry *base)
-+{
- 	int err;
--	err = lookup_noperm_common(name, base, len, this);
-+	err = lookup_noperm_common(qname, base);
- 	if (err < 0)
- 		return err;
- 	return inode_permission(idmap, base->d_inode, MAY_EXEC);
-@@ -2888,16 +2887,14 @@ static int lookup_one_common(struct mnt_idmap *idmap,
-  */
- struct dentry *try_lookup_noperm(struct qstr *name, struct dentry *base)
- {
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_noperm_common(name->name, base, name->len, &this);
-+	err = lookup_noperm_common(name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	name->hash = this.hash;
- 	return lookup_dcache(name, base, 0);
- }
- EXPORT_SYMBOL(try_lookup_noperm);
-@@ -2915,17 +2912,16 @@ EXPORT_SYMBOL(try_lookup_noperm);
- struct dentry *lookup_noperm(struct qstr name, struct dentry *base)
- {
- 	struct dentry *dentry;
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_noperm_common(name.name, base, name.len, &this);
-+	err = lookup_noperm_common(&name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	dentry = lookup_dcache(&this, base, 0);
--	return dentry ? dentry : __lookup_slow(&this, base, 0);
-+	dentry = lookup_dcache(&name, base, 0);
-+	return dentry ? dentry : __lookup_slow(&name, base, 0);
- }
- EXPORT_SYMBOL(lookup_noperm);
- 
-@@ -2943,17 +2939,16 @@ struct dentry *lookup_one(struct mnt_idmap *idmap, struct qstr name,
- 			  struct dentry *base)
- {
- 	struct dentry *dentry;
--	struct qstr this;
- 	int err;
- 
- 	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
- 
--	err = lookup_one_common(idmap, name.name, base, name.len, &this);
-+	err = lookup_one_common(idmap, &name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	dentry = lookup_dcache(&this, base, 0);
--	return dentry ? dentry : __lookup_slow(&this, base, 0);
-+	dentry = lookup_dcache(&name, base, 0);
-+	return dentry ? dentry : __lookup_slow(&name, base, 0);
- }
- EXPORT_SYMBOL(lookup_one);
- 
-@@ -2971,17 +2966,16 @@ EXPORT_SYMBOL(lookup_one);
- struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
- 				   struct qstr name, struct dentry *base)
- {
--	struct qstr this;
- 	int err;
- 	struct dentry *ret;
- 
--	err = lookup_one_common(idmap, name.name, base, name.len, &this);
-+	err = lookup_one_common(idmap, &name, base);
- 	if (err)
- 		return ERR_PTR(err);
- 
--	ret = lookup_dcache(&this, base, 0);
-+	ret = lookup_dcache(&name, base, 0);
- 	if (!ret)
--		ret = lookup_slow(&this, base, 0);
-+		ret = lookup_slow(&name, base, 0);
- 	return ret;
- }
- EXPORT_SYMBOL(lookup_one_unlocked);
+     if caps[FATTR4_SUPPORTED_ATTRS] & FATTR4_OPEN_ARGUMENTS:
+         if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
+             openmask |= 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
 -- 
-2.48.1
+2.47.1
 
 
