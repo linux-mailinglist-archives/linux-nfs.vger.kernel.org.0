@@ -1,189 +1,175 @@
-Return-Path: <linux-nfs+bounces-10702-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10703-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE9B8A69B2A
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FEBBA69B29
 	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 22:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72C0E7AFD63
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 21:45:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B36338A7B9B
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Mar 2025 21:46:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A27571E1C3F;
-	Wed, 19 Mar 2025 21:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7EC1E520D;
+	Wed, 19 Mar 2025 21:46:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bTf6YIxf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wcfO+HzP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bTf6YIxf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wcfO+HzP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ClwDKXzf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E5214AD29
-	for <linux-nfs@vger.kernel.org>; Wed, 19 Mar 2025 21:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78770213235
+	for <linux-nfs@vger.kernel.org>; Wed, 19 Mar 2025 21:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742420774; cv=none; b=V7gnsaR0Yh9Cp5XityvPg5s2iZpD8gkZhhr8z5paEoF16eANYBi9fhwY4NCTBJMNKYws26pMR1FXm0ZAhDblCDnlOjLrCyFFqk4qOawUMDh/uV3532hyiSaZsFa8JxwckJTVvrseH4IpK/wHUJCO2wD2bCQ6FyoRW9WYIiD2i9s=
+	t=1742420814; cv=none; b=LBhDZi7UoA8pbhkGiKXEV6YUWprBkydQ6N4iZ5vOIDKh3IwX+v1Qv0Y66qHD8Eibdwmc/yO8M3qF8lZIDc3HkNCYq8+6ruKpPdRyeFyAyZllbOC2HXc7cAZLH4qx3NUZlR3m5ksQL96xpbW4mZS9SzmUKI5s6yMFthHr8bKFn1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742420774; c=relaxed/simple;
-	bh=pE9iRes7c/cYk+8DrCITMmAezO2LHbN94oqjGOPQGDA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=PLYXlh4ThaLfK4Q2bRvKbMibE2RNes6YPOcKCEXgJCF7NX8GDzqx1YxkRQap5CPKXw7w2ANeB5VA356qRi9b4Cq1e/jvL/nVYBzZIdHsdJnodfMpU9rqxUcpWGSRMxyUTl4fTqzhVadCTGYEeBP7VH3YVeGGc0cZYbTU8z2S43Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bTf6YIxf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wcfO+HzP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bTf6YIxf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wcfO+HzP; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1742420814; c=relaxed/simple;
+	bh=xkd3ExdNDUXClktLVKtBpNGXV74PtQP0snzmq41GVtI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q+n4L7e2CSpElo8S7fajgKgopzwv6+J4Ct3G7nfEbuLADZQLV1ihr6yFTOAIHa8sZinjidFMtyM0JwfHNoIUWENav10N+2miNK9FQ2PXY6PINEtyno5ftAYPahDKKFMc2rIQvNrdFnwhVpS8VpUVnX2drRGi/t8BFkUKi8TU8jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ClwDKXzf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742420811;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=F2YT91mHWQscwxZm5pqWAN3/c4B3mqHQ/2m5wVL5GVU=;
+	b=ClwDKXzfJHNEA/Xwt52AOTqtLE/icPMceImK3x1rRRseMEAiNal5DMRQBUkyNysWmzzf0Z
+	eQv3X9CxM3Ck8YI7Ufa7n8Z5VA3RBzcb38hUFOnvksctFm8eu9wdg2X5cOCMdkws6bE2OH
+	STkDEHhyCD189VXENjTr9yxetrxIflA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-692-XbVdzDUCOyenvYx3qpS11g-1; Wed,
+ 19 Mar 2025 17:46:47 -0400
+X-MC-Unique: XbVdzDUCOyenvYx3qpS11g-1
+X-Mimecast-MFC-AGG-ID: XbVdzDUCOyenvYx3qpS11g_1742420806
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CFCFD2170C;
-	Wed, 19 Mar 2025 21:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742420770; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qOgCf2mg+yhi/H19hxmK0gtYDoGJ2Ec1iCddbJmpNRM=;
-	b=bTf6YIxfenlf/vAob8+4zMDnkQ7trN8DVrXPhl3GokmWHdqviVy6Jhe1qYhnuBDMhcgCsw
-	oAyqd49ZmZ2fg4QFXzXGeTDLccVWCMYH9G6WvfxluhpaoCyAh+fWfBT7OlKPsOEa1DXKrt
-	rQpgC91fDeO3jFF2cqflo1x+Kpm7LPQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742420770;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qOgCf2mg+yhi/H19hxmK0gtYDoGJ2Ec1iCddbJmpNRM=;
-	b=wcfO+HzPH3uqO7loBbLwBr55YCLMJC1llHdGQ/Ji+PV6iUHjJg96MYqeRnFu6+lVAKd0SR
-	dAXEIk2Jnr8GTsAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742420770; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qOgCf2mg+yhi/H19hxmK0gtYDoGJ2Ec1iCddbJmpNRM=;
-	b=bTf6YIxfenlf/vAob8+4zMDnkQ7trN8DVrXPhl3GokmWHdqviVy6Jhe1qYhnuBDMhcgCsw
-	oAyqd49ZmZ2fg4QFXzXGeTDLccVWCMYH9G6WvfxluhpaoCyAh+fWfBT7OlKPsOEa1DXKrt
-	rQpgC91fDeO3jFF2cqflo1x+Kpm7LPQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742420770;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qOgCf2mg+yhi/H19hxmK0gtYDoGJ2Ec1iCddbJmpNRM=;
-	b=wcfO+HzPH3uqO7loBbLwBr55YCLMJC1llHdGQ/Ji+PV6iUHjJg96MYqeRnFu6+lVAKd0SR
-	dAXEIk2Jnr8GTsAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8CA813726;
-	Wed, 19 Mar 2025 21:46:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QOsFFyA722dJOgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 19 Mar 2025 21:46:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4E25319560B2;
+	Wed, 19 Mar 2025 21:46:46 +0000 (UTC)
+Received: from okorniev-mac.redhat.com (unknown [10.22.81.201])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 79CE91956095;
+	Wed, 19 Mar 2025 21:46:44 +0000 (UTC)
+From: Olga Kornievskaia <okorniev@redhat.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org,
+	neilb@suse.de,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	Olga Kornievskaia <okorniev@redhat.com>
+Subject: [PATCH 1/1] nfsd: fix NLM access checking
+Date: Wed, 19 Mar 2025 17:46:41 -0400
+Message-Id: <20250319214641.27699-1-okorniev@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Dai Ngo" <dai.ngo@oracle.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Tom Talpey" <tom@talpey.com>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: NFSD automatically releases all states when underlying file
- system is unmounted
-In-reply-to: <543f93fd-3b5a-4e4a-b2b0-0a1b7e1e8361@oracle.com>
-References: <543f93fd-3b5a-4e4a-b2b0-0a1b7e1e8361@oracle.com>
-Date: Thu, 20 Mar 2025 08:46:00 +1100
-Message-id: <174242076022.9342.12166225816627715170@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 20 Mar 2025, Dai Ngo wrote:
-> Hi,
->=20
-> Currently when the local file system needs to be unmounted for maintenance
-> the admin needs to make sure all the NFS clients have stopped using any fil=
-es
-> on the NFS shares before the umount(8) can succeed.
+Since commit 4cc9b9f2bf4df ("nfsd: refine and rename NFSD_MAY_LOCK")
+for export policies with "sec=krb5:..." or "xprtsec=tls:.." NLM
+locking calls on v3 mounts fail. And for "sec=krb5" NLM calls it
+also leads to out-of-bounds reference while in check_nfsd_access().
 
-This is easily achieved with
-  echo /path/to/filesystem > /proc/fs/nfsd/unlock_filesystem
+This patch does 3 fixes. 2 problems are related to sec=krb5.
+First is fixing what "access" content is being passed into
+the inode_permission(). Prior to 4cc9b9f2bf4df, the code would
+explicitly set access to be read/ownership. And after is passes
+access that's set in nlm_fopen but it's lacking read access.
+Second is because previously for NLM check_nfsd_access() was
+never called and thus nfsd4_spo_must_allow() function wasn't
+called. After the patch, this lead to NLM call which has no
+compound state structure created trying to dereference it.
+This patch instead moves the call to after may_bypass_gss
+check which implies NLM and would return there and would
+never get to calling nfsd4_spo_must_allow().
 
-Do this after unexporting and before unmounting.
+The last problem is related to TLS export policy. NLM dont
+come over TLS and thus dont pass the TLS checks in
+check_nfsd_access() leading to access being denied. Instead
+rely on may_bypass_gss to indicate NLM and allow access
+checking to continue.
 
-All state for NFSv4 exports, and all NLM locks for NFSv2/3 exports, will
-be invalidated and files closed.  NFSv4 clients will get
-NFS4ERR_ADMIN_REVOKED when they attempt to use any state that was on
-that filesystem.
+Fixes: 4cc9b9f2bf4df ("nfsd: refine and rename NFSD_MAY_LOCK")
+Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+---
+ fs/nfsd/export.c | 23 +++++++++++++----------
+ fs/nfsd/vfs.c    |  4 ++++
+ 2 files changed, 17 insertions(+), 10 deletions(-)
 
-(I don't think this flushes the NFSv3 file cache, so a short delay might
- be needed before the unmount when v3 is used.  That should be fixed)
-
-NeilBrown
-
-
->=20
-> In an environment where there are thousands of clients this manual process
-> seems almost impossible or impractical. The only option available now is to
-> restart the NFS server which would works since the NFS client can recover i=
-ts
-> state but it seems like this is a big hammer approach.
->=20
-> Ideally, when the umount command is run there is a callback from the VFS la=
-yer
-> to notify the upper protocols; NFS and SMB, to release its states on this f=
-ile
-> system for the umount to complete.
->=20
-> Is there any existing mechanism to allow NFSD to release its states automat=
-ically
-> on unmount?
->=20
-> Unmount is not a frequent operation. Is it justifiable to add a bunch of co=
-mplex
-> code for something is not frequently needed?
->=20
-> I appreciate any opinions on this issue.
->=20
-> Thanks,
-> -Dai
->=20
->=20
->=20
->=20
->   =20
->=20
->=20
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 0363720280d4..4cbf617efa7c 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -1124,7 +1124,8 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+ 		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
+ 			goto ok;
+ 	}
+-	goto denied;
++	if (!may_bypass_gss)
++		goto denied;
+ 
+ ok:
+ 	/* legacy gss-only clients are always OK: */
+@@ -1142,15 +1143,6 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+ 			return nfs_ok;
+ 	}
+ 
+-	/* If the compound op contains a spo_must_allowed op,
+-	 * it will be sent with integrity/protection which
+-	 * will have to be expressly allowed on mounts that
+-	 * don't support it
+-	 */
+-
+-	if (nfsd4_spo_must_allow(rqstp))
+-		return nfs_ok;
+-
+ 	/* Some calls may be processed without authentication
+ 	 * on GSS exports. For example NFS2/3 calls on root
+ 	 * directory, see section 2.3.2 of rfc 2623.
+@@ -1168,6 +1160,17 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp,
+ 		}
+ 	}
+ 
++	/* If the compound op contains a spo_must_allowed op,
++	 * it will be sent with integrity/protection which
++	 * will have to be expressly allowed on mounts that
++	 * don't support it
++	 */
++	/* This call must be done after the may_bypass_gss check.
++	 * may_bypass_gss implies NLM(/MOUNT) and not 4.1
++	 */
++	if (nfsd4_spo_must_allow(rqstp))
++		return nfs_ok;
++
+ denied:
+ 	return nfserr_wrongsec;
+ }
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 4021b047eb18..95d973136079 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -2600,6 +2600,10 @@ nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
+ 	    uid_eq(inode->i_uid, current_fsuid()))
+ 		return 0;
+ 
++	/* If this is NLM, require read or ownership permissions */
++	if (acc & NFSD_MAY_NLM)
++		acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
++
+ 	/* This assumes  NFSD_MAY_{READ,WRITE,EXEC} == MAY_{READ,WRITE,EXEC} */
+ 	err = inode_permission(&nop_mnt_idmap, inode,
+ 			       acc & (MAY_READ | MAY_WRITE | MAY_EXEC));
+-- 
+2.47.1
 
 
