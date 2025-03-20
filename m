@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-10730-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10731-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98F7DA6AF46
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 21:40:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8F20A6AF47
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 21:40:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F173148237E
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 20:40:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B89F1892C5E
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 20:40:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98F36228C9D;
-	Thu, 20 Mar 2025 20:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B80A229B12;
+	Thu, 20 Mar 2025 20:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdIfpbbV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIjwVEYU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754CD1DDA39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2F8229B0D
 	for <linux-nfs@vger.kernel.org>; Thu, 20 Mar 2025 20:40:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742503224; cv=none; b=JoUZlvPJwkCnvXSQBM+vt8HPCqlvmzzxmT1AtLsD+3SZgYeeWx8yJ96U1rtnPfLo0kqMwDBmGOhHAzdJVpAtS1sbD4dV+rOaNbBxBLHzoZeBxsLLK2RqpTDmResXc11BFUT+cikvaUczdvPPSnmLejrw/5yyHONvqaEcDOPK100=
+	t=1742503224; cv=none; b=NSPffcZVhOrNn5ywvIbz/fs1KUEiq9sBTjdjbRlz2LBlCAJG+Quc5SQP3OmtBlwY3IS5tuKymcHOAvoWmVkQw2SDteXZ5PuufIGDqD/oYgIF9sVrkmp8R8AGklU6iAuzX6TfhxHm06wQahWvw8r/Rh+ClfvJg0p2ZQ4Rsf0WYX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742503224; c=relaxed/simple;
-	bh=tKQpeY+RK+uF3VsSq1lAUuwbkicudUKI6dH8jeka+0E=;
+	bh=BaSAMP7xXx0DIgoNFZrC7Deznsv8V/ufUg4tQlkQ4LA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FsSlS+dOS5tsiVMYu0GZ0eVbAoFoKTJzhHTbREbPPLWLPpXTwkEOhMDRauzgw6SwKvA5IQgkPAyQBBcuuAVpadQrOgjJS8yzgUdqTyBeFuKhKP6wxjpXzrGGipR+0ASTOieILRUTQajebUDi4aaqW7kY5tjPqWUUrned/m6c+lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdIfpbbV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9885BC4CEE8;
-	Thu, 20 Mar 2025 20:40:23 +0000 (UTC)
+	 MIME-Version; b=rX3eWsSgxXVcBi5MlJRXkgWXhZ209zlq/Vr7tGSWj7lOEaR2GDL6iPhg1AY68xQBtAwb2x9Tfz/fuagxUYUTFl7/vapazEYFf0RPhxUANqOhSBLMwP5BGH/IXJoBspvfvPL+G68a9FAREP9X6qSgjVplF7jxN0XrwUHHpRjVdkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIjwVEYU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2537EC4CEEC;
+	Thu, 20 Mar 2025 20:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742503223;
-	bh=tKQpeY+RK+uF3VsSq1lAUuwbkicudUKI6dH8jeka+0E=;
+	s=k20201202; t=1742503224;
+	bh=BaSAMP7xXx0DIgoNFZrC7Deznsv8V/ufUg4tQlkQ4LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QdIfpbbVuvIPxrcfiD1ZJlJk2gw6H81LsbHlZe/nf+tuAvOdb2D+Fqz2Fyh3Gesdf
-	 jwm1Sow602fwVdNjxEkMd67KjOQgW28Pco0W9xCrVgn7l5CGhhOhK7NJg717BrxrLd
-	 C9KgxQI1yoSygTPZaH64ONbUmu5Aft+lQBS+H4DgGEkLQ0m6pGzKM46jm6Z3ZVW+8q
-	 rJN16Vq4IJe9sPFL8vbG7JDwjS4dWTza3x8wumQljcNSqmqht8ab17PTl5PSkJ1xsL
-	 V+wdM79K8auAb3WybJPb5tc9vr+RoZpxNfbX0VSR4ubTS4RXXW0Yg+aLAICU0rHgBi
-	 m/u7JhijU2A+A==
+	b=OIjwVEYURjcf8Q+0AvXmUp63XgnaAwfHUlfuG0L9TzGDUAnmdatVm81d1RUd1Oz6Q
+	 sh0f8s3g6niM94m5FcIId4fIo9/grYpilnybAsyCGFAFA3Utk4HvAhVYE9COgqV/f6
+	 1r9FojOflUHry8uZm43iJ7KCJMkwHaa1RMEQMMfbMdYZj6QNbyiqKMele9wrfg4fBs
+	 0O69o2hkTSBGrFesPoNhv8bkYGXhmFnJGBLhl91P9w+yq2EWRWBBIeckQL4e7R1srm
+	 KWlRb/isKnVQwIKkJROYZswmjE9IFydjuIpdqHnhmVpuETfP5A4dLOVlpcLhhpXHSf
+	 lRN3Bq7EA2SVA==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
 	Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH RFC v2 1/4] NFS: Add a mount option to make ENETUNREACH errors fatal
-Date: Thu, 20 Mar 2025 16:40:18 -0400
-Message-ID: <e46c08d4ab2ed370f2fe39ed1fb85156e1485e17.1742502819.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH RFC v2 2/4] NFS: Treat ENETUNREACH errors as fatal in containers
+Date: Thu, 20 Mar 2025 16:40:19 -0400
+Message-ID: <2c8f80b8d3706ee441b6e404f6229b4c695d35c8.1742502819.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1742502819.git.trond.myklebust@hammerspace.com>
 References: <cover.1742502819.git.trond.myklebust@hammerspace.com>
@@ -61,126 +61,225 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If the NFS client was initially created in a container, and that
-container is torn down, there is usually no possibity to go back and
-destroy any NFS clients that are hung because their virtual network
-devices have been unlinked.
-
-Add a flag that tells the NFS client that in these circumstances, it
-should treat ENETDOWN and ENETUNREACH errors as fatal to the NFS client.
-
-The option defaults to being on when the mount happens from inside a net
-namespace that is not "init_net".
+Propagate the NFS_MOUNT_NETUNREACH_FATAL flag to work with the generic
+NFS client. If the flag is set, the client will receive ENETDOWN and
+ENETUNREACH errors from the RPC layer, and is expected to treat them as
+being fatal.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/fs_context.c       | 38 ++++++++++++++++++++++++++++++++++++++
- fs/nfs/super.c            |  2 ++
- include/linux/nfs_fs_sb.h |  1 +
- 3 files changed, 41 insertions(+)
+ fs/nfs/client.c               |  5 +++++
+ fs/nfs/nfs4client.c           |  2 ++
+ fs/nfs/nfs4proc.c             |  3 +++
+ include/linux/nfs_fs_sb.h     |  1 +
+ include/linux/sunrpc/clnt.h   |  5 ++++-
+ include/linux/sunrpc/sched.h  |  1 +
+ include/trace/events/sunrpc.h |  1 +
+ net/sunrpc/clnt.c             | 30 ++++++++++++++++++++++--------
+ 8 files changed, 39 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 1cabba1231d6..5eb8c0a7833b 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -50,6 +50,7 @@ enum nfs_param {
- 	Opt_clientaddr,
- 	Opt_cto,
- 	Opt_alignwrite,
-+	Opt_fatal_neterrors,
- 	Opt_fg,
- 	Opt_fscache,
- 	Opt_fscache_flag,
-@@ -97,6 +98,20 @@ enum nfs_param {
- 	Opt_xprtsec,
- };
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 3b0918ade53c..02c916a55020 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -546,6 +546,8 @@ int nfs_create_rpc_client(struct nfs_client *clp,
+ 		args.flags |= RPC_CLNT_CREATE_NOPING;
+ 	if (test_bit(NFS_CS_REUSEPORT, &clp->cl_flags))
+ 		args.flags |= RPC_CLNT_CREATE_REUSEPORT;
++	if (test_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags))
++		args.flags |= RPC_CLNT_CREATE_NETUNREACH_FATAL;
  
-+enum {
-+	Opt_fatal_neterrors_default,
-+	Opt_fatal_neterrors_enetunreach,
-+	Opt_fatal_neterrors_none,
-+};
+ 	if (!IS_ERR(clp->cl_rpcclient))
+ 		return 0;
+@@ -709,6 +711,9 @@ static int nfs_init_server(struct nfs_server *server,
+ 	if (ctx->flags & NFS_MOUNT_NORESVPORT)
+ 		set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
+ 
++	if (ctx->flags & NFS_MOUNT_NETUNREACH_FATAL)
++		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
 +
-+static const struct constant_table nfs_param_enums_fatal_neterrors[] = {
-+	{ "default",			Opt_fatal_neterrors_default },
-+	{ "enetdown:enetunreach",	Opt_fatal_neterrors_enetunreach },
-+	{ "enetunreach:enetdown",	Opt_fatal_neterrors_enetunreach },
-+	{ "none",			Opt_fatal_neterrors_none },
-+	{}
-+};
-+
- enum {
- 	Opt_local_lock_all,
- 	Opt_local_lock_flock,
-@@ -153,6 +168,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
- 	fsparam_string("clientaddr",	Opt_clientaddr),
- 	fsparam_flag_no("cto",		Opt_cto),
- 	fsparam_flag_no("alignwrite",	Opt_alignwrite),
-+	fsparam_enum  ("fatal_errors",	Opt_fatal_neterrors, nfs_param_enums_fatal_neterrors),
- 	fsparam_flag  ("fg",		Opt_fg),
- 	fsparam_flag_no("fsc",		Opt_fscache_flag),
- 	fsparam_string("fsc",		Opt_fscache),
-@@ -896,6 +912,25 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			goto out_of_bounds;
- 		ctx->nfs_server.max_connect = result.uint_32;
- 		break;
-+	case Opt_fatal_neterrors:
-+		trace_nfs_mount_assign(param->key, param->string);
-+		switch (result.uint_32) {
-+		case Opt_fatal_neterrors_default:
-+			if (fc->net_ns != &init_net)
-+				ctx->flags |= NFS_MOUNT_NETUNREACH_FATAL;
-+			else
-+				ctx->flags &= ~NFS_MOUNT_NETUNREACH_FATAL;
-+			break;
-+		case Opt_fatal_neterrors_enetunreach:
-+			ctx->flags |= NFS_MOUNT_NETUNREACH_FATAL;
-+			break;
-+		case Opt_fatal_neterrors_none:
-+			ctx->flags &= ~NFS_MOUNT_NETUNREACH_FATAL;
-+			break;
-+		default:
-+			goto out_invalid_value;
-+		}
+ 	/* Allocate or find a client reference we can use */
+ 	clp = nfs_get_client(&cl_init);
+ 	if (IS_ERR(clp))
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 83378f69b35e..8f7d40844cdc 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -233,6 +233,8 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	__set_bit(NFS_CS_NO_RETRANS_TIMEOUT, &clp->cl_flags);
+ 	if (test_bit(NFS_CS_PNFS, &cl_init->init_flags))
+ 		__set_bit(NFS_CS_PNFS, &clp->cl_flags);
++	if (test_bit(NFS_CS_NETUNREACH_FATAL, &cl_init->init_flags))
++		__set_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags);
+ 	/*
+ 	 * Set up the connection to the server before we add add to the
+ 	 * global list.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index f195e7ceca1b..6fb3708560cf 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -195,6 +195,9 @@ static int nfs4_map_errors(int err)
+ 		return -EBUSY;
+ 	case -NFS4ERR_NOT_SAME:
+ 		return -ENOTSYNC;
++	case -ENETDOWN:
++	case -ENETUNREACH:
 +		break;
- 	case Opt_lookupcache:
- 		trace_nfs_mount_assign(param->key, param->string);
- 		switch (result.uint_32) {
-@@ -1675,6 +1710,9 @@ static int nfs_init_fs_context(struct fs_context *fc)
- 		ctx->xprtsec.cert_serial	= TLS_NO_CERT;
- 		ctx->xprtsec.privkey_serial	= TLS_NO_PRIVKEY;
- 
-+		if (fc->net_ns != &init_net)
-+			ctx->flags |= NFS_MOUNT_NETUNREACH_FATAL;
-+
- 		fc->s_iflags		|= SB_I_STABLE_WRITES;
- 	}
- 	fc->fs_private = ctx;
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 96de658a7886..23ed1ed67a10 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -457,6 +457,8 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
- 		{ NFS_MOUNT_FORCE_RDIRPLUS, ",rdirplus=force", "" },
- 		{ NFS_MOUNT_UNSHARED, ",nosharecache", "" },
- 		{ NFS_MOUNT_NORESVPORT, ",noresvport", "" },
-+		{ NFS_MOUNT_NETUNREACH_FATAL,
-+		  ",fatal_neterrors=enetdown:enetunreach", "" },
- 		{ 0, NULL, NULL }
- 	};
- 	const struct proc_nfs_info *nfs_infop;
+ 	default:
+ 		dprintk("%s could not handle NFSv4 error %d\n",
+ 				__func__, -err);
 diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index b83d16a42afc..a6ce8590eaaf 100644
+index a6ce8590eaaf..71319637a84e 100644
 --- a/include/linux/nfs_fs_sb.h
 +++ b/include/linux/nfs_fs_sb.h
-@@ -168,6 +168,7 @@ struct nfs_server {
- #define NFS_MOUNT_SHUTDOWN			0x08000000
- #define NFS_MOUNT_NO_ALIGNWRITE		0x10000000
- #define NFS_MOUNT_FORCE_RDIRPLUS	0x20000000
-+#define NFS_MOUNT_NETUNREACH_FATAL	0x40000000
+@@ -50,6 +50,7 @@ struct nfs_client {
+ #define NFS_CS_DS		7		/* - Server is a DS */
+ #define NFS_CS_REUSEPORT	8		/* - reuse src port on reconnect */
+ #define NFS_CS_PNFS		9		/* - Server used for pnfs */
++#define NFS_CS_NETUNREACH_FATAL	10		/* - ENETUNREACH errors are fatal */
+ 	struct sockaddr_storage	cl_addr;	/* server identifier */
+ 	size_t			cl_addrlen;
+ 	char *			cl_hostname;	/* hostname of server */
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 9ad353f26f4f..5d9cdf31853c 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -64,7 +64,9 @@ struct rpc_clnt {
+ 				cl_noretranstimeo: 1,/* No retransmit timeouts */
+ 				cl_autobind : 1,/* use getport() */
+ 				cl_chatty   : 1,/* be verbose */
+-				cl_shutdown : 1;/* rpc immediate -EIO */
++				cl_shutdown : 1,/* rpc immediate -EIO */
++				cl_netunreach_fatal : 1;
++						/* Treat ENETUNREACH errors as fatal */
+ 	struct xprtsec_parms	cl_xprtsec;	/* transport security policy */
  
- 	unsigned int		fattr_valid;	/* Valid attributes */
- 	unsigned int		caps;		/* server capabilities */
+ 	struct rpc_rtt *	cl_rtt;		/* RTO estimator data */
+@@ -175,6 +177,7 @@ struct rpc_add_xprt_test {
+ #define RPC_CLNT_CREATE_SOFTERR		(1UL << 10)
+ #define RPC_CLNT_CREATE_REUSEPORT	(1UL << 11)
+ #define RPC_CLNT_CREATE_CONNECTED	(1UL << 12)
++#define RPC_CLNT_CREATE_NETUNREACH_FATAL	(1UL << 13)
+ 
+ struct rpc_clnt *rpc_create(struct rpc_create_args *args);
+ struct rpc_clnt	*rpc_bind_new_program(struct rpc_clnt *,
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index eac57914dcf3..ccba79ebf893 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -134,6 +134,7 @@ struct rpc_task_setup {
+ #define RPC_TASK_MOVEABLE	0x0004		/* nfs4.1+ rpc tasks */
+ #define RPC_TASK_NULLCREDS	0x0010		/* Use AUTH_NULL credential */
+ #define RPC_CALL_MAJORSEEN	0x0020		/* major timeout seen */
++#define RPC_TASK_NETUNREACH_FATAL 0x0040	/* ENETUNREACH is fatal */
+ #define RPC_TASK_DYNAMIC	0x0080		/* task was kmalloc'ed */
+ #define	RPC_TASK_NO_ROUND_ROBIN	0x0100		/* send requests on "main" xprt */
+ #define RPC_TASK_SOFT		0x0200		/* Use soft timeouts */
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 851841336ee6..5d331383047b 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -343,6 +343,7 @@ TRACE_EVENT(rpc_request,
+ 		{ RPC_TASK_MOVEABLE, "MOVEABLE" },			\
+ 		{ RPC_TASK_NULLCREDS, "NULLCREDS" },			\
+ 		{ RPC_CALL_MAJORSEEN, "MAJORSEEN" },			\
++		{ RPC_TASK_NETUNREACH_FATAL, "NETUNREACH_FATAL"},	\
+ 		{ RPC_TASK_DYNAMIC, "DYNAMIC" },			\
+ 		{ RPC_TASK_NO_ROUND_ROBIN, "NO_ROUND_ROBIN" },		\
+ 		{ RPC_TASK_SOFT, "SOFT" },				\
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 3499b17ffea7..45f0154a0d07 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -512,6 +512,8 @@ static struct rpc_clnt *rpc_create_xprt(struct rpc_create_args *args,
+ 		clnt->cl_discrtry = 1;
+ 	if (!(args->flags & RPC_CLNT_CREATE_QUIET))
+ 		clnt->cl_chatty = 1;
++	if (args->flags & RPC_CLNT_CREATE_NETUNREACH_FATAL)
++		clnt->cl_netunreach_fatal = 1;
+ 
+ 	return clnt;
+ }
+@@ -662,6 +664,7 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
+ 	new->cl_noretranstimeo = clnt->cl_noretranstimeo;
+ 	new->cl_discrtry = clnt->cl_discrtry;
+ 	new->cl_chatty = clnt->cl_chatty;
++	new->cl_netunreach_fatal = clnt->cl_netunreach_fatal;
+ 	new->cl_principal = clnt->cl_principal;
+ 	new->cl_max_connect = clnt->cl_max_connect;
+ 	return new;
+@@ -1195,6 +1198,8 @@ void rpc_task_set_client(struct rpc_task *task, struct rpc_clnt *clnt)
+ 		task->tk_flags |= RPC_TASK_TIMEOUT;
+ 	if (clnt->cl_noretranstimeo)
+ 		task->tk_flags |= RPC_TASK_NO_RETRANS_TIMEOUT;
++	if (clnt->cl_netunreach_fatal)
++		task->tk_flags |= RPC_TASK_NETUNREACH_FATAL;
+ 	atomic_inc(&clnt->cl_task_count);
+ }
+ 
+@@ -2101,14 +2106,17 @@ call_bind_status(struct rpc_task *task)
+ 	case -EPROTONOSUPPORT:
+ 		trace_rpcb_bind_version_err(task);
+ 		goto retry_timeout;
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		if (task->tk_flags & RPC_TASK_NETUNREACH_FATAL)
++			break;
++		fallthrough;
+ 	case -ECONNREFUSED:		/* connection problems */
+ 	case -ECONNRESET:
+ 	case -ECONNABORTED:
+ 	case -ENOTCONN:
+ 	case -EHOSTDOWN:
+-	case -ENETDOWN:
+ 	case -EHOSTUNREACH:
+-	case -ENETUNREACH:
+ 	case -EPIPE:
+ 		trace_rpcb_unreachable_err(task);
+ 		if (!RPC_IS_SOFTCONN(task)) {
+@@ -2190,19 +2198,22 @@ call_connect_status(struct rpc_task *task)
+ 
+ 	task->tk_status = 0;
+ 	switch (status) {
++	case -ENETDOWN:
++	case -ENETUNREACH:
++		if (task->tk_flags & RPC_TASK_NETUNREACH_FATAL)
++			break;
++		fallthrough;
+ 	case -ECONNREFUSED:
+ 	case -ECONNRESET:
+ 		/* A positive refusal suggests a rebind is needed. */
+-		if (RPC_IS_SOFTCONN(task))
+-			break;
+ 		if (clnt->cl_autobind) {
+ 			rpc_force_rebind(clnt);
++			if (RPC_IS_SOFTCONN(task))
++				break;
+ 			goto out_retry;
+ 		}
+ 		fallthrough;
+ 	case -ECONNABORTED:
+-	case -ENETDOWN:
+-	case -ENETUNREACH:
+ 	case -EHOSTUNREACH:
+ 	case -EPIPE:
+ 	case -EPROTO:
+@@ -2454,10 +2465,13 @@ call_status(struct rpc_task *task)
+ 	trace_rpc_call_status(task);
+ 	task->tk_status = 0;
+ 	switch(status) {
+-	case -EHOSTDOWN:
+ 	case -ENETDOWN:
+-	case -EHOSTUNREACH:
+ 	case -ENETUNREACH:
++		if (task->tk_flags & RPC_TASK_NETUNREACH_FATAL)
++			goto out_exit;
++		fallthrough;
++	case -EHOSTDOWN:
++	case -EHOSTUNREACH:
+ 	case -EPERM:
+ 		if (RPC_IS_SOFTCONN(task))
+ 			goto out_exit;
 -- 
 2.48.1
 
