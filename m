@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-10723-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10725-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99390A6AC53
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 18:44:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C97CA6AC56
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 18:45:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84E197AD4CE
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 17:43:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32F6C8A4EDC
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 17:44:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F49225A35;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46BB8225A3B;
 	Thu, 20 Mar 2025 17:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh/R4y3o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vF2hBy5m"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011E2225795
-	for <linux-nfs@vger.kernel.org>; Thu, 20 Mar 2025 17:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DC225A2C
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Mar 2025 17:44:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742492684; cv=none; b=n4ZYX3nUACpgrGSyRgiY7K0jiFB66U5id0VErI2ZIUtf55SAXItPPk5/rpO6sKufoM8913H6w3vo6vhqJ/LxB4Tm+ER89tY6UC3K8CnJBKTF1hWBpee5VPzIgF2cyoJ/WCvQGOQaHQoM4Uv5YOFczgxCnyzffPa2sLIBYBXV+Ro=
+	t=1742492684; cv=none; b=UWZkNLwYFFk1wtlNRLWbVfBYoksBmbYVJBf8cTJhbnTisbmu05NxHi6HMLV29vRx6ocV1+IbOf2fnxGdVmxSO+B+WPM6MiyPwDXf1OjFuLl/JVSlRlCnFWXHXqgpRZ5psAb29km4U4ioffHTF0L8cgEiWTSsxnEy05VNe3BTw+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742492684; c=relaxed/simple;
-	bh=m5J8f7pOdTkHYTKTXsGokDuZ148DkK78N7V1t9ukBsg=;
+	bh=jnTPJqa6Izobe6HDXFtsTWdev0EwPrgei021SBLB+S4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f0N+6F6tnvh8JVrlx1IZOlDKz18HxZ7gxhBObS9C3KnBGoBl7lEKOrOProPpTAZocwkutBpmXsWF7qM2DYKRVzv4Gbe79VdpJqTHKGixxPsA+KNOaUddS1+P7cnqVBzVAiEsmWWT2XjouBsoKhqVHgnQQwkW3dAp2bQFB4PF+pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh/R4y3o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D116C4CEDD;
+	 MIME-Version; b=gf3+5fZVgw1DmkEOyxfWRTQvNC/ZhD10eWwe7goZNxUpZZ6nvZzQh6mzNIpml+nR4YcXFnEBCgmeVlxCdmDmXvWDuEhKqeE0J+RTC0uWplYM6yFRWYlgVsqdkm9eXymdmYDv/oHUaxc63BRa3LUwsQhCwl0Z8lkRZ46dW4RKsdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vF2hBy5m; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFDBC4CEE7;
 	Thu, 20 Mar 2025 17:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742492683;
-	bh=m5J8f7pOdTkHYTKTXsGokDuZ148DkK78N7V1t9ukBsg=;
+	s=k20201202; t=1742492684;
+	bh=jnTPJqa6Izobe6HDXFtsTWdev0EwPrgei021SBLB+S4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zh/R4y3ovSDSPFMfAbeEYjhJpMcvJSRKTcF2OLAHEAPgzJuhxnk8TmU1S4CYk3/DI
-	 Kd/KkF6TPG65qT220UWllAaq1F1ael9mWgFRtrNs7qdkHe604/V6cunbm7a0kcuvP6
-	 evTCClVbBUca8vOs9t2/FaGsZLGmH+LPPBUuZNSETIAU42jl+W90c3fQFKpoBehaOU
-	 9P55wykqfhxEucHHjDnuOzS5Qf+Gx8kQg/uEuoRyoS2lE6gGZwo+Ox6YQpmkvD7Ges
-	 duVw6uvizhHtiKlw7L1mF0lAmsWnyZKFBzIedk5eU3Ar0Q75gcP4n3grwS9ypRfARh
-	 egUodvNMHrBcQ==
+	b=vF2hBy5mxxkZ069lVSfcujzZdqRqKc0MO0H28hVnQuMBPegVjwASdRAcIVUgW9O2d
+	 ihs8QfMUCXJAXBIAdyPGpo2cNhKUU3S1/g/IweoaSBpesjhS1RM8yq7xXO4JhHDkMW
+	 LSQkY4hhA8bPWdpUUDolNBFvkUcqToxVIFhBgrquphI7RjS5uvSR3mX+TG6xW+USA7
+	 c0DD1FPsDBEd3hz34u7XmD5fcf5oIVznJ8f8Bn73aScYJQe+JsQG52lkGwdcU8sxLE
+	 Z3lzNfuLe1w3OXbdQcxVkz+xvy8Nvy1dJ4S2pfVogGwlAbN0c54DldQjYoDexfqqKX
+	 A7KzAGT4rhMjw==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
 	Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH RFC 3/4] pNFS/flexfiles: Treat ENETUNREACH errors as fatal in containers
-Date: Thu, 20 Mar 2025 13:44:39 -0400
-Message-ID: <9fb52e2c1b3773bd347806eda135a22ea91feea6.1742490771.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH RFC 4/4] pNFS/flexfiles: Report ENETDOWN as a connection error
+Date: Thu, 20 Mar 2025 13:44:40 -0400
+Message-ID: <cb9deab71af721c93086c37e8d6350bf75fe9a57.1742490771.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1742490771.git.trond.myklebust@hammerspace.com>
 References: <cover.1742490771.git.trond.myklebust@hammerspace.com>
@@ -61,146 +61,27 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Propagate the NFS_MOUNT_NETUNREACH_FATAL flag to work with the pNFS
-flexfiles client. In these circumstances, the client needs to treat the
-ENETDOWN and ENETUNREACH errors as fatal, and should abandon the
-attempted I/O.
+If the client should see an ENETDOWN when trying to connect to the data
+server, it might still be able to talk to the metadata server through
+another NIC. If so, report the error.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 23 +++++++++++++++++++++--
- fs/nfs/nfs3client.c                    |  2 ++
- fs/nfs/nfs4client.c                    |  5 +++++
- include/linux/nfs4.h                   |  1 +
- 4 files changed, 29 insertions(+), 2 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 98b45b636be3..f89fdba7289d 100644
+index f89fdba7289d..61ad269c825f 100644
 --- a/fs/nfs/flexfilelayout/flexfilelayout.c
 +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -1154,10 +1154,14 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
- 		rpc_wake_up(&tbl->slot_tbl_waitq);
- 		goto reset;
- 	/* RPC connection errors */
-+	case -ENETDOWN:
-+	case -ENETUNREACH:
-+		if (test_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags))
-+			return -NFS4ERR_FATAL_IOERROR;
-+		fallthrough;
- 	case -ECONNREFUSED:
- 	case -EHOSTDOWN:
- 	case -EHOSTUNREACH:
--	case -ENETUNREACH:
- 	case -EIO:
- 	case -ETIMEDOUT:
- 	case -EPIPE:
-@@ -1183,6 +1187,7 @@ static int ff_layout_async_handle_error_v4(struct rpc_task *task,
- 
- /* Retry all errors through either pNFS or MDS except for -EJUKEBOX */
- static int ff_layout_async_handle_error_v3(struct rpc_task *task,
-+					   struct nfs_client *clp,
- 					   struct pnfs_layout_segment *lseg,
- 					   u32 idx)
- {
-@@ -1200,6 +1205,11 @@ static int ff_layout_async_handle_error_v3(struct rpc_task *task,
- 	case -EJUKEBOX:
- 		nfs_inc_stats(lseg->pls_layout->plh_inode, NFSIOS_DELAY);
- 		goto out_retry;
-+	case -ENETDOWN:
-+	case -ENETUNREACH:
-+		if (test_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags))
-+			return -NFS4ERR_FATAL_IOERROR;
-+		fallthrough;
- 	default:
- 		dprintk("%s DS connection error %d\n", __func__,
- 			task->tk_status);
-@@ -1234,7 +1244,7 @@ static int ff_layout_async_handle_error(struct rpc_task *task,
- 
- 	switch (vers) {
- 	case 3:
--		return ff_layout_async_handle_error_v3(task, lseg, idx);
-+		return ff_layout_async_handle_error_v3(task, clp, lseg, idx);
- 	case 4:
- 		return ff_layout_async_handle_error_v4(task, state, clp,
- 						       lseg, idx);
-@@ -1337,6 +1347,9 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
- 		return task->tk_status;
- 	case -EAGAIN:
- 		goto out_eagain;
-+	case -NFS4ERR_FATAL_IOERROR:
-+		task->tk_status = -EIO;
-+		return 0;
- 	}
- 
- 	return 0;
-@@ -1507,6 +1520,9 @@ static int ff_layout_write_done_cb(struct rpc_task *task,
- 		return task->tk_status;
- 	case -EAGAIN:
- 		return -EAGAIN;
-+	case -NFS4ERR_FATAL_IOERROR:
-+		task->tk_status = -EIO;
-+		return 0;
- 	}
- 
- 	if (hdr->res.verf->committed == NFS_FILE_SYNC ||
-@@ -1551,6 +1567,9 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
- 	case -EAGAIN:
- 		rpc_restart_call_prepare(task);
- 		return -EAGAIN;
-+	case -NFS4ERR_FATAL_IOERROR:
-+		task->tk_status = -EIO;
-+		return 0;
- 	}
- 
- 	ff_layout_set_layoutcommit(data->inode, data->lseg, data->lwb);
-diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
-index b0c8a39c2bbd..0d7310c1ee0c 100644
---- a/fs/nfs/nfs3client.c
-+++ b/fs/nfs/nfs3client.c
-@@ -120,6 +120,8 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
- 
- 	if (mds_srv->flags & NFS_MOUNT_NORESVPORT)
- 		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
-+	if (test_bit(NFS_CS_NETUNREACH_FATAL, &mds_clp->cl_flags))
-+		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
- 
- 	__set_bit(NFS_CS_DS, &cl_init.init_flags);
- 
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 83378f69b35e..96e7a17203a4 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -937,6 +937,9 @@ static int nfs4_set_client(struct nfs_server *server,
- 		__set_bit(NFS_CS_TSM_POSSIBLE, &cl_init.init_flags);
- 	server->port = rpc_get_port((struct sockaddr *)addr);
- 
-+	if (server->options & NFS_MOUNT_NETUNREACH_FATAL)
-+		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
-+
- 	/* Allocate or find a client reference we can use */
- 	clp = nfs_get_client(&cl_init);
- 	if (IS_ERR(clp))
-@@ -1011,6 +1014,8 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
- 
- 	if (mds_srv->flags & NFS_MOUNT_NORESVPORT)
- 		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
-+	if (test_bit(NFS_CS_NETUNREACH_FATAL, &mds_clp->cl_flags))
-+		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
- 
- 	__set_bit(NFS_CS_PNFS, &cl_init.init_flags);
- 	cl_init.max_connect = NFS_MAX_TRANSPORTS;
-diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-index 5fa60fe441b5..d8cad844870a 100644
---- a/include/linux/nfs4.h
-+++ b/include/linux/nfs4.h
-@@ -300,6 +300,7 @@ enum nfsstat4 {
- /* error codes for internal client use */
- #define NFS4ERR_RESET_TO_MDS   12001
- #define NFS4ERR_RESET_TO_PNFS  12002
-+#define NFS4ERR_FATAL_IOERROR  12003
- 
- static inline bool seqid_mutating_err(u32 err)
- {
+@@ -1274,6 +1274,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 		case -ECONNRESET:
+ 		case -EHOSTDOWN:
+ 		case -EHOSTUNREACH:
++		case -ENETDOWN:
+ 		case -ENETUNREACH:
+ 		case -EADDRINUSE:
+ 		case -ENOBUFS:
 -- 
 2.48.1
 
