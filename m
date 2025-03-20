@@ -1,59 +1,55 @@
-Return-Path: <linux-nfs+bounces-10711-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10712-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3963FA6A401
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 11:46:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43D47A6A45D
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 12:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D78F38A528B
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 10:46:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 81905189BA42
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Mar 2025 11:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 612FE224254;
-	Thu, 20 Mar 2025 10:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438411CEADB;
+	Thu, 20 Mar 2025 11:00:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gi4Ey/7Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGebkIG0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31607209F4E;
-	Thu, 20 Mar 2025 10:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6932940F
+	for <linux-nfs@vger.kernel.org>; Thu, 20 Mar 2025 11:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742467594; cv=none; b=tAAR/DaYcN15CVIJ4d+jc9x+GpqNEsEhCuNoMkZytcg8Lx6WfzXbwHNoqnWrU0e23h7KPwFJhbZJ5Ca6XoV7UCxGmUGr6sjo2uze0tjzB1UTo1tYqYuD/3DnVCK4mLWnI8p1CwUINw1zfvA5k3Yq7yPBX56T7tTmRe3dUh+OgUA=
+	t=1742468434; cv=none; b=OaPeNRapQcivFUsvllil85mQ61QHmKW2jTNfgvkb6k6x9fIK7atTQi7eHghSl9EvUAQUzZHyECsk+XtH8ZjBVNsmOVzR1azSvYN+ld/vzrKHh3yZrXYCF53iykmzLrlNkwsy7nd2oXiGhahDXevosMlyANorhi7w8SggmIUKnLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742467594; c=relaxed/simple;
-	bh=YvMQlYXlkwRZkEReaqyNkiXw7BWYWP12LN8EdzHzpsU=;
+	s=arc-20240116; t=1742468434; c=relaxed/simple;
+	bh=Pzok3hx1Ieogg56eTkMHRg1JEkTviCqLs2yeiwLk4/E=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eDeC7JaZRov4gzVUPy0PgTxKCQIjtI0NMT3xBaCPbJZUx0pQnt8ClncwHm7wPCmncLu+ll+2m7Z+XXPX7lr2csj3fwma+35d4XFOTXmqOetHya4Cow0LlHz3B66l7MfBwOfl9y8UJB3qF149FaR4oJxDBKRcHlOV96jTZWjEHIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gi4Ey/7Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2273C4CEEC;
-	Thu, 20 Mar 2025 10:46:32 +0000 (UTC)
+	 Content-Type:MIME-Version; b=t34nqLGvtU/xd22tBZ8Aw8NtB4RnT0yxFLtkYYPnXNwBQgd9gZtISc+5mOLT1VGk2uHK8zf+rrMNjYMyMk7wGyCOES2HH7pai0WK3E8EE6i7OHJ/cAk7jfE603jKJJyJNw7PF/FSIeikqFfKCTFsxSPw7Pf4DjFyxTuT573KvrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGebkIG0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E094C4CEDD;
+	Thu, 20 Mar 2025 11:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742467593;
-	bh=YvMQlYXlkwRZkEReaqyNkiXw7BWYWP12LN8EdzHzpsU=;
+	s=k20201202; t=1742468433;
+	bh=Pzok3hx1Ieogg56eTkMHRg1JEkTviCqLs2yeiwLk4/E=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gi4Ey/7ZG9i4OVoCYEMtLOriw101iUKTiHUW4fze1MmUgdWAA/dxjnp2cJc5pTBUb
-	 teJL+hCQKNeg9PmJGsYy2W9yuNnaAEUORZnKYVx5p7BxIUY2ogPXGw+EdCI1EK28Jp
-	 XgPnhb8kH/upO8Bp6TEe0gk4Fvt0a3wHg/Q5OzrRO+eBrU0FzgEnrbVe3MWZTOps1P
-	 oEg+Lp+0tQle42tW4nb3ugOmbz+rUuXMuogZLcDPO/bhDKcuss59/Pduv2cBr/OpIw
-	 hkJFhyy9fnKiDFAsZJyU5d67NlrwL8XStoASxu/5nyIPLrB4/e9Gjw0bwQ8Dpr2J+W
-	 69mFeb2UkR28Q==
-Message-ID: <bd523c84e64ffd405e1a1184796269c153baa119.camel@kernel.org>
-Subject: Re: [PATCH 6/6] VFS: change lookup_one_common and
- lookup_noperm_common to take a qstr
+	b=nGebkIG0YR26LI1SAs5c2+TALS5h8zZq1xABnMyX6+gmRkTrGRMcdzDQtYaoi2LOg
+	 rZ43tRnjFZe723YdtQNMhQuR1hL3rlkimdqSg8rf0T4eDhYv1tCU20BKuYgq8Shpj2
+	 8xS/NfCzuyoe9hMd18vHqN5/u2ynptgpmLXdSTSxffGxEr/sGIMACRE0sDtKsp6fUw
+	 i9kbMYTK69QLbK5bbioPgXd/rIEzsa+NgLDhWqrtOcybVCLUoxkxWOY/B0CDVnrh9u
+	 osNvZgaEx1L+wcC80fmnE9BAecGO+D7D8mHeGmwsXiUf/cBU1CXisjhJBHGaVetwPE
+	 6GenjrNe+vcMQ==
+Message-ID: <29ae7f23cafda80203209c3dc5bccced6951874c.camel@kernel.org>
+Subject: Re: [PATCH] pynfs: fix key error if FATTR4_OPEN_ARGUMENTS is not
+ supported
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner	 <brauner@kernel.org>, Jan Kara <jack@suse.cz>, David
- Howells <dhowells@redhat.com>,  Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, netfs@lists.linux.dev, 
-	linux-fsdevel@vger.kernel.org
-Date: Thu, 20 Mar 2025 06:46:31 -0400
-In-Reply-To: <20250319031545.2999807-7-neil@brown.name>
-References: <20250319031545.2999807-1-neil@brown.name>
-	 <20250319031545.2999807-7-neil@brown.name>
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>, calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Date: Thu, 20 Mar 2025 07:00:32 -0400
+In-Reply-To: <20250319032402.1789-1-chenhx.fnst@fujitsu.com>
+References: <20250319032402.1789-1-chenhx.fnst@fujitsu.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,151 +134,37 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-03-19 at 14:01 +1100, NeilBrown wrote:
-> From: NeilBrown <neilb@suse.de>
+On Wed, 2025-03-19 at 11:23 +0800, Chen Hanxiao wrote:
+> If FATTR4_OPEN_ARGUMENTS is not supportd, DELEG24 and DELEG25
+> will throw:
+> 	KeyError: 86
 >=20
-> These function already take a qstr of course, but they also currently
-> take a name/len was well and fill in the qstr.
-> Now they take a qstr that is already filled in, which is what all the
-> callers have.
+> Check FATTR4_OPEN_ARGUMENTS in caps from server
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 > ---
->  fs/namei.c | 44 +++++++++++++++++++-------------------------
->  1 file changed, 19 insertions(+), 25 deletions(-)
+>  nfs4.1/server41tests/st_delegation.py | 3 +++
+>  1 file changed, 3 insertions(+)
 >=20
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 16605f7108c0..e2fb61573f13 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -2833,13 +2833,12 @@ int vfs_path_lookup(struct dentry *dentry, struct=
- vfsmount *mnt,
->  }
->  EXPORT_SYMBOL(vfs_path_lookup);
+> diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests=
+/st_delegation.py
+> index fa9b451..f27e852 100644
+> --- a/nfs4.1/server41tests/st_delegation.py
+> +++ b/nfs4.1/server41tests/st_delegation.py
+> @@ -311,6 +311,9 @@ def _testCbGetattr(t, env, change=3D0, size=3D0):
+>                  OPEN4_SHARE_ACCESS_WRITE |
+>                  OPEN4_SHARE_ACCESS_WANT_WRITE_DELEG)
 > =20
-> -static int lookup_noperm_common(const char *name, struct dentry *base,
-> -				  int len,
-> -				  struct qstr *this)
-> +static int lookup_noperm_common(struct qstr *qname, struct dentry *base)
->  {
-> -	this->name =3D name;
-> -	this->len =3D len;
-> -	this->hash =3D full_name_hash(base, name, len);
-> +	const char *name =3D qname->name;
-> +	u32 len =3D qname->len;
+> +    if FATTR4_OPEN_ARGUMENTS not in caps:
+> +        fail("FATTR4_OPEN_ARGUMENTS not supported")
 > +
-> +	qname->hash =3D full_name_hash(base, name, len);
->  	if (!len)
->  		return -EACCES;
-> =20
-> @@ -2856,7 +2855,7 @@ static int lookup_noperm_common(const char *name, s=
-truct dentry *base,
->  	 * to use its own hash..
->  	 */
->  	if (base->d_flags & DCACHE_OP_HASH) {
-> -		int err =3D base->d_op->d_hash(base, this);
-> +		int err =3D base->d_op->d_hash(base, qname);
->  		if (err < 0)
->  			return err;
->  	}
-> @@ -2864,10 +2863,10 @@ static int lookup_noperm_common(const char *name,=
- struct dentry *base,
->  }
-> =20
->  static int lookup_one_common(struct mnt_idmap *idmap,
-> -			     const char *name, struct dentry *base, int len,
-> -			     struct qstr *this) {
-> +			     struct qstr *qname, struct dentry *base)
-> +{
->  	int err;
-> -	err =3D lookup_noperm_common(name, base, len, this);
-> +	err =3D lookup_noperm_common(qname, base);
->  	if (err < 0)
->  		return err;
->  	return inode_permission(idmap, base->d_inode, MAY_EXEC);
-> @@ -2888,16 +2887,14 @@ static int lookup_one_common(struct mnt_idmap *id=
-map,
->   */
->  struct dentry *try_lookup_noperm(struct qstr *name, struct dentry *base)
->  {
-> -	struct qstr this;
->  	int err;
-> =20
->  	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
-> =20
-> -	err =3D lookup_noperm_common(name->name, base, name->len, &this);
-> +	err =3D lookup_noperm_common(name, base);
->  	if (err)
->  		return ERR_PTR(err);
-> =20
-> -	name->hash =3D this.hash;
->  	return lookup_dcache(name, base, 0);
->  }
->  EXPORT_SYMBOL(try_lookup_noperm);
-> @@ -2915,17 +2912,16 @@ EXPORT_SYMBOL(try_lookup_noperm);
->  struct dentry *lookup_noperm(struct qstr name, struct dentry *base)
->  {
->  	struct dentry *dentry;
-> -	struct qstr this;
->  	int err;
-> =20
->  	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
-> =20
-> -	err =3D lookup_noperm_common(name.name, base, name.len, &this);
-> +	err =3D lookup_noperm_common(&name, base);
->  	if (err)
->  		return ERR_PTR(err);
-> =20
-> -	dentry =3D lookup_dcache(&this, base, 0);
-> -	return dentry ? dentry : __lookup_slow(&this, base, 0);
-> +	dentry =3D lookup_dcache(&name, base, 0);
-> +	return dentry ? dentry : __lookup_slow(&name, base, 0);
->  }
->  EXPORT_SYMBOL(lookup_noperm);
-> =20
-> @@ -2943,17 +2939,16 @@ struct dentry *lookup_one(struct mnt_idmap *idmap=
-, struct qstr name,
->  			  struct dentry *base)
->  {
->  	struct dentry *dentry;
-> -	struct qstr this;
->  	int err;
-> =20
->  	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
-> =20
-> -	err =3D lookup_one_common(idmap, name.name, base, name.len, &this);
-> +	err =3D lookup_one_common(idmap, &name, base);
->  	if (err)
->  		return ERR_PTR(err);
-> =20
-> -	dentry =3D lookup_dcache(&this, base, 0);
-> -	return dentry ? dentry : __lookup_slow(&this, base, 0);
-> +	dentry =3D lookup_dcache(&name, base, 0);
-> +	return dentry ? dentry : __lookup_slow(&name, base, 0);
->  }
->  EXPORT_SYMBOL(lookup_one);
-> =20
-> @@ -2971,17 +2966,16 @@ EXPORT_SYMBOL(lookup_one);
->  struct dentry *lookup_one_unlocked(struct mnt_idmap *idmap,
->  				   struct qstr name, struct dentry *base)
->  {
-> -	struct qstr this;
->  	int err;
->  	struct dentry *ret;
-> =20
-> -	err =3D lookup_one_common(idmap, name.name, base, name.len, &this);
-> +	err =3D lookup_one_common(idmap, &name, base);
->  	if (err)
->  		return ERR_PTR(err);
-> =20
-> -	ret =3D lookup_dcache(&this, base, 0);
-> +	ret =3D lookup_dcache(&name, base, 0);
->  	if (!ret)
-> -		ret =3D lookup_slow(&this, base, 0);
-> +		ret =3D lookup_slow(&name, base, 0);
->  	return ret;
->  }
->  EXPORT_SYMBOL(lookup_one_unlocked);
+>      if caps[FATTR4_SUPPORTED_ATTRS] & FATTR4_OPEN_ARGUMENTS:
+>          if caps[FATTR4_OPEN_ARGUMENTS].oa_share_access_want & OPEN_ARGS_=
+SHARE_ACCESS_WANT_DELEG_TIMESTAMPS:
+>              openmask |=3D 1<<OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMP=
+S
+
+Nice catch.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
