@@ -1,363 +1,306 @@
-Return-Path: <linux-nfs+bounces-10736-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10737-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BE4DA6BBD8
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Mar 2025 14:41:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 284DCA6BCF1
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Mar 2025 15:28:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5F2B464B48
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Mar 2025 13:40:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C5193B1421
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Mar 2025 14:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F293822A4EA;
-	Fri, 21 Mar 2025 13:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4AF078F29;
+	Fri, 21 Mar 2025 14:28:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TsiZrmgN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="sfUmrNgf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poaUTE/u"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6BE216E01
-	for <linux-nfs@vger.kernel.org>; Fri, 21 Mar 2025 13:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742564442; cv=fail; b=qDP1xve7CIgnLiuob1InWuD4SI/rircvNDd9TsmAlG1coe9zHfVXPGR7Y4w2bMp4fT5EAhYSSRRgRVHwXhlPXAiaPJtjZDTi4317Uc2y9+xW0mXlQP+ESiv9Q/PjL1+G4Ipj5GSqGQBZ85uiZDzn6Ixh4Hmmtcjr6PMAOxrAwl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742564442; c=relaxed/simple;
-	bh=9GA6/qqO3TRJfVNifOy3x9d6Kzr+MLN19lYoSEHYAlE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aBLChzl4lf3TLVUV8C/T4n8bsteGFwo65OCZWspwZYcCH3XclD6qLDqlbJk+LkJIi3vyrQXeOW7hv5c47fpWirFq4fdvEDrBcmQPfyX91mnKS6fMRbNkGGSlGhjn/yXwPZYSh6Ui2uXLy36ANsKgoI4arQQqp+zmq34ooAmJkhE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=TsiZrmgN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=sfUmrNgf; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52L4tqc5028491;
-	Fri, 21 Mar 2025 13:40:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=uRI9/sn1DHzGcO4E4QgjEmAEji63ozGf44kU20UaXbE=; b=
-	TsiZrmgN+x/EeoZ3Yef8axGOyZiYcNr3fvR7gdQg9q2jOWfpUcwVStTYmSNqAc/r
-	H3RbyAAs18rsCGSkbbE8prq4zaX8vNBYM0K+3odJc4lD/rH9zVWLE3D/pXC4o/65
-	8PmLxBwPKT5ejPx4sdxw+yToWUncfxez/dxNEs0er20MdsOf2Y+HXiTc9/QfV5tD
-	OccVnPLNzRmSQWItWVezY2cyymRC4DSxWpbKKCJR9hDSOrtrh1jMu/nIhAsoWzco
-	b6jcmIHGJPskcy1HZlx+WrFW1EfWucwxxQnY5rFkBMCuspOoDedBQ9TV7Q8Eu+8V
-	Kpw0Cpu1KiKGqbOqfQtjnw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d23s8pps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Mar 2025 13:40:26 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52LC8r5u009615;
-	Fri, 21 Mar 2025 13:40:25 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45dxm43w6h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Mar 2025 13:40:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CucHZOjxxjPtIWwo4x1nEg4TRgZHb/Yky9WS0QH7vdt389m6i6kjZmTTvtVCE0BOa8+j2EB/htHaU3iiFY3xcQxVOVvH147CO59i/4rwPOzciLMplsjRF3Mqs3iasTR+4zS1+YMpF2lLd+WX0J8K0isKm5qF22vjmPjWrJwZt3FYdMnjRxJN/KxFU5So33KovqRjNdvnGuHB77crJ3gdNKMJcUoNJ+Xd2wiGid4oSnin+MSy7xPgZ0m5pIxGZyPJpmL82g65DwyhsgCobgfEmrUEqc+Lp350RlZhI776xCSvSca+r3RRejSwYvb4koznuMXqnTXsQ/gTjOmgnyx8IQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uRI9/sn1DHzGcO4E4QgjEmAEji63ozGf44kU20UaXbE=;
- b=p83Q3ggBB2JY8hlUsIPyNcE91ihVj/nCt1Cgq44JvPkc09z9vf2v6uERxXFRghCYy6WGTe822Gz/LY1u8uZlPT4Nzr7CzYm5NdNcrxntG+lGqGUKIMr0ZRuH0h094DXIbNhRkh7pq9GkdJKaRL7WC9OT3Zdk3IT79Qe2yx2tI0FO6Fy00ZNAYQ1MmpXvda3Q5KHczkljl3jgvy8clJKSvW1CaZTGqiq+/eB/oSyY4JVGdrIuy8z/yl7MIOCwHSBZYCv5PQxAPT8HbpkKE+JrPRf4/pwBUVyL6jvgrFgvBko9mMwReOWUqKMcJvCYYd3BO9nYAkUGPJfxuFx6k34WdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uRI9/sn1DHzGcO4E4QgjEmAEji63ozGf44kU20UaXbE=;
- b=sfUmrNgfDNuRrB5vq+rSkwz8ZVrUKnBi07g7xKx4h+xMs5ARV9yKfvL6Ncud/W+xRkMulb+n+0FCyDGOGtHLuSG7mjQ+3hVsJMLeThWtMw4Fy4SVPKiTvaVSYPKfqg7as9r+/dAAk2KZ8ey2iiT39y5xSxgppBpAjgvXMqsij9Q=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by IA0PR10MB7232.namprd10.prod.outlook.com (2603:10b6:208:406::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.35; Fri, 21 Mar
- 2025 13:40:24 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%4]) with mapi id 15.20.8534.036; Fri, 21 Mar 2025
- 13:40:24 +0000
-Message-ID: <57da1afe-2fc0-4d75-ad6d-8f15c28e5d7a@oracle.com>
-Date: Fri, 21 Mar 2025 09:40:21 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] nfsd: fix NLM access checking
-To: Olga Kornievskaia <okorniev@redhat.com>
-Cc: Olga Kornievskaia <aglo@umich.edu>, linux-nfs@vger.kernel.org,
-        neilb@suse.de, Dai.Ngo@oracle.com, tom@talpey.com, jlayton@kernel.org
-References: <20250319214641.27699-1-okorniev@redhat.com>
- <c8262248-2dcc-463e-b76c-7beee2786171@oracle.com>
- <CAN-5tyHgjfGDnaJkKaPFmU4M1WJiGnUh0LRFJ3GT2bvXNMdM_A@mail.gmail.com>
- <801ded98-5661-4e6b-b39f-2b3b7ad0981b@oracle.com>
- <CACSpFtD0T+avEk-gecCZkmEbQ5qKNf=K7mBUKMAYV1e-khV7-A@mail.gmail.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CACSpFtD0T+avEk-gecCZkmEbQ5qKNf=K7mBUKMAYV1e-khV7-A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR03CA0304.namprd03.prod.outlook.com
- (2603:10b6:610:118::28) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA934C85
+	for <linux-nfs@vger.kernel.org>; Fri, 21 Mar 2025 14:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742567308; cv=none; b=A2JHcevLNqDQtCNO3TS1DZDnxz4PjienpuBTQ4B2YsRU7vl7ymajyxoNj2ubHZj6dkv0VkY+Hy0ffPIGOOldp7aMOqoFiyXDKkJ1EueSorBK3FF5EbOhu6XiT4NqdXWcfm+eXrFboJoq4xjJj6o7FScGAkkDtU+YLggRkaiy2kE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742567308; c=relaxed/simple;
+	bh=5OOKoPS66au6Bchz7i8tTtwkvo32LodZmz/CAuUF6Qc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pKWQBepGM8VjoYzEiutuZS3ys1rjJKDX3Ki/irDyBv282EYqsCFMBSrXuRMCP7Ug/OKVhPCzxbgQ/Q0poU9w37CXW0tFDyoPy/Uahf+x1r1TQT2GEbV9VTPSeWtL+ROC/GQ1K1zLJDA8M6JTgFgxPCVSAFnoTolM9WAdANG0Qmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poaUTE/u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B17C4CEE3;
+	Fri, 21 Mar 2025 14:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742567308;
+	bh=5OOKoPS66au6Bchz7i8tTtwkvo32LodZmz/CAuUF6Qc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=poaUTE/uyL0WJMKczQjcts235BZBK22f9Bqahfq5Q6kbjGWCokCq0IUEFG9C2glpj
+	 zlObtRyTDAMGVpPa3mZLpO1GrAKdJV3fWfcagFleTRjbiM0FqPP7zyOsl1l2v/xrKj
+	 BpzUuORwdz6X1c4pTeKcdudwTijicKlydR3x7fVjghYmPrC3BrfDzmGP4uDDz5fAnu
+	 S7gdzhUwRQ83mY0uzumY0hjdQlqQ+WfljyKwj/aqkTivuwjOrNv2Q52eS3nN747GZz
+	 SyZ3Yc+eyw4bsCQNJlwvOgEV9dgzXN50uaaXa4Fbk4BQLnj2anxTHSdwu3H6BW1808
+	 HI3aERIosljLw==
+Message-ID: <c50797895e967be97f58c041d368c245b748d9b0.camel@kernel.org>
+Subject: Re: [PATCH RFC v2 3/4] pNFS/flexfiles: Treat ENETUNREACH errors as
+ fatal in containers
+From: Jeff Layton <jlayton@kernel.org>
+To: trondmy@kernel.org, linux-nfs@vger.kernel.org
+Cc: Josef Bacik <josef@toxicpanda.com>
+Date: Fri, 21 Mar 2025 10:28:26 -0400
+In-Reply-To: <ec593b842e52f0b3966b8a2073ea3fb3f9666fd6.1742502819.git.trond.myklebust@hammerspace.com>
+References: <cover.1742502819.git.trond.myklebust@hammerspace.com>
+	 <ec593b842e52f0b3966b8a2073ea3fb3f9666fd6.1742502819.git.trond.myklebust@hammerspace.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA0PR10MB7232:EE_
-X-MS-Office365-Filtering-Correlation-Id: 967d9f89-4ac9-4832-e8ff-08dd687dee85
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0hObHp5VVNDT1RvdGtiSkpEVEZTd1dlcXVyVm44VlNDa05UOHhaZDl3WlFl?=
- =?utf-8?B?bGU3Tk9tRThGVXd3YkVFams0a2tKTUJtT0QvaHBwMnlEUGVZb0F2Z0ttYVhj?=
- =?utf-8?B?eDluTEZ4eTBLWkd0UzRRTUl1RUNOTzczeUtoZmNiVFdNMkxQbUgxS1ZXTlM2?=
- =?utf-8?B?M0JnWllvcEVyRlp1UXFRSnp5RitYenNOdWtBeElCcUhKUzNqd3ZERHpoalVl?=
- =?utf-8?B?RVJmQVNpRXEyWUJOZUxjV3R4Nnk5VXBUQjVtWW8ySVdzNURYd0Q5YzlPVllG?=
- =?utf-8?B?bmNrWFJoME5DNkpPWGdNU2FpYmRobmdobXFtWElkZmpUK21RWHJDdGxlcDVW?=
- =?utf-8?B?RDQ1cGV5bi8rRElmSkZDc3hzZUt4UlU5Y0JobnRCVVBNR0wvdG5GQjhwMVV0?=
- =?utf-8?B?R21HcGVWTzh2NlNTUGRUdlFaTzhWaE1vckhjcUZBbU5PRW13WklLemwydWY5?=
- =?utf-8?B?U0dHV0p5ZmRZdEsvNkJSV3kyeXpPMFpQSlpVZjhudVJrQVltWmFYSU1uMjVR?=
- =?utf-8?B?YXBrVkdHUUZDQkZONmhMNHFWS2Y4SGJkMExIeU1WV1VVb1pQaFM5b0VQL3cv?=
- =?utf-8?B?SUMraVlkb3g1K3g0QmlZaDcrMHN6b3lYdEdQZzBpbG02UmlpeFlHT1lQbFFR?=
- =?utf-8?B?NWpkLy9CdnkvbjdwVG1xSHp6OU1UTldxZHhlcjRtcVRHeVVhc1pBcGRxZ0s1?=
- =?utf-8?B?RWxVa1IxNU9FY1preVo0Um12enFIa1o3Qy9vNmpOTEh6S2E4MWxZMzBPV2JI?=
- =?utf-8?B?eVNJYmtSVjIwVEp5OHNSSnIySmFSWjZ0cmZGZXVMQk5OdjhUb0wyS3BuZUlB?=
- =?utf-8?B?NFBVRis2ZUFvUTRwdGg2K0V0SlNTaURlZG5RVElkNUlUeG9NYzk0RTl3cWJk?=
- =?utf-8?B?cU80TGdid1I5elJxWmQvMVZrbCtoeUNBd1VOMWk2TElOVG9aMytmVHhGRFgz?=
- =?utf-8?B?WFJYcUFEUlp0Q29JWTVNUS9qNncxVXdZaWJmeXUxNVkvdmlzZUpkNFZLVGdi?=
- =?utf-8?B?ZUVHYjhXV29rOEVLZlMzMDBKOWM3ZmlIYUhhNFhTL09Qb1NCOURyS1gzSHhN?=
- =?utf-8?B?OG5objY5WVBYcWlibUhEeDhZYTIzbXVLcU1hbHNrYnJBcXdaS1JyMXN0R0kw?=
- =?utf-8?B?TzJBaVlFVjJvUDBmanRmY2NidnkyY3VvOExGSWdNemppeElOVStFVU9FZTVP?=
- =?utf-8?B?L3RXWEFCODFUejVxeFluYTdvMDlzM0NnNXo0VVNXOWd1QzBkQkY0RnVYY3hZ?=
- =?utf-8?B?SGp5MzFnMFAxa2ZYWDBuMjY5Q2ZJU0d4K1ZmNXF3SVVQMnRmc2lJWEovNU9H?=
- =?utf-8?B?NUJ0QVllYithQjQraXV1d1lFRnp6RWsrR0xLMEJIOGFkZ2p5ZE84TlZ2MSta?=
- =?utf-8?B?enpkaXdDUFY2NlBGd0lGS0lacDNsUzBZM2FRVkVmQmFXVDh3ci9hZmRzSTR5?=
- =?utf-8?B?b2hXVXNKNFlSeVNjVldSeGhGeHg3T3lML2VaRWlTRUtlRFFtNmZtTTRjaVZJ?=
- =?utf-8?B?VWNZNnRqOFJTbGh6TGRWRUg2eFRWd3M3a0Q0QWw3V0Q4OVB2dkR1akRrNGF2?=
- =?utf-8?B?cDdPbmxCOVRINzRPdlpBNDQyZHY1Y2ZvUzl4SGpuN3paUER6cjNDbTEzOGxK?=
- =?utf-8?B?LzZVaTJlRklmOUlvT0I5N3lIWWIzVkVMRllXMzBlRXRVTkwvYm44OGxSdFJw?=
- =?utf-8?B?cmtSbzFBUEZHZDc2aWxzQXZMZTBmbEJvOUIrZlhhckoyNDg5OEZrbTFtVnBR?=
- =?utf-8?B?NTVWOTZVdzBjTXhQekFLek9JMmdEZE56ejhDRThoVnZNTUhiVDFXYmZuTzYz?=
- =?utf-8?B?cmlBUHFXZDU3UkVoNS9ONm1hdEpqWURXTUd4VUtLejJuaFJYeE15WjFtK0xn?=
- =?utf-8?Q?PXmldwfg1xj7M?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?d2x2Rys3Mi9PVEowdUV5ZWdJU0MxNklRNDNHMlZJZFl5VXlxTlF6OWhxd3p3?=
- =?utf-8?B?bXJ2N1lnZ3k0UzlEeURCY1ZSZEwrd3RhUEZ1KzJHdjdqT2JzVjZoeWVMZS9G?=
- =?utf-8?B?cENGRmtFUEVOckluU3VEbnJIQlkxSnljc1ZHTitSOEVxRVpNaUxOZDVzRWI3?=
- =?utf-8?B?ZTF6LzFINjBhRTlLYWsxNjVkSmZrN3libWtTSTJ1TzVrVUZJWTIrL0FDeFFB?=
- =?utf-8?B?Y3NkM2RWdjY3UE5LTDRaWGFsclA4Tk5mbzN3WEtDL0xwM0RndlE5T2x4dXpX?=
- =?utf-8?B?cUR5RjBWQnJzM3NTdzhxUjVVbkFESFlVT0MzL3E2L3FJdituQUhIaG5vd1hT?=
- =?utf-8?B?ejVmejh0d3d1Ym1Nbjg4bE9MWmo1VEhUZkFGRS92bjdEOGhCR0xxTGpaelFz?=
- =?utf-8?B?MjhYUXROaW96RFM3eFhoWVA4dUVBMDhJd0ZLS0c3dlFTa29IeDd3NitVTUZ4?=
- =?utf-8?B?bVhiNmhzdHVxZU0wZnZqeGZIVFZjTldWdHd6RjBGQUZ6L2diVjV6aTFGd2hw?=
- =?utf-8?B?Tlo2aXl6T3VJVXZaNWpRTWR4SlNoeWxlb2FTOHYwQTZoa04vd0VmN3VVdzZq?=
- =?utf-8?B?UThIWC9XTVNRb2p5V3dJc2NqVXlmME45MzR5aVBwaUZ6d3R6ZG80WlhWemhX?=
- =?utf-8?B?QWVLUmozbjdweDh4OUdoVGplbmkyV0xvYUpqWmJXUFJobWhmVVZZRDBYZHBJ?=
- =?utf-8?B?bllpOFFrMkI5TlNibDJoYklzZkpIZktGcGNrcjBsbHNkbnZPMnhmOThiQmVs?=
- =?utf-8?B?dlFtSWVaUXBNaHZvMnhucTZsTU1FVFIwMlc0eG80NzRUQ1RYYjR4ZW93VUFa?=
- =?utf-8?B?Sm1waHlaRXFSVWp5NHNqcE9tUUNiWmNlY3QzZWkvQ0ROVkdSbEhoNXJtemJS?=
- =?utf-8?B?T2R1dlFTemJqME5UZVhibDRibEhXb0RnUUVFQithNEpGZXpYWEI3L01heWpE?=
- =?utf-8?B?WUxORzZNME50MksxM3dTell1dmNVYjFPYVd4bUtCNHh5cHVxUHdEbGFzekI1?=
- =?utf-8?B?dGFVSUZ6WmNhdWRCU2d3amtWOHpuTHdxL2ZQVzM0UW9FRm1EY3BTdS9Iek54?=
- =?utf-8?B?dGV4a29iVnJWdnNUQ1V5WTUwRWlHcEpzWjVOTm9RRUhTdmRwWVJsZWQyMDc3?=
- =?utf-8?B?Uno4OUl5aHkwMTJvNjU5bTJIYzcxVHVQNnNGdjR5Q0paUCsrTm1meVA3anBH?=
- =?utf-8?B?N0VDbTUxNzBFRmFRUnlRTXpHa2pSbkJ3WXlJVWdWUm56S2J0TnpTVkJrZmNR?=
- =?utf-8?B?VFJWVkJVOHFDZktZTXJpZkh1aUNrME9yU2Uyd1Z0bVF6Ull0b25LUXdFRXdw?=
- =?utf-8?B?dmlzaEFkeks2azgzbUwxVGtIZ3NRL005R1FlclpzSmFqdHNod0tuWEhxL0Ru?=
- =?utf-8?B?MDVReDZnTWp4aElCSVpSTHlHRHNwQUNWMUpTSEFueVc1WVdmMjNsSTR1WGFR?=
- =?utf-8?B?SkVJQWpJTjRDTHNud2g0VUNzRFNoQnNja0o4S3JFZklrdWpqTEREblU0WGZk?=
- =?utf-8?B?c090SUlldWxRMGV2cDJCbkIwVXIwd2RwSHpXRFNVS0RjM3VHTlYrRFJLOWMy?=
- =?utf-8?B?RDM1ZmQrdlFVYUdoSDZrSHRJaUNsNEZkTFFoSDNxVE5rYUYwY0lrdEEwbGtY?=
- =?utf-8?B?ZUdDYldBUmIrdDJ2akFoZjlHenErSkh5aFNLa1JrYzFWY3RxZFpoYU94UHd3?=
- =?utf-8?B?WVF2a0RHaHlhN3hNdGtpQ0lKajdEcENFYzE5R2hVL3l6eC9MS3M0QXJ0alNZ?=
- =?utf-8?B?SjJhNTRPZmZsTGdibkFXaHRGOUdmYUZ4cUxCWWJ2UmxmQ2p6bkRBSVBPWUVn?=
- =?utf-8?B?VmUxUXQ2NTlsYURsTkJXc2VwSlBLUUkxcjdWR1pWTXZSWlJkSC9Ceit5LzF6?=
- =?utf-8?B?cFd0TUp3Vktoc2ViMmRlN0E0WGozd3dDdGlsNzlqMFVsYmF4cUZhTFd2ZG5k?=
- =?utf-8?B?d0RxRGdPa2hra1FFdWxuVFVTNEcvUnF5L1h1b2ZlWkVaSzNZU0x1V2JBT01s?=
- =?utf-8?B?OVRKeUwybHB5N05iY3VNbUVKT3Joblp1K3pWTUhvUlJVVTNVTHRpNytmbVNC?=
- =?utf-8?B?Z0xsblllNjY0Y2xGTUVNSjNkVThDTG45eVFkZ3k4WHZCSktzeE0vVCtxRWly?=
- =?utf-8?Q?6hkOeGTGD628kSkl8lL2w8MYZ?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/VDNs3hu9w6ZALC6io0LbDkS2KNfxb+VHJxUNSkGW0Fjad+p0tlyHAJ1YfzfO0jBIWgbDH2uUhICwpxYSHwbZTBAdtYVr5tU+Dz+WHarFoAY0FFT/jSzKs72SjFxunGBd3r23GAdGvV29CtTrLQBLeXikQO470woczidlbNfP7oypkAwCcu+Dz0nsMnkg/7WaRuFgbiuFWE22TGL7ZHI0VVXpOKpYES1LPC15ulWQ8SQCsw4OfLQcxFjxNpfFp4E0bJm5qeURxhMZxadTgayNbikyl0Q5cLa5wV1MqyA65zYM9SWNB668UlQduUch5FNrtw0jdvs4fI5jsPJcutPQsfDI1b1RGU08hZDqefAv96Lbftu1I1VfZUgYRReXSqTl0YDcduXuKhzRwDD19iMwKUw6MXkUH8pIXkgBOGFwUTjVjJpbLBXTuUTYMDJEnsjQ2WIA1/NWhjXaAiTBl1/3/6RsEIqrP+s0Q8eMYnxHXUJkzVnrFNnF0ZcUZZhCvaj69JJzKudkBiPGHu2HWPp2XU7PRf0I9T0EhaVGz1YGHLOdlmq1gnrwdraFP9oYbdSUQcjQwqUxq8u4cIt8wL2cEYrt47YYuQWhjeWZ3e5tcU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 967d9f89-4ac9-4832-e8ff-08dd687dee85
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 13:40:24.0000
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1p76DFp6LbaJ6y6MlxhgUNqYSYivGFDeAlXjsisRnCe/4Om3q6l3DlVld64w2WKAFcEjqXtDeQyzyBxATciPaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7232
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2503210101
-X-Proofpoint-GUID: MzNtJRWxiwBf_t7jFd1fqmaOCjzYyHnK
-X-Proofpoint-ORIG-GUID: MzNtJRWxiwBf_t7jFd1fqmaOCjzYyHnK
 
-On 3/20/25 4:46 PM, Olga Kornievskaia wrote:
-> On Thu, Mar 20, 2025 at 1:32 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->>
->> On 3/20/25 12:29 PM, Olga Kornievskaia wrote:
->>> On Thu, Mar 20, 2025 at 9:58 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+On Thu, 2025-03-20 at 16:40 -0400, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>=20
+> Propagate the NFS_MOUNT_NETUNREACH_FATAL flag to work with the pNFS
+> flexfiles client. In these circumstances, the client needs to treat the
+> ENETDOWN and ENETUNREACH errors as fatal, and should abandon the
+> attempted I/O.
+>=20
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/flexfilelayout/flexfilelayout.c | 23 +++++++++++++++++++++--
+>  fs/nfs/nfs3client.c                    |  2 ++
+>  fs/nfs/nfs4client.c                    |  5 +++++
+>  include/linux/nfs4.h                   |  1 +
+>  4 files changed, 29 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayo=
+ut/flexfilelayout.c
+> index 98b45b636be3..f89fdba7289d 100644
+> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
+> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+> @@ -1154,10 +1154,14 @@ static int ff_layout_async_handle_error_v4(struct=
+ rpc_task *task,
+>  		rpc_wake_up(&tbl->slot_tbl_waitq);
+>  		goto reset;
+>  	/* RPC connection errors */
+> +	case -ENETDOWN:
+> +	case -ENETUNREACH:
+> +		if (test_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags))
+> +			return -NFS4ERR_FATAL_IOERROR;
+> +		fallthrough;
+>  	case -ECONNREFUSED:
+>  	case -EHOSTDOWN:
+>  	case -EHOSTUNREACH:
+> -	case -ENETUNREACH:
+>  	case -EIO:
+>  	case -ETIMEDOUT:
+>  	case -EPIPE:
+> @@ -1183,6 +1187,7 @@ static int ff_layout_async_handle_error_v4(struct r=
+pc_task *task,
+> =20
+>  /* Retry all errors through either pNFS or MDS except for -EJUKEBOX */
+>  static int ff_layout_async_handle_error_v3(struct rpc_task *task,
+> +					   struct nfs_client *clp,
+>  					   struct pnfs_layout_segment *lseg,
+>  					   u32 idx)
+>  {
+> @@ -1200,6 +1205,11 @@ static int ff_layout_async_handle_error_v3(struct =
+rpc_task *task,
+>  	case -EJUKEBOX:
+>  		nfs_inc_stats(lseg->pls_layout->plh_inode, NFSIOS_DELAY);
+>  		goto out_retry;
+> +	case -ENETDOWN:
+> +	case -ENETUNREACH:
+> +		if (test_bit(NFS_CS_NETUNREACH_FATAL, &clp->cl_flags))
+> +			return -NFS4ERR_FATAL_IOERROR;
+> +		fallthrough;
+>  	default:
+>  		dprintk("%s DS connection error %d\n", __func__,
+>  			task->tk_status);
+> @@ -1234,7 +1244,7 @@ static int ff_layout_async_handle_error(struct rpc_=
+task *task,
+> =20
+>  	switch (vers) {
+>  	case 3:
+> -		return ff_layout_async_handle_error_v3(task, lseg, idx);
+> +		return ff_layout_async_handle_error_v3(task, clp, lseg, idx);
+>  	case 4:
+>  		return ff_layout_async_handle_error_v4(task, state, clp,
+>  						       lseg, idx);
+> @@ -1337,6 +1347,9 @@ static int ff_layout_read_done_cb(struct rpc_task *=
+task,
+>  		return task->tk_status;
+>  	case -EAGAIN:
+>  		goto out_eagain;
+> +	case -NFS4ERR_FATAL_IOERROR:
+> +		task->tk_status =3D -EIO;
+> +		return 0;
+>  	}
+> =20
+>  	return 0;
+> @@ -1507,6 +1520,9 @@ static int ff_layout_write_done_cb(struct rpc_task =
+*task,
+>  		return task->tk_status;
+>  	case -EAGAIN:
+>  		return -EAGAIN;
+> +	case -NFS4ERR_FATAL_IOERROR:
+> +		task->tk_status =3D -EIO;
+> +		return 0;
+>  	}
+> =20
+>  	if (hdr->res.verf->committed =3D=3D NFS_FILE_SYNC ||
+> @@ -1551,6 +1567,9 @@ static int ff_layout_commit_done_cb(struct rpc_task=
+ *task,
+>  	case -EAGAIN:
+>  		rpc_restart_call_prepare(task);
+>  		return -EAGAIN;
+> +	case -NFS4ERR_FATAL_IOERROR:
+> +		task->tk_status =3D -EIO;
+> +		return 0;
+>  	}
+> =20
+>  	ff_layout_set_layoutcommit(data->inode, data->lseg, data->lwb);
+> diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+> index b0c8a39c2bbd..0d7310c1ee0c 100644
+> --- a/fs/nfs/nfs3client.c
+> +++ b/fs/nfs/nfs3client.c
+> @@ -120,6 +120,8 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_serv=
+er *mds_srv,
+> =20
+>  	if (mds_srv->flags & NFS_MOUNT_NORESVPORT)
+>  		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
+> +	if (test_bit(NFS_CS_NETUNREACH_FATAL, &mds_clp->cl_flags))
+> +		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
+> =20
+>  	__set_bit(NFS_CS_DS, &cl_init.init_flags);
+> =20
+> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+> index 8f7d40844cdc..9bfb88d791ab 100644
+> --- a/fs/nfs/nfs4client.c
+> +++ b/fs/nfs/nfs4client.c
+> @@ -939,6 +939,9 @@ static int nfs4_set_client(struct nfs_server *server,
+>  		__set_bit(NFS_CS_TSM_POSSIBLE, &cl_init.init_flags);
+>  	server->port =3D rpc_get_port((struct sockaddr *)addr);
+> =20
+> +	if (server->options & NFS_MOUNT_NETUNREACH_FATAL)
 
->>>>> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
->>>>> index 4021b047eb18..95d973136079 100644
->>>>> --- a/fs/nfsd/vfs.c
->>>>> +++ b/fs/nfsd/vfs.c
->>>>> @@ -2600,6 +2600,10 @@ nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
->>>>
->>>> More context shows there is an NFSD_MAY_OWNER_OVERRIDE check just
->>>> before the new logic added by this patch:
->>>>
->>>>         if ((acc & NFSD_MAY_OWNER_OVERRIDE) &&
->>>>
->>>>>           uid_eq(inode->i_uid, current_fsuid()))
->>>>>               return 0;
->>>>>
->>>>> +     /* If this is NLM, require read or ownership permissions */
->>>>> +     if (acc & NFSD_MAY_NLM)
->>>>> +             acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
->>>>> +
->>>>
->>>> So I'm wondering if this new test needs to come /before/ the existing
->>>> MAY_OWNER_OVERRIDE check here? If not, the comment you add here might
->>>> explain why it is correct to place the new logic afterwards.
->>>
->>> Why would you think this check should go before?
->>
->> Because this code is confusing.
->>
->> So, for NLM, MAY_OWNER_OVERRIDE is already set for the uid_eq check.
->> The order of the new code is not consequential. But it still catches
->> the eye.
-> 
-> I just re-checked the original code and the re(set)ing of acc was done
-> before the MAY_OWNER_OVERRIDE check. So changing my patch as you
-> suggest would be consistent with how things worked before. I will do
-> that.
-> 
->>> NFS_MAY_OWNER_OVERRIDE is actually already set by nlm_fopen() when it
->>> arrives in check_nfsd_access() .
->>
->> This code is /clearing/ the other flags too. That's a little subtle.
->>
->> The new comment should explain why only these two flags are needed for
->> the subsequent code.
-> 
-> inode_permission() only care about READ, WRITE (EXEC)? NFSD_MAY_READ
-> is supposed to be the same as MAY_READ etc. Thus I believe passing
-> other values is of no consequence so to be honest I don't understand
-> why NFSD_MAY_OWNER_OVERRIDE is needed here. But what is of consequence
-> is (not) passing a NFSD_MAY_WRITE (which is what gets passed in by
-> nlm_fopen()).
-> 
->> That is, explain not only why NFSD_MAY_READ is
->> getting set, but also why NFSD_MAY_NLM and NFSD_MAY_BYPASS_GSS are
->> getting cleared.
->>
->> Or, if clearing those flags was unintentional, make the code read:
->>
->>         acc |= NFSD_MAY_READ;
->>
->> I don't understand this code well enough to figure out why nlm_fopen()
->> shouldn't just set NFSD_MAY_READ. Therefore: better code comment needed.
-> 
-> My comment came from the comment that was removed by commit
-> 4cc9b9f2bf4df. I don't have a good understanding of the code to
-> provide a "better" comment.
-> 
-> nlm_fopen assigns the access based on the requested lock type. an
-> exclusive lock i'm assuming gets translated to the "write" =
-> NFSD_MAY_WRITE. But the the user might not have write access to the
-> file but still be allowed to request an exclusive lock on it, right?
+^^^
 
-Agreed.
+That should be checking server->flags.
+
+With that fix in place, this patchset seems to do the right thing. It
+takes roughly a minute or two for the RPCs to expire, but they do
+eventually expire now.
+
+Nice work!
 
 
-> @@ -2531,16 +2531,6 @@ nfsd_permission(struct svc_cred *cred, struct
-> svc_export *exp,
->         if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
->                 return nfserr_perm;
-> 
-> -       if (acc & NFSD_MAY_LOCK) {
-> -               /* If we cannot rely on authentication in NLM requests,
-> -                * just allow locks, otherwise require read permission, or
-> -                * ownership
-> -                */
-> -               if (exp->ex_flags & NFSEXP_NOAUTHNLM)
-> -                       return 0;
-> -               else
-> -                       acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
-> -       }
->         /*
->          * The file owner always gets access permission for accesses that
->          * would normally be checked at open time. This is to make
+> +		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
+> +
+>  	/* Allocate or find a client reference we can use */
+>  	clp =3D nfs_get_client(&cl_init);
+>  	if (IS_ERR(clp))
+> @@ -1013,6 +1016,8 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_se=
+rver *mds_srv,
+> =20
+>  	if (mds_srv->flags & NFS_MOUNT_NORESVPORT)
+>  		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
+> +	if (test_bit(NFS_CS_NETUNREACH_FATAL, &mds_clp->cl_flags))
+> +		__set_bit(NFS_CS_NETUNREACH_FATAL, &cl_init.init_flags);
+> =20
+>  	__set_bit(NFS_CS_PNFS, &cl_init.init_flags);
+>  	cl_init.max_connect =3D NFS_MAX_TRANSPORTS;
+> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> index 5fa60fe441b5..d8cad844870a 100644
+> --- a/include/linux/nfs4.h
+> +++ b/include/linux/nfs4.h
+> @@ -300,6 +300,7 @@ enum nfsstat4 {
+>  /* error codes for internal client use */
+>  #define NFS4ERR_RESET_TO_MDS   12001
+>  #define NFS4ERR_RESET_TO_PNFS  12002
+> +#define NFS4ERR_FATAL_IOERROR  12003
+> =20
+>  static inline bool seqid_mutating_err(u32 err)
+>  {
 
-The original comment isn't significantly more illuminating, true.
-
-This seems clearer to me, but folks who know this code better might
-feel it is a bit obvious:
-
-	/*
-	 * For the purpose of permission checking NLM requests,
-	 * the locker must have READ access or own the file.
-	 */
-
-
->>> Prior to the 4cc9b9f2bf4df inode_permission() would get NFSD_MAY_READ
->>> | NFSD_MAY_OWNER_OVERRIDE in access argument. After, it gets
->>> NFSD_MAY_WRITE | NFSD_MAY_NLM | NFSD_MAY_OWNER_OVERRIDE |
->>> NFSD_MAY_BYPASS_GSS. It made inode_permission() fail the call. Isn't
->>> NLM asking for write permissions on the file for locking?
->>>
->>> My attempt was to return the code to previous functionality which
->>> worked (and was only explicitly asking for read permissions on the
->>> file).
->>
->> So the patch is reverting part of 4cc9b9f2bf4df; perhaps that should be
->> called out in the patch description (up to you). However, the proposed
->> fix doesn't make this code easier to understand, and that's probably my
->> main quibble.
->>
->>
->>> Unless you think more is needed here: I would resubmit with 3 patches
->>> for each of the chunks and corresponding problems.
->>
->> Agreed, and I don't think I have any substantial change requests for the
->> first two fixes.
->>
->>
->>>>>       /* This assumes  NFSD_MAY_{READ,WRITE,EXEC} == MAY_{READ,WRITE,EXEC} */
->>>>>       err = inode_permission(&nop_mnt_idmap, inode,
->>>>>                              acc & (MAY_READ | MAY_WRITE | MAY_EXEC));
->>>>
->>>>
->>>> --
->>>> Chuck Lever
->>>>
->>
->>
->> --
->> Chuck Lever
->>
-> 
-
-
--- 
-Chuck Lever
+--=20
+Jeff Layton <jlayton@kernel.org>
 
