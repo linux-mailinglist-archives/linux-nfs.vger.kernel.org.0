@@ -1,96 +1,84 @@
-Return-Path: <linux-nfs+bounces-10769-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10768-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 658BEA6CBE9
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 19:58:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B1DA6CBE8
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 19:54:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDB5B3B130A
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 18:58:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54B517A6544
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 18:53:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E914C22F3B8;
-	Sat, 22 Mar 2025 18:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFBA1FBE8B;
+	Sat, 22 Mar 2025 18:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GgS0urfs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5WNIbc4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-244102.protonmail.ch (mail-244102.protonmail.ch [109.224.244.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E100D1C84B6
-	for <linux-nfs@vger.kernel.org>; Sat, 22 Mar 2025 18:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881E31C84B6
+	for <linux-nfs@vger.kernel.org>; Sat, 22 Mar 2025 18:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742669910; cv=none; b=kTnYrmaZnY0vk14lHkR7ls+TiDhWZ6NosaZClPHvoqjn2KMJpaUxnWaZirU7vOXzhERfsXAegAvsI1bIkZmHa0szBEuaM5mAlqKAfeST5tj4sc169G+MGB/APa5cFeJkXLVURyUxEH1eGZ9l18ap855OxuUB4kG/qltU7sCpQHM=
+	t=1742669672; cv=none; b=Ak9uigj2pGPzH/SFeoNhNjAHqXgWj6BQPzStOQN3hcVpzMfUQ32jO/OHQnPTX1kEG2dvscwfK5kMEZkTqWHhqPnLI41yayZJXfxfYN9D/tIcCBcRAP1ghnur81lR4q3SPoHNnuxsyy3jrrRUoCzymfl4CDLExf7brMC1UnlU/Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742669910; c=relaxed/simple;
-	bh=AQehVEGcHQlNtoNiVD+cDMG2JFMx+buNTLzFo+pJI0E=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dcnd9Zk3ABLYj/FRNI/HAGoftE11S+gYb3vlkQ3Lc7wzbbVA79cgTnoWRQf/HfUtJ9E85LKphOmIhfxZ0/m2qpWGOxSEijPPMlQDvx8oUkdcmzHykvUXMdBxkdlNEAXQt0Lq+zIC3KhWu1v6g4CnllF+eaI/JzviQcX0/HK2m2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GgS0urfs; arc=none smtp.client-ip=109.224.244.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742669536; x=1742928736;
-	bh=AQehVEGcHQlNtoNiVD+cDMG2JFMx+buNTLzFo+pJI0E=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=GgS0urfsd3ow57RM+0p6Ips7sY9lfNOUVbWa7IlEmtYCPBZ/9eD8MU+3noLWN2Hei
-	 hiqZKzLl6nbkOdHRWDWVb1K0ho0QeOWuDy+rPPVZqHWay2gY6T7nx/BMU0os2zhIzn
-	 feyASNSYOqN2LHz1QMPdVcovJo3SJbQpEVxUMfAon8s65PXEwZC2itwtprDhnPIm/A
-	 40asZX68ZcBtJDfsQeGTGIrn+p3WGEWZ4y84vs2ygbXXOzxpF9JMpFLuCv/vImnfm0
-	 +9MsAj5AQuBGbpo3DELVw5xHjF5gRnwL72JSe/EPS2VlGqid6F2KolZJyiLuxxtLdF
-	 Tj48t2F94JH0A==
-Date: Sat, 22 Mar 2025 18:52:09 +0000
-To: Chuck Lever <chuck.lever@oracle.com>
-From: John <therealgraysky@proton.me>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: kernel panic when starting nfsd on OpenWrt with kernel 6.12.19
-Message-ID: <aftSYzYb2wDE8d8Q_6_jph3l5F2XfBHwu8PA6UBHPO4lq8UtgdpUoGk_YQcd1upHD4ynl1B5LWzPytWanWx2-JGJ11rCmZVKgrdF3y-pUuY=@proton.me>
-In-Reply-To: <75ec06ad-7472-4e83-a20e-28543ec2909d@oracle.com>
-References: <xD3JWWvIeTEG7_-UtXFNOaGpYHZL9Dr4beYme8ebQZiBvaBcTu3u7Q9GxE7cJrGRYsfTjC2BPxBTuyl1TijqjUP8_nC4tpcfekVKuBtDp68=@proton.me> <0cd73138-baa7-4cd7-a6ed-7c5eefed495f@oracle.com> <yW5ewBN3-dAMHSq9KmbFRPRt_fK0FTmuqclUbu4K1kZPcfB6DmXRPOVC_OAwh1waQz2Of0qUDqxQ3YL-NBULF9H6-HMdVjixFAad20f5sUY=@proton.me> <75ec06ad-7472-4e83-a20e-28543ec2909d@oracle.com>
-Feedback-ID: 47473199:user:proton
-X-Pm-Message-ID: 4d1879361cfa4f3d3ccaa3421b7649d68c08035e
+	s=arc-20240116; t=1742669672; c=relaxed/simple;
+	bh=FmQi668bNJQ+e9UnpT1ZImTmeD0lwKYxkuTtQnYmH8g=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=HC1jJTYyKVzgSW0VYnBwQ+gCfBBpGBeM/LrfwkJW4DUUNDtLxtFy2lKFwsjkMSpWpiEWc31foVBEoBKVNPSpvLV9NY6+xZlm08YrdH4Ijwnqz8LRcHOGFmARNR7+86xszABlCZU58Gelm3ENcJk6GHyPkuWzmu5YmVKFPbkaZgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5WNIbc4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97D1C4CEDD;
+	Sat, 22 Mar 2025 18:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742669671;
+	bh=FmQi668bNJQ+e9UnpT1ZImTmeD0lwKYxkuTtQnYmH8g=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=N5WNIbc4gvwfgqj0EV9unTs7B+o5nplTp+VmRjsM4awWn6ZWVqtoT7Nq484Gh5lNv
+	 Ix10daEM9fmK+BP4fhHFB949iPHTXovKc7yHTB6zr4wpOZ3ZpwRyY4jlPFePWMYurB
+	 lef+ODwcm+psuNYuW6F7q2cUFgSCL6+/B6KzHzUCAjxTdCuQLnmOob8iTmcvlQfGon
+	 9SLYPsgsHebKlqi8OiNMBKDiRVDLF1ge3/U1an2578wDQBvobJ4sIxJ2jgMWB3l1Xs
+	 hkiKUyxPSNsMi/EpFH6LJhuv/88xezA59dEzjX9UmaIw2AIGvl/mIBFbDZbMWafz+G
+	 E2vDQwnXz4uYw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 00DDF380665A;
+	Sat, 22 Mar 2025 18:55:08 +0000 (UTC)
+From: therealgraysky via Bugspray Bot <bugbot@kernel.org>
+Date: Sat, 22 Mar 2025 18:55:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+To: cel@kernel.org, anna@kernel.org, trondmy@kernel.org, 
+ linux-nfs@vger.kernel.org, jlayton@kernel.org
+Message-ID: <20250322-b219911c1-348fac92b04e@bugzilla.kernel.org>
+In-Reply-To: <20250322-b219911c0-bbbed350da5c@bugzilla.kernel.org>
+References: <20250322-b219911c0-bbbed350da5c@bugzilla.kernel.org>
+Subject: Re: kernel panic when starting nfsd on OpenWrt snapshot with
+ kernel 6.12.19
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
+therealgraysky writes via Kernel.org Bugzilla:
 
-On Saturday, March 22nd, 2025 at 2:06 PM, Chuck Lever <chuck.lever@oracle.c=
-om> wrote:
+Please consider adding the following to the 6.12-stable queue:
 
-> If this is a "product" kernel then you should approach the distributor
-> first. I do not have the hardware, the binaries, the .config, or a
-> cross compiler for whatever "Hardware name: iKOOLCORE R2Max/R2Max" is
-> (guessing RPi ?)
+de71d4e211ed ("nfsd: fix legacy client tracking initialization")
 
-No, this is the vanilla kernel + OpenWrt project patches. No vendor involve=
-d. Also, both of the machines that are experiencing this bug are x86/64, no=
-t ARM.
+When I apply this to my build of 6.12.19, I no longer experience the bug/nfsd appears fully functional.
 
-> This:
->=20
-> nfsd4_client_tracking_init+0x39/0x150 [nfsd]
->=20
-> suggests that your distributor (or LTS) might be missing a fix
-> for recent crashes that are due to incorrectly setting
-> CONFIG_NFSD_LEGACY_CLIENT_TRACKING. I'm thinking of perhaps
->=20
-> de71d4e211ed ("nfsd: fix legacy client tracking initialization")
->=20
-> in particular, which does not appear to have been applied to
-> v6.12.19.
+Reference: https://lore.kernel.org/linux-nfs/75ec06ad-7472-4e83-a20e-28543ec2909d@oracle.com/T/#t
 
-I applied this commit to my image build and found no bug upon starting nfsd=
- with 6.12.19. I will comment the bug report[1] with this info. Many thanks=
- for pointing this out, Chuck!
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219911#c1
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
-1. https://bugzilla.kernel.org/show_bug.cgi?id=3D219911
 
