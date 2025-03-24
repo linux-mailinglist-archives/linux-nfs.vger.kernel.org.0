@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-10781-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10782-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25894A6E462
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 21:30:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5F2BA6E46B
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 21:31:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FF543A45E9
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 20:29:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0894217035B
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 20:31:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43AE81C8613;
-	Mon, 24 Mar 2025 20:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAB0D1D5159;
+	Mon, 24 Mar 2025 20:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aasHAbpM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d43+xMfO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9031C84DD
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 20:29:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CFE1E8326
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 20:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742848155; cv=none; b=hqg1w73yRfGUiMImK5syP5x9Bv59muynztn13CDHII4teu5aOhct9wGTf5HfmjjPPY5B+MSNIPVVRbq/4n3/OlVkCYKQzK6W61HPzQqLoA/lMU7Npga3eEQYh1b4pB0ViX2WpksXDgQlzm6s7c1WeSoxcZ59UhR2m6+qD4/XWVU=
+	t=1742848197; cv=none; b=kVwewP34Sja/YlVHCBXeBNGpHl1K5N5Vd3ZoeVJjvEBq4pVFyd7w7mdpYFJ2/Hx3bkAI406babHsb7XQPks21cZC4HtClIi7eSu1l9RHyjdy/GGV5599wtWvPzk8JzseNeul+AICqrxPY1avMfPjoXh2bTnEwfzPliwGfMdteq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742848155; c=relaxed/simple;
-	bh=ZvyPOnVFhznFBuJc+c18dzo/Ms1o8uzHZLv97t16KKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AAfST7k4Jfk+7cFJ1HH1RznyNVAJ8MD4Az7xxdnziTZeHRpIge4NiGFaoA0M0H9vrWkHOWc0LbXBW6/XxQDvVbevZR2PshylvLzLCiUUkwYToD6jHRaXB5VfntG1mmw0L/H+IldPIywjDQVdyLLlQ9+17HvRAYewwJtLHQPhDb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aasHAbpM; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1742848197; c=relaxed/simple;
+	bh=FrqpZlDcVbHqLnA2SROmUMkLStFlAf0y2uGzRHY4E9k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qwQT3Fmka4WkhdPem6XVo9SuMzQEM3UhqhmLv7/ibGFhSwmB6LUyIGSSxA/ByXkg3Bw4/TXey+RqR0rW3NF0JojHAZnyqp2UAqXmkZep5LhBx7t9W6QrNYvzEfMJQG6VZR1wg8aR+DwIyiQ+b7OsLoITNDlix6Qc73byFnwreVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d43+xMfO; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742848152;
+	s=mimecast20190719; t=1742848194;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/hG7OHoa+hNL/Xeqt2578yEk0EtPbbIlhiEgKko7fcs=;
-	b=aasHAbpMsHs++fzgwr9nflhJV4ShsvCVEfp0Q7hhgeBf/yxnHaYJI4CzcwZ/EUwJs9PdIl
-	Gc72Oyi20wahxLMINWKL4WF1W+gwDeylKfmBR1Ov6BgJr4erMdgSTUAAFhkiREP2D/gaRd
-	lKmpWI38AOgbEIFRoW2Zm2uDiJzCG8E=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=XxdEZ3+S3yXb33nBpvb94g6lgCZsROpKiGm8VQuRPxs=;
+	b=d43+xMfOcpZRLYshuwYnwajTgfKLHXrBN8YNmGPeb4GISTw2oDwqg8IsZSvQ04EpCTUis5
+	0cFp+0jr5zH0z0aT5M2K+Q5yMJs83T0aTKMKHzXJ9aPWiTwx7tZBkwmqPpQkGcNheg67Cz
+	xySVVLShEtSUoi4oaoziOX6E+095Fls=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-16-mlaYi8ofN5qgW8l8W1O5cw-1; Mon, 24 Mar 2025 16:29:11 -0400
-X-MC-Unique: mlaYi8ofN5qgW8l8W1O5cw-1
-X-Mimecast-MFC-AGG-ID: mlaYi8ofN5qgW8l8W1O5cw_1742848149
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5cd0f8961so300442285a.1
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 13:29:10 -0700 (PDT)
+ us-mta-288-YXEfXii-M6-yaWjJi93Abg-1; Mon, 24 Mar 2025 16:29:53 -0400
+X-MC-Unique: YXEfXii-M6-yaWjJi93Abg-1
+X-Mimecast-MFC-AGG-ID: YXEfXii-M6-yaWjJi93Abg_1742848193
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6ece036a581so61640196d6.1
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 13:29:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742848148; x=1743452948;
+        d=1e100.net; s=20230601; t=1742848192; x=1743452992;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hG7OHoa+hNL/Xeqt2578yEk0EtPbbIlhiEgKko7fcs=;
-        b=dmrOQQK+YwbGi5oO9vcx2bcIP9ayiNo8SK5rFu4qA+5+0vb5xEVRnNFiUCJdAvuMN/
-         TMcyLgL2USI6tjzkLaBwL8znuAeuJBsJZ6R6YGAWhrc94buqVKy0xv7+HFxE3YxWv4j4
-         vHFW+U+D7ECva09INZWCl9RfGCAF9Bh0RB/ccR8zyZJr9HnLxdX4YdM1cZSswqrVFk0p
-         T988/hkwVeDgo5j7NDqZ0ZrtbbC0enpQRLVbVGmxc/FPVrNK1DgYxshnmnx9PxTxbgXs
-         Mw4sPA0gKVJ0mZe1L/UsL+FzYAkkuSQ1WvvtkWdDKiZQnNjDLIf2xgXekTo+cGtM+5cu
-         6+Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQUnKGOIoyGi7mHh7Dyht53fGMXP0rC3q1uA3t1YB3PMqDmV2TBDjMgZPO9DFA6Gq8eK1bRTvL7/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2zdg5RXW9HHV8Yf7Y/BppQPZ1tnRnayAgw0QiW4QEBMTCwF/P
-	s1v0FyXeaslYGrdjUymMTwBQeZz5lexj/lU5Cdn1lbj4a+vQt2AegGybJtdIjguxFYkDYCeatm9
-	waYvZXk2T3dOJr0iGigESwj3KHu+qWq9aqPmrvqYzsJL+91upeyEjqQYPZe2ObAcjpXHW
-X-Gm-Gg: ASbGncvtA99POyX0tXUn9wPMus4jgb7NsaQ6eCXIxkiMdiXvGGfMrvDlmptik2gK7Km
-	JOWvmmED0kwDmkU+s62ENUzvKsuecFK67JHI3lg3aZk2wIoj3Fd7xDdWntEcTyEhQpmOOLklF10
-	WNV6jgSgfDqhjYRGkryDYtE7wm57RVruEVwj1w2NdXfWMMSj71dneH1EHngZvTvhVt2eMsEzohE
-	cw7pgU9h+3IJszEI/4ukfS4PMPKFJqVMPRXDKFOBfLaxDnbklvOqgm04OEh63UR2p0v8KjcdMs0
-	TkWRNrcSSJX5nUs=
-X-Received: by 2002:a05:620a:2907:b0:7c5:42c8:ac82 with SMTP id af79cd13be357-7c5ba157edbmr1929937485a.23.1742848148112;
-        Mon, 24 Mar 2025 13:29:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEJNayygTyHny/u17kut/a678VKTK8eZO1nWZVCFNvbwH+zFUMVBTnU/wrGLLP+6NwtwIftwQ==
-X-Received: by 2002:a05:620a:2907:b0:7c5:42c8:ac82 with SMTP id af79cd13be357-7c5ba157edbmr1929934485a.23.1742848147724;
-        Mon, 24 Mar 2025 13:29:07 -0700 (PDT)
+        bh=XxdEZ3+S3yXb33nBpvb94g6lgCZsROpKiGm8VQuRPxs=;
+        b=heYXq+w/vfWWpcCHif/hvRd3pl4ydt6TqAqOBJuJ20oBke71WrkfZ561/bcHnezJcb
+         jPlq84Fd1+j7hdSG5RelgLYGYEJ1Ls85Cqn4m3V1K0M6xzitBisSY1Ac/RioE7BoM2VP
+         rIWOFPOYO1hTYYcH57q7Zsj20bIJaliaYNx4hXzDhh9Iwt35fS+wYpqKC+m2zIY3KBk+
+         9BQINNCHl1mzVidt0dVdm3LgnoITiNX6qJfgYs3aR4LqanKV/Ns5rQk9L+PO4psF6MwK
+         j7jewJZOjbG5IW1e/j2Y6xyYsLnncXIckaW+vhZdIMBnk4LaaRVRtixnwt5JWdlSAr1f
+         p7Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3FfRrCDWcGjRvOcKCGlEbNM5a7XI0jSfC315WE6tGZyXANBcqrAy0TlvmM/wUAoKy/Z+W8WbiMjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmMvkhzbp9gEYjuz9AR5eQfjyPpc2trahKNdv0GqRqkpjv6LoT
+	z3n+1HuJ/XI3cb9cGVCYlbIKb5WbtziouI1pOYjN8F5udlu2ouyb3QbTru8tqCg05sI6YQFbvd/
+	c6FFKR5GKrt7Io8SsTIZpLjGq9w2mMw2P9hlgUQAg3JkvBiom/it9uYudCwzQ8MS2xZOI
+X-Gm-Gg: ASbGncsjgf7bR5OtWcqJW/tJOfZrAA8vrks/AG+MSU10epI5dcx9ODvx1+7GK7+M5og
+	c9GfajptU+ohHPrxAcSCkZZoTVIS6s/0a/lvM9LC799q6TotuEo0csLZ0r7G4GuLa9knSm+uNB8
+	GP1YtKVGPAPgIS7u+7gGYbHong8rrwqNrUE5tG6bjR0q3wu5EtzaTHg8cfGEghJgbIdZ4yWTAWE
+	ozKcMwFX7dI/XEkHd8RnqVBuSaBByZ42mVmtcnvnVVa/aVqm2tSQpdTkJ6C5b7cST0OhWFR2KgE
+	1ftllKtUN/aRrtU=
+X-Received: by 2002:a05:6214:d44:b0:6d4:1425:6d2d with SMTP id 6a1803df08f44-6eb3f3b6e48mr164217116d6.43.1742848192152;
+        Mon, 24 Mar 2025 13:29:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZzIisBoFCsVVMBZjSqqKm9VGrvVX4TbAbCvQbVqh7qUVbknMXGTxLbzJcAI655RjvDs+dqg==
+X-Received: by 2002:a05:6214:d44:b0:6d4:1425:6d2d with SMTP id 6a1803df08f44-6eb3f3b6e48mr164216886d6.43.1742848191681;
+        Mon, 24 Mar 2025 13:29:51 -0700 (PDT)
 Received: from [172.31.1.159] ([70.105.244.27])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ec688sm551723285a.64.2025.03.24.13.29.05
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef0f21fsm48625026d6.24.2025.03.24.13.29.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Mar 2025 13:29:06 -0700 (PDT)
-Message-ID: <892715b8-8a43-45fc-bd01-1526b96a3ee2@redhat.com>
-Date: Mon, 24 Mar 2025 16:29:05 -0400
+        Mon, 24 Mar 2025 13:29:51 -0700 (PDT)
+Message-ID: <a5d324eb-5023-407c-b5ff-5b7bd347eb12@redhat.com>
+Date: Mon, 24 Mar 2025 16:29:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,63 +88,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH v2] gssd.man: add documentation for
- use-gss-proxy nfs.conf option
-To: Scott Mayhew <smayhew@redhat.com>
-Cc: romero@fnal.gov, bcodding@redhat.com, linux-nfs@vger.kernel.org
-References: <9e7f3d6a-0989-4778-a2c0-ffafdebefa87@redhat.com>
- <20250317132206.1096158-1-smayhew@redhat.com>
+Subject: Re: [nfs-utils][PATCH] support/nfs/xcommon.c: fix a formatting error
+ with clang
+To: Alexander Kanavin <alex@linutronix.de>, linux-nfs@vger.kernel.org
+References: <20250321113147.3477702-1-alex@linutronix.de>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250317132206.1096158-1-smayhew@redhat.com>
+In-Reply-To: <20250321113147.3477702-1-alex@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 3/17/25 9:22 AM, Scott Mayhew wrote:
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+On 3/21/25 7:31 AM, Alexander Kanavin wrote:
+> Specifically, this happens:
+> 
+> | xcommon.c:101:24: error: format string is not a string literal [-Werror,-Wformat-nonliteral]
+> |   101 |      vfprintf (stderr, fmt2, args);
+> |       |                        ^~~~
+> 
+> A similar approach (print \n seprately) is already used elsewhere in
+> the same file.
+> 
+> Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 Committed... (tag: nfs-utils-2-8-3-rc8)
 
 steved.
 > ---
+>   support/nfs/xcommon.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> v2 - slight phrasing change.
-> 
->   utils/gssd/gssd.man | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/utils/gssd/gssd.man b/utils/gssd/gssd.man
-> index c735eff6..4a75b056 100644
-> --- a/utils/gssd/gssd.man
-> +++ b/utils/gssd/gssd.man
-> @@ -392,6 +392,17 @@ Setting to
->   is equivalent to providing the
->   .B -H
->   flag.
-> +.TP
-> +.B use-gss-proxy
-> +Setting this to 1 allows
-> +.BR gssproxy (8)
-> +to intercept GSSAPI calls and service them on behalf of
-> +.BR rpc.gssd ,
-> +enabling certain features such as keytab-based client initiation.
-> +Note that this is unrelated to the functionality that
-> +.BR gssproxy (8)
-> +provides on behalf of the NFS server.  For more information, see
-> +.BR https://github.com/gssapi/gssproxy/blob/main/docs/NFS.md#nfs-client .
->   .P
->   In addtion, the following value is recognized from the
->   .B [general]
-> @@ -405,7 +416,8 @@ Equivalent to
->   .BR rpc.svcgssd (8),
->   .BR kerberos (1),
->   .BR kinit (1),
-> -.BR krb5.conf (5)
-> +.BR krb5.conf (5),
-> +.BR gssproxy (8)
->   .SH AUTHORS
->   .br
->   Dug Song <dugsong@umich.edu>
+> diff --git a/support/nfs/xcommon.c b/support/nfs/xcommon.c
+> index 3989f0bc..1d04dd11 100644
+> --- a/support/nfs/xcommon.c
+> +++ b/support/nfs/xcommon.c
+> @@ -94,13 +94,11 @@ xstrconcat4 (const char *s, const char *t, const char *u, const char *v) {
+>   void
+>   nfs_error (const char *fmt, ...) {
+>        va_list args;
+> -     char *fmt2;
+>   
+> -     fmt2 = xstrconcat2 (fmt, "\n");
+>        va_start (args, fmt);
+> -     vfprintf (stderr, fmt2, args);
+> +     vfprintf (stderr, fmt, args);
+> +     fprintf (stderr, "\n");
+>        va_end (args);
+> -     free (fmt2);
+>   }
+>   
+>   /* Make a canonical pathname from PATH.  Returns a freshly malloced string.
 
 
