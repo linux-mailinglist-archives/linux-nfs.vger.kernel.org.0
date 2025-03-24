@@ -1,84 +1,87 @@
-Return-Path: <linux-nfs+bounces-10768-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10770-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88B1DA6CBE8
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 19:54:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 900C0A6DD08
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 15:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 54B517A6544
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Mar 2025 18:53:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE8CD189220C
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 14:30:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFBA1FBE8B;
-	Sat, 22 Mar 2025 18:54:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F55257448;
+	Mon, 24 Mar 2025 14:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5WNIbc4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCUk7B39"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881E31C84B6
-	for <linux-nfs@vger.kernel.org>; Sat, 22 Mar 2025 18:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA93EEC5
+	for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 14:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742669672; cv=none; b=Ak9uigj2pGPzH/SFeoNhNjAHqXgWj6BQPzStOQN3hcVpzMfUQ32jO/OHQnPTX1kEG2dvscwfK5kMEZkTqWHhqPnLI41yayZJXfxfYN9D/tIcCBcRAP1ghnur81lR4q3SPoHNnuxsyy3jrrRUoCzymfl4CDLExf7brMC1UnlU/Sc=
+	t=1742826598; cv=none; b=GDpvxCfiEG5qjTGW8JwS3vYRicef1Gdekn5iW0OCG2D/iZZnksfTjqtgwMkjH1qbujfBE+nrF4dKRzRCALlSnroCBJvFoTo7ONFq2Q9wefyaqsmd8ddIYfr3bvnfC4Gid3ffuYPMEFrZX5aE3Q9j3QgAWY1U+4QJA2bjTfdD0uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742669672; c=relaxed/simple;
-	bh=FmQi668bNJQ+e9UnpT1ZImTmeD0lwKYxkuTtQnYmH8g=;
-	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
-	 References:Subject; b=HC1jJTYyKVzgSW0VYnBwQ+gCfBBpGBeM/LrfwkJW4DUUNDtLxtFy2lKFwsjkMSpWpiEWc31foVBEoBKVNPSpvLV9NY6+xZlm08YrdH4Ijwnqz8LRcHOGFmARNR7+86xszABlCZU58Gelm3ENcJk6GHyPkuWzmu5YmVKFPbkaZgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5WNIbc4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97D1C4CEDD;
-	Sat, 22 Mar 2025 18:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742669671;
-	bh=FmQi668bNJQ+e9UnpT1ZImTmeD0lwKYxkuTtQnYmH8g=;
-	h=From:Date:To:In-Reply-To:References:Subject:From;
-	b=N5WNIbc4gvwfgqj0EV9unTs7B+o5nplTp+VmRjsM4awWn6ZWVqtoT7Nq484Gh5lNv
-	 Ix10daEM9fmK+BP4fhHFB949iPHTXovKc7yHTB6zr4wpOZ3ZpwRyY4jlPFePWMYurB
-	 lef+ODwcm+psuNYuW6F7q2cUFgSCL6+/B6KzHzUCAjxTdCuQLnmOob8iTmcvlQfGon
-	 9SLYPsgsHebKlqi8OiNMBKDiRVDLF1ge3/U1an2578wDQBvobJ4sIxJ2jgMWB3l1Xs
-	 hkiKUyxPSNsMi/EpFH6LJhuv/88xezA59dEzjX9UmaIw2AIGvl/mIBFbDZbMWafz+G
-	 E2vDQwnXz4uYw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 00DDF380665A;
-	Sat, 22 Mar 2025 18:55:08 +0000 (UTC)
-From: therealgraysky via Bugspray Bot <bugbot@kernel.org>
-Date: Sat, 22 Mar 2025 18:55:05 +0000
+	s=arc-20240116; t=1742826598; c=relaxed/simple;
+	bh=bd/MIbN3zOnWWraUbjfQLEjmGOyrVvJEqzQcTOxjP+U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Xk50gcmJRCSoQwAQjqeE/k6EeFHoqETSHEUp/MlzDBcT5VhyeNJwtYo4vyA4uCB4TfuidzIttTndRum2kng3Wm33/UMqc+vKX2bPQrRRxjRcHT7S8aJ83kLVCEbv+Gn6no8GNfgj7qSopl+jBsj7VjkP3m1Ng8DNaKTxqsnb8yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCUk7B39; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7430e27b2so936272066b.3
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 07:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742826594; x=1743431394; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bd/MIbN3zOnWWraUbjfQLEjmGOyrVvJEqzQcTOxjP+U=;
+        b=DCUk7B39s6u+kMm8IJ6ZvDU4ol6BkAdmaPX/K/QlGEgimDqr13nGEtDPqr0yd6FqsE
+         amV3Vu4+Z9g8ssDXCuqr9jIdBht9jhGQKRH335ilQofK8sHp6CvQ9rt6k/H9U4f+3t+F
+         yg+/taoHYnE67mAtdrFHCLeVerT6p212c0zvK+RYn9w7HwOhR2XfNKhCPWW7K2I0etn7
+         YIiKtTZu02WqySFY/WVJ82N1v/GL4g2zzvabZ8taFXRngZg7oDm+0+7hs/6tQMN1pfyb
+         F99pzSwnjdl13nqbJNNDz+qfk0hSpPCe1rEJs+3LoNfXEODZW/GOSVgci8emkI1M0+NF
+         PnoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742826594; x=1743431394;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bd/MIbN3zOnWWraUbjfQLEjmGOyrVvJEqzQcTOxjP+U=;
+        b=Klf2gcH97duvguYSQ66fWH7FW8LZVEP0BJF0h6wW7qUSEkiww41EK0B3nFmomx4kL+
+         OPJlJbpKnjXJfrkNgeroTa7z4AYFdd3vWEx/K0dLd5drG8brjWVNC+7xfISuEtDvjo8k
+         mTtzxjCiYlG3pouWMqlNnI1zpOURmRF9eqmluf0zRrUcnPKLofb+3XuhPqhpDlUwXfFE
+         niwfqjgocFhB/GzQ+8f73Aj8ARtrA6NTdjk/bwu+oGbQMD5rakM5bJIR+FW4m8DYlfBV
+         PjrTlXU4vuqChJCqquQDoHYqvcHpSww0UIrmwVV/YZDTXk77aMKOYE4vvD6hCUzm2gPh
+         5QbQ==
+X-Gm-Message-State: AOJu0YysnC5k4BO8uxj+GDSC8YBuYdvFrtlp4RIUQCT2gQAunBOJ2EEG
+	tgtbLJoYP/eKWm6GgWW1W+dF76JJu8+JRmG01caoMW1KHw0QFzLNtmA8LRrbtx01wOw6njQ4efh
+	+azN/cc5e/qvoUD+V9iM1o8W8sbRoBklD0pU=
+X-Gm-Gg: ASbGncvyC9Fi5pv9bTf+MfHQsBPyXQbsl4kIfk6pa28f6/nxKosMBX488aTpt+/GyTc
+	DJKuqs9kcoODCWyBOhzBJufC4n1KX2Qn9nwhCqaN51pn6wpVvzXy4WUCuGeJMgsUW1qVVKTlpZ0
+	e4fke2ZoZm6bB8R1dEkKwbfCeUpw==
+X-Google-Smtp-Source: AGHT+IGS9EB+EUD/I4daJULSQ1qUa9ywfxHR8pTklGTsMOGQ2s2CgLDqUBsAkQHfyOAvFhcXFpEYa8hOjm5TpE0FUj8=
+X-Received: by 2002:a17:907:72c2:b0:ac1:e53c:d13f with SMTP id
+ a640c23a62f3a-ac3f25318b8mr1340233966b.50.1742826593853; Mon, 24 Mar 2025
+ 07:29:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: cel@kernel.org, anna@kernel.org, trondmy@kernel.org, 
- linux-nfs@vger.kernel.org, jlayton@kernel.org
-Message-ID: <20250322-b219911c1-348fac92b04e@bugzilla.kernel.org>
-In-Reply-To: <20250322-b219911c0-bbbed350da5c@bugzilla.kernel.org>
-References: <20250322-b219911c0-bbbed350da5c@bugzilla.kernel.org>
-Subject: Re: kernel panic when starting nfsd on OpenWrt snapshot with
- kernel 6.12.19
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: NFSD
-X-Mailer: bugspray 0.1-dev
+From: Martin Wege <martin.l.wege@gmail.com>
+Date: Mon, 24 Mar 2025 15:29:17 +0100
+X-Gm-Features: AQ5f1JpRt9ygp_VYHMwKR0-w4AsGQyzGRoAo6U0ROL0V6cKCZENrmTcjC9RTQFs
+Message-ID: <CANH4o6NoWzPikoEtbVN1esw9d5KDgfOfds1iLfpUNeFcXzaA2w@mail.gmail.com>
+Subject: pynfs tests for NFSv4.1 OPENATTR / O_XATTR?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-therealgraysky writes via Kernel.org Bugzilla:
+Hello!
 
-Please consider adding the following to the 6.12-stable queue:
+Does pynfs have tests for NFSv4.1 OPENATTR / O_XATTR?
 
-de71d4e211ed ("nfsd: fix legacy client tracking initialization")
-
-When I apply this to my build of 6.12.19, I no longer experience the bug/nfsd appears fully functional.
-
-Reference: https://lore.kernel.org/linux-nfs/75ec06ad-7472-4e83-a20e-28543ec2909d@oracle.com/T/#t
-
-View: https://bugzilla.kernel.org/show_bug.cgi?id=219911#c1
-You can reply to this message to join the discussion.
--- 
-Deet-doot-dot, I am a bot.
-Kernel.org Bugzilla (bugspray 0.1-dev)
-
+Thanks,
+Martin
 
