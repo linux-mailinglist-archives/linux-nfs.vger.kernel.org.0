@@ -1,97 +1,78 @@
-Return-Path: <linux-nfs+bounces-10771-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10772-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DA21A6DD55
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 15:47:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2C92A6E044
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 17:54:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7D757A6DF3
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 14:46:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4FD63ABB74
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Mar 2025 16:54:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D093B7A8;
-	Mon, 24 Mar 2025 14:46:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F365E263F20;
+	Mon, 24 Mar 2025 16:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdLux31K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+9CaZxF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76992628C
-	for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 14:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B433C5;
+	Mon, 24 Mar 2025 16:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742827619; cv=none; b=hFIt0DgFfyuJJPbFwHxAnpsbi03S0cfqlJRDrQqZ/vo+LxgOtrHaRV8bBlFSCFBTLAKl2ZkvL7K0AmPSqCoFIt3Qq8+Ae5JPcjIe5cCDS/bKX9OP6llK7zuAYZvA1fTUk/Em/WVP/K2an6egLoYFzIuxusUO5nvYwMSYV/YnIp8=
+	t=1742835272; cv=none; b=m3OfNlQjhblkruAG/2MeA/2NpllQpAufk3Gf+bSZZe7+t/6CgFATd4P7ph7+7setRR63JoGBOPgYwqEGS5u1vtlFPCmnH1zUY20gKCXeAJBVIMf32xjDgcXxsqI2AnAspq9YoNTMAmE/gqlSttX4NIY7mHX6uV2lMf24gUV8P3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742827619; c=relaxed/simple;
-	bh=hgWAiXWe+Nr62GUBiBemFvGG+t6s+T22pioakc7hWt4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=o5M+jGo+Tcj85bRUyEkVNDv6juU8qzgRZZO3j8hLCP0DlebE9C1H2wYCzKcO2nQ972wMN07kM6SK+SXYY8SixLzOQ8tVN5gaFfJ6NqTBgzcCjkMraZbPV68KTC+EUcVxupxaONTVl1FgzsP9QVFHwIkD8Jbl+L2P7dbkABaPNXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdLux31K; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so624268966b.3
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Mar 2025 07:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742827616; x=1743432416; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hgWAiXWe+Nr62GUBiBemFvGG+t6s+T22pioakc7hWt4=;
-        b=MdLux31K3+lKCKNReG2Uj7Z9xDTpJl5EpWHY2opkPlO9NYK/4wHgep6+EoiyShIbp8
-         a22s4Pt45TaLQqXSN03FAZUHbWAWgCpr09j2z8duE1Jyqtom+owuT6+ePJaWA2lVsnYK
-         M8HJFBWwOGwhpJch0fAgn+PtA2rE9Q0wBXBfqexvp8T254VYiMPr26kTRyvlfOqw6ThW
-         bgnV4l659l0ZY/6T5DivThwJimiRegs7rHLENc5zR8GSqaz4uZY9xtVj0MEVSJ2kTAHa
-         Vp+UD/d9kr1bxp5OjGOw4Nqc2+QjeJzuFMxjCRACoyw49fbPRqqwvpY8T/bvxhXRasMh
-         8NyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742827616; x=1743432416;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hgWAiXWe+Nr62GUBiBemFvGG+t6s+T22pioakc7hWt4=;
-        b=oIQTQBYw3hFOIESyLpRPymf93ZMjLMC0Zasko9DMGwoK4rBd9Y3pz4GmeTIjeMslju
-         Z+F4o1vBEE6HwN2bIghX3KOQLXj02IZoLyL5fvhTbOxX84ff4SsKdKSlUWPTfaXlWTep
-         c+tMbrQMD4BsArRzJGnxejBJdTm/MbLtRU6QKNDGZc6xRjZmY1LGIa24zPzTe7yfa5Ls
-         NO2EnmEkJjGileCZvyrYWn/51znVH1IXCifwrpEAjIXn0bqGGN2VRn5hmDf7JldfvaQs
-         oqqUB2b4GNGog3EY0jmxexhJLpOtKLLgLDceN/YrWUGBXtYYmYZQ6VTNXoduZr7Gs6FO
-         P+Pw==
-X-Gm-Message-State: AOJu0Yw2txy7od3YxYJ+08CwVpwcRZ5HN/sVKdQ9PfNixjapvd7HciRE
-	3bzeL+sLV2Qawdaky6e1BNF2/AzMczovSuGI+hZre0Bz4G9e0Up0xMGjemdHcykRRRouj4eT+UB
-	OznnVpK2zxAa0lS+b/JstoRfAVzhKNg216Ig=
-X-Gm-Gg: ASbGncv7YH7EFOKbAS4Vw/avSbiElWd6RfWP+S9+bbtYgtwVmQTTwe63QZ9IVqSN8ZG
-	QivsqrDo/66PmIJPc0Q8d6AefHvlws4pTXXoWYcNfYI8GDbgiC55KcGuInS+IRQQqHZqPLF1Arc
-	YFSIzOMAM/Vw+ckmAjg5nW1eagIw==
-X-Google-Smtp-Source: AGHT+IGvjACfWV0c0OVi9G7AsA1iDuaAsrSlCj2/EdS4JleoEngD2rUW2OYzcgl/YC+4J1ZjB+tMcLXfK5+X9UdAfvE=
-X-Received: by 2002:a17:907:f50a:b0:ac3:45b5:d325 with SMTP id
- a640c23a62f3a-ac3f253011emr1386077666b.52.1742827615246; Mon, 24 Mar 2025
- 07:46:55 -0700 (PDT)
+	s=arc-20240116; t=1742835272; c=relaxed/simple;
+	bh=5I9LbMBxstUgKyeIA6cfBMkjqUMcx4Rgcbe/l4wXkfY=;
+	h=From:Date:MIME-Version:Content-Type:To:Message-ID:In-Reply-To:
+	 References:Subject; b=nS3UbaFFtao+zYk3i9rYx0IH6x7yhrXOHbIO2JzReOEDkxQ4QDz9itHGT51cnHfY/IA5N7dVfHiODU1dGzssvaLvTqczA44P9UIDGyfSM1hEpXVxUKSHbdDsnt6oOQe3LhE5dgzb7L1snf3Mq0wkNSkxV+Ak5ZmdwinRCZDiDvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+9CaZxF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404DAC4CEE9;
+	Mon, 24 Mar 2025 16:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742835272;
+	bh=5I9LbMBxstUgKyeIA6cfBMkjqUMcx4Rgcbe/l4wXkfY=;
+	h=From:Date:To:In-Reply-To:References:Subject:From;
+	b=u+9CaZxFsNJ3y8Whwh3pNSyZ57Z1Hr/gF3ubLtx1xUAJyg+y71oIQYA7XDLVe+DrI
+	 zETkGcXi0AAbP3SUgVEGGDu+A9q4SrCJYYTLHDCSDlQrCheLkwlViGxar3vrm2jQwv
+	 m6SgwgGp+uk6FS6gikhY3UyIUKhvFlOTv7LkE25ADyhNH6tTcUdB5E3I1tcXnZxIt2
+	 fYfisORcsUdNcBs44SP1JSckgsG+Bx/uBndoGNKqeRJkqFyFtW+cFByjFL19uzlV+t
+	 Sr/SzcGkxlOReWLnrnigosRR1vDK3iPcP83TRvqp8RxnGloawhhkDAQsK5MxRPc0Hy
+	 9baItlu4v213A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7B923380664D;
+	Mon, 24 Mar 2025 16:55:09 +0000 (UTC)
+From: Lucas via Bugspray Bot <bugbot@kernel.org>
+Date: Mon, 24 Mar 2025 16:55:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Mon, 24 Mar 2025 15:46:19 +0100
-X-Gm-Features: AQ5f1Jp35B_4IAnWbZ3UHavtPEM-jtPW4so1v6H7mXmECTiYBy3gxluzpXz_hb0
-Message-ID: <CANH4o6O=7++U9L1mqBr5hSSQkJ0fjAR2QQdoqxYwKash+sfYSQ@mail.gmail.com>
-Subject: Frustration with Debian: NFSv4 has become optional, on separate DVD
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: linux-nfs@vger.kernel.org, iommu@lists.linux.dev, trondmy@kernel.org, 
+ chuck.lever@oracle.com, cel@kernel.org, robin.murphy@arm.com, 
+ anna@kernel.org, jlayton@kernel.org
+Message-ID: <20250324-b219865c5-7644f6e6d9a5@bugzilla.kernel.org>
+In-Reply-To: <20250313-b219865c0-2a34cbc6e249@bugzilla.kernel.org>
+References: <20250313-b219865c0-2a34cbc6e249@bugzilla.kernel.org>
+Subject: Re: NFS Server Issues with RDMA in Kernel 6.13.6
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: NFSD
+X-Mailer: bugspray 0.1-dev
 
-Hello,
+Lucas writes via Kernel.org Bugzilla:
 
-sorry for doing this here, but maybe others will join in this complaint:
+Apologies for the silly question, I’m not a kernel developer. Is there any update on this issue, or is the fix included in the latest 6.14 kernel? If there’s anything I can do to help, such as running more tests, please let me know.
 
-I tried to install Debian Bookworm. Turns out the default installation
-no longer includes the nfs-common+nfs4-acl-tools packages - they are
-now OPTIONAL, on a different DVD.
+View: https://bugzilla.kernel.org/show_bug.cgi?id=219865#c5
+You can reply to this message to join the discussion.
+-- 
+Deet-doot-dot, I am a bot.
+Kernel.org Bugzilla (bugspray 0.1-dev)
 
-So that feels like NFSv4 has been downgraded as optional,
-non-essential, drop-with-next-release-because-no-one-cares part of the
-Debian ecosystem.
-
-What a disgrace
-
-Thanks,
-Martin
 
