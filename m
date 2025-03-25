@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-10853-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10854-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A572A708A4
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:00:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BA78A708C1
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:05:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A3B03AE225
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:58:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43B02164FE6
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:04:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8105253B62;
-	Tue, 25 Mar 2025 17:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2AF26463E;
+	Tue, 25 Mar 2025 18:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVLPbAJK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oyu00OIk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CA218A6AB
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 17:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5714F26463D
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 18:04:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925547; cv=none; b=Zr6POQiU0LkdUMSiGAX/I4HjRIF8q9htGSBnAy7y98gHorvQk5P8a54I8YuQJcbcY5YvR5G91doFAKTTq5Q8IQAdgGcYZ5NqtfCl3C7V71rHvjbsc4J8LjqajgBItCUdbOdAAkU3zrIJkfZuUw2i+6poHqQdxvsAmNVp583awQQ=
+	t=1742925879; cv=none; b=NfMGHB9ka9CDjVM2W/2P/Y8P3728vmCBA5RMjJBItFqK7CSw6slUWE5XhK1yGnkEZa9sKg4cyCePqgeE2Q2aHEMH42zZBZp7d/ZQ2UEBdL8JXcYyG9U3xXKlOb/Gv7LWLx4v3hg4TQc8SFBP32tqjrN6gNjOd5x9WHsq9uq157U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925547; c=relaxed/simple;
-	bh=YDv+fr7uTXcA5rLlonJO6eZdtwgJe1Eq0guhx795Ibc=;
+	s=arc-20240116; t=1742925879; c=relaxed/simple;
+	bh=cWAnZMyIMZtTLSiunyT2O9rbYcML8qrBw3GrUgNHHLI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LT5mnfEdaTUdn6mfgqLngpp7UcLGo7rPfEifk/5Nh9+/U83+L0RDWqm++P5uO3eeHuVKUyncI4vkRfeZvf9199PggmN5aKiHZz+fFZJ2JIQMZp+BAj790t162EswvhNnuikxMYm8F9TGYK0qlLceNQM9li+rRtWYQjloE455B28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVLPbAJK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC714C4CEE4;
-	Tue, 25 Mar 2025 17:59:05 +0000 (UTC)
+	 Content-Type:MIME-Version; b=jINqoQ4ur8LGV/MyIELV5zOSu3UnVJU++mmaGKHQEXlc/7HvNPA4INeB9AwgAsWWdD8LbVF9OP92eimuym6Aq3OZPsh8y4IHZxtuYoRIKoBbEkR/EM4j/yfQjRjI2agbF6T666qEuXRVmY1KHiHSbAmt8SLYZntKLYDJ9z/KPdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oyu00OIk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7101CC4CEED;
+	Tue, 25 Mar 2025 18:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742925546;
-	bh=YDv+fr7uTXcA5rLlonJO6eZdtwgJe1Eq0guhx795Ibc=;
+	s=k20201202; t=1742925878;
+	bh=cWAnZMyIMZtTLSiunyT2O9rbYcML8qrBw3GrUgNHHLI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=XVLPbAJKFO2fWJ4zP7oTBwV0AD3TbpdDswOr+B310exRkdFsYuBLpbtref8doaUhJ
-	 PLPfJFm5qj8VQrRKzs5r9cBwu1NDM3Q9Kp3qlr7eY5xJaxg8V7w3MHQpCj0usgNwYm
-	 fnKU3CRDWVKi9X4HzycLjtrRRuk1aqxURAYt1f3jLYzn2hQfwm7G0oQr4B9AlmaWMZ
-	 QZZzydCQKZFtGQ7jtGBt3uRaJB9FwpVsWiWThq8M9EyErApuhT5g7JPnVH8r6SfeJU
-	 KgtQSRP1z2hD6Rb63Y/uRCqtQSqoiHeEnDZHnz2Np+PPeBjUaA65jSTDQqbRZRWYuo
-	 TOHBnedv3G0rQ==
-Message-ID: <202d8ae85ba2b1cfb454356a2781ef5b31ff37be.camel@kernel.org>
-Subject: Re: [PATCH v2 3/4] NFSv4: clp->cl_cons_state < 0 signifies an
- invalid nfs_client
+	b=Oyu00OIkXwyJEg5O/E1IFjrT+uNzd2JAEE1xMDDUXDLRQe6GgH4XPQu6K/vpKwvaN
+	 qBYN1R38gKkgONmDathdNdBX4vtJOpNdxcFcYPSBYKWyS8aOqBYkYby6XUspwbM9or
+	 Lv4dAFns0w2HDWRjInELBViqjLGiPmLaL58z45LZzhgvY2A0P4XJusN6+n2RLb7mX+
+	 6UouHZmBNMeeodx4EZ1rfTyQt7TDsytGRgqdK2v84DUDq8rHjvHtHbPheQhIUHlBGA
+	 qFZRsm67fNargmLAzXewPAtvw+sUjA7kceaCMGe1kjum/9ra5U+nE3wu4eUtwHizp/
+	 nnXa9hYKO4SeA==
+Message-ID: <3c94f6980a3bb02c1106ff8c44e8dad39c249299.camel@kernel.org>
+Subject: Re: [PATCH v2 4/4] NFSv4: Treat ENETUNREACH errors as fatal for
+ state recovery
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, linux-nfs@vger.kernel.org
 Cc: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 25 Mar 2025 13:59:04 -0400
-In-Reply-To: <56bc4d7e614a6d9d0aa520c71bd0ffb102e3ef08.1742919341.git.trond.myklebust@hammerspace.com>
+Date: Tue, 25 Mar 2025 14:04:37 -0400
+In-Reply-To: <b1989a8316da4dcaaaaedad3b9d234d212be1083.1742919341.git.trond.myklebust@hammerspace.com>
 References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-	 <56bc4d7e614a6d9d0aa520c71bd0ffb102e3ef08.1742919341.git.trond.myklebust@hammerspace.com>
+	 <b1989a8316da4dcaaaaedad3b9d234d212be1083.1742919341.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,43 +138,41 @@ MIME-Version: 1.0
 On Tue, 2025-03-25 at 12:17 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> If someone calls nfs_mark_client_ready(clp, status) with a negative
-> value for status, then that should signal that the nfs_client is no
-> longer valid.
+> If a containerised process is killed and causes an ENETUNREACH or
+> ENETDOWN error to be propagated to the state manager, then mark the
+> nfs_client as being dead so that we don't loop in functions that are
+> expecting recovery to succeed.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/nfs4state.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/nfs/nfs4state.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >=20
 > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 542cdf71229f..738eb2789266 100644
+> index 738eb2789266..14ba3f96e6fc 100644
 > --- a/fs/nfs/nfs4state.c
 > +++ b/fs/nfs/nfs4state.c
-> @@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct nfs_client =
-*clp)
->  	struct rpc_clnt *clnt =3D clp->cl_rpcclient;
->  	bool swapon =3D false;
-> =20
-> -	if (clnt->cl_shutdown)
-> +	if (clnt->cl_shutdown || clp->cl_cons_state < 0)
+> @@ -2739,7 +2739,15 @@ static void nfs4_state_manager(struct nfs_client *=
+clp)
+>  	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
+>  			" with error %d\n", section_sep, section,
+>  			clp->cl_hostname, -status);
+> -	ssleep(1);
+> +	switch (status) {
+> +	case -ENETDOWN:
+> +	case -ENETUNREACH:
+> +		nfs_mark_client_ready(clp, -EIO);
+> +		break;
 
-Would it be simpler to just set cl_shutdown when this occurs instead of
-having to check cl_cons_state as well?
-
->  		return;
-> =20
->  	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
-> @@ -1403,7 +1403,7 @@ int nfs4_schedule_stateid_recovery(const struct nfs=
-_server *server, struct nfs4_
->  	dprintk("%s: scheduling stateid recovery for server %s\n", __func__,
->  			clp->cl_hostname);
->  	nfs4_schedule_state_manager(clp);
-> -	return 0;
-> +	return clp->cl_cons_state < 0 ? clp->cl_cons_state : 0;
->  }
->  EXPORT_SYMBOL_GPL(nfs4_schedule_stateid_recovery);
-> =20
+Should this be conditional on clnt->cl_netunreach_fatal being true?
+=20
+> +	default:
+> +		ssleep(1);
+> +		break;
+> +	}
+>  out_drain:
+>  	memalloc_nofs_restore(memflags);
+>  	nfs4_end_drain_session(clp);
 
 --=20
 Jeff Layton <jlayton@kernel.org>
