@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-10852-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10853-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADDC6A70897
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:56:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A572A708A4
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:00:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37A5F176140
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:56:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A3B03AE225
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:58:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2E3263F46;
-	Tue, 25 Mar 2025 17:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8105253B62;
+	Tue, 25 Mar 2025 17:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKbBHcRY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVLPbAJK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0815826159A
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 17:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CA218A6AB
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 17:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925378; cv=none; b=hZc1Tdr1rUyUyXaB+QXA6Ul+8VG2dojFrhYM5eGbMgB+WXwF7NM28vQimskRkAIih4MlqR1rq4Rzhga5wgfRKsPALIPD5bzgUR1DGWjO4clQQpvF1YtIDyocrLfxUsGX0f1XeU5T+I1XkLulgvmMhOCq25Bcjgpw7pELrwvcRNY=
+	t=1742925547; cv=none; b=Zr6POQiU0LkdUMSiGAX/I4HjRIF8q9htGSBnAy7y98gHorvQk5P8a54I8YuQJcbcY5YvR5G91doFAKTTq5Q8IQAdgGcYZ5NqtfCl3C7V71rHvjbsc4J8LjqajgBItCUdbOdAAkU3zrIJkfZuUw2i+6poHqQdxvsAmNVp583awQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925378; c=relaxed/simple;
-	bh=uL/SBPpRorWiNh6pZASXQwy2mFrlT1q3QDACA1r71nM=;
+	s=arc-20240116; t=1742925547; c=relaxed/simple;
+	bh=YDv+fr7uTXcA5rLlonJO6eZdtwgJe1Eq0guhx795Ibc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MkrMuY9f2P5j73XJ2APChVIMcOxCrbaL3aCuRBPInbz1WiFXKJLPXnvcSkEGAr8H9wYbQs4r4tidZWI6v1K0AiZVv3zaFogx92jKxYJ4ksk9hW41jKSZeKrtBYXdMnEJE/QcPjuib67TQ3dH0A1ovEj9k6FRskZc4BvWbobbQlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKbBHcRY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93CFC4CEE4;
-	Tue, 25 Mar 2025 17:56:16 +0000 (UTC)
+	 Content-Type:MIME-Version; b=LT5mnfEdaTUdn6mfgqLngpp7UcLGo7rPfEifk/5Nh9+/U83+L0RDWqm++P5uO3eeHuVKUyncI4vkRfeZvf9199PggmN5aKiHZz+fFZJ2JIQMZp+BAj790t162EswvhNnuikxMYm8F9TGYK0qlLceNQM9li+rRtWYQjloE455B28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVLPbAJK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC714C4CEE4;
+	Tue, 25 Mar 2025 17:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742925377;
-	bh=uL/SBPpRorWiNh6pZASXQwy2mFrlT1q3QDACA1r71nM=;
+	s=k20201202; t=1742925546;
+	bh=YDv+fr7uTXcA5rLlonJO6eZdtwgJe1Eq0guhx795Ibc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AKbBHcRYGAQogMqwk06xIuVl5O3JTk0xfIgaTjrBXXb16x/kgQnUt1E3LmkzAdzU9
-	 LITGCAIZ6KW2+dB6VgzkKWbP0tELIRauJr0ycKGJ61HF3JpYsqB3/CuIwQ2eqfrFE+
-	 DtlMN/BT1NnDXKQmUfYcb0F/sUDzhfAleG1gxA8XJachOjezr/tNvcjd0kaZZYwg1P
-	 faIHBNPx+QZ2Q+FyixJ9zp0GakHHbP3SY3y/dfMho2CTUHBUD7Ckh2tjiZqL9wTc3s
-	 S1h9YyLH4z4+PHb1k5mq3bsRvsfPlWNA6mTStErA+LgkneVj2m8ddSh13ThXhk3n2h
-	 kMxUq8a/8Expw==
-Message-ID: <ae9b5632cd01a409b08446854997b52401c21980.camel@kernel.org>
-Subject: Re: [PATCH v2 1/4] SUNRPC: rpcbind should never reset the port to
- the value '0'
+	b=XVLPbAJKFO2fWJ4zP7oTBwV0AD3TbpdDswOr+B310exRkdFsYuBLpbtref8doaUhJ
+	 PLPfJFm5qj8VQrRKzs5r9cBwu1NDM3Q9Kp3qlr7eY5xJaxg8V7w3MHQpCj0usgNwYm
+	 fnKU3CRDWVKi9X4HzycLjtrRRuk1aqxURAYt1f3jLYzn2hQfwm7G0oQr4B9AlmaWMZ
+	 QZZzydCQKZFtGQ7jtGBt3uRaJB9FwpVsWiWThq8M9EyErApuhT5g7JPnVH8r6SfeJU
+	 KgtQSRP1z2hD6Rb63Y/uRCqtQSqoiHeEnDZHnz2Np+PPeBjUaA65jSTDQqbRZRWYuo
+	 TOHBnedv3G0rQ==
+Message-ID: <202d8ae85ba2b1cfb454356a2781ef5b31ff37be.camel@kernel.org>
+Subject: Re: [PATCH v2 3/4] NFSv4: clp->cl_cons_state < 0 signifies an
+ invalid nfs_client
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, linux-nfs@vger.kernel.org
 Cc: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 25 Mar 2025 13:56:15 -0400
-In-Reply-To: <8b9a709ef321aa246b9ef00a8bcfa71a77df4245.1742919341.git.trond.myklebust@hammerspace.com>
+Date: Tue, 25 Mar 2025 13:59:04 -0400
+In-Reply-To: <56bc4d7e614a6d9d0aa520c71bd0ffb102e3ef08.1742919341.git.trond.myklebust@hammerspace.com>
 References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-	 <8b9a709ef321aa246b9ef00a8bcfa71a77df4245.1742919341.git.trond.myklebust@hammerspace.com>
+	 <56bc4d7e614a6d9d0aa520c71bd0ffb102e3ef08.1742919341.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,32 +138,44 @@ MIME-Version: 1.0
 On Tue, 2025-03-25 at 12:17 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> If we already had a valid port number for the RPC service, then we
-> should not allow the rpcbind client to set it to the invalid value '0'.
+> If someone calls nfs_mark_client_ready(clp, status) with a negative
+> value for status, then that should signal that the nfs_client is no
+> longer valid.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  net/sunrpc/rpcb_clnt.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  fs/nfs/nfs4state.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-> index 102c3818bc54..53bcca365fb1 100644
-> --- a/net/sunrpc/rpcb_clnt.c
-> +++ b/net/sunrpc/rpcb_clnt.c
-> @@ -820,9 +820,10 @@ static void rpcb_getport_done(struct rpc_task *child=
-, void *data)
->  	}
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 542cdf71229f..738eb2789266 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct nfs_client =
+*clp)
+>  	struct rpc_clnt *clnt =3D clp->cl_rpcclient;
+>  	bool swapon =3D false;
 > =20
->  	trace_rpcb_setport(child, map->r_status, map->r_port);
-> -	xprt->ops->set_port(xprt, map->r_port);
-> -	if (map->r_port)
-> +	if (map->r_port) {
-> +		xprt->ops->set_port(xprt, map->r_port);
->  		xprt_set_bound(xprt);
-> +	}
->  }
-> =20
->  /*
+> -	if (clnt->cl_shutdown)
+> +	if (clnt->cl_shutdown || clp->cl_cons_state < 0)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Would it be simpler to just set cl_shutdown when this occurs instead of
+having to check cl_cons_state as well?
+
+>  		return;
+> =20
+>  	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> @@ -1403,7 +1403,7 @@ int nfs4_schedule_stateid_recovery(const struct nfs=
+_server *server, struct nfs4_
+>  	dprintk("%s: scheduling stateid recovery for server %s\n", __func__,
+>  			clp->cl_hostname);
+>  	nfs4_schedule_state_manager(clp);
+> -	return 0;
+> +	return clp->cl_cons_state < 0 ? clp->cl_cons_state : 0;
+>  }
+>  EXPORT_SYMBOL_GPL(nfs4_schedule_stateid_recovery);
+> =20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
