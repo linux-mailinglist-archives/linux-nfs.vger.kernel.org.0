@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-10851-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10852-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21C10A7089A
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:57:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADDC6A70897
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:56:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D9883ADF0D
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:55:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37A5F176140
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:56:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7D326159A;
-	Tue, 25 Mar 2025 17:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F2E3263F46;
+	Tue, 25 Mar 2025 17:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWteTJUN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AKbBHcRY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0959E1F2B82
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 17:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0815826159A
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 17:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925362; cv=none; b=cCp1NB+A927HTqdQEo7pTkxBzs/ps33szXlbZpA1e84zY4aG27o7Oa8qJxJmXlbhKK1Th3GjXIgIdiS4aFogW+whxIegzbFAMiF85E6bMQV9RytVv8EUyyDFkvKyqNbSXbqH6tLAS9X58DDRBpRWdq2/TjNFjaxuKgrRegoZOEQ=
+	t=1742925378; cv=none; b=hZc1Tdr1rUyUyXaB+QXA6Ul+8VG2dojFrhYM5eGbMgB+WXwF7NM28vQimskRkAIih4MlqR1rq4Rzhga5wgfRKsPALIPD5bzgUR1DGWjO4clQQpvF1YtIDyocrLfxUsGX0f1XeU5T+I1XkLulgvmMhOCq25Bcjgpw7pELrwvcRNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925362; c=relaxed/simple;
-	bh=+2M/6UQ9HOSkQKiok5MxqJBAFKXvx94vd3e4XS+5Ph4=;
+	s=arc-20240116; t=1742925378; c=relaxed/simple;
+	bh=uL/SBPpRorWiNh6pZASXQwy2mFrlT1q3QDACA1r71nM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nLMYPTDOlginfWGEAmqqjn468v9RIXmPvgT8gYoI4SILuwpEOHFA6VJwaBTLUA6yllznN1Uw/d8GwAABMUsKo3n6QHtqpF+xRedZ8GNmw2cJt88+iDNtvYRDTqidrKURUupbMElQHazDC+QZVl8fUqnzd65aT6imKD8UnzjDvIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWteTJUN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D09C4CEEA;
-	Tue, 25 Mar 2025 17:56:00 +0000 (UTC)
+	 Content-Type:MIME-Version; b=MkrMuY9f2P5j73XJ2APChVIMcOxCrbaL3aCuRBPInbz1WiFXKJLPXnvcSkEGAr8H9wYbQs4r4tidZWI6v1K0AiZVv3zaFogx92jKxYJ4ksk9hW41jKSZeKrtBYXdMnEJE/QcPjuib67TQ3dH0A1ovEj9k6FRskZc4BvWbobbQlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AKbBHcRY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93CFC4CEE4;
+	Tue, 25 Mar 2025 17:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742925361;
-	bh=+2M/6UQ9HOSkQKiok5MxqJBAFKXvx94vd3e4XS+5Ph4=;
+	s=k20201202; t=1742925377;
+	bh=uL/SBPpRorWiNh6pZASXQwy2mFrlT1q3QDACA1r71nM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cWteTJUN2tYyI/40Bozp32hJ1HB7xAWIStX+89VmlmLCUAUJoqrWWtWaceMnS3QA3
-	 MpeJreLsJMVSN+BSPiTmBIk0IlhJGGaNzZaf7kSdhCtlDs6b7E2L4NGIMaNaI8qYF6
-	 6pJNtWTkj4/Y40onrBbGDl8XaGnO7AuxAYtliSd5GPoskpzLRDtHK5L2aZNXZiwwtQ
-	 Ezc2GC4jsxSrKeRevBUla5BEoes7UwYe4YIL7lPi1KWWIzyozx3CGx3CCRmbkDTEbQ
-	 at1raMWZZ7VVZT524GG0WPW5Z0Gjz4eXYKkik4js3M2oONjo2DYtA6IfmLsIqnwk2f
-	 pHq/ynkadSCsQ==
-Message-ID: <25680d0e03c82061f9662473f6c7767449e21e1a.camel@kernel.org>
-Subject: Re: [PATCH v2 2/4] SUNRPC: rpc_clnt_set_transport() must not change
- the autobind setting
+	b=AKbBHcRYGAQogMqwk06xIuVl5O3JTk0xfIgaTjrBXXb16x/kgQnUt1E3LmkzAdzU9
+	 LITGCAIZ6KW2+dB6VgzkKWbP0tELIRauJr0ycKGJ61HF3JpYsqB3/CuIwQ2eqfrFE+
+	 DtlMN/BT1NnDXKQmUfYcb0F/sUDzhfAleG1gxA8XJachOjezr/tNvcjd0kaZZYwg1P
+	 faIHBNPx+QZ2Q+FyixJ9zp0GakHHbP3SY3y/dfMho2CTUHBUD7Ckh2tjiZqL9wTc3s
+	 S1h9YyLH4z4+PHb1k5mq3bsRvsfPlWNA6mTStErA+LgkneVj2m8ddSh13ThXhk3n2h
+	 kMxUq8a/8Expw==
+Message-ID: <ae9b5632cd01a409b08446854997b52401c21980.camel@kernel.org>
+Subject: Re: [PATCH v2 1/4] SUNRPC: rpcbind should never reset the port to
+ the value '0'
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, linux-nfs@vger.kernel.org
 Cc: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 25 Mar 2025 13:55:59 -0400
-In-Reply-To: <f6c87857690a66e7f1ee684c755f6c97d8913d64.1742919341.git.trond.myklebust@hammerspace.com>
+Date: Tue, 25 Mar 2025 13:56:15 -0400
+In-Reply-To: <8b9a709ef321aa246b9ef00a8bcfa71a77df4245.1742919341.git.trond.myklebust@hammerspace.com>
 References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-	 <f6c87857690a66e7f1ee684c755f6c97d8913d64.1742919341.git.trond.myklebust@hammerspace.com>
+	 <8b9a709ef321aa246b9ef00a8bcfa71a77df4245.1742919341.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,40 +138,32 @@ MIME-Version: 1.0
 On Tue, 2025-03-25 at 12:17 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> The autobind setting was supposed to be determined in rpc_create(),
-> since commit c2866763b402 ("SUNRPC: use sockaddr + size when creating
-> remote transport endpoints").
+> If we already had a valid port number for the RPC service, then we
+> should not allow the rpcbind client to set it to the invalid value '0'.
 >=20
-
-Should this have:
-
-    Fixes: c2866763b402 ("SUNRPC: use sockaddr + size when creating remote =
-transport endpoints")
-
-?
-
-Though I guess that commit is old enough that maybe it doesn't matter.
-
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  net/sunrpc/clnt.c | 3 ---
->  1 file changed, 3 deletions(-)
+>  net/sunrpc/rpcb_clnt.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 1cfaf93ceec1..6f75862d9782 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -270,9 +270,6 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct=
- rpc_clnt *clnt,
->  	old =3D rcu_dereference_protected(clnt->cl_xprt,
->  			lockdep_is_held(&clnt->cl_lock));
+> diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
+> index 102c3818bc54..53bcca365fb1 100644
+> --- a/net/sunrpc/rpcb_clnt.c
+> +++ b/net/sunrpc/rpcb_clnt.c
+> @@ -820,9 +820,10 @@ static void rpcb_getport_done(struct rpc_task *child=
+, void *data)
+>  	}
 > =20
-> -	if (!xprt_bound(xprt))
-> -		clnt->cl_autobind =3D 1;
-> -
->  	clnt->cl_timeout =3D timeout;
->  	rcu_assign_pointer(clnt->cl_xprt, xprt);
->  	spin_unlock(&clnt->cl_lock);
+>  	trace_rpcb_setport(child, map->r_status, map->r_port);
+> -	xprt->ops->set_port(xprt, map->r_port);
+> -	if (map->r_port)
+> +	if (map->r_port) {
+> +		xprt->ops->set_port(xprt, map->r_port);
+>  		xprt_set_bound(xprt);
+> +	}
+>  }
+> =20
+>  /*
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
