@@ -1,106 +1,84 @@
-Return-Path: <linux-nfs+bounces-10844-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10845-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66BA3A70469
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 15:59:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC8BFA7069A
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 17:19:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35737188D393
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 14:59:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1359177453
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 16:18:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DEE325A648;
-	Tue, 25 Mar 2025 14:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F9925D204;
+	Tue, 25 Mar 2025 16:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THjc/2tX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTgT9Ctm"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17D6A2D;
-	Tue, 25 Mar 2025 14:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF8225C71F
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 16:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742914752; cv=none; b=A5KMpQwLaAmvDnIjCmPpa2Wex43neZsQR/G2PMGj7Ps9rtVM9Samd186+C3hY+sTlClPHdPb09HbXHunMo+PBTFxWzD+EMa9+O6pdiL6lqJnxsB5jp457HwhO9lGQ+qPJH/LzX4TDdudQdkKVs01uOXKWaVI3ZmrySB8B2zn7+w=
+	t=1742919466; cv=none; b=VmZgOQIibMFJJM90O09dboiBWVHEeQ2++uM4K+ElhrC/nUnp+2i/XiqQK4kbf7R/zYS7KOJzMomiZg+qm9Ui8zBSy2HQW0rGOgYYoBwtAw76l3p5BSvKegwT9BzamZLsypJfw6wUSqPkiNQ0lJQ0Yyd0rQ0oW2QXlcQjPVnBVHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742914752; c=relaxed/simple;
-	bh=GG0tU6LAS0IFpbXq1LKTAjBG2Gdzv1j6t3kcYYdww/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FH6UhMFgOIS8h3/k/aLAzAh3l/TbqcQEFu2szWm5ZWSUbvOmH9oX+1Zy4NuYtlTz34CF2tXmZy8+yLOuQ2lJ++OhuvVi36LfLIMSBlDC1Bl5gzehX0mbPVRIYxwq+UmeeGm3AUUlHaGUO8aB54MlQv1ukeopUXMYKa5lUfHOLdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THjc/2tX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21EEC4CEE4;
-	Tue, 25 Mar 2025 14:59:08 +0000 (UTC)
+	s=arc-20240116; t=1742919466; c=relaxed/simple;
+	bh=QsZDdBnkTuGhUWBCzg983UNPUZZmhi66LsCjLD4iZ1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qMX0Ho/PG9vv/w44MO4eHG8YTeWYosUvsGmc4jY0MkR50lkEW3Y88iHZxiJqH4eOpsS01q6/3ufCMZ6QDhiKaALWpEVDpwGizvqpoCjgPY8GjjcpB7S0yDV1c5cPQ+iKyPgWSYIRkmk9RF00eVvJTCawj2KpKaWuj5t5YoVZaFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTgT9Ctm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6565EC4CEED;
+	Tue, 25 Mar 2025 16:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742914750;
-	bh=GG0tU6LAS0IFpbXq1LKTAjBG2Gdzv1j6t3kcYYdww/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=THjc/2tXjglNxUVBg49jtkwvKg3Q6v6ExEDsXkormSA4o1E094osQbHG1L50sjLLN
-	 l22BzJ8t7UVC2UrJoZLPg9zOiCWClpXJc+1MiZW2o8M2ZUwZ+sdfLn8ODLijRBmLyM
-	 nbNwZ8QXS2rYaiLARjuJE1Y9KkqGCZJbzWWWUrchlrPN6rG+xnrURxCbSyHdA9OjgM
-	 3zyemc6xcpwYS0I+6VPkrNZorSlFQVszix6P7NhomKeCSqwHPdWwOPAj+yQCsyOPFQ
-	 iv05QgxhyTnDgDkHjkXbFrGnS0LQ5+8X4+QaHzpNrtncIZDoFmLPH83iA7RBEVJ+XS
-	 V1vlOouXQ4TxQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-next@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Amir Goldstein <amir73il@gmail.com>,
-	NeilBrown <neil@brown.name>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: Re: (subset) [PATCH 01/10] exportfs: add module description
-Date: Tue, 25 Mar 2025 15:58:29 +0100
-Message-ID: <20250325-typisch-absicht-8fd692d68fe6@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
-References: <20250324173242.1501003-1-arnd@kernel.org>
+	s=k20201202; t=1742919465;
+	bh=QsZDdBnkTuGhUWBCzg983UNPUZZmhi66LsCjLD4iZ1s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nTgT9CtmVe60ITrKJ9RE3le65cYzbfJVkJxhnmXUT3BG6iCfMCKBvfB2eG6dlVexD
+	 atxiNGN7o/XDr/g2GBsc4oWcTtHxL6inYMqeiGs0oYs9T6NRMzdUZCU2wAFlX3D+LI
+	 Uwh+PxzPSUcdk5e2mPDC/Qf1HC+ZLp9BgCFmluEJxGoEL0lJrD6jgQcN1lxQX/dx+v
+	 TVZuJNaIYY18UD747QZZGFfmy1VVOmkSOBeV8HwM/qdQsaHLpeY8MoCaipW+oVqidO
+	 zcAcngH3IXGVDLfmNbHrCPfiBtTMu64COKOFkWfMfdPmm2JVCmRpFH1EPwJFd8yRfs
+	 tSQGZBRdKFyYg==
+From: trondmy@kernel.org
+To: linux-nfs@vger.kernel.org
+Cc: Jeff Layton <jlayton@kernel.org>,
+	Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH v2 0/4] Ensure that ENETUNREACH terminates state recovery
+Date: Tue, 25 Mar 2025 12:17:40 -0400
+Message-ID: <cover.1742919341.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1092; i=brauner@kernel.org; h=from:subject:message-id; bh=GG0tU6LAS0IFpbXq1LKTAjBG2Gdzv1j6t3kcYYdww/0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ/OrLL/f3quYkNWyV8ZiSd/XfmfJrdBb2wCZYP4n29h FU9JD6rdpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAExE8CTDP3VWP6lba9iS9mut ubm85d4jVuMnpgLu2Q86Ij4KJV83DGf4wz3h3Vr5COGVnxsEDFav5Z9Tt9qWmcc7+GbgEq6F33e 85wMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Mar 2025 18:32:26 +0100, Arnd Bergmann wrote:
-> Every loadable module should have a description, to avoid a warning such as:
-> 
-> WARNING: modpost: missing MODULE_DESCRIPTION() in fs/exportfs/exportfs.o
-> 
-> 
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-I've removed mentioning of NFS from the module description because
-exportfs is now used for a lot more.
+With the recent patch series that caused containerised mounts which
+return ENETUNREACH or ENETDOWN errors to report fatal errors, we also
+want to ensure that the state manager thread also triggers fatal errors
+in the processes or threads that are waiting for recovery to complete.
 
 ---
+v2:
+ - Return EIO instead of ENETUNREACH in nfs4_wait_clnt_recover()
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Trond Myklebust (4):
+  SUNRPC: rpcbind should never reset the port to the value '0'
+  SUNRPC: rpc_clnt_set_transport() must not change the autobind setting
+  NFSv4: clp->cl_cons_state < 0 signifies an invalid nfs_client
+  NFSv4: Treat ENETUNREACH errors as fatal for state recovery
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+ fs/nfs/nfs4state.c     | 14 +++++++++++---
+ net/sunrpc/clnt.c      |  3 ---
+ net/sunrpc/rpcb_clnt.c |  5 +++--
+ 3 files changed, 14 insertions(+), 8 deletions(-)
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+-- 
+2.49.0
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[01/10] exportfs: add module description
-        https://git.kernel.org/vfs/vfs/c/e3206c4aa06f
 
