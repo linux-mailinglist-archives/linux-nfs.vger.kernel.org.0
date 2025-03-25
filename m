@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-10878-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10879-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD6F8A70CF9
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 23:35:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3CB5A70CFA
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 23:35:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 55E95175C11
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 22:35:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A911E3BB389
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 22:35:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6663426A08C;
-	Tue, 25 Mar 2025 22:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12F8E26A092;
+	Tue, 25 Mar 2025 22:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dL+CWGBh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwocNj84"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4264B1E1E05
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 22:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22251E1E05
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 22:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742942127; cv=none; b=fornh6LGw6KpAfV3s6S1ZsL7hI5o2tpVwjV4l3Zcep1klLIRv+ZC/MWG9aav4bpeKOevANIH0V+zNdXz5dP07JsVx3LaEwQ/S5et8Q42upR98fOWi96HsVICjnWJWMArin3kCOb2VooDt6FfAxt9cbDn8mxb0QZFhLqJlGYBduE=
+	t=1742942128; cv=none; b=oX6k3pozeOrGubq26o5coz7qsY8ICqPfZgD4nrkQTB2kunMAYN8LKQ5fyGxuI9O7kRbpRgmUgx80mVGEuKHSyZJWGXbv1Yj2W5yK/IJC6G2U1/mg4D1k782lgw5NeMLNZPTTuyxHxGJ0SALsve9CeWiucIyYYDAFJjpEK//ZnFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742942127; c=relaxed/simple;
-	bh=K7QEDIqXlGyjS1hIhlW1Y9CwsIMrcCHqp6+rAQeHiUQ=;
+	s=arc-20240116; t=1742942128; c=relaxed/simple;
+	bh=DcyQHC8NeXigx8LMQEI0+AqnIAX0ogTR8+S7SIXGt3Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SmrBMws1rrVUllo7Abr5INu/4J/eaZZOnEcE3bNdv/wxmHjokwessRGxMDCrxAFOW4NT3bzH9o9MCWuxjbzlvpdui8wHBN2JUsYHvcVsgG0zlMRgaDQGYGmcMjGE/21kpsXbsGvJhS7qKfo8zHPtKCJ+0jL2vV5tD8qZq8nBUQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dL+CWGBh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D0BC4CEEE;
+	 MIME-Version; b=ocON7nlBqBnpkFMHMPfeF+C9jU0X0VTo759zYp75etBD61Qj4OMfolyP0Em5lgfxrMfjpaVnrJPLd8gEOoh4nZw2XkuuesSmlXGpTCv7cmlVf9ysPkzuh9SyfwcCJ40ghWEWw/s520zqAIGBRjxnUjdfmFGB5oxAjT/g56nrIus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwocNj84; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC3A6C4CEE9;
 	Tue, 25 Mar 2025 22:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742942126;
-	bh=K7QEDIqXlGyjS1hIhlW1Y9CwsIMrcCHqp6+rAQeHiUQ=;
+	s=k20201202; t=1742942127;
+	bh=DcyQHC8NeXigx8LMQEI0+AqnIAX0ogTR8+S7SIXGt3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dL+CWGBh1FeYs9kLP5+2p3/fsBIDhUmXDY+MWwcgph7vFkZT/blvxyiJ3gwPjbFy7
-	 9GnfPHGw5JuWurZAeqIYKfplfNpToEzqRs5CRsQ+Yt9qxRntpE2j/PtVw0dB3YdbKO
-	 zh1j3cfWpH/g2zo4DEX6X9munEzU4fDHfdMm2GOIs/OJB2fIz7Qt1oLI5n3rEN0ClV
-	 HEqpY1ol74dvEcl0uZ5p/6eBSJJXLbjglqpa16/nHkQjX/iqs/TQoFRSwWY8Nru6gk
-	 m0ugnrWJk7XgWx5TPmLt15WtomW41cDLFQJThFmbHwOlCPvNg54pftpagDr4ny4EKT
-	 iUaZmSZ2zY5ww==
+	b=QwocNj84U0h7tp7kxY1yTSR60t5qO5BH/A7HxA//1GCi+Ik8hnDPWl1+SY2Gnhhk2
+	 jD76bogWbm+n8OePm1dgljJ9mr8Fpw358CXimAuRkOnEp2aqf7Q6fdQ9yI6uzvgBF4
+	 JJpxNDo0pKpw8mMma/As7Z9u5BgBy09Sye5IcVq3sAK4DZ2a+wNWFovY8wtVQvbIcJ
+	 I36spt6nP1x6CQ26SUq4irn2OaqzKJTuR6c7UV690LeU5M9kCNahJsEFYhRJHKlH10
+	 MOgeTwkwDgQ1joA5CmeUT1Aw360qh8k2kvjzGneb3yeZGtDi4KWxpQjFBCjS6bLZ6n
+	 XNIAqz4Sr+0DQ==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
 Cc: Jeff Layton <jlayton@kernel.org>,
 	Josef Bacik <josef@toxicpanda.com>,
 	Benjamin Coddington <bcodding@redhat.com>
-Subject: [PATCH v3 3/6] NFS: Shut down the nfs_client only after all the superblocks
-Date: Tue, 25 Mar 2025 18:35:20 -0400
-Message-ID: <1cefd7cbadf0eaec5bae66e0870cdb89c7120070.1742941932.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH v3 4/6] NFSv4: Further cleanups to shutdown loops
+Date: Tue, 25 Mar 2025 18:35:21 -0400
+Message-ID: <668e25098cb97187d084d5fa2916ddd4d2a68e00.1742941932.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1742941932.git.trond.myklebust@hammerspace.com>
 References: <cover.1742941932.git.trond.myklebust@hammerspace.com>
@@ -62,70 +62,41 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The nfs_client manages state for all the superblocks in the
-"cl_superblocks" list, so it must not be shut down until all of them are
-gone.
+Replace the tests for the RPC client being shut down with tests for
+whether the nfs_client is in an error state.
 
-Fixes: 7d3e26a054c8 ("NFS: Cancel all existing RPC tasks when shutdown")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/sysfs.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c  | 2 +-
+ fs/nfs/nfs4state.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index b30401b2c939..37cb2b776435 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -14,6 +14,7 @@
- #include <linux/rcupdate.h>
- #include <linux/lockd/lockd.h>
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 889511650ceb..50be54e0f578 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -9580,7 +9580,7 @@ static void nfs41_sequence_call_done(struct rpc_task *task, void *data)
+ 		return;
  
-+#include "internal.h"
- #include "nfs4_fs.h"
- #include "netns.h"
- #include "sysfs.h"
-@@ -228,6 +229,25 @@ static void shutdown_client(struct rpc_clnt *clnt)
- 	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
- }
+ 	trace_nfs4_sequence(clp, task->tk_status);
+-	if (task->tk_status < 0 && !task->tk_client->cl_shutdown) {
++	if (task->tk_status < 0 && clp->cl_cons_state >= 0) {
+ 		dprintk("%s ERROR %d\n", __func__, task->tk_status);
+ 		if (refcount_read(&clp->cl_count) == 1)
+ 			return;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 542cdf71229f..f1f7eaa97973 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
+ 	struct rpc_clnt *clnt = clp->cl_rpcclient;
+ 	bool swapon = false;
  
-+/*
-+ * Shut down the nfs_client only once all the superblocks
-+ * have been shut down.
-+ */
-+static void shutdown_nfs_client(struct nfs_client *clp)
-+{
-+	struct nfs_server *server;
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
-+		if (!(server->flags & NFS_MOUNT_SHUTDOWN)) {
-+			rcu_read_unlock();
-+			return;
-+		}
-+	}
-+	rcu_read_unlock();
-+	nfs_mark_client_ready(clp, -EIO);
-+	shutdown_client(clp->cl_rpcclient);
-+}
-+
- static ssize_t
- shutdown_show(struct kobject *kobj, struct kobj_attribute *attr,
- 				char *buf)
-@@ -259,7 +279,6 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
+-	if (clnt->cl_shutdown)
++	if (clp->cl_cons_state < 0)
+ 		return;
  
- 	server->flags |= NFS_MOUNT_SHUTDOWN;
- 	shutdown_client(server->client);
--	shutdown_client(server->nfs_client->cl_rpcclient);
- 
- 	if (!IS_ERR(server->client_acl))
- 		shutdown_client(server->client_acl);
-@@ -267,6 +286,7 @@ shutdown_store(struct kobject *kobj, struct kobj_attribute *attr,
- 	if (server->nlm_host)
- 		shutdown_client(server->nlm_host->h_rpcclnt);
- out:
-+	shutdown_nfs_client(server->nfs_client);
- 	return count;
- }
- 
+ 	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
 -- 
 2.49.0
 
