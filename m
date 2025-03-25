@@ -1,179 +1,268 @@
-Return-Path: <linux-nfs+bounces-10854-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10855-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA78A708C1
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:05:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67DAFA708FB
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:25:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 43B02164FE6
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:04:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6BC616C77C
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 18:25:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2AF26463E;
-	Tue, 25 Mar 2025 18:04:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E528E13D531;
+	Tue, 25 Mar 2025 18:25:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oyu00OIk"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PdH709Rp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5714F26463D
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 18:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F5F2628C
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 18:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925879; cv=none; b=NfMGHB9ka9CDjVM2W/2P/Y8P3728vmCBA5RMjJBItFqK7CSw6slUWE5XhK1yGnkEZa9sKg4cyCePqgeE2Q2aHEMH42zZBZp7d/ZQ2UEBdL8JXcYyG9U3xXKlOb/Gv7LWLx4v3hg4TQc8SFBP32tqjrN6gNjOd5x9WHsq9uq157U=
+	t=1742927144; cv=none; b=bjqUzCb7tJZc5pJet2bCOXjCrYZenyiwn61iuTfq5nJtoaj9GuZWXRlHblOznzH2PrN6DSmf/Kh0jVsGHAAaKj3WvUFFeaaBhhjFiA3S4w0pQ5U5jjfa+MlVLg8AzJQJIGVISwpzVLMfeLI85uAN+ay1eFwym6xY/xq9kdy3CY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925879; c=relaxed/simple;
-	bh=cWAnZMyIMZtTLSiunyT2O9rbYcML8qrBw3GrUgNHHLI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jINqoQ4ur8LGV/MyIELV5zOSu3UnVJU++mmaGKHQEXlc/7HvNPA4INeB9AwgAsWWdD8LbVF9OP92eimuym6Aq3OZPsh8y4IHZxtuYoRIKoBbEkR/EM4j/yfQjRjI2agbF6T666qEuXRVmY1KHiHSbAmt8SLYZntKLYDJ9z/KPdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oyu00OIk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7101CC4CEED;
-	Tue, 25 Mar 2025 18:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742925878;
-	bh=cWAnZMyIMZtTLSiunyT2O9rbYcML8qrBw3GrUgNHHLI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Oyu00OIkXwyJEg5O/E1IFjrT+uNzd2JAEE1xMDDUXDLRQe6GgH4XPQu6K/vpKwvaN
-	 qBYN1R38gKkgONmDathdNdBX4vtJOpNdxcFcYPSBYKWyS8aOqBYkYby6XUspwbM9or
-	 Lv4dAFns0w2HDWRjInELBViqjLGiPmLaL58z45LZzhgvY2A0P4XJusN6+n2RLb7mX+
-	 6UouHZmBNMeeodx4EZ1rfTyQt7TDsytGRgqdK2v84DUDq8rHjvHtHbPheQhIUHlBGA
-	 qFZRsm67fNargmLAzXewPAtvw+sUjA7kceaCMGe1kjum/9ra5U+nE3wu4eUtwHizp/
-	 nnXa9hYKO4SeA==
-Message-ID: <3c94f6980a3bb02c1106ff8c44e8dad39c249299.camel@kernel.org>
-Subject: Re: [PATCH v2 4/4] NFSv4: Treat ENETUNREACH errors as fatal for
- state recovery
-From: Jeff Layton <jlayton@kernel.org>
-To: trondmy@kernel.org, linux-nfs@vger.kernel.org
-Cc: Josef Bacik <josef@toxicpanda.com>
-Date: Tue, 25 Mar 2025 14:04:37 -0400
-In-Reply-To: <b1989a8316da4dcaaaaedad3b9d234d212be1083.1742919341.git.trond.myklebust@hammerspace.com>
-References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-	 <b1989a8316da4dcaaaaedad3b9d234d212be1083.1742919341.git.trond.myklebust@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1742927144; c=relaxed/simple;
+	bh=MtT7fcKCCQsduzGUxt5aSFmA1c+8D95sDUoEeN6D4sU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jFEwquMMZYc4ANbqp1IbLbyBuMcx6hoqxsARRNZu7E4K9z6H9upd4KQrElUSvdtkWdlYeI8KXKFp2IADI/FIPA2mIx3lTjX83YhRyvZsl63/CsiSFCNyPGEqKpW0igPvxx0ORW/Pw88f1ok0xV+cQebHlOx2Xy5zZw2Jn5WuZ1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PdH709Rp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PGaUiq005408
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 18:25:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JRGNWIigpwo+sVTPh8kbLoLbaa55z6ir5sOM8yRKY3U=; b=PdH709RpCdHTnlhj
+	ECryn1k1Bv/1QtXMucGxqJuc36hCjEx3xeuvj7YZ4T2Gwq8w+U5/hFSSBlv2a52L
+	d6gmQJvp4KojBcSrRxH/ZtY/eAxtN9n2uDQni+C7Ef4Bjkd4v43Krri2bf87aOcx
+	h5KYoENe5XitjLlEx2JTo0XAZ/n6XwxiHeeKsbPruPzKxWtpLMGaVfHdKW/497Ga
+	OjbiVaac8The1DYmWIBWZHkYvLGjgkG1DDmLv3AnxTqfFtTjQVsxTpzqdgxUjpnp
+	vT+imEzfvuP+/B7ZpY7h0ZSx60hjxRWUO5fM6wCuePM9hhInaY/NeghwnNmZAnko
+	k/kPag==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmcyajgq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 18:25:41 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so10062753a91.0
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 11:25:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742927141; x=1743531941;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRGNWIigpwo+sVTPh8kbLoLbaa55z6ir5sOM8yRKY3U=;
+        b=DCu9NOIIs3vAIwAlAqvXsswpRFPx9RGvIURgd9Cy0eSdXbX7354mffk9nVYzvUCCY1
+         pHuwg9nRQaRfzVb+E5pqInN5aWF0WD4zwlgVTZQYthJ8qbVSm9vqPr6FeyP64MlWrkO8
+         EaEqS6jpyKtGKayYJexvIwgBCdOHD/ZZcUTN2CFCqGYOEAG9PZ61QD4tsVWPJKD2M2aE
+         1+QjvrcVNDju/i0cYXE7sMS+itskoGBG97Zgv8KG6PAAhb/epmPge9BUGrxdCw8sMFA0
+         +NYYIQVsUxOUA4BDzRPNsHMcrhdi5lyy7OPAZ8x1zVtIYa2YrsFWTN59dkfdmkYJywQR
+         I9tg==
+X-Gm-Message-State: AOJu0Yyl1mMHlDRaB/nSdVmvRlRu3oimJijRuhKjIVecJa02a6Qt3UX9
+	UV5RHKEUEZWe2/LtSc+9+N38XHc08IVXrZSP4xvXPC8iZbCVGDtMfqQq25qwb2yc8r4WG4jsgDk
+	i0yZbhQW3FsmoPTR9PwvY5HMvVUcwg7NevxuU1VCaJAl3yhiqsdvPK2mfV+s=
+X-Gm-Gg: ASbGnct101Mv0byEnI2OA9JHzBNYPY0hZpbBRwolHoiWJYVamxhveAJGXa1X1cqKKYF
+	bC06EQfYBO8X2J48wbO9B1oO54VetFp0fxQRllCjI1Vogp9g4EVcAizaruEZ4VRqa9SgWDF6zGJ
+	ua+BQVN96jHhSdFVSaIXuR4iWsX5tKByh16ffcBVW9Jxm9EmWtAOcLbyBj+mKkOtlf3KkoZtBph
+	GOiqAmqwlww7KeuSi425adGlHORNFWMjuXdqDluOuGcyxm4A2GQf2+qwm0Xpr2r+m2puYNbEhnk
+	EzV0mmp4/ycLmeh63yl/AWOcUb08WuuBE4Vuh4artA4W1Q3fwfKG
+X-Received: by 2002:a17:90b:2707:b0:2ff:6488:e01c with SMTP id 98e67ed59e1d1-3030fefe3e4mr28947995a91.29.1742927140306;
+        Tue, 25 Mar 2025 11:25:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKyThvP/6bv+vB1hA0BThsYJO6kjkY/GjavrCe9iZXGxCc0uzui9jC18dAshu5DJG0xEVGYw==
+X-Received: by 2002:a17:90b:2707:b0:2ff:6488:e01c with SMTP id 98e67ed59e1d1-3030fefe3e4mr28947947a91.29.1742927139718;
+        Tue, 25 Mar 2025 11:25:39 -0700 (PDT)
+Received: from [10.81.24.74] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a682sm14705727a91.31.2025.03.25.11.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 11:25:39 -0700 (PDT)
+Message-ID: <e2ec5e8d-a004-42b7-81ad-05edb1365224@oss.qualcomm.com>
+Date: Tue, 25 Mar 2025 11:25:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: nfs compile error nfslocalio.o and localio.o since v6.14-rc1
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Mike Snitzer <snitzer@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+References: <20250215120054.mfvr2fzs5426bthx@pali>
+ <4c790142-7126-413d-a2f3-bb080bb26ce6@oracle.com>
+ <20250215163800.v4qdyum6slbzbmts@pali>
+ <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
+ <20250215165100.jlibe46qwwdfgau5@pali> <20250223182746.do2irr7uxpwhjycd@pali>
+ <20250318190520.efwb45jarbyacnw4@pali>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250318190520.efwb45jarbyacnw4@pali>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=EZ3IQOmC c=1 sm=1 tr=0 ts=67e2f525 cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=0G27khmstMVWLXMTRScA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=mb2HYd0p4foA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-ORIG-GUID: D9Hbw0ya1Wm0A8lpHDjv-dWpXO9fkplH
+X-Proofpoint-GUID: D9Hbw0ya1Wm0A8lpHDjv-dWpXO9fkplH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-25_08,2025-03-25_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
+ spamscore=0 lowpriorityscore=0 clxscore=1011 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503250126
 
-On Tue, 2025-03-25 at 12:17 -0400, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->=20
-> If a containerised process is killed and causes an ENETUNREACH or
-> ENETDOWN error to be propagated to the state manager, then mark the
-> nfs_client as being dead so that we don't loop in functions that are
-> expecting recovery to succeed.
->=20
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/nfs4state.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 738eb2789266..14ba3f96e6fc 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -2739,7 +2739,15 @@ static void nfs4_state_manager(struct nfs_client *=
-clp)
->  	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s"
->  			" with error %d\n", section_sep, section,
->  			clp->cl_hostname, -status);
-> -	ssleep(1);
-> +	switch (status) {
-> +	case -ENETDOWN:
-> +	case -ENETUNREACH:
-> +		nfs_mark_client_ready(clp, -EIO);
-> +		break;
+On 3/18/25 12:05, Pali Rohár wrote:
+> PING?
+> 
+> On Sunday 23 February 2025 19:27:46 Pali Rohár wrote:
+>> Mike, have you looked at this issue?
+>>
+>> On Saturday 15 February 2025 17:51:00 Pali Rohár wrote:
+>>> On Saturday 15 February 2025 11:41:25 Chuck Lever wrote:
+>>>> On 2/15/25 11:38 AM, Pali Rohár wrote:
+>>>>> On Saturday 15 February 2025 11:29:45 Chuck Lever wrote:
+>>>>>> Hi Pali -
+>>>>>>
+>>>>>> On 2/15/25 7:00 AM, Pali Rohár wrote:
+>>>>>>> Hello, since v6.14-rc1, file nfslocalio.c cannot be compiled with
+>>>>>>> gcc-8.3 and attached .config file. Same problem is with localio.c.
+>>>>>>
+>>>>>> If the interwebs are correct, gcc-8.3 was released in 2014. ISTR that
+>>>>>> recent releases of the Linux kernel no longer support gcc versions that
+>>>>>> old.
+>>>>>
+>>>>> Hello, I know that this is old version, and I specially used it just to
+>>>>> check if everything compiles correctly. And it failed.
+>>>>>
+>>>>> Per https://docs.kernel.org/process/changes.html the minimal version of
+>>>>> gcc is 5.1, so I think that compilation with gcc 8.3 should still be
+>>>>> supported.
+>>>>>
+>>>>>> It appears to be snagging on kernel-wide utility helpers, not code
+>>>>>> specific to NFS.
+>>>>>
+>>>>> It looks like that, but only those two nfs files cause compile errors.
+>>>>> Everything else compiles without problem. So it is quite suspicious and
+>>>>> maybe it could signal that those helper are used incorrectly in nfs
+>>>>> code? I'm not sure, I have not investigated it.
+>>>>
+>>>> A bisect would be helpful.
+>>>>
+>>>> Also, what is the CPU platform architecture? x86_64?
+>>>
+>>> Yes, it is x86_64, I hope that all details/configuration is in the
+>>> .config file. I took generic gcc 8.3 version which was distributed by
+>>> some debian version. So nothing special.
+>>>
+>>>>
+>>>>>> If that's the case, it might not be possible for us to address this
+>>>>>> breakage.
+>>>>>>
+>>>>>> Adding Mike, who contributed this code.
+>>>>>>
+>>>>>>> Error is:
+>>>>>>>
+>>>>>>> $ make bzImage
+>>>>>>>   CALL    scripts/checksyscalls.sh
+>>>>>>>   DESCEND objtool
+>>>>>>>   INSTALL libsubcmd_headers
+>>>>>>>   CC      fs/nfs_common/nfslocalio.o
+>>>>>>> In file included from ./include/linux/rbtree.h:24,
+>>>>>>>                  from ./include/linux/mm_types.h:11,
+>>>>>>>                  from ./include/linux/mmzone.h:22,
+>>>>>>>                  from ./include/linux/gfp.h:7,
+>>>>>>>                  from ./include/linux/umh.h:4,
+>>>>>>>                  from ./include/linux/kmod.h:9,
+>>>>>>>                  from ./include/linux/module.h:17,
+>>>>>>>                  from fs/nfs_common/nfslocalio.c:7:
+>>>>>>> fs/nfs_common/nfslocalio.c: In function ‘nfs_close_local_fh’:
+>>>>>>> ./include/linux/rcupdate.h:531:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
+>>>>>>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+>>>>>>>          ^
+>>>>>>> ./include/linux/rcupdate.h:650:31: note: in expansion of macro ‘__rcu_access_pointer’
+>>>>>>>  #define rcu_access_pointer(p) __rcu_access_pointer((p), __UNIQUE_ID(rcu), __rcu)
+>>>>>>>                                ^~~~~~~~~~~~~~~~~~~~
+>>>>>>> fs/nfs_common/nfslocalio.c:288:10: note: in expansion of macro ‘rcu_access_pointer’
+>>>>>>>   ro_nf = rcu_access_pointer(nfl->ro_file);
+>>>>>>>           ^~~~~~~~~~~~~~~~~~
+>>>>>>> make[4]: *** [scripts/Makefile.build:207: fs/nfs_common/nfslocalio.o] Error 1
+>>>>>>> make[3]: *** [scripts/Makefile.build:465: fs/nfs_common] Error 2
+>>>>>>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
+>>>>>>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
+>>>>>>> make: *** [Makefile:251: __sub-make] Error 2
+>>>>>>>
+>>>>>>>
+>>>>>>> $ make fs/nfs/localio.o
+>>>>>>>   CALL    scripts/checksyscalls.sh
+>>>>>>>   DESCEND objtool
+>>>>>>>   INSTALL libsubcmd_headers
+>>>>>>>   CC      fs/nfs/localio.o
+>>>>>>> In file included from ./include/linux/rbtree.h:24,
+>>>>>>>                  from ./include/linux/mm_types.h:11,
+>>>>>>>                  from ./include/linux/mmzone.h:22,
+>>>>>>>                  from ./include/linux/gfp.h:7,
+>>>>>>>                  from ./include/linux/umh.h:4,
+>>>>>>>                  from ./include/linux/kmod.h:9,
+>>>>>>>                  from ./include/linux/module.h:17,
+>>>>>>>                  from fs/nfs/localio.c:11:
+>>>>>>> fs/nfs/localio.c: In function ‘nfs_local_open_fh’:
+>>>>>>> ./include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
+>>>>>>>   typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+>>>>>>>          ^
+>>>>>>> ./include/linux/rcupdate.h:686:2: note: in expansion of macro ‘__rcu_dereference_check’
+>>>>>>>   __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
+>>>>>>>   ^~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>> ./include/linux/rcupdate.h:758:28: note: in expansion of macro ‘rcu_dereference_check’
+>>>>>>>  #define rcu_dereference(p) rcu_dereference_check(p, 0)
+>>>>>>>                             ^~~~~~~~~~~~~~~~~~~~~
+>>>>>>> fs/nfs/localio.c:275:7: note: in expansion of macro ‘rcu_dereference’
+>>>>>>>   nf = rcu_dereference(*pnf);
+>>>>>>>        ^~~~~~~~~~~~~~~
+>>>>>>> make[4]: *** [scripts/Makefile.build:207: fs/nfs/localio.o] Error 1
+>>>>>>> make[3]: *** [scripts/Makefile.build:465: fs/nfs] Error 2
+>>>>>>> make[2]: *** [scripts/Makefile.build:465: fs] Error 2
+>>>>>>> make[1]: *** [/home/pali/develop/kernel.org/linux/Makefile:1994: .] Error 2
+>>>>>>> make: *** [Makefile:251: __sub-make] Error 2
+>>>>>>>
+>>>>>>>
+>>>>>>> Reproduced from commit 7ff71e6d9239 ("Merge tag 'alpha-fixes-v6.14-rc2'
+>>>>>>> of git://git.kernel.org/pub/scm/linux/kernel/git/mattst88/alpha").
 
-Should this be conditional on clnt->cl_netunreach_fatal being true?
-=20
-> +	default:
-> +		ssleep(1);
-> +		break;
-> +	}
->  out_drain:
->  	memalloc_nofs_restore(memflags);
->  	nfs4_end_drain_session(clp);
+FWIW I'm seeing this issue using gcc-13.3.0-nolibc/x86_64-linux/bin/x86_64-linux-gcc
+from https://www.kernel.org/pub/tools/crosstool so this isn't just a GCC version
+issue. My workspace is based on 6.14-rc5
 
---=20
-Jeff Layton <jlayton@kernel.org>
+In file included from ./include/linux/rbtree.h:24,
+                 from ./include/linux/mm_types.h:11,
+                 from ./include/linux/mmzone.h:22,
+                 from ./include/linux/gfp.h:7,
+                 from ./include/linux/umh.h:4,
+                 from ./include/linux/kmod.h:9,
+                 from ./include/linux/module.h:17,
+                 from fs/nfs/localio.c:11:
+fs/nfs/localio.c: In function ‘nfs_local_open_fh’:
+./include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type ‘struct nfsd_file’
+  538 |  typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
+      |         ^
+./include/linux/rcupdate.h:686:2: note: in expansion of macro ‘__rcu_dereference_check’
+  686 |  __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
+      |  ^~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/rcupdate.h:758:28: note: in expansion of macro ‘rcu_dereference_check’
+  758 | #define rcu_dereference(p) rcu_dereference_check(p, 0)
+      |                            ^~~~~~~~~~~~~~~~~~~~~
+fs/nfs/localio.c:275:7: note: in expansion of macro ‘rcu_dereference’
+  275 |  nf = rcu_dereference(*pnf);
+      |       ^~~~~~~~~~~~~~~
+make[7]: *** [scripts/Makefile.build:207: fs/nfs/localio.o] Error 1
+
+There is also a Intel kernel test robot report:
+https://lore.kernel.org/all/202503181317.eiDzfsM0-lkp@intel.com/
+
+
 
