@@ -1,120 +1,228 @@
-Return-Path: <linux-nfs+bounces-10867-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10868-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC3E3A70AA4
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 20:41:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C097A70AAB
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 20:44:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54A0D16E635
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:41:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A1D3018877C9
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Mar 2025 19:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47333198851;
-	Tue, 25 Mar 2025 19:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCE1D19D086;
+	Tue, 25 Mar 2025 19:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wx6F1mXL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A50zDOtk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4161F0E33
-	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 19:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A794B4A21
+	for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 19:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742931655; cv=none; b=M45sZDSQ8OlkVQ6Mv8UqJ6NnWwuMICysT4EIpCtoNKao8Wu4Wk9i5vt9zLt6rWzWvdIA5UeTSEO5tUPa+lim79BkDU8Dr3L8JA3j/BIELte7iqRIRSFwGUoG5wf8JRE/v0l7QjxhPr0gwhoMSoRvHMsCzaZxMh4LYnvNKsz0cqE=
+	t=1742931857; cv=none; b=C2vwzwpKDnCGXSSvlz1pH8H7NkNXCgw+CgJI/WWOw1iDo6i3KmRZT10yQ+NpGraXZMQNJYHUv8LJZqJVv/0pYVM0Zo2aUrFa5L5RU+t5/rArDtDPa7jVmCCkXKHgaRwvMFDnLFvBMkmPrhG+oR7brIJZA992Y8pPbefHnMPQ94U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742931655; c=relaxed/simple;
-	bh=+6azFkAHiitoL2Mik2x9LuUgtpr6AaiAAem0n4pny8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=uWnJGHxAlo9/zrT4jRXc5HpyEcjb0o4xLugMRWbs0RyOPf30ejiX3D4hfSe9N0R1Tt3i5IT11Py5w6EzakOfceI9r4T+0bgi4MX6zubgLvzDjNyY0PHh3vP3lrN+OuoeT5ZVI7RWFXhAQnZVezjcJ2WaP0AFBHW9rwS3DLtz6LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wx6F1mXL; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so10998529a12.1
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Mar 2025 12:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742931650; x=1743536450; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xmlEmnHml3aLq9AQKixQs44/4gFzD8THY2JFMeGIBvg=;
-        b=Wx6F1mXL5OQhtloMJHAG/zndl48v0SRMmNjrGkEPv1CCVT7xR2UfGSxOoniRtp/CV3
-         jz+Al4WAEuC415vfhzRZFKnG3NbPtzy8/KVK32tsjds53YQqSLIhzF0kysbryXsHkvdm
-         KGr/AyP9GbOa9ThDu9fqvMYMQsLKDHH940SgL4iRIJoBs6pm1hlPAnBA9qzkeYQ6DCZ+
-         Y9ouZFFPNWaUKdV+YwhSFv9rxgRpuiz8lc/0R/uuOMnFv8FGBpDrTi6Ikpj/5Kx7NsFX
-         Ni/LZp+PGDKBiRFq+nFzvxDS97/fqCJyiWrxtPyuIF3GI4Uc4LBINIRT2omxA3H8tm/b
-         bEUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742931650; x=1743536450;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xmlEmnHml3aLq9AQKixQs44/4gFzD8THY2JFMeGIBvg=;
-        b=rgH4C9S4FuYRVDpF9nRFRdbUATPKFh0fWVntqdOlKLmW+xa9cHNlSoOoU67QuCcrmM
-         R4pecPQjW55y34c602h3MPc+i2KQ71n2jlU060JKfmHEqjMLkU6ELHgCj9DTfrBeGTkF
-         FgBl66F/JmGN6qE3km3UFpbiafqUSq91ILmVxkgj0KZbCrWCkqCyIYW4bPEbWmfRwAFH
-         HEupinjE9J+uNV1+yIAzp+DA6HQFrqwTl74f9Cig5+VTYI8UMRJ4lge2aFNF6SHtkTti
-         fke31knuOvdXrbDaXJcw3MYsR9ygXExytXNmlb5plQj80JO+wCqsXZuSYuQHLOuD8wmV
-         elLg==
-X-Gm-Message-State: AOJu0YxcLL0ULiqszXGu6Gs4cw7aOATZEL46L7V1X8T/SRnz7A4oIRhU
-	rhCyTRk3wa7SelVZZQhELOhOz9E3IZJTIUOSm//XN2PagKFCewRMhaTouhe6Wxi0AB17NVOVh2H
-	0Dzfx4fJC2rwJkHeRTVFRhSOQdJjIbXVCeSI=
-X-Gm-Gg: ASbGncuvK6Mrmcsfd4O4pmbWhlMuQmcV7tNd6qFF2xOfp6ssD522L3N9PpcIc7mvP5P
-	4WgbADpRpQ7o5p7j97okk1r16FyKm3oi4mI5o7i8t0kX5QQV/BY3wetJjauWFcpJDbvn8cOT6S/
-	ZWvIVbB0oXl+GaGnYYm7cNyV/GMQ==
-X-Google-Smtp-Source: AGHT+IGNmONot7AmWOIi5UqMx9n+Zqa48O3HxpzUCVpIBdGTS3B5v9uAfryJiFokPdxZvwxoqrNQCbStFQxVGNnnmho=
-X-Received: by 2002:a05:6402:2102:b0:5ed:1c64:be9a with SMTP id
- 4fb4d7f45d1cf-5ed1c64bf01mr2789764a12.2.1742931649676; Tue, 25 Mar 2025
- 12:40:49 -0700 (PDT)
+	s=arc-20240116; t=1742931857; c=relaxed/simple;
+	bh=Ya1Km9XPxVeFqIyNPCXd6DePb9WO02pnIHVMmKV5PJQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e2tDSvw/wNFTDBoY6gRLuWK9LhwHWu5TF9lAbLnVniCWp6BRUsG4xwB3PXii62ukcBRCKU5RQer9SLxP3kVgFyV0O7YNVyb2LbI3owunejhJyoNAdCHQfx8mzhlRktoGmk1mUWfzIo8Qx2AlzGZtlQZDiudpJcLmPDzNhkmKQ+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A50zDOtk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9682FC4CEE4;
+	Tue, 25 Mar 2025 19:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742931856;
+	bh=Ya1Km9XPxVeFqIyNPCXd6DePb9WO02pnIHVMmKV5PJQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=A50zDOtkcM/yNgjLHb1r7ObO0cyBarsWPbxsImMsnfRXCKcpothshq2YnX1H3yKBE
+	 p2ZBv4ImOJXN1WyIfhHTU5Fb5I4UOMXe3nAIgDBim9kZW9GfJWB2VXy5WAnTFv6lQ+
+	 kk2ABLrN0Z51ByH1WYGrF1RlOU69GMXraa8spfIJMZiRhNGupWzSbxUIxpwOG854hY
+	 rtPRUH8w3EZckfcXsPoPVB4AChH9ZMC7yJqXlltUb1iw97lf0BZ83giOA4T1pdchYD
+	 E39op1SlOamC6jgUR6OBsqvTFiXQT/r5Im6aRiTID4odhsUbnFG7lFacDlNsLSsGXK
+	 HKIdS4Q1ekC4g==
+Message-ID: <2146465da4d77595aa9876cfc4b636898f08c96e.camel@kernel.org>
+Subject: Re: [PATCH v2 3/4] NFSv4: clp->cl_cons_state < 0 signifies an
+ invalid nfs_client
+From: Jeff Layton <jlayton@kernel.org>
+To: Trond Myklebust <trondmy@hammerspace.com>, "linux-nfs@vger.kernel.org"
+	 <linux-nfs@vger.kernel.org>
+Cc: "josef@toxicpanda.com" <josef@toxicpanda.com>, bcodding@redhat.com
+Date: Tue, 25 Mar 2025 15:44:14 -0400
+In-Reply-To: <bbfa25ef22c7b7b826d91d8cad71b5de2590ec92.camel@hammerspace.com>
+References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
+			 <56bc4d7e614a6d9d0aa520c71bd0ffb102e3ef08.1742919341.git.trond.myklebust@hammerspace.com>
+		 <202d8ae85ba2b1cfb454356a2781ef5b31ff37be.camel@kernel.org>
+	 <bbfa25ef22c7b7b826d91d8cad71b5de2590ec92.camel@hammerspace.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-In-Reply-To: <cover.1742919341.git.trond.myklebust@hammerspace.com>
-From: Lionel Cons <lionelcons1972@gmail.com>
-Date: Tue, 25 Mar 2025 20:40:00 +0100
-X-Gm-Features: AQ5f1JqWEpy4qFtGTkwQHmdKWGwreTWQJfi4EBAYaA6OAO4ZLiscoK6VS74ATDY
-Message-ID: <CAPJSo4W2y4gF1tP9LSmqXkSr+TEz9COLPePcJVDxoJB79QUeJQ@mail.gmail.com>
-Subject: Concerns about ENETUNREACH patch series Re: [PATCH v2 0/4] Ensure
- that ENETUNREACH terminates state recovery
-To: linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025 at 17:19, <trondmy@kernel.org> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> With the recent patch series that caused containerised mounts which
-> return ENETUNREACH or ENETDOWN errors to report fatal errors, we also
-> want to ensure that the state manager thread also triggers fatal errors
-> in the processes or threads that are waiting for recovery to complete.
->
-> ---
-> v2:
->  - Return EIO instead of ENETUNREACH in nfs4_wait_clnt_recover()
->
-> Trond Myklebust (4):
->   SUNRPC: rpcbind should never reset the port to the value '0'
->   SUNRPC: rpc_clnt_set_transport() must not change the autobind setting
->   NFSv4: clp->cl_cons_state < 0 signifies an invalid nfs_client
->   NFSv4: Treat ENETUNREACH errors as fatal for state recovery
->
->  fs/nfs/nfs4state.c     | 14 +++++++++++---
->  net/sunrpc/clnt.c      |  3 ---
->  net/sunrpc/rpcb_clnt.c |  5 +++--
->  3 files changed, 14 insertions(+), 8 deletions(-)
+On Tue, 2025-03-25 at 18:48 +0000, Trond Myklebust wrote:
+> On Tue, 2025-03-25 at 13:59 -0400, Jeff Layton wrote:
+> > On Tue, 2025-03-25 at 12:17 -0400, trondmy@kernel.org=C2=A0wrote:
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > >=20
+> > > If someone calls nfs_mark_client_ready(clp, status) with a negative
+> > > value for status, then that should signal that the nfs_client is no
+> > > longer valid.
+> > >=20
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > > =C2=A0fs/nfs/nfs4state.c | 4 ++--
+> > > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> > > index 542cdf71229f..738eb2789266 100644
+> > > --- a/fs/nfs/nfs4state.c
+> > > +++ b/fs/nfs/nfs4state.c
+> > > @@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct
+> > > nfs_client *clp)
+> > > =C2=A0	struct rpc_clnt *clnt =3D clp->cl_rpcclient;
+> > > =C2=A0	bool swapon =3D false;
+> > > =C2=A0
+> > > -	if (clnt->cl_shutdown)
+> > > +	if (clnt->cl_shutdown || clp->cl_cons_state < 0)
+> >=20
+> > Would it be simpler to just set cl_shutdown when this occurs instead
+> > of
+> > having to check cl_cons_state as well?
+>=20
+> Do we need the check for clnt->cl_shutdown at all here? I'd expect any
+> caller of this function to already hold a reference to the client,
+> which means that the RPC client should still be up.
 
-1. Can this "ENETUNREACH or ENETDOWN are fatal" feature be turned off?
+Not necessarily? Just because you hold a reference to the rpc_clnt
+doesn't mean that it's still up, AFAIU.
 
-2. We have concerns about this feature - what will happen if a switch
-or router gets rebooted? What will happen if you unplug your laptop?
-What will happen if you enable/disable your VPN software on a machine
-or container? What will happen if you switch WIFIs on your laptop?
+For instance, if you end up using the "shutdown" file in sysfs, any RPC
+still in flight will hold a reference to the client. Writing to
+"shutdown" will set cl_shutdown to 1 and then cancel all the RPCs, but
+there is at least a window of time where we have an elevated refcount
+but the client is no longer valid.
 
-All these scenarios will trigger a temporary ENETUNREACH or ENETDOWN,
-and should NOT be fatal for mounts or containers.
 
-Lionel
+>=20
+> I'm a little suspicious of the check in nfs41_sequence_call_done() too.
+>=20
+
+Me too. I think this is probably an indicator that we need to carefully
+audit how cl_shutdown is used and clarify what it means. Luckily there
+are only a handful of places that reference it:
+
+The call_start check is fine I thinkhhuhdljkfjltkuddjrig, though maybe
+we should add cl_shutdown checks in later states? The other places that
+check it come from this commit:
+
+    6ad477a69ad8 NFSv4: Clean up some shutdown loops
+
+Should we convert both of those checks to look at clp->cl_cons_state
+instead?
+
+> >=20
+> > > =C2=A0		return;
+> > > =C2=A0
+> > > =C2=A0	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> > > @@ -1403,7 +1403,7 @@ int nfs4_schedule_stateid_recovery(const
+> > > struct nfs_server *server, struct nfs4_
+> > > =C2=A0	dprintk("%s: scheduling stateid recovery for server %s\n",
+> > > __func__,
+> > > =C2=A0			clp->cl_hostname);
+> > > =C2=A0	nfs4_schedule_state_manager(clp);
+> > > -	return 0;
+> > > +	return clp->cl_cons_state < 0 ? clp->cl_cons_state : 0;
+> > > =C2=A0}
+> > > =C2=A0EXPORT_SYMBOL_GPL(nfs4_schedule_stateid_recovery);
+> > > =C2=A0
+> >=20
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
