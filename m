@@ -1,56 +1,57 @@
-Return-Path: <linux-nfs+bounces-10884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7C83A70E1B
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 01:17:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDF75A70E1F
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 01:17:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639B6173D2B
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 00:17:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77E0418847BF
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 00:18:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6173E4A35;
-	Wed, 26 Mar 2025 00:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A5AA55;
+	Wed, 26 Mar 2025 00:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzwRUxEf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KtOGqOCH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908E4A29
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 00:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316D1A48
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 00:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742948247; cv=none; b=BhLQHDu+qlP70w/6QPCmn/745OM5HtGHyQLI7NpDcCDDvcarE5S4/MZl9mYE1ikLZImqxpLBhBSzx5pIVfDeGPB/04qkh5pnPL4whRQuD8wujlLSHyC7pjkZLsqdyVZdNoxZe47zyQ3VQwD1sywSkDMfLFk1owx7to9oipKOco0=
+	t=1742948275; cv=none; b=WQSV05tbeglWQ0AAMm7OeH0jeNcG/0GLUq0IMM2RcTvryC05zGck/SgVotQeBdSXuNsip5B0lmW1KVboUKDyq/ROiwVgaspnXBcCjmFdV1QRvJN6iNwXul2LgWSe/9DeAvBP4TlOaQru0zukhdw/R8tTVWXrq/NIWDo3FGI8uSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742948247; c=relaxed/simple;
-	bh=Yyst3e5j9H/9ZUKo/+0aEbLH49oeEeV978d+S+rTors=;
+	s=arc-20240116; t=1742948275; c=relaxed/simple;
+	bh=sLPt9iGvBNnKfigqQLx7NcpWxwyz1LcORTgK2ZfmEYk=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iVFP+nlacrDzXLo5OV+tCkTAFPGJK5UrvWZ2OmCTTJ9VPnLjmBHQj+skx53LvWyKfrfAPLNEDwaxtcWIRciKOttRxeCWlsGesvTxdtRHMgYexslfJMInZVfw/NAlVBkIsEJdJRzXqH25g6pq6625uSc6CXoC+yyNqtLZiyrInT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzwRUxEf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8B2C4CEE4;
-	Wed, 26 Mar 2025 00:17:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=o1GSaSK5SVEyZhcSKPRBF3tK6+lNpuAE/9uSshHGtUFGpxROsjER+qJSKeaJM476D22OeQ276uwloJjLuMTPDE626QBrpRkJCUAXD2+Uj6KNObIHL8MD2GYzVdHQNoOPuYVMTuKVZJjjJ/upptRye/x8OTfjWP/CdiIvucZcgNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KtOGqOCH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0991C4CEE4;
+	Wed, 26 Mar 2025 00:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742948246;
-	bh=Yyst3e5j9H/9ZUKo/+0aEbLH49oeEeV978d+S+rTors=;
+	s=k20201202; t=1742948275;
+	bh=sLPt9iGvBNnKfigqQLx7NcpWxwyz1LcORTgK2ZfmEYk=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=GzwRUxEfkYSXQcSfSWD8ZMOAgyfcdzgXcKuRiXaplEEGe7tpN09ZbcvE0uRs5Symp
-	 7VqnpkFod+LNGF0d5R4fZJXfBdy9Tp2vDgGZPU04R70ogTwiaaCSJl9Fp5zE78DSv8
-	 LOdNvuz90c/LncdZ/7OW6X/kudlt45ptYDwiaC7hjd8pIQys1UC3Qbp25K7VM0oGJa
-	 Ik4/zps44msNpPjo/7SzF8qqHmRa9F9em0HgUv8kgGKENQHcz43iCIcT09wz2SAw0J
-	 PVfIXSLbO1FQ3I9cQxSTMOpOmsyuPSyVTSRB2zwTGqRHpYAxvd38ZelE1i3IXf9NSw
-	 HovEVMKLVIiZg==
-Message-ID: <11be517780fadad1473a044c182648a131c874b5.camel@kernel.org>
-Subject: Re: [PATCH v3 4/6] NFSv4: Further cleanups to shutdown loops
+	b=KtOGqOCH8rdDuhmFJmkXTK5Oyt0ZhJu0CymJ7JrlB090qQkNDgD4xcpomv3QLkJPj
+	 O7fWBc+TZcSfjJx80NhYTKNyzYOYX2HK4gcxRPsxkTiLCKsy2rn99LF5MYLFz5usmp
+	 nSbBFwnBpCiNLSp0h5Tc7H+VSTAncWY2Ossg60a6r4XT2HtfRj5KvD7dROB35Y07zM
+	 6AP6lTJJ1eFxo3QT95RFscIP8Fe9VHhB0bheYmiolX3I3c4AuN3dcSq2362xbcOpRA
+	 N9E8d2hAS7R1/L3rB6hoCSLion3SNbXQ5CpKL1EZQKi118hHq0jxFwXHfQMD4urOzR
+	 0PM1/c7j/jBpw==
+Message-ID: <25e873a2e3dbd42255b24cae9fdb9ffcb41e5e67.camel@kernel.org>
+Subject: Re: [PATCH v3 5/6] NFSv4: clp->cl_cons_state < 0 signifies an
+ invalid nfs_client
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, linux-nfs@vger.kernel.org
 Cc: Josef Bacik <josef@toxicpanda.com>, Benjamin Coddington
 	 <bcodding@redhat.com>
-Date: Tue, 25 Mar 2025 20:17:25 -0400
-In-Reply-To: <668e25098cb97187d084d5fa2916ddd4d2a68e00.1742941932.git.trond.myklebust@hammerspace.com>
+Date: Tue, 25 Mar 2025 20:17:53 -0400
+In-Reply-To: <7059cac07b2bc3c6a249b66326a86a5858f74214.1742941932.git.trond.myklebust@hammerspace.com>
 References: <cover.1742941932.git.trond.myklebust@hammerspace.com>
-	 <668e25098cb97187d084d5fa2916ddd4d2a68e00.1742941932.git.trond.myklebust@hammerspace.com>
+	 <7059cac07b2bc3c6a249b66326a86a5858f74214.1742941932.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,49 +139,29 @@ MIME-Version: 1.0
 On Tue, 2025-03-25 at 18:35 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> Replace the tests for the RPC client being shut down with tests for
-> whether the nfs_client is in an error state.
+> If someone calls nfs_mark_client_ready(clp, status) with a negative
+> value for status, then that should signal that the nfs_client is no
+> longer valid.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/nfs4proc.c  | 2 +-
 >  fs/nfs/nfs4state.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 889511650ceb..50be54e0f578 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -9580,7 +9580,7 @@ static void nfs41_sequence_call_done(struct rpc_tas=
-k *task, void *data)
->  		return;
-> =20
->  	trace_nfs4_sequence(clp, task->tk_status);
-> -	if (task->tk_status < 0 && !task->tk_client->cl_shutdown) {
-> +	if (task->tk_status < 0 && clp->cl_cons_state >=3D 0) {
->  		dprintk("%s ERROR %d\n", __func__, task->tk_status);
->  		if (refcount_read(&clp->cl_count) =3D=3D 1)
->  			return;
 > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 542cdf71229f..f1f7eaa97973 100644
+> index f1f7eaa97973..272d2ebdae0f 100644
 > --- a/fs/nfs/nfs4state.c
 > +++ b/fs/nfs/nfs4state.c
-> @@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct nfs_client =
-*clp)
->  	struct rpc_clnt *clnt =3D clp->cl_rpcclient;
->  	bool swapon =3D false;
+> @@ -1403,7 +1403,7 @@ int nfs4_schedule_stateid_recovery(const struct nfs=
+_server *server, struct nfs4_
+>  	dprintk("%s: scheduling stateid recovery for server %s\n", __func__,
+>  			clp->cl_hostname);
+>  	nfs4_schedule_state_manager(clp);
+> -	return 0;
+> +	return clp->cl_cons_state < 0 ? clp->cl_cons_state : 0;
+>  }
+>  EXPORT_SYMBOL_GPL(nfs4_schedule_stateid_recovery);
 > =20
-> -	if (clnt->cl_shutdown)
-> +	if (clp->cl_cons_state < 0)
->  		return;
-> =20
->  	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
-
-This should probably also have:
-
-    Fixes: 6ad477a69ad8 ("NFSv4: Clean up some shutdown loops")
-
-...but otherwise this looks good to me.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
