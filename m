@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-10883-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10884-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80A77A70E27
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 01:20:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7C83A70E1B
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 01:17:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3656E842ABB
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 00:17:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 639B6173D2B
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 00:17:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 227CF22F01;
-	Wed, 26 Mar 2025 00:15:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6173E4A35;
+	Wed, 26 Mar 2025 00:17:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYNo+LxU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzwRUxEf"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF08714AA9
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 00:15:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908E4A29
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 00:17:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742948124; cv=none; b=i1U1BPG3v+3RguD/sHkUNdrA6t3FYUepKbfYWM2Jm289V5u/Bfwjh3H2gxzkjc8SMjstHBTUZPdY2QUgh84aAS3S/v7ePBwfMAtPyxodVbllPRju5qxZpMAXcIb8btDHyFtIqlVYfVz5QK7n13OvK1W6b0if6LWi3mNQDFTiv/s=
+	t=1742948247; cv=none; b=BhLQHDu+qlP70w/6QPCmn/745OM5HtGHyQLI7NpDcCDDvcarE5S4/MZl9mYE1ikLZImqxpLBhBSzx5pIVfDeGPB/04qkh5pnPL4whRQuD8wujlLSHyC7pjkZLsqdyVZdNoxZe47zyQ3VQwD1sywSkDMfLFk1owx7to9oipKOco0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742948124; c=relaxed/simple;
-	bh=I1Dh69G6sYZ6wxdNGWBIiFmnN+gXkn42S1AgjuOSZM4=;
+	s=arc-20240116; t=1742948247; c=relaxed/simple;
+	bh=Yyst3e5j9H/9ZUKo/+0aEbLH49oeEeV978d+S+rTors=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h+0dx0y87gLau9LNKHtP0quVRN7aqoIeiAIforEahMCJQCQ4jAob/lRTo308+kFZEKhzhFMAIs/ie9Y1coaEkU+NwaMes2HDaJ4WtoLHD4vaQ3EOzAASg/nzioysnggUEjp471D9TSA+T1MUtio2CQid9bp74RNGJilbAoHxF7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYNo+LxU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F178C4CEE4;
-	Wed, 26 Mar 2025 00:15:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iVFP+nlacrDzXLo5OV+tCkTAFPGJK5UrvWZ2OmCTTJ9VPnLjmBHQj+skx53LvWyKfrfAPLNEDwaxtcWIRciKOttRxeCWlsGesvTxdtRHMgYexslfJMInZVfw/NAlVBkIsEJdJRzXqH25g6pq6625uSc6CXoC+yyNqtLZiyrInT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzwRUxEf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8B2C4CEE4;
+	Wed, 26 Mar 2025 00:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742948123;
-	bh=I1Dh69G6sYZ6wxdNGWBIiFmnN+gXkn42S1AgjuOSZM4=;
+	s=k20201202; t=1742948246;
+	bh=Yyst3e5j9H/9ZUKo/+0aEbLH49oeEeV978d+S+rTors=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aYNo+LxU9Hzw0ut0twHIJFlgUDvlYd2u8KJMSxs6MfeGqP9DwK+5crjnh8YevTFrh
-	 +rPCl81igX2mAYn8MjVgYY98NjLV5GNoebb3wsHPveQxZOh3VrYndJDK9SyA9i5dbj
-	 ooU2cRhnKky0nfyLE6zoHkjwx+sK0jJRUuMx556ymn7Cp7fj5gNYK2t3mVfAOuyDta
-	 gLUrTiPK6MPC/CfWeneDn9/H1FCZFMuDD1ix/f2e81ndBmKUxhG1CFsZjHPsGHzcAW
-	 Dwb9zb9tlOiFHLsgbUnprS+N6wqKeqj//HhRmRdH6OCG1/btabJAfEmv+enY2WqXa+
-	 Cyib+1nM577dg==
-Message-ID: <ecccbc8fca9b057d018bb68acedfb47a6cf76550.camel@kernel.org>
-Subject: Re: [PATCH v3 3/6] NFS: Shut down the nfs_client only after all the
- superblocks
+	b=GzwRUxEfkYSXQcSfSWD8ZMOAgyfcdzgXcKuRiXaplEEGe7tpN09ZbcvE0uRs5Symp
+	 7VqnpkFod+LNGF0d5R4fZJXfBdy9Tp2vDgGZPU04R70ogTwiaaCSJl9Fp5zE78DSv8
+	 LOdNvuz90c/LncdZ/7OW6X/kudlt45ptYDwiaC7hjd8pIQys1UC3Qbp25K7VM0oGJa
+	 Ik4/zps44msNpPjo/7SzF8qqHmRa9F9em0HgUv8kgGKENQHcz43iCIcT09wz2SAw0J
+	 PVfIXSLbO1FQ3I9cQxSTMOpOmsyuPSyVTSRB2zwTGqRHpYAxvd38ZelE1i3IXf9NSw
+	 HovEVMKLVIiZg==
+Message-ID: <11be517780fadad1473a044c182648a131c874b5.camel@kernel.org>
+Subject: Re: [PATCH v3 4/6] NFSv4: Further cleanups to shutdown loops
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, linux-nfs@vger.kernel.org
 Cc: Josef Bacik <josef@toxicpanda.com>, Benjamin Coddington
 	 <bcodding@redhat.com>
-Date: Tue, 25 Mar 2025 20:15:21 -0400
-In-Reply-To: <1cefd7cbadf0eaec5bae66e0870cdb89c7120070.1742941932.git.trond.myklebust@hammerspace.com>
+Date: Tue, 25 Mar 2025 20:17:25 -0400
+In-Reply-To: <668e25098cb97187d084d5fa2916ddd4d2a68e00.1742941932.git.trond.myklebust@hammerspace.com>
 References: <cover.1742941932.git.trond.myklebust@hammerspace.com>
-	 <1cefd7cbadf0eaec5bae66e0870cdb89c7120070.1742941932.git.trond.myklebust@hammerspace.com>
+	 <668e25098cb97187d084d5fa2916ddd4d2a68e00.1742941932.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -139,79 +138,49 @@ MIME-Version: 1.0
 On Tue, 2025-03-25 at 18:35 -0400, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> The nfs_client manages state for all the superblocks in the
-> "cl_superblocks" list, so it must not be shut down until all of them are
-> gone.
+> Replace the tests for the RPC client being shut down with tests for
+> whether the nfs_client is in an error state.
 >=20
-> Fixes: 7d3e26a054c8 ("NFS: Cancel all existing RPC tasks when shutdown")
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/sysfs.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+>  fs/nfs/nfs4proc.c  | 2 +-
+>  fs/nfs/nfs4state.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-> index b30401b2c939..37cb2b776435 100644
-> --- a/fs/nfs/sysfs.c
-> +++ b/fs/nfs/sysfs.c
-> @@ -14,6 +14,7 @@
->  #include <linux/rcupdate.h>
->  #include <linux/lockd/lockd.h>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 889511650ceb..50be54e0f578 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -9580,7 +9580,7 @@ static void nfs41_sequence_call_done(struct rpc_tas=
+k *task, void *data)
+>  		return;
 > =20
-> +#include "internal.h"
->  #include "nfs4_fs.h"
->  #include "netns.h"
->  #include "sysfs.h"
-> @@ -228,6 +229,25 @@ static void shutdown_client(struct rpc_clnt *clnt)
->  	rpc_cancel_tasks(clnt, -EIO, shutdown_match_client, NULL);
->  }
+>  	trace_nfs4_sequence(clp, task->tk_status);
+> -	if (task->tk_status < 0 && !task->tk_client->cl_shutdown) {
+> +	if (task->tk_status < 0 && clp->cl_cons_state >=3D 0) {
+>  		dprintk("%s ERROR %d\n", __func__, task->tk_status);
+>  		if (refcount_read(&clp->cl_count) =3D=3D 1)
+>  			return;
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 542cdf71229f..f1f7eaa97973 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1198,7 +1198,7 @@ void nfs4_schedule_state_manager(struct nfs_client =
+*clp)
+>  	struct rpc_clnt *clnt =3D clp->cl_rpcclient;
+>  	bool swapon =3D false;
 > =20
-> +/*
-> + * Shut down the nfs_client only once all the superblocks
-> + * have been shut down.
-> + */
-> +static void shutdown_nfs_client(struct nfs_client *clp)
-> +{
-> +	struct nfs_server *server;
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
-> +		if (!(server->flags & NFS_MOUNT_SHUTDOWN)) {
-> +			rcu_read_unlock();
-> +			return;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +	nfs_mark_client_ready(clp, -EIO);
-> +	shutdown_client(clp->cl_rpcclient);
-> +}
-> +
+> -	if (clnt->cl_shutdown)
+> +	if (clp->cl_cons_state < 0)
+>  		return;
+> =20
+>  	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
 
-Isn't the upshot of this that a mount won't actually get shutdown until
-you shutdown all of the mounts to the same server? Personally, I find
-that acceptable, but we should note that it is a change in behavior.
+This should probably also have:
 
+    Fixes: 6ad477a69ad8 ("NFSv4: Clean up some shutdown loops")
 
->  static ssize_t
->  shutdown_show(struct kobject *kobj, struct kobj_attribute *attr,
->  				char *buf)
-> @@ -259,7 +279,6 @@ shutdown_store(struct kobject *kobj, struct kobj_attr=
-ibute *attr,
-> =20
->  	server->flags |=3D NFS_MOUNT_SHUTDOWN;
->  	shutdown_client(server->client);
-> -	shutdown_client(server->nfs_client->cl_rpcclient);
-> =20
->  	if (!IS_ERR(server->client_acl))
->  		shutdown_client(server->client_acl);
-> @@ -267,6 +286,7 @@ shutdown_store(struct kobject *kobj, struct kobj_attr=
-ibute *attr,
->  	if (server->nlm_host)
->  		shutdown_client(server->nlm_host->h_rpcclnt);
->  out:
-> +	shutdown_nfs_client(server->nfs_client);
->  	return count;
->  }
-> =20
+...but otherwise this looks good to me.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
