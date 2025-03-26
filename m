@@ -1,308 +1,203 @@
-Return-Path: <linux-nfs+bounces-10902-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10903-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFF38A71526
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 11:58:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED366A71593
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 12:19:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 587FF171BA1
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 10:58:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBC4A188BB26
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Mar 2025 11:18:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBF631B3950;
-	Wed, 26 Mar 2025 10:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8478A1D8DE0;
+	Wed, 26 Mar 2025 11:18:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="h3AnBBwQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hrGPJ5oy"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C551215C15F
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 10:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBE91D7E54
+	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 11:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742986681; cv=none; b=m1WGyFcW9BbSmoFrSBi2UX30VEQSqgot4ItCknrPou0wWHrfGFrh3cbjf+Wc6b7GcA8TeV0gey8ojEg9dqtrX2C0r8/mDGwrr6AHAbPP5xhtAGHRl7Ryv3Y5w4X3Jl1Si6RFqCKhBcEQQSfxkIZuPSTsfHOeEWLnCxv1SFZ+vjw=
+	t=1742987927; cv=none; b=mKcMRj1JcwV1o6ob3dCrIjYdd3ULy5vngWOkGIx9gggZvHOlIRaUV+yJZFUH1/ao8wfrNdFcjkNFNweLGAA+uZygS2Sv/7Z7kUZYOt8U3vS4PYRQKtDo1MN/L985UrRb/kIycfhA2WJQsz3Dl6bjnBDFTMM0KCygEaELDB31sSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742986681; c=relaxed/simple;
-	bh=FMBoZlARdlqxo6ZeRtLboOYUHUG3jcmIC+r8xkbWzhs=;
-	h=From:Content-Type:Mime-Version:Subject:Date:References:Cc:To:
-	 Message-Id; b=s8pcn1NckyBFsU9nrMCN9qhrj7n4mnk2VxYNcJnenAi/A5/JjDLqfiqC+gdwWngnz5FHbCSH1HuAgscIAl+vzvZGUKe7me1mNUaq3Lpq2IuPtkzHACPKPf2X6u50NHCiKb6hK0/Z+6St59v9yJUfNBzdS5OFcvf7VFrofHB9zqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=h3AnBBwQ; arc=none smtp.client-ip=131.169.56.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
-	by smtp-o-3.desy.de (Postfix) with ESMTP id 2E0B511F837
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 11:52:29 +0100 (CET)
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 8978213F648
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 11:52:21 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 8978213F648
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1742986341; bh=PPr7UfEw/SX0neHxiX8ZIyD3NUd27Rort5gXYy3jxYI=;
-	h=From:Subject:Date:References:Cc:To:From;
-	b=h3AnBBwQz+2dNq3c5beI1TQACJGab24urdLHkWG0tjWeb/u1CTnUFJVzuwRxlUX+h
-	 5/tOYFcr5ENELwMw3SuKPUxZwjwq5KyFoHH8TiewAIH9x14SwU8Os1YQfg95vp6poE
-	 gCMKmfMOYZrlcT/tt+BJf46Z2IgrIRb3LGaHn2ys=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-	by smtp-buf-1.desy.de (Postfix) with ESMTP id 8098520040
-	for <linux-nfs@vger.kernel.org>; Wed, 26 Mar 2025 11:52:21 +0100 (CET)
-Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [194.95.235.47])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 7800440044;
-	Wed, 26 Mar 2025 11:52:21 +0100 (CET)
-Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [IPv6:2001:638:700:1038::1:52])
-	by b1722.mx.srv.dfn.de (Postfix) with ESMTP id D1F1216005A;
-	Wed, 26 Mar 2025 11:52:20 +0100 (CET)
-Received: from z-prx-4.desy.de (z-prx-4.desy.de [131.169.10.28])
-	by smtp-intra-1.desy.de (Postfix) with ESMTP id BB2AF80046;
-	Wed, 26 Mar 2025 11:52:20 +0100 (CET)
-Received: from localhost (localhost [IPv6:::1])
-	by z-prx-4.desy.de (Postfix) with ESMTP id AD87FA0266;
-	Wed, 26 Mar 2025 11:52:20 +0100 (CET)
-Received: from z-prx-4.desy.de ([IPv6:::1])
- by localhost (z-prx-4.desy.de [IPv6:::1]) (amavis, port 10026) with ESMTP
- id oywXdhlV1K5G; Wed, 26 Mar 2025 11:52:20 +0100 (CET)
-Received: from smtpclient.apple (unknown [IPv6:2a04:4540:6a22:9a00:359b:e3b5:d1a3:b6d7])
-	by z-prx-4.desy.de (Postfix) with ESMTPSA id 20810A00AD;
-	Wed, 26 Mar 2025 11:52:19 +0100 (CET)
-From: sandro <sandro.grizzo@desy.de>
-Content-Type: multipart/signed;
-	boundary="Apple-Mail=_91CFD364-C38D-471D-B189-74D49B58B9BF";
-	protocol="application/pkcs7-signature";
-	micalg=sha-256
+	s=arc-20240116; t=1742987927; c=relaxed/simple;
+	bh=wKgCvx89+J3qorNNGcKA6Cyhh1542Qp5jvsr0StXYC8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lCc2n0lleblmz0tGWQUn1cauAZSYVpkKGhwljHzKgZraIdRGTqUVRgubFxGX8reb+n4Gz9RJiGR/HxuzPrLeT9/+aQEwQDrMJjjic7s8E4nrYz3hBiTmJeeVmqTAfWG92FjC9F6InugVQ+k0D6et6FMlRQDvUMzUobFKx8GWfos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hrGPJ5oy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F122C4CEE2;
+	Wed, 26 Mar 2025 11:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742987926;
+	bh=wKgCvx89+J3qorNNGcKA6Cyhh1542Qp5jvsr0StXYC8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=hrGPJ5oyxPwa95MlOWehR6Rw1JQSrg+k20eBvbknFyTZpRouJGN9hPrQIpaJnKdYv
+	 NItIVhf8sowVuMbsQrB8QwrSeX+1V0DQ6A1fu8YkKxEeAvfdnNBXODXZ+QZIQyBegg
+	 qQaQ9mOHVCo7rGncLlFEAHRP98YvIGl/XDJirKJ1OI55a/lW3y2INOA0SNLz2G8jDY
+	 wSV05Svd0yVaUhuzmTryieJ7gJybrBFG/q/5IRqZh/RL7Fsu4bDSGNSLYjeeuKYn81
+	 Na6cdEPKr+AP7h+4ToJiQBImxE+6mZ7Z1y8UJvAexjle1BarZqvmwKdHnj04OFngQB
+	 9SterTq5UpWKA==
+Message-ID: <578359da41b13a0ca35879e61e8769b95546e480.camel@kernel.org>
+Subject: Re: [PATCH v3 6/6] NFSv4: Treat ENETUNREACH errors as fatal for
+ state recovery
+From: Jeff Layton <jlayton@kernel.org>
+To: Benjamin Coddington <bcodding@redhat.com>, trondmy@kernel.org
+Cc: linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+Date: Wed, 26 Mar 2025 07:18:45 -0400
+In-Reply-To: <4E6693BA-38E4-4BC6-94E0-50E38446BE93@redhat.com>
+References: <cover.1742941932.git.trond.myklebust@hammerspace.com>
+	 <ea44b46c7546579386d8d9e1a2b62c152534b6cc.1742941932.git.trond.myklebust@hammerspace.com>
+	 <4E6693BA-38E4-4BC6-94E0-50E38446BE93@redhat.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: PID/TGID of userland process  in the RPC layer
-Date: Wed, 26 Mar 2025 11:52:09 +0100
-References: <0D49914A-DB7D-458D-95C3-26D3185E412A@gmx.de>
-Cc: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: linux-nfs@vger.kernel.org
-Message-Id: <12ACA4E6-1317-4BE7-96EB-0993320E5136@desy.de>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+MIME-Version: 1.0
 
+On Wed, 2025-03-26 at 06:39 -0400, Benjamin Coddington wrote:
+> On 25 Mar 2025, at 18:35, trondmy@kernel.org wrote:
+>=20
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >=20
+> > If a containerised process is killed and causes an ENETUNREACH or
+> > ENETDOWN error to be propagated to the state manager, then mark the
+> > nfs_client as being dead so that we don't loop in functions that are
+> > expecting recovery to succeed.
+> >=20
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> >  fs/nfs/nfs4state.c | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> > index 272d2ebdae0f..7612e977e80b 100644
+> > --- a/fs/nfs/nfs4state.c
+> > +++ b/fs/nfs/nfs4state.c
+> > @@ -2739,7 +2739,15 @@ static void nfs4_state_manager(struct nfs_client=
+ *clp)
+> >  	pr_warn_ratelimited("NFS: state manager%s%s failed on NFSv4 server %s=
+"
+> >  			" with error %d\n", section_sep, section,
+> >  			clp->cl_hostname, -status);
+> > -	ssleep(1);
+> > +	switch (status) {
+> > +	case -ENETDOWN:
+> > +	case -ENETUNREACH:
+> > +		nfs_mark_client_ready(clp, -EIO);
+> > +		break;
+> > +	default:
+> > +		ssleep(1);
+> > +		break;
+> > +	}
+> >  out_drain:
+> >  	memalloc_nofs_restore(memflags);
+> >  	nfs4_end_drain_session(clp);
+> > --=20
+> > 2.49.0
+>=20
+> Doesn't this have the same bug as the sysfs shutdown - in that a mount wi=
+th
+> fatal_neterrors=3DENETDOWN:ENETUNREACH can take down the state manager fo=
+r a
+> mount without it?  I think the same consideration applies as shutdown so
+> far: in practical use, you're not going to care.
+>=20
 
---Apple-Mail=_91CFD364-C38D-471D-B189-74D49B58B9BF
-Content-Type: multipart/alternative;
-	boundary="Apple-Mail=_70EDB225-2BE7-4CA7-B128-56B7CE987F9F"
+True. In principle we probably ought to avoid sharing superblocks
+between mounts with different fatal_errors=3D options. In practice, I
+agree that no one will care since this means that the server is borked.
 
+> Another thought - its pretty subtle that the only way those errors
+> might/should reach us here is if that mount option is in play.
+>=20
+> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+>=20
+> Ben
+>=20
 
---Apple-Mail=_70EDB225-2BE7-4CA7-B128-56B7CE987F9F
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
-
-Hello everyone,
-
-I was wondering if I can obtain the PID/TGID of some userland process =
-that originally caused a RPC request to be transmitted from within the =
-RPC request itself.
-
-Here is what I did to find out:
-
-With a BPF program I collect the following metrics from a tracepoint =
-inside =E2=80=9Cxprt_request_transmit()=E2=80=9D function defined in =
-/net/sunrpc/xprt.c:
-
-1. current task name=20
-2. current PID/TGID as a return value of bpf_get_current_pid_tgid()
-3. The TGID assigned in the tk_owner field of struct rpc_task.=20
-
-=46rom the sources I know that the TGID from 3. is assigned  in =
-=E2=80=9Crpc_init_task() function=E2=80=9D defined in =
-/net/sunrpc/sched.c:
-
-	task->tk_owner =3D current->tgid;
-
-In the output of the BPF program I see records with the following =
-entries for the above metrics:
-
-1. "kworker/u389:3=E2=80=9D
-2. "PID": 455045, "TGID": 455045
-3.  =E2=80=9CTGID of tk_owner": 3989219
-
-Here, I presume, the thread (kworker) that executed the =
-"xprt_request_transmit()=E2=80=9D routine differs from the one that =
-assigned its TGID to the tk_owner field in =E2=80=9Crpc_init_task()=E2=80=9D=
-.=20
-
-But there are also records like this:
-
-1. "kworker/u128:4"
-2. "PID": 1457360, "TGID": 1457360
-3.  "TGID of tk_owner": 1457360
-
-Here, the kworker did both the jobs.
-
-Now to my questions:
-
-1. What determines which thread (kernel or userland thread) executes =
-rpc_init_task()?=20
-2. How can I, with certainty, obtain the PID/TGID of the userland =
-process  from inside rpc_init_task() ?
-
-Thank you for your answers.
-
-Best regards,
-Sandro
-
-_______________________________________________
-
-
---Apple-Mail=_70EDB225-2BE7-4CA7-B128-56B7CE987F9F
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset=utf-8
-
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; =
-charset=3Dutf-8"></head><body style=3D"overflow-wrap: break-word; =
--webkit-nbsp-mode: space; line-break: =
-after-white-space;"><div><div>Hello everyone,</div><div><div =
-style=3D"overflow-wrap: break-word; -webkit-nbsp-mode: space; =
-line-break: after-white-space;"><div><br></div><div>I was wondering if I =
-can obtain the PID/TGID of some userland process that originally caused =
-a RPC request to be <font><span style=3D"caret-color: rgb(0, 0, =
-0);">transmitted from within the RPC request =
-itself</span></font>.</div><div><br></div><div>Here is what I did to =
-find out:</div><div><br></div><div>With a BPF program I collect the =
-following metrics from a tracepoint inside =E2=80=9Cxprt_request_transmit(=
-)=E2=80=9D function defined in =
-/net/sunrpc/xprt.c:</div><div><br></div><div>1. current task =
-name&nbsp;</div><div>2. current PID/TGID as a return value of =
-bpf_get_current_pid_tgid()</div><div>3. The TGID assigned in the =
-tk_owner field of struct rpc_task.&nbsp;</div><div><br></div><div>=46rom =
-the sources I know that the TGID from 3. is assigned &nbsp;in =
-=E2=80=9Crpc_init_task() function=E2=80=9D defined in =
-/net/sunrpc/sched.c:</div><div><br></div><div><span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">	=
-</span>task-&gt;tk_owner =3D =
-current-&gt;tgid;</div><div><br></div><div>In the output of the BPF =
-program I see records with the following entries for the above =
-metrics:</div><div><br></div><div>1.&nbsp;"kworker/u389:3=E2=80=9D</div><d=
-iv>2.&nbsp;"PID": 455045, "TGID": 455045</div><div>3. &nbsp;=E2=80=9CTGID =
-of tk_owner": 3989219</div><div><br></div><div>Here, I presume, the =
-thread (kworker) that executed the "<font><span style=3D"caret-color: =
-rgb(0, 0, 0);">xprt_request_transmit()=E2=80=9D routine differs from the =
-one that assigned its TGID to the&nbsp;</span></font><font>tk_owner =
-field in =
-=E2=80=9Crpc_init_task()=E2=80=9D.&nbsp;</font></div><div><br></div><div><=
-font>But there are also records like =
-this:</font></div><div><font><br></font></div><div><font>1. =
-"</font>kworker/u128:4"</div><div>2.&nbsp;"PID": 1457360,&nbsp;"TGID": =
-1457360</div><div>3.&nbsp;<span style=3D"caret-color: rgb(0, 0, =
-0);">&nbsp;</span><span style=3D"caret-color: rgb(0, 0, =
-0);">"</span><span style=3D"caret-color: rgb(0, 0, 0); color: rgb(0, 0, =
-0);">TGID of tk_owner</span><span style=3D"caret-color: rgb(0, 0, =
-0);">":&nbsp;</span><span style=3D"caret-color: rgb(0, 0, =
-0);">1457360</span></div><div><span style=3D"caret-color: rgb(0, 0, =
-0);"><br></span></div><div><span style=3D"caret-color: rgb(0, 0, =
-0);">Here, the kworker did both the =
-jobs.</span></div><div><br></div><div><span style=3D"caret-color: rgb(0, =
-0, 0);">Now to my questions:</span></div><div><span style=3D"caret-color: =
-rgb(0, 0, 0);"><br></span></div><div><span style=3D"caret-color: rgb(0, =
-0, 0);">1.&nbsp;</span>What determines which thread (kernel or userland =
-thread) executes rpc_init_task()?&nbsp;</div><div>2. How can I, with =
-certainty, obtain the&nbsp;<span style=3D"caret-color: rgb(0, 0, 0); =
-color: rgb(0, 0, 0);">PID/TGID of the</span>&nbsp;userland process =
-&nbsp;from inside rpc_init_task() ?</div><div><br></div><div>Thank you =
-for your answers.</div><div><br></div><div>Best =
-regards,</div><div>Sandro</div><div><br></div></div>______________________=
-_________________________<br></div></div><br></body></html>=
-
---Apple-Mail=_70EDB225-2BE7-4CA7-B128-56B7CE987F9F--
-
---Apple-Mail=_91CFD364-C38D-471D-B189-74D49B58B9BF
-Content-Disposition: attachment;
-	filename=smime.p7s
-Content-Type: application/pkcs7-signature;
-	name=smime.p7s
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDjQw
-ggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5NTlaMEYxCzAJBgNVBAYT
-Ak5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBD
-QSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAs0riIl4nW+kEWxQENTIgFK600jFA
-xs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpw
-XgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyMyT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSq
-adM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWvQJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZ
-zVKTNORvPrGPRLnJ0EEVCHR82LL6oz915WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusCh
-SsZEn7juIsGIiDyaIhhLsd3amm8BS3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8
-v7bPZiJRaT7ZC2f50P4lTlnbLvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZ
-zR4MbpjTWdEdSLKvz8+0wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zF
-p2pyYUOiuzP+as/AZnz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbds
-Gac+diahjEwzyB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQY
-MBaAFFN5v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAO
-BgNVHQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNvbS9VU0VS
-VHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRqMGgwPwYIKwYB
-BQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FBZGRUcnVzdENBLmNy
-dDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTANBgkqhkiG9w0BAQwFAAOC
-AgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABglkrPkES/VyMZsfuds8fcDGvG
-E3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01ugDdqwlyXuYizeXyH2ICAQfXMtS+r
-az7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgjKDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tf
-fjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlPotv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8B
-GdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9bKzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4
-NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFSG+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi
-8SKNohAOKnUc7RIP6ss1hqIFyv0xXZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT
-9uSI2Xvhz8p+4pCYkiZqpahZlHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbU
-vDM9slzZXdI7NjJokVBq3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4Rz
-adUwggdGMIIFLqADAgECAhEAmUYNxPr0ho/hZY1bWIM2XTANBgkqhkiG9w0BAQwFADBGMQswCQYD
-VQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29u
-YWwgQ0EgNDAeFw0yNDA5MTMwMDAwMDBaFw0yNjA5MTMyMzU5NTlaMIG/MQswCQYDVQQGEwJERTEQ
-MA4GA1UECBMHSGFtYnVyZzEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
-b24gREVTWTEOMAwGA1UEYRMFR09WREUxJDAiBgkqhkiG9w0BCQEWFXNhbmRyby5ncml6em9AZGVz
-eS5kZTEPMA0GA1UEBBMGR3JpenpvMQ8wDQYDVQQqEwZTYW5kcm8xFjAUBgNVBAMTDVNhbmRybyBH
-cml6em8wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCyjdFCoVsUI2wAddAjjv8O0tiG
-r7BVK98Mx92NH6LS85SXxp9mcMESIYA/JKGT4QHOQiWlw/Vh/ByUEtZVYgrzUcq56m58Grfb9HaE
-cTSAxWVzqKzZO1fWgLNU687w4Rwv/iQZYXJy9rBXo9dGPvzk3zNsfVmp2QUnnHFw1MemTJ5g3j0i
-HsXvEFBUmuJxB6lp0mDaJiCj2CYmn6B7qPDm/4EJhNRxxHNXauMmT6K7Rigja6/R9FX0AmytC33W
-qfx0Icm6zO1lfAiXoP+nb9jFxnE8CgyjCzdSdcEAKKWioZO/xwPACGcg6ks+L/GDWEsW0MOyJ/ze
-s7ZapbwYf0mE1mpV65R58kq1vxjDbHz+IRNwmXMZg2hgF4xlJqHpLXoa43JrFC6qqwTnQmhz8lze
-NPdHEKGxHEB3hZnTP5jkLbEgn78VjpKC5QWT024enJLNGpogtL87xAe6WXaY1JLwkCTNJgBPo57/
-3ZgXFE0t/AGzD76EFEMcEfo9Jr4Fr0TugH75CCYto1Ze7rl+chUSZ75pp3xSR/2x5Hqc95jOmKE0
-PMXrbEE1pcMHJubfejHVaTmaoUIooUtb1i9ER3K82Q14iCx5wY4uziozhsZbDgg0NyPF41YxbXD1
-zY2YAdWKx8WqzwFn20kPM4I63yTvimk3Jej5fqLzrPyMKjIjYQIDAQABo4IBszCCAa8wHwYDVR0j
-BBgwFoAUaQChxyFY+ODFGyCwCt2nUb8T2eQwHQYDVR0OBBYEFLEqua9xc958iCdtQ8ambOk7Q3OE
-MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMEBggrBgEF
-BQcDAjBQBgNVHSAESTBHMDoGDCsGAQQBsjEBAgEKBDAqMCgGCCsGAQUFBwIBFhxodHRwczovL3Nl
-Y3RpZ28uY29tL1NNSU1FQ1BTMAkGB2eBDAEFAwIwQgYDVR0fBDswOTA3oDWgM4YxaHR0cDovL0dF
-QU5ULmNybC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNybDB4BggrBgEFBQcBAQRsMGow
-PQYIKwYBBQUHMAKGMWh0dHA6Ly9HRUFOVC5jcnQuc2VjdGlnby5jb20vR0VBTlRQZXJzb25hbENB
-NC5jcnQwKQYIKwYBBQUHMAGGHWh0dHA6Ly9HRUFOVC5vY3NwLnNlY3RpZ28uY29tMCAGA1UdEQQZ
-MBeBFXNhbmRyby5ncml6em9AZGVzeS5kZTANBgkqhkiG9w0BAQwFAAOCAgEAp7gd8CFxvBmNzvDT
-mXIqzfAWtIhhpyRvKWhRV9GNMQbU3ie33xZIjthOPO6lV94GS4pp/fSWMBA63loldqvPGRNI7R7P
-TvG2tngRC4cIxuXiPvBF/CerhPu7yOMnaz1MrKE4A0QGnm6v9Hy+NbC0eOYSv3TW39SDFi9VPnbU
-g52CnJfND+fvhAdrPM3ccl4qaThn3idsc65bfGQ++ZXWgU7xw15b2vdCd1csaNRZp3KprTIBWx6Q
-kBfb4OjS8NuEF90bRMGBNzaQ/MGqDlSDLjcSCfTyfhZ9qKYa9T/zmYrV5+a4x0j72iAiqtP/91Zt
-NvCFD9SPr0FtAIWg7omrxr15QAG1UetuYP8WQimkxMbd8Yk/zjvHyj5d9/ySeXAHeZZ0YpgvsLs/
-ynAseI7LEZwUvkQqaVpLbrEM+iIQwDppM1tPN1/utz8oRDv4Ez6t7DVmHTwNT2gN1dMoRu5pxBwm
-LkpUUtYNlb+U/w7u/+H5IbbWp+h8jR9d2zEZ7Uk5DSy6G8LUFOg1T1NO94r85c2hzpDciaRI/a9a
-SdhOcW3RQP7JBrmcp7oKWL83fDHBdRWXqskeGshFdwpWrTNSdfBgEGBRRV78CwPCw43jpdu6S/Gi
-Taj0nDPf/RS8COT3qePkpUYHzOns5HS3FiHRGkdpGsXGblmo8ejeQmsQDCkxggPNMIIDyQIBATBb
-MEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFO
-VCBQZXJzb25hbCBDQSA0AhEAmUYNxPr0ho/hZY1bWIM2XTANBglghkgBZQMEAgEFAKCCAUMwGAYJ
-KoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUwMzI2MTA1MjA5WjAvBgkq
-hkiG9w0BCQQxIgQgpXqMZhDut8sP3N4VnUzhcooQuyncxCBhQtodvk8WtNcwagYJKwYBBAGCNxAE
-MV0wWzBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEcMBoGA1UEAxMT
-R0VBTlQgUGVyc29uYWwgQ0EgNAIRAJlGDcT69IaP4WWNW1iDNl0wbAYLKoZIhvcNAQkQAgsxXaBb
-MEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFO
-VCBQZXJzb25hbCBDQSA0AhEAmUYNxPr0ho/hZY1bWIM2XTANBgkqhkiG9w0BAQsFAASCAgBJY4ZH
-J/wyJYKN7V9Eqf6T5DVGa5nrVwg3f5KKKBqKixn0a2YfS0V2UJwrl5ZomMpu1q5znWJzki/zMatz
-PTV4DuX85vhF0NqoRubjD3QgyFDDHaUD+24uqBoR8Ajc9df5S3C6lNGmYImUeXPWPhq1P3qqd8/h
-FYGmD+hgrymyf3swMOn4WOyX/gvAwA3fVTqAsV+JEIADtNWt2u9WJNnlisGT0RtRaBRt2to7KuoB
-xZ0OspPZGvTy+Vn+6omZVHBUULTkdn3HfgzMpHE4W+iKfxRh70xc1HTG+aBKUDUZBKQF3W3NrKl/
-umqmIdjShWrjVfDd3osNtq3M+ekdJmPB5iZVraQ55b3XZzvXQrNWfcZfOitm+KY9y2Z7shy2PTOb
-MiqLIp7hrPVgE2/zWkqbWnKlAHbjUWZyhKpG5QpfJYMQyJj6JcVUH0fYWcuJbTOyk+LbuOofOqD+
-mpmSzNki8NS1cK6XKxmD70ikKSNA62WCnOaLihRaheEVdIaETF4VLMojMiekXSKY1j5G4Wci20H5
-+9G0w+LepuQ4QLQQIcOoFjTauMTModQM0vUAP6knOcqJGU+LaReeAvnJuCUP271AH/GZPdc41XBe
-bDcyna7tw6BEm03wbNE0mmaxqJLyZOfjP3bZYKGeVXHwaTnWptmPqrA7+f4la8XceO262wAAAAAA
-AA==
---Apple-Mail=_91CFD364-C38D-471D-B189-74D49B58B9BF--
+--=20
+Jeff Layton <jlayton@kernel.org>
 
