@@ -1,96 +1,95 @@
-Return-Path: <linux-nfs+bounces-10925-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10926-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0938A7369A
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Mar 2025 17:20:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CA8CA736AF
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Mar 2025 17:21:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F416716CDBD
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Mar 2025 16:20:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 47CC8189ED2E
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Mar 2025 16:21:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E0021A4F1F;
-	Thu, 27 Mar 2025 16:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 049DB217F2E;
+	Thu, 27 Mar 2025 16:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kOYAPj8Z"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kYpVbHXO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709111A0BCA
-	for <linux-nfs@vger.kernel.org>; Thu, 27 Mar 2025 16:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD21A315E
+	for <linux-nfs@vger.kernel.org>; Thu, 27 Mar 2025 16:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743092414; cv=none; b=eQmX4Gcfht0jhAGC//2CFsTmUcFeZM/p5Jd3kym3Zk2sXDIoGDIQEVmYFlyfOKUV4aZN2qpa8i4S8a8tQXREQyB/aBCqAexJwV4KjssqQK1ZQ5OStv2NAfZp/7drDo6ugNM4saQjBI0yZCeTaGfdV3UrfXOlu+s1mqwtJ6InAB8=
+	t=1743092416; cv=none; b=MkrMppr54Ia39mk2FQf+dXna2bBiQJXLREu/dWZk25wlP9fXolrZFQg+uT3W/p/nXDzSa6sOnbCsvvMtG3hTYqR7rX2v8qPmReo474iFcFZNQKoNsI3ojM1xvCzionxzJIqHqWgO+3Avvhf3FXb+m7mjza2xDtqhluFPfdf1Rok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743092414; c=relaxed/simple;
-	bh=d7ElXG12q67ts9hPo9D4cCi81eQhC4QyN/csAlxbkk8=;
+	s=arc-20240116; t=1743092416; c=relaxed/simple;
+	bh=NVwNdpFq+nrFVf9YMmHiCb/6V19g4IwZkEMgGwL2onM=;
 	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=DA99Nw5NNFKroq+bZq/9dQfffZBBhtg/uVfvxkzRW7lf99C2RBwV5guYj38Xu802JHhKeoEA8yuVXntpIxncze++yxtlyBBpoE8b4ud2U7ZbY8Ulfy6Q7KMLhYGfa16gaSUnZBsUGBZ+UsMEoKloH8u4Nwk1o+Mu7JuySpX4Cac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kOYAPj8Z; arc=none smtp.client-ip=209.85.214.169
+	 Content-Type; b=S6ouRGhExQO39a66hxeaCp21af3BYaMamaXlWeO1+QfPytMRAYE2Yjuyx8SehNTMjVMRCufGqcnBrmmwFyKl+b0cCZ5lR1kbNPp8fvpzSMzKr41dh8Uf0frBf2Bd0vxrrQJikJTlzeAEsON8QixrrM6uaKKKbCRh7vhjETqdT1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kYpVbHXO; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22398e09e39so27896905ad.3
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-226185948ffso27191945ad.0
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Mar 2025 09:20:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743092410; x=1743697210; darn=vger.kernel.org;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743092412; x=1743697212; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
-        b=kOYAPj8ZAlZLOFNhrs9mchTgodx5+USr5guYG8Kx5M0JP8ixbwK1esti7rpswrGb06
-         rZ8bzKVq45I+F4VCYLj8Uyzv45ccDb4WFH942uFTDyknzHTy0czdcynotfuRLD2wg5js
-         9s1l+cPdq9QnkCuoEXgL6Mm+Oiy+oFZf5Yo4i+Q7RKiBePhd2E17Wv2UbwxAi5DtKxTB
-         JsVtgXqlomwNDp5h8fp8aMZdPPnYqZCWtkFo/vCEykJ/kRXGKYKXo+g3PrjhCX/nSS1t
-         FI5ZCmh2PQ14BKCflq1wX58jeyx9oUNg0aEAG1kI4tifINMvDnXCesxjzWtQG7O/35PI
-         ZZxw==
+        bh=kX05jx75Xb8+ENPYRjK+Gc3Ht1e9kjVMOGIod7/HdTg=;
+        b=kYpVbHXOgUpLRMTokda7b4lmD2DDWFPI2/1xILmmVtvv2Uw2c425hHMb6Mh3XvOHcy
+         nP8Sil2DtAmwEzSGosSFOLRmQxPK0h32eU2gWjNMDVPHCiA1hN9BeUxBlsKxkGufn3G3
+         TcU/USq5mdFBfH0YQ84YyaDyymgPlO23ua3WuznzjPqV//xHsgEpA/FAqpZZiXhxdgRb
+         dM7o2SRY3KiDdmyuRpL0DXg5EldGGr7oEX4+yMoTg1p2xyBHS0DPepwNmXiT2Elk7/6w
+         gzIfRy2jc5Y2IQle7KV3aoz4JzA3VybBDskwGHOBLoZbb2KnEXpw4TivDslOd9+I6MHq
+         GV+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743092410; x=1743697210;
+        d=1e100.net; s=20230601; t=1743092412; x=1743697212;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
-        b=QC5u3KnWmjuDilflz8wgpkRnEZUGVvLnl2Csz7NFPQygf/iIE754ySCGKa2+VcHPkO
-         sorszCa/gloq3YOb4QLxsv1gz+EUfQ7fnKBBanJSk7lk703QuUCNYOuqP+xfVOxdqWh/
-         pLDJE+QeHLHH4isg97NhAP7WZxkhcC1EcmM1gkC4KIJyHWr06twwJVmLYFfD6l599PPU
-         IcPIRl4Lp0SmRVzYbmC6GFS9zx19kTeu9ZH7Wvj3bYL4O6E8q7+xes4zP7CXyEd9urF4
-         q3Wax/6Y2kXNk6Io9FhEmYCUGn0V4Q5/LnXToOu9ebt1t0lWYj167DCRJ2EiqFgIgYqq
-         HerQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9fig714C9yUNvQgSlT6v9LYtSt5heKkTmeCZHlHkTCXB3Vi/SpP/ScY/u56Ur4pCktsvrOkrO9/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRuY9kL2xiiLpM7CLMzNUd6iNbduvY5p3sqPDAojTyZMzkOOTi
-	CJMcAb8utOntKCjy61+0l1WB1iTduRGVI4xR2IWKmMi7GoIAv0WPgU7TGCgTbyA=
-X-Gm-Gg: ASbGncv8POymx1unojjqXGPVvjoehRizdRN1L9OYpN47pfowt1xudlAtmRZaPJw5JF4
-	3u9vxwjRIqZ0y8h2hdSbpNCE2T77MoEswY7QWTdSmFioUvBLHKGcckej3oyJ9o7BqwHd7ewhqOD
-	2zwzhJyAasYXjB98+AZGE/w3sfT/YiYDv8Ex1rBeg4QUTrpbK2+2Q1CGHzqrmYGdfUpJuYkbvDM
-	C9aABoSEk0WKwIJzqXW5+MhZwI5Ob9yNrdgbxQdeNmbI4gXWGuTasAnrQazH00xFq0RZNcsaC4V
-	EjcrXU4+teK5LQf3hK3YDZBhDgieQm6ND9Oz1w==
-X-Google-Smtp-Source: AGHT+IGhXmi8JOjZOP3Ikj3wo/1uBU9qt49Ql5SLHckRbeVG8HWYg9iWFYIxA94kzN1K7mL9F21TaQ==
-X-Received: by 2002:a17:903:22d2:b0:223:4816:3e9e with SMTP id d9443c01a7336-22804857854mr57168615ad.13.1743092410377;
-        Thu, 27 Mar 2025 09:20:10 -0700 (PDT)
+        bh=kX05jx75Xb8+ENPYRjK+Gc3Ht1e9kjVMOGIod7/HdTg=;
+        b=c+hn+OaLZgbp/5IlyOMKDvdymyR2MGsbVYVZDv5X64nFWJzR2Qm/kI3uGvotBY7QwJ
+         FVGWNPlPYESU0xGcw/I7AApqyf7gVXdhKZAYobAY3dDi7aiKAIgfsIjhHJ39AHKXqI6l
+         DBgW72a7eCP5bbA3FcAlU28Z4JutAPNoqI4b+kqL58WT/LDdK+9Mu9HioWMNEQusLQKy
+         +3pCH764udHZyRiJmDj1ePpgBpBd/KUi0wQcIMorb3cw6vRVWE6VCgvGMNrAUgMpFHZ4
+         WQEa6oi2UDnJpaEYKfYyRV6G82eVwjSUyg2DTCtatyFTrQuaIbbxYzAj1T3UZs5PnxWL
+         I20Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVNv1bm3J/E05nxP4WHXifD3ty46iKcDOR52bnpWLkdq6H5u6SavEiQuSqa1mFw7l0nKaPpmTUHea4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5upOVo6urNH6HIgAR6+3axRXLcrC1Q38uu8Rt5xYNcLs6ndkP
+	Rc8mBiOuMydrfY95KnCjtjNiDd2oh+3SANC9IXPmCDcMn0Hq4jwlNuyr9Ulql0o=
+X-Gm-Gg: ASbGncvKw40PsdDm2FAni4MgqePJGuVu1Uz/I/L8yEkkjO2eVS99oqVtz7KmGW/KP9e
+	mx5ApGrTgUp5Na5Mfz/ezCY2I07AxmyGktGC9GTYncMzeITzNFGuUzbxqp7ATaVV5xNN31xldxz
+	/C8QCtK+0UKjdsWiJ/mg3d74MS7Va3LYp00XuuoXTA6iauY1x+vc71/7T2csqorQgsO/dOLUsGT
+	PAONMAt+WWoWuAEMXjVinH5Ri7AsFQdqV+l6DW6LShD+jl/lulWr1/4ozgvRFvsIYZ08JG1+mBU
+	P8zxv9PwAlufe8bNjyCQT7nD/y9eb9JhYPDjRA==
+X-Google-Smtp-Source: AGHT+IGClNJzmnXOK1L/PFNFl5ogZb2gMU/Eqg4X3l9WVxApkZth9g72YE2t9vJ4dK3KZhjxhfYK+Q==
+X-Received: by 2002:a17:903:228c:b0:224:216e:332f with SMTP id d9443c01a7336-22804968a3cmr61064755ad.48.1743092411962;
+        Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
 Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618e4b6sm14534202b3a.180.2025.03.27.09.20.09
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec780bsm1682245ad.19.2025.03.27.09.20.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
-Date: Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
-X-Google-Original-Date: Thu, 27 Mar 2025 09:20:00 PDT (-0700)
-Subject:     Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT kernel-self with ILP32 ABI
-In-Reply-To: <svu4xdeo7a7ve3vorvgbkjxzrqmqk5oztgtfpbg556wjw4x7vc@yg4esoipmt7g>
-CC: david@redhat.com, peterz@infradead.org, guoren@kernel.org,
-  Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>,
-  Linus Torvalds <torvalds@linux-foundation.org>, Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+        Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
+X-Google-Original-Date: Thu, 27 Mar 2025 09:20:02 PDT (-0700)
+Subject:     Re: [RFC PATCH V3 01/43] rv64ilp32_abi: uapi: Reuse lp64 ABI interface
+In-Reply-To: <CAHk-=wiVgTJpSxrQbEi28pUOmuWXrox45vV9kPhe9q5CcRxEbw@mail.gmail.com>
+CC: guoren@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+  Greg KH <gregkh@linuxfoundation.org>, Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
   atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de,
   Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, brauner@kernel.org,
   akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com,
   inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn, jiawei@iscas.ac.cn,
   wuwei2016@iscas.ac.cn, drew@pdp7.com, prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com,
   wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, dsterba@suse.com,
-  mingo@redhat.com, boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn,
-  leobras@redhat.com, jszhang@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-  samuel.holland@sifive.com, yongxuan.wang@sifive.com, luxu.kernel@bytedance.com, ruanjinjie@huawei.com,
-  cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn,
-  Ard Biesheuvel <ardb@kernel.org>, ast@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-  kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
+  mingo@redhat.com, peterz@infradead.org, boqun.feng@gmail.com, xiao.w.wang@intel.com,
+  qingfang.deng@siflower.com.cn, leobras@redhat.com, jszhang@kernel.org,
+  Conor Dooley <conor.dooley@microchip.com>, samuel.holland@sifive.com, yongxuan.wang@sifive.com, luxu.kernel@bytedance.com,
+  david@redhat.com, ruanjinjie@huawei.com, cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com,
+  qiaozhe@iscas.ac.cn, Ard Biesheuvel <ardb@kernel.org>, ast@kernel.org, linux-kernel@vger.kernel.org,
+  linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
   linux-crypto@vger.kernel.org, bpf@vger.kernel.org, linux-input@vger.kernel.org,
   linux-perf-users@vger.kernel.org, linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
   linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
@@ -98,8 +97,8 @@ CC: david@redhat.com, peterz@infradead.org, guoren@kernel.org,
   netfilter-devel@vger.kernel.org, coreteam@netfilter.org, linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
   linux-usb@vger.kernel.org, linux-media@vger.kernel.org
 From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Liam.Howlett@oracle.com
-Message-ID: <mhng-e8248074-b79c-42f6-986f-9993851b6be2@palmer-ri-x1c9a>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-16d3c75b-cf60-499e-98b0-098d630874b4@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -109,56 +108,47 @@ Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Mar 2025 12:23:39 PDT (-0700), Liam.Howlett@oracle.com wrote:
-> * David Hildenbrand <david@redhat.com> [250325 14:52]:
->> On 25.03.25 13:26, Peter Zijlstra wrote:
->> > On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
->> > > From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
->> > >
->> > > Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
->> > > but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
->> >
->> > I'm thinking you're going to be finding a metric ton of assumptions
->> > about 'unsigned long' being 64bit when 64BIT=y throughout the kernel.
->> >
->> > I know of a couple of places where 64BIT will result in different math
->> > such that a 32bit 'unsigned long' will trivially overflow.
-
-Ya, I write code that assumes "unsigned long" is the size of a register 
-pretty regularly.
-
->> >
->> > Please, don't do this. This adds a significant maintenance burden on all
->> > of us.
->> >
+On Tue, 25 Mar 2025 13:41:30 PDT (-0700), Linus Torvalds wrote:
+> On Tue, 25 Mar 2025 at 05:17, <guoren@kernel.org> wrote:
 >>
->> Fully agreed.
+>> The rv64ilp32 abi kernel accommodates the lp64 abi userspace and
+>> leverages the lp64 abi Linux interface. Hence, unify the
+>> BITS_PER_LONG = 32 memory layout to match BITS_PER_LONG = 64.
 >
-> I would go further and say I do not want this to go in.
-
-Seems reasonable to me, and I think it's also been the general sentiment 
-when this stuff comes up.  This specific implementation seems 
-particularly clunky, but I agree that it's going to be painful to do 
-this sort of thing.
-
-> The open ended maintenance burden is not worth extending hardware life
-> of a board with 16mb of ram (If I understand your 2023 LPC slides
-> correctly).
-
-We can already run full 32-bit kernels on 64-bit hardware.  The hardware 
-needs to support configurable XLEN, but there's systems out there that 
-do already.
-
-It's not like any of the existing RISC-V stuff ships in meaningful 
-volumes.  So I think it's fine to just say that vendors who want tiny 
-memories should build hardware that plays nice with those constraints, 
-and vendors who build hardware that doesn't make any sense get to pick 
-up the pieces.
-
-I get RISC-V is where people go to have crazy ideas, but there's got to 
-be a line somewhere...
-
+> No.
 >
-> Thank you,
-> Liam
+> This isn't happening.
+>
+> You can't do crazy things in the RISC-V code and then expect the rest
+> of the kernel to just go "ok, we'll do crazy things".
+>
+> We're not doing crazy __riscv_xlen hackery with random structures
+> containing 64-bit values that the kernel then only looks at the low 32
+> bits. That's wrong on *so* many levels.
+
+FWIW: this has come up a few times and we've generally said "nobody 
+wants this", but that doesn't seem to stick...
+
+> I'm willing to say "big-endian is dead", but I'm not willing to accept
+> this kind of crazy hackery.
+>
+> Not today, not ever.
+
+OK, maybe that will stick ;)
+
+> If you want to run a ilp32 kernel on 64-bit hardware (and support
+> 64-bit ABI just in a 32-bit virtual memory size), I would suggest you
+>
+>  (a) treat the kernel as natively 32-bit (obviously you can then tell
+> the compiler to use the rv64 instructions, which I presume you're
+> already doing - I didn't look)
+>
+>  (b) look at making the compat stuff do the conversion the "wrong way".
+>
+> And btw, that (b) implies *not* just ignoring the high bits. If
+> user-space gives 64-bit pointer, you don't just treat it as a 32-bit
+> one by dropping the high bits. You add some logic to convert it to an
+> invalid pointer so that user space gets -EFAULT.
+>
+>             Linus
 
