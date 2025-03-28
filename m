@@ -1,57 +1,55 @@
-Return-Path: <linux-nfs+bounces-10948-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10949-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6030DA75026
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 19:09:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33427A75050
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 19:23:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7D76179FE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 18:09:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7AE87A192E
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 18:22:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FDD4DDC5;
-	Fri, 28 Mar 2025 18:09:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89741DE4CA;
+	Fri, 28 Mar 2025 18:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojcA/g95"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H++2hhy/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0DBC2FA
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Mar 2025 18:09:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A270214A0BC
+	for <linux-nfs@vger.kernel.org>; Fri, 28 Mar 2025 18:23:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743185393; cv=none; b=FypzxWC2Qens7HqzTH2CjQx9QpyMaD9oyx/t9iATpIbFBg2b8V7gmME2rT5gYLdRwEAA6C09zMZa/kA6OXc6MNcLX5E1YAH2ZWWGZLHL7JxM6IFe84uhVAJft3X0Q7OH5OEc3897etQCQVvG9JF+HusgAdZwOMne/tUV6UbFbGI=
+	t=1743186219; cv=none; b=ggSDNfsSXbK3cHoQbRYfNy6mpOgLHVO29PmYUVMdtm3CqyE1GKygSSy0IZ0ww0H27H+KN5qcCvjRmrlaMkNd+adFI103TGKhtoRR/pCv8Q6R9IcDN2ZL2iHAIRDB5Y5Xdg3yi5nsZH/FyL8iAWMMi3VYMlISOKRbQcS0aEQY7VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743185393; c=relaxed/simple;
-	bh=+kQVYkOlSkLtUk6yjFaI7/bce/Xt6RViC78GMtQmIEI=;
+	s=arc-20240116; t=1743186219; c=relaxed/simple;
+	bh=cLTgwnZ7ngRijXCYbIdkXIO5OqGB4Nl1i5Hye/IwGhw=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RYkpJ0OVsN+45KXhjfZGPA0N104Qp1Gawwhj2riBXbvkSNfJaBnGVIz5KXSw6vVaPySsuAcf6ERpcX2OROyUpYBR/+1ymyyX/GolUyMaIGi2ifLr0G7KQW/sr9t6hanYi9GpdgPTQS3ldfW4Q2wFEHeThE/S4MxlzyXn8rNkf1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojcA/g95; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E284C4CEE4;
-	Fri, 28 Mar 2025 18:09:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=QCY76C6I595aOfT4BITT8Toel8b2upFP6WUeODRyc99rsr3p2518fRehjtYl/UBkDqTPvDSOMlPu2p09n1ZiK6Zs0YBhGtYHEeGfz9qdhynwB2GNwHOcAJ6XAKA67x8xu8WGMlXpw2dopMLyqy1t+VpzRl8Lsn6uag7FL7QAdUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H++2hhy/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC5C6C4CEE4;
+	Fri, 28 Mar 2025 18:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743185392;
-	bh=+kQVYkOlSkLtUk6yjFaI7/bce/Xt6RViC78GMtQmIEI=;
+	s=k20201202; t=1743186219;
+	bh=cLTgwnZ7ngRijXCYbIdkXIO5OqGB4Nl1i5Hye/IwGhw=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=ojcA/g95rS5fjkF9FmvPYtq6i0qc/J3EMknTPyoYJGFGwyorbvyG4Oe0e8udf1Qaz
-	 pG1dYXJcPOq7xmGmbAStZL4dCB2uPVrkqzkOP8ol2n4/NLCp00vLC8sy6DmTCa2PBg
-	 kw8YJNNgD5YQmr/juB16Vh7y2+g3F01RNWKBcX8ZulkZz/GAJsCj2QalzAU0Pe2YpV
-	 zgGGtR1sZhPJPwvuwjr5LunTOqZdNyWBOb6Giw5WbKcqVb16mjDF2oJN49Dmf2L5E4
-	 5LloanXhIIf4fS1e0qj1WZ+vHmLSLUK8vcZMnNm8YGWRe4lNfhzSjwkZJuDqL4gYb8
-	 tbFkQN+A4FqeA==
-Message-ID: <e8dd5ab70e23cbba22dae76acf52884f0676d81a.camel@kernel.org>
-Subject: Re: [PATCH 1/2] SUNRPC: Don't allow waiting for exiting tasks
+	b=H++2hhy/RESj8UrKmTCK6wmtII9FX3GcyW+5fnorxCWoVQT2vCRehNrE8HHw9Z2/3
+	 RqpGrF5V9g8WDxW0F6FBInKJ9GIbhVnPXAljBLZMEwiIGU6hAF5ldrvQTENTB9BtVE
+	 nCgGdQD4TAqwnyGS4Sv0VYE0KV1IBDxFa3TDeug5xDEcMVOLbGsTKyIidMcBTAizxL
+	 mS01IaZpWx34QZpholbjfJ1aqGgeiqbEUlM42cAr+tBStC/C2R1J6edJh9/NR/P6rA
+	 aByObMepB2SICrkTSu0Yb9qzHvFGSKUbaqQJz3GvZUliy2nwa4oD0xOKtzhL077ztP
+	 la8E0ho2IOrfQ==
+Message-ID: <da4e69fa55fd3ef9739383ead6774f84ac903c07.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFS: Don't allow waiting for exiting tasks
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>, "linux-nfs@vger.kernel.org"
-	 <linux-nfs@vger.kernel.org>
-Date: Fri, 28 Mar 2025 14:09:51 -0400
-In-Reply-To: <653869b6e69d65b0314e133b901d670968d7b345.camel@hammerspace.com>
+To: trondmy@kernel.org, linux-nfs@vger.kernel.org
+Date: Fri, 28 Mar 2025 14:23:37 -0400
+In-Reply-To: <f12bc922d95858ffea1649d64767f342e1a190fd.1743183579.git.trond.myklebust@hammerspace.com>
 References: 
 	<f301a88d04e1929a313c458bd8ce1218903b648a.1743183579.git.trond.myklebust@hammerspace.com>
-		 <26602925a3b7623c17c58cc9d5adeddde95e70d6.camel@kernel.org>
-	 <653869b6e69d65b0314e133b901d670968d7b345.camel@hammerspace.com>
+	 <f12bc922d95858ffea1649d64767f342e1a190fd.1743183579.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,44 +134,108 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-03-28 at 18:00 +0000, Trond Myklebust wrote:
-> On Fri, 2025-03-28 at 13:53 -0400, Jeff Layton wrote:
-> > On Fri, 2025-03-28 at 13:40 -0400, trondmy@kernel.org=C2=A0wrote:
-> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > >=20
-> > > Once a task calls exit_signals() it can no longer be signalled. So
-> > > do
-> > > not allow it to do killable waits.
-> > >=20
-> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > ---
-> > > =C2=A0net/sunrpc/sched.c | 2 ++
-> > > =C2=A01 file changed, 2 insertions(+)
-> > >=20
-> > > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > > index 9b45fbdc90ca..73bc39281ef5 100644
-> > > --- a/net/sunrpc/sched.c
-> > > +++ b/net/sunrpc/sched.c
-> > > @@ -276,6 +276,8 @@ EXPORT_SYMBOL_GPL(rpc_destroy_wait_queue);
-> > > =C2=A0
-> > > =C2=A0static int rpc_wait_bit_killable(struct wait_bit_key *key, int
-> > > mode)
-> > > =C2=A0{
-> > > +	if (unlikely(current->flags & PF_EXITING))
-> > > +		return -EINTR;
-> > > =C2=A0	schedule();
-> > > =C2=A0	if (signal_pending_state(mode, current))
-> > > =C2=A0		return -ERESTARTSYS;
-> >=20
-> > Won't this mean that if a task is signalled and does a final fput,
-> > that
-> > a CLOSE sent in task_work will never get sent?
+On Fri, 2025-03-28 at 13:40 -0400, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> It should mean that the close gets sent, but the task won't wait for
-> completion.
+> Once a task calls exit_signals() it can no longer be signalled. So do
+> not allow it to do killable waits.
 >=20
-
-Good enough, I guess.
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/inode.c    | 2 ++
+>  fs/nfs/internal.h | 5 +++++
+>  fs/nfs/nfs3proc.c | 2 +-
+>  fs/nfs/nfs4proc.c | 9 +++++++--
+>  4 files changed, 15 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 1aa67fca69b2..119e447758b9 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -74,6 +74,8 @@ nfs_fattr_to_ino_t(struct nfs_fattr *fattr)
+> =20
+>  int nfs_wait_bit_killable(struct wait_bit_key *key, int mode)
+>  {
+> +	if (unlikely(nfs_current_task_exiting()))
+> +		return -EINTR;
+>  	schedule();
+>  	if (signal_pending_state(mode, current))
+>  		return -ERESTARTSYS;
+> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+> index fae2c7ae4acc..2133b3c20bad 100644
+> --- a/fs/nfs/internal.h
+> +++ b/fs/nfs/internal.h
+> @@ -912,6 +912,11 @@ static inline u32 nfs_stateid_hash(nfs4_stateid *sta=
+teid)
+>  }
+>  #endif
+> =20
+> +static inline bool nfs_current_task_exiting(void)
+> +{
+> +	return (current->flags & PF_EXITING) !=3D 0;
+> +}
+> +
+>  static inline bool nfs_error_is_fatal(int err)
+>  {
+>  	switch (err) {
+> diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+> index 0c3bc98cd999..c1736dbb92b6 100644
+> --- a/fs/nfs/nfs3proc.c
+> +++ b/fs/nfs/nfs3proc.c
+> @@ -39,7 +39,7 @@ nfs3_rpc_wrapper(struct rpc_clnt *clnt, struct rpc_mess=
+age *msg, int flags)
+>  		__set_current_state(TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+>  		schedule_timeout(NFS_JUKEBOX_RETRY_TIME);
+>  		res =3D -ERESTARTSYS;
+> -	} while (!fatal_signal_pending(current));
+> +	} while (!fatal_signal_pending(current) && !nfs_current_task_exiting())=
+;
+>  	return res;
+>  }
+> =20
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 50be54e0f578..da97f87ecaa9 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -446,6 +446,8 @@ static int nfs4_delay_killable(long *timeout)
+>  {
+>  	might_sleep();
+> =20
+> +	if (unlikely(nfs_current_task_exiting()))
+> +		return -EINTR;
+>  	__set_current_state(TASK_KILLABLE|TASK_FREEZABLE_UNSAFE);
+>  	schedule_timeout(nfs4_update_delay(timeout));
+>  	if (!__fatal_signal_pending(current))
+> @@ -457,6 +459,8 @@ static int nfs4_delay_interruptible(long *timeout)
+>  {
+>  	might_sleep();
+> =20
+> +	if (unlikely(nfs_current_task_exiting()))
+> +		return -EINTR;
+>  	__set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE_UNSAFE);
+>  	schedule_timeout(nfs4_update_delay(timeout));
+>  	if (!signal_pending(current))
+> @@ -1777,7 +1781,8 @@ static void nfs_set_open_stateid_locked(struct nfs4=
+_state *state,
+>  		rcu_read_unlock();
+>  		trace_nfs4_open_stateid_update_wait(state->inode, stateid, 0);
+> =20
+> -		if (!fatal_signal_pending(current)) {
+> +		if (!fatal_signal_pending(current) &&
+> +		    !nfs_current_task_exiting()) {
+>  			if (schedule_timeout(5*HZ) =3D=3D 0)
+>  				status =3D -EAGAIN;
+>  			else
+> @@ -3581,7 +3586,7 @@ static bool nfs4_refresh_open_old_stateid(nfs4_stat=
+eid *dst,
+>  		write_sequnlock(&state->seqlock);
+>  		trace_nfs4_close_stateid_update_wait(state->inode, dst, 0);
+> =20
+> -		if (fatal_signal_pending(current))
+> +		if (fatal_signal_pending(current) || nfs_current_task_exiting())
+>  			status =3D -EINTR;
+>  		else
+>  			if (schedule_timeout(5*HZ) !=3D 0)
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
