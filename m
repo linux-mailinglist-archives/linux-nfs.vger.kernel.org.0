@@ -1,165 +1,158 @@
-Return-Path: <linux-nfs+bounces-10935-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10936-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DC00A741C1
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 01:36:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31535A741F6
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 02:14:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18D0C178641
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 00:36:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 284A51892E6B
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 01:15:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F2A628373;
-	Fri, 28 Mar 2025 00:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTkLKT6e"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA77F19F40A;
+	Fri, 28 Mar 2025 01:14:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDC517BCE
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Mar 2025 00:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395CE3D3B3;
+	Fri, 28 Mar 2025 01:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743122183; cv=none; b=PKiw9AuovY3DSaPId082XoLtvAsW896ebEgHvwZC81fPjPFGGcdnF40bNLvhT+qODMb9luH0V8NyXbHbIntru3y9NblXSV8eqbbNDwD9yRHG1YeB8yqU3yjg+DtAg9aZh3f3PtGf8w1dNdPQlafxYoOmw1rrLpcXlq6Kehj53u8=
+	t=1743124491; cv=none; b=kYPYwVYDvFi3pX5o771s1Fh9Q/ssd7p8PiAQRHLKRBNfsS90uTDAakJmOB/65noUy/huft4rVW/sx1RzNl6m9N6O8CDrR9sEggOnHe+f5bquCIQ7TWzSlETallNwQgMfZENUOTs9Zvgprl2Iw9gs00rhOnw0KZBIVTuODWqT5JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743122183; c=relaxed/simple;
-	bh=wctJ1ErYcQBnFjNhI/Wh4UmCu7tinOhLlAmuiPV8uWo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QIIIcxAKreJHyZHBAYtURoCDO6H1RPGXG5L7vGudBO2R68ncc2QQjy9aHO2AZEKbnEaioSy9j6T5E1bIWsbc1AL0DPu9o07dU5cieZp5eXkog31NKOO8bZpSz++r2Peb+2JMZOP4GeGzTVHvvupw2poND+bBp9cFjVI3KNo9C5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTkLKT6e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743122180;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jZgT0WURSRB848HBI94GLSiMtq/jWtcd9/O2hUbTiIc=;
-	b=DTkLKT6e/K9EnOD0vhRi4l7U9yaBZGs/Gft/VC/BaOCFhHQ3z1K2ZqUjEiWt8De8T3jXle
-	jPvGlaHNBxOrRQyEjt3SjH5JAab56CX649tjspU+CiMlBMSbh6rO7tFbFCSNdKYVgT/yq5
-	1u+kdNQasSMhFdjf0OyNLeyGXKjg6fA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-182-17TiKDEaPqaXFelBl45HIg-1; Thu, 27 Mar 2025 20:36:18 -0400
-X-MC-Unique: 17TiKDEaPqaXFelBl45HIg-1
-X-Mimecast-MFC-AGG-ID: 17TiKDEaPqaXFelBl45HIg_1743122177
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac28a2c7c48so78546366b.3
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Mar 2025 17:36:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743122177; x=1743726977;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jZgT0WURSRB848HBI94GLSiMtq/jWtcd9/O2hUbTiIc=;
-        b=Wkdp69yeovZlIvqmjd9N9yKZCeEyrdd73RUoFsAvt4iY+j/RPBe+/m/UoQzK48pN4R
-         9oDO/BwGKuVyj6d4WkopnHQzWYP3aFqMwpgJo3xxE1XmPTA4dCdk41oQYSSgrz+r5nx9
-         D3AXHyOB7rYLq9dxsXkScur2TZieG1OrhUU++KwcXoRdx2lhkH4kRQAW/VRJjEUl405J
-         NOjHLbaWvUUjqmXn+N2LtFvNe3rVpyJx1H8Ex3gBfNcGTk3F/dUhPtSt5xVPaHlIvgVO
-         ZxfDlwOPX0cLMpMB/ztBbHMvfvkZZF/BgZspHmsnStOlQz6AfHciFMB3SE3yzZOrYE1B
-         C/qA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxpQJqabd0gBCovuPy+Uv9K3osVilLEv+Zwzs52Gpb1dr7YGDpg9rFPFFpjO9LkpcERMVxXA4qsFY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx5yoljKqR1JH56bUnATA55vFsdAg8ndaxQ1qJohaugtgeI9qr
-	YFm8Q9kNyX8xJ+2gM57hMvzAPSNy7sUSUEp05E8rWVfE5yzQRk3+LtiNtuSf0iyoOwAr/ILsqWk
-	P2An5HnC67vP/d2noqI5VjsjQhCqjgpgKL/Zfmr0cF0v3Je1Q4PW6kjnyCc11J3QE8CKlzrNoMt
-	dxOEsRCn3CmeFyXq9jBfUp8hVCpXvVyOqb
-X-Gm-Gg: ASbGncsIstC7fvk7FQnRPp8QsXBzaIMX1dZUbsVj25KG32+Z5qqRCnSn4/M+jGnLeVF
-	DSyqgGK9VulHyF2cSvxh/ef4a5OTadO+wce9/Ax8Q1jd9DaoE3Ogfp95ggbtsyyhanrpOCEST2D
-	wx4AfojLw7EGpgMOdqY1y6+tFsLn1wlQM=
-X-Received: by 2002:a17:907:3e90:b0:ac4:2a9:5093 with SMTP id a640c23a62f3a-ac6fb14ebddmr553280766b.41.1743122177276;
-        Thu, 27 Mar 2025 17:36:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEOv5cgmL9L69uRA52T3l+7YmYTaNqKGARXqj9YkPhDmy6k+21t7V0zdDjPYRed82cY0+NI9ayCDEso7MgThBg=
-X-Received: by 2002:a17:907:3e90:b0:ac4:2a9:5093 with SMTP id
- a640c23a62f3a-ac6fb14ebddmr553278466b.41.1743122176865; Thu, 27 Mar 2025
- 17:36:16 -0700 (PDT)
+	s=arc-20240116; t=1743124491; c=relaxed/simple;
+	bh=Lrs0qJ2XX490B/P+4HpTQ96ufgdA3j9s94aEfJYo+js=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=WAPqWzuxF4CdLoolT7iEUQRK8P/g4O0aWxckYAnTbTuDAiFZIHHR1cPWj4vajgy1geCSdnZQ2sG1V0RNLP5pwGKLn3lflj2/6u5g+4o+2CUFb0f8lOv4gfImLwTysreLHO9D20PfwwxBSr/IUVyAufBDKYtzZFkjlqEft1Ogfxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1txyJ1-001t2i-99;
+	Fri, 28 Mar 2025 01:14:43 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250322001306.41666-1-okorniev@redhat.com> <20250322001306.41666-4-okorniev@redhat.com>
- <174311964828.9342.15055420092560166796@noble.neil.brown.name>
-In-Reply-To: <174311964828.9342.15055420092560166796@noble.neil.brown.name>
-From: Olga Kornievskaia <okorniev@redhat.com>
-Date: Thu, 27 Mar 2025 20:36:05 -0400
-X-Gm-Features: AQ5f1JprVynr4NtDep7euj9wRN1G8k3rs5niCQvvhm-OVoEH1H2pUAx1epZXtqQ
-Message-ID: <CACSpFtAj1TxzsMfxuSttA0_tqAZ2FZR69DuL5i-xK6bvMbtc_w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] nfsd: reset access mask for NLM calls in nfsd_permission
-To: NeilBrown <neilb@suse.de>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org, 
-	Dai.Ngo@oracle.com, tom@talpey.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Al Viro" <viro@zeniv.linux.org.uk>
+Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "David Howells" <dhowells@redhat.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/6] VFS: improve interface for lookup_one functions
+In-reply-to: <20250322002719.GC2023217@ZenIV>
+References: <>, <20250322002719.GC2023217@ZenIV>
+Date: Fri, 28 Mar 2025 12:14:42 +1100
+Message-id: <174312448295.9342.4725506312787082473@noble.neil.brown.name>
 
-On Thu, Mar 27, 2025 at 7:54=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> On Sat, 22 Mar 2025, Olga Kornievskaia wrote:
-> > NLM locking calls need to pass thru file permission checking
-> > and for that prior to calling inode_permission() we need
-> > to set appropriate access mask.
-> >
-> > Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-> > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> > ---
-> >  fs/nfsd/vfs.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 4021b047eb18..7928ae21509f 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -2582,6 +2582,13 @@ nfsd_permission(struct svc_cred *cred, struct sv=
-c_export *exp,
-> >       if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
-> >               return nfserr_perm;
-> >
-> > +     /*
-> > +      * For the purpose of permission checking of NLM requests,
-> > +      * the locker must have READ access or own the file
-> > +      */
-> > +     if (acc & NFSD_MAY_NLM)
-> > +             acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
-> > +
->
-> I don't agree with this change.
-> The only time that NFSD_MAY_NLM is set, NFSD_MAY_OWNER_OVERRIDE is also
-> set.  So that part of the change adds no value.
->
-> This change only affects the case where a write lock is being requested.
-> In that case acc will contains NFSD_MAY_WRITE but not NFSD_MAY_READ.
-> This change will set NFSD_MAY_READ.  Is that really needed?
->
-> Can you please describe the particular problem you saw that is fixed by
-> this patch?  If there is a problem and we do need to add NFSD_MAY_READ,
-> then I would rather it were done in nlm_fopen().
+On Sat, 22 Mar 2025, Al Viro wrote:
+> On Wed, Mar 19, 2025 at 02:01:32PM +1100, NeilBrown wrote:
+>=20
+> > -struct dentry *lookup_one(struct mnt_idmap *idmap, const char *name,
+> > -			  struct dentry *base, int len)
+> > +struct dentry *lookup_one(struct mnt_idmap *idmap, struct qstr name,
+> > +			  struct dentry *base)
+>=20
+> >  {
+> >  	struct dentry *dentry;
+> >  	struct qstr this;
+> > @@ -2942,7 +2940,7 @@ struct dentry *lookup_one(struct mnt_idmap *idmap, =
+const char *name,
+> > =20
+> >  	WARN_ON_ONCE(!inode_is_locked(base->d_inode));
+> > =20
+> > -	err =3D lookup_one_common(idmap, name, base, len, &this);
+> > +	err =3D lookup_one_common(idmap, name.name, base, name.len, &this);
+>=20
+> No.  Just look at what lookup_one_common() is doing as the first step.
+>=20
+>         this->name =3D name;
+> 	this->len =3D len;
 
-set export policy with (sec=3Dkrb5:...) then mount with sec=3Dkrb5,vers=3D3=
-,
-then ask for an exclusive flock(), it would fail.
+This code is cleaned up in a later patch. lookup_one_common receives the
+address of just one qstr which is initialised with qstr that is passed
+in.
+So on x86_64, the original qstr is passed in as 2 registers.  These are
+stored in the stack and the address is passed to lookup_noperm_common(),
+as lookup_one_common() gets inlined.
 
-The reason it fails is because nlm_fopen() translates lock to open
-with WRITE. Prior to patch 4cc9b9f2bf4d, the access would be set to
-acc =3D NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE; before calling into
-inode_permission(). The patch changed it and lead to lock no longer
-being given out with sec=3Dkrb5 policy.
+We have to put the two values onto the stack at some point, either in
+the original callers, or in the lookup_one family of functions.  I think
+it is cleaner in lookup_one as we don't need to put a & in front of all
+the QSTR calls.  But we can change it to pass the pointer if you really
+think that is better.
+
+Thanks,
+NeilBrown
 
 
->
-> Thanks,
-> NeilBrown
->
->
-> >       /*
-> >        * The file owner always gets access permission for accesses that
-> >        * would normally be checked at open time. This is to make
-> > --
-> > 2.47.1
-> >
-> >
->
+>=20
+> You copy your argument's fields to corresponding fields of *&this.  It migh=
+t make
+> sense to pass a qstr, but not like that - just pass a _pointer_ to struct q=
+str instead.
+>=20
+> Have lookup_one_common() do this:
+>=20
+> static int lookup_one_common(struct mnt_idmap *idmap,
+>                              struct qstr *this, struct dentry *base)
+> {
+> 	const unsigned char *name =3D this->name;
+> 	int len =3D this->len;
+>         if (!len)
+>                 return -EACCES;
+>=20
+>         this->hash =3D full_name_hash(base, name, len);
+>         if (is_dot_dotdot(name, len))
+>                 return -EACCES;
+>=20
+>         while (len--) {
+>                 unsigned int c =3D *name++;
+>                 if (c =3D=3D '/' || c =3D=3D '\0')
+>                         return -EACCES;
+>         }
+>         /*
+>          * See if the low-level filesystem might want
+>          * to use its own hash..
+>          */
+>         if (base->d_flags & DCACHE_OP_HASH) {
+>                 int err =3D base->d_op->d_hash(base, this);
+>                 if (err < 0)
+>                         return err;
+>         }
+>=20
+>         return inode_permission(idmap, base->d_inode, MAY_EXEC);
+> }
+>=20
+> and adjust the callers; e.g.
+> struct dentry *lookup_one(struct mnt_idmap *idmap, struct qstr *this,
+> 			  struct dentry *base)
+> {
+>         struct dentry *dentry;
+>         int err;
+>=20
+>         WARN_ON_ONCE(!inode_is_locked(base->d_inode));
+>=20
+>         err =3D lookup_one_common(idmap, this, base);
+>         if (err)
+>                 return ERR_PTR(err);
+>=20
+>         dentry =3D lookup_dcache(this, base, 0);
+>         return dentry ? dentry : __lookup_slow(this, base, 0);
+> }
+>=20
+> with callers passing idmap, &QSTR_LEN(name, len), base instead of
+> idmap, name, base, len.  lookup_one_common() looks at the fields
+> separately; its callers do not.
+>=20
 
 
