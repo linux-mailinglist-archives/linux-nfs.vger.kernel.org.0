@@ -1,73 +1,96 @@
-Return-Path: <linux-nfs+bounces-10952-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10953-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C72EAA75351
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Mar 2025 00:29:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44779A756EF
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Mar 2025 16:10:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E3C91691D0
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Mar 2025 23:29:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 857AD188F51F
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Mar 2025 15:10:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1A8A1E1A3D;
-	Fri, 28 Mar 2025 23:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC941E492;
+	Sat, 29 Mar 2025 15:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d2lQ8fkl";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FdevpvdR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021123.outbound.protection.outlook.com [52.101.62.123])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1884A35
-	for <linux-nfs@vger.kernel.org>; Fri, 28 Mar 2025 23:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7305A1FC8
+	for <linux-nfs@vger.kernel.org>; Sat, 29 Mar 2025 15:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743204560; cv=fail; b=EeI4cDzk7gkSW0aKN9cFXoVmKYuPX1s+YNrjSnADSUqoVBBePb8/OWWkKtWjmgOozQtGiUz/YaJyUIzGPLa9hYLcNoI6gj6LX1U1KQP/bSuBudBFImy/XWe6Lpdwy01PdRkEAyNYn5jC2Mh1Jickn3DsANpiXodpzpkJW52x+0I=
+	t=1743261019; cv=fail; b=XqVRS+DKNhRvUUSIZO2JRB4PrhemmFzjwQjnjwQcw7llhqj3xZhkksk1xtwhPT4fqFRePAeJ3B3RP1m7JTvDn9yj0No7H1L9XsOfJ5fWNX1VNGRRxdPSajjH17P3wSD6nq+JUFNTHZ5EfPvlUohqKj+11r9Q42erK/Pee8XTOY8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743204560; c=relaxed/simple;
-	bh=kanmts0cREPJNA+y4vJ/4slOahxU8lRRWVhoPmmaeYk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XkiSEsncQsfs7vi9FoZCwxiWO3MLlGvfyvM/fgMOKQItyceEuXkDdYlv9Oc35M9W51WRe9rmSDkdjTVHTiYPoLI0qm1YfG52d5O/4ZZEIxyPFuRP9+9YVTl9Xtv7LvZB70dLc/1ZOPiO+UgrA386ZMeCQn1KGzIDqBRwJ4LYfAQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=52.101.62.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+	s=arc-20240116; t=1743261019; c=relaxed/simple;
+	bh=j+b3j8TFQWw0s5/ip/Hqm5Qu24ntt8bFozd/lMhzDco=;
+	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=iwiaqmYmVDVgRtAqyAJ087GZVK+6GWyIqjvFBmpAPXh6otb770xmzwlaX08SRwApijii0/HAFotza4fNjnvyYcvHcBDM+rLy1GCZ+1dx21/lkRMaswP7XCzhzZKG0LYiJJKruo3/yqBVEDh/H9uPEboTdOy2KEfJz8a2jDwlvEE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=d2lQ8fkl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FdevpvdR; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52T9pDm1028080;
+	Sat, 29 Mar 2025 15:10:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=5b0+Lw2wh8sgskvB
+	8YNQY+w8LKI81RC6wRk9vSezomg=; b=d2lQ8fklMKRSIg1g7dq+NcTLhUgrWRWi
+	RZqZIMMNavrUEukMyHpe7k4qTAOIgIvhxRz/EVjip7cCIii16ke+9eg0+lG83G3v
+	pcRBJrwa77X7F0dtMR9ebXPF9kpRZUZbXTTIGykmiDqrVpLWwHVhgBpWccmSo7Iz
+	d4gGRE5784ZYRrdFqZ8S++/alZPfkBnbSbP74zT47541MlbTM+NdDAr/4MCv2LZj
+	5P0E0M+WsRi+/uP19eD9D4glht0AxmlggTwY2oeK8aHqACbRnNBuaLDwpQqSGQZb
+	IFk/EM2gp3hYpz1nizlcSLXMcRQyzCqYgEZ51Fkfh5hhhz3QLdxmSw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p79c0kaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 29 Mar 2025 15:10:14 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52TDhmGD010720;
+	Sat, 29 Mar 2025 15:10:14 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2049.outbound.protection.outlook.com [104.47.51.49])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45p7acdvnk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 29 Mar 2025 15:10:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZUj8zQ1u1+8UiZMR2h5E7nabhoHDP3yw1EM8Ulbt4Tt2diIFrZ4QBO2m3snXKxZqPEBkiB6F/HEk+MqhCplVe4bYh7u4teNbsjiBR6mj9QDoD2LyxSTQrD5Djf5WIlfJ5hX58OAjVzBc3N+TARHIKav4JtrNeO5vRMntVHdUgwS3yaOQ3FqRQUWT6DJiMJwS9kDochFv8BzxLTSuZn5Pt7mPqvj+QFyJQY/bgBpk6+iGlvnKZF0bluMiqub12MvEUNvcv7kAM0cUFbI+GIZjIwVLWgqCHoPC2ix6wzjv2L9/jG+RaPExJuPfPmNuxj+NDNBIErA/vIxBdrroGAhadQ==
+ b=kTJ8jN4yLg34AcNvfxplsBKTF3jPw+MSmywWfPaXro7dzDU2SqnIJY7ufzS5KBeMtV/VgelcIquhz2BiEzVKzq1gQ2kpnfxwERwd0otGARIPkP4qzwxyIDGHRFVKlV+1ldoPs3bsjlJ4dVfjQAZll26HM5l4qAu0tgLJpJDe3VOWDQPY701mE+AD6zJT5be970nz7Lw3IsOT1fo936zQQBh+jrSadLzoh6OFef6BkSX0s7dccU+jY+zA5MNXRqzYD8fnbC2RxIlWiF9KgWAJsZy2x3rW90SEnv/lVt7EpirMRD1/C8U/8fVTgFGKCPq40+xrh8ioKx3r243adHm3xQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tmD14BKKhMRzMYJIeAzT60GYYln4HfHHVkDuG6S6Vtk=;
- b=eKLFOVTnas8qcSoTdSkvqCxeABR9uNMtRSXRb5rW2anpeuJZS7wHN4iitIVO95cxZF3awWkgc8I5B8yIenhooYYnwTztLTRNn7GxD8v6FimJLbaPbpETlkanyvAht8e4X8aww5mf/DMNBXxya8Dv6QG4B8PYfSn8PzfQ7/0WRqw2aiK+o6T8RZ9HKGPQR5yk4E/KG0J89k2ME0sZKFhXPz5Rqb98L0bqllo7415nyO46vrUzK+o0gdcicy5wBKRrIimIelWTHwcYlb+MCWXAO/rXecy0wF0/Tw7HQ/CIOTidb8c6ll5Kh69AQ1Yb7OovjaM1OqLkQSkTryixjLGJZQ==
+ bh=5b0+Lw2wh8sgskvB8YNQY+w8LKI81RC6wRk9vSezomg=;
+ b=qzToWplcLf4Snx/BHBzNEtwEIub86k86Q368aoXb7jnt2K3614UiPjG25ZePIQ1tSh6q7SMQekDNepg9VxxtqIWAdGYe1YeX6FbMsCrnPUfjRwg4ez1soraXARWry9QnZ7SOQZrgW+h27K2VcZXTSjtCiWRMuyktGt/2wlmAgU3p3IF1dkLbn51r/eevfdnIwol/ndS5FH172IGILOqK0K4zpB6tMxSYz/wax2mKuriLl3WqBmAJE+71/e7cFsXYgccItbscB1/F3T6M3/kwq6z2Z/FjyODNGypAH495p0Ukq0Tcxtpr7IixkcruankwquU9it/fc6Z1VVrQx6txeQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB3854.prod.exchangelabs.com (2603:10b6:805:19::20) by
- PH0PR01MB6714.prod.exchangelabs.com (2603:10b6:510:94::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.47; Fri, 28 Mar 2025 23:29:14 +0000
-Received: from SN6PR01MB3854.prod.exchangelabs.com
- ([fe80::66af:6788:adc5:f856]) by SN6PR01MB3854.prod.exchangelabs.com
- ([fe80::66af:6788:adc5:f856%5]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 23:29:13 +0000
-Message-ID: <058327d3-83b4-4b1e-8ca5-786764e218b6@talpey.com>
-Date: Fri, 28 Mar 2025 19:29:14 -0400
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5b0+Lw2wh8sgskvB8YNQY+w8LKI81RC6wRk9vSezomg=;
+ b=FdevpvdR8owyp027yg9gEwMQ0jVX2zntX3h/F+xN5pcMIdWfsLmHggmsJYqICs2EixOUO+ITA2AHV7YhM9bOlVUD2ZYvqftgyL5pt5tr9FZIAsa3eG/sGMtex4s5DbZToWquiq4q4HajA7CIYS2UWZU2T7vSw243IrFhmyuX+3o=
+Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
+ by BY5PR10MB4179.namprd10.prod.outlook.com (2603:10b6:a03:206::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.33; Sat, 29 Mar
+ 2025 15:10:11 +0000
+Received: from DS7PR10MB5134.namprd10.prod.outlook.com
+ ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
+ ([fe80::39b2:9b47:123b:fc63%5]) with mapi id 15.20.8583.030; Sat, 29 Mar 2025
+ 15:10:11 +0000
+Message-ID: <74e445b9-b084-4dd1-93ff-cb6fe875ee9a@oracle.com>
+Date: Sat, 29 Mar 2025 11:10:12 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] nfsd: reset access mask for NLM calls in
- nfsd_permission
-To: NeilBrown <neilb@suse.de>, Olga Kornievskaia <aglo@umich.edu>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com,
- jlayton@kernel.org, linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com
-References: <>
- <CAN-5tyHKrbL9DuFxvH6hnL4uwHDZ-d49X8DFBVReCvdh+Qh0XQ@mail.gmail.com>
- <174319880848.9342.18353626790561074601@noble.neil.brown.name>
 Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <174319880848.9342.18353626790561074601@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL0PR02CA0133.namprd02.prod.outlook.com
- (2603:10b6:208:35::38) To SN6PR01MB3854.prod.exchangelabs.com
- (2603:10b6:805:19::20)
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: nfsv4@ietf.org, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+From: Chuck Lever <chuck.lever@oracle.com>
+Subject: [3rd notice] Announcing the Spring 2025 NFS Bake-a-thon
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR19CA0005.namprd19.prod.outlook.com
+ (2603:10b6:610:4d::15) To DS7PR10MB5134.namprd10.prod.outlook.com
+ (2603:10b6:5:3a1::23)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -75,250 +98,129 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB3854:EE_|PH0PR01MB6714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fc4c80e-8301-4df7-6891-08dd6e505997
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|BY5PR10MB4179:EE_
+X-MS-Office365-Filtering-Correlation-Id: 543ab0b6-ddcd-4a67-79bf-08dd6ed3ccd1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NzQ5ZXBkbXl5a1BtNWptK3Z2eHBINmQzVklqN3ZpUXN0REVzdi8ySjR2TGtU?=
- =?utf-8?B?MjJXYktaK1VhN3VhRHRCNVhlOVJpNGMwY2pFbkhTaGMvWkhGQXRWV1FOa2VK?=
- =?utf-8?B?bE81alpIc21mdGRLMm5xN3hSSXFpT1Q0ZytzRTlDbStQYUEzOHhydkVzV3pJ?=
- =?utf-8?B?Ukh5TDMwM2dPSm5WV1duRmtwQ0JxdW8rTFd4OUR1dHRTSGFxYVcycVdxaUhs?=
- =?utf-8?B?ZkpwZVk3YkY4TW5aMUZYblAzWkhDQWRjZ3FGSm5zTDBXRkZDODB4Rk4ySm5W?=
- =?utf-8?B?MXBjeHpMcHJJeWZkcDJuZmZzMHpqYlZGeVlUVXB1cEQyWTZYU0orQmR3ZGdS?=
- =?utf-8?B?cWVOUGoxc2VjTlFNdEZDL0hNcFhvbjl3QkVuaG5ocG9VK2xweGU1R3BlTi9V?=
- =?utf-8?B?WThpZ3FEYTRMNlFLb2lGT0V1RkY3T2ZVM0ZBNUUyMmk4SFJPa01yQXM0bTNF?=
- =?utf-8?B?UDZPbnpYMlppeXhEbmYrMUVWdGhFNEpnYnJlMy90ZTAvcEFMbW00OU5URlkr?=
- =?utf-8?B?ZjZOK3RNRmp3TzBieHVhcWllTCtiNlIxUUY4VmF6Qk53cWVoaWxmTnJ2YXNL?=
- =?utf-8?B?ci9RV1VQU0ZBcjVSVll0Y3FtVUlXWElOZ1JwZkxEVitrMWFwaUJhblZ4WlVE?=
- =?utf-8?B?RTdKdlJHL2JGcGtxbmVWMDU0cDduaHdlR204ZTg1M2kzZE1CSFp6Snp4MFVh?=
- =?utf-8?B?NVU1cVZKSGRZQ1dGN2tVQ3l3U0Z2MHNFM2tSOWc1ek1VbWZzcVd5NU93amo1?=
- =?utf-8?B?RC90SHpnRDNqTnFEaXhBcDZjSzBKNlJSZTUrWGY5NzN6MjZSQitjT003MDRZ?=
- =?utf-8?B?OW5lWHZIM2lvNUVzck9xRDVsblBjQnMvN3dxTXZlaU8wYmtZNTBRZHNmS3F2?=
- =?utf-8?B?cjN1VWd3RWh4YnVZTHJXeEZoTWNQVlg4am5Yclh5a29kVUV6b1NSVzFBQXd1?=
- =?utf-8?B?OXEzdlVrUGdkMGY4bUhIbnZlV2JIazF3TURYNlJGMTNqcGlMOVZncFJlNnZX?=
- =?utf-8?B?MUNrKzEwYlhXWVlkWG43dWs1emtWR0FVdjhCak1VRTRvcUlUeWlYbWFPMFhJ?=
- =?utf-8?B?aVp4TmFjTEI0ckNTUStjTjcyKzNBVW10YlUxT21DOWh5Z24rUWRtV0ZMM2kv?=
- =?utf-8?B?OXQ5K0c0M2F5RTFsUGt2dUNLdmlSNk5KeUFXR081aG8xcHpyUWMvK3k5dDVN?=
- =?utf-8?B?Y2UyMEx0VFgxVmcwMllXMDR5YjJjdmxXYzFhbmgwNjJnZDRIYmhnUHIvS2FK?=
- =?utf-8?B?R2lwKzFqL1l5NnBHMzI1c3QvMnhkT0swL1JXTmkzc1hRM1lGTDRlVmxZMW5w?=
- =?utf-8?B?VXJHRHVWcjVmZmZCeTZnWEpWeTc5TUlncXBNVGFhME96UG11UFp1UXJoTHJj?=
- =?utf-8?B?dkw4Qlh1VGNhUHRHVm5XVDVwTlJXY3BIZldFYTlzQWpXWVhFR00rQXJRRFJU?=
- =?utf-8?B?QmZES2FCcUc5a2N0YkxjNDdyM3B1bWtGM0Z0aUxJTzJKNXFXL0tXTndKTDJE?=
- =?utf-8?B?dlZBSUs5dUdQTDc3U0pLUy8ybTFCbkY1QTBCYzV5aURTMkZKRC9nN2NuRk9N?=
- =?utf-8?B?c3Z0UElVYTNtamM2TEJ0RXNEQUNhRjhxMDNyUzNoQnlFbjBrM3E0NENXRTVW?=
- =?utf-8?B?RjcveFFRMFZxWkh3d1g1aGh0dkh2cW5pUGpxUVEzL0dWVUR5WmxvWTNaZ3dn?=
- =?utf-8?B?UFhGSlJNNTNkblpKZWtlMmF6V2hOYlV0SlFORjNaUUs0cjFwSnAvZytPckE4?=
- =?utf-8?B?NEF3NGtJUktPWTF3a242UU1JYmsyeS9MT1U0R2FNc1V0V2NiMkFqZ01RODMy?=
- =?utf-8?B?YlBTWXFPa2w5RXkvakhIQ0JNaWtKS3lwMmtxb1M5b0NnSndVRFBidGlQVG9S?=
- =?utf-8?Q?A/01WdQ6jHfXq?=
+	=?utf-8?B?Y3FkMDBDaWpSdFhUTTY2c0M3MmxwaU1lb0wxcDJTOURhVW9TZ1RySTEwb3Jh?=
+ =?utf-8?B?SkFWUmRmeUxmU0poZUFnNDA1M2pIaldiS2hiUXNya3d1eTVvVTVURnlETU9H?=
+ =?utf-8?B?TzBNVUd6VkdQamNoWGllWXBFcWFJMmJOd1JTZ1BXcmhxOWJMNTEzQVMwaS9H?=
+ =?utf-8?B?NU5hcWtOTkFEazF0eUtrYldlNUZCRy9QQ1FCZ3Q3eElvbnlPQkt0L1FaK2lq?=
+ =?utf-8?B?SDhrNmJsc3dTU1JRd0hVVE5md1NXTVNDNGZhTlNBendCdCt1eVU2V3FaUGJl?=
+ =?utf-8?B?aGEyeGloVVZGQ2ZYaUZxZm1kdVVVRVJaMjJ0YTk4cHNwQit1c0hMOTFhOC80?=
+ =?utf-8?B?S0NSUjFTRXdkV1Bqcjlvb3l0bG1hdTQyUHhMWUFKbVNKNVk3NGNWeXVDUzVa?=
+ =?utf-8?B?NnJpTUpkUjdWUDN6R1dKS2lMODMyZ1NsM2t2RHF0SkVSWjM5ZUFEUXQxZ2U0?=
+ =?utf-8?B?SnVBdFVNclhYRkJkcTdpenpUaStabHZ5b21iLzczb2hYbFdEZzBiak5Fc0Fr?=
+ =?utf-8?B?UWJKVFRqYi9nZjJ5VC9JMG9KVWRTSk1uaDZoajVLd2ZtQ1c4UGxobFJCSnF2?=
+ =?utf-8?B?bk5kMml2ellNRmtxWVNjejhrMUxGenJXcnZpbE0xUnJmVk9BSHVNYlZ4Q0xP?=
+ =?utf-8?B?a09GY2RJaW5rblFxRlZ6ejFhV3YvQkprYWJKWElTbENRTGNhOWRQT3kxeEpw?=
+ =?utf-8?B?a2orOHpwYktJRzdiVUFHeVQwRStvTUlVcTYxa1hqenNpOUxYeXZia3FIdVlx?=
+ =?utf-8?B?M0EvNkd1azFJWklsa2t3am1YY3VtcklNcTEzWlNuUWJSeDZhNGNqL1pOQ1g0?=
+ =?utf-8?B?eTZwYm5BNURLTXhDeUp3eFJ2RE1mWFpic1VFU2FPeEVZenEwU3VudDlLTTlR?=
+ =?utf-8?B?RTBlekFzQWR2bmhzZElkRnJGY0s5ZU1iYnE4bmxON1E5WTNXMkJsNzJmZnd4?=
+ =?utf-8?B?NXFqbER5NmJwclNzcDV0ZFRXMG1IZEFtSFpVTHFBaEpJV3p5ODFnNDFaMlpW?=
+ =?utf-8?B?Rnp6a0N3N2kyd1FkNkdxVU1ORklWWGdUODNzNWhYb0RvWDBtVWhWc1ArK2py?=
+ =?utf-8?B?emV1eHVCd1J4MnhRY3c2WXQwY2tFQ2JOZzlFMlFUQ1BWVCtnSHU5MTk3ZnZD?=
+ =?utf-8?B?NUwzQjFkNnBrYi9hR05LTkNqYm9LOU54SUR4TmFnQnB4aThmQjV6WUlXam9l?=
+ =?utf-8?B?NWZFQk1tT1QycGFsYjZIWUdQMWQvQTRZc3BjTlRIYmMwSzYxRnduMk1PT3Qx?=
+ =?utf-8?B?NmhMYW01Rnh3V2lmZ3M2UWRIcGcrbmFVbEY1WHFrcGN5bHJjdzFtQVpnREtx?=
+ =?utf-8?B?Y0tzVDhkMXRIQVBwc0ZiTkVBdEVzOENrSElHb2xrbzJkRW1rZ2g4djVkMXVY?=
+ =?utf-8?B?ZUFSaGE1VzZCQWxNdEpSdEpDWGhTZFZ2L3hJWWdCMHJUV0J0VlNodk9QM0M0?=
+ =?utf-8?B?VG9ab2lSNTdPZXhEUHBKN2pnclpFSldUVjZCaVZqaFNMSkdOazdETEtUYXRp?=
+ =?utf-8?B?YUFGQ2kvdjVlMU5hZkxFdmVJOEZrQ3k0eFZPbDhPUnp6d1dUVVl2czg4MlZG?=
+ =?utf-8?B?ZmtTdWl2dWhTRUp4Ty8zUVI1VFdoK2RUUHR6KzRIQ011Q3pCYXBsS00razk0?=
+ =?utf-8?B?RmFFZWFwb0FWeWN1Y3FWckFpTWN4ZHpocE54Y1JZOHUvNkt5V0hCeUMyTWdl?=
+ =?utf-8?B?a29oelhnVXVoZzAyRU95RWtoaWR0MkVZbW1RS0ZSVnBCQTlURVFPUkcwL0Er?=
+ =?utf-8?B?eTVHU1JVN053R3VrUzJ4S3JTNHVOTVdsVzlDY3Z5OGdBNHJwbXFnOUxseGNU?=
+ =?utf-8?B?alV2OHkrYUVzYmQyWEdQZz09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB3854.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YmRZY0lIRklBU3dlSUFVeWs1cFZhOXJ6SzhVdDVqSitwNjZjeTQ5Umo0elZx?=
- =?utf-8?B?ZitteHdydnM4MUl3djJ5dGxTU09CdDFyU1YyQlR6S3dvaWFWRk1JQTl0NDBE?=
- =?utf-8?B?eTRMWlVQUHV1THl1ckdlN0ZTeVFKM0Nldi9CVkhPMHlDVS9oN0JQV3VNakVL?=
- =?utf-8?B?aVRqWHVaYVFJZTNEQ285Vk5BeTlaNkxJelc0b05SOGp4OFNTeVRKQVZsZHhH?=
- =?utf-8?B?bmtCQkg1ZW1teUZlZHBmVzIxbGJBOUMwTVRyRVFIQjdSVXJUZHc3aEp3OVY3?=
- =?utf-8?B?VmIwTUVrcFVZUVUxY09oRTBkb0dWaUZKdFM4NEFkYkZMRXZGNTRQSmI4Wkxo?=
- =?utf-8?B?QS9ydDBWeCtpT0tEN2plN3dPR1AvaVFQRW8wMW15Qk5ZdCsySnR5Y1h2MG9z?=
- =?utf-8?B?cUZRKzZGSCt1dlAwQlRWVVZHMDNoVUlaRnRHSFl3VUc5TmdvckRpMnJFUVZC?=
- =?utf-8?B?Y2pEWUVDbVRMMzlYVHNVSlhJbGxyQXV5SXc2Q01Tb3dwRkZmNWNlNy9WZjdM?=
- =?utf-8?B?dUZ6endvNFBMWmdseGlTL3dwTm1XNE1pa3dwWEJxS1BkR2RROERlNC9CMHN1?=
- =?utf-8?B?MkJ6SzI5N0c5M0NEOEdEazRncHhJU1IrL2VtNlZlOGc1RWU3ZEtmL1JqbEI5?=
- =?utf-8?B?QlVRanJYbDdudW44Z2ZpZjdRVDRDRE56bGJKamtDQVNtcDNwdVRvWkpVNUJ5?=
- =?utf-8?B?WmQ4SjhWTnlocjdBS2pDbXNUVUdncTJmejYyNENjY3NVaGlRdFNIRmRqLzBW?=
- =?utf-8?B?bVdCUTVHOXhvQVRLZXRFVTNHRk1RZDJUenErenJKalpkc0FmTURoQzFzTmc4?=
- =?utf-8?B?ZEtpcC9MbUhaL0FoYlAwSXhtQmlmRm0rYkh3WVE5clNLaWtoRlBlWFB0dGxO?=
- =?utf-8?B?OHluZm1LVHhmVFdCMjBMRDgwYk84VGwyenIxb2U2dEh6a29ENHFoRWVJSXJE?=
- =?utf-8?B?ZEVsZWtZc3piMmsrVk5aZ3BzQ2NXVnlTdUpYV01DWVhMQ1YwK3JqR3hoU3g2?=
- =?utf-8?B?SXFnbnpzOHR1eGwyeWtOUzVXMXRDaytycTZwTWY3OGZTRk5IYTFtUW1zQWJL?=
- =?utf-8?B?b0kraTlFTmJkUEE1RUhBdDhUaWUyTmI5YlZBSHYrNkRVRUtZTWZJNGR4dkFq?=
- =?utf-8?B?UEV0Vy94MjZ5WkVBcWR6M2ZuMUxrdmtVUUlBY0pIZWx2VHp1bmwxUUQ3Q2hU?=
- =?utf-8?B?ZkJKRHNxRGNWajBIeEJvL0tZbCtiak5sRE9oeGI0MHBVNjJtbCsxa3dJc1NQ?=
- =?utf-8?B?Ri9RRndjdGEzemwxOWttTDFxSWdGYU9Sc3hFMlNtaGpIOUE2THJERC92cFVu?=
- =?utf-8?B?NW5ITWlDOTZUS1paaXExM2JYVTlYYS83MmpEeHpNRngzNGJHRTREeG9yVmx5?=
- =?utf-8?B?ell3Z3RQdC9qSkVsUnV2ekg1Mkl4dWs3cWRUTm1HbWxkcWJZektFWkJyeUJN?=
- =?utf-8?B?ZG9KYnhsZmxZeGhxWWtMWHhnNzBSWXNpVmwvT0JJRUYwU1A2NCtOWkV6YnVw?=
- =?utf-8?B?eDJpWlY5NEtwRFZKSXlwVVNaaGtmQVJOL0ZlaEQ1cjZ0ckw2SkRlbjJvOFNI?=
- =?utf-8?B?Mmt3Q0NNdHNFYWt2ckkrYzc5ZVVOYXJDRDJlcXkyT29uWkRDNGsrOXQrRklm?=
- =?utf-8?B?N3BnNTdvMm10STg4dEJxbGJ5UnNmTk1UNzB1QlpDZmswT2oxS29VRFZhM0N3?=
- =?utf-8?B?UTY1ektIK2Jmc3gzaTAvTnVWZnVFa1J1UlZYbngyWEJoYm1aQnp5WGxqdnVk?=
- =?utf-8?B?MEVpQ0dTNDVYWXpIZ1FkVVI2UHFrZExmaUlDVXA2clBDeXcwS3hOUXlOUDlw?=
- =?utf-8?B?dkQ3UjI5RHkwSTMrWW9DSENrVE5VcW1Va1R1Q0puTFZGZW0vMWIyUDNvRVFu?=
- =?utf-8?B?YkJsUzhMSDd1YW16dmloNjVoMHpzcnZhbVQwaFVHekhpdlQyRVlRVit1QmZT?=
- =?utf-8?B?NXJIUDVXTElNQXRyQXo0V1FOdzlqeGVOcG5Uc21ZWktXTUFBTEZjbW5SZ3lI?=
- =?utf-8?B?QXhSZFdBcTRxZVFUR29lVHZrUzBnQkYyMVlwQzcyK0puL0w1QjZuR0VweDR1?=
- =?utf-8?B?LzNFa0JwM0ozeTJVUkRFd0VRRWNjdUdCOTRGQU1waytCVUhNdHBrVmZGV1pG?=
- =?utf-8?Q?zK/c=3D?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fc4c80e-8301-4df7-6891-08dd6e505997
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB3854.prod.exchangelabs.com
+	=?utf-8?B?emRKMGZXVHRjTnMxVG9CdHFlRUt2cnRJU1NuSUhoc1h0WTZ3ckk2WFRiYWgv?=
+ =?utf-8?B?eTVDNEpiVC81QWg0cDNGck5jVHk0bjAra3VDZWZXekh5ZlNtSkdwRDdWTHA2?=
+ =?utf-8?B?WVhoZENCOElmTGp1Q2E4OXJHYVFYMUF1Skp6SnpFUUtQYkJPWmdQdFpGNDM0?=
+ =?utf-8?B?dlJ1dytRUVRVN1F4amtsSGVKWjRraUtxSUE5QkxtUm1QZUlaY2pDVEFSS2tB?=
+ =?utf-8?B?MkMrV2ZjSHZQTUo5TnlkMmJLYmxLc3h4RXRWTkxzYkVsNUIzNVMxbUg0dW1x?=
+ =?utf-8?B?SlV2MWdvRGdYYWsxVGgxY1IyQmJoQXMwQWUvODFVRjZrdktYVHVDVkY2UHBl?=
+ =?utf-8?B?QXJ5OXdBWHZuM3hBdWtFcnVnVWI2dHlTVXgxeTMrc0I1bzFsM2ROb2I1SXB0?=
+ =?utf-8?B?dnQ4cjAzbHZVTzI5NlJ6L2ZSYW5DY3EvWTAvRWM4aU54bFpYcS9SYTJ0MW5K?=
+ =?utf-8?B?emdwSVBtUVd0UHhIRWtHT3A3OE16U0RyTWJ2T1VxL2N6ditWVHpOOWkxK2dG?=
+ =?utf-8?B?RkZqcXZOeFJKMzkxdUgwYzZDaFlWdU5BYmM3ZVBBa2RFeCt5VEJMcWJFQ2FT?=
+ =?utf-8?B?T05sYVNmdHBqbWdwbS9uemlXNEwvQ2JNakQ5WlNWUU10cEtBTjlPQks0eE9j?=
+ =?utf-8?B?UGN0SC90ZzdHWlZYekg1LzdOOE50c1U0N1FzR2hxcVJvQTZGQ3VGNkZzVlE1?=
+ =?utf-8?B?VDhSRlpiejIvQjcrY25mWUx1blM0QmJzZGE0Ty9BYVpUTWRRSDdUa091dXRI?=
+ =?utf-8?B?T1UwMHY1RDNUMTBKVVRIYjNqZmlyRmRJcTVmdmUzOEhtTjY5QlIxVHNVNXJU?=
+ =?utf-8?B?MEpiOEZ2NStQazJmYjkvWDVINFRVd2RmQnZhVUJZNkZJZUxJVSt5NVRKYWcx?=
+ =?utf-8?B?SDcxcHFFdkkxakhNYTNqYUtCOS9GZUcrMitXdTZWelNxWlQzSis5ajBlK0w4?=
+ =?utf-8?B?T0Z6M3dsK3hUY1o0STRBSWF0SkIwR1FoYTVhZXdhdUgzUDZVQmQvTGJVdHJE?=
+ =?utf-8?B?SHdVOUNlQXFTVGUrUTZwL1NiSS9mbkhaVEtlZENpN0tGMzhqRHBhTUNxajhw?=
+ =?utf-8?B?Z0hTNEs3Yk9mV1A2THE0STk2aGg0anhnS3J6UGkwN2RnSktFN3VrM0pVemxl?=
+ =?utf-8?B?ajJtSUI0OVRPWmt6RnBzMU1LVzcrODAxelVzbXZLaFpwZDhucUliTm9rQ1Zo?=
+ =?utf-8?B?ME82UURJRjdQS0ZwelpEd0pzRER6MzA4WEJLN0FCRTZobHhTeUNlOXdzRUcy?=
+ =?utf-8?B?RVY4NEtWMW9XdWdrQzZqZ0NjMG8xdTdNMkp6YlNnTjlKb2ZWdlY2R1gxcGp1?=
+ =?utf-8?B?S2w1NG51REl1aWFDaS8wWElNUEdOOVVGd1ZXeEFweHRqOU1YSDcvUndCRmNF?=
+ =?utf-8?B?T2JFMUkyNFNBTmZqVms5MTdqS0l4VzRNYU8yM09ZRmR3U0dwMjc2OTFYUE1n?=
+ =?utf-8?B?MVZZMXVvYnRXdVloSXJ5WXAvaXpJMlNlZjM0akg0Y3pKQU8wN2RDeWppV0M0?=
+ =?utf-8?B?MzFVZm5TVUhmcHJ2WVhDQjZUZjdicHBOSFJ5MUZrVXNtTTd3S2pNaGgvZHJm?=
+ =?utf-8?B?MWpPUzU3VFNyVld4TUFzWkJPU2haSlE2a0RZQ3gxKytxZXU2dVFvbTF6eG1k?=
+ =?utf-8?B?NDUwZlQrVEJrQ2ZiL2lremN3OG5CcTk4U0lwV3dTN0RORTJKVGNzVXA0QlAx?=
+ =?utf-8?B?L05rOFZFT2JiRjlNaExaT3ArTXRpRXJCR3pPMXkyKzRoZ3ZrZFFQUmxWWndk?=
+ =?utf-8?B?aEd2V3JaMFNrMXdrR1UzekRlbThHeVNFK2x1NmdNTkdLS2xqQ015LzFrM2px?=
+ =?utf-8?B?N1c2L3VFNTFNdlpuSGpGalVIdy9JL2lHbmpra1VQQ3BOYXZoZHVUcENaWmg4?=
+ =?utf-8?B?cUNqYkJBOGkxeWN2d0RaQXFVS3NqbFhEeWliUVFXeGdGNjVmWFBlci9HL3FX?=
+ =?utf-8?B?V0lnZDRjZmdxOWRRTXFiTWdRVmhFOGg2aEs5NmtzcWR0WDgxOWo1VjZHQWNR?=
+ =?utf-8?B?eTlxb2RpUUNtbnN4U0dUWEFkdjhIYWFMYXEzcEZVQS9MdE1JdVVueUFDZ1hN?=
+ =?utf-8?B?dDJpUCsrdHE3Q0R4d3dTSnAvb25FbjZIRTZ1NmRWWndLNGtzQUN5U1JqRTV5?=
+ =?utf-8?Q?EGB+mkQ02QaOIbhV+U36zSlLn?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	E4MC5oon/wADGteIeQvuzPyAqU6YH3PnjPBuikUIT2c/ZtMwpyZSlANuaBINNqUq72u/ACmc/X8CH9aPCv+ZIvCCulOhBjYG7Iun1rn4gno8u7KIQSmaNyot9nBXdvJcPdUOFF8Ffon7MHvbEc3aA/oS+Zr5nnPJGPJDyjRVQ8QYnFQIU4ECnWe3PTsSO26maGL+JhblgJ6J9YG5ddwtXG1Vfga7bC3E8a0+ks0p08DXbxqZw80HAuUOp7f3Gto7+ndZ7khEi2ojRRr88YmYSKpkbtO6xSt0PANy51o3YgNX2Ewpaj4CNHpDE2TdjYjD8Gh1rck65eDEHN6IlM2QOf5F0CUi7MnG8DHLEanVknZ0mZqdbCpgf5adLOMad1t22c3ug05CFGauuok6/fNEexLE4vuqoyLHQeiECkzjnb865Y6+Vm/oICPvv38LSpbK8lxQPiXrBKyKf06eRD8Pu8uOij+ZX/inAXHV810ajgRZLkUPnDFr8SYZ3QFEv4dKPYNHQXiCi7wDzoxr8PxfZ1ba7i8iyVxElOBblrtB0Ya+/rlpZQtxFB9f8NvJjPZsh/QFer4tUoaFZ7SQXBHFuKKPsCZGg/aDBnrCQhsJL1A=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 543ab0b6-ddcd-4a67-79bf-08dd6ed3ccd1
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 23:29:13.7645
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2025 15:10:11.1437
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OLZfdx/CtYA0DI0VQez99e04svMJR90FC9JOt0TFK0+V1HG+aeRYifA+evjJft6s
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB6714
+X-MS-Exchange-CrossTenant-UserPrincipalName: EDceBtYRtrTxljcN6P+h302IfR0yUzvVplZLnICu/WCq/gJJPXYdmwtsbCWHokVLnNjKByVs8pGp2dSRajkyhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4179
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-29_01,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 mlxlogscore=777
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2503290109
+X-Proofpoint-GUID: t_nR15Wnfq7CiaZYz1QKZItMkMqZXmkj
+X-Proofpoint-ORIG-GUID: t_nR15Wnfq7CiaZYz1QKZItMkMqZXmkj
 
-On 3/28/2025 5:53 PM, NeilBrown wrote:
-> On Sat, 29 Mar 2025, Olga Kornievskaia wrote:
->> On Thu, Mar 27, 2025 at 9:43 PM NeilBrown <neilb@suse.de> wrote:
->>>
->>> On Fri, 28 Mar 2025, Olga Kornievskaia wrote:
->>>> On Thu, Mar 27, 2025 at 7:54 PM NeilBrown <neilb@suse.de> wrote:
->>>>>
->>>>> On Sat, 22 Mar 2025, Olga Kornievskaia wrote:
->>>>>> NLM locking calls need to pass thru file permission checking
->>>>>> and for that prior to calling inode_permission() we need
->>>>>> to set appropriate access mask.
->>>>>>
->>>>>> Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
->>>>>> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
->>>>>> ---
->>>>>>   fs/nfsd/vfs.c | 7 +++++++
->>>>>>   1 file changed, 7 insertions(+)
->>>>>>
->>>>>> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
->>>>>> index 4021b047eb18..7928ae21509f 100644
->>>>>> --- a/fs/nfsd/vfs.c
->>>>>> +++ b/fs/nfsd/vfs.c
->>>>>> @@ -2582,6 +2582,13 @@ nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
->>>>>>        if ((acc & NFSD_MAY_TRUNC) && IS_APPEND(inode))
->>>>>>                return nfserr_perm;
->>>>>>
->>>>>> +     /*
->>>>>> +      * For the purpose of permission checking of NLM requests,
->>>>>> +      * the locker must have READ access or own the file
->>>>>> +      */
->>>>>> +     if (acc & NFSD_MAY_NLM)
->>>>>> +             acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE;
->>>>>> +
->>>>>
->>>>> I don't agree with this change.
->>>>> The only time that NFSD_MAY_NLM is set, NFSD_MAY_OWNER_OVERRIDE is also
->>>>> set.  So that part of the change adds no value.
->>>>>
->>>>> This change only affects the case where a write lock is being requested.
->>>>> In that case acc will contains NFSD_MAY_WRITE but not NFSD_MAY_READ.
->>>>> This change will set NFSD_MAY_READ.  Is that really needed?
->>>>>
->>>>> Can you please describe the particular problem you saw that is fixed by
->>>>> this patch?  If there is a problem and we do need to add NFSD_MAY_READ,
->>>>> then I would rather it were done in nlm_fopen().
->>>>
->>>> set export policy with (sec=krb5:...) then mount with sec=krb5,vers=3,
->>>> then ask for an exclusive flock(), it would fail.
->>>>
->>>> The reason it fails is because nlm_fopen() translates lock to open
->>>> with WRITE. Prior to patch 4cc9b9f2bf4d, the access would be set to
->>>> acc = NFSD_MAY_READ | NFSD_MAY_OWNER_OVERRIDE; before calling into
->>>> inode_permission(). The patch changed it and lead to lock no longer
->>>> being given out with sec=krb5 policy.
->>>
->>> And do you have WRITE access to the file?
->>>
->>> check_fmode_for_setlk() in fs/locks.c suggests that for F_WRLCK to be
->>> granted the file must be open for FMODE_WRITE.
->>> So when an exclusive lock request arrives via NLM, nlm_lookup_file()
->>> calls nlm_do_fopen() with a mode of O_WRONLY and that causes
->>> nfsd_permission() to check that the caller has write access to the file.
->>>
->>> So if you are trying to get an exclusive lock to a file that you don't
->>> have write access to, then it should fail.
->>> If, however, you do have write access to the file - I cannot see why
->>> asking for NFSD_MAY_READ instead of NFSD_MAY_WRITE would help.
->>
->> That's correct, the user doing flock() does NOT have write access to
->> the file. Yet prior to the 4cc9b9f2bf4d, that access was allowed. If
->> that was a bug then my bad. I assumed it was regression.
->>
->> It's interesting to me that on an XFS file system, I can create a file
->> owned by root (on a local filesystem) and then request an exclusive
->> lock on it (as a user -- no write permissions).
-> 
-> "flock" is the missing piece.  I always thought it was a little odd
-> implementing flock locks over NFS using byte-range locking.  Not
-> necessarily wrong, but definitely odd.
-> 
-> The man page for fcntl says
-> 
->     In order to place a read lock, fd must be open for reading.  In order
->     to place a write lock, fd must be open for writing.  To place both
->     types of lock, open a file read-write.
-> 
-> So byte-range locks require a consistent open mode.
-> 
-> The man page for flock says
-> 
->      A shared or exclusive lock can be placed on a file regardless of the
->      mode in which the file was opened.
-> 
-> Since the NFS client started using NLM (or v4 LOCK) for flock requests,
-> we cannot know if a request is flock or fcntl so we cannot check the
-> "correct" permissions.  We have to rely on the client doing the
-> permission checking.
-> 
-> So it isn't really correct to check for either READ or WRITE.
+Greetings,
 
-Just one thing to mention, newer versions of the flock(2) manpage do
-mention the NFS/NLM behavior w.r.t. open for writing:
+This is a friendly and warm reminder that Oracle is pleased to sponsor
+the Spring 2025 NFS Bake-a-thon event, to be held May 12 - 16 in Ann
+Arbor, Michigan, US. This is an in-person event that includes secure
+remote access to the test network via VPN, enabling virtual
+participation.
 
-        Since Linux 2.6.12, NFS clients support flock() locks by emulating
-        them as fcntl(2) byte-range locks on the entire file.  This means
-        that fcntl(2) and flock() locks do interact with one another over
-        NFS.  It also means that in order to place an exclusive lock, the
-        file must be opened for writing.
+Event registration and network, hotel, and venue info:
 
-Not sure this solves the question, but it's "documented". The text
-should maybe be revisited either way.
+http://nfsv4bat.org/Events/2025/May/BAT/index.html
 
-Tom.
 
-> This is awkward because nfsd doesn't just check permissions.  It has to
-> open the file and say what mode it is opening for.  This is apparently
-> important when re-exporting NFS according to
-> 
-> Commit: 7f024fcd5c97 ("Keep read and write fds with each nlm_file")
-> 
-> So if you try an exclusive flock on a re-exported NFS file (reexported
-> over v3) that you have open for READ but do not have write permission
-> for, then the client will allow it, but the intermediate server will try
-> a O_WRITE open which the final server will reject.
-> (does re-export work over v3??)
-> 
-> There is no way to make this "work".  As I said: sending flock requests
-> over NFS was an interesting choice.
-> For v4 re-export it isn't a problem because the intermediate server
-> knows what mode the file was opened for on the client.
-> 
-> So what do we do?  Whatever we do needs a comment explaining that flock
-> vs fcntl is the problem.
-> Possibly we should not require read or write access - and just trust the
-> client.  Alternately we could stick with the current practice of
-> requiring READ but not WRITE - it would be rare to lock a file which you
-> don't have read access to.
-> 
-> So yes: we do need a patch here.  I would suggest something like:
-> 
->   /* An NLM request may be from fcntl() which requires the open mode to
->    * match to lock mode or may be from flock() which allows any lock mode
->    * with any open mode.  "acc" here indicates the lock mode but we must
->    * do permission check reflecting the open mode which we cannot know.
->    * For simplicity and historical continuity, always only check for
->    * READ access
->    */
->   if (acc & NFSD_MAY_NLM)
-> 	acc = (acc & ~NFSD_MAY_WRITE) | NFSD_MAY_READ;
-> 
-> I'd prefer to leave the MAY_OWNER_OVERRIDE setting in nlm_fopen().
-> 
-> Thanks,
-> NeilBrown
-> 
+If you plan to attend either in person or virtually, feel free to add
+your name and email to our sign-in Sheet:
+
+https://docs.google.com/spreadsheets/d/1_6Vl_3fcrehfuuY-WpIgGyxUUl3d0Xt_4zNTEN0sPug/edit?gid=0#gid=0
+
+
+Direct your questions to bakeathon-contact@googlegroups.com.
+
+-- 
+Chuck Lever
 
 
