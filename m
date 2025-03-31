@@ -1,170 +1,135 @@
-Return-Path: <linux-nfs+bounces-10958-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10959-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9232A75D6F
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 02:10:29 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9BBDA75E49
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 05:52:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B31A188A6A7
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 00:10:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D815D7A1CCA
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 03:51:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6562E3391;
-	Mon, 31 Mar 2025 00:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF4F2CCC5;
+	Mon, 31 Mar 2025 03:52:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iTemLj1f";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vag9BFGN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uostnFAZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="enIp6U5c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7q+hAYM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0311310E3
-	for <linux-nfs@vger.kernel.org>; Mon, 31 Mar 2025 00:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2B320E6;
+	Mon, 31 Mar 2025 03:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743379824; cv=none; b=pv8SmnTS9F0Z2ZxDAN63U4U25TJU9+lrpOzfnHXeaojWuFy43KrWdAuGQK8d7SzjujUf2wACPQfoTUKqbyOdmgrq98E4WaOSOuCIUAlkc/oETBRbzFBGzaaDNbqmC2dQsRk8czlHFFo6NhmYCVRk9/drJ1MHW8kSsNEcMnVoy5M=
+	t=1743393137; cv=none; b=Mq/ciDnTrrhFjVX5Aff0nXNRnmS+r+ZOAP9A/pURfpsC7JkbUsOjHjle17+j03j4KEwNt7aC9QjXVGqoAee1WaPpVZaquaNp6+VEKZn1zQGTWip5dIZP77oaCPLnnJAAsZmUGyy1U2lGcGH0hdE5NM2rqoWfxqluUnvtX38VGDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743379824; c=relaxed/simple;
-	bh=s+u7I5pesD2a4RU+++VpkUXmmVAQG012AakO/sAOB/o=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=p1L2JXkDpb4Fkbe8gd2EyubPKpfs23bTxQKW5wUTxYn1heYS4ku83hrg1RcpIZ3O9rI33qZC/kJq1BDisD6UJt5A7HVy8A9x8aZSenK1a83H28S5SeQZZqCJ7D3h0vg0jAkWp/2gInAKig7JGGMHNj0+1UzxliiARl87YtYWg3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iTemLj1f; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vag9BFGN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uostnFAZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=enIp6U5c; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D1E7B211AB;
-	Mon, 31 Mar 2025 00:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743379821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
-	b=iTemLj1fgzLbt0mSSGzD4lzM0pMxT8jpc0lQcubloWjr1ATpsZFPRQuxRyZlgVdbq0cVRV
-	LlT0BEjYwq+3LW0XcdOIW5DY69EECNEcvkFNIEXoQJ7sX0wKbHj370ofC4pUacS47dXIE/
-	y0Hkj6gHc822A9bj2yQuRw0cSpWhtnI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743379821;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
-	b=Vag9BFGNp9SvJYrKAyJTe1/PfkcOZWorWOlBdzvDXAWdQzT+USeLjkj8AeMvesIRKaEGib
-	h1hUEoL+TLXd+GDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uostnFAZ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=enIp6U5c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743379819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
-	b=uostnFAZf+NjLOBz8d6+FapThF/6x7FUMJoPqqoXyQaoPQGAQUcZ0jiG+1tyrvDcbYdkF+
-	vpCD0bmXEinq+JtEbLa7Alj3vRWVPHlYzsSqPgwqzA8b1ikeZZRD9kSQShA/dF5kC28UZx
-	SQvXzk/fe6pKeWnpmNU0YleZAINivXw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743379819;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
-	b=enIp6U5c7zridMgEN8lqGs9FW3QmHxscIBHhfJh7iD+gxk/YPBynOFZkoUJlZewoPpW/ID
-	+deeEaMaZwwm3EBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 78C91139A1;
-	Mon, 31 Mar 2025 00:10:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xp8IDGnd6WeGOAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 31 Mar 2025 00:10:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1743393137; c=relaxed/simple;
+	bh=prYBJ7EyvpaFZ3S/55s3P21HVzdoeTTd1doe67JZr4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=irud2u3hqatO1JH+0SNBH3nFDlbawRAlmjZMq1+CMuRgU/HiPpLlAzAMnH619aIi4aqqYnjWoLUc+ZWZZ6zLeduLa/5X50I39gLJawMQ4Ng8xFuVO2K58DvxAmLmqUAt3qFHOJ3BHc7UKoHMivCVaPBkxzEE9//ZTXo7RZxe6ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7q+hAYM; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54998f865b8so3993140e87.3;
+        Sun, 30 Mar 2025 20:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743393133; x=1743997933; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AGYkbNNYPJvEF/4iUZAE4nsCYBUBEw8w1lknk92z4UQ=;
+        b=C7q+hAYMklw0Pi9hBb9Cyyv0QD7H/MtKt+XwE9mxK66w7gIVYlKrkfxRuQku5LTsPM
+         yT4rXYm/b5c7RHDM+YVL5UprMCNybHLR3EyjxuPghdFYHKOFgRaVwaWvj/ZwVdornsbt
+         BIbaFUIpo/p+ohSLY7I7PcnMKV24tpClatDza7H6maJ7hqa6/zkA5EH4Yr+0gSNu4zsW
+         E8V3nF0T9gNtjIdHTvdPWHJHJMkcwMhf9bEn7LpwofTdUbXIMKfxtQQqkJTTCwm5y7xb
+         2qts1DNjYCQcetTWzmF1zq6Y25f7muX/+/P0dI890QHFAycRvf6ciVn/Fd2UIwXmMhsE
+         KNQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743393133; x=1743997933;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AGYkbNNYPJvEF/4iUZAE4nsCYBUBEw8w1lknk92z4UQ=;
+        b=vHoOd4Q58u1rg/1Udrm4rZS7ALCjbBlDCAbTycdzq0C0YIauD1ysZJNCTUdf16ghXC
+         dwBNHM6Bfu/z4Kj3f7AH3HGI//inPqjQ7odonj2PIN4fwhskoXA5K4w7xFpY2dA9h8ib
+         s3h5MHZrXfixpK+mh5aXDfCy/Hricoj6umMwrx7Tlx3dmr/MDhBxxdtC2yFsTT5lpRC5
+         OEsdlrevA7M+ayuxOdVQ3FJfhA9xYaNRwGmtO9+PCJApDp5DKl+tgzH5iux6qRqKlmmB
+         srXIZwUyYp0KNXaDONHrWEu5cAIafJR/sv/VY7Wi5nm0cZMoxWYKMB7EI4II37jxpyO+
+         qZzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlX6rl/YKXDDrBX0bqSSrioua06kqU2+U+6TY5jNGZpo+bXV/3gPk63XeEf21cgVa5ehYc3iuuRqg04+kc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Qs6hFwgzqqnCm96N8/Tsglnmh50li/Q5YkzEnkGSneA+Hf7o
+	ub6Y4eKF/q9fFd2pHcrt4nsU5bjDjBQGU9tLE3juuMVOXyhG72A87tDsJuza
+X-Gm-Gg: ASbGncvonPQH2FqY0O/4hIQsgbSyHhhgPpJRXyWttKB0KCEQL4Wr1WwL7+i1ZnCCEcs
+	I2C6rSDDJCNV61afN6XdrYvcwajXl2NcJSpq9Xr1wJyAytve1t8Z5dgSToyfDuJn4etuSrFuuxg
+	VhqutFObSuOk6vvOvkTUZAV26MNidY2FZZtck8X9hqutmFWkWILExe9eegEjrm37AX6ycsSpBhB
+	i67Eww5J04/EuFW7Y+oRkxWYcPuPyEWXO/o2xoBo8UKcwr7u3AdWeGm/E7TMhi3cQ4gwi02EQ83
+	CyXoJzURly8g92oATbhm
+X-Google-Smtp-Source: AGHT+IHyUCjFJC7vE+0HBnoaPNa58HytIUzs9oqFAGvA0djiPOaWypb/clSX02GDWJQguNsMueDlKA==
+X-Received: by 2002:a05:6512:3b95:b0:545:3dd:aa69 with SMTP id 2adb3069b0e04-54b1112810amr2484075e87.36.1743393133090;
+        Sun, 30 Mar 2025 20:52:13 -0700 (PDT)
+Received: from elende (elende.valinor.li. [2a01:4f9:6a:1c47::2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c1b09sm1015766e87.96.2025.03.30.20.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Mar 2025 20:52:11 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Date: Mon, 31 Mar 2025 05:52:11 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Steve Dickson <steved@redhat.com>
+Cc: Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: ANNOUNCE: nfs-utils-2.8.3 released.
+Message-ID: <Z-oRa3cF97JCGkVo@lorien.valinor.li>
+References: <64a11de6-ca85-40ce-9235-954890b3a483@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Olga Kornievskaia" <aglo@umich.edu>
-Cc: "Olga Kornievskaia" <okorniev@redhat.com>, chuck.lever@oracle.com,
- jlayton@kernel.org, linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com,
- tom@talpey.com
-Subject:
- Re: [PATCH 3/3] nfsd: reset access mask for NLM calls in nfsd_permission
-In-reply-to:
- <CAN-5tyHWB9+Q9ONmWfF2LGe6wO1hZXvx2vEHb441Q3XkjzOFmQ@mail.gmail.com>
-References:
- <>, <CAN-5tyHWB9+Q9ONmWfF2LGe6wO1hZXvx2vEHb441Q3XkjzOFmQ@mail.gmail.com>
-Date: Mon, 31 Mar 2025 11:10:14 +1100
-Message-id: <174337981427.9342.10894606812592381794@noble.neil.brown.name>
-X-Rspamd-Queue-Id: D1E7B211AB
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,noble.neil.brown.name:mid,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64a11de6-ca85-40ce-9235-954890b3a483@redhat.com>
 
-On Mon, 31 Mar 2025, Olga Kornievskaia wrote:
->=20
-> This code would also make the behaviour consistent with prior to
-> 4cc9b9f2bf4d. But now I question whether or not the new behaviour is
-> what is desired going forward or not?
->=20
-> Here's another thing to consider: the same command done over nfsv4
-> returns an error. I guess nobody ever complained that flock over v3
-> was successful but failed over v4?
+Hi Steve,
 
-That is useful.  Given that:
- - exclusive flock without write access over v4 never worked
- - As Tom notes, new man pages document that exclusive flock without write ac=
-cess
-   isn't expected to work over NFS
- - it is hard to think of a genuine use case for exclusive flock without
-   write access
+On Sun, Mar 30, 2025 at 03:37:33PM -0400, Steve Dickson wrote:
+> Hello,
+> 
+> The release has a number changes in time for
+> the upcoming Spring Bakeathon (May 12-16):
+> 
+>     * A number of man pages updates
+>     * Bug fixes for nfscld and gssd
+>     * New argument to nfsdctl as well as some bug fixes
+>     * Bug fixes to mountstats and nfsiostat
+>     * Updates to rpcctl
+> 
+> As well as miscellaneous other bug fixes see
+> the Changelog for details.
+> 
+> The tarballs can be found in
+>   https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.3/
+> or
+>   http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.3
+> 
+> The change log is in
+>    https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.3/2.8.3-Changelog
+> or
+>  http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.2/2.8.3-Changelog
+> 
+> 
+> The git tree is at:
+>    git://linux-nfs.org/~steved/nfs-utils
+> 
+> Please send comments/bugs to linux-nfs@vger.kernel.org
 
-I'm inclined to leave this code as it is and declare your failing test
-to no longer be invalid.  That is technically a regression, but
-regressions only matter if people notice them (and complain to Linus).
-No harm - no fowl.
+Thansk for this new release!
 
-Thanks,
-NeilBrown
+Noticed that the nfs-utils-2-8-3 and release commit is not yet in
+https://git.linux-nfs.org/?p=steved/nfs-utils.git . Could you push
+those as well?
+
+Regards,
+Salvatore
 
