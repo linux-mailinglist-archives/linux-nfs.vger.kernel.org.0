@@ -1,129 +1,170 @@
-Return-Path: <linux-nfs+bounces-10957-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10958-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DA3CA75BF1
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Mar 2025 21:37:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9232A75D6F
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 02:10:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84F2D3A83B8
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Mar 2025 19:37:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B31A188A6A7
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Mar 2025 00:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CBFC1B87D9;
-	Sun, 30 Mar 2025 19:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C6562E3391;
+	Mon, 31 Mar 2025 00:10:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dngWXG2/"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iTemLj1f";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Vag9BFGN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uostnFAZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="enIp6U5c"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E89578F51
-	for <linux-nfs@vger.kernel.org>; Sun, 30 Mar 2025 19:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0311310E3
+	for <linux-nfs@vger.kernel.org>; Mon, 31 Mar 2025 00:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743363464; cv=none; b=rejRRbzbHqwsP2EM/kj6S7qTAn+LfAVTLR9bcJu9grIT9wTL1I4YAAgFTbZPMIxIASthZjnN/yQb6nns4doIx1R0VzedebaDLOaaizvxK2RB87xjf5zUst/PseYrl375w6G9ujMXf56PYzwFcFBY5AiGAJkQCDQ6/qofSB8aW+0=
+	t=1743379824; cv=none; b=pv8SmnTS9F0Z2ZxDAN63U4U25TJU9+lrpOzfnHXeaojWuFy43KrWdAuGQK8d7SzjujUf2wACPQfoTUKqbyOdmgrq98E4WaOSOuCIUAlkc/oETBRbzFBGzaaDNbqmC2dQsRk8czlHFFo6NhmYCVRk9/drJ1MHW8kSsNEcMnVoy5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743363464; c=relaxed/simple;
-	bh=FdSZJ7yjYtp0hGeVBZHMwHht2/XdwjBnyuoka0/dhxs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=N3cRglDDClzrq0E72iMtBt0culz4oXJ/I7VQeOCtlhTCSPbdmwB+9I4nijJj/cUPGZNwC8xU/uGp4TYhfOwy38566X72JHriH6KVQXImjCUu5By5FhkSammqcvASNZGcC/T7vCO9YFmREQKPfIrilCtrqI8XdszzjYgrCiBTkK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dngWXG2/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743363462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g5Xk8LqCMuC0hbWLeWvLxITG+yRsd8228TYUU/9Egww=;
-	b=dngWXG2/nvtSMOvrPYM0zDo1K1iD4Ud+ZnibjxI4emwTkK653IfdCV4TS5+0gawrA7JVnm
-	ufCwQ3PJaR57vtUdazDFyBrQZN4ni35RfltPgEAMmE7hRjr1YD2nlPt4WP9cQf1I9sRF9f
-	kvSWQNjG3iEIlIBjEqRHXX4IDRcBIMQ=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-493-pOi0TTo8N4OCUxLjG3ergw-1; Sun, 30 Mar 2025 15:37:40 -0400
-X-MC-Unique: pOi0TTo8N4OCUxLjG3ergw-1
-X-Mimecast-MFC-AGG-ID: pOi0TTo8N4OCUxLjG3ergw_1743363459
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85e6b977ef2so701068839f.2
-        for <linux-nfs@vger.kernel.org>; Sun, 30 Mar 2025 12:37:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743363458; x=1743968258;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g5Xk8LqCMuC0hbWLeWvLxITG+yRsd8228TYUU/9Egww=;
-        b=lZlqPSfXxCEg5OovnSMjViykypLIZugXdmwrSHvNq/QWeCOuM0SSBBqIrCxGu43Z0/
-         sc3VKfK6TpZzw/uAOUrPxa/o16yJ1EoWUY1BqQDCIqbWPzyj15d8BUXAMAAb15TMVnbY
-         RxXSsBCt/QC5xwY9CfV3N0qMbv9AFG9zm5gOrHQ0M9zUSzt+vaZVnIlezu++bmy+M/V2
-         fol2iDC8QI3Ht8WROW3fPmfLzkiHQI+sYk6O8GIz9x3DtzPiDquvJ8GIHAsRczybr5kh
-         KoeqpxPtwoSPJvpD+Ugams0tFLbI3nUV18Ys1N4ek/26vEJCaP4MBnnCtl0b1U5yE6N7
-         GuQA==
-X-Gm-Message-State: AOJu0YzK+Og8TTIfXsitTBgXVvfOJbk5FtiA5KEHuHQwvMLPwbyov127
-	MtZlQHXWjFbcWXt3dpU/XH8CrQz5Uc5m6XjglkIIUtUolTU4yYL00bN+7IFBOyqcbuH1UF4JTOd
-	lUCwrI3pwL5THScaiuWlp7LW+WhdQP8JvsLX2xWtXBxaD2pZ2+VicbzmjNQjdNJydivbojB2Lgp
-	QsVA1xWqo2iPAmiJldb7VCNvQaoF+gBNEHdAW5ebs=
-X-Gm-Gg: ASbGnctJL7Gqfog5fHEHMk/07R/19wmcWT8C/eLllagD39T3Pl6gzorOZVeJjiIFTQ+
-	am3PD/OxaLH8hczo3kD73NdUtaz5XIbd2Qgxrym4Euvan020HouxJBhIBaBNitVKJQn96k90OXD
-	wMDybpgDemAZ0kttUcjRgYMwRV3I05O3izY/yy6UYe85BHnFWYVoKJrQrDHKXhY3YR779gGRbzd
-	mYcWOl5j1X4l+50qyA+H9+J5WBsrQ2+sBBAHNU1r+/UfNHaWIUBnj4fOGBg9bMF08x2jc4rDQiA
-	wopaMguqpD36B8M=
-X-Received: by 2002:a05:6e02:1a2f:b0:3d3:fdb8:1796 with SMTP id e9e14a558f8ab-3d5e08e988dmr74579025ab.2.1743363458234;
-        Sun, 30 Mar 2025 12:37:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3WLRKEv2ZX784wP0IJWPmDZbDgTMMLUXHCoabKGYQvtdraGugN8X5U+NxP/NHUj6r1Pqwxw==
-X-Received: by 2002:a05:6e02:1a2f:b0:3d3:fdb8:1796 with SMTP id e9e14a558f8ab-3d5e08e988dmr74578885ab.2.1743363457908;
-        Sun, 30 Mar 2025 12:37:37 -0700 (PDT)
-Received: from [172.31.1.159] ([70.105.244.27])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d5d5ae9d5esm17051095ab.44.2025.03.30.12.37.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Mar 2025 12:37:36 -0700 (PDT)
-Message-ID: <64a11de6-ca85-40ce-9235-954890b3a483@redhat.com>
-Date: Sun, 30 Mar 2025 15:37:33 -0400
+	s=arc-20240116; t=1743379824; c=relaxed/simple;
+	bh=s+u7I5pesD2a4RU+++VpkUXmmVAQG012AakO/sAOB/o=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=p1L2JXkDpb4Fkbe8gd2EyubPKpfs23bTxQKW5wUTxYn1heYS4ku83hrg1RcpIZ3O9rI33qZC/kJq1BDisD6UJt5A7HVy8A9x8aZSenK1a83H28S5SeQZZqCJ7D3h0vg0jAkWp/2gInAKig7JGGMHNj0+1UzxliiARl87YtYWg3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iTemLj1f; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Vag9BFGN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uostnFAZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=enIp6U5c; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D1E7B211AB;
+	Mon, 31 Mar 2025 00:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743379821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
+	b=iTemLj1fgzLbt0mSSGzD4lzM0pMxT8jpc0lQcubloWjr1ATpsZFPRQuxRyZlgVdbq0cVRV
+	LlT0BEjYwq+3LW0XcdOIW5DY69EECNEcvkFNIEXoQJ7sX0wKbHj370ofC4pUacS47dXIE/
+	y0Hkj6gHc822A9bj2yQuRw0cSpWhtnI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743379821;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
+	b=Vag9BFGNp9SvJYrKAyJTe1/PfkcOZWorWOlBdzvDXAWdQzT+USeLjkj8AeMvesIRKaEGib
+	h1hUEoL+TLXd+GDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=uostnFAZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=enIp6U5c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743379819; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
+	b=uostnFAZf+NjLOBz8d6+FapThF/6x7FUMJoPqqoXyQaoPQGAQUcZ0jiG+1tyrvDcbYdkF+
+	vpCD0bmXEinq+JtEbLa7Alj3vRWVPHlYzsSqPgwqzA8b1ikeZZRD9kSQShA/dF5kC28UZx
+	SQvXzk/fe6pKeWnpmNU0YleZAINivXw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743379819;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F+qKcyXsxlmGs/aQulxGCOpfhG2KE5JPU54PryctD3Y=;
+	b=enIp6U5c7zridMgEN8lqGs9FW3QmHxscIBHhfJh7iD+gxk/YPBynOFZkoUJlZewoPpW/ID
+	+deeEaMaZwwm3EBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 78C91139A1;
+	Mon, 31 Mar 2025 00:10:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xp8IDGnd6WeGOAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 31 Mar 2025 00:10:17 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Steve Dickson <steved@redhat.com>
-Subject: ANNOUNCE: nfs-utils-2.8.3 released.
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Olga Kornievskaia" <aglo@umich.edu>
+Cc: "Olga Kornievskaia" <okorniev@redhat.com>, chuck.lever@oracle.com,
+ jlayton@kernel.org, linux-nfs@vger.kernel.org, Dai.Ngo@oracle.com,
+ tom@talpey.com
+Subject:
+ Re: [PATCH 3/3] nfsd: reset access mask for NLM calls in nfsd_permission
+In-reply-to:
+ <CAN-5tyHWB9+Q9ONmWfF2LGe6wO1hZXvx2vEHb441Q3XkjzOFmQ@mail.gmail.com>
+References:
+ <>, <CAN-5tyHWB9+Q9ONmWfF2LGe6wO1hZXvx2vEHb441Q3XkjzOFmQ@mail.gmail.com>
+Date: Mon, 31 Mar 2025 11:10:14 +1100
+Message-id: <174337981427.9342.10894606812592381794@noble.neil.brown.name>
+X-Rspamd-Queue-Id: D1E7B211AB
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,noble.neil.brown.name:mid,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hello,
+On Mon, 31 Mar 2025, Olga Kornievskaia wrote:
+>=20
+> This code would also make the behaviour consistent with prior to
+> 4cc9b9f2bf4d. But now I question whether or not the new behaviour is
+> what is desired going forward or not?
+>=20
+> Here's another thing to consider: the same command done over nfsv4
+> returns an error. I guess nobody ever complained that flock over v3
+> was successful but failed over v4?
 
-The release has a number changes in time for
-the upcoming Spring Bakeathon (May 12-16):
+That is useful.  Given that:
+ - exclusive flock without write access over v4 never worked
+ - As Tom notes, new man pages document that exclusive flock without write ac=
+cess
+   isn't expected to work over NFS
+ - it is hard to think of a genuine use case for exclusive flock without
+   write access
 
-     * A number of man pages updates
-     * Bug fixes for nfscld and gssd
-     * New argument to nfsdctl as well as some bug fixes
-     * Bug fixes to mountstats and nfsiostat
-     * Updates to rpcctl
+I'm inclined to leave this code as it is and declare your failing test
+to no longer be invalid.  That is technically a regression, but
+regressions only matter if people notice them (and complain to Linus).
+No harm - no fowl.
 
-As well as miscellaneous other bug fixes see
-the Changelog for details.
-
-The tarballs can be found in
-   https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.3/
-or
-   http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.3
-
-The change log is in
-    https://www.kernel.org/pub/linux/utils/nfs-utils/2.8.3/2.8.3-Changelog
-or
-  http://sourceforge.net/projects/nfs/files/nfs-utils/2.8.2/2.8.3-Changelog
-
-
-The git tree is at:
-    git://linux-nfs.org/~steved/nfs-utils
-
-Please send comments/bugs to linux-nfs@vger.kernel.org
-
-steved.
-
+Thanks,
+NeilBrown
 
