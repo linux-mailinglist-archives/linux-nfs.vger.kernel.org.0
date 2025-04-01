@@ -1,146 +1,151 @@
-Return-Path: <linux-nfs+bounces-10976-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10977-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2252A77E33
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Apr 2025 16:50:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E093A7819A
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Apr 2025 19:40:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21E183ADA19
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Apr 2025 14:49:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EDCC37A4964
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Apr 2025 17:39:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181E42054E3;
-	Tue,  1 Apr 2025 14:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61F0E1E9B02;
+	Tue,  1 Apr 2025 17:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbkg4//1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uy3aodr5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6D11E47B3
-	for <linux-nfs@vger.kernel.org>; Tue,  1 Apr 2025 14:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1479461
+	for <linux-nfs@vger.kernel.org>; Tue,  1 Apr 2025 17:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743519008; cv=none; b=oYgCicTpRqidZK/EyOGz54zdw34KMsypfeoY6wqmQYydHArEiLHaT3FaQB1X97sOaBKzgGLwPVFILH1bA0CUYvsGIiZWK7R7GDY7uRFSVfQe9q2kPKOX7M8udoJeQamYtBt7zHGqmBNiwBfU0QeSSMCI0Q3WoiBL+umEdd+YAeg=
+	t=1743529212; cv=none; b=GZCElrXVeTM0L+P6h4myKRb1YxxdLtg5LoLq8sxGO7HjLACcQU9a3Np5YO0tpivZWu71rDycImpI7W5RGAvOqIW8hOgFo1D6lnwSTVW5TZ/qNTppGVffqtgFe36Fm7eNIMxvlEuKKfZg58SVyH2Rz4P1+HcyRB0lZr6aQggOOaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743519008; c=relaxed/simple;
-	bh=W62jtRlVslrX5x+mGDWAaw8lOHQPBvZQ0s14+XvMXBw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=EAZ0LxUFBHtnDgMl7OeD7ehnBJ6Sj4Z5efCeGELOcsYJ6gqkRLOJqL4eIQj00MQAwvyfU7o1AHB/8lFPE7Fua1oS23a8ugiK+qJNURjkX938B1eb4pUa00FH9O5Dch3tyuK4F/hE7jUYVNVIgtrqDBcw+3nHEU1jXw38odLIOIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gbkg4//1; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so4860977276.3
-        for <linux-nfs@vger.kernel.org>; Tue, 01 Apr 2025 07:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743519005; x=1744123805; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MhE0zR6QqDUHio64ZtqkrCx1HFmTzbjGWRcMBkTHsPQ=;
-        b=gbkg4//1rY4YKRj4GzH2O4mnYjGGmTXxR/8bW9mK9tPlEIcqRkcfJeZL7lE6eB6WbY
-         3jpwmFeWuNflhE/islMF4t1hgDLAUJ5x+uJWWa3MO6DOWRFz6M/tJu1xP3m57cgjwhoe
-         9JRMv1RBN/SDCAJ1ft9R1/h6ZDxl1plBLQca6N0ii/iILLZaUed3XMT7iOkrEHNXR3Y8
-         ifj8Cjjdu7IvAoML1JWfrESkzD9BbnmKD8Orh+3dAMiCalh0ru8ZGyF+BX/qhYuLs0dE
-         C5sGt5kZaLDnmsStowAw4MYFNUXrT6s+cDFNmjLPfIoRuWhVHwJZDk+/8ZCwXvEKff4l
-         r3QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743519005; x=1744123805;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MhE0zR6QqDUHio64ZtqkrCx1HFmTzbjGWRcMBkTHsPQ=;
-        b=XlQ0eakFPnvYFQqMOa3u1K4Wkfbt0nK9OKB/AdPz8nUTl9vUk4m4VwRkMkez8NOcj8
-         eZUJaswpyml3mesxwyVEI4PNR8u7sidpA49/p7vRB44beZrgrmbopSyyuEjH+zmUxrOH
-         PNbndKwMYWGNFfTixlPl6uM6XGT9c6gJ8drKXVRxExDIFLkAGS03XzcEmXLXgARforn4
-         R2PbhWf15SRjOva07Gly+on7l3witdzmrb0/21bzHOr+B7+yk5un4i4/CbWs3RR5FcF5
-         cXHXo4zN+eZKhzxLlTWpSLJkzr40OE7aCN6K+NMHBOpw97g1fecqU8NeGoflqp32C2cX
-         +NCw==
-X-Gm-Message-State: AOJu0YylPm0oZMUnqJXZxwTtHzpOfDPE1H9JkNhBtpmyzV/hLMVRikqN
-	+e9EtJi5kLWY3JzPIIraGuJzRoOnGIkVUhxjLvsy+eiiYSHUntdaoXJpRYFORx/OPEui3y1llxI
-	XurGfhthc3IUXnQBkOozWjEd2PFOoNlEB
-X-Gm-Gg: ASbGncvKyuBmffVwONv1lQk2wCedSRCp8qxOviXmzi8R1I4vZmrhi3i/TWjVQjbiXJn
-	PWQUMqofUaxZApdF9DAYUg8CMJCp8oMoMiJL+Q3NBh2n0fTfHA2IDr9WwMpdz1c2yEGDZnWHeRi
-	UykDk4GJ6RuYxNKpkhsMPQ3B4OsqUa
-X-Google-Smtp-Source: AGHT+IHeNg6w0lJEpQSUf5KlWNaU+W0g6y11vP/BlYIpi28a4ZAl39vXDGBIbDoEhC2JQZk9zwXS0nHEJHe90G3varU=
-X-Received: by 2002:a05:6902:e0d:b0:e6d:e3f8:5167 with SMTP id
- 3f1490d57ef6-e6de3f8647emr2029521276.39.1743519005307; Tue, 01 Apr 2025
- 07:50:05 -0700 (PDT)
+	s=arc-20240116; t=1743529212; c=relaxed/simple;
+	bh=Mw8CR9OVuNY6T1ztrVVJxZ5BPmGvReqQymmbilhFZ0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hx+AwvOteRpHu1lEjTxpEcX9D/bPSDele5O12PW4bHJBWWxyi0A/lQtLlRC0L3iOFIklrPiNwBLozSuUcqwkcN7DCw2vUiRjdeQ1vjEUQL7JgVIsFrTYKSq9zMHNs19kD2TbINlOa7B3QAemqQ7M/Egm65HndjlBU/P9wt1Gf3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uy3aodr5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893A9C4CEE4;
+	Tue,  1 Apr 2025 17:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743529211;
+	bh=Mw8CR9OVuNY6T1ztrVVJxZ5BPmGvReqQymmbilhFZ0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uy3aodr5X74mQpSDs1LNJPpApOsLxJgmb2cglaPqDdyv3Tw6xav+nuLJNWFFoYgNT
+	 l8mWgVQrkD2AMNIT04c2yRuv6O8iQbsO3EIN+NUly950MKoNnnoTK6+DfLgruYOp3m
+	 RyAXnyIpCXXmfhfYc7wzudwaJ+ml5YytrlNSX3Z5BkgpSIkPT7ypSmj7FNSiCXm76W
+	 lLbTMTDWI1lofG+d1ahE4IdoxuYEMlj8x5SMcVt0aNBtqidHe4AmGNgy66JsGBswDl
+	 Tqf/V7mPDL98pqLOVLmNBs5rgosqou5I4+Xq1+2CGu4VWvEV3gqfXgRsc1WAC+gal/
+	 jhQc4eppsToVQ==
+Date: Tue, 1 Apr 2025 13:40:10 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Rik Theys <rik.theys@gmail.com>
+Cc: linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: Memory reclaim and high nfsd usage
+Message-ID: <Z-wk-sJXi0dzttM_@kernel.org>
+References: <CAPwv0JktC7Kb4cibSbioNAAZ9FeWs6aHeLRXDk_6MKUik1j3mg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Reply-To: mvogt1@gmail.com
-From: Martin Vogt <mvogt1@gmail.com>
-Date: Tue, 1 Apr 2025 16:49:54 +0200
-X-Gm-Features: AQ5f1Jqx4IyxwUWYiyJlrmPsWiXtL3oL1Wj1WOI8WUnLJpCy8Ywhiv2EmFJpeys
-Message-ID: <CAOE8yMCHGQ682xnzVq4DuJ_-AVfJ=jYvgpaTThvXK-XDs2TGKQ@mail.gmail.com>
-Subject: vers=4.1 in nfsmount.conf.d with Server
-To: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPwv0JktC7Kb4cibSbioNAAZ9FeWs6aHeLRXDk_6MKUik1j3mg@mail.gmail.com>
 
-Hello,
+On Mon, Mar 31, 2025 at 09:05:54PM +0200, Rik Theys wrote:
+> Hi,
+> 
+> Our fileserver is currently running 6.12.13 with the following 3
+> patches (from nfsd-testing) applied to it:
+> 
+> - fix-decoding-in-nfs4_xdr_dec_cb_getattr
+> - skip-sending-CB_RECALL_ANY
+> - fix-cb_getattr_status-fix
+> 
+> Frequently the load on the system goes up and top shows a lot of
+> kswapd and kcompact threads next to nfsd threads. During these period
+> (which can last for hours), users complain about very slow NFS access.
+> We have approx 260 systems connecting to this server and the number of
+> nfs client states (from the states files in the clients directory) are
+> around 200000.
 
+Are any of these clients connecting to a server from the same host?
+Only reason I ask is I fixed a recursion deadlock that manifested in
+testing when memory was very low and LOCALIO used to loopback mount on
+the same host.  See:
 
-I have a netapp NFS server, from which I need to mount the NFS export
-with the client option:
-vers=4.1.
+ce6d9c1c2b5cc785 ("NFS: fix nfs_release_folio() to not deadlock via kcompactd writeback")
+https://git.kernel.org/linus/ce6d9c1c2b5cc785
 
-The reason is, that the server exports 4.2, but this has some issue
-with SSC therefore we need  to downgrade the client, which uses
-userspace copy in 4.1
+(I suspect you aren't using NFS loopback mounts at all otherwise your
+report would indicate breadcrumbs like I mentioned in my commit,
+e.g. "task kcompactd0:58 blocked for more than 4435 seconds").
+ 
+> When I look at our monitoring logs, the system has frequent direct
+> reclaim stalls (allocstall_movable, and some allocstall_normal) and
+> pgscan_kswapd goes up to ~10000000. The kswapd_low_wmark_hit_quickly
+> is about 50. So it seems the system is out of memory and is constantly
+> trying to free pages? If I understand it correctly the system hits a
+> threshold which makes it scan for pages to free, frees some pages and
+> when it stops it very quickly hits the low watermark again?
+> 
+> But the system has over 150G of memory dedicated to cache, and
+> slab_reclaim is only about 16G. Why is the system not dropping more
+> caches to free memory instead of constantly looking to free memory? Is
+> there a tunable that we can set so the system will prefer to drop
+> caches and increase memory usage for other nfsd related things? Any
+> tips on how to debug where the memory pressure is coming from, or why
+> the system decides to keep the pages used for cache instead of freeing
+> some of those?
 
-For example, the fs5 export should be mounted like this:
+All good questions, to which I don't have immediate answers (but
+others may).
 
-fs5.domain.de:/vol/fs5_m_scratch on /m/scratch/space type nfs4
-(rw,nosuid,nodev,relatime,vers=4.1,rsize=65536,wsize=65536,..)
+Just FYI: there is a slow-start development TODO to leverage 6.14's
+"DONTCACHE" support (particularly in nfsd, but client might benefit
+some too) to avoid nfsd writeback stalls due to memory being
+fragmented and reclaim having to work too hard (in concert with
+kcompactd) to find adequate pages.
 
-My idea was to use ("man nfsmount.conf")
+> I've ran a perf record for 10s and the top 4 of the events seem to be:
+> 
+> 1. 54% is swapper in intel_idle_ibrs
+> 2. 12% is swapper in intel_idle
+> 3. 7.43% is nfsd in native_queued_spin_lock_slowpath:
+> 4. 5% is kswapd0 in __list_del_entry_valid_or_report
 
-[root@v110it01 nfsmount.conf.d]# pwd
-/etc/nfsmount.conf.d
-[root@v110it01 nfsmount.conf.d]# cat netapp.conf
+10s is pretty short... might consider a longer sample and then use the
+perf.data to generate a flamegraph, e.g.:
 
+- Download Flamegraph project: git clone https://github.com/brendangregg/FlameGraph
+  you will likely need to install some missing deps, e.g.:
+  yum install perl-open.noarch
+- export FLAME=/root/git/FlameGraph
+- perf record -F 99 -a -g sleep 120
+  - this will generate a perf.data output file.
 
-[ NFSMount_Global_Options ]
-Defaultvers=4.2
+Once you have perf.data output, generate a flamegraph file (named
+perf.svg) using these 2 commands:
+perf script | $FLAME/stackcollapse-perf.pl > out.perf-folded
+$FLAME/flamegraph.pl out.perf-folded > perf.svg
 
-[ Server "fs5.domain.de" ]
-rsize=32768
-vers=4.1
+Open the perf.svg image with your favorite image viewer (a web browser
+works well).
 
-[ Server "fs6.domain.de" ]
-vers=4.1
+I just find flamegraph way more useful than 'perf report' ranked
+ordering.
+ 
+> Are there any know memory management changes related to NFS that have
+> been introduced that could explain this behavior? What steps can I
+> take to debug the root cause of this? Looking at iftop there isn't
+> much going on regarding throughput. The top 3 NFS4 server operations
+> are sequence 9563/s), putfh(9032/s) and getattr (7150/s).
 
-
-This does not work, it uses vers=4.2.
-The only thing which seems to work reliably is to use the
-NFSMount_Global_Options.
-If it works, I can reverse the entries and then it does not work anymore.
-This is a bit strange, but its harder to reproduce a working mount,
-than a non working.
-
-I monitor the mount with and then edit the file in another terminal
-
-while true ; do
-
-   mount fs5.domain.de:/vol/fs5_m_scratch /mnt/
-   mount | grep /mnt
-   sleep 4
-   umount /mnt
-   sleep 1
-done
-
-If I add rsize, for fs5 this is used, but not the vers=4.1.
-If I change the name from fs6 to fs5 and have two fs5 entries it works too,
-as soon I change it back to fs6 the mount is vers=4.2.
-
-This is verified for :
-
-- nfs-utils-2.5.4-27.el9.x86_64 (el9)
-- bookworm (debian)
-
-best regards,
-
-Martin
+You'd likely do well to expand the audience to include MM too (now cc'd).
 
