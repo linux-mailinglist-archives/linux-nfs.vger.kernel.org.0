@@ -1,82 +1,96 @@
-Return-Path: <linux-nfs+bounces-10990-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-10991-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8769A7913F
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Apr 2025 16:33:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D81DAA79345
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Apr 2025 18:35:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADCCE16D95F
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Apr 2025 14:33:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9642189800F
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Apr 2025 16:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE49323906A;
-	Wed,  2 Apr 2025 14:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B93A1C5F13;
+	Wed,  2 Apr 2025 16:29:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZxGTGaH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Skb1UAaB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B160219306
-	for <linux-nfs@vger.kernel.org>; Wed,  2 Apr 2025 14:33:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DA01BD9F0;
+	Wed,  2 Apr 2025 16:29:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743604391; cv=none; b=QpFoWKMBtWfR5XcLVCXvnVKFAWry0o6IfibqhxBmy6LsYYBtzKCNgBDlvkGdsIklH4fZcj7OBTnDTws9CeImorgH7Wdwy35R/9ldmbLwlkaSMTTBH/sG7JiOKSHnGdSstLppBekjQ6N/DvOFHcnwVSwTSoqUcTojacTMSITHyzU=
+	t=1743611382; cv=none; b=G7C0oYV8hEHdkEEeyDde/rexuLLeOJdxoVDI8Wng+VsuckKKIkcd+tZwRFo2UXfqJi9uXDEnrSFCDdVXCFzxu6UokanBhUChSTtBET/NcFstNP3ZYyxQmf9m/wWHp6VVg0ScAhYGx9b7ZvG4/sjB+voH7V1dK5qLrjibIz9CAUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743604391; c=relaxed/simple;
-	bh=cx6c1GaXbVwZykhdz6vbj/02BFYvDUD0DeE2CcR9daE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VJI9p/lUkzdROo7OqT+u68RHbFNKDT9KVWUn08PobURvDUxAh5YZXctvUBQ8azaBJQKgZZn4wrihVOSSI5fN/v2k3/0VZ5SxPXknt2ja8y8PveYe9bdyeoRFE+SPC7Vi/mDv3RvqTiHFI0mvU40mqjv2TD51eji/if/4UV1sQGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZxGTGaH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BB4C4CEDD;
-	Wed,  2 Apr 2025 14:33:10 +0000 (UTC)
+	s=arc-20240116; t=1743611382; c=relaxed/simple;
+	bh=a1Jqz4AdejyyOw0dqXIvbzsiymf/h4r5uJuyzeJ9uLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z/e3+iqTyG0cEbpsf8xtR0yKSqH9rgkeyR0SkLFOS6Uhk3lutWJrPwykzM9lecRvZbgdWvou8aVlhPpsPx/AcEjj5xLEjH1M+kYLQRBNEqiluG+saeEAfkWiHWuli4yyIGa3dIaCr/AcWXJjoDumDy2vdVQQGh42UkeiZ07cnXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Skb1UAaB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5F3C4CEDD;
+	Wed,  2 Apr 2025 16:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743604391;
-	bh=cx6c1GaXbVwZykhdz6vbj/02BFYvDUD0DeE2CcR9daE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fZxGTGaHa/Wu739+PEM36xCxfq6wmSHJIswJQSGd3Rk4Tteyd1TXQMzmg5dJ+DoRg
-	 0c9pcYB2gi+2cbmGYOCd4oUmfx/41b62FPppaLXhvKImfllQ7Dy4KUjk0G9V7w+Zou
-	 Jv3/ULT4NpOYhvlKTZtygs8iSlRXlWH68VCWrFM1GajebK6hr+UBwxNHQbMGhOVs3Z
-	 1eSq/H2kJ5FmDB7TTW5tqskVgm05nue1UrigmQE5wAPdUq1iFl+au06b5/pY1YEO+i
-	 Y37mbqfAiGwP2PYQMX9DZpToJ+ABZBg/yZc5C+DxX5lbfBCfzvElJyV+gHpwi+hf2g
-	 0tPByOaz+bLjw==
-From: cel@kernel.org
-To: jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com,
-	Guoqing Jiang <guoqing.jiang@linux.dev>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: remove redundant WARN_ON_ONCE in nfsd4_write
-Date: Wed,  2 Apr 2025 10:33:05 -0400
-Message-ID: <174360436416.37828.17599943712066367696.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250402140619.16565-1-guoqing.jiang@linux.dev>
-References: <20250402140619.16565-1-guoqing.jiang@linux.dev>
+	s=k20201202; t=1743611381;
+	bh=a1Jqz4AdejyyOw0dqXIvbzsiymf/h4r5uJuyzeJ9uLc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Skb1UAaBKKtPjavlMGJbwVmwCc1rQiu68uPSjn9lCdQBO6is8EnPjDiIUlGZDycY9
+	 JM8oWG8yoYMtKIi86J3vCO5S61t/futny1iePQ9Nqbrug+NGks6b1tr9eIl4sLNFHW
+	 MSafq3gVSFRulAVRtV3fjQTzTnOMi/y8uAvoQtUDJRVEHJ/2Oa5BohZe8RoMrommaH
+	 2XTkXhjxJeT6qld4/0WPWeYPeef0q7HxO/kqHlIqU6ndw46E3Vm248mwsYnSgb+nfQ
+	 ccqOz0qT9/Y9cbRWArUxH7gG+wfwN96R7YKQpM0MaQbyH7h4saMRZHpROXD6tts417
+	 1IYLMdIw/79bg==
+Date: Wed, 2 Apr 2025 09:29:40 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfs: add missing selections of CONFIG_CRC32
+Message-ID: <20250402162940.GB1235@sol.localdomain>
+References: <20250401220221.22040-1-ebiggers@kernel.org>
+ <35874d6a-d5bc-4f5f-a62c-c03a6e877588@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <35874d6a-d5bc-4f5f-a62c-c03a6e877588@oracle.com>
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, Apr 02, 2025 at 09:51:05AM -0400, Chuck Lever wrote:
+> On 4/1/25 6:02 PM, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > nfs.ko, nfsd.ko, and lockd.ko all use crc32_le(), which is available
+> > only when CONFIG_CRC32 is enabled.  But the only NFS kconfig option that
+> > selected CONFIG_CRC32 was CONFIG_NFS_DEBUG, which is client-specific and
+> > did not actually guard the use of crc32_le() even on the client.
+> > 
+> > The code worked around this bug by only actually calling crc32_le() when
+> > CONFIG_CRC32 is built-in, instead hard-coding '0' in other cases.  This
+> > avoided randconfig build errors, and in real kernels the fallback code
+> > was unlikely to be reached since CONFIG_CRC32 is 'default y'.  But, this
+> > really needs to just be done properly, especially now that I'm planning
+> > to update CONFIG_CRC32 to not be 'default y'.
+> 
+> It's interesting that no-one has noticed this before. dprintk is not the
+> only consumer of the FH hash function: NFS/NFSD trace points also use
+> it.
+> 
+> Eric, assuming you would like to carry this patch forward instead of us
+> taking it through one of the NFS client or server trees:
+> 
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> 
+> for the hunks related to nfsd and lockd.
 
-On Wed, 02 Apr 2025 22:06:19 +0800, Guoqing Jiang wrote:
-> It can be removed since svc_fill_write_vector already has the
-> same WARN_ON_ONCE.
+Please go ahead and take it through one of the NFS trees.  Thanks!
 
-Applied to nfsd-testing, thanks!
-
-[1/1] nfsd: remove redundant WARN_ON_ONCE in nfsd4_write
-      commit: e20ef2bd835ca8c6e4b835a8e3f7cfa09957b7ab
-
---
-Chuck Lever
-
+- Eric
 
