@@ -1,85 +1,99 @@
-Return-Path: <linux-nfs+bounces-11001-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11002-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 747FEA7B915
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 10:41:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F01BA7BE1B
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 15:41:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3A1F7A6F9C
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 08:39:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B37DF3B4F41
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 13:40:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D3DE19CCF5;
-	Fri,  4 Apr 2025 08:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1486E1EF0B4;
+	Fri,  4 Apr 2025 13:41:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MBD2Nsm5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvXEJ6n8"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ADD190462;
-	Fri,  4 Apr 2025 08:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D479B1624C9;
+	Fri,  4 Apr 2025 13:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756058; cv=none; b=JOFfp/78fLs/Ege+ZDpeWFUmnIXN/GQuLYROQ5NIel7Hg+260PrBruIrjv5mccdmsmF9VzrtX0Q502j0v5XLOR2OcnzCZ9up5oggv7kKMd3tW6zRMPZu/XiOjZIiB9JkAquZjUr/CM1nOS9NZtflKm/joN2TnK53sA0b4GpL2s0=
+	t=1743774067; cv=none; b=PhPSbsnfOpgxC5TE0KVzwo34NBDpLiTxvFgkW9e2qO5gRxT69D6IrTxU84xCK3bnIxeJbDJWSTmHgz7tWmQ5vKgupLeTsbQcMPLd7O+X6yQQZmfPJvWnE9KlKS/HOdfVYJLFrZVZYi55NsV1evyrwKM3n9fJOoQ4aR2/8Nf9eUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756058; c=relaxed/simple;
-	bh=mgWlpdtAZtS9MzZFKC2ROkD2L4zM4MSAKa2DQRqJcU0=;
+	s=arc-20240116; t=1743774067; c=relaxed/simple;
+	bh=Q4xnhejB5l0SgKBzeLzuppiBD0WWWZ+in4TshRMzkSo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XgYrUZOP0dMIZV31QcerI+CKaVIr1+qdjeabn7QfRmLGSKq+I3zo5biAl9XaHHDHvvnyBXmAeNIeca7VDrOUP/G+kO8bH90lkU+iK/YBmBYwAHm63H9XxWA/5N3R7vVtI27/RP9AMo7Bgf0Ko3coMtANBJ308DeF4YMUF8mWZ+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MBD2Nsm5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/o5JY8rHVbpSAUZBEImi6JefrhFq8j8aWHFRiUENmgk=; b=MBD2Nsm5RhEO/7aXU7MI1VmUzm
-	LIlfUS2tldABU92HagptKWIGQ7jT8eFKP4RYxwJFLpRmJkT0upfYq4HhnhqI2HZN6rUjvbmyrMjSc
-	SVn/Jw1QV5sIvPa/xHmRrarGqknZWnCqg7nLHS9+AsozKOO+ZlYprzBpmAwW+ZH80DH3k+tluQqEy
-	pSHunrlka5O9ySNKtoLfSSkdzyrDGlQZ5i58q1LmqHsAPLb6F9rUMCoaS/Qc8wj7LgLQxFdKCkgTB
-	2IaSkMK9fU4vfUwpRCbkoMA8p+YSq+96UjQnYqscHvxnkTPNUL0SSBHWcJAaidHWNlYDM8yjjb9Bv
-	4mN4596w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0cbf-0000000BAtH-3Iu5;
-	Fri, 04 Apr 2025 08:40:55 +0000
-Date: Fri, 4 Apr 2025 01:40:55 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Sheng Yong <shengyong2021@gmail.com>, akpm@linux-foundation.org,
-	vbabka@suse.cz, linux-kernel@vger.kernel.org,
-	linux-mm@archiver.kernel.org, Sheng Yong <shengyong1@xiaomi.com>,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org
-Subject: Re: [PATCH] lib/iov_iter: fix to increase non slab folio refcount
-Message-ID: <Z--bF9D8FFqVZ-s5@infradead.org>
-References: <20250401140255.1249264-1-shengyong1@xiaomi.com>
- <Z-v2ReHKyFIXQlKs@casper.infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KRqXaoqlWqVTdzSuccJIlP+zKFZ2D3i2X2DkYSj/XelujFhARerXTMyVLpZCulT1uPDcjfgBeX+gh0EQZ1d+cT3p9mtSTDap3xwo+ekcRQ4ApkGuEm+zn1vIfzevGu86JywXu9zPLbZCchNOMu9pF3o1MmUQlJEDoKFMujsayRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvXEJ6n8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F711C4CEDD;
+	Fri,  4 Apr 2025 13:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743774066;
+	bh=Q4xnhejB5l0SgKBzeLzuppiBD0WWWZ+in4TshRMzkSo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UvXEJ6n8cQ+7fHMaSLfPQsjm+XICKAtB3/I0UHEZtQHNuwQjg/CxvVMaYu9BBy3Mc
+	 yB99qP6kzbZ2ylaPLAr+SRN0BW/4HBFp+aUcSFxY8EY57MFnb0qzEjhmbuWysUBpJ9
+	 L++XYjgLMugmCuUlXCBV4dfBWYS5LyC6NEciz0R3kS33JAzId1MW87oHcAfGJt5II2
+	 cbxNiuyzfDhK1Yry+onA38EjZNo1ok3GBTqcrW6oprcWyM68c/GUz+N4wJOrtAnKgR
+	 5PgVIYYi2wDRukuYCvGuXEulx6hu7vYHEil6q00WvjBna5Zl4mJB9vH3gv5UnZjhqL
+	 8itdHW6B7Bzfg==
+Date: Fri, 4 Apr 2025 15:41:01 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: David Howells <dhowells@redhat.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/6] VFS: improve interface for lookup_one functions
+Message-ID: <20250404-fanpost-wirkt-9af345e9ebd6@brauner>
+References: <>
+ <3170778.1742479489@warthog.procyon.org.uk>
+ <174312469657.9342.13122047478058505480@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-v2ReHKyFIXQlKs@casper.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <174312469657.9342.13122047478058505480@noble.neil.brown.name>
 
-On Tue, Apr 01, 2025 at 03:20:53PM +0100, Matthew Wilcox wrote:
-> On Tue, Apr 01, 2025 at 10:02:55PM +0800, Sheng Yong wrote:
-> > When testing EROFS file-backed mount over v9fs on qemu, I encounter
-> > a folio UAF and page sanity check reports the following call trace.
-> > Fix it by increasing non slab folio refcount correctly.
+On Fri, Mar 28, 2025 at 12:18:16PM +1100, NeilBrown wrote:
+> On Fri, 21 Mar 2025, David Howells wrote:
+> > NeilBrown <neil@brown.name> wrote:
+> > 
+> > > Also the path component name is passed as "name" and "len" which are
+> > > (confusingly?) separate by the "base".  In some cases the len in simply
+> > > "strlen" and so passing a qstr using QSTR() would make the calling
+> > > clearer.
+> > > Other callers do pass separate name and len which are stored in a
+> > > struct.  Sometimes these are already stored in a qstr, other times it
+> > > easily could be.
+> > > 
+> > > So this patch changes these three functions to receive a 'struct qstr',
+> > > and improves the documentation.
+> > 
+> > You did want 'struct qstr' not 'struct qstr *' right?  I think there are
+> > arches where this will cause the compiler to skip a register argument or two
+> > if it's the second argument or third argument - i386 for example.  Plus you
+> > have an 8-byte alignment requirement because of the u64 in it that may suck if
+> > passed through several layers of function.
 > 
-> This report needs to say what the problem _is_, which is that pages may
-> be coalesced across a folio boundary.
+> I don't think it is passed through several layers - except where the
+> intermediate are inlined.
+> And gcc enforces 16 byte alignment of the stack on function calls for
+> i386, so I don't think alignment will be an issue.
+> 
+> I thought 'struct qstr' would result in slightly cleaner calling.  But I
+> cannot make a strong argument in favour of it so I'm willing to change
+> if there are concerns.
 
-9p/virtio also really needs to move away from iov_iter_get_pages_alloc
-and to iov_iter_extract_pages.  That way it properly pins pages for user
-memory and doesn't do the pointless page reference for kernel iters that
-triggered this.  Of course until all callers are gone this fix is
-needed, but the caller also needs fixing to use the proper interface.
-
-(Same for ceph and nfs)
+Fwiw, I massaged the whole series to pass struct qstr * instead of
+struct qstr. I just forgot to finish that rebase and push.
+/me doing so now.
 
