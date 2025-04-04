@@ -1,160 +1,584 @@
-Return-Path: <linux-nfs+bounces-11004-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11005-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2A07A7C358
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 20:58:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 338C9A7C67D
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Apr 2025 01:00:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22AC43B2741
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 18:57:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE7C71775B7
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Apr 2025 23:00:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578B71B4242;
-	Fri,  4 Apr 2025 18:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b="n9aOIgIN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A1BD19C578;
+	Fri,  4 Apr 2025 23:00:38 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39E6195B1A
-	for <linux-nfs@vger.kernel.org>; Fri,  4 Apr 2025 18:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C2715990C;
+	Fri,  4 Apr 2025 23:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743793065; cv=none; b=tXD4gmBYrcq7pDap7x2dJ0QHgCSLAUWOIdc4x38X7Sk2RkUXTRTa7xXs9m4/l/tzWFFZQ3Kmwh6U4H5GoHLAfKaz9I58+E62Y2EsqdMJBa8bQVzBHQHB5uMWF4gkXfTzfPkSZce0zq+W2+fCK8KeKIZXem2BzzEoz2CrDlsta3A=
+	t=1743807638; cv=none; b=gTd7M+g9PeWuW9RCJYCNPcKDPQAzpBlb72E5Kaf48IJtdpg7Rinte081AEsC7odBHoiBDPRKXxmQ6MBJKZMIdi8vWKaHOfbBHTvoT/cZ1/bKuBwA/Ueg0RuIICfYzIsRjW5SIlTvapQM/1PeuQovT8vTQM6D3/zWvfDZixhaQt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743793065; c=relaxed/simple;
-	bh=de386EFIOUxFGlJdP6khmVLjd66LlTAtplBu2HcHo0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FLwhbgmetMUgXGjbwdY58oOVg0qP/gQR7hN+jvNx7eoXU3zQxkMw3rZ4rgNj9GS/IBx6GpbdYwZfWyWusBSKLSm/xnd6R4F8T37I0pGGpTCZD8Sud4fGUCaw0NswqES0QYqIv8eD+FGvvCmDVek9wdVtyy9CcoRQOvRKtDhYhsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com; spf=none smtp.mailfrom=osandov.com; dkim=pass (2048-bit key) header.d=osandov-com.20230601.gappssmtp.com header.i=@osandov-com.20230601.gappssmtp.com header.b=n9aOIgIN; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=osandov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=osandov.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7395095e9afso180027b3a.0
-        for <linux-nfs@vger.kernel.org>; Fri, 04 Apr 2025 11:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=osandov-com.20230601.gappssmtp.com; s=20230601; t=1743793063; x=1744397863; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H27b55sIL4VwsW9rzj2++VVABVZ+EIcz/Ji91Y4Dl7w=;
-        b=n9aOIgINDu0m5MSRMZsaGBxpcKjsuicTMxlwXxrTQ4QwOtdpcWSJCunfnJRWdr1hkD
-         HZmsy5O5Rmm6RxUfEOP+GoegAs4Qkm8vmn5DiDYvfNLmlHuWgRQC4v2ZF14VdeGwuJk3
-         TbpogxQvbb3/OhMvZuVf1jBPNs2dUhhHoGwjzkrv6zUfCaqdgrU8z/xKIw0WBVZDRral
-         /APtjI683MmkIf5Imcj7ZSmLyyCdb3HJ4oStXhS5NpkM2Y8KkOPp08aYmxxh1PNhF2fH
-         XGA/wZVOHgdFnG7eppg0Y1dvI8aBPW5rG7PXfrfTAJhYn3q8F4FE23xmJWOjhbrlBitJ
-         uygg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743793063; x=1744397863;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H27b55sIL4VwsW9rzj2++VVABVZ+EIcz/Ji91Y4Dl7w=;
-        b=MZ7JegIUY2CfcIhNNJQ4VoPFZlFtQzefeILWZKMjTQKI+5Xp9vtpCVd3T5utZ+LqwV
-         9HDBg0WrRrx1BtJkyFwQzw0+jNSTl1jYf5ih9BPTb40PaQH66miOqatXe71VS48lFC7G
-         1+Abm+o3N6CTPV4jHCz7a1ztmABKXF/zHUqsNXJuVRPsrGtn1pcNmVdHsnt6K5q09Gaa
-         PR+u9LTLjvLBAB4tJnOXEDZAROA4J/8/H8WEQpIE8b4eDn2EJTAY54yFFA5fjhnkYg02
-         UbnvGBIKPExyg2OP02+4YwX/kFAJ2ZO3ofcBBqZwO8ezRbul2LKh4nq+MVzenlIQYMyF
-         OJtw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVtyzBBmgkAu9MV+qbRBqd6VWtCb+gRQMjrCFyYSUF/UIcyvi7SQ38+u2I+L1Hd094YQEvFxGKrTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk8CdRh7uQ/6usmdOqtRev9ihBYC4AqiSP2T0IGFVM715CZaWd
-	zxUJh36ZucyHzUBo9j28TObpDuaC0iaWEzvQqihSu2fnE0dcgVpO+y88m2Q442MpzWepYodqld1
-	z
-X-Gm-Gg: ASbGncvxSbnUQp/vuggXn5CNvCmFflAK9GyGzMgJ7rDCbwhE+ALr/ineTz39jiZCkqj
-	jYAzZCB1cXMU0xG58OjNiAKYuXncboVg5vU7ywH6J9TcC00AEYN9XREUh+dNpufmcTj+xVu/qQ0
-	j0/jjM7R1hSB7vDc+o+QoM6pcbS5a8NjnAvgVxKbFZokz1iD0O++zUQeL7DdJQBhKi/8K4OmBc2
-	ictejNMoX+oeUBdKGKtuykU0Oh6QiSlyAjS2IhiidYd3lPjCTTsKVa4Me/D29qSHhox9ylOxS/v
-	YYybslgLG5iliaBcLChnYEcCELPQ
-X-Google-Smtp-Source: AGHT+IH2COP4zRoWYkRWCM5LlgGUUi1DbhUTiJaQ6OYCPdPwwdUf7muBal8jdM2XpgxutFxNlmLPKg==
-X-Received: by 2002:a05:6a00:1412:b0:736:4d90:f9c0 with SMTP id d2e1a72fcca58-739e48f8e09mr2318671b3a.1.1743793062820;
-        Fri, 04 Apr 2025 11:57:42 -0700 (PDT)
-Received: from telecaster ([2620:10d:c090:500::4:2b52])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1a62sm3760721b3a.32.2025.04.04.11.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 11:57:42 -0700 (PDT)
-Date: Fri, 4 Apr 2025 11:57:41 -0700
-From: Omar Sandoval <osandov@osandov.com>
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Chris Mason <clm@meta.com>,
-	linux-nfs@vger.kernel.org
-Subject: Leaking plh_return_segs in containerized pNFS client?
-Message-ID: <Z_ArpQC_vREh_hEA@telecaster>
+	s=arc-20240116; t=1743807638; c=relaxed/simple;
+	bh=N2umlV1EAqLgdOh0zDjcSp6hhZaosk19TwRhPJ5icBk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=usymLsBZrdJCkl/uQUC1nNw2rIUS0N/pYdZak5nNI33v6YFsag46QPWanBN+pOM7PuyYp2ECKciZXEuTf8ZADeH1Vcai/9S+7h86C2YqM3ZpcoDBfTr0gwRwabdjU2txWJAtgAn/mldQ1giZ1NdKf2CYwRe3LEJXln8bkcvgW2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1u0q1U-005Zsl-Qs;
+	Fri, 04 Apr 2025 23:00:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: "NeilBrown" <neil@brown.name>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "David Howells" <dhowells@redhat.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ linux-nfs@vger.kernel.org, netfs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/6] VFS: improve interface for lookup_one functions
+In-reply-to: <20250404-waldarbeiten-entern-d0ae4513ee41@brauner>
+References: <>, <20250404-waldarbeiten-entern-d0ae4513ee41@brauner>
+Date: Sat, 05 Apr 2025 10:00:28 +1100
+Message-id: <174380762838.9342.7614757812120907834@noble.neil.brown.name>
 
-Hi, Trond,
+On Sat, 05 Apr 2025, Christian Brauner wrote:
+> On Fri, Apr 04, 2025 at 03:41:01PM +0200, Christian Brauner wrote:
+> > On Fri, Mar 28, 2025 at 12:18:16PM +1100, NeilBrown wrote:
+> > > On Fri, 21 Mar 2025, David Howells wrote:
+> > > > NeilBrown <neil@brown.name> wrote:
+> > > >=20
+> > > > > Also the path component name is passed as "name" and "len" which are
+> > > > > (confusingly?) separate by the "base".  In some cases the len in si=
+mply
+> > > > > "strlen" and so passing a qstr using QSTR() would make the calling
+> > > > > clearer.
+> > > > > Other callers do pass separate name and len which are stored in a
+> > > > > struct.  Sometimes these are already stored in a qstr, other times =
+it
+> > > > > easily could be.
+> > > > >=20
+> > > > > So this patch changes these three functions to receive a 'struct qs=
+tr',
+> > > > > and improves the documentation.
+> > > >=20
+> > > > You did want 'struct qstr' not 'struct qstr *' right?  I think there =
+are
+> > > > arches where this will cause the compiler to skip a register argument=
+ or two
+> > > > if it's the second argument or third argument - i386 for example.  Pl=
+us you
+> > > > have an 8-byte alignment requirement because of the u64 in it that ma=
+y suck if
+> > > > passed through several layers of function.
+> > >=20
+> > > I don't think it is passed through several layers - except where the
+> > > intermediate are inlined.
+> > > And gcc enforces 16 byte alignment of the stack on function calls for
+> > > i386, so I don't think alignment will be an issue.
+> > >=20
+> > > I thought 'struct qstr' would result in slightly cleaner calling.  But I
+> > > cannot make a strong argument in favour of it so I'm willing to change
+> > > if there are concerns.
+> >=20
+> > Fwiw, I massaged the whole series to pass struct qstr * instead of
+> > struct qstr. I just forgot to finish that rebase and push.
+> > /me doing so now.
+>=20
+> Fwiw, there were a bunch of build failures for me when I built the
+> individual commits that I fixed up. I generally do:
+>=20
+> git rebase -i HEAD~XXXXX -x "make -j512"
 
-I'm investigating an issue on our systems that are running your latest
-containerized NFS client teardown patches while Jeff is out. We're not
-seeing the NFS client get stuck anymore, but I'm debugging what appears
-to be a reference leak.
+Thanks for the fix-up! I'll have a look and compare with what I have.
+I generally do something similar to the above - though my hardware
+wouldn't handle -j512.
 
-Jeff noticed that there are some lingering network namespaces not in use
-by any processes after the container shutdown. I chased these references
-through:
+>=20
+> with an allmodconfig to make sure that it cleanly builds at each commit.
+>=20
+Part of the code I'm changing is in arch/s390.  I'd need to get a
+cross-compiler to build that.... maybe I should.
 
-   net -> nfs_client -> nfs4_pnfs_ds -> nfs4_ff_layout_ds ->
-   nfs4_ff_layout_mirror -> nfs4_ff_layout_segment
+Thanks again.  I have a few more small cleanup (probably post on Monday)
+and then a large batch which changes all the code which locks
+directories for create/remove/rename.
 
-What I'm seeing is:
+One awkwardness which you might have an opinion on:
+ In the final state we will be locking just the dentry, not the
+ directory.  So the unlock only needs to be given the dentry.
+ Something like "dentry_unlock(de);".
 
-* The nfs4_ff_layout_segment/pnfs_layout_segment has a pls_refcount of
-  0, but hasn't been freed.
-* Its pls_layout has already been freed, and the nfs_inode
-  and nfs_server are also long gone.
-* The segment was on pls_layout_hdr->plh_return_segs.
+ Today we can implement that as "inode_unlock(de->d_parent->d_inode)"
+ because d_parent is stable until the unlock happens.  After the switch
+ it will involves clearing a bit and a possible wakeup.
 
-    >>> lseg
-    *(struct pnfs_layout_segment *)0xffff88813147ca00 = {
-            .pls_list = (struct list_head){
-                    .next = (struct list_head *)0xffff8885d49e0f38,
-                    .prev = (struct list_head *)0xffff888dee919f80,
-            },
-            .pls_lc_list = (struct list_head){
-                    .next = (struct list_head *)0xffff88813147ca10,
-                    .prev = (struct list_head *)0xffff88813147ca10,
-            },
-            .pls_commits = (struct list_head){
-                    .next = (struct list_head *)0xffff88813147ca20,
-                    .prev = (struct list_head *)0xffff88813147ca20,
-            },
-            .pls_range = (struct pnfs_layout_range){
-                    .iomode = (u32)1,
-                    .offset = (u64)0,
-                    .length = (u64)18446744073709551615,
-            },
-            .pls_refcount = (refcount_t){
-                    .refs = (atomic_t){
-                            .counter = (int)0,
-                    },
-            },
-            .pls_seq = (u32)2,
-            .pls_flags = (unsigned long)10,
-            .pls_layout = (struct pnfs_layout_hdr *)0xffff8885d49e0f00,
-    }
-    >>> decode_enum_type_flags(lseg.pls_flags, prog["NFS_LSEG_VALID"].type_)
-    'NFS_LSEG_ROC|NFS_LSEG_LAYOUTRETURN'
-    >>> lseg.pls_list.next == lseg.pls_layout.plh_return_segs.address_of_()
-    True
+ However:  vfs_mkdir() consumes the dentry on failure so there won't be
+ any dentry to unlock - unless the caller keeps a copy, which would be
+ clumsy.
+ In the case where vfs_mkdir() returns a different dentry it will have
+ to transfer the lock to that dentry (I don't see a problem there) so it
+ will need to know about locking.  So I'm planing to have vfs_mkdir()
+ drop the lock as well as put the dentry on failure.
 
-So my guess is that there were still segments on plh_return_segs when
-the pnfs_layout_hdr was freed. I wasn't able to make sense of how the
-lifetime of that list is supposed to work. My next step is to test with
-WARN_ONCE(!list_empty(&lo->plh_return_segs)) in the free path of
-pnfs_put_layout_hdr(). In the meantime, do you have any ideas?
+ This ends up being quite an intrusive change.  Several other functions
+ (in nfsd and particularly overlayfs) need to be changed to also drop
+ the lock on failure.
+
+ Do you think this is an acceptable API or should I explore other
+ approaches?
+
+ I've included my current draft patch so you can see the extent of the
+ changes.  overlayfs is particularly interesting - it sometimes holds a
+ rename lock across vfs_mkdir(), so we need to unlock the "other"
+ directory after failure.  I think it will get cleaner later but I don't
+ have code to prove it yet.
 
 Thanks,
-Omar
+NeilBrown
 
-P.S. I spotted a separate issue that nfs4_data_server_cache is only
-keyed on the socket address, not taking the network namespace into
-account, which can result in connections being shared between
-containers. This leak has a knock-on effect of pinning dead DS
-connections in the cache, which other containers may try to reuse. Maybe
-the cache should be split up by netns?
+
+
+
+Author: NeilBrown <neil@brown.name>
+Date:   Fri Apr 4 16:43:25 2025 +1100
+
+    Change vfs_mkdir() to unlock on failure.
+   =20
+    Proposed changes to directory-op locking will lock the dentry rather
+    than the whole directory.  So the dentry will need to be unlocked.
+   =20
+    vfs_mkdir() consumes the dentry on error, so there will be no dentry to
+    be unlocked.
+   =20
+    So change vfs_mkdir() to unlock on error.  This requires various other
+    functions in various callers to also unlock on error.
+   =20
+    At present this results in some clumsy code.  Once the transition to
+    dentry locking is complete the clumsiness will be gone.
+   =20
+    overlays looks particularly clumsy as in some cases a double-directory
+    rename lock is taken, and a mkdir is then performed in one of the
+    directories.  If that fails the other directory must be unlocked.
+   =20
+    Signed-off-by: NeilBrown <neil@brown.name>
+
+diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+index 14d0cc894000..1a5905c313f1 100644
+--- a/fs/cachefiles/namei.c
++++ b/fs/cachefiles/namei.c
+@@ -131,8 +131,11 @@ struct dentry *cachefiles_get_directory(struct cachefile=
+s_cache *cache,
+ 		ret =3D cachefiles_inject_write_error();
+ 		if (ret =3D=3D 0)
+ 			subdir =3D vfs_mkdir(&nop_mnt_idmap, d_inode(dir), subdir, 0700);
+-		else
++		else {
++			/* vfs_mkdir() unlocks on failure */
++			inode_unlock(d_inode(dir));
+ 			subdir =3D ERR_PTR(ret);
++		}
+ 		if (IS_ERR(subdir)) {
+ 			trace_cachefiles_vfs_error(NULL, d_inode(dir), ret,
+ 						   cachefiles_trace_mkdir_error);
+@@ -196,9 +199,10 @@ struct dentry *cachefiles_get_directory(struct cachefile=
+s_cache *cache,
+ 	return ERR_PTR(-EBUSY);
+=20
+ mkdir_error:
+-	inode_unlock(d_inode(dir));
+-	if (!IS_ERR(subdir))
++	if (!IS_ERR(subdir)) {
++		inode_unlock(d_inode(dir));
+ 		dput(subdir);
++	}
+ 	pr_err("mkdir %s failed with error %d\n", dirname, ret);
+ 	return ERR_PTR(ret);
+=20
+diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+index 51a5c54eb740..31e8abfff490 100644
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -518,7 +518,7 @@ static struct dentry *ecryptfs_mkdir(struct mnt_idmap *id=
+map, struct inode *dir,
+ 				 lower_dentry, mode);
+ 	rc =3D PTR_ERR(lower_dentry);
+ 	if (IS_ERR(lower_dentry))
+-		goto out;
++		goto out_unlocked;
+ 	rc =3D 0;
+ 	if (d_unhashed(lower_dentry))
+ 		goto out;
+@@ -530,6 +530,7 @@ static struct dentry *ecryptfs_mkdir(struct mnt_idmap *id=
+map, struct inode *dir,
+ 	set_nlink(dir, lower_dir->i_nlink);
+ out:
+ 	inode_unlock(lower_dir);
++out_unlocked:
+ 	if (d_really_is_negative(dentry))
+ 		d_drop(dentry);
+ 	return ERR_PTR(rc);
+diff --git a/fs/namei.c b/fs/namei.c
+index 360a86ca1f02..ba36883dd70a 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4130,9 +4130,10 @@ EXPORT_SYMBOL(kern_path_create);
+=20
+ void done_path_create(struct path *path, struct dentry *dentry)
+ {
+-	if (!IS_ERR(dentry))
++	if (!IS_ERR(dentry)) {
+ 		dput(dentry);
+-	inode_unlock(path->dentry->d_inode);
++		inode_unlock(path->dentry->d_inode);
++	}
+ 	mnt_drop_write(path->mnt);
+ 	path_put(path);
+ }
+@@ -4295,7 +4296,8 @@ SYSCALL_DEFINE3(mknod, const char __user *, filename, u=
+mode_t, mode, unsigned, d
+  * negative or unhashes it and possibly splices a different one returning it,
+  * the original dentry is dput() and the alternate is returned.
+  *
+- * In case of an error the dentry is dput() and an ERR_PTR() is returned.
++ * In case of an error the dentry is dput(), the parent is unlocked, and
++ * an ERR_PTR() is returned.
+  */
+ struct dentry *vfs_mkdir(struct mnt_idmap *idmap, struct inode *dir,
+ 			 struct dentry *dentry, umode_t mode)
+@@ -4333,6 +4335,8 @@ struct dentry *vfs_mkdir(struct mnt_idmap *idmap, struc=
+t inode *dir,
+ 	return dentry;
+=20
+ err:
++	/* Caller only needs to unlock if dentry is not an error */
++	inode_unlock(dir);
+ 	dput(dentry);
+ 	return ERR_PTR(error);
+ }
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index c1d9bd07285f..8907967135c6 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -221,7 +221,8 @@ nfsd4_create_clid_dir(struct nfs4_client *clp)
+ 	dentry =3D lookup_one_len(dname, dir, HEXDIR_LEN-1);
+ 	if (IS_ERR(dentry)) {
+ 		status =3D PTR_ERR(dentry);
+-		goto out_unlock;
++		inode_unlock(d_inode(dir));
++		goto out;
+ 	}
+ 	if (d_really_is_positive(dentry))
+ 		/*
+@@ -234,13 +235,14 @@ nfsd4_create_clid_dir(struct nfs4_client *clp)
+ 		 */
+ 		goto out_put;
+ 	dentry =3D vfs_mkdir(&nop_mnt_idmap, d_inode(dir), dentry, S_IRWXU);
+-	if (IS_ERR(dentry))
++	if (IS_ERR(dentry)) {
+ 		status =3D PTR_ERR(dentry);
++		goto out;
++	}
+ out_put:
+-	if (!status)
+-		dput(dentry);
+-out_unlock:
++	dput(dentry);
+ 	inode_unlock(d_inode(dir));
++out:
+ 	if (status =3D=3D 0) {
+ 		if (nn->in_grace)
+ 			__nfsd4_create_reclaim_record_grace(clp, dname,
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 9abdc4b75813..0e935be8c2c1 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1450,7 +1450,9 @@ nfsd_check_ignore_resizing(struct iattr *iap)
+ 		iap->ia_valid &=3D ~ATTR_SIZE;
+ }
+=20
+-/* The parent directory should already be locked: */
++/* The parent directory should already be locked.  The lock
++ * will be dropped on error.
++ */
+ __be32
+ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		   struct nfsd_attrs *attrs,
+@@ -1516,8 +1518,11 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_=
+fh *fhp,
+ 	err =3D nfsd_create_setattr(rqstp, fhp, resfhp, attrs);
+=20
+ out:
+-	if (!IS_ERR(dchild))
++	if (!IS_ERR(dchild)) {
++		if (err)
++			inode_unlock(dirp);
+ 		dput(dchild);
++	}
+ 	return err;
+=20
+ out_nfserr:
+@@ -1572,6 +1577,9 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (err !=3D nfs_ok)
+ 		goto out_unlock;
+ 	err =3D nfsd_create_locked(rqstp, fhp, attrs, type, rdev, resfhp);
++	if (err)
++		/* lock will have been dropped */
++		return err;
+ 	fh_fill_post_attrs(fhp);
+ out_unlock:
+ 	inode_unlock(dentry->d_inode);
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index d7310fcf3888..324429d02569 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -518,7 +518,7 @@ static int ovl_set_upper_fh(struct ovl_fs *ofs, struct de=
+ntry *upper,
+ /*
+  * Create and install index entry.
+  *
+- * Caller must hold i_mutex on indexdir.
++ * Caller must hold i_mutex on indexdir.  It will be unlocked on error.
+  */
+ static int ovl_create_index(struct dentry *dentry, const struct ovl_fh *fh,
+ 			    struct dentry *upper)
+@@ -539,16 +539,22 @@ static int ovl_create_index(struct dentry *dentry, cons=
+t struct ovl_fh *fh,
+ 	 * TODO: implement create index for non-dir, so we can call it when
+ 	 * encoding file handle for non-dir in case index does not exist.
+ 	 */
+-	if (WARN_ON(!d_is_dir(dentry)))
++	if (WARN_ON(!d_is_dir(dentry))) {
++		inode_unlock(dir);
+ 		return -EIO;
++	}
+=20
+ 	/* Directory not expected to be indexed before copy up */
+-	if (WARN_ON(ovl_test_flag(OVL_INDEX, d_inode(dentry))))
++	if (WARN_ON(ovl_test_flag(OVL_INDEX, d_inode(dentry)))) {
++		inode_unlock(dir);
+ 		return -EIO;
++	}
+=20
+ 	err =3D ovl_get_index_name_fh(fh, &name);
+-	if (err)
++	if (err) {
++		inode_unlock(dir);
+ 		return err;
++	}
+=20
+ 	temp =3D ovl_create_temp(ofs, indexdir, OVL_CATTR(S_IFDIR | 0));
+ 	err =3D PTR_ERR(temp);
+@@ -567,8 +573,10 @@ static int ovl_create_index(struct dentry *dentry, const=
+ struct ovl_fh *fh,
+ 		dput(index);
+ 	}
+ out:
+-	if (err)
++	if (err) {
+ 		ovl_cleanup(ofs, dir, temp);
++		inode_unlock(dir);
++	}
+ 	dput(temp);
+ free_name:
+ 	kfree(name.name);
+@@ -781,7 +789,8 @@ static int ovl_copy_up_workdir(struct ovl_copy_up_ctx *c)
+ 	ovl_start_write(c->dentry);
+ 	inode_lock(wdir);
+ 	temp =3D ovl_create_temp(ofs, c->workdir, &cattr);
+-	inode_unlock(wdir);
++	if (!IS_ERR(wdir))
++		inode_unlock(wdir);
+ 	ovl_end_write(c->dentry);
+ 	ovl_revert_cu_creds(&cc);
+=20
+diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
+index fe493f3ed6b6..b4d92b51b63f 100644
+--- a/fs/overlayfs/dir.c
++++ b/fs/overlayfs/dir.c
+@@ -138,13 +138,16 @@ int ovl_cleanup_and_whiteout(struct ovl_fs *ofs, struct=
+ inode *dir,
+ 	goto out;
+ }
+=20
++/* dir will be unlocked on failure */
+ struct dentry *ovl_create_real(struct ovl_fs *ofs, struct inode *dir,
+ 			       struct dentry *newdentry, struct ovl_cattr *attr)
+ {
+ 	int err;
+=20
+-	if (IS_ERR(newdentry))
++	if (IS_ERR(newdentry)) {
++		inode_unlock(dir);
+ 		return newdentry;
++	}
+=20
+ 	err =3D -ESTALE;
+ 	if (newdentry->d_inode)
+@@ -189,13 +192,16 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, stru=
+ct inode *dir,
+ 	}
+ out:
+ 	if (err) {
+-		if (!IS_ERR(newdentry))
++		if (!IS_ERR(newdentry)) {
++			inode_unlock(dir);
+ 			dput(newdentry);
++		}
+ 		return ERR_PTR(err);
+ 	}
+ 	return newdentry;
+ }
+=20
++/* Note workdir will be unlocked on failure */
+ struct dentry *ovl_create_temp(struct ovl_fs *ofs, struct dentry *workdir,
+ 			       struct ovl_cattr *attr)
+ {
+@@ -309,7 +315,7 @@ static int ovl_create_upper(struct dentry *dentry, struct=
+ inode *inode,
+ 				    attr);
+ 	err =3D PTR_ERR(newdentry);
+ 	if (IS_ERR(newdentry))
+-		goto out_unlock;
++		goto out;
+=20
+ 	if (ovl_type_merge(dentry->d_parent) && d_is_dir(newdentry) &&
+ 	    !ovl_allow_offline_changes(ofs)) {
+@@ -323,6 +329,7 @@ static int ovl_create_upper(struct dentry *dentry, struct=
+ inode *inode,
+ 		goto out_cleanup;
+ out_unlock:
+ 	inode_unlock(udir);
++out:
+ 	return err;
+=20
+ out_cleanup:
+@@ -367,9 +374,12 @@ static struct dentry *ovl_clear_empty(struct dentry *den=
+try,
+=20
+ 	opaquedir =3D ovl_create_temp(ofs, workdir, OVL_CATTR(stat.mode));
+ 	err =3D PTR_ERR(opaquedir);
+-	if (IS_ERR(opaquedir))
+-		goto out_unlock;
+-
++	if (IS_ERR(opaquedir)) {
++		/* workdir was unlocked, no upperdir */
++		inode_unlock(upperdir->d_inode);
++		mutex_unlock(&upperdir->d_sb->s_vfs_rename_mutex);
++		return ERR_PTR(err);
++	}
+ 	err =3D ovl_copy_xattr(dentry->d_sb, &upperpath, opaquedir);
+ 	if (err)
+ 		goto out_cleanup;
+@@ -455,8 +465,13 @@ static int ovl_create_over_whiteout(struct dentry *dentr=
+y, struct inode *inode,
+=20
+ 	newdentry =3D ovl_create_temp(ofs, workdir, cattr);
+ 	err =3D PTR_ERR(newdentry);
+-	if (IS_ERR(newdentry))
+-		goto out_dput;
++	if (IS_ERR(newdentry)) {
++		/* workdir was unlocked, not upperdir */
++		inode_unlock(upperdir->d_inode);
++		mutex_unlock(&upperdir->d_sb->s_vfs_rename_mutex);
++		dput(upper);
++		goto out;
++	}
+=20
+ 	/*
+ 	 * mode could have been mutilated due to umask (e.g. sgid directory)
+diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
+index 6f2f8f4cfbbc..f7f7c3d1ad63 100644
+--- a/fs/overlayfs/overlayfs.h
++++ b/fs/overlayfs/overlayfs.h
+@@ -248,6 +248,7 @@ static inline struct dentry *ovl_do_mkdir(struct ovl_fs *=
+ofs,
+ {
+ 	dentry =3D vfs_mkdir(ovl_upper_mnt_idmap(ofs), dir, dentry, mode);
+ 	pr_debug("mkdir(%pd2, 0%o) =3D %i\n", dentry, mode, PTR_ERR_OR_ZERO(dentry)=
+);
++	/* Note: dir will have been unlocked on failure */
+ 	return dentry;
+ }
+=20
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index b63474d1b064..56055c70f200 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -366,14 +366,17 @@ static struct dentry *ovl_workdir_create(struct ovl_fs =
+*ofs,
+ 			goto out_dput;
+ 	} else {
+ 		err =3D PTR_ERR(work);
++		inode_unlock(dir);
+ 		goto out_err;
+ 	}
+ out_unlock:
+-	inode_unlock(dir);
++	if (work && !IS_ERR(work))
++		inode_unlock(dir);
+ 	return work;
+=20
+ out_dput:
+ 	dput(work);
++	inode_unlock(dir);
+ out_err:
+ 	pr_warn("failed to create directory %s/%s (errno: %i); mounting read-only\n=
+",
+ 		ofs->config.workdir, name, -err);
+@@ -569,7 +572,7 @@ static int ovl_check_rename_whiteout(struct ovl_fs *ofs)
+ 	temp =3D ovl_create_temp(ofs, workdir, OVL_CATTR(S_IFREG | 0));
+ 	err =3D PTR_ERR(temp);
+ 	if (IS_ERR(temp))
+-		goto out_unlock;
++		return err;
+=20
+ 	dest =3D ovl_lookup_temp(ofs, workdir);
+ 	err =3D PTR_ERR(dest);
+@@ -620,10 +623,13 @@ static struct dentry *ovl_lookup_or_create(struct ovl_f=
+s *ofs,
+=20
+ 	inode_lock_nested(parent->d_inode, I_MUTEX_PARENT);
+ 	child =3D ovl_lookup_upper(ofs, name, parent, len);
+-	if (!IS_ERR(child) && !child->d_inode)
++	if (!IS_ERR(child) && !child->d_inode) {
+ 		child =3D ovl_create_real(ofs, parent->d_inode, child,
+ 					OVL_CATTR(mode));
+-	inode_unlock(parent->d_inode);
++		if (!IS_ERR(child))
++			inode_unlock(parent->d_inode);
++	} else
++		inode_unlock(parent->d_inode);
+ 	dput(parent);
+=20
+ 	return child;
+diff --git a/fs/xfs/scrub/orphanage.c b/fs/xfs/scrub/orphanage.c
+index 3537f3cca6d5..af59183374ae 100644
+--- a/fs/xfs/scrub/orphanage.c
++++ b/fs/xfs/scrub/orphanage.c
+@@ -171,7 +171,7 @@ xrep_orphanage_create(
+ 					     orphanage_dentry, 0750);
+ 		error =3D PTR_ERR(orphanage_dentry);
+ 		if (IS_ERR(orphanage_dentry))
+-			goto out_unlock_root;
++			goto out_dput_root;
+ 	}
+=20
+ 	/* Not a directory? Bail out. */
+
+
+
 
