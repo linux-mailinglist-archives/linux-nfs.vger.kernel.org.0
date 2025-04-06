@@ -1,55 +1,56 @@
-Return-Path: <linux-nfs+bounces-11012-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11013-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9316A7CDF7
-	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 15:08:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E70DA7CE0A
+	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 15:16:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 774B91888594
-	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 13:08:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB2BD172A85
+	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 13:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F772198823;
-	Sun,  6 Apr 2025 13:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153E31BD9C5;
+	Sun,  6 Apr 2025 13:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVcSt601"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9dKlho6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A96F42069
-	for <linux-nfs@vger.kernel.org>; Sun,  6 Apr 2025 13:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC72AEE0
+	for <linux-nfs@vger.kernel.org>; Sun,  6 Apr 2025 13:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743944892; cv=none; b=tp+uGW9fK49JM6vtA23Wiok4lEaeAbORIqEfmQJf8U9ETnrhDzodW3HgYe0jQ1CyyEB5pPWUh30PtGKr63zm/Tb5oSR1UEV/7mzeF0/PqWcS93odRfxezvP7ovPzwf4eAo83aAGHtYlOZjx/7KL4OSGZFgvb9w6kmEIUhW2kdG0=
+	t=1743945369; cv=none; b=P9WLW+J3EML/ybmLXZw/d8GgjtYMk5hGILWPqFs5vkDBn4JkpB8ZeZgzk5eiU3v5RJHTMUdcqheOJcZuep2l0tliyzygqo0v85AKIhm4vu/rMfC6uNepgKTsE3K+8FNUeaGaSJHRnjfwOZI2EeaJbfGpS5SHTUQq0BS87hlB+DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743944892; c=relaxed/simple;
-	bh=5z1g4plV6jLChtR/toCc7MUsAl8lHxRM8dh3a7W9dEQ=;
+	s=arc-20240116; t=1743945369; c=relaxed/simple;
+	bh=+YfCCgm28M8ybwm2seNJ33I3jfQBdBZe4DaPXr826eI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bifBjEN06MxTEpdU1xvZOgz5DKOYd9p5Jb+JWeghD9oyxSyC41oSZpwtGweRsKzu9JVuqI2AuPCvTclcSDvfPRS8reXoUpxXQksTiCMox2ZpnLGgjTTASNX9rjhJvUjYJVOqzBMJNzsIAkZVRR+SupA15ToWhykgGVMPGUMD5rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVcSt601; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2994CC4CEE3;
-	Sun,  6 Apr 2025 13:08:10 +0000 (UTC)
+	 Content-Type:MIME-Version; b=tPXwOxfKZved3793zDVkL6UCFh3Jr2J6imZJ6MhMQJevCFDq2dGgtxN8EmC41JeoNok0MeSH+U9ziPBPwtUgFTg2bchncVJ2ZzlPQWXiRPWiuIe9yRUJOjLi/OwGlnORqzZ4ulXfM8I5WPZn4aw7gos8vd6I/UPw6KnIZroSTTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9dKlho6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C41C4CEE3;
+	Sun,  6 Apr 2025 13:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743944890;
-	bh=5z1g4plV6jLChtR/toCc7MUsAl8lHxRM8dh3a7W9dEQ=;
+	s=k20201202; t=1743945368;
+	bh=+YfCCgm28M8ybwm2seNJ33I3jfQBdBZe4DaPXr826eI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YVcSt6018sua4XyQMpYdHxuev77kQ8Br2Fz7H9/M2s7ySgsZju7letzTXNHQ5jb+m
-	 HV5ovIUhPSIFkKOo3oGvydbHdkBewveYmW/mskoTxOTZYVQjfBKVVrCxO6vdpoVWPP
-	 3iNqYdQmmuNKockTqLFxGB+v7r1X4tpi68IZqkRdRVC6r26EFEjyLMT2pxVkOpKuaY
-	 Dj3O32M1nBv8xD2ro3Z8MCerFC2SWWzqe1yeTvBTx+YYZDsCoRJzVp8STaiybvFjYJ
-	 0Xb/1O5BhqrYU4QAmRldPCScLvgktgw+RtqSUpop+PwEgwsGwrVyn4s+Og5FIogl1z
-	 NMlOErWsd24qQ==
-Message-ID: <b0342047d444e49aef379193497dbbc4f3fff3d7.camel@kernel.org>
-Subject: Re: [PATCH 1/2] NFSv4: Handle fatal ENETDOWN and ENETUNREACH errors
+	b=W9dKlho6SAQxJQgE5jemVod0/pKV5p6cltZa5pa2BYNt+m669C53opviPcIJ4Khvb
+	 MgM5m5++WLQIxRQdbGC7CKPaF7tL98+zQA79xgbEmiqhEOGCPSMAzv4cJ0KTykL6NJ
+	 OWIKNA/OWBDmQtSzT+SA0txSszexwjJEOC5IoUdRoQ6iZPb8VZMKRd+vPUvqxNF6KJ
+	 4Bq3u+h/tR+mV2e3oRo+pvflejrQIrlNCmzmXPiiVDSYm9yjKUxmmklWTS0HE38YiD
+	 VJjrTNnpFl8J8q39Qdm/QIzEK/Bg7kR7brkc5yZJPKf3RsCQXD7yC7pX7UwvpHbNcc
+	 QVhXufuX7b/Iw==
+Message-ID: <a5c66e082a0b8669c89bb487027da7fac66fa5b6.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSv4/pnfs: Layoutreturn on close must handle fatal
+ networking errors
 From: Jeff Layton <jlayton@kernel.org>
 To: trondmy@kernel.org, Omar Sandoval <osandov@osandov.com>
 Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org
-Date: Sun, 06 Apr 2025 09:08:09 -0400
-In-Reply-To: <756e03b4405f80344f98a695f49e50dd3a1caca0.1743930506.git.trond.myklebust@hammerspace.com>
+Date: Sun, 06 Apr 2025 09:16:07 -0400
+In-Reply-To: <cdb06dc8d5ab3e65db78a78a9ac5969453efe0b5.1743930506.git.trond.myklebust@hammerspace.com>
 References: <cover.1743930506.git.trond.myklebust@hammerspace.com>
-	 <756e03b4405f80344f98a695f49e50dd3a1caca0.1743930506.git.trond.myklebust@hammerspace.com>
+	 <cdb06dc8d5ab3e65db78a78a9ac5969453efe0b5.1743930506.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,41 +138,47 @@ MIME-Version: 1.0
 On Sun, 2025-04-06 at 11:11 +0200, trondmy@kernel.org wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> Ensure that the NFSv4 error handling code recognises the
-> RPC_TASK_NETUNREACH_FATAL flag, and handles the ENETDOWN and ENETUNREACH
-> errors accordingly.
+> If we have a fatal ENETDOWN or ENETUNREACH error, then the layoutreturn
+> on close code should also handle that as fatal, and free the layouts.
 >=20
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  fs/nfs/nfs4proc.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  fs/nfs/pnfs.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index da97f87ecaa9..f862c862b3a3 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -671,6 +671,15 @@ nfs4_async_handle_exception(struct rpc_task *task, s=
-truct nfs_server *server,
->  	struct nfs_client *clp =3D server->nfs_client;
->  	int ret;
-> =20
-> +	if ((task->tk_rpc_status =3D=3D -ENETDOWN ||
-> +	     task->tk_rpc_status =3D=3D -ENETUNREACH) &&
-> +	    task->tk_flags & RPC_TASK_NETUNREACH_FATAL) {
-> +		exception->retry =3D 0;
-> +		exception->recovering =3D 0;
-> +		exception->retry =3D 0;
+> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+> index 5f582713bf05..3554046b5bfc 100644
+> --- a/fs/nfs/pnfs.c
+> +++ b/fs/nfs/pnfs.c
+> @@ -1659,8 +1659,16 @@ int pnfs_roc_done(struct rpc_task *task, struct nf=
+s4_layoutreturn_args **argpp,
+>  		break;
+>  	case -NFS4ERR_NOMATCHING_LAYOUT:
+>  		/* Was there an RPC level error? If not, retry */
+> -		if (task->tk_rpc_status =3D=3D 0)
+> +		if (task->tk_rpc_status =3D=3D 0) {
+> +			if ((task->tk_rpc_status =3D=3D -ENETDOWN ||
+> +			     task->tk_rpc_status =3D=3D -ENETUNREACH) &&
+> +			    task->tk_flags & RPC_TASK_NETUNREACH_FATAL) {
 
-Why set exception->retry twice?
+You already checked that task->tk_rpc_status is 0, so the inside if
+statement will never be true. I think you probably want to get rid if
+the outside=20
 
-> +		return -EIO;
-> +	}
-> +
->  	ret =3D nfs4_do_handle_exception(server, errorcode, exception);
->  	if (exception->delay) {
->  		int ret2 =3D nfs4_exception_should_retrans(server, exception);
+     if (task->tk_rpc_status =3D=3D 0)
 
-Other than that, this looks sane.
+condition?
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> +				*ret =3D 0;
+> +				(*respp)->lrs_present =3D 0;
+> +				retval =3D -EIO;
+> +			}
+>  			break;
+> +		}
+>  		/* If the call was not sent, let caller handle it */
+>  		if (!RPC_WAS_SENT(task))
+>  			return 0;
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
