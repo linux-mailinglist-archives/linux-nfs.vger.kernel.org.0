@@ -1,175 +1,110 @@
-Return-Path: <linux-nfs+bounces-11020-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11021-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DF8DA7CED1
-	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 17:54:42 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6EAAA7DC58
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 13:35:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF808188C46D
-	for <lists+linux-nfs@lfdr.de>; Sun,  6 Apr 2025 15:54:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72B2C18890B4
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 11:35:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF2F13AD05;
-	Sun,  6 Apr 2025 15:54:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433CC23C8C5;
+	Mon,  7 Apr 2025 11:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLv4MhAt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mr7Rg/EC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783B023CB
-	for <linux-nfs@vger.kernel.org>; Sun,  6 Apr 2025 15:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE74C23C367
+	for <linux-nfs@vger.kernel.org>; Mon,  7 Apr 2025 11:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743954877; cv=none; b=BcYTIuf/kZHVoG77ChaRFwBVpGnFk69N28aLtrhTgV/4o+ixJ+pSJgvRIXBnM7g8H+v+89ZdtCRk1FlHD+tWQxammtXk/kb9zxENN23ILSiDhRv5rUzTneE6Bw28GNNvZZCY0xCOYbF1nhU3ua+kzH3Qv0WjevH+xwzWuwpEPMA=
+	t=1744025698; cv=none; b=AzobG+b2qbiTLfPMJ+SrwNt+dHOe04pI7QY6yTWGYfsNhXC91yLzCE83vuKV+Au9uFbFjoyTtQboAAnWTslZTAXR5Mwx46rvmX6fzxbA+5jcelVaOeD1igQvoyq7q3JFNj3C1U5xL5S2OTbtPW5z51VpW0nQ3RLF4DsW+rcQF58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743954877; c=relaxed/simple;
-	bh=+uxyfiLTO7c2Bz+VIrcVrLz626rmoP0jO4t990W9gxc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fL9EGeRFVd8kUp0IcMSh8ru9Uz5K5BPR4G/qUJMp68g9mcavIVIHPhg93z7/oRC80G5X30k9HACgJSMzU0MzmEbvMh01Yn5hk/SIWBDD+uOCZ5IYt+FRIuEjdLLd5XX7G/2Df/4sUDyw59dq44aYYGen8DoF+FYN9n50tHqFOxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLv4MhAt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9437DC4CEE3;
-	Sun,  6 Apr 2025 15:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743954877;
-	bh=+uxyfiLTO7c2Bz+VIrcVrLz626rmoP0jO4t990W9gxc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VLv4MhAtUyI5Dl5xWliARJ0nMOfK3LG7LI381CV8IfAF/jEQoqfek0x1JOE/stmIt
-	 tz8D1rkyVRiq2b8a21OxTPf4vnpGk3POZeg/N+JrrNudDNvpnwhLMUlVJHsZ8oDT17
-	 IYMVm80VtvZNN/vVAXWfcuThiyLqYazmfXr+Lb5vKTZEllM2PQuf3Cv75HXFUYCYb3
-	 ckmDxLqoK1SiW2xx4CKKPVwLf17ckcVrBycU7xpA/BLJZPzvtskQ7va7tVJTyURdMQ
-	 Fq3plH8j38Plz5vRf7ot1YhSqgb95rrWNnq9xHpo9g3gBMyVkiIf3GAriKNSAbstZy
-	 vObTM4LJ+ugNA==
-Message-ID: <a9da42d35019c6744e8b246a96cd8f8089922336.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] NFSv4/pnfs: Layoutreturn on close must handle
- fatal networking errors
-From: Jeff Layton <jlayton@kernel.org>
-To: trondmy@kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc: Chris Mason <clm@meta.com>, linux-nfs@vger.kernel.org
-Date: Sun, 06 Apr 2025 11:54:35 -0400
-In-Reply-To: <d45398aaaa1db68cd8bd7eac86acc4e04866f177.1743954240.git.trond.myklebust@hammerspace.com>
-References: <cover.1743954240.git.trond.myklebust@hammerspace.com>
-	 <d45398aaaa1db68cd8bd7eac86acc4e04866f177.1743954240.git.trond.myklebust@hammerspace.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1744025698; c=relaxed/simple;
+	bh=a+3PSzba4tRai6M/BM+U7fPXtuCevnqFwBbvwwLYN4I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=tkhqJYQp/buFdGeDOqdBXRfSScSI92baXeeI0eg3m6PmS6TWJERAmuVI35D9o3x2csFxXoPPKhXpJThTe1QlpwfLuNuEhpjD6JSgxatMiWGkO42F6jD2Hg9U99KFLUogW/igfraUhP4qKVQJyQrfnrfFTeJzpmLg/FH2+v6Uk7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mr7Rg/EC; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso4020431a12.2
+        for <linux-nfs@vger.kernel.org>; Mon, 07 Apr 2025 04:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744025694; x=1744630494; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=arsJDqhwJfphf2bVaHv3Y91glUqdzFar66XFygWxjaQ=;
+        b=Mr7Rg/ECZU0nUQ3rT5RN4f786gGuIMVPSek8pP189qrOhVMy0GCdgWhUQ2r5LzLGHb
+         JgmZ8M9rpkk0aspF7QlrtzEdIhP8X/mGf7js+aJiQtEeZEBWzmXZLU9/xusf0AINGbjg
+         pPVn9VY+zKvejEczRcj+rumkS+WmPSy9A5Ab41QOZAlQTUuQVyOvysMn1a6Ty0j9ar74
+         avYCbe16vqLMoBwoDvCwJoxsFPNMStYLkeCQy/i0TkApopYoaNWnMdE0INd2LRefJAC9
+         b1ZEUMpb9U06b4BKKplzH0Pn/U7rwgC3GcIMfLaAMKROK0T6lUP9xDhwGKNPRiiAMARb
+         jOBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744025694; x=1744630494;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=arsJDqhwJfphf2bVaHv3Y91glUqdzFar66XFygWxjaQ=;
+        b=P2RRjz5Va7oLG1ExDbawmefQhFCcP4ysJVVy0Jctz+l+19YJWVW9pvUwbVTbQg3XMr
+         YKI2oswlM4uCldJp6a5BQI3NzvZb7Z0CGiwmfaakw3d0mCRaKOEhmtVy6pfenD/rKquj
+         XhpeFzj+H8BBR15rAV9kzswEoD6daeGVvsq1EM3bZ7qZvZ72qaGpYNVfisATZ+wRcSm+
+         EnfzquX2Oq/lgDab4ciS9agYR3bgHS9lgfrRsz6I+EbZ9cRRJAxA3/wCYUi9UzrFFJs7
+         pR7xc2YwB0iSi7XDjbkEUBKDuzCvzXMdfEYrX8pJBdiqdRyCbjQ3yx8tf9fJvPyvvXb2
+         h20g==
+X-Gm-Message-State: AOJu0YwzV1QZVLQxcp6tSDSu1NHLBvVTIAL2SPiSvWHSFsqmhnBPaPUY
+	qGgXeMUE+7Fy1svnwxjuraWNcZO8nEDrZCXOfjQ+U4YLjEcav65HGsdN/OFvGbfyLzeFqV2rUYZ
+	12VGyAQFbmCYOPkOsljmjAdpdaQaVJjqq
+X-Gm-Gg: ASbGnct0BQjVuWUZwGBNjw3fZtFmM0a5Ttx5d2maMX0ZZk3dWNsvXewLPB9r1SnKHqE
+	vkjM7tDbQ97ZmW7vD6kRgmzmuWhR0anQz0fPppdBzrKb45JobFnwmyjO/fveWOMoqy3F7Q1PR5d
+	ecQW5JgaL9n4iY8ecwiDAjovy30Q==
+X-Google-Smtp-Source: AGHT+IGDSJMjZdPlrONRC7uIe9BgfzmrV2nXp/LHsmAMZMyeYsFPr8pb7DApUYRwezrahDnaBSzptrx7zKb3CkGdSP0=
+X-Received: by 2002:a17:90b:224d:b0:2ff:4f04:4261 with SMTP id
+ 98e67ed59e1d1-306a48b308cmr12265815a91.34.1744025694532; Mon, 07 Apr 2025
+ 04:34:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
+In-Reply-To: <CALXu0UdddwbzGUUzKdbxpb-yC-FVMhbdcd-P+OLSDNvjZeByGw@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Mon, 7 Apr 2025 13:34:18 +0200
+X-Gm-Features: ATxdqUEAjQK_p0ZKjXeaJZ6vASm4XG4S1p1OuyepbWnv72TlhQWptGPiG4FZVGQ
+Message-ID: <CALXu0Ueh2uLMJUimG8ngFaW=soxvQj4ZaakmgpGZn5BRSWvMHQ@mail.gmail.com>
+Subject: Increase RPCSVC_MAXPAYLOAD to 8M, part DEUX
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 2025-04-06 at 17:45 +0200, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->=20
-> If we have a fatal ENETDOWN or ENETUNREACH error, then the layoutreturn
-> on close code should also handle that as fatal, and free the layouts.
->=20
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/pnfs.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index 5f582713bf05..10fdd065a61c 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -1661,6 +1661,18 @@ int pnfs_roc_done(struct rpc_task *task, struct nf=
-s4_layoutreturn_args **argpp,
->  		/* Was there an RPC level error? If not, retry */
->  		if (task->tk_rpc_status =3D=3D 0)
->  			break;
-> +		/*
-> +		 * Is there a fatal network level error?
-> +		 * If so release the layout, but flag the error.
-> +		 */
-> +		if ((task->tk_rpc_status =3D=3D -ENETDOWN ||
-> +		     task->tk_rpc_status =3D=3D -ENETUNREACH) &&
-> +		    task->tk_flags & RPC_TASK_NETUNREACH_FATAL) {
-> +			*ret =3D 0;
-> +			(*respp)->lrs_present =3D 0;
-> +			retval =3D -EIO;
-> +			break;
-> +		}
->  		/* If the call was not sent, let caller handle it */
->  		if (!RPC_WAS_SENT(task))
->  			return 0;
+On Wed, 22 Jan 2025 at 11:07, Cedric Blancher <cedric.blancher@gmail.com> wrote:
+>
+> Good morning!
+>
+> IMO it might be good to increase RPCSVC_MAXPAYLOAD to at least 8M,
+> giving the NFSv4.1 session mechanism some headroom for negotiation.
+> For over a decade the default value is 1M (1*1024*1024u), which IMO
+> causes problems with anything faster than 2500baseT.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Chuck pointed out that the new /sys/kernel/debug/ subdir could be used
+to host "experimental" tunables.
+
+Plan:
+Add a /sys/kernel/debug/nfsd/RPCSVC_MAXPAYLOAD tunable file,
+RPCSVC_MAXPAYLOAD defaults to 4M, on connection start it copies the
+value of /sys/kernel/debug/nfsd/RPCSVC_MAXPAYLOAD into a private
+variable to make it unchangeable during connection lifetime, because
+Chuck is worried that svc_rqst::rq_pages might blow up in our face.
+
+Would that be a plan?
+
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
