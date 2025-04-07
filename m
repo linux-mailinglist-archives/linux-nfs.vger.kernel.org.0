@@ -1,56 +1,58 @@
-Return-Path: <linux-nfs+bounces-11028-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11031-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6246A7E4EA
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 17:42:24 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6541A7E588
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 18:03:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 944543A2392
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 15:36:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 353947A35E5
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Apr 2025 16:02:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB961FFC68;
-	Mon,  7 Apr 2025 15:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0142B2063D4;
+	Mon,  7 Apr 2025 15:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atJ6hN4x"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRL+5c+k"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E935C1FF7CC
-	for <linux-nfs@vger.kernel.org>; Mon,  7 Apr 2025 15:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02B720370D
+	for <linux-nfs@vger.kernel.org>; Mon,  7 Apr 2025 15:59:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744040169; cv=none; b=qNGXyHure5JF/DL7T3ZlXD55V11jcT9jdtN/6wmzpO5UJBW/YQRoy37hfuN02WySzwlzIeAaNbQj9rrMwt6ejMT8RYJiaiDJIcOJ4ogB0CJOJfQVANhixzMBQQOuA9Q0GLNRRbLKQrD6l2WKHBa3zKHP9/TKc5AUpIxGRQjUkIk=
+	t=1744041552; cv=none; b=ZbQzZZ520I8cMg8VoAK96QYxaFemvBNpJ2/OdGNGrcXOt5NGJ4yUUcCUpBeIbDJe5bxGcVW9zQS+btEh+vA9k6Xvy0EddvjkSrVYZ4sO1M4hs26EdZ14rht851ob9HR/CGZsUowvilv+ZxiJK6Y7rtob59EoC8d+dp1kds1XFSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744040169; c=relaxed/simple;
-	bh=efar3MKPXs60Uw6FkModzesBiGRsO8Pode56TF0FafI=;
+	s=arc-20240116; t=1744041552; c=relaxed/simple;
+	bh=tov2HqkxS0wcWpaoBqG6xuFUEO4J1m1Xw8RhEE4BfVc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=trSKvnNUmS0Z00fr1hSPhGcnYCHx6FBtmVO0sW5YrV5mjkfFGpnbq2rDqc/i4+i7D05tigBoB3OKQN6+pJbx53HpyKEEX5xF1y+RFLva7wSR2xeqUk2XUrpFp8BK/X4tkbtMM8xKYhk9o/8hw7xfl8Sbqyg95qfp8Y4A/vlUZ/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atJ6hN4x; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3BFC4CEDD;
-	Mon,  7 Apr 2025 15:36:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=RXEN0EicsN8kJRykMsbCzK+fwp7RMSnblnsquDfJmkC1TkhhiPXxrhr/YN940foUTXuqvV8WnfHokjKcVoAlPSLvxDVOd48suaRHZ2o9aIPQ1kI4UHItkLayzlRgbjL2jwZpyZoGFX2PUZrzu+AJnxUs6+8OxhuupZQG28rbCqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRL+5c+k; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C61B4C4CEE9;
+	Mon,  7 Apr 2025 15:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744040168;
-	bh=efar3MKPXs60Uw6FkModzesBiGRsO8Pode56TF0FafI=;
+	s=k20201202; t=1744041552;
+	bh=tov2HqkxS0wcWpaoBqG6xuFUEO4J1m1Xw8RhEE4BfVc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=atJ6hN4xfFcFAHFfgC6s4CYvhtf9TWv+DL4diBarKzFwfX5zXm6pswjD4Id7yAbtT
-	 regZg+OgXHRzAQ9laaD71o68Dk/iw1JUeF3fvIKd3MUuaIAjeSppdcK5udusoSD3nK
-	 3FxM9Ykt9dFKzhmbS+r6jQ8ElwKLwyaLypQXQse4DYMZF3aX+MMRahiq4nou2X8YQL
-	 dbFH2d46uzeJ6G91UdIOEG4aNf8mkCphPG400zlfmZ7vNgNACFwvoBhd98LeuJokmz
-	 48xKM/+XGh8w+K+5BWGXgELrCXyIQEaLqglkYef52OYJlzHqJhi9UhNp30GHFDoKlI
-	 ChNhKENxiRGBQ==
-Message-ID: <8556bbf14b11dcb29798374d93f6da27bd1735b7.camel@kernel.org>
+	b=HRL+5c+ko8H1qMaag8GHRqa8L1hkdmGizgei0OUDFi+1rvoStx20tgzVwZRYmi3V9
+	 XkCvYt56Mp2ckgLhWp/c7f4WvF7r+JlEc5AaGKstbBKAx3NCmYzk+CyWhnzoFQGKE7
+	 YyTuCZroIp7xlK2Mkm8uURUBMkUKXn36LM0rx/v+SSkZhoSN12yYe/4hO9Hz7nKa6z
+	 HDYLlgyk96Zy/1aFIVMrlmaNoL0gl1FdHtVTRsdT7/vqbEHYo5JFIohWyrvmTdAMvE
+	 lainS6MMbr1HxuUTX3uZphkadNBmh1UevjQiwHh3w9p/NTtwb24D3jqTL2ZdPJAgNp
+	 vSGNMOFaxN2mA==
+Message-ID: <3963da47314bfa375d46117b382c2fb2961177a1.camel@kernel.org>
 Subject: Re: [PATCH 2/3] nfsd: adjust nfsd4_spo_must_allow checking order
 From: Jeff Layton <jlayton@kernel.org>
-To: Olga Kornievskaia <okorniev@redhat.com>, chuck.lever@oracle.com
-Cc: linux-nfs@vger.kernel.org, neilb@suse.de, Dai.Ngo@oracle.com,
- tom@talpey.com
-Date: Mon, 07 Apr 2025 11:36:07 -0400
-In-Reply-To: <20250322001306.41666-3-okorniev@redhat.com>
+To: Olga Kornievskaia <okorniev@redhat.com>
+Cc: chuck.lever@oracle.com, linux-nfs@vger.kernel.org, neilb@suse.de, 
+	Dai.Ngo@oracle.com, tom@talpey.com
+Date: Mon, 07 Apr 2025 11:59:10 -0400
+In-Reply-To: <CACSpFtBrJs8PbAbbBBybW_Gn7LR1r9vVSppGa4VVEWMBt_2osA@mail.gmail.com>
 References: <20250322001306.41666-1-okorniev@redhat.com>
 	 <20250322001306.41666-3-okorniev@redhat.com>
+	 <8556bbf14b11dcb29798374d93f6da27bd1735b7.camel@kernel.org>
+	 <CACSpFtBrJs8PbAbbBBybW_Gn7LR1r9vVSppGa4VVEWMBt_2osA@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,70 +137,80 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-03-21 at 20:13 -0400, Olga Kornievskaia wrote:
-> Prior to this patch, some non-4.x NFS operations such as NLM
-> calls have to go thru export policy checking would end up
-> calling nfsd4_spo_must_allow() function and lead to an
-> out-of-bounds error because no compound state structures
-> needed by nfsd4_spo_must_allow() are present in the svc_rqst
-> request structure.
+On Mon, 2025-04-07 at 11:56 -0400, Olga Kornievskaia wrote:
+> On Mon, Apr 7, 2025 at 11:36=E2=80=AFAM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >=20
+> > On Fri, 2025-03-21 at 20:13 -0400, Olga Kornievskaia wrote:
+> > > Prior to this patch, some non-4.x NFS operations such as NLM
+> > > calls have to go thru export policy checking would end up
+> > > calling nfsd4_spo_must_allow() function and lead to an
+> > > out-of-bounds error because no compound state structures
+> > > needed by nfsd4_spo_must_allow() are present in the svc_rqst
+> > > request structure.
+> > >=20
+> > > Instead, do the nfsd4_spo_must_allow() checking after the
+> > > may_bypass_gss check which is geared towards allowing various
+> > > calls such as NLM while export policy is set with sec=3Dkrb5:...
+> > >=20
+> > > Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
+> > > Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
+> > > ---
+> > >  fs/nfsd/export.c | 17 ++++++++---------
+> > >  1 file changed, 8 insertions(+), 9 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> > > index 88ae410b4113..02f26cbd59d0 100644
+> > > --- a/fs/nfsd/export.c
+> > > +++ b/fs/nfsd/export.c
+> > > @@ -1143,15 +1143,6 @@ __be32 check_nfsd_access(struct svc_export *ex=
+p, struct svc_rqst *rqstp,
+> > >                       return nfs_ok;
+> > >       }
+> > >=20
+> > > -     /* If the compound op contains a spo_must_allowed op,
+> > > -      * it will be sent with integrity/protection which
+> > > -      * will have to be expressly allowed on mounts that
+> > > -      * don't support it
+> > > -      */
+> > > -
+> > > -     if (nfsd4_spo_must_allow(rqstp))
+> > > -             return nfs_ok;
+> > > -
+> > >       /* Some calls may be processed without authentication
+> > >        * on GSS exports. For example NFS2/3 calls on root
+> > >        * directory, see section 2.3.2 of rfc 2623.
+> > > @@ -1168,6 +1159,14 @@ __be32 check_nfsd_access(struct svc_export *ex=
+p, struct svc_rqst *rqstp,
+> > >                               return 0;
+> > >               }
+> > >       }
+> > > +     /* If the compound op contains a spo_must_allowed op,
+> > > +      * it will be sent with integrity/protection which
+> > > +      * will have to be expressly allowed on mounts that
+> > > +      * don't support it
+> > > +      */
+> > > +     if (nfsd4_spo_must_allow(rqstp))
+> > > +             return nfs_ok;
+> > > +
+> > >=20
+> > >  denied:
+> > >       return nfserr_wrongsec;
+> >=20
+> > Is this enough to fully fix the OOB problem? It looks like you could
+> > still get past the may_bypass_gss if statement above this with a
+> > carefully crafted RPC.
 >=20
-> Instead, do the nfsd4_spo_must_allow() checking after the
-> may_bypass_gss check which is geared towards allowing various
-> calls such as NLM while export policy is set with sec=3Dkrb5:...
+> A crafted RPC can and thus Neil's patch that checks the version in
+> nfsd4_spo_must_allow is needed.
 >=20
-> Fixes: 4cc9b9f2bf4d ("nfsd: refine and rename NFSD_MAY_LOCK")
-> Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
-> ---
->  fs/nfsd/export.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index 88ae410b4113..02f26cbd59d0 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -1143,15 +1143,6 @@ __be32 check_nfsd_access(struct svc_export *exp, s=
-truct svc_rqst *rqstp,
->  			return nfs_ok;
->  	}
-> =20
-> -	/* If the compound op contains a spo_must_allowed op,
-> -	 * it will be sent with integrity/protection which
-> -	 * will have to be expressly allowed on mounts that
-> -	 * don't support it
-> -	 */
-> -
-> -	if (nfsd4_spo_must_allow(rqstp))
-> -		return nfs_ok;
-> -
->  	/* Some calls may be processed without authentication
->  	 * on GSS exports. For example NFS2/3 calls on root
->  	 * directory, see section 2.3.2 of rfc 2623.
-> @@ -1168,6 +1159,14 @@ __be32 check_nfsd_access(struct svc_export *exp, s=
-truct svc_rqst *rqstp,
->  				return 0;
->  		}
->  	}
-> +	/* If the compound op contains a spo_must_allowed op,
-> +	 * it will be sent with integrity/protection which
-> +	 * will have to be expressly allowed on mounts that
-> +	 * don't support it
-> +	 */
-> +	if (nfsd4_spo_must_allow(rqstp))
-> +		return nfs_ok;
-> +
-> =20
->  denied:
->  	return nfserr_wrongsec;
+> I still feel changing the order would be beneficial as it would take
+> care of realistic requests.
 
-Is this enough to fully fix the OOB problem? It looks like you could
-still get past the may_bypass_gss if statement above this with a
-carefully crafted RPC.
-
-Maybe the right fix is to make nfsd4_spo_must_allow() check the rq_prog
-and rq_vers fields to ensure that this is NFSv4? It can just return
-false if it's not.
-
+No objection to changing the order if that makes sense, but I think we
+do need to guard against carefully crafted RPCs too. Can we have
+nfsd4_spo_must_allow() vet that the request is NFSv4 before checking
+the compound fields too?
 --=20
 Jeff Layton <jlayton@kernel.org>
 
