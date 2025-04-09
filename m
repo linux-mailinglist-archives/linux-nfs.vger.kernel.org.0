@@ -1,84 +1,131 @@
-Return-Path: <linux-nfs+bounces-11047-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11048-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 414E5A823B0
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 13:39:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21FB3A8247E
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 14:18:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32A197B02E6
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 11:38:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A7908821F8
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 12:18:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E01725E461;
-	Wed,  9 Apr 2025 11:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA1825523F;
+	Wed,  9 Apr 2025 12:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="mGbO2iSn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAFC25E448;
-	Wed,  9 Apr 2025 11:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123652561AA
+	for <linux-nfs@vger.kernel.org>; Wed,  9 Apr 2025 12:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198757; cv=none; b=WHNLiCRqyYKvgOjg4pJwukufZeGU6A5+E7Ch4WP0W99JvzZ3jKJ//GDBIFoODvBBs8cR6VYkRkxpnbxCUT3ePxg2w0XX4nRbGWQo8IAPVN8RLBSYwgS/TL78FTbM6VQO6DgegPnqERlc46Ibq+4OJPyP+vYBcyxGLrZM2Pu1C8A=
+	t=1744201131; cv=none; b=Fr2lF5jaDMnNf1bffTD74c2a/GNsy0kAdLEfgKu/KNH5wb8FswRE/kBY9ZJs2XV6VaNzCOHDZzo3tC+4f61CJ+GCjo01f53jr7feoy+5/sr5LDVQD93kpKP5nSnBgMp2xbDU+ot2Nddo9pfoifgqsAX0FSjp9KkD0h5KrbfXSk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198757; c=relaxed/simple;
-	bh=EcQzu22hBKBt+jCYu3t0+mpap4FiLnEOlNd3ykYef78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QUqndW5/Zo102InR1uGu9/Br4DoId3/wrMec9oa2E7ZOa91f9dcH50tRVNv60tgtkvkWHhexqc4cxBPY9DgKHwPJkFGSG0LCE3OsHEaOkVyweg3feQbGoXyk1x9YHXwbvzNDqhUmOVoWBx+ZHi+6sbKNpGxDVOqCeXc1bWIg2XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZXgtn2w6Cz13LHm;
-	Wed,  9 Apr 2025 19:38:25 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C68F180472;
-	Wed,  9 Apr 2025 19:39:06 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 9 Apr 2025 19:39:05 +0800
-Message-ID: <c49a0e08-7184-4e74-b28e-8543dd9f570f@huawei.com>
-Date: Wed, 9 Apr 2025 19:39:04 +0800
+	s=arc-20240116; t=1744201131; c=relaxed/simple;
+	bh=oSyZxbFI15BY4P6SsP8To32LC5P8C7o9Pj4O3on6yp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GZVfaEXuHhna3zEKXDG6M7uqnOHcynUDXwKxEOL0ZWO3pvuJdJUOLiWrbocKctEK8GkV3wJ0MlTDi5hHSS//pVPmvj74fNtmmJGK8zSqV6WeIad6e1lwUTJZd+e1ULy2vxD3CfLI3Te4H5JNnENl+OhhoUBi5srvSci9debFA9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=mGbO2iSn; arc=none smtp.client-ip=193.252.22.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id 2UN2uqXhxgxs72UN6u3iYK; Wed, 09 Apr 2025 14:17:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1744201059;
+	bh=bUwZ1IXzDa4ayIH2Zdf2/rb4udXYWiKLEpmJN3fmH4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=mGbO2iSnu/rxa8ARhP1zpaqhxX+ZbuFBgx36uTe686zXYK6BGe93RBv6UMii1GXuA
+	 AzCbS/ziTG5NdEWnjSpwuNwOkvoJLlV9sIgrbImhNnA2Cs2kEeyhYK9h6r5+D91oF6
+	 2bQ59nw+t9ND52PwQ0K62SiDU9opvOhn/5GMUKI95M1GqsDnF/N9kjTbNKSqPYRAVF
+	 SNrU4PWaaOOLBszohcDf9BWmefP67Ry4Ej+eRMOjM/RDAn5mhtwo4oXG5VbWEBjt7Z
+	 xiazchK1um5du7xJznvzFoN5ciUSYHoSNYXm+IfZNz4w9IhghZBS5HJ/WT7SXLInru
+	 5KjZxf2B2nxwQ==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 09 Apr 2025 14:17:39 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <3911d932-5ad3-4cc9-98c9-408818cdb4cf@wanadoo.fr>
+Date: Wed, 9 Apr 2025 21:17:31 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH 0/2] Ignore SB_RDONLY when mounting and remounting nfs
-To: <trondmy@kernel.org>, <anna@kernel.org>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<ehagberg@janestreet.com>, <linux-nfs@dimebar.com>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250304130533.549840-1-lilingfeng3@huawei.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <20250304130533.549840-1-lilingfeng3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs: add dummy definition for nfsd_file
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+References: <20250215120054.mfvr2fzs5426bthx@pali>
+ <4c790142-7126-413d-a2f3-bb080bb26ce6@oracle.com>
+ <20250215163800.v4qdyum6slbzbmts@pali>
+ <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
+ <20250215165100.jlibe46qwwdfgau5@pali> <20250223182746.do2irr7uxpwhjycd@pali>
+ <20250318190520.efwb45jarbyacnw4@pali>
+ <e2ec5e8d-a004-42b7-81ad-05edb1365224@oss.qualcomm.com>
+ <Z-QYjLJk8_ttf-kW@kernel.org>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <Z-QYjLJk8_ttf-kW@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Friendly ping..
+On 27/03/2025 at 00:09, Mike Snitzer wrote:
+> Add dummy definition for nfsd_file in both nfslocalio.c and localio.c
+> so older gcc (e.g. EL8's 8.5.0) can be used.  Older gcc causes RCU
+> code (rcu_dereference and rcu_access_pointer) to dereference what
+> should just be an opaque pointer with its use of typeof.
+> 
+> So without the dummy definition compiling with older gcc fails.
 
-Thanks
+Same issue on GCC 9.5.0 and I confirmed that this fixes the issue. So:
 
-在 2025/3/4 21:05, Li Lingfeng 写道:
-> When NFS_MOUNT_UNSHARED is not set, NFS forces the sharing of a
-> superblock among each filesystem that mounts sub-directories elonging to
-> a single exported root path.
->
-> To prevent interference between different filesystems, ignore SB_RDONLY
-> when mounting and remounting nfs.
->
-> Li Lingfeng (2):
->    nfs: clear SB_RDONLY before getting superblock
->    nfs: ignore SB_RDONLY when remounting nfs
->
->   fs/nfs/super.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
+Tested-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+
+> Link: https://lore.kernel.org/all/Zsyhco1OrOI_uSbd@kernel.org/
+> Fixes: 55a9742d02eff ("nfs: cache all open LOCALIO nfsd_file(s) in client")
+> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
+
+Results from checkpatch.pl:
+
+  WARNING: Unknown commit id '55a9742d02eff', maybe rebased or not pulled?
+  #63:
+  Fixes: 55a9742d02eff ("nfs: cache all open LOCALIO nfsd_file(s) in
+client")
+
+  WARNING: From:/Signed-off-by: email address mismatch: 'From: Mike
+Snitzer <snitzer@kernel.org>' != 'Signed-off-by: Mike Snitzer
+<snitzer@hammerspace.com>'
+
+  total: 0 errors, 2 warnings, 28 lines checked
+
+
+For the first one, I think that the correct commit hash is:
+
+  86e00412254a ("nfs: cache all open LOCALIO nfsd_file(s) in client")
+  Link: https://git.kernel.org/torvalds/c/86e00412254a
+
+Unless someone already picked up the patch, you should probably fix
+those and resend.
+
+
+Yours sincerely,
+Vincent Mailhol
+
 
