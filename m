@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-11058-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11059-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18C65A8280E
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 16:36:16 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDB72A82811
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 16:36:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51CB71BC2D09
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 14:34:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFB821BA56C2
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 14:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1077267B88;
-	Wed,  9 Apr 2025 14:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C5DC268685;
+	Wed,  9 Apr 2025 14:33:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTTuPrCc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HMwJfusd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FE7267B7D;
-	Wed,  9 Apr 2025 14:33:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53738267F79;
+	Wed,  9 Apr 2025 14:33:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209189; cv=none; b=hnvyRQwFCkm6qn1KHl7vHRK/ox8fLpLWcqqG66xomyRdwk00VCmEIS+x9TnX20qpPUBjGv3q1oU3MUMqd2VSvmyCgTMqYGFUzQ0vpKZsOJtZ1sa6P84z7SIuI+7+GJWYlcIbMwbqSmYtOn/MAzGsLkKOgRTbNQQeanzqUSbP+Ho=
+	t=1744209191; cv=none; b=KEGyWhOVv1OZzhvH9aIYXHuIYlhHzzG3xqMPhYFYuBjWr+M6D3ULmRCg32X10weJcgQjPuZCxTYbRxjv8kUoKz3iW41TaDOiny9o+5fP74Sl6uOEIKkCyo4TP2gv4DVfyt1nsQ6Iri9yFxoBqd6j0GRD6Tf7FCRw0hsRV1xcqG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209189; c=relaxed/simple;
-	bh=BQLvPi5adL0wTtZSKVY7dNZq7GWhrzHDPslTRMLDCZM=;
+	s=arc-20240116; t=1744209191; c=relaxed/simple;
+	bh=3lBHNRhbn3AyscwreqTw127PVjP+C97TIOi1V8Aszcg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kpNy66h2kMJn8cPzX2sy4bo6p5ucsK/affgpwKKdE4u4Fhfa265MWjmeIWzApXISOQ1sZBlLxrElMeiP1NHQx3WR0djkMhMiKBbV4boeLu0tU+iOnvLRTpRyeT8z8De0MQzcK3+WYfQ40UEKmcQj3d3WO4HUsOkRdAgFh30/GaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTTuPrCc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEF8C4CEE7;
-	Wed,  9 Apr 2025 14:33:08 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=LaR74r71Qx3NU8f5KNQKy9gJGL5WFJWvjsYfGSG6YwaNfXgxmdb4ar+vJLQVArgx/t0e38/BruyAMJD1li9VKlzsFKFFLx1bwC+kThJGtUsMwS564DpynWFdKBACmdAB4dF5brO+Vlvmfk2JdYMTZAmrB6l5xd8lmRvVvsEsRj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HMwJfusd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C12C4AF0C;
+	Wed,  9 Apr 2025 14:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744209189;
-	bh=BQLvPi5adL0wTtZSKVY7dNZq7GWhrzHDPslTRMLDCZM=;
+	s=k20201202; t=1744209190;
+	bh=3lBHNRhbn3AyscwreqTw127PVjP+C97TIOi1V8Aszcg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OTTuPrCcD3MU+xlHx5csmDDmzZFk6kx9lhQH3O74SO1OcBfj/LdMYUDUjCJMTZUyz
-	 OSHYBmAS6EwpBvovFgqBTcsCvvp9BzP3hg8wPNJONpjuFyZGIF5bKi4e5w/eaH+VN+
-	 yfidYCEUKIVm4QKBdLgf9ElzWL1yVFW+7z1uoxf6MzhDWTpnztMr02XLFPYzMHu//x
-	 XHCL5TrzwqEkygvKcFwhyJIij7ql12x/I90jrjpULulP0sekc34APM/dC5ca7hG8tw
-	 ivcr/PEUk6XpOhtliubYUI5e8IowKYmoP1ia2jWaCFxeZxlHxrNiPIBvwrt3UzVpAV
-	 F5hUIMKxO2y+w==
+	b=HMwJfusdPxV8voWS7Sqw2PBQO6q5upDqmm2/Yo9E8uvCMwGMKLMbDRizirIkEohMK
+	 xSFK0LwKrU2SYjUu9xw4HRqeKKIkt5fElSm70M37P3WvhIBcR2NB9yLSCtOJvWWeTI
+	 Fvu2UxREQRJSTpsiB3q+tSf0tOeETs4Ya4rEJJAIXkMznCCY/7MIlBlBNYbq6ei4CS
+	 flh/FCVLSqVRho7+RUDhQmlAePI6m2vRtgQdNbxOJUiP2jKlyv+3XY7I10hp89qZgC
+	 imb9fMYKUqbB5vONX/U0eCQiruwgYqA7HPcT3m234HfoZvD6ddg3KwmAuBKzKrgdna
+	 O1p/WO3EL3NVQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 09 Apr 2025 10:32:30 -0400
-Subject: [PATCH v2 08/12] nfsd: add tracepoints for hardlink events
+Date: Wed, 09 Apr 2025 10:32:31 -0400
+Subject: [PATCH v2 09/12] nfsd: add tracepoints for unlink events
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-nfsd-tracepoints-v2-8-cf4e084fdd9c@kernel.org>
+Message-Id: <20250409-nfsd-tracepoints-v2-9-cf4e084fdd9c@kernel.org>
 References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
 In-Reply-To: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
@@ -62,20 +62,20 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
 Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3960; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=BQLvPi5adL0wTtZSKVY7dNZq7GWhrzHDPslTRMLDCZM=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn9oUbOH5ZxnvvfUd490wSsweIgCzLwzty4dXjs
- kt29Z2ATO+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ/aFGwAKCRAADmhBGVaC
- FVK1D/912/NCdBc/qNMMlZoaLK7/ZGfWHFbLEdvI8aPGsNWfo+pzhVetamRlpz5gWd930mlJwgN
- KlGe/H6lo6QopgTZKXWDfSCVCxfMSJVVubz2YhKw9kwnyj/7umUsCioid6OwD9dDdb8pYaTu016
- w3f05NzVbFJgeoLwUEp88tnFASHRfGkmd0D5eLWfl+WeRj4pjgr5gQLTu8P0S8el20Grt7Wu8f0
- FqdTIywPUYgTNvQtANKMMxOK2/zuWoT1SpCF+9b4zv16rDLn4Q3zxm+RZPTwqy7ah8wj9nOX4AO
- Zu+cxH36Ul9A5U+5FVbrcvr9oD9vJRd/5tO0hWthVgkz0+K+/Kn3z6dnfKjByfIa8ltw6NblVMT
- nU8kvs7C1wBvd4GWUwjHCuZT0lgQEVveIW9C1s/LtnagunhQKA5+xK0mgm7djnQ6cIoyStzi0L5
- Z+PusxOAnacQWzIuJ1nm0VhckG9IWhXOJQPWktuCPDJ8h1Ur2RwMbBZk8HA/6un3bMdpy3yK9lo
- UxqW377MiSOQnhFAjlxnqRX+oSBnoJBCMbPMf1QjElWvt6G3V74j33xkjs3efLpZG0AUS+RtUTP
- WBq5OVG0H1tc1U5WpNbY6eWm1vmAYMAtCqMheO/IrmDYenv7a0CLVZOOoa50G0Dd2cWzSJM/32O
- 4I3cr54okMF3a3A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4556; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=3lBHNRhbn3AyscwreqTw127PVjP+C97TIOi1V8Aszcg=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn9oUbB1oc1qBHjTKKUupXcV+Lp28pd7wRhuufh
+ OsyAZPZKi2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ/aFGwAKCRAADmhBGVaC
+ Fa3OEAC0HXdQHCfGj5TMz1y7xL4fE7crJNIFSPJViMYkZMkU5Px+tBZy31jznxY0TKewDu0GvPR
+ YPgDckRf/srWi3yVCEy5CGOYcaaIaTJ5yq4Lt/+d9o4ZNAvfb/9nzGDJCwZY3Ke2+98+DGcGieQ
+ yEaUI7p6XbnYc2mE9ax0mgLSTQTfyyQzNOB//W4DSNeA6vOHm+ERC/oNdYg4NPymcYMar+w/Wes
+ n5jnvf/VXkqGY/YwGI63iCENvPs4mVSEivY1VFZD9KJlbWEC2SUlOeTACK41LePP956HtsM5P3S
+ +rm1uwdBVI9FWdTQehYFy6PdNH078lFOh0t39GhXXwC7QvtCkGAoprWB8k/khLoOj5L6Qhn5uIk
+ WzBD/rM8ds3H/WNxQFgb43iX3GlQiY6SoOxK9/FqQaijS3mnbjo/m3RbkFmY1wDwMONwvvQRX5c
+ bo+5waTt56qdW4hXNyIvqGnQl+q9zWdUV6YSNnekxHjMfsLoC6zcyTFc6pDc++ued3aN1z832EZ
+ AHvBzE3DKIPcXbWJumEa0nt4p20myM2el0DHqVd5PyYtR1V7c7mpKLAsQ3IbhShDim2sCIMNsQQ
+ TGtw6wbzxgAc2b3ErF6NQ5zCYn+xdlFqSz+gUkinXS+/+r6P3pqgj6VCgLv7giS1hf2TeHic4yZ
+ XmWcY+LElztba2g==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
@@ -83,105 +83,118 @@ X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs3proc.c |  7 +------
- fs/nfsd/nfs4proc.c |  3 +++
- fs/nfsd/nfsproc.c  |  7 +------
- fs/nfsd/trace.h    | 35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 40 insertions(+), 12 deletions(-)
+ fs/nfsd/nfs3proc.c | 10 ++--------
+ fs/nfsd/nfs4proc.c |  2 ++
+ fs/nfsd/nfsproc.c  |  5 ++---
+ fs/nfsd/trace.h    | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 40 insertions(+), 11 deletions(-)
 
 diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 587fc92597e7c77d078e871b8d12684c6b5efa2d..97aaf98d0af7dc565b21937ecca4852dd9253221 100644
+index 97aaf98d0af7dc565b21937ecca4852dd9253221..8893bf5e0b1d15b24e9c2c71fa1a8a09586a03d3 100644
 --- a/fs/nfsd/nfs3proc.c
 +++ b/fs/nfsd/nfs3proc.c
-@@ -564,12 +564,7 @@ nfsd3_proc_link(struct svc_rqst *rqstp)
- 	struct nfsd3_linkargs *argp = rqstp->rq_argp;
- 	struct nfsd3_linkres  *resp = rqstp->rq_resp;
+@@ -501,10 +501,7 @@ nfsd3_proc_remove(struct svc_rqst *rqstp)
+ 	struct nfsd3_diropargs *argp = rqstp->rq_argp;
+ 	struct nfsd3_attrstat *resp = rqstp->rq_resp;
  
--	dprintk("nfsd: LINK(3)     %s ->\n",
--				SVCFH_fmt(&argp->ffh));
--	dprintk("nfsd:   -> %s %.*s\n",
--				SVCFH_fmt(&argp->tfh),
--				argp->tlen,
--				argp->tname);
-+	trace_nfsd_proc_link(rqstp, &argp->ffh, &argp->tfh, argp->tname, argp->tlen);
+-	dprintk("nfsd: REMOVE(3)   %s %.*s\n",
+-				SVCFH_fmt(&argp->fh),
+-				argp->len,
+-				argp->name);
++	trace_nfsd3_proc_remove(rqstp, &argp->fh, argp->name, argp->len);
  
- 	fh_copy(&resp->fh,  &argp->ffh);
- 	fh_copy(&resp->tfh, &argp->tfh);
+ 	/* Unlink. -S_IFDIR means file must not be a directory */
+ 	fh_copy(&resp->fh, &argp->fh);
+@@ -523,10 +520,7 @@ nfsd3_proc_rmdir(struct svc_rqst *rqstp)
+ 	struct nfsd3_diropargs *argp = rqstp->rq_argp;
+ 	struct nfsd3_attrstat *resp = rqstp->rq_resp;
+ 
+-	dprintk("nfsd: RMDIR(3)    %s %.*s\n",
+-				SVCFH_fmt(&argp->fh),
+-				argp->len,
+-				argp->name);
++	trace_nfsd3_proc_rmdir(rqstp, &argp->fh, argp->name, argp->len);
+ 
+ 	fh_copy(&resp->fh, &argp->fh);
+ 	resp->status = nfsd_unlink(rqstp, &resp->fh, S_IFDIR,
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index e22596a2e311861be1e4f595d77547be04634ce7..7dffae2f16d9fa8dea043b7bf300eaca52c0aa7c 100644
+index 7dffae2f16d9fa8dea043b7bf300eaca52c0aa7c..8524e78201e22984517e93cd9a2834190266c633 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -977,6 +977,9 @@ nfsd4_link(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	struct nfsd4_link *link = &u->link;
+@@ -1114,6 +1114,8 @@ nfsd4_remove(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	struct nfsd4_remove *remove = &u->remove;
  	__be32 status;
  
-+	trace_nfsd4_link(rqstp, &cstate->save_fh, &cstate->current_fh,
-+			 link->li_name, link->li_namelen);
++	trace_nfsd4_remove(rqstp, &cstate->current_fh, remove->rm_name, remove->rm_namelen);
 +
- 	status = nfsd_link(rqstp, &cstate->current_fh,
- 			   link->li_name, link->li_namelen, &cstate->save_fh);
- 	if (!status)
+ 	if (opens_in_grace(SVC_NET(rqstp)))
+ 		return nfserr_grace;
+ 	status = nfsd_unlink(rqstp, &cstate->current_fh, 0,
 diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 0674ed6b978f6caa1325a9271f2fde9b3ef60945..b40b5ab1d3b17dd8974fcaeda3ac7c26baee67cf 100644
+index b40b5ab1d3b17dd8974fcaeda3ac7c26baee67cf..55656bb0264c31c10419ed41240c91ba66493106 100644
 --- a/fs/nfsd/nfsproc.c
 +++ b/fs/nfsd/nfsproc.c
-@@ -481,12 +481,7 @@ nfsd_proc_link(struct svc_rqst *rqstp)
- 	struct nfsd_linkargs *argp = rqstp->rq_argp;
+@@ -445,8 +445,7 @@ nfsd_proc_remove(struct svc_rqst *rqstp)
+ 	struct nfsd_diropargs *argp = rqstp->rq_argp;
  	struct nfsd_stat *resp = rqstp->rq_resp;
  
--	dprintk("nfsd: LINK     %s ->\n",
--		SVCFH_fmt(&argp->ffh));
--	dprintk("nfsd:    %s %.*s\n",
--		SVCFH_fmt(&argp->tfh),
--		argp->tlen,
--		argp->tname);
-+	trace_nfsd_proc_link(rqstp, &argp->ffh, &argp->tfh, argp->tname, argp->tlen);
+-	dprintk("nfsd: REMOVE   %s %.*s\n", SVCFH_fmt(&argp->fh),
+-		argp->len, argp->name);
++	trace_nfsd_proc_remove(rqstp, &argp->fh, argp->name, argp->len);
  
- 	resp->status = nfsd_link(rqstp, &argp->tfh, argp->tname, argp->tlen,
- 				 &argp->ffh);
+ 	/* Unlink. -SIFDIR means file must not be a directory */
+ 	resp->status = nfsd_unlink(rqstp, &argp->fh, -S_IFDIR,
+@@ -572,7 +571,7 @@ nfsd_proc_rmdir(struct svc_rqst *rqstp)
+ 	struct nfsd_diropargs *argp = rqstp->rq_argp;
+ 	struct nfsd_stat *resp = rqstp->rq_resp;
+ 
+-	dprintk("nfsd: RMDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
++	trace_nfsd_proc_rmdir(rqstp, &argp->fh, argp->name, argp->len);
+ 
+ 	resp->status = nfsd_unlink(rqstp, &argp->fh, S_IFDIR,
+ 				   argp->name, argp->len);
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 850dbf1240b234b67dd7d75d6903c0f49dc01261..9ff919a08f424bfe023cf91244fe08effbdf993e 100644
+index 9ff919a08f424bfe023cf91244fe08effbdf993e..dd984917bd0a741ac545c06631ab2a7de8af5158 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -2465,6 +2465,41 @@ DECLARE_EVENT_CLASS(nfsd_vfs_symlink_class,
- DEFINE_NFSD_VFS_SYMLINK_EVENT(nfsd_proc_symlink);
- DEFINE_NFSD_VFS_SYMLINK_EVENT(nfsd3_proc_symlink);
- DEFINE_NFSD_VFS_SYMLINK_EVENT(nfsd4_symlink);
+@@ -2500,6 +2500,40 @@ DECLARE_EVENT_CLASS(nfsd_vfs_link_class,
+ DEFINE_NFSD_VFS_LINK_EVENT(nfsd_proc_link);
+ DEFINE_NFSD_VFS_LINK_EVENT(nfsd3_proc_link);
+ DEFINE_NFSD_VFS_LINK_EVENT(nfsd4_link);
 +
-+DECLARE_EVENT_CLASS(nfsd_vfs_link_class,
++DECLARE_EVENT_CLASS(nfsd_vfs_unlink_class,
 +	TP_PROTO(struct svc_rqst *rqstp,
-+		 struct svc_fh *sfhp,
-+		 struct svc_fh *tfhp,
++		 struct svc_fh *fhp,
 +		 const char *name,
-+		 unsigned int namelen),
-+	TP_ARGS(rqstp, sfhp, tfhp, name, namelen),
++		 unsigned int len),
++	TP_ARGS(rqstp, fhp, name, len),
 +	TP_STRUCT__entry(
 +		SVC_RQST_ENDPOINT_FIELDS(rqstp)
-+		__field(u32, sfh_hash)
-+		__field(u32, tfh_hash)
-+		__string_len(name, name, namelen)
++		__field(u32, fh_hash)
++		__string_len(name, name, len)
 +	),
 +	TP_fast_assign(
 +		SVC_RQST_ENDPOINT_ASSIGNMENTS(rqstp);
-+		__entry->sfh_hash = knfsd_fh_hash(&sfhp->fh_handle);
-+		__entry->tfh_hash = knfsd_fh_hash(&tfhp->fh_handle);
++		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
 +		__assign_str(name);
 +	),
-+	TP_printk("xid=0x%08x src_fh=0x%08x tgt_fh=0x%08x name=%s",
-+		  __entry->xid, __entry->sfh_hash, __entry->tfh_hash,
++	TP_printk("xid=0x%08x fh_hash=0x%08x name=%s",
++		  __entry->xid, __entry->fh_hash,
 +		  __get_str(name))
 +);
 +
-+#define DEFINE_NFSD_VFS_LINK_EVENT(__name)					\
-+	DEFINE_EVENT(nfsd_vfs_link_class, __name,				\
-+		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *sfhp,	\
-+			      struct svc_fh *tfhp, const char *name,		\
-+			      unsigned int namelen),				\
-+		     TP_ARGS(rqstp, sfhp, tfhp, name, namelen))
++#define DEFINE_NFSD_VFS_UNLINK_EVENT(__name)						\
++	DEFINE_EVENT(nfsd_vfs_unlink_class, __name,					\
++		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp,		\
++			      const char *name, unsigned int len),			\
++		     TP_ARGS(rqstp, fhp, name, len))
 +
-+DEFINE_NFSD_VFS_LINK_EVENT(nfsd_proc_link);
-+DEFINE_NFSD_VFS_LINK_EVENT(nfsd3_proc_link);
-+DEFINE_NFSD_VFS_LINK_EVENT(nfsd4_link);
++DEFINE_NFSD_VFS_UNLINK_EVENT(nfsd_proc_remove);
++DEFINE_NFSD_VFS_UNLINK_EVENT(nfsd_proc_rmdir);
++DEFINE_NFSD_VFS_UNLINK_EVENT(nfsd3_proc_remove);
++DEFINE_NFSD_VFS_UNLINK_EVENT(nfsd3_proc_rmdir);
++DEFINE_NFSD_VFS_UNLINK_EVENT(nfsd4_remove);
++
  #endif /* _NFSD_TRACE_H */
  
  #undef TRACE_INCLUDE_PATH
