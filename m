@@ -1,132 +1,84 @@
-Return-Path: <linux-nfs+bounces-11046-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11047-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30D54A81730
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Apr 2025 22:54:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 414E5A823B0
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 13:39:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1460917A613
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Apr 2025 20:54:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32A197B02E6
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 11:38:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D796D23E351;
-	Tue,  8 Apr 2025 20:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E01725E461;
+	Wed,  9 Apr 2025 11:39:17 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B5023C8C1
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Apr 2025 20:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAFC25E448;
+	Wed,  9 Apr 2025 11:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145647; cv=none; b=X02QyRgjdKlmE1hBRY+iVoNlGPsR4OtKNyuuhrJf9ciJuFxt8L+7DpTwMbyxdjZsoyfScMIorHcmTbVGD9iokWWPJ0MMey37sJgSCCFhuB4DIKzBKV6GRu3agTP6t7VWlS4QFP6wwHh9UZVPa+feGvoIkG0dEuXE9ycKctEjJXs=
+	t=1744198757; cv=none; b=WHNLiCRqyYKvgOjg4pJwukufZeGU6A5+E7Ch4WP0W99JvzZ3jKJ//GDBIFoODvBBs8cR6VYkRkxpnbxCUT3ePxg2w0XX4nRbGWQo8IAPVN8RLBSYwgS/TL78FTbM6VQO6DgegPnqERlc46Ibq+4OJPyP+vYBcyxGLrZM2Pu1C8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145647; c=relaxed/simple;
-	bh=3xT6uS8HztkRqOOr0LTbG8hzn5pb6pq/trhliBKKZ8c=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:Content-Type; b=UzqDoEASs4AVlJMSRJKx1s7jt5DKKrr303KflPyidlRYySOLssD67C2mejuwZF41JL3fFXRiJwYU0kRmEl0TdYW4Fx4iTTe3zW9FTQ1fVsfMqKF5MB6S7/+TgCYDOrcn5oIzckg7h3Rb0Mza/2qRq9qbO4XhV0JCOyt7rH+++gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.130.132) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 8 Apr
- 2025 23:53:44 +0300
-Message-ID: <416219f5-7983-484b-b5a7-5fb7da9561f7@omp.ru>
-Date: Tue, 8 Apr 2025 23:53:42 +0300
+	s=arc-20240116; t=1744198757; c=relaxed/simple;
+	bh=EcQzu22hBKBt+jCYu3t0+mpap4FiLnEOlNd3ykYef78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QUqndW5/Zo102InR1uGu9/Br4DoId3/wrMec9oa2E7ZOa91f9dcH50tRVNv60tgtkvkWHhexqc4cxBPY9DgKHwPJkFGSG0LCE3OsHEaOkVyweg3feQbGoXyk1x9YHXwbvzNDqhUmOVoWBx+ZHi+6sbKNpGxDVOqCeXc1bWIg2XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZXgtn2w6Cz13LHm;
+	Wed,  9 Apr 2025 19:38:25 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5C68F180472;
+	Wed,  9 Apr 2025 19:39:06 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 9 Apr 2025 19:39:05 +0800
+Message-ID: <c49a0e08-7184-4e74-b28e-8543dd9f570f@huawei.com>
+Date: Wed, 9 Apr 2025 19:39:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Subject: [PATCH] nfs: direct: drop useless initializer in
- nfs_direct_write_completion()
-To: Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
-	<anna@kernel.org>, <linux-nfs@vger.kernel.org>
-Content-Language: en-US
-CC: <lvc-project@linuxtesting.org>
-Organization: Open Mobile Platform
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 04/08/2025 20:37:33
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 192477 [Apr 08 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 54 0.3.54
- 464169e973265e881193cca5ab7aa5055e5b7016
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.130.132 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.130.132 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.130.132
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 04/08/2025 20:39:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 4/8/2025 7:41:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH 0/2] Ignore SB_RDONLY when mounting and remounting nfs
+To: <trondmy@kernel.org>, <anna@kernel.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<ehagberg@janestreet.com>, <linux-nfs@dimebar.com>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250304130533.549840-1-lilingfeng3@huawei.com>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <20250304130533.549840-1-lilingfeng3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-In nfs_direct_write_completion(), the local variable req isn't used outside
-the *while* loop and is assigned to right at the start of that loop's body,
-so its initializer appears useless -- drop it; then move the declaration to
-the loop body (which happens to have a pointless empty line anyway)...
+Friendly ping..
 
-Found by Linux Verification Center (linuxtesting.org) with the Svace static
-analysis tool.
+Thanks
 
-Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-
----
-This patch is against the linux-next branch of Trond Myklebust's linux-nfs.git
-repo.
-
- fs/nfs/direct.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: linux-nfs/fs/nfs/direct.c
-===================================================================
---- linux-nfs.orig/fs/nfs/direct.c
-+++ linux-nfs/fs/nfs/direct.c
-@@ -757,7 +757,6 @@ static void nfs_direct_write_completion(
- {
- 	struct nfs_direct_req *dreq = hdr->dreq;
- 	struct nfs_commit_info cinfo;
--	struct nfs_page *req = nfs_list_entry(hdr->pages.next);
- 	struct inode *inode = dreq->inode;
- 	int flags = NFS_ODIRECT_DONE;
- 
-@@ -786,6 +785,7 @@ static void nfs_direct_write_completion(
- 	spin_unlock(&inode->i_lock);
- 
- 	while (!list_empty(&hdr->pages)) {
-+		struct nfs_page *req;
- 
- 		req = nfs_list_entry(hdr->pages.next);
- 		nfs_list_remove_request(req);
+在 2025/3/4 21:05, Li Lingfeng 写道:
+> When NFS_MOUNT_UNSHARED is not set, NFS forces the sharing of a
+> superblock among each filesystem that mounts sub-directories elonging to
+> a single exported root path.
+>
+> To prevent interference between different filesystems, ignore SB_RDONLY
+> when mounting and remounting nfs.
+>
+> Li Lingfeng (2):
+>    nfs: clear SB_RDONLY before getting superblock
+>    nfs: ignore SB_RDONLY when remounting nfs
+>
+>   fs/nfs/super.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+>
 
