@@ -1,89 +1,89 @@
-Return-Path: <linux-nfs+bounces-11065-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11066-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523DCA829AE
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 17:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 92706A829CA
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 17:16:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CADC844464C
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 15:08:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFEF34E5C50
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 15:10:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D358026B950;
-	Wed,  9 Apr 2025 15:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B36266B60;
+	Wed,  9 Apr 2025 15:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XDEzWUso";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iBfi+Mig"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HQylQLfX";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="M5/etR/A"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B5A267722;
-	Wed,  9 Apr 2025 15:03:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA43266F00;
+	Wed,  9 Apr 2025 15:09:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211002; cv=fail; b=AcIqd7+wdNmARrnIULHlcwq/AqDKD2qG+Q1AcHo4xcSNGWTMuTTpKuegHfXzMXuwqMMhgjWVNZN793aynzWcjoIaCdnmxQXdG3Yd/+pMdqwl1MVGAe8NjHR5AJ8CPqIb64IN8SnKfPP8aHXzjXT+V0ejc/xdFLDwEpNqp1eNqdA=
+	t=1744211389; cv=fail; b=btcGt7DxZszhmc30+hZgnEDtd/WMme3poSfJeyGEkJNiO0xbVXzEieNys+9/I4V9r94DwIsQvqB2CUeMvmfqlFzDBxQ+TPSruvV/cU7AQ4ptrSm+Hjdb5EETF+dO3iah+i9NyeD0dUJF6Sys2Dx+hkEoOyHQQMA5atsUuI83mXA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211002; c=relaxed/simple;
-	bh=P+/WYzTibTV66l7nTUW5MQodIdYUgNtl0xhPcGg8BgY=;
+	s=arc-20240116; t=1744211389; c=relaxed/simple;
+	bh=6iUFOEL0amqZ4DkvIlXmlM8wDkgkvLVeu/VVyu8AF7M=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TN29OO117Cll94gWXdJmoAep00etcWARZzjwruCFugkulI3uuirHr/ACsDqImmosQSj+K/EhzGYZmSbOvtN+y4cSmlBADp+zrq3MJ3p6jmSu0Ag5s3S1xctmJ0snxo2b/GpJeFWeFjObbZf/hAzy3CI3imIeO8SONdjl+lz8iH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XDEzWUso; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iBfi+Mig; arc=fail smtp.client-ip=205.220.165.32
+	 Content-Type:MIME-Version; b=COZRULn6zfIiw3PQIOIB45tzdts0HN0nV6YuX6I7WL/toZqqRTnGLZxuvgYhI61MCuTNnJikErExNYWCLkdRKk+cAWE5ggMaf+iqLbtqaDRz1YRPtw82887P3+byCDfNZLHRz50QHjj87UjnZIyKdlOjjGMx26cS2MNhfd8rcfQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HQylQLfX; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=M5/etR/A; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539Etf3m023702;
-	Wed, 9 Apr 2025 15:03:08 GMT
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539EpSZ3000470;
+	Wed, 9 Apr 2025 15:09:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=CXUDi17ipqaDl8bKa9E41aiIJlTZt1rQ24UWfOQIHJ8=; b=
-	XDEzWUsolW4oiGEYNJ8Jxq9hBtSKPBU0MM8kiUswjvPzxqfF4TRUfsc3NYHVAVXS
-	LNFHftr8f/CrRVaKmFzCpRAKuTTpcdb6U2C2/KlhjrwRJaH1R5aeyc1fKbIjLQ8E
-	ZbB5J+u1FHTaIR06dM0ovDAv26PSVQ2xOc5sHlLE0zO/DghKF1AWnrQddkxdqzed
-	DM2acKmyL8mBfJ5+N8X4dNVEAj8KAtKZWvBaUSstJM57iL8OCMQBolGHuVVyyepj
-	0oSU3UjeGNbqvTDUGh5L4jLb7ajQDXg/ViR+RR9i4dxYP4/SAi06s4Lg6akxLh0p
-	G4KNAu4kYekwyASQpoTJ7Q==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tuebqdkm-1
+	corp-2023-11-20; bh=ifv3YnZ8ti6PlhC+Vy1mMInsBZpbtTzsbg0MvJkfXho=; b=
+	HQylQLfXa4WxCRBqn8l3pplY6+lA0F0Q2Iw1bpB62MQDPPthrttJtj2P02ZITPzY
+	YTtyBdKVBNit17QYcPdUP9vXFIOgwvixFn7q8ZOza1Bjnj6C3JkE/kpvhHv7AKPx
+	sl0M94Vw1vvB/6BMOmEY9pVZtM/0wfQN3jCdEkkIeXXNw+bYIQqVoERrd0tR+HAF
+	Z90WK+2OlJ8/hLbve6wsbSsBO4FEImD28WpF7UXIHJ7dFYz4XWRrS/jW7z3smin/
+	EfiBrM6e7sA4midsyPocv2x2fL46QIEbFLP+ztuWqMzGpLFrjXdWbDAGGRsgo/4K
+	FhbDPHNxo8OZZPvcYcG1wg==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tvd9yaqd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 15:03:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 539DlAWA022130;
-	Wed, 9 Apr 2025 15:03:06 GMT
-Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazlp17010003.outbound.protection.outlook.com [40.93.20.3])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttybndue-2
+	Wed, 09 Apr 2025 15:09:37 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 539EikxF020955;
+	Wed, 9 Apr 2025 15:09:36 GMT
+Received: from cy4pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17010001.outbound.protection.outlook.com [40.93.6.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyh8m5b-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 15:03:06 +0000
+	Wed, 09 Apr 2025 15:09:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KQXbZ6yhS/w8MjZyzvSN3lYzOcncjFg57beLksQwdTGcqyAWvhVCh0e51ZAJGkGQ4nMj/MwHaOB59bJgmskKBUNIkGu81tqozjvikMLammHFwZafwCNvAZ8Z6CFDThBIrsO03038ur/AarGh2Y83LmaGGZsZX5BJjSxy2ZCdLJeNYGpoJKNDn+ECAUMSBWOA3W7dClBB9Ggiirb2bAv9KL8MnFJw8nl+oKW1u8rKdoR2TrU/G2kTHfWcf6VW043szEaPFM/ngcmzjtpdLiMtyMdvd0ft6P1KtS3+jG8VccJyzrKeo+XKjuFUTAz8hVYzzTNlmpUMuM2bsrHofCF/+A==
+ b=FujGmGVOLqGCY4RSg+KJxsVBgL58vHZzFDGh64ySetGDc0GZPbCD3y3mK5Vo2/buCTAut3sxZWdOTfK/AQ7VdRYRcAf14gwCOCrTiH65W1qhHZB5ynB4OR/LCwQKz6ao3iP7aQwsuOgoQFRVUlPpYQ6mJk06Oezk+Nizul3rDnq+iwYhMBZPPGg9NrqVhiEjkqLXDexFVMVGO4ZgVN+/4bhtYEgqq39rE09ZVA+1++P8piKaw9c2A3zTTwPHc9ktiRHZvKcUSHkrqLqAF6UXIykTho1UEVVJtIzz9uNLOoWrolaaEoLBq9rMUBH2xWlQvFpfjdaBho5qQN0LUD1BDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CXUDi17ipqaDl8bKa9E41aiIJlTZt1rQ24UWfOQIHJ8=;
- b=EPPBJOGWRhDK2t8S5fgp5GX6E/uDM32g/HTEXD5rTXo7BIRnnuqatZPgSPLlU2Myjo5o5qyvejPb1AGSRaE6uc6CvGrptgh2ERsK15r9uUpxG853XPBsc9Wu28db2wiTGGuiJ5/I92HtGlR48kcAcIVWIGfYAqdMwvmMNmBBOmWRdD2LVsV9sCh6fBolzHLn2sF143iuCdz5wFD36buTJHXhij53Ae/lHTG3XSlqbJn/CTH3XuHzqFV51YXqdKSMcPzXEsPa/8GIZfIsZxnO9D9oaLQXC1UcDlstmSJOzgmirq6+EscCTzZdyn+R8Atm5pG+mD9a0UuLZiDTrtcigw==
+ bh=ifv3YnZ8ti6PlhC+Vy1mMInsBZpbtTzsbg0MvJkfXho=;
+ b=cM9h7o7Uv0ClyWedgCDSSqit2aXb8FbbNM8t/To2dmXBz8v0Avq16d3d+HvtjK3mt2473mDI+arMYLGsknzc/avRIWGMFUwTcM/EnMT6R4GiyiXAo/bj4t8zi/FRR5556yjqc9jRDemif9knYOvZUaRa9c3US3nYrkePbMbAO/8wXxmFKZwPjYI6WIQcsCgb8sUwKIsgB1cobGz89GiKE0kkwqwq/ame46i6mzhQgM7XJB438mgHpY0V7PX1G9YIzRsmxqMq/NesVamD9vuetgXdrlYD0DGfmIu3j+QJkYsO+PUSgNBro5zkuun3E7wUiktXc2et9MOCZclo+2chqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CXUDi17ipqaDl8bKa9E41aiIJlTZt1rQ24UWfOQIHJ8=;
- b=iBfi+MigTissdqXGQxjIrEcbt4V9hU24G4iWvoGebWeKgcUxUJqSPSS6AtHmGfldTcbeCxtyB3S4aVOPcGkjv85K4eFYsTo5lMd4Ezqt0nprP7kidJOJA3O5O63ynPvTz/onUd+ynOITA9Mfg0udWouaIHoTMoX34iJEZUS48Qk=
+ bh=ifv3YnZ8ti6PlhC+Vy1mMInsBZpbtTzsbg0MvJkfXho=;
+ b=M5/etR/AAB7GqAxs19MTnu82TiKKc10FXWDmFoS6cZDHXctSoQxErP9zsWcfQW0s1ZSMQ02lQKa5XT4XVzt9oH8NylVe8NPT3ngLjrG9mE6OfegTf6SOVvM5piXWcrGN0poJQQC//zDhg/29GfecfW4BfCzk1PcEbgAsFXmWmTE=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by LV3PR10MB8107.namprd10.prod.outlook.com (2603:10b6:408:290::18) with
+ by DS0PR10MB6726.namprd10.prod.outlook.com (2603:10b6:8:139::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
- 2025 15:03:03 +0000
+ 2025 15:09:32 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8632.017; Wed, 9 Apr 2025
- 15:03:03 +0000
-Message-ID: <df6ba077-5f29-4bbb-a011-e9570aa2c923@oracle.com>
-Date: Wed, 9 Apr 2025 11:03:00 -0400
+ 15:09:32 +0000
+Message-ID: <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
+Date: Wed, 9 Apr 2025 11:09:29 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/12] nfsd: add a tracepoint for nfsd_setattr
+Subject: Re: [PATCH v2 06/12] nfsd: add tracepoints around nfsd_create events
 To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
         Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
@@ -91,14 +91,14 @@ To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
 Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
- <20250409-nfsd-tracepoints-v2-4-cf4e084fdd9c@kernel.org>
+ <20250409-nfsd-tracepoints-v2-6-cf4e084fdd9c@kernel.org>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20250409-nfsd-tracepoints-v2-4-cf4e084fdd9c@kernel.org>
+In-Reply-To: <20250409-nfsd-tracepoints-v2-6-cf4e084fdd9c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0P221CA0026.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:610:11d::6) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH5PR03CA0004.namprd03.prod.outlook.com
+ (2603:10b6:610:1f1::6) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -107,247 +107,321 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|LV3PR10MB8107:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d7dd4b0-0091-48cc-120f-08dd7777a063
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS0PR10MB6726:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49bf88a5-e462-4c73-e8b9-08dd7778880e
 X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?bnhkN3hhK08vVTZaSHRSbjdpM0F3RUlscmM2a29wRGk1azdnN2hicExMdDJD?=
- =?utf-8?B?T3lVWDBaVmdZeG40UTBGTXF6RFFIdlJBWnZPak9hOGVyZzNmMDFrWURTSktu?=
- =?utf-8?B?eUtTTDNVbEd4ZHdSRDlCN2NYV3R2YVJuRFF1Zm9zVTBJWlNCMEZUM1lla09O?=
- =?utf-8?B?bkJ6bVNzZ2p6M21HckVodytuSm1XT0k5ZDdnc0MraWh0ZWxTeUFkRkRhRWcz?=
- =?utf-8?B?RXdoWWFvTUdZVkx5d1lsZFRQanZCdHhlVElYMXptdU8wVUFkUlJsWmpXcnVa?=
- =?utf-8?B?aFArTklPMUNPYnZYMVBhaGNETHFXc25oT0lmNlB1L2ZVWlZaQW1Mc3lEbjJB?=
- =?utf-8?B?bkV3NjFRamVLek4yY3hVd1c0OGlNWkhOY3FZb1NCYTBCQmVsMUlEWmZzcmpW?=
- =?utf-8?B?YS9VVUtNbno1T2JIc3YxOXlLYWt6RnArU3RHVGRZVzdiWk1jVFE0RFpIbXdC?=
- =?utf-8?B?UURUOHRqT1pZUTc5dnRnTnpOWW0wc1QrV2Y3UU45R1VpR09HeUhoZU16YjB2?=
- =?utf-8?B?QjF6RHArNUZIcm9wSmNWaW5aVEFuMyt5NS9MOVFDRDI1R3dtSGZrYU5xVTM1?=
- =?utf-8?B?QTZCMlFqVk5Oa1Bhd3ZES1lzWFJOV2p4VVhmc09oWmcxNWRsVlJ5NW9xWDlC?=
- =?utf-8?B?VTF6TGlOODdZazJlVjQrbVhBOFovYmF0V2hOY0grSS81MHRLcXdCQmwvajFx?=
- =?utf-8?B?N3RPNmNjQ3FRNEVXMFdLYU1qeHI5K3hDM0JnamwvVjVFeDFlVkppUDNsTkZS?=
- =?utf-8?B?ck9hOStMSXNodFdhMXE2dVdoV2JEUGRQMUVDcm9veHVRTkhwZXQybndSMjJt?=
- =?utf-8?B?a0lwME8zbk9Ib2xWWFVWR1g5cWtmY01ia2huVW1hZ1g1dFI3cmVwU0xtRmt1?=
- =?utf-8?B?VkhYbklWdmkzZFBTUnQzbFdWdEpyQnRURGdoUU1MNnVsV1AzN3BtMklvTHFZ?=
- =?utf-8?B?MHB5emRweHV3Y1F4bDBwV0h4SGhuNDVuOWJCbU9TNGRrZnJsY282b3A3U3Ns?=
- =?utf-8?B?d1pHTEhySW5tblR5TmpOU0FHc2gyaWF4UDhpZVBQM1pwRTkwejliLzkyT2xK?=
- =?utf-8?B?TTc2cEF1QjFQZkNmZUQzdFZTcmd5S2ZFSnVBd3lNN3NpQlZEWjNSclc5ZXVF?=
- =?utf-8?B?MEE1T3NWZmhUYTZkZVdtVUtmU2FQOHVnaUhqT2xtZ0FBM0xuZ0p5WHVPM0Zh?=
- =?utf-8?B?a2JXZU8yRDZNV2NMekkvTEZERkZJc2ZHWUFENFM3ZEQxR0hhc053bk14UVRY?=
- =?utf-8?B?ZlArYWFsc0tCOTM5K3JSNWdxU091RWVHOFJGUFd0UU9tYjdIa3EzSjJxTjV4?=
- =?utf-8?B?UHFURkpSK0RQSUJrQmtxQnhoQjhybTV0VGpSY0ZxUEp1V0J3aGFrT0UxKy9z?=
- =?utf-8?B?ZTViN0ZYeHF1dWpDdVh6RHJObVVKYncrZXpNNmpvL0NkSTV6QTcyc2Eyd292?=
- =?utf-8?B?aE1QVGwycnF4QkpzR2piU09DWEtYWTg2YjBzZG0yNFpCQlI2TXcvc0x5L1h0?=
- =?utf-8?B?dCtIYjBVQjYwVzlXcmJOTFYxZEt6WEZ6K1M1YXdpaEFnU3JhcTZhaUlNbFJK?=
- =?utf-8?B?QnQ2SXBOcytSdlk5KzBWbkNVMTluZlgxVDN3NEcvRzdMZWRkZ0s5QVM3bGt1?=
- =?utf-8?B?R3NRdlZCdDkrOUE3QjBKakJJOUFNWkN0SUwxcm16YzBsSEZsM0wwTlpLK2tk?=
- =?utf-8?B?YUtXekZmcDlUTjNPR1J2UGRvM21WZVZURzBlRGsrYWZSVytUV1M3ZlZaVlFo?=
- =?utf-8?B?Q1BwUm1NM3hCQ1FaM1UvdEovWkduYXlUako2Ykt3c3daUUdlM0JVNzhkRTZq?=
- =?utf-8?B?OFd5WHNXb0VaemtrWDhwZ2VzT1ZBWElsdG1IMGl0azhyV0xvODYvclczc0dV?=
- =?utf-8?B?Z01WKysyR0hURmNrUFNXU082eitBUkI1eWlDOGswanQwYWZxcGxYaUU5QkY4?=
- =?utf-8?Q?jCtkPnSlW5c=3D?=
+ =?utf-8?B?eEp4VGNSNEhiL0FraHEyMkJhRnlkN0pVYnExSnZEemxtNytOQmZHSzJiM0FO?=
+ =?utf-8?B?bU1IbDlQanJHSlNGSTRFd01iWGNRT21EYytiWVJsTGplWVZSZWFmeC9IbEJB?=
+ =?utf-8?B?Y2lBcmJhbndoZ3BLRklQZDdLNVZBTDdISnNFam9EcmlkSDJOL2J0RXJWY2VZ?=
+ =?utf-8?B?eXpZWG5xb082dDlLcEVHUkhUaU1XVVJOZG5BalJwckRZd1Q1empyVU90eFRa?=
+ =?utf-8?B?b0c5Y3dVZkc3TWdUV0c5ZzB5NlQzL2p0RkdrV20yTVBSSlVQdSs4QXorMHFM?=
+ =?utf-8?B?bFIrM0xGbWZ3OGF4UUNKVGZZTmhEZ2FzbXA0bUlpbzdRSXpFN245aFhIbFFC?=
+ =?utf-8?B?UmExa3p0VzRXWDFtV0g3NWVjL0piaFZPYmVXajVGTTFreUJoNjR6aWhyNE9r?=
+ =?utf-8?B?cGs1Um1OTXdyUUpJYVJTVElyRExEQklyZDNCMGk1RTdHTkFZZ3RhMlNXTk5m?=
+ =?utf-8?B?b09rSlAzMmozQ283MktNa0ZjWGQ3MGZ0MjRYZ0g2bjJVVUIrcU1HTmV4MnZP?=
+ =?utf-8?B?SzUyTjFRc2RBQWl5NlNjcnZMUzZjc2QzVVlzUm9iR2s2T3ZEWnlNV044VEcr?=
+ =?utf-8?B?ZVM2VXNodmwraW90MklLWXVaQ1ZnWTJmZ1F2U3RUazBTTGRjVTh2SDcrdFda?=
+ =?utf-8?B?YVVtTkZhUXNYYkNRczZvN2pUaEhMbkdTQm9XUUFlakQ4eXV5MmNwNFhseDRa?=
+ =?utf-8?B?cGM0anpVWU91RWJiNGFJdWVyaStrYXJyVktjRmpRQ1NHUXdyVllMbUJkQzQw?=
+ =?utf-8?B?UlY0K0xyUjcvQXQ5WDJKYnRVQzhoR1pYWGlPaURFRSt2OU9nd3RFZG5zamhO?=
+ =?utf-8?B?L003SkgwU2NONFNiaFJMNTZabzlRanlXbFdYVlVvdS9Rek44eFRVQXNybURt?=
+ =?utf-8?B?Q0F0bmNTZng4L0N0a201MXAxanpkZEpUMjdTT3p2azhFeEl3cHlWU0xhRFl2?=
+ =?utf-8?B?cm5vWnVPNEF4L29SckhIazcyTFFTRmhkeTZ0RW1YbVhlV3lTM3RjRzFGVlBm?=
+ =?utf-8?B?V0FyZWdsdFRHcFhVd0Nabk8zRFhWUVNZOWpaMjhyOThTU3dhN0pVeTFQRlpG?=
+ =?utf-8?B?RmVLQlZQN081enBQSmlxSTVpRW8xZlVaVXgyNU9mWTFBQTVpeS9kdWZra3VB?=
+ =?utf-8?B?TlM3NUcrM0ppaFpzRTArVzV6eG5ramV5a2l2SUliQW5mMG9iMEwyV1lTMGky?=
+ =?utf-8?B?SVQxbXJMektOMHIzQzlJTndmWDlKeklIRWpPaUQ0K3FidzUwYS81U1NZNkhW?=
+ =?utf-8?B?NkVxM2w0bElDYkRUWE9XYjVaTG9xR0dvN2E2aUhUbVNvYzlsU2o3REJxSVZF?=
+ =?utf-8?B?bktoV1FhZUJhM3RlQkd4YWVTL2VMQ1FPMTY5VjNRQXZEUnMvVjR3RTdDSjhL?=
+ =?utf-8?B?Q1R4L014a1ZKU3VOTUxER0VtYnU5dHAzNGw4M0lNQUFSZFZLMDNSRllxWURv?=
+ =?utf-8?B?eW9wWGFJYVVOWUFaL0ZsY3RjSW0zcHI3L0NsYlMrRjJROUZGSHFQMVRjZGtH?=
+ =?utf-8?B?cjNCTUJZQmthbnBTcUZVOG9qdDg5TmZQeFB5NzM0YVBzUWNRNURkdzZrUUZP?=
+ =?utf-8?B?WDlLcnNDRVM2U0NzT204U2VzWkw1K09QM0lHdGFLUmlvUXRvUDgyRjloQmdr?=
+ =?utf-8?B?RGlTZUhoSTBHaU5Lb2pnTWRRdXNpaUs0MTRXWW5EeUJFT05DdE4vRzFVb2hS?=
+ =?utf-8?B?K1luTGtQN0w1V2NvWU5SeUZMZWFlYW42Snp6bTFwSS9NWEhJUXpMWVhMVE1V?=
+ =?utf-8?B?R3c0dktjbUUzR3FUSEppYldsVTlmdjhOQWhBTHlrSkl3WU9SLzlFbmIxY0tF?=
+ =?utf-8?B?ZmorTGtUQ2xqdU1zeWRoMTNSWEh2TWRPZFdNR0pQNFoxbkxHWFpSdk5pVEtD?=
+ =?utf-8?Q?SjZtCVEZ5loP/?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?Q0EvSUhWb29RbW93WmJCK0JZOWlCbnBYVmZyMXhSTW4wSHdodzAwTGZUM0Z4?=
- =?utf-8?B?MFJ5VVVoZzk3eG9tbU9aamcwelVXOXVpNjVIVWU2SVRrdnZLU21ScEk5aXl3?=
- =?utf-8?B?RXNFUUxFU1ZqQ3JFQVlnc0dlSjFaWDk1WDJKSnU1R09ROVBUbHUxZE96ZXA2?=
- =?utf-8?B?cHgzNEtHZHJrMnJQWXJXTjFJKzRxVzliR1hBb05kZnhjWktvUlZ4MTloWGFv?=
- =?utf-8?B?K3VwK0lWU0ZwU2FBRFpSTVRTVHo0UnYzVlZHVEF5SmpPZHI2K1U0WXhPOFMw?=
- =?utf-8?B?YXRiNERJK0xHSTRjVVBqS1BIamtXZ0JDZVhUMlNRUGZhb3JacStFTUZsbWs0?=
- =?utf-8?B?L1NGZmYwRWhEaGJZWFM2eklxS2lic3p6cFpNMjFzcVc2amdwUVRlVEtidkJB?=
- =?utf-8?B?MEg2Z0NrTzNia01TT2tZbCtpRU5KSWg3bU0xaHpQOE5KZUE5ck11OWdhREFs?=
- =?utf-8?B?cXU0NnhCdC9GdmhHaWpSa0NyQ003NU45b256WEpLV2NkWGxNYVZ0U0VzN0VR?=
- =?utf-8?B?SmI2TzJSVmh2bHQ2K2NueHVNbFg4UlI3Qk9GL2RNOGpOYndFQkZPRGJ1aVQv?=
- =?utf-8?B?Qit6QVAzLytoQUhRQ3ZUSE1wenkyd0tRNlFWZlR2OURsRW03ZXNMVWN3WTlX?=
- =?utf-8?B?RUZjdXYxSzJLVWs1U0lZRnUwVmI0WUNpYlFDRGlYSDNJYmJmbS9qUFhKZjBG?=
- =?utf-8?B?YXlmbkNoa2cxcGRsSDBSUkNwRXNaNlpNRjJNY1BwNUR0WnBsRm10SkpMZDl3?=
- =?utf-8?B?YVhNcE9NRFA4c3cvUXBYeUpydWkrU0NWei9Qb093enNXcy95YnFmTE9HUkNl?=
- =?utf-8?B?T20zdmptM1puTHRoaW1iUVdrUnNZWk0yMVRPaFZUTXJQNy91NjV3azA3cXVM?=
- =?utf-8?B?SHpIYlEycWVmRlM4WFBuT3QzaGp5WktzTHo0bzg1dVRSWFZDSWxzVDdCUTVP?=
- =?utf-8?B?WEc3TWQ4dmJMWFVCdnRXK3JiOFZkdHQwYm00UkpMa0JRbEJsZUZhMUpjQ3c1?=
- =?utf-8?B?Rk1rMHhEbDNJV3RLTXFzWWthRG0zekFQODROSkhIdGhnZ2k5UGNHaWxnYWNT?=
- =?utf-8?B?ZFIya2gvdFVZMzB2S2swUGhMakJzSzRWZnVUQ1k1MHd2RHBBTVBQNDRkUzJq?=
- =?utf-8?B?QTRqeXIwa1dQK1pQODdHbS9Bd1VjOHpzWmtUT1pQNkRXTlM5dXhRK3RZK2o4?=
- =?utf-8?B?NHdvQW5Sa3hHK2dUQmxFL1d4YWd3Z0Q4ZHpPT1IzMFhGWERWU3plZG9RWEZk?=
- =?utf-8?B?RENjT2UyenJPTXdEVmhuQ0FUbS9PNGhFekpseEhJcUsvMENGNk4zb2xqcTNa?=
- =?utf-8?B?OHNveVhRSXpwU0lPZU8yVXY3WFJFWU0yL3ptdlNOWWtRT1FPbVpxNTVWMFFy?=
- =?utf-8?B?dEhqQVMyQlpTYmZzM3RHZ3diRFFwWjhTSldqMUtpVllqdm1haklXU0xsZVFS?=
- =?utf-8?B?MmNMK0piekEwZ1dNamk0eWxaL3dYUHZ5UVBGSnVucThtVW81WXhxdzU2aXZv?=
- =?utf-8?B?TFJ1dEVRV3MydkkvVytiT1NkQjlXYXI1V1F3a3JRSGt1aU5yVytSWFZJdlc4?=
- =?utf-8?B?WWN4WkRseDAwWFpFc09ycnNwZU1TT1lsYUt1Ry9zQjJLa0RubWdYd3pGQ2ts?=
- =?utf-8?B?cDQwRVF1a1RTdnBXdUVBSHVQMVJtMElaeS9UR3kyc2xPdWlCc2VBV3JuU3hE?=
- =?utf-8?B?T2ZtWkZhN2dyYitob3Y2bDdmQ0Z0dFdNci91dUxpRWpTaVU0TE51NlowZHhY?=
- =?utf-8?B?M1o0eS9VUmR2Nk1VMnJ5T01ldldla2ZlNU9KaS9MUU9XOGozUXZ3d2JPMm5J?=
- =?utf-8?B?ZTNJRDJZZGRIcnFDc1RVT0pJbWd1aUhVOHRkQm1qQ1dhQWE2eTZpODRCbnF5?=
- =?utf-8?B?U09ESG8ydFpGUEI1TStpUU00NFNST1JYaWhaYXZMTzdVeDMzNksvTG5mTDVI?=
- =?utf-8?B?emZwUGRSLzVIbmFndy82b3VrM2JualpNNTgwZkNQSHdTRWFzcWNkbEhEZmox?=
- =?utf-8?B?R1c5Q1ZReUxVM1J5cUh0VVY0RmI1bHZKNGM3MFhzak1FZm1FTnF6UnNxSXNU?=
- =?utf-8?B?TkR4azNoUTRCclIxS2xyeDUxR01MbWFEYnhLYWtYKzJIalVvQ2F6Q1dsYmJi?=
- =?utf-8?B?Q1dDQkFSWStkOWEzNWhNTEI2TzI0bllwY0dhejIrQTBESFVWYkIvNit1RE8w?=
- =?utf-8?B?MUE9PQ==?=
+ =?utf-8?B?Ym1KNnRwNWRES0dERjYwY2I2WHNTSFZZOWE4VlNidVJUSUlzbUhtd1JTbzRU?=
+ =?utf-8?B?b3R1V2hWWVdUOElZQ05Ob1NJeWV1bFE0di83Q2w0bTVEQ1YxbVMrZG9LR1d5?=
+ =?utf-8?B?ckx3RVhTdUxHVXBEMnVhUkRYM2liUHVSMEpPWFp3czJwMVNac0FDQStscEhJ?=
+ =?utf-8?B?RENGUE1lL0FyVTVFUmRkOFdlYzd4NWpQUWdyR0NGdXNVWld4NVBEWUplZ21v?=
+ =?utf-8?B?WmZYNlMvQzI3YTd5NXJMdTVvZkNtVHQ4S2FldXVrN3QwVUlmcERZWVJzRU5J?=
+ =?utf-8?B?K01tYy96ZnU2QkZzM2VZYnBnMUtvd0JwN2dHak5yVHFMZWwvWHlLZTRYMU9W?=
+ =?utf-8?B?WUNlTGFNbUdGMnlZTmRWbC8wZGpwQldTVkVlYUloUTVZcjNsWjRpM0tOY2lC?=
+ =?utf-8?B?dHUwT291Slk4RERBQnZRUkhiRkY4eVYyMGJJSEZiaUhhbDRLa1Y2WEF6R0JW?=
+ =?utf-8?B?dmJjZEprRXY2WnA0V2xYazlITVFPcHUxYWxBN2RHM0xMZFhRcFF4czAzZnlT?=
+ =?utf-8?B?QTFIclJNVGpPbnNNaWNvRlVZN1cvTTJnS0dUelJvWW01bjR4UHFPZGx0c3d3?=
+ =?utf-8?B?NzA5a0lUbzdPaWtIRkJRREYxdFFlQTdYYWpCclhtSEk3S2huS1Z3cnBxSm1E?=
+ =?utf-8?B?Vk1yVHRNdnJZbXRVNjV3Y1FkQTBtaDJCWTh0VVk3bzNQa0FRQUl1V0ZveWVB?=
+ =?utf-8?B?eTNxdU9Za0FHMmd6YmFiT2VMSkN2b24rbEE1YzBzL3VUSlF6TEkvTHlzQjBa?=
+ =?utf-8?B?VUU4SlFrcjhmQ3RZcld5VU8zSDhCdUFQbzM0eXZSV0crSkVkNzN6Y1lFRVdK?=
+ =?utf-8?B?WS9iVWVtaDByRHlHWjk0R1lPODhoYXF5b3liL2N4WVBHM29kRkNLa0dDSThD?=
+ =?utf-8?B?VldOVFBnZUc4MzJxUXQ2dk8rQnYyaGphamludEt4TE1Rc2lWZXdldEhsbFlH?=
+ =?utf-8?B?REZlZ1h2TFY3Q01QWWhtb0REeHZMcnBCMmgvYzZqRDBnY3NlTzV6dytQdGlh?=
+ =?utf-8?B?NFdXeEZ2dkZBMmdpSWVhNHI4am0zWTFCV1pJQzFvd1ZxRlI0c1p2b0grdUV2?=
+ =?utf-8?B?QmFkMUNRN3RhSHB0cVkxZlpCMi9qOFlGTE1JYW4yRUF6MU9GcFQ1MkpMSjFE?=
+ =?utf-8?B?NEhyV09VcW1sRG1KZTlvMWlRdkJCdURicG50b0wzODQvYXpXZjRsRk5kYk93?=
+ =?utf-8?B?blBEYTFTbnRPejdyMzMxbFhNVmJ2QTc3cnhrTVJnekNNSHRzZGppQWdvdVRl?=
+ =?utf-8?B?dkRabVZCbFVUelp4VW5ZbXFuNWJlSHJGMFpObEZSbXg1MjlqR1IzQktldlJW?=
+ =?utf-8?B?QTBRdGlRZDJkOUVmQkl4dkRjY3dxbWVOZFB4TndKZzhxVDVING9haXVpS1Rp?=
+ =?utf-8?B?dmZralhKOGJNQlRrV2pySDMvcmYzQmtHdUs0ZE96Y3paQ0xzRktCYlk0aVY4?=
+ =?utf-8?B?UGxweVFhQkJyTHIxSU5PNXdnSU9hdUhPdFE2Y2ZMOS9sUjA0bDRUUG1GN203?=
+ =?utf-8?B?bUJtbVpiSlBXdjJrQm1MbVhyY28vYzFqTksvaG4yblFPVS9vNlFxWXZlS0NH?=
+ =?utf-8?B?SmZtN2xTajZNWkY1YXQxaDlrSlZsYWJGZlgrbjZTUVJtdk0veTJCUEd6OW5T?=
+ =?utf-8?B?VkdvUTVYNERoOWpZZ3RMN012UE0wMGVUUVpBMkN4eFZ1VTlERkhvU2ZJU1N4?=
+ =?utf-8?B?bDA4Y2l2SmJrUEJYNzQ0NGthZ2xuNW51K3pUNFhwYy9JYXJZa3Raa2JsZUMr?=
+ =?utf-8?B?RkY1dkxlVklVRzRualpYdW5xdVdzdVh5N3Z5QVRMaVRVdEJLc2dvczlkcFlE?=
+ =?utf-8?B?RWJqenFQV0R2VUZQQWphZHNYL0ZnUHNXYlZhUnVIYytQTTlQUWZaSk1vWjRW?=
+ =?utf-8?B?R0w4bFZyd2kxL3ZvQ0NFSHNPN1dXaVdnN1d2amJRbTFJN3J4VTh2OWxjcDdP?=
+ =?utf-8?B?VUlQVlRjRnZoMmJZcjBLYysxMGx5MDlkVnVaYlBSWlkxOXdTOUxUaHdlb0hT?=
+ =?utf-8?B?WS9GTGhNa01EME83NkdxS01aa0pvUVMzL3RQd3dhSFRDWVlvdXlrd3Y5aUJk?=
+ =?utf-8?B?L1ZWaTlCOUtac3hSSVFJbko1aE0yeDhieFMxN0oyL0JiK2xrN3NJSnJNNGFW?=
+ =?utf-8?B?UzFsOTBWb2JtOWFCUlovM3J2eHZNRGpDUGJ5VXVwSEU1bVNLV2psazR5alZY?=
+ =?utf-8?B?Rmc9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	lCB1pcF58qa3LnKezjMLJXK5lf8XgVvlxq+wtnsq+ihqNFt0A8DJcHeAtHaqS/XUCx+5hop7ELEUjcdJ1MUYYcyUpWCEZYn9An9SKssuw+3W4CcEZLNBbEcMiefO+tPVKEsogib4fKG0td0f3k+LKVW4GDT7VgSpnhYyZ+PTwiR20OU3aAfcCZiruAHHxEl8gzAB1MN27BDEooiaHsSuUwKeV0xwdj5DoYFDhnpNvpAKixlxpBziiwifuJI8XxXzrftr5b05CwcaUDD+Xt56IzuUPHro45qpTaQIpjdUqwQqOiTdf2elEaZA7i+QIFeXEdNGgPDiEhREt6RvWkA3LlHFKv13mgoCbHjqcGcdec+tAiNKAfltwm51WLbpIXRkvwuEQBupYH89jVkTOrK3HypB17Ce/zeuTee5Lkv/jKKFCxRFi7iSNsvK5GuWPDCcy8dzzSdEeodfsxOHFb2CBsSYqqY2GrggAZSugffUZHWwUxGGGShNHUnmISM9PLqilWjkVPwJLfFnL9sp9HYFA5ZwexJOQhwVj8e6LGMHm9jYLzeVwS53fDGftRY/JwsokF93V5YrXXntao0cM3tGzTDxACOAAeI4B1/7JA0Kecg=
+	51MzSJiZvddq8+q0muM7vFIMrI7DfOpJMv3RyWgxMibDi+PmYnxvMXcK63Vzxa0mdFAhazqQWxPtpXSV8v08lpH5lZngs/wqzmYWM+A/KXV6SRZWsmGjEY6Qdx18E4HdKEyUOXBwY4dpaH0vXuIHnhv8W1+AM6JJ8z/bkC3TuQXmw+SXsTVZXhqjUYz48J8+sRiStRHHScjw+FiTOEsnwE3Y29nHUQ0p1FqmOBSev+Rr5+e5uFG+oie2vmplBVKlqv0hjFjZhCp24kWnp1/lb1092t96OcxDG1Kyyo/Wagnsfv1wXl2wMjqF2Uw6jPtDNj4ZkKUJ04fnZc+5IykeNUIFHy0otOvNDK1g66XKmbZj23QH0W9FbDuEJK3EMLZeeV3m2b3y/0mDn8ZS9NPjeyyQDDappIQZiO9UZWGw/eUrJYeqKRUW2PYmvfRfbsAagryWIe01VPpD5tvR1uCqL2Ax77p0VyeG0CM0u/8yw41tqsNlTTxnhR1aC4prWqHkW3iQIDj3Voz0LfghPmcdTREr509u4pbor38mSsVxMOkAiq0pVOd9TVOFQhrpFrY96AM6nYGwGGghfRr1hAw+twxr7zlerVVyqhBItp90Peo=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d7dd4b0-0091-48cc-120f-08dd7777a063
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49bf88a5-e462-4c73-e8b9-08dd7778880e
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:03:03.3388
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:09:32.1354
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yXHWzlZq3QLb7CXyJ6kZxDE4Tni13gbwPBfd0i09XVrOaIhe9IzZbqlMiI3IBtxVkS1T7oJW978lNAzUNvWGLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB8107
+X-MS-Exchange-CrossTenant-UserPrincipalName: MTzl3+nP1U5MwNG71xQJY7ZrX8rhOtu57xSP4NMJEWrkvetHtBEaKbux7J0aFT3/8WEreiCMy+taq67unco4kQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6726
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=955
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504090094
-X-Proofpoint-GUID: xAAyIiJ4L10OH-ONw9fVcKohjgJ5IcpL
-X-Proofpoint-ORIG-GUID: xAAyIiJ4L10OH-ONw9fVcKohjgJ5IcpL
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504090096
+X-Proofpoint-ORIG-GUID: Q51UXvqcBCjTBJ7_RohGh_48BJJmqIBy
+X-Proofpoint-GUID: Q51UXvqcBCjTBJ7_RohGh_48BJJmqIBy
 
 On 4/9/25 10:32 AM, Jeff Layton wrote:
-> Turn Sargun's internal kprobe based implementation of this into a normal
-> static tracepoint. Also, remove the dprintk's that got added recently
-> with the fix for zero-length ACLs.
+> ...and remove the legacy dprintks.
 > 
-> Cc: Sargun Dillon <sargun@sargun.me>
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  fs/nfsd/trace.h         | 35 +++++++++++++++++++++++++++++++++++
->  fs/nfsd/vfs.c           |  5 ++---
->  include/trace/misc/fs.h | 21 +++++++++++++++++++++
->  3 files changed, 58 insertions(+), 3 deletions(-)
+>  fs/nfsd/nfs3proc.c | 18 +++++-------------
+>  fs/nfsd/nfs4proc.c | 29 +++++++++++++++++++++++++++++
+>  fs/nfsd/nfsproc.c  |  6 +++---
+>  fs/nfsd/trace.h    | 39 +++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 76 insertions(+), 16 deletions(-)
 > 
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index 372bdcf5e07a5c835da240ecebb02e3576eb2ca6..ea1280970ea11b2a82f0de88ad0422eef7063d6d 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -14,6 +14,7 @@
+>  #include "xdr3.h"
+>  #include "vfs.h"
+>  #include "filecache.h"
+> +#include "trace.h"
+>  
+>  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+>  
+> @@ -380,10 +381,7 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+>  	struct nfsd3_diropres *resp = rqstp->rq_resp;
+>  	svc_fh *dirfhp, *newfhp;
+>  
+> -	dprintk("nfsd: CREATE(3)   %s %.*s\n",
+> -				SVCFH_fmt(&argp->fh),
+> -				argp->len,
+> -				argp->name);
+> +	trace_nfsd3_proc_create(rqstp, &argp->fh, S_IFREG, argp->name, argp->len);
+>  
+>  	dirfhp = fh_copy(&resp->dirfh, &argp->fh);
+>  	newfhp = fh_init(&resp->fh, NFS3_FHSIZE);
+> @@ -405,10 +403,7 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+>  		.na_iattr	= &argp->attrs,
+>  	};
+>  
+> -	dprintk("nfsd: MKDIR(3)    %s %.*s\n",
+> -				SVCFH_fmt(&argp->fh),
+> -				argp->len,
+> -				argp->name);
+> +	trace_nfsd3_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->len);
+>  
+>  	argp->attrs.ia_valid &= ~ATTR_SIZE;
+>  	fh_copy(&resp->dirfh, &argp->fh);
+> @@ -471,13 +466,10 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+>  	struct nfsd_attrs attrs = {
+>  		.na_iattr	= &argp->attrs,
+>  	};
+> -	int type;
+> +	int type = nfs3_ftypes[argp->ftype];
+>  	dev_t	rdev = 0;
+>  
+> -	dprintk("nfsd: MKNOD(3)    %s %.*s\n",
+> -				SVCFH_fmt(&argp->fh),
+> -				argp->len,
+> -				argp->name);
+> +	trace_nfsd3_proc_mknod(rqstp, &argp->fh, type, argp->name, argp->len);
+>  
+>  	fh_copy(&resp->dirfh, &argp->fh);
+>  	fh_init(&resp->fh, NFS3_FHSIZE);
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 6e23d6103010197c0316b07c189fe12ec3033812..2c795103deaa4044596bd07d90db788169a32a0c 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -250,6 +250,8 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	__be32 status;
+>  	int host_err;
+>  
+> +	trace_nfsd4_create_file(rqstp, fhp, S_IFREG, open->op_fname, open->op_fnamelen);
+> +
+>  	if (isdotent(open->op_fname, open->op_fnamelen))
+>  		return nfserr_exist;
+>  	if (!(iap->ia_valid & ATTR_MODE))
+> @@ -807,6 +809,29 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	return status;
+>  }
+>  
+> +static umode_t nfs_type_to_vfs_type(enum nfs_ftype4 nfstype)
+> +{
+> +	switch (nfstype) {
+> +	case NF4REG:
+> +		return S_IFREG;
+> +	case NF4DIR:
+> +		return S_IFDIR;
+> +	case NF4BLK:
+> +		return S_IFBLK;
+> +	case NF4CHR:
+> +		return S_IFCHR;
+> +	case NF4LNK:
+> +		return S_IFLNK;
+> +	case NF4SOCK:
+> +		return S_IFSOCK;
+> +	case NF4FIFO:
+> +		return S_IFIFO;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+
+Wondering what happens when trace points are disabled in the kernel
+build. Maybe this helper belongs in fs/nfsd/trace.h instead as a
+macro wrapper for __print_symbolic(). But see below.
+
+
+>  static __be32
+>  nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	     union nfsd4_op_u *u)
+> @@ -822,6 +847,10 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>  	__be32 status;
+>  	dev_t rdev;
+>  
+> +	trace_nfsd4_create(rqstp, &cstate->current_fh,
+> +			   nfs_type_to_vfs_type(create->cr_type),
+> +			   create->cr_name, create->cr_namelen);
+> +
+>  	fh_init(&resfh, NFS4_FHSIZE);
+>  
+>  	status = fh_verify(rqstp, &cstate->current_fh, S_IFDIR, NFSD_MAY_NOP);
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 6dda081eb24c00b834ab0965c3a35a12115bceb7..33d8cbf8785588d38d4ec5efd769c1d1d06c6a91 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -10,6 +10,7 @@
+>  #include "cache.h"
+>  #include "xdr.h"
+>  #include "vfs.h"
+> +#include "trace.h"
+>  
+>  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+>  
+> @@ -292,8 +293,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+>  	int		hosterr;
+>  	dev_t		rdev = 0, wanted = new_decode_dev(attr->ia_size);
+>  
+> -	dprintk("nfsd: CREATE   %s %.*s\n",
+> -		SVCFH_fmt(dirfhp), argp->len, argp->name);
+> +	trace_nfsd_proc_create(rqstp, dirfhp, S_IFREG, argp->name, argp->len);
+>  
+>  	/* First verify the parent file handle */
+>  	resp->status = fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+> @@ -548,7 +548,7 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+>  		.na_iattr	= &argp->attrs,
+>  	};
+>  
+> -	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
+> +	trace_nfsd_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->len);
+>  
+>  	if (resp->fh.fh_dentry) {
+>  		printk(KERN_WARNING
 > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index 0d49fc064f7273f32c93732a993fd77bc0783f5d..c496fed58e2eed15458f35a158fbfef39a972c55 100644
+> index 382849d7c321d6ded8213890c2e7075770aa716c..c6aff23a845f06c87e701d57ec577c2c5c5a743c 100644
 > --- a/fs/nfsd/trace.h
 > +++ b/fs/nfsd/trace.h
-> @@ -11,6 +11,7 @@
->  #include <linux/tracepoint.h>
->  #include <linux/sunrpc/clnt.h>
->  #include <linux/sunrpc/xprt.h>
-> +#include <trace/misc/fs.h>
->  #include <trace/misc/nfs.h>
->  #include <trace/misc/sunrpc.h>
->  
-> @@ -2337,6 +2338,40 @@ DEFINE_EVENT(nfsd_copy_async_done_class,		\
->  DEFINE_COPY_ASYNC_DONE_EVENT(done);
->  DEFINE_COPY_ASYNC_DONE_EVENT(cancel);
->  
-> +TRACE_EVENT(nfsd_setattr,
-> +	TP_PROTO(const struct svc_rqst *rqstp, const struct svc_fh *fhp,
-> +		 const struct iattr *iap, const struct timespec64 *guardtime),
-> +	TP_ARGS(rqstp, fhp, iap, guardtime),
+> @@ -2391,6 +2391,45 @@ TRACE_EVENT(nfsd_lookup_dentry,
+>  	TP_printk("xid=0x%08x fh_hash=0x%08x name=%s",
+>  		  __entry->xid, __entry->fh_hash, __get_str(name))
+>  );
+> +
+> +DECLARE_EVENT_CLASS(nfsd_vfs_create_class,
+> +	TP_PROTO(struct svc_rqst *rqstp,
+> +		 struct svc_fh *fhp,
+> +		 umode_t type,
+> +		 const char *name,
+> +		 unsigned int len),
+> +	TP_ARGS(rqstp, fhp, type, name, len),
 > +	TP_STRUCT__entry(
 > +		SVC_RQST_ENDPOINT_FIELDS(rqstp)
 > +		__field(u32, fh_hash)
-> +		__field(s64, gtime_tv_sec)
-> +		__field(u32, gtime_tv_nsec)
-> +		__field(unsigned int, ia_valid)
-> +		__field(loff_t, ia_size)
-> +		__field(uid_t, ia_uid)
-> +		__field(gid_t, ia_gid)
-> +		__field(umode_t, ia_mode)
+> +		__field(umode_t, type)
+> +		__string_len(name, name, len)
 > +	),
-> +	TP_fast_assign(__entry->xid = be32_to_cpu(rqstp->rq_xid);
+> +	TP_fast_assign(
 > +		SVC_RQST_ENDPOINT_ASSIGNMENTS(rqstp);
 > +		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-> +		__entry->gtime_tv_sec = guardtime ? guardtime->tv_sec : 0;
-> +		__entry->gtime_tv_nsec = guardtime ? guardtime->tv_nsec : 0;
-> +		__entry->ia_valid = iap->ia_valid;
-> +		__entry->ia_size = iap->ia_size;
-> +		__entry->ia_uid = __kuid_val(iap->ia_uid);
-> +		__entry->ia_gid = __kgid_val(iap->ia_gid);
-> +		__entry->ia_mode = iap->ia_mode;
+> +		__entry->type = type;
+> +		__assign_str(name);
 > +	),
-> +	TP_printk(
-> +		"xid=0x%08x fh_hash=0x%08x ia_valid=%s ia_size=%llu ia_mode=0%o ia_uid=%u ia_gid=%u guard_time=%lld.%u",
-> +		__entry->xid, __entry->fh_hash, show_ia_valid_flags(__entry->ia_valid),
-> +		__entry->ia_size, __entry->ia_mode, __entry->ia_uid, __entry->ia_gid,
-> +		__entry->gtime_tv_sec, __entry->gtime_tv_nsec
-> +	)
-> +)
+> +	TP_printk("xid=0x%08x fh_hash=0x%08x type=%s name=%s",
+> +		  __entry->xid, __entry->fh_hash,
+> +		  show_fs_file_type(__entry->type), __get_str(name))
+> +);
+> +
+> +#define DEFINE_NFSD_VFS_CREATE_EVENT(__name)						\
+> +	DEFINE_EVENT(nfsd_vfs_create_class, __name,					\
+> +		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp,		\
+> +			      umode_t type, const char *name, unsigned int len),	\
+> +		     TP_ARGS(rqstp, fhp, type, name, len))
+> +
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_create);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_mkdir);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_create);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mkdir);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mknod);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create);
+> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create_file);
+
+I think we would be better off with one or two new trace points in
+nfsd_create() and nfsd_create_setattr() instead of all of these...
+
+Unless I've missed what you are trying to observe...?
+
+
 > +
 >  #endif /* _NFSD_TRACE_H */
 >  
 >  #undef TRACE_INCLUDE_PATH
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index d1156a18a79579bf427fe5809dc93d06e241201e..77ae22abc1a21ec587cf089b2a5f750464b5e985 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -501,7 +501,8 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  	bool		size_change = (iap->ia_valid & ATTR_SIZE);
->  	int		retries;
->  
-> -dprintk("nfsd_setattr pacl=%p valid=0x%x\n", attr->na_pacl, iap->ia_valid);
-
-Nit:
-
-These unindented dprintk call sites were introduced by Rick's POSIX
-ACL patch series, which is experimental. He's promised to remove them
-before he sends a final version of that series.
-
-Your patch can leave them in place, as they will be gone soon by other
-means.
-
-
-> +	trace_nfsd_setattr(rqstp, fhp, iap, guardtime);
-> +
->  	if (iap->ia_valid & ATTR_SIZE) {
->  		accmode |= NFSD_MAY_WRITE|NFSD_MAY_OWNER_OVERRIDE;
->  		ftype = S_IFREG;
-> @@ -597,7 +598,6 @@ dprintk("nfsd_setattr pacl=%p valid=0x%x\n", attr->na_pacl, iap->ia_valid);
->  						NULL);
->  	}
->  	if (IS_ENABLED(CONFIG_FS_POSIX_ACL) && attr->na_pacl) {
-> -dprintk("at set_posix_acl\n");
->  		/*
->  		 * For any file system that is not ACL_SCOPE_FILE_OBJECT,
->  		 * a_count == 0 MUST reply nfserr_inval.
-> @@ -612,7 +612,6 @@ dprintk("at set_posix_acl\n");
->  							attr->na_pacl);
->  		else
->  			attr->na_paclerr = -EINVAL;
-> -dprintk("set_posix_acl=%d\n", attr->na_paclerr);
->  	}
->  out_fill_attrs:
->  	/*
-> diff --git a/include/trace/misc/fs.h b/include/trace/misc/fs.h
-> index 738b97f22f3651f2370830037a8f4bfdf9a42ad4..0406ebe2a80a499dfcadb7e63db4d9e4a84d4d64 100644
-> --- a/include/trace/misc/fs.h
-> +++ b/include/trace/misc/fs.h
-> @@ -120,3 +120,24 @@
->  		{ LOOKUP_BENEATH,	"BENEATH" }, \
->  		{ LOOKUP_IN_ROOT,	"IN_ROOT" }, \
->  		{ LOOKUP_CACHED,	"CACHED" })
-> +
-> +#define show_ia_valid_flags(flags)			\
-> +	__print_flags(flags, "|",			\
-> +		{ ATTR_MODE,		"MODE" },	\
-> +		{ ATTR_UID,		"UID" },	\
-> +		{ ATTR_GID,		"GID" },	\
-> +		{ ATTR_SIZE,		"SIZE" },	\
-> +		{ ATTR_ATIME,		"ATIME" },	\
-> +		{ ATTR_MTIME,		"MTIME" },	\
-> +		{ ATTR_CTIME,		"CTIME" },	\
-> +		{ ATTR_ATIME_SET,	"ATIME_SET" },	\
-> +		{ ATTR_MTIME_SET,	"MTIME_SET" },	\
-> +		{ ATTR_FORCE,		"FORCE" },	\
-> +		{ ATTR_KILL_SUID,	"KILL_SUID" },	\
-> +		{ ATTR_KILL_SGID,	"KILL_SGID" },	\
-> +		{ ATTR_FILE,		"FILE" },	\
-> +		{ ATTR_KILL_PRIV,	"KILL_PRIV" },	\
-> +		{ ATTR_OPEN,		"OPEN" },	\
-> +		{ ATTR_TIMES_SET,	"TIMES_SET" },	\
-> +		{ ATTR_TOUCH,		"TOUCH"},	\
-> +		{ ATTR_DELEG,		"DELEG"})
 > 
 
 
