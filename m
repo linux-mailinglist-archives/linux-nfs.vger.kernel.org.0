@@ -1,49 +1,48 @@
-Return-Path: <linux-nfs+bounces-11068-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11069-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6227A82A6F
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 17:32:56 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C6ECA82B29
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 17:51:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CB23D17134F
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 15:27:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A6623BA5F7
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Apr 2025 15:36:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7762E265631;
-	Wed,  9 Apr 2025 15:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076EB265613;
+	Wed,  9 Apr 2025 15:36:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZPHA1MY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BoEMSKV1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D1A263C76;
-	Wed,  9 Apr 2025 15:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09B2146A68;
+	Wed,  9 Apr 2025 15:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212421; cv=none; b=I5ETbeUieLRybqjLO2z+LvhFH974AECTfy/6nNG9rcdawtbfrw8RLytPY/fmhMI2UtOqmbXRyY5uj2oyxW7xbZ6ds6GLa7m+nXSRfJNA/ttgsVjLaz0LRCq0LXJ0PLCs7KT43W2Yitadug/9CSboRR94r+azsGHEIBT1Rzg5eec=
+	t=1744212999; cv=none; b=N4U5FPn3jvC1zD5pfbdMyh0OWHFVu1g4lI7VH/UDb5E3J0h/xsPUpQLY2wB+Ox9/oVSOV8OzcigZFPsTYwv7AX/DwR8KbfqQoNcOxTVsuZvMtfg8B4+6WJWe8B2Di3IqUEjhQ3cCTUIQH+VVZEqjOVoMKROG5Hek3nemL/wlGTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212421; c=relaxed/simple;
-	bh=BdFVwSWqsAXV9HoSnTOZ3zxj/jDupa/3rm80FSq3g38=;
+	s=arc-20240116; t=1744212999; c=relaxed/simple;
+	bh=nBgTW6kzyLoNKk+mjoVnZLJgm9YbzS4rnSblOAg3/vo=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VTpD/CRrw2RdR4kXclRzs0N073U0UZtV17xW4Z9JlUA5v9nJHHK8Aqmz/Mi6Ff7jFSHDL/JskJgmhfuTkTa6m99gskCjEchljSqVWUdNQKOTGXCjyKUGCKDpALPk2cBIU1ZifZVh6e9dS7tARYpSWs9ZUW6LmKwT0coB7+iYdCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZPHA1MY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D737BC4CEE2;
-	Wed,  9 Apr 2025 15:26:58 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ohfx5LTR1xentYZ68G8J81QfF4aVx28B3tZQztyF7maKfyWoqfKj+S5C1s2CfJwvWYfy9qfJRNRo7wdB9QIu6p2AGq5UP5d/fUes3wa3KxitMPFLQV0xjy9XPcncGOvip3gh32yc+Q3ZHEmtZOTiU6CDqmVwOomkFm51IrgWHOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BoEMSKV1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CE5C4CEE2;
+	Wed,  9 Apr 2025 15:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744212419;
-	bh=BdFVwSWqsAXV9HoSnTOZ3zxj/jDupa/3rm80FSq3g38=;
+	s=k20201202; t=1744212999;
+	bh=nBgTW6kzyLoNKk+mjoVnZLJgm9YbzS4rnSblOAg3/vo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FZPHA1MYLVQGs7Z0AAEooIpmI5A8DljAj9byzwN9/mntI3ZusBkz9WFk3R1DFbDdg
-	 UaJqysLCCKUrFiv6wSdeRVx5Y1LHBU87UVCq7+Avbb8/AY740JSUfn0UiNVQ5JneXd
-	 6u/j64iaCHViuKcwE8inpsEJz3j2tdFLHPetoJae7gEoE77wLDa12dikuNdgYVYep8
-	 aeKE6lfUzVMWx14P6v40xtxYYFUs2iyaFFQnth3nPXzNff2HP8n922mvkcV5MwpWpM
-	 SQF5zx56rSszkkns+r6yeMjSVOwfqMC16l0TRqyDMnncghdFFi3npTnukjhENe5zpr
-	 bN6nG++xJwdgw==
-Message-ID: <1c99e177b4880f92044b4a37a735081b1f9d6118.camel@kernel.org>
-Subject: Re: [PATCH v2 02/12] sunrpc: add info about xprt queue times to
- svc_xprt_dequeue tracepoint
+	b=BoEMSKV13gDHXoLcX0/gpGD6uIrFZ5DFhDQg2uTZZRhSjrqTqyW7ATYwx31qH/VEM
+	 RcEFi0tqjVI85fenIibSLI7w9hpDTjuMi4OEb+0EJzB9V7TpU2bg4RZeJ2IsGmgnG4
+	 +So+v+fNnjnpG/oSVg6ygnb0o4iNcCTexDp6ASV9P7lhcoLr6vlcY67U2X1cCRsn88
+	 MwBIgF48sK90Ofd3sESX4bRBeG7AONrmMy/0nMghmhlz0aARoHD3U0XpeyCpQv5hFJ
+	 O4MTmBmAuSu32HiHtIt4QIj/MNIcVSEDT6JHXMCmxZrGqMk3A7gWr/kpAVtHGTwhrm
+	 +MSCZ4xGcnjCg==
+Message-ID: <11d5010fbe14e21b614d7cc56bae1805b35f3a31.camel@kernel.org>
+Subject: Re: [PATCH v2 06/12] nfsd: add tracepoints around nfsd_create events
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
@@ -51,11 +50,11 @@ To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
  Schumaker <anna@kernel.org>
 Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Date: Wed, 09 Apr 2025 11:26:57 -0400
-In-Reply-To: <d18a4caf-45c4-46a8-81af-400d94f51606@oracle.com>
+Date: Wed, 09 Apr 2025 11:36:37 -0400
+In-Reply-To: <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
 References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
-	 <20250409-nfsd-tracepoints-v2-2-cf4e084fdd9c@kernel.org>
-	 <d18a4caf-45c4-46a8-81af-400d94f51606@oracle.com>
+	 <20250409-nfsd-tracepoints-v2-6-cf4e084fdd9c@kernel.org>
+	 <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,100 +139,244 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-04-09 at 11:00 -0400, Chuck Lever wrote:
+On Wed, 2025-04-09 at 11:09 -0400, Chuck Lever wrote:
 > On 4/9/25 10:32 AM, Jeff Layton wrote:
-> > Currently, this tracepoint displays "wakeup-us", which is the time that
-> > the woken thread spent sleeping, before dequeueing the next xprt. Add a
-> > new statistic that shows how long the xprt sat on the queue before bein=
-g
-> > serviced.
->=20
-> I don't understand the difference between "waiting on queue" and
-> "sleeping". When are those two latency measurements not the same?
->=20
-
-These are measuring two different things:
-
-svc_rqst->rq_qtime represents the time between when thread on the
-sp_idle_threads list was woken. This patch adds svc_xprt->xpt_qtime,
-which represents the time that the svc_xprt was added to the lwq.
-
-The first tells us how long the interval was between the thread being
-woken and the xprt being dequeued. The new statistic tells us how long
-between the xprt being enqueued and dequeued.
-
-They could easily diverge if there were not enough threads available to
-service all of the queued xprts.
-
->=20
+> > ...and remove the legacy dprintks.
+> >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
-> >  include/linux/sunrpc/svc_xprt.h |  1 +
-> >  include/trace/events/sunrpc.h   | 13 +++++++------
-> >  net/sunrpc/svc_xprt.c           |  1 +
-> >  3 files changed, 9 insertions(+), 6 deletions(-)
+> >  fs/nfsd/nfs3proc.c | 18 +++++-------------
+> >  fs/nfsd/nfs4proc.c | 29 +++++++++++++++++++++++++++++
+> >  fs/nfsd/nfsproc.c  |  6 +++---
+> >  fs/nfsd/trace.h    | 39 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 76 insertions(+), 16 deletions(-)
 > >=20
-> > diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc=
-_xprt.h
-> > index 72be609525796792274d5b8cb5ff37f73723fc23..369a89aea18618748607ee9=
-43247c327bf62c8d5 100644
-> > --- a/include/linux/sunrpc/svc_xprt.h
-> > +++ b/include/linux/sunrpc/svc_xprt.h
-> > @@ -53,6 +53,7 @@ struct svc_xprt {
-> >  	struct svc_xprt_class	*xpt_class;
-> >  	const struct svc_xprt_ops *xpt_ops;
-> >  	struct kref		xpt_ref;
-> > +	ktime_t			xpt_qtime;
-> >  	struct list_head	xpt_list;
-> >  	struct lwq_node		xpt_ready;
-> >  	unsigned long		xpt_flags;
-> > diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrp=
-c.h
-> > index 5d331383047b79b9f6dcd699c87287453c1a5f49..b5a0f0bc1a3b7cfd90ce018=
-1a8a419db810988bb 100644
-> > --- a/include/trace/events/sunrpc.h
-> > +++ b/include/trace/events/sunrpc.h
-> > @@ -2040,19 +2040,20 @@ TRACE_EVENT(svc_xprt_dequeue,
+> > diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> > index 372bdcf5e07a5c835da240ecebb02e3576eb2ca6..ea1280970ea11b2a82f0de8=
+8ad0422eef7063d6d 100644
+> > --- a/fs/nfsd/nfs3proc.c
+> > +++ b/fs/nfsd/nfs3proc.c
+> > @@ -14,6 +14,7 @@
+> >  #include "xdr3.h"
+> >  #include "vfs.h"
+> >  #include "filecache.h"
+> > +#include "trace.h"
 > > =20
-> >  	TP_STRUCT__entry(
-> >  		SVC_XPRT_ENDPOINT_FIELDS(rqst->rq_xprt)
-> > -
-> >  		__field(unsigned long, wakeup)
-> > +		__field(unsigned long, qtime)
-> >  	),
+> >  #define NFSDDBG_FACILITY		NFSDDBG_PROC
 > > =20
-> >  	TP_fast_assign(
-> > -		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqst->rq_xprt);
-> > +		ktime_t ktime =3D ktime_get();
+> > @@ -380,10 +381,7 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+> >  	struct nfsd3_diropres *resp =3D rqstp->rq_resp;
+> >  	svc_fh *dirfhp, *newfhp;
 > > =20
-> > -		__entry->wakeup =3D ktime_to_us(ktime_sub(ktime_get(),
-> > -							rqst->rq_qtime));
-> > +		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqst->rq_xprt);
-> > +		__entry->wakeup =3D ktime_to_us(ktime_sub(ktime, rqst->rq_qtime));
-> > +		__entry->qtime =3D ktime_to_us(ktime_sub(ktime, rqst->rq_xprt->xpt_q=
-time));
-> >  	),
+> > -	dprintk("nfsd: CREATE(3)   %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_create(rqstp, &argp->fh, S_IFREG, argp->name, argp->=
+len);
 > > =20
-> > -	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " wakeup-us=3D%lu",
-> > -		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup)
-> > +	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " wakeup-us=3D%lu qtime=3D%lu",
-> > +		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup, __entry->qtime)
+> >  	dirfhp =3D fh_copy(&resp->dirfh, &argp->fh);
+> >  	newfhp =3D fh_init(&resp->fh, NFS3_FHSIZE);
+> > @@ -405,10 +403,7 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > =20
+> > -	dprintk("nfsd: MKDIR(3)    %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->l=
+en);
+> > =20
+> >  	argp->attrs.ia_valid &=3D ~ATTR_SIZE;
+> >  	fh_copy(&resp->dirfh, &argp->fh);
+> > @@ -471,13 +466,10 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+> >  	struct nfsd_attrs attrs =3D {
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > -	int type;
+> > +	int type =3D nfs3_ftypes[argp->ftype];
+> >  	dev_t	rdev =3D 0;
+> > =20
+> > -	dprintk("nfsd: MKNOD(3)    %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_mknod(rqstp, &argp->fh, type, argp->name, argp->len)=
+;
+> > =20
+> >  	fh_copy(&resp->dirfh, &argp->fh);
+> >  	fh_init(&resp->fh, NFS3_FHSIZE);
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index 6e23d6103010197c0316b07c189fe12ec3033812..2c795103deaa4044596bd07=
+d90db788169a32a0c 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -250,6 +250,8 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+> >  	__be32 status;
+> >  	int host_err;
+> > =20
+> > +	trace_nfsd4_create_file(rqstp, fhp, S_IFREG, open->op_fname, open->op=
+_fnamelen);
+> > +
+> >  	if (isdotent(open->op_fname, open->op_fnamelen))
+> >  		return nfserr_exist;
+> >  	if (!(iap->ia_valid & ATTR_MODE))
+> > @@ -807,6 +809,29 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_=
+compound_state *cstate,
+> >  	return status;
+> >  }
+> > =20
+> > +static umode_t nfs_type_to_vfs_type(enum nfs_ftype4 nfstype)
+> > +{
+> > +	switch (nfstype) {
+> > +	case NF4REG:
+> > +		return S_IFREG;
+> > +	case NF4DIR:
+> > +		return S_IFDIR;
+> > +	case NF4BLK:
+> > +		return S_IFBLK;
+> > +	case NF4CHR:
+> > +		return S_IFCHR;
+> > +	case NF4LNK:
+> > +		return S_IFLNK;
+> > +	case NF4SOCK:
+> > +		return S_IFSOCK;
+> > +	case NF4FIFO:
+> > +		return S_IFIFO;
+> > +	default:
+> > +		break;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+>=20
+> Wondering what happens when trace points are disabled in the kernel
+> build. Maybe this helper belongs in fs/nfsd/trace.h instead as a
+> macro wrapper for __print_symbolic(). But see below.
+>=20
+
+If tracepoints are disabled, then the only caller of this static
+function would go away, so it should get optimized out. I don't see how
+you'd make this a wrapper around __print_symbolic(), since the point is
+to pass in a NFS version-independent constant that the tracepoint class
+can use as a type.
+
+>=20
+> >  static __be32
+> >  nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *csta=
+te,
+> >  	     union nfsd4_op_u *u)
+> > @@ -822,6 +847,10 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_=
+compound_state *cstate,
+> >  	__be32 status;
+> >  	dev_t rdev;
+> > =20
+> > +	trace_nfsd4_create(rqstp, &cstate->current_fh,
+> > +			   nfs_type_to_vfs_type(create->cr_type),
+> > +			   create->cr_name, create->cr_namelen);
+> > +
+> >  	fh_init(&resfh, NFS4_FHSIZE);
+> > =20
+> >  	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFDIR, NFSD_MAY_NO=
+P);
+> > diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> > index 6dda081eb24c00b834ab0965c3a35a12115bceb7..33d8cbf8785588d38d4ec5e=
+fd769c1d1d06c6a91 100644
+> > --- a/fs/nfsd/nfsproc.c
+> > +++ b/fs/nfsd/nfsproc.c
+> > @@ -10,6 +10,7 @@
+> >  #include "cache.h"
+> >  #include "xdr.h"
+> >  #include "vfs.h"
+> > +#include "trace.h"
+> > =20
+> >  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+> > =20
+> > @@ -292,8 +293,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> >  	int		hosterr;
+> >  	dev_t		rdev =3D 0, wanted =3D new_decode_dev(attr->ia_size);
+> > =20
+> > -	dprintk("nfsd: CREATE   %s %.*s\n",
+> > -		SVCFH_fmt(dirfhp), argp->len, argp->name);
+> > +	trace_nfsd_proc_create(rqstp, dirfhp, S_IFREG, argp->name, argp->len)=
+;
+> > =20
+> >  	/* First verify the parent file handle */
+> >  	resp->status =3D fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+> > @@ -548,7 +548,7 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > =20
+> > -	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, =
+argp->name);
+> > +	trace_nfsd_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->le=
+n);
+> > =20
+> >  	if (resp->fh.fh_dentry) {
+> >  		printk(KERN_WARNING
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index 382849d7c321d6ded8213890c2e7075770aa716c..c6aff23a845f06c87e701d5=
+7ec577c2c5c5a743c 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -2391,6 +2391,45 @@ TRACE_EVENT(nfsd_lookup_dentry,
+> >  	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x name=3D%s",
+> >  		  __entry->xid, __entry->fh_hash, __get_str(name))
 > >  );
+> > +
+> > +DECLARE_EVENT_CLASS(nfsd_vfs_create_class,
+> > +	TP_PROTO(struct svc_rqst *rqstp,
+> > +		 struct svc_fh *fhp,
+> > +		 umode_t type,
+> > +		 const char *name,
+> > +		 unsigned int len),
+> > +	TP_ARGS(rqstp, fhp, type, name, len),
+> > +	TP_STRUCT__entry(
+> > +		SVC_RQST_ENDPOINT_FIELDS(rqstp)
+> > +		__field(u32, fh_hash)
+> > +		__field(umode_t, type)
+> > +		__string_len(name, name, len)
+> > +	),
+> > +	TP_fast_assign(
+> > +		SVC_RQST_ENDPOINT_ASSIGNMENTS(rqstp);
+> > +		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> > +		__entry->type =3D type;
+> > +		__assign_str(name);
+> > +	),
+> > +	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x type=3D%s name=3D%s",
+> > +		  __entry->xid, __entry->fh_hash,
+> > +		  show_fs_file_type(__entry->type), __get_str(name))
+> > +);
+> > +
+> > +#define DEFINE_NFSD_VFS_CREATE_EVENT(__name)						\
+> > +	DEFINE_EVENT(nfsd_vfs_create_class, __name,					\
+> > +		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp,		\
+> > +			      umode_t type, const char *name, unsigned int len),	\
+> > +		     TP_ARGS(rqstp, fhp, type, name, len))
+> > +
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_mkdir);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mkdir);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mknod);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create_file);
+>=20
+> I think we would be better off with one or two new trace points in
+> nfsd_create() and nfsd_create_setattr() instead of all of these...
+>=20
+> Unless I've missed what you are trying to observe...?
+>
+
+I'll look into doing it that way.
+
+>=20
+> > +
+> >  #endif /* _NFSD_TRACE_H */
 > > =20
-> >  DECLARE_EVENT_CLASS(svc_xprt_event,
-> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > index ae25405d8bd22672a361d1fd3adfdcebb403f90f..32018557797b1f683d8b725=
-9f5fccd029aebcd71 100644
-> > --- a/net/sunrpc/svc_xprt.c
-> > +++ b/net/sunrpc/svc_xprt.c
-> > @@ -488,6 +488,7 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
-> >  	pool =3D svc_pool_for_cpu(xprt->xpt_server);
-> > =20
-> >  	percpu_counter_inc(&pool->sp_sockets_queued);
-> > +	xprt->xpt_qtime =3D ktime_get();
-> >  	lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
-> > =20
-> >  	svc_pool_wake_idle_thread(pool);
+> >  #undef TRACE_INCLUDE_PATH
 > >=20
 >=20
 >=20
