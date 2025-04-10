@@ -1,106 +1,118 @@
-Return-Path: <linux-nfs+bounces-11087-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11088-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BBCEA84A4E
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 18:43:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44DA9A84BE5
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 20:12:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1687D9A07CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 16:40:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FE881B84C26
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 18:12:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCF741DFE0A;
-	Thu, 10 Apr 2025 16:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B57A626A1B3;
+	Thu, 10 Apr 2025 18:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VyDePdUq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fe4iOWwu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DC21C700D
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 16:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912FF284B22
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 18:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744303216; cv=none; b=Slpgj/WMw2HaAdQLu33M7AVyah3YQHeJpma2L2ZBWKnwblkXFjhRZkJqM4Odbrd+rC2EDeevJ93TeOvkCwCaSXKnkXt3JuiF4r0if4vuMCg8giY13yKMm/sv6efewj5pIO+La3IV3ByfJIp6iAiHHf0PJvwJqImz98mrAqenaXQ=
+	t=1744308760; cv=none; b=iJF0A6eGYEqZ7Yxlx9OE5frXC9cSpsiTj3NpEUyFsVnbQPFIn16dhCMa1XLig1DbTrb37oyePfj45dixCozvQaveUaR2N6y4SoGoATSTs67ff4is04V4JlCor7fknYrb8n5mQjNV5vA/zY2OCfBLZrw5Xtxz+JtcLrO9Tz/Ao5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744303216; c=relaxed/simple;
-	bh=TqhHIcMHDXopmGXGfEreyc/jr5JVPqoSHz5T/ZLx4U0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dqYfpc3VDdFm54pusUG4f3hmCL282VgeR483Ux1SWzlmX+EusWmmcPgYJyO7IqD/uFlDBkNzsrROWTlfX4SRWoTWBpEiCXXsNuWSIJZB+ry/nHBjBgh2JQmfSTxVIhzizE4LHMERocWj4eBRIjdw2FCxlzhq/p4zJ5aND39Qu8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VyDePdUq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaecf50578eso182416466b.2
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 09:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744303212; x=1744908012; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TqhHIcMHDXopmGXGfEreyc/jr5JVPqoSHz5T/ZLx4U0=;
-        b=VyDePdUqt7o/fgbNgnpFSWmOs9umhbARh7gJVshBKyNTCQzYJM7AyBFJ4ZHzTgOEN9
-         Tolj5iXjMuB4MXq2XsconMaVaXLb0P/BduChHlja8eDu0AgGDUbHQ+UcRNQfBfMFZaRG
-         L8kzb4E4wYrhnN47L35pPhafq8X0/B0VHxil2HFyv1dq8qlYzNHNKofhsVtG4QVdqNcp
-         7eFboHq0IYTGfRQrqloxaXeHCVTmzW8miFElTozhtYERJbVK2yfIREzO90DrY6Gea/ec
-         9ONhaTjAqI9AfU5P2qo21XB/4WjWgvUkA58giTp0pGeFZCqwrRMDAd8yMA2ewUX+Vmau
-         wxEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744303212; x=1744908012;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TqhHIcMHDXopmGXGfEreyc/jr5JVPqoSHz5T/ZLx4U0=;
-        b=EHGG5+OUNtviAbXgK4kzms7FRIUtGgeM+y9f9AZ6GCKJIe4NguBdBcrFtu4SwVcvdi
-         AMG1/jrVyteOOA/U89m+lF8aIiUOi3KNm2ceBKtPV7Uz0tYpBV6IUzYnD45Wf+wOwzHi
-         bF9qFekwwWrI0GXDLzMica361VKlYzNqfl3FvxfxbJju/ct2P8Jp+4sswabnKySrBJ1z
-         CVHVDsBFkrCCUaNmoEznLO0niKVtIojo7lPBmMg60tNNCjmvsjPnKFVG/rGsQcXaUDDn
-         ue/3c//XxQ5gxtTTimJrw3jcrlrd7fgrlEeow6LAiEzPhQWnkYehn9KMClYY8EeUDveI
-         9xvg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Xp5sCr7MqfhCeyKFqoUjPSA3HZpGohu9FuudW8Qof/Uxlc8no7IfoIiKojCYyjuluLP31RXCeZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNUxSoSrtxPo+YEqwm3wDYz9Bf1oPx98Mp7EpT2kKWc8KZdaOn
-	Qog7pNLYxGVyOHlBOyiETCi9xHAwmszi4i/JjS/YRD4r19VVuE1+uIzS3cMDcbjZExhLN2/QkhR
-	tuPlk/y/up5dyeLnHZsFpO1bKnwPwuA==
-X-Gm-Gg: ASbGnctkQ2waegQqxdZ7mOJKUUg6wf/djnUHrjuM7klyvq4Y9UvHcoZDsJJMsEIG3oG
-	+bsejezjCHRlmtcbTvFPoo5YdBBX5h2hXZ2GTsHImZ+0ohvpDFHvGE7FLTrSd/bh3wGkfi0puru
-	tYAyd3NjEyBoxQ0XtzHhBGng==
-X-Google-Smtp-Source: AGHT+IFP6yq/vzY7I4fvc4+UIvmPbN2K4Z6WtiAs5cm6EtrHw17tV90l0qM/f+vFv3TLEUuLwtDRu/yv2d/BWtBPDUU=
-X-Received: by 2002:a17:907:6ea1:b0:ac6:f5a8:b7a1 with SMTP id
- a640c23a62f3a-acabd202949mr312224366b.31.1744303212180; Thu, 10 Apr 2025
- 09:40:12 -0700 (PDT)
+	s=arc-20240116; t=1744308760; c=relaxed/simple;
+	bh=CVFsj5emVxYFMbjWV99FdKD13tBW6XH5vCGELFplQYQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sB0T4U42LRibC425Edf8yaF89P8MLF1IRAHflsAlbxTEcXzoZ0JmSMOtkTf3P3VfA4iLTktXlJL5SlthcIpE3uz1DSB87NZdjjARqoOt0BKDeNUtAc6YUMAVucT04Q5F8FgWuS6QlRmEQB5mQ0ik1+KAI8Psq10zwCX6HQVJdtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fe4iOWwu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A91ECC4CEDD;
+	Thu, 10 Apr 2025 18:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744308760;
+	bh=CVFsj5emVxYFMbjWV99FdKD13tBW6XH5vCGELFplQYQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=fe4iOWwuxaePhFIovGyaBdBwzUrxjAtAGjdyaDviSQDcS2q8cRx8vqdRHGTWJGGgR
+	 JGb9OGrJKh4gsKkSzpNiVhOQ4MThuCgUBUQ3n27lzU6PfHdiR62u5ecTIsxpqSVx7x
+	 lyybNpBrzb4YEO2PEuIVXrI1AX+h2x4WnMiu85I4kRxwT7n1hiqCafhLojseKtn9ye
+	 jZWKaqIfeVC5OZqV0aoA3G412MiBn6zCPo5hi8HWOJFJEAK9FPjsDcvVGXJhvYnZ4v
+	 nR550AYJ+Jhn392AR+ZxcMKClpiRuR0nYZP+QNhRGmRv0gdJWlX/PhQQ+LJTAlQ2w4
+	 +kilHVDqiwykA==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 0/2] nfs: don't share pNFS DS connections between net
+ namespaces
+Date: Thu, 10 Apr 2025 14:12:17 -0400
+Message-Id: <20250410-nfs-ds-netns-v1-0-cc6236e84190@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410141012.22187-1-cel@kernel.org>
-In-Reply-To: <20250410141012.22187-1-cel@kernel.org>
-From: Sebastian Feld <sebastian.n.feld@gmail.com>
-Date: Thu, 10 Apr 2025 18:39:35 +0200
-X-Gm-Features: ATxdqUELHniV27PNWd7lg2zOlw1dyi1ujqecqA_XWr0S-fRz6acHfbvX32-zHpk
-Message-ID: <CAHnbEG+fNNEveZh3oTsp+8MSuGVZ7P35XBZN+2yMJxbHRt3VHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] MAINTAINERS: Update Neil Brown's email address
-To: cel@kernel.org
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAEK+GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0MD3by0Yt2UYt281JK8Yl1jI8Nkc4tkQ7NEc0sloJaCotS0zAqwcdG
+ xtbUA8kSmDF4AAAA=
+X-Change-ID: 20250410-nfs-ds-netns-321c78c16a79
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>, 
+ linux-nfs@vger.kernel.org, linux-kernel@vger.keornel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1545; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=CVFsj5emVxYFMbjWV99FdKD13tBW6XH5vCGELFplQYQ=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn+AoMcBBqbuJkK5y/AW69wCBZ2s4xbhk3qT6XM
+ X9W48AjdOWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ/gKDAAKCRAADmhBGVaC
+ FZQRD/9n27YYhJbcm0Sffh4Ybs1P2PW1NPUU9+WTWUEDx7Yc4i4yljCEp9q2iyel80eV5sQlWab
+ iJh7pzxH1HqrY2K98etmQO2ABJBrvoI+akve2V6weS3ZvtAoAFuaMD7N4kZXc/DRewxNSfAG3g7
+ JTqhvn35xcV8vPLjlNy+snY/3O0vwc7ojskuFaEJMhcxzLvuogLSDfYftFGdNmk8Q1pfb272Wq5
+ hSPZgb7FAtTD9jMrtWdLz09Sx3LHqtT0z2h5Tc5Ohsjybz1wxtWdOgiFWJYKhcefwKbWrCZCIq4
+ XJB8eCvHirohs/JEcJt6+k2QBqZ+/SfYkxQMy3u8ezZovfeC1qJT8lfYfxEuZ5KNawz596NOo/o
+ BaCD/1TxoZ3onqZP/UcI9OgubRhvmBkU0Keqo3jC+nnxcxkBaKH0FRcZq42JD/QPIKcvHb09ANq
+ RpPx6XodbsYC//eNMmuUTfDlc0CHMVcTuQ/L3XDgygHjIgXtaTtVOGwTBPfNwTxrNfrSt8v+Y4B
+ Wx1dCp6+AbohLblKxWIGXva+ZwrU33n90DM8KdHaiZmh8nlvIg6HPBiRZ/3WgwKN7azZYNGB2MQ
+ bvwp0kfklgJWMWSz8uL1LhLw3W4UHC7iFMSFCuGLt64SG7u+hDZnln+oQNaJL44onwvLDEIn7aT
+ d4cslgc58W4kHIw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Thu, Apr 10, 2025 at 4:15=E2=80=AFPM <cel@kernel.org> wrote:
->
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Neil is planning retirement, and has asked me to replace his Suse
-> email address with his personal email address. Both addresses
-> currently route to the same mailbox.
+Sargun noted that he had seen some cases where a dead netns with a stuck
+NFS mount in it would affect other containers. Omar took a look last
+week and noted that there was a global list of DS connections and there
+was no segregation by namespace.
 
-No no no no. Neil is NOT going to retire. He is needed here. So please
-reject the patch, and let him happily work at SuSE until he is 150
-years old.
+The first patch in the series fixes this in a minimal way by tracking
+struct net in the nfs4_pnfs_ds structure and not matching it when the
+caller's net is different. The second patch goes the rest of the way,
+and makes the nfs4_data_server_cache and lock be per-net.
 
-Sebi
---=20
-Sebastian Feld - IT security consultant
+My thought was that the first patch should be suitable for stable
+kernels, and both could go to mainline. If you think the risk is low
+though, we could just squash the two together.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (2):
+      nfs: don't share pNFS DS connections between net namespaces
+      nfs: move the nfs4_data_server_cache into struct nfs_net
+
+ fs/nfs/client.c                           |  4 ++++
+ fs/nfs/filelayout/filelayoutdev.c         |  6 +++---
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 +++---
+ fs/nfs/inode.c                            |  3 +++
+ fs/nfs/netns.h                            |  6 +++++-
+ fs/nfs/pnfs.h                             |  4 +++-
+ fs/nfs/pnfs_nfs.c                         | 32 +++++++++++++++++--------------
+ 7 files changed, 39 insertions(+), 22 deletions(-)
+---
+base-commit: cf03f570936ac96ed4775eb2e4f1a6ab6a13f143
+change-id: 20250410-nfs-ds-netns-321c78c16a79
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
