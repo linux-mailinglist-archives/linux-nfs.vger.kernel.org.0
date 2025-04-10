@@ -1,143 +1,232 @@
-Return-Path: <linux-nfs+bounces-11082-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11083-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6B44A843F0
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 15:02:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2D39A84589
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 16:00:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07AF23A918D
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 13:00:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 366AC16915A
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 14:00:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA223A8C1;
-	Thu, 10 Apr 2025 13:01:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82B528A412;
+	Thu, 10 Apr 2025 14:00:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FAA2853F3
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 13:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7F428CF48;
+	Thu, 10 Apr 2025 14:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290066; cv=none; b=rqDjev6tBqietRCdWrvAhPAvQ+u0BBwRQiGm3UbXGGVkNA4tKNgT1k+lSnicMr9cUsP58GxbpUySP9wAn2pND4lFH6/7XrZW4G/aUbRjHlUzrR201AqHRkapodIx03/xWN8Nb5CN21MlRXTf1orHoD1ygsOdKl1P0jZaqRz35Kw=
+	t=1744293614; cv=none; b=p0KvVkMKOxS4r/CqZVhjR6IMXHpVbH/kPyE6Q71pqZGzjsjbKhZOVEQffJb6PlqmR5VcxDkyEBLwb7weE7tPGErK8XtGKceLjUcVAcKOu3XaqzltdNbG7EquJlUE4O42NzdyoJjbjxmflJ+5QJBotojcUhkAgFsrGrsj52jLzEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290066; c=relaxed/simple;
-	bh=rwPkiyvlkGahsCRk5Rs9i2NY8xIVldcE0m8kVhszBuM=;
-	h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=a0YJX+SJsgSnvxYriyI1TwpODTJMjfkyxroDLcOY5LPP/Oy54MA+7u3Ga3EksN+4Uez8o6P/ZsmY0vN/k8wmSjP2oStujPcJehNbRgtQBhjl4r+OYYeF61k8OkcPvk9/28vCkajtq5uLfl2u2ryRUdw5LPKuvznMjetxMuK4fm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with ESMTPSA id F392A103706
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 14:55:20 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 64EBF6018938D
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 14:55:20 +0200 (CEST)
-To: linux-nfs@vger.kernel.org
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Subject: Async client v4 mount results in unexpected number of extents on the
- server
-Message-ID: <848f71b0-7e27-fce1-5e43-2d3c8d4522b4@applied-asynchrony.com>
-Date: Thu, 10 Apr 2025 14:55:20 +0200
+	s=arc-20240116; t=1744293614; c=relaxed/simple;
+	bh=7wF8LCmsUqEp2NjHInH4TmmaQeJYNPP+02n9VYtEBHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=U+/4uwgy71v+fgSXmC3y4uG2egkhl7Fe+Dra6heD7605z/h02HsnElPkez1nkTcBjq7mayUhGqwTwbzc7lpcyQLTjTu9Ug8lD+7nHNU44iole8Sxvc9sZ/8gL32XUXfbjuqQz4jdUNtuTW3qXTQNgUMOX11cJ2AGnhkQVsQ8YHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZYLv11WnYzvWty;
+	Thu, 10 Apr 2025 21:55:57 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id AAA08140147;
+	Thu, 10 Apr 2025 22:00:00 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 10 Apr 2025 21:59:59 +0800
+Message-ID: <6df264b9-7d87-4b35-8f56-b593097124a6@huawei.com>
+Date: Thu, 10 Apr 2025 21:59:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] nfs: Fix shift-out-of-bounds UBSAN warning with
+ negative retrans
+To: <trondmy@kernel.org>, <anna@kernel.org>, <rdunlap@infradead.org>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<chengzhihao1@huawei.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20250410073525.1982010-1-wangzhaolong1@huawei.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <20250410073525.1982010-1-wangzhaolong1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-Story time!
+Friendly ping.
 
-For quite some time now (at least two years or so) I noticed that
-client NFS I/O has started to generate "weird" extent sizes for
-large files on my NFS exports (async, XFS, plenty of unfragmented
-space, 10Gb). It happens from several machines, with both 1Gb and
-10Gb NICs, all up-to-date userland and kernels.
+Perhaps the easiest way to avoid the UBSAN warning is to add a check at
+the location where the warning is triggered. If a check is to be added during
+the NFS mount process, then the calculation results of the two parameters passed
+from user space must first be verified. This approach, however, seems somewhat
+redundant.
 
-While I normally use autofs, the following demonstrates the issue
-with a regular mount to my server:
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index 0eab15465511..b714671fa418 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -654,13 +654,20 @@ static unsigned long xprt_abs_ktime_to_jiffies(ktime_t abstime)
+  static unsigned long xprt_calc_majortimeo(struct rpc_rqst *req,
+  		const struct rpc_timeout *to)
+  {
+  	unsigned long majortimeo = req->rq_timeout;
+  
+-	if (to->to_exponential)
+-		majortimeo <<= to->to_retries;
+-	else
++	if (to->to_exponential) {
++		unsigned long shifted_value;
++
++		/* Use safe left shift to avoid undefined behavior */
++		if (check_shl_overflow(majortimeo, to->to_retries,
++				       &shifted_value))
++			majortimeo = to->to_maxval;
++		else
++			majortimeo = shifted_value;
++	} else
+  		majortimeo += to->to_increment * to->to_retries;
+  	if (majortimeo > to->to_maxval || majortimeo == 0)
+  		majortimeo = to->to_maxval;
+  	return majortimeo;
+  }
+-- 
+2.34.3
 
-$mount.nfs4 -o async tux:/var/cache/distfiles /var/cache/distfiles
-$mount | grep distfiles
-tux:/var/cache/distfiles on /var/cache/distfiles type nfs4 (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,
-proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.100.223,
-local_lock=none,addr=192.168.100.222)
+Best regards,
+Wang Zhaolong
 
-Now we do a buffered write to the mount point using rsync.
-This also happens e.g. with a GUI file manager or coreutils' cp,
-but I currently have the latter patched with forced fallocate for
-large files, so rsync it is:
 
-$rsync -av --progress /tmp/linux-6.14.1.tar /var/cache/distfiles/
-sending incremental file list
-linux-6.14.1.tar
-   1,561,466,880 100%    1.73GB/s    0:00:00 (xfr#1, to-chk=0/1)
+> The previous commit c09f11ef3595 ("NFS: fs_context: validate UDP retrans
+> to prevent shift out-of-bounds") attempted to address UBSAN warnings by
+> validating retrans values, but had two key limitations[1]:
+> 
+> 1. It only handled binary mount options, not validating string options
+> 2. It failed to account for negative retrans values, which bypass the
+>     check `data->retrans >= 64` but then get converted to large positive
+>     numbers when assigned to unsigned context->retrans
+> 
+> When these large numbers are later used as shift amounts in
+> xprt_calc_majortimeo(), they trigger the UBSAN shift-out-of-bounds
+> warning. This issue has existed since early kernel versions (2.6.x series)
+> as the code historically lacks proper validation of retrans values from
+> userspace.
+> 
+> As the NFS maintainer has previously indicated that fixes to
+> xprt_calc_majortimeo() wouldn't be accepted for this issue, this patch
+> takes the approach of properly validating input parameters instead:
+> 
+> This patch:
+> - Adds a proper validation check in nfs_validate_transport_protocol(),
+>    which is a common code path for all mount methods (binary or string)
+> - Defines a reasonable upper limit (15) that is still generous for
+>    real-world requirements while preventing undefined behavior
+> - Provides a clearer error message to users when rejecting values
+> - Removes the incomplete check from the binary mount path
+> 
+> By validating the retrans parameter in a common code path, we ensure
+> all mount operations have consistent behavior regardless of how the
+> mount options are provided to the kernel.
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219988
+> [2] https://lore.kernel.org/all/5850f8a65c59436b607c9d1ac088402d14873577.camel@hammerspace.com/#t
+> 
+> Fixes: c09f11ef3595 ("NFS: fs_context: validate UDP retrans to prevent shift out-of-bounds")
+> Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+> ---
+>   fs/nfs/fs_context.c | 25 +++++++++++++------------
+>   1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 13f71ca8c974..cb3683d5d37f 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -33,10 +33,11 @@
+>   #else
+>   #define NFS_DEFAULT_VERSION 2
+>   #endif
+>   
+>   #define NFS_MAX_CONNECTIONS 16
+> +#define NFS_MAX_UDP_RETRANS 15
+>   
+>   enum nfs_param {
+>   	Opt_ac,
+>   	Opt_acdirmax,
+>   	Opt_acdirmin,
+> @@ -358,10 +359,19 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
+>   {
+>   	switch (ctx->nfs_server.protocol) {
+>   	case XPRT_TRANSPORT_UDP:
+>   		if (nfs_server_transport_udp_invalid(ctx))
+>   			goto out_invalid_transport_udp;
+> +		/*
+> +		 * For UDP transport, retrans is used as a shift value in
+> +		 * xprt_calc_majortimeo(). To prevent shift-out-of-bounds
+> +		 * and overflow, limit it to 15 bits which is a reasonable
+> +		 * upper limit for any real-world scenario (typical values
+> +		 * are 3-5).
+> +		 */
+> +		if (ctx->retrans > NFS_MAX_UDP_RETRANS)
+> +			goto out_invalid_udp_retrans;
+>   		break;
+>   	case XPRT_TRANSPORT_TCP:
+>   	case XPRT_TRANSPORT_RDMA:
+>   		break;
+>   	default:
+> @@ -378,10 +388,13 @@ static int nfs_validate_transport_protocol(struct fs_context *fc,
+>   	}
+>   
+>   	return 0;
+>   out_invalid_transport_udp:
+>   	return nfs_invalf(fc, "NFS: Unsupported transport protocol udp");
+> +out_invalid_udp_retrans:
+> +	return nfs_invalf(fc, "NFS: UDP protocol requires retrans <= %d (got %d)",
+> +			  NFS_MAX_UDP_RETRANS, ctx->retrans);
+>   out_invalid_xprtsec_policy:
+>   	return nfs_invalf(fc, "NFS: Transport does not support xprtsec");
+>   }
+>   
+>   /*
+> @@ -1155,19 +1168,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+>   		memcpy(mntfh->data, data->root.data, mntfh->size);
+>   		if (mntfh->size < sizeof(mntfh->data))
+>   			memset(mntfh->data + mntfh->size, 0,
+>   			       sizeof(mntfh->data) - mntfh->size);
+>   
+> -		/*
+> -		 * for proto == XPRT_TRANSPORT_UDP, which is what uses
+> -		 * to_exponential, implying shift: limit the shift value
+> -		 * to BITS_PER_LONG (majortimeo is unsigned long)
+> -		 */
+> -		if (!(data->flags & NFS_MOUNT_TCP)) /* this will be UDP */
+> -			if (data->retrans >= 64) /* shift value is too large */
+> -				goto out_invalid_data;
+> -
+>   		/*
+>   		 * Translate to nfs_fs_context, which nfs_fill_super
+>   		 * can deal with.
+>   		 */
+>   		ctx->flags	= data->flags & NFS_MOUNT_FLAGMASK;
+> @@ -1270,13 +1274,10 @@ static int nfs23_parse_monolithic(struct fs_context *fc,
+>   out_no_address:
+>   	return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+>   
+>   out_invalid_fh:
+>   	return nfs_invalf(fc, "NFS: invalid root filehandle");
+> -
+> -out_invalid_data:
+> -	return nfs_invalf(fc, "NFS: invalid binary mount data");
+>   }
+>   
+>   #if IS_ENABLED(CONFIG_NFS_V4)
+>   struct compat_nfs_string {
+>   	compat_uint_t len;
 
-sent 1,561,684,835 bytes  received 35 bytes  446,195,677.14 bytes/sec
-total size is 1,561,466,880  speedup is 1.00
-
-So a nice and fast async write, minus the expected delay on close.
-This results (repeatably) in something like the following, after
-writeback has settled on the server:
-
-$ssh tux "filefrag -ek /var/cache/distfiles/linux-6.14.1.tar"
-Filesystem type is: 58465342
-File size of /var/cache/distfiles/linux-6.14.1.tar is 1561466880 (1524872 blocks of 1024 bytes)
-  ext:     logical_offset:        physical_offset: length:   expected: flags:
-    0:        0..    4031:  504215344.. 504219375:   4032:
-    1:     4032..   36863:  512042080.. 512074911:  32832:  504219376:
-    2:    36864..   53183:  511952912.. 511969231:  16320:  512074912:
-    3:    53184..   69567:  511991704.. 512008087:  16384:  511969232:
-    4:    69568..  292863:  516378400.. 516601695: 223296:  512008088:
-    5:   292864..  331775:  516679456.. 516718367:  38912:  516601696:
-    6:   331776..  462783:  515329204.. 515460211: 131008:  516718368:
-    7:   462784..  525311:  515541100.. 515603627:  62528:  515460212:
-    8:   525312..  552959:  515460212.. 515487859:  27648:  515603628:
-    9:   552960..  683967:  515763228.. 515894235: 131008:  515487860:
-   10:   683968..  782271:  516280096.. 516378399:  98304:  515894236:
-   11:   782272..  806911:  516980448.. 517005087:  24640:  516378400:
-   12:   806912..  884671:  516601696.. 516679455:  77760:  517005088:
-   13:   884672.. 1048575:  517037124.. 517201027: 163904:  516679456:
-   14:  1048576.. 1310655:  516718368.. 516980447: 262080:  517201028:
-   15:  1310656.. 1524871:  517201028.. 517415243: 214216:  516980448: last,eof
-/var/cache/distfiles/linux-6.14.1.tar: 16 extents found
-
-The target filesystem is completely unfragmented and there is no good
-reason why XFS's buffered I/O should result in this roller coaster layout.
-The extent sizes obviously vary from run to run, but way too many times
-the first few extents have ~4k sizes. Sometimes they then quickly double
-in size (as XFS does), sometimes they do not. There is no memory pressure
-anywhere, many GBs of RAM free etc.
-
-Increasing or reducing writeback sysctls on either the client or server
-has accomplished exactly nothing useful, other than varying the timing.
-
-None of this happens when the client explicitly mounts in sync mode;
-the resulting file is always a nice contiguous extent, despite the fact
-that the export is in async mode and does buffered I/O. So the symptom
-seems to be caused by the client when collecting pages for writeback.
-
-Unfortunately sync writes have very poor performance: ~55 MB/s on my
-1Gb laptop, ~330 MB/s on my workstation with 10GBit. Sad.
-
-Now I'm trying to understand why client writeback results in these
-irregular extents. I *think* all this started ~2 years back but do
-not remember a particular kernel release (xarray? maple tree?).
-I only noticed this after the fact when I copyied files with a GUI and
-always ended up with more extents than before.
-
-Does this behaviour seem familiar to anybody?
-
-I realize this is "not a bug" (all data is safe and sound etc.) but
-somehow it seems that various layers are not working together as one
-might expect. It's possible that my expectation is wrong. :)
-
-Thanks for reading!
-
-Holger
 
