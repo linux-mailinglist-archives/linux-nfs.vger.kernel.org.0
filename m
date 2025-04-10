@@ -1,104 +1,85 @@
-Return-Path: <linux-nfs+bounces-11084-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11085-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F9C7A845BF
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 16:10:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC7A9A8466F
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 16:33:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D2407B2AE3
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 14:09:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB12B4E0A39
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Apr 2025 14:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3161B280CFC;
-	Thu, 10 Apr 2025 14:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08C262836B1;
+	Thu, 10 Apr 2025 14:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+5g5KLv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ey5ZlfSD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D50C276021
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 14:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84E8204697
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Apr 2025 14:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294216; cv=none; b=j1YqTFQZOWP4qTEOuY0y9LX6RAnDU6B9D8SMnDzCfiiVtV5nw3yoQw8gn7u3yf0qgQ+vfhpw5oGBBGcXVYjlDBLs46Q8bmXWgZTJpJO3VLnJUqc5ELQdmohyAa7Fv0xqCOUuO692YRE14SayPc9w8b9C+ORgG5IbKs7QFwiprKc=
+	t=1744295387; cv=none; b=OjbiAtFdCJPqeOXvlzCeehrmZEkDKgXmo2uGk8z1NRx5vfIZnMkEcIWBHvMKgV1OJi/MCU8PMFuX7rJLwk8kntrs453lc/xji2e7o7VNJ3Z9T3u9n1bAcRdvW6x1ToFg1ONk14LZwSvkJm8y0SMEpcyOmft7PraeBzm/N42BTy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294216; c=relaxed/simple;
-	bh=qQCYvbpX8gHB63hf9sGho2D9a+9uPW1p7hIGqjKfH4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mUkSiEYcSh/DOJ1a9jA+GVsPs1wzg7h+ic8c2nJiojGdv/HAejHSwFO3/buH0KNuowyaL1GlNzmxN5WKvZT/wWZqt8NtXv2HFcfW7g+WjL9hJ8wuoao6kgrUDVTaZ04DFQJfbEccNPLDttz75v2Ncz0SXNbR17GPoP+i13ARIDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+5g5KLv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4B9C4CEDD;
-	Thu, 10 Apr 2025 14:10:15 +0000 (UTC)
+	s=arc-20240116; t=1744295387; c=relaxed/simple;
+	bh=5yK36dNOS1L2w/tNsMmnBotBGFOHWf1u+k1dCh3Y23E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JM0oFrN7tkE5qaGBgRxbdSK/9+K94Ceoo/KDoXs3rhqiuaiV2S1I+hJIGxzk6gTo4asm0xz5P0Ml3JJ1nCS3nhESUM1w8x+akyk/8Y6jmoUm1gFMuf13bGj9aHbTVGw77Ku84QILYF96AWXvXrIPYa3Ug1CsPmqPzBYOkcsG3gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ey5ZlfSD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9337C4CEDD;
+	Thu, 10 Apr 2025 14:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744294215;
-	bh=qQCYvbpX8gHB63hf9sGho2D9a+9uPW1p7hIGqjKfH4Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=r+5g5KLvJ5hhvdxOtq4Ta21OaA/MoDaTK/oPMokBHSxtNuyv9ovOQwtcmRowipj+q
-	 RWkfxm7AG+pxcTm8i9L3EfuMx+51PB7GDESvCGT/toC/l0IJq+h9vwN9/SHjIU9XS4
-	 ZvOfRPzNsrGvteCCn0ag9ujjI3DKG8mnT+eSXmbABg+ofOSIJhWEN7DwqK6tLEv7dT
-	 B9bB6Rp6Gs/VWcj6NRvP2K54IW5jRYfSVRkbwKs5CaTV91mnsKG9PjpKTvSMGn4Dqb
-	 C4oJ4pj7A0N1tgM2hr65a5QOPG81tt34reuXDGDDcnuVj3gR8ZxnZBx+FuysJNz2Pp
-	 yoPZ/ltoKKAiA==
+	s=k20201202; t=1744295386;
+	bh=5yK36dNOS1L2w/tNsMmnBotBGFOHWf1u+k1dCh3Y23E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ey5ZlfSDnhq5PptUzvQbIhM5/wIu0pQ0YOERpLLieXB0KCvdrhbs5YL0DJF9CIWNV
+	 tc4427YO8Ya3GVXzEcPnJIgP6z27eousUVgHfLRmDkFfGBrPX0IjosztsZFtM19Qny
+	 NpYwMTr8OuUoNJOgGnudVZECRztoGSy5CeY7v0XWsqKIsshOodej+2+UbD2HMtiMbN
+	 CiUKCDkX/W1ILwoUKt0IghD595vsxKLO3vKvrGhzbdXPphZFYV+DPZvW8oKojPhQ0y
+	 ggIOGkag71shN2A+/hbZz/6WJT90C5pJWT5hpGDo0b0gFXFM+erYwyc/l9iVnj18SI
+	 v1Hbo35yrbRZg==
 From: cel@kernel.org
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
+To: Jeff Layton <jlayton@kernel.org>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2] MAINTAINERS: Update Neil Brown's email address
-Date: Thu, 10 Apr 2025 10:10:12 -0400
-Message-ID: <20250410141012.22187-1-cel@kernel.org>
+	NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: nfsd4_spo_must_allow() must check this is a v4 compound request
+Date: Thu, 10 Apr 2025 10:29:41 -0400
+Message-ID: <174429535730.22687.11355511149178297924.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <174312035952.9342.9287917468081272195@noble.neil.brown.name>
+References: <174312035952.9342.9287917468081272195@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Neil is planning retirement, and has asked me to replace his Suse
-email address with his personal email address. Both addresses
-currently route to the same mailbox.
+On Fri, 28 Mar 2025 11:05:59 +1100, NeilBrown wrote:
+> If the request being processed is not a v4 compound request, then
+> examining the cstate can have undefined results.
+> 
+> This patch adds a check that the rpc procedure being execute
+> (rq_procinfo) is the NFSPROC4_COMPOUND procedure.
+> 
+> 
+> [...]
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- .mailmap    | 2 ++
- MAINTAINERS | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Applied to nfsd-testing, thanks!
 
-diff --git a/.mailmap b/.mailmap
-index be60c13d2ee1..605a51dce19c 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -529,6 +529,8 @@ Naveen N Rao <naveen@kernel.org> <naveen.n.rao@linux.vnet.ibm.com>
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org> <quic_neeraju@quicinc.com>
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org> <neeraju@codeaurora.org>
- Neil Armstrong <neil.armstrong@linaro.org> <narmstrong@baylibre.com>
-+NeilBrown <neil@brown.name> <neilb@suse.de>
-+NeilBrown <neil@brown.name> <neilb@cse.unsw.edu.au>
- Nguyen Anh Quynh <aquynh@gmail.com>
- Nicholas Piggin <npiggin@gmail.com> <npiggen@suse.de>
- Nicholas Piggin <npiggin@gmail.com> <npiggin@kernel.dk>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c9763412a508..bf0deede9fdb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12602,7 +12602,7 @@ W:	http://kernelnewbies.org/KernelJanitors
- KERNEL NFSD, SUNRPC, AND LOCKD SERVERS
- M:	Chuck Lever <chuck.lever@oracle.com>
- M:	Jeff Layton <jlayton@kernel.org>
--R:	Neil Brown <neilb@suse.de>
-+R:	NeilBrown <neil@brown.name>
- R:	Olga Kornievskaia <okorniev@redhat.com>
- R:	Dai Ngo <Dai.Ngo@oracle.com>
- R:	Tom Talpey <tom@talpey.com>
--- 
-2.47.0
+[1/1] nfsd: nfsd4_spo_must_allow() must check this is a v4 compound request
+      commit: 2abb04fa48e2469247d2e3e05df8df9edd1fe402
+
+--
+Chuck Lever
 
 
