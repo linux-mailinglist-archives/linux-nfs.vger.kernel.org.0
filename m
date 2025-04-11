@@ -1,64 +1,63 @@
-Return-Path: <linux-nfs+bounces-11116-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11117-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2512CA86114
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 16:53:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88B1EA86112
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 16:53:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EAD3F7AA62F
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 14:52:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 907C64C55EF
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 14:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357CF207A2D;
-	Fri, 11 Apr 2025 14:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F661F7575;
+	Fri, 11 Apr 2025 14:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOVBpxy/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bpoq+oUz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB261F5858;
-	Fri, 11 Apr 2025 14:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F031607B4;
+	Fri, 11 Apr 2025 14:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744383179; cv=none; b=Vbro8aHQtAlffcDAekvxu3+F4bMtGJM8J7SUo1Jmx/mMPjCcCSepC00dAUf7ym1q7m3G9mhps6lQ+QZfd129uxd/F3kSNeu3u2Nwdz68NfmtJSqv6cSsi7aSZORelazEdv1E0vbOXyIakutZ8zXoeAsLK2pF6pQxIVbtyg61EvQ=
+	t=1744383200; cv=none; b=jdvL0ovH3zPpc6ky7gZQMJQShktE4mTYC7Fs4OvbENMB/ERzfN82e8YvwordPwR3RC/gpwyAwBpziQK2wFZUA0Hl9vpql/yr5SmC/s8KT9BqTs2+25HshV+PITOeMzAufsJFPepMCGp7BzKaIok51MLsoKUdsuFIFm7AF2NWC7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744383179; c=relaxed/simple;
-	bh=YYlILsGyYo5Vq+LNV2/sGtn8ufrLU88MhRh0wxwXRuM=;
+	s=arc-20240116; t=1744383200; c=relaxed/simple;
+	bh=9vUOR9Y4OjDDb9ss3wEoenqKWPL/Oge7/h/YmGefah4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OdWLxhDyaklcI1iZYtR3WJWR8Jn+hIxx+G1zMAhj8T59A+Z6vGVSXL4MuKrd2OXX9FFiKFLnyY5qNd2UNi3KIqNpAXfyqS1KsjkC77cW+sfMq0Mcf5RIrKe6mj5aXlmLwW2h9mzu9SQQIEQXuZCLBxboWwY015KP3bNWv7koK0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOVBpxy/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315B9C4CEE2;
-	Fri, 11 Apr 2025 14:52:57 +0000 (UTC)
+	 MIME-Version:Content-Type; b=UI7j5MfnyskJ1uPfEQyLAw82zwae72koEthjXzrDjjrjk0yuFl022K+nvU/66aT2YbHnJ/NYQM8XX6jk4Z39nL5J6qnfty0kMeUdUCBCORGNSmidakiJDsf7d0wXrhv22Woy2FeD1wD5isF3/+D1PHRd3t76OCbX4qL346vPuII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bpoq+oUz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 273F5C4CEE7;
+	Fri, 11 Apr 2025 14:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744383178;
-	bh=YYlILsGyYo5Vq+LNV2/sGtn8ufrLU88MhRh0wxwXRuM=;
+	s=k20201202; t=1744383200;
+	bh=9vUOR9Y4OjDDb9ss3wEoenqKWPL/Oge7/h/YmGefah4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LOVBpxy/G4XQpTGo983CC7VQT9aQAG1c5mjQC/ion1+XguF4o2qGzwwYb6vVl8udN
-	 HkNTB9+W4M5Mq4aM44dFJ4/Z8UTtX9DvrTEsFIBPvP6LzljTgnMiuzY1PUuWUKNb59
-	 IhJKrnsrTdm9LecEcFULMMv216B2nPGn0qknq+3UCCPMRcx3tsNC8I2oNcRXQooJKd
-	 fHcruwzE6/pYZi1plA8t4o5e/p2jne3Un1+2+MnD+SGu4FjNKyKz4MNtCcup7IlY5q
-	 OCNU7ROCxBPfFB+/S1O/e52vshj1BwvkrSS2JoJ6qbMkkymtfX7KMK4vJ7WdlQYy7B
-	 A4q0DPpzD/RVA==
+	b=Bpoq+oUzt8CMvVvrAAQBpUrH2Aplp+l0sdszcroEIHW9/ZWZTpu58xcg0Q5zGKVQ3
+	 SllaE3QH3LFu2xwaZpMDZ7iYq8lBdMfUJuikYloPSJisJj+P1hzQtwicALajLYJueP
+	 tYNOttBP7zwp/QvoHsL2pzN2Lj4LDxLXfLIY4MGxp8VElRi9KFmJfJ/mJTfRcfk049
+	 zPCyNJeiSlrr7FiOYzXYCO3JgyK7JGjY2KU9Z1fejYqt67n9Uxb+fWgaXck4kL1Xpe
+	 qCvBaZdrxThymOjQBhn/VYVIQXlGhS6uiDcnABrUdlNAyqKVJvCD4o13jLxGZcZbgl
+	 NPVz16arQxIkg==
 From: cel@kernel.org
-To: Neil Brown <neilb@suse.de>,
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Neil Brown <neilb@suse.de>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
 	Jeff Layton <jlayton@kernel.org>
 Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Sargun Dillon <sargun@sargun.me>,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 00/12] nfsd: observability improvements
-Date: Fri, 11 Apr 2025 10:52:53 -0400
-Message-ID: <174438313317.30898.15954352003138182749.b4-ty@oracle.com>
+Subject: Re: [PATCH] sunrpc: add info about xprt queue times to svc_xprt_dequeue tracepoint
+Date: Fri, 11 Apr 2025 10:53:15 -0400
+Message-ID: <174438318485.31035.4351288521914711713.b4-ty@oracle.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
-References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
+In-Reply-To: <20250411-sunrpc-tracepoints-v1-1-ed2eb14ce6ee@kernel.org>
+References: <20250411-sunrpc-tracepoints-v1-1-ed2eb14ce6ee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,22 +69,23 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-On Wed, 09 Apr 2025 10:32:22 -0400, Jeff Layton wrote:
-> While troubleshooting a performance problem internally, it became
-> evident that we needed tracepoints in nfsd_commit. The first patch adds
-> that. While discussing that, Sargun pointed out some tracepoints he
-> added using kprobes. Those are converted to static tracepoints here, and
-> the legacy dprintk's removed.
+On Fri, 11 Apr 2025 10:22:14 -0400, Jeff Layton wrote:
+> I've been looking at a problem where we see increased RPC timeouts in
+> clients when the nfs_layout_flexfiles dataserver_timeo value is tuned
+> very low (6s). This is necessary to ensure quick failover to a different
+> mirror if a server goes down, but it causes a lot more major RPC timeouts.
 > 
-> Lastly, I've updated the svc_xprt_dequeue tracepoint to show how long
-> the xprt sat on the queue before being serviced.
+> Ultimately, the problem is server-side however. It's sometimes doesn't
+> respond to connection attempts. My theory is that the interrupt handler
+> runs when a connection comes in, the xprt ends up being enqueued, but it
+> takes a significant amount of time for the nfsd thread to pick it up.
 > 
 > [...]
 
 Applied to nfsd-testing, thanks!
 
-[01/12] nfsd: add commit start/done tracepoints around nfsd_commit()
-        commit: f2a3825118e6177f4de5ee9996248ced2918b08b
+[1/1] sunrpc: add info about xprt queue times to svc_xprt_dequeue tracepoint
+      commit: b7a6405d13bb2b5cbf89decb111f84408d121dc9
 
 --
 Chuck Lever
