@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-11113-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11114-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F132A8603F
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 16:16:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 324F4A86052
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 16:18:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DE823AB769
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 14:14:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ECA0C7BA46C
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Apr 2025 14:16:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6D921F418E;
-	Fri, 11 Apr 2025 14:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5F861F8751;
+	Fri, 11 Apr 2025 14:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEMT2J2Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cp6sLDKP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB2626AD9;
-	Fri, 11 Apr 2025 14:14:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE461F3BBE;
+	Fri, 11 Apr 2025 14:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744380879; cv=none; b=DMQlDKf1ijXQAOz3uQUYtOd7DaPcjOwA13lz86NntZ3Cz+VcmuJTEn9+RZv3rTLAMnmD8X95qUUqP86RTsgXmYfB9/o7RcKivMTADRLFSy33aeQc7JTSDzcZf41r63N5Y/ulHEeX8tXe9n1T7sSrhalRgYDMqP9p27wmTuMbA3g=
+	t=1744380976; cv=none; b=aGF0kNuF/WNOB8buTof+1WdH9+rRRnEnEOsdv83K6SejEWKlVImHpnRfh9TTz4LYCHnHcuh60jGpNtuKHDEyNsLJn40tIdQAJ5yQcer5WU19WS9ZfmwWlzZLypKsXxlEHSFEnrI5ZzmK01z2ljoV9YD9yfpC/TjcSGKSW7IUSdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744380879; c=relaxed/simple;
-	bh=QljkX+r+XBI4knPP4WhniYUqdQt7WoAGeY3UKOPefkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nx3Ye2Dq0KYQOzw5JpHUFOH5EwaI1LuBaJcGqDalK+IFj+L5BDljP+aZML8T/KEWT2GhPsYBl+vm/ArCo9dBpvLmexcoINNLsH2nrvfZwq5Fwa6jk3Ew4sOUIRofgFfvF3ma8PNsol9b8CDXrWOoujfveQuHxp5lpLpXcsaA0Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEMT2J2Z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8273EC4CEE2;
-	Fri, 11 Apr 2025 14:14:38 +0000 (UTC)
+	s=arc-20240116; t=1744380976; c=relaxed/simple;
+	bh=eeycAu5NMGHcZIH3iNC4x4DQf8akT1Yx3tBBEzJbMwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YImw52QE1sNHjjg9Ne4t7p44QFPWboVHOswehFYcDsl77MnOUJK54J9YDGYPF9OjctKBsVvWGNm4nAyjjmiGPi9AEWC5B+U/oCU4RAshRnp1QQeFQtRfFDCD7hlDjO5HCbFYyew5IWOlpT/9NGPIV9fMXLredaDCiFGpZK8rwYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cp6sLDKP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9AC8C4CEEB;
+	Fri, 11 Apr 2025 14:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744380879;
-	bh=QljkX+r+XBI4knPP4WhniYUqdQt7WoAGeY3UKOPefkE=;
+	s=k20201202; t=1744380976;
+	bh=eeycAu5NMGHcZIH3iNC4x4DQf8akT1Yx3tBBEzJbMwo=;
 	h=From:To:Cc:Subject:Date:From;
-	b=KEMT2J2Z4c6wnfSXILDlSKvA3RNFBW0oD116QXIvAbhJA9b6/fX0KpS5ZEGUGriBi
-	 a5e5eC5cgDuvsB6jSmKn2/kvo9EppW7GQr6nGWUqzD1qLEOa1mxYtJ8M/uId7clK/C
-	 1oVg0vlhBJScYuc/nnD3J0MbA9+ydRHmhOSXggKPokZ5n4dxaT6pF5ofPuPodrXz1y
-	 iQX+x9QXaefvwXV7xFqmojiAl66oGB1WluwaNO+wzNrF1igSpez1Z+imo4uKQrFHf2
-	 wL4aDJYjI7igAr1lzZ60b5bw/khN51jBuK2uw1pkpPBemWB9iBGGnHrwxkSqt6+BwF
-	 NfkmJV8pRfqfQ==
+	b=cp6sLDKPycZXAGpis7r4ESaeYytQPhegsA9qYSLcaRspPT9JjcUZochLPgxr911PQ
+	 TD+gP5Yg+gMUpC4Z/MsN4MtshXPvlwVsZsMIqp//1TSkQ2vMwy4BGFsI/qMZSjhiT+
+	 Smd8IdNyK5DASwPric1f8hlKJWgoQBtKq/z2H+1TsPGtEAE8XaN5fBj9Q09brmC3So
+	 jq0QNWRgLmPwhZhXb4BX5Dr+LE5ySvp+eRI7sNrxrG8T5bcF+LsadgAa3G3NwfGLd2
+	 Ddp4bIyFQJHclbeFOmVK7nAQM47Tf3IF79ux4CrAXjPfvv2/NZ8DWtgqbvgqz27vTt
+	 8Ppdx1CoGKzfQ==
 From: cel@kernel.org
 To: <stable@vger.kernel.org>
 Cc: <linux-nfs@vger.kernel.org>,
 	Jeff Layton <jlayton@kernel.org>,
 	syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
-Subject: [PATCH v6.13] nfsd: don't ignore the return code of svc_proc_register()
-Date: Fri, 11 Apr 2025 10:14:12 -0400
-Message-ID: <20250411141412.27052-1-cel@kernel.org>
+Subject: [PATCH v6.12] nfsd: don't ignore the return code of svc_proc_register()
+Date: Fri, 11 Apr 2025 10:16:11 -0400
+Message-ID: <20250411141611.27150-1-cel@kernel.org>
 X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -84,9 +84,8 @@ Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
  fs/nfsd/stats.h  | 2 +-
  3 files changed, 11 insertions(+), 4 deletions(-)
 
-I did not have any problem cherry-picking 930b64 onto v6.13.11. This
-built and ran some simple NFSD tests in my lab.
-
+I did not have any problem cherry-picking 930b64 onto v6.12.23. This            
+built and ran some simple NFSD tests in my lab. 
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
 index e83629f39604..2e835e7c107e 100644
