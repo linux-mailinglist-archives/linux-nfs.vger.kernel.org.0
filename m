@@ -1,129 +1,151 @@
-Return-Path: <linux-nfs+bounces-11123-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11124-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0119A87088
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Apr 2025 06:08:19 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CAE6A87E1F
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 12:54:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BF3117A237
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Apr 2025 04:08:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E337C3B2AE8
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 10:53:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B07CF3D6A;
-	Sun, 13 Apr 2025 04:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0B9327C86D;
+	Mon, 14 Apr 2025 10:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StaQkIup"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5saEp6d"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BEF322A
-	for <linux-nfs@vger.kernel.org>; Sun, 13 Apr 2025 04:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA51C1EBFED
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Apr 2025 10:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744517278; cv=none; b=GfyVvCYd6WIHmPnlwkn/1DaNe9/9QUp/0AHe3PAgf5M5ZFrml3nc09tBIfDoMiIROMu4m5lNB2Ln1PvyfFXX/rwyi8kOkhOZeuAhCEeJRU6Bh9dw9KhVAhEhYok/LLsnJyCjH2J2NHkSPIFiaFeyxhvfk0hiOY1nVcIUxSYTeQM=
+	t=1744628011; cv=none; b=RzhEglWPyn6Uy+XWX1LqIKI2OH4vuwZuTqelyIcg/p6BBNE40X/uUJ/YBKwYHl/TMUGgaE4Sp740s3M1zzzLN3V7VCM3xPuyYdwgsJJmhQ5debTqnS9gw2yIzQWgqdyA8ddcZwuQ7CJXw4NVXBGMQD5KgiYqARk2sQBsyf3s5zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744517278; c=relaxed/simple;
-	bh=T+9UE4VQG7DF+epK1aVNvSetThK0ZDSFV5iFxwSSPkM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aKeE/PT1sYHGARexGIcgSmrV07OlpY/lD7pjjHknzy04JpwTCXxJoyqO68NXqjoNnObejbr0OXVJLhcQtS6kFP+mYe4AVI8N6Lx7QgcYzSi2sMn8S9hyPXVKT/4SMuhywerAhaQ5QuaUS1LGm4IgDoR+EOodYnbXbliLN1Jvc1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StaQkIup; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-aee773df955so3489731a12.1
-        for <linux-nfs@vger.kernel.org>; Sat, 12 Apr 2025 21:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744517276; x=1745122076; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=n6NLiQCpE2GJ19tBJ52ZGj6+jpvNC2yqxp4jfsFx1PU=;
-        b=StaQkIupwcB2twmYufeFO1A7teC02Vnm1KQGnzssgSWQZHgrpryZb5M/ZH0aEZgha1
-         9gJOMgQ9+VWYPBZTxMJwOt859icC167k5Ev0tKanrCrX1dKX8YFwgrrSeXwWIWwW2YvG
-         mV3FD2cZBE+pcuyJQjj0JK5dJ6WcMQ6/1/7rjxibJ37N4lq4vvE0Q5PS7l9qcHDTPh4l
-         iESpoJgSJK6fAXiJJk5BAywjLT0Iu10X1yeaZo+kyPtuF7dIIPF+q+pcTfh9rLWFvMmX
-         LcUnlQhu5HYp4Pp1mbMZK4GoJaMvlDnDza+uFqHQ4ZoFKrAUgI4OKZeKcs0Nhqdi0OIN
-         57/A==
+	s=arc-20240116; t=1744628011; c=relaxed/simple;
+	bh=i8UFVfLVecE/OkBEcbn7OeI+IvLd733RRqhhh0d5tg0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Imc0SZouCXwy8V6ux/0Qfh+hTw0WjqkuuC6HVZiSFK8AQs3ra+rLHMVxyztdzHQgvvj6zag652y7EcwyrYF/4aJ0G9lNqarL5gcSyG6dsop7irdGQEGfk9dDPUVONNWhyE0Oldu07EqNwiJuK3XMgRtQuat9Qbf0t5DeDKfzzWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5saEp6d; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744628008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=QssDdryN4XzwB2ObD+whRE7b65oyqcuIi20l20iYWjQ=;
+	b=b5saEp6d9ZRpv2f6Ym5f3SAXWHIhC2H0qSJ97NjDv9avcvUzcpym4GVnLwKH4IAe9PMtOf
+	g/WAZbnKBUagXTO8UukzM2mAPb+leVKhImJ70z3IW1ECV99GotXJEalxUE1hlvxSzOx+Y7
+	qS7Nq1sa03q7DvUmG39jFO5hFgP12Sw=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-467-bQB0npX1NMaskzuhA2Z9PQ-1; Mon, 14 Apr 2025 06:53:26 -0400
+X-MC-Unique: bQB0npX1NMaskzuhA2Z9PQ-1
+X-Mimecast-MFC-AGG-ID: bQB0npX1NMaskzuhA2Z9PQ_1744628006
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-30566e34290so4556421a91.3
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Apr 2025 03:53:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744517276; x=1745122076;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n6NLiQCpE2GJ19tBJ52ZGj6+jpvNC2yqxp4jfsFx1PU=;
-        b=qml4XZT+iimUUokw+NlDmKQjc4gz8s/gUSutTDeg29nSTd5VTIU06MuwbB3AEr/6aH
-         n/WdZe03w5CzTAv7fMxdVW4sgRU2TvMFxtVGsgSVW+FVe9UY0sGTg+5jOa/Sz6PKKesW
-         +IQcaBCQzPVxO6kSbLdt40z4drEQK/l+5NHOaCBwQWP0Itb8kC7jI+KphE5Uz2w1i8bX
-         0FbACw1nwsam8UUNI/IL57OYJovt0uZwmbhoO+636NJwl9O5di4hiJ4u3etQxgx4fcn8
-         Zi14ahTW9WkrbwNOJ98JywL3rUnfPX0CBPw2cLRQ4kYAAomThAMhEpJxqPHtSQhfVtXU
-         Ww8Q==
-X-Gm-Message-State: AOJu0YxzZFYhGHhb5QRxBnhLQ7EV3QKABpQkkQl1IaDPH4OmsQimVOwe
-	G8loCG9/Gpn58bLlXZTbbuin3DBOkYdbaJ8yJpdLxip6YMzA2M0yYbXRXOri
-X-Gm-Gg: ASbGncsSc5C88KWkumWaghWldTY0zyI7zZsLyPqUrt6d7NrckJl13JqqeXExY5dgLyk
-	gESA/FURjh7SD4qCW8y8muYhliDc7eXnuuEE9gCkHP915Rg9MJuimqz1JN/i3apTO2LJzLQ0lzT
-	K8TU9FuXpuxjhekPpncFxIIslY70azholunBtwkjrsgJTT6u+P8VasHYBKgJNV2ufiX95Phm30Q
-	QQmcoJHttbhlouZJxEHLKrmwuDfYusTLSpOEe0HtpyhCgNyaFvpCxJylVMli51uUCRgoZLusvWu
-	gFUxWXpUMI6hZTdX0gRsuxqtPbjg8jZSRff82ELung==
-X-Google-Smtp-Source: AGHT+IHf4xkB6cZLZAWgwe0vLQj+ORrptz+6bragyDNhldS+5MsoTZR3p2r+rp2uSZtdFnMrD7CrHg==
-X-Received: by 2002:a17:902:d4cb:b0:21f:1348:10e6 with SMTP id d9443c01a7336-22bea05db99mr104203915ad.13.1744517275918;
-        Sat, 12 Apr 2025 21:07:55 -0700 (PDT)
-Received: from hh.localdomain ([222.247.199.118])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b628fasm75312825ad.32.2025.04.12.21.07.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 12 Apr 2025 21:07:55 -0700 (PDT)
-From: hhtracer@gmail.com
-X-Google-Original-From: huhai@kylinos.cn
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	huhai <huhai@kylinos.cn>
-Subject: [PATCH] nfs: Use IS_ERR_OR_NULL() helper function
-Date: Sun, 13 Apr 2025 12:08:28 +0800
-Message-Id: <20250413040828.2529-1-huhai@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1744628006; x=1745232806;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QssDdryN4XzwB2ObD+whRE7b65oyqcuIi20l20iYWjQ=;
+        b=i12wR5wNlOUAYkXBrHR4EX5VRQ0HV/nt3fV49Q5yVD6rOZyOt3CbmCDZoX3M+UWjQr
+         nOraP5BNiyhd6v/xJ850cXQn1KnUVzdbKEcrMIbLNmC6Z6qxATr2IbP+tuo24RPNA+6X
+         vmbPxarkG+ljQHEtXdAg2k7yOCJf2MsmAiDWF0VSlkNGhs8e3wXpoY1dd1q8sH/imjbS
+         cyjrphppUU1Hs2fCJ36xlq+lLHZbCd49793xMb6Z+VVn7Ce9SmILq4h2dGnft5BAvdBT
+         Gg3jyvH9M5RCv5W+wU6P4LrogYSyfkUeQW5s6+RQCXo0jYB+rTXFZOlAxCa+B/dkceTf
+         PSmw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+Q8wEQBrcvv8Fs7VbJkMWuq5lp5NIkR3+J1JqMjr+E+TKRBQqpJ/0KlUav4qgjpT+pr1ciupz6tE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMxtUF2KZp59jHTsjVQd+SIM30tPy6UrjMD26p1oi9tBjg2DPl
+	3Ij2PoPlTaumrREOyVl+6VxEX1laxvdr28FslTkq4JaZ34aUOV095VT0C++FNG5fR8xuyxzVomP
+	aXkKtuzh12zLRRrb0980zo5uTCmPwFaILDpDY171S5bn3trBGgmjEJrbHYse5LUrODN88HQv+0n
+	516X3HIpX/MB7CGopERkRrJSiveyGPH9XJ
+X-Gm-Gg: ASbGncsH9FZqdlb29esWpwu9LohovYtgIaKFAmvnfc0vQ+SEZrHy6frNqyiGexWNy67
+	ZzGx/4F4RHRDqRHpYF84u3nCjNYy3OHDBrGlgT19p6ElXR9CHWvmD2aXLRMyP/MQSGx4waIdFil
+	UUbSM0UU3UdRNHzL/IGtyjoun0lA==
+X-Received: by 2002:a17:90a:d00c:b0:2ff:570d:88c5 with SMTP id 98e67ed59e1d1-3082377bf6emr17374459a91.9.1744628005671;
+        Mon, 14 Apr 2025 03:53:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1RQ4lutpYCn+Kaq6I6KhtiVojLcDa95CbKbGEjQZmsp7rcx8Um4wnI+nq8RtXvDW862mAFQnIMpcjZ2unsv8=
+X-Received: by 2002:a17:90a:d00c:b0:2ff:570d:88c5 with SMTP id
+ 98e67ed59e1d1-3082377bf6emr17374447a91.9.1744628005214; Mon, 14 Apr 2025
+ 03:53:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Ondrej Mosnacek <omosnace@redhat.com>
+Date: Mon, 14 Apr 2025 12:53:13 +0200
+X-Gm-Features: ATxdqUH0l3nfdPAcTuR_HE3HJVDFxQf3jn1qi3rAw2RBx76Mc5KftSBiTI7qpGU
+Message-ID: <CAFqZXNtqPBMGUL8kvYoW2VzdrmcY1cx1+NL+LmOs0oxjfG5csA@mail.gmail.com>
+Subject: NFS/SELinux regression caused by commit fc2a169c56de ("sunrpc: clean
+ cache_detail immediately when flush is written frequently")
+To: SElinux list <selinux@vger.kernel.org>, linux-nfs <linux-nfs@vger.kernel.org>
+Cc: Li Lingfeng <lilingfeng3@huawei.com>, Chuck Lever <chuck.lever@oracle.com>
+Content-Type: multipart/mixed; boundary="00000000000084531d0632badcb5"
 
-From: huhai <huhai@kylinos.cn>
+--00000000000084531d0632badcb5
+Content-Type: text/plain; charset="UTF-8"
 
-Use the IS_ERR_OR_NULL() helper instead of open-coding a
-NULL and an error pointer checks to simplify the code and
-improve readability.
+Hello,
 
-No functional changes are intended.
+I noticed that the selinux-testsuite
+(https://github.com/SELinuxProject/selinux-testsuite) nfs_filesystem
+test recently started to spuriously fail on latest mainline-based
+kernels (the root directory didn't have the expected SELinux label
+after a specific sequence of exports/unexports + mounts/unmounts).
 
-Signed-off-by: huhai <huhai@kylinos.cn>
----
- fs/nfs/write.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+I bisected (and revert-tested) the regression to:
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 23df8b214474..bf44ab0f5de3 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -637,14 +637,13 @@ static int nfs_page_async_flush(struct folio *folio,
- 				struct nfs_pageio_descriptor *pgio)
- {
- 	struct nfs_page *req;
--	int ret = 0;
-+	int ret;
- 
- 	req = nfs_lock_and_join_requests(folio);
--	if (!req)
--		goto out;
--	ret = PTR_ERR(req);
--	if (IS_ERR(req))
-+	if (IS_ERR_OR_NULL(req)) {
-+		ret = PTR_ERR_OR_ZERO(req);
- 		goto out;
-+	}
- 
- 	nfs_folio_set_writeback(folio);
- 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
+    commit fc2a169c56de0860ea7599ea6f67ad5fc451bde1
+    Author: Li Lingfeng <lilingfeng3@huawei.com>
+    Date:   Fri Dec 27 16:33:53 2024 +0800
+
+       sunrpc: clean cache_detail immediately when flush is written frequently
+
+It's not immediately obvious to me what the bug is, so I'm posting
+this to relevant people/lists in the hope they can debug and fix this
+better than I could.
+
+I'm attaching a simplified reproducer. Note that it only tries 50
+iterations, but sometimes that's not enough to trigger the bug. It
+requires a system with SELinux enabled and probably a policy that is
+close enough to Fedora's. I tested it on Fedora Rawhide, but it should
+probably also work on other SELinux-enabled distros that use the
+upstream refpolicy.
+
 -- 
-2.25.1
+Ondrej Mosnacek
+Senior Software Engineer, Linux Security - SELinux kernel
+Red Hat, Inc.
+
+--00000000000084531d0632badcb5
+Content-Type: application/x-shellscript; 
+	name="reproduce_nfs_mount_regression.sh"
+Content-Disposition: attachment; 
+	filename="reproduce_nfs_mount_regression.sh"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m9gxjwo00>
+X-Attachment-Id: f_m9gxjwo00
+
+IyEvYmluL2Jhc2gKCnNldCAtZQoKc3lzdGVtY3RsIHN0YXJ0IG5mcy1zZXJ2ZXIKCmZvciAoKCBp
+ID0gMDsgaSA8IDUwOyBpKysgKSk7IGRvCiAgICBleHBvcnRmcyAtbyBydyxub19yb290X3NxdWFz
+aCxzZWN1cml0eV9sYWJlbCBsb2NhbGhvc3Q6L3ZhcgogICAgbW91bnQgLXQgbmZzIC1vIG5mc3Zl
+cnM9NC4yLHByb3RvPXRjcCxjbGllbnRhZGRyPTEyNy4wLjAuMSxhZGRyPTEyNy4wLjAuMSxjb250
+ZXh0PXN5c3RlbV91Om9iamVjdF9yOmV0Y190OnMwIGxvY2FsaG9zdDovdmFyL2xpYiAvbW50CiAg
+ICBzZWNvbiAtdCAtZiAvbW50CiAgICB1bW91bnQgL21udAoKICAgIGV4cG9ydGZzIC11IGxvY2Fs
+aG9zdDovdmFyCiAgICBleHBvcnRmcyAtbyBydyxub19yb290X3NxdWFzaCBsb2NhbGhvc3Q6L3Zh
+cgoKICAgIG1vdW50IC10IG5mcyAtbyBuZnN2ZXJzPTQuMixwcm90bz10Y3AsY2xpZW50YWRkcj0x
+MjcuMC4wLjEsYWRkcj0xMjcuMC4wLjEsY29udGV4dD1zeXN0ZW1fdTpvYmplY3RfcjpldGNfdDpz
+MCBsb2NhbGhvc3Q6L3Zhci9saWIgL21udAogICAgc2Vjb24gLXQgLWYgL21udAogICAgdW1vdW50
+IC9tbnQKCiAgICBtb3VudCAtdCBuZnMgLW8gbmZzdmVycz00LjIscHJvdG89dGNwLGNsaWVudGFk
+ZHI9MTI3LjAuMC4xLGFkZHI9MTI3LjAuMC4xIGxvY2FsaG9zdDovdmFyL2xpYiAvbW50CiAgICBz
+ZWNvbiAtdCAtZiAvbW50CiAgICBsYWJlbD0iJChzZWNvbiAtdCAtZiAvbW50KSIKICAgIHVtb3Vu
+dCAvbW50CgogICAgZXhwb3J0ZnMgLXUgbG9jYWxob3N0Oi92YXIKCiAgICBbICIkbGFiZWwiID0g
+Im5mc190IiBdIHx8IGV4aXQgMQpkb25lCmV4aXQgMAo=
+--00000000000084531d0632badcb5--
 
 
