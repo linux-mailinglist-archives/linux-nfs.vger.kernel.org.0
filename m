@@ -1,116 +1,98 @@
-Return-Path: <linux-nfs+bounces-11128-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11129-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98C85A887D0
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 17:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDC2DA889D1
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 19:29:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98C601891E1D
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 15:54:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 229441898887
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 17:29:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B7427F732;
-	Mon, 14 Apr 2025 15:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71FC9289360;
+	Mon, 14 Apr 2025 17:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLYfVlrQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnCBuiYR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6933F27F72B;
-	Mon, 14 Apr 2025 15:54:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48681284664;
+	Mon, 14 Apr 2025 17:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744646078; cv=none; b=uhIdAiEmb7pEd0Lw7xmDq15vR4qskJfa5TVX5XKCcKfxFIe5MiSiSCcEveR9KPFLZr7OaY/ClxmDHnqUWGyGDzqoC+mDlkVOXv+xKvx/bku4ZytvcIznwJBcaL5LcrikZ6EF96PEiEN+FKMG+hy1T4OgeqDgRK0htMjRDdRBFK0=
+	t=1744651748; cv=none; b=ncpTvL7/vsDAiTytEzX4/GuyRZNH+S/V4EWiIw8IUja7PLkCjuJ+Q4a6omUV092fLbAIVTacxowvOZPN0MPCCcCE3yKb3JVCkkRQxIaG+/X+DJPWvZav7U6CiYBOPzRFIwSU7En9/18JLkWlu6oW8VGTt8t2SiOc2k+i86qSSME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744646078; c=relaxed/simple;
-	bh=o7Sn3LssoZFdLf/2WQFJxlbEOZh5vKlFF2621SYwp34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1lEoNpsJH+gjo8AaHEecEPk8AWGTgkYEaDvUclCmX8fdHsjFVPPY7afyTZQtXPz5IwuCl9BNeUJI9F0CUkSJUj1tSi++maO5Py+udJMKHpsTUtxjk4RSktg/8dmb8TLhtBWwvIcXHmzDrM2csa+4onEjzLFLStkaowSIm+XGvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLYfVlrQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427D7C4CEE2;
-	Mon, 14 Apr 2025 15:54:36 +0000 (UTC)
+	s=arc-20240116; t=1744651748; c=relaxed/simple;
+	bh=2LwujIMcoVo/g6CQX8qVI4v8Y7PUKl68g94gIm8Qgzc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BYklIG3JTxQ2TjiR1ycmBPZr4QezHCGK4AQDulnjDW4jwHEhVIP+NkmYw6AHyheignqEunAUwrElCYSQ109p3JK4eIBJHCot1E0nT+Mnos+fYgeKfPceEn8APvL9t95FRPMGG/hF7ASp/Gkq/+3Qyk0oTlVxFDDav028Np0P8Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnCBuiYR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAB3C4CEE2;
+	Mon, 14 Apr 2025 17:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744646077;
-	bh=o7Sn3LssoZFdLf/2WQFJxlbEOZh5vKlFF2621SYwp34=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hLYfVlrQYepHQWesioVCpm42zHOJLSshh+LpFpzd2GUO5z1O33z14rPTbYsGJpLAp
-	 G2IF4aybBPOph7yY2k4uEUlzAvuAGg5lYGly2ZEMOD9HvYy0CEkRRzPe0+YLlGeZGp
-	 7h4iuqLOg+k5eP523aJlKDrs5Mz7Ay24OXkcNAgnod2BprHZ/2EPo2lWX5vnd0L7DI
-	 +NvIOlycB2jUYg17fsEtUtl4ck/ZbofxXVwIrZDiWW6LYis8B8aOH2iEEPjnd1XlPi
-	 e8Bxu73vwu3FxmpKutjvRbvR9o+s9imX00ps23+7ziXlxPv45jCYR2W2daOUwP7I2x
-	 Nfipbhz2YEAxQ==
-Date: Mon, 14 Apr 2025 17:54:33 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-Message-ID: <20250414-unecht-geklagt-028caecfeb95@brauner>
-References: <20250217003020.3170652-1-neilb@suse.de>
- <20250217003020.3170652-2-neilb@suse.de>
- <20250414-wendung-halbe-e81e952285cc@brauner>
+	s=k20201202; t=1744651747;
+	bh=2LwujIMcoVo/g6CQX8qVI4v8Y7PUKl68g94gIm8Qgzc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JnCBuiYRzqonBU7B1877cTLwtpZuADmhQAgVCfm39GeVzRGfbweIlv7TkbYwcY7sU
+	 qAUIf4F1ykm4ENI6Y5aXU0BAdyvDgh2HP/CcX8iSf8VnOwFjlyUZ6BTK07QgWy5c+W
+	 /DDYwdO1jJPcO1RhxD6lZcPXTHkN5d2dzRUP6MoUzdsoM02bhWZmxB8Ik2mqVifzfG
+	 nOPJKTLb5XG1QftgNTXsCvp5W/IduO/YN80HoHqDNLCuDMz23XMlNDyssnnwMmtivp
+	 +nlK40VkvCoKSsaIPSbI+7x1K+cYR8XRngdnUMEEYF+iku2weEOtbu0ui/sVwSo+ee
+	 c19l1NTuFPpXQ==
+From: cel@kernel.org
+To: jlayton@kernel.org,
+	neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com,
+	Li Lingfeng <lilingfeng3@huawei.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	houtao1@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	lilingfeng@huaweicloud.com
+Subject: Re: [PATCH] nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
+Date: Mon, 14 Apr 2025 13:29:03 -0400
+Message-ID: <174465166461.41191.18027879549273675051.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250414143852.1308979-1-lilingfeng3@huawei.com>
+References: <20250414143852.1308979-1-lilingfeng3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250414-wendung-halbe-e81e952285cc@brauner>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 01:01:53PM +0200, Christian Brauner wrote:
-> > diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-> > index 7f358740e958..367eaf2c78b7 100644
-> > --- a/kernel/audit_watch.c
-> > +++ b/kernel/audit_watch.c
-> > @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
-> >  	struct dentry *d = kern_path_locked(watch->path, parent);
-> >  	if (IS_ERR(d))
-> >  		return PTR_ERR(d);
-> > -	if (d_is_positive(d)) {
-> > -		/* update watch filter fields */
-> > -		watch->dev = d->d_sb->s_dev;
-> > -		watch->ino = d_backing_inode(d)->i_ino;
-> > -	}
-> > +	/* update watch filter fields */
-> > +	watch->dev = d->d_sb->s_dev;
-> > +	watch->ino = d_backing_inode(d)->i_ino;
-> > +
-> >  	inode_unlock(d_backing_inode(parent->dentry));
-> >  	dput(d);
-> >  	return 0;
-> > @@ -419,10 +418,11 @@ int audit_add_watch(struct audit_krule *krule, struct list_head **list)
-> >  	/* caller expects mutex locked */
-> >  	mutex_lock(&audit_filter_mutex);
-> >  
-> > -	if (ret) {
-> > +	if (ret && ret != -ENOENT) {
-> >  		audit_put_watch(watch);
-> >  		return ret;
-> >  	}
-> > +	ret = 0;
-> 
-> So this is broken.
-> 
-> If kern_path_locked() fails due to a negative dentry and returns ENOENT
-> it will have already called path_put() and @parent_path is invalid.
-> 
-> But right after this audit does:
-> 
-> >  
-> >  	/* either find an old parent or attach a new one */
-> >  	parent = audit_find_parent(d_backing_inode(parent_path.dentry));
-> 
-> and then later on calls path_put() again. So this is a UAF. We need to
-> fix this.
-> 
-> This used to work before because kern_path_locked() return a path with a
-> negative dentry.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-*returned the parent path even if the looked up dentry was negative
+On Mon, 14 Apr 2025 22:38:52 +0800, Li Lingfeng wrote:
+> In nfs4_state_start_net(), laundromat_work may access nfsd_ssc through
+> nfs4_laundromat -> nfsd4_ssc_expire_umount. If nfsd_ssc isn't initialized,
+> this can cause NULL pointer dereference.
+> 
+> Normally the delayed start of laundromat_work allows sufficient time for
+> nfsd_ssc initialization to complete. However, when the kernel waits too
+> long for userspace responses (e.g. in nfs4_state_start_net ->
+> nfsd4_end_grace -> nfsd4_record_grace_done -> nfsd4_cld_grace_done ->
+> cld_pipe_upcall -> __cld_pipe_upcall -> wait_for_completion path), the
+> delayed work may start before nfsd_ssc initialization finishes.
+> 
+> [...]
+
+Applied to nfsd-testing, thanks!
+
+[1/1] nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
+      commit: 05d68df60b9af7765c38073ff117169aa5f52310
+
+--
+Chuck Lever
+
 
