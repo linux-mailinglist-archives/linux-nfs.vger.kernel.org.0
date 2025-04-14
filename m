@@ -1,107 +1,116 @@
-Return-Path: <linux-nfs+bounces-11127-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11128-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9C32A8856F
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 16:43:38 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98C85A887D0
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 17:54:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C816F17A4F1
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 14:39:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98C601891E1D
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Apr 2025 15:54:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 894D22750E3;
-	Mon, 14 Apr 2025 14:19:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B7427F732;
+	Mon, 14 Apr 2025 15:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLYfVlrQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB0253947;
-	Mon, 14 Apr 2025 14:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6933F27F72B;
+	Mon, 14 Apr 2025 15:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744640373; cv=none; b=uVV8Xxjyuxs/qrtjb64gPTppZaJsWwrvB9EO4IKpMIx2FzOV9EMrXUwtqO36p2RgYaF8mL0pXWBBjNlfsH6vBOVvlR1o557ii9zhdkKiAqcIpaRbxqH7pESDl77TY/jhlq9Eh7hxe2ZqVZdNQK2K3ofjt2Hp8yBKO7KsoivpZwg=
+	t=1744646078; cv=none; b=uhIdAiEmb7pEd0Lw7xmDq15vR4qskJfa5TVX5XKCcKfxFIe5MiSiSCcEveR9KPFLZr7OaY/ClxmDHnqUWGyGDzqoC+mDlkVOXv+xKvx/bku4ZytvcIznwJBcaL5LcrikZ6EF96PEiEN+FKMG+hy1T4OgeqDgRK0htMjRDdRBFK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744640373; c=relaxed/simple;
-	bh=q7jbEhr50P4j5cB6h/OjmIXHLzxIFXaZIyKktMb1zRM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tr/B82WLPgVzD6BMcpomNo23zyYIr1W9JoqKp6V8tgoaR+uAjIJFg/1XIlHCVlvOUW0zNXvz8Dv+fpdYhuFBOfRxeJ/3MBtrXIOmhnFqd6vgz1ZsnobTwzh4nxp+dKv13HVvYuTDGgowwvp+tEOOeid+ZrMuUGvU6gx7FFVkxNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZbqD939GlzsSLB;
-	Mon, 14 Apr 2025 22:19:21 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C3C01400D4;
-	Mon, 14 Apr 2025 22:19:27 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 14 Apr
- 2025 22:19:26 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
-Date: Mon, 14 Apr 2025 22:38:52 +0800
-Message-ID: <20250414143852.1308979-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1744646078; c=relaxed/simple;
+	bh=o7Sn3LssoZFdLf/2WQFJxlbEOZh5vKlFF2621SYwp34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P1lEoNpsJH+gjo8AaHEecEPk8AWGTgkYEaDvUclCmX8fdHsjFVPPY7afyTZQtXPz5IwuCl9BNeUJI9F0CUkSJUj1tSi++maO5Py+udJMKHpsTUtxjk4RSktg/8dmb8TLhtBWwvIcXHmzDrM2csa+4onEjzLFLStkaowSIm+XGvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLYfVlrQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 427D7C4CEE2;
+	Mon, 14 Apr 2025 15:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744646077;
+	bh=o7Sn3LssoZFdLf/2WQFJxlbEOZh5vKlFF2621SYwp34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hLYfVlrQYepHQWesioVCpm42zHOJLSshh+LpFpzd2GUO5z1O33z14rPTbYsGJpLAp
+	 G2IF4aybBPOph7yY2k4uEUlzAvuAGg5lYGly2ZEMOD9HvYy0CEkRRzPe0+YLlGeZGp
+	 7h4iuqLOg+k5eP523aJlKDrs5Mz7Ay24OXkcNAgnod2BprHZ/2EPo2lWX5vnd0L7DI
+	 +NvIOlycB2jUYg17fsEtUtl4ck/ZbofxXVwIrZDiWW6LYis8B8aOH2iEEPjnd1XlPi
+	 e8Bxu73vwu3FxmpKutjvRbvR9o+s9imX00ps23+7ziXlxPv45jCYR2W2daOUwP7I2x
+	 Nfipbhz2YEAxQ==
+Date: Mon, 14 Apr 2025 17:54:33 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Vlastimil Babka <vbabka@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+Message-ID: <20250414-unecht-geklagt-028caecfeb95@brauner>
+References: <20250217003020.3170652-1-neilb@suse.de>
+ <20250217003020.3170652-2-neilb@suse.de>
+ <20250414-wendung-halbe-e81e952285cc@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414-wendung-halbe-e81e952285cc@brauner>
 
-In nfs4_state_start_net(), laundromat_work may access nfsd_ssc through
-nfs4_laundromat -> nfsd4_ssc_expire_umount. If nfsd_ssc isn't initialized,
-this can cause NULL pointer dereference.
+On Mon, Apr 14, 2025 at 01:01:53PM +0200, Christian Brauner wrote:
+> > diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+> > index 7f358740e958..367eaf2c78b7 100644
+> > --- a/kernel/audit_watch.c
+> > +++ b/kernel/audit_watch.c
+> > @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
+> >  	struct dentry *d = kern_path_locked(watch->path, parent);
+> >  	if (IS_ERR(d))
+> >  		return PTR_ERR(d);
+> > -	if (d_is_positive(d)) {
+> > -		/* update watch filter fields */
+> > -		watch->dev = d->d_sb->s_dev;
+> > -		watch->ino = d_backing_inode(d)->i_ino;
+> > -	}
+> > +	/* update watch filter fields */
+> > +	watch->dev = d->d_sb->s_dev;
+> > +	watch->ino = d_backing_inode(d)->i_ino;
+> > +
+> >  	inode_unlock(d_backing_inode(parent->dentry));
+> >  	dput(d);
+> >  	return 0;
+> > @@ -419,10 +418,11 @@ int audit_add_watch(struct audit_krule *krule, struct list_head **list)
+> >  	/* caller expects mutex locked */
+> >  	mutex_lock(&audit_filter_mutex);
+> >  
+> > -	if (ret) {
+> > +	if (ret && ret != -ENOENT) {
+> >  		audit_put_watch(watch);
+> >  		return ret;
+> >  	}
+> > +	ret = 0;
+> 
+> So this is broken.
+> 
+> If kern_path_locked() fails due to a negative dentry and returns ENOENT
+> it will have already called path_put() and @parent_path is invalid.
+> 
+> But right after this audit does:
+> 
+> >  
+> >  	/* either find an old parent or attach a new one */
+> >  	parent = audit_find_parent(d_backing_inode(parent_path.dentry));
+> 
+> and then later on calls path_put() again. So this is a UAF. We need to
+> fix this.
+> 
+> This used to work before because kern_path_locked() return a path with a
+> negative dentry.
 
-Normally the delayed start of laundromat_work allows sufficient time for
-nfsd_ssc initialization to complete. However, when the kernel waits too
-long for userspace responses (e.g. in nfs4_state_start_net ->
-nfsd4_end_grace -> nfsd4_record_grace_done -> nfsd4_cld_grace_done ->
-cld_pipe_upcall -> __cld_pipe_upcall -> wait_for_completion path), the
-delayed work may start before nfsd_ssc initialization finishes.
-
-Fix this by moving nfsd_ssc initialization before starting laundromat_work.
-
-Fixes: f4e44b393389 ("NFSD: delay unmount source's export after inter-server copy completed.")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfsd/nfssvc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 9b3d6cff0e1e..8ed143ef8b41 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -396,13 +396,13 @@ static int nfsd_startup_net(struct net *net, const struct cred *cred)
- 	if (ret)
- 		goto out_filecache;
- 
-+#ifdef CONFIG_NFSD_V4_2_INTER_SSC
-+	nfsd4_ssc_init_umount_work(nn);
-+#endif
- 	ret = nfs4_state_start_net(net);
- 	if (ret)
- 		goto out_reply_cache;
- 
--#ifdef CONFIG_NFSD_V4_2_INTER_SSC
--	nfsd4_ssc_init_umount_work(nn);
--#endif
- 	nn->nfsd_net_up = true;
- 	return 0;
- 
--- 
-2.31.1
-
+*returned the parent path even if the looked up dentry was negative
 
