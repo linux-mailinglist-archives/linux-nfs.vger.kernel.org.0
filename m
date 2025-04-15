@@ -1,210 +1,329 @@
-Return-Path: <linux-nfs+bounces-11141-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11142-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2917A8A1D1
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Apr 2025 16:50:30 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C73DDA8A89E
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Apr 2025 21:57:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D073E441E9A
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Apr 2025 14:50:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A1B43A3B46
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Apr 2025 19:57:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A392973BE;
-	Tue, 15 Apr 2025 14:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D815236431;
+	Tue, 15 Apr 2025 19:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="rZlKy59F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4ZOuSjd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE55E297A40
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Apr 2025 14:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E406221549
+	for <linux-nfs@vger.kernel.org>; Tue, 15 Apr 2025 19:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728567; cv=none; b=mzbpQXWHpe+mLbG/OFoLdCMrBH80atcFlT5Z61Nztgk2ATb/lfsYH5KxMwfrH9EwMlNYO8umnJrqC+9lnAXXgLHknYam5t1STBZhQ97Irs9yXNbANBfGZphxq7z05LbzUyGsPg6ZPfcVv8giLBz/JQnmw2nHaUckX8F/pTK28+8=
+	t=1744747036; cv=none; b=gFiJBRHOlDIlB0Puv+6D+2d21IXF9yYTWoKpPyMq4Mzds+RDIMD/ANfP6y5s9uavnSAOJdmds2moo8MqdqoE/N3vR8Byz6j6CZr83PaIEtmrEnaCn19HmjRzTH0AqXjg3LEcujpvKjmdf2tJjFH0NQ6GFHdtL+T5pf+nGHXjueU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728567; c=relaxed/simple;
-	bh=a97Mlu0hFAMIjHLIr8ZqFabRyI+4TfXIar5z2rU6Hn8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Ph0lKIgq5do/hIzCsw8e7IBNuxSi3AUiYwwUhB4qbIe/xA9XWp3aWGQpH+KCzC0he6Npzf4ms6jL599s1c5wfI2tBERwa1f3TgY9zADdtHMkg30hD6s1c4dYN17kTBQokLmSvm1w+n8yB6QXCBOLRVO0mnZKbrC3L3VtY31d5rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=rZlKy59F; arc=none smtp.client-ip=131.169.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 249E913F647
-	for <linux-nfs@vger.kernel.org>; Tue, 15 Apr 2025 16:49:16 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 249E913F647
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1744728556; bh=/hYCj25gZwgh9zjBvBTcDEKYpBSc5IEVHOXX7mF7YXQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=rZlKy59Fd9IRJ22IAfTKDIyrB93/UAYOXxNDfESVdHA+i/TqeFHnlv38v4VRTBkcu
-	 DdiLKLZ+z1yqYdQ3+Lz7LzR3/ixIpRal+6SeVf994T4gDKMhf4Fs9XFUwGO7eC4isg
-	 tQyer+FqOdqVWaweH5OHm5Ha8V3pnJnPTuslX04I=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-	by smtp-buf-2.desy.de (Postfix) with ESMTP id 18DCA120043;
-	Tue, 15 Apr 2025 16:49:16 +0200 (CEST)
-Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [IPv6:2001:638:d:c302:acdc:1979:2:e7])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 0EE0940044;
-	Tue, 15 Apr 2025 16:49:16 +0200 (CEST)
-Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
-	by b1722.mx.srv.dfn.de (Postfix) with ESMTP id 4EE54160059;
-	Tue, 15 Apr 2025 16:49:14 +0200 (CEST)
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-	by smtp-intra-2.desy.de (Postfix) with ESMTP id 1C48220044;
-	Tue, 15 Apr 2025 16:49:14 +0200 (CEST)
-Date: Tue, 15 Apr 2025 16:49:13 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Calum Mackay <calum.mackay@oracle.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <865403842.27244482.1744728553871.JavaMail.zimbra@desy.de>
-In-Reply-To: <5fb69477dfb9e372e70caf6d320170f6a20927af.camel@kernel.org>
-References: <20250415114814.285400-1-tigran.mkrtchyan@desy.de> <5fb69477dfb9e372e70caf6d320170f6a20927af.camel@kernel.org>
-Subject: Re: [PATCH] deleg: break infinite loop in DELEG8 test
+	s=arc-20240116; t=1744747036; c=relaxed/simple;
+	bh=jtaTGp2oWUstTk7YXI1Tgt5M3j+GP2T6KETqcJeSjfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GhW45AWuyxF+c75E9MdzxA0xNzF6MBvldBRGhPeoqijapDk+pzLKPWtbVIOKGDaGTNa2EZospk/mHqXB3x9e0IDGEOj60KueWZ/z1qkKJ3VmtnS2EciA5LBu2kgHWRlGzTa46DwY3kpTVG5keaNIhaLNTDxTn+R+jCV/a50/VeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z4ZOuSjd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744747033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KAAmttPKjpgLRaHDsA6XFVY5pxRH5AlJbPWbGbNk1eA=;
+	b=Z4ZOuSjdQmm/8crolgTsEZ81TyQ0gWzc8EpofMxn4amhRFrYwii488W/TXhKx+Y5B5HAvc
+	e/99NYqSd9vwehQuVYAWCYPWNVhdKjj+c0BrPNXY87mMOjSBXkcgC6D9lSW9TYbHG+/JKl
+	gJfCpGEa+qYavDh5FU/zo/PKb0Swk8I=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-56UlnMUhPB6P0NaU_z9hGA-1; Tue,
+ 15 Apr 2025 15:56:19 -0400
+X-MC-Unique: 56UlnMUhPB6P0NaU_z9hGA-1
+X-Mimecast-MFC-AGG-ID: 56UlnMUhPB6P0NaU_z9hGA_1744746978
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A4A7A1955BC5;
+	Tue, 15 Apr 2025 19:56:18 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.64.98])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09E6719560AD;
+	Tue, 15 Apr 2025 19:56:18 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+	id 27FB6340E0B; Tue, 15 Apr 2025 15:56:16 -0400 (EDT)
+Date: Tue, 15 Apr 2025 15:56:16 -0400
+From: Scott Mayhew <smayhew@redhat.com>
+To: Anna Schumaker <anna.schumaker@oracle.com>
+Cc: trondmy@kernel.org, anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSv4: xattr handlers should check for absent nfs
+ filehandles
+Message-ID: <Z_654AzXgl06DShO@aion>
+References: <20250411201612.2993634-1-smayhew@redhat.com>
+ <2ae4daaf-5e6e-41d4-9d22-2fcda3246bd3@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
-	boundary="----=_Part_27244483_2037462523.1744728554060"
-X-Mailer: Zimbra 9.0.0_GA_4718 (ZimbraWebClient - FF137 (Linux)/9.0.0_GA_4737)
-Thread-Topic: deleg: break infinite loop in DELEG8 test
-Thread-Index: 86Ejh6Wg87gsfDadJqiPNw+u24dukg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ae4daaf-5e6e-41d4-9d22-2fcda3246bd3@oracle.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-------=_Part_27244483_2037462523.1744728554060
-Date: Tue, 15 Apr 2025 16:49:13 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Calum Mackay <calum.mackay@oracle.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <865403842.27244482.1744728553871.JavaMail.zimbra@desy.de>
-In-Reply-To: <5fb69477dfb9e372e70caf6d320170f6a20927af.camel@kernel.org>
-References: <20250415114814.285400-1-tigran.mkrtchyan@desy.de> <5fb69477dfb9e372e70caf6d320170f6a20927af.camel@kernel.org>
-Subject: Re: [PATCH] deleg: break infinite loop in DELEG8 test
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 9.0.0_GA_4718 (ZimbraWebClient - FF137 (Linux)/9.0.0_GA_4737)
-Thread-Topic: deleg: break infinite loop in DELEG8 test
-Thread-Index: 86Ejh6Wg87gsfDadJqiPNw+u24dukg==
+On Mon, 14 Apr 2025, Anna Schumaker wrote:
 
-In general, I want, but it's already happens on handling compound call:
-
-```
-        for item in range(max_retries):
-            res = self.c.compound([seq_op] + ops, **kwargs)
-            res = self.update_seq_state(res, slot)
-            if res.status != NFS4ERR_DELAY or not handle_state_errors:
-                break
-            if res.resarray[0].sr_status != NFS4ERR_DELAY:
-                # As per errata ID 2006 for RFC 5661 section 15.1.1.3
-                # don't update the slot and sequence ID if the sequence
-                # operation itself receives NFS4ERR_DELAY
-                slot, seq_op = self._prepare_compound(saved_kwargs)
-            time.sleep(delay_time)
-```
-
-Tigran.
-
------ Original Message -----
-> From: "Jeff Layton" <jlayton@kernel.org>
-> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>, "Calum Mackay" <calum.mackay@oracle.com>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Tuesday, 15 April, 2025 16:10:11
-> Subject: Re: [PATCH] deleg: break infinite loop in DELEG8 test
-
-> On Tue, 2025-04-15 at 13:48 +0200, Tigran Mkrtchyan wrote:
->> The test assumes that the server can return either OK or DELAY,
->> however, the 'break' condition checks only for OK.
->> 
->> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
->> ---
->>  nfs4.1/server41tests/st_delegation.py | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/nfs4.1/server41tests/st_delegation.py
->> b/nfs4.1/server41tests/st_delegation.py
->> index ea4c073..60b0de6 100644
->> --- a/nfs4.1/server41tests/st_delegation.py
->> +++ b/nfs4.1/server41tests/st_delegation.py
->> @@ -181,8 +181,8 @@ def testDelegRevocation(t, env):
->>                          owner, how, claim)
->>      while 1:
->>          res = sess2.compound(env.home + [open_op])
->> -        if res.status == NFS4_OK:
->> -            break;
->> +        if res.status == NFS4_OK or res.status == NFS4ERR_DELAY:
->> +            break
->>          check(res, [NFS4_OK, NFS4ERR_DELAY])
->>          # just to keep sess1 renewed.  This is a bit fragile, as we
->>          # depend on the above compound waiting no longer than the
+> Hi Scott,
 > 
-> Don't you want to loop on NFS4ERR_DELAY?
+> On 4/11/25 4:16 PM, Scott Mayhew wrote:
+> > The nfs inodes for referral anchors that have not yet been followed have
+> > their filehandles zeroed out.
+> > 
+> > Attempting to call getxattr() on one of these will cause the nfs client
+> > to send a GETATTR to the nfs server with the preceding PUTFH sans
+> > filehandle.  The server will reply NFS4ERR_NOFILEHANDLE, leading to -EIO
+> > being returned to the application.
+> > 
+> > For example:
+> > 
+> > $ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
+> > getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO (Input/output error)
+> > /mnt/t/ref: system.nfs4_acl: Input/output error
+> > +++ exited with 1 +++
+> > 
+> > Have the xattr handlers return -ENODATA instead.
 > 
-> It looks like this is supposed to loop (with no DELEGRETURN) until the
-> open returns NFS4_OK. Presumably at that point the delegation will be
-> revoked and you'll get the expected errors.
-> --
-> Jeff Layton <jlayton@kernel.org>
+> This looks like a lot of repeated code. I was wondering if there is a way to
+> do this with a helper function that returns -ENODATA? Or could it be checked
+> inside nfs4_proc_set_acl() / nfs4_proc_get_acl() / nfs4_server_supports_acls()
+> to cut down on duplication?
 
-------=_Part_27244483_2037462523.1744728554060
-Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+I'll move the check down into nfs4_proc_set_acl() /
+nfs4_proc_get_acl().
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
-XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
-TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
-Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
-CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
-dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
-b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
-UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
-jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
-yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
-FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
-ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
-59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
-UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
-IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
-IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
-6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
-CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
-LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
-MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
-Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
-aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
-dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
-DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
-yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
-zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
-37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
-76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
-BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
-lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
-bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
-vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
-nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
-0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yNTA0MTUxNDQ5MTRaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
-BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIINbA1tT6EgG9TgpUd09d+fGNxpK
-yYRrZuTwq446/MhWMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
-MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAJ/R4TL7440Ho07fAtaYOgcjKZQzH4D3efP8J5/Y
-tOGsBpgC5QMMEBYrbAWFBFgaKDQXvFIA/YI3W1Eye+rZZ648GczXsVM0pmPbfe05dZ2I2riPEwo+
-5RHDVGMRvNp8fbwB+OLGVlcoAkV5ZPiGSkAwqUATlUw/bPqWj8gRESPI7Rl7lUAMo+3oJfWY30kw
-vdLedU1NQMgf4CJ5um39U4WefaXXCk+zTmALt3mgNht0SGJI0fI2bNn+/mAL2dc/j2f7Fp6BFiMM
-w/PNzQV1xUi93wWw/uROoTC9Aj54ilqaSNp/e6frXf0ecoT+PI0tQw8AyVedeByI3rgzoClVGsmU
-jPteQu25fvYrIbMRJgl6EX5eXy2v/k6EOiQB0ruc6hd8Nmyzr4s49sQYxPoZGjvWILkdj8wap+56
-oNvpUWVpV+F7nLUfiSPoUnTN1+Mo4nFJBELOVO3AphX28YsIJx9BbqAEO6ot3RLhnhRWIsZKqZ2+
-SdZQlPr5sNERTRHKOCVwHId2TFPxBofgPp8TZA+WY5VaC2arJ4SauUpK2f+2mrsPoOO7PawezyMA
-d2Q7NCj2CPMIzTYKAsAZzL/pZFm5IZWkHD82kLupW0JVh8RrwFNq5y9gxHG3BPMckSpbm0ZTqQoY
-XqUc7pCKvStNLvhQCpB8Wp54FHqcwB5LTVErAAAAAAAA
-------=_Part_27244483_2037462523.1744728554060--
+> 
+> > 
+> > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > ---
+> >  fs/nfs/nfs4proc.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> > 
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index 970f28dbf253..a01592930370 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -7933,6 +7933,11 @@ static int nfs4_xattr_set_nfs4_acl(const struct xattr_handler *handler,
+> >  				   const char *key, const void *buf,
+> >  				   size_t buflen, int flags)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_set_acl(inode, buf, buflen, NFS4ACL_ACL);
+> >  }
+> >  
+> > @@ -7940,11 +7945,21 @@ static int nfs4_xattr_get_nfs4_acl(const struct xattr_handler *handler,
+> >  				   struct dentry *unused, struct inode *inode,
+> >  				   const char *key, void *buf, size_t buflen)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_get_acl(inode, buf, buflen, NFS4ACL_ACL);
+> >  }
+> >  
+> >  static bool nfs4_xattr_list_nfs4_acl(struct dentry *dentry)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(d_inode(dentry));
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> 
+> Note that the return value of this function is a boolean, and not an integer,
+> so callers probably won't care about a specific return value.
+
+Doh!  I blame the fact that I was fighting a severe head and chest cold
+last week.  After a fresh look, I don't think we need to change the list
+handlers at all - those get called by the listxattr inode operation,
+which nfs_referral_inode_operations does not have.
+
+-Scott
+> 
+> > +
+> >  	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_ACL);
+> >  }
+> >  
+> > @@ -7957,6 +7972,11 @@ static int nfs4_xattr_set_nfs4_dacl(const struct xattr_handler *handler,
+> >  				    const char *key, const void *buf,
+> >  				    size_t buflen, int flags)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_set_acl(inode, buf, buflen, NFS4ACL_DACL);
+> >  }
+> >  
+> > @@ -7964,11 +7984,21 @@ static int nfs4_xattr_get_nfs4_dacl(const struct xattr_handler *handler,
+> >  				    struct dentry *unused, struct inode *inode,
+> >  				    const char *key, void *buf, size_t buflen)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_get_acl(inode, buf, buflen, NFS4ACL_DACL);
+> >  }
+> >  
+> >  static bool nfs4_xattr_list_nfs4_dacl(struct dentry *dentry)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(d_inode(dentry));
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> 
+> Here's another boolean return type.
+> 
+> > +
+> >  	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_DACL);
+> >  }
+> >  
+> > @@ -7980,6 +8010,11 @@ static int nfs4_xattr_set_nfs4_sacl(const struct xattr_handler *handler,
+> >  				    const char *key, const void *buf,
+> >  				    size_t buflen, int flags)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_set_acl(inode, buf, buflen, NFS4ACL_SACL);
+> >  }
+> >  
+> > @@ -7987,11 +8022,21 @@ static int nfs4_xattr_get_nfs4_sacl(const struct xattr_handler *handler,
+> >  				    struct dentry *unused, struct inode *inode,
+> >  				    const char *key, void *buf, size_t buflen)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	return nfs4_proc_get_acl(inode, buf, buflen, NFS4ACL_SACL);
+> >  }
+> >  
+> >  static bool nfs4_xattr_list_nfs4_sacl(struct dentry *dentry)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(d_inode(dentry));
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> 
+> Boolean return type.
+> 
+> Thanks,
+> Anna
+> 
+> > +
+> >  	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_SACL);
+> >  }
+> >  
+> > @@ -8005,6 +8050,11 @@ static int nfs4_xattr_set_nfs4_label(const struct xattr_handler *handler,
+> >  				     const char *key, const void *buf,
+> >  				     size_t buflen, int flags)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (security_ismaclabel(key))
+> >  		return nfs4_set_security_label(inode, buf, buflen);
+> >  
+> > @@ -8015,6 +8065,11 @@ static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
+> >  				     struct dentry *unused, struct inode *inode,
+> >  				     const char *key, void *buf, size_t buflen)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> > +
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (security_ismaclabel(key))
+> >  		return nfs4_get_security_label(inode, buf, buflen);
+> >  	return -EOPNOTSUPP;
+> > @@ -8023,8 +8078,12 @@ static int nfs4_xattr_get_nfs4_label(const struct xattr_handler *handler,
+> >  static ssize_t
+> >  nfs4_listxattr_nfs4_label(struct inode *inode, char *list, size_t list_len)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> >  	int len = 0;
+> >  
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (nfs_server_capable(inode, NFS_CAP_SECURITY_LABEL)) {
+> >  		len = security_inode_listsecurity(inode, list, list_len);
+> >  		if (len >= 0 && list_len && len > list_len)
+> > @@ -8056,9 +8115,13 @@ static int nfs4_xattr_set_nfs4_user(const struct xattr_handler *handler,
+> >  				    const char *key, const void *buf,
+> >  				    size_t buflen, int flags)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> >  	u32 mask;
+> >  	int ret;
+> >  
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (!nfs_server_capable(inode, NFS_CAP_XATTR))
+> >  		return -EOPNOTSUPP;
+> >  
+> > @@ -8093,9 +8156,13 @@ static int nfs4_xattr_get_nfs4_user(const struct xattr_handler *handler,
+> >  				    struct dentry *unused, struct inode *inode,
+> >  				    const char *key, void *buf, size_t buflen)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> >  	u32 mask;
+> >  	ssize_t ret;
+> >  
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (!nfs_server_capable(inode, NFS_CAP_XATTR))
+> >  		return -EOPNOTSUPP;
+> >  
+> > @@ -8120,6 +8187,7 @@ static int nfs4_xattr_get_nfs4_user(const struct xattr_handler *handler,
+> >  static ssize_t
+> >  nfs4_listxattr_nfs4_user(struct inode *inode, char *list, size_t list_len)
+> >  {
+> > +	struct nfs_fh *fh = NFS_FH(inode);
+> >  	u64 cookie;
+> >  	bool eof;
+> >  	ssize_t ret, size;
+> > @@ -8127,6 +8195,9 @@ nfs4_listxattr_nfs4_user(struct inode *inode, char *list, size_t list_len)
+> >  	size_t buflen;
+> >  	u32 mask;
+> >  
+> > +	if (unlikely(fh->size == 0))
+> > +		return -ENODATA;
+> > +
+> >  	if (!nfs_server_capable(inode, NFS_CAP_XATTR))
+> >  		return 0;
+> >  
+> 
+
 
