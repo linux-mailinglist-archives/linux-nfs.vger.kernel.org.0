@@ -1,159 +1,237 @@
-Return-Path: <linux-nfs+bounces-11148-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11149-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DD52A907BE
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 17:29:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9410AA90B8A
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 20:43:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 558301907B76
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 15:29:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 604A47A6186
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 18:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B148D20D4E0;
-	Wed, 16 Apr 2025 15:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC26224253;
+	Wed, 16 Apr 2025 18:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGJgFp3l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQ/XKBBI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5072080DB
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Apr 2025 15:28:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0404F22424E
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Apr 2025 18:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817339; cv=none; b=T1y4r3EOZ/V1tREQzeHJG0Ca1h0YwBJZH8LEGb09LjtA7EmE7GQgM+TJSEZT26WBHs7GvgvYavN/l9/Wcdt1udsuOcu835WfqcudR8ABDy/GfAD9YuqXiolfTxaN0BgAJHg6saAWU9A9AbCC0LhEpKQWMciMkVlp4sDKwIYmr2w=
+	t=1744828939; cv=none; b=SDbFk+W2tCljJ6/qe0EGwVxpPEJJrMOryah8WAgMc8ADAb9oyqMPYgOIK/BObrBA3zSasMtdrphpUY9Sy9OaFeB0kW5+MYFM/6R+qQab40T90l2VnBbtPIP8n7S4HjM+YiXe5cuVGgltE2qUN5B2QZO/pJB7IAFPp0KeBa/Pd7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817339; c=relaxed/simple;
-	bh=cCJQXTL4g18PQ9Q7cI4mJ71WzF5rruMcQyqcExY9Y50=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p+fxOFXno2Po0KG5vpU7Z/UyE258Z0YJ28DqoFVQgNkz6UgtCT9p60DZ8w+cManbAu5DUkJUSglc/s/KL5Pk2dYQOXdaWALxf8GPsE/etqbzMtS19c4Vs/zwUBnT0FQ8vfoBX9B/FBCfmaWz+OOk+7fuvjXS6Gx4ZkeSUaIACgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGJgFp3l; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E353C4CEF1;
-	Wed, 16 Apr 2025 15:28:58 +0000 (UTC)
+	s=arc-20240116; t=1744828939; c=relaxed/simple;
+	bh=gM9Vxni7W754ZNMFRPyZuP3ZsAloFTWS+oW7brATXIw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gdyJ5NHji2CVkgPlaBSjtnwVR1qv+bKdklBG+IXf3am/eE9l7dPFThrMDDBftJvqNoXdtxeFDsO8j2fOYixzqq7k4VjOXsVGVevY6w6rgv7QRPBlA0SgRGztDlCvxoS/2oVo/srI3YH3zsS8Q2HfzalnwsFCxxshUUMfOk7R4cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQ/XKBBI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E70C4CEE2;
+	Wed, 16 Apr 2025 18:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744817339;
-	bh=cCJQXTL4g18PQ9Q7cI4mJ71WzF5rruMcQyqcExY9Y50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NGJgFp3lMEeOO+fYonnh0qxVh7gWhq3uZJGzfiZIkWLxfmLPwbhh0k5wWL8f+306y
-	 bLDl5W5/MvXmfLYJ9Oi35TjL5NX2PggjMwhptJNxUDIXeJ3XVwtD4dBW+osuSXzlfV
-	 2KYPUIt2XZg/Fyl6EatRjnGYHLTwar9WiWapK8ctogToPw4ur+wuouAG1yO5dX69Wg
-	 DiokDQzin2MHm5eGAp7FS6CUE7A5JUreqMhVW25NNQLhJVOasWNfH3iKUas1CYQNiH
-	 oqMpBfiqfbFbrkupC7iodl9qR5w8BKqL9GeLgcnpeAE+/eKo4faCBNc4CdpNg/TZcK
-	 /3NuG8o4/+8lQ==
-From: cel@kernel.org
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 2/2] sunrpc: Replace the rq_vec array with dynamically-allocated memory
-Date: Wed, 16 Apr 2025 11:28:54 -0400
-Message-ID: <20250416152854.15269-3-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250416152854.15269-1-cel@kernel.org>
+	s=k20201202; t=1744828938;
+	bh=gM9Vxni7W754ZNMFRPyZuP3ZsAloFTWS+oW7brATXIw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=XQ/XKBBID+iMGKjXAl+KpPnZmzvPGGwsUaf8v8y3hp6eClrJoLHJOYAzz5lof6IeQ
+	 crCewTHlFJB2TuBY6yXDsQsuK4fh0TusIZqCIOkkUSUHxi+zelFYn+tfJvhMPHKr7t
+	 JTjls/4tr/8RtRcG3djiohls8RWvdyJ8xiEtbg1QLx6jEveuR6Fjx3IEUlmS7uLqCs
+	 MPLgpIOvN8Fv/1ynTt0KC27CCLUUBdV+r/t7VNuA1OBAxiH8AFNBCP1adxHEAlKGM0
+	 0b5ozFsAKp1XBinUKlrj9n5eAkkLYBymrJUN70LlSoGctpcex4hLTgoG8pnw2F/g1U
+	 z19pQSl+0JT5Q==
+Message-ID: <1086d2ecc8fc0aed85fc571e8bc4c66f6ff0fb64.camel@kernel.org>
+Subject: Re: [RFC PATCH 1/2] sunrpc: Replace the rq_bvec array with
+ dynamically-allocated memory
+From: Jeff Layton <jlayton@kernel.org>
+To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Wed, 16 Apr 2025 14:42:17 -0400
+In-Reply-To: <20250416152854.15269-2-cel@kernel.org>
 References: <20250416152854.15269-1-cel@kernel.org>
+	 <20250416152854.15269-2-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 2025-04-16 at 11:28 -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> As a step towards making NFSD's maximum rsize and wsize variable,
+> replace the fixed-size rq_bvec[] array in struct svc_rqst with a
+> chunk of dynamically-allocated memory.
+>=20
+> On a system with 8-byte pointers and 4KB pages, pahole reports that
+> the rq_bvec[] array is 4144 bytes. Replacing it with a single
+> pointer reduces the size of struct svc_rqst to about 7500 bytes.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/linux/sunrpc/svc.h | 2 +-
+>  net/sunrpc/svc.c           | 6 ++++++
+>  net/sunrpc/svcsock.c       | 7 +++----
+>  3 files changed, 10 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 74658cca0f38..225c385085c3 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -195,7 +195,7 @@ struct svc_rqst {
+> =20
+>  	struct folio_batch	rq_fbatch;
+>  	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
+> -	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
+> +	struct bio_vec		*rq_bvec;
 
-As a step towards making NFSD's maximum rsize and wsize variable,
-replace the fixed-size rq_vec[] array in struct svc_rqst with a
-chunk of dynamically-allocated memory.
+It's a reasonable start.
 
-On a system with 8-byte pointers and 4KB pages, pahole reports that
-the rq_vec[] array is 4144 bytes. Replacing it with a single
-pointer reduces the size of struct svc_rqst to about 3300 bytes.
+What would also be good to do here is to replace the invocations of
+RPCSVC_MAXPAGES that involve this array with a helper function that
+returns the length of it.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4proc.c         | 2 +-
- fs/nfsd/vfs.c              | 2 +-
- include/linux/sunrpc/svc.h | 2 +-
- net/sunrpc/svc.c           | 8 +++++++-
- 4 files changed, 10 insertions(+), 4 deletions(-)
+For now it could just return RPCSVC_MAXPAGES, but eventually you could
+add (e.g.) a rqstp->rq_bvec_len field and use that to indicate how many
+entries there are in rq_bvec.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index b397246dae7b..79ee58202396 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1228,7 +1228,7 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	write->wr_how_written = write->wr_stable_how;
- 
- 	nvecs = svc_fill_write_vector(rqstp, &write->wr_payload);
--	WARN_ON_ONCE(nvecs > ARRAY_SIZE(rqstp->rq_vec));
-+	/* WARN_ON_ONCE(nvecs > ARRAY_SIZE(rqstp->rq_vec)); */
- 
- 	status = nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
- 				write->wr_offset, rqstp->rq_vec, nvecs, &cnt,
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 9abdc4b75813..ae0901d6db1a 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1094,7 +1094,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		++v;
- 		base = 0;
- 	}
--	WARN_ON_ONCE(v > ARRAY_SIZE(rqstp->rq_vec));
-+	WARN_ON_ONCE(v > RPCSVC_MAXPAGES);
- 
- 	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
- 	iov_iter_kvec(&iter, ITER_DEST, rqstp->rq_vec, v, *count);
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 225c385085c3..13b6d0753bc0 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -194,7 +194,7 @@ struct svc_rqst {
- 	struct page *		*rq_page_end;  /* one past the last page */
- 
- 	struct folio_batch	rq_fbatch;
--	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
-+	struct kvec		*rq_vec;
- 	struct bio_vec		*rq_bvec;
- 
- 	__be32			rq_xid;		/* transmission id */
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index db29819716b8..8d28aeb74e1b 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -674,6 +674,7 @@ svc_rqst_free(struct svc_rqst *rqstp)
- {
- 	folio_batch_release(&rqstp->rq_fbatch);
- 	kfree(rqstp->rq_bvec);
-+	kfree(rqstp->rq_vec);
- 	svc_release_buffer(rqstp);
- 	if (rqstp->rq_scratch_page)
- 		put_page(rqstp->rq_scratch_page);
-@@ -712,6 +713,11 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	if (!svc_init_buffer(rqstp, serv->sv_max_mesg, node))
- 		goto out_enomem;
- 
-+	rqstp->rq_vec = kcalloc_node(RPCSVC_MAXPAGES, sizeof(struct kvec),
-+				      GFP_KERNEL, node);
-+	if (!rqstp->rq_vec)
-+		goto out_enomem;
-+
- 	rqstp->rq_bvec = kcalloc_node(RPCSVC_MAXPAGES, sizeof(struct bio_vec),
- 				      GFP_KERNEL, node);
- 	if (!rqstp->rq_bvec)
-@@ -1754,7 +1760,7 @@ unsigned int svc_fill_write_vector(struct svc_rqst *rqstp,
- 		++pages;
- 	}
- 
--	WARN_ON_ONCE(i > ARRAY_SIZE(rqstp->rq_vec));
-+	WARN_ON_ONCE(i > RPCSVC_MAXPAGES);
- 	return i;
- }
- EXPORT_SYMBOL_GPL(svc_fill_write_vector);
--- 
-2.49.0
+> =20
+>  	__be32			rq_xid;		/* transmission id */
+>  	u32			rq_prog;	/* program number */
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index e7f9c295d13c..db29819716b8 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -673,6 +673,7 @@ static void
+>  svc_rqst_free(struct svc_rqst *rqstp)
+>  {
+>  	folio_batch_release(&rqstp->rq_fbatch);
+> +	kfree(rqstp->rq_bvec);
+>  	svc_release_buffer(rqstp);
+>  	if (rqstp->rq_scratch_page)
+>  		put_page(rqstp->rq_scratch_page);
+> @@ -711,6 +712,11 @@ svc_prepare_thread(struct svc_serv *serv, struct svc=
+_pool *pool, int node)
+>  	if (!svc_init_buffer(rqstp, serv->sv_max_mesg, node))
+>  		goto out_enomem;
+> =20
+> +	rqstp->rq_bvec =3D kcalloc_node(RPCSVC_MAXPAGES, sizeof(struct bio_vec)=
+,
+> +				      GFP_KERNEL, node);
+> +	if (!rqstp->rq_bvec)
+> +		goto out_enomem;
+> +
+>  	rqstp->rq_err =3D -EAGAIN; /* No error yet */
+> =20
+>  	serv->sv_nrthreads +=3D 1;
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 72e5a01df3d3..671640933f18 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -713,8 +713,7 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
+>  	if (svc_xprt_is_dead(xprt))
+>  		goto out_notconn;
+> =20
+> -	count =3D xdr_buf_to_bvec(rqstp->rq_bvec,
+> -				ARRAY_SIZE(rqstp->rq_bvec), xdr);
+> +	count =3D xdr_buf_to_bvec(rqstp->rq_bvec, RPCSVC_MAXPAGES, xdr);
+> =20
+>  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
+>  		      count, rqstp->rq_res.len);
+> @@ -1219,8 +1218,8 @@ static int svc_tcp_sendmsg(struct svc_sock *svsk, s=
+truct svc_rqst *rqstp,
+>  	memcpy(buf, &marker, sizeof(marker));
+>  	bvec_set_virt(rqstp->rq_bvec, buf, sizeof(marker));
+> =20
+> -	count =3D xdr_buf_to_bvec(rqstp->rq_bvec + 1,
+> -				ARRAY_SIZE(rqstp->rq_bvec) - 1, &rqstp->rq_res);
+> +	count =3D xdr_buf_to_bvec(rqstp->rq_bvec + 1, RPCSVC_MAXPAGES,
+> +				&rqstp->rq_res);
+> =20
+>  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, rqstp->rq_bvec,
+>  		      1 + count, sizeof(marker) + rqstp->rq_res.len);
 
+--=20
+Jeff Layton <jlayton@kernel.org>
 
