@@ -1,70 +1,57 @@
-Return-Path: <linux-nfs+bounces-11145-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11147-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8399BA9079A
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 17:23:53 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E9D0A907C0
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 17:29:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D2EC3A6A55
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 15:23:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC423163249
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Apr 2025 15:29:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF79218C32C;
-	Wed, 16 Apr 2025 15:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96200210184;
+	Wed, 16 Apr 2025 15:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EuF5JX7+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nylwrd3F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D15D2080D2
-	for <linux-nfs@vger.kernel.org>; Wed, 16 Apr 2025 15:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7018C20FA9D
+	for <linux-nfs@vger.kernel.org>; Wed, 16 Apr 2025 15:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817028; cv=none; b=EBjvJFWjcZI9rHxGBqktpF40R9crbQBhf2mjEE4MLRAW2p8PgE4Dr8xVq/vufEhYaw5Un8ykgiNWl/YKO4ByBtFVTfkSjEgXATFWue6IM0K1eX2D5Hk2lUO3b0XI/KYj4ZR4nbDXDc6UGoP9h9rTgstfX4G4qJVQpbAsDyrJ5QE=
+	t=1744817338; cv=none; b=TIDtgqMaTwlLApJb1jXCvWY/horCrfLItsBWWKK4TgfhoYktTWy7m++BGixIu6E9p7n48Phx6Z4Rkcf8BWb+S/Y+k8aPyA+hZPX5ElZS5mo4HLnOQzICHzWfW/VpgJMKkaZ1sn1S+YLsIadRI3xnDKDvmyuxEmidKEK7H1EiIQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817028; c=relaxed/simple;
-	bh=mN0WHbhfKIUCxidFoyjjJRsRujTMRi9hIp/f3wcY9NE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sXaYuNQzbSWFCPNOoGWklRLVo4DbH5gPjyHK0q7aHrPrmkRqpgeDpyXZlc7U4ZocX9jfDcpQjQL3zEGjSFnToMSrsRh1T9uR+MtlJeN2blrmXoJ08wq/a6z8XfqVYsffotZMaeqEwydnbD53jbcKDiVpH+6CjqGn/4DWrAbDycE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EuF5JX7+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744817026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=48VIjcc0oSg5rlReRfyA1Q58PckxJW4sgUEltzYtX9g=;
-	b=EuF5JX7+3n13YROhfzLK9O0/qD+GoksrTXIqmoVkwND7LHIC2yr8BXvlkQLPvtYE0tvcG/
-	F7xmJ1KRQe5nTIFHeKrPhg26EnDvmSya5BxhYbYJNZJCVgAZN2GMZYH554NksHDd17f6jI
-	/SZL4wRCdWMCN+gfiP1oeAzJuJS2H5E=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-614-D0Anc6pVPim8u6n0GhpwCA-1; Wed,
- 16 Apr 2025 11:23:43 -0400
-X-MC-Unique: D0Anc6pVPim8u6n0GhpwCA-1
-X-Mimecast-MFC-AGG-ID: D0Anc6pVPim8u6n0GhpwCA_1744817020
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A40AD1800ECA;
-	Wed, 16 Apr 2025 15:23:40 +0000 (UTC)
-Received: from aion.redhat.com (unknown [10.22.64.98])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 375AC30001A1;
-	Wed, 16 Apr 2025 15:23:40 +0000 (UTC)
-Received: from aion.redhat.com (localhost [IPv6:::1])
-	by aion.redhat.com (Postfix) with ESMTP id 9984D3411C2;
-	Wed, 16 Apr 2025 11:23:38 -0400 (EDT)
-From: Scott Mayhew <smayhew@redhat.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH v2] NFSv4: xattr handlers should check for absent nfs filehandles
-Date: Wed, 16 Apr 2025 11:23:38 -0400
-Message-ID: <20250416152338.3279639-1-smayhew@redhat.com>
+	s=arc-20240116; t=1744817338; c=relaxed/simple;
+	bh=a7c24YskoRhrOlXLdcYdq2jSomg4IxSlDhQRW3N0SfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cHhwX4C68FUPEZT9HIc3GHCkA3dT7szyfUO4aI44p1vjYFkKU6WsxpMsEkiui8cnnJ45Pkrtvwt1I4iv9JGdC3+ylHwwcdNcVIBs1gVCymXsFtrJ7XjVn2dPKrFxYMDhqHHsor2ECeaUMpAq991/+AUotN6hZthKo0AzfEacl2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nylwrd3F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E6B5C4CEE4;
+	Wed, 16 Apr 2025 15:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744817337;
+	bh=a7c24YskoRhrOlXLdcYdq2jSomg4IxSlDhQRW3N0SfU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nylwrd3FkiZiR+BM4JkQFpZU906nWB1/mhMANhmSIPNvwTYwX1gpva1E4rIUAeLDl
+	 bGtNdCNzkkAd/Tr8pdf3G+aTXYRAWi8CSOg+sj4NHNkghis1L9ReztZJen3fXzo69w
+	 9L/XQwR5sHJGMLbRLrkoKRh44BI0J3w5QNW05xCN2YJUAPPnOQ9GqS6rQzk0nCrlnm
+	 9uqVlo9UJoBFIueQ7//opt3npWKyI+7JfhveJ3E9oQFJ2LhCjq5+YCYQ02jvhFMxFF
+	 olUvOpPtnGl2ZMJy90qYn0YfpWtcWAzJqA6CnsrVKZBe/IzTpCuCfLFOhvNrywsl1y
+	 13VIuQQ6dJ57w==
+From: cel@kernel.org
+To: NeilBrown <neil@brown.name>,
+	Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [RFC PATCH 0/2] Move rq_vec[] and rq_bvec[] out of svc_rqst
+Date: Wed, 16 Apr 2025 11:28:52 -0400
+Message-ID: <20250416152854.15269-1-cel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -72,54 +59,39 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-The nfs inodes for referral anchors that have not yet been followed have
-their filehandles zeroed out.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Attempting to call getxattr() on one of these will cause the nfs client
-to send a GETATTR to the nfs server with the preceding PUTFH sans
-filehandle.  The server will reply NFS4ERR_NOFILEHANDLE, leading to -EIO
-being returned to the application.
+In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
+need to do something clever with the payload arrays embedded in
+struct svc_rqst. Here's one way of dealing with two of them.
 
-For example:
+My preference is to keep these arrays allocated all the time because
+allocating them on demand increases the risk of a memory allocation
+failure during a large I/O. This is a quick-and-dirty approach that
+might be replaced once NFSD is converted to use large folios.
 
-$ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
-getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO (Input/output error)
-/mnt/t/ref: system.nfs4_acl: Input/output error
-+++ exited with 1 +++
+The downside of this design choice is that it pins a few pages per
+NFSD thread (and that's the current situation already). But note
+that because RPCSVC_MAXPAGES is 259, each array is just over a page
+in size, making the allocation waste quite a bit of memory beyond
+the end of the array due to power-of-2 allocator round up. This gets
+worse as the MAXPAGES value is doubled or quadrupled.
 
-Have the xattr handlers return -ENODATA instead.
+I plan to look at rq_pages[] next.
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Chuck Lever (2):
+  sunrpc: Replace the rq_bvec array with dynamically-allocated memory
+  sunrpc: Replace the rq_vec array with dynamically-allocated memory
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 970f28dbf253..1b0fd3cc9e02 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6202,6 +6202,8 @@ static ssize_t nfs4_proc_get_acl(struct inode *inode, void *buf, size_t buflen,
- 	struct nfs_server *server = NFS_SERVER(inode);
- 	int ret;
- 
-+	if (unlikely(NFS_FH(inode)->size == 0))
-+		return -ENODATA;
- 	if (!nfs4_server_supports_acls(server, type))
- 		return -EOPNOTSUPP;
- 	ret = nfs_revalidate_inode(inode, NFS_INO_INVALID_CHANGE);
-@@ -6276,6 +6278,9 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf,
- {
- 	struct nfs4_exception exception = { };
- 	int err;
-+
-+	if (unlikely(NFS_FH(inode)->size == 0))
-+		return -ENODATA;
- 	do {
- 		err = __nfs4_proc_set_acl(inode, buf, buflen, type);
- 		trace_nfs4_set_acl(inode, err);
+ fs/nfsd/nfs4proc.c         |  2 +-
+ fs/nfsd/vfs.c              |  2 +-
+ include/linux/sunrpc/svc.h |  4 ++--
+ net/sunrpc/svc.c           | 14 +++++++++++++-
+ net/sunrpc/svcsock.c       |  7 +++----
+ 5 files changed, 20 insertions(+), 9 deletions(-)
+
 -- 
-2.48.1
+2.49.0
 
 
