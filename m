@@ -1,44 +1,43 @@
-Return-Path: <linux-nfs+bounces-11173-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11175-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1848CA94249
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 10:35:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDB3FA94254
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 10:37:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2402A8A2D6B
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 08:34:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 70E1C19E2F93
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 08:38:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AE781B6CF1;
-	Sat, 19 Apr 2025 08:34:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649191A8407;
+	Sat, 19 Apr 2025 08:37:55 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18CE1FB3;
-	Sat, 19 Apr 2025 08:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E750D1A5B9B;
+	Sat, 19 Apr 2025 08:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745051683; cv=none; b=mAix36zCRzgIjMQSk/Xbc3oXo8wRjjDOKuO23YK0OyC/nxQQPeGq+VxFgs3IQtymJtxvE+uRSRJf/VDPo0/W9A7F7iRoBNqHf2Xufrgb/V+i+z5xWgkYYk8lFhVs4J+3QLEtMIyVlK7BFnlQ/cqwm8V1XsLowi3AWmuAK9+mqpw=
+	t=1745051875; cv=none; b=LUgI3DhfOgAOIFzEv4tPjXGzfb3yzEgCYTX+Y5POxfrFkySudHTCY51PZTge7yQX/rgjtX+Pgh97KAtxkFgO912JqHbdjzaa6dSQRbAhB2o49VQ7TeuwMhbf40DUOcIeF2Aa1KwyPfZIJWD8iMZNMfhUmoCU5u6mocVyQ9i2Yw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745051683; c=relaxed/simple;
-	bh=6vfBMEHNRiWKyVQ0+nDbh3AS6ETSW3sPRcK39Li++r8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A/Jh52JdB+A3vpPyDtnSkpsN/00xBqHbpbxxwJI5WVroiRR4XMPb9Cb9BL7paW0FiSm9kaeUj8YgpY8HrUE1iwp7im4LiCUBNxCg1TvckXgDrTf5IZ9aa903hxjchqxgSmEh1WA+nCt5UpuX810+P4ELeZfI2dLYBJXgIjgIRTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	s=arc-20240116; t=1745051875; c=relaxed/simple;
+	bh=P9RFDeyBkDkbaio9Lo6rkiHLfMPI1vCJmkTnj0lCITo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OPa5dSiKCeEUhrJOOkqKTnLwA6LHJDBr9VYjMxwZn2xJKXUTb+FOsPFSV8elq1JqfUAEXxkexSnVgIgZcJ3EncirSOuBFdrXUOrQ478NKeMIlUmDHzxHMl9v1dLdtb4qpNwLaJnnSrNpD4m1paBovIeAKC97Q55l/iEdydGZZjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZflK46xpzz13KbK;
-	Sat, 19 Apr 2025 16:33:44 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZflKp4MVbzHrDH;
+	Sat, 19 Apr 2025 16:34:22 +0800 (CST)
 Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id B03D71402E9;
-	Sat, 19 Apr 2025 16:34:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 697E6140259;
+	Sat, 19 Apr 2025 16:37:50 +0800 (CST)
 Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
  (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 19 Apr
- 2025 16:34:37 +0800
+ 2025 16:37:49 +0800
 From: Li Lingfeng <lilingfeng3@huawei.com>
 To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
 	<bcodding@redhat.com>
@@ -46,95 +45,135 @@ CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
 	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
 	<lilingfeng3@huawei.com>
-Subject: [PATCH 2/2] nfs: handle failure of get_nfs_open_context
-Date: Sat, 19 Apr 2025 16:53:55 +0800
-Message-ID: <20250419085355.1451457-3-lilingfeng3@huawei.com>
+Subject: [PATCH] nfs: fix the race of lock/unlock and open
+Date: Sat, 19 Apr 2025 16:57:09 +0800
+Message-ID: <20250419085709.1452492-1-lilingfeng3@huawei.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20250419085355.1451457-1-lilingfeng3@huawei.com>
-References: <20250419085355.1451457-1-lilingfeng3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemg500017.china.huawei.com (7.202.181.81)
 
-During initialization of unlockdata or lockdata structures, if acquiring
-the nfs_open_context fails, the current operation must be aborted to
-ensure the nfs_open_context remains valid after initialization completes.
-This is critical because both lock and unlock release callbacks
-dereference the nfs_open_context - an invalid context could lead to null
-pointer dereference.
+LOCK may extend an existing lock and release another one and UNLOCK may
+also release an existing lock.
+When opening a file, there may be access to file locks that have been
+concurrently released by lock/unlock operations, potentially triggering
+UAF.
+While certain concurrent scenarios involving lock/unlock and open
+operations have been safeguarded with locks – for example,
+nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
+locks_lock_inode_wait() – there remain cases where such protection is not
+yet implemented.
 
-Fixes: faf5f49c2d9c ("NFSv4: Make NFS clean up byte range locks asynchronously")
-Fixes: a5d16a4d090b ("NFSv4: Convert LOCK rpc call into an asynchronous RPC call")
+The issue can be reproduced through the following steps:
+T1: open in read-only mode with three consecutive lock operations applied
+    lock1(0~100) --> add lock1 to file
+    lock2(120~200) --> add lock2 to file
+    lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
+T2: restart nfs-server and run state manager
+T3: open in write-only mode
+    T1                            T2                                T3
+                            start recover
+lock1
+lock2
+                            nfs4_open_reclaim
+                            clear_bit // NFS_DELEGATED_STATE
+lock3
+ _nfs4_proc_setlk
+  lock so_delegreturn_mutex
+  unlock so_delegreturn_mutex
+  _nfs4_do_setlk
+                            recover done
+                                                lock so_delegreturn_mutex
+                                                nfs_delegation_claim_locks
+                                                get lock2
+   rpc_run_task
+   ...
+   nfs4_lock_done
+    locks_lock_inode_wait
+    ...
+     locks_dispose_list
+     free lock2
+                                                use lock2
+                                                // UAF
+                                                unlock so_delegreturn_mutex
+
+Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
+issue.
+
+Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
 Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
 ---
- fs/nfs/nfs4proc.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ fs/nfs/nfs4proc.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 9f5689c43a50..d76cf0f79f9c 100644
+index 970f28dbf253..297ee2442c02 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -7075,24 +7075,27 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
- 	struct nfs4_state *state = lsp->ls_state;
- 	struct inode *inode = state->inode;
- 	struct nfs_lock_context *l_ctx;
-+	struct nfs_open_context *open_ctx;
+@@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
+ 		.inode = calldata->lsp->ls_state->inode,
+ 		.stateid = &calldata->arg.stateid,
+ 	};
++	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
  
- 	p = kzalloc(sizeof(*p), GFP_KERNEL);
- 	if (p == NULL)
- 		return NULL;
- 	l_ctx = nfs_get_lock_context(ctx);
--	if (!IS_ERR(l_ctx)) {
-+	if (!IS_ERR(l_ctx))
- 		p->l_ctx = l_ctx;
--	} else {
--		kfree(p);
--		return NULL;
--	}
-+	else
-+		goto out_free;
-+	/* Ensure we don't close file until we're done freeing locks! */
-+	open_ctx = get_nfs_open_context(ctx);
-+	if (open_ctx)
-+		p->ctx = open_ctx;
-+	else
-+		goto out_free;
- 	p->arg.fh = NFS_FH(inode);
- 	p->arg.fl = &p->fl;
- 	p->arg.seqid = seqid;
- 	p->res.seqid = seqid;
- 	p->lsp = lsp;
--	/* Ensure we don't close file until we're done freeing locks! */
--	p->ctx = get_nfs_open_context(ctx);
- 	locks_init_lock(&p->fl);
- 	locks_copy_lock(&p->fl, fl);
- 	p->server = NFS_SERVER(inode);
-@@ -7100,6 +7103,9 @@ static struct nfs4_unlockdata *nfs4_alloc_unlockdata(struct file_lock *fl,
- 	nfs4_stateid_copy(&p->arg.stateid, &lsp->ls_stateid);
- 	spin_unlock(&state->state_lock);
- 	return p;
-+out_free:
-+	kfree(p);
-+	return NULL;
- }
+ 	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
+ 		return;
+ 	switch (task->tk_status) {
+ 		case 0:
+ 			renew_lease(calldata->server, calldata->timestamp);
++			mutex_lock(&sp->so_delegreturn_mutex);
+ 			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
++			mutex_unlock(&sp->so_delegreturn_mutex);
+ 			if (nfs4_update_lock_stateid(calldata->lsp,
+ 					&calldata->res.stateid))
+ 				break;
+@@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs4_lockdata *data = calldata;
+ 	struct nfs4_lock_state *lsp = data->lsp;
++	struct nfs4_state_owner *sp = data->ctx->state->owner;
  
- static void nfs4_locku_release_calldata(void *data)
-@@ -7327,6 +7333,8 @@ static struct nfs4_lockdata *nfs4_alloc_lockdata(struct file_lock *fl,
- 	p->lsp = lsp;
- 	p->server = server;
- 	p->ctx = get_nfs_open_context(ctx);
-+	if (!p->ctx)
-+		goto out_free_seqid;
- 	locks_init_lock(&p->fl);
- 	locks_copy_lock(&p->fl, fl);
- 	return p;
+ 	if (!nfs4_sequence_done(task, &data->res.seq_res))
+ 		return;
+@@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ 				data->timestamp);
+ 		if (data->arg.new_lock && !data->cancelled) {
+ 			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
+-			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
++			mutex_lock(&sp->so_delegreturn_mutex);
++			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
++				mutex_unlock(&sp->so_delegreturn_mutex);
+ 				goto out_restart;
++			}
++			mutex_unlock(&sp->so_delegreturn_mutex);
+ 		}
+ 		if (data->arg.new_lock_owner != 0) {
+ 			nfs_confirm_seqid(&lsp->ls_seqid, 0);
+@@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
+ 	int status;
+ 
+ 	request->c.flc_flags |= FL_ACCESS;
+-	status = locks_lock_inode_wait(state->inode, request);
+-	if (status < 0)
+-		goto out;
+ 	mutex_lock(&sp->so_delegreturn_mutex);
+ 	down_read(&nfsi->rwsem);
++	status = locks_lock_inode_wait(state->inode, request);
++	if (status < 0) {
++		up_read(&nfsi->rwsem);
++		mutex_unlock(&sp->so_delegreturn_mutex);
++		goto out;
++	}
+ 	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
+ 		/* Yes: cache locks! */
+ 		/* ...but avoid races with delegation recall... */
 -- 
 2.31.1
 
