@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11181-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11182-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BE40A944D4
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 19:28:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB689A944D5
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 19:28:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DBDC1893CCD
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 17:28:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3740176E56
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Apr 2025 17:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D09B61AA1FF;
-	Sat, 19 Apr 2025 17:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8861DF24F;
+	Sat, 19 Apr 2025 17:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW2ew3qs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFK/GjTA"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD501DF24F
-	for <linux-nfs@vger.kernel.org>; Sat, 19 Apr 2025 17:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3311DF991
+	for <linux-nfs@vger.kernel.org>; Sat, 19 Apr 2025 17:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745083704; cv=none; b=MvI75LTVWz7gsbh44Gxo+bAgU8kjYoch9KPavzryRfkIhDEFwRATPuJdY0ZOu5+4PcbN1m17rXOE6j/nEfdyAfwJdVbVIeH0ZCpCD3/lSgtBm5HvwCgepLbROIf0mJ2wOPkjDqWX26GBjXfDcs4MJINueZlk+/YfXmBCIhoHVYg=
+	t=1745083705; cv=none; b=OaQpuC+CScnIdxzukaJAbO/iHQo2p97eQua+kbd04gG06j9TLVE/Fnm7fWf7yX/rB+ppJxm93a3lCMDi5WAIQUYmG1cHCDMSuvahviKbYTI4qbKNY12Box34dmn0PmOZrE+UmbSjAO2lP/M+Vtf2o6+uB2uzLTlklJSegqwV7Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745083704; c=relaxed/simple;
-	bh=Qs4KqSmfeg1vD5F3CSgnrZ3dQ6epG85BC/R5JOBHC/k=;
+	s=arc-20240116; t=1745083705; c=relaxed/simple;
+	bh=w2ShGO9ROIkEGlEzAtRx2bKgV2rgvqHhzRiDIS44PCk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U4ebT9ubPrmQ2xcHGP6YP7CqkdKzDhZQsSdBEFBWBDasqj1c6WLyI1IFYTaASOQeT7wNmIAazsiEL7OVJKTOChK66Cw2ADWIyFJFiZj2Ba2rEr7q8GVs7JaANYnQCe+ypse8JpFRtId2ON6Yz/6yWULga4fHjSIkQ/6T/XYVOn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW2ew3qs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E71FC4CEED;
-	Sat, 19 Apr 2025 17:28:23 +0000 (UTC)
+	 MIME-Version; b=DR/QxYULEiz/GN9Jforh3Qfbq/1HY4yvPg4Ptpcx3hL32A1jkHG28UiLhQZUgvASTb0jNcVMdZGYVAn8ihOEo0lZR3Sg0UMH4qnehiwhvD/As0BNI9yX3zRNOBDiirDLyE9CITEMWFVXrjzWcg656vNT5BxTX9E4RRCTsF7jR0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFK/GjTA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65D0DC4CEEE;
+	Sat, 19 Apr 2025 17:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745083704;
-	bh=Qs4KqSmfeg1vD5F3CSgnrZ3dQ6epG85BC/R5JOBHC/k=;
+	s=k20201202; t=1745083705;
+	bh=w2ShGO9ROIkEGlEzAtRx2bKgV2rgvqHhzRiDIS44PCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LW2ew3qsEzxHGZ6vljimHsytO1uXuEShE3TItxl8yN1zJB0uo2xrluDj3OjqUUIHu
-	 ASzf0/pU28k40OFL5xTCtSE+wmE8nBaL1x1lFlWA/7wwaMyZNDtJYR+WRmRPKG7R1g
-	 kjhJqrD6w2oy3J95he/2qRXUMX1W4NcrYDcpDn9X4SWZke9P3oV6WIb4YTRXVU2b7k
-	 mhNzzd9OLj4vnhTaqPHOadwCjd0126rzlFROwZ2fR2tgqC7kjtDeljiMn27mPjiRsy
-	 n36s9zmVp6XhdKDdyjqWkcClrHLvPnLXvUDs1iqJz36BLpgWp0xa5+ZeVAAsdfLG5W
-	 5u1jTBUsuKL8g==
+	b=fFK/GjTACDI8zZTYmaTg40oyo8Fqai6w4Hv7zbUBkm+pP106XYv7EfXg1hQoi7vjN
+	 k+l0Ip9nkonJvW8tzSQlo5H0q6OjpiYpR3WhCyaVXyd4FctiSJwTWmdcrZoFbbAHey
+	 c/7ekvkvwD1xaktUmhRM9/9kaJ495iIBNY+MCB81zYtKdNXytBkiWF5MZY+MirXwmQ
+	 QUr67+FOZ+clK5DG+c5uFev6+XctHqlwr+oVGazftRkPxyk1q7YlzPtHdJb/21sXl1
+	 0zwAKKpSi9ve2Y1puiqmFk3/QamweCScpr11nj6Iuz7SZu/dhGYObJVnrhTS0ABc/Z
+	 BILxfd7hU8geA==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 03/10] sunrpc: Replace the rq_pages array with dynamically-allocated memory
-Date: Sat, 19 Apr 2025 13:28:11 -0400
-Message-ID: <20250419172818.6945-4-cel@kernel.org>
+Subject: [PATCH v2 04/10] sunrpc: Replace the rq_vec array with dynamically-allocated memory
+Date: Sat, 19 Apr 2025 13:28:12 -0400
+Message-ID: <20250419172818.6945-5-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250419172818.6945-1-cel@kernel.org>
 References: <20250419172818.6945-1-cel@kernel.org>
@@ -69,142 +69,92 @@ As a step towards making NFSD's maximum rsize and wsize variable at
 run-time, replace the fixed-size rq_vec[] array in struct svc_rqst
 with a chunk of dynamically-allocated memory.
 
+The rq_vec array is sized assuming request processing will need at
+most one kvec per page in a maximum-sized RPC message.
+
 On a system with 8-byte pointers and 4KB pages, pahole reports that
-the rq_pages[] array is 2080 bytes. Replacing it with a single
-pointer reduces the size of struct svc_rqst to just over 9500 bytes.
+the rq_vec[] array is 4144 bytes. Replacing it with a single
+pointer reduces the size of struct svc_rqst to about 5400 bytes.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h        |  3 ++-
- net/sunrpc/svc.c                  | 34 ++++++++++++++++++-------------
- net/sunrpc/svc_xprt.c             | 10 +--------
- net/sunrpc/xprtrdma/svc_rdma_rw.c |  2 +-
- 4 files changed, 24 insertions(+), 25 deletions(-)
+ fs/nfsd/nfs4proc.c         | 1 -
+ fs/nfsd/vfs.c              | 2 +-
+ include/linux/sunrpc/svc.h | 2 +-
+ net/sunrpc/svc.c           | 8 +++++++-
+ 4 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index b397246dae7b..d1be58b557d1 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1228,7 +1228,6 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	write->wr_how_written = write->wr_stable_how;
+ 
+ 	nvecs = svc_fill_write_vector(rqstp, &write->wr_payload);
+-	WARN_ON_ONCE(nvecs > ARRAY_SIZE(rqstp->rq_vec));
+ 
+ 	status = nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+ 				write->wr_offset, rqstp->rq_vec, nvecs, &cnt,
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 9abdc4b75813..4eaac3aa7e15 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1094,7 +1094,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		++v;
+ 		base = 0;
+ 	}
+-	WARN_ON_ONCE(v > ARRAY_SIZE(rqstp->rq_vec));
++	WARN_ON_ONCE(v > rqstp->rq_maxpages);
+ 
+ 	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+ 	iov_iter_kvec(&iter, ITER_DEST, rqstp->rq_vec, v, *count);
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 5b879c31d7b8..96ac12dbb04d 100644
+index 96ac12dbb04d..72d016772711 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -200,7 +200,8 @@ struct svc_rqst {
- 	struct xdr_stream	rq_res_stream;
- 	struct page		*rq_scratch_page;
- 	struct xdr_buf		rq_res;
--	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
-+	unsigned long		rq_maxpages;	/* num of entries in rq_pages */
-+	struct page *		*rq_pages;
- 	struct page *		*rq_respages;	/* points into rq_pages */
- 	struct page *		*rq_next_page; /* next reply page to use */
+@@ -207,7 +207,7 @@ struct svc_rqst {
  	struct page *		*rq_page_end;  /* one past the last page */
+ 
+ 	struct folio_batch	rq_fbatch;
+-	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
++	struct kvec		*rq_vec;
+ 	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
+ 
+ 	__be32			rq_xid;		/* transmission id */
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 8ce3e6b3df6a..682e11c9be36 100644
+index 682e11c9be36..5808d4b97547 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -636,20 +636,25 @@ svc_destroy(struct svc_serv **servp)
- EXPORT_SYMBOL_GPL(svc_destroy);
- 
- static bool
--svc_init_buffer(struct svc_rqst *rqstp, unsigned int size, int node)
-+svc_init_buffer(struct svc_rqst *rqstp, const struct svc_serv *serv, int node)
+@@ -675,6 +675,7 @@ static void
+ svc_rqst_free(struct svc_rqst *rqstp)
  {
--	unsigned long pages, ret;
-+	unsigned long ret;
+ 	folio_batch_release(&rqstp->rq_fbatch);
++	kfree(rqstp->rq_vec);
+ 	svc_release_buffer(rqstp);
+ 	if (rqstp->rq_scratch_page)
+ 		put_page(rqstp->rq_scratch_page);
+@@ -713,6 +714,11 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	if (!svc_init_buffer(rqstp, serv, node))
+ 		goto out_enomem;
  
--	pages = size / PAGE_SIZE + 1; /* extra page as we hold both request and reply.
--				       * We assume one is at most one page
--				       */
--	WARN_ON_ONCE(pages > RPCSVC_MAXPAGES);
--	if (pages > RPCSVC_MAXPAGES)
--		pages = RPCSVC_MAXPAGES;
-+	/* Add an extra page, as rq_pages holds both request and reply.
-+	 * We assume one of those is at most one page.
-+	 */
-+	rqstp->rq_maxpages = svc_serv_maxpages(serv) + 1;
- 
--	ret = alloc_pages_bulk_node(GFP_KERNEL, node, pages,
-+	/* rq_pages' last entry is NULL for historical reasons. */
-+	rqstp->rq_pages = kcalloc_node(rqstp->rq_maxpages + 1,
-+				       sizeof(struct page *),
-+				       GFP_KERNEL, node);
-+	if (!rqstp->rq_pages)
-+		return false;
++	rqstp->rq_vec = kcalloc_node(rqstp->rq_maxpages, sizeof(struct kvec),
++				      GFP_KERNEL, node);
++	if (!rqstp->rq_vec)
++		goto out_enomem;
 +
-+	ret = alloc_pages_bulk_node(GFP_KERNEL, node, rqstp->rq_maxpages,
- 				    rqstp->rq_pages);
--	return ret == pages;
-+	return ret == rqstp->rq_maxpages;
- }
- 
- /*
-@@ -658,11 +663,12 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int size, int node)
- static void
- svc_release_buffer(struct svc_rqst *rqstp)
- {
--	unsigned int i;
-+	unsigned long i;
- 
--	for (i = 0; i < ARRAY_SIZE(rqstp->rq_pages); i++)
-+	for (i = 0; i < rqstp->rq_maxpages; i++)
- 		if (rqstp->rq_pages[i])
- 			put_page(rqstp->rq_pages[i]);
-+	kfree(rqstp->rq_pages);
- }
- 
- static void
-@@ -704,7 +710,7 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	if (!rqstp->rq_resp)
- 		goto out_enomem;
- 
--	if (!svc_init_buffer(rqstp, serv->sv_max_mesg, node))
-+	if (!svc_init_buffer(rqstp, serv, node))
- 		goto out_enomem;
- 
  	rqstp->rq_err = -EAGAIN; /* No error yet */
-@@ -896,7 +902,7 @@ EXPORT_SYMBOL_GPL(svc_set_num_threads);
- bool svc_rqst_replace_page(struct svc_rqst *rqstp, struct page *page)
- {
- 	struct page **begin = rqstp->rq_pages;
--	struct page **end = &rqstp->rq_pages[RPCSVC_MAXPAGES];
-+	struct page **end = &rqstp->rq_pages[rqstp->rq_maxpages];
  
- 	if (unlikely(rqstp->rq_next_page < begin || rqstp->rq_next_page > end)) {
- 		trace_svc_replace_page_err(rqstp);
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index ae25405d8bd2..23547ed25269 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -651,18 +651,10 @@ static void svc_check_conn_limits(struct svc_serv *serv)
- 
- static bool svc_alloc_arg(struct svc_rqst *rqstp)
- {
--	struct svc_serv *serv = rqstp->rq_server;
- 	struct xdr_buf *arg = &rqstp->rq_arg;
- 	unsigned long pages, filled, ret;
- 
--	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
--	if (pages > RPCSVC_MAXPAGES) {
--		pr_warn_once("svc: warning: pages=%lu > RPCSVC_MAXPAGES=%lu\n",
--			     pages, RPCSVC_MAXPAGES);
--		/* use as many pages as possible */
--		pages = RPCSVC_MAXPAGES;
--	}
--
-+	pages = rqstp->rq_maxpages;
- 	for (filled = 0; filled < pages; filled = ret) {
- 		ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
- 		if (ret > filled)
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 40797114d50a..661b3fe2779f 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -765,7 +765,7 @@ static int svc_rdma_build_read_segment(struct svc_rqst *rqstp,
- 		}
- 		len -= seg_len;
- 
--		if (len && ((head->rc_curpage + 1) > ARRAY_SIZE(rqstp->rq_pages)))
-+		if (len && ((head->rc_curpage + 1) > rqstp->rq_maxpages))
- 			goto out_overrun;
+ 	serv->sv_nrthreads += 1;
+@@ -1750,7 +1756,7 @@ unsigned int svc_fill_write_vector(struct svc_rqst *rqstp,
+ 		++pages;
  	}
  
+-	WARN_ON_ONCE(i > ARRAY_SIZE(rqstp->rq_vec));
++	WARN_ON_ONCE(i > rqstp->rq_maxpages);
+ 	return i;
+ }
+ EXPORT_SYMBOL_GPL(svc_fill_write_vector);
 -- 
 2.49.0
 
