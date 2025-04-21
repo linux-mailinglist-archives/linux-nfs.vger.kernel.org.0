@@ -1,536 +1,187 @@
-Return-Path: <linux-nfs+bounces-11199-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11200-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3DF1A9509F
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:15:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24846A950A9
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:16:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F6B33B27A7
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:15:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB6021887925
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEE8E2627FC;
-	Mon, 21 Apr 2025 12:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 136DA2586EF;
+	Mon, 21 Apr 2025 12:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnDpLrr1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1Q1Kcll"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881B31E489;
-	Mon, 21 Apr 2025 12:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8720DD63
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 12:16:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745237712; cv=none; b=HZvh/gZ0eCKP2SaP/MhriDx1Jtm80c7qlsJCpCDzg+tcFoCE3YypuKskTNmtM9bEVlPyz8p2diVamLQT4uaetarywsPCkrPr3YcoHkD1fcCRkP7/ZC9XsChEUHHsxTWKcV/drAU4lVobJ4pySksaAZF6oWahpupA3NeP32Ly17Q=
+	t=1745237797; cv=none; b=ELlcIzlaN4INy5YFATXck4IYKY8keP2N9ixDW/Dyy7dPhuTtvBR+oeFA9tOzvao2P0p0xZA0oJSmyUFV/+ueVKJ6IYClofxSMJrx0e//4+JfcU00680KW672tI8DluJtL5mn345c36zyhIZVUj8zNpMsqWPdgo7Td8I6HpRaWto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745237712; c=relaxed/simple;
-	bh=NWY7vWz9LzFUvuTqvqdXLpzUQJzDyIOXn3ZAziazYMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QGZPYuSxFSE3Vl4iqXCTrulFaLUUWdj28gy51UOEAxQG1SRjw/F0rhNVeMQ6vk+zs/uPFIkzibLVeQ3wknpO2y48b1FvmQExzBSEfcWmqEhFgybd9KkAPm9EXwXjXgCoz1peg3zXdciQqRD3KUTUb1tyzTesM/IgZH5oE4hI1ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnDpLrr1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFD2C4CEE4;
-	Mon, 21 Apr 2025 12:15:11 +0000 (UTC)
+	s=arc-20240116; t=1745237797; c=relaxed/simple;
+	bh=QdNkEO49X3cPbmaJ+ddKKZOfhCY20hcVOMHliQnKJb4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jllimHwBM6Xlr/VH9Gbk3EdLWX+5L54ajzhKNTavKFy2GUfOzwlzSG40deIhZMVHpNvmf7NOvfPfdcs46IskCo+cChuUJNXS0lGwn0IK1/DrbQMsR87ngFmx9VsS1gslUNDmxyI9mt3Yp4EQB12sTIY+5ZW1UHjbchaq8tVoZnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1Q1Kcll; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3373C4CEE4;
+	Mon, 21 Apr 2025 12:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745237712;
-	bh=NWY7vWz9LzFUvuTqvqdXLpzUQJzDyIOXn3ZAziazYMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DnDpLrr1aHd6v+YaqiTVi2NrCjjqZu8qRp4T5eBxEGHEGLls9Xv56HZnNIu1x6t0f
-	 dl+gI15q1YitWz+mjG7ItcVAvLiKl6QBqOdWtJqcd+y6fYesCChZ0PO0KBWzqORQwl
-	 B5j03gVqzZ/7JkWoPuTIoRDfvgQkSsUzc7fGCxgSmu0CW4oDj789SP3RnY1mVvkgab
-	 XbdEqHCD2yky9eaO2m4+0OUvRO8bs9+5fl5EdTZFONbgZykPs7lxvp2su+DzZiHlWn
-	 S5V3c/DOm3VClEII7k2kPf1/a6kI0/jT+Q9VJI4gxtOdCP4Ch+9yFGVU+3uAYqhjMe
-	 KmhiBG/k+m5Kw==
-Date: Sun, 20 Apr 2025 14:21:10 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Luiz Capitulino <luizcap@redhat.com>,
-	Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
- full-featured API
-Message-ID: <20250420112110.GA32613@unreal>
-References: <20250414120819.3053967-1-linyunsheng@huawei.com>
+	s=k20201202; t=1745237796;
+	bh=QdNkEO49X3cPbmaJ+ddKKZOfhCY20hcVOMHliQnKJb4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=s1Q1KcllRZrEO3eKGGkzlk/cG+/KckJlqF2xUTAYvUO5UyPG5Lpuy6Jcr9DcU3TuJ
+	 icto2CosrYlRZFy2Tw5ZT9ZTfrNlU9Mh1z6Www5IytyL9vhSkomB1NtV2E8kMEAnhO
+	 tNZJEfl1yz1bCXGmYMWe9E07dMg7ftgdx37IP/g851xvnRuqdXa0bSL1/JpEXT0+Or
+	 bERI0Lb59tsDdJ+W+b/UfDiYyxmeVH5pbiOsEQxZ1O/6NywAQusggCrM84ty7G/QuA
+	 3maS1gBr95U4WwdFN13Ltc6JNYqe6uQkmijCnwscml9nKQdpVev8ruG5EoTz26znIR
+	 d1xolOCOYqzjA==
+Message-ID: <1263daf84321d07574a05e3cbda66ecf3716a4bc.camel@kernel.org>
+Subject: Re: [PATCH v2 01/10] sunrpc: Remove backchannel check in
+ svc_init_buffer()
+From: Jeff Layton <jlayton@kernel.org>
+To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
+ <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Mon, 21 Apr 2025 08:16:34 -0400
+In-Reply-To: <20250419172818.6945-2-cel@kernel.org>
+References: <20250419172818.6945-1-cel@kernel.org>
+	 <20250419172818.6945-2-cel@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414120819.3053967-1-linyunsheng@huawei.com>
 
-On Mon, Apr 14, 2025 at 08:08:11PM +0800, Yunsheng Lin wrote:
-> As mentioned in [1], it seems odd to check NULL elements in
-> the middle of page bulk allocating, and it seems caller can
-> do a better job of bulk allocating pages into a whole array
-> sequentially without checking NULL elements first before
-> doing the page bulk allocation for most of existing users
-> by passing 'page_array + allocated' and 'nr_pages - allocated'
-> when calling subsequent page bulk alloc API so that NULL
-> checking can be avoided, see the pattern in mm/mempolicy.c.
-> 
-> Through analyzing of existing bulk allocation API users, it
-> seems only the fs users are depending on the assumption of
-> populating only NULL elements, see:
-> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
-> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
-> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
-> commit 88e4d41a264d ("SUNRPC: Use __alloc_bulk_pages() in svc_init_buffer()")
-> 
-> The current API adds a mental burden for most users. For most
-> users, their code would be much cleaner if the interface accepts
-> an uninitialised array with length, and were told how many pages
-> had been stored in that array, so support one simple and one
-> full-featured to meet the above different use cases as below:
-> - alloc_pages_bulk() would be given an uninitialised array of page
->   pointers and a required count and would return the number of
->   pages that were allocated.
-> - alloc_pages_bulk_refill() would be given an initialised array
->   of page pointers some of which might be NULL. It would attempt
->   to allocate pages for the non-NULL pointers, return 0 if all
->   pages are allocated, -EAGAIN if at least one page allocated,
->   ok to try again immediately or -ENOMEM if don't bother trying
->   again soon, which provides a more consistent semantics than the
->   current API as mentioned in [2], at the cost of the pages might
->   be getting re-ordered to make the implementation simpler.
-> 
-> Change the existing fs users to use the full-featured API, except
-> for the one for svc_init_buffer() in net/sunrpc/svc.c. Other
-> existing callers can use the simple API as they seems to be passing
-> all NULL elements via memset, kzalloc, etc, only remove unnecessary
-> memset for existing users calling the simple API in this patch.
-> 
-> The test result for xfstests full test:
-> Before this patch:
-> btrfs/default: 1061 tests, 3 failures, 290 skipped, 13152 seconds
->   Failures: btrfs/012 btrfs/226
->   Flaky: generic/301: 60% (3/5)
-> Totals: 1073 tests, 290 skipped, 13 failures, 0 errors, 12540s
-> 
-> nfs/loopback: 530 tests, 3 failures, 392 skipped, 3942 seconds
->   Failures: generic/464 generic/551
->   Flaky: generic/650: 40% (2/5)
-> Totals: 542 tests, 392 skipped, 12 failures, 0 errors, 3799s
-> 
-> After this patch:
-> btrfs/default: 1061 tests, 2 failures, 290 skipped, 13446 seconds
->   Failures: btrfs/012 btrfs/226
-> Totals: 1069 tests, 290 skipped, 10 failures, 0 errors, 12853s
-> 
-> nfs/loopback: 530 tests, 3 failures, 392 skipped, 4103 seconds
->   Failures: generic/464 generic/551
->   Flaky: generic/650: 60% (3/5)
-> Totals: 542 tests, 392 skipped, 13 failures, 0 errors, 3933s
-> 
-> The stress test also suggest there is no regression for the erofs
-> too.
-> 
-> Using the simple API also enable the caller to not zero the array
-> before calling the page bulk allocating API, which has about 1~2 ns
-> performance improvement for time_bench_page_pool03_slow() test case
-> of page_pool in a x86 vm system, this reduces some performance impact
-> of fixing the DMA API misuse problem in [3], performance improves
-> from 87.886 ns to 86.429 ns.
-> 
-> Also a temporary patch to enable the using of full-featured API in
-> page_pool suggests that the new full-featured API doesn't seem to have
-> noticeable performance impact for the existing users, like SUNRPC, btrfs
-> and erofs.
-> 
-> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
-> 2. https://lore.kernel.org/all/180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com/
-> 3. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
-> CC: Jesper Dangaard Brouer <hawk@kernel.org>
-> CC: Luiz Capitulino <luizcap@redhat.com>
-> CC: Mel Gorman <mgorman@techsingularity.net>
-> Suggested-by: Neil Brown <neilb@suse.de>
-> Acked-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+On Sat, 2025-04-19 at 13:28 -0400, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> A backchannel service might use forechannel send and receive
+> buffers, but svc_recv() still calls svc_alloc_arg() on backchannel
+> svc_rqsts, so it will populate the svc_rqst's rq_pages[] array
+> anyway. The "is backchannel" check in svc_init_buffer() saves us
+> nothing.
+>=20
+> In a moment, I plan to replace the rq_pages[] array with a
+> dynamically-allocated piece of memory, and svc_init_buffer() is
+> where that memory will get allocated. Backchannel requests actually
+> do use that array, so it has to be available to handle those
+> requests without a segfault.
+>=20
+> XXX: Or, make svc_alloc_arg() ignore backchannel requests too?
+>      Could set rqstp->rq_maxpages to zero.
+>=20
+
+Maybe I'm confused here, but the backchannel still needs some pages to
+do its thing? I guess the main change here is that the pages are
+allocated at svc_create time instead of waiting until later?
+
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
-> V3:
-> 1. Provide both simple and full-featured API as suggested by NeilBrown.
-> 2. Do the fs testing as suggested in V2.
-> 
-> V2:
-> 1. Drop RFC tag.
-> 2. Fix a compile error for xfs.
-> 3. Defragmemt the page_array for SUNRPC and btrfs.
-> ---
->  drivers/vfio/pci/mlx5/cmd.c       |  2 --
->  drivers/vfio/pci/virtio/migrate.c |  2 --
->  fs/btrfs/extent_io.c              | 21 +++++++++---------
->  fs/erofs/zutil.c                  | 11 +++++----
->  include/linux/gfp.h               | 37 +++++++++++++++++++++++++++++++
->  include/trace/events/sunrpc.h     | 12 +++++-----
->  kernel/bpf/arena.c                |  1 -
->  mm/page_alloc.c                   | 32 +++++---------------------
->  net/core/page_pool.c              |  3 ---
->  net/sunrpc/svc_xprt.c             | 12 ++++++----
->  10 files changed, 72 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
-> index 11eda6b207f1..fb094527715f 100644
-> --- a/drivers/vfio/pci/mlx5/cmd.c
-> +++ b/drivers/vfio/pci/mlx5/cmd.c
-> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
->  		if (ret)
->  			goto err_append;
->  		buf->allocated_length += filled * PAGE_SIZE;
-> -		/* clean input for another bulk allocation */
-> -		memset(page_list, 0, filled * sizeof(*page_list));
->  		to_fill = min_t(unsigned int, to_alloc,
->  				PAGE_SIZE / sizeof(*page_list));
-
-If it is possible, let's drop this hunk to reduce merge conflicts.
-The whole mlx5vf_add_migration_pages() is planned to be rewritten.
-https://lore.kernel.org/linux-rdma/076a3991e663fe07c1a5395f5805c514b63e4d94.1744825142.git.leon@kernel.org/
-
-Thanks
-
-
->  	} while (to_alloc > 0);
-> diff --git a/drivers/vfio/pci/virtio/migrate.c b/drivers/vfio/pci/virtio/migrate.c
-> index ba92bb4e9af9..9f003a237dec 100644
-> --- a/drivers/vfio/pci/virtio/migrate.c
-> +++ b/drivers/vfio/pci/virtio/migrate.c
-> @@ -91,8 +91,6 @@ static int virtiovf_add_migration_pages(struct virtiovf_data_buffer *buf,
->  		if (ret)
->  			goto err_append;
->  		buf->allocated_length += filled * PAGE_SIZE;
-> -		/* clean input for another bulk allocation */
-> -		memset(page_list, 0, filled * sizeof(*page_list));
->  		to_fill = min_t(unsigned int, to_alloc,
->  				PAGE_SIZE / sizeof(*page_list));
->  	} while (to_alloc > 0);
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 197f5e51c474..51ef15703900 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -623,21 +623,22 @@ int btrfs_alloc_page_array(unsigned int nr_pages, struct page **page_array,
->  			   bool nofail)
+>  net/sunrpc/svc.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index e7f9c295d13c..8ce3e6b3df6a 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -640,10 +640,6 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int=
+ size, int node)
 >  {
->  	const gfp_t gfp = nofail ? (GFP_NOFS | __GFP_NOFAIL) : GFP_NOFS;
-> -	unsigned int allocated;
+>  	unsigned long pages, ret;
+> =20
+> -	/* bc_xprt uses fore channel allocated buffers */
+> -	if (svc_is_backchannel(rqstp))
+> -		return true;
 > -
-> -	for (allocated = 0; allocated < nr_pages;) {
-> -		unsigned int last = allocated;
-> +	int ret;
->  
-> -		allocated = alloc_pages_bulk(gfp, nr_pages, page_array);
-> -		if (unlikely(allocated == last)) {
-> +	do {
-> +		ret = alloc_pages_bulk_refill(gfp, nr_pages, page_array);
-> +		if (unlikely(ret == -ENOMEM)) {
->  			/* No progress, fail and do cleanup. */
-> -			for (int i = 0; i < allocated; i++) {
-> -				__free_page(page_array[i]);
-> -				page_array[i] = NULL;
-> +			for (int i = 0; i < nr_pages; i++) {
-> +				if (page_array[i]) {
-> +					__free_page(page_array[i]);
-> +					page_array[i] = NULL;
-> +				}
->  			}
->  			return -ENOMEM;
->  		}
-> -	}
-> +	} while (ret == -EAGAIN);
-> +
->  	return 0;
->  }
->  
-> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-> index 55ff2ab5128e..6ce11a8a261c 100644
-> --- a/fs/erofs/zutil.c
-> +++ b/fs/erofs/zutil.c
-> @@ -68,7 +68,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
->  	struct page **tmp_pages = NULL;
->  	struct z_erofs_gbuf *gbuf;
->  	void *ptr, *old_ptr;
-> -	int last, i, j;
-> +	int ret, i, j;
->  
->  	mutex_lock(&gbuf_resize_mutex);
->  	/* avoid shrinking gbufs, since no idea how many fses rely on */
-> @@ -86,12 +86,11 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
->  		for (j = 0; j < gbuf->nrpages; ++j)
->  			tmp_pages[j] = gbuf->pages[j];
->  		do {
-> -			last = j;
-> -			j = alloc_pages_bulk(GFP_KERNEL, nrpages,
-> -					     tmp_pages);
-> -			if (last == j)
-> +			ret = alloc_pages_bulk_refill(GFP_KERNEL, nrpages,
-> +						      tmp_pages);
-> +			if (ret == -ENOMEM)
->  				goto out;
-> -		} while (j != nrpages);
-> +		} while (ret == -EAGAIN);
->  
->  		ptr = vmap(tmp_pages, nrpages, VM_MAP, PAGE_KERNEL);
->  		if (!ptr)
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index c9fa6309c903..cf6100981fd6 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -244,6 +244,43 @@ unsigned long alloc_pages_bulk_mempolicy_noprof(gfp_t gfp,
->  #define alloc_pages_bulk(_gfp, _nr_pages, _page_array)		\
->  	__alloc_pages_bulk(_gfp, numa_mem_id(), NULL, _nr_pages, _page_array)
->  
-> +/*
-> + * alloc_pages_bulk_refill_noprof - Refill order-0 pages to an array
-> + * @gfp: GFP flags for the allocation when refilling
-> + * @nr_pages: The size of refilling array
-> + * @page_array: The array to refill order-0 pages
-> + *
-> + * Note that only NULL elements are populated with pages and the pages might
-> + * get re-ordered.
-> + *
-> + * Return 0 if all pages are refilled, -EAGAIN if at least one page is refilled,
-> + * ok to try again immediately or -ENOMEM if no page is refilled and don't
-> + * bother trying again soon.
-> + */
-> +static inline int alloc_pages_bulk_refill_noprof(gfp_t gfp, int nr_pages,
-> +						 struct page **page_array)
-> +{
-> +	int allocated = 0, i;
-> +
-> +	for (i = 0; i < nr_pages; i++) {
-> +		if (page_array[i]) {
-> +			swap(page_array[allocated], page_array[i]);
-> +			allocated++;
-> +		}
-> +	}
-> +
-> +	i = alloc_pages_bulk_noprof(gfp, numa_mem_id(), NULL,
-> +				    nr_pages - allocated,
-> +				    page_array + allocated);
-> +	if (likely(allocated + i == nr_pages))
-> +		return 0;
-> +
-> +	return i ? -EAGAIN : -ENOMEM;
-> +}
-> +
-> +#define alloc_pages_bulk_refill(...)				\
-> +	alloc_hooks(alloc_pages_bulk_refill_noprof(__VA_ARGS__))
-> +
->  static inline unsigned long
->  alloc_pages_bulk_node_noprof(gfp_t gfp, int nid, unsigned long nr_pages,
->  				   struct page **page_array)
-> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-> index 5d331383047b..cb8899f1cbdc 100644
-> --- a/include/trace/events/sunrpc.h
-> +++ b/include/trace/events/sunrpc.h
-> @@ -2143,23 +2143,23 @@ TRACE_EVENT(svc_wake_up,
->  TRACE_EVENT(svc_alloc_arg_err,
->  	TP_PROTO(
->  		unsigned int requested,
-> -		unsigned int allocated
-> +		int ret
->  	),
->  
-> -	TP_ARGS(requested, allocated),
-> +	TP_ARGS(requested, ret),
->  
->  	TP_STRUCT__entry(
->  		__field(unsigned int, requested)
-> -		__field(unsigned int, allocated)
-> +		__field(int, ret)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->requested = requested;
-> -		__entry->allocated = allocated;
-> +		__entry->ret = ret;
->  	),
->  
-> -	TP_printk("requested=%u allocated=%u",
-> -		__entry->requested, __entry->allocated)
-> +	TP_printk("requested=%u ret=%d",
-> +		__entry->requested, __entry->ret)
->  );
->  
->  DECLARE_EVENT_CLASS(svc_deferred_event,
-> diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
-> index 0d56cea71602..9022c4440814 100644
-> --- a/kernel/bpf/arena.c
-> +++ b/kernel/bpf/arena.c
-> @@ -445,7 +445,6 @@ static long arena_alloc_pages(struct bpf_arena *arena, long uaddr, long page_cnt
->  			return 0;
->  	}
->  
-> -	/* zeroing is needed, since alloc_pages_bulk() only fills in non-zero entries */
->  	pages = kvcalloc(page_cnt, sizeof(struct page *), GFP_KERNEL);
->  	if (!pages)
->  		return 0;
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d7cfcfa2b077..59a4fe23e62a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4784,9 +4784,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->   * This is a batched version of the page allocator that attempts to
->   * allocate nr_pages quickly. Pages are added to the page_array.
->   *
-> - * Note that only NULL elements are populated with pages and nr_pages
-> - * is the maximum number of pages that will be stored in the array.
-> - *
->   * Returns the number of pages in the array.
->   */
->  unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
-> @@ -4802,29 +4799,18 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	struct alloc_context ac;
->  	gfp_t alloc_gfp;
->  	unsigned int alloc_flags = ALLOC_WMARK_LOW;
-> -	int nr_populated = 0, nr_account = 0;
-> -
-> -	/*
-> -	 * Skip populated array elements to determine if any pages need
-> -	 * to be allocated before disabling IRQs.
-> -	 */
-> -	while (nr_populated < nr_pages && page_array[nr_populated])
-> -		nr_populated++;
-> +	int nr_populated = 0;
->  
->  	/* No pages requested? */
->  	if (unlikely(nr_pages <= 0))
->  		goto out;
->  
-> -	/* Already populated array? */
-> -	if (unlikely(nr_pages - nr_populated == 0))
-> -		goto out;
-> -
->  	/* Bulk allocator does not support memcg accounting. */
->  	if (memcg_kmem_online() && (gfp & __GFP_ACCOUNT))
->  		goto failed;
->  
->  	/* Use the single page allocator for one page. */
-> -	if (nr_pages - nr_populated == 1)
-> +	if (nr_pages == 1)
->  		goto failed;
->  
->  #ifdef CONFIG_PAGE_OWNER
-> @@ -4896,24 +4882,16 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	/* Attempt the batch allocation */
->  	pcp_list = &pcp->lists[order_to_pindex(ac.migratetype, 0)];
->  	while (nr_populated < nr_pages) {
-> -
-> -		/* Skip existing pages */
-> -		if (page_array[nr_populated]) {
-> -			nr_populated++;
-> -			continue;
-> -		}
-> -
->  		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
->  								pcp, pcp_list);
->  		if (unlikely(!page)) {
->  			/* Try and allocate at least one page */
-> -			if (!nr_account) {
-> +			if (!nr_populated) {
->  				pcp_spin_unlock(pcp);
->  				goto failed_irq;
->  			}
->  			break;
->  		}
-> -		nr_account++;
->  
->  		prep_new_page(page, 0, gfp, 0);
->  		set_page_refcounted(page);
-> @@ -4923,8 +4901,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	pcp_spin_unlock(pcp);
->  	pcp_trylock_finish(UP_flags);
->  
-> -	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
-> -	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
-> +	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_populated);
-> +	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_populated);
->  
->  out:
->  	return nr_populated;
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index 7745ad924ae2..2431d2f6d610 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -541,9 +541,6 @@ static noinline netmem_ref __page_pool_alloc_pages_slow(struct page_pool *pool,
->  	if (unlikely(pool->alloc.count > 0))
->  		return pool->alloc.cache[--pool->alloc.count];
->  
-> -	/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk */
-> -	memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
-> -
->  	nr_pages = alloc_pages_bulk_node(gfp, pool->p.nid, bulk,
->  					 (struct page **)pool->alloc.cache);
->  	if (unlikely(!nr_pages))
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index ae25405d8bd2..1191686fc0af 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -653,7 +653,8 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->  {
->  	struct svc_serv *serv = rqstp->rq_server;
->  	struct xdr_buf *arg = &rqstp->rq_arg;
-> -	unsigned long pages, filled, ret;
-> +	unsigned long pages;
-> +	int ret;
->  
->  	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
->  	if (pages > RPCSVC_MAXPAGES) {
-> @@ -663,9 +664,12 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->  		pages = RPCSVC_MAXPAGES;
->  	}
->  
-> -	for (filled = 0; filled < pages; filled = ret) {
-> -		ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
-> -		if (ret > filled)
-> +	while (true) {
-> +		ret = alloc_pages_bulk_refill(GFP_KERNEL, pages, rqstp->rq_pages);
-> +		if (!ret)
-> +			break;
-> +
-> +		if (ret == -EAGAIN)
->  			/* Made progress, don't sleep yet */
->  			continue;
->  
-> -- 
-> 2.33.0
-> 
+>  	pages =3D size / PAGE_SIZE + 1; /* extra page as we hold both request a=
+nd reply.
+>  				       * We assume one is at most one page
+>  				       */
+
+Acked-by: Jeff Layton <jlayton@kernel.org>
 
