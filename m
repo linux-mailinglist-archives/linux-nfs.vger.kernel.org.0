@@ -1,69 +1,60 @@
-Return-Path: <linux-nfs+bounces-11197-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11198-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF39DA95077
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 13:52:40 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B76BFA95082
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:00:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22A3817247C
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 11:52:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C6F23B3241
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B071A212FAD;
-	Mon, 21 Apr 2025 11:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51FAC2620F5;
+	Mon, 21 Apr 2025 12:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5kdhx/e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdxgVY7u"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC721C5489
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 11:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270BF1DB122;
+	Mon, 21 Apr 2025 12:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745236356; cv=none; b=SPnlCKw4m+q1BuwAgkr4arqbxMIoKmwyozptmdHdM0PLlhEa7j14Sg4tt3ob/fB2K5DnrEbVgCNTXi+xR0b5x6hBdWF96QwQrAqTnys2MIaP0arUC0x9zlCXTiK+nOJzN8oM602MDhUzGu/y843Ek0RLK+Q1AUavctSrjptSOrM=
+	t=1745236821; cv=none; b=aIJJ+HQrqokyLQcGP3h+TtdTgO0j3PsL86o1wh3nmMpU+c2rDEGsD2PkUe0sUeRehnPhvUYk8yR6EscZEEowqcBRAGxahrP/I8Ltp4/7QVCjZ4MTuT2dvWut2cmjn3jcfwU2Lu/epQhi8WYLQZ0NnirGaMuB8dQPVkY+KY5dnT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745236356; c=relaxed/simple;
-	bh=e+i1md761kSHZH6FeAw4mCn30IWEEbbsQEhAJFgfR7I=;
+	s=arc-20240116; t=1745236821; c=relaxed/simple;
+	bh=W9NOrm9S/k4sk/Uv/kYF+L5FLMLUi7wpa+sanI+asWI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fHKhD9Qr7HuAXI2N2qUd2sDNBm2UUKKRpBGZL5rTl8zPLIQQ98kshIat1WFC/bfNIa9XYNYJVL5LmPAwoIYbvUE8sXL/ud9m9FBifxbNnUxWwcHP6FM+mG8dov+rqTw5LzoMuv57E1yTbhQerL9hQZc4X0Dwzu1dBP4P2lr4mVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5kdhx/e; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52EC7C4CEE4;
-	Mon, 21 Apr 2025 11:52:35 +0000 (UTC)
+	 Content-Type:MIME-Version; b=B77crgVcbxWw6bfv16mZOCCanuTwjR2NLL63dlG7Zkf0EfgpDkQToNKykVsoWjQWIuiAD4cjW8taVcX6eiYmswM/8MYnYo0aCG3FC0R39UPPv9IHFfzEKwkysNPmhu/tOTiNxU1g4GHnLYOe8T2Euzc4RKSIyqmQo3Z6edku3H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdxgVY7u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC295C4CEE4;
+	Mon, 21 Apr 2025 12:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745236356;
-	bh=e+i1md761kSHZH6FeAw4mCn30IWEEbbsQEhAJFgfR7I=;
+	s=k20201202; t=1745236820;
+	bh=W9NOrm9S/k4sk/Uv/kYF+L5FLMLUi7wpa+sanI+asWI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=F5kdhx/e/kfDIFjama7RKu5HHyV7lSWKi3KuqLVsPHxOU290xSEIs4st+enRk6sVh
-	 3DZVC/jjwlaY8QApr083Zm/oaBP0Re4qoMLr37smlf8j9qzM3N4QBMwq8NGhjiLBH0
-	 npeTG1/OrJW6ohJKhSRpKe3nRtGuV8kkWySECeFQG/1dRUIO5AjnGxqwdkMtFnrZLg
-	 dAsoL80qCCIVr8R9hjrEGfVY6LFsi30Ahp2KswJNKO+l/FBXb+6/yZXNCKZQ0hK1v9
-	 U9DB86HY4mitvnQoR6OnWoFFz+HI+ih0KmFxWFskk1e+g8s+Pi+C/c5keqr0MVs+ys
-	 DvgIceoI8+Frg==
-Message-ID: <acd75dd17afc29afd03ceeea17d564fbd62c0c48.camel@kernel.org>
-Subject: Re: [PATCH v2] nfs: add dummy definition for nfsd_file
+	b=rdxgVY7u4Wr/0ynkCmkzMWC9eIclSz+fmcOILcMHqoAMnCEfqOWaWloopBHaHq7YY
+	 d+up9T280tE01YvHzaXZGcCSl8CjWIruElG3ZXlTN4Yz1pa53kle/oBv6DX2CcuHLl
+	 s564wE1au2JwXnH/k9yO2xETnaafhY0EXazkxCsKsXmHC3ciAjwTNhFJCfmS+dWW5k
+	 MicdH8ClN+qVhwCKYOftTkl/cSYdWJqIL+ypylMJdyaFlGqJXELTpJz1Ckf/agdujW
+	 Yo8RVgoGapErDwSow91+gdmDTwyhfNid5YSmOPom1ZleID+gvzW8j11ZVY+OP182vh
+	 S4zgDub2bkTUw==
+Message-ID: <3452e3fea7c250fc0816aa1b55f579849e056283.camel@kernel.org>
+Subject: Re: [PATCH 2/2] nfs: handle failure of get_nfs_open_context
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, Trond Myklebust	
- <trond.myklebust@hammerspace.com>, Anna Schumaker
- <anna.schumaker@oracle.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, Pali
- =?ISO-8859-1?Q?Roh=E1r?=
-	 <pali@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	linux-nfs@vger.kernel.org, Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Date: Mon, 21 Apr 2025 07:52:34 -0400
-In-Reply-To: <Z_coQbSdvMWD92IA@kernel.org>
-References: <20250215120054.mfvr2fzs5426bthx@pali>
-	 <4c790142-7126-413d-a2f3-bb080bb26ce6@oracle.com>
-	 <20250215163800.v4qdyum6slbzbmts@pali>
-	 <a8e12721-721e-41d1-9192-940c01e7f0f0@oracle.com>
-	 <20250215165100.jlibe46qwwdfgau5@pali>
-	 <20250223182746.do2irr7uxpwhjycd@pali>
-	 <20250318190520.efwb45jarbyacnw4@pali>
-	 <e2ec5e8d-a004-42b7-81ad-05edb1365224@oss.qualcomm.com>
-	 <Z-QYjLJk8_ttf-kW@kernel.org>
-	 <3911d932-5ad3-4cc9-98c9-408818cdb4cf@wanadoo.fr>
-	 <Z_coQbSdvMWD92IA@kernel.org>
+To: Li Lingfeng <lilingfeng3@huawei.com>, trondmy@kernel.org,
+ anna@kernel.org, 	bcodding@redhat.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Date: Mon, 21 Apr 2025 08:00:18 -0400
+In-Reply-To: <40d40603-f9a9-4eaa-aaa6-d5ce31445aa4@huawei.com>
+References: <20250419085355.1451457-1-lilingfeng3@huawei.com>
+	 <20250419085355.1451457-3-lilingfeng3@huawei.com>
+	 <828b70d9f1c0a34966aeda8198d80046dcd2bba2.camel@kernel.org>
+	 <40d40603-f9a9-4eaa-aaa6-d5ce31445aa4@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -148,66 +139,150 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-04-09 at 22:09 -0400, Mike Snitzer wrote:
-> Add dummy definition for nfsd_file in both nfslocalio.c and localio.c
-> so various compilers (e.g. gcc 8.5.0 and 9.5.0) can be used. Otherwise
-> RCU code (rcu_dereference and rcu_access_pointer) will dereference
-> what should just be an opaque pointer (by using typeof(*ptr)).
+On Mon, 2025-04-21 at 09:56 +0800, Li Lingfeng wrote:
+> =E5=9C=A8 2025/4/19 20:34, Jeff Layton =E5=86=99=E9=81=93:
+> > On Sat, 2025-04-19 at 16:53 +0800, Li Lingfeng wrote:
+> > > During initialization of unlockdata or lockdata structures, if acquir=
+ing
+> > > the nfs_open_context fails, the current operation must be aborted to
+> > > ensure the nfs_open_context remains valid after initialization comple=
+tes.
+> > > This is critical because both lock and unlock release callbacks
+> > > dereference the nfs_open_context - an invalid context could lead to n=
+ull
+> > > pointer dereference.
+> > >=20
+> > > Fixes: faf5f49c2d9c ("NFSv4: Make NFS clean up byte range locks async=
+hronously")
+> > > Fixes: a5d16a4d090b ("NFSv4: Convert LOCK rpc call into an asynchrono=
+us RPC call")
+> > > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > > ---
+> > >   fs/nfs/nfs4proc.c | 22 +++++++++++++++-------
+> > >   1 file changed, 15 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > index 9f5689c43a50..d76cf0f79f9c 100644
+> > > --- a/fs/nfs/nfs4proc.c
+> > > +++ b/fs/nfs/nfs4proc.c
+> > > @@ -7075,24 +7075,27 @@ static struct nfs4_unlockdata *nfs4_alloc_unl=
+ockdata(struct file_lock *fl,
+> > >   	struct nfs4_state *state =3D lsp->ls_state;
+> > >   	struct inode *inode =3D state->inode;
+> > >   	struct nfs_lock_context *l_ctx;
+> > > +	struct nfs_open_context *open_ctx;
+> > >  =20
+> > >   	p =3D kzalloc(sizeof(*p), GFP_KERNEL);
+> > >   	if (p =3D=3D NULL)
+> > >   		return NULL;
+> > >   	l_ctx =3D nfs_get_lock_context(ctx);
+> > > -	if (!IS_ERR(l_ctx)) {
+> > > +	if (!IS_ERR(l_ctx))
+> > >   		p->l_ctx =3D l_ctx;
+> > > -	} else {
+> > > -		kfree(p);
+> > > -		return NULL;
+> > > -	}
+> > > +	else
+> > > +		goto out_free;
+> > > +	/* Ensure we don't close file until we're done freeing locks! */
+> > > +	open_ctx =3D get_nfs_open_context(ctx);
+> > >=20
+> > >=20
+> > Sorry for the confusion. Now that I look more closely, I think I was
+> > wrong before.
+> >=20
+> > This can't fail, because the caller holds a reference to ctx, so the
+> > refcount must be non-zero. Instead of this patch, could you add a
+> > comment in there to that effect to make this clear in the future?
+> Hi Jeff,
 >=20
-> Fixes: 86e00412254a ("nfs: cache all open LOCALIO nfsd_file(s) in client"=
-)
-> Cc: stable@vger.kernel.org
-> Tested-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-> Tested-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Tested-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs/localio.c           | 8 ++++++++
->  fs/nfs_common/nfslocalio.c | 8 ++++++++
->  2 files changed, 16 insertions(+)
+> Thank you for the feedback.
+> Adding a comment instead of this patch may be better.
 >=20
-> v2: fix email used in S-o-B, added 3 Tested-by:s and adjust commit header=
-.
+> However, I=E2=80=99d like to seek your guidance on a broader question: Fo=
+r
+> scenarios where an error condition =E2=80=8Bcurrently cannot occur but wo=
+uld lead
+> to severe consequences (e.g., NULL pointer dereference, data corruption)
+> if it ever did happen (e.g., due to future code changes or bugs), do you
+> recommend proactively adding error handling as a defensive measure?
 >=20
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 5c21caeae075..830078e5866b 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -46,6 +46,14 @@ struct nfs_local_fsync_ctx {
->  	struct completion	*done;
->  };
-> =20
-> +/*
-> + * nfsd_file structure is purposely kept opaque to NFS client.
-> + * This is a dummy definition to make RCU compilation happy.
-> + */
-> +struct nfsd_file {
-> +	int undefined__;
-> +};
-> +
->  static bool localio_enabled __read_mostly =3D true;
->  module_param(localio_enabled, bool, 0644);
-> =20
-> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
-> index 6a0bdea6d644..f3274a70ce5e 100644
-> --- a/fs/nfs_common/nfslocalio.c
-> +++ b/fs/nfs_common/nfslocalio.c
-> @@ -271,6 +271,14 @@ struct nfsd_file *nfs_open_local_fh(nfs_uuid_t *uuid=
-,
->  }
->  EXPORT_SYMBOL_GPL(nfs_open_local_fh);
-> =20
-> +/*
-> + * nfsd_file structure is purposely kept opaque to NFS client.
-> + * This is a dummy definition to make RCU compilation happy.
-> + */
-> +struct nfsd_file {
-> +	int undefined__;
-> +};
-> +
->  void nfs_close_local_fh(struct nfs_file_localio *nfl)
->  {
->  	struct nfsd_file *ro_nf =3D NULL;
+> My rationale:
+> =E2=80=8BCurrent code: No code path triggers this condition today --> Han=
+dling
+> code would be "dead" for now.
+> =E2=80=8BFuture risks: If a bug introduced later allows the condition to =
+occur,
+> silent failure or crashes could result.
+> Is there a kernel/dev policy on such preemptive safeguards? Or should we
+> address these only when the triggering scenarios materialize?
+>=20
+> Your insight would help me align with the project=E2=80=99s practices.
+> Thanks in advance!
+>=20
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+There is no firm policy here. We just have to make a judgment call in
+these situations.
+
+In general, we don't want to litter the code with a lot of conditionals
+or BUG_ONs/WARN_ONs for cases that can really never happen, as that
+might slow things down for little benefit, and it makes the code less
+readable. OTOH, being proactive about catching errors is a good thing,
+so if there is any chance that things could change in the future, it's
+good to have a warning about it.
+
+In this particular case, given that we have to hold a reference in
+order to pass a pointer to the ctx in the first place, there is little
+value in doing (e.g.) WARN_ON(!open_ctx), as that should really never
+happen.
+
+
+
+> Best regards,
+> Lingfeng
+> >=20
+> >=20
+> > > +	if (open_ctx)
+> > > +		p->ctx =3D open_ctx;
+> > > +	else
+> > > +		goto out_free;
+> > If we did decide to keep the error handling however, this would leak
+> > l_ctx. That reference would also need to be put if open_ctx was NULL
+> > here.
+> >=20
+> > >   	p->arg.fh =3D NFS_FH(inode);
+> > >   	p->arg.fl =3D &p->fl;
+> > >   	p->arg.seqid =3D seqid;
+> > >   	p->res.seqid =3D seqid;
+> > >   	p->lsp =3D lsp;
+> > > -	/* Ensure we don't close file until we're done freeing locks! */
+> > > -	p->ctx =3D get_nfs_open_context(ctx);
+> > >   	locks_init_lock(&p->fl);
+> > >   	locks_copy_lock(&p->fl, fl);
+> > >   	p->server =3D NFS_SERVER(inode);
+> > > @@ -7100,6 +7103,9 @@ static struct nfs4_unlockdata *nfs4_alloc_unloc=
+kdata(struct file_lock *fl,
+> > >   	nfs4_stateid_copy(&p->arg.stateid, &lsp->ls_stateid);
+> > >   	spin_unlock(&state->state_lock);
+> > >   	return p;
+> > > +out_free:
+> > > +	kfree(p);
+> > > +	return NULL;
+> > >   }
+> > >  =20
+> > >   static void nfs4_locku_release_calldata(void *data)
+> > > @@ -7327,6 +7333,8 @@ static struct nfs4_lockdata *nfs4_alloc_lockdat=
+a(struct file_lock *fl,
+> > >   	p->lsp =3D lsp;
+> > >   	p->server =3D server;
+> > >   	p->ctx =3D get_nfs_open_context(ctx);
+> > > +	if (!p->ctx)
+> > > +		goto out_free_seqid;
+> > >   	locks_init_lock(&p->fl);
+> > >   	locks_copy_lock(&p->fl, fl);
+> > >   	return p;
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
