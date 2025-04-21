@@ -1,58 +1,56 @@
-Return-Path: <linux-nfs+bounces-11202-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11203-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B11DA950CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:22:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 698B5A950E3
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:28:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 66B6B3B37B6
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:22:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54D413ADCBD
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C34B7264636;
-	Mon, 21 Apr 2025 12:22:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026942580C2;
+	Mon, 21 Apr 2025 12:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dLGr8qkn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t46gk5VG"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF0826462E
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 12:22:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09A2264A7A
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 12:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238163; cv=none; b=B4RIXQ8rM4cRfKLCU5AweRvfBrNh313xLBCsc1ER1G62GiEnd2u1Y+yaIonnrRn4P8+6dPVq2NTTSOTYcjRxrSwn1ZO71rnF1uSHLAIphz/xxKCkd8G3+hNT8SGwRoujsWj9UxgQR6AjhqpdabQ/ZlaikP2ItnhtSQCtteSAkSo=
+	t=1745238506; cv=none; b=kFfsrlp5O3c8SYi8XKnD0CD1IDmW/HjDAJL+G4/1x4ptQuNxffxMcQOUaYHAlNM8iAwCh97Wt2XrUQ9NY4EkRny7+5WBjI/rNgye08yZjCbyqNRmZP7Ovjl/YibDO+C+p/k+iLdCpdz/tpvzwBUdte/jjjVEwyLG3yksKlcaTw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238163; c=relaxed/simple;
-	bh=QjppL2LagWrgJRozlKOrpRGPgg5al4nW/gaRNCsK4gQ=;
+	s=arc-20240116; t=1745238506; c=relaxed/simple;
+	bh=um/YH0OaWKXEDZAMhAi89ccbxZRa3P3E7497RgVjs5U=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E7Shp1Qm50zEQgTohalHahauUQ+vWMVAbT/CbQKaJ8afjw8Oe+K0d0Ti4XNvGxowkS3fUkhh+BegoDbW+hfsVz/P6R6YPx+30z+uGjUxbDOse/wv2PxUZb1vrrRmsM2UHqRHq5kIiZbYDamHCywQ/JxSwlVgKKslNh8104ASYHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dLGr8qkn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E6C0C4CEE4;
-	Mon, 21 Apr 2025 12:22:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WRB6OO+AVkhyZgMxy8xUwVqE7UOIqrrJxRxTz1I3iX7VcVWhcB5ZtkCg3y3UEk/gZOP3YjCEx0rmPWh66Lw8SMTdfd8gt/GAPp09pKNrU4ewlCaWjM5r9IfBIDRIgGsCrVYkWUAEkAbGbMlMFtX7TOu7bzaQQTCQcIl5XAu88Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t46gk5VG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC9CC4CEE4;
+	Mon, 21 Apr 2025 12:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745238162;
-	bh=QjppL2LagWrgJRozlKOrpRGPgg5al4nW/gaRNCsK4gQ=;
+	s=k20201202; t=1745238506;
+	bh=um/YH0OaWKXEDZAMhAi89ccbxZRa3P3E7497RgVjs5U=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=dLGr8qknCzPJwycOyzeG9tSjiqd4JuVlYDdbTwUXp3lzs9iOJIcobAiz+DnM9/QBK
-	 8zZ6W2j5oCbEXjQhwIMcbyNz4XIdfAyTRd9/6QGSilsXvygEewJ6bfAmg6tlQw+8sd
-	 grvBjIWuC9nhd3TCV2ApXkvxPz8j4wpKOCZhWwRsB4zSbqV4WHAUSS2pvVpEQXwFp1
-	 TASMAZVpAeTxab8JvcgjhASFG0ECNLfvLK9LerLfELJiNOoUGOsHOkaDx1RzoJSObK
-	 jI0FdwSLvwpEvknM92nF65qeFkXyPM6Q/koPbZoUOMoqWpqBU2RySPHr2MuMtj2qjB
-	 GYn7ATTKJonhg==
-Message-ID: <4f3228ee1730142246c23fd694128488157a9fa7.camel@kernel.org>
-Subject: Re: [PATCH v2 04/10] sunrpc: Replace the rq_vec array with
- dynamically-allocated memory
+	b=t46gk5VGPQJ8nAZhrukg7wAD+RBl8JJY2GLjudwR7NUR20N/qWUqc79ckKucerd1K
+	 h0ODPUX7MM2PY37hIW2mQL+FqM6697eyNUh1CTX0c1MzoVQBB8P5lqaYe2yvBwofn0
+	 6QFKYcmUk0tq4rkjCiF3TsTCjjuJZy+0egQq4wtmIC5kuojIkHcK/9v1yjMp8oltx8
+	 0cAtnzeGI+ybxSo2zcRNCuUMny8F//C3btBkZ0r56yeKzlr65DcFMU93JKqlPfgmXK
+	 QShgf9YrbszZCyf7W6Vrm3h7+JtWRoEkoNTOnBNX1JELp2JWRfuSBzR3gFIeoxdGDx
+	 Sojzjrg1HTFgQ==
+Message-ID: <b2083da5bea0c3de1cb25a3258e72acab3d02682.camel@kernel.org>
+Subject: Re: [PATCH v2 00/10] Allocate payload arrays dynamically
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 21 Apr 2025 08:22:40 -0400
-In-Reply-To: <20250419172818.6945-5-cel@kernel.org>
+Date: Mon, 21 Apr 2025 08:28:24 -0400
+In-Reply-To: <20250419172818.6945-1-cel@kernel.org>
 References: <20250419172818.6945-1-cel@kernel.org>
-	 <20250419172818.6945-5-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,107 +138,83 @@ MIME-Version: 1.0
 On Sat, 2025-04-19 at 13:28 -0400, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> As a step towards making NFSD's maximum rsize and wsize variable at
-> run-time, replace the fixed-size rq_vec[] array in struct svc_rqst
-> with a chunk of dynamically-allocated memory.
+> In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
+> need to do something clever with the payload arrays embedded in
+> struct svc_rqst and elsewhere.
 >=20
-> The rq_vec array is sized assuming request processing will need at
-> most one kvec per page in a maximum-sized RPC message.
+> My preference is to keep these arrays allocated all the time because
+> allocating them on demand increases the risk of a memory allocation
+> failure during a large I/O. This is a quick-and-dirty approach that
+> might be replaced once NFSD is converted to use large folios.
 >=20
-> On a system with 8-byte pointers and 4KB pages, pahole reports that
-> the rq_vec[] array is 4144 bytes. Replacing it with a single
-> pointer reduces the size of struct svc_rqst to about 5400 bytes.
-
-nit: so I guess the current struct is ~9k or so? If you're going to
-post numbers here, they should probably refer to the same thing.
-
-I'm lazy -- don't make me do math.
-
+> The downside of this design choice is that it pins a few pages per
+> NFSD thread (and that's the current situation already). But note
+> that because RPCSVC_MAXPAGES is 259, each array is just over a page
+> in size, making the allocation waste quite a bit of memory beyond
+> the end of the array due to power-of-2 allocator round up. This gets
+> worse as the MAXPAGES value is doubled or quadrupled.
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/nfs4proc.c         | 1 -
->  fs/nfsd/vfs.c              | 2 +-
->  include/linux/sunrpc/svc.h | 2 +-
->  net/sunrpc/svc.c           | 8 +++++++-
->  4 files changed, 9 insertions(+), 4 deletions(-)
+> This series also addresses similar issues in the socket and RDMA
+> transports.
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index b397246dae7b..d1be58b557d1 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1228,7 +1228,6 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_co=
-mpound_state *cstate,
->  	write->wr_how_written =3D write->wr_stable_how;
-> =20
->  	nvecs =3D svc_fill_write_vector(rqstp, &write->wr_payload);
-> -	WARN_ON_ONCE(nvecs > ARRAY_SIZE(rqstp->rq_vec));
-> =20
->  	status =3D nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
->  				write->wr_offset, rqstp->rq_vec, nvecs, &cnt,
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 9abdc4b75813..4eaac3aa7e15 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1094,7 +1094,7 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struc=
-t svc_fh *fhp,
->  		++v;
->  		base =3D 0;
->  	}
-> -	WARN_ON_ONCE(v > ARRAY_SIZE(rqstp->rq_vec));
-> +	WARN_ON_ONCE(v > rqstp->rq_maxpages);
-> =20
->  	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
->  	iov_iter_kvec(&iter, ITER_DEST, rqstp->rq_vec, v, *count);
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 96ac12dbb04d..72d016772711 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -207,7 +207,7 @@ struct svc_rqst {
->  	struct page *		*rq_page_end;  /* one past the last page */
-> =20
->  	struct folio_batch	rq_fbatch;
-> -	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
-> +	struct kvec		*rq_vec;
->  	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
-> =20
->  	__be32			rq_xid;		/* transmission id */
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 682e11c9be36..5808d4b97547 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -675,6 +675,7 @@ static void
->  svc_rqst_free(struct svc_rqst *rqstp)
->  {
->  	folio_batch_release(&rqstp->rq_fbatch);
-> +	kfree(rqstp->rq_vec);
->  	svc_release_buffer(rqstp);
->  	if (rqstp->rq_scratch_page)
->  		put_page(rqstp->rq_scratch_page);
-> @@ -713,6 +714,11 @@ svc_prepare_thread(struct svc_serv *serv, struct svc=
-_pool *pool, int node)
->  	if (!svc_init_buffer(rqstp, serv, node))
->  		goto out_enomem;
-> =20
-> +	rqstp->rq_vec =3D kcalloc_node(rqstp->rq_maxpages, sizeof(struct kvec),
-> +				      GFP_KERNEL, node);
-> +	if (!rqstp->rq_vec)
-> +		goto out_enomem;
-> +
->  	rqstp->rq_err =3D -EAGAIN; /* No error yet */
-> =20
->  	serv->sv_nrthreads +=3D 1;
-> @@ -1750,7 +1756,7 @@ unsigned int svc_fill_write_vector(struct svc_rqst =
-*rqstp,
->  		++pages;
->  	}
-> =20
-> -	WARN_ON_ONCE(i > ARRAY_SIZE(rqstp->rq_vec));
-> +	WARN_ON_ONCE(i > rqstp->rq_maxpages);
->  	return i;
->  }
->  EXPORT_SYMBOL_GPL(svc_fill_write_vector);
+> Chuck Lever (9):
+>   sunrpc: Remove backchannel check in svc_init_buffer()
+>   sunrpc: Add a helper to derive maxpages from sv_max_mesg
+>   sunrpc: Replace the rq_pages array with dynamically-allocated memory
+>   sunrpc: Replace the rq_vec array with dynamically-allocated memory
+>   sunrpc: Replace the rq_bvec array with dynamically-allocated memory
+>   sunrpc: Adjust size of socket's receive page array dynamically
+>   svcrdma: Adjust the number of RDMA contexts per transport
+>   svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
+>   svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
+>=20
+>  fs/nfsd/nfs4proc.c                       |  1 -
+>  fs/nfsd/vfs.c                            |  2 +-
+>  include/linux/sunrpc/svc.h               | 19 +++++++--
+>  include/linux/sunrpc/svc_rdma.h          |  6 ++-
+>  include/linux/sunrpc/svcsock.h           |  4 +-
+>  net/sunrpc/svc.c                         | 51 +++++++++++++++---------
+>  net/sunrpc/svc_xprt.c                    | 10 +----
+>  net/sunrpc/svcsock.c                     | 15 ++++---
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  8 +++-
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c        |  2 +-
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 16 ++++++--
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
+>  12 files changed, 88 insertions(+), 48 deletions(-)
+>=20
+> --=20
+> 2.49.0
+>=20
+>=20
+> Chuck Lever (10):
+>   sunrpc: Remove backchannel check in svc_init_buffer()
+>   sunrpc: Add a helper to derive maxpages from sv_max_mesg
+>   sunrpc: Replace the rq_pages array with dynamically-allocated memory
+>   sunrpc: Replace the rq_vec array with dynamically-allocated memory
+>   sunrpc: Replace the rq_bvec array with dynamically-allocated memory
+>   sunrpc: Adjust size of socket's receive page array dynamically
+>   svcrdma: Adjust the number of RDMA contexts per transport
+>   svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
+>   svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
+>   sunrpc: Remove the RPCSVC_MAXPAGES macro
+>=20
+>  fs/nfsd/nfs4proc.c                       |  1 -
+>  fs/nfsd/vfs.c                            |  2 +-
+>  include/linux/sunrpc/svc.h               | 31 +++++++++-----
+>  include/linux/sunrpc/svc_rdma.h          |  6 ++-
+>  include/linux/sunrpc/svcsock.h           |  4 +-
+>  net/sunrpc/svc.c                         | 51 +++++++++++++++---------
+>  net/sunrpc/svc_xprt.c                    | 10 +----
+>  net/sunrpc/svcsock.c                     | 15 ++++---
+>  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  8 +++-
+>  net/sunrpc/xprtrdma/svc_rdma_rw.c        |  2 +-
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 16 ++++++--
+>  net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
+>  12 files changed, 93 insertions(+), 55 deletions(-)
+>=20
 
---=20
-Jeff Layton <jlayton@kernel.org>
+I think the pile looks fine, modulo a few nits (which you can clean up
+if you like).
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
