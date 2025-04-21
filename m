@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-11203-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11204-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 698B5A950E3
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 14:28:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29F56A951B2
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 15:31:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54D413ADCBD
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 12:28:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CF0172A36
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 13:31:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026942580C2;
-	Mon, 21 Apr 2025 12:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C071B5EB5;
+	Mon, 21 Apr 2025 13:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t46gk5VG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHC6Haf6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09A2264A7A
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 12:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67C2AF1E
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 13:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745238506; cv=none; b=kFfsrlp5O3c8SYi8XKnD0CD1IDmW/HjDAJL+G4/1x4ptQuNxffxMcQOUaYHAlNM8iAwCh97Wt2XrUQ9NY4EkRny7+5WBjI/rNgye08yZjCbyqNRmZP7Ovjl/YibDO+C+p/k+iLdCpdz/tpvzwBUdte/jjjVEwyLG3yksKlcaTw4=
+	t=1745242248; cv=none; b=airM7OO1xCqOhE8+L5S0J6T3nHIqdK6Bx7AezY6ogfkqVl3yME6aQPolYME6o3a37winE+N1L17liS4J68aNs1FcXebRKAkotyhIKuWnwFRjbM9UaJMnt7BplvbX2qy53e5NVNiDkj9pg5u6VuDCE+Hz56vSbGCg/32EK+LBH0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745238506; c=relaxed/simple;
-	bh=um/YH0OaWKXEDZAMhAi89ccbxZRa3P3E7497RgVjs5U=;
+	s=arc-20240116; t=1745242248; c=relaxed/simple;
+	bh=BItSzitY1dl2aISpEHflnTRNaWSM4TRpRn2ZAAHVeUc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WRB6OO+AVkhyZgMxy8xUwVqE7UOIqrrJxRxTz1I3iX7VcVWhcB5ZtkCg3y3UEk/gZOP3YjCEx0rmPWh66Lw8SMTdfd8gt/GAPp09pKNrU4ewlCaWjM5r9IfBIDRIgGsCrVYkWUAEkAbGbMlMFtX7TOu7bzaQQTCQcIl5XAu88Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t46gk5VG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC9CC4CEE4;
-	Mon, 21 Apr 2025 12:28:25 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WtjPFInFAJWOk+LGHagWoci3IHndDIrmu08IMJk+nLbtxcSrMKSvkbwwJgKQ871c8395PLPLTRv/P/RJHOHg0H/+9sZp5rhiD+0M7jLW89SlCrxqXXjrFv1IDi0H5Q+NpxVW7K9RoXZ8P51oD/k+yT5/m+UhK7YUxC2ln9w1PPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHC6Haf6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9906FC4CEE4;
+	Mon, 21 Apr 2025 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745238506;
-	bh=um/YH0OaWKXEDZAMhAi89ccbxZRa3P3E7497RgVjs5U=;
+	s=k20201202; t=1745242248;
+	bh=BItSzitY1dl2aISpEHflnTRNaWSM4TRpRn2ZAAHVeUc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=t46gk5VGPQJ8nAZhrukg7wAD+RBl8JJY2GLjudwR7NUR20N/qWUqc79ckKucerd1K
-	 h0ODPUX7MM2PY37hIW2mQL+FqM6697eyNUh1CTX0c1MzoVQBB8P5lqaYe2yvBwofn0
-	 6QFKYcmUk0tq4rkjCiF3TsTCjjuJZy+0egQq4wtmIC5kuojIkHcK/9v1yjMp8oltx8
-	 0cAtnzeGI+ybxSo2zcRNCuUMny8F//C3btBkZ0r56yeKzlr65DcFMU93JKqlPfgmXK
-	 QShgf9YrbszZCyf7W6Vrm3h7+JtWRoEkoNTOnBNX1JELp2JWRfuSBzR3gFIeoxdGDx
-	 Sojzjrg1HTFgQ==
-Message-ID: <b2083da5bea0c3de1cb25a3258e72acab3d02682.camel@kernel.org>
-Subject: Re: [PATCH v2 00/10] Allocate payload arrays dynamically
+	b=QHC6Haf6uXnZzapaRvhq0lRc99C4cs8P+Ih0DXs4T6nn4Q9cqpb0FADRf25GgRzvy
+	 5YPQkrhl0Sfb7CN2VCl2nxhD0cgoTulfDwXOpV9x+o+zgmNclHvuiu2YlqEpp5T73n
+	 5OiLH9I2hY+9QV3ufO/E+KAt33Ww0BwZDCAcDsydJmqHYiPNdn1cChNZ0RPvxVsd4V
+	 chr8OA7/BtLy3uh5yBvu7bUf2hqGF3zn9G4HEKFr0GYYnjK2ydgLz8QCivIYje9dBo
+	 gisSDyu+k7CMJ5DxHgwO1qH9H2xbS1Ks/8o7TbaweYh/GvicdCflRHaqsZBm2yEgRa
+	 Kg5cel0voY+Fg==
+Message-ID: <90c00a85362940d06eab4bb864b686b9842411a9.camel@kernel.org>
+Subject: Re: [PATCH v2 0/2] nfs: don't share pNFS DS connections between net
+ namespaces
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Mon, 21 Apr 2025 08:28:24 -0400
-In-Reply-To: <20250419172818.6945-1-cel@kernel.org>
-References: <20250419172818.6945-1-cel@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.keornel.org
+Date: Mon, 21 Apr 2025 09:30:46 -0400
+In-Reply-To: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
+References: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,86 +135,52 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-04-19 at 13:28 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 2025-04-10 at 16:42 -0400, Jeff Layton wrote:
+> Sargun noted that he had seen some cases where a dead netns with a stuck
+> NFS mount in it would affect other containers. Omar took a look last
+> week and noted that there was a global list of DS connections and there
+> was no segregation by namespace.
 >=20
-> In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
-> need to do something clever with the payload arrays embedded in
-> struct svc_rqst and elsewhere.
+> The first patch in the series fixes this in a minimal way by tracking
+> struct net in the nfs4_pnfs_ds structure and not matching it when the
+> caller's net is different. The second patch goes the rest of the way,
+> and makes the nfs4_data_server_cache and lock be per-net.
 >=20
-> My preference is to keep these arrays allocated all the time because
-> allocating them on demand increases the risk of a memory allocation
-> failure during a large I/O. This is a quick-and-dirty approach that
-> might be replaced once NFSD is converted to use large folios.
+> My thought was that the first patch should be suitable for stable
+> kernels, and both could go to mainline. If you think the risk is low
+> though, we could just squash the two together.
 >=20
-> The downside of this design choice is that it pins a few pages per
-> NFSD thread (and that's the current situation already). But note
-> that because RPCSVC_MAXPAGES is 259, each array is just over a page
-> in size, making the allocation waste quite a bit of memory beyond
-> the end of the array due to power-of-2 allocator round up. This gets
-> worse as the MAXPAGES value is doubled or quadrupled.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v2:
+> - fix build break when IS_ENABLED(CONFIG_NFS_V4_1) is false
+> - Link to v1: https://lore.kernel.org/r/20250410-nfs-ds-netns-v1-0-cc6236=
+e84190@kernel.org
 >=20
-> This series also addresses similar issues in the socket and RDMA
-> transports.
+> ---
+> Jeff Layton (2):
+>       nfs: don't share pNFS DS connections between net namespaces
+>       nfs: move the nfs4_data_server_cache into struct nfs_net
 >=20
-> Chuck Lever (9):
->   sunrpc: Remove backchannel check in svc_init_buffer()
->   sunrpc: Add a helper to derive maxpages from sv_max_mesg
->   sunrpc: Replace the rq_pages array with dynamically-allocated memory
->   sunrpc: Replace the rq_vec array with dynamically-allocated memory
->   sunrpc: Replace the rq_bvec array with dynamically-allocated memory
->   sunrpc: Adjust size of socket's receive page array dynamically
->   svcrdma: Adjust the number of RDMA contexts per transport
->   svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
->   svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
+>  fs/nfs/client.c                           |  7 +++++++
+>  fs/nfs/filelayout/filelayoutdev.c         |  6 +++---
+>  fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 +++---
+>  fs/nfs/netns.h                            |  6 +++++-
+>  fs/nfs/pnfs.h                             |  4 +++-
+>  fs/nfs/pnfs_nfs.c                         | 32 +++++++++++++++++--------=
+------
+>  6 files changed, 39 insertions(+), 22 deletions(-)
+> ---
+> base-commit: cf03f570936ac96ed4775eb2e4f1a6ab6a13f143
+> change-id: 20250410-nfs-ds-netns-321c78c16a79
 >=20
->  fs/nfsd/nfs4proc.c                       |  1 -
->  fs/nfsd/vfs.c                            |  2 +-
->  include/linux/sunrpc/svc.h               | 19 +++++++--
->  include/linux/sunrpc/svc_rdma.h          |  6 ++-
->  include/linux/sunrpc/svcsock.h           |  4 +-
->  net/sunrpc/svc.c                         | 51 +++++++++++++++---------
->  net/sunrpc/svc_xprt.c                    | 10 +----
->  net/sunrpc/svcsock.c                     | 15 ++++---
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  8 +++-
->  net/sunrpc/xprtrdma/svc_rdma_rw.c        |  2 +-
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 16 ++++++--
->  net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
->  12 files changed, 88 insertions(+), 48 deletions(-)
->=20
-> --=20
-> 2.49.0
->=20
->=20
-> Chuck Lever (10):
->   sunrpc: Remove backchannel check in svc_init_buffer()
->   sunrpc: Add a helper to derive maxpages from sv_max_mesg
->   sunrpc: Replace the rq_pages array with dynamically-allocated memory
->   sunrpc: Replace the rq_vec array with dynamically-allocated memory
->   sunrpc: Replace the rq_bvec array with dynamically-allocated memory
->   sunrpc: Adjust size of socket's receive page array dynamically
->   svcrdma: Adjust the number of RDMA contexts per transport
->   svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
->   svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
->   sunrpc: Remove the RPCSVC_MAXPAGES macro
->=20
->  fs/nfsd/nfs4proc.c                       |  1 -
->  fs/nfsd/vfs.c                            |  2 +-
->  include/linux/sunrpc/svc.h               | 31 +++++++++-----
->  include/linux/sunrpc/svc_rdma.h          |  6 ++-
->  include/linux/sunrpc/svcsock.h           |  4 +-
->  net/sunrpc/svc.c                         | 51 +++++++++++++++---------
->  net/sunrpc/svc_xprt.c                    | 10 +----
->  net/sunrpc/svcsock.c                     | 15 ++++---
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  8 +++-
->  net/sunrpc/xprtrdma/svc_rdma_rw.c        |  2 +-
->  net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 16 ++++++--
->  net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
->  12 files changed, 93 insertions(+), 55 deletions(-)
->=20
+> Best regards,
 
-I think the pile looks fine, modulo a few nits (which you can clean up
-if you like).
+Trond,
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Does this set look reasonable for v6.15?
+
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
 
