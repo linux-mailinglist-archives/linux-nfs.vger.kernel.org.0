@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-11204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29F56A951B2
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 15:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A75CA951CE
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 15:40:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50CF0172A36
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 13:31:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62A61172AED
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 13:40:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C071B5EB5;
-	Mon, 21 Apr 2025 13:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4713264A74;
+	Mon, 21 Apr 2025 13:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QHC6Haf6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKHB/QIl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE67C2AF1E
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 13:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5D3B640
+	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 13:40:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745242248; cv=none; b=airM7OO1xCqOhE8+L5S0J6T3nHIqdK6Bx7AezY6ogfkqVl3yME6aQPolYME6o3a37winE+N1L17liS4J68aNs1FcXebRKAkotyhIKuWnwFRjbM9UaJMnt7BplvbX2qy53e5NVNiDkj9pg5u6VuDCE+Hz56vSbGCg/32EK+LBH0s=
+	t=1745242805; cv=none; b=qFt3i9CepohfDpNF+VyPVBdZ9UGKNreJpq45rX56S0K76yjzhMMMydrKi+eKrbdUfA74XY214BE/GDwOz/MR3laUqOXfchJJ7xJm2tIcCV9irrSA8zvlDm3Y5U/VOZDTZrTZi5TDD92961prEjM87mNnPWdFooGQEKZKSiaTSPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745242248; c=relaxed/simple;
-	bh=BItSzitY1dl2aISpEHflnTRNaWSM4TRpRn2ZAAHVeUc=;
+	s=arc-20240116; t=1745242805; c=relaxed/simple;
+	bh=2b8g3lbPYkf9tgt8OqTfesRBVnVYYC+y3n1Ea+o9WO8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WtjPFInFAJWOk+LGHagWoci3IHndDIrmu08IMJk+nLbtxcSrMKSvkbwwJgKQ871c8395PLPLTRv/P/RJHOHg0H/+9sZp5rhiD+0M7jLW89SlCrxqXXjrFv1IDi0H5Q+NpxVW7K9RoXZ8P51oD/k+yT5/m+UhK7YUxC2ln9w1PPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QHC6Haf6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9906FC4CEE4;
-	Mon, 21 Apr 2025 13:30:47 +0000 (UTC)
+	 Content-Type:MIME-Version; b=bmgt3obRaA0dn4HiIGLi+ByJ9AO2VODc+koRdALgcg6GGvRSVeRWPQVS5KGPU7E/gFq7819uLOZLiTrO2DkInVaMC6AxpB4P+yCL5vA3tuOV/ASZV6lMIDzNlrkIkQhKCIsQP9eSbmmMEsFAM8mt4S/fRG4gd3RKKqP/+Ao6tzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKHB/QIl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09607C4CEE4;
+	Mon, 21 Apr 2025 13:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745242248;
-	bh=BItSzitY1dl2aISpEHflnTRNaWSM4TRpRn2ZAAHVeUc=;
+	s=k20201202; t=1745242805;
+	bh=2b8g3lbPYkf9tgt8OqTfesRBVnVYYC+y3n1Ea+o9WO8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=QHC6Haf6uXnZzapaRvhq0lRc99C4cs8P+Ih0DXs4T6nn4Q9cqpb0FADRf25GgRzvy
-	 5YPQkrhl0Sfb7CN2VCl2nxhD0cgoTulfDwXOpV9x+o+zgmNclHvuiu2YlqEpp5T73n
-	 5OiLH9I2hY+9QV3ufO/E+KAt33Ww0BwZDCAcDsydJmqHYiPNdn1cChNZ0RPvxVsd4V
-	 chr8OA7/BtLy3uh5yBvu7bUf2hqGF3zn9G4HEKFr0GYYnjK2ydgLz8QCivIYje9dBo
-	 gisSDyu+k7CMJ5DxHgwO1qH9H2xbS1Ks/8o7TbaweYh/GvicdCflRHaqsZBm2yEgRa
-	 Kg5cel0voY+Fg==
-Message-ID: <90c00a85362940d06eab4bb864b686b9842411a9.camel@kernel.org>
-Subject: Re: [PATCH v2 0/2] nfs: don't share pNFS DS connections between net
- namespaces
+	b=sKHB/QIlkfPR0R13oalwoWS4Tz/3sOXWHHRJTzj7pRMhEho6d1Kprymv3m5QBE/Y2
+	 0kVJsTB9RuPlYDtwr+UoTEmz4WtRQL7kgGuz4tEFGFnK4NWdOqsgewpc7qfR/pMZm/
+	 WDQJN07eHfDWUXrj9R1yhNlGIsD2rlEsvKCbJNVjj700fSMCj3uLqSuvfMvQG1Kzfa
+	 YoMbXCxM8koRNef1B3Rp1judxWB7Z3Wi4ytYQi5or7K1DOtS3ICwBx4k2yXPoJ3XeS
+	 LKOzZCkqP+IysE/MPxSsNCUtO4IfEDnBn7UXgQ3Y5XPd95Tfi/jtJUPZczoWuJZV13
+	 v+4kcX+Ht0gaA==
+Message-ID: <1b2c626c62b32568d5a722b50164a495ef10314c.camel@kernel.org>
+Subject: Re: [PATCH] pynfs: add test for read with delegation stateid after
+ close
 From: Jeff Layton <jlayton@kernel.org>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Omar Sandoval <osandov@osandov.com>, Sargun Dillon <sargun@sargun.me>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.keornel.org
-Date: Mon, 21 Apr 2025 09:30:46 -0400
-In-Reply-To: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
-References: <20250410-nfs-ds-netns-v2-0-f80b7979ba80@kernel.org>
+To: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>, calum.mackay@oracle.com
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 21 Apr 2025 09:40:03 -0400
+In-Reply-To: <20250411111902.132591-1-tigran.mkrtchyan@desy.de>
+References: <20250411111902.132591-1-tigran.mkrtchyan@desy.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,52 +134,99 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-04-10 at 16:42 -0400, Jeff Layton wrote:
-> Sargun noted that he had seen some cases where a dead netns with a stuck
-> NFS mount in it would affect other containers. Omar took a look last
-> week and noted that there was a global list of DS connections and there
-> was no segregation by namespace.
+On Fri, 2025-04-11 at 13:19 +0200, Tigran Mkrtchyan wrote:
+> This test checks the independence of delegation stateid from open
+> stateid.
 >=20
-> The first patch in the series fixes this in a minimal way by tracking
-> struct net in the nfs4_pnfs_ds structure and not matching it when the
-> caller's net is different. The second patch goes the rest of the way,
-> and makes the nfs4_data_server_cache and lock be per-net.
->=20
-> My thought was that the first patch should be suitable for stable
-> kernels, and both could go to mainline. If you think the risk is low
-> though, we could just squash the two together.
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
 > ---
-> Changes in v2:
-> - fix build break when IS_ENABLED(CONFIG_NFS_V4_1) is false
-> - Link to v1: https://lore.kernel.org/r/20250410-nfs-ds-netns-v1-0-cc6236=
-e84190@kernel.org
+>  nfs4.1/server41tests/st_delegation.py | 50 ++++++++++++++++++++++++++-
+>  1 file changed, 49 insertions(+), 1 deletion(-)
 >=20
-> ---
-> Jeff Layton (2):
->       nfs: don't share pNFS DS connections between net namespaces
->       nfs: move the nfs4_data_server_cache into struct nfs_net
->=20
->  fs/nfs/client.c                           |  7 +++++++
->  fs/nfs/filelayout/filelayoutdev.c         |  6 +++---
->  fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 +++---
->  fs/nfs/netns.h                            |  6 +++++-
->  fs/nfs/pnfs.h                             |  4 +++-
->  fs/nfs/pnfs_nfs.c                         | 32 +++++++++++++++++--------=
-------
->  6 files changed, 39 insertions(+), 22 deletions(-)
-> ---
-> base-commit: cf03f570936ac96ed4775eb2e4f1a6ab6a13f143
-> change-id: 20250410-nfs-ds-netns-321c78c16a79
->=20
-> Best regards,
+> diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests=
+/st_delegation.py
+> index f27e852..ea4c073 100644
+> --- a/nfs4.1/server41tests/st_delegation.py
+> +++ b/nfs4.1/server41tests/st_delegation.py
+> @@ -2,7 +2,7 @@ from .st_create_session import create_session
+>  from .st_open import open_claim4
+>  from xdrdef.nfs4_const import *
+> =20
+> -from .environment import check, fail, create_file, open_file, close_file=
+, do_getattrdict
+> +from .environment import check, fail, create_file, open_file, close_file=
+, do_getattrdict, close_file, write_file, read_file
+>  from xdrdef.nfs4_type import *
+>  import nfs_ops
+>  op =3D nfs_ops.NFS4ops()
+> @@ -390,3 +390,51 @@ def testCbGetattrWithChange(t, env):
+>      if FATTR4_TIME_DELEG_MODIFY in attrs2:
+>          if attrs1[FATTR4_TIME_MODIFY] =3D=3D attrs2[FATTR4_TIME_DELEG_MO=
+DIFY]:
+>              fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " =3D=
+=3D ", attrs2[FATTR4_TIME_DELEG_MODIFY])
+> +
+> +def testDelegReadAfterClose(t, env):
+> +    """Test read with delegation stateid after close
+> +
+> +    Create file with some data. Open the file for read, get delegation, =
+close the file.
+> +    Tesr that reads with delegation stateid still works.
+> +
+> +    FLAGS: deleg all
+> +    CODE: DELEG26
+> +    """
+> +    sess1 =3D env.c1.new_client_session(b"%s_1" % env.testname(t))
+> +
+> +    name =3D env.testname(t)
+> +    owner =3D b"owner_%s" % name
+> +
+> +    # craete file with some data
 
-Trond,
+nit: "create"
 
-Does this set look reasonable for v6.15?
+> +    res =3D create_file(sess1, owner)
+> +    check(res)
+> +
+> +    fh =3D res.resarray[-1].object
+> +    stateid =3D res.resarray[-2].stateid
+> +
+> +    res =3D write_file(sess1, fh, b'data', 0, stateid)
+> +    check(res)
+> +
+> +    res =3D close_file(sess1, fh, stateid=3Dstateid)
+> +    check(res)
+> +
+> +
+> +    # open file, get delegation, close the file
+> +    access =3D OPEN4_SHARE_ACCESS_READ | OPEN4_SHARE_ACCESS_WANT_READ_DE=
+LEG;
+> +    res =3D open_file(sess1, owner, access =3D access)
+> +    check(res)
+> +
+> +    fh =3D res.resarray[-1].object
+> +    stateid =3D res.resarray[-2].stateid
+> +    delegstateid =3D res.resarray[-2].delegation.read.stateid
+> +
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+It might be good to check that you got a delegation here, though the
+test will obviously fail either way.
+ *=20
+> +    res =3D close_file(sess1, fh, stateid=3Dstateid)
+> +    check(res)
+> +
+> +    # Issue READ with delegation sateid
+
+nit: "delegation stateid"
+
+> +    res =3D read_file(sess1, fh, 0, 10, delegstateid)
+> +    check(res)
+> +
+> +    # cleanup: return delegation
+> +    res =3D sess1.compound([op.putfh(fh), op.delegreturn(delegstateid)])
+> +    check(res)
+
+Looks reasonable otherwise.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
