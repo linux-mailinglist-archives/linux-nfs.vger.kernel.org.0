@@ -1,150 +1,129 @@
-Return-Path: <linux-nfs+bounces-11210-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11211-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF4BAA9577A
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 22:44:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D508A96733
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Apr 2025 13:23:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 981A0188DE9E
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Apr 2025 20:44:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 591A117CE25
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Apr 2025 11:23:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D881F03EA;
-	Mon, 21 Apr 2025 20:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="FHEkxxvR"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1E727BF6C;
+	Tue, 22 Apr 2025 11:22:57 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE4D1E0E13
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 20:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDD925F96F;
+	Tue, 22 Apr 2025 11:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745268279; cv=none; b=rrpBwfizC/DlV/BSGk5N98OmfA0ivetBBxfKc8IVF9xKtHKGihmJM56SPDvVXwfxx6JvApKpcHXU/ub42GPrgkx4YbTT8yEmEgEi3DM8T31ybTa5x5WBcScNyo3oyIXiK9yIx46wmrwstP/yTag8yvWoYglD3PAq7vhEAhOA2Sg=
+	t=1745320977; cv=none; b=D5I6GIvOpR83Ie6P1ZSFYYs2Xrg1hh61FViZ04QHmigdBXaugMS3JHP0d3o9BTngQgDhwR6i0FWnxa0MS3+NFvC8BEax9edJaNQdKfv/espMU13xdHDvXvVbqDKH6BFh8SvDV965fE0kFnwgh+z+IFC0lAbmljPKHNoTjO+5394=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745268279; c=relaxed/simple;
-	bh=jEtzNrLdaHSrsS8dewFbTc5tjuvUcnuSEJ4DayCva7k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fupwXkNBeipMfexibM4z9TgqujkdkNhgRNrao8QQPVboC+Ij3vN+RENXNKjWpcHC+eof5kTDoDGBsZ1co8scOA8pDQ/SJY4adDGDVrXgUsVcG4WDTgj1U8ovEkfI3uQWEyb1Vjw5cuWGrGdRTxAIZzGDkOk3mJEp9etZ0cbreEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=FHEkxxvR; arc=none smtp.client-ip=131.169.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 1814413F647
-	for <linux-nfs@vger.kernel.org>; Mon, 21 Apr 2025 22:44:27 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 1814413F647
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1745268267; bh=i5kjhqSUp9zyjqxeDgidmRZqj+p5WXZWHNuduV56xnI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FHEkxxvRit8tYE641lCWPKKBsZDDeq2v2vHTecK0I2jgA8dZ9sE01hs0K6/arx2Ir
-	 fiBr0A310c5aMfDSappJk70jbnDiO5R8n7Nrq93rNksO4VWh9FN5c5GFZyZPonSdtt
-	 mwh69lCPeCuZ90haad2zffnNfCJX3pMMmLFMUDHI=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-	by smtp-buf-1.desy.de (Postfix) with ESMTP id 0D3F520040;
-	Mon, 21 Apr 2025 22:44:27 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [194.95.239.47])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 0177240044;
-	Mon, 21 Apr 2025 22:44:26 +0200 (CEST)
-Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [131.169.56.82])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id D7DAF10A3CC;
-	Mon, 21 Apr 2025 22:44:25 +0200 (CEST)
-Received: from nairi.desy.de (VPN0027.desy.de [131.169.253.26])
-	by smtp-intra-1.desy.de (Postfix) with ESMTP id 97DBE80046;
-	Mon, 21 Apr 2025 22:44:25 +0200 (CEST)
-From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org,
-	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Subject: [PATCH pynfs v2] pynfs: add test for read with delegation stateid after close
-Date: Mon, 21 Apr 2025 22:44:24 +0200
-Message-ID: <20250421204424.35730-1-tigran.mkrtchyan@desy.de>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745320977; c=relaxed/simple;
+	bh=zTL90bad/j/J03MNrk8iChcdy57GihnCjKQVaL4RKTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=m/jvWasnKwRuHiPUtUSGF+1doyRyVRI6fzvYSTpwo0KTWuYdKHV39WmNLDvUyfMOGVVxvGpbNuVgCnVbERmo1yWtOFZZ/9Fm83420FEMVDp4+XXM+rMMXkmbIROufyAMlJ4S/pRu2tnFTYI6TSMSWO5uijAmPmnAleJyzCFwXtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zhfr23R0RzvWrs;
+	Tue, 22 Apr 2025 19:18:42 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 395C9180087;
+	Tue, 22 Apr 2025 19:22:51 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 22 Apr 2025 19:22:50 +0800
+Message-ID: <cd6db77d-fcb4-44d9-8f1b-61749b411c33@huawei.com>
+Date: Tue, 22 Apr 2025 19:22:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
+ full-featured API
+To: Leon Romanovsky <leon@kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
+ Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
+	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
+ Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff
+ Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
+	<okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+	<tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
+ Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
+	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<netdev@vger.kernel.org>
+References: <20250414120819.3053967-1-linyunsheng@huawei.com>
+ <20250420112110.GA32613@unreal>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20250420112110.GA32613@unreal>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-This test checks the independence of delegation stateid from open
-stateid.
+On 2025/4/20 19:21, Leon Romanovsky wrote:
 
-Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
----
- nfs4.1/server41tests/st_delegation.py | 53 ++++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
+...
 
-diff --git a/nfs4.1/server41tests/st_delegation.py b/nfs4.1/server41tests/st_delegation.py
-index f27e852..41095b9 100644
---- a/nfs4.1/server41tests/st_delegation.py
-+++ b/nfs4.1/server41tests/st_delegation.py
-@@ -2,7 +2,7 @@ from .st_create_session import create_session
- from .st_open import open_claim4
- from xdrdef.nfs4_const import *
- 
--from .environment import check, fail, create_file, open_file, close_file, do_getattrdict
-+from .environment import check, fail, create_file, open_file, close_file, do_getattrdict, close_file, write_file, read_file
- from xdrdef.nfs4_type import *
- import nfs_ops
- op = nfs_ops.NFS4ops()
-@@ -390,3 +390,54 @@ def testCbGetattrWithChange(t, env):
-     if FATTR4_TIME_DELEG_MODIFY in attrs2:
-         if attrs1[FATTR4_TIME_MODIFY] == attrs2[FATTR4_TIME_DELEG_MODIFY]:
-             fail("Bad modify time: ", attrs1[FATTR4_TIME_MODIFY], " == ", attrs2[FATTR4_TIME_DELEG_MODIFY])
-+
-+def testDelegReadAfterClose(t, env):
-+    """Test read with delegation stateid after close
-+
-+    Create file with some data. Open the file for read, get delegation, close the file.
-+    Tesr that reads with delegation stateid still works.
-+
-+    FLAGS: deleg all
-+    CODE: DELEG26
-+    """
-+    sess1 = env.c1.new_client_session(b"%s_1" % env.testname(t))
-+
-+    name = env.testname(t)
-+    owner = b"owner_%s" % name
-+
-+    # create file with some data
-+    res = create_file(sess1, owner)
-+    check(res)
-+
-+    fh = res.resarray[-1].object
-+    stateid = res.resarray[-2].stateid
-+
-+    res = write_file(sess1, fh, b'data', 0, stateid)
-+    check(res)
-+
-+    res = close_file(sess1, fh, stateid=stateid)
-+    check(res)
-+
-+
-+    # open file, get delegation, close the file
-+    access = OPEN4_SHARE_ACCESS_READ | OPEN4_SHARE_ACCESS_WANT_READ_DELEG;
-+    res = open_file(sess1, owner, access = access)
-+    check(res)
-+
-+    fh = res.resarray[-1].object
-+    stateid = res.resarray[-2].stateid
-+
-+    if not _got_deleg(res.resarray[-2].delegation):
-+        fail("Failed to get delegation")
-+    delegstateid = res.resarray[-2].delegation.read.stateid
-+
-+    res = close_file(sess1, fh, stateid=stateid)
-+    check(res)
-+
-+    # Issue READ with delegation stateid
-+    res = read_file(sess1, fh, 0, 10, delegstateid)
-+    check(res)
-+
-+    # cleanup: return delegation
-+    res = sess1.compound([op.putfh(fh), op.delegreturn(delegstateid)])
-+    check(res)
--- 
-2.49.0
+>>
+>> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
+>> index 11eda6b207f1..fb094527715f 100644
+>> --- a/drivers/vfio/pci/mlx5/cmd.c
+>> +++ b/drivers/vfio/pci/mlx5/cmd.c
+>> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
+>>  		if (ret)
+>>  			goto err_append;
+>>  		buf->allocated_length += filled * PAGE_SIZE;
+>> -		/* clean input for another bulk allocation */
+>> -		memset(page_list, 0, filled * sizeof(*page_list));
+>>  		to_fill = min_t(unsigned int, to_alloc,
+>>  				PAGE_SIZE / sizeof(*page_list));
+> 
+> If it is possible, let's drop this hunk to reduce merge conflicts.
+> The whole mlx5vf_add_migration_pages() is planned to be rewritten.
+> https://lore.kernel.org/linux-rdma/076a3991e663fe07c1a5395f5805c514b63e4d94.1744825142.git.leon@kernel.org/
+
+It seems mlx5vf_add_migration_pages() is changed to use the pattern
+of passing 'page_array + allocated' and 'nr_pages - allocated' in the
+above patch, so I think it is ok to drop the above hunk.
+
+Hi, Andrew
+Do you want me to resend this patch without the above hunk or it is
+possible that you can drop the above hunk when committing if there
+is no other comment need fixing?
+
+> 
+> Thanks
+> 
+> 
 
 
