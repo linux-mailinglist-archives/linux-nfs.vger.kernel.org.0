@@ -1,163 +1,115 @@
-Return-Path: <linux-nfs+bounces-11223-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11224-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31DDFA97DC8
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 06:25:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1E5FA97F8E
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 08:49:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5137D17CE33
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 04:25:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9035E3A70C5
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 06:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E005A265CBF;
-	Wed, 23 Apr 2025 04:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C8B1E47C5;
+	Wed, 23 Apr 2025 06:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHy0X3rB"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="mykjDivW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-70.smtpout.orange.fr [193.252.22.70])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6395265CBA;
-	Wed, 23 Apr 2025 04:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EBF2676D5
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 06:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745382336; cv=none; b=Ys8Gl987lPjYcKZ0K5wyLlPqDXPArNPlrEnM+h84jqxoDM3oE3So3or0/7ele9KM7Xv6sS2oMg+JVhv3D6etpEztMOrN7HX80/dp5V/6cvPgKz9fXXgHAQm9U5Zf5RAcLgtVO9rLGUdPZbcFG5QVbXpdqoGSg2lSh7qWr8rdN2U=
+	t=1745390961; cv=none; b=XuDOfPqbRFKXP3ZochR8jofDsJ9AdcHDyn9pi8cDLUfHaO+x7/esLDtiUxM1KnAhkeAhnuoxpS6UNSxF9nGT011KeO/xU3oZDeZ18JAVu2+lTjDo9gqCAq3kgh3hBRGo0SBOOxdyfByWzW66chfFY2aTcP/+q9sGthv2SjBetF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745382336; c=relaxed/simple;
-	bh=T4dxTjHbMdrsjf8LVgCA3UA6psQzEm5gWO89zxcso54=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Fv3aMbCDEpvOUyVZcWwFFOqGUal7uVoseD+AG6rbA0zJ/F58ulUjklZ1jyZ/jCk/nDieKoH7iO8W2JKOPGfNpeWVTgnSiYfFHXXr/ueeqwiLEeUTDr6mPbyWvU+vx1Nacd7Mz0Q16WHszIFjPs+ivfXs1z6TIydNBxqI0ltFTjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHy0X3rB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC778C4CEEE;
-	Wed, 23 Apr 2025 04:25:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745382336;
-	bh=T4dxTjHbMdrsjf8LVgCA3UA6psQzEm5gWO89zxcso54=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sHy0X3rB14dBHfS9hOR9bMglpxYPbnWqN4ahZb8CAG8IK4YlU67llR1bDw/Se8itr
-	 CS6ch5k0FcsOjDGEEKerdlA9YQkFiIEhKZJB/JnUqz1fDgxtn7y6/ldXBb+Dm/y9Ai
-	 KSxOeu57d+G378bJwoXsBx9/AEHazIBtroHQnBnDQrNbjAlDF+ud4He/3gQluJa6yM
-	 /i86sSPnqctzLWUrNxwf6JkYvQPEbvAiyni3EwAOb66VvQhcprOhYcT9BtcpiDHYSQ
-	 lK+X4kmz36xRRyghP8cOLxhAu5/iQAr6qF5Y/Ou8HMA5NoShlvBAiCfa1at2iBSSft
-	 SMHJeuLUpj87g==
-From: trondmy@kernel.org
-To: linux-nfs@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 3/3] NFS: Enable the RWF_DONTCACHE flag for the NFS client
-Date: Wed, 23 Apr 2025 00:25:32 -0400
-Message-ID: <ec165b304a7b56d1fa4c6c2b1ad1c04d4dcbd3f6.1745381692.git.trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745381692.git.trond.myklebust@hammerspace.com>
-References: <cover.1745381692.git.trond.myklebust@hammerspace.com>
+	s=arc-20240116; t=1745390961; c=relaxed/simple;
+	bh=J94UdOy+URG0llfJ2vo+R69UB36BEDE2iZtaRefabew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rjd+WXrdvXP9za2kj1dSn/GseICv9DGm7djsq+ebbRwBYSEqJv7suxlu6dmmSE5lTqgBgPqb6BZadP6lvU7XoQNs/JC6U9Fca85aXYNTMQ1CHsHiJLGV9e4mBefLn0I7G8lTcEoaF/MucUFGEdfCXnpGbW68+Ddlx1QLeIGneP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=mykjDivW; arc=none smtp.client-ip=193.252.22.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id 7TtmuTh5F5k817TtquMKgL; Wed, 23 Apr 2025 08:48:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1745390887;
+	bh=+EKREV3L/L0Eu5q9rdAhYaLjHeWbUg34NalARwPzRtk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=mykjDivWBOA4gPDa+Pk/qc9nELYidYpaT+0Tvmj8z9zoZpn48FZXSpnuJd9Q+Hvzj
+	 Y2mJZmQ2ciuklnWnLTevZhI8JNViDiIBFTk9BU9RZKqh314lFvN2pkwdeDbrn7kAcY
+	 EASJJIJWDjW+GrGKcCMlxAnGWe4tDE3YbDfNXeK5wsjVZhVJ43qxk8C/iTy/thUntL
+	 oNG3k7PpahK22JwLIP5Tt7QLsGmj+Z269l0EuO1+fPgFc9/2yXONx4j0LaWi366U64
+	 LExUk4tJxlIKtO+hqsqr3HOiWUmCT4IjxvuU+LXbOt8ER2+inBcnrmqNw3tC/mWQIk
+	 AIZDc9I7SeN4Q==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 23 Apr 2025 08:48:07 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <96bff204-4cdc-426c-981d-29912243b5d1@wanadoo.fr>
+Date: Wed, 23 Apr 2025 15:47:58 +0900
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] nfs: add dummy definition for nfsd_file
+To: NeilBrown <neilb@suse.de>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna.schumaker@oracle.com>, linux-nfs@vger.kernel.org,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+References: <> <20250422220200.otabh5q7efh63rjh@pali>
+ <174536837419.500591.6789771877874461689@noble.neil.brown.name>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <174536837419.500591.6789771877874461689@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On 23/04/2025 at 09:32, NeilBrown wrote:
+> On Wed, 23 Apr 2025, Pali Rohár wrote:
+>> On Wednesday 23 April 2025 07:54:40 NeilBrown wrote:
+>>> On Wed, 23 Apr 2025, Pali Rohár wrote:
+>>> Actually I do object to this fix (though I've been busy and hadn't had
+>>> much change to look at it properly).
+>>> The fix is ugly.  At the very least it should be wrapping in an 
+>>>    #if  GCC_VERSION  < whatever
+>>
+>> The problem is that this compile issue happens also with some builds of
+>> gcc 13.3.0 as was discussed in the email thread.
+>>
+>> So is not clear what is that "whatever". For me it looks like that it
+>> would be more than the version, probably also some build characteristics
+>> of gcc. But I have not been investigating it deeper.
+> 
+> Fair enough - let's skip that idea then.
 
-While the NFS readahead code has no problems using the generic code to
-manage the dropbehind behaviour enabled by RWF_DONTCACHE, the write code
-needs to deal with the fact that NFS writeback uses a 2 step process
-(UNSTABLE write followed by COMMIT).
-This commit replaces the use of the folio dropbehind flag with a local
-NFS request flag that triggers the dropbehind behaviour once the data
-has been written to stable storage.
+If someone wants to investigate, here is a minimal reproducer:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/file.c            |  2 ++
- fs/nfs/nfs4file.c        |  2 ++
- fs/nfs/write.c           | 12 +++++++++++-
- include/linux/nfs_page.h |  1 +
- 4 files changed, 16 insertions(+), 1 deletion(-)
+  https://godbolt.org/z/sxvYPzY6b
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 033feeab8c34..60d47f141acb 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -910,5 +910,7 @@ const struct file_operations nfs_file_operations = {
- 	.splice_write	= iter_file_splice_write,
- 	.check_flags	= nfs_check_flags,
- 	.setlease	= simple_nosetlease,
-+
-+	.fop_flags	= FOP_DONTCACHE,
- };
- EXPORT_SYMBOL_GPL(nfs_file_operations);
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 1cd9652f3c28..e6726499c585 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -467,4 +467,6 @@ const struct file_operations nfs4_file_operations = {
- #else
- 	.llseek		= nfs_file_llseek,
- #endif
-+
-+	.fop_flags	= FOP_DONTCACHE,
- };
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 23df8b214474..e0ac439ab211 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -359,8 +359,12 @@ static void nfs_folio_end_writeback(struct folio *folio)
- static void nfs_page_end_writeback(struct nfs_page *req)
- {
- 	if (nfs_page_group_sync_on_bit(req, PG_WB_END)) {
-+		struct folio *folio = nfs_page_to_folio(req);
-+
-+		if (folio_test_clear_dropbehind(folio))
-+			set_bit(PG_DROPBEHIND, &req->wb_flags);
- 		nfs_unlock_request(req);
--		nfs_folio_end_writeback(nfs_page_to_folio(req));
-+		nfs_folio_end_writeback(folio);
- 	} else
- 		nfs_unlock_request(req);
- }
-@@ -813,6 +817,9 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 			clear_bit(PG_MAPPED, &req->wb_head->wb_flags);
- 		}
- 		spin_unlock(&mapping->i_private_lock);
-+
-+		if (test_bit(PG_DROPBEHIND, &req->wb_flags))
-+			folio_end_dropbehind(folio);
- 	}
- 
- 	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
-@@ -2093,6 +2100,7 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 		.range_start = range_start,
- 		.range_end = range_start + len - 1,
- 	};
-+	bool dropbehind = folio_test_clear_dropbehind(folio);
- 	int ret;
- 
- 	trace_nfs_writeback_folio(inode, range_start, len);
-@@ -2113,6 +2121,8 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 			goto out_error;
- 	}
- out_error:
-+	if (dropbehind)
-+		folio_set_dropbehind(folio);
- 	trace_nfs_writeback_folio_done(inode, range_start, len, ret);
- 	return ret;
- }
-diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-index 169b4ae30ff4..1a017b5b476f 100644
---- a/include/linux/nfs_page.h
-+++ b/include/linux/nfs_page.h
-@@ -37,6 +37,7 @@ enum {
- 	PG_REMOVE,		/* page group sync bit in write path */
- 	PG_CONTENDED1,		/* Is someone waiting for a lock? */
- 	PG_CONTENDED2,		/* Is someone waiting for a lock? */
-+	PG_DROPBEHIND,		/* Implement RWF_DONTCACHE */
- };
- 
- struct nfs_inode;
--- 
-2.49.0
+(personnally, I have no plans to further investigate).
+
+
+Yours sincerely,
+Vincent Mailhol
 
 
