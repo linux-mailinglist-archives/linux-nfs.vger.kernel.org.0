@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-11255-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11256-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C6DCA99981
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 22:35:49 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F517A99984
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 22:37:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1698462AED
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 20:35:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 092561B85406
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 20:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57292267736;
-	Wed, 23 Apr 2025 20:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 698AD26B96B;
+	Wed, 23 Apr 2025 20:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDqUrEK0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgNlMY6q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3157986331
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 20:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4454C26B953
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 20:37:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440546; cv=none; b=X7BN7vcLsUX8XWXjw4jNdVpB3hQwu2u57LJxN639oyOzsYU1Dw0MIjEPWP7ZJQYg77xefigD/ukysSBhemNwaG3/oTsUSLLbu8zw8CRJ7ZyieS2S+92pdKpH6K7QsZFYSX+9/ZCSXTLuezGa1PmCLIpp+fUHFLL7JCowt3JAzPg=
+	t=1745440662; cv=none; b=jTueUwXIFCJugQaQe9XjIyy3NSl4mhBO0JvJWKqxV+jKLj991V1g5+bshUDqBXxGfKakotPxIg0io4WUlcXhtfGUhqBK8/YTuTPwE1iOMvehP0myHmkOk50GxwP+fNpSKOhtG08SVk4cYlrZS6kHj8JDeQMx7C4EXKapfYDrSQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440546; c=relaxed/simple;
-	bh=fxsMmmwLj9OtltNymRNlc3bdLF5Rn92z9WMF4LsaP8U=;
+	s=arc-20240116; t=1745440662; c=relaxed/simple;
+	bh=kSY/TmzKY5ioAjL6DhOQuTYQYu7XL4vTXwXOldMfpBA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iieCBc+skiZ6nSwAlM1bautdd7sjLq6Tv9L/vP40tvSLj2ojKRZozgsoL7sBEiAmq1na9EXY2yn8uTd/LhCGLGqQOIE7LNWLJl7ZbkNRdNHabqVzLOwLyjDxQpEyB1EidDTNR1HhKu0lv6+6fuMIWJHwsguIgWVJ5dsJPpt6i4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDqUrEK0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F32C4CEE2;
-	Wed, 23 Apr 2025 20:35:45 +0000 (UTC)
+	 Content-Type:MIME-Version; b=j2xj+mRmNjTd0l0cMPRc2g9W8yl+rg3LBEDZd0F4vFHJ1of1PLEyapX8LOpEY1LCuuHfdqx2a6k09TO/ORgTUn8XxGr5Cx9omZ0evIwa1KMonUTDZz5NkoM7KViGJHNC76iYkT6cHuIjBpQ9FDfgLOFdQWaEmCaty3SK/EK0Ays=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgNlMY6q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56165C4CEE2;
+	Wed, 23 Apr 2025 20:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745440545;
-	bh=fxsMmmwLj9OtltNymRNlc3bdLF5Rn92z9WMF4LsaP8U=;
+	s=k20201202; t=1745440661;
+	bh=kSY/TmzKY5ioAjL6DhOQuTYQYu7XL4vTXwXOldMfpBA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qDqUrEK00DfPuSsxjjapOWGQzjqhYMcmTgx9OTfhOwslnAueWYQtZLe0ZIyqAk5U7
-	 N+6yfyTNI9erRNzd84ijwETBo2YYphr+0dVYGxT12IOOIRyU/2pn6KMgIdCY+OrQwu
-	 /cOoGA4+SvONrkrWsLU/HUMvdhvFc4R7ZjfpxB8okk70a4/dndgnDGWTtDAaPYQvAe
-	 om8w8YBFOdZP4oreGa0qhU4EnmPDG5kTLNV+7u/jxrWrmeuKx195Vf9zC6NTlfhso6
-	 QTXcnwK0UJm+vmdB7/j5yktBhJn/1+TkZzgAMB40Lai+NVsm/ktC6lKBEp+5Qif29o
-	 feCBfzaQQ2Oeg==
-Message-ID: <851b8c0884038fd496517cce61ef2c53b41ed8a2.camel@kernel.org>
-Subject: Re: [PATCH 1/2] NFSv4: Ensure test_and_free_stateid callers use
- private memory
+	b=EgNlMY6qlxnqcs4o+pA5CTfoPZPUJqnhGIWhvXimdtK3a24MNhAnVT8OT+MIcdWiI
+	 zCsmzryDeBGw8rAvlrdJ3Y24TmaiPdfbPXSFWdC8isWtaPZskXey1E0CbvrMz1firz
+	 /wEv1+/ZJ43HaMCq0eGoK36H4u4S6YOOXaWuIVtCPImR6Kip5bi9IT2B+UrVYCV7Hy
+	 z5DJlRTSXWgdTEhc4GKHUHLevCiEMG1nUW0W+G+hQ+G6N49L7QpEGzmsX26P9kkwnp
+	 KYSbaeJ3C3FqjbKDeld/qJSx/WhgyPmb8/dU1n7C3DFaWHVgKh+L3SkRxPPqjSwxPj
+	 jvnzAOwpZBpLA==
+Message-ID: <6fe721ba67cc176f8c9befd13249b08e6b83c704.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSv4: Allow FREE_STATEID to clean up delegations
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Date: Wed, 23 Apr 2025 16:35:44 -0400
-In-Reply-To: <eb9c88aacce78595a079c2f248395af3e823239f.1745430006.git.bcodding@redhat.com>
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+	linux-nfs@vger.kernel.org
+Date: Wed, 23 Apr 2025 16:37:40 -0400
+In-Reply-To: <FF36159B-E39E-4391-9955-394249FF27F6@redhat.com>
 References: <cover.1745430006.git.bcodding@redhat.com>
-	 <eb9c88aacce78595a079c2f248395af3e823239f.1745430006.git.bcodding@redhat.com>
+	 <e8c113d33be1bf52016b6b747330eec5c17dc948.1745430006.git.bcodding@redhat.com>
+	 <f768ca3c27d1b0e6934a7ec319fa2ea9d0778b07.camel@kernel.org>
+	 <FF36159B-E39E-4391-9955-394249FF27F6@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,78 +137,30 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-04-23 at 13:59 -0400, Benjamin Coddington wrote:
-> A follow-up patch intends to signal the success or failure of FREE_STATEI=
-D
-> by modifying the nfs4_stateid's type which requires the const qualifier f=
-or
-> the nfs4_stateid to be dropped.  Since it will no longer safe to operate
-> directly on shared stateid objects in this path, ensure that callers send=
- a
-> copy.
->
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> ---
->  fs/nfs/nfs4proc.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
+On Wed, 2025-04-23 at 15:59 -0400, Benjamin Coddington wrote:
+> On 23 Apr 2025, at 15:41, Jeff Layton wrote:
 >=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 6e95db6c17e9..bfb9e980d662 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -2990,6 +2990,7 @@ static void nfs41_delegation_recover_stateid(struct=
- nfs4_state *state)
->  static int nfs41_check_expired_locks(struct nfs4_state *state)
->  {
->  	int status, ret =3D NFS_OK;
-> +	nfs4_stateid stateid;
->  	struct nfs4_lock_state *lsp, *prev =3D NULL;
->  	struct nfs_server *server =3D NFS_SERVER(state->inode);
-> =20
-> @@ -3007,9 +3008,9 @@ static int nfs41_check_expired_locks(struct nfs4_st=
-ate *state)
->  			nfs4_put_lock_state(prev);
->  			prev =3D lsp;
-> =20
-> +			nfs4_stateid_copy(&stateid, &lsp->ls_stateid);
->  			status =3D nfs41_test_and_free_expired_stateid(server,
-> -					&lsp->ls_stateid,
-> -					cred);
-> +					&stateid, cred);
->  			trace_nfs4_test_lock_stateid(state, lsp, status);
->  			if (status =3D=3D -NFS4ERR_EXPIRED ||
->  			    status =3D=3D -NFS4ERR_BAD_STATEID) {
-> @@ -3042,17 +3043,18 @@ static int nfs41_check_expired_locks(struct nfs4_=
-state *state)
->  static int nfs41_check_open_stateid(struct nfs4_state *state)
->  {
->  	struct nfs_server *server =3D NFS_SERVER(state->inode);
-> -	nfs4_stateid *stateid =3D &state->open_stateid;
-> +	nfs4_stateid stateid;
->  	const struct cred *cred =3D state->owner->so_cred;
->  	int status;
-> =20
->  	if (test_bit(NFS_OPEN_STATE, &state->flags) =3D=3D 0)
->  		return -NFS4ERR_BAD_STATEID;
-> -	status =3D nfs41_test_and_free_expired_stateid(server, stateid, cred);
-> +	nfs4_stateid_copy(&stateid, &state->open_stateid);
-> +	status =3D nfs41_test_and_free_expired_stateid(server, &stateid, cred);
->  	trace_nfs4_test_open_stateid(state, NULL, status);
->  	if (status =3D=3D -NFS4ERR_EXPIRED || status =3D=3D -NFS4ERR_BAD_STATEI=
-D) {
->  		nfs_state_clear_open_state_flags(state);
-> -		stateid->type =3D NFS4_INVALID_STATEID_TYPE;
-> +		state->open_stateid.type =3D NFS4_INVALID_STATEID_TYPE;
->  		return status;
->  	}
->  	if (nfs_open_stateid_recover_openmode(state))
+> > On Wed, 2025-04-23 at 13:59 -0400, Benjamin Coddington wrote:
+> > > @@ -10612,6 +10610,7 @@ static int nfs41_free_stateid(struct nfs_serv=
+er *server,
+> > >  	if (IS_ERR(task))
+> > >  		return PTR_ERR(task);
+> > >  	rpc_put_task(task);
+> > > +	stateid->type =3D NFS4_FREED_STATEID_TYPE;
+> >=20
+> > Would it be possible to call nfs_delegation_mark_returned() at this
+> > point, and skip all of the type changing?
+>=20
+> It won't because we can be here with a lock stateid or open
+> stateid.
+>=20
 
-I don't know that you really need to do this. In the cases where you
-end up setting the type to FREED, you will also return NFS4ERR_EXPIRED,
-which will make the callers set the type to INVALID.
+Ok, I can see why you decided to do it this way, and since we already
+have a REVOKED and INVALID types, adding FREED doesn't seem that bad.
 
-There will be a brief window where the type will be set to FREED, but
-that should be no big deal.
+If you do go this route, then I think you also need to add the FREED
+case to the switch in nfs41_test_and_free_expired_stateid().
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
