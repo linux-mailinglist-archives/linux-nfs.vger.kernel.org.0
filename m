@@ -1,134 +1,90 @@
-Return-Path: <linux-nfs+bounces-11246-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11247-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A837A99223
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 17:40:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B481A9922A
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 17:40:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A7F9E3AF38C
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 15:31:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D57E217501F
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 15:33:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AC45288C9E;
-	Wed, 23 Apr 2025 15:21:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D0C294A0C;
+	Wed, 23 Apr 2025 15:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ep64U+W0"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nSeo62+2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042F62853F3
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 15:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79647294A11;
+	Wed, 23 Apr 2025 15:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421691; cv=none; b=dCVl/fqXxS2HAcsktRsRolUAUz4VxX15zn/6k8K4iNGSzsAtB1ViqLdMLjAWfJgT9dysmrC4k97+Lp/gvA9Xv7PKGJzuQHUC+n6MIzegiAcfk65W8fKd5R8txN1AoVL7bxjACc9xYNV2CNfDzKyhIrMra/XNfyjC1Khw6fKBNRo=
+	t=1745421746; cv=none; b=WMolbx/n0nCvXj91gHcCVYE7jxc/yoJ+AdKgXLJdhK97E1tv6u3kxtp35TBsSFTBKqUTXYkRdldCxQdtTymincMVvSlw7Ju0+MLdVwggEB8aEWbJLrETHk6yLZ93o0PB3P2lATW6Drkyv6cCHjBHmDsrOv8AbQRYcCISj0Kmnfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421691; c=relaxed/simple;
-	bh=XcMdj2D0M7vOLfmtMP5O8q4WsZiAeUcrcknnmdzOtTI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YSSC7mSpZvkS2GmJ7QrTma23SsircghU+jNIVmDf50DT675towE7vbntUipmEHUY9QEbnhNFKFEP3l3pw7fqWfmk/RWiDWPob9OuttYAJj10jSn4A6Nsmt9vGrx3n8+a/EBim/tVl9fOVfejLf6L9SXkWbPMr71f786+5Uds+bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ep64U+W0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAFDC4CEE3;
-	Wed, 23 Apr 2025 15:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421690;
-	bh=XcMdj2D0M7vOLfmtMP5O8q4WsZiAeUcrcknnmdzOtTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ep64U+W0lcCo9DZ7dH/uTpAPMh4LcmXjLUC+PCK8mxuaIuM2wjKs3nabooxXfwTRH
-	 uc015BEsGFBkQfpgyInOrtNiHUn9E+zUtjBRY7ds187gI0sgVQqHdzZlhZ1dlP4Flt
-	 txVnU6Vlj8vS6mmPy7KfolnfLX+Wgp2BQ0wNWHlZUinJo48y5ufjeAiZ/UxcbweFbO
-	 yyBdRUxP7X9CWPVDvAj5wHPX5IeUoFfJtFQynw+TVZa2yxzr+gSus9D0blWN2IK67b
-	 0XgA9LrkUBJqjgC8F8gOcf/6JE/9txM7OaJWsnRx9w3u0QW4J1PgCE/K8nP2uQVgsl
-	 Ed2IGBdY0KR5w==
-From: cel@kernel.org
-To: NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: <linux-nfs@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v3 11/11] NFSD: Remove NFSSVC_MAXBLKSIZE from .pc_xdrressize
-Date: Wed, 23 Apr 2025 11:21:17 -0400
-Message-ID: <20250423152117.5418-12-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423152117.5418-1-cel@kernel.org>
-References: <20250423152117.5418-1-cel@kernel.org>
+	s=arc-20240116; t=1745421746; c=relaxed/simple;
+	bh=jAfJr2XQWsTd7yRq7KWP63S4YmwQunNDIphELRFESnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxT3plLO66IhYkvdsbmpvESVlPYvMLmCqAgFOXiw2VL8jqCpZO/+jgsVxjWtjmQp8U+EWzb5TE3GRHJBzaHAQtqF+WLHTUe5Xnfw6XJwST3QEFtjai3Zf5xQD7x7FDmK/561zUdhExTp0UQW1KD1/0k3F+CirfDrJOnWCTortlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nSeo62+2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YoQyjWRH9eXTiQRhc7wzvbUlYYQ5kxVn10ITUVJfxVA=; b=nSeo62+2iEJWLdPbfSzRAj630A
+	vc46VIYo8JO6jguCJvkZjSPRIQJWOeHOUEo8dDzOv11DXHKLct/WjEbfkHy+J6UVEfxeDe4FufJS4
+	mOBl3ORlESe46TgCZGwtqTObif0KHDrQiut8vUmdOSw1rsqVNJXtt7iaSf+jkAJVeItbYhO5QRBc+
+	+zWueHtk4ROnwp4Ckp2zdCcwSYvWcEs7ojJMUeGohOVXSyBwxRV9lLSXFT9AiaET/X2hH/urDyFzW
+	o07rR4ZYzzDPB57RKTsidANeA1LnFTjaxBiNbw2eOgSQL3bndMKeKo77WeuYxGDJxcG4CzMH6dtlS
+	cBioKC7Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7bva-00000009U9R-0oVY;
+	Wed, 23 Apr 2025 15:22:22 +0000
+Date: Wed, 23 Apr 2025 16:22:22 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: trondmy@kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] Initial NFS client support for RWF_DONTCACHE
+Message-ID: <aAkFrow1KTUmA_cH@casper.infradead.org>
+References: <cover.1745381692.git.trond.myklebust@hammerspace.com>
+ <c608d941-c34d-4cf9-b635-7f327f0fd8f4@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c608d941-c34d-4cf9-b635-7f327f0fd8f4@oracle.com>
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Wed, Apr 23, 2025 at 10:38:37AM -0400, Chuck Lever wrote:
+> On 4/23/25 12:25 AM, trondmy@kernel.org wrote:
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > 
+> > The following patch set attempts to add support for the RWF_DONTCACHE
+> > flag in preadv2() and pwritev2() on NFS filesystems.
+> 
+> Hi Trond-
+> 
+> "RFC" in the subject field noted.
+> 
+> The cover letter does not explain why one would want this facility, nor
+> does it quantify the performance implications.
+> 
+> I can understand not wanting to cache on an NFS server, but don't you
+> want to maintain a data cache as close to applications as possible?
 
-The value in the .pc_xdrressize field is used to "reserve space in
-the output queue". Relevant only to UDP transports, AFAICT.
-
-The fixed value of NFSSVC_MAXBLKSIZE is added to that field for
-NFSv2 and NFSv3 read requests, even though nfsd_proc_read() is
-already careful to reserve the actual size of the read payload.
-Adding the maximum payload size to .pc_xdrressize seems to be
-unnecessary.
-
-Also, instead of adding a constant 4 bytes for each payload's
-XDR pad, add the actual size of the pad for better accuracy of
-the reservation size.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs3proc.c | 4 ++--
- fs/nfsd/nfsproc.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 372bdcf5e07a..dbb750a7b5db 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -202,7 +202,7 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
- 	 */
- 	resp->count = argp->count;
- 	svc_reserve_auth(rqstp, ((1 + NFS3_POST_OP_ATTR_WORDS + 3) << 2) +
--			 resp->count + 4);
-+			 xdr_align_size(resp->count));
- 
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = nfsd_read(rqstp, &resp->fh, argp->offset,
-@@ -921,7 +921,7 @@ static const struct svc_procedure nfsd_procedures3[22] = {
- 		.pc_argzero = sizeof(struct nfsd3_readargs),
- 		.pc_ressize = sizeof(struct nfsd3_readres),
- 		.pc_cachetype = RC_NOCACHE,
--		.pc_xdrressize = ST+pAT+4+NFSSVC_MAXBLKSIZE/4,
-+		.pc_xdrressize = ST+pAT+3,
- 		.pc_name = "READ",
- 	},
- 	[NFS3PROC_WRITE] = {
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 6dda081eb24c..a95faf726e58 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -219,7 +219,7 @@ nfsd_proc_read(struct svc_rqst *rqstp)
- 	/* Obtain buffer pointer for payload. 19 is 1 word for
- 	 * status, 17 words for fattr, and 1 word for the byte count.
- 	 */
--	svc_reserve_auth(rqstp, (19<<2) + argp->count + 4);
-+	svc_reserve_auth(rqstp, (19<<2) + xdr_align_size(argp->count));
- 
- 	resp->count = argp->count;
- 	fh_copy(&resp->fh, &argp->fh);
-@@ -739,7 +739,7 @@ static const struct svc_procedure nfsd_procedures2[18] = {
- 		.pc_argzero = sizeof(struct nfsd_readargs),
- 		.pc_ressize = sizeof(struct nfsd_readres),
- 		.pc_cachetype = RC_NOCACHE,
--		.pc_xdrressize = ST+AT+1+NFSSVC_MAXBLKSIZE_V2/4,
-+		.pc_xdrressize = ST+AT+1,
- 		.pc_name = "READ",
- 	},
- 	[NFSPROC_WRITECACHE] = {
--- 
-2.49.0
-
+If you look at the original work for RWF_DONTCACHE, you'll see this is
+the application providing the hint that it's doing a streaming access.
+It's only applied to folios which are created as a result of this
+access, and other accesses to these folios while the folios are in use
+clear the flag.  So it's kind of like O_DIRECT access, except that it
+does go through the page cache so there's none of this funky alignment
+requirement on the userspace buffers.
 
