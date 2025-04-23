@@ -1,166 +1,332 @@
-Return-Path: <linux-nfs+bounces-11256-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11257-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F517A99984
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 22:37:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3AD3A99AD8
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 23:38:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 092561B85406
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 20:37:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E82134622D4
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 21:38:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 698AD26B96B;
-	Wed, 23 Apr 2025 20:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6772D1EBFF7;
+	Wed, 23 Apr 2025 21:38:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgNlMY6q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enHfW5jl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4454C26B953
-	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 20:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6428144C63
+	for <linux-nfs@vger.kernel.org>; Wed, 23 Apr 2025 21:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440662; cv=none; b=jTueUwXIFCJugQaQe9XjIyy3NSl4mhBO0JvJWKqxV+jKLj991V1g5+bshUDqBXxGfKakotPxIg0io4WUlcXhtfGUhqBK8/YTuTPwE1iOMvehP0myHmkOk50GxwP+fNpSKOhtG08SVk4cYlrZS6kHj8JDeQMx7C4EXKapfYDrSQs=
+	t=1745444302; cv=none; b=n7U4QKXA5ICvyStrzRn65euMj+Iz134cZEC70baLFoW9ISBX9Gnl+Qf9WvtNYJjq3Ix2fDAr7j7ui4M/xl88mb+fQCKDh/fEVMc2qvVNEyCSM4lcpZti0MzwVbzFQAw5tC8zSvZ9kIpqoKbj5YF0VPc6L9uHakiHDYC2t05C3Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440662; c=relaxed/simple;
-	bh=kSY/TmzKY5ioAjL6DhOQuTYQYu7XL4vTXwXOldMfpBA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j2xj+mRmNjTd0l0cMPRc2g9W8yl+rg3LBEDZd0F4vFHJ1of1PLEyapX8LOpEY1LCuuHfdqx2a6k09TO/ORgTUn8XxGr5Cx9omZ0evIwa1KMonUTDZz5NkoM7KViGJHNC76iYkT6cHuIjBpQ9FDfgLOFdQWaEmCaty3SK/EK0Ays=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgNlMY6q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56165C4CEE2;
-	Wed, 23 Apr 2025 20:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745440661;
-	bh=kSY/TmzKY5ioAjL6DhOQuTYQYu7XL4vTXwXOldMfpBA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EgNlMY6qlxnqcs4o+pA5CTfoPZPUJqnhGIWhvXimdtK3a24MNhAnVT8OT+MIcdWiI
-	 zCsmzryDeBGw8rAvlrdJ3Y24TmaiPdfbPXSFWdC8isWtaPZskXey1E0CbvrMz1firz
-	 /wEv1+/ZJ43HaMCq0eGoK36H4u4S6YOOXaWuIVtCPImR6Kip5bi9IT2B+UrVYCV7Hy
-	 z5DJlRTSXWgdTEhc4GKHUHLevCiEMG1nUW0W+G+hQ+G6N49L7QpEGzmsX26P9kkwnp
-	 KYSbaeJ3C3FqjbKDeld/qJSx/WhgyPmb8/dU1n7C3DFaWHVgKh+L3SkRxPPqjSwxPj
-	 jvnzAOwpZBpLA==
-Message-ID: <6fe721ba67cc176f8c9befd13249b08e6b83c704.camel@kernel.org>
-Subject: Re: [PATCH 2/2] NFSv4: Allow FREE_STATEID to clean up delegations
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org
-Date: Wed, 23 Apr 2025 16:37:40 -0400
-In-Reply-To: <FF36159B-E39E-4391-9955-394249FF27F6@redhat.com>
-References: <cover.1745430006.git.bcodding@redhat.com>
-	 <e8c113d33be1bf52016b6b747330eec5c17dc948.1745430006.git.bcodding@redhat.com>
-	 <f768ca3c27d1b0e6934a7ec319fa2ea9d0778b07.camel@kernel.org>
-	 <FF36159B-E39E-4391-9955-394249FF27F6@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1745444302; c=relaxed/simple;
+	bh=85K7WyKA6eInPZo30SkvbjtkfWHLB5MYQ14pOW006/I=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=jrHhtFQ47bLg8TX21kDpgrfeL9CuiIs4CDhjlaQZu+O0A0RTYfh3QbvUfgsSObJrnd6A+ywDifywjZoz7sOo7fPkxI5F7XA0wNzu3bMAx3igHg2ghJEe/IAwmNOUV4RZAfQtV0zI4E3emZJKYOJouh7GlVxZzy7modyK/bSLHQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=enHfW5jl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745444299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LEFv/2djugy/485D1mjGAOQrvD7ihlWo25kKbig3wqA=;
+	b=enHfW5jld87rjrJvgymKx+NyMKYrSRUBpojKbxS6pCNePgMvbl23YH1/As7lW2UfKVRsfd
+	6lkAzmgMecv4emXnWpbkFp+RJh1uEzdzr5u9YEHu5pyKkgnWK11l8QAGO0pMBq2Vx244sh
+	V7E11Z+Sd/ryu7OC+MZp9mhRBIxzSn4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-4wzLRlAeMHmVvBUcOOVGyA-1; Wed,
+ 23 Apr 2025 17:38:17 -0400
+X-MC-Unique: 4wzLRlAeMHmVvBUcOOVGyA-1
+X-Mimecast-MFC-AGG-ID: 4wzLRlAeMHmVvBUcOOVGyA_1745444295
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D35601800446;
+	Wed, 23 Apr 2025 21:38:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.16])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C45CC1800873;
+	Wed, 23 Apr 2025 21:38:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Paulo Alcantara <pc@manguebit.com>
+cc: dhowells@redhat.com, Steve French <sfrench@samba.org>,
+    Christian Brauner <brauner@kernel.org>, netfs@lists.linux.dev,
+    v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+    linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] netfs: Fix undifferentiation of DIO reads from unbuffered reads
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3064918.1745444289.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 23 Apr 2025 22:38:09 +0100
+Message-ID: <3064919.1745444289@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, 2025-04-23 at 15:59 -0400, Benjamin Coddington wrote:
-> On 23 Apr 2025, at 15:41, Jeff Layton wrote:
->=20
-> > On Wed, 2025-04-23 at 13:59 -0400, Benjamin Coddington wrote:
-> > > @@ -10612,6 +10610,7 @@ static int nfs41_free_stateid(struct nfs_serv=
-er *server,
-> > >  	if (IS_ERR(task))
-> > >  		return PTR_ERR(task);
-> > >  	rpc_put_task(task);
-> > > +	stateid->type =3D NFS4_FREED_STATEID_TYPE;
-> >=20
-> > Would it be possible to call nfs_delegation_mark_returned() at this
-> > point, and skip all of the type changing?
->=20
-> It won't because we can be here with a lock stateid or open
-> stateid.
->=20
+On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated fro=
+m
+"unbuffered reads" (specified by cache=3Dnone in the mount parameters).  T=
+he
+difference is flagged in the protocol and the server may behave
+differently: Windows Server will, for example, mandate that DIO reads are
+block aligned.
 
-Ok, I can see why you decided to do it this way, and since we already
-have a REVOKED and INVALID types, adding FREED doesn't seem that bad.
+Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
+NETFS_DIO_READ, parallelling the write differentiation that already exists=
+.
 
-If you do go this route, then I think you also need to add the FREED
-case to the switch in nfs41_test_and_free_expired_stateid().
+A further patch will be required to make cifs do something different,
+depending on the rreq->origin set.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Fixes: 016dc8516aec ("netfs: Implement unbuffered/DIO read support")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Steve French <sfrench@samba.org>
+cc: netfs@lists.linux.dev
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: ceph-devel@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/9p/vfs_addr.c             |    3 ++-
+ fs/afs/write.c               |    1 +
+ fs/ceph/addr.c               |    4 +++-
+ fs/netfs/direct_read.c       |    3 ++-
+ fs/netfs/main.c              |    1 +
+ fs/netfs/misc.c              |    1 +
+ fs/netfs/objects.c           |    1 +
+ fs/netfs/read_collect.c      |    7 +++++--
+ fs/nfs/fscache.c             |    1 +
+ fs/smb/client/file.c         |    3 ++-
+ include/linux/netfs.h        |    1 +
+ include/trace/events/netfs.h |    1 +
+ 12 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index b5a4a28e0fe7..e4420591cf35 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -77,7 +77,8 @@ static void v9fs_issue_read(struct netfs_io_subrequest *=
+subreq)
+ =
+
+ 	/* if we just extended the file size, any portion not in
+ 	 * cache won't be on server and is zeroes */
+-	if (subreq->rreq->origin !=3D NETFS_DIO_READ)
++	if (subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
++	    subreq->rreq->origin !=3D NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 	if (pos + total >=3D i_size_read(rreq->inode))
+ 		__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 7df7b2f5e7b2..2e7526ea883a 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -202,6 +202,7 @@ void afs_retry_request(struct netfs_io_request *wreq, =
+struct netfs_io_stream *st
+ 	case NETFS_READ_GAPS:
+ 	case NETFS_READ_SINGLE:
+ 	case NETFS_READ_FOR_WRITE:
++	case NETFS_UNBUFFERED_READ:
+ 	case NETFS_DIO_READ:
+ 		return;
+ 	default:
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 557c326561fd..b95c4cb21c13 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -238,6 +238,7 @@ static void finish_netfs_read(struct ceph_osd_request =
+*req)
+ 		if (sparse && err > 0)
+ 			err =3D ceph_sparse_ext_map_end(op);
+ 		if (err < subreq->len &&
++		    subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
+ 		    subreq->rreq->origin !=3D NETFS_DIO_READ)
+ 			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 		if (IS_ENCRYPTED(inode) && err > 0) {
+@@ -281,7 +282,8 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io=
+_subrequest *subreq)
+ 	size_t len;
+ 	int mode;
+ =
+
+-	if (rreq->origin !=3D NETFS_DIO_READ)
++	if (rreq->origin !=3D NETFS_UNBUFFERED_READ &&
++	    rreq->origin !=3D NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 	__clear_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+ =
+
+diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
+index a24e63d2c818..9902766195d7 100644
+--- a/fs/netfs/direct_read.c
++++ b/fs/netfs/direct_read.c
+@@ -188,7 +188,8 @@ ssize_t netfs_unbuffered_read_iter_locked(struct kiocb=
+ *iocb, struct iov_iter *i
+ =
+
+ 	rreq =3D netfs_alloc_request(iocb->ki_filp->f_mapping, iocb->ki_filp,
+ 				   iocb->ki_pos, orig_count,
+-				   NETFS_DIO_READ);
++				   iocb->ki_flags & IOCB_DIRECT ?
++				   NETFS_DIO_READ : NETFS_UNBUFFERED_READ);
+ 	if (IS_ERR(rreq))
+ 		return PTR_ERR(rreq);
+ =
+
+diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+index 70ecc8f5f210..3db401d269e7 100644
+--- a/fs/netfs/main.c
++++ b/fs/netfs/main.c
+@@ -39,6 +39,7 @@ static const char *netfs_origins[nr__netfs_io_origin] =3D=
+ {
+ 	[NETFS_READ_GAPS]		=3D "RG",
+ 	[NETFS_READ_SINGLE]		=3D "R1",
+ 	[NETFS_READ_FOR_WRITE]		=3D "RW",
++	[NETFS_UNBUFFERED_READ]		=3D "UR",
+ 	[NETFS_DIO_READ]		=3D "DR",
+ 	[NETFS_WRITEBACK]		=3D "WB",
+ 	[NETFS_WRITEBACK_SINGLE]	=3D "W1",
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 77e7f7c79d27..43b67a28a8fa 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -461,6 +461,7 @@ static ssize_t netfs_wait_for_request(struct netfs_io_=
+request *rreq,
+ 		case NETFS_DIO_READ:
+ 		case NETFS_DIO_WRITE:
+ 		case NETFS_READ_SINGLE:
++		case NETFS_UNBUFFERED_READ:
+ 		case NETFS_UNBUFFERED_WRITE:
+ 			break;
+ 		default:
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index d3eb9ba3013a..31fa0c81e2a4 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -59,6 +59,7 @@ struct netfs_io_request *netfs_alloc_request(struct addr=
+ess_space *mapping,
+ 	    origin =3D=3D NETFS_READ_GAPS ||
+ 	    origin =3D=3D NETFS_READ_SINGLE ||
+ 	    origin =3D=3D NETFS_READ_FOR_WRITE ||
++	    origin =3D=3D NETFS_UNBUFFERED_READ ||
+ 	    origin =3D=3D NETFS_DIO_READ) {
+ 		INIT_WORK(&rreq->work, netfs_read_collection_worker);
+ 		rreq->io_streams[0].avail =3D true;
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index 900dd51c3b94..bad677e58a42 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -342,7 +342,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_requ=
+est *rreq)
+ {
+ 	unsigned int i;
+ =
+
+-	if (rreq->origin =3D=3D NETFS_DIO_READ) {
++	if (rreq->origin =3D=3D NETFS_UNBUFFERED_READ ||
++	    rreq->origin =3D=3D NETFS_DIO_READ) {
+ 		for (i =3D 0; i < rreq->direct_bv_count; i++) {
+ 			flush_dcache_page(rreq->direct_bv[i].bv_page);
+ 			// TODO: cifs marks pages in the destination buffer
+@@ -360,7 +361,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_requ=
+est *rreq)
+ 	}
+ 	if (rreq->netfs_ops->done)
+ 		rreq->netfs_ops->done(rreq);
+-	if (rreq->origin =3D=3D NETFS_DIO_READ)
++	if (rreq->origin =3D=3D NETFS_UNBUFFERED_READ ||
++	    rreq->origin =3D=3D NETFS_DIO_READ)
+ 		inode_dio_end(rreq->inode);
+ }
+ =
+
+@@ -416,6 +418,7 @@ bool netfs_read_collection(struct netfs_io_request *rr=
+eq)
+ 	//netfs_rreq_is_still_valid(rreq);
+ =
+
+ 	switch (rreq->origin) {
++	case NETFS_UNBUFFERED_READ:
+ 	case NETFS_DIO_READ:
+ 	case NETFS_READ_GAPS:
+ 		netfs_rreq_assess_dio(rreq);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index e278a1ad1ca3..8b0785178731 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -367,6 +367,7 @@ void nfs_netfs_read_completion(struct nfs_pgio_header =
+*hdr)
+ =
+
+ 	sreq =3D netfs->sreq;
+ 	if (test_bit(NFS_IOHDR_EOF, &hdr->flags) &&
++	    sreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
+ 	    sreq->rreq->origin !=3D NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &sreq->flags);
+ =
+
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 3bd34d2b98d0..76f91ce6b29b 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -219,7 +219,8 @@ static void cifs_issue_read(struct netfs_io_subrequest=
+ *subreq)
+ 			goto failed;
+ 	}
+ =
+
+-	if (subreq->rreq->origin !=3D NETFS_DIO_READ)
++	if (subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
++	    subreq->rreq->origin !=3D NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ =
+
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index c3f230732f51..1464b3a10498 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -206,6 +206,7 @@ enum netfs_io_origin {
+ 	NETFS_READ_GAPS,		/* This read is a synchronous read to fill gaps */
+ 	NETFS_READ_SINGLE,		/* This read should be treated as a single object */
+ 	NETFS_READ_FOR_WRITE,		/* This read is to prepare a write */
++	NETFS_UNBUFFERED_READ,		/* This is an unbuffered read */
+ 	NETFS_DIO_READ,			/* This is a direct I/O read */
+ 	NETFS_WRITEBACK,		/* This write was triggered by writepages */
+ 	NETFS_WRITEBACK_SINGLE,		/* This monolithic write was triggered by write=
+pages */
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 402c5e82e7b8..4175eec40048 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -39,6 +39,7 @@
+ 	EM(NETFS_READ_GAPS,			"RG")		\
+ 	EM(NETFS_READ_SINGLE,			"R1")		\
+ 	EM(NETFS_READ_FOR_WRITE,		"RW")		\
++	EM(NETFS_UNBUFFERED_READ,		"UR")		\
+ 	EM(NETFS_DIO_READ,			"DR")		\
+ 	EM(NETFS_WRITEBACK,			"WB")		\
+ 	EM(NETFS_WRITEBACK_SINGLE,		"W1")		\
+
 
