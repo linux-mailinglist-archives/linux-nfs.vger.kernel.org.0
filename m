@@ -1,116 +1,113 @@
-Return-Path: <linux-nfs+bounces-11270-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11271-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3555BA9B352
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 18:04:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C727EA9B4AB
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 18:54:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3BED792453F
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 16:04:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E2049A6FE4
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 16:54:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA1B627F4CB;
-	Thu, 24 Apr 2025 16:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF29293B62;
+	Thu, 24 Apr 2025 16:51:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rmLHfkoc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7yETnR4"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58D127D78C
-	for <linux-nfs@vger.kernel.org>; Thu, 24 Apr 2025 16:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07ED29345D;
+	Thu, 24 Apr 2025 16:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745510644; cv=none; b=EgJQALlckliZnQNu9OZpZAuuJGQyrNDB/f1Jm1XjGEgn+NR/0hz9v1dv3iRbBtPbTgKeFAgazV7gUAisM6RGb5AUwwvc1+E4hAh6UR80D6EYXdEL7BCul0A6dyxgaWwu+0oR9HJuc+cA0hacM0aJpHfO6VFaAdb+tsJYOFIAG2s=
+	t=1745513473; cv=none; b=K4gd7jGXyZQlrXIQ8fvOIJCXhX3i9xpcxie4L39TE/gsBkwCiIP0ePU0pFh1gwoZfY+c19G0eSIwHFCkx8lGHVpLmfnQCH0nCSv4ogADJwo0SyjmqHAOWc+tV2aDilmiQi7QBA4lMZmT7fXT7dv0mGyaO99aOYSt1rS3cXClIjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745510644; c=relaxed/simple;
-	bh=kPbgEDerKFrVnDh8srs9BatqxUMaUKo73Q4nQx493mg=;
+	s=arc-20240116; t=1745513473; c=relaxed/simple;
+	bh=O30a3FalLBME3kBJ1cSEVuQL9s7QShLEWwr9eGBk9y0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JU6+zT7pdPx0gQEJEex7p9XQv1gxpGINq0qhUKnh8EmQl/8JQOwweZeRnq/6i3xcLdLK6XC26oQZeHcDQIYQUHvZwL7nUcEYsqlU7LVe1UbHR4j7S/hWyPDiOTdRY3i6IN6ssZBbDTDKsG9LwTPHLLReKW/+UiB/o325bdl/hLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rmLHfkoc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9E2C4CEE8;
-	Thu, 24 Apr 2025 16:04:03 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZDdgLsKDl+Qc1xeFKgldwIz1gYu8rW2t6Ew5gQRNal1lrbFEc/PCKe6tLGvxdKFFSMtxImLYPgU/IbZEI4A5rcyBRMcP9DObkjH0jWFoofM/GVjp83S9O35nuu0cINtZchbyzREvAT9V4ADmGvtgnh1T/FG7STjKIhqLV4CX1uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7yETnR4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B12C4CEE3;
+	Thu, 24 Apr 2025 16:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745510644;
-	bh=kPbgEDerKFrVnDh8srs9BatqxUMaUKo73Q4nQx493mg=;
+	s=k20201202; t=1745513473;
+	bh=O30a3FalLBME3kBJ1cSEVuQL9s7QShLEWwr9eGBk9y0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rmLHfkocP1N4nOSKOTivkdQBQo4BtSkZOcHIyJ1ms1Xhi5CA+8l1XAmwSWq5ZCu1c
-	 1KeCellQYOXCAHr+dd89s+pCooQ2EfQd+tISTog9zEg/6PXC0rCP/eUeavxBmnlAE7
-	 PZmR+vpPob08VMCFqnETbbQY19Hl8AU8bh51a/D1k82OQCXpZUGj2hkbft6VFOt7db
-	 0UAIfeVBqsWgeJ7dnM4tQZh9bHcfBJeVVM4fCQ4mIOWboo7TL2GXYS9gkHXYL4JdW7
-	 baG+9EmWQn3Q13nNGi0a7mNVyIn5+50EQEuKRyWKRK+Ud233j1MjxZyOz3cVmYwVjG
-	 nbt1CDYnJ1i4w==
-Date: Thu, 24 Apr 2025 12:04:03 -0400
+	b=t7yETnR4wlf3sc5MnAFm9WBuY2XqtUAT+VUhj9x1LRWN4+0PvhSk0eRuNt8nrNd4+
+	 q7Ofx48Yi4/IyPg/5JG3jwHCxVplyqYgiQ6t/KxDUDz92Z1jRama+jvFEOwoumITWG
+	 UaeByzPzQHFLUX9rIyAkC+f9cgb+u0hP56+1dwUPoYw7sJuq17KIPBQooCxstMAqM1
+	 xHu4rABYUpIvUTyuE/3VPFocxx63TVpclETkuhV1ecoDNRRVqzTe90MReNULFMvIvo
+	 9Mju2vZw07f9TCaXAc9hje+QFS13g0ao/OQmxS96ahILjE5j7pwmWqBkcZD7ARy3p5
+	 Q5XZsoyy4Iy0Q==
+Date: Thu, 24 Apr 2025 12:51:12 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	linux-nfs@vger.kernel.org,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Subject: Re: [PATCH v2] nfs: add dummy definition for nfsd_file
-Message-ID: <aApg86mNKak2e--H@kernel.org>
-References: <>
- <8c67a295-8caa-4e53-a764-f691657bbe62@wanadoo.fr>
- <174539938027.500591.1190076221216165031@noble.neil.brown.name>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Matthew Wilcox <willy@infradead.org>, trondmy@kernel.org,
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] Initial NFS client support for RWF_DONTCACHE
+Message-ID: <aApsAAYJMMRtKr8h@kernel.org>
+References: <cover.1745381692.git.trond.myklebust@hammerspace.com>
+ <c608d941-c34d-4cf9-b635-7f327f0fd8f4@oracle.com>
+ <aAkFrow1KTUmA_cH@casper.infradead.org>
+ <97033bd0-dcf9-4049-8e44-060b7e854952@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <174539938027.500591.1190076221216165031@noble.neil.brown.name>
+In-Reply-To: <97033bd0-dcf9-4049-8e44-060b7e854952@oracle.com>
 
-On Wed, Apr 23, 2025 at 07:09:40PM +1000, NeilBrown wrote:
-> On Wed, 23 Apr 2025, Vincent Mailhol wrote:
-> > On 23/04/2025 at 09:32, NeilBrown wrote:
-> > > On Wed, 23 Apr 2025, Pali Rohár wrote:
-> > >> On Wednesday 23 April 2025 07:54:40 NeilBrown wrote:
-> > >>> On Wed, 23 Apr 2025, Pali Rohár wrote:
+On Wed, Apr 23, 2025 at 11:30:21AM -0400, Chuck Lever wrote:
+> On 4/23/25 11:22 AM, Matthew Wilcox wrote:
+> > On Wed, Apr 23, 2025 at 10:38:37AM -0400, Chuck Lever wrote:
+> >> On 4/23/25 12:25 AM, trondmy@kernel.org wrote:
+> >>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >>>
+> >>> The following patch set attempts to add support for the RWF_DONTCACHE
+> >>> flag in preadv2() and pwritev2() on NFS filesystems.
+> >>
+> >> Hi Trond-
+> >>
+> >> "RFC" in the subject field noted.
+> >>
+> >> The cover letter does not explain why one would want this facility, nor
+> >> does it quantify the performance implications.
+> >>
+> >> I can understand not wanting to cache on an NFS server, but don't you
+> >> want to maintain a data cache as close to applications as possible?
 > > 
-> > (...)
-> > 
-> > >>> Actually I do object to this fix (though I've been busy and hadn't had
-> > >>> much change to look at it properly).
-> > >>> The fix is ugly.  At the very least it should be wrapping in an 
-> > >>>    #if  GCC_VERSION  < whatever
-> > 
-> > I acknowledge that the fix is a bit ugly, but Mike is the only one who
-> > has proposed a solution so far.
+> > If you look at the original work for RWF_DONTCACHE, you'll see this is
+> > the application providing the hint that it's doing a streaming access.
+> > It's only applied to folios which are created as a result of this
+> > access, and other accesses to these folios while the folios are in use
+> > clear the flag.  So it's kind of like O_DIRECT access, except that it
+> > does go through the page cache so there's none of this funky alignment
+> > requirement on the userspace buffers.
 > 
-> FYI here is my current patch which fixes this problem and a few other
-> problems, but doesn't fix everything I (think I) have found, and may
-> introduce some problems because some of the interactions are subtle and
-> need careful review.
-> 
-> Once I'm confident of it I hope to break it up into individual patches
-> and submit.
+> OK, was wondering whether this behavior was opt-in; sounds like it is.
+> Thanks for setting me straight.
 
-Thanks for working through it (and sorry for the troubles...).
+Yes, its certainly opt-in (requires setting a flag for each use).
+Jens added support in fio relatively recently, see:
+https://git.kernel.dk/cgit/fio/commit/?id=43c67b9f3a8808274bc1e0a3b7b70c56bb8a007f
 
-This was where we last discussed the need for my hack (I actually
-thought it was older RCU implementation in 5.15 that was the issue):
-https://lore.kernel.org/all/Zsyhco1OrOI_uSbd@kernel.org/
-(somehow it morphed into blaming vintage compilers, e.g. RHEL8's gcc
-8.5 or whatever).
+Looking ahead relative to NFSD, as you know we've discussed exposing
+per-export config controls to enable use of DONTCACHE.  Finer controls
+(e.g. only large sequential IO) would be more desirable but I'm not
+aware of a simple means to detect such workloads with NFSD.
 
-We have stable@ kernels to be concerned about.  But hopefully you
-carry forward with splitting up the patches like you've planned, they
-all make sense and they all get marked for stable@ (6.14+).  Saves the
-make-work of effectively implementing the fixes twice (purely for
-stable's benefit, by needing to pull your subtle rcu race fixes to the
-front).
+Could it be that we'd do well to carry through large folio support in
+NFSD and expose a configurable threshold that if met or exceeded then
+DONTCACHE used?
+
+What is the status of large folio support in NFSD?  Is anyone actively
+working on it?
 
 Thanks,
 Mike
