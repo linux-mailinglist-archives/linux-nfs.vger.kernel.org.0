@@ -1,107 +1,222 @@
-Return-Path: <linux-nfs+bounces-11262-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11263-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B347A99BA8
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 00:50:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5E5BA9A0F5
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 08:08:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 721591B8163D
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Apr 2025 22:50:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D010C19461D1
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Apr 2025 06:09:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79BC021FF29;
-	Wed, 23 Apr 2025 22:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892971C84B9;
+	Thu, 24 Apr 2025 06:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="dkEyF2Ls"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="hs0H+ACA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3571F584E;
-	Wed, 23 Apr 2025 22:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C612701B8;
+	Thu, 24 Apr 2025 06:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745448607; cv=none; b=AbGK23Yb35hxhLVoC4xuKf2sgCcOloGKkD6hCh0zW0ej9+3qahHOzXhHfJuPhmYFcBh/JXlPTpSFKrHJHdyr2s4Xz/wb4biPGKWxO00etoQKQ0ZUR8gG+3ME2XP/gclBqQpsWFsXb5XZ6t1OuZAFs5aguERVBEU46jCQlobUQc4=
+	t=1745474932; cv=none; b=nW6oiDTwqqngu3xrSiZSlUnjEmZPyP5mnPmDEzJfPaJOEM0y/KFzHBBxz8M57l4cmbETuti7F9ymq6uVfFLCQFa8sPidYxgKuNe3zr0ua9ZW9UeSRWgCkFXFQelp6OAIk0CiW2Mt+hK4SD2pLRdsBk3UJ8ZJxpsQWN/E7L7cTqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745448607; c=relaxed/simple;
-	bh=gurGA5DvPR7ijUfbURSFtgXSMzhd2JubECzI5/j0278=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=KzHBzRnIEUbx0cRyAj0j/vC0dTK0coLr1oFfaYum7AUa6L+ex8lK1kbSi080XCNEqN8Jjp8hfAUQc5yedkO40mmw5yeevxbzk1jMJZ313It/SWFOfvTpyCfmpfbrcPT+Eb6/EzRTaDpvh+3O+G9jSTrA4SnNG9OSk811lb8Ra1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=dkEyF2Ls; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
-Message-ID: <2d912187be794438cf6a9f6e7e0d694b@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1745448598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yqDLqDkzfCLD1y/XctMlv7d7M9f1SUafflmNfC4nFOA=;
-	b=dkEyF2Lsci/dhbHFGy4dWOMBdiFrKc9PedskRLUQLJi2b/Q2vug4emf2t1VJNax0kzDlvC
-	IFL0yZqs7OeB1MEPwwzXvLEfsyc1cMJVXp1OigwCnjnS6t5KBMXPzMPkGDT5sQEIRpEsm/
-	8GbfEg1A6VfuJb3Pn9BupnoKAg5RT5PPMODCpkZzSrf1N8+gwnndBplVOADvF5Q7v/LF2j
-	Tl7RMRyI8Y8Zvy/lkQkQQEDmgk97ivdkj5SOvOUIaKZafS4NSEVWU+aY6WVOkniQeqhf/m
-	v5H2gYdVtNpG9ZB2z3lMkyL5OkDRcrZiVHslzCRS0PmKHbkUaZBpFsw+IGCREQ==
-From: Paulo Alcantara <pc@manguebit.com>
-To: David Howells <dhowells@redhat.com>
-Cc: dhowells@redhat.com, Steve French <sfrench@samba.org>, Christian Brauner
- <brauner@kernel.org>, netfs@lists.linux.dev, v9fs@lists.linux.dev,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix undifferentiation of DIO reads from
- unbuffered reads
-In-Reply-To: <3064919.1745444289@warthog.procyon.org.uk>
-References: <3064919.1745444289@warthog.procyon.org.uk>
-Date: Wed, 23 Apr 2025 19:49:49 -0300
+	s=arc-20240116; t=1745474932; c=relaxed/simple;
+	bh=z69nq/MgzN2SYK20L3oEeyyjXxTnvMQZRovZMTQvL/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oHpCrGJrC6bK3R1tky37oORZdQO9dASvTu13nJqhOmCSgSOZKHHFnYNn4zn0VzSKBonyt4jDyCdzHGoqRRA5Sxo7cAx/OeG2dDIL1exXx/ym7LR7iUMprgDJ5hOl7qs/8zmcUb2W/a5Kt0a/nby7WSfKMvabTvWHY0u9WXbD674=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=hs0H+ACA; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=JPduwAvc1gp12G5xqoy89t/41gjq88tVopAmX2Kdf4I=; b=hs0H+ACAV5Xibgg0fcNkSXqJ96
+	0wEf5vzPZAau1MS9pcIoslbMkWbSHCK6fddoc7L13S6Y4JrtVBX+DV/fcMc1YQ/0Apuo+xT9Ge/VI
+	sbW2OWYdYS8Bofwqej9oJCBCR+36BZi8Yrk06Jmb+rET8Jlqck1Ukiy2xepydG3shpjzdtBZ2DzVE
+	p/G09Nx/geyb+/B1F75QavBiKkZwnE68+C9Sj9qVVVBlzF9+olsQ4u/ITKYtx7rYLileh61Sh8a4D
+	/Yp8ZUmcM7/e6LvCg99iAZTfgsdspYXVw7/KXcgHKlQUmD+SHiFOXEdFhDawzrwxckGdGO3GFybhi
+	gNX50wMQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7plN-0000000EDVB-0HVK;
+	Thu, 24 Apr 2025 06:08:45 +0000
+Date: Thu, 24 Apr 2025 07:08:45 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: linux-fsdevel@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Miklos Szeredi <miklos@szeredi.hu>, linux-cifs@vger.kernel.org
+Subject: [RFC][PATCH] saner calling conventions for ->d_automount()
+Message-ID: <20250424060845.GG2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-David Howells <dhowells@redhat.com> writes:
+Currently the calling conventions for ->d_automount() instances have
+an odd wart - returned new mount to be attached is expected to have
+refcount 2.
 
-> On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
-> "unbuffered reads" (specified by cache=none in the mount parameters).  The
-> difference is flagged in the protocol and the server may behave
-> differently: Windows Server will, for example, mandate that DIO reads are
-> block aligned.
->
-> Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
-> NETFS_DIO_READ, parallelling the write differentiation that already exists.
->
-> A further patch will be required to make cifs do something different,
-> depending on the rreq->origin set.
->
-> Fixes: 016dc8516aec ("netfs: Implement unbuffered/DIO read support")
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Paulo Alcantara <pc@manguebit.com>
-> cc: Steve French <sfrench@samba.org>
-> cc: netfs@lists.linux.dev
-> cc: v9fs@lists.linux.dev
-> cc: linux-afs@lists.infradead.org
-> cc: linux-cifs@vger.kernel.org
-> cc: ceph-devel@vger.kernel.org
-> cc: linux-nfs@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/9p/vfs_addr.c             |    3 ++-
->  fs/afs/write.c               |    1 +
->  fs/ceph/addr.c               |    4 +++-
->  fs/netfs/direct_read.c       |    3 ++-
->  fs/netfs/main.c              |    1 +
->  fs/netfs/misc.c              |    1 +
->  fs/netfs/objects.c           |    1 +
->  fs/netfs/read_collect.c      |    7 +++++--
->  fs/nfs/fscache.c             |    1 +
->  fs/smb/client/file.c         |    3 ++-
->  include/linux/netfs.h        |    1 +
->  include/trace/events/netfs.h |    1 +
->  12 files changed, 21 insertions(+), 6 deletions(-)
+That kludge is intended to make sure that mark_mounts_for_expiry() called
+before we get around to attaching that new mount to the tree won't decide
+to take it out.  finish_automount() drops the extra reference after it's
+done with attaching mount to the tree - or drops the reference twice in
+case of error.  ->d_automount() instances have rather counterintuitive
+boilerplate in them.
 
-Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+There's a much simpler approach: have mark_mounts_for_expiry() skip the
+mounts that are yet to be mounted.  And to hell with grabbing/dropping
+those extra references.  Makes for simpler correctness analysis, at that...
+    
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
+index 767b2927c762..749637231773 100644
+--- a/Documentation/filesystems/porting.rst
++++ b/Documentation/filesystems/porting.rst
+@@ -1203,3 +1203,10 @@ should use d_drop();d_splice_alias() and return the result of the latter.
+ If a positive dentry cannot be returned for some reason, in-kernel
+ clients such as cachefiles, nfsd, smb/server may not perform ideally but
+ will fail-safe.
++
++---
++
++**mandatory**
++
++Calling conventions for ->d_automount() have changed; we should *not* grab
++an extra reference to new mount - it should be returned with refcount 1.
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index ae79c30b6c0c..cc0a58e96770 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -1411,9 +1411,7 @@ defined:
+ 
+ 	If a vfsmount is returned, the caller will attempt to mount it
+ 	on the mountpoint and will remove the vfsmount from its
+-	expiration list in the case of failure.  The vfsmount should be
+-	returned with 2 refs on it to prevent automatic expiration - the
+-	caller will clean up the additional ref.
++	expiration list in the case of failure.
+ 
+ 	This function is only used if DCACHE_NEED_AUTOMOUNT is set on
+ 	the dentry.  This is set by __d_instantiate() if S_AUTOMOUNT is
+diff --git a/fs/afs/mntpt.c b/fs/afs/mntpt.c
+index 45cee6534122..9434a5399f2b 100644
+--- a/fs/afs/mntpt.c
++++ b/fs/afs/mntpt.c
+@@ -189,7 +189,6 @@ struct vfsmount *afs_d_automount(struct path *path)
+ 	if (IS_ERR(newmnt))
+ 		return newmnt;
+ 
+-	mntget(newmnt); /* prevent immediate expiration */
+ 	mnt_set_expiry(newmnt, &afs_vfsmounts);
+ 	queue_delayed_work(afs_wq, &afs_mntpt_expiry_timer,
+ 			   afs_mntpt_expiry_timeout * HZ);
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index 83ac192e7fdd..05d8584fd3b9 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -319,9 +319,6 @@ static struct vfsmount *fuse_dentry_automount(struct path *path)
+ 
+ 	/* Create the submount */
+ 	mnt = fc_mount(fsc);
+-	if (!IS_ERR(mnt))
+-		mntget(mnt);
+-
+ 	put_fs_context(fsc);
+ 	return mnt;
+ }
+diff --git a/fs/namespace.c b/fs/namespace.c
+index bbda516444ff..1807ccb1a52d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3903,10 +3903,6 @@ int finish_automount(struct vfsmount *m, const struct path *path)
+ 		return PTR_ERR(m);
+ 
+ 	mnt = real_mount(m);
+-	/* The new mount record should have at least 2 refs to prevent it being
+-	 * expired before we get a chance to add it
+-	 */
+-	BUG_ON(mnt_get_count(mnt) < 2);
+ 
+ 	if (m->mnt_sb == path->mnt->mnt_sb &&
+ 	    m->mnt_root == dentry) {
+@@ -3939,7 +3935,6 @@ int finish_automount(struct vfsmount *m, const struct path *path)
+ 	unlock_mount(mp);
+ 	if (unlikely(err))
+ 		goto discard;
+-	mntput(m);
+ 	return 0;
+ 
+ discard_locked:
+@@ -3953,7 +3948,6 @@ int finish_automount(struct vfsmount *m, const struct path *path)
+ 		namespace_unlock();
+ 	}
+ 	mntput(m);
+-	mntput(m);
+ 	return err;
+ }
+ 
+@@ -3990,11 +3984,14 @@ void mark_mounts_for_expiry(struct list_head *mounts)
+ 
+ 	/* extract from the expiration list every vfsmount that matches the
+ 	 * following criteria:
++	 * - already mounted
+ 	 * - only referenced by its parent vfsmount
+ 	 * - still marked for expiry (marked on the last call here; marks are
+ 	 *   cleared by mntput())
+ 	 */
+ 	list_for_each_entry_safe(mnt, next, mounts, mnt_expire) {
++		if (!is_mounted(&mnt->mnt))
++			continue;
+ 		if (!xchg(&mnt->mnt_expiry_mark, 1) ||
+ 			propagate_mount_busy(mnt, 1))
+ 			continue;
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 973aed9cc5fe..7f1ec9c67ff2 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -195,7 +195,6 @@ struct vfsmount *nfs_d_automount(struct path *path)
+ 	if (IS_ERR(mnt))
+ 		goto out_fc;
+ 
+-	mntget(mnt); /* prevent immediate expiration */
+ 	if (timeout <= 0)
+ 		goto out_fc;
+ 
+diff --git a/fs/smb/client/namespace.c b/fs/smb/client/namespace.c
+index e3f9213131c4..778daf11f1db 100644
+--- a/fs/smb/client/namespace.c
++++ b/fs/smb/client/namespace.c
+@@ -283,7 +283,6 @@ struct vfsmount *cifs_d_automount(struct path *path)
+ 		return newmnt;
+ 	}
+ 
+-	mntget(newmnt); /* prevent immediate expiration */
+ 	mnt_set_expiry(newmnt, &cifs_automount_list);
+ 	schedule_delayed_work(&cifs_automount_task,
+ 			      cifs_mountpoint_expiry_timeout);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8ddf6b17215c..fa488721019f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10085,8 +10085,6 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	put_filesystem(type);
+ 	if (IS_ERR(mnt))
+ 		return NULL;
+-	mntget(mnt);
+-
+ 	return mnt;
+ }
+ 
 
