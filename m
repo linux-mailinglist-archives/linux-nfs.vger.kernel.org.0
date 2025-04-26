@@ -1,120 +1,117 @@
-Return-Path: <linux-nfs+bounces-11288-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11289-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B50DA9D037
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Apr 2025 20:09:36 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DA46A9D93A
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 10:12:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FD363BC2C9
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Apr 2025 18:09:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFD724C046A
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 08:12:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A82A1A256E;
-	Fri, 25 Apr 2025 18:09:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8A221884A;
+	Sat, 26 Apr 2025 08:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnXQMMxx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Saz8uESQ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A522D1A2545
-	for <linux-nfs@vger.kernel.org>; Fri, 25 Apr 2025 18:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DFF1922D4
+	for <linux-nfs@vger.kernel.org>; Sat, 26 Apr 2025 08:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745604572; cv=none; b=ca5lo0cB+iuujp+jIabHOY7Q2xSeor5FteOcR2WnUXfe0gY3JwSi4ddjPqr9x3XSft9zd9DWzB+1IMfmd7nr8kgA/kE3dOuioYFSnMz6lrHhxdUBS/u81metbzgpwd/A//uEKZUkyONCNe8ylmNLH7d3NBFNuMmLgrawLOWtjtw=
+	t=1745655163; cv=none; b=u5X3WPGSn/WWzCLevHYVPzxEBF7yVvEAoiqGiuMJOHyXHqAqg9NqTjN9XcnOqVYaOs2cnpb4+0Xtx1VQhgIDj6StKAdBaG8Z1nKEqKPvsuUtd5kl3xaALkZJL6mffXn0V8MDkzF2/cnfExIJ8QL0Gl7yJRC+64CLUbgWgI7tL+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745604572; c=relaxed/simple;
-	bh=XPQm1oXarAbPiWPj1mG+GY2AG2+c7bXEyjOguM8/TCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ijI2LdCa6jV4VZ3wuekYaVNBRz68XDU8rZxxcPOm8QU4X9CazIQQ3C+FKHjEXAxdQBCa1HX6DMUn5CAKF9qg+bvUhIR8aoeu67oLARydWHpeQ7LNQu7c7peMphFZLZG9rKLJkWxk1dDYDU7wziZC8nu0MscdY+ROWMyFqqGS3HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UnXQMMxx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745604569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KODFhvxKraJughP9qW4YXV6XmZj+vig1YLapLwroizQ=;
-	b=UnXQMMxxiMJJFMVK9M45ddYd35qsMZJ6ihOpdty4eVIbhr7bteCHaU3zueJYjt1+M/Eexd
-	9vHX16eq/zs0fKlIG/ikz8vxyB46rWmG/hLQzsALPCzP7cOYY3YpAO08jnx2ucVpG0Vo9f
-	pMTFY9KXh4QlF/DkCV3j6kXlQXUCu2k=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-i0owWRnfMwqKCFrTHueOPA-1; Fri,
- 25 Apr 2025 14:09:27 -0400
-X-MC-Unique: i0owWRnfMwqKCFrTHueOPA-1
-X-Mimecast-MFC-AGG-ID: i0owWRnfMwqKCFrTHueOPA_1745604567
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCB2B1956086;
-	Fri, 25 Apr 2025 18:09:26 +0000 (UTC)
-Received: from okorniev-mac.redhat.com (unknown [10.22.89.105])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0172195608D;
-	Fri, 25 Apr 2025 18:09:25 +0000 (UTC)
-From: Olga Kornievskaia <okorniev@redhat.com>
-To: trondmy@kernel.org,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org,
-	Olga Kornievskaia <okorniev@redhat.com>
-Subject: [PATCH 1/1] NFSv4.2: fix listxattr to return selinux security label
-Date: Fri, 25 Apr 2025 14:09:21 -0400
-Message-Id: <20250425180921.86702-1-okorniev@redhat.com>
+	s=arc-20240116; t=1745655163; c=relaxed/simple;
+	bh=kocRxf9yEOEtTP+ZkM8kf273S/lbmABjzi2b89wIwWY=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tqcSOSHpA0f80Z8+6am7wn+jbealtIrCKuJV0V4KdG4YMZV84sneJwuMp5VFyJRjeVdQBp2eDOeousYH9R7e49VTaGRg9KH9Wyxo2OYZcQfcnxHgpsq7TuSHYrf25gnLjJ1CSqnDVob7+hB8VIWeIc/2tFWoNqt3xLrtgR9NYmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Saz8uESQ; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so2749911f8f.1
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Apr 2025 01:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745655160; x=1746259960; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ywLURDenPX0lIljZmfn/f7yli6vSUHStcK1oLhUId+c=;
+        b=Saz8uESQ6F3lZINXU07mk1xoKUqP+cT2Hc2/+3Kyg2+2/YAbS5SLQsi4WTCf/OEUqT
+         P9z/IgzaXjBpLdB+gXeZAaSIzVQtgkAxQw7cyzfHdluGeQRZF+eAzKPiyVXbZO78lHc4
+         Q7VhCotbMQ3e7TQXpYHJDYvYTqP6lyfvfALwvgYi4nOZEjbnLj1M72jLaFjzwFx5IWZW
+         fBq3eEulEfCWc/0NaBwEPX+wl4CuDRNHOM48sHPyJgOZ/LK7/ye1J82roA3776lPpfrR
+         c8ot123FmEMitHrKSodMftR2te3qx55sv4M6v82kMfcuX4Br+q9cOigPtEG+/TJJbCOx
+         i+ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745655160; x=1746259960;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ywLURDenPX0lIljZmfn/f7yli6vSUHStcK1oLhUId+c=;
+        b=rXnJSQfz3KbVnBweLmDBkQ6ZIEj+IxQgQSc7oxlq+OujbHke3BJp5Aub04aC5T046N
+         g0nMgB+1RHtzaKRhQ692qkuNLYd7wMjO3igS+T2zk4yUS07prd5av2VQ0QhlUZI7hJao
+         mpxxCz0rewmbevHn4slGSXq4yDMMOc/HCJNzjzqHJXi3ZWYsLfh0LUtl/E1zHMsUehd6
+         t31GC6l8e02AKwsytB3Npc0BSljxn4SQyKyxyj1ds2fJVo7jNa9IaG3mMCF9L8qHTLFm
+         Wc81DEwmqfh9aFII35WGUdzZ+IGtLjssoiBCT7ZCkgmDCIroyPW8pBCNqkPmuKa6Tbib
+         Q+jg==
+X-Gm-Message-State: AOJu0YwhcgHfk00EU9ILOp3osCEgf4QmG+MVp6HNCg61iBBR6ffWHPaJ
+	YUE4RQz8U1qziMsCURlZqvAIGEVZUGxA/GdiP2Sp3xn++mTOiefL
+X-Gm-Gg: ASbGncuBaDzy2q522Q56T+a0D/oVVVt918kj1/pfvWmgUDCmtPsJNRkgPKzXvt/QF4q
+	FTqKpLIOl2fVOXOPLu7hBxdyjHOU2QTRr+eIXm9CFd6RktFpRv69hr7Ff0OX/Jr+csxtvy0Ledj
+	QhxezgHbssxo0R2+P0RkpP2/hC0jTVJXEpSOv+O7Xz3QlDm9aD0F62OKMSWyHFqIBw3vfcBp+2U
+	YfKY+6ugBqdpOoxrGg4WUn9lueoaocRyvev4fBQMBGhd+dsq97xktbPYCWr86mhzIJWcOV2uhiY
+	7FILwzWYuJLZG4I6DWjM9E7TkpoScgiEYt7WhxKk4czk7yI0Fg7+o0KHFhRlVrGkrte8Gj0caA=
+	=
+X-Google-Smtp-Source: AGHT+IEWcbF8ozzE6QrdCUmn9y5GiBMURdxglV+u3KSDqGsetouEt+rGFJonyHaP5Zgn7RdZkp5klw==
+X-Received: by 2002:a5d:598c:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a07ab8176emr1486136f8f.41.1745655160240;
+        Sat, 26 Apr 2025 01:12:40 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca5473sm4751416f8f.31.2025.04.26.01.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Apr 2025 01:12:38 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 75DF7BE2DE0; Sat, 26 Apr 2025 10:12:37 +0200 (CEST)
+Date: Sat, 26 Apr 2025 10:12:37 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Steve Dickson <steved@redhat.com>
+Subject: nfsdctl: lockd configuration failure reported after updating to
+ nfs-utils-2.8.3
+Message-ID: <aAyVdfJT4uMUeA6s@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Currently, when NFS is quired for all the labels present on the
-file via a command example "getfattr -d -m . /mnt/testfile", it
-does not return the security label. Yet when asked specifically for
-the label (getfattr -n security.selinux) it will be returned.
-Include the security label when all attributes are queried.
+Hi
 
-Signed-off-by: Olga Kornievskaia <okorniev@redhat.com>
----
- fs/nfs/nfs4proc.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+After updating in Debian nfs-utils to 2.8.3, a systemctl status
+nfs-server.service shows:
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 1f7cc260b007..5f7f5fed6f0e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10845,7 +10845,7 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
- 
- static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- {
--	ssize_t error, error2, error3;
-+	ssize_t error, error2, error3, error4;
- 	size_t left = size;
- 
- 	error = generic_listxattr(dentry, list, left);
-@@ -10868,8 +10868,16 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- 	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
- 	if (error3 < 0)
- 		return error3;
-+	if (list) {
-+		list += error3;
-+		left -= error3;
-+	}
-+
-+	error4 = security_inode_listsecurity(d_inode(dentry), list, left);
-+	if (error4 < 0)
-+		return error4;
- 
--	error += error2 + error3;
-+	error += error2 + error3 + error4;
- 	if (size && error > size)
- 		return -ERANGE;
- 	return error;
--- 
-2.47.1
+nfsdctl: lockd configuration failure
 
+For reproducing the case the nfs.conf is kept to the default
+(commented) section. 
+
+In Debian we do not use the system linux/lockd_netlink.h (where the
+changes only seem to have merged upstream in 6.15-rc1) and use the
+shipped copy in nfs-utils instead.
+
+I do not see problems with mounts, so I suspect the problem a user
+reported downstream in https://bugs.debian.org/1104096 is just
+cosmetical?
+
+nfsdctl nlm reports:
+
+nfsdctl: nfsd not found
+
+Regards,
+Salvatore
 
