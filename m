@@ -1,117 +1,152 @@
-Return-Path: <linux-nfs+bounces-11289-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11290-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA46A9D93A
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 10:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16E96A9DA7A
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 14:03:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFD724C046A
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 08:12:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 595F34676DB
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Apr 2025 12:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8A221884A;
-	Sat, 26 Apr 2025 08:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Saz8uESQ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852655A79B;
+	Sat, 26 Apr 2025 12:03:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DFF1922D4
-	for <linux-nfs@vger.kernel.org>; Sat, 26 Apr 2025 08:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DEEA926
+	for <linux-nfs@vger.kernel.org>; Sat, 26 Apr 2025 12:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745655163; cv=none; b=u5X3WPGSn/WWzCLevHYVPzxEBF7yVvEAoiqGiuMJOHyXHqAqg9NqTjN9XcnOqVYaOs2cnpb4+0Xtx1VQhgIDj6StKAdBaG8Z1nKEqKPvsuUtd5kl3xaALkZJL6mffXn0V8MDkzF2/cnfExIJ8QL0Gl7yJRC+64CLUbgWgI7tL+Q=
+	t=1745669012; cv=none; b=TjALOPu13Wlks/x+zqCGNU3mNwFXp8g5d5wTG4GNjKF2MoyrCls33MFBamUld2DQrdAQn8kc5t3ST0R8rZAAU7Zi2S0bNLKsq8ed4i+FNB8dxSs/tg7ZbV94OvvSGGBetNLpa0LMV49VuXw1WcDXAted6a5Wji70Ms6OUkTBkOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745655163; c=relaxed/simple;
-	bh=kocRxf9yEOEtTP+ZkM8kf273S/lbmABjzi2b89wIwWY=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tqcSOSHpA0f80Z8+6am7wn+jbealtIrCKuJV0V4KdG4YMZV84sneJwuMp5VFyJRjeVdQBp2eDOeousYH9R7e49VTaGRg9KH9Wyxo2OYZcQfcnxHgpsq7TuSHYrf25gnLjJ1CSqnDVob7+hB8VIWeIc/2tFWoNqt3xLrtgR9NYmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Saz8uESQ; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so2749911f8f.1
-        for <linux-nfs@vger.kernel.org>; Sat, 26 Apr 2025 01:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745655160; x=1746259960; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ywLURDenPX0lIljZmfn/f7yli6vSUHStcK1oLhUId+c=;
-        b=Saz8uESQ6F3lZINXU07mk1xoKUqP+cT2Hc2/+3Kyg2+2/YAbS5SLQsi4WTCf/OEUqT
-         P9z/IgzaXjBpLdB+gXeZAaSIzVQtgkAxQw7cyzfHdluGeQRZF+eAzKPiyVXbZO78lHc4
-         Q7VhCotbMQ3e7TQXpYHJDYvYTqP6lyfvfALwvgYi4nOZEjbnLj1M72jLaFjzwFx5IWZW
-         fBq3eEulEfCWc/0NaBwEPX+wl4CuDRNHOM48sHPyJgOZ/LK7/ye1J82roA3776lPpfrR
-         c8ot123FmEMitHrKSodMftR2te3qx55sv4M6v82kMfcuX4Br+q9cOigPtEG+/TJJbCOx
-         i+ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745655160; x=1746259960;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ywLURDenPX0lIljZmfn/f7yli6vSUHStcK1oLhUId+c=;
-        b=rXnJSQfz3KbVnBweLmDBkQ6ZIEj+IxQgQSc7oxlq+OujbHke3BJp5Aub04aC5T046N
-         g0nMgB+1RHtzaKRhQ692qkuNLYd7wMjO3igS+T2zk4yUS07prd5av2VQ0QhlUZI7hJao
-         mpxxCz0rewmbevHn4slGSXq4yDMMOc/HCJNzjzqHJXi3ZWYsLfh0LUtl/E1zHMsUehd6
-         t31GC6l8e02AKwsytB3Npc0BSljxn4SQyKyxyj1ds2fJVo7jNa9IaG3mMCF9L8qHTLFm
-         Wc81DEwmqfh9aFII35WGUdzZ+IGtLjssoiBCT7ZCkgmDCIroyPW8pBCNqkPmuKa6Tbib
-         Q+jg==
-X-Gm-Message-State: AOJu0YwhcgHfk00EU9ILOp3osCEgf4QmG+MVp6HNCg61iBBR6ffWHPaJ
-	YUE4RQz8U1qziMsCURlZqvAIGEVZUGxA/GdiP2Sp3xn++mTOiefL
-X-Gm-Gg: ASbGncuBaDzy2q522Q56T+a0D/oVVVt918kj1/pfvWmgUDCmtPsJNRkgPKzXvt/QF4q
-	FTqKpLIOl2fVOXOPLu7hBxdyjHOU2QTRr+eIXm9CFd6RktFpRv69hr7Ff0OX/Jr+csxtvy0Ledj
-	QhxezgHbssxo0R2+P0RkpP2/hC0jTVJXEpSOv+O7Xz3QlDm9aD0F62OKMSWyHFqIBw3vfcBp+2U
-	YfKY+6ugBqdpOoxrGg4WUn9lueoaocRyvev4fBQMBGhd+dsq97xktbPYCWr86mhzIJWcOV2uhiY
-	7FILwzWYuJLZG4I6DWjM9E7TkpoScgiEYt7WhxKk4czk7yI0Fg7+o0KHFhRlVrGkrte8Gj0caA=
-	=
-X-Google-Smtp-Source: AGHT+IEWcbF8ozzE6QrdCUmn9y5GiBMURdxglV+u3KSDqGsetouEt+rGFJonyHaP5Zgn7RdZkp5klw==
-X-Received: by 2002:a5d:598c:0:b0:391:2c67:798f with SMTP id ffacd0b85a97d-3a07ab8176emr1486136f8f.41.1745655160240;
-        Sat, 26 Apr 2025 01:12:40 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca5473sm4751416f8f.31.2025.04.26.01.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Apr 2025 01:12:38 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 75DF7BE2DE0; Sat, 26 Apr 2025 10:12:37 +0200 (CEST)
-Date: Sat, 26 Apr 2025 10:12:37 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Steve Dickson <steved@redhat.com>
-Subject: nfsdctl: lockd configuration failure reported after updating to
- nfs-utils-2.8.3
-Message-ID: <aAyVdfJT4uMUeA6s@eldamar.lan>
+	s=arc-20240116; t=1745669012; c=relaxed/simple;
+	bh=gdH7NSXB73PA2MDOCwPDrhMfk2SIwhhjt90X+UVTFjM=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=fIVuPw6cxjqdSvAyR5eGdHH/v6oQ9o9NMUNOT+9zUPX26rWkJN1I0MFg4hGsX1QMaCJpW+DaQFpPpFLHYbIG8W7N6wRPl76WPc185kl1kNUXt3FhheqI44crt8OZUtFYnTLrbwhY9nMuv4+hS948Dv8BdimB6CO8Xc12TmopqYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1u8eFa-0000G4-Mw;
+	Sat, 26 Apr 2025 12:03:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: "NeilBrown" <neil@brown.name>
+To: cel@kernel.org
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>
+Subject:
+ Re: [PATCH v3 11/11] NFSD: Remove NFSSVC_MAXBLKSIZE from .pc_xdrressize
+In-reply-to: <20250423152117.5418-12-cel@kernel.org>
+References: <20250423152117.5418-1-cel@kernel.org>,
+ <20250423152117.5418-12-cel@kernel.org>
+Date: Sat, 26 Apr 2025 14:31:02 +1000
+Message-id: <174564186264.500591.13673906323063582835@noble.neil.brown.name>
 
-Hi
+On Thu, 24 Apr 2025, cel@kernel.org wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> The value in the .pc_xdrressize field is used to "reserve space in
+> the output queue". Relevant only to UDP transports, AFAICT.
+>=20
+> The fixed value of NFSSVC_MAXBLKSIZE is added to that field for
+> NFSv2 and NFSv3 read requests, even though nfsd_proc_read() is
+> already careful to reserve the actual size of the read payload.
+> Adding the maximum payload size to .pc_xdrressize seems to be
+> unnecessary.
 
-After updating in Debian nfs-utils to 2.8.3, a systemctl status
-nfs-server.service shows:
+I believe it is necessary.
 
-nfsdctl: lockd configuration failure
+svc_reserve() (and svc_reserve_auth) only ever reduces the size of the
+reservation.
+->rq_reserved is initialised to serv->sv_max_mesg, then reduced to
+.pc_xdrressize once the proc is known, then possibly reduced further by
+code in the proc.
+So .pc_xdrressize must be (at least) the largest possible size.
 
-For reproducing the case the nfs.conf is kept to the default
-(commented) section. 
+>=20
+> Also, instead of adding a constant 4 bytes for each payload's
+> XDR pad, add the actual size of the pad for better accuracy of
+> the reservation size.
 
-In Debian we do not use the system linux/lockd_netlink.h (where the
-changes only seem to have merged upstream in 6.15-rc1) and use the
-shipped copy in nfs-utils instead.
+Could we instead change svc_reserve() to add the pad, and remove all the
+manual padding?
 
-I do not see problems with mounts, so I suspect the problem a user
-reported downstream in https://bugs.debian.org/1104096 is just
-cosmetical?
+But pc_xdrressize is in xdr units - it is multiplied by 4 before passing
+to svc_reserve.  So these changes don't do what you think they do...
 
-nfsdctl nlm reports:
+NeilBrown
 
-nfsdctl: nfsd not found
 
-Regards,
-Salvatore
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs3proc.c | 4 ++--
+>  fs/nfsd/nfsproc.c  | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index 372bdcf5e07a..dbb750a7b5db 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -202,7 +202,7 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
+>  	 */
+>  	resp->count =3D argp->count;
+>  	svc_reserve_auth(rqstp, ((1 + NFS3_POST_OP_ATTR_WORDS + 3) << 2) +
+> -			 resp->count + 4);
+> +			 xdr_align_size(resp->count));
+> =20
+>  	fh_copy(&resp->fh, &argp->fh);
+>  	resp->status =3D nfsd_read(rqstp, &resp->fh, argp->offset,
+> @@ -921,7 +921,7 @@ static const struct svc_procedure nfsd_procedures3[22] =
+=3D {
+>  		.pc_argzero =3D sizeof(struct nfsd3_readargs),
+>  		.pc_ressize =3D sizeof(struct nfsd3_readres),
+>  		.pc_cachetype =3D RC_NOCACHE,
+> -		.pc_xdrressize =3D ST+pAT+4+NFSSVC_MAXBLKSIZE/4,
+> +		.pc_xdrressize =3D ST+pAT+3,
+>  		.pc_name =3D "READ",
+>  	},
+>  	[NFS3PROC_WRITE] =3D {
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 6dda081eb24c..a95faf726e58 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -219,7 +219,7 @@ nfsd_proc_read(struct svc_rqst *rqstp)
+>  	/* Obtain buffer pointer for payload. 19 is 1 word for
+>  	 * status, 17 words for fattr, and 1 word for the byte count.
+>  	 */
+> -	svc_reserve_auth(rqstp, (19<<2) + argp->count + 4);
+> +	svc_reserve_auth(rqstp, (19<<2) + xdr_align_size(argp->count));
+> =20
+>  	resp->count =3D argp->count;
+>  	fh_copy(&resp->fh, &argp->fh);
+> @@ -739,7 +739,7 @@ static const struct svc_procedure nfsd_procedures2[18] =
+=3D {
+>  		.pc_argzero =3D sizeof(struct nfsd_readargs),
+>  		.pc_ressize =3D sizeof(struct nfsd_readres),
+>  		.pc_cachetype =3D RC_NOCACHE,
+> -		.pc_xdrressize =3D ST+AT+1+NFSSVC_MAXBLKSIZE_V2/4,
+> +		.pc_xdrressize =3D ST+AT+1,
+>  		.pc_name =3D "READ",
+>  	},
+>  	[NFSPROC_WRITECACHE] =3D {
+> --=20
+> 2.49.0
+>=20
+>=20
+
 
