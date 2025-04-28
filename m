@@ -1,59 +1,56 @@
-Return-Path: <linux-nfs+bounces-11340-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11341-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 367F5A9FBFD
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 23:13:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79F57A9FC4C
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 23:37:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E0B63BF135
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:11:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C435917C732
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4663D20FAB4;
-	Mon, 28 Apr 2025 21:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 444E820CCF4;
+	Mon, 28 Apr 2025 21:35:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etFc8ZRi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qdRaFld3"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC2D204F9B;
-	Mon, 28 Apr 2025 21:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14999176ADB
+	for <linux-nfs@vger.kernel.org>; Mon, 28 Apr 2025 21:35:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745874524; cv=none; b=uopoH1KEXvrmgA8cn4MbsAJ3gEL8fDhA9qpHKr+AUhMCkfJzSXonm54kqACcT5qoXnBy3QuqYCPQCnXab49ce2lLD0cfefwTJXlhUrSAGFsOYj4+B4xQQZZyzhC0M93z4CQCjnnsFj1KoFhcsbN2kVZ1UObrT5HnsaHZTXnkpdc=
+	t=1745876145; cv=none; b=pVNaZEN3mbPhMFrSZrOGFmQMenYEmwWcPyHtXSz58wbVkhYLtPamJL7tRdcDrw/ABqHQy49g5wq2GEgEwnEyQnZc1fYXUxSyV4tdYKU+DW0yqESPEeYf0bSsY8PXgPCKM+gEPLSfcR1NnrbswLmAKCXiSLsHL+KUT6eOJ77dTCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745874524; c=relaxed/simple;
-	bh=LCiGLoKbLEPztR1v2cJUkY0EfLgHqfE3XCZJk5a0PYE=;
+	s=arc-20240116; t=1745876145; c=relaxed/simple;
+	bh=YX34DpVGTC31bL7bOAy5Aam24RGUoWGG/vjoJWG7Kig=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jN5/pN7bQK2or2xHNHUCHqBj9CBvJg9hXCEt+/L/hfi6hMZpMkrdmjOn8Ghxzm4zbOQ5CUtT3pt09eotgahFuo+RAM5OsVpaPqviFo0ocFIdwpb1Dgm5vLdw+LXccNlixKQIei32tCfVbrS+wKfM1jSg2wS6etoRosuTPk9KhhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etFc8ZRi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BAA2C4CEE4;
-	Mon, 28 Apr 2025 21:08:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=BWRUngH1gu71Cmc5s1knWNbhEc7vnVYy0prgrzjRx5xNpPl9epj+uyU3XPM5Q9oAfkOE9QPPorg4xwOjClYLCFKncTz12tO+l1R3+lsPSxMTXG6agGRCVYdUtJiH7B+jzlryr+6oTwmsZsdz1rpKiUS4PJ5pg7h9RIgV7dv2xUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qdRaFld3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB36C4CEE4;
+	Mon, 28 Apr 2025 21:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745874523;
-	bh=LCiGLoKbLEPztR1v2cJUkY0EfLgHqfE3XCZJk5a0PYE=;
+	s=k20201202; t=1745876144;
+	bh=YX34DpVGTC31bL7bOAy5Aam24RGUoWGG/vjoJWG7Kig=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=etFc8ZRiWQhUGWgz9uTocWfalCZDlpZbfOIkY6MG3keIhGqSwdB79zh6LXfAcZg1v
-	 hT5ysBuGaYdTccTFPDnEgZ3dwmJTexmMDg+HbusX5Z9sXlvy9VvGVQtxFUdN4MJxTf
-	 VahIBH5SAaYr4avuY99JKnzsIQMPlDh4vCDfGlGT30Dt0jNSefgnMspNxkjU3QWmlj
-	 rDyaIdgx8zrlsw/E1m0XYHoGHfbGqZyxBHUfaFReTB8KHpfE8ZrnSK/tIX4baNSBNl
-	 SIRY4ghXJuoXGaIevhUBloREkfknjGlgsBnM09flofP8S5NQ1jSBpHd89pJVEegs8u
-	 LYw/5O4+09jBA==
-Message-ID: <420d4c4285d7d2cf3528839408e19501abfbf82b.camel@kernel.org>
-Subject: Re: [PATCH v4 14/14] SUNRPC: Bump the maximum payload size for the
- server
+	b=qdRaFld3xgXeZiisXSoPZ/dxGntOmKuWv1lmA+96SzoTQv16KN8vgOao0pbxMLDMs
+	 +emeizWrv8ZqBkST19qVKQSOC7kFaRFV0buH1yJlEyjS7cXB9CxdLLZXNCTHxuBmSK
+	 Tn617+LkhGzWUb1mhfYmG+jaLpA8zODp65egMiuF4v+J1j2FykOBMluPwx/KeCZuTw
+	 adNawSGlVnYaLIjlIGlzfVvxa1hiGgnz1TrOLRjtEvnKsxpQJ9tb6gkCU6pPJLaAez
+	 Oi2XyTrk7vO3Hd1H18WE81plW+b1lNfTXHGBtuq730bHU1MAjDVOp1Ku+rGtbS7QTs
+	 LGV6fGE2WzLGA==
+Message-ID: <683b78ce40c6aa209aef7f9e79ead74aaeb1440a.camel@kernel.org>
+Subject: Re: [PATCH v2] NFS: Avoid flushing data while holding directory
+ locks in nfs_rename()
 From: Jeff Layton <jlayton@kernel.org>
-To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
- <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>,  Anna Schumaker	 <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, Chuck Lever
-	 <chuck.lever@oracle.com>
-Date: Mon, 28 Apr 2025 14:08:42 -0700
-In-Reply-To: <20250428193702.5186-15-cel@kernel.org>
-References: <20250428193702.5186-1-cel@kernel.org>
-	 <20250428193702.5186-15-cel@kernel.org>
+To: trondmy@kernel.org, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 28 Apr 2025 14:35:43 -0700
+In-Reply-To: <5cd8fe68532655c0d4482ad712799d2fe1ab4ed2.1745858923.git.trond.myklebust@hammerspace.com>
+References: 
+	<5cd8fe68532655c0d4482ad712799d2fe1ab4ed2.1745858923.git.trond.myklebust@hammerspace.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,53 +135,108 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-04-28 at 15:37 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2025-04-28 at 09:49 -0700, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 >=20
-> Increase the maximum server-side RPC payload to 4MB. The default
-> remains at 1MB.
+> The Linux client assumes that all filehandles are non-volatile for
+> renames within the same directory (otherwise sillyrename cannot work).
+> However, the existence of the Linux 'subtree_check' export option has
+> meant that nfs_rename() has always assumed it needs to flush writes
+> before attempting to rename.
 >=20
-> To adjust the operational maximum, shut down the NFS server. Then
-> echo a new value into:
+> Since NFSv4 does allow the client to query whether or not the server
+> exhibits this behaviour, and since knfsd does actually set the
+> appropriate flag when 'subtree_check' is enabled on an export, it
+> should be OK to optimise away the write flushing behaviour in the cases
+> where it is clearly not needed.
 >=20
->   /proc/fs/nfsd/max_block_size
->=20
-> And restart the NFS server.
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->  include/linux/sunrpc/svc.h | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  fs/nfs/client.c           |  2 ++
+>  fs/nfs/dir.c              | 15 ++++++++++++++-
+>  include/linux/nfs_fs_sb.h | 12 +++++++++---
+>  3 files changed, 25 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index e27bc051ec67..b449eb02e00a 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -119,14 +119,14 @@ void svc_destroy(struct svc_serv **svcp);
->   * Linux limit; someone who cares more about NFS/UDP performance
->   * can test a larger number.
->   *
-> - * For TCP transports we have more freedom.  A size of 1MB is
-> - * chosen to match the client limit.  Other OSes are known to
-> - * have larger limits, but those numbers are probably beyond
-> - * the point of diminishing returns.
-> + * For non-UDP transports we have more freedom.  A size of 4MB is
-> + * chosen to accommodate clients that support larger I/O sizes.
->   */
-> -#define RPCSVC_MAXPAYLOAD	(1*1024*1024u)
-> -#define RPCSVC_MAXPAYLOAD_TCP	RPCSVC_MAXPAYLOAD
-> -#define RPCSVC_MAXPAYLOAD_UDP	(32*1024u)
-> +enum {
-> +	RPCSVC_MAXPAYLOAD	=3D 4 * 1024 * 1024,
-> +	RPCSVC_MAXPAYLOAD_TCP	=3D RPCSVC_MAXPAYLOAD,
-> +	RPCSVC_MAXPAYLOAD_UDP	=3D 32 * 1024,
-> +};
-
-I guess the enum is so that the symbol names remain in debuginfo?
-
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 2115c1189c2d..6d63b958c4bb 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -1105,6 +1105,8 @@ struct nfs_server *nfs_create_server(struct fs_cont=
+ext *fc)
+>  		if (server->namelen =3D=3D 0 || server->namelen > NFS2_MAXNAMLEN)
+>  			server->namelen =3D NFS2_MAXNAMLEN;
+>  	}
+> +	/* Linux 'subtree_check' borkenness mandates this setting */
+> +	server->fh_expire_type =3D NFS_FH_VOL_RENAME;
 > =20
->  extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+>  	if (!(fattr->valid & NFS_ATTR_FATTR)) {
+>  		error =3D ctx->nfs_mod->rpc_ops->getattr(server, ctx->mntfh,
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index bd23fc736b39..d0e0b435a843 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -2676,6 +2676,18 @@ nfs_unblock_rename(struct rpc_task *task, struct n=
+fs_renamedata *data)
+>  	unblock_revalidate(new_dentry);
+>  }
 > =20
+> +static bool nfs_rename_is_unsafe_cross_dir(struct dentry *old_dentry,
+> +					   struct dentry *new_dentry)
+> +{
+> +	struct nfs_server *server =3D NFS_SB(old_dentry->d_sb);
+> +
+> +	if (old_dentry->d_parent !=3D new_dentry->d_parent)
+> +		return false;
+> +	if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
+> +		return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
+> +	return true;
+> +}
+> +
+>  /*
+>   * RENAME
+>   * FIXME: Some nfsds, like the Linux user space nfsd, may generate a
+> @@ -2763,7 +2775,8 @@ int nfs_rename(struct mnt_idmap *idmap, struct inod=
+e *old_dir,
+> =20
+>  	}
+> =20
+> -	if (S_ISREG(old_inode->i_mode))
+> +	if (S_ISREG(old_inode->i_mode) &&
+> +	    nfs_rename_is_unsafe_cross_dir(old_dentry, new_dentry))
+>  		nfs_sync_inode(old_inode);
+>  	task =3D nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
+>  				must_unblock ? nfs_unblock_rename : NULL);
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index 71319637a84e..ee03f3cef30c 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -213,6 +213,15 @@ struct nfs_server {
+>  	char			*fscache_uniq;	/* Uniquifier (or NULL) */
+>  #endif
+> =20
+> +	/* The following #defines numerically match the NFSv4 equivalents */
+> +#define NFS_FH_NOEXPIRE_WITH_OPEN (0x1)
+> +#define NFS_FH_VOLATILE_ANY (0x2)
+> +#define NFS_FH_VOL_MIGRATION (0x4)
+> +#define NFS_FH_VOL_RENAME (0x8)
+> +#define NFS_FH_RENAME_UNSAFE (NFS_FH_VOLATILE_ANY | NFS_FH_VOL_RENAME)
+> +	u32			fh_expire_type;	/* V4 bitmask representing file
+> +						   handle volatility type for
+> +						   this filesystem */
+>  	u32			pnfs_blksize;	/* layout_blksize attr */
+>  #if IS_ENABLED(CONFIG_NFS_V4)
+>  	u32			attr_bitmask[3];/* V4 bitmask representing the set
+> @@ -236,9 +245,6 @@ struct nfs_server {
+>  	u32			acl_bitmask;	/* V4 bitmask representing the ACEs
+>  						   that are supported on this
+>  						   filesystem */
+> -	u32			fh_expire_type;	/* V4 bitmask representing file
+> -						   handle volatility type for
+> -						   this filesystem */
+>  	struct pnfs_layoutdriver_type  *pnfs_curr_ld; /* Active layout driver *=
+/
+>  	struct rpc_wait_queue	roc_rpcwaitq;
+>  	void			*pnfs_ld_data;	/* per mount point data */
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
