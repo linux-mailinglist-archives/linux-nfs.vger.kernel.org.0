@@ -1,139 +1,158 @@
-Return-Path: <linux-nfs+bounces-11312-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11313-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7ECF9A9F60C
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 18:42:43 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE19A9F629
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 18:49:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF2DF17D4C2
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 16:42:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD334189102C
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 16:49:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9717082D;
-	Mon, 28 Apr 2025 16:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2ACE262FCE;
+	Mon, 28 Apr 2025 16:49:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="sy8McH2D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvxsgUsj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic313-14.consmr.mail.ne1.yahoo.com (sonic313-14.consmr.mail.ne1.yahoo.com [66.163.185.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3177327A135
-	for <linux-nfs@vger.kernel.org>; Mon, 28 Apr 2025 16:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.185.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAAB254863
+	for <linux-nfs@vger.kernel.org>; Mon, 28 Apr 2025 16:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745858559; cv=none; b=t+p60YNOMNOFj06kwGJcGg9wc/ia0lrHEgln490UsfQdqWrK8gfK2nWFTRGG25UkUpv9qln7slCQUPSItx9JilpEy/UEJXPhOFYe+g68B35jlHiOiik0OLTZNioQECqoXOn0QnRD3pjUNiBWYpJWHEc10ta1n+6GNfyiK4s5prc=
+	t=1745858950; cv=none; b=KF12+Hh42rFB3pHAMdLI5unUmLBSZMJgv9ht+snM9H97Pd6SlHRe6i8zE0u0wm6BJuGm6+bPiYFn9YbyX4p7E/xXEP1slbDQJHwPMkbFb3oaK01voachF3oq36Z8IIoTVTKewr4HZATPvGU9KCD3XBpnsVd/YnZekVLuNxOHgCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745858559; c=relaxed/simple;
-	bh=6xY2nc0RaB26C8Wx9+EpDD+pS50ZQFFzgqmN0vDJVM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tIA13jMpei8t2SibgMZsR2srIbj4eBF3IUJuVuhRCBnoepvkNGrdEDXac1z8D8zGTI2A8ZnHUKzNhzeKG2oaosYPv+9ASawzfRipE28lP1D1ktZCnu1eokUqHa1VCTiw11CuDKR3ljF/sQjSdOrWWhEwnHK2PB+Y2qUBMITMg8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=sy8McH2D; arc=none smtp.client-ip=66.163.185.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745858557; bh=sqVT6q/gS2IO11mPSx1zGKMYT49soEThtm+blh315uA=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=sy8McH2Dg0hZ+KIcGa9BrMAEbFL9dd9DzyuowdMBJ42kmfJcNKcRZt20kBLnpBWxnK9oHCEjqL0jIJGw6Jtq9jNNR1eViSzRtfYWXdrphC7qiDYYCq7VhgXBFs9qjXquZSKbKMyErHKPEa2LGXGEF8YWq0m/sLcR5SdRe4bI7Z+ROhYVWxG3U0UsFAP3fTJ5iliwOxPfW8UYP3DASScj5Leb+0OPP/WjnHmcrg6DBqyAyw7C7qcZ/8Ls94zH6DAttq/h6ta/MaKruY0dIPBVund0sWCwcbBAVjeFyVvuoXFNVjwwZYmODAJu7sNtM5CymBG0SLzj+HeBFrGOshz67Q==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1745858557; bh=DNBKJBOUHBlZ1+Ohj4h9rElc8cvHqymrThsI03Qrs8c=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Ngug5uazaTxWrTdZD/ZGBe9rwxpyVM9lmLlikxtDjN+qR9cnsecjgo78MYg4SMiNHibA4FTjqZf2dOx8so5hJRGoh6z7l4BGDXWLp1c+/E9/awBRXD//SsFat/b3WiQLsX6jIbI6sLs5Ea3fG8oOp8DjSQbAIrTBad6KKhBwG0aHEyFh3I1lFmwdsFTCAUHb4uuRYm2z1Wh6SJyQSpzhqT9Y9Dlc2335YBmAnJTdNpV0PBwMlv5g6zczUVAyPEfN/F9X/I7I2CMK9gQy8vvLP3N2DCOqNbiSltxbgV2/IckmCOMSTHL80tr0uinv6Ea8NJ/6b5j9DLhty4koMOw5nw==
-X-YMail-OSG: UYxsJJYVM1nve9Q1xFVLkeERBzVnVqyeHNPd50KUB7jgbH3qnYdOeQSyfMHuvbW
- qdxenoAyQY4kfeXtpWqZncnvV4pEA65QrNlhYkSBm5eHxEzqJaN_MrUWFi4HLAdU3NTv9ONO8gLT
- cLAu_MOBPS_LgVGCglF1z0Y3_8ytqhiuFo_TP8MCy0UFNM6a1IbxYWDG86Cox61EjEcmypBIvpe1
- uWuUd4TD4tK.3ul8yWMxqrd25_WVjmqzIPeI2kQxA80v8bDSvAvS9fRfgBQie1dFmB7b.lMgWFOP
- ZilW7mYqGAUAEd5sIHhRbM5sX06GQSi1mpsVcYkc8PJknupzijLUWFVZter12xVOFjb0BA55oSAH
- 77H4.ISHRjuvqylanW3b5ADWiS95coLks.f8xOjtuxNenvVMAg8nqxpdtyEdsA_UdRr4ecIQECqE
- bmgJN.bhYwx3oMX6z3Jz1bkOJklFDEYmnAKw3D3str.Nht9hC_xVNgrbLJZ9.rNr.mOFSxqa6jfR
- NzTWQm.Ytw63L55tA06hyzHHdrjVR2OXcgnBOkat708FMl_IPur7I3GO7c4xZx1cLwYxLsVyQlM2
- vLwoPcqv2JNGJlx.k_S6poZ78DMhnZPo1Fi5UANnyldKm0qx2nvSkgFeSxH_dSA2oUxF38Jv05Ex
- uPnh4LNRt2ILoAAhOXhYaQBMOFAHUmDPQjBMyjx8eZA84SDu2cVeBZrZdVN01GhuztLQNAVp294G
- ULILjvCOs.54DRfxU1wtH17Sk79MRyUWr7F2m1MfzeT0xDCQ2oSEuRMV9JWeS7rkBFeYtUEFcUW.
- Ps03SFKOZwHHSe7i1CUN1AQL79JqCpL2D2vGFmZElBKd654KIWGglrDvQzz9go6t_dnC_0XNuFFz
- Wqfs7cwGDr1KAQbGHT1tMMN62xIPoyd_lYLpXpPLS6T.i1PVqtCeHq0agMU62JEcFBVVHeNq0Q5y
- mMIR8R_58uuJGV80TTO8N1InesdhPtkZG17KfzZZvINBYepDdFtaqqkiiBMdwmDvIJnUKUTq8RqS
- x80QqukyMnMk8ThsUJYJh7MuGF59h2T8N7GxnM7K9zgIZvCApcvG2ecW.Hagm535fBKgeZ0GuN6T
- wiN7fj8CSnxIEf_0tjTs2hd_CtNjs8SOo.FceppCmCHalLAesziEagVow2DCsId4mAsLZ71.1NYv
- UM92W_x6lVQ2vZW8fpmNtXDjV6DeZgshzQGWrjWc5lF9TmZ55DoTsPTGyMcqDW8Mhi8Y4z9i5EMw
- CWoPC1chtCz9ZdvpDp4qoHVc_j3gH9PNFj8xOBHxZOnW6EAV76Srgpn_yfaAL6R1qRitIkQ3zVba
- se2GMNKCv42Z4LlEa6TVZnzW7d.s1xmc4I5nEbAM6as4EXDBMCURXjgZkS8G2BpYfHRXrvrLN9An
- Plqi._0rEVZ2rLX5T9oTpcEATS9cFX7LHkTPtZQDEEDSiq5419tp0MLu0nUE0Mzc_BaWFqe7j6MV
- lJUinby15mI.gtJVB88ANtxOgY0xa4bjspGMx0ECpJNHzOzwvRhcjz6fru4tXGfll_EI0ippPIKM
- W8anfa3hFd3u5KeQF0v38m8BShW4c229uA06WOCdxy16JBMDZNRX6wC8iiwbUX6O8zmrAjhjzGCq
- 8DBAN9gSguBrMmyQfB9o1y_vYNPbiRJhNk5BckAjmHuytY.ZPhAU6RKnJsxHUkntiUL3Yj_vuUv0
- ZApsmGak9pq3qlG5QUcnQvs6v0DMvfgq50PynoFhABZkdJVH0q9P8DdveQcOMI7OKHSgrLik59kD
- zaAPDwdXDMgvaHXZGiHD_O7bBbCYplhKf2VkM9JNis2_GH.mGmPc0wDqk2xNoJsy_iRm4YJQmnZ1
- Jw2c_L2ut7ybkHC9Psxxp_7UnGIAXvGz0NIIJuf8qh4T._FjQXNr69vuYWFV7T76pOB8boFnM5ja
- l7YhKZuFRVmZ5L9nsUvkc.gHXv1JPVQofrP2YOb4NQ0c2zJhGP9RqrTDcMjCUxhYdYydxislMlC9
- 5h9hTDI2E0ppdVWQHyCCtUufdASICa2N11Z._oEMpPJA4daZpCA_mE.C2jtNPkKssc5BJ9BN9lrt
- nLrLJj3TroWEET.3j7WUAXcboQKa9astOlpVySbvvahbPdIInXS0_eNLewaYQdPs9jgfKzFjlmfK
- T1srwHLociI00t176XO8hSn3oi0EoSBcwNnUUgDQU6Y_pXmS753OvERIzjlzBKsc_l58.0hGdfjW
- a2f_2_EOabiLHJtwbquFCYOboie.Js47cjFkCbFEceb5TxLWGaqgqoGFms5rdJF23KIRecTSMtda
- VUg--
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: dc9f098f-28ea-41ed-87ec-fab9cfeed3e1
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Mon, 28 Apr 2025 16:42:37 +0000
-Received: by hermes--production-gq1-74d64bb7d7-4ndhm (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0d3d3196c6fbd5ff60aed6348ba5f11a;
-          Mon, 28 Apr 2025 16:32:29 +0000 (UTC)
-Message-ID: <f24142d4-e0eb-4d35-b230-80dff1e58331@schaufler-ca.com>
-Date: Mon, 28 Apr 2025 09:32:28 -0700
+	s=arc-20240116; t=1745858950; c=relaxed/simple;
+	bh=CLiNq81QkTxPebOPw0IlncT9WbmQ4BpMHn5nWMpVP+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LfgxS7kEFT391UowTUSRrsexjAv6ViSryN7v/LQDqQ/8mCdYqCLG04dmLasSi3A1o/xalPnjfgsh9/g1fG3WGXCkbxWJDz9FrPpjVF/opRhMAFHMszg/C9GVVwsm/WZVr6KlXHf65j2/scnnxCSYFNKIa73i+ffcLqh0AlHUiUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvxsgUsj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78C28C4CEE4;
+	Mon, 28 Apr 2025 16:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745858950;
+	bh=CLiNq81QkTxPebOPw0IlncT9WbmQ4BpMHn5nWMpVP+U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rvxsgUsj9wqZUomZEx+8sMQa/tXjZkbp+IBOm52Zqx6xuh+r3fCZ14gF8SqnjX/sc
+	 lA5AcYm578xW/4MZiMNGEsfaJ/5HBxpLRIqCbBdp17RADuebmuFb7YgNXdNejyWzCa
+	 dtp5I/g4paWPxvD5tIP7orwwUsjnrCXR/Sukjupc7tMz7RzjX6nTszPl2hZ5hBSilu
+	 lPC+qN4dtZZSij3RFVfwOURBD6R2FgEb6o48hsoKT7PQ8CW4fETyOXFI9RNEfZ33T5
+	 W6+riWo5YnGYO64wE2V2QCLgek4QrHAie/xjXl5m97D0+oDVf9JsyMAM67JMdQAEMa
+	 MR4L0bbil5wiA==
+From: trondmy@kernel.org
+To: Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v2] NFS: Avoid flushing data while holding directory locks in nfs_rename()
+Date: Mon, 28 Apr 2025 09:49:09 -0700
+Message-ID: <5cd8fe68532655c0d4482ad712799d2fe1ab4ed2.1745858923.git.trond.myklebust@hammerspace.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] security,fs,nfs,net: update security_inode_listsecurity()
- interface
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: paul@paul-moore.com, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Ondrej Mosnacek <omosnace@redhat.com>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
- netdev@vger.kernel.org, selinux@vger.kernel.org,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20250428155535.6577-2-stephen.smalley.work@gmail.com>
- <988adabb-4236-4401-9db1-130687b0d84f@schaufler-ca.com>
- <CAEjxPJ66vErSdqaMkdx8H2xcYXQ1hrscLpkWDSQ906q8c2VTFQ@mail.gmail.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <CAEjxPJ66vErSdqaMkdx8H2xcYXQ1hrscLpkWDSQ906q8c2VTFQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23737 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On 4/28/2025 9:23 AM, Stephen Smalley wrote:
-> On Mon, Apr 28, 2025 at 12:17 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
->> On 4/28/2025 8:55 AM, Stephen Smalley wrote:
->>> Update the security_inode_listsecurity() interface to allow
->>> use of the xattr_list_one() helper and update the hook
->>> implementations.
->>>
->>> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
->>>
->>> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
->>> ---
->>> This patch is relative to the one linked above, which in theory is on
->>> vfs.fixes but doesn't appear to have been pushed when I looked.
->>> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
->>> index bf3bbac4e02a..3c3919dcdebc 100644
->>> --- a/include/linux/lsm_hook_defs.h
->>> +++ b/include/linux/lsm_hook_defs.h
->>> @@ -174,8 +174,8 @@ LSM_HOOK(int, -EOPNOTSUPP, inode_getsecurity, struct mnt_idmap *idmap,
->>>        struct inode *inode, const char *name, void **buffer, bool alloc)
->>>  LSM_HOOK(int, -EOPNOTSUPP, inode_setsecurity, struct inode *inode,
->>>        const char *name, const void *value, size_t size, int flags)
->>> -LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char *buffer,
->>> -      size_t buffer_size)
->>> +LSM_HOOK(int, 0, inode_listsecurity, struct inode *inode, char **buffer,
->>> +      ssize_t *remaining_size)
->> How about "rem", "rsize" or some other name instead of the overly long
->> "remaining_size_"?
-> I don't especially care either way but was just being consistent with
-> the xattr_list_one() code.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Sigh. Then I'd leave it as is.
+The Linux client assumes that all filehandles are non-volatile for
+renames within the same directory (otherwise sillyrename cannot work).
+However, the existence of the Linux 'subtree_check' export option has
+meant that nfs_rename() has always assumed it needs to flush writes
+before attempting to rename.
+
+Since NFSv4 does allow the client to query whether or not the server
+exhibits this behaviour, and since knfsd does actually set the
+appropriate flag when 'subtree_check' is enabled on an export, it
+should be OK to optimise away the write flushing behaviour in the cases
+where it is clearly not needed.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/client.c           |  2 ++
+ fs/nfs/dir.c              | 15 ++++++++++++++-
+ include/linux/nfs_fs_sb.h | 12 +++++++++---
+ 3 files changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 2115c1189c2d..6d63b958c4bb 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -1105,6 +1105,8 @@ struct nfs_server *nfs_create_server(struct fs_context *fc)
+ 		if (server->namelen == 0 || server->namelen > NFS2_MAXNAMLEN)
+ 			server->namelen = NFS2_MAXNAMLEN;
+ 	}
++	/* Linux 'subtree_check' borkenness mandates this setting */
++	server->fh_expire_type = NFS_FH_VOL_RENAME;
+ 
+ 	if (!(fattr->valid & NFS_ATTR_FATTR)) {
+ 		error = ctx->nfs_mod->rpc_ops->getattr(server, ctx->mntfh,
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index bd23fc736b39..d0e0b435a843 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2676,6 +2676,18 @@ nfs_unblock_rename(struct rpc_task *task, struct nfs_renamedata *data)
+ 	unblock_revalidate(new_dentry);
+ }
+ 
++static bool nfs_rename_is_unsafe_cross_dir(struct dentry *old_dentry,
++					   struct dentry *new_dentry)
++{
++	struct nfs_server *server = NFS_SB(old_dentry->d_sb);
++
++	if (old_dentry->d_parent != new_dentry->d_parent)
++		return false;
++	if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
++		return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
++	return true;
++}
++
+ /*
+  * RENAME
+  * FIXME: Some nfsds, like the Linux user space nfsd, may generate a
+@@ -2763,7 +2775,8 @@ int nfs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+ 
+ 	}
+ 
+-	if (S_ISREG(old_inode->i_mode))
++	if (S_ISREG(old_inode->i_mode) &&
++	    nfs_rename_is_unsafe_cross_dir(old_dentry, new_dentry))
+ 		nfs_sync_inode(old_inode);
+ 	task = nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
+ 				must_unblock ? nfs_unblock_rename : NULL);
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 71319637a84e..ee03f3cef30c 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -213,6 +213,15 @@ struct nfs_server {
+ 	char			*fscache_uniq;	/* Uniquifier (or NULL) */
+ #endif
+ 
++	/* The following #defines numerically match the NFSv4 equivalents */
++#define NFS_FH_NOEXPIRE_WITH_OPEN (0x1)
++#define NFS_FH_VOLATILE_ANY (0x2)
++#define NFS_FH_VOL_MIGRATION (0x4)
++#define NFS_FH_VOL_RENAME (0x8)
++#define NFS_FH_RENAME_UNSAFE (NFS_FH_VOLATILE_ANY | NFS_FH_VOL_RENAME)
++	u32			fh_expire_type;	/* V4 bitmask representing file
++						   handle volatility type for
++						   this filesystem */
+ 	u32			pnfs_blksize;	/* layout_blksize attr */
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	u32			attr_bitmask[3];/* V4 bitmask representing the set
+@@ -236,9 +245,6 @@ struct nfs_server {
+ 	u32			acl_bitmask;	/* V4 bitmask representing the ACEs
+ 						   that are supported on this
+ 						   filesystem */
+-	u32			fh_expire_type;	/* V4 bitmask representing file
+-						   handle volatility type for
+-						   this filesystem */
+ 	struct pnfs_layoutdriver_type  *pnfs_curr_ld; /* Active layout driver */
+ 	struct rpc_wait_queue	roc_rpcwaitq;
+ 	void			*pnfs_ld_data;	/* per mount point data */
+-- 
+2.49.0
 
 
