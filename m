@@ -1,75 +1,74 @@
-Return-Path: <linux-nfs+bounces-11301-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11302-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C06ACA9E5FC
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 03:53:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2CABBA9E649
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 04:35:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18C3417717A
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 01:53:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 796C3166B8F
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 02:35:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABD378F3A;
-	Mon, 28 Apr 2025 01:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AB731C695;
+	Mon, 28 Apr 2025 02:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRIVw3wL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UrKQBIUM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFAE14F90
-	for <linux-nfs@vger.kernel.org>; Mon, 28 Apr 2025 01:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A4E7494
+	for <linux-nfs@vger.kernel.org>; Mon, 28 Apr 2025 02:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745805222; cv=none; b=Vx2qmXuOsTUgMHydSCb3Io4dUvZ6JzykAl8NhwAuC5TMjrAPPVRno7A1Hv3EjDd1CeHkpDYBmr1tnX3H1kLO/T917D3MlNq4Q7I+t1wc9V5lk+MnA6cIwn+hOfOclF4qdAHHpg2bcmmBj/WAgsGYIE8qL5AkTL6GFKI9PSG2QYM=
+	t=1745807747; cv=none; b=mIvCAeqGCJKmcj65k+ZUsH7z2HKlT9Kdva4S/rj238Fuh3kwoDE623Lit8iBhvBe95R+Ilx+oIP8fBmE2zmyn40G0wy0ciiVs5HsAiB2TfimwLhDr/YiMVUNbV3ungQTjOiUDl7D/5IOl5PcPHrA+MCYukFYhhHaH54x78RZ2kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745805222; c=relaxed/simple;
-	bh=P8TorOk5myL/XVwjznZVA/KsJ4kW28jYflsXZJyX2f4=;
+	s=arc-20240116; t=1745807747; c=relaxed/simple;
+	bh=2EL012p1IZF6b+OFiqlTHa5WcwdYRXohNFb0iORs9ag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D3piFldgHRSqeDcU/bbqAW8QfkR9vbRCtJq935xsTwmzI+oa353QGc3ENW7LCFJT24ZqFDnszLV1Xxk83kq/4pvja4XFobALEa1rLGeZtKKOTGdrA7y0jdknxNE+QueU1XKb7sc0K7432eAqwZmj7STSg+sUeimWqpVQmhbdrDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRIVw3wL; arc=none smtp.client-ip=198.175.65.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPzawmrSymXQcP+hg8ia5DivNCy73K63tKOjOcSLAUQpNGCsHVVVD5VRO2DOWDNZnGTFZR0imQD9AWgyu3WtWRkUJYDR2SYDPRpCnxcLfAVgI/THox4KxBp7PDiwueORvtNNVVC9OH/Ot3hvL/i2rAK725JRZKaJikJSgXZyY/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UrKQBIUM; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745805221; x=1777341221;
+  t=1745807744; x=1777343744;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=P8TorOk5myL/XVwjznZVA/KsJ4kW28jYflsXZJyX2f4=;
-  b=GRIVw3wLcHpBzNzsdm8R7KXCJ7k9+ANdmCZsUutAE3x1STb7reGlznXR
-   hPrYNEibXTTC7pVjtYKcMsJJR8Q/cNOyzIXncsuyE6C5TAWaS5R73FgF7
-   XkF/eYTwhN+hsvVeOhMw1nT8/G1CuGeFoZXg5VJVG8qc/CpGMxCdosoPN
-   NEn7/9ka3aNIt7GBO61MSDxhJ41YqhxrM3zEQSdzzD5fGliEi4B7sgdIV
-   fouhXVYdxc0RkvYon2zLaut5UhkabIUXEV2tkFB8rgaARZ7yUYz6fYeNZ
-   zOLdOvo5Kfv16fonwLSwxEaMUYbvklSUTycd69xv86jRfv9VIAXsAE2lz
-   Q==;
-X-CSE-ConnectionGUID: XtUh8haKT+61mekdDRpjVA==
-X-CSE-MsgGUID: bljiGhA7SC60NSrNkN0EFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47398650"
+  bh=2EL012p1IZF6b+OFiqlTHa5WcwdYRXohNFb0iORs9ag=;
+  b=UrKQBIUMuzi4pheVxbL6NGNm1I8+3jMfAKUtQxaYZYW+/zjIc1QHTVuo
+   TSgjssdn5fBofZGgthsuO7WW4nyTymiORJXhlQEKlIkLPqniAIhLJ9+q2
+   RkfSgPZ/b2jwqBXg48syd2qY0YrrVV8PSavJGlYffK+NYX02L+gLjKk+U
+   09VWjhmEPsv9AtdLgaB2X37iwZBDvCWaTLBIQoD7kc6l1rpytWBxZvIxt
+   6UoSHmtVipgyyvMUTbnAL+WvLbIg79yk7nVMdytc/jaAOedikAG9fkc73
+   DLGFVyBLSvq7HnEV+v3xOG+HjekzO3sHFNQhbcseBA0k7LImx4yICX6kF
+   A==;
+X-CSE-ConnectionGUID: GU/VKQ4pQcKJ++n3k6ww1g==
+X-CSE-MsgGUID: ME0iqLUBTfGMiyVH7DUWJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11416"; a="47263961"
 X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="47398650"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 18:53:41 -0700
-X-CSE-ConnectionGUID: TsWwCYQwTh6wyHL3yHdWvQ==
-X-CSE-MsgGUID: cPaMhLeZRCOAsgiy0SDahQ==
+   d="scan'208";a="47263961"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2025 19:35:43 -0700
+X-CSE-ConnectionGUID: z1wjE4iISt2JJu5JGeRwXw==
+X-CSE-MsgGUID: r+yNE68mRzitaN8CmAg2tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,245,1739865600"; 
-   d="scan'208";a="133690933"
+   d="scan'208";a="134332153"
 Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 27 Apr 2025 18:53:38 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 27 Apr 2025 19:35:41 -0700
 Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u9Dge-0006XJ-1f;
-	Mon, 28 Apr 2025 01:53:36 +0000
-Date: Mon, 28 Apr 2025 09:53:22 +0800
+	id 1u9ELL-0006Yz-1Y;
+	Mon, 28 Apr 2025 02:35:39 +0000
+Date: Mon, 28 Apr 2025 10:35:29 +0800
 From: kernel test robot <lkp@intel.com>
 To: trondmy@kernel.org, Anna Schumaker <anna@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-nfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH] NFS: Avoid flushing data while holding directory locks
  in nfs_rename()
-Message-ID: <202504280902.aKsSfRfW-lkp@intel.com>
+Message-ID: <202504281017.yCgdaZD3-lkp@intel.com>
 References: <a804c54445a3f028007763e05285d765afcab0f9.1745794273.git.trond.myklebust@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -95,38 +94,43 @@ url:    https://github.com/intel-lab-lkp/linux/commits/trondmy-kernel-org/NFS-Av
 base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
 patch link:    https://lore.kernel.org/r/a804c54445a3f028007763e05285d765afcab0f9.1745794273.git.trond.myklebust%40hammerspace.com
 patch subject: [PATCH] NFS: Avoid flushing data while holding directory locks in nfs_rename()
-config: i386-buildonly-randconfig-004-20250428 (https://download.01.org/0day-ci/archive/20250428/202504280902.aKsSfRfW-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504280902.aKsSfRfW-lkp@intel.com/reproduce)
+config: sparc-randconfig-002-20250428 (https://download.01.org/0day-ci/archive/20250428/202504281017.yCgdaZD3-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250428/202504281017.yCgdaZD3-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504280902.aKsSfRfW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504281017.yCgdaZD3-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> fs/nfs/client.c:1109:10: error: no member named 'fh_expire_type' in 'struct nfs_server'
-    1109 |         server->fh_expire_type = NFS_FH_VOL_RENAME;
-         |         ~~~~~~  ^
->> fs/nfs/client.c:1109:27: error: use of undeclared identifier 'NFS_FH_VOL_RENAME'
-    1109 |         server->fh_expire_type = NFS_FH_VOL_RENAME;
-         |                                  ^
-   2 errors generated.
+   fs/nfs/client.c: In function 'nfs_create_server':
+>> fs/nfs/client.c:1109:8: error: 'struct nfs_server' has no member named 'fh_expire_type'
+     server->fh_expire_type = NFS_FH_VOL_RENAME;
+           ^~
+>> fs/nfs/client.c:1109:27: error: 'NFS_FH_VOL_RENAME' undeclared (first use in this function); did you mean 'NFS4_FH_VOL_RENAME'?
+     server->fh_expire_type = NFS_FH_VOL_RENAME;
+                              ^~~~~~~~~~~~~~~~~
+                              NFS4_FH_VOL_RENAME
+   fs/nfs/client.c:1109:27: note: each undeclared identifier is reported only once for each function it appears in
 --
->> fs/nfs/dir.c:2686:14: error: no member named 'fh_expire_type' in 'struct nfs_server'
-    2686 |         if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
-         |             ~~~~~~  ^
->> fs/nfs/dir.c:2686:31: error: use of undeclared identifier 'NFS_FH_RENAME_UNSAFE'
-    2686 |         if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
-         |                                      ^
-   fs/nfs/dir.c:2687:20: error: no member named 'fh_expire_type' in 'struct nfs_server'
-    2687 |                 return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
-         |                          ~~~~~~  ^
->> fs/nfs/dir.c:2687:37: error: use of undeclared identifier 'NFS_FH_NOEXPIRE_WITH_OPEN'
-    2687 |                 return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
-         |                                                   ^
-   4 errors generated.
+   fs/nfs/dir.c: In function 'nfs_rename_is_unsafe_cross_dir':
+>> fs/nfs/dir.c:2686:12: error: 'struct nfs_server' has no member named 'fh_expire_type'
+     if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
+               ^~
+>> fs/nfs/dir.c:2686:31: error: 'NFS_FH_RENAME_UNSAFE' undeclared (first use in this function); did you mean 'TASK_FREEZABLE_UNSAFE'?
+     if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
+                                  ^~~~~~~~~~~~~~~~~~~~
+                                  TASK_FREEZABLE_UNSAFE
+   fs/nfs/dir.c:2686:31: note: each undeclared identifier is reported only once for each function it appears in
+   fs/nfs/dir.c:2687:18: error: 'struct nfs_server' has no member named 'fh_expire_type'
+      return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
+                     ^~
+>> fs/nfs/dir.c:2687:37: error: 'NFS_FH_NOEXPIRE_WITH_OPEN' undeclared (first use in this function); did you mean 'NFS4_FH_NOEXPIRE_WITH_OPEN'?
+      return !(server->fh_expire_type & NFS_FH_NOEXPIRE_WITH_OPEN);
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+                                        NFS4_FH_NOEXPIRE_WITH_OPEN
 
 
 vim +1109 fs/nfs/client.c
