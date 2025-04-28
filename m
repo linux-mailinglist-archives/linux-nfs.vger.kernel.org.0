@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11322-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11324-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA11DA9F9AD
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:37:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50777A9F9B6
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:37:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBD515A06A4
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 19:37:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7ED211A85EA6
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 19:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8F22980B6;
-	Mon, 28 Apr 2025 19:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D635B2973D2;
+	Mon, 28 Apr 2025 19:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/a2o7zf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/cAORBB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E282973BA;
-	Mon, 28 Apr 2025 19:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF53E2973BA;
+	Mon, 28 Apr 2025 19:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745869033; cv=none; b=VKz8rx9ZKAFhncokKPkPCKQcCgHLesg+hq74dSj5nkBoZtJaxGBn25S6OZ98GRcNNq+mmg6g1tkDEaVAumcaNW+NKXeGOORzHcnXT6P1KlboQDxuDlaPEeM3La8Rd8qrGGiKW+UF5oTZvwrZgznQfCdOHmbyj/sx14ceexVd3u8=
+	t=1745869036; cv=none; b=FESOO15//d7n7gqhm4nb4iCu3a+RvmIdKG88ylwMUUi2jo7S9sWhD/+gURHbmQjqz1aLPfPP/rNppcsXdpw+Ec/JsfCWm7Z2tJi7UZ98Gh3ftgJxrai3PJyoS9iXi7Dy0IM+P2ZDHdDev4WuywJ+bbem/pz4/RlwYnfas7cvoW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745869033; c=relaxed/simple;
-	bh=HCW0j1r9vGO4/GzVmNGEYF1N29fYXFULbXzXOBBTElU=;
+	s=arc-20240116; t=1745869036; c=relaxed/simple;
+	bh=T4zwhb8s1Gh6sSl1ewC9XNq+lNCNMEa/AoUsRYEhkL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CsBd51I90cG2kMOpkF9E0r49QCqqA2TjChTz8uEWpHDx3P1m/wteKCz23d15Ec4xt2m+IJYFUqUJTZ5T0pooJFWG5NsHFkSqMfuthTO4GX3qRYx75IPkaRlamiTF9E37lfkV5ZuprKaU9GuMDttEdjnCa+u3zeUF72ozkMSrmZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f/a2o7zf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599D5C4CEEE;
-	Mon, 28 Apr 2025 19:37:12 +0000 (UTC)
+	 MIME-Version; b=bWpYMu34neiWk6HfmNJKc+SCw4xpr8Od5Ru7Fv3lrn3Ir17Ay/7IHuzWmgndO0lV3g97fC8XBtQCrtUQ+qLUGDaDCAN75NLfqtGTM47nGC5K1Js4QXRsedzuTOQ/Y/rbKHwMszsNitD6ZMzlIaDM8BMhHrLaeD6Rch+QXbugdFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/cAORBB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64155C4CEED;
+	Mon, 28 Apr 2025 19:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745869033;
-	bh=HCW0j1r9vGO4/GzVmNGEYF1N29fYXFULbXzXOBBTElU=;
+	s=k20201202; t=1745869034;
+	bh=T4zwhb8s1Gh6sSl1ewC9XNq+lNCNMEa/AoUsRYEhkL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f/a2o7zfbD0rOZRscDHySGLcO0aeY/OUhXLB/8koXk0OzRczoOolTfE5IjZrXImOB
-	 MOJUeIu+bvsypEKOy7uM+1JWeKACFmWO9iD0bfd5FuNHqbi3pb1NQA4KDJtEpGLIes
-	 VdYjEnOyrIg0Ba4gtZkXXXItzkPUZKfOlY7uQ+83mMHx06hmYAfCV7Q8d8dKQbvgt9
-	 z/BiLnupeToj8iXCDSBvaRJnXvqdmigEVkEqfw7ZmOz5uBXs90O03MJa7ddtv+xzPs
-	 G42tvVU3lpczlRwYNIJGcLwH+AaBTqEUCRBqyDGMNCdaATQ8C3JO5OY0oC6L2BYax/
-	 cXt4eJ58cRblg==
+	b=R/cAORBBxwLKdrqSYKHwn42IaF8WoJ3StLDIXRj0dUoqU02uelr66iBwy/kwnXhyq
+	 ATy3ZrvFClzpQV4FSjDsGloUb9HZvKsvp+qgnficSqZaQN2yxe8Of5TWJlPWKyNCQO
+	 u1oHpZLBMZUSQQ6vnJnVWKeUcVK4fhz/qv5hd/d62pIuczDE1IRaDy1jdQoS430foc
+	 JMtzT4rQ0vn9RApm0abhrW960fyLVQl+4vnkxaBkP528Im71MkCjUJ5TTKeczOpEaU
+	 XFtkJOdo2Q03n1V6JCB8lsOD/3cr5SxCd1NaVuGgkQSj2q3lZBteDKnVB2XH/tdLWz
+	 Lmqhk1AocKuMg==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -51,9 +51,9 @@ To: NeilBrown <neil@brown.name>,
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v4 07/14] sunrpc: Adjust size of socket's receive page array dynamically
-Date: Mon, 28 Apr 2025 15:36:55 -0400
-Message-ID: <20250428193702.5186-8-cel@kernel.org>
+Subject: [PATCH v4 08/14] svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
+Date: Mon, 28 Apr 2025 15:36:56 -0400
+Message-ID: <20250428193702.5186-9-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250428193702.5186-1-cel@kernel.org>
 References: <20250428193702.5186-1-cel@kernel.org>
@@ -67,60 +67,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-As a step towards making NFSD's maximum rsize and wsize variable at
-run-time, make sk_pages a flexible array.
+Allow allocation of more entries in the rc_pages[] array when the
+maximum size of an RPC message is increased.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svcsock.h | 4 +++-
- net/sunrpc/svcsock.c           | 8 ++++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ include/linux/sunrpc/svc_rdma.h         | 3 ++-
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 8 ++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
-index bf45d9e8492a..963bbe251e52 100644
---- a/include/linux/sunrpc/svcsock.h
-+++ b/include/linux/sunrpc/svcsock.h
-@@ -40,7 +40,9 @@ struct svc_sock {
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index 619fc0bd837a..1016f2feddc4 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -202,7 +202,8 @@ struct svc_rdma_recv_ctxt {
+ 	struct svc_rdma_pcl	rc_reply_pcl;
  
- 	struct completion	sk_handshake_done;
- 
--	struct page *		sk_pages[RPCSVC_MAXPAGES];	/* received data */
-+	/* received data */
-+	unsigned long		sk_maxpages;
-+	struct page *		sk_pages[] __counted_by(sk_maxpages);
+ 	unsigned int		rc_page_count;
+-	struct page		*rc_pages[RPCSVC_MAXPAGES];
++	unsigned long		rc_maxpages;
++	struct page		*rc_pages[] __counted_by(rc_maxpages);
  };
  
- static inline u32 svc_sock_reclen(struct svc_sock *svsk)
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index c846341bb08c..5432e4a2f858 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1339,7 +1339,8 @@ static void svc_tcp_init(struct svc_sock *svsk, struct svc_serv *serv)
- 		svsk->sk_marker = xdr_zero;
- 		svsk->sk_tcplen = 0;
- 		svsk->sk_datalen = 0;
--		memset(&svsk->sk_pages[0], 0, sizeof(svsk->sk_pages));
-+		memset(&svsk->sk_pages[0], 0,
-+		       svsk->sk_maxpages * sizeof(struct page *));
+ /*
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 292022f0976e..e7e4a39ca6c6 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -120,12 +120,16 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ {
+ 	int node = ibdev_to_node(rdma->sc_cm_id->device);
+ 	struct svc_rdma_recv_ctxt *ctxt;
++	unsigned long pages;
+ 	dma_addr_t addr;
+ 	void *buffer;
  
- 		tcp_sock_set_nodelay(sk);
+-	ctxt = kzalloc_node(sizeof(*ctxt), GFP_KERNEL, node);
++	pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
++	ctxt = kzalloc_node(struct_size(ctxt, rc_pages, pages),
++			    GFP_KERNEL, node);
+ 	if (!ctxt)
+ 		goto fail0;
++	ctxt->rc_maxpages = pages;
+ 	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
+ 	if (!buffer)
+ 		goto fail1;
+@@ -497,7 +501,7 @@ static bool xdr_check_write_chunk(struct svc_rdma_recv_ctxt *rctxt)
+ 	 * a computation, perform a simple range check. This is an
+ 	 * arbitrary but sensible limit (ie, not architectural).
+ 	 */
+-	if (unlikely(segcount > RPCSVC_MAXPAGES))
++	if (unlikely(segcount > rctxt->rc_maxpages))
+ 		return false;
  
-@@ -1378,10 +1379,13 @@ static struct svc_sock *svc_setup_socket(struct svc_serv *serv,
- 	struct svc_sock	*svsk;
- 	struct sock	*inet;
- 	int		pmap_register = !(flags & SVC_SOCK_ANONYMOUS);
-+	unsigned long	pages;
- 
--	svsk = kzalloc(sizeof(*svsk), GFP_KERNEL);
-+	pages = svc_serv_maxpages(serv);
-+	svsk = kzalloc(struct_size(svsk, sk_pages, pages), GFP_KERNEL);
- 	if (!svsk)
- 		return ERR_PTR(-ENOMEM);
-+	svsk->sk_maxpages = pages;
- 
- 	inet = sock->sk;
- 
+ 	p = xdr_inline_decode(&rctxt->rc_stream,
 -- 
 2.49.0
 
