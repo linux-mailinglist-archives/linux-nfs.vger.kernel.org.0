@@ -1,58 +1,59 @@
-Return-Path: <linux-nfs+bounces-11339-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11340-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6763EA9FB9E
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 23:07:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 367F5A9FBFD
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 23:13:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6ECF47AF256
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:06:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7E0B63BF135
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 21:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CFD1169AE6;
-	Mon, 28 Apr 2025 21:07:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4663D20FAB4;
+	Mon, 28 Apr 2025 21:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rE1FZzoq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etFc8ZRi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5009B1E4BE;
-	Mon, 28 Apr 2025 21:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC2D204F9B;
+	Mon, 28 Apr 2025 21:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745874452; cv=none; b=KOqQTIyRPj0Tb4LsCCFLWn20oovU/VD2BO54i4QSaSMLJACiWES+JfYr++1ktCYKCpVRjiC/WLx0MgQSQHoQ/2YpIrv7BwoBUBjNBmysxUryH5ryXRnB33qgfFpXrOdx4krnueI4yCqdqz2ZaB2tncjRmuTDw+c+NmVnOe3s+SQ=
+	t=1745874524; cv=none; b=uopoH1KEXvrmgA8cn4MbsAJ3gEL8fDhA9qpHKr+AUhMCkfJzSXonm54kqACcT5qoXnBy3QuqYCPQCnXab49ce2lLD0cfefwTJXlhUrSAGFsOYj4+B4xQQZZyzhC0M93z4CQCjnnsFj1KoFhcsbN2kVZ1UObrT5HnsaHZTXnkpdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745874452; c=relaxed/simple;
-	bh=x7rPxxKme/C3y3fbV62xxEMk77M67sXDSZvHTnmF4mY=;
+	s=arc-20240116; t=1745874524; c=relaxed/simple;
+	bh=LCiGLoKbLEPztR1v2cJUkY0EfLgHqfE3XCZJk5a0PYE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jjhj3a5raqnQihOqG4fN2PFRZgo8leay2nC5TAx1RBBwFF+1QTqZn6OaryhgqEoTT9AsTDgFpvum1/tIrNlt43pawSqOnf9yI0gtSN6pTNb9M4EyWmsPNyj3wd4OM1CVWs2BHn8gUPSKFCk024ZiB+vq61eSnlE8zlblNjLO/eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rE1FZzoq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F25FC4CEE4;
-	Mon, 28 Apr 2025 21:07:31 +0000 (UTC)
+	 Content-Type:MIME-Version; b=jN5/pN7bQK2or2xHNHUCHqBj9CBvJg9hXCEt+/L/hfi6hMZpMkrdmjOn8Ghxzm4zbOQ5CUtT3pt09eotgahFuo+RAM5OsVpaPqviFo0ocFIdwpb1Dgm5vLdw+LXccNlixKQIei32tCfVbrS+wKfM1jSg2wS6etoRosuTPk9KhhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etFc8ZRi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BAA2C4CEE4;
+	Mon, 28 Apr 2025 21:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745874451;
-	bh=x7rPxxKme/C3y3fbV62xxEMk77M67sXDSZvHTnmF4mY=;
+	s=k20201202; t=1745874523;
+	bh=LCiGLoKbLEPztR1v2cJUkY0EfLgHqfE3XCZJk5a0PYE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=rE1FZzoqvEvNTg8MyaLz1Dx0Majaa7oQde9qZ0ZXAJ96z2aAuy0LsrDzgdsy/mjqu
-	 3YLMMSmvYw+K2fJO4ELfQi3kIOgvtZaBD2JgIJd3nbf49Yx9So8aeX1kzRkAfI4hCe
-	 sUgUWZAj9ofO8d716vn7K2P+mZThaIjTSAo9zf1kn3ouO6UCvcFSvn574v4PrL07Iw
-	 0vqxrykLa6U2rWKfMlp02Nq2J5+oGTUUb7yECdxD+SynTg0SUBIZWVienlBQtr7FTw
-	 4BtczfwgF7BhQultak1q3mYUe7AOHaqZlQpSaaydZV2NK6Zeu0BNGCWGw+buiP3tZx
-	 NGm6NHPvw0KWw==
-Message-ID: <860a8bfdef506c56a72c59ff029ac1f80ac06473.camel@kernel.org>
-Subject: Re: [PATCH v4 13/14] NFSD: Add a "default" block size
+	b=etFc8ZRiWQhUGWgz9uTocWfalCZDlpZbfOIkY6MG3keIhGqSwdB79zh6LXfAcZg1v
+	 hT5ysBuGaYdTccTFPDnEgZ3dwmJTexmMDg+HbusX5Z9sXlvy9VvGVQtxFUdN4MJxTf
+	 VahIBH5SAaYr4avuY99JKnzsIQMPlDh4vCDfGlGT30Dt0jNSefgnMspNxkjU3QWmlj
+	 rDyaIdgx8zrlsw/E1m0XYHoGHfbGqZyxBHUfaFReTB8KHpfE8ZrnSK/tIX4baNSBNl
+	 SIRY4ghXJuoXGaIevhUBloREkfknjGlgsBnM09flofP8S5NQ1jSBpHd89pJVEegs8u
+	 LYw/5O4+09jBA==
+Message-ID: <420d4c4285d7d2cf3528839408e19501abfbf82b.camel@kernel.org>
+Subject: Re: [PATCH v4 14/14] SUNRPC: Bump the maximum payload size for the
+ server
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>,  Anna Schumaker	 <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, Chuck Lever
 	 <chuck.lever@oracle.com>
-Date: Mon, 28 Apr 2025 14:07:30 -0700
-In-Reply-To: <20250428193702.5186-14-cel@kernel.org>
+Date: Mon, 28 Apr 2025 14:08:42 -0700
+In-Reply-To: <20250428193702.5186-15-cel@kernel.org>
 References: <20250428193702.5186-1-cel@kernel.org>
-	 <20250428193702.5186-14-cel@kernel.org>
+	 <20250428193702.5186-15-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,53 +141,50 @@ MIME-Version: 1.0
 On Mon, 2025-04-28 at 15:37 -0400, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> We'd like to increase the maximum r/wsize that NFSD can support,
-> but without introducing possible regressions. So let's add a
-> default setting of 1MB. A subsequent patch will raise the
-> maximum value but leave the default alone.
+> Increase the maximum server-side RPC payload to 4MB. The default
+> remains at 1MB.
 >=20
-> No behavior change is expected.
+> To adjust the operational maximum, shut down the NFS server. Then
+> echo a new value into:
+>=20
+>   /proc/fs/nfsd/max_block_size
+>=20
+> And restart the NFS server.
 >=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfsd.h   | 9 +++++++--
->  fs/nfsd/nfssvc.c | 2 +-
->  2 files changed, 8 insertions(+), 3 deletions(-)
+>  include/linux/sunrpc/svc.h | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 2c85b3efe977..614971a700d8 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -44,9 +44,14 @@ bool nfsd_support_version(int vers);
->  #include "stats.h"
-> =20
->  /*
-> - * Maximum blocksizes supported by daemon under various circumstances.
-> + * Default and maximum payload size (NFS READ or WRITE), in bytes.
-> + * The default is historical, and the maximum is an implementation
-> + * limit.
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index e27bc051ec67..b449eb02e00a 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -119,14 +119,14 @@ void svc_destroy(struct svc_serv **svcp);
+>   * Linux limit; someone who cares more about NFS/UDP performance
+>   * can test a larger number.
+>   *
+> - * For TCP transports we have more freedom.  A size of 1MB is
+> - * chosen to match the client limit.  Other OSes are known to
+> - * have larger limits, but those numbers are probably beyond
+> - * the point of diminishing returns.
+> + * For non-UDP transports we have more freedom.  A size of 4MB is
+> + * chosen to accommodate clients that support larger I/O sizes.
 >   */
-> -#define NFSSVC_MAXBLKSIZE       RPCSVC_MAXPAYLOAD
+> -#define RPCSVC_MAXPAYLOAD	(1*1024*1024u)
+> -#define RPCSVC_MAXPAYLOAD_TCP	RPCSVC_MAXPAYLOAD
+> -#define RPCSVC_MAXPAYLOAD_UDP	(32*1024u)
 > +enum {
-> +	NFSSVC_DEFBLKSIZE       =3D 1 * 1024 * 1024,
-> +	NFSSVC_MAXBLKSIZE       =3D RPCSVC_MAXPAYLOAD,
+> +	RPCSVC_MAXPAYLOAD	=3D 4 * 1024 * 1024,
+> +	RPCSVC_MAXPAYLOAD_TCP	=3D RPCSVC_MAXPAYLOAD,
+> +	RPCSVC_MAXPAYLOAD_UDP	=3D 32 * 1024,
 > +};
+
+I guess the enum is so that the symbol names remain in debuginfo?
+
 > =20
->  struct readdir_cd {
->  	__be32			err;	/* 0, nfserr, or nfserr_eof */
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 9b3d6cff0e1e..692d2ef30db1 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -582,7 +582,7 @@ static int nfsd_get_default_max_blksize(void)
->  	 */
->  	target >>=3D 12;
+>  extern u32 svc_max_payload(const struct svc_rqst *rqstp);
 > =20
-> -	ret =3D NFSSVC_MAXBLKSIZE;
-> +	ret =3D NFSSVC_DEFBLKSIZE;
->  	while (ret > target && ret >=3D 8*1024*2)
->  		ret /=3D 2;
->  	return ret;
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
