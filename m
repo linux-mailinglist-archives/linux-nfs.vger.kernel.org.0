@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-11335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11334-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25F32A9FA82
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 22:26:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26089A9FA7F
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 22:26:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE3A33AF726
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 20:25:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9636D4663AB
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Apr 2025 20:26:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A13C1DF269;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0EA1DEFE9;
 	Mon, 28 Apr 2025 20:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngtJUsvl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IveTORDH"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6204F1DA617;
-	Mon, 28 Apr 2025 20:24:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FF11B3937;
+	Mon, 28 Apr 2025 20:24:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745871882; cv=none; b=gsqMCVrVl+M8KYB9wYWogobN+hSA6pFm9y9ku4PwqcYbtwNSL4eJ0Q5IbhCoYOIYvtoJhdhE3w9+UYLpbeUuY4JDUMumnKZjqP09XRPwtyiJ3oMKrHQGBEEQ694yFuqgl65uHAfEDTp4nC+FUuCYZkBI54dd3cxBDojJS6fR+YI=
+	t=1745871882; cv=none; b=SEboNuGSeTcUJ+6oSymfy/a5mCz6IT7US8oxM5Wwm5OfcpBp4KsluL51Ve5NPwrzDjlJxu/ty2MkFQLF7W0SWeM/xrAx7mqGPTbGx/zbFqWgW4I19wbNZe+2kLPeQD81pu0UNll+TYlE3Me76FYgse7Oemfye2rIkrh+hIQK1AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745871882; c=relaxed/simple;
-	bh=EwvpbPG6QlZRxW3isNMsSz+cgScu08I8seIYeLihg5U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eNx9HLIbi/OSTMXdk43QCESUahszvdfXZZElViiGJtfC38f+QXiCrzi3H4bYq4q760Q91LhB45MatUVeu7g/aNPVSEte+SCrziaWeC+kWV09xLQ1+WAyJLaAj6bITcwiP1Bsjl9o2n1svOEztHjjd3lm8l5EjM5i/QElcLiW5RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngtJUsvl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C022C4CEE4;
+	bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VsO+GHL/EHyUlEO3RK5yZ+n+y9GwFEk9c7uLDh1FuOs8Za9lzq5P3RXlI6LVAnxmyeKOqEgljfCugLwknxLcN+0HsZQXzKWwtyqadDlO1nTW3cpenww2/wMlKDFtUgIwnCTpha94XWx6F1K6XfNCeX19sm6vBpWSsOVGYeDABmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IveTORDH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44BBC4CEEE;
 	Mon, 28 Apr 2025 20:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745871881;
-	bh=EwvpbPG6QlZRxW3isNMsSz+cgScu08I8seIYeLihg5U=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ngtJUsvlZbOShO9w6mKW5QQm/a2gPN7etfn/VkwU+7pEvyVJ/QabYNXcCXk/S4FyH
-	 RfqKrAyG6wlkfErxPcv+REBoV9obNTSpV6gELC+pHTGTarosbxVmyCZKlsftAScY8g
-	 l6LcO/EUVj3F0mQ1sY0PZNgzmGrTRg9Fyb2kMWsp/B1/G/7s6TWctohdJ9cxOrIuBy
-	 NqsIaN/PemnI+fF7d5Snb50pESWnoldhpPsl7+vBVXkEXSX4pSnL4xcwz5/CfevAcM
-	 iS9mpbXqg4VWsG9PCvaBFM8m2G2N93f3Y3ueSYVoDh6ij1ShkrMpFJMT424v+3g7bT
-	 +ogxqQlM6R4wA==
+	bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IveTORDHv/soZjIb7NsUu1IJ1AarcVDSPlFJnLlmJuXqL5NqCc5LlszMhktDslPsh
+	 32WtKYRGJO8b1KKQ7kKsXbGRl57GtdIzaem9FW7af3mpu0RlfpM+av1i5Bu+0zmF1r
+	 t/MZeTxOmcO2WeICpdjnVhlfxCnXPjtfsEoYj5EtXLmbLyqMsIYRDwnBjLud+M9GfL
+	 ChxjA4MRamcoi+PxoQikM6+WFlq1b9zXav3CVP17Vt32yWJ3xkXxu3QIE2Fl9XR7cT
+	 yEiQGzR41vmwX2c3VI9hPSOxHfVUnKFQHbFcE4SHPTgu/dH5sjHChPLhPm/Jvi2UZ3
+	 kAe6GIHjOOKcg==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH RFC 0/2] nfs: free leftover lsegs before freeing a layout
+Date: Mon, 28 Apr 2025 13:24:38 -0700
+Subject: [PATCH RFC 1/2] nfs: free leftover lsegs before freeing a layout
  in pnfs_put_layout_hdr
-Date: Mon, 28 Apr 2025 13:24:37 -0700
-Message-Id: <20250428-nfs-6-16-v1-0-2d45b80facef@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,64 +53,79 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAXkD2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyML3by0Yl0zXUMzXQtzAzOjxEQjSwvLFCWg8oKi1LTMCrBR0UpBbs5
- KsbW1AGqGn6dfAAAA
-X-Change-ID: 20250428-nfs-6-16-87062aa2989d
+Message-Id: <20250428-nfs-6-16-v1-1-2d45b80facef@kernel.org>
+References: <20250428-nfs-6-16-v1-0-2d45b80facef@kernel.org>
+In-Reply-To: <20250428-nfs-6-16-v1-0-2d45b80facef@kernel.org>
 To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: Omar Sandoval <osandov@osandov.com>, Chris Mason <clm@fb.com>, 
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1382; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=EwvpbPG6QlZRxW3isNMsSz+cgScu08I8seIYeLihg5U=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoD+QIwSBqP+I8u6EzvPzPLdJ0IlnwhETTMdZ3c
- lVpdp6GrfKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaA/kCAAKCRAADmhBGVaC
- FaSoEACQVVqlo3aMey9Xj4jMlt8flCe5b7xMWgk6HRdiGr/tRwhZaBMoIXUOVNC5Ok/44CA5Vzj
- /FBExISLin1BAUrkyGOWOMVNlufHXU3SxWci0D8dTumh6UrUoMh2+HmdSSu4nR8rPRuYIENFvQw
- B8dX7e5V2JltDDTADkMgvRsc9Mil5lKqddaUwOZ3efFZ/36byfOgex5sPWOibq4WSFMknKAuT+e
- v+WhW8CC8pXjlKvRzERiA00IV12bCUngH3DwCS28hGdvspF7fOYZxYBHleEvgpJ9X/kapZbvgAb
- qYoBgzgHlXKre/FmyRxv0epVqgI4V26hHnvFbWU9fPt/7eDX6CG3z4GG14qho7mxoXBKOj6U68z
- fdmtaEP2JzYj4muf19mvvc+RQ9vQS147zNmVywYXGLT/IbIPZZuqthOhFUXABh6ISGlrqOXsw44
- m9yQKXaXnANVFLLM9LrN/4xAniEjo0hWOB5rwxHs8Ubp5rbNmeCu58CgVuLn9nHydbutVglr7YZ
- 5Mp4rs9bnZ8fh1E7RofSuOtL+fKBTHeWLoRUBvthGWsHtbh2wK7s8UoUTwpC09fcqi0YrJJle7w
- Cmp/hcRZQpGiPG/tceBYEaZ118CZwR1sqQ5rVdZT1vVsT8sOfPQb3g4zANZAP1VfT4GnTLXfI9Y
- SRxBXAwmEbXJBMA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1884; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=xptNENGGtclKBVRuB92L5LlI26MH8Q/AAe6oNcqgf3E=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBoD+QII4ZFNWmKKwPdRPKRSZZXHX7yILZQOXAHB
+ tGVvTTBi/2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaA/kCAAKCRAADmhBGVaC
+ FfysEACjaNN2BHkxxsIgTT4ioaEHV5Vdcyldc8toITSF+zJVNGq54s/tgiZfBgMIKNRiUiCUxlp
+ P9IAdoG8UZ0hba7Y4sYoWVNF2zFfE3nIB1P9x234NCpZnx7OB0wtm79ONVp436q5/ZWON4p07J9
+ R2f3cy8a9I+g/FtElBWOstKld4uuR0te/L3HZQs7fsbNA3zI/q8kGKVFGfVXDHLYJMGdS7boJdo
+ atyd2nvsS3Wg35Dv9/MmtF28xFKLeIiywsey+HiosqO2bpSQLdcLIdg9p5Glysx1UdpkjyxFpFi
+ MRKgJ/BdaR2KXStPBW59T2TIXmWoK9Ccs7dxeiASxFCNDMY10/6tqUtlZuYeinUE9RvkdmDd6VT
+ aF5Il3aPyuqePs9hhJdhq6ADCsxZ9maczt/+muE6QVBWnWpN4Jkn7rTrCwTMkHw8m/FVI60Bou6
+ q8on2YReYiyV8u9rl0214ssSErL/s8Fylpw1PGd4s3b2RrpS3GD3GG5dAnhsrq0MxrM+S7SBkEP
+ XIBZVFm8AbbpypVuOW0Rq//bYTI0z7ohG6y4yokth7RNal+gzwk+BuU97FhkQUTrjFCepmf6c8b
+ 55ZPNDTa2UGpFbekx3gHPFeiI4igW1uc2xGtl6kVDu1qhj1ZWKu3Pk0U2y+I5UfExRH7skVc2hI
+ 5oFR6yYS3/B0pkg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Sending this as an RFC as I don't have a reliable reproducer for the
-problem that Omar reported. I'm also not sure this is the best fix for
-the problem. There is probably a case to be made that the real bug is in
-the error handling for pnfs_layoutreturn_before_put_layout_hdr().
+Entries on the plh_return_segs list have already had their refcount go
+to zero, and are only hanging around so that a LAYOUTRETURN can be
+issued.
 
-My guess is that the issue is that we end up with entries on the
-plh_return_segs list just before the network goes down. That causes the
-LAYOUTRETURN to fail with something that looks retryable, and the lsegs
-on the list aren't freed.
+If there are still leftover lsegs on the plh_return_segs list when the
+last pnfs_layout_hdr reference is put, then that means that the
+layoutreturn just before the final refcount_dec_and_lock() has failed,
+or that new lsegs have somehow raced onto plh_return_segs.
 
-It's possible that we just need to catch ENETUNREACH in the LAYOUTRETURN
-error handling, but I'm not sure I correctly understand the problem. If
-entries are racing onto the list just before the refcount decrement,
-then that wouldn't fix it.
+In either case, nothing else will be aware of the entries on that list,
+since there are no more outstanding references. On the last
+pnfs_layout_put(), do a final call to pnfs_mark_layout_stateid_invalid()
+to shuffle any leftover segments to a tmp_list. Then free that list
+after dropping the i_lock.
 
-The first patch should fix the issue of the leaked lsegs, and the second
-should let us know if it ever crops up again.
-
+Reported-by: Omar Sandoval <osandov@osandov.com>
+Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Jeff Layton (2):
-      nfs: free leftover lsegs before freeing a layout in pnfs_put_layout_hdr
-      nfs: pr_warn if plh_segs or plh_return_segs are non-empty when freeing
+ fs/nfs/pnfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- fs/nfs/pnfs.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
----
-base-commit: 5bc1018675ec28a8a60d83b378d8c3991faa5a27
-change-id: 20250428-nfs-6-16-87062aa2989d
+diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+index 5f582713bf05eb72eb34b2e2c06d1edcd3c258d3..0bcb5a4bd420c157069ee63457518b206223b7cb 100644
+--- a/fs/nfs/pnfs.c
++++ b/fs/nfs/pnfs.c
+@@ -307,6 +307,7 @@ pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
+ {
+ 	struct inode *inode;
+ 	unsigned long i_state;
++	LIST_HEAD(tmp_list);
+ 
+ 	if (!lo)
+ 		return;
+@@ -316,9 +317,11 @@ pnfs_put_layout_hdr(struct pnfs_layout_hdr *lo)
+ 	if (refcount_dec_and_lock(&lo->plh_refcount, &inode->i_lock)) {
+ 		if (!list_empty(&lo->plh_segs))
+ 			WARN_ONCE(1, "NFS: BUG unfreed layout segments.\n");
++		pnfs_mark_layout_stateid_invalid(lo, &tmp_list);
+ 		pnfs_detach_layout_hdr(lo);
+ 		i_state = inode->i_state;
+ 		spin_unlock(&inode->i_lock);
++		pnfs_free_lseg_list(&tmp_list);
+ 		pnfs_free_layout_hdr(lo);
+ 		/* Notify pnfs_destroy_layout_final() that we're done */
+ 		if (i_state & (I_FREEING | I_CLEAR))
 
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.49.0
 
 
