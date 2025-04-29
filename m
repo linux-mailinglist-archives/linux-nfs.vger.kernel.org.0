@@ -1,53 +1,53 @@
-Return-Path: <linux-nfs+bounces-11355-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11356-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A96B2AA1AAE
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Apr 2025 20:33:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1251AAA1AAF
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Apr 2025 20:33:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B7CA1BC1180
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Apr 2025 18:33:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 747A74C38C8
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Apr 2025 18:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA7F25333E;
-	Tue, 29 Apr 2025 18:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BDAA253344;
+	Tue, 29 Apr 2025 18:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FUc08dWA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hh3Iit1R"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B934D252905
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3E324E00F
 	for <linux-nfs@vger.kernel.org>; Tue, 29 Apr 2025 18:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745951598; cv=none; b=UxCAbZQy0jQrVf/cA9SbaSX+exdZrqHmCvTSL66L8OtWSIWySx0Y+SCYMIMykJyraLzGFJJr4zPliku51UWfw1roIp41UlvsFi3rOS3+7ICX7YnHfFzrww0iDnM+Pe3a2wWx4J5Lv2QZuPeKb2vb7dOmhnTtdKPEN71t5gp1vUE=
+	t=1745951598; cv=none; b=lX6sHNwqVJAnEZL3vXuf8P82WLWSenT6WKmJ8Q7qqAXJtN17/fZatLlP1QF3pVKPkD0RqBc2mZWH2o6v9PbTSsnbKmviYWq+i61XQ4SuFrn8eE3PVzul4ftAzNNSAz6wiJJEvpJPNLfvyNfi+xHRsFKwhYmJE2p5GNkIveS8S5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745951598; c=relaxed/simple;
-	bh=WdWuGZkEEAyol5ALrodIZL486YDvl2S9CnjuObpiOPU=;
+	bh=iQDVXysa+bpqwMj0MbzV9xnHXcsg+5z5+VfkNhyMeMs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ux2lrP9WXS4OsFLnnDgaKqswF9GY2UN3SfLXD06wZqwpI4uaKqtrenIwcoOMvo4SjPsv/wIEAaplpTOuLo6+z7ZqEpe5zh8gUb4mogFG6SlxPhRgtqcFWrTQ9O8rkLBSrjBpTUusKuosl9C7kF1HxpxdlV0PgUmHEkJ8fpDbdbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FUc08dWA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 026EDC4CEEF;
-	Tue, 29 Apr 2025 18:33:17 +0000 (UTC)
+	 MIME-Version; b=XHfHfKM+fXoUo2wCfCBRhGXbcag+restWuBgZUmhBmXOw4X/CV0y/LM1tan8/RMvh6F2uEqN/Rt+2XCPTefflG3tMgtF/esTRtBe800mJgzsEA6UUzUifw6279cO8hgnPwMqQbiu+SHlY9G5d8oCT2NRXwe4QQhinDqnNSwFTus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hh3Iit1R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7750FC4CEE9;
+	Tue, 29 Apr 2025 18:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745951598;
-	bh=WdWuGZkEEAyol5ALrodIZL486YDvl2S9CnjuObpiOPU=;
+	bh=iQDVXysa+bpqwMj0MbzV9xnHXcsg+5z5+VfkNhyMeMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FUc08dWAEdJl+PaLN84SwAGqKmmZZpvF8n/+2udUjsbjuWPPQgkwVYYT+PAMLvhLb
-	 VPo40BZZquJMSWKG3KiftPxL5BlOaNLjiMaTBSPhAdtww5Qt1LsR9tOWd0AKN/nznq
-	 RMwPWy2KSOTJiyNals7ZUqxKMlgPtFaTfA2xU/Y9BGnmBYgcUunxmweMXETV/gnh5v
-	 aewKyDZQcYhUn3b9T/IN1eQ8lASQiGDetk/HU8PM8cI8PVUcc/13VlWBwUxfC6gQAP
-	 o3ur+iyPB6f/e9hmZSyGFRn3d0yt7fuu5V7PqkHNliChsmxfc9nn+IsPVVfNRJ6ZJl
-	 0eNYfl2pA82nA==
+	b=Hh3Iit1RnH/SnMosdI7Veuw9xStN7nuvtshxxuhUv6SBfZfStWQTNX/8vSqKEIbeI
+	 d+xOQKs7zbOxPSVBiQkG9XQ0CDWN8VvGpRJCm/em3vR4ksPdEqYblTNqFyGqBAvuHu
+	 5HtiwV4o5WKzaIBQir5oF17meUwkGictlGfIdKCRA6YdO1X1gQwHDEWhLcQ8+tvm+A
+	 zAIfv/YHWYZtTmpjkCq/olZOuRExsLnsZb0JjdLkJF0BphyxGnBKsdA0UWPMsRscxr
+	 FNBB0SkTkOlPmeY157mrcWhlsCSRfUDRwgyXg0kG59GxUFrtxKtygeS8ErE8KKwO5E
+	 rCAl3iyHgb7cA==
 From: Anna Schumaker <anna@kernel.org>
 To: linux-nfs@vger.kernel.org,
 	steved@redhat.com
 Cc: anna@kernel.org
-Subject: [PATCH v3 2/4] rpcctl: Add support for the xprtsec sysfs attribute
-Date: Tue, 29 Apr 2025 14:33:13 -0400
-Message-ID: <20250429183315.254059-3-anna@kernel.org>
+Subject: [PATCH v3 3/4] rpcctl: Display new rpc_clnt sysfs attributes
+Date: Tue, 29 Apr 2025 14:33:14 -0400
+Message-ID: <20250429183315.254059-4-anna@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250429183315.254059-1-anna@kernel.org>
 References: <20250429183315.254059-1-anna@kernel.org>
@@ -61,53 +61,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <anna.schumaker@oracle.com>
 
-This was recently added to the Linux kernel, so running rpcctl on
-kernels that don't have this attribute will print out "unknown" in its
-place instead.
+This includes the rpc program name, rpc version, and maximum number of
+connections.
 
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 ---
- tools/rpcctl/rpcctl.py | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/rpcctl/rpcctl.py | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index 654b2f60a894..ce22e424b804 100755
+index ce22e424b804..130f245a64e8 100755
 --- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -20,13 +20,13 @@ if not sunrpc.is_dir():
-     sys.exit(1)
+@@ -185,14 +185,13 @@ class Xprt:
+ class XprtSwitch:
+     """Represents a group of xprt connections."""
  
- 
--def read_sysfs_file(path):
-+def read_sysfs_file(path, *, missing="enoent"):
-     """Read a sysfs file."""
-     try:
-         with open(path, 'r') as f:
-             return f.readline().strip()
-     except FileNotFoundError:
--        return "(enoent)"
-+        return f"({missing})"
- 
- 
- def write_sysfs_file(path, input):
-@@ -58,6 +58,7 @@ class Xprt:
-         self.info = read_info_file(path / "xprt_info")
-         self.dstaddr = read_sysfs_file(path / "dstaddr")
-         self.srcaddr = read_sysfs_file(path / "srcaddr")
-+        self.xprtsec = read_sysfs_file(path / "xprtsec", missing="unknown")
-         self.read_state()
+-    def __init__(self, path, sep=":"):
++    def __init__(self, path):
+         """Read in xprt switch information from sysfs."""
+         self.path = path
+         self.name = path.stem
+         self.info = read_info_file(path / "xprt_switch_info")
+         self.xprts = sorted([Xprt(p) for p in self.path.iterdir()
+                              if p.is_dir()])
+-        self.sep = sep
  
      def __lt__(self, rhs):
-@@ -67,7 +68,8 @@ class Xprt:
-     def _xprt(self):
-         main = ", main" if self.info.get("main_xprt") else ""
-         return f"{self.name}: {self.type}, {self.dstaddr}, " \
--               f"port {self.info['dst_port']}, state <{self.state}>{main}"
-+               f"port {self.info['dst_port']}, sec {self.xprtsec}, " \
-+               f"state <{self.state}>{main}"
+         """Compare the name of two xprt switch instances."""
+@@ -200,7 +199,7 @@ class XprtSwitch:
  
-     def _src_reqs(self):
-         return f"	Source: {self.srcaddr}, port {self.info['src_port']}, " \
+     def __str__(self):
+         """Return a string representation of an xprt switch."""
+-        switch = f"{self.name}{self.sep} " \
++        switch = f"{self.name}: " \
+                  f"xprts {self.info['num_xprts']}, " \
+                  f"active {self.info['num_active']}, " \
+                  f"queue {self.info['queue_len']}"
+@@ -258,7 +257,11 @@ class RpcClient:
+         """Read in rpc client information from sysfs."""
+         self.path = path
+         self.name = path.stem
+-        self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
++        self.switch = XprtSwitch(path / (path / "switch").readlink())
++        self.program = read_sysfs_file(path / "program", missing="unknown")
++        self.version = read_sysfs_file(path / "rpc_version", missing="unknown")
++        self.max_connect = read_sysfs_file(path / "max_connect",
++                                           missing="unknown")
+ 
+     def __lt__(self, rhs):
+         """Compare the name of two rpc client instances."""
+@@ -266,7 +269,9 @@ class RpcClient:
+ 
+     def __str__(self):
+         """Return a string representation of an rpc client."""
+-        return f"{self.name}: {self.switch}"
++        return f"{self.name}: {self.program}, rpc version {self.version}, " \
++               f"max_connect {self.max_connect}" \
++               f"\n  {' ' * len(self.name)}{self.switch}"
+ 
+     def add_command(subparser):
+         """Add parser options for the `rpcctl client` command."""
 -- 
 2.49.0
 
