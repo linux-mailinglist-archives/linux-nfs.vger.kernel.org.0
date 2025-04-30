@@ -1,166 +1,383 @@
-Return-Path: <linux-nfs+bounces-11373-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11374-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53D98AA4C06
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 14:57:21 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 468E1AA4D75
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 15:28:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03A3E4A3D32
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 12:55:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 891C57B6DF5
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 13:27:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CA225B1F7;
-	Wed, 30 Apr 2025 12:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4BF20DD52;
+	Wed, 30 Apr 2025 13:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrb8E8QD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j2vVdxLa";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eKolFJt+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFE925B1F6
-	for <linux-nfs@vger.kernel.org>; Wed, 30 Apr 2025 12:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017462; cv=none; b=P0t7aejYEm1M07i9JjUlNGnU5d+H5N2E4h4NmFNB9N+jzVTmK3TjBLlPvmekTdEGVD8H3czqx/7oUxl3ntIN26wo/sTuE4m6Bfo4iMLeeAOXs1w+ZwglsqFONFLzKp/mq+WF9VtkdMqkrAoBiVUU4Z8UIOdX78M5adNZXlP56Ww=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017462; c=relaxed/simple;
-	bh=iPbBIAzq7nufotlknhe49S72iEN2Hqt1zT8nUFSMfdY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gvpFuF1LHTfrj2whnov9maoCBVaoQg3Eb74bVV26niq9Sij89X/cyK68+3JnVdmpRE1jXzkkZqtRoj6LgsCHbZJ0AbYy82fTmcAuqVPnKfLm/KbTgU6LmMKuTpz4ACogv8d2/0L6QER1rtk+6xMu3LUwS0y3MHnkj2exN8rvBis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrb8E8QD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22AD0C4CEEB;
-	Wed, 30 Apr 2025 12:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746017462;
-	bh=iPbBIAzq7nufotlknhe49S72iEN2Hqt1zT8nUFSMfdY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qrb8E8QDMLqAy9h7xExsT6LOqnO0nTDYm6+58RNKz9N3+I5v6s+Dm+z6qZ2vZGdYI
-	 vpnYqRL9ilc2c6/XrHWsyy0AUZ9k84H1cKlRlhsYtDstUNTcBzs4AY3OmN6YFwjJCr
-	 hGnW/TRq4HKn8lkPeYXfMUhrL3fPvCMcYHCk+PKvzoSMYYIpi9N9OEybhwsMLsrzOI
-	 bsFKtH9p07Tmo7RaSiMTp+/KEcOCWkXl8r3sGSg2LsLaPizGZhD4grzllbaAU+nsss
-	 hH45ClPy3pA3Bxf+DtJ9kOSZJcATBRazRfTsdWSY+UKEqx9HsYM+qPH/vRluxPFGlb
-	 pLYGiP2hUXWvg==
-Message-ID: <f30a022aa4c694aabc7d39b118214e8bf178349a.camel@kernel.org>
-Subject: Re: [PATCH] NFSv4: Don't check for OPEN feature support in v4.1
-From: Jeff Layton <jlayton@kernel.org>
-To: Scott Mayhew <smayhew@redhat.com>, trondmy@kernel.org, anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Date: Wed, 30 Apr 2025 05:51:01 -0700
-In-Reply-To: <20250430111229.4114991-1-smayhew@redhat.com>
-References: <20250430111229.4114991-1-smayhew@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B967239082
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Apr 2025 13:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746019721; cv=fail; b=YSTupEWcMhMMseC/pppKjtSnYp9JZhbfhU4hvCXrjIlQUjTsVUGPIcxiTqo5OdzXbTSXw3cDcs7eB3HsM9zMCNSc45rmrzWmhwpLp0Tt/N+IO89WDisKXm3P2d+vq6gsB6dt8vBPnVyKe9VFF+gUDJDbmdjQwBhsCRQcegNqZVE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746019721; c=relaxed/simple;
+	bh=h9W5EoeSEezRBfh9AaRl9Fuiu61PViC3ViaDOX0g/IY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nYHaVRqeED+81cnOLYEm5vBjQf4bj0b1EkHO/k/066TMos2Xx8JPyF9IUXBZs/oLmUkcksRAGtj66+QgT6Wi3dSLLvFo8c5l/LKNQ6yrV4f6rOyQIg1vJ/nalm7uPlRG+vSlhfzmvgtTgeUA4UO2wQXo/1NjoEB1ioxTibZSBgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=j2vVdxLa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eKolFJt+; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UD05A2013644;
+	Wed, 30 Apr 2025 13:28:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=; b=
+	j2vVdxLa0PBW9+AEqVkQEmZEdPglWHLU4IzZuZGQJnq9J+WvRYjr6ukQXjfZYTtU
+	uU1oECKzxBGNrDDaYX7kI+3FlAFXhMZL/R1fcBKjknikBp4sBEYhhSZAfaDJqhGZ
+	PG2XxmHUld4lSS/njEhJRJGZLe8rvjDnWpUEfcD8qXNn+NmR/agt/bc4RsfyKbh3
+	sTQglBixAdvwdqzlSCqN1ox7L+/VXV7srB7oYTSzUqZF7qnuq7tSZBTUwfCgo0Fn
+	VCxXRDg3PomJa9H9HZrXr5xMKIMnUW9Fc7KVgO7JG09J9ObAt5c8w0BeXkJmapt4
+	LxdpZnOhcP+iEepLm83P1A==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ut95js-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 13:28:26 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53UDGM4p001383;
+	Wed, 30 Apr 2025 13:28:25 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010007.outbound.protection.outlook.com [40.93.11.7])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxba5p8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 13:28:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CTtnuLPYHm7cfRsxbtxvgXLEtzfoqo2hDdpxoN16eNQQRNv82ZXTmg8rkL9nVkBG4wvONcoSA9JBN8sk98EHpzhQnjoCVisOzIum2FlPqVpYF7oHYlL+3ZGsLKvP5RMastHhbVPOfwY+nJT+2FgNfcS+bnkL7F41WCfHG9RCwlYmCtyj7RJpjcQmU+EgHYRNpBO0P/cZkFnpCnubhAKD/j7PfjUai3J2KZ6BqZ5+J5LAGI/3ye90/8qQVQdUTBLsJYPhvcHa3wJhdafm4EyY6B1o+ItrE45CDkgFp581a6gv8TGg9DHKmF8fRQfk44xCtcikJ4nx62IT2GJRBfpGZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=;
+ b=d1DtJ3nToQfaDu2S5Kj5HQfqbprq/v5zhZ730PAkKr36LJjvF9KvvC2V3mK52KrcP9Gi7UENKy22/Omho3tK89UVFVk2gJWDE5zFGqqQgkCyZa31C+M0GysZOmS0Jh0GucccqRJYPpSRWxfFvEAhErr6tJp9rInIDvupaxk4I4fK2NQPdLKdHY5LrIa56LR6eGDaD244eQ9Pzq8mCsaHpMCUbHa819d9YP1F6ZsRQNi7UWS0wu9v1iuLsH4aEXu3wAMI3L/QZ6wOb3La2qRTxO+cdl7mxz0ILUyKJGxkPDAJnp/kh6/4WF7u/CxQ5tr8k0EwGwNvgW7ktkxLqdTTTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=;
+ b=eKolFJt+3+tzA8935qivlKdwR6O8ywGT5eNizFoTbAXPOyb8mEQ7nBLrw3n5sC5hqRfJBMDNfmia6Pwrtvp02daMnMu8BZqdERsZ/30K/S69lw8cAqOTAvDjLTPWw4GAhRMFQyRFwEmne103Ji4liYZP8fFMCfFK/JPxmMCMWHw=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by IA0PR10MB7159.namprd10.prod.outlook.com (2603:10b6:208:401::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 13:28:23 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
+ 13:28:22 +0000
+Message-ID: <0a8d2285-e5b5-4a75-98a0-1a94d6fbbae3@oracle.com>
+Date: Wed, 30 Apr 2025 09:28:21 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFS: Avoid flushing data while holding directory locks in
+ nfs_rename()
+To: Trond Myklebust <trondmy@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <a804c54445a3f028007763e05285d765afcab0f9.1745794273.git.trond.myklebust@hammerspace.com>
+ <2526363b-1f4a-4999-9f9a-8c4c5c6c132d@oracle.com>
+ <c4b94ca894764b5f323fbf92530389f8c8b85894.camel@hammerspace.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <c4b94ca894764b5f323fbf92530389f8c8b85894.camel@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH0PR03CA0301.namprd03.prod.outlook.com
+ (2603:10b6:610:118::11) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA0PR10MB7159:EE_
+X-MS-Office365-Filtering-Correlation-Id: 12fb25d2-6b75-4320-8c99-08dd87eae13d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QjVsV294cGpXNGt1bytWR3lvNk1jRXR6YmFXRi9tc1c4Ujg0UnlQd1piQnZ5?=
+ =?utf-8?B?Y3QvbUFERVhzc0FiRk5BdGFIdS93ZkZLd3M5aG5XdTlSQmxRUXFibFNoTWpC?=
+ =?utf-8?B?cEc1QzJaZUlVQVZMdC85NEF1Y1l4RlRsSThxNEU0OGFyMGxpcGFpSFo5ZU1K?=
+ =?utf-8?B?MUI5YlZrMHhtc3Q3M3BCSUNUTkJoSUlPdXFNT2hPVjZURDNubXRodmtkZnRx?=
+ =?utf-8?B?cjlOYnU4dDdERlhqL3RDaHo5VCtHNU05bW5BQjk5R0s3bkN3OERVbmdaQjBD?=
+ =?utf-8?B?N3JDZmpJZ05Yd2xqREw4VDdzbDNWL3lnM1pTYWdxeWdmZHEyRmF6K2MvL2ky?=
+ =?utf-8?B?cUpERjFKTWZqZE8yVjdTUmZpRTlyWTBIYmw1ODZhVHY5UHdvNTNBNWk1YmJW?=
+ =?utf-8?B?ZDMvYWljcTg2cVFzVmJBVVNtVmsvZG5hRnlDeTBRVys2WEE1VThTYlhiSXNr?=
+ =?utf-8?B?c2NMSUN5a2xmTnBnOTRDMnpFTVFWb0RuZnQ5ZHVnYmdVTlFDUU01YjJtUkVz?=
+ =?utf-8?B?bFVvbnh5N0tyVWFMbG9vbjRzbyt0TFBNVzRkNkFqV1NDcm45MDZLMXF3eXZB?=
+ =?utf-8?B?WGYyK0Zva0JmeDhuZG9uUC9hWEhFbm4yUXFkS2FWcWV0bWp5SmFPL0ovU3dJ?=
+ =?utf-8?B?cEgycVRwN3Byb3pZaFFDSUZtMVVuYlRPeTFCSmFEYWVmL0RmYmp6ZU1NaGZ6?=
+ =?utf-8?B?QVI4cnVDKytHRW51MHczVkgxTDNzVGhLdTd1YWdodDdoVVc2UDZWc3lZS1Q3?=
+ =?utf-8?B?NXRpQ050c3hmY3pVSGVhWGJDOWw5Q3pmc3cvRHAvNDFubytBZUFPTVd0YlZX?=
+ =?utf-8?B?cEJZcS9ucm93bmxqUDlGYmlVYkZ0ejZNZUszSlhxa2o3ZlNDNDNiYXAvU0tO?=
+ =?utf-8?B?aW5UT3JOVW5lc2VGbDRLZTFFS3JZcmFjeERrTS92QTdpeHlldm10TUh5UXNH?=
+ =?utf-8?B?L3V5V3FtZFNoYVpmNmVDeDdqN016UkdhUGVsUGJpR0dnR3c1RjZhM1FtNFhZ?=
+ =?utf-8?B?SWoyRk9iNUlmRm5mcDhtREQ5Q20xa0VpOSs0WmYvdVUyV1RQMVJtN0wzVzRj?=
+ =?utf-8?B?ZzNPMXhBRUFtZjFISTNqcERuUjRubDVwcDZLdTQ2WWtHRFlOdjRYbzJpK0Vk?=
+ =?utf-8?B?UGNJZ2JONzU1dWcreFhyTjk3Q2ljc05MWGJZWmhpUEQvMmp0YS9OcVNIdFo0?=
+ =?utf-8?B?Z1QxNWVUY2Vwb2dIOVcvTlhtT2MvNmVVdEFxem1QU1pkQ0U4VDhTaStIU01k?=
+ =?utf-8?B?ZXIvTEEyUS9tVFFkclYyc2o1eHJYVVBxc29xR0lzanV3ekVTY0FQSk5PYnY2?=
+ =?utf-8?B?TWtlTHp5ZXg4UmRBMmEzMU1lay9wTnBOU296Ykp3MmNSMkZDWDdZcnJIZzVS?=
+ =?utf-8?B?ejRxSytGR0laS1FXUkJHMlhqSnFWMUYyYUU3cW9ocENuaTRrWHRwN2JoQTNR?=
+ =?utf-8?B?L3B3WWl4S09Ua0xJd2VPL3ZUREhWUXFxMHRoc2hmcFdzOVJDSysyWVl4ODVv?=
+ =?utf-8?B?S0pVWXFhM293cCt4MjJuaXBhZ3l6VVk2cUdLam15Zkx0Mk9SaTJoV3NUbzZh?=
+ =?utf-8?B?NzlFREMxMHVVbmEyS2FoVTVqRUhKYUhtYitvUEJRUTd6UXRRdk8xbmhMOG83?=
+ =?utf-8?B?c0diUlZmckZuTlRObWVBS0hhMzR2UUdUNzZjeTVCSDVwNE9QS2pVcXJvWGp0?=
+ =?utf-8?B?SjFndHJsU0NZd3Q2aGdwWUpmbVhZYXNpenEwczNYcy9SYk1YZWdUbTBJeExy?=
+ =?utf-8?B?R3Q1bGwyemtqUmFPWWduRTNFSlFBeG5hMVVidkQ2T0haOVNmaFhzSEZvT21s?=
+ =?utf-8?B?Q0U5UC90MkV4OFc5UGdRR2REci81RFJqZkNkZ2xZTG1kSzBVU1paWW5zaUpG?=
+ =?utf-8?B?RDUyZXpiT0JPR05oZlcvZFVzbU02N1hhZTVGLzdRd0VaU082cXpoaWtGMDBp?=
+ =?utf-8?Q?NgfiZO6/gyk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dVJwRTFnZmxxWTBhUGxBczlJcnQrd1FTd2JwTUQwQk02dDAzODFySTZlVVZ3?=
+ =?utf-8?B?WU8xWmF1Y0tBRmlPN2UxUFhBakpsdXozaExxcGptWFZzN3Y4R3lLTnF1M2lG?=
+ =?utf-8?B?THNGMGZPSlVKM2ptdGlpL1ZwVGpPck1JVEF2SWczLzBBNXhYKzE2TDk5eUNx?=
+ =?utf-8?B?S2NoUEpqL2tiL1ZuOUpEOTJDeEtXRXFJaWlRM3htZDhrYlp4QjdLNUNQOC9E?=
+ =?utf-8?B?KytaNko0KzhJY1pidnYrZ1lrT2VOZ2pLbktRejhmS1RMRGkzOWQxY2M5K3Ry?=
+ =?utf-8?B?SHBTUEJaMTFFeWQxc3JMSVV2anFUVFpGQnZud21oZTNoRzZITU40RXl0RTly?=
+ =?utf-8?B?VXVlclVZQWEwcHhzZmNVOGxid1RhSXlhZzlqVGNxQ3IrMGN5elhwSjBFM1F4?=
+ =?utf-8?B?WTZhSm4ySzBYdUN1ZG52YzF4OWRVRHhRL3o3Q3I2SlJZNzZ4OXVrMW5lN05Q?=
+ =?utf-8?B?V1ExNHBMRVMzYjNiUmJDcDZuKzBPUTA2THVSK21tN1ltUUZQNzBaVmtvZ253?=
+ =?utf-8?B?K3hGM1hnQlJOSDl0cjhTNGk4UVJYT0crTURnTzVLemJpK1lSR2oxcmxkRTln?=
+ =?utf-8?B?YURKR0xtemI0UWNQcEhhaTdOTVl0YlllRk9tbWFENVplaVViYzlNWklOR0Mz?=
+ =?utf-8?B?OHAwOWRGRkJSQlZUWjZiZ0hHT0YxMW5hRUttVTlNRW1uUXN4UkhiZ1NjaE5p?=
+ =?utf-8?B?UThsZGxIbUtpUlEweWR6dVFGRXMvMXZpcEN4UU52a2lsTzA2MkVhcUJuL0g0?=
+ =?utf-8?B?cktUZWNRSklXVmZDU0tWQ0tiU0IzbzN0QmxXWTNtL2piRUVTcWQ1SURyNVhZ?=
+ =?utf-8?B?VHpveU9xR0U5bFUzMWRMa2pwQm1PYTVubngydVhWeC9uWS9JNjZKbUdpV2FT?=
+ =?utf-8?B?VnFTYUdWRmE0ZisxY1lZMENwMGRHZ01DUFUrYmJtUGpiVUI4OU83NHdabzA5?=
+ =?utf-8?B?dnd5UVFRdXJOdkVKbmVQWW9PTTdZZ0xFaFhZUHRKRlRUYWxlL0twUjBGUzhE?=
+ =?utf-8?B?a0JMVFBneSs3alJpWTdieENmS1lWeitLNnN6Yk5DMk1FQ3Y5U0t2WWQySHdY?=
+ =?utf-8?B?bHAvNnhFL0oyaGxycS91OXg5N1BSenFSbEdzY3RnQVFlazRDeW5XKzZWQ2VZ?=
+ =?utf-8?B?QVVjY2laM3B3K3p0a1l1NFFlOFRabUo3aXFqeWh0OE9zYmZYWWRjb2k5c090?=
+ =?utf-8?B?dU92TzFhQmIvMjYwS0dveVFGbjhxclZWRUZSdy9odE14NGZVR0s4c0Y2TlR1?=
+ =?utf-8?B?OFU0dkI0NEhlVzlPRzNQUEI0VmRPRllXUzlwb3lwbVZpNnBlVVV5azVwREE5?=
+ =?utf-8?B?c241Zm9vSC9PcFIzWG92cWhGTlhpbzg3bWpLYU4wanZDWk9za2NSbVBXSHVl?=
+ =?utf-8?B?UEtvOVRoY0d0OFRZMmIxR0dmR0RWV3k2ZFpjbEF6WlptdHU3YkZtSjJXUWRY?=
+ =?utf-8?B?Y1k4dkhxSFlwUUlrVVJIKzl0MHJlc004S1pJVGgrWEtnMmhOT3hVN3NqODcz?=
+ =?utf-8?B?dGhTVlYyNXZ5ZE82anZTSWs4M2Uvbk9IWGZaKzFjaW1pcHR6Lzdsc2RtM1N3?=
+ =?utf-8?B?TC9nYWovcldQd3lQMEJ1blBEdjdvZzdGY0w5TUtXd0dPdDhMdlJ4NllRVlVs?=
+ =?utf-8?B?dkx5UU1PTW9jcllmRC80VUFrdHBDMnIzVjc1YzlibzhxMllHcXl0OENCZGFJ?=
+ =?utf-8?B?RnppZ3RPbGZJTkpid2loV3A4Vm1WLzAweDRVenhsK295Mk9CU0JmMURpbVJE?=
+ =?utf-8?B?QTdmMitmcGwwbCs0MnlFUW5JMys5YjFjQnB0VzkwZFBvV09MR0V5SHArWHF0?=
+ =?utf-8?B?S0FKVVhGa2F2cGVZNDFOeVFqVVovcWVyWVYxWnlEZDFZdy9PbXhZV2FNalB3?=
+ =?utf-8?B?Y1JTWGlFMjBqY0FadVc0L0ZENll4S2dFa3gvNHhvVGFZMHVUTGtmSnJ5czFU?=
+ =?utf-8?B?dEV4UndrbWkzcEk3eUYwS2c4cEIrQ3hrZ2x3TytYM2ZGUk11Yk9pK2lkREZm?=
+ =?utf-8?B?UWJzaXhNZDROQ1FxWlh2Y2RyZmUwbEIwVVNRUG1STjVyQ1I5NURTN1FFWVls?=
+ =?utf-8?B?TGpMV090eWNPQmhkcnVZd3FUd3hUelA5WnJTenVKVWVsQkVyUEVYYkRJYmgx?=
+ =?utf-8?B?TEYxK21HeWJtUjVzMS95WXdjeTh2ME0vc2NwV2lhYVQ2S1Z5cVBERllYYVZE?=
+ =?utf-8?B?NWc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/hbMwGQimRW+bWqWSI3isXqhow8PBghxIVBGDOBL4NOk6raDrR7co1F1Tr9f1P7TrKmN5MLRW/nz5HG4lFRgQF6EBIZk6iYnjAHsqJavCzJ8vyr2LnCaKW/BgbXtD17tq1qlvmQ+ZzFoFvy7YiMzLhi5KkKC/059OijVnwrWWO7qdq2yu+8eXsUOtRfNL3RmY2XMI5Vk8qixbTrB4dFqJwYsRkFsu8dQZL1hFeq3Z1sypssbnaHS/8wO9Kx8NHYld4YdVlODgI79rCIH+YxR2CB9OCB8j1EcuGQfGWuZ8Gpm53ViH7gWShxv1FV5wbTVJW+j/2Ggi2DfRNdFweAqXRUlKCPhWtMMEOTwJXfSD68hl3riGMT4DZH3sba557Rx/FGsl1HjM8hSIaEaGewGpDLhTm9aUVqEt4mPzZ5PxKAe2CJkjmIUHnXXEATu7YnGBLOa/lsz+l92R8b5aCEpFS13iN0nBAqIgtq4bHfyn3CW+8le9jxAoFRLkvBe5AByqDku+HfcDaxHQf9/ppzsS9AEw47FfOt7WsIbuOhF/b9uVSS0dwdUzktoLuHR6P4SG9MBk+Y72NZQd2ZJEJj1qZWUQdWp0TiU8P3+vj2Zddo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12fb25d2-6b75-4320-8c99-08dd87eae13d
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 13:28:22.9027
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Oq/XKkiKAeC+2upckb+equZWgbhMAMs7ol4gYCSKToxVXdSpTmIhsdPi7IWFfvvu2cx3JcHCEYzIXVVc7myE8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7159
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504300095
+X-Proofpoint-GUID: voIpZ3q3yumtjFnmhHf7CJULJ6bSSlsb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA5NSBTYWx0ZWRfX2ZS1lso7QOtU DiFcpqDAqPliNYgGFLVqAXdekcaJJiUXTHxKQ7GWQjUaM8bnKSNeSAndx7oY/SlBrOLrAqbwqYx QTLDDlpsKRmRbxn6Poaq+oTiejeqeUGELEVA2xhgmObbHK9hq97cQCU2Xtwh4UDaAKgKdKqOl3m
+ aG1+Y10z7DN/bzPWGpq8+QFqa15NvGwPGgPizEReVdNwEtTX3LmRQEq/aQ+2rEPwPleQJQiZkvu Nyyufp5xeYTV8eb80aY4Bv2r5tRVPmhpJg3wghVWAkViNH5EbwdKamnKIiClTW79pWc/uqiEm4G pY5kVYzGNWbdigjP+dVCW4opoHybH6vv+WgjIhe2t/iAiV05+2ETUw2G2Y9PLdAnvXYs5/j36/O
+ F6R1BuvtxJSJdnTKYYeTqZ/0hU26ROYPwuCA/5R2Pd3ZnAkP9F+s/2I5RuOVFlNDeiwlcxgp
+X-Authority-Analysis: v=2.4 cv=ZuHtK87G c=1 sm=1 tr=0 ts=6812257b b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=SEtKQCMJAAAA:8 a=I4OJOmu-QpTY69J4ndEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=kyTSok1ft720jgMXX5-3:22 cc=ntf awl=host:13129
+X-Proofpoint-ORIG-GUID: voIpZ3q3yumtjFnmhHf7CJULJ6bSSlsb
 
-On Wed, 2025-04-30 at 07:12 -0400, Scott Mayhew wrote:
-> fattr4_open_arguments is a v4.2 recommended attribute, so we shouldn't
-> be sending it to v4.1 servers.
->=20
-> Fixes: cb78f9b7d0c0 ("nfs: fix the fetch of FATTR4_OPEN_ARGUMENTS")
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> ---
->  fs/nfs/nfs4proc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 970f28dbf253..2eb2d750a5f1 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -3967,8 +3967,9 @@ static int _nfs4_server_capabilities(struct nfs_ser=
-ver *server, struct nfs_fh *f
->  		     FATTR4_WORD0_CASE_INSENSITIVE |
->  		     FATTR4_WORD0_CASE_PRESERVING;
->  	if (minorversion)
-> -		bitmask[2] =3D FATTR4_WORD2_SUPPATTR_EXCLCREAT |
-> -			     FATTR4_WORD2_OPEN_ARGUMENTS;
-> +		bitmask[2] =3D FATTR4_WORD2_SUPPATTR_EXCLCREAT;
-> +	if (minorversion > 1)
-> +		bitmask[2] |=3D FATTR4_WORD2_OPEN_ARGUMENTS;
-> =20
->  	status =3D nfs4_call_sync(server->client, server, &msg, &args.seq_args,=
- &res.seq_res, 0);
->  	if (status =3D=3D 0) {
+On 4/29/25 7:22 PM, Trond Myklebust wrote:
+> On Tue, 2025-04-29 at 12:14 -0400, Chuck Lever wrote:
+>> On 4/27/25 7:01 PM, trondmy@kernel.org wrote:
+>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>
+>>> The Linux client assumes that all filehandles are non-volatile for
+>>> renames within the same directory (otherwise sillyrename cannot
+>>> work).
+>>> However, the existence of the Linux 'subtree_check' export option
+>>> has
+>>> meant that nfs_rename() has always assumed it needs to flush writes
+>>> before attempting to rename.
+>>>
+>>> Since NFSv4 does allow the client to query whether or not the
+>>> server
+>>> exhibits this behaviour, and since knfsd does actually set the
+>>> appropriate flag when 'subtree_check' is enabled on an export, it
+>>> should be OK to optimise away the write flushing behaviour in the
+>>> cases
+>>> where it is clearly not needed.
+>>
+>> No objection to the high level goal, seems like a sensible change.
+>>
+>> So NFSv3 still has the flushing requirement, but NFSv4 can disable
+>> that
+>> requirement as long as the server in question asserts
+>> FH4_VOLATILE_ANY
+>> and FH4_VOL_RENAME, correct?
+>>
+>> I'm wondering how confident we are that other server implementations
+>> behave reasonably. Yes, they are broken if they don't behave, but
+>> there
+>> is still risk of introducing a regression.
+> 
+> I'd prefer to deal with that through other means if it turns out that
+> we have to. The problem we have right now is that we are forcing a
+> writeback of the entire file while holding several directory mutexes
+> (as well as the filesystem-global s_vfs_rename_mutex). That's terrible
+> for performance and scalability.
+> 
+>>
+>>
+>>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>> ---
+>>>  fs/nfs/client.c           |  2 ++
+>>>  fs/nfs/dir.c              | 15 ++++++++++++++-
+>>>  include/linux/nfs_fs_sb.h |  6 ++++++
+>>>  3 files changed, 22 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+>>> index 2115c1189c2d..6d63b958c4bb 100644
+>>> --- a/fs/nfs/client.c
+>>> +++ b/fs/nfs/client.c
+>>> @@ -1105,6 +1105,8 @@ struct nfs_server *nfs_create_server(struct
+>>> fs_context *fc)
+>>>  		if (server->namelen == 0 || server->namelen >
+>>> NFS2_MAXNAMLEN)
+>>>  			server->namelen = NFS2_MAXNAMLEN;
+>>>  	}
+>>> +	/* Linux 'subtree_check' borkenness mandates this setting
+>>> */
+>>
+>> Assuming you are going to respin this patch to deal with the build
+>> bot
+>> warnings, can you make this comment more useful? "borkenness" sounds
+>> like you are dealing with a server bug here, but that's not really
+>> the case. subtree_check is working as designed: it requires the extra
+>> flushing. The no_subtree_check case does not, IIUC.
+> 
+> subtree checking is working as designed, but that doesn't change the
+> fact that it is a violation of the NFSv3 protocol. You can't to change
+> the filehandle in mid flight in any stateless protocol, because that
+> will break applications.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+My point is that the comment you add in this patch, although whimsical,
+is not terribly illuminating. A more expansive comment (with the detail
+you provide above) would be helpful.
+
+But if subtree_check is not compliant with RFC 1813, perhaps we should
+consider finally deprecating and removing it. At least exports(5) should
+mention the spec compliance issue, but my copy of exports(5) does not.
+
+
+>> It would be better to explain this need strictly in terms of file
+>> handle
+>> volatility, no?
+>>
+>>
+>>> +	server->fh_expire_type = NFS_FH_VOL_RENAME;
+>>>  
+>>>  	if (!(fattr->valid & NFS_ATTR_FATTR)) {
+>>>  		error = ctx->nfs_mod->rpc_ops->getattr(server,
+>>> ctx->mntfh,
+>>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>>> index bd23fc736b39..d0e0b435a843 100644
+>>> --- a/fs/nfs/dir.c
+>>> +++ b/fs/nfs/dir.c
+>>> @@ -2676,6 +2676,18 @@ nfs_unblock_rename(struct rpc_task *task,
+>>> struct nfs_renamedata *data)
+>>>  	unblock_revalidate(new_dentry);
+>>>  }
+>>>  
+>>> +static bool nfs_rename_is_unsafe_cross_dir(struct dentry
+>>> *old_dentry,
+>>> +					   struct dentry
+>>> *new_dentry)
+>>> +{
+>>> +	struct nfs_server *server = NFS_SB(old_dentry->d_sb);
+>>> +
+>>> +	if (old_dentry->d_parent != new_dentry->d_parent)
+>>> +		return false;
+>>> +	if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
+>>> +		return !(server->fh_expire_type &
+>>> NFS_FH_NOEXPIRE_WITH_OPEN);
+>>> +	return true;
+>>> +}
+>>> +
+>>>  /*
+>>>   * RENAME
+>>>   * FIXME: Some nfsds, like the Linux user space nfsd, may generate
+>>> a
+>>> @@ -2763,7 +2775,8 @@ int nfs_rename(struct mnt_idmap *idmap,
+>>> struct inode *old_dir,
+>>>  
+>>>  	}
+>>>  
+>>> -	if (S_ISREG(old_inode->i_mode))
+>>> +	if (S_ISREG(old_inode->i_mode) &&
+>>> +	    nfs_rename_is_unsafe_cross_dir(old_dentry,
+>>> new_dentry))
+>>>  		nfs_sync_inode(old_inode);
+>>>  	task = nfs_async_rename(old_dir, new_dir, old_dentry,
+>>> new_dentry,
+>>>  				must_unblock ? nfs_unblock_rename
+>>> : NULL);
+>>> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+>>> index 71319637a84e..6732c7e04d19 100644
+>>> --- a/include/linux/nfs_fs_sb.h
+>>> +++ b/include/linux/nfs_fs_sb.h
+>>> @@ -236,6 +236,12 @@ struct nfs_server {
+>>>  	u32			acl_bitmask;	/* V4 bitmask
+>>> representing the ACEs
+>>>  						   that are
+>>> supported on this
+>>>  						   filesystem */
+>>> +	/* The following #defines numerically match the NFSv4
+>>> equivalents */
+>>> +#define NFS_FH_NOEXPIRE_WITH_OPEN (0x1)
+>>> +#define NFS_FH_VOLATILE_ANY (0x2)
+>>> +#define NFS_FH_VOL_MIGRATION (0x4)
+>>> +#define NFS_FH_VOL_RENAME (0x8)
+>>> +#define NFS_FH_RENAME_UNSAFE (NFS_FH_VOLATILE_ANY |
+>>> NFS_FH_VOL_RENAME)
+>>>  	u32			fh_expire_type;	/* V4
+>>> bitmask representing file
+>>>  						   handle
+>>> volatility type for
+>>>  						   this filesystem
+>>> */
+>>
+> 
+
+
+-- 
+Chuck Lever
 
