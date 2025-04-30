@@ -1,383 +1,339 @@
-Return-Path: <linux-nfs+bounces-11374-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11375-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 468E1AA4D75
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 15:28:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3D13AA52A1
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 19:34:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 891C57B6DF5
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 13:27:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E1D817201C
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 17:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4BF20DD52;
-	Wed, 30 Apr 2025 13:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A69C1E0B86;
+	Wed, 30 Apr 2025 17:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j2vVdxLa";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eKolFJt+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrudvkyZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B967239082
-	for <linux-nfs@vger.kernel.org>; Wed, 30 Apr 2025 13:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019721; cv=fail; b=YSTupEWcMhMMseC/pppKjtSnYp9JZhbfhU4hvCXrjIlQUjTsVUGPIcxiTqo5OdzXbTSXw3cDcs7eB3HsM9zMCNSc45rmrzWmhwpLp0Tt/N+IO89WDisKXm3P2d+vq6gsB6dt8vBPnVyKe9VFF+gUDJDbmdjQwBhsCRQcegNqZVE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019721; c=relaxed/simple;
-	bh=h9W5EoeSEezRBfh9AaRl9Fuiu61PViC3ViaDOX0g/IY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nYHaVRqeED+81cnOLYEm5vBjQf4bj0b1EkHO/k/066TMos2Xx8JPyF9IUXBZs/oLmUkcksRAGtj66+QgT6Wi3dSLLvFo8c5l/LKNQ6yrV4f6rOyQIg1vJ/nalm7uPlRG+vSlhfzmvgtTgeUA4UO2wQXo/1NjoEB1ioxTibZSBgE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=j2vVdxLa; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eKolFJt+; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UD05A2013644;
-	Wed, 30 Apr 2025 13:28:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=; b=
-	j2vVdxLa0PBW9+AEqVkQEmZEdPglWHLU4IzZuZGQJnq9J+WvRYjr6ukQXjfZYTtU
-	uU1oECKzxBGNrDDaYX7kI+3FlAFXhMZL/R1fcBKjknikBp4sBEYhhSZAfaDJqhGZ
-	PG2XxmHUld4lSS/njEhJRJGZLe8rvjDnWpUEfcD8qXNn+NmR/agt/bc4RsfyKbh3
-	sTQglBixAdvwdqzlSCqN1ox7L+/VXV7srB7oYTSzUqZF7qnuq7tSZBTUwfCgo0Fn
-	VCxXRDg3PomJa9H9HZrXr5xMKIMnUW9Fc7KVgO7JG09J9ObAt5c8w0BeXkJmapt4
-	LxdpZnOhcP+iEepLm83P1A==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ut95js-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 13:28:26 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53UDGM4p001383;
-	Wed, 30 Apr 2025 13:28:25 GMT
-Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010007.outbound.protection.outlook.com [40.93.11.7])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxba5p8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 13:28:25 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CTtnuLPYHm7cfRsxbtxvgXLEtzfoqo2hDdpxoN16eNQQRNv82ZXTmg8rkL9nVkBG4wvONcoSA9JBN8sk98EHpzhQnjoCVisOzIum2FlPqVpYF7oHYlL+3ZGsLKvP5RMastHhbVPOfwY+nJT+2FgNfcS+bnkL7F41WCfHG9RCwlYmCtyj7RJpjcQmU+EgHYRNpBO0P/cZkFnpCnubhAKD/j7PfjUai3J2KZ6BqZ5+J5LAGI/3ye90/8qQVQdUTBLsJYPhvcHa3wJhdafm4EyY6B1o+ItrE45CDkgFp581a6gv8TGg9DHKmF8fRQfk44xCtcikJ4nx62IT2GJRBfpGZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=;
- b=d1DtJ3nToQfaDu2S5Kj5HQfqbprq/v5zhZ730PAkKr36LJjvF9KvvC2V3mK52KrcP9Gi7UENKy22/Omho3tK89UVFVk2gJWDE5zFGqqQgkCyZa31C+M0GysZOmS0Jh0GucccqRJYPpSRWxfFvEAhErr6tJp9rInIDvupaxk4I4fK2NQPdLKdHY5LrIa56LR6eGDaD244eQ9Pzq8mCsaHpMCUbHa819d9YP1F6ZsRQNi7UWS0wu9v1iuLsH4aEXu3wAMI3L/QZ6wOb3La2qRTxO+cdl7mxz0ILUyKJGxkPDAJnp/kh6/4WF7u/CxQ5tr8k0EwGwNvgW7ktkxLqdTTTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=43X8tv8kNFjxqkSIBjCe75MLmJ1XUNs7R1XXuXZp1Ik=;
- b=eKolFJt+3+tzA8935qivlKdwR6O8ywGT5eNizFoTbAXPOyb8mEQ7nBLrw3n5sC5hqRfJBMDNfmia6Pwrtvp02daMnMu8BZqdERsZ/30K/S69lw8cAqOTAvDjLTPWw4GAhRMFQyRFwEmne103Ji4liYZP8fFMCfFK/JPxmMCMWHw=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by IA0PR10MB7159.namprd10.prod.outlook.com (2603:10b6:208:401::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 13:28:23 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
- 13:28:22 +0000
-Message-ID: <0a8d2285-e5b5-4a75-98a0-1a94d6fbbae3@oracle.com>
-Date: Wed, 30 Apr 2025 09:28:21 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] NFS: Avoid flushing data while holding directory locks in
- nfs_rename()
-To: Trond Myklebust <trondmy@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <a804c54445a3f028007763e05285d765afcab0f9.1745794273.git.trond.myklebust@hammerspace.com>
- <2526363b-1f4a-4999-9f9a-8c4c5c6c132d@oracle.com>
- <c4b94ca894764b5f323fbf92530389f8c8b85894.camel@hammerspace.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <c4b94ca894764b5f323fbf92530389f8c8b85894.camel@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR03CA0301.namprd03.prod.outlook.com
- (2603:10b6:610:118::11) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90E019E98B
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Apr 2025 17:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746034445; cv=none; b=MPsWeQNNO8sGvRBwTmrTfKbUqaoe8TF3oSeH1/ZjKW+06gQeLvEcIv8L6YUjyxEI3YRTS45A0hjo/lwqpUwD69gzfPuAbQNg53xVWUfmh2lBoLI4u80JyPYl1zpodLC3UhC/oJC8H5IFMDUVsCtbEOYb3ESG12lt/kXBwmuuPZk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746034445; c=relaxed/simple;
+	bh=Czvs56AQ6HkNlzo1xoC3uvWWsZqoEgIzAT0NDzaECJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hdpk+30Sy4ULH2ozhTpJNc/idG3H0H9atQIW68wVAlVfdhz243234it2oJ8fs61NlAyFw05hYJmlIHtGDDE84vEta/N4OKo9FEF4UGCbNnL14Z/MeJzqGmov9WwEleUJesq2/i9a3xAd5XBF3tyfXebufYj+OgnIUkS5u+s5av4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrudvkyZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293B8C4CEE7;
+	Wed, 30 Apr 2025 17:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746034444;
+	bh=Czvs56AQ6HkNlzo1xoC3uvWWsZqoEgIzAT0NDzaECJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BrudvkyZA+MK+6URbWMDi9UCTN6F5tmSpbZlHJIW5iYobrd1DzYleGFz+E6AcW6tt
+	 LE33tqxsTICWJ2wW5ULu9x0DwhEhrpHQaPDAxWz4gnlcXUFr6YkdrtffUXHsZMfTGC
+	 UV+86GrFADBaH8F3aV8kY4bjj2uVEIIf/3Xd3ZSCrnUszISeabr6rNAb+xyBJPRFE+
+	 NxSoIZbic/xGt/s7aSkQTfsq+2lcNLwVAuUAAUKZcs7Db3iCnwZ+ZQZOcmILNZ0sjP
+	 w7Ye71Oo/ZHj5mXdDXokSbOMWkFxfWV+Qauf3NlsovEVL2i45MtX//sL/3ek3IwABO
+	 g1S700tXiILTw==
+Date: Wed, 30 Apr 2025 13:34:03 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: NeilBrown <neil@brown.name>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 6/6] nfs_localio: protect race between nfs_uuid_put() and
+ nfs_close_local_fh()
+Message-ID: <aBJfC0geyEDZyGYg@kernel.org>
+References: <20250430040429.2743921-1-neil@brown.name>
+ <20250430040429.2743921-7-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA0PR10MB7159:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12fb25d2-6b75-4320-8c99-08dd87eae13d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QjVsV294cGpXNGt1bytWR3lvNk1jRXR6YmFXRi9tc1c4Ujg0UnlQd1piQnZ5?=
- =?utf-8?B?Y3QvbUFERVhzc0FiRk5BdGFIdS93ZkZLd3M5aG5XdTlSQmxRUXFibFNoTWpC?=
- =?utf-8?B?cEc1QzJaZUlVQVZMdC85NEF1Y1l4RlRsSThxNEU0OGFyMGxpcGFpSFo5ZU1K?=
- =?utf-8?B?MUI5YlZrMHhtc3Q3M3BCSUNUTkJoSUlPdXFNT2hPVjZURDNubXRodmtkZnRx?=
- =?utf-8?B?cjlOYnU4dDdERlhqL3RDaHo5VCtHNU05bW5BQjk5R0s3bkN3OERVbmdaQjBD?=
- =?utf-8?B?N3JDZmpJZ05Yd2xqREw4VDdzbDNWL3lnM1pTYWdxeWdmZHEyRmF6K2MvL2ky?=
- =?utf-8?B?cUpERjFKTWZqZE8yVjdTUmZpRTlyWTBIYmw1ODZhVHY5UHdvNTNBNWk1YmJW?=
- =?utf-8?B?ZDMvYWljcTg2cVFzVmJBVVNtVmsvZG5hRnlDeTBRVys2WEE1VThTYlhiSXNr?=
- =?utf-8?B?c2NMSUN5a2xmTnBnOTRDMnpFTVFWb0RuZnQ5ZHVnYmdVTlFDUU01YjJtUkVz?=
- =?utf-8?B?bFVvbnh5N0tyVWFMbG9vbjRzbyt0TFBNVzRkNkFqV1NDcm45MDZLMXF3eXZB?=
- =?utf-8?B?WGYyK0Zva0JmeDhuZG9uUC9hWEhFbm4yUXFkS2FWcWV0bWp5SmFPL0ovU3dJ?=
- =?utf-8?B?cEgycVRwN3Byb3pZaFFDSUZtMVVuYlRPeTFCSmFEYWVmL0RmYmp6ZU1NaGZ6?=
- =?utf-8?B?QVI4cnVDKytHRW51MHczVkgxTDNzVGhLdTd1YWdodDdoVVc2UDZWc3lZS1Q3?=
- =?utf-8?B?NXRpQ050c3hmY3pVSGVhWGJDOWw5Q3pmc3cvRHAvNDFubytBZUFPTVd0YlZX?=
- =?utf-8?B?cEJZcS9ucm93bmxqUDlGYmlVYkZ0ejZNZUszSlhxa2o3ZlNDNDNiYXAvU0tO?=
- =?utf-8?B?aW5UT3JOVW5lc2VGbDRLZTFFS3JZcmFjeERrTS92QTdpeHlldm10TUh5UXNH?=
- =?utf-8?B?L3V5V3FtZFNoYVpmNmVDeDdqN016UkdhUGVsUGJpR0dnR3c1RjZhM1FtNFhZ?=
- =?utf-8?B?SWoyRk9iNUlmRm5mcDhtREQ5Q20xa0VpOSs0WmYvdVUyV1RQMVJtN0wzVzRj?=
- =?utf-8?B?ZzNPMXhBRUFtZjFISTNqcERuUjRubDVwcDZLdTQ2WWtHRFlOdjRYbzJpK0Vk?=
- =?utf-8?B?UGNJZ2JONzU1dWcreFhyTjk3Q2ljc05MWGJZWmhpUEQvMmp0YS9OcVNIdFo0?=
- =?utf-8?B?Z1QxNWVUY2Vwb2dIOVcvTlhtT2MvNmVVdEFxem1QU1pkQ0U4VDhTaStIU01k?=
- =?utf-8?B?ZXIvTEEyUS9tVFFkclYyc2o1eHJYVVBxc29xR0lzanV3ekVTY0FQSk5PYnY2?=
- =?utf-8?B?TWtlTHp5ZXg4UmRBMmEzMU1lay9wTnBOU296Ykp3MmNSMkZDWDdZcnJIZzVS?=
- =?utf-8?B?ejRxSytGR0laS1FXUkJHMlhqSnFWMUYyYUU3cW9ocENuaTRrWHRwN2JoQTNR?=
- =?utf-8?B?L3B3WWl4S09Ua0xJd2VPL3ZUREhWUXFxMHRoc2hmcFdzOVJDSysyWVl4ODVv?=
- =?utf-8?B?S0pVWXFhM293cCt4MjJuaXBhZ3l6VVk2cUdLam15Zkx0Mk9SaTJoV3NUbzZh?=
- =?utf-8?B?NzlFREMxMHVVbmEyS2FoVTVqRUhKYUhtYitvUEJRUTd6UXRRdk8xbmhMOG83?=
- =?utf-8?B?c0diUlZmckZuTlRObWVBS0hhMzR2UUdUNzZjeTVCSDVwNE9QS2pVcXJvWGp0?=
- =?utf-8?B?SjFndHJsU0NZd3Q2aGdwWUpmbVhZYXNpenEwczNYcy9SYk1YZWdUbTBJeExy?=
- =?utf-8?B?R3Q1bGwyemtqUmFPWWduRTNFSlFBeG5hMVVidkQ2T0haOVNmaFhzSEZvT21s?=
- =?utf-8?B?Q0U5UC90MkV4OFc5UGdRR2REci81RFJqZkNkZ2xZTG1kSzBVU1paWW5zaUpG?=
- =?utf-8?B?RDUyZXpiT0JPR05oZlcvZFVzbU02N1hhZTVGLzdRd0VaU082cXpoaWtGMDBp?=
- =?utf-8?Q?NgfiZO6/gyk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dVJwRTFnZmxxWTBhUGxBczlJcnQrd1FTd2JwTUQwQk02dDAzODFySTZlVVZ3?=
- =?utf-8?B?WU8xWmF1Y0tBRmlPN2UxUFhBakpsdXozaExxcGptWFZzN3Y4R3lLTnF1M2lG?=
- =?utf-8?B?THNGMGZPSlVKM2ptdGlpL1ZwVGpPck1JVEF2SWczLzBBNXhYKzE2TDk5eUNx?=
- =?utf-8?B?S2NoUEpqL2tiL1ZuOUpEOTJDeEtXRXFJaWlRM3htZDhrYlp4QjdLNUNQOC9E?=
- =?utf-8?B?KytaNko0KzhJY1pidnYrZ1lrT2VOZ2pLbktRejhmS1RMRGkzOWQxY2M5K3Ry?=
- =?utf-8?B?SHBTUEJaMTFFeWQxc3JMSVV2anFUVFpGQnZud21oZTNoRzZITU40RXl0RTly?=
- =?utf-8?B?VXVlclVZQWEwcHhzZmNVOGxid1RhSXlhZzlqVGNxQ3IrMGN5elhwSjBFM1F4?=
- =?utf-8?B?WTZhSm4ySzBYdUN1ZG52YzF4OWRVRHhRL3o3Q3I2SlJZNzZ4OXVrMW5lN05Q?=
- =?utf-8?B?V1ExNHBMRVMzYjNiUmJDcDZuKzBPUTA2THVSK21tN1ltUUZQNzBaVmtvZ253?=
- =?utf-8?B?K3hGM1hnQlJOSDl0cjhTNGk4UVJYT0crTURnTzVLemJpK1lSR2oxcmxkRTln?=
- =?utf-8?B?YURKR0xtemI0UWNQcEhhaTdOTVl0YlllRk9tbWFENVplaVViYzlNWklOR0Mz?=
- =?utf-8?B?OHAwOWRGRkJSQlZUWjZiZ0hHT0YxMW5hRUttVTlNRW1uUXN4UkhiZ1NjaE5p?=
- =?utf-8?B?UThsZGxIbUtpUlEweWR6dVFGRXMvMXZpcEN4UU52a2lsTzA2MkVhcUJuL0g0?=
- =?utf-8?B?cktUZWNRSklXVmZDU0tWQ0tiU0IzbzN0QmxXWTNtL2piRUVTcWQ1SURyNVhZ?=
- =?utf-8?B?VHpveU9xR0U5bFUzMWRMa2pwQm1PYTVubngydVhWeC9uWS9JNjZKbUdpV2FT?=
- =?utf-8?B?VnFTYUdWRmE0ZisxY1lZMENwMGRHZ01DUFUrYmJtUGpiVUI4OU83NHdabzA5?=
- =?utf-8?B?dnd5UVFRdXJOdkVKbmVQWW9PTTdZZ0xFaFhZUHRKRlRUYWxlL0twUjBGUzhE?=
- =?utf-8?B?a0JMVFBneSs3alJpWTdieENmS1lWeitLNnN6Yk5DMk1FQ3Y5U0t2WWQySHdY?=
- =?utf-8?B?bHAvNnhFL0oyaGxycS91OXg5N1BSenFSbEdzY3RnQVFlazRDeW5XKzZWQ2VZ?=
- =?utf-8?B?QVVjY2laM3B3K3p0a1l1NFFlOFRabUo3aXFqeWh0OE9zYmZYWWRjb2k5c090?=
- =?utf-8?B?dU92TzFhQmIvMjYwS0dveVFGbjhxclZWRUZSdy9odE14NGZVR0s4c0Y2TlR1?=
- =?utf-8?B?OFU0dkI0NEhlVzlPRzNQUEI0VmRPRllXUzlwb3lwbVZpNnBlVVV5azVwREE5?=
- =?utf-8?B?c241Zm9vSC9PcFIzWG92cWhGTlhpbzg3bWpLYU4wanZDWk9za2NSbVBXSHVl?=
- =?utf-8?B?UEtvOVRoY0d0OFRZMmIxR0dmR0RWV3k2ZFpjbEF6WlptdHU3YkZtSjJXUWRY?=
- =?utf-8?B?Y1k4dkhxSFlwUUlrVVJIKzl0MHJlc004S1pJVGgrWEtnMmhOT3hVN3NqODcz?=
- =?utf-8?B?dGhTVlYyNXZ5ZE82anZTSWs4M2Uvbk9IWGZaKzFjaW1pcHR6Lzdsc2RtM1N3?=
- =?utf-8?B?TC9nYWovcldQd3lQMEJ1blBEdjdvZzdGY0w5TUtXd0dPdDhMdlJ4NllRVlVs?=
- =?utf-8?B?dkx5UU1PTW9jcllmRC80VUFrdHBDMnIzVjc1YzlibzhxMllHcXl0OENCZGFJ?=
- =?utf-8?B?RnppZ3RPbGZJTkpid2loV3A4Vm1WLzAweDRVenhsK295Mk9CU0JmMURpbVJE?=
- =?utf-8?B?QTdmMitmcGwwbCs0MnlFUW5JMys5YjFjQnB0VzkwZFBvV09MR0V5SHArWHF0?=
- =?utf-8?B?S0FKVVhGa2F2cGVZNDFOeVFqVVovcWVyWVYxWnlEZDFZdy9PbXhZV2FNalB3?=
- =?utf-8?B?Y1JTWGlFMjBqY0FadVc0L0ZENll4S2dFa3gvNHhvVGFZMHVUTGtmSnJ5czFU?=
- =?utf-8?B?dEV4UndrbWkzcEk3eUYwS2c4cEIrQ3hrZ2x3TytYM2ZGUk11Yk9pK2lkREZm?=
- =?utf-8?B?UWJzaXhNZDROQ1FxWlh2Y2RyZmUwbEIwVVNRUG1STjVyQ1I5NURTN1FFWVls?=
- =?utf-8?B?TGpMV090eWNPQmhkcnVZd3FUd3hUelA5WnJTenVKVWVsQkVyUEVYYkRJYmgx?=
- =?utf-8?B?TEYxK21HeWJtUjVzMS95WXdjeTh2ME0vc2NwV2lhYVQ2S1Z5cVBERllYYVZE?=
- =?utf-8?B?NWc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/hbMwGQimRW+bWqWSI3isXqhow8PBghxIVBGDOBL4NOk6raDrR7co1F1Tr9f1P7TrKmN5MLRW/nz5HG4lFRgQF6EBIZk6iYnjAHsqJavCzJ8vyr2LnCaKW/BgbXtD17tq1qlvmQ+ZzFoFvy7YiMzLhi5KkKC/059OijVnwrWWO7qdq2yu+8eXsUOtRfNL3RmY2XMI5Vk8qixbTrB4dFqJwYsRkFsu8dQZL1hFeq3Z1sypssbnaHS/8wO9Kx8NHYld4YdVlODgI79rCIH+YxR2CB9OCB8j1EcuGQfGWuZ8Gpm53ViH7gWShxv1FV5wbTVJW+j/2Ggi2DfRNdFweAqXRUlKCPhWtMMEOTwJXfSD68hl3riGMT4DZH3sba557Rx/FGsl1HjM8hSIaEaGewGpDLhTm9aUVqEt4mPzZ5PxKAe2CJkjmIUHnXXEATu7YnGBLOa/lsz+l92R8b5aCEpFS13iN0nBAqIgtq4bHfyn3CW+8le9jxAoFRLkvBe5AByqDku+HfcDaxHQf9/ppzsS9AEw47FfOt7WsIbuOhF/b9uVSS0dwdUzktoLuHR6P4SG9MBk+Y72NZQd2ZJEJj1qZWUQdWp0TiU8P3+vj2Zddo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12fb25d2-6b75-4320-8c99-08dd87eae13d
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 13:28:22.9027
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Oq/XKkiKAeC+2upckb+equZWgbhMAMs7ol4gYCSKToxVXdSpTmIhsdPi7IWFfvvu2cx3JcHCEYzIXVVc7myE8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7159
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
- definitions=main-2504300095
-X-Proofpoint-GUID: voIpZ3q3yumtjFnmhHf7CJULJ6bSSlsb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA5NSBTYWx0ZWRfX2ZS1lso7QOtU DiFcpqDAqPliNYgGFLVqAXdekcaJJiUXTHxKQ7GWQjUaM8bnKSNeSAndx7oY/SlBrOLrAqbwqYx QTLDDlpsKRmRbxn6Poaq+oTiejeqeUGELEVA2xhgmObbHK9hq97cQCU2Xtwh4UDaAKgKdKqOl3m
- aG1+Y10z7DN/bzPWGpq8+QFqa15NvGwPGgPizEReVdNwEtTX3LmRQEq/aQ+2rEPwPleQJQiZkvu Nyyufp5xeYTV8eb80aY4Bv2r5tRVPmhpJg3wghVWAkViNH5EbwdKamnKIiClTW79pWc/uqiEm4G pY5kVYzGNWbdigjP+dVCW4opoHybH6vv+WgjIhe2t/iAiV05+2ETUw2G2Y9PLdAnvXYs5/j36/O
- F6R1BuvtxJSJdnTKYYeTqZ/0hU26ROYPwuCA/5R2Pd3ZnAkP9F+s/2I5RuOVFlNDeiwlcxgp
-X-Authority-Analysis: v=2.4 cv=ZuHtK87G c=1 sm=1 tr=0 ts=6812257b b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=SEtKQCMJAAAA:8 a=I4OJOmu-QpTY69J4ndEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=kyTSok1ft720jgMXX5-3:22 cc=ntf awl=host:13129
-X-Proofpoint-ORIG-GUID: voIpZ3q3yumtjFnmhHf7CJULJ6bSSlsb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430040429.2743921-7-neil@brown.name>
 
-On 4/29/25 7:22 PM, Trond Myklebust wrote:
-> On Tue, 2025-04-29 at 12:14 -0400, Chuck Lever wrote:
->> On 4/27/25 7:01 PM, trondmy@kernel.org wrote:
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> The Linux client assumes that all filehandles are non-volatile for
->>> renames within the same directory (otherwise sillyrename cannot
->>> work).
->>> However, the existence of the Linux 'subtree_check' export option
->>> has
->>> meant that nfs_rename() has always assumed it needs to flush writes
->>> before attempting to rename.
->>>
->>> Since NFSv4 does allow the client to query whether or not the
->>> server
->>> exhibits this behaviour, and since knfsd does actually set the
->>> appropriate flag when 'subtree_check' is enabled on an export, it
->>> should be OK to optimise away the write flushing behaviour in the
->>> cases
->>> where it is clearly not needed.
->>
->> No objection to the high level goal, seems like a sensible change.
->>
->> So NFSv3 still has the flushing requirement, but NFSv4 can disable
->> that
->> requirement as long as the server in question asserts
->> FH4_VOLATILE_ANY
->> and FH4_VOL_RENAME, correct?
->>
->> I'm wondering how confident we are that other server implementations
->> behave reasonably. Yes, they are broken if they don't behave, but
->> there
->> is still risk of introducing a regression.
+Hi Neil,
+
+With this change a simple write to a file (using pNFS flexfiles)
+triggers this patch's nfs_close_local_fh WARN_ON:
+
+[  261.589009] ------------[ cut here ]------------
+[  261.589016] WARNING: CPU: 2 PID: 7220 at fs/nfs_common/nfslocalio.c:344 nfs_close_local_fh+0x1dd/0x1f0 [nfs_localio]
+[  261.589045] Modules linked in: tls nfsv3 nfs_layout_flexfiles rpcsec_gss_krb5 nfsv4 dns_resolver nfsidmap nfsd auth_rpcgss nfs_acl nft_nat nft_ct nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_masq nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 veth bridge stp llc nfs lockd grace nfs_localio sunrpc netfs nf_tables nfnetlink overlay rfkill vsock_loopback vmw_vsock_virtio_transport_common vmw_vsock_vmci_transport vsock vfat fat intel_rapl_msr intel_rapl_common kvm_intel kvm nd_pmem dax_pmem nd_e820 pktcdvd libnvdimm irqbypass ppdev crct10dif_pclmul crc32_pclmul vmw_balloon i2c_piix4 ghash_clmulni_intel vmw_vmci pcspkr joydev i2c_smbus rapl parport_pc parport xfs sr_mod sd_mod cdrom sg ata_generic ata_piix mptspi crc32c_intel libata scsi_transport_spi serio_raw mptscsih vmxnet3 mptbase dm_mod fuse [last unloaded: sunrpc]
+[  261.589403] CPU: 2 UID: 0 PID: 7220 Comm: dd Kdump: loaded Tainted: G        W         -------  ---  6.12.24.0.hs.62.snitm+ #15
+[  261.589414] Tainted: [W]=WARN
+[  261.589417] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 12/12/2018
+[  261.589423] RIP: 0010:nfs_close_local_fh+0x1dd/0x1f0 [nfs_localio]
+[  261.589440] Code: e2 ba 02 00 00 00 48 89 ee 4c 89 e7 e8 9c 9f cb e1 48 8b 43 20 48 85 c0 75 e2 48 89 ee 4c 89 e7 e8 28 a7 cb e1 e9 6f ff ff ff <0f> 0b e8 bc 36 d0 e1 e9 63 ff ff ff e8 02 86 8a e2 66 90 90 90 90
+[  261.589447] RSP: 0018:ffffb0fac4d5bc98 EFLAGS: 00010282
+[  261.589455] RAX: 0000000000000000 RBX: ffff94354d5f0270 RCX: 0000000000000002
+[  261.589461] RDX: ffff943544085040 RSI: ffff9435455559e8 RDI: ffff943544085040
+[  261.589466] RBP: ffff943544199e80 R08: 58132c4e3594ffff R09: fffffffae10a4a38
+[  261.589472] R10: 0000000000000001 R11: 000000000000000f R12: ffff94354baae380
+[  261.589477] R13: ffff94354baae3c0 R14: ffff943546916d08 R15: ffff943546916cf0
+[  261.589499] FS:  00007fd6724ff580(0000) GS:ffff943773b00000(0000) knlGS:0000000000000000
+[  261.589512] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  261.589518] CR2: 00007fdade5900a8 CR3: 000000010f3a8002 CR4: 00000000001726f0
+[  261.589539] Call Trace:
+[  261.589545]  <TASK>
+[  261.589556]  ff_layout_free_mirror+0x78/0xc0 [nfs_layout_flexfiles]
+[  261.589575]  ff_layout_free_layoutreturn+0x64/0x110 [nfs_layout_flexfiles]
+[  261.589594]  pnfs_roc_release+0x7e/0x140 [nfsv4]
+[  261.589830]  nfs4_free_closedata+0x6c/0x80 [nfsv4]
+[  261.590013]  rpc_free_task+0x36/0x60 [sunrpc]
+[  261.590209]  nfs4_do_close+0x269/0x330 [nfsv4]
+[  261.590398]  __put_nfs_open_context+0xcb/0x150 [nfs]
+[  261.590546]  nfs_file_release+0x39/0x60 [nfs]
+[  261.590700]  __fput+0xdc/0x2a0
+[  261.590713]  __x64_sys_close+0x3e/0x70
+[  261.590723]  do_syscall_64+0x7b/0x160
+[  261.590736]  ? clear_bhb_loop+0x45/0xa0
+[  261.590744]  ? clear_bhb_loop+0x45/0xa0
+[  261.590769]  ? clear_bhb_loop+0x45/0xa0
+[  261.590777]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  261.590789] RIP: 0033:0x7fd671f2ebf8
+[  261.590796] Code: 01 02 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 f3 0f 1e fa 48 8d 05 65 6b 2a 00 8b 00 85 c0 75 17 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 40 c3 0f 1f 80 00 00 00 00 53 89 fb 48 83 ec
+[  261.590803] RSP: 002b:00007ffd9826ea88 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+[  261.590812] RAX: ffffffffffffffda RBX: 0000558223012120 RCX: 00007fd671f2ebf8
+[  261.590819] RDX: 0000000000100000 RSI: 0000000000000000 RDI: 0000000000000001
+[  261.590826] RBP: 0000000000000001 R08: 00000000ffffffff R09: 0000000000000000
+[  261.590834] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000001
+[  261.590843] R13: 0000000000000000 R14: 0000000000000000 R15: 00007fd67232d000
+[  261.590858]  </TASK>
+[  261.590864] ---[ end trace 0000000000000000 ]---
+
+After this last patch is applied, in nfs_close_local_fh() you have:
+
+        /* tell nfs_uuid_put() to wait for us */
+        RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+        spin_unlock(&nfs_uuid->lock);
+        rcu_read_unlock();
+
+        ro_nf = xchg(&nfl->ro_file, RCU_INITIALIZER(NULL));
+        rw_nf = xchg(&nfl->rw_file, RCU_INITIALIZER(NULL));
+        nfs_to_nfsd_file_put_local(ro_nf);
+        nfs_to_nfsd_file_put_local(rw_nf);
+
+        rcu_read_lock();
+        if (WARN_ON(rcu_access_pointer(nfl->nfs_uuid) != nfs_uuid)) {
+                rcu_read_unlock();
+                return;
+        }
+        /* Remove nfl from nfs_uuid->files list and signal nfs_uuid_put()
+         * that we are done.
+         */
+        spin_lock(&nfs_uuid->lock);
+        list_del_init(&nfl->list);
+        wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
+        spin_unlock(&nfs_uuid->lock);
+        rcu_read_unlock();
+}
+
+this is bogus right?:
+
+RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+...
+if (WARN_ON(rcu_access_pointer(nfl->nfs_uuid) != nfs_uuid))
+
+not sure what you were trying to do, maybe stale debugging? [but you didn't test so... ;) ]
+
+Thanks,
+Mike
+
+
+On Wed, Apr 30, 2025 at 02:01:16PM +1000, NeilBrown wrote:
+> nfs_uuid_put() and nfs_close_local_fh() can race if a "struct
+> nfs_file_localio" is released at the same time that nfsd calls
+> nfs_localio_invalidate_clients().
 > 
-> I'd prefer to deal with that through other means if it turns out that
-> we have to. The problem we have right now is that we are forcing a
-> writeback of the entire file while holding several directory mutexes
-> (as well as the filesystem-global s_vfs_rename_mutex). That's terrible
-> for performance and scalability.
+> It is important that neither of these functions completes after the
+> other has started looking at a given nfs_file_localio and before it
+> finishes.
 > 
->>
->>
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>> ---
->>>  fs/nfs/client.c           |  2 ++
->>>  fs/nfs/dir.c              | 15 ++++++++++++++-
->>>  include/linux/nfs_fs_sb.h |  6 ++++++
->>>  3 files changed, 22 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
->>> index 2115c1189c2d..6d63b958c4bb 100644
->>> --- a/fs/nfs/client.c
->>> +++ b/fs/nfs/client.c
->>> @@ -1105,6 +1105,8 @@ struct nfs_server *nfs_create_server(struct
->>> fs_context *fc)
->>>  		if (server->namelen == 0 || server->namelen >
->>> NFS2_MAXNAMLEN)
->>>  			server->namelen = NFS2_MAXNAMLEN;
->>>  	}
->>> +	/* Linux 'subtree_check' borkenness mandates this setting
->>> */
->>
->> Assuming you are going to respin this patch to deal with the build
->> bot
->> warnings, can you make this comment more useful? "borkenness" sounds
->> like you are dealing with a server bug here, but that's not really
->> the case. subtree_check is working as designed: it requires the extra
->> flushing. The no_subtree_check case does not, IIUC.
+> If nfs_uuid_put() exits while nfs_close_local_fh() is closing ro_file
+> and rw_file it could return to __nfd_file_cache_purge() while some files
+> are still referenced so the purge may not succeed.
 > 
-> subtree checking is working as designed, but that doesn't change the
-> fact that it is a violation of the NFSv3 protocol. You can't to change
-> the filehandle in mid flight in any stateless protocol, because that
-> will break applications.
-
-My point is that the comment you add in this patch, although whimsical,
-is not terribly illuminating. A more expansive comment (with the detail
-you provide above) would be helpful.
-
-But if subtree_check is not compliant with RFC 1813, perhaps we should
-consider finally deprecating and removing it. At least exports(5) should
-mention the spec compliance issue, but my copy of exports(5) does not.
-
-
->> It would be better to explain this need strictly in terms of file
->> handle
->> volatility, no?
->>
->>
->>> +	server->fh_expire_type = NFS_FH_VOL_RENAME;
->>>  
->>>  	if (!(fattr->valid & NFS_ATTR_FATTR)) {
->>>  		error = ctx->nfs_mod->rpc_ops->getattr(server,
->>> ctx->mntfh,
->>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->>> index bd23fc736b39..d0e0b435a843 100644
->>> --- a/fs/nfs/dir.c
->>> +++ b/fs/nfs/dir.c
->>> @@ -2676,6 +2676,18 @@ nfs_unblock_rename(struct rpc_task *task,
->>> struct nfs_renamedata *data)
->>>  	unblock_revalidate(new_dentry);
->>>  }
->>>  
->>> +static bool nfs_rename_is_unsafe_cross_dir(struct dentry
->>> *old_dentry,
->>> +					   struct dentry
->>> *new_dentry)
->>> +{
->>> +	struct nfs_server *server = NFS_SB(old_dentry->d_sb);
->>> +
->>> +	if (old_dentry->d_parent != new_dentry->d_parent)
->>> +		return false;
->>> +	if (server->fh_expire_type & NFS_FH_RENAME_UNSAFE)
->>> +		return !(server->fh_expire_type &
->>> NFS_FH_NOEXPIRE_WITH_OPEN);
->>> +	return true;
->>> +}
->>> +
->>>  /*
->>>   * RENAME
->>>   * FIXME: Some nfsds, like the Linux user space nfsd, may generate
->>> a
->>> @@ -2763,7 +2775,8 @@ int nfs_rename(struct mnt_idmap *idmap,
->>> struct inode *old_dir,
->>>  
->>>  	}
->>>  
->>> -	if (S_ISREG(old_inode->i_mode))
->>> +	if (S_ISREG(old_inode->i_mode) &&
->>> +	    nfs_rename_is_unsafe_cross_dir(old_dentry,
->>> new_dentry))
->>>  		nfs_sync_inode(old_inode);
->>>  	task = nfs_async_rename(old_dir, new_dir, old_dentry,
->>> new_dentry,
->>>  				must_unblock ? nfs_unblock_rename
->>> : NULL);
->>> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
->>> index 71319637a84e..6732c7e04d19 100644
->>> --- a/include/linux/nfs_fs_sb.h
->>> +++ b/include/linux/nfs_fs_sb.h
->>> @@ -236,6 +236,12 @@ struct nfs_server {
->>>  	u32			acl_bitmask;	/* V4 bitmask
->>> representing the ACEs
->>>  						   that are
->>> supported on this
->>>  						   filesystem */
->>> +	/* The following #defines numerically match the NFSv4
->>> equivalents */
->>> +#define NFS_FH_NOEXPIRE_WITH_OPEN (0x1)
->>> +#define NFS_FH_VOLATILE_ANY (0x2)
->>> +#define NFS_FH_VOL_MIGRATION (0x4)
->>> +#define NFS_FH_VOL_RENAME (0x8)
->>> +#define NFS_FH_RENAME_UNSAFE (NFS_FH_VOLATILE_ANY |
->>> NFS_FH_VOL_RENAME)
->>>  	u32			fh_expire_type;	/* V4
->>> bitmask representing file
->>>  						   handle
->>> volatility type for
->>>  						   this filesystem
->>> */
->>
+> If nfs_close_local_fh() exits while nfsd_uuid_put() is still closing the
+> files then the "struct nfs_file_localio" could be freed while
+> nfsd_uuid_put() is still looking at it.  This side is currently handled
+> by copying the pointers out of ro_file and rw_file before deleting from
+> the list in nfsd_uuid.  We need to preserve this while ensuring that
+> nfsd_uuid_put() does wait for nfs_close_local_fh().
 > 
-
-
--- 
-Chuck Lever
+> This patch use nfl->uuid and nfl->list to provide the required
+> interlock.
+> 
+> nfs_uuid_put() removes the nfs_file_localio from the list, then drops
+> locks and puts the two files, then reclaims the spinlock and sets
+> ->nfs_uuid to NULL.
+> 
+> nfs_close_local_fh() operates in the reverse order, setting ->nfs_uuid
+> to NULL, then closing the files, then unlinking from the list.
+> 
+> If nfs_uuid_put() finds that ->nfs_uuid is already NULL, it waits for
+> the nfs_file_localio to be removed from the list.  If
+> nfs_close_local_fh() find that it has already been unlinked it waits for
+> ->nfs_uuid to become NULL.  This ensure that one of the two tries to
+> close the files, but they each waits for the other.
+> 
+> As nfs_uuid_put() is making the list empty, change from a
+> list_for_each_safe loop to a while that always takes the first entry.
+> This makes the intent more clear.
+> Also don't move the list to a temporary local list as this would defeat
+> the guarantees required for the interlock.
+> 
+> Fixes: 86e00412254a ("nfs: cache all open LOCALIO nfsd_file(s) in client")
+> Signed-off-by: NeilBrown <neil@brown.name>
+> ---
+>  fs/nfs_common/nfslocalio.c | 83 +++++++++++++++++++++++++++-----------
+>  1 file changed, 59 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+> index abf1591a3b7f..0aaf0abeb110 100644
+> --- a/fs/nfs_common/nfslocalio.c
+> +++ b/fs/nfs_common/nfslocalio.c
+> @@ -151,8 +151,7 @@ EXPORT_SYMBOL_GPL(nfs_localio_enable_client);
+>   */
+>  static bool nfs_uuid_put(nfs_uuid_t *nfs_uuid)
+>  {
+> -	LIST_HEAD(local_files);
+> -	struct nfs_file_localio *nfl, *tmp;
+> +	struct nfs_file_localio *nfl;
+>  
+>  	spin_lock(&nfs_uuid->lock);
+>  	if (unlikely(!rcu_access_pointer(nfs_uuid->net))) {
+> @@ -166,35 +165,47 @@ static bool nfs_uuid_put(nfs_uuid_t *nfs_uuid)
+>  		nfs_uuid->dom = NULL;
+>  	}
+>  
+> -	list_splice_init(&nfs_uuid->files, &local_files);
+> -	spin_unlock(&nfs_uuid->lock);
+> -
+>  	/* Walk list of files and ensure their last references dropped */
+> -	list_for_each_entry_safe(nfl, tmp, &local_files, list) {
+> +
+> +	while ((nfl = list_first_entry_or_null(&nfs_uuid->files,
+> +					       struct nfs_file_localio,
+> +					       list)) != NULL) {
+>  		struct nfsd_file __rcu *ro_nf;
+>  		struct nfsd_file __rcu *rw_nf;
+>  
+> +		/* If nfs_uuid is already NULL, nfs_close_local_fh is
+> +		 * closing and we must wait, else we unlink and close.
+> +		 */
+> +		if (nfl->nfs_uuid == NULL) {
+> +			/* nfs_close_local_fh() is doing the
+> +			 * close and we must wait. until it unlinks
+> +			 */
+> +			wait_var_event_spinlock(nfl,
+> +						list_first_entry_or_null(
+> +							&nfs_uuid->files,
+> +							struct nfs_file_localio,
+> +							list) != nfl,
+> +						&nfs_uuid->lock);
+> +			continue;
+> +		}
+> +
+>  		ro_nf = xchg(&nfl->ro_file, RCU_INITIALIZER(NULL));
+>  		rw_nf = xchg(&nfl->rw_file, RCU_INITIALIZER(NULL));
+>  
+> -		spin_lock(&nfs_uuid->lock);
+>  		/* Remove nfl from nfs_uuid->files list */
+>  		list_del_init(&nfl->list);
+>  		spin_unlock(&nfs_uuid->lock);
+> +		nfs_to_nfsd_file_put_local(ro_nf);
+> +		nfs_to_nfsd_file_put_local(rw_nf);
+> +		cond_resched();
+> +		spin_lock(&nfs_uuid->lock);
+>  		/* Now we can allow racing nfs_close_local_fh() to
+>  		 * skip the locking.
+>  		 */
+>  		RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+> -
+> -		nfs_to_nfsd_file_put_local(ro_nf);
+> -		nfs_to_nfsd_file_put_local(rw_nf);
+> -
+> -		cond_resched();
+> +		wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
+>  	}
+>  
+> -	spin_lock(&nfs_uuid->lock);
+> -	BUG_ON(!list_empty(&nfs_uuid->files));
+> -
+>  	/* Remove client from nn->local_clients */
+>  	if (nfs_uuid->list_lock) {
+>  		spin_lock(nfs_uuid->list_lock);
+> @@ -302,22 +313,46 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
+>  		return;
+>  	}
+>  
+> +	spin_lock(&nfs_uuid->lock);
+> +	if (!rcu_access_pointer(nfl->nfs_uuid)) {
+> +		/* nfs_uuid_put has finished here */
+> +		spin_unlock(&nfs_uuid->lock);
+> +		rcu_read_unlock();
+> +		return;
+> +	}
+> +	if (list_empty(&nfs_uuid->files)) {
+> +		/* nfs_uuid_put() has started closing files, wait for it
+> +		 * to finished
+> +		 */
+> +		spin_unlock(&nfs_uuid->lock);
+> +		rcu_read_unlock();
+> +		wait_var_event(&nfl->nfs_uuid,
+> +			       rcu_access_pointer(nfl->nfs_uuid) == NULL);
+> +		return;
+> +	}
+> +	/* tell nfs_uuid_put() to wait for us */
+> +	RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+> +	spin_unlock(&nfs_uuid->lock);
+> +	rcu_read_unlock();
+> +
+>  	ro_nf = xchg(&nfl->ro_file, RCU_INITIALIZER(NULL));
+>  	rw_nf = xchg(&nfl->rw_file, RCU_INITIALIZER(NULL));
+> +	nfs_to_nfsd_file_put_local(ro_nf);
+> +	nfs_to_nfsd_file_put_local(rw_nf);
+>  
+> +	rcu_read_lock();
+> +	if (WARN_ON(rcu_access_pointer(nfl->nfs_uuid) != nfs_uuid)) {
+> +		rcu_read_unlock();
+> +		return;
+> +	}
+> +	/* Remove nfl from nfs_uuid->files list and signal nfs_uuid_put()
+> +	 * that we are done.
+> +	 */
+>  	spin_lock(&nfs_uuid->lock);
+> -	/* Remove nfl from nfs_uuid->files list */
+>  	list_del_init(&nfl->list);
+> +	wake_up_var_locked(&nfl->nfs_uuid, &nfs_uuid->lock);
+>  	spin_unlock(&nfs_uuid->lock);
+>  	rcu_read_unlock();
+> -	/* Now we can allow racing nfs_close_local_fh() to
+> -	 * skip the locking.
+> -	 */
+> -	RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+> -
+> -	nfs_to_nfsd_file_put_local(ro_nf);
+> -	nfs_to_nfsd_file_put_local(rw_nf);
+> -	return;
+>  }
+>  EXPORT_SYMBOL_GPL(nfs_close_local_fh);
+>  
+> -- 
+> 2.49.0
+> 
+> 
 
