@@ -1,92 +1,105 @@
-Return-Path: <linux-nfs+bounces-11370-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11371-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33876AA4222
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 07:11:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76000AA4A08
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 13:33:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C8564C4282
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 05:11:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E5BD21C06B2C
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 11:32:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82FAC1D7989;
-	Wed, 30 Apr 2025 05:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A96150997;
+	Wed, 30 Apr 2025 11:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cx7sg5Y4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15EEC2;
-	Wed, 30 Apr 2025 05:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF4E20C00C
+	for <linux-nfs@vger.kernel.org>; Wed, 30 Apr 2025 11:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745989885; cv=none; b=sww/BWpVh0KOsbxmIyZRQSlvMwmyjbM08f4vrje4v4AX+XKUzA8iXavTPYaOnk1zIHp6duqRsi3xSlPVG//Iw60Kej8SuD5MwHR6tIbJytILj93rE09S9EHXriN5bzheYX+p9X8rPWqCNbtGgAluKIZxC/MiDKmo+OFIOtSzkB4=
+	t=1746012523; cv=none; b=gYSR1OQCsitcwyYXfghVPGfApqyil5FdwKmQX42bUEbqwEbBJTy5GOeZaitT/y+UlB5vxmxl0G1iokDETQSyQcwPqYb/x9o2Xh8PKP/BwTnlRmI9Fi43eTVWbvPtsGAhR/mxrFk+qgqX+hKOQ1WIr0JyHVaHuC58/pg6iV02z3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745989885; c=relaxed/simple;
-	bh=GKAyAO70P54rBl2U+yYWKNPUj74H/O93+u3SMpe7dZg=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=lfvHVNMPki1MghHOM/qaVw0Uhefe/4tnBkgY5Clrbemtq8BLmua/8p5ZVL2VQeQBsRaGBtzh+u8qf4xuM/Su0X03sa1wgoQN8g/EADBL+hXo13eQvwsO1a5cixfvdxQNRUudlLPh++frEQ83RwLvlFGw/SIW0M9dNJRT9DAYH3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1u9zj5-005J4L-MS;
-	Wed, 30 Apr 2025 05:11:19 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1746012523; c=relaxed/simple;
+	bh=LnmsUGrRKAfLHu3WqLJRNX4A/bp81dWr4LVO7Mn3UmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ad62bac5WQY/8PGNTFSdnJp8kchWLvCFCcTfk3nTA0z34OuGUWo8M5RgjeNJ3iWr/Srd7JLo3Uydb6Lbok4GrKvbG9gdo17hIeKklItcp6oC9nIyxbyu67kBY28FkUQTNzpw5TVJtd0+D87sP2/azMGUScrFO4h0B11T7VldbCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cx7sg5Y4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746012520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Bb2yr3qjCOKF//BifsiGwrCRpLka7Bd2yBDiEBASFh4=;
+	b=Cx7sg5Y4aXc2BDkXBwUKIZLop+z+42VyrG08BRW+6ir50VjtU1uJ3+mzno9KlmbfTPuP6+
+	QmR55n1UC3/kT+jx7JlAIuEbdIeE3VMvcmGIwBa7ztP8E8+daxoVEOEynZWGE0BQo5iPxE
+	XOFvh4ebYoARsamsQQ+zX68BtAfU8H4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-361-Y1U1nnEqNEC7z1QAOl4pNw-1; Wed,
+ 30 Apr 2025 07:28:36 -0400
+X-MC-Unique: Y1U1nnEqNEC7z1QAOl4pNw-1
+X-Mimecast-MFC-AGG-ID: Y1U1nnEqNEC7z1QAOl4pNw_1746012515
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C06B119560A7;
+	Wed, 30 Apr 2025 11:28:35 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.88.153])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F91119560AF;
+	Wed, 30 Apr 2025 11:28:35 +0000 (UTC)
+Received: from aion.. (localhost [IPv6:::1])
+	by aion.redhat.com (Postfix) with ESMTP id 75F37344E3F;
+	Wed, 30 Apr 2025 07:12:29 -0400 (EDT)
+From: Scott Mayhew <smayhew@redhat.com>
+To: trondmy@kernel.org,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Don't check for OPEN feature support in v4.1
+Date: Wed, 30 Apr 2025 07:12:29 -0400
+Message-ID: <20250430111229.4114991-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: cel@kernel.org
-Cc: "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Anna Schumaker" <anna@kernel.org>,
- linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
- "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 00/14] Allocate payload arrays dynamically
-In-reply-to: <20250428193702.5186-1-cel@kernel.org>
-References: <20250428193702.5186-1-cel@kernel.org>
-Date: Wed, 30 Apr 2025 15:11:19 +1000
-Message-id: <174598987938.500591.3903811314689386843@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, 29 Apr 2025, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
-> need to do something clever with the payload arrays embedded in
-> struct svc_rqst and elsewhere.
-> 
-> My preference is to keep these arrays allocated all the time because
-> allocating them on demand increases the risk of a memory allocation
-> failure during a large I/O. This is a quick-and-dirty approach that
-> might be replaced once NFSD is converted to use large folios.
-> 
-> The downside of this design choice is that it pins a few pages per
-> NFSD thread (and that's the current situation already). But note
-> that because RPCSVC_MAXPAGES is 259, each array is just over a page
-> in size, making the allocation waste quite a bit of memory beyond
-> the end of the array due to power-of-2 allocator round up. This gets
-> worse as the MAXPAGES value is doubled or quadrupled.
+fattr4_open_arguments is a v4.2 recommended attribute, so we shouldn't
+be sending it to v4.1 servers.
 
-I wonder if we should special-case those 3 extra.
-We don't need any for rq_vec and only need 2 (I think) for rq_bvec.
+Fixes: cb78f9b7d0c0 ("nfs: fix the fetch of FATTR4_OPEN_ARGUMENTS")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ fs/nfs/nfs4proc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-We could use the arrays only for payload and have dedicated
-page/vec/bvec for request, reply, read-padding.
-Or maybe we could not allow read requests that result in the extra page
-due to alignment needs.  Would that be much cost?
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 970f28dbf253..2eb2d750a5f1 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3967,8 +3967,9 @@ static int _nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *f
+ 		     FATTR4_WORD0_CASE_INSENSITIVE |
+ 		     FATTR4_WORD0_CASE_PRESERVING;
+ 	if (minorversion)
+-		bitmask[2] = FATTR4_WORD2_SUPPATTR_EXCLCREAT |
+-			     FATTR4_WORD2_OPEN_ARGUMENTS;
++		bitmask[2] = FATTR4_WORD2_SUPPATTR_EXCLCREAT;
++	if (minorversion > 1)
++		bitmask[2] |= FATTR4_WORD2_OPEN_ARGUMENTS;
+ 
+ 	status = nfs4_call_sync(server->client, server, &msg, &args.seq_args, &res.seq_res, 0);
+ 	if (status == 0) {
+-- 
+2.48.1
 
-Apart from the one issue I noted separately, I think the series looks
-good.
-
-Reviewed-by: NeilBrown <neil@brown.name>
-
-Thanks,
-NeilBrown
 
