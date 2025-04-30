@@ -1,41 +1,41 @@
-Return-Path: <linux-nfs+bounces-11369-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11370-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26654AA4205
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 06:54:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33876AA4222
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 07:11:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F31909C0033
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 04:53:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C8564C4282
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Apr 2025 05:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BD671B21BF;
-	Wed, 30 Apr 2025 04:54:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82FAC1D7989;
+	Wed, 30 Apr 2025 05:11:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B3B10F1;
-	Wed, 30 Apr 2025 04:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15EEC2;
+	Wed, 30 Apr 2025 05:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745988844; cv=none; b=Y/Ho74c1uDo8GN18ELc1EVUUDFFXC1yd9HSPt4K+bapGNOiDcOH5xBsZrUzJY2yGTo6u+AFPMl8cUoFGEJwvESFOSaLayOPMSER05FIQDm2lN4iszopZiPQP18dInFCts8gVFLWCN/VGrxNJgb+Qp+duTix4PVQThGoV2mA+HSw=
+	t=1745989885; cv=none; b=sww/BWpVh0KOsbxmIyZRQSlvMwmyjbM08f4vrje4v4AX+XKUzA8iXavTPYaOnk1zIHp6duqRsi3xSlPVG//Iw60Kej8SuD5MwHR6tIbJytILj93rE09S9EHXriN5bzheYX+p9X8rPWqCNbtGgAluKIZxC/MiDKmo+OFIOtSzkB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745988844; c=relaxed/simple;
-	bh=DP/TCRvjNddrF0jB+aH3+vJQ4re7mA8SAztgvsnODac=;
+	s=arc-20240116; t=1745989885; c=relaxed/simple;
+	bh=GKAyAO70P54rBl2U+yYWKNPUj74H/O93+u3SMpe7dZg=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=D0qS0jAtyg+ZgUfvDujRySrMgmBdf8aWrfJNPXCmtsuY7VlOWcZNGYQ5Y27ytf8/RMiSW3zN7DKzt8bpaVAZXMKweuxHG7VTdgrP9zLkMEKOqX/5kY1eQBG2NFz1r1wmjjaBKxQl9F6xrfduiT1+qX0H05zKsGiCL/p7knKvoEc=
+	 References:Date:Message-id; b=lfvHVNMPki1MghHOM/qaVw0Uhefe/4tnBkgY5Clrbemtq8BLmua/8p5ZVL2VQeQBsRaGBtzh+u8qf4xuM/Su0X03sa1wgoQN8g/EADBL+hXo13eQvwsO1a5cixfvdxQNRUudlLPh++frEQ83RwLvlFGw/SIW0M9dNJRT9DAYH3I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1u9zSH-005Hxf-D2;
-	Wed, 30 Apr 2025 04:53:57 +0000
+	id 1u9zj5-005J4L-MS;
+	Wed, 30 Apr 2025 05:11:19 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -49,77 +49,44 @@ Cc: "Jeff Layton" <jlayton@kernel.org>,
  "Tom Talpey" <tom@talpey.com>, "Anna Schumaker" <anna@kernel.org>,
  linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
  "Chuck Lever" <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 04/14] sunrpc: Replace the rq_pages array with
- dynamically-allocated memory
-In-reply-to: <20250428193702.5186-5-cel@kernel.org>
-References: <20250428193702.5186-1-cel@kernel.org>,
- <20250428193702.5186-5-cel@kernel.org>
-Date: Wed, 30 Apr 2025 14:53:56 +1000
-Message-id: <174598883695.500591.9691141765386746394@noble.neil.brown.name>
+Subject: Re: [PATCH v4 00/14] Allocate payload arrays dynamically
+In-reply-to: <20250428193702.5186-1-cel@kernel.org>
+References: <20250428193702.5186-1-cel@kernel.org>
+Date: Wed, 30 Apr 2025 15:11:19 +1000
+Message-id: <174598987938.500591.3903811314689386843@noble.neil.brown.name>
 
 On Tue, 29 Apr 2025, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> As a step towards making NFSD's maximum rsize and wsize variable at
-> run-time, replace the fixed-size rq_vec[] array in struct svc_rqst
-> with a chunk of dynamically-allocated memory.
->=20
-> On a system with 8-byte pointers and 4KB pages, pahole reports that
-> the rq_pages[] array is 2080 bytes. This patch replaces that with
-> a single 8-byte pointer field.
->=20
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  include/linux/sunrpc/svc.h        |  3 ++-
->  net/sunrpc/svc.c                  | 34 ++++++++++++++++++-------------
->  net/sunrpc/svc_xprt.c             | 10 +--------
->  net/sunrpc/xprtrdma/svc_rdma_rw.c |  2 +-
->  4 files changed, 24 insertions(+), 25 deletions(-)
->=20
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index e83ac14267e8..ea3a33eec29b 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -205,7 +205,8 @@ struct svc_rqst {
->  	struct xdr_stream	rq_res_stream;
->  	struct page		*rq_scratch_page;
->  	struct xdr_buf		rq_res;
-> -	struct page		*rq_pages[RPCSVC_MAXPAGES + 1];
-> +	unsigned long		rq_maxpages;	/* num of entries in rq_pages */
-> +	struct page *		*rq_pages;
->  	struct page *		*rq_respages;	/* points into rq_pages */
->  	struct page *		*rq_next_page; /* next reply page to use */
->  	struct page *		*rq_page_end;  /* one past the last page */
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 8ce3e6b3df6a..682e11c9be36 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -636,20 +636,25 @@ svc_destroy(struct svc_serv **servp)
->  EXPORT_SYMBOL_GPL(svc_destroy);
-> =20
->  static bool
-> -svc_init_buffer(struct svc_rqst *rqstp, unsigned int size, int node)
-> +svc_init_buffer(struct svc_rqst *rqstp, const struct svc_serv *serv, int n=
-ode)
->  {
-> -	unsigned long pages, ret;
-> +	unsigned long ret;
-> =20
-> -	pages =3D size / PAGE_SIZE + 1; /* extra page as we hold both request and=
- reply.
-> -				       * We assume one is at most one page
-> -				       */
-> -	WARN_ON_ONCE(pages > RPCSVC_MAXPAGES);
-> -	if (pages > RPCSVC_MAXPAGES)
-> -		pages =3D RPCSVC_MAXPAGES;
-> +	/* Add an extra page, as rq_pages holds both request and reply.
-> +	 * We assume one of those is at most one page.
-> +	 */
-> +	rqstp->rq_maxpages =3D svc_serv_maxpages(serv) + 1;
+> 
+> In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
+> need to do something clever with the payload arrays embedded in
+> struct svc_rqst and elsewhere.
+> 
+> My preference is to keep these arrays allocated all the time because
+> allocating them on demand increases the risk of a memory allocation
+> failure during a large I/O. This is a quick-and-dirty approach that
+> might be replaced once NFSD is converted to use large folios.
+> 
+> The downside of this design choice is that it pins a few pages per
+> NFSD thread (and that's the current situation already). But note
+> that because RPCSVC_MAXPAGES is 259, each array is just over a page
+> in size, making the allocation waste quite a bit of memory beyond
+> the end of the array due to power-of-2 allocator round up. This gets
+> worse as the MAXPAGES value is doubled or quadrupled.
 
-The calculation in svc_serv_maxpages() already allows for both request
-and reply.  I think the "+ 1" here is wrong.
+I wonder if we should special-case those 3 extra.
+We don't need any for rq_vec and only need 2 (I think) for rq_bvec.
 
+We could use the arrays only for payload and have dedicated
+page/vec/bvec for request, reply, read-padding.
+Or maybe we could not allow read requests that result in the extra page
+due to alignment needs.  Would that be much cost?
+
+Apart from the one issue I noted separately, I think the series looks
+good.
+
+Reviewed-by: NeilBrown <neil@brown.name>
+
+Thanks,
 NeilBrown
 
