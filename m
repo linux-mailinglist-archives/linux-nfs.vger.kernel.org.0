@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-11429-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11430-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BC90AA82C2
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:30:33 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C25AA82C5
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:32:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B61694603AE
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:30:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 395683BB403
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAAE2266577;
-	Sat,  3 May 2025 20:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C105B1922EE;
+	Sat,  3 May 2025 20:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMQHcEWz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y/2Jq69Y"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31E1CD0C;
-	Sat,  3 May 2025 20:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952A0C13D;
+	Sat,  3 May 2025 20:32:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746304219; cv=none; b=k0kfOCCn7zJ5pisgloFkL03rUkjyjKPD4iBsmNJhToRne3cfjXARZFP7P9tHanguAAk5eGOXXGwcDRThu3JG4IP/ZgqUrfhIL+lh1e4p2Ig/K3krxKH/p7YIfJReoUY1qSUyV614xRhZNc0h0mAQebGrmYqlt3MClDkhgBcEj0Y=
+	t=1746304323; cv=none; b=VwtfnX6N8V7VSq3Vu3ULJ+21DJkR2G02pIGBlYpFTX+PUj2+1LPb0+Sd0Hymfn1/TLMe3vMKhBKUFpkgpa/LdHnfbp8fH8CQ/zl0l2QLCMgnCHDWFfCsscRsEejGqBjnkqTXNHSQWIGMztBrp+dctZmjkNxyMaDzT9bCmFPViAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746304219; c=relaxed/simple;
-	bh=r1R1aZvnHmUWjHguwxH94EAYeb6C746edb+gR82Is00=;
+	s=arc-20240116; t=1746304323; c=relaxed/simple;
+	bh=FQiJqgSG8qAM+9sUPxfkxSPVQGVVcWpx84h6AZ01BZA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WHsouBhwDJlNtq0k+k8iMWPZ0SPZFdNrqaufX4+t2Vf6NMg3S/p59HvFhu7+WAISYHyfD8FSHoyLbJefKMUyjo89E3JcOLms9FCwLZKn68DsTRuPZ+4JxpsGa2gw81v7mu0SmlhOfY7WMzAEF3gXlB8QWtpdA5bplBiJQwuih30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMQHcEWz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47262C4CEE3;
-	Sat,  3 May 2025 20:30:18 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IiI/iqqKbw0eODFvGYXtXDDL/WAxgBzcAi/9kxDZa/uFoD/Uks8INy9rCTdmQ/xOVS/8JD1tQC4eAPkLEOGFgrV3dSWjVQGXhTJAY89rKyHMZlaAGerkecayEVmakkN132VAp1TFDbJpIXdfPIFX5Z+KhhMy0Kf3dhdQfEGV4TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y/2Jq69Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A7FAC4CEE3;
+	Sat,  3 May 2025 20:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746304219;
-	bh=r1R1aZvnHmUWjHguwxH94EAYeb6C746edb+gR82Is00=;
+	s=k20201202; t=1746304323;
+	bh=FQiJqgSG8qAM+9sUPxfkxSPVQGVVcWpx84h6AZ01BZA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YMQHcEWzOCNl5gtxjkopIwHs0/Ksdi95kdT3jhdn5ZKP1YtGUZyvFhGSp7SJ4OVNg
-	 O2zMaOSR6pRaKbagMtZMvCZzbiiuLzxvrcBowP6MfzMOesh4WylmWfoz9HfKjLsQ7O
-	 fWAvlQgov0GLo777Emv0ceyYImghnKy1DG6hqlE8QgKRVIjjY7aw9bs47SST1Wrgxm
-	 QIbUboNbWQwilEcqbN/owQlxx1xvJRxp0O7ntrYxt5hMIg3MCg0GpdnzoKRbeE5PSs
-	 MR8mSUONIYGrLyqoY5sc47gXPLiCITYTu/eOpxMSWh4pcrT4SokgLNRbkJYlAxWcOv
-	 GVjy2ucXctkAg==
-Message-ID: <bc8ac00be01ae6785092db9dbeccaa9f4c7ed0e6.camel@kernel.org>
-Subject: Re: [PATCH v4 07/18] nfsd: add tracepoint to nfsd_link()
+	b=Y/2Jq69YM0dCs5/vixoRHjihR0DgBYeM0NyQj4zoS/AhZTYhemVm6+AQwFW4njBj2
+	 rPaqUraVGjL4EMAleiuEU12OJP+pFVP6CCOdXoa2renvREgewq0D2VkN8xrDJ54jPH
+	 I+DSYQ04/R0mVGb6CfIv/VAi1kqhITwM/yr+ab9SA0+Y7GlG3ojWXKFeBNBiMJT74r
+	 nSrFGUe7lL5vB9UzbR1a9l4fY4riIhcdTHTc4nLK2BSnLbuNEhO0Ci5OHKHw81uC2B
+	 w5OOz+wgrKJN5jYJXvc3CgiXdSI/D9K8mrQhT0IulZMshqYTo3ZD9YoOeao8y00Xj8
+	 zNbVrnWpuRY8g==
+Message-ID: <bafc4aadc539f2575ac4135fccf8be2dfb0aebd7.camel@kernel.org>
+Subject: Re: [PATCH v4 00/18] nfsd: observability improvements
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>,  Trond Myklebust <trond.myklebust@hammerspace.com>, Anna
  Schumaker <anna@kernel.org>
-Cc: sargun@sargun.me, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sat, 03 May 2025 16:30:17 -0400
-In-Reply-To: <20250503195936.5083-8-cel@kernel.org>
+Cc: sargun@sargun.me, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  Chuck Lever <chuck.lever@oracle.com>
+Date: Sat, 03 May 2025 16:32:01 -0400
+In-Reply-To: <20250503195936.5083-1-cel@kernel.org>
 References: <20250503195936.5083-1-cel@kernel.org>
-	 <20250503195936.5083-8-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,71 +138,71 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Sat, 2025-05-03 at 15:59 -0400, cel@kernel.org wrote:
-> From: Jeff Layton <jlayton@kernel.org>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> These needed enough cosmetic changes that a v4 posting is warranted.
 >=20
 
-Looks like this one didn't get an expanded changelog?
+Thanks for the cleanups. Your changes look fine to me.
 
-
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/trace.h | 27 +++++++++++++++++++++++++++
->  fs/nfsd/vfs.c   |  2 ++
->  2 files changed, 29 insertions(+)
+> Some of these could add a few more arguments, but the basic
+> infrastructure is solid enough to run with.
 >=20
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index e347cdaaa732..acbf94cfb720 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -2471,6 +2471,33 @@ TRACE_EVENT(nfsd_vfs_symlink,
->  	)
->  );
-> =20
-> +TRACE_EVENT(nfsd_vfs_link,
-> +	TP_PROTO(
-> +		const struct svc_rqst *rqstp,
-> +		const struct svc_fh *sfhp,
-> +		const struct svc_fh *tfhp,
-> +		const char *name,
-> +		unsigned int namelen
-> +	),
-> +	TP_ARGS(rqstp, sfhp, tfhp, name, namelen),
-> +	TP_STRUCT__entry(
-> +		NFSD_TRACE_PROC_CALL_FIELDS(rqstp)
-> +		__field(u32, sfh_hash)
-> +		__field(u32, tfh_hash)
-> +		__string_len(name, name, namelen)
-> +	),
-> +	TP_fast_assign(
-> +		NFSD_TRACE_PROC_CALL_ASSIGNMENTS(rqstp);
-> +		__entry->sfh_hash =3D knfsd_fh_hash(&sfhp->fh_handle);
-> +		__entry->tfh_hash =3D knfsd_fh_hash(&tfhp->fh_handle);
-> +		__assign_str(name);
-> +	),
-> +	TP_printk("xid=3D0x%08x src_fh=3D0x%08x tgt_fh=3D0x%08x name=3D%s",
-> +		__entry->xid, __entry->sfh_hash, __entry->tfh_hash,
-> +		__get_str(name)
-> +	)
-> +);
-> +
->  #endif /* _NFSD_TRACE_H */
-> =20
->  #undef TRACE_INCLUDE_PATH
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index ecd453b260b6..30702f36db98 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1721,6 +1721,8 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
-hp,
->  	__be32		err;
->  	int		host_err;
-> =20
-> +	trace_nfsd_vfs_link(rqstp, ffhp, tfhp, name, len);
-> +
->  	err =3D fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_CREATE);
->  	if (err)
->  		goto out;
+> Changes in v4:
+> - Replace usage of __array/memcpy for capturing sockaddrs
+> - Add NFSD_TRACE_PROC_CALL macros instead of re-using SVC_RQST_ENDPOINT
+> - Const-ify tracepoint pointer arguments
+> - Rename nfsd_setattr and nfsd_lookup_dentry tracepoints to include _vfs_
+> - Restructure the new READDIR tracepoint to capture the "count" argument
+> - Add non-empty patch descriptions to silence checkpatch.pl
+> - Link to v3: https://lore.kernel.org/r/20250503-nfsd-tracepoints-v3-0-d8=
+9f445969af@kernel.org
+>=20
+> Changes in v3:
+> - move most of the tracepoints into non-version specific nfsd/vfs.c calls
+> - rename them with a nfsd_vfs_* prefix
+> - remove the dprintks in separate patches
+> - Link to v2: https://lore.kernel.org/r/20250409-nfsd-tracepoints-v2-0-cf=
+4e084fdd9c@kernel.org
+>=20
+> Changes in v2:
+> - Break tracepoints out into multiple patches
+> - Flesh out the tracepoints in these locations to display the same info
+>   as legacy dprintks.
+> - have all the tracepoints SVC_XPRT_ENDPOINT_* info
+> - update svc_xprt_dequeue tracepoint to show how long xprt was on queue
+> - Link to v1: https://lore.kernel.org/r/20250306-nfsd-tracepoints-v1-0-44=
+05bf41b95f@kernel.org
+>=20
+> Chuck Lever (2):
+>   NFSD: Use sockaddr instead of a generic array
+>   NFSD: Add a Call equivalent to the NFSD_TRACE_PROC_RES macros
+>=20
+> Jeff Layton (16):
+>   nfsd: add a tracepoint for nfsd_setattr
+>   nfsd: add a tracepoint to nfsd_lookup_dentry
+>   nfsd: add nfsd_vfs_create tracepoints
+>   nfsd: add tracepoint to nfsd_symlink
+>   nfsd: add tracepoint to nfsd_link()
+>   nfsd: add tracepoints for unlink events
+>   nfsd: add tracepoint to nfsd_rename
+>   nfsd: add tracepoint to nfsd_readdir
+>   nfsd: add tracepoint for getattr and statfs events
+>   nfsd: remove old v2/3 create path dprintks
+>   nfsd: remove old v2/3 SYMLINK dprintks
+>   nfsd: remove old LINK dprintks
+>   nfsd: remove REMOVE/RMDIR dprintks
+>   nfsd: remove dprintks for v2/3 RENAME events
+>   nfsd: remove legacy READDIR dprintks
+>   nfsd: remove legacy dprintks from GETATTR and STATFS codepaths
+>=20
+>  fs/nfsd/nfs3proc.c      |  63 +--------
+>  fs/nfsd/nfs4proc.c      |   5 +
+>  fs/nfsd/nfsproc.c       |  35 +----
+>  fs/nfsd/trace.h         | 300 ++++++++++++++++++++++++++++++++++++++--
+>  fs/nfsd/vfs.c           |  16 ++-
+>  include/trace/misc/fs.h |  21 +++
+>  6 files changed, 336 insertions(+), 104 deletions(-)
 
 --=20
 Jeff Layton <jlayton@kernel.org>
