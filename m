@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11419-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11420-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC4F1AA8281
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:02:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 398F2AA8280
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:02:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 05D5C18972D8
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:02:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1F4C17E630
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96592281519;
-	Sat,  3 May 2025 19:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F6E828153D;
+	Sat,  3 May 2025 19:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5Bmxx3V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfRo2zBR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2E128150F;
-	Sat,  3 May 2025 19:59:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26313281530;
+	Sat,  3 May 2025 19:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746302392; cv=none; b=rK1rze82t4rI6OnCgBgB94eiJFwxPGmQS7mhKcFeqxLMXaNcEe7VAPQl1OdejgS61nyOQe2bmLXhHOn9f8QAxfEnI0D09EjKQ2+3oAwK8lKVH0eIOhBF7w8s3ybZOODEWifUwKtXKoM9lNtoXQzDBNEEQ4s+VMBquPooL+2aoYM=
+	t=1746302393; cv=none; b=aX7nlEAY5sNclwGELAXK+40L3ZHlew0RAHc0ysd3oPUJ7/v1edvlQpvF16RlZsdKgfxw5452G9b2ThIOTHQ1KMejVIGoX77Vb+rGOMmS1EbZ+OJdCb/6ZXxw5eNRz4t4t/NSCUw8UwHVGxRyhybyjYIJuaW/kR0zEDEPJDlorIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746302392; c=relaxed/simple;
-	bh=ZKs0bRbmtNComB3idWcyiEEWtYkgrA5qtpbBITjrpuA=;
+	s=arc-20240116; t=1746302393; c=relaxed/simple;
+	bh=TVHo4Ecy++QVCQpnYiE4psmntUpTeyQ75KVVZClLUzw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TpYcpcwMn/pQIK2RsHxUlwrnX6Mq3DSP9mx5azeR2I7LwyvIHQUnsnBQPT+PUufYg7JnxRiuaREkGR998KkiPX9n1QZThIDyfrE/mDhu11W/jduW/CsfQ9I6HSbA211jPQS094o+qiwNowS28T1wL8MAcUhG9qMri6K6SBtoSDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5Bmxx3V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51F4C4CEF1;
-	Sat,  3 May 2025 19:59:50 +0000 (UTC)
+	 MIME-Version; b=OUaOImEI/ojtFK1UksR+ycQEJuYVwNUUdS5vR51xYUcef2b1mlUXTDMvUfLPJTueN0kKr0vdk4dZZoznk8YVn94fx1ds7nYYOxyLwUulGHKpr/Ps8WHZNJw+Qfj5RwL9jHuvOq+uTJq/znZGDJ0oJBQMaAFALmXERfZRTG4JCOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfRo2zBR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8E5AC4CEEF;
+	Sat,  3 May 2025 19:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746302391;
-	bh=ZKs0bRbmtNComB3idWcyiEEWtYkgrA5qtpbBITjrpuA=;
+	s=k20201202; t=1746302392;
+	bh=TVHo4Ecy++QVCQpnYiE4psmntUpTeyQ75KVVZClLUzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=l5Bmxx3VSgNxEdpLmMUkQqE8BNzTN1GL4eCRr8wmjhohbuliOnbVEymzbDXT2U64J
-	 +IoWds50gO+J1oVaarNg7FX3+Og7iWFRwaRTstGBf3HLr9+iIHbPWhxqV8XTzTo3XU
-	 zBg5KnVYEyMl6L2tD1Va+kVSnhUQq28aIajN3pFXxjuEePx2/7VWuORUoa3KHBZSGB
-	 01LQjUScTOlRQOip9NS5Kebv4BY/mi23EMilofmmhlbhurVOw0L73ajF/DPEhhaeeB
-	 qjWt76NyTrLPjqXFZFJHmSNg866vPFgKbfvwJw/gol2Tn3vgiqXN7mSonPLvza17/o
-	 xJahD0wGloSLg==
+	b=gfRo2zBRgJes8jqTLAuFuu2BUobMaNoh9dM0mwC3jP/8ANMolvc7b7edZ0moMNuee
+	 Ib/BPADMCBANV6d/ysYLMCehuVV8k/7D4mn4yC3TCVsEMgcaMcEHElRWk/p1xRwI1f
+	 R7FGnQ0aKfBoBaW5IBJrgxw1tS+5IWjXfow5GbhHkLDgloA5l3ZC6q9d7pYXk3G884
+	 Hd/x5S9C0aYySIYQdoCyulcH7qwp2Vt/EVy8qhqjGv7L6cVwz/TSh2ShFdfbFJT8in
+	 ibo0fUdpKo8cpZ5z3Oz9ef4TGXyJKPNGb/5OXUCkZnkeg64UeEIeKgXU8AHbT6SZzy
+	 xyYb/vzcNofHA==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -52,9 +52,9 @@ To: NeilBrown <neil@brown.name>,
 Cc: sargun@sargun.me,
 	<linux-nfs@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 11/18] nfsd: add tracepoint for getattr and statfs events
-Date: Sat,  3 May 2025 15:59:29 -0400
-Message-ID: <20250503195936.5083-12-cel@kernel.org>
+Subject: [PATCH v4 12/18] nfsd: remove old v2/3 create path dprintks
+Date: Sat,  3 May 2025 15:59:30 -0400
+Message-ID: <20250503195936.5083-13-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250503195936.5083-1-cel@kernel.org>
 References: <20250503195936.5083-1-cel@kernel.org>
@@ -68,112 +68,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Layton <jlayton@kernel.org>
 
-There isn't a common helper for getattrs, so add these into the
-protocol-specific helpers.
+Observability here is now covered by static tracepoints.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3proc.c |  2 ++
- fs/nfsd/nfs4proc.c |  2 ++
- fs/nfsd/nfsproc.c  |  2 ++
- fs/nfsd/trace.h    | 30 ++++++++++++++++++++++++++++++
- fs/nfsd/vfs.c      |  2 ++
- 5 files changed, 38 insertions(+)
+ fs/nfsd/nfs3proc.c | 15 ---------------
+ fs/nfsd/nfsproc.c  |  5 -----
+ 2 files changed, 20 deletions(-)
 
 diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 80096a5c4865..f6eb8331dc4b 100644
+index f6eb8331dc4b..a4dd1f7c202f 100644
 --- a/fs/nfsd/nfs3proc.c
 +++ b/fs/nfsd/nfs3proc.c
-@@ -70,6 +70,8 @@ nfsd3_proc_getattr(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd3_attrstat *resp = rqstp->rq_resp;
+@@ -385,11 +385,6 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+ 	struct nfsd3_diropres *resp = rqstp->rq_resp;
+ 	svc_fh *dirfhp, *newfhp;
  
-+	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
-+
- 	dprintk("nfsd: GETATTR(3)  %s\n",
- 		SVCFH_fmt(&argp->fh));
+-	dprintk("nfsd: CREATE(3)   %s %.*s\n",
+-				SVCFH_fmt(&argp->fh),
+-				argp->len,
+-				argp->name);
+-
+ 	dirfhp = fh_copy(&resp->dirfh, &argp->fh);
+ 	newfhp = fh_init(&resp->fh, NFS3_FHSIZE);
  
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 483fd8b26f9d..2b16ee1ae461 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -876,6 +876,8 @@ nfsd4_getattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	struct nfsd4_getattr *getattr = &u->getattr;
- 	__be32 status;
+@@ -410,11 +405,6 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+ 		.na_iattr	= &argp->attrs,
+ 	};
  
-+	trace_nfsd_vfs_getattr(rqstp, &cstate->current_fh);
-+
- 	status = fh_verify(rqstp, &cstate->current_fh, 0, NFSD_MAY_NOP);
- 	if (status)
- 		return status;
+-	dprintk("nfsd: MKDIR(3)    %s %.*s\n",
+-				SVCFH_fmt(&argp->fh),
+-				argp->len,
+-				argp->name);
+-
+ 	argp->attrs.ia_valid &= ~ATTR_SIZE;
+ 	fh_copy(&resp->dirfh, &argp->fh);
+ 	fh_init(&resp->fh, NFS3_FHSIZE);
+@@ -479,11 +469,6 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+ 	int type;
+ 	dev_t	rdev = 0;
+ 
+-	dprintk("nfsd: MKNOD(3)    %s %.*s\n",
+-				SVCFH_fmt(&argp->fh),
+-				argp->len,
+-				argp->name);
+-
+ 	fh_copy(&resp->dirfh, &argp->fh);
+ 	fh_init(&resp->fh, NFS3_FHSIZE);
+ 
 diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index c561af30c37a..8816cc565c0c 100644
+index 8816cc565c0c..eec925d84410 100644
 --- a/fs/nfsd/nfsproc.c
 +++ b/fs/nfsd/nfsproc.c
-@@ -55,6 +55,8 @@ nfsd_proc_getattr(struct svc_rqst *rqstp)
- 	struct nfsd_fhandle *argp = rqstp->rq_argp;
- 	struct nfsd_attrstat *resp = rqstp->rq_resp;
+@@ -295,9 +295,6 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 	int		hosterr;
+ 	dev_t		rdev = 0, wanted = new_decode_dev(attr->ia_size);
  
-+	trace_nfsd_vfs_getattr(rqstp, &argp->fh);
-+
- 	dprintk("nfsd: GETATTR  %s\n", SVCFH_fmt(&argp->fh));
+-	dprintk("nfsd: CREATE   %s %.*s\n",
+-		SVCFH_fmt(dirfhp), argp->len, argp->name);
+-
+ 	/* First verify the parent file handle */
+ 	resp->status = fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+ 	if (resp->status != nfs_ok)
+@@ -551,8 +548,6 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+ 		.na_iattr	= &argp->attrs,
+ 	};
  
- 	fh_copy(&resp->fh, &argp->fh);
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index bed58cf55c10..3c5505ef5e3a 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -2579,6 +2579,36 @@ TRACE_EVENT(nfsd_vfs_readdir,
- 	)
- );
- 
-+DECLARE_EVENT_CLASS(nfsd_vfs_getattr_class,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp,
-+		const struct svc_fh *fhp
-+	),
-+	TP_ARGS(rqstp, fhp),
-+	TP_STRUCT__entry(
-+		NFSD_TRACE_PROC_CALL_FIELDS(rqstp)
-+		__field(u32, fh_hash)
-+	),
-+	TP_fast_assign(
-+		NFSD_TRACE_PROC_CALL_ASSIGNMENTS(rqstp);
-+		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
-+	),
-+	TP_printk("xid=0x%08x fh_hash=0x%08x",
-+		__entry->xid, __entry->fh_hash
-+	)
-+);
-+
-+#define DEFINE_NFSD_VFS_GETATTR_EVENT(__name)		\
-+DEFINE_EVENT(nfsd_vfs_getattr_class, __name,		\
-+	TP_PROTO(					\
-+		const struct svc_rqst *rqstp,		\
-+		const struct svc_fh *fhp		\
-+	),						\
-+	TP_ARGS(rqstp, fhp))
-+
-+DEFINE_NFSD_VFS_GETATTR_EVENT(nfsd_vfs_getattr);
-+DEFINE_NFSD_VFS_GETATTR_EVENT(nfsd_vfs_statfs);
-+
- #endif /* _NFSD_TRACE_H */
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 41314b2a8199..d0dfd97de4d3 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -2290,6 +2290,8 @@ nfsd_statfs(struct svc_rqst *rqstp, struct svc_fh *fhp, struct kstatfs *stat, in
- {
- 	__be32 err;
- 
-+	trace_nfsd_vfs_statfs(rqstp, fhp);
-+
- 	err = fh_verify(rqstp, fhp, 0, NFSD_MAY_NOP | access);
- 	if (!err) {
- 		struct path path = {
+-	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
+-
+ 	if (resp->fh.fh_dentry) {
+ 		printk(KERN_WARNING
+ 			"nfsd_proc_mkdir: response already verified??\n");
 -- 
 2.49.0
 
