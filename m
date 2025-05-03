@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-11428-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11429-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DF3BAA82C0
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BC90AA82C2
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 22:30:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85F68460341
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:30:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B61694603AE
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 May 2025 20:30:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB771A23B0;
-	Sat,  3 May 2025 20:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAAE2266577;
+	Sat,  3 May 2025 20:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8UU3qyD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMQHcEWz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924E9266577;
-	Sat,  3 May 2025 20:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31E1CD0C;
+	Sat,  3 May 2025 20:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746304210; cv=none; b=mJS/5Nz6wSqvGUiogr5fetnoDaGPXFcRG3Hy8ZsK3zRRPGdNd9jr83HHJEl6LuTQcRSJg7eqy8sbowBk3cLGkgT6AxhWmddbF7ummFzmuD4FaHJJTjNGI1zRixUUZjpyK+2Wh6ry5AuZNBtusUDnry8HaFlovNOUtkHqxX4ufZE=
+	t=1746304219; cv=none; b=k0kfOCCn7zJ5pisgloFkL03rUkjyjKPD4iBsmNJhToRne3cfjXARZFP7P9tHanguAAk5eGOXXGwcDRThu3JG4IP/ZgqUrfhIL+lh1e4p2Ig/K3krxKH/p7YIfJReoUY1qSUyV614xRhZNc0h0mAQebGrmYqlt3MClDkhgBcEj0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746304210; c=relaxed/simple;
-	bh=kQ/dPVDuQvTO/Q9SRFUt3wXSG8rYWILTFALL3qLa3Xc=;
+	s=arc-20240116; t=1746304219; c=relaxed/simple;
+	bh=r1R1aZvnHmUWjHguwxH94EAYeb6C746edb+gR82Is00=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ev8gmsxb4Ue5i/KtyLDgSsXd9A6ZyIRMgv8p/hDEvjYo6T933MJTu3BvBabKUrbiu5em98WmBR+3FkMc+TrDvO9magrSieL/sbv2z6bNcnWMHeeOfjIwPUGJTPXFwJz3ACUZYRjL8kZ8qj5Eq+BhmLYDkceScQLuWPw6phdVoI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8UU3qyD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D876C4CEE3;
-	Sat,  3 May 2025 20:30:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=WHsouBhwDJlNtq0k+k8iMWPZ0SPZFdNrqaufX4+t2Vf6NMg3S/p59HvFhu7+WAISYHyfD8FSHoyLbJefKMUyjo89E3JcOLms9FCwLZKn68DsTRuPZ+4JxpsGa2gw81v7mu0SmlhOfY7WMzAEF3gXlB8QWtpdA5bplBiJQwuih30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMQHcEWz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47262C4CEE3;
+	Sat,  3 May 2025 20:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746304209;
-	bh=kQ/dPVDuQvTO/Q9SRFUt3wXSG8rYWILTFALL3qLa3Xc=;
+	s=k20201202; t=1746304219;
+	bh=r1R1aZvnHmUWjHguwxH94EAYeb6C746edb+gR82Is00=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=q8UU3qyDGil56NABHF0cLRoYiADAwBjEkZY7hO4qqtpwz46M5HGrkGAGGO+B+ALgA
-	 5KiFoL/NxYHWLF3kTNg5vCAatIJdQdUSgrVdSXO8K9JEAXokTJXBC7Jk3L3D+JL2gj
-	 z03vSSv01tPDrhNhszFjZjmsKQ/DQxa1/gW21ikeZEqv+ghdI5egK9u3cv48BwqSQU
-	 rnqDGxUnNK4JtFC1rX3v1rjpnC2NECGFi8e5Pv2UkPAuj1bJpKHy7d2hCxHuXJ5idA
-	 PfUlEflLOThucCUe8FrIBHg24A+6XC+kMDKYfthnJCtT9L07j2PHueHeEnhwmjre/3
-	 ErATJ/tLhf0Fg==
-Message-ID: <750ba8afbaacdc88aee7a03f8e4cf76da87fbbd9.camel@kernel.org>
-Subject: Re: [PATCH v4 02/18] NFSD: Add a Call equivalent to the
- NFSD_TRACE_PROC_RES macros
+	b=YMQHcEWzOCNl5gtxjkopIwHs0/Ksdi95kdT3jhdn5ZKP1YtGUZyvFhGSp7SJ4OVNg
+	 O2zMaOSR6pRaKbagMtZMvCZzbiiuLzxvrcBowP6MfzMOesh4WylmWfoz9HfKjLsQ7O
+	 fWAvlQgov0GLo777Emv0ceyYImghnKy1DG6hqlE8QgKRVIjjY7aw9bs47SST1Wrgxm
+	 QIbUboNbWQwilEcqbN/owQlxx1xvJRxp0O7ntrYxt5hMIg3MCg0GpdnzoKRbeE5PSs
+	 MR8mSUONIYGrLyqoY5sc47gXPLiCITYTu/eOpxMSWh4pcrT4SokgLNRbkJYlAxWcOv
+	 GVjy2ucXctkAg==
+Message-ID: <bc8ac00be01ae6785092db9dbeccaa9f4c7ed0e6.camel@kernel.org>
+Subject: Re: [PATCH v4 07/18] nfsd: add tracepoint to nfsd_link()
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>,  Trond Myklebust <trond.myklebust@hammerspace.com>, Anna
  Schumaker <anna@kernel.org>
-Cc: sargun@sargun.me, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org,  Chuck Lever <chuck.lever@oracle.com>
-Date: Sat, 03 May 2025 16:30:07 -0400
-In-Reply-To: <20250503195936.5083-3-cel@kernel.org>
+Cc: sargun@sargun.me, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 03 May 2025 16:30:17 -0400
+In-Reply-To: <20250503195936.5083-8-cel@kernel.org>
 References: <20250503195936.5083-1-cel@kernel.org>
-	 <20250503195936.5083-3-cel@kernel.org>
+	 <20250503195936.5083-8-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,46 +138,72 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Sat, 2025-05-03 at 15:59 -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+> From: Jeff Layton <jlayton@kernel.org>
 >=20
-> Introduce tracing helpers that can be used before the procedure
-> status code is known. These macros are similar to the
-> SVC_RQST_ENDPOINT helpers, but they can be modified to include
-> NFS-specific fields if that is needed later.
->=20
+
+Looks like this one didn't get an expanded changelog?
+
+
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/trace.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+>  fs/nfsd/trace.h | 27 +++++++++++++++++++++++++++
+>  fs/nfsd/vfs.c   |  2 ++
+>  2 files changed, 29 insertions(+)
 >=20
 > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index f67ab3d1b506..fc373c4d5fdd 100644
+> index e347cdaaa732..acbf94cfb720 100644
 > --- a/fs/nfsd/trace.h
 > +++ b/fs/nfsd/trace.h
-> @@ -18,6 +18,23 @@
->  #include "nfsfh.h"
->  #include "xdr4.h"
+> @@ -2471,6 +2471,33 @@ TRACE_EVENT(nfsd_vfs_symlink,
+>  	)
+>  );
 > =20
-> +#define NFSD_TRACE_PROC_CALL_FIELDS(r) \
-> +		__field(unsigned int, netns_ino) \
-> +		__field(u32, xid) \
-> +		__sockaddr(server, (r)->rq_xprt->xpt_locallen) \
-> +		__sockaddr(client, (r)->rq_xprt->xpt_remotelen)
+> +TRACE_EVENT(nfsd_vfs_link,
+> +	TP_PROTO(
+> +		const struct svc_rqst *rqstp,
+> +		const struct svc_fh *sfhp,
+> +		const struct svc_fh *tfhp,
+> +		const char *name,
+> +		unsigned int namelen
+> +	),
+> +	TP_ARGS(rqstp, sfhp, tfhp, name, namelen),
+> +	TP_STRUCT__entry(
+> +		NFSD_TRACE_PROC_CALL_FIELDS(rqstp)
+> +		__field(u32, sfh_hash)
+> +		__field(u32, tfh_hash)
+> +		__string_len(name, name, namelen)
+> +	),
+> +	TP_fast_assign(
+> +		NFSD_TRACE_PROC_CALL_ASSIGNMENTS(rqstp);
+> +		__entry->sfh_hash =3D knfsd_fh_hash(&sfhp->fh_handle);
+> +		__entry->tfh_hash =3D knfsd_fh_hash(&tfhp->fh_handle);
+> +		__assign_str(name);
+> +	),
+> +	TP_printk("xid=3D0x%08x src_fh=3D0x%08x tgt_fh=3D0x%08x name=3D%s",
+> +		__entry->xid, __entry->sfh_hash, __entry->tfh_hash,
+> +		__get_str(name)
+> +	)
+> +);
 > +
-> +#define NFSD_TRACE_PROC_CALL_ASSIGNMENTS(r) \
-> +		do { \
-> +			struct svc_xprt *xprt =3D (r)->rq_xprt; \
-> +			__entry->netns_ino =3D SVC_NET(r)->ns.inum; \
-> +			__entry->xid =3D be32_to_cpu((r)->rq_xid); \
-> +			__assign_sockaddr(server, &xprt->xpt_local, \
-> +					  xprt->xpt_locallen); \
-> +			__assign_sockaddr(client, &xprt->xpt_remote, \
-> +					  xprt->xpt_remotelen); \
-> +		} while (0)
+>  #endif /* _NFSD_TRACE_H */
+> =20
+>  #undef TRACE_INCLUDE_PATH
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index ecd453b260b6..30702f36db98 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1721,6 +1721,8 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
+hp,
+>  	__be32		err;
+>  	int		host_err;
+> =20
+> +	trace_nfsd_vfs_link(rqstp, ffhp, tfhp, name, len);
 > +
->  #define NFSD_TRACE_PROC_RES_FIELDS(r) \
->  		__field(unsigned int, netns_ino) \
->  		__field(u32, xid) \
+>  	err =3D fh_verify(rqstp, ffhp, S_IFDIR, NFSD_MAY_CREATE);
+>  	if (err)
+>  		goto out;
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
