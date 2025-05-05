@@ -1,65 +1,62 @@
-Return-Path: <linux-nfs+bounces-11478-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11479-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A19CAAB5EC
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 07:39:13 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 653F3AAB5E9
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 07:39:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 403863A3EE4
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 05:32:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D99603A2506
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 05:32:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023A734C990;
-	Tue,  6 May 2025 00:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E354C4AA751;
+	Tue,  6 May 2025 00:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/qIrMJc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBpVxkF/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D533B96F7;
-	Mon,  5 May 2025 23:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C40137F947;
+	Mon,  5 May 2025 23:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746487325; cv=none; b=TaaAd7CerSYgHUX1aLXDcidp0xO4oLv7SRqdMcUKpqj6c6FXvqW4rh/d0EdNtbhyJdEINJRM46xW95sTiB9H5gyKVbffvBOzfYMvjZ1CL+VnOK17rYLuuYS47tC9S4D33TsHXmtD8+6dqe0YE5LCA4yelwf6JtbLRqoypHNg/Cw=
+	t=1746487333; cv=none; b=sWl9NKPu8k7Lxl12y+ykof2OSAxn14DJzq/k6EckBkscFa6MCUBHlHJ81gHqBsZeu9K7Y4LtfeJITJ5q07rututhAAbhSIMmC1LWBZsQiNJ0aXICb2PywxnPPoLNqFX9i7vOEDdSXi8URkpOF5eIYuSI08JILfM9hzNQQpsC87A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746487325; c=relaxed/simple;
-	bh=r2MZUQHt6DwOgzB2vWJnhnSAR1QWjHGXqGvtKXBEtog=;
+	s=arc-20240116; t=1746487333; c=relaxed/simple;
+	bh=sPgo/UldMLcbvt6C1XwY2ohaBmrJBOqaeUI3P5ZcP5U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NAUkZe+upwL1bZkU4xHVjt/6ZAsS10NZbdMCCeFlIQ0eVMem0EEK5G7u61u1JngY9BJCpohv6CuCGeJf8qikRGUCr3AMYPpVxFd1L2lIMn+Ej1DV+7u3wAHk2+HBesSVDFivIzjhhtBuwpdXGBDXhkvis4oOrlEaIgKTwGo8y+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/qIrMJc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89055C4CEEF;
-	Mon,  5 May 2025 23:22:02 +0000 (UTC)
+	 MIME-Version; b=Mi25Hz16pBBqVvZuqoHWL4KGTqmk4pdtyy2REvFIqxhtyEUk2BSH3Q2N/aYrdpRNbqyupMiVFSb2kYS/eTqj5wGZ3seiLnNzUtUQqvU/xt9xThbtTLLC1M1Ub9BUhWnoE3FSachI3xyxqRheMaRhI8MnxCo9rhp1RjGQDnYoUko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBpVxkF/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9E4C4CEEE;
+	Mon,  5 May 2025 23:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746487324;
-	bh=r2MZUQHt6DwOgzB2vWJnhnSAR1QWjHGXqGvtKXBEtog=;
+	s=k20201202; t=1746487331;
+	bh=sPgo/UldMLcbvt6C1XwY2ohaBmrJBOqaeUI3P5ZcP5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q/qIrMJcVh0pUQ7yQm4G3j/TKIlCRDYXUdiEaTZa3J2FquicV8JrDh+WrfsVHH5AZ
-	 EyDwlRDyaZfDHwYwNEZFWgL7EDR8YbiZTuyU98CeB+cOrOKQm2/4cdKX8cJtZJkYyJ
-	 ZABkXHCkMNzn+BdMgqQV7ecmDg8npCZnGLyZjSYs/cKlrtUCUYReXo8O7RCvH+V756
-	 7G1Ngvru+euMivhsRQMPg0rX1+FzRCfkHmoWw8d+1k1rSSV3dqqPEqK+klKDtMALKH
-	 wLWx9HJbAUf5dPlp9g/N110FDNd/lbx7W23Is8K0JbH4hfUjIHL84Z8n6Q3Nxenprp
-	 2bNZkOJwhiXZQ==
+	b=rBpVxkF/0/s8NRRyS122AtBhf1UlmPYlRsEvgmL4hw/ZkGb8xtog8thF7GoX9qwD3
+	 O2R9yhZnd+ykUzM2PpV9mNtib/SY5tNNkr5UmgPMravMseqltWKNpi00wWRCAReMle
+	 cWXrc/A1OtJ2+c52S2nQvKkAaq2j+J9+W822l4r/JQxCBFXBMRJxWK2WEKpUCDu+2J
+	 xIw4Bh1KDRp5JhNITnDAhNbphem7/pB40aDSDUr4TSBwtgItYLGESHHpRgrBKRfy7R
+	 rolYVv1tByJSFyYPJtIyiqoovUg39+4l7dPBh1jNOkbzCjoomU7N6WVfwmS2l6kV/M
+	 UMPQiqsfe19Jg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
 	Jeff Layton <jlayton@kernel.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
 	trondmy@kernel.org,
 	anna@kernel.org,
-	chuck.lever@oracle.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/79] SUNRPC: rpc_clnt_set_transport() must not change the autobind setting
-Date: Mon,  5 May 2025 19:20:38 -0400
-Message-Id: <20250505232151.2698893-6-sashal@kernel.org>
+	snitzer@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/79] pNFS/flexfiles: Report ENETDOWN as a connection error
+Date: Mon,  5 May 2025 19:20:42 -0400
+Message-Id: <20250505232151.2698893-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250505232151.2698893-1-sashal@kernel.org>
 References: <20250505232151.2698893-1-sashal@kernel.org>
@@ -76,34 +73,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit bf9be373b830a3e48117da5d89bb6145a575f880 ]
+[ Upstream commit aa42add73ce9b9e3714723d385c254b75814e335 ]
 
-The autobind setting was supposed to be determined in rpc_create(),
-since commit c2866763b402 ("SUNRPC: use sockaddr + size when creating
-remote transport endpoints").
+If the client should see an ENETDOWN when trying to connect to the data
+server, it might still be able to talk to the metadata server through
+another NIC. If so, report the error.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Tested-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index f689c7b0c304d..d67cb10a11db6 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -277,9 +277,6 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct rpc_clnt *clnt,
- 	old = rcu_dereference_protected(clnt->cl_xprt,
- 			lockdep_is_held(&clnt->cl_lock));
- 
--	if (!xprt_bound(xprt))
--		clnt->cl_autobind = 1;
--
- 	clnt->cl_timeout = timeout;
- 	rcu_assign_pointer(clnt->cl_xprt, xprt);
- 	spin_unlock(&clnt->cl_lock);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 1b88b78f40bea..3b4f93dcf3239 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1285,6 +1285,7 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
+ 		case -ECONNRESET:
+ 		case -EHOSTDOWN:
+ 		case -EHOSTUNREACH:
++		case -ENETDOWN:
+ 		case -ENETUNREACH:
+ 		case -EADDRINUSE:
+ 		case -ENOBUFS:
 -- 
 2.39.5
 
