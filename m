@@ -1,112 +1,90 @@
-Return-Path: <linux-nfs+bounces-11475-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11480-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35767AAB736
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 08:07:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B4ACAABCC4
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 10:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C424F7A84AC
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 06:05:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1783D1880310
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 08:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757C838DC3B;
-	Tue,  6 May 2025 00:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5478C22331E;
+	Tue,  6 May 2025 08:10:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmdNe/Uy"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dpXyCir6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA862F2C58;
-	Mon,  5 May 2025 23:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE68220F35
+	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 08:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486826; cv=none; b=nANvbjKTGVAwxHUOa6cC24GpBNnIIU1pbxkD9OidRdaZuSa2QX8VpUNEdfHi33Fd1hoWK3JCb0iiutcaKZo+6Wd+JJ/udkAi2xbhK2JWpB4MtYV9PEhr1mJrRfC4+QW2DJjj9DQfDTM+S4hxrCxhn5BfsBYIG52yDrEZHLBzfRI=
+	t=1746519021; cv=none; b=hfFWjB9c38ilCY0VewW8f5MhHnGLWdtk4S4YtOY4DQk7o4Wy+OnlcD+RY/4jZOQjuvMQJhOuQIUGQ646SceAg38hrr7w6Bt45qewCyqmx/vgIwEZU51V8N/u8htGUHGyO+b7F27UQGT4bbI0AXDfpK22JiIT/+DU5+Ux/v9ePA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486826; c=relaxed/simple;
-	bh=5zCAUR5fKm9UzdL5/oPX1lm7XAncAkCAaeT6OXBH1Ak=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Hh7jko7Ka5KLKnbVV8lEI0FRuFyIBZNo8woJvL/M1EqM23wt0MOeRUnH2r3VWi65px9gRrG3PdrvpgkX6M4NS4EthsU4faDFIJf1VNjyicMBXXbOCLSebjKFQrDhfIH5yXeW7siLhVScvFiGQd233LScRTSMKTiRo/FKbYy/qFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmdNe/Uy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 749E7C4CEED;
-	Mon,  5 May 2025 23:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486826;
-	bh=5zCAUR5fKm9UzdL5/oPX1lm7XAncAkCAaeT6OXBH1Ak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tmdNe/UyZQZP1nziO5XkoXFitc1fkwACYkXzyTZ/YFb/HFE4390mzuuG1GXOVRnec
-	 U8Fz611TATT/pJnFJ3B+rIBxbpzlpR6xhz7YWcIRVpJXW7BNbLxCHIm9h/2dzY+Ujt
-	 HMf5oRbtFbJG7nW9E/c+/Kw7V3pwq4XhliHpKEuS0LLWu6HycfUB9/joadUkHBue7+
-	 g/gR9h+F7GnytH91bvORtV8gAXrMFPn37dxU9oWWIrREWtXtAxbtZREoBmsl44NTC4
-	 EXcNaEnUb7Ql+Ys4m0cY9RkqgsA682HW1RjgUmsC2uz3BGUfQP1adeSVFABu3A31Dc
-	 hsOyeBpYAuSPA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	chuck.lever@oracle.com,
-	trondmy@kernel.org,
-	anna@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 010/153] SUNRPC: rpcbind should never reset the port to the value '0'
-Date: Mon,  5 May 2025 19:10:57 -0400
-Message-Id: <20250505231320.2695319-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+	s=arc-20240116; t=1746519021; c=relaxed/simple;
+	bh=xPHtwcRyZypI0M/zn8r69qHb9Kf/LIapegrnkyfz0hM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFgjUnsg+GhGagUVCb/4i8/Q3AbrIASVfAze+pQH1dRALx8OUvZNCO2fWqnOwFJ8tTdOYw9hzkprGi8akiMHPvXFRb4GoFzdR3hs4No+alwbiJ4Pdt5Qn4FK8iPWHNytU/KNwZcLlCBnRrbjP3eGA3WtmsI3u5UYl8pRHyoLiXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dpXyCir6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OzyOOjeOVLi3r7iK57XVv83fbG54a7AzVwvdvL8XGrc=; b=dpXyCir65jLVHUNe+M0mIzRPzT
+	G6rN7Zfn/tfTYmDO19gLzwNPRYATVP8wwNUEuFeZIjb0Ukm02conF4KL7jKsWeEV2J5yVkBbt49DM
+	2jDuae7zp4hfDN5cqkegw5bKf1st9KoX5hmTfeqUbAb3+OUACL0aAwkfVajPPWkEqLv6DNYAqC5uM
+	/fM/EZPirYwLuIQaOVNCeySXjw7ioJ7FeQHCYVlN7CYwTEuBwylfvCCa2rTUgnDXx56IEOQ78VwjR
+	ncsVSGHk2YgZ3s64pIDBJWlYMdYp7OFBzYbM5kpqz7Ej2BnSf3ao2Hm+hwIUB2s/eK0nkghHp2YNh
+	I3MZOCJw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCDNZ-0000000B6aE-0yMf;
+	Tue, 06 May 2025 08:10:17 +0000
+Date: Tue, 6 May 2025 01:10:17 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: cel@kernel.org
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Roland Mainz <roland.mainz@nrubsig.org>
+Subject: Re: [PATCH] NFSD: Implement FATTR4_CLONE_BLKSIZE attribute
+Message-ID: <aBnD6Wj1yq9MP8ZB@infradead.org>
+References: <20250427163914.5053-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250427163914.5053-1-cel@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Sun, Apr 27, 2025 at 12:39:14PM -0400, cel@kernel.org wrote:
+> NFSD can return 0 here, as at least one client implementation we
+> are aware of (the Linux NFS client) treats 0 as meaning "CLONE has
+> no alignment restrictions".
 
-[ Upstream commit 214c13e380ad7636631279f426387f9c4e3c14d9 ]
+Usuaully clone does have a restriction, though.
 
-If we already had a valid port number for the RPC service, then we
-should not allow the rpcbind client to set it to the invalid value '0'.
+> Meanwhile we need to consult the nfsv4 Working Group to clarify the
+> meaning and use of the value of this attribute.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sunrpc/rpcb_clnt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Yeah, the attribute seems to be severly underspecified, i.e. it does
+not even provide a unit that the value is in.
 
-diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
-index 638b14f28101e..c49f9295fce97 100644
---- a/net/sunrpc/rpcb_clnt.c
-+++ b/net/sunrpc/rpcb_clnt.c
-@@ -797,9 +797,10 @@ static void rpcb_getport_done(struct rpc_task *child, void *data)
- 	}
- 
- 	trace_rpcb_setport(child, map->r_status, map->r_port);
--	xprt->ops->set_port(xprt, map->r_port);
--	if (map->r_port)
-+	if (map->r_port) {
-+		xprt->ops->set_port(xprt, map->r_port);
- 		xprt_set_bound(xprt);
-+	}
- }
- 
- /*
--- 
-2.39.5
+I think the only sane way out is an errate that makes 0 mean
+"not specified" and then provides the byte unit and maybe some
+other quirks.
+
+> +	/* Linux filesystems have no clone alignment restrictions */
+
+That is absolutely untrue as said above.
 
 
