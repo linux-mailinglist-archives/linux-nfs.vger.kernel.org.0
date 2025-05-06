@@ -1,124 +1,72 @@
-Return-Path: <linux-nfs+bounces-11502-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11504-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9424CAAC735
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:00:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0CE4AAC776
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:08:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C26E87B1E10
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 13:58:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E154B4A1FA6
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:08:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFD2C281374;
-	Tue,  6 May 2025 13:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBB7C281343;
+	Tue,  6 May 2025 14:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DPep8NXC"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XLTUaTZr"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C752D281369;
-	Tue,  6 May 2025 13:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BC3278745
+	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 14:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746539976; cv=none; b=onQpu/ZUZ3JXAZXzXvpNBbsMEYTxCqtT56c4z3YDI3Wc4sq09eAAf+YPsKxDIXmhgoC3p8IPKto7QXNGSsCDyXW6lDeIqpGvQuDrI1PDEEv1BJdGmmg9O5F3okSucJHumx8G+H7MJ23qJGPWm0IzoBkWvX1ObvQrp/1ZjNU0/i0=
+	t=1746540501; cv=none; b=h3HcDGmoNIW8uC+9sCHLVPIv/MQGKGZrws+f0ezNtjiMuKn5Zp4Tf2ktrKHDuJDkcb97PyTE367vLi+BvzNydrMYquPKtUPU+EKBQ08H0SveRnxrTxyzO/arnLZGhv8S0EnK1b+FpGLT0r0xnn0NSZDYE1EwmPLkmIxHUN/e+LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746539976; c=relaxed/simple;
-	bh=N+Fy0SWace4VRSzZe9xJ2XWM6pLAhrdNjIc/ELtCYEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lOBjhsb0RoO2ByR+j5rrUeySA/xk+fXkv8iufcJri5Uc/t9y1gq6hXydQAkMMbIcRt20OXt6FjUCppjBEgeaBWWWzHTA0ft77ou8aLQ1R2b5T83B7CgCGCfwD662LDUt4/E1VjPHbZATXnMDyvFpmh1TOuO2tzprEFcCqf6ekcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DPep8NXC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 647A1C4CEF0;
-	Tue,  6 May 2025 13:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746539976;
-	bh=N+Fy0SWace4VRSzZe9xJ2XWM6pLAhrdNjIc/ELtCYEQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DPep8NXC/vl9nbyf+1vVek08yQM3DZi77Yu9VgIGCZ5YQx1sOB9Dv9JArkZH44feA
-	 5Z2uG46abTev7aO6qIwM3WFdBe9p2uAqcfqdFtPFRGdk26I1jKRtCOafBkJ7MDA+Jp
-	 xCXkIF7LVwpzY6FR+OgCv2GTXkVrzy7l4A5y3qftdhdlS8lMgWcWHAkzJ0AkWnNbZp
-	 ePDWCtEyvn8DbUVlzLQkvPQjvBSObiLcC3gtRyaH8JQtfKD+y/kxJq2bD/YiI7ZB8W
-	 lblMqNIKrx7YyrkJxnKOMuotBkQRCcqlY733KkwrBJT6G7IFLSVPOskedBBToAEhsb
-	 RUOwn1FmpTQSQ==
-Message-ID: <bae5b474-8945-4e27-ab72-432a63b8a1e0@kernel.org>
-Date: Tue, 6 May 2025 09:59:34 -0400
+	s=arc-20240116; t=1746540501; c=relaxed/simple;
+	bh=8dbFMyXjusDJBwJo5CQ2X3v2m+hUT05WefJxUWggZgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1LbOetnSVsP4lYX1YwKVrmju3QFCzY8/Idd6Q0llDlcnPwC3wy3NCXzaDbCo2I/TFOlYjBiNFfu2WzejqhQ+d6aD1GFXH7i7GelIy3FChGXWFu5U361fDrQv/zbkDBo/CvsQZRkp50nMdjQotPPpwWqc+deSIungZaqWtZ/ju8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XLTUaTZr; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=tpJbyb9nLR5f1oPeHyjvkIZEOn/soC/95tBLnoSrMoY=; b=XLTUaTZrCONZiid/9zO9f+SCQF
+	I8reBG5v/xaSRRZ5Qpb7/+o2o4u1pUyIPy3OMyGqLXlHNuVY2f9GO0eFkrMQAQzMjLaWSHovcVbhe
+	pNpQ7GjbYt0aDrA3T1QBLAmsLLY+gstjdgzraY2jXjWxO6OVbufbsgLCrYi1HiQ2TofJ9lORxTtsX
+	5C5aOeZ1XBSP/kQ2eUSfPL+FQGvGUgwBVi3HGxY8h3pznFriqrtIZVml1f608RTBvliwmUN5By5nl
+	dTWnSGbZg19K6jBgsEV14InFoi5NXZv4GjUE3iX5oQDCdjmhohi98HqLWrseQwpXPfLe3IgUd7tPz
+	xs0Vyinw==;
+Received: from 2a02-8389-2341-5b80-3871-beb2-232f-7711.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:3871:beb2:232f:7711] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCIy3-0000000CG43-1lPv;
+	Tue, 06 May 2025 14:08:19 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: writeback cleanups
+Date: Tue,  6 May 2025 16:07:46 +0200
+Message-ID: <20250506140815.3761765-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/14] SUNRPC: Bump the maximum payload size for the
- server
-To: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>
-Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
- linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <20250428193702.5186-1-cel@kernel.org>
- <20250428193702.5186-15-cel@kernel.org> <aBoP249KZ5G9hU81@infradead.org>
- <390ac9ce-d32d-4534-a406-52288f79ab0c@kernel.org>
- <d3cd6ed78404a5ac354ef428c2c00912de0baa33.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <d3cd6ed78404a5ac354ef428c2c00912de0baa33.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 5/6/25 9:54 AM, Jeff Layton wrote:
-> On Tue, 2025-05-06 at 09:52 -0400, Chuck Lever wrote:
->> On 5/6/25 9:34 AM, Christoph Hellwig wrote:
->>> On Mon, Apr 28, 2025 at 03:37:02PM -0400, cel@kernel.org wrote:
->>>> From: Chuck Lever <chuck.lever@oracle.com>
->>>>
->>>> Increase the maximum server-side RPC payload to 4MB. The default
->>>> remains at 1MB.
->>>>
->>>> To adjust the operational maximum, shut down the NFS server. Then
->>>> echo a new value into:
->>>>
->>>>   /proc/fs/nfsd/max_block_size
->>>>
->>>> And restart the NFS server.
->>>
->>> Are you going to wire this up to a config file in nfs-utils that
->>> gets set before the daemon starts?
->>
->> That's up to SteveD -- it might be added to /etc/nfs.conf.
->>
->>
-> 
-> Can we also add this to the netlink interface for nfsd and nfsdctl?
+Hi all,
 
-Sure, that's possible, however:
+this series has a bunch of cosmetic cleanups for the NFS folio writeback
+code.
 
-The purpose of this series is only to enable experimentation (aside from
-the other nice clean-ups).
-
-Once that is complete, what are the use cases for admins to increase or
-decrease this value? (Not a rhetorical question: I'd like to invite some
-discussion about that).
-
-As always, these interfaces need documentation and long-term support. I
-would like to get some technical rationale on the table before we
-commit to the support costs.
-
-
->>> Because otherwise this is a pretty horrible user interface.
->>
->> This is an API that has existed forever.
->>
->> I don't even like that this maximum can be tuned. After a period of
->> experimentation, I was going to set the default to a higher value and
->> be done with it, because I can't think of a reason why it needs to be
->> shifted up or down after that.
->>
-> 
-
-
--- 
-Chuck Lever
+Diffstat:
+ write.c |   54 +++++++++++++++++++-----------------------------------
+ 1 file changed, 19 insertions(+), 35 deletions(-)
 
