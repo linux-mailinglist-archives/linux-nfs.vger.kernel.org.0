@@ -1,95 +1,136 @@
-Return-Path: <linux-nfs+bounces-11516-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11514-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 418FAAAC7D0
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:24:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 339CFAAC7AF
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:19:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AEF89462348
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:24:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 835F317DDDB
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:19:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96B2F27FB2F;
-	Tue,  6 May 2025 14:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D5CF280CD5;
+	Tue,  6 May 2025 14:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Xy/7w8jR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjMKJ6Q4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1401C1A9B5B
-	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 14:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B1927FD75;
+	Tue,  6 May 2025 14:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746541455; cv=none; b=cZOz7F+NJLRa8Cn8GF7O5cYb+ExcTQ0GASe6tfmS7XZrHTUV2gHsoBBpXUY8Xma/UZiAGT+dJhjPXw4VrmU5WS1JpFr+XcDuMwcqCnMyzuG1kdwhaQe5mP17BZPuZeiuX/3/ES9VpaGIgCbl5/+2MTl0VlJ0qDcrN2DCFXwT8lA=
+	t=1746541149; cv=none; b=qhDc/u+kn9pvys3UZl3PK8XexZsl/nRoLrQ89g3AB/HqygDnGQnm0xxFcBhZ1YVSCNp9CcndbiHuGtfAj2aVpn9yQ7WjCz6EgBHjBANnIUm7CDJeI8FS03dNIwpFCE0aaYSs0MdTGTZ8p3pxyor8fXY6UcjMOh4vDC94Sj9DL+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746541455; c=relaxed/simple;
-	bh=YH0pp7xcsev6MKyTamDozGymR2GfAkED7nYW/37/hIM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=jKIS9jc6B0e7iCrTqrkHKL0S8HjD83/hvvd5EJOgkVZBBXI5SuGZ9hnMyZAax1633i/Q8+owtbr0VgV0wYVmf82HUceqNR8GCVw9dZrN9Bul4C6sNwQhJBzMBg+22gurxFhLDhpNt8tMUqHeCs+k4DJmdtp+3XjMn6g0D64WEgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Xy/7w8jR; arc=none smtp.client-ip=203.205.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1746541139; bh=5v04AZ2TtxIffc1jiqe3kUu1qgrpQB8oPCLtS8ZkItA=;
-	h=From:To:Cc:Subject:Date;
-	b=Xy/7w8jRttbA1m4qojt7mSl/UcQWz7NCHsQLpO0C+xPOvB5nLufIok0kV+eJ4lf+V
-	 B3TKjpt3Z6OZw99+WSg65MqncezygQNq14y6OPJGGqCSNp+tzr2nnORmCAkOHF1P8C
-	 +2130hlXO/YyJqrxFXVl80oJkqFSQgAE1u9RfehE=
-Received: from localhost.localdomain ([115.60.183.182])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id 4BA2DC30; Tue, 06 May 2025 22:18:58 +0800
-X-QQ-mid: xmsmtpt1746541138tlmkwcss8
-Message-ID: <tencent_86CDAF841D6F5657A618E706DD1CAAD95E05@qq.com>
-X-QQ-XMAILINFO: Mdc3TkmnJyI/gMPwy6PT9tKusv7N/hf0p/j5yKuNwNyZbLUhA2RK6Sh4JK9R1z
-	 DQvR7gzwzESppotpHQF/TtbNR5HZDCcjo2bDPryrXklnNLpdEZQtrshO3gP025KRJdYr2XPW/gfq
-	 aZyEY0djwBfwtigSyzdobuOxeTOwzjNf6Vv1+zYCZhLeAEn8a9myf81vOVpMVY0zIHnqVYVCx17q
-	 dBs9lGVo07k3g8w+M90AI3diJsvMxRgkhrJZqB+9dO05xF58ZZWjVcfut3qy5W2A1JoJgP10kwhz
-	 j3g4+LEZQ8FHmo4e6IpLubXXldlgtdowUgCdLD0pcAEgk4+C0Z6mXzEbKdF8vIcNR2blhHd1DAiw
-	 +I/Ycnwi+qhZPxDrdJexwPAWSsfLXLQPb55eDKPPGxa6nnIalrr3soiK/PvIL5KvmmGS9F333aTI
-	 Se6tZKTKGlo74PhK84rlLMTKCJtcLk1mTzb0zSKUmsR7fwJGbQlH8jMGzutogqMM7E5+J1uQx1xf
-	 A7kflkSx/hZ6s+1T65UXmxWfNgfk5aCbbGuML9ZoSlOWf8UbTCjgW50e6Jfv6wQ8dOM42OnlQa++
-	 QZXk731YkmdDyX+LcmW/5LgbCfeOxG97NYCeBgT6Z01Gmcg5LyrNRrEv8vj4TgSJJULMUhJ7gxMl
-	 YltqrC8qGm0PmU1DQQ8rPYw/7PaS+/s6N9VclNt1YqNMZiDYtYjbylhI13qL3I/CGbX44RiKO/Mt
-	 pDhof09MNGS5REW52xzGExAx1j7O+yQ9lBKR0IC+Hco6jn2v4EThC2y4ioEbvbUl/Puzo54hIh5p
-	 AdWxYOsVJHmczvMz4aNFfgerFnRqBElsUeL1NYErsbmccPBvKRLpsqL52d//Y7Qt9077iklZs8Lw
-	 XRcNqoEbAB01ajuPtBBW4XtYf2CmU0diDEXAIRCHKJwkCjRUReyJQ=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: 597607025@qq.com
-To: linux-nfs@vger.kernel.org
-Cc: zhangyaqi@kylinos.cn
-Subject: [PATCH] gssd:fix the possible buffer overflow in get_full_hostname
-Date: Tue,  6 May 2025 22:17:50 +0800
-X-OQ-MSGID: <20250506141750.32879-1-597607025@qq.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1746541149; c=relaxed/simple;
+	bh=E83/hew1cOPUFGnu6c2yVhS0Ry6f9izbjoeJaooc9Kw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=izZ23c5nPXziaz2ebMztEARjMbqp2BBEvy7jhded8hqXXxUufFSu+RbwXwvZ/g58Yxo/9oTehS8/JDx0zFvdEC3dcUXoHiBeMS6NtXf8t01poS7hKm1boIWcNxv55HV25ADjkCnFImYyDLKhXxYdNhrAkGDGLAQ7W89zA9t4x9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjMKJ6Q4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7309DC4CEE4;
+	Tue,  6 May 2025 14:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746541148;
+	bh=E83/hew1cOPUFGnu6c2yVhS0Ry6f9izbjoeJaooc9Kw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gjMKJ6Q4e2ZKLC7ZY+0TRvjbzvBcxGKcfuIm0WFPUhPxQiI8mPT+2i3YU9ILcVSLt
+	 udxTu4V3TlwHXwh9blDumdbeO3ceLfVJD3dv7qTAekZkXD9Pn6tI4/wK+wIMSUVaQa
+	 J+gRiICmJeuwjyunDmBz3dHcZm3dNdkiKiBhnwlqPDjghq5vnD2/YowxQ90+hqA1cA
+	 IjUT//DynbOglveDxW0dATqEQmwU6mvSQ0mm1Gk39SFkbp4fQIXk5z4w/PKuSQJMhI
+	 J/ltVlUvuQeaNax5bFzaXNj7HD8jAMn5jwIS1lmGnhG7lbyq9WEbBd6C5xY++UbmMW
+	 iZzHK5u6RRIjQ==
+Message-ID: <d7115cd7-c34c-4212-b244-e5247ac68fcc@kernel.org>
+Date: Tue, 6 May 2025 10:19:06 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/14] svcrdma: Reduce the number of rdma_rw contexts
+ per-QP
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
+ Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+ Leon Romanovsky <leon@kernel.org>
+References: <20250428193702.5186-1-cel@kernel.org>
+ <20250428193702.5186-2-cel@kernel.org> <aBoJ64qDSp7U3twh@infradead.org>
+ <20250506131722.GG2260621@ziepe.ca> <aBoRSeERzax5lTvH@infradead.org>
+ <20250506135536.GH2260621@ziepe.ca>
+ <be740f28-8d68-400c-85bc-81cc4e48ccc6@kernel.org>
+ <20250506141705.GI2260621@ziepe.ca>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250506141705.GI2260621@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: zhangyaqi <zhangyaqi@kylinos.cn>
+On 5/6/25 10:17 AM, Jason Gunthorpe wrote:
+> On Tue, May 06, 2025 at 10:13:00AM -0400, Chuck Lever wrote:
+>> On 5/6/25 9:55 AM, Jason Gunthorpe wrote:
+>>> On Tue, May 06, 2025 at 06:40:25AM -0700, Christoph Hellwig wrote:
+>>>> On Tue, May 06, 2025 at 10:17:22AM -0300, Jason Gunthorpe wrote:
+>>>>> On Tue, May 06, 2025 at 06:08:59AM -0700, Christoph Hellwig wrote:
+>>>>>> On Mon, Apr 28, 2025 at 03:36:49PM -0400, cel@kernel.org wrote:
+>>>>>>> qp_attr.cap.max_rdma_ctxs. The QP's actual Send Queue length is on
+>>>>>>> the order of the sum of qp_attr.cap.max_send_wr and a factor times
+>>>>>>> qp_attr.cap.max_rdma_ctxs. The factor can be up to three, depending
+>>>>>>> on whether MR operations are required before RDMA Reads.
+>>>>>>>
+>>>>>>> This limit is not visible to RDMA consumers via dev->attrs. When the
+>>>>>>> limit is surpassed, QP creation fails with -ENOMEM. For example:
+>>>>>>
+>>>>>> Can we find a way to expose this limit from the HCA drivers and the
+>>>>>> RDMA core?
+>>>>>
+>>>>> Shouldn't it be max_qp_wr?
+>>>>
+>>>> Does that allow for arbitrary combination of different WRs?  
+>>>
+>>> I think it is supposed to be the maximum QP WR depth you can create..
+>>>
+>>> A QP shouldn't behave differently depending on the WR operation, each
+>>> one takes one WR entry.
+>>>
+>>> Chuck do you know differently?
+>>
+>> qp_attr.cap.max_rdma_ctxs reserves a number of SQEs over and above
+>> qp_attr.cap.max_send_wr. The sum of those two cannot exceed max_qp_wr,
+>> of course.
+> 
+> Yes
+> 
+>> But there is a multiplier, due to whether the device wants a
+>> registration and invalidation WR in addition to each RDMA Read WR.
+> 
+> Yes, but both of these are in the rdma rw layer
+>  
+>> Further, in drivers/infiniband/hw/mlx5/qp.c :: calc_sq_size
+>>
+>>         wq_size = roundup_pow_of_two(attr->cap.max_send_wr * wqe_size);
+>>         qp->sq.wqe_cnt = wq_size / MLX5_SEND_WQE_BB;
+>>         if (qp->sq.wqe_cnt > (1 << MLX5_CAP_GEN(dev->mdev,
+>> log_max_qp_sz))) {
+> 
+> And this log_max_qp_sz should be used to derive attr.max_qp_wr
+> 
+>> In this patch I'm trying to include the reg/inv multiplier in the
+>> calculation, but that doesn't seem to be enough to make "accept"
+>> reliable, IMO due to this extra calculation in calc_sq_size().
+> 
+> Did ib_create_qp get called with more than max_qp_wr ?
 
-Signed-off-by: zhangyaqi <zhangyaqi@kylinos.cn>
----
- utils/gssd/krb5_util.c | 1 +
- 1 file changed, 1 insertion(+)
+The request was for, like, 9300 SQEs. max_qp_wr is 32K on my systems.
 
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index 560e8be1..09625fb9 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -619,6 +619,7 @@ get_full_hostname(const char *inhost, char *outhost, int outhostlen)
- 		goto out;
- 	}
- 	strncpy(outhost, addrs->ai_canonname, outhostlen);
-+	outhost[outhostlen - 1] = '\0';
- 	nfs_freeaddrinfo(addrs);
- 	for (c = outhost; *c != '\0'; c++)
- 	    *c = tolower(*c);
+> Or is max_qp_wr not working?
+
 -- 
-2.27.0
-
+Chuck Lever
 
