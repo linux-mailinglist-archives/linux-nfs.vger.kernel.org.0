@@ -1,57 +1,57 @@
-Return-Path: <linux-nfs+bounces-11508-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11509-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46B96AAC77D
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 75841AAC77E
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:08:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3AC74A0109
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:08:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7640E4A018A
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:08:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890D6262D1D;
-	Tue,  6 May 2025 14:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58837281371;
+	Tue,  6 May 2025 14:08:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cqTXV3lR"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BAxC/Pcj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A23278745
-	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 14:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E095424E014
+	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 14:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540513; cv=none; b=YPsQdpH28dBxRFPJQ/T4YG5J4p8s0HnhL0eb5ErF9A5RraWyr/XCYcaQXzHyUN9ITeGJK5qJ8ciZ8GiLxO0rjwEX0lBj/HJvt8S2GNoxM4dDCqzqXTkaoI+c1jcdu+YIfJoxC3X3YJjDcSD900Z3Knehmf+s6TQ/fPh/3Suheh8=
+	t=1746540516; cv=none; b=Qi6kVadbQYMkOZQLi1xzdS+Hn7RgSWbtt2TMy69AJq/DlBj57Y0kzypftpcwA8KY128Q49eOY1Y7sASsKhFVbJxmLcAXsHP+4NkzAzoeGUAq+UmmHlz1NKCIYVoQX/3Z2VBGWi6667qJ3w/Wk4cXqlgMdqryNbBAnlxUR9Bx1XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540513; c=relaxed/simple;
-	bh=2wOBszh2qi7SupY0Bb433bVn185bXeaW8j0pl4jmUbo=;
+	s=arc-20240116; t=1746540516; c=relaxed/simple;
+	bh=jlRDbU0fcwx4nYSYKKnRs8gI80wBH3ln+L8lNEM5FqY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GY+gYaBwKiPDLkfT/xhbRl1erha9lsOsKGFyEuPKhjYzeOFj/Wk3rzAyptdAfqVFGJo4GtPzE4jHDFNUKbXHHxC8ogT4DMRFY0NwzatqkFOjx6FeVohkjiu+r8tqOJaGkT4LRnf0OEbV51vPidlUuqwsM8mutPgYCLvZFJKulEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cqTXV3lR; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=FPHhGbz1hcMbjKdl8B19ggx9fJdtskWFvDMVuh8tyL7uFko/wX39bLlakG5XPyPEg7vZsowj/TzU+VCwTGR2iP0OsKhKzPv+KF9tf8xpg4qMcN4u5rZa3mIcusVMuD/5jcZwMwoJvZG+aCYxUc+2/HvkQxfKRSRJ1s0/B1s69DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BAxC/Pcj; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=lDUpzKlFrA94WIGsiuNXhU/O7MTA+ppZ4YzZpR6ymBQ=; b=cqTXV3lRqoar6h13CzpL8Q0PSF
-	y4DtjSp1755U3R7MPRxurXqJNEuVVWkd5Gv2f0UdA/YGT1x9PgZV7pBcETYit6cqLtiXrqBEER8G/
-	YO4G0m0+We1GEXTWevijb0JEy9fliAiAi0R4FyngmZnAH5tsmxGLQRbcTAe+Sa3/1z058js2e+mtP
-	cfCNkXmb4iTMAzzFKl6qvVK6CIz468QLCzQlNyO+RnJdrU+R4A6j+ZNZ7QvMqfwtOn7IkOcyNbcuv
-	ifXHvA2YpZEr7vE8RDFSYYO1KTQfrE/NgqmEwLdB/sq67Ktwxb/11q2ir1JspOJFrNz2zzKRTtvtm
-	pqvHZSAA==;
+	bh=7BnQZytnr9lyaSZa4xj8MCesqLa2nxkm+PPuX/aJKis=; b=BAxC/PcjSf0VX4e8aa7vrcVKnQ
+	7OKJcIjIqZrB8vT6/X2574rk8gCyl4mhXRwjggeGTBGlESOnE55GR+lh/EaP9q7cSmAWIHstoT0t9
+	Ivn7ofqe4siEhKjVTxt4TVljVX+1hv3GzJUpDCCJ2mmZqwg3Cewaiyv+qT7t1gukkTmVG85jv1St0
+	SOek+yZGKcFrrL/+xEck2rn/S8taC5ScEqyeu5xVO2nEU10SSBTPjZke7S62n/WjSqcI/2Eab+O9m
+	vgRw4+j2yshJIDDs8A6ZvWBm8pZ8Ip+V6kAeq4AhDxAETXZ9ZkUO/BVIhm87RGDPNHjAsV0s5W2bx
+	N4XdU/NQ==;
 Received: from 2a02-8389-2341-5b80-3871-beb2-232f-7711.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:3871:beb2:232f:7711] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCIyE-0000000CG6r-2gGs;
-	Tue, 06 May 2025 14:08:31 +0000
+	id 1uCIyI-0000000CG7D-0r3v;
+	Tue, 06 May 2025 14:08:34 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 4/5] nfs: refactor nfs_do_writepage
-Date: Tue,  6 May 2025 16:07:50 +0200
-Message-ID: <20250506140815.3761765-5-hch@lst.de>
+Subject: [PATCH 5/5] nfs: use writeback_iter directly
+Date: Tue,  6 May 2025 16:07:51 +0200
+Message-ID: <20250506140815.3761765-6-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250506140815.3761765-1-hch@lst.de>
 References: <20250506140815.3761765-1-hch@lst.de>
@@ -64,63 +64,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Use early returns wherever possible to simplify the code.
+Stop using write_cache_pages and use writeback_iter directly.  This
+removes an indirect call per written folio and makes the code easier
+to follow.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/nfs/write.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/nfs/write.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 4e1d57b63a85..68c5dc061abe 100644
+index 68c5dc061abe..374fc6b34c79 100644
 --- a/fs/nfs/write.c
 +++ b/fs/nfs/write.c
-@@ -636,16 +636,15 @@ static int nfs_do_writepage(struct folio *folio, struct writeback_control *wbc,
- 		struct nfs_pageio_descriptor *pgio)
- {
- 	struct nfs_page *req;
--	int ret = 0;
-+	int ret;
+@@ -694,16 +694,6 @@ static int nfs_writepage_locked(struct folio *folio,
+ 	return err;
+ }
  
- 	nfs_pageio_cond_complete(pgio, folio->index);
- 
- 	req = nfs_lock_and_join_requests(folio);
- 	if (!req)
--		goto out;
--	ret = PTR_ERR(req);
-+		return 0;
- 	if (IS_ERR(req))
--		goto out;
-+		return PTR_ERR(req);
- 
- 	nfs_folio_set_writeback(folio);
- 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
-@@ -655,7 +654,6 @@ static int nfs_do_writepage(struct folio *folio, struct writeback_control *wbc,
- 	if (nfs_error_is_fatal_on_server(ret))
- 		goto out_launder;
- 
--	ret = 0;
- 	if (!nfs_pageio_add_request(pgio, req)) {
- 		ret = pgio->pg_error;
- 		/*
-@@ -666,11 +664,12 @@ static int nfs_do_writepage(struct folio *folio, struct writeback_control *wbc,
- 		folio_redirty_for_writepage(wbc, folio);
- 		nfs_redirty_request(req);
- 		pgio->pg_error = 0;
--	} else
--		nfs_add_stats(folio->mapping->host,
--			      NFSIOS_WRITEPAGES, 1);
--out:
+-static int nfs_writepages_callback(struct folio *folio,
+-				   struct writeback_control *wbc, void *data)
+-{
+-	int ret;
+-
+-	ret = nfs_do_writepage(folio, wbc, data);
+-	folio_unlock(folio);
 -	return ret;
-+		return ret;
-+	}
+-}
+-
+ static void nfs_io_completion_commit(void *inode)
+ {
+ 	nfs_commit_inode(inode, 0);
+@@ -739,11 +729,15 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 	}
+ 
+ 	do {
++		struct folio *folio = NULL;
 +
-+	nfs_add_stats(folio->mapping->host, NFSIOS_WRITEPAGES, 1);
-+	return 0;
-+
- out_launder:
- 	nfs_write_error(req, ret);
- 	return 0;
+ 		nfs_pageio_init_write(&pgio, inode, priority, false,
+ 				      &nfs_async_write_completion_ops);
+ 		pgio.pg_io_completion = ioc;
+-		err = write_cache_pages(mapping, wbc, nfs_writepages_callback,
+-					&pgio);
++		while ((folio = writeback_iter(mapping, wbc, folio, &err))) {
++			err = nfs_do_writepage(folio, wbc, &pgio);
++			folio_unlock(folio);
++		}
+ 		pgio.pg_error = 0;
+ 		nfs_pageio_complete(&pgio);
+ 		if (err == -EAGAIN && mntflags & NFS_MOUNT_SOFTERR)
 -- 
 2.47.2
 
