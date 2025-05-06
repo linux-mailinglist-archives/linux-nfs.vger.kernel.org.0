@@ -1,78 +1,132 @@
-Return-Path: <linux-nfs+bounces-11510-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11511-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF26DAAC782
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:09:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4A09AAC78D
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 16:13:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330A046549C
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:09:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C2F9D98084E
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 14:13:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760CF28137A;
-	Tue,  6 May 2025 14:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F12F42820A7;
+	Tue,  6 May 2025 14:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C/CcBjaA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1zdbJII"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5DC8F7D;
-	Tue,  6 May 2025 14:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05C728151D;
+	Tue,  6 May 2025 14:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540559; cv=none; b=bqJGCImYLlbQA3Zzi59GYqVeI6e6zIHRYe+fx7p+5arGs3etHD78Q5NVnWvYj+QmeIq9O+8+fEwuLVAHQk3MKf+rDsPAG7Is98EuvD/0qEMnPHVINS0rx/O41ferrRkzVgnaCxJ3wW5pYVsqzSNsnjKd1w4sscsibpKHMGi0tMg=
+	t=1746540782; cv=none; b=rnp4+TMxGcauaW5OzpFB4wjNDUuxPsMycWRrSGsK25hFI7R4VfSm1VhrI7Ix3IEv1vYaV9+e1d1u92KOzTEeZuM6lhpUJJ0+QselsGwh5RUuRyCHADX9d4eAlrH/MC8Ko6RDQggkMxYFj4MlB2JLMvxBIiaqVT9ZupyAPfK4aE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540559; c=relaxed/simple;
-	bh=7j4RlZ7YeNUapKgf+Chlob+RLOvYJtidQUMzo9Wj5is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQJqi9NqfzxG/1akoaw7CZIevxadQjc5Ef9sU8v0FNBUAJ5yEsUlqBNvrBftLaZI9HSpjyZG+/G8wrYSr0KloWRVHX1EcblVm7CTQqwxcNUKROuQ8ccBNZXMx50O1+u07TVjLVCuPBXMsouWFB1MNNF8faNOk9d5UvUsPzgzvZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C/CcBjaA; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7j4RlZ7YeNUapKgf+Chlob+RLOvYJtidQUMzo9Wj5is=; b=C/CcBjaAf0bch6vbg+ZZ+2cZ/u
-	aKc6e2qGd1Su1n0g2F5Ysmufp57rVyt33CjA4ieGF1FTAQa5XJ4m+naXLBTn7FppNNKCdy66Fn5uQ
-	EQraYNn3zLVmPn6Dd9N8SfeEuOeeJveR/vrXSucdnpQCxxOET2pCQup9zyobMHPO8t7hd6HL3LFPe
-	FCfc4zKfWZAf4gSrdiq1mNAJlQHWls9MaRLil/ji8P5uEvYvjYR9XE/7ED3SU8d9C4eDLacUXJCCv
-	L9Nd3wiB9G+txeB14JqTNCeCJ5JiWxjlI7ddwRZeOq2PV/SJxYCJPSXVQQNu28QZ/gUHjBGzBvIin
-	k02TB4eg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCIyz-0000000CGDK-31z7;
-	Tue, 06 May 2025 14:09:17 +0000
-Date: Tue, 6 May 2025 07:09:17 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	linux-nvme@lists.infradead.org
-Subject: Re: kernel TLS configuration, was: Re: [ANNOUNCE] ktls-utils 1.0.0
-Message-ID: <aBoYDS84d8N5STLq@infradead.org>
-References: <oracle/ktls-utils/push/refs/tags/ktls-utils-1.0.0/000000-c787cd@github.com>
- <32e4bd99-a85f-4f53-94bd-b8c3ecf2c66f@oracle.com>
- <aBoCELZ_x-C4talt@infradead.org>
- <63b16277-d651-4f37-9e32-965dc6d1e7b0@oracle.com>
+	s=arc-20240116; t=1746540782; c=relaxed/simple;
+	bh=sHB5xB6ZlgMWavAZfAu7pxqL26cOwNdXZepJmr3qCw4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EjSbVGkrvcmhlQqgKl+P5c3Zi2uY3UmF8d9X9/w9GDKOHl6tZAxzevyjjBoL/LgjbbggH+3xSrKxNdGPLvk1SX2Q+qYYbh/y1yRelteogZTQEadLbQqgRlYFZuZwUK2MRvp80XF1DgNUrSccZqplYiQlZm7XnGyz5mHFRtSwdsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1zdbJII; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C740C4CEE4;
+	Tue,  6 May 2025 14:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746540782;
+	bh=sHB5xB6ZlgMWavAZfAu7pxqL26cOwNdXZepJmr3qCw4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e1zdbJIIwYe4gSduQWtnBgAfpdwBH4dmlQZfxcLPNhPkdVmbLnuldAOEsNtMtT+X5
+	 04976iIYzOGipfuhrdEUZWXAKw4QFfSmgOMiVtScGuFhkHtuMOUgww6p4fQ131BsqR
+	 HWanQwJ7xc+BX8wbxTm32xRg/pR8pFsgE3e+HcVK66kMYayshKN6/haolDaPVzUD3Z
+	 MxrG/n8kFrV7RaONbnZ1MwgMUFC/BqB2ocYEsxWTb4CwkrvqqxZdT4MzUmU2+jsloq
+	 xDUSX+z/oBrlDi67mtyZOjVlVuWJkoljkLQ2jJAELXX0+QVwhYiF3RXedzwOHlFCD5
+	 80Yvs+at5//4A==
+Message-ID: <be740f28-8d68-400c-85bc-81cc4e48ccc6@kernel.org>
+Date: Tue, 6 May 2025 10:13:00 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63b16277-d651-4f37-9e32-965dc6d1e7b0@oracle.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/14] svcrdma: Reduce the number of rdma_rw contexts
+ per-QP
+To: Jason Gunthorpe <jgg@ziepe.ca>, Christoph Hellwig <hch@infradead.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+ Chuck Lever <chuck.lever@oracle.com>, Leon Romanovsky <leon@kernel.org>
+References: <20250428193702.5186-1-cel@kernel.org>
+ <20250428193702.5186-2-cel@kernel.org> <aBoJ64qDSp7U3twh@infradead.org>
+ <20250506131722.GG2260621@ziepe.ca> <aBoRSeERzax5lTvH@infradead.org>
+ <20250506135536.GH2260621@ziepe.ca>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250506135536.GH2260621@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 09:42:29AM -0400, Chuck Lever wrote:
-> are very welcome. (But you do have to sign the Oracle Contributor's
-> Agreement, unfortunately, to get the patches into ktls-utils).
+On 5/6/25 9:55 AM, Jason Gunthorpe wrote:
+> On Tue, May 06, 2025 at 06:40:25AM -0700, Christoph Hellwig wrote:
+>> On Tue, May 06, 2025 at 10:17:22AM -0300, Jason Gunthorpe wrote:
+>>> On Tue, May 06, 2025 at 06:08:59AM -0700, Christoph Hellwig wrote:
+>>>> On Mon, Apr 28, 2025 at 03:36:49PM -0400, cel@kernel.org wrote:
+>>>>> qp_attr.cap.max_rdma_ctxs. The QP's actual Send Queue length is on
+>>>>> the order of the sum of qp_attr.cap.max_send_wr and a factor times
+>>>>> qp_attr.cap.max_rdma_ctxs. The factor can be up to three, depending
+>>>>> on whether MR operations are required before RDMA Reads.
+>>>>>
+>>>>> This limit is not visible to RDMA consumers via dev->attrs. When the
+>>>>> limit is surpassed, QP creation fails with -ENOMEM. For example:
+>>>>
+>>>> Can we find a way to expose this limit from the HCA drivers and the
+>>>> RDMA core?
+>>>
+>>> Shouldn't it be max_qp_wr?
+>>
+>> Does that allow for arbitrary combination of different WRs?  
+> 
+> I think it is supposed to be the maximum QP WR depth you can create..
+> 
+> A QP shouldn't behave differently depending on the WR operation, each
+> one takes one WR entry.
+> 
+> Chuck do you know differently?
 
-I guess we should just for it, which would also take care of the
-musl support?
+qp_attr.cap.max_rdma_ctxs reserves a number of SQEs over and above
+qp_attr.cap.max_send_wr. The sum of those two cannot exceed max_qp_wr,
+of course.
 
+But there is a multiplier, due to whether the device wants a
+registration and invalidation WR in addition to each RDMA Read WR.
+
+Further, in drivers/infiniband/hw/mlx5/qp.c :: calc_sq_size
+
+        wq_size = roundup_pow_of_two(attr->cap.max_send_wr * wqe_size);
+        qp->sq.wqe_cnt = wq_size / MLX5_SEND_WQE_BB;
+        if (qp->sq.wqe_cnt > (1 << MLX5_CAP_GEN(dev->mdev,
+log_max_qp_sz))) {
+                mlx5_ib_dbg(dev, "send queue size (%d * %d / %d -> %d)
+exceeds limits(%d)\n",
+                            attr->cap.max_send_wr, wqe_size,
+MLX5_SEND_WQE_BB
+                            qp->sq.wqe_cnt,
+
+                            1 << MLX5_CAP_GEN(dev->mdev, log_max_qp_sz));
+                return -ENOMEM;
+        }
+
+So when svcrdma requests a large number of ctxts on top of a Send
+Queue size of 135, svc_rdma_accept() fails and the debug message above
+pops out.
+
+In this patch I'm trying to include the reg/inv multiplier in the
+calculation, but that doesn't seem to be enough to make "accept"
+reliable, IMO due to this extra calculation in calc_sq_size().
+
+-- 
+Chuck Lever
 
