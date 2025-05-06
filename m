@@ -1,233 +1,402 @@
-Return-Path: <linux-nfs+bounces-11535-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11536-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13E42AACD46
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 20:30:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05D3CAACE6C
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 21:54:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72D914C7428
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 18:30:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 024B61B684FE
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 May 2025 19:54:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0A3286884;
-	Tue,  6 May 2025 18:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF26E20D4E4;
+	Tue,  6 May 2025 19:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pE2NGvA7"
+	dkim=pass (2048-bit key) header.d=nwra.com header.i=@nwra.com header.b="3MkwPnMU"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH1PR09CU001.outbound.protection.outlook.com (mail-northcentralusazon11011052.outbound.protection.outlook.com [40.107.199.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DD428643B;
-	Tue,  6 May 2025 18:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746556207; cv=none; b=dOHU98odUtzNtQpg82/i5WGtIcFLgjMSa1ZFo2euxplvzYLMYhcdajLDv7cVp+Yt7cT3SC3IhjGOCks5Qkok6LAdp9bQ996W9UTBCsQ/05Y6TtYzOJgI6uY8K08Seb4CLnP+tF0hdpB8XtF9GIW8Vm3m5S57VJAmhDdXOwgTgTA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746556207; c=relaxed/simple;
-	bh=5T4zXrMD4XeSy/waZcahRkYiRVuVEIdKStQhCfFz7oI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nN9cR44VMcNuQjmSgB5/BJ8+g45TWqVTU/fcXMH8x/BtUW8GRTMQ1AuBe3JBUwzW7bOM93er8/tXLGnetYtI3bJo0RjjJD1H6zcCiy/y3P61rlOtQzc3XSOjAHTHMkyzD8wSYuUqewLs+n5fMLsFyUt1p+GwofrWc6GGePNAluE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pE2NGvA7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15EA1C4CEE4;
-	Tue,  6 May 2025 18:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746556205;
-	bh=5T4zXrMD4XeSy/waZcahRkYiRVuVEIdKStQhCfFz7oI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pE2NGvA7M3tbVXTV4PwHakBn1k9/LGml5Z/okOs/KNiZyJCUq/ndwBBHP/L3kvusO
-	 CSkY+o6ha/moBArEqqgucDMd3OUl+H1xxL89YLPWKuODumdOIBmkWlJlrpGmrKGr/k
-	 1Y/nvy1Th1Lq9HBQ5Whe88sS+LBTXexLiaa5nx/c+N8tP5gc2xB6ScOiU495MhqkVh
-	 TW/GcclJJ6Q7FqQGC70ynLm3jvd1kSsQ5A5L0WB/K7hLXSrFZvIjRcK3IgIMAd4NRf
-	 wLwYsqwlmwUBe3jSo2lNI5vPcqhM3vs3KGP4oLo5N50BX5baV24ONc16dc+fWR9dK6
-	 t6IUxwt9zpmRA==
-Message-ID: <15ef4be15016b47e3a77a4ab37f77cec9c49dbae.camel@kernel.org>
-Subject: Re: performance r nfsd with RWF_DONTCACHE and larger wsizes
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Cc: Mike Snitzer <snitzer@kernel.org>, Trond Myklebust
- <trondmy@hammerspace.com>,  Jens Axboe <axboe@kernel.dk>, Chris Mason
- <clm@meta.com>, Anna Schumaker <anna@kernel.org>
-Date: Tue, 06 May 2025 14:30:04 -0400
-In-Reply-To: <d4d16122-5db6-473e-82dd-39e728796064@oracle.com>
-References: <370dd4ae06d44f852342b7ee2b969fc544bd1213.camel@kernel.org>
-	 <d4d16122-5db6-473e-82dd-39e728796064@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BC01FBCB1
+	for <linux-nfs@vger.kernel.org>; Tue,  6 May 2025 19:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.199.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746561259; cv=fail; b=i6H9QAu0OmOjgcRQMQMEoOf89s/UO5aTHaYZyZ/RPiq+KtHk9dFRKminu+nTVYKLzdlzcU+99123OTdtwJghelB3JuJYdJIEuR7fJzoyeeVUvGpzxCjdq/zlxSF5vIhQ/pP5F8Bt8IE/9ea4Qkrvry8Zj6zc1ssHVsrg7+T0aHo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746561259; c=relaxed/simple;
+	bh=FhTwvtsvetj8DWkAru8kYuXVJm8dVgWyCBI1ryE27xo=;
+	h=Message-ID:Date:Subject:From:To:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=USOvl+k1ekB7IOeJ6FlCZPPYE/5rm1uG3Ry0aevEbshAl8K4BjBs9vHhA5saNW3VskyIfmaFm/N68yV4PmxT2vVcashCQU9fUcitEJduH8IkK69ivwfZn5kXjMCEQ1QfWRY3ytI9/JR2ajuDfM+Pq0xenCXVGJoogQkCOh5sNEA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nwra.com; spf=pass smtp.mailfrom=nwra.com; dkim=pass (2048-bit key) header.d=nwra.com header.i=@nwra.com header.b=3MkwPnMU; arc=fail smtp.client-ip=40.107.199.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nwra.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nwra.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qQG/lXDGmI166PDfM4Y3ar/R/IweOuXl0zGvQOzTzCOO1diK6Hlm4yU0wb5tP8CSjBqA/UWyXsMPY2476uX5VHiSNMXKwflJS9LF5Vc4z4iOkBjsene3Lnqkr3LMvos4SAbSBqXZ0I6jwJrIR1lDYvLqnUKO7wmBeP4Lwx9EtO8pkC/0CuiZFJBErZOLUZUf99FLpUNCDXVu6wvSvkAvmCRxdWi1Y5BFMtfGGCewchQ4N6A8aSDGUPSoI3hQ/0GKz+t8sbRUMozbAm91cxewVp+pNGKTW3j6H55nKAB+jGZB/J5GL3RYdSowBylCw0tFx8s64C9HvvvCk954aVoY1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rr1e4zGIlzd+Zq1oJsk4Ox32NaCfu7nQvGIbQWvyin0=;
+ b=jBwSf8gkgbBD1Vs8qr9pvJTvPgmIXSPNEBeK9sGM40eGX6uq3nI8JnlWsvxsQDMP887pao9uIqkA8jjJuOVsrBBIxADTH+46UC9HNUPC9DHQgxiQLm3ndHRWd/aimiSX0VzT1pA8B+LBoO1FnRepM1RvNtUWcxPadraRmARnwlV3IGIbC0fKRskPlUVVN0ndxpuNw/r9XzvJDXyWxDIMh7JskBrE5i+7zx3yQBXzD9jCysLMsfUsUsa60cYh7KVZxSF3Uv0voKhXA++vsQCgp3E/aUMzewASt0ilKg2rdV5276SJRQSizdM1OBJto4mlsr3jDWSxnctdaLeLGMsExA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nwra.com; dmarc=pass action=none header.from=nwra.com;
+ dkim=pass header.d=nwra.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nwra.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rr1e4zGIlzd+Zq1oJsk4Ox32NaCfu7nQvGIbQWvyin0=;
+ b=3MkwPnMUJ6Lz60DUScfZfiot4j2zuAs8WmaJcdqE2Tdi+x9FOsoLbzMR160duR2ZA/wlcp3Fg5t5HVLnC5knbzq8ohaq4/JM3vwsG6XhL7Gl3s0oSuluFYTGJ41naZqp/krwe1v+/dLpM8Pic5UHPAOmyAo2NnysRSLLOYwfED/FVPuyLil1770SB5d1Iw1Rkhg5BJhHYMHVw3xUkvBWtNHie+DIauED2eAMWFN8QOXamgym0qo0KZa1ZFUadmie4FLu+nLj9pVBawq9Rp4VN6UFTSg2WQe96rCO8/YsjnkFdAxi4j0J4RZY3XyLTYzh+RXt4qhGdYEAhA2SPgamew==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nwra.com;
+Received: from SJ0PR09MB11875.namprd09.prod.outlook.com
+ (2603:10b6:a03:51f::10) by SA1PR09MB11207.namprd09.prod.outlook.com
+ (2603:10b6:806:36b::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Tue, 6 May
+ 2025 19:54:12 +0000
+Received: from SJ0PR09MB11875.namprd09.prod.outlook.com
+ ([fe80::30e0:339f:805:2779]) by SJ0PR09MB11875.namprd09.prod.outlook.com
+ ([fe80::30e0:339f:805:2779%3]) with mapi id 15.20.8699.019; Tue, 6 May 2025
+ 19:54:12 +0000
+Message-ID: <e482c8e4-2939-4ef6-a004-e23fcf5e666d@nwra.com>
+Date: Tue, 6 May 2025 13:54:10 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: Trouble with multiple kerberos ticket caches
+From: Orion Poplawski <orion@nwra.com>
+To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <c4ecc067-9a51-40c8-9300-29119ff2e1d0@nwra.com>
+Content-Language: en-US
+Organization: NWRA
+In-Reply-To: <c4ecc067-9a51-40c8-9300-29119ff2e1d0@nwra.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060002080607000103030206"
+X-ClientProxiedBy: CY5P221CA0111.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:930:1f::25) To SJ0PR09MB11875.namprd09.prod.outlook.com
+ (2603:10b6:a03:51f::10)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR09MB11875:EE_|SA1PR09MB11207:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ec5223e-2799-413e-3c7d-08dd8cd7c58d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|41320700013|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YjZ3U0ZKRWRmVk9jdVZqM09YVnNETGY3OGNaSFQvaG94MmthUDdENlZFNDN3?=
+ =?utf-8?B?d2J4TDhiV1VYRlY3dUFsWE1mWWhuaklGbmROTUZkY1k2Z3FIWnVhcThnNkJU?=
+ =?utf-8?B?MzNuc09raXh2MlZQamFEMGRGa3RtT2lMUGtpam8rcWJoK1B1VEU4cFU2Ym4r?=
+ =?utf-8?B?a1BpV1VBaUVtckYxcGZCdFA2Z2pSclgxOFdpc0xETUlzUUswTEd1MHN6Vm1Z?=
+ =?utf-8?B?S1hqRnVKc1l1L0tFTGwwNnA5N2RyczZqeGpUVVNvSEZGUnZLZFlqRnUzeUZC?=
+ =?utf-8?B?RVA3RzBmWWluWmYvc056ZWVCZlZBZnlKeHVEOThyV3VCSjRYTDNMbWVXR3ZT?=
+ =?utf-8?B?eVRwcWQ4bkFtcTlwc0tZalhLeVpYUnBTK29MTUhoNHJoZFI4Nk16OG91T0ZL?=
+ =?utf-8?B?YUFXa1hGNmdiMlZqaTRPa3Rtd3lzVXdmT0lIYnRUSkFSNW14Y29JY29McTZ6?=
+ =?utf-8?B?Y3ZpWjJGRm5pdGlrV01QNTZCWWpuM1ZXa1NpZk9sTmtES0FuUDJQYmpjZjdH?=
+ =?utf-8?B?UzVUY1Q2NmJpdFhvVnovSHBDWFN2VFJHQUNONGxwV2RLQ2ttYS9ham9OL2p3?=
+ =?utf-8?B?ZkpjRmh1SDcvQklRMGRIQkFnTTdlTnB4UEZ2bWNidGdFcE5vbDIxcXkweFR6?=
+ =?utf-8?B?OThWdGZvYUJYWGthL1dNNW9VVHMwMWg0WjMwOSs1U1BwamtsZE40dGNPSHVt?=
+ =?utf-8?B?TTBIeEhvVUZYTS8yeVE4NXdQdGFZSkRBS3hscVUrVkxBeG5hMGpuc2VUTVNV?=
+ =?utf-8?B?TTN2aFlrVld5UGtRMkVrUEJFSDd0dldBd0pjNm1vdUpzS2lLYisrajE1L1NB?=
+ =?utf-8?B?M2lLa2JJRWwxbzZOQitEL0daTjFEcUh1UWVYU252bmdmTDhUVmVhWCtNdWho?=
+ =?utf-8?B?QzA1VU56U040cXM5djFEZVhVMzgzODhjOGcrcTRENVVNQXplUTM2ekNmcjRO?=
+ =?utf-8?B?bTFCdG83VkpiTFduNHZyejRyRDRyaFp6K1ltc3RmNEtGOE9vei9hRVo2amx6?=
+ =?utf-8?B?TXpCVy9VVmp5Wm5OWDhjUVRHcXJSSmpYR1N3SnVzYnRPUGl4bVViMXN4VEg0?=
+ =?utf-8?B?NjEzeHpQMFZmK0t6dGYzOUtzSGYzY1JFRnlUWFdZbjJqa2ZkK3NKVDNwWUwx?=
+ =?utf-8?B?WWdaY01JTWk3UDlOYmx0eVo5QkM4aHhaUysydUJzU3V1YlUvd3dsYWRtQmtM?=
+ =?utf-8?B?MnhKK3BJRGRQVHdLZ29CZWhqM2VrckRmMVdFb2pPR2owTXV1a2o3VnFIclZi?=
+ =?utf-8?B?dFZTS0NZTWN0VXdzMnNVeWZXQW56YkhLZnlYV0ZGSGFuelkyWHNBeVlVUVlO?=
+ =?utf-8?B?Q0ZjTUxFSGg4M2VyUEJSWW80YkJyaGthb0RWcU9pZmRBVE81dGJKOHF6bjJk?=
+ =?utf-8?B?SlZMdGFZM0NDcEFxRFpGMU1LblcvVjQxL0ZLdVBYYm42ZHluZTJONUt1bXJT?=
+ =?utf-8?B?Ui8zUUFzTXQ4UE1jQ0V4cXZTMzVFcTZ2bS8xeVI0WmF3RUhQb29kVEh1Y0Iz?=
+ =?utf-8?B?NWJjaW4rM0w0bDhaYTF2anZqcmFZclNET1VuOUV1RHJlRVVjbWltZi9ySVJi?=
+ =?utf-8?B?WFRVUFdTaTZmb3c3M1o3OFR6eWZ0cElOUUdOdXFReDFHMkhkR3h0M2JtQlha?=
+ =?utf-8?B?ZHd2Qzd4Zk9GTVhheFNneUlsVitwbG9pUEJOMHN3T2VhVzE3d01uclBNOExS?=
+ =?utf-8?B?RW9DYVJ1Zm5HWkpMNzdwRmhjNE9Ya2c1c1pKakY3KzQ4SkhyTnVpeXJWZ2Zi?=
+ =?utf-8?B?VW5YTlJXOFFKSkVFVzVuNDl6MExXQXl5ODFINUZPWkYvSERDTFUzMmZhNHBQ?=
+ =?utf-8?Q?1E32vfO56kugoq66O434HCYJ1padu25cclq7s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR09MB11875.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q0JXVzcrRWdNV0F2a3JVc05wdTJPWFBCT2VwdTR6OTBhcis4b0VqQlZHbU51?=
+ =?utf-8?B?UXlSSEF0TWIvUWdJTE5YVzI2TUlZUFRlS3EzRHhMZjBJZ0JGc0xHczFTVXJ3?=
+ =?utf-8?B?RWorcGpKc0pYMGx6eU9ySGVuMXA5VE9wUmdGQ24zSGovcFJuRVUzLzgwM1dN?=
+ =?utf-8?B?RVFKd1Q1RzhmYlpZV1V3Rll1ZjZOcUljN2IwWS9lVDRLMzB2U25ubGxJTEZy?=
+ =?utf-8?B?cWVkZUllQlR5ZkdMYUhaelJNNjNHbmVpNkg5cSs2cDdGSDc0Ly9RSGI4WEt4?=
+ =?utf-8?B?R3ZBWXpIY1RUNzBKQldjTEsxSUVyTEZCaG1sNXpEMjhKTkRueFFsaHBXV2cr?=
+ =?utf-8?B?MWpGeU5iR05MTlp1THFDcWN2R0JuVUJqaTBMVk5OTHFMQkt3U2c0UHBFakht?=
+ =?utf-8?B?UWdKOVlhN0tXMWJqdXh6cElmRW5JSzFPL2dZMFZZL0poMlBSL2VQamhGdkhE?=
+ =?utf-8?B?MzF4RHg0UEs3dkNrZ003dEhTS3h4MloxbHI5Vjc4MnVEVFVPNXdOZXVUelMw?=
+ =?utf-8?B?TjdFYy9PWVMyVVUwTVZ6dGduTnh0RktHTjlKZUo1NUpJS1cyQ3lJbndBUXQ4?=
+ =?utf-8?B?TGtqQ0s1SmRCZW9Denk5NXV3a0JBYzdlQkRrdU9yc0d0cUhxSWhBa0tsQU1H?=
+ =?utf-8?B?b2xrOUVPcDBVTGFCSzgwZHQxeTlSdTBqK0dmNDNtYWdnbzdHdmxsWXZ5SWth?=
+ =?utf-8?B?WVJ0dzY3THpaZlRZU3dObFZtaHdBMHZkK21wcnhDOW03MzR6YUNadVNwbVRQ?=
+ =?utf-8?B?Wm1qTlhUWVM1SlBRS0l3SVdoUTJxSk9xUjIwdFRuV2JoYXBic0V0TnluVUdC?=
+ =?utf-8?B?dUJFaXVKVlJwa3BseGY0blBYaUdlcFRsRkVCS01NU21ZN2dWUFBhV0IveWQw?=
+ =?utf-8?B?Z0toR3ZkMTV2RHZiOS9IekV2QUlyVDNrcjF2SHNFUDVLRnZRTy9waHppTGpi?=
+ =?utf-8?B?eEd6S1hrMXlOY1VHRGx2c1lad2JxWnBJdjJWbi9DMnk3OWJZQ2YzVkFlVEE0?=
+ =?utf-8?B?ZHhBbHRrSVpERUpRbEpGN3lPZ1NkU2lQdDlpTm03R1NKZVBvdktSM21jc3VG?=
+ =?utf-8?B?NGMrWVZFbTNKMnJhOEpyWWtlLzFaSUlqVldnR25aT1VnY0N1c3RZUHBYQTR2?=
+ =?utf-8?B?anVSaEtNRjYrWFBLYXRLeDVOUzNKRkRsYkloYnhYWGlZNU9EL3pRSzZnak5k?=
+ =?utf-8?B?aW9Tbkt4Tys4Q0plTm9vWldvdU5QN1RXS1ZwVHQvVGxXWFpEaHpLdWtBTFhY?=
+ =?utf-8?B?bFJILzUrazNSMENiZW44RVVMTjlYTWI0TzIrTWRDK09ISjZ6REMyMU44Z2FT?=
+ =?utf-8?B?ZGlOWWdUMHkyRG5lY2haTEhGOWVNQWpscUVCc3dPT3RSRURWdFlXd2JPOXlK?=
+ =?utf-8?B?NGdFYyt1UklkbWw0VTBnZDVCTXhYNVZ0U3I2UXUwc1RuUWE4dmxsMisrK2d1?=
+ =?utf-8?B?VVhVb251WUJ2RjMxczFSS0h0ZERKRG1MSWNGMEdiV3lHWmNpQ0orTUlyY0lF?=
+ =?utf-8?B?MWd1RGZESGhEd3ZzTjNmZmMwUU1tbFFPZ2VPWExZYi9HdTYrY0tmWHg2Mkwr?=
+ =?utf-8?B?QWw4NERiWkxLNWIwSW9JWVVlMzdjaExySFM5R3J1MHZPL09lYWxiY1ZRSzA3?=
+ =?utf-8?B?SDIxb003WHFYaE1YOGNucEFWMm05TGJDZ1JvYVZZbWVPWWJ1MVp3MDhxcTlZ?=
+ =?utf-8?B?TTNscm1BNHAwWi9zb3AycjZ6SEw3R2N5MTVSZkdJUytSdjZRT2hHd0s5TllW?=
+ =?utf-8?B?SU5VQkxWWHpHbzcrMnFzV3M1a2diTmtNNGx2WmRkQ2dhWit3ZEpOOGxBeEk5?=
+ =?utf-8?B?bzlFQXkwNHlZMkxxbGtaaENwUHl1NHJtKzBUS1QzTHFDeC9PMENjME90TFBn?=
+ =?utf-8?B?bElxYzRuOFlobGVHL1JDcWV5elZCYXd5cmpIZzNacnRReHBLMTZLVCtFcHFP?=
+ =?utf-8?B?Wmw4RXZjZHl6aUtFK3dSdVh4RDFjRFRzRDRVbkZIYTd1Q004R1k2RkJJMDc5?=
+ =?utf-8?B?U2ZyUVoraXlmYXhvZHdjaXlhRXREdzIyKy9ocnNFWGErQjhKZ3ZjWDZXUDA3?=
+ =?utf-8?B?anJuc0E4WTlSRVZxQ0RSVHZ6Vjk0elBkQldnL1AwSEJxK1pCRW1ZaW01di9y?=
+ =?utf-8?Q?+F/7/3utjmp5nuI9AuU8Hcy82?=
+X-OriginatorOrg: nwra.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ec5223e-2799-413e-3c7d-08dd8cd7c58d
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR09MB11875.namprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 19:54:11.8187
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 761303a3-2ec2-424e-8122-be8b689b4996
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR09MB11207
 
-On Tue, 2025-05-06 at 14:16 -0400, Chuck Lever wrote:
-> On 5/6/25 1:40 PM, Jeff Layton wrote:
-> > FYI I decided to try and get some numbers with Mike's RWF_DONTCACHE
-> > patches for nfsd [1]. Those add a module param that make all reads and
-> > writes use RWF_DONTCACHE.
-> >=20
-> > I had one host that was running knfsd with an XFS export, and a second
-> > that was acting as NFS client. Both machines have tons of memory, so
-> > pagecache utilization is irrelevant for this test.
-> >=20
-> > I tested sequential writes using the fio-seq_write.fio test, both with
-> > and without the module param enabled.
-> >=20
-> > These numbers are from one run each, but they were pretty stable over
-> > several runs:
-> >=20
-> > # fio /usr/share/doc/fio/examples/fio-seq-write.fio
-> >=20
-> > wsize=3D1M:
-> >=20
-> > Normal:      WRITE: bw=3D1034MiB/s (1084MB/s), 1034MiB/s-1034MiB/s (108=
-4MB/s-1084MB/s), io=3D910GiB (977GB), run=3D901326-901326msec
-> > DONTCACHE:   WRITE: bw=3D649MiB/s (681MB/s), 649MiB/s-649MiB/s (681MB/s=
--681MB/s), io=3D571GiB (613GB), run=3D900001-900001msec
-> >=20
-> > DONTCACHE with a 1M wsize vs. recent (v6.14-ish) knfsd was about 30%
-> > slower. Memory consumption was down, but these boxes have oodles of
-> > memory, so I didn't notice much change there.
-> >=20
-> > Chris suggested that the write sizes were too small in this test, so I
-> > grabbed Chuck's patches to increase the max RPC payload size [2] to 4M,
-> > and patched the client to allow a wsize that big:
-> >=20
-> > wsize=3D4M:
-> >=20
-> > Normal:       WRITE: bw=3D1053MiB/s (1104MB/s), 1053MiB/s-1053MiB/s (11=
-04MB/s-1104MB/s), io=3D930GiB (999GB), run=3D904526-904526msec
-> > DONTCACHE:    WRITE: bw=3D1191MiB/s (1249MB/s), 1191MiB/s-1191MiB/s (12=
-49MB/s-1249MB/s), io=3D1050GiB (1127GB), run=3D902781-902781msec
-> >=20
-> > Not much change with normal buffered I/O here, but DONTCACHE is faster
-> > with a 4M wsize. My suspicion (unconfirmed) is that the dropbehind flag
-> > ends up causing partially-written large folios in the pagecache to get
-> > written back too early, and that slows down later writes to the same
-> > folios.
+--------------ms060002080607000103030206
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 5/2/25 11:29, Orion Poplawski wrote:
+> One of our users is struggling with multiple kerberos ticket caches imp=
+acting
+> access to NFS sec=3Dkrb5 mounts.
 >=20
-> My feeling is that at this point, the NFSD read and write paths are not
-> currently tuned for large folios -- they break every I/O into single
-> pages.
+> Because home directories are NFS mounted, we use GSSAPI auth to forward=
+ a
+> ticket.  But then we need to kinit to have a long-term renewable ticket=
+=2E
+>=20
+> But we seem to be seeing that new ssh connections which create a new ti=
+cket
+> cache break access to the NFS mounts, resulting in "permission denied" =
+or
+> "Stale file handle" messages.  Switching back to a renewable ticket cac=
+he
+> seems to resolve the issue.
+>=20
+> Any suggestions?  Is this expected?  I would have thought that the nfs =
+access
+> would work with any valid ticket.
+>=20
+> NAME=3D"AlmaLinux"
+> VERSION=3D"8.10 (Cerulean Leopard)"
+> nfs-utils-2.3.3-59.el8.x86_64
+> 4.18.0-553.50.1.el8_10.x86_64
 >=20
 
-*nod*
+More details.  The issue seems to arise when doing gssapi delegation from=
+ a
+macOS client to the Linux box.  If I have ticket on macOS:
 
->=20
-> > I wonder if we need some heuristic that makes generic_write_sync() only
-> > kick off writeback immediately if the whole folio is dirty so we have
-> > more time to gather writes before kicking off writeback?
->=20
-> Mike has suggested that NFSD should limit the use RWF_UNCACHED to
-> WRITE requests with large payloads (for some arbitrary definition of
-> "large").
->=20
+Ticket cache: API:427671FC-DB63-442F-ACA4-13A9194F4398
+Default principal: user@AD.NWRA.COM
 
-Yeah. I think we need something along those lines.
+Valid starting     Expires            Service principal
+05/06/25 13:29:54  05/06/25 23:29:54  krbtgt/AD.NWRA.COM@AD.NWRA.COM
+        renew until 05/13/25 13:29:50
+05/06/25 13:30:30  05/06/25 23:29:54  krbtgt/NWRA.COM@AD.NWRA.COM
+05/06/25 13:30:30  05/06/25 23:29:54  host/host@NWRA.COM
 
->=20
-> > This might also be a good reason to think about a larger rsize/wsize
-> > limit in the client.
-> >=20
-> > I'd like to also test reads with this flag, but I'm currently getting
-> > back that EOPNOTSUPP error when I try to test them.
->=20
-> That's expected for that patch series.
->=20
+and ssh to the Linux box, I can't access the nfs mount:
 
-Yep, I figured.
+-bash: /home/user/.bash_profile: Permission denied
 
-> But I have to ask: what problem do you expect RWF_UNCACHED to solve?
->=20
+Ticket cache: KEYRING:persistent:30657:krb_ccache_efgrZpc
+Default principal: user@AD.NWRA.COM
 
-I don't have a problem to solve, per-se. I was mainly just wondering
-what sort of effect RWF_DONTCACHE and larger payloads would have on
-performance.
+Valid starting     Expires            Service principal
+05/06/25 13:30:30  05/06/25 23:29:54  krbtgt/AD.NWRA.COM@AD.NWRA.COM
 
->=20
-> > [1]: https://lore.kernel.org/linux-nfs/20250220171205.12092-1-
-> > snitzer@kernel.org/
-> > [2]: https://lore.kernel.org/linux-nfs/20250428193702.5186-15-
-> > cel@kernel.org/
->=20
+I also notice that the ticket is non-renewable.
+
+If I then kinit I can access the home directory fine.  Other than the new=
+
+ticket being renewable I don't see any difference:
+
+Ticket cache: KEYRING:persistent:30657:krb_ccache_efgrZpc
+Default principal: user@AD.NWRA.COM
+
+Valid starting     Expires            Service principal
+05/06/25 13:31:27  05/06/25 23:31:27  nfs/server@NWRA.COM
+        renew until 05/13/25 13:31:22
+05/06/25 13:31:27  05/06/25 23:31:27  krbtgt/NWRA.COM@AD.NWRA.COM
+        renew until 05/13/25 13:31:22
+05/06/25 13:31:27  05/06/25 23:31:27  krbtgt/AD.NWRA.COM@AD.NWRA.COM
+        renew until 05/13/25 13:31:22
+
+Actually, I also notice now that there is a krbtgt/NWRA.COM principal as =
+well.
+ I wonder if that is the difference.
+
+
+On the initial connection I see:
+
+May 06 13:16:22 rpc.gssd[1539533]:
+                                   handle_gssd_upcall(0x7f9c73b2fc80):
+'mech=3Dkrb5 uid=3D30657 enctypes=3D18,17,16,23,3,1,2' (nfs/clnt2c)
+May 06 13:16:22 rpc.gssd[1539533]: start_upcall_thread(0x7f9c73b2fc80):
+created thread id 0x7f9c69d07700
+May 06 13:16:22 rpc.gssd[1539533]: krb5_not_machine_creds(0x7f9c69d07700)=
+: uid
+30657 tgtname (null)
+May 06 13:16:22 rpc.gssd[1539533]: create_auth_rpc_client(0x7f9c69d07700)=
+:
+creating tcp client for server server
+May 06 13:16:22 rpc.gssd[1539533]: DEBUG: port already set to 2049
+May 06 13:16:22 rpc.gssd[1539533]: create_auth_rpc_client(0x7f9c69d07700)=
+:
+creating context with server nfs@server
+May 06 13:16:22 rpc.gssd[1539533]: WARNING: Failed to create krb5 context=
+ for
+user with uid 30657 for server nfs@server
+May 06 13:16:22 rpc.gssd[1539533]: looking for client creds with uid 3065=
+7 for
+server serverin /tmp
+May 06 13:16:22 rpc.gssd[1539533]: CC '/tmp/krb5ccmachine_NWRA.COM' being=
+
+considered, with preferred realm 'NWRA.COM'
+May 06 13:16:22 rpc.gssd[1539533]: CC '/tmp/krb5ccmachine_NWRA.COM' owned=
+ by
+0, not 30657
+May 06 13:16:22 rpc.gssd[1539533]: looking for client creds with uid 3065=
+7 for
+server server in /run/user/%U
+May 06 13:16:22 rpc.gssd[1539533]: do_error_downcall(0x7f9c69d07700): uid=
+
+30657 err -13
+
+
+after kinit:
+
+May 06 13:31:27 rpc.gssd[1539533]:
+                                   handle_gssd_upcall(0x7f9c73b2fc80):
+'mech=3Dkrb5 uid=3D30657 enctypes=3D18,17,16,23,3,1,2' (nfs/
+clnt2c)
+May 06 13:31:27 rpc.gssd[1539533]: start_upcall_thread(0x7f9c73b2fc80):
+created thread id 0x7f9c63fff700
+May 06 13:31:27 rpc.gssd[1539533]: krb5_not_machine_creds(0x7f9c63fff700)=
+: uid
+30657 tgtname (null)
+May 06 13:31:27 rpc.gssd[1539533]: create_auth_rpc_client(0x7f9c63fff700)=
+:
+creating tcp client for server server
+May 06 13:31:27 rpc.gssd[1539533]: DEBUG: port already set to 2049
+May 06 13:31:27 rpc.gssd[1539533]: create_auth_rpc_client(0x7f9c63fff700)=
+:
+creating context with server nfs@server
+May 06 13:31:27 rpc.gssd[1539533]: DEBUG: serialize_krb5_ctx: lucid versi=
+on!
+May 06 13:31:27 rpc.gssd[1539533]: prepare_krb5_rfc4121_buffer: protocol =
+1
+May 06 13:31:27 rpc.gssd[1539533]: prepare_krb5_rfc4121_buffer: serializi=
+ng
+key with enctype 18 and size 32
+May 06 13:31:27 rpc.gssd[1539533]: do_downcall(0x7f9c63fff700):
+lifetime_rec=3D10h:0m:0s acceptor=3Dnfs@server
+
 
 --=20
-Jeff Layton <jlayton@kernel.org>
+Orion Poplawski
+he/him/his  - surely the least important thing about me
+Manager of IT Systems                      720-772-5637
+NWRA, Boulder Office                  FAX: 303-415-9702
+3380 Mitchell Lane                       orion@nwra.com
+Boulder, CO 80301                 https://www.nwra.com/
+
+--------------ms060002080607000103030206
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+ClEwggUVMIID/aADAgECAhEArxwEsqyM/5sAAAAAUc4Y4zANBgkqhkiG9w0BAQsFADCBtDEU
+MBIGA1UEChMLRW50cnVzdC5uZXQxQDA+BgNVBAsUN3d3dy5lbnRydXN0Lm5ldC9DUFNfMjA0
+OCBpbmNvcnAuIGJ5IHJlZi4gKGxpbWl0cyBsaWFiLikxJTAjBgNVBAsTHChjKSAxOTk5IEVu
+dHJ1c3QubmV0IExpbWl0ZWQxMzAxBgNVBAMTKkVudHJ1c3QubmV0IENlcnRpZmljYXRpb24g
+QXV0aG9yaXR5ICgyMDQ4KTAeFw0yMDA3MjkxNTQ4MzBaFw0yOTA2MjkxNjE4MzBaMIGlMQsw
+CQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjE5MDcGA1UECxMwd3d3LmVudHJ1
+c3QubmV0L0NQUyBpcyBpbmNvcnBvcmF0ZWQgYnkgcmVmZXJlbmNlMR8wHQYDVQQLExYoYykg
+MjAxMCBFbnRydXN0LCBJbmMuMSIwIAYDVQQDExlFbnRydXN0IENsYXNzIDIgQ2xpZW50IENB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxDKNQtCeGZ1bkFoQTLUQACG5B0je
+rm6A1v8UUAboda9rRo7npU+tw4yw+nvgGZH98GOtcUnzqBwfqzQZIE5LVOkAk75wCDHeiVOs
+V7wk7yqPQtT36pUlXRR20s2nEvobsrRcYUC9X91Xm0RV2MWJGTxlPbno1KUtwizT6oMxogg8
+XlmuEi4qCoxe87MxrgqtfuywSQn8py4iHmhkNJ0W46Y9AzFAFveU9ksZNMmX5iKcSN5koIML
+WAWYxCJGiQX9o772SUxhAxak+AqZHOLAxn5pAjJXkAOvAJShudzOr+/0fBjOMAvKh/jVXx9Z
+UdiLC7k4xljCU3zaJtTb8r2QzQIDAQABo4IBLTCCASkwDgYDVR0PAQH/BAQDAgGGMB0GA1Ud
+JQQWMBQGCCsGAQUFBwMEBggrBgEFBQcDAjASBgNVHRMBAf8ECDAGAQH/AgEAMDMGCCsGAQUF
+BwEBBCcwJTAjBggrBgEFBQcwAYYXaHR0cDovL29jc3AuZW50cnVzdC5uZXQwMgYDVR0fBCsw
+KTAnoCWgI4YhaHR0cDovL2NybC5lbnRydXN0Lm5ldC8yMDQ4Y2EuY3JsMDsGA1UdIAQ0MDIw
+MAYEVR0gADAoMCYGCCsGAQUFBwIBFhpodHRwOi8vd3d3LmVudHJ1c3QubmV0L3JwYTAdBgNV
+HQ4EFgQUCZGluunyLip1381+/nfK8t5rmyQwHwYDVR0jBBgwFoAUVeSB0RGAvtiJuQijMfmh
+JAkWuXAwDQYJKoZIhvcNAQELBQADggEBAD+96RB180Kn0WyBJqFGIFcSJBVasgwIf91HuT9C
+k6QKr0wR7sxrMPS0LITeCheQ+Xg0rq4mRXYFNSSDwJNzmU+lcnFjtAmIEctsbu+UldVJN8+h
+APANSxRRRvRocbL+YKE3DyX87yBaM8aph8nqUvbXaUiWzlrPEJv2twHDOiGlyEPAhJ0D+MU0
+CIfLiwqDXKojK+n/uN6nSQ5tMhWBMMgn9MD+zxp1zIe7uhGhgmVQBZ/zRZKHoEW4Gedf+EYK
+W8zYXWsWkUwVlWrj5PzeBnT2bFTdxCXwaRbW6g4/Wb4BYvlgnx1AszH3EJwv+YpEZthgAk4x
+ELH2l47+IIO9TUowggU0MIIEHKADAgECAhBOGocb/uu4yQAAAABMPXr3MA0GCSqGSIb3DQEB
+CwUAMIGlMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjE5MDcGA1UECxMw
+d3d3LmVudHJ1c3QubmV0L0NQUyBpcyBpbmNvcnBvcmF0ZWQgYnkgcmVmZXJlbmNlMR8wHQYD
+VQQLExYoYykgMjAxMCBFbnRydXN0LCBJbmMuMSIwIAYDVQQDExlFbnRydXN0IENsYXNzIDIg
+Q2xpZW50IENBMB4XDTIzMTIxNjIxMTUyNVoXDTI2MTIxNjIxNDUyMlowgbAxCzAJBgNVBAYT
+AlVTMRMwEQYDVQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdTZWF0dGxlMSYwJAYDVQQKEx1O
+b3J0aFdlc3QgUmVzZWFyY2ggQXNzb2NpYXRlczEbMBkGA1UEYRMSTlRSVVMrV0EtNjAwNTcz
+MjUxMTUwFgYDVQQDEw9PcmlvbiBQb3BsYXdza2kwGwYJKoZIhvcNAQkBFg5vcmlvbkBud3Jh
+LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKn5wO5Bjob6bLDahVowly2l
+AyCWBHGRq1bSptv7tXpj+Xaci4zpCqRoyqX0Gjpo8BEulUYQK8b7nO7UM3aMLC8H6vyzQ64A
+GupPGIKuJg+Qr8jA0ihCVH+duE0bNXfDPTm/8VsXOubmVLPLp0cejxzrEC/RI5l8rdl0sQ+2
+QZp9jTlyghB1Rxt2AYVYhVVnRMSJ8RgKp9MLV3qIfHqF1k5MGBIP6rS1afmlGd/yW9IWSB8z
+iASPtr/Ml5ObbxtYZG47kCKCS7RF2rI6rGNmK/R6cITRs37dzUfBmagDFV897wAW3tHTyLQM
+4vobhmS2UYi8C5voc+I75LYOsvLaXHUCAwEAAaOCAVEwggFNMA4GA1UdDwEB/wQEAwIFoDAd
+BgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwFAYDVR0gBA0wCzAJBgdngQwBBQMBMGoG
+CCsGAQUFBwEBBF4wXDAjBggrBgEFBQcwAYYXaHR0cDovL29jc3AuZW50cnVzdC5uZXQwNQYI
+KwYBBQUHMAKGKWh0dHA6Ly9haWEuZW50cnVzdC5uZXQvMjA0OGNsYXNzMnNoYTIuY2VyMDQG
+A1UdHwQtMCswKaAnoCWGI2h0dHA6Ly9jcmwuZW50cnVzdC5uZXQvY2xhc3MyY2EuY3JsMBkG
+A1UdEQQSMBCBDm9yaW9uQG53cmEuY29tMB8GA1UdIwQYMBaAFAmRpbrp8i4qdd/Nfv53yvLe
+a5skMB0GA1UdDgQWBBSZhCz4u7bZ2JjPtNAM8gx3QVEp1zAJBgNVHRMEAjAAMA0GCSqGSIb3
+DQEBCwUAA4IBAQA2L6VG0IcimaH24eRr4+L6a/Q51YxInV1pDPt73Lr2uz9CzKWiqWgm6Ioh
+O9gSEhDsAYUXED8lkJ3jId9Lo/fDj5M+13S4eChfzFb1VWyA9fBeOE+/zEYrSPQIuRUM324g
+PEm8eP/mYaZzHXoA0RJC7jyZlLRdzu/kGqUQDr+81YnkXoyoKc8WeNZnSQSL+LqRvPJCcCTu
+JbCdd7C8zYW1dRgh4d9hYooUSsKTsSeDoRkFyqk4ZH0V3PFqa2HiFrdi8h3vpBX44VFddyaa
+e+ekomLvvVZWGtJgXWr6VEBo8PTah0fw8BQjCIfFym44D9dulz1YW7E6FRPMSZ7x8X3UMYIF
+ZDCCBWACAQEwgbowgaUxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1FbnRydXN0LCBJbmMuMTkw
+NwYDVQQLEzB3d3cuZW50cnVzdC5uZXQvQ1BTIGlzIGluY29ycG9yYXRlZCBieSByZWZlcmVu
+Y2UxHzAdBgNVBAsTFihjKSAyMDEwIEVudHJ1c3QsIEluYy4xIjAgBgNVBAMTGUVudHJ1c3Qg
+Q2xhc3MgMiBDbGllbnQgQ0ECEE4ahxv+67jJAAAAAEw9evcwDQYJYIZIAWUDBAIBBQCgggN6
+MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUwNjE5NTQx
+MFowLwYJKoZIhvcNAQkEMSIEIN3XNlXQMKR/HIQ3NRbYIUqbIU4H8f61ly8GzY+8OXi2MIHL
+BgkrBgEEAYI3EAQxgb0wgbowgaUxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1FbnRydXN0LCBJ
+bmMuMTkwNwYDVQQLEzB3d3cuZW50cnVzdC5uZXQvQ1BTIGlzIGluY29ycG9yYXRlZCBieSBy
+ZWZlcmVuY2UxHzAdBgNVBAsTFihjKSAyMDEwIEVudHJ1c3QsIEluYy4xIjAgBgNVBAMTGUVu
+dHJ1c3QgQ2xhc3MgMiBDbGllbnQgQ0ECEE4ahxv+67jJAAAAAEw9evcwgc0GCyqGSIb3DQEJ
+EAILMYG9oIG6MIGlMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNRW50cnVzdCwgSW5jLjE5MDcG
+A1UECxMwd3d3LmVudHJ1c3QubmV0L0NQUyBpcyBpbmNvcnBvcmF0ZWQgYnkgcmVmZXJlbmNl
+MR8wHQYDVQQLExYoYykgMjAxMCBFbnRydXN0LCBJbmMuMSIwIAYDVQQDExlFbnRydXN0IENs
+YXNzIDIgQ2xpZW50IENBAhBOGocb/uu4yQAAAABMPXr3MIIBbwYJKoZIhvcNAQkPMYIBYDCC
+AVwwCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzANBggqhkiG9w0DAgIB
+BTANBggqhkiG9w0DAgIBBTAHBgUrDgMCBzANBggqhkiG9w0DAgIBBTAKBggqhkiG9w0CAjAK
+BggqhkiG9w0CBTAHBgUrDgMCGjALBglghkgBZQMEAgEwCwYJYIZIAWUDBAICMAsGCWCGSAFl
+AwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUDBAIHMAsGCWCGSAFlAwQCCDALBglghkgBZQME
+AgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEBATALBgkrgQUQhkg/AAIwCAYGK4EEAQsAMAgG
+BiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsDMAsGCSuBBRCGSD8AAzAIBgYrgQQBDgAwCAYG
+K4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMwDQYJKoZIhvcNAQEBBQAEggEAjEiOjVAXo/Ip
+f8uCbbjrZQA6M3HPntY1vPrC/+qpDVIk/BHpPcunQ+WV11b1+HYm63puL2hjH3cZOplFmzK/
+lqOimqvVpv/KrdqBS3d+hHB+GVw/QIO+70lYBir4n2DZAi8eanhJVqScCP0gWgfipQckC/20
+53XqHFEzAC22BuZSQFfI8GEvhyBkAOJIrtCcPPHYFr3fC0R4wwB/D+ewLEOxMYQmKsSTsFtP
+q0a7GVRxptyK27kbnMk0gXluXtyH1oU3oW9C7MieNJ6Y5wtsAZjtcJYHZICSmx0sBzIBrH27
+Ia9/3qURvZrlIdj8geoOIJG665KfGClplCW2WvXplQAAAAAAAA==
+
+--------------ms060002080607000103030206--
 
