@@ -1,145 +1,92 @@
-Return-Path: <linux-nfs+bounces-11582-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11583-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A027AAE38C
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:51:28 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C702CAAE394
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:53:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DA947A8344
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:50:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF6F91BA791F
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C402874F1;
-	Wed,  7 May 2025 14:51:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAC54213E81;
+	Wed,  7 May 2025 14:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GhWB4OMn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23C62139D2;
-	Wed,  7 May 2025 14:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C55E207A27
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629480; cv=none; b=g6lRA0u87d/7kL4v5Lu3t+helv6qHSrlVOk/x5sND6UQatU9R+RXPZ+STZbyTU2jE1Md9TkTsNLre7iBvD2UOPJje2GawODDuUKcdeqfrVJ/3sc2RJ4qe+GuA/zog8+JugUIBAHBTAJkezdpNlRlkssQ/I4p1wIPn/BLzwFUN1k=
+	t=1746629611; cv=none; b=Bn4C2aQf/CmmLdo2QbJu7sa4R4ORHBHN/n2Ah0oSNSFBVCu8qdFTHgLAUGgNv2Kjmquqi7wTFqQyyHqA8Hplqpdivrqj+Jy/HFa/Tt7YiV7qcGKmZQaz7pYE4jxFqw5WTSEvV1k6KW9OU0mfU30XMB1pCNUz59wjHp3TLPtRww8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629480; c=relaxed/simple;
-	bh=NPA5fWeiy+CdF2Izc2yyx1/a1+9Qt6WzEAMq3XypOaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=As135YLHD4urdbUqrj2FDgXJH4hqGilHTyg4xvLF0P4uJKMhNUVKSskDrXwrXWXYnHurcQc/815nrR/2EwuJSoK33XcjtptT/EAG/e1g2hR/eXsNZ6cL47kwVOIKXeimtEkdIiXNEPeRaYm61P9RT1a2n1hO+3xorW17iMYjWU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3995ff6b066so3495514f8f.3;
-        Wed, 07 May 2025 07:51:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746629477; x=1747234277;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=834ecun7GkIpcfgOiJfl+krcWKVVEZ53RPy+KA72j+8=;
-        b=sffQ8uAUwQt5uk7fDnvYPAkSsaIt/35q7+vzPepVWZ4G52Cm0h5bkOxz26kU8YXnyf
-         Cp25dyGuec+wrFcRwuyL7Khf3Pl3zz2tFcKHvWgVR755anktUq1ySko5wlUIdi78DgmE
-         74GNxHA4kfxwQyd6ZF3h/+apCibQ/DATPoUx2jmR+cVZD40U2AJ8CjDJIhekZkQDpUGE
-         tYL0OHMhIk2TdZ3zOiZ1NE5vgVebq5j+bGXM0IZrXPbfBiEtck8sRODVtTdOONQ2y4uX
-         X7kMIVIkGrBNbHJh4xUy3ZjCCHrxoTNgBdeSDTEiQOEaI+zN6fpXok3dKjg3FQzoYsth
-         GbuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZpZXgz3excW9v/SWFBFKnAiOA3im2NoU8JdPxPGmioXHJ6LCdT8ZcxfpnNadYBTsq7NOE4HGrsw==@vger.kernel.org, AJvYcCVWlNGnII/qwP1PrQa9J7qggLzD3UZNzaFn3FdKRWWciI10aPtjMEbH679ZCBTTfiYezU0zeY3jzp3R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3ew+YDQiudbnBiRyZgc+HA6mTxyV/uVql01aWmOy+eTMHpx3M
-	St4yQdl1mmr4BWVggIwARE2klefwsx1pb0S7S6W9xU4mYWxMVbJ7
-X-Gm-Gg: ASbGnctUvilF2TDjwTW8nDD91E01FBVFJnd3SURxe0FZ/xCurWyIbuKHUpvjyXmkU1S
-	T9W6Si6ZaajOmnv4TrTC+vh6vA82SmBcmRdcSMlNMYt95l4rIxqG43FBnkCbcc443L6e8Gjo4Rq
-	Pm5rwGqduMyhPqTBXV+4H/AFAaiGVfa3YwCDN4Ejxl+BLRBe1mDqJUAqpoVIZ5fiEiUf7TJf7Y1
-	NGdgcg91+p6tnXp6CMUBJ5dHMrICecY6q5rQTtcseb7j3fpcKFHz2CJQdVP29bC3V+UA4fg5CKW
-	FypF45Yn0PN8mmPErX+gt8ivd6AUBWO+lYRRRZ79bMvY4hF6cfbJWW9ktckf5Zc/K7qo0yKRbXc
-	+2RpU1eeByPwwCckY
-X-Google-Smtp-Source: AGHT+IFoRriMU6u/G78ePtFV+Mux25cjZQlxF2bl1IUWwvPj1gOeuLmcuec2LPLUjNg6YlnXe/SfYg==
-X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr3113188f8f.53.1746629476779;
-        Wed, 07 May 2025 07:51:16 -0700 (PDT)
-Received: from [10.50.5.11] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7caasm17377865f8f.54.2025.05.07.07.51.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 07:51:16 -0700 (PDT)
-Message-ID: <778e6327-f77a-4f14-a243-197058ed278d@grimberg.me>
-Date: Wed, 7 May 2025 17:51:14 +0300
+	s=arc-20240116; t=1746629611; c=relaxed/simple;
+	bh=+uhejmQ1gMmMeByxlXibjiNpk2JF04K7HsRfQn/IaVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a1VB3aBYaQW8zKOG6jJCkqepU4AZc+fFe3VmIWVu9DmZM5T7UQcVFmv6qRnboWzDfI+OpSaOMPF/Qrg00pa+u8r4f+fOrlz6GD7tnfsVP36cjlfIV1CYvsxD0XtYY2OAYozhOBBJ5ZbEoer8Oz5+5TMIrCHcfnfBvbIOnlAV6Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GhWB4OMn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746629607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+uhejmQ1gMmMeByxlXibjiNpk2JF04K7HsRfQn/IaVo=;
+	b=GhWB4OMnq69FjYCgaxnrdcSNJd1kqiUEycyeAjRHMhxktszrttLU3uKPg+cZ5oSRunMvIw
+	O3YUD+TH37gBgH4jzGD75BiXQseIXFjZAI9Q17bNkLZAA1CWEwTbVEWztWt/3g2VTxdHQd
+	eFkoDvxjCaOf5wbc/XxsA4GYbJEqTIc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-259-p5-F79MBOIC3qRtqYPQbkg-1; Wed,
+ 07 May 2025 10:53:25 -0400
+X-MC-Unique: p5-F79MBOIC3qRtqYPQbkg-1
+X-Mimecast-MFC-AGG-ID: p5-F79MBOIC3qRtqYPQbkg_1746629601
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20D7F1956077;
+	Wed,  7 May 2025 14:53:21 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.76.2])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 350B919560A7;
+	Wed,  7 May 2025 14:53:20 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Scott Mayhew <smayhew@redhat.com>, anna@kernel.org, trondmy@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSv4: Don't check for OPEN feature support in v4.1
+Date: Wed, 07 May 2025 10:53:17 -0400
+Message-ID: <E0CFFDE3-83C5-436E-9B55-75F45AD17C44@redhat.com>
+In-Reply-To: <20250430111229.4114991-1-smayhew@redhat.com>
+References: <20250430111229.4114991-1-smayhew@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
-To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
- Trond Myklebust <trondmy@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, David Howells <dhowells@redhat.com>,
- Jarkko Sakkinen <jarkko@kernel.org>, linux-nfs@vger.kernel.org,
- kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
- keyrings@vger.kernel.org
-References: <20250507080944.3947782-1-hch@lst.de>
- <20250507080944.3947782-3-hch@lst.de>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250507080944.3947782-3-hch@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+On 30 Apr 2025, at 7:12, Scott Mayhew wrote:
 
-
-On 07/05/2025 11:09, Christoph Hellwig wrote:
-> Create a kernel .nfs keyring similar to the nvme .nvme one.  Unlike for
-> a userspace-created keyrind, tlshd is a possesor of the keys with this
-> and thus the keys don't need user read permissions.
+> fattr4_open_arguments is a v4.2 recommended attribute, so we shouldn't
+> be sending it to v4.1 servers.
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   fs/nfs/inode.c | 15 +++++++++++++++
->   1 file changed, 15 insertions(+)
->
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 119e447758b9..fb1fe1bdfe92 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -2571,6 +2571,8 @@ static struct pernet_operations nfs_net_ops = {
->   	.size = sizeof(struct nfs_net),
->   };
->   
-> +static struct key *nfs_keyring;
-> +
->   /*
->    * Initialize NFS
->    */
-> @@ -2578,6 +2580,17 @@ static int __init init_nfs_fs(void)
->   {
->   	int err;
->   
-> +	if (IS_ENABLED(CONFIG_NFS_V4)) {
+> Fixes: cb78f9b7d0c0 ("nfs: fix the fetch of FATTR4_OPEN_ARGUMENTS")
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 
-xprtsec is sunrpc, meaning it is also supported with nfsv3.
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Cc: stable@vger.kernel.org # 6.11+
 
-> +		nfs_keyring = keyring_alloc(".nfs",
-> +				     GLOBAL_ROOT_UID, GLOBAL_ROOT_GID,
-> +				     current_cred(),
-> +				     (KEY_POS_ALL & ~KEY_POS_SETATTR) |
-> +				     (KEY_USR_ALL & ~KEY_USR_SETATTR),
-> +				     KEY_ALLOC_NOT_IN_QUOTA, NULL, NULL);
-> +		if (IS_ERR(nfs_keyring))
-> +			return PTR_ERR(nfs_keyring);
-> +	}
-> +
->   	err = nfs_sysfs_init();
->   	if (err < 0)
->   		goto out10;
-> @@ -2653,6 +2666,8 @@ static void __exit exit_nfs_fs(void)
->   	nfs_fs_proc_exit();
->   	nfsiod_stop();
->   	nfs_sysfs_exit();
-> +	if (IS_ENABLED(CONFIG_NFS_V4))
-> +		key_put(nfs_keyring);
 
-Same comment
+It would be lovely to have this fixed in v6.15.
 
->   }
->   
->   /* Not quite true; I just maintain it */
+Ben
 
 
