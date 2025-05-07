@@ -1,255 +1,369 @@
-Return-Path: <linux-nfs+bounces-11540-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11541-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77F22AAD1D6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 02:06:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E498EAAD347
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 04:30:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80F8E9846EE
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 00:06:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 492774684BF
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 02:30:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67EC6635;
-	Wed,  7 May 2025 00:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1091A18C937;
+	Wed,  7 May 2025 02:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk3MN9+b"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pdZ9LOUs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/8izlL2n";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pdZ9LOUs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/8izlL2n"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C145623;
-	Wed,  7 May 2025 00:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB17FBA38
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 02:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746576414; cv=none; b=BVZv0nJc78bPBfmmKxlhL1dBheISKPI8j+RO86egNzeuzvwlQyb6UPmXICa72d06PDwkdI34/BttYuvzONtLyA3GdxX8mPjoRq4MRUtvU2BjK+YI65FYGGn6yl5LdQTXE4A+wEK1QJfs38UEb3ITL+KQnOV9AEFHNsDFFMdLKGs=
+	t=1746584999; cv=none; b=HmqyNurA1MiYjkwVoEIlvbUihyCfHK26Gm77QHJo4hCYi4zjEH9+pLy10iER0yNVihkAtWq7+kjmclyZQMqI9owV0zj5eaCUN0+aqbfDfum8J2agVN6aqgvO0bHMnW7MR6evH40yIjXoOJDmZYn4Y1Ib6EjxX7wwN8/ZNfNGOqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746576414; c=relaxed/simple;
-	bh=Up31LBLuTDys2yDLiDe+MkKJLJdnOgrUgt7tjzyHyxQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lidnGac3koY7xgVPvyMihJ4Vsgvz5UYbdUYRAxsg/t0YN/vvG/ay4pOrkrVS4m99Bghf1aM2yixWPxCA3rtQcLX7ydAAr8gRdEXZcbKy6G+AX0DdAp1/9E7GuKyJ81NHM7khCy5YQgkNghAEpZMq1Q6LPPeSgksqlURXPpsIUZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qk3MN9+b; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0AC5C4CEE4;
-	Wed,  7 May 2025 00:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746576413;
-	bh=Up31LBLuTDys2yDLiDe+MkKJLJdnOgrUgt7tjzyHyxQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Qk3MN9+bhfWQi4EjwjOb61V9FdHjEpEoiv3mCPPvRKSw6KYgiWOer/JpqfgOtfsfB
-	 Rp3Qay+Ojzj8sGQ1JskMhViX4tb3581ndnV7lPxZD7ImmusbT6D0PrBhGH1UrqNxhK
-	 e6p7+0mekSWWUYbJVv163Z+qCTxUqVV39inMBPWCPpdRCY3vCndq7z0bRm4zZ8VsBn
-	 mc/KouauEJCt/7c4pkSXFWKyGfZKtkW5X9khex9vuGxkNqrVAqQnDYz7H4dVLGZe/N
-	 t6Go+sKo1F3Jv3yt2vFPTRzD+ys7hBEafInoTZT0YDZJMKZUxUUoewQZfoM/zzxJA+
-	 aQB6TocGQ7YoA==
-Message-ID: <8039661b7a4c4f10452180372bd985c0440f1e1d.camel@kernel.org>
-Subject: Re: performance r nfsd with RWF_DONTCACHE and larger wsizes
-From: Jeff Layton <jlayton@kernel.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, Chuck Lever	
- <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>, Trond
- Myklebust	 <trondmy@hammerspace.com>, Jens Axboe <axboe@kernel.dk>, Chris
- Mason	 <clm@meta.com>, Anna Schumaker <anna@kernel.org>
-Date: Tue, 06 May 2025 20:06:51 -0400
-In-Reply-To: <aBqNtfPwFBvQCgeT@dread.disaster.area>
-References: <370dd4ae06d44f852342b7ee2b969fc544bd1213.camel@kernel.org>
-	 <aBqNtfPwFBvQCgeT@dread.disaster.area>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
+	s=arc-20240116; t=1746584999; c=relaxed/simple;
+	bh=BrRcuO40glUvAhX4jcgqQRX6GitiKruYQ7GRmwQ1zEU=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=WweBLApK3ysa8qYU2ZrRwI8BCI0QC+IOC+K8mXC0932vg9Fe9KeeDSwPv6jBXFK3BC4iYR4sMgx2alHQtVJ6euZ4zNWHhwcPCo1yS2wT6Z69kSvXauTLASVpH1w7zzEfArQ1dwZV7JMPq9lmT6zbe8ETDjw0uLTGgvBeovg1hs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pdZ9LOUs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/8izlL2n; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pdZ9LOUs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/8izlL2n; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A4C751F387;
+	Wed,  7 May 2025 02:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746584993; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S3vI5uMsJbz3H3f0Gmr+IXo+nnTfSDBYtJcynhCv/d4=;
+	b=pdZ9LOUsIC3YMz+0Ea902MtB7tnzPrzv+6TtOnqmahaUflC4jXK7D2TJCrQgXugcIDCOcV
+	ulB7E51Si1LT3cZqzCFLWu4a09ZUO+hDY1k+YjkGX2lZwLFYI2/FG9SmzcwZcnBzZtpQFi
+	dGneU+AjjbIxaCbADqLpLsoBa0lUJJo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746584993;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S3vI5uMsJbz3H3f0Gmr+IXo+nnTfSDBYtJcynhCv/d4=;
+	b=/8izlL2npPN+tPww20PF2/C23OSh83bpNgG1osxCSgjPFo+N7ZKEjh5ssA83XiKGOpiQHB
+	fLgJ61QP+5Tc10Aw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pdZ9LOUs;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/8izlL2n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746584993; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S3vI5uMsJbz3H3f0Gmr+IXo+nnTfSDBYtJcynhCv/d4=;
+	b=pdZ9LOUsIC3YMz+0Ea902MtB7tnzPrzv+6TtOnqmahaUflC4jXK7D2TJCrQgXugcIDCOcV
+	ulB7E51Si1LT3cZqzCFLWu4a09ZUO+hDY1k+YjkGX2lZwLFYI2/FG9SmzcwZcnBzZtpQFi
+	dGneU+AjjbIxaCbADqLpLsoBa0lUJJo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746584993;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S3vI5uMsJbz3H3f0Gmr+IXo+nnTfSDBYtJcynhCv/d4=;
+	b=/8izlL2npPN+tPww20PF2/C23OSh83bpNgG1osxCSgjPFo+N7ZKEjh5ssA83XiKGOpiQHB
+	fLgJ61QP+5Tc10Aw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D5FFF13680;
+	Wed,  7 May 2025 02:29:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id R0LvIJzFGmgJCQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 07 May 2025 02:29:48 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: Pali =?utf-8?q?Roh=C3=A1r?= <pali@kernel.org>
+Cc: "Mike Snitzer" <snitzer@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+ "Vincent Mailhol" <mailhol.vincent@wanadoo.fr>,
+ "Anna Schumaker" <anna.schumaker@oracle.com>, linux-nfs@vger.kernel.org,
+ "Jeff Johnson" <jeff.johnson@oss.qualcomm.com>,
+ "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>
+Subject: Re: [PATCH v2] nfs: add dummy definition for nfsd_file
+In-reply-to: <20250504090757.zk5rgb4lg4cgqenf@pali>
+References: <>, <20250504090757.zk5rgb4lg4cgqenf@pali>
+Date: Wed, 07 May 2025 12:29:44 +1000
+Message-id: <174658498476.3924073.575374680003176730@noble.neil.brown.name>
+X-Rspamd-Queue-Id: A4C751F387
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[wanadoo.fr];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,oracle.com,hammerspace.com,wanadoo.fr,vger.kernel.org,oss.qualcomm.com,redhat.com,talpey.com];
+	DKIM_TRACE(0.00)[suse.de:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, 2025-05-07 at 08:31 +1000, Dave Chinner wrote:
-> On Tue, May 06, 2025 at 01:40:35PM -0400, Jeff Layton wrote:
-> > FYI I decided to try and get some numbers with Mike's RWF_DONTCACHE
-> > patches for nfsd [1]. Those add a module param that make all reads and
-> > writes use RWF_DONTCACHE.
+On Sun, 04 May 2025, Pali Roh=C3=A1r wrote:
+> On Wednesday 23 April 2025 00:02:00 Pali Roh=C3=A1r wrote:
+> > On Wednesday 23 April 2025 07:54:40 NeilBrown wrote:
+> > > On Wed, 23 Apr 2025, Pali Roh=C3=A1r wrote:
+> > > > On Sunday 20 April 2025 12:12:22 Mike Snitzer wrote:
+> > > > > On Sat, Apr 19, 2025 at 01:52:31PM -0400, Chuck Lever wrote:
+> > > > > > On 4/18/25 5:34 PM, Mike Snitzer wrote:
+> > > > > > > On Wed, Apr 16, 2025 at 09:31:55AM -0400, Chuck Lever wrote:
+> > > > > > >> On 4/15/25 10:41 PM, Vincent Mailhol wrote:
+> > > > > > >>> +CC: Neil Brown
+> > > > > > >>> +CC: Olga Kornievskaia
+> > > > > > >>> +CC: Dai Ngo
+> > > > > > >>> +CC: Tom Talpey
+> > > > > > >>> +CC: Trond Myklebust
+> > > > > > >>> +CC: Anna Schumaker
+> > > > > > >>>
+> > > > > > >>> (just to make sure that anyone listed in
+> > > > > > >>>
+> > > > > > >>>   ./scripts/get_maintainer.pl fs/nfs_common/nfslocalio.c
+> > > > > > >>>
+> > > > > > >>> get copied).
+> > > > > > >>>
+> > > > > > >>> Here is the link to the full thread:
+> > > > > > >>>
+> > > > > > >>>   https://lore.kernel.org/all/Z_coQbSdvMWD92IA@kernel.org/
+> > > > > > >>>
+> > > > > > >>>
+> > > > > > >>> On 10/04/2025 at 11:09, Mike Snitzer:
+> > > > > > >>>> Add dummy definition for nfsd_file in both nfslocalio.c and =
+localio.c
+> > > > > > >>>> so various compilers (e.g. gcc 8.5.0 and 9.5.0) can be used.=
+ Otherwise
+> > > > > > >>>> RCU code (rcu_dereference and rcu_access_pointer) will deref=
+erence
+> > > > > > >>>> what should just be an opaque pointer (by using typeof(*ptr)=
+).
+> > > > > > >>>>
+> > > > > > >>>> Fixes: 86e00412254a ("nfs: cache all open LOCALIO nfsd_file(=
+s) in client")
+> > > > > > >>>> Cc: stable@vger.kernel.org
+> > > > > > >>>> Tested-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+> > > > > > >>>> Tested-by: Pali Roh=C3=A1r <pali@kernel.org>
+> > > > > > >>>> Tested-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > > > > > >>>> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> > > > > > >>>
+> > > > > > >>> Hi everyone,
+> > > > > > >>>
+> > > > > > >>> The build has been broken for several weeks already. Does any=
+one have
+> > > > > > >>> intention to pick-up this patch?
+> > > > > > >>>
+> > > > > > >>> (please ignore if someone already picked it up and if it is a=
+lready on
+> > > > > > >>> its way to Linus's tree).
+> > > > > > >>
+> > > > > > >> I assumed that, like all LOCALIO-related changes, this fix wou=
+ld go
+> > > > > > >> in through the NFS client tree. Let me know if it needs to go =
+via NFSD.
+> > > > > > >=20
+> > > > > > > Since we haven't heard from Trond or Anna about it, I think you=
+'d be
+> > > > > > > perfectly fine to pick it up.  It is a compiler fixup associate=
+d with
+> > > > > > > nfd_file being kept opaque to the client -- but given it is "st=
+ruct
+> > > > > > > nfsd_file" that gives you full license to grab it (IMO).
+> > > > > > >=20
+> > > > > > > I'm also unaware of any conflicting changes in the NFS client t=
+ree.
+> > > > > >=20
+> > > > > > Hi Mike -
+> > > > > >=20
+> > > > > > I just looked at this one again. The patch's diffstat is:
+> > > > > >=20
+> > > > > >  fs/nfs/localio.c           | 8 ++++++++
+> > > > > >  fs/nfs_common/nfslocalio.c | 8 ++++++++
+> > > > > >=20
+> > > > > > Although fs/nfs_common/ is part of both trees, fs/nfs/localio.c is
+> > > > > > definitely a client file. I'm still happy to pick it up, but tech=
+nically
+> > > > > > I would need an Acked-by: from one of the NFS client maintainers.
+> > > > > >=20
+> > > > > > My impression is that Trond is managing the NFS client pulls for =
+v6.15.
+> > > > >=20
+> > > > > Sure, that's my understanding too.  Feel free to offer your Acked-by
+> > > > > (for fs/nfs_common/) and hopefully it'll get picked up.  I can
+> > > > > followup with Trond later this coming week if/as needed.
+> > > > >=20
+> > > > > Thanks,
+> > > > > Mike
+> > > >=20
+> > > > Can we move forward here? The compilation of kernel is broken for at
+> > > > least 2 months. Also I have tried to contact Trond for more months but
+> > > > has not responded to my emails.
+> > > >=20
+> > > > Could be this change picked with a slightly higher priority than just
+> > > > waiting another two months? Note that nobody objected this particular
+> > > > fix and there are 3+ Tested-by lines. And it is not a good image if s=
+ome
+> > > > kernel component does not compile...
+> > > >=20
+> > >=20
+> > > Actually I do object to this fix (though I've been busy and hadn't had
+> > > much change to look at it properly).
+> > > The fix is ugly.  At the very least it should be wrapping in an=20
+> > >    #if  GCC_VERSION  < whatever
 > >=20
-> > I had one host that was running knfsd with an XFS export, and a second
-> > that was acting as NFS client. Both machines have tons of memory, so
-> > pagecache utilization is irrelevant for this test.
->=20
-> Does RWF_DONTCACHE result in server side STABLE write requests from
-> the NFS client, or are they still unstable and require a post-write
-> completion COMMIT operation from the client to trigger server side
-> writeback before the client can discard the page cache?
->=20
-
-The latter. I didn't change the client at all here (other than to allow
-it to do bigger writes on the wire). It's just doing bog-standard
-buffered I/O. nfsd is adding RWF_DONTCACHE to every write via Mike's
-patch.
-
-> > I tested sequential writes using the fio-seq_write.fio test, both with
-> > and without the module param enabled.
+> > The problem is that this compile issue happens also with some builds of
+> > gcc 13.3.0 as was discussed in the email thread.
 > >=20
-> > These numbers are from one run each, but they were pretty stable over
-> > several runs:
-> >=20
-> > # fio /usr/share/doc/fio/examples/fio-seq-write.fio
+> > So is not clear what is that "whatever". For me it looks like that it
+> > would be more than the version, probably also some build characteristics
+> > of gcc. But I have not been investigating it deeper.
 >=20
-> $ cat /usr/share/doc/fio/examples/fio-seq-write.fio
-> cat: /usr/share/doc/fio/examples/fio-seq-write.fio: No such file or direc=
-tory
-> $
+> Neil, thank you for taking care about this. I will retest your next
+> patches later.
 >=20
-> What are the fio control parameters of the IO you are doing? (e.g.
-> is this single threaded IO, does it use the psync, libaio or iouring
-> engine, etc)
+> > > to make the purpose more clear.  But I'd rather a deeper fix.
+> > >=20
+> > > GCC is complaining that rcu_dereference is being called on a point to a
+> > > structure that it doesn't know the content of.
+> > > So the code is says "I'm going to dereference this pointer even that
+> > > that is actually impossible as I don't know what any of the fields are".
+> > >=20
+> > > I'd rather it didn't do that.  I've been playing with the code and I
+> > > think it can be made quite a bit cleaner by moving the rcu_dereference()
+> > > call into the nfsd side of the code.  Hopefully I'll have a patch in a
+> > > day or so to demonstrate what I mean.
+> > >=20
+> > > I understand your desire for some action - but the reality is that you
+> > > have the full source code of the kernel and you can do whatever you want
+> > > to the kernel that you are working on.  You don't need us.
+> > > Getting code upstream is certainly good and we should continue to work
+> > > on doing that, but if you *need* something to be upstream then you might
+> > > want to consider whether your processes are really serving you.
+>=20
+> I need to comment this. I read more times that kernel developers are
+> complaining about vendors who do not provide accurate kernel support for
+> their hardware, like not sending changes to mainline kernel and instead
+> just publishing their own SDK (=3Dcopy of kernel with own changes) or not
+> providing nothing at all, and that this is being repeated.
+> And here you are saying that it OK and basically preferred, you have
+> sources do that and do not care about mainline kernel.
+> Then we have there developers who are saying that usage of non-mainline
+> or patched kernel is not supported and would not take any bug report and
+> instead redirect them to vendor portal. So at the end the result for
+> some specific hardware is that you cannot use mainline kernel because of
+> broken A, you have to use vendor kernel, but there is a broken thing B
+> about which vendor do not care (and taking it from mainline) and you
+> cannot report it to kernel developers because you are not using mainline.
+> Which makes the situation really bad for (end) users...
+
+Hi,
+ thank you for caring about the status of the upstream kernel and for
+ doing what you can to improve it.  That is appreciated.
+
+ My point was not that you shouldn't do what you can.  It was more that
+ your ability to influence upstream does have limits.
+
+ I'm specifically responding to this:
+
+> Can we move forward here? The compilation of kernel is broken for at
+> least 2 months. Also I have tried to contact Trond for more months but
+> has not responded to my emails.
+>=20
+> Could be this change picked with a slightly higher priority than just
+> waiting another two months?
+
+This sounds to me like nagging, complaining, and maybe a little bit of
+guilt-tripping.  You probably didn't mean it that way, but that it how
+it sounds to me.
+
+It is really good that you reported the problem - thanks.
+It is really good that you tested the proposed fix - thanks.
+It is really good that you sent occasional reminders - thanks.
+
+but ultimately you don't have control.  You cannot force the maintainer
+to accept the patch, and the above is unlikely to be more effective than
+occasional simple reminders.
+
+Anything that you do to increase the chance of a fix must be helpful.
+Complaining is rarely helpful.
+
+>=20
+> > > Trond does often seem slow to take patches, and often they simply appear
+> > > in git://git.linux-nfs.org/projects/trondmy/nfs-2.6.git without any
+> > > reply to the emails, but he or Anna does usually get to stuff
+> > > eventually.
+> > >=20
+> > > NeilBrown
+>=20
+> So how to contact those people if they do not react for year? I tried to
+> remind changes more times, but no response. I was already told by more
+> people that this is a private group which is not taking changes or
+> (security) bug reports from outside, and my experience just proves it.
 >=20
 
+If you genuinely think any maintainer isn't doing their job properly, the
+question to ask is "what can I do to help?".  Maybe there is nothing you
+can do.  Maybe you can offer to be a co-maintainer (if you can
+demonstrate ability).  Maybe you can fund someone else to be the
+maintainer.  If you believe a maintainer is acting in a way that is not
+just unhelpful but is actively harmful, you can always try to bring the
+problem directly to Linus' attention.
+(I don't think any of this applies to NFS - but you might see it differently).
 
-; fio-seq-write.job for fiotest
+In the case of a regression, as this is, you can always try involving
+the "KERNEL REGRESSIONS" maintainer - see the maintainers file.  That
+might result in the regression becoming visible to Linus and he might
+choose to act in some way.
 
-[global]
-name=3Dfio-seq-write
-filename=3Dfio-seq-write
-rw=3Dwrite
-bs=3D256K
-direct=3D0
-numjobs=3D1
-time_based
-runtime=3D900
+I agree that it is frustrating when you can see an opportunity to
+improve the kernel (or any OSS project) but cannot get your voice heard.
+Sometimes you just have to do your best, and move on.
 
-[file1]
-size=3D10G
-ioengine=3Dlibaio
-iodepth=3D16
-
-
-> > wsize=3D1M:
-> >=20
-> > Normal:      WRITE: bw=3D1034MiB/s (1084MB/s), 1034MiB/s-1034MiB/s (108=
-4MB/s-1084MB/s), io=3D910GiB (977GB), run=3D901326-901326msec
-> > DONTCACHE:   WRITE: bw=3D649MiB/s (681MB/s), 649MiB/s-649MiB/s (681MB/s=
--681MB/s), io=3D571GiB (613GB), run=3D900001-900001msec
-> >=20
-> > DONTCACHE with a 1M wsize vs. recent (v6.14-ish) knfsd was about 30%
-> > slower. Memory consumption was down, but these boxes have oodles of
-> > memory, so I didn't notice much change there.
->=20
-> So what is the IO pattern that the NFSD is sending to the underlying
-> XFS filesystem?
->=20
-> Is it sending 1M RWF_DONTCACHE buffered IOs to XFS as well (i.e. one
-> buffered write IO per NFS client write request), or is DONTCACHE
-> only being used on the NFS client side?
->=20
-
-It's should be sequential I/O, though the writes would be coming in
-from different nfsd threads. nfsd just does standard buffered I/O. The
-WRITE handler calls nfsd_vfs_write(), which calls vfs_write_iter().
-With the module parameter enabled, it also adds RWF_DONTCACHE.
-
-DONTCACHE is only being used on the server side. To be clear, the
-protocol doesn't support that flag (yet), so we have no way to project
-DONTCACHE from the client to the server (yet). This is just early
-exploration to see whether DONTCACHE offers any benefit to this
-workload.
-
-> > I wonder if we need some heuristic that makes generic_write_sync() only
-> > kick off writeback immediately if the whole folio is dirty so we have
-> > more time to gather writes before kicking off writeback?
->=20
-> You're doing aligned 1MB IOs - there should be no partially dirty
-> large folios in either the client or the server page caches.
->=20
-
-Interesting. I wonder what accounts for the slowdown with 1M writes? It
-seems likely to be related to the more aggressive writeback with
-DONTCACHE enabled, but it'd be good to understand this.
-
-> That said, this is part of the reason I asked about both whether the
-> client side write is STABLE and  whether RWF_DONTCACHE on
-> the server side. i.e. using either of those will trigger writeback
-> on the serer side immediately; in the case of the former it will
-> also complete before returning to the client and not require a
-> subsequent COMMIT RPC to wait for server side IO completion...
->=20
-
-I need to go back and sniff traffic to be sure, but I'm fairly certain
-the client is issuing regular UNSTABLE writes and following up with a
-later COMMIT, at least for most of them. The occasional STABLE write
-might end up getting through, but that should be fairly rare.
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Thanks,
+NeilBrown
 
