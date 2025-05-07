@@ -1,65 +1,63 @@
-Return-Path: <linux-nfs+bounces-11561-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11562-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B08CAADDA6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 13:44:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 359D8AADDD3
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 13:56:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C71B84A12F4
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 11:44:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 385FD3A83C9
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 11:56:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AD38234970;
-	Wed,  7 May 2025 11:44:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99729257AF5;
+	Wed,  7 May 2025 11:56:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VvOZdt0K"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m3tuZIU5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C920A24DFF6
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 11:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB09221F13
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 11:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746618255; cv=none; b=MWtXQdn77N34el6BRCMTUXVmeeM+C/8hhQWS8Uizdi3sB/yf3nywLQ+xlskoc2zO08bNkv/xrF+ipoodL6y9nS31SEu/I4YHGLJ7aHsW0MjVIvE0H5bM7T96a2fJI7SDZXRCIbejjnTPeKDhFEiopIWfQwQm3UGG/mKCUp8eJ1U=
+	t=1746618988; cv=none; b=F+YCsyY5r8C+CEH/YCJ4GPIlO+WJLAmugWKaQGitw73Lf0lHa7kN2GRs0urqzbxCTwiQklADmWOQvPs197s/3t8li2l3sCLsFGLFIw+WuHDWsE7DDPgSMlL4WFpxd+e1XeFWZJc7MCiv/aoqU1n6EiWlYD0/kxugx2wmMTKSWnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746618255; c=relaxed/simple;
-	bh=JM2uua32zYxY+v+E41TLKeEtFDcnY2NrMVLdibGfq00=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=HGaUkTkmAjZ15ojTHZzQezUkquyQR9fLajZehDjhymHMh1DCeOj0Ji7XSCjjGDGKLof4JAe+Lc64TArEfl8iBsgNCchxPUtu1SkipVXLLHoSHpbULLfl9lxxLqoyb6+x/ZPXhNI/7+1S54oS9l+gh/loR9Capa1SmF4VmN60Rok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VvOZdt0K; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746618251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2T4963+h9fGmgUuI3+2RDiR456W/f3Td1+AewO9Kiss=;
-	b=VvOZdt0K+RiX186NmHmIDYc7H143A8sXf0th/WnWvCqAmjdyQEVjZrrFIpYoMLZNBIgCxQ
-	rLuvy/1XagRusUhEnQFKcNk8RhvcCNDRB/D/lPrZQ5cddolOC3srxJh77wpKnOpHrTrCNk
-	lXvWxvghfL1jGhfUcJmpRuhuVlpEBwU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-50-34NFHiOgMbaGBeDTLnsRKg-1; Wed,
- 07 May 2025 07:44:10 -0400
-X-MC-Unique: 34NFHiOgMbaGBeDTLnsRKg-1
-X-Mimecast-MFC-AGG-ID: 34NFHiOgMbaGBeDTLnsRKg_1746618249
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 61702195608C
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 11:44:09 +0000 (UTC)
-Received: from bighat.boston.devel.redhat.com (unknown [10.22.80.171])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AFD2018003FC
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 11:44:08 +0000 (UTC)
-From: Steve Dickson <steved@redhat.com>
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] nfsdctl: Warning Clean Up
-Date: Wed,  7 May 2025 07:44:07 -0400
-Message-ID: <20250507114407.101530-1-steved@redhat.com>
+	s=arc-20240116; t=1746618988; c=relaxed/simple;
+	bh=N4tCWRpDeB3jzqfM7DvdSbzG0Jl6dXu9+EVXkXNETYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xnb9FPOJA/6A6DhjctxPFEQYkqbo6GvzwND48zZ7Dfn2YH8RJNN19k1Q6KBgduRL9U0HBYhyQ8hb1mtTtRCpC+BDlr//XW8Jd2TiFFCxubQVr9iykytigNyvsSbIHq5zLRTZmYlbShezesyqXCCFkMjZl+oovLZA1MaQ8jvKCVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m3tuZIU5; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=j8SJLlNkcTb7bA2zHk9hOuqpWhHc770mAORCYl5oWWo=; b=m3tuZIU5vWvr7n1iNbIs4Y3C7f
+	9NhNyRmlMih0nZvvP5LRHlgRLGR6t9SU121heNbnl+lKxhJbjoD6RbXovhYOCf7l87VbC6qFkW8kq
+	FgQ42qvpNwX/aZSBineWSdh/Mtt25cRYAUQi1L+4ve6wHx4jR7HVDS4niAeI0cUQORyxRdpxralUU
+	0DgKv5ZykE750a+Zvat1utXtM6xNpYEeTwDMsMRl76zY+2Dv9OqZWsqSwwScGA8ZV0X6WhSdCdi6z
+	m1fTUduzzh2LbFBLR4KPjsPDDrzPw0FhpPHXg0fIZZQ47jysNovlAuFcdqNSkptwK2O+FSKSnQhc5
+	xOzPcLfg==;
+Received: from [2001:4bb8:2cc:5a47:1fe7:c9d0:5f76:7c02] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCdNt-0000000FHmn-2wKb;
+	Wed, 07 May 2025 11:56:22 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org
+Subject: remove rq_vec
+Date: Wed,  7 May 2025 13:55:49 +0200
+Message-ID: <20250507115617.3995150-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,44 +65,23 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Removed a number of unused variables
+Hi all,
 
-Initialized a variable that could be used
-before initialized
+this series remove the rq_vec field from the svc_rqst structure and
+always uses the bvec array for VFS operations.
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
----
- utils/nfsdctl/nfsdctl.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+It doesn't integrate the bvec arrays used by the socket transport and
+those of the VFS layer in nfsd yet, but it is a step toward that.
 
-diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-index c2e34260..e7a0e124 100644
---- a/utils/nfsdctl/nfsdctl.c
-+++ b/utils/nfsdctl/nfsdctl.c
-@@ -1521,7 +1521,7 @@ static int configure_versions(void)
- 
- static int configure_listeners(void)
- {
--	char *port, *rdma_port;
-+	char *port, *rdma_port = NULL;
- 	bool rdma, udp, tcp;
- 	struct conf_list *hosts;
- 	int ret = 0;
-@@ -1675,10 +1675,7 @@ static void nlm_usage(void)
- 
- static int nlm_func(struct nl_sock *sock, int argc, char ** argv)
- {
--	int *threads, grace, lease, idx, ret, opt, pools;
--	struct conf_list *thread_str;
--	struct conf_list_node *n;
--	char *scope, *pool_mode;
-+	int opt;
- 
- 	optind = 1;
- 	while ((opt = getopt_long(argc, argv, "h", help_only_options, NULL)) != -1) {
--- 
-2.49.0
-
+Diffstat:
+ fs/nfsd/nfs3proc.c         |    5 ----
+ fs/nfsd/nfs4proc.c         |    7 ------
+ fs/nfsd/nfsproc.c          |    7 +-----
+ fs/nfsd/vfs.c              |   49 ++++++++++++++++++++++++++++-----------------
+ fs/nfsd/vfs.h              |    4 +--
+ include/linux/sunrpc/svc.h |    3 --
+ net/sunrpc/svc.c           |   40 ------------------------------------
+ 7 files changed, 37 insertions(+), 78 deletions(-)
 
