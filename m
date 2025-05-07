@@ -1,118 +1,90 @@
-Return-Path: <linux-nfs+bounces-11548-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11549-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2670FAAD49F
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 06:49:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A06E8AAD54B
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 07:33:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C67C37AB2B4
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 04:48:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D303C986BA9
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 05:32:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ADC21F956;
-	Wed,  7 May 2025 04:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AAB01D618E;
+	Wed,  7 May 2025 05:33:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bu/J4a6W"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0MZ9FYk5"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA78D1D47AD
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 04:49:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909A51DF25D
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 05:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746593368; cv=none; b=FGRmA4ZN5N6ATTcyOLhet2WD0lm9bHMZCqPFm01yzTHf3LxueQ/lQsSUP71+wfvHrSxuTnhQFJ5hZUyyar1If59i+MohZ/OXwQBJa9jMeYh5mJrl/shL2q9/ICOcO2tHJn5HzffCNXV8t1MRDah2NolqEGtDEw6DGpRGSQ+yyNc=
+	t=1746595981; cv=none; b=pf7yBCHTfPl8i6hrnsDBOyHiL711RtEkXWWyuErLnaTh43FKxtlInUKsE1G70+KrSySFM0I6Sh85wXujGUOHXpkLoptiuQTYwMuBcagQMVZdtjaDHRtDi1cI93vi+IEV0aN9BDrGrRCdN6H523m3khu8hu0mrYYUCDvXxkkBrXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746593368; c=relaxed/simple;
-	bh=jlRDbU0fcwx4nYSYKKnRs8gI80wBH3ln+L8lNEM5FqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n2lqEbQe+1WlFLok1nxyKbEarp4Lry4Ld1dsHSkGj6HHjsjI/QXK+XRlkt2To6lvz/HBuqI0nE66LQhaKYjdh3NZUWFE1VkNIeIiNnz6qQjw3O/c5R1UnFVRVntBEg/EfYuyTAj1V+kd5eEtfH0oSWc5Evvdyhx3ULASgmqfA78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bu/J4a6W; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+	s=arc-20240116; t=1746595981; c=relaxed/simple;
+	bh=BZQSFwlX10XleVKODiKa/NRUtRJHW/zJ4wM7LjSIfGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZQvgQzmHCus5YyeRJhwqm/hK9XSKxo8E/fY2PZorGopUHFPMi1SZCvUiCtINjut7pXq+9CgfBE5b6S2gKPUNwS1qTHJjrMLYF5CausdRRvsXK5L2LLTR6P259Oj+XxzH/OstuEOiN988gtIq6DGAavCN8c/Ipj3WVXfhB8zS22c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0MZ9FYk5; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
-	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=7BnQZytnr9lyaSZa4xj8MCesqLa2nxkm+PPuX/aJKis=; b=bu/J4a6WG9v9x4IiuK9kVIq57I
-	ImyduLUdLntmz8T45bJkYFUdI7ibUfUWIi5h3CK6c1w/US2p663XNBHJc+Tb0YumlrexUSdgDO/ZV
-	RYChDFBzV22h2HPryfjGkoIklCncFqqXPeSNtrL7fpKHPBgNBfcEKCNiKj+UXP8/BbPnRUb8mCs88
-	V7P85xvGU+F2p08Xa82PmHMOPypyBpT+2sf/znDKRhacnaIwmNPmUHep7gADnLt75zUTcRH3bpTcU
-	4256FeC/ErBujx8TKyf6f1JICUO253ysQk6g10pYAGd8q11Qdp8VCNr0oAr8z4vCTDGoAjZ98Aeqk
-	aPSwB6xw==;
-Received: from 2a02-8389-2341-5b80-3ba7-83fe-7065-4f0b.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:3ba7:83fe:7065:4f0b] helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCWij-0000000ECZI-40Tm;
-	Wed, 07 May 2025 04:49:26 +0000
-From: Christoph Hellwig <hch@lst.de>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 4/4] nfs: use writeback_iter directly
-Date: Wed,  7 May 2025 06:48:54 +0200
-Message-ID: <20250507044908.3891983-5-hch@lst.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250507044908.3891983-1-hch@lst.de>
-References: <20250507044908.3891983-1-hch@lst.de>
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fFw6Y6agzrZjzBmkwNNwMz6H8AAqf4SDGK3o9ao+52k=; b=0MZ9FYk54fPF7MZJnz9Og9oyyx
+	iAw0eZik1HsUmph2DEsORvSUESHnHm+a9j2wsySvfKFRxWBRa3aBxdAFl0gmEadTRC6rHOQR499JX
+	I6Ctb4TMN31bsUNvZ2tsK8o+TdI/nER1kSmM4Gfgil5SICAchC1Rmlx7H/BPqEaH1DtX6FZ1sVnCQ
+	e1SHxVHnEx9LTki91PMbEcdUien3bPclidLT42Vxziqv/+YdR3AarLCb5dHws03oaKtb0RwuhDKWQ
+	YjpTZJlo6RyJ0eq+vk6uiVyLpbzlRaEWeEAY2oBZbOo4YEE1e24BxvmNeZSwkho5KDSRsv+MTc7Bx
+	FAq+VGHA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uCXOr-0000000EH9m-3eKe;
+	Wed, 07 May 2025 05:32:57 +0000
+Date: Tue, 6 May 2025 22:32:57 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: cel@kernel.org
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+	Roland Mainz <roland.mainz@nrubsig.org>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2] NFSD: Implement FATTR4_CLONE_BLKSIZE attribute
+Message-ID: <aBrwiS1DM1i-DBXH@infradead.org>
+References: <20250506150105.11874-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506150105.11874-1-cel@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Stop using write_cache_pages and use writeback_iter directly.  This
-removes an indirect call per written folio and makes the code easier
-to follow.
+On Tue, May 06, 2025 at 11:01:05AM -0400, cel@kernel.org wrote:
+> +static __be32 nfsd4_encode_fattr4_clone_blksize(struct xdr_stream *xdr,
+> +						const struct nfsd4_fattr_args *args)
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/nfs/write.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+Overly long line here.  And easily avoided by using the much more
+maintainable two-tab indents for prototype continuations.
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 68c5dc061abe..374fc6b34c79 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -694,16 +694,6 @@ static int nfs_writepage_locked(struct folio *folio,
- 	return err;
- }
- 
--static int nfs_writepages_callback(struct folio *folio,
--				   struct writeback_control *wbc, void *data)
--{
--	int ret;
--
--	ret = nfs_do_writepage(folio, wbc, data);
--	folio_unlock(folio);
--	return ret;
--}
--
- static void nfs_io_completion_commit(void *inode)
- {
- 	nfs_commit_inode(inode, 0);
-@@ -739,11 +729,15 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- 	}
- 
- 	do {
-+		struct folio *folio = NULL;
-+
- 		nfs_pageio_init_write(&pgio, inode, priority, false,
- 				      &nfs_async_write_completion_ops);
- 		pgio.pg_io_completion = ioc;
--		err = write_cache_pages(mapping, wbc, nfs_writepages_callback,
--					&pgio);
-+		while ((folio = writeback_iter(mapping, wbc, folio, &err))) {
-+			err = nfs_do_writepage(folio, wbc, &pgio);
-+			folio_unlock(folio);
-+		}
- 		pgio.pg_error = 0;
- 		nfs_pageio_complete(&pgio);
- 		if (err == -EAGAIN && mntflags & NFS_MOUNT_SOFTERR)
--- 
-2.47.2
+> +{
+> +	struct inode *inode = d_inode(args->dentry);
+> +
+> +	return nfsd4_encode_uint32_t(xdr, inode->i_sb->s_blocksize);
+
+That's a bit of an assumption.  The generic clone prep function uses
+the block size, but file systems aren't required to actually use
+generic_remap_file_range_prep.
+
+Probably still the best we can do, but a comment explaining including
+a reference to generic_remap_checks / generic_remap_file_range_prep
+would be very useful here.
 
 
