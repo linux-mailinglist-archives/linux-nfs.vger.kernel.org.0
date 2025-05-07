@@ -1,86 +1,87 @@
-Return-Path: <linux-nfs+bounces-11577-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11578-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFDBDAAE2C3
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 11D53AAE2D7
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:28:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD8AC5283D8
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:20:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0266527064
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:23:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AE3F28C037;
-	Wed,  7 May 2025 14:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98D3C28CF7B;
+	Wed,  7 May 2025 14:15:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfQOI1eC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PPE2sESa"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B97E28A1EB
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 14:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19BB28D841
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 14:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746627307; cv=none; b=l/HndZExec8qggHvvQo5RoERvSgvkowLMW9bfNKqfDFtXJ0hgx5PNhU4pn+ycUmxPAYP6J8wRMFRN/kxmXrkFwoir/I6Tofsd3RqHsAXTTl3ExttHvmsuH0f7XiyWNeGEdzX6X3gWz48TQNGJXivYe9TmWFLzbfWwPrbyBv96/4=
+	t=1746627355; cv=none; b=Mb1OfjY6KF3pDUHoh77H5kSlWKsF284XnODIk2FsOPpdrgoo+XhwP5KNI+jSbAu1X/rj6MhtOS8D/Z1JH1cWqWO/EthpfTNfzKHtWnYY6rHIQ/mmHx+HEmn/S7CiQB7xaQ/oHf9saRsTJ3DdIJIyCyqcieVhUFd8VZBvMJDR3/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746627307; c=relaxed/simple;
-	bh=UK7ZCOx4OADDVpWjQHMJgc9LDEjXvN0B53sAzWKeXh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KN5vdm/rnwjiwEveOdtGHs3zWtAInTZf16Ta4xece6t2pVhNxr1PG+RNVoBRFV566d0F2pZs6U0TfE+F2lLRhppfFYQaowWo25nVHm/iHbWrF9v5AtzbpBw+t70q9Q4x+4tRYFY7daJKCImda7+Bk09FmSyktDcoiy8Hd9Xhd1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dfQOI1eC; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1746627355; c=relaxed/simple;
+	bh=fJckmf9IwjYeead7dT1KUL8OcRRAIxNLq2zNTa3lYpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=pzlvRzaUkHjAmEo24P8X+zcuySjBMNhGZNtTMGmqtk2v/7glWutvfOya4BT0MEiWDn95YueQfT/8U5dz830KB6m9/5qUos62vgO+TlUGm8I8J/qgH2g+6r1tRFWA+VoKC2T7U2dId5kw2Cdbzj1IZg+RWXf420PD8qlVr5/4mhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PPE2sESa; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746627304;
+	s=mimecast20190719; t=1746627352;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a9GIHHBe2DWdqL71MfzxlYkwZuC08u0cVJcdF9XzPec=;
-	b=dfQOI1eCMHiFc9lsc0BPy0KnSPfcS6+GdynXpzxyrcyXszbPQArzhxfEdFmzsNrL9KC17j
-	BlOedzuUGqn2KO63xv8G31w2QcqYTFlLnGU7cXBNSiOqPTPHb2a+nT5RZz2ieNDsgraYkj
-	6HBVPBM58F3Ih/t9TZncifhN63D2JJs=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=jfVK6HHLff73J58o9PanfKB8cNl8BoppLGUFG9f83E4=;
+	b=PPE2sESarGD8v178on+BMILBWLdmApkl88jttaLWscS4jqC4Q5fMt8M7wV2ZxZefMoLQZy
+	3FQIqg8CqDEQ1jDEbgpV0+aa/txk3vyGUycf1zjZDNZx+6QkC6q/5tWVsifN9vOWkqhHtx
+	1lXF+9WfSYhLGqK+Qun1iTVDhzPYwuE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-161-HbSoOWt7PJi2yulVcMXkIw-1; Wed, 07 May 2025 10:15:03 -0400
-X-MC-Unique: HbSoOWt7PJi2yulVcMXkIw-1
-X-Mimecast-MFC-AGG-ID: HbSoOWt7PJi2yulVcMXkIw_1746627303
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8feffbe08so164623356d6.0
-        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 07:15:03 -0700 (PDT)
+ us-mta-207-9qTqh53pPNylZaxDWb6SxA-1; Wed, 07 May 2025 10:15:51 -0400
+X-MC-Unique: 9qTqh53pPNylZaxDWb6SxA-1
+X-Mimecast-MFC-AGG-ID: 9qTqh53pPNylZaxDWb6SxA_1746627351
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4766afee192so147190621cf.0
+        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 07:15:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746627302; x=1747232102;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746627350; x=1747232150;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9GIHHBe2DWdqL71MfzxlYkwZuC08u0cVJcdF9XzPec=;
-        b=HnPbqnIDJe6Iz4D/4a0lftDBa4zOFW4upl8aWm2hHU3wQDp5i9ckxNKfhuuZ2GxD0J
-         nc5fD0j0F3001H84Zun7T/7AfTUhJyH5zVhGrXIxjgJs/XQnT5x6UoNLkHJNgSHuV9ce
-         gdIm35mDfX0fg/BUSv5mwIlHZsW0/5OahAnR2myeBb2e7MgJAJIl6y4Y1dFVBI1FOtvv
-         RTh/Y2aXc2LOdiT7oGvlUNVX8ERz0Ity0xOUAn8JDciB+4eIbmKte40bcXeUIfKMa5rO
-         7dnY2mW/j7durJmtbHuRKoeKcP0oSBJnnfDowUw3qYB3XMs8HQK+rZydmxwEORsPB3jV
-         nnuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVepToVXiXV1b6bOXfSTQMkTDv9oMDOIjGOIzpjAT1uAJ6fA6Q7lDb4s4YVX0tVucf2OOYvc0Siq/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNuzciIPspZyEb2wJPVy8qkr/F3P4WRcBMeL5Nv+QiuS1VFaMo
-	HupDJnbcfTpAt4GzvcFkzhfbYpCHmlL1xZ1+XBDTPewLT4Qc+qsNrmXsHOKh+56wDIn8UtY3BA6
-	2GcmpgoG8HztRKjR15XgZnOhRmK787/oUvd3rGe5d1GpmRPGHShjhrVdkDqSDGfiqhQ==
-X-Gm-Gg: ASbGncvKtLgVMl+NSx1VNPwDXQvlPwyPC1jTgmlMhEirRhsosFP2Gx31S/wnIYOE1up
-	nwY6n/zE+k0KoBVHWMb9VPjvzGrRJVQv1t3BF3eqCctWyZJLd1sSSuVx994TZZ6gVnr6s1N3SJk
-	ekp3F3V7E8Ti1+4Q119jLA/C1Sqsn3ZTZzqucWjbYKV5hXhW5WAaz1YcHCuRjYRbYOaHoRgMs/N
-	8VNzcLAMsTPk7+PmMp0p9t5gaZ9J1wCYwhSPE/ISwbRMWuktfK9A5wWJltUt6PNf3NsBdjjgQ+p
-	WkH0JHb1Ww==
-X-Received: by 2002:a05:6214:226a:b0:6e8:9957:e705 with SMTP id 6a1803df08f44-6f542ae3cdemr51014806d6.34.1746627302233;
-        Wed, 07 May 2025 07:15:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZStABUmunh6hLoRwVFeWvLWe2tHkoOVLSunL9OrO0uZl4b7WeeZP2mmmy6KQoxUM2GzZHdg==
-X-Received: by 2002:a05:6214:226a:b0:6e8:9957:e705 with SMTP id 6a1803df08f44-6f542ae3cdemr51014326d6.34.1746627301761;
-        Wed, 07 May 2025 07:15:01 -0700 (PDT)
+        bh=jfVK6HHLff73J58o9PanfKB8cNl8BoppLGUFG9f83E4=;
+        b=N2YsSla5qU5HrQD8VKLx+SZh7DRjz8E1MkYlH4+Mr7FGjUmE751sH2UA4asLtEo12A
+         Fu9EVFGkfAGuXxmHGRE3vR2zdzerOdRvBcSOdo7Bt8reGAmVC8iAaY1xoErIeBhYtD6j
+         zfPrJ8AgRm0bG6g7FfE9sFTz37jwhEZeaKBL5KcbSxGrhWKEGJQ4Jgpe5PvNY6I//MpT
+         j/ZMyDInb7aTQXF2TRYUTAfrYRps08+nFIltg10gNirDULiFaWR25VC5EoGEILK8Nk3d
+         uXxDO8HkRhEM2RuANsd2+KaIsjuFbcVWwOmuCsp++8Uc7ENV/YW/riiltaN6tLHu59L1
+         JTgQ==
+X-Gm-Message-State: AOJu0YwScEv2QhXiASThxP4Em/QfZWdM2eR9XjvGJVH1xCg8K+0nGN+a
+	U6Tc+sX3U0wFT3HlNaPRkLRQmQAsfnVXX0gMXbEFjPuZy+7Rocdb6hFBBbl0X2Lg8ZymTpkqW8u
+	JJ3XHbBfOV5REgShrymPlFFGfpJGPgIo53R5kuCykqcCV6ba4fWVpHIuEBHZUwQZSoFFMmWIUW3
+	6fLRadvJPMQmAAbMy89bXfTbr3YvBWT2kVrhX4s5Y=
+X-Gm-Gg: ASbGncuOlsEIoPGm+X8qybVt39bwa+hy6DfI5qpqEnV9B3zLti7/MzlUegBaYYWB06t
+	7IwK7wnoUri9Wom8VAc/T2UHWorFxdtyhbPjIE9mxDiRVATmJqzjqqfD+1/Mvf+u3o7DtMNCKU1
+	cb8f8Fb1Zc/oOM7cb3dqyLcAVXn/S3M1DVtqHHa/T6hboHY5ua+8J8HxPejPq343bC4GwwL87DH
+	BbX9q3ArCJ2tlO7TLVjFM/6JgKFHc04vXneG/SF91c/cX4ZGTjIvkTrbXyYg+6atOzTloE9v1qa
+	HD/U6qAryQ==
+X-Received: by 2002:a05:622a:4d9b:b0:491:286a:8606 with SMTP id d75a77b69052e-49222ca000emr50210911cf.0.1746627350457;
+        Wed, 07 May 2025 07:15:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbZ8pFyrQacvlFgLuV1wmsFo7TUeoD0jLI+2fzY9WOsMB26hfJv1aj7iYV/ZFtnpHe7AIeMA==
+X-Received: by 2002:a05:622a:4d9b:b0:491:286a:8606 with SMTP id d75a77b69052e-49222ca000emr50210481cf.0.1746627350017;
+        Wed, 07 May 2025 07:15:50 -0700 (PDT)
 Received: from [172.31.1.12] ([70.105.247.97])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f542780cc6sm14178986d6.83.2025.05.07.07.15.00
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-49220f81e34sm14773511cf.11.2025.05.07.07.15.49
+        for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 07:15:01 -0700 (PDT)
-Message-ID: <b12bd840-8aa2-40a6-8880-d017ddd54fbe@redhat.com>
-Date: Wed, 7 May 2025 10:14:59 -0400
+        Wed, 07 May 2025 07:15:49 -0700 (PDT)
+Message-ID: <08c25488-ecd8-4c05-b70b-6b56535151c0@redhat.com>
+Date: Wed, 7 May 2025 10:15:48 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,41 +89,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gssd:fix the possible buffer overflow in
- get_full_hostname
-To: 597607025@qq.com, linux-nfs@vger.kernel.org
-Cc: zhangyaqi@kylinos.cn
-References: <tencent_86CDAF841D6F5657A618E706DD1CAAD95E05@qq.com>
-Content-Language: en-US
+Subject: Re: [PATCH] nfsdctl: Warning Clean Up
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <tencent_86CDAF841D6F5657A618E706DD1CAAD95E05@qq.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20250507114407.101530-1-steved@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250507114407.101530-1-steved@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/6/25 10:17 AM, 597607025@qq.com wrote:
-> From: zhangyaqi <zhangyaqi@kylinos.cn>
+On 5/7/25 7:44 AM, Steve Dickson wrote:
+> Removed a number of unused variables
 > 
-> Signed-off-by: zhangyaqi <zhangyaqi@kylinos.cn>
+> Initialized a variable that could be used
+> before initialized
+> 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
 Committed... (tag: nfs-utils-2-8-4-rc1)
 
 steved.
 > ---
->   utils/gssd/krb5_util.c | 1 +
->   1 file changed, 1 insertion(+)
+>   utils/nfsdctl/nfsdctl.c | 7 ++-----
+>   1 file changed, 2 insertions(+), 5 deletions(-)
 > 
-> diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-> index 560e8be1..09625fb9 100644
-> --- a/utils/gssd/krb5_util.c
-> +++ b/utils/gssd/krb5_util.c
-> @@ -619,6 +619,7 @@ get_full_hostname(const char *inhost, char *outhost, int outhostlen)
->   		goto out;
->   	}
->   	strncpy(outhost, addrs->ai_canonname, outhostlen);
-> +	outhost[outhostlen - 1] = '\0';
->   	nfs_freeaddrinfo(addrs);
->   	for (c = outhost; *c != '\0'; c++)
->   	    *c = tolower(*c);
+> diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
+> index c2e34260..e7a0e124 100644
+> --- a/utils/nfsdctl/nfsdctl.c
+> +++ b/utils/nfsdctl/nfsdctl.c
+> @@ -1521,7 +1521,7 @@ static int configure_versions(void)
+>   
+>   static int configure_listeners(void)
+>   {
+> -	char *port, *rdma_port;
+> +	char *port, *rdma_port = NULL;
+>   	bool rdma, udp, tcp;
+>   	struct conf_list *hosts;
+>   	int ret = 0;
+> @@ -1675,10 +1675,7 @@ static void nlm_usage(void)
+>   
+>   static int nlm_func(struct nl_sock *sock, int argc, char ** argv)
+>   {
+> -	int *threads, grace, lease, idx, ret, opt, pools;
+> -	struct conf_list *thread_str;
+> -	struct conf_list_node *n;
+> -	char *scope, *pool_mode;
+> +	int opt;
+>   
+>   	optind = 1;
+>   	while ((opt = getopt_long(argc, argv, "h", help_only_options, NULL)) != -1) {
 
 
