@@ -1,66 +1,66 @@
-Return-Path: <linux-nfs+bounces-11581-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11582-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E418DAAE386
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:48:48 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A027AAE38C
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:51:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D19283BDC2E
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:48:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DA947A8344
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:50:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC40286D7A;
-	Wed,  7 May 2025 14:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69C402874F1;
+	Wed,  7 May 2025 14:51:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90ED6288C1F;
-	Wed,  7 May 2025 14:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23C62139D2;
+	Wed,  7 May 2025 14:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629324; cv=none; b=FWaaMdnIvTl4roGu/iKsKTRL8+JjB5Ac364cqHAcEsU3d7Bjf1KFEdhrEBcvTbnU/6vRzDp+MEiF8CK1cfxFblgph+kXQ/ADuDaKUfuTn3SWUPLv1AYX6v5V/Bm4IQEb1bwuv4oPN14HjmwqXpu9cbYj9QKNBzN6a+0cT9Ji59g=
+	t=1746629480; cv=none; b=g6lRA0u87d/7kL4v5Lu3t+helv6qHSrlVOk/x5sND6UQatU9R+RXPZ+STZbyTU2jE1Md9TkTsNLre7iBvD2UOPJje2GawODDuUKcdeqfrVJ/3sc2RJ4qe+GuA/zog8+JugUIBAHBTAJkezdpNlRlkssQ/I4p1wIPn/BLzwFUN1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629324; c=relaxed/simple;
-	bh=EAKMHUJqzlQgDrepx4CDqYCADzmC7w3H6FiJl08P0iU=;
+	s=arc-20240116; t=1746629480; c=relaxed/simple;
+	bh=NPA5fWeiy+CdF2Izc2yyx1/a1+9Qt6WzEAMq3XypOaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=unsgkKLEVen1UysbxmwqcLrd+rr9A7A0eCLkA2meEuhB4o30XYV1uU/z29vh7gwYvMvtFtY6k2FqhC2zPBtZnQ3WI0dEnPzNge21h7tXM5zDeOm76DReYTgIW+/Lvs6hEYs5tCxPAmb6cwejwqc+wAGBkvOosnu/+bmPaLxVjqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:Content-Type; b=As135YLHD4urdbUqrj2FDgXJH4hqGilHTyg4xvLF0P4uJKMhNUVKSskDrXwrXWXYnHurcQc/815nrR/2EwuJSoK33XcjtptT/EAG/e1g2hR/eXsNZ6cL47kwVOIKXeimtEkdIiXNEPeRaYm61P9RT1a2n1hO+3xorW17iMYjWU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-441ab63a415so70748095e9.3;
-        Wed, 07 May 2025 07:48:42 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3995ff6b066so3495514f8f.3;
+        Wed, 07 May 2025 07:51:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746629321; x=1747234121;
+        d=1e100.net; s=20230601; t=1746629477; x=1747234277;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAKMHUJqzlQgDrepx4CDqYCADzmC7w3H6FiJl08P0iU=;
-        b=QS3E1RQYT3m+fO7cLw/wPtoi1kKxcZ+hkPD6UURJHMSgbAslY0ozwiCcD3rQmJc8i0
-         O03wGdqcIkJHZ/LISr+afgFN8xSOPYcmCmKyG038sbI57X6pngG2ZpdkKva3leG5YRxd
-         b7raTQcMBP7vMlfk3DYP89TM7LK7+ECCEi2v1NrTzD4sedMud3TB+4pXspTEm13Ns9Aj
-         ncnQyUNmqnDDNwqcX0X594IwXyBlD/YX1nRVlltZx2x81E0ElepG7VLC87hgGGuounUm
-         +CLjgy6Q/x/s64t1KSddFC9M+eH0lQ8VDlppiGSbwfHbYth2WxRL5WNwIWm3WvRHFKhF
-         iTgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr2j5POK1HS45iNECISSkyNAcV79DdUE7J15u8LBBR+3X9KL7J9LPeTKOgb8OiKvZbIuEgJ6tkbw==@vger.kernel.org, AJvYcCXbV8o2I0q6aRikq6dIrvYMiSyxJao3CkIJ7b9ec3uO0NBZsIqzXwE5nZ6d2ewde91eiaHWudZ5apwb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoD9qbEwTCoMZpLOuWtP6Bq4ndV9JKjAObhTbWwwLz2MqzUEIY
-	Y9fuyBoI6fod7S5ou3AmmgMWWMAVMNEG1DTs3rQYTkeUjFOeSHpb2By0dg==
-X-Gm-Gg: ASbGncvpjpvFDWByb6bQmKv4pPei6rTc2SGSB8yJtc0kOV/P6tMI5Zn0kk0loxYrt/3
-	MXWWuLg93IiDSVg72CwYxf9GBP0umFr0SSodBO/sPVCaUPDBl67Ag8DivCZWWtsgcI31sLXWM6Y
-	6hTrMFoKRzyzjQqU75wxlL3mu1yWz2ybG7NFY6mfnwpZL1G1BtMR+KswJcEtdazJoGKqpuffdur
-	d4QPI0mPhbG9kNOPmeMYy/YmPaMcJf7JJHB4kei52mBkZBFM9T/BL2ar6ZT6U9GrR4dtoyzn/c0
-	TQXKKSH8/N9C8/zomXP2FKcoKu7cfeCILwlvFyTbJah+1GqN8V3fVfFRGbcbB7RyTrBh0eg39d0
-	9pZSG2SgJMUDHe2EB
-X-Google-Smtp-Source: AGHT+IF5BTozncU2f8ZOakRdmEUv5uIWg8hax2hMSrXQM17uMKwSEvjMx5Ip07y2lNB42HNCyDZFCQ==
-X-Received: by 2002:a05:600c:37c6:b0:43c:f8fc:f6a6 with SMTP id 5b1f17b1804b1-441d44c321emr32242065e9.9.1746629320547;
-        Wed, 07 May 2025 07:48:40 -0700 (PDT)
+        bh=834ecun7GkIpcfgOiJfl+krcWKVVEZ53RPy+KA72j+8=;
+        b=sffQ8uAUwQt5uk7fDnvYPAkSsaIt/35q7+vzPepVWZ4G52Cm0h5bkOxz26kU8YXnyf
+         Cp25dyGuec+wrFcRwuyL7Khf3Pl3zz2tFcKHvWgVR755anktUq1ySko5wlUIdi78DgmE
+         74GNxHA4kfxwQyd6ZF3h/+apCibQ/DATPoUx2jmR+cVZD40U2AJ8CjDJIhekZkQDpUGE
+         tYL0OHMhIk2TdZ3zOiZ1NE5vgVebq5j+bGXM0IZrXPbfBiEtck8sRODVtTdOONQ2y4uX
+         X7kMIVIkGrBNbHJh4xUy3ZjCCHrxoTNgBdeSDTEiQOEaI+zN6fpXok3dKjg3FQzoYsth
+         GbuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZpZXgz3excW9v/SWFBFKnAiOA3im2NoU8JdPxPGmioXHJ6LCdT8ZcxfpnNadYBTsq7NOE4HGrsw==@vger.kernel.org, AJvYcCVWlNGnII/qwP1PrQa9J7qggLzD3UZNzaFn3FdKRWWciI10aPtjMEbH679ZCBTTfiYezU0zeY3jzp3R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ew+YDQiudbnBiRyZgc+HA6mTxyV/uVql01aWmOy+eTMHpx3M
+	St4yQdl1mmr4BWVggIwARE2klefwsx1pb0S7S6W9xU4mYWxMVbJ7
+X-Gm-Gg: ASbGnctUvilF2TDjwTW8nDD91E01FBVFJnd3SURxe0FZ/xCurWyIbuKHUpvjyXmkU1S
+	T9W6Si6ZaajOmnv4TrTC+vh6vA82SmBcmRdcSMlNMYt95l4rIxqG43FBnkCbcc443L6e8Gjo4Rq
+	Pm5rwGqduMyhPqTBXV+4H/AFAaiGVfa3YwCDN4Ejxl+BLRBe1mDqJUAqpoVIZ5fiEiUf7TJf7Y1
+	NGdgcg91+p6tnXp6CMUBJ5dHMrICecY6q5rQTtcseb7j3fpcKFHz2CJQdVP29bC3V+UA4fg5CKW
+	FypF45Yn0PN8mmPErX+gt8ivd6AUBWO+lYRRRZ79bMvY4hF6cfbJWW9ktckf5Zc/K7qo0yKRbXc
+	+2RpU1eeByPwwCckY
+X-Google-Smtp-Source: AGHT+IFoRriMU6u/G78ePtFV+Mux25cjZQlxF2bl1IUWwvPj1gOeuLmcuec2LPLUjNg6YlnXe/SfYg==
+X-Received: by 2002:a5d:64e8:0:b0:3a0:809f:1c95 with SMTP id ffacd0b85a97d-3a0b4a6868bmr3113188f8f.53.1746629476779;
+        Wed, 07 May 2025 07:51:16 -0700 (PDT)
 Received: from [10.50.5.11] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a0b6d0e1ebsm1458450f8f.80.2025.05.07.07.48.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7caasm17377865f8f.54.2025.05.07.07.51.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 07:48:40 -0700 (PDT)
-Message-ID: <b56bc2a2-3357-4d50-b53b-e65866ba1e7b@grimberg.me>
-Date: Wed, 7 May 2025 17:48:38 +0300
+        Wed, 07 May 2025 07:51:16 -0700 (PDT)
+Message-ID: <778e6327-f77a-4f14-a243-197058ed278d@grimberg.me>
+Date: Wed, 7 May 2025 17:51:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] NFS: support the kernel keyring for TLS
+Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
 To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
  Trond Myklebust <trondmy@kernel.org>
 Cc: Anna Schumaker <anna@kernel.org>, David Howells <dhowells@redhat.com>,
@@ -76,14 +76,70 @@ Cc: Anna Schumaker <anna@kernel.org>, David Howells <dhowells@redhat.com>,
  kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
  keyrings@vger.kernel.org
 References: <20250507080944.3947782-1-hch@lst.de>
- <20250507080944.3947782-2-hch@lst.de>
+ <20250507080944.3947782-3-hch@lst.de>
 Content-Language: en-US
 From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250507080944.3947782-2-hch@lst.de>
+In-Reply-To: <20250507080944.3947782-3-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Pretty straight-forward I think.
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+
+On 07/05/2025 11:09, Christoph Hellwig wrote:
+> Create a kernel .nfs keyring similar to the nvme .nvme one.  Unlike for
+> a userspace-created keyrind, tlshd is a possesor of the keys with this
+> and thus the keys don't need user read permissions.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   fs/nfs/inode.c | 15 +++++++++++++++
+>   1 file changed, 15 insertions(+)
+>
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 119e447758b9..fb1fe1bdfe92 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -2571,6 +2571,8 @@ static struct pernet_operations nfs_net_ops = {
+>   	.size = sizeof(struct nfs_net),
+>   };
+>   
+> +static struct key *nfs_keyring;
+> +
+>   /*
+>    * Initialize NFS
+>    */
+> @@ -2578,6 +2580,17 @@ static int __init init_nfs_fs(void)
+>   {
+>   	int err;
+>   
+> +	if (IS_ENABLED(CONFIG_NFS_V4)) {
+
+xprtsec is sunrpc, meaning it is also supported with nfsv3.
+
+> +		nfs_keyring = keyring_alloc(".nfs",
+> +				     GLOBAL_ROOT_UID, GLOBAL_ROOT_GID,
+> +				     current_cred(),
+> +				     (KEY_POS_ALL & ~KEY_POS_SETATTR) |
+> +				     (KEY_USR_ALL & ~KEY_USR_SETATTR),
+> +				     KEY_ALLOC_NOT_IN_QUOTA, NULL, NULL);
+> +		if (IS_ERR(nfs_keyring))
+> +			return PTR_ERR(nfs_keyring);
+> +	}
+> +
+>   	err = nfs_sysfs_init();
+>   	if (err < 0)
+>   		goto out10;
+> @@ -2653,6 +2666,8 @@ static void __exit exit_nfs_fs(void)
+>   	nfs_fs_proc_exit();
+>   	nfsiod_stop();
+>   	nfs_sysfs_exit();
+> +	if (IS_ENABLED(CONFIG_NFS_V4))
+> +		key_put(nfs_keyring);
+
+Same comment
+
+>   }
+>   
+>   /* Not quite true; I just maintain it */
+
 
