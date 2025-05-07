@@ -1,107 +1,102 @@
-Return-Path: <linux-nfs+bounces-11566-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11567-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A36AAE0F4
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 15:43:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A7FAAAE240
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:15:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF18C7A65C6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 13:42:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BC40189A16D
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE33221A45D;
-	Wed,  7 May 2025 13:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABC228B7EF;
+	Wed,  7 May 2025 13:58:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H8/I3FG+";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="fo924xRV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A7kpMt9n";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Gfk9dCFO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD18E3C463;
-	Wed,  7 May 2025 13:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250DB28B7E0
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 13:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746625416; cv=fail; b=BLAasyzhqBy7ofHlaF/muArgmKScIO+7hawZQCED00arLi71sUJ4ggLWlMjFDZnMq2iqs7RnDQd10nPcqIyCmqVZ2q4Ne8OzYlodKBMmrm8BXcn1LK0sJssLosjFqitx3jrE+skHX1qua3NJzviVLjgm2wmpP8vuN8qpqJFXVqQ=
+	t=1746626307; cv=fail; b=D7KQ4hMVvP1TpDgRkdu6WslCOHknHKTXOmCzn3gz2N7ZqIqT819L1dUmkkKp8gvnxJxJepyGKO+BrbzcDdAoMfasH8+pSxzWwqDZ6ZHki+BIZnx9fASDP42d0Ox4+/sP2VGj81bGJqLjD+QRrck7mh7Kzr8k4EpI4N84xG4y9T4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746625416; c=relaxed/simple;
-	bh=iV13jWBdOy0baHB+3eShIcc+AQBOGBRts22FGRjSshM=;
+	s=arc-20240116; t=1746626307; c=relaxed/simple;
+	bh=rr0H60r7yhwFa7gfFxCu1TDI1iY/L3bommAenu4Wz8U=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uk2tE1x4IonEatXYK+FYNlBgJyRt4z1GfyyOoDJNIIKw32iulqWDhcdniaRDZzMMcVTC5JBsS1ZVgqfneF0y7AGVxrFyLhnyW6CYa12n/itrAGZArpb4Nj+RSk9mDMppD815jEyBHobdMnRCprLt1bYnuV74sre5itYWvHCcDis=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=H8/I3FG+; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=fo924xRV; arc=fail smtp.client-ip=205.220.177.32
+	 Content-Type:MIME-Version; b=doLYzGjqu9B0sC9S2HnqX1h1zda9Aa/sknJDH5rgl31rMxRDHCWPtHVJK4mxlbHVDf6L7zZAHRdyCm5dLSnG9HOu5+XjdAPFz4LI0iTh+PGa9euZtQOBen+UopAtUb9wsPzXxcpqi+9DqSkM9iwQ7cFKVI60rNxRuJEpSWvsjiU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=A7kpMt9n; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Gfk9dCFO; arc=fail smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547D7BDt003425;
-	Wed, 7 May 2025 13:43:28 GMT
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 547DqjhA001473;
+	Wed, 7 May 2025 13:58:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=3rk1+6J9xzFn1TYzpIRyOecktXUG0IdwnATHn2Wbm+U=; b=
-	H8/I3FG+2ng8493dQXYIxDvfVMhs8PR6RDN5+gu9K82QILqY0atdUkgBQuKMSD5k
-	TPwOZ5QgCzjUagSuIEKGL0OOdKyKnYjHVwjMz1Li9Xg0PtOZhIC6dfS5/1+PbMxh
-	Mk68wZuzeTgUycMopXb61vLRDOZw81bAAbbSPgJeKbJJfsJHNuR9+7bSxHhES8NK
-	cyWv9Fnk3oyS3dTDu2QpqIcnXFUpAHlujhmGMrkqwx6ZS4Z/1vkHqBiKSoMyuu9h
-	uqv0/Wzmv2qAPFfp24xU+HM2b+nz1n3ukEjLnxXfov8XAAC4tBPGHg7twCDjJQbq
-	Sv1mw1ssmP5R+CuVDclsvw==
+	corp-2025-04-25; bh=uFmiwxSflrWtKZtE6UcjSqXJzI30AtxTN+AVxSQ+bpI=; b=
+	A7kpMt9n4bYKyz+k4u1jxFVEvKxjTkhGqZ/FppRXkkwDpGnL6NCy6Oaz2AZOsEPU
+	OzhNr+sUAqQKzHPETPsoVuHUtLDOiudosmuwAuLqFEEUkwTlUPKEftzJqYwZ/pV3
+	KC3HEt0u9MuDbHHKa4fQx19PKuAOi2MMX4t/YlH/xTRrtU2V91GreFVTCLiYu1QN
+	JZJ2/r/cFlo8NskCw2fhOkx4pkaOO+6SlypJNTbF/mDVgcIOB5wCmxY2iDH7agJV
+	Sst3Nqu8NfwtvubM365LvJA+wdQJeLBbIYgW5XuEOgmL/CVBszlWkFe+N786Reid
+	wsRoRC/f7M/S+oDdZeL7aw==
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46g847g2xj-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46g8sf00f2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 07 May 2025 13:43:27 +0000 (GMT)
+	Wed, 07 May 2025 13:58:11 +0000 (GMT)
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 547DQplc035339;
-	Wed, 7 May 2025 13:43:26 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azlp17010019.outbound.protection.outlook.com [40.93.12.19])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kaeg1b-2
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 547CKm3G035324;
+	Wed, 7 May 2025 13:58:11 GMT
+Received: from cy4pr02cu008.outbound.protection.outlook.com (mail-westcentralusazlp17011031.outbound.protection.outlook.com [40.93.6.31])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kaf1jw-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 07 May 2025 13:43:26 +0000
+	Wed, 07 May 2025 13:58:11 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eBi/4JXkRt5WiyAkbNZOn8b7w6H25ujEtHDfJPjNzPbKKUvc9wlePh1zXkhK2NZHXRlAgbhMAFdXmiClqPwJqubbxY1Nr0K59Mif/9FxRMUpbkYectbvJTPvtJNPRiExY1RtPp39kN8z/NeQCVnJT+spna+5W/VtNuoDMb5qw+2k+6YoyluWV7a+p+6RaU9fCroH1WQGOd15jSTMyX9pX8HPb6nt0eSS1mPzd3WsjWJ0lCC0CVStAZLUFl+FtZ+DHX0zOxpx86JPpvJdcHDcNl9k4TmShjZYnzJ10lg1NiaATJjvAhtpo1GJCi9erW95dSg6iVgj+bQRI5RYrdbKyg==
+ b=Ch44uxLRdrfehcGQ4MN57o0Kl1FXO4eITIt96wRxbffbA6cKD6QeGjfmx5gF7bxDsl0hbLygg89uIHkLVNgHKfwTy5LhJwMaKhUgurFMzvVSCe7VgZAxgbzGzH+ZeXfROMO50K/3za6ZLlRNbt78kkhsnRzqpWWEO5eDapDq+Ugx+SjOhEc8GNanAM4qhVY+87A88TvudxwaZM3mmIZopuJ0B27/9zubpXAuHk2bRJUeZab9RLUeP7Z0QGC1qKDTYq72Ws2uA8jvVeDR1W8zIFIVsx95Ag2MoAiGEGNbK4aB9YPQLzvX6mwRk1JcOM2NL9JD/8TC6ugLYRf9FShLbQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3rk1+6J9xzFn1TYzpIRyOecktXUG0IdwnATHn2Wbm+U=;
- b=JWkWpw+on9oTUmix7mBAs7yBgZ5I7nW+Mpr3mbzDSCuCEYUSZVbWctq+hd42c9JnKrRTNXKaiQQEJv3lO8k6x1+eCVQrzTdW0Aj7X3AY1mQ3x6Cps8+a0U/nEzrKrko60icly/jr+rkSG7fB6K+gsXUBvo7OvhA/+MZlhvjBLZO17I2h1PFh4wwo4aDhPeveH1seIyrj6xjap3MI2fEonAH/2SxEIWAXG4+gMq1NVQdRQL0hiM8hdfjKCo/na+ojZH7GBC3ctrbgZ7Q5dp10ApLDStQxiIPMVsD5P5KIAdd3FS+7XQDK7X6GPawMac72pASw7PFdtXT3ZMjCGGxtiw==
+ bh=uFmiwxSflrWtKZtE6UcjSqXJzI30AtxTN+AVxSQ+bpI=;
+ b=gf9NtODGLfe7DOBKvEHg6RDHrHHdPEqY4/Y+9KlKgTJGXphDTnX5VMS5ERNSTP3VD6n1CjoCWhPdBOAAt6i3YsPjZj5Z2iS6QHgpaaIPxf8H49Y4IxAUl0xEX18+ibjfUpjlseKUUpxpxHHaxyOvcSOfa2lqdD5ffjxYIANNeRN/phQ0b4wgJD/lDMvHdSkGveofBFspj1gyeEkMMY8Gc4WyEU4dYO59d6E3UygzJQuP/vJbUh9qxKXo0R6DQM7MTJCUUIWdKL879amMGr0Hy59Ll5JSq52Ka4VKMw+MLQOfwz3CvqrHwaVaw/qvgloflFM6/hEoWz02KCpGTkItjg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rk1+6J9xzFn1TYzpIRyOecktXUG0IdwnATHn2Wbm+U=;
- b=fo924xRVKdfc8V2Z+QTfPD8P7Hy9WmFeLyUs57fXN2ojxsmrnBtxie2keOF7JVjowyWPFbuHT8QIfOneg+1jX48vb7VBiO6zQ5fxWGg4DIc1hMmukfZ8ceUS3SE9YChoig24/3XxfEVUahdtkRqPYz/XqVZeMX2e8jwy3ogxKQ4=
+ bh=uFmiwxSflrWtKZtE6UcjSqXJzI30AtxTN+AVxSQ+bpI=;
+ b=Gfk9dCFOmKZU+K27oExyxwqAoH8hDfx3WRmiIltQDyPsoUSHj+O18FuYhXTuykQltyFG3IAQghM7FkgAdiXU+duKnb90kB7J6NvLXNBiHtq/+OngRHmzSPmVCqG6KGZKK1T6sz1isQF2xbmia1DIvlM9KziU7QW98gNMVl4b5TU=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH0PR10MB4503.namprd10.prod.outlook.com (2603:10b6:510:3a::20) with
+ by CH3PR10MB7805.namprd10.prod.outlook.com (2603:10b6:610:1bc::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Wed, 7 May
- 2025 13:43:08 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Wed, 7 May
+ 2025 13:58:07 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8699.022; Wed, 7 May 2025
- 13:43:07 +0000
-Message-ID: <79560cc9-6931-417d-8491-182e4ff77666@oracle.com>
-Date: Wed, 7 May 2025 09:43:05 -0400
+ 13:58:06 +0000
+Message-ID: <7d6c0a09-4588-4ed8-8827-94b3027ed4f7@oracle.com>
+Date: Wed, 7 May 2025 09:58:05 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: performance r nfsd with RWF_DONTCACHE and larger wsizes
-To: Dave Chinner <david@fromorbit.com>, Jeff Layton <jlayton@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Mike Snitzer <snitzer@kernel.org>,
-        Trond Myklebust
- <trondmy@hammerspace.com>,
-        Jens Axboe <axboe@kernel.dk>, Chris Mason <clm@meta.com>,
-        Anna Schumaker <anna@kernel.org>
-References: <370dd4ae06d44f852342b7ee2b969fc544bd1213.camel@kernel.org>
- <aBqNtfPwFBvQCgeT@dread.disaster.area>
- <8039661b7a4c4f10452180372bd985c0440f1e1d.camel@kernel.org>
- <aBrKbOoj4dgUvz8f@dread.disaster.area>
+Subject: Re: remove rq_vec
+To: Christoph Hellwig <hch@lst.de>, Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org
+References: <20250507115617.3995150-1-hch@lst.de>
 Content-Language: en-US
 From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <aBrKbOoj4dgUvz8f@dread.disaster.area>
+In-Reply-To: <20250507115617.3995150-1-hch@lst.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR20CA0026.namprd20.prod.outlook.com
- (2603:10b6:610:58::36) To BN0PR10MB5128.namprd10.prod.outlook.com
+X-ClientProxiedBy: CH2PR14CA0021.namprd14.prod.outlook.com
+ (2603:10b6:610:60::31) To BN0PR10MB5128.namprd10.prod.outlook.com
  (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -110,344 +105,136 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH0PR10MB4503:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22733dd1-707e-47e3-30a2-08dd8d6d1986
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH3PR10MB7805:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8d4c502-fcaf-4536-8102-08dd8d6f316f
 X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?clI4OXllS1pwVDIrNUxNWTJmc0dTdWFUS2dVa0pNYnhtVFM4OGtkVHhNK0Nw?=
- =?utf-8?B?VGhqQkdCNmJmZER2SjFRK2JQTmEzQ2NxZUtuVzBWTHJiTHI0ZzVGbkNPZXkz?=
- =?utf-8?B?WFRKUGhBQ0p0cm1wVVN0NCs2WUxFdEIvSXJVbnlZVkY3Z1ZWNEVIcmVIQk9x?=
- =?utf-8?B?ZDhNRTRYamNXdXZGV3lmeUV6UWFVU3dBbURaMEd4cHIraW0vNXZ1SFNoRmt1?=
- =?utf-8?B?WnZSQWx1d3Y3QWUyWEo4d25CYy9IYUx6NHAxc3ZYYUFDOFBpRnhPenBJQ1lt?=
- =?utf-8?B?bkNqMENpYThIMkJnODdWZ1A0SENtSzdjVmt5NTZaWnM3M0xCS0U2NVY4YndE?=
- =?utf-8?B?SjdXVU5idmhlUFJjNkVBR2dLL29MTkE4elZuRXZVQW41anVQNEVDZTZNdEJR?=
- =?utf-8?B?S2lNNjlXdVA2WHRObE10S2RmdHA3YUYyWkZSVmdoYWFCblFJaDRoT3N0L1pE?=
- =?utf-8?B?dVFoSjN4Zjc3OU5ZWDJBYVQwMndvWHdaTTBPUVNnSEdDbmxrejZqM2k2aEJw?=
- =?utf-8?B?cmt3d0FzM01aL0JIMTd4dTBYMVMzQktzbGY2dFRjaHJTT1UxLzFvY1NmbzhW?=
- =?utf-8?B?cHRhVUZpUXA5MVRJV0E4U1NWUVdjTUZyWEkzM2YvMzVTUW5waTY5aXJEMVZy?=
- =?utf-8?B?bEVtNWV5SElEUldHdnplOXJwMEZ3N3RTS1I3Ym5tb0xCWlVBczIrTnRuSGJu?=
- =?utf-8?B?MTUyOEdiYXNRcEpOWndjM2ZodWlsOEVWOU5IY0gwTzhsY2Z1RXBTaGpkVEV0?=
- =?utf-8?B?WkJrVncxTElSM0lJR09HRnNBTktWa3RDSUlCbTdwTlNxNmp3WWFCZG44Q2FJ?=
- =?utf-8?B?cFBWdVdOZC9wbHhGdE5zR3lScHl5OU4wem56Q3hwWGpCcGNsVEdHbGpwdzh2?=
- =?utf-8?B?ZitLaml3TGJPR3pIMVc5ZlhXeW9sRmMrOTA4VzJBTFJhblMzS2FlaGdUdXE1?=
- =?utf-8?B?SEVoOUJlcFhvZE8yV3U4c2gyTlNrRmNjUm1TUHFYRDAyMTJHZWhPQ0UvRit4?=
- =?utf-8?B?TnZobmtRSklHRHBSc3prUE00cXpDNUJ6V0hjeUE1ZEhzQ1dXcGRYd3VncDMr?=
- =?utf-8?B?N0ttODdPTG5rU3VwOWl0UjZCcjR6NVkzbG01NDZDM0ZGK2xHWGxUM3MraEdz?=
- =?utf-8?B?L2tHaXhKZ0F2Z21Zc21FTFZFY3lwaFBCWjcxMVVzTWcrUC8rQlhUS0ZRMXBU?=
- =?utf-8?B?a1doK1ZCZlhEYTM4SlBGTHg1VklCTTg5YmV3QnB2d0NUdmhxUFl0TWV4S1hs?=
- =?utf-8?B?M2lnaUZJY1o1NjZrYnBhWUFFN1lzakdJYnl6WFVtUUc3Qjk2UW9VZ0FUdUMy?=
- =?utf-8?B?QktWY052UlZzSXV3SFBKUXhpbzk3SWVHU3lEcDBneW9jY08xV2RnNS8vSS9D?=
- =?utf-8?B?WDdvckR3cU0rZ1hwZzY1cm92V24yYTI5Uk5UWG9jU3hhN2xBeUx5M05HWTdW?=
- =?utf-8?B?QnJaUUx6L3NudjFSSFRxQzd5elhHa1Bhb1FmdUU1R09sYkU4SjgwSjJ0bDZt?=
- =?utf-8?B?Z0pTSXRZelp4MEh6N3hRUWw1Nzd4OFdOV29tVjg4S2RsdHQwaFo1UDdteEIr?=
- =?utf-8?B?NkYrQmlsU3diNEZieGNVOGJOTkJwMW9rbGx0V3JHUlZJV0g1d3F3elJ5dHhF?=
- =?utf-8?B?ejFoOVowbE83b2xMcUpLRlVZN0l0ZFBka0JQSlNvWlVFWTFKa3owTTBnTDhY?=
- =?utf-8?B?ZThSeGg3eGQvRFdZMzFzaGEyVGZTNTVVekt0NDh1ZW5mUW5pYUFwQVZyOEJB?=
- =?utf-8?B?Z2RyclBMZWV3eXpJN3NJcE55elAxYTFLT2xNKzVDdnQrdU04VU0xTmNIamlK?=
- =?utf-8?B?VERwZG1CdDFEVjVkMjlyRHMrUS9PLy9nejltTG4reFY2MmJYeXBYQ1lQWXVP?=
- =?utf-8?B?cnVtSFNTZ3JzeERESmdEZGNwK1kzSlNkUHhHazZvOE1rOGlzdmdSNzhRaXNQ?=
- =?utf-8?Q?fd3QatJYUQA=3D?=
+ =?utf-8?B?TS84enpYd2tPZjF1RFNxb2srK25ieUlVMU83QnN2S2JFMm52MmZyRnk1NGNL?=
+ =?utf-8?B?WkprV25oZmJNL21JblZ3YmtQcVkvT1B3RGVaQWdyVEFUbmI0YW9sS1NxUHdX?=
+ =?utf-8?B?NWlqeklkSkhDdFNTRzBPR3kyaWJoZ0xWNkRZUVEyeStNVmlPYW9Wck5YSDRl?=
+ =?utf-8?B?SmxNUkZKaVQ1THpGOVc4M2dJTC9URE9zWFpJRFExTEQrSHJlaFVDeVFZV0U5?=
+ =?utf-8?B?cjcrU0J1N0t5UXR0Nnl3eUFoVER1UjFoNlhqYWhtQmlhYnA0eTRzS2J4OXFT?=
+ =?utf-8?B?dExaQi9Iak1rUUZ0RHc2cnR6V2N6VWx6d1F0N1l2VFNHMURmSDZmU2wwSDZ5?=
+ =?utf-8?B?dXR1blhYUWpISlc3bVRKVGlxY1hvZUdzM3VkMVlKOWhKbTFkeXp4QzdpTUJT?=
+ =?utf-8?B?T09SSXhYYUhHUTBNR3hVQjRrd2Q5a1kxd25WQVhXc3pqRmVUN2FpNVY3OEs3?=
+ =?utf-8?B?a0RmY05YaFJVUjJTUkV3cml2UzgzSjd5VHRkYXM0YVB4ZTA1QUJiTDhSTnlt?=
+ =?utf-8?B?RFVJVU9KN21Da1FKNitpeThjbkg1MDRBZTFzbjlCQ09wV2J3Zk9KNDVnUDhI?=
+ =?utf-8?B?Z1p1SnovVVRPMzdaVUZlcFFUQ0VNKzEzMkR3bnFlcjE1MGsvNGttemR6TDJ1?=
+ =?utf-8?B?blRTdlRwSkRIbDhmWlNNQ01idHRORDJZaTFMZXNSQlhqRWdqcjBIdG1KN1p2?=
+ =?utf-8?B?QWRHWmtTL1BxL1Fwc2VlbzhiVnpCdFhSLzY5Z3FqeXlaekV0VUZjK3V1LzYx?=
+ =?utf-8?B?YlhtZnBMVDRBdnZhQ3ZyN3h2TlRFNGlvK1FmNXhTMzFUK3pzd0lvSFZDNFo5?=
+ =?utf-8?B?bUxkei91Q3IxeHlkeEFmMVF2aVV3UmNNQ3BEMkl6THlRRkhuZzFwR2VIQnBD?=
+ =?utf-8?B?TzQrNEdWTDJMa1d4dnhwNUhUbitzTHpHOTdsVmhQeFR5RDY0d2tTUDJVNVlS?=
+ =?utf-8?B?RW5ZTjZORVNhN3loQ2FLVThtSzFJWWVwc05FS2c5QVNrR2xPRVlMWlR6aHJ4?=
+ =?utf-8?B?QlMvVi8xY0NQSnl4YUwvbEFGN05EeEIrUEJkeDAwWGp5YzExN1JQak9taXRs?=
+ =?utf-8?B?MFN5YnNCWU5OUUxobnEvVzROUHpxN2RMYXY2a1JSeUM5QXc5b21KU1p4UUdO?=
+ =?utf-8?B?aE1rYUszVDhVYXBxMHF2YVpBZFViQlBhbW5lSENCUDgzeStxUDNXNW5JeVI0?=
+ =?utf-8?B?ZndjaDYwSjFoT3RKWks2ak9XcUtEbEU1R2xaQUIxRTRkN0d6aEtFRmQ2R2I4?=
+ =?utf-8?B?SU5LbkFxSWFlaC9KQVRvUlVOK3dYZjZMQmpsN1FwK3hPYU9Udkp3TUtjOTdy?=
+ =?utf-8?B?S25iekFHTndITEtLUUpHRXQrUUQrY1k0NUFYUnhid2Nlc0ZzTDdXOUdLT1lj?=
+ =?utf-8?B?dEE2T094K3pwSFNqT2d6d0FTQ1A1Z3ZpSk9wN1RQQlBnb3R6M3htTGd5bUcz?=
+ =?utf-8?B?MERYWjFJd01SQU9jTFluZ25pa1R4V0pGb1R5anVnbGI5eW5pZzNPN2FMY25q?=
+ =?utf-8?B?Rm9Wd05qa1dXSndhRDlvenhBSU9PbEJoRGYzTmR3M3dFdVJkVVlwbHNPbFd6?=
+ =?utf-8?B?blJiNWlUTjFsYzNwc1JtWGhRVFdLVnFFSG9rbkdKNWF6Q3dqV0lnNFU4QTJU?=
+ =?utf-8?B?ZDZ5WXVlb2lBVVdZcmtscFRqWnhMTFh4Unl0MThRalFESFlLWWpJQlA3UmZW?=
+ =?utf-8?B?U1ZOaHhEVmlQZXNOSXpnaVlPaXFydWtETW84M3hXbk5NVE9rU2ZMWGNNRkhp?=
+ =?utf-8?B?YnFDeHVpU3pkWUhUM0hCVmZlTmZJcTA3KzNKMzVSUzNuMDcvbC9KODlUb1pG?=
+ =?utf-8?B?WVFSTEl6cG82SHFncllCdHpxNHpKZTA5ZURBdGt5N1JmQjFJd215dGh0b2dj?=
+ =?utf-8?B?WHBYaXhPenZYZVdkdnVReVgyL0VYMmFJeHE3Z2hrZWFTcFkxUG1weDVxQWJM?=
+ =?utf-8?Q?BdQ5k1HSh+o=3D?=
 X-Forefront-Antispam-Report:
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?VTAyNWg0b3k5RkYwbUxQSVNEa2FaYVRLNCtqYnc2dWlqSnllOG95VWVOTVIv?=
- =?utf-8?B?blNuZi9xa3ZkNmIvTEloV3VZd2dHT0hKS1RvOVVPL2JjK0RTZXplVmV1SG1v?=
- =?utf-8?B?d3krQUhZNXgyT2h4OHZwMWlEQlI1ZnZmUDNKYjJWeHlqN0pPMG1GcFdJZndj?=
- =?utf-8?B?SS9vZTVYb3o1TkhQNmxzZk0yaTVaV3FOMkZSUTFVbENlbkMvWHJ4Tkx6dk1n?=
- =?utf-8?B?c1k4ZGVVbC9mS0t5NTJLR213M0NrV3V4ZUllVGtRemc4TjdmR0dLT3lWd2ZZ?=
- =?utf-8?B?WmNwbEl3QXNzcGNaNmVkZFhZTTlhMXRBV2N0TkVkVW9Bd0xPZnBhSVppNHFU?=
- =?utf-8?B?eGJZMklubXFrak82NEhQS1hnd2JvNmRRV3I3TEY0ZFpVR0cweHo4bHFQZnlH?=
- =?utf-8?B?SjBjdzlTVklFQUdXNW5nczZ1VmN2NGNyOUZIZDI5enNWUEdtY0g3M3JQeFkv?=
- =?utf-8?B?MS9JMkE0YTdpNzhpTGhNZjBwL2tXS2J6YmRydWJPOVVjT0tueUJnbTRzTStE?=
- =?utf-8?B?TDVnelR4QU80dEdVQjhTZzF2TFh0QkZ6c1hLR0l1YkQzZi9WdEoraVpwaktz?=
- =?utf-8?B?Y1FvV0cwallyeGRKTFRzbTNxTGhjaWo4azhTMEVIZXJEajFjcDFjc3dDb0Ry?=
- =?utf-8?B?MXkyRmN6L01lcFBzT1VMa0YwTE5selBnWHRzaW41dnZ2MjBYcURIY0M5Mlli?=
- =?utf-8?B?VDJSK1daM1pMU1lHSmhlbEdKbVUrNXNLVHBmSXJrdkFDK241dG9tYjNPVDRE?=
- =?utf-8?B?Q3N3S0prTTFuU0k0b0IrMEc4RHVmQkdNMjRBZ2VNTndnV2JHM3paczRoWVlx?=
- =?utf-8?B?K1h1cFBFSGpzTS9qZzRBYmNBVCtVckZUSUpiejNDdDNMQnlrR2lMOTk3ck1T?=
- =?utf-8?B?MVljZ1pVWTZaZzZYQmtRcEgxejFzdExoL3FyL01DZDFMUjlSRElvVXhZL0FK?=
- =?utf-8?B?Y0dkcTdUZkFMNmZvUUpseEVTNUlwU3FueitZcU1IRllSQzVGWkRhUGlDZWNx?=
- =?utf-8?B?ZXlZNGZPcHpYU01lcnNDTi9ZZG5YUkx2SzBiVGtHNTREenZnQnVTWGF3MmVM?=
- =?utf-8?B?TXRCV2NQQndmN0RITlIxbHNOZDdrTWdYbkw5SHJHYXltOG1VSm1EckpBUTA4?=
- =?utf-8?B?dlFHcUo5UTVLeGp5a1BkcVBSTXdJbFdWWHFQMHJHMHBSQks4N3M2RmdtWUtL?=
- =?utf-8?B?bnViajVWTG9PS2ZDQWNaU3h1aHZUbmVZeDJBcTFWVit5RkZVVjRMajF6a2Nr?=
- =?utf-8?B?YTUzc0pEbVBnYTB5cHFZcU4vWkZiOUFYOUhQdTNHb1J2SzNqYit1K3lyVG1U?=
- =?utf-8?B?Vlh4VHVML0NKQ004U21MZ2RxSFlFcUIrWDRCNmxmNU96SmZZbHZWbUk0Q1Jh?=
- =?utf-8?B?cFo5WE5Bb2JxZjNUbFZscC9Db3RRYmsrVnJMSnArN1NTdzB4MGdNdS9VRlB6?=
- =?utf-8?B?NFZUOVRRTS9oZjlNMmJiRXJiREo0ZjQ1eE5qcmRoZ1BBTVFMTjkvNENiU2ZR?=
- =?utf-8?B?UFNVZ01YQ3k1SlVDL2dLQ3dDNXZhMlJEanNFRHBuMkdNZFlReis0a3cvYWVB?=
- =?utf-8?B?QXl1YVlWOGc1bUN4MzVROGExUktveXNhajNSbFVrTE9iTUhKcnlLR1h6c3oy?=
- =?utf-8?B?SzRyaTh2MTBNc09FOWxZTnk3UkF5dk5XZE5HN2FsK3o1NG1hQWJweVkyc2xa?=
- =?utf-8?B?V01sb205MDlwb3dkWkkzc2JFV2pVeUU2WmNadi9RTkowU1ZsSDMzNVJFV0hW?=
- =?utf-8?B?MHBQMTJYQnJCSkViR0FlOC8wWXpERFIzZjI1cmVkSW5nck03eEdmeU1Bekxh?=
- =?utf-8?B?OGovMCtYMkhiNFdvYnRvaTFxVDd0b0trZjRaOWJPUDYxTnVUbkFKWHNTNk94?=
- =?utf-8?B?aHhUYXFVdXJ0SDlFL1QwVDVCaHZuWWRySG5kd25iUkV0QmRIZnZoN1RWRHA1?=
- =?utf-8?B?SWdTUGpyNjlXR1RRdnIza0V1cDBEQ0xpSGpNSlBqTTQ5emtwdGpzT010TnlV?=
- =?utf-8?B?STA4OG9DNHhiVWRmTnVIaDNyOUc2c2xqNWxoanA3RTJFd20vekVLRlVxY3lQ?=
- =?utf-8?B?WUI0VFgrb1p4ektHeXlpbE9OZWdnZGhWeWpxVW0vTGFlOXRpU0xUcVNza2Jx?=
- =?utf-8?B?S0p4UW1aMmdqVmZ4UmEzQkNVd3pxQVJTWGd1dmN4RmVzMTJ1MUVsdXVYRUJp?=
- =?utf-8?B?VEE9PQ==?=
+ =?utf-8?B?bXBuYU1XQ056QkJuYWhmQVBZelB5UUNFYktnVjA0bnp0K253R0gxNnFIdGFO?=
+ =?utf-8?B?dmhINkt6U1BOd2pSYWNFaCsvUnZOb1FJc253UHJqZmtIaG1KNnFqejF1ODR4?=
+ =?utf-8?B?cDhQYWc5a2p6SnhBUFNVbGIyWnA3cDF2WDZtOTFXbVkwV0FFdGM0ZnJtZnhO?=
+ =?utf-8?B?UXlEZjdFZmV5Y2lIZXJCbUNlZk1ZZm5ZQTVUb3p6ZXZtbTk3SkFQbkNvVzlI?=
+ =?utf-8?B?Y3F0MXEvcjFmakJZZXJ0R2pRbkl2RXdaQ0U4bVZKNkdKUFRIbTZEVzNOM05U?=
+ =?utf-8?B?M0VLOUQvWVdhV3hkU1FZTHhQYnVOM2loK3BvUVllZVZxcFpLV2M3SnNtaEti?=
+ =?utf-8?B?eEUwRkJzMkU2TEVEaWV3WTZQaE9lUFRqS1RzU3Ewb3liL2lYdXpzVnFZb3Zh?=
+ =?utf-8?B?WmNUU0tnNHRBb3loTEM3T0FGWUFaUW9VMXZQNENJWkhVN2xiaWpBKzc4dmxB?=
+ =?utf-8?B?THBZajBGNlNoek8yYUl1L3V5MVUzMGx0em80bXZoc1h1bDBHVFpSb2ZhczlJ?=
+ =?utf-8?B?dnlhbkdBelRCemtpZXNOSTBiUmloQ3V1YTlBNytXbkNFWUI5MHJKbzhrMjRk?=
+ =?utf-8?B?dTB2N1ZQM2xQWFlyazNlWisrYmQ1ZW95YUNrNjYvOFIvOHY4TmdMYS93MFRF?=
+ =?utf-8?B?bk1zb2djSDcyZWRBYUE2N0ZabTN3UzBpYndudklwbFhrUk9OeWE2WE5pZTQw?=
+ =?utf-8?B?Z3lSbGtERmlRblFlcm14Q1p1TmRpbXJtZy9STUVpMU91Z1I3UUlYcGovRS9J?=
+ =?utf-8?B?dmhQbkRkR0MzL2lXL0FSdFpQSWpIUEd2bC9KMEJGNHROSE85YUcrQ0hOMlcr?=
+ =?utf-8?B?WG44b1MrRWtQdDVOQ2RRVE9VVy9qQlprbHBPcExTaUhaVHJVdzF6cVdkYzVa?=
+ =?utf-8?B?cGg2aXhQNElZS0lGZEVFUlVmREwzSExaR3FuMnYzNEJIYW1HOGoxNkhoa1Ni?=
+ =?utf-8?B?Njk4Qnd3aGpBVitIVjVvNStzZGJqQzF3dGV3TlpzVWdTNGY3bTJmN3F4am9l?=
+ =?utf-8?B?bHl4bjhzYkVjMkNpYUk3bFRaWTc4ekZ3SVluZml6ZllKbmdQV2tnMEJBZGRi?=
+ =?utf-8?B?WEcycTdZRFhPeExGVkN2TkpYL1hoTFFwOGZockI2UFcyK1FkYmU1Zm5GNEVY?=
+ =?utf-8?B?ZExzckR5YkV0WFYvWSs5NGUyR01GZzRJcDd4eUo3WVl2Y21ibjdFUUVZU2dJ?=
+ =?utf-8?B?Wk1GZWFDakpsMGV2V25vLy9ldUZsU3NzL3lsTCtXS0UwaGsvRElMVXl1MEQ5?=
+ =?utf-8?B?ckFKaTNDdGhYeFg0LzdTbHdFR1hjb3JPQlh4MTFzd0pJZ2RZUWx1NDFjNHRS?=
+ =?utf-8?B?TWhqK2JKNXpqU2JYMEh1elVoYzFEcEdWTzhKU21RTm5DbWRHalJTR3l6a2Uz?=
+ =?utf-8?B?YXhKR0I2U3g2cjBNZzYvcHlLZlNhTC9CSlZDYUNkb3BVTHhsa1BXQis5UFhx?=
+ =?utf-8?B?OGsyNnB3OWp3S1lNcm51cy9IUG5VemhjQTBFQ3lDK2RJNmdTWUhEZ1R3bjNr?=
+ =?utf-8?B?enhubzlxZXpSRzlYQlVjZkxLbDJnV1FxaDlQV1ZubVRzMmErOUNIbkphbUp6?=
+ =?utf-8?B?RkVxVnpaSkZaTGFmM01zTElJa2F0VXAycEZvbllHOVYzeWpMZmRGTVBEMCs4?=
+ =?utf-8?B?ZzBNY0JXK0lMVDJtTXc0L054NEk1M3hBbGpRMG9JdzBRSUU0SHZVQ2lPMzFR?=
+ =?utf-8?B?QVY0aHBWMndqd1ZuVUJ6WkJ5V0UxbHNSejRkdDIwdldIdVhrdkEzRDdXcGdo?=
+ =?utf-8?B?UGhYd3kxb3g3QkRqQktkYVVYdmlBYTJobHUxQzJOell0Q2ErRmsrSUd2a2Fx?=
+ =?utf-8?B?TFdqWFVVWUZTZUNiWGVReUNlYnZUa1d5ZVpycVZ2eXRDNXhNcS9Jcm1Fd1VM?=
+ =?utf-8?B?VEk0N0tuUUdDLzY0bmxmMHp5eVFpcTk2a0ZXOVIxNnFVR3V2blVKYlk4bWtO?=
+ =?utf-8?B?eTQ4bXUrUGpKSzNuOUVxbWdwTDN2aUxyQlVhaU15OVkrL0g0T2h6NVhwRkow?=
+ =?utf-8?B?Y01icC9XSVhyS1V0WHh1dGgweXU0aC9NaFNiektUbDNhUExJRnppL2dnaUNO?=
+ =?utf-8?B?ay9WTGhFeVQ0ZzNNaEtmZU5ZYVoybFM1MGc0YmVBTG5WNUlqTnYvTUwwUVVa?=
+ =?utf-8?B?QWpXa29QNWlDTDhSYURlM0IxZVZKQ3d1WGViY0dnUzJuV082WXhFcUw2SExD?=
+ =?utf-8?B?aEE9PQ==?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	QqZccHgIrozJR1vZwT0sINRcV8kbkSXUoCRplnPqZZyfPiCAi2E8Z934WcNTnXvZ9xp+6GaMyvW4SKXf5lK0D83i0MEPPcWOYIACw+rwhzPLGH9rYMIQqHTYSAwsJ3zf5DvNrVPjCDeAnyyJ/XOv1q7eI7RHdmOxtwOWHtR0VHMDsf8+URUrUZ33waB4BrMat5csT8oVGwQclGNL0Qj4Cm3E9UpPtgMs7xAXI+5p7UVmlh1nxZAa9hC2Fj8oKsXQGd/aynrUDFyY08t1fML/3jBgW5EmMTnk3QadYJEp+uBlzzuuw3VJr9GKDNZlDLxUVcLpPjfP0iugqiJTKAR7EusMhZMpyBJ8uIxXEYuGOeZ2q5ELRGhZVxVuRTPMMaI6IzRtslNwQkyL1TGv0QuXSNjNUtS35pA0aPIUjsH3IehAROyp+TtFnNAb9qQHKhjvJjZGn9TnKp16Hdwg0WY13HNgXeN094bnelpc93AwqwQmDBRO+qDJHv8kX/6S7HSBhWni9zirytmZXjSi7owBrTpyZ5oqG/k463LUqUBBvfBOaZynDJUID6DLKEtGhOZmQ+cESWGG2iKEf5NMZ+0xo/1jlXPwilyKVqlo7SZkBQ4=
+	hX2np+qSJGl4ySYEK8CX9QUbCkrsqO4ITFrfO4VbTi+PhpsOrI+8HoPXjHqj3KfG7z2Bgf13LpjrvfIIQdGUzNR0FCfiM9AUeceJuO6/CHYCw2NLD+dcIiRXqzv6hY3Wfdw2FMvjKqZfDTlsgPhnPGzec6ukSD6sEd4xncZ25BAp6EQCEC2gidFUpS/GhKwgULSxZjyn1bQpSyXeQozYrcCyZOc+pQeBLIKiQl+ZrbmxYSMbRGATtnkIH4JolXkSO5W/j4P4gxjGi46s/P60queHaafzn9rhXB/NRhTTC+ZdYuEYK/5OcVHmc4GvfR14YdLFpSVjvbrdi/bE8Cu/Javnsp2V7orQbyeWzX16zgmHKo6qTj37c3xtRC3Y9qDI+uomu0JbMRmI821mdXlWr2jZ52Y7Phqtjw/p859FjXhqFB2pR7SShhRMcHYNkNsqlXRRfSBi1YLeFz55PRsT40/reCaJVlrwyAydDybVU6Wv0NPHwCeSTMZxzka8M83tvLf+eRhLkK8VckLsp1F6ocrl3PEWH4E3rsMm8qZRTI8dgVtzj4xZmeYdbTmbAUEEvZiXLQ3iQqr2t9jlPlj/aEA9ePOiD3A+7w642hwquCY=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22733dd1-707e-47e3-30a2-08dd8d6d1986
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8d4c502-fcaf-4536-8102-08dd8d6f316f
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:43:07.8356
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 13:58:06.8094
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eIH71NOAufNF2L2Z+gNlhrgpgPc0paqGMwv2YFefIDGrYiULdL+OGBOgsidQ/ZWLR816CLkaegTheTX9c2IXrw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4503
+X-MS-Exchange-CrossTenant-UserPrincipalName: W03NPv2Odaz0PqFx01fbUB1ZQjyQYG9fRDikNXa84sCWlCeAC3EBz2I1Dgj62Z68FJc4BxzZ41OK/Wful7aLTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7805
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-07_04,2025-05-06_01,2025-02-21_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 spamscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=811 bulkscore=0 mlxscore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505070129
-X-Authority-Analysis: v=2.4 cv=SvmQ6OO0 c=1 sm=1 tr=0 ts=681b637f b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=j3XS8_TttYIVoZJDNx8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: HIW_5PmoUkKaC5FkqCLhdWpTYFEFI_qx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEyOSBTYWx0ZWRfX+ykHs8FIvG4T B4+IgTkmMoPPIPoNvtbRUurUFMSqxoMEevi2CFfBf+OWfL0NZbJw1MFp/aQ++99mRTPzS+YAsV5 gGAX2CPkC8QbEsuGAzYdRarr6qcVNL3WjJD4KygxuQXaT1IirJmmjEuAn8mJCeNdsTYniNiG+Pw
- fhvBzQAWlNmIhRc5c7Lsu/SEOcoYqvJMcJ4sDIQ8AR4QgZ4OixcV85w3621iQOBjLbXCvlaxx0z oEanwQGgoXfd0ynQyH0OC+CTdbK1x/sSpIACzuFzXZ+vuai1FTTtIXQyh+3L1+ewVKop2T/spKi I5Fd6k0FfbdLwGo3U3hrOULHh7/k7naPSepMuzRTrtU689p4i1zCOOLjsX4nSdhlGtmg4gsmGeX
- t5ivhP7MEk5CDGkWxAiH0GShHvAJqAKvnVHOZdlpEmdc3AbksgYGi4NP+gpgZ588dJ3yqaUi
-X-Proofpoint-ORIG-GUID: HIW_5PmoUkKaC5FkqCLhdWpTYFEFI_qx
+ engine=8.12.0-2504070000 definitions=main-2505070131
+X-Proofpoint-GUID: -KuAYgElta9XNQkJVko2Tl0pQjUOH3cn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDEzMCBTYWx0ZWRfXx/KFfLH/0e/f cuyHG9tyRKGBnlkWxAP8xkwS43THfrEKJNG3ENGCFQraSQGTKD59r65iQ9S3HDtgIsHBcxfSylt JElutk97m6lfSk6fNlhUmZU8UiGAS+fCu3G4RQt306K61ANSrsFsWNj/KlJ9GObnS4g03NozUn7
+ n84MADYZwhGCQqo7q6Dz/0ztwsB4Js0KuQod+vjprGD4JtHkvFWwG9u6eG8aBUN8Fy/z5BpK378 2eAiu3SyKdQq5w4s96Yr5Tzg4rkix6X5Ou0xGQPKty5e6+xhXTb3pK8KP4A/hAw3yzWgJDL4B3M dzYk3ntO4kWcuuJg9K1R3PczJ6xwcKaY6K9AOvc4XqTLUiI96bR/Yr8bAidd6SeAdqQYwuuNLL+
+ Li8+JBI7NhNnmVRfrIOR+iRAzCs3luax7/DvzT1Mc0ZsVxUqvq1frWeA8GoBlB3UY8yhJyKD
+X-Proofpoint-ORIG-GUID: -KuAYgElta9XNQkJVko2Tl0pQjUOH3cn
+X-Authority-Analysis: v=2.4 cv=Pen/hjhd c=1 sm=1 tr=0 ts=681b66f3 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=_0hK9XvqEkH3o8SgxPoA:9 a=QEXdDO2ut3YA:10
 
-On 5/6/25 10:50 PM, Dave Chinner wrote:
-> On Tue, May 06, 2025 at 08:06:51PM -0400, Jeff Layton wrote:
->> On Wed, 2025-05-07 at 08:31 +1000, Dave Chinner wrote:
->>> On Tue, May 06, 2025 at 01:40:35PM -0400, Jeff Layton wrote:
->>>> FYI I decided to try and get some numbers with Mike's RWF_DONTCACHE
->>>> patches for nfsd [1]. Those add a module param that make all reads and
->>>> writes use RWF_DONTCACHE.
->>>>
->>>> I had one host that was running knfsd with an XFS export, and a second
->>>> that was acting as NFS client. Both machines have tons of memory, so
->>>> pagecache utilization is irrelevant for this test.
->>>
->>> Does RWF_DONTCACHE result in server side STABLE write requests from
->>> the NFS client, or are they still unstable and require a post-write
->>> completion COMMIT operation from the client to trigger server side
->>> writeback before the client can discard the page cache?
->>>
->>
->> The latter. I didn't change the client at all here (other than to allow
->> it to do bigger writes on the wire). It's just doing bog-standard
->> buffered I/O. nfsd is adding RWF_DONTCACHE to every write via Mike's
->> patch.
+On 5/7/25 7:55 AM, Christoph Hellwig wrote:
+> Hi all,
 > 
-> Ok, that wasn't clear that it was only server side RWF_DONTCACHE.
+> this series remove the rq_vec field from the svc_rqst structure and
+> always uses the bvec array for VFS operations.
 > 
-> I have some more context from a different (internal) discussion
-> thread about how poorly the NFSD read side performs with
-> RWF_DONTCACHE compared to O_DIRECT. This is because there is massive
-> page allocator spin lock contention due to all the concurrent reads
-> being serviced.
+> It doesn't integrate the bvec arrays used by the socket transport and
+> those of the VFS layer in nfsd yet, but it is a step toward that.
 > 
-> The buffered write path locking is different, but I suspect
-> something similar is occurring and I'm going to ask you to confirm
-> it...
-> 
->>>> I tested sequential writes using the fio-seq_write.fio test, both with
->>>> and without the module param enabled.
->>>>
->>>> These numbers are from one run each, but they were pretty stable over
->>>> several runs:
->>>>
->>>> # fio /usr/share/doc/fio/examples/fio-seq-write.fio
->>>
->>> $ cat /usr/share/doc/fio/examples/fio-seq-write.fio
->>> cat: /usr/share/doc/fio/examples/fio-seq-write.fio: No such file or directory
->>> $
->>>
->>> What are the fio control parameters of the IO you are doing? (e.g.
->>> is this single threaded IO, does it use the psync, libaio or iouring
->>> engine, etc)
->>>
->>
->>
->> ; fio-seq-write.job for fiotest
->>
->> [global]
->> name=fio-seq-write
->> filename=fio-seq-write
->> rw=write
->> bs=256K
->> direct=0
->> numjobs=1
->> time_based
->> runtime=900
->>
->> [file1]
->> size=10G
->> ioengine=libaio
->> iodepth=16
-> 
-> Ok, so we are doing AIO writes on the client side, so we have ~16
-> writes on the wire from the client at any given time.
-> 
-> This also means they are likely not being received by the NFS server
-> in sequential order, and the NFS server is going to be processing
-> roughly 16 write RPCs to the same file concurrently using
-> RWF_DONTCACHE IO.
-> 
-> These are not going to be exactly sequential - the server side IO
-> pattern to the filesystem is quasi-sequential, with random IOs being
-> out of order and leaving temporary holes in the file until the OO
-> write is processed.
-> 
-> XFS should handle this fine via the speculative preallocation beyond
-> EOF that is triggered by extending writes (it was designed to
-> mitigate the fragmentation this NFS behaviour causes). However, we
-> should always keep in mind that while client side IO is sequential,
-> what the server is doing to the underlying filesystem needs to be
-> treated as "concurrent IO to a single file" rather than "sequential
-> IO".
-> 
->>>> wsize=1M:
->>>>
->>>> Normal:      WRITE: bw=1034MiB/s (1084MB/s), 1034MiB/s-1034MiB/s (1084MB/s-1084MB/s), io=910GiB (977GB), run=901326-901326msec
->>>> DONTCACHE:   WRITE: bw=649MiB/s (681MB/s), 649MiB/s-649MiB/s (681MB/s-681MB/s), io=571GiB (613GB), run=900001-900001msec
->>>>
->>>> DONTCACHE with a 1M wsize vs. recent (v6.14-ish) knfsd was about 30%
->>>> slower. Memory consumption was down, but these boxes have oodles of
->>>> memory, so I didn't notice much change there.
->>>
->>> So what is the IO pattern that the NFSD is sending to the underlying
->>> XFS filesystem?
->>>
->>> Is it sending 1M RWF_DONTCACHE buffered IOs to XFS as well (i.e. one
->>> buffered write IO per NFS client write request), or is DONTCACHE
->>> only being used on the NFS client side?
->>>
->>
->> It's should be sequential I/O, though the writes would be coming in
->> from different nfsd threads. nfsd just does standard buffered I/O. The
->> WRITE handler calls nfsd_vfs_write(), which calls vfs_write_iter().
->> With the module parameter enabled, it also adds RWF_DONTCACHE.
-> 
-> Ok, so buffered writes (even with RWF_DONTCACHE) are not processed
-> concurrently by XFS - there's an exclusive lock on the inode that
-> will be serialising all the buffered write IO.
-> 
-> Given that most of the work that XFS will be doing during the write
-> will not require releasing the CPU, there is a good chance that
-> there is spin contention on the i_rwsem from the 15 other write
-> waiters.
+> Diffstat:
+>  fs/nfsd/nfs3proc.c         |    5 ----
+>  fs/nfsd/nfs4proc.c         |    7 ------
+>  fs/nfsd/nfsproc.c          |    7 +-----
+>  fs/nfsd/vfs.c              |   49 ++++++++++++++++++++++++++++-----------------
+>  fs/nfsd/vfs.h              |    4 +--
+>  include/linux/sunrpc/svc.h |    3 --
+>  net/sunrpc/svc.c           |   40 ------------------------------------
+>  7 files changed, 37 insertions(+), 78 deletions(-)
 
-This observation echoes my experience with a client pushing 16MB
-writes via 1MB NFS WRITEs to one file. They are serialized on the server
-by the i_rwsem (or a similar generic per-file lock). The first NFS WRITE
-to be emitted by the client is as fast as can be expected, but the RTT
-of the last NFS WRITE to be emitted by the client is almost exactly 16
-times longer.
-
-I've wanted to drill into this for some time, but unfortunately (for me)
-I always seem to have higher priority issues to deal with.
-
-Comparing performance with a similar patch series that implements
-uncached server-side I/O with O_DIRECT rather than RWF_UNCACHED might be
-illuminating.
-
-
-> That may be a contributing factor to poor performance, so kernel
-> profiles from the NFS server for both the normal buffered write path
-> as well as the RWF_DONTCACHE buffered write path. Having some idea
-> of the total CPU usage of the nfsds during the workload would also
-> be useful.
-> 
->> DONTCACHE is only being used on the server side. To be clear, the
->> protocol doesn't support that flag (yet), so we have no way to project
->> DONTCACHE from the client to the server (yet). This is just early
->> exploration to see whether DONTCACHE offers any benefit to this
->> workload.
-> 
-> The nfs client largely aligns all of the page caceh based IO, so I'd
-> think that O_DIRECT on the server side would be much more performant
-> than RWF_DONTCACHE. Especially as XFS will do concurrent O_DIRECT
-> writes all the way down to the storage.....
-> 
->>>> I wonder if we need some heuristic that makes generic_write_sync() only
->>>> kick off writeback immediately if the whole folio is dirty so we have
->>>> more time to gather writes before kicking off writeback?
->>>
->>> You're doing aligned 1MB IOs - there should be no partially dirty
->>> large folios in either the client or the server page caches.
->>
->> Interesting. I wonder what accounts for the slowdown with 1M writes? It
->> seems likely to be related to the more aggressive writeback with
->> DONTCACHE enabled, but it'd be good to understand this.
-> 
-> What I suspect is that block layer IO submission latency has
-> increased significantly  with RWF_DONTCACHE and that is slowing down
-> the rate at which it can service buffered writes to a single file.
-> 
-> The difference between normal buffered writes and RWF_DONTCACHE is
-> that the write() context will marshall the dirty folios into bios
-> and submit them to the block layer (via generic_write_sync()). If
-> the underlying device queues are full, then the bio submission will
-> be throttled to wait for IO completion.
-> 
-> At this point, all NFSD write processing to that file stalls. All
-> the other nfsds are blocked on the i_rwsem, and that can't be
-> released until the holder is released by the block layer throttling.
-> Hence any time the underlying device queue fills, nfsd processing of
-> incoming writes stalls completely.
-> 
-> When doing normal buffered writes, this IO submission stalling does
-> not occur because there is no direct writeback occurring in the
-> write() path.
-> 
-> Remember the bad old days of balance_dirty_pages() doing dirty
-> throttling by submitting dirty pages for IO directly in the write()
-> context? And how much better buffered write performance and write()
-> submission latency became when we started deferring that IO to the
-> writeback threads and waiting on completions?
-> 
-> We're essentially going back to the bad old days with buffered
-> RWF_DONTCACHE writes. Instead of one nicely formed background
-> writeback stream that can be throttled at the block layer without
-> adversely affecting incoming write throughput, we end up with every
-> write() context submitting IO synchronously and being randomly
-> throttled by the block layer throttle....
-> 
-> There are a lot of reasons the current RWF_DONTCACHE implementation
-> is sub-optimal for common workloads. This IO spraying and submission
-> side throttling problem
-> is one of the reasons why I suggested very early on that an async
-> write-behind window (similar in concept to async readahead winodws)
-> would likely be a much better generic solution for RWF_DONTCACHE
-> writes. This would retain the "one nicely formed background
-> writeback stream" behaviour that is desirable for buffered writes,
-> but still allow in rapid reclaim of DONTCACHE folios as IO cleans
-> them...
-> 
->>> That said, this is part of the reason I asked about both whether the
->>> client side write is STABLE and  whether RWF_DONTCACHE on
->>> the server side. i.e. using either of those will trigger writeback
->>> on the serer side immediately; in the case of the former it will
->>> also complete before returning to the client and not require a
->>> subsequent COMMIT RPC to wait for server side IO completion...
->>>
->>
->> I need to go back and sniff traffic to be sure, but I'm fairly certain
->> the client is issuing regular UNSTABLE writes and following up with a
->> later COMMIT, at least for most of them. The occasional STABLE write
->> might end up getting through, but that should be fairly rare.
-> 
-> Yeah, I don't think that's an issue given that only the server side
-> is using RWF_DONTCACHE. The COMMIT will effectively just be a
-> journal and/or device cache flush as all the dirty data has already
-> been written back to storage....
-> 
-> -Dave.
+I already have patches to do this in test.
 
 
 -- 
