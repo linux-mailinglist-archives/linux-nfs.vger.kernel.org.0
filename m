@@ -1,56 +1,58 @@
-Return-Path: <linux-nfs+bounces-11585-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11586-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F37DAAE4D6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 17:31:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8E0FAAE4E7
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 17:34:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C8919C47E3
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 15:28:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AE1EF188D29F
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 15:34:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F6428A41F;
-	Wed,  7 May 2025 15:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01C771F2C3B;
+	Wed,  7 May 2025 15:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhlW0W58"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAFUoSQ6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13BA28A40A
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 15:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3ED748D;
+	Wed,  7 May 2025 15:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746631594; cv=none; b=fyIQ5E85S4YXA3Y4UQzMeUW2focWgI7p/U6NLIKNVNFstiiuPaXxYTqqz7eYp8iL7fSf5cV5i/wsdQvcAfUGl3V6CSWbzKNPYEqbPdPrxKTOjvHhLeAPB9Ovz9QgC6k6hckloDtq0tHm1/9Jh8b00MBoOchxdnhzyGgCAOkkUKo=
+	t=1746632078; cv=none; b=OF+KS5YRNI7ihfG/EwhBm+PdZVG3MVQdBsllnuVif/VC0Su3J3mwsaYaDRly8AsFEcEy+BlCHh0w1+/gJ0jz7tWFs0assUOSQsE8VgbTaWvYoZFVIcEmXoHaIEEA+S920wmg8CBzAR45u9w0cTo1KJIzR5z+vB5Mw9f5q/ZGWWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746631594; c=relaxed/simple;
-	bh=tEPOlD9Z5hqgqTHd2Zr9JQB0LDUK0q9nfIw21EzIEe0=;
+	s=arc-20240116; t=1746632078; c=relaxed/simple;
+	bh=Ok7u6LBoKGfJAF9tBNN43W2Bk0yrb0kqkYv9jxCF5dw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KuCK4UkfpCQJwBibSZX2dwmX7ugYw4ngG+zbtWPzTQq/sKbJIldwJSbXdrBAHI+P0uklXD2+noo7auZnksPMEr8xSnG/W6tz42fo/DQTaN7NDVifdKq7tDX+07pWG/NQGVRVjSL4sHiYf/C1V/j7SRqXDU07U3hP8W5z/FEru2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhlW0W58; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ACE4C4CEE2;
-	Wed,  7 May 2025 15:26:33 +0000 (UTC)
+	 Content-Type:MIME-Version; b=c6gUwZozmI65KYmUnj7oUkqaIvU7xNzlhyWfYjtOpRPkCQSNBN/fLSACSkqKFa4KIwwQ76R5XoN3DQ9etag2698iATrOx7dqOj2IJYMZgl+oeSUcVs1M8fcRf+QRLjdIPc9y2H22UxvkMplInwMSVEmidSS1wgpro4oStcYflco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAFUoSQ6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FD9C4CEE2;
+	Wed,  7 May 2025 15:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746631593;
-	bh=tEPOlD9Z5hqgqTHd2Zr9JQB0LDUK0q9nfIw21EzIEe0=;
+	s=k20201202; t=1746632078;
+	bh=Ok7u6LBoKGfJAF9tBNN43W2Bk0yrb0kqkYv9jxCF5dw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IhlW0W58JjaFhi8ZMJlnYH9ogcrH8471t16htivobKVurYvQVf9Eb/znZwJ9V9K+4
-	 odZhsGExKgovAg/QnBL0HX8p30qtbtzOEiOjhAdWayswqZZAiJo9aYtAKi5p57yVzg
-	 LSUEcBAWTPii2044igqdHGeAthyHEDUK77zqP4LAke81X1lXvBWwH5dgRseIL6QrUM
-	 gKKTn+M9CZgAIdBt9c+h+cj04SI5T9qShmM4FWOoDI07PmWP5V8i6Asmf6ME3HlDy/
-	 dWDqfT6g9iadhY/qig2Y4d8TkGpKlu2yJ7tRF+lXbB+/EjfHH7DmmB05PS7CCdJ0I2
-	 Z9SsxB3t+xZ7Q==
-Message-ID: <907c96ecd344f45901f52dc1dd2e41688c35c592.camel@kernel.org>
-Subject: Re: [PATCH v1 0/4] Remove svc_rqst :: rq_vec
+	b=rAFUoSQ6rC39yiNpaMBSD7TInrcA+77kty1PNmh8J1pvuBZoyg2RBtr7kVcFfuuUb
+	 e6jeP5gqM1S0pzN5kSmwCNqu7lx92XcT29YCVjrzpoQexRwe5OlC6PdspR1nMe9WEO
+	 pO/SetlQcbPJMnF7VgTb3g/u1/K2rBtJmpADtx8BrEst/AmyYys91n3npM+tHD3L4/
+	 JIkQeiOvOrNNJmg7MUDNeY+UqjYB4lFI+6oa+8xhVfXocIRbKbRTIl/dl7ZcsNNap4
+	 ytZfFe17/SiCHNwhMXqfBeewsL8GlVn0NlksJLTqMnfV9AHhbpnazpeLeZuxgcOKiP
+	 XJ9CoqmWFHBEQ==
+Message-ID: <b73ee4d1184e91b540edaeb22d939fea852d482e.camel@kernel.org>
+Subject: Re: [PATCH v3] NFSD: Implement FATTR4_CLONE_BLKSIZE attribute
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 07 May 2025 11:26:32 -0400
-In-Reply-To: <20250507140728.6497-1-cel@kernel.org>
-References: <20250507140728.6497-1-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Roland
+ Mainz <roland.mainz@nrubsig.org>, Christoph Hellwig <hch@infradead.org>, 
+	stable@vger.kernel.org
+Date: Wed, 07 May 2025 11:34:36 -0400
+In-Reply-To: <20250507144515.6864-1-cel@kernel.org>
+References: <20250507144515.6864-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,35 +137,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-05-07 at 10:07 -0400, cel@kernel.org wrote:
+On Wed, 2025-05-07 at 10:45 -0400, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> I intend to insert these into the series that expands the maximum
-> r/wsize, once they are reviewed.
+> RFC 7862 states that if an NFS server implements a CLONE operation,
+> it MUST also implement FATTR4_CLONE_BLKSIZE. NFSD implements CLONE,
+> but does not implement FATTR4_CLONE_BLKSIZE.
 >=20
-> Testing has shown no correctness issues, but some unexpected
-> performance variation that I still need to chase down.
+> Note that in Section 12.2, RFC 7862 claims that
+> FATTR4_CLONE_BLKSIZE is RECOMMENDED, not REQUIRED. Likely this is
+> because a minor version is not permitted to add a REQUIRED
+> attribute. Confusing.
 >=20
 
-Interesting.
-
-
-> Chuck Lever (4):
->   NFSD: Use rqstp->rq_bvec in nfsd_iter_read()
->   NFSD: De-duplicate the svc_fill_write_vector() call sites
->   NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
->   SUNRPC: Remove svc_rqst :: rq_vec
+Isn't CLONE itself an optional operation? It wouldn't make sense to
+REQUIRE this attribute on servers that don't support CLONE, so I think
+it makes sense that it should be optional. Anyway, I'm just being
+pedantic.
+=20
+> We assume this attribute reports a block size as a count of bytes,
+> as RFC 7862 does not specify a unit.
 >=20
->  fs/nfsd/nfs3proc.c         |  5 +---
->  fs/nfsd/nfs4proc.c         |  8 ++---
->  fs/nfsd/nfsproc.c          |  9 ++----
->  fs/nfsd/vfs.c              | 61 +++++++++++++++++++++++++++-----------
->  fs/nfsd/vfs.h              | 10 +++----
->  include/linux/sunrpc/svc.h |  3 +-
->  net/sunrpc/svc.c           | 33 ++++++++++-----------
->  7 files changed, 71 insertions(+), 58 deletions(-)
+> Reported-by: Roland Mainz <roland.mainz@nrubsig.org>
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Reviewed-by: Roland Mainz <roland.mainz@nrubsig.org>
+> Cc: stable@vger.kernel.org # v6.7+
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index e67420729ecd..9eb8e5704622 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3391,6 +3391,23 @@ static __be32 nfsd4_encode_fattr4_suppattr_exclcre=
+at(struct xdr_stream *xdr,
+>  	return nfsd4_encode_bitmap4(xdr, supp[0], supp[1], supp[2]);
+>  }
+> =20
+> +/*
+> + * Copied from generic_remap_checks/generic_remap_file_range_prep.
+> + *
+> + * These generic functions use the file system's s_blocksize, but
+> + * individual file systems aren't required to use
+> + * generic_remap_file_range_prep. Until there is a mechanism for
+> + * determining a particular file system's (or file's) clone block
+> + * size, this is the best NFSD can do.
+> + */
+> +static __be32 nfsd4_encode_fattr4_clone_blksize(struct xdr_stream *xdr,
+> +						const struct nfsd4_fattr_args *args)
+> +{
+> +	struct inode *inode =3D d_inode(args->dentry);
+> +
+> +	return nfsd4_encode_uint32_t(xdr, inode->i_sb->s_blocksize);
+> +}
+> +
+>  #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+>  static __be32 nfsd4_encode_fattr4_sec_label(struct xdr_stream *xdr,
+>  					    const struct nfsd4_fattr_args *args)
+> @@ -3545,7 +3562,7 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_encode=
+_ops[] =3D {
+>  	[FATTR4_MODE_SET_MASKED]	=3D nfsd4_encode_fattr4__noop,
+>  	[FATTR4_SUPPATTR_EXCLCREAT]	=3D nfsd4_encode_fattr4_suppattr_exclcreat,
+>  	[FATTR4_FS_CHARSET_CAP]		=3D nfsd4_encode_fattr4__noop,
+> -	[FATTR4_CLONE_BLKSIZE]		=3D nfsd4_encode_fattr4__noop,
+> +	[FATTR4_CLONE_BLKSIZE]		=3D nfsd4_encode_fattr4_clone_blksize,
+>  	[FATTR4_SPACE_FREED]		=3D nfsd4_encode_fattr4__noop,
+>  	[FATTR4_CHANGE_ATTR_TYPE]	=3D nfsd4_encode_fattr4__noop,
+> =20
 
-Either way, this seems like a good simplification and cleanup.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
