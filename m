@@ -1,96 +1,130 @@
-Return-Path: <linux-nfs+bounces-11553-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11554-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5E3BAAD8F6
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 09:52:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E3857AAD935
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 09:57:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9772F3B0650
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 07:47:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AD5B3A50A4
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 07:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B564221FD5;
-	Wed,  7 May 2025 07:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XLLQGYYF"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C19921FF59;
+	Wed,  7 May 2025 07:50:05 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD30E220F4F;
-	Wed,  7 May 2025 07:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97915220F20
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746603743; cv=none; b=RFsrJ8qIREtilzqzTWee2O7Ed7VHQb4+Iqoe1GqwikfhhLv90h9NAcnIqO2xgON8zYk8502SILZVTXuU4Xlb6Ik15d1lW8rd4UwHlAsicRcO9AKczuE9G53iaCCjTJH4E+/eHN47VzEDVceZPWcNt2bLX5XSzgbqKgnOfR+E9p8=
+	t=1746604205; cv=none; b=niKkw5fDkokj9k74ckGX9W4/pGYAcbBUq0Piogz/sRdkgU2z0ECEI8idZq9cI/ofCogs6bOjHCN9/7JjdLLnxdvDUmBEjqKeOxGZOZvVOzpIEJhCUpWT+gA/9h6C99Wq5SkKxAuj7HtCEeaamSTDf/pqSULlEpsOPqb6F/O6f4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746603743; c=relaxed/simple;
-	bh=HHp5H7G2E8fGD9MVdYFQmn1WrfJCaPcz5UTzKMcuINY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXI09tNLiEAs469xWGjV4tIzfnvjU4U47vj4BxtWO6p47zhDLmozQlkxN3W9pmeQ24vTmgrX72CqepAhg+hXSAJ5z6t82znQAi8bpiTmXs/4CdVqBQ08HQxLX301Ns6OmyQf7Sgg7kFku+bvPCSL6nIS023vY5L7rKCJC4APL+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XLLQGYYF; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0ke6EYah+uY4vpjtJLy0dpIgV5ZCmCNv1pgp/+dxS5c=; b=XLLQGYYFwm7JiksHJp5h2ZTn3u
-	76st4NL1kAKyNatOXdW0f1wo7wc4cNINf+uXaghVMWnZM0Ypk/+W0r4P/P/4E3kRiZokgJ8QYhqBl
-	dB75HXPmsaz74OuRXf55qa35V8/XM4wYqquPPbVdq09Tuxfcf/QgMI/NPcHqHt5UZ9RC01T/5zrWj
-	FkcJfOwqYo0Cdw0XL5dp6d6gudD6X8eYocNpozsUysacsQBpJSGtdyvQIzpz7QOklgcaq/QcmF3RA
-	xTTvz/YA+bkSppzbRCN+D68gr43SAAfubLFyNaqik8Ia++0z/P0KBmtGtFxqy4qBDAyy24h9+Ge0S
-	hM9FNqaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uCZQ3-0000000EZrI-22QD;
-	Wed, 07 May 2025 07:42:19 +0000
-Date: Wed, 7 May 2025 00:42:19 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, NeilBrown <neil@brown.name>,
-	Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v4 14/14] SUNRPC: Bump the maximum payload size for the
- server
-Message-ID: <aBsO28mbIZrU2HHD@infradead.org>
-References: <20250428193702.5186-1-cel@kernel.org>
- <20250428193702.5186-15-cel@kernel.org>
- <aBoP249KZ5G9hU81@infradead.org>
- <390ac9ce-d32d-4534-a406-52288f79ab0c@kernel.org>
+	s=arc-20240116; t=1746604205; c=relaxed/simple;
+	bh=0aUBr2iPSWKnwAwkpV9FO2LdVd3xps7OB7drF/jOb1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sPwKUtqcuisvMHJPR/NUzvg5I2Rd8EAupiiRl6WE+6RoPeedUO23eOus9n5/pf8d2Ozmvg73N84P1vfg5lkUXenatckK9f8MLAqHzZEHWq8xkEblz49mdPT0omffnFI4yjf06v3pCSLBcmqdKmR10Gnkiu0pTo6DVJgPAuue4Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so43018065e9.2
+        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 00:50:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746604202; x=1747209002;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L8n3qXfnGWQxspDxfSGkwgtKVwzUiL9sbiMeF5o/i3s=;
+        b=NKeNMz6NEPdpm2xa88zFIiNIxkmN/ffNL7/fnsKqLwkOLItaZ696bFLy4ErXl1B0JL
+         0RbAAQgmMW71OSwYKeFoJhbcIMyFio7Jlra9vJzqxtczNvsk34Rkkpa1GgX3oKZhZ1/Y
+         Cpe6WhHFusYR/F+KsBd7CSqX1fevObuyG/z+wr700+lnIvFZm7ja6cYu4ObVSwlhPBYc
+         i1gatyH8ERjxqoVqMDc4qCc7cp8MqC6yoGiZmM4gpDQ4ZXRAWNptgVhEEg2UPzHb/nEe
+         peHvVGBCkjErjifF61zjzglIJkHPZcRwmn0itmNwJAz8aWSC/2l8PgqWLgZlbDoUSzlO
+         PsZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/1lisrgx/BY3QW6dbS8WGiKwQ/C024ErgwgGe62wzqyE3MaQMEbukb3wIiBjL913QRar5stSZaso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvcvDlJBiBvUanlMG+vsHesQM5U28vQq1wN8IZC2+QVu8fvQ1V
+	+XBRNZJc18urb106K1DuStLojBIuy687BrIeEQwUMbhgVOokwgTVO7aupA==
+X-Gm-Gg: ASbGncs+LIlS1XCSY9ey/DWiDdA3VlTfo4Suv4xzi3WYKNaPt5Z7XhWotG5M/b7dV9B
+	qAlbYxjKTJKKCBqMUCOriZSgzISIIvSjXuRyRlww2QjfvXVcfpFpx6KJqwvkX1y5lAPK/6Wf3S0
+	zPmh6JcFKfEEO6zEGSgdF8MOSVOZv5rirE1CwaUkZTMJKS06lBgmlVa8YACE0Ql9r655VBPkT0b
+	quwvgapbo7zWJPTlppl1Nn4z60YE/3En80CYago4COPeNurZku5g/7LQMqj1yTbaKZ65DNpIk+C
+	+yzGWRiemn+lk4N6jZMbgaSnSdpof9pKB/9n7anWH8uTeYDB6skSlYqA/jjpPUMkxVut0lnRuPs
+	ps6HR1Q==
+X-Google-Smtp-Source: AGHT+IF1vprA2n5E+jroTf7GicLPh1OLjR2W+OefRYgngvbtY0+MbtGhgFvbp4eTOgWyLhqV7bQbVw==
+X-Received: by 2002:a05:600c:4e48:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-441d44d7c33mr15941505e9.27.1746604201603;
+        Wed, 07 May 2025 00:50:01 -0700 (PDT)
+Received: from [10.50.5.11] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441d43a764fsm21071985e9.37.2025.05.07.00.50.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 May 2025 00:50:01 -0700 (PDT)
+Message-ID: <ee591788-e2fc-4407-9f78-d73a6f406438@grimberg.me>
+Date: Wed, 7 May 2025 10:50:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <390ac9ce-d32d-4534-a406-52288f79ab0c@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: kernel TLS configuration, was: Re: [ANNOUNCE] ktls-utils 1.0.0
+To: Christoph Hellwig <hch@infradead.org>,
+ Chuck Lever <chuck.lever@oracle.com>
+Cc: kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+ linux-nvme@lists.infradead.org
+References: <oracle/ktls-utils/push/refs/tags/ktls-utils-1.0.0/000000-c787cd@github.com>
+ <32e4bd99-a85f-4f53-94bd-b8c3ecf2c66f@oracle.com>
+ <aBoCELZ_x-C4talt@infradead.org>
+Content-Language: en-US
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <aBoCELZ_x-C4talt@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 06, 2025 at 09:52:06AM -0400, Chuck Lever wrote:
-> > Are you going to wire this up to a config file in nfs-utils that
-> > gets set before the daemon starts?
-> 
-> That's up to SteveD -- it might be added to /etc/nfs.conf.
 
-Well, you should be talking to him or even include a patch.
 
-> > Because otherwise this is a pretty horrible user interface.
-> 
-> This is an API that has existed forever.
+On 06/05/2025 15:35, Christoph Hellwig wrote:
+> Hi Chuck,
+>
+> let me use this as a vehicle to rant^H^H^H^Hprovide constructive
+> feedback about configuration of the tls upcalls now that I finally
+> got around playing with both NVMe and TCP over TLS.
+>
+> For modular systems configuations the amount of monolithic state
+> in tlshd.conf is a bit unfortunate.
+>
+> For NVMe it isn't all that bad, but having to hardcode the .nvme
+> keyring still means that:
+>
+>   - we need userspace configuration past just enabling tlshd to enable
+>     any kernel subsystem using TLS upcalls.
+>   - hard code the keyring used in the userspace configuration
+>
+> Can't we ensure the upcall passes the keyring to use and avoid
+> this issue entirely?
+>
+> For NFS hardcoding the keys and certs in tlshd.conf is even more anoying,
+> because it limits to a single client key and cert for the entire system.
+>
+> I have a hacky little patch for the NFS client to pass keyids for the
+> client key and the certificate as mount options, which seems to work
+> nicely, but it still requires adding another keyring (see above) or
+> giving the user read permissions for the keys while it would prefer
+> that it would just work and we would not need to give any root login
+> session a way to read the keys.
+>
 
-Huh?  It is a brand new file added by this patch.
+Christoph,
 
-> I don't even like that this maximum can be tuned. After a period of
-> experimentation, I was going to set the default to a higher value and
-> be done with it, because I can't think of a reason why it needs to be
-> shifted up or down after that.
+Just so I understand, this is a separate issue from passing the keyring to
+tlshd correct? Is the suggesting that nfs will create a special .nfs keyring
+similar to what nvme does?
 
-Why not?  A tiny desk NAS box has very different resources available
-compared to say a multi-socket enterprise AI data server.
-
+Note that nvme also allows the user to pass its own keyring (never tried
+it before - we probably need a blktest for it //hannes). So in this 
+case, the
+possessor will need to set user READ perms on the key itself (assuming that
+it updated tlshd.conf to know this keyring)?
 
