@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-11574-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11575-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DA5AAAE297
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:22:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F80CAAE289
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 16:21:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C4259C0172
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:15:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02A1C1890EE8
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 May 2025 14:19:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02B83288C28;
-	Wed,  7 May 2025 14:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D748528A3E2;
+	Wed,  7 May 2025 14:13:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QWE9g4sL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNMxowgs"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DC41E49F
-	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 14:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F300288CB0
+	for <linux-nfs@vger.kernel.org>; Wed,  7 May 2025 14:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746626950; cv=none; b=TDmuRVWFloZH+4yvFl25mS7sJWIOm4P/vLME6VWe08L7X7XluRC8gT388z0aOUIKbcoj/Gxx0Q0gxz4xsWTbsGRpThLRo9rEo17P3r1bNFv3Rmkk0YNmF+cAd/WWXa6SPii+7jjmx8ykaDk3hd9sbsfVCVwN6wc1GZO9Edp73e4=
+	t=1746627196; cv=none; b=l7fFnPt7gFytq1fAfgaIZZnxtUFSgo0fO2SckQ7c9W9s0mxtsvg26OLJIujlaYnPuitd/VK1nLA5cceeID5sWVqV1Da91Anmv7baOwTtumAsR1GkQSs+FOshpdVS9z64qnngnfY0GXnLPJaMJXc4jNJqf+oZO2GXzW8mjQNLZ9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746626950; c=relaxed/simple;
-	bh=qo+uQHEAXccBOCDsrqPMWE9Ota57XfpdsF7yd4kmAD8=;
+	s=arc-20240116; t=1746627196; c=relaxed/simple;
+	bh=Jk0qEzDf1GgKYwkfyw7T8SweoARv3jqNsIPTL25Xlvk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H0bbPa8+YJxKRKAktwhrgbQhqSRc0xPyymN1fDYBr41CyOO866hZHUjLZ+2hyTLjmAFnrJHCr2Gx+kGKnve0OjhD7wNXtVAnCFBqzhvc1bS9B0Kx4UfEV/0pzwgKnp2eRWO61Qf3Nd/nYrSeD46Y/NuFZHGcY2M43wPPeNe2iPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QWE9g4sL; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=Q5vwx1r+KXcPeYvUWvGWx0YjUUHEBRbBVlC9UTTJboOqgIQsS695yZ+GM00FexJLAoz6pJyha1if1zMbzcgWWDLpjE76wUMipfdUCpaE9d/OJ25kFUFZJ4pI2wbzvn9okBG72MLvA28NrK2WzFDJxkWQs8rlN7z23boab/BqIZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VNMxowgs; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746626948;
+	s=mimecast20190719; t=1746627193;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hod9ClR/0iqFVHkXoCmmcGPfp0kUeV34uftDySekgG4=;
-	b=QWE9g4sLBQ/os54Wl32aRUQSmT8dI4YtrOWy4ETr2jIAkhJfSG6Kystc9J9YZ5o4/iF+P4
-	EpnXx9U/RjlKm60VToe9FESNodI6YH2q3SHZ/ozHGOP3BoV5lCr98y1XphafyNdFm++sZG
-	nqspoX3GV+ZV567ouL5WRwmijjMRwzg=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=dGsxMPNFY/8K6ozV9e5VgY7BfLsaWCsWB2r4xmnleeI=;
+	b=VNMxowgseoM5zq5Vcdij9g0T8u2t43Cs5y9BtY945lCFYXneOeMg6mW42a+7SOwfRSCHqH
+	q+RVS90G1eKapRRGU9MRR6P99XsZB0S99im04i+1B2rSyPRS1IIrvFAjAIfajBVsjcvNWu
+	i8KtDb5S2yt/UgDxo3bkaOH1a5X/fTk=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-460-fIdHME6WPvyhXALrK41XpA-1; Wed, 07 May 2025 10:09:07 -0400
-X-MC-Unique: fIdHME6WPvyhXALrK41XpA-1
-X-Mimecast-MFC-AGG-ID: fIdHME6WPvyhXALrK41XpA_1746626946
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8f4367446so77977936d6.0
-        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 07:09:07 -0700 (PDT)
+ us-mta-633-hzdebZAUM_S6XUnedVENvQ-1; Wed, 07 May 2025 10:13:12 -0400
+X-MC-Unique: hzdebZAUM_S6XUnedVENvQ-1
+X-Mimecast-MFC-AGG-ID: hzdebZAUM_S6XUnedVENvQ_1746627192
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e91d8a7165so116943886d6.0
+        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 07:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746626946; x=1747231746;
+        d=1e100.net; s=20230601; t=1746627191; x=1747231991;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hod9ClR/0iqFVHkXoCmmcGPfp0kUeV34uftDySekgG4=;
-        b=Yu6ubQsYJNf6wEFO8OkDbSD+zgNZusyZg5+YgRhsIRBwWhRF8Bh8fkrBR5sYoK5yZg
-         Uw5jTN64zXRGq6QriivT9vJbXQMWz4g5DSOkG7bH9OVino4kPwZwNZ3NNrOrKlTZMYeJ
-         8oT6FOS+8IJ8Z3MP5zYl3HX/ZJQISJ8aAjAYXvesZwFKveMunJQG+yXvkB+i5tkGLup1
-         iR9EErSAV461nCI2Xgirs6vT6bOgJMq16oTDhX0sE7LZfht3pVJiuiYNfgN2JDFgFecq
-         v4xHzqq4cFIXTe2okk+U34FOGXxQTUoR2hWySOINGPvzP3t8GCofkGRv6o8FhNL1tSln
-         GrTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKwkd3jRewwRzNQbmrBwLqq4GkaZeYoF7xtXY7TJbZvXMPPafAU2swKmBb2F0cw1bLbX42eFDd2ZY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXglImsvwoNnNjBICLpVzwriwbmUfz1gCt8rIfDZZrOPqd54dY
-	U+KhEohSnNTFeeWdA/GdG03NKyVN0ha2MmCxK4SQd/aAVAz64JkP7uM6YaRN3+1fnuSZG1I7kP8
-	8yqlKEBdjpp0u2HNIGZKMHwpYgNvFet+M3xjhtMTeNSLxe9/KO8UXnaUnmg==
-X-Gm-Gg: ASbGncu2lpzhxeJLcPR+w8zGaVrfaNnwQ3GmMc8YXcUBLDcbKCA9lgbmrgcabksT3Rd
-	/rpPD+MYLPL9V0qNyuypTVv0xnuXJEV6mlDdZnReDE5skt8CpCdyk2+zcwDOeXN9TiGbaNsQs2o
-	BTjCocODt+2Fn8HWOzLKo3HGEsnG+TK9w1yFTBcyitBnfFJSVw3cNdat5unSXKzga4VTqtK9Ora
-	pPzhcYU3+nvkKx0+mcBTpRGlD8jHNLDu2ptLiX3pPq/0oRG4txk3Aq+xpe4QYZWZlZbjvE3bnva
-	F9xM+9LjQA==
-X-Received: by 2002:a05:6214:19ed:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f542b00b7cmr47234986d6.44.1746626944561;
-        Wed, 07 May 2025 07:09:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFtTee3HiTQZvPnaesuAGAw1QyR+9ewiZ04ynMCZ7q9uS3CSuZgDwnAplQo3L8chViW245Tlg==
-X-Received: by 2002:a05:6214:19ed:b0:6e6:5bd5:f3c3 with SMTP id 6a1803df08f44-6f542b00b7cmr47232346d6.44.1746626941777;
-        Wed, 07 May 2025 07:09:01 -0700 (PDT)
+        bh=dGsxMPNFY/8K6ozV9e5VgY7BfLsaWCsWB2r4xmnleeI=;
+        b=Unmyxu6HsFh5ILcXuTuN5jYBttJ/+ga/t4SJNBZnUcLwfGGHYCYoUDpaoRy0B7O9Kl
+         41tUrxpJoo6pyme9X5JdEQ+rJJSPPINW0siK+EFgBue4bMVvozyRyEsQkRN/bfCd1dch
+         4YbRpZibOjGnoiPAmlVJiVa0M4EWQmr8XKnIGbkIf4y/tU7ER7cPG1XRBSdWFv7GyrAq
+         WGDN6RCLj0zUBArLCSmjCdrCLWmNZ6vXa6F39oSIzN2DoglBG9ZgCsxnqG+5rDUhqnFJ
+         1dFKhEFL6HgDO6sDrxcxwc12WVwG40k9hXlAXkIhok/plRdh+YK4vkptc6knRVXBiSWw
+         25ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUViiKpK8BNU2Xbe650MD7vYuhOomWUrF2SJaI3uUlpwmJw4OLRhbX5JUHtciMOklTIqjytTBn4zaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyShux+7e0cT8jfNoSO8Dm1B6+NI+/CCp00hItV5VXxwvMxIml
+	S6KgjwuqoNfsU2pvRcO/1c895eWPC+IuPMAGCdonwLdPJZv+eQy4/OwyhL2ras7vZbuDZhhU7fz
+	g8dsfBC5EH+EZa/6BJW0shjWXthfHKiVGfDnTCGmfaMItGP166A2ztXzLyO1TxMxITQ==
+X-Gm-Gg: ASbGncupMRozHhMsEfSdCz5DKGjpADe4kAQxDDqahRladenWGGVqPqWMd2VWe9Ls2Do
+	MTuLrEusyOEWlaYTIr+qpNCzPVIUb2AGoWMgUFcz+m7JhJ7En6Q/VUQpZZCq0g5zpdkiZaNF6gx
+	oyg3BA7rKL8EVrfsvGMUh1fXhZtrlp07zWEBgTY5TFeiARgtnzi0JovGZ8UyHIY4eGd53qgBFZ/
+	aHjjuKqsxNpt46Z6fXU6/2VBq8r/s98/hJI4TOukqAYGoveDFGeWIUUnnae36dJNk8hCPOsDVVH
+	Pg3PAE7JMQ==
+X-Received: by 2002:a05:6214:5283:b0:6f2:d4ed:c549 with SMTP id 6a1803df08f44-6f542a15924mr54532896d6.20.1746627190915;
+        Wed, 07 May 2025 07:13:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCJD+DyySP2J4ccHy+95BIdyVandAJJ4iz/BOFnE0bZvCJ9Bk9uic3/aGgL5pMMWaK/QCMuw==
+X-Received: by 2002:a05:6214:5283:b0:6f2:d4ed:c549 with SMTP id 6a1803df08f44-6f542a15924mr54532326d6.20.1746627190335;
+        Wed, 07 May 2025 07:13:10 -0700 (PDT)
 Received: from [172.31.1.12] ([70.105.247.97])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f542781393sm14123066d6.88.2025.05.07.07.09.00
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f54268da00sm14341416d6.56.2025.05.07.07.13.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 May 2025 07:09:01 -0700 (PDT)
-Message-ID: <3d18e4ce-1c79-43f2-8f39-a118126b8f61@redhat.com>
-Date: Wed, 7 May 2025 10:08:58 -0400
+        Wed, 07 May 2025 07:13:09 -0700 (PDT)
+Message-ID: <1729e6c6-4299-4cdc-9129-2a848ed8b562@redhat.com>
+Date: Wed, 7 May 2025 10:13:07 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,53 +88,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [nfs-utils PATCH] nfsdctl: fix lockd config during autostart
+Subject: Re: [nfs-utils PATCH v2] nfsdctl: debug logging fixups
 To: Scott Mayhew <smayhew@redhat.com>
 Cc: jlayton@kernel.org, linux-nfs@vger.kernel.org
-References: <20250501181928.125198-1-smayhew@redhat.com>
+References: <20250501121543.4181345-1-smayhew@redhat.com>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250501181928.125198-1-smayhew@redhat.com>
+In-Reply-To: <20250501121543.4181345-1-smayhew@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/1/25 2:19 PM, Scott Mayhew wrote:
-> Be sure to actually send the lockd config values over the netlink
-> interface.
+On 5/1/25 8:15 AM, Scott Mayhew wrote:
+> Move read_nfsd_conf() out of autostart_func() and into main() so we
+> don't lose any messages.  Remove hard-coded NFSD_FAMILY_NAME in the
+> first error message in netlink_msg_alloc() so the error message has the
+> correct family and make both error messages in netlink_msg_alloc()
+> more descriptive/unique.
 > 
-> While we're at it, get rid of the unused "ret" variable.
-> 
-> Fixes: f61c2ff8 ("nfsdctl: add necessary bits to configure lockd")
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+> SteveD - the original patch was supposed to go on top of Jeff's
+> "nfsdctl: add support for new lockd configuration interface" patches,
+> but seems to have gotten lost in the shuffle.  The v2 patch is the same,
+> I've just reworded the commit message a bit.
+Not sure what you are talking about... Those nlm patches went in
+a while ago... What am I missing?
+
 Committed... (tag: nfs-utils-2-8-4-rc1)
 
 steved.
-> ---
->   utils/nfsdctl/nfsdctl.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+
+> 
+>   utils/nfsdctl/nfsdctl.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 > diff --git a/utils/nfsdctl/nfsdctl.c b/utils/nfsdctl/nfsdctl.c
-> index 733756a9..ae435932 100644
+> index 733756a9..1fdbb44d 100644
 > --- a/utils/nfsdctl/nfsdctl.c
 > +++ b/utils/nfsdctl/nfsdctl.c
-> @@ -1417,7 +1417,6 @@ static int lockd_configure(struct nl_sock *sock, int grace)
->   {
->   	char *tcp_svc, *udp_svc;
->   	int tcpport = 0, udpport = 0;
-> -	int ret;
+> @@ -436,7 +436,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
 >   
->   	tcp_svc = conf_get_str("lockd", "port");
->   	if (tcp_svc) {
-> @@ -1432,6 +1431,8 @@ static int lockd_configure(struct nl_sock *sock, int grace)
->   		if (udpport < 0)
->   			return 1;
+>   	id = genl_ctrl_resolve(sock, family);
+>   	if (id < 0) {
+> -		xlog(L_ERROR, "%s not found", NFSD_FAMILY_NAME);
+> +		xlog(L_ERROR, "failed to resolve %s generic netlink family", family);
+>   		return NULL;
 >   	}
-> +
-> +	return lockd_config_doit(sock, LOCKD_CMD_SERVER_SET, grace, tcpport, udpport);
->   }
 >   
->   static int
+> @@ -447,7 +447,7 @@ static struct nl_msg *netlink_msg_alloc(struct nl_sock *sock, const char *family
+>   	}
+>   
+>   	if (!genlmsg_put(msg, 0, 0, id, 0, 0, 0, 0)) {
+> -		xlog(L_ERROR, "failed to allocate netlink message");
+> +		xlog(L_ERROR, "failed to add generic netlink headers to netlink message");
+>   		nlmsg_free(msg);
+>   		return NULL;
+>   	}
+> @@ -1592,8 +1592,6 @@ static int autostart_func(struct nl_sock *sock, int argc, char ** argv)
+>   		}
+>   	}
+>   
+> -	read_nfsd_conf();
+> -
+>   	grace = conf_get_num("nfsd", "grace-time", 0);
+>   	ret = lockd_configure(sock, grace);
+>   	if (ret) {
+> @@ -1824,6 +1822,8 @@ int main(int argc, char **argv)
+>   	xlog_syslog(0);
+>   	xlog_stderr(1);
+>   
+> +	read_nfsd_conf();
+> +
+>   	/* Parse the preliminary options */
+>   	while ((opt = getopt_long(argc, argv, "+hdsV", pre_options, NULL)) != -1) {
+>   		switch (opt) {
 
 
