@@ -1,119 +1,98 @@
-Return-Path: <linux-nfs+bounces-11602-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11603-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E63CAAFF6C
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 17:43:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5753AB0188
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 19:37:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58F521BC39A0
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 15:43:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68C2E4C6C9E
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 17:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE81A27A464;
-	Thu,  8 May 2025 15:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E275214234;
+	Thu,  8 May 2025 17:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/fPBYXh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCwMg4S4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE9027A137
-	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 15:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FAF213E8B
+	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 17:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746719004; cv=none; b=VcWePxCkH3Krr1PHsB/AE0SCmK/HaMbGT9KLg6HY32Rytvk5mn1FdCnXRKorsff9T+lIefox+Jrasna+aqJkkOhZHL1HoLp3UF/QJIhPmw5AOzT/Tia+cbL+puG3+QZWuEXYHf+6QxywXR1xnfaw1u7L8iMDt9GmHOUopeGfobI=
+	t=1746725863; cv=none; b=YLOKkWp1sdQyG/csMsd05cd0ALAGLfTRxeI+ZBFZ6oYPY6XEwDhpYcJ/E3mw0SCK6goyI/045ZDPts6tBsdfBH/k5jRsZyJS6o/IZMKRTjzJBQsRjYMhHJySkso17EzY52eYgQ/GI53B4ZcuytnteSirU9Tq65JXgw2FAusiUwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746719004; c=relaxed/simple;
-	bh=YuzFY5iIeE/5SyS+rcd6EVV7jCbQGUHQiVQ4+7iLZTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ERayGgSV4DO00xDpBbV3ETu8UwNpsXPQtoHbgo2QyLcunX8wVHns3RgoPiSLeTa3IdfcTE4Nh7FH1qKGtJobYCKZs0EqkF8kouGtfrJZOQmIVkWnbTVGyqqHkeHlDd4AGUH8cpgQhy8CQgmHn4e0jzBWTPYIrTn3CIpDTu8G4no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/fPBYXh; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746719003; x=1778255003;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YuzFY5iIeE/5SyS+rcd6EVV7jCbQGUHQiVQ4+7iLZTM=;
-  b=a/fPBYXhzbBqm2DUXSYS6vDT+G0Z9Q1QJAEpRlCnSTQgHi17o9Yr5ujz
-   P6R/oAWrUmsrDsBhYjTlPvRoon2y+WvEpxChwnn+Mgi3nwMuq8uVjaooK
-   cxG+Qu059huDpEKARntp5is8jBe4uTIIXRJdnAzP+/Trz1zl4gFSKca+i
-   zoyADrF8wromv9aykPfaUQpsS3ApTI/8nMLev2G2xaCk0XoPpsfctIZPq
-   iqSvDnXXdP0Oe/j67XDZQnOGUb3Gscr5g/L1HDQDZY6JmdXVSNIr1XCsr
-   2booFzPS9NjEX61J4bTd84CT1x3mYiiqR/SBs89rygZRfmZbegQukKYQ6
-   Q==;
-X-CSE-ConnectionGUID: Nf1DbWOUTsGycwNTIWporQ==
-X-CSE-MsgGUID: 1gwsN+yLRBib9go+KGgJxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="48675975"
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="48675975"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2025 08:43:18 -0700
-X-CSE-ConnectionGUID: OBx61r3WTq6//JvgDGZtjw==
-X-CSE-MsgGUID: DzpXdOVTR0eyOwi05XsawA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,272,1739865600"; 
-   d="scan'208";a="136262748"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 08 May 2025 08:43:14 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uD3Oy-000B7D-29;
-	Thu, 08 May 2025 15:43:12 +0000
-Date: Thu, 8 May 2025 23:42:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
+	s=arc-20240116; t=1746725863; c=relaxed/simple;
+	bh=zN1UcdcrB9bpjHjxRoFISF/zHouFErlHa26uO+hIAus=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sd+Vlv6rFZZmXvZBOOM+GC9wtrNiQdYDs3NXHOWT6O6TF33zEGup8AqAex3VGoZHI5OP5FPre1I3KWI4dyAZ7+U/RKZHJ4G7yyuNPPklb0BbYeomG7SbrtC25W2YFUp5EmAQGrrWj4MzxOPpcX9DpdCpXWiXgKtX53j9gBszx0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCwMg4S4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA97C4CEEB;
+	Thu,  8 May 2025 17:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746725862;
+	bh=zN1UcdcrB9bpjHjxRoFISF/zHouFErlHa26uO+hIAus=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MCwMg4S4ZmJyNnh0K+KG2zvhD8ziCNGSymrfpgU1oigPSo1iuxJWcdeVTUdco/3a6
+	 /dln77Ee9XTuf0wBsvAPlhTAm0OpxpLMDenaVVF83nnxtNGqha1H3RS3tgppHJNLJ3
+	 GSQZr5fA0QjUyqPdTgnEhhQ4lqtTat6i1B5o+RtT6CvZHVXhmyqCXjMeJQ462IOthF
+	 uIpfaq0gRk3AXLBG39lm/Or4E3Q8pCd4l+JhjusC6D30NnGzLzU54MrM7ge6xYpcdu
+	 LsKy2KXhaQjzKjJASrzNiLuzMn85EBf9GRNGGWUlYBrfXSzIpcRXGlmySv+TUA49Xz
+	 iESIc6x+wP87Q==
+From: cel@kernel.org
+To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Neil Brown <neilb@suse.de>,
 	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] nfsd: use rq_bvec instead of rq_vec in nfsd_vfs_write
-Message-ID: <202505082324.vojWBNIq-lkp@intel.com>
-References: <20250507115617.3995150-3-hch@lst.de>
+	Dai Ngo <dai.ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: <linux-nfs@vger.kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v2 0/6] Remove svc_rqst :: rq_vec
+Date: Thu,  8 May 2025 13:37:34 -0400
+Message-ID: <20250508173740.5475-1-cel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507115617.3995150-3-hch@lst.de>
+Content-Transfer-Encoding: 8bit
 
-Hi Christoph,
+From: Chuck Lever <chuck.lever@oracle.com>
 
-kernel test robot noticed the following build errors:
+I expect this arrangement will not be permanent: the end-goal
+might be folio queues rather than bio_vecs.
 
-[auto build test ERROR on brauner-vfs/vfs.all]
-[also build test ERROR on trondmy-nfs/linux-next linus/master v6.15-rc5]
-[cannot apply to next-20250508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I intend to insert these into the series that expands the maximum
+r/wsize, once this series is reviewed.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Hellwig/nfsd-use-rq_bvec-instead-of-rq_vec-in-nfsd_vfs_write/20250507-205615
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250507115617.3995150-3-hch%40lst.de
-patch subject: [PATCH 2/3] nfsd: use rq_bvec instead of rq_vec in nfsd_vfs_write
-config: m68k-defconfig (https://download.01.org/0day-ci/archive/20250508/202505082324.vojWBNIq-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250508/202505082324.vojWBNIq-lkp@intel.com/reproduce)
+Testing has shown no correctness issues. There is a consistent and
+measurable performance loss on NFSv4.1 with the write path changes.
+I've mitigated it somewhat in this version of the series, but I
+still do not understand why it happens (it also happened when the
+series used svc_fill_write_vector()).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505082324.vojWBNIq-lkp@intel.com/
+Chuck Lever (6):
+  NFSD: Use rqstp->rq_bvec in nfsd_iter_read()
+  SUNRPC: Export xdr_buf_to_bvec()
+  NFSD: De-duplicate the svc_fill_write_vector() call sites
+  NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
+  SUNRPC: Remove svc_fill_write_vector()
+  SUNRPC: Remove svc_rqst :: rq_vec
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
->> ERROR: modpost: "xdr_buf_to_bvec" [fs/nfsd/nfsd.ko] undefined!
+ fs/nfsd/nfs3proc.c         |  5 +--
+ fs/nfsd/nfs4proc.c         |  8 ++---
+ fs/nfsd/nfsproc.c          |  9 ++----
+ fs/nfsd/vfs.c              | 65 +++++++++++++++++++++++++++-----------
+ fs/nfsd/vfs.h              | 10 +++---
+ include/linux/sunrpc/svc.h |  3 --
+ net/sunrpc/svc.c           | 46 ---------------------------
+ net/sunrpc/xdr.c           |  1 +
+ 8 files changed, 59 insertions(+), 88 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
 
