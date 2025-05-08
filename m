@@ -1,96 +1,96 @@
-Return-Path: <linux-nfs+bounces-11593-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11594-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D411AAF087
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 03:13:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6950AAAF0BF
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 03:50:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F20A9C7B6F
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 01:13:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76EB91C00555
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 01:51:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4FCC175D53;
-	Thu,  8 May 2025 01:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183BE15687D;
+	Thu,  8 May 2025 01:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="wCEc8g/h"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="MRQ1IyOp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5511186353
-	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 01:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599E728F4
+	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 01:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746666809; cv=none; b=Bif1N7s7Iz6KjfIY/GnYZAoovypZvpX4Ftw4YPSsUW+3MMZvMCDe1AmRZVUb6FK5SdVch8flQHPGtlmOoEEsGzqle3+4hfJ4OlsY6f2mdeteHYghtzddmwRW3T+yDfKrUNLau1Kj9nueQuHg6jWHCJbjX4HLHoQEDRSVLNK65f8=
+	t=1746669054; cv=none; b=oALKT4wvLIycmnSjRFGB+7su31PL2k/IdwH3fv5gPlL0aWw5CgpyDW+QeigI9vY8Jn16joQ9LA7hnlfdsZhevNUeEeZ5Ay7fY+2lX9mMkuTSbecPkn9ATXZ2qtk7ykCAd8a+YwrrNwVaZuq1pFa0tpeBkXHAjD0mz/Khe3v0BnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746666809; c=relaxed/simple;
-	bh=BDSykI2E8bE4xhQDYdkvnvhZpciUcUNgBJ5QUMem4Jo=;
+	s=arc-20240116; t=1746669054; c=relaxed/simple;
+	bh=GAr+xAjVqMCTT3nP6Y6WGlb8Kargwr6G2YhC7E1fv5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ujjRTVvHrWr6GJLFi93MAlxrFckpz3urJducLZpZa/TUdoYgF5JqNh+GNmKQy5ReuPvaCg1vSs4j+imLfZiwD0gIr73EJOJ+Vnp2cHa+U/NiD8wFKDgH7mhOcZ6GKLIdzzG9IiA5HpnQofyLVZgJhQtX36K+TQ+gjhBNs7v3wpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=wCEc8g/h; arc=none smtp.client-ip=209.85.215.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4+mL1j6yNiyDFnaKVm8t6enkQ0XgOZI/BBXC4KT1N/ClPoPP1z7tcV/yeEjHhrdOx9hOLQgBxw0ewuB4bTJBIdfvYHMaFd3ce9s3/V0FqTbA2CNVE6wvFb/MgkWz87IIMO4LyxSv7bmh5n0T/uPzhfTZ+chDXDEsMTmZU4L9LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=MRQ1IyOp; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1fd59851baso247694a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 18:13:28 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so523916a91.1
+        for <linux-nfs@vger.kernel.org>; Wed, 07 May 2025 18:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1746666807; x=1747271607; darn=vger.kernel.org;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1746669051; x=1747273851; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sbbzzTE3KYEGvV266s4O0aBBC9K6qVrKmRZI7U4ZVBU=;
-        b=wCEc8g/hQel1/CoKh/OcI/8N1+aln1pKDl2a3BZjWYMiEZlfNrPvcDs3qxeMdAzufA
-         95AnVKQGA3ns9Kt1J6FY61rnNkRmLIaSG6gcn3Q/wVENLEqP0bON4eivj1AtbnqvLmXn
-         aEGapj3wPgFxHblWPVVo5nSSi/efk0BnAyEHsnosZKMgZQ633X425jarrlpCPHo7dmYi
-         6jIcRA/PQmM2YR5gyjtU+NyzYu4E3GXR7bi3ET5Vg13+V3vJmczU+nVfdiyBFWTvX7r4
-         IvXusFrYTviFGTHkb01zzLLOTn3M9MxjXyBuTRztTVEhnEfz7/oJzoRJsZBXPfweT/nU
-         iZrA==
+        bh=YfpAEmYfYIc7AtnRvwJbXO85quh0S5H3KLAKIFlkzjs=;
+        b=MRQ1IyOpbMqzcPFwHTdse93CFdhx7V3dlrkDQrPwYkUzwQs300Hum7lKdLii7PO/K7
+         yzEeNIw1ogKnnP3ery0e1tamm/fcLMRZLlwAGNEsgA5IEoYI4li3zpbvDi/GBB50IohW
+         5Sxc3soONErytW4IPJTGa1Whk9neVG5oJmENou/2y0m9OW3OLJel4vnFiPINx1BFOnPf
+         nYVC2gLgDSP9G47BMUA4jDGXSLyhcipkOLcr+gkOEal5OkxfR4J2YuhTrEhZ23wJMlwG
+         z4HAHa5daWnrVXEe3z7UiPj8y+twQo2e/195tF801QfqPyMnivxmNAqfEYWnlLHnGLsx
+         AapA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746666807; x=1747271607;
+        d=1e100.net; s=20230601; t=1746669051; x=1747273851;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sbbzzTE3KYEGvV266s4O0aBBC9K6qVrKmRZI7U4ZVBU=;
-        b=w+ZSRK33vmS/aWKkBFsN8wV+uLHgfuVSY7l1adXrZERA2FpMyj3NQkIlvQGjYhpyl9
-         fX9ZaCbzsr7+Xdtxzy5d7JarnxkNuPToYmZQwqfR2CGp8wHkNhUiho0M4ykttsrqgbCK
-         K9VDR/0csHYp4DzP/pI+/L7gySv6puYZy0MnqwCussis8azKBP2p2TOcvVN/Cz74SnqO
-         wqTq3CLWK58QqXyBl2Kas+WRaO4eU5bMm17BOE1Ma09tFXLYjoD02wjVqBGzCR1bd9Yw
-         lkeFIAqK6BHFei147Y/Rr0qyNaeLarEoa5QRZq02blwIcyCY5JXK5Z60Ihtp87jnrwhS
-         M4nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcu4AdvECDmL2lc2h7KiaucUzkNL6KjwJE/Zg5+oy9cJSvdIy33aEHlZ7B5tZFznnuNBaDxWphA/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrPQ44la9UhQbrgdKTQKcbQSA1BFQ9gIqkVz/imtQV0h2gWie0
-	XtdWCUrGtW/wrr4vfnjGsgf7wrrkETiJwSrVgBywAaLvBC5aD+rhv5FCswqDyx0=
-X-Gm-Gg: ASbGnctDS5zFsPGxKrxr3K1QBdwuaG/Q2qlHwagNB1MpLukvx8/re24nF2SM2GfKtAf
-	5Omg9h3NYa2uYTVqZC5Oz8Gghx25ouAmPmgJ3CshtzmY5NWi+6+pk+1T3UbK0bkr4BDDOfgPP2e
-	EebwfkiSNOpkIZp4IAZ/4LC6W7bs1ki4FLUznKyBE5Mgii+a3DQbg/ZoEdRKX6Xk7S3OQRK7D2I
-	4uefot3Y3yjIZRuj5pG3a7XJuai27pSnPIusvBl8qyvAAimBKloekr7hC43wsJAnsH2oWUkBBK7
-	z8PfvBD/zdpRCZn1n/gg85cowoNAFhOsoJEMfvqJogPet9SxnmBh3Br0rMwc151MQvQMjrZzGWg
-	JetxhqGZ7F8JZBQ==
-X-Google-Smtp-Source: AGHT+IG//ycYvi6kOcuuO68LXeKSwnrGdpvwaRuS7wiVSi2aoHOJKzsXsJrdRbd4Avnb7+6KnL1VUg==
-X-Received: by 2002:a17:90b:4a51:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-30aac184d78mr7589256a91.5.1746666807561;
-        Wed, 07 May 2025 18:13:27 -0700 (PDT)
+        bh=YfpAEmYfYIc7AtnRvwJbXO85quh0S5H3KLAKIFlkzjs=;
+        b=ZeNWGQEhHATyM/2+2wUzGfmrej+RVZtjaepl4mvo/IBLWBh7X6Sal5JfnYrkIJxU5F
+         YIg6qs0T5vqgcD68VzHOnirkiugy+NRMBYdZF18CET8NJRkzS0KPJ4F/GL2tvvAysCWc
+         YKM7LDJOvWm6BtIHH/6G3sd60nn5+hdT5exj6iD/6zTaoRVK1MqRbGWbGTgdklmwgU15
+         5vPScjU0XPKXcfsr/Qh90pWBZVHSVoXtD0IS6aj8wjKdc5pc/BP9xk2iJ25MUnX2WlPD
+         ptKSVIx1wpF74OINv0r2kt+dGfUe1S21qiyqCHbmU4pXzHJlpzAqFM7BELra0ToJhfH+
+         0pgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiQvdkC1C0GXIWTRj+tASAKQ2ZpA9fcCdWrFH9Z9+20UN8kRTtWut4QxURRhpGiJdkC4r8X9dVzGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHQk/aeTYW5AalET2dShZ2gCkVHMHo88dxks5Qn9YwxcBS8Tb6
+	CaPeP3X1vDGFWaDEh8aYp5FqGnSWlXSESFfEmoO7KQd+wb/GnFDDYqfZARBRBxo=
+X-Gm-Gg: ASbGncsd4ZsAGCLCPOAg/e7zLZrCQtetzXl4TNErJQnh5W9XWcrn+nCg93TXGwO2vYM
+	fzpjyHwv0Th7884fIrktRcXLWsx3rG5Ob8o3BHDJnvSo7/twDuodgaVQRgcEK/+HzzY5CaVMA+O
+	MYb778PgLJrgfoNbBa9wGVnpcB5ASS+WQA4Ef1QJG/PRA63yBcPH/yLMI2oebAFaJWwQzKBUkpE
+	dVRC33MvLaMgKu7zYNBfPJDBvvRKWZjJPliInmeRKE+uTtaau629vg/0qqyNcRcL/YQn6+X6KbD
+	a89kT6SOXlCPBC9sP3U7sEpWiZggaRW+Wb3JXasJv1xGoWlcFVh95u1539y06ZAdo85V/7HVVpa
+	k2tLcH1lOsr5iGkXCO9vL2lZR
+X-Google-Smtp-Source: AGHT+IF+bbkMxlz1VcogJpzRGuR+rHH4uhWm8E6xaXb7FZHjS4o/dYV+UAcTlCURGVrDaYivlIcTbQ==
+X-Received: by 2002:a17:90b:4c10:b0:2fe:7f40:420a with SMTP id 98e67ed59e1d1-30b3a674f85mr2180792a91.17.1746669051555;
+        Wed, 07 May 2025 18:50:51 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4f89b7dsm908812a91.47.2025.05.07.18.13.26
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30ad4d54febsm958269a91.23.2025.05.07.18.50.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 18:13:26 -0700 (PDT)
+        Wed, 07 May 2025 18:50:50 -0700 (PDT)
 Received: from dave by dread.disaster.area with local (Exim 4.98.2)
 	(envelope-from <david@fromorbit.com>)
-	id 1uCppD-00000000jrq-12BE;
-	Thu, 08 May 2025 11:13:23 +1000
-Date: Thu, 8 May 2025 11:13:23 +1000
+	id 1uCqPQ-00000000kT1-0mb3;
+	Thu, 08 May 2025 11:50:48 +1000
+Date: Thu, 8 May 2025 11:50:48 +1000
 From: Dave Chinner <david@fromorbit.com>
-To: Chuck Lever <chuck.lever@oracle.com>
+To: Mike Snitzer <snitzer@kernel.org>
 Cc: Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
+	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
 	Trond Myklebust <trondmy@hammerspace.com>,
 	Jens Axboe <axboe@kernel.dk>, Chris Mason <clm@meta.com>,
 	Anna Schumaker <anna@kernel.org>
 Subject: Re: performance r nfsd with RWF_DONTCACHE and larger wsizes
-Message-ID: <aBwFM27NZ8t3aeH8@dread.disaster.area>
+Message-ID: <aBwN-Iz3hJTAKpzS@dread.disaster.area>
 References: <370dd4ae06d44f852342b7ee2b969fc544bd1213.camel@kernel.org>
  <aBqNtfPwFBvQCgeT@dread.disaster.area>
  <8039661b7a4c4f10452180372bd985c0440f1e1d.camel@kernel.org>
  <aBrKbOoj4dgUvz8f@dread.disaster.area>
- <79560cc9-6931-417d-8491-182e4ff77666@oracle.com>
+ <aBvVltbDKdHXMtLL@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -99,63 +99,113 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <79560cc9-6931-417d-8491-182e4ff77666@oracle.com>
+In-Reply-To: <aBvVltbDKdHXMtLL@kernel.org>
 
-On Wed, May 07, 2025 at 09:43:05AM -0400, Chuck Lever wrote:
-> On 5/6/25 10:50 PM, Dave Chinner wrote:
-> > Ok, so buffered writes (even with RWF_DONTCACHE) are not processed
-> > concurrently by XFS - there's an exclusive lock on the inode that
-> > will be serialising all the buffered write IO.
-> > 
-> > Given that most of the work that XFS will be doing during the write
-> > will not require releasing the CPU, there is a good chance that
-> > there is spin contention on the i_rwsem from the 15 other write
-> > waiters.
+On Wed, May 07, 2025 at 05:50:14PM -0400, Mike Snitzer wrote:
+> Hey Dave,
 > 
-> This observation echoes my experience with a client pushing 16MB
-> writes via 1MB NFS WRITEs to one file. They are serialized on the server
-> by the i_rwsem (or a similar generic per-file lock). The first NFS WRITE
-> to be emitted by the client is as fast as can be expected, but the RTT
-> of the last NFS WRITE to be emitted by the client is almost exactly 16
-> times longer.
+> Thanks for providing your thoughts on all this.  More inlined below.
+> 
+> On Wed, May 07, 2025 at 12:50:20PM +1000, Dave Chinner wrote:
+> > On Tue, May 06, 2025 at 08:06:51PM -0400, Jeff Layton wrote:
+> > > On Wed, 2025-05-07 at 08:31 +1000, Dave Chinner wrote:
+> > > > What are the fio control parameters of the IO you are doing? (e.g.
+> > > > is this single threaded IO, does it use the psync, libaio or iouring
+> > > > engine, etc)
+> > > > 
+> > > 
+> > > 
+> > > ; fio-seq-write.job for fiotest
+> > > 
+> > > [global]
+> > > name=fio-seq-write
+> > > filename=fio-seq-write
+> > > rw=write
+> > > bs=256K
+> > > direct=0
+> > > numjobs=1
+> > > time_based
+> > > runtime=900
+> > > 
+> > > [file1]
+> > > size=10G
+> > > ioengine=libaio
+> > > iodepth=16
+> >
+> > Ok, so we are doing AIO writes on the client side, so we have ~16
+> > writes on the wire from the client at any given time.
+> 
+> Jeff's workload is really underwhelming given he is operating well
+> within available memory (so avoiding reclaim, etc).  As such this test
+> is really not testing what RWF_DONTCACHE is meant to address (and to
+> answer Chuck's question of "what do you hope to get from
+> RWF_DONTCACHE?"): the ability to reach steady state where even if
+> memory is oversubscribed the network pipes and NVMe devices are as
+> close to 100% utilization as possible.
 
-Yes, that is the symptom that will be visible if you just batch
-write IO 16 at a time. If you allow AIO submission up to a depth
-of 16 (i.e. first 16 submit in a batch, then submit new IO in
-completion batch sizes) then there is always 16 writes on the wire
-instead of it trailing off like 16 -> 0, 16 -> 0, 16 -> 0.
+Right.
 
-This would at least keep the pipeline full, but it does nothing to
-address the IO latency of the server side serialisation.
+However, one of the things that has to be kept in mind is that we
+don't have 100% of the CPU dedicated to servicing RWF_DONTCACHE IO
+like the fio microbenchmarks have.
 
-There is some work in progress to allow concurrent buffered writes
-in XFS, and this would largely solve this issue for the NFS
-server...
+Applications are going to take a chunk of CPU time to
+create/marshall/process the data that we we are doing IO on, so any
+time we spend on doing IO is less time that the applications have to
+do their work. If you can saturate the storage without saturating
+CPUs, then RWF_DONTCACHE should allow that steady state to be
+maintained indefinitely.
 
-> I've wanted to drill into this for some time, but unfortunately (for me)
-> I always seem to have higher priority issues to deal with.
+However, RWF_DONTCACHE does not remove the data copy overhead of
+buffered IO, whilst it adds IO submission overhead to each IO. Hence
+it will require more CPU time to saturate the storage devices than
+normal buffered IO. If you've got CPU to spare, great. If you don't,
+then overall performance will be reduced.
 
-It's really an XFS thing, not an NFS server problem...
+> > This also means they are likely not being received by the NFS server
+> > in sequential order, and the NFS server is going to be processing
+> > roughly 16 write RPCs to the same file concurrently using
+> > RWF_DONTCACHE IO.
+> > 
+> > These are not going to be exactly sequential - the server side IO
+> > pattern to the filesystem is quasi-sequential, with random IOs being
+> > out of order and leaving temporary holes in the file until the OO
+> > write is processed.
+> > 
+> > XFS should handle this fine via the speculative preallocation beyond
+> > EOF that is triggered by extending writes (it was designed to
+> > mitigate the fragmentation this NFS behaviour causes). However, we
+> > should always keep in mind that while client side IO is sequential,
+> > what the server is doing to the underlying filesystem needs to be
+> > treated as "concurrent IO to a single file" rather than "sequential
+> > IO".
+> 
+> Hammerspace has definitely seen that 1MB IO coming off the wire is
+> fragmented by the time it XFS issues it to underlying storage; so much
+> so that IOPs bound devices (e.g. AWS devices that are capped at ~10K
+> IOPs) are choking due to all the small IO.
 
-> Comparing performance with a similar patch series that implements
-> uncached server-side I/O with O_DIRECT rather than RWF_UNCACHED might be
-> illuminating.
+That should not happen in the general case. Can you start a separate
+thread to triage the issue so we can try to understand why that is
+happening?
 
-Yes, that will directly compare concurrent vs serialised submission,
-but O_DIRECT will also include IO completion latency in the write
-RTT, so overall write throughput can still go down.
+> So yeah, minimizing the fragmentation is critical (and largely *not*
+> solved at this point... hacks like sync mount from NFS client or using
+> O_DIRECT at the client, which sets sync bit, helps reduce the
+> fragmentation but as soon as you go full buffered the N=16+ IOs on the
+> wire will fragment each other).
 
-In my experience, Improving NFS IO throughput is all about
-maximising the number of OTW requests in flight (client side) whilst
-simultaneously minimising the latency of individual IO operations
-(server side). RWF_DONTCACHE makes the latency of individual
-operations somewhat worse, O_DIRECT makes the latency quite a bit
-worse. O_DIRECT, however, can mitigate IO latency via concurrency,
-but RWF_DONTCACHE cannot (yet).
+Fragmentation mitigation for NFS server IO is generally only
+addressable at the filesystem level - it's not really something you
+can mitigate at the NFS server or client.
 
-Hence it is no surprise to me that, everything else being equal,
-these server side options actually reduce throughput rather than
-improve it...
+> Do you recommend any particular tuning to help XFS's speculative
+> preallocation work for many competing "sequential" IO threads?
+
+I can suggest lots of things, but without knowing the IO pattern,
+the fragmentation pattern, the filesystem state, what triggers the
+fragmentation, etc, I'd just be guessing as to which knob might make
+the problem go away (hence the request to separate that out).
 
 -Dave.
 -- 
