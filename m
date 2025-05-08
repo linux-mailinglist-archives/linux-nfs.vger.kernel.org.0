@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11607-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11609-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74539AB018A
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 19:37:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4CCBAB018D
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 19:37:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC82D4C6D8A
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 17:37:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 215343ABCE4
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 May 2025 17:37:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323EB1AAA1C;
-	Thu,  8 May 2025 17:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7681328153C;
+	Thu,  8 May 2025 17:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxbB6/Iv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEd2OohM"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8B928153C
-	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 17:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532D0214234
+	for <linux-nfs@vger.kernel.org>; Thu,  8 May 2025 17:37:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746725867; cv=none; b=ajL+Ldp83OnXbCVXI8KEciapKfXvrm1bNJxQm4OhfNuqkI4BWqDFTskRhybpp4mbzlowjooYgL2JN5fk9PvNyVBj4drSLuUC2IEd1a7EBH8U4cH8AyUlofhj1czg63xa+nrFzgdG6cJUdbYO93IVtqe1J5vXqlNkUo7lB+bDksU=
+	t=1746725868; cv=none; b=B4tpplxy8l7gzCWo6wn49OuuIWpIfnuJgrgag89c6tS+GQ02WQ/kt56MOniQrI8I9pL2Y7foSoXWRF5b8PDSzIaGv6edYTnCuNtEcczqrmeuCvX3/NyPnwZ70OLD5/gMCqpBKoWBKNa/VnCDrz8xhn/q+eI++mAnKGJv6mG49jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746725867; c=relaxed/simple;
-	bh=1LrHCnvjrVwOY8fPciSNHg2pcSP2e5AZbG7sV6Om58g=;
+	s=arc-20240116; t=1746725868; c=relaxed/simple;
+	bh=K3/g2iwRGJX3xkUR5858CkNzHUfivOTrWG/f7d+pYCU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gUAbJ8nPuQszEZWYMeEKiASUyxMXTqY2bExTf1dlXAQA7H7MKPpgt4caVREkXgWHOHfOq42fURdLgii0pcVsnNd8zLig1K5C3FJW7gsWBn98NC45zFgHaFhBcEqQYbXWDnKIeLUWnm2YqXwBym5nwtgKo4rIafqOvbMS8FHWptY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxbB6/Iv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE2EC4CEEB;
+	 MIME-Version; b=Q37u66/7+iBl7SvscgnauDWRHarTZg7qDEK59fa4o6S7YKBBOnW8ETNUfUsuwVE7EiiT2HsSDe0BlCGwqLjZXAMDpWliLTy30yChtH9ZwTKLY1q/C3rVREiIVHBBa2Dv3PfvFP9g3nQQ7V3TcO4IDdo6vnnen5x1LEo2/8WurdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEd2OohM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A25C4CEF0;
 	Thu,  8 May 2025 17:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746725866;
-	bh=1LrHCnvjrVwOY8fPciSNHg2pcSP2e5AZbG7sV6Om58g=;
+	s=k20201202; t=1746725867;
+	bh=K3/g2iwRGJX3xkUR5858CkNzHUfivOTrWG/f7d+pYCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZxbB6/Ivlsjpdrz7mg6EILm7o2s7P4y8dVf8DwaVRepeL6LbXZ6huW6ufMbmr6LRA
-	 LfuYx2EaBepPVt9NMtGcghE3frMhdbpArLD8BY+90s8QfSQ7sFGYl0SFiO7dWdiW1T
-	 EJ2hVrpsYvGjl9oEaXw5mX8K25qxpNjP7Cd8j6JVqAJXJwXGblrFXFY0QAzLLrqWtu
-	 HaxjpH0w+HoMudxuxaDNILcCmoAeAnXhbHZGKPTIHGkprZh4QQYhneaFfVn5G6iatN
-	 zQnaueDYgwiyZFp6+G0a6/xTyVzy2nZc6pKvn3a6Z8LX4jqdXnTj5FYYtmOPzQWdbh
-	 nqI0gwE4HRC9w==
+	b=KEd2OohMyONVwFvnfHXZIkT2blDPr9s5mB9Nomw+qESdTfu4BreYJSZSShCnZhree
+	 E4Ryt9Jy7Wbw28g8krU4VC7mhr8PhAbjYGxOSnvK9f1/D06EYdrf8ZnMt9Vx13upCz
+	 2KCv9IEAMpHr/jEiFYt9RupjkQWsHv9ecGoqciAQ/ND7Q/BVufKtp1pRwopZCERprL
+	 Xn9rFPBuRSeYeN6xHRBlmL2ZLjXkpSbzi5e/r1s2P/wmWYsZHXl7rTLMFVfSCtAag0
+	 zWaV+BudiCnWR1lJ1i5vWVh8/Xcg/RASyCMpqkhT6Kq6gKxEi8TtV3C5VjvELIuS49
+	 OcLJDEdkVh6QQ==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v2 5/6] SUNRPC: Remove svc_fill_write_vector()
-Date: Thu,  8 May 2025 13:37:39 -0400
-Message-ID: <20250508173740.5475-6-cel@kernel.org>
+Subject: [PATCH v2 6/6] SUNRPC: Remove svc_rqst :: rq_vec
+Date: Thu,  8 May 2025 13:37:40 -0400
+Message-ID: <20250508173740.5475-7-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250508173740.5475-1-cel@kernel.org>
 References: <20250508173740.5475-1-cel@kernel.org>
@@ -65,81 +65,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Clean up: This API is no longer used.
+Clean up: This array is no longer used.
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h |  2 --
- net/sunrpc/svc.c           | 43 --------------------------------------
- 2 files changed, 45 deletions(-)
+ include/linux/sunrpc/svc.h | 1 -
+ net/sunrpc/svc.c           | 6 ------
+ 2 files changed, 7 deletions(-)
 
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 088c162ae7d6..a1b48ad1d464 100644
+index a1b48ad1d464..48666b83fe68 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -463,8 +463,6 @@ const char *	   svc_proc_name(const struct svc_rqst *rqstp);
- int		   svc_encode_result_payload(struct svc_rqst *rqstp,
- 					     unsigned int offset,
- 					     unsigned int length);
--unsigned int	   svc_fill_write_vector(struct svc_rqst *rqstp,
--					 struct xdr_buf *payload);
- char		  *svc_fill_symlink_pathname(struct svc_rqst *rqstp,
- 					     struct kvec *first, void *p,
- 					     size_t total);
+@@ -205,7 +205,6 @@ struct svc_rqst {
+ 	struct page *		*rq_page_end;  /* one past the last page */
+ 
+ 	struct folio_batch	rq_fbatch;
+-	struct kvec		*rq_vec;
+ 	struct bio_vec		*rq_bvec;
+ 
+ 	__be32			rq_xid;		/* transmission id */
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index d113f44798a1..c086f46265f6 100644
+index c086f46265f6..939b6239df8a 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1725,49 +1725,6 @@ int svc_encode_result_payload(struct svc_rqst *rqstp, unsigned int offset,
- }
- EXPORT_SYMBOL_GPL(svc_encode_result_payload);
+@@ -673,7 +673,6 @@ svc_rqst_free(struct svc_rqst *rqstp)
+ {
+ 	folio_batch_release(&rqstp->rq_fbatch);
+ 	kfree(rqstp->rq_bvec);
+-	kfree(rqstp->rq_vec);
+ 	svc_release_buffer(rqstp);
+ 	if (rqstp->rq_scratch_page)
+ 		put_page(rqstp->rq_scratch_page);
+@@ -712,11 +711,6 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	if (!svc_init_buffer(rqstp, serv, node))
+ 		goto out_enomem;
  
--/**
-- * svc_fill_write_vector - Construct data argument for VFS write call
-- * @rqstp: RPC execution context
-- * @payload: xdr_buf containing only the write data payload
-- *
-- * Fills in @rqstp->rq_bvec, and returns the number of elements it
-- * populated in that array.
-- */
--unsigned int svc_fill_write_vector(struct svc_rqst *rqstp,
--				   struct xdr_buf *payload)
--{
--	struct page **pages = payload->pages;
--	struct bio_vec *vec = rqstp->rq_bvec;
--	struct kvec *first = payload->head;
--	size_t total = payload->len;
--	unsigned int base, len, i;
+-	rqstp->rq_vec = kcalloc_node(rqstp->rq_maxpages, sizeof(struct kvec),
+-				      GFP_KERNEL, node);
+-	if (!rqstp->rq_vec)
+-		goto out_enomem;
 -
--	/* Some types of transport can present the write payload
--	 * entirely in rq_arg.pages. In this case, @first is empty.
--	 */
--	i = 0;
--	if (first->iov_len) {
--		len = min_t(size_t, total, first->iov_len);
--		bvec_set_virt(&vec[i], first->iov_base, len);
--		total -= len;
--		++i;
--	}
--
--	base = payload->page_base;
--	while (total) {
--		len = min_t(size_t, total, PAGE_SIZE);
--		bvec_set_page(&vec[i], *pages, len, base);
--		total -= len;
--		base = 0;
--		++i;
--		++pages;
--	}
--
--	WARN_ON_ONCE(i > rqstp->rq_maxpages);
--	return i;
--}
--EXPORT_SYMBOL_GPL(svc_fill_write_vector);
--
- /**
-  * svc_fill_symlink_pathname - Construct pathname argument for VFS symlink call
-  * @rqstp: svc_rqst to operate on
+ 	rqstp->rq_bvec = kcalloc_node(rqstp->rq_maxpages,
+ 				      sizeof(struct bio_vec),
+ 				      GFP_KERNEL, node);
 -- 
 2.49.0
 
