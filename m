@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11636-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11637-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C93DAB1D18
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:05:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5245EAB1D16
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:05:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5A524C1AD9
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27677A00162
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 493D1244684;
-	Fri,  9 May 2025 19:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2844924500A;
+	Fri,  9 May 2025 19:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0XC8Lp1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSz3yLbB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221472417EF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E23245003;
 	Fri,  9 May 2025 19:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817449; cv=none; b=ASsqQ11wWu0/zng+6qUzM1H9s3CnRglf8fAYZ4vu/8QheYd+e+4Y4Z5LVe29WgY2pvhiERSriCqNlXLAGQyRFc4mGYGpY+yMwtv14PfmASOJ0tTYC1gInbp/KnYVrCzmKcEX9zrDP3iPOuxftyggaia0upv4KOKhE+Bdo8NuaX0=
+	t=1746817450; cv=none; b=FaHmvChfkmuqsp17Kki6p+xkzvCQfK5nZLoBJKt0ERPH58MrfaE8n/Hak3oJNay/G0dMUqQRwIx91c2RwwbmxVNGidAOcHSCimLFKLGSaoztZTxWtVjptDRBVfWC8BBERd3g3nQBr5fMN7wIaJG75942kqG1Kgypqj7I7Cm6NEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817449; c=relaxed/simple;
-	bh=YKGKC7JXDv1Dk3EoPPKhIm+toh0199UMijj8dd4O5BM=;
+	s=arc-20240116; t=1746817450; c=relaxed/simple;
+	bh=LbkIdg+5qz9GLLe1tdKoyymSPk/AgHic/oHsVR8B2O8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qakak3FNDkiK1e1APm2ITLts2N86p0aGeSlgy5xIUMJi1LMyn+NTPZxWn6dFImbhZAtx9q3b9V4mUJv7xBMHQ4tLrU3ZnK3I19aKq6X49O0UxXAv7WiftopMJQmUAW/0BYAIQMOtCYbcFOPlWKBr/Q40AX8AWocVJvJehaSUHc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0XC8Lp1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE7AC4CEF0;
-	Fri,  9 May 2025 19:04:08 +0000 (UTC)
+	 MIME-Version; b=uM6ckIAFGM7j4UXb7w909NQYBw0KLb3JywEuDdVN/0+0kfYJrf4nHuvSImpb2wLa6YB688JByj/dKQ3PRQ8uuPMcsPO9rn/d2unNwJvbDCWW5bdI9ZifvBRlMSY46dvCALJtVcSvZZEre13FjRHOieDzVwo1/wUH1kBxUzPMyiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSz3yLbB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B547C4CEE9;
+	Fri,  9 May 2025 19:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746817449;
-	bh=YKGKC7JXDv1Dk3EoPPKhIm+toh0199UMijj8dd4O5BM=;
+	bh=LbkIdg+5qz9GLLe1tdKoyymSPk/AgHic/oHsVR8B2O8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E0XC8Lp1HLZUMySjjU0p8mBqEpWpTXRrU/VK+zYiKatWlOjAHdGBHIe/sued1Skok
-	 Jc8qD6IDbv5Q2ZIarkq76DQb4Wdph8GvRadNrNYz4yUzxWHuryGm8q2HemcaDkR/SN
-	 mHW1yVoDt2IiFewRvx8VF+9LjWlVbqYh5AeEHnonvthnEtIMHt7++RsIiTGXAStbER
-	 ovQGZev8BddVF4EwZh3Zm/I931Qaf9Z8eNIXrks/oUDxGrWV0StTFaJS9YP35bUqhL
-	 y0VPJ9jAaeaJtCCCtAqizdGWhA30CcRTqGZh5YphV5+idGvK1Ij2z5i5R8Cv2uLizS
-	 o65vGDf/rALhA==
+	b=eSz3yLbB5SGPhtGdPnP0yjqfSCJu8SV0c4mpnXFykLTj+7aVDw3boR6qzh4rG9V1w
+	 ZkkTGDs8w2n3VPFGT3tPGR/v+xVvTz7ibLssFaE3Wpo+56yzQi7IbB/fXR6rXa4Ael
+	 a59vTDmMiFpMgHOkb1/Tq0QEpAyRkn8nuUyeiKWratuux9BEBFlCkyY0IxrsiUpBf+
+	 3VvfXjl3TG1M94kydjJ2n15CWfKDTCMI1Y9AwQij59lrIEQJiotedrIZFV2fv8hdOS
+	 CdTd8fk7OhMaTlgbfTM13S49bgcl8CrvauYdZGFlRsRP6Kl4pV5o6w1gXT78cc+SrI
+	 FwRV7NdHcpFeA==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -50,9 +50,9 @@ To: NeilBrown <neil@brown.name>,
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v5 14/19] svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
-Date: Fri,  9 May 2025 15:03:48 -0400
-Message-ID: <20250509190354.5393-15-cel@kernel.org>
+Subject: [PATCH v5 15/19] sunrpc: Remove the RPCSVC_MAXPAGES macro
+Date: Fri,  9 May 2025 15:03:49 -0400
+Message-ID: <20250509190354.5393-16-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509190354.5393-1-cel@kernel.org>
 References: <20250509190354.5393-1-cel@kernel.org>
@@ -66,85 +66,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Allow allocation of more entries in the sc_pages[] array when the
-maximum size of an RPC message is increased.
+It is no longer used.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Reviewed-by: NeilBrown <neil@brown.name>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h       |  3 ++-
- net/sunrpc/xprtrdma/svc_rdma_sendto.c | 16 +++++++++++++---
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ include/linux/sunrpc/svc.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 1016f2feddc4..22704c2e5b9b 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -245,7 +245,8 @@ struct svc_rdma_send_ctxt {
- 	void			*sc_xprt_buf;
- 	int			sc_page_count;
- 	int			sc_cur_sge_no;
--	struct page		*sc_pages[RPCSVC_MAXPAGES];
-+	unsigned long		sc_maxpages;
-+	struct page		**sc_pages;
- 	struct ib_sge		sc_sges[];
- };
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 6540af4b9bdb..d57df042e24a 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -150,14 +150,7 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+  * list.  xdr_buf.tail points to the end of the first page.
+  * This assumes that the non-page part of an rpc reply will fit
+  * in a page - NFSd ensures this.  lockd also has no trouble.
+- *
+- * Each request/reply pair can have at most one "payload", plus two pages,
+- * one for the request, and one for the reply.
+- * We using ->sendfile to return read data, we might need one extra page
+- * if the request is not page-aligned.  So add another '1'.
+  */
+-#define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
+-				+ 2 + 1)
  
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 96154a2367a1..914cd263c2f1 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -118,6 +118,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- {
- 	int node = ibdev_to_node(rdma->sc_cm_id->device);
- 	struct svc_rdma_send_ctxt *ctxt;
-+	unsigned long pages;
- 	dma_addr_t addr;
- 	void *buffer;
- 	int i;
-@@ -126,13 +127,19 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- 			    GFP_KERNEL, node);
- 	if (!ctxt)
- 		goto fail0;
-+	pages = svc_serv_maxpages(rdma->sc_xprt.xpt_server);
-+	ctxt->sc_pages = kcalloc_node(pages, sizeof(struct page *),
-+				      GFP_KERNEL, node);
-+	if (!ctxt->sc_pages)
-+		goto fail1;
-+	ctxt->sc_maxpages = pages;
- 	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
- 	if (!buffer)
--		goto fail1;
-+		goto fail2;
- 	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
- 				 rdma->sc_max_req_size, DMA_TO_DEVICE);
- 	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
--		goto fail2;
-+		goto fail3;
- 
- 	svc_rdma_send_cid_init(rdma, &ctxt->sc_cid);
- 
-@@ -151,8 +158,10 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- 		ctxt->sc_sges[i].lkey = rdma->sc_pd->local_dma_lkey;
- 	return ctxt;
- 
--fail2:
-+fail3:
- 	kfree(buffer);
-+fail2:
-+	kfree(ctxt->sc_pages);
- fail1:
- 	kfree(ctxt);
- fail0:
-@@ -176,6 +185,7 @@ void svc_rdma_send_ctxts_destroy(struct svcxprt_rdma *rdma)
- 				    rdma->sc_max_req_size,
- 				    DMA_TO_DEVICE);
- 		kfree(ctxt->sc_xprt_buf);
-+		kfree(ctxt->sc_pages);
- 		kfree(ctxt);
- 	}
- }
+ /**
+  * svc_serv_maxpages - maximum count of pages needed for one RPC message
 -- 
 2.49.0
 
