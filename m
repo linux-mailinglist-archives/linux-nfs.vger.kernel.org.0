@@ -1,45 +1,46 @@
-Return-Path: <linux-nfs+bounces-11622-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11623-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7789AAB1CF5
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:01 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90776AB1CF6
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 366073A9860
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:03:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CB7CC18992C8
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C7F924166E;
-	Fri,  9 May 2025 19:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 334DB2417D9;
+	Fri,  9 May 2025 19:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ogl+ekKJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVt/CGfI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DDE241661;
-	Fri,  9 May 2025 19:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079A4241661;
+	Fri,  9 May 2025 19:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817437; cv=none; b=jlIIfdCcifC89ZwdUuLcAaGM8RhIAGFyciIRnn4rI0aaEz5TktsWpYASP4vQqjKFeb7e3YA/PUKvd1Oo9zsYB5vMDJ/M2ZQgLj3oeH3qkEHh60nfHY1h5WekVXI7psxTjWff+zbhKGoToKl3KEjzUfdYIN0/+TmfBOMQAQsKeR0=
+	t=1746817438; cv=none; b=eLCJxr5NHNjoiwdKDDgrl1bdGLR7xcOeRYSz08PBwuZqnbk0BkHVnhD2wPlAaCQXtd+pvKeFV7u1boUFIo2YcBKNM88WVPdvfyW5sXZoNZ4WgbmMhTuuLO1Ys3AT8Qqn75a93Um7n+auANxx0GAuNh2GZm0xVPD/N+uqpsm80u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817437; c=relaxed/simple;
-	bh=Rx1UztUuuMc7zNG5cM1iHfYJOuIbjsS952oGwaC2+p0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cWD8cs0VXiESrAxkEWJyJ/xkQZpsr416kKedPGyMl7xezWN3CRiPeXdPm1cMxHvs2tfvOSOme55AErm0Tctt49FszGIKWzgcsXT7DuEjk/g7QYjp3Izs3ji3k7rgRIf9MYASL+8Rak7jUyyqVj7YImvm8wycNt1/M03V0g5CGYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ogl+ekKJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177C9C4CEE4;
+	s=arc-20240116; t=1746817438; c=relaxed/simple;
+	bh=uX7FI93dY2S91RDTPQ/9sV7aE0XnrmdrvDrVcSDGqqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YJIEmnmCt2dHr+jNkhlTYB3U45AnvV70z4gNM9YH1+/N263ewKflWAhiNN+ecmqxbNkIlzoSJFHxMCmNVYVBNIjUVZS+06tdC6mh/cUBJEin2B2Ee1qJ1AtQvjpgWMM0x4JNPNbnuDA4+vR4pAVuVth6SWSDplV/tXI0alKgFQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVt/CGfI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39BDC4CEEE;
 	Fri,  9 May 2025 19:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746817436;
-	bh=Rx1UztUuuMc7zNG5cM1iHfYJOuIbjsS952oGwaC2+p0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ogl+ekKJ/5bxR3/rUr8/uRaT2txWaxpFowDoe/H3rllQSje3/RbZE+V8HtXlIuDeC
-	 tE2fE3Mu1G1nzLLGMW+/KB+5KE7p+R/SEbMoeZfp0jZMNj4aGkDl7cpio1nmvgJ7cj
-	 AfB/e0qbFXY2q783GfSIFfHBVRgcPfFONzHGiE25cn81SMxSfQT/UwUZuZbYglckaS
-	 c10Vp3YVY3MCk1smyjOzMSsvp6nMHCiPJPpYrs5lVi7s2LfTKCm9w1JUcHmuysEAln
-	 Jgzsxh8aZtItPJWDkA3bqWP3kW/rFlDTXRby2GpW8UDYIwkZG0TDWZg9myc5dt2SJh
-	 spF4DJsBzTUWQ==
+	s=k20201202; t=1746817437;
+	bh=uX7FI93dY2S91RDTPQ/9sV7aE0XnrmdrvDrVcSDGqqY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LVt/CGfIbWeHOc+CKP0SGfp2yOUab7lY4VUXIGy8oloyTM/CUDXnOB2h8jmV1zk3E
+	 Xwk1cvwbf/TcGHfZljupkhEUtYdjLOgjL806Ga0kmKUgjYjq5q64bLoAb1HIE+K4Mu
+	 KJszxLZSHUGbmQJ9zCJwznro8TCfjRbYS8yWF5vM96Ba8h6QoBC9Zj/e9VNMNdaYAY
+	 1dE2mm4rdyZDWbsUyVkuFguL+yXaN50i0n2KJlzpwdDx9SGnFqvhYbv4taxueNhTC7
+	 UGW+70Qq/GOp9GPO9dIz/6Yn4GlT6YEOPznrBI+fGLeOYlC0FRfLWmUPzRJN23tVFI
+	 Sl+zBIgMyA/Tg==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -48,11 +49,14 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v5 00/19] Allocate payload arrays dynamically
-Date: Fri,  9 May 2025 15:03:34 -0400
-Message-ID: <20250509190354.5393-1-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v5 01/19] svcrdma: Reduce the number of rdma_rw contexts per-QP
+Date: Fri,  9 May 2025 15:03:35 -0400
+Message-ID: <20250509190354.5393-2-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250509190354.5393-1-cel@kernel.org>
+References: <20250509190354.5393-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -63,83 +67,88 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-In order to make RPCSVC_MAXPAYLOAD larger (or variable in size), we
-need to do something clever with the payload arrays embedded in
-struct svc_rqst and elsewhere.
+There is an upper bound on the number of rdma_rw contexts that can
+be created per QP.
 
-My preference is to keep these arrays allocated all the time because
-allocating them on demand increases the risk of a memory allocation
-failure during a large I/O. This is a quick-and-dirty approach that
-might be replaced once NFSD is converted to use large folios.
+This invisible upper bound is because rdma_create_qp() adds one or
+more additional SQEs for each ctxt that the ULP requests via
+qp_attr.cap.max_rdma_ctxs. The QP's actual Send Queue length is on
+the order of the sum of qp_attr.cap.max_send_wr and a factor times
+qp_attr.cap.max_rdma_ctxs. The factor can be up to three, depending
+on whether MR operations are required before RDMA Reads.
 
-The downside of this design choice is that it pins a few pages per
-NFSD thread (and that's the current situation already). But note
-that because RPCSVC_MAXPAGES is 259, each array is just over a page
-in size, making the allocation waste quite a bit of memory beyond
-the end of the array due to power-of-2 allocator round up. This gets
-worse as the MAXPAGES value is doubled or quadrupled.
+This limit is not visible to RDMA consumers via dev->attrs. When the
+limit is surpassed, QP creation fails with -ENOMEM. For example:
 
-This series also addresses similar issues in the socket and RDMA
-transports.
+svcrdma's estimate of the number of rdma_rw contexts it needs is
+three times the number of pages in RPCSVC_MAXPAGES. When MAXPAGES
+is about 260, the internally-computed SQ length should be:
 
-Changes since v4:
-* Replace the use of rq_vec instead of allocating it dynamically
+64 credits + 10 backlog + 3 * (3 * 260) = 2414
 
-Changes since v3:
-* Improved the rdma_rw context count estimate
-* Dropped "NFSD: Remove NFSSVC_MAXBLKSIZE from .pc_xdrressize"
-* Cleaned up the max size macros a bit
-* Completed the implementation of adjustable max_block_size
+Which is well below the advertised qp_max_wr of 32768.
 
-Changes since v2:
-* Address Jeff's review comments
-* Address Neil's review comments
-* Start removing a few uses of NFSSVC_MAXBLKSIZE
+If RPCSVC_MAXPAGES is increased to 4MB, that's 1040 pages:
 
-Chuck Lever (19):
-  svcrdma: Reduce the number of rdma_rw contexts per-QP
-  sunrpc: Add a helper to derive maxpages from sv_max_mesg
-  sunrpc: Remove backchannel check in svc_init_buffer()
-  sunrpc: Replace the rq_pages array with dynamically-allocated memory
-  sunrpc: Replace the rq_bvec array with dynamically-allocated memory
-  NFSD: Use rqstp->rq_bvec in nfsd_iter_read()
-  NFSD: De-duplicate the svc_fill_write_vector() call sites
-  SUNRPC: Export xdr_buf_to_bvec()
-  NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
-  SUNRPC: Remove svc_fill_write_vector()
-  SUNRPC: Remove svc_rqst :: rq_vec
-  sunrpc: Adjust size of socket's receive page array dynamically
-  svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
-  svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
-  sunrpc: Remove the RPCSVC_MAXPAGES macro
-  NFSD: Remove NFSD_BUFSIZE
-  NFSD: Remove NFSSVC_MAXBLKSIZE_V2 macro
-  NFSD: Add a "default" block size
-  SUNRPC: Bump the maximum payload size for the server
+64 credits + 10 backlog + 3 * (3 * 1040) = 9434
 
- fs/nfsd/nfs3proc.c                       |  5 +-
- fs/nfsd/nfs4proc.c                       | 10 +--
- fs/nfsd/nfs4state.c                      |  2 +-
- fs/nfsd/nfs4xdr.c                        |  2 +-
- fs/nfsd/nfsd.h                           | 24 +++----
- fs/nfsd/nfsproc.c                        | 13 ++--
- fs/nfsd/nfssvc.c                         |  2 +-
- fs/nfsd/nfsxdr.c                         |  4 +-
- fs/nfsd/vfs.c                            | 67 ++++++++++++++------
- fs/nfsd/vfs.h                            | 10 +--
- include/linux/sunrpc/svc.h               | 46 ++++++++------
- include/linux/sunrpc/svc_rdma.h          |  6 +-
- include/linux/sunrpc/svcsock.h           |  4 +-
- net/sunrpc/svc.c                         | 80 +++++++-----------------
- net/sunrpc/svc_xprt.c                    | 10 +--
- net/sunrpc/svcsock.c                     | 15 +++--
- net/sunrpc/xdr.c                         |  1 +
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  |  8 ++-
- net/sunrpc/xprtrdma/svc_rdma_rw.c        |  2 +-
- net/sunrpc/xprtrdma/svc_rdma_sendto.c    | 16 ++++-
- net/sunrpc/xprtrdma/svc_rdma_transport.c | 14 +++--
- 21 files changed, 170 insertions(+), 171 deletions(-)
+However, QP creation fails. Dynamic printk for mlx5 shows:
 
+calc_sq_size:618:(pid 1514): send queue size (9326 * 256 / 64 -> 65536) exceeds limits(32768)
+
+Although 9326 is still far below qp_max_wr, QP creation still
+fails.
+
+Because the total SQ length calculation is opaque to RDMA consumers,
+there doesn't seem to be much that can be done about this except for
+consumers to try to keep the requested rdma_rw ctxt count low.
+
+Fixes: 2da0f610e733 ("svcrdma: Increase the per-transport rw_ctx count")
+Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/svc_rdma_transport.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+index 5940a56023d1..3d7f1413df02 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
+@@ -406,12 +406,12 @@ static void svc_rdma_xprt_done(struct rpcrdma_notification *rn)
+  */
+ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ {
++	unsigned int ctxts, rq_depth, maxpayload;
+ 	struct svcxprt_rdma *listen_rdma;
+ 	struct svcxprt_rdma *newxprt = NULL;
+ 	struct rdma_conn_param conn_param;
+ 	struct rpcrdma_connect_private pmsg;
+ 	struct ib_qp_init_attr qp_attr;
+-	unsigned int ctxts, rq_depth;
+ 	struct ib_device *dev;
+ 	int ret = 0;
+ 	RPC_IFDEBUG(struct sockaddr *sap);
+@@ -462,12 +462,14 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 		newxprt->sc_max_bc_requests = 2;
+ 	}
+ 
+-	/* Arbitrarily estimate the number of rw_ctxs needed for
+-	 * this transport. This is enough rw_ctxs to make forward
+-	 * progress even if the client is using one rkey per page
+-	 * in each Read chunk.
++	/* Arbitrary estimate of the needed number of rdma_rw contexts.
+ 	 */
+-	ctxts = 3 * RPCSVC_MAXPAGES;
++	maxpayload = min(xprt->xpt_server->sv_max_payload,
++			 RPCSVC_MAXPAYLOAD_RDMA);
++	ctxts = newxprt->sc_max_requests * 3 *
++		rdma_rw_mr_factor(dev, newxprt->sc_port_num,
++				  maxpayload >> PAGE_SHIFT);
++
+ 	newxprt->sc_sq_depth = rq_depth + ctxts;
+ 	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr)
+ 		newxprt->sc_sq_depth = dev->attrs.max_qp_wr;
 -- 
 2.49.0
 
