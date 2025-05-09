@@ -1,249 +1,145 @@
-Return-Path: <linux-nfs+bounces-11618-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11619-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2AB5AB0F2A
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 11:39:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A003CAB116E
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 13:04:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0CC11B67E6E
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 09:39:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF4FF17EB5D
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 11:04:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0317327991F;
-	Fri,  9 May 2025 09:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C8A328D82F;
+	Fri,  9 May 2025 11:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PG3TiC8L"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E65535976;
-	Fri,  9 May 2025 09:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8F272E55
+	for <linux-nfs@vger.kernel.org>; Fri,  9 May 2025 11:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746783563; cv=none; b=dn10l/isJfP+CRwGPORVVoPMU1R333le2Gx0pcnE2AP6fUfgwg3teNBluGqfgCxUUc5hHWiSpDiscDnsmkF6YP+f10aSDrSqEI85Fu6J2c3JVIvH7zzyTQWdEkdy68sd1jK3wWmX86EDOfE+idmm7o1ESKc+6I8F9FjeRDyt/wc=
+	t=1746788647; cv=none; b=acqlAW+/lXwAGIplhQEJ2/QDT9quYRfdRBRMuW87NyKfD8TC1OKbE2fWv6lEkW7GzEQs3y5CxJsx3sXpoAzPdnqoz3Ss1RmlRyF5oBPkz5UYeIRihNQ++sbgKk+syvD60jSVs33PQLxkWII0K4vSn9FOQeWYo97xHm45jnJaAcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746783563; c=relaxed/simple;
-	bh=Ctc2LlgT/TBtEZb9BwfLgoa2yV+uYDSFls2xwrat8Os=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AAfxb+MHj6W5Di6V6FOIGnxIXyxzUhUkteWdvbg1ul8PYjMlE2mxfx2ZHxqx1CH8Qfcm7KgMv65Ix6pqQdmfeE5BpzOOcXq7Hpnu5X+A/3g97IoUFXisEmM3LuKo/lM/MWsPAa0UFkNvho6WfyZ7QV716S439CbhiFPbOJyf3kQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5499AZvK004245;
-	Fri, 9 May 2025 09:38:34 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46e430pca6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 09 May 2025 09:38:34 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Fri, 9 May 2025 02:38:33 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Fri, 9 May 2025 02:38:28 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <chuck.lever@oracle.com>,
-        <jlayton@kernel.org>, <trond.myklebust@hammerspace.com>,
-        <anna@kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <ebiederm@xmission.com>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <liujian56@huawei.com>, <kuniyu@amazon.com>
-Subject: [PATCH 6.1.y] sunrpc: fix one UAF issue caused by sunrpc kernel tcp socket
-Date: Fri, 9 May 2025 17:38:28 +0800
-Message-ID: <20250509093828.3243368-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746788647; c=relaxed/simple;
+	bh=C497MzSJln+BEudKccHZvGHDpgPrALAGE20vXvzdYCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GkSTfWtWm+oOS6ulCb9qxDiNiSw1o6LNNdlvH394nK1189u0GRvMreJ6N9ecTG/XbVrmOhBPgSZStHUwO6vhKbj4kTl27A/D8aG0CAtRzNc7WhEcFVbQslwTPT7zDfMKYtaspuhfASiCsWx9YBw+gNuymc+AKkkUOsRgoE5/on4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PG3TiC8L; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746788645; x=1778324645;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C497MzSJln+BEudKccHZvGHDpgPrALAGE20vXvzdYCU=;
+  b=PG3TiC8L+7Wi481apIt2cOJzfEY/p/5o5mjkKGjqBmvNxOSGKfVolitx
+   MXatOvpLl5fzXXgOKDjQu4dy6i31GSd2KQc1zQikdYgHMni4vggGyMmTq
+   tM6tpMWOmncMj1+bJy2uWuwO0OPUrWQUPQFoYg2vdj2FWy2N6z9oNtceA
+   xuT18l/lB84341UHdWjZuo0PRJ3/MwqzdxyTX+elCZFIb2t80CmDaQq4L
+   Nn8tYX6JX5sLW+sibVFVd7sacGDomnYf+5S9Qqv/DnPsiMiTOOGdfGINv
+   HAan7eEu6bFws1gpMv4bq7F8EQer6Mk9yVIYGAM8abbPhEu4Lytq6Pymc
+   g==;
+X-CSE-ConnectionGUID: Ovyj4yMSTpuMl2jlIsxB1w==
+X-CSE-MsgGUID: dqGxDxZWRTi0o5pFErRRKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11427"; a="36241435"
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="36241435"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2025 04:04:05 -0700
+X-CSE-ConnectionGUID: kUcKfIBCS0iYMmyizglDiA==
+X-CSE-MsgGUID: 90wzbuhcSju6vV0akIwiVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,275,1739865600"; 
+   d="scan'208";a="136975769"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 09 May 2025 04:04:02 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uDLWJ-000Bz1-2y;
+	Fri, 09 May 2025 11:03:59 +0000
+Date: Fri, 9 May 2025 19:03:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: oe-kbuild-all@lists.linux.dev, Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 6/6] nfs_localio: change nfsd_file_put_local() to take a
+ pointer to __rcu pointer
+Message-ID: <202505091849.42eZCL5e-lkp@intel.com>
+References: <20250509004852.3272120-7-neil@brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=BajY0qt2 c=1 sm=1 tr=0 ts=681dcd1a cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8 a=vggBfdFIAAAA:8 a=SEtKQCMJAAAA:8 a=t7CeM3EgAAAA:8
- a=1f2QqqMRGjE1UMYEyBAA:9 a=kyTSok1ft720jgMXX5-3:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
-X-Proofpoint-ORIG-GUID: WASk0LQFlJwxy6C-Cknx7dsR8T8oJvlv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDA5MiBTYWx0ZWRfX+RG/N2dPGMh2 j1//+/kOAUg8zN2uXHGG9d8/9VJvmJ5mBMOGtlwXe3T47RjnaI0AJMm6yGv6B/2Vdnt38soIz9q WgU7xeC62TecBL8aqRaILiCaSpRRZVRecmXv+YiWkZYoZ1+mSXv7EFCQyPzX6n7WVpWN2eivLK8
- AFQPdvSP3yDbX27i7sbDR86n/EdPXevd7vcO8fXaElAGmV+FYFUZQ2HMb+hp143h4l2sKnQNGFI MSd2FXU2tO8+Uem5p+Ds9KM7Cp+FETCSuwvF/+wH1U+hYyJwL/IdLt5ORnosQrqqblBH28mkkIe BFe0K3O24hEIIrZlKUsAloM3WcG43YeKGnE1YGeA8fHKU6O8UZ4RmCdBThaZoR8CEIHBmcVSY/q
- TOS5kqXvNkoiRllesLRtM17jhLY+5hE6Fy9v4d8xCy8UR0TF/zhXV+NktlDPhjeY4ljmU1fk
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-09_03,2025-05-08_04,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2505090092
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509004852.3272120-7-neil@brown.name>
 
-From: Liu Jian <liujian56@huawei.com>
+Hi NeilBrown,
 
-[ Upstream commit 3f23f96528e8fcf8619895c4c916c52653892ec1 ]
+kernel test robot noticed the following build warnings:
 
-BUG: KASAN: slab-use-after-free in tcp_write_timer_handler+0x156/0x3e0
-Read of size 1 at addr ffff888111f322cd by task swapper/0/0
+[auto build test WARNING on brauner-vfs/vfs.all]
+[also build test WARNING on linus/master v6.15-rc5]
+[cannot apply to trondmy-nfs/linux-next next-20250508]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.0-rc4-dirty #7
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x68/0xa0
- print_address_description.constprop.0+0x2c/0x3d0
- print_report+0xb4/0x270
- kasan_report+0xbd/0xf0
- tcp_write_timer_handler+0x156/0x3e0
- tcp_write_timer+0x66/0x170
- call_timer_fn+0xfb/0x1d0
- __run_timers+0x3f8/0x480
- run_timer_softirq+0x9b/0x100
- handle_softirqs+0x153/0x390
- __irq_exit_rcu+0x103/0x120
- irq_exit_rcu+0xe/0x20
- sysvec_apic_timer_interrupt+0x76/0x90
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20
-RIP: 0010:default_idle+0xf/0x20
-Code: 4c 01 c7 4c 29 c2 e9 72 ff ff ff 90 90 90 90 90 90 90 90 90 90 90 90
- 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d 33 f8 25 00 fb f4 <fa> c3 cc cc cc
- cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90
-RSP: 0018:ffffffffa2007e28 EFLAGS: 00000242
-RAX: 00000000000f3b31 RBX: 1ffffffff4400fc7 RCX: ffffffffa09c3196
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff9f00590f
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffed102360835d
-R10: ffff88811b041aeb R11: 0000000000000001 R12: 0000000000000000
-R13: ffffffffa202d7c0 R14: 0000000000000000 R15: 00000000000147d0
- default_idle_call+0x6b/0xa0
- cpuidle_idle_call+0x1af/0x1f0
- do_idle+0xbc/0x130
- cpu_startup_entry+0x33/0x40
- rest_init+0x11f/0x210
- start_kernel+0x39a/0x420
- x86_64_start_reservations+0x18/0x30
- x86_64_start_kernel+0x97/0xa0
- common_startup_64+0x13e/0x141
- </TASK>
+url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfs_localio-use-cmpxchg-to-install-new-nfs_file_localio/20250509-085046
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20250509004852.3272120-7-neil%40brown.name
+patch subject: [PATCH 6/6] nfs_localio: change nfsd_file_put_local() to take a pointer to __rcu pointer
+config: i386-buildonly-randconfig-002-20250509 (https://download.01.org/0day-ci/archive/20250509/202505091849.42eZCL5e-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250509/202505091849.42eZCL5e-lkp@intel.com/reproduce)
 
-Allocated by task 595:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- __kasan_slab_alloc+0x87/0x90
- kmem_cache_alloc_noprof+0x12b/0x3f0
- copy_net_ns+0x94/0x380
- create_new_namespaces+0x24c/0x500
- unshare_nsproxy_namespaces+0x75/0xf0
- ksys_unshare+0x24e/0x4f0
- __x64_sys_unshare+0x1f/0x30
- do_syscall_64+0x70/0x180
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505091849.42eZCL5e-lkp@intel.com/
 
-Freed by task 100:
- kasan_save_stack+0x24/0x50
- kasan_save_track+0x14/0x30
- kasan_save_free_info+0x3b/0x60
- __kasan_slab_free+0x54/0x70
- kmem_cache_free+0x156/0x5d0
- cleanup_net+0x5d3/0x670
- process_one_work+0x776/0xa90
- worker_thread+0x2e2/0x560
- kthread+0x1a8/0x1f0
- ret_from_fork+0x34/0x60
- ret_from_fork_asm+0x1a/0x30
+All warnings (new ones prefixed by >>):
 
-Reproduction script:
+>> fs/nfsd/filecache.c:382: warning: Function parameter or struct member 'pnf' not described in 'nfsd_file_put_local'
+>> fs/nfsd/filecache.c:382: warning: Excess function parameter 'nf' description in 'nfsd_file_put_local'
 
-mkdir -p /mnt/nfsshare
-mkdir -p /mnt/nfs/netns_1
-mkfs.ext4 /dev/sdb
-mount /dev/sdb /mnt/nfsshare
-systemctl restart nfs-server
-chmod 777 /mnt/nfsshare
-exportfs -i -o rw,no_root_squash *:/mnt/nfsshare
 
-ip netns add netns_1
-ip link add name veth_1_peer type veth peer veth_1
-ifconfig veth_1_peer 11.11.0.254 up
-ip link set veth_1 netns netns_1
-ip netns exec netns_1 ifconfig veth_1 11.11.0.1
+vim +382 fs/nfsd/filecache.c
 
-ip netns exec netns_1 /root/iptables -A OUTPUT -d 11.11.0.254 -p tcp \
-	--tcp-flags FIN FIN  -j DROP
+65294c1f2c5e72 Jeff Layton  2019-08-18  372  
+a61e147e6be6e7 Mike Snitzer 2024-09-05  373  /**
+b33f7dec3a6721 Mike Snitzer 2024-11-15  374   * nfsd_file_put_local - put nfsd_file reference and arm nfsd_net_put in caller
+c840b8e1f039e9 Mike Snitzer 2024-11-13  375   * @nf: nfsd_file of which to put the reference
+a61e147e6be6e7 Mike Snitzer 2024-09-05  376   *
+c840b8e1f039e9 Mike Snitzer 2024-11-13  377   * First save the associated net to return to caller, then put
+c840b8e1f039e9 Mike Snitzer 2024-11-13  378   * the reference of the nfsd_file.
+a61e147e6be6e7 Mike Snitzer 2024-09-05  379   */
+c840b8e1f039e9 Mike Snitzer 2024-11-13  380  struct net *
+100c0943040501 NeilBrown    2025-05-09  381  nfsd_file_put_local(struct nfsd_file __rcu **pnf)
+a61e147e6be6e7 Mike Snitzer 2024-09-05 @382  {
+100c0943040501 NeilBrown    2025-05-09  383  	struct nfsd_file *nf;
+100c0943040501 NeilBrown    2025-05-09  384  	struct net *net = NULL;
+a61e147e6be6e7 Mike Snitzer 2024-09-05  385  
+100c0943040501 NeilBrown    2025-05-09  386  	nf = unrcu_pointer(xchg(pnf, NULL));
+100c0943040501 NeilBrown    2025-05-09  387  	if (nf) {
+100c0943040501 NeilBrown    2025-05-09  388  		net = nf->nf_net;
+a61e147e6be6e7 Mike Snitzer 2024-09-05  389  		nfsd_file_put(nf);
+100c0943040501 NeilBrown    2025-05-09  390  	}
+c840b8e1f039e9 Mike Snitzer 2024-11-13  391  	return net;
+a61e147e6be6e7 Mike Snitzer 2024-09-05  392  }
+a61e147e6be6e7 Mike Snitzer 2024-09-05  393  
 
-(note: In my environment, a DESTROY_CLIENTID operation is always sent
- immediately, breaking the nfs tcp connection.)
-ip netns exec netns_1 timeout -s 9 300 mount -t nfs -o proto=tcp,vers=4.1 \
-	11.11.0.254:/mnt/nfsshare /mnt/nfs/netns_1
-
-ip netns del netns_1
-
-The reason here is that the tcp socket in netns_1 (nfs side) has been
-shutdown and closed (done in xs_destroy), but the FIN message (with ack)
-is discarded, and the nfsd side keeps sending retransmission messages.
-As a result, when the tcp sock in netns_1 processes the received message,
-it sends the message (FIN message) in the sending queue, and the tcp timer
-is re-established. When the network namespace is deleted, the net structure
-accessed by tcp's timer handler function causes problems.
-
-To fix this problem, let's hold netns refcnt for the tcp kernel socket as
-done in other modules. This is an ugly hack which can easily be backported
-to earlier kernels. A proper fix which cleans up the interfaces will
-follow, but may not be so easy to backport.
-
-Fixes: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-[Routine __netns_tracker_free() is not supported in 6.1 and so using
-netns_tracker_free() instead.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- net/sunrpc/svcsock.c  | 4 ++++
- net/sunrpc/xprtsock.c | 7 +++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 23b4c728de59..654579553edb 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1457,6 +1457,10 @@ static struct svc_xprt *svc_create_socket(struct svc_serv *serv,
- 	newlen = error;
- 
- 	if (protocol == IPPROTO_TCP) {
-+		netns_tracker_free(net, &sock->sk->ns_tracker);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(net, 1);
- 		if ((error = kernel_listen(sock, 64)) < 0)
- 			goto bummer;
- 	}
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index b9dc8e197dde..181474105e4c 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1855,6 +1855,13 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
- 		goto out;
- 	}
- 
-+	if (protocol == IPPROTO_TCP) {
-+		netns_tracker_free(xprt->xprt_net, &sock->sk->ns_tracker);
-+		sock->sk->sk_net_refcnt = 1;
-+		get_net_track(xprt->xprt_net, &sock->sk->ns_tracker, GFP_KERNEL);
-+		sock_inuse_add(xprt->xprt_net, 1);
-+	}
-+
- 	filp = sock_alloc_file(sock, O_NONBLOCK, NULL);
- 	if (IS_ERR(filp))
- 		return ERR_CAST(filp);
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
