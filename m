@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11631-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11632-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF66AAB1D0B
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2805AB1D04
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 149744A1545
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2228189C2F7
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1417D243387;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CBE224466C;
 	Fri,  9 May 2025 19:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsN+mL39"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyJvC6oU"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CFE24169B;
-	Fri,  9 May 2025 19:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DF8244665;
+	Fri,  9 May 2025 19:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817445; cv=none; b=JPP+e5WASynHuzoR2c7EipFM550y5dClxpvn5i5WiKHWMuLFB3pB7qaB+FQG7WKI4adbwOiK5O6HR5fJh//t+U9wA0NB+fPYHmpgkYh18U7MGQTuT08uwrEfN6NQt9/DSoQXT321rhY6NVNFt5Reuu/mJxcBNpM4l6DXYtL4CM4=
+	t=1746817445; cv=none; b=pZ1Uik7qdnN4bnAttkBo077MxplqBLxjcrYtrXnsUD5s+FHebfqeE87M6Kz6mAN/HBN4/eOsJiKiQYKBNksnJ8lRwDkXTkn8NcM1OvmdXjOt4/297kf2fMouGtAr8piNM4i00p5jFp9kT9h8xzh2xahVWEMWVvfQ28qms6+AXwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746817445; c=relaxed/simple;
-	bh=EuvVL61BxfXVGGlDS/KnWG047ihuK8S1vV2BWINdNw8=;
+	bh=JgZeGSv0c4pzpGEbwYPu464tC/Pkf4OLN+rQfjgF+Hg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uu1Z7/t7oyFa+BTUh0flPnaTunqVJLaaThpSj/BPpbfORVdup87h51oHsVUohyIGc7+AT+bsOOIoeXhkCqc4VQLg74MVlYd1/UYy4LatBRZ9GWeDlnXLkixqhaNbs+aSMknUDdXbHZnrGUrYjVJlEfsB21kyw02Kd63qgqgjsGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsN+mL39; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDCCCC4CEEE;
-	Fri,  9 May 2025 19:04:03 +0000 (UTC)
+	 MIME-Version; b=BWCWes4pwUw/YxzrADQfCDZ9vIqQFvdVzHj+wBMLPfJW9KcO7SluMymR/+edjAzarB9jnjAtpFBfoapZ4+BkP9NyJS6eZ13xTz7bKGkQmB8Qmkwyx3k93BS9UGihPqsgiFffx+AWo9XNYdIe0LgkfdNY6QZemZLdAyttfRME8HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyJvC6oU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A103DC4CEEF;
+	Fri,  9 May 2025 19:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746817444;
-	bh=EuvVL61BxfXVGGlDS/KnWG047ihuK8S1vV2BWINdNw8=;
+	s=k20201202; t=1746817445;
+	bh=JgZeGSv0c4pzpGEbwYPu464tC/Pkf4OLN+rQfjgF+Hg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GsN+mL395hrXFxI3R7kK2wtNyG3j0vTybomD4nyaaVzc4bFS2QqdARPu1FUXwmUkB
-	 Gdpz0SceZBELoplZZlSqk5znIM6d1AuGRXfdow07+vBGkOXYr6H4cMZhRp1Y8rAU10
-	 pBQ2o9rYGj95NdbZ8WCN2NgjQe0h1+pS7LbMQNxJVJzWtgc3myANp0D9tREp2LjhFg
-	 GZOOcMu6V+tMMHXdicYYV+1t4MsIYY3Ytq8FikToQ0+G5c9rJh6tedpJBJYyQVgGkG
-	 IlEc35EcuLtyhc20KZMBHKWrmD0oL6fVaQcZ7QiNIuUSxcRiZ17eI2EmeqGC90jMs0
-	 qylpwq+JkSmSA==
+	b=WyJvC6oUn26KPuvXBrcC8qfk3cFBpKXrW0hQR5BVpO51yUM0NNqWL49VgBJtZo6hd
+	 tldqYo+r1XL1CpdhTPJTZiUOMGTtFTE41yd0nSaZnwK8nc2EN6u7ZrY87Kh2H+xmQM
+	 U0CN7Y1+D8UO4PuAxPKTElOYKc78UImqDcZ8Y0FyLRmjDyVA4sdrTd6yFUzGdUiStS
+	 kLCr3S90InGKxpiNWDYTB8eMbuQ7YZi39ndnjtAilIac26QWJumwFl2a3lmYGDxmHw
+	 KwE44R/rj78a/5iunhFKyiyv65mUFw6UNPl8D9XfLUo3gvTuqJnnwD/zmm/ZGq+wcY
+	 /wHwIy5veMerQ==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,11 +49,10 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v5 09/19] NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
-Date: Fri,  9 May 2025 15:03:43 -0400
-Message-ID: <20250509190354.5393-10-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH v5 10/19] SUNRPC: Remove svc_fill_write_vector()
+Date: Fri,  9 May 2025 15:03:44 -0400
+Message-ID: <20250509190354.5393-11-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509190354.5393-1-cel@kernel.org>
 References: <20250509190354.5393-1-cel@kernel.org>
@@ -67,41 +66,78 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-If we can get rid of all uses of rq_vec, then it can be removed.
-Replace one use of rqstp::rq_vec with rqstp::rq_bvec.
+Clean up: This API is no longer used.
 
-The feeling of layering violation grows stronger now that
-<linux/sunrpc/xdr.h> is included in fs/nfsd/vfs.c.
-
-Suggested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/vfs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/linux/sunrpc/svc.h |  2 --
+ net/sunrpc/svc.c           | 40 --------------------------------------
+ 2 files changed, 42 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 43ecc5ae0c3f..fac53cd145e7 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -31,6 +31,7 @@
- #include <linux/exportfs.h>
- #include <linux/writeback.h>
- #include <linux/security.h>
-+#include <linux/sunrpc/xdr.h>
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index dec636345ee2..510ee1927977 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -470,8 +470,6 @@ const char *	   svc_proc_name(const struct svc_rqst *rqstp);
+ int		   svc_encode_result_payload(struct svc_rqst *rqstp,
+ 					     unsigned int offset,
+ 					     unsigned int length);
+-unsigned int	   svc_fill_write_vector(struct svc_rqst *rqstp,
+-					 const struct xdr_buf *payload);
+ char		  *svc_fill_symlink_pathname(struct svc_rqst *rqstp,
+ 					     struct kvec *first, void *p,
+ 					     size_t total);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index a8861a80bc04..939b6239df8a 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1719,46 +1719,6 @@ int svc_encode_result_payload(struct svc_rqst *rqstp, unsigned int offset,
+ }
+ EXPORT_SYMBOL_GPL(svc_encode_result_payload);
  
- #include "xdr3.h"
- 
-@@ -1206,8 +1207,8 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (stable && !fhp->fh_use_wgather)
- 		flags |= RWF_SYNC;
- 
--	nvecs = svc_fill_write_vector(rqstp, payload);
--	iov_iter_kvec(&iter, ITER_SOURCE, rqstp->rq_vec, nvecs, *cnt);
-+	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-+	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
- 	since = READ_ONCE(file->f_wb_err);
- 	if (verf)
- 		nfsd_copy_write_verifier(verf, nn);
+-/**
+- * svc_fill_write_vector - Construct data argument for VFS write call
+- * @rqstp: svc_rqst to operate on
+- * @payload: xdr_buf containing only the write data payload
+- *
+- * Fills in rqstp::rq_vec, and returns the number of elements.
+- */
+-unsigned int svc_fill_write_vector(struct svc_rqst *rqstp,
+-				   const struct xdr_buf *payload)
+-{
+-	const struct kvec *first = payload->head;
+-	struct page **pages = payload->pages;
+-	struct kvec *vec = rqstp->rq_vec;
+-	size_t total = payload->len;
+-	unsigned int i;
+-
+-	/* Some types of transport can present the write payload
+-	 * entirely in rq_arg.pages. In this case, @first is empty.
+-	 */
+-	i = 0;
+-	if (first->iov_len) {
+-		vec[i].iov_base = first->iov_base;
+-		vec[i].iov_len = min_t(size_t, total, first->iov_len);
+-		total -= vec[i].iov_len;
+-		++i;
+-	}
+-
+-	while (total) {
+-		vec[i].iov_base = page_address(*pages);
+-		vec[i].iov_len = min_t(size_t, total, PAGE_SIZE);
+-		total -= vec[i].iov_len;
+-		++i;
+-		++pages;
+-	}
+-
+-	WARN_ON_ONCE(i > ARRAY_SIZE(rqstp->rq_vec));
+-	return i;
+-}
+-EXPORT_SYMBOL_GPL(svc_fill_write_vector);
+-
+ /**
+  * svc_fill_symlink_pathname - Construct pathname argument for VFS symlink call
+  * @rqstp: svc_rqst to operate on
 -- 
 2.49.0
 
