@@ -1,286 +1,257 @@
-Return-Path: <linux-nfs+bounces-11620-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11621-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F09BAB14FE
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 15:27:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0A22AB19DA
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 18:09:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D6BC6169738
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 13:24:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C684B1C47C5E
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 16:04:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBAC129187E;
-	Fri,  9 May 2025 13:21:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCD9023644F;
+	Fri,  9 May 2025 16:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=puzzle-itc.de header.i=@puzzle-itc.de header.b="gL0xmALV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZEfkUodb";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BmpoTv66"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5536BB5B
-	for <linux-nfs@vger.kernel.org>; Fri,  9 May 2025 13:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746796900; cv=none; b=A4fpqh+zrR/r5usK8+kTEO5PWE8iitSMcO1C350WrshGvi0Uv7is3iw7GWlDZRS0a6BPynlKulPzED2k1LzP49uv9aWZo9fqVgDjn93//3kIDyi1KWd+oO0RVBiD0D3G+qVBDHZJ9xJqP2KWUY9Q2D8grpKbk9FyhGmhQVCro1s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746796900; c=relaxed/simple;
-	bh=fblsidyECMV6+V2+VSu7at+vrk2DPpN7wJbC2gboAmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e5zhc7LzyCQW4jqnxknQ7fa0ocOnNtDDOsE/67bz88PChCSORaA/V01/XuEYrDM+JqNoa77eHkYz08+JMunHWaNOLV5yhhT373M4oPMDqn29g74wD/Y356mu9gNke1tNGIYwmXEg0WmthufPZoL3alqSAUkRax3jWKixpNm/pUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=puzzle-itc.de; spf=pass smtp.mailfrom=puzzle-itc.de; dkim=pass (1024-bit key) header.d=puzzle-itc.de header.i=@puzzle-itc.de header.b=gL0xmALV; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=puzzle-itc.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=puzzle-itc.de
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d0618746bso16342255e9.2
-        for <linux-nfs@vger.kernel.org>; Fri, 09 May 2025 06:21:36 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D42233704
+	for <linux-nfs@vger.kernel.org>; Fri,  9 May 2025 16:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746806508; cv=fail; b=pp3a7OO6QKvYOhy6ryRpijD0f8fph6lW8/A4orsZk29K+L8SRH1DFDN6mNUK6WpMokz5HhR8wyNnjfKRbD8ASz98nkPptbB+YYujP2pGbz1U8W9Lc4liXbm9aAAJ6eT/DN+bAHdKgQg5ljEtz+RZ5bN8D5vbCVT+w+VtD68C6SA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746806508; c=relaxed/simple;
+	bh=SKJFxkF+Dj4vUhZE/ud+Ls/lhWQK5eM3C4cAoJZciV8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ravGMH2LokB44jQWP58Jjyk5n+dA1BM7yFIvRGjcTrw63Xmu9M61yAfZlh6IFrnTdHgQN0LGZkCaFbWKS5Ah57tCXNyEZptaT5QDhvseGQvSu2034vxZ7XHC5BizwcZL9P46Z423O6EPV4lSx214QqvM6EYQdlQ8h0vUbE51cxc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZEfkUodb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BmpoTv66; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 549FCZ6g001260;
+	Fri, 9 May 2025 16:01:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=IR9LFgrlmpWJxH0xASgUAJuWuT+Pid4CPUlIwiwHG9s=; b=
+	ZEfkUodbpoJL8bwtAHEsR3pHT1bLYDmMYGF98p8Kdj1MCu/DBr4J/IjiFqQN4u3Z
+	RQF6d3mJHhdJ6LlgmWgxRjyjKvvtyerEBFVxN6CmG+rgQPtROQ+8FAjTo0lBtCs0
+	z45TQkjOHpCXAwvNCbbJF8U486c8Us3rFBlLcLY/uDIy17pMj3IZjRNGmocDjKhQ
+	fChKm6+Ppzt4Utf+WURkIWnUc09YAv9CqHSQBc4WGmSOL3dJiRR+Jj9mfWtQzKq5
+	LDnBtUAx157dvxfTnGqmTU7lh89NVMk+EqynbSPJDcmQJaur0umCiImClfr3ah2S
+	d+/DZtjPAt9O+qtst3ONkw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46hm4yr3v1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 09 May 2025 16:01:42 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 549G1EMe032283;
+	Fri, 9 May 2025 16:01:41 GMT
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazlp17010004.outbound.protection.outlook.com [40.93.11.4])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kkd07f-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 09 May 2025 16:01:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rr88KZ7dOEvuYYe8TBSq88I9lctUsqAgZu3kSaKBQp1sYqO7/CKJ4l6L+VDRNqcf+bK2ljAboCNeSbvvsaDrZ72GnBUA7gNZyejXXc6ckIPXrEUxLqgrbTgbEphVGauiSeJ539LedFEiadblnMEcExeGSQHVYB00qdME9Guhiv4lQEYU2xgcJJ5qKOWrfflZOkyrkZ3n8SM4+kfRKpqbkGqiMEQNn5o1F3N7dy+s9rArWJaJWZQK17xEjkRlMECF/yOHAt65bqhepG5XiE3+Y0durub0j5hi7OAhxUpNpu1VJ8nEXnffPhDwf+5Ma7Jj7xHl9Gn9/Hq3UuvG0jUyhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IR9LFgrlmpWJxH0xASgUAJuWuT+Pid4CPUlIwiwHG9s=;
+ b=fxGF5r5jb3+3k/Sh7F87g8DLhz15hY3d4+mCTkHAt5/ed9dzaSr8U3cOMKCeRmNZm6gHU6O1YqVwrp8QycAz10v5hdVHJ3AsQ1yJZP51Wss2WaiCjr+4TQhi9GfLvocZaOwmINqxSU8TOpenxahjHja+jjK5eITLYBk7MIlKCPeEb9XWffFmlwv9gQiaLqRIMzQUWBKQd3htfjN3aCvT16vQz28T5+IT/DLTuSCx1ZAhUdC3XkvvHsKSp/kMeZg+ZN6xJ6iM6JguSLo+i4r0A8fAqOvzemqDmtCX4cBHwG5Yury2PZkAsJ3cgb7qaYpiiA37ZzpatFRDgrih/Wd5kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=puzzle-itc.de; s=google; t=1746796895; x=1747401695; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:organization
-         :autocrypt:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OqFVOiGRgM/0WeeF9gNzAZsDW1TBl0MpXz3RrJRn2gA=;
-        b=gL0xmALVqZKdWhYjn5SsOnpc3wlQkYEob0rvI2wFnAXjP/+7Za3Y/d2YikgQPBZuhx
-         Qhwro8ICManALWNcEBRf9PrxEAZV3mft+21TXJzXTO7waopUGnMXAmoey9/GgCku2olc
-         RG19VLk32vDqa9ozBHBgP/WaP5QVm/6yf6aNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746796895; x=1747401695;
-        h=content-transfer-encoding:content-language:in-reply-to:organization
-         :autocrypt:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OqFVOiGRgM/0WeeF9gNzAZsDW1TBl0MpXz3RrJRn2gA=;
-        b=d/gBI2LUnB3vj5wxZQosfbFZBiRQC24NHpmStOWzJaVmo7qrw8AWDZBO/VRxeVrnNk
-         Ho4CU+CkRZIRM7ab3kJj6s1aXDDvPBkn6Ptrc0JvQDJyNCp+MlajA3kgxXZjlfuk4ifv
-         OGK8wJ80WGiTbUq7zMqxH3q/4u3BeN1PGS5l+mN9ml2qkI38wynbfCSwX5oW3IrmA4/j
-         WyGCcR2cym/MBABRrNCj7PhDhdxRZclGsfYbaYiQXdxgJaiY8W4lcHehli20BEdmndNA
-         8or/LrKBEgMCQK1WvnwKEepcQBKTNFfHA/QpPieOxKeAPHYUi8aPX77KytgPg9dBXVmX
-         JIsg==
-X-Gm-Message-State: AOJu0YyVDIqvFZ+DSPpFN8HGUDs/bzD6p7d7gTpjYYZTM7rtIoHdxM5d
-	GgxhiAsuTaTL6+xoYrKScAaZs6gkJu5dHE18p8xLMEaeLdDm4YDaSTGZaKqdGFY5BtwrAyT8Fqk
-	C3H4m5gP3tss/M5KtSo1h/wPvcSqRDUVHZHfEw1C71mANodx1oj1rJ1n7saMwFfgY
-X-Gm-Gg: ASbGncui2pk2WFTi8ASEm/Vk0WSW3WvWFB3kw4KD0UpE/K6kcz2Jds5Ep5X/4h8/8Zy
-	HDCMjX2aP/N+3fXhSNvla+vfHp5XPbRCCZD0vAT+9uFsrNjomN5c3StkjHg00o3sDr2z4xhLD5X
-	3sdRXup9C4s4yQZApTnXQAR9823Ok2UXMO04gBy9XjzQf7gStVU/P1hIrl2AM6NpzNlAD2vtDiQ
-	M89eQ3L4sRaucW2GLIad5obVHDaEeuV3fZZbVcvs+BuPlem8A86Z3yr9TTN3wnxahGTtGAXnqNG
-	0ISL1U7x8+Jrcj0Jz9jDMMXGJeld72+/nogF2EKCPSqFAYNdgTuYnuyUi/Au63J26UwdoMN7DVP
-	HVUApaw==
-X-Google-Smtp-Source: AGHT+IEmNOXjmy0GeDtJdcAC6D6Nzsi/37zciD4vAaMPLvEbSfuDwm/tNhI5ZC7NPJ6y8ox30zCe2w==
-X-Received: by 2002:a05:600c:4e45:b0:43d:46de:b0eb with SMTP id 5b1f17b1804b1-442d6d44814mr29346075e9.12.1746796895241;
-        Fri, 09 May 2025 06:21:35 -0700 (PDT)
-Received: from [10.44.72.28] (p5b285530.dip0.t-ipconnect.de. [91.40.85.48])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442cd3aeb79sm71890135e9.27.2025.05.09.06.21.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 May 2025 06:21:34 -0700 (PDT)
-Message-ID: <8225a6a4-3b68-44db-ab99-17cf1a4f5175@puzzle-itc.de>
-Date: Fri, 9 May 2025 15:21:34 +0200
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IR9LFgrlmpWJxH0xASgUAJuWuT+Pid4CPUlIwiwHG9s=;
+ b=BmpoTv66/WUdNyNT/j/qo+fKsPz5t3hwvxfRx4a0bygpAJFps/rhuv2RHG/uDfs/TfeQdcKNs/J1T4YS8nNNDYBe0PCcHdLFTWp1pLG/05BrUHYzZ9GgJLHQ9FNn9tgNs0E2/T1DYx1UWQ+J0Fa8m+Y+jd3IID1N9HmyHFoPjo0=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DS7PR10MB5213.namprd10.prod.outlook.com (2603:10b6:5:3aa::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.21; Fri, 9 May
+ 2025 16:01:21 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8699.022; Fri, 9 May 2025
+ 16:01:21 +0000
+Message-ID: <f540ef6a-705a-4987-87b5-fd6753174289@oracle.com>
+Date: Fri, 9 May 2025 12:01:19 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6 v2] nfs_localio: fixes for races and errors from older
+ compilers
+To: NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+        Anna Schumaker <anna@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        paulmck@kernel.org
+References: <20250509004852.3272120-1-neil@brown.name>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20250509004852.3272120-1-neil@brown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR04CA0074.namprd04.prod.outlook.com
+ (2603:10b6:610:74::19) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Trouble with multiple kerberos ticket caches
-To: Orion Poplawski <orion@nwra.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <c4ecc067-9a51-40c8-9300-29119ff2e1d0@nwra.com>
- <e482c8e4-2939-4ef6-a004-e23fcf5e666d@nwra.com>
- <c123b772-ab05-4333-a868-c409c03fcfa2@puzzle-itc.de>
- <62ed2e30-30ba-4b45-b602-14da6f29e9dc@nwra.com>
-From: Daniel Kobras <kobras@puzzle-itc.de>
-Autocrypt: addr=kobras@puzzle-itc.de; keydata=
- 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
- p63U1j1sBdH4lyrWIu/HHjYDEL8+XTvqMCBEHuI=
-Organization: Puzzle ITC Deutschland GmbH
-In-Reply-To: <62ed2e30-30ba-4b45-b602-14da6f29e9dc@nwra.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB5213:EE_
+X-MS-Office365-Filtering-Correlation-Id: d49f1705-ff9b-4902-4deb-08dd8f12bdce
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?WXB4Q2xidGJKQUhWclZLbUZ0ZlU4aU9xdVAyMlAzOTY0TFFKOFNvR2E2eDlD?=
+ =?utf-8?B?ZFBRY3g2SCtxQ0EwRCtxMWdTY0dRNS8rV0F3UEFTNHB2N3dscTJoSFA4Skht?=
+ =?utf-8?B?NC9oVEN0bWNzalFWV000cnpEeUJOTnhGcEtiYjR0UTFDVDhnOC9NZ1RmNSt4?=
+ =?utf-8?B?R1JaWVpzREJOMGtGY0prZyt2TkJMWFdNWjhVWVlldVpxTGdJY2s1S0RGYXpi?=
+ =?utf-8?B?SGlKTmo4Q2JsbVcxV0dIcnBiZlJOSDVDWXdNZjlHVjIvb1UxREZ2YmE2cEQx?=
+ =?utf-8?B?cnVOTE5haU9qdElFYTdUZCt0cjQ1d21EaTBocGlWbXBsUTFTc3ZtS2tWT1Ro?=
+ =?utf-8?B?blB1eEpudjF1dEdud0ViWU4rWlQrM3A1N0Izcm5CV0UxVGJpbVlPMS9hdjE2?=
+ =?utf-8?B?Z1NwWnBOblFqaTVFQmZDWFNXbkhnR3dSbTU4OUpjT0FHMnJYUnJxTDdZbUJI?=
+ =?utf-8?B?QnRaekVXOFA3V0hrb0R5a252RmEyV0VJMmg3RnRHbHVVVUpicDRqK1BCV1Ez?=
+ =?utf-8?B?VGFPU0JQQjBVc0V2VXY4K3lxNEgveFNySmRrelpJSHJsaDVWNnBaaEpCRldt?=
+ =?utf-8?B?LzEzNnlzREg4cFhzVXp1dHBYQU80VG90bzFDalRiWjBXS1F6STNVYitFVGhs?=
+ =?utf-8?B?N1FrcTRTdjdjV2V5TFZwQjdrWnc2ZG9WTVBVdzRGaWhsZlNiVklaU0Z2aW1m?=
+ =?utf-8?B?dEVNTExGWUdiUXZYaGdqTG1ETmg2OVA3QXczREpWWE1LNUtPMFZwL1lqekph?=
+ =?utf-8?B?R1hrWWFJaG0vR1FaaU5NMHlVb0REOERkV1NmU0JvYWcrNFM5WUM2aWRhOFJm?=
+ =?utf-8?B?SDNpTlFTR3E1QS94THFBditsK3lXOXFSbHY1eUdSTU9ScE5uck0wZDdLb3Ay?=
+ =?utf-8?B?NnY1clN4S0dHT1VHYUQvMVlCckU2VTdvbWxWOE82ZUpHc0dtQ1E4UUdRZU9r?=
+ =?utf-8?B?TVNWckttdzNUNW1yeDJFU1VFSGtDUmIvQTdZQjhIZisxQmZET1Nkdy8xb0o2?=
+ =?utf-8?B?RDQzZm9lV1FOaUQ3ajQyR09JOFZ3c0ZiMnNmZDhaUEtvdXBNeWZFa1czRk5k?=
+ =?utf-8?B?STliN3lEdndiTEZSZXpYYkJPSWxGSE1aNEhLUTVmMnlJbzUxMG8rYjh4MTh6?=
+ =?utf-8?B?eERaRU42KzhVcXVMaDBDVzFsVnBGNkplN0NvT09KaC9uVXBQMk1KOVJveGJ4?=
+ =?utf-8?B?NTllTWI4VjJxbTRTNmI3eEJJTVgwQWpMaktpai9HZnNOQmdMeEJMZDNGcFFu?=
+ =?utf-8?B?MVJxbHBqZFdOTjVXTytuR0lZTzI4Z1FBUURxUmZrbll6amJVSks4U3BERGRG?=
+ =?utf-8?B?RmloMFdsSHFuR3VQakkxZ2JkTURSSTBzcEdCNnEwNTYvRGswYS85MFlwcWVE?=
+ =?utf-8?B?ZzBkSnNxSnJHdU1xRWViNUdNeW1UWW9MU2FQZFhPd0xaNFVhV0MrTHVVaHVI?=
+ =?utf-8?B?TE5WU1RQNEN6TlFFNmF3b29YeFFpeFVheVBYdzY1cDBaczl3RmJ4cUF0c3pB?=
+ =?utf-8?B?cmZJRDFnbUZ1Qk1qRHFTZlVmM3BicFJvdkdQMnZzaDkweUorUlRVT1FIeVB3?=
+ =?utf-8?B?bFlvWG1OTkxCbWZXRmpFWjB0U2pwZXVBTGd6RGlHb1ZMYzVJSUxXRGVYaGxF?=
+ =?utf-8?B?RjNtak1PMWFCd29jZ0FzZ2lraWoySlB0OGVsL1hwRy9yeEFIVTZxTmRDV0JX?=
+ =?utf-8?B?UEZYUGdmUjVBbjJsYWFqVkxhaE00VGdJTXhBNjFBdXRMNWV0UWZQQmZoYUxJ?=
+ =?utf-8?B?cFp4N0dxQkVaRHhwNHZkMXNlaHRKVWk3cHZEU3EwTjNYa1N6SngvbkFHZHNJ?=
+ =?utf-8?B?NUlqK2ptWmRRN25qSExKWGxiWnlFTGRwMUFEZnJxZmxKajJLS2FLaWFrdlU1?=
+ =?utf-8?B?WjRWOVJkSFRnRkR6ZGgvN29qRGNac2pDdzRUOFlvclFYWXhub3lQNlpxaFF6?=
+ =?utf-8?Q?0uQO1jOK8AE=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?MWx2eXI3eFBFQUh6UTB2bmlkcUVjMEI0VFdENlhnVzZPZk5yOHN2SFdYd3JU?=
+ =?utf-8?B?WG9Fc0Y2L3k2QjRDZGlsK2tpaVAxd0hkeVh2N3JDcERGM3VvNSt3ZXdSdlBm?=
+ =?utf-8?B?cGhwTVl5RzhZL3VRRmIyeTNRWWFkd2xtZ2o3ZWh3UHBBdmdQMUhqQzlaWU83?=
+ =?utf-8?B?SFhTUmpwWGNBM1c5VXlTRnFUdlJyUFZ6RlNJREdJOVVKcmZ3YTU5L0pyV1pM?=
+ =?utf-8?B?UCtKd3V4T2xNdjU3QkJzYk5TUUNINUpkVmVPb0hHdmoxN0FXVU92Vi8yY0k1?=
+ =?utf-8?B?Tmp4ZFk5TXBjcG5sc3pSczd1dzFBRTRuZ0I1RFQ1a1hhOGRaYWRCSTFENDZo?=
+ =?utf-8?B?WTkzKzgxSkFBUWRaTlVhZzQrUThLVjRJa2xRUG9VT1pob3QrSzhSNkRZQXlh?=
+ =?utf-8?B?TEZabEZUWGxHU042bFFiZ01CSm5GSnVzcTMzUzI5S3FjZXNidTY3YlVETisr?=
+ =?utf-8?B?em1UYkRia2RSSWJzOVdaS0N2SGx3YzBvS2NHcGk5Q2xlT0dGLzM5TGtBN2NR?=
+ =?utf-8?B?TlBYTnFrRTlyTUQwR0N2THp2Qmk5Wm51L1lCQkQ1OXdxNVlsS1dGUFVidExv?=
+ =?utf-8?B?WU41SFJBdklvajZMTXYwRmFhU2NUWm5nRHJKS3pmSUlaU2J2R0VLcDZETCtT?=
+ =?utf-8?B?RW4zMms5MGhjNFVES2ozOXJRTGdqb3FQR2o3SW4wdGdUZWZBU2xsbTNKWEhF?=
+ =?utf-8?B?TFYzV25BT283S3FiaEtPZWNtZHRNWXNzQXoraUtxZlN0MFBPaXRWSElOU215?=
+ =?utf-8?B?OEV5VUg5b3JHUURqdjdKKzJtOUJudmxzUVFWajV2eDJ2cDJuT051VzJtbXZt?=
+ =?utf-8?B?ZXFyTWdPQlh0OGtyMXZnZU93a3FaY3Vmd2VmckZYUnRWTlp2SDdXR3k2em1x?=
+ =?utf-8?B?R0hzUGQzclN0M2ticTJiVC8zc1BzTHlycFFjdnc4SUJqajlpYTdRemkxbEdh?=
+ =?utf-8?B?dTQ2U2dKZk9DV2dWd0xMV2hhMllYaFptaWhCWHBtaUE3M2ZjbGlXeHlhVkcw?=
+ =?utf-8?B?UkZlZ05RVVpvQ0sxMmtOUUFHVVE0cTdqQjVKR2FReWJmWSthYmRGMTZCMlor?=
+ =?utf-8?B?RU45a1pUUDVVK01rbDVDU0NpajNxR3dnSCtKTUNrcmVxek9qSmg3OTBxM2Jh?=
+ =?utf-8?B?Qjg4YTFTdHJ6emZycEJtLy9hVFl4amtIUjhuSERMU1JMMlY2RysvTFZEUDhP?=
+ =?utf-8?B?NTY0Nys5akxDRjExMWpjbENaTVE0KzUxWGRyOXFRT2VVTkhrWG12VnM0RU1m?=
+ =?utf-8?B?ZlVaQlJaek4xM1p0VXpMcHFrb080akg5akh4TjluOWVCZ3d2N2NJOEQwT0RJ?=
+ =?utf-8?B?YzRyWlpOWjZaNkNIK29yS1BrbmIyV0VwWHZxTjM3MDdrZlkrOC9VYlF3dDFo?=
+ =?utf-8?B?d2NzbnpDYmhYM2F2ajVKdjc3cCtqK05XNnFqekR0dlZnSFlRYUxDTnIzUjhE?=
+ =?utf-8?B?bFNIVytzYnZOVXhuUzBMa0xmSnNONFJ2ZWlSWHJsampTRDR1MXRKYWZnbFVJ?=
+ =?utf-8?B?MUxnRzM1dHRiK1YyT3VwUFFtZTV3MzdPRlVkVVk5Y2FsRnNBVHJJcVZRTEVo?=
+ =?utf-8?B?M1RBZEh5NW42TTZ6amRocGI5bjR6aEdVTS94NDNXVXd5Zk56Yi9DUW9UdGpT?=
+ =?utf-8?B?UTIzQVptcDRvQklSaXYydDNwTEdrUHlOaGNUYmV5ZUp5cmo5Q0RvKzBmMHRG?=
+ =?utf-8?B?YW52TTVNVlV2ZFFvbjVCdHFqWmFhV0t5eHZpa0pYUjNpT2U0N2pLcHp5TkMx?=
+ =?utf-8?B?b0RBWnArR0NBbWE5SUttU1JZMmZwRUpoeTE1SXBpL1R5akQ4K0JkWVpaUTZV?=
+ =?utf-8?B?bFNzQy9vMVk5cjRZZ3BaeWJWem5oSDdqdURxQVNOL3E4UjdjVlBqRUdxcnFK?=
+ =?utf-8?B?VXViMWR3enJnVE5vM0tVUnJCT3hqeStHNldBdXFtWE1qQWVBcm9ZbEdDa2ov?=
+ =?utf-8?B?dDV6d2lONVJxcGQ4blc5dDVLZE1kOG5BY3k5VDBCT2tVODRLVHVGZm9qVUlr?=
+ =?utf-8?B?MkJQWkIyVWdZcUM1YU9KTWVGMm9UZ0JiKzJHemVLRThsMDRwRnBQZGdkU3pM?=
+ =?utf-8?B?YVNnblFlY2ErWCtkVGIwNnkrK2p5c0l4bmY5dlJqaVljdHV4bGdwWmxyZy9P?=
+ =?utf-8?Q?IfEM99IcWb/cHtT4l+t24CDZc?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	mhUbf6CnvrOBFwT/tY3gHu4on23U4C4BjZJdT4wdfpMUuC6Qu8n3w1nLjByPduhvGbearBcHuHsla4zisjvmZZ2KveQDoDVO/FF8DoP6OB89wewepTsoknD5pwQ7iNWX0vDHbdcituiUmNIIp33UDYN7nfK8shDG+MpHve0QarxhzzuvEaNCvG45DRjuFWoOc0PqORbIe+JFet3H0PdpV89D/Ba5H0H8hM4FZpbQTTygogh09pD+mgjWvtkIJXSuqbyg/9IhHKEMo0n0ZwePXZ+X4mJ2aG4ks8MbqFZcm/od1tHnEJGDACuHtTjNkhzMeDWDuRf5wtcvz0xiG7d/5crulKBerCK982yUzS9i5OW2h7yFzpFIAWjN5f+8DZSyffBzsGadzN6x7G1L34b8oMGqoFbOjVyUIHxCDV7xOlBhh+J+vOHFrjlf7dpxRwH5pW2uUNT4OW0SmPocB2KrZRiVXLWEXId+X8phak5aMZRyITwCoDTJ8LVoGH0ekEbibd702jIkqH1d+UPUIVeChGyhQ/69ryw16A+9qjyxiru/4E10LbxXJ8Q8FU1r5VV9mza4w6iMDp4WDtgqm6fxQ3NnfNE5sGgJUkdCkMo3Sv0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d49f1705-ff9b-4902-4deb-08dd8f12bdce
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2025 16:01:21.4220
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: A5BdbGkZqK9rmY0XeQyzKdmFwcf3SASAX/UCnzH/aNCixnwKl6LzhOLvoHS7kNPeezRYCuLopOJ3lCwzm8mO3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5213
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-09_06,2025-05-09_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505090157
+X-Proofpoint-GUID: OUKTlJZ5nXBSNCWNN764PI_Fxr294dV9
+X-Authority-Analysis: v=2.4 cv=H8bbw/Yi c=1 sm=1 tr=0 ts=681e26e6 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=h3mv4K3hHkBpZKE0jPkA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13185
+X-Proofpoint-ORIG-GUID: OUKTlJZ5nXBSNCWNN764PI_Fxr294dV9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA5MDE1OCBTYWx0ZWRfX9z6LJiAJ8sJ5 TatQKs+vC673LKpJ8fXhf/bAHW44UWG4Qsf3QVaUyobfIrVfy87f3wcMNDFq5mhheLYsNt/GgU8 xAnUwibUZP7yJ9nQimTZbIOgGkVYngDdpmaKQcvH9dqxeamkPtFEbVF5diiB5OFDAxvgBWcGdBX
+ oP+ZGonLVclbPuTr4zwq9609WN7ggOPMKwp5VJFUhGg8pEt/11T/qwfQcM4YsGmUBuQPIaaAh42 K7s/wVKtK4HCSmV8jUH5bjTxTl3toOPcasjXF/nXIvkMuIbpd7hcF/losMHinBp1wA2ATF1dF4r BWIVli5zKQQzrcz8ew4o0/Xzrw1Wb+hlLd0ZBna94DmVX9+gkOz/eFyQn/2n+tV4Ev3oKKblEQh
+ D6sFxPII0+yKn5WE8UI+R9sCKdVXxoGtPLS0RujyAfBPpfINYhnWP1brGUIq51cRQ0rL6mtw
 
-Hi!
+[ adding Paul McK ]
 
-Am 07.05.25 um 19:39 schrieb Orion Poplawski:
-> On 5/7/25 10:57, Daniel Kobras wrote:
->> Am 06.05.25 um 21:54 schrieb Orion Poplawski:
->>> More details.=C2=A0 The issue seems to arise when doing gssapi delegati=
-on from a
->>> macOS client to the Linux box.=C2=A0 If I have ticket on macOS:
->>>
->>> Ticket cache: API:427671FC-DB63-442F-ACA4-13A9194F4398
->>> Default principal: user@AD.NWRA.COM
->>>
->>> Valid starting=C2=A0=C2=A0=C2=A0=C2=A0 Expires=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Service principal
->>> 05/06/25 13:29:54=C2=A0 05/06/25 23:29:54=C2=A0 krbtgt/AD.NWRA.COM@AD.N=
-WRA.COM
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 renew until 05/13/25 =
-13:29:50
->>> 05/06/25 13:30:30=C2=A0 05/06/25 23:29:54=C2=A0 krbtgt/NWRA.COM@AD.NWRA=
-.COM
->>> 05/06/25 13:30:30=C2=A0 05/06/25 23:29:54=C2=A0 host/host@NWRA.COM
->>>
->>> and ssh to the Linux box, I can't access the nfs mount:
->>>
->>> -bash: /home/user/.bash_profile: Permission denied
->>>
->>> Ticket cache: KEYRING:persistent:30657:krb_ccache_efgrZpc
->>> Default principal: user@AD.NWRA.COM
->>>
->>> Valid starting=C2=A0=C2=A0=C2=A0=C2=A0 Expires=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Service principal
->>> 05/06/25 13:30:30=C2=A0 05/06/25 23:29:54=C2=A0 krbtgt/AD.NWRA.COM@AD.N=
-WRA.COM
->>>
->>> I also notice that the ticket is non-renewable.
->>>
->>> If I then kinit I can access the home directory fine.=C2=A0 Other than =
-the new
->>> ticket being renewable I don't see any difference:
->>>
->>> Ticket cache: KEYRING:persistent:30657:krb_ccache_efgrZpc
->>> Default principal: user@AD.NWRA.COM
->>>
->>> Valid starting=C2=A0=C2=A0=C2=A0=C2=A0 Expires=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Service principal
->>> 05/06/25 13:31:27=C2=A0 05/06/25 23:31:27=C2=A0 nfs/server@NWRA.COM
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 renew until 05/13/25 =
-13:31:22
->>> 05/06/25 13:31:27=C2=A0 05/06/25 23:31:27=C2=A0 krbtgt/NWRA.COM@AD.NWRA=
-.COM
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 renew until 05/13/25 =
-13:31:22
->>> 05/06/25 13:31:27=C2=A0 05/06/25 23:31:27=C2=A0 krbtgt/AD.NWRA.COM@AD.N=
-WRA.COM
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 renew until 05/13/25 =
-13:31:22
->>>
->>> Actually, I also notice now that there is a krbtgt/NWRA.COM principal a=
-s well.
->>>  =C2=A0 I wonder if that is the difference.
->>
->> Can you please check and compare the output of 'klist -ef' (which includ=
-es
->> additional info on enctypes and flags) in both cases? It sounds like the=
- macOS
->> client is forwarding a ticket that is not accepted by the Linux client's=
- krb5
->> library. This could happen if eg. the default_tgs_enctypes configured in
->> krb5.conf on the macOS side is incompatible with the permitted_enctypes =
-in
->> krb5.conf on the Linux side.
->=20
-> That does indeed seem to be the issue - but it seems strange.
->=20
-> On the mac:
->=20
-> Valid starting       Expires              Service principal
-> 05/07/2025 10:50:16  05/07/2025 20:50:16  krbtgt/AD.NWRA.COM@AD.NWRA.COM
->         Flags: FPIA, Etype (skey, tkt): aes256-cts-hmac-sha1-96,
-> aes256-cts-hmac-sha1-96
->=20
-> On the Linux box:
->=20
-> Valid starting       Expires              Service principal
-> 05/07/2025 11:17:25  05/07/2025 20:50:16  krbtgt/AD.NWRA.COM@AD.NWRA.COM
->          Flags: FfPA, Etype (skey, tkt): DEPRECATED:arcfour-hmac,
-> aes256-cts-hmac-sha1-96
+On 5/8/25 8:46 PM, NeilBrown wrote:
+> This is a revised version a the earlier series.  I've actually tested
+> this time and fixed a few issues including the one that Mike found.
 
-Can you please re-check the 'klist -ef' output on the mac once you've=20
-ssh'ed to the Linux box, ie. once also the host ticket is present in the=20
-ccache? The TGT that ends up on the Linux system gets requested by the=20
-mac, which doesn't know about the krb5 configuration on the Linux side,
-and therefore needs to guess the supported enctypes. MIT's libkrb5=20
-derives the enctype to request for the forwarded TGT from the ticket for=20
-the target service, ie. the host service in the case of ssh. On macOS,=20
-you're likely using a Heimdal-based libkrb5, but I assume it uses a=20
-similar heuristic.
+As Mike mentioned in a previous thread, at this point, any fix for this
+issue will need to be applied to recent stable kernels as well. This
+series looks a bit too complicated for that.
 
-If the ccache shows that related host ticket also uses RC4 enctypes,=20
-this could be either due to the default set of ticket enctypes=20
-configured on the mac, or because the AD computer account for your
-Linux system does not allow any stronger enctypes (see=20
-msDS-supportedEncryptionTypes attribute).
+I expect that other subsystems will encounter this issue eventually,
+so it would be beneficial to address the root cause. For that purpose, I
+think I like Vincent's proposal the best:
 
-Either case would explain the weak session key in the forwarded TGT. But=20
-then I wonder why the ssh login works at all, given that your Linux=20
-system ought to reject the RC4 host ticket due to its restricted set of
-permitted_enctypes. So something still doesn't add up.
+https://lore.kernel.org/linux-nfs/8c67a295-8caa-4e53-a764-f691657bbe62@wanadoo.fr/raw
 
-> The linux box has crypto-policies:
->=20
-> [libdefaults]
-> permitted_enctypes =3D aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha256-=
-128
-> aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 camellia256-cts-cmac
-> camellia128-cts-cmac
->=20
-> Shouldn't that prevent it from ending up with arcfour-hmac in the first p=
-lace?
->=20
-> I tried adding this to the mac without any change:
->=20
-> [libdefaults]
-> permitted_enctypes =3D aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha256-=
-128
-> aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 camellia256-cts-cmac
-> camellia128-cts-cmac
-> default_tgs_enctypes =3D aes256-cts-hmac-sha384-192 aes128-cts-hmac-sha25=
-6-128
-> aes256-cts-hmac-sha1-96 aes128-cts-hmac-sha1-96 camellia256-cts-cmac
-> camellia128-cts-cmac
+None of this is to say that Neil's patches shouldn't be applied. But
+perhaps these are not a broad solution to the RCU compilation issue.
 
-Those are options for MIT's libkrb5. Unless you're using a non-default=20
-stack on the mac, you probably want to use Heimdal's default_etypes, or=20
-the more specific default_as_etypes/default_tgs_etypes instead.
 
-Kind regards,
+> Original description:
+>   Following the reports of older compilers complaining about the rcu
+>   annotations in nfs-localio I reviewed the relevant code and found some
+>   races and opportunities for simplification.
+> 
+> Thanks,
+> NeilBrown
+> 
+>  [PATCH 1/6] nfs_localio: use cmpxchg() to install new
+>  [PATCH 2/6] nfs_localio: always hold nfsd net ref with nfsd_file ref
+>  [PATCH 3/6] nfs_localio: simplify interface to nfsd for getting
+>  [PATCH 4/6] nfs_localio: duplicate nfs_close_local_fh()
+>  [PATCH 5/6] nfs_localio: protect race between nfs_uuid_put() and
+>  [PATCH 6/6] nfs_localio: change nfsd_file_put_local() to take a
 
-Daniel
---=20
-Daniel Kobras
-Principal Architect
-Puzzle ITC Deutschland
-+49 7071 14316 0
-www.puzzle-itc.de
 
---=20
-Puzzle ITC Deutschland GmbH
-Sitz der Gesellschaft: Eisenbahnstra=C3=9Fe 1, 72072=20
-T=C3=BCbingen
-
-Eingetragen am Amtsgericht Stuttgart HRB 765802
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Lukas Kallies, Daniel Kobras, Mark Pr=C3=B6hl
-
+-- 
+Chuck Lever
 
