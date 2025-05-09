@@ -1,103 +1,96 @@
-Return-Path: <linux-nfs+bounces-11644-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11645-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C8E3AB1E71
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 22:39:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BE9EAB1EA6
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 23:02:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9861B507CF1
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 20:39:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE84B1C04804
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACA69241663;
-	Fri,  9 May 2025 20:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02AD720F07E;
+	Fri,  9 May 2025 21:02:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpGfwbOf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6tLd+6d"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A3A1E25F8
-	for <linux-nfs@vger.kernel.org>; Fri,  9 May 2025 20:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16B65464E
+	for <linux-nfs@vger.kernel.org>; Fri,  9 May 2025 21:02:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746823191; cv=none; b=KqGve9NEJaDLFZQUx0LZf56CLuoJ6dJ8j/UlMitwALgifqowtO3ze+zcdtZC9Iv/OOuMUiYIqIyVRwlMpxu33vK9KyKrG/4Tm/xha5TtaXixIF/3oNQyTsbLQV51n81m1TS5O0kFFg8QxpzWqf0lhauGg1L8v7fBeiCWWrDpbhM=
+	t=1746824550; cv=none; b=hDKCS49BU1Teqc7MO8nmXfDRAfhW1GRLiyMwC40YSN1kl3X8S7WWZLPA7pVgXLOp1x1bHvX47wlW3CtD8evGUuXmi1mYL8I5VWx54z2l+0Alq5F0xOgXuo9PUSSt3rxkpYDSCElmy/sraLLMWbV3n6+ds4I8XOpSJY88Ue8mbAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746823191; c=relaxed/simple;
-	bh=Zz/dtWRyr6SiDWZ9AKL9RyRkfC0EHJaMtaFQf0eEbtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fm+VRCaJCVGho7bA1H0hDgOWv53/lhA2XCKgiK4LJ+1oUd3ul9Oj6qhneNJqVh9ueQXfwVhQq0plUugeJEaFXnEcLVKUsE6/1C/TM9Q8sZ4Tvq53SdN99gaDY+Xl+GrpS/8/nZDwavCW7Wv2+xauh3hKN7uEa6Z6RZrNSWAyAJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpGfwbOf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9684EC4CEE4;
-	Fri,  9 May 2025 20:39:50 +0000 (UTC)
+	s=arc-20240116; t=1746824550; c=relaxed/simple;
+	bh=isSQ404P7sF/BUPm7h/ogq+DBzEc7N5rFy9jn6IjGuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mA3bIR+9vRMOvzHpX2ND1yPeyl7z+K/IzVJ1hNlHpi5l60yc4sZk7uPD3QUbLuiq7ADGw2+Km6+R6VstvSdpIcfGChxxDJijU2qtSNErREBKFoNo4E5R9281/VO5rV3OBiOnvj1Y4DVUg7z80z4/4PlblAOefPLNxG7zATDUnpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6tLd+6d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA1CC4CEE4;
+	Fri,  9 May 2025 21:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746823190;
-	bh=Zz/dtWRyr6SiDWZ9AKL9RyRkfC0EHJaMtaFQf0eEbtk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qpGfwbOfK/1LYcQ2x8HK3J3eihKh8eiH7LMfm9uiu3G9Y10neglWDWfAfVpTmhmRN
-	 xbGgw4ufmUGo9eelHZLwuXVt1NHBvQrrxwuy7NHaugXnL5sU8AJa0PS3Umv1Qh6+6c
-	 7FSTIWaVT+OD0WcWXYZ9ReVdOCWhUXpfqdvoofK4jlv0hO+sxZ7OmTCZqofYrXB7+X
-	 sISM8lgE8V2qXy+cVE9u+l33jh/JxHzsGi0/QQd7qtszQbwUYscN4FNu7xrZPEttUi
-	 9AvglzMYXt+pwUJgL5mirBRDTZ5ecQuaHp69U2dQpSbHPLUACZo5ClAiEsZx53H+DW
-	 NNg2h1Ueb5QyQ==
+	s=k20201202; t=1746824550;
+	bh=isSQ404P7sF/BUPm7h/ogq+DBzEc7N5rFy9jn6IjGuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K6tLd+6d4kg+nkUlhZYz9zkNT/L03Uvo+tJk1oCH46c40WvWaPs7vIyzNOVmyb0ii
+	 IodFc4Karc/6atrYKq+5+oPC0/vNyk0XAHlmkkCCmEhjgOfgTQIlOjY15ToAiCddm0
+	 lhNaLVOI9mNAYfTZsvHdExTog3Zk7BYBKRTYhhQYPXwDd4IBDkoOuFO7+kTygMNuqC
+	 G3gYsfRpF+/Nd/fi3JCaWRoBSWgDdCyRZjdjHabVzETO2r0XqNsnGV8kL+xLIaj7qE
+	 nTZ/CTl5mzvkFYU6A+NEyN3hU2zhQEUtYnLcQnjgvIW+Gi+kjmH5S5t88lPkoTGgb4
+	 esH8iDLA/bKbw==
+Date: Fri, 9 May 2025 17:02:29 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Trond Myklebust <trondmy@hammerspace.com>,
-	anna@kernel.org
-Cc: Olga Kornievskaia <okorniev@redhat.com>,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH] pnfs/flexfiles: connect to NFSv3 DS using TLS if MDS connection uses TLS
-Date: Fri,  9 May 2025 16:39:49 -0400
-Message-ID: <20250509203949.21715-1-snitzer@kernel.org>
-X-Mailer: git-send-email 2.44.0
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+	paulmck@kernel.org
+Subject: Re: [PATCH 0/6 v2] nfs_localio: fixes for races and errors from
+ older compilers
+Message-ID: <aB5tZY9ucJigXGFp@kernel.org>
+References: <20250509004852.3272120-1-neil@brown.name>
+ <f540ef6a-705a-4987-87b5-fd6753174289@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f540ef6a-705a-4987-87b5-fd6753174289@oracle.com>
 
-Implementation follows bones of the pattern that was established in
-commit a35518cae4b325 ("NFSv4.1/pnfs: fix NFS with TLS in pnfs").
+On Fri, May 09, 2025 at 12:01:19PM -0400, Chuck Lever wrote:
+> [ adding Paul McK ]
+> 
+> On 5/8/25 8:46 PM, NeilBrown wrote:
+> > This is a revised version a the earlier series.  I've actually tested
+> > this time and fixed a few issues including the one that Mike found.
+> 
+> As Mike mentioned in a previous thread, at this point, any fix for this
+> issue will need to be applied to recent stable kernels as well. This
+> series looks a bit too complicated for that.
+> 
+> I expect that other subsystems will encounter this issue eventually,
+> so it would be beneficial to address the root cause. For that purpose, I
+> think I like Vincent's proposal the best:
+> 
+> https://lore.kernel.org/linux-nfs/8c67a295-8caa-4e53-a764-f691657bbe62@wanadoo.fr/raw
+> 
+> None of this is to say that Neil's patches shouldn't be applied. But
+> perhaps these are not a broad solution to the RCU compilation issue.
 
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- fs/nfs/pnfs_nfs.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+I agree with your suggested approach.  Hopefully Paul agrees and
+Vincent can polish a patch for near-term inclusion.
 
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index 91ef486f40b9..b4ccdf78d4dd 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -830,10 +830,16 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
- 				.servername = clp->cl_hostname,
- 				.connect_timeout = connect_timeout,
- 				.reconnect_timeout = connect_timeout,
-+				.xprtsec = clp->cl_xprtsec,
- 			};
- 
--			if (da->da_transport != clp->cl_proto)
-+			if (da->da_transport != clp->cl_proto &&
-+			    clp->cl_proto != XPRT_TRANSPORT_TCP_TLS)
- 				continue;
-+			if (da->da_transport == XPRT_TRANSPORT_TCP &&
-+			    mds_srv->nfs_client->cl_proto == XPRT_TRANSPORT_TCP_TLS)
-+				xprt_args.ident = XPRT_TRANSPORT_TCP_TLS;
-+
- 			if (da->da_addr.ss_family != clp->cl_addr.ss_family)
- 				continue;
- 			/* Add this address as an alias */
-@@ -841,6 +847,9 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
- 					rpc_clnt_test_and_add_xprt, NULL);
- 			continue;
- 		}
-+		if (da->da_transport == XPRT_TRANSPORT_TCP &&
-+		    mds_srv->nfs_client->cl_proto == XPRT_TRANSPORT_TCP_TLS)
-+			da->da_transport = XPRT_TRANSPORT_TCP_TLS;
- 		clp = get_v3_ds_connect(mds_srv,
- 				&da->da_addr,
- 				da->da_addrlen, da->da_transport,
--- 
-2.43.0
+It'll be at least a week before I can put adequate time to reviewing
+and testing Neil's patchset.
 
+Thanks,
+Mike
 
