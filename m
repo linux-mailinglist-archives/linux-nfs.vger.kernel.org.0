@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11624-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11625-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2C57AB1CFB
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:16 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 345BFAB1CFC
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 21:04:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11BC6167074
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:04:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52B473BBB63
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 May 2025 19:03:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD0624291E;
-	Fri,  9 May 2025 19:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1386B242D65;
+	Fri,  9 May 2025 19:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkvwSfcE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfoicq5F"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8992242909;
-	Fri,  9 May 2025 19:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC56242909;
+	Fri,  9 May 2025 19:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746817439; cv=none; b=aTbMmNL51ke90joZQMJEAZpXx4KYYJHPCQAYhjIfLx6UW+hQeTPR2c3y6JmvJDNxdTNQUtmIN6EPHT31YOprkBkX4xEB95ugyxfSTtUB9Af6OQgvBlHzhyDSOLt7jFSFV6YvVI/5wUa1RnY/02hOeg+UNVLNJQXdjNfPjFLrK7s=
+	t=1746817440; cv=none; b=W/RAr8J2GMxmV42bkuTUsP1yCz68Im7Ks61ne6HHZcQs15pUnwbdN1pRwg875Jp6Kx3KWfDSzfxJTw6gAyB5lV/KgCKhUtrW/6P1egYKOsQ1t45sMgc7cA4pjHlGI/HVglK+n8W5gSp5T6xWL2gAUPhMxx1jj0FxRE9MYaGG7nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746817439; c=relaxed/simple;
-	bh=ZELpgg+4FVsSnEdEHEp2bzubVRI6D/i04bcZdZG8eLI=;
+	s=arc-20240116; t=1746817440; c=relaxed/simple;
+	bh=A0J6/nKjeswD8OvWOE8YPOobnGary8OSPlvRIOhlXOA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rEQdc/+4QY/QBikVk4P7onE7cIEdXQmtlgUoG+B9z0ObmN9UJTgcVx16ShrVqfY7Qx9S/UTi0mCgPZTHyWb7CjHAl0434wotmsTT5C9OqaLQVjVhJ7dadsx61c1Ok5h13Jyd5efaK5bb4YH7dqK+oW1WNUikiWNF1jAVtgG+VxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkvwSfcE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4CF8C4CEF0;
-	Fri,  9 May 2025 19:03:57 +0000 (UTC)
+	 MIME-Version; b=LUER4htrF+b/Ur7wuQzcO9NR+qhM+MCyGgymEpZOJNif4hlfWSFNFkV7mrzHVf71DaWcguKemdwKi5fa48U2hvLwwzbwlSTzBR8Jm1W+u1tA0Dv83rrTCRyo1iYZxMmEtuqtU8M54M8LrvHrO9alehnMi2+4YQ+rh+KeUAu13JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfoicq5F; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954ECC4CEE4;
+	Fri,  9 May 2025 19:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746817438;
-	bh=ZELpgg+4FVsSnEdEHEp2bzubVRI6D/i04bcZdZG8eLI=;
+	s=k20201202; t=1746817439;
+	bh=A0J6/nKjeswD8OvWOE8YPOobnGary8OSPlvRIOhlXOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rkvwSfcEGbbvJgGEsG6qL8EQHacH6OOlUVD6y91OFHoaEjnWEKmhrTOJYg4L0Z07r
-	 1J5CYQ7RHgWre9vM7AdbcT8RyaxTUNGV7AGYrCyZMXMzuCkgv/47PRZYY8c6DmeTFc
-	 k+3BZuGGN5BRtM00lNxhQxNEbJJgqxipOkOx8DGzf65HAOntBWtRZMW72k4qXbXTIj
-	 Eyg72D2PluLFDiOVmtJBUH/Hu9v6SXQ7YShR9xmMyTQ9XYPv4xGD0KLDBUQb1J1UuJ
-	 S0f/NFe7nbh1C+z7SPPlMs744cO5Y2nRD0t3oFNH7uxNBR6MwpThv5b8//EAK+53tq
-	 NDTUHcRHGVTjQ==
+	b=qfoicq5Ftg8CbqXLyH9HBG9/HtgoJtYUAVnbyyKNz9fCCnNhKfHwJgVInxY0TBof3
+	 QXmHfHPdlltzHkgPAaJYOcvUhxKLULBMcyyaFj9bIBlgXh4w05SF+SbmRqYPdmlrh9
+	 LZRWRFS6WvP0r/TfTNoRmLiMjN9Y53DHu7wB9EaOZbrYlXZ1wN+GhQhyTkm77seRaI
+	 zalmhT493MaKIX1rUeNjWPameX/NYoZKcXtMWMqtBkkoJhfBUD5dMoRGnqHCWcLwgP
+	 /beeRQrfLR9BLvAEXnLDM4LsEwv3PCY9mZCQMsFjJmb4NlGXjhKqtjbt81nWcX7PrT
+	 n9aQuSqwxTAkw==
 From: cel@kernel.org
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,10 +49,11 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	<linux-rdma@vger.kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v5 02/19] sunrpc: Add a helper to derive maxpages from sv_max_mesg
-Date: Fri,  9 May 2025 15:03:36 -0400
-Message-ID: <20250509190354.5393-3-cel@kernel.org>
+	Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v5 03/19] sunrpc: Remove backchannel check in svc_init_buffer()
+Date: Fri,  9 May 2025 15:03:37 -0400
+Message-ID: <20250509190354.5393-4-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250509190354.5393-1-cel@kernel.org>
 References: <20250509190354.5393-1-cel@kernel.org>
@@ -66,47 +67,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-This page count is to be used to allocate various arrays of pages
-and bio_vecs, replacing the fixed RPCSVC_MAXPAGES value.
+The server's backchannel uses struct svc_rqst, but does not use the
+pages in svc_rqst::rq_pages. It's rq_arg::pages and rq_res::pages
+comes from the RPC client's page allocator. Currently,
+svc_init_buffer() skips allocating pages in rq_pages for that
+reason.
 
-The documenting comment is somewhat stale -- of course NFSv4
-COMPOUND procedures may have multiple payloads.
+Except that, svc_rqst::rq_pages is filled anyway when a backchannel
+svc_rqst is passed to svc_recv() -> and then to svc_alloc_arg().
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+This isn't really a problem at the moment, except that these pages
+are allocated but then never used, as far as I can tell.
+
+The problem is that later in this series, in addition to populating
+the entries of rq_pages[], svc_init_buffer() will also allocate the
+memory underlying the rq_pages[] array itself. If that allocation is
+skipped, then svc_alloc_args() chases a NULL pointer for ingress
+backchannel requests.
+
+This approach avoids introducing extra conditional logic in
+svc_alloc_args(), which is a hot path.
+
+Acked-by: Jeff Layton <jlayton@kernel.org>
 Reviewed-by: NeilBrown <neil@brown.name>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ net/sunrpc/svc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 74658cca0f38..749f8e53e8a6 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -159,6 +159,23 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
- #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
- 				+ 2 + 1)
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index e7f9c295d13c..8ce3e6b3df6a 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -640,10 +640,6 @@ svc_init_buffer(struct svc_rqst *rqstp, unsigned int size, int node)
+ {
+ 	unsigned long pages, ret;
  
-+/**
-+ * svc_serv_maxpages - maximum count of pages needed for one RPC message
-+ * @serv: RPC service context
-+ *
-+ * Returns a count of pages or vectors that can hold the maximum
-+ * size RPC message for @serv.
-+ *
-+ * Each request/reply pair can have at most one "payload", plus two
-+ * pages, one for the request, and one for the reply.
-+ * nfsd_splice_actor() might need an extra page when a READ payload
-+ * is not page-aligned.
-+ */
-+static inline unsigned long svc_serv_maxpages(const struct svc_serv *serv)
-+{
-+	return DIV_ROUND_UP(serv->sv_max_mesg, PAGE_SIZE) + 2 + 1;
-+}
-+
- /*
-  * The context of a single thread, including the request currently being
-  * processed.
+-	/* bc_xprt uses fore channel allocated buffers */
+-	if (svc_is_backchannel(rqstp))
+-		return true;
+-
+ 	pages = size / PAGE_SIZE + 1; /* extra page as we hold both request and reply.
+ 				       * We assume one is at most one page
+ 				       */
 -- 
 2.49.0
 
