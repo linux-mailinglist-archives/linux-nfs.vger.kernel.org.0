@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-11656-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11657-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 786B2AB2878
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 May 2025 15:28:41 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53648AB2879
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 May 2025 15:28:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF5133B9E0E
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 May 2025 13:28:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEF73171181
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 May 2025 13:28:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A3511A315D;
-	Sun, 11 May 2025 13:28:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C81B91A315D;
+	Sun, 11 May 2025 13:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pz2g5Ie+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIw89xO0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0C73A1B6
-	for <linux-nfs@vger.kernel.org>; Sun, 11 May 2025 13:28:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37073A1B6
+	for <linux-nfs@vger.kernel.org>; Sun, 11 May 2025 13:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746970118; cv=none; b=cOl+NLnwVCUl6hAgpV0IeFaDbKphTj1FID0mOUp8E8helHnWw/nNhD1Dz7e9vkNdBk71EmxeG4WJgFA23ionGIo7bRy7JEpJBp5vGYnANzzzNoVP+Af14Xqr60eMzmHyP6zMCfG3TmoXyb/Sac6WSrc9NWIGzvBazQFPfSafEQU=
+	t=1746970121; cv=none; b=QWyqT5bqvZz2SCvo1zyv7xstwxfM1tHFvOL56zz+Ez9lIZqqm9n2KT+/WH0kInxSHTjk3rTn+jnVdFJNUS2MwarnhshBZjNhLR2FbgWJaOJHH1JSKi+rbfdxqqgmuIHr9v62NyIpi7xRQQDZ0N38efklJsT6wtB+imLh0U5RToo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746970118; c=relaxed/simple;
-	bh=NU3WHBkvRj06C0joCDifO4hfCy01v9eZD+dlxgziJNc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=c2hY8asLNnWnrNu2fp12hm6Mq3225NP8RRnextLjSUOFnAiLmiDHhYDYZFfVqGHmnSHd9YJHGcJ2Dy0RsCDjyMApynnicyGQ674o5Cu37aaBla1CFE3ouPZNL7PypPh/HgVR5YgowINmVVHndDy+3UwjimNNY4IHqpezZNks6nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pz2g5Ie+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D467C4CEE4
-	for <linux-nfs@vger.kernel.org>; Sun, 11 May 2025 13:28:37 +0000 (UTC)
+	s=arc-20240116; t=1746970121; c=relaxed/simple;
+	bh=kMp3Jd6qHGv/yRnlfdM9KxQA47R81rJ1wb9H2o9YzG8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=DDHP3VI6uDhEZP/S/vraAqETsBWC0Am6OsWUAWiiXPKjwfH+g8s7VdZkJ3gIfBiKh72eU/Zp39TzMwf2AHEmp0wKa3ZGGywySGNSdZrSVclYApDSX2RfxmFjk+wIwL4YuwnTbQp3+UFKOahx2o+t7r6qDtlvlM6AzZSXeAfQ5Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIw89xO0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCBA3C4CEE4
+	for <linux-nfs@vger.kernel.org>; Sun, 11 May 2025 13:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746970117;
-	bh=NU3WHBkvRj06C0joCDifO4hfCy01v9eZD+dlxgziJNc=;
+	s=k20201202; t=1746970121;
+	bh=kMp3Jd6qHGv/yRnlfdM9KxQA47R81rJ1wb9H2o9YzG8=;
 	h=From:To:Subject:Date:From;
-	b=pz2g5Ie+4UuqMH+cWRwg3YTfnfysSJyIpsu1jicUYd6zdJm+3nwQRHj9Qra78rMp5
-	 zBf4TJ43Wh+pYT4FWZM0gYFiDcID+vtP+Gylt5UWFHplzznEfkvi5en/6RooJU0Txb
-	 V41Az0o0s+wtDYc4GRVWhcN/1bu2WnbVEoFO2t259GmVWz/QgYI66HQbAEE34AN8lJ
-	 EWlfNOSLUKaOzkC3TGJLKtbVX4t3l24+EtnWvve1zymNrDEPIUyikkerInTTVUbOhy
-	 Q9tLO584BlOR0pKVms4fPziuoLf5WwGypc3CYaUpI9sYay8uVgspg5y/XVCMFm78pj
-	 Pf6SRBKFWmXLA==
+	b=iIw89xO0oCOdapX93uRoU3w410sWKTzl3bujQREmfppRzd+h98gVxRlTPgTG1Snbn
+	 berc08YkeLJEDrjJk9oQ15frGP2vh/OGl5ti2HDKrviuX7vHROykpxapZ2aWrq9K2s
+	 Bqh4KjDTQpWTPnW12oUn5fSfxRcLR3vcLWi2SyDErWtJP43DNzUgC2bQG9yClukMlJ
+	 O6cV1c+TOwpRMW1r9eHfhL/AdIzp92E+gnP264UAe//o6wGftXNTMf9E11nHN8KWuI
+	 ANrBwES+f5Y8fQ75ljaMTUo0cGW4iTp3JE/Z+FQ6bresMWxaEWZKV1zirjRflknZq8
+	 M6VbNHKySznjw==
 From: trondmy@kernel.org
 To: linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSv4/pnfs: Reset the layout state after a layoutreturn
-Date: Sun, 11 May 2025 09:28:35 -0400
-Message-ID: <956259d72ee10ad81fd49daa8f2daf12644dc50f.1746970063.git.trond.myklebust@hammerspace.com>
+Subject: [PATCH] NFS/pnfs: Fix the error path in pnfs_layoutreturn_retry_later_locked()
+Date: Sun, 11 May 2025 09:28:39 -0400
+Message-ID: <7a4abcb32bb29ad463638bf1d2d0600a3d9e357c.1746970073.git.trond.myklebust@hammerspace.com>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -56,43 +56,82 @@ Content-Transfer-Encoding: 8bit
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If there are still layout segments in the layout plh_return_lsegs list
-after a layout return, we should be resetting the state to ensure they
-eventually get returned as well.
+If there isn't a valid layout, or the layout stateid has changed, the
+cleanup after a layout return should clear out the old data.
 
-Fixes: 68f744797edd ("pNFS: Do not free layout segments that are marked for return")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/pnfs.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ fs/nfs/pnfs.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
 
 diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 10fdd065a61c..fc7c5fb10198 100644
+index fc7c5fb10198..3adb7d0dbec7 100644
 --- a/fs/nfs/pnfs.c
 +++ b/fs/nfs/pnfs.c
-@@ -745,6 +745,14 @@ pnfs_mark_matching_lsegs_invalid(struct pnfs_layout_hdr *lo,
- 	return remaining;
+@@ -1254,21 +1254,15 @@ static void pnfs_clear_layoutcommit(struct inode *inode,
+ static void
+ pnfs_layoutreturn_retry_later_locked(struct pnfs_layout_hdr *lo,
+ 				     const nfs4_stateid *arg_stateid,
+-				     const struct pnfs_layout_range *range)
++				     const struct pnfs_layout_range *range,
++				     struct list_head *freeme)
+ {
+-	const struct pnfs_layout_segment *lseg;
+-	u32 seq = be32_to_cpu(arg_stateid->seqid);
+-
+ 	if (pnfs_layout_is_valid(lo) &&
+-	    nfs4_stateid_match_other(&lo->plh_stateid, arg_stateid)) {
+-		list_for_each_entry(lseg, &lo->plh_return_segs, pls_list) {
+-			if (pnfs_seqid_is_newer(lseg->pls_seq, seq) ||
+-			    !pnfs_should_free_range(&lseg->pls_range, range))
+-				continue;
+-			pnfs_set_plh_return_info(lo, range->iomode, seq);
+-			break;
+-		}
+-	}
++	    nfs4_stateid_match_other(&lo->plh_stateid, arg_stateid))
++		pnfs_reset_return_info(lo);
++	else
++		pnfs_mark_layout_stateid_invalid(lo, freeme);
++	pnfs_clear_layoutreturn_waitbit(lo);
  }
  
-+static void pnfs_reset_return_info(struct pnfs_layout_hdr *lo)
-+{
-+	struct pnfs_layout_segment *lseg;
-+
-+	list_for_each_entry(lseg, &lo->plh_return_segs, pls_list)
-+		pnfs_set_plh_return_info(lo, lseg->pls_range.iomode, 0);
-+}
-+
- static void
- pnfs_free_returned_lsegs(struct pnfs_layout_hdr *lo,
- 		struct list_head *free_me,
-@@ -1292,6 +1300,7 @@ void pnfs_layoutreturn_free_lsegs(struct pnfs_layout_hdr *lo,
- 		pnfs_mark_matching_lsegs_invalid(lo, &freeme, range, seq);
- 		pnfs_free_returned_lsegs(lo, &freeme, range, seq);
- 		pnfs_set_layout_stateid(lo, stateid, NULL, true);
-+		pnfs_reset_return_info(lo);
- 	} else
- 		pnfs_mark_layout_stateid_invalid(lo, &freeme);
- out_unlock:
+ void pnfs_layoutreturn_retry_later(struct pnfs_layout_hdr *lo,
+@@ -1276,11 +1270,12 @@ void pnfs_layoutreturn_retry_later(struct pnfs_layout_hdr *lo,
+ 				   const struct pnfs_layout_range *range)
+ {
+ 	struct inode *inode = lo->plh_inode;
++	LIST_HEAD(freeme);
+ 
+ 	spin_lock(&inode->i_lock);
+-	pnfs_layoutreturn_retry_later_locked(lo, arg_stateid, range);
+-	pnfs_clear_layoutreturn_waitbit(lo);
++	pnfs_layoutreturn_retry_later_locked(lo, arg_stateid, range, &freeme);
+ 	spin_unlock(&inode->i_lock);
++	pnfs_free_lseg_list(&freeme);
+ }
+ 
+ void pnfs_layoutreturn_free_lsegs(struct pnfs_layout_hdr *lo,
+@@ -1716,6 +1711,7 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
+ 	struct inode *inode = args->inode;
+ 	const nfs4_stateid *res_stateid = NULL;
+ 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
++	LIST_HEAD(freeme);
+ 
+ 	switch (ret) {
+ 	case -NFS4ERR_BADSESSION:
+@@ -1724,9 +1720,9 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
+ 	case -NFS4ERR_NOMATCHING_LAYOUT:
+ 		spin_lock(&inode->i_lock);
+ 		pnfs_layoutreturn_retry_later_locked(lo, &args->stateid,
+-						     &args->range);
+-		pnfs_clear_layoutreturn_waitbit(lo);
++						     &args->range, &freeme);
+ 		spin_unlock(&inode->i_lock);
++		pnfs_free_lseg_list(&freeme);
+ 		break;
+ 	case 0:
+ 		if (res->lrs_present)
 -- 
 2.49.0
 
