@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-11681-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11682-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8873DAB5490
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:17:45 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 666AFAB5484
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:17:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E69B3A5D2B
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 12:16:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E6FF162537
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 12:16:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA95120DD51;
-	Tue, 13 May 2025 12:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F012728D8E5;
+	Tue, 13 May 2025 12:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzhbfrqV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRg0gYcO"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50AA1DF72E
-	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 12:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0BA20DD51
+	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 12:16:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138560; cv=none; b=GOXYmUIpnDO/ql+9Cc12w42FfFPl2JYNK8+HyO46TLPoBgn8tLFB9frsXKW41PD5eSjExJF+JgXTdPQ/ozHwCa3zI3mbJF7S2DO5kTP0BZ1EJHSIMmim8kQOI2xZJlWRb3FhhS8C8IcT7kdueovih+oC0NaaZyjF3KlGSFBYDuM=
+	t=1747138592; cv=none; b=oAGV6gaCSCKfkthHhiud2gTAu07Aeq9NXV1PDdZEy5wZOPjvvvnEV/g8QWw2mYzhyBfA2e8OoA8OQ6TD9rsTaz3LgrTqD6BDuyDAdDyCfY7hpxb0WXRfjzzVcEWkabNYLyUXNED18NCzaKOoO/iQ6AIDwMuVq5LHXDRZSUXtCBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138560; c=relaxed/simple;
-	bh=CpjJUauHx26bKCdjpc32cJeJHVR8Jrw7nn48NX0qYo8=;
+	s=arc-20240116; t=1747138592; c=relaxed/simple;
+	bh=EOoWX9zH9PKgDz+5P83FzdfJ7wJQFNCFYR+62ITGWDU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t/Rg4acOZjcMesMqBW82Kj0KRdS3K9ZFwSt7e9kwakaDz5bS6LDq7dRBUOShETfpcuNdqjfsFGa3RwxIMRiz91hUPdVT0LYzXa6K7kGNf+SSo9hGR72v5iWALv3mWbu0uMVmRZgTZRWKOabzidG6rSdGKWdAxQy8VXhX6uOku6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzhbfrqV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934A3C4CEE4;
-	Tue, 13 May 2025 12:15:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ePe2+ayA3DBkF7fLGiN2SpBrhMBpp3CTmJi2E42r310AdBS0O02QcOQ/ZcJ0rS0lkmSo3P7lqBf0L6FzPE2LF7zj5Ac+f0adyRZ1qV7goBokEaIwTwOH7KHUBhg7yj4e2MnEr4Fqg1FOg9CATnky2+4LWmzcomi6NdtwCDEZZcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRg0gYcO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42A2C4CEE4;
+	Tue, 13 May 2025 12:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747138560;
-	bh=CpjJUauHx26bKCdjpc32cJeJHVR8Jrw7nn48NX0qYo8=;
+	s=k20201202; t=1747138592;
+	bh=EOoWX9zH9PKgDz+5P83FzdfJ7wJQFNCFYR+62ITGWDU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HzhbfrqVbcV4y2SKH/RAYoZ2zR97OrOfhNzZ0VPg4v/ZXfhSt+TTOfttA3L2wH81G
-	 C5aiBUnvjwRQ0Hx39r19RoAdVYglpI7TyAOPcj0jFn3kITPCOj5AWCGng4PW6P6IVa
-	 4rPR6wYcndXrqP+S7c7vAfJqnEbpSJwmTIaniv+V/g2OsO63I8BCOrC/WX5jTHZd/a
-	 6CB2k9irzlOh1ryD4q1g222srnQg8Sbaoq5GL6RBL8qknCKNt4MRPzSmFqDMa7qMSE
-	 wzuLdLI+vcXLjdJW9KJKgiz511AYVSOz1bC6JMalnn4/CzOh4NYq2S3XXuoFYiynGM
-	 YGYvnlm6ayt3Q==
-Message-ID: <a45c4dedc2ad1a6571e4fc27ab53fa47e93adea8.camel@kernel.org>
-Subject: Re: [PATCH 1/3] sunrpc: simplify xdr_init_encode_pages
+	b=kRg0gYcOMHCKmqVmc4hHDmnRFaajBZ39wcKooFVptJetjH8JTiq6bwp9BBVGGeGGF
+	 bV36ECvtUepd+hq9CAYriqXkMPCC7NGEYaxCMGEN1QQVCfAhmJD2tIxoCwM9AhI/Hx
+	 geO6d+vvGZOLnP2Ps4CqlBsX2xU44jCWawUfL674RxHPhiRjng6i7SFrHDLhLx6urg
+	 a3oAJ0cqsuwEsmpSrryZQng1PlLLAc0IW2VwMaOKDvvGEctEyBxr/YI5KP52KEfoYR
+	 lhsZi8EcFoC3BXPTCj1BLs8V1cVUdlra39CHTNrx4h7aEOD/phy9YtCstYx5vNkP7Z
+	 tySZcdmxdIfUA==
+Message-ID: <507c584df83c68411e7a3171303a658bb112525d.camel@kernel.org>
+Subject: Re: [PATCH 3/3] sunrpc: unexport csum_partial_copy_to_xdr
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>, 
  Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
  linux-nfs@vger.kernel.org
-Date: Tue, 13 May 2025 07:15:58 -0500
-In-Reply-To: <20250513085739.894150-2-hch@lst.de>
+Date: Tue, 13 May 2025 07:16:30 -0500
+In-Reply-To: <20250513085739.894150-4-hch@lst.de>
 References: <20250513085739.894150-1-hch@lst.de>
-	 <20250513085739.894150-2-hch@lst.de>
+	 <20250513085739.894150-4-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,93 +138,27 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-05-13 at 10:57 +0200, Christoph Hellwig wrote:
-> The rqst argument to xdr_init_encode_pages is set to NULL by all callers,
-> and pages is always set to buf->pages.  Remove the two arguments and
-> hardcode the assignments.
+> csum_partial_copy_to_xdr is only used inside the sunrpc module, so
+> remove the export.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/nfsd/nfs3proc.c         |  2 +-
->  fs/nfsd/nfsproc.c          |  2 +-
->  include/linux/sunrpc/xdr.h |  3 +--
->  net/sunrpc/xdr.c           | 11 ++++-------
->  4 files changed, 7 insertions(+), 11 deletions(-)
+>  net/sunrpc/socklib.c | 1 -
+>  1 file changed, 1 deletion(-)
 >=20
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index 8902fae8c62d..6c94042b03fa 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -562,7 +562,7 @@ static void nfsd3_init_dirlist_pages(struct svc_rqst =
-*rqstp,
->  	buf->pages =3D rqstp->rq_next_page;
->  	rqstp->rq_next_page +=3D (buf->buflen + PAGE_SIZE - 1) >> PAGE_SHIFT;
-> =20
-> -	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
-> +	xdr_init_encode_pages(xdr, buf);
+> diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
+> index 7196e7042e0f..68b16f2ba686 100644
+> --- a/net/sunrpc/socklib.c
+> +++ b/net/sunrpc/socklib.c
+> @@ -158,7 +158,6 @@ int csum_partial_copy_to_xdr(struct xdr_buf *xdr, str=
+uct sk_buff *skb)
+>  		return -1;
+>  	return 0;
 >  }
+> -EXPORT_SYMBOL_GPL(csum_partial_copy_to_xdr);
 > =20
->  /*
-> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-> index 7c573d792252..f1c2c096804b 100644
-> --- a/fs/nfsd/nfsproc.c
-> +++ b/fs/nfsd/nfsproc.c
-> @@ -577,7 +577,7 @@ static void nfsd_init_dirlist_pages(struct svc_rqst *=
-rqstp,
->  	buf->pages =3D rqstp->rq_next_page;
->  	rqstp->rq_next_page++;
-> =20
-> -	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
-> +	xdr_init_encode_pages(xdr, buf);
->  }
-> =20
->  /*
-> diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-> index a2ab813a9800..29d3a7659727 100644
-> --- a/include/linux/sunrpc/xdr.h
-> +++ b/include/linux/sunrpc/xdr.h
-> @@ -242,8 +242,7 @@ typedef int	(*kxdrdproc_t)(struct rpc_rqst *rqstp, st=
-ruct xdr_stream *xdr,
-> =20
->  extern void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf,
->  			    __be32 *p, struct rpc_rqst *rqst);
-> -extern void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf=
- *buf,
-> -			   struct page **pages, struct rpc_rqst *rqst);
-> +void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf);
->  extern __be32 *xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes);
->  extern int xdr_reserve_space_vec(struct xdr_stream *xdr, size_t nbytes);
->  extern void __xdr_commit_encode(struct xdr_stream *xdr);
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 4e003cb516fe..1ab973d3e324 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -992,21 +992,18 @@ EXPORT_SYMBOL_GPL(xdr_init_encode);
->   * xdr_init_encode_pages - Initialize an xdr_stream for encoding into pa=
-ges
->   * @xdr: pointer to xdr_stream struct
->   * @buf: pointer to XDR buffer into which to encode data
-> - * @pages: list of pages to decode into
-> - * @rqst: pointer to controlling rpc_rqst, for debugging
->   *
->   */
-> -void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
-> -			   struct page **pages, struct rpc_rqst *rqst)
-> +void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf)
->  {
->  	xdr_reset_scratch_buffer(xdr);
-> =20
->  	xdr->buf =3D buf;
-> -	xdr->page_ptr =3D pages;
-> +	xdr->page_ptr =3D buf->pages;
->  	xdr->iov =3D NULL;
-> -	xdr->p =3D page_address(*pages);
-> +	xdr->p =3D page_address(*xdr->page_ptr);
->  	xdr->end =3D (void *)xdr->p + min_t(u32, buf->buflen, PAGE_SIZE);
-> -	xdr->rqst =3D rqst;
-> +	xdr->rqst =3D NULL;
->  }
->  EXPORT_SYMBOL_GPL(xdr_init_encode_pages);
-> =20
+>  static inline int xprt_sendmsg(struct socket *sock, struct msghdr *msg,
+>  			       size_t seek)
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
