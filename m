@@ -1,253 +1,268 @@
-Return-Path: <linux-nfs+bounces-11700-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11701-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B7EAB5B5B
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 19:33:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A2F34AB5BDC
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 19:53:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 285A817DD75
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 17:31:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1A9F4C0E2D
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 17:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F414228F514;
-	Tue, 13 May 2025 17:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C803D2BFC6C;
+	Tue, 13 May 2025 17:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TU1DYQLC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OuqQVUbO"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA92F1E51E1
-	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 17:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BFF2C2AB1
+	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 17:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157498; cv=none; b=Ya75+2GVb37B87YcRlKUUmL/XaKHr8GoPr8nhu+TJjmV/YgAeWSFMCgx+ruZ+t5XiPNVvX9BigiIu0gaxVQnik2RM6Le6JN1DGpK2y9DGrSb2GdfXDLnQq5Dou2XHD+mifMN5giODBqn2SBHEwY3hrT4KOkOC+zsPFyBboSOhVw=
+	t=1747158611; cv=none; b=aOHdNIS6Kn9NLqeM7y3Iq5V2xI12A28uwGEZaEz7wfBTzbN4/JsYdWZZAlOwuLQpZydb28pOSsG994TzHdm3OxDgoIL0yXtf4DXqnarNh85B73nxFjO1Z3StlOqPgqNlPwET0GoisUkzXZCbfFbEoI58BSOleeh6MQAkV+bxGLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157498; c=relaxed/simple;
-	bh=JTWBHMfQYlKxCN9E4NoiD+sEKNvisSBzyttYuXwxHHA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dqTiRtrplUoUUUnwzPCXY3+e8TcnWWNjx4sB1UZoBy1v9RZOcVCzcpcUMaqSGQ9h4LyBttSeFZJ0EMxJEw8r7jTdHSu3bsKRW3244VGmArIiOzjVSaJdy8GIzr3WLcxmRHUVSiCi0NgmKzvLhm2Khju4uir7EebNcF30Og6qQ8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TU1DYQLC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE84C4CEE4;
-	Tue, 13 May 2025 17:31:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747157498;
-	bh=JTWBHMfQYlKxCN9E4NoiD+sEKNvisSBzyttYuXwxHHA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=TU1DYQLCmUGHdSBZD9C9P41zCpTpyaq3zvNQOa8wiDqrjGsKVCxE6mCYcTU3Gkqss
-	 BQj4VHzcqNZ8Er6wrxydqsOS7UzB5LwYi/SLaMaObbwN/JizZGWnfbldTMCd7Q08ld
-	 j338ah8+3sdUxpTwamUO2n4yDpRC37Hk+OKjWdVnQqEJPDd2nn+4qYbYPXZWUkVKTK
-	 o9kjezJMF6aHxBBkpc0J78QBNEjqRbG2Qe9A86nuEZEzLqJrwmYcw72J+3sLjGJ6uw
-	 rcw9/9A/n+k5l1EmzR1ils5Siz95JnNC0ysl1HAjbtdmRwCPg3QRJw91ykB1EBhqXv
-	 OC6693WW+Wlow==
-Message-ID: <35398f2769a337703360c69fedbd8c478808883f.camel@kernel.org>
-Subject: Re: [PATCH] NFS: always probe for LOCALIO support asynchronously
-From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, Trond Myklebust
- <trondmy@hammerspace.com>, 	anna@kernel.org
+	s=arc-20240116; t=1747158611; c=relaxed/simple;
+	bh=YJSrV6T8sxPjZqNXVHskQpT1iRmuJC8Ydz8/ZcSsdso=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hp8Iu9VxRV/qbJgaFIqcA069dNTM+9GtaoMXTsT9F9B1VZFgcL4fpTWqSM0VtItSWlD9/NHypuR6z9LNtVnbk+cuJjnY76ce8wywlt3aAd2tpqxyBV3cSfLFUEjGlB9Iy3SMXCkqffP/BKs1dbf0VJUocM2k7K8v/wY/KZqzwVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OuqQVUbO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747158608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J4bVf9ZNn7cPvLdxzlLtWP+OOGhy4MfZrE3WBXP6aUI=;
+	b=OuqQVUbOzoy5IEKQI0WUh+w3ZMF9wWz/vRXWLXff8KpDOcdM4keQbZMhq/iEz2F38aXmKz
+	JR/40zUq8iHpyr9Ek9qIsCDil80IY7H8NqpOd3GkTPC5mXT+Itb4b1Om+AbfOdJtOn8lQR
+	V99vd9q7Znjb5PomoeZNClrtawMZ/Zo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-673-4YxHi1ANN0yq354MywpXJQ-1; Tue,
+ 13 May 2025 13:50:06 -0400
+X-MC-Unique: 4YxHi1ANN0yq354MywpXJQ-1
+X-Mimecast-MFC-AGG-ID: 4YxHi1ANN0yq354MywpXJQ_1747158605
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9EDC1800874;
+	Tue, 13 May 2025 17:50:05 +0000 (UTC)
+Received: from [10.22.88.54] (unknown [10.22.88.54])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19A961953B80;
+	Tue, 13 May 2025 17:50:04 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: =?utf-8?q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
 Cc: linux-nfs@vger.kernel.org
-Date: Tue, 13 May 2025 13:31:36 -0400
-In-Reply-To: <20250513160831.19997-1-snitzer@kernel.org>
-References: <20250513160831.19997-1-snitzer@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+Subject: Re: [RFC PATCH v2] nfsv4: Add support for the birth time attribute
+Date: Tue, 13 May 2025 13:47:53 -0400
+Message-ID: <5F6FC0B6-D88A-4144-BE9B-D95867396BD0@redhat.com>
+In-Reply-To: <CA+1jF5puYFtPJ+sdUxHEy9JrOeq13VW-ROXpj8UwOZz4b4hsLw@mail.gmail.com>
+References: <20230901083421.2139-1-chenhx.fnst@fujitsu.com>
+ <3461ADBE-EAD4-4EEF-B7B0-45348BCDB92C@redhat.com>
+ <CA+1jF5puYFtPJ+sdUxHEy9JrOeq13VW-ROXpj8UwOZz4b4hsLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, 2025-05-13 at 12:08 -0400, Mike Snitzer wrote:
-> It was reported that NFS client mounts of AWS Elastic File System
-> (EFS) volumes is slow, this is because the AWS firewall disallows
-> LOCALIO (because it doesn't consider the use of NFS_LOCALIO_PROGRAM
-> valid), see: https://bugzilla.redhat.com/show_bug.cgi?id=3D2335129
->=20
-> Switch to performing the LOCALIO probe asynchronously to address the
-> potential for the NFS LOCALIO protocol being disallowed and/or slowed
-> by the remote server's response.
->=20
-> While at it, fix nfs_local_probe_async() to always take/put a
-> reference on the nfs_client that is using the LOCALIO protocol.
-> Also, unexport the nfs_local_probe() symbol and make it private to
-> fs/nfs/localio.c
->=20
-> This change has the side-effect of initially issuing reads, writes and
-> commits over the wire via SUNRPC until the LOCALIO probe completes.
->=20
+On 13 May 2025, at 12:36, Aur=C3=A9lien Couderc wrote:
 
-Technically, this should only happen if you start doing I/O _right_
-after creating the client. Usually there is a delay between mounting
-and I/O so hopefully this shouldn't happen much if at all.
+> On Tue, May 13, 2025 at 6:08=E2=80=AFPM Benjamin Coddington <bcodding@r=
+edhat.com> wrote:
+>>
+>> I'm interested in this work, Chen are you still interested in moving t=
+his
+>> forward?   I have another question below --
+>>
+>> On 1 Sep 2023, at 4:34, Chen Hanxiao wrote:
+>>
+>>> nfsd already support btime by commit e377a3e698.
+>>>
+>>> This patch enable nfs to report btime in nfs_getattr.
+>>> If underlying filesystem supports "btime" timestamp,
+>>> statx will report btime for STATX_BTIME.
+>>>
+>>> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+>>>
+>>> ---
+>>> v1.1:
+>>>       minor fix
+>>> v2:
+>>>       properly set cache validity
+>>>
+>>>  fs/nfs/inode.c          | 28 ++++++++++++++++++++++++----
+>>>  fs/nfs/nfs4proc.c       |  3 +++
+>>>  fs/nfs/nfs4xdr.c        | 23 +++++++++++++++++++++++
+>>>  include/linux/nfs_fs.h  |  2 ++
+>>>  include/linux/nfs_xdr.h |  5 ++++-
+>>>  5 files changed, 56 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+>>> index 8172dd4135a1..cfdf68b07982 100644
+>>> --- a/fs/nfs/inode.c
+>>> +++ b/fs/nfs/inode.c
+>>> @@ -196,7 +196,8 @@ void nfs_set_cache_invalid(struct inode *inode, u=
+nsigned long flags)
+>>>               if (!(flags & NFS_INO_REVAL_FORCED))
+>>>                       flags &=3D ~(NFS_INO_INVALID_MODE |
+>>>                                  NFS_INO_INVALID_OTHER |
+>>> -                                NFS_INO_INVALID_XATTR);
+>>> +                                NFS_INO_INVALID_XATTR |
+>>> +                                NFS_INO_INVALID_BTIME);
+>>>               flags &=3D ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_S=
+IZE);
+>>>       }
+>>>
+>>> @@ -515,6 +516,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *=
+fh, struct nfs_fattr *fattr)
+>>>               memset(&inode->i_atime, 0, sizeof(inode->i_atime));
+>>>               memset(&inode->i_mtime, 0, sizeof(inode->i_mtime));
+>>>               memset(&inode->i_ctime, 0, sizeof(inode->i_ctime));
+>>> +             memset(&nfsi->btime, 0, sizeof(nfsi->btime));
+>>>               inode_set_iversion_raw(inode, 0);
+>>>               inode->i_size =3D 0;
+>>>               clear_nlink(inode);
+>>> @@ -538,6 +540,10 @@ nfs_fhget(struct super_block *sb, struct nfs_fh =
+*fh, struct nfs_fattr *fattr)
+>>>                       inode->i_ctime =3D fattr->ctime;
+>>>               else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+>>>                       nfs_set_cache_invalid(inode, NFS_INO_INVALID_CT=
+IME);
+>>> +             if (fattr->valid & NFS_ATTR_FATTR_BTIME)
+>>> +                     nfsi->btime =3D fattr->btime;
+>>> +             else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+>>> +                     nfs_set_cache_invalid(inode, NFS_INO_INVALID_BT=
+IME);
+>>>               if (fattr->valid & NFS_ATTR_FATTR_CHANGE)
+>>>                       inode_set_iversion_raw(inode, fattr->change_att=
+r);
+>>>               else
+>>> @@ -835,6 +841,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const st=
+ruct path *path,
+>>>  {
+>>>       struct inode *inode =3D d_inode(path->dentry);
+>>>       struct nfs_server *server =3D NFS_SERVER(inode);
+>>> +     struct nfs_inode *nfsi =3D NFS_I(inode);
+>>>       unsigned long cache_validity;
+>>>       int err =3D 0;
+>>>       bool force_sync =3D query_flags & AT_STATX_FORCE_SYNC;
+>>> @@ -845,7 +852,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const st=
+ruct path *path,
+>>>
+>>>       request_mask &=3D STATX_TYPE | STATX_MODE | STATX_NLINK | STATX=
+_UID |
+>>>                       STATX_GID | STATX_ATIME | STATX_MTIME | STATX_C=
+TIME |
+>>> -                     STATX_INO | STATX_SIZE | STATX_BLOCKS |
+>>> +                     STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_B=
+TIME |
+>>>                       STATX_CHANGE_COOKIE;
+>>>
+>>>       if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
+>>> @@ -920,6 +927,10 @@ int nfs_getattr(struct mnt_idmap *idmap, const s=
+truct path *path,
+>>>               stat->attributes |=3D STATX_ATTR_CHANGE_MONOTONIC;
+>>>       if (S_ISDIR(inode->i_mode))
+>>>               stat->blksize =3D NFS_SERVER(inode)->dtsize;
+>>> +     if (!(server->fattr_valid & NFS_ATTR_FATTR_BTIME))
+>>> +             stat->result_mask &=3D ~STATX_BTIME;
+>>> +     else
+>>> +             stat->btime =3D nfsi->btime;
+>>>  out:
+>>>       trace_nfs_getattr_exit(inode, err);
+>>>       return err;
+>>> @@ -1803,7 +1814,7 @@ static int nfs_inode_finish_partial_attr_update=
+(const struct nfs_fattr *fattr,
+>>>               NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
+>>>               NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
+>>>               NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
+>>> -             NFS_INO_INVALID_NLINK;
+>>> +             NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
+>>>       unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
+>>>       enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_=
+attr_type;
+>>>
+>>> @@ -2122,7 +2133,8 @@ static int nfs_update_inode(struct inode *inode=
+, struct nfs_fattr *fattr)
+>>>       nfsi->cache_validity &=3D ~(NFS_INO_INVALID_ATTR
+>>>                       | NFS_INO_INVALID_ATIME
+>>>                       | NFS_INO_REVAL_FORCED
+>>> -                     | NFS_INO_INVALID_BLOCKS);
+>>> +                     | NFS_INO_INVALID_BLOCKS
+>>> +                     | NFS_INO_INVALID_BTIME);
+>>>
+>>>       /* Do atomic weak cache consistency updates */
+>>>       nfs_wcc_update_inode(inode, fattr);
+>>> @@ -2161,6 +2173,7 @@ static int nfs_update_inode(struct inode *inode=
+, struct nfs_fattr *fattr)
+>>>                                       | NFS_INO_INVALID_BLOCKS
+>>>                                       | NFS_INO_INVALID_NLINK
+>>>                                       | NFS_INO_INVALID_MODE
+>>> +                                     | NFS_INO_INVALID_BTIME
+>>>                                       | NFS_INO_INVALID_OTHER;
+>>>                               if (S_ISDIR(inode->i_mode))
+>>>                                       nfs_force_lookup_revalidate(ino=
+de);
+>>> @@ -2189,6 +2202,12 @@ static int nfs_update_inode(struct inode *inod=
+e, struct nfs_fattr *fattr)
+>>>               nfsi->cache_validity |=3D
+>>>                       save_cache_validity & NFS_INO_INVALID_MTIME;
+>>>
+>>> +     if (fattr->valid & NFS_ATTR_FATTR_BTIME) {
+>>> +             nfsi->btime =3D fattr->btime;
+>>> +     } else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+>>> +             nfsi->cache_validity |=3D
+>>> +                     save_cache_validity & NFS_INO_INVALID_BTIME;
+>>> +
+>>>       if (fattr->valid & NFS_ATTR_FATTR_CTIME)
+>>>               inode->i_ctime =3D fattr->ctime;
+>>>       else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+>>> @@ -2332,6 +2351,7 @@ struct inode *nfs_alloc_inode(struct super_bloc=
+k *sb)
+>>>  #endif /* CONFIG_NFS_V4 */
+>>>  #ifdef CONFIG_NFS_V4_2
+>>>       nfsi->xattr_cache =3D NULL;
+>>> +     memset(&nfsi->btime, 0, sizeof(nfsi->btime));
+>>
+>>
+>> ^^ is this redundant if we're going to do it anyway in nfs_fhget for I=
+_NEW?
+>>
+>> .. actually, I don't understand why were doing /any/ nfsi member
+>> initialization here.. am I missing something?
+>>
+>> Otherwise, this gets
+>>
+>> Tested-by: Benjamin Coddington <bcodding@redhat.com>
+>> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+>
+> Reviewed-by: Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+>
+> I am astonished that birth timestamp support in the Linux NFS client
+> wasn't implemented... earlier.
+>
+> Just curious: What happens with this functionality if one filesystem
+> exported by nfsd supports birth timestamps, and another filesystem
+> does not support birth timestamps?
 
-Either way, it's clearly a safe way to handle this, and it gets around
-the synchronous blocking when the localio protocol server isn't
-reachable.
+Without explicitly looking, I think the attribute would just not be liste=
+d
+in the supported attributes as queried by the client during mount, and th=
+e
+client would just behave as it does now.
 
-> Suggested-by: Jeff Layton <jlayton@kernel.org> # to always probe async
-> Fixes: 76d4cb6345da ("nfs: probe for LOCALIO when v4 client reconnects to=
- server")
-> Cc: stable@vger.kernel.org # 6.14+
-> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> ---
->  fs/nfs/client.c                           | 2 +-
->  fs/nfs/flexfilelayout/flexfilelayoutdev.c | 2 +-
->  fs/nfs/internal.h                         | 1 -
->  fs/nfs/localio.c                          | 6 ++++--
->  4 files changed, 6 insertions(+), 5 deletions(-)
->=20
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index 6d63b958c4bb..d8fe7c0e7e05 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -439,7 +439,7 @@ struct nfs_client *nfs_get_client(const struct nfs_cl=
-ient_initdata *cl_init)
->  			spin_unlock(&nn->nfs_client_lock);
->  			new =3D rpc_ops->init_client(new, cl_init);
->  			if (!IS_ERR(new))
-> -				 nfs_local_probe(new);
-> +				 nfs_local_probe_async(new);
->  			return new;
->  		}
-> =20
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilel=
-ayout/flexfilelayoutdev.c
-> index 4a304cf17c4b..656d5c50bbce 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-> @@ -400,7 +400,7 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment =
-*lseg,
->  		 * keep ds_clp even if DS is local, so that if local IO cannot
->  		 * proceed somehow, we can fall back to NFS whenever we want.
->  		 */
-> -		nfs_local_probe(ds->ds_clp);
-> +		nfs_local_probe_async(ds->ds_clp);
->  		max_payload =3D
->  			nfs_block_size(rpc_max_payload(ds->ds_clp->cl_rpcclient),
->  				       NULL);
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 6655e5f32ec6..69c2c10ee658 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -455,7 +455,6 @@ extern int nfs_wait_bit_killable(struct wait_bit_key =
-*key, int mode);
-> =20
->  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
->  /* localio.c */
-> -extern void nfs_local_probe(struct nfs_client *);
->  extern void nfs_local_probe_async(struct nfs_client *);
->  extern void nfs_local_probe_async_work(struct work_struct *);
->  extern struct nfsd_file *nfs_local_open_fh(struct nfs_client *,
-> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> index 4ec952f9f47d..a4bacd9a5052 100644
-> --- a/fs/nfs/localio.c
-> +++ b/fs/nfs/localio.c
-> @@ -171,7 +171,7 @@ static bool nfs_server_uuid_is_local(struct nfs_clien=
-t *clp)
->   * - called after alloc_client and init_client (so cl_rpcclient exists)
->   * - this function is idempotent, it can be called for old or new client=
-s
->   */
-> -void nfs_local_probe(struct nfs_client *clp)
-> +static void nfs_local_probe(struct nfs_client *clp)
->  {
->  	/* Disallow localio if disabled via sysfs or AUTH_SYS isn't used */
->  	if (!localio_enabled ||
-> @@ -191,14 +191,16 @@ void nfs_local_probe(struct nfs_client *clp)
->  		nfs_localio_enable_client(clp);
->  	nfs_uuid_end(&clp->cl_uuid);
->  }
-> -EXPORT_SYMBOL_GPL(nfs_local_probe);
-> =20
->  void nfs_local_probe_async_work(struct work_struct *work)
->  {
->  	struct nfs_client *clp =3D
->  		container_of(work, struct nfs_client, cl_local_probe_work);
-> =20
-> +	if (!refcount_inc_not_zero(&clp->cl_count))
-> +		return;
->  	nfs_local_probe(clp);
-> +	nfs_put_client(clp);
->  }
-> =20
->  void nfs_local_probe_async(struct nfs_client *clp)
+Ben
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
