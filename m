@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-11680-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11681-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5000FAB548E
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:17:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8873DAB5490
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:17:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1A3D3A4CC0
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 12:16:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E69B3A5D2B
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 12:16:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51DF228DF0C;
-	Tue, 13 May 2025 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA95120DD51;
+	Tue, 13 May 2025 12:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m16+qv8i"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzhbfrqV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B13128DEFF
-	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 12:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50AA1DF72E
+	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 12:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747138539; cv=none; b=kizpNgKqkUiMFYpQ6FShaFPuOJuDgbG+KyVRUng4mdg7edShG11ajGHe1uaLeQW7ok7ftqbwnw1jAC91ElIcuoWZkzbdzsz0VaZF9KBeDuJMyvpLX952Ry03/n5Sm6f/Gcj3Z4VZtLPmfYKn00YPY1B2brQ5aVs2i5I9aNdXkXg=
+	t=1747138560; cv=none; b=GOXYmUIpnDO/ql+9Cc12w42FfFPl2JYNK8+HyO46TLPoBgn8tLFB9frsXKW41PD5eSjExJF+JgXTdPQ/ozHwCa3zI3mbJF7S2DO5kTP0BZ1EJHSIMmim8kQOI2xZJlWRb3FhhS8C8IcT7kdueovih+oC0NaaZyjF3KlGSFBYDuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747138539; c=relaxed/simple;
-	bh=zn93+tc4sE4PH8LlRRtkv6CU+vSu/2rQNBaeJy63V2Q=;
+	s=arc-20240116; t=1747138560; c=relaxed/simple;
+	bh=CpjJUauHx26bKCdjpc32cJeJHVR8Jrw7nn48NX0qYo8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=attXPEOUeKilgflTessgR8DM+SUD1iGaHgB0D+GHTVEoyoTI+HTB/N6BGx4f/5GyR6GqTSARBjs+JOQ0GkefCX7hrPDGT3zbziwG4xLD1DcV+vCKv+UTZamvsKd/3osesOgTsRWrDJAZcyDUF+RiXQiyN5AFNorWqg7I+L+D8Vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m16+qv8i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56344C4CEE4;
-	Tue, 13 May 2025 12:15:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=t/Rg4acOZjcMesMqBW82Kj0KRdS3K9ZFwSt7e9kwakaDz5bS6LDq7dRBUOShETfpcuNdqjfsFGa3RwxIMRiz91hUPdVT0LYzXa6K7kGNf+SSo9hGR72v5iWALv3mWbu0uMVmRZgTZRWKOabzidG6rSdGKWdAxQy8VXhX6uOku6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzhbfrqV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934A3C4CEE4;
+	Tue, 13 May 2025 12:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747138539;
-	bh=zn93+tc4sE4PH8LlRRtkv6CU+vSu/2rQNBaeJy63V2Q=;
+	s=k20201202; t=1747138560;
+	bh=CpjJUauHx26bKCdjpc32cJeJHVR8Jrw7nn48NX0qYo8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=m16+qv8iFHxaKt8U87F6FB60zQX3K9LbEf7gG1QO7DhV9egMxNW1z/60uE8CzJ2Pr
-	 088lHJ4w2JJstaW3dM7/3/4JaNRtdF4TlP9ja5S9JMxw3oTJGtvmcn7J4pd6WAXRzr
-	 Iw5Z7r+q2A9Cbym8qP0gD7zA3126VE2W+bI/tl7XIexbpbQcxvYq41oZgbi5uKpeAG
-	 g1P8I8Zv6MlMAK9y/gLDXh7BOk+PDexTAvk9+oPxhLJyjX3eNb2qn2Cq5OYuMzLBlA
-	 D4ATX4qWme+u7gFJfC7uKQxmjCLXRT4xE5dBeZmTTidM/Lki5AaeW5Tow/JclLY9QR
-	 LUwIm1xWOHriQ==
-Message-ID: <758fc947dcd2e153c814a4b498bdaf953a46386c.camel@kernel.org>
-Subject: Re: [PATCH 2/3] sunrpc: simplify xdr_partial_copy_from_skb
+	b=HzhbfrqVbcV4y2SKH/RAYoZ2zR97OrOfhNzZ0VPg4v/ZXfhSt+TTOfttA3L2wH81G
+	 C5aiBUnvjwRQ0Hx39r19RoAdVYglpI7TyAOPcj0jFn3kITPCOj5AWCGng4PW6P6IVa
+	 4rPR6wYcndXrqP+S7c7vAfJqnEbpSJwmTIaniv+V/g2OsO63I8BCOrC/WX5jTHZd/a
+	 6CB2k9irzlOh1ryD4q1g222srnQg8Sbaoq5GL6RBL8qknCKNt4MRPzSmFqDMa7qMSE
+	 wzuLdLI+vcXLjdJW9KJKgiz511AYVSOz1bC6JMalnn4/CzOh4NYq2S3XXuoFYiynGM
+	 YGYvnlm6ayt3Q==
+Message-ID: <a45c4dedc2ad1a6571e4fc27ab53fa47e93adea8.camel@kernel.org>
+Subject: Re: [PATCH 1/3] sunrpc: simplify xdr_init_encode_pages
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>, 
  Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
  Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
  linux-nfs@vger.kernel.org
-Date: Tue, 13 May 2025 07:15:37 -0500
-In-Reply-To: <20250513085739.894150-3-hch@lst.de>
+Date: Tue, 13 May 2025 07:15:58 -0500
+In-Reply-To: <20250513085739.894150-2-hch@lst.de>
 References: <20250513085739.894150-1-hch@lst.de>
-	 <20250513085739.894150-3-hch@lst.de>
+	 <20250513085739.894150-2-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,244 +138,93 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-05-13 at 10:57 +0200, Christoph Hellwig wrote:
-> csum_partial_copy_to_xdr can handle a checksumming and non-checksumming
-> case and implements this using a callback, which leads to a lot of
-> boilerplate code and indirect calls in the fast path.
->=20
-> Switch to storing a no_checksum flag in struct xdr_skb_reader instead
-> to remove the indirect call and simplify the code.
+> The rqst argument to xdr_init_encode_pages is set to NULL by all callers,
+> and pages is always set to buf->pages.  Remove the two arguments and
+> hardcode the assignments.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  net/sunrpc/socklib.c | 143 +++++++++++++++----------------------------
->  1 file changed, 50 insertions(+), 93 deletions(-)
+>  fs/nfsd/nfs3proc.c         |  2 +-
+>  fs/nfsd/nfsproc.c          |  2 +-
+>  include/linux/sunrpc/xdr.h |  3 +--
+>  net/sunrpc/xdr.c           | 11 ++++-------
+>  4 files changed, 7 insertions(+), 11 deletions(-)
 >=20
-> diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
-> index 1b2b84feeec6..7196e7042e0f 100644
-> --- a/net/sunrpc/socklib.c
-> +++ b/net/sunrpc/socklib.c
-> @@ -27,97 +27,60 @@
->  struct xdr_skb_reader {
->  	struct sk_buff	*skb;
->  	unsigned int	offset;
-> +	bool		no_checksum;
-
-The change is reasonable overall, but I'm not a fan of having a
-negative boolean like this (i.e. one that starts with no_*). Can we
-reverse the sense of this and call it "must_checksum" or something?
-
->  	size_t		count;
->  	__wsum		csum;
->  };
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index 8902fae8c62d..6c94042b03fa 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -562,7 +562,7 @@ static void nfsd3_init_dirlist_pages(struct svc_rqst =
+*rqstp,
+>  	buf->pages =3D rqstp->rq_next_page;
+>  	rqstp->rq_next_page +=3D (buf->buflen + PAGE_SIZE - 1) >> PAGE_SHIFT;
 > =20
-> -typedef size_t (*xdr_skb_read_actor)(struct xdr_skb_reader *desc, void *=
-to,
-> -				     size_t len);
-> -
->  /**
->   * xdr_skb_read_bits - copy some data bits from skb to internal buffer
->   * @desc: sk_buff copy helper
->   * @to: copy destination
->   * @len: number of bytes to copy
+> -	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
+> +	xdr_init_encode_pages(xdr, buf);
+>  }
+> =20
+>  /*
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 7c573d792252..f1c2c096804b 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -577,7 +577,7 @@ static void nfsd_init_dirlist_pages(struct svc_rqst *=
+rqstp,
+>  	buf->pages =3D rqstp->rq_next_page;
+>  	rqstp->rq_next_page++;
+> =20
+> -	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
+> +	xdr_init_encode_pages(xdr, buf);
+>  }
+> =20
+>  /*
+> diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+> index a2ab813a9800..29d3a7659727 100644
+> --- a/include/linux/sunrpc/xdr.h
+> +++ b/include/linux/sunrpc/xdr.h
+> @@ -242,8 +242,7 @@ typedef int	(*kxdrdproc_t)(struct rpc_rqst *rqstp, st=
+ruct xdr_stream *xdr,
+> =20
+>  extern void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf,
+>  			    __be32 *p, struct rpc_rqst *rqst);
+> -extern void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf=
+ *buf,
+> -			   struct page **pages, struct rpc_rqst *rqst);
+> +void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf);
+>  extern __be32 *xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes);
+>  extern int xdr_reserve_space_vec(struct xdr_stream *xdr, size_t nbytes);
+>  extern void __xdr_commit_encode(struct xdr_stream *xdr);
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 4e003cb516fe..1ab973d3e324 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -992,21 +992,18 @@ EXPORT_SYMBOL_GPL(xdr_init_encode);
+>   * xdr_init_encode_pages - Initialize an xdr_stream for encoding into pa=
+ges
+>   * @xdr: pointer to xdr_stream struct
+>   * @buf: pointer to XDR buffer into which to encode data
+> - * @pages: list of pages to decode into
+> - * @rqst: pointer to controlling rpc_rqst, for debugging
 >   *
-> - * Possibly called several times to iterate over an sk_buff and copy
-> - * data out of it.
-> + * Possibly called several times to iterate over an sk_buff and copy dat=
-a out of
-> + * it.
 >   */
->  static size_t
->  xdr_skb_read_bits(struct xdr_skb_reader *desc, void *to, size_t len)
+> -void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
+> -			   struct page **pages, struct rpc_rqst *rqst)
+> +void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf)
 >  {
-> -	if (len > desc->count)
-> -		len =3D desc->count;
-> -	if (unlikely(skb_copy_bits(desc->skb, desc->offset, to, len)))
-> -		return 0;
-> -	desc->count -=3D len;
-> -	desc->offset +=3D len;
-> -	return len;
-> -}
-> +	len =3D min(len, desc->count);
-> +
-> +	if (desc->no_checksum) {
-> +		if (unlikely(skb_copy_bits(desc->skb, desc->offset, to, len)))
-> +			return 0;
-> +	} else {
-> +		__wsum csum;
-> +
-> +		csum =3D skb_copy_and_csum_bits(desc->skb, desc->offset, to, len);
-> +		desc->csum =3D csum_block_add(desc->csum, csum, desc->offset);
-> +	}
+>  	xdr_reset_scratch_buffer(xdr);
 > =20
-> -/**
-> - * xdr_skb_read_and_csum_bits - copy and checksum from skb to buffer
-> - * @desc: sk_buff copy helper
-> - * @to: copy destination
-> - * @len: number of bytes to copy
-> - *
-> - * Same as skb_read_bits, but calculate a checksum at the same time.
-> - */
-> -static size_t xdr_skb_read_and_csum_bits(struct xdr_skb_reader *desc, vo=
-id *to, size_t len)
-> -{
-> -	unsigned int pos;
-> -	__wsum csum2;
-> -
-> -	if (len > desc->count)
-> -		len =3D desc->count;
-> -	pos =3D desc->offset;
-> -	csum2 =3D skb_copy_and_csum_bits(desc->skb, pos, to, len);
-> -	desc->csum =3D csum_block_add(desc->csum, csum2, pos);
->  	desc->count -=3D len;
->  	desc->offset +=3D len;
->  	return len;
+>  	xdr->buf =3D buf;
+> -	xdr->page_ptr =3D pages;
+> +	xdr->page_ptr =3D buf->pages;
+>  	xdr->iov =3D NULL;
+> -	xdr->p =3D page_address(*pages);
+> +	xdr->p =3D page_address(*xdr->page_ptr);
+>  	xdr->end =3D (void *)xdr->p + min_t(u32, buf->buflen, PAGE_SIZE);
+> -	xdr->rqst =3D rqst;
+> +	xdr->rqst =3D NULL;
 >  }
+>  EXPORT_SYMBOL_GPL(xdr_init_encode_pages);
 > =20
-> -/**
-> - * xdr_partial_copy_from_skb - copy data out of an skb
-> - * @xdr: target XDR buffer
-> - * @base: starting offset
-> - * @desc: sk_buff copy helper
-> - * @copy_actor: virtual method for copying data
-> - *
-> - */
->  static ssize_t
-> -xdr_partial_copy_from_skb(struct xdr_buf *xdr, unsigned int base, struct=
- xdr_skb_reader *desc, xdr_skb_read_actor copy_actor)
-> +xdr_partial_copy_from_skb(struct xdr_buf *xdr, struct xdr_skb_reader *de=
-sc)
->  {
-> -	struct page	**ppage =3D xdr->pages;
-> -	unsigned int	len, pglen =3D xdr->page_len;
-> -	ssize_t		copied =3D 0;
-> -	size_t		ret;
-> -
-> -	len =3D xdr->head[0].iov_len;
-> -	if (base < len) {
-> -		len -=3D base;
-> -		ret =3D copy_actor(desc, (char *)xdr->head[0].iov_base + base, len);
-> -		copied +=3D ret;
-> -		if (ret !=3D len || !desc->count)
-> -			goto out;
-> -		base =3D 0;
-> -	} else
-> -		base -=3D len;
-> -
-> -	if (unlikely(pglen =3D=3D 0))
-> -		goto copy_tail;
-> -	if (unlikely(base >=3D pglen)) {
-> -		base -=3D pglen;
-> -		goto copy_tail;
-> -	}
-> -	if (base || xdr->page_base) {
-> -		pglen -=3D base;
-> -		base +=3D xdr->page_base;
-> -		ppage +=3D base >> PAGE_SHIFT;
-> -		base &=3D ~PAGE_MASK;
-> -	}
-> -	do {
-> +	struct page **ppage =3D xdr->pages + (xdr->page_base >> PAGE_SHIFT);
-> +	unsigned int poff =3D xdr->page_base & ~PAGE_MASK;
-> +	unsigned int pglen =3D xdr->page_len;
-> +	ssize_t copied =3D 0;
-> +	size_t ret;
-> +
-> +	if (xdr->head[0].iov_len =3D=3D 0)
-> +		return 0;
-> +
-> +	ret =3D xdr_skb_read_bits(desc, xdr->head[0].iov_base,
-> +			xdr->head[0].iov_len);
-> +	if (ret !=3D xdr->head[0].iov_len || !desc->count)
-> +		return ret;
-> +	copied +=3D ret;
-> +
-> +	while (pglen) {
-> +		unsigned int len =3D min(PAGE_SIZE - poff, pglen);
->  		char *kaddr;
-> =20
->  		/* ACL likes to be lazy in allocating pages - ACLs
-> @@ -126,36 +89,29 @@ xdr_partial_copy_from_skb(struct xdr_buf *xdr, unsig=
-ned int base, struct xdr_skb
->  			*ppage =3D alloc_page(GFP_NOWAIT | __GFP_NOWARN);
->  			if (unlikely(*ppage =3D=3D NULL)) {
->  				if (copied =3D=3D 0)
-> -					copied =3D -ENOMEM;
-> -				goto out;
-> +					return -ENOMEM;
-> +				return copied;
->  			}
->  		}
-> =20
-> -		len =3D PAGE_SIZE;
->  		kaddr =3D kmap_atomic(*ppage);
-> -		if (base) {
-> -			len -=3D base;
-> -			if (pglen < len)
-> -				len =3D pglen;
-> -			ret =3D copy_actor(desc, kaddr + base, len);
-> -			base =3D 0;
-> -		} else {
-> -			if (pglen < len)
-> -				len =3D pglen;
-> -			ret =3D copy_actor(desc, kaddr, len);
-> -		}
-> +		ret =3D xdr_skb_read_bits(desc, kaddr + poff, len);
->  		flush_dcache_page(*ppage);
->  		kunmap_atomic(kaddr);
-> +
->  		copied +=3D ret;
->  		if (ret !=3D len || !desc->count)
-> -			goto out;
-> +			return copied;
->  		ppage++;
-> -	} while ((pglen -=3D len) !=3D 0);
-> -copy_tail:
-> -	len =3D xdr->tail[0].iov_len;
-> -	if (base < len)
-> -		copied +=3D copy_actor(desc, (char *)xdr->tail[0].iov_base + base, len=
- - base);
-> -out:
-> +		pglen -=3D len;
-> +		poff =3D 0;
-> +	}
-> +
-> +	if (xdr->tail[0].iov_len) {
-> +		copied +=3D xdr_skb_read_bits(desc, xdr->tail[0].iov_base,
-> +					xdr->tail[0].iov_len);
-> +	}
-> +
->  	return copied;
->  }
-> =20
-> @@ -174,12 +130,13 @@ int csum_partial_copy_to_xdr(struct xdr_buf *xdr, s=
-truct sk_buff *skb)
->  	desc.skb =3D skb;
->  	desc.offset =3D 0;
->  	desc.count =3D skb->len - desc.offset;
-> +	desc.no_checksum =3D skb_csum_unnecessary(skb);
-> =20
-> -	if (skb_csum_unnecessary(skb))
-> +	if (desc.no_checksum)
->  		goto no_checksum;
-> =20
->  	desc.csum =3D csum_partial(skb->data, desc.offset, skb->csum);
-> -	if (xdr_partial_copy_from_skb(xdr, 0, &desc, xdr_skb_read_and_csum_bits=
-) < 0)
-> +	if (xdr_partial_copy_from_skb(xdr, &desc) < 0)
->  		return -1;
->  	if (desc.offset !=3D skb->len) {
->  		__wsum csum2;
-> @@ -195,7 +152,7 @@ int csum_partial_copy_to_xdr(struct xdr_buf *xdr, str=
-uct sk_buff *skb)
->  		netdev_rx_csum_fault(skb->dev, skb);
->  	return 0;
->  no_checksum:
-> -	if (xdr_partial_copy_from_skb(xdr, 0, &desc, xdr_skb_read_bits) < 0)
-> +	if (xdr_partial_copy_from_skb(xdr, &desc) < 0)
->  		return -1;
->  	if (desc.count)
->  		return -1;
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
