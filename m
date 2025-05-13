@@ -1,193 +1,115 @@
-Return-Path: <linux-nfs+bounces-11670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEFFEAB4CAA
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 09:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA646AB4E53
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 10:42:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 711FD1B41143
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 07:24:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80B9E1892AC0
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 08:43:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 711FB1EFFA3;
-	Tue, 13 May 2025 07:24:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43FC20B207;
+	Tue, 13 May 2025 08:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6bgFy6s"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA421EDA04;
-	Tue, 13 May 2025 07:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CEA1DACA1;
+	Tue, 13 May 2025 08:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747121070; cv=none; b=tnIdjrSfXiG/zqRRQ3KzcsmWKgObz2SP4RD6SiEC6K7vHOkk0PtIPiv8SPRq7nY9Ju/CWonCt35bOeL4IDATyupZYUUIXqRjyNvNWUmefXD5+9rSaANq3Lui/Ko25lA06RxrZLGqcq9yoIdGIdAXRCMs4dGvxWJPPu9UMbd1sFs=
+	t=1747125771; cv=none; b=NmDErLvJCNe7ZhiQAnVgkZf68CAVmu69L9w6GduMmEB+Tv6TY/wql1A4dk+O/MM6UK9u9QFgyrenr94WFHXkzg0GGeCMJQCw3ECJQVn2OpW5S2u4Pw6IxYbMjPWgsL0d8Q48vXupVPpxH+GxPdS2IEHixcrBuwNcdb3IbYFVkDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747121070; c=relaxed/simple;
-	bh=8ygg5+lbmN/VLtz/D714USCmypSOCh9GpoUadQ03tCs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H5xu/zji49G9lftEECXAxBciG6RUyj1sOYkQXmWzVqZtNpZBrvQGkq+es4x2SJYS17/YB6XRb1zGh3ul+BNHSxQhtIWoarnGoHd1C2N55ZBK4Hg0Mmg560eC3fZk8RHHKezRFu5CLqWPYdx02OB/5h2C3sGuMQWzk1OV/YYlEdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZxScH0Gq5z1d1JV;
-	Tue, 13 May 2025 15:22:55 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id A5DAF180477;
-	Tue, 13 May 2025 15:24:19 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by kwepemg500017.china.huawei.com
- (7.202.181.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 13 May
- 2025 15:24:18 +0800
-From: Li Lingfeng <lilingfeng3@huawei.com>
-To: <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
-	<neil@brown.name>, <okorniev@redhat.com>, <Dai.Ngo@oracle.com>,
-	<tom@talpey.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>,
-	<lilingfeng3@huawei.com>
-Subject: [PATCH] nfsd: Invoke tracking callbacks only after initialization is complete
-Date: Tue, 13 May 2025 15:43:05 +0800
-Message-ID: <20250513074305.3362209-1-lilingfeng3@huawei.com>
-X-Mailer: git-send-email 2.31.1
+	s=arc-20240116; t=1747125771; c=relaxed/simple;
+	bh=OzZ66wt4HAm6wey4RjSjmAObLxD250cALf3K1QBNgws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t3w4MZfA0UUPWTs8O0b2XtE8bypr5tJAx6f72KZ397wKSVUZ8Dkc/atbCgoc1bw6ZtWU8LhRogfrW9drV1+HYqbfUM8Q6dRnbd+VEj31+OsU0u46nTQeKiOwCqP5fbtRx7ihr2S1TkwQfKyD68nrg8xf5H2aqy7rlXEWz9sfPw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j6bgFy6s; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c2c754af3cso4932710fac.3;
+        Tue, 13 May 2025 01:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747125769; x=1747730569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YnHMxDDmp1Gl8n7186sTU9lQMsLD+PQrzrZRHfNvawY=;
+        b=j6bgFy6sxgQCbbemH/PtgJobHFOrLTpK0evCrYq9uBr9mgaoY4bNysTl3Pb5CDAXX4
+         HKjZq65YAcRxAkirSn4uYlufxKRYIrmTLwUXLnEjI3FE5ZIbUaRIN7RQYJnhCNTcyNqd
+         OGMRh/iSILCfqydhPUqKEfSCzfxNt+LxGmPxYfCWNn2GX2yAE/c2k6TZsIv8oedqINJL
+         sg2tvFv8bmRs52tAMvGO3iWqiKncyKNf2lU8KtQTBjqM4Yv3UtFU9XzVgsO6WkBMPAPZ
+         /ZoD9kC4Jo1e7vRP7GkOyoTl1ewbSeTIJdtgbMJ9rAR4iPrkfId2497HPzZNhyn4YcFC
+         bKBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747125769; x=1747730569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YnHMxDDmp1Gl8n7186sTU9lQMsLD+PQrzrZRHfNvawY=;
+        b=PowugYW13B7DXpiq/IzkxugQD+3jU9nDjsXJVeKJxTu3B9JNYGSefdYQsY3yUiNarO
+         S7xLX/f56q/jyi647LdSVjOnDL86d48uys+xdL1Tvf5X4IARUtuL6XOTvXtjh5CNMwlD
+         lKBqVhw9ouaYsKJoXe0modQRUAe+PAu3Lps6QIDgrKBKxHeiTYwqR8Q2Yx+nXEotmv5s
+         7XMg+g0SkYFWqSIk//DYjQvJpDrTBdLWbqbdFvNbfp6imG4SivrjuHFezjOsSPbCoyHz
+         1b+0IKk7SZ9SeGzd2iVo8rWILbidFOKjTGEFNQ46GVvPmQrG/qxgNy89HZCXlXqhnLwA
+         vNKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1uWsComXfMyRiSDPaNmvu4rUFAYNhDshnVAOMXHBclEytAbXxAKTBeBfrl0dXBaXRHyBt15nE8Is=@vger.kernel.org, AJvYcCWmK7/D5SzO1L21SmgPnqP1+RE6KrOU/hoSddUI5mfrIt0Nb2aiKHDXe1BeT0zN4vkPa8+88N2ZreVulA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxatgootC+5c37sh+bGWi/2SXHUxU+57GJpkz9KZzWngYOIciHe
+	khQGIuZQhby9x9QEF0Y7OCeelxDOn77JVPJCd0QY1ITqEL+pp+6gdW3gVze5ZEVCfuUziTC2woo
+	C5XokYOqKtQqeR95EO6IKv8Hu+Xw=
+X-Gm-Gg: ASbGnctMc4NUJm/xPUMTdX+5g1gT3aml/Tc0lQSQ8vFi8UlP7kgtpVDL1dUYxLflHLy
+	JlcEg0r4V/gmDV/Hp+s22hrwfJL+240RPiscBHqPvQ1l73p6XyOK0orDmXj3WA3Fwd6Xr0E1HYV
+	yrqeXxFb1BXsv5hd+djynq0s5ZrMrQJTEx
+X-Google-Smtp-Source: AGHT+IFSrhH1/39CYmuZRXcHiUrZZnTtHqJM0Y/edlTj2LGLVUxkj8Bt1EWzkM/qVbH64cUA1i/LGPOmXnXgN4YNK1M=
+X-Received: by 2002:a05:6870:71d4:b0:29e:3c90:148b with SMTP id
+ 586e51a60fabf-2dba44dc473mr9452641fac.26.1747125769171; Tue, 13 May 2025
+ 01:42:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+References: <20250509190354.5393-1-cel@kernel.org> <20250509190354.5393-20-cel@kernel.org>
+ <CA+1jF5pLds8XYfsBqVsJOmr4b+YaXPdHzUNWmtx8aQLec6UKZQ@mail.gmail.com> <8179372a-1d5a-42b7-b84d-72a8dcefbdd1@kernel.org>
+In-Reply-To: <8179372a-1d5a-42b7-b84d-72a8dcefbdd1@kernel.org>
+From: =?UTF-8?Q?Aur=C3=A9lien_Couderc?= <aurelien.couderc2002@gmail.com>
+Date: Tue, 13 May 2025 10:42:12 +0200
+X-Gm-Features: AX0GCFsgZbSXnkLGxZSdkBJGiIdIukIaOFK3j0bfiJ4pvAKPsJQNrMYVFjTRrDQ
+Message-ID: <CA+1jF5rpxD8NSMxzURWEF+RsgwhVXsr5pmDs_zDYe5nfJk0V2g@mail.gmail.com>
+Subject: Re: [PATCH v5 19/19] SUNRPC: Bump the maximum payload size for the server
+To: Chuck Lever <cel@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Checking whether tracking callbacks can be called based on whether
-nn->client_tracking_ops is NULL may lead to callbacks being invoked
-before tracking initialization completes, causing resource access
-violations (UAF, NULL pointer dereference). Examples:
+On Mon, May 12, 2025 at 8:09=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+>
+> On 5/12/25 12:44 PM, Aur=C3=A9lien Couderc wrote:
+> > Could this patch series - minus the change to the default of 1MB - be
+> > promoted to Linux 6.6 LongTermSupport, please?
+>
+> It has to be merged upstream first.
+>
+> But, new features are generally not backported to stable. At this time,
+> this feature is intended only for future kernels.
 
-1) nfsd4_client_tracking_init
-   // set nn->client_tracking_ops
-   nfsd4_cld_tracking_init
-    nfs4_cld_state_init
-     nn->reclaim_str_hashtbl = kmalloc_array
-    ... // error path, goto err
-    nfs4_cld_state_shutdown
-     kfree(nn->reclaim_str_hashtbl)
-                                      write_v4_end_grace
-                                       nfsd4_end_grace
-                                        nfsd4_record_grace_done
-                                         nfsd4_cld_grace_done
-                                          nfs4_release_reclaim
-                                           nn->reclaim_str_hashtbl[i]
-                                           // UAF
-   // clear nn->client_tracking_ops
+1. I could argue that this patch series - minus the change to the
+default of 1MB - is a "necessary cleanup", removing half broken buffer
+size limits
+2. The patch series makes  /proc/fs/nfsd/max_block_size usable
 
-2) nfsd4_client_tracking_init
-   // set nn->client_tracking_ops
-   nfsd4_cld_tracking_init
-                                      write_v4_end_grace
-                                       nfsd4_end_grace
-                                        nfsd4_record_grace_done
-                                         nfsd4_cld_grace_done
-                                          alloc_cld_upcall
-                                           cn = nn->cld_net
-                                           spin_lock // cn->cn_lock
-                                           // NULL deref
-   // error path, skip init pipe
-   __nfsd4_init_cld_pipe
-    cn = kzalloc
-    nn->cld_net = cn
-   // clear nn->client_tracking_ops
+IMO this qualifies the patch series for stable@
 
-After nfsd mounts, users can trigger grace_done callbacks via
-/proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
-in error paths, this causes access violations.
-
-Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl),
-introducing a flag to indicate whether tracking initialization has
-completed and checking this flag before invoking callbacks may be better.
-
-Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
-Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
----
- fs/nfsd/netns.h       |  1 +
- fs/nfsd/nfs4recover.c | 13 +++++++++----
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 3e2d0fde80a7..dbd782d6b063 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -113,6 +113,7 @@ struct nfsd_net {
- 
- 	struct file *rec_file;
- 	bool in_grace;
-+	bool client_tracking_init_done;
- 	const struct nfsd4_client_tracking_ops *client_tracking_ops;
- 
- 	time64_t nfsd4_lease;
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index c1d9bd07285f..6c27c1252c0e 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
- 		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n", status);
- 		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_CLIENT_TRACKING.\n");
- 		nn->client_tracking_ops = NULL;
-+		nn->client_tracking_init_done = false;
-+	} else {
-+		nn->client_tracking_init_done = true;
- 	}
-+
- 	return status;
- }
- 
-@@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
-+	nn->client_tracking_init_done = false;
- 	if (nn->client_tracking_ops) {
- 		if (nn->client_tracking_ops->exit)
- 			nn->client_tracking_ops->exit(net);
-@@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->create(clp);
- }
- 
-@@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->remove(clp);
- }
- 
-@@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
- {
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		return nn->client_tracking_ops->check(clp);
- 
- 	return -EOPNOTSUPP;
-@@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
- void
- nfsd4_record_grace_done(struct nfsd_net *nn)
- {
--	if (nn->client_tracking_ops)
-+	if (nn->client_tracking_ops && nn->client_tracking_init_done)
- 		nn->client_tracking_ops->grace_done(nn);
- }
- 
--- 
-2.31.1
-
+Aur=C3=A9lien
+--=20
+Aur=C3=A9lien Couderc <aurelien.couderc2002@gmail.com>
+Big Data/Data mining expert, chess enthusiast
 
