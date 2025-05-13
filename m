@@ -1,59 +1,59 @@
-Return-Path: <linux-nfs+bounces-11676-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11677-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 428A0AB5439
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:01:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D975AB543E
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 14:02:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 82C2D7A9945
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 11:59:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 263C017367B
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 12:02:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F72F238C34;
-	Tue, 13 May 2025 12:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A86A28D8E5;
+	Tue, 13 May 2025 12:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOxYzpJ3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ORpWUOJy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3449980B;
-	Tue, 13 May 2025 12:00:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1E028D85C;
+	Tue, 13 May 2025 12:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747137657; cv=none; b=fa+tkL8O/udZdLP+Q0juj7YT+cePLpe+yYmnYA57lSESJseE9JzcjO7LyCdWwmAqmoM+exLEN6EfxoqNPE+JTZLKTd3z5Yo/KWxZfr8o7GHZtID7LtUSHWrorItYgY2UJjAPBBNDgK5kuRvdUx/7QVWvrxKb27L62iqUxb+ssaU=
+	t=1747137745; cv=none; b=JEn8Zd6RImNTo01NweM7Boz4h8lmHOdwxWqTgALQNjAZKErYw14/O8xBwtDF+XX93KKBM72DCKmF/NaNCsKnySm9hvuxdBz7M4XaCj5IL0MXLJ9RHo5sg8ks9lhhT25D8BwdbAA2R/0RcBoGBvVgrFQ779WACYH4BRVc9cR/CK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747137657; c=relaxed/simple;
-	bh=ptD7Axicq+98ZSCLtiL9lVPrnDb83wE0MacJFhiPtR8=;
+	s=arc-20240116; t=1747137745; c=relaxed/simple;
+	bh=W4oRaTsVo4qhFDmv2To1zKjmQfyXhVUTJEPuBMtxfts=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D5jmRAeRdQUy1jjiu0ysYhgAlwOqUdCMGLRbuFCgvQwuf+211F32IhTG+g4ldWZGyHeGoRrkUFxcn6O0SNhjkPy8PduuApy0+yKo87vkkOg1AvzI+eKMMmqbnTfIjSeHl+OuwIpdFXZUf3uEgXP1oxHK0RgFIo1NbXa7/rHVYlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOxYzpJ3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1154FC4CEE9;
-	Tue, 13 May 2025 12:00:55 +0000 (UTC)
+	 Content-Type:MIME-Version; b=MIcxtojvcL+3o6A9P+BK++VTHglAwaO6KUQtPAnovk40dsUsdU9PrfFsfop3LFHFxoaJ6RY1as3Ww95ORQkkfw78UbQtGmOPl3aTR9+xvHQOKlM85WryywtLX2RsldFUxzbwPbd21S945PNMXkNKyBUxKDi8Tvut1sdc0AIStgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ORpWUOJy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42BDC4CEE4;
+	Tue, 13 May 2025 12:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747137656;
-	bh=ptD7Axicq+98ZSCLtiL9lVPrnDb83wE0MacJFhiPtR8=;
+	s=k20201202; t=1747137744;
+	bh=W4oRaTsVo4qhFDmv2To1zKjmQfyXhVUTJEPuBMtxfts=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pOxYzpJ3cwbEWKJr3JV1zBxHvufNCjCGmPb90+7ASPp8QZ9ar4sINMmXh8swhtHru
-	 qtX/o1cbPi4q/lCQwvV+hzeVfrt7H6dE6603CFrSGjyCyDjkBSxJpGlR9XqUGYodXj
-	 v9ROxRhnY9X28FR1+kVJh5SpT+ufe+V5rEW4qO0meXc/PVFSv84rfkIB28EQ3heOg3
-	 wQ8xS1GiIjEvsv84JSQQ+9hALoLE559l/5d1uW4oIRgXcaMy/l3Z7MR1W/pHeT1emo
-	 KE+29nD39hZyJRoFULaMMhxqr5VzJUr1oErt4liFHoSTCHa4xtEoMgLk8c+/dixyVq
-	 CU9dAKueiI33Q==
-Message-ID: <f3d7a799ee28c821db1fb946640c270a89690174.camel@kernel.org>
-Subject: Re: [PATCH v5 01/19] svcrdma: Reduce the number of rdma_rw contexts
- per-QP
+	b=ORpWUOJyu4WMgXSwX/By537Ku/zD0YOQWbDbX6hRenwHRF77OBkKFBenq7MGQKiBI
+	 cMS5qo55uso0y6hvPaMj5VrZx6oB3xt3VyMN3v/zOKj79wBlTWO++4YOQwmQIeUrb/
+	 8unpzOeJFv7qu2DeAhvjTrbXWEybE3QOEqub2Ote6p1NCwuHhErAHA6U/uqp72OL1u
+	 F20L38FBK2J+5xbtlCE8QhPhZ1nNWT935SJ1/UynvynDpcoruKcY54R8bT1pM+7YTW
+	 2NSyfBIk7pAlaq/tyVrqBmObfU7CSS9/Y8G1OnywNJPzuaj5tFj0aNPEKXpHhMX8wz
+	 9qXDPRQAVez4w==
+Message-ID: <a0f1232d29e699a40da0e41c423bcad8e99887cd.camel@kernel.org>
+Subject: Re: [PATCH v5 07/19] NFSD: De-duplicate the svc_fill_write_vector()
+ call sites
 From: Jeff Layton <jlayton@kernel.org>
 To: cel@kernel.org, NeilBrown <neil@brown.name>, Olga Kornievskaia	
  <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom Talpey
  <tom@talpey.com>
 Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, Chuck Lever
-	 <chuck.lever@oracle.com>, Christoph Hellwig <hch@lst.de>
-Date: Tue, 13 May 2025 07:00:54 -0500
-In-Reply-To: <20250509190354.5393-2-cel@kernel.org>
+	 <chuck.lever@oracle.com>
+Date: Tue, 13 May 2025 07:02:22 -0500
+In-Reply-To: <20250509190354.5393-8-cel@kernel.org>
 References: <20250509190354.5393-1-cel@kernel.org>
-	 <20250509190354.5393-2-cel@kernel.org>
+	 <20250509190354.5393-8-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,92 +141,262 @@ MIME-Version: 1.0
 On Fri, 2025-05-09 at 15:03 -0400, cel@kernel.org wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> There is an upper bound on the number of rdma_rw contexts that can
-> be created per QP.
+> All three call sites do the same thing.
 >=20
-> This invisible upper bound is because rdma_create_qp() adds one or
-> more additional SQEs for each ctxt that the ULP requests via
-> qp_attr.cap.max_rdma_ctxs. The QP's actual Send Queue length is on
-> the order of the sum of qp_attr.cap.max_send_wr and a factor times
-> qp_attr.cap.max_rdma_ctxs. The factor can be up to three, depending
-> on whether MR operations are required before RDMA Reads.
+> I'm struggling with this a bit, however. struct xdr_buf is an XDR
+> layer object and unmarshaling a WRITE payload is clearly a task
+> intended to be done by the proc and xdr functions, not by VFS. This
+> feels vaguely like a layering violation.
 >=20
-> This limit is not visible to RDMA consumers via dev->attrs. When the
-> limit is surpassed, QP creation fails with -ENOMEM. For example:
->=20
-> svcrdma's estimate of the number of rdma_rw contexts it needs is
-> three times the number of pages in RPCSVC_MAXPAGES. When MAXPAGES
-> is about 260, the internally-computed SQ length should be:
->=20
-> 64 credits + 10 backlog + 3 * (3 * 260) =3D 2414
->=20
-> Which is well below the advertised qp_max_wr of 32768.
->=20
-> If RPCSVC_MAXPAGES is increased to 4MB, that's 1040 pages:
->=20
-> 64 credits + 10 backlog + 3 * (3 * 1040) =3D 9434
->=20
-> However, QP creation fails. Dynamic printk for mlx5 shows:
->=20
-> calc_sq_size:618:(pid 1514): send queue size (9326 * 256 / 64 -> 65536) e=
-xceeds limits(32768)
->=20
-> Although 9326 is still far below qp_max_wr, QP creation still
-> fails.
->=20
-> Because the total SQ length calculation is opaque to RDMA consumers,
-> there doesn't seem to be much that can be done about this except for
-> consumers to try to keep the requested rdma_rw ctxt count low.
->=20
-> Fixes: 2da0f610e733 ("svcrdma: Increase the per-transport rw_ctx count")
-> Reviewed-by: NeilBrown <neil@brown.name>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+I think it's fine.
+
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/xprtrdma/svc_rdma_transport.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
+>  fs/nfsd/nfs3proc.c         |  5 +---
+>  fs/nfsd/nfs4proc.c         |  8 ++----
+>  fs/nfsd/nfsproc.c          |  9 +++----
+>  fs/nfsd/vfs.c              | 52 +++++++++++++++++++++++++++++---------
+>  fs/nfsd/vfs.h              | 10 ++++----
+>  include/linux/sunrpc/svc.h |  2 +-
+>  net/sunrpc/svc.c           |  4 +--
+>  7 files changed, 54 insertions(+), 36 deletions(-)
 >=20
-> diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrd=
-ma/svc_rdma_transport.c
-> index 5940a56023d1..3d7f1413df02 100644
-> --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-> @@ -406,12 +406,12 @@ static void svc_rdma_xprt_done(struct rpcrdma_notif=
-ication *rn)
->   */
->  static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
->  {
-> +	unsigned int ctxts, rq_depth, maxpayload;
->  	struct svcxprt_rdma *listen_rdma;
->  	struct svcxprt_rdma *newxprt =3D NULL;
->  	struct rdma_conn_param conn_param;
->  	struct rpcrdma_connect_private pmsg;
->  	struct ib_qp_init_attr qp_attr;
-> -	unsigned int ctxts, rq_depth;
->  	struct ib_device *dev;
->  	int ret =3D 0;
->  	RPC_IFDEBUG(struct sockaddr *sap);
-> @@ -462,12 +462,14 @@ static struct svc_xprt *svc_rdma_accept(struct svc_=
-xprt *xprt)
->  		newxprt->sc_max_bc_requests =3D 2;
->  	}
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index 8902fae8c62d..12e1eef810e7 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -220,7 +220,6 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
+>  	struct nfsd3_writeargs *argp =3D rqstp->rq_argp;
+>  	struct nfsd3_writeres *resp =3D rqstp->rq_resp;
+>  	unsigned long cnt =3D argp->len;
+> -	unsigned int nvecs;
 > =20
-> -	/* Arbitrarily estimate the number of rw_ctxs needed for
-> -	 * this transport. This is enough rw_ctxs to make forward
-> -	 * progress even if the client is using one rkey per page
-> -	 * in each Read chunk.
-> +	/* Arbitrary estimate of the needed number of rdma_rw contexts.
->  	 */
-> -	ctxts =3D 3 * RPCSVC_MAXPAGES;
-> +	maxpayload =3D min(xprt->xpt_server->sv_max_payload,
-> +			 RPCSVC_MAXPAYLOAD_RDMA);
-> +	ctxts =3D newxprt->sc_max_requests * 3 *
-> +		rdma_rw_mr_factor(dev, newxprt->sc_port_num,
-> +				  maxpayload >> PAGE_SHIFT);
-> +
->  	newxprt->sc_sq_depth =3D rq_depth + ctxts;
->  	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr)
->  		newxprt->sc_sq_depth =3D dev->attrs.max_qp_wr;
+>  	dprintk("nfsd: WRITE(3)    %s %d bytes at %Lu%s\n",
+>  				SVCFH_fmt(&argp->fh),
+> @@ -235,10 +234,8 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
+> =20
+>  	fh_copy(&resp->fh, &argp->fh);
+>  	resp->committed =3D argp->stable;
+> -	nvecs =3D svc_fill_write_vector(rqstp, &argp->payload);
+> -
+>  	resp->status =3D nfsd_write(rqstp, &resp->fh, argp->offset,
+> -				  rqstp->rq_vec, nvecs, &cnt,
+> +				  &argp->payload, &cnt,
+>  				  resp->committed, resp->verf);
+>  	resp->count =3D cnt;
+>  	resp->status =3D nfsd3_map_status(resp->status);
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 2b16ee1ae461..ffd8b1d499df 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1216,7 +1216,6 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_co=
+mpound_state *cstate,
+>  	struct nfsd_file *nf =3D NULL;
+>  	__be32 status =3D nfs_ok;
+>  	unsigned long cnt;
+> -	int nvecs;
+> =20
+>  	if (write->wr_offset > (u64)OFFSET_MAX ||
+>  	    write->wr_offset + write->wr_buflen > (u64)OFFSET_MAX)
+> @@ -1231,12 +1230,9 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_c=
+ompound_state *cstate,
+>  		return status;
+> =20
+>  	write->wr_how_written =3D write->wr_stable_how;
+> -
+> -	nvecs =3D svc_fill_write_vector(rqstp, &write->wr_payload);
+> -
+>  	status =3D nfsd_vfs_write(rqstp, &cstate->current_fh, nf,
+> -				write->wr_offset, rqstp->rq_vec, nvecs, &cnt,
+> -				write->wr_how_written,
+> +				write->wr_offset, &write->wr_payload,
+> +				&cnt, write->wr_how_written,
+>  				(__be32 *)write->wr_verifier.data);
+>  	nfsd_file_put(nf);
+> =20
+> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> index 7c573d792252..65cbe04184f3 100644
+> --- a/fs/nfsd/nfsproc.c
+> +++ b/fs/nfsd/nfsproc.c
+> @@ -251,17 +251,14 @@ nfsd_proc_write(struct svc_rqst *rqstp)
+>  	struct nfsd_writeargs *argp =3D rqstp->rq_argp;
+>  	struct nfsd_attrstat *resp =3D rqstp->rq_resp;
+>  	unsigned long cnt =3D argp->len;
+> -	unsigned int nvecs;
+> =20
+>  	dprintk("nfsd: WRITE    %s %u bytes at %d\n",
+>  		SVCFH_fmt(&argp->fh),
+>  		argp->len, argp->offset);
+> =20
+> -	nvecs =3D svc_fill_write_vector(rqstp, &argp->payload);
+> -
+> -	resp->status =3D nfsd_write(rqstp, fh_copy(&resp->fh, &argp->fh),
+> -				  argp->offset, rqstp->rq_vec, nvecs,
+> -				  &cnt, NFS_DATA_SYNC, NULL);
+> +	fh_copy(&resp->fh, &argp->fh);
+> +	resp->status =3D nfsd_write(rqstp, &resp->fh, argp->offset,
+> +				  &argp->payload, &cnt, NFS_DATA_SYNC, NULL);
+>  	if (resp->status =3D=3D nfs_ok)
+>  		resp->status =3D fh_getattr(&resp->fh, &resp->stat);
+>  	else if (resp->status =3D=3D nfserr_jukebox)
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 7cfd26dec5a8..43ecc5ae0c3f 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1143,11 +1143,27 @@ static int wait_for_concurrent_writes(struct file=
+ *file)
+>  	return err;
+>  }
+> =20
+> +/**
+> + * nfsd_vfs_write - write data to an already-open file
+> + * @rqstp: RPC execution context
+> + * @fhp: File handle of file to write into
+> + * @nf: An open file matching @fhp
+> + * @offset: Byte offset of start
+> + * @payload: xdr_buf containing the write payload
+> + * @cnt: IN: number of bytes to write, OUT: number of bytes actually wri=
+tten
+> + * @stable: An NFS stable_how value
+> + * @verf: NFS WRITE verifier
+> + *
+> + * Upon return, caller must invoke fh_put on @fhp.
+> + *
+> + * Return values:
+> + *   An nfsstat value in network byte order.
+> + */
+>  __be32
+> -nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_f=
+ile *nf,
+> -				loff_t offset, struct kvec *vec, int vlen,
+> -				unsigned long *cnt, int stable,
+> -				__be32 *verf)
+> +nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +	       struct nfsd_file *nf, loff_t offset,
+> +	       const struct xdr_buf *payload, unsigned long *cnt,
+> +	       int stable, __be32 *verf)
+>  {
+>  	struct nfsd_net		*nn =3D net_generic(SVC_NET(rqstp), nfsd_net_id);
+>  	struct file		*file =3D nf->nf_file;
+> @@ -1162,6 +1178,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp, struct nfsd_file *nf,
+>  	unsigned int		pflags =3D current->flags;
+>  	rwf_t			flags =3D 0;
+>  	bool			restore_flags =3D false;
+> +	unsigned int		nvecs;
+> =20
+>  	trace_nfsd_write_opened(rqstp, fhp, offset, *cnt);
+> =20
+> @@ -1189,7 +1206,8 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
+h *fhp, struct nfsd_file *nf,
+>  	if (stable && !fhp->fh_use_wgather)
+>  		flags |=3D RWF_SYNC;
+> =20
+> -	iov_iter_kvec(&iter, ITER_SOURCE, vec, vlen, *cnt);
+> +	nvecs =3D svc_fill_write_vector(rqstp, payload);
+> +	iov_iter_kvec(&iter, ITER_SOURCE, rqstp->rq_vec, nvecs, *cnt);
+>  	since =3D READ_ONCE(file->f_wb_err);
+>  	if (verf)
+>  		nfsd_copy_write_verifier(verf, nn);
+> @@ -1289,14 +1307,24 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct s=
+vc_fh *fhp,
+>  	return err;
+>  }
+> =20
+> -/*
+> - * Write data to a file.
+> - * The stable flag requests synchronous writes.
+> - * N.B. After this call fhp needs an fh_put
+> +/**
+> + * nfsd_write - open a file and write data to it
+> + * @rqstp: RPC execution context
+> + * @fhp: File handle of file to write into; nfsd_write() may modify it
+> + * @offset: Byte offset of start
+> + * @payload: xdr_buf containing the write payload
+> + * @cnt: IN: number of bytes to write, OUT: number of bytes actually wri=
+tten
+> + * @stable: An NFS stable_how value
+> + * @verf: NFS WRITE verifier
+> + *
+> + * Upon return, caller must invoke fh_put on @fhp.
+> + *
+> + * Return values:
+> + *   An nfsstat value in network byte order.
+>   */
+>  __be32
+>  nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+> -	   struct kvec *vec, int vlen, unsigned long *cnt, int stable,
+> +	   const struct xdr_buf *payload, unsigned long *cnt, int stable,
+>  	   __be32 *verf)
+>  {
+>  	struct nfsd_file *nf;
+> @@ -1308,8 +1336,8 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *f=
+hp, loff_t offset,
+>  	if (err)
+>  		goto out;
+> =20
+> -	err =3D nfsd_vfs_write(rqstp, fhp, nf, offset, vec,
+> -			vlen, cnt, stable, verf);
+> +	err =3D nfsd_vfs_write(rqstp, fhp, nf, offset, payload, cnt,
+> +			     stable, verf);
+>  	nfsd_file_put(nf);
+>  out:
+>  	trace_nfsd_write_done(rqstp, fhp, offset, *cnt);
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index f9b09b842856..eff04959606f 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -128,13 +128,13 @@ bool		nfsd_read_splice_ok(struct svc_rqst *rqstp);
+>  __be32		nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				loff_t offset, unsigned long *count,
+>  				u32 *eof);
+> -__be32 		nfsd_write(struct svc_rqst *, struct svc_fh *, loff_t,
+> -				struct kvec *, int, unsigned long *,
+> -				int stable, __be32 *verf);
+> +__be32		nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +				loff_t offset, const struct xdr_buf *payload,
+> +				unsigned long *cnt, int stable, __be32 *verf);
+>  __be32		nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				struct nfsd_file *nf, loff_t offset,
+> -				struct kvec *vec, int vlen, unsigned long *cnt,
+> -				int stable, __be32 *verf);
+> +				const struct xdr_buf *payload,
+> +				unsigned long *cnt, int stable, __be32 *verf);
+>  __be32		nfsd_readlink(struct svc_rqst *, struct svc_fh *,
+>  				char *, int *);
+>  __be32		nfsd_symlink(struct svc_rqst *, struct svc_fh *,
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 538bea716c6b..dec636345ee2 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -471,7 +471,7 @@ int		   svc_encode_result_payload(struct svc_rqst *rq=
+stp,
+>  					     unsigned int offset,
+>  					     unsigned int length);
+>  unsigned int	   svc_fill_write_vector(struct svc_rqst *rqstp,
+> -					 struct xdr_buf *payload);
+> +					 const struct xdr_buf *payload);
+>  char		  *svc_fill_symlink_pathname(struct svc_rqst *rqstp,
+>  					     struct kvec *first, void *p,
+>  					     size_t total);
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 2c1c4aa93f43..a8861a80bc04 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1727,10 +1727,10 @@ EXPORT_SYMBOL_GPL(svc_encode_result_payload);
+>   * Fills in rqstp::rq_vec, and returns the number of elements.
+>   */
+>  unsigned int svc_fill_write_vector(struct svc_rqst *rqstp,
+> -				   struct xdr_buf *payload)
+> +				   const struct xdr_buf *payload)
+>  {
+> +	const struct kvec *first =3D payload->head;
+>  	struct page **pages =3D payload->pages;
+> -	struct kvec *first =3D payload->head;
+>  	struct kvec *vec =3D rqstp->rq_vec;
+>  	size_t total =3D payload->len;
+>  	unsigned int i;
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
