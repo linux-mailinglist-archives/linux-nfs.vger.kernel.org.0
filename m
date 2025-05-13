@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-11699-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11700-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9443EAB5B32
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 19:27:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 42B7EAB5B5B
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 19:33:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9219019E4373
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 17:27:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 285A817DD75
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 May 2025 17:31:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6A681DA31D;
-	Tue, 13 May 2025 17:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F414228F514;
+	Tue, 13 May 2025 17:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVzOByO+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TU1DYQLC"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06B21D5CDE
-	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 17:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA92F1E51E1
+	for <linux-nfs@vger.kernel.org>; Tue, 13 May 2025 17:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747157246; cv=none; b=R1kdUGGr2o0L8P2j1EWU/0A1zMJe9a4ZmTSVqrZM+FKTczbABscfItgTHA33z6jhy+PVdmL5u+Jh2HRtiVqm9aPXaYkiLaYIRYC8psPnKRFFYMnlIa3NbNHqN6duuWWcK0Y4297wXQILB5OscukHi14ifEKcpldijAug1SlO6oU=
+	t=1747157498; cv=none; b=Ya75+2GVb37B87YcRlKUUmL/XaKHr8GoPr8nhu+TJjmV/YgAeWSFMCgx+ruZ+t5XiPNVvX9BigiIu0gaxVQnik2RM6Le6JN1DGpK2y9DGrSb2GdfXDLnQq5Dou2XHD+mifMN5giODBqn2SBHEwY3hrT4KOkOC+zsPFyBboSOhVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747157246; c=relaxed/simple;
-	bh=hZ6tHhtG1mZYhzlWwwQbG4syJ9b+/zybiKzVWHc0bJk=;
+	s=arc-20240116; t=1747157498; c=relaxed/simple;
+	bh=JTWBHMfQYlKxCN9E4NoiD+sEKNvisSBzyttYuXwxHHA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XyzZRFPVHn74yGoWuHZjctox5Atqyz/aDQ1rcpY4RReJy8osf7ZKIyvMpDxEDR1IiIQFTunrisyss+PvnLfbfNen044XhHA5sluHtqkReVkwoCnNnIQENM/mOCFiz/3IEOtcvyNByKcSMm6D6803muvjRX31WLUMupsi1NXgm7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVzOByO+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C33C4CEE4;
-	Tue, 13 May 2025 17:27:25 +0000 (UTC)
+	 Content-Type:MIME-Version; b=dqTiRtrplUoUUUnwzPCXY3+e8TcnWWNjx4sB1UZoBy1v9RZOcVCzcpcUMaqSGQ9h4LyBttSeFZJ0EMxJEw8r7jTdHSu3bsKRW3244VGmArIiOzjVSaJdy8GIzr3WLcxmRHUVSiCi0NgmKzvLhm2Khju4uir7EebNcF30Og6qQ8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TU1DYQLC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE84C4CEE4;
+	Tue, 13 May 2025 17:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747157246;
-	bh=hZ6tHhtG1mZYhzlWwwQbG4syJ9b+/zybiKzVWHc0bJk=;
+	s=k20201202; t=1747157498;
+	bh=JTWBHMfQYlKxCN9E4NoiD+sEKNvisSBzyttYuXwxHHA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cVzOByO++adUcPcaAJWUOKb9+XYc2K5aAtPXqjNzH6dal3dkn4qrNSZ+rNABBeGQA
-	 Q7eo/yvX5iT1sEFHNYGMbntVkf509iO9ZfAJLP8T4e7s1lSWawP+LwbrJe3SiU49ep
-	 rh01V255LBNnyT6pOLNKPGiTunlmcaizFxRly7KuUzhYefuuG18gI8UY55xiLTJS5O
-	 99vKI18gDyIjU4VKdqt9lQgQiPy29LHFTVmfyApSAZpMJGl5bZf89KAT/5J8sS3OAC
-	 MCsZBDQMSKMc6jMJFWhnROVvVIW5J5AkGyAn/2YkeEIdAo/vDy0oA1BYcVt2EElvWt
-	 WCIzRjrcJn5vg==
-Message-ID: <40fcc037506a8964a836bbe9e7ece752ad67be18.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: release read access of nfs4_file when a write
- delegation is returned
+	b=TU1DYQLCmUGHdSBZD9C9P41zCpTpyaq3zvNQOa8wiDqrjGsKVCxE6mCYcTU3Gkqss
+	 BQj4VHzcqNZ8Er6wrxydqsOS7UzB5LwYi/SLaMaObbwN/JizZGWnfbldTMCd7Q08ld
+	 j338ah8+3sdUxpTwamUO2n4yDpRC37Hk+OKjWdVnQqEJPDd2nn+4qYbYPXZWUkVKTK
+	 o9kjezJMF6aHxBBkpc0J78QBNEjqRbG2Qe9A86nuEZEzLqJrwmYcw72J+3sLjGJ6uw
+	 rcw9/9A/n+k5l1EmzR1ils5Siz95JnNC0ysl1HAjbtdmRwCPg3QRJw91ykB1EBhqXv
+	 OC6693WW+Wlow==
+Message-ID: <35398f2769a337703360c69fedbd8c478808883f.camel@kernel.org>
+Subject: Re: [PATCH] NFS: always probe for LOCALIO support asynchronously
 From: Jeff Layton <jlayton@kernel.org>
-To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com, neilb@suse.de, 
-	okorniev@redhat.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, sagi@grimberg.me
-Date: Tue, 13 May 2025 13:27:24 -0400
-In-Reply-To: <1747152651-23087-1-git-send-email-dai.ngo@oracle.com>
-References: <1747152651-23087-1-git-send-email-dai.ngo@oracle.com>
+To: Mike Snitzer <snitzer@kernel.org>, Trond Myklebust
+ <trondmy@hammerspace.com>, 	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Date: Tue, 13 May 2025 13:31:36 -0400
+In-Reply-To: <20250513160831.19997-1-snitzer@kernel.org>
+References: <20250513160831.19997-1-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,72 +134,120 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-05-13 at 09:10 -0700, Dai Ngo wrote:
-> When a write delegation is returned, check if read access was added
-> to nfs4_file when client opens file with WRONLY, and release it.
+On Tue, 2025-05-13 at 12:08 -0400, Mike Snitzer wrote:
+> It was reported that NFS client mounts of AWS Elastic File System
+> (EFS) volumes is slow, this is because the AWS firewall disallows
+> LOCALIO (because it doesn't consider the use of NFS_LOCALIO_PROGRAM
+> valid), see: https://bugzilla.redhat.com/show_bug.cgi?id=3D2335129
 >=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Switch to performing the LOCALIO probe asynchronously to address the
+> potential for the NFS LOCALIO protocol being disallowed and/or slowed
+> by the remote server's response.
+>=20
+> While at it, fix nfs_local_probe_async() to always take/put a
+> reference on the nfs_client that is using the LOCALIO protocol.
+> Also, unexport the nfs_local_probe() symbol and make it private to
+> fs/nfs/localio.c
+>=20
+> This change has the side-effect of initially issuing reads, writes and
+> commits over the wire via SUNRPC until the LOCALIO probe completes.
+>=20
+
+Technically, this should only happen if you start doing I/O _right_
+after creating the client. Usually there is a delay between mounting
+and I/O so hopefully this shouldn't happen much if at all.
+
+Either way, it's clearly a safe way to handle this, and it gets around
+the synchronous blocking when the localio protocol server isn't
+reachable.
+
+> Suggested-by: Jeff Layton <jlayton@kernel.org> # to always probe async
+> Fixes: 76d4cb6345da ("nfs: probe for LOCALIO when v4 client reconnects to=
+ server")
+> Cc: stable@vger.kernel.org # 6.14+
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/nfs4state.c | 9 ++++++++-
->  fs/nfsd/state.h     | 1 +
->  2 files changed, 9 insertions(+), 1 deletion(-)
+>  fs/nfs/client.c                           | 2 +-
+>  fs/nfs/flexfilelayout/flexfilelayoutdev.c | 2 +-
+>  fs/nfs/internal.h                         | 1 -
+>  fs/nfs/localio.c                          | 6 ++++--
+>  4 files changed, 6 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 2bd63594d8da..5e47d9f85ab5 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1207,14 +1207,19 @@ nfs4_inc_and_copy_stateid(stateid_t *dst, struct =
-nfs4_stid *stid)
->  static void put_deleg_file(struct nfs4_file *fp)
+> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> index 6d63b958c4bb..d8fe7c0e7e05 100644
+> --- a/fs/nfs/client.c
+> +++ b/fs/nfs/client.c
+> @@ -439,7 +439,7 @@ struct nfs_client *nfs_get_client(const struct nfs_cl=
+ient_initdata *cl_init)
+>  			spin_unlock(&nn->nfs_client_lock);
+>  			new =3D rpc_ops->init_client(new, cl_init);
+>  			if (!IS_ERR(new))
+> -				 nfs_local_probe(new);
+> +				 nfs_local_probe_async(new);
+>  			return new;
+>  		}
+> =20
+> diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilel=
+ayout/flexfilelayoutdev.c
+> index 4a304cf17c4b..656d5c50bbce 100644
+> --- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> +++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> @@ -400,7 +400,7 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment =
+*lseg,
+>  		 * keep ds_clp even if DS is local, so that if local IO cannot
+>  		 * proceed somehow, we can fall back to NFS whenever we want.
+>  		 */
+> -		nfs_local_probe(ds->ds_clp);
+> +		nfs_local_probe_async(ds->ds_clp);
+>  		max_payload =3D
+>  			nfs_block_size(rpc_max_payload(ds->ds_clp->cl_rpcclient),
+>  				       NULL);
+> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+> index 6655e5f32ec6..69c2c10ee658 100644
+> --- a/fs/nfs/internal.h
+> +++ b/fs/nfs/internal.h
+> @@ -455,7 +455,6 @@ extern int nfs_wait_bit_killable(struct wait_bit_key =
+*key, int mode);
+> =20
+>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>  /* localio.c */
+> -extern void nfs_local_probe(struct nfs_client *);
+>  extern void nfs_local_probe_async(struct nfs_client *);
+>  extern void nfs_local_probe_async_work(struct work_struct *);
+>  extern struct nfsd_file *nfs_local_open_fh(struct nfs_client *,
+> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> index 4ec952f9f47d..a4bacd9a5052 100644
+> --- a/fs/nfs/localio.c
+> +++ b/fs/nfs/localio.c
+> @@ -171,7 +171,7 @@ static bool nfs_server_uuid_is_local(struct nfs_clien=
+t *clp)
+>   * - called after alloc_client and init_client (so cl_rpcclient exists)
+>   * - this function is idempotent, it can be called for old or new client=
+s
+>   */
+> -void nfs_local_probe(struct nfs_client *clp)
+> +static void nfs_local_probe(struct nfs_client *clp)
 >  {
->  	struct nfsd_file *nf =3D NULL;
-> +	struct nfsd_file *rnf =3D NULL;
+>  	/* Disallow localio if disabled via sysfs or AUTH_SYS isn't used */
+>  	if (!localio_enabled ||
+> @@ -191,14 +191,16 @@ void nfs_local_probe(struct nfs_client *clp)
+>  		nfs_localio_enable_client(clp);
+>  	nfs_uuid_end(&clp->cl_uuid);
+>  }
+> -EXPORT_SYMBOL_GPL(nfs_local_probe);
 > =20
->  	spin_lock(&fp->fi_lock);
-> -	if (--fp->fi_delegees =3D=3D 0)
-> +	if (--fp->fi_delegees =3D=3D 0) {
->  		swap(nf, fp->fi_deleg_file);
-> +		swap(rnf, fp->fi_rdeleg_file);
-> +	}
->  	spin_unlock(&fp->fi_lock);
+>  void nfs_local_probe_async_work(struct work_struct *work)
+>  {
+>  	struct nfs_client *clp =3D
+>  		container_of(work, struct nfs_client, cl_local_probe_work);
 > =20
->  	if (nf)
->  		nfsd_file_put(nf);
-> +	if (rnf)
-> +		nfs4_file_put_access(fp, NFS4_SHARE_ACCESS_READ);
+> +	if (!refcount_inc_not_zero(&clp->cl_count))
+> +		return;
+>  	nfs_local_probe(clp);
+> +	nfs_put_client(clp);
 >  }
 > =20
->  static void nfs4_unlock_deleg_lease(struct nfs4_delegation *dp)
-> @@ -4738,6 +4743,7 @@ static void nfsd4_file_init(const struct svc_fh *fh=
-, struct nfs4_file *fp)
->  	INIT_LIST_HEAD(&fp->fi_clnt_odstate);
->  	fh_copy_shallow(&fp->fi_fhandle, &fh->fh_handle);
->  	fp->fi_deleg_file =3D NULL;
-> +	fp->fi_rdeleg_file =3D NULL;
->  	fp->fi_had_conflict =3D false;
->  	fp->fi_share_deny =3D 0;
->  	memset(fp->fi_fds, 0, sizeof(fp->fi_fds));
-> @@ -6171,6 +6177,7 @@ nfsd4_add_rdaccess_to_wrdeleg(struct svc_rqst *rqst=
-p, struct nfsd4_open *open,
->  		__nfs4_file_get_access(fp, NFS4_SHARE_ACCESS_READ);
->  		fp =3D stp->st_stid.sc_file;
->  		fp->fi_fds[O_RDONLY] =3D nf;
-> +		fp->fi_rdeleg_file =3D nf;
->  		spin_unlock(&fp->fi_lock);
->  	}
->  	return true;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 1995bca158b8..8adc2550129e 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -665,6 +665,7 @@ struct nfs4_file {
->  	atomic_t		fi_access[2];
->  	u32			fi_share_deny;
->  	struct nfsd_file	*fi_deleg_file;
-> +	struct nfsd_file	*fi_rdeleg_file;
->  	int			fi_delegees;
->  	struct knfsd_fh		fi_fhandle;
->  	bool			fi_had_conflict;
+>  void nfs_local_probe_async(struct nfs_client *clp)
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
