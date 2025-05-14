@@ -1,132 +1,190 @@
-Return-Path: <linux-nfs+bounces-11728-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11729-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 099CEAB7831
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 23:51:43 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07C80AB784D
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 23:58:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD9351BA46D2
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 21:51:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E84637B7D3A
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 21:57:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31A4C221F2F;
-	Wed, 14 May 2025 21:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWyjzxHY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99D2F215067;
+	Wed, 14 May 2025 21:58:09 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A9D213E71
-	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 21:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA427223DE2
+	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 21:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747259499; cv=none; b=oXOHywIcq2xl0cLfm7lPiAGO/eAWkrF6wN58hmKZTDQiwKeZtgOgFyNxec+RHI7UdwyTMQpZIiFeB7+SIXRf2IShMJRhZT2mgRBItLNhTujFGIRfKCSlVdIKoDdsAxeoFKAJC0+f4K4iqmf0SnKkGfUMEawKoLCGF0NuYqrnf+0=
+	t=1747259889; cv=none; b=G8p2XgiAY1hqTLoUoX5mL21fWWDRNN1FzOoA8uYuLJZKpVll/fGln9m0BrWSGz3GH0Gi6xQuSzgHbeYNbp9WmxwtZ9beESzYLBifiziq6hpLSfxBl0/BmnRub1V46p+1SHq8mn472o2E0rd4B6RiauX/w3PVTJP36liRGnKJ7rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747259499; c=relaxed/simple;
-	bh=HNU8O8Ud5MPcRK3hgrJXsqtvVRiLaCMw5kegXI4M0Ig=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=i9A/F5QGYlo69cy3OhYvAuTqCl8TuJ/lsg6cPwsLmn1qHaGXkMyg8nNTGuoP6fy4R7iNrwiwv/geSBUBkFtpWYWX5RaJUQ2wANCwmK4QTCjTlib9shRB6AoQsSKhxhEgJ7ek15uvuQ2blrjPnZa3K4OnPzQtugJr5KGTslSUZAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWyjzxHY; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso523601a12.3
-        for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 14:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747259495; x=1747864295; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HNU8O8Ud5MPcRK3hgrJXsqtvVRiLaCMw5kegXI4M0Ig=;
-        b=QWyjzxHY4VoVznhkGnLNIfKpnS1a58Tqogl+aXGOY2vRLbrms3mDKxLxbN+3VsONNN
-         Q3U4+c3aSN6PlEhFmJzPkwNcjv6TITrKwjwBU84P9An31fjSNnkJ8kmGKiovkzSr952h
-         u1Ha0+PL5cjmrsb8L6Y7aR35V/1H1Wb5SouAOwmHakz9pBVnNVaRw+06yV+1WePp0kk/
-         1a7dRCO07obbn0LwWcl7TJdHPhD1r7bFS0sSSqn5I1ylS+xDCZzYmFtk66QbiFfCuUW0
-         rHegV+AZsf2J8ie/1Ll+WIwQ4n6uz93KbkgzANSsYx3IUJcoz7+PngAAWqbl/9o1fPF1
-         7iHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747259495; x=1747864295;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HNU8O8Ud5MPcRK3hgrJXsqtvVRiLaCMw5kegXI4M0Ig=;
-        b=c339RsvOlAOQMD3sdF+/XJa6XBTqRcZlpN5GhGmDXQ7zEOzwhnFi+rUNp+t7gS5QOU
-         rLaEL2ODDrFzUDHk6Q1gLg91D90G5NLDinnn2AXIuDWXVGtTqa4RCeESRtHd0VgmAkJn
-         UHToi8YaJ9JK3E8ZchdTmMaLf+aGaSaIRoNz++88v4UnhUQXOsbEiWXmzAYazHiUvXgh
-         0TJG8ZZ2A09crTVwlUJd/R+PKjUAomqlzyAFYycxTexh0Fqz24J/FUYlqVEt6H8C89Mv
-         Q6qNMCwyqyLe0oSJdnWymasKZ1rpGWQQq+xdaEZ2kNCkckgTDQWk3A7yJ7eGu6dAqGTO
-         1QYQ==
-X-Gm-Message-State: AOJu0YwMYFgRxajkqWd5LiRnLO1/qhybGMArkJ1DpRb5wah13JTNeoWD
-	8o/+3uzVPt3zxafZkIwvUaUcmgJV14WUjtimCIgbyfJd/SbVMyL26ykyJMFLzIWbY7YYnO7ncPa
-	gyvmhW/EH0RINGpAw0kSk46WDDjIAfk/y
-X-Gm-Gg: ASbGncs8PHR51XAM/tQWpjaAsDFt9zthU3yuBSAzZrCoV2BAqmPNMLn8Z2/zzrwCM0O
-	tRhalMq4GZOC6OrYXmasHMJB56KWAJ5r0C3zRjC5nJnMGgpRQRUhJF9Esek0eIDE6TkjNl5RKvo
-	uBuRLxzGPO09YW7uER2O3Pe/csq+9erGQA
-X-Google-Smtp-Source: AGHT+IGt0ytEgoqdCZQYUGexSCsfE0fdvYwZhdKIy9chVujluYk5vYGqkkEbavG1zW5MlQDEbUgP/gd2XypYgBIceFY=
-X-Received: by 2002:a05:6402:13c7:b0:5f6:25d6:71e1 with SMTP id
- 4fb4d7f45d1cf-5ffcf7a8ec9mr55502a12.0.1747259495149; Wed, 14 May 2025
- 14:51:35 -0700 (PDT)
+	s=arc-20240116; t=1747259889; c=relaxed/simple;
+	bh=xYrBokOX/43CZBvpoFxQgLsjTHYm2qm/keYEo3NG31c=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=OTbSzZlLhS4WEr+f+xmZ5jaIz+B8DQyZ2AFbjxtHT6G+UQiINdLFKNm1d6BbGHvwOwQmy6SqkJRnNXsJWzDi5+wmiE9niuIPvkANBNvfIbKIags1LYNZoEuSzlObEKDdc+bYI8rNErvFRagk3DNu/4+xrec409VlaxIsGDfcF/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uFK73-0049Vs-7d;
+	Wed, 14 May 2025 21:58:05 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Wed, 14 May 2025 23:50:00 +0200
-X-Gm-Features: AX0GCFvxvvBjkLQesyHsT5Z-x97HTg4MLLpm25rDPRQN-n1Sf-YuBWTnJP1nsUk
-Message-ID: <CANH4o6Pvc7wuB0Yh8sEQDRg59_=rUNtnpgJizZ5mmmGNgY5Qrg@mail.gmail.com>
-Subject: Why TLS and Kerberos are not useful for NFS security Re: [PATCH
- nfs-utils] exportfs: make "insecure" the default for all exports
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Jeff Layton" <jlayton@kernel.org>
+Cc: "Steve Dickson" <steved@redhat.com>, "Tom Haynes" <loghyr@gmail.com>,
+ linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
+In-reply-to: <f1afb60ecb3ac256807c12963ac87382ad45731b.camel@kernel.org>
+References: <>, <f1afb60ecb3ac256807c12963ac87382ad45731b.camel@kernel.org>
+Date: Thu, 15 May 2025 07:58:05 +1000
+Message-id: <174725988501.62796.4552146319250587024@noble.neil.brown.name>
 
-On Wed, May 14, 2025 at 1:55=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
->
-> On Wed, 14 May 2025, Jeff Layton wrote:
-> Ignoring source ports makes no sense at all unless you enforce some other
-> authentication, like krb5 or TLS, or unless you *know* that there are no
-> unprivileged processes running on any client machines.
+On Wed, 14 May 2025, Jeff Layton wrote:
+> On Wed, 2025-05-14 at 21:43 +1000, NeilBrown wrote:
+> > On Wed, 14 May 2025, Jeff Layton wrote:
+> > > On Wed, 2025-05-14 at 12:28 +1000, NeilBrown wrote:
+> > > > On Wed, 14 May 2025, NeilBrown wrote:
+> > > > > On Tue, 13 May 2025, Jeff Layton wrote:
+> > > > > > Back in the 80's someone thought it was a good idea to carve out =
+a set
+> > > > > > of ports that only privileged users could use. When NFS was origi=
+nally
+> > > > > > conceived, Sun made its server require that clients use low ports.
+> > > > > > Since Linux was following suit with Sun in those days, exportfs h=
+as
+> > > > > > always defaulted to requiring connections from low ports.
+> > > > > >=20
+> > > > > > These days, anyone can be root on their laptop, so limiting conne=
+ctions
+> > > > > > to low source ports is of little value.
+> > > > >=20
+> > > > > But who is going to export any filesystem to their laptop?
+> > > > >=20
+> > > > > >=20
+> > >=20
+> > > The point is that most NFS servers are run on networks where the admin
+> > > may not have 100% control over every host on the network. Once you're
+> > > that situation, relying on low port values for security is basically
+> > > worthless.
+> >=20
+> > "most" ??  Where did you get that statistic?
+> >=20
+>=20
+> Anecdotal experience.
+>=20
+> > "Some" are run on in-machine-room networks which are completely
+> > controlled, but which allow local users to log in to unprivileged
+> > accounts.  In this case it makes perfect sense to rely on "privileged"
+> > ports to control access.  If you silently change nfs-utils so that
+> > unprivileged users can have root-level access over NFS, then you are
+> > exposing the file server completely to anyone who can log in to an
+> > server in that local network.  Are you sure you want to do that?
+> >=20
+>=20
+> These types of environments are vanishingly small these days. If you
+> have a network of any size, it is _really_ hard to prevent someone from
+> plugging a laptop or something else into a random network drop.
 
-I don't like to ruin that party, but this is NOT realistic.
-
-1. Kerberos5 support is HARD to set up, and fragile because not all
-distributions test it on a regular basis. Config is hard, not all
-distributions support all kinds of encryption methods, and Redhat's
-crusade&maintainer mobbing to promote sssd at the expense of other
-solutions left users with a half broken, overcomplicated Windows
-Active Directory clone called sssd, which is an insane overkill for
-most scenarios.
-gssproxy is also a constant source of pain - just Google for the
-Debian bug reports.
-
-Short: Lack of test coverage in distros, not working from time to
-time, sssd and gssproxy are more of a problem than a solution.
-
-It really only makes sense for very big sites and a support contract
-which covers support and bug fixes for Kerberos5 in NFS+gssproxy.
+In that case you should be disabling AUTH_UNIX, not disabling "secure".
 
 
-2. TLS: Wanna make NFS even slower? Then use NFS with TLS.
+>=20
+> You can prevent that with 802.1x security, or something similar, but at
+> that point what is checking the source port going to give you?
+>=20
+> > >=20
+> > > > > > Make the default be "insecure" when creating exports.
+> > > > >=20
+> > > > > So you want to break lots of configurations that are working perfec=
+tly
+> > > > > well?
+> > > >=20
+> > > > Sorry - I was wrong.  You aren't breaking working configurations, but
+> > > > you are removing a protection that people might be expecting.  It mig=
+ht
+> > > > not be much protection, but it is not zero.
+> > > >=20
+> > >=20
+> > > True. Anyone relying on this "protection" is fooling themselves though.
+> >=20
+> > As above: in some circumstances with physically secure networks
+> > (entirely in a locked room, or entire in a virtualisation host, or a
+> > VPN) it makes perfect sense.
+> >=20
+>=20
+> Not really. If any host is compromised on your network then this
+> protection goes out the window.
 
-NFS filesystem over TLS support then feels like working with molasses.
+If any host is compromised then all protections go out the window.  Let's
+make "allsquash,anonuid=3D0" the default.
 
-Exacerbated by Linux's crazy desire to only support hyper-secure
-post-quantum encryption method (so no fast arcfour, because that is
-"insecure", and everyone is expected to only work with AMD
-Threadripper 3995WX), lack of good threading through the TLS eye of
-the needle, and LACK of support in NFS clients.
+>=20
+> The default should also always "just work". We have to balance that
+> with being secure. There is a reason we don't default to krb5, for
+> instance. In this case, the added security of checking low port values
+> by default is pretty worthless. I think we ought to err on the side of
+> usability.
 
-Interoperability is also a big problem (nay, it's ZERO
-interoperability), as this is basically a Linux kernel client/kernel server=
- only
-solution.
-libtirpc doesn't support TLS, Ganesha doesn't support TLS, so yeah,
-this is an issue, and not a solution.
+No.  nonononono.  The default should always be secure.  Many things
+should be installed inactive and require explicit admin action to
+enable.  A tool should "just work".  A service should do nothing unless
+explicitly asked.
 
-Fazit: Supporting your argumentation with Kerberos5 or TLS is not gonna fly=
-.
+>=20
+> Also, to be clear, this currently not even enforced in all situations
+> where TCP is used. iwarp travels over TCP, but using RDMA disables this
+> check.
 
-Thanks,
-Martin
+And presumably this has always been the case so there is no case of
+changing a default that people might be depending on.  So they aren't
+particularly relevant.
+
+>=20
+> > If we want to make this configuration problem more easy to detect, maybe
+> > we should log unprivileged port access (beyond the few requests for
+> > which it can make sense).
+> >=20
+>=20
+> I don't see any benefit in that at all. If someone wants to do that,
+> they can get that via tracepoints.
+
+You reported that a configuration error was hard to debug.  I suggested
+a way to make the configuration error more visible (and hence easier to
+debug).  You cannot see the benefit.......  clearly I didn't explain
+myself well - sorry.
+
+> > Ignoring source ports makes no sense at all unless you enforce some other
+> > authentication, like krb5 or TLS, or unless you *know* that there are no
+> > unprivileged processes running on any client machines.
+> >=20
+>=20
+> Paying attention to source ports makes no sense at all. In the modern
+> age, all sorts of middleware boxes can change the source port on a
+> connection. It is essentially meaningless outside of a few tightly
+> controlled environments. Those environments can always enable "secure"
+> if they require it.
+
+But they are currently using the default in the knowledge that it is
+"secure" and you want to change the default for *everyone*.
+
+Sure - change the default for yourself if that is what you want.  Update
+your script which generates /etc/exports or add some new option to
+/etc/nfs.conf, but don't impose your choice on everyone without asking
+them (and of course you cannot ask everyone).
+
+NeilBrown
 
