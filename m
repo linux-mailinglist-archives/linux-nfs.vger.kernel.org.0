@@ -1,58 +1,57 @@
-Return-Path: <linux-nfs+bounces-11714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 911A5AB69A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 13:17:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86CE9AB69AF
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 13:20:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E485C8C22BB
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 11:17:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19D78189F4EC
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 11:20:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2CE2749E2;
-	Wed, 14 May 2025 11:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8FA846447;
+	Wed, 14 May 2025 11:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7mJxVwj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7XO574o"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3652749DD
-	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 11:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BAF225401
+	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 11:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747221451; cv=none; b=LcU4PkXPLFLWnqwMMfxftifVQPK0k7VG5t+fvI0b2cNdAO7hmgqlEVpmX8A7zryHuaW+o1YnNoir+SI7KYMJw6ggNVZZaMPsyZQm6f6jtE4Z6PmF4UjmRZ0oZCE56SrQpdHPugdRetUP0+QlJ1z7E732FOSIeE82K1WlyvtSdrI=
+	t=1747221638; cv=none; b=nzRtG6aqirfSpmm+54JdJwpsYIFD6chvWmYW39tfdWoYyxuWacitR7mp64mL8quD4oN/gdfyoR+qqMBeRKqpofuTv2EdJm8JCA1kZqF2D+YcxDnb+T9T46I+yfLAYQnpaNxcQVtdUvS9GqkMEVIzKMQWAe+qS5wGRh5NX8+KnvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747221451; c=relaxed/simple;
-	bh=rgXqS2UY8aqwlEGgLqWqNcltmCbL37ece00e3qTAk60=;
+	s=arc-20240116; t=1747221638; c=relaxed/simple;
+	bh=CTlJhMZhB+wKpjO3oNMAWfmMsVbehLL+J45G+MuFOWU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GrgFEfaQ6CaJCJ7W3IVY7BdfBjvHWbZBXZCIfCeDNjzyBqgej2LIY70MMPfH4NfoM9tC0OgmiLB1uX4D9NQMCh2milhZA2PomZ2aeW46BicEoLjnfrs4D3HfblAYEwJ3jApSJ5cm3yTewxds5oXPCyWJ7SHUIp6lcgrY6wt0x1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7mJxVwj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1970FC4CEE9;
-	Wed, 14 May 2025 11:17:30 +0000 (UTC)
+	 Content-Type:MIME-Version; b=PJX1Q6haVN72q1pCV3ywC6AWGXdknSRqOtl2OqgpxeKsYY2kPwvtV5ZgFc2TnA0OB0q3xP+0MdkbI1Q0VgdzjfN5/KG1qUqy6jC8HSgyePizh4QY2ZTeTesvHpW+5Aj6ZLT5AgbuooHgNQdtJNBE8LcQez4xCYQZUNm8JjwVV7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7XO574o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71BE3C4CEEB;
+	Wed, 14 May 2025 11:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747221450;
-	bh=rgXqS2UY8aqwlEGgLqWqNcltmCbL37ece00e3qTAk60=;
+	s=k20201202; t=1747221638;
+	bh=CTlJhMZhB+wKpjO3oNMAWfmMsVbehLL+J45G+MuFOWU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=k7mJxVwj7/b8E3vw/0UVQC+LFopSIga2V6BEoh+ffKhNvV267RdFsersMFNxAgZB/
-	 +p8EQI7wRlQfN5LyCw5aYwUvpOauwJBkSBLzDowzoj2ROeLskIO1rS0WVVaV7WWbFn
-	 wMVPlWbmJEUMKAEQ8wBIQKQ/2y3+y/peay0mr2s6jue3jonfAzdCxN36FiL8diGMRE
-	 11stwHNuCLuwJlZjsrW1W40gN2g+N8PFm8OqjL2fw4WAcDweJj7XfyOEQ+zbxdGUes
-	 Y8zYvIOYgN6kw+D5JlacARpCLC1qPg+IMcF4JEx+FVZJHRjxo9PrWuywh62kOmp14e
-	 0cDWVuWtZ16yA==
-Message-ID: <91b04852a612c651533c62f6f9fc4bd61e97be62.camel@kernel.org>
+	b=V7XO574oG/NEZYJKACN0tzNgInvC0qMnf6PYbrjTk/H41xfjM8fWfY3aOmquwpH01
+	 FSAX+tPhZNmYvQTWhYM9+Wdyf8RH1z86WWurZyjqbcIiECHS44T1XP5IbRTbA+7T0K
+	 NL6ApqxUITziZDOm6elFn59+lUz0sRL4/N53Vq67gdk5QpQ/jLdHAW8lkx4OGpBwd7
+	 e7Ml/drI28jxMUMZ0YO42TT5xSzO4JzwKF/9ri0PKRio67T2NJUqaEMFuJQv53WLSq
+	 fBuJpAltx8Y8WjYJYL9wZnxZ2THq28GSZC6+TdbxkLQ2XYFmFBCZNEaacSZz5tLeAP
+	 46dUai7Ef+DxA==
+Message-ID: <7ccccc0cbaecb1a092983de6ab30f1db722d0006.camel@kernel.org>
 Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
  exports
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>
 Cc: Steve Dickson <steved@redhat.com>, Tom Haynes <loghyr@gmail.com>, 
 	linux-nfs@vger.kernel.org
-Date: Wed, 14 May 2025 07:17:29 -0400
-In-Reply-To: <174718970409.62796.16127055429561662161@noble.neil.brown.name>
+Date: Wed, 14 May 2025 07:20:36 -0400
+In-Reply-To: <174719033130.62796.892917485792343533@noble.neil.brown.name>
 References: <20250513-master-v1-1-e845fe412715@kernel.org>
-	, <174718900620.62796.18240600261000060825@noble.neil.brown.name>
-	 <174718970409.62796.16127055429561662161@noble.neil.brown.name>
+	 <174719033130.62796.892917485792343533@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,129 +136,102 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-05-14 at 12:28 +1000, NeilBrown wrote:
-> On Wed, 14 May 2025, NeilBrown wrote:
-> > On Tue, 13 May 2025, Jeff Layton wrote:
-> > > Back in the 80's someone thought it was a good idea to carve out a se=
-t
-> > > of ports that only privileged users could use. When NFS was originall=
-y
-> > > conceived, Sun made its server require that clients use low ports.
-> > > Since Linux was following suit with Sun in those days, exportfs has
-> > > always defaulted to requiring connections from low ports.
-> > >=20
-> > > These days, anyone can be root on their laptop, so limiting connectio=
-ns
-> > > to low source ports is of little value.
+On Wed, 2025-05-14 at 12:38 +1000, NeilBrown wrote:
+> On Tue, 13 May 2025, Jeff Layton wrote:
+> > Back in the 80's someone thought it was a good idea to carve out a set
+> > of ports that only privileged users could use. When NFS was originally
+> > conceived, Sun made its server require that clients use low ports.
+> > Since Linux was following suit with Sun in those days, exportfs has
+> > always defaulted to requiring connections from low ports.
 > >=20
-> > But who is going to export any filesystem to their laptop?
+> > These days, anyone can be root on their laptop, so limiting connections
+> > to low source ports is of little value.
 > >=20
-> > >=20
-
-The point is that most NFS servers are run on networks where the admin
-may not have 100% control over every host on the network. Once you're
-that situation, relying on low port values for security is basically
-worthless.
-
-> > > Make the default be "insecure" when creating exports.
+> > Make the default be "insecure" when creating exports.
 > >=20
-> > So you want to break lots of configurations that are working perfectly
-> > well?
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > In discussion at the Bake-a-thon, we decided to just go for making
+> > "insecure" the default for all exports.
+> > ---
+> >  support/nfs/exports.c      | 7 +++++--
+> >  utils/exportfs/exports.man | 4 ++--
+> >  2 files changed, 7 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> > index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef28=
+7ca0685af3e70ed0b 100644
+> > --- a/support/nfs/exports.c
+> > +++ b/support/nfs/exports.c
+> > @@ -34,8 +34,11 @@
+> >  #include "reexport.h"
+> >  #include "nfsd_path.h"
+> > =20
+> > -#define EXPORT_DEFAULT_FLAGS	\
+> > -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOS=
+UBTREECHECK)
+> > +#define EXPORT_DEFAULT_FLAGS	(NFSEXP_READONLY |	\
+> > +				 NFSEXP_ROOTSQUASH |	\
+> > +				 NFSEXP_GATHERED_WRITES |\
+> > +				 NFSEXP_NOSUBTREECHECK | \
+> > +				 NFSEXP_INSECURE_PORT)
+> > =20
+> >  struct flav_info flav_map[] =3D {
+> >  	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
+> > diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+> > index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7eb8=
+4301c4ec97b14d003 100644
+> > --- a/utils/exportfs/exports.man
+> > +++ b/utils/exportfs/exports.man
+> > @@ -180,8 +180,8 @@ understands the following export options:
+> >  .TP
+> >  .IR secure
+> >  This option requires that requests not using gss originate on an
+> > -Internet port less than IPPORT_RESERVED (1024). This option is on by d=
+efault.
+> > -To turn it off, specify
+> > +Internet port less than IPPORT_RESERVED (1024). This option is off by =
+default
+> > +but can be explicitly disabled by specifying
+> >  .IR insecure .
 >=20
-> Sorry - I was wrong.  You aren't breaking working configurations, but
-> you are removing a protection that people might be expecting.  It might
-> not be much protection, but it is not zero.
+> I think you mean "can be explicit enabled if desired" or similar.
 >=20
 
-True. Anyone relying on this "protection" is fooling themselves though.
+Yeah, it is a little awkward. I want to keep "insecure" in the manpage
+so that people know what the option is (and don't try to use something
+like "nosecure"). I'll see if I can rephrase that.
 
-> >=20
-> > I don't see any really motivation for this change.  Could you provide i=
-t
-> > please?
+> If you really want to do this, you should require either "insecure" or
+> "secure" and generate a warning like we did when changing other defaults
+> in the past.  After a period of time you can remove that requirement.
 >=20
-> Or to put it another way: who benefits?
+> NeilBrown
 >=20
 
-Anyone running NFS clients behind NAT?
+Requiring the option _would_ break existing setups, so I'd be against
+that plan.
 
-The main discussion came about when we were testing against a
-hammerspace deployment. They were using knfsd as their DS's, and had
-forgotten to add "insecure" to the export options. When the (NAT'ed)
-client tried to talk to the DS's, it got back NFSERR3_PERM because of
-this. It took a little while to ascertain the cause.
+One thing we could do is have exportfs log a warning to syslog when
+neither option is specified. Admins could specify it either way to
+silence the message. Would that overcome your objection?
 
-Note that Solaris' NFS server stopped checking source ports many years
-ago. We're only doing this now because we followed suit from how they
-behaved in the 90s and never changed it.
-
+>=20
+> >  (NOTE: older kernels (before upstream kernel version 4.17) enforced th=
+is
+> >  requirement on gss requests as well.)
 > >=20
-> > Thanks,
-> > NeilBrown
+> > ---
+> > base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
+> > change-id: 20250513-master-89974087bb04
 > >=20
-> > >=20
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > > In discussion at the Bake-a-thon, we decided to just go for making
-> > > "insecure" the default for all exports.
-> > > ---
-> > >  support/nfs/exports.c      | 7 +++++--
-> > >  utils/exportfs/exports.man | 4 ++--
-> > >  2 files changed, 7 insertions(+), 4 deletions(-)
-> > >=20
-> > > diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-> > > index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef=
-287ca0685af3e70ed0b 100644
-> > > --- a/support/nfs/exports.c
-> > > +++ b/support/nfs/exports.c
-> > > @@ -34,8 +34,11 @@
-> > >  #include "reexport.h"
-> > >  #include "nfsd_path.h"
-> > > =20
-> > > -#define EXPORT_DEFAULT_FLAGS	\
-> > > -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_N=
-OSUBTREECHECK)
-> > > +#define EXPORT_DEFAULT_FLAGS	(NFSEXP_READONLY |	\
-> > > +				 NFSEXP_ROOTSQUASH |	\
-> > > +				 NFSEXP_GATHERED_WRITES |\
-> > > +				 NFSEXP_NOSUBTREECHECK | \
-> > > +				 NFSEXP_INSECURE_PORT)
-> > > =20
-> > >  struct flav_info flav_map[] =3D {
-> > >  	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
-> > > diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
-> > > index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7e=
-b84301c4ec97b14d003 100644
-> > > --- a/utils/exportfs/exports.man
-> > > +++ b/utils/exportfs/exports.man
-> > > @@ -180,8 +180,8 @@ understands the following export options:
-> > >  .TP
-> > >  .IR secure
-> > >  This option requires that requests not using gss originate on an
-> > > -Internet port less than IPPORT_RESERVED (1024). This option is on by=
- default.
-> > > -To turn it off, specify
-> > > +Internet port less than IPPORT_RESERVED (1024). This option is off b=
-y default
-> > > +but can be explicitly disabled by specifying
-> > >  .IR insecure .
-> > >  (NOTE: older kernels (before upstream kernel version 4.17) enforced =
-this
-> > >  requirement on gss requests as well.)
-> > >=20
-> > > ---
-> > > base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
-> > > change-id: 20250513-master-89974087bb04
-> > >=20
-> > > Best regards,
-> > > --=20
-> > > Jeff Layton <jlayton@kernel.org>
-> > >=20
-> > >=20
-> > >=20
+> > Best regards,
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
 > >=20
 > >=20
 > >=20
+>=20
 
 --=20
 Jeff Layton <jlayton@kernel.org>
