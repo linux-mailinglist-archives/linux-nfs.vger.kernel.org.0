@@ -1,166 +1,134 @@
-Return-Path: <linux-nfs+bounces-11725-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11726-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C03A2AB7282
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 19:13:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35638AB7827
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 23:47:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D4B21B666FA
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 17:13:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 561C93BC40C
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 21:46:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D27028030E;
-	Wed, 14 May 2025 17:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oelmyfCe"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B051720298D;
+	Wed, 14 May 2025 21:47:14 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F151DE3CA;
-	Wed, 14 May 2025 17:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4606F1F09AD
+	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 21:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747242800; cv=none; b=TOI3DigAhyV/RLKWS0F2HGb4JFmePu4WCiejSldX3qeWEx3ZHphFLL4tc9FxDybmzwLsrV+rR86d37qUk7z6yHM2J4pFHYuAtJaOHDyyVSCD6us9PPTW3QofXL7rX4mzV6OKEuH1V13tECC/l+kqnwfCZs79t+D1McjcfkPc4Mk=
+	t=1747259234; cv=none; b=sjlRx0OGLdujyBSYnoj61rBj8WtQLFqoRi16lO5xryiENXche8ppiVTU+47uKkGA083ATd90riaSW/5QkoULg7uO476zZPuX/yGVQmI6urjt2v9gE2hJvP2QD3rJhbfkXBldUCL2zlJNjt+aAp8ntOCb4LvRqFvh2bJfZgQtZZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747242800; c=relaxed/simple;
-	bh=/ajbg9YzJ+FTV0b8IS7khy5sjaDC+ROSSY1Eln7ioQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QObimpUX/W6Sd/jAanlY4swIWYy/6TcQ1mMRH41tuKKvN4rigFAMa+Onx7RNcd7kRDgxZZqqrWSsfjiJ3xcCgni2bCZZ/CWsVYB822vqtMegD9Kk0vypdWHGS1aLQngLWyXa3/Udu1LsOtWxagUXQ5yffAPajSNBx2VnVjnr3YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oelmyfCe; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=/7hgdb8KdUY4HPMBxB/aj3IltbKgj6zTC2ID0FehOx4=; b=oelmyfCe6RwImPtsSpzWES0AwN
-	SrhNexpGRJzF8KgrL63P5isxM3MHLXjA9j/MSTpawvfx/wF7VLvcfDO5D0a/XkpBMJJqlhg2MeGjO
-	v9MugrpBgDOCJJkc5AtxSGahe9vM7PiJUfjXAUK1BzDtrmoiSciYm0y3NNMgve0lrfi2vc+bQIijK
-	Tf0gq55EznkItPDrtxdZVJCq2wZRKOdc3W0O0ZJYY1sWPsrcQv33qGM7ONrjLjOfNEfxiO/QE/QIS
-	0pcQTGwM3Vn+B01WQKkROPaQk9tsQYnab0LyrWiCvORfidYwhXTHQMb9x/cjiofGUX4b0CkSkB36v
-	zSdUEGmA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFFfR-0000000CbCr-38Cv;
-	Wed, 14 May 2025 17:13:17 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] fs: Pass a folio to page_put_link()
-Date: Wed, 14 May 2025 18:13:14 +0100
-Message-ID: <20250514171316.3002934-4-willy@infradead.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250514171316.3002934-1-willy@infradead.org>
-References: <20250514171316.3002934-1-willy@infradead.org>
+	s=arc-20240116; t=1747259234; c=relaxed/simple;
+	bh=IBmhz/ND6sq2JmPOSOVXaJSVZyOMswgFlNjaift9qFw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=OY5HdkVxj3J3r99YD9oZ+h4EP8S+4JQsoMQ1TuVTEcP033ls91s8ZoNwv5Wg9bj1VupQYj6xZQow1+wXRC+8uFyHec2GoTQNWjNAk88xEEGbHgQOSNJq4YHlhO+2FXT0euPZXNr0yk9XU/JuxYA/863l2V3ouxGUd0flR33VPbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uFJwR-0048n7-Q9;
+	Wed, 14 May 2025 21:47:07 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "NeilBrown" <neil@brown.name>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>, "Steve Dickson" <steved@redhat.com>,
+ "Tom Haynes" <loghyr@gmail.com>, linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
+In-reply-to: <9a75be59-fd60-4183-8853-f7fe541c4f14@oracle.com>
+References: <>, <9a75be59-fd60-4183-8853-f7fe541c4f14@oracle.com>
+Date: Thu, 15 May 2025 07:47:07 +1000
+Message-id: <174725922736.62796.10035875212639959992@noble.neil.brown.name>
 
-All callers now have a folio.  Pass it to page_put_link(), saving a
-hidden call to compound_head().  Also add kernel-doc for page_get_link()
-and page_put_link().
+On Wed, 14 May 2025, Chuck Lever wrote:
+> On 5/14/25 7:43 AM, NeilBrown wrote:
+> > On Wed, 14 May 2025, Jeff Layton wrote:
+> >> On Wed, 2025-05-14 at 12:28 +1000, NeilBrown wrote:
+>=20
+> >> True. Anyone relying on this "protection" is fooling themselves though.
+> >=20
+> > As above: in some circumstances with physically secure networks
+> > (entirely in a locked room, or entire in a virtualisation host, or a
+> > VPN) it makes perfect sense.
+>=20
+> On a physically secure network where all the hosts are also known to be
+> secure, source port checking is wholly superfluous. It makes no sense
+> there.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/fuse/dir.c    |  2 +-
- fs/namei.c       | 30 +++++++++++++++++++++++++++---
- fs/nfs/symlink.c |  2 +-
- 3 files changed, 29 insertions(+), 5 deletions(-)
+No, that is the only place that it makes sense.
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 83ac192e7fdd..33b82529cb6e 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1676,7 +1676,7 @@ static const char *fuse_get_link(struct dentry *dentry, struct inode *inode,
- 		goto out_err;
- 	}
- 
--	set_delayed_call(callback, page_put_link, &folio->page);
-+	set_delayed_call(callback, page_put_link, folio);
- 
- 	return folio_address(folio);
- 
-diff --git a/fs/namei.c b/fs/namei.c
-index 8e82aa7ecb82..12d24f6da782 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -5419,7 +5419,7 @@ static char *__page_get_link(struct dentry *dentry, struct inode *inode,
- 		if (IS_ERR(folio))
- 			return ERR_CAST(folio);
- 	}
--	set_delayed_call(callback, page_put_link, &folio->page);
-+	set_delayed_call(callback, page_put_link, folio);
- 	BUG_ON(mapping_gfp_mask(mapping) & __GFP_HIGHMEM);
- 	return folio_address(folio);
- }
-@@ -5431,6 +5431,17 @@ const char *page_get_link_raw(struct dentry *dentry, struct inode *inode,
- }
- EXPORT_SYMBOL_GPL(page_get_link_raw);
- 
-+/**
-+ * page_get_link() - An implementation of the get_link inode_operation.
-+ * @dentry: The directory entry which is the symlink.
-+ * @inode: The inode for the symlink.
-+ * @callback: Used to drop the reference to the symlink.
-+ *
-+ * Filesystems which store their symlinks in the page cache should use
-+ * this to implement the get_link() member of their inode_operations.
-+ *
-+ * Return: A pointer to the NUL-terminated symlink.
-+ */
- const char *page_get_link(struct dentry *dentry, struct inode *inode,
- 					struct delayed_call *callback)
- {
-@@ -5440,12 +5451,25 @@ const char *page_get_link(struct dentry *dentry, struct inode *inode,
- 		nd_terminate_link(kaddr, inode->i_size, PAGE_SIZE - 1);
- 	return kaddr;
- }
--
- EXPORT_SYMBOL(page_get_link);
- 
-+/**
-+ * page_put_link() - Drop the reference to the symlink.
-+ * @arg: The folio which contains the symlink.
-+ *
-+ * This is used internally by page_get_link().  It is exported for use
-+ * by filesystems which need to implement a variant of page_get_link()
-+ * themselves.  Despite the apparent symmetry, filesystems which use
-+ * page_get_link() do not need to call page_put_link().
-+ *
-+ * The argument, while it has a void pointer type, must be a pointer to
-+ * the folio which was retrieved from the page cache.  The delayed_call
-+ * infrastructure is used to drop the reference count once the caller
-+ * is done with the symlink.
-+ */
- void page_put_link(void *arg)
- {
--	put_page(arg);
-+	folio_put(arg);
- }
- EXPORT_SYMBOL(page_put_link);
- 
-diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
-index 004a8f6c568e..58146e935402 100644
---- a/fs/nfs/symlink.c
-+++ b/fs/nfs/symlink.c
-@@ -63,7 +63,7 @@ static const char *nfs_get_link(struct dentry *dentry,
- 		if (IS_ERR(folio))
- 			return ERR_CAST(folio);
- 	}
--	set_delayed_call(done, page_put_link, &folio->page);
-+	set_delayed_call(done, page_put_link, folio);
- 	return folio_address(folio);
- }
- 
--- 
-2.47.2
+If you have a secure network of secure machines running a secure
+configuration of secure software managed by secure administrators, then
+you can trust that a low port number comes from secure software and,
+in particular, that the UID in the AUTH_SYS credential is reliable.
 
+If you don't have that security, then you cannot trust the port number
+or the uid and should not be accepting AUTH_SYS at all.
+
+If you *Do* have that security, then we can discuss if the "secure" or
+"insecure" flag is appropriate.  If you know that all processes running
+on all nodes in the network are secure, and will only do what the admins
+let them do, then there is no need for "secure" with its restrictions,
+and "insecure" is perfectly fine.  However if you allow lower-privileged
+processes - maybe you have a login server, or you let people upload their
+own cgi scripts to the web server - then "secure" is important to ensure
+users only access file that their uid has access to.
+
+>=20
+>=20
+> >>>> I don't see any really motivation for this change.  Could you provide =
+it
+> >>>> please?
+> >>>
+> >>> Or to put it another way: who benefits?
+> >>>
+> >>
+> >> Anyone running NFS clients behind NAT?
+> >=20
+> > Maybe that should have been in the commit message?
+>=20
+> Agreed, the commit message should have more beef (sorry, vegetarians).
+>=20
+> The commit message should also mention that NFS clients frequently
+> exhaust their privileged source port range, causing new mount
+> operations to fail sporadically. This is a well-documented problem
+> and the main reason we started moving Kerberized mounts to ephemeral
+> ports.
+>=20
+> Generally that's a situation that is sticky for a couple of minutes
+> while TCP sockets proceed through TIME_WAIT until the source port can
+> be re-used by another connection.
+>=20
+>=20
+> >> The main discussion came about when we were testing against a
+> >> hammerspace deployment. They were using knfsd as their DS's, and had
+> >> forgotten to add "insecure" to the export options. When the (NAT'ed)
+> >> client tried to talk to the DS's, it got back NFSERR3_PERM because of
+> >> this. It took a little while to ascertain the cause.
+> >=20
+> > "Change default to fix configuration problem"....???
+> > The default must always be the more secure.  "fail safe".
+>=20
+> Sure, but this option, although it's name is "secure", offers very
+> little real security. So we are actively promoting a mythological level
+> of security here, and that is a Bad Thing (tm).
+
+"very little" is not zero.  "mythological" is unfair.  There is real
+security is certain specific situations.
+
+
+NeilBrown
 
