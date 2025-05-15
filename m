@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-11736-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11737-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F0EAB8536
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 13:49:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD27AB8538
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 13:49:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 219147AC1C9
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 11:48:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7FD953ABF17
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 11:49:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508FC18DB37;
-	Thu, 15 May 2025 11:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E905225414;
+	Thu, 15 May 2025 11:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tNMj5sr2"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u1c5BllV"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679A0225414
-	for <linux-nfs@vger.kernel.org>; Thu, 15 May 2025 11:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C96298275
+	for <linux-nfs@vger.kernel.org>; Thu, 15 May 2025 11:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309765; cv=none; b=ZSu9h422RfoGIsC3a1KDNAsAbgQmTOU2hM8k/UPyc2wfZYJ/SXyn/uyiduMqv9cwv/Df9+H06puO41Hxh8zOsbLBY7PikS7hpY2fTtmDvN269/l/F/1xxeZgO+uFN8jHs2AHONsRwLO1ZTBdw37DTjDjOu60q0uohq5r/ctSoXU=
+	t=1747309768; cv=none; b=nhAIERg9o1IFpfTtQ9q2GPkAeHv+3M0x4QMZtt41VFr3DqTEYgjmpB35BD6ZuVOzS9pAkEPIhPe8C/lpAYboksfO1yaR7RQb9BUAxstxzgCFGUsFoxB+eLdZnbdoFIxsmST31TrMRUoLzAfxyc1OQwI4JI6zdPETvlLgsMOM/H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309765; c=relaxed/simple;
-	bh=JuHOnX4fRCvqvAaI+amuO5QTHsrY9tW/E/UUW6+nm1Q=;
+	s=arc-20240116; t=1747309768; c=relaxed/simple;
+	bh=grP/ww5e56KBcLeGlSpCqM+NUE2PY8i1+VsvNidE02k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kZ473e+qSkzIywbvM66zCoBBSDFbRlIRIYyU3DjpX44scjZkb3cAkQGkjXa9ICty8yT/nWsBh18Q1bEydIfcq0Hxxh4cPRiYfzkrC76owCAf43Mmmbhtig+guvk4sxPn2Q64G49DsHtoPVln/GdjwIn61X1tQJIamSkscxvkQyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tNMj5sr2; arc=none smtp.client-ip=198.137.202.133
+	 MIME-Version; b=pLmWuEjDdOYrhYQ0cvRB3lrTbms9KbS+mLrVaWq6xW4TxZBBIXUaLby0jghZtUKOz31hLIycsiCnTe7AFZ7dT2MmoVR3SetCP4bx2dL9as0EvwLLIcrHt8k1dnErtRIFkwjSk/Tz3nMguhM6Oqka3EmMf3D1smhyqTTq7E6qYWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=u1c5BllV; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=35PWNoXHJ2Vz8SvHFKsNJ12qNNcjDFmMzo1wewSK7O0=; b=tNMj5sr27+WlF6uIE0J8lwQMrA
-	2k3G9qmJP2rHaGfjyJOdQsDDs3tFuQbkD7YLG75t/a3TZaW9fgwml3RquNDlPp6vXUM7YwzWGgcNy
-	SOugt5vMO10hSM1ltT66QrOzdOVj2N1ZewdmLWMop/kPgqlKrU1AX83I7C0cdTvB6xOPHo8FOaDfT
-	lLtH4/hiutWZrZC3hxvVwqE+CQrgp3azCjaD/RRw4Au25XP/GkKUUTIGWmPjuJ/Py+t6iUtkZbwrz
-	MSefRKWCsFaQq5DJ88uXQyVpumQ9nUzyeaL1RcZRf0Lx8zYeEiCAhK1LDEcufVW/pd3eubOqUxgA4
-	R0FfenvA==;
+	bh=l1tmyeIGLlMw4MHA651F26ityewTsDg/YNzOPySumu8=; b=u1c5BllVAFAB0Xj8A3jdWXNnAs
+	/Xvb3m361gVz2wJRLTOAB/BdCrnvgkAY1FsWWB2qS28ljsjPX03567e41lISn8Rri+L/TLjrOFijn
+	Cq+m9cz7DrkM1Dmde9fx9Cj29eIRqzhFwptfcDwIaFe+oLe5Nxf5T6OdDT/Pv8LhweyGZlBvsK+LB
+	bOhoOWq1id+ax5T7OdxdAmJU7SoaSrwmx7l9WnhuB73+gOqCAdH+5cj8sg+N1nWjyxzP1p0rwn4vw
+	xQl0x3mgxMx3acPA82RUTvR/7y2UtDJnzZZwhcqA8g0//725zveE8He6ZtbjU57sM0bq3SG1HgYiq
+	D/fNimNg==;
 Received: from 2a02-8389-2341-5b80-81b5-a24e-41ab-85a6.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:81b5:a24e:41ab:85a6] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFX5V-00000000S7z-05o8;
-	Thu, 15 May 2025 11:49:21 +0000
+	id 1uFX5Y-00000000S8J-28gR;
+	Thu, 15 May 2025 11:49:24 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -55,9 +55,9 @@ Cc: NeilBrown <neil@brown.name>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH 2/3] sunrpc: simplify xdr_partial_copy_from_skb
-Date: Thu, 15 May 2025 13:48:46 +0200
-Message-ID: <20250515114906.32559-3-hch@lst.de>
+Subject: [PATCH 3/3] sunrpc: unexport csum_partial_copy_to_xdr
+Date: Thu, 15 May 2025 13:48:47 +0200
+Message-ID: <20250515114906.32559-4-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250515114906.32559-1-hch@lst.de>
 References: <20250515114906.32559-1-hch@lst.de>
@@ -70,247 +70,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-csum_partial_copy_to_xdr can handle a checksumming and non-checksumming
-case and implements this using a callback, which leads to a lot of
-boilerplate code and indirect calls in the fast path.
-
-Switch to storing a need_checksum flag in struct xdr_skb_reader instead
-to remove the indirect call and simplify the code.
+csum_partial_copy_to_xdr is only used inside the sunrpc module, so
+remove the export.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/socklib.c | 163 ++++++++++++++++---------------------------
- 1 file changed, 59 insertions(+), 104 deletions(-)
+ net/sunrpc/socklib.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
-index 1b2b84feeec6..75e31e3a3ced 100644
+index 75e31e3a3ced..3c7e8e677e91 100644
 --- a/net/sunrpc/socklib.c
 +++ b/net/sunrpc/socklib.c
-@@ -27,97 +27,60 @@
- struct xdr_skb_reader {
- 	struct sk_buff	*skb;
- 	unsigned int	offset;
-+	bool		need_checksum;
- 	size_t		count;
- 	__wsum		csum;
- };
- 
--typedef size_t (*xdr_skb_read_actor)(struct xdr_skb_reader *desc, void *to,
--				     size_t len);
--
- /**
-  * xdr_skb_read_bits - copy some data bits from skb to internal buffer
-  * @desc: sk_buff copy helper
-  * @to: copy destination
-  * @len: number of bytes to copy
-  *
-- * Possibly called several times to iterate over an sk_buff and copy
-- * data out of it.
-+ * Possibly called several times to iterate over an sk_buff and copy data out of
-+ * it.
-  */
- static size_t
- xdr_skb_read_bits(struct xdr_skb_reader *desc, void *to, size_t len)
- {
--	if (len > desc->count)
--		len = desc->count;
--	if (unlikely(skb_copy_bits(desc->skb, desc->offset, to, len)))
--		return 0;
--	desc->count -= len;
--	desc->offset += len;
--	return len;
--}
-+	len = min(len, desc->count);
-+
-+	if (desc->need_checksum) {
-+		__wsum csum;
-+
-+		csum = skb_copy_and_csum_bits(desc->skb, desc->offset, to, len);
-+		desc->csum = csum_block_add(desc->csum, csum, desc->offset);
-+	} else {
-+		if (unlikely(skb_copy_bits(desc->skb, desc->offset, to, len)))
-+			return 0;
-+	}
- 
--/**
-- * xdr_skb_read_and_csum_bits - copy and checksum from skb to buffer
-- * @desc: sk_buff copy helper
-- * @to: copy destination
-- * @len: number of bytes to copy
-- *
-- * Same as skb_read_bits, but calculate a checksum at the same time.
-- */
--static size_t xdr_skb_read_and_csum_bits(struct xdr_skb_reader *desc, void *to, size_t len)
--{
--	unsigned int pos;
--	__wsum csum2;
--
--	if (len > desc->count)
--		len = desc->count;
--	pos = desc->offset;
--	csum2 = skb_copy_and_csum_bits(desc->skb, pos, to, len);
--	desc->csum = csum_block_add(desc->csum, csum2, pos);
- 	desc->count -= len;
- 	desc->offset += len;
- 	return len;
- }
- 
--/**
-- * xdr_partial_copy_from_skb - copy data out of an skb
-- * @xdr: target XDR buffer
-- * @base: starting offset
-- * @desc: sk_buff copy helper
-- * @copy_actor: virtual method for copying data
-- *
-- */
- static ssize_t
--xdr_partial_copy_from_skb(struct xdr_buf *xdr, unsigned int base, struct xdr_skb_reader *desc, xdr_skb_read_actor copy_actor)
-+xdr_partial_copy_from_skb(struct xdr_buf *xdr, struct xdr_skb_reader *desc)
- {
--	struct page	**ppage = xdr->pages;
--	unsigned int	len, pglen = xdr->page_len;
--	ssize_t		copied = 0;
--	size_t		ret;
--
--	len = xdr->head[0].iov_len;
--	if (base < len) {
--		len -= base;
--		ret = copy_actor(desc, (char *)xdr->head[0].iov_base + base, len);
--		copied += ret;
--		if (ret != len || !desc->count)
--			goto out;
--		base = 0;
--	} else
--		base -= len;
--
--	if (unlikely(pglen == 0))
--		goto copy_tail;
--	if (unlikely(base >= pglen)) {
--		base -= pglen;
--		goto copy_tail;
--	}
--	if (base || xdr->page_base) {
--		pglen -= base;
--		base += xdr->page_base;
--		ppage += base >> PAGE_SHIFT;
--		base &= ~PAGE_MASK;
--	}
--	do {
-+	struct page **ppage = xdr->pages + (xdr->page_base >> PAGE_SHIFT);
-+	unsigned int poff = xdr->page_base & ~PAGE_MASK;
-+	unsigned int pglen = xdr->page_len;
-+	ssize_t copied = 0;
-+	size_t ret;
-+
-+	if (xdr->head[0].iov_len == 0)
-+		return 0;
-+
-+	ret = xdr_skb_read_bits(desc, xdr->head[0].iov_base,
-+			xdr->head[0].iov_len);
-+	if (ret != xdr->head[0].iov_len || !desc->count)
-+		return ret;
-+	copied += ret;
-+
-+	while (pglen) {
-+		unsigned int len = min(PAGE_SIZE - poff, pglen);
- 		char *kaddr;
- 
- 		/* ACL likes to be lazy in allocating pages - ACLs
-@@ -126,36 +89,29 @@ xdr_partial_copy_from_skb(struct xdr_buf *xdr, unsigned int base, struct xdr_skb
- 			*ppage = alloc_page(GFP_NOWAIT | __GFP_NOWARN);
- 			if (unlikely(*ppage == NULL)) {
- 				if (copied == 0)
--					copied = -ENOMEM;
--				goto out;
-+					return -ENOMEM;
-+				return copied;
- 			}
- 		}
- 
--		len = PAGE_SIZE;
- 		kaddr = kmap_atomic(*ppage);
--		if (base) {
--			len -= base;
--			if (pglen < len)
--				len = pglen;
--			ret = copy_actor(desc, kaddr + base, len);
--			base = 0;
--		} else {
--			if (pglen < len)
--				len = pglen;
--			ret = copy_actor(desc, kaddr, len);
--		}
-+		ret = xdr_skb_read_bits(desc, kaddr + poff, len);
- 		flush_dcache_page(*ppage);
- 		kunmap_atomic(kaddr);
-+
- 		copied += ret;
- 		if (ret != len || !desc->count)
--			goto out;
-+			return copied;
- 		ppage++;
--	} while ((pglen -= len) != 0);
--copy_tail:
--	len = xdr->tail[0].iov_len;
--	if (base < len)
--		copied += copy_actor(desc, (char *)xdr->tail[0].iov_base + base, len - base);
--out:
-+		pglen -= len;
-+		poff = 0;
-+	}
-+
-+	if (xdr->tail[0].iov_len) {
-+		copied += xdr_skb_read_bits(desc, xdr->tail[0].iov_base,
-+					xdr->tail[0].iov_len);
-+	}
-+
- 	return copied;
- }
- 
-@@ -169,17 +125,22 @@ xdr_partial_copy_from_skb(struct xdr_buf *xdr, unsigned int base, struct xdr_skb
-  */
- int csum_partial_copy_to_xdr(struct xdr_buf *xdr, struct sk_buff *skb)
- {
--	struct xdr_skb_reader	desc;
--
--	desc.skb = skb;
--	desc.offset = 0;
--	desc.count = skb->len - desc.offset;
-+	struct xdr_skb_reader desc = {
-+		.skb		= skb,
-+		.count		= skb->len - desc.offset,
-+	};
- 
--	if (skb_csum_unnecessary(skb))
--		goto no_checksum;
-+	if (skb_csum_unnecessary(skb)) {
-+		if (xdr_partial_copy_from_skb(xdr, &desc) < 0)
-+			return -1;
-+		if (desc.count)
-+			return -1;
-+		return 0;
-+	}
- 
-+	desc.need_checksum = true;
- 	desc.csum = csum_partial(skb->data, desc.offset, skb->csum);
--	if (xdr_partial_copy_from_skb(xdr, 0, &desc, xdr_skb_read_and_csum_bits) < 0)
-+	if (xdr_partial_copy_from_skb(xdr, &desc) < 0)
- 		return -1;
- 	if (desc.offset != skb->len) {
- 		__wsum csum2;
-@@ -194,12 +155,6 @@ int csum_partial_copy_to_xdr(struct xdr_buf *xdr, struct sk_buff *skb)
- 	    !skb->csum_complete_sw)
+@@ -156,7 +156,6 @@ int csum_partial_copy_to_xdr(struct xdr_buf *xdr, struct sk_buff *skb)
  		netdev_rx_csum_fault(skb->dev, skb);
  	return 0;
--no_checksum:
--	if (xdr_partial_copy_from_skb(xdr, 0, &desc, xdr_skb_read_bits) < 0)
--		return -1;
--	if (desc.count)
--		return -1;
--	return 0;
  }
- EXPORT_SYMBOL_GPL(csum_partial_copy_to_xdr);
+-EXPORT_SYMBOL_GPL(csum_partial_copy_to_xdr);
  
+ static inline int xprt_sendmsg(struct socket *sock, struct msghdr *msg,
+ 			       size_t seek)
 -- 
 2.47.2
 
