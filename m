@@ -1,175 +1,197 @@
-Return-Path: <linux-nfs+bounces-11730-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11731-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB284AB7948
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 01:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 132D6AB7B12
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 03:42:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8E79D1B65993
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 May 2025 23:05:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CC55189AA66
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 01:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C3AA21C16D;
-	Wed, 14 May 2025 23:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3AC22798F3;
+	Thu, 15 May 2025 01:42:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGp9NRST"
+	dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b="hcsJzBZi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hyub.org (hyub.org [45.33.94.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BB920E6E7
-	for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 23:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCC01F4CA0
+	for <linux-nfs@vger.kernel.org>; Thu, 15 May 2025 01:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.33.94.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747263893; cv=none; b=KbDaV6ci71o0/OM/98G2br84gXMpOZEvd/sD9XbJyUnLn/EhanhlovLIt1K+uDrEp/fmBgLrLPYglJxvNNhArf+9+fejxeEuhI5FemihnSFSl9eOX5Ak8nixLw6akuQ9lXfD8stasE1QyOsjEoevThkKzW/jAK+2a0DNE1FGCdQ=
+	t=1747273327; cv=none; b=rmFMU0WY5YgXzro5Edxp3JxGjuc0wFaNbydH7SHAx5mu1HRjFVvy9fad+KCyCbRQZ9zcUS8CBtEpItCT/domu2Uh+T2CdSMu3CvZs/wKdpOHQLsZUEBGaPvFtZySTSePQ5tYLSKyvPU91do7b73YuthG623GwXPQGBeCt5wnoFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747263893; c=relaxed/simple;
-	bh=iJ3eXMXSILqCF1lpYH7XX+AxoO0z4i1//AmB+vl2P3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=ulXTMm5QCWjwkwZGUsJDe8r3o6ZENWZHSe4OqW6FwvNTp3Ecy0bD8gMOFgP7Wfh3/vzkzBZEgUbRixeCfJT1+s9cppVfsghk3R+a6Rap8QRJBfiO3cARthb9u0OysmOGtw/R9LD1/2LOu/+fbIqExJOkwqcqNupL+cw9wfyVD54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QGp9NRST; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so658190a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 14 May 2025 16:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747263889; x=1747868689; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6wXpdNKajoX2+L47Q8+7BdYVVq57RuSzQunlZmBVSFY=;
-        b=QGp9NRSTZzsn9eTTVK/ZamywzqGVKYx0NO9hIFj88ExxVnMoEQ8rLEcNNOIJvUNQfo
-         9Js/R+jlU9r/wVS5zTB7hf2s6U+7cJZBWf2zaeUVsXtuVEGa+bPMyep1XuYarDjvtrsq
-         PJkM4w3mdfrOO4WMa4IXir9PCC2dP/HubS/D3qJ0bn/q3DFJhFePWucNn80zc1H2fDIq
-         PjZa7/5HLSIR6GljTV7Mf062Fk1mKaVQ53Qe1dbn1BBKyMqejSfoVa4mBt2WN/yRasd0
-         NIM72kwBdL48+Ydd5Loq4MgVtMsa6yiO2vqDMaYfN6Bic4FAu8w9U6E+At2DP+UlIYEj
-         gSIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747263889; x=1747868689;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6wXpdNKajoX2+L47Q8+7BdYVVq57RuSzQunlZmBVSFY=;
-        b=YVKmtWVqfHlRHAiEb1teACi2hjJlTSdY/hhmLuWGSdQ5COSeeD3jejfsKJiwCocITu
-         qT9w3H5ZmiL3DkvE4nkNvOxW48hHubzQ9ttEejIYCPn1qUZ09k0WuFfSH2Ky5GmpUOCH
-         eQiNDopK4ROzvLteXmxQ3391wx2wQDAJvDgQ6VHG2c+PRzTpbuNymj8LerxOWIJSI2oH
-         f/MjGM2bKzZsZRXrBYURcEUdrQYdoW35iGOpvLD7GYwp4aoJxXYB1YfZONUBcS+e5dO4
-         kvwOfB8S4g4mog5+/KrxYAQ6cqMl3hnsvCOk4s/tkK/9+MjeXoFv7hxx5sGpKCCLcmM6
-         Judw==
-X-Gm-Message-State: AOJu0YyHR5MfQid41r+qYPgMxOknOFyn9OhjbjOynrbUPnXrPlH4jIdv
-	dVY1v+HfYlB+pRDd4ySM1XdvJxbQH+MCmRHfzFt3ChTcXanL1+5M2KZpJA6wc9GYKhz0yODVyWK
-	Zx+XNNwLjAKSzxCPwVi9qAkKOFSsiZJMV
-X-Gm-Gg: ASbGncsRHxs+AmoHFIHCSTHMeFmyvutush/R3beklQbi7EpGIU5p3Xh8YgNF2IIjoQ+
-	dDIt/Ee2o6cSfMdSLWrTASNAZsXpcHDp2qRd64YCAk9yVc7rc6gQHRiWVMVk0kqC4DNzwutFhYc
-	dzhytUc3OvAMYh15VNnhJzMgRkFRSdzLBk
-X-Google-Smtp-Source: AGHT+IExgja5DzE0JObJwZW8r5BVtRiUZtXVtF4gMMZMUHs/xtr7tpFnrBhRPfc+bn1/ORfFR8u6/1XTStO7b5skOGk=
-X-Received: by 2002:a05:6402:1ec9:b0:5fd:194e:9ee3 with SMTP id
- 4fb4d7f45d1cf-5ff988d44e8mr4292147a12.24.1747263889222; Wed, 14 May 2025
- 16:04:49 -0700 (PDT)
+	s=arc-20240116; t=1747273327; c=relaxed/simple;
+	bh=AvuLSV6zDdkadW1IeUvLRuHMKA2i2v2ZTr06+WPelx0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k4L82jjVxZfmWSessmQPD52N1N+opkkeKhd9E+TjLvrY6VuePRC6oBuPWoUuhoAwE+xmP4M+yKGYKrP+9GxMeO/YRNjhunS0TCTeMnntmODRUY+ryZzYw1hJ925rMnoXLb7TFKpNN2x4dK9LrHrYV55bizRKzuogTxq5Nj77s/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org; spf=pass smtp.mailfrom=hyub.org; dkim=pass (2048-bit key) header.d=hyub.org header.i=@hyub.org header.b=hcsJzBZi; arc=none smtp.client-ip=45.33.94.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hyub.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hyub.org
+Received: by mail.hyub.org (Postfix) id E5748609F5;
+	Thu, 15 May 2025 01:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hyub.org; s=dkim;
+	t=1747272763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qtCXqlAWEroB7EG5AJcb9ba3gQUixJoangc/jD5HtcY=;
+	b=hcsJzBZi90OENqVmswYRVmSnAF2yDEyQv4lCKCM25DrlGY1WdxuMnfaGHyUNZ4qQAUPRSD
+	RfxBq/037IOXyQ3r+hHQEsgwqT0rup7YndI4wx5A9Cey5LFJMEnbvFhtXMXegQ7oe9OrrN
+	yI2iWHZf+aen+XGWJGtUQcg+ot/qUUNUNG4gvP4IClW9mObrpQ1Jl5kKFi+8qXy/+NzfBP
+	25EzB79kaxl/OEvX0AcpDXuHsohX7vl8yUZ7c+pockaiha6CAPR1ssdXHPUMJXB7jJ7/wY
+	pBu1oNtBukd13USxXSbKRw3mjx6S0XzXh2k4ruolPRk/pvH3F+vClB15Mp5u5w==
+Message-ID: <20c276fb-d840-4fec-a7b9-998f57d0a674@hyub.org>
+Date: Thu, 15 May 2025 01:32:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQmue3zaStgJcOa+29Jh-k_H8QyD3a0=kB4E25feUT2X8w@mail.gmail.com>
-In-Reply-To: <CAKAoaQmue3zaStgJcOa+29Jh-k_H8QyD3a0=kB4E25feUT2X8w@mail.gmail.com>
-From: Martin Wege <martin.l.wege@gmail.com>
-Date: Thu, 15 May 2025 01:03:00 +0200
-X-Gm-Features: AX0GCFtNby9ebj1tf2n4i0vteUAxcTgLJUK9wUmRKBdrSZEsHQuku3sIPv4XKG0
-Message-ID: <CANH4o6McqtFUmCO6vBH8JD+aS142FAKcqxi8GkW2g2Sj=hm6yQ@mail.gmail.com>
-Subject: Fwd: [Ms-nfs41-client-devel] ANN: NFSv4.2/NFSv4.1 filesystem client
- Windows driver binaries for Windows 10/11+WindowsServer 2019/2022 for
- testing, 2025-05-14 ...
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
+ exports
+To: Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>
+Cc: Steve Dickson <steved@redhat.com>, Tom Haynes <loghyr@gmail.com>,
+ linux-nfs@vger.kernel.org
+References: <20250513-master-v1-1-e845fe412715@kernel.org>
+ <174719033130.62796.892917485792343533@noble.neil.brown.name>
+ <7ccccc0cbaecb1a092983de6ab30f1db722d0006.camel@kernel.org>
+From: Christopher Bii <christopherbii@hyub.org>
+In-Reply-To: <7ccccc0cbaecb1a092983de6ab30f1db722d0006.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Just want to weigh in on this briefly,
 
-Please test the binaries. The NFSv4.2/4.1 client is for Windows 10/11
-AMD64+x86 and Windows Server 2019+2022/AMD64, but interoperability
-feedback with NFSv4.1/NFSv4.2 servers based on Linux 6.6+ LTS and
-6.14+ would be great.
+Firstly:
 
-News:
-See announcement below, copy-by-block-cloning is IMO the most
-interesting new feature, because it's "on" by default for all Windows
-11 applications which copy files
+Yes, people have arbitrary access to low ports on their systems, but
+such privileges are voided behind a NAT. Meaning a, possibly accidental,
+publicly facing server may indeed benefit from such a check.
 
-Thanks,
-Martin
+Secondly:
 
----------- Forwarded message ---------
-From: Roland Mainz <roland.mainz@nrubsig.org>
-Date: Wed, May 14, 2025 at 8:49=E2=80=AFPM
-Subject: [Ms-nfs41-client-devel] ANN: NFSv4.2/NFSv4.1 filesystem
-client Windows driver binaries for Windows 10/11+WindowsServer
-2019/2022 for testing, 2025-05-14 ...
-To: <ms-nfs41-client-devel@lists.sourceforge.net>
+Even if NAT's didn't exist and you needed no system capabilities to bind
+to any port. It is entirely legitimate for server/client applications,
+let alone ones living in the kernel, to restrict client access based on
+any criterion that may (de)legitimize them. Look at smtp. Yes there are
+workarounds to everything, but goal isn't to stop bad actors in whole,
+or even in large part. If such a thing can deter a small portion of
+malicious traffic, it worked.
 
+Thirdly:
 
-Hi!
+Kinda goes with the above. Evaluating the efficiency of individual
+components of a larger system can often lead to false conclusions.
 
-----
+Unless this has actively caused any issues for people where they would
+rather it be opt-in, I think this should remain unchanged. If anything,
+I'd say the argument to take it out completely is much more compelling.
 
-We've created a set of test binaries for the NFSv4.2/NFSv4.1
-filesystem client driver for Windows 10 (32+64bit), Windows 11+Windows
-Server 2019/2022 (64bit), based on
-https://github.com/kofemann/ms-nfs41-client (commit id
-#0dc698b9c563c7958a52862ed10d0758f3522fb3, git bundle in tarball), for
-testing and feedback.
+It's a simple toggle option, those likely to need the change can easily
+do so. If we assume zero user knowledge, they are likely incapable of
+stepping outside the default ports used by client/server. Meaning, best
+case scenario, the connection from port 60000 may be the vacuum cleaner.
 
-** FULL release readme:
-- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
-/msnfs41client_cygwin_64bit32bit_binaries_20250514_20h00m_git0dc698b.readme
-** Download URL:
-- http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing=
-/msnfs41client_cygwin_64bit32bit_binaries_20250514_20h00m_git0dc698b.tar.bz=
-2
+Regards,
+Christopher Bii
 
-** Major changes since the last release:
-- Support for FSCTL_DUPLICATE_EXTENTS_TO_FILE, which allows Windows 11
-applications which use |CopyFile2()| (like cmd.exe  copy, xcopy.exe
-etc) to copy files via block cloning. Requires NFSv4.2 NFS server with
-{ CLONE, SEEK, DEALLOCATE } support, exporting a filesystem which
-supports block cloning (e.g. btrfs, xfs). This includes correct
-cloning of sparse files.
-- Sparse file support (requires NFSv4.2 server { SEEK, ALLOCATE,
-DEALLOCATE } and the |FATTR4_WORD1_SPACE_USED| attr), including
-hole/data range enumeration, punching holes etc., e.g. $ fsutil sparse
-queryrange mysparsefile #
-- Improved Windows Extended Attribute (EA) support (requires NFS >=3D
-v4.1 server with "Named Attribute" support ("OPENATTR")), including
-create/read/write/delete
-- Improved WSL support
-- Support for Storage32-API (e.g. enables use of *.msi installer files
-on NFS filesystems)
-- Cygwin /usr/bin/svn and Windows '/cygdrive/c/Program
-Files/Git/cmd/git' now work
-- Illumos NFSv4.2 server is now supported
-- Solaris 11.4 NFSv4.1 server is now supported
-- Windows Server 2022 NFSv4.1 server is now supported (compared to
-WS2019 this NFS server version has ACL support)
+Jeff Layton wrote:
+> On Wed, 2025-05-14 at 12:38 +1000, NeilBrown wrote:
+>> On Tue, 13 May 2025, Jeff Layton wrote:
+>>> Back in the 80's someone thought it was a good idea to carve out a set
+>>> of ports that only privileged users could use. When NFS was originally
+>>> conceived, Sun made its server require that clients use low ports.
+>>> Since Linux was following suit with Sun in those days, exportfs has
+>>> always defaulted to requiring connections from low ports.
+>>>
+>>> These days, anyone can be root on their laptop, so limiting connections
+>>> to low source ports is of little value.
+>>>
+>>> Make the default be "insecure" when creating exports.
+>>>
+>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>> ---
+>>> In discussion at the Bake-a-thon, we decided to just go for making
+>>> "insecure" the default for all exports.
+>>> ---
+>>>   support/nfs/exports.c      | 7 +++++--
+>>>   utils/exportfs/exports.man | 4 ++--
+>>>   2 files changed, 7 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+>>> index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef287ca0685af3e70ed0b 100644
+>>> --- a/support/nfs/exports.c
+>>> +++ b/support/nfs/exports.c
+>>> @@ -34,8 +34,11 @@
+>>>   #include "reexport.h"
+>>>   #include "nfsd_path.h"
+>>>   
+>>> -#define EXPORT_DEFAULT_FLAGS	\
+>>> -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTREECHECK)
+>>> +#define EXPORT_DEFAULT_FLAGS	(NFSEXP_READONLY |	\
+>>> +				 NFSEXP_ROOTSQUASH |	\
+>>> +				 NFSEXP_GATHERED_WRITES |\
+>>> +				 NFSEXP_NOSUBTREECHECK | \
+>>> +				 NFSEXP_INSECURE_PORT)
+>>>   
+>>>   struct flav_info flav_map[] = {
+>>>   	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
+>>> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+>>> index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7eb84301c4ec97b14d003 100644
+>>> --- a/utils/exportfs/exports.man
+>>> +++ b/utils/exportfs/exports.man
+>>> @@ -180,8 +180,8 @@ understands the following export options:
+>>>   .TP
+>>>   .IR secure
+>>>   This option requires that requests not using gss originate on an
+>>> -Internet port less than IPPORT_RESERVED (1024). This option is on by default.
+>>> -To turn it off, specify
+>>> +Internet port less than IPPORT_RESERVED (1024). This option is off by default
+>>> +but can be explicitly disabled by specifying
+>>>   .IR insecure .
+>>
+>> I think you mean "can be explicit enabled if desired" or similar.
+>>
+> 
+> Yeah, it is a little awkward. I want to keep "insecure" in the manpage
+> so that people know what the option is (and don't try to use something
+> like "nosecure"). I'll see if I can rephrase that.
+> 
+>> If you really want to do this, you should require either "insecure" or
+>> "secure" and generate a warning like we did when changing other defaults
+>> in the past.  After a period of time you can remove that requirement.
+>>
+>> NeilBrown
+>>
+> 
+> Requiring the option _would_ break existing setups, so I'd be against
+> that plan.
+> 
+> One thing we could do is have exportfs log a warning to syslog when
+> neither option is specified. Admins could specify it either way to
+> silence the message. Would that overcome your objection?
+> 
+>>
+>>>   (NOTE: older kernels (before upstream kernel version 4.17) enforced this
+>>>   requirement on gss requests as well.)
+>>>
+>>> ---
+>>> base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
+>>> change-id: 20250513-master-89974087bb04
+>>>
+>>> Best regards,
+>>> -- 
+>>> Jeff Layton <jlayton@kernel.org>
+>>>
+>>>
+>>>
+>>
+> 
 
-** Please send comments, bugs, test reports, complaints etc. to the
-MailMan mailing list at
-https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-deve=
-l
-
-----
-
-Bye,
-Roland
---
-  __ .  . __
- (o.\ \/ /.o) roland.mainz@nrubsig.org
-  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
-  /O /=3D=3D\ O\  TEL +49 641 3992797
- (;O/ \/ \O;)
-_______________________________________________
-Ms-nfs41-client-devel mailing list
-Ms-nfs41-client-devel@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/ms-nfs41-client-devel
 
