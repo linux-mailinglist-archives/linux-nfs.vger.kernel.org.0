@@ -1,99 +1,84 @@
-Return-Path: <linux-nfs+bounces-11733-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11734-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D226FAB83A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 12:15:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1519AB8535
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 13:49:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 900A94E302D
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 10:15:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F21533AC2FD
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 May 2025 11:49:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D84297B70;
-	Thu, 15 May 2025 10:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EC11298251;
+	Thu, 15 May 2025 11:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYQyQZxZ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tOmHxkRp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19572297B60;
-	Thu, 15 May 2025 10:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A27225414
+	for <linux-nfs@vger.kernel.org>; Thu, 15 May 2025 11:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747304103; cv=none; b=TWZ4QHrD9gRLOwwMSUu7zoPc7DPOmSGh+P76rKQzK7AIWJ1k/7982xFYA3lYqNBjNpI2OjmhOBgybnTrvCjimiLy3C6hXzdqpINJDLjlYP36ZLh4MBcAWI1cUgQZZOX2IvNEZlgaD3/Y9IhA7wJbmw6jpjZTw6pWki+2VX3je1c=
+	t=1747309758; cv=none; b=NS1F90RT4W6jM5ZAtt7NRR5QCetLqg3uZHmtn9vnoI6YiVmow8uCAwQnTch0ZfnYIRZiNFANj+WjzEcX+Y6qegQW3Nix4GD6/Zs7xNctyeFjSOZOIZGue3NO10JJ/2Zx8/lUZ+yH08w9cw/apYWEdXiyHgVH3Cz0zRxVQzcPCeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747304103; c=relaxed/simple;
-	bh=R6mphUTOSX/2JhAwvUojWFzDj+Z0x2A5QDAVFnWi0us=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YgeuNCIJu9Pj6nm6rEsjFgr1AN3QUA5olGjnD123j6eibkXH9If/51mfg9EkYZdlonWd30kNUeWf9NxHxQJSI48bhteYs9gPFHiFTtVR2R36AJKT34gvkBMfXqcA0IyWiS6YVBl8clu9TK4Mbiw4uND/AIDI/z6z5tJ/jU3tl4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYQyQZxZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4227EC4CEE7;
-	Thu, 15 May 2025 10:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747304102;
-	bh=R6mphUTOSX/2JhAwvUojWFzDj+Z0x2A5QDAVFnWi0us=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BYQyQZxZLkTYUi+q1fvYrpd7L03kG7AH/bgAP3zLNs798GtdZzqlz/PHDWYM0HbPi
-	 9XEbMqmpRwLKpJ4w0NsprMvSgEbKGQi4foj9PoxfSu+cryiHd+JduNZ0a2262hzea6
-	 3CiQ2/2g+Gb2XPia1skP8xI6xVnmpzrqGA89U2HuxafqG+GGXtWMdZ1vrOQjQkH5hN
-	 FCnILuB2eMrXx3eW0hMqN8R70CDX+Bj5M/pjH7ZUI94g7iUQzLMJ8imqHjkSelf4Xn
-	 qmSGmlX3+18TEcTauqQDY7iAl3+nWMyNe/sQk2Qymnwnu2ZDPHnJ3LPNge3X+sqD4G
-	 fYQuUo2jfoLDA==
-From: Christian Brauner <brauner@kernel.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	linux-fsdevel@vger.kernel.org,
+	s=arc-20240116; t=1747309758; c=relaxed/simple;
+	bh=N41Tgxp+xaot2g/R6pW1juFuPbNYkFELS4FJIKQ0Nl4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ScRhlo7yfU93kbkvNdHaoEWvvkFI/oFGUFOG50xlJgd+10WFctUJV7dvtzgbBP5zBIOXxrBJNs87A5BVQl4jjljsY5uNuK42bZDzkHJoJ+vNaArDDj4H4NuWnE3orkOU4E0/AFTMCkCi81nu40Y4pHrd7dVzARdPGPT1degJTlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tOmHxkRp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=PuBmwi7YArW0JeWN9hrB3ajVIxTttZGZi15MBm6LL0c=; b=tOmHxkRpig2zCnJb3z6VAhUoHe
+	HcfmjFQIUsAAdoMCzo/OkztX4+73KLe1RIjNOAV5Hh03grecxgxGhXNnAavZmkw+Q7kDalgY7ChPF
+	LPSl4dKsLbN7Ckw0GR2JTaRwnJ+xxDngw8mRb8JxDtcmpKhF2DZS24Yq0UnWMlJw+vrUHHKXtGGry
+	YPjhEIl0YAVKvOUkzr/3ETXFMlGoZFM7jNj2ydsaPHDRR/ztz7zCReG5OJP13YzEmZdN5TOzgVZxm
+	sXsvMNXgQMY9KHVFNEXjwKphLWIY7h5ZhUyxIDOikRomV7yPXxEcjrKtzptgJbQPfiL37w/Tm88PY
+	i8k1tgSg==;
+Received: from 2a02-8389-2341-5b80-81b5-a24e-41ab-85a6.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:81b5:a24e:41ab:85a6] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uFX5K-00000000S5M-07tB;
+	Thu, 15 May 2025 11:49:10 +0000
+From: Christoph Hellwig <hch@lst.de>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
 	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 0/3] Use folios for symlinks in the page cache
-Date: Thu, 15 May 2025 12:14:57 +0200
-Message-ID: <20250515-abwarten-legehennen-7eb82a17183e@brauner>
+Subject: small sunrpc cleanups v2
+Date: Thu, 15 May 2025 13:48:44 +0200
+Message-ID: <20250515114906.32559-1-hch@lst.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250514171316.3002934-1-willy@infradead.org>
-References: <20250514171316.3002934-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1427; i=brauner@kernel.org; h=from:subject:message-id; bh=R6mphUTOSX/2JhAwvUojWFzDj+Z0x2A5QDAVFnWi0us=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSo7lt01LjY58EGL6U/TNtqtv+RVt0tqXHkvkdGNY/69 9f3v9zI6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZhIjhbDf8+wk++P+k+Wmf1B mCVBK5HH0vzfPv4fipE6mgdfqsbz/2dkaFnCp5fhc9BDKDhcTteEa5XrjZW68uK9/ZMmNiteE8l iBwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, 14 May 2025 18:13:11 +0100, Matthew Wilcox (Oracle) wrote:
-> FUSE already uses folios for its symlinks.  Mirror that conversion in
-> the generic code and the NFS code.  That lets us get rid of a few
-> folio->page->folio conversions in this path, and some of the few
-> remaining users of read_cache_page() / read_mapping_page().
-> 
-> If anyone's concerned about all the extra lines in the diffstat, it's
-> documentation that I've added.
-> 
-> [...]
+Hi all,
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+just a few small cleanups done while looking at the code.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Changes since v1:
+ - invert polarity of a flag
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
-
-[1/3] fs: Convert __page_get_link() to use a folio
-      https://git.kernel.org/vfs/vfs/c/5f152cc012f4
-[2/3] nfs: Use a folio in nfs_get_link()
-      https://git.kernel.org/vfs/vfs/c/cc8e87f312e0
-[3/3] fs: Pass a folio to page_put_link()
-      https://git.kernel.org/vfs/vfs/c/4ec373b74e96
+Diffstat:
+ fs/nfsd/nfs3proc.c         |    2 
+ fs/nfsd/nfsproc.c          |    2 
+ include/linux/sunrpc/xdr.h |    3 
+ net/sunrpc/socklib.c       |  164 ++++++++++++++++-----------------------------
+ net/sunrpc/xdr.c           |   11 +--
+ 5 files changed, 66 insertions(+), 116 deletions(-)
 
