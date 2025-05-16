@@ -1,56 +1,54 @@
-Return-Path: <linux-nfs+bounces-11777-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11778-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8575CAB9F7A
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 May 2025 17:12:16 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B891CAB9F94
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 May 2025 17:14:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB99DA27545
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 May 2025 15:05:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EC04D7A8315
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 May 2025 15:13:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3812E26AF3;
-	Fri, 16 May 2025 15:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BEE01A5BAE;
+	Fri, 16 May 2025 15:14:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8U/UN32"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKGD0FXh"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C54219ED
-	for <linux-nfs@vger.kernel.org>; Fri, 16 May 2025 15:05:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D45156237
+	for <linux-nfs@vger.kernel.org>; Fri, 16 May 2025 15:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747407940; cv=none; b=nX2auy95FgIor8JkOo38nIUUY+vo7tUB7Vqd/72en9lxEibzr00dCCmdEy7pOqyDya9ynHJyzHs7QlS8FebAWqDVlUEISZC4P5PiH/EvPfyFp6W/9R/DbBzif9zCVXwe4Z9Dr+j73uNqKuc5K01jDe7ky6KtdnpFb92Gg/KVJJ4=
+	t=1747408466; cv=none; b=s5DsinBB+V2XUCUMnvi/jn/bmZtGEO313qKDdFyRoGjI86C+k5WTnda+eG/eJ6DuEeyCz1wYAW14rP8xis9vDuCjXDFOTj/byoRqvRFdGnHznndbOMSMnxBP0CzD/HEQSD6Z4aZqmcK3LlW1+g2ZLXQuRz5zkU70pIB3QVatgEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747407940; c=relaxed/simple;
-	bh=oXE/T4whAQ5L/UaLy3satDRzB+LuvBn85GOIWefkzY0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qiZHcZYlxpHhZ6kDEaXdentX8ECTpMCKTmD5GaKswCNhme/WcibNho9Y7iLNNYYHSKbQn5dzRovZdRDitfQ/2EP5zPkW5YUzlv5LiV1pFNzxB4OB0rNVxO6cf8bhb0rxpqvHPcibO/8ZiNiMQB1ticaYP+c+XK1I6GD6WuAkX24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8U/UN32; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D157C4CEE4;
-	Fri, 16 May 2025 15:05:38 +0000 (UTC)
+	s=arc-20240116; t=1747408466; c=relaxed/simple;
+	bh=oj7pIcrAYdL6ezRrWCjz0F9WNpMb8xWiRvd8AqNP1/Y=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dOohCUs2uIjDEgH5liJcyTyjsWPUCPgTUncIHXtM3wU5cljk7ciBAAEJ+xuvDCz1mX574LPW4RUFH+Q3jupMc27llCiDcVxEr3361KlUTRIpAznYWMoxSqQDimQ+S6oLbeleuSKz7llBGmv3IGv/h1gQH3+L4Mt0dhCojkj77QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKGD0FXh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD36C4CEE4;
+	Fri, 16 May 2025 15:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747407939;
-	bh=oXE/T4whAQ5L/UaLy3satDRzB+LuvBn85GOIWefkzY0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N8U/UN32jOAwScEdjvj4eUCEuzaaGEijXeBqh9xROdmm2OfNKaX3uj7Nndz4G0D3c
-	 HWyHCV0QcPKhV7ds4a5F6Fo3rHb6rsixwV+Tez8+20MR5JzyGNj7pWaAFeCM5g5Oe4
-	 97oPP8DfE4CgFBwZbHbxrMsDzS6hWDgvI4LgiNpc4bqgreEuZEdB4yGrsgPVxaHnF5
-	 /xry/YNioIPicKyIf/PwRqXxrOKyvUUOveQhA7XpzcnzNOfVIT8BpHDG4eD0hiKvIh
-	 QvVP7bAaU/V6nx/+T5aLbw3ZEYOpYb34pDBbc22vYjkctf7U0U0CuZ5ByVug1oS00b
-	 VB1QssEeRXXOQ==
-Message-ID: <480b2ed5ded21d186f4b4e64a8aebc226d4c3468.camel@kernel.org>
-Subject: Re: [PATCH v1 1/3] Expand the type of nfs_fattr->valid
+	s=k20201202; t=1747408465;
+	bh=oj7pIcrAYdL6ezRrWCjz0F9WNpMb8xWiRvd8AqNP1/Y=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=RKGD0FXhJTCQEFST4E/WhtIJvIAIN2nzUw7YBHKyn81cBFoIt7G2WVM8bmJa63Qpi
+	 +Wn4nhJ0Ud4D/MreRbG03hiQPSrQHdPjEI2UgXupYe3LjYwkUHg6hYFnsmw8TeEHbi
+	 N8TU/8+V1TxY9RZnMzVbndx2sSB6xp8uJkiJB/w+DMH5TFn8I61dXNkALnWQaYgrdq
+	 YeEINvholoCp11AaeFrJyNtQ7lfm/I7gJ0oD/grzes55wOAooFHH8k4BtkAVB/BnbP
+	 LHeLJMuvJwMfsGyjzbsEOiMDRfY4r/0mqRrA47EDfu9mVUS5c6DvKxpyOx8gs7zRvS
+	 LQZY/8q3iDBgQ==
+Message-ID: <74bc723f4989fc5eb0bfb1558025f10b04eac6a4.camel@kernel.org>
+Subject: Re: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Lance Shelton <lance.shelton@hammerspace.com>
-Date: Fri, 16 May 2025 11:05:38 -0400
-In-Reply-To: <725abd9afbe268c50b99a1b2ded6c2339a5e79c0.1747318805.git.bcodding@redhat.com>
-References: <cover.1747318805.git.bcodding@redhat.com>
-	 <725abd9afbe268c50b99a1b2ded6c2339a5e79c0.1747318805.git.bcodding@redhat.com>
+To: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+	trond.myklebust@hammerspace.com
+Date: Fri, 16 May 2025 11:14:24 -0400
+In-Reply-To: <20250516150010.61641-1-anna@kernel.org>
+References: <20250516150010.61641-1-anna@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,131 +133,71 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-05-15 at 10:40 -0400, Benjamin Coddington wrote:
-> From: Trond Myklebust <trond.myklebust@primarydata.com>
+On Fri, 2025-05-16 at 11:00 -0400, Anna Schumaker wrote:
+> From: Anna Schumaker <anna.schumaker@oracle.com>
 >=20
-> We need to be able to track more than 32 attributes per inode.
+> The PTR_ERR_OR_ZERO() macro uses IS_ERR(), which checks if an error
+> value is a valid Linux error code. It does not take into account NFS
+> error codes, which are well out of the range of MAX_ERRNO. So if
+> _nfs4_proc_mkdir() returns -NFS4ERR_DELAY (which xfstests generic/477 was
+> able to consistently hit while running against a Hammerspace server),
+> PTR_ERR_OR_ZERO() will happily say "no, that's not an error", so we
+> propagate it up to the VFS who then tries to dput() it.
 >=20
-> Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
-> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> Naturally, the kernel doesn't like this:
+>=20
+> [  247.669307] BUG: unable to handle page fault for address: ffffffffffff=
+d968
+> [  247.690824] RIP: 0010:lockref_put_return+0x67/0x130
+> [  247.719037] Call Trace:
+> [  247.719446]  <TASK>
+> [  247.719806]  ? __pfx_lockref_put_return+0x10/0x10
+> [  247.720538]  ? _raw_spin_unlock+0x15/0x30
+> [  247.721173]  ? dput+0x179/0x490
+> [  247.721682]  ? vfs_mkdir+0x475/0x780
+> [  247.722259]  dput+0x30/0x490
+> [  247.722730]  do_mkdirat+0x158/0x310
+> [  247.723292]  ? __pfx_do_mkdirat+0x10/0x10
+> [  247.723928]  __x64_sys_mkdir+0xd3/0x160
+> [  247.724531]  do_syscall_64+0x4b/0x120
+> [  247.725131]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  247.725914] RIP: 0033:0x7fe0e22f3ddb
+>=20
+> While I was in the area, I noticed that we're discarding any errors left
+> unhandled by nfs4_handle_exception(). This patch fixes both of these
+> issues.
+>=20
+> Fixes: 8376583b84a1 ("nfs: change mkdir inode_operation to return alterna=
+te dentry if needed.")
+> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 > ---
->  fs/nfs/inode.c            |  5 ++--
->  include/linux/nfs_fs_sb.h |  2 +-
->  include/linux/nfs_xdr.h   | 54 +++++++++++++++++++--------------------
->  3 files changed, 31 insertions(+), 30 deletions(-)
+>  fs/nfs/nfs4proc.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 1aa67fca69b2..d4e449fa076e 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -2164,10 +2164,11 @@ static int nfs_update_inode(struct inode *inode, =
-struct nfs_fattr *fattr)
->  	bool attr_changed =3D false;
->  	bool have_delegation;
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index c7e068b563ff..306dade146e6 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -5274,13 +5274,17 @@ static struct dentry *nfs4_proc_mkdir(struct inod=
+e *dir, struct dentry *dentry,
+>  		sattr->ia_mode &=3D ~current_umask();
+>  	do {
+>  		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
+> -		err =3D PTR_ERR_OR_ZERO(alias);
+> +		err =3D PTR_ERR(alias);
+> +		if (err > 0)
+> +			err =3D 0;
+>  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+>  		err =3D nfs4_handle_exception(NFS_SERVER(dir), err,
+>  				&exception);
+>  	} while (exception.retry);
+>  	nfs4_label_release_security(label);
 > =20
-> -	dfprintk(VFS, "NFS: %s(%s/%lu fh_crc=3D0x%08x ct=3D%d info=3D0x%x)\n",
-> +	dfprintk(VFS, "NFS: %s(%s/%lu fh_crc=3D0x%08x ct=3D%d info=3D0x%lx)\n",
->  			__func__, inode->i_sb->s_id, inode->i_ino,
->  			nfs_display_fhandle_hash(NFS_FH(inode)),
-> -			atomic_read(&inode->i_count), fattr->valid);
-> +			atomic_read(&inode->i_count),
-> +			(unsigned long)fattr->valid);
+> +	if (err !=3D 0)
+> +		return ERR_PTR(err);
+>  	return alias;
+>  }
+> =20
 
-Why the cast? You could just set the format to %llx and pass fattr-
->valid as-is?
-
-> =20
->  	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
->  		/* Only a mounted-on-fileid? Just exit */
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index f00bfcee7120..056d0ad38756 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -168,8 +168,8 @@ struct nfs_server {
->  #define NFS_MOUNT_SHUTDOWN			0x08000000
->  #define NFS_MOUNT_NO_ALIGNWRITE		0x10000000
-> =20
-> -	unsigned int		fattr_valid;	/* Valid attributes */
->  	unsigned int		caps;		/* server capabilities */
-> +	__u64			fattr_valid;	/* Valid attributes */
->  	unsigned int		rsize;		/* read size */
->  	unsigned int		rpages;		/* read size (in pages) */
->  	unsigned int		wsize;		/* write size */
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 9155a6ffc370..b7b06f0d2fb9 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -45,7 +45,7 @@ struct nfs4_threshold {
->  };
-> =20
->  struct nfs_fattr {
-> -	unsigned int		valid;		/* which fields are valid */
-> +	__u64			valid;		/* which fields are valid */
->  	umode_t			mode;
->  	__u32			nlink;
->  	kuid_t			uid;
-> @@ -80,32 +80,32 @@ struct nfs_fattr {
->  	struct nfs4_label	*label;
->  };
-> =20
-> -#define NFS_ATTR_FATTR_TYPE		(1U << 0)
-> -#define NFS_ATTR_FATTR_MODE		(1U << 1)
-> -#define NFS_ATTR_FATTR_NLINK		(1U << 2)
-> -#define NFS_ATTR_FATTR_OWNER		(1U << 3)
-> -#define NFS_ATTR_FATTR_GROUP		(1U << 4)
-> -#define NFS_ATTR_FATTR_RDEV		(1U << 5)
-> -#define NFS_ATTR_FATTR_SIZE		(1U << 6)
-> -#define NFS_ATTR_FATTR_PRESIZE		(1U << 7)
-> -#define NFS_ATTR_FATTR_BLOCKS_USED	(1U << 8)
-> -#define NFS_ATTR_FATTR_SPACE_USED	(1U << 9)
-> -#define NFS_ATTR_FATTR_FSID		(1U << 10)
-> -#define NFS_ATTR_FATTR_FILEID		(1U << 11)
-> -#define NFS_ATTR_FATTR_ATIME		(1U << 12)
-> -#define NFS_ATTR_FATTR_MTIME		(1U << 13)
-> -#define NFS_ATTR_FATTR_CTIME		(1U << 14)
-> -#define NFS_ATTR_FATTR_PREMTIME		(1U << 15)
-> -#define NFS_ATTR_FATTR_PRECTIME		(1U << 16)
-> -#define NFS_ATTR_FATTR_CHANGE		(1U << 17)
-> -#define NFS_ATTR_FATTR_PRECHANGE	(1U << 18)
-> -#define NFS_ATTR_FATTR_V4_LOCATIONS	(1U << 19)
-> -#define NFS_ATTR_FATTR_V4_REFERRAL	(1U << 20)
-> -#define NFS_ATTR_FATTR_MOUNTPOINT	(1U << 21)
-> -#define NFS_ATTR_FATTR_MOUNTED_ON_FILEID (1U << 22)
-> -#define NFS_ATTR_FATTR_OWNER_NAME	(1U << 23)
-> -#define NFS_ATTR_FATTR_GROUP_NAME	(1U << 24)
-> -#define NFS_ATTR_FATTR_V4_SECURITY_LABEL (1U << 25)
-> +#define NFS_ATTR_FATTR_TYPE		BIT_ULL(0)
-> +#define NFS_ATTR_FATTR_MODE		BIT_ULL(1)
-> +#define NFS_ATTR_FATTR_NLINK		BIT_ULL(2)
-> +#define NFS_ATTR_FATTR_OWNER		BIT_ULL(3)
-> +#define NFS_ATTR_FATTR_GROUP		BIT_ULL(4)
-> +#define NFS_ATTR_FATTR_RDEV		BIT_ULL(5)
-> +#define NFS_ATTR_FATTR_SIZE		BIT_ULL(6)
-> +#define NFS_ATTR_FATTR_PRESIZE		BIT_ULL(7)
-> +#define NFS_ATTR_FATTR_BLOCKS_USED	BIT_ULL(8)
-> +#define NFS_ATTR_FATTR_SPACE_USED	BIT_ULL(9)
-> +#define NFS_ATTR_FATTR_FSID		BIT_ULL(10)
-> +#define NFS_ATTR_FATTR_FILEID		BIT_ULL(11)
-> +#define NFS_ATTR_FATTR_ATIME		BIT_ULL(12)
-> +#define NFS_ATTR_FATTR_MTIME		BIT_ULL(13)
-> +#define NFS_ATTR_FATTR_CTIME		BIT_ULL(14)
-> +#define NFS_ATTR_FATTR_PREMTIME		BIT_ULL(15)
-> +#define NFS_ATTR_FATTR_PRECTIME		BIT_ULL(16)
-> +#define NFS_ATTR_FATTR_CHANGE		BIT_ULL(17)
-> +#define NFS_ATTR_FATTR_PRECHANGE	BIT_ULL(18)
-> +#define NFS_ATTR_FATTR_V4_LOCATIONS	BIT_ULL(19)
-> +#define NFS_ATTR_FATTR_V4_REFERRAL	BIT_ULL(20)
-> +#define NFS_ATTR_FATTR_MOUNTPOINT	BIT_ULL(21)
-> +#define NFS_ATTR_FATTR_MOUNTED_ON_FILEID BIT_ULL(22)
-> +#define NFS_ATTR_FATTR_OWNER_NAME	BIT_ULL(23)
-> +#define NFS_ATTR_FATTR_GROUP_NAME	BIT_ULL(24)
-> +#define NFS_ATTR_FATTR_V4_SECURITY_LABEL BIT_ULL(25)
-> =20
->  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
->  		| NFS_ATTR_FATTR_MODE \
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
