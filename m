@@ -1,222 +1,117 @@
-Return-Path: <linux-nfs+bounces-11787-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11788-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73BEEABA939
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 11:49:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F113DABABE4
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 20:40:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 011C9177D29
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 09:49:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD83F3AEAE5
+	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 18:39:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 904E920330;
-	Sat, 17 May 2025 09:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 786A21DF973;
+	Sat, 17 May 2025 18:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/Rc8ZiT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B928176026
-	for <linux-nfs@vger.kernel.org>; Sat, 17 May 2025 09:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEEC202C30;
+	Sat, 17 May 2025 18:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747475357; cv=none; b=uRJODAD72/cFQd4mt0gyv4ZQETJ5CwZJSrfWXb/ijTFCwwOe3GSX9Aca6z7bnQtUMWuc00kVBhMz5YdagLEVfq6sm31/yWOC+ac1kOQ1RgK3NkzyxAsmVMpwUHXCAkU+iHU7dLuGll6wz9c7HYZj2pf13Yfbtn5u4WzmhDkXCTY=
+	t=1747507211; cv=none; b=b+rxd6oncXpmWXAsvFJRr2j2Wa2UYYvbkZDllDqG6uMStPOrg3dcAT5WRs+N0pRxh0UFAEWN3vUBtbx3JQ/bZRX3Xv4nJXLQNVrDPTeA2h6LXX/lH+oLFQ4Mh+gQkca2Qo7Ca5Fdg1gMPCiFXX7elrDWCBTKtvX9WwfYIjJEeck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747475357; c=relaxed/simple;
-	bh=pR4Slo6cNrfWWeqvSrqJSDLyuRtRZaleQmiLjUtY/+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VljJ6LAPNbpR2MuLr2FF7EyK6O1W0iCT6YSS3Kuf7ZU1e7WfRAhct3CwEq+/HourQjPDUgylb6JNU13/EfAfwEcC88BkelD2I/Edzqs7qxkiHEdB3nWLu0DR0JqajxQpm1ApJ3ThOiqC4B22Ho481faH5PVUhSkZNhCWE1/zRTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a3681aedf8so268311f8f.1
-        for <linux-nfs@vger.kernel.org>; Sat, 17 May 2025 02:49:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747475354; x=1748080154;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :reply-to:cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=36Xd4XOZcOHfnKjklDanQeCKJX/jyEc+VxUUlIzlJiU=;
-        b=K3izKp/qtJpR+XZMpLDHN37nE1YXTL+bH8WuoAWvqxM4mzIWFLSOF1aDuF1a5Aix7O
-         LnFXIpvgIpdmJdrY9aMqN+cFxxlEOmk/WrHWEkgtcwf+yhOww4bnTd2cIAwi/EjwPKmb
-         Ipd9f0IP8Dd+ezHQHdeLrewSxTktCHN2L0wzFKAyDK24GTn31Rr7CG5YBif5+7FJwGc9
-         dfTi31O5J1Zui+kuDMo4QiCPROCua9pARqTGfhnK5wUbd3DCuyiItDwmJqXQ+MUGEgHR
-         zHZma0beIMNV5rlUiOx5Hlpno6Ikj9gJrqbheYlpuhxYX06vmHu41+WHajbL9Wq9b4Nj
-         jLsg==
-X-Gm-Message-State: AOJu0YxItSDXRvhp/SKlZZw6JmotHLklIjnvJ+k8yrmOdRJL3sxfBvpf
-	fSrIN3oQ3R3QLZzOHEtcGsDzyi00RzA6bO7m0rKQ4skJO7Xk5kBHqyQ6DvmZtA==
-X-Gm-Gg: ASbGnctf5SxrtkCggWwrhs+JR4zHZHMl3kx0zqXliljcxCofqQB1+kC7MloTsUoRGP/
-	UPl052RHV50rNuBWOElElGCfLM1FA2RfQVyJm3YTJulkWgNZDlrvRLModeCoFPoRqx3bGoRX2ES
-	oPG6Kf/s4ibc7CpIAD7jcdgJ+Jfv7rXlvXFMnaWBHijWEG2Ee1gvr+sp509l2O3ZzfwMwj2WqRf
-	83EJcQEQiBY2VPkrtuYJ25uJSoas5iE5bNN+InjBaoQFamtHQeZW0HEX9yKM38QXPv5g+A6ag8c
-	WIZDDNPAz1ieROo95tZCnfx5/sFo4u6haV7Q9u2u+q0OWoWj2EyWKf2rujntUWsa1s0dPj9g4Vx
-	lD2hZjeiqe/Iq2nyCs4A=
-X-Google-Smtp-Source: AGHT+IH6yceEfrV2VpLWN2+R3QpoHb1PF8CCe2E+hgLD5B5OQlYiznuF4EgvC51DHw8btgM2xmqvcA==
-X-Received: by 2002:a5d:64e9:0:b0:3a3:685b:118 with SMTP id ffacd0b85a97d-3a3685b0292mr838629f8f.24.1747475353501;
-        Sat, 17 May 2025 02:49:13 -0700 (PDT)
-Received: from [10.100.102.74] (89-138-68-29.bb.netvision.net.il. [89.138.68.29])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583efasm62213895e9.29.2025.05.17.02.49.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 May 2025 02:49:13 -0700 (PDT)
-Message-ID: <830cac81-6608-4c8a-be38-fa3e6630fed0@grimberg.me>
-Date: Sat, 17 May 2025 12:49:12 +0300
+	s=arc-20240116; t=1747507211; c=relaxed/simple;
+	bh=WKWVRy2+m4H/11NZG/n7a5Udgxg8ZMFS/sbQyU1Y3uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+ZeMvHdCowWl+vCgoHtBJX6GrPlM8wEdGAFf5zIPj/NcSvGBFEGbpm5iP5ItIuU442W1nRFHRqRWlJZHUlttnC6qkfoBjtrrbLZokhoxmoMj7uGjyPuqUl+0iFPnqhN3J6GJGrinV8usrw7CJICfGjgpvqf1jJ4LFPFObQnBF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/Rc8ZiT; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747507210; x=1779043210;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WKWVRy2+m4H/11NZG/n7a5Udgxg8ZMFS/sbQyU1Y3uI=;
+  b=K/Rc8ZiTIgaiof+NC71tFPzDy91bAGdVUDn/EOhsEXJ0+KGRvEZkXt42
+   Y+eHYCSKTB5s2U0cnAVac2DjjxEHK/ZRqDbo8DiYwMXe+MkougYHD6NrX
+   DdzC/632s7foXHyNvrl5JxEDgFIz+dllzyTAWgpnyFMy3tRqAT4Lp+9r/
+   rMMrAL1tZtp3WqXywP6J0FR8pm5PZDGzEXMtQEiUIswTnlCMZHBNHR4Ls
+   15cFjSyFsl4yoAMvrTShISmtd7ZgU8hTilDVk6wtm8MZy0ToXATXXEsDx
+   dPYiIp/KQrlvlfoWoWP3oKGv+71kNv+5cIChNivp85wP7tUPKpAsVB7kv
+   Q==;
+X-CSE-ConnectionGUID: FjlUhkqVSsSfJA0q1yWO0A==
+X-CSE-MsgGUID: 6DiXwZjhT9++oc5avwnKZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="52083155"
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="52083155"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 11:40:09 -0700
+X-CSE-ConnectionGUID: K48QIeBGTROHuSU/nsiaQg==
+X-CSE-MsgGUID: UvIeephWRPCQMHfXINH/zQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
+   d="scan'208";a="144233359"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 17 May 2025 11:40:07 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uGMS4-000KLP-1s;
+	Sat, 17 May 2025 18:40:04 +0000
+Date: Sun, 18 May 2025 02:39:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Anna Schumaker <anna@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, linux-nfs@vger.kernel.org,
+	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
+	keyrings@vger.kernel.org
+Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
+Message-ID: <202505180251.Qt2Rlaed-lkp@intel.com>
+References: <20250515115107.33052-3-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] NFSv4.2: fix setattr caching of
- TIME_[MODIFY|ACCESS]_SET when timestamps are delegated
-From: Sagi Grimberg <sagi@grimberg.me>
-To: linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Reply-To: sagi@grimberg.me
-References: <20250511215436.457429-1-sagi@grimberg.me>
-Content-Language: en-US
-In-Reply-To: <20250511215436.457429-1-sagi@grimberg.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515115107.33052-3-hch@lst.de>
 
-Hey,
+Hi Christoph,
 
-Chuck, this does not introduce any new xfstests failures.
+kernel test robot noticed the following build warnings:
 
-Jeff, forgot to add your "Reviewed-by" tag, care to add another one?
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.15-rc6 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Trond, from your last comment my understanding is that you are
-supportive of this, are you planning to take this patch?
+url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Hellwig/nfs-create-a-kernel-keyring/20250515-205131
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20250515115107.33052-3-hch%40lst.de
+patch subject: [PATCH 2/2] nfs: create a kernel keyring
+config: sh-sh03_defconfig (https://download.01.org/0day-ci/archive/20250518/202505180251.Qt2Rlaed-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505180251.Qt2Rlaed-lkp@intel.com/reproduce)
 
-On 12/05/2025 0:54, Sagi Grimberg wrote:
-> nfs_setattr will flush all pending writes before updating a file time
-> attributes. However when the client holds delegated timestamps, it can
-> update its timestamps locally as it is the authority for the file
-> times attributes. The client will later set the file attributes by
-> adding a setattr to the delegreturn compound updating the server time
-> attributes.
->
-> Fix nfs_setattr to avoid flushing pending writes when the file time
-> attributes are delegated and the mtime/atime are set to a fixed
-> timestamp (ATTR_[MODIFY|ACCESS]_SET. Also, when sending the setattr
-> procedure over the wire, we need to clear the correct attribute bits
-> from the bitmask.
->
-> I was able to measure a noticable speedup when measuring untar performance.
-> Test: $ time tar xzf ~/dir.tgz
-> Baseline: 0m44.407s
-> Patched: 0m29.712s
->
-> Which is more than 30% latency improvement.
->
-> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-> ---
-> Changes from v1:
-> - Moved attr->ia_valid assignments as well as inode->lock handling to
->    nfs_set_timestamps_to_ts helper
->
->   fs/nfs/inode.c    | 54 +++++++++++++++++++++++++++++++++++++++++------
->   fs/nfs/nfs4proc.c |  8 +++----
->   2 files changed, 52 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 119e447758b9..295e2776053c 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -633,6 +633,40 @@ nfs_fattr_fixup_delegated(struct inode *inode, struct nfs_fattr *fattr)
->   	}
->   }
->   
-> +static void nfs_set_timestamps_to_ts(struct inode *inode, struct iattr *attr)
-> +{
-> +	unsigned int cache_flags = 0;
-> +
-> +	spin_lock(&inode->i_lock);
-> +	if (attr->ia_valid & ATTR_MTIME_SET) {
-> +		struct timespec64 ctime = inode_get_ctime(inode);
-> +		struct timespec64 mtime = inode_get_mtime(inode);
-> +		struct timespec64 now;
-> +		int updated = 0;
-> +
-> +		now = inode_set_ctime_current(inode);
-> +		if (!timespec64_equal(&now, &ctime))
-> +			updated |= S_CTIME;
-> +
-> +		inode_set_mtime_to_ts(inode, attr->ia_mtime);
-> +		if (!timespec64_equal(&now, &mtime))
-> +			updated |= S_MTIME;
-> +
-> +		inode_maybe_inc_iversion(inode, updated);
-> +		cache_flags |= NFS_INO_INVALID_CTIME | NFS_INO_INVALID_MTIME;
-> +		attr->ia_valid &= ~(ATTR_MTIME|ATTR_MTIME_SET|
-> +					ATTR_ATIME|ATTR_ATIME_SET);
-> +
-> +	}
-> +	if (attr->ia_valid & ATTR_ATIME_SET) {
-> +		inode_set_atime_to_ts(inode, attr->ia_atime);
-> +		cache_flags |= NFS_INO_INVALID_ATIME;
-> +		attr->ia_valid &= ~(ATTR_ATIME|ATTR_ATIME_SET);
-> +	}
-> +	NFS_I(inode)->cache_validity &= ~cache_flags;
-> +	spin_unlock(&inode->i_lock);
-> +}
-> +
->   static void nfs_update_timestamps(struct inode *inode, unsigned int ia_valid)
->   {
->   	enum file_time_flags time_flags = 0;
-> @@ -700,15 +734,23 @@ nfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->   	}
->   
->   	if (nfs_have_delegated_mtime(inode) && attr->ia_valid & ATTR_MTIME) {
-> -		spin_lock(&inode->i_lock);
-> -		nfs_update_timestamps(inode, attr->ia_valid);
-> -		spin_unlock(&inode->i_lock);
-> -		attr->ia_valid &= ~(ATTR_MTIME | ATTR_ATIME);
-> +		if (attr->ia_valid & ATTR_MTIME_SET) {
-> +			nfs_set_timestamps_to_ts(inode, attr);
-> +		} else {
-> +			spin_lock(&inode->i_lock);
-> +			nfs_update_timestamps(inode, attr->ia_valid);
-> +			spin_unlock(&inode->i_lock);
-> +			attr->ia_valid &= ~(ATTR_MTIME|ATTR_ATIME);
-> +		}
->   	} else if (nfs_have_delegated_atime(inode) &&
->   		   attr->ia_valid & ATTR_ATIME &&
->   		   !(attr->ia_valid & ATTR_MTIME)) {
-> -		nfs_update_delegated_atime(inode);
-> -		attr->ia_valid &= ~ATTR_ATIME;
-> +		if (attr->ia_valid & ATTR_ATIME_SET) {
-> +			nfs_set_timestamps_to_ts(inode, attr);
-> +		} else {
-> +			nfs_update_delegated_atime(inode);
-> +			attr->ia_valid &= ~ATTR_ATIME;
-> +		}
->   	}
->   
->   	/* Optimization: if the end result is no change, don't RPC */
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 970f28dbf253..c501a0d5da90 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -325,14 +325,14 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, const __u32 *src,
->   
->   	if (nfs_have_delegated_mtime(inode)) {
->   		if (!(cache_validity & NFS_INO_INVALID_ATIME))
-> -			dst[1] &= ~FATTR4_WORD1_TIME_ACCESS;
-> +			dst[1] &= ~(FATTR4_WORD1_TIME_ACCESS|FATTR4_WORD1_TIME_ACCESS_SET);
->   		if (!(cache_validity & NFS_INO_INVALID_MTIME))
-> -			dst[1] &= ~FATTR4_WORD1_TIME_MODIFY;
-> +			dst[1] &= ~(FATTR4_WORD1_TIME_MODIFY|FATTR4_WORD1_TIME_MODIFY_SET);
->   		if (!(cache_validity & NFS_INO_INVALID_CTIME))
-> -			dst[1] &= ~FATTR4_WORD1_TIME_METADATA;
-> +			dst[1] &= ~(FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY_SET);
->   	} else if (nfs_have_delegated_atime(inode)) {
->   		if (!(cache_validity & NFS_INO_INVALID_ATIME))
-> -			dst[1] &= ~FATTR4_WORD1_TIME_ACCESS;
-> +			dst[1] &= ~(FATTR4_WORD1_TIME_ACCESS|FATTR4_WORD1_TIME_ACCESS_SET);
->   	}
->   }
->   
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505180251.Qt2Rlaed-lkp@intel.com/
 
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+>> WARNING: modpost: vmlinux: section mismatch in reference: init_nfs_fs+0x18c (section: .init.text) -> exit_misc_binfmt (section: .exit.text)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
