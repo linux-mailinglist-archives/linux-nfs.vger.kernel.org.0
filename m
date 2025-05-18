@@ -1,117 +1,135 @@
-Return-Path: <linux-nfs+bounces-11788-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11789-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F113DABABE4
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 20:40:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50EC9ABAF27
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 May 2025 11:58:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD83F3AEAE5
-	for <lists+linux-nfs@lfdr.de>; Sat, 17 May 2025 18:39:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA9163BC127
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 May 2025 09:57:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 786A21DF973;
-	Sat, 17 May 2025 18:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734A6205E25;
+	Sun, 18 May 2025 09:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/Rc8ZiT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5gEip4Y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEEC202C30;
-	Sat, 17 May 2025 18:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD68610B;
+	Sun, 18 May 2025 09:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747507211; cv=none; b=b+rxd6oncXpmWXAsvFJRr2j2Wa2UYYvbkZDllDqG6uMStPOrg3dcAT5WRs+N0pRxh0UFAEWN3vUBtbx3JQ/bZRX3Xv4nJXLQNVrDPTeA2h6LXX/lH+oLFQ4Mh+gQkca2Qo7Ca5Fdg1gMPCiFXX7elrDWCBTKtvX9WwfYIjJEeck=
+	t=1747562259; cv=none; b=bxIXM7iuZ03gyiylhGyuw5jSWDW5+wVjXrCAaAYGfrvYII4vGSu0QZ1ryQDizyXhPUNKshQ/3R6Tw/xY7BrTJVi6UHnVKVVSP6Uid3wnef7ZNcj1MKkMeyovwW87Shw242Rf3QGXp8BAkIxkkbfxEveQVezUOcWBWGch6Hnbq5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747507211; c=relaxed/simple;
-	bh=WKWVRy2+m4H/11NZG/n7a5Udgxg8ZMFS/sbQyU1Y3uI=;
+	s=arc-20240116; t=1747562259; c=relaxed/simple;
+	bh=2guWlEnLnYfsa0rYUzzORZ1RYR7+Gd6K7S86SE5kPD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+ZeMvHdCowWl+vCgoHtBJX6GrPlM8wEdGAFf5zIPj/NcSvGBFEGbpm5iP5ItIuU442W1nRFHRqRWlJZHUlttnC6qkfoBjtrrbLZokhoxmoMj7uGjyPuqUl+0iFPnqhN3J6GJGrinV8usrw7CJICfGjgpvqf1jJ4LFPFObQnBF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/Rc8ZiT; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747507210; x=1779043210;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WKWVRy2+m4H/11NZG/n7a5Udgxg8ZMFS/sbQyU1Y3uI=;
-  b=K/Rc8ZiTIgaiof+NC71tFPzDy91bAGdVUDn/EOhsEXJ0+KGRvEZkXt42
-   Y+eHYCSKTB5s2U0cnAVac2DjjxEHK/ZRqDbo8DiYwMXe+MkougYHD6NrX
-   DdzC/632s7foXHyNvrl5JxEDgFIz+dllzyTAWgpnyFMy3tRqAT4Lp+9r/
-   rMMrAL1tZtp3WqXywP6J0FR8pm5PZDGzEXMtQEiUIswTnlCMZHBNHR4Ls
-   15cFjSyFsl4yoAMvrTShISmtd7ZgU8hTilDVk6wtm8MZy0ToXATXXEsDx
-   dPYiIp/KQrlvlfoWoWP3oKGv+71kNv+5cIChNivp85wP7tUPKpAsVB7kv
-   Q==;
-X-CSE-ConnectionGUID: FjlUhkqVSsSfJA0q1yWO0A==
-X-CSE-MsgGUID: 6DiXwZjhT9++oc5avwnKZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11436"; a="52083155"
-X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="52083155"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2025 11:40:09 -0700
-X-CSE-ConnectionGUID: K48QIeBGTROHuSU/nsiaQg==
-X-CSE-MsgGUID: UvIeephWRPCQMHfXINH/zQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,297,1739865600"; 
-   d="scan'208";a="144233359"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 17 May 2025 11:40:07 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGMS4-000KLP-1s;
-	Sat, 17 May 2025 18:40:04 +0000
-Date: Sun, 18 May 2025 02:39:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christoph Hellwig <hch@lst.de>, Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Anna Schumaker <anna@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>, linux-nfs@vger.kernel.org,
-	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
-	keyrings@vger.kernel.org
-Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
-Message-ID: <202505180251.Qt2Rlaed-lkp@intel.com>
-References: <20250515115107.33052-3-hch@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bXVrSZ4Ekjmsnxk9PLHW1bQv3TR/H/emys8+jMDofTCRNITfs6n8u6xtFxzfTACctlrWetNKT5fDLKDMMaOtIXxhIZev7sgZVoNRXwTO4xO0WFtWxUiBxeC3SWYaMAKyb9bdRaCTNrQWKiuS3T7fkmRmAAjY2AVjih1F9DydmjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5gEip4Y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CF9FC4CEE7;
+	Sun, 18 May 2025 09:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747562258;
+	bh=2guWlEnLnYfsa0rYUzzORZ1RYR7+Gd6K7S86SE5kPD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h5gEip4YURXxog4NPbjwAAvEP2x61+SOC4BREK8aa1NQe7RMnNK4nT82eP1MpC7TW
+	 EY03+r6T64AxoDBmjhbBBPPH4bUdzvq5wJBTyrlxNbLwJlnSLDtc/5GuSL3jPKmU3p
+	 5Zn7oSOWEBf79cct6/YikCrQtjpyIRbH/4ryT7Cp7gLO93Gtfmcsfp4MiG3oMghtO9
+	 y2MN0QZUhZoaS22caNuJS2dPaq8Vhvkna6Qsh8XntwPiEHCHbn68Rcg8bm0gUninmI
+	 Ahmn5S1/8Kz9J1ht8KeFb4C+yhOyyh81tWrY0pzYusED2prXnIEqn/+cms0hQV4Hun
+	 B4iAHJrwjOYKA==
+Received: by pali.im (Postfix)
+	id 5BC0DE90; Sun, 18 May 2025 11:57:35 +0200 (CEST)
+Date: Sun, 18 May 2025 11:57:35 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] nfs: Fix mounting NFS3 AUTH_NULL exports
+Message-ID: <20250518095735.2wgtvjvzedliqeyv@pali>
+References: <20240912130220.17032-1-pali@kernel.org>
+ <20241222164018.id3ul7ucaxsrdkyq@pali>
+ <20250418180313.h4jxi2rfxsmroumf@pali>
+ <20250504084840.4n47y4zhqjqsk6bu@pali>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250515115107.33052-3-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250504084840.4n47y4zhqjqsk6bu@pali>
+User-Agent: NeoMutt/20180716
 
-Hi Christoph,
+PING?
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on trondmy-nfs/linux-next]
-[also build test WARNING on linus/master v6.15-rc6 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Christoph-Hellwig/nfs-create-a-kernel-keyring/20250515-205131
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20250515115107.33052-3-hch%40lst.de
-patch subject: [PATCH 2/2] nfs: create a kernel keyring
-config: sh-sh03_defconfig (https://download.01.org/0day-ci/archive/20250518/202505180251.Qt2Rlaed-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250518/202505180251.Qt2Rlaed-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505180251.Qt2Rlaed-lkp@intel.com/
-
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> WARNING: modpost: vmlinux: section mismatch in reference: init_nfs_fs+0x18c (section: .init.text) -> exit_misc_binfmt (section: .exit.text)
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Sunday 04 May 2025 10:48:40 Pali Rohár wrote:
+> PING?
+> 
+> On Friday 18 April 2025 20:03:13 Pali Rohár wrote:
+> > PING?
+> > 
+> > On Sunday 22 December 2024 17:40:18 Pali Rohár wrote:
+> > > PING? If there is no objection, could you include series into -next?
+> > > 
+> > > On Thursday 12 September 2024 15:02:15 Pali Rohár wrote:
+> > > > Linux NFS3 kernel client currently has broken support for NFS3
+> > > > AUTH_NULL-only exports and also broken mount option -o sec=none
+> > > > (which explicitly specifies that mount should use AUTH_NULL).
+> > > > 
+> > > > For AUTH_NULL-only server exports, Linux NFS3 kernel client mounts such
+> > > > export with AUTH_UNIX authentication which results in unusable mount
+> > > > point (any operation on it fails with error because server rejects
+> > > > AUTH_UNIX authentication).
+> > > > 
+> > > > Half of the problem is with MNTv3 servers, as some of them (e.g. Linux
+> > > > one) never announce AUTH_NULL authentication for any export. Linux MNTv3
+> > > > server does not announce it even when the export has the only AUTH_NULL
+> > > > auth method allowed, instead it announce AUTH_UNIX (even when AUTH_UNIX
+> > > > is disabled for that export in Linux NFS3 knfsd server). So MNTv3 server
+> > > > for AUTH_NONE-only exports instruct Linux NFS3 kernel client to use
+> > > > AUTH_UNIX and then NFS3 server refuse access to files with AUTH_UNIX.
+> > > > 
+> > > > Main problem on the client side is that mount option -o sec=none for
+> > > > NFS3 client is not processed and Linux NFS kernel client always skips
+> > > > AUTH_NULL (even when server announce it, and also even when user
+> > > > specifies -o sec=none on mount command line).
+> > > > 
+> > > > This patch series address these issues in NFS3 client code.
+> > > > 
+> > > > Add a workaround for buggy MNTv3 servers which do not announce AUTH_NULL,
+> > > > by trying AUTH_NULL authentication as an absolutely last chance when
+> > > > everything else fails. And honors user choice of AUTH_NULL if user
+> > > > explicitly specified -o sec=none as mount option.
+> > > > 
+> > > > AUTH_NULL authentication is useful for read-only exports, including
+> > > > public exports. As authentication for these types of exports do not have
+> > > > to be required.
+> > > > 
+> > > > Patch series was tested with AUTH_NULL-only, AUTH_UNIX-only and combined
+> > > > AUTH_NULL+AUTH_UNIX exports from Linux knfsd NFS3 server + default Linux
+> > > > MNTv3 userspace server. And also tested with exports from modified MNTv3
+> > > > server to properly return AUTH_NULL support in response list.
+> > > > 
+> > > > Patch series is based on the latest upstream tag v6.11-rc7.
+> > > > 
+> > > > Pali Rohár (5):
+> > > >   nfs: Fix support for NFS3 mount with -o sec=none from Linux MNTv3
+> > > >     server
+> > > >   nfs: Propagate AUTH_NULL/AUTH_UNIX PATHCONF NFS3ERR_ACCESS failures
+> > > >   nfs: Try to use AUTH_NULL for NFS3 mount when no -o sec was given
+> > > >   nfs: Fix -o sec=none output in /proc/mounts
+> > > >   nfs: Remove duplicate debug message 'using auth flavor'
+> > > > 
+> > > >  fs/nfs/client.c | 14 ++++++++++-
+> > > >  fs/nfs/super.c  | 64 +++++++++++++++++++++++++++++++++++++++----------
+> > > >  2 files changed, 65 insertions(+), 13 deletions(-)
+> > > > 
+> > > > -- 
+> > > > 2.20.1
+> > > > 
 
