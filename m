@@ -1,202 +1,126 @@
-Return-Path: <linux-nfs+bounces-11802-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11803-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43DC0ABBCC3
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 13:40:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8364ABBE8C
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 15:03:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A48411729A0
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 11:39:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DFD497A4199
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 13:02:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 683501FDA9E;
-	Mon, 19 May 2025 11:39:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 553A5136327;
+	Mon, 19 May 2025 13:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6RjmpI2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RylGgC/D"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FD34C92
-	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 11:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A27D2A8D0
+	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 13:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747654781; cv=none; b=lig6PIDqPp3Aq75Bkm+Tydx+QgVFddzEPpgtDuqQdo9AyFUrq7oeDbHrqUSAUHlBxwVHsas5mf1B75pAOVShDmlzUn4GPo8i98/kaVwRegmQc1qY7A9SIBd2YPXf/ZVBCy8dyzD1B/gIB+Pze/yrG+GZ3i1PFtA9pxC+jpGdnm8=
+	t=1747659796; cv=none; b=aFQNFjjptTU/c6V9Sach11OCWy5p8KOeGuq+TSpn/Nb9gVBvU/EbvfcaPh9jZe25HYPelVmcXd+Dx5jt3P39imFRzJanc0WCfef/RebIbSSbob6Jl92mo1HXQ7p7EjtWK2Y6uaORcatOzNDuXfksPK1UFa/BU/e+y16MMviOTaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747654781; c=relaxed/simple;
-	bh=UcCSuiV2P+uphfWQVx2heAHZ8cLA5LcWA5/XrD3v9Kw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iwqOGg0SAlcn28GGMxWyniT28sBhD3S3j+9W2N/VhJacj0AtlIQoeYS+oRpL6BedRj5JqhVHIWkIzy2tqFWEaU+rYgBla2a9L8TTJYoxL844ZquwdE5rBNgrhLghfg8z8skOm7WcfMecBu4uIQ3ZUXFXoahsRxJxS/jJRyb2wic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6RjmpI2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD5AC4CEEB;
-	Mon, 19 May 2025 11:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747654780;
-	bh=UcCSuiV2P+uphfWQVx2heAHZ8cLA5LcWA5/XrD3v9Kw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=D6RjmpI24n/PeCHcvM3tFrCQMsAOlbXBOZdOCI5nqs9s55JzwF98IQagJ0Aj4w3J3
-	 ATrrCWF5KKKc8CQ00VO6ws8/d6nozjVCPXpg7cB1v2laLWHK9tSYxMlDLSo+GOwNvY
-	 xOx6yi9mrODG5orE5W3RwAzpjdatppDwHmAF10uTsOQxfJhSs9N58hjLCnG4Bl52ar
-	 +F1zMC6Fu5gI4u0P5LpAFlp7jM7UTSdoradpBEpYUnbVPA6uuvI/KG0FIzsgmGDm9m
-	 S+k/e2UKLtHe14f2jXJGBuywGBRsWUEjn7tdavvNb6TFHVjR35If/vkLKL7+57Bgix
-	 VPEN9RWgjqiGQ==
-Message-ID: <232cc3d8f1d07be149f37b62204dd4505bd12d09.camel@kernel.org>
-Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
- exports
-From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
-Cc: Steve Dickson <steved@redhat.com>, Tom Haynes <loghyr@gmail.com>, 
-	linux-nfs@vger.kernel.org
-Date: Mon, 19 May 2025 07:39:39 -0400
-In-Reply-To: <174763456358.62796.11640858259978429069@noble.neil.brown.name>
-References: <>, <02da3d46-3b05-4167-8750-121f5e30b7e9@oracle.com>
-	 <174763456358.62796.11640858259978429069@noble.neil.brown.name>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	s=arc-20240116; t=1747659796; c=relaxed/simple;
+	bh=dH6nmy0xv95+82EaUNpyEkooNgg+yuvjoY3gb5hePnw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=BVEg3bk4KgQfyc4/HUsGmPWbefa+W53pkkoktLynRge9UXzPocDfOlUaajFXLNzWA9tsTSQIb8R2DkUeuW/T++bLSDVOKu8iZ0KsOV41kOLgi47DFwvgMW46wqHOKVPoQOAYNq2WR/enj0pDmOJjqcHwhESDKCfHANdWVuBr45U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RylGgC/D; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442ed8a275fso54993575e9.2
+        for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 06:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747659792; x=1748264592; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dH6nmy0xv95+82EaUNpyEkooNgg+yuvjoY3gb5hePnw=;
+        b=RylGgC/DIZnsRiK2P0pP7QVUeHDBJ9VVXlHzv5U2hSwEn1pkxF7Cnd9ZAuuG7sEHP4
+         ahpOJfev3eaZgc23jJWr6yfdIO/2IhNNjmEo6xCLOpmThIOj0bNUl2UlkOY1DvYGNlZu
+         rP4UOOfPC0xS3Al/zBE4KsjB0VCM0FmXa1U5F+1+TSandvJ+62wAbAcvoG/vW4SQz4qz
+         +u0rhDjmdcHtyHARuiibkVUFC6QeXUxYW2RETokyyQp49wm/b7WBBLUHa3I8lkBtWKdg
+         sEvy75zQbo7AVbiQSraWiKGQeikxRe3bBqUS1RLvPOWV1IjOcN+3GpLT1QJ+5pVkgqMY
+         STXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747659792; x=1748264592;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dH6nmy0xv95+82EaUNpyEkooNgg+yuvjoY3gb5hePnw=;
+        b=KTsjS7+hfADcDm3gep/75wU9ZeMQC1+Lr75IO37dgDJyqikvVYg4zeny9YZJsFlYXD
+         KWUC1eqgUOx25ElKruM3BI2/UnjVB1rehEZAt22/LU0ZhwFPu7tQYghLVxoI1RBkijjf
+         Ar0elulc+7h2fJK3DDbefeO/RkClFRNlyWe7bY5c7DwniBKQ7RhqyFUinW26d/nova/F
+         dbtcGML4gOeGeWziIxoJ/flWzoCR9zF6eKiq8ShwrFZTH0eCTqkIEEGBs8C0NfVRJpKf
+         mpMPl5ZUopLq0Jxw8wPROVBLDyoD2yjCCbld3eOZ3cHwSJFJL/LeKmEiwz1R9h4Pq5yh
+         z9Xg==
+X-Gm-Message-State: AOJu0YwZHCf/Rc1PjP3XmNusz3U8DLbPdi6/EvHVnUKsok7SkyC2isO7
+	g3dkeQiIs8K8HfkmdauUHdfePol2Z1txc8Bt+Ta1jDQ5ypJIsZdmTzPcsXS9xtPrAt/+0i9xX0y
+	HWzYxyHpN9IpiZvP1bizHvhOLYf7WUBnDeA==
+X-Gm-Gg: ASbGncsWLchgX6mCI3RR+KFyD4B9s3BQv2jvwm2ueZ+SKn6d6IRQ7IK1b61c8pDidye
+	u4dupMGOPhKb89LCSA8hQuu/8fUWYRdnL5jeotzNrZsopNu0KcIhfzIhYsS9B3rUT/O2fgY66Mg
+	EW3rRPVaT2fJwjzFC3voc5J81mhvrZ1Vc=
+X-Google-Smtp-Source: AGHT+IHuDAtmwYC0bQxHHdhwegiu4eOzpYCd3G2kMD64nz8w9jjbwpED1g1MQKjSKO4N8LNN2seHcYyvrZmwskS89qg=
+X-Received: by 2002:a05:6000:188d:b0:3a3:6d2f:ed29 with SMTP id
+ ffacd0b85a97d-3a36d2fee1dmr3606357f8f.23.1747659792152; Mon, 19 May 2025
+ 06:03:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CANH4o6Pvc7wuB0Yh8sEQDRg59_=rUNtnpgJizZ5mmmGNgY5Qrg@mail.gmail.com>
+ <CAM5tNy7MCKPgg7+fNJk3SkTp9Au6G=2XBK+8DfxKQQ8-GvaA=Q@mail.gmail.com>
+In-Reply-To: <CAM5tNy7MCKPgg7+fNJk3SkTp9Au6G=2XBK+8DfxKQQ8-GvaA=Q@mail.gmail.com>
+From: Lionel Cons <lionelcons1972@gmail.com>
+Date: Mon, 19 May 2025 15:03:00 +0200
+X-Gm-Features: AX0GCFvbVsd22ihJ9fjt9buW24yE2Bj4CJUq7dly5_OmR2ci-9-aFrVKQsjKlK8
+Message-ID: <CAPJSo4VU8UP1bzT=FssnBU2EAtLmVoKg4icxLA6bXmNUNtVF_A@mail.gmail.com>
+Subject: NFS/TLS situation on Windows - Re: Why TLS and Kerberos are not
+ useful for NFS security Re: [PATCH nfs-utils] exportfs: make "insecure" the
+ default for all exports
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2025-05-19 at 16:02 +1000, NeilBrown wrote:
-> On Fri, 16 May 2025, Chuck Lever wrote:
-> >=20
-> > Fair enough. We'll focus on improving the man page text for now.
-> >=20
->=20
-> Has anyone volunteered to do that?
+On Thu, 15 May 2025 at 04:09, Rick Macklem <rick.macklem@gmail.com> wrote:
 >
-> Here are some words that might be useful.  I haven't tried to structure
-> them to fit well into the man page.
+> On Wed, May 14, 2025 at 2:51=E2=80=AFPM Martin Wege <martin.l.wege@gmail.=
+com> wrote:
+> What other clients are there out there? (Hummingbird's, now called
+> OpenText's NFSv4.0 client. I was surprised to see it was still possible
+> to buy it. And it probably can be put in the same category as the MacOS o=
+ne.)
 
-Thanks Neil.
+Situation on Windows:
+1. OpenText NFSv4 client: We've talked to Opentext about TLS support,
+and they do not know whether a market for NFS over TLS outside what
+they call the "Linux bubble" will ever martialise. There is also risk,
+both engineering and drastic performance degradation if the Windows
+native TLS is used (this is a kernel driver, so only the Windows
+native TLS can be used).
+So this is not going to happen unless someone pays, and the
+performance will not be great.
 
-I was planning to write up a manpage patch for this once the dust had
-settled from this discussion. I'll plan to incorporate something like
-what you've written below.
+2. ms-nfs41-client NFSv4.2 client: I've talked to Roland Mainz, who is
+working with Tigran Mkrtchyan on ms-nfs41-client (Windows NFSv4.2
+client). Their RPC is based on libtirpc, and if steved-libtirpc gets
+TLS support, then this can be easily ported. But Roland (didn't ask
+Tigran yet) doesn't have time to implement TLS support in libtirpc.
 
-> ---------------
-> sec=3Dsys (also known as AUTH_SYS) is only safe to specify for clients
-> that are connected to the server by a secure network - either physically
-> secure such as in a locked room, or cryptographically secure such as
-> with a VPN where the client hardware is also secure (locked cage or
-> secure-boot etc).
->=20
-> When such physical and/or crypto security is in place sec=3Dsys can
-> safely be used and there is an extra configuration option available in
-> a choice between the "secure" and "insecure" export options. =20
->=20
-> "insecure" means that all software running in the client node is fully
-> trusted to only access files on the NFS exports that it is expected to
-> access.  In this case the server will accept connections from any TCP
-> port on the client (and messages from any UDP port) - as they can
-> equally be trusted.
->=20
-> "secure" means that the clients are Unix-like systems and that only
-> "admin" software such as the kernel and administrative software running
-> as "root" can be trusted to access files appropriately.  All other
-> software, which includes all user-space software running with a UID
-> other than zero, should be treated with caution and not given direct
-> access to the NFS server.  In this case the server will reject
-> connections from TCP ports on the client with numbers not less than 1024
-> (and UDP messages from ports not less than 1024) as such connections an
-> messages may be from an untrusted process.  Note that on Unix-like
-> systems only privileged processes can send from ports below 1024.
->=20
-> The "secure" option is enabled by default as it is least likely to give
-> away undesired access.  Note that the names of the options do not
-> clearly match the descriptions given.
->=20
-> -------------
->=20
-> I haven't added anything about mtls as I couldn't find out how nfsd
-> interprets the identity presented in the client-side certificate.  If
-> the identity is a "machine identity" then sec=3Dsys would make sense on
-> that connection.  If the identity is for a specific user and can map to
-> a uid, the all_squash,anon=3DUID should be imposed on that connection.
->=20
-> Can you point me to any documentation about how the client certificate
-> is interpreted by nfsd?
+3. Windows Server 20xx NFSv4.1 server: Other department went through a
+cycle of meetings with Microsoft in 2024/2025, so far Microsoft wants
+"market demand" (which doesn't seem to materialise), and cautions that
+the performance might be below 50% of a similar SMB configuration,
+because TLS is not considered to be a good match for network
+filesystems.
 
+Summary:
+Forget about NFS/TLS on Windows.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Lionel
 
