@@ -1,150 +1,274 @@
-Return-Path: <linux-nfs+bounces-11794-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11795-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C326ABB387
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 05:09:46 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADA08ABB3B5
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 05:49:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 25F3D1892CFC
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 03:09:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B27A189581C
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 03:49:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CC37126C17;
-	Mon, 19 May 2025 03:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YD1gIDru"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78D5135897;
+	Mon, 19 May 2025 03:49:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB98E11185
-	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 03:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BB1171D2
+	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 03:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747624182; cv=none; b=czGwJbbAWFyJDOUcvApvHvfChfSyaSrZqunVv0SPKHjS6ZQ6Wv8vsdo8ap7NKA1yrhNxvmyXCHmJzb9LGaHzQExGepQRxJRf9/gbvE23EfQ8mFFdVZhgbJNpMQLSbrbskbnAlwl78vP3W2hL/kvVasvgh8fHnprtWsPztjc1qRc=
+	t=1747626582; cv=none; b=aay3K0Ao726eKwobuLYpFYg7b3HuiyxySUIxvdRBP1K91YBc+eHPQ7O3gjFxeAM61IeBPDcycOxtohC6y+d74xR/3u8+E8sgrW+V+EAtZDnisvuUgmoIAp1y3qMhdvjEpYA9HBqZHkRXZXAgMJQ/lyORcWBe4lJz3kdMJySgAms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747624182; c=relaxed/simple;
-	bh=kSLYu4uHFlGcIgpBfEybh47j8ev2XTdwoYmxrsBuMzU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q0qnDYp2XIWX/tbUT3C+aHkqjWQaFhcna2LnC9pa+M617Gz6bUgGruSZql6tdCCfKlEsYmPEBmlQ8JF5UHquBHtPS+ulfnfRVRDp2XmswI3bOrB0LneVrqmgDkqyggItBxLkxdslN/Oo3q5D4CBjhOYMubKix5ZszG/G6/ZTfrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YD1gIDru; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-601dd3dfc1fso1408145a12.0
-        for <linux-nfs@vger.kernel.org>; Sun, 18 May 2025 20:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747624178; x=1748228978; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fMEYAxHuYVP6XupBEnYcukaYFBJ4HPM3DUfpygG7p1w=;
-        b=YD1gIDruOWgTaT7Oe2MSVqsA97O8mbyekHXBXURcYvav94c31MZZqxuToYMjR6l8QR
-         8lw6eBICOqnxRxC032V4jMBYNFTrnRA7jSBesq0EQk0rvxarBTzSndDsK3UbMt0B1mFi
-         pATey8Ba88ce8peYlO1KNWNFZHJJfv+ut73Ws7SXuFqe+GcBSfpVPE3nIugDUEh7cMZ/
-         p2G09FZX9+2mo+TdBIcDFmYZsvW6cOLjtG4ZdRpICPFx1S6CA7y7IoJgsrcdnJmNXrcC
-         KRqc2INhmkCnWzAktiuNJUwjULp9f1T2h29J/izjrqzKDvcYROvRHpkIdE1Eu+G6nBeR
-         F04A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747624178; x=1748228978;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMEYAxHuYVP6XupBEnYcukaYFBJ4HPM3DUfpygG7p1w=;
-        b=AyA203BlQXEJgqGVVU61z+9ezp2EilfKAkhhf5C8xvZs0ftHBDkHnsF5ibrulTBwW+
-         tiFQt0uUPCpU4Q1SijUjVCLvaA9kHJCwdRv7vgunkCD94JduA98WtzvTjKmfTOfaD32p
-         eHRFZdme3GnJ/tqJLb414Uw1stYYrpMVmpubQ59iK8VfvVsU3ruVAQ1yCexPrMsFcFOf
-         mzG0QEkIKb2l8vxHkbbKJjadonc8WrLi3BM8Gvysw76w4kZVp0gLsiPvcuhpjphW2GVB
-         ssZbEM0dJ7vVyGzi/Etg92NNutINn+f65QDjLRyM37eYgYfPa63zTpgEyQs0HTQlVVBK
-         Bvbg==
-X-Gm-Message-State: AOJu0YyfASKjZ/p7isrouB5yqhVycjMNBqcRrW5maCpUmjVLEdrRtYy3
-	c4YuugGIwhRFWBRe2sFggVxM7sX3hQKSx3zOy4herFHLV/DfkhttEHXcM52WmU8JudB2F4tecVT
-	4o7qO+lTmdinlZj0WG26g/cDMtBy25g==
-X-Gm-Gg: ASbGnctsHT2hHonVXZcRPnyqHOxXbINk6pxWtW+vzQBRYetB4koJdPeHIjgKTwQSdYZ
-	//6KpXyeckHqXWGWykKYqyGO7D8KxKWHcRMm9JrXoYjtUawoywROTGBBESMwLOfWzNCsEAHOJfV
-	A/u4KmrbCDVOQdYO4oklPFukjoQ95TS9wXgEusnIFTdmyckkUAHvP0qJQjVkIOmaat
-X-Google-Smtp-Source: AGHT+IGk4BjiXVJoUItGPN7n+Kp+oDChydfAYzAJO0C+lKvd729Y1Tv/qXTzEJ4KkUz9Clqwk2bYcwEBR70pC7DSiBg=
-X-Received: by 2002:a05:6402:274d:b0:5fb:1fba:cd93 with SMTP id
- 4fb4d7f45d1cf-6011407dd4fmr9503779a12.5.1747624177772; Sun, 18 May 2025
- 20:09:37 -0700 (PDT)
+	s=arc-20240116; t=1747626582; c=relaxed/simple;
+	bh=1GO9bb9OovNa/wZ31lfGFhUxYmbJGVBNoonEGm/a1h4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=GCER36CUL6XIUvbgEGFGcEkzpNvE5yIKEzFOgrSAouMYvwlmBv9mxhqiemL/YbQJEGkuIgwZ5sgpaMGq0BtpfACrP+6CEbSVMLH+53QZhiEGbjTfTjSMGw0BzeNlidh5ODXKd5355I7FHzW5gvf+9JWR+ox4zBEcXvwBWy60b+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uGrVK-0067hM-Ja;
+	Mon, 19 May 2025 03:49:30 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANH4o6Pvc7wuB0Yh8sEQDRg59_=rUNtnpgJizZ5mmmGNgY5Qrg@mail.gmail.com>
- <CAAvCNcBPac+uDC6x_V_jW1q_JCG3yEeCMjvpc869AmBAhti3Xw@mail.gmail.com>
-In-Reply-To: <CAAvCNcBPac+uDC6x_V_jW1q_JCG3yEeCMjvpc869AmBAhti3Xw@mail.gmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Sun, 18 May 2025 20:09:25 -0700
-X-Gm-Features: AX0GCFsaa-C-q3J8D2pfEqrjZeDLNEbi1q_SofN_Q3GGi0pN8jIQue533KVWOAA
-Message-ID: <CAM5tNy5cxxmksGyXRx4RTTAYqJaJJP49LA3VHzgtz7vvZuqYtw@mail.gmail.com>
-Subject: Re: Why TLS and Kerberos are not useful for NFS security Re: [PATCH
- nfs-utils] exportfs: make "insecure" the default for all exports
-To: Dan Shelton <dan.f.shelton@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, libtirpc-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Mike Snitzer" <snitzer@kernel.org>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ Pali =?utf-8?q?Roh=C3=A1r?= <pali@kernel.org>,
+ "Vincent Mailhol" <mailhol.vincent@wanadoo.fr>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ paulmck@kernel.org
+Subject: Re: [PATCH 0/6 v2] nfs_localio: fixes for races and errors from older
+ compilers
+In-reply-to: <aB-vxtKNKxpPnkz2@kernel.org>
+References: <>, <aB-vxtKNKxpPnkz2@kernel.org>
+Date: Mon, 19 May 2025 13:49:30 +1000
+Message-id: <174762657001.62796.7283949995262534578@noble.neil.brown.name>
 
-On Sun, May 18, 2025 at 7:15=E2=80=AFPM Dan Shelton <dan.f.shelton@gmail.co=
-m> wrote:
->
-> On Wed, 14 May 2025 at 23:51, Martin Wege <martin.l.wege@gmail.com> wrote=
-:
-> > Interoperability is also a big problem (nay, it's ZERO
-> > interoperability), as this is basically a Linux kernel client/kernel se=
-rver only
-> > solution.
-> > libtirpc doesn't support TLS, Ganesha doesn't support TLS, so yeah,
-> > this is an issue, and not a solution.
-> >
-> > Fazit: Supporting your argumentation with Kerberos5 or TLS is not gonna=
- fly.
->
-> I tried to add TLS support to libtirpc, but I think it's simply not
-> possible. The APIs are just not compatible.
-> Ganesha folks also tried the same, and failed - their ntirpc would
-> require a major redesign to support TLS.
-Well, I'll admit I don't know if the userspace RPC code in FreeBSD
-is considered the tirpc or not. (It's in libc and happens to have Frank's
-initials on it from long ago when he worked on it for NetBSD.)
+On Sun, 11 May 2025, Mike Snitzer wrote:
+> On Sat, May 10, 2025 at 12:02:27PM -0400, Chuck Lever wrote:
+> > On 5/9/25 11:01 PM, NeilBrown wrote:
+> > > On Sat, 10 May 2025, Chuck Lever wrote:
+> > >> [ adding Paul McK ]
+> > >>
+> > >> On 5/8/25 8:46 PM, NeilBrown wrote:
+> > >>> This is a revised version a the earlier series.  I've actually tested
+> > >>> this time and fixed a few issues including the one that Mike found.
+> > >>
+> > >> As Mike mentioned in a previous thread, at this point, any fix for this
+> > >> issue will need to be applied to recent stable kernels as well. This
+> > >> series looks a bit too complicated for that.
+> > >>
+> > >> I expect that other subsystems will encounter this issue eventually,
+> > >> so it would be beneficial to address the root cause. For that purpose,=
+ I
+> > >> think I like Vincent's proposal the best:
+> > >>
+> > >> https://lore.kernel.org/linux-nfs/8c67a295-8caa-4e53-a764-f691657bbe62=
+@wanadoo.fr/raw
+> > >>
+> > >> None of this is to say that Neil's patches shouldn't be applied. But
+> > >> perhaps these are not a broad solution to the RCU compilation issue.
+> > >=20
+> > > Do we need a "broad solution to the RCU compilation issue"?
+> >=20
+> > Fair question. If the current localio code is simply incorrect as it
+> > stands, then I suppose the answer is no. Because gcc is happy to compile
+> > it in most cases, I thought the problem was with older versions of gcc,
+> > not with localio (even though, I agree, the use of an incomplete
+> > structure definition is somewhat brittle when used with RCU).
+> >=20
+> >=20
+> > > Does it ever make sense to "dereference" a pointer to a structure that =
+is
+> > > not fully specified?  What does that even mean?
+> > >=20
+> > > I find it harder to argue against use of rcu_access_pointer() in that
+> > > context, at least for test-against-NULL, but sparse doesn't complain
+> > > about a bare test of an __rcu pointer against NULL, so maybe there is no
+> > > need for rcu_access_pointer() for simple tests - in which case the
+> > > documentation should be updated.
+> >=20
+> > For backporting purposes, inventing our own local RCU helper to handle
+> > the situation might be best. Then going forward, apply your patches to
+> > rectify the use of the incomplete structure definition, and the local
+> > helper can eventually be removed.
+> >=20
+> > My interest is getting to a narrow set of changes that can be applied
+> > now and backported as needed. The broader clean-ups can then be applied
+> > to future kernels (or as subsequent patches in the same merge window).
+> >=20
+> > My 2 cents, worth every penny.
+>=20
+> I really would prefer we just use this patch as the stop-gap for 6.14
+> and 6.15 (which I have been carrying for nearly a year now because I
+> need to support an EL8 platform that uses gcc 8.5):
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/commit/?h=
+=3Dkernel-6.12.24/nfs-testing&id=3Df9add5e4c9b4629b102876dce9484e1da3e35d1f
+>=20
+> Then we work through getting Neil's patchset to land for 6.16 and
+> revert the stop-gap (dummy nfsd_file) patch.
+>=20
+> > > (of course rcu_dereference() doesn't actually dereference the pointer,
+> > >  despite its name.  It just declared that there is an imminent intention
+> > >  to dereference the pointer.....)
+> > >=20
+> > > NeilBrown
+>=20
+> Rather than do a way more crazy stop-gap like this (which actually works):
 
-Anyhow, at a quick glance, it doesn't look all that difficult.
+"works" in what sense?  Presumably that gcc-8 doesn't complain.
+sparse doesn't like it at all though.
+If you don't care about sparse not being happy, then it would be easier
+to just use READ_ONCE and WRITE_ONCE rather than creating the new
+_opaque interfaces.
 
-The low level functions in clnt_vc.c that do I/O on the socket
-are called __msgread() and __msgwrite(). If RPC over TLS is
-enabled, those functions would need to use SSL_read() and SSL_write().
+Thanks,
+NeilBrown
 
-When a new TCP connection is created (in clnt_vc_create() in this code),
-it then needs to do a Null RPC with AUTH_TLS (7) as the authentication
-flavor. If it gets STARTTLS in the reply's verifier, then it does a
-SSL_connect(). If that succeeds, it flips some flag to tell the I/O
-functions to use SSL_read() and SSL_write().
-(There is some arm waving to create the SSL context and associate
-the TCP socket with it. You can find all that in the sources for
-rpc.tlsclntd.c in FreeBSD.)
 
-I haven't actually done this (I did the daemons and krpc mods for
-FreeBSD, but not libc ones), but unless there is some corner
-that makes it really difficult, it doesn't look like a lot of work to me.
-(If Frank or anyone else wants to do this, they can email me for
-more info.)
 
-rick
-ps: The biggest hassle is that, once you do it, the applications that
-      use the library will also need to link in a bunch of SSL
-libraries as well.
-      (The simple thing is to have a separate library version. Since it's i=
-n
-       libc in FreeBSD, this is more bothersome.)
+>=20
+>  fs/nfs/localio.c           |  6 +++---
+>  fs/nfs_common/nfslocalio.c |  8 +++----
+>  include/linux/nfslocalio.h | 52 ++++++++++++++++++++++++++++++++++++++++++=
+++++
+>  3 files changed, 59 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> index 73dd07495440..fedc07254c00 100644
+> --- a/fs/nfs/localio.c
+> +++ b/fs/nfs/localio.c
+> @@ -272,7 +272,7 @@ nfs_local_open_fh(struct nfs_client *clp, const struct =
+cred *cred,
+> =20
+>  	new =3D NULL;
+>  	rcu_read_lock();
+> -	nf =3D rcu_dereference(*pnf);
+> +	nf =3D rcu_dereference_opaque(*pnf);
+>  	if (!nf) {
+>  		rcu_read_unlock();
+>  		new =3D __nfs_local_open_fh(clp, cred, fh, nfl, mode);
+> @@ -281,11 +281,11 @@ nfs_local_open_fh(struct nfs_client *clp, const struc=
+t cred *cred,
+>  		rcu_read_lock();
+>  		/* try to swap in the pointer */
+>  		spin_lock(&clp->cl_uuid.lock);
+> -		nf =3D rcu_dereference_protected(*pnf, 1);
+> +		nf =3D rcu_dereference_opaque_protected(*pnf, 1);
+>  		if (!nf) {
+>  			nf =3D new;
+>  			new =3D NULL;
+> -			rcu_assign_pointer(*pnf, nf);
+> +			rcu_assign_opaque_pointer(*pnf, nf);
+>  		}
+>  		spin_unlock(&clp->cl_uuid.lock);
+>  	}
+> diff --git a/fs/nfs_common/nfslocalio.c b/fs/nfs_common/nfslocalio.c
+> index 6a0bdea6d644..213862ceb8bb 100644
+> --- a/fs/nfs_common/nfslocalio.c
+> +++ b/fs/nfs_common/nfslocalio.c
+> @@ -285,14 +285,14 @@ void nfs_close_local_fh(struct nfs_file_localio *nfl)
+>  		return;
+>  	}
+> =20
+> -	ro_nf =3D rcu_access_pointer(nfl->ro_file);
+> -	rw_nf =3D rcu_access_pointer(nfl->rw_file);
+> +	ro_nf =3D rcu_access_opaque(nfl->ro_file);
+> +	rw_nf =3D rcu_access_opaque(nfl->rw_file);
+>  	if (ro_nf || rw_nf) {
+>  		spin_lock(&nfs_uuid->lock);
+>  		if (ro_nf)
+> -			ro_nf =3D rcu_dereference_protected(xchg(&nfl->ro_file, NULL), 1);
+> +			ro_nf =3D rcu_dereference_opaque_protected(xchg(&nfl->ro_file, NULL), 1=
+);
+>  		if (rw_nf)
+> -			rw_nf =3D rcu_dereference_protected(xchg(&nfl->rw_file, NULL), 1);
+> +			rw_nf =3D rcu_dereference_opaque_protected(xchg(&nfl->rw_file, NULL), 1=
+);
+> =20
+>  		/* Remove nfl from nfs_uuid->files list */
+>  		RCU_INIT_POINTER(nfl->nfs_uuid, NULL);
+> diff --git a/include/linux/nfslocalio.h b/include/linux/nfslocalio.h
+> index 9aa8a43843d7..c6e86891d4b5 100644
+> --- a/include/linux/nfslocalio.h
+> +++ b/include/linux/nfslocalio.h
+> @@ -15,6 +15,58 @@
+>  #include <linux/sunrpc/svcauth.h>
+>  #include <linux/nfs.h>
+>  #include <net/net_namespace.h>
+> +#include <linux/rcupdate.h>
+> +
+> +/*
+> + * RCU methods to allow fs/nfs_common and fs/nfs LOCALIO code to avoid
+> + * dereferencing pointer to 'struct nfs_file' which is opaque outside fs/n=
+fsd
+> +*/
+> +#define __rcu_access_opaque_pointer(p, local, space) \
+> +({ \
+> +	typeof(p) local =3D (__force typeof(p))READ_ONCE(p); \
+> +	rcu_check_sparse(p, space); \
+> +	(__force __kernel typeof(p))(local); \
+> +})
+> +
+> +#define rcu_access_opaque(p) __rcu_access_opaque_pointer((p), __UNIQUE_ID(=
+rcu), __rcu)
+> +
+> +#define __rcu_dereference_opaque_protected(p, local, c, space) \
+> +({ \
+> +	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_opaque_protected() usa=
+ge"); \
+> +	rcu_check_sparse(p, space); \
+> +	(__force __kernel typeof(p))(p); \
+> +})
+> +
+> +#define rcu_dereference_opaque_protected(p, c) \
+> +	__rcu_dereference_opaque_protected((p), __UNIQUE_ID(rcu), (c), __rcu)
+> +
+> +#define __rcu_dereference_opaque_check(p, local, c, space) \
+> +({ \
+> +	/* Dependency order vs. p above. */ \
+> +	typeof(p) local =3D (__force typeof(p))READ_ONCE(p); \
+> +	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_opaque_check() usage")=
+; \
+> +	rcu_check_sparse(p, space); \
+> +	(__force __kernel typeof(p))(local); \
+> +})
+> +
+> +#define rcu_dereference_opaque_check(p, c) \
+> +	__rcu_dereference_opaque_check((p), __UNIQUE_ID(rcu), \
+> +				       (c) || rcu_read_lock_held(), __rcu)
+> +
+> +#define rcu_dereference_opaque(p) rcu_dereference_opaque_check(p, 0)
+> +
+> +#define RCU_INITIALIZER_OPAQUE(v) (typeof((v)) __force __rcu)(v)
+> +
+> +#define rcu_assign_opaque_pointer(p, v)					      \
+> +do {									      \
+> +	uintptr_t _r_a_p__v =3D (uintptr_t)(v);				      \
+> +	rcu_check_sparse(p, __rcu);					      \
+> +									      \
+> +	if (__builtin_constant_p(v) && (_r_a_p__v) =3D=3D (uintptr_t)NULL)	      \
+> +		WRITE_ONCE((p), (typeof(p))(_r_a_p__v));		      \
+> +	else								      \
+> +		smp_store_release(&p, RCU_INITIALIZER_OPAQUE((typeof(p))_r_a_p__v)); \
+> +} while (0)
+> =20
+>  struct nfs_client;
+>  struct nfs_file_localio;
+>=20
 
->
-> So, why do the NFS folks even bother with NFS over TLS, if it is this
-> kind of mismatch?
->
-> Dan
-> --
-> Dan Shelton - Cluster Specialist Win/Lin/Bsd
->
 
