@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-11830-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11831-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6DE5ABC9C5
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 23:36:21 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17960ABC9DF
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 23:37:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C35107A715E
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 21:34:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B65617A6DA1
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 21:35:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A01323D281;
-	Mon, 19 May 2025 21:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B23A242922;
+	Mon, 19 May 2025 21:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3mns6DR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KM9ANOXP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3A723C8DB;
-	Mon, 19 May 2025 21:23:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43124290E;
+	Mon, 19 May 2025 21:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689793; cv=none; b=ES4ItJHNaJmKtEly1xwiil0FsOwzQFZsJsb49OZqTkiVQgCOTHPndu74bjlaxpeJG60+C2Y3ESCcgQnjfH2CEBQ6YWBnMeF0bUdVHYQEXxtcUXPmZ2kFP9HQCq7a35GiPWAjmqDT69584jNGeBZECKcGtEe4Fh28zMXJbvw9IlM=
+	t=1747689805; cv=none; b=O0UDqpCB9UTk6MF1WQ8u3QbAzwmxxW/6gx0BrqkyokiIXyl/iNzyPRP8zOK8zmss1ZD+RNSY/0yg3siyPmkqwDL7Rk5rTg1svE2K8HPjaDHmn9abjbY+b9NnkaMLFbitSorCirXBDujdT7eEN0zGwV2/uC4F47ku3Hf33F+uofs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689793; c=relaxed/simple;
-	bh=9nT33KnFOC3C7Wzv2WdNkbg3IvK+6H0nsITh5HZr8rw=;
+	s=arc-20240116; t=1747689805; c=relaxed/simple;
+	bh=sSdC6lcOfasrwYFisTaklWi7gIOTsyja7XvtG+qCxq4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bqDvk6iXbwTFWWrg5wJFi66gU3UOxjJ+/0NSP/C3JoqvKg8UCv2WgMBLiRgQF3p+dT+xBAG9SGrL3R72qzcRwFILU4npYRFz6sX5pmnCEteWAGVV0eOpZTyVlGj1no/91768fHMr6V4v7uY0xcoLk8EowZN7nMCIKdWM3/ehYb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3mns6DR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1284C4CEEB;
-	Mon, 19 May 2025 21:23:11 +0000 (UTC)
+	 MIME-Version; b=JcDQfaQ3p533J0HunNGlC8LnvU0w1XvHF3eTLowBQa2qxTMeplyAsvMlDOkWykTVK11in6JzbwROuEavFODNTNpn/u/Dd2lkPeLW4i4E2vwJmhLMgtux/W7cUPKT+MUGzvGEk+4GLrytutcSKkBsyGFokPKEs918UMZXM/Sob4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KM9ANOXP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83D6EC4CEE4;
+	Mon, 19 May 2025 21:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689792;
-	bh=9nT33KnFOC3C7Wzv2WdNkbg3IvK+6H0nsITh5HZr8rw=;
+	s=k20201202; t=1747689804;
+	bh=sSdC6lcOfasrwYFisTaklWi7gIOTsyja7XvtG+qCxq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m3mns6DRNNRDC1IBi4qQugnf4Jc0NkCXBwLvRchvKjS3B7CNVCburzZVanVNUd14V
-	 VL3J0ErkcAutbj1jOjsHQtCBvD8IMO1TKfL1nJYwU2EjltIK8garM8gTGFt84aQ7YS
-	 OxtMVuHwJO3PLoh/lyS/xsIoYXgNu+3NM6n55mzbDdPS/O+FaH1cbSMQisJqkbuAS5
-	 5+A6VXlwVw9ELvG+RoSDVf7uU8ZGDtLxO2ze6pJjHxQJVOe84K6Nt9etrYNcXRqeRq
-	 R0GJNUuJ3qzMVhtqVst+KDg+tYeinbIigu+x1up2AfeWYSfyDc9T8vELlToyvw90hs
-	 gNXLl3ylDK7Pg==
+	b=KM9ANOXPItaGdf6RFh+NmBr9Flxo1C1MeX4SeoVcospgEejMNMKln/5L6HouXNVto
+	 +xYygctHkHS5jWYDTsLzNXsef+IEElA47pLjR8KYdqOeD2PD+nsdnwHGCqbZk10v24
+	 y8fGR+kTiPfBFjF73/8T+MBlyySx0Wvdmy8LdN/im/YM3ptmRYwcmCUfwgemakD09j
+	 4QsnBhZ0TKl3TngBcIhYgg+66O1Dm+n7GQTm9JG9t2qQqfDrC7Xcr5pWpWfUZv7Tde
+	 eR3whh81+C0gUVXJkm1yCZEusc5jFbCxyi8Zi5XjNUpMz2MiCJItQRCjRzplmJGrjH
+	 hcMNXnCml9RmQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Jeff Layton <jlayton@kernel.org>,
 	anna.schumaker@netapp.com,
 	linux-nfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 2/7] nfs: don't share pNFS DS connections between net namespaces
-Date: Mon, 19 May 2025 17:23:03 -0400
-Message-Id: <20250519212308.1986645-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 2/6] nfs: don't share pNFS DS connections between net namespaces
+Date: Mon, 19 May 2025 17:23:16 -0400
+Message-Id: <20250519212320.1986749-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519212308.1986645-1-sashal@kernel.org>
-References: <20250519212308.1986645-1-sashal@kernel.org>
+In-Reply-To: <20250519212320.1986749-1-sashal@kernel.org>
+References: <20250519212320.1986749-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.183
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
 From: Jeff Layton <jlayton@kernel.org>
@@ -163,10 +163,10 @@ index bfa7202ca7be1..4b0cdddce6eb3 100644
  		goto out_err_drain_dsaddrs;
  
 diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index f331f067691b0..dcc01a06d39f1 100644
+index a7cf84a6673bf..f88b0cf00f21e 100644
 --- a/fs/nfs/pnfs.h
 +++ b/fs/nfs/pnfs.h
-@@ -59,6 +59,7 @@ struct nfs4_pnfs_ds {
+@@ -57,6 +57,7 @@ struct nfs4_pnfs_ds {
  	struct list_head	ds_node;  /* nfs4_pnfs_dev_hlist dev_dslist */
  	char			*ds_remotestr;	/* comma sep list of addrs */
  	struct list_head	ds_addrs;
@@ -174,7 +174,7 @@ index f331f067691b0..dcc01a06d39f1 100644
  	struct nfs_client	*ds_clp;
  	refcount_t		ds_count;
  	unsigned long		ds_state;
-@@ -403,7 +404,8 @@ int pnfs_generic_commit_pagelist(struct inode *inode,
+@@ -405,7 +406,8 @@ int pnfs_generic_commit_pagelist(struct inode *inode,
  int pnfs_generic_scan_commit_lists(struct nfs_commit_info *cinfo, int max);
  void pnfs_generic_write_commit_done(struct rpc_task *task, void *data);
  void nfs4_pnfs_ds_put(struct nfs4_pnfs_ds *ds);
@@ -185,7 +185,7 @@ index f331f067691b0..dcc01a06d39f1 100644
  void nfs4_pnfs_v3_ds_connect_unload(void);
  int nfs4_pnfs_ds_connect(struct nfs_server *mds_srv, struct nfs4_pnfs_ds *ds,
 diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index 6b681f0c5df0d..29c1c7f80b1d8 100644
+index a2ad8bb87e2db..461c00c1338c2 100644
 --- a/fs/nfs/pnfs_nfs.c
 +++ b/fs/nfs/pnfs_nfs.c
 @@ -651,12 +651,12 @@ _same_data_server_addrs_locked(const struct list_head *dsaddrs1,
@@ -203,7 +203,7 @@ index 6b681f0c5df0d..29c1c7f80b1d8 100644
  			return ds;
  	return NULL;
  }
-@@ -763,7 +763,7 @@ nfs4_pnfs_remotestr(struct list_head *dsaddrs, gfp_t gfp_flags)
+@@ -749,7 +749,7 @@ nfs4_pnfs_remotestr(struct list_head *dsaddrs, gfp_t gfp_flags)
   * uncached and return cached struct nfs4_pnfs_ds.
   */
  struct nfs4_pnfs_ds *
@@ -212,7 +212,7 @@ index 6b681f0c5df0d..29c1c7f80b1d8 100644
  {
  	struct nfs4_pnfs_ds *tmp_ds, *ds = NULL;
  	char *remotestr;
-@@ -781,13 +781,14 @@ nfs4_pnfs_ds_add(struct list_head *dsaddrs, gfp_t gfp_flags)
+@@ -767,13 +767,14 @@ nfs4_pnfs_ds_add(struct list_head *dsaddrs, gfp_t gfp_flags)
  	remotestr = nfs4_pnfs_remotestr(dsaddrs, gfp_flags);
  
  	spin_lock(&nfs4_ds_cache_lock);
