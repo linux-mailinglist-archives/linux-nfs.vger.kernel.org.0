@@ -1,110 +1,141 @@
-Return-Path: <linux-nfs+bounces-11796-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11797-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6680BABB4BC
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 08:03:33 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F4C3ABB83C
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 11:07:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B656175E8E
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 06:03:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A3261892207
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 09:07:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00D761FFC48;
-	Mon, 19 May 2025 06:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A291526C38D;
+	Mon, 19 May 2025 09:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NsCCb64K"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF51E8322
-	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 06:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A4C26C3A1
+	for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 09:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747634569; cv=none; b=AEbGJ4JQW+yug49530mrbRNh8aHEmgfYsHtl8eh6vDkNAibzduoZyfSsdRyXkZiV9Vd0RczpBLZv+9BXoMHLZhSzNOoDk08mtlnTVlw2cuM0Y5KQOb1VeqZxCerx1ZuOiHTbvG2YAd59IbeRZxR+RxEHumDak0P0/nE3q/ekV1I=
+	t=1747645647; cv=none; b=NoKzzU1Hvxu5EuCOEBxsLKvix7RJXGvWMKGoYO4xKXvKlko0qHwhS3Bk/zapTLhvnsy2Yekel6FPzmmSOpe0QYvgb/rnv3Doxg4pMIJHRmtMKrHRP0hcOVcQ8KM8IOigKeLQCZLTHFa8ZWVBCb037ER/Pzn/9iHOQMTMIOz4YN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747634569; c=relaxed/simple;
-	bh=aXrKeCC5XgTdkC6oyLDBsmVy/G2epXNyv/ywFt7pJYw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=cfIAw4Xhjltfh7+z7fqnD6L7vUHxY1UAdIfEYaTmjUGuCB12TiMusuit6OBBLPngvrz/5z7JZIZr7X/XzvbcK1aAoYBGlJReT1sBELKrJX5/CrvxQG+rVhInL0X8CRRIvVBFIOyc1YXNdzszXgxZsq/SStID7nIbFOrEfVDrJ6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uGtaF-0068ig-R7;
-	Mon, 19 May 2025 06:02:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1747645647; c=relaxed/simple;
+	bh=4rBX6YspVYCIDPNLZKRc2wJwrp2OYC47FhKHqNl0FwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T1bw+Gxleo92iXGjUCZbL2cgiBRmSg6ILpRBS3d8VD/bFcrwpOkPRwakpGZqyPOq1mePndIQlIJ51rDtAvM91ze5ZrkrUIJR4mNjUgTCUYW3dQwFgzLyeY7NVDf+tl7viAIIBkzHCVknFTqrSKJwJ1DrE4qSXkeHeenM+JtRcws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NsCCb64K; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747645645;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DkN9GuwbtueXsDOI2wUEzNlSJ5jf3RNLBFIQXl+y3I0=;
+	b=NsCCb64KZQtKGAAmCgpM1gtrBwUzd5J7toCwL7hi3oyVhl5MP4Hfg2u1keWAKdNc+kuLWD
+	7Cfyow9ri6yDt8ANNYlgQJIELRkcJkx1Of5NlgCr4i99f40emro5aS0Dlzw04jfkZbK2D7
+	q77kj16UbkVkPQCOu2XO2GBCSLEa8mw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-1IDUbA_mOAWUFZRkcSDKlg-1; Mon,
+ 19 May 2025 05:07:19 -0400
+X-MC-Unique: 1IDUbA_mOAWUFZRkcSDKlg-1
+X-Mimecast-MFC-AGG-ID: 1IDUbA_mOAWUFZRkcSDKlg_1747645638
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 80BD41800447;
+	Mon, 19 May 2025 09:07:17 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.188])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CEBE9195608D;
+	Mon, 19 May 2025 09:07:13 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: David Howells <dhowells@redhat.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] netfs: Miscellaneous fixes
+Date: Mon, 19 May 2025 10:07:00 +0100
+Message-ID: <20250519090707.2848510-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, "Steve Dickson" <steved@redhat.com>,
- "Tom Haynes" <loghyr@gmail.com>, linux-nfs@vger.kernel.org
-Subject:
- Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
-In-reply-to: <02da3d46-3b05-4167-8750-121f5e30b7e9@oracle.com>
-References: <>, <02da3d46-3b05-4167-8750-121f5e30b7e9@oracle.com>
-Date: Mon, 19 May 2025 16:02:43 +1000
-Message-id: <174763456358.62796.11640858259978429069@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Fri, 16 May 2025, Chuck Lever wrote:
-> 
-> Fair enough. We'll focus on improving the man page text for now.
-> 
+Hi Christian,
 
-Has anyone volunteered to do that?
+Here are some miscellaneous fixes and changes for netfslib, if you could
+pull them:
 
-Here are some words that might be useful.  I haven't tried to structure
-them to fit well into the man page.
----------------
-sec=sys (also known as AUTH_SYS) is only safe to specify for clients
-that are connected to the server by a secure network - either physically
-secure such as in a locked room, or cryptographically secure such as
-with a VPN where the client hardware is also secure (locked cage or
-secure-boot etc).
+ (1) Fix an oops in write-retry due to mis-resetting the I/O iterator.
 
-When such physical and/or crypto security is in place sec=sys can
-safely be used and there is an extra configuration option available in
-a choice between the "secure" and "insecure" export options.  
+ (2) Fix the recording of transferred bytes for short DIO reads.
 
-"insecure" means that all software running in the client node is fully
-trusted to only access files on the NFS exports that it is expected to
-access.  In this case the server will accept connections from any TCP
-port on the client (and messages from any UDP port) - as they can
-equally be trusted.
+ (3) Fix a request's work item to not require a reference, thereby avoiding
+     the need to get rid of it in BH/IRQ context.
 
-"secure" means that the clients are Unix-like systems and that only
-"admin" software such as the kernel and administrative software running
-as "root" can be trusted to access files appropriately.  All other
-software, which includes all user-space software running with a UID
-other than zero, should be treated with caution and not given direct
-access to the NFS server.  In this case the server will reject
-connections from TCP ports on the client with numbers not less than 1024
-(and UDP messages from ports not less than 1024) as such connections an
-messages may be from an untrusted process.  Note that on Unix-like
-systems only privileged processes can send from ports below 1024.
+ (4) Fix waiting and waking to be consistent about the waitqueue used.
 
-The "secure" option is enabled by default as it is least likely to give
-away undesired access.  Note that the names of the options do not
-clearly match the descriptions given.
+The patches can also be found here:
 
--------------
-
-I haven't added anything about mtls as I couldn't find out how nfsd
-interprets the identity presented in the client-side certificate.  If
-the identity is a "machine identity" then sec=sys would make sense on
-that connection.  If the identity is for a specific user and can map to
-a uid, the all_squash,anon=UID should be imposed on that connection.
-
-Can you point me to any documentation about how the client certificate
-is interpreted by nfsd?
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
 
 Thanks,
-NeilBrown
+David
+
+David Howells (3):
+  netfs: Fix oops in write-retry from mis-resetting the subreq iterator
+  netfs: Fix the request's work item to not require a ref
+  netfs: Fix wait/wake to be consistent about the waitqueue used
+
+Paulo Alcantara (1):
+  netfs: Fix setting of transferred bytes with short DIO reads
+
+ fs/9p/vfs_addr.c             |   2 +-
+ fs/afs/write.c               |   8 +-
+ fs/cachefiles/io.c           |  16 +--
+ fs/ceph/addr.c               |   2 +-
+ fs/erofs/fscache.c           |   6 +-
+ fs/netfs/buffered_read.c     |  32 +++--
+ fs/netfs/buffered_write.c    |   2 +-
+ fs/netfs/direct_read.c       |  10 +-
+ fs/netfs/direct_write.c      |  12 +-
+ fs/netfs/fscache_io.c        |  10 +-
+ fs/netfs/internal.h          |  42 +++++--
+ fs/netfs/misc.c              | 218 +++++++++++++++++++++++++++++++++++
+ fs/netfs/objects.c           |  47 ++++----
+ fs/netfs/read_collect.c      | 178 ++++------------------------
+ fs/netfs/read_pgpriv2.c      |   4 +-
+ fs/netfs/read_retry.c        |  26 +----
+ fs/netfs/read_single.c       |   6 +-
+ fs/netfs/write_collect.c     |  81 +++++--------
+ fs/netfs/write_issue.c       |  38 +++---
+ fs/netfs/write_retry.c       |  19 ++-
+ fs/smb/client/cifsproto.h    |   3 +-
+ fs/smb/client/cifssmb.c      |   4 +-
+ fs/smb/client/file.c         |   7 +-
+ fs/smb/client/smb2pdu.c      |   4 +-
+ include/linux/fscache.h      |   2 +-
+ include/linux/netfs.h        |  14 +--
+ include/trace/events/netfs.h |   7 +-
+ net/9p/client.c              |   6 +-
+ 28 files changed, 427 insertions(+), 379 deletions(-)
+
 
