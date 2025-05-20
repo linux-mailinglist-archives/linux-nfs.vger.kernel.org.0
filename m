@@ -1,234 +1,153 @@
-Return-Path: <linux-nfs+bounces-11832-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11833-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F49ABC9F3
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 23:38:50 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B383AABCC66
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 May 2025 03:38:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE9021700C0
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 May 2025 21:37:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B67B11B605ED
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 May 2025 01:38:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8A12459ED;
-	Mon, 19 May 2025 21:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7C44B1E5C;
+	Tue, 20 May 2025 01:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bk+9B6pU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMfu9FpK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A6D2459E0;
-	Mon, 19 May 2025 21:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8202B253F35
+	for <linux-nfs@vger.kernel.org>; Tue, 20 May 2025 01:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747689815; cv=none; b=aqjJfLsX48K56yK1d+a6q/aUdkew2ifq+pEFQAEnE6UZvV3jGk4548izSUnZx77RyrMEmhwHhRjs9/hP5Z5YyNqYmqeIM3Tjee8JgRFYMKI10HKT8DtSN9XOCFkWmI/XabBpBxIMh9JziwgClOrfjF508aSimO2mVBD9xDXausA=
+	t=1747705093; cv=none; b=kcD3f8KoB4E+5spF6QjNRx9oirunsvX3OKqwuDdE+j+wr2N6O/sBC0NjtkQLDqMUspqCUsG9Fyew/+fRhJYCOzCBwMuk14RtMIyBBQxWrlHwB1ln5XOvjsnj4SeNLt+f1XSyyxjJustEojiZBlN47TQW78A3xsEuZhj4kfo6ocM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747689815; c=relaxed/simple;
-	bh=uP9UgC02hn6qmbiczDBUbBXOmhkkOC3BNHf9VGvqYMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dcjFjp++o7LeYmPNRTmhI4/KykNmpWncZ0RTorLdHFyMBntV0MLaGDHSakaeDNw+yLYT+a2pDovUjBMlARXvH5hoyCEp8WztKLAZfY8tRH4pqNi7KDSsMyK4GhVffazUTwLqMsdbg3MRStjNQ9ysgIXCMr9jWqa2xEMVKvcvers=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bk+9B6pU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B61EC4CEEB;
-	Mon, 19 May 2025 21:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747689815;
-	bh=uP9UgC02hn6qmbiczDBUbBXOmhkkOC3BNHf9VGvqYMM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bk+9B6pUZxn0y6AA4x5mAJT2s2RBdb9C0a3BjlLy6YmsfmGMkV7xe1IazQhTfimNf
-	 NrgBSBzH2aGlNa/7JVO2WAFgx7x8iTiXulQwMgm6WxYE+fI5c6Uabw79W28S5DG+be
-	 9VF+XHzO2zcHCozmL+n7djb7e//7s3TACD34KCgE5vN4sksROtxyGzSpn29dVW8nby
-	 owSYT/+F8jojbE8w4QrZ8gutNzQN4aurgsZpTf22i9UHY3wDlIQjTOQosfYKVk0bMI
-	 0sPyaALza53rtb+uhBN/6vPPCehSRJRo6d7Vs4jey4UJCqYwGNIxoHTr0+9O+FdvbR
-	 DJRySTeaNPWJQ==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Jeff Layton <jlayton@kernel.org>,
-	Omar Sandoval <osandov@osandov.com>,
-	Sargun Dillon <sargun@sargun.me>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Sasha Levin <sashal@kernel.org>,
-	anna.schumaker@netapp.com,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 2/5] nfs: don't share pNFS DS connections between net namespaces
-Date: Mon, 19 May 2025 17:23:28 -0400
-Message-Id: <20250519212331.1986865-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250519212331.1986865-1-sashal@kernel.org>
-References: <20250519212331.1986865-1-sashal@kernel.org>
+	s=arc-20240116; t=1747705093; c=relaxed/simple;
+	bh=eljU35hDbEAdHwRTu2RNu6BR2B97PG01DTj/9T+KyAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eSflGqMW7HhYpsGHI7CiWCPhI6U6XFxrzIFXMoCecAS2byGkLyC3tv6EJ7dDRHHFIouIOKrpVlxiy2vrMcMiQpJruKdIiwhqxfvkFpakp+KXhg4f7Z4tiS+iraEFcu2pRLyPtKqchgvez/Qjw4YfaYrKXwHDMMauChpR9r+T2I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMfu9FpK; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-708ac7dfc19so47388127b3.3
+        for <linux-nfs@vger.kernel.org>; Mon, 19 May 2025 18:38:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747705090; x=1748309890; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eljU35hDbEAdHwRTu2RNu6BR2B97PG01DTj/9T+KyAs=;
+        b=SMfu9FpKITBYEZFa0zrWsjc3X1vDnsgoB1AzhD9lsUrFk5EtDksXmZ2FsjlddpngCr
+         F5eAHwnBsk/vGK2k2ME7OzFySBmIuIX8js58jaix1Hhi8W+zXU+vg3tf8tUV1qb8GWFi
+         w6BbyoEssYYtzpOC/WZ0Lcm/kgWtRlduUvXVfxgjJzn+hFB7+R4mfcRojy/+YiGid2e+
+         iCDy8zcYHpOxg8CnpWmd47NtMbabKrGMAP9AS3gEbPI7q0uYCnb0N2p+oniqyN1IQdDh
+         VwYLjd+LTE2Rg4ROkJ+es/AT3LPSdTIdrLaOB8JBRcupiBUGc0iaMBaGgbJRSlR1XHiv
+         UPuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747705090; x=1748309890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eljU35hDbEAdHwRTu2RNu6BR2B97PG01DTj/9T+KyAs=;
+        b=HCiGPOBC4SlTQ4czLnW57+pDi7fsjmI4fEr3DYe6jxJ2auio5BIhZ6Hci13ZodUw4u
+         D7jqHcGnki1mxx009HXql8m8dboi8N2gnBl1rRgsPSTGPaC+cxMXlwUiXyDr1OZNTiWx
+         k8qifiggMuanxP8TnL3Cqn0moA3OiAt1ID+ZbWrUqqK7sf/aa6QMtqRegFq3Wkux/kMD
+         b6Toi4sa5nnM52ZwXYSzSjNJssTfoqHmpaJ0ss2U/zADzzva1pxR2zF0VQC8+vMkdi5i
+         qmdzuQZOgAm58Ah4uNjbtT7C1K0inLGqed4AJZ0O5M1E4HDw5BZ2fcMj34QHuj1rlGS3
+         sw8Q==
+X-Gm-Message-State: AOJu0Yymt4mZk+tI4DK4slbGDvOP2rNH9KvewKcIlaGGMPLLcrO1pPhi
+	wXn3NP5nsUVBcr9YecmO3Qs9JrTP68Lfr7pwAy7Xn9+p8w6vbf0b0DXCzx7yZn9704qd+VxWcUm
+	xPcYSvvydn+sk2PJPGPLc3US4c8rUPRO4afIk0/y0
+X-Gm-Gg: ASbGncvrRtllfwMeYiKxNe/9YwsJNaH0u9nAaypTA+oUxxblC7K6sPsU0XuUIbYYsLZ
+	nKpuv+a9LE4QUseU00KhnF1U8LYre/V5gvkeRdzjc2CPBRrz0NMLbXG+JfzMZxVf0VvCN2uBbak
+	9eCpfyYz+kjLc/AVPmgwTOxwoEEnTzlsI=
+X-Google-Smtp-Source: AGHT+IHo44Qw6QfyUmKw7ToIxUqepSj+0BXlq/f6qhssc3gQ3YSk/2rzf+8pthr/U4koqcgbyYGSKtPJLvbHoS3R4Qg=
+X-Received: by 2002:a05:690c:d0d:b0:708:100a:57b0 with SMTP id
+ 00721157ae682-70ca797ae55mr186602297b3.8.1747705089992; Mon, 19 May 2025
+ 18:38:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
-Content-Transfer-Encoding: 8bit
+References: <CANH4o6Pvc7wuB0Yh8sEQDRg59_=rUNtnpgJizZ5mmmGNgY5Qrg@mail.gmail.com>
+ <CAM5tNy7MCKPgg7+fNJk3SkTp9Au6G=2XBK+8DfxKQQ8-GvaA=Q@mail.gmail.com> <CAPJSo4VU8UP1bzT=FssnBU2EAtLmVoKg4icxLA6bXmNUNtVF_A@mail.gmail.com>
+In-Reply-To: <CAPJSo4VU8UP1bzT=FssnBU2EAtLmVoKg4icxLA6bXmNUNtVF_A@mail.gmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Mon, 19 May 2025 18:37:23 -0700
+X-Gm-Features: AX0GCFu4aYglNnpXVKkbhzoQu97uDx0wrM3owjTq15UiKQMAxcVFXO_t9YxmIYI
+Message-ID: <CAM5tNy61mcXY8LoP-Ve2L7Qpb8pmtb=+MyfC5Q=otq7_Bc19CA@mail.gmail.com>
+Subject: Re: NFS/TLS situation on Windows - Re: Why TLS and Kerberos are not
+ useful for NFS security Re: [PATCH nfs-utils] exportfs: make "insecure" the
+ default for all exports
+To: Lionel Cons <lionelcons1972@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jeff Layton <jlayton@kernel.org>
+On Mon, May 19, 2025 at 6:03=E2=80=AFAM Lionel Cons <lionelcons1972@gmail.c=
+om> wrote:
+>
+> CAUTION: This email originated from outside of the University of Guelph. =
+Do not click links or open attachments unless you recognize the sender and =
+know the content is safe. If in doubt, forward suspicious emails to IThelp@=
+uoguelph.ca.
+>
+>
+> On Thu, 15 May 2025 at 04:09, Rick Macklem <rick.macklem@gmail.com> wrote=
+:
+> >
+> > On Wed, May 14, 2025 at 2:51=E2=80=AFPM Martin Wege <martin.l.wege@gmai=
+l.com> wrote:
+> > What other clients are there out there? (Hummingbird's, now called
+> > OpenText's NFSv4.0 client. I was surprised to see it was still possible
+> > to buy it. And it probably can be put in the same category as the MacOS=
+ one.)
+>
+> Situation on Windows:
+> 1. OpenText NFSv4 client: We've talked to Opentext about TLS support,
+> and they do not know whether a market for NFS over TLS outside what
+> they call the "Linux bubble" will ever martialise. There is also risk,
+> both engineering and drastic performance degradation if the Windows
+> native TLS is used (this is a kernel driver, so only the Windows
+> native TLS can be used).
+> So this is not going to happen unless someone pays, and the
+> performance will not be great.
+>
+> 2. ms-nfs41-client NFSv4.2 client: I've talked to Roland Mainz, who is
+> working with Tigran Mkrtchyan on ms-nfs41-client (Windows NFSv4.2
+> client). Their RPC is based on libtirpc, and if steved-libtirpc gets
+> TLS support, then this can be easily ported. But Roland (didn't ask
+> Tigran yet) doesn't have time to implement TLS support in libtirpc.
+>
+> 3. Windows Server 20xx NFSv4.1 server: Other department went through a
+> cycle of meetings with Microsoft in 2024/2025, so far Microsoft wants
+> "market demand" (which doesn't seem to materialise), and cautions that
+> the performance might be below 50% of a similar SMB configuration,
+> because TLS is not considered to be a good match for network
+> filesystems.
+>
+> Summary:
+> Forget about NFS/TLS on Windows.
+Well, for #1 and #3 I'm not surprised and would agree.
+I would like to find a way forward for #2.
+I will take a look at the libtirpc sources and try and cobble to-gether
+a prototype using the OpenSSL libraries.
 
-[ Upstream commit 6b9785dc8b13d9fb75ceec8cf4ea7ec3f3b1edbc ]
+I am not sure how helpful that will be for Roland, but it might be a
+starting point. (It depends upon what Microsoft provides in the kernel
+w.r.t. TLS and whether the driver uses a libtirpc library built from source=
+s.
 
-Currently, different NFS clients can share the same DS connections, even
-when they are in different net namespaces. If a containerized client
-creates a DS connection, another container can find and use it. When the
-first client exits, the connection will close which can lead to stalls
-in other clients.
+I do plan on posting to the mailing list for #2, since I did a short
+test drive of the driver.
 
-Add a net namespace pointer to struct nfs4_pnfs_ds, and compare those
-value to the caller's netns in _data_server_lookup_locked() when
-searching for a nfs4_pnfs_ds to match.
+rick
 
-Reported-by: Omar Sandoval <osandov@osandov.com>
-Reported-by: Sargun Dillon <sargun@sargun.me>
-Closes: https://lore.kernel.org/linux-nfs/Z_ArpQC_vREh_hEA@telecaster/
-Tested-by: Sargun Dillon <sargun@sargun.me>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Link: https://lore.kernel.org/r/20250410-nfs-ds-netns-v2-1-f80b7979ba80@kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/filelayout/filelayoutdev.c         | 6 +++---
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 6 +++---
- fs/nfs/pnfs.h                             | 4 +++-
- fs/nfs/pnfs_nfs.c                         | 9 +++++----
- 4 files changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfs/filelayout/filelayoutdev.c b/fs/nfs/filelayout/filelayoutdev.c
-index d913e818858f3..82bba1ede717c 100644
---- a/fs/nfs/filelayout/filelayoutdev.c
-+++ b/fs/nfs/filelayout/filelayoutdev.c
-@@ -75,6 +75,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	struct page *scratch;
- 	struct list_head dsaddrs;
- 	struct nfs4_pnfs_ds_addr *da;
-+	struct net *net = server->nfs_client->cl_net;
- 
- 	/* set up xdr stream */
- 	scratch = alloc_page(gfp_flags);
-@@ -160,8 +161,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 
- 		mp_count = be32_to_cpup(p); /* multipath count */
- 		for (j = 0; j < mp_count; j++) {
--			da = nfs4_decode_mp_ds_addr(server->nfs_client->cl_net,
--						    &stream, gfp_flags);
-+			da = nfs4_decode_mp_ds_addr(net, &stream, gfp_flags);
- 			if (da)
- 				list_add_tail(&da->da_node, &dsaddrs);
- 		}
-@@ -171,7 +171,7 @@ nfs4_fl_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 			goto out_err_free_deviceid;
- 		}
- 
--		dsaddr->ds_list[i] = nfs4_pnfs_ds_add(&dsaddrs, gfp_flags);
-+		dsaddr->ds_list[i] = nfs4_pnfs_ds_add(net, &dsaddrs, gfp_flags);
- 		if (!dsaddr->ds_list[i])
- 			goto out_err_drain_dsaddrs;
- 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index 1f12297109b41..e6d7473e1a32a 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -49,6 +49,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	struct nfs4_pnfs_ds_addr *da;
- 	struct nfs4_ff_layout_ds *new_ds = NULL;
- 	struct nfs4_ff_ds_version *ds_versions = NULL;
-+	struct net *net = server->nfs_client->cl_net;
- 	u32 mp_count;
- 	u32 version_count;
- 	__be32 *p;
-@@ -80,8 +81,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 
- 	for (i = 0; i < mp_count; i++) {
- 		/* multipath ds */
--		da = nfs4_decode_mp_ds_addr(server->nfs_client->cl_net,
--					    &stream, gfp_flags);
-+		da = nfs4_decode_mp_ds_addr(net, &stream, gfp_flags);
- 		if (da)
- 			list_add_tail(&da->da_node, &dsaddrs);
- 	}
-@@ -147,7 +147,7 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
- 	new_ds->ds_versions = ds_versions;
- 	new_ds->ds_versions_cnt = version_count;
- 
--	new_ds->ds = nfs4_pnfs_ds_add(&dsaddrs, gfp_flags);
-+	new_ds->ds = nfs4_pnfs_ds_add(net, &dsaddrs, gfp_flags);
- 	if (!new_ds->ds)
- 		goto out_err_drain_dsaddrs;
- 
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 68339680bb7d1..a73566d365028 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -57,6 +57,7 @@ struct nfs4_pnfs_ds {
- 	struct list_head	ds_node;  /* nfs4_pnfs_dev_hlist dev_dslist */
- 	char			*ds_remotestr;	/* comma sep list of addrs */
- 	struct list_head	ds_addrs;
-+	const struct net	*ds_net;
- 	struct nfs_client	*ds_clp;
- 	refcount_t		ds_count;
- 	unsigned long		ds_state;
-@@ -377,7 +378,8 @@ int pnfs_generic_commit_pagelist(struct inode *inode,
- int pnfs_generic_scan_commit_lists(struct nfs_commit_info *cinfo, int max);
- void pnfs_generic_write_commit_done(struct rpc_task *task, void *data);
- void nfs4_pnfs_ds_put(struct nfs4_pnfs_ds *ds);
--struct nfs4_pnfs_ds *nfs4_pnfs_ds_add(struct list_head *dsaddrs,
-+struct nfs4_pnfs_ds *nfs4_pnfs_ds_add(const struct net *net,
-+				      struct list_head *dsaddrs,
- 				      gfp_t gfp_flags);
- void nfs4_pnfs_v3_ds_connect_unload(void);
- int nfs4_pnfs_ds_connect(struct nfs_server *mds_srv, struct nfs4_pnfs_ds *ds,
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index aff44a7b98f86..e2d90239d042d 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -414,12 +414,12 @@ _same_data_server_addrs_locked(const struct list_head *dsaddrs1,
-  * Lookup DS by addresses.  nfs4_ds_cache_lock is held
-  */
- static struct nfs4_pnfs_ds *
--_data_server_lookup_locked(const struct list_head *dsaddrs)
-+_data_server_lookup_locked(const struct net *net, const struct list_head *dsaddrs)
- {
- 	struct nfs4_pnfs_ds *ds;
- 
- 	list_for_each_entry(ds, &nfs4_data_server_cache, ds_node)
--		if (_same_data_server_addrs_locked(&ds->ds_addrs, dsaddrs))
-+		if (ds->ds_net == net && _same_data_server_addrs_locked(&ds->ds_addrs, dsaddrs))
- 			return ds;
- 	return NULL;
- }
-@@ -512,7 +512,7 @@ nfs4_pnfs_remotestr(struct list_head *dsaddrs, gfp_t gfp_flags)
-  * uncached and return cached struct nfs4_pnfs_ds.
-  */
- struct nfs4_pnfs_ds *
--nfs4_pnfs_ds_add(struct list_head *dsaddrs, gfp_t gfp_flags)
-+nfs4_pnfs_ds_add(const struct net *net, struct list_head *dsaddrs, gfp_t gfp_flags)
- {
- 	struct nfs4_pnfs_ds *tmp_ds, *ds = NULL;
- 	char *remotestr;
-@@ -530,13 +530,14 @@ nfs4_pnfs_ds_add(struct list_head *dsaddrs, gfp_t gfp_flags)
- 	remotestr = nfs4_pnfs_remotestr(dsaddrs, gfp_flags);
- 
- 	spin_lock(&nfs4_ds_cache_lock);
--	tmp_ds = _data_server_lookup_locked(dsaddrs);
-+	tmp_ds = _data_server_lookup_locked(net, dsaddrs);
- 	if (tmp_ds == NULL) {
- 		INIT_LIST_HEAD(&ds->ds_addrs);
- 		list_splice_init(dsaddrs, &ds->ds_addrs);
- 		ds->ds_remotestr = remotestr;
- 		refcount_set(&ds->ds_count, 1);
- 		INIT_LIST_HEAD(&ds->ds_node);
-+		ds->ds_net = net;
- 		ds->ds_clp = NULL;
- 		list_add(&ds->ds_node, &nfs4_data_server_cache);
- 		dprintk("%s add new data server %s\n", __func__,
--- 
-2.39.5
-
+>
+> Lionel
+>
 
