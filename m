@@ -1,195 +1,208 @@
-Return-Path: <linux-nfs+bounces-11856-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11857-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63317ABFFB1
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 00:38:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAC96AC00A9
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 01:21:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A55653A84C9
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 May 2025 22:38:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69B0218822A4
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 May 2025 23:22:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5340D239E94;
-	Wed, 21 May 2025 22:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHXSci1o"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF31D23D2B1;
+	Wed, 21 May 2025 23:21:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F971754B
-	for <linux-nfs@vger.kernel.org>; Wed, 21 May 2025 22:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B227921D3C7
+	for <linux-nfs@vger.kernel.org>; Wed, 21 May 2025 23:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747867102; cv=none; b=S4DNJLIQJIkl0vn6QAGcBzkvfkhC4aSYXSWPsi0ndumeEggwInFBTCsrjZ/yXAMV43al3aAuAPhx3aIJSl3GVWGJ0GG8fe+ug4Tq3vzBgvPjrnVZpDTm6DnEf55ueQ+wEtanBg4b8BBSMXoZjmJLIlLciv7qo489sI6gCktDiEg=
+	t=1747869662; cv=none; b=fS13v4DjbUXDJTUmQIWaoDu5qCPcjM7wjUC6m9hM9a/NSQHWXG6Hy3q9p+aYfxKiEcd7CgrQsvNWxRgU2Y2aBU/u1eq7JEdcWIHmSiaIG3Z5haxlRDEHm3vXrqNcB+4hX4z1in5sZTByw+bBgCMfsYT8RcLEsGwm9s65jK93ias=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747867102; c=relaxed/simple;
-	bh=lkmYfYalRQ7SIVlGkEeQtTQEjLulLpWdiiBfVjWlZ08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HzfUEnauGSKj5et0ruE8UfRQYTgfGaNSEey+sL8HbcSZcFP8T4Wr6k6BA3v8ZsZ+eWG+JGlehTQcNdpjHGJ/JsOSYKkUUjic9gez+VKHnQYaCuKiQVkXQ0wbc1AzkLQOJnx+hVbextHHxoXvw3OuWT5UbJU9GMQRGsBXL2SL8z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jHXSci1o; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-601d66f8cafso6239587a12.3
-        for <linux-nfs@vger.kernel.org>; Wed, 21 May 2025 15:38:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747867099; x=1748471899; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lkmYfYalRQ7SIVlGkEeQtTQEjLulLpWdiiBfVjWlZ08=;
-        b=jHXSci1o+ucNs6+EUIRn7OX9Y2tK0SZq+Engrpx6YE/L4Wc6J0YVDonSS59hzZYfy5
-         2kVBQxThUukUQc63FejPnPqbZqteR9A3i1o99HaMlly1vy61CxHNhn1c/bkzfAP0mTnJ
-         ro0hbx3iQtrQiAgediObtuKKmdeFARrPGzphC5LlAjpsw/F7btdYgw3GOWeNm+dfwBSo
-         R1REY2eRbRjjQthPDfHtMCd920Z7mThwHYVPKi2ykCPDbyr5P8i8bGXeupBf030iTQDa
-         ioJUBiHSkCdKCEpat7RR9sU6ndav0KBVzYsm5Co/eaHfM54Uv7bFliIRXqp5pvHB2ovh
-         7Cag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747867099; x=1748471899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lkmYfYalRQ7SIVlGkEeQtTQEjLulLpWdiiBfVjWlZ08=;
-        b=CLtyfonCFeoUSMu7lhVMin7szbSD31hmGT087anp8GibAK0pS9hk6O6I2iux1FVpAy
-         rTLBHkrCqBlLYtiVlvUNP5J2GJKt3V/7qttimkc3UzIU1xWNjQ1gC58ylGf5pfxL1KHP
-         1N6NYRKx0QYxuzDPo9EU5sZ4qNdcvaoBdkvyy2RUoMz1pLbF+qTzel9PeQxGWn3tyN9a
-         VyJDAquRHC37rUG4zTiwitk7wtCJoaI0tqGewrdaPpvYIMkbRNbPQGkiOJKIX5FhjVCt
-         hk8eBJPTiW4FB8/hPv6EET0ybIKmvbV3bUSlqiqpTXjrWvCyJwxCup723tqOCT8viDup
-         s/zw==
-X-Gm-Message-State: AOJu0YywVAhUnLbHVn5PIAnlP6WGzn9SFvi2XAOY2pZh71txx4aO9NvL
-	E/NwqD8jNCKiTKWLPFApgrPetE1cFsSMDXrxdfZKbAj24jn4J8eG9xN+CKwezFEoYp92xVdJojA
-	MSaxPJvDQEFY52XtGuT7U7aJYSAE5EwEz2zTrhw==
-X-Gm-Gg: ASbGncuCpQy6LVBQpAisOBfN1ZFC7JJ4HG2t2CZiC4fphQOD6//HVtI5PyC3hQigIj/
-	d1VFf1Za6BZ5t9Gji32jEs15e3TfZOTgNkRp3fEd+g+T++5RGNrczxvHe+KUt/LDVLNF7Q+kCN/
-	kH5+PcXWJGE+tCamyHIG8O3yEldLVZx3C1ecgusk7oYjnrZMLC713bIW7Q0EfMSm0=
-X-Google-Smtp-Source: AGHT+IGkSSZEuMewGtPAQUOI5W+yj0JrfEI5MuvwDwlOj4iMgNyc3rExr+LfpPXm92IwJ7LX5fo+YaEA9Ncv4ZokwEE=
-X-Received: by 2002:a05:6402:27d1:b0:602:2a0f:eae with SMTP id
- 4fb4d7f45d1cf-6022a0f0edcmr4901044a12.14.1747867098403; Wed, 21 May 2025
- 15:38:18 -0700 (PDT)
+	s=arc-20240116; t=1747869662; c=relaxed/simple;
+	bh=Ih0XwK5pjQQxkw/U/3xiRAsPcYWeN041WyA6R+Jfet4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=IwiIlaK3ap+qvi8RrjVwYvXGWLmYkqWtrS21wrwVXCDJPwZvO3yakS/Qvi0IUqmVpYO31NtqwcHubXNPrWYK+6fFWWMYg8GDJhAxb/qWZ8eQSYsF71j88SH1km6teHl4QA4xuxCaleuEqXXvQW7qlAwWE+4lk1YCCtCKt51vkA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uHsjy-007kTU-Tg;
+	Wed, 21 May 2025 23:20:50 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANH4o6Pvc7wuB0Yh8sEQDRg59_=rUNtnpgJizZ5mmmGNgY5Qrg@mail.gmail.com>
- <CAM5tNy7MCKPgg7+fNJk3SkTp9Au6G=2XBK+8DfxKQQ8-GvaA=Q@mail.gmail.com>
- <CAPJSo4VU8UP1bzT=FssnBU2EAtLmVoKg4icxLA6bXmNUNtVF_A@mail.gmail.com>
- <CAM5tNy61mcXY8LoP-Ve2L7Qpb8pmtb=+MyfC5Q=otq7_Bc19CA@mail.gmail.com> <CAPJSo4UFPbwaO3=rwSOvG72EFrye8W3i3s+ztFJ8_DBY62zjjA@mail.gmail.com>
-In-Reply-To: <CAPJSo4UFPbwaO3=rwSOvG72EFrye8W3i3s+ztFJ8_DBY62zjjA@mail.gmail.com>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Wed, 21 May 2025 15:38:04 -0700
-X-Gm-Features: AX0GCFueEkV1H0HL9qANH-0KMno0JfLgV2apnzf8mRlYB9uSQacIqPMF4_MF-N8
-Message-ID: <CAM5tNy5_=YuyHfUNeVjYNEC=hoV7TxJS4St+=Q9WdzpuK3H1=g@mail.gmail.com>
-Subject: Re: NFS/TLS situation on Windows - Re: Why TLS and Kerberos are not
- useful for NFS security Re: [PATCH nfs-utils] exportfs: make "insecure" the
- default for all exports
-To: Lionel Cons <lionelcons1972@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, libtirpc-devel@lists.sourceforge.net, 
-	ms-nfs41-client-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Anna Schumaker" <anna@kernel.org>
+Cc:
+ linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org
+Subject: Re: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
+In-reply-to: <20250516150010.61641-1-anna@kernel.org>
+References: <20250516150010.61641-1-anna@kernel.org>
+Date: Thu, 22 May 2025 09:20:50 +1000
+Message-id: <174786965058.62796.752773445709137169@noble.neil.brown.name>
 
-On Wed, May 21, 2025 at 12:07=E2=80=AFAM Lionel Cons <lionelcons1972@gmail.=
-com> wrote:
->
-> On Tue, 20 May 2025 at 03:38, Rick Macklem <rick.macklem@gmail.com> wrote=
-:
-> >
-> > On Mon, May 19, 2025 at 6:03=E2=80=AFAM Lionel Cons <lionelcons1972@gma=
-il.com> wrote:
-> > >
-> > > CAUTION: This email originated from outside of the University of Guel=
-ph. Do not click links or open attachments unless you recognize the sender =
-and know the content is safe. If in doubt, forward suspicious emails to ITh=
-elp@uoguelph.ca.
-> > >
-> > >
-> > > On Thu, 15 May 2025 at 04:09, Rick Macklem <rick.macklem@gmail.com> w=
-rote:
-> > > >
-> > > > On Wed, May 14, 2025 at 2:51=E2=80=AFPM Martin Wege <martin.l.wege@=
-gmail.com> wrote:
-> > > > What other clients are there out there? (Hummingbird's, now called
-> > > > OpenText's NFSv4.0 client. I was surprised to see it was still poss=
-ible
-> > > > to buy it. And it probably can be put in the same category as the M=
-acOS one.)
-> > >
-> > > Situation on Windows:
-> > > 1. OpenText NFSv4 client: We've talked to Opentext about TLS support,
-> > > and they do not know whether a market for NFS over TLS outside what
-> > > they call the "Linux bubble" will ever martialise. There is also risk=
-,
-> > > both engineering and drastic performance degradation if the Windows
-> > > native TLS is used (this is a kernel driver, so only the Windows
-> > > native TLS can be used).
-> > > So this is not going to happen unless someone pays, and the
-> > > performance will not be great.
-> > >
-> > > 2. ms-nfs41-client NFSv4.2 client: I've talked to Roland Mainz, who i=
-s
-> > > working with Tigran Mkrtchyan on ms-nfs41-client (Windows NFSv4.2
-> > > client). Their RPC is based on libtirpc, and if steved-libtirpc gets
-> > > TLS support, then this can be easily ported. But Roland (didn't ask
-> > > Tigran yet) doesn't have time to implement TLS support in libtirpc.
-> > >
-> > > 3. Windows Server 20xx NFSv4.1 server: Other department went through =
-a
-> > > cycle of meetings with Microsoft in 2024/2025, so far Microsoft wants
-> > > "market demand" (which doesn't seem to materialise), and cautions tha=
-t
-> > > the performance might be below 50% of a similar SMB configuration,
-> > > because TLS is not considered to be a good match for network
-> > > filesystems.
-> > >
-> > > Summary:
-> > > Forget about NFS/TLS on Windows.
-> > Well, for #1 and #3 I'm not surprised and would agree.
-> > I would like to find a way forward for #2.
-> > I will take a look at the libtirpc sources and try and cobble to-gether
-> > a prototype using the OpenSSL libraries.
->
-> That would be awesome
->
-> >
-> > I am not sure how helpful that will be for Roland, but it might be a
-> > starting point. (It depends upon what Microsoft provides in the kernel
-> > w.r.t. TLS and whether the driver uses a libtirpc library built from so=
-urces.
->
-> If it works with steved-libtirpc on Linux, then it should work with
-> the libtirpc from ms-nfs41-client too.
-Hmm. Maybe I will put the function calls that would do upcalls in and
-then write a simple set of them that do the OpenSSL calls. I need to
-find out more about how the driver does RPCs.
+On Sat, 17 May 2025, Anna Schumaker wrote:
+> From: Anna Schumaker <anna.schumaker@oracle.com>
+>=20
+> The PTR_ERR_OR_ZERO() macro uses IS_ERR(), which checks if an error
+> value is a valid Linux error code. It does not take into account NFS
+> error codes, which are well out of the range of MAX_ERRNO. So if
+> _nfs4_proc_mkdir() returns -NFS4ERR_DELAY (which xfstests generic/477 was
+> able to consistently hit while running against a Hammerspace server),
+> PTR_ERR_OR_ZERO() will happily say "no, that's not an error", so we
+> propagate it up to the VFS who then tries to dput() it.
+>=20
+> Naturally, the kernel doesn't like this:
+>=20
+> [  247.669307] BUG: unable to handle page fault for address: ffffffffffffd9=
+68
+> [  247.690824] RIP: 0010:lockref_put_return+0x67/0x130
+> [  247.719037] Call Trace:
+> [  247.719446]  <TASK>
+> [  247.719806]  ? __pfx_lockref_put_return+0x10/0x10
+> [  247.720538]  ? _raw_spin_unlock+0x15/0x30
+> [  247.721173]  ? dput+0x179/0x490
+> [  247.721682]  ? vfs_mkdir+0x475/0x780
+> [  247.722259]  dput+0x30/0x490
+> [  247.722730]  do_mkdirat+0x158/0x310
+> [  247.723292]  ? __pfx_do_mkdirat+0x10/0x10
+> [  247.723928]  __x64_sys_mkdir+0xd3/0x160
+> [  247.724531]  do_syscall_64+0x4b/0x120
+> [  247.725131]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [  247.725914] RIP: 0033:0x7fe0e22f3ddb
+>=20
+> While I was in the area, I noticed that we're discarding any errors left
+> unhandled by nfs4_handle_exception(). This patch fixes both of these
+> issues.
+>=20
+> Fixes: 8376583b84a1 ("nfs: change mkdir inode_operation to return alternate=
+ dentry if needed.")
+> Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
+> ---
+>  fs/nfs/nfs4proc.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index c7e068b563ff..306dade146e6 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -5274,13 +5274,17 @@ static struct dentry *nfs4_proc_mkdir(struct inode =
+*dir, struct dentry *dentry,
+>  		sattr->ia_mode &=3D ~current_umask();
+>  	do {
+>  		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
+> -		err =3D PTR_ERR_OR_ZERO(alias);
+> +		err =3D PTR_ERR(alias);
+> +		if (err > 0)
+> +			err =3D 0;
 
-I'll try to look at the sources on github.
+This would be problematic on a 32 bit machine with more than 2GB of
+memory ... or maybe on any 32bit machine as I think kernel addresses are
+always negative.
 
->
-> Question is whether the openssl license is compatible to LGPL used by
-> ms-nfs41-client
-I don't see why LGPL'd code cannot link to non-GPL'd open source, but
-I'm no lawyer. (When this is done, it will only be attractive to those that
-want RPC-over-TLS, since the TLS libraries will need to be linked into
-the app. using the libtirpc, I think? (I don't understand library versionin=
-g,
-so I don't know if there is a way to avoid this when apps. don't want
-RPC-over-TLS?)
+The largest nfs error code is a little over 12000.  We could maybe
+change MAX_ERRNO to 13000, but as that is more than one page it might
+not work.
+The best solution would be to separate the error from the pointer while
+the error might exceed MAX_ERRNO.
 
-The question is what TLS libraries are normally used for Windows?
+Something like this?
 
-rick
+NeilBrown
 
->
-> >
-> > I do plan on posting to the mailing list for #2, since I did a short
-> > test drive of the driver.
->
-> Thank you
->
->
->
-> Lionel
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 970f28dbf253..feebca84b980 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5155,13 +5155,15 @@ static int nfs4_do_create(struct inode *dir, struct d=
+entry *dentry, struct nfs4_
+ }
+=20
+ static struct dentry *nfs4_do_mkdir(struct inode *dir, struct dentry *dentry,
+-				    struct nfs4_createdata *data)
++				    struct nfs4_createdata *data, int *statusp)
+ {
+-	int status =3D nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir), &da=
+ta->msg,
++	struct dentry *ret;
++
++	*statusp =3D nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir), &data=
+->msg,
+ 				    &data->arg.seq_args, &data->res.seq_res, 1);
+=20
+-	if (status)
+-		return ERR_PTR(status);
++	if (*statusp)
++		return NULL;
+=20
+ 	spin_lock(&dir->i_lock);
+ 	/* Creating a directory bumps nlink in the parent */
+@@ -5170,7 +5172,11 @@ static struct dentry *nfs4_do_mkdir(struct inode *dir,=
+ struct dentry *dentry,
+ 				      data->res.fattr->time_start,
+ 				      NFS_INO_INVALID_DATA);
+ 	spin_unlock(&dir->i_lock);
+-	return nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
++	ret =3D nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
++	if (!IS_ERR(ret))
++		return ret;
++	*statusp =3D PTR_ERR(ret);
++	return NULL;
+ }
+=20
+ static void nfs4_free_createdata(struct nfs4_createdata *data)
+@@ -5231,17 +5237,18 @@ static int nfs4_proc_symlink(struct inode *dir, struc=
+t dentry *dentry,
+=20
+ static struct dentry *_nfs4_proc_mkdir(struct inode *dir, struct dentry *den=
+try,
+ 				       struct iattr *sattr,
+-				       struct nfs4_label *label)
++				       struct nfs4_label *label, int *statusp)
+ {
+ 	struct nfs4_createdata *data;
+-	struct dentry *ret =3D ERR_PTR(-ENOMEM);
++	struct dentry *ret =3D NULL;
+=20
++	*statusp =3D -ENOMEM;
+ 	data =3D nfs4_alloc_createdata(dir, &dentry->d_name, sattr, NF4DIR);
+ 	if (data =3D=3D NULL)
+ 		goto out;
+=20
+ 	data->arg.label =3D label;
+-	ret =3D nfs4_do_mkdir(dir, dentry, data);
++	ret =3D nfs4_do_mkdir(dir, dentry, data, statusp);
+=20
+ 	nfs4_free_createdata(data);
+ out:
+@@ -5264,11 +5271,12 @@ static struct dentry *nfs4_proc_mkdir(struct inode *d=
+ir, struct dentry *dentry,
+ 	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
+ 		sattr->ia_mode &=3D ~current_umask();
+ 	do {
+-		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
+-		err =3D PTR_ERR_OR_ZERO(alias);
++		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
+ 		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+-		err =3D nfs4_handle_exception(NFS_SERVER(dir), err,
+-				&exception);
++		if (err)
++			alias =3D ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
++							      err,
++							      &exception));
+ 	} while (exception.retry);
+ 	nfs4_label_release_security(label);
+=20
 
