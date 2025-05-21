@@ -1,124 +1,148 @@
-Return-Path: <linux-nfs+bounces-11843-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11845-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DBABABE816
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 May 2025 01:34:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAEDAABE88F
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 May 2025 02:33:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B958C189B63E
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 May 2025 23:35:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 117978A07D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 May 2025 00:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC3C2528E0;
-	Tue, 20 May 2025 23:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1F7D17E;
+	Wed, 21 May 2025 00:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5yQRu5L"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="rFaV/nR/"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-16.consmr.mail.ne1.yahoo.com (sonic307-16.consmr.mail.ne1.yahoo.com [66.163.190.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C07218EA2;
-	Tue, 20 May 2025 23:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE67632
+	for <linux-nfs@vger.kernel.org>; Wed, 21 May 2025 00:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747784088; cv=none; b=FLY1na3URfmI9DgwMRXLJk8A/k3myW9JniFYxFinZUyX19WTroicN1aEFFtYLjMqUteONkrk/80hhodh+pM6//a5h8kLkptnCtPwtLFvNeVwAuoS6+98eXaDu6KpiGDlKDL5BCP4cxMXKv8JaBUbgPOmLw6zH03J09/qmAeRGnk=
+	t=1747787574; cv=none; b=npctFdNQXbBkwd2P82MFj5tcy0LknOqoEL5EoJCOu84KKt1X9GRGJHTlDnTgQ5+nxqtCfG4nV8dOCmO5t1DOuSQKsEIod/q9RkX0O2fl3YF3+vwwMh8+1EWcCR6JDLwO61xeNzYVZYzmumDYxJDWLCNsd7JG8MPMwMCSu4STkGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747784088; c=relaxed/simple;
-	bh=nk5kiEmG5q6Z6ly3rI2SSY3NQLP58Venst00SAF/F60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQSQWaEXNJtCwCmnjx7/+ErlYXG4iIHELhG788Jr4BwetBC7T6/ctVePbyyGYmBPcnwWHpeTjdd/WtMBOkCcdWwcfvuPZzf5i7viPcCMsznO0ReS0gETCI/IhQcvnB73z2URerOE67V218EtmZ7jh0Qy/9pU4WxQrIL2bvC+UUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5yQRu5L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED200C4CEE9;
-	Tue, 20 May 2025 23:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747784088;
-	bh=nk5kiEmG5q6Z6ly3rI2SSY3NQLP58Venst00SAF/F60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y5yQRu5LByw0qmZ43NOxThhQtuMUYw/+ZdxT7XSL2GD0uPrryMrYvF7hrXlwb+LxR
-	 ZAfYA8jueqxHLuIGfSEGpdB03PxUdHOD91p18u+8CGqSnWfc9/soxQeMhxcRYBBBP+
-	 o41IY6fqHnI7Oi9ai33uTiKQyuy/T7f/w8Q49UeG//f1O73giDmS8Ze/DVf8TBo2Aa
-	 6TPSC1h85fHcC96Hk2lzl8/29drA/WjeXSfevV9r9NApvmOgTavSSP+ow+/oLOE4my
-	 oiGZgeNaci6l6nx2iuJRl+1kBOLp9aHH5LMm4NLiMyC8W4Rd7mV5+Jzq+T7yfudl0m
-	 ihhDCVTGozBlw==
-Date: Tue, 20 May 2025 19:34:46 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: cel@kernel.org
-Cc: Thomas Haynes <loghyr@hammerspace.com>, linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org, kernel-tls-handshake@lists.linux.dev,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Steve Sears <sjs@hammerspace.com>, Jakub Kacinski <kuba@kernel.org>
-Subject: Re: [PATCH v1] SUNRPC: Prevent hang on NFS mount with xprtsec=[m]tls
-Message-ID: <aC0RlqfuilOj51kT@kernel.org>
-References: <20250520195916.676511-1-cel@kernel.org>
+	s=arc-20240116; t=1747787574; c=relaxed/simple;
+	bh=T0RbOaBwczPSyR6MtoU31hIYUwk641zg+6X5zZah544=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvaxlvmD19owdFif599NaaVi9VYRT55zhpaLxgA4GW33lTxn4zjbPFY66HCJ664hoWSLtrgXVPMy4JnrhB3Xtnd0mzHkSwWi7SK5PjzzGp753yQnATUM0aNZD9E5C/4WvjrhdQto0GNauBBVyXyRb2HFCqHUBQps2wiGTFlyb0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=rFaV/nR/; arc=none smtp.client-ip=66.163.190.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747787572; bh=cx3YGvuPA+vDPKU0fnjGtN1JBtOZiqAYEf/p/WyoWqc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=rFaV/nR/9tR/VJ9dlBKmcXFaM+rBCHQm8As1ww2BcQa7HrmQeOJdYgOdduWEp+gVsrgyec4zlnC3yP7ArsuEsHdpJ5hbk+41W7DsQLsc8zpUEtMXjnOGqoTpxpSxY5LgtN+Xi96dhMkjU9KRtpaBHF6wHHdPaXSEdAlR2lc5kBk355N41Kk61npl1kClXco3jWV99KcO7ig8IzZChrDthICz3aH4PsKXUcZxwdKyKz1cnjUhesZ2iKHnJpa9jdg4LUZgRYJK0l3cWZzAWMPtsNTGjALUycKyfHFWao8ypxi/bqN83dk/XmgWb1PET+FBbLfjslO6mkWozQtYGhfuQQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747787572; bh=P6mhyPWDWUF8GubZawJPhGpr9uPfJd4GHsxXFw3mr/8=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=Ra0E499uybDQ6EXY2s8/kGDFG7tj9xYNPYCzg/WMVj2dQZOa8wH63B8HBUlNE3ZQLJhUEbp1TDORdxlbmedLY1TvtTit1EUmPdEnsah3DerpsXxXmW/D4exAqzoFLa8lUp4TPt6Px4x3t7GDPOw4qTvlqValeu/SFtJWMzhyCDOQSxWAEFlzuh5KUTLIz2ZxV1te5NSvVt6l5dCLWDzeK1CbNFWayr0BMkDywFhspl4uw6eQa8+sK+Zy2TUxlaHSuBFCEBcV6padnFkvQxl3N+1Vwq36yDk26q5SzA/rpYlpx+iwhuafk8OMWpU/Rc7UxaokKjM/Fo3OPVVpd0AZwA==
+X-YMail-OSG: oJxqVeIVM1kG4i3jzx86a6TgdP.0sTad.diCSsPSpVtwno5YOcf4L8zlUdZEOX3
+ 8A0thCmq_VigcvCdJvgaCkckZOOYvUdKewrkAPP9aJk_p0xPyf.jgIizuH685NVoGGEsZXLdFdug
+ KsfNyN6u27wSgiw3EA5NT7LiZYqzGRdq8MvhtXvWJH2GTrywTeQi5mpHSTIF9O4.lueZUO8G_yCB
+ GimCgBre7Pq4hh.Tix3Db25Mz558v8DjALQKQPjYGb3y3bOObaQGrYhlQbd_YzYTOLHbffbFa1h.
+ VdUS7oeb3_W4v7kW8uf3MMgikkLUPy5_N3NTcw.vXv.vcpoBno2jD6PC6pAArBx5LrniAONVF5NL
+ DNZ0lbX8RFTB3abN4z.nTduuzKkvxe2l3BVnJRQNjJKTU1LFybufTbbMEDwu5baGKA958c_lo6jl
+ Ki_Jyn0rD1.JYTtnoIx96NHid4bqeOGjoluxMzSGcOH4e2mF_eyHTOuHE.GVwW.MGjBGrL7Mn4OF
+ EroLwnRvazI2LY23GfsrCi1PeEYCF8axRd.0_VRs9TTJpaaA4nYaxO4m9F19ZCezmQTdCrzLkKWR
+ pHB5e53Uj_cUROztu93urkHbS3_YRBavUDhRgU0Ek7TPFMvHLQyXEaWP4e4Ws_RbFfREN93xNLos
+ Kc9ZLb0PCg_u6eH99NHXjewZP2eUMo_86VIZpWX8NGQy7Lfk4YsbmFB5aUnIjyBq48PG_dTrKk5z
+ AIcl72aBX1WgvRnc3a2sBEzK21PuEsJAw.fB27faktiFQjnVbeFuoMCHu0ILPa5_KBW1NaiTO8X8
+ hkclaeaIGx.EQyLDm6mokUOUEjibE0RA2lb8hKRjkGd4mJZ1vFN5lCXmgcqv3CwxobcFqjXEQGGd
+ eIFyISiS6t9k6_HDvzhqseZOZCOL_ZH78coh6bDqJRMDU1FLT1bYMsFJTSpgZZ_i72sY3Xt0wwzO
+ ac9jVZzzRY_jHkMkZap.1.6sUZc_oQT7_Blgdr_XkwJF9CDdY08db7uqthjEdLm21rrPRpg.i02B
+ 9UCyw0rKb7uKTcpI7iay83Ra.S3FxdZxYfQ4MG.nqQXOBF5AmysxwGThRwU3Qs1.lB_EEXhVBhIf
+ o0pQcQFJhk_0EeWe7n2XI9Asjm4opRYMi6kgSMOH0wyHCgHUgAd6jsdoGx2opwPzfDbNRS82kt5W
+ 8LLAwkv5aXfmymlYCEPSF5eIT8KjjGPuSKP8MZYrzCTyj.zICKHTcZz069JvMfHhuZfWUusHArIK
+ F6faHelbx.nKw.w3hLLRGUw2bKZ_5jPcBiw4Rb8_Qp_CVrhX5GTTB0IhSrdtcvXrhXFf0QlQfZwH
+ BPiiMFgERCzxMSPQcPMSN4Og7wB4eLnwwEvx2TLV9P5WFkHMbrveeHWcx1s2kEq4fmPdAnfzKFob
+ UiD7eshjXza87WTGI1UQLG6JVAPIWUwx3B9iZgY2A.xc5GqLO6K4k.rA19yy5mL5v4xOq9P.C5WZ
+ 4DSMxHUoMsHAGwI6dozCO9.lpwHSuodsKl6Pr5r93iBJUALbm_3mJaXVD03SJ7TPS68w8gZfyFup
+ pwVB2QxpPhaF6Yf1PB.ovCH9q73ez77wvnCe50bi7AQAATJNXC_KaA8WWq_4cwcfp7iCyD6RaOmz
+ X5U297wVCeTgwGBnUfEktpe8TUMwVhXECIHtvrGKdEdynadWwxb3nzP2X_vYppH7m4R86zYxopFe
+ cZIJ7R1cehKHgf4JFUBM5XpArdLOJ9twLQOkPDhsVlTQ0wOPVDnhh8tFpfvZ44VqL6PB_gDo4XpY
+ ztEy7mqEY_apSmXbbR_7YqfponqTx11ZCR2UXG8V3UdlDp8sdyuHEtmxlp7RIsFF0eLr1EwA.sCX
+ pHTuKxJrhEtg5tVLifxeNsc3KwO5m0Q8AfATYhuiN8XFAXU9umYuKmeX34YIVBcDUvmazY10a5.u
+ YILlbIcdhEPqdXcmT5sf13Swx_mWqG_WyPJAUAETwQuMK3FDaYw22i11vFSdcwLRV94ShbChwy3j
+ vnIFzE_eiqSUz947iwzHYTofvN.O5yQ8kTsYH0sX1O_6o26G11NgQ8QNS9Uq1qfn23DNEaJ7dtxo
+ NQPhXykgxXpt41pz94MSknLke9XTiYFenqiICsMFPItuw.3g0by6b3piWRUpv44IPi0rueVKqVya
+ 7HhOBENFFJHsuaU0D8NRbui9XPywUHPkPofkB.UW20Df18q76w1jwNWVnrt574YMbGHpi22t01My
+ ShhwmxybpA87YsB6Le3OIj8pKMxaCCxfzCCQ_W4s8TwbYjYk00qgdkk9Npz4tNAdJKHgEPsYtODB
+ wjzcaWg--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: fa6019c4-8c81-48f7-9087-f9292112f967
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Wed, 21 May 2025 00:32:52 +0000
+Received: by hermes--production-gq1-74d64bb7d7-5qmwx (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 22b51d61e1487a2ad2d4a72f676939f8;
+          Wed, 21 May 2025 00:22:40 +0000 (UTC)
+Message-ID: <f4842839-20e9-4ff3-8551-3e33d1c87e44@schaufler-ca.com>
+Date: Tue, 20 May 2025 17:22:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520195916.676511-1-cel@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] security,fs,nfs,net: update
+ security_inode_listsecurity() interface
+To: Paul Moore <paul@paul-moore.com>, Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
+ "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@kernel.org>,
+ Ondrej Mosnacek <omosnace@redhat.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+ selinux@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+ <CAHC9VhQfrMe7EY3_bvW6PcLdaW7tPMgv6WZuePxd1RrbhyZv-g@mail.gmail.com>
+ <CAHC9VhQyDX+NgWipgm5DGMewfVTBe3DkLbe_AANRiuAj40bA1w@mail.gmail.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <CAHC9VhQyDX+NgWipgm5DGMewfVTBe3DkLbe_AANRiuAj40bA1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23840 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Tue, May 20, 2025 at 03:59:16PM -0400, cel@kernel.org wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Engineers at Hammerspace noticed that sometimes mounting with
-> "xprtsec=tls" hangs for a minute or so, and then times out, even
-> when the NFS server is reachable and responsive.
-> 
-> kTLS shuts off data_ready callbacks if strp->msg_ready is set to
-> mitigate data_ready callbacks when a full TLS record is not yet
-> ready to be read from the socket.
-> 
-> Normally msg_ready is clear when the first TLS record arrives on
-> a socket. However, I observed that sometimes tls_setsockopt() sets
-> strp->msg_ready, and that prevents forward progress because
-> tls_data_ready() becomes a no-op.
-> 
-> Moreover, Jakub says: "If there's a full record queued at the time
-> when [tlshd] passes the socket back to the kernel, it's up to the
-> reader to read the already queued data out." So SunRPC cannot
-> expect a data_ready call when ingress data is already waiting.
-> 
-> Add an explicit poll after SunRPC's upper transport is set up to
-> pick up any data that arrived after the TLS handshake but before
-> transport set-up is complete.
-> 
-> Reported-by: Steve Sears <sjs@hammerspace.com>
-> Suggested-by: Jakub Kacinski <kuba@kernel.org>
-> Fixes: 75eb6af7acdf ("SUNRPC: Add a TCP-with-TLS RPC transport class")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/xprtsock.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> Mike, can you try this out?
+On 5/20/2025 2:31 PM, Paul Moore wrote:
+> On Tue, Apr 29, 2025 at 7:34 PM Paul Moore <paul@paul-moore.com> wrote:
+>> On Mon, Apr 28, 2025 at 4:15 PM Stephen Smalley
+>> <stephen.smalley.work@gmail.com> wrote:
+>>> Update the security_inode_listsecurity() interface to allow
+>>> use of the xattr_list_one() helper and update the hook
+>>> implementations.
+>>>
+>>> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
+>>>
+>>> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
-Works well, thanks to you and Jakub for seeing this through!
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
 
-Tested-by: Mike Snitzer <snitzer@kernel.org>
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+I haven't been able to test the change in Smack, but it appears reasonable.
 
-> 
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index 83cc095846d3..4b10ecf4c265 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -2740,6 +2740,11 @@ static void xs_tcp_tls_setup_socket(struct work_struct *work)
->  	}
->  	rpc_shutdown_client(lower_clnt);
->  
-> +	/* Check for ingress data that arrived before the socket's
-> +	 * ->data_ready callback was set up.
-> +	 */
-> +	xs_poll_check_readable(upper_transport);
-> +
->  out_unlock:
->  	current_restore_flags(pflags, PF_MEMALLOC);
->  	upper_transport->clnt = NULL;
-> -- 
-> 2.49.0
-> 
+>>> ---
+>>> This patch is relative to the one linked above, which in theory is on
+>>> vfs.fixes but doesn't appear to have been pushed when I looked.
+>>>
+>>>  fs/nfs/nfs4proc.c             | 10 ++++++----
+>>>  fs/xattr.c                    | 19 +++++++------------
+>>>  include/linux/lsm_hook_defs.h |  4 ++--
+>>>  include/linux/security.h      |  5 +++--
+>>>  net/socket.c                  | 17 +++++++----------
+>>>  security/security.c           | 16 ++++++++--------
+>>>  security/selinux/hooks.c      | 10 +++-------
+>>>  security/smack/smack_lsm.c    | 13 ++++---------
+>>>  8 files changed, 40 insertions(+), 54 deletions(-)
+>> Thanks Stephen.  Once we get ACKs from the NFS, netdev, and Smack
+>> folks I can pull this into the LSM tree.
+> Gentle ping for Trond, Anna, Jakub, and Casey ... can I get some ACKs
+> on this patch?  It's a little late for the upcoming merge window, but
+> I'd like to merge this via the LSM tree after the merge window closes.
+>
+> Link to the patch if you can't find it in your inbox:
+> https://lore.kernel.org/linux-security-module/20250428195022.24587-2-stephen.smalley.work@gmail.com/
+>
+> --
+> paul-moore.com
+>
 
