@@ -1,572 +1,177 @@
-Return-Path: <linux-nfs+bounces-11860-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11861-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA7EAC0527
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 09:02:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D26EAC07E7
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 10:57:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24E439E1318
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 07:01:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6E8B67B4FE6
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 May 2025 08:56:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03A9A1A8419;
-	Thu, 22 May 2025 07:02:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FA132882DA;
+	Thu, 22 May 2025 08:55:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Xy1WeCTt";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Xy1WeCTt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Plt04XWp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF023BBC9
-	for <linux-nfs@vger.kernel.org>; Thu, 22 May 2025 07:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF25E287510
+	for <linux-nfs@vger.kernel.org>; Thu, 22 May 2025 08:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747897320; cv=none; b=MG2TydM17UIiwotYeWPUF6U4NR+uwY6CEIVGdzrpXckEanR+gVlMnunoJapA1xHFV/dy+vNLDRA345xecbG8B1Pdoh0W69CdtLJAmgZtJIpZCIOKF2OSnUDX0/hxUgCORjIrouw8blb9bC/owLu5Q1uSxGgj/uvN83WEOexqwBI=
+	t=1747904159; cv=none; b=MHJWRgUC6vEteskWQZQwN9KgS6uEebcwoPyXjjyUrCAECVFL1oHvpEz1wE3dd1hbePW54XJeOFwO3jKdCx3pNYySe2Qt8ZPJCBuRa2cUXxPoUvM5iCzBQvSkxg8yim3ubl5kEQ0pkZ+RLoKBzMiOkCxS8jGlji2/TmcI2vMvumI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747897320; c=relaxed/simple;
-	bh=ZFyfUM1LhqA/TEsKs0lgurbbs9Gv4O3CQHxQbdJsrNU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jAXB6NzCBH4CP60+XT8bBXIqfk8D8M3SYJqAKKXC7wU8DQogOInxgzW3q+3LjSZNrq63ajitonhgeAohPbqVhF3+s5/HkXiIRcZ52AmAy9yQmj4wjskbn0kGX/LMbojoamFFTvVLZOwbKiKxfXti1ouWVjw6tDhfpeZGKjhVdWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Xy1WeCTt; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Xy1WeCTt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E6B71FFC9;
-	Thu, 22 May 2025 07:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747897316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
+	s=arc-20240116; t=1747904159; c=relaxed/simple;
+	bh=4ASId0JH+VWWZL3IFUBP1dU99/1eNzfiw9x3qfiCG40=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dyyng5+sWZwDYS5PC8e3zO4HJiVlVDoSX2TYMMDhX3jDhz02fEgHyzSuvaEv2DkrJAuuDT9hUYqP4PY7ZytMTAePDXUj3mj9xXnVxpUopQOkyatgYqs/avocOyQvKCUvHUD4+rgPQCLc0OAw6CCx+c64PK+y5BZYu9UvRApWk+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Plt04XWp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747904153;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ExIM8Nv3hKgExYEyTGpkzRZ5tixk6vNcxxy2uYgg5Rg=;
-	b=Xy1WeCTtiB42Wqn9m2N8VXwURvyOa8h8S0PgyP4Lnf0S6IGqED3bmac1/+pzW600Mrh75i
-	h/2evfjjV+9jtAKqj2ggRhX7yfhVtG4yB52zsXwsGdaObXmkAjae8DaRFxawwTTTnMY7e3
-	R7nWBh4nlBgFrEv+wwRwhvvTcQZF9qU=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747897316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ExIM8Nv3hKgExYEyTGpkzRZ5tixk6vNcxxy2uYgg5Rg=;
-	b=Xy1WeCTtiB42Wqn9m2N8VXwURvyOa8h8S0PgyP4Lnf0S6IGqED3bmac1/+pzW600Mrh75i
-	h/2evfjjV+9jtAKqj2ggRhX7yfhVtG4yB52zsXwsGdaObXmkAjae8DaRFxawwTTTnMY7e3
-	R7nWBh4nlBgFrEv+wwRwhvvTcQZF9qU=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1B50613433;
-	Thu, 22 May 2025 07:01:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8AUlA+TLLmgHBQAAD6G6ig
-	(envelope-from <antonio.feijoo@suse.com>); Thu, 22 May 2025 07:01:56 +0000
-From: Antonio Alvarez Feijoo <antonio.feijoo@suse.com>
-To: linux-nfs@vger.kernel.org
-Cc: Antonio Alvarez Feijoo <antonio.feijoo@suse.com>
-Subject: [PATCH 2/2] systemd: Add a generator to mount /sysroot via NFSv4 in the initrd
-Date: Thu, 22 May 2025 08:59:10 +0200
-Message-ID: <6cb1a43a10841aded94efcdb2ab4f2c2ed8450f2.1747753109.git.antonio.feijoo@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1747753109.git.antonio.feijoo@suse.com>
-References: <cover.1747753109.git.antonio.feijoo@suse.com>
+	bh=6pino5Ai5bwBqjPAZpAdwxhzTr0aiQB3uDnJ8famwHw=;
+	b=Plt04XWpD0bB8dXYd4QoNbQDF4AgWT6uIaeogpiXA9rEz52Hh5ep5OgQKVWcixMJ/+f/zW
+	du/U3k/x5CODoR/41rwec+6SabIIeWnx/QMuATan/L+mZFg65/F4C33pizSenqVh7wewL8
+	fFgU5gEOFQBoBZ8MMYY5JIZO146pjp8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-356-i0QSiU3VM3izM8-n-Iz2wg-1; Thu, 22 May 2025 04:55:52 -0400
+X-MC-Unique: i0QSiU3VM3izM8-n-Iz2wg-1
+X-Mimecast-MFC-AGG-ID: i0QSiU3VM3izM8-n-Iz2wg_1747904151
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-441d438a9b7so40914855e9.1
+        for <linux-nfs@vger.kernel.org>; Thu, 22 May 2025 01:55:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747904151; x=1748508951;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6pino5Ai5bwBqjPAZpAdwxhzTr0aiQB3uDnJ8famwHw=;
+        b=rQHxxuB9CZAjy1lvQBZBep107PfLTKqZL4QYXW16VnnpPkpC5seBiYOE8ykt4a2FjV
+         iY5jZArPYjNvD4T0L3H4ZIlaX02kpTUaV2vxZ5TU9tig0/YSsOtD8EsahGzjqLWH5vH/
+         ezxdHVLR5RnvYVeqzw8g+udeYUkMJH2VYUowVgTgz4Siu/mN8zS0d5F20yZCeSS6fPpp
+         qzib1bua2GiQoSn7X8E8ld0hVA55ro0c2S3oCjhtoHegsNg4gvqWj0VkAtjlQATZ5P3c
+         ZwAT900wWiZswuX2PlbdBwfvHfbq1RH6wQqidZxhE8lIH7Ps/r9fTswEDBtINcJgiaNH
+         8CsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsFD2z+Kdm+q1KIPSfPJDb3DrAPJAIDveSdOXVEQ2tAfkA+JoIpmoIJibLEdt+HTUiGr7bsLss4A8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMApUL7/LWRw8Sq8IyYOioVGtIl2YiZ9r6MGggK+XMhIR/gd/5
+	XcyK+n2KaC6kD02wZUEEAtnIGOXFbMdR61oC3I7EfDWDypaa+rZiy+nb+qRBCBguMcSmNIig4db
+	uOcyRZdfIkEJGIkP2hf0W2SrOBEIeHW1kInhjXxg1k3aXX/iflBoGpGpZz7jyvw==
+X-Gm-Gg: ASbGncuip3D9WBlGQlTigwhGVFnzy7cdeKk0fs/BndwlGMf14Pa3cHz1hMxqiscTLxc
+	VJw1/1EZBF3T4tiAjFoeg18wRuSaOj9jk2rix79N4uQ3HdoXKLsxml4kmCm5Tmcd8BePEkEHvbV
+	fhFfm8FS+jrQrA4SGiytTSNdh5R05dlsE0sIv9Az306RHu18PZmOr6TuSDYWe28cHTIjwWTByID
+	I870nNBGQg4JvRHLrYwdnC/Ry0orjCot/vNQP8j9g+cjHOFPrqGh/7Moemyg8wt8M4ELB9Jor3b
+	Ci3RU7AbqnRYNtjZ7lY=
+X-Received: by 2002:a05:600c:c1c8:10b0:441:d228:3a07 with SMTP id 5b1f17b1804b1-442f8524304mr174238655e9.13.1747904150755;
+        Thu, 22 May 2025 01:55:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZZWLfHYdYPfwzdbwFycNAp7aliAoZubbXRRwKwS5IPvqLZEKoM1L6RvMRd6G8MB4cd63apg==
+X-Received: by 2002:a05:600c:c1c8:10b0:441:d228:3a07 with SMTP id 5b1f17b1804b1-442f8524304mr174238455e9.13.1747904150355;
+        Thu, 22 May 2025 01:55:50 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:247a:1010::f39? ([2a0d:3344:247a:1010::f39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3d6csm99616195e9.19.2025.05.22.01.55.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 01:55:49 -0700 (PDT)
+Message-ID: <7a965a97-a6d0-462f-b7dd-8833605ea7c9@redhat.com>
+Date: Thu, 22 May 2025 10:55:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-6.80 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_COUNT_TWO(0.00)[2];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:mid,network-online.target:url];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -6.80
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 net-next 4/6] socket: Remove kernel socket conversion
+ except for net/rds/.
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Willem de Bruijn <willemb@google.com>
+Cc: Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuni1840@gmail.com>,
+ netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+ Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Wenjia Zhang <wenjia@linux.ibm.com>,
+ Jan Karcher <jaka@linux.ibm.com>, Steve French <sfrench@samba.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ linux-nvme@lists.infradead.org, Matthieu Baerts <matttbe@kernel.org>,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250517035120.55560-1-kuniyu@amazon.com>
+ <20250517035120.55560-5-kuniyu@amazon.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250517035120.55560-5-kuniyu@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch adds the nfsroot-generator to parse the following kernel
-command line options in the initrd:
+On 5/17/25 5:50 AM, Kuniyuki Iwashima wrote:
+> Since commit 26abe14379f8 ("net: Modify sk_alloc to not reference
+> count the netns of kernel sockets."), TCP kernel socket has caused
+> many UAF.
+> 
+> We have converted such sockets to hold netns refcnt, and we have
+> the same pattern in cifs, mptcp, nvme, rds, smc, and sunrpc.
+> 
+>   __sock_create_kern(..., &sock);
+>   sk_net_refcnt_upgrade(sock->sk);
+> 
+> Let's drop the conversion and use sock_create_kern() instead.
+> 
+> The changes for cifs, mptcp, nvme, and smc are straightforward.
+> 
+> For sunrpc, we call sock_create_net() for IPPROTO_TCP only and still
+> call __sock_create_kern() for others.
+> 
+> For rds, we cannot drop sk_net_refcnt_upgrade() for accept()ed
+> sockets.
+> 
+> Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-- root=/dev/nfs nfsroot=[<server>:]<path>[,<options>]
+This LGTM, but is touching a few other subsystems, it would be great to
+collect acks from the relevant maintainers: I'm adding a few CCs.
 
-  Defined in <kernel_source>/Documentation/admin-guide/nfs/nfsroot.rst
+Direct link to the series:
 
-- root=nfs[4]:[<server>:]<path>[:<options>]
+https://lore.kernel.org/all/20250517035120.55560-1-kuniyu@amazon.com/#t
 
-  Defined in dracut.cmdline(7).
+> diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+> index 37a2ba38f10e..c7b4f5a7cca1 100644
+> --- a/fs/smb/client/connect.c
+> +++ b/fs/smb/client/connect.c
+> @@ -3348,21 +3348,14 @@ generic_ip_connect(struct TCP_Server_Info *server)
+>  		socket = server->ssocket;
+>  	} else {
+>  		struct net *net = cifs_net_ns(server);
+> -		struct sock *sk;
+>  
+> -		rc = __sock_create_kern(net, sfamily, SOCK_STREAM,
+> -					IPPROTO_TCP, &server->ssocket);
+> +		rc = sock_create_kern(net, sfamily, SOCK_STREAM,
+> +				      IPPROTO_TCP, &server->ssocket);
+>  		if (rc < 0) {
+>  			cifs_server_dbg(VFS, "Error %d creating socket\n", rc);
+>  			return rc;
+>  		}
+>  
+> -		sk = server->ssocket->sk;
+> -		__netns_tracker_free(net, &sk->ns_tracker, false);
+> -		sk->sk_net_refcnt = 1;
+> -		get_net_track(net, &sk->ns_tracker, GFP_KERNEL);
+> -		sock_inuse_add(net, 1);
 
-Since systemd does not create the sysroot.mount unit when nfsroot is
-requested [1], this generator can create it so the real root will be
-mounted in /sysroot, and also add the dependency to
-initrd-root-fs.target to automatically continue the boot process.
+AFAICS the above implicitly adds a missing net_passive_dec(net), which
+in turns looks like a separate bugfix. What about adding a separate
+patch introducing that line? Could be in the same series to simplify the
+processing.
 
-[1] https://github.com/systemd/systemd/commit/77b8e92de8264c0b656a7d2fb437dd8d598ab597
+Thanks,
 
-Signed-off-by: Antonio Alvarez Feijoo <antonio.feijoo@suse.com>
----
- .gitignore                  |   1 +
- systemd/Makefile.am         |   8 +-
- systemd/nfs.systemd.man     |  62 +++++++--
- systemd/nfsroot-generator.c | 243 ++++++++++++++++++++++++++++++++++++
- systemd/systemd.c           |  16 ++-
- systemd/systemd.h           |   1 +
- 6 files changed, 320 insertions(+), 11 deletions(-)
- create mode 100644 systemd/nfsroot-generator.c
-
-diff --git a/.gitignore b/.gitignore
-index 08ce7cdf..622134bb 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -80,6 +80,7 @@ tests/nsm_client/nlm_sm_inter_svc.c
- tests/nsm_client/nlm_sm_inter_xdr.c
- utils/nfsidmap/nfsidmap
- utils/nfsref/nfsref
-+systemd/nfsroot-generator
- systemd/nfs-server-generator
- systemd/rpc-pipefs-generator
- systemd/nfs-config.service
-diff --git a/systemd/Makefile.am b/systemd/Makefile.am
-index b4483222..5e481421 100644
---- a/systemd/Makefile.am
-+++ b/systemd/Makefile.am
-@@ -59,15 +59,19 @@ EXTRA_DIST = $(unit_files) $(udev_files) $(man5_MANS) $(man7_MANS)
- 
- generator_dir = $(unitdir)/../system-generators
- 
--EXTRA_PROGRAMS	= nfs-server-generator rpc-pipefs-generator
-+EXTRA_PROGRAMS	= nfsroot-generator nfs-server-generator rpc-pipefs-generator
- genexecdir = $(generator_dir)
- 
- COMMON_SRCS = systemd.c systemd.h
- 
-+nfsroot_generator_SOURCES = $(COMMON_SRCS) nfsroot-generator.c
-+
- nfs_server_generator_SOURCES = $(COMMON_SRCS) nfs-server-generator.c
- 
- rpc_pipefs_generator_SOURCES = $(COMMON_SRCS) rpc-pipefs-generator.c
- 
-+nfsroot_generator_LDADD = ../support/nfs/libnfs.la
-+
- nfs_server_generator_LDADD = ../support/export/libexport.a \
- 			     ../support/nfs/libnfs.la \
- 			     ../support/misc/libmisc.a \
-@@ -78,7 +82,7 @@ nfs_server_generator_LDADD = ../support/export/libexport.a \
- rpc_pipefs_generator_LDADD = ../support/nfs/libnfs.la
- 
- if INSTALL_SYSTEMD
--genexec_PROGRAMS = nfs-server-generator rpc-pipefs-generator
-+genexec_PROGRAMS = nfsroot-generator nfs-server-generator rpc-pipefs-generator
- install-data-hook: $(unit_files) $(udev_files)
- 	mkdir -p $(DESTDIR)/$(unitdir)
- 	cp $(unit_files) $(DESTDIR)/$(unitdir)
-diff --git a/systemd/nfs.systemd.man b/systemd/nfs.systemd.man
-index f49e7776..a8476038 100644
---- a/systemd/nfs.systemd.man
-+++ b/systemd/nfs.systemd.man
-@@ -14,13 +14,13 @@ The
- .I nfs-utils
- package provides a suite of
- .I systemd
--unit files which allow the various services to be started and
--managed.  These unit files ensure that the services are started in the
--correct order, and the prerequisites are active before dependant
--services start.  As there are quite  few unit files, it is not
--immediately obvious how best to achieve certain results.  The
--following subsections attempt to cover the issues that are most likely
--to come up.
-+unit files and generators which allow the various services to be
-+started and managed.  These unit files and generators ensure that the
-+services are started in the correct order, and the prerequisites are
-+active before dependant services start.  As there are quite a few unit
-+files and generators, it is not immediately obvious how best to achieve
-+certain results.  The following subsections attempt to cover the issues
-+that are most likely to come up.
- .SS Configuration
- The standard systemd unit files do not provide any easy way to pass
- any command line arguments to daemons so as to configure their
-@@ -166,6 +166,52 @@ file is present.  If a site needs this file present but does not want
- running, it can be masked with
- .RS
- .B systemctl mask rpc-gssd
-+.SS Generators
-+systemd unit generators are small executables placed in
-+.I /usr/lib/systemd/system-generators/
-+to dynamically extend the unit file hierarchy.  The
-+.I nfs-utils
-+package provides three:
-+.TP
-+.B nfsroot-generator
-+It creates the
-+.B sysroot.mount
-+unit to mount /sysroot via NFSv4 in the initrd, if it detects one the
-+following options in the kernel command line:
-+.PP
-+.RS
-+.B root=/dev/nfs nfsroot=[<server>:]<path>[,<options>]
-+.PP
-+.RS
-+Defined in
-+.I <kernel_source>/Documentation/admin-guide/nfs/nfsroot.rst
-+.RE
-+.RE
-+.PP
-+.RS
-+.B root=nfs[4]:[<server>:]<path>[:<options>]
-+.PP
-+.RS
-+Defined in
-+.BR dracut.cmdline (7).
-+.PP
-+.B NOTE:
-+Although "nfs" can be used as type indicator for the mountpoint, the
-+mount unit will use always "nfs4".
-+.RE
-+.RE
-+.TP
-+.B nfs-server-generator
-+It creates ordering dependencies between
-+.I nfs-server.service
-+and various filesystem mounts: it should start before any "nfs"
-+mountpoints are mounted, in case they are loop-back mounts, and after
-+all exported filesystems are mounted, so there is no risk of exporting
-+the underlying directory.
-+.TP
-+.B rpc-pipefs-generator
-+It creates ordering dependencies between NFS services and the
-+rpc_pipefs mountpoint.
- .RE
- .SH FILES
- /etc/nfs.conf
-@@ -180,6 +226,8 @@ and in related
- .I conf.d
- drop-in directories.
- .SH SEE ALSO
-+.BR bootup (7),
-+.BR systemd.generator (7),
- .BR systemd.unit (5),
- .BR nfs.conf (5),
- .BR nfsmount.conf (5).
-diff --git a/systemd/nfsroot-generator.c b/systemd/nfsroot-generator.c
-new file mode 100644
-index 00000000..52bd0752
---- /dev/null
-+++ b/systemd/nfsroot-generator.c
-@@ -0,0 +1,243 @@
-+/*
-+ * nfsroot-generator:
-+ *   systemd generator to mount /sysroot via NFSv4 in the initrd
-+ */
-+
-+#include <sys/stat.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include "nfslib.h"
-+#include "systemd.h"
-+
-+struct nfsroot_info {
-+	char	*server;
-+	char	*path;
-+	char	*options;
-+};
-+
-+/* Valid kernel command line options:
-+ *
-+ * - root=/dev/nfs nfsroot=[<server>:]<path>[,<options>]
-+ *
-+ *   Defined in <kernel_source>/Documentation/admin-guide/nfs/nfsroot.rst
-+ *
-+ * - root=nfs[4]:[<server>:]<path>[:<options>]
-+ *
-+ *   Defined in dracut.cmdline(7).
-+ *
-+ * Allow to use both "nfs" or "nfs4" as type indicator,
-+ * although the mount unit will use always "nfs4".
-+ *
-+ * If <server> is not set, it is determined by the 2nd
-+ * token of the ip parameter:
-+ *
-+ *     ip=<client-ip>:<server-ip>:...
-+ *
-+ * <options> can be appended with the prefix ":" or ","
-+ * and are separated by ",".
-+ */
-+static int get_nfsroot_info_from_cmdline(struct nfsroot_info *info)
-+{
-+	FILE	*f;
-+	char	buf[4096], *p;
-+	char	*root = NULL, *nfsroot = NULL, *ip = NULL;
-+	char	*colon, *slash, *comma;
-+	size_t	size;
-+
-+	f = fopen("/proc/cmdline", "r");
-+	if (!f)
-+		return errno;
-+
-+	if (fgets(buf, sizeof(buf), f) == NULL)
-+		return EIO;
-+
-+	fclose(f);
-+
-+	size = strlen(buf);
-+	if (buf[size - 1] == '\n')
-+		buf[size - 1] = '\0';
-+	for (p = strtok(buf, " "); p; p = strtok(NULL, " ")) {
-+		if (!strncmp(p, "root=", strlen("root=")))
-+			root = p + strlen("root=");
-+		else if (!strncmp(p, "nfsroot=", strlen("nfsroot=")))
-+			nfsroot = p + strlen("nfsroot=");
-+		else if (!strncmp(p, "ip=", strlen("ip=")))
-+			ip = p + strlen("ip=");
-+	}
-+
-+	if (!strcmp(root, "/dev/nfs")) {
-+		/* Require the nfsroot parameter with the pseudo-NFS-device */
-+		if (!nfsroot)
-+			return EINVAL;
-+
-+	} else if (root) {
-+		/* Mount type: "nfs" or "nfs4" */
-+		colon = strchr(root, ':');
-+		if (colon == NULL)
-+			return EINVAL;
-+		if (strncmp(root, "nfs:", strlen("nfs:")) &&
-+			strncmp(root, "nfs4:", strlen("nfs4:")))
-+			return EINVAL;
-+
-+		nfsroot = colon + 1;
-+	}
-+
-+	slash = strchr(nfsroot, '/');
-+	if (slash == NULL)
-+		return EINVAL;
-+
-+	if (slash - nfsroot > 0) {
-+		if ((slash - 1)[0] != ':')
-+			return EINVAL;
-+
-+		info->server = strndup(nfsroot, slash - nfsroot - 1);
-+		nfsroot = slash;
-+	} else {
-+		/* Require the ip parameter if <server> is unset */
-+		if (!ip)
-+			return EINVAL;
-+
-+		colon = strchr(ip, ':');
-+		if (colon == NULL)
-+			return EINVAL;
-+		ip = colon + 1;
-+		colon = strchr(ip, ':');
-+		if (colon == NULL)
-+			return EINVAL;
-+		info->server = strndup(ip, colon - ip);
-+	}
-+	if (!info->server)
-+		return ENOMEM;
-+
-+	colon = strchr(nfsroot, ':');
-+	if (colon != NULL) {
-+		info->path = strndup(nfsroot, colon - nfsroot);
-+		nfsroot = colon + 1;
-+	} else {
-+		comma = strchr(nfsroot, ',');
-+		if (comma == NULL) {
-+			info->path = strdup(nfsroot);
-+		} else {
-+			info->path = strndup(nfsroot, comma - nfsroot);
-+			nfsroot = comma + 1;
-+		}
-+	}
-+	if (!info->path)
-+		return ENOMEM;
-+
-+	if ((colon || comma) && strlen(nfsroot) > 0) {
-+		/* Skip checking <options> format */
-+		info->options = strdup(nfsroot);
-+		if (!info->options)
-+			return ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static int generate_sysroot_mount_unit(const struct nfsroot_info *info,
-+			       const char *dirname)
-+{
-+	int 	ret = 0;
-+	char	*path, *rpath;
-+	char	dirbase[] = "/initrd-root-fs.target.requires";
-+	char	filebase[] = "/sysroot.mount";
-+	FILE	*f;
-+
-+	path = malloc(strlen(dirname) + 1 + sizeof(filebase));
-+	if (!path)
-+		return ENOMEM;
-+	sprintf(path, "%s", dirname);
-+	mkdir(path, 0755);
-+	strcat(path, filebase);
-+	f = fopen(path, "w");
-+	if (!f) {
-+		ret = errno;
-+		goto cleanup;
-+	}
-+
-+	fprintf(f, "# Automatically generated by nfsroot-generator\n\n[Unit]\n");
-+	fprintf(f, "Description=NFSv4 Root File System\n");
-+	fprintf(f, "SourcePath=/proc/cmdline\n");
-+	fprintf(f, "Requires=modprobe@sunrpc.service rpc_pipefs.target\n");
-+	fprintf(f, "Wants=nfs-idmapd.service network-online.target remote-fs-pre.target\n");
-+	fprintf(f, "After=modprobe@sunrpc.service nfs-idmapd.service network-online.target remote-fs-pre.target rpc_pipefs.target\n");
-+	fprintf(f, "Before=initrd-root-fs.target remote-fs.target\n");
-+	fprintf(f, "\n[Mount]\n");
-+	fprintf(f, "What=%s:%s\n", info->server, info->path);
-+	fprintf(f, "Where=/sysroot\n");
-+	fprintf(f, "Type=nfs4\n");
-+	if (info->options)
-+		fprintf(f, "Options=%s\n", info->options);
-+
-+	fclose(f);
-+
-+	rpath = malloc(strlen(dirname) + 1 + sizeof(dirbase) + sizeof(filebase));
-+	if (!rpath) {
-+		ret = ENOMEM;
-+		goto cleanup;
-+	}
-+	sprintf(rpath, "%s%s", dirname, dirbase);
-+	mkdir(rpath, 0755);
-+	strcat(rpath, filebase);
-+
-+	if (symlink(path, rpath) < 0 && errno != EEXIST)
-+		ret = errno;
-+
-+	free(rpath);
-+cleanup:
-+	free(path);
-+
-+	return ret;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int 	ret;
-+	struct nfsroot_info	info = {
-+		.server = NULL,
-+		.path = NULL,
-+		.options = NULL,
-+	};
-+
-+	/* Avoid using any external services */
-+	xlog_syslog(0);
-+
-+	if (argc != 4 || argv[1][0] != '/') {
-+		fprintf(stderr, "nfsroot-generator: mount /sysroot via NFSv4 in the initrd\n");
-+		fprintf(stderr, "Usage: normal-dir early-dir late-dir\n");
-+		exit(1);
-+	}
-+
-+	if (!systemd_in_initrd())
-+		exit(0);
-+
-+	ret = get_nfsroot_info_from_cmdline(&info);
-+	if (ret) {
-+		fprintf(stderr, "nfsroot-generator: failed to get nfsroot from kernel command line: %s\n",
-+			strerror(ret));
-+		goto cleanup;
-+	}
-+
-+	if (info.server && info.path) {
-+		ret = generate_sysroot_mount_unit(&info, argv[1]);
-+		if (ret) {
-+			fprintf(stderr, "nfsroot-generator: failed to generate sysroot.mount unit: %s\n",
-+				strerror(ret));
-+		}
-+	}
-+
-+cleanup:
-+	if (info.server)
-+		free(info.server);
-+	if (info.path)
-+		free(info.path);
-+	if (info.options)
-+		free(info.options);
-+
-+	exit(ret);
-+}
-diff --git a/systemd/systemd.c b/systemd/systemd.c
-index c7bdb4d2..fe749a99 100644
---- a/systemd/systemd.c
-+++ b/systemd/systemd.c
-@@ -1,13 +1,12 @@
- /*
-  * Helper functions for systemd generators in nfs-utils.
-- *
-- * Currently just systemd_escape().
-  */
- 
- #include <stdio.h>
- #include <stdlib.h>
- #include <ctype.h>
- #include <string.h>
-+#include <unistd.h>
- #include "systemd.h"
- 
- static const char hex[16] =
-@@ -132,3 +131,16 @@ out:
- 	sprintf(p, "%s", suffix);
- 	return result;
- }
-+
-+/*
-+ * check if the system is running in the initrd, following the same logic as
-+ * systemd, described in os-release(5):
-+ *
-+ *     In the initrd[2] and exitrd, /etc/initrd-release plays the same role as
-+ *     os-release in the main system. Additionally, the presence of that file
-+ *     means that the system is in the initrd/exitrd phase.
-+ */
-+int systemd_in_initrd(void)
-+{
-+	return (access("/etc/initrd-release", F_OK) >= 0);
-+}
-diff --git a/systemd/systemd.h b/systemd/systemd.h
-index 25235ec8..72a04c86 100644
---- a/systemd/systemd.h
-+++ b/systemd/systemd.h
-@@ -2,5 +2,6 @@
- #define SYSTEMD_H
- 
- char *systemd_escape(char *path, char *suffix);
-+int systemd_in_initrd(void);
- 
- #endif /* SYSTEMD_H */
--- 
-2.43.0
+Paolo
 
 
