@@ -1,159 +1,105 @@
-Return-Path: <linux-nfs+bounces-11871-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11872-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8242AAC1EC3
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 10:35:25 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4DBEAC1EC6
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 10:35:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3451F5048DE
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 08:35:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 111F37AFD5C
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 08:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F00D1EE008;
-	Fri, 23 May 2025 08:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8732212FB7;
+	Fri, 23 May 2025 08:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCW8uzjd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcRl5Kfk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C374218FDBE
-	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 08:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88592143748;
+	Fri, 23 May 2025 08:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989311; cv=none; b=VHEDfBcgPfTG8GJkca41LDo6DhlXcXiLhoY/qmUSvVVe8DRXLbFbVQ8iY4OhTD0rpIH+6jXjbDEPC7DIe1L4hth0agJtujNwDzPu36r+LtUUULHfnEaDsgoWJzcaK4Tqw5BbJiyKmdPWfmVmUyTqnodfeGhRZbp8tm7/Mu0vNQY=
+	t=1747989330; cv=none; b=ECG2GLzMGIYgI/0R4y4ASJo0c46ZY/d7NvsYRcQMVG8CjXlwG9vGqPWQKtQ7cPEVQe6q3zQ4nftoTyIa98jQuqOy5uiNlm6GtuiizoKmqpzDNaEOGOYdoiDp/t+yOJR1hld7UGsx65KOHPXEcTvM46DPhC+HZ+/MYJqTYNHfAB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989311; c=relaxed/simple;
-	bh=3TKCaIyB5/0opVLcNoQ1gcsKEomRJ1FYv7vspoTx96c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sHnMLnGS/9HWF3mPtCRkg7WwS1TAFBDmtwSll4Q93tCuZBeNyd8XyUcy/GY7MqRfHlNvVeVB1LRvGBHsZyipmChL7VfHqWa+sYY9q1lZMtmr4Z38tPUOUL52xFrTzYSTeBY+RGwL2+R0QixDxHyU1UNOs89/pYuIeO0JsT2qbQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FCW8uzjd; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so5061245e9.1
-        for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 01:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747989307; x=1748594107; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YbryJ7vGqluEKazlG50NrGVTXzGTh20PwbvTVePubi4=;
-        b=FCW8uzjdkegTQaXSgicQDmJCEkRU+BnmQeyAgfBLMju6bBIH18Kqk+4TSnI79qOCKh
-         zHm1MByLm/kVB0oTu6ErNVZg9hHuTktIiTwE24YnjxAFzvIycQ+A+uq3Vd1wp5mA1De8
-         N/2k8tdff14brPqLEnNUUzMeDHa6Bb3HAYTtrNxsvQOBW4EM37YPUr77XfDooUMHUAN7
-         qn1LF8fdMdbVO5WWPcnYuM847aRgVULTGdNxklwAFhwifxJJwkHORMSvPHe+EYw17qVK
-         wX9d0yvoA9s3XBeLmNqISjAQ0nfYrGXnsxa2UawlOZKfvrT+aKhDJvGEmXDdb6LJeUVN
-         8Eeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747989307; x=1748594107;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YbryJ7vGqluEKazlG50NrGVTXzGTh20PwbvTVePubi4=;
-        b=nfQQTbqFwI3ZBm1UPXTHeWhgXBMgMIK0VhYzcsaQnhv6/7W5QAl5C66yIHr1C0kHAG
-         2COw9Y+qGetWmkqNz239/szyG/wy85erVEXAfAnJMCXTIa1V3eG+EDrvqJJovjeGGzIa
-         LSTgb1TBPCihpNNAM/SzvD5rU9NZkI5NKPzPP9fuwJGOGs3mwfIb/I9rF8xHm2DajiUV
-         CIP2li4onn08HxKjv50kPhMEHLuXAUbwP8/3coLIjMIr5VhNrY7GF4Ds3oBUIdpa7DP0
-         /1VlTphanlco9z69ImgNEhRRJhvJOvmaZ/BpDXRlj5aT9evOHp97gM1RxHZz2CbrBF8X
-         FNLw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5axfzrOfENGrGuuBOIrSDF+M/MpDSEIAimPTYExxRSfd3NLf6uS2YyDtwUvSR+nINpYX8epIES2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpQJe6dBcyPU+y+zDW8ooSWRZKkYcopo6WahsJWbR5fzr99lat
-	0MrBUTDuKY2Ni5LH2oSfVJV42kIzWFT5C8bMScrF1n41h/ZJ5mGnzQoM8EuUKO/IrSA=
-X-Gm-Gg: ASbGnctwDxHHq1t4yt3HUg9esJItmhL267e7EP46uDt9F4p1LVH88zXNHq8N1zmV5yS
-	GNoN3/+g0bXqUbSopW5fx6Em8OuQR9SGYqjDHGTfxFaSPQOcCp3nK2DGK01iqRFewKRrlD/jiBt
-	HIv/Y1MyU5HjQZJbT4vOdPDH2KZ8Kh42vrG7hGISqYf1RHxOJ6RBFRbLh7o2MpPbD9SOZqlhJ/P
-	hVh6uoV82Bl+QeTzomUvnMnMpWp4Uk6tXR5ItOJ6z0JbFGUIpOUl9P30Q/qtRKzMR1PCH1fDHXM
-	DBSWAx3jMPcRMMM/yxVi5NdRKUOPxX2ghpA46MhhY0qJo3p9ylJ82Yya
-X-Google-Smtp-Source: AGHT+IGDLAMP6aDEKzjJ8nU1sJDp2T3vwd2IHZI+1NwlB0Wm65hoqonKY2iKdd6kvHgAkP8caUNfmA==
-X-Received: by 2002:a05:600c:43d4:b0:43c:ec72:3daf with SMTP id 5b1f17b1804b1-44b533c19b8mr15328325e9.14.1747989306976;
-        Fri, 23 May 2025 01:35:06 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a3648baa6asm23534815f8f.91.2025.05.23.01.35.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 May 2025 01:35:06 -0700 (PDT)
-Date: Fri, 23 May 2025 11:35:03 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Anna Schumaker <anna@kernel.org>,
-	linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, anna@kernel.org
-Subject: Re: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
-Message-ID: <202505181116.RhlCb75I-lkp@intel.com>
+	s=arc-20240116; t=1747989330; c=relaxed/simple;
+	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LNGbd0sJe6Jxm+7jeyQKc9YFcrztnYLp6BSPsAa3SQoAoVahZMdVJxPYlovXfs19iB8PrlkAsTT+LARL93sAV1k7Slr9s7J6d/3TnmL+SXup25Ssaz1SwB3ZJ8E6b99cKcfVi+WuuT7J8HTLmevBpEji4lbquH480xzPCBjIJsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcRl5Kfk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2820AC4CEE9;
+	Fri, 23 May 2025 08:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747989330;
+	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XcRl5Kfk0LErS6d8DWAJDv0260N7QeO09U2nEFy+/POSGuCKNcjXuTRL0y6iQAms+
+	 gufkd6wsGs2pwGAfTTTeqykAQJSG3C9QMqDlczk12XUK8b+gnUv39dzAs+z+h0L9KU
+	 dFmNH9hN4SUxUnrSmfRCxsKQPdLr6cCcoy656aBC1W/wE/N9u+bAtp071aSh5VFXrz
+	 WJtXbFOeZWq0QZdlLbFa8iWq98vVMUNbRD5mf5u12jUsRXe1g45rdOeEwXKTllwLpA
+	 3PSQLEBw3ZwbknFRHyf2d/jwQlcLoLv/+KHFE3+7KsGGW2+zCXKKLsn6xXRMvWEl13
+	 YalaMnrvpCNlg==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Steve French <sfrench@samba.org>,
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+	netfs@lists.linux.dev,
+	v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Fix undifferentiation of DIO reads from unbuffered reads
+Date: Fri, 23 May 2025 10:35:21 +0200
+Message-ID: <20250523-audienz-brotkrumen-039bac60ea9c@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <3444961.1747987072@warthog.procyon.org.uk>
+References: <3444961.1747987072@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516150010.61641-1-anna@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1377; i=brauner@kernel.org; h=from:subject:message-id; bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQYGHu/SDHY357Z8Vnt0kvnnd5Pl3f7Mby3s230lQmyW iYw5/2CjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIks38vwT0H9fHuqkaemTEaT jfn5xW8rPt7zu6F+QEBTKqFnj+vLKQz/C9Xiw1OmmKf0fDXx/Lpto3rrw5Pspt38p9YeZml/+/0 cNwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Anna,
+On Fri, 23 May 2025 08:57:52 +0100, David Howells wrote:
+> On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
+> "unbuffered reads" (specified by cache=none in the mount parameters).  The
+> difference is flagged in the protocol and the server may behave
+> differently: Windows Server will, for example, mandate that DIO reads are
+> block aligned.
+> 
+> Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
+> NETFS_DIO_READ, parallelling the write differentiation that already exists.
+> cifs will then do the right thing.
+> 
+> [...]
 
-kernel test robot noticed the following build warnings:
+Applied to the vfs-6.16.netfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.netfs branch should appear in linux-next soon.
 
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anna-Schumaker/NFS-Fixes-for-nfs4_proc_mkdir-error-handling/20250516-231124
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/20250516150010.61641-1-anna%40kernel.org
-patch subject: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
-config: i386-randconfig-141-20250517 (https://download.01.org/0day-ci/archive/20250518/202505181116.RhlCb75I-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505181116.RhlCb75I-lkp@intel.com/
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-New smatch warnings:
-fs/nfs/nfs4proc.c:5277 nfs4_proc_mkdir() warn: passing zero to 'PTR_ERR'
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.netfs
 
-vim +/PTR_ERR +5277 fs/nfs/nfs4proc.c
-
-8376583b84a193 NeilBrown           2025-02-27  5260  static struct dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5261  				      struct iattr *sattr)
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5262  {
-dff25ddb48086a Andreas Gruenbacher 2016-12-02  5263  	struct nfs_server *server = NFS_SERVER(dir);
-0688e64bc60038 Trond Myklebust     2019-04-07  5264  	struct nfs4_exception exception = {
-0688e64bc60038 Trond Myklebust     2019-04-07  5265  		.interruptible = true,
-0688e64bc60038 Trond Myklebust     2019-04-07  5266  	};
-c528f70f504434 Trond Myklebust     2022-10-19  5267  	struct nfs4_label l, *label;
-8376583b84a193 NeilBrown           2025-02-27  5268  	struct dentry *alias;
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5269  	int err;
-a8a5da996df7d2 Aneesh Kumar K.V    2010-12-09  5270  
-aa9c2669626ca7 David Quigley       2013-05-22  5271  	label = nfs4_label_init_security(dir, dentry, sattr, &l);
-aa9c2669626ca7 David Quigley       2013-05-22  5272  
-dff25ddb48086a Andreas Gruenbacher 2016-12-02  5273  	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
-a8a5da996df7d2 Aneesh Kumar K.V    2010-12-09  5274  		sattr->ia_mode &= ~current_umask();
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5275  	do {
-8376583b84a193 NeilBrown           2025-02-27  5276  		alias = _nfs4_proc_mkdir(dir, dentry, sattr, label);
-4c35d65f4c6f1e Anna Schumaker      2025-05-16 @5277  		err = PTR_ERR(alias);
-4c35d65f4c6f1e Anna Schumaker      2025-05-16  5278  		if (err > 0)
-4c35d65f4c6f1e Anna Schumaker      2025-05-16  5279  			err = 0;
-
-This doesn't work.  Imagine we are on a 64bit system and
-_nfs4_proc_mkdir() returns a valid pointer.  It depends on if BIT(31)
-is set whether we return zero or a random negative number.
-
-This needs to be:
-
-	err = PTR_ERR_OR_ZERO(alias);
-
-078ea3dfe396b1 Trond Myklebust     2013-08-12  5280  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
-078ea3dfe396b1 Trond Myklebust     2013-08-12  5281  		err = nfs4_handle_exception(NFS_SERVER(dir), err,
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5282  				&exception);
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5283  	} while (exception.retry);
-aa9c2669626ca7 David Quigley       2013-05-22  5284  	nfs4_label_release_security(label);
-aa9c2669626ca7 David Quigley       2013-05-22  5285  
-4c35d65f4c6f1e Anna Schumaker      2025-05-16  5286  	if (err != 0)
-4c35d65f4c6f1e Anna Schumaker      2025-05-16  5287  		return ERR_PTR(err);
-8376583b84a193 NeilBrown           2025-02-27  5288  	return alias;
-^1da177e4c3f41 Linus Torvalds      2005-04-16  5289  }
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+[1/1] netfs: Fix undifferentiation of DIO reads from unbuffered reads
+      https://git.kernel.org/vfs/vfs/c/db26d62d79e4
 
