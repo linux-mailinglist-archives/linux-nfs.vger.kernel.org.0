@@ -1,333 +1,159 @@
-Return-Path: <linux-nfs+bounces-11870-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11871-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12140AC1E14
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 09:58:55 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8242AAC1EC3
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 10:35:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 388FB1C02B3C
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 07:58:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3451F5048DE
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 08:35:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60412DCBE6;
-	Fri, 23 May 2025 07:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F00D1EE008;
+	Fri, 23 May 2025 08:35:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XQvdtYsA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCW8uzjd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA00284B51
-	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 07:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C374218FDBE
+	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 08:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747987086; cv=none; b=lhOQClunYbJLviuvlZUp/NRXARODMdG3GgdXWG3u6/uZFQS0SuCnWGfWQ4yBpEceYl3Xyz0f1Cyq0PIuvr3oky3JBYoaoNxKN/PoGqr8r2njMGKNHJdEY0OZUHQS61V7+9GH6/tMSgtvCG2CxyGQqzmuA0hH/HjkOIYbPtLGtU4=
+	t=1747989311; cv=none; b=VHEDfBcgPfTG8GJkca41LDo6DhlXcXiLhoY/qmUSvVVe8DRXLbFbVQ8iY4OhTD0rpIH+6jXjbDEPC7DIe1L4hth0agJtujNwDzPu36r+LtUUULHfnEaDsgoWJzcaK4Tqw5BbJiyKmdPWfmVmUyTqnodfeGhRZbp8tm7/Mu0vNQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747987086; c=relaxed/simple;
-	bh=5b4iIJLicDG44C6e4DHl+bizqMDLZTKbRDPmcgw3Q6o=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=mW3gIDZsaL7pYAEzCxzOu85XiXub0+OIuJ8ltnKovkFhT9NZpeJJZ2MYNfTBmcbU2Rl14P110htYxKzxE9SAI/nLO43QPwe8UcSrUPcPon1E/smzSaN5wxtF9Vf4xuv4Q9XfyLMR0m++QVpm566wTWIovko0nOiJKSUbprsGvig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XQvdtYsA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747987083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tiNxf9tQwpwE2TWVu8VUS+sRn12irkIFL/qqEmpQB1g=;
-	b=XQvdtYsAkUQlVtfME2u+5u8DKOB0cP9xVzlNIju9uc4bnWO1Nfk7iUCx9J1cCaLv7GDG/B
-	mswBQUsBHdLt9PEqw+JDdlM9d/iV6epEP77h5SG3RfqiabHfB6EvFDnJpL6Epc+0OpzvzO
-	IZB8Coy/4190MYnxr9VMT2D0JPigS4A=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-175-wSrVJLLkPtC-v1SIaj6bAA-1; Fri,
- 23 May 2025 03:57:59 -0400
-X-MC-Unique: wSrVJLLkPtC-v1SIaj6bAA-1
-X-Mimecast-MFC-AGG-ID: wSrVJLLkPtC-v1SIaj6bAA_1747987077
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 16578195608E;
-	Fri, 23 May 2025 07:57:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.188])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4B809195608F;
-	Fri, 23 May 2025 07:57:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.com>,
-    Steve French <sfrench@samba.org>,
-    Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, netfs@lists.linux.dev,
-    v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] netfs: Fix undifferentiation of DIO reads from unbuffered reads
+	s=arc-20240116; t=1747989311; c=relaxed/simple;
+	bh=3TKCaIyB5/0opVLcNoQ1gcsKEomRJ1FYv7vspoTx96c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sHnMLnGS/9HWF3mPtCRkg7WwS1TAFBDmtwSll4Q93tCuZBeNyd8XyUcy/GY7MqRfHlNvVeVB1LRvGBHsZyipmChL7VfHqWa+sYY9q1lZMtmr4Z38tPUOUL52xFrTzYSTeBY+RGwL2+R0QixDxHyU1UNOs89/pYuIeO0JsT2qbQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FCW8uzjd; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so5061245e9.1
+        for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 01:35:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747989307; x=1748594107; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YbryJ7vGqluEKazlG50NrGVTXzGTh20PwbvTVePubi4=;
+        b=FCW8uzjdkegTQaXSgicQDmJCEkRU+BnmQeyAgfBLMju6bBIH18Kqk+4TSnI79qOCKh
+         zHm1MByLm/kVB0oTu6ErNVZg9hHuTktIiTwE24YnjxAFzvIycQ+A+uq3Vd1wp5mA1De8
+         N/2k8tdff14brPqLEnNUUzMeDHa6Bb3HAYTtrNxsvQOBW4EM37YPUr77XfDooUMHUAN7
+         qn1LF8fdMdbVO5WWPcnYuM847aRgVULTGdNxklwAFhwifxJJwkHORMSvPHe+EYw17qVK
+         wX9d0yvoA9s3XBeLmNqISjAQ0nfYrGXnsxa2UawlOZKfvrT+aKhDJvGEmXDdb6LJeUVN
+         8Eeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747989307; x=1748594107;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YbryJ7vGqluEKazlG50NrGVTXzGTh20PwbvTVePubi4=;
+        b=nfQQTbqFwI3ZBm1UPXTHeWhgXBMgMIK0VhYzcsaQnhv6/7W5QAl5C66yIHr1C0kHAG
+         2COw9Y+qGetWmkqNz239/szyG/wy85erVEXAfAnJMCXTIa1V3eG+EDrvqJJovjeGGzIa
+         LSTgb1TBPCihpNNAM/SzvD5rU9NZkI5NKPzPP9fuwJGOGs3mwfIb/I9rF8xHm2DajiUV
+         CIP2li4onn08HxKjv50kPhMEHLuXAUbwP8/3coLIjMIr5VhNrY7GF4Ds3oBUIdpa7DP0
+         /1VlTphanlco9z69ImgNEhRRJhvJOvmaZ/BpDXRlj5aT9evOHp97gM1RxHZz2CbrBF8X
+         FNLw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5axfzrOfENGrGuuBOIrSDF+M/MpDSEIAimPTYExxRSfd3NLf6uS2YyDtwUvSR+nINpYX8epIES2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpQJe6dBcyPU+y+zDW8ooSWRZKkYcopo6WahsJWbR5fzr99lat
+	0MrBUTDuKY2Ni5LH2oSfVJV42kIzWFT5C8bMScrF1n41h/ZJ5mGnzQoM8EuUKO/IrSA=
+X-Gm-Gg: ASbGnctwDxHHq1t4yt3HUg9esJItmhL267e7EP46uDt9F4p1LVH88zXNHq8N1zmV5yS
+	GNoN3/+g0bXqUbSopW5fx6Em8OuQR9SGYqjDHGTfxFaSPQOcCp3nK2DGK01iqRFewKRrlD/jiBt
+	HIv/Y1MyU5HjQZJbT4vOdPDH2KZ8Kh42vrG7hGISqYf1RHxOJ6RBFRbLh7o2MpPbD9SOZqlhJ/P
+	hVh6uoV82Bl+QeTzomUvnMnMpWp4Uk6tXR5ItOJ6z0JbFGUIpOUl9P30Q/qtRKzMR1PCH1fDHXM
+	DBSWAx3jMPcRMMM/yxVi5NdRKUOPxX2ghpA46MhhY0qJo3p9ylJ82Yya
+X-Google-Smtp-Source: AGHT+IGDLAMP6aDEKzjJ8nU1sJDp2T3vwd2IHZI+1NwlB0Wm65hoqonKY2iKdd6kvHgAkP8caUNfmA==
+X-Received: by 2002:a05:600c:43d4:b0:43c:ec72:3daf with SMTP id 5b1f17b1804b1-44b533c19b8mr15328325e9.14.1747989306976;
+        Fri, 23 May 2025 01:35:06 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a3648baa6asm23534815f8f.91.2025.05.23.01.35.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 May 2025 01:35:06 -0700 (PDT)
+Date: Fri, 23 May 2025 11:35:03 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Anna Schumaker <anna@kernel.org>,
+	linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, anna@kernel.org
+Subject: Re: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
+Message-ID: <202505181116.RhlCb75I-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3444960.1747987072.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 23 May 2025 08:57:52 +0100
-Message-ID: <3444961.1747987072@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516150010.61641-1-anna@kernel.org>
 
-On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated fro=
-m
-"unbuffered reads" (specified by cache=3Dnone in the mount parameters).  T=
-he
-difference is flagged in the protocol and the server may behave
-differently: Windows Server will, for example, mandate that DIO reads are
-block aligned.
+Hi Anna,
 
-Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
-NETFS_DIO_READ, parallelling the write differentiation that already exists=
-.
-cifs will then do the right thing.
+kernel test robot noticed the following build warnings:
 
-Fixes: 016dc8516aec ("netfs: Implement unbuffered/DIO read support")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Reviewed-by: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-cc: Steve French <sfrench@samba.org>
-cc: netfs@lists.linux.dev
-cc: v9fs@lists.linux.dev
-cc: linux-afs@lists.infradead.org
-cc: linux-cifs@vger.kernel.org
-cc: ceph-devel@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
----
- fs/9p/vfs_addr.c             |    3 ++-
- fs/afs/write.c               |    1 +
- fs/ceph/addr.c               |    4 +++-
- fs/netfs/direct_read.c       |    3 ++-
- fs/netfs/main.c              |    1 +
- fs/netfs/misc.c              |    1 +
- fs/netfs/objects.c           |    1 +
- fs/netfs/read_collect.c      |    7 +++++--
- fs/nfs/fscache.c             |    1 +
- fs/smb/client/file.c         |    3 ++-
- include/linux/netfs.h        |    1 +
- include/trace/events/netfs.h |    1 +
- 12 files changed, 21 insertions(+), 6 deletions(-)
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Anna-Schumaker/NFS-Fixes-for-nfs4_proc_mkdir-error-handling/20250516-231124
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20250516150010.61641-1-anna%40kernel.org
+patch subject: [PATCH] NFS: Fixes for nfs4_proc_mkdir() error handling
+config: i386-randconfig-141-20250517 (https://download.01.org/0day-ci/archive/20250518/202505181116.RhlCb75I-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index b5a4a28e0fe7..e4420591cf35 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -77,7 +77,8 @@ static void v9fs_issue_read(struct netfs_io_subrequest *=
-subreq)
- =
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202505181116.RhlCb75I-lkp@intel.com/
 
- 	/* if we just extended the file size, any portion not in
- 	 * cache won't be on server and is zeroes */
--	if (subreq->rreq->origin !=3D NETFS_DIO_READ)
-+	if (subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
-+	    subreq->rreq->origin !=3D NETFS_DIO_READ)
- 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- 	if (pos + total >=3D i_size_read(rreq->inode))
- 		__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
-diff --git a/fs/afs/write.c b/fs/afs/write.c
-index 7df7b2f5e7b2..2e7526ea883a 100644
---- a/fs/afs/write.c
-+++ b/fs/afs/write.c
-@@ -202,6 +202,7 @@ void afs_retry_request(struct netfs_io_request *wreq, =
-struct netfs_io_stream *st
- 	case NETFS_READ_GAPS:
- 	case NETFS_READ_SINGLE:
- 	case NETFS_READ_FOR_WRITE:
-+	case NETFS_UNBUFFERED_READ:
- 	case NETFS_DIO_READ:
- 		return;
- 	default:
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 557c326561fd..b95c4cb21c13 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -238,6 +238,7 @@ static void finish_netfs_read(struct ceph_osd_request =
-*req)
- 		if (sparse && err > 0)
- 			err =3D ceph_sparse_ext_map_end(op);
- 		if (err < subreq->len &&
-+		    subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
- 		    subreq->rreq->origin !=3D NETFS_DIO_READ)
- 			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- 		if (IS_ENCRYPTED(inode) && err > 0) {
-@@ -281,7 +282,8 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io=
-_subrequest *subreq)
- 	size_t len;
- 	int mode;
- =
+New smatch warnings:
+fs/nfs/nfs4proc.c:5277 nfs4_proc_mkdir() warn: passing zero to 'PTR_ERR'
 
--	if (rreq->origin !=3D NETFS_DIO_READ)
-+	if (rreq->origin !=3D NETFS_UNBUFFERED_READ &&
-+	    rreq->origin !=3D NETFS_DIO_READ)
- 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- 	__clear_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
- =
+vim +/PTR_ERR +5277 fs/nfs/nfs4proc.c
 
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index a24e63d2c818..9902766195d7 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -188,7 +188,8 @@ ssize_t netfs_unbuffered_read_iter_locked(struct kiocb=
- *iocb, struct iov_iter *i
- =
+8376583b84a193 NeilBrown           2025-02-27  5260  static struct dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5261  				      struct iattr *sattr)
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5262  {
+dff25ddb48086a Andreas Gruenbacher 2016-12-02  5263  	struct nfs_server *server = NFS_SERVER(dir);
+0688e64bc60038 Trond Myklebust     2019-04-07  5264  	struct nfs4_exception exception = {
+0688e64bc60038 Trond Myklebust     2019-04-07  5265  		.interruptible = true,
+0688e64bc60038 Trond Myklebust     2019-04-07  5266  	};
+c528f70f504434 Trond Myklebust     2022-10-19  5267  	struct nfs4_label l, *label;
+8376583b84a193 NeilBrown           2025-02-27  5268  	struct dentry *alias;
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5269  	int err;
+a8a5da996df7d2 Aneesh Kumar K.V    2010-12-09  5270  
+aa9c2669626ca7 David Quigley       2013-05-22  5271  	label = nfs4_label_init_security(dir, dentry, sattr, &l);
+aa9c2669626ca7 David Quigley       2013-05-22  5272  
+dff25ddb48086a Andreas Gruenbacher 2016-12-02  5273  	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
+a8a5da996df7d2 Aneesh Kumar K.V    2010-12-09  5274  		sattr->ia_mode &= ~current_umask();
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5275  	do {
+8376583b84a193 NeilBrown           2025-02-27  5276  		alias = _nfs4_proc_mkdir(dir, dentry, sattr, label);
+4c35d65f4c6f1e Anna Schumaker      2025-05-16 @5277  		err = PTR_ERR(alias);
+4c35d65f4c6f1e Anna Schumaker      2025-05-16  5278  		if (err > 0)
+4c35d65f4c6f1e Anna Schumaker      2025-05-16  5279  			err = 0;
 
- 	rreq =3D netfs_alloc_request(iocb->ki_filp->f_mapping, iocb->ki_filp,
- 				   iocb->ki_pos, orig_count,
--				   NETFS_DIO_READ);
-+				   iocb->ki_flags & IOCB_DIRECT ?
-+				   NETFS_DIO_READ : NETFS_UNBUFFERED_READ);
- 	if (IS_ERR(rreq))
- 		return PTR_ERR(rreq);
- =
+This doesn't work.  Imagine we are on a 64bit system and
+_nfs4_proc_mkdir() returns a valid pointer.  It depends on if BIT(31)
+is set whether we return zero or a random negative number.
 
-diff --git a/fs/netfs/main.c b/fs/netfs/main.c
-index 70ecc8f5f210..3db401d269e7 100644
---- a/fs/netfs/main.c
-+++ b/fs/netfs/main.c
-@@ -39,6 +39,7 @@ static const char *netfs_origins[nr__netfs_io_origin] =3D=
- {
- 	[NETFS_READ_GAPS]		=3D "RG",
- 	[NETFS_READ_SINGLE]		=3D "R1",
- 	[NETFS_READ_FOR_WRITE]		=3D "RW",
-+	[NETFS_UNBUFFERED_READ]		=3D "UR",
- 	[NETFS_DIO_READ]		=3D "DR",
- 	[NETFS_WRITEBACK]		=3D "WB",
- 	[NETFS_WRITEBACK_SINGLE]	=3D "W1",
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 77e7f7c79d27..43b67a28a8fa 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -461,6 +461,7 @@ static ssize_t netfs_wait_for_request(struct netfs_io_=
-request *rreq,
- 		case NETFS_DIO_READ:
- 		case NETFS_DIO_WRITE:
- 		case NETFS_READ_SINGLE:
-+		case NETFS_UNBUFFERED_READ:
- 		case NETFS_UNBUFFERED_WRITE:
- 			break;
- 		default:
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index d3eb9ba3013a..31fa0c81e2a4 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -59,6 +59,7 @@ struct netfs_io_request *netfs_alloc_request(struct addr=
-ess_space *mapping,
- 	    origin =3D=3D NETFS_READ_GAPS ||
- 	    origin =3D=3D NETFS_READ_SINGLE ||
- 	    origin =3D=3D NETFS_READ_FOR_WRITE ||
-+	    origin =3D=3D NETFS_UNBUFFERED_READ ||
- 	    origin =3D=3D NETFS_DIO_READ) {
- 		INIT_WORK(&rreq->work, netfs_read_collection_worker);
- 		rreq->io_streams[0].avail =3D true;
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 900dd51c3b94..bad677e58a42 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -342,7 +342,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_requ=
-est *rreq)
- {
- 	unsigned int i;
- =
+This needs to be:
 
--	if (rreq->origin =3D=3D NETFS_DIO_READ) {
-+	if (rreq->origin =3D=3D NETFS_UNBUFFERED_READ ||
-+	    rreq->origin =3D=3D NETFS_DIO_READ) {
- 		for (i =3D 0; i < rreq->direct_bv_count; i++) {
- 			flush_dcache_page(rreq->direct_bv[i].bv_page);
- 			// TODO: cifs marks pages in the destination buffer
-@@ -360,7 +361,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_requ=
-est *rreq)
- 	}
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
--	if (rreq->origin =3D=3D NETFS_DIO_READ)
-+	if (rreq->origin =3D=3D NETFS_UNBUFFERED_READ ||
-+	    rreq->origin =3D=3D NETFS_DIO_READ)
- 		inode_dio_end(rreq->inode);
- }
- =
+	err = PTR_ERR_OR_ZERO(alias);
 
-@@ -416,6 +418,7 @@ bool netfs_read_collection(struct netfs_io_request *rr=
-eq)
- 	//netfs_rreq_is_still_valid(rreq);
- =
+078ea3dfe396b1 Trond Myklebust     2013-08-12  5280  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+078ea3dfe396b1 Trond Myklebust     2013-08-12  5281  		err = nfs4_handle_exception(NFS_SERVER(dir), err,
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5282  				&exception);
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5283  	} while (exception.retry);
+aa9c2669626ca7 David Quigley       2013-05-22  5284  	nfs4_label_release_security(label);
+aa9c2669626ca7 David Quigley       2013-05-22  5285  
+4c35d65f4c6f1e Anna Schumaker      2025-05-16  5286  	if (err != 0)
+4c35d65f4c6f1e Anna Schumaker      2025-05-16  5287  		return ERR_PTR(err);
+8376583b84a193 NeilBrown           2025-02-27  5288  	return alias;
+^1da177e4c3f41 Linus Torvalds      2005-04-16  5289  }
 
- 	switch (rreq->origin) {
-+	case NETFS_UNBUFFERED_READ:
- 	case NETFS_DIO_READ:
- 	case NETFS_READ_GAPS:
- 		netfs_rreq_assess_dio(rreq);
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index e278a1ad1ca3..8b0785178731 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -367,6 +367,7 @@ void nfs_netfs_read_completion(struct nfs_pgio_header =
-*hdr)
- =
-
- 	sreq =3D netfs->sreq;
- 	if (test_bit(NFS_IOHDR_EOF, &hdr->flags) &&
-+	    sreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
- 	    sreq->rreq->origin !=3D NETFS_DIO_READ)
- 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &sreq->flags);
- =
-
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index 3000c8a9d3ea..d2df10b8e6fd 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -219,7 +219,8 @@ static void cifs_issue_read(struct netfs_io_subrequest=
- *subreq)
- 			goto failed;
- 	}
- =
-
--	if (subreq->rreq->origin !=3D NETFS_DIO_READ)
-+	if (subreq->rreq->origin !=3D NETFS_UNBUFFERED_READ &&
-+	    subreq->rreq->origin !=3D NETFS_DIO_READ)
- 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
- =
-
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index c3f230732f51..1464b3a10498 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -206,6 +206,7 @@ enum netfs_io_origin {
- 	NETFS_READ_GAPS,		/* This read is a synchronous read to fill gaps */
- 	NETFS_READ_SINGLE,		/* This read should be treated as a single object */
- 	NETFS_READ_FOR_WRITE,		/* This read is to prepare a write */
-+	NETFS_UNBUFFERED_READ,		/* This is an unbuffered read */
- 	NETFS_DIO_READ,			/* This is a direct I/O read */
- 	NETFS_WRITEBACK,		/* This write was triggered by writepages */
- 	NETFS_WRITEBACK_SINGLE,		/* This monolithic write was triggered by write=
-pages */
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 402c5e82e7b8..4175eec40048 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -39,6 +39,7 @@
- 	EM(NETFS_READ_GAPS,			"RG")		\
- 	EM(NETFS_READ_SINGLE,			"R1")		\
- 	EM(NETFS_READ_FOR_WRITE,		"RW")		\
-+	EM(NETFS_UNBUFFERED_READ,		"UR")		\
- 	EM(NETFS_DIO_READ,			"DR")		\
- 	EM(NETFS_WRITEBACK,			"WB")		\
- 	EM(NETFS_WRITEBACK_SINGLE,		"W1")		\
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
