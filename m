@@ -1,161 +1,248 @@
-Return-Path: <linux-nfs+bounces-11887-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11888-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 842CFAC2BE8
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 00:39:05 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24E2BAC2BE9
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 00:40:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 484271658CE
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 22:39:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C8CB1C20317
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 22:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE88F1EB1B4;
-	Fri, 23 May 2025 22:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18F5D20C006;
+	Fri, 23 May 2025 22:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCIdN0Wv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l7Co2HFz"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79842DCBE6
-	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 22:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70FF2DCBE6
+	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 22:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748039941; cv=none; b=ry0tl873i2vrSln/8VsntiCn76eug8frH01BIDPC0wxIvKhiXibmhz0W9FtvexRoJGDmT8Hq8q8yMUNnQJ5msBPNJEH4jZHKoZYqAFblFN7wUnK2NIOZoRGBEoIkrXqg5S5s4vxg0AzWiLRoCRQGGAR7m7Wr7Q3tvyy8WZmtEaw=
+	t=1748040048; cv=none; b=cVy94ICfA2AlAxTR4GvdFr0Zvq7VfCXU6Qc7Bo11eMvwKqVz9Nn9bnlcnnpxi3xSmcHSrYZ24hFoweQEeOh2tgkTGn3iG5slw+svDGmoBZLh/j1dLZnLqjK3BPdvDy2Y50yCnhjaL9HGcqjIT7J3kkU4NcTdKufxhfz/xOfFJIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748039941; c=relaxed/simple;
-	bh=nigQY1fyJonPn/fPiLiJO1adFgSH58CyWCgeU6eszME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOlkibg6P1s8KZSWn5F4kh8wg0aDzvQqPRmL2mx81C9hSA6S1h2yxkDtFVLRwkbpL2fHlQERf0yIdB3185IYrxhs6NGKRuIfLxJl3PPDmcUF2v9aoC9waVJHwASFN4VBnUzuG8sNJbVt3za+C3XAuvaqBc37QqMTYZphTBNseOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCIdN0Wv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB754C4CEE9;
-	Fri, 23 May 2025 22:39:00 +0000 (UTC)
+	s=arc-20240116; t=1748040048; c=relaxed/simple;
+	bh=wQd8/ixEaMWDssumjrCt+Z2dPHdu4SeP7QOacYnt9Aw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oLFMhjj91DYt9OGATp3YpmZDOCrUlYNij+sJZybysltjz02A9bcsoXndbNVk5CLD1fid0jtraGC2YNL5zh0rcHePFvdY9qGRvM/pAtyZa1U6bYzgQ0qulA2pFFnj5zicaaZPdNA7CxU2aLbvIt+ynmKgJGcIl+3RqBo+i1SMh+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l7Co2HFz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E673CC4CEE9;
+	Fri, 23 May 2025 22:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748039941;
-	bh=nigQY1fyJonPn/fPiLiJO1adFgSH58CyWCgeU6eszME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TCIdN0WvtiSAlAiLFoRIdBb0rSCeS8QZtzl8arwzrBrAZGN3NCH0nkpFLnlJBFMDL
-	 uzNGlWn64mF7VhrLa4+0f9dlURiEepwGq3r1X5h/2/aa5ZTxOLxGcZU9Aof3Rt9vU1
-	 o6EQsLY2PJMpxEaR0m3LEqEMHyV+pf3sCKTd37JdJAfbjsT2LpqwjdePYB+Cs5Id5z
-	 0qfBn+9aS3rvlZO8QuHN0DGs67vb9ooIYkf2q08tY8/C2sJX9rOz4WoJuovsqlSoG+
-	 0Y+VnJw/1Mv3X62R0VYY7ny0XFVxmQaHmclVGe8ogG6K/R6PySXu6NGyxGX444xcgw
-	 ht7o9CmzHtX4Q==
-Date: Fri, 23 May 2025 18:38:59 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
-	linux-nfs@vger.kernel.org
+	s=k20201202; t=1748040047;
+	bh=wQd8/ixEaMWDssumjrCt+Z2dPHdu4SeP7QOacYnt9Aw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=l7Co2HFzh3CwZmnKxivbvXcFwYCWoDxs+AOC26OIt0729SaND4TmFTgJAM7xTjIvK
+	 8WfU+32E9SiVX1BMeuHVkxwxr2y1Kw2AQDgLZehNemtm6vfN71YSdj9lXdNn1UtMEd
+	 lpMBzw08gD1MfkW7uJ/DRTlizZHj+rsrOIW4ya9JQqGz3HQ5ueXJSKBloETlZM2L0D
+	 wC1LqYg1ZHlFLMdhsJLJjOoTcNzeUCsyOTYHITHiOLO7+AtoQIkZ9g4xsHFkUF2tEx
+	 fsaMDFNIh+NZx20OW4pOzlpljT/kfXwQ1Xp7b1ZBXBXQXCk17A8IpOEI91cUM6TwMb
+	 MFB30xYqkAoMw==
+Message-ID: <6bb9e9cce27e2a222bf55e272d690aab8f0eef13.camel@kernel.org>
 Subject: Re: unable to run NFSD in container if "options sunrpc
  pool_mode=pernode"
-Message-ID: <aDD5A9_vphMkBxjC@kernel.org>
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	linux-nfs@vger.kernel.org
+Date: Fri, 23 May 2025 18:40:45 -0400
+In-Reply-To: <aDD0VxdSk0O6LdFG@kernel.org>
 References: <aDC-ftnzhJAlwqwh@kernel.org>
- <f93f70ce429f2dd6d11f6900808fc4ab737f765f.camel@kernel.org>
- <aDD0VxdSk0O6LdFG@kernel.org>
+	 <f93f70ce429f2dd6d11f6900808fc4ab737f765f.camel@kernel.org>
+	 <aDD0VxdSk0O6LdFG@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
+ n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
+ egyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqV
+ T2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm
+ 0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtV
+ YrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8sn
+ VluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQ
+ cDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQf
+ CBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sE
+ LZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BB
+ MBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4
+ gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI
+ 7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/r0km
+ R/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2B
+ rQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRI
+ ONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZ
+ Wf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQO
+ lDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7Rj
+ iR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27Xi
+ QQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBM
+ YXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKC
+ wQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9q
+ LqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC
+ 3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoa
+ c8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3F
+ LpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx3bri75n1
+ TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw
+ 87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2
+ xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y
+ +jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5d
+ Hxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBM
+ BAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4h
+ N9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPep
+ naQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQ
+ RERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6
+ FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR
+ 685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8Eew
+ P8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0Xzh
+ aKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyAnLqRgDgR+wTQ
+ T6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7h
+ dMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b
+ 24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAg
+ kKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjr
+ uymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItu
+ AXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfD
+ FOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce
+ 6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbo
+ sZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDv
+ qrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51a
+ sjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qG
+ IcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbL
+ UO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0b25AcHJpbWFyeWRh
+ dGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOa
+ EEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSU
+ apy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50
+ M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5d
+ dhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn
+ 0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0
+ jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7e
+ flPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0
+ BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7B
+ AKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc
+ 8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQg
+ HAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD
+ 2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuacBOTtmOdz4ZN2tdvNgozz
+ uxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9J
+ DfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRD
+ CHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1g
+ Yy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVV
+ AaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJO
+ aEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhp
+ f8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+m
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDD0VxdSk0O6LdFG@kernel.org>
 
-On Fri, May 23, 2025 at 06:19:03PM -0400, Mike Snitzer wrote:
+On Fri, 2025-05-23 at 18:19 -0400, Mike Snitzer wrote:
 > On Fri, May 23, 2025 at 02:40:17PM -0400, Jeff Layton wrote:
 > > On Fri, 2025-05-23 at 14:29 -0400, Mike Snitzer wrote:
 > > > I don't know if $SUBJECT ever worked... but with latest 6.15 or
-> > > nfsd-testing if I just use pool_mode=global then all is fine.
-> > > 
-> > > If pool_mode=pernode then mounting the container's NFSv3 export fails.
-> > > 
-> > > I haven't started to dig into code yet but pool_mode=pernode works
+> > > nfsd-testing if I just use pool_mode=3Dglobal then all is fine.
+> > >=20
+> > > If pool_mode=3Dpernode then mounting the container's NFSv3 export fai=
+ls.
+> > >=20
+> > > I haven't started to dig into code yet but pool_mode=3Dpernode works
 > > > perfectly fine if NFSD isn't running in a container.
-> > > 
+> > >=20
+
+Oops, I went and looked and nfsd isn't running in a container on these
+boxes. There are some other containerized apps running on the box, but
+nfsd isn't running in a container.
+
+
 > > > Mike
-> > > 
-> > > ps. yet another reason why pool_mode=pernode should be the default if
+> > >=20
+> > > ps. yet another reason why pool_mode=3Dpernode should be the default =
+if
 > > > more than 1 NUMA node ;)
-> > 
+> >=20
 > > Huh, strange. I've no idea why that would be. What kernel is this?
-> 
+>=20
 > It is this 6.12.24 based frankenbeast-ish kernel:
-> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=kernel-6.12.24/main-testing
-> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=
+=3Dkernel-6.12.24/main-testing
+>=20
 > Basically just 6.12.24 + NFS and NFSD sync'd through nfs-testing and
 > nfsd-testing (so 6.15 NFS and NFSD going on 6.16).
-> 
+>=20
 > But I also just verified that this kernel built on Chuck's
 > nfsd-testing branch (with 2 extra patches) has the same issue:
-> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=cel-nfsd-testing-6.16
-> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/snitzer/linux.git/log/?h=
+=3Dcel-nfsd-testing-6.16
+>=20
 > Here is the NFS related config:
-> 
-> CONFIG_NETWORK_FILESYSTEMS=y
-> CONFIG_NFS_FS=m
+>=20
+> CONFIG_NETWORK_FILESYSTEMS=3Dy
+> CONFIG_NFS_FS=3Dm
 > # CONFIG_NFS_V2 is not set
-> CONFIG_NFS_V3=m
-> CONFIG_NFS_V3_ACL=y
-> CONFIG_NFS_V4=m
+> CONFIG_NFS_V3=3Dm
+> CONFIG_NFS_V3_ACL=3Dy
+> CONFIG_NFS_V4=3Dm
 > # CONFIG_NFS_SWAP is not set
-> CONFIG_NFS_V4_1=y
-> CONFIG_NFS_V4_2=y
-> CONFIG_PNFS_FILE_LAYOUT=m
-> CONFIG_PNFS_BLOCK=m
-> CONFIG_PNFS_FLEXFILE_LAYOUT=m
-> CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN="kernel.org"
+> CONFIG_NFS_V4_1=3Dy
+> CONFIG_NFS_V4_2=3Dy
+> CONFIG_PNFS_FILE_LAYOUT=3Dm
+> CONFIG_PNFS_BLOCK=3Dm
+> CONFIG_PNFS_FLEXFILE_LAYOUT=3Dm
+> CONFIG_NFS_V4_1_IMPLEMENTATION_ID_DOMAIN=3D"kernel.org"
 > # CONFIG_NFS_V4_1_MIGRATION is not set
-> CONFIG_NFS_V4_SECURITY_LABEL=y
-> CONFIG_NFS_FSCACHE=y
+> CONFIG_NFS_V4_SECURITY_LABEL=3Dy
+> CONFIG_NFS_FSCACHE=3Dy
 > # CONFIG_NFS_USE_LEGACY_DNS is not set
-> CONFIG_NFS_USE_KERNEL_DNS=y
-> CONFIG_NFS_DEBUG=y
-> CONFIG_NFS_DISABLE_UDP_SUPPORT=y
+> CONFIG_NFS_USE_KERNEL_DNS=3Dy
+> CONFIG_NFS_DEBUG=3Dy
+> CONFIG_NFS_DISABLE_UDP_SUPPORT=3Dy
 > # CONFIG_NFS_V4_2_READ_PLUS is not set
-> CONFIG_NFSD=m
+> CONFIG_NFSD=3Dm
 > # CONFIG_NFSD_V2 is not set
-> CONFIG_NFSD_V3_ACL=y
-> CONFIG_NFSD_V4=y
-> CONFIG_NFSD_PNFS=y
+> CONFIG_NFSD_V3_ACL=3Dy
+> CONFIG_NFSD_V4=3Dy
+> CONFIG_NFSD_PNFS=3Dy
 > # CONFIG_NFSD_BLOCKLAYOUT is not set
-> CONFIG_NFSD_SCSILAYOUT=y
+> CONFIG_NFSD_SCSILAYOUT=3Dy
 > # CONFIG_NFSD_FLEXFILELAYOUT is not set
 > # CONFIG_NFSD_V4_2_INTER_SSC is not set
-> CONFIG_NFSD_V4_SECURITY_LABEL=y
+> CONFIG_NFSD_V4_SECURITY_LABEL=3Dy
 > # CONFIG_NFSD_LEGACY_CLIENT_TRACKING is not set
 > # CONFIG_NFSD_V4_DELEG_TIMESTAMPS is not set
-> CONFIG_GRACE_PERIOD=m
-> CONFIG_LOCKD=m
-> CONFIG_LOCKD_V4=y
-> CONFIG_NFS_ACL_SUPPORT=m
-> CONFIG_NFS_COMMON=y
-> CONFIG_NFS_COMMON_LOCALIO_SUPPORT=m
-> CONFIG_NFS_LOCALIO=y
-> CONFIG_NFS_V4_2_SSC_HELPER=y
-> CONFIG_SUNRPC=m
-> CONFIG_SUNRPC_GSS=m
-> CONFIG_SUNRPC_BACKCHANNEL=y
-> CONFIG_RPCSEC_GSS_KRB5=m
-> CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1=y
-> CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA2=y
-> CONFIG_SUNRPC_DEBUG=y
-> CONFIG_SUNRPC_XPRT_RDMA=m
-> 
+> CONFIG_GRACE_PERIOD=3Dm
+> CONFIG_LOCKD=3Dm
+> CONFIG_LOCKD_V4=3Dy
+> CONFIG_NFS_ACL_SUPPORT=3Dm
+> CONFIG_NFS_COMMON=3Dy
+> CONFIG_NFS_COMMON_LOCALIO_SUPPORT=3Dm
+> CONFIG_NFS_LOCALIO=3Dy
+> CONFIG_NFS_V4_2_SSC_HELPER=3Dy
+> CONFIG_SUNRPC=3Dm
+> CONFIG_SUNRPC_GSS=3Dm
+> CONFIG_SUNRPC_BACKCHANNEL=3Dy
+> CONFIG_RPCSEC_GSS_KRB5=3Dm
+> CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1=3Dy
+> CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA2=3Dy
+> CONFIG_SUNRPC_DEBUG=3Dy
+> CONFIG_SUNRPC_XPRT_RDMA=3Dm
+>=20
 > > FWIW, I just built a localio-enabled on a v6.12-uek kernel for our own
-> > purposes yesterday and it's running pool_mode=pernode. It seemed to
+> > purposes yesterday and it's running pool_mode=3Dpernode. It seemed to
 > > work fine as a v3 DS, but I didn't test mounting the container's export
 > > directly.
-> 
+>=20
 > OK, but you were able to access the v3 DS just fine (assuming pNFS
 > flexfiles layouts that point to your DS that is running NFSD in a
 > container) ?
-> 
+>=20
 > I'm using nfs-utils-2.8.2.  I don't see any nfsd threads running if I
-> use "options sunrpc pool_mode=pernode".
+> use "options sunrpc pool_mode=3Dpernode".
+>=20
 
-Actually, I do see nfsd threads running.. just that if I try to issue
-IO (using pNFS flexfiles to file on v3 DS) it hangs.
+I'll have a look soon, but if you figure it out in the meantime, let us
+know.
 
-Mike
+--=20
+Jeff Layton <jlayton@kernel.org>
 
