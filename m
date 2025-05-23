@@ -1,105 +1,215 @@
-Return-Path: <linux-nfs+bounces-11872-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11873-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4DBEAC1EC6
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 10:35:38 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1FBDAC225B
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 14:10:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 111F37AFD5C
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 08:34:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6CEDA43A52
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 12:09:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8732212FB7;
-	Fri, 23 May 2025 08:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5005822B5A3;
+	Fri, 23 May 2025 12:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcRl5Kfk"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xpSobNdp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="B5I7E2fH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xpSobNdp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="B5I7E2fH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88592143748;
-	Fri, 23 May 2025 08:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1DB23535B
+	for <linux-nfs@vger.kernel.org>; Fri, 23 May 2025 12:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747989330; cv=none; b=ECG2GLzMGIYgI/0R4y4ASJo0c46ZY/d7NvsYRcQMVG8CjXlwG9vGqPWQKtQ7cPEVQe6q3zQ4nftoTyIa98jQuqOy5uiNlm6GtuiizoKmqpzDNaEOGOYdoiDp/t+yOJR1hld7UGsx65KOHPXEcTvM46DPhC+HZ+/MYJqTYNHfAB4=
+	t=1748002208; cv=none; b=MsHqLGRbCcNxeSycPKmmNjPNLpiQM/MdGcUQwQh2KaU6Gv32AVRsedbwcJy/q94BlUu70W87D1IoLf0XxqW7Blebs3hclVmj1F0opXmK7QYwt/LA9RxxDQEWIrkHGtZQOJJXP2dPn+Ui/CKKscryJwLhDXRxnlf6ms2NU+fJDvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747989330; c=relaxed/simple;
-	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LNGbd0sJe6Jxm+7jeyQKc9YFcrztnYLp6BSPsAa3SQoAoVahZMdVJxPYlovXfs19iB8PrlkAsTT+LARL93sAV1k7Slr9s7J6d/3TnmL+SXup25Ssaz1SwB3ZJ8E6b99cKcfVi+WuuT7J8HTLmevBpEji4lbquH480xzPCBjIJsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcRl5Kfk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2820AC4CEE9;
-	Fri, 23 May 2025 08:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747989330;
-	bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XcRl5Kfk0LErS6d8DWAJDv0260N7QeO09U2nEFy+/POSGuCKNcjXuTRL0y6iQAms+
-	 gufkd6wsGs2pwGAfTTTeqykAQJSG3C9QMqDlczk12XUK8b+gnUv39dzAs+z+h0L9KU
-	 dFmNH9hN4SUxUnrSmfRCxsKQPdLr6cCcoy656aBC1W/wE/N9u+bAtp071aSh5VFXrz
-	 WJtXbFOeZWq0QZdlLbFa8iWq98vVMUNbRD5mf5u12jUsRXe1g45rdOeEwXKTllwLpA
-	 3PSQLEBw3ZwbknFRHyf2d/jwQlcLoLv/+KHFE3+7KsGGW2+zCXKKLsn6xXRMvWEl13
-	 YalaMnrvpCNlg==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Steve French <sfrench@samba.org>,
-	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
-	netfs@lists.linux.dev,
-	v9fs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix undifferentiation of DIO reads from unbuffered reads
-Date: Fri, 23 May 2025 10:35:21 +0200
-Message-ID: <20250523-audienz-brotkrumen-039bac60ea9c@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <3444961.1747987072@warthog.procyon.org.uk>
-References: <3444961.1747987072@warthog.procyon.org.uk>
+	s=arc-20240116; t=1748002208; c=relaxed/simple;
+	bh=2apjwt/EGa3rwNBeH7T6oHO9deqXpOdNjAIwUVY5+Z4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=go9M/BxXjl7fKa0EA7ZkKg/zPHztSWrCQl5DoAH48uoCnzdKgKhDkDY2lkXRsVGl+Ed2Y8sIGvIVJixvY4uFf2+qQcYYb8e+eApJ3WCBMO7EUWxP5uz96qzUwuti2WguBW8883Ai9D+zwP/bbZ29eq0J1a4Y5VhwlJIXAHTzdMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xpSobNdp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=B5I7E2fH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xpSobNdp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=B5I7E2fH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1929621BFA;
+	Fri, 23 May 2025 12:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748002204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oa0an+Q6U2k/kOogtft4u+KOHqSzjK04aZoqM1uKk3A=;
+	b=xpSobNdpeKV2RBw4NmR8g8Zlb0Ay9R6p9XBMqEtD8A7lMN/Gc4tUp6FkaO/QyJUrLqCU+R
+	h8G89/Eo/b7o0T06uekONQbhoH6W7mNgRam3LcHHQEg47js6/qMQH3PzNIeRPjm3laRCzW
+	9lmth6oq4KPVqh3cV6OknQoptVCPsF8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748002204;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oa0an+Q6U2k/kOogtft4u+KOHqSzjK04aZoqM1uKk3A=;
+	b=B5I7E2fH9XpbCTaejq9BBLwgySksQsBR7TZzjoxZYNOx9yznoBbzo1+Gbs74Sfc4iKAFNW
+	yHSB94VvU5TEocDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xpSobNdp;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=B5I7E2fH
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748002204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oa0an+Q6U2k/kOogtft4u+KOHqSzjK04aZoqM1uKk3A=;
+	b=xpSobNdpeKV2RBw4NmR8g8Zlb0Ay9R6p9XBMqEtD8A7lMN/Gc4tUp6FkaO/QyJUrLqCU+R
+	h8G89/Eo/b7o0T06uekONQbhoH6W7mNgRam3LcHHQEg47js6/qMQH3PzNIeRPjm3laRCzW
+	9lmth6oq4KPVqh3cV6OknQoptVCPsF8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748002204;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oa0an+Q6U2k/kOogtft4u+KOHqSzjK04aZoqM1uKk3A=;
+	b=B5I7E2fH9XpbCTaejq9BBLwgySksQsBR7TZzjoxZYNOx9yznoBbzo1+Gbs74Sfc4iKAFNW
+	yHSB94VvU5TEocDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CA4B71336F;
+	Fri, 23 May 2025 12:10:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2dGgHpplMGgZbgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 23 May 2025 12:10:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1377; i=brauner@kernel.org; h=from:subject:message-id; bh=aaYZ1roJQALwLOCDStlA1iSIFgYsVkGtdj7Sg7WhRg0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQYGHu/SDHY357Z8Vnt0kvnnd5Pl3f7Mby3s230lQmyW iYw5/2CjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIks38vwT0H9fHuqkaemTEaT jfn5xW8rPt7zu6F+QEBTKqFnj+vLKQz/C9Xiw1OmmKf0fDXx/Lpto3rrw5Pspt38p9YeZml/+/0 cNwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+From: NeilBrown <neilb@suse.de>
+To: openembedded-core@lists.openembedded.org
+Cc: "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [PATCH OE-core] nfs-utils: don't use signals to shut down nfs server.
+Date: Fri, 23 May 2025 17:41:19 +1000
+Message-id: <174800219540.608730.11726448273017682287@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 1929621BFA
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Fri, 23 May 2025 08:57:52 +0100, David Howells wrote:
-> On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
-> "unbuffered reads" (specified by cache=none in the mount parameters).  The
-> difference is flagged in the protocol and the server may behave
-> differently: Windows Server will, for example, mandate that DIO reads are
-> block aligned.
-> 
-> Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
-> NETFS_DIO_READ, parallelling the write differentiation that already exists.
-> cifs will then do the right thing.
-> 
-> [...]
 
-Applied to the vfs-6.16.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.netfs branch should appear in linux-next soon.
+Since Linux v2.4 it has been possible to stop all NFS server by running
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+   rpc.nfsd 0
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+i.e.  by requesting that zero threads be running.  This is preferred as
+it doesn't risk killing some other process which happens to be called
+"nfsd".
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Since Linux v6.6 - and other stable kernels to which
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.netfs
+  Commit: 390390240145 ("nfsd: don't allow nfsd threads to be
+  signalled.")
 
-[1/1] netfs: Fix undifferentiation of DIO reads from unbuffered reads
-      https://git.kernel.org/vfs/vfs/c/db26d62d79e4
+has been backported - sending a signal no longer works to stop nfs server
+threads.
+
+This patch changes the nfsserver script to use "rpc.nfsd 0" to stop
+server threads.
+
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ .../nfs-utils/nfs-utils/nfsserver             | 28 +++----------------
+ 1 file changed, 4 insertions(+), 24 deletions(-)
+
+Resending with different From: address because first attempt was bounced
+as spam
+
+  openembedded-core@lists.openembedded.org
+    host lb01.groups.io [45.79.81.153]
+    SMTP error from remote mail server after end of data:
+    500 This message has been flagged as spam.
+
+
+diff --git a/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver b/meta/r=
+ecipes-connectivity/nfs-utils/nfs-utils/nfsserver
+index cb6c1b4d08d8..99ec280b3594 100644
+--- a/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver
++++ b/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver
+@@ -89,34 +89,14 @@ start_nfsd(){
+ 	start-stop-daemon --start --exec "$NFS_NFSD" -- "$@"
+ 	echo done
+ }
+-delay_nfsd(){
+-	for delay in 0 1 2 3 4 5 6 7 8 9=20
+-	do
+-		if pidof nfsd >/dev/null
+-		then
+-			echo -n .
+-			sleep 1
+-		else
+-			return 0
+-		fi
+-	done
+-	return 1
+-}
+ stop_nfsd(){
+-	# WARNING: this kills any process with the executable
+-	# name 'nfsd'.
+ 	echo -n 'stopping nfsd: '
+-	start-stop-daemon --stop --quiet --signal 1 --name nfsd
+-	if delay_nfsd || {
+-		echo failed
+-		echo ' using signal 9: '
+-		start-stop-daemon --stop --quiet --signal 9 --name nfsd
+-		delay_nfsd
+-	}
++	$NFS_NFSD 0
++	if pidof nfsd
+ 	then
+-		echo done
+-	else
+ 		echo failed
++	else
++		echo done
+ 	fi
+ }
+=20
+--=20
+2.49.0
+
 
