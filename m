@@ -1,65 +1,65 @@
-Return-Path: <linux-nfs+bounces-11881-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11882-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57689AC2998
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 20:24:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F0F4AC299B
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 20:24:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68603A218A4
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 18:24:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C8201C02781
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 May 2025 18:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B68299A97;
-	Fri, 23 May 2025 18:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AC83299A8D;
+	Fri, 23 May 2025 18:24:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="fRL7+9HH"
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="ok1iFqS9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB272298CAA;
-	Fri, 23 May 2025 18:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F64729993E;
+	Fri, 23 May 2025 18:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748024663; cv=none; b=eYrBL6siYgdrRkeEm5s3pP2bFYmaCMMgcBklNiX99I5sKx8dR4AEJ89u1EeVoN6O4k8Y/Wi4TdVfX3//mhYYOHPagZ5CDQBlVXj2RDVlSis90HJq4VmZAT1IP62z2N2yVVnmK7QQn7MHdSCJlFpXxwE+g0Oubb69dF2T13WxywU=
+	t=1748024690; cv=none; b=XaG4PwDRio0qa+Ow+KbqIEWXL8buIpocWH3sg0ibSY5/pBkQkLMpJc8SMeFZ6mallOCFwDTpctLaYL2BQRU0ul4ycHb2gx4zgQ6JD+DaOCW3qyFNYt7/VDO0IJgVN3zkRy/SboCUwPAsMFq9aYRWabC0n1msWA9BAlm7rsk5XMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748024663; c=relaxed/simple;
-	bh=yS0LHTUHjZeufGohZ/G1LkLYzmVuC8hQGvqm+fnY0h0=;
+	s=arc-20240116; t=1748024690; c=relaxed/simple;
+	bh=aFdYqC5yR7IS7C1K0ft6ANTYCQeklh9fnLjP9xYz9w0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hPZGzcw8DtItuGcweEPmlLZ9zQXOERDJZiCVWo8B1QdI+jcZ7fNorBlfaHJFp7K2WOSwQ3Y/Pc4Jq/FjwIQwvnNA3JK5RuZFUBXjt0ot0BTbsM9JsnapaGYlDKxXaDcVGOSn+O3tW9/p/4bgC2vv6irqCwRDDQThLuFvzjSgF+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=fRL7+9HH; arc=none smtp.client-ip=99.78.197.217
+	 MIME-Version:Content-Type; b=rtVBrJtwaSPJf98wRs9tyz+fnO2Elh+jO1U6zT3DTKeuzk67oLdp1uMCM2RBiLfx1MwHkzoGfVQcxXapZ5egr6cgrVCLv/ukGDhTJ61ZwlXhEMfbEQWJBLD6k2n2EmkTKaIngHxYOaA+T4r1AlUZpbGwvS3Y4zpC/uKpTa2vQqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=ok1iFqS9; arc=none smtp.client-ip=52.119.213.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1748024662; x=1779560662;
+  t=1748024688; x=1779560688;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/mr+HGfc/NDHwPhm1cPT7tfkvFkLNtbK2fi3H5uBrWE=;
-  b=fRL7+9HHm7TiqI9GR2iy5HhwBVIlbPiCzfPD9TIi964lhc2MuLMoUO/j
-   KIUTxzdam2L6FFUOMLsGwrXcTi1743YvB//GobNT0CCnrsjfBWZn5iG2l
-   PV9+8CCAgEY9n14VoUHaQyVXlC0exIRP827MPcenPsjldBXmbWW061ozE
-   btilEHjaXrc+TAJQayzvC9PuK0EKASf3Gfb+RNceXYY8qNlT6UzOtdS+l
-   nfPkb8nWJfMj+kv6kjttMuUM6+YAOcj7C+abhZn0TrefFopGVHAejnYul
-   llcWPRMT70Pc9kmZ2fARind5rjxre54IsJ6KeOQUB7W3F5x7uJhwD3cFb
-   w==;
+  bh=dFwPDfIzlH6tGV/bxIu9QKq8iVcQQ5JJd5NsWTivNLU=;
+  b=ok1iFqS9b5+Cd6wL+QFFGXwkTtmKn3cOQrrXwR71ackg9rVlZvF6E4Lg
+   dr995swBmuUYeJ8PrE6fhIuBfdBn4LdO6zQ1Fg5c3QhkSaAWauJqVqScf
+   tFLn/PiBoqNtKo5z24bMbHqGpJsJRuaPpohdY0tnUmEjDfF4krI+th3O3
+   UYmLCnlgMk/gO7TMCo18e0Y6GJfkwn08M8aoLHlFIgrUD9dyORuK/CAz6
+   hr/fQYxUdFVUu16rIQEOFPhrzfzW6lVe8SAhKc4AsyaumzhS7vw4NftjJ
+   FfkzucArBWQ+vtUfCyHEV7um2PMTctoF+0Zl0C4y4qvw0K7FloMt7pbaG
+   g==;
 X-IronPort-AV: E=Sophos;i="6.15,309,1739836800"; 
-   d="scan'208";a="53385123"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 18:24:20 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:31257]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.19.213:2525] with esmtp (Farcaster)
- id e2a6872f-6eeb-4ec2-af08-c555d6bd2020; Fri, 23 May 2025 18:24:19 +0000 (UTC)
-X-Farcaster-Flow-ID: e2a6872f-6eeb-4ec2-af08-c555d6bd2020
+   d="scan'208";a="96733226"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 18:24:46 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:5360]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.3.185:2525] with esmtp (Farcaster)
+ id 0c05805c-7ef1-4828-9116-14573788f047; Fri, 23 May 2025 18:24:45 +0000 (UTC)
+X-Farcaster-Flow-ID: 0c05805c-7ef1-4828-9116-14573788f047
 Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 23 May 2025 18:24:19 +0000
+ Fri, 23 May 2025 18:24:45 +0000
 Received: from 6c7e67bfbae3.amazon.com (10.142.204.12) by
  EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 23 May 2025 18:24:15 +0000
+ Fri, 23 May 2025 18:24:41 +0000
 From: Kuniyuki Iwashima <kuniyu@amazon.com>
 To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
 	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
@@ -73,9 +73,9 @@ CC: Simon Horman <horms@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>,
 	<netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
 	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
 	<linux-nvme@lists.infradead.org>
-Subject: [PATCH v2 net-next 6/7] socket: Replace most sock_create() calls with sock_create_kern().
-Date: Fri, 23 May 2025 11:21:12 -0700
-Message-ID: <20250523182128.59346-7-kuniyu@amazon.com>
+Subject: [PATCH v2 net-next 7/7] socket: Clean up kdoc for sock_create() and sock_create_lite().
+Date: Fri, 23 May 2025 11:21:13 -0700
+Message-ID: <20250523182128.59346-8-kuniyu@amazon.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250523182128.59346-1-kuniyu@amazon.com>
 References: <20250523182128.59346-1-kuniyu@amazon.com>
@@ -87,209 +87,115 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWC001.ant.amazon.com (10.13.139.223) To
+X-ClientProxiedBy: EX19D038UWB004.ant.amazon.com (10.13.139.177) To
  EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Except for only one user, sctp_do_peeloff(), all sockets created
-by drivers and fs are not tied to userspace processes nor exposed
-via file descriptors.
+__sock_create() is now static and the same doc exists on sock_create()
+and sock_create_kern().
 
-Let's use sock_create_kern() for such in-kernel use cases as CIFS
-client and NFS.
+Also, __sock_create() says "On failure @res is set to %NULL.", but
+this is always false.
+
+In addition, the old style kdoc is a bit corrupted and we can't see the
+DESCRIPTION section:
+
+  $ scripts/kernel-doc -man net/socket.c | scripts/split-man.pl /tmp/man
+  $ man /tmp/man/sock_create.9
+
+Let's clean them up.
 
 Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 ---
- drivers/infiniband/hw/erdma/erdma_cm.c    | 6 ++++--
- drivers/infiniband/sw/siw/siw_cm.c        | 6 ++++--
- drivers/isdn/mISDN/l1oip_core.c           | 3 ++-
- drivers/nvme/target/tcp.c                 | 5 +++--
- drivers/target/iscsi/iscsi_target_login.c | 7 ++++---
- drivers/xen/pvcalls-back.c                | 6 ++++--
- fs/ocfs2/cluster/tcp.c                    | 8 +++++---
- fs/smb/server/transport_tcp.c             | 7 ++++---
- 8 files changed, 30 insertions(+), 18 deletions(-)
+ net/socket.c | 58 ++++++++++++++++++++++------------------------------
+ 1 file changed, 25 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/infiniband/hw/erdma/erdma_cm.c b/drivers/infiniband/hw/erdma/erdma_cm.c
-index e0acc185e719..cec758cec7fd 100644
---- a/drivers/infiniband/hw/erdma/erdma_cm.c
-+++ b/drivers/infiniband/hw/erdma/erdma_cm.c
-@@ -1026,7 +1026,8 @@ int erdma_connect(struct iw_cm_id *id, struct iw_cm_conn_param *params)
- 		return -ENOENT;
- 	erdma_qp_get(qp);
+diff --git a/net/socket.c b/net/socket.c
+index 9ad352183fae..e4e9f5cc5d70 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -1315,18 +1315,20 @@ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+ }
  
--	ret = sock_create(AF_INET, SOCK_STREAM, IPPROTO_TCP, &s);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       AF_INET, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (ret < 0)
- 		goto error_put_qp;
- 
-@@ -1305,7 +1306,8 @@ int erdma_create_listen(struct iw_cm_id *id, int backlog)
- 	if (addr_family != AF_INET)
- 		return -EAFNOSUPPORT;
- 
--	ret = sock_create(addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/drivers/infiniband/sw/siw/siw_cm.c b/drivers/infiniband/sw/siw/siw_cm.c
-index 708b13993fdf..bea948640aba 100644
---- a/drivers/infiniband/sw/siw/siw_cm.c
-+++ b/drivers/infiniband/sw/siw/siw_cm.c
-@@ -1391,7 +1391,8 @@ int siw_connect(struct iw_cm_id *id, struct iw_cm_conn_param *params)
- 	siw_dbg_qp(qp, "pd_len %d, laddr %pISp, raddr %pISp\n", pd_len, laddr,
- 		   raddr);
- 
--	rv = sock_create(v4 ? AF_INET : AF_INET6, SOCK_STREAM, IPPROTO_TCP, &s);
-+	rv = sock_create_kern(current->nsproxy->net_ns,
-+			      v4 ? AF_INET : AF_INET6, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (rv < 0)
- 		goto error;
- 
-@@ -1767,7 +1768,8 @@ int siw_create_listen(struct iw_cm_id *id, int backlog)
- 	if (addr_family != AF_INET && addr_family != AF_INET6)
- 		return -EAFNOSUPPORT;
- 
--	rv = sock_create(addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
-+	rv = sock_create_kern(current->nsproxy->net_ns,
-+			      addr_family, SOCK_STREAM, IPPROTO_TCP, &s);
- 	if (rv < 0)
- 		return rv;
- 
-diff --git a/drivers/isdn/mISDN/l1oip_core.c b/drivers/isdn/mISDN/l1oip_core.c
-index a5ad88a960d0..1451ec859a32 100644
---- a/drivers/isdn/mISDN/l1oip_core.c
-+++ b/drivers/isdn/mISDN/l1oip_core.c
-@@ -659,7 +659,8 @@ l1oip_socket_thread(void *data)
- 	allow_signal(SIGTERM);
- 
- 	/* create socket */
--	if (sock_create(PF_INET, SOCK_DGRAM, IPPROTO_UDP, &socket)) {
-+	if (sock_create_kern(current->nsproxy->net_ns,
-+			     PF_INET, SOCK_DGRAM, IPPROTO_UDP, &socket)) {
- 		printk(KERN_ERR "%s: Failed to create socket.\n", __func__);
- 		ret = -EIO;
- 		goto fail;
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 12a5cb8641ca..4e499df746f4 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -2078,8 +2078,9 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
- 	if (port->nport->inline_data_size < 0)
- 		port->nport->inline_data_size = NVMET_TCP_DEF_INLINE_DATA_SIZE;
- 
--	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
--				IPPROTO_TCP, &port->sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       port->addr.ss_family, SOCK_STREAM,
-+			       IPPROTO_TCP, &port->sock);
- 	if (ret) {
- 		pr_err("failed to create a socket\n");
- 		goto err_port;
-diff --git a/drivers/target/iscsi/iscsi_target_login.c b/drivers/target/iscsi/iscsi_target_login.c
-index c2ac9a99ebbb..c085a3aaca6e 100644
---- a/drivers/target/iscsi/iscsi_target_login.c
-+++ b/drivers/target/iscsi/iscsi_target_login.c
-@@ -796,10 +796,11 @@ int iscsit_setup_np(
- 		return -EINVAL;
- 	}
- 
--	ret = sock_create(sockaddr->ss_family, np->np_sock_type,
--			np->np_ip_proto, &sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       sockaddr->ss_family, np->np_sock_type,
-+			       np->np_ip_proto, &sock);
- 	if (ret < 0) {
--		pr_err("sock_create() failed.\n");
-+		pr_err("sock_create_kern() failed.\n");
- 		return ret;
- 	}
- 	np->np_socket = sock;
-diff --git a/drivers/xen/pvcalls-back.c b/drivers/xen/pvcalls-back.c
-index fd7ed65e0197..c404678e1924 100644
---- a/drivers/xen/pvcalls-back.c
-+++ b/drivers/xen/pvcalls-back.c
-@@ -406,7 +406,8 @@ static int pvcalls_back_connect(struct xenbus_device *dev,
- 	    sa->sa_family != AF_INET)
- 		goto out;
- 
--	ret = sock_create(AF_INET, SOCK_STREAM, 0, &sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       AF_INET, SOCK_STREAM, 0, &sock);
- 	if (ret < 0)
- 		goto out;
- 	ret = inet_stream_connect(sock, sa, req->u.connect.len, 0);
-@@ -646,7 +647,8 @@ static int pvcalls_back_bind(struct xenbus_device *dev,
- 		goto out;
- 	}
- 
--	ret = sock_create(AF_INET, SOCK_STREAM, 0, &map->sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       AF_INET, SOCK_STREAM, 0, &map->sock);
- 	if (ret < 0)
- 		goto out;
- 
-diff --git a/fs/ocfs2/cluster/tcp.c b/fs/ocfs2/cluster/tcp.c
-index fce9beb214f0..491916662561 100644
---- a/fs/ocfs2/cluster/tcp.c
-+++ b/fs/ocfs2/cluster/tcp.c
-@@ -1558,7 +1558,7 @@ static void o2net_start_connect(struct work_struct *work)
- 	unsigned int nofs_flag;
- 
- 	/*
--	 * sock_create allocates the sock with GFP_KERNEL. We must
-+	 * sock_create_kern() allocates the sock with GFP_KERNEL. We must
- 	 * prevent the filesystem from being reentered by memory reclaim.
- 	 */
- 	nofs_flag = memalloc_nofs_save();
-@@ -1600,7 +1600,8 @@ static void o2net_start_connect(struct work_struct *work)
- 		goto out;
- 	}
- 
--	ret = sock_create(PF_INET, SOCK_STREAM, IPPROTO_TCP, &sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       PF_INET, SOCK_STREAM, IPPROTO_TCP, &sock);
- 	if (ret < 0) {
- 		mlog(0, "can't create socket: %d\n", ret);
- 		goto out;
-@@ -1984,7 +1985,8 @@ static int o2net_open_listening_sock(__be32 addr, __be16 port)
- 		.sin_port = port,
- 	};
- 
--	ret = sock_create(PF_INET, SOCK_STREAM, IPPROTO_TCP, &sock);
-+	ret = sock_create_kern(current->nsproxy->net_ns,
-+			       PF_INET, SOCK_STREAM, IPPROTO_TCP, &sock);
- 	if (ret < 0) {
- 		printk(KERN_ERR "o2net: Error %d while creating socket\n", ret);
- 		goto out;
-diff --git a/fs/smb/server/transport_tcp.c b/fs/smb/server/transport_tcp.c
-index abedf510899a..e1e9cbe5742f 100644
---- a/fs/smb/server/transport_tcp.c
-+++ b/fs/smb/server/transport_tcp.c
-@@ -427,18 +427,19 @@ static void tcp_destroy_socket(struct socket *ksmbd_socket)
+ /**
+- *	sock_create_lite - creates a socket
+- *	@family: protocol family (AF_INET, ...)
+- *	@type: communication type (SOCK_STREAM, ...)
+- *	@protocol: protocol (0, ...)
+- *	@res: new socket
++ * sock_create_lite - creates a socket
+  *
+- *	Creates a new socket and assigns it to @res, passing through LSM.
+- *	The new socket initialization is not complete, see kernel_accept().
+- *	Returns 0 or an error. On failure @res is set to %NULL.
+- *	This function internally uses GFP_KERNEL.
++ * @family: protocol family (AF_INET, ...)
++ * @type: communication type (SOCK_STREAM, ...)
++ * @protocol: protocol (0, ...)
++ * @res: new socket
++ *
++ * Creates a new socket and assigns it to @res, passing through LSM.
++ *
++ * The new socket initialization is not complete, see kernel_accept().
++ *
++ * Context: Process context. This function internally uses GFP_KERNEL.
++ * Return: 0 or an error. On failure @res is set to %NULL.
   */
- static int create_socket(struct interface *iface)
+-
+ int sock_create_lite(int family, int type, int protocol, struct socket **res)
  {
-+	struct net *net = current->nsproxy->net_ns;
- 	int ret;
- 	struct sockaddr_in6 sin6;
- 	struct sockaddr_in sin;
- 	struct socket *ksmbd_socket;
- 	bool ipv4 = false;
+ 	int err;
+@@ -1452,21 +1454,6 @@ int sock_wake_async(struct socket_wq *wq, int how, int band)
+ }
+ EXPORT_SYMBOL(sock_wake_async);
  
--	ret = sock_create(PF_INET6, SOCK_STREAM, IPPROTO_TCP, &ksmbd_socket);
-+	ret = sock_create_kern(net, PF_INET6, SOCK_STREAM, IPPROTO_TCP, &ksmbd_socket);
- 	if (ret) {
- 		if (ret != -EAFNOSUPPORT)
- 			pr_err("Can't create socket for ipv6, fallback to ipv4: %d\n", ret);
--		ret = sock_create(PF_INET, SOCK_STREAM, IPPROTO_TCP,
--				  &ksmbd_socket);
-+		ret = sock_create_kern(net, PF_INET, SOCK_STREAM, IPPROTO_TCP,
-+				       &ksmbd_socket);
- 		if (ret) {
- 			pr_err("Can't create socket for ipv4: %d\n", ret);
- 			goto out_clear;
+-/**
+- *	__sock_create - creates a socket
+- *	@net: net namespace
+- *	@family: protocol family (AF_INET, ...)
+- *	@type: communication type (SOCK_STREAM, ...)
+- *	@protocol: protocol (0, ...)
+- *	@res: new socket
+- *	@kern: boolean for kernel space sockets
+- *
+- *	Creates a new socket and assigns it to @res, passing through LSM.
+- *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
+- *	be set to true if the socket resides in kernel space.
+- *	This function internally uses GFP_KERNEL.
+- */
+-
+ static int __sock_create(struct net *net, int family, int type, int protocol,
+ 			 struct socket **res, int kern)
+ {
+@@ -1583,16 +1570,21 @@ static int __sock_create(struct net *net, int family, int type, int protocol,
+ }
+ 
+ /**
+- *	sock_create - creates a socket
+- *	@family: protocol family (AF_INET, ...)
+- *	@type: communication type (SOCK_STREAM, ...)
+- *	@protocol: protocol (0, ...)
+- *	@res: new socket
++ * sock_create - creates a socket for userspace
++ *
++ * @family: protocol family (AF_INET, ...)
++ * @type: communication type (SOCK_STREAM, ...)
++ * @protocol: protocol (0, ...)
++ * @res: new socket
+  *
+- *	A wrapper around __sock_create().
+- *	Returns 0 or an error. This function internally uses GFP_KERNEL.
++ * Creates a new socket and assigns it to @res, passing through LSM.
++ *
++ * The socket is for userspace and should be exposed via a file
++ * descriptor and BPF hooks (see inet_create(), inet_release(), etc).
++ *
++ * Context: Process context. This function internally uses GFP_KERNEL.
++ * Return: 0 or an error.
+  */
+-
+ int sock_create(int family, int type, int protocol, struct socket **res)
+ {
+ 	return __sock_create(current->nsproxy->net_ns, family, type, protocol, res, 0);
 -- 
 2.49.0
 
