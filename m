@@ -1,51 +1,52 @@
-Return-Path: <linux-nfs+bounces-11892-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11893-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0824AC2F63
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 13:40:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECDEEAC2F82
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 13:50:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE45E7AA39F
-	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 11:38:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CB68A209EA
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 May 2025 11:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF551DF994;
-	Sat, 24 May 2025 11:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADE81E501C;
+	Sat, 24 May 2025 11:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Du2FA+p4"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="GSdqruRq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C886533E4
-	for <linux-nfs@vger.kernel.org>; Sat, 24 May 2025 11:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95031E3772
+	for <linux-nfs@vger.kernel.org>; Sat, 24 May 2025 11:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748086803; cv=none; b=U3UNawuttJJcBhkcxrEGEOekFjipuM+uP2H3BaeFfNrFulpH3+eTNY6riTN7aTwNdcv1eH0AvkEOdyMXeHFMwZ4Xim2W+zrTTGDFIPmeZIi5hsx5KLUFkY5D1Kk3oli9lTLbgYz7IiVyB1UbCezsmDNSqeSQZ5JA+dwQvD+CETg=
+	t=1748087364; cv=none; b=sVHqAu57nkrXhDbaXdVxQRL0KAc8j65x8t56INEanuRCdr7EiWsozNKSeFY3OkU77j3jkbuhIXJJv7dvCQYTTAfofXZ4COuwU4O8bvU1Nbd1OIeruhOoi6gx1eWFmmxkLXJkaSCCj5pEOMTBAgV+qEDRmvegzWHJBmjKbjIzbCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748086803; c=relaxed/simple;
-	bh=hIwHRX0j4D0eLM4anx1bxiTPrNCaQ2l4r7A1Kx4yznA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To; b=ouP9I9TmPw/Oc97+DkkOVEgRcLs9x9wzEADWuV3rLM5OnySh7DSeIGpknXsRh1Z3tReYivJefO1N9L0ktKCvw2iDQz7w3aUuRHH//oif6oggTZ5h5UqvmyTdSdGFPzP1zn10cpaK45SqWEPPCBnDdK2ApoMealpa04OahCtg68I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Du2FA+p4; arc=none smtp.client-ip=185.67.36.66
+	s=arc-20240116; t=1748087364; c=relaxed/simple;
+	bh=kNDOoT5a2pYSYCdwEX1pCbotOS/BB3aXrGBCczpgmBc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Subject:From:
+	 References:In-Reply-To; b=tu3hWPxak7nVEp1ozrPmaISuUYVb5vr5hMVJwnmlGYE4v4iyVsBBa/DJ1YaY4Q+VSv/Ff1nT+aVbWYLdKvAyEjYxLyaW/g3JCHLHhZaBnikr3xzW0Yq5zk0M0FZRBJparadss6SaoViBSMxIeP68JvF6SizuB/Jj8wJ4HsWYEOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=GSdqruRq; arc=none smtp.client-ip=185.67.36.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 1DFF2240101
-	for <linux-nfs@vger.kernel.org>; Sat, 24 May 2025 13:34:26 +0200 (CEST)
+	by mout01.posteo.de (Postfix) with ESMTPS id DFA50240027
+	for <linux-nfs@vger.kernel.org>; Sat, 24 May 2025 13:41:51 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1748086466; bh=hIwHRX0j4D0eLM4anx1bxiTPrNCaQ2l4r7A1Kx4yznA=;
+	t=1748086911; bh=kNDOoT5a2pYSYCdwEX1pCbotOS/BB3aXrGBCczpgmBc=;
 	h=Mime-Version:Content-Transfer-Encoding:Content-Type:Date:
-	 Message-Id:Subject:From:To:From;
-	b=Du2FA+p4T62NJkLenei4jJzdEr7y/edI1s3y8g+wAxFj3ALUCL6M785xscWkRI5hJ
-	 XCBn5Aa/Djih4/RnTttqot9IjFzTQOyF1A7bbCivIL/b1ygIj6zCqhFX1qfkoGiJZz
-	 g8S+CNXu8O5X6z+cS5iIbRPdY2pCqKuXiqH2lbBfnutFYiTDc/KARMN8c3/edTD+zX
-	 ynaR9+WeiF6uB85PoyiduLBliMUgmou72PqOp4j69G3y1bdnXo3dvwz/GsA5Y05uPR
-	 XYU8ejEaPbJHrEVAPrSP6mKIiX9XZYPkGeoIhymG/LMFVgrY9z5fIfJbpddsCFHqCX
-	 AHSqUCZtH/y7g==
+	 Message-Id:To:Subject:From:From;
+	b=GSdqruRqvN07b40LsTubpOmRh9Vc4TseXZY9PRzHojY7gEPhUKnkOFmM1yW1ZPX2i
+	 V+U1GtX6GeFHYYi1VCsxA82cvw7vC4obiMyvuSYuSMYWV9N0eYE0JJrrZ5em8/s9TW
+	 quav+CR2ocIKAiBu/caTTTf6BtKLX2sElQTDwN3lEE/j0TzF1rGLXPV4GD5IiFTQMJ
+	 iRJMbKbCkM6ztqvYEbalT6U6Lj81Rg+qqHHhKlfABcAdsMsyGs+7gTPMdkgA8zkAC2
+	 ZlNLG12JZU3RUap2t+dI2d/Zh6lE/WOaiogTILGfjLxVE+kL2/zf17n7xL7sbwFwQk
+	 8sc4l6fQjASQg==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4b4KgP5p3Qz9rxD
-	for <linux-nfs@vger.kernel.org>; Sat, 24 May 2025 13:34:25 +0200 (CEST)
+	by submission (posteo.de) with ESMTPSA id 4b4Kqz3qvgz9rxL;
+	Sat, 24 May 2025 13:41:51 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -54,34 +55,13 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Sat, 24 May 2025 11:34:25 +0000
-Message-Id: <DA4CXNXDBZB8.9AQO25002X65@posteo.net>
-Subject: [PATCH] autoconf: replace non-portable += syntax
+Date: Sat, 24 May 2025 11:41:51 +0000
+Message-Id: <DA4D3CP4XQDK.1DGSBGV7A4JMO@posteo.net>
+To: "Sertonix" <sertonix@posteo.net>, <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] autoconf: replace non-portable += syntax
 From: "Sertonix" <sertonix@posteo.net>
-To: <linux-nfs@vger.kernel.org>
+References: <DA4CXNXDBZB8.9AQO25002X65@posteo.net>
+In-Reply-To: <DA4CXNXDBZB8.9AQO25002X65@posteo.net>
 
-
-Behaves exactly the same and also works in shells which don't support +=3D
-
-Signed-off-by: Sertonix <sertonix@posteo.net>
----
- configure.ac | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/configure.ac b/configure.ac
-index d8205e80..eb542581 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -678,7 +678,7 @@ AC_DEFUN([CHECK_CCSUPPORT], [
-   AC_MSG_CHECKING([whether CC supports $1])
-   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
-     [AC_MSG_RESULT([yes])]
--    [$2+=3D$1],
-+    [AS_VAR_APPEND([$2],["$1"])],
-     [AC_MSG_RESULT([no])]
-   )
-   CFLAGS=3D"$my_save_cflags"
---=20
-2.49.0
-
+I forgot to mention that this patch is for nfs-utils
 
