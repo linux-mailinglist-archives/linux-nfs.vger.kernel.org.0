@@ -1,159 +1,1046 @@
-Return-Path: <linux-nfs+bounces-11910-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11911-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B792FAC3DAF
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 12:07:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51DBBAC3E54
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 13:10:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A70B7A1D12
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 10:05:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 527C51890929
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 11:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3101F463C;
-	Mon, 26 May 2025 10:06:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B37211F4180;
+	Mon, 26 May 2025 11:10:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gj6NOAvl"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="P7V7KHeu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8928B1A9B28;
-	Mon, 26 May 2025 10:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA671EA7DF
+	for <linux-nfs@vger.kernel.org>; Mon, 26 May 2025 11:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253997; cv=none; b=HD/ApUe1R/6An5Pz4vvTfuy//XRk9zHkXr5jcGUGEVurr91LaKzD7WJOsTYu/kPpBzC5njOzKTgsx9tDn0Nu+Y3WdjGTWq8DCPK9iNv6RpY1n/2VuR6UIF/ireBQE4k9rJOZRqngkAhXJ4gg1kFWP0IOJu+gnxO3H801BzaMUGo=
+	t=1748257835; cv=none; b=hbXDwGT/1gPpW9U3/UhevbZ/K9S8hM/Gb7XGjpzsFd9yVSUPH+k4vshqEqQNm3TLLeHJPIhR0duUHG79IgE+T6Ud+CSVGFClri0qAS4fsThm33nEQtiF5WwyocApIR323pWOhwf/BAwIqT/MOypDZQLO161+/Uli7mwDj1/PuZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253997; c=relaxed/simple;
-	bh=wHuTCDqGbQazXhYURFiMHlcs6ZTg1HV4SgDfCGERDjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LbpY7paNuEal77OuQ477KuzUPabzyduhpwj3IiYEch8Vdx8GuaHZcpv9GEaZdY1AeaRdrsQd7k3d4rux4I0nQ2aWuDBSuEGk824+0vJ7AEg6TH67B+VxvLhIoSNRlKDVgID9s8fPLg5pzRPqq3glDH4FSn9JaZatHYGhrnGmefQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gj6NOAvl; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so17108795e9.0;
-        Mon, 26 May 2025 03:06:35 -0700 (PDT)
+	s=arc-20240116; t=1748257835; c=relaxed/simple;
+	bh=bats3C5SJfBoFTdEl24HaJ3zzj4NbvoL3Ez0PlapVU8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kGP8jxlkU2zk4hGHJmpvnPrtQYQxsKeH2UK30pJVYvpRpfrqUYnXAKDaSW0cPccAEnKstll/zY0XNCfVSGgecR6GJmpefAes/p4f3JyYHR5LxUo6kaB72orzqOL4nD95L/JHOMWLugJNe/betMH/6h2KLPNgr1g8v+y1AMvUu4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com; spf=pass smtp.mailfrom=vastdata.com; dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b=P7V7KHeu; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vastdata.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vastdata.com
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7db5b0ddb1so70660276.2
+        for <linux-nfs@vger.kernel.org>; Mon, 26 May 2025 04:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748253994; x=1748858794; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TPh1Ct6QshCKWmDEdMk7hCZKp6Jz8m7ODsFZr4dzpn0=;
-        b=Gj6NOAvl3ndaXh1w0t5qvbCW3sveArO9S6ZMIWXiQaN3temLlg4BoWWMJpIbgcgLvC
-         p1/2mqKtsm+UqXelEAC3dsYfFeTko1rQaBNRB6/hIonOiTWPJ3NRrD70EnQB5M+REtyz
-         cBGrJBHQTVR/aUvNymlFnuOLZTLkREhSW+38SdoSV4YqOHP+0m70KUj32Ez05dBJPhx2
-         YF1vgOcSbjdGkfaD+Yb+TJ7kvqCsX0bD3f5NAlmcZ7YSoZjufJjtySSB0vxazu5MIEBb
-         2UZmSTvdrej5Hg7PGSgja0HOOhrgWwUFpjtouhhDyliR1uVR66tUqP/5OWD5ySqYoyQu
-         AZQw==
+        d=vastdata.com; s=google; t=1748257832; x=1748862632; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PbfFEr/+RYD3r5fiDgGt5sMv7W2auxg8FNK+1QCFJ9o=;
+        b=P7V7KHeuP9FouyZynjtvuI8XDY3lYZvpoLsu/a8ZIVjL4p8vIltXYR/ZbvXgbln5Fd
+         Jw8nhAl5dlKfvd9S8WfpNkoJ6JYLB3FuR5D5DXN2Se7zGskr9kTV6P4jGJx5FDSSa0Y4
+         wLNIYjamoQIpJrWVkJxlTzQF3l7QAFORfls99hi0IZ6pnrKcZFm4gqaWWfTkEnYRelF5
+         cps3rps2X2LBuAbwsbz++omoDTl7xBI7yKLelnNQv99tHWK43SwyX/cJJ37JZg/3F3KR
+         qF1t3GjfxbvfksrsRrgvXsVzS1/dCchdfLZRifqigIZv/Ngqdmxu8fM6NFSGtw0rRrMo
+         pf8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748253994; x=1748858794;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TPh1Ct6QshCKWmDEdMk7hCZKp6Jz8m7ODsFZr4dzpn0=;
-        b=qYnREaR2a02RyHwXd7sgjyncEfutYAmpi3ZMFbYkMyaDFTMApTLMlDNcutPCCQ4h5R
-         llpXLrwg0R3zADGJjLgJlrYhX/gVkr2B/DXKkkqaojA9HlaEYXpW3f2QYxo5ULAU9I+/
-         RqK7cHU3y/XtfkxhadAAGCXyeYw8QQGjNhNZfnJvA9AXcGW3873WvfBCt623A6Y+UIr7
-         L07JsgAdup70KCRgXxUw2DuCZPBEQrHYBxw5DKftJCitZsXuC+vYEvEx9iXrtttiz104
-         +fl7LJowxVHt7I/cnuEcekR1bfQF7KAqKAe6c29BTKbc8i4GiGwASJqiqEV86B8qBjp0
-         Utug==
-X-Forwarded-Encrypted: i=1; AJvYcCVKnqAThd+GcD9aN1GM2RagO9YeTPkLdjufyZqHwxGg22C4uPGyE+lrJ50FIJqiq1707DIKeK/JB1IqkQ==@vger.kernel.org, AJvYcCX80qEOqiMsVwR+6b8l3lfN+KARm2FSOSihS0bvSiZlT60mgJwZmuxE5U1bw5RLrWlXjWnjDFVc@vger.kernel.org, AJvYcCXlLvDGPSHjhJRjUzCbSFgllUrvvSDkZzt19GOzY7ZHYnJ5dX/nrN5HYxBNO8ajddJKn7GPE992LsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGJMb6K+gQM/CRM1swoF8Kban2oo2iRNyhoZps2CVYhmlH5PsK
-	YwfRX0uJY2V9oAtIndIadJY/uulMeOt9AAfLQ2Aa3rBrgwRWVT4nhloD
-X-Gm-Gg: ASbGncusYoiTh/jlkl8CQ4BHt3HXp0gLwqNiVNWw4/aSLdhH8xwhW5YFRCLbDoFBp+Q
-	tJN5W2h3FAW9dMbRtgOTnhmpZy4NnxRiBT6hKyCIjCMs/OsfCNHQgzF4/6KFXNRKPcOQX506JBh
-	TkgiEr0RiHTnALd9WNtd+10u574ZkS+oWThwbqjjKl0LGkqKrhrb3sQCfMwYrckMdl2EVmW1/Yj
-	JBIHdK8R4K4unFMtX/VO3w0xZSVR45/bE1+Xu/mJnQSGCmFsJJ2sBGy9jiyBxD6CA6sBdsq/QNV
-	DkyLshMKV+9aTGA1iYz2MtqpztiDsBsYquhgPYaekYWUClqVl2QmV1llh5pIp0zw4d7eCAzHlx8
-	1ncNBScrkibYBzA==
-X-Google-Smtp-Source: AGHT+IFNZkvn3tGi7ARy4dpQ3TrKaZGPDzyR33srZYXPNzWELPLp52hjHD63j/jTAmYk0WDJMq4RNg==
-X-Received: by 2002:a05:6000:238a:b0:3a4:d367:c5aa with SMTP id ffacd0b85a97d-3a4d367c798mr4219403f8f.20.1748253993614;
-        Mon, 26 May 2025 03:06:33 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d67795eesm3561697f8f.86.2025.05.26.03.06.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 03:06:33 -0700 (PDT)
-Date: Mon, 26 May 2025 11:06:32 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn
- <willemb@google.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima
- <kuni1840@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
- <jlayton@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Keith Busch
- <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Wenjia Zhang
- <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, Steve French
- <sfrench@samba.org>, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v2 net-next 1/7] socket: Un-export __sock_create().
-Message-ID: <20250526110632.7ab3323e@pumpkin>
-In-Reply-To: <20250526052907.GB11639@lst.de>
-References: <20250523182128.59346-1-kuniyu@amazon.com>
-	<20250523182128.59346-2-kuniyu@amazon.com>
-	<20250526052907.GB11639@lst.de>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1748257832; x=1748862632;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PbfFEr/+RYD3r5fiDgGt5sMv7W2auxg8FNK+1QCFJ9o=;
+        b=ioxwluBX952k/Izxq1Yn5RIJoowH8q99FoH1If9gX1wv2X9p8LWZyBRNbwYtuqZ2fU
+         CyQ4WVCxVXMqHLUebNIDAPTzFMgmu7rnR2FVy4NQ8MCtrzT4dImBjaYbPMkpJrSJ410E
+         9TK4MMWq5c2b+8W7imlAbPcs5pFfAg8aeH0zgZ7fmVAQNJiQk18bh6z8MT7G6kyiSWmB
+         tIVFv+PED17koxnP/5gfwbM+AaleN6V72V/Mh2uwj0wDv8pfGweRpKBzOEOthLmX4xZN
+         VIwzMGwG8A2FZO5NCpkNCJMUkkvAEziDJaHXe6VLHPg2JdgWUh06y4sjFDGuO8qJj0vH
+         BZPA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKrA5G/cpfqo0klt0zHladqNrxWzcOWkdR6VTr7gZytkW3WvFWf86c+RscZ0H47TmY6lo1XgbUTKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwnTQ0LcYKPoGmp9ohzW8TWZx8VWqc7QQyxwPppULk2Egyr3Gd
+	bgHaR4+ggQl6YQicFyAA2Dd5QWfAlWROTX7CjlRReKSUoHA6BkYzXjGY8HpQ/EfDV4Q47IcIW0V
+	Z0hHqJOk/YeejgM7GR5vRZ4DZ/ERWkl+GoLbhL33+PA==
+X-Gm-Gg: ASbGncvTUYp+JIHQoCdKK2YU2aPRrsc2D7pGZ/M5iCtoRSnusNlYTswoDkfEuTYTSR4
+	+WIePXSrIuIDeEvcV7NFTp8qWImawBuxwp0lhSC/TDs+iNP3hnFSKSumQq4mGrpa2ynZJoABeTi
+	uq1zVUAUZVq4ZJZNB/ed72eNP/mYX4E8SHnexxos6HtFsa
+X-Google-Smtp-Source: AGHT+IGDWE5hCzwl7nlloBqQFYTFiXyPBZOP3TKzjT9GDuDThs0ogf9slOC/6cbPrvBck66Gwkfeh6Iv0pbAIVNhtCM=
+X-Received: by 2002:a05:6902:18cb:b0:e7d:6ed6:a4e5 with SMTP id
+ 3f1490d57ef6-e7d91b404e8mr3664526276.8.1748257831941; Mon, 26 May 2025
+ 04:10:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CAN5pLa6EU6nKe=qt+QijK1OMyt8JjHBC2VCk=NMMSA4SJmS4rg@mail.gmail.com>
+ <2529724b-ad96-4b02-9d8e-647ef21eab03@oracle.com>
+In-Reply-To: <2529724b-ad96-4b02-9d8e-647ef21eab03@oracle.com>
+From: Petro Pavlov <petro.pavlov@vastdata.com>
+Date: Mon, 26 May 2025 14:10:20 +0300
+X-Gm-Features: AX0GCFvD5ara47u7aDWq4SKqsvKCZhe26uZChKOZI_aEeTSlcEbogGrQg7HTvak
+Message-ID: <CAN5pLa4z-v9MSwZCxbW6oMy1Fa=b9GFEwmVxdDTnguO6_9-f_g@mail.gmail.com>
+Subject: Re: Questions Regarding Delegation Claim Behavior
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Roi Azarzar <roi.azarzar@vastdata.com>, linux-nfs@vger.kernel.org
+Content-Type: multipart/mixed; boundary="0000000000000cde9c063607ffcd"
+
+--0000000000000cde9c063607ffcd
+Content-Type: multipart/alternative; boundary="0000000000000cde98063607ffcb"
+
+--0000000000000cde98063607ffcb
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 May 2025 07:29:07 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+Hello Chuck,
 
-> On Fri, May 23, 2025 at 11:21:07AM -0700, Kuniyuki Iwashima wrote:
-> > Since commit eeb1bd5c40ed ("net: Add a struct net parameter to
-> > sock_create_kern"), we no longer need to export __sock_create()
-> > and can replace all non-core users with sock_create_kern().
-> >=20
-> > Let's convert them and un-export __sock_create(). =20
->=20
-> The changes looks good, but the commit log including subject line
-> is rather confusing.  What you do is to replace all uses of
-> __sock_create with sock_create_kern, which works because
-> sock_create_kern just calls __sock_create with the last argument set
-> to 1 as those callers do it.  This then allows marking __sock_create
-> static because all outside users are gone.
->=20
-> Please state that, i.e.
->=20
-> Subect: use sock_create_kern insteadf of opencoding it
->=20
-> Replace all callers of __sock_create that set the kernel argument to 1
-> with sock_create_kern, which is the improve interface for that.
-> Mark __sock_create static now that all users outside of socket.c
-> are gone.
+Thank you for your response, and apologies for the confusion regarding the
+kernel version =E2=80=94 the correct version is 6.15.0-rc3+ (I believe it's=
+ from
+the branch you gave us). Regarding the client, I'm using hand-written tests
+based on pynfs.
 
-I'd also like to see an explicit statement on all these patches
-about whether the created sockets hold a reference to the namespace.
+I believe the following section of the RFC may be relevant to the use of a
+delegation stateid in relation to the file being accessed:
 
-I know it is documented in the function definitions, but the issue
-has always been that the callers get it wrong.
+If the stateid type is not valid for the context in which the stateid
+appears, return NFS4ERR_BAD_STATEID. Note that a stateid may be valid in
+general, as would be reported by the TEST_STATEID operation, but be invalid
+for a particular operation, as, for example, when a stateid that doesn't
+represent byte-range locks is passed to the non-from_open case of LOCK or
+to LOCKU, or when a stateid that does not represent an open is passed to
+CLOSE or OPEN_DOWNGRADE. In such cases, the server MUST return
+NFS4ERR_BAD_STATEID.
 
-=46rom what I remember, as this point in the patch series sock_create_kern()
-doesn't holds a reference, but by the end of the series it does.
-That just has to be a recipe for disaster and pretty much requires the
-changes all go through the same tree in one merge window.
-But the code touches multiple areas and the changes would normally go throu=
-gh
-multiple trees.
-So it's going to be hard to get all the acks and the patch accepted.
-(Unless you persuade Linus to 'just apply the changes'.
 
-I think you need to look at three merge windows.
-1) Add new function(s) for creating user/kernel sockets with/without holding
-   a namespace reference.
-2) Update all the callers to use the new functions.
-3) Delete the old functions.
+I did some further investigation and identified another scenario that seems
+problematic:
 
-There is no point modifying the callers twice, and the commits need to
-explicitly state whether they want the namespace held or not.
+   1.
 
-	David
+   *Client1* creates file1 without a delegation, with read-write access. It
+   writes some data, changes the file mode to 444, and then closes the file=
+.
+   2.
 
+   *Client2* opens file1 with read access, receives a read delegation (
+   deleg1), and closes the file without returning the delegation.
+   3.
+
+   *Client2* then creates file2 with read-write access, receives a write
+   delegation (deleg2), and leaves the file open (delegation is not
+   returned).
+   4.
+
+   *Client2* tries to open file1 with write access and receives an
+   ACCESS_DENIED error (expected).
+   5.
+
+   Next, *Client2* attempts to open  file1  with *write *access using
+   CLAIM_DELEGATE_CUR, providing the stateid from  deleg2  (which was
+   issued for  file2) =E2=80=94 unexpectedly, the operation succeeds.
+   6.
+
+   *Client2* proceeds to write to file1, and it also succeeds =E2=80=94 des=
+pite the
+   file being set to 444, where no write access should be allowed.
+
+This behavior seems incorrect, as I would expect the write operation to
+fail due to file permissions.
+
+Please see the attached PCAP file for reference.
+
+Best regards,
+Petro Pavlov
+
+On Fri, May 23, 2025 at 5:41=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+
+> On 5/22/25 11:51 AM, Petro Pavlov wrote:
+> > Hello,
+> >
+> > My name is Petro Pavlov, I'm a developer at VAST.
+> >
+> > I have a few questions about the delegation claim behavior observed in
+> > the Linux kernel version 3.10.0-1160.118.1.el7.x86_64.
+> >
+> > I=E2=80=99ve written the following test case:
+> >
+> >  1. Client1 opens *file1* with a write delegation; the server grants
+> >     both the open and delegation (*delegation1*).
+>
+> Since you mention a write delegation, I'll assume you are using Linux
+> as an NFS client, and the server is not Linux, since that kernel version
+> does not implement server-side write delegation.
+>
+>
+> >  2. Client1 closes the open but does not return the delegation.
+> >  3. Client2 opens *file2* and also receives a write delegation
+> >     (*delegation2*).
+> >  4. Client1 then issues an open request with CLAIM_DELEGATE_CUR,
+> >     providing the filename from step 3 *(file2*), but using the
+> >     delegation stateid from step 1 (*delegation1*).
+>
+> Would that be a client bug?
+>
+>
+> >  5. The server begins a recall of *delegation2*, treating the request i=
+n
+> >     step 4 as a normal open rather than returning a BAD_STATEID error.
+>
+> That seems OK to me. The server has correctly noticed that the
+> client is opening file2, and delegation2 is associated with a
+> previous open of file2.
+>
+> A better place to seek an authoritative answer might be RFC 8881.
+>
+> The server returns BAD_STATEID if the stateid doesn't pass various
+> checks as outlined in Section 8.2. I don't see any text requiring the
+> server to report BAD_STATEID if delegate_stateid does not match the
+> component4 on a DELEGATE_CUR OPEN -- in fact, Table 19 says that
+> DELEGATE_CUR considers only the current file handle (the parent
+> directory) and the component4 argument.
+>
+>
+> > My understanding is that the server should have verified whether the
+> > delegation stateid provided actually belongs to the file being opened.
+> > Since it does not, I expected the server to return a BAD_STATEID error
+> > instead of proceeding with a standard open.
+> >
+> > From additional tests, it seems the server only checks whether the
+> > delegation stateid is valid (i.e., whether it was ever granted), but
+> > does not verify that it is associated with the correct file or client.
+> > Please see the attached PCAP for reference.
+> >
+> > Questions:
+> >
+> > Is this behavior considered a bug?
+> >
+> > Are there any known plans to address or fix this issue in future kernel
+> > versions?
+>
+> AFAICT at the moment, NOTABUG
+>
+>
+> --
+> Chuck Lever
+>
+
+--0000000000000cde98063607ffcb
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><p>Hello Chuck,</p>
+<p>Thank you for your response, and apologies for the confusion regarding t=
+he kernel version =E2=80=94 the correct version is 6.15.0-rc3+ (I believe i=
+t&#39;s from the branch you gave us). Regarding the client, I&#39;m using h=
+and-written tests based on pynfs.</p>
+<p>I believe the following section of the RFC may be relevant to the use of=
+ a delegation <code>stateid</code> in relation to the file being accessed:<=
+/p>
+<blockquote>
+<p>If the stateid type is not valid for the context in which the stateid ap=
+pears, return NFS4ERR_BAD_STATEID. Note that a stateid may be valid in gene=
+ral, as would be reported by the TEST_STATEID operation, but be invalid for=
+ a particular operation, as, for example, when a stateid that doesn&#39;t r=
+epresent byte-range locks is passed to the non-from_open case of LOCK or to=
+ LOCKU, or when a stateid that does not represent an open is passed to CLOS=
+E or OPEN_DOWNGRADE. In such cases, the server MUST return NFS4ERR_BAD_STAT=
+EID.</p>
+</blockquote>
+<p><br></p><p>I did some further investigation and identified another scena=
+rio that seems problematic:</p>
+<ol>
+<li>
+<p><strong>Client1</strong> creates <code>file1</code> without a delegation=
+, with read-write access. It writes some data, changes the file mode to <co=
+de>444</code>, and then closes the file.</p>
+</li>
+<li>
+<p><strong>Client2</strong> opens <code>file1</code> with read access, rece=
+ives a read delegation (<code>deleg1</code>), and closes the file without r=
+eturning the delegation.</p>
+</li>
+<li>
+<p><strong>Client2</strong> then creates <code>file2</code> with read-write=
+ access, receives a write delegation (<code>deleg2</code>), and leaves the =
+file open (delegation is not returned).</p>
+</li>
+<li>
+<p><strong>Client2</strong> tries to open <code>file1</code> with write acc=
+ess and receives an <code>ACCESS_DENIED</code> error (expected).</p>
+</li>
+<li><p>Next, <b>Client2</b> attempts to open=C2=A0
+
+<code>file1</code>=C2=A0 with <b>write </b>access using CLAIM_DELEGATE_CUR,=
+ providing the stateid from=C2=A0
+
+<span style=3D"font-family:monospace">deleg2</span>=C2=A0 (which was issued=
+ for=C2=A0
+
+<code>file2</code>) =E2=80=94 unexpectedly, the operation succeeds.</p>
+</li>
+<li>
+<p><strong>Client2</strong> proceeds to write to <code>file1</code>, and it=
+ also succeeds =E2=80=94 despite the file being set to <code>444</code>, wh=
+ere no write access should be allowed.</p>
+</li>
+</ol>
+<p>This behavior seems incorrect, as I would expect the write operation to =
+fail due to file permissions.</p>
+<p>Please see the attached PCAP file for reference.</p>
+<p>Best regards,<br>
+Petro Pavlov</p></div><br><div class=3D"gmail_quote gmail_quote_container">=
+<div dir=3D"ltr" class=3D"gmail_attr">On Fri, May 23, 2025 at 5:41=E2=80=AF=
+PM Chuck Lever &lt;<a href=3D"mailto:chuck.lever@oracle.com">chuck.lever@or=
+acle.com</a>&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D=
+"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-le=
+ft:1ex">On 5/22/25 11:51 AM, Petro Pavlov wrote:<br>
+&gt; Hello,<br>
+&gt; <br>
+&gt; My name is Petro Pavlov, I&#39;m a developer at VAST.<br>
+&gt; <br>
+&gt; I have a few questions about the delegation claim behavior observed in=
+<br>
+&gt; the Linux kernel version 3.10.0-1160.118.1.el7.x86_64.<br>
+&gt; <br>
+&gt; I=E2=80=99ve written the following test case:<br>
+&gt; <br>
+&gt;=C2=A0 1. Client1 opens *file1* with a write delegation; the server gra=
+nts<br>
+&gt;=C2=A0 =C2=A0 =C2=A0both the open and delegation (*delegation1*).<br>
+<br>
+Since you mention a write delegation, I&#39;ll assume you are using Linux<b=
+r>
+as an NFS client, and the server is not Linux, since that kernel version<br=
+>
+does not implement server-side write delegation.<br>
+<br>
+<br>
+&gt;=C2=A0 2. Client1 closes the open but does not return the delegation.<b=
+r>
+&gt;=C2=A0 3. Client2 opens *file2* and also receives a write delegation<br=
+>
+&gt;=C2=A0 =C2=A0 =C2=A0(*delegation2*).<br>
+&gt;=C2=A0 4. Client1 then issues an open request with CLAIM_DELEGATE_CUR,<=
+br>
+&gt;=C2=A0 =C2=A0 =C2=A0providing the filename from step 3 *(file2*), but u=
+sing the<br>
+&gt;=C2=A0 =C2=A0 =C2=A0delegation stateid from step 1 (*delegation1*).<br>
+<br>
+Would that be a client bug?<br>
+<br>
+<br>
+&gt;=C2=A0 5. The server begins a recall of *delegation2*, treating the req=
+uest in<br>
+&gt;=C2=A0 =C2=A0 =C2=A0step 4 as a normal open rather than returning a BAD=
+_STATEID error.<br>
+<br>
+That seems OK to me. The server has correctly noticed that the<br>
+client is opening file2, and delegation2 is associated with a<br>
+previous open of file2.<br>
+<br>
+A better place to seek an authoritative answer might be RFC 8881.<br>
+<br>
+The server returns BAD_STATEID if the stateid doesn&#39;t pass various<br>
+checks as outlined in Section 8.2. I don&#39;t see any text requiring the<b=
+r>
+server to report BAD_STATEID if delegate_stateid does not match the<br>
+component4 on a DELEGATE_CUR OPEN -- in fact, Table 19 says that<br>
+DELEGATE_CUR considers only the current file handle (the parent<br>
+directory) and the component4 argument.<br>
+<br>
+<br>
+&gt; My understanding is that the server should have verified whether the<b=
+r>
+&gt; delegation stateid provided actually belongs to the file being opened.=
+<br>
+&gt; Since it does not, I expected the server to return a BAD_STATEID error=
+<br>
+&gt; instead of proceeding with a standard open.<br>
+&gt; <br>
+&gt; From additional tests, it seems the server only checks whether the<br>
+&gt; delegation stateid is valid (i.e., whether it was ever granted), but<b=
+r>
+&gt; does not verify that it is associated with the correct file or client.=
+<br>
+&gt; Please see the attached PCAP for reference.<br>
+&gt; <br>
+&gt; Questions:<br>
+&gt; <br>
+&gt; Is this behavior considered a bug?<br>
+&gt; <br>
+&gt; Are there any known plans to address or fix this issue in future kerne=
+l<br>
+&gt; versions?<br>
+<br>
+AFAICT at the moment, NOTABUG<br>
+<br>
+<br>
+-- <br>
+Chuck Lever<br>
+</blockquote></div>
+
+--0000000000000cde98063607ffcb--
+--0000000000000cde9c063607ffcd
+Content-Type: application/octet-stream; name="delegation_access.pcap"
+Content-Disposition: attachment; filename="delegation_access.pcap"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mb4zj91m0>
+X-Attachment-Id: f_mb4zj91m0
+
+Cg0NCrQAAABNPCsaAQAAAP//////////AgA9AEFNRCBFUFlDIDlKMTQgOTYtQ29yZSBQcm9jZXNz
+b3IgICAgICAgICAgICAgICAgICh3aXRoIFNTRTQuMikAAAADACIATGludXggMy4xMC4wLTExNjAu
+MTE4LjEuZWw3Lng4Nl82NAAABAAiAER1bXBjYXAgKFdpcmVzaGFyaykgMi42LjIgKHYyLjYuMikA
+AAAAAAC0AAAAAQAAAHACAABxAAAAAAAEAAIAAwBhbnkACQABAAkAAAALABsCAHRjcCBwb3J0IDIw
+MDQ4IG9yIHRjcCBwb3J0IDIwNDkgb3IgdGNwIHBvcnQgODggb3IgdGNwIHBvcnQgMTExIG9yIHRj
+cCBwb3J0IDQ0NSBvciB0Y3AgcG9ydCAyMDEwNyBvciB0Y3AgcG9ydCAyMDEwNiBvciB0Y3AgcG9y
+dCAzODkgb3IgdGNwIHBvcnQgOTA5MCBvciB0Y3AgcG9ydCA5MDkxIG9yIHRjcCBwb3J0IDIwMTA4
+IG9yIHRjcCBwb3J0IDkwOTIgb3IgdGNwIHBvcnQgOTA5NiBvciB0Y3AgcG9ydCA5MDkzIG9yIHRj
+cCBwb3J0IDgwMDkgb3IgdGNwIHBvcnQgNDQyMCBvciB1ZHAgcG9ydCAyMDA0OCBvciB1ZHAgcG9y
+dCAyMDQ5IG9yIHVkcCBwb3J0IDg4IG9yIHVkcCBwb3J0IDExMSBvciB1ZHAgcG9ydCA0NDUgb3Ig
+dWRwIHBvcnQgMjAxMDcgb3IgdWRwIHBvcnQgMjAxMDYgb3IgdWRwIHBvcnQgMzg5IG9yIHVkcCBw
+b3J0IDkwOTAgb3IgdWRwIHBvcnQgOTA5MSBvciB1ZHAgcG9ydCAyMDEwOCBvciB1ZHAgcG9ydCA5
+MDkyIG9yIHVkcCBwb3J0IDkwOTYgb3IgdWRwIHBvcnQgOTA5MyBvciB1ZHAgcG9ydCA4MDA5IG9y
+IHVkcCBwb3J0IDQ0MjAADAAiAExpbnV4IDMuMTAuMC0xMTYwLjExOC4xLmVsNy54ODZfNjQAAAAA
+AABwAgAABgAAAGwAAAAAAAAA+g5DGKPpIedMAAAATAAAAAAEAAEABgIAFww4GAAACABFAAA8KzdA
+AEAGiagKX3MzChv+LwOLCAFcKJbGAAAAAKDCaQCGCwAAAgQjAAQCCAoADr3xAAAAAAEDAwdsAAAA
+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
+Fww4GAAACABFAgFACZNAAEAGqkYKX3MzChv+L4SsCAHcfs/qWVkN/oAYANKHDwAAAQEICgAOxu+g
+rPekgAABCBP66Q4AAAAAAAAAAgABhqMAAAAEAAAAAQAAAAEAAAAwAAAAKgAAAA9wZXJzb25hbC1k
+ZXZ2bS0AAAAIrgAABFcAAAADAAAAAwAAABEAAABkAAAAAAAAAAAAAAAdbmZzNF9jbGllbnQucHk6
+Y29ubmVjdF9jbGllbnQAAAAAAAABAAAAAQAAACpB2g0SxFQjpgAAADVweW5mc19lbnZfMTc0ODI1
+NzU1M181Zjg5NzJhZmQ4M2I0ODI1YTJjYzA2Zjk1Nzg5MzdmYgAAAAAAAAAAAAAAAAAAAQAAAA5j
+aXRpLnVtaWNoLmVkdQAAAAAACXB5bmZzIFguWAAAAAAAAABoNEsREsEf0nABAAAGAAAAZAAAAAAA
+AAD7DkMYG69CdEQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQAAEAAXgaW5wob/i8KX3MzCAGE
+rFlZDf7cftD2gBD//++eAAABAQgKoKz4HAAOxu9kAAAABgAAAHgBAAAAAAAA+w5DGCQiRHRYAQAA
+WAEAAAAAAAEABgAAF8XDIsMiCABFAAFIAAFAAF4GldIKG/4vCl9zMwgBhKxZWQ3+3H7Q9oAY///N
+2wAAAQEICqCs+BwADsbvgAABEBP66Q4AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdbmZzNF9j
+bGllbnQucHk6Y29ubmVjdF9jbGllbnQAAAMAAAABAAAAKgAAAAAoaCxoOhQepQAAAAEAAgABAAAA
+AAAAAAAAAAAAAAAAFXByb3RvY29sLWxpbnV4LXNlcnZlcgAAAAAAABVwcm90b2NvbC1saW51eC1z
+ZXJ2ZXIAAAAAAAABAAAACmtlcm5lbC5vcmcAAAAAAExMaW51eCA2LjE1LjAtcmMzKyAjMSBTTVAg
+UFJFRU1QVF9EWU5BTUlDIFdlZCBBcHIgMjMgMjI6NDQ6MTUgSURUIDIwMjUgeDg2XzY0AAAAAAAA
+AAAAAAAAeAEAAAYAAABkAAAAAAAAAPsOQxh6WkR0RAAAAEQAAAAABAABAAYCABcMOBgAAAgARQAA
+NAmUQABABqtTCl9zMwob/i+ErAgB3H7Q9llZDxKAEADbhgMAAAEBCAoADscxoKz4HGQAAAAGAAAA
+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
+AAAAAQAAAA5jaXRpLnVtaWNoLmVkdQAAAAAACXB5bmZzIFguWAAAAAAAAABoNEsRLuE65VQBAAAG
+AAAAZAAAAAAAAAD7DkMY14N5jkQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQAAEAAXgaW5wob
+/i8KX3MzCAGEsH8OnzXaDNH5gBD//za/AAABAQgKoKz51AAOyJVkAAAABgAAAIABAAAAAAAA+w5D
+GBkte45gAQAAYAEAAAAAAAEABgAAF8XDIgAACABFAAFQAAFAAF4GlcoKG/4vCl9zMwgBhLB/Dp81
+2gzR+YAY///rLwAAAQEICqCs+dQADsiVgAABGCx8WGIAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAlbmZzNF9kZWxlZ2F0aW9uLnB5Om9wZW5fc2Vjb25kX2NsaWVudAAAPwAAAAEAAAAqAAAAACho
+LGg7FB6lAAAAAQACAAEAAAAAAAAAAAAAAAAAAAAVcHJvdG9jb2wtbGludXgtc2VydmVyAAAAAAAA
+FXByb3RvY29sLWxpbnV4LXNlcnZlcgAAAAAAAAEAAAAKa2VybmVsLm9yZwAAAAAATExpbnV4IDYu
+MTUuMC1yYzMrICMxIFNNUCBQUkVFTVBUX0RZTkFNSUMgV2VkIEFwciAyMyAyMjo0NDoxNSBJRFQg
+MjAyNSB4ODZfNjQAAAAAAAAAAAAAAACAAQAABgAAAGQAAAAAAAAA+w5DGG5we45EAAAARAAAAAAE
+AAEABgIAFww4GAAACABFAAA0GVtAAEAGm4wKX3MzChv+L4SwCAHaDNH5fw6gUYAQANuGAwAAAQEI
+CgAOyOmgrPnUZAAAAAYAAABYAQAAAAAAAPsOQxhdJZyOOAEAADgBAAAABAABAAYCABcMOBgAAAgA
+RQIBKBlcQABABpqVCl9zMwob/i+EsAgB2gzR+X8OoFGAGADbhvcAAAEBCAoADsjroKz51IAAAPAs
+fFhjAAAAAAAAAAIAAYajAAAABAAAAAEAAAABAAAAPAAAACoAAAAaZGVmYXVsdCBtYWNoaW5lbmFt
+ZSAtIFNUVUIAAAAACK4AAARXAAAAAwAAAAMAAAARAAAAZAAAAAAAAAAAAAAAJW5mczRfZGVsZWdh
+dGlvbi5weTpvcGVuX3NlY29uZF9jbGllbnQAAAAAAAABAAAAAQAAACsoaCxoOxQepQAAAAEAAAAC
+AAAAAAAAIAAAACAAAAAgAAAAAIAAAAAIAAAAAAAAAAAAACAAAAAgAAAAIAAAAACAAAAACAAAAABA
+AAAAAAAAAQAAAABYAQAABgAAAGQAAAAAAAAA+w5DGDZ/uY5EAAAARAAAAAAAAAEABgAAF8XDIgEV
+CABFAAA0AAJAAF4GluUKG/4vCl9zMwgBhLB/DqBR2gzS7YAQ//80VQAAAQEICqCs+dgADsjrZAAA
+AAYAAAAMAQAAAAAAAPsOQxjLR/SS7AAAAOwAAAAAAAABAAYAABfFwyIBAAgARQAA3AADQABeBpY8
+Chv+LwpfczMIAYSwfw6gUdoM0u2AGP//B98AAAEBCAqgrPogAA7I64AAAKQsfFhjAAAAAQAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAJW5mczRfZGVsZWdhdGlvbi5weTpvcGVuX3NlY29uZF9jbGllbnQA
+AAAAAAABAAAAKwAAAAAoaCxoOxQepTUBAAAAAAAAAAAAAQAAAAIAAAAAAAAgAAAAIAAAAAhQAAAA
+MgAAAAgAAAAAAAAAAAAAIAAAACAAAAAAAAAAAIAAAAAIAAAAAAwBAAAGAAAALAEAAAAAAAD7DkMY
+qXoVkwwBAAAMAQAAAAQAAQAGAgAXDDgY//8IAEUCAPwZXUAAQAaawApfczMKG/4vhLAIAdoM0u1/
+DqD5gBgA44bLAAABAQgKAA7JNqCs+iCAAADELHxYZAAAAAAAAAACAAGGowAAAAQAAAABAAAAAQAA
+ADwAAAAqAAAAGmRlZmF1bHQgbWFjaGluZW5hbWUgLSBTVFVCAAAAAAiuAAAEVwAAAAMAAAADAAAA
+EQAAAGQAAAAAAAAAAAAAACVuZnM0X2RlbGVnYXRpb24ucHk6b3Blbl9zZWNvbmRfY2xpZW50AAAA
+AAAAAQAAAAIAAAA1KGgsaDsUHqU1AQAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA6AAAAACwBAAAG
+AAAAZAAAAAAAAAD7DkMY5Pgyk0QAAABEAAAAAAAAAQAGAAAXxcMiAAQIAEUAADQABEAAXgaW4wob
+/i8KX3MzCAGEsH8OoPnaDNO1gBD//zJOAAABAQgKoKz6JAAOyTZkAAAABgAAAOgAAAAAAAAA+w5D
+GC9i9pfIAAAAyAAAAAAAAAEABgAAF8XDIgAACABFAAC4AAVAAF4Gll4KG/4vCl9zMwgBhLB/DqD5
+2gzTtYAY//+O2QAAAQEICqCs+nMADsk2gAAAgCx8WGQAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAlbmZzNF9kZWxlZ2F0aW9uLnB5Om9wZW5fc2Vjb25kX2NsaWVudAAAAAAAAAIAAAA1AAAAACho
+LGg7FB6lNQEAAAAAAAAAAAABAAAAAAAAAAcAAAAHAAAAAAAAADoAAAAA6AAAAAYAAADkAQAAAAAA
+APsOQxirpxmYxAEAAMQBAAAABAABAAYCABcMOBgAAAgARQIBtBleQABABpoHCl9zMwob/i+EsAgB
+2gzTtX8OoX2AGADsh4MAAAEBCAoADsmKoKz6c4AAAXwsfFhlAAAAAAAAAAIAAYajAAAABAAAAAEA
+AAABAAAAPAAAACoAAAAaZGVmYXVsdCBtYWNoaW5lbmFtZSAtIFNUVUIAAAAACK4AAARXAAAAAwAA
+AAMAAAARAAAAZAAAAAAAAAAAAAAAJ25mczRfZGVsZWdhdGlvbi5weTpvcGVuX2ZpbGVfd2l0aF9k
+ZWxlZwAAAAABAAAABAAAADUoaCxoOxQepTUBAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAABYAAAAc
+AQAHACmVAAQAAAAAFVTYtDiZQiiewvRB9xwpnwAAABIAAAAAAAAEAwAAAAAAAAAAAAAAAAAAAAd1
+c2VyOTk5AAAAAAEAAAAAAAAAAgAAABAAAAACAAAADAAAAAAAAAQAAAAB/wAAAAAAAABIdGVzdF9k
+ZWxlZ19jbGFpbV93cm9uZ19hY2Nlc3NfZmlyc3RfYjI3ZWJiYWMtYzdiMC00NDY5LWE0OWYtNDM1
+M2VmYTE1ZGFmAAAACuQBAAAGAAAAZAAAAAAAAAD7DkMYLdQ2mEQAAABEAAAAAAAAAQAGAAAXxcMi
+AAAIAEUAADQABkAAXgaW4Qob/i8KX3MzCAGEsH8OoX3aDNU1gBD//y+iAAABAQgKoKz6eAAOyYpk
+AAAABgAAAGABAAAAAAAA+w5DGBRSZpxAAQAAQAEAAAAAAAEABgAAF8XDIgAACABFAAEwAAdAAF4G
+leQKG/4vCl9zMwgBhLB/DqF92gzVNYAY//85RQAAAQEICqCs+r4ADsmKgAAA+Cx8WGUAAAABAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAnbmZzNF9kZWxlZ2F0aW9uLnB5Om9wZW5fZmlsZV93aXRoX2Rl
+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
+AAAAPAAAACoAAAAaZGVmYXVsdCBtYWNoaW5lbmFtZSAtIFNUVUIAAAAACK4AAARXAAAAAwAAAAMA
+AAARAAAAZAAAAAAAAAAAAAAAMG5mczRfZGVsZWdhdGlvbi5weTp0ZXN0X2RlbGVnX2NsYWltX3dy
+b25nX2FjY2VzcwAAAAEAAAADAAAANShoLGg7FB6lNQEAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAA
+FgAAACgBAAeBKZUABAAAAAAVVNi0OJlCKJ7C9EH3HCmfa+gCBAAAAADI7uNEAAAABAAAAAAAAAAB
+KGgsaDsUHqUBAAAAdAEAAAYAAABkAAAAAAAAAPsOQxiaKzylRAAAAEQAAAAAAAABAAYAABfFwyKV
+pAgARQAANAAMQABeBpbbChv+LwpfczMIAYSwfw6jvdoM2JGAEP//KFEAAAEBCAqgrPtSAA7KZWQA
+AAAGAAAACAEAAAAAAAD7DkMYbkT/qOgAAADoAAAAAAAAAQAGAAAXxcMiAAYIAEUAANgADUAAXgaW
+Ngob/i8KX3MzCAGEsH8Oo73aDNiRgBj//4M+AAABAQgKoKz7kQAOymWAAACgLHxYaAAAAAEAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAADBuZnM0X2RlbGVnYXRpb24ucHk6dGVzdF9kZWxlZ19jbGFpbV93
+cm9uZ19hY2Nlc3MAAAADAAAANQAAAAAoaCxoOxQepTUBAAAAAAAAAAAABQAAAAAAAAAHAAAABwAA
+AAAAAAAWAAAAAAAAAAQAAAAA/////wAAAAAAAAAAAAAAAAgBAAAGAAAA4AAAAAAAAAD7DkMYpAAw
+qcAAAADAAAAAAAQAAQAGAgAXDDgYCAoIAEUCALAZYkAAQAabBwpfczMKG/4vhLAIAdoM2JF/DqRh
+gBgBDYZ/AAABAQgKAA7KqaCs+5GAAAB4LHxYaQAAAAAAAAACAAGGowAAAAQAAAABAAAAAAAAAAAA
+AAAAAAAAAAAAADBuZnM0X2RlbGVnYXRpb24ucHk6YnVzeV93YWl0X2Nsb3NlX3NlY29uZF9jbGll
+bnQAAAABAAAAAQAAACwoaCxoOxQepTUBAAAAAAAA4AAAAAYAAABkAAAAAAAAAPsOQxgdvkypRAAA
+AEQAAAAAAAABAAYAABfFwyIAAAgARQAANAAOQABeBpbZChv+LwpfczMIAYSwfw6kYdoM2Q2AEP//
+JqkAAAEBCAqgrPuWAA7KqWQAAAAGAAAAxAAAAAAAAAD7DkMY8/tCraQAAACkAAAAAAAAAQAGAAAX
+xcMiAAAIAEUAAJQAD0AAXgaWeAob/i8KX3MzCAGEsH8OpGHaDNkNgBj//03RAAABAQgKoKz72QAO
+yqmAAABcLHxYaQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBuZnM0X2RlbGVnYXRpb24ucHk6
+YnVzeV93YWl0X2Nsb3NlX3NlY29uZF9jbGllbnQAAAABAAAALAAAAADEAAAABgAAAGQAAAAAAAAA
++w5DGAdrT61EAAAARAAAAAAEAAEABgIAFww4GAAACABFAAA0GWNAAEAGm4QKX3MzChv+L4SwCAHa
+DNkNfw6kwYARAQ2GAwAAAQEICgAOyu6grPvZZAAAAAYAAADYAQAAAAAAAPsOQxjnTWWtuAEAALgB
+AAAABAABAAYCABcMOBhHgAgARQIBqAmZQABABqnYCl9zMwob/i+ErAgB3H7TfllZEP6AGAD0h3cA
+AAEBCAoADsrwoKz5OoAAAXAT+ukSAAAAAAAAAAIAAYajAAAABAAAAAEAAAABAAAAMAAAACoAAAAP
+cGVyc29uYWwtZGV2dm0tAAAACK4AAARXAAAAAwAAAAMAAAARAAAAZAAAAAAAAAAAAAAAJ25mczRf
+ZGVsZWdhdGlvbi5weTpvcGVuX2ZpbGVfd2l0aF9kZWxlZwAAAAABAAAABAAAADUoaCxoOhQepTQB
+AAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAABYAAAAcAQAHACmVAAQAAAAAFVTYtDiZQiiewvRB9xwp
+nwAAABIAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAd1c2VyOTk5AAAAAAEAAAAAAAAAAgAAABAAAAAC
+AAAADAAAAAAAAAQAAAAB/wAAAAAAAABIdGVzdF9kZWxlZ19jbGFpbV93cm9uZ19hY2Nlc3NfZmly
+c3RfYjI3ZWJiYWMtYzdiMC00NDY5LWE0OWYtNDM1M2VmYTE1ZGFmAAAACtgBAAAGAAAAZAAAAAAA
+AAD7DkMYIvJurUQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQAEEAAXgaW1wob/i8KX3MzCAGE
+sH8OpMHaDNkOgBD//yW9AAABAQgKoKz73AAOyu5kAAAABgAAAGQAAAAAAAAA+w5DGLwub61EAAAA
+RAAAAAAAAAEABgAAF8XDIgAACABFAAA0ABFAAF4GltYKG/4vCl9zMwgBhLB/DqTB2gzZDoAR//8l
+vAAAAQEICqCs+9wADsruZAAAAAYAAABkAAAAAAAAAPsOQxieZ2+tRAAAAEQAAAAABAABAAYCABcM
+OBgABAgARQAANKRbQABABhCMCl9zMwob/i+EsAgB2gzZDn8OpMKAEAENJK0AAAEBCAoADsrwoKz7
+3GQAAAAGAAAAZAAAAAAAAAD7DkMYid2ErUQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQACEAA
+XgaW3wob/i8KX3MzCAGErFlZEP7cftTygBD//+DgAAABAQgKoKz73QAOyvBkAAAABgAAAIABAAAA
+AAAA+w5DGPmAArRgAQAAYAEAAAAAAAEABgAAF8XDIgAACABFAAFQAAlAAF4GlcIKG/4vCl9zMwgB
+hKxZWRD+3H7U8oAY//9qpwAAAQEICqCs/EoADsrwgAABGBP66RIAAAABAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAnbmZzNF9kZWxlZ2F0aW9uLnB5Om9wZW5fZmlsZV93aXRoX2RlbGVnAAAAAAQAAAA1
+AAAAAChoLGg6FB6lNAEAAAAAAAAAAAADAAAAAAAAAAcAAAAHAAAAAAAAABYAAAAAAAAAEgAAAAAA
+AAABKGgsaDoUHqUBAAAAAAAAAWg0SxIIAuYGaDRLEggC5gYAAAAkAAAAAgAAABAAAAACAAAAAQAA
+AAEoaCxoOhQepQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAKAEAB4EplQAEAAAA
+ABVU2LQ4mUIonsL0QfccKZ9r6AIEAAAAAMju40SAAQAABgAAAGQAAAAAAAAA+w5DGCT4ArREAAAA
+RAAAAAAEAAEABgIAFww4GEeACABFAAA0CZpAAEAGq00KX3MzChv+L4SsCAHcftTyWVkSGoAQAPyG
+AwAAAQEICgAOy1+grPxKZAAAAAYAAABwAQAAAAAAAPsOQxiyIiO0UAEAAFABAAAABAABAAYCABcM
+OBgpnwgARQIBQAmbQABABqo+Cl9zMwob/i+ErAgB3H7U8llZEhqAGAD8hw8AAAEBCAoADsthoKz8
+SoAAAQgT+ukTAAAAAAAAAAIAAYajAAAABAAAAAEAAAABAAAAMAAAACoAAAAPcGVyc29uYWwtZGV2
+dm0tAAAACK4AAARXAAAAAwAAAAMAAAARAAAAZAAAAAAAAAAAAAAAMG5mczRfZGVsZWdhdGlvbi5w
+eTp0ZXN0X2RlbGVnX2NsYWltX3dyb25nX2FjY2VzcwAAAAEAAAADAAAANShoLGg6FB6lNAEAAAAA
+AAAAAAAEAAAAAAAAAAAAAAAAAAAAFgAAACgBAAeBKZUABAAAAAAVVNi0OJlCKJ7C9EH3HCmfa+gC
+BAAAAADI7uNEAAAAGQAAAAEoaCxoOhQepQEAAAAAAAAAAAAAAAAAAA5wAQAABgAAAGQAAAAAAAAA
++w5DGFgCQbREAAAARAAAAAAAAAEABgAAF8XDIgAACABFAAA0AApAAF4Glt0KG/4vCl9zMwgBhKxZ
+WRIa3H7V/oAQ///d1gAAAQEICqCs/E4ADsthZAAAAAYAAAAQAQAAAAAAAPsOQxhNd6+48AAAAPAA
+AAAAAAABAAYAABfFwyIAAAgARQAA4AALQABeBpYwChv+LwpfczMIAYSsWVkSGtx+1f6AGP//zpQA
+AAEBCAqgrPyZAA7LYYAAAKgT+ukTAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMG5mczRfZGVs
+ZWdhdGlvbi5weTp0ZXN0X2RlbGVnX2NsYWltX3dyb25nX2FjY2VzcwAAAAMAAAA1AAAAAChoLGg6
+FB6lNAEAAAAAAAAAAAAEAAAAAAAAAAcAAAAHAAAAAAAAABYAAAAAAAAAGQAAAAAAAAAAAAAADnJl
+YWRfb25seV9kYXRhAAAQAQAABgAAAGgBAAAAAAAA+w5DGImJy7hIAQAASAEAAAAEAAEABgIAFww4
+GAAACABFAgE4CZxAAEAGqkUKX3MzChv+L4SsCAHcftX+WVkSxoAYAQWHBwAAAQEICgAOy6+grPyZ
+gAABABP66RQAAAAAAAAAAgABhqMAAAAEAAAAAQAAAAEAAAAwAAAAKgAAAA9wZXJzb25hbC1kZXZ2
+bS0AAAAIrgAABFcAAAADAAAAAwAAABEAAABkAAAAAAAAAAAAAAAwbmZzNF9kZWxlZ2F0aW9uLnB5
+OnRlc3RfZGVsZWdfY2xhaW1fd3JvbmdfYWNjZXNzAAAAAQAAAAMAAAA1KGgsaDoUHqU0AQAAAAAA
+AAAAAAUAAAAAAAAAAAAAAAAAAAAWAAAAKAEAB4EplQAEAAAAABVU2LQ4mUIonsL0QfccKZ9r6AIE
+AAAAAMju40QAAAAEAAAAAAAAAAEoaCxoOhQepQEAAABoAQAABgAAAGQAAAAAAAAA+w5DGJJ07rhE
+AAAARAAAAAAAAAEABgAAF8XDIgAACABFAAA0AAxAAF4GltsKG/4vCl9zMwgBhKxZWRLG3H7XAoAQ
+///biQAAAQEICqCs/J0ADsuvZAAAAAYAAAAIAQAAAAAAAPsOQxjHWRG96AAAAOgAAAAAAAABAAYA
+ABfFwyIAAAgARQAA2AANQABeBpY2Chv+LwpfczMIAYSsWVkSxtx+1wKAGP//wEYAAAEBCAqgrPzi
+AA7Lr4AAAKAT+ukUAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMG5mczRfZGVsZWdhdGlvbi5w
+eTp0ZXN0X2RlbGVnX2NsYWltX3dyb25nX2FjY2VzcwAAAAMAAAA1AAAAAChoLGg6FB6lNAEAAAAA
+AAAAAAAFAAAAAAAAAAcAAAAHAAAAAAAAABYAAAAAAAAABAAAAAD/////AAAAAAAAAAAAAAAACAEA
+AAYAAADcAQAAAAAAAPsOQxjo1jC9vAEAALwBAAAABAABAAYCABcMOBgAAAgARQIBrAmdQABABqnQ
+Cl9zMwob/i+ErAgB3H7XAllZE2qAGAENh3sAAAEBCAoADsv5oKz84oAAAXQT+ukVAAAAAAAAAAIA
+AYajAAAABAAAAAEAAAABAAAAMAAAACoAAAAPcGVyc29uYWwtZGV2dm0tAAAACK4AAARXAAAAAwAA
+AAMAAAARAAAAZAAAAAAAAAAAAAAAJ25mczRfZGVsZWdhdGlvbi5weTpvcGVuX2ZpbGVfd2l0aF9k
+ZWxlZwAAAAABAAAABAAAADUoaCxoOhQepTQBAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAABYAAAAc
+AQAHACmVAAQAAAAAFVTYtDiZQiiewvRB9xwpnwAAABIAAAAAAAACAwAAAAAAAAAAAAAAAAAAAAd1
+c2VyOTk5AAAAAAEAAAAAAAAAAgAAABAAAAACAAAADAAAAAAAAAQAAAAB/wAAAAAAAABJdGVzdF9k
+ZWxlZ19jbGFpbV93cm9uZ19hY2Nlc3Nfc2Vjb25kXzE2MWNlOTczLTRlNTEtNDY3NC04Yzk0LTFi
+ZjBmNmQ1OWU4OAAAAAAAAArcAQAABgAAAGQAAAAAAAAA+w5DGFGlT71EAAAARAAAAAAAAAEABgAA
+F8XDIsMiCABFAAA0AA5AAF4GltkKG/4vCl9zMwgBhKxZWRNq3H7YeoAQ///Y2gAAAQEICqCs/OYA
+Dsv5ZAAAAAYAAACMAQAAAAAAAPsOQxi0z0fBbAEAAGwBAAAAAAABAAYAABfFwyIAAggARQABXAAP
+QABeBpWwChv+LwpfczMIAYSsWVkTatx+2HqAGP//YvsAAAEBCAqgrP0pAA7L+YAAASQT+ukVAAAA
+AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ25mczRfZGVsZWdhdGlvbi5weTpvcGVuX2ZpbGVfd2l0
+aF9kZWxlZwAAAAAEAAAANQAAAAAoaCxoOhQepTQBAAAAAAAAAAAABgAAAAAAAAAHAAAABwAAAAAA
+AAAWAAAAAAAAABIAAAAAAAAAAShoLGg6FB6lAwAAAAAAAAFoNEsSCALmBmg0SxItFg2QAAAAJAAA
+AAIAAAAQAAAAAgAAAAIAAAABKGgsaDoUHqUEAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAKAAAAAAAAACgBAAeBKZUABAAAAAAVVNi0OJlCKJ7C9EH3HCmfbOgCBAAAAAAqby/X
+jAEAAAYAAADAAQAAAAAAAPsOQxgeOGjBoAEAAKABAAAABAABAAYCABcMOBhCKAgARQIBkAmeQABA
+BqnrCl9zMwob/i+ErAgB3H7YellZFJKAGAEVh18AAAEBCAoADsw/oKz9KYAAAVgT+ukWAAAAAAAA
+AAIAAYajAAAABAAAAAEAAAABAAAAMAAAACoAAAAPcGVyc29uYWwtZGV2dm0tAAAACK4AAARXAAAA
+AwAAAAMAAAARAAAAZAAAAAAAAAAAAAAAMG5mczRfZGVsZWdhdGlvbi5weTp0ZXN0X2RlbGVnX2Ns
+YWltX3dyb25nX2FjY2VzcwAAAAEAAAAEAAAANShoLGg6FB6lNAEAAAAAAAAAAAAHAAAAAAAAAAAA
+AAAAAAAAFgAAABwBAAcAKZUABAAAAAAVVNi0OJlCKJ7C9EH3HCmfAAAAEgAAAAAAAAACAAAAAAAA
+AAAAAAAAAAAAB3VzZXI5OTkAAAAAAAAAAAAAAABIdGVzdF9kZWxlZ19jbGFpbV93cm9uZ19hY2Nl
+c3NfZmlyc3RfYjI3ZWJiYWMtYzdiMC00NDY5LWE0OWYtNDM1M2VmYTE1ZGFmAAAACsABAAAGAAAA
+ZAAAAAAAAAD7DkMYIQeIwUQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQAEEAAXgaW1wob/i8K
+X3MzCAGErFlZFJLcftnWgBD//9XJAAABAQgKoKz9LQAOzD9kAAAABgAAAPgAAAAAAAAA+w5DGC3e
+XsXYAAAA2AAAAAAAAAEABgAAF8XDIgFpCABFAADIABFAAF4GlkIKG/4vCl9zMwgBhKxZWRSS3H7Z
+1oAY//+6fwAAAQEICqCs/W0ADsw/gAAAkBP66RYAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA0AAAAw
+bmZzNF9kZWxlZ2F0aW9uLnB5OnRlc3RfZGVsZWdfY2xhaW1fd3JvbmdfYWNjZXNzAAAAAwAAADUA
+AAAAKGgsaDoUHqU0AQAAAAAAAAAAAAcAAAAAAAAABwAAAAcAAAAAAAAAFgAAAAAAAAASAAAADfgA
+AAAGAAAAxAEAAAAAAAD7DkMYgMJ7xaQBAACkAQAAAAQAAQAGAgAXDDgYAAAIAEUCAZQJn0AAQAap
+5gpfczMKG/4vhKwIAdx+2dZZWRUmgBgBHodjAAABAQgKAA7MhKCs/W2AAAFcE/rpFwAAAAAAAAAC
+AAGGowAAAAQAAAABAAAAAQAAADAAAAAqAAAAD3BlcnNvbmFsLWRldnZtLQAAAAiuAAAEVwAAAAMA
+AAADAAAAEQAAAGQAAAAAAAAAAAAAACFuZnM0X2RlbGVnYXRpb24ucHk6X3JlY2xhaW1fZGVsZWcA
+AAAAAAABAAAABAAAADUoaCxoOhQepTQBAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAABYAAAAcAQAH
+ACmVAAQAAAAAFVTYtDiZQiiewvRB9xwpnwAAABIAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAd1c2Vy
+OTk5AAAAAAAAAAACAAAAAShoLGg6FB6lBAAAAAAAAEh0ZXN0X2RlbGVnX2NsYWltX3dyb25nX2Fj
+Y2Vzc19maXJzdF9iMjdlYmJhYy1jN2IwLTQ0NjktYTQ5Zi00MzUzZWZhMTVkYWYAAAAKxAEAAAYA
+AABkAAAAAAAAAPsOQxgOhJvFRAAAAEQAAAAAAAABAAYAABfFwyIAAAgARQAANAASQABeBpbVChv+
+LwpfczMIAYSsWVkVJtx+2zaAEP//00wAAAEBCAqgrP1xAA7MhGQAAAAGAAAAVAEAAAAAAAD7DkMY
+u3pcyTQBAAA0AQAAAAAAAQAGAAAXxcMiAAAIAEUAASQAE0AAXgaV5Aob/i8KX3MzCAGErFlZFSbc
+fts2gBj//61NAAABAQgKoKz9sAAOzISAAADsE/rpFwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ACFuZnM0X2RlbGVnYXRpb24ucHk6X3JlY2xhaW1fZGVsZWcAAAAAAAAEAAAANQAAAAAoaCxoOhQe
+pTQBAAAAAAAAAAAACAAAAAAAAAAHAAAABwAAAAAAAAAWAAAAAAAAABIAAAAAAAAAAShoLGg6FB6l
+BgAAAAAAAAFoNEsSLRYNkGg0SxItFg2QAAAAJAAAAAEAAAAAAAAAAAAAAAoAAAAAAAAAKAEAB4Ep
+lQAEAAAAABVU2LQ4mUIonsL0QfccKZ9r6AIEAAAAAMju40RUAQAABgAAAHABAAAAAAAA+w5DGOrB
+eclQAQAAUAEAAAAEAAEABgIAFww4GAAACABFAgFACaBAAEAGqjkKX3MzChv+L4SsCAHcfts2WVkW
+FoAYASaHDwAAAQEICgAOzMegrP2wgAABCBP66RgAAAAAAAAAAgABhqMAAAAEAAAAAQAAAAEAAAAw
+AAAAKgAAAA9wZXJzb25hbC1kZXZ2bS0AAAAIrgAABFcAAAADAAAAAwAAABEAAABkAAAAAAAAAAAA
+AAAwbmZzNF9kZWxlZ2F0aW9uLnB5OnRlc3RfZGVsZWdfY2xhaW1fd3JvbmdfYWNjZXNzAAAAAQAA
+AAMAAAA1KGgsaDoUHqU0AQAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAWAAAAKAEAB4EplQAEAAAA
+ABVU2LQ4mUIonsL0QfccKZ9r6AIEAAAAAMju40QAAAAZAAAAAShoLGg6FB6lBgAAAAAAAAAAAAAA
+AAAADnABAAAGAAAAZAAAAAAAAAD7DkMYpw6ZyUQAAABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQA
+FEAAXgaW0wob/i8KX3MzCAGErFlZFhbcftxCgBD//9DKAAABAQgKoKz9tAAOzMdkAAAABgAAABAB
+AAAAAAAA+w5DGACDX83wAAAA8AAAAAAAAAEABgAAF8XDIgAACABFAADgABVAAF4GliYKG/4vCl9z
+MwgBhKxZWRYW3H7cQoAY///BigAAAQEICqCs/fMADszHgAAAqBP66RgAAAABAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAwbmZzNF9kZWxlZ2F0aW9uLnB5OnRlc3RfZGVsZWdfY2xhaW1fd3JvbmdfYWNj
+ZXNzAAAAAwAAADUAAAAAKGgsaDoUHqU0AQAAAAAAAAAAAAkAAAAAAAAABwAAAAcAAAAAAAAAFgAA
+AAAAAAAZAAAAAAAAAAAAAAAOcmVhZF9vbmx5X2RhdGEAABABAAAGAAAAjAEAAAAAAAD7DkMYcBV8
+zWwBAABsAQAAAAQAAQAGAgAXDDgYAAAIAEUCAVwJoUAAQAaqHApfczMKG/4vhKwIAdx+3EJZWRbC
+gBgBL4crAAABAQgKAA7NCqCs/fOAAAEkE/rpGQAAAAAAAAACAAGGowAAAAQAAAABAAAAAQAAADAA
+AAAqAAAAD3BlcnNvbmFsLWRldnZtLQAAAAiuAAAEVwAAAAMAAAADAAAAEQAAAGQAAAAAAAAAAAAA
+ADBuZnM0X2RlbGVnYXRpb24ucHk6dGVzdF9kZWxlZ19jbGFpbV93cm9uZ19hY2Nlc3MAAAABAAAA
+AwAAADUoaCxoOhQepTQBAAAAAAAAAAAACgAAAAAAAAAAAAAAAAAAABYAAAAoAQAHgSmVAAQAAAAA
+FVTYtDiZQiiewvRB9xwpn2voAgQAAAAAyO7jRAAAACYAAAABKGgsaDoUHqUGAAAAAAAAAAAAAAAA
+AAACAAAAGG5vdF9zb19yZWFkX29ubHlfZGF0YS4uLowBAAAGAAAAZAAAAAAAAAD7DkMYPA+bzUQA
+AABEAAAAAAAAAQAGAAAXxcMiAAAIAEUAADQAFkAAXgaW0Qob/i8KX3MzCAGErFlZFsLcft1qgBD/
+/85wAAABAQgKoKz99wAOzQpkAAAABgAAAAgBAAAAAAAA+w5DGBgCkNHoAAAA6AAAAAAAAAEABgAA
+F8XDIgAACABFAADYABdAAF4GliwKG/4vCl9zMwgBhKxZWRbC3H7daoAY///nmAAAAQEICqCs/joA
+Ds0KgAAAoBP66RkAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbmZzNF9kZWxlZ2F0aW9uLnB5
+OnRlc3RfZGVsZWdfY2xhaW1fd3JvbmdfYWNjZXNzAAAAAwAAADUAAAAAKGgsaDoUHqU0AQAAAAAA
+AAAAAAoAAAAAAAAABwAAAAcAAAAAAAAAFgAAAAAAAAAmAAAAAAAAABgAAAACZf58bg0x27IIAQAA
+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
+bAAAAA==
+--0000000000000cde9c063607ffcd--
 
