@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-11907-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11908-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C7E9AC3942
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 07:33:31 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AC43AC3946
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 07:33:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2579B1671A7
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 05:33:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C650A1893599
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 05:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B33F119E819;
-	Mon, 26 May 2025 05:33:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C97961A840A;
+	Mon, 26 May 2025 05:33:49 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323CE72615;
-	Mon, 26 May 2025 05:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418EB19D880;
+	Mon, 26 May 2025 05:33:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748237607; cv=none; b=Iw2oL6S35rHTtI3K0SzbenSIw1nuXcCQR1jBzAGVLRr9iIzKAcBUKTibHX8olzF1b4/fbDO8TBDYL+cVKEEoWq2b1NCuysG+KRQlAdDGyOOyhjhhMV01J9qD87Bgh6Q6EAsSS/y1fGUsKjJebygbiMnsXd8PqkxVHmSzv2hDBnA=
+	t=1748237629; cv=none; b=MePDSaPq3xhOl5lL1tH0wdm3jcE877rovAJErX/QxjAr7GexRSpuq2nKb/Zd8OtNI3Q5tBnQ+Vjw2L/Is2ATkMwZfAGyXYSoySAzxLdf9ERpSw2Wob6b4sKdLnZcwlaNIMfObimE0Ny6c1QLrYM/Eq8HKrXzQtb4pGzdfhYuS8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748237607; c=relaxed/simple;
-	bh=N17y5RgMY9Y26bM/MiYbgYZBYXhdYO9/ZcqCpTlK8rU=;
+	s=arc-20240116; t=1748237629; c=relaxed/simple;
+	bh=6KjRGakdHLvTPtXjxEJatZfcW4FuqXdDm78T3RH7W1k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P3WUTiOCIUWM7SCZSGlkOj3N0kJZVR2WIR6f7VgVmex2GdRAFEsk9lrCDG3kFlySDAH+L4c2hDhiDaVXt/qdXIdeMX2uAbjb/frpRjHCsxRY6TuxCVcd840KaeYH0CClKy2USiHAaWx0TctCCdMLpb2myjQc5GiQq+xxA81ZgY0=
+	 Content-Type:Content-Disposition:In-Reply-To; b=NO25xM/Xsuox+szztg9s098okaha6FhVQtDW8HRBL2kGqiQe+JpwT61u5gFfnTFinzpEMCMrrAMi3ASTeODY/DVXr30tVjrJrzwHOiaLvlJUK627DyLhXLPN6Ym369QYNTUpEPf8y7qBGONHmQGp53pKU/kBXr8B3VIzZPHElDw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id A2BEF68AFE; Mon, 26 May 2025 07:33:21 +0200 (CEST)
-Date: Mon, 26 May 2025 07:33:21 +0200
+	id C070F68D0D; Mon, 26 May 2025 07:33:43 +0200 (CEST)
+Date: Mon, 26 May 2025 07:33:43 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Kuniyuki Iwashima <kuniyu@amazon.com>
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -49,10 +49,10 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	netdev@vger.kernel.org, mptcp@lists.linux.dev,
 	linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
 	linux-nvme@lists.infradead.org
-Subject: Re: [PATCH v2 net-next 5/7] socket: Remove kernel socket
- conversion except for net/rds/.
-Message-ID: <20250526053321.GE11639@lst.de>
-References: <20250523182128.59346-1-kuniyu@amazon.com> <20250523182128.59346-6-kuniyu@amazon.com>
+Subject: Re: [PATCH v2 net-next 6/7] socket: Replace most sock_create()
+ calls with sock_create_kern().
+Message-ID: <20250526053343.GF11639@lst.de>
+References: <20250523182128.59346-1-kuniyu@amazon.com> <20250523182128.59346-7-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,13 +61,16 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523182128.59346-6-kuniyu@amazon.com>
+In-Reply-To: <20250523182128.59346-7-kuniyu@amazon.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, May 23, 2025 at 11:21:11AM -0700, Kuniyuki Iwashima wrote:
-> Let's drop the conversion and use sock_create_kern() instead.
+On Fri, May 23, 2025 at 11:21:12AM -0700, Kuniyuki Iwashima wrote:
+> Except for only one user, sctp_do_peeloff(), all sockets created
+> by drivers and fs are not tied to userspace processes nor exposed
+> via file descriptors.
+> 
+> Let's use sock_create_kern() for such in-kernel use cases as CIFS
+> client and NFS.
 
-Please send a patch per subsystem that is converted to make the
-commit log better and help with bisectability. 
-
+Same thing, one patch per subsystem please.
 
