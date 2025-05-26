@@ -1,39 +1,38 @@
-Return-Path: <linux-nfs+bounces-11902-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11903-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1D03AC37FD
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 04:29:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 663A5AC3866
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 06:08:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A36AD7A5303
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 02:28:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 34038170651
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 May 2025 04:08:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE8FE14F9D6;
-	Mon, 26 May 2025 02:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288FA17A2E2;
+	Mon, 26 May 2025 04:08:30 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85347260F
-	for <linux-nfs@vger.kernel.org>; Mon, 26 May 2025 02:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5576A136E
+	for <linux-nfs@vger.kernel.org>; Mon, 26 May 2025 04:08:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748226583; cv=none; b=eIEjkTGiJAC5HUuozDyXzRbA4vr6Yu8DPy+a8yCd22Acgm+P2o9ryeri1o8qRucBlRIZYi3JzhvL6rhpFOSPJIx/fX52Etqdq0VzDA/QGVOKZxBTTfi/kqVpkdE7zGEWiVfWnpkdVj/D4hVxTHIo+JL0vxs7BeV9NP64Djrz5VY=
+	t=1748232510; cv=none; b=JK3vD+eUIpYCRs8y0e/YwKMjinUeCYydioFDemLGj5GT0sm+sB2TYt5yW5XD/gzPcrsN7BU3W7OIjtQtfAAAVHGMfj8GBT7/oN5jmpz9SdcsQXBGpc1G70uDvH/Quo76Yo7VYHiSx10Am7IXrNcCS6yB00WaGt7mAAN4G6JheCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748226583; c=relaxed/simple;
-	bh=BmvM+72rF4HN7oNk8GIlMLEai20/zWFjN6NhDAyVGdQ=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=KRbHZy/So8GrnCqr9rSzWPsJiqPZU7s+wpDLMwLDER8RWDGLnEgvStlnAjv0j1JswvYBooeNT7vHcVC5fLXuT7GIGkWcNYicN8XETRXcboIserZWyYuJMOefThu7eFRdbVkw66Mi2uhDY650qaqWsinZ2ji9KpaQuc+0YeXOK64=
+	s=arc-20240116; t=1748232510; c=relaxed/simple;
+	bh=Xl4SQEVJbEODj5sGE/Y07ZTQO8W1pkZQ+c7YucOVwEw=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=W3XOIoLaL2qXLA0Aju4KCu915z+X371Idy9hXA1AetnkSHYOSeHkSgUPpVnPQOCEW/uUzEv4YPXEP0xuE3LBdQmQ0fcxk7D3sPuC84DuKeUOlJRSWYIyglm0yJ8NN9uUcZVLs+tJpaau8xaA8OAs4qKuFdhXtkK/AMDL99laICw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1uJNar-00B2OK-44;
-	Mon, 26 May 2025 02:29:37 +0000
+	id 1uJP8T-00B4Yh-RK;
+	Mon, 26 May 2025 04:08:25 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -43,100 +42,129 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neil@brown.name>
-To: "Rick Macklem" <rick.macklem@gmail.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Steve Dickson" <steved@redhat.com>, "Tom Haynes" <loghyr@gmail.com>,
- linux-nfs@vger.kernel.org
-Subject:
- Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
-In-reply-to:
- <CAM5tNy6ZJwSV9tmsyPHDjp3rLVFw6=dhs3ojxORqLNNnurGtFQ@mail.gmail.com>
-References:
- <>, <CAM5tNy6ZJwSV9tmsyPHDjp3rLVFw6=dhs3ojxORqLNNnurGtFQ@mail.gmail.com>
-Date: Mon, 26 May 2025 12:29:36 +1000
-Message-id: <174822657684.608730.17929019810730634619@noble.neil.brown.name>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: fix incorrect handling of large-number NFS errors in
+ nfs4_do_mkdir()
+Date: Mon, 26 May 2025 14:08:25 +1000
+Message-id: <174823250556.608730.11560543414622955231@noble.neil.brown.name>
 
-On Mon, 26 May 2025, Rick Macklem wrote:
-> On Sun, May 25, 2025 at 5:09=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
-> >
-> > On Mon, 26 May 2025, Chuck Lever wrote:
-> > > On 5/20/25 9:20 AM, Chuck Lever wrote:
-> > > > Hiya Rick -
-> > > >
-> > > > On 5/19/25 9:44 PM, Rick Macklem wrote:
-> > > >
-> > > >> Do you also have some configurable settings for if/how the DNS
-> > > >> field in the client's X.509 cert is checked?
-> > > >> The range is, imho:
-> > > >> - Don't check it at all, so the client can have any IP/DNS name (a m=
-obile
-> > > >>   device). The least secure, but still pretty good, since the ert. v=
-erified.
-> > > >> - DNS matches a wildcard like *.umich.edu for the reverse DNS name f=
-or
-> > > >>    the client's IP host address.
-> > > >> - DNS matches exactly what reverse DNS gets for the client's IP host=
- address.
-> > > >
-> > > > I've been told repeatedly that certificate verification must not depe=
-nd
-> > > > on DNS because DNS can be easily spoofed. To date, the Linux
-> > > > implementation of RPC-with-TLS depends on having the peer's IP address
-> > > > in the certificate's SAN.
-> > > >
-> > > > I recognize that tlshd will need to bend a little for clients that use
-> > > > a dynamically allocated IP address, but I haven't looked into it yet.
-> > > > Perhaps client certificates do not need to contain their peer IP
-> > > > address, but server certificates do, in order to enable mounting by IP
-> > > > instead of by hostname.
-> > > >
-> > > >
-> > > >> Wildcards are discouraged by some RFC, but are still supported by Op=
-enSSL.
-> > > >
-> > > > I would prefer that we follow the guidance of RFCs where possible,
-> > > > rather than a particular implementation that might have historical
-> > > > reasons to permit a lack of security.
-> > >
-> > > Let me follow up on this.
-> > >
-> > > We have an open issue against tlshd that has suggested that, rather
-> > > than looking at DNS query results, the NFS server should authorize
-> > > access by looking at the client certificate's CN. The server's
-> > > administrator should be able to specify a list of one or more CN
-> > > wildcards that can be used to authorize access, much in the same way
-> > > that NFSD currently uses netgroups and hostnames per export.
-> > >
-> > > So, after validating the client's CA trust chain, an NFS server can
-> > > match the client certificate's CN against its list of authorized CNs,
-> > > and if the client's CN fails to match, fail the handshake (or whatever
-> > > we need to do).
-> > >
-> > > I favor this approach over using DNS labels, which are often
-> > > untrustworthy, and IP addresses, which can be dynamically reassigned.
-> > >
-> > > What do you think?
-> >
-> > I completely agree with this.  IP address and DNS identity of the client
-> > is irrelevant when mTLS is used.  What matters is whether the client has
-> > authority to act as one of the the names given when the filesystem was
-> > exported (e.g. in /etc/exports).  His is exacly what you said.
-> Well, what happens when someone naughty copies the cert. to a different
-> system?
 
-Then you have already lost.  Certificates are like passwords.
+A recent commit introduced nfs4_do_mkdir() which reports an error from
+nfs4_call_sync() by returning it with ERR_PTR().
 
-I guess 2FA is a thing and maybe it makes sense to check both IP and
-certificate.  But I certainly wouldn't want to trust only that the IP
-matches the certificate.  I would want to be able to check the
-certificate without even considering the IP.
-Maybe:
- 1/ Is the IP from a permitted subnet - if not, reject.
- 2/ is the certificate for an approved CN - if not, reject.
- 3/ Does the IP match the CN
+This is a problem as nfs4_call_sync() can return negative NFS-specific
+errors with values larger than MAX_ERRNO (4095).  One example is
+NFS4ERR_DELAY which has value 10008.
 
-1 and 3 could be optional.  2 shouldn't be.
+This "pointer" gets to PTR_ERR_OR_ZERO() in nfs4_proc_mkdir() which
+chooses ZERO because it isn't in the range of value errors.  Ultimately
+the pointer is dereferenced.
 
-Thanks,
-NeilBrown
+This patch changes nfs4_do_mkdir() to report the dentry pointer and
+status separately - pointer as a return value, status in an "int *"
+parameter.
+
+The same separation is used for _nfs4_proc_mkdir() and the two are
+combined only in nfs4_proc_mkdir() after the status has passed through
+nfs4_handle_exception(), which ensures the error code does not exceed
+MAX_ERRNO.
+
+It also fixes a problem in the even when nfs4_handle_exception() updated
+the error value, the original 'alias' was still returned.
+
+Reported-by: Anna Schumaker <anna@kernel.org>
+Fixes: 8376583b84a1 ("nfs: change mkdir inode_operation to return alternate d=
+entry if needed.")
+Signed-off-by: NeilBrown <neil@brown.name>
+---
+ fs/nfs/nfs4proc.c | 32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index b1d2122bd5a7..4b123bca65e1 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5164,13 +5164,15 @@ static int nfs4_do_create(struct inode *dir, struct d=
+entry *dentry, struct nfs4_
+ }
+=20
+ static struct dentry *nfs4_do_mkdir(struct inode *dir, struct dentry *dentry,
+-				    struct nfs4_createdata *data)
++				    struct nfs4_createdata *data, int *statusp)
+ {
+-	int status =3D nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir), &da=
+ta->msg,
++	struct dentry *ret;
++
++	*statusp =3D nfs4_call_sync(NFS_SERVER(dir)->client, NFS_SERVER(dir), &data=
+->msg,
+ 				    &data->arg.seq_args, &data->res.seq_res, 1);
+=20
+-	if (status)
+-		return ERR_PTR(status);
++	if (*statusp)
++		return NULL;
+=20
+ 	spin_lock(&dir->i_lock);
+ 	/* Creating a directory bumps nlink in the parent */
+@@ -5179,7 +5181,11 @@ static struct dentry *nfs4_do_mkdir(struct inode *dir,=
+ struct dentry *dentry,
+ 				      data->res.fattr->time_start,
+ 				      NFS_INO_INVALID_DATA);
+ 	spin_unlock(&dir->i_lock);
+-	return nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
++	ret =3D nfs_add_or_obtain(dentry, data->res.fh, data->res.fattr);
++	if (!IS_ERR(ret))
++		return ret;
++	*statusp =3D PTR_ERR(ret);
++	return NULL;
+ }
+=20
+ static void nfs4_free_createdata(struct nfs4_createdata *data)
+@@ -5240,17 +5246,18 @@ static int nfs4_proc_symlink(struct inode *dir, struc=
+t dentry *dentry,
+=20
+ static struct dentry *_nfs4_proc_mkdir(struct inode *dir, struct dentry *den=
+try,
+ 				       struct iattr *sattr,
+-				       struct nfs4_label *label)
++				       struct nfs4_label *label, int *statusp)
+ {
+ 	struct nfs4_createdata *data;
+-	struct dentry *ret =3D ERR_PTR(-ENOMEM);
++	struct dentry *ret =3D NULL;
+=20
++	*statusp =3D -ENOMEM;
+ 	data =3D nfs4_alloc_createdata(dir, &dentry->d_name, sattr, NF4DIR);
+ 	if (data =3D=3D NULL)
+ 		goto out;
+=20
+ 	data->arg.label =3D label;
+-	ret =3D nfs4_do_mkdir(dir, dentry, data);
++	ret =3D nfs4_do_mkdir(dir, dentry, data, statusp);
+=20
+ 	nfs4_free_createdata(data);
+ out:
+@@ -5273,11 +5280,12 @@ static struct dentry *nfs4_proc_mkdir(struct inode *d=
+ir, struct dentry *dentry,
+ 	if (!(server->attr_bitmask[2] & FATTR4_WORD2_MODE_UMASK))
+ 		sattr->ia_mode &=3D ~current_umask();
+ 	do {
+-		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label);
+-		err =3D PTR_ERR_OR_ZERO(alias);
++		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
+ 		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+-		err =3D nfs4_handle_exception(NFS_SERVER(dir), err,
+-				&exception);
++		if (err)
++			alias =3D ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
++							      err,
++							      &exception));
+ 	} while (exception.retry);
+ 	nfs4_label_release_security(label);
+=20
+--=20
+2.49.0
+
 
