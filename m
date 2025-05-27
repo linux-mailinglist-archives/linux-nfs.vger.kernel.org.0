@@ -1,73 +1,73 @@
-Return-Path: <linux-nfs+bounces-11923-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11924-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1A11AC527F
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 17:59:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45650AC5304
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 18:30:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 553A616B7F1
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 15:58:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D24B51BA315C
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 16:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D7B27CCC4;
-	Tue, 27 May 2025 15:58:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A0C327F198;
+	Tue, 27 May 2025 16:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/Wp5LNS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCcVCLpa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D43D1DF26E
-	for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 15:58:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B88F4ED
+	for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 16:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748361504; cv=none; b=YY5KCV+hi2naShZbrylSbJXmCpNmAu9S+SGrj0zPWOHX704V8T9yUCx4ZOYFAJzGJsjotPfFaZessibkWVql93A8bLyRC4yHILg7xRJ3GVBu04FFt66ekhUhbERTXgZpduURQ3tkpJmnbUFjtrGGYKVNkqqq88+xATQXi36Iwp8=
+	t=1748363400; cv=none; b=bAF4buvotqkLXX2xW/N2cSDTsN7ZNAl1IvjXo7rJrr5EM+v/PoIAuwxJGv5Q7tuBMzHlv4K6t4GILewEcDVBjpz3z3Ff633nl1oUdGSDphPwKnRQF0uYU7Xlru8Ap/LUQcq4G7MGofQGqGaVVOteMBApPxD8tzrDxcImyndX4Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748361504; c=relaxed/simple;
-	bh=F2m1w3X4bRaaM3+3sHtWTh9R6Q5MMJ+Xj5ISKyxHiZ8=;
+	s=arc-20240116; t=1748363400; c=relaxed/simple;
+	bh=phSkK3LFTiYZjw5mzkzdJwX2SwUHkrcBhyGZv50kzTk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XeY7R3cb3JgZFlu2hLdaWKPhDVES6zo1/nAVnS2mcnY58JIfDIhc+rY0DLQ+63qSnZARlxlJpzWCHCqqz9hlAuQA56uOnZbc0kivtXDL9lyZjFGWDGfI+gE30PG9uvz0+Mh5KIO9Piq/DPLkz9CKBiEQtPgaqnDinusyDijLn00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/Wp5LNS; arc=none smtp.client-ip=209.85.208.46
+	 To:Cc:Content-Type; b=CjCQ2tiXQPIEtCk3ItdFy7bZfybV+DNI42aUBozLPg8WGQfFdeucDKDc8X8pu7yznBujU1xp4tPLrom5N0Jgx7rsK44UqvIDFHb5L/sdQfgH3ysFVB77OnfnouTF0rBGa37IhQH5XPb2GxYuxu6R19o98IqEg0UxG3msVe8Qk50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GCcVCLpa; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6045a3a2c5eso3630434a12.2
-        for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 08:58:19 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fff52493e0so4389259a12.3
+        for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 09:29:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748361498; x=1748966298; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748363396; x=1748968196; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HjjS5zJIo5Dte89oa6l5XcQ0z2c1Rn/UUR6whtrZ01M=;
-        b=l/Wp5LNS2oyTfjz88Mnqze5Y3mukmiuKxQWWTE6xtM0M5Te49deRBlF0aXsnFXPSpb
-         PQs1hCCSzAQo46e8h+yqhzHGSLe+Y/V6weuH8zOm5cjfZ1lAB+lA4P7LWLLXgPJmw3x4
-         xzL7yaiVEHr2Ja23lvZ7FZfrYF5NghMRyBjYRoXBjFqiEIMcRRLlcb3t/aBPdEmOnjGR
-         FwOWmZrEXMWpNmT9AoLgrm9uTdo6i7XHROyuHnQBbimGLYEhwMWiI7KdgenledLkEh5h
-         9nfAOzsyGVb+WihmoTpVBhTXGutSgf3cSf4fLcqk5zcHD7EI3KTJZLTs9/pEmAVTvbGH
-         05dQ==
+        bh=yywoH5OGt9B4TbiRqfJZOWFodTvSKSYl+FoOQNS0skc=;
+        b=GCcVCLparQEm3xbcDYJytlfK9EYj16uRkq2B4QgR/cObqyrBcnmzOUD30HNMVh0TG8
+         NtRTEKHW74nqmYIeWaCEnCCwBFMZXzRyCHwuJ34Oc7L4ixXPwko3crMZvv359rHyRXq5
+         GODHMtAF0UOhTU7EMxpVaSaRPR7QHlNVEnUMMW2km1MPZVLSSyiWZhPvh+RbiYbBIi2z
+         +o2xaToByX5kBJflaEAMZQMpVdzumAoNG5CoazXKme956DhssD26URBuPackgfng/MoD
+         HZtPKJx3wRVhtQkCkGGlOLgJFGLAPrTBGbDQyfKcRef/fjQZrVpzr9ts2xxboQw2W52z
+         m0jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748361498; x=1748966298;
+        d=1e100.net; s=20230601; t=1748363396; x=1748968196;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HjjS5zJIo5Dte89oa6l5XcQ0z2c1Rn/UUR6whtrZ01M=;
-        b=faPi81rXncDgFtWlKYFg8ePrv55fapmzp8bok/S/j79F7Mc55WhxnALfFpVhRuT9+R
-         znhEEKNhqlrV9YUkFRCr8YKYvCy03/v6+WZlqe0oBJt8OD/b2nwzVLb3A53G44LhsxXZ
-         D9ffx8g8VCtIDDRrJJiH173pumoD6ZbvtoHSn+qvGePUmghv+DMaAcSSYUca4u/meNZx
-         qU+6Vn3VEKgJjhuIv/WRmxcFMHXajBgXqBuG1uAQrs+VSlIGeLvzn9gz9/44HuBOa+vy
-         Iw7G0xkHTN+7R80oJ7QkFxuWSNYGIq1oXRI8ka2/0qD28zqw4ZDFARahob5j5eWrlooZ
-         FrqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOCwOCbnOtcW7CucM8aPqTmFJ1IZuQhyuY04ECHPFjHiORC1zR5kv8/QecKAx4zELFcbkrQbLwBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhqQT7wrjNPx4mV9glS8UuH5cbfK2y74Cdud+P2yB1ozZhJA+K
-	02HnJ++FaBSAiyZBEf2ZS8cMnKca7fRTMVvmaUONmfvu/0FPJTMgaY6J7AAyPMDWkjlGulVLl7D
-	ONtaiOi9bTWSDEOXfWiDdTNUzYCd6zA==
-X-Gm-Gg: ASbGncte1H9rEFDPqyDgLvoVDvNBGM6fpTqtlvHGGf48Evs1oE87PupCR6RKbTY4oy4
-	63SoMJEcZgvUlLCC5+9mvDf6S8y+7EWQHz/YEFQtduu+2uiuBeDLq4TjRIOI22KZCBc2QY8ObHm
-	1yQazYULgiGoTeSmHhss7z+zMZEM5Kj7/L
-X-Google-Smtp-Source: AGHT+IGSyjlr7h4i5mPWP9KAZSCPNV+Xign+mltNKSQWJosfljNiRDUJN1Pnm9IxZBX5/TqEOqN1W78hASFZX6xHNVk=
-X-Received: by 2002:a05:6402:26c3:b0:5fe:e3a7:a8bb with SMTP id
- 4fb4d7f45d1cf-602da407a83mr10602928a12.25.1748361497948; Tue, 27 May 2025
- 08:58:17 -0700 (PDT)
+        bh=yywoH5OGt9B4TbiRqfJZOWFodTvSKSYl+FoOQNS0skc=;
+        b=aS3U6wdENCxM33OXB3SwwptJmDTwRAZtvvKbflSMsQ55aDJvKDdDPCX8fKUEPMb5lj
+         KiCWuvL8fvpSqIBh0tO2mg5REVjjPC3TsKzSh3/OAM38tFdDuoJ4WlCzUiyRwbkFtNS9
+         BpmWlHms55MdjL3/WSANrjmblDUFqWNAsm4GDYYWCr+TPHZehaWIydfJilsUqq4FEEz2
+         Tc4FFnzNsjWSuIBVT9qjjkhhw6+nS1HLvQyb1TuaIat8zr/EkO3wyXHL9QOpEpDq88cu
+         iOhcuOOzr3eRZ50uRlaytotdmMutzQ95/AnGYe+ySEPDo/9ie80QnCyM3fd2rw0WKNdJ
+         hJhg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5sO0joewhMK+nFasL+37foJ9XlSUWabX8boDT/ElrNx/Iln1Au1EtSpqpv+NAqNbhSifpmYOEoe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmQ3b3/oqotqHlhRJudzyITBpjKjwRn+8U/eJonjkjLpK7YNte
+	87tGyxTN+Wmp4ERFPulCNehlkJ4udi1vA+ZLYrdHVSrYvflQYyDR3ZYokLpZuYCQbnlKTqgeHbo
+	LRBm4LOYemW/KZo4dRaupT6DNAj355g==
+X-Gm-Gg: ASbGncvK+I4gCWIhTgIBLgjnAJeTHNvDHdlS4tsvcEibkizjyaCs/qLGGkIBdvuilSO
+	owiVfOU8p9aaxzI6BEv5w4MMeiDUMgdPoR7dfw2LyfGxjWJIP53rLZgbunH/AZkctB1fATlC4jJ
+	bRMmGUUn+Sc6M1qnTQm3Gp+b/Wt8hf1TsD
+X-Google-Smtp-Source: AGHT+IHgKB2msaR47gRlBOtgq3TczT1tADaifSJqjGcx1WsU2bDg8oFD2e6b/f1wL6woQDE2woXTaAu9TrchnZ8wg50=
+X-Received: by 2002:a05:6402:430d:b0:600:caf:51f1 with SMTP id
+ 4fb4d7f45d1cf-602da4fd6c9mr11573344a12.28.1748363396159; Tue, 27 May 2025
+ 09:29:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -78,9 +78,9 @@ References: <d539c502-e776-460f-852c-8af9722ad9f8@oracle.com>
  <174821817646.608730.16435329287198176319@noble.neil.brown.name> <f679b62b-cbf3-4225-a163-870c65ff0c9b@oracle.com>
 In-Reply-To: <f679b62b-cbf3-4225-a163-870c65ff0c9b@oracle.com>
 From: Rick Macklem <rick.macklem@gmail.com>
-Date: Tue, 27 May 2025 08:58:05 -0700
-X-Gm-Features: AX0GCFv8yFa8XOaqKw5MCmEFoK3jjd7YlWjYDHssGFKLxLMQTaDPtptZDdpylog
-Message-ID: <CAM5tNy41RagQfYZRWxP6YV-+3azy-ftizZXtCEOzT5cRBe74nQ@mail.gmail.com>
+Date: Tue, 27 May 2025 09:29:43 -0700
+X-Gm-Features: AX0GCFtc8AuYbnrizF2gyXpOekGZ7JbqrbVuW3Qnf-xlTfCNgLs76EKDH1cDYR8
+Message-ID: <CAM5tNy6sgLg1HFBBkRe5JoXbrDjWiJfoxW3S-ZHh7HGSoVXzgQ@mail.gmail.com>
 Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
 To: Chuck Lever <chuck.lever@oracle.com>
 Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>, 
@@ -200,6 +200,46 @@ s
 > But what about SAN? Any others? I say start with only CN, but I'd like
 > to think about ways to make it possible to match against other fields in
 > the future.
+Just fyi, here's an example where filtering on the DNS or IP field in the
+SAN (SubjectAltName) could improve security..
+(Dusting off my CS sysadmin hat.)
+
+Suppose I had a file system where student grades and exam questions
+were stored.
+The mount was restricted to faculty offices, where their machines had fixed
+well known IP addresses and FQDNs assigned.
+However, as it was for my case, the building their offices were in also had
+student labs and the building was assigned a subnet by the campus
+networking folk.
+--> As such, a student could easily come in off hours (when the faculty wer=
+e not
+     around and, as such, had their office computers shut down) and
+plug into the
+     subnet (they just had to find an RJ45 jack somewhere that they
+could access).
+     --> They could then set their laptop up with the same IP address
+as a faculty
+           member's office computer and defeat ordinary /etc/exports
+filtering based
+           on client IP address.
+
+However, these students would not have the X.509 cert. with a DNS or IP fie=
+ld
+set to the correct address in it. (They might have a valid cert. so
+their laptop can
+mount the file systems students have coursework assignments on, but it woul=
+d
+not have the DNS or IP of a faculty member's office computer.)
+--> This additional filtering would stop them from accessing the
+marks/exam question
+      file system (or at least make it a lot harder for them to do so).
+
+As already discussed, there is a tradeoff between using DNS or IP. (I'll ad=
+mit
+FreeBSD doesn't currently support the IP case, but it probably should.)
+
+rick
+
 >
 > What would the administrative interface look like? Could be the machine
 > name in /etc/exports, for instance:
@@ -209,18 +249,6 @@ s
 > But I worry that will not be flexible enough. A more general filter
 > mechanism might need something like the ini file format used to create
 > CSRs.
-One thing you might want to consider as well is the case of compounds not
-associated  with files (such as the initial EXCHANGEID, CREATESESSION).
-- A naughty client can do a pretty good job of a DOS with those.
-
-Right now there is SP4_NONE and SP4_MACH_CRED for Kerberos.
-I have tried to suggest to the NFSv4 working group that SP4_MACH_CRED
-should be allowed for the mtls case as well, although I'm not sure it has
-gained traction. (Something might be buried in David Noveck's security
-draft. I haven't gotten around to looking at it lately.)
-
-rick
-
 >
 >
 > What about pre-shared keys? No certificate fields there.
