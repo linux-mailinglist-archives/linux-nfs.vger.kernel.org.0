@@ -1,259 +1,224 @@
-Return-Path: <linux-nfs+bounces-11920-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11921-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71586AC5038
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 15:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82A25AC50A6
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 16:17:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E6853BCA30
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 13:50:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1CF923B94BC
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 14:16:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19B12741B0;
-	Tue, 27 May 2025 13:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E45621348;
+	Tue, 27 May 2025 14:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1mS5FEg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LURkryTu"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA3827144A
-	for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 13:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97A22DCC0C;
+	Tue, 27 May 2025 14:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353815; cv=none; b=BZgOCB5Ekrx7WAVDkCwI8j6rEb2FdzpkWL8Z18eQAeiHDwC3xsIj3PYN9jM9NXab8rmuMWLOoURqYaB6QyvXg8X1GfDrLwjScR5XVgJsIPxcaz/Qb14sBq/1TNc1qyyAZWFiY35BxCszWOJK3pfT7tBUXyunORXwooDv4fjrUEA=
+	t=1748355428; cv=none; b=Jzo5YEhcyWjFpomVHC6UHrdn7QTckH4Jhy8KckU/FjV+lkQFEaGrPQeq2pIb+MbuVhe8CX5B0axsCHRHgLbnh+C9DO3hKYT8cciZuqA4Va5LKNqUCx5hyJ3TCbUS7OyBzDgmQhx4JQyIhzb8stf3clYEUz3piHPylmP1KkHw21M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353815; c=relaxed/simple;
-	bh=MoTLkea0XKDWmA2drCckQiB2fWdKv+4YvT/MAz61Xjg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d3we32i7XgMO5w/jKGIuPJN0WdchTde1Jy1bmZvsbWTXxa17zseDrm6iiA/VqikVW1dmGQfH7bdtKFGRyFri0lyoLK4wx2qAYu0y/I2uEBnzLFdwMuSmm6SGFJOhRsQ1Kp50yo+SU0Lz7tE5FRzHxGUSpISWBDKzWb0HzBssmYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1mS5FEg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F64EC4CEE9;
-	Tue, 27 May 2025 13:50:14 +0000 (UTC)
+	s=arc-20240116; t=1748355428; c=relaxed/simple;
+	bh=QSI9xpdPjt2cu7QbFv5alW6FAXC6hJzKmw9uIJmaT0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rH3qTDl6H4C3MQ9NguDO5Uwo9PH01XMZKSvfKEZTDiqXlb3iNj4Hx448Gku2/Nhpg5gGoT7gcqVkpXFZcyYr+X/SeI5d2lC5OIYbnj4ItnB695IzX4fRf/jEm6g5xynPHkGaEeqr8LSWJJVvOsbAxrr1WjEILUNkM6dgcJ2y2Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LURkryTu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFBCC4CEE9;
+	Tue, 27 May 2025 14:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748353815;
-	bh=MoTLkea0XKDWmA2drCckQiB2fWdKv+4YvT/MAz61Xjg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=t1mS5FEgjQZw64BthcAGa3e+iwcqZSocsywUSvQ28aHWdce8g3oDV+5znBL2ZAZ0Q
-	 vXvCcvm53dgKgdxTQfSgFmCtJ4t6SZPctqL7s4pUBdYnrPKEXLEK8As1Cx6VNOHZWH
-	 +dJfyzJVNyHiaT3HA9FnHJ9GQ9MVA5WBdwBhQh7/9LPr8hO313BAc0nIAJG02v4kay
-	 EOvTba4ngXgRLXQdtryzzAJut8otbLTiY4kdvIcrfUvdcsAWQTkAaEI2AyKO3ymR7A
-	 j6FDDyG/yv1wlY9Dxy+NEC644D6/WGo1BRbSao4aDZmeTuI3kC8oIx9F+07RH+M7Da
-	 7qYKFlW92WePg==
-Message-ID: <0a6ebf149045d2d7c5379e1187d7b44ee297457b.camel@kernel.org>
-Subject: Re: unable to run NFSD in container if "options sunrpc
- pool_mode=pernode"
-From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: steved@redhat.com, Chuck Lever <chuck.lever@oracle.com>, NeilBrown
-	 <neil@brown.name>, linux-nfs@vger.kernel.org
-Date: Tue, 27 May 2025 09:50:13 -0400
-In-Reply-To: <aDHYtTJxeAr5FDRK@kernel.org>
-References: <aDC-ftnzhJAlwqwh@kernel.org>
-	 <f93f70ce429f2dd6d11f6900808fc4ab737f765f.camel@kernel.org>
-	 <aDD0VxdSk0O6LdFG@kernel.org>
-	 <6bb9e9cce27e2a222bf55e272d690aab8f0eef13.camel@kernel.org>
-	 <aDEAJzELBTH0CqHI@kernel.org> <aDFCuXj2JBQuv-Yd@kernel.org>
-	 <73c6caaa51804da9ae850ee65b6ab51640706d74.camel@kernel.org>
-	 <aDHYtTJxeAr5FDRK@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	s=k20201202; t=1748355428;
+	bh=QSI9xpdPjt2cu7QbFv5alW6FAXC6hJzKmw9uIJmaT0w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LURkryTu0jC8GKWUlAOskqna2q1eIsXw2Fs0CzO3fihwnnlvGIIH4a/1glUyv1vYb
+	 tMIQ4fWQX5vLOF3iszLF7EoyBLGB8Dz+0MXYAEEdPJP9R/3LVFwXMtlTmOEv4AvKgv
+	 mp9G99dfrotMsxYTr9x5szoI2YF4focKIZcrNRaWg1JpsaadlRQ0/Ap92bBwSJkYJh
+	 Z11rYMJQnuzMgTbu3m4eNBIZUk6qKcmIurmAqSKyFXbxIEkjY9Dy274R/saefGoteD
+	 JpAqRY96ulh8vg2VLCKy0TohfEN2ZQowneeTucyXYxO7jHidYdrM5WLcEpaAvPLDwh
+	 WRVgI4mvqyVKA==
+From: cel@kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <linux-kernel@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL] NFSD changes for v6.16
+Date: Tue, 27 May 2025 10:17:06 -0400
+Message-ID: <20250527141706.388993-1-cel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 2025-05-24 at 10:33 -0400, Mike Snitzer wrote:
-> On Sat, May 24, 2025 at 08:05:19AM -0400, Jeff Layton wrote:
-> > On Fri, 2025-05-23 at 23:53 -0400, Mike Snitzer wrote:
-> > > On Fri, May 23, 2025 at 07:09:27PM -0400, Mike Snitzer wrote:
-> > > > On Fri, May 23, 2025 at 06:40:45PM -0400, Jeff Layton wrote:
-> > > > > On Fri, 2025-05-23 at 18:19 -0400, Mike Snitzer wrote:
-> > > > > > On Fri, May 23, 2025 at 02:40:17PM -0400, Jeff Layton wrote:
-> > > > > > > On Fri, 2025-05-23 at 14:29 -0400, Mike Snitzer wrote:
-> > > > > > > > I don't know if $SUBJECT ever worked... but with latest 6.1=
-5 or
-> > > > > > > > nfsd-testing if I just use pool_mode=3Dglobal then all is f=
-ine.
-> > > > > > > >=20
-> > > > > > > > If pool_mode=3Dpernode then mounting the container's NFSv3 =
-export fails.
-> > > > > > > >=20
-> > > > > > > > I haven't started to dig into code yet but pool_mode=3Dpern=
-ode works
-> > > > > > > > perfectly fine if NFSD isn't running in a container.
-> > > > > > > >=20
-> > > > >=20
-> > > > > Oops, I went and looked and nfsd isn't running in a container on =
-these
-> > > > > boxes. There are some other containerized apps running on the box=
-, but
-> > > > > nfsd isn't running in a container.
-> > > >=20
-> > > > OK.
-> > > >=20
-> > > > > > I'm using nfs-utils-2.8.2.  I don't see any nfsd threads runnin=
-g if I
-> > > > > > use "options sunrpc pool_mode=3Dpernode".
-> > > > > >=20
-> > > > >=20
-> > > > > I'll have a look soon, but if you figure it out in the meantime, =
-let us
-> > > > > know.
-> > > >=20
-> > > > Will do.
-> > > >=20
-> > > > Just the latest info I have, with sunrpc's pool_mode=3Dpernode dd h=
-angs
-> > > > with this stack trace:
-> > >=20
-> > > Turns out this pool_mode=3Dpernode issue is a regression caused by th=
-e
-> > > very recent nfs-utils 2.8.2 (I rebuilt EL10's nfs-utils package,
-> > > because why not upgrade to the latest!?).
-> > >=20
-> > > If I use EL9.5's latest nfs-utils-2.5.4-37.el8.x86_64 then sunrpc's
-> > > pool_mode=3Dpernode works fine.
-> > >=20
-> > > And this issue doesn't have anything to do with running in a containe=
-r
-> > > (it seemed to be container related purely because I happened to be
-> > > seeing the issue with an EL9.5 container that had the EL10-based
-> > > nfs-utils 2.8.2 installed).
-> > >=20
-> > > Steved, unfortunately I'm not sure what the problem is with the newer
-> > > nfs-utils and setting "options sunrpc pool_mode=3Dpernode"
-> > >=20
-> >=20
-> > I tried to reproduce this using fedora-41 VMs (no f42 available for
-> > virt-builder yet), but everything worked. I don't have any actual NUMA
-> > hw here though, so maybe that matters?
-> >=20
-> > Can you run this on the nfs server and send back the output? I'm
-> > wondering if this setting might not track the module option properly on
-> > that host for some reason:
-> >=20
-> >     # nfsdctl pool-mode
->=20
-> (from EL9.5 container with nfs-utils 2.8.2)
-> # nfsdctl pool-mode
-> pool-mode: pernode
-> npools: 2
->=20
-> (on host)
-> # numactl -H
-> available: 2 nodes (0-1)
-> node 0 cpus: 0 1 2 3 4 5 6 7
-> node 0 size: 11665 MB
-> node 0 free: 9892 MB
-> node 1 cpus: 8 9 10 11 12 13 14 15
-> node 1 size: 6042 MB
-> node 1 free: 5127 MB
-> node distances:
-> node   0   1
->   0:  10  20
->   1:  20  10
->=20
-> (and yeahh I was aware the newer nfs-utils uses the netlink interface,
-> will be interesting to pin down what the issue is with
-> pool-mode=3Dpernode)
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-Ok, I can reproduce this on a true NUMA machine. The first thing that's
-interesting is that it seems to be intermittent. Occasionally I can
-mount and operate on the socket, but socket requests hang most of the
-time.
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-I turned up all of the nfsd and sunrpc tracepoints. After attempting a
-mount that hung, I see only a single tracepoint fire:
+are available in the Git repository at:
 
-          <idle>-0       [038] ..s..  5942.572721: svc_xprt_enqueue: server=
-=3D[::]:2049 client=3D(einval) flags=3DCONN|CHNGBUF|LISTENER|CACHE_AUTH|CON=
-G_CTRL
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.16
 
-Based on the flags, svc_xprt_ready should have returned true. That should
-make the xprt be enqueued and an idle thread be awoken. It looks like
-that last bit may not be happening for some reason.
+for you to fetch changes up to 425364dc49f050b6008b43408aa96d42105a9c1d:
 
-At this point, I'll probably have to add some debugging. I'll keep
-poking at it -- stay tuned.
---=20
-Jeff Layton <jlayton@kernel.org>
+  xdrgen: Fix code generated for counted arrays (2025-05-16 10:58:48 -0400)
+
+----------------------------------------------------------------
+NFSD 6.16 Release Notes
+
+The marquee feature for this release is that the limit on the
+maximum rsize and wsize has been raised to 4MB. The default remains
+at 1MB, but risk-seeking administrators now have the ability to try
+larger I/O sizes with NFS clients that support them. Eventually the
+default setting will be increased when we have confidence that this
+change will not have negative impact.
+
+With v6.16, NFSD now has its own debugfs file system where we can
+add experimental features and make them available outside of our
+development community without impacting production deployments. The
+first experimental setting added is one that makes all NFS READ
+operations use vfs_iter_read() instead of the NFSD splice actor. The
+plan is to eventually retire the splice actor, as that will enable a
+number of new capabilities such as the use of struct bio_vec from the
+top to the bottom of the NFSD stack.
+
+Jeff Layton contributed a number of observability improvements. The
+use of dprintk() in a number of high-traffic code paths has been
+replaced with static trace points.
+
+This release sees the continuation of efforts to harden the NFSv4.2
+COPY operation. Soon, the restriction on async COPY operations can
+be lifted.
+
+Many thanks to the contributors, reviewers, testers, and bug
+reporters who participated during the v6.16 development cycle.
+
+----------------------------------------------------------------
+Chuck Lever (32):
+      NFSD: OFFLOAD_CANCEL should mark an async COPY as completed
+      NFSD: Shorten CB_OFFLOAD response to NFS4ERR_DELAY
+      NFSD: Implement CB_SEQUENCE referring call lists
+      NFSD: Implement CB_SEQUENCE referring call lists
+      NFSD: Record each NFSv4 call's session slot index
+      NFSD: Add /sys/kernel/debug/nfsd
+      NFSD: Add experimental setting to disable the use of splice read
+      MAINTAINERS: Update Neil Brown's email address
+      svcrdma: Unregister the device if svc_rdma_accept() fails
+      NFSD: Implement FATTR4_CLONE_BLKSIZE attribute
+      NFSD: Use sockaddr instead of a generic array
+      NFSD: Add a Call equivalent to the NFSD_TRACE_PROC_RES macros
+      svcrdma: Reduce the number of rdma_rw contexts per-QP
+      sunrpc: Add a helper to derive maxpages from sv_max_mesg
+      sunrpc: Remove backchannel check in svc_init_buffer()
+      sunrpc: Replace the rq_pages array with dynamically-allocated memory
+      sunrpc: Replace the rq_bvec array with dynamically-allocated memory
+      NFSD: Use rqstp->rq_bvec in nfsd_iter_read()
+      NFSD: De-duplicate the svc_fill_write_vector() call sites
+      SUNRPC: Export xdr_buf_to_bvec()
+      NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
+      SUNRPC: Remove svc_fill_write_vector()
+      SUNRPC: Remove svc_rqst :: rq_vec
+      sunrpc: Adjust size of socket's receive page array dynamically
+      svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
+      svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
+      sunrpc: Remove the RPCSVC_MAXPAGES macro
+      NFSD: Remove NFSD_BUFSIZE
+      NFSD: Remove NFSSVC_MAXBLKSIZE_V2 macro
+      NFSD: Add a "default" block size
+      SUNRPC: Bump the maximum payload size for the server
+      xdrgen: Fix code generated for counted arrays
+
+Eric Biggers (1):
+      nfsd: use SHA-256 library API instead of crypto_shash API
+
+Guoqing Jiang (1):
+      nfsd: remove redundant WARN_ON_ONCE in nfsd4_write
+
+Jeff Layton (19):
+      nfsd: add commit start/done tracepoints around nfsd_commit()
+      sunrpc: add info about xprt queue times to svc_xprt_dequeue tracepoint
+      sunrpc: allow SOMAXCONN backlogged TCP connections
+      nfsd: add a tracepoint for nfsd_setattr
+      nfsd: add a tracepoint to nfsd_lookup_dentry
+      nfsd: add nfsd_vfs_create tracepoints
+      nfsd: add tracepoint to nfsd_symlink
+      nfsd: add tracepoint to nfsd_link()
+      nfsd: add tracepoints for unlink events
+      nfsd: add tracepoint to nfsd_rename
+      nfsd: add tracepoint to nfsd_readdir
+      nfsd: add tracepoint for getattr and statfs events
+      nfsd: remove old v2/3 create path dprintks
+      nfsd: remove old v2/3 SYMLINK dprintks
+      nfsd: remove old LINK dprintks
+      nfsd: remove REMOVE/RMDIR dprintks
+      nfsd: remove dprintks for v2/3 RENAME events
+      nfsd: remove legacy READDIR dprintks
+      nfsd: remove legacy dprintks from GETATTR and STATFS codepaths
+
+Li Lingfeng (1):
+      nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
+
+Long Li (2):
+      sunrpc: update nextcheck time when adding new cache entries
+      sunrpc: fix race in cache cleanup causing stale nextcheck time
+
+Maninder Singh (2):
+      NFSD: unregister filesystem in case genl_register_family() fails
+      NFSD: fix race between nfsd registration and exports_proc
+
+NeilBrown (1):
+      nfsd: nfsd4_spo_must_allow() must check this is a v4 compound request
+
+Olga Kornievskaia (1):
+      nfsd: fix access checking for NLM under XPRTSEC policies
+
+ .mailmap                                           |   2 +
+ MAINTAINERS                                        |   2 +-
+ fs/nfsd/Kconfig                                    |   2 +-
+ fs/nfsd/Makefile                                   |   1 +
+ fs/nfsd/debugfs.c                                  |  47 ++++
+ fs/nfsd/export.c                                   |   3 +-
+ fs/nfsd/nfs3proc.c                                 |  68 +----
+ fs/nfsd/nfs4callback.c                             | 132 ++++++++-
+ fs/nfsd/nfs4proc.c                                 |  35 ++-
+ fs/nfsd/nfs4recover.c                              |  61 +----
+ fs/nfsd/nfs4state.c                                |  40 +--
+ fs/nfsd/nfs4xdr.c                                  |  21 +-
+ fs/nfsd/nfsctl.c                                   |  25 +-
+ fs/nfsd/nfsd.h                                     |  34 +--
+ fs/nfsd/nfsproc.c                                  |  48 +---
+ fs/nfsd/nfssvc.c                                   |   8 +-
+ fs/nfsd/nfsxdr.c                                   |   4 +-
+ fs/nfsd/state.h                                    |  23 ++
+ fs/nfsd/trace.h                                    | 302 ++++++++++++++++++++-
+ fs/nfsd/vfs.c                                      |  90 ++++--
+ fs/nfsd/vfs.h                                      |  10 +-
+ fs/nfsd/xdr4.h                                     |   4 +
+ fs/nfsd/xdr4cb.h                                   |   5 +-
+ include/linux/sunrpc/svc.h                         |  46 ++--
+ include/linux/sunrpc/svc_rdma.h                    |   6 +-
+ include/linux/sunrpc/svc_xprt.h                    |   1 +
+ include/linux/sunrpc/svcsock.h                     |   4 +-
+ include/trace/events/sunrpc.h                      |  13 +-
+ include/trace/misc/fs.h                            |  21 ++
+ net/sunrpc/cache.c                                 |  17 +-
+ net/sunrpc/svc.c                                   |  80 ++----
+ net/sunrpc/svc_xprt.c                              |  11 +-
+ net/sunrpc/svcsock.c                               |  17 +-
+ net/sunrpc/xdr.c                                   |   1 +
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   8 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c                  |   2 +-
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c              |  16 +-
+ net/sunrpc/xprtrdma/svc_rdma_transport.c           |  15 +-
+ .../C/pointer/encoder/variable_length_array.j2     |   2 +
+ .../C/struct/encoder/variable_length_array.j2      |   2 +
+ .../C/union/decoder/variable_length_array.j2       |   2 +
+ 41 files changed, 849 insertions(+), 382 deletions(-)
+ create mode 100644 fs/nfsd/debugfs.c
 
