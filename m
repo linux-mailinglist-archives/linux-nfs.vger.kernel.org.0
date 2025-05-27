@@ -1,336 +1,259 @@
-Return-Path: <linux-nfs+bounces-11919-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11920-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0968DAC4FB7
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 15:28:45 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71586AC5038
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 15:50:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 906291BA0D20
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 13:28:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E6853BCA30
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 May 2025 13:50:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61954139E;
-	Tue, 27 May 2025 13:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19B12741B0;
+	Tue, 27 May 2025 13:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H4Q4YZA7";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gt8M4sYA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1mS5FEg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7671926563B
-	for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 13:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352519; cv=fail; b=gLVP9bWEWgFslJmelhQI9DMhAypmW+kMqYHfPHG8SoYZLY/b39WbMr9DtzGxi8zPwL/BFc7vpqa9tk3b7MMSK2gKG+yK9oZHBnNtDa0Ed3PMJIuyCJn+EuExcm3fyJ2PxrzLddz15J/NXJOfJif4G0+HLt8L/alXY0bL8D/poOk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352519; c=relaxed/simple;
-	bh=5cfHeqZm/+oqycCTehZfknCT7cpEb5w5UmA0kEgxl2E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KpOR3NfMsf69cT5T0eaOVW96pv5m1Neg+k6Uy0Q1NFsXXBD3k3P2HpiV6JJty0myhiX8ED1dXm4TZ6JP/0A5jnZ83nPqoF92A11FI2wVh3edfccXQlimWrACisxIKaXWiDHIkGPlEOfk2xsuRPdWLssBKt8IOduF3zPqrVBP2hs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=H4Q4YZA7; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gt8M4sYA; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RCjewp011693;
-	Tue, 27 May 2025 13:28:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=Z4wUxI12pZDbysZcOTeArnjRAqy+7ynhAa7nwBG9cic=; b=
-	H4Q4YZA7SdF+Pdxm9tAnLFZLbjQQiLCyfGM06Vw6GI9SyAqTQ8slMgfJaK0IrdBE
-	IiLUcD94/MvaqIbA6eP4M6Z12MdOeT/rgefnJBgxUP7SbNMgjvTxEo93larmxckp
-	v/du3K0163tp6axu/Jzvs1qa5Jhoohwfy6n0TffzItXzjgBfUjIXZQ7275+BPdl9
-	lbWJVKXYVlzL5kCoxKzbd42PZ+0wyN0ksz549+2HwVXY+Ex6IRmpYjXbUcC8+n8o
-	vle18/Mpgi1fxKev65Be1022VU+m8AW96JTWm4V+ODJyM6n+oX/2JXf8W07FPPMH
-	c/ohq+bju6xOFGtoRKzKTQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v2peu3gh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 13:28:31 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54RDIi6j023220;
-	Tue, 27 May 2025 13:28:30 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46u4j8ux3s-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 13:28:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LHDfKrgLl0di0sj6rZmi/0g5TyW5I9j8L8jqBFY+EnXcSx02F5up5mS+ycyYqMirM0/iGNKvdVQ1r9Kcxx2Wmderw0XUaW7vQYyHYdvmh2P+/1Vb5FcNmaYd4av8jsTYBQpfzKZsRgXk6GNNfIxdbkAEMDtnyXyFKqc6pIg1r+7eS5K5wvXU/B3jsbCxNYpxM/TjBKmG7zZ8Yp/BbrUm7qAyV6lO7rcL6bC/yI09y43eH7RoVxp9yRcUMHnjwo736J0pq/riNpP7+adOcOWYorO+3CAN8Fw5trECl96tuET4yz0o6Q1uJ9h7yGHO4vy6TINKCj5rx0RAS7gu77553A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Z4wUxI12pZDbysZcOTeArnjRAqy+7ynhAa7nwBG9cic=;
- b=enbSzTumjR6KoNE1uz5qveqrMvIIqhJQTDeMtdyCLVWdlt2ICgzsQ9vrx9iOt1dVjgSGd48mX48g7Pl/d5TA88CZitgQaytI21qjJ2ZYoaap50P8/ixh3+fQsFGsLaViFaP6jNObRAZJ6dyiGUbu+twRxiiQXEZInnATifbfyC9oguWaVfiHAP6aJ0dgP5oZIiGxla2sABH5jxsIAOVNj9MY5x7WkfOrkm3b/AocHPQKaXtuRLzmvPO7zG4mOOCozdzJTsp3GRJfLGdJyDorr8XKf4Kwuq3+ZZC7eKR8RaIaGLasg7+yW75FVDwo6AbpTMzWGxqFnUlmSCh/nEFuuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Z4wUxI12pZDbysZcOTeArnjRAqy+7ynhAa7nwBG9cic=;
- b=gt8M4sYAK6IvVxxC6BjHTS5Lbedzp1cJ0t/UK8PAsrEHLFLHpcyH5A7sqC46Tg33YHYKo8gmWSNZZkwC5UKLz84tihada8SUgPIjqERkS+K5G08reCZRWz66/ItjqWMmxrZFCWmBN/qDJGm//ejF5Cntq8NKeYSsWLnvQOoCTNg=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH0PR10MB5817.namprd10.prod.outlook.com (2603:10b6:510:12a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Tue, 27 May
- 2025 13:28:11 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8746.035; Tue, 27 May 2025
- 13:28:11 +0000
-Message-ID: <32d35633-ed90-489c-96f0-b19bd94ecd1c@oracle.com>
-Date: Tue, 27 May 2025 09:28:09 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
- exports
-To: Rick Macklem <rick.macklem@gmail.com>, NeilBrown <neil@brown.name>
-Cc: Jeff Layton <jlayton@kernel.org>, Steve Dickson <steved@redhat.com>,
-        Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org
-References: <d539c502-e776-460f-852c-8af9722ad9f8@oracle.com>
- <174821817646.608730.16435329287198176319@noble.neil.brown.name>
- <CAM5tNy6ZJwSV9tmsyPHDjp3rLVFw6=dhs3ojxORqLNNnurGtFQ@mail.gmail.com>
-Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <CAM5tNy6ZJwSV9tmsyPHDjp3rLVFw6=dhs3ojxORqLNNnurGtFQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR04CA0035.namprd04.prod.outlook.com
- (2603:10b6:610:77::10) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA3827144A
+	for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 13:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748353815; cv=none; b=BZgOCB5Ekrx7WAVDkCwI8j6rEb2FdzpkWL8Z18eQAeiHDwC3xsIj3PYN9jM9NXab8rmuMWLOoURqYaB6QyvXg8X1GfDrLwjScR5XVgJsIPxcaz/Qb14sBq/1TNc1qyyAZWFiY35BxCszWOJK3pfT7tBUXyunORXwooDv4fjrUEA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748353815; c=relaxed/simple;
+	bh=MoTLkea0XKDWmA2drCckQiB2fWdKv+4YvT/MAz61Xjg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=d3we32i7XgMO5w/jKGIuPJN0WdchTde1Jy1bmZvsbWTXxa17zseDrm6iiA/VqikVW1dmGQfH7bdtKFGRyFri0lyoLK4wx2qAYu0y/I2uEBnzLFdwMuSmm6SGFJOhRsQ1Kp50yo+SU0Lz7tE5FRzHxGUSpISWBDKzWb0HzBssmYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1mS5FEg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F64EC4CEE9;
+	Tue, 27 May 2025 13:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748353815;
+	bh=MoTLkea0XKDWmA2drCckQiB2fWdKv+4YvT/MAz61Xjg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=t1mS5FEgjQZw64BthcAGa3e+iwcqZSocsywUSvQ28aHWdce8g3oDV+5znBL2ZAZ0Q
+	 vXvCcvm53dgKgdxTQfSgFmCtJ4t6SZPctqL7s4pUBdYnrPKEXLEK8As1Cx6VNOHZWH
+	 +dJfyzJVNyHiaT3HA9FnHJ9GQ9MVA5WBdwBhQh7/9LPr8hO313BAc0nIAJG02v4kay
+	 EOvTba4ngXgRLXQdtryzzAJut8otbLTiY4kdvIcrfUvdcsAWQTkAaEI2AyKO3ymR7A
+	 j6FDDyG/yv1wlY9Dxy+NEC644D6/WGo1BRbSao4aDZmeTuI3kC8oIx9F+07RH+M7Da
+	 7qYKFlW92WePg==
+Message-ID: <0a6ebf149045d2d7c5379e1187d7b44ee297457b.camel@kernel.org>
+Subject: Re: unable to run NFSD in container if "options sunrpc
+ pool_mode=pernode"
+From: Jeff Layton <jlayton@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: steved@redhat.com, Chuck Lever <chuck.lever@oracle.com>, NeilBrown
+	 <neil@brown.name>, linux-nfs@vger.kernel.org
+Date: Tue, 27 May 2025 09:50:13 -0400
+In-Reply-To: <aDHYtTJxeAr5FDRK@kernel.org>
+References: <aDC-ftnzhJAlwqwh@kernel.org>
+	 <f93f70ce429f2dd6d11f6900808fc4ab737f765f.camel@kernel.org>
+	 <aDD0VxdSk0O6LdFG@kernel.org>
+	 <6bb9e9cce27e2a222bf55e272d690aab8f0eef13.camel@kernel.org>
+	 <aDEAJzELBTH0CqHI@kernel.org> <aDFCuXj2JBQuv-Yd@kernel.org>
+	 <73c6caaa51804da9ae850ee65b6ab51640706d74.camel@kernel.org>
+	 <aDHYtTJxeAr5FDRK@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH0PR10MB5817:EE_
-X-MS-Office365-Filtering-Correlation-Id: dda1d773-09b7-4c4d-bbc2-08dd9d225392
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?d01DOVJ0dnJiNW9jVG93MjNnT05YbmpRc0dhSUYzWDZWc0V1TmowUHFib1Za?=
- =?utf-8?B?dTRwUDhrVit0c1A5c0FSQXpVMVBpRG9TeFNGWEFpemVweTNCU0RvaXhnQXZL?=
- =?utf-8?B?YVozUCt2YmlWdFByNEZjR3hNb0Z1K3RxTnVGSW9lVHdZblVZalEzNE82NGxV?=
- =?utf-8?B?dDdPZDdNQ1Z3MW5qdHhoU3A4ZGJDQ3JYeHJSM1NzcDlnVFpCZ0U4N2E4L0FP?=
- =?utf-8?B?T3Uzd05xU1dDN2pPcEVROUpOMjBLL0x5ZjVBSWd2UzZ5NW5LRHJuMjQ3V3JD?=
- =?utf-8?B?YVZrN1FiV0lwNS9UVHVXN2s3VU9QdSt5VWgyMVVld0dZRlpibnEzMjU4YTZh?=
- =?utf-8?B?V3RudzcvcDY3L1lOWUdPMGZ2Kzc3eG1BejltSFdRTldaa1F5YUUxaXloSUhk?=
- =?utf-8?B?Q0JLWDVNVVNEdEQvQ0hKby90V2xNb3hNL1JmclFkSzNOZmZsemNGR1FKZUlH?=
- =?utf-8?B?TlR1bHYxd1RTbGNWK01oSThWU2RFckJIb3FTQ0E5SE1CcTU5dU4raVJqWmlk?=
- =?utf-8?B?dHhwWlN5T3gyS2NpRW10c01pd1hOTzIwRTNudmpHbTZXR1FxaEFLcUpCWVRs?=
- =?utf-8?B?dXRDNDR2bVVLK3VJQUUzTkVFbWNzLzBSZElDNkFQWGVSNEFTckU4Zk1ROEdy?=
- =?utf-8?B?Tk9wYWpRVi83Mmo5MG5Kdi9OM3BlWklCbTN6M3VIc2crZGdLbkZva3dUbFM3?=
- =?utf-8?B?ZVVwYm4yRUNHRVJjRXJlWHJOaVpYbStEUG9PMDA4dmFxQnNCZDNrYXVub0l6?=
- =?utf-8?B?aHUrK0dpTmU1RlkzMmkyUnhacktybWhlR2xZS1p1Nkk3U2dKNEhOL1B2MXdq?=
- =?utf-8?B?ZlFYUXZZeTZ2WFpEQm9pZ1N3bUhKZnV6TFNKSUZxOERqZ1dGWVFEU1Vpa2F6?=
- =?utf-8?B?SktnYzFEQS9YYWRMQkxFTGEvU2Y4M1ZLQ01iS1NFR1AzVkI5SjlwUWdZMUhW?=
- =?utf-8?B?aUxkVmptLytHTVQ1RGdsVHpveWh1bXNQSlVNWlJoN0hQUWVBTUtVSEoyN1lj?=
- =?utf-8?B?Sk0xV2lYMEtUekRidUtpRTVtYVFPL1lYVnM1d3NpOTBhMlNHQk56NExleFpI?=
- =?utf-8?B?ZHV4bE5jOEtaNmlBb0lFbFNXcXpvZ1EyTklKSGNhVy8wY0VGTVlnUVVDd0hu?=
- =?utf-8?B?TS9ZS3hUMFRLY2d1NFlOSTdzY0w4TU1Sbk5IK1NabThGeG12ZjQxWGQ3eGJ6?=
- =?utf-8?B?TldiN2IzcE9nb3d6MktXcVZvalAzbWUxTUVES0NUN1k0dTBZZGZLeFJjcWRN?=
- =?utf-8?B?TXVjS0VmcUM1REVrMVcybXVxUEZvaFh4eE1OOEc3OVlzSkdYRlVqK0NxWXVv?=
- =?utf-8?B?dE5iWFV5NzZuRW1RWHpRQldidDR0TENHTGd4dEwydEZpeExlaU9YcnY0UFlP?=
- =?utf-8?B?WGlHOVBzOVlQWmw4U2dRQUc4VXJTYitmU21xOEpjcTRwajFTZ1BKMDdHRDJX?=
- =?utf-8?B?UVpHSXRtQTRlNGdqQUxTSEw5ZzlmbTdzRmtSUXQzUnVQTndSZDZoMnhRZHVy?=
- =?utf-8?B?WjBqK0ZYUlJHVFFDWGRKcHRGRTA0SUkxeVdKNTlDYjkyczZPRTlvN3BzSTZK?=
- =?utf-8?B?OHBQODJhdjNEaUFVR1FLaXJjU3J0c3FlOXhxdWxxOTlkZmxyQ2dCbzdycW9Q?=
- =?utf-8?B?a1EwUkdHend3R1lOMC9PMVZ3K1haOXRRRmF5T25LcGJ0TGJiMy9sZzdXTkFa?=
- =?utf-8?B?bzdHUXVUTHBqcXQ4RStodU0zQXFrald1VUc3NTRFcUFVZVkwYW95TWt4VGs2?=
- =?utf-8?B?RWpCS3J0a0ljWm9leDBoc3NaS2VLUm80K2tFdWtWTlErdmlDMmY0UUF5UDI4?=
- =?utf-8?B?VnNJaE12L3NOSHYzVkdLS2JJUXVuQXNJbGNEdVc3N05sY0tSY3VWU2FKK2R3?=
- =?utf-8?B?NVlsMnIrSTFTd3NOS05Rdnd4dVJKNk1LRkd5MmJjYlF2TWdSRjF6dUtmYkVo?=
- =?utf-8?Q?5ZtRPP79bJA=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?M0FtUi9weXJWS0UwbHJ1bEZDR3d3OWw1TzR4T09BUGhOa3QyeS91NGsrUWcz?=
- =?utf-8?B?N0hqdFdHR1NQZU9PTUNlUWJId0ZQd3F3ZGx4bzNvelFNYnI2SGtsVGk2NUVv?=
- =?utf-8?B?bWxGUlM5bXRUMnV3eDFNdjFaL1JCd0RMbHJCVFlPeGlnZU1FelVHdis2cVQ3?=
- =?utf-8?B?Rit4WnNEOVRWMExnZk9ZeElla3MyV1lpcXZiL2lOVk1iZjYvSkZlZSttdi8v?=
- =?utf-8?B?aDQ3OUxQZVI1VlBvUGMzK2Z2UGhVcjBOenN3cUF1YnRmNmlPdk1VQVVZWmQv?=
- =?utf-8?B?K1kwK25vRnMxaFdoeUJjTHROMjIrd3RVYy9qWGl1Z1UrVmdpNzY0TkpTZkNk?=
- =?utf-8?B?TkxZeEFyMFp0U2MvUXBBUVJLUU5IaHhoVmhvYVlUdVBEczRZek01U2RwQjZB?=
- =?utf-8?B?bXpsQzdOVTdiYlUycXFqWURkL1ZramhScUF3OWs0cXZXMTJNZGFxY0wyemx3?=
- =?utf-8?B?TWMvWXlIN1lHRFFxQUtXR2dyN09kcTVYU09vcnoxNjdBWVkzb3l0QlFrWU9p?=
- =?utf-8?B?TmJUdkcxUmozeGNvR1d2dzJSTElzZlVoRk9VaVNxL0hjbnNqdndCdzhJa1Y3?=
- =?utf-8?B?Tzc4Q2xoRUxKOFF0NEZLZGlyZEptTDlBS3hWd25RbTUvck5PMjNPSVgyNjhM?=
- =?utf-8?B?NHMxN3JReHpZSGZrSUZISjRaK0owMzl1M2VjMGIyaWwxR1F0Tm9VbkZjaW92?=
- =?utf-8?B?aGhIQjg4d0U2emJlUDN2MzRqOEh6dDBiTjhWSFRoREY3VlIrVTBhbmtMQ2o5?=
- =?utf-8?B?VktxMFhjSWJFcUs5U2t6YlJmL2xCM2Q5MEJjcnlZT0lpTlhxcnNnUkl6eVVP?=
- =?utf-8?B?cGsxeFNjYllORkdKSC9jRkRPdFJPTkJGdjR0OGtMSzZKdE9qbkpzb3QwVnVD?=
- =?utf-8?B?b3RpRUx0Q3NGTWdSTkpncUEwT2VKdWJNa1hkamRUUWxHR1VJa1l5eldNdnZV?=
- =?utf-8?B?RjlxTno1VWZCY21XQ1VuL0JULytDMUt2VmwxUHJVYSt5SXlFaTNjRkRmaG5P?=
- =?utf-8?B?UTNaKzhpV2xyRXJHYUZQOGQwZEVPSkVDRjhBMFlXSHQraDdLQmFBbGlyWCs0?=
- =?utf-8?B?Wm9WSzhVS0VhTWx4a2dtczcwYjR1NFEzTEEwMWRJc1F1UGpERFBlZVZNV0Jp?=
- =?utf-8?B?UUc0bTFrbVc2RDJhVFpYcnFVQlJJanRQVEdxV3dIQUpEZ2c2UzNyUUFvaU9T?=
- =?utf-8?B?bDRUNnFlaFBwSklHTTVJZ2JXaGlUU05iY2lNL3VkQnBFQ2xQaDU0bG9QMkht?=
- =?utf-8?B?Q1F6cDRyRDNLWTd6aHNYZ2hxRDRNU1A0NWhxdnZhRUtzcEE2cDdmV0xPV2dn?=
- =?utf-8?B?MHlFTUpJRzdwNHEyVjBlSHhQRTNNOG5GRXhEREdUSEVPME4zeU9jK2hwQlNa?=
- =?utf-8?B?K25ucE5BNlBKL0RySE5GeFNxTHg1eFlqN0dYQXBET2EvRVU4SmJiY09hNFpT?=
- =?utf-8?B?TC9OYnRYT1hUTE9wUkFxcG1HSGE1dUtpUHlWS1ZlSzUyYVNVdUQwckhhVWRI?=
- =?utf-8?B?UHlsbmdqcG1zalptaVl1N1dTZDZGVGpDeENJL29rN25VSy9IMEhORTlCeVkv?=
- =?utf-8?B?d25ReTFIcHo0ZGZRclRxbWt0SGZMVDg0K2Z1MFlPa2dmemN6NEF2ZXhoQ0dL?=
- =?utf-8?B?ckV4M3AwTnVaeVhvZ2tlWndMNWE1aDhxZFRoNzY5SGV6N2Q1MGtwQTdLc29S?=
- =?utf-8?B?ODhITjRtM04zMlNTVVhwQm80ejlYT1NGR1YySTlaeG4rVWpiaEJnMkdSLzJB?=
- =?utf-8?B?NElUbXk5UmFOYXVNNTZyNjgrV2IrcXFBYTRreStndFdJdkxkZVZHZTVXdzlC?=
- =?utf-8?B?WXFEZG9zRVBobFNPN2VUUkJtOXNhRDRiL2xZWStrQzlQbUpFYldRVzdMNk9p?=
- =?utf-8?B?QkwxRnZldFVxTW5oNmJzbW1ybllVQmRvMytvMzVlNFBXUEhjVHh0NjRHeG9a?=
- =?utf-8?B?UVpiczVSMWJMQ2R0YUl4UkxNeEUxWlpuMGRpK1FSSzdwWExLc011bm9aQXBY?=
- =?utf-8?B?Nyt3SWc3T21qVVBkNFZON0wzVlRmK0N5YldKT3VOZHByTzdzQnRTQ2Q5aVVX?=
- =?utf-8?B?Zjl0Wjg5TWpxUkEyU3JwR1pOWHhXMlFJc0FNeFdkN0t4Z2ZORnpBRFhYeUVp?=
- =?utf-8?Q?XSKxSOSOKGN/+ehxbcuB/AFRw?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Nf7uHDPh4YY3PpZ2bla6nHpUaIjilLmYRTWbqd6dxRsnPzjP60oLH1sRXjb+KKP+ZVmEZX6DxMrONkV8r5aEPVy2MarJz86ZzELTHuA8ABSAKivl2crNUU5QyFofBBPFRfEVytqr/LtafooLflTOrwzQ41kMIFEKMe2lEHMMRZ9uOsnB5LMK5j3EPLvrYcwACb5pXgYxdrIum+y0GaYt72WOtGpqhqkvR8cXmKJb6Q7MHVZNLFffIo9TOj1h+akMN6NqgTVpaylUVM6IdKcS5sQYPHCf7ErUl5k0B5EU8NGJ+RXtZwbIw2NafVPErMvpYWFrPnTMzMelqZWgTV/OndXWCtXFvxzGLgKVZFuLy5pzu9NfbA0r4SxxHo+zzWD3jAh4NoYAY7Me3HBXWpWZG/pIF2aa1ogYNDethnAd8FKntEGl33dXF0jzHWuzzhfkswyNCmmIBE0Jc1J1mFZfKGTdF7pJ+cb3EUU/pOOagAsO+7ZtWiSlteRVPRJ35+bCDdJ+lhQ3q/TVT4xONdbnp5yovaRdOI+NCePIwt9uIqzqXo0dc3Fu2kz7jHUD7EDreNSeyhyve/CqAgd0w7HePQqhtbNiM332+/G7C1yeKFw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dda1d773-09b7-4c4d-bbc2-08dd9d225392
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 13:28:11.4642
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KQOJ0NOdUs71nxBc4KNYVhrRTyS0IoJBLaN2J2bcUZvJK2hJ3kVvoa/JUN/53dncKpDNCb+O+ZpNFZHWXOR+/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5817
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 mlxlogscore=999
- bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2505270110
-X-Proofpoint-ORIG-GUID: YxaU3M3r5cla8ToZgm2XdZ8xGowsO1D4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDExMCBTYWx0ZWRfX+ZGcI4eLHvgc q3UhdAsXNOgZ9a6+EG2ISskjNUX5uKRxwz5jJj7cLUIvZIHnHUf/e24yutaFr1zhfZ3GO08t/MJ 6eq8JeQrntfTZZc377fC8gMpEBXXeDcdC94a6sWYc6f46S+KQsc3msZkDTiKirjeaYGVLlnWIfo
- Z6VbCNOaNFbzZDKw1jETYdjWSL967qKUGXX7FL/bfhGlmXIISBQdrn3tIeJGMxUHgTfmmQiXTC4 8zsnekMwv/p93qaxVEJaP74LagGqg7xIYbK/QYOGisyxVb8djYl6yyT/CzWfnuvdFO39OAjYgIx FRNEj+NxxuvUU2J8HhHqCi5lFVCiHtMfMMGo8n7g+DT6CHMIrxRKrbbzGMQqrE7Izba3oTiikpm
- alVgEMPr9hPsX0d7NOHk0p+ijC9cfaNoNmevNz7N8DTnkmnopZLp5ktawlRGCXA6Jvah3+8n
-X-Proofpoint-GUID: YxaU3M3r5cla8ToZgm2XdZ8xGowsO1D4
-X-Authority-Analysis: v=2.4 cv=TdeWtQQh c=1 sm=1 tr=0 ts=6835bdff b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=A1X0JdhQAAAA:8 a=0qbNhFydd_yygGaPRMEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14714
 
-On 5/25/25 9:47 PM, Rick Macklem wrote:
-> On Sun, May 25, 2025 at 5:09 PM NeilBrown <neil@brown.name> wrote:
->>
->> On Mon, 26 May 2025, Chuck Lever wrote:
->>> On 5/20/25 9:20 AM, Chuck Lever wrote:
->>>> Hiya Rick -
->>>>
->>>> On 5/19/25 9:44 PM, Rick Macklem wrote:
->>>>
->>>>> Do you also have some configurable settings for if/how the DNS
->>>>> field in the client's X.509 cert is checked?
->>>>> The range is, imho:
->>>>> - Don't check it at all, so the client can have any IP/DNS name (a mobile
->>>>>   device). The least secure, but still pretty good, since the ert. verified.
->>>>> - DNS matches a wildcard like *.umich.edu for the reverse DNS name for
->>>>>    the client's IP host address.
->>>>> - DNS matches exactly what reverse DNS gets for the client's IP host address.
->>>>
->>>> I've been told repeatedly that certificate verification must not depend
->>>> on DNS because DNS can be easily spoofed. To date, the Linux
->>>> implementation of RPC-with-TLS depends on having the peer's IP address
->>>> in the certificate's SAN.
->>>>
->>>> I recognize that tlshd will need to bend a little for clients that use
->>>> a dynamically allocated IP address, but I haven't looked into it yet.
->>>> Perhaps client certificates do not need to contain their peer IP
->>>> address, but server certificates do, in order to enable mounting by IP
->>>> instead of by hostname.
->>>>
->>>>
->>>>> Wildcards are discouraged by some RFC, but are still supported by OpenSSL.
->>>>
->>>> I would prefer that we follow the guidance of RFCs where possible,
->>>> rather than a particular implementation that might have historical
->>>> reasons to permit a lack of security.
->>>
->>> Let me follow up on this.
->>>
->>> We have an open issue against tlshd that has suggested that, rather
->>> than looking at DNS query results, the NFS server should authorize
->>> access by looking at the client certificate's CN. The server's
->>> administrator should be able to specify a list of one or more CN
->>> wildcards that can be used to authorize access, much in the same way
->>> that NFSD currently uses netgroups and hostnames per export.
->>>
->>> So, after validating the client's CA trust chain, an NFS server can
->>> match the client certificate's CN against its list of authorized CNs,
->>> and if the client's CN fails to match, fail the handshake (or whatever
->>> we need to do).
->>>
->>> I favor this approach over using DNS labels, which are often
->>> untrustworthy, and IP addresses, which can be dynamically reassigned.
->>>
->>> What do you think?
->>
->> I completely agree with this.  IP address and DNS identity of the client
->> is irrelevant when mTLS is used.  What matters is whether the client has
->> authority to act as one of the the names given when the filesystem was
->> exported (e.g. in /etc/exports).  His is exacly what you said.
-> Well, what happens when someone naughty copies the cert. to a different
-> system?
+On Sat, 2025-05-24 at 10:33 -0400, Mike Snitzer wrote:
+> On Sat, May 24, 2025 at 08:05:19AM -0400, Jeff Layton wrote:
+> > On Fri, 2025-05-23 at 23:53 -0400, Mike Snitzer wrote:
+> > > On Fri, May 23, 2025 at 07:09:27PM -0400, Mike Snitzer wrote:
+> > > > On Fri, May 23, 2025 at 06:40:45PM -0400, Jeff Layton wrote:
+> > > > > On Fri, 2025-05-23 at 18:19 -0400, Mike Snitzer wrote:
+> > > > > > On Fri, May 23, 2025 at 02:40:17PM -0400, Jeff Layton wrote:
+> > > > > > > On Fri, 2025-05-23 at 14:29 -0400, Mike Snitzer wrote:
+> > > > > > > > I don't know if $SUBJECT ever worked... but with latest 6.1=
+5 or
+> > > > > > > > nfsd-testing if I just use pool_mode=3Dglobal then all is f=
+ine.
+> > > > > > > >=20
+> > > > > > > > If pool_mode=3Dpernode then mounting the container's NFSv3 =
+export fails.
+> > > > > > > >=20
+> > > > > > > > I haven't started to dig into code yet but pool_mode=3Dpern=
+ode works
+> > > > > > > > perfectly fine if NFSD isn't running in a container.
+> > > > > > > >=20
+> > > > >=20
+> > > > > Oops, I went and looked and nfsd isn't running in a container on =
+these
+> > > > > boxes. There are some other containerized apps running on the box=
+, but
+> > > > > nfsd isn't running in a container.
+> > > >=20
+> > > > OK.
+> > > >=20
+> > > > > > I'm using nfs-utils-2.8.2.  I don't see any nfsd threads runnin=
+g if I
+> > > > > > use "options sunrpc pool_mode=3Dpernode".
+> > > > > >=20
+> > > > >=20
+> > > > > I'll have a look soon, but if you figure it out in the meantime, =
+let us
+> > > > > know.
+> > > >=20
+> > > > Will do.
+> > > >=20
+> > > > Just the latest info I have, with sunrpc's pool_mode=3Dpernode dd h=
+angs
+> > > > with this stack trace:
+> > >=20
+> > > Turns out this pool_mode=3Dpernode issue is a regression caused by th=
+e
+> > > very recent nfs-utils 2.8.2 (I rebuilt EL10's nfs-utils package,
+> > > because why not upgrade to the latest!?).
+> > >=20
+> > > If I use EL9.5's latest nfs-utils-2.5.4-37.el8.x86_64 then sunrpc's
+> > > pool_mode=3Dpernode works fine.
+> > >=20
+> > > And this issue doesn't have anything to do with running in a containe=
+r
+> > > (it seemed to be container related purely because I happened to be
+> > > seeing the issue with an EL9.5 container that had the EL10-based
+> > > nfs-utils 2.8.2 installed).
+> > >=20
+> > > Steved, unfortunately I'm not sure what the problem is with the newer
+> > > nfs-utils and setting "options sunrpc pool_mode=3Dpernode"
+> > >=20
+> >=20
+> > I tried to reproduce this using fedora-41 VMs (no f42 available for
+> > virt-builder yet), but everything worked. I don't have any actual NUMA
+> > hw here though, so maybe that matters?
+> >=20
+> > Can you run this on the nfs server and send back the output? I'm
+> > wondering if this setting might not track the module option properly on
+> > that host for some reason:
+> >=20
+> >     # nfsdctl pool-mode
+>=20
+> (from EL9.5 container with nfs-utils 2.8.2)
+> # nfsdctl pool-mode
+> pool-mode: pernode
+> npools: 2
+>=20
+> (on host)
+> # numactl -H
+> available: 2 nodes (0-1)
+> node 0 cpus: 0 1 2 3 4 5 6 7
+> node 0 size: 11665 MB
+> node 0 free: 9892 MB
+> node 1 cpus: 8 9 10 11 12 13 14 15
+> node 1 size: 6042 MB
+> node 1 free: 5127 MB
+> node distances:
+> node   0   1
+>   0:  10  20
+>   1:  20  10
+>=20
+> (and yeahh I was aware the newer nfs-utils uses the netlink interface,
+> will be interesting to pin down what the issue is with
+> pool-mode=3Dpernode)
 
-When that copy is discovered, the server can use a CRL to fence the use
-of the copied certificate (and as Rik T. pointed out, NFSD does not yet
-support that kind of mechanism).
+Ok, I can reproduce this on a true NUMA machine. The first thing that's
+interesting is that it seems to be intermittent. Occasionally I can
+mount and operate on the socket, but socket requests hang most of the
+time.
 
+I turned up all of the nfsd and sunrpc tracepoints. After attempting a
+mount that hung, I see only a single tracepoint fire:
 
-> --> It is true that verification will show that the cert. is valid, but is it
->       valid for that client system?
->      (Not checking the reverse DNS name makes the check somewhat weaker,
->        imho. Now, is having the IP address in the cert. and checking
-> that stronger.
->        Well, maybe. The hassle is that the certs. all have to be replaced when
->        some network type decides to reconfigure the LANs or move the system
->        onto a different subnet for some reason.)
+          <idle>-0       [038] ..s..  5942.572721: svc_xprt_enqueue: server=
+=3D[::]:2049 client=3D(einval) flags=3DCONN|CHNGBUF|LISTENER|CACHE_AUTH|CON=
+G_CTRL
 
-None of that works for NFS clients whose name and address are
-dynamically assigned.
+Based on the flags, svc_xprt_ready should have returned true. That should
+make the xprt be enqueued and an idle thread be awoken. It looks like
+that last bit may not be happening for some reason.
 
-
-> Another way a cert. can be protected from being moved to a different client
-> by someone naughty is adding a passphrase to it (the -aes256 option on
-> the openssl command line when creating the CSR). The hassle is that
-> someone has to type the passphrase in when the system is started/rebooted.
-> 
-> There is no perfect solution (or security is not a binary value, if
-> you prefer), so
-> I chose to provide as many options as I could, so that sysadmins could choose
-> what works for them. (Of course, they need to understand what is going on and
-> documenting that can be a challenge.)
-
-Fair. Our implementations might differ in this regard.
-
-
-> rick
-> 
->>
->> Ideally it would be more than just the CN.  We want to know both the
->> domain in which the peer has authority (e.g.  example.com) and the type
->> of authority (e.g.  serve-web-pages or proxy-file-access or
->> act-as-neilb).
->> I don't know internal details of certificates so I don't know if there
->> is some other field that can say "This peer is authorised to proxy file
->> access requests for all users in the given domain" or if we need a hack
->> like exporting to nfs-client.example.com.
->>
->> But if the admin has full control of what names to export to, it is
->> possible that the distinction doesn't matter.  I wouldn't want the
->> certificate used to authenticate my web server to have authority to
->> access all files on my NFS server just because the same domain name
->> applies to both.
->>
->> Thanks,
->> NeilBrown
-
-
--- 
-Chuck Lever
+At this point, I'll probably have to add some debugging. I'll keep
+poking at it -- stay tuned.
+--=20
+Jeff Layton <jlayton@kernel.org>
 
