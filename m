@@ -1,437 +1,413 @@
-Return-Path: <linux-nfs+bounces-11947-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11948-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DEE6AC69E3
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 14:57:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 720DEAC6B5F
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 16:09:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1BBE7B055B
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 12:55:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C572F189887D
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 14:08:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77FE6283FC3;
-	Wed, 28 May 2025 12:57:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2AE279331;
+	Wed, 28 May 2025 14:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0hpDGpC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fDyzYY9l";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JOuPNsAq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5296B246774
-	for <linux-nfs@vger.kernel.org>; Wed, 28 May 2025 12:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748437031; cv=none; b=AvIPJLyEDhm5NKQGshnogIm8UWC6s9NI+ecRSaJPJTAwcpAKtjxNVETzE3chgArUSJ4U1tf2K7+f69NxnQUxDg9zkiSVyFfIArVgdqv9C8anmRPhEaYUSsOaz0TeTZP7IVNZbqkkrtjAcVlYi17++DwDLZDZChKoNHqDdrvoFmo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748437031; c=relaxed/simple;
-	bh=ZFu1JTfGsFcZdGAkFwrYMHwOJtmxfCebcoN26nhWDuk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZY9Qd8Wi1BTdsVLwAivuG0TmKnAsE6uASjab7SuCkmwqeRw8kqCJeoIb1rECcClPRxhaNAfikGbx++ppmnS35FyX4qg7ddLPPIvJ2LasM66NgA3WlOzuGk7y7JxjrnILuaxGB2/1hmM0jTROclX6TJ++VznSx7/D6YYfs5FAxwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0hpDGpC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA29C4CEE7;
-	Wed, 28 May 2025 12:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748437031;
-	bh=ZFu1JTfGsFcZdGAkFwrYMHwOJtmxfCebcoN26nhWDuk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=t0hpDGpC4oQYAstKAm+hrBiyoGPfV7W7VON68Iffw/XEdFLGspyQZ5q72RFHfZDjx
-	 ItMOcDNMm/5ZMyMFBM51vqOzWvnh1mkcya/oA8L7av3syc4aFEwqjvicO83bKeQzfB
-	 Icn1iuMmi4VtiHZStGg8hXeVouPtcD1630KrAWRHYwrU0K71EvfCTfaMvMkisP/CaI
-	 zpWUco+6/WHw3syYg6uECDelVWRGsRD8ddZ3BkFMPLIb5OdUQtbD/SSXF/5Ky8XoaZ
-	 oafOU1WDkM0V1JJTOZsgHPYxbTggMGnH3c8n8u57y3cIj10h8897w3lr8qgkXJ823h
-	 Mk03x9rGVZcAQ==
-Message-ID: <a639fc978c9bdc54943301fad6618f8f068203ce.camel@kernel.org>
-Subject: Re: [PATCH v2 2/3] nfs: Add timecreate to nfs inode
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>, Trond Myklebust
-	 <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, Lance Shelton <lance.shelton@hammerspace.com>
-Date: Wed, 28 May 2025 08:56:37 -0400
-In-Reply-To: <ee8d37a7b6495e95aa2875241e2962d41e57dc14.1748436487.git.bcodding@redhat.com>
-References: <cover.1748436487.git.bcodding@redhat.com>
-	 <ee8d37a7b6495e95aa2875241e2962d41e57dc14.1748436487.git.bcodding@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F0E38FB0
+	for <linux-nfs@vger.kernel.org>; Wed, 28 May 2025 14:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748441278; cv=fail; b=qbLGmaLQVn/9CNW39fYQiMb0yYodyuzNMCzMSUgz5nXBDJuTRxQ2gTn05mYIHFhvXj0mljd0qtJ5slf0P8BFwDXtZkx0st3V0rFCHiWf7gi3EqzuJXFqY8GAcs/5IQkcrqsLMPzmJkieVCpAluheFgZA7xqy+zrfh7HQLHB6z1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748441278; c=relaxed/simple;
+	bh=sgocw6Q7kc20G2fVe7H03N6BUuguIeA38Hm5WE4i/5U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uEvM08d5ecNNYyLe9yYbY6pGcQB4iVnhzPYZB0r03UVSvHKd3C+gDqqQDwgEURMuPJ8p5FyO0rZWtAL5ynblOLWQsUZl2dbIpN3yz0pLyCY7mYfIUrRYvoSOoesv4QYiM3iW33Ir2jJiW85y7kneXfyqxU7FBJLYaW+uwdaneg0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fDyzYY9l; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JOuPNsAq; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SCqMmN024357;
+	Wed, 28 May 2025 14:07:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=v2emqBS4emMn5TA0Wzn+MJ3TMwUhH0p3bJzoQFYlDwc=; b=
+	fDyzYY9lAKxLNTSvaeqC5BNXvBrVFc4n95f/TVZn/iG/mbp7Ujmq1c4tVYwQZ6WW
+	L6HFGrsJ+GtO4nMhxLwcZkJL0mqT4nrdKRLv2gdTEvgTUHiPKS2A6LpvVakZf8uY
+	9mCv0JS/G/FgHorw3yVvn3Xex7nHYgd0i9oyVgnrwQyg8Xgpi13Q72Bi7an8FbXO
+	iHzRfFSz5TwCyCe+tFIOKPYXHrdy1Vk3BiXd+tEoGS6uD+r1NjLzJjyyhmELI5b5
+	zgagmZxLFhq/qyGcC7WZ7xOhRbZya3bojPyx1w/dTrqXwOw03kT5B4Egz9qoDdLV
+	rfJ4zDnMHGI5nSvLkR/Hpg==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v46twxmj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 14:07:51 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE1w4V035716;
+	Wed, 28 May 2025 14:07:50 GMT
+Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11012065.outbound.protection.outlook.com [40.93.200.65])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46u4jbetb3-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 14:07:50 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GcSSu5QUYag+mErc8Yqic2OBIi1z1va2Crgus8pTQOPMuBB5kZcLs74XR3INia/pRxRCanMQxaxJK22cILf+qIP7xibKYNWbDSYxqH9U2Q8Ekc3ftDpApXJ6+YvND6ke9gqeEEMc4NGJ1xmEn0h7vsgifXc1J9g5pGu3V+QdqdGR/K3GOjWZbnWc4CaZgrAZ0bcgvoN5LvThAraiXutpt6q39xXx52OI9vcCqFMnLoSzAAJGX9HhLzSE521H3joOIgxWS6iqwncm5FblNCYm9+NRhBHVRurnSRex68n3P0TZgRcOk/IhdDgZdG1uX9LotVPE4aNAb+jjw9ZeRGaNbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v2emqBS4emMn5TA0Wzn+MJ3TMwUhH0p3bJzoQFYlDwc=;
+ b=XhkAIQ18VkIv/W7fmb+7boN2UQ5pOEq4luC+UP77eMUYQaD3W1AyBJjz4bikgyg6sTsodGT75/PVjOV5aSpOioC+d57ue6OvwYx7NgHMjA56PwGrphkweUho+Ut+bhVqjiWJjk22i0zj1iAc8uU47j+aXG6E2PBFSjwaLuM8NfJZ6EjkkOSpFFafsy5k585dATFdx1atePSeW1ED9HkCaojzJvAz+UEy86Y1c4Klixm1f3YtJsSzoFbtjMLlbHPmrw9pd+Bs9MKTM7+lK9QwOHOPuqWKCDuGbTni4LcYLiu2PL77R+BBp2zNvsWxGC3LiBHiuJryHSJCmvXDIHfJKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v2emqBS4emMn5TA0Wzn+MJ3TMwUhH0p3bJzoQFYlDwc=;
+ b=JOuPNsAqnSImGOZ5AbkbRX4PmTXEpBVrXzUt4qWs1Y8H5Rhv0go2j+0liGJXFvhH6y7EvVViGFT2+sN6P6drFAwm1WX6fGxshvSmB+3uul2H7NrCmYM6jw30mGWAjXFrf9e6rrmRwHZLdjUDZeJeIgH2Mhpwe4D0fba6ljE5y+8=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SJ5PPF2BE4E177D.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::798) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 28 May
+ 2025 14:07:16 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8746.035; Wed, 28 May 2025
+ 14:07:16 +0000
+Message-ID: <411381bf-5bea-46ea-bd70-4ea76395ddef@oracle.com>
+Date: Wed, 28 May 2025 10:07:13 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
+ exports
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: NeilBrown <neil@brown.name>, Rick Macklem <rick.macklem@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, Steve Dickson <steved@redhat.com>,
+        Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org
+References: <> <d539c502-e776-460f-852c-8af9722ad9f8@oracle.com>
+ <174821817646.608730.16435329287198176319@noble.neil.brown.name>
+ <f679b62b-cbf3-4225-a163-870c65ff0c9b@oracle.com>
+ <3DF74DD6-E300-4CDE-B8D9-EECD5F05BC8B@redhat.com>
+ <e6daff16-2949-4413-b801-58393d9cb993@oracle.com>
+ <93C75052-1CC8-4660-B760-F2FAAAA0393A@redhat.com>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <93C75052-1CC8-4660-B760-F2FAAAA0393A@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR19CA0005.namprd19.prod.outlook.com
+ (2603:10b6:610:4d::15) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SJ5PPF2BE4E177D:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb3ad4e4-3efa-4723-9793-08dd9df0f3bf
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?elZpRUU4bjIxTmF5c1laRW9FYXh0OWluajNzb2tJcmkzZGdSS2NNNHo3WVcx?=
+ =?utf-8?B?Si9ock52cDdYWnlFTWZkMThIaHQwVmw4RGFtbVFiU01SSVU1R2FCN1JaYmxD?=
+ =?utf-8?B?NjY2VzErVXFOSjc0cjVTQ09Pa25wR1JkWCtkQ0NTOGZOSDk3eXpmckVtWVRD?=
+ =?utf-8?B?bk9LUUd3clBZTmtmMkZMTDBQdGFmeFgvNDRzcVRmRFF6N3FyVWc0cDE2eDFl?=
+ =?utf-8?B?NDVrUmxTT0t2K3N4OEM4U3lvbEdhdDJFU3Y0OFJwV0IzdElLOTZVUitrS1E5?=
+ =?utf-8?B?Sjl5dTFhTFZMcDhzYkJzYi9tL1k4b0dPTUNuZksrNjIwcHJ5UWhPUHZsOXll?=
+ =?utf-8?B?d0d5bVRZdytrb3NpTk1VTnJ0NDBSR1Z6ZERVQWFDVUtLQ1JrdDdIYXdLQnYz?=
+ =?utf-8?B?MmpoSnVCZ1ZpWXFwZzlVL0RjWXNMQnRsKzczSzFSazltdlNmSHJwNEJDSkQ3?=
+ =?utf-8?B?cjg4ZXJuM1ZVYWRGZjdrQjVvb1h5Mm1BMU9LYmRYckxZOUw1MW1JNEhPZVJK?=
+ =?utf-8?B?U0Fva0tMSHc3ZGVkODk5UTNTQWYzQ2NKRVp3R0greXlBbzJGOENHSXVhZzRs?=
+ =?utf-8?B?U0REZXJ0UENEeWRwVGIxNDFSYlVYZXE1RXZMcXpsL0JwVjRFV3RjZlkvbmNK?=
+ =?utf-8?B?RnNSeTExem1pcVNxOERVdVRSbHZ0MURnS0x1RjNIYnVBVEUxRytRMzdpZmpD?=
+ =?utf-8?B?Q0lFQTJXWWowU1l2SHdkMWpJUHcyRzg4ZFJ6ZUd5WkltRnNKMWd4UUhqK1hL?=
+ =?utf-8?B?RzN6S0lSRXpxNDVNUUcvcnROS1hLOEd2a1hiNWxjcnVBV3pNVTJkNnZONkcw?=
+ =?utf-8?B?eUJRM0w0R0JWdXNENm4xdVlzQWY1WDAwR0tyV2hDTW9DSjJMdHVPNzZ3ZWwx?=
+ =?utf-8?B?MWw5ZnFXWGErTTBpM3pEMTJ0SkpJdHNGQmFmbG5tbUlQZ2haRmQzUWd2eFhp?=
+ =?utf-8?B?NFR0ZG9XRHJBT2dUNHBoL0FNbnI0M1pWSHVpTmgzOElPL3NpdkRGcXhSUGlk?=
+ =?utf-8?B?QzFkNGhySWFIUDU4NmJqdlZUenV6WTFyR0NOdlk0Z0NxTGxtUEJ2cElPNnc4?=
+ =?utf-8?B?amw2N3EzZEEwMTloVktrNjZkK201THNuQ3IybVJPZDRtWTZvRXZnU0pwL2RD?=
+ =?utf-8?B?cHYvUVVZbmpGcnBjRUJBMXlRanQ5ZXBVOWdPVnBtYnA1VGdoNTZBRFNVQlNy?=
+ =?utf-8?B?SHc5cnUrQkYvZlc2WHliOXpyaUVmOVlzMndKMDhpVmVaUENyajQ1bDdEWlJq?=
+ =?utf-8?B?dk1hSXpGR0Z3M1hjMlBvRFVGTDhCS2xCckdUMFp0eStJRGM4M2dNVU5WRzhL?=
+ =?utf-8?B?R0I4WUNLazJWY2VEcTlOMkZCZG94VklSYXF6QmV3VjJPcm1nWmZHUE4zYTRX?=
+ =?utf-8?B?TUoyemUrclY2QWdVT050ak1vOWNZQTltRENNdnppcTFZbHlBMHBTdCtIejd3?=
+ =?utf-8?B?QzJOTjZUWXQ2MGhhN1dQRzUrS09Fd09iR3hnZy9rZ2tCcnVzdWxmODF3TGtH?=
+ =?utf-8?B?WHNWVDFRL0RFV3h3ZEpuTWMxRHEyVjVMWE5tKzUyYzNWS29OekkyQWdSRlFO?=
+ =?utf-8?B?dVpqZ1RLNGR5VWdwMlk4SEptay9iVTkvTTdud0l6dFplSTBNUCttcXdHWUVr?=
+ =?utf-8?B?UlFQajYxUkJDajh0Z1lkSSs2eThkeUVwUzFFQnUzYkUwTzIzUHB1bzVBVERz?=
+ =?utf-8?B?MzhIbFFRclE4aEZRdmZhVXZod0NVKzhOeElJWDFLcUtMZnJkK2ZIZDhvaXRr?=
+ =?utf-8?B?MzYyNFUxL0JFcnk3RHZBL04zUnBWWWVoZHBJYjAycVl5amlnSlZOMVlIN3cx?=
+ =?utf-8?B?NVRTc2RKR3AvQ3Rwb1VLcVBoSWdXLzFpY21WTndta0VxTUFYSFczd0NMZmcx?=
+ =?utf-8?B?R3F6UUIwVUt5TndNN2xKWU40TTJnYWI2ZHM2blc3dGVQTHZuK3hlS2txcENs?=
+ =?utf-8?Q?N78XW8T8ing=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?TVZYUkt6ODZSelpncVNZb0tjaU51cVJDcGVUOUpaYVFVMklCV1BxVmdEOXVl?=
+ =?utf-8?B?MDl5TlJhNDlSa3g5WTBQRUo2QVhkTnJSRkRydEMyQURJTUlDVGJOSHFZRDI0?=
+ =?utf-8?B?RjkyWisrcFZXN285MWthOW41TXUzYlpBU0N0K0twMUFrTlNNb0pjS0VvUFM2?=
+ =?utf-8?B?bHZETktLNlRmMDJ6RUk2dWtMcmdQZFUyM3RvMVVYN21Fc1FvazRnNCtrMHln?=
+ =?utf-8?B?N0VFWkZYVzVYQ1ZVcmVLWUVxd2RVbnBWRzdrZ3E1dm91bzJ2eFdGSHhRSGUw?=
+ =?utf-8?B?TnpyK0RXNjRQemhkSGlCd0p1cjZWcWt3UW1jUFRkQkFNM1YzN3A0UUlsbERV?=
+ =?utf-8?B?MUNISStYWVBzMXB0Z2lhTFh4ZHFTVTJmcDdPR2Z2c0hTb1lpc3V0Y2ZqeTVD?=
+ =?utf-8?B?UFdQQVY1TjA2U2Z6YVgycHVqOUJ6ZTRldEQ1MWxBd0EvRS9yRUxkeUg4Rk56?=
+ =?utf-8?B?S2cxSGtFbkRrcUhzRHlYUVhkN2UralA3L29FYzNwd3VHTlNMZXhKTzRkcGth?=
+ =?utf-8?B?MEw1TWY3MnNzbVU1S2NCNlJkTmtiMWh4ZVlwVnZlWXRaQ0ZYV0t3Rmo0UWs1?=
+ =?utf-8?B?REgyY2Z2bnhOcEhTeCt1K3ZQS0NwVkxITDI5OWNocG0xTkNYZjhMNTc0T3NK?=
+ =?utf-8?B?WDZjbXJlNGFRaDRtTkRqWWM4WlNrclI3aUJiYSswUWl1UjFWblVDdGp1UCt2?=
+ =?utf-8?B?YzIrQnlSNTlBbnRDM3NPcmxYQnZoeFE5NWd6NHVNdXQ5R3o5OEFGQVRxM09G?=
+ =?utf-8?B?dmNMRHIyVi9JVUNWTHY1cE1jL0dtWWwydWg5L3AyMG94aE55Ymdyb2EyaTJq?=
+ =?utf-8?B?N25UeEtNWVNpaE1RZTdTVDZTcmFYK2lGd3hTS2Z6RzhtdzErUDF2cEtQZjBw?=
+ =?utf-8?B?TFhtMmZEcGZPMXQwMjFGcHZLLzhCblN5Z0xRK2NlT0N0d1hvL3R6R095NjVR?=
+ =?utf-8?B?ZjZUVTduMWZsdDd4akdvMW9iRXFkQVFwVGZnQWcySHkrY3VteDZvYWU2NWMr?=
+ =?utf-8?B?VWs1VVF0aUhuQWoxMTFCZlhYM1dPTVlIZ1YvYW4yVG91eHl4b0I0blRZb2wy?=
+ =?utf-8?B?b2hEeWtlT2lhcmlFWU9mYTZndnR1QVVHYjRjdnBzc1p2MXVkUTJYVjYzbElN?=
+ =?utf-8?B?enYvVWtrN1FWVzNtMGxreWNkU0daT0RxQWUvalVEMDcrSm5VQlVwTGtka0Ra?=
+ =?utf-8?B?KzJmWExpS2tPRTFUdzQ1RGJVTlY0VGx6Rm5lK1Z1MzErcmlmU2ZiQS9XT1hX?=
+ =?utf-8?B?Y2l1MzVDbk1raFlEb3FVbUYzd1g3eHlYWGFFSzFybmZvUE1IVE1wc3NLbmxS?=
+ =?utf-8?B?dmdzNGx6VWpBT1hGS0RCMzhEQncwTlhzVHFhV2o5RVB3RXp4TTlZenpNMHdz?=
+ =?utf-8?B?eElWU0pXWlBscVhVU2xYNTNHeHl0VzI3R0ZENVhtUHlKeDFXWEhCUnRBb0E1?=
+ =?utf-8?B?ckFtQ25NWGkzVVR6TlFxN091R0lmOForRTFrS3ExWit1bTB0cmlPUGpvSWFP?=
+ =?utf-8?B?QUtJLzlxU0FOYi9adUNDSmNaZjlTamxpMUxpcG5kTlZmUkpQRWRIZTJTLzZH?=
+ =?utf-8?B?eWtLM1VRd29xb2xIc2JjbUZPRlRIb0pWV2JvUTVORHBWYkh4OFdkQ2tSenFa?=
+ =?utf-8?B?SjZWU3dLdTZJYW5jbjZYVkVnRlU3bXh5dXpIckU3NzNLSHdKQWV1Zm9abGRr?=
+ =?utf-8?B?MjFvenBpdHBET1RLUUZBLzNBekczSzN5dncvQTlvNVNuQldNdGNDcWR5dHl2?=
+ =?utf-8?B?eGd3dE93Z3crVkFCWFFLalVDbm1HS3laMi9UYWliQzVrdi9ONkQ2cmZ5S0Yr?=
+ =?utf-8?B?ckFoZCtNakc5ZU1yNkY2cmhZMVU3ajgzWVhQZ0tTTlpueW5KbUFpOC9yQzZ4?=
+ =?utf-8?B?eEU1NVNuajRrOWVqR0NxSmt4UXdiN2F2VjRKZ2lNdS9BYk5pS2RPcEJNa0Jt?=
+ =?utf-8?B?WnBNcXVLR2FZazlJc1NsMTVsL3NCdFI3RTgrVFdkSVIxd2hkazBkT0xUdHlh?=
+ =?utf-8?B?ZWpJNjNFdHo2cEFKVWhvVEpxZ1oySnNBYm1KMTVNUjJNQXZRcFNUS1R0KzEz?=
+ =?utf-8?B?UzE4ZEtzaElPMHJwZjdZSEtBZ0NUUUhsK2pGcC9IRlY3djNyVlAzbVdCNDUy?=
+ =?utf-8?Q?re924Kce3KI2yqs0iisooXQnS?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	QZGzM8PadkgqEe0u5rlGfYylOU3I6hq9GqKibBCzTr4amfE54hPmvbtgzKxksI2Nrp5q0JCz7iOBsHekcL4eh9DA6M33x+fMOkp2RJvQbCii0+83jqAyJw5RDf/Z6sb8kRhbUd+QdWf/BHKN55tgAbNq9wEs7hx+uM6I656Wd0MUP+xic44YgTZFS91O2x9o7LUJLrsPklRDEOCCeZNe57cVkmN2dqBy46QUzQFML0wmB3Q2LXDdeOyf0a+3BJgWV7N7iA/zaWkLMOAMR5rq+0o0K4AA9KsAAYfelQKUVpdQnpfZrKJfYGES5+JURGFATvYIXHOJXYoHp9W5+eed2nOJerf7XgCSnh3A/T6AM6CKL0K8CPeF4uFUggriQLeMjqWShPdeA1vXOIyg0feLjjRJbSkEwareiFt0LFqM7YWK2Rd94Ettr7NHWHyWKLpEZ4GSrpYi+wHuOLO4gZZsbQX4Z/b7tc+QPFvyv/7oly4e8hrNpXpFUzYzrLh+8EA+tZakQ10FaVqjcxoHlTd2asTA3u0ufmwSU2GSoNjQBSxtdex4KaRmZR/io5ILZun6od7qDxOid7WnTnBMUPClQI479zaZw9/NEag+QLljYFQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb3ad4e4-3efa-4723-9793-08dd9df0f3bf
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 14:07:16.6166
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: S/IlVzgPY1UqX/Zwe3YfL2TAN3Gkkt9PC4CpcEPWAiV4zX6HTkPaddA+Yo6RAO2m0BAbLuK7iHc2qB0qXaNXyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF2BE4E177D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_07,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 bulkscore=0 adultscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2505280123
+X-Proofpoint-GUID: DhPHjqJePaiZN2HeWHQkBb1gLXg0t-ip
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEyMyBTYWx0ZWRfX4WYGICIOdToH krJzxsmQ6/HUdv5UmCvTj+yjTK3flbwiu2Ne05fFV7g8WscmP12G5o0bZUDGrFMjT1pVD9QNoki LCG0YND5dgCrBI/Ws/AEoJriniRG5Umb93xCdUs+U23S+uutQBkfqp+2ksd4lul9rfPotoN4kIk
+ vBBDptAU6i7I3D2adUMi/oUJe4ZvEqC7dRb2ekRkqUjbLPpKdd457l49fHfzX5O9sosBaKbnJEq qPeMTeXQnJBI2AQW/7oeVUdmx+d5ZdWSzb3n+DdTMCmWeq16ktFH+SP5O5VQBcK3y83W33aiRs9 0p3OJgTGpbO99i85Ike2fL+X8Y6rjjruVZU5jjcwAkgzS55Divdg6JyqNStaY2xvOiKoFA9ysgp
+ +J5lg5/9T42Zvy4bO4bdSzNsalfThA9+NG+aBvwn8baazjoixvoNKpqv+BIXMwHw1TcF20z8
+X-Authority-Analysis: v=2.4 cv=VskjA/2n c=1 sm=1 tr=0 ts=683718b7 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=A1X0JdhQAAAA:8 a=mEza3si5AAAA:8 a=cAMBmxsg1OSceWQwfoIA:9 a=QEXdDO2ut3YA:10 a=rjRlSLlayDNRPJ6elN85:22
+X-Proofpoint-ORIG-GUID: DhPHjqJePaiZN2HeWHQkBb1gLXg0t-ip
 
-On Wed, 2025-05-28 at 08:50 -0400, Benjamin Coddington wrote:
-> From: Anne Marie Merritt <annemarie.merritt@primarydata.com>
->=20
-> Add tracking of the create time (a.k.a. btime) along with corresponding
-> bitfields, request, and decode xdr routines.
->=20
-> Signed-off-by: Anne Marie Merritt <annemarie.merritt@primarydata.com>
-> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/inode.c          | 28 ++++++++++++++++++++++------
->  fs/nfs/nfs4proc.c       | 14 +++++++++++++-
->  fs/nfs/nfs4xdr.c        | 24 ++++++++++++++++++++++++
->  fs/nfs/nfstrace.h       |  3 ++-
->  include/linux/nfs_fs.h  |  7 +++++++
->  include/linux/nfs_xdr.h |  3 +++
->  6 files changed, 71 insertions(+), 8 deletions(-)
->=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 160f3478a835..fd84c24963b3 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -197,6 +197,7 @@ void nfs_set_cache_invalid(struct inode *inode, unsig=
-ned long flags)
->  		if (!(flags & NFS_INO_REVAL_FORCED))
->  			flags &=3D ~(NFS_INO_INVALID_MODE |
->  				   NFS_INO_INVALID_OTHER |
-> +				   NFS_INO_INVALID_BTIME |
->  				   NFS_INO_INVALID_XATTR);
->  		flags &=3D ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE);
->  	}
-> @@ -522,6 +523,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh, =
-struct nfs_fattr *fattr)
->  		inode_set_atime(inode, 0, 0);
->  		inode_set_mtime(inode, 0, 0);
->  		inode_set_ctime(inode, 0, 0);
-> +		memset(&nfsi->btime, 0, sizeof(nfsi->btime));
->  		inode_set_iversion_raw(inode, 0);
->  		inode->i_size =3D 0;
->  		clear_nlink(inode);
-> @@ -545,6 +547,10 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh,=
- struct nfs_fattr *fattr)
->  			inode_set_ctime_to_ts(inode, fattr->ctime);
->  		else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
->  			nfs_set_cache_invalid(inode, NFS_INO_INVALID_CTIME);
-> +		if (fattr->valid & NFS_ATTR_FATTR_BTIME)
-> +			nfsi->btime =3D fattr->btime;
-> +		else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
-> +			nfs_set_cache_invalid(inode, NFS_INO_INVALID_BTIME);
->  		if (fattr->valid & NFS_ATTR_FATTR_CHANGE)
->  			inode_set_iversion_raw(inode, fattr->change_attr);
->  		else
-> @@ -1900,7 +1906,7 @@ static int nfs_inode_finish_partial_attr_update(con=
-st struct nfs_fattr *fattr,
->  		NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
->  		NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
->  		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
-> -		NFS_INO_INVALID_NLINK;
-> +		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
->  	unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
->  	enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_attr_typ=
-e;
-> =20
-> @@ -2219,10 +2225,13 @@ static int nfs_update_inode(struct inode *inode, =
-struct nfs_fattr *fattr)
->  	nfs_fattr_fixup_delegated(inode, fattr);
-> =20
->  	save_cache_validity =3D nfsi->cache_validity;
-> -	nfsi->cache_validity &=3D ~(NFS_INO_INVALID_ATTR
-> -			| NFS_INO_INVALID_ATIME
-> -			| NFS_INO_REVAL_FORCED
-> -			| NFS_INO_INVALID_BLOCKS);
-> +	nfsi->cache_validity &=3D
-> +		~(NFS_INO_INVALID_ATIME | NFS_INO_REVAL_FORCED |
-> +		  NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
-> +		  NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
-> +		  NFS_INO_INVALID_OTHER | NFS_INO_INVALID_BLOCKS |
-> +		  NFS_INO_INVALID_NLINK | NFS_INO_INVALID_MODE |
-> +		  NFS_INO_INVALID_BTIME);
-> =20
+On 5/27/25 4:25 PM, Benjamin Coddington wrote:
+> On 27 May 2025, at 15:41, Chuck Lever wrote:
+> 
+>> On 5/27/25 3:18 PM, Benjamin Coddington wrote:
+>>> On 27 May 2025, at 11:05, Chuck Lever wrote:
+>>>
+>>>> On 5/25/25 8:09 PM, NeilBrown wrote:
+>>>>> On Mon, 26 May 2025, Chuck Lever wrote:
+>>>>>> On 5/20/25 9:20 AM, Chuck Lever wrote:
+>>>>>>> Hiya Rick -
+>>>>>>>
+>>>>>>> On 5/19/25 9:44 PM, Rick Macklem wrote:
+>>>>>>>
+>>>>>>>> Do you also have some configurable settings for if/how the DNS
+>>>>>>>> field in the client's X.509 cert is checked?
+>>>>>>>> The range is, imho:
+>>>>>>>> - Don't check it at all, so the client can have any IP/DNS name (a mobile
+>>>>>>>>   device). The least secure, but still pretty good, since the ert. verified.
+>>>>>>>> - DNS matches a wildcard like *.umich.edu for the reverse DNS name for
+>>>>>>>>    the client's IP host address.
+>>>>>>>> - DNS matches exactly what reverse DNS gets for the client's IP host address.
+>>>>>>>
+>>>>>>> I've been told repeatedly that certificate verification must not depend
+>>>>>>> on DNS because DNS can be easily spoofed. To date, the Linux
+>>>>>>> implementation of RPC-with-TLS depends on having the peer's IP address
+>>>>>>> in the certificate's SAN.
+>>>>>>>
+>>>>>>> I recognize that tlshd will need to bend a little for clients that use
+>>>>>>> a dynamically allocated IP address, but I haven't looked into it yet.
+>>>>>>> Perhaps client certificates do not need to contain their peer IP
+>>>>>>> address, but server certificates do, in order to enable mounting by IP
+>>>>>>> instead of by hostname.
+>>>>>>>
+>>>>>>>
+>>>>>>>> Wildcards are discouraged by some RFC, but are still supported by OpenSSL.
+>>>>>>>
+>>>>>>> I would prefer that we follow the guidance of RFCs where possible,
+>>>>>>> rather than a particular implementation that might have historical
+>>>>>>> reasons to permit a lack of security.
+>>>>>>
+>>>>>> Let me follow up on this.
+>>>>>>
+>>>>>> We have an open issue against tlshd that has suggested that, rather
+>>>>>> than looking at DNS query results, the NFS server should authorize
+>>>>>> access by looking at the client certificate's CN. The server's
+>>>>>> administrator should be able to specify a list of one or more CN
+>>>>>> wildcards that can be used to authorize access, much in the same way
+>>>>>> that NFSD currently uses netgroups and hostnames per export.
+>>>>>>
+>>>>>> So, after validating the client's CA trust chain, an NFS server can
+>>>>>> match the client certificate's CN against its list of authorized CNs,
+>>>>>> and if the client's CN fails to match, fail the handshake (or whatever
+>>>>>> we need to do).
+>>>>>>
+>>>>>> I favor this approach over using DNS labels, which are often
+>>>>>> untrustworthy, and IP addresses, which can be dynamically reassigned.
+>>>>>>
+>>>>>> What do you think?
+>>>>>
+>>>>> I completely agree with this.  IP address and DNS identity of the client
+>>>>> is irrelevant when mTLS is used.  What matters is whether the client has
+>>>>> authority to act as one of the the names given when the filesystem was
+>>>>> exported (e.g. in /etc/exports).  His is exacly what you said.
+>>>>>
+>>>>> Ideally it would be more than just the CN.  We want to know both the
+>>>>> domain in which the peer has authority (e.g.  example.com) and the type
+>>>>> of authority (e.g.  serve-web-pages or proxy-file-access or
+>>>>> act-as-neilb).
+>>>>> I don't know internal details of certificates so I don't know if there
+>>>>> is some other field that can say "This peer is authorised to proxy file
+>>>>> access requests for all users in the given domain" or if we need a hack
+>>>>> like exporting to nfs-client.example.com.
+>>>>>
+>>>>> But if the admin has full control of what names to export to, it is
+>>>>> possible that the distinction doesn't matter.  I wouldn't want the
+>>>>> certificate used to authenticate my web server to have authority to
+>>>>> access all files on my NFS server just because the same domain name
+>>>>> applies to both.
+>>>>
+>>>> My thought is that, for each handshake, there would be two stages:
+>>>>
+>>>> 1. Does the NFS server trust the certificate? This is purely a chain-of-
+>>>>    trust issue, so validating the certificate presented by the client is
+>>>>    the order of the day.
+>>>>
+>>>> 2. Does the NFS server authorize this client to access the export? This
+>>>>    is a check very similar to the hostname/netgroup/IP address check
+>>>>    that is done today, but it could be done just once at handshake time.
+>>>>    Match the certificate's fields against a per-export filter.
+>>>>
+>>>> I would take tlshd out of the picture for stage 2, and let NFSD make its
+>>>> own authorization decisions. Because an NFS client might be authorized
+>>>> to access some exports but not others.
+>>>>
+>>>> So:
+>>>>
+>>>> How does the server indicate to clients that yes, your cert is trusted,
+>>>> but no, you are not authorized to access this file system? I guess that
+>>>> is an NFS error like NFSERR_STALE or NFS4ERR_WRONGSEC.
+>>>>
+>>>> What certificate fields should we implement matches for? CN is obvious.
+>>>> But what about SAN? Any others? I say start with only CN, but I'd like
+>>>> to think about ways to make it possible to match against other fields in
+>>>> the future.
+>>>>
+>>>> What would the administrative interface look like? Could be the machine
+>>>> name in /etc/exports, for instance:
+>>>>
+>>>> *,OU="NFS Bake-a-thon",*   rw,sec=sys,xprtsec=mtls,fsid=42
+>>>>
+>>>> But I worry that will not be flexible enough. A more general filter
+>>>> mechanism might need something like the ini file format used to create
+>>>> CSRs.
+>>>
+>>> It might be useful to make the kernel's authorization based on mapping to a
+>>> keyword that tlshd passes back after the handshake, and keep the more
+>>> complicated logic of parsing certificate fields and using config files up in
+>>> ktls-utils userspace.
+>>
+>> I agree that the kernel can't do the filtering.
+>>
+>> But it's not possible that tlshd knows what export the client wants to
+>> access during the TLS handshake; no NFS traffic has been exchanged yet.
+>> Thus parsing per-export security settings during the handshake is not
+>> possible; it can happen only once tlshd passes the connected socket back
+>> to the kernel.
+>>
+>> And remember that ktls-utils is shared with NVMe and now QUIC as well.
+>> tlshd doesn't know anything about the upper layer protocols. Therefore
+>> adding NFS-specific authorization policy settings to ktls-utils is a
+>> layering violation.
+> 
+> Here tlshd doesn't need to know anything about the upper layer protocols, it
+> merely uses its mapping rules to match the certificate to a keyword it
+> passes back to the kernel in the successful handshake downcall.  The kernel
+> then can decide what that keyword means.  If not implemented in-kernel it
+> can merely be ignored.
 
-The delta above is a little curious. This patch is just adding
-NFS_INO_INVALID_BTIME, but the patch above adds the clearing of several
-other bits as well. Why does this logic change?
+Actually this sounds close to what I was imagining.
 
->  	/* Do atomic weak cache consistency updates */
->  	nfs_wcc_update_inode(inode, fattr);
-> @@ -2261,7 +2270,8 @@ static int nfs_update_inode(struct inode *inode, st=
-ruct nfs_fattr *fattr)
->  					| NFS_INO_INVALID_BLOCKS
->  					| NFS_INO_INVALID_NLINK
->  					| NFS_INO_INVALID_MODE
-> -					| NFS_INO_INVALID_OTHER;
-> +					| NFS_INO_INVALID_OTHER
-> +					| NFS_INO_INVALID_BTIME;
->  				if (S_ISDIR(inode->i_mode))
->  					nfs_force_lookup_revalidate(inode);
->  				attr_changed =3D true;
-> @@ -2295,6 +2305,12 @@ static int nfs_update_inode(struct inode *inode, s=
-truct nfs_fattr *fattr)
->  		nfsi->cache_validity |=3D
->  			save_cache_validity & NFS_INO_INVALID_CTIME;
-> =20
-> +	if (fattr->valid & NFS_ATTR_FATTR_BTIME)
-> +		nfsi->btime =3D fattr->btime;
-> +	else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
-> +		nfsi->cache_validity |=3D
-> +			save_cache_validity & NFS_INO_INVALID_BTIME;
-> +
->  	/* Check if our cached file size is stale */
->  	if (fattr->valid & NFS_ATTR_FATTR_SIZE) {
->  		new_isize =3D nfs_size_to_loff_t(fattr->size);
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index b1d2122bd5a7..f7fb61f805a3 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -222,6 +222,7 @@ const u32 nfs4_fattr_bitmap[3] =3D {
->  	| FATTR4_WORD1_RAWDEV
->  	| FATTR4_WORD1_SPACE_USED
->  	| FATTR4_WORD1_TIME_ACCESS
-> +	| FATTR4_WORD1_TIME_CREATE
->  	| FATTR4_WORD1_TIME_METADATA
->  	| FATTR4_WORD1_TIME_MODIFY
->  	| FATTR4_WORD1_MOUNTED_ON_FILEID,
-> @@ -243,6 +244,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] =3D {
->  	| FATTR4_WORD1_RAWDEV
->  	| FATTR4_WORD1_SPACE_USED
->  	| FATTR4_WORD1_TIME_ACCESS
-> +	| FATTR4_WORD1_TIME_CREATE
->  	| FATTR4_WORD1_TIME_METADATA
->  	| FATTR4_WORD1_TIME_MODIFY,
->  	FATTR4_WORD2_MDSTHRESHOLD
-> @@ -323,6 +325,9 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, const=
- __u32 *src,
->  	if (!(cache_validity & NFS_INO_INVALID_OTHER))
->  		dst[1] &=3D ~(FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP);
-> =20
-> +	if (!(cache_validity & NFS_INO_INVALID_BTIME))
-> +		dst[1] &=3D ~FATTR4_WORD1_TIME_CREATE;
-> +
->  	if (nfs_have_delegated_mtime(inode)) {
->  		if (!(cache_validity & NFS_INO_INVALID_ATIME))
->  			dst[1] &=3D ~FATTR4_WORD1_TIME_ACCESS;
-> @@ -1307,7 +1312,8 @@ nfs4_update_changeattr_locked(struct inode *inode,
->  				NFS_INO_INVALID_ACCESS | NFS_INO_INVALID_ACL |
->  				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
->  				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
-> -				NFS_INO_INVALID_MODE | NFS_INO_INVALID_XATTR;
-> +				NFS_INO_INVALID_MODE | NFS_INO_INVALID_BTIME |
-> +				NFS_INO_INVALID_XATTR;
->  		nfsi->attrtimeo =3D NFS_MINATTRTIMEO(inode);
->  	}
->  	nfsi->attrtimeo_timestamp =3D jiffies;
-> @@ -4047,6 +4053,10 @@ static int _nfs4_server_capabilities(struct nfs_se=
-rver *server, struct nfs_fh *f
->  			server->fattr_valid &=3D ~NFS_ATTR_FATTR_CTIME;
->  		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_MODIFY))
->  			server->fattr_valid &=3D ~NFS_ATTR_FATTR_MTIME;
-> +		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_MODIFY))
-> +			server->fattr_valid &=3D ~NFS_ATTR_FATTR_MTIME;
-> +		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_CREATE))
-> +			server->fattr_valid &=3D ~NFS_ATTR_FATTR_BTIME;
->  		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
->  				sizeof(server->attr_bitmask));
->  		server->attr_bitmask_nl[2] &=3D ~FATTR4_WORD2_SECURITY_LABEL;
-> @@ -5773,6 +5783,8 @@ void nfs4_bitmask_set(__u32 bitmask[], const __u32 =
-src[],
->  		bitmask[1] |=3D FATTR4_WORD1_TIME_MODIFY;
->  	if (cache_validity & NFS_INO_INVALID_BLOCKS)
->  		bitmask[1] |=3D FATTR4_WORD1_SPACE_USED;
-> +	if (cache_validity & NFS_INO_INVALID_BTIME)
-> +		bitmask[1] |=3D FATTR4_WORD1_TIME_CREATE;
-> =20
->  	if (cache_validity & NFS_INO_INVALID_SIZE)
->  		bitmask[0] |=3D FATTR4_WORD0_SIZE;
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index 55bef5fbfa47..f8d019c9d58d 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -1623,6 +1623,7 @@ static void encode_readdir(struct xdr_stream *xdr, =
-const struct nfs4_readdir_arg
->  			| FATTR4_WORD1_RAWDEV
->  			| FATTR4_WORD1_SPACE_USED
->  			| FATTR4_WORD1_TIME_ACCESS
-> +			| FATTR4_WORD1_TIME_CREATE
->  			| FATTR4_WORD1_TIME_METADATA
->  			| FATTR4_WORD1_TIME_MODIFY;
->  		attrs[2] |=3D FATTR4_WORD2_SECURITY_LABEL;
-> @@ -4207,6 +4208,24 @@ static int decode_attr_time_access(struct xdr_stre=
-am *xdr, uint32_t *bitmap, str
->  	return status;
->  }
-> =20
-> +static int decode_attr_time_create(struct xdr_stream *xdr, uint32_t *bit=
-map, struct timespec64 *time)
-> +{
-> +	int status =3D 0;
-> +
-> +	time->tv_sec =3D 0;
-> +	time->tv_nsec =3D 0;
-> +	if (unlikely(bitmap[1] & (FATTR4_WORD1_TIME_CREATE - 1U)))
-> +		return -EIO;
-> +	if (likely(bitmap[1] & FATTR4_WORD1_TIME_CREATE)) {
-> +		status =3D decode_attr_time(xdr, time);
-> +		if (status =3D=3D 0)
-> +			status =3D NFS_ATTR_FATTR_BTIME;
-> +		bitmap[1] &=3D ~FATTR4_WORD1_TIME_CREATE;
-> +	}
-> +	dprintk("%s: btime=3D%lld\n", __func__, time->tv_sec);
-> +	return status;
-> +}
-> +
->  static int decode_attr_time_metadata(struct xdr_stream *xdr, uint32_t *b=
-itmap, struct timespec64 *time)
->  {
->  	int status =3D 0;
-> @@ -4781,6 +4800,11 @@ static int decode_getfattr_attrs(struct xdr_stream=
- *xdr, uint32_t *bitmap,
->  		goto xdr_error;
->  	fattr->valid |=3D status;
-> =20
-> +	status =3D decode_attr_time_create(xdr, bitmap, &fattr->btime);
-> +	if (status < 0)
-> +		goto xdr_error;
-> +	fattr->valid |=3D status;
-> +
->  	status =3D decode_attr_time_metadata(xdr, bitmap, &fattr->ctime);
->  	if (status < 0)
->  		goto xdr_error;
-> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-> index 7a058bd8c566..f49f064c5ee5 100644
-> --- a/fs/nfs/nfstrace.h
-> +++ b/fs/nfs/nfstrace.h
-> @@ -32,7 +32,8 @@
->  			{ NFS_INO_INVALID_BLOCKS, "INVALID_BLOCKS" }, \
->  			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
->  			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" }, \
-> -			{ NFS_INO_INVALID_MODE, "INVALID_MODE" })
-> +			{ NFS_INO_INVALID_MODE, "INVALID_MODE" }, \
-> +			{ NFS_INO_INVALID_BTIME, "INVALID_BTIME" })
-> =20
->  #define nfs_show_nfsi_flags(v) \
->  	__print_flags(v, "|", \
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index 67ae2c3f41d2..5cc5f7f02887 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -160,6 +160,12 @@ struct nfs_inode {
->  	unsigned long		flags;			/* atomic bit ops */
->  	unsigned long		cache_validity;		/* bit mask */
-> =20
-> +	/*
-> +	 * NFS Attributes not included in struct inode
-> +	 */
-> +
-> +	struct timespec64	btime;
-> +
->  	/*
->  	 * read_cache_jiffies is when we started read-caching this inode.
->  	 * attrtimeo is for how long the cached information is assumed
-> @@ -316,6 +322,7 @@ struct nfs4_copy_state {
->  #define NFS_INO_INVALID_XATTR	BIT(15)		/* xattrs are invalid */
->  #define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
->  #define NFS_INO_INVALID_MODE	BIT(17)		/* cached mode is invalid */
-> +#define NFS_INO_INVALID_BTIME	BIT(18)		/* cached btime is invalid */
-> =20
->  #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
->  		| NFS_INO_INVALID_CTIME \
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index 9cacbbd14787..ac4bff6e9913 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -67,6 +67,7 @@ struct nfs_fattr {
->  	struct timespec64	atime;
->  	struct timespec64	mtime;
->  	struct timespec64	ctime;
-> +	struct timespec64	btime;
->  	__u64			change_attr;	/* NFSv4 change attribute */
->  	__u64			pre_change_attr;/* pre-op NFSv4 change attribute */
->  	__u64			pre_size;	/* pre_op_attr.size	  */
-> @@ -106,6 +107,7 @@ struct nfs_fattr {
->  #define NFS_ATTR_FATTR_OWNER_NAME	BIT_ULL(23)
->  #define NFS_ATTR_FATTR_GROUP_NAME	BIT_ULL(24)
->  #define NFS_ATTR_FATTR_V4_SECURITY_LABEL BIT_ULL(25)
-> +#define NFS_ATTR_FATTR_BTIME		BIT_ULL(26)
-> =20
->  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
->  		| NFS_ATTR_FATTR_MODE \
-> @@ -126,6 +128,7 @@ struct nfs_fattr {
->  		| NFS_ATTR_FATTR_SPACE_USED)
->  #define NFS_ATTR_FATTR_V4 (NFS_ATTR_FATTR \
->  		| NFS_ATTR_FATTR_SPACE_USED \
-> +		| NFS_ATTR_FATTR_BTIME \
->  		| NFS_ATTR_FATTR_V4_SECURITY_LABEL)
-> =20
->  /*
+Following the NIS netgroups metaphor, some other user space system would
+define groups, and then /etc/exports could use those to define security
+policy. tlshd would know nothing of NFS, and mountd would know nothing
+of certificates.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Here, tlshd would match a list of groups that the client certificate
+belongs to, and return that list to the kernel as part of a successful
+handshake. That list could be either passed to mountd, or mountd could
+provide the group list on the export and let the kernel match on that.
+
+I guess the TLS groups would be defined in /etc/tlshd.conf. Any upper
+layer protocol can use or ignore them.
+
+TLS groups would be wildcards that might include CN, SAN, certificate
+serial no., etc. So NFSD could still filter by the IP or hostname in the
+certificate presented by the client.
+
+Then, would TLS groups be specified in the export entry's machine name,
+like netgroups today, or would we add a new export option? I'm still
+mulling Rick's suggestion about continuing to restrict mtls access by
+actual IP.
+
+
+>> What makes the most sense is that the handshake succeeds, then NFSD
+>> permits the client to access any export resources that the server's
+>> per-export security policy allows, based on the client's cert.
+>>
+>>
+>>> I'm imagining something like this in /etc/exports:
+>>>
+>>> /exports *(rw,sec=sys,xprtsec=mtls,tlsauth=any)
+>>> /exports/home *(rw,sec=sys,xprtsec=mtls,tlsauth=users)
+>>>
+>>> .. and then tlshd would do the work to create a map of authorized
+>>> certificate identities mapped to a keyword, something like:
+>>>
+>>> CN=*                any
+>>> CN=*.nfsv4bat.org   users
+>>> SHA1=4EB6D578499B1CCF5F581EAD56BE3D9B6744A5E5   bob
+>>
+>> I think mountd is going to have to do that, somehow. It already knows
+>> about netgroups, for example, and this is very similar.
+> 
+> That sounds.. complicated.
+> 
+> Ben
+> 
+
+
+-- 
+Chuck Lever
 
