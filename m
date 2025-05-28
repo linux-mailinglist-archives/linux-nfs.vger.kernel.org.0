@@ -1,383 +1,174 @@
-Return-Path: <linux-nfs+bounces-11941-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11942-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FA98AC5FAC
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 04:48:32 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45930AC682D
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 13:11:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD7BA9E0EA1
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 02:48:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E4E324A2D59
+	for <lists+linux-nfs@lfdr.de>; Wed, 28 May 2025 11:11:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 885C77F7FC;
-	Wed, 28 May 2025 02:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E7D227A92F;
+	Wed, 28 May 2025 11:11:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn24f8t4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OaZRuhHa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5558E28E0F
-	for <linux-nfs@vger.kernel.org>; Wed, 28 May 2025 02:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CA727A929;
+	Wed, 28 May 2025 11:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748400510; cv=none; b=ugPNPOA3HvVaoF0BeUV2xje6KBJo1J+dHsmeV9ZBVZCz3ydtUHToCWgYRCbey2l1sxJZaY1rEgt+5xQGX9t9IJHkxICqwqzfcLNGafiIBDYSTwQPFojHxctSanBITjihnJOjRXzrrzsg/j50YRmItzJEAmzx3ya2K0rEmju7y0o=
+	t=1748430683; cv=none; b=h3+SRwyPIGArsmmQfhFl+DUiSWcfOTcVQRzbLXaiq1MHw8L98hW0U4ghGYkgqNIufnOednLTmau7NRUqhEHcM0JZ8Sx1JN6+EC6yLGGDnWEUJlbh0YIviBqwel8Rhd7V9H+w/vt+1C+W0iHKVqwesS5Oq3BE/oFEOSWk5dcJn50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748400510; c=relaxed/simple;
-	bh=MzDz2ulc+VQaM62mIyWQmOfGbQJ/63JFIP2XwlY60T4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u9i0MZapgxrHbF4HAGtnoZ0EcbLWTX3750MEvzqt/IGOT7N3UI7jtKs6nSK95NXliHHfmcqza1RoJQOClmSKpMcBowYlWiBuPJftxPVrWvFWP3T58utsFn8yLhtP6V5uXqdzYQqx0dKx6N1aShQVNAv8AeX4tbjmEt4FJzLhPpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cn24f8t4; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso8166350a12.1
-        for <linux-nfs@vger.kernel.org>; Tue, 27 May 2025 19:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748400506; x=1749005306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ABLs8GI/jPw1zGmiQ4vNIFEB3X6GwD5hM3qy89QCWuQ=;
-        b=cn24f8t4Hqu8k+FEjkf7FbbfyqHoGRQ5rbUVq7GeEewPG9CRS7QnqAtNbKG5fUtTmf
-         Cq4PeowdAMQA8smQpzfDl7Svdb++x91uQ1KW+MlzyXMxUbovD3tJPcd1+iyrWyN/JToH
-         tPYKeXDEaJVNKoE4LTrOQBpEhqTvh0m67Dum6FunOTwNrhObeymjdAzi6FPmxOWVKTIr
-         uVgcMherWeqVH5sLC+mJ16WZr5ugfVRpzZRjZGDF9dtV+0j87tmYuIVrozAd2H+UCfBO
-         1AskXPG3/RmBRN9rRTVHqEn69pqdDCQnvkELpmTkqukULbJsuHHYgio/DUYv7nw167Pa
-         oJuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748400506; x=1749005306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ABLs8GI/jPw1zGmiQ4vNIFEB3X6GwD5hM3qy89QCWuQ=;
-        b=Qf9pDF13miZJbvRXCgFtSTNWE3bhdYQK4zHD0flEpIoP7ihFBc31TOw6LsW8x5WHIR
-         WHqqtuEjavwtXuyRUzhb+tXnMCplUupzGwMs52fgmgVtWk3SV+fkNNKKzRWnn2z4M53i
-         qRcxKc+tNjhn5I1uQRkirZTe7YUedDXyfbio7xS9ggmfcrR9jwzBSHVXR+nKzeKYxhzb
-         ndXfcE5BQCEUzkqEeFLS49Vscup6uYupci5ekTJvKWQJAE6PFpeEBkffWBNikAfS/NVm
-         4yr2LUp0P2sOT7uIRNUQF2nKEsFvSiQqNqvKMMtlrMyUbO7nYZ+8mHuvsF4OWBrstauv
-         ApZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnd92LYKB3BOKOYb01W+kCHAl6wBvLMmKWOWcBt+UHUWAQH2gfK6mW94KZThVC767HlwVXqiqZFiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF+E12OWN8YB/U5nEuJoN47tNOB8vk+4Kryk0wWBPUc7NapcGk
-	wsgy+rvO/QlRmAI9kN3Onheqg0xXJ8jnXQ8TBMlU39AzzQn6UJURCaJbWYI+sg3sUKQNA8jJ63X
-	uzWzoyXqbpeNRJpAByHN7c/VH3Bc77A==
-X-Gm-Gg: ASbGncuw6U/F0WWruqczUYKQ4GoCEitRd+lC2sLjQGmwNyHl2OTQaGW8iN7/oCDo5Kk
-	fu+8nncTEhBrSiETDD0yeiPhnDbTViPdT0pIB9/dbR2xzM48tLoRfhSMCRuSKDM8suVnUr5d4bC
-	a6o574Gu3FxM0j1H+e6gorNcc4jThnvAzd
-X-Google-Smtp-Source: AGHT+IH+f+GoS06xepo6OQZwNN0zPxKuZZK/IfaawW8KQkpGd0euqBHVw9pJexqxUUTg1MAVtwfI0FbTBtAxsDjJN2o=
-X-Received: by 2002:a05:6402:280d:b0:600:e549:3c19 with SMTP id
- 4fb4d7f45d1cf-6051c33c687mr296435a12.1.1748400506111; Tue, 27 May 2025
- 19:48:26 -0700 (PDT)
+	s=arc-20240116; t=1748430683; c=relaxed/simple;
+	bh=uHiGp2aq/Wwo8MjyGca1umeJbHorr8RG5qJ5OtNyBN8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z4kZHAN0b2A1r9/VrGDMbl9yKNHBi4r4vnttmXJjssMqo5NuV3bCABdnn2WZAkRMhjK91GUyjEvyjyVZIF9WicnrPIZgFbcKhrIAdOUAWmWDRqZagyun0xx5KGb3O9AC4dvgAPokI1abfYs9yIdTrge8P5NILaVKpqLtT74rZ1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OaZRuhHa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D38C4CEE7;
+	Wed, 28 May 2025 11:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748430681;
+	bh=uHiGp2aq/Wwo8MjyGca1umeJbHorr8RG5qJ5OtNyBN8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=OaZRuhHa8huC1wzSUhMu8x3xo1lMiKwEh7R/xjOrdDjT9dlbz1lmF1IM4JkmHB3gD
+	 hgCnfclelMqwd85j8SBn4612NijVVqQbpOcbKEXPUMj7Zk2f2DXddJYQfOxGUDKzH6
+	 TdTWA8/KD2erhhDbDsO0X7n48uuBinmEbnuo9nRd906QRpKQ0iPpHAvX8InYQoRngM
+	 2E/qD2a1eQe7Ffp5Budz+QciPDBIJOno/gS2eIFeYGYE/T9W9FylJdMmZoClI6LChK
+	 tOlVYJtn9mTgwzw94C5yfmSSV+qAopHw5fD/wKQHWkFhrYke8CiNeTqvEFMu/cE/MT
+	 8NfLm7YOnDsoA==
+Message-ID: <3bd1932129f4221a7affc5a6bf1ea5367dcb6a7c.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Replace simple_strtoul with kstrtoint in
+ expkey_parse
+From: Jeff Layton <jlayton@kernel.org>
+To: Su Hui <suhui@nfschina.com>, chuck.lever@oracle.com, neilb@suse.de, 
+	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Date: Wed, 28 May 2025 07:11:19 -0400
+In-Reply-To: <20250527092548.1931636-1-suhui@nfschina.com>
+References: <20250527092548.1931636-1-suhui@nfschina.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e6daff16-2949-4413-b801-58393d9cb993@oracle.com> <174839547480.608730.18119418768033620929@noble.neil.brown.name>
-In-Reply-To: <174839547480.608730.18119418768033620929@noble.neil.brown.name>
-From: Rick Macklem <rick.macklem@gmail.com>
-Date: Tue, 27 May 2025 19:48:13 -0700
-X-Gm-Features: AX0GCFvFn3JG4yByKTmHtyStAG2v5MPAf8u_0El7MgFMcXpwIvMMHYP_tlDbjW0
-Message-ID: <CAM5tNy70Q4Q8s2J=DqufXfFKNh97gCBg36ozm=VNYw0WVE281Q@mail.gmail.com>
-Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
-To: NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Benjamin Coddington <bcodding@redhat.com>, 
-	Jeff Layton <jlayton@kernel.org>, Steve Dickson <steved@redhat.com>, Tom Haynes <loghyr@gmail.com>, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 6:24=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
->
-> On Wed, 28 May 2025, Chuck Lever wrote:
-> > On 5/27/25 3:18 PM, Benjamin Coddington wrote:
-> > > On 27 May 2025, at 11:05, Chuck Lever wrote:
-> > >
-> > >> On 5/25/25 8:09 PM, NeilBrown wrote:
-> > >>> On Mon, 26 May 2025, Chuck Lever wrote:
-> > >>>> On 5/20/25 9:20 AM, Chuck Lever wrote:
-> > >>>>> Hiya Rick -
-> > >>>>>
-> > >>>>> On 5/19/25 9:44 PM, Rick Macklem wrote:
-> > >>>>>
-> > >>>>>> Do you also have some configurable settings for if/how the DNS
-> > >>>>>> field in the client's X.509 cert is checked?
-> > >>>>>> The range is, imho:
-> > >>>>>> - Don't check it at all, so the client can have any IP/DNS name =
-(a mobile
-> > >>>>>>   device). The least secure, but still pretty good, since the er=
-t. verified.
-> > >>>>>> - DNS matches a wildcard like *.umich.edu for the reverse DNS na=
-me for
-> > >>>>>>    the client's IP host address.
-> > >>>>>> - DNS matches exactly what reverse DNS gets for the client's IP =
-host address.
-> > >>>>>
-> > >>>>> I've been told repeatedly that certificate verification must not =
-depend
-> > >>>>> on DNS because DNS can be easily spoofed. To date, the Linux
-> > >>>>> implementation of RPC-with-TLS depends on having the peer's IP ad=
-dress
-> > >>>>> in the certificate's SAN.
-> > >>>>>
-> > >>>>> I recognize that tlshd will need to bend a little for clients tha=
-t use
-> > >>>>> a dynamically allocated IP address, but I haven't looked into it =
-yet.
-> > >>>>> Perhaps client certificates do not need to contain their peer IP
-> > >>>>> address, but server certificates do, in order to enable mounting =
-by IP
-> > >>>>> instead of by hostname.
-> > >>>>>
-> > >>>>>
-> > >>>>>> Wildcards are discouraged by some RFC, but are still supported b=
-y OpenSSL.
-> > >>>>>
-> > >>>>> I would prefer that we follow the guidance of RFCs where possible=
-,
-> > >>>>> rather than a particular implementation that might have historica=
-l
-> > >>>>> reasons to permit a lack of security.
-> > >>>>
-> > >>>> Let me follow up on this.
-> > >>>>
-> > >>>> We have an open issue against tlshd that has suggested that, rathe=
-r
-> > >>>> than looking at DNS query results, the NFS server should authorize
-> > >>>> access by looking at the client certificate's CN. The server's
-> > >>>> administrator should be able to specify a list of one or more CN
-> > >>>> wildcards that can be used to authorize access, much in the same w=
-ay
-> > >>>> that NFSD currently uses netgroups and hostnames per export.
-> > >>>>
-> > >>>> So, after validating the client's CA trust chain, an NFS server ca=
-n
-> > >>>> match the client certificate's CN against its list of authorized C=
-Ns,
-> > >>>> and if the client's CN fails to match, fail the handshake (or what=
-ever
-> > >>>> we need to do).
-> > >>>>
-> > >>>> I favor this approach over using DNS labels, which are often
-> > >>>> untrustworthy, and IP addresses, which can be dynamically reassign=
-ed.
-> > >>>>
-> > >>>> What do you think?
-> > >>>
-> > >>> I completely agree with this.  IP address and DNS identity of the c=
-lient
-> > >>> is irrelevant when mTLS is used.  What matters is whether the clien=
-t has
-> > >>> authority to act as one of the the names given when the filesystem =
-was
-> > >>> exported (e.g. in /etc/exports).  His is exacly what you said.
-> > >>>
-> > >>> Ideally it would be more than just the CN.  We want to know both th=
-e
-> > >>> domain in which the peer has authority (e.g.  example.com) and the =
-type
-> > >>> of authority (e.g.  serve-web-pages or proxy-file-access or
-> > >>> act-as-neilb).
-> > >>> I don't know internal details of certificates so I don't know if th=
-ere
-> > >>> is some other field that can say "This peer is authorised to proxy =
-file
-> > >>> access requests for all users in the given domain" or if we need a =
-hack
-> > >>> like exporting to nfs-client.example.com.
-> > >>>
-> > >>> But if the admin has full control of what names to export to, it is
-> > >>> possible that the distinction doesn't matter.  I wouldn't want the
-> > >>> certificate used to authenticate my web server to have authority to
-> > >>> access all files on my NFS server just because the same domain name
-> > >>> applies to both.
-> > >>
-> > >> My thought is that, for each handshake, there would be two stages:
-> > >>
-> > >> 1. Does the NFS server trust the certificate? This is purely a chain=
--of-
-> > >>    trust issue, so validating the certificate presented by the clien=
-t is
-> > >>    the order of the day.
-> > >>
-> > >> 2. Does the NFS server authorize this client to access the export? T=
-his
-> > >>    is a check very similar to the hostname/netgroup/IP address check
-> > >>    that is done today, but it could be done just once at handshake t=
-ime.
-> > >>    Match the certificate's fields against a per-export filter.
-> > >>
-> > >> I would take tlshd out of the picture for stage 2, and let NFSD make=
- its
-> > >> own authorization decisions. Because an NFS client might be authoriz=
-ed
-> > >> to access some exports but not others.
-> > >>
-> > >> So:
-> > >>
-> > >> How does the server indicate to clients that yes, your cert is trust=
-ed,
-> > >> but no, you are not authorized to access this file system? I guess t=
-hat
-> > >> is an NFS error like NFSERR_STALE or NFS4ERR_WRONGSEC.
-> > >>
-> > >> What certificate fields should we implement matches for? CN is obvio=
-us.
-> > >> But what about SAN? Any others? I say start with only CN, but I'd li=
-ke
-> > >> to think about ways to make it possible to match against other field=
-s in
-> > >> the future.
-> > >>
-> > >> What would the administrative interface look like? Could be the mach=
-ine
-> > >> name in /etc/exports, for instance:
-> > >>
-> > >> *,OU=3D"NFS Bake-a-thon",*   rw,sec=3Dsys,xprtsec=3Dmtls,fsid=3D42
-> > >>
-> > >> But I worry that will not be flexible enough. A more general filter
-> > >> mechanism might need something like the ini file format used to crea=
-te
-> > >> CSRs.
-> > >
-> > > It might be useful to make the kernel's authorization based on mappin=
-g to a
-> > > keyword that tlshd passes back after the handshake, and keep the more
-> > > complicated logic of parsing certificate fields and using config file=
-s up in
-> > > ktls-utils userspace.
-> >
-> > I agree that the kernel can't do the filtering.
-> >
-> > But it's not possible that tlshd knows what export the client wants to
-> > access during the TLS handshake; no NFS traffic has been exchanged yet.
-> > Thus parsing per-export security settings during the handshake is not
-> > possible; it can happen only once tlshd passes the connected socket bac=
-k
-> > to the kernel.
-> >
-> > And remember that ktls-utils is shared with NVMe and now QUIC as well.
-> > tlshd doesn't know anything about the upper layer protocols. Therefore
-> > adding NFS-specific authorization policy settings to ktls-utils is a
-> > layering violation.
-> >
-> > What makes the most sense is that the handshake succeeds, then NFSD
-> > permits the client to access any export resources that the server's
-> > per-export security policy allows, based on the client's cert.
->
-> We certainly need a mapping between content of the certificate and an
-> "auth_domain" as understood by net/sunrpc, then a mapping from
-> auth_domain and filesystem to export options - we already have the
-> latter.
->
-> There seem to be two option for the first mapping.
-> 1/ tlshd can pass the "important" parts of the certificate (and the PSK
->   info) to the sunrpc module much as the IP layer currently passes the IP
->   address and port number to the sunrpc module.  sunrpc then passes this =
-up to
->   mountd which does whatever mapping magic we want and passes down an
->   auth_domain which is then used for further lookup.
->
-> 2/ tlshd can do some initial interpretation of the certificate (and PSK)
->   and determine one or more tags which serve to sufficiently classify the
->   certificate for local needs.  It passes them to sunrpc and thence to
->   mountd which gives relevant details to nfsd.
->
-> So the core question is: what sort of info do we want to pass from tlshd
-> to mountd (via sunrpc) and where is the processing easiest.  Or maybe:
-> which part of the processing can usefully be shared with other clients
-> of tlshd and which are truly nfsd-specific?
-I'm a simple minded guy, so here's a simple minded suggestion...
-Define CNs using a DNS like syntax. For example:
-alice.faculty.cis.uoguelph.ca
-bob.student.cis.uoguelph.ca
+On Tue, 2025-05-27 at 17:25 +0800, Su Hui wrote:
+> kstrtoint() is better because simple_strtoul() ignores overflow and the
+> type of 'fsidtype' is 'int' rather than 'unsigned long'.
+>=20
+> Signed-off-by: Su Hui <suhui@nfschina.com>
+> ---
+>  fs/nfsd/export.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index 0363720280d4..1bc9bc20cac3 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -83,7 +83,6 @@ static int expkey_parse(struct cache_detail *cd, char *=
+mesg, int mlen)
+>  	struct auth_domain *dom =3D NULL;
+>  	int err;
+>  	int fsidtype;
+> -	char *ep;
+>  	struct svc_expkey key;
+>  	struct svc_expkey *ek =3D NULL;
+> =20
+> @@ -109,8 +108,7 @@ static int expkey_parse(struct cache_detail *cd, char=
+ *mesg, int mlen)
+>  	err =3D -EINVAL;
+>  	if (qword_get(&mesg, buf, PAGE_SIZE) <=3D 0)
+>  		goto out;
+> -	fsidtype =3D simple_strtoul(buf, &ep, 10);
+> -	if (*ep)
+> +	if (kstrtoint(buf, 10, &fsidtype))
+>  		goto out;
+>  	dprintk("found fsidtype %d\n", fsidtype);
+>  	if (key_len(fsidtype)=3D=3D0) /* invalid type */
 
-When a handshake gets the cert., extract the above CN and push it
-into the kernel, associated with the TCP connection.
-
-Then in /etc/exports, specify a CN or a wildcarded suffix. For example:
-/exports/faculty/alice
-(rw,sec=3Dsys,xprtsec=3Dmtls,cn=3Dalice.faculty.cis.uoguelph.ca)
-/exports/faculty/data (rw,sec=3Dsys,xprtsec=3Dmtls,cn=3D*.faculty.cis.uogue=
-lph.ca)
-/exports/students (rw,sec=3Dsys,xprtsec=3Dmtls,cn=3D*.student.cis.uoguelph.=
-ca)
-
-Then whatever processes /etc/exports pushes the cn strings into the kernel,
-associating them with the file systems.
-
-Then, when an RPC request arrives on the TCP connection, tag it with the
-CN string (alice.faculty.cis.uoguelph.ca or bob.student.cis.uoguelph.ca)
-and when exports need to be checked for a file system, it is just a string
-compare (either the whole string or a suffix when wildcarded).
-
-You can use the same string comparison rules as DNS names. Ascii case
-independent and Puny encoding for non-ascii chars.
-
-rick
-
-
->
-> I'd be inclined to keep as much understanding of the various details of
-> certificates in tlshd as possible.  It has to deal with some of that
-> complexity, and mountd really doesn't.
->
-> >
-> >
-> > > I'm imagining something like this in /etc/exports:
-> > >
-> > > /exports *(rw,sec=3Dsys,xprtsec=3Dmtls,tlsauth=3Dany)
-> > > /exports/home *(rw,sec=3Dsys,xprtsec=3Dmtls,tlsauth=3Dusers)
-> > >
-> > > .. and then tlshd would do the work to create a map of authorized
-> > > certificate identities mapped to a keyword, something like:
-> > >
-> > > CN=3D*                any
-> > > CN=3D*.nfsv4bat.org   users
-> > > SHA1=3D4EB6D578499B1CCF5F581EAD56BE3D9B6744A5E5   bob
-> >
-> > I think mountd is going to have to do that, somehow. It already knows
-> > about netgroups, for example, and this is very similar.
->
-> netgroups is a good example.  mountd knows what a netgroup is but
-> doesn't really know about the internal details.  There is a function
-> "innetgr()" which it calls to do the required magic.  We similarly want
-> a simple way for mountd to know that a given certificate matches a given
-> tlsgroup.  A library function would be OK.  strcmp would be good too.
->
-> We export to a netgroups as:
->         /path @netgroup(options)
-> could we export to a certificate as
->         /path &tlsgroup(options)
-> ??
->
-> It's always seems weird to me have the "sec=3D" in the options list.
-> The authentication bit comes before the options.  An IP address or
-> hostname meand AUTH_SYS. A krb5 indicator means krb5 etc....
-> But that isn't the way we went .... unfortunately??
->
-> Thanks,
-> NeilBrown
->
->
-> >
-> >
-> > > I imagine more flexible or complex rule logic might be desired in the
-> > > future, and having that work land in ktls-utils would be nicer than h=
-aving
-> > > to do kernel work or handling various bits of certificate logic or re=
-verse
-> > > lookups in-kernel.
-> >
-> > I agree that the kernel will have to be hands off (or, it will act as a
-> > pipe between the user space pieces that actually handle the security
-> > policy, if you will).
-> >
-> >
-> > --
-> > Chuck Lever
-> >
->
->
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
