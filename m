@@ -1,70 +1,70 @@
-Return-Path: <linux-nfs+bounces-11986-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11987-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1E55AC7D3F
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 May 2025 13:37:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C02A6AC7D40
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 May 2025 13:37:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0E613BF1F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 May 2025 11:37:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A33516121F
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 May 2025 11:37:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F5592918EB;
-	Thu, 29 May 2025 11:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C343228F959;
+	Thu, 29 May 2025 11:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a2n8UTrO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qFu2RBvN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A7D2918C4
-	for <linux-nfs@vger.kernel.org>; Thu, 29 May 2025 11:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235252918EC
+	for <linux-nfs@vger.kernel.org>; Thu, 29 May 2025 11:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748518460; cv=none; b=MWwSboZszGWEcMhei5PN5RM+Ai6WyJ/3CX1ddoweHtNI2fADvMLL9t5xIbYSgafgH94VvBB+xmIUbyCz8blRNlgC5i+p7dnQ4M1koUln+7Aa2KBGvXSFdob0/Zylaidox1Z4J267bZPs9Z9ymNs54XUyTbtmv8cYsPmG8g8UVSY=
+	t=1748518461; cv=none; b=RmggaVQlyIkc+sPq0Tj+xvj2yrR3bm/US5lmcWGcM+MdAxwXTiwjMjxKFpcD9bpzplFOs82GfObOYQhJ6RDSfw/F6TdWSiEA/GcOHTAm2xLW0QOjfuCFf2XJPDXVPCivBxHkG0CuSt8WZQ6zjcK9ozPiO8Y6pijnXNv9+s4Ac2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748518460; c=relaxed/simple;
-	bh=dfaTiw8nLDRjFxCFnO02BCVy3d+c+Vl05L0PLyr4qcU=;
+	s=arc-20240116; t=1748518461; c=relaxed/simple;
+	bh=AvshCjFmzExHwRxduu+FeUsS3ZP3gR0L5bOFFiOF5gk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=p49o+4E8kj7GkvSrZPYjWI+GbhSJHQLVZX8XShLMM1tdctituKoGhNBGYJPC3dN3mDLzqkBvDm46KS7xB7AWooWfUPZDZ/KXsdHGH1yPE7HwcbNY75G2HlzgOPu98xC8sT+v75sil80xCTkFQnZcvqwhP/34wH/hgotpMOf78Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=a2n8UTrO; arc=none smtp.client-ip=203.254.224.24
+	 Content-Type:References; b=HoV/BNT4n9LfaY3QES0/bgJ3ZiMTsTuS/Ww0DHtMpMDWliE/Gqt5xSYTIivKCgKT2vom8oCnODyW5K6A5g3ceeUe8fnMJuf8KYTRD+dcyqZc/ArO6sQapcnB2MyFJghTmkGGigQaPhIPmKQPDwlOqmBxVTdQgPIbGy8yr98kzYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=qFu2RBvN; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250529113416epoutp01264c197a05b183f3969c9b8598cdb8c0~D-EWQSFug2905929059epoutp01U
-	for <linux-nfs@vger.kernel.org>; Thu, 29 May 2025 11:34:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250529113416epoutp01264c197a05b183f3969c9b8598cdb8c0~D-EWQSFug2905929059epoutp01U
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250529113418epoutp01e1f566a6d1a9521e360be765c101199c~D-EYSgYqV2841428414epoutp01l
+	for <linux-nfs@vger.kernel.org>; Thu, 29 May 2025 11:34:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250529113418epoutp01e1f566a6d1a9521e360be765c101199c~D-EYSgYqV2841428414epoutp01l
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748518456;
-	bh=cE4aGrMWfdfKbV5mbcWv7IOIJ9zK97xR7MCGDQSOGKk=;
+	s=mail20170921; t=1748518458;
+	bh=5UKmqLXR0SIvc4dfCdeb83oafI/Njtr5UdFaODU7FB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a2n8UTrOM8mPmjG1GkMf88KfKidjyEHvKIwzrMlx/hgazwXWF/RQruVtbORT+aKhP
-	 uo4kUlfRMf3JRNFX4TLvxRcDSM+/boX9VMF1IEjCb3f7dZOFrynqPvneCM0bQb5DwX
-	 Q4vuckXTuFOWlWIHlUGObdxUZKjUZV4KFoF37dso=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250529113415epcas5p13c210c73fcbcff52dcc7bb93f4f01f1b~D-EVoaqUQ0281002810epcas5p1n;
-	Thu, 29 May 2025 11:34:15 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4b7PQs6NQsz3hhT4; Thu, 29 May
-	2025 11:34:13 +0000 (GMT)
+	b=qFu2RBvNXHWNmiq01V1MxikIMwpwRLJDr99QjFrNaJle0RwlD47xRGi73FOWrTqUU
+	 +O9QGnz3eG+0v8rRxXuSFyTWWV4s1KrPxU3XWjqMpIuL8GgyjVV8mADambr26uqOMS
+	 6ttAJRXZfcuBtqZdCgt7zSEueb8zo1I78m1nH6oY=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250529113417epcas5p4913bfcdebcbf40173aa088f75116ecc8~D-EXr8ISM1596915969epcas5p4A;
+	Thu, 29 May 2025 11:34:17 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.175]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4b7PQw1Fqdz6B9m5; Thu, 29 May
+	2025 11:34:16 +0000 (GMT)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
 	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250529113306epcas5p3d10606ae4ea7c3491e93bde9ae408c9f~D-DVj9Ciy0439204392epcas5p3B;
-	Thu, 29 May 2025 11:33:06 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	20250529113311epcas5p3c8f1785b34680481e2126fda3ab51ad9~D-DZugUHF0980809808epcas5p3Y;
+	Thu, 29 May 2025 11:33:11 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
 	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250529113306epsmtrp271b91974fef11311e14c484c1a067438~D-DVZrJFM3201832018epsmtrp2_;
-	Thu, 29 May 2025 11:33:06 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-ae-683845f23ae6
+	20250529113310epsmtrp24c693352404dc8921ffaebdb46d76e3c~D-DZoI3zJ3201832018epsmtrp2U;
+	Thu, 29 May 2025 11:33:10 +0000 (GMT)
+X-AuditID: b6c32a52-41dfa70000004c16-96-683845f61a79
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	62.F0.08766.2F548386; Thu, 29 May 2025 20:33:06 +0900 (KST)
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	80.A2.19478.6F548386; Thu, 29 May 2025 20:33:10 +0900 (KST)
 Received: from localhost.localdomain (unknown [107.99.41.245]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250529113302epsmtip2ad463f8678ba29c64da9a5eb397e2892~D-DRiEkXT2424224242epsmtip2B;
-	Thu, 29 May 2025 11:33:02 +0000 (GMT)
+	20250529113306epsmtip27b8bc9c2fd5f4139f51a8dda75df7888~D-DVgb9KP2456924569epsmtip2m;
+	Thu, 29 May 2025 11:33:06 +0000 (GMT)
 From: Kundan Kumar <kundan.kumar@samsung.com>
 To: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
 	brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com,
@@ -77,10 +77,10 @@ Cc: linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
 	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org,
 	gost.dev@samsung.com, Kundan Kumar <kundan.kumar@samsung.com>, Anuj Gupta
 	<anuj20.g@samsung.com>
-Subject: [PATCH 12/13] nfs: add support in nfs to handle multiple writeback
- contexts
-Date: Thu, 29 May 2025 16:45:03 +0530
-Message-Id: <20250529111504.89912-13-kundan.kumar@samsung.com>
+Subject: [PATCH 13/13] writeback: set the num of writeback contexts to
+ number of online cpus
+Date: Thu, 29 May 2025 16:45:04 +0530
+Message-Id: <20250529111504.89912-14-kundan.kumar@samsung.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250529111504.89912-1-kundan.kumar@samsung.com>
 Precedence: bulk
@@ -90,85 +90,57 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJIsWRmVeSWpSXmKPExsWy7bCSvO4nV4sMg7b1whbb1u1mt5izfg2b
-	xYV1qxktWnf+Z7FomvCX2WL13X42i9eHPzFanJ56lsliyyV7i/eXtzFZrL65htFiy7F7jBaX
-	n/BZ7J7+j9Xi5oGdTBYrVx9lspg9vZnJ4sn6WcwWW798ZbW4tMjdYs/ekywW99b8Z7W4cOA0
-	q8WNCU8ZLZ7t3shs8XlpC7vFwVMd7Baf5gINOf/3OKvF7x9z2BzkPE4tkvDYOesuu8fmFVoe
-	l8+Wemxa1cnmsenTJHaPEzN+s3i82DyT0WP3gs9MHrtvNrB5nLtY4fF+31U2j74tqxg9ps6u
-	9ziz4Ai7x4ppF5kChKK4bFJSczLLUov07RK4MrYdfcBc8IS34sRS3gbGldxdjJwcEgImEgt+
-	zGfqYuTiEBLYzShxc+FuRoiEjMTuuztZIWxhiZX/nrNDFH1klJh9+wdzFyMHB5uArsSPplCQ
-	uIjATWaJc2fPgDUwC/xjlNj9SgfEFhYIkTj9fxkbiM0ioCqx5FUDmM0rYCexafIFqGXyEjMv
-	fWcHsTmB4ouWfAWLCwnYSiy9uZYFol5Q4uTMJywQ8+UlmrfOZp7AKDALSWoWktQCRqZVjJKp
-	BcW56bnFhgWGeanlesWJucWleel6yfm5mxjBqUFLcwfj9lUf9A4xMnEwHmKU4GBWEuFtsjfL
-	EOJNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbLxMEp1cAU633n10k1
-	d2v/ThdDY8P5q4xkpB0yZ4idC1tVcftNR67buyu3WPe5RzNtWH2tvmW1jP/cy7fellk7b/zm
-	N/PiFW2WLV/d/jVWRe4rFSwrvVsSF6MT/tpXL1qAKXT36vS0SR/Sph6U1Q9aaBNepmItNj9w
-	6e1Dx9Prvadc7fhve3ZZWWnT1o8BO17x7O/elK9vFn3z2rXtPI27ew3m+1dt/JJjdkezcc+K
-	V3dLdiXe3PnJe4GK6bHOvHsTw82TSrzf9ajsyw1l/NUr8UMq6OvUNPmYKWqqe5luNOxVXCIg
-	tJTpRvyN0xztR2w07daISReu/a90uuxXSdWltcdV7aSWn5ybzObi/t72y8071RuUWIozEg21
-	mIuKEwHp2L7efAMAAA==
-X-CMS-MailID: 20250529113306epcas5p3d10606ae4ea7c3491e93bde9ae408c9f
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsWy7bCSvO43V4sMg0nLDS22rdvNbjFn/Ro2
+	iwvrVjNatO78z2LRNOEvs8Xqu/1sFq8Pf2K0OD31LJPFlkv2Fu8vb2OyWH1zDaPFlmP3GC0u
+	P+Gz2D39H6vFzQM7mSxWrj7KZDF7ejOTxZP1s5gttn75ympxaZG7xZ69J1ks7q35z2px4cBp
+	VosbE54yWjzbvZHZ4vPSFnaLg6c62C0+zQUacv7vcVaL3z/msDnIeZxaJOGxc9Zddo/NK7Q8
+	Lp8t9di0qpPNY9OnSeweJ2b8ZvF4sXkmo8fuBZ+ZPHbfbGDzOHexwuP9vqtsHn1bVjF6TJ1d
+	73FmwRF2jxXTLjIFCEVx2aSk5mSWpRbp2yVwZVy+q11wja1iZe9RlgbGo6xdjJwcEgImEq+v
+	fGDqYuTiEBLYzijxYeUzZoiEjMTuuzuhioQlVv57zg5R9JFR4tqKiWxdjBwcbAK6Ej+aQkHi
+	IgI3mSXOnT0D1sAs8I9RYvcrHRBbWCBG4uz6RjYQm0VAVWL28RtgNbwCdhJNZ19CLZOXmHnp
+	OzuIzQkUX7TkKyOILSRgK7H05loWiHpBiZMzn7BAzJeXaN46m3kCo8AsJKlZSFILGJlWMYqm
+	FhTnpucmFxjqFSfmFpfmpesl5+duYgSnBK2gHYzL1v/VO8TIxMF4iFGCg1lJhLfJ3ixDiDcl
+	sbIqtSg/vqg0J7X4EKM0B4uSOK9yTmeKkEB6YklqdmpqQWoRTJaJg1OqgSn3nsKHdUEZXB3/
+	31+61rnj3FbLW0wfYp0aEl+cOzgrpXP/vyyBDMZFqwIuXN4T1fzt47t21nnG6oI6273rj1/U
+	DW/rWWKvP+PuUY7HZw8dW9YTcfFDntJn+4dPrB4ahc88cSpSZMnVutsmAT5Zn+/E6i38t85q
+	W3z45H+s4TfU+Rb16/942v1BvFkr7qNY7JmNH57aqPPyvP5krnZAe/ZryUeV199mzU00bf08
+	+4BReOTT+l1+f6fZZqr/6n5ZqvZXd2rr/+KA5zktbmcndev81jXurtj4hW257O7dDE3u5yaL
+	lR6QbkxOftwuv7UvXT9tzes9allf/UOMNVNSjP5skMiP6rI45q7YVKbMOUWJpTgj0VCLuag4
+	EQASq0MleAMAAA==
+X-CMS-MailID: 20250529113311epcas5p3c8f1785b34680481e2126fda3ab51ad9
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250529113306epcas5p3d10606ae4ea7c3491e93bde9ae408c9f
+X-CMS-RootMailID: 20250529113311epcas5p3c8f1785b34680481e2126fda3ab51ad9
 References: <20250529111504.89912-1-kundan.kumar@samsung.com>
-	<CGME20250529113306epcas5p3d10606ae4ea7c3491e93bde9ae408c9f@epcas5p3.samsung.com>
+	<CGME20250529113311epcas5p3c8f1785b34680481e2126fda3ab51ad9@epcas5p3.samsung.com>
 
-Fetch writeback context to which an inode is affined. Use it to perform
-writeback related operations.
+We create N number of writeback contexts, N = number of online cpus. The
+inodes gets distributed across different writeback contexts, enabling
+parallel writeback.
 
 Signed-off-by: Kundan Kumar <kundan.kumar@samsung.com>
 Signed-off-by: Anuj Gupta <anuj20.g@samsung.com>
 ---
- fs/nfs/internal.h | 5 +++--
- fs/nfs/write.c    | 6 +++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ mm/backing-dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index fd513bf9e875..a7cacaf484c9 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -838,14 +838,15 @@ static inline void nfs_folio_mark_unstable(struct folio *folio,
- {
- 	if (folio && !cinfo->dreq) {
- 		struct inode *inode = folio->mapping->host;
-+		struct bdi_writeback_ctx *bdi_wb_ctx =
-+						fetch_bdi_writeback_ctx(inode);
- 		long nr = folio_nr_pages(folio);
- 
- 		/* This page is really still in write-back - just that the
- 		 * writeback is happening on the server now.
- 		 */
- 		node_stat_mod_folio(folio, NR_WRITEBACK, nr);
--		wb_stat_mod(&inode_to_bdi(inode)->wb_ctx_arr[0]->wb,
--			    WB_WRITEBACK, nr);
-+		wb_stat_mod(&bdi_wb_ctx->wb, WB_WRITEBACK, nr);
- 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
- 	}
- }
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index ec48ec8c2db8..ca0823debce7 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -932,11 +932,11 @@ static void nfs_folio_clear_commit(struct folio *folio)
- {
- 	if (folio) {
- 		long nr = folio_nr_pages(folio);
--		struct inode *inode = folio->mapping->host;
-+		struct bdi_writeback_ctx *bdi_wb_ctx =
-+				fetch_bdi_writeback_ctx(folio->mapping->host);
- 
- 		node_stat_mod_folio(folio, NR_WRITEBACK, -nr);
--		wb_stat_mod(&inode_to_bdi(inode)->wb_ctx_arr[0]->wb,
--			    WB_WRITEBACK, -nr);
-+		wb_stat_mod(&bdi_wb_ctx->wb, WB_WRITEBACK, -nr);
- 	}
- }
- 
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index d416122e2914..55c07c9be4cd 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -1046,7 +1046,7 @@ int bdi_init(struct backing_dev_info *bdi)
+ 	bdi->min_ratio = 0;
+ 	bdi->max_ratio = 100 * BDI_RATIO_SCALE;
+ 	bdi->max_prop_frac = FPROP_FRAC_BASE;
+-	bdi->nr_wb_ctx = 1;
++	bdi->nr_wb_ctx = num_online_cpus();
+ 	bdi->wb_ctx_arr = kcalloc(bdi->nr_wb_ctx,
+ 				  sizeof(struct bdi_writeback_ctx *),
+ 				  GFP_KERNEL);
 -- 
 2.25.1
 
