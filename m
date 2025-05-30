@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-11992-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-11993-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7452FAC8656
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 May 2025 04:45:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82B32AC86C6
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 May 2025 04:59:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF4243BA8D4
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 May 2025 02:45:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C22C18830FF
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 May 2025 02:59:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EB4E8633F;
-	Fri, 30 May 2025 02:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 390B2227EB9;
+	Fri, 30 May 2025 02:54:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdgOcePV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fr6KTlTi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13B2CCC9;
-	Fri, 30 May 2025 02:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9323B227B9F;
+	Fri, 30 May 2025 02:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748573132; cv=none; b=TX+ESxuKzK1fFNkDLikiSi1Kg/VqPiiV5Yq0d5rhjM/Kn1DJCE3SjQTXS9/kEF9lIg5fO2WX8dlZ+t3GXa8uiNDAnLh0gdF0D5SLubqhDjp/Dgs07cjDG5cncfjva3VQD8oY/01f53l1Zt/ag3doYi3+mTnFQiCSUV789NVBc+s=
+	t=1748573646; cv=none; b=QVegVo+ZojKtBQ4UyRm7VN/nXSK2KU3CSi3fE/x51nDLLuEhyFUdgykeSaxgi7i/RtsuLJ8uhzN5gE5dwU7y2WnQh6GFNlNDXsv6O93CCO8sX4w8LTuooVWZ27yuLZH/f3mT4X/BsfyHEfe9S8h3UYyLNbJloQGSQLuc/iEgEuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748573132; c=relaxed/simple;
-	bh=x18HnVhVbRhIWKpmltEGD1wKR/IEN2lra4oEUH168vw=;
+	s=arc-20240116; t=1748573646; c=relaxed/simple;
+	bh=ru9a6sY4ZvkfZZSCB/5pKAsVZvCUON0+3IAKLW5UIfU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J+CC3Fp/iLEYxcwipsEUVPP6MOCnWuJ3WiwDiSS3gG0QXnlb6fJOg+3L2vwT8o5xbj3bgGMQ/61FAfoUa0nwxmBLifZfM6WqCvwSlLycS86K5hF2jJYoRlYKh7dWTx5rKcMiMhUK9alJlWfKHl74EZ6WTKJCgvuto08n19BG1RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdgOcePV; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=soh74iyDsiqXtAX3ZnG2qRAMA67uh0CWj6KfV4bXxxSXLzaiim2xwfShf+cvXG5cQlIGWGLtVewQ+sBuT5xOoS7eS1OVU58AFaxuDcHL8DqqbHRAMOIhrLzg/En+Kmy8/OgTVNO5h91ApwiVYp/pvw/s0TinB2etf9MwBu7lC4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fr6KTlTi; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2351ffb669cso8502975ad.2;
-        Thu, 29 May 2025 19:45:30 -0700 (PDT)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234c5b57557so15693835ad.3;
+        Thu, 29 May 2025 19:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748573130; x=1749177930; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748573644; x=1749178444; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KoOjhXLY+ZNHRcoN2faE2b66e3GkcsBbU+4gzMj9KqY=;
-        b=NdgOcePVWex7lYBd6mm9ioSKYVsCCN/BB0yDPYfhoiKzjscBiQQ5b1T4B8Dq1Z+iAO
-         a+UNL1yBbho2Ic9w8tiQW0iX7Kc3pZl0qb3SbHjg7NcGM4jEyeJXXKBlGoOQQFqJXi+p
-         LwaFeWGJ8mSMxb/aWQJP5hQvdf8yb9xstT+PwxheOmk9tuHJnLXoOI4rD7qLCUrKHw5e
-         MmYFJ6acFrU/i95KPz/DnKinzX5H6V7nNbzjOF2ByHR9hrRqOE5PTgfJKK3aedPWInwV
-         7UdbZrfIexAMFTqDOfQuK8hKal6Gq7tdTKDbb4wnNJJYsTTMFy1GPgE01x08Sn9I/TIF
-         BHxg==
+        bh=XWyxMFb5cX5nYvnzZ8Z+1Eedymi4rZCZ/8P/Gr9oFgw=;
+        b=Fr6KTlTiCzSWtuLO1aDqK5QkyiSaJXvtz4yaKWkDDq1l4DQGK74UwNZ/U+VNFoPOQj
+         gww4Vcahj8xRIoACeH32wCOTu6WIak38OGvCF2okQfUeWYI3jWQdnK+XEM8Fels5QKCD
+         BGi9F6kS91KxnjYWyJVExSsoJ3ih08e1qCZM4i+xvqh4kUJljY8jl4Fx3X/epWx7EBna
+         zIIxRHAHeXtOH855d5YHundxXo/igm75kNIQl8Z7u+FUjVSb8AKUfA13QVUAUXUmgIIr
+         lMyomjeI1EqKh7jM2G1eCuMVna0L6qw3MQEGKBHE3rtZOlmo3FY+sK6wPkrBIBrBTKdc
+         yZlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748573130; x=1749177930;
+        d=1e100.net; s=20230601; t=1748573644; x=1749178444;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KoOjhXLY+ZNHRcoN2faE2b66e3GkcsBbU+4gzMj9KqY=;
-        b=EtLlhyEw0NXzoi/R8dgBiPoOrC2EHKMP0E34j+CNBnbEwmG5cM99UaCYyQgVEvtOYl
-         LoEuzSuxg71OHnmUk9rI3gewXA6T3OA8pzOyjOAH3dVAt8sh2RcwZbEX+2zlamLzDnWp
-         lB1fZnqJu/OeASGuQp7wu3+z5ar1fTEaogKvHZTWF4A4D1ik6tDf/qBcgZwuKg4t2MiK
-         MGFH0CwTWEtnda07QaxcOrjXWLNm71iVZ5Ymfyn0qv5knvqeaNkEfCRTCkg+FvCZWVHt
-         dLHqPcN/pb6aakr5h2cFurJBIZEw86lcMJ6rAMMJS9+PT9aiwih1ZBMKDvyvpM9ZmqlK
-         6XHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV60aSkNT5+2QfD6x7GJMS7g/zkKG+2MVQWcBoa4RAIO8s0PYBF4dkIUC/3n0RH63K0Dgi6WQbVLPQ=@vger.kernel.org, AJvYcCWDJ16BV7BlYergudNuUV8oXaotK01pn0AuK0Xw9xjV0xNb8u5UYoki+zFojP6yxspkZTkZ5asY@vger.kernel.org, AJvYcCWxVzAV7S7Rnt9dJxaRDXWVuTrmFV1P9eJRFvVTx3WxO/MDgjHyUSg3gZ6l8ZRKfiyIj+yzpcP7Gj4ueA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/vMR67MoKnUfj6oH42XoePJL1ARuvrl6vm9G7NZIKglW3Hi3n
-	A8rL4QPu4oTibNMfFMPk+kHWrXOx0kp65hKFwE3RhenlXO9RI1VxnYU=
-X-Gm-Gg: ASbGnctRbrU+HFjTofN4ZWSwBOYjwrEp3b2DgqAFqpPGQF3HNySHkb+aV+aRuXyEq4G
-	2e5hqE5mIFv21nz5ns/NRb+qOrj6m3SiESrZS/iDKQi/qgJTgswOGuWbMnMPNoFVwW7E1/jqcF7
-	q7FHUGYQnpzXTXKkGZg6TiRlFkKieCfoC6cbgXmcdrSeKtTgmPTrfAYiN0YE1ZvjJRPDTvKrbX1
-	XOShHgiC687hB5cFvQPHsaUbLKyIcJ7YYjdCxfTMrti4k2WKFRcmeXrtsLqCsSgohN0ulq9k6rE
-	VCX/AMPjE6S5hrIWsGZ68OljwTW/
-X-Google-Smtp-Source: AGHT+IGmhneqjdBylW4JYpgbPUNRknu2JzSpNlC2hWsZcakXdR7Ir8On6/7pieVXkB9LlKcYsiVkBw==
-X-Received: by 2002:a17:903:3ac8:b0:234:bfe3:c4a5 with SMTP id d9443c01a7336-235298ef7bfmr26925495ad.2.1748573129870;
-        Thu, 29 May 2025 19:45:29 -0700 (PDT)
+        bh=XWyxMFb5cX5nYvnzZ8Z+1Eedymi4rZCZ/8P/Gr9oFgw=;
+        b=pRxMTSUvq88S7Rq24g0e542N9qFccJE2l9NV5X4sG6xUierydRm1aAR+pGGAdVBb4a
+         96nGmx83FtP4jl+0Sr6t1am79qAQyb0HKUGaF23lpqjumNZtWNuVG/uT6Mi6B15JhI+O
+         MK+6YHmrOMV50k3i3ZEtIB7R8jOhtVe0e/aDuzXqvUJaSPimvdIDZIfvbSNR/lTIJtTv
+         /p7QHgKTPeXlVZ38lz9A4h/O/BK/9UN4Sy4JyQqbXiA6ptULhEv204S4WNUnLk2nr08d
+         vwhz0c2Y+SVAGOA6yX9BVOGdR3JZDUWaDRb5TdWQ59mGKB0+09fU32cf06rX1IntBtyY
+         q4lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcmZkwkBZTEhvSDjSVHXyQ09UxNILdEjWPD+L/a2/ozJ9yEb7fCBewiRVGbpNiHCjjERQeuQjOLKSjDg==@vger.kernel.org, AJvYcCVdddSKESgLFp/efSZajIF4E0sA3SIgUiTFCjkQ7xrjX3diwIPRoY+4/On6nwYggWdpD0Z/QVSWDiw=@vger.kernel.org, AJvYcCXxNsBylGi9DIaGi8Hd33c+eQxoqv5UOtb9NcZpzWFWUqojAJicD5BaEIgp1dUAMj7c3kVHS33O@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY135nvtgo4gDN1V0fffWlQXDiLFciBWeMi/MAskknqYC4Av78
+	VnjFzEC/1e9YGtiNcamO5XCOAFqoT+Wg32VybS6jaCIh/xDXwyo872k=
+X-Gm-Gg: ASbGncvJt97fK7B4gSGaZ80Cg+YnD7m44pxajvQkSysIxxf0idNw4jHarhhoVnxWW6C
+	OYJbbWMBNLRbbPfwEPpWNO5byvhw1hhsrHkNmSU0wVBKvPHVkSGgnkojVf35oBZOF9nsISQq7Su
+	jeiRINfA0nvfqZl62jMZSUCYykEGn08QHVPeaMCpw3SWkBAj0cXOCZ4qXPadq+4+7VPPn93np8A
+	YBh0tpzbt0wJUUFlEdJeyeGocJMYg/8FHDYJQVIxpMNnnmrpaX1bPqHi432w+l/zF8GZSQN39Y4
+	dfjlyqfBaWZ//ltNPt4AOPSAmBXY
+X-Google-Smtp-Source: AGHT+IGgDezX7cz1uOZykPYiPInz+eIk19WtpZF+nVK4hwKpEI92osR/Nx6vpb7wz1AjRVv5hZda0w==
+X-Received: by 2002:a17:902:d544:b0:224:10a2:cae7 with SMTP id d9443c01a7336-235396cb241mr8527095ad.40.1748573643807;
+        Thu, 29 May 2025 19:54:03 -0700 (PDT)
 Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf504asm18767775ad.178.2025.05.29.19.45.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf9380sm18830305ad.203.2025.05.29.19.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 19:45:29 -0700 (PDT)
+        Thu, 29 May 2025 19:54:03 -0700 (PDT)
 From: Kuniyuki Iwashima <kuni1840@gmail.com>
 To: hch@lst.de
 Cc: axboe@kernel.dk,
@@ -95,12 +95,12 @@ Cc: axboe@kernel.dk,
 	sfrench@samba.org,
 	wenjia@linux.ibm.com,
 	willemb@google.com
-Subject: Re: [PATCH v2 net-next 2/7] socket: Rename sock_create_kern() to __sock_create_kern().
-Date: Thu, 29 May 2025 19:45:26 -0700
-Message-ID: <20250530024527.3206724-1-kuni1840@gmail.com>
+Subject: Re: [PATCH v2 net-next 3/7] socket: Restore sock_create_kern().
+Date: Thu, 29 May 2025 19:53:41 -0700
+Message-ID: <20250530025401.3211542-1-kuni1840@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526053013.GC11639@lst.de>
-References: <20250526053013.GC11639@lst.de>
+In-Reply-To: <20250526053227.GD11639@lst.de>
+References: <20250526053227.GD11639@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -110,15 +110,38 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 26 May 2025 07:30:13 +0200
-> On Fri, May 23, 2025 at 11:21:08AM -0700, Kuniyuki Iwashima wrote:
-> > Let's rename sock_create_kern() to __sock_create_kern() as a special
-> > API and add a fat documentation.
+Date: Mon, 26 May 2025 07:32:27 +0200
+> On Fri, May 23, 2025 at 11:21:09AM -0700, Kuniyuki Iwashima wrote:
+> > Let's restore sock_create_kern() that holds a netns reference.
 > > 
-> > The next patch will add sock_create_kern() that holds netns refcnt.
+> > Now, it's the same as the version before commit 26abe14379f8 ("net:
+> > Modify sk_alloc to not reference count the netns of kernel sockets.").
+> > 
+> > Back then, after creating a socket in init_net, we used sk_change_net()
+> > to drop the netns ref and switch to another netns, but now we can
+> > simply use __sock_create_kern() instead.
+> > 
+> >   $ git blame -L:sk_change_net include/net/sock.h 26abe14379f8~
+> > 
+> > DEBUG_NET_WARN_ON_ONCE() is to catch a path calling sock_create_kern()
+> > from __net_init functions, since doing so would leak the netns as
+> > __net_exit functions cannot run until the socket is removed.
 > 
-> Maybe do this before patch 1 to reduce the churn of just touching a
-> lot of the same callers again?
+> Is reusing the name as the old sock_create_kern a good idea?  It can
+> lead to bugs by people used to the old semantics.
 
-Makes sense, will do.
+In the old days, sock_create_kern() did take a ref to netns,
+but an implicit change that avoids taking the ref has caused
+a lot of problems for people who used to the old semantics.
+
+This series rather rolls back the change, so I think using
+the same name here is better than leaving the catchy
+sock_create_kern() error-prone.
+
+
+> It's also
+> not really an all that descriptive name for either variant.  I'm
+> not really a net stack or namespace expert, but maybe we can come
+> up with more descriptive version for both this new sock_create_kern
+> and the old sock_create_kern/__sock_create_kern?
 
