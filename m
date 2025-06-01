@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-12002-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12003-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14264ACA14E
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 01:26:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 330CDACA27F
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 01:37:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F7A41891F0B
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 Jun 2025 23:26:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 502CB3AD2E0
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 Jun 2025 23:36:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E12625A322;
-	Sun,  1 Jun 2025 23:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C63026A1CD;
+	Sun,  1 Jun 2025 23:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/Pcb+1C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXxyjlNp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2654C25A2CF;
-	Sun,  1 Jun 2025 23:24:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F019426A1C4;
+	Sun,  1 Jun 2025 23:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748820295; cv=none; b=XxZho6l7lmbHLfMOErIJnyuZBeUalQur/oCr4geaowToXBVIdBBR5xwO+D245q/j0Uq9iVvdJlQ/HaIx1H1WPtL7cSsReeuikIslqospaTJSd2k5UZfuu7FCy8ztPYmZ8bYSYD9zpps6x9pcZiB+VTiaQq6SGVKeS/ElkF2sSAw=
+	t=1748820439; cv=none; b=WdFsiOqeN6kbjrZ3sW3TRHl8HAY0Nd4AH9ctQiHJ25UDef0fpKvJV/1nU46VpXmh3y0KoCeym1zm6ScmFN4TPRukLtBhf3znDMckuD/m8FJcXfAyzF+e9FnxRPgsPAY7hZIz5TwHEXWBZuVvRnecBGx61dBNayIx77keVAvv2BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748820295; c=relaxed/simple;
-	bh=3bkWV+zePza3ilN9VzWxZXyowwsJzz6V6pzRAqDmjWU=;
+	s=arc-20240116; t=1748820439; c=relaxed/simple;
+	bh=Cc2dSgRqdxOm4CWPyrUzYifk7GLQGM0Cwexgs44OEGc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F2/0Kj3SLvbvFWEwzC0wjQfNNCBU0oUgGoAkuam05p1WZjP7zmvyB70jJR50H4mvjZYkT8U64kPFqSqCjbRLPv/R8abLuZ9KtWdMsSNcOq6UJ8wBpIUflkANkj8FHE4reQBbGlfW2JyWPa96+IAyAMvXg2YWXT73V75cacJfx+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/Pcb+1C; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61120C4CEEE;
-	Sun,  1 Jun 2025 23:24:53 +0000 (UTC)
+	 MIME-Version:Content-Type; b=rm6RJxCm8Ixo803qvsdsiyZ0ZTmK9/tm7m3fRizq4IVpHcWs5gAqzw33EyMRGWng20RyOc1w1NzMJT0UHA0EcE6RpGopCUzG1wSjYTWqXpB6Dts2Ep99aDcG5pGXJV9rhz8Lqbmg0xcMZbA56uhu9bp/g8TGaFzeN2ee9W9et4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXxyjlNp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F04C4CEEE;
+	Sun,  1 Jun 2025 23:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748820295;
-	bh=3bkWV+zePza3ilN9VzWxZXyowwsJzz6V6pzRAqDmjWU=;
+	s=k20201202; t=1748820438;
+	bh=Cc2dSgRqdxOm4CWPyrUzYifk7GLQGM0Cwexgs44OEGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T/Pcb+1CWaqcHm0sMfSVFxBohV8sp4Rmfl0xVm78upPAbitd9Cld7yNe8JRuoC4ZH
-	 OSHYdZSZK8pCbUASiqKns+79kRED9nBU94UsFI6VYXNFiwQ5OldpTAGW0vGUYD9VT5
-	 YomKlBySY3+NqIXcQat9Wa7L9GGtCvl8q166adaBEqRhdocKekTqc40FCxR+8XKqEL
-	 8C1ZPsTEjHOIQyKJf6wob67WCG9Zw7Q5w2Bq83vSZNwkxg8fnQVL4DNRnQIlCQB8s/
-	 8gqY8GrotBJvfQaroXPRPzkPZPOLT1SWVfQydtzXfUc78gMzd0gD3UdVsn0fXg4pmv
-	 3rC0WgBXfQ34g==
+	b=AXxyjlNpQriNg55TJhhfoWEUPRUNGJyyRiqAmusF8G1vxvp/uovWaTniDf3RnbGS9
+	 0SxydOtFW3GubuFOQZ9Z7moVxm9wPtgDVMBQPnJ7pzPh3dlcaaLwBIMCR85/6nIpBX
+	 OOw6hDQ7jEmuFQ+EdLI+bo+Ae1Ed7kdtfu8uG8HQSkJ1pvGpOScudx12Q9cZOu9zk2
+	 ZVAqvkOnCCaRHTh+7GKIPqMns4p1ilPN2y++DXcIKvswSdz9kb2vRew2l3sxSXGksw
+	 rupXhEMm+Ur75qGDBvuT60fHM2tBtNwdqj+cp+OoPyTwIOX2kBqAlUxRVRXLxURWmD
+	 Ats5/kKYvvYvw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
 Cc: Long Li <leo.lilong@huawei.com>,
 	Chuck Lever <chuck.lever@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
+	jlayton@kernel.org,
 	trondmy@kernel.org,
 	anna@kernel.org,
-	jlayton@kernel.org,
 	davem@davemloft.net,
 	edumazet@google.com,
 	kuba@kernel.org,
@@ -57,9 +57,9 @@ Cc: Long Li <leo.lilong@huawei.com>,
 	linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 007/110] sunrpc: update nextcheck time when adding new cache entries
-Date: Sun,  1 Jun 2025 19:22:49 -0400
-Message-Id: <20250601232435.3507697-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.15 057/110] sunrpc: fix race in cache cleanup causing stale nextcheck time
+Date: Sun,  1 Jun 2025 19:23:39 -0400
+Message-Id: <20250601232435.3507697-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250601232435.3507697-1-sashal@kernel.org>
 References: <20250601232435.3507697-1-sashal@kernel.org>
@@ -72,101 +72,136 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.15
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Long Li <leo.lilong@huawei.com>
 
-[ Upstream commit 5ca00634c8bbb2979c73465588f486b9632f5ed5 ]
+[ Upstream commit 2298abcbe11e9b553d03c0f1d084da786f7eff88 ]
 
-The cache_detail structure uses a "nextcheck" field to control hash table
-scanning intervals. When a table scan begins, nextcheck is set to current
-time plus 1800 seconds. During scanning, if cache_detail is not empty and
-a cache entry's expiry time is earlier than the current nextcheck, the
-nextcheck is updated to that expiry time.
+When cache cleanup runs concurrently with cache entry removal, a race
+condition can occur that leads to incorrect nextcheck times. This can
+delay cache cleanup for the cache_detail by up to 1800 seconds:
 
-This mechanism ensures that:
-1) Empty cache_details are scanned every 1800 seconds to avoid unnecessary
-   scans
-2) Non-empty cache_details are scanned based on the earliest expiry time
-   found
+1. cache_clean() sets nextcheck to current time plus 1800 seconds
+2. While scanning a non-empty bucket, concurrent cache entry removal can
+   empty that bucket
+3. cache_clean() finds no cache entries in the now-empty bucket to update
+   the nextcheck time
+4. This maybe delays the next scan of the cache_detail by up to 1800
+   seconds even when it should be scanned earlier based on remaining
+   entries
 
-However, when adding a new cache entry to an empty cache_detail, the
-nextcheck time was not being updated, remaining at 1800 seconds. This
-could delay cache cleanup for up to 1800 seconds, potentially blocking
-threads(such as nfsd) that are waiting for cache cleanup.
-
-Fix this by updating the nextcheck time whenever a new cache entry is
-added.
+Fix this by moving the hash_lock acquisition earlier in cache_clean().
+This ensures bucket emptiness checks and nextcheck updates happen
+atomically, preventing the race between cleanup and entry removal.
 
 Signed-off-by: Long Li <leo.lilong@huawei.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit, the code changes, and the kernel
-repository context, here is my assessment: **YES** This commit should be
-backported to stable kernel trees. Here's my extensive analysis: ##
-Analysis of the Problem The commit addresses a specific cache management
-issue in the SUNRPC subsystem that can cause significant delays (up to
-1800 seconds/30 minutes) in cache cleanup operations. The problem occurs
-when: 1. A cache_detail starts empty, with nextcheck set to current time
-+ 1800 seconds 2. A new cache entry is added to this empty cache_detail
-3. The nextcheck time is NOT updated to reflect the new entry's expiry
-time 4. This means cache cleanup won't occur until the original
-1800-second timeout expires 5. During this delay, threads like nfsd that
-depend on cache cleanup can be blocked ## Code Change Analysis The fix
-is minimal and surgical: ```c + if (detail->nextcheck >
-new->expiry_time) + detail->nextcheck = new->expiry_time + 1; ``` This
-2-line addition in `sunrpc_cache_add_entry()` ensures that when a new
-cache entry is added, if its expiry time is earlier than the current
-nextcheck time, nextcheck is updated to trigger cleanup at the
-appropriate time. ## Why This Qualifies for Stable Backporting **1. Bug
-Fix Nature**: This clearly fixes a bug where cache cleanup could be
-inappropriately delayed, affecting system functionality. **2. Minimal
-Risk**: The change is extremely small and contained. It only adds a
-simple conditional check that makes the cache cleanup more responsive.
-There's no architectural change or complex logic. **3. Critical
-Subsystem Impact**: The SUNRPC cache affects NFS operations, which are
-critical for many production systems. A 1800-second delay in cache
-cleanup can severely impact NFS server responsiveness. **4. Clear User
-Impact**: The commit message explicitly mentions that this can block
-threads like nfsd, which directly affects users experiencing NFS service
-delays or hangs. **5. Historical Context**: Looking at the similar
-commits provided as reference, this fix is actually addressing a more
-fundamental timing issue than some of the other cache-related changes
-that were marked as "NO" for backporting. Those commits dealt with
-interface behavior changes or feature additions, while this fixes a
-clear performance/delay bug. **6. Low Complexity**: The fix doesn't
-introduce new features, change APIs, or modify behavioral contracts. It
-simply ensures that cache cleanup happens when it should happen. **7.
-Contained Scope**: The change is isolated to a single function
-(`sunrpc_cache_add_entry`) and only affects the timing of cache cleanup,
-not the cleanup logic itself. ## Comparison with Reference Commits
-Unlike the reference commits marked "NO" which involved: - Interface
-behavior changes (flush interface semantics) - Feature additions (new
-cache operations) - Complex timing logic modifications - Architectural
-changes This commit simply fixes a timing bug with a minimal, obvious
-correction that ensures cache cleanup occurs at the appropriate time
-rather than being unnecessarily delayed. The fix follows the stable tree
-rules perfectly: it's an important bugfix with minimal risk that
-addresses a clear user-visible issue in a critical kernel subsystem.
+Now let me analyze this commit in detail based on what I've learned:
+**ANALYSIS:** **YES** - This commit should be backported to stable
+kernel trees. ## Detailed Analysis: ### 1. **Bug Impact Assessment**
+This commit fixes a **race condition** that can cause cache cleanup
+delays of up to **1800 seconds (30 minutes)**. This is a significant
+performance regression that affects the SUNRPC cache subsystem's ability
+to clean expired entries in a timely manner. ### 2. **Root Cause
+Analysis** The race condition occurs in the `cache_clean()` function
+between these steps: - **Line 461**: `current_detail->nextcheck =
+seconds_since_boot()+30*60;` (sets nextcheck to current time + 1800
+seconds) - **Lines 466-469**: The code searches for non-empty buckets
+**without holding hash_lock** - **Lines 479-496**: The code then
+acquires `hash_lock` and processes entries, updating nextcheck based on
+entry expiry times **The race window**: Between lines 466-469 and 479,
+concurrent cache operations (like `sunrpc_cache_unhash()`) can remove
+entries from buckets, making them empty. When `cache_clean()` later
+acquires the hash_lock, it finds empty buckets and cannot update the
+nextcheck time appropriately. ### 3. **Code Change Analysis** The fix is
+**minimal and surgical**: ```c // BEFORE: hash_lock acquired late (line
+479) if (current_detail && current_index < current_detail->hash_size) {
+// ... variable declarations ... spin_lock(&current_detail->hash_lock);
+// TOO LATE! // AFTER: hash_lock acquired early (before bucket search)
+spin_lock(&current_detail->hash_lock); while (current_index <
+current_detail->hash_size &&
+hlist_empty(&current_detail->hash_table[current_index]))
+current_index++; ``` This ensures that: 1. **Atomicity**: Bucket
+emptiness checks and nextcheck updates happen atomically 2. **Race
+prevention**: No concurrent entry removal can happen during bucket
+scanning 3. **Correctness**: nextcheck times are updated based on the
+actual state of buckets at scan time ### 4. **Risk Assessment** **Low
+Risk**: - **Scope**: Changes only affect the locking order in
+`cache_clean()` - **Backwards compatibility**: No API changes - **Side
+effects**: Minimal - just holds the lock slightly longer, which is safe
+- **Testing**: The change preserves existing logic while fixing the race
+### 5. **Stable Tree Criteria Compliance** ✅ **Fixes important bug**:
+30-minute cache cleanup delays significantly impact performance ✅
+**Small and contained**: Only 12 lines changed in a single function ✅
+**No architectural changes**: Just reorders lock acquisition ✅ **Minimal
+regression risk**: The change is conservative and preserves existing
+behavior ✅ **Clear side effects**: Only improves correctness, no
+negative impacts ### 6. **Comparison with Similar Commits** Looking at
+the historical examples: - **Similar to Commit #3 (YES)**: Fixes a race
+condition with minimal code changes and clear correctness improvement -
+**Unlike Commits #1,#2,#4,#5 (NO)**: Those were either reverted,
+cosmetic, or changed behavior significantly ### 7. **Critical System
+Impact** SUNRPC cache is used by: - **NFS client/server operations** -
+**RPC authentication caching** - **Various network filesystem
+operations** A 30-minute delay in cache cleanup can cause: - Memory
+bloat from stale entries - Performance degradation - Potential service
+disruptions **Conclusion**: This is a clear bug fix with minimal risk
+that addresses a significant performance issue in a critical kernel
+subsystem. It meets all criteria for stable tree backporting.
 
- net/sunrpc/cache.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/sunrpc/cache.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index 7ce5e28a6c031..bbaa77d7bbc81 100644
+index bbaa77d7bbc81..131090f31e6a8 100644
 --- a/net/sunrpc/cache.c
 +++ b/net/sunrpc/cache.c
-@@ -135,6 +135,8 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
+@@ -464,24 +464,21 @@ static int cache_clean(void)
+ 		}
+ 	}
  
- 	hlist_add_head_rcu(&new->cache_list, head);
- 	detail->entries++;
-+	if (detail->nextcheck > new->expiry_time)
-+		detail->nextcheck = new->expiry_time + 1;
- 	cache_get(new);
- 	spin_unlock(&detail->hash_lock);
++	spin_lock(&current_detail->hash_lock);
++
+ 	/* find a non-empty bucket in the table */
+-	while (current_detail &&
+-	       current_index < current_detail->hash_size &&
++	while (current_index < current_detail->hash_size &&
+ 	       hlist_empty(&current_detail->hash_table[current_index]))
+ 		current_index++;
  
+ 	/* find a cleanable entry in the bucket and clean it, or set to next bucket */
+-
+-	if (current_detail && current_index < current_detail->hash_size) {
++	if (current_index < current_detail->hash_size) {
+ 		struct cache_head *ch = NULL;
+ 		struct cache_detail *d;
+ 		struct hlist_head *head;
+ 		struct hlist_node *tmp;
+ 
+-		spin_lock(&current_detail->hash_lock);
+-
+ 		/* Ok, now to clean this strand */
+-
+ 		head = &current_detail->hash_table[current_index];
+ 		hlist_for_each_entry_safe(ch, tmp, head, cache_list) {
+ 			if (current_detail->nextcheck > ch->expiry_time)
+@@ -502,8 +499,10 @@ static int cache_clean(void)
+ 		spin_unlock(&cache_list_lock);
+ 		if (ch)
+ 			sunrpc_end_cache_remove_entry(ch, d);
+-	} else
++	} else {
++		spin_unlock(&current_detail->hash_lock);
+ 		spin_unlock(&cache_list_lock);
++	}
+ 
+ 	return rv;
+ }
 -- 
 2.39.5
 
