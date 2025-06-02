@@ -1,77 +1,75 @@
-Return-Path: <linux-nfs+bounces-12054-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12055-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB738ACB385
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 16:42:51 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC522ACB374
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 16:42:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D03B994025B
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 14:31:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A964A4A4E8D
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 14:32:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC2A9226534;
-	Mon,  2 Jun 2025 14:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2891D227EBB;
+	Mon,  2 Jun 2025 14:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3e5MwHFM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778A520E026;
-	Mon,  2 Jun 2025 14:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004C12288F4
+	for <linux-nfs@vger.kernel.org>; Mon,  2 Jun 2025 14:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748874251; cv=none; b=XVHTiFBsAp+l0DRC1bQT7PrbnLV2jO4GuoRwywrrMbcHei5zbL5h8HLX3iECztc0wYuaqNKhlevdjARmqoOAJ010Q/+Cdc67F1YhzQ2Eta245jKmlG5t7+QidIcsxi7V/ni0uljU/xxCC6/6M/Bfdho+p9hRIduVbS9crVnusfI=
+	t=1748874325; cv=none; b=KarTesGauFzIzgzOKwGlwSfgHV3ZoTF+HXDzUiauTPnI/Q3Fv2pvAiXbHLXOsHjLjjtMRh9VYCWO/fYgaj4jY/m7qYP0yqjgd/GLJslUIEUgNAg85DCEAHoVG5g9t8pP4Zi5bS7vIT9Yv67bIww95NlVJSppPrq20eAGm5GGZk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748874251; c=relaxed/simple;
-	bh=Ty/ggLvGy0LpeeBlq8XqYQYZ33weKKPJqE7+/JpCaJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gj2AMcIOupj7FvTkBYz/mTfLyVsl9Li/DLpIRl+Nt+fwq167/fpYQUwVn0AiuGyiFyBuAOALXuG1ReX+otoa6AjqjFZpu2juoJuE46l7K+RuQ2KQqJBdwRGqKcnv6hc8BtdO9oF7bWnkLP/e+kdEMv1mvbPqZJ8RN6tTW0Sk5TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id A052D68C7B; Mon,  2 Jun 2025 16:24:05 +0200 (CEST)
-Date: Mon, 2 Jun 2025 16:24:05 +0200
+	s=arc-20240116; t=1748874325; c=relaxed/simple;
+	bh=FuhIjzzn12Tjt+zJo9mV5D47TJMwfvZPJEiQmIj9a00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qEk8FLNYAFpYUqBoOaQ+l6+fdChbNQRaw/0Rv8nVP0J0SsfhEGgYHWalraZI6d3YSDaWxXBHvLCTy8xbUpwNgk2bRHAXzXxH6lsLk8Zum0ds+aHT0orAvp3Xo9YZUOdd+MvSDu8DUrT7cQk6ulRv35MaTzUKS/BgxjqRH4WTzIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3e5MwHFM; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=59ALSCs5Xd9I4pC1VfM5WkHs/KUTPSbIoL7AXJAl1HU=; b=3e5MwHFMi/FTWt/aWjW7zjeN5x
+	TOe071qnBr/PUUCUop7ncgq9rZtX05brtTXr6SjlC52CBL1lG2DfE7ATo1AZoh90qSLMi5zf7yl4F
+	J0mXm81zpl+DWunrghBD4C/xO+li0rO36RBopxUxixdhGLjntERa3iiSrXTgd9GAwCQnwm3qX2Ak7
+	FaKq42RjIOlaOTPi2ob17qkF2cjc7PzzueihjZLl8se+a838r9V4pQiuRinaDmsFzloF3+blE9+7S
+	sNZDzNvECLIFbRgpUqaRekfPofCF8b/Z37zyspo9HP1nCZwGb/NG0unYpykAqHnEO4nIWoTuKMHP3
+	gAlpp4ew==;
+Received: from 2a02-8389-2341-5b80-d601-7564-c2e0-491c.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:d601:7564:c2e0:491c] helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uM66K-00000007ctJ-3cib;
+	Mon, 02 Jun 2025 14:25:21 +0000
 From: Christoph Hellwig <hch@lst.de>
-To: Kundan Kumar <kundan.kumar@samsung.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
-	brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu,
-	agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org,
-	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org,
-	clm@meta.com, david@fromorbit.com, amir73il@gmail.com,
-	axboe@kernel.dk, hch@lst.de, ritesh.list@gmail.com,
-	djwong@kernel.org, dave@stgolabs.net, p.raghav@samsung.com,
-	da.gomez@samsung.com, linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com,
-	Anuj Gupta <anuj20.g@samsung.com>
-Subject: Re: [PATCH 04/13] writeback: affine inode to a writeback ctx
- within a bdi
-Message-ID: <20250602142405.GA22563@lst.de>
-References: <20250529111504.89912-1-kundan.kumar@samsung.com> <CGME20250529113232epcas5p4e6f3b2f03d3a5f8fcaace3ddd03298d0@epcas5p4.samsung.com> <20250529111504.89912-5-kundan.kumar@samsung.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: writeback cleanups v2 (resend)
+Date: Mon,  2 Jun 2025 16:24:48 +0200
+Message-ID: <20250602142517.408443-1-hch@lst.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529111504.89912-5-kundan.kumar@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, May 29, 2025 at 04:44:55PM +0530, Kundan Kumar wrote:
-> @@ -157,7 +157,7 @@ fetch_bdi_writeback_ctx(struct inode *inode)
->  {
->  	struct backing_dev_info *bdi = inode_to_bdi(inode);
->  
-> -	return bdi->wb_ctx_arr[0];
-> +	return bdi->wb_ctx_arr[inode->i_ino % bdi->nr_wb_ctx];
+Hi all,
 
-Most modern file systems use 64-bit inode numbers, while i_ino sadly
-still is only an ino_t that can be 32-bits wide.  So we'll either need
-an ugly fs hook here, or maybe convince Linus that it finally is time
-for a 64-bit i_ino (which would also clean up a lot of mess in the
-file systems and this constant source of confusion).
+this series has a bunch of cosmetic cleanups for the NFS folio writeback
+code.
 
+Changes since v1:
+ - don't mess up code placement in one patch only to fix it up later
+
+Diffstat:
+ write.c |   54 +++++++++++++++++++-----------------------------------
+ 1 file changed, 19 insertions(+), 35 deletions(-)
 
