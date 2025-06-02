@@ -1,75 +1,163 @@
-Return-Path: <linux-nfs+bounces-12060-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12061-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFE9FACB89C
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 17:43:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 589A1ACB90C
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 17:55:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB8C21C27D27
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 15:29:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 195AB1889CE6
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 15:51:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C47A70825;
-	Mon,  2 Jun 2025 15:25:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181C4223324;
+	Mon,  2 Jun 2025 15:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="YCpnVtE0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qemG5lsW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CC71A2547;
-	Mon,  2 Jun 2025 15:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E31ACEAF;
+	Mon,  2 Jun 2025 15:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748877933; cv=none; b=mPyj3rsKePsowV55BNjsPeIi3bIb4n4Zejv8d5X5sRCXvuuv//w2RsFWsc8iKL3h08GtHTUcPzLCkkN3y6QRsg39sJNjLFJFwnB/Hu/LxOH7GqsRCfgQ9jDS/uzFBe7gxyHtk6icFyhxl/acV8aWDy2OVTg+wwG62tfUuyd7CjY=
+	t=1748879458; cv=none; b=F1MEc6/z7QEQI+cR5ZdiGko3CIZlkx2T+jeQ81CRNnw8j46hmqCPowqjtestzE0SXMT3yOw32H4kB7cA/SezwiIp9TL1OtB9sYyUb/LOG1HJoG1YJxE3RI6grzHZFSN1riy4AYOT8p1Z2xNleK1Y9Q2Fq2pscgrh6XQ5koiP97U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748877933; c=relaxed/simple;
-	bh=sYb1HTwFmid9QR6gcYW6iBAiz6qQUWsRAqJT/xFUer4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UbrIYRlhFxHJBQbjvxj7h1iAtZHjZFA9nXigKrrFk08YNVOr4h0fZg7Xe/YGnu3rJGKAh+BJFIoKPj0IoEvmTfNXW+3ZC9PG2KLaJaoicbB2NVdkOW76qQXu6H6gcF4de+w75MhFNPid3h4z8v0ZpnJmMca11Cn0EUO2UyDNiew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id AD99468C7B; Mon,  2 Jun 2025 17:25:25 +0200 (CEST)
-Date: Mon, 2 Jun 2025 17:25:25 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Christoph Hellwig <hch@lst.de>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
-	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
-	keyrings@vger.kernel.org
-Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
-Message-ID: <20250602152525.GA27651@lst.de>
-References: <20250515115107.33052-1-hch@lst.de> <20250515115107.33052-3-hch@lst.de> <c2044daa-c68e-43bf-8c28-6ce5f5a5c129@grimberg.me> <aCdv56ZcYEINRR0N@kernel.org> <692256f1-9179-4c19-ba17-39422c9bad69@grimberg.me>
+	s=arc-20240116; t=1748879458; c=relaxed/simple;
+	bh=Q9CM5k4oJ/nmKWsQeroSA28ODbk+exz6kaRb+r2x7qI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kL/CtIMPpxwBgaNCyZhBLRDdcXOp5QQqPq6wey6jv49KVdZLG3BpzuXX57lGthoXdYgnncpE2GqRYmdPUBdM9XcBbk6/iiGVqnNnrwnSbJmy+hv2bRNFzTVP+NFkG+ZHt59psBeXDRHW1u0zeJBntX/lRRuy9MNOer9zYww4khM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=YCpnVtE0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=qemG5lsW; arc=none smtp.client-ip=103.168.172.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailflow.phl.internal (Postfix) with ESMTP id BFAAC2005B9;
+	Mon,  2 Jun 2025 11:50:54 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Mon, 02 Jun 2025 11:50:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1748879454;
+	 x=1748886654; bh=ECtcKLbK8c4DaaUNIeCZvRoLrnqb0sjqKj+TVBnd5MM=; b=
+	YCpnVtE0/pyuTPAo2dUvlNHyIRQp7CHCmumKiV4wfwZrMpKynIqCRMi+p1/fH5ki
+	dj4E9tYR3TXOZPU5t4o4uq231s9oha8SLHh8CQyqQyBALR8a/A2n+Vx+H7X+Q9Sn
+	4ViHCvQ+jDpY1ADZJhYZOd0rga8bV2PNb5l8i5cQHJI++ZlV7jX97e503FVyTCD7
+	j9a5w/cvUwsafKwtV/zrt1Q3kf750UNmYz8ITYWJf+FB1ExoeN4skydEd3q7rxoR
+	feKziDyh97pABpZ5fLlQXcFoXsgxnfaICi7zMZ2D8toOxbS61HHSS6p8FLxbe4J6
+	MhejaeOuGfov8wiSRSgi0Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748879454; x=
+	1748886654; bh=ECtcKLbK8c4DaaUNIeCZvRoLrnqb0sjqKj+TVBnd5MM=; b=q
+	emG5lsW68M9FqVhhIEhFON2CaL0suvIwrG82ESHJpVIu1h3F/i191l9hV+Dbzq2K
+	6XbF2zYr9jTBC1UrwkB3ellb0/A+EYiudo0Eb/FvWwMOlm5klcdWq7LCWxNije/t
+	mxfhG+dmqTcPiclnja7pOoXEAWSEZbgBHjFyfwNoMVSgyHOQYgQmOOTE4O+oZgSC
+	laHY3LCBhpMnCsw39vPQujbi3SoZggk0SN27jw1FE2mQRTc2OH+q6fTfh9ZFVEEw
+	PFsDIa8JF1LBia8YhzqwxFRv9h09aCTenlxMHU+Kw1W4v5MBfwjJBsYThMYAC0if
+	jZoJMt5/e30D8q85LL4lQ==
+X-ME-Sender: <xms:Xcg9aHIhY2nO5lH8xSqkRB0qRpNVxH7F9H8X35iKjKkKv9e4592r1w>
+    <xme:Xcg9aLLFT-gsWHFts7phYKRLeyQKosLvuUeIxaQZ_Xex-ABQF9U31yE_HRiPWWPcW
+    -nVoJiQ67Rdu_Fb>
+X-ME-Received: <xmr:Xcg9aPtwDSmii5shQTEwaj3Hk_CD7B7Ab-NIrviAtjZQLJG7zOCUJoOst52df_3RcRkZAE_dehwWs0C34G-dT629jehro0BVCMfkBvgMgZFmAoHsjy29>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefkedtjeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfev
+    fhfhjggtgfesthejredttddvjeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuc
+    eosggvrhhnugessghssggvrhhnugdrtghomheqnecuggftrfgrthhtvghrnhephefhjeeu
+    jeelhedtheetfedvgfdtleffuedujefhheegudefvdfhheeuveduueegnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugessghssggv
+    rhhnugdrtghomhdpnhgspghrtghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehhtghhsehlshhtrdguvgdprhgtphhtthhopehkuhhnuggrnhdrkhhumhgr
+    rhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehjrggvghgvuhhksehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegthhgroheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    vhhirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegsrhgruh
+    hnvghrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrggtkhesshhushgvrdgtiidp
+    rhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtoheprghgrh
+    huvghnsggrsehrvgguhhgrthdrtghomh
+X-ME-Proxy: <xmx:Xcg9aAYJgqQmz_0i6NtyVbZeSTGQGdJbmubSjYWHEVPRSrWWEFEe6A>
+    <xmx:Xcg9aOb_RKHyzMZjYao8mke_FVbcL-v2Df80QDBAD9sHg1hMl_H62g>
+    <xmx:Xcg9aEA1OIXT30KKLzhLz1yXcjGGIsyU3yFQA4fZuvUdfeXXw9_nOg>
+    <xmx:Xcg9aMa9Y0JhTXQUDvr_vzbW0j29L6GR1gk9r4Y-9wRdu1Vgoir90A>
+    <xmx:Xsg9aFsYPtxDkjvPEIFtUlbaHsrqiDCTwy0xjaUHsIsFVgwYTdTJ-5lT>
+Feedback-ID: i5c2e48a5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 2 Jun 2025 11:50:50 -0400 (EDT)
+Message-ID: <99f79383-479e-4df1-9650-61fa3c600171@bsbernd.com>
+Date: Mon, 2 Jun 2025 17:50:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <692256f1-9179-4c19-ba17-39422c9bad69@grimberg.me>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/13] fuse: add support for multiple writeback contexts
+ in fuse
+To: Christoph Hellwig <hch@lst.de>, Kundan Kumar <kundan.kumar@samsung.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com,
+ trondmy@kernel.org, anna@kernel.org, akpm@linux-foundation.org,
+ willy@infradead.org, mcgrof@kernel.org, clm@meta.com, david@fromorbit.com,
+ amir73il@gmail.com, axboe@kernel.dk, ritesh.list@gmail.com,
+ djwong@kernel.org, dave@stgolabs.net, p.raghav@samsung.com,
+ da.gomez@samsung.com, linux-f2fs-devel@lists.sourceforge.net,
+ linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com,
+ Anuj Gupta <anuj20.g@samsung.com>, Joanne Koong <joannelkoong@gmail.com>
+References: <20250529111504.89912-1-kundan.kumar@samsung.com>
+ <CGME20250529113257epcas5p4dbaf9c8e2dc362767c8553399632c1ea@epcas5p4.samsung.com>
+ <20250529111504.89912-11-kundan.kumar@samsung.com>
+ <20250602142157.GC21996@lst.de>
+From: Bernd Schubert <bernd@bsbernd.com>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <20250602142157.GC21996@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 17, 2025 at 12:45:02PM +0300, Sagi Grimberg wrote:
->
->
-> On 16/05/2025 20:03, Jarkko Sakkinen wrote:
->> On Fri, May 16, 2025 at 02:47:18PM +0300, Sagi Grimberg wrote:
->>> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
->> Based on?
->
-> Based on the same that nvme is doing. The only reason I see to have it
-> is to avoid having the user explicitly set perms on the key for tlshd to be
-> able to load it. nvme creates its own keyring that possessors can use, so 
-> makes
-> sense that nfs has this keyring as well.
 
-Jarkoo, can you please state your objections clearly?  You've only
-asked this one liner question in response to Sagi's question but not
-even commented the original patch.
+
+On 6/2/25 16:21, Christoph Hellwig wrote:
+>>  static void fuse_writepage_finish_stat(struct inode *inode, struct folio *folio)
+>>  {
+>> -	struct backing_dev_info *bdi = inode_to_bdi(inode);
+>> +	struct bdi_writeback_ctx *bdi_wb_ctx = fetch_bdi_writeback_ctx(inode);
+>>  
+>> -	dec_wb_stat(&bdi->wb_ctx_arr[0]->wb, WB_WRITEBACK);
+>> +	dec_wb_stat(&bdi_wb_ctx->wb, WB_WRITEBACK);
+>>  	node_stat_sub_folio(folio, NR_WRITEBACK_TEMP);
+>> -	wb_writeout_inc(&bdi->wb_ctx_arr[0]->wb);
+>> +	wb_writeout_inc(&bdi_wb_ctx->wb);
+>>  }
+> 
+> There's nothing fuse-specific here except that nothing but fuse uses
+> NR_WRITEBACK_TEMP.  Can we try to move this into the core first so that
+> the patches don't have to touch file system code?
+> 
+>> -	inc_wb_stat(&inode_to_bdi(inode)->wb_ctx_arr[0]->wb, WB_WRITEBACK);
+>> +	inc_wb_stat(&bdi_wb_ctx->wb, WB_WRITEBACK);
+>>  	node_stat_add_folio(tmp_folio, NR_WRITEBACK_TEMP);
+> 
+> Same here.  On pattern is that fuse and nfs both touch the node stat
+> and the web stat, and having a common helper doing both would probably
+> also be very helpful.
+> 
+> 
+
+Note that Miklos' PR for 6.16 removes NR_WRITEBACK_TEMP through
+patches from Joanne, i.e. only 
+
+dec_wb_stat(&bdi->wb, WB_WRITEBACK);
+
+is left over.
+
+
+Thanks,
+Bernd
 
