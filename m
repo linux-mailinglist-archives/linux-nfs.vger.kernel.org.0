@@ -1,331 +1,244 @@
-Return-Path: <linux-nfs+bounces-12020-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12021-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AEB94ACAF33
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 15:38:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 377F4ACB05D
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 16:04:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD6EC188DEE4
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 13:39:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C494B3A43A7
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jun 2025 14:03:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EED0221558;
-	Mon,  2 Jun 2025 13:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3875223DE1;
+	Mon,  2 Jun 2025 14:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bk5jVAGM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zymgBT7R";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bk5jVAGM";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zymgBT7R"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIqSRB0w"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3280F221545
-	for <linux-nfs@vger.kernel.org>; Mon,  2 Jun 2025 13:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAA51E3772;
+	Mon,  2 Jun 2025 14:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748871471; cv=none; b=jnMXzE9zowNW+gpdfEwYINpjS18stq7cpS8sF1OJ8kPjkxNeO9SEPCr5lfsqM+KLvtlB5C77x7KR3YADj7VVDT5Nr+nns0bkon7P08WSCjSUyyZCi2WsuYV4Orfzeff7gcstsAKoKlaEYKla9YbWj1oBkqSaRVOdQJDjE9RgUPM=
+	t=1748872942; cv=none; b=So3nR2d/b1s4UyQwWjKHRJVnmgENL8XOPs+SxybE3yzZdInNkVpjUUwqqvovAUESmuR673lamPWwVjrZdZBOhcb5hJ4BnkAUmLqTzGUTnZf9bUvHWKL92IOA6vkJltUXuyF++Pj4HPGj8lxKicohQZwRGq5hgpWBNr4Ydf/bc8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748871471; c=relaxed/simple;
-	bh=5x7n1jgxq4+k0WO1myXMoZ5o312U+Y4t+iC2S+j1a20=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=R2xWQnErUqQZ606yIaDZVLrtZfnytGzs1vL6yrdAtjPhEshWVMJGmgs52uthO0TJslGs0L0hEDffkcH2qm1aNN6NWgSj95Lc7r2YZ/yGdel6IWg64Z1/4v9Ug1MsbVQ1ASUoHiE8TzgaPDM9VrSMVvfgbvq4KXRF4R4XqVzBW2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bk5jVAGM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zymgBT7R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bk5jVAGM; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zymgBT7R; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B0321F443;
-	Mon,  2 Jun 2025 13:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748871467;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=kd24fYJl6q2mmSg7SdhXv6Pob329QD9L7tRSt4GRads=;
-	b=Bk5jVAGMdlSEyyDQ5ocAbd3Kag86iXWCO4W/QNxrBVEXfsqIV6CK5BlNwrNjVdATA9v4C9
-	htNTp7rdVNRZFsI2Qx0wkAfATCGmwbefJxsLYGNIqru89ChPzSNPDFm9I08Cc4YVK0n9Gh
-	HKYs9b5Cq1F2kwWKNFai5Xk8Ocvg8hw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748871467;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=kd24fYJl6q2mmSg7SdhXv6Pob329QD9L7tRSt4GRads=;
-	b=zymgBT7RFMQXruzi0lyaTSIWCKTVYkB6ViGg5/JdLaNugyUCnQ0ch6PnLrEbjUSg8l0L9S
-	FNMwGOxQ8a5sq9CQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Bk5jVAGM;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zymgBT7R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748871467;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=kd24fYJl6q2mmSg7SdhXv6Pob329QD9L7tRSt4GRads=;
-	b=Bk5jVAGMdlSEyyDQ5ocAbd3Kag86iXWCO4W/QNxrBVEXfsqIV6CK5BlNwrNjVdATA9v4C9
-	htNTp7rdVNRZFsI2Qx0wkAfATCGmwbefJxsLYGNIqru89ChPzSNPDFm9I08Cc4YVK0n9Gh
-	HKYs9b5Cq1F2kwWKNFai5Xk8Ocvg8hw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748871467;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=kd24fYJl6q2mmSg7SdhXv6Pob329QD9L7tRSt4GRads=;
-	b=zymgBT7RFMQXruzi0lyaTSIWCKTVYkB6ViGg5/JdLaNugyUCnQ0ch6PnLrEbjUSg8l0L9S
-	FNMwGOxQ8a5sq9CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8C71613A63;
-	Mon,  2 Jun 2025 13:37:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GfntHiqpPWjFSAAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Mon, 02 Jun 2025 13:37:46 +0000
-Date: Mon, 2 Jun 2025 15:37:41 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Steve Dickson <steved@redhat.com>
-Cc: ltp@lists.linux.it, linux-nfs@vger.kernel.org,
-	"Ricardo B. Marliere" <rbm@suse.com>,
-	Avinesh Kumar <akumar@suse.de>
-Subject: [RFC] rpcbind: detect support of remote calls
-Message-ID: <20250602133741.GA324895@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
+	s=arc-20240116; t=1748872942; c=relaxed/simple;
+	bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=eO65RsKcV0AJN1imAw/V9M0NaKFBsahK3Ga4VC/EvqMR8G7dsq0gG7ecRPK8KnUcXJhECb0yqdaoXHu7a5lh93pWtiCMS+0mFsHtxrNC+XQEn0w8eLdG7y/+HYvTctH9CGqiuZJER5xOdHhSTUG2WsWJtjEfWhm9fd+yltvE/C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIqSRB0w; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4F6C4CEEE;
+	Mon,  2 Jun 2025 14:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748872942;
+	bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mIqSRB0wQgPqhsxVa/yNSBhTCnxYbWnQUlvlv69wc4Cq4E4u1+vwhXioO/ND29wuI
+	 B5q5s+kF23ftfWNv2ruuBNEOPTlLoAk9ixsMZcqW6PZnKnzzMMTCvHVjNig1ksB+Aa
+	 YD5JGnPJKlUPM/ohytpr2Pc+JCgxR23mDwbN/2kU7Oo0GU7/F6zbx/RAwnsZIpBfHn
+	 FDTbwV3AB31MX1aZxS+tKtMiFELxaBKSSYGsTdGCER5cTLzKTkuuTT9WIXlgCNAHbR
+	 hn1g4c/lUBMn5v8nv6am8MO3m1tr1IPNmK84fYgbz/wesGHiOGwjIRVfHlCncZdXUQ
+	 e4rTXpkfcqKZw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH RFC v2 00/28] vfs, nfsd, nfs: implement directory
+ delegations
+Date: Mon, 02 Jun 2025 10:01:43 -0400
+Message-Id: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spamd-Result: default: False [-3.71 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	HAS_REPLYTO(0.30)[pvorel@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	REPLYTO_EQ_FROM(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 0B0321F443
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.71
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMeuPWgC/1XMSwrCMBAG4KuUWRvJTB9QV4LgAdxKF9GM7WBJZ
+ CJFKb27ITuX/4NvhcQqnOBQraC8SJIYcqBdBffJhZGN+JyBLDWWsDVe1HieeTRMSIT25nrfQP6
+ /lB/yKdYVLucTDLmcJL2jfou/YJkKVf9RCxprHPqObO/qrm2OT9bA8z7qCMO2bT/XK23mqAAAA
+ A==
+X-Change-ID: 20240215-dir-deleg-e212210ba9d4
+To: Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Alexander Aring <alex.aring@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
+ Bharath SM <bharathsm@microsoft.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Amir Goldstein <amir73il@gmail.com>, 
+ Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+ samba-technical@lists.samba.org, linux-doc@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7294; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=iIK4xHtP2iB/dMVlgTRCrs6Nyv+GOjdTvMOXVehLvCw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoPa7eH4dxLZMTDUBiNfi1m6jZ0a8U8aP49Cb4o
+ QXXiOiXSFmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaD2u3gAKCRAADmhBGVaC
+ FQlxEAC7HyMj6Wi4Cj2ZXRnQ6tLUiAPql3kGQ6b+4TnB4C5INTYH7QJn6GyrOCsIWBLZs7RmO1Q
+ OWJUM5dpkulxHcf0SZRjhHJrL4jTxxpEjaNJyCs6uwmLF8xEmJYOpuRC5bGeylO6YFVA4VMa7d9
+ sL/zck8SI6v5sCFz82OKq4sdpCUqLwUSltgIvme+NYwcLCyIrxfPD629U39PecA2Fjj07lObW8Z
+ 0CcWx6ktdW7qGKdefjnwMfXB4VSH3BbBBfxn0KZO51xscytcGwbtVmBZrfV0ji8ltYXZTON8twR
+ vdFB6tzhYQH+U16o9DXnReztt6CIhRxAUq8yvv3BjlDZAOiGl8BoIQHgn1JSxQ00+nmZheWm8kX
+ 2ixcydZyThSs0rTCmfwF1aQuHZoK1Uufs98/J9VLGPWx6jI5CO6NrT04TEO8UmMKystNLkwCdw/
+ LTs6FPreZIf4fWk+/O2jdcmZY7pvQvDyvp64Fw+Vg+RVIj20vrjfZ3jV2Ys/b4nEy+LOvc2CNwY
+ TbqDGl7Jp/cS6BcU2vNsEkYuAYgQn1v1KnPkRLthM3vw58O9peuOTyYvYJf9pMoAaLdYGW6++1Z
+ BDcrfBdS5uvbRUM3Jj+WdpETlHmM+JBs2SCloiRD9foknEAo64p/XEE4pGLSxiy8gc0Ha3qWzMe
+ jbZtKoCl7Di4jOA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Hi Steve,
+This patchset is an update to a patchset that I posted just over a year
+ago [1]. That version had client and server patches. This one is just
+the server-side patches.
 
-Ricardo found that TI-RPC rpc_pmap_rmtcall [1] tirpc_rpcb_rmtcall [2] tests are
-failing when they use rpcbind *without* --enable-rmtcalls (the default since
-2018, see 2e9c289 ("rpcbind: Disable remote calls by default") [3]).
+NFSv4.1 adds a GET_DIR_DELEGATION operation, to allow clients
+to request a delegation on a directory. If the client holds a directory
+delegation, then it knows that nothing will change the dentries in it
+until it has been recalled.
 
-TL;DR: Is there a way to detect missing support from rpcbind? Because we cannot
-blindly expect that timeout means disabled remote calls (it could be also
-caused by regression). Other option is just to disable these tests by default
-(detection is preferred).
+In 2023, Rick Macklem gave a talk at the NFS Bakeathon on his
+implementation of directory delegations for FreeBSD [2], and showed that
+it can greatly improve LOOKUP-heavy workloads. There is also some
+earlier work by CITI [3] that showed similar results. The SMB protocol
+also has a similar sort of construct, and they have also seen large
+performance improvements on certain workloads.
 
-# export PATH="/opt/ltp/testcases/bin:$PATH"
-# rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
-...
-tirpc_rpcb_rmtcall 10.0.0.2 536875000
-rpc_test 1 TFAIL: tirpc_rpcb_rmtcall 10.0.0.2 536875000 failed unexpectedly
+This version also starts with support for trivial directory delegations.
+From there it adds VFS support for ignoring certain break_lease() events
+on on directories. The server can then request leases that ignore
+certain events (like a create or delete) and set its fsnotify mask to
+receive a callback after that event occurs. That allows it to avoid
+breaking the lease.
 
-As the name of the test suggests they are using pmap_rmtcall() and rpcb_rmtcall().
-A bit debug info.
+When a fsnotify callback comes in, the server will encode the
+information directly as XDR in a buffer attached to the delegation. The
+CB_NOTIFY callback is then queued, which will scoop up that buffer and
+allocate another to start gathering more events.  If it runs out of
+space to spool events, it will give up and trigger a recall of the
+delegation.
 
-Modified rpc_test.sh to use strace:
+This is still a work-in-progress however:
 
-+++ b/testcases/network/rpc/rpc-tirpc/rpc_test.sh
-@@ -87,6 +87,8 @@ do_test()
- 		done
- 	fi
- 
-+	echo "$CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS" # FIXME: debug
-+	EXPECT_RHOST_PASS strace -o /tmp/a $CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS
- 	EXPECT_RHOST_PASS $CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS
- }
- 
+The main thing missing at this point is support for sending attributes
+in the CB_NOTIFY, particularly on ADD events. The right set of fattrs
+would allow the client to instantiate a dentry and inode without having
+to contact the server.
 
-I see the test timeouts (full strace output below):
+Still, it's getting close to the point where the server side is somewhat
+functional so it's a good time to post what I have so far.
 
-# rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
-...
-sendto(5, "h=\r}\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\5\0\0\0\0\0\0\0\0"..., 60, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 60
-poll([{fd=5, events=POLLIN}], 1, 1000)  = 0 (Timeout)
+Anna has graciously agreed to work on the client-side pieces. I do have
+some patches, but that piece is still pretty rough:
 
-Using rpcbind 1.2.7-1.2 (from Tumbleweed), output when run with debug mode:
+    https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/log/?h=dir-deleg-clnt
 
-# /usr/sbin/rpcbind -w -f -d
-rpcbind: PMAPPROC_DUMP
+In a nutshell, the client-side GDD4 support is still simplistic, and
+there is no support for CB_NOTIFY yet.
 
-rpcbind: RPCB_UNSET request for (536875000, 1, ) :
-rpcbind: RPCB_UNSET: succeeded
-rpcbind: RPCB_SET request for (536875000, 1, udp, 0.0.0.0.223.168) :
-rpcbind: RPCB_SET: succeeded
-rpcbind: RPCB_GETADDR req for (100000, 2, tcp) from 127.0.0.1.3.98:
-mergeaddr: contact uaddr = 127.0.0.1.0.111
-addrmerge(caller, 0.0.0.0.0.111, 127.0.0.1.0.111, tcp
-addrmerge: hint 127.0.0.1.0.111
-addrmerge: returning 127.0.0.1.0.111
-mergeaddr: uaddr = 0.0.0.0.0.111, merged uaddr = 127.0.0.1.0.111
-rpcbind: getaddr: 127.0.0.1.0.111
-rpcbind: PMAPPROC_DUMP
+I also have a MR up for wireshark [4], and I have patches for some basic
+pynfs tests that I've been using to drive the server (to be posted
+soon).
 
-rpcbind: RPCB_GETADDR req for (536875000, 1, udp) from 10.0.0.1.3.105:
-mergeaddr: contact uaddr = 10.0.0.2.0.111
-addrmerge(caller, 0.0.0.0.223.168, 10.0.0.2.0.111, udp
-addrmerge: hint 10.0.0.2.0.111
-addrmerge: returning 10.0.0.2.223.168
-mergeaddr: uaddr = 0.0.0.0.223.168, merged uaddr = 10.0.0.2.223.168
-rpcbind: getaddr: 10.0.0.2.223.168
-rpcbind: RPCBPROC_BCAST
+At this point I'm mainly interested in feedback on the VFS bits,
+particularly the delegated_inode changes. Also, I should make special
+mention of atomic_open since Al pointed it out in the last set:
 
-rpcbind: rpcb_indirect callit req for (536875000, 1, 1, udp) from 10.0.0.1.3.105 :
-rpcbind: found at uaddr 0.0.0.0.223.168
+I think we can't reasonably support dir delegations on filesystems that
+support atomic_open. When we do a create on those filesystems, we don't
+know whether the file exists or not, so we can't know whether we need to
+break a dir delegation.
 
-addrmerge(caller, 0.0.0.0.223.168, NULL, udp
-addrmerge: hint 127.0.0.1.0.111
-addrmerge: returning 127.0.0.1.223.168
-addrmerge(caller, 0.0.0.0.223.168, NULL, udp
-addrmerge: hint 10.0.0.1.3.105
-addrmerge: returning 192.168.122.43.223.168
-rpcbind: merged uaddr 192.168.122.43.223.168
+It would be nice to have a compile-time check for that, but I'm not sure
+how we could reasonably do it. For now, I've settled for disabling
+directory leases in FUSE, NFS and CIFS, which should work around the
+potential problem.
 
-rpcbind: RPCB_UNSET request for (536875000, 1, ) :
-rpcbind: Suppression RPC_UNSET(map_unset)
-rpcbind: rbl->rpcb_map.r_owner=superuser
-rpcbind: owner=superuser
-rpcbind: RPCB_UNSET: succeeded
+[1]: https://lore.kernel.org/linux-nfs/20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org/
+[2]: https://www.youtube.com/watch?v=DdFyH3BN5pI
+[3]: https://linux-nfs.org/wiki/index.php/CITI_Experience_with_Directory_Delegations
+[4]: https://gitlab.com/wireshark/wireshark/-/merge_requests/20048
 
-Obviously, if I compile rpcbind with --enable-rmtcalls and run it, both tests work:
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- add support for ignoring certain break_lease() events
+- basic support for CB_NOTIFY
+- Link to v1: https://lore.kernel.org/r/20240315-dir-deleg-v1-0-a1d6209a3654@kernel.org
 
-$ ./autogen.sh && ./configure --enable-debug --enable-warmstarts --enable-rmtcalls --with-rpcuser=rpc --with-nss-modules="files usrfiles"
-$ make -j`nproc`
-# ./rpcbind -w -d -f
+---
+Jeff Layton (28):
+      filelock: push the S_ISREG check down to ->setlease handlers
+      filelock: add a lm_may_setlease lease_manager callback
+      vfs: add try_break_deleg calls for parents to vfs_{link,rename,unlink}
+      vfs: allow mkdir to wait for delegation break on parent
+      vfs: allow rmdir to wait for delegation break on parent
+      vfs: break parent dir delegations in open(..., O_CREAT) codepath
+      vfs: make vfs_create break delegations on parent directory
+      vfs: make vfs_mknod break delegations on parent directory
+      filelock: lift the ban on directory leases in generic_setlease
+      nfsd: allow filecache to hold S_IFDIR files
+      nfsd: allow DELEGRETURN on directories
+      nfsd: check for delegation conflicts vs. the same client
+      nfsd: wire up GET_DIR_DELEGATION handling
+      filelock: rework the __break_lease API to use flags
+      filelock: add struct delegated_inode
+      filelock: add support for ignoring deleg breaks for dir change events
+      filelock: add an inode_lease_ignore_mask helper
+      nfsd: add protocol support for CB_NOTIFY
+      nfsd: add callback encoding and decoding linkages for CB_NOTIFY
+      nfsd: add data structures for handling CB_NOTIFY to directory delegation
+      fsnotify: export fsnotify_recalc_mask()
+      nfsd: update the fsnotify mark when setting or removing a dir delegation
+      nfsd: make nfsd4_callback_ops->prepare operation bool return
+      nfsd: add notification handlers for dir events
+      nfsd: allow nfsd to get a dir lease with an ignore mask
+      nfsd: add a tracepoint for nfsd_file_fsnotify_handle_dir_event()
+      nfsd: add support for NOTIFY4_ADD_ENTRY events
+      nfsd: add support for NOTIFY4_RENAME_ENTRY events
 
-# rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
-...
-rpc_test 1 TINFO: using libtirpc: yes
-tirpc_rpcb_rmtcall 10.0.0.2 536875000
-rpc_test 1 TPASS: tirpc_rpcb_rmtcall 10.0.0.2 536875000 passed as expected
+ Documentation/sunrpc/xdr/nfs4_1.x    | 252 ++++++++++++++++-
+ fs/attr.c                            |   4 +-
+ fs/fuse/dir.c                        |   1 +
+ fs/locks.c                           | 120 ++++++--
+ fs/namei.c                           | 296 ++++++++++++-------
+ fs/nfs/nfs4file.c                    |   2 +
+ fs/nfsd/filecache.c                  | 103 +++++--
+ fs/nfsd/filecache.h                  |   2 +
+ fs/nfsd/nfs4callback.c               |  60 +++-
+ fs/nfsd/nfs4layouts.c                |   3 +-
+ fs/nfsd/nfs4proc.c                   |  24 +-
+ fs/nfsd/nfs4state.c                  | 535 +++++++++++++++++++++++++++++++++--
+ fs/nfsd/nfs4xdr_gen.c                | 506 ++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfs4xdr_gen.h                |  17 +-
+ fs/nfsd/state.h                      |  47 ++-
+ fs/nfsd/trace.h                      |  26 +-
+ fs/nfsd/vfs.c                        |   5 +-
+ fs/nfsd/vfs.h                        |   2 +-
+ fs/nfsd/xdr4cb.h                     |  11 +
+ fs/notify/mark.c                     |   1 +
+ fs/open.c                            |   8 +-
+ fs/posix_acl.c                       |  12 +-
+ fs/smb/client/cifsfs.c               |   3 +
+ fs/utimes.c                          |   4 +-
+ fs/xattr.c                           |  16 +-
+ include/linux/filelock.h             | 143 +++++++---
+ include/linux/fs.h                   |   9 +-
+ include/linux/nfs4.h                 | 127 ---------
+ include/linux/sunrpc/xdrgen/nfs4_1.h | 293 ++++++++++++++++++-
+ include/linux/xattr.h                |   4 +-
+ include/uapi/linux/nfs4.h            |   2 -
+ 31 files changed, 2249 insertions(+), 389 deletions(-)
+---
+base-commit: 22b71eb34051a70c39c86997657de92722ec1838
+change-id: 20240215-dir-deleg-e212210ba9d4
 
-# rpc_test.sh -s rpc_svc_1 -c rpc_pmap_rmtcall
-...
-rpc_pmap_rmtcall 10.0.0.2 536875000
-rpc_test 1 TPASS: rpc_pmap_rmtcall 10.0.0.2 536875000 passed as expected
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-
-And the rpcbind outpt contains also:
-
-rpcbind: rpcbproc_callit_com:  original XID 683f1705, new XID f68e200
-rpcbind: my_svc_run:  polled on forwarding fd 7, netid udp - calling handle_reply
-
-Also, wouldn't it be worth mention --enable-rmtcalls in functions' man pages?
-(Or have I overlooked that in man?)
-
-Thanks for any hint.
-
-Kind regards,
-Petr
-
-[1] https://github.com/linux-test-project/ltp/tree/master/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_addrmanagmt_pmap_rmtcall/rpc_pmap_rmtcall.c
-[2] https://github.com/linux-test-project/ltp/tree/master/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/tirpc/tirpc_expertlevel_rpcb_rmtcall/tirpc_rpcb_rmtcall.c
-[3] https://git.linux-nfs.org/?p=steved/rpcbind.git;a=commitdiff;h=2e9c289246c647e25649914bdb0d9400c66f486e
-
-Full strace on rpcbind compiled without --enable-rmtcalls (the default, thus
-how it's shipped to the new distros):
-
-# rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
-
-execve("/opt/ltp/testcases/bin/tirpc_rpcb_rmtcall", ["tirpc_rpcb_rmtcall", "10.0.0.2", "536875000"], 0x7ffee8701b10 /* 228 vars */) = 0
-...
-openat(AT_FDCWD, "/etc/services", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
-...
-openat(AT_FDCWD, "/usr/etc/services", O_RDONLY|O_CLOEXEC) = 5
-fstat(5, {st_mode=S_IFREG|0644, st_size=868338, ...}) = 0
-read(5, "#\n# Network services, Internet s"..., 4096) = 4096
-read(5, "[Jon_Postel]\ndaytime            "..., 4096) = 4096
-read(5, "gs          44/udp       # MPM F"..., 4096) = 4096
-read(5, "emote Job Service \nnetrjs-2     "..., 4096) = 4096
-read(5, "Jon_Postel]\nhostname           1"..., 4096) = 4096
-close(5)                                = 0
-socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) = 5
-getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
-openat(AT_FDCWD, "/etc/bindresvport.blacklist", O_RDONLY) = 6
-fstat(6, {st_mode=S_IFREG|0644, st_size=415, ...}) = 0
-read(6, "#\n# This file contains a list of"..., 4096) = 415
-read(6, "", 4096)                       = 0
-close(6)                                = 0
-getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getpid()                                = 28530
-bind(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, 16) = 0
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-getsockname(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
-gettimeofday({tv_sec=1748867467, tv_usec=890549}, NULL) = 0
-getpid()                                = 28530
-setsockopt(5, SOL_IP, IP_RECVERR, [1], 4) = 0
-ioctl(5, FIONBIO, [1])                  = 0
-...
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-sendto(5, "h0`M\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\3\0\0\0\0\0\0\0\0"..., 88, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 88
-poll([{fd=5, events=POLLIN}], 1, 15000) = 1 ([{fd=5, revents=POLLIN}])
-recvfrom(5, "h0`M\0\0\0\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\02010.0"..., 8800, 0, NULL, NULL) = 44
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-close(5)                                = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) = 5
-getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
-getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getpid()                                = 28530
-bind(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, 16) = 0
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-getsockname(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
-getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
-gettimeofday({tv_sec=1748867467, tv_usec=892984}, NULL) = 0
-getpid()                                = 28530
-setsockopt(5, SOL_IP, IP_RECVERR, [1], 4) = 0
-ioctl(5, FIONBIO, [1])                  = 0
-...
-sendto(5, "h0V\302\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\5\0\0\0\0\0\0\0\0"..., 60, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 60
-poll([{fd=5, events=POLLIN}], 1, 1000)  = 0 (Timeout)
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
-close(5)                                = 0
-rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
-fstat(1, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
-write(1, "1\n", 2)                      = 2
-exit_group(1)                           = ?
-+++ exited with 1 +++
 
