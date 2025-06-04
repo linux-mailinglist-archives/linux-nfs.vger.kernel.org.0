@@ -1,142 +1,143 @@
-Return-Path: <linux-nfs+bounces-12086-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12087-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B454ACD6AF
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 05:49:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B17D1ACDAE6
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 11:23:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 13B09178124
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 03:49:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DCE31898F07
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 09:23:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6DC2609F5;
-	Wed,  4 Jun 2025 03:48:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94A9B28AB12;
+	Wed,  4 Jun 2025 09:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGyY7i9k"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id B818770838;
-	Wed,  4 Jun 2025 03:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D437B26156F;
+	Wed,  4 Jun 2025 09:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749008935; cv=none; b=sIWQlYcMoNQVA4RfvO52Q576zeZKfnfxSLD0P2yAMXz/gSE7xjFZXNioOCImal4gxYWUkjpenwrHF0XkODvVr+1ZWyflomQgRoKXgUwWJ6Mbjoeg5Age3fRgOP90HnpNc7DsyvdtK00njlb5wDbeen9MnaTc5eJTHZWiFvE4Du8=
+	t=1749028969; cv=none; b=sz1Cu5GIP2D+7Vkx2Apdy2pDGY7M7rYKI8NGTME9ac2MAjtRbCDqbAZR+UtFAlOOLRepcIXOdmq3eujbMhK+greST8Wmd+4d2oaQJOqVDgrSA1aJ6Zo1VmT+gWCtw5wyOmN4XExRwStlAIoYa/Ad/RyyqutBTgt/tzMEQ2m+KdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749008935; c=relaxed/simple;
-	bh=p1azAzD1JQm81XfjGQoJVYO2dhg0xi6TF9uyuTGkfnw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ri1eeYXZbGXitgJ1RMhAJnS2b6vza8qGOqStRB8mfVS1c7Ue60PA+XU1Ghwdb6UMAho829CcmuXO50rCbkDgpE3Dk/3ZYh8XylZf3J4cfSXq+dQOposbV3diNQk3GpnQK6dSic5mHrsC95TPF065DPMKFN1vGaABZSWDX02kf/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id E26EB6018DA57;
-	Wed,  4 Jun 2025 11:48:35 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: Su Hui <suhui@nfschina.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] nfsd: Change the type of ek_fsidtype from int to u8 and use kstrtou8
-Date: Wed,  4 Jun 2025 11:47:26 +0800
-Message-Id: <20250604034725.450911-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1749028969; c=relaxed/simple;
+	bh=A+Hb+IYZVbIrHhgOikz8cYlE64YeroKilPbQiRKqru4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GSOhWiZv8ckkmt2dd5mAh81ein+UxSJvnbNVbuCVYBkohP40KyGlUa3tK3mUAT1PN4+M12jLzhU066uWC4gj6ausu8fR77bXzi41rIYx9+G9wZHEQ7yTkccpu9xm6bOrCfRhc/b6lq1Y3w4QsBFBjwO+B4JpWZIi3hDlB2JkmTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGyY7i9k; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad89333d603so1249030466b.2;
+        Wed, 04 Jun 2025 02:22:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749028966; x=1749633766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kxD+BS5BNW9JlEJcYvio44SXpqyv8Wmatgad1UAi7lM=;
+        b=WGyY7i9kyt34dfZ26K5bRH2uPAk3d8i14krVC3MeyB7qmiGIPnsbzO9AFs+zxqjpSh
+         OwpwwNmi7fKW2hrM3vFA7JFm/knSas9JWjINjDMW9m6bSZHwJaFENWntQcEhfT46jDKG
+         ZGE4AAztKgsrjCX7/w3lw/dalngGRREGyhPY07MhxGZjRvmoqcBHrE3e5lZOgW4xbzOO
+         tQH4zoIiQGTs1OYCuShfafmxmyg2SJbvLsfFIeeL/593LbYf4FVkV3EQbhpaBdXPv1l2
+         +AJQeP5e8hReLNk9qf1105owScYLx1Sb5IUPszir83Uc+VrKrgm6Wq4focg9I8AIKxnQ
+         YhLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749028966; x=1749633766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kxD+BS5BNW9JlEJcYvio44SXpqyv8Wmatgad1UAi7lM=;
+        b=qJ8kYYkdiu/6DlNnGVW+kFhBI45M6ayGmf7gzfOX3g9gGqUODH6A2FDZV499IOvpVZ
+         zUaKI9ESA66+AG9cCRfLKUG3/Unh6iiO9Qwmeg+UVTBa6jfJv0GtdV7kiGuNUq7BDFbb
+         b77G0/V7Pb6Zwe5utkNJ1p8Dugru33owvfHoNO7J4e0f+1//HWZv7/tLiIYaOPhHB6wK
+         8ty1FTAFmgMj/XvNPx10yUQAhE6wQrccfBHLqjpKEOX+uvGZTJN/KatrhGS6qGJANAaF
+         fpo9yvxkEF3ET2e/CDXvuqtlJ2KrrskBxDh1bq45S8Wp5Ksc6o5bCOqUjIFWzv5VUCBb
+         efJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhEpCFPqfLcbXoyBbezGlFh+E5/vigFqEImROKr7621SJ6tmZ3oqGZ4q9+5BnQVWMThI0wtDZXF1Kw@vger.kernel.org, AJvYcCXsVIN7d6KJaJW4TMTTdirKlfyCFi3qBFdP+aWFFxzAfgNn05Tb3FstO+rwoLccj7aAUoOcvQQykFagsPZy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7mkNMYEybWeqjxY3lZAdJvciH593Jt7rxlMcWz3OXS0SkSaCP
+	IGnrH6fkKdjgk+XjES67RvBakpP2q/CvDw0fqsLEL6XxFd4C/hii/v9iyYGaL9WYyA32kF2jBT0
+	ItpMLPLbgoTpZmuoP9oUu68UlYS49DdQ=
+X-Gm-Gg: ASbGncvrZ9phtoSGARd6UclFnUS6wXFrrGO1pBjow+Xv59vnE7ZBc/L6GFFHDTossWn
+	2EgxCpL72C//JpjtzigSvrlEAWzfEDxpmaH9/DDOOPy1c0pi6JDdxnrA2m91/Nt3oGQ7RjeSItU
+	zMqJiAvXGsNf7P3wAyid4H2AJqUULE+/UE25D7cf+lD4Rjt6pDJYHxdYGkiWMtjjI0ft94fc5UD
+	ilj
+X-Google-Smtp-Source: AGHT+IFtmWSVIfRymSX8p9O1DuQ9uGU3imVuqryH0lzpbx4dWpXx940NayRL5XU/iX+3A15SSf0ibjMq2HLSlqBsVEw=
+X-Received: by 2002:a17:906:a995:b0:add:fa4e:8a61 with SMTP id
+ a640c23a62f3a-addfa4e8f2bmr123364566b.38.1749028965818; Wed, 04 Jun 2025
+ 02:22:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20250529113215epcas5p2edd67e7b129621f386be005fdba53378@epcas5p2.samsung.com>
+ <20250529111504.89912-1-kundan.kumar@samsung.com> <20250602141904.GA21996@lst.de>
+ <c029d791-20ca-4f2e-926d-91856ba9d515@samsung.com> <20250603132434.GA10865@lst.de>
+ <CACzX3AuBVsdEUy09W+L+xRAGLsUD0S9+J2AO8nSguA2nX5d8GQ@mail.gmail.com>
+In-Reply-To: <CACzX3AuBVsdEUy09W+L+xRAGLsUD0S9+J2AO8nSguA2nX5d8GQ@mail.gmail.com>
+From: Kundan Kumar <kundanthebest@gmail.com>
+Date: Wed, 4 Jun 2025 14:52:34 +0530
+X-Gm-Features: AX0GCFsIp4hEknwUTt7cvxyvZfmfYSDQ8XVwMfEKcuya3JVRf5uqzsLfTt2zwvo
+Message-ID: <CALYkqXqVRYqq+5_5W4Sdeh07M8DyEYLvrsm3yqhhCQTY0pvU1g@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Parallelizing filesystem writeback
+To: Anuj gupta <anuj1072538@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, "Anuj Gupta/Anuj Gupta" <anuj20.g@samsung.com>, 
+	Kundan Kumar <kundan.kumar@samsung.com>, jaegeuk@kernel.org, chao@kernel.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, 
+	agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org, 
+	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org, 
+	clm@meta.com, david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk, 
+	ritesh.list@gmail.com, djwong@kernel.org, dave@stgolabs.net, 
+	p.raghav@samsung.com, da.gomez@samsung.com, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
+	gost.dev@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The valid values for ek_fsidtype are actually 0-7 so it's better to
-change the type to u8. Also using kstrtou8() to relpace simple_strtoul(),
-kstrtou8() is safer and more suitable for u8.
+> > > For xfs used this command:
+> > > xfs_io -c "stat" /mnt/testfile
+> > > And for ext4 used this:
+> > > filefrag /mnt/testfile
+> >
+> > filefrag merges contiguous extents, and only counts up for discontiguou=
+s
+> > mappings, while fsxattr.nextents counts all extent even if they are
+> > contiguous.  So you probably want to use filefrag for both cases.
+>
+> Got it =E2=80=94 thanks for the clarification. We'll switch to using file=
+frag
+> and will share updated extent count numbers accordingly.
 
-Signed-off-by: Su Hui <suhui@nfschina.com>
-Suggested-by: NeilBrown <neil@brown.name>
----
-v2:
- - change the type of ek_fsidtype to u8 and using kstrtou8.
-v1:
- - https://lore.kernel.org/all/20250527092548.1931636-1-suhui@nfschina.com/
+Using filefrag, we recorded extent counts on xfs and ext4 at three
+stages:
+a. Just after a 1G random write,
+b. After a 30-second wait,
+c. After unmounting and remounting the filesystem,
 
-ps: I don't add the v1 patch's review tag because it's very different
-between v1 and v2.
+xfs
+Base
+a. 6251   b. 2526  c. 2526
+Parallel writeback
+a. 6183   b. 2326  c. 2326
 
- fs/nfsd/export.c | 8 +++-----
- fs/nfsd/export.h | 2 +-
- fs/nfsd/trace.h  | 4 ++--
- 3 files changed, 6 insertions(+), 8 deletions(-)
+ext4
+Base
+a. 7080   b. 7080    c. 11
+Parallel writeback
+a. 5961   b. 5961    c. 11
 
-diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-index 88ae410b4113..cadfc2bae60e 100644
---- a/fs/nfsd/export.c
-+++ b/fs/nfsd/export.c
-@@ -82,8 +82,7 @@ static int expkey_parse(struct cache_detail *cd, char *mesg, int mlen)
- 	int len;
- 	struct auth_domain *dom = NULL;
- 	int err;
--	int fsidtype;
--	char *ep;
-+	u8 fsidtype;
- 	struct svc_expkey key;
- 	struct svc_expkey *ek = NULL;
- 
-@@ -109,10 +108,9 @@ static int expkey_parse(struct cache_detail *cd, char *mesg, int mlen)
- 	err = -EINVAL;
- 	if (qword_get(&mesg, buf, PAGE_SIZE) <= 0)
- 		goto out;
--	fsidtype = simple_strtoul(buf, &ep, 10);
--	if (*ep)
-+	if (kstrtou8(buf, 10, &fsidtype))
- 		goto out;
--	dprintk("found fsidtype %d\n", fsidtype);
-+	dprintk("found fsidtype %u\n", fsidtype);
- 	if (key_len(fsidtype)==0) /* invalid type */
- 		goto out;
- 	if ((len=qword_get(&mesg, buf, PAGE_SIZE)) <= 0)
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index 4d92b99c1ffd..b9c0adb3ce09 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -88,7 +88,7 @@ struct svc_expkey {
- 	struct cache_head	h;
- 
- 	struct auth_domain *	ek_client;
--	int			ek_fsidtype;
-+	u8			ek_fsidtype;
- 	u32			ek_fsid[6];
- 
- 	struct path		ek_path;
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 3c5505ef5e3a..b244c6b3e905 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -344,7 +344,7 @@ TRACE_EVENT(nfsd_exp_find_key,
- 		 int status),
- 	TP_ARGS(key, status),
- 	TP_STRUCT__entry(
--		__field(int, fsidtype)
-+		__field(u8, fsidtype)
- 		__array(u32, fsid, 6)
- 		__string(auth_domain, key->ek_client->name)
- 		__field(int, status)
-@@ -367,7 +367,7 @@ TRACE_EVENT(nfsd_expkey_update,
- 	TP_PROTO(const struct svc_expkey *key, const char *exp_path),
- 	TP_ARGS(key, exp_path),
- 	TP_STRUCT__entry(
--		__field(int, fsidtype)
-+		__field(u8, fsidtype)
- 		__array(u32, fsid, 6)
- 		__string(auth_domain, key->ek_client->name)
- 		__string(path, exp_path)
--- 
-2.30.2
+Used the same fio commandline as earlier:
+fio --filename=3D/mnt/testfile --name=3Dtest --bs=3D4k --iodepth=3D1024
+--rw=3Drandwrite --ioengine=3Dio_uring  --fallocate=3Dnone --numjobs=3D1
+--size=3D1G --direct=3D0 --eta-interval=3D1 --eta-newline=3D1
+--group_reporting
 
+filefrag command:
+filefrag  /mnt/testfile
 
