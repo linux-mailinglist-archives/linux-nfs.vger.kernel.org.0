@@ -1,181 +1,170 @@
-Return-Path: <linux-nfs+bounces-12105-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12106-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B570AACE451
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 20:26:45 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 707B5ACE471
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 20:37:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E42081890065
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 18:26:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4D72F7A6C1F
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 18:36:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE23171A1;
-	Wed,  4 Jun 2025 18:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94BA21FE45B;
+	Wed,  4 Jun 2025 18:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JjGdxvMQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cnro/LL2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89441FECAF
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Jun 2025 18:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A87B7260F;
+	Wed,  4 Jun 2025 18:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749061601; cv=none; b=oxQErY2gfDZBmU4skhaYqkF3itorrA++MDP9st0qr4Wf51GqGjx2O+miX9tUILmMfs/4w3z8AZYyRk1xgMa4lmSgD+ntNPmUF+AKGv2dsydQlhI7ibWy6hOvY8vusJI1ktfvHJYI4Ud+bjODnVB4nvHj/BZbwpJwaPdLfokT6nY=
+	t=1749062257; cv=none; b=Ad2QHaz4VU4gOat4laxlskrPVW87a5hyaqXz5G6/LlIdZwWBQdCU1ystoB6aCtryOLu2VH6XCl2ZefbWopBZjfHP5ZrEzgOj1KA3p4/hORbSAIjficjUYcJZk8qnPeqNhgFAC228riCH/3dNW5iGBcOmIe8nQ4lNAjfmpoOkOjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749061601; c=relaxed/simple;
-	bh=W3QrunMFWVkfiMa1DeOo0Z+Zw6O8cV4lkmlvi5P+G5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AiuuTo/WG19/D1BId87RPP8rI507BdaliQKHcY7rdTv14N+37siH7cFN4wnI6seNsRwRRXneJUzREsSw1Ybjbmr0jmmEu8GyuJmpfkSg2K6AVXZqO8ZXmjQLAF+/cTsnxR/TDIQS3F4lmaJ9Ez0tBAU+C+m6zZ/s8AAOG5S3xxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JjGdxvMQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749061598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vD62RXP11gJFzBmHg/FQLGL9T7uWuzQyd3DlPXEtQ1E=;
-	b=JjGdxvMQYiBjaHFNn6OOktQHxs1qT1csqxUOmWmga1QIMlEweGO82houl8BClRNMd9X7zw
-	V5kb9183yES85zf+G8hWfKOAKLy3dFDUpIJyA3D4UQhl+Wi7tQGwx4JpPu5myQmVJFm2iY
-	ufuIMpB2wKMKasAkItAcuSldHeziPhE=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-7wtM461bMb6LCDvywpQ3jg-1; Wed, 04 Jun 2025 14:26:37 -0400
-X-MC-Unique: 7wtM461bMb6LCDvywpQ3jg-1
-X-Mimecast-MFC-AGG-ID: 7wtM461bMb6LCDvywpQ3jg_1749061597
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6facf4cf5e1so2685666d6.2
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Jun 2025 11:26:37 -0700 (PDT)
+	s=arc-20240116; t=1749062257; c=relaxed/simple;
+	bh=kMacitpLXMv1GwpjR46stCcXET1RA/LYFLgeKG2ri0w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NufkR24cZ5svXpKyzZVvxK3DEkur7RVatpHExwoCRgCiau1L1Nda70TwlLUYgPdnQSCkL1PBUw+U2eXRAH5D6eKccBR31esFmecm37coM7CLwCs+M41Lr7EgwiLQRTUqpa06lSP6If5MY1HKgbAdxi89m89tsKzt90NJ93yhxvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cnro/LL2; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-23526264386so1507005ad.2;
+        Wed, 04 Jun 2025 11:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749062255; x=1749667055; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EMJKoOEyvjYK7yMgj6XYrB7SCgQJhbeYmY5wKASLWgQ=;
+        b=Cnro/LL2772IgfPvBkcj02q0G22wGtxA8oVHUIfPS/6i5JI1niOK/8UGgZ5yyvbC85
+         rGJg4XnWLiinbPfCbtheI1Mdn4no/w4kY7u/Gkxj+2nu3IgKzxFM5Ax01Cg5hDWvlErW
+         wVHZXLXFy5/e79ZIPXde018nbAuY1j9yGon46cJX/icgcFSPPsyD5XcHO9R10UQqaOMV
+         Gut+tNvjBwJwsSKJpOmrG15Ltc7t7Tkz7WoLrNAknPUPi5mq2/cnDWQGFfmreu2JPKSH
+         j8ajrW8SptgYUUfY3l4R45g5/fswpIU2mb6szkeeBM3HduyWJLND3x72oA/Gk2LQ0V9T
+         tUKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749061596; x=1749666396;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vD62RXP11gJFzBmHg/FQLGL9T7uWuzQyd3DlPXEtQ1E=;
-        b=Ek+OMErbXYx2lk1X3mhhHveK1CKqFOgyhAjy6idF7qpWlUM+4T+n3JYzw7+wCnoiET
-         x+XgxUdO8ThMRXsnmJrhRR5Zqc3AEYV/8/mDQrH1zQODJm93VkwiYXjOsoAUI3yXMdpT
-         HP5/0Hm163zfX0O95x+wufS93SF4briiRaltR8OEAef+PvHf7LmHSNOiy1UprHKeIpl+
-         IcPa7AdtKtPnSut+Rlb9NzqwRHE7II5Vonam+y7OzhQD3mAH/3DBrsk73FblBKKZX8fr
-         pkHGHxyxvnjM4ycTBhV5mThzLyMgmGabK5nPoFYF/bqMCZwVm0cW77uaapq2yRLWAB1d
-         KTpw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6z7V+q5Mak9mplk+icTBenavW+9knqZcQL7zMUqLiFTvYIRp/fiKBvU9DFuJkCLprIDUe65nLquc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy38uRGlzZZfhFHSrJD4u01updERjE+Za1OU9Ci0ZniKG7QxjMi
-	2CsXwyolns+ir/QWOXv3wt8hPOL8hNfxQ1IxMhfiL17Q2SefWgv7p7NNN1zLjjBO4qcX29RzQVU
-	hBOm6GhgZK7+AbJOs60lQxfbPiQB4vI64rhVEuscqRuX8mD1xMysNbATX2oaCpWkdCEvqOA==
-X-Gm-Gg: ASbGncvZs/5nNpp2prTA+tDZvPnsPXbl22/HLDBqR3Mq51JyftiiSWKuhMyqxqkEgoS
-	4XGOK/N/HnRmDLPUMxFPO3R7RmqaOBM0jRq9SO69VDb8C6l4SYrfkvkQYqd0hPPbNar26R5cFva
-	Dkxrg/eY7oyQon5dNVp0WvHc/dYtsrLZeMHt7JAa6CirHkShPPJyDaMPXa6LCfHzaeGZjUKxZat
-	RJ+5IS9FLurzvThg89yEFHW1hfBpUntE9WPKEEVN6fxFDkpnEpGM+cZ5eV537r6SB3vNI9q/6G+
-	HzIhK4wrrKk=
-X-Received: by 2002:a05:6214:2507:b0:6f8:b7cd:984f with SMTP id 6a1803df08f44-6faf7023e52mr54391146d6.30.1749061596121;
-        Wed, 04 Jun 2025 11:26:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGb8W4Pga49rV6gFLmr28JLMLSnAuw/HcSfZPPutAN/8rN+X0ShuZKjKOcVaNeJZbmu/AUObg==
-X-Received: by 2002:a05:6214:2507:b0:6f8:b7cd:984f with SMTP id 6a1803df08f44-6faf7023e52mr54390756d6.30.1749061595706;
-        Wed, 04 Jun 2025 11:26:35 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.242.209])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4c7d8sm103904226d6.36.2025.06.04.11.26.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 11:26:35 -0700 (PDT)
-Message-ID: <7bbb789d-b3ae-4258-bebf-40ed87587576@redhat.com>
-Date: Wed, 4 Jun 2025 14:26:34 -0400
+        d=1e100.net; s=20230601; t=1749062255; x=1749667055;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EMJKoOEyvjYK7yMgj6XYrB7SCgQJhbeYmY5wKASLWgQ=;
+        b=Lw1kkFEsEekJ3Y7k8xIHj9xdMCkofnl8AI9L3eu9W+Ae5rJAmFlfrA1xKdfvDiC7xc
+         PWblmrm8ZQzCzxUNme9yK0Qgr9Oni8utLNUjfxapOWHKUfoqtJgIN56W9kIm4scRht1v
+         yzN+uOds/EpbdbbsFWer4Z8gpDjZviGpLH7uVg4/10946ID+gJLQAGRm9DbnhxpXbS2E
+         nIoohJf8mApE+K56SJGBcgCjEproiaS2zUm4X2pmTCNKTD7YlNCZIWbLLwteCvwruNqg
+         g475KeITNL7GrBZ6GOsMgjsLMs0CZC43aaa3OHFJ+VBJnjLhD2bp7RCKj9OdTG4wyaYp
+         GRzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG4hxnkiB55tP5sF6bMSiUJtpjpeuNi7LFFI6jOB0ojvVc8sRzsAkbGn3RhKsLf2gFcbdOKA76gYfYig==@vger.kernel.org, AJvYcCX83t8MlTlH+cCwDOYTX0xKpWAtC2JpUnXHpnnSgRauHdl3nNNDAzeXXUcQ6mY+Sl0CMtRccf+UE6c=@vger.kernel.org, AJvYcCXsshSbWBN9N8PQNKFu8+WJ/mQrk9JwvoDOmIGw0vHifxRv1r+0gdng2v2dzJf6T/fyQD/0twNi@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdHtusHQPbf78sH4cpGmexl72o3d7TC225XVS0JSeiIemmARVW
+	mBfEkE6J+JIv/T5kd2HywwYlLoANp6bQ137qR1NLWI4azb/YZXZZCac=
+X-Gm-Gg: ASbGncto7WFhZHMIJzWX4FjNzENIxmr1umyKRKxGgxr/2WeaoVdwe2L7LFNFuo/Ybvu
+	RmnryC2spEj5VuQE2YqDAti0dwVHgnQ+xPHbLvSOjFjmx/rs7/EWaZYRBg+/gG5fQdO8CzaH+wA
+	I3spq6nHEKHZkzqyE63AtwhSjkeS6s3sZypbM5uCugCRahVKP4aQIx7SbZmHUpxTGi330IcqSuX
+	Xm6VsJlaYU+FDECZBo0VrRhj4CpffCCIP+xOeKsMvRj52+1FGf6dE9YDt5IG7inZSlgLpD2zXmN
+	D5+owXLg9YyuNr5xXOtz2Q8hI+i4
+X-Google-Smtp-Source: AGHT+IHzeMlOG8WaEKyWojPC70HY/eTfvQSuJDc6Tquqle6do5jo7DuCE23TvCyOkWhB0uyKaHd7DQ==
+X-Received: by 2002:a17:903:3d0b:b0:234:a033:b6f6 with SMTP id d9443c01a7336-235e11cb901mr52517545ad.31.1749062255383;
+        Wed, 04 Jun 2025 11:37:35 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d14c63sm107254965ad.241.2025.06.04.11.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 11:37:34 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: david.laight.linux@gmail.com
+Cc: axboe@kernel.dk,
+	chuck.lever@oracle.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	hch@lst.de,
+	horms@kernel.org,
+	jaka@linux.ibm.com,
+	jlayton@kernel.org,
+	kbusch@kernel.org,
+	kuba@kernel.org,
+	kuni1840@gmail.com,
+	kuniyu@amazon.com,
+	linux-nfs@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-rdma@vger.kernel.org,
+	matttbe@kernel.org,
+	mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	sfrench@samba.org,
+	wenjia@linux.ibm.com,
+	willemb@google.com
+Subject: Re: [PATCH v2 net-next 3/7] socket: Restore sock_create_kern().
+Date: Wed,  4 Jun 2025 11:36:43 -0700
+Message-ID: <20250604183733.135820-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250603223020.3344d362@pumpkin>
+References: <20250603223020.3344d362@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
- exports
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org
-References: <20250513-master-v1-1-e845fe412715@kernel.org>
-Content-Language: en-US
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20250513-master-v1-1-e845fe412715@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello all,
-
-On 5/13/25 9:50 AM, Jeff Layton wrote:
-> Back in the 80's someone thought it was a good idea to carve out a set
-> of ports that only privileged users could use. When NFS was originally
-> conceived, Sun made its server require that clients use low ports.
-> Since Linux was following suit with Sun in those days, exportfs has
-> always defaulted to requiring connections from low ports.
+From: David Laight <david.laight.linux@gmail.com>
+Date: Tue, 3 Jun 2025 22:30:20 +0100
+> On Mon, 2 Jun 2025 07:08:17 +0200
+> Christoph Hellwig <hch@lst.de> wrote:
 > 
-> These days, anyone can be root on their laptop, so limiting connections
-> to low source ports is of little value.
+> > On Thu, May 29, 2025 at 07:53:41PM -0700, Kuniyuki Iwashima wrote:
+> > > In the old days, sock_create_kern() did take a ref to netns,
+> > > but an implicit change that avoids taking the ref has caused
+> > > a lot of problems for people who used to the old semantics.
 > 
-> Make the default be "insecure" when creating exports.
+> That must have been a long time ago.
+> Was it even long after the namespace code was added?
+> (I don't have a system with the git tree up at the moment)
+
+2007: 1b8d7ae42d02 ("[NET]: Make socket creation namespace safe.")
+2015: 26abe14379f8 ("net: Modify sk_alloc to not reference count the netns of kernel sockets.")
+
+It's been long since the implicit change, but it's only _recently_ that
+people started to notice the issue thanks?/due to k8s use cases, e.g.
+fs mounted in netns (ef7134c7fc48, 1be52169c348 + b013b817f32f, etc).
+
+
 > 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> In discussion at the Bake-a-thon, we decided to just go for making
-> "insecure" the default for all exports.
-> ---
->   support/nfs/exports.c      | 7 +++++--
->   utils/exportfs/exports.man | 4 ++--
->   2 files changed, 7 insertions(+), 4 deletions(-)
+> > > 
+> > > This series rather rolls back the change, so I think using
+> > > the same name here is better than leaving the catchy
+> > > sock_create_kern() error-prone.  
+> > 
+> > Ok.
 > 
-> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-> index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef287ca0685af3e70ed0b 100644
-> --- a/support/nfs/exports.c
-> +++ b/support/nfs/exports.c
-> @@ -34,8 +34,11 @@
->   #include "reexport.h"
->   #include "nfsd_path.h"
->   
-> -#define EXPORT_DEFAULT_FLAGS	\
-> -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTREECHECK)
-> +#define EXPORT_DEFAULT_FLAGS	(NFSEXP_READONLY |	\
-> +				 NFSEXP_ROOTSQUASH |	\
-> +				 NFSEXP_GATHERED_WRITES |\
-> +				 NFSEXP_NOSUBTREECHECK | \
-> +				 NFSEXP_INSECURE_PORT)
->   
->   struct flav_info flav_map[] = {
->   	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
-> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
-> index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7eb84301c4ec97b14d003 100644
-> --- a/utils/exportfs/exports.man
-> +++ b/utils/exportfs/exports.man
-> @@ -180,8 +180,8 @@ understands the following export options:
->   .TP
->   .IR secure
->   This option requires that requests not using gss originate on an
-> -Internet port less than IPPORT_RESERVED (1024). This option is on by default.
-> -To turn it off, specify
-> +Internet port less than IPPORT_RESERVED (1024). This option is off by default
-> +but can be explicitly disabled by specifying
->   .IR insecure .
->   (NOTE: older kernels (before upstream kernel version 4.17) enforced this
->   requirement on gss requests as well.)
+> Except that you are changing the semantics again.
+> So you end up with the same problem the other way around.
+> I can imagine code ending up with an extra reference to the ns.
+
+I don't think so because it's rare case where we want to use
+the no-refcnt version and it usually happens under net/ or
+drivers/net.
+
+Now we have SOCKET entry in MAINTAINERS so I can add sock_create
+there so that we are always CCed to prevent such issues.
+
+
 > 
-> ---
-> base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
-> change-id: 20250513-master-89974087bb04
+> The obvious name a a function for general driver use would be
+> kernel_socket() - matching the other functions that were added
+> when set_fs(KERNEL_DS) was removed.
+
+kernel_socket() doesn't fit here as kernel_XXX() takes struct
+socket, not struct sock.
+
+
 > 
-> Best regards,
-My apologies but I got a bit lost in the fairly large thread
-What as is consensus on this patch? Thumbs up or down.
-Will there be a V2?
+> I definitely aim to end up where the existing code fails to
+> compile - just to ensure all the code is found.
 
-I'm wondering what type documentation impact this would
-have on all docs out there that say one has to be root
-to do the mount.
-
-I guess I'm not against the patch but as Neil pointed
-out making things insecure is a different direction
-that the rest of the world is going.
-
-my two cents,
-
-steved.
-
-
+You can see the patch 2 renaming sock_create_kern() to __sock_create_kern()
+does the job to find all users with the help of compilers.
 
