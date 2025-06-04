@@ -1,86 +1,86 @@
-Return-Path: <linux-nfs+bounces-12113-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12114-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D47D4ACE558
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 21:53:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 286F8ACE57E
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 22:06:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19BCF1894576
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 19:53:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEBF33A8D98
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 20:05:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0891F418E;
-	Wed,  4 Jun 2025 19:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291B41940A1;
+	Wed,  4 Jun 2025 20:06:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ifPOv1Sb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmNNetK2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62E5111BF
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Jun 2025 19:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA96111BF
+	for <linux-nfs@vger.kernel.org>; Wed,  4 Jun 2025 20:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749066803; cv=none; b=VH3+qA0uR2B98FoWnZwWSDO1iD8wPR04WzbW5cWwlxvjj5Dow2fHE7K2sxBcvn0h4uMty3xBgSnRf3LALSDwuj+QdVPxdsIv4mZFtfv2X63MCWOjtaLss0Cq4zmea6P2DcNBsvmzcKD2h6AfV/vAEJpzkYskwTzVsHzL0apLStw=
+	t=1749067564; cv=none; b=rD72RuABmXngO5magkEGEAn3ocHrtD9dV0Dbp43XkZgWBCCPh4u4TkXW/BSdUf2/2iQXeC2YHlr5MZIGaR+E60A7oXIieSvDIhBjejLcbpCFeN61iM0XY+8mJ3jiMh+DOijK2EebgMsjFJZYzXy6GWM4B1AsE28bQlcxLkmPRHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749066803; c=relaxed/simple;
-	bh=O9j+HVQVhuRbfYAEb3aB8SCEOeX6uNiChLFY1pY8JJk=;
+	s=arc-20240116; t=1749067564; c=relaxed/simple;
+	bh=RylqUxfiPyzIiMpeIr20pjN1HKA8v38kVSMoLlZVjoo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m8gL/QKwcpruBEyJ/o0/7i99scpZaNssRCgnWszUdbv6kTlQgCL4b42VI5OXd53EBqGyth/GdS3qTnlt/s1FtM2icutG55yrEBlawCH6e31/V6QLN5BvDAPMTCtq4fsHdXNtnrHvfEm0cdNWf6EGItyR3O4X7gwZL0jhgHbJ3uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ifPOv1Sb; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=J9bJ/lLje4rcEAk9L9udLn6ZFLPbjpRLEqDWCiuqN3YwLA6a0tDEB7bSJNjJAZ8DTuNR2VB3sar68d3/006oo6g3HL39PQ68Mzd5hC1ViF85p8Xut9qpGzGSGwp+KfF3Q/tPl7RHEGDfdHnFJVcAkU8FTi/pglw9eGDW+eYVAfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hmNNetK2; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749066799;
+	s=mimecast20190719; t=1749067550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sNCAZauu0KVtFcF/gfYr86cnT/PYJ4bje9pvuDsXSlY=;
-	b=ifPOv1SbdlmPBpcnU4MS09AEwjRofDRGQCd9BPd9M5NMQNcIS6JiPyZn+KGxg814JQ2p24
-	9e7YcXKMGFrd3rDA/NljUlIPR8maEVpGOGjUTy4n8P6k4wchCn+yj8hTHFz2ah7bNKTjhS
-	Z/rOupKoNEpV45POE8NbevwamArZu10=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=8XHV0cDOgBg5ogcUU9mk7828v98sokJupoWg1rauZhI=;
+	b=hmNNetK2/SNsv+5qRy3/ic2ANztwlgzSy70MlSnan9aJxE8vCxFrX59q1IEANrr+I1CcbR
+	n1+ubgdMnNJ+25wKke+nI4ufI7r95F7IWMy40FrOsKqDjuk9/HlW9B8z9gNrzPZWwZ96yM
+	46ssSNyBoFghEc+ZwO3Qqfm0yqT7oJ4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-529-X5Cc80pTPoCsUN86U2xbYg-1; Wed, 04 Jun 2025 15:53:18 -0400
-X-MC-Unique: X5Cc80pTPoCsUN86U2xbYg-1
-X-Mimecast-MFC-AGG-ID: X5Cc80pTPoCsUN86U2xbYg_1749066798
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09bc05b77so36929885a.1
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Jun 2025 12:53:18 -0700 (PDT)
+ us-mta-330-IV1bt-3uOpSaQIK-gHhV4A-1; Wed, 04 Jun 2025 16:05:49 -0400
+X-MC-Unique: IV1bt-3uOpSaQIK-gHhV4A-1
+X-Mimecast-MFC-AGG-ID: IV1bt-3uOpSaQIK-gHhV4A_1749067549
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c760637fe5so46999485a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Jun 2025 13:05:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749066798; x=1749671598;
+        d=1e100.net; s=20230601; t=1749067549; x=1749672349;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sNCAZauu0KVtFcF/gfYr86cnT/PYJ4bje9pvuDsXSlY=;
-        b=wkBvSNaRNExuhkFQZFUfWLNRywSrxTheUtlbj68lqt/V9ZAq8hnlpaRApyk5K+L+XL
-         x7gM3HaWWb9eKbqs8JWM9pe6QiYyisH8Nyq9lpvc7r2jVDGDjLzvIIL5HQyYuu47z4Hy
-         NXdUnYZ14KJ1f4WWMIdUeBz2Vp2ccPMpZpB7C6rRR1pF/CBhiOXDLmzxfmsmfH5Mv5D7
-         CatihzqDjD5d1yXx+s1dlgBNOw1A9M5TmtDBM9x0/fjTZiLl1SVaeN77ZgPsBjAznyL4
-         /bZVPMk2BfuP+OhK/6gRRnobnzFMx2JaLx2vC29y7HUXGdL6VyLKujxaPbmOqWt8i7hG
-         b5TA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6euXr2CqOvfY0GgbOv10D0TWrm3dmza1yRUdhRhhlraIM1HqkJI5bwHJMXfogSmB3vJIqoiiGFsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBk90cJ6RKODE+fans7urBFUp1fx/pAbXRaKPcVvf9zd9acpBe
-	7RBlB21T6YPaE9n/84eyPq1RULaLJDbgBYsSdk8r/uyBlIQWt0JEG5PBh1I53TvZ/a66AZy5Iir
-	xCwMrH/LOPfCCtiqZfNJ2tH4Fi7oKczXjbo/0jXhuw1vbWS/B0kBL7pBe1vfE1A==
-X-Gm-Gg: ASbGncv3iDmSjFb0GNK0RmE6jPauydAhW2npUnhERxIkEV7G6A884FfG2gPYisOSwvk
-	uGLZvPVd58qqbd6jnH1dFVu9GVlBr1MUSglXsCSc634516GRZ/uA2fN9+BFzaZDz2DAkfsvx2GF
-	O+4VC2g35+1ZjKlJkdiDvMCjPTQFfSs2B4s/UbAn4UCtGGTmAZFMyY+wzEYjNP2IL9JpwWfsooc
-	1SS7f42TSG/Hi3tYrhgucjSCjgvPmy/Cs2IXwiX8hvBw9sbBqmjGKiwVQYfU4o7tB57zQKdHKK8
-	W1sScNsZQV0=
-X-Received: by 2002:a05:620a:3915:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d219869714mr697760285a.5.1749066798068;
-        Wed, 04 Jun 2025 12:53:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE4RjIlKvAfNRc7xO2rj6txxsqyBwhBC7+Q4ArGz1lRR64vv4bTqhbxgyQUlKbUFkWEPJIz/A==
-X-Received: by 2002:a05:620a:3915:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d219869714mr697757385a.5.1749066797701;
-        Wed, 04 Jun 2025 12:53:17 -0700 (PDT)
+        bh=8XHV0cDOgBg5ogcUU9mk7828v98sokJupoWg1rauZhI=;
+        b=Z/sCLNFPhFqTp8WGnySc0mZWD+J3vUjzNuRL+noFX1YQmzPtN6J9iqtgtGiurabuvs
+         7TzlHviCR16+tz3v4N2rpAH3KBQItC74ueLGP3YLn4gEVosNRRab0AoByCc3LUT0wUOg
+         VjDdtDAFQix0NxtvnqTzzTWRh+WHq1qy09dhUuc3fxitMTTkqgT8gclh5LtCcdv0tE0Y
+         ylYhKzibYFTdXSGNS+3qIgaZAvXassKeUeKqpIGSp7I2IsvwLLeBvlHLyHQYcsPi5UPU
+         GZfVJl2HDBTRuKzmrSJABQQyBoxy2oF28WDDS9/nSvv5vTyWIkw+hoYd2shwTOqXZLUC
+         K6VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKVpH8gjlEP5JifvY/TqdqsqhiUlzo6heqIr61iUdivkdr0R9cgZCQQifNpCJo7guhMUpULPUDwjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys8+NebiQYk3BaUbgOpxpdaKx/xDN7W7fsmIIhRULTeXDJpGhN
+	iyjXJapNHcyx9mP6+mO7IxHCaksf8AxGtfeByi//FDuWz2TSmbIUsv4pmJkLeYdyGaLnjgnhwAh
+	T9erp23Q5fDYk3185YDtgNRfYp7CEDONkKvyYnQwaXe5bu7WlWGlWmKLukUbC5A==
+X-Gm-Gg: ASbGncsB+cl2E+Swnp5jkFeQU20buBfFWYLQu9q7Is2PBk2W3G9wWsoy5rV0gWlqa4T
+	+DKAosEhnkjfEHaT2cl3kFAfetRWqMZ4uNFpNPeGI3LsfqfRNUKA56UPAX3YAnPI+rOSRMUu8t1
+	Ab78MWhY0S4n5rck52+DDbwb90l4T1pNA6TZ/Q3PEpdZ4Mz/9/FQeO5ugD7RY3mFwgSCEo8Jjq7
+	LGibv95NRpEnd77Rz7nSIOZOtLzwbhiGaGjsYgyeVpuP5Z6CUgk/vPDPOw0y7DNkDkKiDD8B1GY
+	9p78/AnzrgI=
+X-Received: by 2002:a05:620a:8809:b0:7d0:a1db:9d7a with SMTP id af79cd13be357-7d2198cd0camr696996285a.40.1749067548714;
+        Wed, 04 Jun 2025 13:05:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKsEIPGpq1PbZE4O+fEKmN8unHmkeiLXm+Gb5zjfAEcyXQkzLvosyCAhjVj/P9G0pPvACzIA==
+X-Received: by 2002:a05:620a:8809:b0:7d0:a1db:9d7a with SMTP id af79cd13be357-7d2198cd0camr696992385a.40.1749067548295;
+        Wed, 04 Jun 2025 13:05:48 -0700 (PDT)
 Received: from [172.31.1.12] ([70.105.242.209])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0e5c3asm1075310785a.22.2025.06.04.12.53.16
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a1bb27fsm1088524885a.116.2025.06.04.13.05.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Jun 2025 12:53:16 -0700 (PDT)
-Message-ID: <e6dbb6be-4e58-4d94-8912-05a5eee87ada@redhat.com>
-Date: Wed, 4 Jun 2025 15:53:15 -0400
+        Wed, 04 Jun 2025 13:05:47 -0700 (PDT)
+Message-ID: <96107ae9-4b95-4ce3-b163-d91251ae9439@redhat.com>
+Date: Wed, 4 Jun 2025 16:05:46 -0400
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -88,110 +88,252 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all
- exports
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Tom Haynes <loghyr@gmail.com>, linux-nfs@vger.kernel.org
-References: <20250513-master-v1-1-e845fe412715@kernel.org>
- <7bbb789d-b3ae-4258-bebf-40ed87587576@redhat.com>
- <16285c94bc3498fb7a612f62e718ae8a53c42c3c.camel@kernel.org>
+Subject: Re: [RFC] rpcbind: detect support of remote calls
+To: Petr Vorel <pvorel@suse.cz>
+Cc: ltp@lists.linux.it, linux-nfs@vger.kernel.org,
+ "Ricardo B. Marliere" <rbm@suse.com>, Avinesh Kumar <akumar@suse.de>
+References: <20250602133741.GA324895@pevik>
+ <bc6adca9-a7c0-4545-b32b-640994d135cb@redhat.com>
+ <20250604194241.GA1159049@pevik>
 Content-Language: en-US
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <16285c94bc3498fb7a612f62e718ae8a53c42c3c.camel@kernel.org>
+In-Reply-To: <20250604194241.GA1159049@pevik>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/4/25 3:17 PM, Jeff Layton wrote:
-> On Wed, 2025-06-04 at 14:26 -0400, Steve Dickson wrote:
->> Hello all,
->>
->> On 5/13/25 9:50 AM, Jeff Layton wrote:
->>> Back in the 80's someone thought it was a good idea to carve out a set
->>> of ports that only privileged users could use. When NFS was originally
->>> conceived, Sun made its server require that clients use low ports.
->>> Since Linux was following suit with Sun in those days, exportfs has
->>> always defaulted to requiring connections from low ports.
->>>
->>> These days, anyone can be root on their laptop, so limiting connections
->>> to low source ports is of little value.
->>>
->>> Make the default be "insecure" when creating exports.
->>>
->>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>> ---
->>> In discussion at the Bake-a-thon, we decided to just go for making
->>> "insecure" the default for all exports.
->>> ---
->>>    support/nfs/exports.c      | 7 +++++--
->>>    utils/exportfs/exports.man | 4 ++--
->>>    2 files changed, 7 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
->>> index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef287ca0685af3e70ed0b 100644
->>> --- a/support/nfs/exports.c
->>> +++ b/support/nfs/exports.c
->>> @@ -34,8 +34,11 @@
->>>    #include "reexport.h"
->>>    #include "nfsd_path.h"
->>>    
->>> -#define EXPORT_DEFAULT_FLAGS	\
->>> -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTREECHECK)
->>> +#define EXPORT_DEFAULT_FLAGS	(NFSEXP_READONLY |	\
->>> +				 NFSEXP_ROOTSQUASH |	\
->>> +				 NFSEXP_GATHERED_WRITES |\
->>> +				 NFSEXP_NOSUBTREECHECK | \
->>> +				 NFSEXP_INSECURE_PORT)
->>>    
->>>    struct flav_info flav_map[] = {
->>>    	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
->>> diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
->>> index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7eb84301c4ec97b14d003 100644
->>> --- a/utils/exportfs/exports.man
->>> +++ b/utils/exportfs/exports.man
->>> @@ -180,8 +180,8 @@ understands the following export options:
->>>    .TP
->>>    .IR secure
->>>    This option requires that requests not using gss originate on an
->>> -Internet port less than IPPORT_RESERVED (1024). This option is on by default.
->>> -To turn it off, specify
->>> +Internet port less than IPPORT_RESERVED (1024). This option is off by default
->>> +but can be explicitly disabled by specifying
->>>    .IR insecure .
->>>    (NOTE: older kernels (before upstream kernel version 4.17) enforced this
->>>    requirement on gss requests as well.)
->>>
->>> ---
->>> base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
->>> change-id: 20250513-master-89974087bb04
->>>
->>> Best regards,
->> My apologies but I got a bit lost in the fairly large thread
->> What as is consensus on this patch? Thumbs up or down.
->> Will there be a V2?
->>
->> I'm wondering what type documentation impact this would
->> have on all docs out there that say one has to be root
->> to do the mount.
->>
->> I guess I'm not against the patch but as Neil pointed
->> out making things insecure is a different direction
->> that the rest of the world is going.
->>
->> my two cents,
->>
->>
+On 6/4/25 3:42 PM, Petr Vorel wrote:
+> Hi Steve,
 > 
-> Thumbs down for now. Neil argued for a more measured approach to
-> changing this.
+>> Hey!
 > 
-> I started work on a manpage patch for exports(5) but it's not quite
-> ready yet. I also want to look at converting some manpages to asciidoc
-> as we go, to make future updates easier.
-Sounds like a plan... Thanks!
+>> On 6/2/25 9:37 AM, Petr Vorel wrote:
+>>> Hi Steve,
+> 
+>>> Ricardo found that TI-RPC rpc_pmap_rmtcall [1] tirpc_rpcb_rmtcall [2] tests are
+>>> failing when they use rpcbind *without* --enable-rmtcalls (the default since
+>>> 2018, see 2e9c289 ("rpcbind: Disable remote calls by default") [3]).
+> 
+>>> TL;DR: Is there a way to detect missing support from rpcbind? Because we cannot
+>>> blindly expect that timeout means disabled remote calls (it could be also
+>>> caused by regression). Other option is just to disable these tests by default
+>>> (detection is preferred).
+>> No there is not a way, that I know of, to see if remote calls
+>> are or are not enabled since it is a compile time flag.
+> 
+> How about rpcbind to print version via new -v or -V command line option.
+> Then compiled options could be printed as part of the output.
+That is not a bad idea... It could be a bit messy since they're
+close to 20 different ifdefs...
+
+> 
+> Nobody needed to know rpcbind version, therefore I'm not sure if testing justify
+> it, but that would be an easy way to provide the info.
+No testing would be needed... as long as rpcbind does not
+drop core with the -v option :-) also there would be a
+manpage up date... but it would not be very invasive.
+
+> 
+>> I really don't know what to say... In Fedora we disabled rmtcalls
+>> which broke NIS and in RHEL we left it enable which drives
+>> SELinux (and a few customers) nuts.
+> 
+> Thanks for info, I fully understand the chosen solution.
+I wish other people would!!! 8-)
 
 steved.
 
+> 
+> Kind regards,
+> Petr
+> 
+>> There is no clear answer... IMHO.
+> 
+>> steved.
+> 
+> 
+> 
+>>> # export PATH="/opt/ltp/testcases/bin:$PATH"
+>>> # rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+>>> ...
+>>> tirpc_rpcb_rmtcall 10.0.0.2 536875000
+>>> rpc_test 1 TFAIL: tirpc_rpcb_rmtcall 10.0.0.2 536875000 failed unexpectedly
+> 
+>>> As the name of the test suggests they are using pmap_rmtcall() and rpcb_rmtcall().
+>>> A bit debug info.
+> 
+>>> Modified rpc_test.sh to use strace:
+> 
+>>> +++ b/testcases/network/rpc/rpc-tirpc/rpc_test.sh
+>>> @@ -87,6 +87,8 @@ do_test()
+>>>    		done
+>>>    	fi
+>>> +	echo "$CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS" # FIXME: debug
+>>> +	EXPECT_RHOST_PASS strace -o /tmp/a $CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS
+>>>    	EXPECT_RHOST_PASS $CLIENT $(tst_ipaddr) $PROGNUMNOSVC $CLIENT_EXTRA_OPTS
+>>>    }
+> 
+>>> I see the test timeouts (full strace output below):
+> 
+>>> # rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+>>> ...
+>>> sendto(5, "h=\r}\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\5\0\0\0\0\0\0\0\0"..., 60, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 60
+>>> poll([{fd=5, events=POLLIN}], 1, 1000)  = 0 (Timeout)
+> 
+>>> Using rpcbind 1.2.7-1.2 (from Tumbleweed), output when run with debug mode:
+> 
+>>> # /usr/sbin/rpcbind -w -f -d
+>>> rpcbind: PMAPPROC_DUMP
+> 
+>>> rpcbind: RPCB_UNSET request for (536875000, 1, ) :
+>>> rpcbind: RPCB_UNSET: succeeded
+>>> rpcbind: RPCB_SET request for (536875000, 1, udp, 0.0.0.0.223.168) :
+>>> rpcbind: RPCB_SET: succeeded
+>>> rpcbind: RPCB_GETADDR req for (100000, 2, tcp) from 127.0.0.1.3.98:
+>>> mergeaddr: contact uaddr = 127.0.0.1.0.111
+>>> addrmerge(caller, 0.0.0.0.0.111, 127.0.0.1.0.111, tcp
+>>> addrmerge: hint 127.0.0.1.0.111
+>>> addrmerge: returning 127.0.0.1.0.111
+>>> mergeaddr: uaddr = 0.0.0.0.0.111, merged uaddr = 127.0.0.1.0.111
+>>> rpcbind: getaddr: 127.0.0.1.0.111
+>>> rpcbind: PMAPPROC_DUMP
+> 
+>>> rpcbind: RPCB_GETADDR req for (536875000, 1, udp) from 10.0.0.1.3.105:
+>>> mergeaddr: contact uaddr = 10.0.0.2.0.111
+>>> addrmerge(caller, 0.0.0.0.223.168, 10.0.0.2.0.111, udp
+>>> addrmerge: hint 10.0.0.2.0.111
+>>> addrmerge: returning 10.0.0.2.223.168
+>>> mergeaddr: uaddr = 0.0.0.0.223.168, merged uaddr = 10.0.0.2.223.168
+>>> rpcbind: getaddr: 10.0.0.2.223.168
+>>> rpcbind: RPCBPROC_BCAST
+> 
+>>> rpcbind: rpcb_indirect callit req for (536875000, 1, 1, udp) from 10.0.0.1.3.105 :
+>>> rpcbind: found at uaddr 0.0.0.0.223.168
+> 
+>>> addrmerge(caller, 0.0.0.0.223.168, NULL, udp
+>>> addrmerge: hint 127.0.0.1.0.111
+>>> addrmerge: returning 127.0.0.1.223.168
+>>> addrmerge(caller, 0.0.0.0.223.168, NULL, udp
+>>> addrmerge: hint 10.0.0.1.3.105
+>>> addrmerge: returning 192.168.122.43.223.168
+>>> rpcbind: merged uaddr 192.168.122.43.223.168
+> 
+>>> rpcbind: RPCB_UNSET request for (536875000, 1, ) :
+>>> rpcbind: Suppression RPC_UNSET(map_unset)
+>>> rpcbind: rbl->rpcb_map.r_owner=superuser
+>>> rpcbind: owner=superuser
+>>> rpcbind: RPCB_UNSET: succeeded
+> 
+>>> Obviously, if I compile rpcbind with --enable-rmtcalls and run it, both tests work:
+> 
+>>> $ ./autogen.sh && ./configure --enable-debug --enable-warmstarts --enable-rmtcalls --with-rpcuser=rpc --with-nss-modules="files usrfiles"
+>>> $ make -j`nproc`
+>>> # ./rpcbind -w -d -f
+> 
+>>> # rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+>>> ...
+>>> rpc_test 1 TINFO: using libtirpc: yes
+>>> tirpc_rpcb_rmtcall 10.0.0.2 536875000
+>>> rpc_test 1 TPASS: tirpc_rpcb_rmtcall 10.0.0.2 536875000 passed as expected
+> 
+>>> # rpc_test.sh -s rpc_svc_1 -c rpc_pmap_rmtcall
+>>> ...
+>>> rpc_pmap_rmtcall 10.0.0.2 536875000
+>>> rpc_test 1 TPASS: rpc_pmap_rmtcall 10.0.0.2 536875000 passed as expected
+> 
+> 
+>>> And the rpcbind outpt contains also:
+> 
+>>> rpcbind: rpcbproc_callit_com:  original XID 683f1705, new XID f68e200
+>>> rpcbind: my_svc_run:  polled on forwarding fd 7, netid udp - calling handle_reply
+> 
+>>> Also, wouldn't it be worth mention --enable-rmtcalls in functions' man pages?
+>>> (Or have I overlooked that in man?)
+> 
+>>> Thanks for any hint.
+> 
+>>> Kind regards,
+>>> Petr
+> 
+>>> [1] https://github.com/linux-test-project/ltp/tree/master/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/rpc/rpc_addrmanagmt_pmap_rmtcall/rpc_pmap_rmtcall.c
+>>> [2] https://github.com/linux-test-project/ltp/tree/master/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/tirpc/tirpc_expertlevel_rpcb_rmtcall/tirpc_rpcb_rmtcall.c
+>>> [3] https://git.linux-nfs.org/?p=steved/rpcbind.git;a=commitdiff;h=2e9c289246c647e25649914bdb0d9400c66f486e
+> 
+>>> Full strace on rpcbind compiled without --enable-rmtcalls (the default, thus
+>>> how it's shipped to the new distros):
+> 
+>>> # rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+> 
+>>> execve("/opt/ltp/testcases/bin/tirpc_rpcb_rmtcall", ["tirpc_rpcb_rmtcall", "10.0.0.2", "536875000"], 0x7ffee8701b10 /* 228 vars */) = 0
+>>> ...
+>>> openat(AT_FDCWD, "/etc/services", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+>>> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 5
+>>> ...
+>>> openat(AT_FDCWD, "/usr/etc/services", O_RDONLY|O_CLOEXEC) = 5
+>>> fstat(5, {st_mode=S_IFREG|0644, st_size=868338, ...}) = 0
+>>> read(5, "#\n# Network services, Internet s"..., 4096) = 4096
+>>> read(5, "[Jon_Postel]\ndaytime            "..., 4096) = 4096
+>>> read(5, "gs          44/udp       # MPM F"..., 4096) = 4096
+>>> read(5, "emote Job Service \nnetrjs-2     "..., 4096) = 4096
+>>> read(5, "Jon_Postel]\nhostname           1"..., 4096) = 4096
+>>> close(5)                                = 0
+>>> socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) = 5
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
+>>> openat(AT_FDCWD, "/etc/bindresvport.blacklist", O_RDONLY) = 6
+>>> fstat(6, {st_mode=S_IFREG|0644, st_size=415, ...}) = 0
+>>> read(6, "#\n# This file contains a list of"..., 4096) = 415
+>>> read(6, "", 4096)                       = 0
+>>> close(6)                                = 0
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getpid()                                = 28530
+>>> bind(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, 16) = 0
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
+>>> gettimeofday({tv_sec=1748867467, tv_usec=890549}, NULL) = 0
+>>> getpid()                                = 28530
+>>> setsockopt(5, SOL_IP, IP_RECVERR, [1], 4) = 0
+>>> ioctl(5, FIONBIO, [1])                  = 0
+>>> ...
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> sendto(5, "h0`M\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\3\0\0\0\0\0\0\0\0"..., 88, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 88
+>>> poll([{fd=5, events=POLLIN}], 1, 15000) = 1 ([{fd=5, revents=POLLIN}])
+>>> recvfrom(5, "h0`M\0\0\0\1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\02010.0"..., 8800, 0, NULL, NULL) = 44
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> close(5)                                = 0
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) = 5
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getpid()                                = 28530
+>>> bind(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, 16) = 0
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> getsockname(5, {sa_family=AF_INET, sin_port=htons(722), sin_addr=inet_addr("0.0.0.0")}, [128 => 16]) = 0
+>>> getsockopt(5, SOL_SOCKET, SO_TYPE, [2], [4]) = 0
+>>> gettimeofday({tv_sec=1748867467, tv_usec=892984}, NULL) = 0
+>>> getpid()                                = 28530
+>>> setsockopt(5, SOL_IP, IP_RECVERR, [1], 4) = 0
+>>> ioctl(5, FIONBIO, [1])                  = 0
+>>> ...
+>>> sendto(5, "h0V\302\0\0\0\0\0\0\0\2\0\1\206\240\0\0\0\4\0\0\0\5\0\0\0\0\0\0\0\0"..., 60, 0, {sa_family=AF_INET, sin_port=htons(111), sin_addr=inet_addr("10.0.0.2")}, 16) = 60
+>>> poll([{fd=5, events=POLLIN}], 1, 1000)  = 0 (Timeout)
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> rt_sigprocmask(SIG_SETMASK, ~[RTMIN RT_1], [], 8) = 0
+>>> close(5)                                = 0
+>>> rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+>>> fstat(1, {st_mode=S_IFIFO|0600, st_size=0, ...}) = 0
+>>> write(1, "1\n", 2)                      = 2
+>>> exit_group(1)                           = ?
+>>> +++ exited with 1 +++
+> 
+> 
 
 
