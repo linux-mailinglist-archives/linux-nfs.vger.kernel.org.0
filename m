@@ -1,49 +1,51 @@
-Return-Path: <linux-nfs+bounces-12118-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12119-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D96A9ACE8F9
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 06:28:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20083ACE8FB
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 06:28:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 652513AA2CE
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 04:27:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C80C188DF10
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 04:29:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C42A13AD1C;
-	Thu,  5 Jun 2025 04:28:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D064217AE11;
+	Thu,  5 Jun 2025 04:28:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C8314F90;
-	Thu,  5 Jun 2025 04:28:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588842065;
+	Thu,  5 Jun 2025 04:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749097696; cv=none; b=JL/zYqrNdewHrHqgyWZBI6akbUj+67szPLQ3oy0OJrzMoYAn+g5D7ej9rcdLpmElmI1lPUuyo5xuNpnL/QSZQPdjIQ2orn2QYBIXWJ4WvOYRK1UyvWLDG9TAbCUWxAIPR6cL3ad8RwiZHZIT/eRgEzJJAla1y+lw6hVkeJdDbtU=
+	t=1749097722; cv=none; b=DyKW00iRyYyb0Go6BUSinMdOHgYyHBrHhl3ScIo/wqnYOmNql9eYHU1g0ikRhjaS5ip5U1EZK7hAQyeg6w2PbndfQbG/cPTA3U91hwENOOKWXLApH+LMlv40/m0oVY6O3xaGkubodUg/t9PCwnhskbI7cf8k3r9vywytsMlxmHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749097696; c=relaxed/simple;
-	bh=rw7BQEsfWstFCbv+P3B5Q8fzv//XASa7jRNHdWNpfp4=;
+	s=arc-20240116; t=1749097722; c=relaxed/simple;
+	bh=2MGsmkciwCxIaAtGlkvT/KpYQKqj9us+j22Hpgiwc9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KAwUz8/0QZOsG+0JdJiLPMUvHi4+n9UgF0Xcjsy1+VAS6ZtLtqF1KBei3kWTZX7kmvjUNblXv2f98mwSlgcouedGKiqEhXik2Gm4lDdvWpzAys+qEoDM8DuRioHFTkPTj9lXUeDpVKvENu8RGBZCLVx2YROiBwsBWc4MyAp/a0E=
+	 Content-Type:Content-Disposition:In-Reply-To; b=OX1KZjjnBz+601A3RBwbHh3WHxWHl/OmLqPKHp9LJHadPI0pzTskNlSdZEG6XM02h6wsdEWUGoi94slyX/KDbI0xhWDE7yDSI0HdJG4h+fTKl4eLupArMS7D/oTBpM3JAC7sS8nKOGWlrxc4hRP/Lt41Neg+VTQalI5006ym2P8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 44A4E68AA6; Thu,  5 Jun 2025 06:28:03 +0200 (CEST)
-Date: Thu, 5 Jun 2025 06:28:02 +0200
+	id 4E62668AA6; Thu,  5 Jun 2025 06:28:36 +0200 (CEST)
+Date: Thu, 5 Jun 2025 06:28:36 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
-	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
-	keyrings@vger.kernel.org
-Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
-Message-ID: <20250605042802.GA834@lst.de>
-References: <20250515115107.33052-1-hch@lst.de> <20250515115107.33052-3-hch@lst.de> <c2044daa-c68e-43bf-8c28-6ce5f5a5c129@grimberg.me> <aCdv56ZcYEINRR0N@kernel.org> <692256f1-9179-4c19-ba17-39422c9bad69@grimberg.me> <20250602152525.GA27651@lst.de> <aEB3jDb3EK2CWqNi@kernel.org>
+To: Kuniyuki Iwashima <kuni1840@gmail.com>
+Cc: hch@lst.de, axboe@kernel.dk, chuck.lever@oracle.com,
+	davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+	jaka@linux.ibm.com, jlayton@kernel.org, kbusch@kernel.org,
+	kuba@kernel.org, kuniyu@amazon.com, linux-nfs@vger.kernel.org,
+	linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+	matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
+	pabeni@redhat.com, sfrench@samba.org, wenjia@linux.ibm.com,
+	willemb@google.com
+Subject: Re: [PATCH v2 net-next 6/7] socket: Replace most sock_create()
+ calls with sock_create_kern().
+Message-ID: <20250605042836.GB834@lst.de>
+References: <20250603045021.GA8367@lst.de> <20250604182020.126258-1-kuni1840@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,33 +54,17 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEB3jDb3EK2CWqNi@kernel.org>
+In-Reply-To: <20250604182020.126258-1-kuni1840@gmail.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Jun 04, 2025 at 07:42:52PM +0300, Jarkko Sakkinen wrote:
-> OK, I put this in simple terms, so perhaps I learn something from
-> nvme and nfs code:
+On Wed, Jun 04, 2025 at 11:20:17AM -0700, Kuniyuki Iwashima wrote:
+> > So the simple scripted renaming was not worth it.  Maybe I misunderstand,
+> > but based on the reading we should basically have about a handful
+> > callers of the non-__kern variant left.  Or is it a lot more?
 > 
-> 1. The code change itself, if this keyring is needed, it looks
->    reasonable.
-> 2. However, I don't see any callers within the scope of patch set
->    for this keyring.
-> 
-> I could quite quickly grab the idea how NVME uses nvme_keyring in TLS
-> handshake code from drivers/nvme/target/{configfs.c,tcp.c}. I guess
-> similar idea will be used in nfs code but I don't see any use for it
-> in the patch set.
-> 
-> Thus, it is hard to grasp the idea of having this patch applied without
-> any supplemental patch set.
+> Yes, after this series, only 2 sock_create() left, one in sctp and
+> another in core.
 
-Maybe I'm missing something.  The reason I added the keyring was that
-without it, tlshd is not the possesor of the keys and can't read them.
-
-I guess you refer to the fact that nvme_tls_psk_lookup does a
-keyring_search and nothing in the NFS code does?  nvme_tls_psk_lookup is
-only used for the default key based on the server side identification in
-NVMe, a concept that doesn't exist in NFS.  But the fact that the keys
-aren't otherwise readable exists for both nvme and NFS.
-
+Sounds easy enough to rename then, and doing so is useful go guide
+people away from it.
 
