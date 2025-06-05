@@ -1,295 +1,222 @@
-Return-Path: <linux-nfs+bounces-12121-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12122-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 964E9ACE98E
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 08:01:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B79C6ACEA4D
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 08:36:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5141F175E56
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 06:01:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 557E93ABDAB
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 06:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60C802AF19;
-	Thu,  5 Jun 2025 06:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y7byHI2H";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WPEUnXzH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="y7byHI2H";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WPEUnXzH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCA6173451;
+	Thu,  5 Jun 2025 06:35:55 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DCC1FC8
-	for <linux-nfs@vger.kernel.org>; Thu,  5 Jun 2025 06:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F881F2C44;
+	Thu,  5 Jun 2025 06:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749103261; cv=none; b=up4mgXSjFXvJDuZegW/0yu/QPdOvQzWYYpLLJDbQ/1Mc7nOalE4hPodF7yf8V1h9qX0tNjiCVRlCw04yfnUNVFXUFV+Qh26dzE8WLrA3fjsLSj6z8EulcFOdcJKKionOBNTsaznzsgG3UK9grITrlhb8/YdntZ/r/y4/WMCQfXw=
+	t=1749105355; cv=none; b=Xn0Aotqeuk0ki72UwgFByTutyQeYaXTVj6RL/0EPvVgxMktzLK7WKOFLy/2zRYRXVx1PQk+m/rEC74z2EF7QjMTuiu7V8AmgLHhjMOK1pyV+uF7xLj81WOnChvJuETU7b+3IpmIcOM1sTgaqZxztTltts6dlOszkFDuBPZWynfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749103261; c=relaxed/simple;
-	bh=qpJta258FnYw/PTHsnKQB7WmOXXuKGOfTCyY1BFsEbs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FXwzCa+4m62UVOf9Ii13vMEtDuUcWjRZt9e3oVSOhDhuW7LtT13JGCVML6ExCjy8pIvdaxYe2lk9HYl+qsbGyjJ6BiSWbYHQdbf4tTTDJYsEeSG8XNgDosfWeeRSowCV/e1KbE1Vz2pBCxu2YRLeA5a+E2QWZAFRM9dpXxDMq3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y7byHI2H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WPEUnXzH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=y7byHI2H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WPEUnXzH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C32B82297B;
-	Thu,  5 Jun 2025 06:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749103251; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1udr9o1Wl9M7CCzXP/mRpdiA3MBWHZyaoxaMRyP+Fc4=;
-	b=y7byHI2HIhf+kI7jnkro5WbetD3ohsVPGOF0bEB51E56/jLXO8G/KHjBuk2nH3kXSsvlYn
-	f5SYtHCjsOeyrrVKrgrS6oqzbne/dkcy2jMMZ8rTcDN+d+5cS1o/N8TZ1sqOXiUiOT8MDC
-	xhkb+NZ3WAioy/kqG65enEufJ0ViZno=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749103251;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1udr9o1Wl9M7CCzXP/mRpdiA3MBWHZyaoxaMRyP+Fc4=;
-	b=WPEUnXzHq+2gTRs+DzhGPFYldhQGSd9CoGzLvna1v3W1TBQFygNopUTR4gJUBooOMpu+0p
-	XKVJh28qeYkCGGBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1749103251; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1udr9o1Wl9M7CCzXP/mRpdiA3MBWHZyaoxaMRyP+Fc4=;
-	b=y7byHI2HIhf+kI7jnkro5WbetD3ohsVPGOF0bEB51E56/jLXO8G/KHjBuk2nH3kXSsvlYn
-	f5SYtHCjsOeyrrVKrgrS6oqzbne/dkcy2jMMZ8rTcDN+d+5cS1o/N8TZ1sqOXiUiOT8MDC
-	xhkb+NZ3WAioy/kqG65enEufJ0ViZno=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1749103251;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1udr9o1Wl9M7CCzXP/mRpdiA3MBWHZyaoxaMRyP+Fc4=;
-	b=WPEUnXzHq+2gTRs+DzhGPFYldhQGSd9CoGzLvna1v3W1TBQFygNopUTR4gJUBooOMpu+0p
-	XKVJh28qeYkCGGBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9046C139CB;
-	Thu,  5 Jun 2025 06:00:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MDZ3IpMyQWicEQAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Thu, 05 Jun 2025 06:00:51 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-nfs@vger.kernel.org
-Cc: libtirpc-devel@lists.sourceforge.net,
-	Petr Vorel <pvorel@suse.cz>,
-	Steve Dickson <SteveD@RedHat.com>,
-	=?UTF-8?q?Ricardo=20B=20=2E=20Marli=C3=A8re?= <rbm@suse.com>
-Subject: [PATCH rpcbind 2/2] rpcbind: Add -v flag to print version and config
-Date: Thu,  5 Jun 2025 08:00:42 +0200
-Message-ID: <20250605060042.1182574-2-pvorel@suse.cz>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250605060042.1182574-1-pvorel@suse.cz>
-References: <20250605060042.1182574-1-pvorel@suse.cz>
+	s=arc-20240116; t=1749105355; c=relaxed/simple;
+	bh=3fVTZQULmeSj1kaoUxmb+CsZJulw3kIUf6Ah34p9Y3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cv5DnIbolo5Dmm6W/LMlIHKdbxim4NMKyPqYO5M32PV/p7A4dOdNrqFm5IdYDixuF2BsVQdtDkFNb3KiKlXrhjL7LafAlDCjY7hJx70fBLaUq1zppcRJYnz055FnpFcKGH7japDS3s4X6LiMJeenJrzDorZKYeap9Uv+FyW25wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bCZR12SLJz13M0N;
+	Thu,  5 Jun 2025 14:33:49 +0800 (CST)
+Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
+	by mail.maildlp.com (Postfix) with ESMTPS id D9458140203;
+	Thu,  5 Jun 2025 14:35:43 +0800 (CST)
+Received: from [10.174.179.155] (10.174.179.155) by
+ kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 5 Jun 2025 14:35:42 +0800
+Message-ID: <872dcf33-cc7e-48c0-810a-f27b59a603e1@huawei.com>
+Date: Thu, 5 Jun 2025 14:35:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] nfsd: Invoke tracking callbacks only after initialization
+ is complete
+To: Jeff Layton <jlayton@kernel.org>, <chuck.lever@oracle.com>,
+	<neilb@suse.de>, <neil@brown.name>, <okorniev@redhat.com>,
+	<Dai.Ngo@oracle.com>, <tom@talpey.com>
+CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
+References: <20250513074305.3362209-1-lilingfeng3@huawei.com>
+ <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
+From: Li Lingfeng <lilingfeng3@huawei.com>
+In-Reply-To: <ae16dcf3d5c569bbff817ca442a7615e816a66e7.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemg500017.china.huawei.com (7.202.181.81)
 
-This helps to see compiled time options, e.g. remote calls enablement.
+Hi Jeff,
 
-$ ./rpcbind -v
-rpcbind 1.2.7
-debug: no, libset debug: no, libwrap: no, nss modules: files, remote calls: no, statedir: /run/rpcbind, systemd: yes, user: root, warm start: no
+Following our discussion, my colleague Yang Erkun proposed an alternative
+solution: using the nfsd_mutex to prevent concurrency between
+initialization/destruction and usage of client_tracking_ops.
+Both our previous approaches (delayed pointer assignment and the
+initialization flag) still leave a window where the issue could occur.
+For example, after validating client_tracking_ops as non-NULL but before
+invoking its callbacks, the pointer could be set to NULL during teardown.
 
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
- man/rpcbind.8 |  6 +++-
- src/rpcbind.c | 81 +++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 83 insertions(+), 4 deletions(-)
+I've prototyped the nfsd_mutex approach and confirmed it resolves the
+problem. What are your thoughts on this solution?
 
-diff --git a/man/rpcbind.8 b/man/rpcbind.8
-index cd0f817..15b70f9 100644
---- a/man/rpcbind.8
-+++ b/man/rpcbind.8
-@@ -11,7 +11,7 @@
- .Nd universal addresses to RPC program number mapper
- .Sh SYNOPSIS
- .Nm
--.Op Fl adfhilsw
-+.Op Fl adfhilsvw
- .Sh DESCRIPTION
- The
- .Nm
-@@ -141,6 +141,10 @@ to use non-privileged ports for outgoing connections, preventing non-privileged
- clients from using
- .Nm
- to connect to services from a privileged port.
-+.It Fl v
-+Print
-+.Nm
-+version and builtin configuration and exit.
- .It Fl w
- Cause
- .Nm
-diff --git a/src/rpcbind.c b/src/rpcbind.c
-index 122ce6a..bf7b499 100644
---- a/src/rpcbind.c
-+++ b/src/rpcbind.c
-@@ -96,10 +96,11 @@ char *rpcbinduser = RPCBIND_USER;
- char *rpcbinduser = NULL;
- #endif
- 
-+#define NSS_MODULES_DEFAULT "files"
- #ifdef NSS_MODULES
- char *nss_modules = NSS_MODULES;
- #else
--char *nss_modules = "files";
-+char *nss_modules = NSS_MODULES_DEFAULT;
- #endif
- 
- /* who to suid to if -s is given */
-@@ -143,6 +144,76 @@ static void rbllist_add(rpcprog_t, rpcvers_t, struct netconfig *,
- static void terminate(int);
- static void parseargs(int, char *[]);
- 
-+static void version()
-+{
-+	fprintf(stderr, "%s\n", PACKAGE_STRING);
-+
-+	fprintf(stderr, "debug: ");
-+#ifdef RPCBIND_DEBUG
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, ", libset debug: ");
-+#ifdef LIB_SET_DEBUG
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, ", libwrap: ");
-+#ifdef LIBWRAP
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, ", nss modules: ");
-+#ifdef NSS_MODULES
-+	fprintf(stderr, "%s", NSS_MODULES);
-+#else
-+	fprintf(stderr, "%s", NSS_MODULES_DEFAULT);
-+#endif
-+
-+	fprintf(stderr, ", remote calls: ");
-+#ifdef RMTCALLS
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, ", statedir: ");
-+#ifdef RPCBIND_STATEDIR
-+	fprintf(stderr, "%s", RPCBIND_STATEDIR);
-+#else
-+	fprintf(stderr, "");
-+#endif
-+
-+	fprintf(stderr, ", systemd: ");
-+#ifdef SYSTEMD
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, ", user: ");
-+#ifdef RPCBIND_USER
-+	fprintf(stderr, "%s", RPCBIND_USER);
-+#else
-+	fprintf(stderr, "");
-+#endif
-+
-+	fprintf(stderr, ", warm start: ");
-+#ifdef WARMSTART
-+	fprintf(stderr, "yes");
-+#else
-+	fprintf(stderr, "no");
-+#endif
-+
-+	fprintf(stderr, "\n");
-+}
-+
- int
- main(int argc, char *argv[])
- {
-@@ -888,7 +959,7 @@ parseargs(int argc, char *argv[])
- {
- 	int c;
- 	oldstyle_local = 1;
--	while ((c = getopt(argc, argv, "adh:ilswf")) != -1) {
-+	while ((c = getopt(argc, argv, "adfh:ilsvw")) != -1) {
- 		switch (c) {
- 		case 'a':
- 			doabort = 1;	/* when debugging, do an abort on */
-@@ -918,13 +989,17 @@ parseargs(int argc, char *argv[])
- 		case 'f':
- 			dofork = 0;
- 			break;
-+		case 'v':
-+			version();
-+			exit(0);
-+			break;
- #ifdef WARMSTART
- 		case 'w':
- 			warmstart = 1;
- 			break;
- #endif
- 		default:	/* error */
--			fprintf(stderr,	"usage: rpcbind [-adhilswf]\n");
-+			fprintf(stderr,	"usage: rpcbind [-adfhilsvw]\n");
- 			exit (1);
- 		}
- 	}
--- 
-2.49.0
+Best regards,
+Li Lingfeng
 
+在 2025/5/13 20:34, Jeff Layton 写道:
+> On Tue, 2025-05-13 at 15:43 +0800, Li Lingfeng wrote:
+>> Checking whether tracking callbacks can be called based on whether
+>> nn->client_tracking_ops is NULL may lead to callbacks being invoked
+>> before tracking initialization completes, causing resource access
+>> violations (UAF, NULL pointer dereference). Examples:
+>>
+>> 1) nfsd4_client_tracking_init
+>>     // set nn->client_tracking_ops
+>>     nfsd4_cld_tracking_init
+>>      nfs4_cld_state_init
+>>       nn->reclaim_str_hashtbl = kmalloc_array
+>>      ... // error path, goto err
+>>      nfs4_cld_state_shutdown
+>>       kfree(nn->reclaim_str_hashtbl)
+>>                                        write_v4_end_grace
+>>                                         nfsd4_end_grace
+>>                                          nfsd4_record_grace_done
+>>                                           nfsd4_cld_grace_done
+>>                                            nfs4_release_reclaim
+>>                                             nn->reclaim_str_hashtbl[i]
+>>                                             // UAF
+>>     // clear nn->client_tracking_ops
+>>
+>> 2) nfsd4_client_tracking_init
+>>     // set nn->client_tracking_ops
+>>     nfsd4_cld_tracking_init
+>>                                        write_v4_end_grace
+>>                                         nfsd4_end_grace
+>>                                          nfsd4_record_grace_done
+>>                                           nfsd4_cld_grace_done
+>>                                            alloc_cld_upcall
+>>                                             cn = nn->cld_net
+>>                                             spin_lock // cn->cn_lock
+>>                                             // NULL deref
+>>     // error path, skip init pipe
+>>     __nfsd4_init_cld_pipe
+>>      cn = kzalloc
+>>      nn->cld_net = cn
+>>     // clear nn->client_tracking_ops
+>>
+>> After nfsd mounts, users can trigger grace_done callbacks via
+>> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
+>> in error paths, this causes access violations.
+>>
+>> Instead of adding locks for specific resources(e.g., reclaim_str_hashtbl),
+>> introducing a flag to indicate whether tracking initialization has
+>> completed and checking this flag before invoking callbacks may be better.
+>>
+>> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
+>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>> ---
+>>   fs/nfsd/netns.h       |  1 +
+>>   fs/nfsd/nfs4recover.c | 13 +++++++++----
+>>   2 files changed, 10 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+>> index 3e2d0fde80a7..dbd782d6b063 100644
+>> --- a/fs/nfsd/netns.h
+>> +++ b/fs/nfsd/netns.h
+>> @@ -113,6 +113,7 @@ struct nfsd_net {
+>>   
+>>   	struct file *rec_file;
+>>   	bool in_grace;
+>> +	bool client_tracking_init_done;
+>>   	const struct nfsd4_client_tracking_ops *client_tracking_ops;
+>>   
+>>   	time64_t nfsd4_lease;
+>> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+>> index c1d9bd07285f..6c27c1252c0e 100644
+>> --- a/fs/nfsd/nfs4recover.c
+>> +++ b/fs/nfsd/nfs4recover.c
+>> @@ -2096,7 +2096,11 @@ nfsd4_client_tracking_init(struct net *net)
+>>   		pr_warn("NFSD: Unable to initialize client recovery tracking! (%d)\n", status);
+>>   		pr_warn("NFSD: Is nfsdcld running? If not, enable CONFIG_NFSD_LEGACY_CLIENT_TRACKING.\n");
+>>   		nn->client_tracking_ops = NULL;
+>> +		nn->client_tracking_init_done = false;
+>> +	} else {
+>> +		nn->client_tracking_init_done = true;
+>>   	}
+>> +
+> The problem seems real (theoretically at least), but I'm not a fan of
+> this fix.
+>
+> If the problem is as you say, then why not just delay the setting of
+> the client_tracking_ops until there is a method that works. IOW, set a
+> temporary variable with an ops pointer and only assign
+> client_tracking_ops at the end of the function/
+>
+> Would that also fix this issue?
+>   
+>>   	return status;
+>>   }
+>>   
+>> @@ -2105,6 +2109,7 @@ nfsd4_client_tracking_exit(struct net *net)
+>>   {
+>>   	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>>   
+>> +	nn->client_tracking_init_done = false;
+>>   	if (nn->client_tracking_ops) {
+>>   		if (nn->client_tracking_ops->exit)
+>>   			nn->client_tracking_ops->exit(net);
+>> @@ -2117,7 +2122,7 @@ nfsd4_client_record_create(struct nfs4_client *clp)
+>>   {
+>>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+>>   
+>> -	if (nn->client_tracking_ops)
+>> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>>   		nn->client_tracking_ops->create(clp);
+>>   }
+>>   
+>> @@ -2126,7 +2131,7 @@ nfsd4_client_record_remove(struct nfs4_client *clp)
+>>   {
+>>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+>>   
+>> -	if (nn->client_tracking_ops)
+>> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>>   		nn->client_tracking_ops->remove(clp);
+>>   }
+>>   
+>> @@ -2135,7 +2140,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
+>>   {
+>>   	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+>>   
+>> -	if (nn->client_tracking_ops)
+>> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>>   		return nn->client_tracking_ops->check(clp);
+>>   
+>>   	return -EOPNOTSUPP;
+>> @@ -2144,7 +2149,7 @@ nfsd4_client_record_check(struct nfs4_client *clp)
+>>   void
+>>   nfsd4_record_grace_done(struct nfsd_net *nn)
+>>   {
+>> -	if (nn->client_tracking_ops)
+>> +	if (nn->client_tracking_ops && nn->client_tracking_init_done)
+>>   		nn->client_tracking_ops->grace_done(nn);
+>>   }
+>>   
 
