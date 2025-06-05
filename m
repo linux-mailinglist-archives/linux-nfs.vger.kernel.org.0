@@ -1,229 +1,177 @@
-Return-Path: <linux-nfs+bounces-12116-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12117-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F1D8ACE730
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 01:30:05 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2D26ACE879
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 04:50:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AEBA171203
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jun 2025 23:30:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 561AD3A9E53
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 02:50:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400EE1DDC08;
-	Wed,  4 Jun 2025 23:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C121B4153;
+	Thu,  5 Jun 2025 02:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="geNVVtA+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JVOx6SRh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D1ZUFUiu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LCxbBJhj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XST2irsD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146D61DC9BB
-	for <linux-nfs@vger.kernel.org>; Wed,  4 Jun 2025 23:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605F34315A;
+	Thu,  5 Jun 2025 02:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749079801; cv=none; b=BgaYVZf3hDP6iGo1FHj4mSD32gkV8jelCTjUkzX/FrrWVLfND7gDaDyITqKgqjXXDKibKb+bI4wbc2+GYmR9/Z+IxNL7WQWGmYcoEet3MXPlT5WrdDRJslAmbVHVjo9+JdlKmFuHFMhrm4eqB8pCDSf/GhDVOw3CslDkwRZaw2A=
+	t=1749091840; cv=none; b=DpyFdsyVOQ79qSTgHjwdTCbiloj4+TAgKkMCA7wmKNV7KaUy4/VKA+Z9rlAIHJx7oeRykqFEI6iujb5zPW4XAtfRWqU2aO+/QwowtvXhNwslxmT1h5fTu9l3izPpcdNN7Ja1zn2zoWBSqDhMSqmANyOOQG9db2V9p/gcy7oxkw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749079801; c=relaxed/simple;
-	bh=gOOsOcW2DA5nTxkhzZc/T8aHod7EF601wP44vXI2oyA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ttWAuAGdMQP21Yw1vtFkPOsSq/KPHD93UDzbZpvus2U+J6VAAxkxo2mXrE5Fnj+GE+tNi7FoM+sCP2utezOifDff07r4N98yIaGs11QpU1dm5PCBxApzHJ0LLIr8zKZfonyK259NYuGTrEdZzGv9z21SHWg8X4nMFz39YLF9THA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=geNVVtA+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JVOx6SRh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D1ZUFUiu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LCxbBJhj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1628822D51;
-	Wed,  4 Jun 2025 23:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749079792; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/s0hDyqK8FpIxr6xDsl71jOPAzw8jBxE09Dx/FkPP60=;
-	b=geNVVtA+7i4hQ0J5Wx8eaCzM+TywUL1wGgH27D+azNIYA8A82QXDC8nMFjSW5nwinFYT4i
-	YsnL/H8Y4OW8e/SJu2eLqsJnzG1iHE/F+9XTB0FT7UJ9qGfPSFxNrWGP30y6kR0e2R0odu
-	y1wIKsZunGWNxqwTNnfOoXj2DEYVhIg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749079792;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/s0hDyqK8FpIxr6xDsl71jOPAzw8jBxE09Dx/FkPP60=;
-	b=JVOx6SRhSSKG34r+i95HVpKuxSK2mrmuY7j0GXX0TDWuo91DJielAE4/N1+TD+HjoY5B0Y
-	ja3IhK7YwmB1CQCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749079791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/s0hDyqK8FpIxr6xDsl71jOPAzw8jBxE09Dx/FkPP60=;
-	b=D1ZUFUiui0s/DrW2bW8hqx4t1VnxhcRbNcZjSFI7vEd4+xrF+wZra+VQPC/mjQ3yzd1OWN
-	K4vdfSiS8uLo4ULuDUrao7UNfx3pOq1vDWxJO2uMmNj/9WylE0+STeOWBC0LyDnZs7gP+y
-	QoMeser7OHzjDC1AfnrueKDnjJS++Xs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749079791;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/s0hDyqK8FpIxr6xDsl71jOPAzw8jBxE09Dx/FkPP60=;
-	b=LCxbBJhjVe2Il7Zb/6cooIDWVDGfOLDom3Su4n+CCZbnF6Rf8ETWTJvZn0TtkmiyPFUGgi
-	O93i2qkULBjKV2CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 75E9A1369A;
-	Wed,  4 Jun 2025 23:29:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MEDoCe3WQGjJJAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Wed, 04 Jun 2025 23:29:49 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1749091840; c=relaxed/simple;
+	bh=a0lA6W01R2d3Gmb2vP4nAHBWwF2STpi2fu87B2V21c4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SHKv/BF/+qTtyr5/B2i0RmnbEBQSxhfESCzKEM1DbFRpb0WOZhmyM5dR1UfMOLxuEkDj88Bm4nipnZ3CjCsqzqTcY1f84bC3v3aQqFusQQWfdP/bJydWVVbTa6KOnPeYDwXQeXKxAZbAfunN3q2n21ojnJV8yTY3sLbfQsNZeVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XST2irsD; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476a720e806so4386011cf.0;
+        Wed, 04 Jun 2025 19:50:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749091838; x=1749696638; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TszH0hbfOo48Nx+Sd/ljYNEfxo2zQCreYc54y4+hX1k=;
+        b=XST2irsDUNoXQf1gIcSfVWgjSLEVMwCCFVwELILw1kx/jX0ThZC+O9xSfjaeA9tr8I
+         VA6kva2N5CSHM5IrnhLrS3u/82xwxRO8DleIs/dRtxYmfpOycvfry+A/zUmc4cSgwD3I
+         UPfwUe3hlPV2TP2JcI68XVUmAVQgK6yP3itpKrBFaodw6Wq+EwiwjpoM/sRnpK33m5B1
+         djvIpKAnyXrowcOOlPOICuOaZCrSO/WKWbJORJT59E9pdSHURfbXiAL1mQ/VfIMGFlaS
+         1DKC+eAKq++3U4EJn2XIcOtF78Dq0S9l6bJ2zfeZlMa0IwlNx5yCRde6z89hxRribu9z
+         YjRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749091838; x=1749696638;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TszH0hbfOo48Nx+Sd/ljYNEfxo2zQCreYc54y4+hX1k=;
+        b=dBynZpp8HIdUIV94a06lvJrjQIX+iZ5TWVMjmiDbHh0aWI2XX5zx+mmkLOFuVQ4baP
+         cXs/1XwY0emh7+N0y/r9C4tkIUCnIhuX84XTDOJbnRUIpY9yrNUsXqDrt+HrXS4FQau0
+         IAa1c3mmkseEMISmtdRLy0FbLXOjH4suxc+Q+Xecfs9qyUIi4gOqLjcpTFglfjJehKdF
+         Obtn8X37VFVc0LwcvlFwC3Uaqub5CgVPjJtvsyOntO1f0VFS/z5oxwob56pIgKFTavaV
+         NjVL/+gnd9SvbB9QtggB52f8zaQQObxu+WQmXQgvtvjwdJqbcBjekEMXMAWaHJeM2AAf
+         ZGGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUi3Xipi1yebs7M+LHdRet9Z/hqekPh+ozIAlAPaIZwMJrENMAK4Rj1MYCYygpHmD4Dr9QryA5m2hmk@vger.kernel.org, AJvYcCWqi+JlwBH+zofGixPkKO78L9CLH7rVC+3/cJsPEVnwDJYtrKpkqZjIrfA70ZKw2RocBHm58TKde0gC0TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjLB0KITRN2Mey74282SIyZkAh2+xlTyWB96i1aYiQ/9pteQaN
+	LzGqOOgO53dLcymQzdLzvaCqatU/oqb/CwannkiySERpAoBiAyMKXiwJ8KbSuiRUGeNXBJNz6Gh
+	1WrkeWGUVuHq2XHYXpMEjd1owQH3xeHI=
+X-Gm-Gg: ASbGncucYhuSp6kfakg2QnGYAaEHtxbfS9YBU71uFRwONQ7BOyiH40Yn7vh/cMEnw91
+	0fijSBKWe7A39JG3HtBco8UTK1Q3/4pIP63IbLWmkXxfSUvX0DQaQT1YhsUr42I0BjWEn/nyYeB
+	FG73XhqTLTpHKqElx4FwTY4kI4nk9PnLl/+UTpbAOSgi8=
+X-Google-Smtp-Source: AGHT+IGyPSRFffvnJ94uVKh8wE6ujjAeqWJS1x4BZTCbP+QFhtzsndUYiALZ9ZDytT6yCtI5W08uwkboUZeuG0lRC2Y=
+X-Received: by 2002:a05:622a:410a:b0:4a4:4da5:8b55 with SMTP id
+ d75a77b69052e-4a5a688be84mr81253291cf.28.1749091837149; Wed, 04 Jun 2025
+ 19:50:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Steve Dickson" <steved@redhat.com>
-Cc: openembedded-core@lists.openembedded.org,
- "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject:
- Re: [PATCH OE-core] nfs-utils: don't use signals to shut down nfs server.
-In-reply-to: <15a51751-2370-4473-a1d3-e4f7cb5e8e6b@redhat.com>
-References: <174800219540.608730.11726448273017682287@noble.neil.brown.name>,
- <15a51751-2370-4473-a1d3-e4f7cb5e8e6b@redhat.com>
-Date: Thu, 05 Jun 2025 09:29:41 +1000
-Message-id: <174907978184.608730.13107648349010629967@noble.neil.brown.name>
-X-Spam-Flag: NO
-X-Spam-Score: -4.28
-X-Spamd-Result: default: False [-4.28 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.18)[-0.903];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[brown.name:email,groups.io:url,imap1.dmz-prg2.suse.org:helo,noble.neil.brown.name:mid,openembedded.org:url,openembedded.org:email]
-X-Spam-Level: 
+References: <20250604-testing-v1-1-e28a8e161e4f@kernel.org>
+In-Reply-To: <20250604-testing-v1-1-e28a8e161e4f@kernel.org>
+From: lei lu <llfamsec@gmail.com>
+Date: Thu, 5 Jun 2025 10:50:25 +0800
+X-Gm-Features: AX0GCFuwn0UYns3XiHPhlUCQ_zxWymZcS0BQFNWljKG_oprk8ZsjwY8-CnxikX8
+Message-ID: <CAEBF3_Z_J6b4xJwM6k_SX4EjEGvOAmRTH1_KLd+1fk_027LWVQ@mail.gmail.com>
+Subject: Re: [PATCH] nfsd: handle get_client_locked() failure in nfsd4_setclientid_confirm()
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 05 Jun 2025, Steve Dickson wrote:
-> Hey Neil,
->=20
-> On 5/23/25 3:41 AM, NeilBrown wrote:
-> >=20
-> > Since Linux v2.4 it has been possible to stop all NFS server by running
-> >=20
-> >     rpc.nfsd 0
-> >=20
-> > i.e.  by requesting that zero threads be running.  This is preferred as
-> > it doesn't risk killing some other process which happens to be called
-> > "nfsd".
-> >=20
-> > Since Linux v6.6 - and other stable kernels to which
-> >=20
-> >    Commit: 390390240145 ("nfsd: don't allow nfsd threads to be
-> >    signalled.")
-> >=20
-> > has been backported - sending a signal no longer works to stop nfs server
-> > threads.
-> >=20
-> > This patch changes the nfsserver script to use "rpc.nfsd 0" to stop
-> > server threads.
-> >=20
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> >   .../nfs-utils/nfs-utils/nfsserver             | 28 +++----------------
-> >   1 file changed, 4 insertions(+), 24 deletions(-)
-> >=20
-> > Resending with different From: address because first attempt was bounced
-> > as spam
-> >=20
-> >    openembedded-core@lists.openembedded.org
-> >      host lb01.groups.io [45.79.81.153]
-> >      SMTP error from remote mail server after end of data:
-> >      500 This message has been flagged as spam.
-> >=20
-> >=20
-> > diff --git a/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver b/me=
-ta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver
-> > index cb6c1b4d08d8..99ec280b3594 100644
-> > --- a/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver
-> > +++ b/meta/recipes-connectivity/nfs-utils/nfs-utils/nfsserver
-> > @@ -89,34 +89,14 @@ start_nfsd(){
-> >   	start-stop-daemon --start --exec "$NFS_NFSD" -- "$@"
-> >   	echo done
-> >   }
-> > -delay_nfsd(){
-> > -	for delay in 0 1 2 3 4 5 6 7 8 9
-> > -	do
-> > -		if pidof nfsd >/dev/null
-> > -		then
-> > -			echo -n .
-> > -			sleep 1
-> > -		else
-> > -			return 0
-> > -		fi
-> > -	done
-> > -	return 1
-> > -}
-> >   stop_nfsd(){
-> > -	# WARNING: this kills any process with the executable
-> > -	# name 'nfsd'.
-> >   	echo -n 'stopping nfsd: '
-> > -	start-stop-daemon --stop --quiet --signal 1 --name nfsd
-> > -	if delay_nfsd || {
-> > -		echo failed
-> > -		echo ' using signal 9: '
-> > -		start-stop-daemon --stop --quiet --signal 9 --name nfsd
-> > -		delay_nfsd
-> > -	}
-> > +	$NFS_NFSD 0
-> > +	if pidof nfsd
-> >   	then
-> > -		echo done
-> > -	else
-> >   		echo failed
-> > +	else
-> > +		echo done
-> >   	fi
-> >   }
-> >  =20
-> Is this suppose to apply to the Linux nfs-utils upstream repo?
->=20
-> A bit confused...
+On Thu, Jun 5, 2025 at 12:01=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Lei Lu recently reported that nfsd4_setclientid_confirm() did not check
+> the return value from get_client_locked(). a SETCLIENTID_CONFIRM could
+> race with a confirmed client expiring and fail to get a reference. That
+> could later lead to a UAF.
+>
+> Fix this by getting a reference early in the case where there is an
+> extant confirmed client. If that fails then treat it as if there were no
+> confirmed client found at all.
+>
+> In the case where the unconfirmed client is expiring, just fail and
+> return the result from get_client_locked().
+>
+> Reported-by: lei lu <llfamsec@gmail.com>
+> Closes: https://lore.kernel.org/linux-nfs/CAEBF3_b=3DUvqzNKdnfD_52L05Mqrq=
+ui9vZ2eFamgAbV0WG+FNWQ@mail.gmail.com/
+> Fixes: d20c11d86d8f ("nfsd: Protect session creation and client confirm u=
+sing client_lock")
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> I ran this vs. pynfs and it seemed to do OK. lei lu, can you test this
+> patch vs. your reproducer and tell us whether it fixes it?
 
-Sorry, I should have been more explicit.
-As it says in the subject, this was for "OE-core" - openembedded-core
-
-It has since been committed there:
-
-https://git.openembedded.org/openembedded-core/commit/?id=3D7b09ad289a36
+Patch works for me, the issue is fixed.
 
 Thanks,
-NeilBrown
+LL
+
+> ---
+>  fs/nfsd/nfs4state.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d5694987f86fadab985e55cce6261ad680e83b69..d61a7910dde3b8536b8715c2e=
+ebd1f1faec95f8f 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4697,10 +4697,16 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
+>         }
+>         status =3D nfs_ok;
+>         if (conf) {
+> -               old =3D unconf;
+> -               unhash_client_locked(old);
+> -               nfsd4_change_callback(conf, &unconf->cl_cb_conn);
+> -       } else {
+> +               if (get_client_locked(conf) =3D=3D nfs_ok) {
+> +                       old =3D unconf;
+> +                       unhash_client_locked(old);
+> +                       nfsd4_change_callback(conf, &unconf->cl_cb_conn);
+> +               } else {
+> +                       conf =3D NULL;
+> +               }
+> +       }
+> +
+> +       if (!conf) {
+>                 old =3D find_confirmed_client_by_name(&unconf->cl_name, n=
+n);
+>                 if (old) {
+>                         status =3D nfserr_clid_inuse;
+> @@ -4717,10 +4723,14 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
+>                         }
+>                         trace_nfsd_clid_replaced(&old->cl_clientid);
+>                 }
+> +               status =3D get_client_locked(unconf);
+> +               if (status !=3D nfs_ok) {
+> +                       old =3D NULL;
+> +                       goto out;
+> +               }
+>                 move_to_confirmed(unconf);
+>                 conf =3D unconf;
+>         }
+> -       get_client_locked(conf);
+>         spin_unlock(&nn->client_lock);
+>         if (conf =3D=3D unconf)
+>                 fsnotify_dentry(conf->cl_nfsd_info_dentry, FS_MODIFY);
+>
+> ---
+> base-commit: 5abc7438f1e9d62e91ad775cc83c9594c48d2282
+> change-id: 20250604-testing-8d988ff48076
+>
+> Best regards,
+> --
+> Jeff Layton <jlayton@kernel.org>
+>
 
