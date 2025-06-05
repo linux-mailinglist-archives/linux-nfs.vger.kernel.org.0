@@ -1,184 +1,186 @@
-Return-Path: <linux-nfs+bounces-12123-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12124-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B938ACEA75
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 08:51:43 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FAFBACEBB3
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 10:21:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 788C0189B18F
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 06:51:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF2073A836F
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Jun 2025 08:21:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE3FD1A00F0;
-	Thu,  5 Jun 2025 06:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42E931FFC6D;
+	Thu,  5 Jun 2025 08:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JX6R8iCA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F51F03D9;
-	Thu,  5 Jun 2025 06:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8000134CB
+	for <linux-nfs@vger.kernel.org>; Thu,  5 Jun 2025 08:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749106298; cv=none; b=OI00yswVq+JAc7I1CrBZQdOChFO7m7gF+sb/AVQalqkx0x7vVMx4+a4N/RFiIHNafwJXi0WPs8YWEcrSfTNEDXtGeepk+4Vo5TDpkXE5jXR7D4dROFHtz7DTDnSe4KJdjHtulKeC/vBavEbF5udfHUqt5LoW4uXqCaYRaz7vkk4=
+	t=1749111680; cv=none; b=k1Lcp9+AhWGWzYsrP647c47HNhTtPJlyXIEiPBmjQGOSuffaJvBKA1flTzY0DjquB8IMyn1Sb+O1mLRn6UwYgAgBSWKWUGHku0tgDqBsBCegP4TizyscqCts9ON0hvU495Pqy1WWIiatdTfie/DTsZrB7e1Jdy1iqP+toyRp8m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749106298; c=relaxed/simple;
-	bh=hS1CBvwCFC9uRduSLLx0Ti6WROWYkF8xkTzwy5DuWaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NFSMmm/cpIhZ3EYN9AkheJzbJH4ovtY+Fw9lKjJ77AKY7HzD5R77lo9Pe0jfuGv87y9J9hsb0nYLDFzuE3LFhGJ9gE7MZRU9y67Dmimrq6gC/VDRPKp4w/U6rKiH5HPr0wo40SbCjg7Z7PRw4oUYUh/H3eiAu/JYlt/CTzu2COI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bCZp434jZztS1K;
-	Thu,  5 Jun 2025 14:50:20 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C3051402FC;
-	Thu,  5 Jun 2025 14:51:33 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 5 Jun 2025 14:51:32 +0800
-Message-ID: <b023bb1f-4c1c-49dc-8842-0b2f1cfbbee0@huawei.com>
-Date: Thu, 5 Jun 2025 14:51:31 +0800
+	s=arc-20240116; t=1749111680; c=relaxed/simple;
+	bh=u7rrTJb4LDH2zSzPHvxAKWb62vGbwDz8aqV1/BzVJvU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=lK6NbjqbGR3YH8BSl0xi/RmSiFQZDgzs2790IKNJoFmVFgLR+xGS1a+5okoeLLe+GdbAvoPFDRU0h/yON6ZPgoxYmiE0YYYvUlI+Hgh8GQ9O8H2WjRPH8LbDZYN4St2VF5egMnHP9Rpl7sZ7x7B9+DIFVwFMgxfgg3gg90EyA1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JX6R8iCA; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b271f3ae786so489357a12.3
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Jun 2025 01:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749111676; x=1749716476; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yZzb7AizSACVgSkN7/8y+iyAFFwlVtkVVYTZP5uB+nk=;
+        b=JX6R8iCAs5Uk+MWEtNddlvQM/yDx3K+2jNQR17cKeO296wb2EEEX4duKYszwhgO+Mi
+         3t8mxS4TRLcafPOEJ4+Vq94MG7nxtfYPE7ZVN5Mz5ZfId/0ePSOHv24l/zCZA5d+GidQ
+         ldM9cQno6khpJpxetl76yZel+7VluutRHICx7Xc8GCcG5ddn6GP/Nplp1mwpFAaviaeh
+         IbrzlZ3TQg9c4rhBCjPRiPxSpmx55PTZPm0/TKutWbZbhqLJ8dxGLU8J+AEzsJDNStr1
+         rTMEh5nS1TaPHau523ExXMJMtnWLcAox+10KVWm1ahrfTRM5RJlij7LlLPCnAtSRNX2N
+         lDNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749111676; x=1749716476;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yZzb7AizSACVgSkN7/8y+iyAFFwlVtkVVYTZP5uB+nk=;
+        b=Qe2aK91dq6aVgMpo1fkWZzGxYX95wGssnunKprdukVDqYVsQyzEUhFgT1AQja6Ukcx
+         c/o1GtT2G95LqSUela1eqagTDvzP0lZz+9ZV2jvqcMq/TF6G68UfbBxFCwxZPfXXa0dn
+         I9PvLJ5F0PUgv6BDu+l1Xjc1cjk1XZw3LdzfZ/f+3dvTQewj4PKu6HkoLaNNrQsGGDqn
+         1h9RJw+nYHvps0rMzoWvBkPqJwhc1bzIR2xE/dSYCczCZVAl6YaSApnY7EjyV1uEuPrQ
+         Lhcy59/+M0k8XUi2MmL0xCmL/oEzGqzdT4U+T6x6J6MmIsOi3y2pAqOvyLQSWHTPBHd8
+         bfXA==
+X-Gm-Message-State: AOJu0YzzAFdzlrzdyQevUzspEQqM97R+Q2bxjtKFAP6Br+/Zko6QTZh9
+	MAKBqCB6dsRNIx1GVrfA4Fzpb+H7+A2hMGYG4CKnBrDECtBmd4NBODuB2Bh5fBHQMBaYKFfZyTk
+	jUG79upBRaMYRXsZnDm0ubWDmuw6YHCZ6kg==
+X-Gm-Gg: ASbGncsfX71y2MR/hd6J7igjJ01qPNpiaONoyRqo7kUFIoLt4JtLYzUPLH4qZjRrXw/
+	XaKfupwNGsvdXPEcXmzknp++RLlZ2XF97VkflOrhEHVzekEHq0r654rzIMwJD3ZKzdrnme4pMZi
+	bG3ZVpepeYIE2ggQzdzdVDW1fvxezMzmqB
+X-Google-Smtp-Source: AGHT+IHTMbyTLsMrWXvo0oIaWcgpz1pHLTsGsseClXYBua36PvP4CzuouxlLGulVGg5635ztb7zHYwcilNMEEa+7WLU=
+X-Received: by 2002:a17:90b:17c4:b0:311:c93b:3ca2 with SMTP id
+ 98e67ed59e1d1-31310fc4faamr7457527a91.6.1749111676395; Thu, 05 Jun 2025
+ 01:21:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] nfs: fix the race of lock/unlock and open
-To: <trondmy@kernel.org>, <anna@kernel.org>, <jlayton@kernel.org>,
-	<bcodding@redhat.com>
-CC: <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-	<yangerkun@huawei.com>, <lilingfeng@huaweicloud.com>
-References: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <20250419085709.1452492-1-lilingfeng3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemg500017.china.huawei.com (7.202.181.81)
+References: <20250513-master-v1-1-e845fe412715@kernel.org> <7bbb789d-b3ae-4258-bebf-40ed87587576@redhat.com>
+ <16285c94bc3498fb7a612f62e718ae8a53c42c3c.camel@kernel.org>
+In-Reply-To: <16285c94bc3498fb7a612f62e718ae8a53c42c3c.camel@kernel.org>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Thu, 5 Jun 2025 10:20:00 +0200
+X-Gm-Features: AX0GCFuvmgywNMDYMTvkC5FG1YfiBLuJFw4c_TiACVj_JE3824uRqN0bXTtTWak
+Message-ID: <CALXu0UcDcsUWKkSfuvE6E6GZ0qiR=-=QaQ5QFz+kgZ6oT2e0Mg@mail.gmail.com>
+Subject: Re: [PATCH nfs-utils] exportfs: make "insecure" the default for all exports
+To: linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Friendly ping..
+On Wed, 4 Jun 2025 at 21:17, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Wed, 2025-06-04 at 14:26 -0400, Steve Dickson wrote:
+> > Hello all,
+> >
+> > On 5/13/25 9:50 AM, Jeff Layton wrote:
+> > > Back in the 80's someone thought it was a good idea to carve out a set
+> > > of ports that only privileged users could use. When NFS was originally
+> > > conceived, Sun made its server require that clients use low ports.
+> > > Since Linux was following suit with Sun in those days, exportfs has
+> > > always defaulted to requiring connections from low ports.
+> > >
+> > > These days, anyone can be root on their laptop, so limiting connections
+> > > to low source ports is of little value.
+> > >
+> > > Make the default be "insecure" when creating exports.
+> > >
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > > In discussion at the Bake-a-thon, we decided to just go for making
+> > > "insecure" the default for all exports.
+> > > ---
+> > >   support/nfs/exports.c      | 7 +++++--
+> > >   utils/exportfs/exports.man | 4 ++--
+> > >   2 files changed, 7 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> > > index 21ec6486ba3d3945df0800972ba1dfd03bd65375..69f8ca8b5e2ed50b837ef287ca0685af3e70ed0b 100644
+> > > --- a/support/nfs/exports.c
+> > > +++ b/support/nfs/exports.c
+> > > @@ -34,8 +34,11 @@
+> > >   #include "reexport.h"
+> > >   #include "nfsd_path.h"
+> > >
+> > > -#define EXPORT_DEFAULT_FLAGS       \
+> > > -  (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTREECHECK)
+> > > +#define EXPORT_DEFAULT_FLAGS       (NFSEXP_READONLY |      \
+> > > +                            NFSEXP_ROOTSQUASH |    \
+> > > +                            NFSEXP_GATHERED_WRITES |\
+> > > +                            NFSEXP_NOSUBTREECHECK | \
+> > > +                            NFSEXP_INSECURE_PORT)
+> > >
+> > >   struct flav_info flav_map[] = {
+> > >     { "krb5",       RPC_AUTH_GSS_KRB5,      1},
+> > > diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+> > > index 39dc30fb8290213990ca7a14b1b3971140b0d120..0b62bb3a82b0e74bc2a7eb84301c4ec97b14d003 100644
+> > > --- a/utils/exportfs/exports.man
+> > > +++ b/utils/exportfs/exports.man
+> > > @@ -180,8 +180,8 @@ understands the following export options:
+> > >   .TP
+> > >   .IR secure
+> > >   This option requires that requests not using gss originate on an
+> > > -Internet port less than IPPORT_RESERVED (1024). This option is on by default.
+> > > -To turn it off, specify
+> > > +Internet port less than IPPORT_RESERVED (1024). This option is off by default
+> > > +but can be explicitly disabled by specifying
+> > >   .IR insecure .
+> > >   (NOTE: older kernels (before upstream kernel version 4.17) enforced this
+> > >   requirement on gss requests as well.)
+> > >
+> > > ---
+> > > base-commit: 2cf015ea4312f37598efe9733fef3232ab67f784
+> > > change-id: 20250513-master-89974087bb04
+> > >
+> > > Best regards,
+> > My apologies but I got a bit lost in the fairly large thread
+> > What as is consensus on this patch? Thumbs up or down.
+> > Will there be a V2?
+> >
+> > I'm wondering what type documentation impact this would
+> > have on all docs out there that say one has to be root
+> > to do the mount.
+> >
+> > I guess I'm not against the patch but as Neil pointed
+> > out making things insecure is a different direction
+> > that the rest of the world is going.
+> >
+> > my two cents,
+> >
+> >
+>
+> Thumbs down for now. Neil argued for a more measured approach to
+> changing this.
 
-Thanks
+What about renaming the option to "resvport" / "noresvport"?
 
-在 2025/4/19 16:57, Li Lingfeng 写道:
-> LOCK may extend an existing lock and release another one and UNLOCK may
-> also release an existing lock.
-> When opening a file, there may be access to file locks that have been
-> concurrently released by lock/unlock operations, potentially triggering
-> UAF.
-> While certain concurrent scenarios involving lock/unlock and open
-> operations have been safeguarded with locks – for example,
-> nfs4_proc_unlckz() acquires the so_delegreturn_mutex prior to invoking
-> locks_lock_inode_wait() – there remain cases where such protection is not
-> yet implemented.
 >
-> The issue can be reproduced through the following steps:
-> T1: open in read-only mode with three consecutive lock operations applied
->      lock1(0~100) --> add lock1 to file
->      lock2(120~200) --> add lock2 to file
->      lock3(50~150) --> extend lock1 to cover range 0~200 and release lock2
-> T2: restart nfs-server and run state manager
-> T3: open in write-only mode
->      T1                            T2                                T3
->                              start recover
-> lock1
-> lock2
->                              nfs4_open_reclaim
->                              clear_bit // NFS_DELEGATED_STATE
-> lock3
->   _nfs4_proc_setlk
->    lock so_delegreturn_mutex
->    unlock so_delegreturn_mutex
->    _nfs4_do_setlk
->                              recover done
->                                                  lock so_delegreturn_mutex
->                                                  nfs_delegation_claim_locks
->                                                  get lock2
->     rpc_run_task
->     ...
->     nfs4_lock_done
->      locks_lock_inode_wait
->      ...
->       locks_dispose_list
->       free lock2
->                                                  use lock2
->                                                  // UAF
->                                                  unlock so_delegreturn_mutex
->
-> Get so_delegreturn_mutex before calling locks_lock_inode_wait to fix this
-> issue.
->
-> Fixes: c69899a17ca4 ("NFSv4: Update of VFS byte range lock must be atomic with the stateid update")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->   fs/nfs/nfs4proc.c | 19 +++++++++++++++----
->   1 file changed, 15 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 970f28dbf253..297ee2442c02 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7112,13 +7112,16 @@ static void nfs4_locku_done(struct rpc_task *task, void *data)
->   		.inode = calldata->lsp->ls_state->inode,
->   		.stateid = &calldata->arg.stateid,
->   	};
-> +	struct nfs4_state_owner *sp = calldata->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &calldata->res.seq_res))
->   		return;
->   	switch (task->tk_status) {
->   		case 0:
->   			renew_lease(calldata->server, calldata->timestamp);
-> +			mutex_lock(&sp->so_delegreturn_mutex);
->   			locks_lock_inode_wait(calldata->lsp->ls_state->inode, &calldata->fl);
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   			if (nfs4_update_lock_stateid(calldata->lsp,
->   					&calldata->res.stateid))
->   				break;
-> @@ -7375,6 +7378,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   {
->   	struct nfs4_lockdata *data = calldata;
->   	struct nfs4_lock_state *lsp = data->lsp;
-> +	struct nfs4_state_owner *sp = data->ctx->state->owner;
->   
->   	if (!nfs4_sequence_done(task, &data->res.seq_res))
->   		return;
-> @@ -7386,8 +7390,12 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
->   				data->timestamp);
->   		if (data->arg.new_lock && !data->cancelled) {
->   			data->fl.c.flc_flags &= ~(FL_SLEEP | FL_ACCESS);
-> -			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-> +			mutex_lock(&sp->so_delegreturn_mutex);
-> +			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0) {
-> +				mutex_unlock(&sp->so_delegreturn_mutex);
->   				goto out_restart;
-> +			}
-> +			mutex_unlock(&sp->so_delegreturn_mutex);
->   		}
->   		if (data->arg.new_lock_owner != 0) {
->   			nfs_confirm_seqid(&lsp->ls_seqid, 0);
-> @@ -7597,11 +7605,14 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
->   	int status;
->   
->   	request->c.flc_flags |= FL_ACCESS;
-> -	status = locks_lock_inode_wait(state->inode, request);
-> -	if (status < 0)
-> -		goto out;
->   	mutex_lock(&sp->so_delegreturn_mutex);
->   	down_read(&nfsi->rwsem);
-> +	status = locks_lock_inode_wait(state->inode, request);
-> +	if (status < 0) {
-> +		up_read(&nfsi->rwsem);
-> +		mutex_unlock(&sp->so_delegreturn_mutex);
-> +		goto out;
-> +	}
->   	if (test_bit(NFS_DELEGATED_STATE, &state->flags)) {
->   		/* Yes: cache locks! */
->   		/* ...but avoid races with delegation recall... */
+> I started work on a manpage patch for exports(5) but it's not quite
+> ready yet. I also want to look at converting some manpages to asciidoc
+> as we go, to make future updates easier.
+
+Why asciidoc? I think every localisation staff in companies will NOT
+be happy with that.
+I'd suggest Docbook/XML, as it is more flexible and allows HTML
+generation without going to the groff/asciidoc eye of the needle.
+
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
