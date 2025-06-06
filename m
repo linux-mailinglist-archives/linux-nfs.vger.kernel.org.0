@@ -1,141 +1,160 @@
-Return-Path: <linux-nfs+bounces-12145-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12146-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FC09ACFC16
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 07:05:04 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A66B2ACFC69
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 08:11:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6B6B3B08E5
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 05:04:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6483517547B
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 06:11:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F216A1957FC;
-	Fri,  6 Jun 2025 05:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85AF0433AC;
+	Fri,  6 Jun 2025 06:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI6c19V4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EB2Xq32D"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC48B1FAA;
-	Fri,  6 Jun 2025 05:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0542336D
+	for <linux-nfs@vger.kernel.org>; Fri,  6 Jun 2025 06:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749186299; cv=none; b=pUdFQwjSS5RcvdWOuY3ntMOT2PXzcYPpygNJlcOA5x+CUGWxYOy2QqKp0gmf9I8oyFA3ljFoyCTihwK5T3/Tw5sHGXAr1QgQ5FHd5lXQWtilL4X2SkXTSARGV/L480svfEdwyyFn5oXr/FHCTiDoaUU3EVu7CLGEN1p8nPobXNw=
+	t=1749190295; cv=none; b=sT/iWc5Oz/8SEfoK/dnajzY2Vm5UsD2bXAVac7Nbaw+JQor9F+xHsM+0VKz5CXySfJI1HfE9E6M8fU4d/4HDBy5TircZpqdduoFVtEYYyzza/4YzLuxHMZZCPg9/gWYrn7x2/cIO56rYFgh7m43TQz5pws4gA0TS5bDZMGk4i8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749186299; c=relaxed/simple;
-	bh=wuFSjTvFnRUQWOWKTNT3M4TMmiJd5ktGG1l+GZMxKYg=;
+	s=arc-20240116; t=1749190295; c=relaxed/simple;
+	bh=OaQucuElph5L/GEE/dIoaOVgGNwJ0acG+TCkiFekg3o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r+2MzqQNBFSTVQZDXx2IgfTa9bDiFa0jjLwEpAbmnHyATv08S5UujO9QtDyWIaUMiPP0ADwSSrbIEZCsa7z7k8N+ZqRRs0ihZVRc8zVnE95EJVBX9hrEY5gGU8CXJfs9bKCuQD+mUOaofmeuYTFJS7xu5RBZnBPM7/vpy7STnjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EI6c19V4; arc=none smtp.client-ip=209.85.208.43
+	 To:Content-Type; b=pKhuq+qm9GHtcRnOBAz4Vwb/cJLSBT2UL5j82Yv5M5DweHr6npSljuXntf1vi2Am/lXNe0qnCuM0qr+3VjLmx8Ob1dzZ7W/0bpgM6kaYReiSvf3Wu7KHMEOqI6TWmQLwohk3IkytYGWEmByZS4PNqGbF8DAmWJ+Xn0cFW9mXONk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EB2Xq32D; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so2734464a12.3;
-        Thu, 05 Jun 2025 22:04:57 -0700 (PDT)
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-311e993f49aso1538035a91.0
+        for <linux-nfs@vger.kernel.org>; Thu, 05 Jun 2025 23:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749186296; x=1749791096; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1749190293; x=1749795093; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x7O9dSJB968DODyLuNRE+vyi9c088XkY9pghf6qlNoA=;
-        b=EI6c19V4iIpcHTRbk+FpLFv5uD5IoOEG9oLj6RtGdhC7nmIg1bZpuD9mSBE3azNVdm
-         LZBLpEgTRnwQSLIG1b3/SNClA0aEiMrErqZ21AoDT3TH3X/laCeGXmxY3TkyjM707Vap
-         Tb5UlIabFdMORRloVyU5yXK3Ds7/7zQNNRGVCvwAneadxqRNFY2pXNfvs71f6J4XVbKY
-         nfkooWVMhbzdevjjHhTjnvBiOO6ewOY7xp5G85M4EcVm6XYmQNaLYMzQdXlCf8R5um5j
-         XBugA/yzuY3k0Hpd1bifVoVZeDejovjjIOJNiYWmlufZ2wMn/36Pjqyx6ihXCU74W8hx
-         /8rQ==
+        bh=bNPH0m/THXjXoi3etRiOn9m9g57bBytN4g10RQH+1vA=;
+        b=EB2Xq32DBE4zEClbCue7YJEBeagWBINR10N3N9ChPnN7QZQQMIFYd6eDqlGxwXnDnT
+         Q8JmV63npfkquXV8Jdu81ZK1tsPmf2M8bysaMAmQEQl6OFsm+jU+X7t8HhPgtFx66KmF
+         TT2j9+3OmM2dLBZJ5zYxyueDpjYPEMex3+q1uFEBgeqijG+dpyTEuUUnT64TANHSwkps
+         /zZRuSMgrDAmkewzCobOaPeVtj7a3huqC/247o28xblo7ufBJJDFI5RB7W1JtIB8+ffw
+         ifSDZ8C0XwZ6HjGG07sdm7jKx6uuFrlzbRWelsQcuCg1CTQz2YPiXVsQYSzxDhe7jWg3
+         58dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749186296; x=1749791096;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1749190293; x=1749795093;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x7O9dSJB968DODyLuNRE+vyi9c088XkY9pghf6qlNoA=;
-        b=GfhG6fDnTYWFMeUxZEzD5eztybxG0sFTUCyv23UauIU8pxp9uyXrt/NeqWIewugUck
-         8p6cBBBf1IobdEYALUSeQFEwAo73QKGXhEDncb3ymXzbbQWjXwxGugKCwsT6YslVAVr6
-         KbRUdCeyPqutxJtoegDW3Tv92H36A9ULXGZn+XgpMi2piKfvib6iYWVMQuMcYPuBXQdY
-         WIVkZD48gmyxdfzF3o7aIkNKMZeVkGkUMd+sKI2AmUBdcYVULH9SArgiyb0ogdNAwUdp
-         u1jMEFbtTH02aLVsCrnDFs5vHnLG3Ty6kpDmVI+Fak42H98bhZSKQ1yUJDVLQ/XpCzMW
-         P2+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWDTwZ3GW37YYWzYYGpwXJTl+E7rrdVYuKH5ehdHgMsj/w7YNFr1j+Vv+jhOsko0XJ8FDDJKLiVkkPb5/um@vger.kernel.org, AJvYcCXLkIcKkIaHYN4NadzYRWRDsLb8IDcodVkke7Fe+u/IRLJlDaIffla6/HF/HZxKhVzyFhDe2/KmFAOA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrxEuuQQAQF00IRJscpNTnfgZdw+lPsQFCu+Fl89fbPK7tfcJB
-	DzS9FMTcEOj4XCXxGPsaf9qr3yKhaUiVbw0C2/a8sWAUfEB6k9m3HfpXbdnWPu94WnBGjk100s2
-	10i1s1Hd+M2h20bF/+y7glF28QqhS1bs=
-X-Gm-Gg: ASbGncufuF1TzE+3/qjiOV2obwxNz2g+ylhTmCBwZfeiUvhfdVg7HauQuIY5VBOrzTm
-	V9b9cf4wEOTUrmdi+HUpuDp4xvR1GnL+i5ek7W1Mz6m5NM4XnoZzUnYu6f6RAQZoRfWBwAmDK9c
-	0Hlfo/AsapsNMTcbi3EcGIQ66WAQIS83hELm59wrdDCE5EFxV9uGACHytJzCLfQVkc7A==
-X-Google-Smtp-Source: AGHT+IEVXR9+wlONFFF0pVmQeCbZZqUlGtHJsfnQn89wNLFqjyadnVgDXduPX3FgpzRh4Sq2aUSNlvX2yGgw+9F0I/g=
-X-Received: by 2002:a17:907:940e:b0:ad8:932e:77ba with SMTP id
- a640c23a62f3a-ade1aa06f9bmr166304966b.38.1749186295861; Thu, 05 Jun 2025
- 22:04:55 -0700 (PDT)
+        bh=bNPH0m/THXjXoi3etRiOn9m9g57bBytN4g10RQH+1vA=;
+        b=NjdG+cCWAWyGTJQBBn15LDqw4dEXutWJUNl5LBdJGjqm3yTV9UW9snqUP1ySHA2Yr5
+         onCsOtgsZK1S9T7ozbz3OMnN5dsoL5kX10wmGG9QZfLXit7ADkJh/Z8PAeIWEmIfIBgb
+         nYw2nJPkML2p1PSFB3GtoRCBWAe6p+5EMMcX+Iyg1rrZ+hoWbVSCevuLtngrY401clkY
+         R27mnUBSy+Td1SuWH3rjO49PBubkDRiLMrdj7zaMBHk+P+MJ8k6USzxX6c0OBTtUFi08
+         ERQ/zYdSOqjYdDqf4rNFP4KCgj2dAl+f/MjDeNenfPo09OebZ9l75KqvGsGnSupRLUtk
+         Fhaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEHUw9zamOGZQuqF0JCVUkzvgGztXTNhIyY6vIzb6lF8apdqu1LaTcC7e4j4VKwAphNZgSqJi9/Eg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxoj2Ck4KkiXLT3VrrQqQ3uT0Jhs+X9N+32+X96yOgTzSE4S+y6
+	ZpHc5GW3lBI6AhbATZe5Mxo140OdmRZWsgJIsgB/ZYbdYoKPy+c4HE346pbXpRdh/Egb9pp2d82
+	aQDgr9C408r14S1L3dw/H7B9xg9BN4XS7eA==
+X-Gm-Gg: ASbGnct/fmPhhtF6nzUFvFo0Juun5KkxPEmpJ7pYpWWbHlQGVxLropYOnYVdwRp5Rbt
+	mhF2e7YZ/uCn0bXiLNCUW0eXD6weTGXpmi3t7koacvTuN2TtFfRxOGvajQfFhooKyu1XAkxgeIZ
+	oG5y17VVy5onPAKxrRSzu/ROhqb0xdsuxO1UZv3PYCGbs=
+X-Google-Smtp-Source: AGHT+IHMCv49qveQ4vc6UWIvAOaJ0QZRoaFTdib6LnF8OFCnox5ZXetSfIX1yBjqsaxGr1jisRVOsiqDG4SXZH7TzKo=
+X-Received: by 2002:a17:90b:1801:b0:312:e445:fdd9 with SMTP id
+ 98e67ed59e1d1-31346b20a9amr3659969a91.10.1749190293282; Thu, 05 Jun 2025
+ 23:11:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250529113215epcas5p2edd67e7b129621f386be005fdba53378@epcas5p2.samsung.com>
- <20250529111504.89912-1-kundan.kumar@samsung.com> <20250602141904.GA21996@lst.de>
- <c029d791-20ca-4f2e-926d-91856ba9d515@samsung.com> <20250603132434.GA10865@lst.de>
- <CACzX3AuBVsdEUy09W+L+xRAGLsUD0S9+J2AO8nSguA2nX5d8GQ@mail.gmail.com>
- <20250603140445.GA14351@lst.de> <20250603140513.GB14351@lst.de>
-In-Reply-To: <20250603140513.GB14351@lst.de>
-From: Kundan Kumar <kundanthebest@gmail.com>
-Date: Fri, 6 Jun 2025 10:34:42 +0530
-X-Gm-Features: AX0GCFtEIAaI-VeodZn7ESl9-Aw4m_sJDaXecGQwiyGHiN7UJTfm9c_uBk6SQ-Q
-Message-ID: <CALYkqXoAGHqGkX9WqEE+yiOftcWkap-ZGH3CSAeFk-cPg4q25A@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Parallelizing filesystem writeback
-To: Christoph Hellwig <hch@lst.de>
-Cc: Anuj gupta <anuj1072538@gmail.com>, "Anuj Gupta/Anuj Gupta" <anuj20.g@samsung.com>, 
-	Kundan Kumar <kundan.kumar@samsung.com>, jaegeuk@kernel.org, chao@kernel.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, 
-	agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org, 
-	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org, 
-	clm@meta.com, david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk, 
-	ritesh.list@gmail.com, djwong@kernel.org, dave@stgolabs.net, 
-	p.raghav@samsung.com, da.gomez@samsung.com, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-	gfs2@lists.linux.dev, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
-	gost.dev@samsung.com
+References: <CAM5tNy4csWq+Zu2hfdz0GcLk9pc0-JeP0EKZs=yOScJSx+v9ow@mail.gmail.com>
+ <CAPJSo4XP132ParCDO6uNFZHyq+c_e1j0o2qxO9tQe4hqbWQw7w@mail.gmail.com>
+ <CAM5tNy4EVhgmj1XHocMqbeKqJSWcUio7kppy+EKfp5ECnQ2R7g@mail.gmail.com>
+ <CAM5tNy5ke7H+pMfsvQC-+kuRUokd0vsbPw_WOY-N6v=0t-pS5Q@mail.gmail.com>
+ <CALXu0UdjF5s3Af72uo0A6503fZfGQ0kfxUs9yGoBh+v0oPz7pA@mail.gmail.com> <CAM5tNy5+X9f=xfr8T2Z+2OcOg6P7VGbSHbH0AeE1h5Xffugh6g@mail.gmail.com>
+In-Reply-To: <CAM5tNy5+X9f=xfr8T2Z+2OcOg6P7VGbSHbH0AeE1h5Xffugh6g@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Fri, 6 Jun 2025 08:11:00 +0200
+X-Gm-Features: AX0GCFvo5zNsZ07l3ixU-IGBDvD8vujrDjNKjI47sAmmYi-ck0N9S6n16bOUL0o
+Message-ID: <CALXu0UdeQhppELxzG7NrW7D4wJ6SM-QQm=PROkV8Z6v+c6+E_Q@mail.gmail.com>
+Subject: NFSv4/TLS support for newgrp(1) Re: [Ms-nfs41-client-devel]
+ Implementing NFS over TLS
+To: Rick Macklem <rick.macklem@gmail.com>, ms-nfs41-client-devel@lists.sourceforge.net, 
+	libtirpc-devel@lists.sourceforge.net, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 3, 2025 at 7:35=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrote=
-:
+On Wed, 4 Jun 2025 at 22:21, Rick Macklem <rick.macklem@gmail.com> wrote:
 >
-> On Tue, Jun 03, 2025 at 04:04:45PM +0200, Christoph Hellwig wrote:
-> > On Tue, Jun 03, 2025 at 07:22:18PM +0530, Anuj gupta wrote:
-> > > > A mount option is about the worst possible interface for behavior
-> > > > that depends on file system implementation and possibly hardware
-> > > > chacteristics.  This needs to be set by the file systems, possibly
-> > > > using generic helpers using hardware information.
-> > >
-> > > Right, that makes sense. Instead of using a mount option, we can
-> > > introduce generic helpers to initialize multiple writeback contexts
-> > > based on underlying hardware characteristics =E2=80=94 e.g., number o=
-f CPUs or
-> > > NUMA topology. Filesystems like XFS and EXT4 can then call these help=
-ers
-> > > during mount to opt into parallel writeback in a controlled way.
+> On Wed, Jun 4, 2025 at 10:36=E2=80=AFAM Cedric Blancher
+> <cedric.blancher@gmail.com> wrote:
 > >
-> > Yes.  A mount option might still be useful to override this default,
-> > but it should not be needed for the normal use case.
+> > On Mon, 2 Jun 2025 at 02:45, Rick Macklem <rick.macklem@gmail.com> wrot=
+e:
+> > >
+> > > On Sun, Jun 1, 2025 at 3:53=E2=80=AFPM Rick Macklem <rick.macklem@gma=
+il.com> wrote:
+> > > >
+> > > > On Wed, May 21, 2025 at 12:20=E2=80=AFAM Lionel Cons <lionelcons197=
+2@gmail.com> wrote:
+> > > > >
+> > > > > On Wed, 21 May 2025 at 01:53, Rick Macklem <rick.macklem@gmail.co=
+m> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > If the Google AI is correct, MS does not provide a full
+> > > > > > TLS implementation in the kernel and their kTLS only
+> > > > > > handles record level encryption/decryption, similar to
+> > > > > > FreeBSD.
+> > > > >
+> > > > > Could you first look into adding TLS support to steved-libtirpc i=
+n a
+> > > > > generic fashion via openssl, please?
+> > > > Ok, I finally got around to doing this. The tarball is attached and=
+ it can
+> > > > also be found at...
+> > > > https://people.freebsd.org/~rmacklem/tirpc-tls.tar
+> >
+> > How are uid and - more important gid - information passed to the NFS/RP=
+C server?
+> Normally, no differently than it is now. Either krb5 or auth_sys.
+> RPC-over-TLS encrypts
+> the RPC header, but does not change it.
 >
-> .. actually a sysfs file on the bdi is probably the better interface
-> for the override than a mount option.
+> There is a "special case" where a <user@domain> string is set in the othe=
+rName
+> component of subjectAltName. For that specific case, the NFS server gener=
+ates
+> credentials based on that user (uid+gid list for POSIX servers) and uses =
+those,
+> ignoring whatever is in the RPC header (presumably auth_sys with any old =
+uid
+> and gid list).
+> --> This is entirely an option for an NFS server and really has
+> nothing to do with
+>      NFS-over-TLS except that it is embedded in the client's X.509
+> cert. by whoever
+>      created it. It is meant for laptops and similar that are only
+> used by one user.
 
-Hi Christoph,
+I see a problem here, because <user@domain> is not sufficient. Users
+can have multiple primary groups, e.g. in case of /bin/newgrp, Windows
+winsg and so on.
 
-Thanks for the suggestion =E2=80=94 I agree the default should come from a
-filesystem-level helper, not a mount option.
+TLS must have a way to specify a primary group for POSIX newgrp(1) support.
 
-I looked into the sysfs override idea, but one challenge is that
-nr_wb_ctx must be finalized before any writes occur. That leaves only
-a narrow window =E2=80=94 after the bdi is registered but before any inodes
-are dirtied =E2=80=94 where changing it is safe.
-
-This makes the sysfs knob a bit fragile unless we tightly guard it
-(e.g., mark it read-only after init). A mount option, even just as an
-override, feels simpler and more predictable, since it=E2=80=99s set before
-the FS becomes active.
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
