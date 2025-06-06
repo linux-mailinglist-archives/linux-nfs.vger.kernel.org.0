@@ -1,99 +1,105 @@
-Return-Path: <linux-nfs+bounces-12147-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12148-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09A23AD0029
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 12:11:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4627AD0358
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:39:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D401116CE89
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 10:11:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D2F2163F46
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 13:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF59286D5D;
-	Fri,  6 Jun 2025 10:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B06288CA1;
+	Fri,  6 Jun 2025 13:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kOYV3ygE"
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="kX2stUGY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1348286883;
-	Fri,  6 Jun 2025 10:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B31B27FD5A;
+	Fri,  6 Jun 2025 13:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749204662; cv=none; b=TdN1wmiMIe2hztKBhZ/O2WTTK5BNShUNL4IOufTgR3PF/7oY33EemnuUZoM70OfS8ObH6tL4I/LG+aVrOChGRHpmyyiuxDhCExbiu4CgR8uJFXV1rgLyCSciWSb6SqWYomKNLRJJ2bzNmCaoB1h0N1vq81PpjSqOVWJoE/oARaQ=
+	t=1749217141; cv=none; b=okuciEbyt+5K/FBlIVIEBYYXbASJBdEqGUhsK7NbY3wuxOqo7rqfRytZb5plKVOvwzpErsoFeFxDBeh04+5rIxjqi6NtSyczCR34njOUMz21QplDc/bhgzORWQTiSthWzqd1ASc34Cm4k9Er97UckU/k2DAg668KNWLNQw9VwRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749204662; c=relaxed/simple;
-	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4UfznYGbivLKvkQheM+E4iC4I+Xp+tqYbBjlC0cJTFOyuTmk13PfFAOY/eHwtE3XsCjiZyZRI05m9FQfpYHGXQ6uUfhmfa+OsMdVRgyG2S+zmk9ZGPJ8UURPJTrq+SVVpUcBIL9GN/qzuG687sdzk9xOgUW6xA6hR5omb0/rDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kOYV3ygE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79D32C4CEEB;
-	Fri,  6 Jun 2025 10:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749204662;
-	bh=QpA/JuCnAP/vFa+RSbOkJBcKz4J+tC4XXGlQAhLxjiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kOYV3ygE1WUo2ThdlO7485Uw/rj45w0Z+n/6w5WbgFyUCXIjsyKtxqHf2YHZO0Hv8
-	 WbPKtRgW3k55PDtqmLWOUmorRkt/FVHsXcRPlM5ZyYNCebTbP+Q4uCa7zdoWaOn2O1
-	 WbPE3oVUkM6WgXPuJMOlqd5WvzgdONu1RXVFeFzL0nqWRUOi3mG4dHgnrBzE/83Mqn
-	 FyKKPmY4pvB6Z7tMVxcKOpNcAeK0soEHiZtQYZhuh00iKPvG3IhxtaXWR/Hhmik34O
-	 gCbYNzdXNCtYHoXL9fEAWqLDFlVb1+xzr5QSZaqBb4CM/pdq0K28lxwY0NR1kAf91W
-	 W7kAAiZVNcUhQ==
-Date: Fri, 6 Jun 2025 12:10:54 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, 
-	Dai Ngo <Dai.Ngo@oracle.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Amir Goldstein <amir73il@gmail.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH RFC v2 04/28] vfs: allow mkdir to wait for delegation
- break on parent
-Message-ID: <20250606-zuzahlen-vervielfachen-8831c5ca8f69@brauner>
-References: <20250602-dir-deleg-v2-0-a7919700de86@kernel.org>
- <20250602-dir-deleg-v2-4-a7919700de86@kernel.org>
- <wqp4ruxfzv47xwz2fca5trvpwg7rxufvd3nlfiu5kfsasqzsih@lutnvxe4ri62>
- <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
+	s=arc-20240116; t=1749217141; c=relaxed/simple;
+	bh=mdgDgqmHWYRMiJBeD5MRWizVMkY2pth50iG8rwuBYOo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ol+VIMfRd+hXq9/5imDAvGpzAh4wM39XuE3xhJcLHzt0slQ9qDYZMyTxsxm0nNC4edK7Pk2NPRE7z8B0X979OwnHQNZEte3NW1m7Ezr4WJqvhJkbMIhLRNd4MBVhVB4V2llDPlVJguraTOcK1B/xj035R4JdP8ogXNxgauVRiHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=kX2stUGY; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+Message-ID: <49730b18-605f-4194-8f93-86f832f4b8f8@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1749217127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1jhQpF+R0Z64uKurrBCjq0j+He4F0llIw3IZaku5tJQ=;
+	b=kX2stUGY573U2qg5ZI0N4pwIUvvKTudDnhgBPWBxxBfNPRZa04Z6CrkvK4PuxDlhqJ3LoC
+	Q9GTAM36hxbyZMg72yzNobP8Sz4rBd1z+kE8wvjSZxuCkBw/uDfwb0YIORVzLfgvb+Ogqq
+	q5AIMWU8zyzj/qGt9DJNU/u3whTPNEM=
+Date: Fri, 6 Jun 2025 16:39:45 +0300
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <eeefb45bc67182971ae7d3c455a4ecfdec53d640.camel@kernel.org>
+From: Konstantin Andreev <andreev@swemel.ru>
+Subject: Re: [PATCH v2] security,fs,nfs,net: update
+ security_inode_listsecurity() interface
+To: linux-security-module@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+ selinux@vger.kernel.org, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Casey Schaufler <casey@schaufler-ca.com>, Paul Moore <paul@paul-moore.com>
+References: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+Content-Language: en-US
+Disposition-Notification-To: Konstantin Andreev <andreev@swemel.ru>
+In-Reply-To: <20250428195022.24587-2-stephen.smalley.work@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 06 Jun 2025 13:38:46.0205 (UTC) FILETIME=[53AB3ED0:01DBD6E8]
 
-On Thu, Jun 05, 2025 at 07:25:38AM -0400, Jeff Layton wrote:
-> On Thu, 2025-06-05 at 13:19 +0200, Jan Kara wrote:
-> > On Mon 02-06-25 10:01:47, Jeff Layton wrote:
-> > > In order to add directory delegation support, we need to break
-> > > delegations on the parent whenever there is going to be a change in the
-> > > directory.
-> > > 
-> > > Rename the existing vfs_mkdir to __vfs_mkdir, make it static and add a
-> > > new delegated_inode parameter. Add a new exported vfs_mkdir wrapper
-> > > around it that passes a NULL pointer for delegated_inode.
-> > > 
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > 
-> > FWIW I went through the changes adding breaking of delegations to VFS
-> > directory functions and they look ok to me. Just I dislike the addition of
-> > __vfs_mkdir() (and similar) helpers because over longer term the helpers
-> > tend to pile up and the maze of functions (already hard to follow in VFS)
-> > gets unwieldy. Either I'd try to give it a proper name or (if exposing the
-> > functionality to the external world is fine - which seems it is) you could
-> > just add the argument to vfs_mkdir() and change all the callers? I've
-> > checked and for each of the modified functions there's less than 10 callers
-> > so the churn shouldn't be that big. What do others think?
+Stephen Smalley, 28/04/2025:
+> Update the security_inode_listsecurity() interface to allow
+> use of the xattr_list_one() helper and update the hook
+> implementations.
+> 
+> Link: https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@gmail.com/
 
-If it's just a few callers we should just add the argument.
+Sorry for being late to the party.
+
+Your approach assumes that every fs-specific xattr lister
+called like
+
+| vfs_listxattr() {
+|    if (inode->i_op->listxattr)
+|        error = inode->i_op->listxattr(dentry, list, size)
+|   ...
+
+must call LSM to integrate LSM's xattr(s) into fs-specific list.
+You did this for tmpfs:
+
+| simple_xattr_list() {
+|   security_inode_listsecurity()
+|   // iterate real xatts list
+
+
+Well, but what about other filesystems in the linux kernel?
+Should all of them also modify their xattr listers?
+
+To me, taking care of security xattrs is improper responsibility
+for filesystem code.
+
+May it be better to merge LSM xattrs
+and fs-backed xattrs at the vfs level (vfs_listxattr)?
+
+--
+Konstantin Andreev
 
