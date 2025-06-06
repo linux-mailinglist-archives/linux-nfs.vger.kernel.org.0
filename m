@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-12175-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12176-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E315BAD05FD
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:49:11 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41220AD060F
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:50:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A95163B4215
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:47:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5B13318843C2
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:49:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A027F28CF5D;
-	Fri,  6 Jun 2025 15:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643FD28A41B;
+	Fri,  6 Jun 2025 15:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3ybQDBB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrxltWvp"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F9C28CF53;
-	Fri,  6 Jun 2025 15:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F58289800;
+	Fri,  6 Jun 2025 15:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224653; cv=none; b=dY3PX5nHIU5gx/JDkSMVC63sy+X6etspIbMQ4HGvcjPjwFvRkXzzkxTUJwLsT/o7VzuqnuiShuUuMQ9oXpoPc0LKYkquD3UD6miGF+dBj5hE9QibdHjqG3di6MCruMZDUmZOuFVIrkcfasVd4Z3cFtfm8w5NgFsZP1j5Y8tOPoA=
+	t=1749224665; cv=none; b=arj+kinIPPBhZmlvMQhucyt0Axj/jGqKW9tg1g94iejP1/aJEs7i3fMICDQ9u4WzWAaI+QCOGa7hea3D17bIa2pOmsNIWr/c1Uq+/VsKl/zhXpczTXFGLD3TLhzJ3ZPic3NeIbXiRj+Gk7Ea5sq3zs4fkt3BPDMRjVrVB9baO4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224653; c=relaxed/simple;
-	bh=z5uudUGjbtOL9S97P4rUBAiVgWJTExYx1dbD7r265JQ=;
+	s=arc-20240116; t=1749224665; c=relaxed/simple;
+	bh=ZJlegHO9KmjdIJV9wMobS9d/AF1kTCLe3V0sQp+kV+I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bA1YeQ7/puEQRTT/LvfL88/qCY4963EWnoJsl9/X8ceH+RVGesWYKJPSYOycQ4OQL7L4jpN4srbhklJxHHOaZMG7DbEPZeZHBS5Kcpj0/KagQ72VSmtUYtnjUwrLKE+gF6j0K8jiJGC3egwBXWl+2E8NgmoOQpEJbibjPfN4RZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3ybQDBB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 512C8C4CEEB;
-	Fri,  6 Jun 2025 15:44:12 +0000 (UTC)
+	 MIME-Version; b=KQvoicwioFAr3HTIkdQDqEFDyjOdgbU+yspGmA7Qi8QC/in+8ypScR2f4IYluzyDnDSmjfg6vzIw0tF2zk7Yo1wRBKzHWr3QMZ5Y8+2FuA8rZIA/vsczKO0Cw4FFDqM0LHBdJns0N44vB8zwL+Q3m97ZzZIWiWy54VVVgNck4PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrxltWvp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D627C4CEEB;
+	Fri,  6 Jun 2025 15:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749224653;
-	bh=z5uudUGjbtOL9S97P4rUBAiVgWJTExYx1dbD7r265JQ=;
+	s=k20201202; t=1749224665;
+	bh=ZJlegHO9KmjdIJV9wMobS9d/AF1kTCLe3V0sQp+kV+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g3ybQDBBah14B8kv+FIFuPAr+C8xld2+bLWj3vTPmm2RxUfMp6DnJN4+vzFxjKr83
-	 PBXWejyWuLeVqwLSQzQuyDQWeru0FRDewEJxfoxUtgL51JyrRUuvM1EJl0uitLy8Hq
-	 4RqBvW0PZI7tV4qJ8ixpwICSLpvJ7h5fJB4nyydnpjY7yOBqP6fnWh+nWyFy3uu7og
-	 l/hCFL6MUSrAbd1gsCYgqvEKnbxU6UkJZYtdFdDMYD1lB6NU8UWKrcf2RNH85WEfnA
-	 pWB/6KE7bUr2wX0DzKwFGxS3NCc/edrBLKmm4NKYE5NvJxUv+5N4iybgcPM06NWzxl
-	 kZ5S00pHbnhIA==
+	b=JrxltWvpQoxG5lEeUSM1GsMPSYD25PWXnghzhp0MRfVQwvaaCYERcsUPZgp+mD5GL
+	 3nOjgdlo8rCFZ+FBJdYh+CdzPw/uarzgS6TceOCKEKK/LPxHdF9p9oKny28OBnOkLJ
+	 YcIxDyqDzjApKTOPle/WOr4JnW78+CN2kIfLWrF3FMo+GQ7jlU0vaYbl32i/+9QbQj
+	 wD5vWCegKEAC2OzqxSlp2aG6ebc4r/2InF0qU56hjP12vLCLvr5DsfVHR9FVkb7tAx
+	 /aUzMBZLbYc54+qMC9U5krRWlEzGjPWUDaFA9AIEvjusFyVrL5G6c2uQPgnBQkiY5W
+	 pqTyNoRG5RcxA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -50,12 +50,12 @@ Cc: Olga Kornievskaia <okorniev@redhat.com>,
 	trondmy@kernel.org,
 	anna@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 3/7] NFSv4.2: fix listxattr to return selinux security label
-Date: Fri,  6 Jun 2025 11:44:03 -0400
-Message-Id: <20250606154408.548320-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 2/6] NFSv4.2: fix listxattr to return selinux security label
+Date: Fri,  6 Jun 2025 11:44:16 -0400
+Message-Id: <20250606154421.548570-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250606154408.548320-1-sashal@kernel.org>
-References: <20250606154408.548320-1-sashal@kernel.org>
+In-Reply-To: <20250606154421.548570-1-sashal@kernel.org>
+References: <20250606154421.548570-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.185
+X-stable-base: Linux 5.10.238
 Content-Transfer-Encoding: 8bit
 
 From: Olga Kornievskaia <okorniev@redhat.com>
@@ -123,10 +123,10 @@ creating the inconsistent behavior reported.
  1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e4b3f25bb8e48..9d4e4146efef0 100644
+index 1005ecf7c250b..77cc1c4219e15 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -10528,7 +10528,7 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+@@ -10378,7 +10378,7 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
  
  static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  {
@@ -135,7 +135,7 @@ index e4b3f25bb8e48..9d4e4146efef0 100644
  	size_t left = size;
  
  	error = generic_listxattr(dentry, list, left);
-@@ -10551,8 +10551,16 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
+@@ -10401,8 +10401,16 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
  	if (error3 < 0)
  		return error3;
