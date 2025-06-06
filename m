@@ -1,60 +1,58 @@
-Return-Path: <linux-nfs+bounces-12169-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12170-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CE6CAD05C9
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:46:29 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CB58AD05D8
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:47:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B46193B2F7E
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:46:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83BD13A4A9D
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:46:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0BE728BAB3;
-	Fri,  6 Jun 2025 15:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E68A128C012;
+	Fri,  6 Jun 2025 15:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cr+T8SC0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtSVnYJB"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85049EEB5;
-	Fri,  6 Jun 2025 15:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6AB289E38;
+	Fri,  6 Jun 2025 15:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224619; cv=none; b=VcxxCNCXT30iQ350JI0nUp2n5R4k1gKtry7LC+ft5llAWGOAOdwjNOTdGQRn/8wltEcUApQvNZZ67ixH2G/b+890GdA3N/NYpZveMNDzOya2ntn+RKwWjLG0fBKnMbTOACD4HYn+IK4T/jxETQDrrZLpGIkM9yXWi1Arrapa0kc=
+	t=1749224627; cv=none; b=Qhg3adRvukuL+bmzbNCWk9F4xPD5lXkVGhs/V/glnlZ8PhG0JcgadXkidVca6UTLytc0GnCkyTxiqWZ0d1y/48lalOLGEuEiSr441HE+1LtjZWzROq4MryLGpuq1C4q27kZFddv3v1PakfR9X4mdqOseV6yW4ZX2rprez+h+E7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224619; c=relaxed/simple;
-	bh=D4mv15+bKBKTXf2d9mpoxjl7U8HbYfnSO+CrHkGP0yU=;
+	s=arc-20240116; t=1749224627; c=relaxed/simple;
+	bh=gO1UxEPa5K+ZaQxnDQmPdQ+FqnjKy6ormGxyWCtvNT0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yiv71qrs2UqQIbYMcFNnLE4JxvnT6b8af7NBKq8EOwnRIFiUsKTmHBYN1YcG3iVreeBMInaI6cZOss37ScG3kLlQvky7JgSJmQcblsyXAE5TG8bk+4FazILe5qV/xBnnN1TsCOf/ceZdBLNQm/px7urcBeyTX0PmR7d9LxB7254=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cr+T8SC0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDCAC4CEED;
-	Fri,  6 Jun 2025 15:43:38 +0000 (UTC)
+	 MIME-Version; b=bYoInMf7Dsv8UpHBg8MQoOG/IMGzBm015B2H8vcS4xrRPfBWZ+Je/+UtVsFzqtSklLz1Lopr9lI0kQeLTDsRFCSz8hrA7MORoLDzKPZ8Ez0MDgKvE/bnoVc+hd+5ryQSEem2zj9DWsGAxZV4HYXTI07wgYr1dU9q06giXrxA4aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtSVnYJB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29CAC4CEEB;
+	Fri,  6 Jun 2025 15:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749224619;
-	bh=D4mv15+bKBKTXf2d9mpoxjl7U8HbYfnSO+CrHkGP0yU=;
+	s=k20201202; t=1749224627;
+	bh=gO1UxEPa5K+ZaQxnDQmPdQ+FqnjKy6ormGxyWCtvNT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cr+T8SC0qQZuKDRGCf1sk6IoY02dV+fJbSGbzAiNT9KQ8+QMOUNlEXwsvpKL/ieRH
-	 QNgnOAEqEyIhNEvE+Sw4caYWwzeRI717SFjfPvJwI3hlRXMuD9e7LDH+Ks/5KeSDgN
-	 7NWI2shDRYs1OVLCxSthgJIMw7Wgbg7XgUqTS8G6J8TyyhW3tR19aX8BUSvN8m0+vC
-	 mX43R/vnIEMBmJnxdSF0fEQFgx4jrYBJ8QqeHiF8ELJk8Y06MAKwjWzgvJhpiLnADv
-	 tn3ugCzpEO+5Vc5+NgfRXO7Chb0iE2TcKtcJEyVNKF7okaWLB5AmKYCKIs7si22aLq
-	 n64ZV3tLhC7bQ==
+	b=YtSVnYJBHavB3fyVXY/KGX5S0TGSyvFukd4T5bvTclrf2Cx0ImyjtiqCWsy+OUGah
+	 lzXfUJvH2jblp9gg7OvQRREuqicRdOSQ3vUeA99hIWvgYEAfqMRGyYMdfzd29JfLIq
+	 VyM+/u+UpuTasAOGLmF019Gd97yi60UH2++PoshnS87vdqZPOOrahVsbkKgxP6FS4R
+	 Hihs44NMRjaUBjT+Fpjq1JWhH/WRnq8OHYmyM5FQG0gHqvR5B906/zIBJdv1W9K6g/
+	 qcb7IMcscUaWIBEynM7fmKp5PC/uLiTM3+DHxZCCcgMA1OeoJX+S6IRTP4ZTvewNad
+	 ysfgGO1CxN+sQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Nikhil Jha <njha@janestreet.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
+Cc: Scott Mayhew <smayhew@redhat.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
 	trondmy@kernel.org,
 	anna@kernel.org,
-	jlayton@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 08/13] sunrpc: don't immediately retransmit on seqno miss
-Date: Fri,  6 Jun 2025 11:43:21 -0400
-Message-Id: <20250606154327.547792-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 12/13] NFSv4: xattr handlers should check for absent nfs filehandles
+Date: Fri,  6 Jun 2025 11:43:25 -0400
+Message-Id: <20250606154327.547792-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250606154327.547792-1-sashal@kernel.org>
 References: <20250606154327.547792-1-sashal@kernel.org>
@@ -67,156 +65,112 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.93
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Nikhil Jha <njha@janestreet.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit fadc0f3bb2de8c570ced6d9c1f97222213d93140 ]
+[ Upstream commit 6e9a2f8dbe93c8004c2af2c0158888628b7ca034 ]
 
-RFC2203 requires that retransmitted messages use a new gss sequence
-number, but the same XID. This means that if the server is just slow
-(e.x. overloaded), the client might receive a response using an older
-seqno than the one it has recorded.
+The nfs inodes for referral anchors that have not yet been followed have
+their filehandles zeroed out.
 
-Currently, Linux's client immediately retransmits in this case. However,
-this leads to a lot of wasted retransmits until the server eventually
-responds faster than the client can resend.
+Attempting to call getxattr() on one of these will cause the nfs client
+to send a GETATTR to the nfs server with the preceding PUTFH sans
+filehandle.  The server will reply NFS4ERR_NOFILEHANDLE, leading to -EIO
+being returned to the application.
 
-Client -> SEQ 1 -> Server
-Client -> SEQ 2 -> Server
-Client <- SEQ 1 <- Server (misses, expecting seqno = 2)
-Client -> SEQ 3 -> Server (immediate retransmission on miss)
-Client <- SEQ 2 <- Server (misses, expecting seqno = 3)
-Client -> SEQ 4 -> Server (immediate retransmission on miss)
-... and so on ...
+For example:
 
-This commit makes it so that we ignore messages with bad checksums
-due to seqnum mismatch, and rely on the usual timeout behavior for
-retransmission instead of doing so immediately.
+$ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
+getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO (Input/output error)
+/mnt/t/ref: system.nfs4_acl: Input/output error
++++ exited with 1 +++
 
-Signed-off-by: Nikhil Jha <njha@janestreet.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+Have the xattr handlers return -ENODATA instead.
+
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit and the similar backported commits as
-reference, here is my assessment:
+Based on my analysis of the commit, I can now provide my assessment.
 
 **YES**
 
-This commit should be backported to stable kernel trees. Here's my
-detailed analysis:
+This commit should be backported to stable kernel trees for the
+following reasons:
 
-## Key Analysis Points:
+1. **It fixes a real user-visible bug**: The commit addresses an issue
+   where attempting to call `getxattr()` on NFS referral anchors that
+   haven't been followed yet causes an I/O error (-EIO) to be returned
+   to applications. The example in the commit message clearly
+   demonstrates this:
+  ```
+  $ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
+  getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO
+  (Input/output error)
+  ```
 
-### 1. **Bug Fix Nature**:
-This commit addresses a clear performance bug in SUNRPC's RPCSEC_GSS
-sequence number handling. The current code immediately retransmits when
-it receives a response with an older sequence number than expected,
-leading to excessive and wasteful retransmissions when the server is
-simply slow.
+2. **The fix is minimal and contained**: The changes are very small -
+   just adding two simple checks:
+  ```c
+  if (unlikely(NFS_FH(inode)->size == 0))
+  return -ENODATA;
+  ```
+  These checks are added to both `nfs4_proc_get_acl()` and
+  `nfs4_proc_set_acl()` functions.
 
-### 2. **Alignment with RFC2203**:
-The commit correctly implements RFC2203 requirements, which state that
-retransmitted messages should use new GSS sequence numbers but keep the
-same XID. The current behavior creates a retransmission storm that
-violates the spirit of this requirement.
+3. **Low risk of regression**: The fix is straightforward and only
+   affects the specific error path when filehandles are zero-sized
+   (which occurs for referral anchors that haven't been followed). It
+   doesn't change any core logic or introduce new features.
 
-### 3. **Code Changes Analysis**:
-The modification in `rpc_decode_header()` at the `out_verifier` label is
-minimal and targeted:
+4. **Improves application compatibility**: Returning -ENODATA instead of
+   -EIO is more semantically correct. Applications expect -ENODATA when
+   extended attributes are not available, while -EIO suggests a more
+   serious I/O problem.
 
-**Before** (lines 2773-2776):
-```c
-case -EACCES:
-    /* Re-encode with a fresh cred */
-    fallthrough;
-default:
-    goto out_garbage;
-```
+5. **Follows stable kernel rules**: This fix:
+   - Fixes a real bug that affects users
+   - Is small and self-contained
+   - Has minimal risk of introducing new issues
+   - Doesn't add new features or make architectural changes
 
-**After**:
-```c
-case -EACCES:
-    /* possible RPCSEC_GSS out-of-sequence event (RFC2203),
-     - reset recv state and keep waiting, don't retransmit
-     */
-    task->tk_rqstp->rq_reply_bytes_recvd = 0;
-    task->tk_status = xprt_request_enqueue_receive(task);
-    task->tk_action = call_transmit_status;
-    return -EBADMSG;
-default:
-    goto out_garbage;
-```
+The commit addresses a specific edge case in NFSv4 where referral
+anchors (mount points that redirect to other servers) have zero-length
+filehandles until they are actually accessed. When applications try to
+read extended attributes on these special inodes, the kernel would
+previously send invalid GETATTR requests to the server, resulting in
+confusing I/O errors. This fix makes the behavior more predictable and
+correct by returning -ENODATA, which indicates that the requested
+attribute doesn't exist.
 
-### 4. **Risk Assessment - LOW**:
-- **Scope**: Changes are confined to a specific error handling path in
-  SUNRPC client code
-- **Behavioral change**: Instead of immediate retransmission, it now
-  waits for normal timeout-based retransmission
-- **Fallback**: The normal timeout mechanism still provides
-  retransmission if needed
-- **Error handling**: Uses existing infrastructure
-  (`xprt_request_enqueue_receive`, `call_transmit_status`)
+ fs/nfs/nfs4proc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-### 5. **Comparison with Similar Backported Commits**:
-This commit shares characteristics with successful backports:
-- **Similar Commit #1**: Also fixed SUNRPC verifier handling by changing
-  `goto out_err` to `goto out_garbage`
-- **Similar Commit #2**: Fixed incomplete RPC message handling with
-  proper state management
-- **Similar Commit #5**: Fixed RPCSEC_GSS sequence number limit handling
-
-All these were backported because they fixed protocol compliance issues
-with minimal risk.
-
-### 6. **User Impact**:
-- **Performance improvement**: Significantly reduces unnecessary
-  retransmissions under server load
-- **Network efficiency**: Reduces wasted bandwidth and server load
-- **No breaking changes**: Maintains compatibility while improving
-  behavior
-
-### 7. **Stability Criteria Compliance**:
-✅ **Important bugfix**: Fixes performance degradation and protocol
-compliance
-✅ **Minimal risk**: Small, localized change to error handling path
-✅ **No new features**: Pure bugfix, no architectural changes
-✅ **Subsystem-contained**: Changes only affect SUNRPC client verifier
-handling
-✅ **Clear benefit**: Reduces retransmission storms in production
-environments
-
-The commit follows the stable tree rules perfectly: it's a targeted fix
-for a real-world performance problem with minimal risk of regression,
-affecting only the specific error case of RPCSEC_GSS sequence number
-mismatches.
-
- net/sunrpc/clnt.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 4ffb2bcaf3648..63756607f6327 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2733,8 +2733,13 @@ rpc_decode_header(struct rpc_task *task, struct xdr_stream *xdr)
- 	case -EPROTONOSUPPORT:
- 		goto out_err;
- 	case -EACCES:
--		/* Re-encode with a fresh cred */
--		fallthrough;
-+		/* possible RPCSEC_GSS out-of-sequence event (RFC2203),
-+		 * reset recv state and keep waiting, don't retransmit
-+		 */
-+		task->tk_rqstp->rq_reply_bytes_recvd = 0;
-+		task->tk_status = xprt_request_enqueue_receive(task);
-+		task->tk_action = call_transmit_status;
-+		return -EBADMSG;
- 	default:
- 		goto out_garbage;
- 	}
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 97a009e007f95..3085a2faab2d3 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6059,6 +6059,8 @@ static ssize_t nfs4_proc_get_acl(struct inode *inode, void *buf, size_t buflen,
+ 	struct nfs_server *server = NFS_SERVER(inode);
+ 	int ret;
+ 
++	if (unlikely(NFS_FH(inode)->size == 0))
++		return -ENODATA;
+ 	if (!nfs4_server_supports_acls(server, type))
+ 		return -EOPNOTSUPP;
+ 	ret = nfs_revalidate_inode(inode, NFS_INO_INVALID_CHANGE);
+@@ -6133,6 +6135,9 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf,
+ {
+ 	struct nfs4_exception exception = { };
+ 	int err;
++
++	if (unlikely(NFS_FH(inode)->size == 0))
++		return -ENODATA;
+ 	do {
+ 		err = __nfs4_proc_set_acl(inode, buf, buflen, type);
+ 		trace_nfs4_set_acl(inode, err);
 -- 
 2.39.5
 
