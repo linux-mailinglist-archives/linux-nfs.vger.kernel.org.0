@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-12156-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12157-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DC83AD057E
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D5802AD0588
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 17:43:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC8DF18894B7
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:43:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1032188E95C
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jun 2025 15:43:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AFD0289828;
-	Fri,  6 Jun 2025 15:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C3A13DBA0;
+	Fri,  6 Jun 2025 15:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0KYKGLy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8uJ7mey"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22975276048;
-	Fri,  6 Jun 2025 15:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E674E289E23;
+	Fri,  6 Jun 2025 15:42:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749224542; cv=none; b=oH2PEWiWDHjtAKF5DSDeXGj4PcYCyN9KymqWk4yZ0lmTDKeXNkKtfwvCrrdD1BpgMoc/28lO5kFHJFGj4gjhrE1Lrs/h68xfu+oxBK9GDwWyoPEInFQ1eslQSeOUUx+alg/NHY7+Dz0qMkWctFxJqlD1V0lPuNRYaGhwBwW6Kr0=
+	t=1749224553; cv=none; b=cC+C2SrtnBL8r8DMhN85cqazAl2Tdn0mJSwmTld+ETSFip65yd8DY5TwDKzfHPOEZ84m2Fmqeo7XBFWM1MSuuwK/NOkAxMXVBwczbAJ20DcJOEE61rVmSh3/kxsg9pP1viT4lTZUcSTafLRteAJEswnWwhxZ9OpWpmLVUB2/5Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749224542; c=relaxed/simple;
-	bh=H+zLShSUXKPHRlc3joCwP0WNciXAGO8dwgkqyGE6lDI=;
+	s=arc-20240116; t=1749224553; c=relaxed/simple;
+	bh=GNhp/OFVEyqdKPrWBtDxirglDPwhP2RviNfwKcCBmfI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QJ+auMpbvfDFTJ0539WukuZ+SQAfYdAfQA2jHPU4AAH1DkQw5jSQjCF5fDx1WMtK/BMTnUuKoIRB4CpeMD1l181ELQM687RCJ9Xjl6vZZE8H9JZUpHULzS8ZPENyxC7Sy5jyL1taGzI+4LlTArbe4Qcwz08BFofbErK216paf6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0KYKGLy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA025C4CEEB;
-	Fri,  6 Jun 2025 15:42:20 +0000 (UTC)
+	 MIME-Version:Content-Type; b=hnebtHM5ML2FojqEXKb09E1GcE7fLcN2HNdf3v20ERvbpB7+LH7EvBEb1KxXjWpcDLGCbiv0+brRCUct5j+wei8eIyV1ElKbWGsXQT3dgD3gZ77h5lleAf4um851qfScXEenjhvl33USzpAh2olkeFKpbDWvzm3t0oCMIQHFHVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8uJ7mey; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A17C4CEF0;
+	Fri,  6 Jun 2025 15:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749224541;
-	bh=H+zLShSUXKPHRlc3joCwP0WNciXAGO8dwgkqyGE6lDI=;
+	s=k20201202; t=1749224552;
+	bh=GNhp/OFVEyqdKPrWBtDxirglDPwhP2RviNfwKcCBmfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O0KYKGLyBSb/bwgVwohrbNJ848ztp48mw+uNBoMXSRUyG2L8m7wrCXMC7UeqKrrKM
-	 jEh/DkTR5nLY19RzL1G/IIgSK/ZWnICD4bSzbp92s8GJsHY7QHVEsvIiSWoIS3RL1u
-	 LWx/bKSSYVIGYuAsxe2KRdW1wtTA1N1zTC9tVoGC3gdV46HJXwv9oA9WLrCpAXtLWt
-	 rWScAJNn2EBlB3ZO9UhV+zFsWLTgtQhpaHB7rJ6EXvyVIuaGuVPf4AFD1HvZfl70Da
-	 U/fS5PKi6LtjNeLWZDRyF1LXI8CQFCI/Auwd9R15lg0hcMkjiB0RKAom0oitcli2Lr
-	 5xmddoWaavmGA==
+	b=X8uJ7meyDfMzNpda4quaHD/yGLd0JcCCx8cfDCL1MIs8FRPOmkvwAoFb+/se9vjZM
+	 YbtO4Lzss2BaMmpuaS0bftcUu5UWzY+kcn6yndTkUC59e/EOtk4XmAPF+26r0/cuYX
+	 KiKXn73DM9zHF9GIlH2wYw0U5KZPERaqU/CFNakysWWY8MMpRiaIA3RPSQuBTwzFd8
+	 3axIRW1xJ0rm/bwGYEQGk9xaMt6FD/Ly1wyxHzn1fhAxCt6K50yCOv278t2HAHde56
+	 z/avtu9KYhI3IpGUhE0dRwrQdLbeoZI7FPS/YMgOUF6xhlq+iNM6E6rA7F+aY1aTW0
+	 DIAjCn+PzPatw==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Scott Mayhew <smayhew@redhat.com>,
+Cc: Han Young <hanyang.tony@bytedance.com>,
 	Anna Schumaker <anna.schumaker@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
 	trondmy@kernel.org,
 	anna@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 20/21] NFSv4: xattr handlers should check for absent nfs filehandles
-Date: Fri,  6 Jun 2025 11:41:45 -0400
-Message-Id: <20250606154147.546388-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 04/19] NFSv4: Always set NLINK even if the server doesn't support it
+Date: Fri,  6 Jun 2025 11:42:10 -0400
+Message-Id: <20250606154225.546969-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250606154147.546388-1-sashal@kernel.org>
-References: <20250606154147.546388-1-sashal@kernel.org>
+In-Reply-To: <20250606154225.546969-1-sashal@kernel.org>
+References: <20250606154225.546969-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,113 +64,85 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.15.1
+X-stable-base: Linux 6.14.10
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Han Young <hanyang.tony@bytedance.com>
 
-[ Upstream commit 6e9a2f8dbe93c8004c2af2c0158888628b7ca034 ]
+[ Upstream commit 3a3065352f73381d3a1aa0ccab44aec3a5a9b365 ]
 
-The nfs inodes for referral anchors that have not yet been followed have
-their filehandles zeroed out.
+fattr4_numlinks is a recommended attribute, so the client should emulate
+it even if the server doesn't support it. In decode_attr_nlink function
+in nfs4xdr.c, nlink is initialized to 1. However, this default value
+isn't set to the inode due to the check in nfs_fhget.
 
-Attempting to call getxattr() on one of these will cause the nfs client
-to send a GETATTR to the nfs server with the preceding PUTFH sans
-filehandle.  The server will reply NFS4ERR_NOFILEHANDLE, leading to -EIO
-being returned to the application.
+So if the server doesn't support numlinks, inode's nlink will be zero,
+the mount will fail with error "Stale file handle". Set the nlink to 1
+if the server doesn't support it.
 
-For example:
-
-$ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
-getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO (Input/output error)
-/mnt/t/ref: system.nfs4_acl: Input/output error
-+++ exited with 1 +++
-
-Have the xattr handlers return -ENODATA instead.
-
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Han Young <hanyang.tony@bytedance.com>
 Signed-off-by: Anna Schumaker <anna.schumaker@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on my analysis of the commit, I can now provide my assessment.
+Based on my analysis of the commit and the kernel source code, here is
+my determination: **YES** This commit should be backported to stable
+kernel trees. Here's my extensive analysis: ## Critical Bug Fix Analysis
+### 1. **Root Cause Understanding** The commit addresses a critical
+issue where NFSv4 mounts fail with "Stale file handle" errors when the
+server doesn't support the `fattr4_numlinks` (NLINK) attribute. Looking
+at the code: - In `/home/sasha/linux/fs/nfs/nfs4xdr.c:3969`, the
+`decode_attr_nlink` function initializes `*nlink = 1` as a default -
+However, in `/home/sasha/linux/fs/nfs/inode.c:556-559`, the current
+logic only sets the inode's nlink if `fattr->valid &
+NFS_ATTR_FATTR_NLINK` is true - When the server doesn't support
+numlinks, the `fattr->valid` flag isn't set, so the inode's nlink
+remains 0 (from initial inode allocation) ### 2. **Impact of Zero
+nlink** From `/home/sasha/linux/fs/nfs/dir.c:1578-1582`, I can see the
+critical check: ```c if (inode->i_nlink > 0 || (inode->i_nlink == 0 &&
+test_bit(NFS_INO_PRESERVE_UNLINKED, &NFS_I(inode)->flags))) return 0;
+else return -ESTALE; ``` When `i_nlink == 0` and the
+`NFS_INO_PRESERVE_UNLINKED` flag isn't set, NFS returns `-ESTALE`,
+causing "Stale file handle" errors and mount failures. ### 3. **Backport
+Suitability Criteria** **✅ Fixes important user-affecting bug**: Mount
+failures prevent basic filesystem functionality **✅ Small and contained
+fix**: The change adds only 2 lines: ```c else if (fattr_supported &
+NFS_ATTR_FATTR_NLINK) nfs_set_cache_invalid(inode,
+NFS_INO_INVALID_NLINK); +else + set_nlink(inode, 1); ``` **✅ Minimal
+regression risk**: Setting nlink=1 as fallback is safe and follows the
+NFSv4 spec (fattr4_numlinks is a "recommended" attribute, so emulation
+is appropriate) **✅ No architectural changes**: This is a targeted fix
+within existing error handling logic **✅ Follows stable tree rules**:
+It's an important bugfix with minimal risk ### 4. **Comparison with
+Similar Commits** Unlike the provided similar commits that were marked
+"NO" (which involved more complex nlink management, cache invalidation
+changes, or feature additions), this commit: - Fixes a fundamental
+compatibility issue - Prevents complete mount failures - Is minimal and
+defensive - Addresses server interoperability problems ### 5. **Server
+Compatibility** This fix ensures NFSv4 clients remain functional with
+servers that don't fully implement all recommended attributes, which is
+critical for real-world deployments where server implementations vary.
+The commit directly prevents mount failures that would otherwise require
+server-side fixes or workarounds, making it essential for stable kernel
+trees where users expect reliable NFS functionality.
 
-**YES**
+ fs/nfs/inode.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This commit should be backported to stable kernel trees for the
-following reasons:
-
-1. **It fixes a real user-visible bug**: The commit addresses an issue
-   where attempting to call `getxattr()` on NFS referral anchors that
-   haven't been followed yet causes an I/O error (-EIO) to be returned
-   to applications. The example in the commit message clearly
-   demonstrates this:
-  ```
-  $ strace -e trace=getxattr getfattr -n system.nfs4_acl /mnt/t/ref
-  getxattr("/mnt/t/ref", "system.nfs4_acl", NULL, 0) = -1 EIO
-  (Input/output error)
-  ```
-
-2. **The fix is minimal and contained**: The changes are very small -
-   just adding two simple checks:
-  ```c
-  if (unlikely(NFS_FH(inode)->size == 0))
-  return -ENODATA;
-  ```
-  These checks are added to both `nfs4_proc_get_acl()` and
-  `nfs4_proc_set_acl()` functions.
-
-3. **Low risk of regression**: The fix is straightforward and only
-   affects the specific error path when filehandles are zero-sized
-   (which occurs for referral anchors that haven't been followed). It
-   doesn't change any core logic or introduce new features.
-
-4. **Improves application compatibility**: Returning -ENODATA instead of
-   -EIO is more semantically correct. Applications expect -ENODATA when
-   extended attributes are not available, while -EIO suggests a more
-   serious I/O problem.
-
-5. **Follows stable kernel rules**: This fix:
-   - Fixes a real bug that affects users
-   - Is small and self-contained
-   - Has minimal risk of introducing new issues
-   - Doesn't add new features or make architectural changes
-
-The commit addresses a specific edge case in NFSv4 where referral
-anchors (mount points that redirect to other servers) have zero-length
-filehandles until they are actually accessed. When applications try to
-read extended attributes on these special inodes, the kernel would
-previously send invalid GETATTR requests to the server, resulting in
-confusing I/O errors. This fix makes the behavior more predictable and
-correct by returning -ENODATA, which indicates that the requested
-attribute doesn't exist.
-
- fs/nfs/nfs4proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 2f404117b186d..026daa5c64446 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6211,6 +6211,8 @@ static ssize_t nfs4_proc_get_acl(struct inode *inode, void *buf, size_t buflen,
- 	struct nfs_server *server = NFS_SERVER(inode);
- 	int ret;
- 
-+	if (unlikely(NFS_FH(inode)->size == 0))
-+		return -ENODATA;
- 	if (!nfs4_server_supports_acls(server, type))
- 		return -EOPNOTSUPP;
- 	ret = nfs_revalidate_inode(inode, NFS_INO_INVALID_CHANGE);
-@@ -6285,6 +6287,9 @@ static int nfs4_proc_set_acl(struct inode *inode, const void *buf,
- {
- 	struct nfs4_exception exception = { };
- 	int err;
-+
-+	if (unlikely(NFS_FH(inode)->size == 0))
-+		return -ENODATA;
- 	do {
- 		err = __nfs4_proc_set_acl(inode, buf, buflen, type);
- 		trace_nfs4_set_acl(inode, err);
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 119e447758b99..4695292378bbe 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -557,6 +557,8 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh, struct nfs_fattr *fattr)
+ 			set_nlink(inode, fattr->nlink);
+ 		else if (fattr_supported & NFS_ATTR_FATTR_NLINK)
+ 			nfs_set_cache_invalid(inode, NFS_INO_INVALID_NLINK);
++		else
++			set_nlink(inode, 1);
+ 		if (fattr->valid & NFS_ATTR_FATTR_OWNER)
+ 			inode->i_uid = fattr->uid;
+ 		else if (fattr_supported & NFS_ATTR_FATTR_OWNER)
 -- 
 2.39.5
 
