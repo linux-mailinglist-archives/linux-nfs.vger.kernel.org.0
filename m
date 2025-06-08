@@ -1,122 +1,122 @@
-Return-Path: <linux-nfs+bounces-12187-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12188-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4975AD1549
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 00:37:26 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4BD5AD157D
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 01:10:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 418E23AAC5E
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jun 2025 22:37:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92D701889E19
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jun 2025 23:10:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C771F8744;
-	Sun,  8 Jun 2025 22:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED7D8211497;
+	Sun,  8 Jun 2025 23:10:12 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD131F4E4F
-	for <linux-nfs@vger.kernel.org>; Sun,  8 Jun 2025 22:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014042AE6D;
+	Sun,  8 Jun 2025 23:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749422242; cv=none; b=UykxNuFBl7zPYrqVSUc6BEDmXEzvEjoiURfbBNtHnOh49Z/9+kkJlM9XlQX13dGAz/tNa0tnK3K93/pLyFsJq90/tiUNVgIAoMgq/rDT3Jh7MdFq8MX7bFTUNqOXLTjsSRSR++eTLYLOEePO9uwmymy/1BmXky3t73PcStNt/24=
+	t=1749424212; cv=none; b=KMl2p8ka/CniLNHbaygEdQw76t5PC9+wiL1ZjyBMHb9UJd3E18sRK3VCZWhD6DVK7zxQMYGmeTY+RoWQZU/9GradBQ36Tg3UpkpaKMGocFt10h9PEuNgthylWErbSl0xBLgcYXvBbBSjyVjFxaEA8kJzKXJcTQNuDjRuZhWypFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749422242; c=relaxed/simple;
-	bh=tJC/KsjSqGVz1yJBAbbCiFIA4rzB/EiV3EubGasD0bw=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=ub2SpyALhjibRxOpA7HJtLcAUJlizwsiQTZ0EUCvTY1796joFXDcbmIH6KRjg0cLj/i8RQS846Dtu/MndwcdO5cVwHP4NFCnGuzSVPOZiXzi0hS/Uh1bvT60NtqtgrhboSNwLjBhorIv02QcQ++olXA/R1yomOZUb0HA6knUgWE=
+	s=arc-20240116; t=1749424212; c=relaxed/simple;
+	bh=Afuue44CwgF//wFbdoNXEChynbl6KEZWKopL/hySyt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AUJjZ9/nJDEJ44n8oD6sL2naHAZtI+oowQZyNLZrxPnlmdiuCx81uF5i3UfV9+Zuj2dIp3bJ/m45hEfWuQcXboaJNwkT3hDMA88Wg4s/Iv5N8qj2MMGYsbc1esGBLgUbu89LDoFjhm8XePVoWHi4zvqbaCT8j6jGOsYV5Qfi9QY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1uOOIR-005sVR-3A;
-	Sun, 08 Jun 2025 22:15:19 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	id 1uOP9O-005veo-5K;
+	Sun, 08 Jun 2025 23:10:02 +0000
+From: NeilBrown <neil@brown.name>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	David Howells <dhowells@redhat.com>,
+	Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Carlos Maiolino <cem@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	coda@cs.cmu.edu,
+	codalist@coda.cs.cmu.edu,
+	linux-nfs@vger.kernel.org,
+	netfs@lists.linux.dev,
+	ecryptfs@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Minor cleanup preparation for some dir-locking API changes
+Date: Mon,  9 Jun 2025 09:09:32 +1000
+Message-ID: <20250608230952.20539-1-neil@brown.name>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH] nfs: use lock_two_nondirectories()
-Date: Mon, 09 Jun 2025 08:15:17 +1000
-Message-id: <174942091741.608730.3327223511347232829@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 
+The following 5 patches provide further cleanup that serves as
+preparation for some dir-locking API changes that I want to make.  The
+most interesting is the last which makes another change to vfs_mkdir().
+As well as returning the dentry or consuming it on failure (a recent
+change) it now also unlocks on failure.  This will be needed when we
+transition to locking just the dentry, not the whole directory.
 
-Rather than open-coding this function call it to make intention clear
-and to use "correct" nesting levels (parent and child are for
-directories).
+This leaves some rather clumsy code in overlayfs.  Overlayfs sometimes
+takes a rename lock (two directories) and then possibly does a
+vfs_mkdir() in one of those directories.  When that fails we now need to
+unlock only the other directory.
 
-This is purely cosmetic with no expected change in behaviour.
+I hope to go through overlayfs to narrow the directory locking so each
+lock only covers a single operation (possibly including a lookup first).
+That should remove the clumsiness and will also be needed for the
+proposed API change.
 
-Signed-off-by: NeilBrown <neil@brown.name>
----
+As well as the cleanups here I have a few for smb/server.  I will send
+those separately as they deserve careful review by the smb team and I
+don't want them to be buried in this patch set.
 
- fs/nfs/nfs4file.c | 25 ++-----------------------
- 1 file changed, 2 insertions(+), 23 deletions(-)
+After these, and the mentioned overlayfs changes, I have a series which
+adds a collection of APIs with names like "lookup_and_lock()" which
+combine the locking and the lookup, and then a set which changes all
+code which currently locks a directory for name-based operations to
+instead use the new look_and_lock() interfaces.  This will mean that the
+changes to directory locking can be done in one central place.
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 5e9d66f3466c..53a958746bb0 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -253,7 +253,6 @@ static loff_t nfs42_remap_file_range(struct file *src_fil=
-e, loff_t src_off,
- 	struct nfs_server *server =3D NFS_SERVER(dst_inode);
- 	struct inode *src_inode =3D file_inode(src_file);
- 	unsigned int bs =3D server->clone_blksize;
--	bool same_inode =3D false;
- 	int ret;
-=20
- 	/* NFS does not support deduplication. */
-@@ -275,20 +274,8 @@ static loff_t nfs42_remap_file_range(struct file *src_fi=
-le, loff_t src_off,
- 			goto out;
- 	}
-=20
--	if (src_inode =3D=3D dst_inode)
--		same_inode =3D true;
--
- 	/* XXX: do we lock at all? what if server needs CB_RECALL_LAYOUT? */
--	if (same_inode) {
--		inode_lock(src_inode);
--	} else if (dst_inode < src_inode) {
--		inode_lock_nested(dst_inode, I_MUTEX_PARENT);
--		inode_lock_nested(src_inode, I_MUTEX_CHILD);
--	} else {
--		inode_lock_nested(src_inode, I_MUTEX_PARENT);
--		inode_lock_nested(dst_inode, I_MUTEX_CHILD);
--	}
--
-+	lock_two_nondirectories(src_inode, dst_inode);
- 	/* flush all pending writes on both src and dst so that server
- 	 * has the latest data */
- 	ret =3D nfs_sync_inode(src_inode);
-@@ -306,15 +293,7 @@ static loff_t nfs42_remap_file_range(struct file *src_fi=
-le, loff_t src_off,
- 		truncate_inode_pages_range(&dst_inode->i_data, dst_off, dst_off + count - =
-1);
-=20
- out_unlock:
--	if (same_inode) {
--		inode_unlock(src_inode);
--	} else if (dst_inode < src_inode) {
--		inode_unlock(src_inode);
--		inode_unlock(dst_inode);
--	} else {
--		inode_unlock(dst_inode);
--		inode_unlock(src_inode);
--	}
-+	unlock_two_nondirectories(src_inode, dst_inode);
- out:
- 	return ret < 0 ? ret : count;
- }
---=20
-2.49.0
+After that there are a few more cleanups to stop filesystems from usng
+d_drop() in the middle of name operations (at the end is OK, but not in
+the middle) and then the core patches for this work which introduce an
+alternate way to provide all the locking that the VFS needs for name
+operations without taking i_rw_sem.  Filesystems can then opt into using
+only this locking and to not depend on i_rw_sem.  This allows create and
+remove of different names is the same directory to continue concurrently
+with each other and with renames.  Renames are also concurrent though
+cross-directory renames block some other cross-directory renames in the
+same part of the tree.
 
+Note that i_rw_sem will still be used for the target of rmdir, and will
+still be held as a shared lock by readdir() so that we never try reading
+in a directory being removed.  It might still be used (shared) for
+lookups for the same reason, though I haven't completely settled my
+design there yet.
+
+Thanks,
+NeilBrown
+
+ [PATCH 1/5] VFS: merge lookup_one_qstr_excl_raw() back into
+ [PATCH 2/5] VFS: Minor fixes for porting.rst
+ [PATCH 3/5] coda: use iterate_dir() in coda_readdir()
+ [PATCH 4/5] exportfs: use lookup_one_unlocked()
+ [PATCH 5/5] Change vfs_mkdir() to unlock on failure.
 
