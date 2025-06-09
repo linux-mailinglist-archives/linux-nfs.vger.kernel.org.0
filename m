@@ -1,174 +1,107 @@
-Return-Path: <linux-nfs+bounces-12216-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12217-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DE83AD226C
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 17:28:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89890AD22F3
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 17:50:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 202FC167501
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 15:28:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18A7C3A2889
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 15:50:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E4B41D5CD1;
-	Mon,  9 Jun 2025 15:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P1VJmzhT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J8To20ht";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="A4JCmg01";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GPvlE897"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3A43D544;
+	Mon,  9 Jun 2025 15:50:33 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FB0126C1E
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 15:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472152116F2
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 15:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749482933; cv=none; b=fRuFeJGanGfjjtA+8zOagELD92j+5FsIk/QzxRwMv9gBuerEITU0pAS5pulmqmfL8ztGFn348crEwSD5Tmz+R1d5bnZn0LKE1rk4A+LfYGUmyHDC+n3lyhmmA+RPGI/wpJnWN9NJ4rBQNsvV6EUHVJaEBM/iFf6skJI9zwH/WBw=
+	t=1749484232; cv=none; b=FT95mNxqDSaUxcKJzg0DP1/kopj51xKQA06y1ZikkrJ5wMEfOAr1HdRtE4gJX99sE2llzFf1pboQ1tLOpbhcSQxlSgudCZ2Ug4ZZA6hCY1+wj9DX6BXRtzjC4uH4DQCfAitoZoYdPtjiGHxs0YD0c8Gx6k4W0XbDkrcRuoZ9IF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749482933; c=relaxed/simple;
-	bh=AS3BcHkXywjf/cPF64fYh6OqRQ8DodiXQyFgo1dvS2M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RnGBmXyDPxSo185sBndomtwXUA4j8JdX5HtrMi+PYp3wxcJi18nY874aeQYDFdhWPMbLSjtYNRudOqge7xapzbMUMvQ+0z/zldkyq9EnJWPkaopB9HjqTfefhRMCADa+RyC3MuYoXAy2dIKhUuv8eGnLNhBNoO3eVDowvCVbfSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P1VJmzhT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J8To20ht; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=A4JCmg01; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GPvlE897; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A5FD921114;
-	Mon,  9 Jun 2025 15:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749482929; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YEKzaDerLDVJJ9hauw1LL+fRqRFfcITgq70KVVz91Q8=;
-	b=P1VJmzhT6++wjBWDdKBgJdE3D6e4ZC8whF4i6Nym9qybaSKp5GobQfswc/ZxyW3Sqw8zoA
-	kFIiedZ0jwB7yMfysUQLek0QqemBrS4rSNy8k0j59HdevNNr3aog/yoU5Ku6nNd6iFjPcq
-	mIlncuicZ8MafUdB6PNci6qMuvFXpYw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749482929;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YEKzaDerLDVJJ9hauw1LL+fRqRFfcITgq70KVVz91Q8=;
-	b=J8To20ht2/6cZXq/ByGjxwDBLJAere1YVjhEwVf/3Fz/FWmGNM4pXiZNEDojTFsH9E/913
-	vHyncuoeM8Nis5BQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=A4JCmg01;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GPvlE897
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1749482928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YEKzaDerLDVJJ9hauw1LL+fRqRFfcITgq70KVVz91Q8=;
-	b=A4JCmg01IyBUKO0mjrK8gsF27mln13RejKKf6+KC+pNs55lScaye1zz1l/EqFt5vVqJNnY
-	R3nnA15hp+OrckU3BJfa/Sm0LLYPtc3vFOFfqQyZ0vCa/s2wpKrvluT1O1d0UqyNdTbMuT
-	jYMDMbIHM6ezXckKLsRYeQkc4LyMigA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1749482928;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YEKzaDerLDVJJ9hauw1LL+fRqRFfcITgq70KVVz91Q8=;
-	b=GPvlE897KZKPd1zYIIt8lJYBeFkPRFxpMoRRkKq1/sulC8vP0CnyAE7WJd8Z1g7J8GJPD1
-	hNpf7JLd/CCBC4Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 63995137FE;
-	Mon,  9 Jun 2025 15:28:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7umGEbD9Rmh2fwAAD6G6ig
-	(envelope-from <krisman@suse.de>); Mon, 09 Jun 2025 15:28:48 +0000
-From: Gabriel Krisman Bertazi <krisman@suse.de>
+	s=arc-20240116; t=1749484232; c=relaxed/simple;
+	bh=q/HVzu3xh0tbj8uX5nOUVhLwwndUJp7L13jHtc8Bo1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I6BfgjkYjkq95/zY+4iP7MlRSIZpQKjZrdmek25BFAXOuM3EppWxrActd2oROoFwFI0yLbm6P8x08CYJNfA20orgiqF9NX/Tsu5JarFfWmWk1+8fwb23wNEUEGLjEP1vOoAGPPMQ3XLOlziwvGR1fQ9kA51HOkUsS61nxIcIXqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from macsyma.thunk.org (unn-37-19-198-84.datapacket.com [37.19.198.84] (may be forged))
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 559FoC45027413
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 9 Jun 2025 11:50:15 -0400
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id 70EB2346600; Mon, 09 Jun 2025 11:50:10 -0400 (EDT)
+Date: Mon, 9 Jun 2025 14:50:10 -0100
+From: "Theodore Ts'o" <tytso@mit.edu>
 To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,  Cedric Blancher
- <cedric.blancher@gmail.com>,  Linux NFS Mailing List
- <linux-nfs@vger.kernel.org>,  linux-fsdevel
- <linux-fsdevel@vger.kernel.org>
+Cc: Cedric Blancher <cedric.blancher@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Subject: Re: LInux NFSv4.1 client and server- case insensitive filesystems
  supported?
-In-Reply-To: <a44ebcd9-436b-436f-a6f5-dea8958aaf2f@oracle.com> (Chuck Lever's
-	message of "Sun, 8 Jun 2025 17:52:36 -0400")
+Message-ID: <20250609155010.GE784455@mit.edu>
 References: <CALXu0Ufzm66Ors3aBBrua0-8bvwqo-=RCmiK1yof9mMUxyEmCQ@mail.gmail.com>
-	<CALXu0Ufgv7RK7gDOK53MJsD+7x4f0+BYYwo2xNXidigxLDeuMg@mail.gmail.com>
-	<44250631-2b70-4ce8-b513-a632e70704ed@oracle.com>
-	<20250607223951.GB784455@mit.edu>
-	<643072ba-3ee6-4e5b-832a-aac88a06e51d@oracle.com>
-	<20250608205244.GD784455@mit.edu>
-	<a44ebcd9-436b-436f-a6f5-dea8958aaf2f@oracle.com>
-Date: Mon, 09 Jun 2025 11:28:46 -0400
-Message-ID: <875xh5ylw1.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <CALXu0Ufgv7RK7gDOK53MJsD+7x4f0+BYYwo2xNXidigxLDeuMg@mail.gmail.com>
+ <44250631-2b70-4ce8-b513-a632e70704ed@oracle.com>
+ <20250607223951.GB784455@mit.edu>
+ <643072ba-3ee6-4e5b-832a-aac88a06e51d@oracle.com>
+ <20250608205244.GD784455@mit.edu>
+ <a44ebcd9-436b-436f-a6f5-dea8958aaf2f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: A5FD921114
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[mit.edu,gmail.com,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:dkim,mailhost.krisman.be:mid]
-X-Spam-Score: -2.01
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a44ebcd9-436b-436f-a6f5-dea8958aaf2f@oracle.com>
 
-Chuck Lever <chuck.lever@oracle.com> writes:
+On Sun, Jun 08, 2025 at 05:52:36PM -0400, Chuck Lever wrote:
+> NFSD currently asserts that all exported file systems are case-sensitive
+> and case-preserving (either via NFSv3 or NFSv4). There is very likely
+> some additional work necessary.
 
-> On 6/8/25 4:52 PM, Theodore Ts'o wrote:
->> On Sun, Jun 08, 2025 at 12:29:30PM -0400, Chuck Lever wrote:
->>>
->>> For some reason I thought case-insensitivity support was merged more
->>> recently than that. I recall it first appearing as a session at LSF in
->>> Park City, but maybe that one was in 2018.
-
-Hi Chuck,
-
-The first LSF discussion on this implementation was Park City, 2018. It
-was merged early 2019.
+If the underlying file system on the server side does do case
+insensitive lookups, how badly would it confuse the NFS client if a
+lookup of "MaDNeSS" and "maddness" both worked and returned the same
+file, even though readdir(2) only showed the existence of "MaDNeSS"
+--- despite the fact that the nfsd asserted that file system was
+case-sensitive?
 
 > Ted, do you happen to know if there are any fstests that exercise case-
 > insensitive lookups? I would not regard that simple test as "job done!
 > put pencil down!" :-)
 
-generic/556 tests basic semantics and many corner cases of casefolded
-lookups.
+There are.   See:
 
--- 
-Gabriel Krisman Bertazi
+common/casefold
+tests/f2fs/012
+tests/generic/453
+tests/generic/454
+tests/generic/556
+
+You'll need to make some adjustments in common/casefold for NFS,
+though.  The tests also assume that case insensivity can be adjusted
+on a per-directory basis, using chattr +F and chattr -F, and that
+probably isn't going to port over to NFS, so you might need to adjust
+the tests as well.
+
+Note that some of these tests also are checking Unicode case-folding
+rules, which is a bit different from the ASCII case-folding which FAT
+implemented.  It also might be interesting/amsuing to see what happens
+if you ran these tests where the NFS server was exporting, say, a
+case-folded file system from a MacOS server, or a Windows NFS server,
+and the client was running Linux NFS.  Or what might happen if you
+tried to do the same thing using, say, CIFS.   :-)
+
+Cheers,
+
+       	       	    	 	     	- Ted
 
