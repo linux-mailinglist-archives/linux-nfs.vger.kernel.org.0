@@ -1,124 +1,138 @@
-Return-Path: <linux-nfs+bounces-12224-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12225-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 960F7AD28F7
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 23:52:57 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C858AD2A96
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 01:35:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 670481892461
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 21:53:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 394AB188F335
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 23:36:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E2C21D587;
-	Mon,  9 Jun 2025 21:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B6B422D7B8;
+	Mon,  9 Jun 2025 23:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="ceXU4eZ1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ii7WjnMM"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A7721CC41
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 21:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5021D3DF
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 23:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749505972; cv=none; b=hNWMqA2JqyiJ8J+kiid1RMd5kCKV+PTjnd5Yf6AzBsX1S1HamrUvaSHDu/WBWYsB1K3VObNuP7d1qHqqlfnkrTXzwr97WAWJBqVleGxAHDoHyJ0kwvXA5f14KvQN5hiD1dZhELhz/JsrxqGRCXTD7jA3N3anNEXl/O6n0SGN6Lo=
+	t=1749512148; cv=none; b=p4Devs+q7oYnZ0KrhrYsNGgqkAVC27ENppN2d9BF36Z/E2+6PYchr8NdGVNtotb2BMbJ02tMQW5OD4q+f3zeK5CPCgYrQGUmonxze4vg9h1zHTNEEXzna341LlHmk2j1A9Zcp2wO82rG7A+Vcj8tlCjxS+PAOTJ8XuTpeX3ZMqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749505972; c=relaxed/simple;
-	bh=peipfacVK6MGlu1yTqE/yzzizEC5OQ9ryXNN0n2o0Y4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VjvRKdSgHz9ti61cFepq8ibifmkDBH4lm9y1EYEPHTzUA+jKG+wm7sf5Cw3iOeVHGIVCthqY1GEH3ueYGuAZYlkvRcUU1sKKMkRpHBFSYAGPSMB31Hi1/WRL0OWAnVXrh56oyN6hiBIgAoN6xNBzqTpwH6zrYM5nJwN+EsP1Sss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=ceXU4eZ1; arc=none smtp.client-ip=131.169.56.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [131.169.56.154])
-	by smtp-o-3.desy.de (Postfix) with ESMTP id CF95211F889
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 23:43:20 +0200 (CEST)
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-	by smtp-o-1.desy.de (Postfix) with ESMTP id E867311F749
-	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 23:43:12 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de E867311F749
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1749505392; bh=1p98zIO6Cm5I1bZug1tu6mVg5Qjp5dPIv+hyYe0Hjt0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ceXU4eZ1hCzSAMApCi5QH/Xl/CaETHjIL0o1FRGER1ryuDPCII8P1KF8E4Dmr0nU4
-	 uxoTa53TkqQDWJpog9WWFAg52hbJDIkUMjeyYVvtW4vHq3EepIS5SrV4ecfMPvExYq
-	 XuXmK97kM8qdyR9MmzuMUcOkJbk7AmwNFHfs1xFk=
-Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
-	by smtp-buf-1.desy.de (Postfix) with ESMTP id D769C20040;
-	Mon,  9 Jun 2025 23:43:12 +0200 (CEST)
-Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [IPv6:2001:638:d:c301:acdc:1979:2:e7])
-	by smtp-m-2.desy.de (Postfix) with ESMTP id C029A16003F;
-	Mon,  9 Jun 2025 23:43:12 +0200 (CEST)
-Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
-	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id 51B6D320093;
-	Mon,  9 Jun 2025 23:43:12 +0200 (CEST)
-Received: from nairi.desy.de (VPN0424.desy.de [131.169.254.169])
-	by smtp-intra-2.desy.de (Postfix) with ESMTP id 16C4F20044;
-	Mon,  9 Jun 2025 23:43:12 +0200 (CEST)
-From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-To: linux-nfs@vger.kernel.org
-Cc: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Subject: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal connection error
-Date: Mon,  9 Jun 2025 23:43:03 +0200
-Message-ID: <20250609214303.816241-2-tigran.mkrtchyan@desy.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250609214303.816241-1-tigran.mkrtchyan@desy.de>
-References: <20250609214303.816241-1-tigran.mkrtchyan@desy.de>
+	s=arc-20240116; t=1749512148; c=relaxed/simple;
+	bh=wH4XpkJrNjkjPmqwPS+WsbjE08oxAVNH7tDT7sqr7X4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=D6NByCWvcx51YuZNCgvzVgIAqli1XUcBgSOU6HbHn8/ugRBH6X08VZi2jiJ2ktxES16wgRvtJMfuyDBFUkBZ4rlCFUh0ZqZQr5frCulqoZjDEB5wHnxFeR6hLHYsBmBNP01x7Z5roWFXs7xfj+LmQxAqfv2KabqRhMsSYr1mF1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ii7WjnMM; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6069d764980so10819248a12.0
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Jun 2025 16:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749512145; x=1750116945; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kk8YMvO8mpVnmNcv4nrs/xR+YkLn17mWSqtJcsuX6wQ=;
+        b=Ii7WjnMMRJtlP7ljaUlyDO4A9n8oFxVMX7HYIFTxgwkMoipavzNxkQ+cdfjOlV/DRE
+         1G4HLVCw3M6tZQwSm4Jc8Un9TCZFf9KDP2KLz/8R9qdkej802v6xJCXQGQKhTTbbUbRz
+         BKKzni4u0hRWUOc4nmcokvFUwsSofEQW986JcXmWkGI+fGWJWvOnnBzE/odBw9GQsUqx
+         7FGny/bRItdsz/1O8rDTuXIRxEGrTJlQtp8axKTEu0CwUV9dSbn3lWFulXKYsZ1Gf01N
+         5WG0xjnPL9I+Pbyxn4MsQlOSttG2jjRqJXGwr/t669dGdl7cG7RqXs+sWQMStaeIuaIC
+         9J1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749512145; x=1750116945;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kk8YMvO8mpVnmNcv4nrs/xR+YkLn17mWSqtJcsuX6wQ=;
+        b=ioRm0jS6/xcB/8XvSUZnU3Eq6ix+sCuycvVNeHDRic7AWGpXGWsVk620QMRbbLu9VK
+         MucvVTBK8J2R4bKPojRpxda331mc6bfQexTvT3wCMxpph97BsmLC0NMu2wmqUHNkSKaZ
+         +VOzQdpEIKxF57r0kJOQEd+9a8/cnNyBXA4XHJ36wb3iNn4TrzAXgieDyU4dhWmrG4G3
+         kNDKt33ygopd45Nh0/ZYWG5ZPwbJdlmOAoKUZJkcikM4Gd7vr7modjVw4hDfzzZniavU
+         7xHiwAh3BLbhx2Uq7yhNIRjsbgYmaLB1wgq2g7kOc/KKUv2z2/XQZHHNb5mj5iWxxZJN
+         K0hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcvJ7TeFyf8PzAD+24yZqEthdqIxMbzeD9L6mEos9mE27YUiOlKZnTT4CWC/dTlA2mtSfiCIZPIk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMrKQvXuPLJrbepL8ekR18/c9BVmYH4BPLrwTGY5/6D5x+Xdi9
+	b1YmYCDKEPGO8ZYA+3BeFTNUQ0i5Zeb1bz3kxSU1oLxMJ0XgdDXcsy5dKuGYMfyQ8ta/P2Sgc2C
+	LfvEhN/5yE36gLGfsT1aC6saHMdn3yA==
+X-Gm-Gg: ASbGncvugDShelvyOkhPbcgUAzLkZC2MwwDCGcjEGV5XTNfNoMAQK0ou2QBXW7jTvdS
+	oGOeW+NXIXAgHIv1cT+D67V3A/b/TQjxybSigl0Zw2VRQSDD1IlIqMufTsjpOPLy1YfSBM2khoD
+	NL6xCWE+wYdpZ4rh5FC3E1Tywe1DGd/Dd6YLemump9yp04VhUdjB1AfiJK+0+Qfnf08qRXho8UT
+	4c=
+X-Google-Smtp-Source: AGHT+IHb7yh7LOSQaeDXfvz4rovwmaojrfFh+hpJKzVa/6yo65GHH0zWb1otHteA1BPAVv1fOJZxzBxHZepIuN8R1pw=
+X-Received: by 2002:a17:907:6093:b0:ad8:5595:ce07 with SMTP id
+ a640c23a62f3a-ade77221b37mr105675966b.19.1749512144477; Mon, 09 Jun 2025
+ 16:35:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Mon, 9 Jun 2025 16:35:32 -0700
+X-Gm-Features: AX0GCFvIw0saOXVw5_rZ9GFtPji-TRiYq6q4RAB6InCJJLbO47beFy4Z73jBAqw
+Message-ID: <CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
+Subject: simple NFSv4.1/4.2 test of remove while holding a delegation
+To: NFSv4 <nfsv4@ietf.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Fixes: 260f32adb88 ("pNFS/flexfiles: Check the result of nfs4_pnfs_ds_connect")
+Hi,
 
-When an applications get killed (SIGTERM/SIGINT) while pNFS client performs a connection
-to DS, client ends in an infinite loop of connect-disconnect. This
-source of the issue, it that flexfilelayoutdev#nfs4_ff_layout_prepare_ds gets an error
-on nfs4_pnfs_ds_connect with status ERESTARTSYS, which is set by rpc_signal_task, but
-the error is treated as transient, thus retried.
+I hope you don't mind a cross-post, but I thought both groups
+might find this interesting...
 
-The issue is reproducible with script as (there should be ~1000 files in
-a directory, client should must not have any connections to DSes):
+I have been creating a compound RPC that does REMOVE and
+then tries to determine if the file object has been removed and
+I was surprised to see quite different results from the Linux knfsd
+and Solaris 11.4 NFSv4.1/4.2 servers. I think both these servers
+provide FH4_PERSISTENT file handles, although I suppose I
+should check that?
 
-```
-echo 3 > /proc/sys/vm/drop_caches
+First, the test OPEN/CREATEs a regular file called "foo" (only one
+hard link) and acquires a write delegation for it.
+Then a compound does the following:
+...
+REMOVE foo
+PUTFH fh for foo
+GETATTR
 
-for i in *
-do
-        head -1 $i &
-        PP=$!
-        sleep 10e-03
-        kill -TERM $PP
-done
-```
+For the Solaris 11.4 server, the server CB_RECALLs the
+delegation and then replies NFS4ERR_STALE for the PUTFH above.
+(The FreeBSD server currently does the same.)
 
-Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
----
- fs/nfs/flexfilelayout/flexfilelayoutdev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+For a fairly recent Linux (6.12) knfsd, the above replies NFS_OK
+with nlinks == 0 in the GETATTR reply.
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index 4a304cf17c4b..0008a8180c9b 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -410,6 +410,10 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
- 			mirror->mirror_ds->ds_versions[0].wsize = max_payload;
- 		goto out;
- 	}
-+	/* There is a fatal error to connect to DS. Mark it unavailable to avoid infinite retry loop. */
-+	if (nfs_error_is_fatal(status))
-+		nfs4_mark_deviceid_unavailable(&mirror->mirror_ds->id_node);
-+
- noconnect:
- 	ff_layout_track_ds_error(FF_LAYOUT_FROM_HDR(lseg->pls_layout),
- 				 mirror, lseg->pls_range.offset,
--- 
-2.49.0
+Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
+probably missed something) and I cannot find anything that states
+either of the above behaviours is incorrect.
+(NFS4ERR_STALE is listed as an error code for PUTFH, but the
+description of PUTFH only says that it sets the CFH to the fh arg.
+It does not say anything w.r.t. the fh arg. needing to be for a file
+that still exists.) Neither of these servers sets
+OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
 
+So, it looks like "file object no longer exists" is indicated either
+by a NFS4ERR_STALE reply to either PUTFH or GETATTR
+OR
+by a successful reply, but with nlinks == 0 for the GETATTR reply.
+
+To be honest, I kinda like the Linux knfsd version, but I am wondering
+if others think that both of these replies is correct?
+
+Also, is the CB_RECALL needed when the delegation is held by
+the same client as the one doing the REMOVE?
+(I don't think it is, but there is a discussion in 18.25.4 which says
+"When the determination above cannot be made definitively because
+delegations are being held, they MUST be recalled.." but everything
+above that is a may/MAY, so it is not obvious to me if a server really
+needs to case?)
+
+Any comments? Thanks, rick
+ps: I am amazed when I learn these things about NFSv4.n after all
+      these years.
 
