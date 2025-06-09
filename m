@@ -1,90 +1,95 @@
-Return-Path: <linux-nfs+bounces-12222-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12223-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51C2CAD28CA
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 23:29:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EFECAD28F6
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 23:52:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 445CA3AD1BA
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 21:28:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 772643A44D8
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jun 2025 21:52:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8214222332E;
-	Mon,  9 Jun 2025 21:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C832921D3F4;
+	Mon,  9 Jun 2025 21:52:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOWitg3p"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="MVJaTZl4"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C04223300;
-	Mon,  9 Jun 2025 21:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A111401C
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 21:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749504534; cv=none; b=bw5NnSfDjvaZ0cFeIuvfkMPmApK5kA53KdBu4CaYVM+TolEVhTGALKEWi2YDcCcBgj+ehk+Yz2+MjBax/8MVaYYhXNBLTsR0z5g6uUSN0MxJDFdIls4pZW09MYXieaWVIoY1oCuqmWKjOlRMXFO7MiM9vAlJ1gxPRuevOGXPQCI=
+	t=1749505972; cv=none; b=sgdvKrPghMQEKo3wW/++MkSwqjgk3AgUT0/PyQApgnZtVhEvxlDYhRJ0XoLd6kRv2DRvVGxwvZvx+6dswh0pcZ+cQV7xU/0DzD0mq2Yl+F7vyt7QEq9uS5SGFyMGwmXy1G4jrGDc3fZLpUMUNMPtzc7bGVUQ2+e83+FWTLT8DP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749504534; c=relaxed/simple;
-	bh=O27KiFF9LMcqVSxOS6yJXBb/3/ezbvbeFJW3zh3Ap/E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iG6xEkLSITg98PlMbROiLD7CQZbbUov9g/arb6D0eqsS9cWEZnuygUfj971KgxFud5OuxeX/M7BPtdNt836x26byOcYNjpZUzk57heWIXXTBYwAHJxUgRuHkrdXpeT4ZFKgpKJ2Id7jJnTT2Yn2wYOktnZfIMrt6IyIyu6F2i9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOWitg3p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61911C4CEEB;
-	Mon,  9 Jun 2025 21:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749504533;
-	bh=O27KiFF9LMcqVSxOS6yJXBb/3/ezbvbeFJW3zh3Ap/E=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tOWitg3pUVNC5SGUALbM1ZDgh2qq2z11/NbUJrl5u2Rh2TijljKfxrRhHcMkjug5s
-	 J31VCqvHKYGzKLmymh4RFaZbQufqCWd/AhlgliF8REz9s5ldt8mxSwRFvC0Fro8rrI
-	 e8zxr2T7VJjTX9ElN0qVBmbI/8FFRFpj6aEIVqeeS5s3jhIxVKWM1PtjWm40f8LY9Y
-	 2O1jFY4nWLxmW8wmyUjDOaFz1Slbpn5YOirB2GoZP2OHxGoIyF2TkEFRmXOLJAhc9l
-	 TQxCyU+JhSiid7W2fIwZgHjfPtRZX+pv/zB+P87x3i55BPzcaFgAVqVc3oOC9eSSk4
-	 7MHMmAJpgoXUw==
-Message-ID: <d34245cfc6c3dcf86969682e7c35a131c6100d47.camel@kernel.org>
-Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>, Chuck Lever <chuck.lever@oracle.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- David Howells <dhowells@redhat.com>,  linux-nfs@vger.kernel.org,
- kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
- keyrings@vger.kernel.org
-Date: Tue, 10 Jun 2025 00:28:49 +0300
-In-Reply-To: <20250609040143.GA26162@lst.de>
-References: <20250515115107.33052-1-hch@lst.de>
-	 <20250515115107.33052-3-hch@lst.de>
-	 <c2044daa-c68e-43bf-8c28-6ce5f5a5c129@grimberg.me>
-	 <aCdv56ZcYEINRR0N@kernel.org>
-	 <692256f1-9179-4c19-ba17-39422c9bad69@grimberg.me>
-	 <20250602152525.GA27651@lst.de> <aEB3jDb3EK2CWqNi@kernel.org>
-	 <20250605042802.GA834@lst.de> <aEMbvQ7EekwPHQ8c@kernel.org>
-	 <20250609040143.GA26162@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1749505972; c=relaxed/simple;
+	bh=px5cYI7LfaG+ED4nCTa3HeK2DAAvpnD/sf3UkqpuqBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nDbcNJ23nqWszJYk1spbvXNW70YrUaHXiL5tJUo6HvXGb8b+EOmwuTMU7RtYoBg93b4qe1dIT+8wk3bCSTwSidxupmOM3WRE3LEY0NtwxWtYdN2idq2/KW2Hs5QKn/F7wBg+baM80dMtr9eitQsaCpEMtYXtqPbtgAGgNTueK7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=MVJaTZl4; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id AEA9811F804
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 23:43:14 +0200 (CEST)
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id 39A7313F647
+	for <linux-nfs@vger.kernel.org>; Mon,  9 Jun 2025 23:43:07 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 39A7313F647
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1749505387; bh=3hR04zluhm5VmPy7cYstmix/+kp6p/z95hwKbKS9uR8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MVJaTZl4aVSDGAR//9Z3QSaS9oEKkNQqBI9JSD+XJVAydV1cYHk3jZLkxRB08Z3zG
+	 7tgFigAR1cll/4bfEmY0NNQRq7uw6dpeK190ClWV8ffya1ngQc7xjW+2RC5vppUpvQ
+	 sdMZ2o4t2ntV3KQ4XVrKZ4J03TKof+YgGVRPto3I=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id 2DD1920040;
+	Mon,  9 Jun 2025 23:43:07 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [IPv6:2001:638:d:c301:acdc:1979:2:e7])
+	by smtp-m-1.desy.de (Postfix) with ESMTP id 2110940044;
+	Mon,  9 Jun 2025 23:43:07 +0200 (CEST)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
+	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id 3585E320093;
+	Mon,  9 Jun 2025 23:43:06 +0200 (CEST)
+Received: from nairi.desy.de (VPN0424.desy.de [131.169.254.169])
+	by smtp-intra-2.desy.de (Postfix) with ESMTP id E367320044;
+	Mon,  9 Jun 2025 23:43:05 +0200 (CEST)
+From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+To: linux-nfs@vger.kernel.org
+Cc: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: [PATCH 0/1] pNFS/flexfiles: mark device unavailable on fatal connection error
+Date: Mon,  9 Jun 2025 23:43:02 +0200
+Message-ID: <20250609214303.816241-1-tigran.mkrtchyan@desy.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-06-09 at 06:01 +0200, Christoph Hellwig wrote:
-> On Fri, Jun 06, 2025 at 07:47:57PM +0300, Jarkko Sakkinen wrote:
-> > Ah, ok this cleared it up, thanks! Just learning these subsystem,
-> > appreciate the patience with this one :-)
->=20
-> I'm also just learning the keyring, so double checking from that
-> perspective is also always welcome..
+As mentioned in the thread 
 
-After quickly studying tlshd, my understanding is that the ".nfs" is a
-"vault for transient stuff" passed to "keyrings" configuration option.
-After that serials within that vault are passed to mount-options
-defined in 1/2.
+https://lore.kernel.org/linux-nfs/601285843.50695650.1748800817824.JavaMail.zimbra@desy.de/T/#u
 
-Stating the obvious, just checking that I understand the user story...
 
-BR, Jarkko
+We observe that interrupted batch processing jobs put the client into an unrecoverable state that requires
+the client host reboot. Finally, I was able to build a custom kernel with all required third-party drivers to prove
+my assumption. So indeed, marking pNFS device unavailable fixes the issue. Thus, please consider the proposed
+change and backport it to older kernels. I did testing with (which is not part of the patch) and will try to
+add a trace point as soon as I find out how to implement one.
+
+Tigran Mkrtchyan (1):
+  pNFS/flexfiles: mark device unavailable on fatal connection error
+
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+-- 
+2.49.0
 
 
