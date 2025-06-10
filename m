@@ -1,59 +1,56 @@
-Return-Path: <linux-nfs+bounces-12240-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12241-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5224AD349C
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:09:47 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A373AAD34B5
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:15:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92051166C41
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 11:09:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6200A3A4F17
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 11:15:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB1B28DF35;
-	Tue, 10 Jun 2025 11:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77252868B;
+	Tue, 10 Jun 2025 11:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKhfh38o"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iia7mTwj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D2228DF34;
-	Tue, 10 Jun 2025 11:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9186518024
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 11:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749553782; cv=none; b=a9fzPS6XkZD/6vL89PplYmhl9oks+swiSACsvqW8rXsE6pCcWgDU2wdP8cpPv/j2YNpKsoX+k6uhmdD3wv/cE1uAKeDx/VeQ6Zj3p855l8eRj06vlDxTLrwo+gCCPN1h0Jr1BNuCnueNRiI/kaX/zF48c/jfyT8Br4ag6s8B3K0=
+	t=1749554139; cv=none; b=WYe+AqIMRm1Og9h5nhAivhAYLRir9SkY29pD/9mVLJaBi7Fs1LqVXy/mihV72ryM3mruwnW5Eoctywixb5w4fnPYW1HSfER5fg8259w8dLODxJ/iXNirvzBe/i0LEB6sQN/PLqrw6wwS/DiIVtVjG4wdGQQsg/2AiK8Wu6QFNzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749553782; c=relaxed/simple;
-	bh=tgyH2Rx7rWrKVsHxuyQmZZSHD4p6E22uAdONWEt6Li4=;
+	s=arc-20240116; t=1749554139; c=relaxed/simple;
+	bh=OPmutp6KTHKEd0a006LB9q6l9JLhIKPPOmvU4rx/WQU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jXqBeaA2u/L+pH8zt6vozWJoHfzpUyDtCDyEQDJyJQG4vFEkd+Rc6oB418Z4DTBp6tnTimG1SqZ/cBUTwlKfH7+aNtNXMLonPTyN9vAdrOnfJ54YVh4yxZ4IFob42RIdH7MW70O3O3KP2nzs52lDIYuEvmRop+1PGna9m8CcVkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKhfh38o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C313FC4CEED;
-	Tue, 10 Jun 2025 11:09:41 +0000 (UTC)
+	 Content-Type:MIME-Version; b=m6RPN0qVPvAzHpCWZYlbZiPcOs4qKmwBwOgObir5PaWOVqe9Krr1VEJqeGYd0ZTxUPof7CpNK5ICPtLXBq45kFogqI/pPiGVy15wrL538Zk2IfQRdS60CTC1UYwjTZeVe8rMLpmFFw+UBZ4KvLWhKBctL/jiSi7FgOUxcld5Qew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iia7mTwj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96022C4CEED;
+	Tue, 10 Jun 2025 11:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749553782;
-	bh=tgyH2Rx7rWrKVsHxuyQmZZSHD4p6E22uAdONWEt6Li4=;
+	s=k20201202; t=1749554139;
+	bh=OPmutp6KTHKEd0a006LB9q6l9JLhIKPPOmvU4rx/WQU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aKhfh38oQd97iKW2PyfcNkxUVqC1XbpqpBGggaZn4tJl7Vgq9FABd/Wtm6YORDG7m
-	 q3A7Ktoqh83RvCgCI0IHau3A/xW/pExU0FtRlLSBOYtNVxJonwMxSrGu51qJ7Um1HO
-	 0tKz1PjY2QLOcOIvaOnxWmCmtkfFzbxN/51XZn+utdF3K5Q45zxdEuGidQGCl5ARO4
-	 VK+d+zT3ZQ7saiKvs2N1f93dS9k1GwNmN2Vl2nYCtOAjejBYKTFVOWaA4rpPKCHouy
-	 7H9Uq8V6zQbcE1Lj/ICu8S3pq0e01pV4QWsJ8/Hjl4Z7WiSeO/ugZCnveY5LRd7X2a
-	 r6cHadTHB8Msg==
-Message-ID: <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
-Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
+	b=iia7mTwj6tvjp1MPYpaCbBF2m9HaTY6lfqIKoCjDgGcbisw2AJwDB7qyvnTqERitq
+	 QkXhWzmFvJF/deFoEQJbM8gR/An9oU+ThbwoksgfbFOEYvxGht0ZcO4Kgxc7CvHJJK
+	 ivm4uy1n4kLmF8RYUc52HmFk7K+NWgsAtJ4h1so7pqGzAc5NxwUBX46BFXCsdS+ZRB
+	 M3TVIK4jxXzaetqo84AfInpAQK+lmmxePl0HTAfyVcBqOa+Syq7vpoG8J6ZMXYngSa
+	 unvfd5sO+lYWQ0i0P6uWPlYh38wrUv7ic1pqVLr/2Or/H8PmiEO2HyeogN7PP2sBvp
+	 nF2X85QjVOQpw==
+Message-ID: <c39c636780a71b66b855eee701e0830c11a3cb06.camel@kernel.org>
+Subject: Re: [PATCH v2] SUNRPC: Cleanup/fix initial rq_pages allocation
 From: Jeff Layton <jlayton@kernel.org>
-To: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-Cc: Olga Kornievskaia <okorniev@redhat.com>, Li Lingfeng	
- <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>, Neil Brown
- <neilb@suse.de>,  Chuck Lever <chuck.lever@oracle.com>, Tom Talpey
- <tom@talpey.com>, linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Tue, 10 Jun 2025 07:09:40 -0400
-In-Reply-To: <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
-References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
-	 <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
-	 <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
+To: Benjamin Coddington <bcodding@redhat.com>, trondmy@kernel.org, 
+	anna@kernel.org, chuck.lever@oracle.com, neilb@suse.de
+Cc: linux-nfs@vger.kernel.org
+Date: Tue, 10 Jun 2025 07:15:37 -0400
+In-Reply-To: <151437c300ca8eb4d8d9a842c9caf167cb32b6ea.1749489592.git.bcodding@redhat.com>
+References: 
+	<151437c300ca8eb4d8d9a842c9caf167cb32b6ea.1749489592.git.bcodding@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,53 +135,65 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-06-10 at 16:49 +0800, ChenXiaoSong wrote:
-> =E5=9C=A8 2025/2/21 00:47, Jeff Layton =E5=86=99=E9=81=93:
-> > Most of the nfsd4_run_cb() callers are converted to use this new flag o=
-r
-> > the nfsd4_try_run_cb() wrapper. The main exception is the callback
-> > channel probe, which has its own synchronization.
-> >=20
+On Mon, 2025-06-09 at 13:21 -0400, Benjamin Coddington wrote:
+> While investigating some reports of memory-constrained NUMA machines
+> failing to mount v3 and v4.0 nfs mounts, we found that svc_init_buffer()
+> was not attempting to retry allocations from the bulk page allocator.
+> Typically, this results in a single page allocation being returned and
+> the mount attempt fails with -ENOMEM.  A retry would have allowed the mou=
+nt
+> to succeed.
 >=20
-> Hi Jeff:
+> Additionally, it seems that the bulk allocation in svc_init_buffer() is
+> redundant because svc_alloc_arg() will perform the required allocation an=
+d
+> does the correct thing to retry the allocations.
 >=20
-> We had a null-ptr-deref in nfsd4_probe_callback():
+> The call to allocate memory in svc_alloc_arg() drops the preferred node
+> argument, but I expect we'll still allocate on the preferred node because
+> the allocation call happens within the svc thread context, which chooses
+> the node with memory closest to the current thread's execution.
 >=20
-> [24225.738349] Unable to handle kernel NULL pointer dereference at=20
-> virtual address 0000000000000000
-> ...
-> [24225.803480] Call trace:
-> [24225.804639]  __queue_work+0xb4/0x558
-> [24225.805949]  queue_work_on+0x88/0x90
-> [24225.807306]  nfsd4_probe_callback+0x4c/0x58 [nfsd]
-> [24225.808896]  nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
-> [24225.808909]  nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
-> [24225.815204]  nfsd4_create_session+0x5b8/0x718 [nfsd]
-> [24225.817711]  nfsd4_proc_compound+0x4c0/0x710 [nfsd]
-> [24225.819329]  nfsd_dispatch+0x104/0x248 [nfsd]
-> [24225.820742]  svc_process_common+0x348/0x808 [sunrpc]
-> [24225.822294]  svc_process+0xb0/0xc8 [sunrpc]
-> [24225.823760]  nfsd+0xf0/0x160 [nfsd]
-> [24225.825006]  kthread+0x134/0x138
-> [24225.826336]  ret_from_fork+0x10/0x18
+> This patch cleans out the bulk allocation in svc_init_buffer() to allow
+> svc_alloc_arg() to handle the allocation/retry logic for rq_pages.
 >=20
-> Is this patch or patchset can fix this issue? And I'm having trouble=20
-> understanding the commit message "callback channel probe has its own=20
-> synchronization", I'd appreciate it if you could explain in more detail.
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 >=20
+> --
+> On v2:
+> 	- rebased on nfsd-next
+> 	- keep the rq_pages array allocation in svc_init_buffer(), defer
+> 	  the page allocation to svc_alloc_arg()
+> ---
+>  net/sunrpc/svc.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>=20
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 939b6239df8a..ef8a05aac87f 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -638,8 +638,6 @@ EXPORT_SYMBOL_GPL(svc_destroy);
+>  static bool
+>  svc_init_buffer(struct svc_rqst *rqstp, const struct svc_serv *serv, int=
+ node)
+>  {
+> -	unsigned long ret;
+> -
+>  	rqstp->rq_maxpages =3D svc_serv_maxpages(serv);
+> =20
+>  	/* rq_pages' last entry is NULL for historical reasons. */
+> @@ -649,9 +647,7 @@ svc_init_buffer(struct svc_rqst *rqstp, const struct =
+svc_serv *serv, int node)
+>  	if (!rqstp->rq_pages)
+>  		return false;
+> =20
+> -	ret =3D alloc_pages_bulk_node(GFP_KERNEL, node, rqstp->rq_maxpages,
+> -				    rqstp->rq_pages);
+> -	return ret =3D=3D rqstp->rq_maxpages;
+> +	return true;
+>  }
+> =20
+>  /*
 
-Synchronization was probably too strong a word. I remember looking over
-this code and convincing myself that the probe callback wasn't subject
-to the same races as the others, but I think that was mostly because
-the outcome of those races was not harmful. Note that the probe itself
-can actually be run at the start of a completely unrelated callback to
-the same client.
-
-So you hit a NULL pointer in __queue_work()? The work_struct is
-embedded in the nfs4_client so that would probably imply that that the
-nfs4_client struct was corrupt?
-
-You may want to get a vmcore and analyze it if you can reproduce this.
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
