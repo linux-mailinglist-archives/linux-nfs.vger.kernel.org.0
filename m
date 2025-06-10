@@ -1,196 +1,211 @@
-Return-Path: <linux-nfs+bounces-12228-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12229-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F392AD2AEF
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 02:36:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AFC8AD2B21
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 03:06:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0949C188F517
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 00:37:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0BF2A1890DDA
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 01:07:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D25433A8;
-	Tue, 10 Jun 2025 00:36:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF2D1A238D;
+	Tue, 10 Jun 2025 01:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTubOKtP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5alh+bP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D151F7D098
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 00:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC90191F98
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 01:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749515815; cv=none; b=RmeCG1k3/Sb8/PuXt0U1epSr08/7AlPaeBXz3IcNRCgLxFgn2V86T2k9tothqoDP/WvG4ybSydP5dXnuZknWleq29y1LgziWNWkqC95GqOc9uPvDH6sVXRYOpiJwj723t/F818ABMrBO77kbxQ7lpVR8cNRkVLIIiHJ3ziBMV2k=
+	t=1749517598; cv=none; b=mAb64WMJyiNiIZV/0jqbmlnAtNLsUXJ8Bku5IbX5jbCaDl+BHpqt5AgaYBTuRd9fDiV+Ry7lg1PNvXijEc4Ch+/QT2txR1X2306t71tRD5mB98UsnpUqq5/RA1KZCh/NnOg488QqvrzFNy48iCMy8gtDVq9poeSQcs9GxGBFzdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749515815; c=relaxed/simple;
-	bh=HH5wq+8wOvwXsuoOYSaDiXZx7FEt/SAejcNg8aEix7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GbBgusizWONTfYFKmNWkQ9vSRosa37G7qLnQR82HnYrR1Q58hd1nlg3CNc2j/TAkGnrjsjdrQgj1JQ6C/2UdipIg8Q2Zim+1TJV8sUl94bP3aUM/unr1YuM1unom5/JMJt2t6sWdMQP0OX553te7zYeGPBeZR4oJUC1NAX1ocPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTubOKtP; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1749517598; c=relaxed/simple;
+	bh=tNZtOzDzeMbzH6a6gg1doUQc3BD3o8RAPvGV4XCf9zs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jCqLyPP0aM0YsneT6HXLbXXtgNxBu3rKoowzEALNZ1tY+g7+F7DjQW4MlK7ixS9cVeRlbF+8X9+5CkN2BCqEmWfMVsz5SH3V28bP+hJzudF0e53ByWMN4DhuXd/uBMCjpBYf9JJD1YPg/+ln8jX1211fwf3fNEa6YYlBJmDp9L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5alh+bP; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5533a86a134so4648528e87.3
-        for <linux-nfs@vger.kernel.org>; Mon, 09 Jun 2025 17:36:53 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adb2bb25105so781321366b.0
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Jun 2025 18:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749515812; x=1750120612; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1749517593; x=1750122393; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LqKkI3UBVz5Wo4hGDKaUO9derx2/XfYnAv9GgTihVL4=;
-        b=OTubOKtPv7iY35tp31SjfHrvXoxFs+6cF8hYJ5pbXTRxo2pDyDygODloN+Ear5kGOZ
-         eCQUG/WvjkRQd+R7Myl4hltv0CvIi7NlaTAIkiCJs9RYFvLRLe3o9d2UwemHrRKL7tIe
-         ugVjQsSEhM8lS+FIloq9z9Qe09hpWE+ndC1UzVLwkY1aoKg5J3DEHvj9NDYnJf2dQMAG
-         CD3enbkPqlHaAB49PjiEkNmDP01H5pMTxNeEkck/xVvq2FF1x75S1cxK05tIdITGjvBj
-         +2bZnjgp8TVkiOVJprTCyL8JyhnyQjRhHVzYP7x1GrrNIefaPezeNdy1QTASLqjsUrpL
-         NS1w==
+        bh=jV8aSpy44KLHBurM528leAPVAEqT/uIw4Dgt7B00SlQ=;
+        b=T5alh+bPTmE6uLT3a2KrtlyaKm8lU4X3mEWDl3W9eUTkE4DOvzJIJrkbGAYjeCgk0S
+         g5neewNr0UNa7JUnOvb2ZiuZpkj37FlYYXvh7jyiFafim/Oz6uMzuDZA4DIODt4hncJY
+         gu6Gc+WZw4W2Fxoo0TFi6bQPMHfDr5KEJ9fOIVTTc4E1PlC39YLYyrk4Y6/zVuK2K3jS
+         KM0PmHlGE94kPegD8FifEUcInRVJWDpQnAXw0lcMys5fAfkM3Hle5jHFGerbpvpSiLT9
+         beNXy8RhTp+Zc6IJgmDGZPyagrB9HOPff7LBGaR6DvXwxjO8PJ12DeOM/7Agn7z5hz5p
+         bXuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749515812; x=1750120612;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1749517593; x=1750122393;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LqKkI3UBVz5Wo4hGDKaUO9derx2/XfYnAv9GgTihVL4=;
-        b=JalrOTRfxhN8mHTk7ddADKQDb5AXhOX2Z2dXUsuaoaeuwh9OEpSW2xVhOINTmyG5W6
-         iwTfQeBR1fCxBk6cTB0ZqNjpCgUt8UJLTnbehpz1nqVRw078QgCyzRZKPZpvnFm1nNxL
-         1ymbwD37qimYIWzi3FE+pvTyAtleCPvmK1e21/4SAEc96n5OC0tPGO+EMebTQ7IP8GUv
-         OnYB38E0agzkJw8LKgXi1YLcrJdcfyHyssWzSPJRMzTwkQQZP3ETL//LAck8daWnSJdD
-         2cRX9AB2YBSyW+3biPURaQjO4Zg2/mFItZeB9MoQGvfYaGrwyYEpdy/4i119KmAy9Dab
-         3w3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWOnxUmWZZ8hggHJwiqdLeVCV5tECcx1v9s95n6kuC5bIK03PftAUgV3YKAde8PLT5pd3lzgOwULTw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAjE27/geRSG9nkUWbyt14ujWNoMSdziediFOM9E/1SUIgo3m4
-	kXhhB8qoSxA5d3+ZkUUZVXsCXjVhJz8QwBh4/MzzuJ2FZuRXmvi2cDo+
-X-Gm-Gg: ASbGnctT8QidztkeT9R8frU99kxogavAF1s1cuCRC12s0WFEV3xdVuPcZchR4R4IlWa
-	vm++X4ACGvlAb8/Xg39TUHP9vQzfXR33M9x3fmZF9Kw+x8ZJQFqrcbzQ/EB+9ZUF6snHyHRADKN
-	Bp3iTdQycAoSQSAniyiRYdkrW68RYEmQO/8hWm7GEe+3PS7y6oyKzqEl6LTE8Kx3WjICR1NllqG
-	2UfX11FYHnTV6KBI9MUlply0s1pk0fIH+OP/5cp6goXCaN+nd1tjafkSH0D0lTIzoX9BpsO+ejN
-	oA2/gwOcEDgsGxyPYhAZ1gR/ZsL1tesiZbA2a1+j7yKvNYNzlIbmijG0GAITzN+yv2uLCnH8IrQ
-	0GjSiZDJvi1/xykwcOJhMpMVd
-X-Google-Smtp-Source: AGHT+IEHwTsBFDKsfSwd5bxbAEf6Qjsha/dQgED+Y4q/n+uoHlXFnxYg2+rrsEN0OO/cJF0KxZmZoQ==
-X-Received: by 2002:a05:6512:4002:b0:553:2bf7:77be with SMTP id 2adb3069b0e04-55366be2d0fmr3429290e87.22.1749515811540;
-        Mon, 09 Jun 2025 17:36:51 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.66.227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32ae1cab60bsm12805181fa.71.2025.06.09.17.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jun 2025 17:36:51 -0700 (PDT)
-Date: Tue, 10 Jun 2025 03:36:49 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Christoph Hellwig <hch@infradead.org>, 
-	Chuck Lever <chuck.lever@oracle.com>
-Cc: "J . Bruce Fields" <bfields@fieldses.org>, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Implement large extent array support in pNFS
-Message-ID: <uegslxlqscbgc2hkktaavrc5fjoj5chlmfdxhltgv5idzazm3h@irvki3iijaw4>
-References: <20250604130809.52931-1-sergeybashirov@gmail.com>
- <aEBeJ2FoSmLvZlSc@infradead.org>
+        bh=jV8aSpy44KLHBurM528leAPVAEqT/uIw4Dgt7B00SlQ=;
+        b=ddH2tARxJo8QocNdbalBfQZ9ofZSFw97RwPeX5Kbg90VoHud7YFG9V3fXjX0onpMd4
+         D3JBtjqPJBpJVfoMTzTXCSfADPFF8FPfD5tehlMXWpTr9kbGMzPPYMNS+sJwUQuKjOiF
+         vQxUuDhzGjqd0yuGIxY/ftRuSkNl9xVn18fpRg9FOEMXpdC4z7KJZKZ00iVrit5m+vWn
+         Py4gKI3LS0ffQVwu0g6nQEzVudw7XLp2JM9k6iz5JL/IDcjovKFRTsxdbRRgk5UG/5P4
+         qrcKxBOCQ7cNXmYPpAqE0Ty7aHA1GpfsoTSr1cPDTVzP0obEK5JXnD2OYCgsoBK93lpY
+         s6Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4rSRf6OTS4lTn/0cPWlYjfDxZhwwuo3gV4L2RJdsxqBANZZsKcd+oTvOD55Bs7DFKHn2nVXMKNAY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyq8albpDeKR430K0hoN+woT3DsSDl0gQY+ZVZWUm83NLlsXW5v
+	LXCSUynf12DNa77084wQVQdq/FESwDlbPP8y4uevE01eMtwyxkU26N8dVJdkRLN26SHTig5bevQ
+	qDnT0JEPLFdMzLDXp9x15LTzr5XZepQ==
+X-Gm-Gg: ASbGncuce7V6wtH78AaHFzPWkJuij84WGL3JW27RJHtY7dZOceI+lFFcmQjAm2e5hk8
+	DKV9cJPrMyDzDUycX/jWeZJpVcJq4y3sCZn/1NWrSogFF5gXetFEi5QbCpIMUgI7Uu5OB/THLAV
+	bZcS0BJ2o+q/5Q8j8Sg5F7xQKHzGQUaStqVfHuW3ufqMIC6MLceLuYw5QddWejcu2ygVNt23CE5
+	g4=
+X-Google-Smtp-Source: AGHT+IFUaGSvadm1ry7vFgKuEgDrgEhE+ctDBVmA37/tH0Xv4rzntIaaytJWsz+FFLvtlBmueRTva6VzIkpmYzz2kSo=
+X-Received: by 2002:a17:906:dc8d:b0:adb:2a66:85bc with SMTP id
+ a640c23a62f3a-ade1aab9e47mr1302642366b.34.1749517593249; Mon, 09 Jun 2025
+ 18:06:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aEBeJ2FoSmLvZlSc@infradead.org>
-User-Agent: NeoMutt/20231103
+References: <CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
+ <f84bed7e-e96c-4a7e-95e6-2a28a574947c@oracle.com>
+In-Reply-To: <f84bed7e-e96c-4a7e-95e6-2a28a574947c@oracle.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Mon, 9 Jun 2025 18:06:21 -0700
+X-Gm-Features: AX0GCFtriKcKlbOU1DekRdP3aI-0Z3u5HVRa8tTOLS1AHLtogntt4kH6WGLPdvY
+Message-ID: <CAM5tNy5rBMrqfQ7S6fZNciWovkf8K9tc+cuV7q0MALocyzYV7A@mail.gmail.com>
+Subject: Re: simple NFSv4.1/4.2 test of remove while holding a delegation
+To: Dai Ngo <dai.ngo@oracle.com>
+Cc: NFSv4 <nfsv4@ietf.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 04, 2025 at 10:10:15AM -0400, Chuck Lever wrote:
-> Can you repost your patch with the current reviewers and maintainers
-> copied as appropriate?
-
-Sorry for the newbie mistake, this is the first patch I'm sending
-upstream. Yes, I will send patch v2 with the right reviewers and
-maintainers.
-
-On Wed, Jun 04, 2025 at 07:54:31AM -0700, Christoph Hellwig wrote:
-> On Wed, Jun 04, 2025 at 04:07:08PM +0300, Sergey Bashirov wrote:
-> > When pNFS client in block layout mode sends layoutcommit RPC to MDS,
-> > a variable length array of modified extents is supplied within request.
-> > This patch allows NFS server to accept such extent arrays if they do not
-> > fit within single memory page.
+On Mon, Jun 9, 2025 at 5:17=E2=80=AFPM Dai Ngo <dai.ngo@oracle.com> wrote:
 >
-> How did you manage to trigger such a workload?
-
-Together with Konstantin we spent a lot of time enabling the pNFS block
-volume setup. We have SDS that can attach virtual block devices via
-vhost-user-blk to virtual machines. And we researched the way to create
-parallel or distributed file system on top of this SDS. From this point
-of view, pNFS block volume layout architecture looks quite suitable. So,
-we created several VMs, configured pNFS and started testing. In fact,
-during our extensive testing, we encountered a variety of issues including
-deadlocks, livelocks, and corrupted files, which we eventually fixed.
-Now we have a working setup and we would like to clean up the code and
-contribute it.
-
-> Also you patch doesn't apply to current mainline.
-
-We will use the git repository link for NFSD from the MAINTAINERS file and
-"nfsd-next" branch to work on top of it. Please let me know if this is the
-wrong repository or branch in our case.
-
-> > +++ b/fs/nfsd/blocklayoutxdr.c
-> > @@ -103,11 +103,13 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
-> >  }
+> On 6/9/25 4:35 PM, Rick Macklem wrote:
+> > Hi,
 > >
-> >  int
-> > -nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
-> > -		u32 block_size)
-> > +nfsd4_block_decode_layoutupdate(struct xdr_buf *buf, u32 len,
-> > +				struct iomap **iomapp, u32 block_size)
-> >  {
+> > I hope you don't mind a cross-post, but I thought both groups
+> > might find this interesting...
+> >
+> > I have been creating a compound RPC that does REMOVE and
+> > then tries to determine if the file object has been removed and
+> > I was surprised to see quite different results from the Linux knfsd
+> > and Solaris 11.4 NFSv4.1/4.2 servers. I think both these servers
+> > provide FH4_PERSISTENT file handles, although I suppose I
+> > should check that?
+> >
+> > First, the test OPEN/CREATEs a regular file called "foo" (only one
+> > hard link) and acquires a write delegation for it.
+> > Then a compound does the following:
+> > ...
+> > REMOVE foo
+> > PUTFH fh for foo
+> > GETATTR
+> >
+> > For the Solaris 11.4 server, the server CB_RECALLs the
+> > delegation and then replies NFS4ERR_STALE for the PUTFH above.
+> > (The FreeBSD server currently does the same.)
+> >
+> > For a fairly recent Linux (6.12) knfsd, the above replies NFS_OK
+> > with nlinks =3D=3D 0 in the GETATTR reply.
+> >
+> > Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
+> > probably missed something) and I cannot find anything that states
+> > either of the above behaviours is incorrect.
+> > (NFS4ERR_STALE is listed as an error code for PUTFH, but the
+> > description of PUTFH only says that it sets the CFH to the fh arg.
+> > It does not say anything w.r.t. the fh arg. needing to be for a file
+> > that still exists.) Neither of these servers sets
+> > OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
+> >
+> > So, it looks like "file object no longer exists" is indicated either
+> > by a NFS4ERR_STALE reply to either PUTFH or GETATTR
+> > OR
+> > by a successful reply, but with nlinks =3D=3D 0 for the GETATTR reply.
+> >
+> > To be honest, I kinda like the Linux knfsd version, but I am wondering
+> > if others think that both of these replies is correct?
+> >
+> > Also, is the CB_RECALL needed when the delegation is held by
+> > the same client as the one doing the REMOVE?
 >
-> So if you pass the xdr_buf that already has the length, can't we drop
-> the len argument?
+> The Linux NFSD detects the delegation belongs to the same client that
+> causes the conflict (due to REMOVE) and skips the CB_RECALL. This is
+> an optimization based on the assumption that the client would handle
+> the conflict locally.
+And then what does the server do with the delegation?
+- Does it just discard it, since the file object has been deleted?
+OR
+- Does it guarantee that a DELEGRETURN done after the REMOVE will
+  still work (which seems to be the case for the 6.12 server I am using for
+  testing).
 
-Thanks for the suggestions! I will rework it in patch v2 to get rid of
-the len argument and the lc_up_len field.
-
-> > +	struct xdr_stream xdr;
 >
-> Also I'm not the expert on the xdr_stream API, but instead of setting
-> up a sub-buffer here shouldn't we reuse that from the actual XDR
-> decoding stage, and if that can't work (Chuck is probably a better
-> source for know how on that then me), at least initialize it in the
-> main nfsd layoutcommit handler rather than in the layout drivers.
-> me we'd probably want that initialized in the core nfsd code and not
-> the layout driver.
+> If the REMOVE was done by another client, the REMOVE will not complete
+> until the delegation is returned. If the PUTFH comes after the REMOVE
+> was completed, it'll  fail with NFS4ERR_STALE since the file, specified
+> by the file handle, no longer exists.
+Assuming the statement w.r.t. "fail with NFS4ERR_STALE" only applies to
+"REMOVE done by another client" then that sounds fine.
+However if the "fail with NFS4ERR_STALE is supposed for happen after
+REMOVE for same client" then that is not what I am seeing.
+If you are curious, the packet trace is here. (Look at packet#58).
+https://people.freebsd.org/~rmacklem/linux-remove.pcap
 
-As for the sub-buffer, the xdr_buf structure is initialized in the core
-nfsd code to point only to the "opaque" field of the "layoutupdate4"
-structure. Since this field is specific to each layout driver, its
-xdr_stream is created on demand inside the field handler. For example,
-the "opaque" field is not used in the file layouts. Do we really need to
-expose the xdr_stream outside the field handler? Probably not. I also
-checked how this is implemented in the nfs client code and found that
-xdr_stream is created in a similar way inside the layout driver. Below
-I have outlined some thoughts on why implemented it this way. Please
-correct me if I missed anything.
+Btw, in case you are curious why I am doing this testing, I am trying
+to figure out a good way for the FreeBSD client to handle temporary
+files. Typically on POSIX they are done via the syscalls:
 
-Let's say we have a layout commit with 1000 extents (in practice we
-observed much more). The size of each block extent structure is 44 bytes,
-and we have another 4 bytes for the total number of extents. So, the
-"opaque" field of the "layoutupdate4" structure has a size of 44004 bytes.
-In this case, we cannot simply borrow a pointer to the xdr internal page
-or the scratch buffer using xdr_inline_decode(). What options do we have?
+fd =3D open("foo", O_CREATE ...);
+unlink("foo");
+write(fd,..), write(fd,..)...
+read(fd,...), read(fd,...)...
+close(fd);
 
-1. Allocate a large enough memory buffer and copy the "opaque" field into
-    it. But I think an extra copy of a large field is not what we prefer.
+If this happens quickly and is not too much writing, the writes
+copy data into buffers/pages, the reads read the data out of
+the pages and then it all gets deleted.
 
-2. When RPC is received, nfsd_dispatch() first decodes the entire compound
-    request and only then processes each operation. Yes, we can create a new
-    callback in the layout driver interface to decode the "opaque" field
-    during the decoding phase and use the actual xdr stream of the request.
-    What I don't like here is that the layout driver is forced to parse a
-    large data buffer before general checks are done (sequence ID, file
-    handler, state ID, range, grace period, etc.). This opens up
-    opportunities to abuse the server by sending invalid layout commits with
-    the maximum possible number of extents (RPC can be up to 1MB).
+Unfortunately, the CB_RECALL forces the NFSv4.n client
+to do WRITE, WRITE,..COMMIT and then DELEGRETURN.
+Then the REMOVE throws all the data away on the NFSv4.n
+server.
+--> As such, I really like not doing the CB_RECALL for "same client".
+My concern is "what happens to the delegation after the file object ("foo")
+gets deleted?
+It either needs to be thrown away by the NFSv4.n server or the
+PUTFH, DELEGRETURN needs to work after the REMOVE.
+Otherwise, the NFSv4.n server may get constipated by the delegations,
+which might be called stale, since the file object has been deleted.
 
-3. It is also possible to store only the position of the "opaque" field in
-    the actual xdr stream of the request during the decoding phase and defer
-    large data buffer parsing until the processing phase. This is what the
-    original code does, and this patch takes it in the same direction.
+--> I can do PUTFH, GETATTR after REMOVE in the same compound,
+     to find out if the file object has been deleted. But then, if a
+     PUTFH, DELEGRETURN fails with NFS4ERR_STALE, can I get
+     away with saying "the server should just discard the delegation as
+     the client already has done so??.
 
---
-Sergey Bashirov
+Thanks for your comments, rick
+
+>
+> -Dai
+>
+> > (I don't think it is, but there is a discussion in 18.25.4 which says
+> > "When the determination above cannot be made definitively because
+> > delegations are being held, they MUST be recalled.." but everything
+> > above that is a may/MAY, so it is not obvious to me if a server really
+> > needs to case?)
+> >
+> > Any comments? Thanks, rick
+> > ps: I am amazed when I learn these things about NFSv4.n after all
+> >        these years.
+> >
 
