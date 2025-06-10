@@ -1,211 +1,377 @@
-Return-Path: <linux-nfs+bounces-12251-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12252-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31380AD38BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 15:19:14 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 800ACAD3896
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 15:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83A3717F95E
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:13:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0ED417AF402
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:13:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFFAB25B2F5;
-	Tue, 10 Jun 2025 13:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DD9418FC84;
+	Tue, 10 Jun 2025 13:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEaX1l8J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS2i0f3q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C644923ABAC;
-	Tue, 10 Jun 2025 13:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA8618D643
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 13:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560997; cv=none; b=hAIAIIsWtggKYBNopwK3HQzGqq3HEaEiGBtGYrk1v4KQWXJ72GuSlBOaP0sciTtarx4ytRg9UezE0MonrWZB8MCErdisQQkS9DvTrzgcUhHS2jjapt67X+WsOlcMTyEcP7PgNIFdsp0aFHtW1hyuLouW6gVo+r1oDilkd+4LM/0=
+	t=1749561108; cv=none; b=X08PjOzGvz76Ygm5KpjmdIilkBdEUppQ+brE1srLsac7NbE/8RsH4ha3ZuVvLwWudgoImhkuMVvUyXuYLihmUy9PnHta2sWKrrlxMRW456l1Au9A/JzazPKCPQnUWiVstLPZ4i1ibdC6J8AIeTqt9MHlqRGc6tKVGvT5KZCnP4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749560997; c=relaxed/simple;
-	bh=2ReBCcZIKH6ZrV95k1rea7JEJZUcLycCpemUm8z3Ptc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tUDz9kflFxR/PRSZJQqIZcnwKomTlzrZwNotKuAKn8gbeYaNx0y52Bs5kM2IIlr55vpfiGq5CLofj+ILBQ5i9l9sqgPAnINZkTxac02/CAJotL16S5U5ihB7xDBp8icZoXy9D/VwBoLVJ4RSXjzcIDbBh7KkqFTWV6ZzHDqeI60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEaX1l8J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46603C4CEED;
-	Tue, 10 Jun 2025 13:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749560997;
-	bh=2ReBCcZIKH6ZrV95k1rea7JEJZUcLycCpemUm8z3Ptc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OEaX1l8J/BzLi11ZnA7r9vaJe/7wcy+oYVVI87fx9aXkO5Fa/wYy6W/upYQNCmWCv
-	 JiCDfuCkhz9uIWhhVIzhfZbZnAW84SfikJsn5NWvLlFfHT2x6Uh9jXfVbUUaq6SQ5C
-	 4EduHc1nJFXsi5rhUnizu99x8yPSy/e2jH6lMx6ewwNsL30Cgx9Qyb3GOGBgO0arQU
-	 VVv7eDHiOySU46JG9Zhu+MBv+ETT1j/Oemsr+Zh5PanxiErSSE+y6MaK+14RKJSdos
-	 Oz+BeAEMCBBCMzLnhItjIOvWq93l6DEWQzNgFS/3bGwkw5EK1AaAYDW3roi8b44LgW
-	 CVWENCpjj3q9g==
-Message-ID: <d19d4a507361dad7d0cde2b94f01faf0fb866676.camel@kernel.org>
-Subject: Re: [PATCH 4/4] nfs: new tracepoint in match_stateid operation
-From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Tue, 10 Jun 2025 09:09:56 -0400
-In-Reply-To: <9BD9513B-972A-4C83-9100-A11F289191E5@redhat.com>
-References: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
-	 <20250603-nfs-tracepoints-v1-4-d2615f3bbe6c@kernel.org>
-	 <9BD9513B-972A-4C83-9100-A11F289191E5@redhat.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1749561108; c=relaxed/simple;
+	bh=1x37FqSp0ARjbq9ELeljnzrTDOrmQuWln6eEUwX9SXs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BBAevjPc8tCM1dpN3b1Mc68W5IBBwElbmRLQ+HJaE8sQhQqo6YKrAUSG3wmUNMqVVIGc488+ZOW7Y/aEoE+tOYT9xheYX8pNrXP5PmRmtl8xnKYzUmr3ETY15rKx3kG6tJkjFudLOE30/Dy7QU03EKwqMZos3oTWgHNsbuDrukc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fS2i0f3q; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso10721675a12.1
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 06:11:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749561105; x=1750165905; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HPl9nchAgGg7GJdjWFCkcqEb7UewansGafYGDKBZ5Fg=;
+        b=fS2i0f3qhrkZgEefO1C98vmgZ06f71OXaJz54yaW549y4qUcwKGbP+2oxjIjtDLafv
+         Xkh5TOdUbWkayDnauqXrR0ik5ig3VDquHoOLC5Sm42oAELGobpsF4Rrnm3YTfI1pcZQf
+         QdMaN+FfsmRMgv+IkCbaziPx3sdm8LAElzIWEbSsy19snxZ9eExzjFxtf9SRBN2kocJv
+         PF8IUxIUJAbcQJKmtEhsIvM6y+ydCtwx+qA6WMarcZOMTtDxXGRMVbBkvVcn8j0M6/YZ
+         TXcNXUvza5UbU7wdX+DaZXSLnXsasi/38iTeDxGd+fvkbwQdVyB31ebFeHxmsTGc4Ozi
+         m8vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749561105; x=1750165905;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HPl9nchAgGg7GJdjWFCkcqEb7UewansGafYGDKBZ5Fg=;
+        b=u7pTJMHyPiEj34tyGCkHFsDVBLslQ4/n6ADfN/1xlw0rfjCx7W3KdkzE6WoU71PJTV
+         MyR4jTTMHVoTmmBFgZN9T5nw5z0Ijq8N/okJn5sgbTbEbXl8b/UC19U9TL+hVizPKINC
+         m/DGtIrGNXNY0PPQ8MLsyexwkT3Q7Xmj9rMg07BQg+i/FwcVfzSuZs/ZFa+fU2T7pr6J
+         /2A8kNglkSfVahLNXbz0EeiEtVXz67xmbgRZtsPP/HK5T0mKRoKTE6RFH4oa4m72fJZ7
+         3Flkza7UNqDDq+sKh9UPn1kqTYCoBlr5YDDdUu37oaNp6xlg5j7F7lbT/LQor7y18VTz
+         JTbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUVFtwtD240eggYKnZKr8XYXFDg+uNDii7QX3N2VjI2wHQuodZvcq/8s1mAJ/3PS/WPwtaUExWkBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyqJ5Khjb+OijWNRvXrwu/f2glxFauw8yl6pC2LE4v7LHUqf6w
+	mYzobG7h1gI6wRtR8UvlhpjxmV6ZNjkC22Y9aYe4yzAKDE8LZkNyj+YIuLV7hn4TkiJ3gSTcfdO
+	jSZ6oMh47THULqCoi5RqoQR1GfSg7rA==
+X-Gm-Gg: ASbGnctWlSpoDH8m+aRmfV/GkRspxD6KDlwq3WRv2XdbDtvhgfM+5EdkO4fH2YKNPYj
+	8gZnoT00a0CbCAng9ziJJN4al4fGu9HJJy0f+D7J5U9uQUhvP5V3e0jkfceVKVJF0r2frKwlEqO
+	re2z4uqKriyuxp7WAXKQXSZ4aAdCgwb3XYNTN4aCscfvCoSyz1VZLBOKG+sqd4E0ImXeaTOj+AF
+	x0=
+X-Google-Smtp-Source: AGHT+IEmApDLPq4G12E7MUmV2WhbaPadZXCM1vfGj2vS7BVxKXmf2n9gpnl793JMtBCP44mdubLO1KuCBuRiInjr/mc=
+X-Received: by 2002:a05:6402:2713:b0:604:5a87:d6c with SMTP id
+ 4fb4d7f45d1cf-607734171f8mr16011131a12.7.1749561104872; Tue, 10 Jun 2025
+ 06:11:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
+ <f84bed7e-e96c-4a7e-95e6-2a28a574947c@oracle.com> <CAM5tNy5rBMrqfQ7S6fZNciWovkf8K9tc+cuV7q0MALocyzYV7A@mail.gmail.com>
+ <d36eac4fe863a3aafc107b2375d415b091044c46.camel@kernel.org>
+ <CAM5tNy5nx=XQ2gTjhaE6h5z+SJMnKKeMZzPDMiMnkWZbGm6fCQ@mail.gmail.com> <3287ef4d7b7f0cec80e2f29eabf17ec32310c60d.camel@kernel.org>
+In-Reply-To: <3287ef4d7b7f0cec80e2f29eabf17ec32310c60d.camel@kernel.org>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Tue, 10 Jun 2025 06:11:33 -0700
+X-Gm-Features: AX0GCFtcKTPa3DJcIHq_sUgcrUJU_ZoLgOjxkNDLyYZ3GRV_Edd7rtyUWpIShOY
+Message-ID: <CAM5tNy5S5DOxCkMPxskpC54_VeF8-Lpa5VHZ-2GAhULWOKSDOw@mail.gmail.com>
+Subject: Re: [nfsv4] Re: simple NFSv4.1/4.2 test of remove while holding a delegation
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Dai Ngo <dai.ngo@oracle.com>, NFSv4 <nfsv4@ietf.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-06-10 at 09:04 -0400, Benjamin Coddington wrote:
-> On 3 Jun 2025, at 7:42, Jeff Layton wrote:
->=20
-> > Add new tracepoints in the NFSv4 match_stateid minorversion op that sho=
-w
-> > the info in both stateids.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/nfs/nfs4proc.c  |  4 ++++
-> >  fs/nfs/nfs4trace.h | 56 ++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  2 files changed, 60 insertions(+)
-> >=20
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index 341740fa293d8fb1cfabe0813c7fcadf04df4f62..80126290589aaccd801c896=
-5252523894e37c44a 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -10680,6 +10680,8 @@ nfs41_free_lock_state(struct nfs_server *server=
-, struct nfs4_lock_state *lsp)
-> >  static bool nfs41_match_stateid(const nfs4_stateid *s1,
-> >  		const nfs4_stateid *s2)
-> >  {
-> > +	trace_nfs41_match_stateid(s1, s2);
-> > +
-> >  	if (s1->type !=3D s2->type)
-> >  		return false;
-> >=20
-> > @@ -10697,6 +10699,8 @@ static bool nfs41_match_stateid(const nfs4_stat=
-eid *s1,
-> >  static bool nfs4_match_stateid(const nfs4_stateid *s1,
-> >  		const nfs4_stateid *s2)
-> >  {
-> > +	trace_nfs4_match_stateid(s1, s2);
-> > +
-> >  	return nfs4_stateid_match(s1, s2);
-> >  }
-> >=20
-> > diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-> > index 73a6b60a848066546c2ae98b4982b0ab36bb0f73..9b56ce9f2f3dcb31a3e21d5=
-740bcf62aca814214 100644
-> > --- a/fs/nfs/nfs4trace.h
-> > +++ b/fs/nfs/nfs4trace.h
-> > @@ -1497,6 +1497,62 @@ DECLARE_EVENT_CLASS(nfs4_inode_stateid_callback_=
-event,
-> >  DEFINE_NFS4_INODE_STATEID_CALLBACK_EVENT(nfs4_cb_recall);
-> >  DEFINE_NFS4_INODE_STATEID_CALLBACK_EVENT(nfs4_cb_layoutrecall_file);
-> >=20
-> > +#define show_stateid_type(type) \
-> > +	__print_symbolic(type, \
-> > +		{ NFS4_INVALID_STATEID_TYPE, "INVALID" }, \
-> > +		{ NFS4_SPECIAL_STATEID_TYPE, "SPECIAL" }, \
-> > +		{ NFS4_OPEN_STATEID_TYPE, "OPEN" }, \
-> > +		{ NFS4_LOCK_STATEID_TYPE, "LOCK" }, \
-> > +		{ NFS4_DELEGATION_STATEID_TYPE, "DELEGATION" }, \
-> > +		{ NFS4_LAYOUT_STATEID_TYPE, "LAYOUT" },	\
-> > +		{ NFS4_PNFS_DS_STATEID_TYPE, "PNFS_DS" }, \
-> > +		{ NFS4_REVOKED_STATEID_TYPE, "REVOKED" })
->=20
-> Let's add NFS4_FREED_STATEID_TYPE at the end here, for after 77be29b7a3f8=
-9.
+On Tue, Jun 10, 2025 at 5:59=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
 >
-> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
->=20
-> Ben
+> On Tue, 2025-06-10 at 05:42 -0700, Rick Macklem wrote:
+> > On Tue, Jun 10, 2025 at 4:51=E2=80=AFAM Jeff Layton <jlayton@kernel.org=
+> wrote:
+> > >
+> > > On Mon, 2025-06-09 at 18:06 -0700, Rick Macklem wrote:
+> > > > On Mon, Jun 9, 2025 at 5:17=E2=80=AFPM Dai Ngo <dai.ngo@oracle.com>=
+ wrote:
+> > > > >
+> > > > > On 6/9/25 4:35 PM, Rick Macklem wrote:
+> > > > > > Hi,
+> > > > > >
+> > > > > > I hope you don't mind a cross-post, but I thought both groups
+> > > > > > might find this interesting...
+> > > > > >
+> > > > > > I have been creating a compound RPC that does REMOVE and
+> > > > > > then tries to determine if the file object has been removed and
+> > > > > > I was surprised to see quite different results from the Linux k=
+nfsd
+> > > > > > and Solaris 11.4 NFSv4.1/4.2 servers. I think both these server=
+s
+> > > > > > provide FH4_PERSISTENT file handles, although I suppose I
+> > > > > > should check that?
+> > > > > >
+> > > > > > First, the test OPEN/CREATEs a regular file called "foo" (only =
+one
+> > > > > > hard link) and acquires a write delegation for it.
+> > > > > > Then a compound does the following:
+> > > > > > ...
+> > > > > > REMOVE foo
+> > > > > > PUTFH fh for foo
+> > > > > > GETATTR
+> > > > > >
+> > > > > > For the Solaris 11.4 server, the server CB_RECALLs the
+> > > > > > delegation and then replies NFS4ERR_STALE for the PUTFH above.
+> > > > > > (The FreeBSD server currently does the same.)
+> > > > > >
+> > > > > > For a fairly recent Linux (6.12) knfsd, the above replies NFS_O=
+K
+> > > > > > with nlinks =3D=3D 0 in the GETATTR reply.
+> > > > > >
+> > > > > > Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
+> > > > > > probably missed something) and I cannot find anything that stat=
+es
+> > > > > > either of the above behaviours is incorrect.
+> > >
+> > > This seems outside the scope of the spec. What you're probably seeing
+> > > is just differences in the implementation details of the two servers.
+> > >
+> > > > > > (NFS4ERR_STALE is listed as an error code for PUTFH, but the
+> > > > > > description of PUTFH only says that it sets the CFH to the fh a=
+rg.
+> > > > > > It does not say anything w.r.t. the fh arg. needing to be for a=
+ file
+> > > > > > that still exists.) Neither of these servers sets
+> > > > > > OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
+> > > > > >
+> > > > > > So, it looks like "file object no longer exists" is indicated e=
+ither
+> > > > > > by a NFS4ERR_STALE reply to either PUTFH or GETATTR
+> > > > > > OR
+> > > > > > by a successful reply, but with nlinks =3D=3D 0 for the GETATTR=
+ reply.
+> > > > > >
+> > > > > > To be honest, I kinda like the Linux knfsd version, but I am wo=
+ndering
+> > > > > > if others think that both of these replies is correct?
+> > > > > >
+> > > > > > Also, is the CB_RECALL needed when the delegation is held by
+> > > > > > the same client as the one doing the REMOVE?
+> > > > >
+> > > > > The Linux NFSD detects the delegation belongs to the same client =
+that
+> > > > > causes the conflict (due to REMOVE) and skips the CB_RECALL. This=
+ is
+> > > > > an optimization based on the assumption that the client would han=
+dle
+> > > > > the conflict locally.
+> > > > And then what does the server do with the delegation?
+> > > > - Does it just discard it, since the file object has been deleted?
+> > > > OR
+> > > > - Does it guarantee that a DELEGRETURN done after the REMOVE will
+> > > >   still work (which seems to be the case for the 6.12 server I am u=
+sing for
+> > > >   testing).
+> > > >
+> > >
+> > > The latter. The file on the server is still being held open by virtue
+> > > of the fact that the client holds a delegation stateid on it.
+> > >
+> > > The inode will still exist in core (with nlinks =3D=3D 0) until its l=
+ast
+> > > reference is released (here, when the client does the final
+> > > DELEGRETURN). Aside from the fact that it's now disconnected from the
+> > > filesystem namespace, it's still "alive", and reachable via filehandl=
+e.
+> > Thanks for the info. (I had a hunch it was held by the delegation.)
+> > I'll guess that implies that LINK could still be done, bumping nlink to=
+ 1
+> > before the DELEGRETURN? That means that nlink =3D=3D 0 only guarantees
+> > that the file object will be deleted if the client holds a write delega=
+tion and
+> > ensures that LINK is not allowed before DELEGRETURN.
+> >
+>
+> I believe that LINK is actually prevented at that point. The VFS only
+> allows flink() to work when nlink =3D=3D 0 on O_TMPFILE files, IIRC. IMO,
+> that's a Linux implementation detail rather than something the NFS
+> protocol or POSIX requires.
+>
+> > Although trying to avoid the WRITE, WRITE,...COMMIT to the server
+> > just before a file is deleted seems worth the effort, it never seems to
+> > be as easy as you'd think.
+> >
+>
+> Definitely. The problem of course is that you can't really know whether
+> a REMOVE will actually delete the file. It'll remove the name, but
+> link() could have raced in, and at that point you sort of have to do
+> the writes.
+If the server were to reply NFS4ERR_STALE, then the client knows that
+the file object is deleted (which was what I had assumed servers would do
+once the nlink went to 0).
 
-Thanks, good catch. I did these patches a while ago and may have missed
-some of the more recent changes. Anna, can you fix that up or would you
-rather I resend the set?
---=20
-Jeff Layton <jlayton@kernel.org>
+For the "checking nlink =3D=3D 0 case" things are a bit sketchy, but if the
+client holds a write delegation is done before doing a DELEGRETURN
+(without write back in this case), it is at least close. Admittedly, there =
+is
+probably nothing that says the FH is invalid as soon as the DELEGRETURN
+for the write delegation is done (assuming all OPENs have also been
+CLOSE'd by the client) and that makes this case insufficient to guarantee
+the file object has been deleted?
+
+>
+> > >
+> > > > >
+> > > > > If the REMOVE was done by another client, the REMOVE will not com=
+plete
+> > > > > until the delegation is returned. If the PUTFH comes after the RE=
+MOVE
+> > > > > was completed, it'll  fail with NFS4ERR_STALE since the file, spe=
+cified
+> > > > > by the file handle, no longer exists.
+> > > > Assuming the statement w.r.t. "fail with NFS4ERR_STALE" only applie=
+s to
+> > > > "REMOVE done by another client" then that sounds fine.
+> > > > However if the "fail with NFS4ERR_STALE is supposed for happen afte=
+r
+> > > > REMOVE for same client" then that is not what I am seeing.
+> > > > If you are curious, the packet trace is here. (Look at packet#58).
+> > > > https://people.freebsd.org/~rmacklem/linux-remove.pcap
+> > > >
+> > > > Btw, in case you are curious why I am doing this testing, I am tryi=
+ng
+> > > > to figure out a good way for the FreeBSD client to handle temporary
+> > > > files. Typically on POSIX they are done via the syscalls:
+> > > >
+> > > > fd =3D open("foo", O_CREATE ...);
+> > > > unlink("foo");
+> > > > write(fd,..), write(fd,..)...
+> > > > read(fd,...), read(fd,...)...
+> > > > close(fd);
+> > > >
+> > > > If this happens quickly and is not too much writing, the writes
+> > > > copy data into buffers/pages, the reads read the data out of
+> > > > the pages and then it all gets deleted.
+> > > >
+> > >
+> > > Yep, common pattern.
+> > >
+> > > > Unfortunately, the CB_RECALL forces the NFSv4.n client
+> > > > to do WRITE, WRITE,..COMMIT and then DELEGRETURN.
+> > > > Then the REMOVE throws all the data away on the NFSv4.n
+> > > > server.
+> > > > --> As such, I really like not doing the CB_RECALL for "same client=
+".
+> > > > My concern is "what happens to the delegation after the file object=
+ ("foo")
+> > > > gets deleted?
+> > > > It either needs to be thrown away by the NFSv4.n server or the
+> > > > PUTFH, DELEGRETURN needs to work after the REMOVE.
+> > >
+> > > I think the latter. A REMOVE just removes the filename from the
+> > > namespace. What happens to the underlying inode/vnode/whathaveyou is
+> > > undefined by the protocol. The delegation is effectively holding the
+> > > file open, so it needs to continue to exist on the server, just as th=
+e
+> > > file "foo" in your example above must exist after the unlink().
+> > >
+> > > > Otherwise, the NFSv4.n server may get constipated by the delegation=
+s,
+> > > > which might be called stale, since the file object has been deleted=
+.
+> > > >
+> > > > --> I can do PUTFH, GETATTR after REMOVE in the same compound,
+> > > >      to find out if the file object has been deleted. But then, if =
+a
+> > > >      PUTFH, DELEGRETURN fails with NFS4ERR_STALE, can I get
+> > > >      away with saying "the server should just discard the delegatio=
+n as
+> > > >      the client already has done so??.
+> > > >
+> > > > Thanks for your comments, rick
+> > > >
+> > >
+> > > If you still have an outstanding delegation after a REMOVE, then
+> > > returning ESTALE on the filehandle at that point seems wrong. The
+> > > delegation still exists, so the underlying filehandle should still
+> > > exist.
+> > >
+> > > Linux doesn't generally throw back an NFS4ERR_STALE until it just can=
+'t
+> > > find the inode at all anymore. A dentry holds a reference to the inod=
+e,
+> > > and open files hold a reference to the dentry. The remove just
+> > > disconnects the dentry from the namespace and drops its refcount. Whe=
+n
+> > > the DELEGRETURN issues the last close, the inode gets cleaned up and =
+at
+> > > that point you can't find it by filehandle anymore.
+> > >
+> > > You probably want to aim for similar behavior in FreeBSD?
+> > I'm not sure. So long as the server guarantees that the file object has=
+ been
+> > deleted by the REMOVE, throwing NFS4ERR_STALE seems a reasonable altern=
+ative?
+> >
+>
+> At that point won't you have to start returning writeback errors back
+> to userland? What if you do this?
+>
+> fd =3D open("foo", O_CREATE ...);
+> unlink("foo");
+> write(fd,..), write(fd,..)...
+> fsync(fd);
+>
+> In the absence of a delegation, won't the fsync get back an error here
+> because the file is now stale?
+The client is going to do "silly rename" at the unilink("foo") and REMOVE
+at the POSIX close(2).
+
+>
+> > Note that the FreeBSD server does not handle NFSv4 OPENs and
+> > DELEGATIONs like a POSIX open(2), so the file handle is no longer
+> > valid once nlink =3D=3D 0 on the underlying vnode/inode.
+> > (Again, I don't think there is anything in RFC8881 that specifies
+> > what is correct behaviour for this?)
+> >
+> > It's a case where I'd like to be able to test against all extant server=
+s,
+> > but none of the others show up at Bakeathons these days. Sigh.
+> >
+> > Thanks for your comments, rick
+> >
+>
+>
+> > >
+> > > > >
+> > > > > -Dai
+> > > > >
+> > > > > > (I don't think it is, but there is a discussion in 18.25.4 whic=
+h says
+> > > > > > "When the determination above cannot be made definitively becau=
+se
+> > > > > > delegations are being held, they MUST be recalled.." but everyt=
+hing
+> > > > > > above that is a may/MAY, so it is not obvious to me if a server=
+ really
+> > > > > > needs to case?)
+> > > > > >
+> > > > > > Any comments? Thanks, rick
+> > > > > > ps: I am amazed when I learn these things about NFSv4.n after a=
+ll
+> > > > > >        these years.
+> > > > > >
+> > >
+> > >
+> > > --
+> > > Jeff Layton <jlayton@kernel.org>
+>
+> --
+> Jeff Layton <jlayton@kernel.org>
 
