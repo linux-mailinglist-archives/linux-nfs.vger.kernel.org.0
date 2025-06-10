@@ -1,56 +1,59 @@
-Return-Path: <linux-nfs+bounces-12241-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12242-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A373AAD34B5
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:15:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A8CEAD3556
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 13:51:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6200A3A4F17
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 11:15:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D2C61750EB
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 11:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B77252868B;
-	Tue, 10 Jun 2025 11:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76ACD155322;
+	Tue, 10 Jun 2025 11:51:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iia7mTwj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UT4l85iE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9186518024
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 11:15:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509F0262BE
+	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 11:51:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749554139; cv=none; b=WYe+AqIMRm1Og9h5nhAivhAYLRir9SkY29pD/9mVLJaBi7Fs1LqVXy/mihV72ryM3mruwnW5Eoctywixb5w4fnPYW1HSfER5fg8259w8dLODxJ/iXNirvzBe/i0LEB6sQN/PLqrw6wwS/DiIVtVjG4wdGQQsg/2AiK8Wu6QFNzY=
+	t=1749556270; cv=none; b=b4sNLCoZ/+Ynsz7QD+CSGDyunnU7XTnhVNXeBd6de+cVNiG+KVH7Q2uupWq2DthKmrlEqQ0fQckLx2wHiikI4M9dNk6ir6sPPLNHJ6V99MIKWeJ+jhD3hYAHwiZzFQkRHjhpIE6Cd/QCpYy626feDnoxYAt3Ak6RiovsVsMONTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749554139; c=relaxed/simple;
-	bh=OPmutp6KTHKEd0a006LB9q6l9JLhIKPPOmvU4rx/WQU=;
+	s=arc-20240116; t=1749556270; c=relaxed/simple;
+	bh=w6cs3iycb97AIzgE4CRKjYDelGJDugRsyKw+GMMgp5M=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m6RPN0qVPvAzHpCWZYlbZiPcOs4qKmwBwOgObir5PaWOVqe9Krr1VEJqeGYd0ZTxUPof7CpNK5ICPtLXBq45kFogqI/pPiGVy15wrL538Zk2IfQRdS60CTC1UYwjTZeVe8rMLpmFFw+UBZ4KvLWhKBctL/jiSi7FgOUxcld5Qew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iia7mTwj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96022C4CEED;
-	Tue, 10 Jun 2025 11:15:38 +0000 (UTC)
+	 Content-Type:MIME-Version; b=mRk0OCZK9/m08odgjF1qusXZxRra5+yjgkHYaSNcq1Y9tprBoOd48sFF2dkWQiGeo74kFanE9cgxRcsEu78TNILlDeA0DdZzl2YzAZWF/sOnogCegfvK08Tsbx4PmucHqrRkjSViG2GZNSyy6Ycr5jtrvu7/KEC3T4KEimsbUjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UT4l85iE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83771C4CEED;
+	Tue, 10 Jun 2025 11:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749554139;
-	bh=OPmutp6KTHKEd0a006LB9q6l9JLhIKPPOmvU4rx/WQU=;
+	s=k20201202; t=1749556269;
+	bh=w6cs3iycb97AIzgE4CRKjYDelGJDugRsyKw+GMMgp5M=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iia7mTwj6tvjp1MPYpaCbBF2m9HaTY6lfqIKoCjDgGcbisw2AJwDB7qyvnTqERitq
-	 QkXhWzmFvJF/deFoEQJbM8gR/An9oU+ThbwoksgfbFOEYvxGht0ZcO4Kgxc7CvHJJK
-	 ivm4uy1n4kLmF8RYUc52HmFk7K+NWgsAtJ4h1so7pqGzAc5NxwUBX46BFXCsdS+ZRB
-	 M3TVIK4jxXzaetqo84AfInpAQK+lmmxePl0HTAfyVcBqOa+Syq7vpoG8J6ZMXYngSa
-	 unvfd5sO+lYWQ0i0P6uWPlYh38wrUv7ic1pqVLr/2Or/H8PmiEO2HyeogN7PP2sBvp
-	 nF2X85QjVOQpw==
-Message-ID: <c39c636780a71b66b855eee701e0830c11a3cb06.camel@kernel.org>
-Subject: Re: [PATCH v2] SUNRPC: Cleanup/fix initial rq_pages allocation
+	b=UT4l85iE/UtubUjbg3PZs5eUQTI3OV8/CKJHmyPKSpblh0GZvojgRNrDjkhYsNmwl
+	 O/dFQNKk9DbSxn6A25lJzxFDtTN3bOBfo5HXbFsdROnHX5UYZgWmbcCvx2q5VaMt1k
+	 F27P1GX2fn6T0TqcAUGkymfUVCxdDVAO5bsI7YYSd/MpMsE/8LxRSxEzq0MZYGaqGI
+	 nFrWzsb6DQu0e0zEfRceXZWbow2xIeG8dwxc6zGIXVdFur0mxO9sARPh/gPCJoGM3y
+	 L2haZv4cmbasyul9PiYgDtycAud+WwdZvyYlvde+422VqkzCMHhRoatDTr4TzAnXFo
+	 8OyDKlcytNqpw==
+Message-ID: <d36eac4fe863a3aafc107b2375d415b091044c46.camel@kernel.org>
+Subject: Re: [nfsv4] Re: simple NFSv4.1/4.2 test of remove while holding a
+ delegation
 From: Jeff Layton <jlayton@kernel.org>
-To: Benjamin Coddington <bcodding@redhat.com>, trondmy@kernel.org, 
-	anna@kernel.org, chuck.lever@oracle.com, neilb@suse.de
-Cc: linux-nfs@vger.kernel.org
-Date: Tue, 10 Jun 2025 07:15:37 -0400
-In-Reply-To: <151437c300ca8eb4d8d9a842c9caf167cb32b6ea.1749489592.git.bcodding@redhat.com>
+To: Rick Macklem <rick.macklem@gmail.com>, Dai Ngo <dai.ngo@oracle.com>
+Cc: NFSv4 <nfsv4@ietf.org>, Linux NFS Mailing List
+ <linux-nfs@vger.kernel.org>
+Date: Tue, 10 Jun 2025 07:51:08 -0400
+In-Reply-To: <CAM5tNy5rBMrqfQ7S6fZNciWovkf8K9tc+cuV7q0MALocyzYV7A@mail.gmail.com>
 References: 
-	<151437c300ca8eb4d8d9a842c9caf167cb32b6ea.1749489592.git.bcodding@redhat.com>
+	<CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
+	 <f84bed7e-e96c-4a7e-95e6-2a28a574947c@oracle.com>
+	 <CAM5tNy5rBMrqfQ7S6fZNciWovkf8K9tc+cuV7q0MALocyzYV7A@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,65 +138,173 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-06-09 at 13:21 -0400, Benjamin Coddington wrote:
-> While investigating some reports of memory-constrained NUMA machines
-> failing to mount v3 and v4.0 nfs mounts, we found that svc_init_buffer()
-> was not attempting to retry allocations from the bulk page allocator.
-> Typically, this results in a single page allocation being returned and
-> the mount attempt fails with -ENOMEM.  A retry would have allowed the mou=
-nt
-> to succeed.
->=20
-> Additionally, it seems that the bulk allocation in svc_init_buffer() is
-> redundant because svc_alloc_arg() will perform the required allocation an=
-d
-> does the correct thing to retry the allocations.
->=20
-> The call to allocate memory in svc_alloc_arg() drops the preferred node
-> argument, but I expect we'll still allocate on the preferred node because
-> the allocation call happens within the svc thread context, which chooses
-> the node with memory closest to the current thread's execution.
->=20
-> This patch cleans out the bulk allocation in svc_init_buffer() to allow
-> svc_alloc_arg() to handle the allocation/retry logic for rq_pages.
->=20
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
->=20
-> --
-> On v2:
-> 	- rebased on nfsd-next
-> 	- keep the rq_pages array allocation in svc_init_buffer(), defer
-> 	  the page allocation to svc_alloc_arg()
-> ---
->  net/sunrpc/svc.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 939b6239df8a..ef8a05aac87f 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -638,8 +638,6 @@ EXPORT_SYMBOL_GPL(svc_destroy);
->  static bool
->  svc_init_buffer(struct svc_rqst *rqstp, const struct svc_serv *serv, int=
- node)
->  {
-> -	unsigned long ret;
-> -
->  	rqstp->rq_maxpages =3D svc_serv_maxpages(serv);
-> =20
->  	/* rq_pages' last entry is NULL for historical reasons. */
-> @@ -649,9 +647,7 @@ svc_init_buffer(struct svc_rqst *rqstp, const struct =
-svc_serv *serv, int node)
->  	if (!rqstp->rq_pages)
->  		return false;
-> =20
-> -	ret =3D alloc_pages_bulk_node(GFP_KERNEL, node, rqstp->rq_maxpages,
-> -				    rqstp->rq_pages);
-> -	return ret =3D=3D rqstp->rq_maxpages;
-> +	return true;
->  }
-> =20
->  /*
+On Mon, 2025-06-09 at 18:06 -0700, Rick Macklem wrote:
+> On Mon, Jun 9, 2025 at 5:17=E2=80=AFPM Dai Ngo <dai.ngo@oracle.com> wrote=
+:
+> >=20
+> > On 6/9/25 4:35 PM, Rick Macklem wrote:
+> > > Hi,
+> > >=20
+> > > I hope you don't mind a cross-post, but I thought both groups
+> > > might find this interesting...
+> > >=20
+> > > I have been creating a compound RPC that does REMOVE and
+> > > then tries to determine if the file object has been removed and
+> > > I was surprised to see quite different results from the Linux knfsd
+> > > and Solaris 11.4 NFSv4.1/4.2 servers. I think both these servers
+> > > provide FH4_PERSISTENT file handles, although I suppose I
+> > > should check that?
+> > >=20
+> > > First, the test OPEN/CREATEs a regular file called "foo" (only one
+> > > hard link) and acquires a write delegation for it.
+> > > Then a compound does the following:
+> > > ...
+> > > REMOVE foo
+> > > PUTFH fh for foo
+> > > GETATTR
+> > >=20
+> > > For the Solaris 11.4 server, the server CB_RECALLs the
+> > > delegation and then replies NFS4ERR_STALE for the PUTFH above.
+> > > (The FreeBSD server currently does the same.)
+> > >=20
+> > > For a fairly recent Linux (6.12) knfsd, the above replies NFS_OK
+> > > with nlinks =3D=3D 0 in the GETATTR reply.
+> > >=20
+> > > Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
+> > > probably missed something) and I cannot find anything that states
+> > > either of the above behaviours is incorrect.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+This seems outside the scope of the spec. What you're probably seeing
+is just differences in the implementation details of the two servers.
+
+> > > (NFS4ERR_STALE is listed as an error code for PUTFH, but the
+> > > description of PUTFH only says that it sets the CFH to the fh arg.
+> > > It does not say anything w.r.t. the fh arg. needing to be for a file
+> > > that still exists.) Neither of these servers sets
+> > > OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
+> > >=20
+> > > So, it looks like "file object no longer exists" is indicated either
+> > > by a NFS4ERR_STALE reply to either PUTFH or GETATTR
+> > > OR
+> > > by a successful reply, but with nlinks =3D=3D 0 for the GETATTR reply=
+.
+> > >=20
+> > > To be honest, I kinda like the Linux knfsd version, but I am wonderin=
+g
+> > > if others think that both of these replies is correct?
+> > >=20
+> > > Also, is the CB_RECALL needed when the delegation is held by
+> > > the same client as the one doing the REMOVE?
+> >=20
+> > The Linux NFSD detects the delegation belongs to the same client that
+> > causes the conflict (due to REMOVE) and skips the CB_RECALL. This is
+> > an optimization based on the assumption that the client would handle
+> > the conflict locally.
+> And then what does the server do with the delegation?
+> - Does it just discard it, since the file object has been deleted?
+> OR
+> - Does it guarantee that a DELEGRETURN done after the REMOVE will
+>   still work (which seems to be the case for the 6.12 server I am using f=
+or
+>   testing).
+>=20
+
+The latter. The file on the server is still being held open by virtue
+of the fact that the client holds a delegation stateid on it.
+
+The inode will still exist in core (with nlinks =3D=3D 0) until its last
+reference is released (here, when the client does the final
+DELEGRETURN). Aside from the fact that it's now disconnected from the
+filesystem namespace, it's still "alive", and reachable via filehandle.
+
+> >=20
+> > If the REMOVE was done by another client, the REMOVE will not complete
+> > until the delegation is returned. If the PUTFH comes after the REMOVE
+> > was completed, it'll  fail with NFS4ERR_STALE since the file, specified
+> > by the file handle, no longer exists.
+> Assuming the statement w.r.t. "fail with NFS4ERR_STALE" only applies to
+> "REMOVE done by another client" then that sounds fine.
+> However if the "fail with NFS4ERR_STALE is supposed for happen after
+> REMOVE for same client" then that is not what I am seeing.
+> If you are curious, the packet trace is here. (Look at packet#58).
+> https://people.freebsd.org/~rmacklem/linux-remove.pcap
+>=20
+> Btw, in case you are curious why I am doing this testing, I am trying
+> to figure out a good way for the FreeBSD client to handle temporary
+> files. Typically on POSIX they are done via the syscalls:
+>=20
+> fd =3D open("foo", O_CREATE ...);
+> unlink("foo");
+> write(fd,..), write(fd,..)...
+> read(fd,...), read(fd,...)...
+> close(fd);
+>=20
+> If this happens quickly and is not too much writing, the writes
+> copy data into buffers/pages, the reads read the data out of
+> the pages and then it all gets deleted.
+>=20
+
+Yep, common pattern.
+
+> Unfortunately, the CB_RECALL forces the NFSv4.n client
+> to do WRITE, WRITE,..COMMIT and then DELEGRETURN.
+> Then the REMOVE throws all the data away on the NFSv4.n
+> server.
+> --> As such, I really like not doing the CB_RECALL for "same client".
+> My concern is "what happens to the delegation after the file object ("foo=
+")
+> gets deleted?
+> It either needs to be thrown away by the NFSv4.n server or the
+> PUTFH, DELEGRETURN needs to work after the REMOVE.
+
+I think the latter. A REMOVE just removes the filename from the
+namespace. What happens to the underlying inode/vnode/whathaveyou is
+undefined by the protocol. The delegation is effectively holding the
+file open, so it needs to continue to exist on the server, just as the
+file "foo" in your example above must exist after the unlink().
+
+> Otherwise, the NFSv4.n server may get constipated by the delegations,
+> which might be called stale, since the file object has been deleted.
+>=20
+> --> I can do PUTFH, GETATTR after REMOVE in the same compound,
+>      to find out if the file object has been deleted. But then, if a
+>      PUTFH, DELEGRETURN fails with NFS4ERR_STALE, can I get
+>      away with saying "the server should just discard the delegation as
+>      the client already has done so??.
+>=20
+> Thanks for your comments, rick
+>=20
+
+If you still have an outstanding delegation after a REMOVE, then
+returning ESTALE on the filehandle at that point seems wrong. The
+delegation still exists, so the underlying filehandle should still
+exist.
+
+Linux doesn't generally throw back an NFS4ERR_STALE until it just can't
+find the inode at all anymore. A dentry holds a reference to the inode,
+and open files hold a reference to the dentry. The remove just
+disconnects the dentry from the namespace and drops its refcount. When
+the DELEGRETURN issues the last close, the inode gets cleaned up and at
+that point you can't find it by filehandle anymore.
+
+You probably want to aim for similar behavior in FreeBSD?
+
+> >=20
+> > -Dai
+> >=20
+> > > (I don't think it is, but there is a discussion in 18.25.4 which says
+> > > "When the determination above cannot be made definitively because
+> > > delegations are being held, they MUST be recalled.." but everything
+> > > above that is a may/MAY, so it is not obvious to me if a server reall=
+y
+> > > needs to case?)
+> > >=20
+> > > Any comments? Thanks, rick
+> > > ps: I am amazed when I learn these things about NFSv4.n after all
+> > >        these years.
+> > >=20
+
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
