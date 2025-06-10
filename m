@@ -1,62 +1,70 @@
-Return-Path: <linux-nfs+bounces-12235-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12236-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14D2EAD2D5D
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 07:39:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78EF2AD3045
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 10:28:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFB2316EE18
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 05:39:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A9B63188F55A
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 08:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28DA225EF81;
-	Tue, 10 Jun 2025 05:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E883F280CD0;
+	Tue, 10 Jun 2025 08:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eH27CSTh"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="XO9JCRIa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A81121931C
-	for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 05:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD51220699;
+	Tue, 10 Jun 2025 08:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749533951; cv=none; b=L5H/xbVv9Mql1WLX6lC779ZiIXv37tHwqPUTODeisQDUwJQccfQwzpx+CaPqfmBxPNXOFVjwO0fHATVV7TP/ccIlnUQivH4tdQPp4Apw7JWJ7jWs9qZ5rl/F0qZTHM6jNXDaKOI2DaVcJauOFc6oqScs6IU02kh0SuxuqsykjEg=
+	t=1749544007; cv=none; b=CgGje8OokptjYS0qqYy943iZ8sRDKwzRXs+F2+PgDbcZltvhWJ13hpohFPuDC3TSM3MuIUfgmbDD7PQVtdGoj560RENVBDzW0Tvr6N5A1gMfLnU/ch916bmlrNYEyUPlUovLvfv0L7L8GTNi3AknAb6KTX3NNilHeZNOB392CCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749533951; c=relaxed/simple;
-	bh=rigiyzExHXT8occ07SKFdGyZy2Xtl1TnOgfu0eMzHSY=;
+	s=arc-20240116; t=1749544007; c=relaxed/simple;
+	bh=hsUFDBfZdSIR8tVs5pcdIO2t5Rqm3FQasO9x+5ffL/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OraKeJlj+WipxoRUMuR6RRiminZ+qarKwRhvJckAmKHUTc3cZB+f8QWPKoWHbusDnai6t9WlbS6H55bXmb3D7FkYaNSunC+chJqNtgpTMgqNQzb9I1ivkFpajj8yEJalD9vTZeLGiRi2yHhju4NPMnficQaw7z/0VP9WFbInPqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eH27CSTh; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DAchEpBKWOcwsqkveVte+0jTh0GW4ycA05ih9akmGvn+jEZD9B2FZ9hFu9MEs6H88T3yNK4sosBwGOr2WsqclrlfU46ff+prPN6PO74kYcUKtGobxwE5H7VxClIowu97GZWRxngic7rlcQqlNG3OHY8F4cr7cbWvFGH6TZOtNK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=XO9JCRIa; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=D7o0B2A4ZMqsSbF4dSWI7FRAu02HwuKBDrBrsoH3DGQ=; b=eH27CSTh0Zia58gzZE5KE82Yg5
-	xZRixqB1c4vjbEbJBJ6FMzbjwShg5eZopZC3YOJLgBcFk1LlZhoG1YwDPgA7KV6PwBlBmnfnaIC6m
-	YTFW7B7SBizDSWCNssVCDMQP+MizeE053u8c/dAtb+NDzVm2bTPefB9gldaTLcGdpT0q6IxbaxPMs
-	H5JQsWCSGLGIpTi54SWnUy0fhivN2t07f9o50+fJHqmkVLfByXaLY8AN0cQ51JJco8Gx8WjJWNpBy
-	Y7CFrTBNlj+aPJqKe8fp/SxAgQuJTWRdZyHfNeQF5Sp+GzVBtiAik+k7E+4dXjZnlYn5Brdm/ab03
-	l2zJ/APw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOrhS-00000005r7b-3jPf;
-	Tue, 10 Jun 2025 05:39:06 +0000
-Date: Mon, 9 Jun 2025 22:39:06 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Sergey Bashirov <sergeybashirov@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
+	bh=gJjdNpvFM5H1GrQp90MUXelTKQKyUyiKDrJlTSfmRX4=; b=XO9JCRIaZShdY6x5O88SggXoA8
+	uFwjOwHiujLn1n5A/Ig2GP3eZ6yc58fpcv27yh6+KT0HDTAD/RH/yNWXnKmnpqz90PXc9K+31X9Ju
+	Je14nhoJxsqNu4OYmHRNgPbUkSvBsKstZnihAQa2KUJLcmasNsdX/hglTNt0/cmsIJNXjWrjb/MiR
+	mgezfhZkeD28qsUsL2rhgoW0m+2Kl7KXku6Q2P6ysqtEyFUhJ+jKHIW6tQZyH9Q14RTecI3aPg6ZY
+	B3wA0d3YKMO37MwUjWaxH1PBnUjpnQeeekmX7lUW5bnJkK6Tgco/Ubhl2yDfFnvKlZlwB+6+BSJrV
+	LYsrxVbA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uOuJY-00000004m5v-0CE1;
+	Tue, 10 Jun 2025 08:26:36 +0000
+Date: Tue, 10 Jun 2025 09:26:36 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neil@brown.name>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	"J . Bruce Fields" <bfields@fieldses.org>,
-	Konstantin Evtushenko <koevtushenko@yandex.com>,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Implement large extent array support in pNFS
-Message-ID: <aEfE-r2dkuDRUKsq@infradead.org>
-References: <20250604130809.52931-1-sergeybashirov@gmail.com>
- <aEBeJ2FoSmLvZlSc@infradead.org>
- <uegslxlqscbgc2hkktaavrc5fjoj5chlmfdxhltgv5idzazm3h@irvki3iijaw4>
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	David Howells <dhowells@redhat.com>, Tyler Hicks <code@tyhicks.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Carlos Maiolino <cem@kernel.org>, linux-fsdevel@vger.kernel.org,
+	coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+	linux-nfs@vger.kernel.org, netfs@lists.linux.dev,
+	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] Change vfs_mkdir() to unlock on failure.
+Message-ID: <20250610082636.GA1131663@ZenIV>
+References: <>
+ <20250609005009.GB299672@ZenIV>
+ <174944652013.608730.3439111222517126345@noble.neil.brown.name>
+ <20250609053442.GC299672@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,79 +73,18 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <uegslxlqscbgc2hkktaavrc5fjoj5chlmfdxhltgv5idzazm3h@irvki3iijaw4>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250609053442.GC299672@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Jun 10, 2025 at 03:36:49AM +0300, Sergey Bashirov wrote:
-> On Wed, Jun 04, 2025 at 07:54:31AM -0700, Christoph Hellwig wrote:
-> > On Wed, Jun 04, 2025 at 04:07:08PM +0300, Sergey Bashirov wrote:
-> > > When pNFS client in block layout mode sends layoutcommit RPC to MDS,
-> > > a variable length array of modified extents is supplied within request.
-> > > This patch allows NFS server to accept such extent arrays if they do not
-> > > fit within single memory page.
-> > 
-> > How did you manage to trigger such a workload?
-> 
-> Together with Konstantin we spent a lot of time enabling the pNFS block
-> volume setup. We have SDS that can attach virtual block devices via
-> vhost-user-blk to virtual machines. And we researched the way to create
-> parallel or distributed file system on top of this SDS. From this point
-> of view, pNFS block volume layout architecture looks quite suitable. So,
-> we created several VMs, configured pNFS and started testing. In fact,
-> during our extensive testing, we encountered a variety of issues including
-> deadlocks, livelocks, and corrupted files, which we eventually fixed.
-> Now we have a working setup and we would like to clean up the code and
-> contribute it.
+On Mon, Jun 09, 2025 at 06:34:42AM +0100, Al Viro wrote:
 
-Can you share your reproducer scripts for client and server?
+> I can't promise a response tonight - going down in an hour or so
+> and I'd like to do enough reordering of #work.mount to be able
+> to post the initial variant of at least some of that in the
+> morning...
 
-Btw, also as a little warning:  the current pNFS code mean any client
-can corrupt the XFS metadata.  If you want to actually use the code
-in production you'll probably want to figure out a way to either use
-the RT device for exposed data (should be easy, but the RT allocator
-sucks..), or find a way to otherwise restrict clients from overwriting
-metadata.
+Grr...  Sorry, that took longer than I hoped - fun propagate_mnt_busy()
+bug had eaten a lot of time ;-/
 
-> > Also you patch doesn't apply to current mainline.
-> 
-> We will use the git repository link for NFSD from the MAINTAINERS file and
-> "nfsd-next" branch to work on top of it. Please let me know if this is the
-> wrong repository or branch in our case.
-
-I guess that's generally fine, but around a -rc1 release it's a bit
-cumbersome.
-
-> As for the sub-buffer, the xdr_buf structure is initialized in the core
-> nfsd code to point only to the "opaque" field of the "layoutupdate4"
-> structure. Since this field is specific to each layout driver, its
-> xdr_stream is created on demand inside the field handler. For example,
-> the "opaque" field is not used in the file layouts. Do we really need to
-> expose the xdr_stream outside the field handler? Probably not. I also
-> checked how this is implemented in the nfs client code and found that
-> xdr_stream is created in a similar way inside the layout driver. Below
-> I have outlined some thoughts on why implemented it this way. Please
-> correct me if I missed anything.
-
-Well, the fields are opaque, but everyone has to either decode (or
-ignore it).  So having common setup sounds useful.
-
-> 1. Allocate a large enough memory buffer and copy the "opaque" field into
->    it. But I think an extra copy of a large field is not what we prefer.
-
-Agreed.
-
-> 2. When RPC is received, nfsd_dispatch() first decodes the entire compound
->    request and only then processes each operation. Yes, we can create a new
->    callback in the layout driver interface to decode the "opaque" field
->    during the decoding phase and use the actual xdr stream of the request.
->    What I don't like here is that the layout driver is forced to parse a
->    large data buffer before general checks are done (sequence ID, file
->    handler, state ID, range, grace period, etc.). This opens up
->    opportunities to abuse the server by sending invalid layout commits with
->    the maximum possible number of extents (RPC can be up to 1MB).
-
-OTOH the same happens for parsing any other NFS compound that isn't
-split into layouts, isn't it?  And we have total size limits on the
-transfer.
-
+I'll go through your series when I get up; apologies for delay...
 
