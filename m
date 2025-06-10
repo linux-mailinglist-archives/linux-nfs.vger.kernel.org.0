@@ -1,64 +1,49 @@
-Return-Path: <linux-nfs+bounces-12232-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12233-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 991A5AD2C5B
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 06:00:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA0ECAD2CBE
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 06:35:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FBAB16D87C
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 04:00:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A11CE16AFC3
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jun 2025 04:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8935D25D559;
-	Tue, 10 Jun 2025 03:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1FBoKFDA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E113020E711;
+	Tue, 10 Jun 2025 04:35:04 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3773125D53B;
-	Tue, 10 Jun 2025 03:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C821D7999;
+	Tue, 10 Jun 2025 04:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749527996; cv=none; b=Fg4bb4z7xh9M4kCtXMpNHG4nI4AnQUVUo/P/bcqiKoVd7RNGGufP35Qc3qJikQUbOR+ConWTWk1kNsdtyOUqwUvTbzFPCukQqALR/2xpVUdkBN2OHz+VeP4Vwe7vCYtFvrHFTRacRrlUW/8ArL6fPbVkrzquSchoI/4PU10Ydxo=
+	t=1749530104; cv=none; b=hlfXjU2WYmK2FWX6WdDvrIt6ztt+2IACW0RTg3OfyAX1OgRaVyA5eBYLoGOS6wGYavU9azNvSJwHRCp/oGNsFxgG+nvBnW7mjWeYFNY8kR5viox+FAJPZDChwwtdGbfYZVicuXnNz8jH3KtRtktL5T2+TLE6xd/0smX7B8cD7/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749527996; c=relaxed/simple;
-	bh=KL0HhKIt6c3r3fAEsoxmA3elH6x2cfQygPx+5IUbRhg=;
+	s=arc-20240116; t=1749530104; c=relaxed/simple;
+	bh=DmSqb4RyrJEUfQc38zpgEXHaWPa4Afjzig3KPbwxgxY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NILYvmWpzk5Dr9CuX/pROEytWXHUg11dy5nMjYBdrNjKGYmE0ht4ShBHwwZQVtZMSmmW7gHuHfu0YAj6VTk1VXhvd1/L6aqjDPt8Whu6ob+58ckmVkYH2gMTst8Zt39VWiuQzpIfX8kSzs6ddRkdeqnF3qHXF96oT3f94muIatU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1FBoKFDA; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sU5sUAgpuF+2t3bLSMGu6a54oU4ikoAiS1gLuK6x3Gc=; b=1FBoKFDAcxgKfiPuLAzUUCEOzs
-	jXtioUSLW9JBSVhxLsOuApjNKF6+grjpCHz28vZd/IGQfabO94E7Iy5zrXHaM7sXd5rWOt2ohXMjh
-	IWjBY7xM6+f7ASZxAQImXZ6HEjUUUHZ59t4SqDwjBqb0ijo1fQSMNM3YVMJNRZTmW/JF7jVITfhFN
-	Om33T3rbortPWrfpdDQwGCcW9bg9KwyLjGGEn4aa+lLwst/wrBxiji30T7o9I9d+l54gXlYhPL1Mz
-	UUJc2OpwcU3Pi4aVWATmOfvoWIH1c766ic7f60/L0AflKqUPUEEjPU0/9pUl2qanhdNErWy5AQfO2
-	NN74eOdA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOq9R-00000005ife-425e;
-	Tue, 10 Jun 2025 03:59:53 +0000
-Date: Mon, 9 Jun 2025 20:59:53 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Joanne Koong <joannelkoong@gmail.com>, miklos@szeredi.hu,
-	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, bernd.schubert@fastmail.fm,
-	kernel-team@meta.com, willy@infradead.org, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
-Message-ID: <aEetuahlyfHGTG7x@infradead.org>
-References: <20250606233803.1421259-1-joannelkoong@gmail.com>
- <20250606233803.1421259-6-joannelkoong@gmail.com>
- <aEZoau3AuwoeqQgu@infradead.org>
- <20250609171444.GL6156@frogsfrogsfrogs>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a64aZq6ynbTllKFDPjPFpRr6cu6qCxMG2ESywJ1W9ArQMQsMlvQgQ07PyM0iC889YxeJN0RHZLPWqfixO8A3ye80AMiqehgyyUzRgC4z6r7nxMhFCo7maPmm5acOHBz0tCyhmy6lDRJ8LFGxdP0uQMd3XgLk+X+desWXz2P1mpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id E026968C4E; Tue, 10 Jun 2025 06:34:51 +0200 (CEST)
+Date: Tue, 10 Jun 2025 06:34:51 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+	kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>,
+	keyrings@vger.kernel.org
+Subject: Re: [PATCH 2/2] nfs: create a kernel keyring
+Message-ID: <20250610043451.GA24571@lst.de>
+References: <20250515115107.33052-3-hch@lst.de> <c2044daa-c68e-43bf-8c28-6ce5f5a5c129@grimberg.me> <aCdv56ZcYEINRR0N@kernel.org> <692256f1-9179-4c19-ba17-39422c9bad69@grimberg.me> <20250602152525.GA27651@lst.de> <aEB3jDb3EK2CWqNi@kernel.org> <20250605042802.GA834@lst.de> <aEMbvQ7EekwPHQ8c@kernel.org> <20250609040143.GA26162@lst.de> <d34245cfc6c3dcf86969682e7c35a131c6100d47.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,26 +52,25 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250609171444.GL6156@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <d34245cfc6c3dcf86969682e7c35a131c6100d47.camel@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, Jun 09, 2025 at 10:14:44AM -0700, Darrick J. Wong wrote:
-> > Where "folio laundering" means calling ->launder_folio, right?
+On Tue, Jun 10, 2025 at 12:28:49AM +0300, Jarkko Sakkinen wrote:
+> On Mon, 2025-06-09 at 06:01 +0200, Christoph Hellwig wrote:
+> > On Fri, Jun 06, 2025 at 07:47:57PM +0300, Jarkko Sakkinen wrote:
+> > > Ah, ok this cleared it up, thanks! Just learning these subsystem,
+> > > appreciate the patience with this one :-)
+> > 
+> > I'm also just learning the keyring, so double checking from that
+> > perspective is also always welcome..
 > 
-> What does fuse use folio laundering for, anyway?  It looks to me like
-> the primary users are invalidate_inode_pages*.  Either the caller cares
-> about flushing dirty data and has called filemap_write_and_wait_range;
-> or it doesn't and wants to tear down the pagecache ahead of some other
-> operation that's going to change the file contents and doesn't care.
-> 
-> I suppose it could be useful as a last-chance operation on a dirty folio
-> that was dirtied after a filemap_write_and_wait_range but before
-> invalidate_inode_pages*?  Though for xfs we just return EBUSY and let
-> the caller try again (or not).  Is there a subtlety to fuse here that I
-> don't know about?
+> After quickly studying tlshd, my understanding is that the ".nfs" is a
+> "vault for transient stuff" passed to "keyrings" configuration option.
+> After that serials within that vault are passed to mount-options
+> defined in 1/2.
 
-My memory might be betraying me, but I think willy once launched an
-attempt to see if we can kill launder_folio.  Adding him, and the
-mm and nfs lists to check if I have a point :)
+Yes.  I'll try to make it more clear for a resend, and I also plan
+to write documents for using TLS and thus the keyrings with NFS and
+nvme.
 
 
