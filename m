@@ -1,247 +1,155 @@
-Return-Path: <linux-nfs+bounces-12324-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12326-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0875AD5DBB
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:03:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FE8CAD5EA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:56:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DAA83AA856
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 18:02:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60022179B74
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 18:56:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E0C728851A;
-	Wed, 11 Jun 2025 18:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02BE82153E7;
+	Wed, 11 Jun 2025 18:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utVzX9dE"
+	dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b="nvy3ywaK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxout5.mail.janestreet.com (mxout5.mail.janestreet.com [64.215.233.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CCD28369D;
-	Wed, 11 Jun 2025 18:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A29E20DD75
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Jun 2025 18:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.215.233.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749664927; cv=none; b=ktPFH7awl1kkYwqIUK4siO5U7zIEVAqfZLjZruCHxYhCXQcg3DB2a+0IXpNS9LvcvWFGALmsZBHos0zPQASMmzQhdW7X+6VvxTDcaUd/TZB3R32BifKtRJfPan0aCl6ks17kTJtzS5/64yozNYt4WqUMKr4Kd4CWwReGqa5fLVc=
+	t=1749668167; cv=none; b=GRB0gzNVVaVBQWYmVbsPNs0q24Q85Vczhl3dSsUWFk0bzccQFXP/nPhAB5SiPfwGoo6sy70+KYcByb8WAe52BQdlXrXnhsFGerdb1yd+8DVnC/i9N7zbPTPneGoOZ311zLtUemLSjwZ0wAlp6XJQ/V2PObEQt1HlIg0nl0eQRX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749664927; c=relaxed/simple;
-	bh=oK07qNHHtHnEZOHYEFp2pLAZLrm+2OvIpgclbYz0RiY=;
+	s=arc-20240116; t=1749668167; c=relaxed/simple;
+	bh=uZMNI2eKpooRJpq5nrCE/LvN5FOfjLV2hWIZUyweVgA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a2RstvQfkFmgjv24H+ugT7Ujey15i/xtYdfdCUtblX41b7NUNAaEcO6d9nq7JyV7JZWoQBLpJMoX0ypXNfZe1dwvXM0NHA+GUyZ76m1OSqYOt1zyLSJDUzbedyitPxLbvscuFkVpR8IUkxz85zJcfk3gPLcg3YKWs1LIgHvgLjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utVzX9dE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE013C4CEEA;
-	Wed, 11 Jun 2025 18:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749664927;
-	bh=oK07qNHHtHnEZOHYEFp2pLAZLrm+2OvIpgclbYz0RiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=utVzX9dE26DRCTqCb6ouSwqWjK43MAtsRplcwJhfyoXYm6an7DKOYXBJCH5ifiXd1
-	 eZZmLvwtfpwlmXoctWeD3SXOBikOUEUfgoMjo1Tm1NbTOg70VXzHXEHJJQH9mtrWwf
-	 jtgup6WmnShL8G8xhE8hANmghas86xQTl7Gi37MEzovwfewOC/ULgcT/wQu2WhW4ME
-	 ldNQFKrfBjMfC2ZIJ2pTF6uCgw0jsTQe3KSzklB86TyiEkcO9Lh1kVBve3b3OjGqCy
-	 UDPXWkFj8mPyxt5kiyYmgUhtcPvhtWyuMYnAc5BeKP5RqZXinLgNIx0wgW3aSOgmZx
-	 iZLyDZ7CYYcrw==
-Date: Wed, 11 Jun 2025 14:02:05 -0400
-From: Mike Snitzer <snitzer@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=stBdhj9wHqYuvRA4t7OAMtLkTNsVbbajgfhEl5UUF8mDsZAjYj0k7ur+pM0TEzu/YeZVooC1wKasMSKtqHRk4tHyCR2Tie6aU//ANhCNBxC63sPt1K8GjB6+iF3wwOStVXhHaBkhYCbcyiZPWhjb/TZ4uhU554Z7ZwTNlEbEJJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com; spf=pass smtp.mailfrom=janestreet.com; dkim=pass (2048-bit key) header.d=janestreet.com header.i=@janestreet.com header.b=nvy3ywaK; arc=none smtp.client-ip=64.215.233.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=janestreet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=janestreet.com
+Date: Wed, 11 Jun 2025 14:50:31 -0400
+From: Nikhil Jha <njha@janestreet.com>
 To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 0/6] NFSD: add enable-dontcache and initially use it to
- add DIO support
-Message-ID: <aEnEnTEYaQ07XOb5@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <9f96291b-3a87-47db-a037-c1d996ea37c0@oracle.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ 	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ 	Olga Kornievskaia <okorniev@redhat.com>,
+ 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+ 	"David S. Miller" <davem@davemloft.net>,
+ 	Eric Dumazet <edumazet@google.com>,
+ 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ 	Simon Horman <horms@kernel.org>,
+ 	Steven Rostedt <rostedt@goodmis.org>,
+ 	Masami Hiramatsu <mhiramat@kernel.org>,
+ 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ 	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] fix gss seqno handling to be more rfc-compliant
+Message-ID: <20250611A18503192e946d6.njha@janestreet.com>
+References: <20250319-rfc2203-seqnum-cache-v2-0-2c98b859f2dd@janestreet.com>
+  <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9f96291b-3a87-47db-a037-c1d996ea37c0@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d78576c1-d743-4ec2-bf8c-d87603460ac1@oracle.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=janestreet.com;
+  s=waixah; t=1749667831;
+  bh=FpMbOeXSW5gqREJmu38NRaAciY+AIiBd4f7rjLts1EQ=;
+  h=Date:From:To:Cc:Subject:References:In-Reply-To;
+  b=nvy3ywaKM+HXjcbXegRqJJhPWpPema6thNJE0eI9STl3qqpqpdaXrG0RPEcTb6eLi
+  OuFY7Iq4Jo9smQZRj6nhny01S5wernP4efPDmtmCnXwnZ0SCPvRmjn+SGzZBmq77HG
+  DzaYSnlxiSHw13ZY1IL/DsX9E0N6VuqliCxJ1xlb5MSpcGNKDrWgT0TNC34L6aqtA/
+  0vlTLRSBQqCJ9XOQ4osz9zYEPUdSdnR6pEUtIjXbVoR9J62P4bezOZk9U8/YcgjV+5
+  vb/KSZaepYU7UBrFw14chpuFvmzUCwJbRVdFHC+OisEvyGoVCqhoZsKxlVk+Wvjf9z
+  22Ya9jACvP9Rg==
 
-On Wed, Jun 11, 2025 at 10:16:39AM -0400, Chuck Lever wrote:
-> On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> > Hi,
+On Thu, Mar 20, 2025 at 09:16:15AM -0400, Chuck Lever wrote:
+> On 3/19/25 1:02 PM, Nikhil Jha via B4 Relay wrote:
+> > When the client retransmits an operation (for example, because the
+> > server is slow to respond), a new GSS sequence number is associated with
+> > the XID. In the current kernel code the original sequence number is
+> > discarded. Subsequently, if a response to the original request is
+> > received there will be a GSS sequence number mismatch. A mismatch will
+> > trigger another retransmit, possibly repeating the cycle, and after some
+> > number of failed retries EACCES is returned.
 > > 
-> > This series introduces 'enable-dontcache' to NFSD's debugfs interface,
-> > once enabled NFSD will selectively make use of O_DIRECT when issuing
-> > read and write IO:
-> > - all READs will use O_DIRECT (both aligned and misaligned)
-> > - all DIO-aligned WRITEs will use O_DIRECT (useful for SUNRPC RDMA)
-> > - misaligned WRITEs currently continue to use normal buffered IO
+> > RFC2203, section 5.3.3.1 suggests a possible solution... “cache the
+> > RPCSEC_GSS sequence number of each request it sends” and "compute the
+> > checksum of each sequence number in the cache to try to match the
+> > checksum in the reply's verifier." This is what FreeBSD’s implementation
+> > does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
 > > 
-> > Q: Why not actually use RWF_DONTCACHE (yet)?
-> > A: 
-> > If IO can is properly DIO-aligned, or can be made to be, using
-> > O_DIRECT is preferred over DONTCACHE because of its reduced CPU and
-> > memory usage.  Relative to NFSD using RWF_DONTCACHE for misaligned
-> > WRITEs, I've briefly discussed with Jens that follow-on dontcache work
-> > is needed to justify falling back to actually using RWF_DONTCACHE.
-> > Specifically, Hammerspace benchmarking has confirmed as Jeff Layton
-> > suggested at Bakeathon, we need dontcache to be enhanced to not
-> > immediately dropbehind when IO completes -- because it works against
-> > us (due to RMW needing to read without benefit of cache), whereas
-> > buffered IO enables misaligned IO to be more performant. Jens thought
-> > that delayed dropbehind is certainly doable but that he needed to
-> > reason through it further (so timing on availability is TBD). As soon
-> > as it is possible I'll happily switch NFSD's misaligned write IO
-> > fallback from normal buffered IO to actually using RWF_DONTCACHE.
+> > However, even with this cache, retransmits directly caused by a seqno
+> > mismatch can still cause a bad message interleaving that results in this
+> > bug. The RFC already suggests ignoring incorrect seqnos on the server
+> > side, and this seems symmetric, so this patchset also applies that
+> > behavior to the client.
 > > 
-> > Continuing with what this patchset provides:
+> > These two patches are *not* dependent on each other. I tested them by
+> > delaying packets with a Python script hooked up to NFQUEUE. If it would
+> > be helpful I can send this script along as well.
 > > 
-> > NFSD now uses STATX_DIOALIGN and STATX_DIO_READ_ALIGN to get and store
-> > DIO alignment attributes from underlying filesystem in associated
-> > nfsd_file.  This is done when the nfsd_file is first opened for a
-> > regular file.
+> > Signed-off-by: Nikhil Jha <njha@janestreet.com>
+> > ---
+> > Changes since v1:
+> >  * Maintain the invariant that the first seqno is always first in
+> >    rq_seqnos, so that it doesn't need to be stored twice.
+> >  * Minor formatting, and resending with proper mailing-list headers so the
+> >    patches are easier to work with.
 > > 
-> > A new RWF_DIRECT flag is added to include/uapi/linux/fs.h to allow
-> > NFSD to use O_DIRECT on a per-IO basis.
+> > ---
+> > Nikhil Jha (2):
+> >       sunrpc: implement rfc2203 rpcsec_gss seqnum cache
+> >       sunrpc: don't immediately retransmit on seqno miss
 > > 
-> > If enable-dontcache=1 then RWF_DIRECT will be set for all READ IO
-> > (even if the IO is misaligned, thanks to expanding the read to be
-> > aligned for use with DIO, as suggested by Jeff and Chuck at the NFS
-> > Bakeathon held recently in Ann Arbor).
+> >  include/linux/sunrpc/xprt.h    | 17 +++++++++++-
+> >  include/trace/events/rpcgss.h  |  4 +--
+> >  include/trace/events/sunrpc.h  |  2 +-
+> >  net/sunrpc/auth_gss/auth_gss.c | 59 ++++++++++++++++++++++++++----------------
+> >  net/sunrpc/clnt.c              |  9 +++++--
+> >  net/sunrpc/xprt.c              |  3 ++-
+> >  6 files changed, 64 insertions(+), 30 deletions(-)
+> > ---
+> > base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+> > change-id: 20250314-rfc2203-seqnum-cache-52389d14f567
 > > 
-> > NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative to
-> > DIO alignment (both page and disk alignment).  This works quite well
-> > for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
-> > maps the WRITE payload into aligned pages. But more work is needed to
-> > be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
-> > used. I spent quite a bit of time analyzing the existing xdr_buf code
-> > and NFSD's use of it.  Unfortunately, the WRITE payload gets stored in
-> > misaligned pages such that O_DIRECT isn't possible without a copy
-> > (completely defeating the point).  I'll reply to this cover letter to
-> > start a subthread to discuss how best to deal with misaligned write
-> > IO (by association with Hammerspace, I'm most interested in NFS v3).
-> > 
-> > Performance benefits of using O_DIRECT in NFSD:
-> > 
-> > Hammerspace's testbed was 10 NFS servers connected via 800Gbit
-> > RDMA networking (mlx5_core), each with 1TB of memory, 48 cores (2 NUMA
-> > nodes) and 8 ScaleFlux NVMe devices (each with two 3.5TB namespaces.
-> > Theoretical max for reads per NVMe device is 14GB/s, or ~7GB/s per
-> > namespace).
-> > 
-> > And 10 client systems each running 64 IO threads.
-> > 
-> > The O_DIRECT performance win is pretty fantastic thanks to reduced CPU
-> > and memory use, particularly for workloads with a working set that far
-> > exceeds the available memory of a given server.  This patchset's
-> > changes (though patch 5, patch 6 wasn't written until after
-> > benchmarking performed) enabled Hammerspace to improve its IO500.org
-> > benchmark result (as submitted for this week's ISC 2025 in Hamburg,
-> > Germany) by 25%.
-> > 
-> > That 25% improvement on IO500 is owed to NFS servers seeing:
-> > - reduced CPU usage from 100% to ~50%
-> >   O_DIRECT:
-> >   write: 51% idle, 25% system,   14% IO wait,   2% IRQ
-> >   read:  55% idle,  9% system, 32.5% IO wait, 1.5% IRQ
-> >   buffered:
-> >   write: 17.8% idle, 67.5% system,   8% IO wait,  2% IRQ
-> >   read:  3.29% idle, 94.2% system, 2.5% IO wait,  1% IRQ
-> > 
-> > - reduced memory usage from just under 100% (987GiB for reads, 978GiB
-> >   for writes) to only ~244 MB for cache+buffer use (for both reads and
-> >   writes).
-> >   - buffered would tip-over due to kswapd and kcompactd struggling to
-> >     find free memory during reclaim.
-> > 
-> > - increased NVMe throughtput when comparing O_DIRECT vs buffered:
-> >   O_DIRECT: 8-10 GB/s for writes, 9-11.8 GB/s for reads
-> >   buffered: 8 GB/s for writes,    4-5 GB/s for reads
-> > 
-> > - abiliy to support more IO threads per client system (from 48 to 64)
-> > 
-> > The performance improvement highlight of the numerous individual tests
-> > in the IO500 collection of benchamrks was in the IOR "easy" test:
-> > 
-> > Write:
-> > O_DIRECT: [RESULT]      ior-easy-write     420.351599 GiB/s : time 869.650 seconds
-> > CACHED:   [RESULT]      ior-easy-write     368.268722 GiB/s : time 413.647 seconds
-> > 
-> > Read: 
-> > O_DIRECT: [RESULT]      ior-easy-read     446.790791 GiB/s : time 818.219 seconds
-> > CACHED:   [RESULT]      ior-easy-read     284.706196 GiB/s : time 534.950 seconds
-> > 
-> > It is suspected that patch 6 in this patchset will improve IOR "hard"
-> > read results. The "hard" name comes from the fact that it performs all
-> > IO using a mislaigned blocksize of 47008 bytes (which happens to be
-> > the IO size I showed ftrace output for in the 6th patch's header).
-> > 
-> > All review and discussion is welcome, thanks!
-> > Mike
-> > 
-> > Mike Snitzer (6):
-> >   NFSD: add the ability to enable use of RWF_DONTCACHE for all IO
-> >   NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
-> >   NFSD: pass nfsd_file to nfsd_iter_read()
-> >   fs: introduce RWF_DIRECT to allow using O_DIRECT on a per-IO basis
-> >   NFSD: leverage DIO alignment to selectively issue O_DIRECT reads and writes
-> >   NFSD: issue READs using O_DIRECT even if IO is misaligned
-> > 
-> >  fs/nfsd/debugfs.c          |  39 +++++++++++++
-> >  fs/nfsd/filecache.c        |  32 +++++++++++
-> >  fs/nfsd/filecache.h        |   4 ++
-> >  fs/nfsd/nfs4xdr.c          |   8 +--
-> >  fs/nfsd/nfsd.h             |   1 +
-> >  fs/nfsd/trace.h            |  37 +++++++++++++
-> >  fs/nfsd/vfs.c              | 111 ++++++++++++++++++++++++++++++++++---
-> >  fs/nfsd/vfs.h              |  17 +-----
-> >  include/linux/fs.h         |   2 +-
-> >  include/linux/sunrpc/svc.h |   5 +-
-> >  include/uapi/linux/fs.h    |   5 +-
-> >  11 files changed, 231 insertions(+), 30 deletions(-)
-> > 
+> > Best regards,
 > 
+> This seems like a sensible thing to do to me.
 > 
-> Hey Mike!
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
 > 
-> There's a lot to digest here!
+> -- 
+> Chuck Lever
 
-For sure.  Thanks for working through it.  My hope is it resonates and
-is meaningful to digest *after* reading through my lede-burying cover
-letter *and* the patches themselves.  Let it wash over you.
+Hi,
 
-It only adds 200 lines of change, folding patches might reduce
-weirdness.  How best to sequence and fold changes will be useful
-feedback.
+We've been running this patch for a while now and noticed a (very silly
+in hindsight) bug.
 
-> A few general comments:
-> 
-> - Since this isn't a series that you intend I should apply immediately
-> to nfsd-next, let's mark subsequent postings with "RFC".
+maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i], seq, p, len);
 
-Yeah, my first posting should've been RFC.
+needs to be
 
-But I'd be in favor of working with urgency so that by v6.16-rc4/5 you
-and Jeff are fine with it for the 6.17 merge window.
- 
-> - Before diving into the history and design, your cover letter should
-> start with a clear problem statement. What are you trying to fix? I
-> think that might be what Christoph is missing in his comment on 5/6.
-> Maybe it's in the cover letter now, but it reads to me like the lede is
-> buried.
+maj_stat = gss_validate_seqno_mic(ctx, task->tk_rqstp->rq_seqnos[i++], seq, p, len);
 
-Yeah, I struggled/struggle to distill sweeping work with various
-talking points down into a concise and natural flow.  Probably should
-taken my cover letter and fed it to some AI. ;)
+Or the kernel gets stuck in a loop when you have more than two retries.
+I can resend this patch but I noticed it's already made its way into
+quite a few trees. Should this be a separate patch instead?
 
-> - In addition to the big iron results, I'd like to see benchmark results
-> for small I/O workloads, and workloads with slower persistent storage,
-> and workloads on slower network fabrics (ie, TCP).
+- Nikhil
 
-It is opt-in so thankfully every class of usecase doesn't need to be
-something I've covered personally.  I'd welcome others to discover how
-this work impacts their workload of choice.
 
-But yeah, TCP with virt systems in the lab is what I developed against
-for quite a while.  It exposed that write IO is never aligned, so I
-eventually put that to one side because the initial target use was on
-a cluster with more capable RDMA network.
 
-Thanks,
-Mike
+
+
 
