@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-12300-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12301-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92573AD5278
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 12:47:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D97E1AD5308
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 13:05:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 42EDD1BC0944
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 10:46:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD4733AB288
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 11:02:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3023427A924;
-	Wed, 11 Jun 2025 10:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5C852E4028;
+	Wed, 11 Jun 2025 10:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5Fewh+B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvtSYJ9Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0958226A0C7;
-	Wed, 11 Jun 2025 10:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABD82E4026;
+	Wed, 11 Jun 2025 10:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638652; cv=none; b=JjmuSWblAUb+caq4KTNWwyEZ6jP8v7qJpVSdhZaprp40fTBA9uFTxhu6/X4AaETFnwMBIkdXH5T92qqGhAgE+4EECmk5DnzC4DNt2+VM4ISFa78uwXfzmYBkQs44o3ri9HlFBpMdHAKSF1QnGLNkmYHendcwNp5fOZ505XwfmM0=
+	t=1749639091; cv=none; b=EGvO7loUWSJeaduysr9Ssu31En/UhG15IB9VIW/wV6fj2BYs4WhR9uHbcyemA/ryUHrgW0zNQu9VqzNQ+Tp98wu83XJvMkuLDG0eOwJP1R88Q04ahZoQaYBbtR5O+/2Ws9UOz/FmQXB6HUo1hFGy3mDKtcsVl1ga86LcPi9JXNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638652; c=relaxed/simple;
-	bh=L1BiHKGHoF+WJOUfUOC0toX/JFdirrVpJEGYABWCoT4=;
+	s=arc-20240116; t=1749639091; c=relaxed/simple;
+	bh=ZYlnhqqM80K0aQrIUjsOlIiBgKKulsWPnzRUBsoBdjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azODqoK/UdY9n7af4bTtmDXo0hHch6iAeCfG7oSx54v5aLijMZB+NZiH/2Sp40p26QRDbDp88zKe/ryN4K9L1+dQq39e6uP3y9jeYxeb9hfGL0PuDfMvSMh//B+WRYGp/Ot9ty/qYaHaQ1Qb5WAVOaPGh0dCiyZGCqDLqPh8nvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5Fewh+B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B2EC4CEF2;
-	Wed, 11 Jun 2025 10:44:11 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=tEy9gxd5AxgaJrBV3gNHrmgdrWGRiFmHVXdR0G32u+tujblzVFE9DCze3egbGynbSUIcyq2LgXj5O3CqkVr8rhcp0UenwwH4u/2nZVksh0eTeHLN/vz2L4xa/Kh0gEbA22PjcJiyr0T8SLVMLwTSG/Fo1AKAeNO8hPdrqFRl+6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvtSYJ9Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB823C4CEF1;
+	Wed, 11 Jun 2025 10:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749638651;
-	bh=L1BiHKGHoF+WJOUfUOC0toX/JFdirrVpJEGYABWCoT4=;
+	s=k20201202; t=1749639091;
+	bh=ZYlnhqqM80K0aQrIUjsOlIiBgKKulsWPnzRUBsoBdjs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R5Fewh+BHlzuxEOmWF0fTcUi3Ct9X+6l862hvBwbDV3Me19BktS+z62h7+rj4QIkZ
-	 q7GbECpW2EKtHvR6KV4Q/A6uoD6xJqwtf5OuJzhAqdNxXzoRNIPjWFa//+OiuGuirW
-	 xElP1S2t6n4PoRyDA8UX8OgT3lMFkOYLBLXpzYY3S82aF+KBK6vPT2X6tL1MUvtzGs
-	 OZWgkH9qxRCCgayLHm87YaCQxgrZpNNwAEsTRZdK7krjqQKHjDhOeIiZWgjD9l0tUm
-	 rXY65Fn7Dmcu8vrJIXi8jUt+gaO2ZNBU/et+jQwQyFQd9vRSd2Bpyb4eDUAJ/IHHBx
-	 hfOwK028WcTAg==
-Date: Wed, 11 Jun 2025 06:44:10 -0400
+	b=XvtSYJ9QKmGQgwaeD76qWVF/4SFSE5uf7GCVofH0MTR6YQuUki1HYeeRwIgrUHVl/
+	 +8Mvv8mh83aoHhKrxMUsX4V9dgtv1XrZxF5Lgn7X0eXMAd4van6hcQtjmk9hccTJti
+	 K0RBm0T8XK4OvjaVrTqhEq5QgqrtgmaM/9MN1mGEBRARjTiOcDf20MuZSzZRS0HRlw
+	 Y5CT/erXmWDHG/p3SScIhOAVnPLvPcLhdnNrIrTAi+pVXwDD0Uixhd8QJFogrJmrWJ
+	 bC4hQht1i8h2b0g2dI5YdZCl+3hzqQ76qwypK1GK906LhDj2EcOS1SnyMcdw5Jk10C
+	 1+L0Oj/YENcdQ==
+Date: Wed, 11 Jun 2025 06:51:29 -0400
 From: Mike Snitzer <snitzer@kernel.org>
 To: Christoph Hellwig <hch@infradead.org>
 Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
 	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
 	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE
- for all IO
-Message-ID: <aEld-iBsy-vgXLoq@kernel.org>
+Subject: Re: [PATCH 4/6] fs: introduce RWF_DIRECT to allow using O_DIRECT on
+ a per-IO basis
+Message-ID: <aElfscsgqhpoyMom@kernel.org>
 References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <aEko3e_kpY-fA35R@infradead.org>
+ <20250610205737.63343-5-snitzer@kernel.org>
+ <aEkpEXIpr8aYNZ4k@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,38 +61,21 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEko3e_kpY-fA35R@infradead.org>
+In-Reply-To: <aEkpEXIpr8aYNZ4k@infradead.org>
 
-On Tue, Jun 10, 2025 at 11:57:33PM -0700, Christoph Hellwig wrote:
-> On Tue, Jun 10, 2025 at 04:57:32PM -0400, Mike Snitzer wrote:
-> > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any data
-> > read or written by NFSD will either not be cached (thanks to O_DIRECT)
-> > or will be removed from the page cache upon completion (DONTCACHE).
+On Tue, Jun 10, 2025 at 11:58:25PM -0700, Christoph Hellwig wrote:
+> On Tue, Jun 10, 2025 at 04:57:35PM -0400, Mike Snitzer wrote:
+> > Avoids the need to open code do_iter_readv_writev() purely to request
+> > that a sync iocb make use of IOCB_DIRECT.
 > > 
-> > enable-dontcache is 0 by default.  It may be enabled with:
-> >   echo 1 > /sys/kernel/debug/nfsd/enable-dontcache
+> > Care was taken to preserve the long-established value for IOCB_DIRECT
+> > (1 << 17) when introducing RWF_DIRECT.
 > 
-> Having this as a global debug-only interface feels a bit odd.
-> 
+> What is the problem with using vfs_iocb_iter_read instead of
+> vfs_iter_read and passing the iocb directly?
 
-I generally agree, I originally proposed nfsd.nfsd_dontcache=Y
-modparam:
-https://lore.kernel.org/linux-nfs/20250220171205.12092-1-snitzer@kernel.org/
-
-(and even implemented formal NFSD per-export "dontcache" control,
-which Trond and I both think is probably needed).
-
-But (ab)using debugfs is the approach Chuck and Jeff would like to
-take for experimental NFSD changes so that we can kick the tires
-without having to support an interface until the end of time. See
-commit 9fe5ea760e64 ("NFSD: Add /sys/kernel/debug/nfsd") for more on
-the general thinking.  First consumer was commit c9dcd1de7977 ("NFSD:
-Add experimental setting to disable the use of splice read").
-
-I'm fine with using debugfs, means to an end with no strings attached.
-
-Once we have confidence in what is needed we can pivot back to
-a modparam or per-export controls or whatever.
-
+Open to whatever.  I just didn't want to open code
+do_iter_readv_writev() like my header said at the start.
+ 
 Mike
 
