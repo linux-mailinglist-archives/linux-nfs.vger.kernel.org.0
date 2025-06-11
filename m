@@ -1,192 +1,86 @@
-Return-Path: <linux-nfs+bounces-12337-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12338-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5520AD619C
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 23:41:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F30FBAD6261
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 00:35:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95AC516BDE6
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 21:41:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C83C53AAE10
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 22:35:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B76A242D9D;
-	Wed, 11 Jun 2025 21:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTtHo4IW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F9A823D2BD;
+	Wed, 11 Jun 2025 22:35:27 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C6D243968;
-	Wed, 11 Jun 2025 21:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F508DF49;
+	Wed, 11 Jun 2025 22:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749677820; cv=none; b=Hn5tfJkJsvSeqvpokx/9WxJWnRIig7Zx4BaD4sU2CQzuAdZqnFauTEUT7adnViGQUwC2wV5V4vBAIL+oSXIYszROm+6iIV4e3iV4vZqNoA5emDXpoxSyCnGnYp+3IEouewRtAbEfHQybtFZNCj0tfJ7LzXBtRZfaJZDRQ7x712U=
+	t=1749681327; cv=none; b=Z/UNiuUP+roRGRKOsoBZiRme/k4uqNFGqRpd4TPGOSVcI4JMMFcjRBN0WwJst4V0Wcb8YDBFBzQ+sLGmzgD4xVRP+oPwJzkZ0KX1//BuFf51cZamMzMXlVWLzCc3EB7qeX76JdGz4sF/3FH0O1zb0fy2MZF8LHo89LkZTlIlhIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749677820; c=relaxed/simple;
-	bh=wYNHkDW6WpVh2Jvzbqjve2B808mF0EEubMr2DeddhIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pYdzv63KKNOmKqLG9rOk11ONZJkdlVZauek4cAhK7wF343zZtkeWlr/PCCAtsRhmYFeoxOKweDWlqw9pC4TKSWCiuZWM37rxoqLV/qLp9Af05tHT9sAy7ttuLPKbLou9ScOU1ECVt1NZ1j4aGmj8UB1UcWhiTYRaeDA4ZVh6Hkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTtHo4IW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57405C4CEE3;
-	Wed, 11 Jun 2025 21:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749677819;
-	bh=wYNHkDW6WpVh2Jvzbqjve2B808mF0EEubMr2DeddhIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dTtHo4IW38VTnQK7l0Od+IBPL2TrTr/Na/IL24hd30X4A1uug5okD8gjzaiaLoTKN
-	 R/uYZDsaBBCN3OtfQyqmfNX80eqsZrga8SyiWWMrTMdtwTvnFhlqaMMt/xCn87/8jz
-	 rUZTK6F/f/mSD/lW7W4/emf1wsASwS7IIgVf8OuDsRAFjHy4hEmqSNW6aTnrJ+1dQE
-	 n68mET//Hb5+XpTlcvkaly7iLa/EAK28DfF1rKcIJaOlUM+HsF4uXIbxxRyTQgP7/k
-	 6E1xUrrvy3rVXvj0Vzz9o0Skztv9/uB6Jr5qMRnmRt1jdpDkdycPAXpI/heKA1sicb
-	 s0J1IkUHfCTPw==
-Date: Wed, 11 Jun 2025 17:36:58 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH 1/6]
- NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
-Message-ID: <aEn2-mYA3VDv-vB8@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
- <aEnWhlXjzOmRfCJf@kernel.org>
- <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
+	s=arc-20240116; t=1749681327; c=relaxed/simple;
+	bh=uyJxGwz+QLoecVnaEMoet+qzKUja57qNfLOrfhR8XE8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=IqMW8+4E4QiAoJj2H85vlshFjmGFwHyMKjO5K974NrkFrFMl+KsetrTeKzBNBaSJw0j9rkfxQVj8pTE0bG1tzJt/re2YLvzFj7YYwbZl41OzhJepIKEcCur+5g3SedV11i1xpjbvI71Q12f3xwEHo1BJfaSvNnd4DabiHqU1/ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPU2J-008NYe-Fs;
+	Wed, 11 Jun 2025 22:35:11 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
+From: "NeilBrown" <neil@brown.name>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Jan Harkes" <jaharkes@cs.cmu.edu>,
+ "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>, "Carlos Maiolino" <cem@kernel.org>,
+ linux-fsdevel@vger.kernel.org, coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+ linux-nfs@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 0/5] Minor cleanup preparation for some dir-locking API changes
+In-reply-to: <20250611-ihnen-gehackt-39b5a2c24db4@brauner>
+References: <20250608230952.20539-1-neil@brown.name>,
+ <20250611-ihnen-gehackt-39b5a2c24db4@brauner>
+Date: Thu, 12 Jun 2025 08:35:10 +1000
+Message-id: <174968131051.608730.6876830326454616279@noble.neil.brown.name>
 
-On Wed, Jun 11, 2025 at 04:29:58PM -0400, Jeff Layton wrote:
-> On Wed, 2025-06-11 at 15:18 -0400, Mike Snitzer wrote:
-> > On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
-> > > On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> > > > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any data
-> > > > read or written by NFSD will either not be cached (thanks to O_DIRECT)
-> > > > or will be removed from the page cache upon completion (DONTCACHE).
-> > > 
-> > > I thought we were going to do two switches: One for reads and one for
-> > > writes? I could be misremembering.
-> > 
-> > We did discuss the possibility of doing that.  Still can-do if that's
-> > what you'd prefer.
-> >  
+On Wed, 11 Jun 2025, Christian Brauner wrote:
+> On Mon, Jun 09, 2025 at 09:09:32AM +1000, NeilBrown wrote:
+> > The following 5 patches provide further cleanup that serves as
+> > preparation for some dir-locking API changes that I want to make.  The
+> > most interesting is the last which makes another change to vfs_mkdir().
+> > As well as returning the dentry or consuming it on failure (a recent
+> > change) it now also unlocks on failure.  This will be needed when we
+> > transition to locking just the dentry, not the whole directory.
 > 
-> Having them as separate controls in debugfs is fine for
-> experimentation's sake, but I imagine we'll need to be all-in one way
-> or the other with a real interface.
+> All of the patches except the vfs_mkdir() one that Al is looking at
+> make sense as independent cleanups imho. So I'd take them unless I hear
+> screams.
 > 
-> I think if we can crack the problem of receiving WRITE payloads into an
-> already-aligned buffer, then that becomes much more feasible. I think
-> that's a solveable problem.
 
-You'd immediately be my hero!  Let's get into it:
+Thanks.  I'm glad you didn't include the vfs_mkdir() change as I found a
+problem in the overlayfs code.  I'm make sure I really understand that
+code before trying that one again.
 
-In a previously reply to this thread you aptly detailed what I found
-out the hard way (with too much xdr_buf code review and tracing):
+Meanwhile I noticed I have a couple of other mostly-independent
+cleanups.  I'll send those.
 
-On Wed, Jun 11, 2025 at 08:55:20AM -0400, Jeff Layton wrote:
-> >
-> > NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative to
-> > DIO alignment (both page and disk alignment).  This works quite well
-> > for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
-> > maps the WRITE payload into aligned pages. But more work is needed to
-> > be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
-> > used. I spent quite a bit of time analyzing the existing xdr_buf code
-> > and NFSD's use of it.  Unfortunately, the WRITE payload gets stored in
-> > misaligned pages such that O_DIRECT isn't possible without a copy
-> > (completely defeating the point).  I'll reply to this cover letter to
-> > start a subthread to discuss how best to deal with misaligned write
-> > IO (by association with Hammerspace, I'm most interested in NFS v3).
-> >
->
-> Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
-> rq_pages array. To get alignment right, you'd probably have to do the
-> receive in a much more piecemeal way.
->
-> Basically, you'd need to decode as you receive chunks of the message,
-> and look out for WRITEs, and then set it up so that their payloads are
-> received with proper alignment.
-
-1)
-Yes, and while I arrived at the same exact conclusion I was left with
-dread about the potential for "breaking too many eggs to make that
-tasty omelette".
-
-If you (or others) see a way forward to have SUNRPC TCP's XDR receive
-"inline" decode (rather than have the 2 stage process you covered
-above) that'd be fantastic.  Seems like really old tech-debt in SUNRPC
-from a time when such care about alignment of WRITE payload pages was
-completely off engineers' collective radar (owed to NFSD only using
-buffered IO I assume?).
-
-2)
-One hack that I verified to work for READ and WRITE IO on my
-particular TCP testbed was to front-pad the first "head" page of the
-xdr_buf such that the WRITE payload started at the 2nd page of
-rq_pages.  So that looked like this hack for my usage:
-
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 8fc5b2b2d806..cf082a265261 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -676,7 +676,9 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
-
-        /* Make arg->head point to first page and arg->pages point to rest */
-        arg->head[0].iov_base = page_address(rqstp->rq_pages[0]);
--       arg->head[0].iov_len = PAGE_SIZE;
-+       // FIXME: front-pad optimized to align TCP's WRITE payload
-+       // but may not be enough for other operations?
-+       arg->head[0].iov_len = 148;
-        arg->pages = rqstp->rq_pages + 1;
-        arg->page_base = 0;
-        /* save at least one page for response */
-
-That gut "but may not be enough for other operations?" comment proved
-to be prophetic.
-
-Sadly it went on to fail spectacularly for other ops (specifically
-READDIR and READDIRPLUS, probably others would too) because
-xdr_inline_decode() _really_ doesn't like going beyond the end of the
-xdr_buf's inline "head" page.  It could be that even if
-xdr_inline_decode() et al was "fixed" (which isn't for the faint of
-heart given xdr_buf's more complex nature) there will likely be other
-mole(s) that pop up.  And in addition, we'd be wasting space in the
-xdr_buf's head page (PAGE_SIZE-frontpad).  So I moved on from trying
-to see this frontpad hack through to completion.
-
-3)
-Lastly, for completeness, I also mentioned briefly in a previous
-recent reply:
-
-On Wed, Jun 11, 2025 at 04:51:03PM -0400, Mike Snitzer wrote:
-> On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
->
-> > In any case, for now at least, unless you're using RDMA, it's going to
-> > end up falling back to buffered writes everywhere. The data is almost
-> > never going to be properly aligned coming in off the wire. That might
-> > be fixable though.
->
-> Ben Coddington mentioned to me that soft-iwarp would allow use of RDMA
-> over TCP to workaround SUNRPC TCP's XDR handling always storing the
-> write payload in misaligned IO.  But that's purely a stop-gap
-> workaround, which needs testing (to see if soft-iwap negates the win
-> of using O_DIRECT, etc).
-
-(Ab)using soft-iwarp as the basis for easily getting page aligned TCP
-WRITE payloads seems pretty gross given we are chasing utmost
-performance, etc.
-
-All said, I welcome your sage advice and help on this effort to
-DIO-align SUNRPC TCP's WRITE payload pages.
-
-Thanks,
-Mike
+NeilBrown
 
