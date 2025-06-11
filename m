@@ -1,251 +1,260 @@
-Return-Path: <linux-nfs+bounces-12334-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12335-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7809AD605F
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 22:51:08 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88744AD606C
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 22:55:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F41673A2F72
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:50:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09D7817246A
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:55:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 067072367D4;
-	Wed, 11 Jun 2025 20:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BAA2367A6;
+	Wed, 11 Jun 2025 20:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCIOTfI3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aogdzj6e"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B832367A6;
-	Wed, 11 Jun 2025 20:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B674223338;
+	Wed, 11 Jun 2025 20:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749675064; cv=none; b=JwqiqNUF3eZMraSBvvZMjnJt52VjgtcRZpS9arWqtra/ud/PJuZFDkpnvra8wosVIxmMIlLsFKok46Fw7UZR7SPtm+ZAhN3efVeXfvaFX5rmSUmdEkmhUms6yDwPR3WRgsfwQePepxSQ3VRtKn8HHKKe9XKnUeuNZXuvjM6bYgc=
+	t=1749675332; cv=none; b=ntvjUq7HIW8sRV/D9wOyhFJsg3uzWAdWkSy+R/8hjNKkBMPMsn9hba+Nm9lz561jXJ/fz55H2V+RoCbCDHePMRYcTqZ1Wl7zphtC0EpS4nmHo90YXmOLytRqjALFua4q9u3lrfuiaNUfHPBbkrqIZqenzvTKgseVcQQAu4mDV08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749675064; c=relaxed/simple;
-	bh=2nXstaYAEep1Zd4TypusU2EeFdZYT2IiwfF5t+k6kAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lds5Aj5PRgdkSbNmvXXVKPqv4pkOT2AaMC/CDaqOszbYRT77XF3JsmAx+mnRcRFFYsiNUeNLJiTtkFcyfhaCB7/s6gTxuN26i462FZIZD+3LIva0ZCb1xwQkkcXPgAxSvWY21ZK/4rgmEAboTHIMVjsdjMKV3dGjJzS23KFFapk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCIOTfI3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34436C4CEE3;
-	Wed, 11 Jun 2025 20:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749675064;
-	bh=2nXstaYAEep1Zd4TypusU2EeFdZYT2IiwfF5t+k6kAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tCIOTfI3TB/MD9FTOedfEJhoaRxm3n7o6tu0lqDuLmr1BMTV6ZW0Zr3QwAV386wwf
-	 c538cPTUS2w6U4yPvFDpX9E+QH98bPRpuiuwzYsnZr8V87kfGhHAoWcrx5r/X3ay3h
-	 SKyEiJ5QrKV0mIvBkSkhvp0taHvJmnvmx0BMXBfx2Zqtdm6p3+dAEuojmFMQuW4Oib
-	 toXIba72+iT8POpE2cFvuEXUuS3ST49XB6uMZWGY8eAyGBB3ZeR70KjIDjwYj+/r++
-	 FrL0TdqwwZfQgWT6aFAklFV/ZM3rxwz40SytdSqtEMFJoEs60cWVlYQNQfHsFp4tHJ
-	 eoJlVpmXTXxsg==
-Date: Wed, 11 Jun 2025 16:51:03 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	bcodding@redhat.com
-Subject: Re: [PATCH 5/6] NFSD: leverage DIO alignment to selectively issue
- O_DIRECT reads and writes
-Message-ID: <aEnsN0uYB61_MyrW@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-6-snitzer@kernel.org>
- <36698c20-599a-4968-a06c-310204474fe8@oracle.com>
- <21a1a0e28349824cc0a2937f719ec38d27089e3b.camel@kernel.org>
- <27bc1d2d-7cc8-449c-9e4c-3a515631fa87@oracle.com>
- <1720744abfdc458bba1980e62d8fd61b06870a6e.camel@kernel.org>
+	s=arc-20240116; t=1749675332; c=relaxed/simple;
+	bh=hnp/kJEXjusD8DYduTGUIAnvDTf4MgPP0RhgmbzD1iE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BYm54LEU+NnScnRQEkVom035u6FNtFESUfiRH18TlDIyWhZsYSYLoINFwYH7biKVmjOWz8EJ6oFxzgzvAfk7pmi7ZSPj4NMUQkFruvI3Im39L7Cnw2TQAZ9nT8epnrYvadlsyG4iBRoT3+bB3PfjzftTkBC98DBn9Pg+Z/6cmcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aogdzj6e; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5534edc646dso218989e87.1;
+        Wed, 11 Jun 2025 13:55:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749675328; x=1750280128; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AvzW0vZPIz8QN8BU0BtSA+GIuXmGeBjyf+f83L+wAUU=;
+        b=aogdzj6eKlhIVc43gajnNQMq3YPhs0U2nRlJ6nR2Vb2wAfM1KhuZoAwA49aCMzNCaF
+         xulGkvLfRF38ie7/RSRQyGBUSNSMa9a+0m+oIaC23eMKsLoIjT7wzSpEniTCzPFX/HnV
+         D6w4/J07Iq+uF89KJ9VQ+ZQLOEF1l9xkHhKwNefOAuuUBRkDsA37CkIJJL/1i7HjJbse
+         frHK8vob1Gk0FgIPOFUwbrcsJMeJ4AUIErFDSLBfbw8RoYypwoeQzHf7KNaTSr1w0/VX
+         yq7IaGhNRh6RtDdgMD448pgQW2/H+7f9oY/YauX80nyApEe3rEb72velna3MuM1CS77/
+         NGKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749675328; x=1750280128;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AvzW0vZPIz8QN8BU0BtSA+GIuXmGeBjyf+f83L+wAUU=;
+        b=TXMi8zpSojBRh5Yh2bjXieeRuzv7xZqn8CCxl9AOJNa3wqrZMcyOskAVbBzxcB1gy7
+         2ZlIT4ju8q9dJ1njA+rlKiQeQFNhFLYwF5lGB1XjabeSbcC1RQPAh49tr0Hz93armDoI
+         UfxxFSdnm1R/tZF7cIyjSijtr4cGPvpuaeuo91d74Jy51OQ1NdvIexFQf9GiELKsZfe0
+         cSSccoFv9bGivbOQmy9/FL/d0hIWBZXZb+V2BeMS1T94zi+UzpAWlUamEk4Kb4SGz96v
+         VHg4l4ncs6rikYk5F6p1/SJ65I2sV+q2w9rfPcuFsQp1o4xNndhzHEPN8auHobLh8CqL
+         FsuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVML91/TkCgKDgUEylcCU5mWfrSZbaM1CXxZAHSGEF1uoRlbFR7Kdn87jBVYL8HZVpofGPyLQVmUTg8Vic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIx/z9+4IrTO3qa/clJQTczmFjzSwyALhekrKcn+n4V1iPtkGl
+	51566A3OKBHRugLYyVopn02DFMRX47/00S2VVZWntdWERJRiGHizbQr2
+X-Gm-Gg: ASbGncsreY5xKH/z0tydLGcKTtNLSkAFVK/UmJBMjbsGyFl2/3B8jT8bvyxsye3OosH
+	qfvq1zW/nmSfg4k5wR5E4Bq0JyhZ3eNyKtwan+obZ45iN66Cd6thnrOXsTuGD9VPLlkcCwoEBQ6
+	2JsqXdXuCfATbenczhTehRJ9mtbYMT/sGQW0XykV8TAWrmqJqIyqbitND2T27u0mPAAyruLk+tp
+	dP9GyWwynMKy2vHfCDclF33Bac0J3sDM3ErufnJ7UfufWadIEmDxI7lJZZfcW0j7WN3DV5PDC8a
+	Za+ahuB93zAP8eMaFjUUUVjDKAuIuogsaspeiib3JsJaYS4TH9r402PYDutfX0iuL3wp23gI+AE
+	QHujy4h3fX5q4Bw==
+X-Google-Smtp-Source: AGHT+IEX5dhbiwT2xbEijpR3MNNcGjWDYXY5XYr3BkUWT5Z44gzf/U4zOKhxAx7l6AjupPvF5UBKeQ==
+X-Received: by 2002:a05:6512:12c3:b0:553:2bb2:789c with SMTP id 2adb3069b0e04-553a55659d3mr220103e87.37.1749675328098;
+        Wed, 11 Jun 2025 13:55:28 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.66.227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553a702afcesm5539e87.231.2025.06.11.13.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jun 2025 13:55:27 -0700 (PDT)
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: [PATCH v2] nfsd: Use correct error code when decoding extents
+Date: Wed, 11 Jun 2025 23:55:02 +0300
+Message-ID: <20250611205504.19276-1-sergeybashirov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1720744abfdc458bba1980e62d8fd61b06870a6e.camel@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
-> On Wed, 2025-06-11 at 11:11 -0400, Chuck Lever wrote:
-> > On 6/11/25 11:07 AM, Jeff Layton wrote:
-> > > On Wed, 2025-06-11 at 10:42 -0400, Chuck Lever wrote:
-> > > > On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> > > > > IO must be aligned, otherwise it falls back to using buffered IO.
-> > > > > 
-> > > > > RWF_DONTCACHE is _not_ currently used for misaligned IO (even when
-> > > > > nfsd/enable-dontcache=1) because it works against us (due to RMW
-> > > > > needing to read without benefit of cache), whereas buffered IO enables
-> > > > > misaligned IO to be more performant.
-> > > > > 
-> > > > > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-> > > > > ---
-> > > > >  fs/nfsd/vfs.c | 40 ++++++++++++++++++++++++++++++++++++----
-> > > > >  1 file changed, 36 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > > > > index e7cc8c6dfbad..a942609e3ab9 100644
-> > > > > --- a/fs/nfsd/vfs.c
-> > > > > +++ b/fs/nfsd/vfs.c
-> > > > > @@ -1064,6 +1064,22 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> > > > >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
-> > > > >  }
-> > > > >  
-> > > > > +static bool is_dio_aligned(const struct iov_iter *iter, loff_t offset,
-> > > > > +			   const u32 blocksize)
-> > > > > +{
-> > > > > +	u32 blocksize_mask;
-> > > > > +
-> > > > > +	if (!blocksize)
-> > > > > +		return false;
-> > > > > +
-> > > > > +	blocksize_mask = blocksize - 1;
-> > > > > +	if ((offset & blocksize_mask) ||
-> > > > > +	    (iov_iter_alignment(iter) & blocksize_mask))
-> > > > > +		return false;
-> > > > > +
-> > > > > +	return true;
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * nfsd_iter_read - Perform a VFS read using an iterator
-> > > > >   * @rqstp: RPC transaction context
-> > > > > @@ -1107,8 +1123,16 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> > > > >  	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
-> > > > >  	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
-> > > > >  
-> > > > > -	if (nfsd_enable_dontcache)
-> > > > > -		flags |= RWF_DONTCACHE;
-> > > > > +	if (nfsd_enable_dontcache) {
-> > > > > +		if (is_dio_aligned(&iter, offset, nf->nf_dio_read_offset_align))
-> > > > > +			flags |= RWF_DIRECT;
-> > > > > +		/* FIXME: not using RWF_DONTCACHE for misaligned IO because it works
-> > > > > +		 * against us (due to RMW needing to read without benefit of cache),
-> > > > > +		 * whereas buffered IO enables misaligned IO to be more performant.
-> > > > > +		 */
-> > > > > +		//else
-> > > > > +		//	flags |= RWF_DONTCACHE;
-> > > > > +	}
-> > > > >  
-> > > > >  	host_err = vfs_iter_read(file, &iter, &ppos, flags);
-> > > > >  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
-> > > > > @@ -1217,8 +1241,16 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> > > > >  	nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-> > > > >  	iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-> > > > >  
-> > > > > -	if (nfsd_enable_dontcache)
-> > > > > -		flags |= RWF_DONTCACHE;
-> > > > > +	if (nfsd_enable_dontcache) {
-> > > > > +		if (is_dio_aligned(&iter, offset, nf->nf_dio_offset_align))
-> > > > > +			flags |= RWF_DIRECT;
-> > > > > +		/* FIXME: not using RWF_DONTCACHE for misaligned IO because it works
-> > > > > +		 * against us (due to RMW needing to read without benefit of cache),
-> > > > > +		 * whereas buffered IO enables misaligned IO to be more performant.
-> > > > > +		 */
-> > > > > +		//else
-> > > > > +		//	flags |= RWF_DONTCACHE;
-> > > > > +	}
-> > > > 
-> > > > IMO adding RWF_DONTCACHE first then replacing it later in the series
-> > > > with a form of O_DIRECT is confusing. Also, why add RWF_DONTCACHE here
-> > > > and then take it away "because it doesn't work"?
+Update error codes in decoding functions of block and scsi layout
+drivers to match the core nfsd code. NFS4ERR_EINVAL means that the
+server was able to decode the request, but the decoded values are
+invalid. Use NFS4ERR_BADXDR instead to indicate a decoding error.
+And ENOMEM is changed to nfs code NFS4ERR_DELAY.
 
-I spoke to this in a previous reply.  I can fold patches to elininate
-this distraction in v2.
+Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+---
+Changes in v2:
+ - Add kdoc comments
+ - Add return code handling to blocklayout.c
 
-> > > > But OK, your series is really a proof-of-concept. Something to work out
-> > > > before it is merge-ready, I guess.
-> > > > 
-> > > > It is much more likely for NFS READ requests to be properly aligned.
-> > > > Clients are generally good about that. NFS WRITE request alignment
-> > > > is going to be arbitrary. Fwiw.
+ fs/nfsd/blocklayout.c    |  4 +--
+ fs/nfsd/blocklayoutxdr.c | 55 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 48 insertions(+), 11 deletions(-)
 
-Correct, thankfully TCP reads don't misalign their payload like TCP
-writes do.  As you know, the value of patch 6 is that application IO
-that generates misaligned IO (as a side-effect of misaligned read
-blocksize, e.g. IOR hard's 47008 blocksize) can issue reads using
-O_DIRECT.
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 08a20e5bcf7f..c3491edb0302 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -182,7 +182,7 @@ nfsd4_block_proc_layoutcommit(struct inode *inode,
+ 	nr_iomaps = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
+ 			lcp->lc_up_len, &iomaps, i_blocksize(inode));
+ 	if (nr_iomaps < 0)
+-		return nfserrno(nr_iomaps);
++		return cpu_to_be32(-nr_iomaps);
+ 
+ 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+ }
+@@ -320,7 +320,7 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
+ 	nr_iomaps = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
+ 			lcp->lc_up_len, &iomaps, i_blocksize(inode));
+ 	if (nr_iomaps < 0)
+-		return nfserrno(nr_iomaps);
++		return cpu_to_be32(-nr_iomaps);
+ 
+ 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
+ }
+diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+index ce78f74715ee..cb95c5201c1f 100644
+--- a/fs/nfsd/blocklayoutxdr.c
++++ b/fs/nfsd/blocklayoutxdr.c
+@@ -112,6 +112,25 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 	return 0;
+ }
+ 
++/**
++ * nfsd4_block_decode_layoutupdate - decode the block layout extent array
++ * @p: pointer to the xdr data
++ * @len: number of bytes to decode
++ * @iomapp: pointer to store the decoded array
++ * @block_size: alignment of extent offset and length
++ *
++ * This function decodes the opaque field of the layoutupdate4 structure
++ * in a layoutcommit request for the block layout driver. The field is
++ * actually an array of extents sent by the client. It also checks that
++ * the file offset, storage offset and length of each extent are aligned
++ * by @block_size.
++ *
++ * Return: The number of extents contained in @iomapp on success,
++ * otherwise one of the following negative NFS error codes:
++ *   %-NFS4ERR_BADXDR: The encoded array in @p was invalid.
++ *   %-NFS4ERR_INVAL: An unaligned extent found.
++ *   %-NFS4ERR_DELAY: Failed to allocate memory for @iomapp.
++ */
+ int
+ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 		u32 block_size)
+@@ -121,25 +140,25 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 
+ 	if (len < sizeof(u32)) {
+ 		dprintk("%s: extent array too small: %u\n", __func__, len);
+-		return -EINVAL;
++		return -NFS4ERR_BADXDR;
+ 	}
+ 	len -= sizeof(u32);
+ 	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+ 		dprintk("%s: extent array invalid: %u\n", __func__, len);
+-		return -EINVAL;
++		return -NFS4ERR_BADXDR;
+ 	}
+ 
+ 	nr_iomaps = be32_to_cpup(p++);
+ 	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
+ 		dprintk("%s: extent array size mismatch: %u/%u\n",
+ 			__func__, len, nr_iomaps);
+-		return -EINVAL;
++		return -NFS4ERR_BADXDR;
+ 	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+ 	if (!iomaps) {
+ 		dprintk("%s: failed to allocate extent array\n", __func__);
+-		return -ENOMEM;
++		return -NFS4ERR_DELAY;
+ 	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+@@ -181,9 +200,27 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	return nr_iomaps;
+ fail:
+ 	kfree(iomaps);
+-	return -EINVAL;
++	return -NFS4ERR_INVAL;
+ }
+ 
++/**
++ * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
++ * @p: pointer to the xdr data
++ * @len: number of bytes to decode
++ * @iomapp: pointer to store the decoded array
++ * @block_size: alignment of extent offset and length
++ *
++ * This function decodes the opaque field of the layoutupdate4 structure
++ * in a layoutcommit request for the scsi layout driver. The field is
++ * actually an array of extents sent by the client. It also checks that
++ * the offset and length of each extent are aligned by @block_size.
++ *
++ * Return: The number of extents contained in @iomapp on success,
++ * otherwise one of the following negative NFS error codes:
++ *   %-NFS4ERR_BADXDR: The encoded array in @p was invalid.
++ *   %-NFS4ERR_INVAL: An unaligned extent found.
++ *   %-NFS4ERR_DELAY: Failed to allocate memory for @iomapp.
++ */
+ int
+ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 		u32 block_size)
+@@ -193,7 +230,7 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 
+ 	if (len < sizeof(u32)) {
+ 		dprintk("%s: extent array too small: %u\n", __func__, len);
+-		return -EINVAL;
++		return -NFS4ERR_BADXDR;
+ 	}
+ 
+ 	nr_iomaps = be32_to_cpup(p++);
+@@ -201,13 +238,13 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	if (len != expected) {
+ 		dprintk("%s: extent array size mismatch: %u/%u\n",
+ 			__func__, len, expected);
+-		return -EINVAL;
++		return -NFS4ERR_BADXDR;
+ 	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+ 	if (!iomaps) {
+ 		dprintk("%s: failed to allocate extent array\n", __func__);
+-		return -ENOMEM;
++		return -NFS4ERR_DELAY;
+ 	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+@@ -232,5 +269,5 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	return nr_iomaps;
+ fail:
+ 	kfree(iomaps);
+-	return -EINVAL;
++	return -NFS4ERR_INVAL;
+ }
+-- 
+2.43.0
 
-> > > > However, one thing we discussed at bake-a-thon was what to do about
-> > > > unstable WRITEs. For unstable WRITEs, the server has to cache the
-> > > > write data at least until the client sends a COMMIT. Otherwise the
-> > > > server will have to convert all UNSTABLE writes to FILE_SYNC writes,
-> > > > and that can have performance implications.
-> > > > 
-> > > 
-> > > If we're doing synchronous, direct I/O writes then why not just respond
-> > > with FILE_SYNC? The write should be on the platter by the time it
-> > > returns.
-
-For v2 I'll look to formalize responding with FILE_SYNC when
-'enable-dontcache' is set.
-
-> > Because "platter". On some devices, writes are slow.
-> > 
-> > For some workloads, unstable is faster. I have an experimental series
-> > that makes NFSD convert all NFS WRITEs to FILE_SYNC. It was not an
-> > across the board win, even with an NVMe-backed file system.
-> > 
-> 
-> Presumably, those devices wouldn't be exported in this mode. That's
-> probably a good argument for making this settable on a per-export
-> basis.
-
-Correct.  This shouldn't be used by default.  But if/when it makes
-sense, it *really* sings.
-
-> > > > One thing you might consider is to continue using the page cache for
-> > > > unstable WRITEs, and then use fadvise DONTNEED after a successful
-> > > > COMMIT operation to reduce page cache footprint. Unstable writes to
-> > > > the same range of the file might be a problem, however.
-> > > 
-> > > Since the client sends almost everything UNSTABLE, that would probably
-> > > erase most of the performance win. The only reason I can see to use
-> > > buffered I/O in this mode would be because we had to deal with an
-> > > unaligned write and need to do a RMW cycle on a block.
-> > > 
-> > > The big question is whether mixing buffered and direct I/O writes like
-> > > this is safe across all exportable filesystems. I'm not yet convinced
-> > > of that.
-> > 
-> > Agreed, that deserves careful scrutiny.
-> > 
-> 
-> Like Mike is asking though, I need a better understanding of the
-> potential races here:
-> 
-> XFS, for instance, takes the i_rwsem shared around dio writes and
-> exclusive around buffered, so they should exclude each other.
-
-> If we did all the buffered writes as RWF_SYNC, would that prevent
-> corruption?
-
-I welcome any help pinning down what must be done to ensure this
-is safe ("this" being: arbitrary switching between buffered and direct
-IO and associated page cache invalidation).  But to be 100% clear:
-NFSD exporting XFS with enable-dontcache=1 has worked very well.
-
-Do we need to go to the extreme of each filesystem exporting support
-with a new flag like FOP_INVALIDATES_BUFFERED_VS_DIRECT?  And if set,
-any evidence to the contrary is a bug?
-
-And does the VFS have a role in ensuring it's safe or can we assume
-vfs/mm/etc are intended to be safe and any core common code that
-proves otherwise is a bug?
-
-> In any case, for now at least, unless you're using RDMA, it's going to
-> end up falling back to buffered writes everywhere. The data is almost
-> never going to be properly aligned coming in off the wire. That might
-> be fixable though.
-
-Ben Coddington mentioned to me that soft-iwarp would allow use of RDMA
-over TCP to workaround SUNRPC TCP's XDR handling always storing the
-write payload in misaligned IO.  But that's purely a stop-gap
-workaround, which needs testing (to see if soft-iwap negates the win
-of using O_DIRECT, etc).
-
-But a long-term better fix is absolutely needed, to be continued (in
-the subthread I need to get going)...
-
-Mike
 
