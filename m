@@ -1,260 +1,193 @@
-Return-Path: <linux-nfs+bounces-12335-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12336-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88744AD606C
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 22:55:35 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54AA3AD6078
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 22:58:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09D7817246A
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:55:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 137A63AAF7C
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 20:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BAA2367A6;
-	Wed, 11 Jun 2025 20:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D99F71D618A;
+	Wed, 11 Jun 2025 20:58:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aogdzj6e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYiK6e0h"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B674223338;
-	Wed, 11 Jun 2025 20:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F423325F989
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Jun 2025 20:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749675332; cv=none; b=ntvjUq7HIW8sRV/D9wOyhFJsg3uzWAdWkSy+R/8hjNKkBMPMsn9hba+Nm9lz561jXJ/fz55H2V+RoCbCDHePMRYcTqZ1Wl7zphtC0EpS4nmHo90YXmOLytRqjALFua4q9u3lrfuiaNUfHPBbkrqIZqenzvTKgseVcQQAu4mDV08=
+	t=1749675488; cv=none; b=bCp7WG+HcLvhjvuShI56je/N2IoMIfxc5fZO+O5v4OL3o/pAnlATp5hBvODMhEcRE8EbmmUQARC5Hj4CwbOrLlXujODBBmbKa+kRGkLl0W8xlHmmN1HxBRqBaZvE3tj6tsENXsnhDVKTCG3KJdcgISf/xCHuG3yYWFOa71T+PaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749675332; c=relaxed/simple;
-	bh=hnp/kJEXjusD8DYduTGUIAnvDTf4MgPP0RhgmbzD1iE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BYm54LEU+NnScnRQEkVom035u6FNtFESUfiRH18TlDIyWhZsYSYLoINFwYH7biKVmjOWz8EJ6oFxzgzvAfk7pmi7ZSPj4NMUQkFruvI3Im39L7Cnw2TQAZ9nT8epnrYvadlsyG4iBRoT3+bB3PfjzftTkBC98DBn9Pg+Z/6cmcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aogdzj6e; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1749675488; c=relaxed/simple;
+	bh=+L9abmj7qBHqRc6BHr7/NhWWtRQTr6lnWMv87t4UIZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GGaFQxxV9zPlFG0OoBKZ05N1sgUtvxcRoLf4YcEGxFVyPMsmrE/aFwgRgEQG+n5PQgekeFPMrVB69QdzJ00ydrxuE/W9zix/P3GYvHslUgQbKpuiFshq0TAXi/ujCRNTxukSKVbxZRz/RS4U68q8RSo9PjTiNjMlpRJPspYzYtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYiK6e0h; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5534edc646dso218989e87.1;
-        Wed, 11 Jun 2025 13:55:30 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad572ba1347so38736066b.1
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jun 2025 13:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749675328; x=1750280128; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AvzW0vZPIz8QN8BU0BtSA+GIuXmGeBjyf+f83L+wAUU=;
-        b=aogdzj6eKlhIVc43gajnNQMq3YPhs0U2nRlJ6nR2Vb2wAfM1KhuZoAwA49aCMzNCaF
-         xulGkvLfRF38ie7/RSRQyGBUSNSMa9a+0m+oIaC23eMKsLoIjT7wzSpEniTCzPFX/HnV
-         D6w4/J07Iq+uF89KJ9VQ+ZQLOEF1l9xkHhKwNefOAuuUBRkDsA37CkIJJL/1i7HjJbse
-         frHK8vob1Gk0FgIPOFUwbrcsJMeJ4AUIErFDSLBfbw8RoYypwoeQzHf7KNaTSr1w0/VX
-         yq7IaGhNRh6RtDdgMD448pgQW2/H+7f9oY/YauX80nyApEe3rEb72velna3MuM1CS77/
-         NGKA==
+        d=gmail.com; s=20230601; t=1749675485; x=1750280285; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G/+8s5arXloy1/Z/r+/SY3L4/HQD11GjXj0RyDsDz7c=;
+        b=MYiK6e0huhbWwixHt3+bmrahAHIN15g9Z8yHIQPmPfK0gbxAUFklhrDHbxjtzgqzHO
+         dTD6QXbFA7uXqOIzb1j0D7h+Z7A9V+Iv0GJTFoPYaYHQudv2Mazt2qLMCZGO6MzoKA4z
+         yhQU6HFBLmRsPTWwwY7ABTOzYdKlkEoWNMJjlzQSXKVTs0CQRb9yv/ZNyyOyddmpG9D5
+         klrwQmFHFHn+nY1u65aX+0zs8yNc6IZjzqXbYGO9qK+XIcWPMESAlTbjzfyVqWOA5DT8
+         /GtPYQ9/7EzgqsotvFbQCGm2xrJdoV7bDfxe7HYX56ZqsxCl+qAd1++oFPlmSZBqj2YU
+         eirw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749675328; x=1750280128;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AvzW0vZPIz8QN8BU0BtSA+GIuXmGeBjyf+f83L+wAUU=;
-        b=TXMi8zpSojBRh5Yh2bjXieeRuzv7xZqn8CCxl9AOJNa3wqrZMcyOskAVbBzxcB1gy7
-         2ZlIT4ju8q9dJ1njA+rlKiQeQFNhFLYwF5lGB1XjabeSbcC1RQPAh49tr0Hz93armDoI
-         UfxxFSdnm1R/tZF7cIyjSijtr4cGPvpuaeuo91d74Jy51OQ1NdvIexFQf9GiELKsZfe0
-         cSSccoFv9bGivbOQmy9/FL/d0hIWBZXZb+V2BeMS1T94zi+UzpAWlUamEk4Kb4SGz96v
-         VHg4l4ncs6rikYk5F6p1/SJ65I2sV+q2w9rfPcuFsQp1o4xNndhzHEPN8auHobLh8CqL
-         FsuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVML91/TkCgKDgUEylcCU5mWfrSZbaM1CXxZAHSGEF1uoRlbFR7Kdn87jBVYL8HZVpofGPyLQVmUTg8Vic=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIx/z9+4IrTO3qa/clJQTczmFjzSwyALhekrKcn+n4V1iPtkGl
-	51566A3OKBHRugLYyVopn02DFMRX47/00S2VVZWntdWERJRiGHizbQr2
-X-Gm-Gg: ASbGncsreY5xKH/z0tydLGcKTtNLSkAFVK/UmJBMjbsGyFl2/3B8jT8bvyxsye3OosH
-	qfvq1zW/nmSfg4k5wR5E4Bq0JyhZ3eNyKtwan+obZ45iN66Cd6thnrOXsTuGD9VPLlkcCwoEBQ6
-	2JsqXdXuCfATbenczhTehRJ9mtbYMT/sGQW0XykV8TAWrmqJqIyqbitND2T27u0mPAAyruLk+tp
-	dP9GyWwynMKy2vHfCDclF33Bac0J3sDM3ErufnJ7UfufWadIEmDxI7lJZZfcW0j7WN3DV5PDC8a
-	Za+ahuB93zAP8eMaFjUUUVjDKAuIuogsaspeiib3JsJaYS4TH9r402PYDutfX0iuL3wp23gI+AE
-	QHujy4h3fX5q4Bw==
-X-Google-Smtp-Source: AGHT+IEX5dhbiwT2xbEijpR3MNNcGjWDYXY5XYr3BkUWT5Z44gzf/U4zOKhxAx7l6AjupPvF5UBKeQ==
-X-Received: by 2002:a05:6512:12c3:b0:553:2bb2:789c with SMTP id 2adb3069b0e04-553a55659d3mr220103e87.37.1749675328098;
-        Wed, 11 Jun 2025 13:55:28 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([46.159.66.227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553a702afcesm5539e87.231.2025.06.11.13.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 13:55:27 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konstantin Evtushenko <koevtushenko@yandex.com>,
-	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH v2] nfsd: Use correct error code when decoding extents
-Date: Wed, 11 Jun 2025 23:55:02 +0300
-Message-ID: <20250611205504.19276-1-sergeybashirov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1749675485; x=1750280285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G/+8s5arXloy1/Z/r+/SY3L4/HQD11GjXj0RyDsDz7c=;
+        b=SU4J5iCD0u3ffLwBYzTEd3qbLA1nXEZ0RcW2Vzc2tJFXU7F5hLrgALyg1x988lkhYr
+         PE/xXRgXEje+gjR4qQc+d0x1zXcMiOQFzuLyPOpb8ork3HVwYcEpPBpnb/DXvficFllE
+         sOfjQUOk3htSPxS8YXEKAmT9Y/yGwMWoELTVtTcbITJdHYUbKXUws26LaD2WlKa5pU86
+         bF9M7sRv2FBOXiOWwwTXQYta1rqVxxpchtzXNhJD8iOvhzFcRuaLh9bIp4ecOhjHv2rS
+         cBevggvA426kqLQZ0gia968iG3DRxdqUwfznHyNBJSjHyZ0Zf/6y2ByGlCM5ZvS1vI39
+         StoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUljTRV5s86kn90pfcp2AZfTltNLALVMl0nRGrUgxWHygczYn+msTj9h/f/cfVohym9T+JQBZpLGxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrbRC4qzf/A3ncKFIB5beluVKfI8ZRtzUl1UVziDz1agx3+6hA
+	biuZkTd83+r6S33h9KYBm8mt7ZKpgkrMgVX/TMydX3a9BcNPlY5I5IkstgH2BOmgkzSk9TQ4s2b
+	CapjkN2aLuckR9PIqt1Pn2x6YqZJ0Iw==
+X-Gm-Gg: ASbGncvi4WQVlkO9fvoxV1YCIA5AyVCTlTnJMMQp1anliX8IfVV+d08H+eQy73/KCJh
+	Ply0uMt2mb1sJcPGPSE4J7uz0OhpA21cqvBxfJAicp9uaBnn0Od7Gw+VQY0yW1Jt0oMCuT5PQCO
+	9I3tO/SqlbP3mI9Q7jN7BuQNefb0RdlhQATfnKqpuZ6GjAauqeBIZWMZyQE3d6nHlRH4Sc0jbjT
+	hQ=
+X-Google-Smtp-Source: AGHT+IHRkedCNzHk1SzOj5rBmhqYdKGOT0I311OnLw4q/8F+aYgGM3ek/NMK2rM/T8JieVzKw3abHjwHN6zXGt1AVI8=
+X-Received: by 2002:a17:907:7ba3:b0:ad8:a41a:3cbf with SMTP id
+ a640c23a62f3a-adea9254a40mr60324066b.13.1749675484835; Wed, 11 Jun 2025
+ 13:58:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
+ <CADaq8jd1gH1-f3Dqg+mAV2RTEwqVS-C21Be4QJT24+bNTuycYA@mail.gmail.com>
+In-Reply-To: <CADaq8jd1gH1-f3Dqg+mAV2RTEwqVS-C21Be4QJT24+bNTuycYA@mail.gmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Wed, 11 Jun 2025 13:57:52 -0700
+X-Gm-Features: AX0GCFsWRMnxP5JwIO0MqY3cYy-Rw0dBhP7PAfQO_VRR9-I_6l6TRPz_ccR_dJ4
+Message-ID: <CAM5tNy5MUCAXs_4zWy33xqOJSMk1hW5006OpLoD32KWLbOfNLQ@mail.gmail.com>
+Subject: Re: [nfsv4] simple NFSv4.1/4.2 test of remove while holding a delegation
+To: David Noveck <davenoveck@gmail.com>
+Cc: NFSv4 <nfsv4@ietf.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update error codes in decoding functions of block and scsi layout
-drivers to match the core nfsd code. NFS4ERR_EINVAL means that the
-server was able to decode the request, but the decoded values are
-invalid. Use NFS4ERR_BADXDR instead to indicate a decoding error.
-And ENOMEM is changed to nfs code NFS4ERR_DELAY.
+On Wed, Jun 11, 2025 at 9:28=E2=80=AFAM David Noveck <davenoveck@gmail.com>=
+ wrote:
+>
+>
+>
+> On Mon, Jun 9, 2025, 7:35=E2=80=AFPM Rick Macklem <rick.macklem@gmail.com=
+> wrote:
+>>
+>> Hi,
+>>
+>> I hope you don't mind a cross-post, but I thought both groups
+>> might find this interesting...
+>
+>
+> I find it interesting, but I can't speak.for either group.
+>>
+>>
+>> I have been creating a compound RPC that does REMOVE and
+>> then tries to determine if the file object has been removed and
+>> I was surprised to see quite different results from the Linux knfsd
+>> and Solaris 11.4 NFSv4.1/4.2 servers. I think both these servers
+>> provide FH4_PERSISTENT file handles, although I suppose I
+>> should check that?
+>>
+>> First, the test OPEN/CREATEs a regular file called "foo" (only one
+>> hard link) and acquires a write delegation for it.
+>> Then a compound does the following:
+>> ...
+>> REMOVE foo
+>> PUTFH fh for foo
+>> GETATTR
+>>
+>> For the Solaris 11.4 server, the server CB_RECALLs the
+>> delegation and then replies NFS4ERR_STALE for the PUTFH above.
+>> (The FreeBSD server currently does the same.)
+>>
+>> For a fairly recent Linux (6.12) knfsd, the above replies NFS_OK
+>> with nlinks =3D=3D 0 in the GETATTR reply.
+>>
+>> Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
+>> probably missed something) and I cannot find anything that states
+>> either of the above behaviours is incorrect.
+>> (NFS4ERR_STALE is listed as an error code for PUTFH, but the
+>> description of PUTFH only says that it sets the CFH to the fh arg.
+>> It does not say anything w.r.t. the fh arg. needing to be for a file
+>> that still exists.) Neither of these servers sets
+>> OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
+>>
+>> So, it looks like "file object no longer exists" is indicated either
+>> by a NFS4ERR_STALE reply to either PUTFH or GETATTR
+>> OR
+>> by a successful reply, but with nlinks =3D=3D 0 for the GETATTR reply.
+>>
+>> To be honest, I kinda like the Linux knfsd version, but I am wondering
+>> if others think that both of these replies is correct?
+>
+>
+> I think they are both correct.  It seems to me that an attempt to choose =
+one of these as preferred and deprecating the other should be rejected sinc=
+e it unjustiably imposes a particular design choice on the server.
+>>
+>>
+>> Also, is the CB_RECALL needed when the delegation is held by
+>> the same client as the one doing the REMOVE?
+>
+>
+> I think so.
+From a practical point of view, I am not convinced it is needed.
+The server can determine if the REMOVE actually deleted the
+file and, if it did, can throw away any delegation record(s) for the
+file object.
+The client knows it has a delegation and can either DELEGRETURN
+it or throw it away if it knows the file object has been deleted and the
+associated file handle is no longer valid (it receives a NFS4ERR_STALE
+from the server for it).
 
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
----
-Changes in v2:
- - Add kdoc comments
- - Add return code handling to blocklayout.c
+Also, wearing my pragmatic practitioner's hat, since the Linux knfsd
+does not do a CB_RECALL now and has shipped this way to who
+knows how many users, declaring that it must be CB_RECALL'd
+does not seem useful?
 
- fs/nfsd/blocklayout.c    |  4 +--
- fs/nfsd/blocklayoutxdr.c | 55 +++++++++++++++++++++++++++++++++-------
- 2 files changed, 48 insertions(+), 11 deletions(-)
+rick
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index 08a20e5bcf7f..c3491edb0302 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -182,7 +182,7 @@ nfsd4_block_proc_layoutcommit(struct inode *inode,
- 	nr_iomaps = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
- 			lcp->lc_up_len, &iomaps, i_blocksize(inode));
- 	if (nr_iomaps < 0)
--		return nfserrno(nr_iomaps);
-+		return cpu_to_be32(-nr_iomaps);
- 
- 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
- }
-@@ -320,7 +320,7 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
- 	nr_iomaps = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
- 			lcp->lc_up_len, &iomaps, i_blocksize(inode));
- 	if (nr_iomaps < 0)
--		return nfserrno(nr_iomaps);
-+		return cpu_to_be32(-nr_iomaps);
- 
- 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
- }
-diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
-index ce78f74715ee..cb95c5201c1f 100644
---- a/fs/nfsd/blocklayoutxdr.c
-+++ b/fs/nfsd/blocklayoutxdr.c
-@@ -112,6 +112,25 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
- 	return 0;
- }
- 
-+/**
-+ * nfsd4_block_decode_layoutupdate - decode the block layout extent array
-+ * @p: pointer to the xdr data
-+ * @len: number of bytes to decode
-+ * @iomapp: pointer to store the decoded array
-+ * @block_size: alignment of extent offset and length
-+ *
-+ * This function decodes the opaque field of the layoutupdate4 structure
-+ * in a layoutcommit request for the block layout driver. The field is
-+ * actually an array of extents sent by the client. It also checks that
-+ * the file offset, storage offset and length of each extent are aligned
-+ * by @block_size.
-+ *
-+ * Return: The number of extents contained in @iomapp on success,
-+ * otherwise one of the following negative NFS error codes:
-+ *   %-NFS4ERR_BADXDR: The encoded array in @p was invalid.
-+ *   %-NFS4ERR_INVAL: An unaligned extent found.
-+ *   %-NFS4ERR_DELAY: Failed to allocate memory for @iomapp.
-+ */
- int
- nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 		u32 block_size)
-@@ -121,25 +140,25 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 
- 	if (len < sizeof(u32)) {
- 		dprintk("%s: extent array too small: %u\n", __func__, len);
--		return -EINVAL;
-+		return -NFS4ERR_BADXDR;
- 	}
- 	len -= sizeof(u32);
- 	if (len % PNFS_BLOCK_EXTENT_SIZE) {
- 		dprintk("%s: extent array invalid: %u\n", __func__, len);
--		return -EINVAL;
-+		return -NFS4ERR_BADXDR;
- 	}
- 
- 	nr_iomaps = be32_to_cpup(p++);
- 	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
- 		dprintk("%s: extent array size mismatch: %u/%u\n",
- 			__func__, len, nr_iomaps);
--		return -EINVAL;
-+		return -NFS4ERR_BADXDR;
- 	}
- 
- 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
- 	if (!iomaps) {
- 		dprintk("%s: failed to allocate extent array\n", __func__);
--		return -ENOMEM;
-+		return -NFS4ERR_DELAY;
- 	}
- 
- 	for (i = 0; i < nr_iomaps; i++) {
-@@ -181,9 +200,27 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	return nr_iomaps;
- fail:
- 	kfree(iomaps);
--	return -EINVAL;
-+	return -NFS4ERR_INVAL;
- }
- 
-+/**
-+ * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
-+ * @p: pointer to the xdr data
-+ * @len: number of bytes to decode
-+ * @iomapp: pointer to store the decoded array
-+ * @block_size: alignment of extent offset and length
-+ *
-+ * This function decodes the opaque field of the layoutupdate4 structure
-+ * in a layoutcommit request for the scsi layout driver. The field is
-+ * actually an array of extents sent by the client. It also checks that
-+ * the offset and length of each extent are aligned by @block_size.
-+ *
-+ * Return: The number of extents contained in @iomapp on success,
-+ * otherwise one of the following negative NFS error codes:
-+ *   %-NFS4ERR_BADXDR: The encoded array in @p was invalid.
-+ *   %-NFS4ERR_INVAL: An unaligned extent found.
-+ *   %-NFS4ERR_DELAY: Failed to allocate memory for @iomapp.
-+ */
- int
- nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 		u32 block_size)
-@@ -193,7 +230,7 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 
- 	if (len < sizeof(u32)) {
- 		dprintk("%s: extent array too small: %u\n", __func__, len);
--		return -EINVAL;
-+		return -NFS4ERR_BADXDR;
- 	}
- 
- 	nr_iomaps = be32_to_cpup(p++);
-@@ -201,13 +238,13 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	if (len != expected) {
- 		dprintk("%s: extent array size mismatch: %u/%u\n",
- 			__func__, len, expected);
--		return -EINVAL;
-+		return -NFS4ERR_BADXDR;
- 	}
- 
- 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
- 	if (!iomaps) {
- 		dprintk("%s: failed to allocate extent array\n", __func__);
--		return -ENOMEM;
-+		return -NFS4ERR_DELAY;
- 	}
- 
- 	for (i = 0; i < nr_iomaps; i++) {
-@@ -232,5 +269,5 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	return nr_iomaps;
- fail:
- 	kfree(iomaps);
--	return -EINVAL;
-+	return -NFS4ERR_INVAL;
- }
--- 
-2.43.0
-
+>
+>> (I don't think it is, but there is a discussion in 18.25.4 which says
+>> "When the determination above cannot be made definitively because
+>> delegations are being held, they MUST be recalled.." but everything
+>> above that is a may/MAY, so it is not obvious to me if a server really
+>> needs to case?)
+>
+>
+> This should be more clear.  Will be looking at a possible change in the n=
+ext rfc5661bis draft.
+>>
+>>
+>> Any comments? Thanks, rick
+>> ps: I am amazed when I learn these things about NFSv4.n after all
+>>       these years.
+>>
+>> _______________________________________________
+>> nfsv4 mailing list -- nfsv4@ietf.org
+>> To unsubscribe send an email to nfsv4-leave@ietf.org
 
