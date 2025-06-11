@@ -1,176 +1,107 @@
-Return-Path: <linux-nfs+bounces-13264-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-14431-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED5DFB12DC6
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 06:51:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72516B57CEE
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 15:27:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B4E44A075A
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Jul 2025 04:50:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 127421AA094C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Sep 2025 13:28:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3293717A2FC;
-	Sun, 27 Jul 2025 04:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F15315D23;
+	Mon, 15 Sep 2025 13:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="nI8+/yiF"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCA20E6
-	for <linux-nfs@vger.kernel.org>; Sun, 27 Jul 2025 04:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9557313283
+	for <linux-nfs@vger.kernel.org>; Mon, 15 Sep 2025 13:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753591865; cv=none; b=IowiG/VN+JOdhI9lhLjsBqifb0b45nsxi1b+zN5kUzLfOh/S0/eE0MPoBI6Cp47qeUxQwBZHV6vVD8MtwPcN+1Csw1pszC2TfDaGCmrtOAoxRYjIP65f3fe0AXmuRuVltcp3PMAB6B44HOGKwzNpcTzKFfAH0HGofhJPbdzBU2M=
+	t=1757942832; cv=none; b=ufeZsaAvAAyUbOz/fBLG2SySMfWjrfB/udk4jLBkZnbYlEWxOzvWc2yn3BAeg5HKuIcjguOg+StmkTYa4aVYNeeY/ovtIN0C8Ls0bA1e4PaF0pQKziDyasXLkZRUIELvv/GErylxKofaQyDUuz7hVANAjRDjaFwIdd8WTcKchg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753591865; c=relaxed/simple;
-	bh=FaElcyjfIxJBkb7B15WeFUn8G6/fTpZTiAhPSM6CWjM=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ZCpsaa5QPcwYF94eQkjtubNGwPXheeYWhH1uHrupGKL8raahV6VkkNS9G4sJqW/5KQXobMuVllw3yhLH7HTi2W9GZL1bByZ91Fquddy1TLyX9A+DqVrifTeQFmHjidpK8mwM2ExCiMNS2D0gxktdmIPynSklgUIqaFJUGA18Mwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uftLU-003aFd-2A;
-	Sun, 27 Jul 2025 04:50:49 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1757942832; c=relaxed/simple;
+	bh=BwK6smIWY8UxaoR0F/gPy8p2dUTxAcFk9K5CxGQyCDc=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=RwoxEOWdpngPNBYzBKI96FoXWqjcbH5Whr+BmdSLd4edOR4vRh76+EVm3Lky+a+yIKLRft45QA7BxDoIKyFnaqJynoo47JqAItrHcJpQTx6Rd6TEcwJ1gkD7LD2L7kAYvAj4LqeKh7Nf9XVTSwmzbKk74zIVOQOZJSrwQfcSeWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=nI8+/yiF; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1757942517; bh=uckOZk/nJoZWWehA5rrqTsGGnE1WONqJczjs0xYA7fE=;
+	h=From:To:Cc:Subject:Date;
+	b=nI8+/yiFF3O5SWKB4sSbOsZr5C/tHzmLaELzFOPcRiUYYIHw39EUCrXGDtS/7fXnE
+	 dr4J2hrFhuvo0ELrhH0zSzBIS5Wb7pVaiPOmzN3k+pPoHbX49I2pzXJKfsT1kU3/0a
+	 z2FQT5k5pJEEeE9Qzz1E4/JHloPq0KTDllBTKN2o=
+Received: from localhost.localdomain ([115.60.178.104])
+	by newxmesmtplogicsvrszb42-0.qq.com (NewEsmtp) with SMTP
+	id 5779AA04; Mon, 15 Sep 2025 21:21:55 +0800
+X-QQ-mid: xmsmtpt1757942515twp57q9sy
+Message-ID: <tencent_AD6578717AD07FA01AED37FCC2D8C966F509@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMmaUT6LyLw8W3HEM5cA52MqBJCkrUFDnyVRuhu9Jit3wCFflwJ+qL
+	 F7C6V5wE6k9uOmgZqHsbg5MOoJObyDMbz1hYHHxRR8zLN3Gg5P0UQyRiWBeY8EUGxQQ5hdidzhtx
+	 f8ud1eUfclpNC4qSua83FLulQJgw+ZyYrOiCtGjDoP51JPgLhIKNvr+kqRESSLwBSfXwyHAovLsx
+	 8/sla+cjn5gO13waWJoXjUooJ+b70bYvJ7X2p9blVH9xLEVuSyLZsAxwHmcNm77Q0AiEP9CaEcVQ
+	 WrDDJQh8IFm/fg99++rWnAl8J5VhY4WYZiNtcR5a/3FMkNj9KMFcAuHDIv6whAnHpmELFrcC3BS5
+	 rEm0shYjfMTS3ingd4PRBBDUxGZN419SKqDWf5aFsYUKh/PmuXCO3Bf7Qa+TFqoZHXU5+5YGwCMN
+	 9vyVvf5D2BViCv00714TGai2Y3ESmtjqqYC2GMFLFSQYpjOBJIyJX63WvtqxtcRjeukzAQG3WEin
+	 Fgeq+UrkqPzq0yipZu3NByU6764f8LpJAzZaY3oqsDPR1sinZKVBanIfr4qTj3E9P7NfUXpwb0TR
+	 nPQcZHs0CRWYRnPfzTywQsdairOP75ku7gSWfOxNgAXv40ZFdr2dsxL+K2KtMEdNTFa+Pt2rnjsF
+	 acpRV05155T3QpJ+T3QlByO9YnkUlcWS6ySBTnGwRMx5LerPB1+JulRwO6A5AHJMxPR/y+e6NL1N
+	 7vH/GP+JnzwMqUnVqU0Rt0/40uYFeJAvxmGPNI/Mosk7cvy7KheBQ89EM6L7lT60c0CJsUJbuEK8
+	 oR1MO5/WHGrwitfzg2UVUvtDSWtsxkL0uc8BBNvp73uxCR+FFkO9fcVi3O+zK900SmVc2HER0L8a
+	 OG9dXMxg6NjkJAmvNYMn4DofBEYAmpuWnRfqiHTrz1Kzoq6miOsi+jLVhnw2iLy9J5zUXQouZT4W
+	 lHzk+TnsE=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: 597607025@qq.com
+To: linux-nfs@vger.kernel.org
+Cc: zhangyaqi@kylinos.cn,
+	steved@redhat.com
+Subject: [PATCH] nfsdcld:fix potential PATH_MAX overflows in recovery dir handling
+Date: Thu, 12 Jun 2025 01:07:41 +0800
+X-OQ-MSGID: <20250611170741.8562-1-597607025@qq.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Harshvardhan Jha" <harshvardhan.j.jha@oracle.com>
-Cc: "Mark Brown" <broonie@kernel.org>, trondmy@kernel.org,
- linux-nfs@vger.kernel.org, Aishwarya.TCV@arm.com, ltp@lists.linux.it,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, "Anna Schumaker" <anna@kernel.org>
-Subject: Re: [PATCH 1/2] SUNRPC: Don't allow waiting for exiting tasks
-In-reply-to: <c5d1eb2b-2697-4413-983c-0650eab389e9@oracle.com>
-References: <>, <c5d1eb2b-2697-4413-983c-0650eab389e9@oracle.com>
-Date: Sun, 27 Jul 2025 14:50:48 +1000
-Message-id: <175359184844.2234665.17719114991555307336@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Jul 2025, Harshvardhan Jha wrote:
-> On 23/07/25 1:37 PM, NeilBrown wrote:
-> > On Wed, 23 Jul 2025, Harshvardhan Jha wrote:
-> >> On 08/04/25 4:01 PM, Mark Brown wrote:
-> >>> On Fri, Mar 28, 2025 at 01:40:44PM -0400, trondmy@kernel.org wrote:
-> >>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >>>>
-> >>>> Once a task calls exit_signals() it can no longer be signalled. So do
-> >>>> not allow it to do killable waits.
-> >>> We're seeing the LTP acct02 test failing in kernels with this patch
-> >>> applied, testing on systems with NFS root filesystems:
-> >>>
-> >>> 10271 05:03:09.064993  tst_test.c:1900: TINFO: LTP version: 20250130-1-=
-g60fe84aaf
-> >>> 10272 05:03:09.076425  tst_test.c:1904: TINFO: Tested kernel: 6.15.0-rc=
-1 #1 SMP PREEMPT Sun Apr  6 21:18:14 UTC 2025 aarch64
-> >>> 10273 05:03:09.076733  tst_kconfig.c:88: TINFO: Parsing kernel config '=
-/proc/config.gz'
-> >>> 10274 05:03:09.087803  tst_test.c:1722: TINFO: Overall timeout per run =
-is 0h 01m 30s
-> >>> 10275 05:03:09.088107  tst_kconfig.c:88: TINFO: Parsing kernel config '=
-/proc/config.gz'
-> >>> 10276 05:03:09.093097  acct02.c:63: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=
-=3Dy
-> >>> 10277 05:03:09.093400  acct02.c:240: TINFO: Verifying using 'struct acc=
-t_v3'
-> >>> 10278 05:03:10.053504  <6>[   98.043143] Process accounting resumed
-> >>> 10279 05:03:10.053935  <6>[   98.043143] Process accounting resumed
-> >>> 10280 05:03:10.064653  acct02.c:193: TINFO: =3D=3D entry 1 =3D=3D
-> >>> 10281 05:03:10.064953  acct02.c:84: TINFO: ac_comm !=3D 'acct02_helper'=
- ('acct02')
-> >>> 10282 05:03:10.076029  acct02.c:133: TINFO: ac_exitcode !=3D 32768 (0)
-> >>> 10283 05:03:10.076331  acct02.c:141: TINFO: ac_ppid !=3D 2466 (2461)
-> > It seems that the acct02 process got logged..
-> > Maybe the vfork attempt (trying to run acct02_helper) got half way an
-> > aborted.
-> > It got far enough that accounting got interested.
-> > It didn't get far enough to update the ppid.
-> > I'd be surprised if that were even possible....
-> >
-> > If you would like to help debug this, changing the
-> >
-> > +       if (unlikely(current->flags & PF_EXITING))
-> >
-> > to
-> >
-> > +       if (unlikely(WARN_ON(current->flags & PF_EXITING)))
-> >
-> > would provide stack traces so we can wee where -EINTR is actually being
-> > returned.  That should provide some hints.
-> >
-> > NeilBrown
->=20
-> Hi Neil,
->=20
-> Upon this addition I got this in the logs
+From: zhangyaqi <zhangyaqi@kylinos.cn>
 
-Thanks for testing.  Was there anything new in the kernel logs?  I was
-expecting a WARNING message followed by a "Call Trace".
+Signed-off-by: zhangyaqi <zhangyaqi@kylinos.cn>
+---
+ utils/nfsdcld/legacy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-If there wasn't, then this patch cannot have caused the problem.
-If there was, then I need to see it.
+diff --git a/utils/nfsdcld/legacy.c b/utils/nfsdcld/legacy.c
+index b89374c9..c6f6925c 100644
+--- a/utils/nfsdcld/legacy.c
++++ b/utils/nfsdcld/legacy.c
+@@ -65,7 +65,7 @@ legacy_load_clients_from_recdir(int *num_records)
+ 		return;
+ 	}
+ 	/* the output from the proc file isn't null-terminated */
+-	recdirname[PATH_MAX] = '\0';
++	recdirname[(n < PATH_MAX) ? n : PATH_MAX] = '\0';
+ 	nl = strchr(recdirname, '\n');
+ 	if (!nl)
+ 		return;
+@@ -133,7 +133,7 @@ legacy_clear_recdir(void)
+ 		return;
+ 	}
+ 	/* the output from the proc file isn't null-terminated */
+-	recdirname[PATH_MAX] = '\0';
++	recdirname[(n < PATH_MAX) ? n : PATH_MAX] = '\0';
+ 	nl = strchr(recdirname, '\n');
+ 	if (!nl)
+ 		return;
+-- 
+2.27.0
 
-Thanks,
-NeilBrown
-
-
->=20
-> <<<test_start>>>
-> tag=3Dacct02 stime=3D1753444172
-> cmdline=3D"acct02"
-> contacts=3D""
-> analysis=3Dexit
-> <<<test_output>>>
-> tst_kconfig.c:88: TINFO: Parsing kernel config
-> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> tst_tmpdir.c:316: TINFO: Using /tmpdir/ltp-w1ozKKlJ6n/LTP_acc4RRfLh as
-> tmpdir (nfs filesystem)
-> tst_test.c:2004: TINFO: LTP version: 20250530-105-gda73e1527
-> tst_test.c:2007: TINFO: Tested kernel:
-> 6.15.8-1.bug38227970.el9.rc2.x86_64 #1 SMP PREEMPT_DYNAMIC Fri Jul 25
-> 02:03:04 PDT 2025 x86_64
-> tst_kconfig.c:88: TINFO: Parsing kernel config
-> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> tst_test.c:1825: TINFO: Overall timeout per run is 0h 00m 30s
-> tst_kconfig.c:88: TINFO: Parsing kernel config
-> '/lib/modules/6.15.8-1.bug38227970.el9.rc2.x86_64/config'
-> acct02.c:61: TINFO: CONFIG_BSD_PROCESS_ACCT_V3=3Dy
-> acct02.c:238: TINFO: Verifying using 'struct acct_v3'
-> acct02.c:191: TINFO: =3D=3D entry 1 =3D=3D
-> acct02.c:82: TINFO: ac_comm !=3D 'acct02_helper' ('acct02')
-> acct02.c:131: TINFO: ac_exitcode !=3D 32768 (0)
-> acct02.c:139: TINFO: ac_ppid !=3D 88929 (88928)
-> acct02.c:181: TFAIL: end of file reached
->=20
-> HINT: You _MAY_ be missing kernel fixes:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D4d9570158b626
->=20
-> Summary:
-> passed=C2=A0 =C2=A00
-> failed=C2=A0 =C2=A01
-> broken=C2=A0 =C2=A00
-> skipped=C2=A0 0
-> warnings 0
-> incrementing stop
-> <<<execution_status>>>
-> initiation_status=3D"ok"
-> duration=3D1 termination_type=3Dexited termination_id=3D1 corefile=3Dno
-> cutime=3D0 cstime=3D20
->=20
-> <<<test_end>>>
->=20
->=20
-> Thanks & Regards,
->=20
-> Harshvardhan
 
