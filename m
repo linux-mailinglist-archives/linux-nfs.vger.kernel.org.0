@@ -1,165 +1,149 @@
-Return-Path: <linux-nfs+bounces-12293-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12294-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52DA3AD4BF1
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 08:42:02 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17CF4AD4C1C
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 08:55:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF45D3A534A
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 06:41:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E4EE1787E0
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 06:55:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F5A6153BD9;
-	Wed, 11 Jun 2025 06:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67367189B8B;
+	Wed, 11 Jun 2025 06:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y8NsB5hc"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nRvhPFLH"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110BD2576
-	for <linux-nfs@vger.kernel.org>; Wed, 11 Jun 2025 06:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CB91494A8
+	for <linux-nfs@vger.kernel.org>; Wed, 11 Jun 2025 06:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749624114; cv=none; b=SOTuznhgYsib+UjpfCxnyXBF9EBEjhW/jgYguIR3NTpr2wK6ACRRw4x3MoBKpGNSxD61j539oGZJNYhmLo+7PskB9L/r6nOWYnFO3pSbOZAy/GzOh8HuenyB+3pDHhCQBOzjT5CNhzYF+4pENmHGcAhuYnMDyIUcPQqZz5jqDhw=
+	t=1749624915; cv=none; b=bqVPRJF1zqtb0UKHYeHXdGnIojMlz6bRzBI9H7bdZDfFJTGqeNCvxYE+kS2cI1MiUQtmvdt6vEEaNinXWwf183moWd8LztDu9p2eCAy+Crs5cTUXStbnf+hHamSqT3RKT3Gwdr1oF4oOcCeSq27yIEcUtQnc1F0XTkgc7vRPkEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749624114; c=relaxed/simple;
-	bh=4ceUAwn27iCccCwkil9iIYDzThF0jr7HFxPSNsr77jc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GTKwfJcg/eJ34v5+i8d12HfNJLEZ4yUn+YZNjnC8MKuNELXfZp/afYKgRpnHPcA5oCXKm+WH32gmjbSCTDaH1wxOnFyYLdngrn75KEtODL1ZMBfcAKb2VSoGbS9IGk3EVc+sadGpkeKfm9QrcckPMGUfHl4d8LxlcLuvo3Y6wkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y8NsB5hc; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so2307061a91.2
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jun 2025 23:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749624112; x=1750228912; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zm2helOcE/3CuLBLhPn3/Auu5lcU/zGdJ3ypZXYgEEo=;
-        b=Y8NsB5hcEscZ0ErMB8d3Ac1bD9lPnDe2OlMNgsAQVLotngYghdoJPYFX4XbPnxm44n
-         TRiqn8R41c/rn/OFLU2j31nniBmgZZ39L5MfaCDeZKbcfINggZ2aq+D3WvNp3mcdKnWT
-         G22OzCEsoT1ZYZcuq1Okq2pqZbyflOcTXVAxifPN4munCkAHjyfeh8/gxRvtxXoyH6DN
-         ZAR17pNM/yCwNea4SUO1NnYzH95YF3phgVMnmS7B8I8sgaqloYh5ImcF36NFFISpHHlA
-         7Z5qhecAJpi/+jqLR8XBZNOsijQh3M9OmdE18Yk2yxLoVvQ6hPDiKnsLPsC5a6ZmQalm
-         9NPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749624112; x=1750228912;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zm2helOcE/3CuLBLhPn3/Auu5lcU/zGdJ3ypZXYgEEo=;
-        b=LrXg8uzBu6fer55zySy9RW9p/o4BqN7S9q2rVYJChmEUuUuFr6f8GilNOjI++vz3+q
-         8c0NfRsPLsj0F0cjajJwXOPBR6Mpn1iuM0DEcIrCupTZHz2RV6RZtTa8RCUuSg7qJozU
-         MIOfaHnirPbnzltzkRGsE2RIfIO6rkNRjEHX6NiU7sJe1uFJocnw4UEH24zw81DAXI7y
-         KmQI87tkyAWLHC4LnWqnF4q818EXHum8oesosX8KyVkpagLZm86Qu//ziXXUuEoBzeSC
-         jzrXDbrUtRJPGCa+dmkUbqBVA2tQCV5P+6pkW1wI1E41nMi21r3zSDnYbNMe4gGHd584
-         0S/g==
-X-Gm-Message-State: AOJu0Yz+H+mpg94LVK1kjUKa4pEBq35S7OcT2ccKXPsNbBXeUaWexcUN
-	w0M2EuOOMK4NRjIfxPSiqbi4OXKqvwWcjmV14GS+KrN+LIBHfiuCuubdsDMZlvAazU71WrWejG6
-	cSx3ek2MYGi1eB3bS1d0u8Lre8pWY54PNsA==
-X-Gm-Gg: ASbGncu6+gxq7iEoSQbQEZkJFbIpZ9ihJfA/BFfRPpvr6FFv+kWxkNSDXm3vs9qe8NW
-	KjMPLyrQZWvtVwX16euJDSlj7db1uUC4ruwma9Q8NQQehp3UsFApTPnwshdcKZZXTsYigjftRKN
-	b6crHKw2qiDdaPk/RxI5z/+7Rkpjt7q096oqDq2FU/g48=
-X-Google-Smtp-Source: AGHT+IGUY3m/3ROfyYZW7A47VfqGPRb+eWHiUBYANFFgp9bK3LWso3ZXwL6CWvvChnmoZFdJhGnsxmwkfUor/y/gu9U=
-X-Received: by 2002:a17:90a:d64f:b0:311:b3e7:fb38 with SMTP id
- 98e67ed59e1d1-313af1b269amr3058265a91.19.1749624111970; Tue, 10 Jun 2025
- 23:41:51 -0700 (PDT)
+	s=arc-20240116; t=1749624915; c=relaxed/simple;
+	bh=vPWLyJMTO+rlyNj8Ejz28nXKtwkRkwH2Rs6aHVchmro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=knSEfdx9AanfG8L5cV7upj1n/ByLMC00xbNp7Y0gP89uQMaJrG8wH/rCyOjvfolgnIcSZAkvhUf6YsuV3CMQ3TSbvJTAbloMCqR/2gmcGdxtgsxEifUJYINSJ9luI1Eyi7WJBs9weppA+pKJPqxDJfsGIIvdFx3Q7Q/DJUuoBf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nRvhPFLH; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=I1ziS8F7zaJPJwhquxHX9AhnagS0bBxQq0YpSnmY6BI=; b=nRvhPFLHQyAa9q4NtI2mgtaHW0
+	t4YM6T1i3I3ubez/dUztiPSDbi/IEYTF+9XbfudD4vVY0CIX+YJPUgCUd9f20XACXBYmsdtSsciWa
+	qIJWbYVLllJxQo410dMV6nwaN82IyElBC02h4gJDvNlXSBKWdtyuqZseIg95QBg0XW+DhL7O6QKdM
+	q7YCTj88jMHjCTrywm8JCXBuaC9nqqciYw4gUu26cttzqR4pBwexgjaNG/1Kd8BQCVjsDEVDSiQYP
+	SUclXiwrAv7ViIF1P/6kB21OcMVNwkgVqDSA+HQdRHY+wUJLgNj61RZMrPAGYlw6WaRebjbLUEnkU
+	NmGvI3dA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPFMb-00000009307-0cVU;
+	Wed, 11 Jun 2025 06:55:09 +0000
+Date: Tue, 10 Jun 2025 23:55:09 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	"J . Bruce Fields" <bfields@fieldses.org>,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Implement large extent array support in pNFS
+Message-ID: <aEkoTdJttLesPv6M@infradead.org>
+References: <20250604130809.52931-1-sergeybashirov@gmail.com>
+ <aEBeJ2FoSmLvZlSc@infradead.org>
+ <uegslxlqscbgc2hkktaavrc5fjoj5chlmfdxhltgv5idzazm3h@irvki3iijaw4>
+ <aEfE-r2dkuDRUKsq@infradead.org>
+ <75iqhi3to6gohuo2o4h3cewslcjzsfyrl7l7x2x3qyiaaecjci@uwoeqjubvqft>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM5tNy7kfqToA8p4-=LOnhvZuk36vocy32U6kgT+561uOWR_iQ@mail.gmail.com>
- <f84bed7e-e96c-4a7e-95e6-2a28a574947c@oracle.com> <CALXu0UfWN7ahsYQfvHVLViuxfb+oOsjQR8GzCHKwhPnctoV3Nw@mail.gmail.com>
- <21771602-be31-4d82-9820-7775751ae7e6@oracle.com>
-In-Reply-To: <21771602-be31-4d82-9820-7775751ae7e6@oracle.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 11 Jun 2025 08:40:00 +0200
-X-Gm-Features: AX0GCFuOSpqFWRHkUBEOrdQ6HKTkyDZEyMXGJLkWuYRCgAf51aX3vrWTZUcWdYY
-Message-ID: <CALXu0Ueg2KeSO9qL5U8uPitmV4N_zwP6GRVAqAmqODyjks3snQ@mail.gmail.com>
-Subject: Re: [nfsv4] Re: simple NFSv4.1/4.2 test of remove while holding a delegation
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75iqhi3to6gohuo2o4h3cewslcjzsfyrl7l7x2x3qyiaaecjci@uwoeqjubvqft>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-IMO there should be a debug setting to turn this off, as it might
-cause bugs in production environments. Similar to -O0 for cc, just in
-case.
+On Tue, Jun 10, 2025 at 06:24:03PM +0300, Sergey Bashirov wrote:
+> On Mon, Jun 09, 2025 at 10:39:06PM -0700, Christoph Hellwig wrote:
+> > On Tue, Jun 10, 2025 at 03:36:49AM +0300, Sergey Bashirov wrote:
+> > > Together with Konstantin we spent a lot of time enabling the pNFS block
+> > > volume setup. We have SDS that can attach virtual block devices via
+> > > vhost-user-blk to virtual machines. And we researched the way to create
+> > > parallel or distributed file system on top of this SDS. From this point
+> > > of view, pNFS block volume layout architecture looks quite suitable. So,
+> > > we created several VMs, configured pNFS and started testing. In fact,
+> > > during our extensive testing, we encountered a variety of issues including
+> > > deadlocks, livelocks, and corrupted files, which we eventually fixed.
+> > > Now we have a working setup and we would like to clean up the code and
+> > > contribute it.
+> > 
+> > Can you share your reproducer scripts for client and server?
+> 
+> I will try. First of all, you need two VMs connected to the same network.
+> The hardest part is somehow to connect a shared block device to both VMs
+> with RW access.
 
-Ced
+I know the basic setup :)
 
-On Tue, 10 Jun 2025 at 14:03, Dai Ngo <dai.ngo@oracle.com> wrote:
->
->
-> On 6/10/25 2:59 AM, Cedric Blancher wrote:
-> > On Tue, 10 Jun 2025 at 02:17, Dai Ngo
-> > <dai.ngo=40oracle.com@dmarc.ietf.org> wrote:
-> >> On 6/9/25 4:35 PM, Rick Macklem wrote:
-> >>> Hi,
-> >>>
-> >>> I hope you don't mind a cross-post, but I thought both groups
-> >>> might find this interesting...
-> >>>
-> >>> I have been creating a compound RPC that does REMOVE and
-> >>> then tries to determine if the file object has been removed and
-> >>> I was surprised to see quite different results from the Linux knfsd
-> >>> and Solaris 11.4 NFSv4.1/4.2 servers. I think both these servers
-> >>> provide FH4_PERSISTENT file handles, although I suppose I
-> >>> should check that?
-> >>>
-> >>> First, the test OPEN/CREATEs a regular file called "foo" (only one
-> >>> hard link) and acquires a write delegation for it.
-> >>> Then a compound does the following:
-> >>> ...
-> >>> REMOVE foo
-> >>> PUTFH fh for foo
-> >>> GETATTR
-> >>>
-> >>> For the Solaris 11.4 server, the server CB_RECALLs the
-> >>> delegation and then replies NFS4ERR_STALE for the PUTFH above.
-> >>> (The FreeBSD server currently does the same.)
-> >>>
-> >>> For a fairly recent Linux (6.12) knfsd, the above replies NFS_OK
-> >>> with nlinks == 0 in the GETATTR reply.
-> >>>
-> >>> Hmm. So I've looked in RFC8881 (I'm terrible at reading it so I
-> >>> probably missed something) and I cannot find anything that states
-> >>> either of the above behaviours is incorrect.
-> >>> (NFS4ERR_STALE is listed as an error code for PUTFH, but the
-> >>> description of PUTFH only says that it sets the CFH to the fh arg.
-> >>> It does not say anything w.r.t. the fh arg. needing to be for a file
-> >>> that still exists.) Neither of these servers sets
-> >>> OPEN4_RESULT_PRESERVE_UNLINKED in the OPEN reply.
-> >>>
-> >>> So, it looks like "file object no longer exists" is indicated either
-> >>> by a NFS4ERR_STALE reply to either PUTFH or GETATTR
-> >>> OR
-> >>> by a successful reply, but with nlinks == 0 for the GETATTR reply.
-> >>>
-> >>> To be honest, I kinda like the Linux knfsd version, but I am wondering
-> >>> if others think that both of these replies is correct?
-> >>>
-> >>> Also, is the CB_RECALL needed when the delegation is held by
-> >>> the same client as the one doing the REMOVE?
-> >> The Linux NFSD detects the delegation belongs to the same client that
-> >> causes the conflict (due to REMOVE) and skips the CB_RECALL. This is
-> >> an optimization based on the assumption that the client would handle
-> >> the conflict locally.
-> > Does Linux nfsd have a setting to turn such optimizations OFF (all of them)?
->
-> There is no setting to turn off the optimization of delegation recall from
-> the same client.
->
-> -Dai
->
-> >
-> > Ced
+> On the client side, you need to have the same /dev/vda device available,
+> but not mounted. Additionally, you need the blkmapd service running.
 
+blkmapd is only needed for the block layout, which should generally be
+avoided as it can't be used reliably because working fencing is
+almost impossible.
 
+> This should create 2.5k extents:
+> fio --name=test --filename=/mnt/pnfs/test.raw --size=10M \
+>     --rw=randwrite --ioengine=libaio --direct=1 --bs=4k  \
+>     --iodepth=128 --fallocate=none
 
--- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+Thanks!  We should find a way to wire up the test coverage
+somewhere, e.g. xfstests.
+
+> Troubleshooting. If any error occurs, then kernel falls back to NFSv3.
+
+That should really be NFSv4.
+
+> the client code also has problems with the block extent array. Currently
+> the client tries to pack all the block extents it needs to commit into
+> one RPC. And if there are too many of them, you will see
+> "RPC: fragment too large" error on the server side. That's why
+> we set rsize and wsize to 1M for now.
+
+We'll really need to fix the client to split when going over the maximum
+compoung size.
+
+> Another problem is that when the
+> extent array does not fit into a single memory page, the client code
+> discards the first page of encoded extents while reallocating a larger
+> buffer to continue layout commit encoding. So even with this patch you
+> may still notice that some files are not written correctly. But at least
+> the server shouldn't send the badxdr error on a well-formed layout commit.
+
+Eww, we'll need to fix that as well.  Would be good to have a reproducer
+for that case as well.
+
+> > Btw, also as a little warning:  the current pNFS code mean any client
+> > can corrupt the XFS metadata.  If you want to actually use the code
+> > in production you'll probably want to figure out a way to either use
+> > the RT device for exposed data (should be easy, but the RT allocator
+> > sucks..), or find a way to otherwise restrict clients from overwriting
+> > metadata.
+> 
+> Thanks for the advice! Yes, we have had issues with XFS corruption
+> especially when multiple clients were writing to the same file in
+> parallel. Spent some time debugging layout recalls and client fencing
+> to figure out what happened.
+
+Normal operation should not cause that, what did you see there?
+
+I mean a malicious client targeting metadata outside it's layout.
+
 
