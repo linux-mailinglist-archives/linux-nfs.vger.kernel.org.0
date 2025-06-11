@@ -1,56 +1,58 @@
-Return-Path: <linux-nfs+bounces-12305-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12306-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C8C8AD561D
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 14:56:00 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B908AD5667
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 15:04:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A32D41746C4
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 12:56:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B1DC3A3889
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jun 2025 13:03:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD7B26E709;
-	Wed, 11 Jun 2025 12:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003812749E7;
+	Wed, 11 Jun 2025 13:04:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFMKbHy0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnSXHlDf"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9188283C8C;
-	Wed, 11 Jun 2025 12:55:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB02827467A;
+	Wed, 11 Jun 2025 13:04:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749646523; cv=none; b=Rw5ddkNWuyOZ9PnPGo2z1pMs6vwBSOW8zn+OdqK+u4suX01rO/vUoYDkoyc84gbgb7CMqI2uQLySMjQ1nFz0HfzOOz7vAPbiY1YHdKt28G5HTluhoCiJOyq8Gc0g74JlEcROLPXrpeCuDr1cgm7iAUXFzPbGnxbeXCbjrF9V6ug=
+	t=1749647045; cv=none; b=pWFxsOoPUvcFzDhmkljDD2mgS6VV5fnP1tBXaJonDIG2FMesnrsY4WffJK+WTi/U24XNdQ2sAybAatuCdq5IKW8YBr2YegcNtityvqC/aYutkH8OXgkJf0rJJOXyHRGgtXMPHuhrSI+kVBwPFmHKZ+/d9NNhWoHzKeyQqFaDC+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749646523; c=relaxed/simple;
-	bh=gFVLNaXy50JFUU/l5LL5RCwINIS9m5MvpU/EuFaA50c=;
+	s=arc-20240116; t=1749647045; c=relaxed/simple;
+	bh=QZLG015LXhv6DaUXWi7YJ8Vo50QVMGaxH3XhwZ0bP28=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WuVfpLo2aM/RE7y5F8yO3NkwTanLU4/SpnMVjxxXV4+m1lIWlJj76XOoOMVuGKo9A1+9TEpOj1o//ji71aTmn+xkhU4xPPIHkhrIbV3DgVulsJMpChcHmgluot59z3F4blqvaPDFdshv68tL7VRvBv7jv4MOmUqlKGDqcTBGpT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFMKbHy0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0790FC4CEEE;
-	Wed, 11 Jun 2025 12:55:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=S4rhUcvS+K4IeVgwx0Ff6HWhX0RnnOfmTfM5WV8NhnmWd8M4uWoFGiy/xI+N2Ug8Xhn/1BVOxZSt/Lp3KiEDRn9soW2trN4ONau2zHIggRbVzQmBIibkG5AA7UeFjVn5ZHe3gCZ0mNaeSW17Ca9sgK8/HBbcFaAGzInXNGcaXb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnSXHlDf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF762C4CEEE;
+	Wed, 11 Jun 2025 13:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749646522;
-	bh=gFVLNaXy50JFUU/l5LL5RCwINIS9m5MvpU/EuFaA50c=;
+	s=k20201202; t=1749647045;
+	bh=QZLG015LXhv6DaUXWi7YJ8Vo50QVMGaxH3XhwZ0bP28=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tFMKbHy0XjDdkv7Wcs2NGFEyZ49ZfbhLoKQh5bKh6GtX3I9fpgc/ZG5ueMTGujgfc
-	 orxVVzuSJTjJtcMvspEednDFQDsdpQqTRQKgH2/GBpaFF6iVoTvTjipLDNWTSOzfyg
-	 K3Rgi5stEkbwp2+SEy+/FVT7pjEwF0oeek9l74ooLq6ma96bL/uwmkiiIlTCbnsgNp
-	 fZQaKPhJHD5oboHiN+7mPVXDCmtxdnA7odcrPa7asmpO63Sizcb03zEsB5wR20gNNp
-	 I2FnV0qh9FljI5NtI02A9cDQUTJhjpBMaYerQfRuzczqYBHLVvGJsMWPL9S4CXNy6Z
-	 m4nIzp2eFdFsw==
-Message-ID: <54acf3548634f5a46fa261fc2ab3fdbf86938c1c.camel@kernel.org>
-Subject: Re: [PATCH 0/6] NFSD: add enable-dontcache and initially use it to
- add DIO support
+	b=LnSXHlDfEec2P+ybZqOs49FTKxYqjl2wAQnCj+oXQS5WO675Z5SDZHISzeC5J177f
+	 CR3YQJPVETC6kZQRhvwCGY4/WJsQece6xyD3i9A6Vll94dojDuI5rkH+JB1oidlRrF
+	 0B99C6ksyyMzKxiQSY2Zm05Hty0Eyvi1rRDxLoCZLev/90gRRHXp9lRmXK2dL345BU
+	 63qBgEqdzBnlXX2Nu42oHcYz8415tuFBdCT68ORvHwuWjSnrUjVowZffDppJu6tRej
+	 fenPS/iVOUXPMlQD/Hij9APbtMokYmraF7fBTJyJ9rNk9VTZlpuKMcuqDuXW5wYuCX
+	 vT1QqfnjqK/+Q==
+Message-ID: <f7ab4c66f6a0ef689f2b784664f284e3b55ebd30.camel@kernel.org>
+Subject: Re: [PATCH 1/6] NFSD: add the ability to enable use of
+ RWF_DONTCACHE for all IO
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Jens Axboe
-	 <axboe@kernel.dk>
-Date: Wed, 11 Jun 2025 08:55:20 -0400
-In-Reply-To: <20250610205737.63343-1-snitzer@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Christoph Hellwig <hch@infradead.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Date: Wed, 11 Jun 2025 09:04:04 -0400
+In-Reply-To: <aEld-iBsy-vgXLoq@kernel.org>
 References: <20250610205737.63343-1-snitzer@kernel.org>
+	 <20250610205737.63343-2-snitzer@kernel.org>
+	 <aEko3e_kpY-fA35R@infradead.org> <aEld-iBsy-vgXLoq@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,185 +137,44 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2025-06-10 at 16:57 -0400, Mike Snitzer wrote:
-> Hi,
+On Wed, 2025-06-11 at 06:44 -0400, Mike Snitzer wrote:
+> On Tue, Jun 10, 2025 at 11:57:33PM -0700, Christoph Hellwig wrote:
+> > On Tue, Jun 10, 2025 at 04:57:32PM -0400, Mike Snitzer wrote:
+> > > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any data
+> > > read or written by NFSD will either not be cached (thanks to O_DIRECT=
+)
+> > > or will be removed from the page cache upon completion (DONTCACHE).
+> > >=20
+> > > enable-dontcache is 0 by default.  It may be enabled with:
+> > >   echo 1 > /sys/kernel/debug/nfsd/enable-dontcache
+> >=20
+> > Having this as a global debug-only interface feels a bit odd.
+> >=20
 >=20
-> This series introduces 'enable-dontcache' to NFSD's debugfs interface,
-> once enabled NFSD will selectively make use of O_DIRECT when issuing
-> read and write IO:
-> - all READs will use O_DIRECT (both aligned and misaligned)
-> - all DIO-aligned WRITEs will use O_DIRECT (useful for SUNRPC RDMA)
-> - misaligned WRITEs currently continue to use normal buffered IO
+> I generally agree, I originally proposed nfsd.nfsd_dontcache=3DY
+> modparam:
+> https://lore.kernel.org/linux-nfs/20250220171205.12092-1-snitzer@kernel.o=
+rg/
 >=20
-> Q: Why not actually use RWF_DONTCACHE (yet)?
-> A:=20
-> If IO can is properly DIO-aligned, or can be made to be, using
-> O_DIRECT is preferred over DONTCACHE because of its reduced CPU and
-> memory usage.  Relative to NFSD using RWF_DONTCACHE for misaligned
-> WRITEs, I've briefly discussed with Jens that follow-on dontcache work
-> is needed to justify falling back to actually using RWF_DONTCACHE.
-> Specifically, Hammerspace benchmarking has confirmed as Jeff Layton
-> suggested at Bakeathon, we need dontcache to be enhanced to not
-> immediately dropbehind when IO completes -- because it works against
-> us (due to RMW needing to read without benefit of cache), whereas
-> buffered IO enables misaligned IO to be more performant. Jens thought
-> that delayed dropbehind is certainly doable but that he needed to
-> reason through it further (so timing on availability is TBD). As soon
-> as it is possible I'll happily switch NFSD's misaligned write IO
-> fallback from normal buffered IO to actually using RWF_DONTCACHE.
+> (and even implemented formal NFSD per-export "dontcache" control,
+> which Trond and I both think is probably needed).
 >=20
-
-To be clear, my concern with *_DONTCACHE is this bit in
-generic_write_sync():
-
-        } else if (iocb->ki_flags & IOCB_DONTCACHE) {                      =
-                        =20
-                struct address_space *mapping =3D iocb->ki_filp->f_mapping;=
-                          =20
-                                                                           =
-                        =20
-                filemap_fdatawrite_range_kick(mapping, iocb->ki_pos - count=
-,                       =20
-                                              iocb->ki_pos - 1);           =
-                        =20
-        }                                                                  =
-                        =20
-                                                                           =
-                        =20
-I understand why it was done, but it means that we're kicking off
-writeback for small ranges after every write. I think we'd be better
-served by allowing for a little batching, and just kick off writeback
-(maybe even for the whole inode) after a short delay. IOW, I agree with
-Dave Chinner that we need some sort of writebehind window.
-
-The dropbehind part (where we drop it from the pagecache after
-writeback completes) is fine, IMO.
-
-> Continuing with what this patchset provides:
+> But (ab)using debugfs is the approach Chuck and Jeff would like to
+> take for experimental NFSD changes so that we can kick the tires
+> without having to support an interface until the end of time. See
+> commit 9fe5ea760e64 ("NFSD: Add /sys/kernel/debug/nfsd") for more on
+> the general thinking.  First consumer was commit c9dcd1de7977 ("NFSD:
+> Add experimental setting to disable the use of splice read").
 >=20
-> NFSD now uses STATX_DIOALIGN and STATX_DIO_READ_ALIGN to get and store
-> DIO alignment attributes from underlying filesystem in associated
-> nfsd_file.  This is done when the nfsd_file is first opened for a
-> regular file.
+> I'm fine with using debugfs, means to an end with no strings attached.
 >=20
-> A new RWF_DIRECT flag is added to include/uapi/linux/fs.h to allow
-> NFSD to use O_DIRECT on a per-IO basis.
->=20
-> If enable-dontcache=3D1 then RWF_DIRECT will be set for all READ IO
-> (even if the IO is misaligned, thanks to expanding the read to be
-> aligned for use with DIO, as suggested by Jeff and Chuck at the NFS
-> Bakeathon held recently in Ann Arbor).
->=20
-> NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative to
-> DIO alignment (both page and disk alignment).  This works quite well
-> for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
-> maps the WRITE payload into aligned pages. But more work is needed to
-> be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
-> used. I spent quite a bit of time analyzing the existing xdr_buf code
-> and NFSD's use of it.  Unfortunately, the WRITE payload gets stored in
-> misaligned pages such that O_DIRECT isn't possible without a copy
-> (completely defeating the point).  I'll reply to this cover letter to
-> start a subthread to discuss how best to deal with misaligned write
-> IO (by association with Hammerspace, I'm most interested in NFS v3).
+> Once we have confidence in what is needed we can pivot back to
+> a modparam or per-export controls or whatever.
 >=20
 
-Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
-rq_pages array. To get alignment right, you'd probably have to do the
-receive in a much more piecemeal way.
-
-Basically, you'd need to decode as you receive chunks of the message,
-and look out for WRITEs, and then set it up so that their payloads are
-received with proper alignment.
-
-Anyway, separate thread to discuss that sounds good.
-=20
-> Performance benefits of using O_DIRECT in NFSD:
->=20
-> Hammerspace's testbed was 10 NFS servers connected via 800Gbit
-> RDMA networking (mlx5_core), each with 1TB of memory, 48 cores (2 NUMA
-> nodes) and 8 ScaleFlux NVMe devices (each with two 3.5TB namespaces.
-> Theoretical max for reads per NVMe device is 14GB/s, or ~7GB/s per
-> namespace).
->=20
-> And 10 client systems each running 64 IO threads.
->=20
-> The O_DIRECT performance win is pretty fantastic thanks to reduced CPU
-> and memory use, particularly for workloads with a working set that far
-> exceeds the available memory of a given server.  This patchset's
-> changes (though patch 5, patch 6 wasn't written until after
-> benchmarking performed) enabled Hammerspace to improve its IO500.org
-> benchmark result (as submitted for this week's ISC 2025 in Hamburg,
-> Germany) by 25%.
->=20
-> That 25% improvement on IO500 is owed to NFS servers seeing:
-> - reduced CPU usage from 100% to ~50%
->   O_DIRECT:
->   write: 51% idle, 25% system,   14% IO wait,   2% IRQ
->   read:  55% idle,  9% system, 32.5% IO wait, 1.5% IRQ
->   buffered:
->   write: 17.8% idle, 67.5% system,   8% IO wait,  2% IRQ
->   read:  3.29% idle, 94.2% system, 2.5% IO wait,  1% IRQ
->=20
-> - reduced memory usage from just under 100% (987GiB for reads, 978GiB
->   for writes) to only ~244 MB for cache+buffer use (for both reads and
->   writes).
->   - buffered would tip-over due to kswapd and kcompactd struggling to
->     find free memory during reclaim.
->=20
-> - increased NVMe throughtput when comparing O_DIRECT vs buffered:
->   O_DIRECT: 8-10 GB/s for writes, 9-11.8 GB/s for reads
->   buffered: 8 GB/s for writes,    4-5 GB/s for reads
->=20
-> - abiliy to support more IO threads per client system (from 48 to 64)
->=20
-> The performance improvement highlight of the numerous individual tests
-> in the IO500 collection of benchamrks was in the IOR "easy" test:
->=20
-> Write:
-> O_DIRECT: [RESULT]      ior-easy-write     420.351599 GiB/s : time 869.65=
-0 seconds
-> CACHED:   [RESULT]      ior-easy-write     368.268722 GiB/s : time 413.64=
-7 seconds
->=20
-> Read:=20
-> O_DIRECT: [RESULT]      ior-easy-read     446.790791 GiB/s : time 818.219=
- seconds
-> CACHED:   [RESULT]      ior-easy-read     284.706196 GiB/s : time 534.950=
- seconds
->=20
-
-Wow!
-
-> It is suspected that patch 6 in this patchset will improve IOR "hard"
-> read results. The "hard" name comes from the fact that it performs all
-> IO using a mislaigned blocksize of 47008 bytes (which happens to be
-> the IO size I showed ftrace output for in the 6th patch's header).
->=20
-> All review and discussion is welcome, thanks!
-> Mike
->=20
-> Mike Snitzer (6):
->   NFSD: add the ability to enable use of RWF_DONTCACHE for all IO
->   NFSD: filecache: add STATX_DIOALIGN and STATX_DIO_READ_ALIGN support
->   NFSD: pass nfsd_file to nfsd_iter_read()
->   fs: introduce RWF_DIRECT to allow using O_DIRECT on a per-IO basis
->   NFSD: leverage DIO alignment to selectively issue O_DIRECT reads and wr=
-ites
->   NFSD: issue READs using O_DIRECT even if IO is misaligned
->=20
->  fs/nfsd/debugfs.c          |  39 +++++++++++++
->  fs/nfsd/filecache.c        |  32 +++++++++++
->  fs/nfsd/filecache.h        |   4 ++
->  fs/nfsd/nfs4xdr.c          |   8 +--
->  fs/nfsd/nfsd.h             |   1 +
->  fs/nfsd/trace.h            |  37 +++++++++++++
->  fs/nfsd/vfs.c              | 111 ++++++++++++++++++++++++++++++++++---
->  fs/nfsd/vfs.h              |  17 +-----
->  include/linux/fs.h         |   2 +-
->  include/linux/sunrpc/svc.h |   5 +-
->  include/uapi/linux/fs.h    |   5 +-
->  11 files changed, 231 insertions(+), 30 deletions(-)
-
+Yeah. I think this will probably end up being a per-export setting.
+We're just hesitant to commit to an interface until we have a bit more
+experience with this.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
