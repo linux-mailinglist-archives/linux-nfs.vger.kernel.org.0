@@ -1,353 +1,224 @@
-Return-Path: <linux-nfs+bounces-12364-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12365-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6278FAD6F00
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 13:28:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B753BAD7092
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 14:37:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 129C116A211
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 11:28:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 101751887F00
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 12:37:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6DE23BF91;
-	Thu, 12 Jun 2025 11:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D20226CF5;
+	Thu, 12 Jun 2025 12:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVAPT8Vt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YO2YlzXw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E419D23A99F;
-	Thu, 12 Jun 2025 11:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659DB2BD04
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 12:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749727728; cv=none; b=kmLGGJQpqKSvAJ/wkbqFOLQua7BxfFRGtoYZBwOpfF8RyzvO1eDRE/kTMD30Ky1cWCbyoT4mHg+J8X3x9FKmY1RN3PNnB0a2iIhxmq0zE1T6ypdYb+j+AE6JQhTDmdtauYQB02bp27ME9CTGybgpinuOVIqFupkqgxf6uzsgg+s=
+	t=1749731827; cv=none; b=MtCPwxPPBTKSsdEQ9rMbkluG0GbEsAdro0OWRyJUWKmlJJd8WzJ5LmFWo91F/LrCGb0+xOWVQdGHuWZeYDJOqc+ofPrRv2CmhoFVahMvy9K45ytc2TK/PNjUJ0RYPuoG5OKmvyAv2MvMD8LT1+3SdQqZ3qgC/necGe6GKGTOwIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749727728; c=relaxed/simple;
-	bh=7PUfQRjnovH8lSirdXfeJkBAFhWToKhGtlZKDlRE4Rc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fbvEJxktJnPa6GI6NxKnBAFalPQMziHy6sRe4qPRPzoizb10d23xaMcBP80NzGyLqxHeMa2h8FME5pSW5WLCh0yyPin9htfASiycbJSXIiVsUIUnK+/0BJovNDssXNOKeOJomd58CEGxzo0ooSoBW8ZGQWFA4yZHscmDr00YyFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVAPT8Vt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E4EC4CEEA;
-	Thu, 12 Jun 2025 11:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749727727;
-	bh=7PUfQRjnovH8lSirdXfeJkBAFhWToKhGtlZKDlRE4Rc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=VVAPT8VtpInYOmDDgZ5RSn1chO8t5aB1Macw5QO+0iVyUHwScJy5En8oz50frath1
-	 YzJCeQvq9dDFyTe03aXkA7j8zaz1hjl68h05sBhvt6hn1XcR77Ow9ZVQPgxNS/kZlX
-	 BNf1qb1pNN+44C6qWKbJm9DAj/0FMXHn6jLH+ikp3QabtsFPJZQhirpv2VUIhoWJxM
-	 vpalfSiPnI67eA3QA9j6OM+W+DVwQ88zFun6hpSUfr04mK1ixkpSZTpCG0rncFSIIH
-	 DJ/ucoAgOGvvhGKdqJSKPVy2ih5AwfM6449T66SbniIG6xxKDb0XZuMrX7fNFjEBkD
-	 bhwMpgn7voKDg==
-Message-ID: <60abafb21e5e57f4e910abcb27495e41a8344130.camel@kernel.org>
-Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
- 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
-From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Date: Thu, 12 Jun 2025 07:28:45 -0400
-In-Reply-To: <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
-		 <20250610205737.63343-2-snitzer@kernel.org>
-		 <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
-		 <aEnWhlXjzOmRfCJf@kernel.org>
-		 <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
-		 <aEn2-mYA3VDv-vB8@kernel.org>
-	 <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1749731827; c=relaxed/simple;
+	bh=8AFhk+xM+ccWdq6s7fDK5DBd/Hbfx8V0/cEk4s6If3s=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=GZ+LWs8NjMg8ZQtKVpIzrKjJ4v2n5cjSS8CAevioyAmVtZxW7wDxTOWhiID0rr48nQGVi+5eYUb9DJMgmWp34OzZ9NNKij/YSINps+s4jYdjKlhIWQ2AfP3qhVoVYUhbmW7/zAMw6O3XerUk0FfcoIhPapaO6BxFpIIJmCCO80k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YO2YlzXw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749731824;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=Yn83hBseogD5ikMpjR5nAA28nJER1I8C3igW2mcZWe8=;
+	b=YO2YlzXwmykucz8AQLzrOhaIeRry6bWtgW3Hj0b6TaNrhMbZjhabVOecHy6My8uZlpeOyX
+	9lv2sn8D2JD6kwIqvF1PSTQZy1YKHO33UN1vdGAcRRRP1F96MBaznTmSrvLjs323yVq21t
+	OGw4ixkLJryKMsp5OhgUF2SbrFxgZsQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-671-iUrsCtDSOweJCslnb-BYaQ-1; Thu,
+ 12 Jun 2025 08:36:59 -0400
+X-MC-Unique: iUrsCtDSOweJCslnb-BYaQ-1
+X-Mimecast-MFC-AGG-ID: iUrsCtDSOweJCslnb-BYaQ_1749731816
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 320BD18011CD;
+	Thu, 12 Jun 2025 12:36:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4236E195609D;
+	Thu, 12 Jun 2025 12:36:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>,
+    Steve French <sfrench@samba.org>,
+    Chuck Lever <chuck.lever@oracle.com>,
+    Mimi Zohar <zohar@linux.ibm.com>
+cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.org>,
+    Herbert Xu <herbert@gondor.apana.org.au>,
+    Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
+    linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+    linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC] Keyrings: How to make them more useful
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <462885.1749731810.1@warthog.procyon.org.uk>
+Date: Thu, 12 Jun 2025 13:36:50 +0100
+Message-ID: <462886.1749731810@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu, 2025-06-12 at 06:28 -0400, Jeff Layton wrote:
-> On Wed, 2025-06-11 at 17:36 -0400, Mike Snitzer wrote:
-> > On Wed, Jun 11, 2025 at 04:29:58PM -0400, Jeff Layton wrote:
-> > > On Wed, 2025-06-11 at 15:18 -0400, Mike Snitzer wrote:
-> > > > On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
-> > > > > On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> > > > > > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any=
- data
-> > > > > > read or written by NFSD will either not be cached (thanks to O_=
-DIRECT)
-> > > > > > or will be removed from the page cache upon completion (DONTCAC=
-HE).
-> > > > >=20
-> > > > > I thought we were going to do two switches: One for reads and one=
- for
-> > > > > writes? I could be misremembering.
-> > > >=20
-> > > > We did discuss the possibility of doing that.  Still can-do if that=
-'s
-> > > > what you'd prefer.
-> > > > =20
-> > >=20
-> > > Having them as separate controls in debugfs is fine for
-> > > experimentation's sake, but I imagine we'll need to be all-in one way
-> > > or the other with a real interface.
-> > >=20
-> > > I think if we can crack the problem of receiving WRITE payloads into =
-an
-> > > already-aligned buffer, then that becomes much more feasible. I think
-> > > that's a solveable problem.
-> >=20
-> > You'd immediately be my hero!  Let's get into it:
-> >=20
-> > In a previously reply to this thread you aptly detailed what I found
-> > out the hard way (with too much xdr_buf code review and tracing):
-> >=20
-> > On Wed, Jun 11, 2025 at 08:55:20AM -0400, Jeff Layton wrote:
-> > > >=20
-> > > > NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative t=
-o
-> > > > DIO alignment (both page and disk alignment).  This works quite wel=
-l
-> > > > for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
-> > > > maps the WRITE payload into aligned pages. But more work is needed =
-to
-> > > > be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
-> > > > used. I spent quite a bit of time analyzing the existing xdr_buf co=
-de
-> > > > and NFSD's use of it.  Unfortunately, the WRITE payload gets stored=
- in
-> > > > misaligned pages such that O_DIRECT isn't possible without a copy
-> > > > (completely defeating the point).  I'll reply to this cover letter =
-to
-> > > > start a subthread to discuss how best to deal with misaligned write
-> > > > IO (by association with Hammerspace, I'm most interested in NFS v3)=
-.
-> > > >=20
-> > >=20
-> > > Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
-> > > rq_pages array. To get alignment right, you'd probably have to do the
-> > > receive in a much more piecemeal way.
-> > >=20
-> > > Basically, you'd need to decode as you receive chunks of the message,
-> > > and look out for WRITEs, and then set it up so that their payloads ar=
-e
-> > > received with proper alignment.
-> >=20
-> > 1)
-> > Yes, and while I arrived at the same exact conclusion I was left with
-> > dread about the potential for "breaking too many eggs to make that
-> > tasty omelette".
-> >=20
-> > If you (or others) see a way forward to have SUNRPC TCP's XDR receive
-> > "inline" decode (rather than have the 2 stage process you covered
-> > above) that'd be fantastic.  Seems like really old tech-debt in SUNRPC
-> > from a time when such care about alignment of WRITE payload pages was
-> > completely off engineers' collective radar (owed to NFSD only using
-> > buffered IO I assume?).
-> >=20
-> > 2)
-> > One hack that I verified to work for READ and WRITE IO on my
-> > particular TCP testbed was to front-pad the first "head" page of the
-> > xdr_buf such that the WRITE payload started at the 2nd page of
-> > rq_pages.  So that looked like this hack for my usage:
-> >=20
-> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > index 8fc5b2b2d806..cf082a265261 100644
-> > --- a/net/sunrpc/svc_xprt.c
-> > +++ b/net/sunrpc/svc_xprt.c
-> > @@ -676,7 +676,9 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
-> >=20
-> >         /* Make arg->head point to first page and arg->pages point to r=
-est */
-> >         arg->head[0].iov_base =3D page_address(rqstp->rq_pages[0]);
-> > -       arg->head[0].iov_len =3D PAGE_SIZE;
-> > +       // FIXME: front-pad optimized to align TCP's WRITE payload
-> > +       // but may not be enough for other operations?
-> > +       arg->head[0].iov_len =3D 148;
-> >         arg->pages =3D rqstp->rq_pages + 1;
-> >         arg->page_base =3D 0;
-> >         /* save at least one page for response */
-> >=20
-> > That gut "but may not be enough for other operations?" comment proved
-> > to be prophetic.
-> >=20
-> > Sadly it went on to fail spectacularly for other ops (specifically
-> > READDIR and READDIRPLUS, probably others would too) because
-> > xdr_inline_decode() _really_ doesn't like going beyond the end of the
-> > xdr_buf's inline "head" page.  It could be that even if
-> > xdr_inline_decode() et al was "fixed" (which isn't for the faint of
-> > heart given xdr_buf's more complex nature) there will likely be other
-> > mole(s) that pop up.  And in addition, we'd be wasting space in the
-> > xdr_buf's head page (PAGE_SIZE-frontpad).  So I moved on from trying
-> > to see this frontpad hack through to completion.
-> >=20
-> > 3)
-> > Lastly, for completeness, I also mentioned briefly in a previous
-> > recent reply:
-> >=20
-> > On Wed, Jun 11, 2025 at 04:51:03PM -0400, Mike Snitzer wrote:
-> > > On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
-> > >=20
-> > > > In any case, for now at least, unless you're using RDMA, it's going=
- to
-> > > > end up falling back to buffered writes everywhere. The data is almo=
-st
-> > > > never going to be properly aligned coming in off the wire. That mig=
-ht
-> > > > be fixable though.
-> > >=20
-> > > Ben Coddington mentioned to me that soft-iwarp would allow use of RDM=
-A
-> > > over TCP to workaround SUNRPC TCP's XDR handling always storing the
-> > > write payload in misaligned IO.  But that's purely a stop-gap
-> > > workaround, which needs testing (to see if soft-iwap negates the win
-> > > of using O_DIRECT, etc).
-> >=20
-> > (Ab)using soft-iwarp as the basis for easily getting page aligned TCP
-> > WRITE payloads seems pretty gross given we are chasing utmost
-> > performance, etc.
-> >=20
-> > All said, I welcome your sage advice and help on this effort to
-> > DIO-align SUNRPC TCP's WRITE payload pages.
-> >=20
-> > Thanks,
-> > Mike
->=20
-> (Sent this to Mike only by accident yesterday -- resending to the full
-> list now)
->=20
-> I've been looking over the code today. Basically, I think we need to
-> have svc_tcp_recvfrom() receive in phases. At a high level:
->=20
-> 1/ receive the record marker (just like it does today)
->=20
-> 2/ receive enough for the RPC header and then decode it.
->=20
-> 3/ Use the rpc program and version from the decoded header to look up
-> the svc_program. Add an optional pg_tcp_recvfrom callback to that
-> structure that will receive the rest of the data into the buffer. If
-> pg_tcp_recvfrom isn't set, then just call svc_tcp_read_msg() like we do
-> today.
->=20
-> For NFSv3, pc_tcp_recvfrom can just look at the procedure. If it's
-> anything but a WRITE we'll just do what we do today
-> (svc_tcp_read_msg()).
->=20
-> For a WRITE, we'll receive the first part of the WRITE3args (everything
-> but the data) into rq_pages, and decode it. We can then use that info
-> to figure out the alignment. Advance to the next page in rq_pages, and
-> then to the point where the data is properly aligned. Do the receive
-> into that spot.
->=20
-> Then we just add a RQ_ALIGNED_DATA to rqstp->rq_flags, and teach
-> nfsd3_proc_write how to find the data and do a DIO write when it's set.
->=20
-> Unaligned writes are still a problem though. If two WRITE RPCs come in
-> for different parts of the same block at the same time, then you could
-> end up losing the result of the first write. I don't see a way to make
-> that non-racy.
->=20
-> NFSv4 will also be a bit of a challenge. We'll need to receive the
-> whole compound one operation at a time. If we hit a WRITE, then we can
-> just do the same thing that we do for v3 to align the data.
->=20
-> I'd probably aim to start with an implementation for v3, and then add
-> v4 support in a second phase.
->=20
-> I'm interested in working on this. It'll be a fair bit of work though.
-> I'll need to think about how to break this up into manageable pieces.
+Hi Jarkko, Steve, Chuck, Mimi, et al.,
 
+I think work needs to be done on the keyrings subsystem to make them more
+useful for network filesystems and other kernel services such as TLS and
+crypto.
 
-Mike asked me to detail the race that I see between unaligned writes:
+There are a number of issues that I think need addressing:
 
-Since we'd have to fill a block before writing, the only way I can see
-to do this with DIO would be to pre-populate the incomplete blocks at
-the ends of the range before receiving the data into the buffer.
+ (1) One of the flaws in the initial design is that whilst keys have a type
+     (which is necessary), this has to be specified as part of the lookup or
+     the search, which is overly restrictive.
 
-Most filesystems allow you to do concurrent DIO writes to the same file
-in parallel. XFS, for instance only locks the inode->i_rwsem for read
-when doing a DIO write.
+     It probably would have been better to search by description alone and
+     then, if a key is found, have any type of key with that description
+     returned and let the app/service investigate the key to find the type.
 
-Suppose we have two adjacent 1.5k WRITES going to a filesystem that has
-1k blocks. Both writes end up doing DIO reads to fill the unwritten
-part of the same block, and then receive in the data. Then they both
-issue their writes to the fs (2k each). The second writer will end up
-clobbering the data that the first wrote in the shared block.
---=20
-Jeff Layton <jlayton@kernel.org>
+     Now, this is still possible to implement on top of the existing API: just
+     allow a NULL type to be passed in - but we might need some way to
+     enumerate all the keys with that description, but of different types.
+     Possibly, the search function should return all the matching keys.
+
+     Possibly, within the kernel, for each keyring, all the keys of the same
+     description can be stored within a group structure, and the search
+     returns the group.  This could also have the added benefit of maybe
+     making it easier to handle updates.
+
+ (2) For certain applications, keys need versioning - and we need to be able
+     to get access to older versions (at least to some extent) of the keys.
+     An example of this is cifs where (if I understand it correctly) the key
+     version gets cranked, but not all servers may have caught up yet, so we
+     need to be able to try the keys in descending order of version.
+
+     This could also work within the group idea mentioned above.
+
+ (3) For certain applications, such as AFS and AF_RXRPC, we may need to be
+     able to keep a number of keys around that have the same description
+     (e.g. cell name) and basic type (e.g. rxrpc) and version, but that have
+     different crypto types (e.g. Rx security classes and Kerberos types, such
+     as RxGK+aes256-cts-hmac-sha1-96, RxGK+aes128-cts-hmac-sha256-128 or
+     RxKAD) as different servers in the same cell might not support all or we
+     might be implementing a server that is offering multiple crypto types.
+
+     So we might need a "subtype" as well as a version.
+
+ (4) I think the keyring ACLs idea need to be revived.  We have a whole bunch
+     of different keyrings, each with a specific 'domain' of usage for the
+     keys contained therein for checking signatures on things.  Can we reduce
+     this to one keyring and use ACLs to declare the specific purposes for
+     which a key may be used or the specific tasks that may use it?  Use
+     special subject IDs (ie. not simply UIDs/GIDs) to mark this.
+
+ (5) Replace the upcall mechanism with a listenable service channel, so that a
+     userspace service (possibly part of systemd or driven from systemd) can
+     listen on it and perform key creation/maintenance services.
+
+     From previous discussions with the systemd maintainer, it would be a lot
+     easier for them to manage if the key is attached to a file descriptor -
+     at least for the duration of the maintenance operation.
+
+     Further, this needs to be containerised in some way so that requests from
+     different containers can be handled separately - and can be
+     distinguished.
+
+ (6) Move away from keeping DNS records in a keyring, but rather keep them in
+     some sort of shrinkable list.  They could still be looked up over a
+     secure channel.
+
+To aid with at least (1), (2) and (3) and possibly (4), I think it might be
+worth adding an extended add_key() system call that takes an additional
+parameter string:
+
+	key_serial_t add_key2(const char *type,
+			      const char *description,
+			      const char *parameters,
+			      const void payload, size_t plen,
+			      key_serial_t keyring);
+
+The parameters would get passed to the key type driver for it to extract
+things like version number and subtype from without the need to try and fold
+it into the payload (which may, for example, be a binary ticket obtained from
+kerberos).  Though possibly that is a bad example as the kerberos ticket may
+contain multiple keys.
+
+Also, maybe add a multi-key adding syscall for when the payload may contain
+multiple keys, each to be added separately:
+
+	int add_keys(const char *type,
+		     const char *description,
+		     const char *parameters,
+		     const void payload, size_t plen,
+		     key_serial_t keyring);
+
+When it comes to keyrings, I'm thinking that the keyring needs to change such
+that the index holds CoW groups of keys of the same description, but of
+different type, version and subtype, e.g.:
+
+	struct key_group {
+		struct rcu_head		rcu;
+		struct key_group	*replacement;
+		char			*description;
+		unsigned int		seq;
+		refcount_t		ref;
+		int			nr_keys;
+		struct {
+			unsigned long	version;
+			struct key __rcu *key;
+		} key_list[];
+	};
+
+and that these groups should be made available to kernel services upon
+searching.  I'm tempted to put the version as part of the group as a whole,
+making it easier to ditch a set of the same version, but that could make RCU
+CoW-ness tricky.
+
+I could then add two new keyctls, one to unlink all the keys in a keyring that
+match description and, optionally, type and parameters (e.g. of a particular
+version):
+
+	int keyctl_scrub(const char *type, /* can be NULL */
+			 const char *description,
+			 const char *parameters, /* can be NULL */
+			 key_serial_t keyring);
+
+and one to list all the keys matching a description and, optionally, type and
+parameters:
+
+	int list_keys(const char *type, /* can be NULL */
+		      const char *description,
+		      const char *parameters, /* can be NULL */
+		      key_serial_t keyring,
+		      key_serial_t *list,
+		      size_t list_size);
+
+Thoughts?
+
+Thanks,
+David
+
 
