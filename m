@@ -1,156 +1,82 @@
-Return-Path: <linux-nfs+bounces-12351-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12352-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 559F1AD685C
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 09:00:08 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4EB7AD6862
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 09:00:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A623F17A039
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 07:00:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 537693AB9FD
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 07:00:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11406202F79;
-	Thu, 12 Jun 2025 07:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 286211E9B1C;
+	Thu, 12 Jun 2025 07:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKv5eUuh"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mzlLHLLu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304B11991C9;
-	Thu, 12 Jun 2025 07:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E7A1F584C;
+	Thu, 12 Jun 2025 07:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749711603; cv=none; b=fvlhll0Z1/2DXD3MKIeNZxG+MI6fsYI/j8fvEZ1ba6Eyhh3B5eQAGnz3AhIEFeOKriDqsy6tJi7S4LeMYiElGIVLE6RoBmgusiGXIOkNLmNEzTs3JZp/c1TCxMrg0jq1xXSyguEyW4vNWAnDAACMlz1YUeqz3O4ve4SEqOqJBYc=
+	t=1749711616; cv=none; b=uvZhc6jsOS5oztJRaIfsrNI6h0/7qmLG/TrNrjpcjAyek7R0HJYPdUw5U8w+nJVWktwvTh9GULt9EpOLTrzlYGTMrVuhpMy/O/uw+grq5voebx7PoNYdelxM/ik7j9ToMMICQpzU9502qUEFXv68boAeWi1otgQNm7H1N6UuVIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749711603; c=relaxed/simple;
-	bh=hP58mwixbZLpt4L8WGRAwg4LFZhaIzmw5nV2N9wnUG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BigbXpGAMOYQsqOFwbN24+XOs0egEX6xWky9Cw6lOC3/S/1apL5z55QZCOkfRu77B8MJw8BjCPng6eMk6yZ8GNDeDrR7szUtElbll6AGLKFb0H+3oYBigRGpKNUjFv+NJuBJHWrJQe1pxdWzH5Kc31uwb4o5J9os5ONPqSZkcbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKv5eUuh; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad891bb0957so97042666b.3;
-        Thu, 12 Jun 2025 00:00:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749711599; x=1750316399; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X298AJ1vmcnnKGKwMnR0+yVEoc+HoTcMBwQlRJb3r1M=;
-        b=IKv5eUuhLrlWjO+e4owlxYr/Xl/sgvjBiRHOnEr1NfCfGZ+rhaxQgEwfKG0NG4l8Xv
-         6K2sHyaGepde0Bv19howVZ9aj7OOa7gkMVJO0nQ2hdqhycAOn4srB5Jnz+uTv85unk7e
-         fG2evG3c8qeKAV8nHhAMSlvsPg3QFROjwp8k0in22MjEKuyp/WqPOf0VTjKffdrbHfG7
-         B6uI2puz7MIN09t+C1b2lpgtL2NQm3oy1SzTE+qlhWjtTzejyeK0vohOqUm0PDN3gm5l
-         gEoqXcZwPqR5/RjIZQbFCCNjzwo6H/dNKlTz6RP1d0FH8tJtkRiyh5dighjy+Kmhq8F9
-         Azsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749711599; x=1750316399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X298AJ1vmcnnKGKwMnR0+yVEoc+HoTcMBwQlRJb3r1M=;
-        b=Nj0ckN+bvNX52q4ASWf4Q5f312xEs0Xh4qMBkoj6JjQXN8J2pTUoJ6FDvyav0fF917
-         7Bx+VLGYbEFg/LVGOhTvFYNPXlFitf6AWy+qQ7srZXZ2j0xGJjShUQj1qmAiIfVrM9wq
-         B4gkX0rQXZMnCLSHcNiQVe3/UH3xpegOP2mRsB7IksGYnMZkGBeqlZ0tC0OOTKzarsdG
-         W5sNAnTJgIaexTOnctZxVfQAuymgV0hDfrJ1SBohnApWB0mL3a+nmSZ/R+Hy+0v0olt5
-         +xlo3TjpVjOq5/BA3P6R6aROUwq30Z3YWWgMebPcnZ+ZTV8a799kg9ERVFb3rjsL1O2S
-         YSKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUclOZ+DYlxrJpFeTE5G1usDMk661AyPPOUY/87MOnxzwXCPqe9/6KzSQTq+5wrTLKIg9TXbE/pj3bV@vger.kernel.org, AJvYcCUnz93vKFTQJE5E9YFr9b/CyoHu+knHkxaWcWx2VMs4tt0rhwTZ3NNEXXnwmoxTSnEG4GssaaOo4A==@vger.kernel.org, AJvYcCVCVcDhdnp0AuxMX/UvHklGnE57aJJbQOqatokkdvjsdU0uGfrdcQTmO7hEn4yTPfvVNjNfuOKayKkj5weJ@vger.kernel.org, AJvYcCVcS3upsJbn4WKItvIFpsROV0svL8mCi2W/eHfGW/4F8BV6Q3L9NrzFDS27Zvs9oDEYtEXMK4wZJP426tjQAg==@vger.kernel.org, AJvYcCXMwRf3yQJgrPNaPW7XrznPAKR9IAQ89EB5XkGggg50eFLls8KPvjrGr/Zb2k5gfEjheI5QpnOjgVO3@vger.kernel.org, AJvYcCXNCfM/k8NhxrERP0eeyNOaTtVd3pHP0m8iL/I6ItgcO8k5sGe0Z8V8SRr4/OMfXcO6//pkqzL11VfMROXcNg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJw6cUfZunW6r4wP18Ax3cV3iS9o4sfonz+k3fuWDbJW5niBLt
-	QodxUtz+sTrI5MOE6gx0Fv3myjLA6kLpPNXbACHOrTUe0raQeytn0OB/Up2RZtjnuFX0+7LetEy
-	Y941Em8v1vGu7dxo4ZRlaa6GoAb3iWJQ=
-X-Gm-Gg: ASbGnct8LRd3DOkc5SgaQHzyZUSHB5ob5ImTOGCN3HcJ0lgDgP/HGsUXcXRu7wqmZLS
-	9SuWmSOHG8MaqMJ3iH3UlYD8o/kzvBO1ezMP7IxKtcJvX+0hcTV+32i2cd755FfuvOT89qowY8f
-	zv1S8SZYaRaRWk80dSbJ2c97Fb86/NWOeYpHuHOdX0t/I=
-X-Google-Smtp-Source: AGHT+IGP33kAVQaksCPNQ+fkTsAwnqDwwrSRq7UMjy+xLEY0jPC08cQGyj+B/BdOosoGWeRWXUDx+SKIKhyM2yGlOO4=
-X-Received: by 2002:a17:907:268d:b0:ad8:a50c:f6cb with SMTP id
- a640c23a62f3a-ade8955ed0emr512735666b.26.1749711599047; Wed, 11 Jun 2025
- 23:59:59 -0700 (PDT)
+	s=arc-20240116; t=1749711616; c=relaxed/simple;
+	bh=HKy4RhO/f30fuWKplqdgBDzy4f1K2ZRcUZPcWRoHj6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jL0dOVCFHBz94/oZhebhiZvZc9J2Akz+YMop2tUSjcragPISRsCmCu4JLAt0ezqZF1Hh+sbF7S14AbO8ybKRD+nF3jGVrfuE0m1PjzDGUF3N3Gx7Rx6pBQr3jus58+983vnkciXuLmaz2snpS8bKc3uNdBTINa9t2zw2yHq9WNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mzlLHLLu; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tz9am5faii+nuBWNYAlA+3Nf4ynU5EK4Nwn62GVL+i8=; b=mzlLHLLuiuC/62rADqheNR6Dtj
+	XTbzwnl89L6yDXp698likphQbptd7uHHpbVjKQZ1uZDR+yGdnC/xhplXbGr5mZXVnRucJmRYJs+Ks
+	yslmI02OdVjyDuPd1czc5ZLI3wAeHYsdAlco7ZEN4yM3duv/8RWFfRoQL+lhYs0AktmfnvCEwOYhT
+	QvE4we0CicdAy3Tv1qS3mFlUti/vCz6LJTMIF49g3UTGrfvwaGt8Dwzx9NXBZsy/9cXjFtCwFpJTB
+	EK7PCAT7jqBKgzSBTtnPzSiQ/YCn0jHlChghyo3n8ptZ8dG0PihJ2CG+dkvSpHXEM6kl8dN1oSg8x
+	h16XbFlA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPbuz-0000000CNtv-1S58;
+	Thu, 12 Jun 2025 07:00:09 +0000
+Date: Thu, 12 Jun 2025 00:00:09 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Sergey Bashirov <sergeybashirov@gmail.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Konstantin Evtushenko <koevtushenko@yandex.com>
+Subject: Re: [PATCH v2] nfsd: Use correct error code when decoding extents
+Message-ID: <aEp6-T8Oqe2dI7of@infradead.org>
+References: <20250611205504.19276-1-sergeybashirov@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250608230952.20539-1-neil@brown.name> <20250608230952.20539-6-neil@brown.name>
-In-Reply-To: <20250608230952.20539-6-neil@brown.name>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 12 Jun 2025 08:59:45 +0200
-X-Gm-Features: AX0GCFsL26c6LJCX3CQkRAKbBnpI_uSHQ6IJbL_IKY5VsBhMkIpqw9gJM4WhyUM
-Message-ID: <CAOQ4uxiV6Ay7iaxi3qw4nYTiVTZ6abH+W6o3z1OJVwf6ySOrzg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] Change vfs_mkdir() to unlock on failure.
-To: NeilBrown <neil@brown.name>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, David Howells <dhowells@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, Carlos Maiolino <cem@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, coda@cs.cmu.edu, codalist@coda.cs.cmu.edu, 
-	linux-nfs@vger.kernel.org, netfs@lists.linux.dev, ecryptfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611205504.19276-1-sergeybashirov@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Mon, Jun 9, 2025 at 1:10=E2=80=AFAM NeilBrown <neil@brown.name> wrote:
->
-> Proposed changes to directory-op locking will lock the dentry rather
-> than the whole directory.  So the dentry will need to be unlocked.
->
-> vfs_mkdir() consumes the dentry on error, so there will be no dentry to
-> be unlocked.
->
-> So change vfs_mkdir() to unlock on error as well as releasing the
-> dentry.  This requires various other functions in various callers to
-> also unlock on error.
->
+On Wed, Jun 11, 2025 at 11:55:02PM +0300, Sergey Bashirov wrote:
+>  	if (nr_iomaps < 0)
+> -		return nfserrno(nr_iomaps);
+> +		return cpu_to_be32(-nr_iomaps);
 
-That's a scary subtle API change to make.
-If the change to mkdir API wasn't only in v6.15, that would
-have been a lethal backporting bug landmine.
-Anyway, a shiny porting.rst comment is due.
+This still feels like an odd calling convention.  Maybe we should just
+change the calling convention to return the __be32 encoded nfs errno
+and have a separate output argument for the number of iomaps?
 
-> At present this results in some clumsy code.  Once the transition to
-> dentry locking is complete the clumsiness will be gone.
->
-> overlayfs looks particularly clumsy as in some cases a double-directory
-> rename lock is taken, and a mkdir is then performed in one of the
-> directories.  If that fails the other directory must be unlocked.
+Chuck, any preference?
 
-Can some of this mess be abstracted with a helper like
-unlock_new_dir(struct dentry *newdir)
-which is tolerant to PTR_ERR?
-
-I will refrain from reviewing the ovl patch because you said you found
-a bug in it and because I hope it may be easier to review with the
-proposed cleanup helper.
-
->
-> Signed-off-by: NeilBrown <neil@brown.name>
-> ---
-...
-
-> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-> index 8baaba0a3fe5..44df3a2449e7 100644
-> --- a/fs/overlayfs/overlayfs.h
-> +++ b/fs/overlayfs/overlayfs.h
-> @@ -248,6 +248,7 @@ static inline struct dentry *ovl_do_mkdir(struct ovl_=
-fs *ofs,
->  {
->         dentry =3D vfs_mkdir(ovl_upper_mnt_idmap(ofs), dir, dentry, mode)=
-;
->         pr_debug("mkdir(%pd2, 0%o) =3D %i\n", dentry, mode, PTR_ERR_OR_ZE=
-RO(dentry));
-> +       /* Note: dir will have been unlocked on failure */
->         return dentry;
->  }
->
-
-Your previous APi change introduced a regression here.
-The name will not be printed in the error case.
-I will post a fix.
-
-Thanks,
-Amir.
 
