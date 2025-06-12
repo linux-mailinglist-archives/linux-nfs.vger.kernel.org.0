@@ -1,92 +1,87 @@
-Return-Path: <linux-nfs+bounces-12397-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12398-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B87AAD7DB0
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 23:43:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4724DAD7DEE
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 23:54:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04AA81891BEB
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 21:43:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21453165424
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 21:54:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1BD22F177;
-	Thu, 12 Jun 2025 21:43:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A147D22F384;
+	Thu, 12 Jun 2025 21:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DE5H4xbI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzrTy/zf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4BB79E1;
-	Thu, 12 Jun 2025 21:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B53C2D5419
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 21:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749764604; cv=none; b=iX+DBXZ80WSsrYEIXtPLHBR1Sj9nXSDPnRZkrsnopi2kjyNSnYgCefN4+EsJ5XmG2ZQtEG388/brEgt/ePY6VlkNguYjHRtP+ZqwVAxDjjreFNGBu7UQPNy77WuaJd5hGA0bAeeo5I13X1zyPlQwHiRZ6vcVN+wv/1W6qqksxko=
+	t=1749765180; cv=none; b=LhXsESjMjKOSJ0RQgCrHdwr/TUy3EXvWIRcmClpwUv2I5oW7RtZwk0OLnobtxMWhRwOV4c0C7fGaU42/7nqmtACuAH3X9jXHCi/AuIIasCxh0Lg9reMQOSYH7ckc0aiQOeoSshaVJXzrs5tjDP5bX6qGHWyX3jVJO/kanuD+s6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749764604; c=relaxed/simple;
-	bh=p33m3E3cKoTgqwe0eGO0wIR/NLLZAKnQ2C+i2252anA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uY0LE+gmCHLc4O7lLP2/y40QK2vJNJgolrPVbgT+ca+1SBTpgWpCBN/rQv6yWohJ0UiIGsTeBr13YXSFRjDOgGa3RFcpb5kE4bvlW/LgpE5A/9M5tEs+GDwb/LPY6V0vXrhcFffT8P3581egb2Ud3cYLGaUeo8UkX2KmtaU9RlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DE5H4xbI; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1749765180; c=relaxed/simple;
+	bh=KFu32siuH59QVA5tsMUTr3S4GaqJdkLfDxtLWXijCa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qqzf3CB8DvJAU0ly/+k7uL+VZiqrHUPxstePyIbpQxUci+q/bFRA0vt4CF49pYzhWElpV79nkfi4FxHHbwc4gZ37FDGIG0f0whmdxut9IX7i9NLtZupUefAP0xjZKtv56BepfxlRXxhAqQY+SHwr14653l9A6D40UonRRp3hA+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZzrTy/zf; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55365c63fa5so1255135e87.1;
-        Thu, 12 Jun 2025 14:43:22 -0700 (PDT)
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2fd091f826so1142020a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 14:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749764600; x=1750369400; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749765178; x=1750369978; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEWzg4Rut5bf/yTovcaRoJHduEB/xJB76yd6WDJanMo=;
-        b=DE5H4xbIIzbnZMezG1kiVCrOtPCttwEWpEccOBFzqctUwqZn51T4uOXE1At02RN5j6
-         pWm2R7Ywz1GpLSCjeW8B+vBOBBTgU/cONShz7pdmawEolufF/DHNlt43usadINjj4+V3
-         5v74nO4gRxSU4/nfcVXmaGjZDgeQgaCQy2OLHnlDGXEBVufeTb+g4NLYAM6fgBX0o6A4
-         DL5MgwH4i4tHDzZX7ZA22LT3hdzEG7aGbEztmkmIAsC89sd7iaW80eMuQL+WXywe0I2V
-         EG3s9mHe9JN0MTnDkS8pOA7wie+JZc0hjdqxxKHPdaHDnEJYkzXZCnavqUdTxfyojevf
-         BQKA==
+        bh=NyaZvcbP+bGXrzNs+AHHidDaTb+FE0tR/1OQOLic31g=;
+        b=ZzrTy/zfbewdOnB0QDL/QbLCwOXYdsyeQPvETT/1hau5JBY3XEY5dEA4vRcfSRufoA
+         3npQawGadujXks1xFt+WQzTMpKJxBhjEpCwg9tBW89hxRdOSPz9C09yd9hLja3uYyq47
+         xlBab7AbbRmDKDzcxCIefmPIIouYsUnPusjbAe3nRsaFcnoV1yMedo9BSyEILwDdcViR
+         9H/d07oBg1rgBY61p9f0CkEY/ZXdIlmZd0w82kuGVbylvH8qoCBdHm2tBUNjuRdTfrC/
+         xVxMM7QE4gLFApRQsY9eTuuKXh4z0JBOXezgFsuRdl+KyEGECH9+EDZzb7Plr6OEivRh
+         Pu1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749764600; x=1750369400;
+        d=1e100.net; s=20230601; t=1749765178; x=1750369978;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AEWzg4Rut5bf/yTovcaRoJHduEB/xJB76yd6WDJanMo=;
-        b=djg6txEhpOGBc0hth31yC8rzCefN2oFlTBEkSHQvRFxsl+TBRMftzwDsBR1wxLD+R+
-         FOC6wojWRzlOThRAsK2rUfeAgPvT47zDDL0ofquL92dABpJJvVT3imUcL+W/uifWte9O
-         ncsE8CjNdn+IrKktw7/MBHxBPty1pC+TpA+HktRx2+R35acGm8hNi5zQKcCVPIMok6uI
-         ZFttwc9TDnG6+1PcEFbO+sShD6/JVKw+RtM0bASm/INl7jzNTy/Z+9p0djtOZtIB4bHO
-         LhDCr3athbJ1QDo++PO4LtITlf1ZXikpUcXYJUcfyGhN0G68yV2LEZJzmjAY6z5IShr8
-         ntbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzR0r1/7fp2XxW9YCOpP7kJI2svR5xN88sWs+NhlBwJu93iAXVAa9/KOsyqvRHp1RPVsOEWMdbwj7B5bU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+a7XksJeHbxd0yXxOhOpJf6HZvuVWX3RFY5bUWOxyrdUd8gaT
-	QYj6+KcCkiv5jaPCrvO/B9hocZJsioAxQeJ0XVKn3+Gg9xp8OgNk6Gww
-X-Gm-Gg: ASbGncs5ksoMPe6f+t8aKgrdPhgVwX0XRWPIrTmxQUUrqxmFwRiWeQpbICBuI+Ciaph
-	LESozwUgfyYJoUS7xbW5T5hLrHHQ/h4i9TTlK7a/O8WVPW0nh0W8LefDKf7oV9x4bwea+K3+ke6
-	y1+599LhnmpKXtAlYBZq10JhJnPiMN/mHOMda0HKQHcaWg3q/KVrBK17/HLyHppyw60NQrPeTWf
-	hWequNSfXtHDIwD0kebyIpnrEpt/cyXr6Zl+t0IEiwSHf5pzQfJbGHiTRn5O7koy3NcIs7UWXoH
-	QhY3GLABqltYpV36x0ayq+fSonnt30IJZ5/E1anh460Q/EObnddRmWLucZsFM/SYyr8JanCUfrp
-	A5vqidIwSJZTQ
-X-Google-Smtp-Source: AGHT+IFWH8RiieHbgsmFZAD7atmeam6vayBGNyDMY8+PUHvXu0NqGXEHE+OngqMpTMJ86irE8ezQcA==
-X-Received: by 2002:a05:6512:4004:b0:553:2874:8ef5 with SMTP id 2adb3069b0e04-553af941b23mr190814e87.16.1749764600183;
-        Thu, 12 Jun 2025 14:43:20 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.250.67])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1f7951sm228972e87.227.2025.06.12.14.43.18
+        bh=NyaZvcbP+bGXrzNs+AHHidDaTb+FE0tR/1OQOLic31g=;
+        b=YjESetVGO/Cq3E/Dvg1N7HHypAFz2KunrrdbCVhw+aZowoEuFnLFNUcgQpZekWy7C+
+         tObsau+eOliVshiBaY1DeKiTa9HHM7Sp6311mFZlJi1+x2gBQn9dwSkmgQRQix5/q+ES
+         9nWlQGgKZNwowYL8LEgxU3VhXdUPg7vMvETn0YAbyT8fTzOHJHGLVyW/1Tj0GWZfPVoD
+         RztK8LAApOgPldiWfRGm8SVrdVU4920i+39suT1Lur7LoXz7RG0udK24SKD9pkOkIg8F
+         /1bXu4uJOuCr5z+lkhYEb32qPdF2Av4P9LYUyGihSQr1umQqp9XMgf5IVlGSjWQdI9BI
+         EtXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKmTEETtffiu1AXhhkJg3Nhm5sQbthIC59hPSY7IpE/mbThz2aRbMCJJPt+jLC07SeYY/8pQ1+aE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuWk7GB4daeRXL98EwjLcw1KOnHXar6jhczxDWk0b85f/TEaD5
+	HeQDGaWUVtWZFazNK4EQeRHTzbNBwUv321KXuq0X25lDxte3rbYhKP4=
+X-Gm-Gg: ASbGncsms9bkBwp+zvED7tLpU153oSqZYxzXKFAhGkUqMnVp3WAW4IOkDr1Kks+u9Rp
+	zdt7vKpP4xnEEzDupt6SZkgCiIw0SBZ1bpgUTyn2fUU84Dkmr46kGbQLSK6/U/ZfGLvZ6hUTqND
+	TcUThkGVI8/X+sB1M2ZQFsifVyg8oOakyBXmlW4GCi6wCnjOMpa2l2Z2x0xo1392AyyoOhom/Rr
+	pSeH7QusPYRkLJ3lnCpEEqSeCX1rgxqI+XWenuHgtz4OPVAuZZUDLf29vk12vs850ztsZl1jeR0
+	cP9EoIrM0cQb2L9PVmGMeASGKEDjG104zlcEigTf7gCMnNzkrg==
+X-Google-Smtp-Source: AGHT+IGpzZMZh88H18MYPUEGd0JP+8gTdSAk+rCZCMRSnAtmL3qMGvbCwWbowaahhhLunC6Ts7Y5Bg==
+X-Received: by 2002:a05:6a21:9987:b0:1ee:ab52:b8cc with SMTP id adf61e73a8af0-21faefd2666mr151498637.21.1749765177709;
+        Thu, 12 Jun 2025 14:52:57 -0700 (PDT)
+Received: from fedora.. ([2601:647:6700:3390::c8d1])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe163a498sm204348a12.15.2025.06.12.14.52.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jun 2025 14:43:19 -0700 (PDT)
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konstantin Evtushenko <koevtushenko@yandex.com>,
-	Sergey Bashirov <sergeybashirov@gmail.com>
-Subject: [PATCH v3] nfsd: Use correct error code when decoding extents
-Date: Fri, 13 Jun 2025 00:42:49 +0300
-Message-ID: <20250612214303.35782-1-sergeybashirov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 12 Jun 2025 14:52:57 -0700 (PDT)
+From: Kuniyuki Iwashima <kuni1840@gmail.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	Kuniyuki Iwashima <kuni1840@gmail.com>,
+	linux-nfs@vger.kernel.org,
+	syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
+Subject: [PATCH v1] nfs: Clean up /proc/net/rpc/nfs when nfs_fs_proc_net_init() fails.
+Date: Thu, 12 Jun 2025 14:52:50 -0700
+Message-ID: <20250612215254.4155863-1-kuni1840@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -95,236 +90,134 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update error codes in decoding functions of block and scsi layout
-drivers to match the core nfsd code. NFS4ERR_EINVAL means that the
-server was able to decode the request, but the decoded values are
-invalid. Use NFS4ERR_BADXDR instead to indicate a decoding error.
-And ENOMEM is changed to nfs code NFS4ERR_DELAY.
+From: Kuniyuki Iwashima <kuniyu@google.com>
 
-Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+syzbot reported a warning below [1] following a fault injection in
+nfs_fs_proc_net_init(). [0]
+
+When nfs_fs_proc_net_init() fails, /proc/net/rpc/nfs is not removed.
+
+Later, rpc_proc_exit() tries to remove /proc/net/rpc, and the warning
+is logged as the directory is not empty.
+
+Let's handle the error of nfs_fs_proc_net_init() properly.
+
+[0]:
+FAULT_INJECTION: forcing a failure.
+name failslab, interval 1, probability 0, space 0, times 0
+CPU: 1 UID: 0 PID: 6120 Comm: syz.2.27 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(full)
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+  dump_stack_lvl (lib/dump_stack.c:123)
+ should_fail_ex (lib/fault-inject.c:73 lib/fault-inject.c:174)
+ should_failslab (mm/failslab.c:46)
+ kmem_cache_alloc_noprof (mm/slub.c:4178 mm/slub.c:4204)
+ __proc_create (fs/proc/generic.c:427)
+ proc_create_reg (fs/proc/generic.c:554)
+ proc_create_net_data (fs/proc/proc_net.c:120)
+ nfs_fs_proc_net_init (fs/nfs/client.c:1409)
+ nfs_net_init (fs/nfs/inode.c:2600)
+ ops_init (net/core/net_namespace.c:138)
+ setup_net (net/core/net_namespace.c:443)
+ copy_net_ns (net/core/net_namespace.c:576)
+ create_new_namespaces (kernel/nsproxy.c:110)
+ unshare_nsproxy_namespaces (kernel/nsproxy.c:218 (discriminator 4))
+ ksys_unshare (kernel/fork.c:3123)
+ __x64_sys_unshare (kernel/fork.c:3190)
+ do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
+ entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+ </TASK>
+
+[1]:
+remove_proc_entry: removing non-empty directory 'net/rpc', leaking at least 'nfs'
+ WARNING: CPU: 1 PID: 6120 at fs/proc/generic.c:727 remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
+Modules linked in:
+CPU: 1 UID: 0 PID: 6120 Comm: syz.2.27 Not tainted 6.16.0-rc1-syzkaller-00010-g2c4a1f3fe03e #0 PREEMPT(full)
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+ RIP: 0010:remove_proc_entry+0x45e/0x530 fs/proc/generic.c:727
+Code: 3c 02 00 0f 85 85 00 00 00 48 8b 93 d8 00 00 00 4d 89 f0 4c 89 e9 48 c7 c6 40 ba a2 8b 48 c7 c7 60 b9 a2 8b e8 33 81 1d ff 90 <0f> 0b 90 90 e9 5f fe ff ff e8 04 69 5e ff 90 48 b8 00 00 00 00 00
+RSP: 0018:ffffc90003637b08 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff88805f534140 RCX: ffffffff817a92c8
+RDX: ffff88807da99e00 RSI: ffffffff817a92d5 RDI: 0000000000000001
+RBP: ffff888033431ac0 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: ffff888033431a00
+R13: ffff888033431ae4 R14: ffff888033184724 R15: dffffc0000000000
+FS:  0000555580328500(0000) GS:ffff888124a62000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f71733743e0 CR3: 000000007f618000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+  sunrpc_exit_net+0x46/0x90 net/sunrpc/sunrpc_syms.c:76
+  ops_exit_list net/core/net_namespace.c:200 [inline]
+  ops_undo_list+0x2eb/0xab0 net/core/net_namespace.c:253
+  setup_net+0x2e1/0x510 net/core/net_namespace.c:457
+  copy_net_ns+0x2a6/0x5f0 net/core/net_namespace.c:574
+  create_new_namespaces+0x3ea/0xa90 kernel/nsproxy.c:110
+  unshare_nsproxy_namespaces+0xc0/0x1f0 kernel/nsproxy.c:218
+  ksys_unshare+0x45b/0xa40 kernel/fork.c:3121
+  __do_sys_unshare kernel/fork.c:3192 [inline]
+  __se_sys_unshare kernel/fork.c:3190 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:3190
+  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+  do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa1a6b8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff3a090368 EFLAGS: 00000246 ORIG_RAX: 0000000000000110
+RAX: ffffffffffffffda RBX: 00007fa1a6db5fa0 RCX: 00007fa1a6b8e929
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000040000080
+RBP: 00007fa1a6c10b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007fa1a6db5fa0 R14: 00007fa1a6db5fa0 R15: 0000000000000001
+ </TASK>
+
+Fixes: d47151b79e32 ("nfs: expose /proc/net/sunrpc/nfs in net namespaces")
+Reported-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=a4cc4ac22daa4a71b87c
+Tested-by: syzbot+a4cc4ac22daa4a71b87c@syzkaller.appspotmail.com
+Signed-off-by: Kuniyuki Iwashima <kuniyu@google.com>
 ---
-Changes in v3:
- - Add nfserr_delay define
- - Return number of iomaps and nfserror as separate values
+ fs/nfs/inode.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
- fs/nfsd/blocklayout.c    | 20 ++++++-----
- fs/nfsd/blocklayoutxdr.c | 71 +++++++++++++++++++++++++++++++---------
- fs/nfsd/blocklayoutxdr.h |  8 ++---
- fs/nfsd/nfsd.h           |  1 +
- 4 files changed, 73 insertions(+), 27 deletions(-)
-
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index 08a20e5bcf7f..19078a043e85 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -178,11 +178,13 @@ nfsd4_block_proc_layoutcommit(struct inode *inode,
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 8ab7868807a7..a2fa6bc4d74e 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -2589,15 +2589,26 @@ EXPORT_SYMBOL_GPL(nfs_net_id);
+ static int nfs_net_init(struct net *net)
  {
- 	struct iomap *iomaps;
- 	int nr_iomaps;
-+	__be32 nfserr;
+ 	struct nfs_net *nn = net_generic(net, nfs_net_id);
++	int err;
  
--	nr_iomaps = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
--			lcp->lc_up_len, &iomaps, i_blocksize(inode));
--	if (nr_iomaps < 0)
--		return nfserrno(nr_iomaps);
-+	nfserr = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
-+			lcp->lc_up_len, &iomaps, &nr_iomaps,
-+			i_blocksize(inode));
-+	if (nfserr != nfs_ok)
-+		return nfserr;
+ 	nfs_clients_init(net);
  
- 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
- }
-@@ -316,11 +318,13 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
- {
- 	struct iomap *iomaps;
- 	int nr_iomaps;
-+	__be32 nfserr;
- 
--	nr_iomaps = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
--			lcp->lc_up_len, &iomaps, i_blocksize(inode));
--	if (nr_iomaps < 0)
--		return nfserrno(nr_iomaps);
-+	nfserr = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
-+			lcp->lc_up_len, &iomaps, &nr_iomaps,
-+			i_blocksize(inode));
-+	if (nfserr != nfs_ok)
-+		return nfserr;
- 
- 	return nfsd4_block_commit_blocks(inode, lcp, iomaps, nr_iomaps);
- }
-diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
-index ce78f74715ee..669ff8e6e966 100644
---- a/fs/nfsd/blocklayoutxdr.c
-+++ b/fs/nfsd/blocklayoutxdr.c
-@@ -112,34 +112,54 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
- 	return 0;
- }
- 
--int
-+/**
-+ * nfsd4_block_decode_layoutupdate - decode the block layout extent array
-+ * @p: pointer to the xdr data
-+ * @len: number of bytes to decode
-+ * @iomapp: pointer to store the decoded extent array
-+ * @nr_iomapsp: pointer to store the number of extents
-+ * @block_size: alignment of extent offset and length
-+ *
-+ * This function decodes the opaque field of the layoutupdate4 structure
-+ * in a layoutcommit request for the block layout driver. The field is
-+ * actually an array of extents sent by the client. It also checks that
-+ * the file offset, storage offset and length of each extent are aligned
-+ * by @block_size.
-+ *
-+ * Return values:
-+ *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
-+ *   %nfserr_bad_xdr: The encoded array in @p is invalid
-+ *   %nfserr_inval: An unaligned extent found
-+ *   %nfserr_delay: Failed to allocate memory for @iomapp
-+ */
-+__be32
- nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
--		u32 block_size)
-+		int *nr_iomapsp, u32 block_size)
- {
- 	struct iomap *iomaps;
- 	u32 nr_iomaps, i;
- 
- 	if (len < sizeof(u32)) {
- 		dprintk("%s: extent array too small: %u\n", __func__, len);
--		return -EINVAL;
-+		return nfserr_bad_xdr;
- 	}
- 	len -= sizeof(u32);
- 	if (len % PNFS_BLOCK_EXTENT_SIZE) {
- 		dprintk("%s: extent array invalid: %u\n", __func__, len);
--		return -EINVAL;
-+		return nfserr_bad_xdr;
- 	}
- 
- 	nr_iomaps = be32_to_cpup(p++);
- 	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
- 		dprintk("%s: extent array size mismatch: %u/%u\n",
- 			__func__, len, nr_iomaps);
--		return -EINVAL;
-+		return nfserr_bad_xdr;
- 	}
- 
- 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
- 	if (!iomaps) {
- 		dprintk("%s: failed to allocate extent array\n", __func__);
+ 	if (!rpc_proc_register(net, &nn->rpcstats)) {
+-		nfs_clients_exit(net);
 -		return -ENOMEM;
-+		return nfserr_delay;
++		err = -ENOMEM;
++		goto err_proc_rpc;
  	}
  
- 	for (i = 0; i < nr_iomaps; i++) {
-@@ -178,22 +198,42 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	}
- 
- 	*iomapp = iomaps;
--	return nr_iomaps;
-+	*nr_iomapsp = nr_iomaps;
-+	return nfs_ok;
- fail:
- 	kfree(iomaps);
--	return -EINVAL;
-+	return nfserr_inval;
+-	return nfs_fs_proc_net_init(net);
++	err = nfs_fs_proc_net_init(net);
++	if (err)
++		goto err_proc_nfs;
++
++	return 0;
++
++err_proc_nfs:
++	rpc_proc_unregister(net, "nfs");
++err_proc_rpc:
++	nfs_clients_exit(net);
++	return err;
  }
  
--int
-+/**
-+ * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
-+ * @p: pointer to the xdr data
-+ * @len: number of bytes to decode
-+ * @iomapp: pointer to store the decoded extent array
-+ * @nr_iomapsp: pointer to store the number of extents
-+ * @block_size: alignment of extent offset and length
-+ *
-+ * This function decodes the opaque field of the layoutupdate4 structure
-+ * in a layoutcommit request for the scsi layout driver. The field is
-+ * actually an array of extents sent by the client. It also checks that
-+ * the offset and length of each extent are aligned by @block_size.
-+ *
-+ * Return values:
-+ *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
-+ *   %nfserr_bad_xdr: The encoded array in @p is invalid
-+ *   %nfserr_inval: An unaligned extent found
-+ *   %nfserr_delay: Failed to allocate memory for @iomapp
-+ */
-+__be32
- nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
--		u32 block_size)
-+		int *nr_iomapsp, u32 block_size)
- {
- 	struct iomap *iomaps;
- 	u32 nr_iomaps, expected, i;
- 
- 	if (len < sizeof(u32)) {
- 		dprintk("%s: extent array too small: %u\n", __func__, len);
--		return -EINVAL;
-+		return nfserr_bad_xdr;
- 	}
- 
- 	nr_iomaps = be32_to_cpup(p++);
-@@ -201,13 +241,13 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	if (len != expected) {
- 		dprintk("%s: extent array size mismatch: %u/%u\n",
- 			__func__, len, expected);
--		return -EINVAL;
-+		return nfserr_bad_xdr;
- 	}
- 
- 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
- 	if (!iomaps) {
- 		dprintk("%s: failed to allocate extent array\n", __func__);
--		return -ENOMEM;
-+		return nfserr_delay;
- 	}
- 
- 	for (i = 0; i < nr_iomaps; i++) {
-@@ -229,8 +269,9 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
- 	}
- 
- 	*iomapp = iomaps;
--	return nr_iomaps;
-+	*nr_iomapsp = nr_iomaps;
-+	return nfs_ok;
- fail:
- 	kfree(iomaps);
--	return -EINVAL;
-+	return nfserr_inval;
- }
-diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
-index 4e28ac8f1127..15b3569f3d9a 100644
---- a/fs/nfsd/blocklayoutxdr.h
-+++ b/fs/nfsd/blocklayoutxdr.h
-@@ -54,9 +54,9 @@ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
- 		const struct nfsd4_getdeviceinfo *gdp);
- __be32 nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
- 		const struct nfsd4_layoutget *lgp);
--int nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
--		u32 block_size);
--int nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
--		u32 block_size);
-+__be32 nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,
-+		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
-+__be32 nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len,
-+		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
- 
- #endif /* _NFSD_BLOCKLAYOUTXDR_H */
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 1bfd0b4e9af7..3ffd2cac10ad 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -283,6 +283,7 @@ void		nfsd_lockd_shutdown(void);
- #define	nfserr_cb_path_down	cpu_to_be32(NFSERR_CB_PATH_DOWN)
- #define	nfserr_locked		cpu_to_be32(NFSERR_LOCKED)
- #define	nfserr_wrongsec		cpu_to_be32(NFSERR_WRONGSEC)
-+#define nfserr_delay			cpu_to_be32(NFS4ERR_DELAY)
- #define nfserr_badiomode		cpu_to_be32(NFS4ERR_BADIOMODE)
- #define nfserr_badlayout		cpu_to_be32(NFS4ERR_BADLAYOUT)
- #define nfserr_bad_session_digest	cpu_to_be32(NFS4ERR_BAD_SESSION_DIGEST)
+ static void nfs_net_exit(struct net *net)
 -- 
-2.43.0
+2.49.0
 
 
