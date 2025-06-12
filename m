@@ -1,127 +1,106 @@
-Return-Path: <linux-nfs+bounces-12393-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12392-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52C3CAD7C93
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 22:38:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D687AD7C8F
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 22:37:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36FB717BC54
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 20:38:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46D6B188F657
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 20:37:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086532D5421;
-	Thu, 12 Jun 2025 20:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44BB72D4B67;
+	Thu, 12 Jun 2025 20:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jRybjXxv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4svedbu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454B4170A26
-	for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 20:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC1B27C179;
+	Thu, 12 Jun 2025 20:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749760687; cv=none; b=qNLeMTe+1uT7OarIe3WsfwRVC+EO2rC1vnzVhifm4jxveE6im6jUWewKx4bKEbheAPz1WX9kx5h9SV+4cxoXZNf5wCfQQpsnkbvxop295xt1IXukZwsovVtih6GaKp55LJBovtKlfCngAV9LcSqbHmQToIdUBQoodJBdwYtPpf0=
+	t=1749760644; cv=none; b=uCYiqReN9tYrDCyv/aJ5hpI8uOOd44Phz10t5z0s5ObF3sbc8Zl2TloEh1IzuyizhafCyOJMp3BQ24UqCONoVDabJlHf5UujPAogNEJGTVDs7/VpCP934MxwwPWCygi2CKIk0ZceVNg/ADjt1CN5BLfRJ2ePRozHtMdYezzkHl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749760687; c=relaxed/simple;
-	bh=SAU5o2DQ0CfgLin1S8tnE5huEGqu4f6AQhBXhQIQYLU=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=a5hs3Ix8Q9UBFluPABZSVr5Kqz1eOTJxloLX4ZONHUVlmldnPb3taLfrmCn+6lytltCZnXOhYDdgbc28UMorXMOMY2l3Z603LAnqTlAn8hpjU6DXTPr2aWvsWSwNhRhLJgHSF0Jr+uUD+dj0e28XlVSAqAS7rPmrSbGZJe/oBvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jRybjXxv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749760685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gj8SQGLLh0rljui6jnNkQMA92RjfoZpiblWpalJC6vA=;
-	b=jRybjXxvPIdp4blIUWtIBTRMkTDklPh5+rmD5urSG4m9/yEcKk2QM6gZm7hKZq8bC+ivQh
-	2k7+nM0KxTTwnc5670X/4yessIN5T0ODhUl7t9QSWBat9hOEbGdlVE+/59HrcTOi/ibhtB
-	dPdOjgUWiCtYKph8O7CfzFM2cSo97zE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-yC1TTY1fOoaf_k-updd0AA-1; Thu,
- 12 Jun 2025 16:36:35 -0400
-X-MC-Unique: yC1TTY1fOoaf_k-updd0AA-1
-X-Mimecast-MFC-AGG-ID: yC1TTY1fOoaf_k-updd0AA_1749760593
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E95CE180AB15;
-	Thu, 12 Jun 2025 20:36:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.18])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 84881195E340;
-	Thu, 12 Jun 2025 20:36:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <2dc7318d6c74b27a49b4c64b513f3da13d980473.camel@HansenPartnership.com>
-References: <2dc7318d6c74b27a49b4c64b513f3da13d980473.camel@HansenPartnership.com> <462886.1749731810@warthog.procyon.org.uk>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: dhowells@redhat.com, keyrings@vger.kernel.org,
-    Jarkko Sakkinen <jarkko@kernel.org>,
-    Steve French <sfrench@samba.org>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Mimi Zohar <zohar@linux.ibm.com>, Paulo Alcantara <pc@manguebit.org>,
-    Herbert Xu <herbert@gondor.apana.org.au>,
-    Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
-    linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-    linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Keyrings: How to make them more useful
+	s=arc-20240116; t=1749760644; c=relaxed/simple;
+	bh=JNuRqevYgAO3YFr9wUMcd3s2kkWKF2nSoOhvyhEwTsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvHfPTKfL8SXbcMsv3azBCpfF3hy8S5rYtl66NiUZN9HYkPVQlZS+/UzfeaHJu5e50Qd3CbVaJsoALjzsGYuv1pQ8fUYuz1RoFgS7lvYfncydJC+C2aSrYKoX9g3axb9hWP+LwNdkL541qpx72kGDkWXbcEUufxXDmgcY8+NM3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4svedbu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0A2C4CEEA;
+	Thu, 12 Jun 2025 20:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749760643;
+	bh=JNuRqevYgAO3YFr9wUMcd3s2kkWKF2nSoOhvyhEwTsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E4svedbupMPBVUZyWIddZUcq9dick7dofGuZUr7tCiG5Gy02C1LzYZhEbyWewT4bf
+	 UsMqYPDvVOhi66e3AFcsDzafmL9CJNo5UkU55URstk01KY82LSZoAfU6RItszuyTVo
+	 T/KOAwiB3CCX+3odkJV/FmNI1ZkHJXH9o6VXzek//P+n/zu/7/hjxSMn6ublEMU9hE
+	 T30vvEiJdhy0Rgg6cA7zPVQSRyGnLfeEX/5MH1NteROD/nSftx74C1+KNfGxYhlCdo
+	 wB3xRjqYM50R8krww3T4r73LYjQ6pA8eHkOCbkvhNldwviAs0lqP67fgzaZ4KD4ccg
+	 WRQQxRS4kK1nw==
+Date: Thu, 12 Jun 2025 16:37:22 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 0/6] NFSD: add enable-dontcache and initially use it to
+ add DIO support
+Message-ID: <aEs6gmTXzhzuDZOI@kernel.org>
+References: <20250610205737.63343-1-snitzer@kernel.org>
+ <54acf3548634f5a46fa261fc2ab3fdbf86938c1c.camel@kernel.org>
+ <aEqEQLumUp8Y7JR5@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <473710.1749760578.1@warthog.procyon.org.uk>
-Date: Thu, 12 Jun 2025 21:36:18 +0100
-Message-ID: <473711.1749760578@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEqEQLumUp8Y7JR5@infradead.org>
 
-James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
-
-> One of the problems I keep tripping over is different special casing
-> for user keyrings (which are real struct key structures) and system
-> keyrings which are special values of the pointer in struct key *.
-
-It's meant to be like that.  The trusted system keyrings are static within
-system_keyring.c and not so easily accessible by kernel modules for
-direct modification, bypassing the security checks.
-
-Obviously this is merely a bit of obscurity and enforcement isn't possible
-against kernel code that is determined to modify those keyrings or otherwise
-interfere in the verification process.
-
-> For examples of what this special handling does, just look at things
-> like bpf_trace.c:bpf_lookup_{user|system}_key
+On Thu, Jun 12, 2025 at 12:39:44AM -0700, Christoph Hellwig wrote:
 > 
-> Since the serial allocation code has a hard coded not less than 3
-> (which looks for all the world like it was designed to mean the two
-> system keyring id's were never used as user serial numbers)
+> Another thing is that using the page cache for reads is probably
+> rather pointless.  I've been wondering if we should just change
+> the direct I/O read code to read from the page cache if there are
+> cached pages and otherwise go direct to the device.  That would make
+> a setup using buffered writes (without or without the dontcache
+> flag) and direct I/O reads safe.
 
-That's just a coincidence.  The <3 thing predates the advent of those system
-keyring magic pointers.
+Yes, that sounds like a good idea.  Just an idea at this point or have
+you tried to implement it?
 
-> I think we could simply allow the two system keyring ids to be passed into
-> lookup_user_key() (which now might be a bit misnamed) and special case not
-> freeing it in put_key().
+I'll start looking at associated code, but may slip until next week.
 
-If you want to make lookup_user_key() provide access to specific keyrings like
-this, just use the next negative numbers - it's not like we're likely to run
-out soon.
+FYI, I mentioned this earlier at one point in this thread but I was
+thinking the IOR "hard" benchmark would offer a solid test for
+invalidating page cache vs O_DIRECT read when ran against NFS/NFSD
+with this NFSD O_DIRECT series applied: which causes NFSD's misaligned
+IO to use buffered IO for writes and O_DIRECT for reads.  NFSD issuing
+the misaligned write to XFS will force RMW when writing, creating
+pages that must be invalidated for any subsequent NFSD read.
 
-But I'd rather not let lookup_user_key() return pointers to these keyrings...
+Turns out IOR "hard" does in fact fail spectacularly with:
+  WARNING: Incorrect data on read (6640830 errors found).
 
-David
+It doesn't fail if the 6th patch in this series isn't used:
+https://lore.kernel.org/linux-nfs/20250610205737.63343-7-snitzer@kernel.org/
 
+Could be a bug in that patch but I think it more likely IOR-hard is
+teasing out the invalidation race you mentioned at the start.
+
+We're retesting with RWF_SYNC set for the buffered write IO (which
+Jeff suggested earlier in this thread).
+
+But your idea seems important to pursue.
+
+I won't be posting a v2 for this series until I can find/fix this
+IOR-hard testcase.
+
+Mike
 
