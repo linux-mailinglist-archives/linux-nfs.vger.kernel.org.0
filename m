@@ -1,61 +1,62 @@
-Return-Path: <linux-nfs+bounces-12363-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12364-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E0FAAD6DAC
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 12:28:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6278FAD6F00
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 13:28:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1B95F162A99
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 10:28:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 129C116A211
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 11:28:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B233922F16C;
-	Thu, 12 Jun 2025 10:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C6DE23BF91;
+	Thu, 12 Jun 2025 11:28:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJw+MNR/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVAPT8Vt"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FC81C32FF;
-	Thu, 12 Jun 2025 10:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E419D23A99F;
+	Thu, 12 Jun 2025 11:28:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724116; cv=none; b=Jp/v8xuIx5O5ZH0w6WFM9vPQBZ6qv6R0+RVT+JkBd7g31Cea+ksBi2hXDK+D2YHPZv44rNLSdsCdKRme36L374iQ7bQVESq1hu4qQ9glLVhgL1GpMIVudXDmsCU84Msa1e42wYL1xzMwZmv14Eal6Lr8WNkuWxaVxLYXs2wkvf4=
+	t=1749727728; cv=none; b=kmLGGJQpqKSvAJ/wkbqFOLQua7BxfFRGtoYZBwOpfF8RyzvO1eDRE/kTMD30Ky1cWCbyoT4mHg+J8X3x9FKmY1RN3PNnB0a2iIhxmq0zE1T6ypdYb+j+AE6JQhTDmdtauYQB02bp27ME9CTGybgpinuOVIqFupkqgxf6uzsgg+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724116; c=relaxed/simple;
-	bh=0wQFtLkjAOoAYPHWtt2H1h02m9LTVXpmj+4KXlaZwpM=;
+	s=arc-20240116; t=1749727728; c=relaxed/simple;
+	bh=7PUfQRjnovH8lSirdXfeJkBAFhWToKhGtlZKDlRE4Rc=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VZdPF+je4Z23fulydzEe6zVJI+8MIjF5NGvZCmBLSrkVn+uyfCtws8KWZAU73brV3CmIhkjuuOHRezVEpr7RlkWvJwyKTIRn3Y5LqDYyIeuDRKmLer3Eoq1T44zJVYkOR+DAX7Cq6zSakD1OSZCxslNuY9VT/yhAB94ROmM7acA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJw+MNR/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D16C4CEEA;
-	Thu, 12 Jun 2025 10:28:35 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fbvEJxktJnPa6GI6NxKnBAFalPQMziHy6sRe4qPRPzoizb10d23xaMcBP80NzGyLqxHeMa2h8FME5pSW5WLCh0yyPin9htfASiycbJSXIiVsUIUnK+/0BJovNDssXNOKeOJomd58CEGxzo0ooSoBW8ZGQWFA4yZHscmDr00YyFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVAPT8Vt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E4EC4CEEA;
+	Thu, 12 Jun 2025 11:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749724116;
-	bh=0wQFtLkjAOoAYPHWtt2H1h02m9LTVXpmj+4KXlaZwpM=;
+	s=k20201202; t=1749727727;
+	bh=7PUfQRjnovH8lSirdXfeJkBAFhWToKhGtlZKDlRE4Rc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=NJw+MNR/UQCECnV1V9dq/rALk5H1WcFVRLsmIk+62UVf30ic1KR5tISF70W28psPc
-	 KYMttbVyVR7a/dV2ghmL0ki3XZic0vswsQVOI0dITE+s6e1aMxJzWx8UY/w9PuLTdw
-	 CWGccJV28xZ90UKiLTi59TdNnvvS3j+3jbBUJZiCxiw07Dgdf41sTd3+eSHLz/Wgvm
-	 Gz6VI1U9nc7riqYWMxueG4sx75LT3qG1p1bVGwNod4D2pRrl4Q+VkrzDSzxIXPN0xs
-	 hO46MIAz2iPWHlV6wjHbA61mhksZRaj75XStp3HpRYgXJYdEd1N7oZXEV9a2zXW49/
-	 /gCR8yX9G89HQ==
-Message-ID: <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
+	b=VVAPT8VtpInYOmDDgZ5RSn1chO8t5aB1Macw5QO+0iVyUHwScJy5En8oz50frath1
+	 YzJCeQvq9dDFyTe03aXkA7j8zaz1hjl68h05sBhvt6hn1XcR77Ow9ZVQPgxNS/kZlX
+	 BNf1qb1pNN+44C6qWKbJm9DAj/0FMXHn6jLH+ikp3QabtsFPJZQhirpv2VUIhoWJxM
+	 vpalfSiPnI67eA3QA9j6OM+W+DVwQ88zFun6hpSUfr04mK1ixkpSZTpCG0rncFSIIH
+	 DJ/ucoAgOGvvhGKdqJSKPVy2ih5AwfM6449T66SbniIG6xxKDb0XZuMrX7fNFjEBkD
+	 bhwMpgn7voKDg==
+Message-ID: <60abafb21e5e57f4e910abcb27495e41a8344130.camel@kernel.org>
 Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
  1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>
 Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Date: Thu, 12 Jun 2025 06:28:34 -0400
-In-Reply-To: <aEn2-mYA3VDv-vB8@kernel.org>
+Date: Thu, 12 Jun 2025 07:28:45 -0400
+In-Reply-To: <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
 References: <20250610205737.63343-1-snitzer@kernel.org>
-	 <20250610205737.63343-2-snitzer@kernel.org>
-	 <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
-	 <aEnWhlXjzOmRfCJf@kernel.org>
-	 <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
-	 <aEn2-mYA3VDv-vB8@kernel.org>
+		 <20250610205737.63343-2-snitzer@kernel.org>
+		 <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
+		 <aEnWhlXjzOmRfCJf@kernel.org>
+		 <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
+		 <aEn2-mYA3VDv-vB8@kernel.org>
+	 <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,183 +141,213 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-06-11 at 17:36 -0400, Mike Snitzer wrote:
-> On Wed, Jun 11, 2025 at 04:29:58PM -0400, Jeff Layton wrote:
-> > On Wed, 2025-06-11 at 15:18 -0400, Mike Snitzer wrote:
-> > > On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
-> > > > On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> > > > > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any d=
-ata
-> > > > > read or written by NFSD will either not be cached (thanks to O_DI=
-RECT)
-> > > > > or will be removed from the page cache upon completion (DONTCACHE=
-).
+On Thu, 2025-06-12 at 06:28 -0400, Jeff Layton wrote:
+> On Wed, 2025-06-11 at 17:36 -0400, Mike Snitzer wrote:
+> > On Wed, Jun 11, 2025 at 04:29:58PM -0400, Jeff Layton wrote:
+> > > On Wed, 2025-06-11 at 15:18 -0400, Mike Snitzer wrote:
+> > > > On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
+> > > > > On 6/10/25 4:57 PM, Mike Snitzer wrote:
+> > > > > > Add 'enable-dontcache' to NFSD's debugfs interface so that: Any=
+ data
+> > > > > > read or written by NFSD will either not be cached (thanks to O_=
+DIRECT)
+> > > > > > or will be removed from the page cache upon completion (DONTCAC=
+HE).
+> > > > >=20
+> > > > > I thought we were going to do two switches: One for reads and one=
+ for
+> > > > > writes? I could be misremembering.
 > > > >=20
-> > > > I thought we were going to do two switches: One for reads and one f=
-or
-> > > > writes? I could be misremembering.
+> > > > We did discuss the possibility of doing that.  Still can-do if that=
+'s
+> > > > what you'd prefer.
+> > > > =20
 > > >=20
-> > > We did discuss the possibility of doing that.  Still can-do if that's
-> > > what you'd prefer.
-> > > =20
-> >=20
-> > Having them as separate controls in debugfs is fine for
-> > experimentation's sake, but I imagine we'll need to be all-in one way
-> > or the other with a real interface.
-> >=20
-> > I think if we can crack the problem of receiving WRITE payloads into an
-> > already-aligned buffer, then that becomes much more feasible. I think
-> > that's a solveable problem.
->=20
-> You'd immediately be my hero!  Let's get into it:
->=20
-> In a previously reply to this thread you aptly detailed what I found
-> out the hard way (with too much xdr_buf code review and tracing):
->=20
-> On Wed, Jun 11, 2025 at 08:55:20AM -0400, Jeff Layton wrote:
+> > > Having them as separate controls in debugfs is fine for
+> > > experimentation's sake, but I imagine we'll need to be all-in one way
+> > > or the other with a real interface.
 > > >=20
-> > > NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative to
-> > > DIO alignment (both page and disk alignment).  This works quite well
-> > > for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
-> > > maps the WRITE payload into aligned pages. But more work is needed to
-> > > be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
-> > > used. I spent quite a bit of time analyzing the existing xdr_buf code
-> > > and NFSD's use of it.  Unfortunately, the WRITE payload gets stored i=
-n
-> > > misaligned pages such that O_DIRECT isn't possible without a copy
-> > > (completely defeating the point).  I'll reply to this cover letter to
-> > > start a subthread to discuss how best to deal with misaligned write
-> > > IO (by association with Hammerspace, I'm most interested in NFS v3).
-> > >=20
+> > > I think if we can crack the problem of receiving WRITE payloads into =
+an
+> > > already-aligned buffer, then that becomes much more feasible. I think
+> > > that's a solveable problem.
 > >=20
-> > Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
-> > rq_pages array. To get alignment right, you'd probably have to do the
-> > receive in a much more piecemeal way.
+> > You'd immediately be my hero!  Let's get into it:
 > >=20
-> > Basically, you'd need to decode as you receive chunks of the message,
-> > and look out for WRITEs, and then set it up so that their payloads are
-> > received with proper alignment.
->=20
-> 1)
-> Yes, and while I arrived at the same exact conclusion I was left with
-> dread about the potential for "breaking too many eggs to make that
-> tasty omelette".
->=20
-> If you (or others) see a way forward to have SUNRPC TCP's XDR receive
-> "inline" decode (rather than have the 2 stage process you covered
-> above) that'd be fantastic.  Seems like really old tech-debt in SUNRPC
-> from a time when such care about alignment of WRITE payload pages was
-> completely off engineers' collective radar (owed to NFSD only using
-> buffered IO I assume?).
->=20
-> 2)
-> One hack that I verified to work for READ and WRITE IO on my
-> particular TCP testbed was to front-pad the first "head" page of the
-> xdr_buf such that the WRITE payload started at the 2nd page of
-> rq_pages.  So that looked like this hack for my usage:
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index 8fc5b2b2d806..cf082a265261 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -676,7 +676,9 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->=20
->         /* Make arg->head point to first page and arg->pages point to res=
-t */
->         arg->head[0].iov_base =3D page_address(rqstp->rq_pages[0]);
-> -       arg->head[0].iov_len =3D PAGE_SIZE;
-> +       // FIXME: front-pad optimized to align TCP's WRITE payload
-> +       // but may not be enough for other operations?
-> +       arg->head[0].iov_len =3D 148;
->         arg->pages =3D rqstp->rq_pages + 1;
->         arg->page_base =3D 0;
->         /* save at least one page for response */
->=20
-> That gut "but may not be enough for other operations?" comment proved
-> to be prophetic.
->=20
-> Sadly it went on to fail spectacularly for other ops (specifically
-> READDIR and READDIRPLUS, probably others would too) because
-> xdr_inline_decode() _really_ doesn't like going beyond the end of the
-> xdr_buf's inline "head" page.  It could be that even if
-> xdr_inline_decode() et al was "fixed" (which isn't for the faint of
-> heart given xdr_buf's more complex nature) there will likely be other
-> mole(s) that pop up.  And in addition, we'd be wasting space in the
-> xdr_buf's head page (PAGE_SIZE-frontpad).  So I moved on from trying
-> to see this frontpad hack through to completion.
->=20
-> 3)
-> Lastly, for completeness, I also mentioned briefly in a previous
-> recent reply:
->=20
-> On Wed, Jun 11, 2025 at 04:51:03PM -0400, Mike Snitzer wrote:
-> > On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
+> > In a previously reply to this thread you aptly detailed what I found
+> > out the hard way (with too much xdr_buf code review and tracing):
 > >=20
-> > > In any case, for now at least, unless you're using RDMA, it's going t=
+> > On Wed, Jun 11, 2025 at 08:55:20AM -0400, Jeff Layton wrote:
+> > > >=20
+> > > > NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative t=
 o
-> > > end up falling back to buffered writes everywhere. The data is almost
-> > > never going to be properly aligned coming in off the wire. That might
-> > > be fixable though.
+> > > > DIO alignment (both page and disk alignment).  This works quite wel=
+l
+> > > > for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
+> > > > maps the WRITE payload into aligned pages. But more work is needed =
+to
+> > > > be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
+> > > > used. I spent quite a bit of time analyzing the existing xdr_buf co=
+de
+> > > > and NFSD's use of it.  Unfortunately, the WRITE payload gets stored=
+ in
+> > > > misaligned pages such that O_DIRECT isn't possible without a copy
+> > > > (completely defeating the point).  I'll reply to this cover letter =
+to
+> > > > start a subthread to discuss how best to deal with misaligned write
+> > > > IO (by association with Hammerspace, I'm most interested in NFS v3)=
+.
+> > > >=20
+> > >=20
+> > > Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
+> > > rq_pages array. To get alignment right, you'd probably have to do the
+> > > receive in a much more piecemeal way.
+> > >=20
+> > > Basically, you'd need to decode as you receive chunks of the message,
+> > > and look out for WRITEs, and then set it up so that their payloads ar=
+e
+> > > received with proper alignment.
 > >=20
-> > Ben Coddington mentioned to me that soft-iwarp would allow use of RDMA
-> > over TCP to workaround SUNRPC TCP's XDR handling always storing the
-> > write payload in misaligned IO.  But that's purely a stop-gap
-> > workaround, which needs testing (to see if soft-iwap negates the win
-> > of using O_DIRECT, etc).
+> > 1)
+> > Yes, and while I arrived at the same exact conclusion I was left with
+> > dread about the potential for "breaking too many eggs to make that
+> > tasty omelette".
+> >=20
+> > If you (or others) see a way forward to have SUNRPC TCP's XDR receive
+> > "inline" decode (rather than have the 2 stage process you covered
+> > above) that'd be fantastic.  Seems like really old tech-debt in SUNRPC
+> > from a time when such care about alignment of WRITE payload pages was
+> > completely off engineers' collective radar (owed to NFSD only using
+> > buffered IO I assume?).
+> >=20
+> > 2)
+> > One hack that I verified to work for READ and WRITE IO on my
+> > particular TCP testbed was to front-pad the first "head" page of the
+> > xdr_buf such that the WRITE payload started at the 2nd page of
+> > rq_pages.  So that looked like this hack for my usage:
+> >=20
+> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > index 8fc5b2b2d806..cf082a265261 100644
+> > --- a/net/sunrpc/svc_xprt.c
+> > +++ b/net/sunrpc/svc_xprt.c
+> > @@ -676,7 +676,9 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+> >=20
+> >         /* Make arg->head point to first page and arg->pages point to r=
+est */
+> >         arg->head[0].iov_base =3D page_address(rqstp->rq_pages[0]);
+> > -       arg->head[0].iov_len =3D PAGE_SIZE;
+> > +       // FIXME: front-pad optimized to align TCP's WRITE payload
+> > +       // but may not be enough for other operations?
+> > +       arg->head[0].iov_len =3D 148;
+> >         arg->pages =3D rqstp->rq_pages + 1;
+> >         arg->page_base =3D 0;
+> >         /* save at least one page for response */
+> >=20
+> > That gut "but may not be enough for other operations?" comment proved
+> > to be prophetic.
+> >=20
+> > Sadly it went on to fail spectacularly for other ops (specifically
+> > READDIR and READDIRPLUS, probably others would too) because
+> > xdr_inline_decode() _really_ doesn't like going beyond the end of the
+> > xdr_buf's inline "head" page.  It could be that even if
+> > xdr_inline_decode() et al was "fixed" (which isn't for the faint of
+> > heart given xdr_buf's more complex nature) there will likely be other
+> > mole(s) that pop up.  And in addition, we'd be wasting space in the
+> > xdr_buf's head page (PAGE_SIZE-frontpad).  So I moved on from trying
+> > to see this frontpad hack through to completion.
+> >=20
+> > 3)
+> > Lastly, for completeness, I also mentioned briefly in a previous
+> > recent reply:
+> >=20
+> > On Wed, Jun 11, 2025 at 04:51:03PM -0400, Mike Snitzer wrote:
+> > > On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
+> > >=20
+> > > > In any case, for now at least, unless you're using RDMA, it's going=
+ to
+> > > > end up falling back to buffered writes everywhere. The data is almo=
+st
+> > > > never going to be properly aligned coming in off the wire. That mig=
+ht
+> > > > be fixable though.
+> > >=20
+> > > Ben Coddington mentioned to me that soft-iwarp would allow use of RDM=
+A
+> > > over TCP to workaround SUNRPC TCP's XDR handling always storing the
+> > > write payload in misaligned IO.  But that's purely a stop-gap
+> > > workaround, which needs testing (to see if soft-iwap negates the win
+> > > of using O_DIRECT, etc).
+> >=20
+> > (Ab)using soft-iwarp as the basis for easily getting page aligned TCP
+> > WRITE payloads seems pretty gross given we are chasing utmost
+> > performance, etc.
+> >=20
+> > All said, I welcome your sage advice and help on this effort to
+> > DIO-align SUNRPC TCP's WRITE payload pages.
+> >=20
+> > Thanks,
+> > Mike
 >=20
-> (Ab)using soft-iwarp as the basis for easily getting page aligned TCP
-> WRITE payloads seems pretty gross given we are chasing utmost
-> performance, etc.
+> (Sent this to Mike only by accident yesterday -- resending to the full
+> list now)
 >=20
-> All said, I welcome your sage advice and help on this effort to
-> DIO-align SUNRPC TCP's WRITE payload pages.
+> I've been looking over the code today. Basically, I think we need to
+> have svc_tcp_recvfrom() receive in phases. At a high level:
 >=20
-> Thanks,
-> Mike
+> 1/ receive the record marker (just like it does today)
+>=20
+> 2/ receive enough for the RPC header and then decode it.
+>=20
+> 3/ Use the rpc program and version from the decoded header to look up
+> the svc_program. Add an optional pg_tcp_recvfrom callback to that
+> structure that will receive the rest of the data into the buffer. If
+> pg_tcp_recvfrom isn't set, then just call svc_tcp_read_msg() like we do
+> today.
+>=20
+> For NFSv3, pc_tcp_recvfrom can just look at the procedure. If it's
+> anything but a WRITE we'll just do what we do today
+> (svc_tcp_read_msg()).
+>=20
+> For a WRITE, we'll receive the first part of the WRITE3args (everything
+> but the data) into rq_pages, and decode it. We can then use that info
+> to figure out the alignment. Advance to the next page in rq_pages, and
+> then to the point where the data is properly aligned. Do the receive
+> into that spot.
+>=20
+> Then we just add a RQ_ALIGNED_DATA to rqstp->rq_flags, and teach
+> nfsd3_proc_write how to find the data and do a DIO write when it's set.
+>=20
+> Unaligned writes are still a problem though. If two WRITE RPCs come in
+> for different parts of the same block at the same time, then you could
+> end up losing the result of the first write. I don't see a way to make
+> that non-racy.
+>=20
+> NFSv4 will also be a bit of a challenge. We'll need to receive the
+> whole compound one operation at a time. If we hit a WRITE, then we can
+> just do the same thing that we do for v3 to align the data.
+>=20
+> I'd probably aim to start with an implementation for v3, and then add
+> v4 support in a second phase.
+>=20
+> I'm interested in working on this. It'll be a fair bit of work though.
+> I'll need to think about how to break this up into manageable pieces.
 
-(Sent this to Mike only by accident yesterday -- resending to the full
-list now)
 
-I've been looking over the code today. Basically, I think we need to
-have svc_tcp_recvfrom() receive in phases. At a high level:
+Mike asked me to detail the race that I see between unaligned writes:
 
-1/ receive the record marker (just like it does today)
+Since we'd have to fill a block before writing, the only way I can see
+to do this with DIO would be to pre-populate the incomplete blocks at
+the ends of the range before receiving the data into the buffer.
 
-2/ receive enough for the RPC header and then decode it.
+Most filesystems allow you to do concurrent DIO writes to the same file
+in parallel. XFS, for instance only locks the inode->i_rwsem for read
+when doing a DIO write.
 
-3/ Use the rpc program and version from the decoded header to look up
-the svc_program. Add an optional pg_tcp_recvfrom callback to that
-structure that will receive the rest of the data into the buffer. If
-pg_tcp_recvfrom isn't set, then just call svc_tcp_read_msg() like we do
-today.
-
-For NFSv3, pc_tcp_recvfrom can just look at the procedure. If it's
-anything but a WRITE we'll just do what we do today
-(svc_tcp_read_msg()).
-
-For a WRITE, we'll receive the first part of the WRITE3args (everything
-but the data) into rq_pages, and decode it. We can then use that info
-to figure out the alignment. Advance to the next page in rq_pages, and
-then to the point where the data is properly aligned. Do the receive
-into that spot.
-
-Then we just add a RQ_ALIGNED_DATA to rqstp->rq_flags, and teach
-nfsd3_proc_write how to find the data and do a DIO write when it's set.
-
-Unaligned writes are still a problem though. If two WRITE RPCs come in
-for different parts of the same block at the same time, then you could
-end up losing the result of the first write. I don't see a way to make
-that non-racy.
-
-NFSv4 will also be a bit of a challenge. We'll need to receive the
-whole compound one operation at a time. If we hit a WRITE, then we can
-just do the same thing that we do for v3 to align the data.
-
-I'd probably aim to start with an implementation for v3, and then add
-v4 support in a second phase.
-
-I'm interested in working on this. It'll be a fair bit of work though.
-I'll need to think about how to break this up into manageable pieces.
+Suppose we have two adjacent 1.5k WRITES going to a filesystem that has
+1k blocks. Both writes end up doing DIO reads to fill the unwritten
+part of the same block, and then receive in the data. Then they both
+issue their writes to the fs (2k each). The second writer will end up
+clobbering the data that the first wrote in the shared block.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
