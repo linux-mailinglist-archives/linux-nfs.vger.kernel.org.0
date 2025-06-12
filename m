@@ -1,79 +1,72 @@
-Return-Path: <linux-nfs+bounces-12373-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12374-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB484AD7392
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 16:21:14 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E5B8AD765B
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 17:36:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C5672C12E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 14:19:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9631C188D232
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jun 2025 15:33:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D152F23FC54;
-	Thu, 12 Jun 2025 14:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D30E529B22D;
+	Thu, 12 Jun 2025 15:28:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDc2sJ7d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eh+QhCjQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02676146593
-	for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 14:17:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE1E29B766
+	for <linux-nfs@vger.kernel.org>; Thu, 12 Jun 2025 15:28:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737858; cv=none; b=oFP+0+3VLvWli6pCVMh/zpwClFWZfqrxhKOmDoU04t9e+TKg/SxZft3Y9zFM6LaJKp78QuFjmfiF8qIfcUtoHVI2ykbscSMV5N4Mmql4QkTPNcbSudQdcP7aMelB5fhGfXBIOGjyIcL3R844fC6JklHZy2Wnf7I/VIzqLCO/EuU=
+	t=1749742112; cv=none; b=h1Y4Q7faViDIUrqp0rWsCNZkW7B3PSB6H9PFz1weIQ9Ac8hSRIyfmvdTQLl7R9cereR0LFYKstWhKnvT6IKSPGDFZy/fkuS9LmQCDSV7aGIsOTnHG5Jot38e1Gj2kZyFiz7OkKhVzrI2lV2JAK05skHSuD/yQTZw9IwM3uZulHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737858; c=relaxed/simple;
-	bh=pv9cfHRqnSI0/wXWn49LAXKEJNNISKs3HhbGThQzmxo=;
+	s=arc-20240116; t=1749742112; c=relaxed/simple;
+	bh=RRogf1aHOoyQl3FeHP5zxfE3RXNRa8Hl8TNR/Kv6/jk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h+ny6N6IRmmN0WVpjNODmG3DO/82QVEx4eClrQy7aHQ1st5pilvII7mcXzmefQVehMO/S79cd3ClPNLwR7B4E2ZGAQ9IEuEWkT3GDvBiu1N1m/bDPKftlZk7tUaY3JbK+YTi4B0cuHi/2AVP781OaJC8TO3+EaSMKW+X3KzzNlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDc2sJ7d; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=qXLMTMoNzViIXZ6xpMxnPSICaWEmTxeiLZD+EjkIRLsLha7JdTM88rf1N5noCGALRqbdBcuiTpYrMRyPbeXIE6fSAX1BC4rBubP4chCGRaMPD0X2sutkP2ILjgOOYrjBaG4SKaaAkmwrXx5kFpbvkzMXpMsEYwglSQFdGqdunLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eh+QhCjQ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749737854;
+	s=mimecast20190719; t=1749742108;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yB/uUYoimKDAGyxop4yqaCFmze5RWxvmDd5eWQv1rHc=;
-	b=CDc2sJ7dBy/oOru0Qhw7je/LSmWCAhFpK4vA1SGlD0W+Laxwt0fgqONC34yD87+KG1LtVA
-	O91SXBdcNx1ZJzT+P6Fb6mpYwmdbaAaXHRTgg3Gt2IQfGnnbKKU0Pvaqc8yEaTzk1n2hJh
-	tJ9OX6KMVylMnfaxRmJaIbrEsN5KF3A=
+	bh=K68kmoXYmN1U2XhajyNVfjsziFOx/Ezh1zRr8FsmUOI=;
+	b=eh+QhCjQxDiyoRdJH03siV8TpwEtzHiSZLQUPbQ0SMU+5DUNX1UPROXSICplYlp0R8Oezx
+	WUkz2CuEA7+eEP9GOD1vgvlgSU1MkpYRcRCO8X6rAS48NPsAnyZTTAnjBC0yCNAQygdsxO
+	7B2CAwDOEvUP4MYgYIePYLu+O2JupoY=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-150-UKEH77YcPrC-7DCS_qZzgw-1; Thu,
- 12 Jun 2025 10:17:28 -0400
-X-MC-Unique: UKEH77YcPrC-7DCS_qZzgw-1
-X-Mimecast-MFC-AGG-ID: UKEH77YcPrC-7DCS_qZzgw_1749737847
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-522-IH31W6V3NG2948c1PzPlvQ-1; Thu,
+ 12 Jun 2025 11:28:25 -0400
+X-MC-Unique: IH31W6V3NG2948c1PzPlvQ-1
+X-Mimecast-MFC-AGG-ID: IH31W6V3NG2948c1PzPlvQ_1749742104
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D871E19560BE;
-	Thu, 12 Jun 2025 14:17:26 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CDADB19560B2;
+	Thu, 12 Jun 2025 15:28:23 +0000 (UTC)
 Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA2A4195E340;
-	Thu, 12 Jun 2025 14:17:24 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 95B9A18002B0;
+	Thu, 12 Jun 2025 15:28:22 +0000 (UTC)
 From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Jens Axboe <axboe@kernel.dk>
-Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
- 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
-Date: Thu, 12 Jun 2025 10:17:22 -0400
-Message-ID: <5D9EA89B-A65F-40A1-B78F-547A42734FC2@redhat.com>
-In-Reply-To: <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
- <aEnWhlXjzOmRfCJf@kernel.org>
- <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
- <aEn2-mYA3VDv-vB8@kernel.org>
- <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
- <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Lance Shelton <lance.shelton@hammerspace.com>,
+ Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v3 2/3] nfs: Add timecreate to nfs inode
+Date: Thu, 12 Jun 2025 11:28:20 -0400
+Message-ID: <6D9EC0BF-E2C0-4644-BC33-6696DA66AE69@redhat.com>
+In-Reply-To: <1e3677b0655fa2bbaba0817b41d111d94a06e5ee.1748515333.git.bcodding@redhat.com>
+References: <cover.1748515333.git.bcodding@redhat.com>
+ <1e3677b0655fa2bbaba0817b41d111d94a06e5ee.1748515333.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -81,162 +74,157 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 12 Jun 2025, at 9:28, Chuck Lever wrote:
+On 29 May 2025, at 6:45, Benjamin Coddington wrote:
 
-> On 6/12/25 6:28 AM, Jeff Layton wrote:
->> On Wed, 2025-06-11 at 17:36 -0400, Mike Snitzer wrote:
->>> On Wed, Jun 11, 2025 at 04:29:58PM -0400, Jeff Layton wrote:
->>>> On Wed, 2025-06-11 at 15:18 -0400, Mike Snitzer wrote:
->>>>> On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
->>>>>> On 6/10/25 4:57 PM, Mike Snitzer wrote:
->>>>>>> Add 'enable-dontcache' to NFSD's debugfs interface so that: Any data
->>>>>>> read or written by NFSD will either not be cached (thanks to O_DIRECT)
->>>>>>> or will be removed from the page cache upon completion (DONTCACHE).
->>>>>>
->>>>>> I thought we were going to do two switches: One for reads and one for
->>>>>> writes? I could be misremembering.
->>>>>
->>>>> We did discuss the possibility of doing that.  Still can-do if that's
->>>>> what you'd prefer.
->>>>>
->>>>
->>>> Having them as separate controls in debugfs is fine for
->>>> experimentation's sake, but I imagine we'll need to be all-in one way
->>>> or the other with a real interface.
->>>>
->>>> I think if we can crack the problem of receiving WRITE payloads into an
->>>> already-aligned buffer, then that becomes much more feasible. I think
->>>> that's a solveable problem.
->>>
->>> You'd immediately be my hero!  Let's get into it:
->>>
->>> In a previously reply to this thread you aptly detailed what I found
->>> out the hard way (with too much xdr_buf code review and tracing):
->>>
->>> On Wed, Jun 11, 2025 at 08:55:20AM -0400, Jeff Layton wrote:
->>>>>
->>>>> NFSD will also set RWF_DIRECT if a WRITE's IO is aligned relative to
->>>>> DIO alignment (both page and disk alignment).  This works quite well
->>>>> for aligned WRITE IO with SUNRPC's RDMA transport as-is, because it
->>>>> maps the WRITE payload into aligned pages. But more work is needed to
->>>>> be able to leverage O_DIRECT when SUNRPC's regular TCP transport is
->>>>> used. I spent quite a bit of time analyzing the existing xdr_buf code
->>>>> and NFSD's use of it.  Unfortunately, the WRITE payload gets stored in
->>>>> misaligned pages such that O_DIRECT isn't possible without a copy
->>>>> (completely defeating the point).  I'll reply to this cover letter to
->>>>> start a subthread to discuss how best to deal with misaligned write
->>>>> IO (by association with Hammerspace, I'm most interested in NFS v3).
->>>>>
->>>>
->>>> Tricky problem. svc_tcp_recvfrom() just slurps the whole RPC into the
->>>> rq_pages array. To get alignment right, you'd probably have to do the
->>>> receive in a much more piecemeal way.
->>>>
->>>> Basically, you'd need to decode as you receive chunks of the message,
->>>> and look out for WRITEs, and then set it up so that their payloads are
->>>> received with proper alignment.
->>>
->>> 1)
->>> Yes, and while I arrived at the same exact conclusion I was left with
->>> dread about the potential for "breaking too many eggs to make that
->>> tasty omelette".
->>>
->>> If you (or others) see a way forward to have SUNRPC TCP's XDR receive
->>> "inline" decode (rather than have the 2 stage process you covered
->>> above) that'd be fantastic.  Seems like really old tech-debt in SUNRPC
->>> from a time when such care about alignment of WRITE payload pages was
->>> completely off engineers' collective radar (owed to NFSD only using
->>> buffered IO I assume?).
->>>
->>> 2)
->>> One hack that I verified to work for READ and WRITE IO on my
->>> particular TCP testbed was to front-pad the first "head" page of the
->>> xdr_buf such that the WRITE payload started at the 2nd page of
->>> rq_pages.  So that looked like this hack for my usage:
->>>
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index 8fc5b2b2d806..cf082a265261 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -676,7 +676,9 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->>>
->>>         /* Make arg->head point to first page and arg->pages point to rest */
->>>         arg->head[0].iov_base = page_address(rqstp->rq_pages[0]);
->>> -       arg->head[0].iov_len = PAGE_SIZE;
->>> +       // FIXME: front-pad optimized to align TCP's WRITE payload
->>> +       // but may not be enough for other operations?
->>> +       arg->head[0].iov_len = 148;
->>>         arg->pages = rqstp->rq_pages + 1;
->>>         arg->page_base = 0;
->>>         /* save at least one page for response */
->>>
->>> That gut "but may not be enough for other operations?" comment proved
->>> to be prophetic.
->>>
->>> Sadly it went on to fail spectacularly for other ops (specifically
->>> READDIR and READDIRPLUS, probably others would too) because
->>> xdr_inline_decode() _really_ doesn't like going beyond the end of the
->>> xdr_buf's inline "head" page.  It could be that even if
->>> xdr_inline_decode() et al was "fixed" (which isn't for the faint of
->>> heart given xdr_buf's more complex nature) there will likely be other
->>> mole(s) that pop up.  And in addition, we'd be wasting space in the
->>> xdr_buf's head page (PAGE_SIZE-frontpad).  So I moved on from trying
->>> to see this frontpad hack through to completion.
->>>
->>> 3)
->>> Lastly, for completeness, I also mentioned briefly in a previous
->>> recent reply:
->>>
->>> On Wed, Jun 11, 2025 at 04:51:03PM -0400, Mike Snitzer wrote:
->>>> On Wed, Jun 11, 2025 at 11:44:29AM -0400, Jeff Layton wrote:
->>>>
->>>>> In any case, for now at least, unless you're using RDMA, it's going to
->>>>> end up falling back to buffered writes everywhere. The data is almost
->>>>> never going to be properly aligned coming in off the wire. That might
->>>>> be fixable though.
->>>>
->>>> Ben Coddington mentioned to me that soft-iwarp would allow use of RDMA
->>>> over TCP to workaround SUNRPC TCP's XDR handling always storing the
->>>> write payload in misaligned IO.  But that's purely a stop-gap
->>>> workaround, which needs testing (to see if soft-iwap negates the win
->>>> of using O_DIRECT, etc).
->>>
->>> (Ab)using soft-iwarp as the basis for easily getting page aligned TCP
->>> WRITE payloads seems pretty gross given we are chasing utmost
->>> performance, etc.
->>>
->>> All said, I welcome your sage advice and help on this effort to
->>> DIO-align SUNRPC TCP's WRITE payload pages.
->>>
->>> Thanks,
->>> Mike
->>
->> (Sent this to Mike only by accident yesterday -- resending to the full
->> list now)
->>
->> I've been looking over the code today. Basically, I think we need to
->> have svc_tcp_recvfrom() receive in phases. At a high level:
->>
->> 1/ receive the record marker (just like it does today)
->>
->> 2/ receive enough for the RPC header and then decode it.
->>
->> 3/ Use the rpc program and version from the decoded header to look up
->> the svc_program. Add an optional pg_tcp_recvfrom callback to that
->> structure that will receive the rest of the data into the buffer. If
->> pg_tcp_recvfrom isn't set, then just call svc_tcp_read_msg() like we do
->> today.
+> From: Anne Marie Merritt <annemarie.merritt@primarydata.com>
 >
-> The layering violations here are mind-blowing.
+> Add tracking of the create time (a.k.a. btime) along with corresponding=
 
-What's already been mentioned elsewhere, but not yet here:
+> bitfields, request, and decode xdr routines.
+>
+> Signed-off-by: Anne Marie Merritt <annemarie.merritt@primarydata.com>
+> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/inode.c          | 17 +++++++++++++++--
+>  fs/nfs/nfs4proc.c       | 14 +++++++++++++-
+>  fs/nfs/nfs4xdr.c        | 24 ++++++++++++++++++++++++
+>  fs/nfs/nfstrace.h       |  3 ++-
+>  include/linux/nfs_fs.h  |  8 ++++++++
+>  include/linux/nfs_xdr.h |  3 +++
+>  6 files changed, 65 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> index 160f3478a835..2e36188a855b 100644
+> --- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -197,6 +197,7 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
+igned long flags)
+>  		if (!(flags & NFS_INO_REVAL_FORCED))
+>  			flags &=3D ~(NFS_INO_INVALID_MODE |
+>  				   NFS_INO_INVALID_OTHER |
+> +				   NFS_INO_INVALID_BTIME |
+>  				   NFS_INO_INVALID_XATTR);
+>  		flags &=3D ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE);
+>  	}
+> @@ -522,6 +523,7 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *fh=
+, struct nfs_fattr *fattr)
+>  		inode_set_atime(inode, 0, 0);
+>  		inode_set_mtime(inode, 0, 0);
+>  		inode_set_ctime(inode, 0, 0);
+> +		memset(&nfsi->btime, 0, sizeof(nfsi->btime));
+>  		inode_set_iversion_raw(inode, 0);
+>  		inode->i_size =3D 0;
+>  		clear_nlink(inode);
+> @@ -545,6 +547,10 @@ nfs_fhget(struct super_block *sb, struct nfs_fh *f=
+h, struct nfs_fattr *fattr)
+>  			inode_set_ctime_to_ts(inode, fattr->ctime);
+>  		else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+>  			nfs_set_cache_invalid(inode, NFS_INO_INVALID_CTIME);
+> +		if (fattr->valid & NFS_ATTR_FATTR_BTIME)
+> +			nfsi->btime =3D fattr->btime;
+> +		else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+> +			nfs_set_cache_invalid(inode, NFS_INO_INVALID_BTIME);
+>  		if (fattr->valid & NFS_ATTR_FATTR_CHANGE)
+>  			inode_set_iversion_raw(inode, fattr->change_attr);
+>  		else
+> @@ -1900,7 +1906,7 @@ static int nfs_inode_finish_partial_attr_update(c=
+onst struct nfs_fattr *fattr,
+>  		NFS_INO_INVALID_ATIME | NFS_INO_INVALID_CTIME |
+>  		NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
+>  		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
+> -		NFS_INO_INVALID_NLINK;
+> +		NFS_INO_INVALID_NLINK | NFS_INO_INVALID_BTIME;
+>  	unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
+>  	enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_attr_t=
+ype;
+>
+> @@ -2261,7 +2267,8 @@ static int nfs_update_inode(struct inode *inode, =
+struct nfs_fattr *fattr)
+>  					| NFS_INO_INVALID_BLOCKS
+>  					| NFS_INO_INVALID_NLINK
+>  					| NFS_INO_INVALID_MODE
+> -					| NFS_INO_INVALID_OTHER;
+> +					| NFS_INO_INVALID_OTHER
+> +					| NFS_INO_INVALID_BTIME;
+>  				if (S_ISDIR(inode->i_mode))
+>  					nfs_force_lookup_revalidate(inode);
+>  				attr_changed =3D true;
+> @@ -2295,6 +2302,12 @@ static int nfs_update_inode(struct inode *inode,=
+ struct nfs_fattr *fattr)
+>  		nfsi->cache_validity |=3D
+>  			save_cache_validity & NFS_INO_INVALID_CTIME;
+>
+> +	if (fattr->valid & NFS_ATTR_FATTR_BTIME)
+> +		nfsi->btime =3D fattr->btime;
+> +	else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
+> +		nfsi->cache_validity |=3D
+> +			save_cache_validity & NFS_INO_INVALID_BTIME;
+> +
+>  	/* Check if our cached file size is stale */
+>  	if (fattr->valid & NFS_ATTR_FATTR_SIZE) {
+>  		new_isize =3D nfs_size_to_loff_t(fattr->size);
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index b1d2122bd5a7..f7fb61f805a3 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -222,6 +222,7 @@ const u32 nfs4_fattr_bitmap[3] =3D {
+>  	| FATTR4_WORD1_RAWDEV
+>  	| FATTR4_WORD1_SPACE_USED
+>  	| FATTR4_WORD1_TIME_ACCESS
+> +	| FATTR4_WORD1_TIME_CREATE
+>  	| FATTR4_WORD1_TIME_METADATA
+>  	| FATTR4_WORD1_TIME_MODIFY
+>  	| FATTR4_WORD1_MOUNTED_ON_FILEID,
+> @@ -243,6 +244,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] =3D {
+>  	| FATTR4_WORD1_RAWDEV
+>  	| FATTR4_WORD1_SPACE_USED
+>  	| FATTR4_WORD1_TIME_ACCESS
+> +	| FATTR4_WORD1_TIME_CREATE
+>  	| FATTR4_WORD1_TIME_METADATA
+>  	| FATTR4_WORD1_TIME_MODIFY,
+>  	FATTR4_WORD2_MDSTHRESHOLD
+> @@ -323,6 +325,9 @@ static void nfs4_bitmap_copy_adjust(__u32 *dst, con=
+st __u32 *src,
+>  	if (!(cache_validity & NFS_INO_INVALID_OTHER))
+>  		dst[1] &=3D ~(FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP);
+>
+> +	if (!(cache_validity & NFS_INO_INVALID_BTIME))
+> +		dst[1] &=3D ~FATTR4_WORD1_TIME_CREATE;
+> +
+>  	if (nfs_have_delegated_mtime(inode)) {
+>  		if (!(cache_validity & NFS_INO_INVALID_ATIME))
+>  			dst[1] &=3D ~FATTR4_WORD1_TIME_ACCESS;
+> @@ -1307,7 +1312,8 @@ nfs4_update_changeattr_locked(struct inode *inode=
+,
+>  				NFS_INO_INVALID_ACCESS | NFS_INO_INVALID_ACL |
+>  				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
+>  				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
+> -				NFS_INO_INVALID_MODE | NFS_INO_INVALID_XATTR;
+> +				NFS_INO_INVALID_MODE | NFS_INO_INVALID_BTIME |
+> +				NFS_INO_INVALID_XATTR;
+>  		nfsi->attrtimeo =3D NFS_MINATTRTIMEO(inode);
+>  	}
+>  	nfsi->attrtimeo_timestamp =3D jiffies;
+> @@ -4047,6 +4053,10 @@ static int _nfs4_server_capabilities(struct nfs_=
+server *server, struct nfs_fh *f
+>  			server->fattr_valid &=3D ~NFS_ATTR_FATTR_CTIME;
+>  		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_MODIFY))
+>  			server->fattr_valid &=3D ~NFS_ATTR_FATTR_MTIME;
+> +		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_MODIFY))
+> +			server->fattr_valid &=3D ~NFS_ATTR_FATTR_MTIME;
 
-The transmitter could always just tell the receiver where the data is, we'd
-need an NFS v3.1 and an extension for v4.2?
+^^
+I just noticed this duplicates the two lines right above -- not harmful, =
+but
+probably needs a cleanup..  let me know if I should repost or if this can=
+ be
+fixed up in a maintainers tree.
 
-Pot Stirred,
 Ben
 
 
