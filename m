@@ -1,170 +1,104 @@
-Return-Path: <linux-nfs+bounces-12430-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12431-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAFE3AD87AC
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 11:23:54 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09729AD884B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 11:46:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E4BD81886020
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 09:24:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A7B51897E0D
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 09:46:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A975279DA8;
-	Fri, 13 Jun 2025 09:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E14F2C159D;
+	Fri, 13 Jun 2025 09:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKIhIjYs"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qFKdDGdY";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qFKdDGdY"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2DC19049B;
-	Fri, 13 Jun 2025 09:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362702C3262
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 09:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749806630; cv=none; b=XojemXJxTAdNhesUKu0uRsIsBhpNAvJhKzkSLMuzOjg/RpqDqCzzukyj3XtiRbtFW9iWgblLXwKssIqCA4h+4mWltT3xOLlxiKmSRxHt2EnP5m5RGM2xrp6fN2221mLQKH1DcpCLgv0WQzwRcKfzhRXIkjSX9jkdTxKE1o38/6M=
+	t=1749807920; cv=none; b=YBAlRPT+Rx7YwzwpGlefjzsYxqaFe3TohJrO1TbPaXH13Zg0P0xjDJTFrQ7xIQNn9So3LNLxbIFAy2LTwlTwNcFwxvZMDKgxJBBaIVAf8DEbd+KINVcy51U/fmjqOwwaNdeHpInVAhfhdkEcnLbDTHC5eQMgyD2LWf9cKptlf+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749806630; c=relaxed/simple;
-	bh=4IM3ljHai7hhYuxZjlxbC1b3dgfoRlGohNkgBHQPTJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tAZ88+o7fQOg5QzfkEhYa+nJJxrOR/s1hS6Irfge2U8P/L5aqNf0tBiCsuBLq01JVlrrYq2DnvG+1avg5Vsw5bJpj0KehHBBKXzsfO2F0KGHH6Ue8tscqkhjVBNVaD0NbuqbNfDxyUxGfXrQoeZaAN6ED+N5v7IbT4bC2Y0pReQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKIhIjYs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 785FDC4CEE3;
-	Fri, 13 Jun 2025 09:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749806629;
-	bh=4IM3ljHai7hhYuxZjlxbC1b3dgfoRlGohNkgBHQPTJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gKIhIjYsG6tslEAhzjn+gh02xfPhV8Zwt6HLme2cE5exQJLo3AgVlx6mJqNO2fp9/
-	 z3pwGrg2wkuIpaCxr9iOeujM+XeqO2AK0at5VdGgHzv1VIpHikz6BOMIpvRk0KNsuM
-	 eeOKcP7t9YgRl0/iJlG56MNRg/boGldhY9CsuaYo6aj9r6dxRFJWTyEWjL+l8ub6fO
-	 HFJwkVCevU1bU7benFDmVvf1G0NgcFf96mtVjqWa6/f4gOcPz/O6VpRZYHcX4JPcur
-	 CAe7W6OdHJBHX3nMT8+005SLu5nLexzn0djUosZfghj9XuGKokz0m/JWZZR7g/th/+
-	 Qd7ICSXEHJlzg==
-Date: Fri, 13 Jun 2025 05:23:48 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>, david.flynn@hammerspace.com
-Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
- 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
-Message-ID: <aEvuJP7_xhVk5R4S@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
- <aEnWhlXjzOmRfCJf@kernel.org>
- <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
- <aEn2-mYA3VDv-vB8@kernel.org>
- <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
- <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
- <f201c16677525288597becfd904d873931092cea.camel@kernel.org>
- <aEu7GSa7HRNNVJVA@infradead.org>
+	s=arc-20240116; t=1749807920; c=relaxed/simple;
+	bh=mMpBbEvbeNXlC5X9MC3OgHZtGFuzFGEpvWSd0B3IbfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dLk+P+0nF9HlbtoCAB0sPAiT2sN5QGmp5rQAqcWJf5G6Ez5R8JeE9hbTkLBKQCRmZXnfg9+142rimHOZyZcCffsPEXSG3jsfnUpIZ0e+5WIlyDrkKdTEhckXp/P+NGbc7IYDUNaX2tqgA0sdRRT4azfPoWRFhhnSY7SFMHrPJYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qFKdDGdY; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qFKdDGdY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: from kunlun.arch.suse.cz (unknown [10.100.128.76])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 6CCC221903;
+	Fri, 13 Jun 2025 09:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1749807914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=T93nWSOKpYiphFrBz44VoY1CDwFHzHVBbfxOK7WrGD8=;
+	b=qFKdDGdYX5B28I+0jtLc5HCsvM+qSeyGlElKlhBWhyLJH0EpUOpF21cfLB2orS2PwUB5lh
+	hThOfsAwbaeJcWH3XHqiQfLtJsZ3CtyF7GujLIO/yQzDEvXjTTnq3uVDvWBvaCIivuLYC/
+	YQ2ZqKFDqbVv5IZnY+6VIRIaegZ1Nls=
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1749807914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=T93nWSOKpYiphFrBz44VoY1CDwFHzHVBbfxOK7WrGD8=;
+	b=qFKdDGdYX5B28I+0jtLc5HCsvM+qSeyGlElKlhBWhyLJH0EpUOpF21cfLB2orS2PwUB5lh
+	hThOfsAwbaeJcWH3XHqiQfLtJsZ3CtyF7GujLIO/yQzDEvXjTTnq3uVDvWBvaCIivuLYC/
+	YQ2ZqKFDqbVv5IZnY+6VIRIaegZ1Nls=
+From: Anthony Iliopoulos <ailiop@suse.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] NFS: struct nfs_server minor cleanups
+Date: Fri, 13 Jun 2025 11:44:36 +0200
+Message-ID: <20250613094439.82338-1-ailiop@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEu7GSa7HRNNVJVA@infradead.org>
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid]
+X-Spam-Level: 
 
-On Thu, Jun 12, 2025 at 10:46:01PM -0700, Christoph Hellwig wrote:
-> On Thu, Jun 12, 2025 at 12:22:42PM -0400, Jeff Layton wrote:
-> > If you're against the idea, I won't waste my time.
-> > 
-> > It would require some fairly hefty rejiggering of the receive code. The
-> > v4 part would be pretty nightmarish to work out too since you'd have to
-> > decode the compound as you receive to tell where the next op starts.
-> > 
-> > The potential for corruption with unaligned writes is also pretty
-> > nasty.
-> 
-> Maybe I'm missing an improvement to the receive buffer handling in modern
-> network hardware, but AFAIK this still would only help you to align the
-> sunrpc data buffer to page boundaries, but avoid the data copy from the
-> hardware receive buffer to the sunrpc data buffer as you still don't have
-> hardware header splitting.
+Minor cleanups of unused fields in struct nfs_server and associated code.
 
-Correct, everything that Jeff detailed is about ensuring the WRITE
-payload is received into page aligned boundary.
+Anthony Iliopoulos (3):
+  NFS: remove unused wpages field from struct nfs_server
+  NFS: remove unused time_delta field from struct nfs_server
+  NFS: remove unused pnfs_ld_data field from struct nfs_server
 
-Which in practice has proven a hard requirement for O_DIRECT in my
-testing -- but I could be hitting some bizarre driver bug in my TCP
-testbed (which sadly sits ontop of older VMware guests/drivers).
+ fs/nfs/client.c           | 2 --
+ include/linux/nfs_fs_sb.h | 3 ---
+ 2 files changed, 5 deletions(-)
 
-But if you looking at patch 5 in this series:
-https://lore.kernel.org/linux-nfs/20250610205737.63343-6-snitzer@kernel.org/
+-- 
+2.49.0
 
-I added fs/nfsd/vfs.c:is_dio_aligned(), which is basically a tweaked
-ditto of fs/btrfs/direct-io.c:check_direct_IO():
-
-static bool is_dio_aligned(const struct iov_iter *iter, loff_t offset,
-                           const u32 blocksize)
-{
-        u32 blocksize_mask;
-
-        if (!blocksize)
-                return false;
-
-        blocksize_mask = blocksize - 1;
-        if ((offset & blocksize_mask) ||
-            (iov_iter_alignment(iter) & blocksize_mask))
-                return false;
-
-        return true;
-}
-
-And fs/nfsd/vfs.c:nfsd_vfs_write() has (after my patch 5):
-
-        nvecs = xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, payload);
-        iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
-
-        if (nfsd_enable_dontcache) {
-                if (is_dio_aligned(&iter, offset, nf->nf_dio_offset_align))
-                        flags |= RWF_DIRECT;
-
-What I found is that unless SUNRPC TPC stored the WRITE payload in a
-page-aligned boundary then iov_iter_alignment() would fail.
-
-The @payload arg above, with my SUNRPC TCP testing, was always offset
-148 bytes into the first page of the pages allocated for xdr_buf's
-use, which is rqstp->rq_pages, which is allocated by
-net/sunrpc/svc_xprt.c:svc_alloc_arg().
-
-> And I don't even know what this is supposed to buy the nfs server.
-> Direct I/O writes need to have the proper file offset alignment, but as
-> far as Linux is concerned we don't require any memory alignment.  Most
-> storage hardware has requirements for the memory alignment that we pass
-> on, but typically that's just a dword (4-byte) alignment, which matches
-> the alignment sunrpc wants for most XDR data structures anyway.  So what
-> additional alignment is actually needed for support direct I/O writes
-> assuming that is the goal?  (I might also simply misunderstand the
-> problem).
-
-THIS... this is the very precise question/detail I discussed with
-Hammerspace's CEO David Flynn when discussing Linux's O_DIRECT
-support.  David shares your understanding and confusion.  And all I
-could tell him is that in practice I always page-aligned my data
-buffers used to issue O_DIRECT.  And that in this instance if I don't
-then O_DIRECT doesn't work (if I commented out the iov_iter_alignment
-check in is_dio_aligned above).
-
-But is that simply due to xdr_buf_to_bvec()'s use of bvec_set_virt()
-for xdr_buf "head" page (first page of rqstp->rg_pages)?  Whereas you
-can see xdr_buf_to_bvec() uses bvec_set_page() to add each of the
-other pages that immediately follow the first "head" page.
-
-All said, if Linux can/should happily allow non-page-aligned DIO (and
-we only need to worry about the on-disk DIO alignment requirements)
-that'd be wonderful.
-
-Then its just a matter of finding where that is broken...
-
-Happy to dig into this further if you might nudge me in the right
-direction.
-
-Thanks,
-Mike
 
