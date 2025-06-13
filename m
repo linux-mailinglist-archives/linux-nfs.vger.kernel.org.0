@@ -1,67 +1,67 @@
-Return-Path: <linux-nfs+bounces-12433-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12434-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2CF9AD8856
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 11:47:44 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7456AD885A
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 11:47:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9619A3B2D35
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 09:46:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 573DB7A5185
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 09:46:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 634D12D5C6E;
-	Fri, 13 Jun 2025 09:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1FE02E175E;
+	Fri, 13 Jun 2025 09:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mLhjGxl1";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mLhjGxl1"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="qbh3Zxmt";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="lNMnjAG+"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32062D8DD9
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 09:45:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1B92E174F
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 09:45:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749807933; cv=none; b=oBp9FaiON68MD8GAOELcWrayXpRJuIRmNbkXTkTUGzRrzkIzkwpA+pgz6CQvaVy4chF2wCY/2deDnsdHolP83R1GXs1MNKXrQ5oihXQFpuoDFGWTI72YEktrJmZviMmwL7tP4B9coVYQAVXYz2GBCYXzd3k2YYyN1Tiuzqa8RCw=
+	t=1749807939; cv=none; b=NkdLLZa+iRXcbA791jnyBjLaQ+5ReyWasPa3PVzuhEA5Vg2Q7o/UI8jwye7LBEoSzxS4Hfskf4xPcV0jH0/AicFwRJeugPEaApYMvIjx6yiTILmDaYIinfeGnstGT0rdgsRXwuCCl9soWbdiOMtBCUB2YRJAxFmmh7hcaYkEdSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749807933; c=relaxed/simple;
-	bh=tiHC4hXhhGqXwrTYPGlnD+6kE+5HjwnwPHJWuAhW/sc=;
+	s=arc-20240116; t=1749807939; c=relaxed/simple;
+	bh=mDjMrcn2K0VCMZNL5P/VXX08pCzSzgHUbgzrg+UVUGU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fPK2ORb1SreEj19gQQBQnfaODTE1M5P+XpXuVZz69yN2tmvVEETw5XLrJpQVK2ggRjFDlqXKTDYyGezi4TBt9ruktH/39OYEBkcuuCQr4KUKCRtGmRTXWIAjGULrL7nnoYD44sJB0LjXAiztG3Grw5/NRp7TJqt2Qp2wF96vIjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mLhjGxl1; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mLhjGxl1; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=PCyRkrHBgrbiRrVAVXjJQBYtlPl2sYwMxTGPLsKwBzpsBGOHXh3kgYQeeS1/5kNOIG88KD2rYjFrYRbD0vZpXlYo6eOYBDtutlXDgCOPZSmzeu0PYqVFyKfMbxc+/A0QcOaN1b2yqc//ruSP0gTGxaVh4lPZua6nJ+RW1vA1hy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=qbh3Zxmt; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=lNMnjAG+; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Received: from kunlun.arch.suse.cz (unknown [10.100.128.76])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 47C1721903;
-	Fri, 13 Jun 2025 09:45:21 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTP id 4C31921941;
+	Fri, 13 Jun 2025 09:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1749807921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1749807925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u9VC+qbe+6tH+Kdye+fXQwUyC/AVihvNLEACk8mi2fM=;
-	b=mLhjGxl14GKjO0cHbHPCjL32qdjh67RHxnnebomM5CwVwAXK0U1oMWbRsCgP1RTtzEL5fO
-	jI9EcwT/DjK7VOAfbw72gMP1iC4BaKsAWmldu7QtXNFmv1zeeN0dJKZcgEAgNxOEAVH/8s
-	iwjMBfGE7/ldrc3vAnabsfaPYFzTK4c=
+	bh=f21kAadH4aFWoIi8fwdLDuBtbgfLrQgqhrLsstTmL1Y=;
+	b=qbh3ZxmtFl+rh5+ZUrWhlexaz1ocgwOwmEntHUbViG21+HCRPFf2ebCEPZDLq+QkeLVzt5
+	xR0H6DgXlbJMgXTYo4ExA1FN0FmJz/14Z+kXBOl8s2dm17eA5JqgR2+NX8HogZAaXiM5sg
+	ej5hrtRW2wqHPqSJasnWymZc/dHE9IE=
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1749807921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1749807924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u9VC+qbe+6tH+Kdye+fXQwUyC/AVihvNLEACk8mi2fM=;
-	b=mLhjGxl14GKjO0cHbHPCjL32qdjh67RHxnnebomM5CwVwAXK0U1oMWbRsCgP1RTtzEL5fO
-	jI9EcwT/DjK7VOAfbw72gMP1iC4BaKsAWmldu7QtXNFmv1zeeN0dJKZcgEAgNxOEAVH/8s
-	iwjMBfGE7/ldrc3vAnabsfaPYFzTK4c=
+	bh=f21kAadH4aFWoIi8fwdLDuBtbgfLrQgqhrLsstTmL1Y=;
+	b=lNMnjAG+Q/kIWqRNHbnhFZcj9GEOQKMzPYGQEonEAwzMV7rZkTz9d0PFbN8O0Qn85JTI0S
+	i97v1GtqQOo1e/Hb+5hWLInDMiGqDY3/Dopt0yC3sXJP3gaLKreQj3iJ8qGHKxvMHFCcU+
+	kcnYRepJYor+yxo273CjrEvtmrDyTkw=
 From: Anthony Iliopoulos <ailiop@suse.com>
 To: Trond Myklebust <trondmy@kernel.org>,
 	Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 2/3] NFS: remove unused time_delta field from struct nfs_server
-Date: Fri, 13 Jun 2025 11:44:38 +0200
-Message-ID: <20250613094439.82338-3-ailiop@suse.com>
+Subject: [PATCH 3/3] NFS: remove unused pnfs_ld_data field from struct nfs_server
+Date: Fri, 13 Jun 2025 11:44:39 +0200
+Message-ID: <20250613094439.82338-4-ailiop@suse.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250613094439.82338-1-ailiop@suse.com>
 References: <20250613094439.82338-1-ailiop@suse.com>
@@ -73,7 +73,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+	BAYES_HAM(-3.00)[99.99%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
@@ -94,40 +94,27 @@ X-Spam-Level:
 X-Spam-Flag: NO
 X-Spam-Score: -2.80
 
-The last code that was using this was removed via commit ca0daa277aca
-("NFS: Cache aggressively when file is open for writing") which was
-merged in v4.8-rc1, so it can be removed completely.
+The last code that was using this was removed via commit 20d655d6197d
+("pnfs/blocklayout: use the device id cache") which was merged in
+v3.18-rc1, so it can be removed completely.
 
 Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
 ---
- fs/nfs/client.c           | 1 -
  include/linux/nfs_fs_sb.h | 1 -
- 2 files changed, 2 deletions(-)
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 23dafc590476..47258dc3af70 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -830,7 +830,6 @@ static void nfs_server_set_fsinfo(struct nfs_server *server,
- 
- 	server->maxfilesize = fsinfo->maxfilesize;
- 
--	server->time_delta = fsinfo->time_delta;
- 	server->change_attr_type = fsinfo->change_attr_type;
- 
- 	server->clone_blksize = fsinfo->clone_blksize;
 diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-index 1aa89b41afd8..05c1aa5fc4e4 100644
+index 05c1aa5fc4e4..128456820b6e 100644
 --- a/include/linux/nfs_fs_sb.h
 +++ b/include/linux/nfs_fs_sb.h
-@@ -202,7 +202,6 @@ struct nfs_server {
- 	struct nfs_fsid		fsid;
- 	int			s_sysfs_id;	/* sysfs dentry index */
- 	__u64			maxfilesize;	/* maximum file size */
--	struct timespec64	time_delta;	/* smallest time granularity */
- 	unsigned long		mount_time;	/* when this fs was mounted */
- 	struct super_block	*super;		/* VFS super block */
- 	dev_t			s_dev;		/* superblock dev numbers */
+@@ -246,7 +246,6 @@ struct nfs_server {
+ 						   filesystem */
+ 	struct pnfs_layoutdriver_type  *pnfs_curr_ld; /* Active layout driver */
+ 	struct rpc_wait_queue	roc_rpcwaitq;
+-	void			*pnfs_ld_data;	/* per mount point data */
+ 
+ 	/* the following fields are protected by nfs_client->cl_lock */
+ 	struct rb_root		state_owners;
 -- 
 2.49.0
 
