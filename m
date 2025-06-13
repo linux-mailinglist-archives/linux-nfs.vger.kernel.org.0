@@ -1,62 +1,66 @@
-Return-Path: <linux-nfs+bounces-12438-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12439-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C2B1AD8C2C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 14:32:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F20EDAD8CAB
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 15:02:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93C4F3B4DA1
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 12:32:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A86B21E3D67
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 13:02:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8490610F9;
-	Fri, 13 Jun 2025 12:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2990560B8A;
+	Fri, 13 Jun 2025 13:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SH+R4TPh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uV4JHpSk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5BD10E9
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 12:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A8763A9;
+	Fri, 13 Jun 2025 13:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749817969; cv=none; b=JmCre8rD784v1VGuQDUUoL1TsRaDQyy0DmScMB9HY7KKI+pA8xjgUGXks2emVZDw+YH0QRNVNOkRD6vH+4r2q9n5l31hab1eoHm5irCGC6+2aCoqxne9AqDQwgGnzhRaSwWgec99DkUgoEwA5q0wP6ewOk2RaeIL63M6EFx9Ffs=
+	t=1749819746; cv=none; b=l3lKFzSjJi8ey8UO8QVZYNRleQxvhSDNtOBCCXgtd9BV0Zc8bIs+zNEBaqMcUNV2mEkqw9VHLWscsu6H55aQX0jIrvkr84/xl8fEBsmZTiF6A92PAryDkzASoNgwiiy6P8Fib+4XfT35lq1A8er4SOJEAQnbHXbaysEtWCUWGEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749817969; c=relaxed/simple;
-	bh=Y7stRnCMPkgguDzOdN652geU6LWdLukinjicF/QbR4Q=;
+	s=arc-20240116; t=1749819746; c=relaxed/simple;
+	bh=7PN5k/AFgWAvQWxG5z8DzkDiPOVq1Fl4+DiqkGFpucE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VsAy1BBXSul/ogda+CtN5sjrTr/YYEIinsmLRRsuZkPFEbiMQRZv/X3WeFBMmHy9hX4Mh5k3X9DXzskvv1tD/YB6Ld/E4HfSA4F1jplCWzOH/Is6CspqP5Za+xgT/bUxiOpiHOmi9FxAYBSvUtHsDxXZY6XpX9UARttLG6M2iY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SH+R4TPh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D5ECC4CEE3;
-	Fri, 13 Jun 2025 12:32:48 +0000 (UTC)
+	 Content-Type:MIME-Version; b=fWrVFMotgP7Hl2t+9FyChdC9JEEZVhxuh76DTKs5EpEF7OuyDEYTpmp34H6QioawP9CDHVtb/MhGdHnzODy6FwVek8qsoaEsOrzMBtFGcqTXaQb+7YK81mPFiR5rBZGZ/FM7+dYjCojxeDVNN+rsxDZWslJ4xCUMZEF3UqNAvkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uV4JHpSk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0404DC4CEE3;
+	Fri, 13 Jun 2025 13:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749817968;
-	bh=Y7stRnCMPkgguDzOdN652geU6LWdLukinjicF/QbR4Q=;
+	s=k20201202; t=1749819745;
+	bh=7PN5k/AFgWAvQWxG5z8DzkDiPOVq1Fl4+DiqkGFpucE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SH+R4TPhCVbMqH0cMoj1BCmYuHqpSfOGNFjaqNCWMb0N4Hgn7tBrqxnL49mCCHTBJ
-	 Rj0TdPySYIMi2lSTEoI3TVUgD7q3ONuPYqThRb5xhrofobaT4rL5k+cPAieRpjOkis
-	 sMU3fY1crONdXF6nSxWtG8K56XKOf3xXXcYvZ4D9D+pF0hjZ/YpVopzfzGhCFUpkA7
-	 Qe+HUq9v4kXvehORXWbjzXaBM7vFF3tzKWj+mpC4grTQ0G9DN5+3MVtAvc0ZkLwsLo
-	 8sfjwXfIplAEzsLtXDhpBeC4Am7nChASOfRzhi98kFkr5tGb/RZyeQZ5qXorHwmByf
-	 S/tLY45yFi7MQ==
-Message-ID: <d1bd6ba1c4a6e603fd47eec0a2e1c071abeaa2ba.camel@kernel.org>
-Subject: Re: unable to run NFSD in container if "options sunrpc
- pool_mode=pernode"
+	b=uV4JHpSkp+O0rpQSPW7BeXhNWqi8sAZ767BwEjQFaD6jligPeo+3wdF+gxRaIROvK
+	 O2BIezAIGYa4hfa7YHhSlPpfMGxH/auAXBIrMb3wjAtV9L82zCuSexezS02quWEPcX
+	 CydkSNXrj4CUvP3bE3oDMZId7ez3xlWadcQsjf7plNw5fDqCAaBn/4o7yC3dFbiX6G
+	 vRe88Tc675kSN/BAy5OrKPcoDS1rrxwQoML8Iq/C5CPak0wShRRGiLcZl9Kq2ZP5C/
+	 v/VkUfMv2u9aKGuWBvNa/rS70wD0Lsm+kcxL9dF4yCFa6ZXWVX0bUphDATJYNVQDsZ
+	 XgTrMA9WDMKnA==
+Message-ID: <826d22214f01fc453a7e38953e2b8893073fcd46.camel@kernel.org>
+Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
+ 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
 From: Jeff Layton <jlayton@kernel.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: steved@redhat.com, Chuck Lever <chuck.lever@oracle.com>, NeilBrown
-	 <neil@brown.name>, linux-nfs@vger.kernel.org
-Date: Fri, 13 Jun 2025 08:32:47 -0400
-In-Reply-To: <aDHYtTJxeAr5FDRK@kernel.org>
-References: <aDC-ftnzhJAlwqwh@kernel.org>
-	 <f93f70ce429f2dd6d11f6900808fc4ab737f765f.camel@kernel.org>
-	 <aDD0VxdSk0O6LdFG@kernel.org>
-	 <6bb9e9cce27e2a222bf55e272d690aab8f0eef13.camel@kernel.org>
-	 <aDEAJzELBTH0CqHI@kernel.org> <aDFCuXj2JBQuv-Yd@kernel.org>
-	 <73c6caaa51804da9ae850ee65b6ab51640706d74.camel@kernel.org>
-	 <aDHYtTJxeAr5FDRK@kernel.org>
+To: Mike Snitzer <snitzer@kernel.org>, Christoph Hellwig <hch@infradead.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, 
+	david.flynn@hammerspace.com
+Date: Fri, 13 Jun 2025 09:02:23 -0400
+In-Reply-To: <aEvuJP7_xhVk5R4S@kernel.org>
+References: <20250610205737.63343-1-snitzer@kernel.org>
+	 <20250610205737.63343-2-snitzer@kernel.org>
+	 <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
+	 <aEnWhlXjzOmRfCJf@kernel.org>
+	 <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
+	 <aEn2-mYA3VDv-vB8@kernel.org>
+	 <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
+	 <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
+	 <f201c16677525288597becfd904d873931092cea.camel@kernel.org>
+	 <aEu7GSa7HRNNVJVA@infradead.org> <aEvuJP7_xhVk5R4S@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,111 +145,137 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-05-24 at 10:33 -0400, Mike Snitzer wrote:
-> On Sat, May 24, 2025 at 08:05:19AM -0400, Jeff Layton wrote:
-> > On Fri, 2025-05-23 at 23:53 -0400, Mike Snitzer wrote:
-> > > On Fri, May 23, 2025 at 07:09:27PM -0400, Mike Snitzer wrote:
-> > > > On Fri, May 23, 2025 at 06:40:45PM -0400, Jeff Layton wrote:
-> > > > > On Fri, 2025-05-23 at 18:19 -0400, Mike Snitzer wrote:
-> > > > > > On Fri, May 23, 2025 at 02:40:17PM -0400, Jeff Layton wrote:
-> > > > > > > On Fri, 2025-05-23 at 14:29 -0400, Mike Snitzer wrote:
-> > > > > > > > I don't know if $SUBJECT ever worked... but with latest 6.1=
-5 or
-> > > > > > > > nfsd-testing if I just use pool_mode=3Dglobal then all is f=
-ine.
-> > > > > > > >=20
-> > > > > > > > If pool_mode=3Dpernode then mounting the container's NFSv3 =
-export fails.
-> > > > > > > >=20
-> > > > > > > > I haven't started to dig into code yet but pool_mode=3Dpern=
-ode works
-> > > > > > > > perfectly fine if NFSD isn't running in a container.
-> > > > > > > >=20
-> > > > >=20
-> > > > > Oops, I went and looked and nfsd isn't running in a container on =
-these
-> > > > > boxes. There are some other containerized apps running on the box=
-, but
-> > > > > nfsd isn't running in a container.
-> > > >=20
-> > > > OK.
-> > > >=20
-> > > > > > I'm using nfs-utils-2.8.2.  I don't see any nfsd threads runnin=
-g if I
-> > > > > > use "options sunrpc pool_mode=3Dpernode".
-> > > > > >=20
-> > > > >=20
-> > > > > I'll have a look soon, but if you figure it out in the meantime, =
-let us
-> > > > > know.
-> > > >=20
-> > > > Will do.
-> > > >=20
-> > > > Just the latest info I have, with sunrpc's pool_mode=3Dpernode dd h=
-angs
-> > > > with this stack trace:
+On Fri, 2025-06-13 at 05:23 -0400, Mike Snitzer wrote:
+> On Thu, Jun 12, 2025 at 10:46:01PM -0700, Christoph Hellwig wrote:
+> > On Thu, Jun 12, 2025 at 12:22:42PM -0400, Jeff Layton wrote:
+> > > If you're against the idea, I won't waste my time.
 > > >=20
-> > > Turns out this pool_mode=3Dpernode issue is a regression caused by th=
-e
-> > > very recent nfs-utils 2.8.2 (I rebuilt EL10's nfs-utils package,
-> > > because why not upgrade to the latest!?).
+> > > It would require some fairly hefty rejiggering of the receive code. T=
+he
+> > > v4 part would be pretty nightmarish to work out too since you'd have =
+to
+> > > decode the compound as you receive to tell where the next op starts.
 > > >=20
-> > > If I use EL9.5's latest nfs-utils-2.5.4-37.el8.x86_64 then sunrpc's
-> > > pool_mode=3Dpernode works fine.
-> > >=20
-> > > And this issue doesn't have anything to do with running in a containe=
-r
-> > > (it seemed to be container related purely because I happened to be
-> > > seeing the issue with an EL9.5 container that had the EL10-based
-> > > nfs-utils 2.8.2 installed).
-> > >=20
-> > > Steved, unfortunately I'm not sure what the problem is with the newer
-> > > nfs-utils and setting "options sunrpc pool_mode=3Dpernode"
-> > >=20
+> > > The potential for corruption with unaligned writes is also pretty
+> > > nasty.
 > >=20
-> > I tried to reproduce this using fedora-41 VMs (no f42 available for
-> > virt-builder yet), but everything worked. I don't have any actual NUMA
-> > hw here though, so maybe that matters?
-> >=20
-> > Can you run this on the nfs server and send back the output? I'm
-> > wondering if this setting might not track the module option properly on
-> > that host for some reason:
-> >=20
-> >     # nfsdctl pool-mode
+> > Maybe I'm missing an improvement to the receive buffer handling in mode=
+rn
+> > network hardware, but AFAIK this still would only help you to align the
+> > sunrpc data buffer to page boundaries, but avoid the data copy from the
+> > hardware receive buffer to the sunrpc data buffer as you still don't ha=
+ve
+> > hardware header splitting.
 >=20
-> (from EL9.5 container with nfs-utils 2.8.2)
-> # nfsdctl pool-mode
-> pool-mode: pernode
-> npools: 2
+> Correct, everything that Jeff detailed is about ensuring the WRITE
+> payload is received into page aligned boundary.
 >=20
-> (on host)
-> # numactl -H
-> available: 2 nodes (0-1)
-> node 0 cpus: 0 1 2 3 4 5 6 7
-> node 0 size: 11665 MB
-> node 0 free: 9892 MB
-> node 1 cpus: 8 9 10 11 12 13 14 15
-> node 1 size: 6042 MB
-> node 1 free: 5127 MB
-> node distances:
-> node   0   1
->   0:  10  20
->   1:  20  10
+> Which in practice has proven a hard requirement for O_DIRECT in my
+> testing -- but I could be hitting some bizarre driver bug in my TCP
+> testbed (which sadly sits ontop of older VMware guests/drivers).
 >=20
-> (and yeahh I was aware the newer nfs-utils uses the netlink interface,
-> will be interesting to pin down what the issue is with
-> pool-mode=3Dpernode)
+> But if you looking at patch 5 in this series:
+> https://lore.kernel.org/linux-nfs/20250610205737.63343-6-snitzer@kernel.o=
+rg/
+>=20
+> I added fs/nfsd/vfs.c:is_dio_aligned(), which is basically a tweaked
+> ditto of fs/btrfs/direct-io.c:check_direct_IO():
+>=20
+> static bool is_dio_aligned(const struct iov_iter *iter, loff_t offset,
+>                            const u32 blocksize)
+> {
+>         u32 blocksize_mask;
+>=20
+>         if (!blocksize)
+>                 return false;
+>=20
+>         blocksize_mask =3D blocksize - 1;
+>         if ((offset & blocksize_mask) ||
+>             (iov_iter_alignment(iter) & blocksize_mask))
+>                 return false;
+>=20
+>         return true;
+> }
+>=20
+> And fs/nfsd/vfs.c:nfsd_vfs_write() has (after my patch 5):
+>=20
+>         nvecs =3D xdr_buf_to_bvec(rqstp->rq_bvec, rqstp->rq_maxpages, pay=
+load);
+>         iov_iter_bvec(&iter, ITER_SOURCE, rqstp->rq_bvec, nvecs, *cnt);
+>=20
+>         if (nfsd_enable_dontcache) {
+>                 if (is_dio_aligned(&iter, offset, nf->nf_dio_offset_align=
+))
+>                         flags |=3D RWF_DIRECT;
+>=20
+> What I found is that unless SUNRPC TPC stored the WRITE payload in a
+> page-aligned boundary then iov_iter_alignment() would fail.
+>=20
+> The @payload arg above, with my SUNRPC TCP testing, was always offset
+> 148 bytes into the first page of the pages allocated for xdr_buf's
+> use, which is rqstp->rq_pages, which is allocated by
+> net/sunrpc/svc_xprt.c:svc_alloc_arg().
+>=20
+> > And I don't even know what this is supposed to buy the nfs server.
+> > Direct I/O writes need to have the proper file offset alignment, but as
+> > far as Linux is concerned we don't require any memory alignment.  Most
+> > storage hardware has requirements for the memory alignment that we pass
+> > on, but typically that's just a dword (4-byte) alignment, which matches
+> > the alignment sunrpc wants for most XDR data structures anyway.  So wha=
+t
+> > additional alignment is actually needed for support direct I/O writes
+> > assuming that is the goal?  (I might also simply misunderstand the
+> > problem).
+>
+> THIS... this is the very precise question/detail I discussed with
+> Hammerspace's CEO David Flynn when discussing Linux's O_DIRECT
+> support.  David shares your understanding and confusion.  And all I
+> could tell him is that in practice I always page-aligned my data
+> buffers used to issue O_DIRECT.  And that in this instance if I don't
+> then O_DIRECT doesn't work (if I commented out the iov_iter_alignment
+> check in is_dio_aligned above).
+>
+> But is that simply due to xdr_buf_to_bvec()'s use of bvec_set_virt()
+> for xdr_buf "head" page (first page of rqstp->rg_pages)?  Whereas you
+> can see xdr_buf_to_bvec() uses bvec_set_page() to add each of the
+> other pages that immediately follow the first "head" page.
+>=20
+> All said, if Linux can/should happily allow non-page-aligned DIO (and
+> we only need to worry about the on-disk DIO alignment requirements)
+> that'd be wonderful.
+>=20
+> Then its just a matter of finding where that is broken...
+>=20
+> Happy to dig into this further if you might nudge me in the right
+> direction.
+>=20
 
-Hi Mike,
+This is an excellent point. If the memory alignment doesn't matter,
+then maybe it's enough to just receive the same way we do today and
+just pad out to the correct blocksize in the bvec array if the data is
+unaligned vs. the blocksize.
 
-I submitted a patch for this a couple of weeks ago:
+We still have the problem of how to do a proper RMW though to deal with
+unaligned writes. A couple of possibilities come to mind:
 
-    https://lore.kernel.org/linux-nfs/20250527-rpc-numa-v1-1-fa1d98e9a900@k=
-ernel.org/
+1. nfsd could just return nfserr_inval when a write is unaligned and
+the export is set up for DIO writes. IOW, just project the requirement
+about alignment to the client. This might be the safest option, at
+least initially. Unaligned writes are pretty uncommon. Most clients
+will probably never hit the error.
 
-Were you able to test it, and did it fix your issue?
+2. What if we added a new "rmw_iter" operation to file_operations that
+could be used for unaligned writes? XFS (for instance) could take the
+i_rwsem exclusive, do DIO reads of the end blocks into bounce pages,
+copy in the unaligned bits at the ends of the iter, do a DIO write and
+release the lock. It'll be slow as hell, but it wouldn't be racy.
 
-Thanks,
+Mike, would you be amenable to option #1, at least initially? If we can
+come up with a way to do unaligned writes safely, we could relax the
+restriction later.
+
+I'm only half serious about rmw_iter, but it does seem like that could
+work.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
