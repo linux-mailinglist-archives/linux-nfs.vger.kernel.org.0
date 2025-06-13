@@ -1,94 +1,133 @@
-Return-Path: <linux-nfs+bounces-12403-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12404-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25CCFAD80B2
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 03:58:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 044D3AD80BF
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 04:03:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 28007189961E
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 01:58:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96F581E1C93
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 02:03:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 922E41E3DED;
-	Fri, 13 Jun 2025 01:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AC771A01B9;
+	Fri, 13 Jun 2025 02:03:36 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9F51C84AD;
-	Fri, 13 Jun 2025 01:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D29610C
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 02:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749779894; cv=none; b=oaXjOROMNOsJD+P+lL8TVtxuahQuAloaSBHg01URZA8g3LekHt6dYyD8IxM8xHjeYwbmW4ag8rhTo4EoZ/Cdk9d5swSLr5KIN/e74XwlFYxj2yr2jAfqiPBsc95PHXX0FWQ48Bj5OY2+dhICuK0Agnt1nMODHa95QlEvVRDap4Q=
+	t=1749780216; cv=none; b=g9IP84F+uv3CRnKplxmFNXb9rVzS0Y74iwRTVB5h0SEjlj+a1dPAcNl5Si35s3+KfQK4lqePAMuNEKhcnwimp36B3gfIa/xsYF694OtkTLOP2cfj5E9HLy7bBhpcbx+NM2tNf63Uwku+ni65tTNpysIQDMPUa1Fp+A77cOUUZ6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749779894; c=relaxed/simple;
-	bh=f8QMY8mB0N1LrAKGUrjE24/b/zE5GWubtfdOBpiexTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rmqEaFtTa2nrm1HIid8BF1Y41feF6KsJiah4+zDbzTVH/U9PsUOutzxS3t37/LS6BHszj8XF3kA5aprMLGmScs3pNIAqc0K2rmPcQkBxeUVbPCHlf/HRyxLR+av4IUJyL34kDSj6AIKDJXxqihshtBCE+zGd2NTndAJnZ948mu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0384CC089D;
-	Fri, 13 Jun 2025 01:58:03 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 2F5EB20025;
-	Fri, 13 Jun 2025 01:58:02 +0000 (UTC)
-Date: Thu, 12 Jun 2025 21:58:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, linux-nfs@vger.kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, NeilBrown <neil@brown.name>, Jeff Layton
- <jlayton@kernel.org>
-Subject: Unused trace events in nfs and nfsd
-Message-ID: <20250612215801.2c4c0ff8@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749780216; c=relaxed/simple;
+	bh=P8GnrATqpN12Ly5GXj5MudvkE7trzuwxunxhtZHaMGs=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=C4jtJkKDvelydw6co5aihfedXubM7+OXY4EMqP0gEAcFfw1PkB6I+wJ7++/EXrtNzej/drAEAXVZTRFP3RSEDkW2ih2sPoJmo3q8iu/pZZ0n99itbl1W43dbDGy/WuE7bwwu/l6znw5XdtTViNrnvDaxerQ/UWNq4+2SshYvrkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPtlL-009j3I-7T;
+	Fri, 13 Jun 2025 02:03:23 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: x719qad1fpmmsad68t94rj1wrs8aayhp
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2F5EB20025
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Ztyoxj3+BWsPrNZnq+hEv3EPGmd3HT/Y=
-X-HE-Tag: 1749779882-397026
-X-HE-Meta: U2FsdGVkX18ba4CfpSNkMDnfUmhGv2rUl4sBX6UVhqnssSHcEzMyJ25jDfRIJTZvGjJNFhd+cUm9JMDGrOckC/ZF15SS2AHFg4oBViepJ/lGowxZWJF4X4Kv+dqH6lnuJZyguknHD44xurRgmgk7CE4bxzg3RmakM8ZRPIIDhQ0cbLFbg2iqNLjLzZ0zJoZOe5dsfybX6fXnJOmxPHppO6iQOUejOqZgQQupavrqaiC4LiyhIELkzVJfISRUNLp8mWTKrgC/p4Ewn89VfcymE9PjrS/kcZ1CrOTkr0jp3pl4iC3t/flBaZge0HM+2rQyxq7Y9TGmUX8/B4+tg66OBfc+dtMpHIfQcVBXLPvrkTLlYLDChiM4/oFuTeuhf2zUWlbKvMXLzvivYTlEkiIlGA==
+From: "NeilBrown" <neil@brown.name>
+To: "Chuck Lever" <cel@kernel.org>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Christoph Hellwig" <hch@infradead.org>
+Subject: Re: [RFC PATCH] NFSD: Use vfs_iocb_iter_read()
+In-reply-to: <20250613003653.532114-1-cel@kernel.org>
+References: <20250613003653.532114-1-cel@kernel.org>
+Date: Fri, 13 Jun 2025 12:03:22 +1000
+Message-id: <174978020221.608730.15605514488447335701@noble.neil.brown.name>
 
-I have code that will trigger a warning if a trace event is defined but
-not used[1]. It gives a list of unused events. Here's what I have in nfs
-and nfsd:
+On Fri, 13 Jun 2025, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Refactor: Enable the use of RWF_ flags to control individual I/O
+> operations.
 
-warning: tracepoint 'nfs4_renew' is unused.
-warning: tracepoint 'nfs4_rename' is unused.
-warning: tracepoint 'nfsd_file_unhash_and_queue' is unused.
-warning: tracepoint 'nfsd_file_lru_add_disposed' is unused.
-warning: tracepoint 'nfsd_file_lru_del_disposed' is unused.
-warning: tracepoint 'nfsd_file_gc_recent' is unused.
-warning: tracepoint 'nfsd_ctl_maxconn' is unused.
+RWF_ flags such as .... ???
 
-nfs4_renew looks to never have been used.
+I'm guessing RWF_DIRECT and maybe RWF_NOWAIT based on the earlier
+conversation.  Might be useful to provide this as explicit motivation.=20
 
-trace_nfs4_rename() was removed by 33912be816d9 ("nfs: remove
-synchronous rename code") but did not remove the event.
+But seeing they will be passed to kiocb_set_rw_flags(), shouldn't we be
+talking about the IOCB_ versions of the flags?  The only caller of
+kiocb_set_rw_flags() I can find which doesn't pass zero is aio_prep_rw()
+and it uses the IOCB_ versions.
 
-trace_nfsd_file_unhash_and_queue() was removed by ac3a2585f01 ("nfsd:
-rework refcounting in filecache")
+And should we be changing the vfs_iter_write() to vfs_iocb_iter_write()
+too, just for consistency?
 
-Events nfsd_file_lru_add_disposed and nfsd_file_lru_del_disposed were
-added by 4a0e73e635e3 ("NFSD: Leave open files out of the filecache
-LRU") but they were never used.
+>=20
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-Event nfsd_file_gc_recent was added by 64912122a4f8 ("nfsd: filecache:
-introduce NFSD_FILE_RECENT") but never used.
+Reviewed-by: NeilBrown <neil@brown.name>
 
-trace_nfsd_ctl_maxconn() was removed by a4b853f183a1 ("sunrpc: remove
-all connection limit configuration") but did not remove the event.
+3 more callers to go and vfs_iter_read() could be discarded.
 
--- Steve
+NeilBrown
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
+
+> ---
+>  fs/nfsd/vfs.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index cd689df2ca5d..f20bacd9b224 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1086,10 +1086,18 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struc=
+t svc_fh *fhp,
+>  {
+>  	unsigned long v, total;
+>  	struct iov_iter iter;
+> -	loff_t ppos =3D offset;
+> +	struct kiocb kiocb;
+>  	ssize_t host_err;
+>  	size_t len;
+> =20
+> +	init_sync_kiocb(&kiocb, file);
+> +	host_err =3D kiocb_set_rw_flags(&kiocb, 0, READ);
+> +	if (host_err) {
+> +		*count =3D 0;
+> +		goto out;
+> +	}
+> +	kiocb.ki_pos =3D offset;
+> +
+>  	v =3D 0;
+>  	total =3D *count;
+>  	while (total) {
+> @@ -1104,7 +1112,8 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+> =20
+>  	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+>  	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
+> -	host_err =3D vfs_iter_read(file, &iter, &ppos, 0);
+> +	host_err =3D vfs_iocb_iter_read(file, &kiocb, &iter);
+> +out:
+>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+>  }
+> =20
+> --=20
+> 2.49.0
+>=20
+>=20
+
 
