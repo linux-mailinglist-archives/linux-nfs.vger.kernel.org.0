@@ -1,58 +1,56 @@
-Return-Path: <linux-nfs+bounces-12461-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12462-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90789AD96B9
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 22:59:34 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ABE0AD96C1
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 23:01:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E663F3BD4CA
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 20:59:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 150D6189D9B6
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 21:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B497824BD1F;
-	Fri, 13 Jun 2025 20:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E982A2367D5;
+	Fri, 13 Jun 2025 21:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5SmYw/a"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGk8VDTS"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF6A23D2A4
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 20:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37AC1A3160
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 21:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848369; cv=none; b=gK1AKTbhXg2qwwLjZ+UP+u9geYdoVMhT40B98/59HIps26Lx0mi7nhdXpIsX9xOly/JxFu25WmxIsuT053wnwM98nCkza1baH4KvF1PkrC/L7OkNpND+KzMPotQdGZ1+QaXawzkvtcjogUV08XfRHZ+8pxexdZ4UsQsnDYR/9/0=
+	t=1749848468; cv=none; b=GTiJAt8fkDHZ22LlylssXzZfUqY9suPBn2BRVviRgIdgQ2Js4H1594PCtYCVHPQlvOnUoApA74Ax/SgmsvFNlsmqjEjLyxi+FJCCBybcCYbzJ4QQaLeLvGPPEpgVdVlNZRtts3digM2cj0hdqCA3iytslnukgtc8d82fPgl7mxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848369; c=relaxed/simple;
-	bh=cp/yzt53LJ6PQudcKm0i+CYPvBF5ergQQbLWu9Xwh9A=;
+	s=arc-20240116; t=1749848468; c=relaxed/simple;
+	bh=MSyC08Bvm5ThA5GoWOWuUVYshS+ybJUreQIb0nqw9Sg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aVXh6fxUt8y05Iqvp2QFYlL7XklYnnRpnxZNf1pNFEde+bJPG7q5XFdlvCtKrxO+ufBXmm89GjFDK5D83AKz/k/qaxph+S72jG8zn5sQr01XBd3j4ecP2S3VNDKrJQywEn/a6kW2BNjCJq4OrX/Uh3gpSLQHjyX4RJRANDHx0QI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5SmYw/a; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABEBC4CEE3;
-	Fri, 13 Jun 2025 20:59:28 +0000 (UTC)
+	 Content-Type:MIME-Version; b=FfqDoejXSpsuIcgWZXf7/sAS8mv6SgF6rfnTx6/TFHS8PPbvFFXixQcfpUn+m6HXchEmqIBfhtOovBZo0KLBH0V5OwjQNsL+SCIN7EfD7kjLPHhtd/bWCobXjtJvHrCozAu23ZEnKuIfKeRa/s/p8KcdNP1fUKbUh6XA3p1AHMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGk8VDTS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F8EC4CEE3;
+	Fri, 13 Jun 2025 21:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749848369;
-	bh=cp/yzt53LJ6PQudcKm0i+CYPvBF5ergQQbLWu9Xwh9A=;
+	s=k20201202; t=1749848468;
+	bh=MSyC08Bvm5ThA5GoWOWuUVYshS+ybJUreQIb0nqw9Sg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Y5SmYw/aZMf+1741LGGqcCQMHgsyIxSIlhCQMn9ERHWRJTu/S7rHFTB0ItDlz7mJX
-	 x+EL3kawN5OtDbwppVc+UP6ZPYHqhG443Qp1ZW0/zzFHa0qQE0cCL+kCCgbkkiq1Lq
-	 meNrX7bjXpKOjfvP7u6vSWRYD86QWtEv1IdW1t1sesFiY7JRR1/7F31oG+oXe6jCpB
-	 IWqZDQG31KO1f+KaU2FoMSA+9Qifz8Dd6ZUMu9quwzHRFb+RA4DlLnz3ndGBA3y7r8
-	 Rs7/yutUf2diCe3RWVMqdhSxZzy2G5My/fCJGATVeHsN3iX3yYdZ4etA9sY2eN4gaZ
-	 nHBHbm5viiSYQ==
-Message-ID: <b8d0351930b9327cb8240f269e4b1272c07816b4.camel@kernel.org>
-Subject: Re: [PATCH v1 1/5] NFSD: Remove definition for
- trace_nfsd_file_unhash_and_queue
+	b=dGk8VDTSK1xbdqWEOcCDxueGXLJP6ewc22XAyCSITs0QDMtiotSO/n4NpfJqeIRi/
+	 u1EQaJcgVuMS/EoY+weUJ6k1snoVxA19Nifru6B7erKDBZ7BmIAUzbRlgzlbQOtBIT
+	 2b2FAUB3R9Ow4mrmiWyt8mveFLawg9FktXb0l1M36t5A/vJJ5I/QYrzU7rsFZZufcc
+	 RAI7g45X/dW9ZQvnfUMA4ZPoQpVJWRz//Jx1BePBt/btcj2qjRoalwnfogpKq8iSSv
+	 TEoJX5ILlBasBGCzljFGroWzYfenEyi8RexUSk6N8sbJGdbNU6qHvDemgFU1w7Qvqq
+	 CLgA6HxdsdjJQ==
+Message-ID: <182c1f7de5a3d8e32db5fca9656f6a198c0f7806.camel@kernel.org>
+Subject: Re: [RFC PATCH v2 0/2] Make NFSD use the vfs_iocb_iter APIs
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, NeilBrown <neil@brown.name>, Olga
  Kornievskaia <okorniev@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, Tom
  Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, Steven
- Rostedt <rostedt@goodmis.org>
-Date: Fri, 13 Jun 2025 16:59:27 -0400
-In-Reply-To: <20250613200747.7110-1-cel@kernel.org>
-References: <20250613200747.7110-1-cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Date: Fri, 13 Jun 2025 17:01:06 -0400
+In-Reply-To: <20250613200847.7155-1-cel@kernel.org>
+References: <20250613200847.7155-1-cel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,32 +135,32 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-06-13 at 16:07 -0400, Chuck Lever wrote:
+On Fri, 2025-06-13 at 16:08 -0400, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> trace_nfsd_file_unhash_and_queue() was removed by commit ac3a2585f01
-> ("nfsd: rework refcounting in filecache").
+> Mike has expressed interest in making NFSD perform direct, uncached,
+> or asynchronous I/O, independent of how the target file might have
+> been opened by the file cache. To do that, the idea is to pass in
+> RWF_ flags during each VFS read and write.
 >=20
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/trace.h | 1 -
->  1 file changed, 1 deletion(-)
+> However, Christoph suggested APIs that already exist which
+> streamline the I/O operation a bit and expose the per-I/O flag
+> setting directly. The suggestion looks to me like a straightforward
+> and sensible general clean up of these code paths.
 >=20
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index b244c6b3e905..93875c7ba358 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -1108,7 +1108,6 @@ DEFINE_NFSD_FILE_EVENT(nfsd_file_free);
->  DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash);
->  DEFINE_NFSD_FILE_EVENT(nfsd_file_put);
->  DEFINE_NFSD_FILE_EVENT(nfsd_file_closing);
-> -DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash_and_queue);
-> =20
->  TRACE_EVENT(nfsd_file_alloc,
->  	TP_PROTO(
+> This series refactors nfsd_iter_read() and nfsd_vfs_write() to use
+> those APIs instead of vfs_iter_read() and vfs_iter_write(),
+> respectively, as a first baby step down this path. No behavior
+> change is expected.
+>=20
+> Chuck Lever (2):
+>   NFSD: Use vfs_iocb_iter_read()
+>   NFSD: Use vfs_iocb_iter_write()
+>=20
+>  fs/nfsd/vfs.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
 
-You can add this to all 5:
+Looks like a straightforward change to me. Why the RFC?=20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
