@@ -1,101 +1,84 @@
-Return-Path: <linux-nfs+bounces-12409-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12410-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A82AAAD82B0
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 07:46:06 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3702EAD83AA
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 09:08:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D8AB3B680A
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 05:45:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEA023B917A
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 07:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B937DF49;
-	Fri, 13 Jun 2025 05:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nHpDQdSK"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AFC6255248;
+	Fri, 13 Jun 2025 07:08:29 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10B92F4311;
-	Fri, 13 Jun 2025 05:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759271632DD;
+	Fri, 13 Jun 2025 07:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749793563; cv=none; b=q+S2jxZ/Y7OMrAOHsdXy6ZFaBQI7GcJVMm9GfpYU1Jwv4r1OpyTeeRs1PgwwcqZnbmkc+GByGrJ24fxK4EHxBTaPKV9uai5p/oiPjy8GzrMuOWXjrgVuV8NwAgRvnLOJ2YK6atNiixminJDvZWSnR5kIDPvfuBzbDD0wMyvqOQ4=
+	t=1749798509; cv=none; b=bpKNFuGdpm4txVDCharWdQOMjLuzfjdq5VlJ+t69PnMM/HAv9h6v3cw1PeFpxdEkitAOn1Y36K+xL+SZuzq+0O+aJsC+JmMfcfQmlfP1mMZWfMzyz6cZlbBNcflcLvG3qlmUgBbf6t4oL84pV9jTFLnXv5ZE4wmHXD4uXua0WFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749793563; c=relaxed/simple;
-	bh=4fqXpc97924wJoXA7QsMhZJWFlxSbs6Egk6EObeBVt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z2YtYLswllJP5yngJUlVXF7T8RjIPeRH5WDhyHvENFJTG8j7YIMWy4Aw4WinNwUp3hq4E5X8KnTw56BTP6P3wEy6wrWBRbLFuuoBSfGmNdE0F0pmfsal+YT2ocTQT91c53liNLtuFvA21ZLCNWLk0s0TkRPvBNJw6AzpkIUPPio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nHpDQdSK; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sOp91Em8OeLhPgudK3PqHU28W38RB+5KU7SLvqrKdFQ=; b=nHpDQdSKnTK+Jo9Sf0vA/zABiE
-	bThJyvuNBM0GCoP9k67NguGuJr5gNqAekPeRfejrm7GGh6cGvnW8lXTIdrlPP+mVz4gg7OJud148A
-	W24f3QGC2PHcjk0JAb6DmHoOqX/9Dfj/4CDM6IcjyIITWbkyKIAt+WhS1yKDKg7bLgxeh3M3m6s/7
-	t2f3dQBGsYUTw9KGM+MNY3M3Z0X1GW2KKxnN0bSuqltAPgB6disdhmxuwEzfyIC1lerl3FtxbfXdt
-	+xiKefUSpYG95mIWUXWOy1aX/EX1CGOEU7T1DNvsOUwDm4yppKoRAiYrv3d0V6GunAYr8NoKNtvm3
-	ppgLKi+Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPxEn-0000000FQFG-0uri;
-	Fri, 13 Jun 2025 05:46:01 +0000
-Date: Thu, 12 Jun 2025 22:46:01 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>,
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: need SUNRPC TCP to receive into aligned pages [was: Re: [PATCH
- 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE for all IO]
-Message-ID: <aEu7GSa7HRNNVJVA@infradead.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
- <aEnWhlXjzOmRfCJf@kernel.org>
- <7c48e17c4b575375069a4bd965f346499e66ac3a.camel@kernel.org>
- <aEn2-mYA3VDv-vB8@kernel.org>
- <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
- <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
- <f201c16677525288597becfd904d873931092cea.camel@kernel.org>
+	s=arc-20240116; t=1749798509; c=relaxed/simple;
+	bh=D0lbE0R+FUdn+WoBoKcNI9HgS1w92fraWDayJ3fxKs0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=F4hxhdbRZUjY0Xu4292DTRJumzs2r81UEzVzJIA0U/9n+GUfAF1N/44T9Ricrxu1yFnQ6qKrPpcNRAymO+OIUGWyyw6Z5YTjrRK1dYSic8GDD5H1c8AVzfpzmn3IJ2mEGO3arAORrdYJYlxu+nBT5M/egmt7MJ7A6zXRHe7mBYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uPyWN-00A9fw-3B;
+	Fri, 13 Jun 2025 07:08:15 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f201c16677525288597becfd904d873931092cea.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+From: "NeilBrown" <neil@brown.name>
+To: "Miklos Szeredi" <miklos@szeredi.hu>
+Cc: "Al Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
+ "David Howells" <dhowells@redhat.com>, "Tyler Hicks" <code@tyhicks.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>, "Kees Cook" <kees@kernel.org>,
+ "Joel Granados" <joel.granados@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <smfrench@gmail.com>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>, netfs@lists.linux.dev,
+ linux-kernel@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change old_dir and new_dir in struct renamedata
+ to dentrys
+In-reply-to:
+ <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
+References:
+ <>, <CAJfpeguiOZJ4dZU-mc0V8bwvWoJ-Q0JubYvYPpmr-f8uguF2LQ@mail.gmail.com>
+Date: Fri, 13 Jun 2025 17:08:13 +1000
+Message-id: <174979849395.608730.16231142843321576358@noble.neil.brown.name>
 
-On Thu, Jun 12, 2025 at 12:22:42PM -0400, Jeff Layton wrote:
-> If you're against the idea, I won't waste my time.
+On Thu, 12 Jun 2025, Miklos Szeredi wrote:
+> On Thu, 12 Jun 2025 at 01:38, Al Viro <viro@zeniv.linux.org.uk> wrote:
 > 
-> It would require some fairly hefty rejiggering of the receive code. The
-> v4 part would be pretty nightmarish to work out too since you'd have to
-> decode the compound as you receive to tell where the next op starts.
+> > Umm...  No objections, as long as overlayfs part is correct; it seems
+> > to be, but I hadn't checked every chunk there...
 > 
-> The potential for corruption with unaligned writes is also pretty
-> nasty.
+> Overlayfs parts looks okay too.
+> 
+> A followup would be nice (e.g. make ovl_cleanup() take a dentry for
+> the directory as well, etc) so that there's no need to have local
+> variables for both the inode and dentry of the directory.
 
-Maybe I'm missing an improvement to the receive buffer handling in modern
-network hardware, but AFAIK this still would only help you to align the
-sunrpc data buffer to page boundaries, but avoid the data copy from the
-hardware receive buffer to the sunrpc data buffer as you still don't have
-hardware header splitting.
+I am planning some followups and will include that in them.
+I'll also be sure to test with fs-tests after consulting README.overlay
+as you suggest elsewhere - thanks.
 
-And I don't even know what this is supposed to buy the nfs server.
-Direct I/O writes need to have the proper file offset alignment, but as
-far as Linux is concerned we don't require any memory alignment.  Most
-storage hardware has requirements for the memory alignment that we pass
-on, but typically that's just a dword (4-byte) alignment, which matches
-the alignment sunrpc wants for most XDR data structures anyway.  So what
-additional alignment is actually needed for support direct I/O writes
-assuming that is the goal?  (I might also simply misunderstand the
-problem).
+NeilBrown
 
