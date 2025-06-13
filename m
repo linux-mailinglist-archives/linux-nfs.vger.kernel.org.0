@@ -1,46 +1,45 @@
-Return-Path: <linux-nfs+bounces-12457-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12458-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 324FFAD95EA
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 22:08:09 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7353EAD95EB
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 22:08:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7DA4B17AC7C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 20:08:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D86253B9A34
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 20:08:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7423223D28A;
-	Fri, 13 Jun 2025 20:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41E361A76AE;
+	Fri, 13 Jun 2025 20:08:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsK6VlUM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm6vApVF"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE2622DF9E
-	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 20:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1E672608
+	for <linux-nfs@vger.kernel.org>; Fri, 13 Jun 2025 20:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749845281; cv=none; b=r8Aq85B/ddEJJ+6C6afXZP0GBTCfVa4q8HNHTTk29aSjy8ALiGdk5VyEmavc4nsTEfRu62laOgNJIYhW9y/fTO/5Qv/CJxfczmJiTMotJewdT0Uwf0GX/xp1fE1LO1rMF2UlmMMUwPd45WIfLMnXA+slcQsYXoPDAnji2TQYHeM=
+	t=1749845331; cv=none; b=qVEBGDFMduEj6gXvSLRtuMme+GetAqHkc/moHfs7n4vMk0XlvVIWXzrs1MlfHL7j35xjWC099H0gRYOF0xIxvlfYbn34vmqQvFwtFn4+ocFo3eoElf2GiIP0iG7Vdh1wftr8/y0z+ljOxRfmyYq/uPQH7Cm9McEbnp4d47qjYGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749845281; c=relaxed/simple;
-	bh=Y206APWtJ9cy36p7YEHCx6o4jkm/13SWxJ1TBAbqjvU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dZKxHrhiw2j8yb0fZ1h9Bgg/RQXGmdrINTYOfSbTrr69jcIpBQTnwrHWpgJKexDIb1XpE9MJXcSON7pdEUv/tGufnFFgsC/PbMaNKlp9Kxl77Hh2siLCkXy5Xu5PDpSP/+8ELGdtTtQ98kIkEcuXE/ZOexA7qx+9aRsiWtTh33A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsK6VlUM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED1DC4CEEB;
-	Fri, 13 Jun 2025 20:08:00 +0000 (UTC)
+	s=arc-20240116; t=1749845331; c=relaxed/simple;
+	bh=u8/oqRxj4kMvwHqQVRHLh6Wn9sljlOgzbahR15cu+EE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FN8f7EzmhAmZfjZwMcXJRdDWL01xSgjtRGzuLIGtpnATwhnQFxqFWliAv7RHavtlwMyqnsBaPxHmjVrIP9ci240XQ1H4EOd04ixnB3dj1PzJOhdrbkpgj23KdLaIpO/RlDzQyAfKbMCrefRhUn2MjEkii9jqVnLtVWxlGBDDClQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm6vApVF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9810C4CEE3;
+	Fri, 13 Jun 2025 20:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749845281;
-	bh=Y206APWtJ9cy36p7YEHCx6o4jkm/13SWxJ1TBAbqjvU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VsK6VlUMbbgw2EAIzIntFai+JZ5cfXvyCFN6cHreLI0LPx462MzBTwHQtxxeIUbET
-	 EOgBdL5SP4FttHy3SEBTiJNlwfBiyAIuNjT5Kej/ShBkkvSc9OBesFjuvAeIe2Uz3j
-	 4jzfR0qBISJWg8F7LXKr+vQ4OuuTV18AdlxXEgGq43PFYQNBguCiHe1BytmaLI8VQH
-	 99RpmANwOBdF+D8kRP3EwFN6bZTJTUAxHZ+jrRUAqd4viCxIHYN1RCcGd7/JfL1eXo
-	 TxWPLD2wQRyrdH4p5c5ZWHg98ZrhAmcVHNlcWwCCDYePV7xI4EiUp6q86zrVQ3FsZW
-	 VwbiS1hEWAHOg==
+	s=k20201202; t=1749845330;
+	bh=u8/oqRxj4kMvwHqQVRHLh6Wn9sljlOgzbahR15cu+EE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Lm6vApVFcQRFpGFVEiG+Gh8cTH2gbXjrKNthFKA4fqFR/fMPwKhzXIvE2BbpDAHVh
+	 tIX6aRkA1ZfREEADCnrZsv4z8qYaqquvTd56XrS6QZKRDISeKT93EDLC24ghfXgKqO
+	 RGFIN8nESBAsG08yf8qePdX8YK4vgeGN/NZ4m474Ped1FJ6J39BI3b6nAq+8Bh9f5P
+	 iMVW4rs5FzSF9TRFG23YYaQ92vyQJJp+jRdVKdK5k0pZicU3zLu/i9qZwlbvu0/5L8
+	 VbxrHY4/45Q+sjOmNCB4VyjTedxvZa1qi+B6//gu/vQCFKPsU9wm9VyslOuEzbbVQ/
+	 RA+8PlUl1NNXQ==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,12 +48,10 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH v1 5/5] NFSD: Clean up kdoc for nfsd_file_put_local()
-Date: Fri, 13 Jun 2025 16:07:47 -0400
-Message-ID: <20250613200747.7110-5-cel@kernel.org>
+Subject: [RFC PATCH v2 0/2] Make NFSD use the vfs_iocb_iter APIs
+Date: Fri, 13 Jun 2025 16:08:45 -0400
+Message-ID: <20250613200847.7155-1-cel@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613200747.7110-1-cel@kernel.org>
-References: <20250613200747.7110-1-cel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,29 +62,28 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Sparse reports that the synopsis of nfsd_file_put_local() does not
-match its kdoc comment. Introduced by commit c25a89770d1f
-("nfs_localio: change nfsd_file_put_local() to take a pointer to
-__rcu pointer").
+Mike has expressed interest in making NFSD perform direct, uncached,
+or asynchronous I/O, independent of how the target file might have
+been opened by the file cache. To do that, the idea is to pass in
+RWF_ flags during each VFS read and write.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+However, Christoph suggested APIs that already exist which
+streamline the I/O operation a bit and expose the per-I/O flag
+setting directly. The suggestion looks to me like a straightforward
+and sensible general clean up of these code paths.
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index e108b6c705b4..732abf6b92a5 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -372,7 +372,7 @@ nfsd_file_put(struct nfsd_file *nf)
- 
- /**
-  * nfsd_file_put_local - put nfsd_file reference and arm nfsd_net_put in caller
-- * @nf: nfsd_file of which to put the reference
-+ * @pnf: nfsd_file of which to put the reference
-  *
-  * First save the associated net to return to caller, then put
-  * the reference of the nfsd_file.
+This series refactors nfsd_iter_read() and nfsd_vfs_write() to use
+those APIs instead of vfs_iter_read() and vfs_iter_write(),
+respectively, as a first baby step down this path. No behavior
+change is expected.
+
+Chuck Lever (2):
+  NFSD: Use vfs_iocb_iter_read()
+  NFSD: Use vfs_iocb_iter_write()
+
+ fs/nfsd/vfs.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
 -- 
 2.49.0
 
