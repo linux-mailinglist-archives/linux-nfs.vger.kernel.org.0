@@ -1,172 +1,477 @@
-Return-Path: <linux-nfs+bounces-12465-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12466-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F34AAD98C7
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 Jun 2025 01:46:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1293AAD9E32
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Jun 2025 18:00:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83D8B7A047C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jun 2025 23:45:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A0B83AE7F8
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 Jun 2025 15:59:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65AC028D859;
-	Fri, 13 Jun 2025 23:46:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CFC2D9ED3;
+	Sat, 14 Jun 2025 16:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ix2Kiytt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yla+sO6f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39420231828;
-	Fri, 13 Jun 2025 23:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCEE1DDC08;
+	Sat, 14 Jun 2025 15:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749858411; cv=none; b=fWPAfVIIP2VNYjawHVcETlLUDRfTio2fsHDhF/stkT2ZrRozELDOmXyQD923IpLLpNuGVTXy3UNBR7+D32kthNaRdkUHJXEViSVABhhjTGxsYS7BoIFlGJs1B3nhTQgubBjsjAj89590bABgduhESVm/jcUy8YzjkFQmPZnKmrk=
+	t=1749916801; cv=none; b=Krx5JePWa/Yvok2pZ58SIWYUzI6hi/z94kIuDpV24wyiwEBBgJB/klhopjtu4wosQt+0T30tL/EDyN9C75SYJoYv6pcNGvlKukcJWhbIZNQgEiMwEcDrhl7y3f3xSdVCmOB6pEA/obdzFEWeluPst8b18R/9FmnYfo6+CF/5MD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749858411; c=relaxed/simple;
-	bh=H5pWPMbDRQz39NW1D9T7OrtkQVDuS2l7hDB1S6ZrBg8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=M7ebHT2kh392HCVfzemStk+Cl1gOR+dY/it7rIGsS1dFA0ueXblHH0LyCglQupZVSkeZHzq5B661LaNz3q3HlfwDQBytscWa1otyBvJIozBoi+SGOcYUUKW1tc09pGKMCYQn4RRvc3QGlSmaDiHcSdJ9L5y0j3TAdHnoq1pf3V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ix2Kiytt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A746C4CEED;
-	Fri, 13 Jun 2025 23:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749858410;
-	bh=H5pWPMbDRQz39NW1D9T7OrtkQVDuS2l7hDB1S6ZrBg8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ix2KiyttidcdRs92Lv+h8SDnPBsI/j4Z4GFcyCipZeS2CCO19eNUHOjRbIuv9nK69
-	 2ZVTWT1ylcAirDiqc4ll5d9x3O2tDhfentcWJ0R4QQ0EIlp4J+iNOOgYWeXBCXMTZj
-	 uPlBI6JBp9N/wX8+wPWAflch2E26OZNCleXws4Mgh62Egr44PUBSDvIryTYOkw8qAU
-	 8MQOJ+yoGIPfar6itNTMD9PmDgICFuvw8VzrCQ4UsfIjEu7OlSJWC74pePE2G1pt2J
-	 IlS1QzpxLlwAozvY6by9ehU6JVpUqh3h9f/76d6bBarqs6OKQYyL5bzX+xtlEW2c5j
-	 1pWC0Lwi4ZNiA==
-Message-ID: <305d2784138dc157df3c7cfa77198129b7cf34fb.camel@kernel.org>
-Subject: Re: [PATCH 02/17] new helper: simple_start_creating()
-From: Jeff Layton <jlayton@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org, chuck.lever@oracle.com, 
-	linux-nfs@vger.kernel.org, neil@brown.name, torvalds@linux-foundation.org, 
-	trondmy@kernel.org
-Date: Fri, 13 Jun 2025 19:46:49 -0400
-In-Reply-To: <20250613223625.GA1880847@ZenIV>
-References: <20250613073149.GI1647736@ZenIV>
-	 <20250613073432.1871345-1-viro@zeniv.linux.org.uk>
-	 <20250613073432.1871345-2-viro@zeniv.linux.org.uk>
-	 <84376c8a7753a8242e9f5730128f0eaea7863b61.camel@kernel.org>
-	 <20250613223625.GA1880847@ZenIV>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1749916801; c=relaxed/simple;
+	bh=KEx7hoirPdt47g221rjcs8BuO4+mJTP7vxekWFv/7fw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hjmS2jm2ZKzsnYwhSOAFLyfuZrAp/kwONlTY/OTxL2RDbOyCJSvpvNTEjaDz38bQZJB/tsnHenzTY4UZL4/ubfUOBO54Kp/6T9AGKythg2pyI+jdJFx0BHpvV+CGN7kriyV8b9A8/f2lJrjHHMASb9xq4wANTfwQzKHxmJ7aqAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yla+sO6f; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b43cce9efso12395991fa.3;
+        Sat, 14 Jun 2025 08:59:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749916798; x=1750521598; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ug0a7NlfbA8HxZxwF5wvPqDhYNOxOmP7Ys12tQJRGJk=;
+        b=Yla+sO6fo7/4RFAx99y9ofUZGAstbdYxJC7kIVglzQPumqpbVYdySwvoOl+p0TTomB
+         o5wHmJFX2R0ghoeguvATQ6cDoCkixD3QzpH/NRXEu2c6INZX1iMChXYCG+iRKhVUnck1
+         PIDiquhMBS5OPYO5CUXAAJfOk0WtFUk1XF8pYcoursX8wNftSzB7Trq5LXjBDBZGPfTb
+         13uPt+E+DOXh8YbhBFElepTuY1yYzzk6csFLSBEwRSRBsOyjmRLfRWm8laLvBEMlNpMQ
+         wGuy5aciII4EXlOF1JtVvkO9RHq314RL7yw57ViWJd1zQOQYrOaCBAmEXJY9WHsEbO8G
+         +8TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749916798; x=1750521598;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ug0a7NlfbA8HxZxwF5wvPqDhYNOxOmP7Ys12tQJRGJk=;
+        b=SfsEdsOnnzkUD/e+gtqTtPkj9FJE//V2AnA33aRWvuFaQeTdbUbR6kRbpB1wMDlfVl
+         pOg5vwg+I7+MlzYHCb3RFNxX/kb8f/l3JXS9qh+hoW4AuQ0ebQ20nH0AtUGlYxMMgEih
+         uPqiQg3rJZ3RPsuiCIG4XgDctDhXWx7KPLoLVARa+ODcnf7uM42ywZiedsPp4JenDTsZ
+         LimMDf7rCkuEWuVyET6RCacblZxbuSll39uPGr0Jc8IY/BubmiIXMwv/8IYkht5NYH9N
+         JJITcLy4C7T1WE7n8tVfVjV3Q+8YkEa+v3kFKot5Y/Z8/UVbGpq7DQ9fQo/9N8i2EYMu
+         3a5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXYwVKPmfm/mi5FqOtiJ72GMOKX/FdTDc5oR8hF5O3ZHtMCKzsBcerTiI/uDE6apwtN+aUcOrs6zzMX1zc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCoxbP0VHOQcNmHFwKKJiTndYOk9inYlZJT17RMLueepC9OiBk
+	8Wb1zHabluaw3GAsz05AeAJsmhqqWS8R07tzMVit8L4x43MaS0NeYQLMYMeqrnpf
+X-Gm-Gg: ASbGncsTDY3RpRPEW2TVgXiW/I64UERmNzmjGXP9T3sPP02b22pRcvst49zorkRO4Xf
+	2XHIDHQfbFYZqCZ4hR4PZtx1H5v/V78JOx/9eFzg6LzMofbVmzxq35n0uOVo0/IdHZvUGDRvoLt
+	kGu5JXCHwbBD7mZ0K3L/2Ag9oORdMzD4241wsYz3uA6E6TCZNim9OT5vadg5jmXX+A3pRvoSA45
+	0Wex2kzSJQ/yU5XxoUjjDXuVkCW0zdzCSHffOt1dM/Pz3zRC5A9qi29VLNEU7lg2yz/S6glg/Ff
+	lk67Ulzzcb/o4DyzY01Zmsq5RhPb0hRBdSkvXmpM+9xqFwZH4m47l+HybETOISuHaYlF9ipfeVk
+	EA7fJMRahV/hOhg==
+X-Google-Smtp-Source: AGHT+IHD3ojF6DhRsYa/1El4O2X3XWFqL7qp3UnWxRXvLIScWF+MKtlSgVVSSuq75HNe5HLJt4Fmjw==
+X-Received: by 2002:a2e:a99a:0:b0:32a:74db:fe73 with SMTP id 38308e7fff4ca-32b4a6dc1ccmr9864981fa.28.1749916797430;
+        Sat, 14 Jun 2025 08:59:57 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([37.78.218.196])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b33170c8asm9067761fa.67.2025.06.14.08.59.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jun 2025 08:59:57 -0700 (PDT)
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: [PATCH v3] nfsd: Implement large extent array support in pNFS
+Date: Sat, 14 Jun 2025 18:59:48 +0300
+Message-ID: <20250614155950.116302-1-sergeybashirov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2025-06-13 at 23:36 +0100, Al Viro wrote:
-> On Fri, Jun 13, 2025 at 02:31:56PM -0400, Jeff Layton wrote:
-> > > -	if (unlikely(IS_DEADDIR(d_inode(parent))))
-> > > -		dentry =3D ERR_PTR(-ENOENT);
-> > > -	else
-> > > -		dentry =3D lookup_noperm(&QSTR(name), parent);
-> > > -	if (!IS_ERR(dentry) && d_really_is_positive(dentry)) {
-> > > -		if (d_is_dir(dentry))
-> > > -			pr_err("Directory '%s' with parent '%s' already present!\n",
-> > > -			       name, parent->d_name.name);
-> > > -		else
-> > > -			pr_err("File '%s' in directory '%s' already present!\n",
-> > > -			       name, parent->d_name.name);
-> >=20
-> > Any chance we could keep a pr_err() for this case? I was doing some
-> > debugfs work recently, and found it helpful.
->=20
-> Umm...  Not in simple_start_creating(), obviously, but...
-> Would something like
-> 	dentry =3D simple_start_creating(parent, name);
->         if (IS_ERR(dentry)) {
-> 		if (dentry =3D=3D ERR_PTR(-EEXIST))
-> 			pr_err("'%s' already exists in '%pd'\n", name, parent);
-> 		simple_release_fs(&debugfs_mount, &debugfs_mount_count);
-> 	}
-> work for you?
+When pNFS client in the block or scsi layout mode sends layoutcommit
+to MDS, a variable length array of modified extents is supplied within
+the request. This patch allows the server to accept such extent arrays
+if they do not fit within single memory page.
 
-That's exactly what I was thinking.
---=20
-Jeff Layton <jlayton@kernel.org>
+The issue can be reproduced when writing to a 1GB file using FIO with
+O_DIRECT, 4K block and large I/O depth without preallocation of the
+file. In this case, the server returns NFSERR_BADXDR to the client.
+
+Co-developed-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+Signed-off-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+---
+Changes in v3:
+ - Prerequisite: [v3] nfsd: Use correct error code when decoding extents
+ - Drop dprintk()
+ - Use svcxdr_init_decode() to init subbuf
+ - Tested manually the block layout driver using FIO
+
+ fs/nfsd/blocklayout.c    |  20 ++++---
+ fs/nfsd/blocklayoutxdr.c | 118 ++++++++++++++++++++-------------------
+ fs/nfsd/blocklayoutxdr.h |   4 +-
+ fs/nfsd/nfs4proc.c       |   2 +-
+ fs/nfsd/nfs4xdr.c        |  11 ++--
+ fs/nfsd/pnfs.h           |   1 +
+ fs/nfsd/xdr4.h           |   3 +-
+ 7 files changed, 83 insertions(+), 76 deletions(-)
+
+diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+index 19078a043e85..54fbe157f84a 100644
+--- a/fs/nfsd/blocklayout.c
++++ b/fs/nfsd/blocklayout.c
+@@ -173,16 +173,18 @@ nfsd4_block_proc_getdeviceinfo(struct super_block *sb,
+ }
+ 
+ static __be32
+-nfsd4_block_proc_layoutcommit(struct inode *inode,
++nfsd4_block_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+ 		struct nfsd4_layoutcommit *lcp)
+ {
+ 	struct iomap *iomaps;
+ 	int nr_iomaps;
+ 	__be32 nfserr;
+ 
+-	nfserr = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
+-			lcp->lc_up_len, &iomaps, &nr_iomaps,
+-			i_blocksize(inode));
++	memcpy(&rqstp->rq_arg, &lcp->lc_up_layout, sizeof(struct xdr_buf));
++	svcxdr_init_decode(rqstp);
++
++	nfserr = nfsd4_block_decode_layoutupdate(&rqstp->rq_arg_stream,
++			&iomaps, &nr_iomaps, i_blocksize(inode));
+ 	if (nfserr != nfs_ok)
+ 		return nfserr;
+ 
+@@ -313,16 +315,18 @@ nfsd4_scsi_proc_getdeviceinfo(struct super_block *sb,
+ 	return nfserrno(nfsd4_block_get_device_info_scsi(sb, clp, gdp));
+ }
+ static __be32
+-nfsd4_scsi_proc_layoutcommit(struct inode *inode,
++nfsd4_scsi_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+ 		struct nfsd4_layoutcommit *lcp)
+ {
+ 	struct iomap *iomaps;
+ 	int nr_iomaps;
+ 	__be32 nfserr;
+ 
+-	nfserr = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
+-			lcp->lc_up_len, &iomaps, &nr_iomaps,
+-			i_blocksize(inode));
++	memcpy(&rqstp->rq_arg, &lcp->lc_up_layout, sizeof(struct xdr_buf));
++	svcxdr_init_decode(rqstp);
++
++	nfserr = nfsd4_scsi_decode_layoutupdate(&rqstp->rq_arg_stream,
++			&iomaps, &nr_iomaps, i_blocksize(inode));
+ 	if (nfserr != nfs_ok)
+ 		return nfserr;
+ 
+diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+index 669ff8e6e966..266b2737882e 100644
+--- a/fs/nfsd/blocklayoutxdr.c
++++ b/fs/nfsd/blocklayoutxdr.c
+@@ -114,8 +114,7 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 
+ /**
+  * nfsd4_block_decode_layoutupdate - decode the block layout extent array
+- * @p: pointer to the xdr data
+- * @len: number of bytes to decode
++ * @xdr: subbuf set to the encoded array
+  * @iomapp: pointer to store the decoded extent array
+  * @nr_iomapsp: pointer to store the number of extents
+  * @block_size: alignment of extent offset and length
+@@ -128,68 +127,74 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+  *
+  * Return values:
+  *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
+- *   %nfserr_bad_xdr: The encoded array in @p is invalid
++ *   %nfserr_bad_xdr: The encoded array in @xdr is invalid
+  *   %nfserr_inval: An unaligned extent found
+  *   %nfserr_delay: Failed to allocate memory for @iomapp
+  */
+ __be32
+-nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
++nfsd4_block_decode_layoutupdate(struct xdr_stream *xdr, struct iomap **iomapp,
+ 		int *nr_iomapsp, u32 block_size)
+ {
+ 	struct iomap *iomaps;
+-	u32 nr_iomaps, i;
++	u32 nr_iomaps, expected, len, i;
++	__be32 nfserr;
+ 
+-	if (len < sizeof(u32)) {
+-		dprintk("%s: extent array too small: %u\n", __func__, len);
++	if (xdr_stream_decode_u32(xdr, &nr_iomaps))
+ 		return nfserr_bad_xdr;
+-	}
+-	len -= sizeof(u32);
+-	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+-		dprintk("%s: extent array invalid: %u\n", __func__, len);
+-		return nfserr_bad_xdr;
+-	}
+ 
+-	nr_iomaps = be32_to_cpup(p++);
+-	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
+-		dprintk("%s: extent array size mismatch: %u/%u\n",
+-			__func__, len, nr_iomaps);
++	len = sizeof(__be32) + xdr_stream_remaining(xdr);
++	expected = sizeof(__be32) + nr_iomaps * PNFS_BLOCK_EXTENT_SIZE;
++	if (len != expected)
+ 		return nfserr_bad_xdr;
+-	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+-	if (!iomaps) {
+-		dprintk("%s: failed to allocate extent array\n", __func__);
++	if (!iomaps)
+ 		return nfserr_delay;
+-	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+ 		struct pnfs_block_extent bex;
++		ssize_t ret;
+ 
+-		memcpy(&bex.vol_id, p, sizeof(struct nfsd4_deviceid));
+-		p += XDR_QUADLEN(sizeof(struct nfsd4_deviceid));
++		ret = xdr_stream_decode_opaque_fixed(xdr,
++				&bex.vol_id, sizeof(bex.vol_id));
++		if (ret < sizeof(bex.vol_id)) {
++			nfserr = nfserr_bad_xdr;
++			goto fail;
++		}
+ 
+-		p = xdr_decode_hyper(p, &bex.foff);
++		if (xdr_stream_decode_u64(xdr, &bex.foff)) {
++			nfserr = nfserr_bad_xdr;
++			goto fail;
++		}
+ 		if (bex.foff & (block_size - 1)) {
+-			dprintk("%s: unaligned offset 0x%llx\n",
+-				__func__, bex.foff);
++			nfserr = nfserr_inval;
++			goto fail;
++		}
++
++		if (xdr_stream_decode_u64(xdr, &bex.len)) {
++			nfserr = nfserr_bad_xdr;
+ 			goto fail;
+ 		}
+-		p = xdr_decode_hyper(p, &bex.len);
+ 		if (bex.len & (block_size - 1)) {
+-			dprintk("%s: unaligned length 0x%llx\n",
+-				__func__, bex.foff);
++			nfserr = nfserr_inval;
++			goto fail;
++		}
++
++		if (xdr_stream_decode_u64(xdr, &bex.soff)) {
++			nfserr = nfserr_bad_xdr;
+ 			goto fail;
+ 		}
+-		p = xdr_decode_hyper(p, &bex.soff);
+ 		if (bex.soff & (block_size - 1)) {
+-			dprintk("%s: unaligned disk offset 0x%llx\n",
+-				__func__, bex.soff);
++			nfserr = nfserr_inval;
++			goto fail;
++		}
++
++		if (xdr_stream_decode_u32(xdr, &bex.es)) {
++			nfserr = nfserr_bad_xdr;
+ 			goto fail;
+ 		}
+-		bex.es = be32_to_cpup(p++);
+ 		if (bex.es != PNFS_BLOCK_READWRITE_DATA) {
+-			dprintk("%s: incorrect extent state %d\n",
+-				__func__, bex.es);
++			nfserr = nfserr_inval;
+ 			goto fail;
+ 		}
+ 
+@@ -202,13 +207,12 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	return nfs_ok;
+ fail:
+ 	kfree(iomaps);
+-	return nfserr_inval;
++	return nfserr;
+ }
+ 
+ /**
+  * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
+- * @p: pointer to the xdr data
+- * @len: number of bytes to decode
++ * @xdr: subbuf set to the encoded array
+  * @iomapp: pointer to store the decoded extent array
+  * @nr_iomapsp: pointer to store the number of extents
+  * @block_size: alignment of extent offset and length
+@@ -220,49 +224,49 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+  *
+  * Return values:
+  *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
+- *   %nfserr_bad_xdr: The encoded array in @p is invalid
++ *   %nfserr_bad_xdr: The encoded array in @xdr is invalid
+  *   %nfserr_inval: An unaligned extent found
+  *   %nfserr_delay: Failed to allocate memory for @iomapp
+  */
+ __be32
+-nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
++nfsd4_scsi_decode_layoutupdate(struct xdr_stream *xdr, struct iomap **iomapp,
+ 		int *nr_iomapsp, u32 block_size)
+ {
+ 	struct iomap *iomaps;
+-	u32 nr_iomaps, expected, i;
++	u32 nr_iomaps, expected, len, i;
++	__be32 nfserr;
+ 
+-	if (len < sizeof(u32)) {
+-		dprintk("%s: extent array too small: %u\n", __func__, len);
++	if (xdr_stream_decode_u32(xdr, &nr_iomaps))
+ 		return nfserr_bad_xdr;
+-	}
+ 
+-	nr_iomaps = be32_to_cpup(p++);
++	len = sizeof(__be32) + xdr_stream_remaining(xdr);
+ 	expected = sizeof(__be32) + nr_iomaps * PNFS_SCSI_RANGE_SIZE;
+-	if (len != expected) {
+-		dprintk("%s: extent array size mismatch: %u/%u\n",
+-			__func__, len, expected);
++	if (len != expected)
+ 		return nfserr_bad_xdr;
+-	}
+ 
+ 	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+-	if (!iomaps) {
+-		dprintk("%s: failed to allocate extent array\n", __func__);
++	if (!iomaps)
+ 		return nfserr_delay;
+-	}
+ 
+ 	for (i = 0; i < nr_iomaps; i++) {
+ 		u64 val;
+ 
+-		p = xdr_decode_hyper(p, &val);
++		if (xdr_stream_decode_u64(xdr, &val)) {
++			nfserr = nfserr_bad_xdr;
++			goto fail;
++		}
+ 		if (val & (block_size - 1)) {
+-			dprintk("%s: unaligned offset 0x%llx\n", __func__, val);
++			nfserr = nfserr_inval;
+ 			goto fail;
+ 		}
+ 		iomaps[i].offset = val;
+ 
+-		p = xdr_decode_hyper(p, &val);
++		if (xdr_stream_decode_u64(xdr, &val)) {
++			nfserr = nfserr_bad_xdr;
++			goto fail;
++		}
+ 		if (val & (block_size - 1)) {
+-			dprintk("%s: unaligned length 0x%llx\n", __func__, val);
++			nfserr = nfserr_inval;
+ 			goto fail;
+ 		}
+ 		iomaps[i].length = val;
+@@ -273,5 +277,5 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 	return nfs_ok;
+ fail:
+ 	kfree(iomaps);
+-	return nfserr_inval;
++	return nfserr;
+ }
+diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+index 15b3569f3d9a..7d25ef689671 100644
+--- a/fs/nfsd/blocklayoutxdr.h
++++ b/fs/nfsd/blocklayoutxdr.h
+@@ -54,9 +54,9 @@ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 		const struct nfsd4_getdeviceinfo *gdp);
+ __be32 nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
+ 		const struct nfsd4_layoutget *lgp);
+-__be32 nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,
++__be32 nfsd4_block_decode_layoutupdate(struct xdr_stream *xdr,
+ 		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
+-__be32 nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len,
++__be32 nfsd4_scsi_decode_layoutupdate(struct xdr_stream *xdr,
+ 		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
+ 
+ #endif /* _NFSD_BLOCKLAYOUTXDR_H */
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index f13abbb13b38..873cd667477c 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2533,7 +2533,7 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
+ 		lcp->lc_size_chg = false;
+ 	}
+ 
+-	nfserr = ops->proc_layoutcommit(inode, lcp);
++	nfserr = ops->proc_layoutcommit(inode, rqstp, lcp);
+ 	nfs4_put_stid(&ls->ls_stid);
+ out:
+ 	return nfserr;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 3afcdbed6e14..659e60b85d5f 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -604,6 +604,8 @@ static __be32
+ nfsd4_decode_layoutupdate4(struct nfsd4_compoundargs *argp,
+ 			   struct nfsd4_layoutcommit *lcp)
+ {
++	u32 len;
++
+ 	if (xdr_stream_decode_u32(argp->xdr, &lcp->lc_layout_type) < 0)
+ 		return nfserr_bad_xdr;
+ 	if (lcp->lc_layout_type < LAYOUT_NFSV4_1_FILES)
+@@ -611,13 +613,10 @@ nfsd4_decode_layoutupdate4(struct nfsd4_compoundargs *argp,
+ 	if (lcp->lc_layout_type >= LAYOUT_TYPE_MAX)
+ 		return nfserr_bad_xdr;
+ 
+-	if (xdr_stream_decode_u32(argp->xdr, &lcp->lc_up_len) < 0)
++	if (xdr_stream_decode_u32(argp->xdr, &len) < 0)
++		return nfserr_bad_xdr;
++	if (!xdr_stream_subsegment(argp->xdr, &lcp->lc_up_layout, len))
+ 		return nfserr_bad_xdr;
+-	if (lcp->lc_up_len > 0) {
+-		lcp->lc_up_layout = xdr_inline_decode(argp->xdr, lcp->lc_up_len);
+-		if (!lcp->lc_up_layout)
+-			return nfserr_bad_xdr;
+-	}
+ 
+ 	return nfs_ok;
+ }
+diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
+index 925817f66917..dfd411d1f363 100644
+--- a/fs/nfsd/pnfs.h
++++ b/fs/nfsd/pnfs.h
+@@ -35,6 +35,7 @@ struct nfsd4_layout_ops {
+ 			const struct nfsd4_layoutget *lgp);
+ 
+ 	__be32 (*proc_layoutcommit)(struct inode *inode,
++			struct svc_rqst *rqstp,
+ 			struct nfsd4_layoutcommit *lcp);
+ 
+ 	void (*fence_client)(struct nfs4_layout_stateid *ls,
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index aa2a356da784..02887029a81c 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -630,8 +630,7 @@ struct nfsd4_layoutcommit {
+ 	u64			lc_last_wr;	/* request */
+ 	struct timespec64	lc_mtime;	/* request */
+ 	u32			lc_layout_type;	/* request */
+-	u32			lc_up_len;	/* layout length */
+-	void			*lc_up_layout;	/* decoded by callback */
++	struct xdr_buf		lc_up_layout;	/* decoded by callback */
+ 	bool			lc_size_chg;	/* response */
+ 	u64			lc_newsize;	/* response */
+ };
+-- 
+2.43.0
+
 
