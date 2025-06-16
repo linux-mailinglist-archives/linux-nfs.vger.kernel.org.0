@@ -1,78 +1,126 @@
-Return-Path: <linux-nfs+bounces-12469-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12470-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1B7BADA74C
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 07:00:54 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00709ADA9DF
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 09:51:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CDCAD3B0D2B
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 05:00:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA7D116717D
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 07:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903F611713;
-	Mon, 16 Jun 2025 05:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HBmWvl3K"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E044D1519B9;
+	Mon, 16 Jun 2025 07:51:32 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00BB81863E
-	for <linux-nfs@vger.kernel.org>; Mon, 16 Jun 2025 05:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D00242AB0;
+	Mon, 16 Jun 2025 07:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750050051; cv=none; b=FLft0k+z4XI1ZiNHLYJ3p3LzYzsnXkdySUGAKX7GFORtXnSAKC1xiez32A5YWSkV+HP5HbO6ac7uyQ/SG5pMZ5OFMmkfP2x8uQDuCgRoZS2AZXMPK+Avg5ve0Wlts4IMaFbqP0jIkmNBoUnmlttJzYIPzIkfh9khSzZyjxZwfh0=
+	t=1750060292; cv=none; b=FNBf/X0iRKKGsoz6d5pVbzrberEnjwuqbCn8JXY+hObfjPkQDrCGzNQtFHGSpi+oE8r4eGpzaGmkRavsE11HeOWNISkrNWJogoiiwdxKuROt3R42MHo/tOOHRkGOx12juc+2XTE+6MFih4jUWaHHiJ4aRf4Cbg1+Rj4EVXbaRVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750050051; c=relaxed/simple;
-	bh=A4tDZ7bhGVQznAHZZo0IGuB5C81Pp8JCVrrH0VNpdgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRthvSxB5ZI4vshXXp+ZZz7TTqhh5Wvjyri/G9FR3LWN8/7naIhsZany7q2FYqlrCS5cUZcfMPa667JYjY3u9FYKgIUHOKBRYv2pw8ndpNMAevBqTl1/F45wSMo5NxcgO8EA5l+zL7RUil8xq1oKylfXLDg5kE5W06/jJAnRTt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HBmWvl3K; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=upWDJgsCBMXhc7h1gKx5S6TOwK/N2j0j1sD+X8Fk8NE=; b=HBmWvl3KY3kDMeZzm/m5vyVc+Y
-	EF2WMAjTF5AeCONNrD1YdeepnWMk/WS9yFdYUOW8YeR68SmtkQdPjIjGPIVUBLkpO+CI2/mF0d5lL
-	/FXqAaEnB2zEeGo4TeWW+/1yFGqEzIxqw20dejr4rhi3z2hlXReweDkL2xIWRmwZztCWe85GhCGZh
-	dDWrPLDcRDS6dTG04yl6BWzT7YdSQP+C7ftcMONukUz1bBmaS7Q/I6VreVVrAT2A72/7Gcbuik9Xn
-	P4Vu886utKJbbPXIN4Ju5JfscYMgd+8FfJBbppOC2tTOVXD0CTbCAUXlyhVIAHwwcKus36ZRgGjCi
-	aAhbXdQw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uR1xf-00000003NfT-2jij;
-	Mon, 16 Jun 2025 05:00:47 +0000
-Date: Sun, 15 Jun 2025 22:00:47 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Chuck Lever <cel@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Jeff Layton <jlayton@kernel.org>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [RFC PATCH v2 2/2] NFSD: Use vfs_iocb_iter_write()
-Message-ID: <aE-k_yGEhBmOUpFP@infradead.org>
-References: <20250613200847.7155-1-cel@kernel.org>
- <20250613200847.7155-3-cel@kernel.org>
+	s=arc-20240116; t=1750060292; c=relaxed/simple;
+	bh=YuyT1YyBuYG4wqa+Ht7aSBXnGvxZhhg7A9glic+jqSA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cT4flmaodmR6kiAdAODGp4cvtFVJOBc+eC6Zwj7OK2JaHxcq7fWokBA+CmxYzgWrQqgoukxdzANjgMSBuA8OpVnsIEu+OVPNekc80KTJpjZEvuWAVALB1iKSNUM8tdTCLSOxIk6I60zsbTrbKFv2ZkAbp8Ku9ZIZgnR3GDXX17M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: zesmtpsz8t1750060147t8ffa88a1
+X-QQ-Originating-IP: TMyvGnHlVWeQP6sEE0T+5jBz56pJK9ZPBzZTiCvA75E=
+Received: from [192.168.3.231] ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 16 Jun 2025 15:49:05 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 11962215163039328790
+Message-ID: <6E9B7F9B8D47F98B+d6fd7e8f-de81-4ec3-b3ae-f85bbb744e66@chenxiaosong.com>
+Date: Mon, 16 Jun 2025 15:49:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613200847.7155-3-cel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] nfsd: prevent callback tasks running concurrently
+From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Olga Kornievskaia <okorniev@redhat.com>,
+ Li Lingfeng <lilingfeng3@huawei.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Neil Brown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
+ Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
+ <20250220-nfsd-callback-v2-1-6a57f46e1c3a@kernel.org>
+ <23651194C61FBB9C+e2ddd3f5-f51f-44c0-8800-d2abb08a2447@chenxiaosong.com>
+ <208bd615061231c035a5633b29190925f271bd4b.camel@kernel.org>
+ <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
+In-Reply-To: <64E3DD4D765DEAD1+87aeb2d4-3732-4e57-ada6-098dbf0a7feb@chenxiaosong.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: Mnff/9wu0oJYO3GB4f1kHYl+nPZWrKexqFBNP0dLbyIHs4e2EHRAu3IJ
+	d8XumO6/xxcQNeDtb2VGsc1xGnNPOBsPmyDlRPag1sOcV7TVoHgPpC5GTLFKghSqZaiW/xu
+	iMgIxIjBYm2tFq4flEikrJ6FYo9GZQ3hu7pA0/jENXjwFrZXbPOEoeuCTiNADjpe2YorwNF
+	nT4n2ucfJ54MGTAGI6mUvV6MtHTp+gB6wsbJIrZJX0hWJnK8cSDN2YSnNXnWm6bRaU86iv3
+	EJhQEQ6PErpU5NhFwy1XGY5JFm4HcRTEHXMCUexpwi8whbELZXZmNyapyYO/3QN6enb3XNx
+	Fc3D/g1POk43anjEqNnQ5xVQjDiE/3ythgw+6eCnx/Pl1pPVoOcSQjZfNHl1EHtx3cJpbWw
+	EnPVAp5cKnIYObrHT5MlN5X+p6jToStMoHj9axaUcbi+dmObEu7D8F6X+INK3ZhZueqCQd4
+	NfOPXmaYQX5RE5lUARch0YYyWzpEVG2vDv+Ewm61Wypf+SYuBVb3C2J55S7L/tdjpmJWSdR
+	YF5lLHL1g7pywG0dSFebr07wZT//N9ZWpolxvIxunG4tYm4GcOTpVhMpUOja2u4y9qoRBZ4
+	YCsIp//C/RvWFHA7hGGfpcyDQZLsyMTqyVbYZREX9/d5F1z+TDVSmfc9vuaNOt7wyqrX2kJ
+	bYTKS+jb1LzyPZZPUI9KUbVrGcFRpK/fwJNzioqBx9LYNL3uT2X/IxyLMqkVCFVZi9/4B2V
+	U3EiC7gsvaJT9XJy1YV0xtQtEB9H9QpyoN2uo2x/mehZUPNhmsVoUd0Wi2et9OgKlkTSVCN
+	lPdJFVNUb+wAbmWEEPpLLBJlOTiKYEaND0H4SMYTtvH0Cj2N5rKfeUN+qSVpyNetYUM9i3U
+	rbWXr33aSnWHz3KVDWVZjXHY6shQe6mdbJasuyVeX3Ouu5WswU4biBa/IXcjND4QevCh0TY
+	iwA71jE9VSPqx7HzoCMjaucwobLpigbb1P5A0nHV8oiui5XEvt7vVPD9OXgK+qAud1cyp/5
+	m9bQg1Zw==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Jun 13, 2025 at 04:08:47PM -0400, Chuck Lever wrote:
-> +	kiocb.ki_flags = 0;
+Hi Jeff:
 
-Same thing here.
+Do you have any suggestions for this null-ptr-deref issue?
 
-Otherwise looks good:
+Here is the link to the vmcore analysis:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
+
+Thanks,
+ChenXiaoSong.
+
+在 2025/6/11 15:12, ChenXiaoSong 写道:
+> 在 2025/6/10 19:09, Jeff Layton 写道:
+>>
+>> Synchronization was probably too strong a word. I remember looking over
+>> this code and convincing myself that the probe callback wasn't subject
+>> to the same races as the others, but I think that was mostly because
+>> the outcome of those races was not harmful. Note that the probe itself
+>> can actually be run at the start of a completely unrelated callback to
+>> the same client.
+>>
+>> So you hit a NULL pointer in __queue_work()? The work_struct is
+>> embedded in the nfs4_client so that would probably imply that that the
+>> nfs4_client struct was corrupt?
+>>
+>> You may want to get a vmcore and analyze it if you can reproduce this.
+> 
+> Thanks for your reply.
+> 
+> I have already got a vmcore. Here is the link to the vmcore analysis:
+> 
+> https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in- 
+> nfsd4_probe_callback.html
+> 
+> Please let me know if you need any more detailed information.
+> 
+> Thanks,
+> ChenXiaoSong.
+
 
 
