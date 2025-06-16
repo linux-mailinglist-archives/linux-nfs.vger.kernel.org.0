@@ -1,61 +1,61 @@
-Return-Path: <linux-nfs+bounces-12481-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12482-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08667ADB651
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 18:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02BF8ADB983
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 21:26:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8C4F16476A
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 16:10:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3010166BE7
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Jun 2025 19:26:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA262206AA;
-	Mon, 16 Jun 2025 16:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A6A289808;
+	Mon, 16 Jun 2025 19:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIbNymSw"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="F9EPORtD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721BE21E0A8;
-	Mon, 16 Jun 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56DB1D9346;
+	Mon, 16 Jun 2025 19:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750090240; cv=none; b=k1HbeQ1lHCfA6k6Rs7tfJcqnASNHJ7ecqBGU1LKrQvLktRFamrBy53zUls19xinQAoA/oHElfswJatsDTwE7wtTB4Hk07MANGBTUR+JawICv3O4+VQcPxnd7rH+8tSBKKybs/RJknnwvH25eM7zl9g/Prxlin17UXH2bIyLiKEc=
+	t=1750101993; cv=none; b=VcezIg1oEjP0wY1BHWwdvK/+lwy2Kzhul2CUIplp7WBKG8OfcdsApWOHpRUECS7q0hlN+YRFi/LzIAs91yukkqt3WBntsoOf/iPHkqO0772+uoRiUGxttv9V2XDMTKLpvq0LvYacTaoO8uYTMk7HYr49Orbxr6b/Q/S6yezEvj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750090240; c=relaxed/simple;
-	bh=msta/VbRK4gFFOO94yUWl0CZPF3iEp7ftLxtL7Ax3sY=;
+	s=arc-20240116; t=1750101993; c=relaxed/simple;
+	bh=MnzhXC229opggvjo3K/cUWOEA0U7OHCZ5sQe3zrO4Vo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O5+o+ccHdrbZREkuBjThnceOlGndeavsCN4NJYNlserEXq4Lqit+/iUoZ+k7kluVJJtiC7/NTdWleHKwd2vgdtIU8gmulj4CJ4uRqV5j9jZ9POS5PaG/oq309WekIiR4Jsc3/YpmQCoQ6AoNiSzgRfTtFilsmZYgQQqIy15/TcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIbNymSw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B36C4CEEA;
-	Mon, 16 Jun 2025 16:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750090239;
-	bh=msta/VbRK4gFFOO94yUWl0CZPF3iEp7ftLxtL7Ax3sY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XIbNymSwIC0PE9FjaRW1bOtcNfLgHmkCYGTYGLFUXf4LGIeX3Is1J34xu+QOv3/nb
-	 kMJ+KsuzfTpn/QpCaRh2pnT3E7adiiRmwCl5VzqPtvllbkZ2emMWwuEte4V/S11EJB
-	 3B9sVrF4fNaJiMAAF3AKsntwsWQ2TLn//fqnGrkZCaPu3oatQ0+uAFC/nxky3h/Wuo
-	 oCmuWZiFAukkXHvhfLTc7j6XK8BmnSQ1VQPG6S88NQpQlQG7BjYX/LEnFnSopincwP
-	 frqd9Zz6jHiu7G/LuzlVl3U5yTA/eYq/SQkKndsGOB4GJQlqSMvsnMUs15JoHkPY2f
-	 Ud/R0Is17oOjw==
-Date: Mon, 16 Jun 2025 12:10:38 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 1/6] NFSD: add the ability to enable use of RWF_DONTCACHE
- for all IO
-Message-ID: <aFBB_txzX19E-96H@kernel.org>
-References: <20250610205737.63343-1-snitzer@kernel.org>
- <20250610205737.63343-2-snitzer@kernel.org>
- <4b858fb1-25f6-457f-8908-67339e20318e@oracle.com>
- <aEnWhlXjzOmRfCJf@kernel.org>
- <d8d01c41-f37f-42e0-9d46-62a51e95ab82@oracle.com>
- <aEr5ozy-UnHT90R9@kernel.org>
- <5dc44ffd-9055-452c-87c6-2572e5a97299@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LuZgBYuzP7YbmOakfBdeZfGhxp0MSLwUutCxJlhqmMgijvAg4p15ROr5VOCUh4QgaeDwAf9fYabnplUhyVrX3DriBsAqTdy3nBDgZdMK+cyzGYSeoydaq29VcqKR7A9+eIfAnf3uFAEN16twWKsJKJEKP8BesmiVZ3+Qj0kbX+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=F9EPORtD; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KT7dHJJ5pKmkNCduZTf91EBdEW9hu3YfWg2JZORC++o=; b=F9EPORtDatoDok2FTq3vKCpOT0
+	S60V/pkGiFOE456RKh0ahM4mQja7ooc3ligfvndoXH50rzh+NGnE8P1QHltWM0bbGmUlzAEFusWhB
+	bx33xQ13GwNfC0y8edMtMFW32GgDA8UEdwGTd+JQ6b9UnRdkTUsJN8qCYku711EN2So2Ftgj3mvrG
+	m1TTkFmRkayHcIMJRtR4kjDHIJtuy7VzIIXR/jeFqC4Bbev8SH94NkhZ6TNwU4I8I3PDWtO+IP/Ma
+	/KuToR5H5bAFbBnpBjPjhzW6fVvNy+uSWIg+6vuLBUiwE2rrtGbgTu+9sMALMPgjp+yzZrUZxEq6O
+	1UU+ULVA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRFTQ-00000001hRA-0laZ;
+	Mon, 16 Jun 2025 19:26:28 +0000
+Date: Mon, 16 Jun 2025 20:26:28 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, chuck.lever@oracle.com,
+	linux-nfs@vger.kernel.org, neil@brown.name,
+	torvalds@linux-foundation.org, trondmy@kernel.org
+Subject: Re: [PATCH 12/17] rpc_mkpipe_dentry(): switch to start_creating()
+Message-ID: <20250616192628.GJ1880847@ZenIV>
+References: <20250613073149.GI1647736@ZenIV>
+ <20250613073432.1871345-1-viro@zeniv.linux.org.uk>
+ <20250613073432.1871345-12-viro@zeniv.linux.org.uk>
+ <6ccc761034c253704988b5a7b58d908e06127a9f.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,57 +64,20 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5dc44ffd-9055-452c-87c6-2572e5a97299@oracle.com>
+In-Reply-To: <6ccc761034c253704988b5a7b58d908e06127a9f.camel@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Mon, Jun 16, 2025 at 09:32:16AM -0400, Chuck Lever wrote:
-> On 6/12/25 12:00 PM, Mike Snitzer wrote:
-> > On Thu, Jun 12, 2025 at 09:21:35AM -0400, Chuck Lever wrote:
-> >> On 6/11/25 3:18 PM, Mike Snitzer wrote:
-> >>> On Wed, Jun 11, 2025 at 10:31:20AM -0400, Chuck Lever wrote:
-> >>>> On 6/10/25 4:57 PM, Mike Snitzer wrote:
-> >>>>> Add 'enable-dontcache' to NFSD's debugfs interface so that: Any data
-> >>>>> read or written by NFSD will either not be cached (thanks to O_DIRECT)
-> >>>>> or will be removed from the page cache upon completion (DONTCACHE).
-> >>>>
-> >>>> I thought we were going to do two switches: One for reads and one for
-> >>>> writes? I could be misremembering.
-> >>>
-> >>> We did discuss the possibility of doing that.  Still can-do if that's
-> >>> what you'd prefer.
-> >>
-> >> For our experimental interface, I think having read and write enablement
-> >> as separate settings is wise, so please do that.
-> >>
-> >> One quibble, though: The name "enable_dontcache" might be directly
-> >> meaningful to you, but I think others might find "enable_dont" to be
-> >> oxymoronic. And, it ties the setting to a specific kernel technology:
-> >> RWF_DONTCACHE.
-> >>
-> >> So: Can we call these settings "io_cache_read" and "io_cache_write" ?
-> >>
-> >> They could each carry multiple settings:
-> >>
-> >> 0: Use page cache
-> >> 1: Use RWF_DONTCACHE
-> >> 2: Use O_DIRECT
-> >>
-> >> You can choose to implement any or all of the above three mechanisms.
+On Fri, Jun 13, 2025 at 03:27:39PM -0400, Jeff Layton wrote:
+> On Fri, 2025-06-13 at 08:34 +0100, Al Viro wrote:
+> > ... and make sure we set the rpc_pipe-private part of inode up before
+> > attaching it to dentry.
 > > 
-> > I like it, will do for v2. But will have O_DIRECT=1 and RWF_DONTCACHE=2.
 > 
-> For io_cache_read, either settings 1 and 2 need to set
-> disable_splice_read, or the io_cache_read setting has to be considered
-> by nfsd_read_splice_ok() when deciding to use nfsd_iter_read() or
-> splice read.
+> "rpc_pipe->private"
 
-Yes, I understand.
- 
-> However, it would be slightly nicer if we could decide whether splice
-> read can be removed /before/ this series is merged. Can you get NFSD
-> tested with IOR with disable_splice_read both enabled and disabled (no
-> direct I/O)? Then we can compare the results to ensure that there is no
-> negative performance impact for removing the splice read code.
+Nope; fs-private, if anything.  That, or rpc_pipefs-private...
 
-I can ask if we have a small window of opportunity to get this tested,
-will let you know if so.
+> nit: subject should say  "...switch to simple_start_creating()".
+
+D'oh...
 
