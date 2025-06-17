@@ -1,283 +1,308 @@
-Return-Path: <linux-nfs+bounces-12537-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12538-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34D2BADCFA5
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Jun 2025 16:27:24 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D97C0ADD823
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Jun 2025 18:52:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1C8D517F799
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Jun 2025 14:22:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 210134A3F24
+	for <lists+linux-nfs@lfdr.de>; Tue, 17 Jun 2025 16:44:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D6F2E54D5;
-	Tue, 17 Jun 2025 14:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8AD2EA724;
+	Tue, 17 Jun 2025 16:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SxAv+SEt";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WcWMH4q5"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0mNSyfEt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910522DE1F1;
-	Tue, 17 Jun 2025 14:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169932; cv=fail; b=dvbFz5PCMXiFnWu8xhwh2l0A/8du7FcEKr8xbRbMfwHcN2gzSDg4yRXxK7KbtURo+gNb5pWmNr/qaiDmaotzb9z25PvVmKALwZ/6322G1iAxwI1rlTcJ/8svFmiEvWve23LJTtkHaywfPyGpO2JRJ3Tijs9FAuU6he5W3rKvjQ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169932; c=relaxed/simple;
-	bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=BApw0JbMBbVRjpt3lYzZITYHQfq9vwZIBiIgkYjvuG653ERi6UvR24Ce890KWkoecqxuiGyYMa0U04sl8Z6wSEVIXUleB9JnqT8Tyx3hcGMveiKcksitR3uISNVHkvAylxa6UkLjtQLhMSoLwoH6BXjsVRymYJG7FxZ+pvmn+ho=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SxAv+SEt; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WcWMH4q5; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H8tag9025365;
-	Tue, 17 Jun 2025 14:17:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=0KKCAZEUFhbQCsca+a
-	vSGS1Y+uYtGTT1Abh5klWQq2A=; b=SxAv+SEtqUOU0h701EBu4d9UWPJvyrkQYQ
-	FQ8d+crsMTyDaO0YeEHtzMjfy/VQyrHjPNp7DpaNB1YZIqJBnkohtA8WIeYRt568
-	653QGs/i/lNFyJNPfMwhtpdTDIhcUeOPPVO0Q45GIwa/T+05MM/lZ2lkOZiX8XIK
-	Efs2uqOxYN6zTawaR7uEvafQfUO/C+Wj8DW/c7SEmqxCjbvrwIVkKqtgKfqX8leF
-	VjX2n/r/OyCCgT5Ry+kb4VLirx0JiWwKqrcYQKKFt5qkUEuxJ8fO0+vJhwPYgxTp
-	zCZNwEobqxSmHh645YXMNwxHwMJJGdWwul0hlV+ZaXSie0vXTzxQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r4fkh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Jun 2025 14:17:29 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55HCfvce031679;
-	Tue, 17 Jun 2025 14:17:28 GMT
-Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010004.outbound.protection.outlook.com [52.101.85.4])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh9205h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Jun 2025 14:17:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OANMc17JzxDskYEip3VAZr31cYXNnaFRcdViaMzntv6YdG70v32ah3YOjbV2vn47MaNkJKHF1i6Q9+WCtx2to0eIoB2MZqpnvkBrJIyZPt7cAxsNoitRpJoQZQ7XWqxPSr/NNQF9BlNyumpmSLygqPjTZgWypsQMgBy2WklM3+JNTbbBWDBSsHVB5WRwQd+DElCRPgqKxLO0Z5co9BlhmY0ptZHZJTrO/cwW1q/73STutKTSYQnv9UNowKDsmT4NPMYopQnTpPHCYSshJiGWEYJHDZlqDzNieuhUacIGHzlXkZY1nI6lb1/1aiSUKpEReOiuK+05yYs0UKGe1p8Wog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
- b=FluvaqAPeB2OsDxtC2023QeG7diBBOk11IQFzdmfBz0EbkV5FTNWEinZtHa+g+zvUalAzE9+ClEhAo5kqFfznTOkbar04ldiGmTluntjLsdYU+M3f3MPmQauOHzxGObVuZaHHB++d1KC7B6TxTHsxJXbRP+hzfmDGgP11IyahYlLgcQdWFoNNFzGzis57hY1y9KPJnqd/d6e6dbmpITZY8Ea9T5mpB6/uA2IQRxHSppEqm1aDZFBYlCUHgb1YzuQd17N3PkkSxlQXxqw1afRJvjv01uGTONdViEa/6JT4Gn/QtJs2xDsuJYKWfIHDMgW/izF6Ye1hwuC+SXpoJM5JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
- b=WcWMH4q5SW1p4rbO3adGeCYWG3DQFJpHpcZsl20aUf5yehkCNMaDk9rXHPbvCMLqiOFiTIJly+Qi6jWtYbNipOUFBR41vRI2AWZRdjGIr+gteJ3ov9QTWB2V8dHjVfyeYESA78jejhuMC7+qcEKm6P3CZC1vFaopWSag8Dy9Tn4=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB4574.namprd10.prod.outlook.com (2603:10b6:a03:2dd::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 14:17:23 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8835.026; Tue, 17 Jun 2025
- 14:17:23 +0000
-Date: Tue, 17 Jun 2025 15:17:20 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Sterba <dsterba@suse.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        "Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
-        Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
-        coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Bob Copeland <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-        Bharath SM <bharathsm@microsoft.com>,
-        Zhihao Cheng <chengzhihao1@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>, Carlos Maiolino <cem@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
-        Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-aio@kvack.org,
-        linux-unionfs@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
-        ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        ocfs2-devel@lists.linux.dev, linux-karma-devel@lists.sourceforge.net,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
-        nvdimm@lists.linux.dev
-Subject: Re: [PATCH 00/10] convert the majority of file systems to
- mmap_prepare
-Message-ID: <45cf6357-2614-4aef-8674-f7bc77be2dcf@lucifer.local>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <644216.1750169159@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <644216.1750169159@warthog.procyon.org.uk>
-X-ClientProxiedBy: LO4P123CA0424.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18b::15) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E15C2E8DE4;
+	Tue, 17 Jun 2025 16:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750178449; cv=none; b=d5F8HzlsLtOr1PBCdvld7PG6VpstTl4LCuyRr2Zufb9fcNasvMi0pdaP4Kyv5nFTuIUDuAP4KpKtRH5//KzNL+3amegCcc+locvHcBduzAkLBZEjeeRGy1BRA274MwnvZ+/0WsydstNU4+4angBhnC9CUWwwaSsISKG4aAzVG/w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750178449; c=relaxed/simple;
+	bh=hYfsZ+h97b8SSCcK8Ze2SD1mhLygdwMfpK9oq0VwKTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cBsG5T/PSDMVGTrdpMsA7lsTpUvwTtEKYtZjaHAGHpNwiWFUlEZqRHTA2UxRWmEJI9pEequA2vW801U6gGvLsdF4h27fkg8Sd22AAyNjQDBiRGr9pHl8Y1SGrC20zsOUum3IB6Vh97PGANLlXFUPasaCJj4zsNtyWEXZ83lX+B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0mNSyfEt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A49BC4CEE3;
+	Tue, 17 Jun 2025 16:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750178449;
+	bh=hYfsZ+h97b8SSCcK8Ze2SD1mhLygdwMfpK9oq0VwKTo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=0mNSyfEtckwG/mGjGLJz6e/PSC944bXgzGUbTbgwQSQ+wSxd9w9vO2B9/9U91XrkJ
+	 ykgP3zlA3Q6gBfH3DR0+XA4HZml7/cXmL4W4cyig3hkJUkR65VYS7BnJXAl21IB8c2
+	 hVunMatEIAio6KBa29gT5KYByd374Mt7KHPPVJB8=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	David Howells <dhowells@redhat.com>,
+	"Paulo Alcantara (Red Hat)" <pc@manguebit.com>,
+	Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>,
+	Steve French <sfrench@samba.org>,
+	netfs@lists.linux.dev,
+	v9fs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.15 461/780] netfs: Fix undifferentiation of DIO reads from unbuffered reads
+Date: Tue, 17 Jun 2025 17:22:49 +0200
+Message-ID: <20250617152510.251693779@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+References: <20250617152451.485330293@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4574:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb8921db-b5af-45ec-8b3a-08ddada9adbd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AaN3sI5uxeiW90s/+6kc8DyyTfZjyoHTiFtYoeOiuatlWRZmQNpkSwgmuU6i?=
- =?us-ascii?Q?9pRVe99iWFoecHLVwU+wsyybt7xDiWKAh6giH9R86WOG1I02Apc0BgT3HMGO?=
- =?us-ascii?Q?P8KTAftNsSPsxdwkieWzPOannzuNwsrEQIMCU4Jd/cKWg3UonDtfMDLl9yaA?=
- =?us-ascii?Q?nEcv0111gfjKdCnTFlij2dWHiRx68z4U0sSoG5tfVGPNuFKzjON1/SVsaBgl?=
- =?us-ascii?Q?EXIjL8RmiXZVLnfWZ7QwQbbWGpgXGxYyBveMohtxjOh9T1iuo2cUUzFQx1Og?=
- =?us-ascii?Q?jb9d56RswZb4YWiMKlFAhNlfKaUXsdSvY7XQlnz3GVpiqki7bbEyjLJSnNj8?=
- =?us-ascii?Q?9wH4NhgCPH9Xxph3e5vEvRxyXPFwazKOGGqeg6ylo+hSxNIw9tmMSEhfCQCj?=
- =?us-ascii?Q?uibSQfEemw93/69CU7C4fhSB/TigMqt0IdxIVOm/B0LHQMsHuWkhHWutpV9U?=
- =?us-ascii?Q?+nLwW28tPyXVnb+wZKyCXLRtRAtcUTkPCUzC4zsXL143xqcoel/du/Isq/nC?=
- =?us-ascii?Q?rIyNOaIJRFe2Y260zwUQ/nMyve6HJF5bbiYzjengUco9R4dTLeGRCV/2m34l?=
- =?us-ascii?Q?QQXbBMNwJYkSg90g6xXCmb1x6+so1wyrQ43J1km22UtM+GwgQyYViaT/Tgei?=
- =?us-ascii?Q?hwq+ZC7H9j132iZaXBSkGSvXmWz6VPBL01/L653ePmpMlfYnKAWHsqJuC97M?=
- =?us-ascii?Q?XKtzxfGSdW68h+bsjFa9+T6wi4N9yM83aUdO8kgxMyIdxNdAkjokQcxrBn8v?=
- =?us-ascii?Q?ctnhC2sg2pBUqic1B6ALGiQTB7RHKq0qUiISU1KGlQS6u3S2ccYuDGUHq1MF?=
- =?us-ascii?Q?eQCOk31xsFT8CoxZOHT5eaERC9BsN5vIE3Wm3oHjO4Omi4N6TAgePFRWAB3k?=
- =?us-ascii?Q?u+CUGUJvbKHjfjnknsTGeI3vFENB918Vp7QvONylH054BlQ/0r2H65ylZF4u?=
- =?us-ascii?Q?wqROFm0zU0WZhMpLhCEieK+iSYgfvAAo4bVwmWs9Cd7toIqelMWvqOJYpMYZ?=
- =?us-ascii?Q?JMV3G7Ct02jzmRGtAGCOC5QoiQ3x7EG22UNcw7/MFn9R8XTlPoPzdzoGwq16?=
- =?us-ascii?Q?NhQ8UzXSd3Bsz3xhDoVT5WCSF7HlqCKrWhgPm4oQAtO9PSQC+G1RDvkQnwXv?=
- =?us-ascii?Q?1MQyBSrD7TuyYoCJIL+60cWgwPmECLjf1UD5eITFsN6S455vy3aRjlNo+X5o?=
- =?us-ascii?Q?gZ6hpg27KTQXuAad20TAh/LrhDBoi+5NExH2JukLLgBgkFLH67eCO4Hv0hJy?=
- =?us-ascii?Q?UZ0N4VdeGw0TPvbpLG7/rRhtTUam+42H6BZBNJJYiqxtm5Ab8SyOg8uZGsBE?=
- =?us-ascii?Q?pyRB0qoI6Yo75lZ7J7yuzWu3LI+hOKksOx4lgA46ijG3NEBAl1ELDsMHsNQT?=
- =?us-ascii?Q?kHDBQvtibnV83Qzoro1p1e13sab4Yee6irPWIsP04dZaK2RXZJcFjQX8XcZc?=
- =?us-ascii?Q?E+mtFlnCSxY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YpUIN0eiEHR1IqDPdI0DKV6HVg1NpfHhaBLy/kZtIXMLcCRXv15nBWdu+Gwp?=
- =?us-ascii?Q?cRtSh7k/iCS9I9SdjFeSVKFEURHatRR0VKn3ZVXpyDjcBIh/EXc8KMbHAlb0?=
- =?us-ascii?Q?V0sS3D4Ueum9YZNRNGRj2/Io2OfyPJ7r4aSDIfo4nPG7HvKYaXCd3vw6VQyk?=
- =?us-ascii?Q?6pCvioe63lOYcS3PxIOyfiTkmwxVYk5sK6kbGQS5V2OPPUjYgH6cDl7bvJ7y?=
- =?us-ascii?Q?JkRv6L/o9+h3PP813iyKofG21CBAaYExjg9LDzsPitSJSuyXlhmuIL3XwVly?=
- =?us-ascii?Q?3ctEdXxAYqzLOPzUWsHxwhd/QV/QE9tf2VTRRflvRs21yQK99H19szrDlaxa?=
- =?us-ascii?Q?I76GgOvcCuce3wW2A9sJ3Ot10anl0+ND6o4f+ljakNJjsg3Uy/HTjF+U7x2y?=
- =?us-ascii?Q?IkWLfFh+qjiym4qauv8kGiXMfQtsWpngz134Ih1ZiYoWFG03Aq4R+rSVVXUK?=
- =?us-ascii?Q?FgnTOkmdsbFBmNscDXHuzRC1CXmN2D7wJetxnhV0IoyNpJaG4k0V3GG4dB2W?=
- =?us-ascii?Q?UGzsI+ZuUsBhlbxBrVWN4cNpAFz7JUUpIKaKxuRr1USmKYMb4YudDOAImoxe?=
- =?us-ascii?Q?VigBhobbGzxlj3hG20rSYWWQ/LtbJndGVPOI3OadobC4OZXSU2Zdq02ZmABl?=
- =?us-ascii?Q?zplUw81HCgN4rHEYjc+dNAVpaMWR0knmoTlD0Dwv/iH/3sFGlAa2jG4Yvy1S?=
- =?us-ascii?Q?//Pxijkp5cj35mxOIJf+JqvClrJVtea50Ake55fGeae8ZFdFRFoBqEWtK4X8?=
- =?us-ascii?Q?zApE39VdhCb7aMJgWukN1RtDiBxG35WUWpS1KR57MgPhvDtvjciGej/kVeCo?=
- =?us-ascii?Q?ZSzFtLvBNH8aw/Eavc3BrsRb+1nzrHamDSA44ELYAn4UCkgeOchEV8PkIMaA?=
- =?us-ascii?Q?U+/8y2Yybhma5yRUiEGTI5855TJNq4WwdBr5Xmntq7gQ6/VEt4tcAu8bqZhb?=
- =?us-ascii?Q?6SDOIm++wvP9jDLtv/39TsiYKSFMw8AjMLlkshGGorign+ThnUS4ASa6SXJ3?=
- =?us-ascii?Q?8weTWlo+AK7uW6YNYKyUeP97QPZRqEMD2bdw8EN8sRsoG7YIz/PTHTVWMLkK?=
- =?us-ascii?Q?hjs3EcvUPPrj1buzqRvLXAQsyDkLL8lm+6KXNfPfrrtBe0CuzoFSVlPBb6mt?=
- =?us-ascii?Q?+xEfP3IhHmtVonhrrB/s62DrjWMEhg33Y996Kb5997Za5ZC4gYyCgMkb7nRm?=
- =?us-ascii?Q?L2lIubJ2YHw0xSRlI/6G+rr/RuDvh1PExk00sOLOjQEh2JEvP7QYy9WoLnlJ?=
- =?us-ascii?Q?XoY4DgfJlgPXqiQDQ2lJp6dAs7b4OstEtyAlxGuPQYWZh/oG9LwY38FGA+MQ?=
- =?us-ascii?Q?19c+XsZ7/H1UH1mJM44PAAFjQvrymNMJ6BQwUH5ikrw3PBwOwMWcrpDWFFB6?=
- =?us-ascii?Q?NtgxcsZun6fOqfI04a5CvyKWSs4jTrnC6+P9PdIOtn8W9SRStqv1+g1sqYHa?=
- =?us-ascii?Q?DgLRYsuP24D2nCVEAFEEfCt5EI8HVMQQWp+9yhAiQJ+FD6vd7yEuDSOhCKD7?=
- =?us-ascii?Q?+eF+Y50ljARaIFx0np7JPZBBZgt59BQmlf1BeXe8Pn/UHMqhod3ALmVSy/tI?=
- =?us-ascii?Q?cCsfA/aSUf25iqwT+EhuRTLXWb9vI2ws0jGUWGf+YZNjMHSCdnslJaqS+5JV?=
- =?us-ascii?Q?Ag=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	QBDRQjWETd6/m3CejgBVpyVWCnusB/UWF9U+oqpTK0a6F4KCFxkoct90AXRodhXohG8bOQj/+jyKphhEC2VZCnEfH3oK4kIAxzkn6Bm594gW+lz1QZZLec2STuNplAHrM1TUINHIO7ytmyJXPSIEt+AyCp9sH0E6aUuOfSU6H76MP4yxqqVaGJI7ehw/WIkkedq2rHwwCYWSJmY+a6iaaDQqP+Op9Dg1jQ7/cgx4DbVStmtWQuvxi+9vqeM50OBoU1k/jRIdV41snwJjmJy7NrXsiMwvGnqkVCoYYEs1W34c6QZQzDOqPLEW9Twi03TpmC3oE1DuzYJCnaLQ+PyF06fIa190pwDf0uKq2W29Sg1OYZWb91Rx7ihtJHL7Gllt0Hlx26DA/KIzrTudyGtP0bNFs+CcB2jqy5IZw/prKssX7+c9rxD0+lJShbpjUXBZq0UItW5tSbynBdmrLDiUqhDALt/DdgW7XBxd1+eUMlopyLgV5/IXayvJgMstq1vJXd/zEHXfKhBK6goy9UsIFDprmbmnuV2iY6HJGUQGVlsAtdDfyY875GjU+ChgQayNDmkN7LQBzV8Cqhpk2iiaRw7A32VGpq47GoL97BMC1bs=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb8921db-b5af-45ec-8b3a-08ddada9adbd
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 14:17:23.3401
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4ghwvxifeqDis2+M9YYGHbNIbWg1bDN1rNvEWD28HL19Otdrs1AkUIn56FThJtEcwstA4sMaqLPy1dbTWtiaCPBMKXivB6TKwcp+87esXSM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4574
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_06,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506170111
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDExMSBTYWx0ZWRfX5ZzlpAp0kbN6 98Calk+SvXfzIYj5Ke75yBlRHYwdQ+AIjUAYtTZ4R0kezDKadidgziqPF2wXnUsPPYjHySd565R C+buSQ+AKYXwt8ohDlxe8/4ELFryq0AksrRFSdpfHPpYI3rP4I+US8H3a4U1tJTOAA2a68Meap3
- f5w+3w3iC3z2DbrGe9XvoLz7GgD0tGOmTyQJGJgsrxJXSCQAc+j07zFTUbVjCdR+vIPrpO2IdML n9eIGpEWnP+Zq0l5U1M8V4li6hAD9IGyGOWHXeo0ZspTqY5YdgLzduad18MSs3GTtBS5BFhyr+O 3/gEwft2yHIXR4CG9Xeid0pwRtjPfK5cskbCvONL9gCUWxxt7NDgouK6wkVil+GbKTCNIrtAJ2k
- w8oZdeyX3tPa6x89VpzaXq7HForJOGQacvFabDSV0U6J4Ahi8AJlkxu/wDzun0rEsI6cfGh4
-X-Proofpoint-GUID: RxntZxdAm8nWHdzoxwobwSyZjUt3_-je
-X-Proofpoint-ORIG-GUID: RxntZxdAm8nWHdzoxwobwSyZjUt3_-je
-X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=685178f9 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=MA-42675piwLz8QlgOoA:9 a=CjuIK1q_8ugA:10 a=Qzt0FRFQUfIA:10
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 03:05:59PM +0100, David Howells wrote:
-> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
->
-> > This is preferred to the existing f_op->mmap() hook as it does require a
-> > VMA to be established yet,
->
-> Did you mean ".. doesn't require a VMA to be established yet, ..."
->
-> David
->
+6.15-stable review patch.  If anyone has any objections, please let me know.
 
-Yeah apologies, indeed I did :)
+------------------
+
+From: David Howells <dhowells@redhat.com>
+
+[ Upstream commit db26d62d79e4068934ad0dccdb92715df36352b9 ]
+
+On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
+"unbuffered reads" (specified by cache=none in the mount parameters).  The
+difference is flagged in the protocol and the server may behave
+differently: Windows Server will, for example, mandate that DIO reads are
+block aligned.
+
+Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
+NETFS_DIO_READ, parallelling the write differentiation that already exists.
+cifs will then do the right thing.
+
+Fixes: 016dc8516aec ("netfs: Implement unbuffered/DIO read support")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Link: https://lore.kernel.org/3444961.1747987072@warthog.procyon.org.uk
+Reviewed-by: "Paulo Alcantara (Red Hat)" <pc@manguebit.com>
+Reviewed-by: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
+cc: Steve French <sfrench@samba.org>
+cc: netfs@lists.linux.dev
+cc: v9fs@lists.linux.dev
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: ceph-devel@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/9p/vfs_addr.c             | 3 ++-
+ fs/afs/write.c               | 1 +
+ fs/ceph/addr.c               | 4 +++-
+ fs/netfs/direct_read.c       | 3 ++-
+ fs/netfs/main.c              | 1 +
+ fs/netfs/misc.c              | 1 +
+ fs/netfs/objects.c           | 1 +
+ fs/netfs/read_collect.c      | 7 +++++--
+ fs/nfs/fscache.c             | 1 +
+ fs/smb/client/file.c         | 3 ++-
+ include/linux/netfs.h        | 1 +
+ include/trace/events/netfs.h | 1 +
+ 12 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index b5a4a28e0fe79..e4420591cf354 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -77,7 +77,8 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
+ 
+ 	/* if we just extended the file size, any portion not in
+ 	 * cache won't be on server and is zeroes */
+-	if (subreq->rreq->origin != NETFS_DIO_READ)
++	if (subreq->rreq->origin != NETFS_UNBUFFERED_READ &&
++	    subreq->rreq->origin != NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 	if (pos + total >= i_size_read(rreq->inode))
+ 		__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 7df7b2f5e7b29..2e7526ea883ae 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -202,6 +202,7 @@ void afs_retry_request(struct netfs_io_request *wreq, struct netfs_io_stream *st
+ 	case NETFS_READ_GAPS:
+ 	case NETFS_READ_SINGLE:
+ 	case NETFS_READ_FOR_WRITE:
++	case NETFS_UNBUFFERED_READ:
+ 	case NETFS_DIO_READ:
+ 		return;
+ 	default:
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 557c326561fdc..b95c4cb21c13f 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -238,6 +238,7 @@ static void finish_netfs_read(struct ceph_osd_request *req)
+ 		if (sparse && err > 0)
+ 			err = ceph_sparse_ext_map_end(op);
+ 		if (err < subreq->len &&
++		    subreq->rreq->origin != NETFS_UNBUFFERED_READ &&
+ 		    subreq->rreq->origin != NETFS_DIO_READ)
+ 			__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 		if (IS_ENCRYPTED(inode) && err > 0) {
+@@ -281,7 +282,8 @@ static bool ceph_netfs_issue_op_inline(struct netfs_io_subrequest *subreq)
+ 	size_t len;
+ 	int mode;
+ 
+-	if (rreq->origin != NETFS_DIO_READ)
++	if (rreq->origin != NETFS_UNBUFFERED_READ &&
++	    rreq->origin != NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 	__clear_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+ 
+diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
+index a24e63d2c8186..9902766195d7b 100644
+--- a/fs/netfs/direct_read.c
++++ b/fs/netfs/direct_read.c
+@@ -188,7 +188,8 @@ ssize_t netfs_unbuffered_read_iter_locked(struct kiocb *iocb, struct iov_iter *i
+ 
+ 	rreq = netfs_alloc_request(iocb->ki_filp->f_mapping, iocb->ki_filp,
+ 				   iocb->ki_pos, orig_count,
+-				   NETFS_DIO_READ);
++				   iocb->ki_flags & IOCB_DIRECT ?
++				   NETFS_DIO_READ : NETFS_UNBUFFERED_READ);
+ 	if (IS_ERR(rreq))
+ 		return PTR_ERR(rreq);
+ 
+diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+index 70ecc8f5f2103..3db401d269e7b 100644
+--- a/fs/netfs/main.c
++++ b/fs/netfs/main.c
+@@ -39,6 +39,7 @@ static const char *netfs_origins[nr__netfs_io_origin] = {
+ 	[NETFS_READ_GAPS]		= "RG",
+ 	[NETFS_READ_SINGLE]		= "R1",
+ 	[NETFS_READ_FOR_WRITE]		= "RW",
++	[NETFS_UNBUFFERED_READ]		= "UR",
+ 	[NETFS_DIO_READ]		= "DR",
+ 	[NETFS_WRITEBACK]		= "WB",
+ 	[NETFS_WRITEBACK_SINGLE]	= "W1",
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 77e7f7c79d27c..43b67a28a8fa0 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -461,6 +461,7 @@ static ssize_t netfs_wait_for_request(struct netfs_io_request *rreq,
+ 		case NETFS_DIO_READ:
+ 		case NETFS_DIO_WRITE:
+ 		case NETFS_READ_SINGLE:
++		case NETFS_UNBUFFERED_READ:
+ 		case NETFS_UNBUFFERED_WRITE:
+ 			break;
+ 		default:
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index d3eb9ba3013a7..31fa0c81e2a43 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -59,6 +59,7 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	    origin == NETFS_READ_GAPS ||
+ 	    origin == NETFS_READ_SINGLE ||
+ 	    origin == NETFS_READ_FOR_WRITE ||
++	    origin == NETFS_UNBUFFERED_READ ||
+ 	    origin == NETFS_DIO_READ) {
+ 		INIT_WORK(&rreq->work, netfs_read_collection_worker);
+ 		rreq->io_streams[0].avail = true;
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index 900dd51c3b941..bad677e58a423 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -342,7 +342,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+ {
+ 	unsigned int i;
+ 
+-	if (rreq->origin == NETFS_DIO_READ) {
++	if (rreq->origin == NETFS_UNBUFFERED_READ ||
++	    rreq->origin == NETFS_DIO_READ) {
+ 		for (i = 0; i < rreq->direct_bv_count; i++) {
+ 			flush_dcache_page(rreq->direct_bv[i].bv_page);
+ 			// TODO: cifs marks pages in the destination buffer
+@@ -360,7 +361,8 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
+ 	}
+ 	if (rreq->netfs_ops->done)
+ 		rreq->netfs_ops->done(rreq);
+-	if (rreq->origin == NETFS_DIO_READ)
++	if (rreq->origin == NETFS_UNBUFFERED_READ ||
++	    rreq->origin == NETFS_DIO_READ)
+ 		inode_dio_end(rreq->inode);
+ }
+ 
+@@ -416,6 +418,7 @@ bool netfs_read_collection(struct netfs_io_request *rreq)
+ 	//netfs_rreq_is_still_valid(rreq);
+ 
+ 	switch (rreq->origin) {
++	case NETFS_UNBUFFERED_READ:
+ 	case NETFS_DIO_READ:
+ 	case NETFS_READ_GAPS:
+ 		netfs_rreq_assess_dio(rreq);
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index e278a1ad1ca3e..8b07851787312 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -367,6 +367,7 @@ void nfs_netfs_read_completion(struct nfs_pgio_header *hdr)
+ 
+ 	sreq = netfs->sreq;
+ 	if (test_bit(NFS_IOHDR_EOF, &hdr->flags) &&
++	    sreq->rreq->origin != NETFS_UNBUFFERED_READ &&
+ 	    sreq->rreq->origin != NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &sreq->flags);
+ 
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 3000c8a9d3ea5..d2df10b8e6fd8 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -219,7 +219,8 @@ static void cifs_issue_read(struct netfs_io_subrequest *subreq)
+ 			goto failed;
+ 	}
+ 
+-	if (subreq->rreq->origin != NETFS_DIO_READ)
++	if (subreq->rreq->origin != NETFS_UNBUFFERED_READ &&
++	    subreq->rreq->origin != NETFS_DIO_READ)
+ 		__set_bit(NETFS_SREQ_CLEAR_TAIL, &subreq->flags);
+ 
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index c3f230732f51d..1464b3a104989 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -206,6 +206,7 @@ enum netfs_io_origin {
+ 	NETFS_READ_GAPS,		/* This read is a synchronous read to fill gaps */
+ 	NETFS_READ_SINGLE,		/* This read should be treated as a single object */
+ 	NETFS_READ_FOR_WRITE,		/* This read is to prepare a write */
++	NETFS_UNBUFFERED_READ,		/* This is an unbuffered read */
+ 	NETFS_DIO_READ,			/* This is a direct I/O read */
+ 	NETFS_WRITEBACK,		/* This write was triggered by writepages */
+ 	NETFS_WRITEBACK_SINGLE,		/* This monolithic write was triggered by writepages */
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 402c5e82e7b8d..4175eec40048a 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -39,6 +39,7 @@
+ 	EM(NETFS_READ_GAPS,			"RG")		\
+ 	EM(NETFS_READ_SINGLE,			"R1")		\
+ 	EM(NETFS_READ_FOR_WRITE,		"RW")		\
++	EM(NETFS_UNBUFFERED_READ,		"UR")		\
+ 	EM(NETFS_DIO_READ,			"DR")		\
+ 	EM(NETFS_WRITEBACK,			"WB")		\
+ 	EM(NETFS_WRITEBACK_SINGLE,		"W1")		\
+-- 
+2.39.5
+
+
+
 
