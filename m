@@ -1,62 +1,58 @@
-Return-Path: <linux-nfs+bounces-12553-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12554-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B136ADEBD2
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 14:23:28 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60791ADECD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 14:42:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64C4C1BC2B9F
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 12:21:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71736165962
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 12:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E990B2E7639;
-	Wed, 18 Jun 2025 12:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60AE2E54C7;
+	Wed, 18 Jun 2025 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXUTunyo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Onzud+4L"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC32E7F3E;
-	Wed, 18 Jun 2025 12:17:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAA92E06E0;
+	Wed, 18 Jun 2025 12:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249025; cv=none; b=ECmuif1TL/1ty3czHqFheaDOCGvMW+cbgfKILNjfcytHLh7Kznk4OfEGqT8z95BQabJJg8OXYEPRC9bN2lEbxY6D/i8dT76NVwDtC8k56Hu34vbBg+jIDUWUJJjWqH62QyK9A8mawphrM67jZYBqJOgJ2hux3RpvlmpQTNVGwJk=
+	t=1750250109; cv=none; b=iJCMtfm+gmxBnPzDFsfyaqwD3DnVzV93iMJfEkDBZ0LXs521YN9Ij6ldAFKPhVsG3alcZn6cY+EWowvCXPqKeQ/NKIod6SEdx80l0Dhag7d42KhJ48mPdV7M4uBxTCEg4HHaYnw76dxFdX1K1mJAgTiUFZm6YdTSQjH+ra9X3KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249025; c=relaxed/simple;
-	bh=JDWuucTS1lkJ7vrfyUZEIdmL3rzVzzcaXJRO2vPbEiU=;
+	s=arc-20240116; t=1750250109; c=relaxed/simple;
+	bh=qlblHo5KETWc8CP8+S/DSbIAsIOnB5URg/BgcHbvmVM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HXNAv16hkjNwE0VHBdABpet+gUKxCzxPmc+9UJ9ALd3566bEGIN7VNVUA47lY8f0E4vBtOaLX0f32Rg3N4KjiOWI+Fgq7+/Bi6kOJ9iCJURG6CBkEMY/MqgVZW1Klm4HdQYWokXTxBajyL19uOrkShWKFsYTa/XN2x824dtS4zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXUTunyo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E0DC4CEE7;
-	Wed, 18 Jun 2025 12:17:04 +0000 (UTC)
+	 Content-Type:MIME-Version; b=rBsz4axOn7JEH5Ti+90iSbIt+P8gzaaPxq4dd0/VyOe2FOD8cuuWRFiXG7j08WW8Mif3/v6Z+nk9JGYNlJYpu0eIuBKtfGD3kX8i2hZr95hk6/icaoI9dClt/htWxYY3cghKs165qga0qERJCkXr10kdxmREqs6CWHh0jVM1Meg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Onzud+4L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F7FC4CEE7;
+	Wed, 18 Jun 2025 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750249025;
-	bh=JDWuucTS1lkJ7vrfyUZEIdmL3rzVzzcaXJRO2vPbEiU=;
+	s=k20201202; t=1750250109;
+	bh=qlblHo5KETWc8CP8+S/DSbIAsIOnB5URg/BgcHbvmVM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YXUTunyosf60QYIIAP6SLmts7vPmnOWrvdgkSGWmDYY5OJmdRBfahFOTsTAjzSJZq
-	 kxPnPlS6slT5+GRGnHwkT/BB5KQAq686YOct4fZLZq/2VusQzUQCyBW8f5oGn9wF5n
-	 rhpq7JLUCEDL71/Yr4fsEURn1kDJoeoH/NrlhM+Nz1ey3/ZGIqLYavjzbMChr99etm
-	 I03eMKHZVUgqKaSIefZqj3zNpEsR1NxcT3YZhDAH0wt3H7D+c3VRK4IOZDGODxAoRC
-	 EZV+6yJ4GLvlSRhEBJ+U7js3yX0He04EoqdPri5i+2xvYlFis8Zx4NZQdEAbExHEX6
-	 q7pndEGZggWRQ==
-Message-ID: <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
-Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
+	b=Onzud+4Lw64B0Cz/MsTcOaxuIvx4FXsUpLK+L0qDW/bq1GqNgeI759uU7VvnI8jFi
+	 iKZ3XhZ4QfZKXgRp8TYLxwommsWRu2kgV9IQ+FuXgAzKObfeGXAtvIY9QbUs/SjvZA
+	 IolpkkycK/2Z964gSh3MnmmzRkwNIyFzab0/RVowz7Whqq+vN9ayWDKFEaJCZU0EpY
+	 PCkI+Bj4F0mQLe7GzMGbFy2t3ZDsSkiAu2K8HE/2wmJh6vPpXsUyXIL8MurW0CGlz2
+	 xAKpqn2bRR2pC8Muu38dHqAx666QpoSfLDHwit213wfprcJabWD9NbOlpEnGddyJJC
+	 5OSa0PWPLVImg==
+Message-ID: <7bf3512276b6d314cbd9d250e16d617d41f3fa61.camel@kernel.org>
+Subject: Re: [PATCH v2] nfsd: Invoke tracking callbacks only after
+ initialization is complete
 From: Jeff Layton <jlayton@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>, Christoph Hellwig
- <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Joanne Koong
- <joannelkoong@gmail.com>, 	miklos@szeredi.hu, brauner@kernel.org,
- linux-fsdevel@vger.kernel.org, 	linux-xfs@vger.kernel.org,
- bernd.schubert@fastmail.fm, kernel-team@meta.com, 	linux-mm@kvack.org,
- linux-nfs@vger.kernel.org
-Date: Wed, 18 Jun 2025 08:17:03 -0400
-In-Reply-To: <aEkHarE9_LlxFTAi@casper.infradead.org>
-References: <20250606233803.1421259-1-joannelkoong@gmail.com>
-	 <20250606233803.1421259-6-joannelkoong@gmail.com>
-	 <aEZoau3AuwoeqQgu@infradead.org> <20250609171444.GL6156@frogsfrogsfrogs>
-	 <aEetuahlyfHGTG7x@infradead.org> <aEkHarE9_LlxFTAi@casper.infradead.org>
+To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
+ neilb@suse.de, 	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+ linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Date: Wed, 18 Jun 2025 08:35:07 -0400
+In-Reply-To: <20250612035506.3651985-1-lilingfeng3@huawei.com>
+References: <20250612035506.3651985-1-lilingfeng3@huawei.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,56 +137,165 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-06-11 at 05:34 +0100, Matthew Wilcox wrote:
-> On Mon, Jun 09, 2025 at 08:59:53PM -0700, Christoph Hellwig wrote:
-> > On Mon, Jun 09, 2025 at 10:14:44AM -0700, Darrick J. Wong wrote:
-> > > > Where "folio laundering" means calling ->launder_folio, right?
-> > >=20
-> > > What does fuse use folio laundering for, anyway?  It looks to me like
-> > > the primary users are invalidate_inode_pages*.  Either the caller car=
-es
-> > > about flushing dirty data and has called filemap_write_and_wait_range=
-;
-> > > or it doesn't and wants to tear down the pagecache ahead of some othe=
-r
-> > > operation that's going to change the file contents and doesn't care.
-> > >=20
-> > > I suppose it could be useful as a last-chance operation on a dirty fo=
-lio
-> > > that was dirtied after a filemap_write_and_wait_range but before
-> > > invalidate_inode_pages*?  Though for xfs we just return EBUSY and let
-> > > the caller try again (or not).  Is there a subtlety to fuse here that=
- I
-> > > don't know about?
-> >=20
-> > My memory might be betraying me, but I think willy once launched an
-> > attempt to see if we can kill launder_folio.  Adding him, and the
-> > mm and nfs lists to check if I have a point :)
+On Thu, 2025-06-12 at 11:55 +0800, Li Lingfeng wrote:
+> Checking whether tracking callbacks can be called based on whether
+> nn->client_tracking_ops is NULL may lead to callbacks being invoked
+> before tracking initialization completes, causing resource access
+> violations (UAF, NULL pointer dereference). Examples:
 >=20
-> I ... got distracted with everything else.
+> 1) nfsd4_client_tracking_init
+>    // set nn->client_tracking_ops
+>    nfsd4_cld_tracking_init
+>     nfs4_cld_state_init
+>      nn->reclaim_str_hashtbl =3D kmalloc_array
+>     ... // error path, goto err
+>     nfs4_cld_state_shutdown
+>      kfree(nn->reclaim_str_hashtbl)
+>                                       write_v4_end_grace
+>                                        nfsd4_end_grace
+>                                         nfsd4_record_grace_done
+>                                          nfsd4_cld_grace_done
+>                                           nfs4_release_reclaim
+>                                            nn->reclaim_str_hashtbl[i]
+>                                            // UAF
+>    // clear nn->client_tracking_ops
 >=20
-> Looking at the original addition of ->launder_page (e3db7691e9f3), I
-> don't understand why we need it.  invalidate_inode_pages2() isn't
-> supposed to invalidate dirty pages, so I don't understand why nfs
-> found it necessary to do writeback from ->releasepage() instead
-> of just returning false like iomap does.
+> 2) nfsd4_client_tracking_init
+>    // set nn->client_tracking_ops
+>    nfsd4_cld_tracking_init
+>                                       write_v4_end_grace
+>                                        nfsd4_end_grace
+>                                         nfsd4_record_grace_done
+>                                          nfsd4_cld_grace_done
+>                                           alloc_cld_upcall
+>                                            cn =3D nn->cld_net
+>                                            spin_lock // cn->cn_lock
+>                                            // NULL deref
+>    // error path, skip init pipe
+>    __nfsd4_init_cld_pipe
+>     cn =3D kzalloc
+>     nn->cld_net =3D cn
+>    // clear nn->client_tracking_ops
 >=20
-> There's now a new question of what the hell btrfs is up to with
-> ->launder_folio, which they just added recently.
 
-IIRC...
 
-The problem was a race where a task could could dirty a page in a
-mmap'ed file after it had been written back but before it was unmapped
-from the pagecache.
+Have you seen this race in the wild?
 
-Bear in mind that the NFS client may need write back and then
-invalidate the pagecache for a file that is still in use if it
-discovers that the inode's attributes have changed on the server.
+Looking at this more closely, I don't think this race is possible.
+You'd need to invoke the ->init routine concurrently from two different
+tasks, but nfsd4_client_tracking_init is called during net ns
+initialization, which should ensure that only one task invokes it.
 
-Trond's solution was to write the page out while holding the page lock
-in this situation. I think we'd all welcome a way to avoid this race
-that didn't require launder_folio().
+
+
+> After nfsd mounts, users can trigger grace_done callbacks via
+> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
+> in error paths, this causes access violations.
+>=20
+> Resolve the issue by leveraging nfsd_mutex to prevent concurrency.
+>=20
+> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
+> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> ---
+>   Changes in v2:
+>     Use nfsd_mutex instead of adding a new flag to prevent concurrency.
+>  fs/nfsd/nfs4recover.c | 8 ++++++++
+>  fs/nfsd/nfs4state.c   | 4 ++++
+>  fs/nfsd/nfsctl.c      | 2 ++
+>  3 files changed, 14 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index 82785db730d9..8ac089f8134c 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -162,7 +162,9 @@ legacy_recdir_name_error(struct nfs4_client *clp, int=
+ error)
+>  	if (error =3D=3D -ENOENT) {
+>  		printk(KERN_ERR "NFSD: disabling legacy clientid tracking. "
+>  			"Reboot recovery will not function correctly!\n");
+> +		mutex_lock(&nfsd_mutex);
+>  		nfsd4_client_tracking_exit(clp->net);
+> +		mutex_unlock(&nfsd_mutex);
+>  	}
+>  }
+> =20
+> @@ -2083,8 +2085,10 @@ nfsd4_client_record_create(struct nfs4_client *clp=
+)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> +	mutex_lock(&nfsd_mutex);
+>  	if (nn->client_tracking_ops)
+>  		nn->client_tracking_ops->create(clp);
+> +	mutex_unlock(&nfsd_mutex);
+>  }
+> =20
+>  void
+> @@ -2092,8 +2096,10 @@ nfsd4_client_record_remove(struct nfs4_client *clp=
+)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> +	mutex_lock(&nfsd_mutex);
+>  	if (nn->client_tracking_ops)
+>  		nn->client_tracking_ops->remove(clp);
+> +	mutex_unlock(&nfsd_mutex);
+>  }
+> =20
+>  int
+> @@ -2101,8 +2107,10 @@ nfsd4_client_record_check(struct nfs4_client *clp)
+>  {
+>  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> =20
+> +	mutex_lock(&nfsd_mutex);
+>  	if (nn->client_tracking_ops)
+>  		return nn->client_tracking_ops->check(clp);
+> +	mutex_unlock(&nfsd_mutex);
+> =20
+>  	return -EOPNOTSUPP;
+>  }
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index d5694987f86f..2794fdc8b678 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2529,7 +2529,9 @@ static void inc_reclaim_complete(struct nfs4_client=
+ *clp)
+>  			nn->reclaim_str_hashtbl_size) {
+>  		printk(KERN_INFO "NFSD: all clients done reclaiming, ending NFSv4 grac=
+e period (net %x)\n",
+>  				clp->net->ns.inum);
+> +		mutex_lock(&nfsd_mutex);
+>  		nfsd4_end_grace(nn);
+> +		mutex_unlock(&nfsd_mutex);
+>  	}
+>  }
+> =20
+> @@ -6773,7 +6775,9 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  		lt.new_timeo =3D 0;
+>  		goto out;
+>  	}
+> +	mutex_lock(&nfsd_mutex);
+>  	nfsd4_end_grace(nn);
+> +	mutex_unlock(&nfsd_mutex);
+> =20
+>  	spin_lock(&nn->s2s_cp_lock);
+>  	idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 3f3e9f6c4250..649850b4bb60 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1085,7 +1085,9 @@ static ssize_t write_v4_end_grace(struct file *file=
+, char *buf, size_t size)
+>  			if (!nn->nfsd_serv)
+>  				return -EBUSY;
+>  			trace_nfsd_end_grace(netns(file));
+> +			mutex_lock(&nfsd_mutex);
+>  			nfsd4_end_grace(nn);
+> +			mutex_lock(&nfsd_mutex);
+>  			break;
+>  		default:
+>  			return -EINVAL;
+
 --=20
 Jeff Layton <jlayton@kernel.org>
 
