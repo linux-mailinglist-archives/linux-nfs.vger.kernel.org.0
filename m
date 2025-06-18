@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-12554-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12555-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60791ADECD2
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 14:42:55 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58CF9ADED01
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 14:50:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71736165962
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 12:38:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DF2ED3B9DE7
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 12:50:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60AE2E54C7;
-	Wed, 18 Jun 2025 12:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 077452E2654;
+	Wed, 18 Jun 2025 12:50:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Onzud+4L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQ0NfVCD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAA92E06E0;
-	Wed, 18 Jun 2025 12:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA032E2640;
+	Wed, 18 Jun 2025 12:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250109; cv=none; b=iJCMtfm+gmxBnPzDFsfyaqwD3DnVzV93iMJfEkDBZ0LXs521YN9Ij6ldAFKPhVsG3alcZn6cY+EWowvCXPqKeQ/NKIod6SEdx80l0Dhag7d42KhJ48mPdV7M4uBxTCEg4HHaYnw76dxFdX1K1mJAgTiUFZm6YdTSQjH+ra9X3KI=
+	t=1750251022; cv=none; b=TyexsjxpEtHVyd4eOsGfhUMX6nDrvxj/a37Td8fh4k/pWh0OG7F0yQdMhomQf2qbzcTKxNRfbJmsBZGhmJu6GvQ1QE6YgPBfT0S/rjAON0QmtaxZcVdJNyR8Slq4cYTAF6laKdh+d9sKDdYyEcxnG0q+tumafxLZv9T56wG/uww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250109; c=relaxed/simple;
-	bh=qlblHo5KETWc8CP8+S/DSbIAsIOnB5URg/BgcHbvmVM=;
+	s=arc-20240116; t=1750251022; c=relaxed/simple;
+	bh=RYR/2pZqj5WTEbQ5KPJo0gncf2BgYE0/xusGNgg2BA0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rBsz4axOn7JEH5Ti+90iSbIt+P8gzaaPxq4dd0/VyOe2FOD8cuuWRFiXG7j08WW8Mif3/v6Z+nk9JGYNlJYpu0eIuBKtfGD3kX8i2hZr95hk6/icaoI9dClt/htWxYY3cghKs165qga0qERJCkXr10kdxmREqs6CWHh0jVM1Meg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Onzud+4L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80F7FC4CEE7;
-	Wed, 18 Jun 2025 12:35:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=I0fXgC3AUhsrrBiHaYpVjMUFFRhD8hpgjPB7Rtd8wBGAjAISyzGkkCmKl0tTg129cS6Q5wQxzty0aYhTAbtvQa02WPQsIpXPM7+zcYrdndFvWExGAPCzRvkspg0mkwmg4LnECjB9nuu1BDWaf+w88t1i39yyZ/sz2tLKt7xnTHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQ0NfVCD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541C8C4CEE7;
+	Wed, 18 Jun 2025 12:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750250109;
-	bh=qlblHo5KETWc8CP8+S/DSbIAsIOnB5URg/BgcHbvmVM=;
+	s=k20201202; t=1750251022;
+	bh=RYR/2pZqj5WTEbQ5KPJo0gncf2BgYE0/xusGNgg2BA0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Onzud+4Lw64B0Cz/MsTcOaxuIvx4FXsUpLK+L0qDW/bq1GqNgeI759uU7VvnI8jFi
-	 iKZ3XhZ4QfZKXgRp8TYLxwommsWRu2kgV9IQ+FuXgAzKObfeGXAtvIY9QbUs/SjvZA
-	 IolpkkycK/2Z964gSh3MnmmzRkwNIyFzab0/RVowz7Whqq+vN9ayWDKFEaJCZU0EpY
-	 PCkI+Bj4F0mQLe7GzMGbFy2t3ZDsSkiAu2K8HE/2wmJh6vPpXsUyXIL8MurW0CGlz2
-	 xAKpqn2bRR2pC8Muu38dHqAx666QpoSfLDHwit213wfprcJabWD9NbOlpEnGddyJJC
-	 5OSa0PWPLVImg==
-Message-ID: <7bf3512276b6d314cbd9d250e16d617d41f3fa61.camel@kernel.org>
+	b=BQ0NfVCDVnRFQhsGtrFT6kpDonnje10TRf58kL8JxTGk4OYfilvIMyh8ePtVZwznL
+	 0VsPBuifWImFMAZhK+thXp8ZKJBUvq6dxjLE8uCcR4fsy/MJgWAoPObm5z0FiGyDeK
+	 55wvl6fM9C9ugsoQQC8Fb8N6+Zbez134gL0oh71KzU2mlGMkootkep7cSydmLXLwZO
+	 c+nmgbFiWNE+xMQynbcIL23tbZ7x2P1hcEGOt0b8Qnk3xtUR4dbshxM6LhdPtHWsSO
+	 TPs5SBJl7QpTXo/XuC+7dsvm38PdrqkkgedmHG8lu0uDFY6CwPTK8y2t8HiQofoH0b
+	 5owDWi+p31qmw==
+Message-ID: <ad9a5a7dff19f8e45a8808f8f3142ae65f44b4da.camel@kernel.org>
 Subject: Re: [PATCH v2] nfsd: Invoke tracking callbacks only after
  initialization is complete
 From: Jeff Layton <jlayton@kernel.org>
@@ -50,9 +50,10 @@ To: Li Lingfeng <lilingfeng3@huawei.com>, chuck.lever@oracle.com,
  linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
 Cc: yukuai1@huaweicloud.com, houtao1@huawei.com, yi.zhang@huawei.com, 
 	yangerkun@huawei.com, lilingfeng@huaweicloud.com
-Date: Wed, 18 Jun 2025 08:35:07 -0400
-In-Reply-To: <20250612035506.3651985-1-lilingfeng3@huawei.com>
+Date: Wed, 18 Jun 2025 08:50:20 -0400
+In-Reply-To: <7bf3512276b6d314cbd9d250e16d617d41f3fa61.camel@kernel.org>
 References: <20250612035506.3651985-1-lilingfeng3@huawei.com>
+	 <7bf3512276b6d314cbd9d250e16d617d41f3fa61.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,164 +138,172 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-06-12 at 11:55 +0800, Li Lingfeng wrote:
-> Checking whether tracking callbacks can be called based on whether
-> nn->client_tracking_ops is NULL may lead to callbacks being invoked
-> before tracking initialization completes, causing resource access
-> violations (UAF, NULL pointer dereference). Examples:
+On Wed, 2025-06-18 at 08:35 -0400, Jeff Layton wrote:
+> On Thu, 2025-06-12 at 11:55 +0800, Li Lingfeng wrote:
+> > Checking whether tracking callbacks can be called based on whether
+> > nn->client_tracking_ops is NULL may lead to callbacks being invoked
+> > before tracking initialization completes, causing resource access
+> > violations (UAF, NULL pointer dereference). Examples:
+> >=20
+> > 1) nfsd4_client_tracking_init
+> >    // set nn->client_tracking_ops
+> >    nfsd4_cld_tracking_init
+> >     nfs4_cld_state_init
+> >      nn->reclaim_str_hashtbl =3D kmalloc_array
+> >     ... // error path, goto err
+> >     nfs4_cld_state_shutdown
+> >      kfree(nn->reclaim_str_hashtbl)
+> >                                       write_v4_end_grace
+> >                                        nfsd4_end_grace
+> >                                         nfsd4_record_grace_done
+> >                                          nfsd4_cld_grace_done
+> >                                           nfs4_release_reclaim
+> >                                            nn->reclaim_str_hashtbl[i]
+> >                                            // UAF
+> >    // clear nn->client_tracking_ops
+> >=20
+> > 2) nfsd4_client_tracking_init
+> >    // set nn->client_tracking_ops
+> >    nfsd4_cld_tracking_init
+> >                                       write_v4_end_grace
+> >                                        nfsd4_end_grace
+> >                                         nfsd4_record_grace_done
+> >                                          nfsd4_cld_grace_done
+> >                                           alloc_cld_upcall
+> >                                            cn =3D nn->cld_net
+> >                                            spin_lock // cn->cn_lock
+> >                                            // NULL deref
+> >    // error path, skip init pipe
+> >    __nfsd4_init_cld_pipe
+> >     cn =3D kzalloc
+> >     nn->cld_net =3D cn
+> >    // clear nn->client_tracking_ops
+> >=20
 >=20
-> 1) nfsd4_client_tracking_init
->    // set nn->client_tracking_ops
->    nfsd4_cld_tracking_init
->     nfs4_cld_state_init
->      nn->reclaim_str_hashtbl =3D kmalloc_array
->     ... // error path, goto err
->     nfs4_cld_state_shutdown
->      kfree(nn->reclaim_str_hashtbl)
->                                       write_v4_end_grace
->                                        nfsd4_end_grace
->                                         nfsd4_record_grace_done
->                                          nfsd4_cld_grace_done
->                                           nfs4_release_reclaim
->                                            nn->reclaim_str_hashtbl[i]
->                                            // UAF
->    // clear nn->client_tracking_ops
 >=20
-> 2) nfsd4_client_tracking_init
->    // set nn->client_tracking_ops
->    nfsd4_cld_tracking_init
->                                       write_v4_end_grace
->                                        nfsd4_end_grace
->                                         nfsd4_record_grace_done
->                                          nfsd4_cld_grace_done
->                                           alloc_cld_upcall
->                                            cn =3D nn->cld_net
->                                            spin_lock // cn->cn_lock
->                                            // NULL deref
->    // error path, skip init pipe
->    __nfsd4_init_cld_pipe
->     cn =3D kzalloc
->     nn->cld_net =3D cn
->    // clear nn->client_tracking_ops
+> Have you seen this race in the wild?
+>=20
+> Looking at this more closely, I don't think this race is possible.
+> You'd need to invoke the ->init routine concurrently from two different
+> tasks, but nfsd4_client_tracking_init is called during net ns
+> initialization, which should ensure that only one task invokes it.
 >=20
 
+My bad. It's not called during net namespace initialization, but during
+server startup. But, the nfsd_mutex is held during this initialization,
+so I still don't think this race can happen.
 
-Have you seen this race in the wild?
-
-Looking at this more closely, I don't think this race is possible.
-You'd need to invoke the ->init routine concurrently from two different
-tasks, but nfsd4_client_tracking_init is called during net ns
-initialization, which should ensure that only one task invokes it.
-
-
-
-> After nfsd mounts, users can trigger grace_done callbacks via
-> /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
-> in error paths, this causes access violations.
 >=20
-> Resolve the issue by leveraging nfsd_mutex to prevent concurrency.
 >=20
-> Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net")
-> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
-> ---
->   Changes in v2:
->     Use nfsd_mutex instead of adding a new flag to prevent concurrency.
->  fs/nfsd/nfs4recover.c | 8 ++++++++
->  fs/nfsd/nfs4state.c   | 4 ++++
->  fs/nfsd/nfsctl.c      | 2 ++
->  3 files changed, 14 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index 82785db730d9..8ac089f8134c 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -162,7 +162,9 @@ legacy_recdir_name_error(struct nfs4_client *clp, int=
- error)
->  	if (error =3D=3D -ENOENT) {
->  		printk(KERN_ERR "NFSD: disabling legacy clientid tracking. "
->  			"Reboot recovery will not function correctly!\n");
-> +		mutex_lock(&nfsd_mutex);
->  		nfsd4_client_tracking_exit(clp->net);
-> +		mutex_unlock(&nfsd_mutex);
->  	}
->  }
-> =20
-> @@ -2083,8 +2085,10 @@ nfsd4_client_record_create(struct nfs4_client *clp=
+> > After nfsd mounts, users can trigger grace_done callbacks via
+> > /proc/fs/nfsd/v4_end_grace. If resources are uninitialized or freed
+> > in error paths, this causes access violations.
+> >=20
+> > Resolve the issue by leveraging nfsd_mutex to prevent concurrency.
+> >=20
+> > Fixes: 52e19c09a183 ("nfsd: make reclaim_str_hashtbl allocated per net"=
 )
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> +	mutex_lock(&nfsd_mutex);
->  	if (nn->client_tracking_ops)
->  		nn->client_tracking_ops->create(clp);
-> +	mutex_unlock(&nfsd_mutex);
->  }
-> =20
->  void
-> @@ -2092,8 +2096,10 @@ nfsd4_client_record_remove(struct nfs4_client *clp=
-)
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> +	mutex_lock(&nfsd_mutex);
->  	if (nn->client_tracking_ops)
->  		nn->client_tracking_ops->remove(clp);
-> +	mutex_unlock(&nfsd_mutex);
->  }
-> =20
->  int
-> @@ -2101,8 +2107,10 @@ nfsd4_client_record_check(struct nfs4_client *clp)
->  {
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> =20
-> +	mutex_lock(&nfsd_mutex);
->  	if (nn->client_tracking_ops)
->  		return nn->client_tracking_ops->check(clp);
-> +	mutex_unlock(&nfsd_mutex);
-> =20
->  	return -EOPNOTSUPP;
->  }
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d5694987f86f..2794fdc8b678 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2529,7 +2529,9 @@ static void inc_reclaim_complete(struct nfs4_client=
- *clp)
->  			nn->reclaim_str_hashtbl_size) {
->  		printk(KERN_INFO "NFSD: all clients done reclaiming, ending NFSv4 grac=
-e period (net %x)\n",
->  				clp->net->ns.inum);
-> +		mutex_lock(&nfsd_mutex);
->  		nfsd4_end_grace(nn);
-> +		mutex_unlock(&nfsd_mutex);
->  	}
->  }
-> =20
-> @@ -6773,7 +6775,9 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		lt.new_timeo =3D 0;
->  		goto out;
->  	}
-> +	mutex_lock(&nfsd_mutex);
->  	nfsd4_end_grace(nn);
-> +	mutex_unlock(&nfsd_mutex);
-> =20
->  	spin_lock(&nn->s2s_cp_lock);
->  	idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 3f3e9f6c4250..649850b4bb60 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1085,7 +1085,9 @@ static ssize_t write_v4_end_grace(struct file *file=
-, char *buf, size_t size)
->  			if (!nn->nfsd_serv)
->  				return -EBUSY;
->  			trace_nfsd_end_grace(netns(file));
-> +			mutex_lock(&nfsd_mutex);
->  			nfsd4_end_grace(nn);
-> +			mutex_lock(&nfsd_mutex);
->  			break;
->  		default:
->  			return -EINVAL;
+> > Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > ---
+> >   Changes in v2:
+> >     Use nfsd_mutex instead of adding a new flag to prevent concurrency.
+> >  fs/nfsd/nfs4recover.c | 8 ++++++++
+> >  fs/nfsd/nfs4state.c   | 4 ++++
+> >  fs/nfsd/nfsctl.c      | 2 ++
+> >  3 files changed, 14 insertions(+)
+> >=20
+> > diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> > index 82785db730d9..8ac089f8134c 100644
+> > --- a/fs/nfsd/nfs4recover.c
+> > +++ b/fs/nfsd/nfs4recover.c
+> > @@ -162,7 +162,9 @@ legacy_recdir_name_error(struct nfs4_client *clp, i=
+nt error)
+> >  	if (error =3D=3D -ENOENT) {
+> >  		printk(KERN_ERR "NFSD: disabling legacy clientid tracking. "
+> >  			"Reboot recovery will not function correctly!\n");
+> > +		mutex_lock(&nfsd_mutex);
+> >  		nfsd4_client_tracking_exit(clp->net);
+> > +		mutex_unlock(&nfsd_mutex);
+> >  	}
+> >  }
+> > =20
+> > @@ -2083,8 +2085,10 @@ nfsd4_client_record_create(struct nfs4_client *c=
+lp)
+> >  {
+> >  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> > =20
+> > +	mutex_lock(&nfsd_mutex);
+> >  	if (nn->client_tracking_ops)
+> >  		nn->client_tracking_ops->create(clp);
+> > +	mutex_unlock(&nfsd_mutex);
+> >  }
+> > =20
+> >  void
+> > @@ -2092,8 +2096,10 @@ nfsd4_client_record_remove(struct nfs4_client *c=
+lp)
+> >  {
+> >  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> > =20
+> > +	mutex_lock(&nfsd_mutex);
+> >  	if (nn->client_tracking_ops)
+> >  		nn->client_tracking_ops->remove(clp);
+> > +	mutex_unlock(&nfsd_mutex);
+> >  }
+> > =20
+> >  int
+> > @@ -2101,8 +2107,10 @@ nfsd4_client_record_check(struct nfs4_client *cl=
+p)
+> >  {
+> >  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
+> > =20
+> > +	mutex_lock(&nfsd_mutex);
+> >  	if (nn->client_tracking_ops)
+> >  		return nn->client_tracking_ops->check(clp);
+> > +	mutex_unlock(&nfsd_mutex);
+> > =20
+> >  	return -EOPNOTSUPP;
+> >  }
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index d5694987f86f..2794fdc8b678 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -2529,7 +2529,9 @@ static void inc_reclaim_complete(struct nfs4_clie=
+nt *clp)
+> >  			nn->reclaim_str_hashtbl_size) {
+> >  		printk(KERN_INFO "NFSD: all clients done reclaiming, ending NFSv4 gr=
+ace period (net %x)\n",
+> >  				clp->net->ns.inum);
+> > +		mutex_lock(&nfsd_mutex);
+> >  		nfsd4_end_grace(nn);
+> > +		mutex_unlock(&nfsd_mutex);
+> >  	}
+> >  }
+> > =20
+> > @@ -6773,7 +6775,9 @@ nfs4_laundromat(struct nfsd_net *nn)
+> >  		lt.new_timeo =3D 0;
+> >  		goto out;
+> >  	}
+> > +	mutex_lock(&nfsd_mutex);
+> >  	nfsd4_end_grace(nn);
+> > +	mutex_unlock(&nfsd_mutex);
+> > =20
+> >  	spin_lock(&nn->s2s_cp_lock);
+> >  	idr_for_each_entry(&nn->s2s_cp_stateids, cps_t, i) {
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index 3f3e9f6c4250..649850b4bb60 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -1085,7 +1085,9 @@ static ssize_t write_v4_end_grace(struct file *fi=
+le, char *buf, size_t size)
+> >  			if (!nn->nfsd_serv)
+> >  				return -EBUSY;
+> >  			trace_nfsd_end_grace(netns(file));
+> > +			mutex_lock(&nfsd_mutex);
+> >  			nfsd4_end_grace(nn);
+> > +			mutex_lock(&nfsd_mutex);
+> >  			break;
+> >  		default:
+> >  			return -EINVAL;
 
 --=20
 Jeff Layton <jlayton@kernel.org>
