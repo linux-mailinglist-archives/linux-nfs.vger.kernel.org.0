@@ -1,68 +1,67 @@
-Return-Path: <linux-nfs+bounces-12549-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12550-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 787D2ADDEA8
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 00:23:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12C24ADE2BB
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 06:47:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD4FF189C1DE
-	for <lists+linux-nfs@lfdr.de>; Tue, 17 Jun 2025 22:23:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0C947A38DC
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 04:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9091C288CBE;
-	Tue, 17 Jun 2025 22:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C4491D5CE8;
+	Wed, 18 Jun 2025 04:47:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i93m4Xw5"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xRnL3Qcl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BA52F5312;
-	Tue, 17 Jun 2025 22:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC9613E02D;
+	Wed, 18 Jun 2025 04:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198987; cv=none; b=lZUbomSnXURwbTX2Up0T8A2LNBVAhzV4I9x5oAdAbtHFyNOnmkwchl18QtiQ31iwzziXaJxLlBuIxdr9GpTkikbLbbdDMO9LSv2qXuV3DAZmtDYFUoDJBjJ67JP613yHig5s8wSbrS3twcbItTVhuAINpY0tge3i/A4AoC/RBkc=
+	t=1750222034; cv=none; b=D2w1JAHVc7lFH5A8oi6fVWC8OsrHSnCU8jRURZAbabYzqCezm8Nnz8SIJ489O0mfLdmGiNP468yRIpa/g771RPDQPLcZ6gsmlS6cehsLlJv+1DN3USEyaQnnhVEjp0nuTJbp4vo1wmv8YSHp0ybezasxiCxsonqMuySy6WSFTiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198987; c=relaxed/simple;
-	bh=WrkWEW3mAuaJ30zEB0S29nyuWw1+zGZV3L0tzl25bM8=;
+	s=arc-20240116; t=1750222034; c=relaxed/simple;
+	bh=Hex2wf7cguz9O50FQk21t8Ar4bJrCkM5W2V/d1UWNX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2d02jo45i7qRr+23+jGqc0ryHcUmyNVE+0MxnuTlLyIFTVFBE7pGz0Z5iUakK64AVjoaH/RrfRKOrjLycS7/hWpjlf1z0daiBIFGch3MAtjIJvdSAacA8WOPSa7/PgQnILS8UIrglzkeoG50fbgHOFPgf+NRHBj+0eG7US6lxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i93m4Xw5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C79C4CEE3;
-	Tue, 17 Jun 2025 22:23:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750198986;
-	bh=WrkWEW3mAuaJ30zEB0S29nyuWw1+zGZV3L0tzl25bM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i93m4Xw5GvMaXfuuU4fc2ZxGWyYQ7R64XxT66H5nSFY00HpXjYHXPIQ7L5ft7PK2G
-	 BxpX0iMwTizxvpxC5qtOO6mHkgspJJ7KVrWecwr2oHfMTmE83lRlPfqrqPfmu/+0xk
-	 JHpxWnL7gRMidHekTjYkz7dNFm1F9ijhlYMDzgxq4UAi3RQLjgoFpeHh9CY0ao/dlG
-	 NDJTXlGpjDiut4jBVemSou2fGXcSkTerUwyjRfuPCXwRZjWVx80rEJiPebQF/Kjpkf
-	 2ZUUtMBNvzmzee9icOsk45mEYN+eIRD4ZVDqDNFLtEJd5B9jm7mcwYubNSf4G1rqw1
-	 Et4dqy29zBWzg==
-Date: Tue, 17 Jun 2025 18:23:05 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-	linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>, david.flynn@hammerspace.com
-Subject: [RFC PATCH] lib/iov_iter: remove piecewise bvec length checking in
- iov_iter_aligned_bvec [was: Re: need SUNRPC TCP to receive into aligned
- pages]
-Message-ID: <aFHqyU4qO_W1enUT@kernel.org>
-References: <aEn2-mYA3VDv-vB8@kernel.org>
- <110c7644b829ce158680979e6cd358193ea3f52b.camel@kernel.org>
- <d13ef7d6-0040-40ac-9761-922a1ec5d911@oracle.com>
- <f201c16677525288597becfd904d873931092cea.camel@kernel.org>
- <aEu7GSa7HRNNVJVA@infradead.org>
- <aEvuJP7_xhVk5R4S@kernel.org>
- <aFAOLAOsWngZV_aL@infradead.org>
- <aFBBToft6H-r51TH@kernel.org>
- <aFDw7QTtvJOxEg-o@infradead.org>
- <aFHPgrPM798wXdSG@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFpB5TCUu3nZwvFUSuNNorFxtGmjFMCtd+sSR2ShjUdGhqPqM+A6ilmTr5WLRJ3OcnysZD2rE++hFKfdHL2bvpqBxnS49/AThrVdGnnDBjrmD8HmN+2E7NeW+H/BW/LL7OHtDIh9nZuuXu4vWRtpOnG1a8V/iDlakMQvtLnw8sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xRnL3Qcl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=g0EyjvhAS1Km3yCILzus7ZZgUkl096TgjUz70d73o+s=; b=xRnL3QclCBTneZxyRvOQKeoAJw
+	WFWsJRoUO17O0yPeqzV/lXobZwMedKmPqKiQuYYY/W8cjidH9cYQY9TknREFhB54Vln4cAuuaKrfI
+	uQjqMorruhedHG2gDmZX9BdhJd3vPxGvK2HtGafdCxzVjwEkeHx/43ybyiXUanAUfCPTmO3jkuyOK
+	5WhZZejGs9FW9D8WEgSExF1Ca5NH5e9O7YFWgvEhEdZP8vciOyUNIhjHY5qHFrx1ytDrCeGMMHXeH
+	Nfi7EwG+OfK2fsKFiKLuxkUYgb9gv1LvvvVamBLUrYuz3aY0LyurBJEtxBE9vbFV9vu1W+bcwpKHH
+	w9wZMM7g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRkhc-000000092bR-1D3q;
+	Wed, 18 Jun 2025 04:47:12 +0000
+Date: Tue, 17 Jun 2025 21:47:12 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Joanne Koong <joannelkoong@gmail.com>, miklos@szeredi.hu,
+	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, bernd.schubert@fastmail.fm,
+	kernel-team@meta.com, linux-mm@kvack.org, linux-nfs@vger.kernel.org
+Subject: does fuse need ->launder_folios, was: Re: [PATCH v1 5/8] iomap: add
+ iomap_writeback_dirty_folio()
+Message-ID: <aFJE0L6P9LlHobIZ@infradead.org>
+References: <20250606233803.1421259-1-joannelkoong@gmail.com>
+ <20250606233803.1421259-6-joannelkoong@gmail.com>
+ <aEZoau3AuwoeqQgu@infradead.org>
+ <20250609171444.GL6156@frogsfrogsfrogs>
+ <aEetuahlyfHGTG7x@infradead.org>
+ <aEkHarE9_LlxFTAi@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -71,114 +70,25 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFHPgrPM798wXdSG@kernel.org>
+In-Reply-To: <aEkHarE9_LlxFTAi@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-[Cc'ing Al and Andrew]
+On Wed, Jun 11, 2025 at 05:34:50AM +0100, Matthew Wilcox wrote:
+> > My memory might be betraying me, but I think willy once launched an
+> > attempt to see if we can kill launder_folio.  Adding him, and the
+> > mm and nfs lists to check if I have a point :)
+> 
+> I ... got distracted with everything else.
+> 
+> Looking at the original addition of ->launder_page (e3db7691e9f3), I
+> don't understand why we need it.  invalidate_inode_pages2() isn't
+> supposed to invalidate dirty pages, so I don't understand why nfs
+> found it necessary to do writeback from ->releasepage() instead
+> of just returning false like iomap does.
 
-On Tue, Jun 17, 2025 at 04:26:42PM -0400, Mike Snitzer wrote:
-> On Mon, Jun 16, 2025 at 09:37:01PM -0700, Christoph Hellwig wrote:
-> > On Mon, Jun 16, 2025 at 12:07:42PM -0400, Mike Snitzer wrote:
-> > > But that's OK... my test bdev is a bad example (archaic VMware vSphere
-> > > provided SCSI device): it doesn't reflect expected modern hardware.
-> > > 
-> > > But I just slapped together a test pmem blockdevice (memory backed,
-> > > using memmap=6G!18G) and it too has dma_alignment=511
-> > 
-> > That's the block layer default when not overriden by the driver, I guess
-> > pmem folks didn't care enough.  I suspect it should not have any
-> > alignment requirements at all.
-> 
-> Yeah, I hacked it with this just to quickly simulate NVMe's dma_alignment:
-> 
-> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-> index 210fb77f51ba..0ab2826073f9 100644
-> --- a/drivers/nvdimm/pmem.c
-> +++ b/drivers/nvdimm/pmem.c
-> @@ -457,6 +457,7 @@ static int pmem_attach_disk(struct device *dev,
->                 .max_hw_sectors         = UINT_MAX,
->                 .features               = BLK_FEAT_WRITE_CACHE |
->                                           BLK_FEAT_SYNCHRONOUS,
-> +               .dma_alignment          = 3,
->         };
->         int nid = dev_to_node(dev), fua;
->         struct resource *res = &nsio->res;
-> 
-> > > I'd like NFSD to be able to know if its bvec is dma-aligned, before
-> > > issuing DIO writes to underlying XFS.  AFAIK I can do that simply by
-> > > checking the STATX_DIOALIGN provided dio_mem_align...
-> > 
-> > Exactly.
-> 
-> I'm finding that even with dma_alignment=3 the bvec, that
-> nfsd_vfs_write()'s call to xdr_buf_to_bvec() produces from NFS's WRITE
-> payload, still causes iov_iter_aligned_bvec() to return false.
-> 
-> The reason is that iov_iter_aligned_bvec() inspects each member of the
-> bio_vec in isolation (in its while() loop). So even though NFS WRITE
-> payload's overall size is aligned on-disk (e.g. offset=0 len=512K) its
-> first and last bvec members are _not_ aligned (due to 512K NFS WRITE
-> payload being offset 148 bytes into the first page of the pages
-> allocated for it by SUNRPC). So iov_iter_aligned_bvec() fails at this
-> check:
-> 
->   if (len & len_mask)
->           return false;
-> 
-> with tracing I added:
-> 
->   nfsd-14027   [001] .....  3734.668780: nfsd_vfs_write: iov_iter_aligned_bvec: addr_mask=3 len_mask=511
->   nfsd-14027   [001] .....  3734.668781: nfsd_vfs_write: iov_iter_aligned_bvec: len=3948 & len_mask=511 failed
-> 
-> Is this another case of the checks being too strict?  The bvec does
-> describe a contiguous 512K extent of on-disk LBA, just not if
-> inspected piece-wise.
-> 
-> BTW, XFS's directio code _will_ also check with
-> iov_iter_aligned_bvec() via iov_iter_is_aligned().
+Yeah.  Miklos (and other fuse folks), can you help figuring out
+if fuse really wants ->launder_folio?  Because it would be really good
+to settle this question before we have to add iomap infrastruture for
+it.
 
-This works, I just don't know what (if any) breakage it exposes us to:
-
-Author: Mike Snitzer <snitzer@kernel.org>
-Date:   Tue Jun 17 22:04:44 2025 +0000
-Subject: lib/iov_iter: remove piecewise bvec length checking in iov_iter_aligned_bvec
-
-iov_iter_aligned_bvec() is strictly checking alignment of each element
-of the bvec to arrive at whether the bvec is aligned relative to
-dma_alignment and on-disk alignment.  Checking each element
-individually results in disallowing a bvec that in aggregate is
-perfectly aligned relative to the provided @len_mask.
-
-Relax the on-disk alignment checking such that it is done on the full
-extent described by the bvec but still do piecewise checking of the
-dma_alignment for each bvec's bv_offset.
-
-This allows for NFS's WRITE payload to be issued using O_DIRECT as
-long as the bvec created with xdr_buf_to_bvec() is composed of pages
-that respect the underlying device's dma_alignment (@addr_mask) and
-the overall contiguous on-disk extent is aligned relative to the
-logical_block_size (@len_mask).
-
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index bdb37d572e97..b2ae482b8a1d 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -819,13 +819,14 @@ static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
- 	unsigned skip = i->iov_offset;
- 	size_t size = i->count;
- 
-+	if (size & len_mask)
-+		return false;
-+
- 	do {
- 		size_t len = bvec->bv_len;
- 
- 		if (len > size)
- 			len = size;
--		if (len & len_mask)
--			return false;
- 		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
- 			return false;
- 
 
