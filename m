@@ -1,56 +1,62 @@
-Return-Path: <linux-nfs+bounces-12552-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12553-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7901DADEAF0
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 13:55:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B136ADEBD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 14:23:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD6993AB731
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 11:51:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 64C4C1BC2B9F
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jun 2025 12:21:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 760CA2DE1EC;
-	Wed, 18 Jun 2025 11:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E990B2E7639;
+	Wed, 18 Jun 2025 12:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSh2KrQI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YXUTunyo"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3FC2C3258;
-	Wed, 18 Jun 2025 11:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCC32E7F3E;
+	Wed, 18 Jun 2025 12:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247437; cv=none; b=bNp+kIbbXUMky3z9dGmJU9CbGJfqeHP33vyIv5dQXiz8Ur0Z9RcYDTSJEUUac32l5gjDUwgmmIRqVEuuTAmdQAY6IngBFFpIAcZElAa1CUTxiWw2nadzd88jBqzzahPbNmNQIZiTdtCHpEfxBi3iB4TtYxVK+Qnatzk5vmXXb1s=
+	t=1750249025; cv=none; b=ECmuif1TL/1ty3czHqFheaDOCGvMW+cbgfKILNjfcytHLh7Kznk4OfEGqT8z95BQabJJg8OXYEPRC9bN2lEbxY6D/i8dT76NVwDtC8k56Hu34vbBg+jIDUWUJJjWqH62QyK9A8mawphrM67jZYBqJOgJ2hux3RpvlmpQTNVGwJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247437; c=relaxed/simple;
-	bh=08NkLB6cEniKmLmxnOXjf/XpsQuGpQY+0IAnMiMy0rw=;
+	s=arc-20240116; t=1750249025; c=relaxed/simple;
+	bh=JDWuucTS1lkJ7vrfyUZEIdmL3rzVzzcaXJRO2vPbEiU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lh1X7udAIdTUdykcJEs41RCnQMxG6n9o+XZPJh1iVgCJXJgqcZbU7M5Tuo0JDbft84Pj85EYuoTYeB+bVziqL9Rdye0HLmk3djFZ+cCp9J/dotElpCpc7kwaG7xc9GZZdWtiCccYt/orj1ZDj/CpxIZbxfP1UYGLk4NUrPeSh4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSh2KrQI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0180FC4CEE7;
-	Wed, 18 Jun 2025 11:50:34 +0000 (UTC)
+	 Content-Type:MIME-Version; b=HXNAv16hkjNwE0VHBdABpet+gUKxCzxPmc+9UJ9ALd3566bEGIN7VNVUA47lY8f0E4vBtOaLX0f32Rg3N4KjiOWI+Fgq7+/Bi6kOJ9iCJURG6CBkEMY/MqgVZW1Klm4HdQYWokXTxBajyL19uOrkShWKFsYTa/XN2x824dtS4zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YXUTunyo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E0DC4CEE7;
+	Wed, 18 Jun 2025 12:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750247435;
-	bh=08NkLB6cEniKmLmxnOXjf/XpsQuGpQY+0IAnMiMy0rw=;
+	s=k20201202; t=1750249025;
+	bh=JDWuucTS1lkJ7vrfyUZEIdmL3rzVzzcaXJRO2vPbEiU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OSh2KrQIhSH2gbB3rmIMHQrJ+FgOfJaHOSxTT3OwMksTFLH/rzlWT75MipZAV4rSb
-	 1ORNj2OpTau5syxKjLQh2iH4SeDQaxBldPa5tyoOXMl9XLWLCRjaiT7qEKHJaqGhEF
-	 y0/hRLucRMNsaWvr4qykNedtjqfod9ZrxcphgJHNSE1oSi0uTBw5/Z6IAw7PNcGKIB
-	 kDvzAZa8QdUQHiqR8ka6jWyFFlUwdbOhFjATFog0hnrI23WSHuyOoJYweFC96ggU+z
-	 s+DO33IVGODE+vWKkoBVaZ1ogKRJtkHmkCoXjEqyrHg4ViL1E8stQ8BaYOCZwW/7lg
-	 +VMb31hrc9OAg==
-Message-ID: <197b15028aa942d2812b1746aff453c4e791aa00.camel@kernel.org>
-Subject: Re: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
+	b=YXUTunyosf60QYIIAP6SLmts7vPmnOWrvdgkSGWmDYY5OJmdRBfahFOTsTAjzSJZq
+	 kxPnPlS6slT5+GRGnHwkT/BB5KQAq686YOct4fZLZq/2VusQzUQCyBW8f5oGn9wF5n
+	 rhpq7JLUCEDL71/Yr4fsEURn1kDJoeoH/NrlhM+Nz1ey3/ZGIqLYavjzbMChr99etm
+	 I03eMKHZVUgqKaSIefZqj3zNpEsR1NxcT3YZhDAH0wt3H7D+c3VRK4IOZDGODxAoRC
+	 EZV+6yJ4GLvlSRhEBJ+U7js3yX0He04EoqdPri5i+2xvYlFis8Zx4NZQdEAbExHEX6
+	 q7pndEGZggWRQ==
+Message-ID: <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
+Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
 From: Jeff Layton <jlayton@kernel.org>
-To: chenxiaosong@chenxiaosong.com, chuck.lever@oracle.com, neilb@suse.de, 
-	okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- huhai@kylinos.cn,  ChenXiaoSong <chenxiaosong@kylinos.cn>
-Date: Wed, 18 Jun 2025 07:50:33 -0400
-In-Reply-To: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
-References: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+To: Matthew Wilcox <willy@infradead.org>, Christoph Hellwig
+ <hch@infradead.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, Joanne Koong
+ <joannelkoong@gmail.com>, 	miklos@szeredi.hu, brauner@kernel.org,
+ linux-fsdevel@vger.kernel.org, 	linux-xfs@vger.kernel.org,
+ bernd.schubert@fastmail.fm, kernel-team@meta.com, 	linux-mm@kvack.org,
+ linux-nfs@vger.kernel.org
+Date: Wed, 18 Jun 2025 08:17:03 -0400
+In-Reply-To: <aEkHarE9_LlxFTAi@casper.infradead.org>
+References: <20250606233803.1421259-1-joannelkoong@gmail.com>
+	 <20250606233803.1421259-6-joannelkoong@gmail.com>
+	 <aEZoau3AuwoeqQgu@infradead.org> <20250609171444.GL6156@frogsfrogsfrogs>
+	 <aEetuahlyfHGTG7x@infradead.org> <aEkHarE9_LlxFTAi@casper.infradead.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,120 +141,56 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2025-06-18 at 18:41 +0800, chenxiaosong@chenxiaosong.com wrote:
-> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On Wed, 2025-06-11 at 05:34 +0100, Matthew Wilcox wrote:
+> On Mon, Jun 09, 2025 at 08:59:53PM -0700, Christoph Hellwig wrote:
+> > On Mon, Jun 09, 2025 at 10:14:44AM -0700, Darrick J. Wong wrote:
+> > > > Where "folio laundering" means calling ->launder_folio, right?
+> > >=20
+> > > What does fuse use folio laundering for, anyway?  It looks to me like
+> > > the primary users are invalidate_inode_pages*.  Either the caller car=
+es
+> > > about flushing dirty data and has called filemap_write_and_wait_range=
+;
+> > > or it doesn't and wants to tear down the pagecache ahead of some othe=
+r
+> > > operation that's going to change the file contents and doesn't care.
+> > >=20
+> > > I suppose it could be useful as a last-chance operation on a dirty fo=
+lio
+> > > that was dirtied after a filemap_write_and_wait_range but before
+> > > invalidate_inode_pages*?  Though for xfs we just return EBUSY and let
+> > > the caller try again (or not).  Is there a subtlety to fuse here that=
+ I
+> > > don't know about?
+> >=20
+> > My memory might be betraying me, but I think willy once launched an
+> > attempt to see if we can kill launder_folio.  Adding him, and the
+> > mm and nfs lists to check if I have a point :)
 >=20
-> Before commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_clie=
-nt"),
-> we had a null-ptr-deref in nfsd4_probe_callback() (Link[1]):
+> I ... got distracted with everything else.
 >=20
->  nfsd: last server has exited, flushing export cache
->  NFSD: starting 90-second grace period (net f0000030)
->  Unable to handle kernel NULL pointer dereference at virtual address 0000=
-000000000000
->  ...
->  Call trace:
->   __queue_work+0xb4/0x558
->   queue_work_on+0x88/0x90
->   nfsd4_probe_callback+0x4c/0x58 [nfsd]
->  NFSD: starting 90-second grace period (net f0000030)
->   nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
->   nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
->   nfsd4_create_session+0x5b8/0x718 [nfsd]
->   nfsd4_proc_compound+0x4c0/0x710 [nfsd]
->   nfsd_dispatch+0x104/0x248 [nfsd]
->   svc_process_common+0x348/0x808 [sunrpc]
->   svc_process+0xb0/0xc8 [sunrpc]
->   nfsd+0xf0/0x160 [nfsd]
->   kthread+0x134/0x138
->   ret_from_fork+0x10/0x18
->  Code: aa1c03e0 97ffffba aa0003e2 b5000780 (f9400262)
->  SMP: stopping secondary CPUs
->  Starting crashdump kernel...
->  Bye!
+> Looking at the original addition of ->launder_page (e3db7691e9f3), I
+> don't understand why we need it.  invalidate_inode_pages2() isn't
+> supposed to invalidate dirty pages, so I don't understand why nfs
+> found it necessary to do writeback from ->releasepage() instead
+> of just returning false like iomap does.
 >=20
-> One of the cases is:
->=20
->     task A (cpu 1)    |   task B (cpu 2)     |   task C (cpu 3)
->  ---------------------|----------------------|---------------------------=
-------
->  nfsd_startup_generic | nfsd_startup_generic |
->    nfsd_users =3D=3D 0    |  nfsd_users =3D=3D 0     |
->    nfsd_users++       |  nfsd_users++        |
->    nfsd_users =3D=3D 1    |                      |
->    ...                |                      |
->    callback_wq =3D=3D xxx |                      |
->  ---------------------|----------------------|---------------------------=
-------
->                       |                      | nfsd_shutdown_generic
->                       |                      |   nfsd_users =3D=3D 1
->                       |                      |   --nfsd_users
->                       |                      |   nfsd_users =3D=3D 0
->                       |                      |   ...
->                       |                      |   callback_wq =3D=3D xxx
->                       |                      |   destroy_workqueue(callba=
-ck_wq)
->  ---------------------|----------------------|---------------------------=
-------
->                       |  nfsd_users =3D=3D 1     |
->                       |  ...                 |
->                       |  callback_wq =3D=3D yyy  |
->=20
-> After commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_clien=
-t"),
-> this issue no longer occurs, but we should still convert the nfsd_users
-> to atomic_t to prevent other similar issues.
->=20
-> Link[1]: https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe=
-_callback.html
-> Co-developed-by: huhai <huhai@kylinos.cn>
-> Signed-off-by: huhai <huhai@kylinos.cn>
-> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
-> ---
->  fs/nfsd/nfssvc.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 9b3d6cff0e1e..08b1f9ebdc2a 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -270,13 +270,13 @@ static int nfsd_init_socks(struct net *net, const s=
-truct cred *cred)
->  	return 0;
->  }
-> =20
-> -static int nfsd_users =3D 0;
-> +static atomic_t nfsd_users =3D ATOMIC_INIT(0);
-> =20
->  static int nfsd_startup_generic(void)
->  {
->  	int ret;
-> =20
-> -	if (nfsd_users++)
-> +	if (atomic_fetch_inc(&nfsd_users))
->  		return 0;
-> =20
->  	ret =3D nfsd_file_cache_init();
-> @@ -291,13 +291,13 @@ static int nfsd_startup_generic(void)
->  out_file_cache:
->  	nfsd_file_cache_shutdown();
->  dec_users:
-> -	nfsd_users--;
-> +	atomic_dec(&nfsd_users);
->  	return ret;
->  }
-> =20
->  static void nfsd_shutdown_generic(void)
->  {
-> -	if (--nfsd_users)
-> +	if (atomic_dec_return(&nfsd_users))
->  		return;
-> =20
->  	nfs4_state_shutdown();
+> There's now a new question of what the hell btrfs is up to with
+> ->launder_folio, which they just added recently.
 
-Isn't nfsd_users protected by the nfsd_mutex? It looks like it's held
-in all of the places this counter is accessed.
+IIRC...
 
+The problem was a race where a task could could dirty a page in a
+mmap'ed file after it had been written back but before it was unmapped
+from the pagecache.
+
+Bear in mind that the NFS client may need write back and then
+invalidate the pagecache for a file that is still in use if it
+discovers that the inode's attributes have changed on the server.
+
+Trond's solution was to write the page out while holding the page lock
+in this situation. I think we'd all welcome a way to avoid this race
+that didn't require launder_folio().
 --=20
 Jeff Layton <jlayton@kernel.org>
 
