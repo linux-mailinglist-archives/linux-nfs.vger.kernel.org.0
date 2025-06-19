@@ -1,79 +1,75 @@
-Return-Path: <linux-nfs+bounces-12573-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12574-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6F62AE05FC
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Jun 2025 14:34:57 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90747AE0682
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Jun 2025 15:06:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7889C18830F7
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Jun 2025 12:34:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 041203A5257
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Jun 2025 13:05:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269A3229B02;
-	Thu, 19 Jun 2025 12:33:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D310D23E35B;
+	Thu, 19 Jun 2025 13:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OKavyMzr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQ1D82t1"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6123A9A0
-	for <linux-nfs@vger.kernel.org>; Thu, 19 Jun 2025 12:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50204224AF7
+	for <linux-nfs@vger.kernel.org>; Thu, 19 Jun 2025 13:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750336439; cv=none; b=Prcwdxhe3dDP+2s+pQ5S0nLGijwejPqVhRp3G6hRa2H4sm+qONlhFneN+4qyQH9m++fxF9yPVL/QV1vSme7xnGq/+g8d1SAfN9dZAheR7l+cwL4q7eg0q33h7KIPd0zDVXbQXmksYl9A2EQX48Uk13BuRygnLcomb4Z6rWR8Ocg=
+	t=1750338358; cv=none; b=pmwhKDqYMbH9pRKlN0gCfHdUMBKZRGzHUQEMZ4Nf+5iid8IutenxyxxtE2tdYYrEqkVTOry5K5JFBsTJHxNM6iNcgw/U3ERxnp/E3wFl+ujeqeUUpjtE0GyMpxqlNdHi5jzQBJkQ8CGA6Kzx7SkfaqNEmBTRTVUksOzOt7N+RN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750336439; c=relaxed/simple;
-	bh=NRGKABP8PYE5W+gDt/rlo6MJFKCxz/Agwa923Xcep/0=;
+	s=arc-20240116; t=1750338358; c=relaxed/simple;
+	bh=3sLwub0kCxpt7FgCUch4YpkTuMlye/WYe1eo3ve+GI4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T1qlIxrjrAluQzLKKwsQaZOevG9/7KcT6rWVnhABCRjniqZkIXAbtyqlI+CEpBVjPvy56/zfbymH7NhNc8vWZYiVfapTadvi0qvtk4Jid4vpf329KTmUJqy1/ZkmsgYNREFIbDsOx71eOy1ovn2fhTP32HeD3haP3L78jk+lwj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OKavyMzr; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=ImW0y0uZ1/rmsJy8BsGbPjNA7Ejm3bjAqoshl23oAEm6/V0dqwPB2FUjvi/TJ+m271+xo41/I6ntXmOEimc0/UJIEJLShypCJWHLSKHt0Ts7LCDYIMsXTHulWpFjVTCAZJf8Mkus1XXtjritIGkLNCv9XBDIxlbStpw3CL7lfDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQ1D82t1; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750336437; x=1781872437;
+  t=1750338357; x=1781874357;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NRGKABP8PYE5W+gDt/rlo6MJFKCxz/Agwa923Xcep/0=;
-  b=OKavyMzrkBVPcrp1LgT/k0xX4o6vIuonG3j7wyJzRPdkMHTOx+RTeY+8
-   mTZAZAWRdzglRFDfJK4AhfcMaQQmIeVvOinAgxaT0Bn/0qmxhruxZ5dDp
-   vrZaSvqvrSODY0+NHNaNZzGx3uAmHJf1eHO/vxETSFG6J5EEv9w8HpvoH
-   i1t2BbJrfv7Mv6P/EmSe091YXLKO4af6PIVSbnfzEp5svxFa4CWK8+u6C
-   aLcsIbxjLY5j1IYJjEF3UMF17lUwK6076Yh6my4RxZAGuLMjvERZDVXfX
-   UfwQ+UzGXIRPNDAmCRpoFdwlUIJHsIYMPbmBkGgsC0Y0g1p/qLQeQ/qhS
+  bh=3sLwub0kCxpt7FgCUch4YpkTuMlye/WYe1eo3ve+GI4=;
+  b=jQ1D82t1TMPYWrq5ys2R3cmjMBsr7Ukce0cu2pEEgoFMrk5Oyw6rYgyv
+   i1FeZJZ3bIsM61cwT7Rf8/ZMUom/CrG2mT6DMrz9p3/VCMtEnJlpBGXt/
+   wgIa8zsjgXEtoe5WV9BbFPVhfKvajum/ZuZy57ITQym4hsQ6/f73AtLyH
+   0RinNBWXolzUrG4RSkmvRMoV5EVFkv9idIhQWkcjXeG3T74aJsl2/3BVE
+   Jv8RjVqTvjvYqkxTiuKERkVOS+72uRjnGiJVxAH/ykNW+zuhYN/WC9Q2T
+   /nrry1MC+lX0fHAvEWw0t67d6xWvuNRS448Yp/ExUkU8Pd8EGcnstz7QK
    g==;
-X-CSE-ConnectionGUID: SEtExOgYQSa0tuGbuNlONg==
-X-CSE-MsgGUID: YKpGCKa2S9OJzCHmtKwdJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52290402"
+X-CSE-ConnectionGUID: GxkcvMR7S8KHsMpvbAg+0g==
+X-CSE-MsgGUID: NtAn1ff/QuO0Nrh2x9PHNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="63195144"
 X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="52290402"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 05:33:56 -0700
-X-CSE-ConnectionGUID: phIflv5VSOmAOqJLXuoShg==
-X-CSE-MsgGUID: hl4fN0GETZe1LcQyXGFCdg==
+   d="scan'208";a="63195144"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 06:05:57 -0700
+X-CSE-ConnectionGUID: uJDRLRxTRIiBRYIt22KQNg==
+X-CSE-MsgGUID: ENBedoJ/ToyxydofWZvOtw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,248,1744095600"; 
-   d="scan'208";a="150077947"
+   d="scan'208";a="150964727"
 Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 19 Jun 2025 05:33:53 -0700
+  by fmviesa009.fm.intel.com with ESMTP; 19 Jun 2025 06:05:55 -0700
 Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uSESk-000Kkg-2O;
-	Thu, 19 Jun 2025 12:33:50 +0000
-Date: Thu, 19 Jun 2025 20:33:49 +0800
+	id 1uSExl-000KlW-08;
+	Thu, 19 Jun 2025 13:05:53 +0000
+Date: Thu, 19 Jun 2025 21:05:03 +0800
 From: kernel test robot <lkp@intel.com>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Li Lingfeng <lilingfeng3@huawei.com>
-Subject: Re: [PATCH 3/3] nfsd: split nfsd_mutex into one mutex per
- net-namespace.
-Message-ID: <202506192052.L9tj28RJ-lkp@intel.com>
-References: <20250618213347.425503-4-neil@brown.name>
+To: Benjamin Coddington <bcodding@redhat.com>, trondmy@kernel.org,
+	anna@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFSv4/pNFS: Fix a race to wake on NFS_LAYOUT_DRAIN
+Message-ID: <202506192044.sMgMZpkZ-lkp@intel.com>
+References: <43be0de9ff48ea68dec20d07cb235e164e634588.1750271744.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -82,126 +78,53 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618213347.425503-4-neil@brown.name>
+In-Reply-To: <43be0de9ff48ea68dec20d07cb235e164e634588.1750271744.git.bcodding@redhat.com>
 
-Hi NeilBrown,
+Hi Benjamin,
 
 kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on brauner-vfs/vfs.all]
-[also build test WARNING on trondmy-nfs/linux-next linus/master v6.16-rc2 next-20250619]
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.16-rc2 next-20250618]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfsd-provide-proper-locking-for-all-write_-function/20250619-053514
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
-patch link:    https://lore.kernel.org/r/20250618213347.425503-4-neil%40brown.name
-patch subject: [PATCH 3/3] nfsd: split nfsd_mutex into one mutex per net-namespace.
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250619/202506192052.L9tj28RJ-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250619/202506192052.L9tj28RJ-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Coddington/NFSv4-pNFS-Fix-a-race-to-wake-on-NFS_LAYOUT_DRAIN/20250619-023749
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/43be0de9ff48ea68dec20d07cb235e164e634588.1750271744.git.bcodding%40redhat.com
+patch subject: [PATCH] NFSv4/pNFS: Fix a race to wake on NFS_LAYOUT_DRAIN
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20250619/202506192044.sMgMZpkZ-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250619/202506192044.sMgMZpkZ-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506192052.L9tj28RJ-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506192044.sMgMZpkZ-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> fs/nfsd/nfsctl.c:1891:14: warning: variable 'nn' is uninitialized when used here [-Wuninitialized]
-    1891 |         mutex_lock(&nn->nfsd_info.mutex);
-         |                     ^~
-   fs/nfsd/nfsctl.c:1877:21: note: initialize the variable 'nn' to silence this warning
-    1877 |         struct nfsd_net *nn;
-         |                            ^
-         |                             = NULL
-   1 warning generated.
+   fs/nfs/pnfs.c: In function 'nfs_layoutget_end':
+>> fs/nfs/pnfs.c:2061:9: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+    2061 |         if (atomic_dec_and_test(&lo->plh_outstanding) &&
+         |         ^~
+   fs/nfs/pnfs.c:2064:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+    2064 |                 wake_up_bit(&lo->plh_flags, NFS_LAYOUT_DRAIN);
+         |                 ^~~~~~~~~~~
 
 
-vim +/nn +1891 fs/nfsd/nfsctl.c
+vim +/if +2061 fs/nfs/pnfs.c
 
-  1867	
-  1868	/**
-  1869	 * nfsd_nl_version_get_doit - get the enabled status for all supported nfs versions
-  1870	 * @skb: reply buffer
-  1871	 * @info: netlink metadata and command arguments
-  1872	 *
-  1873	 * Return 0 on success or a negative errno.
-  1874	 */
-  1875	int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info *info)
-  1876	{
-  1877		struct nfsd_net *nn;
-  1878		int i, err;
-  1879		void *hdr;
-  1880	
-  1881		skb = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-  1882		if (!skb)
-  1883			return -ENOMEM;
-  1884	
-  1885		hdr = genlmsg_iput(skb, info);
-  1886		if (!hdr) {
-  1887			err = -EMSGSIZE;
-  1888			goto err_free_msg;
-  1889		}
-  1890	
-> 1891		mutex_lock(&nn->nfsd_info.mutex);
-  1892		nn = net_generic(genl_info_net(info), nfsd_net_id);
-  1893	
-  1894		for (i = 2; i <= 4; i++) {
-  1895			int j;
-  1896	
-  1897			for (j = 0; j <= NFSD_SUPPORTED_MINOR_VERSION; j++) {
-  1898				struct nlattr *attr;
-  1899	
-  1900				/* Don't record any versions the kernel doesn't have
-  1901				 * compiled in
-  1902				 */
-  1903				if (!nfsd_support_version(i))
-  1904					continue;
-  1905	
-  1906				/* NFSv{2,3} does not support minor numbers */
-  1907				if (i < 4 && j)
-  1908					continue;
-  1909	
-  1910				attr = nla_nest_start(skb,
-  1911						      NFSD_A_SERVER_PROTO_VERSION);
-  1912				if (!attr) {
-  1913					err = -EINVAL;
-  1914					goto err_nfsd_unlock;
-  1915				}
-  1916	
-  1917				if (nla_put_u32(skb, NFSD_A_VERSION_MAJOR, i) ||
-  1918				    nla_put_u32(skb, NFSD_A_VERSION_MINOR, j)) {
-  1919					err = -EINVAL;
-  1920					goto err_nfsd_unlock;
-  1921				}
-  1922	
-  1923				/* Set the enabled flag if the version is enabled */
-  1924				if (nfsd_vers(nn, i, NFSD_TEST) &&
-  1925				    (i < 4 || nfsd_minorversion(nn, j, NFSD_TEST)) &&
-  1926				    nla_put_flag(skb, NFSD_A_VERSION_ENABLED)) {
-  1927					err = -EINVAL;
-  1928					goto err_nfsd_unlock;
-  1929				}
-  1930	
-  1931				nla_nest_end(skb, attr);
-  1932			}
-  1933		}
-  1934	
-  1935		mutex_unlock(&nn->nfsd_info.mutex);
-  1936		genlmsg_end(skb, hdr);
-  1937	
-  1938		return genlmsg_reply(skb, info);
-  1939	
-  1940	err_nfsd_unlock:
-  1941		mutex_unlock(&nn->nfsd_info.mutex);
-  1942	err_free_msg:
-  1943		nlmsg_free(skb);
-  1944	
-  1945		return err;
-  1946	}
-  1947	
+411ae722d10a6d Trond Myklebust     2018-06-23  2058  
+411ae722d10a6d Trond Myklebust     2018-06-23  2059  static void nfs_layoutget_end(struct pnfs_layout_hdr *lo)
+411ae722d10a6d Trond Myklebust     2018-06-23  2060  {
+880265c77ac415 Trond Myklebust     2022-05-31 @2061  	if (atomic_dec_and_test(&lo->plh_outstanding) &&
+880265c77ac415 Trond Myklebust     2022-05-31  2062  	    test_and_clear_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags))
+b844d0ad43d3ba Benjamin Coddington 2025-06-18  2063  		smp_mb__after_atomic();
+880265c77ac415 Trond Myklebust     2022-05-31  2064  		wake_up_bit(&lo->plh_flags, NFS_LAYOUT_DRAIN);
+411ae722d10a6d Trond Myklebust     2018-06-23  2065  }
+411ae722d10a6d Trond Myklebust     2018-06-23  2066  
 
 -- 
 0-DAY CI Kernel Test Service
