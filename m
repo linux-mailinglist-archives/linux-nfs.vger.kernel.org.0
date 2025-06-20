@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-12587-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12588-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C0EAE1AC4
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 14:16:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D0D4AE1AC6
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 14:16:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51D7F1BC79B1
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 12:16:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D5A9416BF72
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 12:16:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B33228A71D;
-	Fri, 20 Jun 2025 12:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AE5728B4FD;
+	Fri, 20 Jun 2025 12:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzTUBPAc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhOhHl0L"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B3128A708;
-	Fri, 20 Jun 2025 12:16:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6091B28B4EB;
+	Fri, 20 Jun 2025 12:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421785; cv=none; b=JzZIVcivFKRFq8GgWegXbgCXSa6A4aQLSq00kfM9iqsAcGXjnYz1TxVfxyAFQvbf33Nq73rYgByrzACQnQBle7XxPKQpeHcRWw4tMow5I0cAmbNHgoUI00xgcWTrJpmQ6gy6z+dfASAHhbobSIPw2QydDVLhuxDbmhIYwfYZrzE=
+	t=1750421786; cv=none; b=q4qDI+2nfttve7UVRr28PsZuxgIL2NSFdFyLa8gcnvUhUVQhPEmSzN+1AWK5ZAKHpsyMzVlY7IfjINcr68pW9qFPH7F/R94tQ/9UJhFXq6OiCCueySWAwsVHtyeb+oUg4EPPVCqS2VRaLSWEWHpU31aIki+M9M2Jog3jJMYENZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421785; c=relaxed/simple;
-	bh=IF42cJs4MpkxNJaOlRvE38Bf4YnfgCEoIGhaNqdYM1c=;
+	s=arc-20240116; t=1750421786; c=relaxed/simple;
+	bh=z098PYiyfIazl40EKda1JH9sBsWrUnkCbFyKswmpC+E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FTqk/g4eTfO/ItarLg1U8F8lN6lf8pISJQP60IXpKsNlOz6RCmI4j04VLMb0EB3P13LlxzlVR3WFJTK/oRlJwWUCJmXILQFsgiubSjo3qVX68K7M4gg5xiIJgl0OSTa+bQEcAwiEgsN/45lW4+HlJlsj0SUlVaWweT33j/muN0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzTUBPAc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 280A9C4CEEF;
-	Fri, 20 Jun 2025 12:16:24 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=n/wPuI6OiRrr0kzC9ad29SPa0Ln/2Lic322nkpeh2h0lgyxHW82BtfUJp6ebWgld0yb0xT60ZkA98cxb77ZLNrCgfdr9dTshEa+zBQsZbkU0tKBtHQU5nvxNncl1KTPnffekNfWkmbob/UgBKJTn/fLjNBqPNG3twR24LdSnGoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhOhHl0L; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2334EC4CEF1;
+	Fri, 20 Jun 2025 12:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750421784;
-	bh=IF42cJs4MpkxNJaOlRvE38Bf4YnfgCEoIGhaNqdYM1c=;
+	s=k20201202; t=1750421785;
+	bh=z098PYiyfIazl40EKda1JH9sBsWrUnkCbFyKswmpC+E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lzTUBPAcPmgowy09KaNRfEDWQsZOSfFh3Mx7dxyjaNuDHxQOvRer9+naOTQ+BfrOJ
-	 Q+444dxfGkL+XS72mUoP50f3Hbpoa7VaffxID0gQmnCuKvA75XuZtwnw4hUcONSuiv
-	 bFq6r9znkcbpNboLxEv3A1lS5yK4tRimoCJIylldgHY55Xnzol7cLOIc4Zgts1lQ7Y
-	 X8R6AakrK2Jm+ykIV+s3FUVDNc2nlKVyTJL4NU37jaxFd8yhH5iY7rwvQ2ig2WVeXG
-	 KAKqZVPgFEGLSmp3IUNhLfIOq41qTFFryMobiVcGwo5DXGaTCKqFQq4RLLRMqt3iHM
-	 Mog/280FIE8vA==
+	b=EhOhHl0LWwJZej3m61MHZuzPg4JpAI2bkVXVulWfd4QQVehXYVrfhlaNhro2tovc5
+	 /jE+BB0TgdztUT48JjgnDRlEIu3NhJZ2GVT2x1nEQaVvEQA2vV+SUI4OqHI7EJFNct
+	 4PYVtUtSXUGoH3GmRB9QRl4a/wGqReeGLEaeNTydTjUBQ1Folo5uklQ7n8Fj9zwKna
+	 CNw9vkyir/IimkxXBbjXfJNIsvQXZqfbSCUC8EeECjkPuLRzbYMyUs/i6B9ypZp9zd
+	 XLzaN/z9Uy3YFd9IUqmBwMrQB2XqKG7cga0RBEG7k40YV+mSMEjFRvyJC3Wd+3DHzs
+	 JWQlgoZBBiJOA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 20 Jun 2025 08:16:01 -0400
-Subject: [PATCH 1/6] sunrpc: fix handling of unknown auth status codes
+Date: Fri, 20 Jun 2025 08:16:02 -0400
+Subject: [PATCH 2/6] sunrpc: remove SVC_SYSERR
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-rpc-6-17-v1-1-a309177d713b@kernel.org>
+Message-Id: <20250620-rpc-6-17-v1-2-a309177d713b@kernel.org>
 References: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
 In-Reply-To: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -62,92 +62,90 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2925; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=IF42cJs4MpkxNJaOlRvE38Bf4YnfgCEoIGhaNqdYM1c=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoVVEVvvpIAEQO5lCfWNBwJe9R34e2PT+so9jUm
- Cu3j0gleJWJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFVRFQAKCRAADmhBGVaC
- FcV0D/0ZDpZ+30hMQqCnHD49j0iVgPsIhEkt1dhp80pnrffQmqkn/0vfx+KAD7PMqIpJU05jfQs
- rLZ72ZOH8hmgtzPytt3RsoduhyB6zk8hlKThPI0gEnHbBxF4lHSNvhVcPIy3wXUtU/2RRU4FcZj
- kw69dWbHVtSATg8iHVhC296Tt3yO7I0P4+VA45hr9AroEayniBp0f/KjFMQ13+vfCkTJYM2dJG+
- rYwwz/FqKxJOcQywl+ZFPR58sUfmD23bzw+mLJ96GCpGn2VQeD2bveYVSCBhBDiRdycK645/vzU
- TYWsb3vgjJH6avrEWAyuIPc1p3ouwT14xYCBpjcQhDFKBEctOvvOz3aBluWLubtUv8Q3EJBZOYo
- 6EzbRyO5wPP2co/tladL0YLojhuKmGr/9U3q1BVcaa4gUMEtDLEVatWtD1oo/OPMiwKwGNW6+pn
- AX35SH1zVMeCx5kulKehPSWwAzYQQECzZwpxIY5wODUm/I38/Jmvx3EhfQIpPNsVPAea5VEuKZ1
- XVPJiSyj2s8VOHkqhEgp8FqAe+HFZH/61G8dbZZTI0Q/zstgMty1sO+MHihH5N/0LOFohHgUFqp
- d/Ayb40pWw+q9udR/C4x1SMAjhtGxISvhBDh5KFN1Pm6jExYUtwm4PWq6JKORok7ZgJJXallZtn
- z+IcszEj0cdo77g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2250; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=z098PYiyfIazl40EKda1JH9sBsWrUnkCbFyKswmpC+E=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoVVEVFMNL4DJL4/b6ik7FbJ/ZuHz9hdYc7E3m+
+ /haO0i8IuqJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFVRFQAKCRAADmhBGVaC
+ FZnfEADLZsADpvh2Y74hvcpGU0+lADGZp/FXzT4mBOGgzIoH6aTDZaevFkpGRU1vci+JWz15Qfc
+ w01d+B5tfzJVo67dcvzZGD65HnjQ0DDfGCkxOE8HU2GXnjQGpVH/DWGXlqn0GvAiw7/S3gaBCcc
+ 70UNHgpqIWVXGRc4g8Jt+6sFLiakviEvPKCnTkmrz+x5nhzc8fsMCUlugPImrsnI70ghp3qxY+t
+ b3Q098hDjozguKPawxcYQQsd93Yf2yfdJcThPcvFGDs7SdxoDMNg13kH21NEAF5p7g/pmkvFAPY
+ TvmovlKbTlexUZwGQtf/6z0HXxSUa3mI5sHFe9PvFYuLW2s9lEfRWuBRM30dx1TT+kRNesSx3CM
+ BpIRun6OXZRkYX4OPeBIHyd2ezhjOSqgv/6RjTdZawR0Gv+BrWHvWDkkN4HaMGbvKU8sYE1wuK/
+ tAQwIwJB6jSAiHV4L64MZuO2WUUWV0g41+JefZLVq73qjLTtU1esog/2K8nLZbjsSxs/uEdLog3
+ BQ/opdxbU2o233tZQZMiaB/UuA8QiLVv1FMtEZ+eK1MEA9Eik2xOelLI3tNW92zZKbKHgdnTcu6
+ ze8KbKuD/Lo70bCgVtGbgurhnWGwvuaHo0VVB/kMDmDh0CndI8hnVlu3QBxj6s+rQqfiIQEvSEy
+ qxYIxFJiuSeiCwQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-In the case of an unknown error code from svc_authenticate or
-pg_authenticate, return AUTH_ERROR with a status of AUTH_FAILED. Also
-add the other auth_stat value from RFC 5531, and document all the status
-codes.
+Nothing returns this error code.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/sunrpc/msg_prot.h | 18 ++++++++++--------
- include/linux/sunrpc/xdr.h      |  2 ++
- net/sunrpc/svc.c                |  3 ++-
- 3 files changed, 14 insertions(+), 9 deletions(-)
+ include/linux/sunrpc/svcauth.h | 1 -
+ include/trace/events/sunrpc.h  | 2 --
+ net/sunrpc/svc.c               | 8 --------
+ 3 files changed, 11 deletions(-)
 
-diff --git a/include/linux/sunrpc/msg_prot.h b/include/linux/sunrpc/msg_prot.h
-index c4b0eb2b2f040887d05b3951c9322c7175dd9329..ada17b57ca44ab65d0e4efc4cc1f71b03f47412d 100644
---- a/include/linux/sunrpc/msg_prot.h
-+++ b/include/linux/sunrpc/msg_prot.h
-@@ -69,15 +69,17 @@ enum rpc_reject_stat {
- };
+diff --git a/include/linux/sunrpc/svcauth.h b/include/linux/sunrpc/svcauth.h
+index 2e111153f7cd2abde7a1ac7daa5b5b8c932a82cd..4b92fec23a490dc8246dc0532fbdd39244e233b0 100644
+--- a/include/linux/sunrpc/svcauth.h
++++ b/include/linux/sunrpc/svcauth.h
+@@ -86,7 +86,6 @@ struct auth_domain {
  
- enum rpc_auth_stat {
--	RPC_AUTH_OK = 0,
--	RPC_AUTH_BADCRED = 1,
--	RPC_AUTH_REJECTEDCRED = 2,
--	RPC_AUTH_BADVERF = 3,
--	RPC_AUTH_REJECTEDVERF = 4,
--	RPC_AUTH_TOOWEAK = 5,
-+	RPC_AUTH_OK = 0,		/* success */
-+	RPC_AUTH_BADCRED = 1,		/* bad credential (seal broken) */
-+	RPC_AUTH_REJECTEDCRED = 2,	/* client must begin new session */
-+	RPC_AUTH_BADVERF = 3,		/* bad verifier (seal broken) */
-+	RPC_AUTH_REJECTEDVERF = 4,	/* verifier expired or replayed */
-+	RPC_AUTH_TOOWEAK = 5,		/* rejected for security reasons */
-+	RPC_AUTH_INVALIDRESP = 6,	/* bogus response verifier */
-+	RPC_AUTH_FAILED = 7,		/* reason unknown */
- 	/* RPCSEC_GSS errors */
--	RPCSEC_GSS_CREDPROBLEM = 13,
--	RPCSEC_GSS_CTXPROBLEM = 14
-+	RPCSEC_GSS_CREDPROBLEM = 13,	/* no credentials for user */
-+	RPCSEC_GSS_CTXPROBLEM = 14	/* problem with context */
- };
+ enum svc_auth_status {
+ 	SVC_GARBAGE = 1,
+-	SVC_SYSERR,
+ 	SVC_VALID,
+ 	SVC_NEGATIVE,
+ 	SVC_OK,
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index ff11fa07cbe3cd6863d281af4f6ed1d3684cf9f0..750ecce56930699e64956636cc0e7bb388596e87 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1691,7 +1691,6 @@ SVC_RQST_FLAG_LIST
+ 		__print_flags(flags, "|", SVC_RQST_FLAG_LIST)
  
- #define RPC_MAXNETNAMELEN	256
-diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index 29d3a7659727dacc0f7cc2f4f18c589a524323c4..e3358c630ba18b0af13bc5ff8e1ab2f884125da7 100644
---- a/include/linux/sunrpc/xdr.h
-+++ b/include/linux/sunrpc/xdr.h
-@@ -119,6 +119,8 @@ xdr_buf_init(struct xdr_buf *buf, void *start, size_t len)
- #define	rpc_autherr_badverf	cpu_to_be32(RPC_AUTH_BADVERF)
- #define	rpc_autherr_rejectedverf cpu_to_be32(RPC_AUTH_REJECTEDVERF)
- #define	rpc_autherr_tooweak	cpu_to_be32(RPC_AUTH_TOOWEAK)
-+#define	rpc_autherr_invalidresp	cpu_to_be32(RPC_AUTH_INVALIDRESP)
-+#define	rpc_autherr_failed	cpu_to_be32(RPC_AUTH_FAILED)
- #define	rpcsec_gsserr_credproblem	cpu_to_be32(RPCSEC_GSS_CREDPROBLEM)
- #define	rpcsec_gsserr_ctxproblem	cpu_to_be32(RPCSEC_GSS_CTXPROBLEM)
- 
+ TRACE_DEFINE_ENUM(SVC_GARBAGE);
+-TRACE_DEFINE_ENUM(SVC_SYSERR);
+ TRACE_DEFINE_ENUM(SVC_VALID);
+ TRACE_DEFINE_ENUM(SVC_NEGATIVE);
+ TRACE_DEFINE_ENUM(SVC_OK);
+@@ -1704,7 +1703,6 @@ TRACE_DEFINE_ENUM(SVC_COMPLETE);
+ #define show_svc_auth_status(status)			\
+ 	__print_symbolic(status,			\
+ 		{ SVC_GARBAGE,	"SVC_GARBAGE" },	\
+-		{ SVC_SYSERR,	"SVC_SYSERR" },		\
+ 		{ SVC_VALID,	"SVC_VALID" },		\
+ 		{ SVC_NEGATIVE,	"SVC_NEGATIVE" },	\
+ 		{ SVC_OK,	"SVC_OK" },		\
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 9abdbcbf247323207cba13546173b8fd28a15e24..195fb0bea841451ad48717d7936992e0a850f703 100644
+index 195fb0bea841451ad48717d7936992e0a850f703..c6ceacedae28e2aafd15edd170a27cdaa84ec47f 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1387,7 +1387,8 @@ svc_process_common(struct svc_rqst *rqstp)
- 		goto sendit;
- 	default:
- 		pr_warn_once("Unexpected svc_auth_status (%d)\n", auth_res);
+@@ -1375,8 +1375,6 @@ svc_process_common(struct svc_rqst *rqstp)
+ 	case SVC_GARBAGE:
+ 		rqstp->rq_auth_stat = rpc_autherr_badcred;
+ 		goto err_bad_auth;
+-	case SVC_SYSERR:
 -		goto err_system_err;
-+		rqstp->rq_auth_stat = rpc_autherr_failed;
-+		goto err_bad_auth;
- 	}
+ 	case SVC_DENIED:
+ 		goto err_bad_auth;
+ 	case SVC_CLOSE:
+@@ -1515,12 +1513,6 @@ svc_process_common(struct svc_rqst *rqstp)
+ 		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_proc_unavail;
+ 	goto sendit;
+-
+-err_system_err:
+-	if (serv->sv_stats)
+-		serv->sv_stats->rpcbadfmt++;
+-	*rqstp->rq_accept_statp = rpc_system_err;
+-	goto sendit;
+ }
  
- 	if (progp == NULL)
+ /*
 
 -- 
 2.49.0
