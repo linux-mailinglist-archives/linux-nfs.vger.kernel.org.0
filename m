@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-12596-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12597-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF8C0AE1B5C
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 14:59:59 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 073ABAE1B63
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 15:01:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C05B61898B5C
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 12:59:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 968E41671E9
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 13:01:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398DC28B4E3;
-	Fri, 20 Jun 2025 12:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C53D184;
+	Fri, 20 Jun 2025 13:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJ0yEMPQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kah18TiI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1239724679C
-	for <linux-nfs@vger.kernel.org>; Fri, 20 Jun 2025 12:59:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98E630E84D
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Jun 2025 13:01:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424363; cv=none; b=cwW15lgSi5m+pKJb8WGI7GpLgNjWFpXxCu28QHh38LdP0pFm6jbdrKFppuk1aeIG7jtjz48Z/DkPc9TnpoGjvpbQPKoTFIE0vH7Syn5QWCfAzD7/GLAxpwb//MYsZ7WDrFThoBZucQfsArgeG3DlL+8TQcTcXP1Eg9/CyLPdNg4=
+	t=1750424495; cv=none; b=K3YAOeQfOC/zGIh67nJl/Yxwm3eu7gLH34OvTbE+aIkO3s3hXeHqD9NvV8buB7qQvEsiRoSctC9E5heJAp16jR5SFZSfUB1XVt3mZvDjOJfyvAwRFXNb8QwkBoyqLoZCsL0ZDIuGaNpv+18w4aatRhmzkKof541BXIZinNoxoo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424363; c=relaxed/simple;
-	bh=2qYWiBHlm1D58irbmWAArbiJN15Rn+Us52EhPaaECuM=;
+	s=arc-20240116; t=1750424495; c=relaxed/simple;
+	bh=eVqBbIF3dQET76AVKE50plce4ukm0p3LV+SDjYOmqys=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bPQsXaYJE73QaIyBXahykO9h/hMoSPznvECKxUvJeXvcMjBTmjXPkjU++BCl5+77sMMdnBV2XP+k2IIYNkZtNoaDlL6FVnqAOp9lq0y/3uzXunVe3eVhTsrAt7BLezkxOlv8oA4DBFyywFm3/wVedvTuCu9McE03SfLo5A21/pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJ0yEMPQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 071E8C4CEE3;
-	Fri, 20 Jun 2025 12:59:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=miWE1hatoXl3711lrToCBkYjutOV+LVrqxwh6Ce5FBgxW4/g3BZ3VPU6+Lv+0Igk42dIGXJ5qKGRHE4MlexH8ZbNBcRr4abEAjKA1/mBXg03+N6lQ4YCv4ZPCDWhVqfDRhXRkx8vxAI5G/0qeBxHEYfeE7ivmNdOTxqiyocmL7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kah18TiI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C799EC4CEE3;
+	Fri, 20 Jun 2025 13:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750424362;
-	bh=2qYWiBHlm1D58irbmWAArbiJN15Rn+Us52EhPaaECuM=;
+	s=k20201202; t=1750424495;
+	bh=eVqBbIF3dQET76AVKE50plce4ukm0p3LV+SDjYOmqys=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CJ0yEMPQZvDH6bs8tKIIFO7CBRERfZWGr2IgVOr9JpGNonBjYOy6+o1K16WpHlpf5
-	 5zh3myT/PMYC6YwnaIt65QctkQo2uIAZeRnm1GpyvKRWsTjEmuu7iTU8mjJKhsREt8
-	 U/1XgakoNmd4PJd2uU3x0U3Oq7ETNiRu1cGrjuWLhc3LxGbwIbMpXGC096NDxsDtrV
-	 TYnjrgY2WeNUk0EMkXiBdCKV8aLrwPBAKT3DhYyMqasJxpXqVFfoCI6b7nk001QgEA
-	 ttni+kK8bf24IptNAniHbs66IlSjoVvennsocBVzAGfXHR/SkI8PDsj38xByvf3By8
-	 k9sBX/i8M/ZgQ==
-Message-ID: <90e0be81e22228f846ccb8435689c7a699bb3d3a.camel@kernel.org>
-Subject: Re: [PATCH 1/3] nfsd: provide proper locking for all write_ function
+	b=kah18TiIIZcVK+NCSo3YX/XanERV5/89P07dgDMwsAL9E+so4AOu+GuerNTbvNO4x
+	 RjotmBiZfCidjAmxuB9+MNK9o0zGsXBg8+woN3mV3pyWu8obB0DA33Da+5Jn5NJQp8
+	 8isjm+tgaD2nlMW6yTFoXTMjq+gWC+zA1wSbbuKCurNcT3cYMA7Vu4a7VvxzoD5idw
+	 5EZGwt/vIDbaMgrYNiZGnutDULumWjoMVJ0whbEM9DWjalmXAlPA1aP9Qsnp9zDi+L
+	 rvJmtxksBMun8CZkJN38zbfkRXAUTjLVvHdoQB2HpMkiSiG5WrgGQ54vkQUR6J7Zdt
+	 nIGzgAajOcY6Q==
+Message-ID: <67b8eb3390347fac8080c7c008e58c6896e6a1d4.camel@kernel.org>
+Subject: Re: [PATCH 2/3] nfsd: use kref and new mutex for global config
+ management
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Li Lingfeng	
  <lilingfeng3@huawei.com>
-Date: Fri, 20 Jun 2025 08:59:20 -0400
-In-Reply-To: <20250618213347.425503-2-neil@brown.name>
+Date: Fri, 20 Jun 2025 09:01:33 -0400
+In-Reply-To: <20250618213347.425503-3-neil@brown.name>
 References: <20250618213347.425503-1-neil@brown.name>
-	 <20250618213347.425503-2-neil@brown.name>
+	 <20250618213347.425503-3-neil@brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,223 +138,283 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-06-19 at 07:31 +1000, NeilBrown wrote:
-> write_foo functions are called to handle IO to files in /proc/fs/nfsd/.
-> The can be called at any time and so generally need locking to ensure
-> they don't happen at an awkward time.
+> nfsd_mutex is used for two quite different things:
+> 1/ it prevents races when start/stoping global resources:
+>    the filecache and the v4 state table
+> 2/ it prevents races for per-netns config, typically
+>    ensure config changes are synchronised w.r.t. server
+>    startup/shutdown.
 >=20
-> Many already take nfsd_mutex and check if nfsd_serv has been set.  This
-> ensures they only run when the server is fully configured.
+> This patch splits out the first used.  A subsequent patch improves the
+> second.
 >=20
-> write_filehandle() does *not* need locking.  It interacts with the
-> export table which is set up when the netns is set up, so it is always
-> valid and it has its own locking.  write_filehandle() is needed before
-> the nfs server is started so checking nfsd_serv would be wrong.
+> "nfsd_users" is changed to a kref which is can be taken to delay
+
+Changelog nits:
+
+s/which is/which/
+
+> the shutdown of global services.  nfsd_startup_get(), it is succeeds,
+
+nit: "if it succeeds"
+
+> ensure the global services will remain until nfsd_startup_put().
+
+"ensures"
+
 >=20
-> The remaining files which do not have any locking are
-> write_v4_end_grace(), write_unlock_ip(), and write_unlock_fs().
-> None of these make sense when the nfs server is not running and there is
-> evidence that write_v4_end_grace() can race with ->client_tracking_op
-> setup/shutdown and cause problems.
+> The new mutex, nfsd_startup_mutex, is only take for startup and
+
+"only taken"
+
+> shutdown.  It is not needed to protect the kref.
 >=20
-> This patch adds locking to these three and ensures the "unlock"
-> functions abort if ->nfsd_serv is not set.
+> The locking needed by nfsd_file_cache_purge() is now provided internally
+> by that function so calls don't need to be concerned.
 >=20
-> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
+> This replaces NFSD_FILE_CACHE_UP which is effective just a flag which
+
+"effectively"
+
+> says nfsd_users is non-zero.
+>=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/nfsctl.c | 115 +++++++++++++++++++++++++++++++----------------
->  1 file changed, 77 insertions(+), 38 deletions(-)
+>  fs/nfsd/export.c    |  6 ------
+>  fs/nfsd/filecache.c | 31 +++++++++++--------------------
+>  fs/nfsd/nfsd.h      |  3 +++
+>  fs/nfsd/nfssvc.c    | 41 +++++++++++++++++++++++++++--------------
+>  4 files changed, 41 insertions(+), 40 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 3f3e9f6c4250..3710a1992d17 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -200,27 +200,18 @@ static inline struct net *netns(struct file *file)
->  	return file_inode(file)->i_sb->s_fs_info;
->  }
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index cadfc2bae60e..1ea3d72ef5c9 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -243,13 +243,7 @@ static struct cache_head *expkey_alloc(void)
 > =20
-> -/*
-> - * write_unlock_ip - Release all locks used by a client
-> - *
-> - * Experimental.
-> - *
-> - * Input:
-> - *			buf:	'\n'-terminated C string containing a
-> - *				presentation format IP address
-> - *			size:	length of C string in @buf
-> - * Output:
-> - *	On success:	returns zero if all specified locks were released;
-> - *			returns one if one or more locks were not released
-> - *	On error:	return code is negative errno value
-> - */
-> -static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size=
-)
-> +static ssize_t __write_unlock_ip(struct file *file, char *buf, size_t si=
-ze)
+>  static void expkey_flush(void)
 >  {
->  	struct sockaddr_storage address;
->  	struct sockaddr *sap =3D (struct sockaddr *)&address;
->  	size_t salen =3D sizeof(address);
->  	char *fo_path;
->  	struct net *net =3D netns(file);
-> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> +
-> +	if (!nn->nfsd_serv)
-> +		/* There cannot be any files to unlock */
-> +		return -EINVAL;
-> =20
->  	/* sanity check */
->  	if (size =3D=3D 0)
-> @@ -241,24 +232,39 @@ static ssize_t write_unlock_ip(struct file *file, c=
-har *buf, size_t size)
+> -	/*
+> -	 * Take the nfsd_mutex here to ensure that the file cache is not
+> -	 * destroyed while we're in the middle of flushing.
+> -	 */
+> -	mutex_lock(&nfsd_mutex);
+>  	nfsd_file_cache_purge(current->nsproxy->net_ns);
+> -	mutex_unlock(&nfsd_mutex);
 >  }
 > =20
->  /*
-> - * write_unlock_fs - Release all locks on a local file system
-> + * write_unlock_ip - Release all locks used by a client
->   *
->   * Experimental.
->   *
->   * Input:
-> - *			buf:	'\n'-terminated C string containing the
-> - *				absolute pathname of a local file system
-> + *			buf:	'\n'-terminated C string containing a
-> + *				presentation format IP address
->   *			size:	length of C string in @buf
->   * Output:
->   *	On success:	returns zero if all specified locks were released;
->   *			returns one if one or more locks were not released
->   *	On error:	return code is negative errno value
->   */
-> -static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size=
-)
-> +static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size=
-)
-> +{
-> +	ssize_t rv;
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +	rv =3D __write_unlock_ip(file, buf, size);
-> +	mutex_unlock(&nfsd_mutex);
-> +	return rv;
-> +}
-> +
-> +static ssize_t __write_unlock_fs(struct file *file, char *buf, size_t si=
-ze)
+>  static const struct cache_detail svc_expkey_cache_template =3D {
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index e108b6c705b4..0a9116b7530c 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -50,8 +50,6 @@
+> =20
+>  #define NFSD_LAUNDRETTE_DELAY		     (2 * HZ)
+> =20
+> -#define NFSD_FILE_CACHE_UP		     (0)
+> -
+>  /* We only care about NFSD_MAY_READ/WRITE for this cache */
+>  #define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE|NFSD_MAY_LOCALI=
+O)
+> =20
+> @@ -70,7 +68,6 @@ struct nfsd_fcache_disposal {
+>  static struct kmem_cache		*nfsd_file_slab;
+>  static struct kmem_cache		*nfsd_file_mark_slab;
+>  static struct list_lru			nfsd_file_lru;
+> -static unsigned long			nfsd_file_flags;
+>  static struct fsnotify_group		*nfsd_file_fsnotify_group;
+>  static struct delayed_work		nfsd_filecache_laundrette;
+>  static struct rhltable			nfsd_file_rhltable
+> @@ -112,9 +109,12 @@ static const struct rhashtable_params nfsd_file_rhas=
+h_params =3D {
+>  static void
+>  nfsd_file_schedule_laundrette(void)
 >  {
->  	struct path path;
->  	char *fo_path;
->  	int error;
-> +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> +
-> +	if (!nn->nfsd_serv)
-> +		/* There cannot be any files to unlock */
-> +		return -EINVAL;
-> =20
->  	/* sanity check */
->  	if (size =3D=3D 0)
-> @@ -291,6 +297,30 @@ static ssize_t write_unlock_fs(struct file *file, ch=
-ar *buf, size_t size)
->  	return error;
->  }
-> =20
-> +/*
-> + * write_unlock_fs - Release all locks on a local file system
-> + *
-> + * Experimental.
-> + *
-> + * Input:
-> + *			buf:	'\n'-terminated C string containing the
-> + *				absolute pathname of a local file system
-> + *			size:	length of C string in @buf
-> + * Output:
-> + *	On success:	returns zero if all specified locks were released;
-> + *			returns one if one or more locks were not released
-> + *	On error:	return code is negative errno value
-> + */
-> +static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size=
-)
-> +{
-> +	ssize_t rv;
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +	rv =3D __write_unlock_fs(file, buf, size);
-> +	mutex_unlock(&nfsd_mutex);
-> +	return rv;
-> +}
-> +
->  /*
->   * write_filehandle - Get a variable-length NFS file handle by path
->   *
-> @@ -1053,6 +1083,29 @@ static ssize_t write_recoverydir(struct file *file=
-, char *buf, size_t size)
->  }
->  #endif
-> =20
-> +static ssize_t __write_v4_end_grace(struct file *file, char *buf, size_t=
- size)
-> +{
-> +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> +
-> +	if (size > 0) {
-> +		switch(buf[0]) {
-> +		case 'Y':
-> +		case 'y':
-> +		case '1':
-> +			if (!nn->nfsd_serv)
-> +				return -EBUSY;
-> +			trace_nfsd_end_grace(netns(file));
-> +			nfsd4_end_grace(nn);
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
+> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
+> -		queue_delayed_work(system_unbound_wq, &nfsd_filecache_laundrette,
+> +	if (nfsd_startup_get()) {
+> +		queue_delayed_work(system_unbound_wq,
+> +				   &nfsd_filecache_laundrette,
+>  				   NFSD_LAUNDRETTE_DELAY);
+> +		nfsd_startup_put();
 > +	}
+>  }
+> =20
+>  static void
+> @@ -795,10 +795,6 @@ nfsd_file_cache_init(void)
+>  {
+>  	int ret;
+> =20
+> -	lockdep_assert_held(&nfsd_mutex);
+> -	if (test_and_set_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1)
+> -		return 0;
+> -
+>  	ret =3D rhltable_init(&nfsd_file_rhltable, &nfsd_file_rhash_params);
+>  	if (ret)
+>  		goto out;
+> @@ -853,8 +849,6 @@ nfsd_file_cache_init(void)
+> =20
+>  	INIT_DELAYED_WORK(&nfsd_filecache_laundrette, nfsd_file_gc_worker);
+>  out:
+> -	if (ret)
+> -		clear_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags);
+>  	return ret;
+>  out_notifier:
+>  	lease_unregister_notifier(&nfsd_file_lease_notifier);
+> @@ -958,9 +952,10 @@ nfsd_file_cache_start_net(struct net *net)
+>  void
+>  nfsd_file_cache_purge(struct net *net)
+>  {
+> -	lockdep_assert_held(&nfsd_mutex);
+> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1)
+> +	if (nfsd_startup_get()) {
+>  		__nfsd_file_cache_purge(net);
+> +		nfsd_startup_put();
+> +	}
+>  }
+> =20
+>  void
+> @@ -975,10 +970,6 @@ nfsd_file_cache_shutdown(void)
+>  {
+>  	int i;
+> =20
+> -	lockdep_assert_held(&nfsd_mutex);
+> -	if (test_and_clear_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 0)
+> -		return;
+> -
+>  	lease_unregister_notifier(&nfsd_file_lease_notifier);
+>  	shrinker_free(nfsd_file_shrinker);
+>  	/*
+> @@ -1347,8 +1338,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
+void *v)
+>  	unsigned long lru =3D 0, total_age =3D 0;
+> =20
+>  	/* Serialize with server shutdown */
+> -	mutex_lock(&nfsd_mutex);
+> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1) {
+> +	if (nfsd_startup_get()) {
+>  		struct bucket_table *tbl;
+>  		struct rhashtable *ht;
+> =20
+> @@ -1360,8 +1350,9 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
+void *v)
+>  		tbl =3D rht_dereference_rcu(ht->tbl, ht);
+>  		buckets =3D tbl->size;
+>  		rcu_read_unlock();
 > +
-> +	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%c\n",
-> +			 nn->grace_ended ? 'Y' : 'N');
+> +		nfsd_startup_put();
+>  	}
+> -	mutex_unlock(&nfsd_mutex);
+> =20
+>  	for_each_possible_cpu(i) {
+>  		hits +=3D per_cpu(nfsd_file_cache_hits, i);
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 1bfd0b4e9af7..8ad9fcc23789 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -80,6 +80,9 @@ extern const struct svc_version	nfsd_version2, nfsd_ver=
+sion3, nfsd_version4;
+>  extern struct mutex		nfsd_mutex;
+>  extern atomic_t			nfsd_th_cnt;		/* number of available threads */
+> =20
+> +bool nfsd_startup_get(void);
+> +void nfsd_startup_put(void);
+> +
+>  extern const struct seq_operations nfs_exports_op;
+> =20
+>  /*
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 82b0111ac469..b2080e5a71e6 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -270,38 +270,51 @@ static int nfsd_init_socks(struct net *net, const s=
+truct cred *cred)
+>  	return 0;
+>  }
+> =20
+> -static int nfsd_users =3D 0;
+> +static struct kref nfsd_users =3D KREF_INIT(0);
+> +static DEFINE_MUTEX(nfsd_startup_mutex);
+> =20
+>  static int nfsd_startup_generic(void)
+>  {
+> -	int ret;
+> +	int ret =3D 0;
+> =20
+> -	if (nfsd_users++)
+> +	if (kref_get_unless_zero(&nfsd_users))
+>  		return 0;
+> +	mutex_lock(&nfsd_startup_mutex);
+> +	if (kref_get_unless_zero(&nfsd_users))
+> +		goto out_unlock;
+> =20
+>  	ret =3D nfsd_file_cache_init();
+>  	if (ret)
+> -		goto dec_users;
+> +		goto out_unlock;
+> =20
+>  	ret =3D nfs4_state_start();
+>  	if (ret)
+>  		goto out_file_cache;
+> -	return 0;
+> +	kref_init(&nfsd_users);
+> +out_unlock:
+> +	mutex_unlock(&nfsd_startup_mutex);
+> +	return ret;
+> =20
+>  out_file_cache:
+>  	nfsd_file_cache_shutdown();
+> -dec_users:
+> -	nfsd_users--;
+> -	return ret;
+> +	goto out_unlock;
+>  }
+> =20
+> -static void nfsd_shutdown_generic(void)
+> +static void nfsd_shutdown_cb(struct kref *kref)
+>  {
+> -	if (--nfsd_users)
+> -		return;
+> -
+>  	nfs4_state_shutdown();
+>  	nfsd_file_cache_shutdown();
+> +	mutex_unlock(&nfsd_startup_mutex);
 > +}
 > +
->  /*
->   * write_v4_end_grace - release grace period for nfsd's v4.x lock manage=
-r
->   *
-> @@ -1075,27 +1128,13 @@ static ssize_t write_recoverydir(struct file *fil=
-e, char *buf, size_t size)
->   */
->  static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t s=
-ize)
->  {
-> -	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> -
-> -	if (size > 0) {
-> -		switch(buf[0]) {
-> -		case 'Y':
-> -		case 'y':
-> -		case '1':
-> -			if (!nn->nfsd_serv)
-> -				return -EBUSY;
-> -			trace_nfsd_end_grace(netns(file));
-> -			nfsd4_end_grace(nn);
-> -			break;
-> -		default:
-> -			return -EINVAL;
-> -		}
-> -	}
-> +	ssize_t rv;
-> =20
-> -	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%c\n",
-> -			 nn->grace_ended ? 'Y' : 'N');
-> +	mutex_lock(&nfsd_mutex);
-> +	rv =3D __write_v4_end_grace(file, buf, size);
-> +	mutex_unlock(&nfsd_mutex);
-> +	return rv;
+> +bool nfsd_startup_get(void)
+> +{
+> +	return kref_get_unless_zero(&nfsd_users);
+> +}
+> +
+> +void nfsd_startup_put(void)
+> +{
+> +	kref_put_mutex(&nfsd_users, nfsd_shutdown_cb, &nfsd_startup_mutex);
 >  }
-> -
->  #endif
 > =20
->  /*----------------------------------------------------------------------=
-------*/
+>  static bool nfsd_needs_lockd(struct nfsd_net *nn)
+> @@ -416,7 +429,7 @@ static int nfsd_startup_net(struct net *net, const st=
+ruct cred *cred)
+>  		nn->lockd_up =3D false;
+>  	}
+>  out_socks:
+> -	nfsd_shutdown_generic();
+> +	nfsd_startup_put();
+>  	return ret;
+>  }
+> =20
+> @@ -443,7 +456,7 @@ static void nfsd_shutdown_net(struct net *net)
+>  	percpu_ref_exit(&nn->nfsd_net_ref);
+> =20
+>  	nn->nfsd_net_up =3D false;
+> -	nfsd_shutdown_generic();
+> +	nfsd_startup_put();
+>  }
+> =20
+>  static DEFINE_SPINLOCK(nfsd_notifier_lock);
+
+I like this approach though. Taking a reference seems much less brittle
+than dealing with a global mutex. Other than the changelog nits:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
