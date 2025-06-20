@@ -1,116 +1,268 @@
-Return-Path: <linux-nfs+bounces-12584-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12585-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52BD4AE1545
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 09:53:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA2D5AE1A57
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 13:55:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D370B17F698
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 07:53:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B5DF1BC0AE3
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 11:55:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D670231850;
-	Fri, 20 Jun 2025 07:53:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4227027FD56;
+	Fri, 20 Jun 2025 11:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X2kB9QhR"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kPTvl70M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="tKxIOt0V";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Cl9mrrk6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="JFLqehut"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C869D23237C;
-	Fri, 20 Jun 2025 07:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02091CAA6D
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Jun 2025 11:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750406020; cv=none; b=jI2GplENiOZ5w4+qGsZ7D5YdCmCxqFmkTFEfz8RvqChKJtfPKrsLo1Bww69VxxqqdetojcCO5ZVSLGaximrdF3WPPrHc5/jT2xNZ1ngUNYP4otWX7RBTEHqMoQ1BQ5GNZwCua0wUz60N7VQJ49y9Akfq5ou1c1VbV0oLa9vJ89I=
+	t=1750420537; cv=none; b=gAKIbbekJvES7OA1XmKLgBNTDpDlDpHMmuwfbzo+jetq9byK66Z3Xr7SQOZCuDLviUz0x4yhmVby0PMZmynF5Bh5VT/aJkHTJ5fnz9tHrngfgtcnGC/blR9g73RJ8RDvfBZ1SkKcniiN/5Yge0MmzaIG8bscUlYq0WbYWWFf5N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750406020; c=relaxed/simple;
-	bh=qo6h93Fp0cE/qzJ3P2ykpMkRijpnUj/LdPFZGdtJe/U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RqpqvjvQ84IKY89V6sdJb7YMnYD4v4SIxshiay/uMJyZ+It6HGfJ2d9PlnNqjxEchLuFV5WFareC7RL4FsrHyCBAffljDBXIp5+IbARMKc4Uniz/l5ADE7oHmcnNogeaUEu6bqyi4uyyXb5HTbDxfaQTjMw7MMXrEehdm//uWy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X2kB9QhR; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553644b8f56so1545351e87.1;
-        Fri, 20 Jun 2025 00:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750406017; x=1751010817; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qo6h93Fp0cE/qzJ3P2ykpMkRijpnUj/LdPFZGdtJe/U=;
-        b=X2kB9QhR0o2cHXFeVkwTipC78zOH4UtuoWFtsMEqW3X51SjZ2msJ8xVUuZ2Vs1tvuv
-         ujI04Ke+0FRmSBRoTJq/znkkY248fLiBsauxa2MVZCtnRLVn0+1l1pnXhVzAGIRJ2AJx
-         cJSk5UKSLohwNIJApUzyPqDf97OxOtnbKrueCqevST54AJ7ozTAxXdeltnB+fulHPIwc
-         sACO+pXCLpQpgsuhmh8vHKdQLjeuzh+9yL0RwhCiPwpe3eeP64gYje20cJW2YklHDjMs
-         4Qii8AnrMufocKUgbwIiQUKwZj0sspCMQlY3M+t4/RGOHkvd3LXCENuB8C1Zuc8m69jH
-         56xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750406017; x=1751010817;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qo6h93Fp0cE/qzJ3P2ykpMkRijpnUj/LdPFZGdtJe/U=;
-        b=BgC0bB1BT+Uc//tzgdANYLFvyscN590DBq3rUER2kPM7I1zhuPoGBg4jFWt++RlaAT
-         Ih0pwkAlytO0Vzr/RSv69X0zlRzRyllMDA9m4RZplyre6YWL+azBTmv2XpkQNUuYIdxm
-         LDbPSVzHhwxa/0shKZp1HtA0FHdc5bWHUqEfNM24cM7Od7NP0UxXvXwKS4Snv8ubz1ai
-         ESs6aGzLcUOCz20ldtUO7OthXaMlNBjxZrswZ7LnaynTxQR2oBoCW1PXWabQn9fkFmcU
-         /RYZICoC3WT5OyGD5bWl93SoQyWyvTB58Re/5dUJ14jsu9bcZVr3rCTeWjAC/YsKrHLd
-         v90Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW0Fj7uwnJFQT9ko1aHVHinvC0b+6Layr4TNY68CKjKgM7qkLQHfOTNXkMTS5yK2TYcxxfbHq0QZxSA@vger.kernel.org, AJvYcCWO0QmOkC02t6Gy8d3rRTe+FPcdn44InPcRaWIZuNel+GZvBA3yrH+aJjVy1nOH8fKGsfHF9Tw7IoDlVho=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz14Lf5dFDX9xniK2rT3NMtsvffJoucHb+IE3+IszwFKSC/qWqK
-	8dfoFNADwGg4ICtUyQC4xikCXfHSqqy+qHCVvUpW0O808O1DicBe2/25
-X-Gm-Gg: ASbGncv//8EMe9PL0oqhH+ZsyXjmxhO2ETfK/o+QtQSDmIdRX6g/BZ6tHzXBoVpu+qW
-	ToVbKQguGqaQPKL0o8kpZKl3yzZfSviz7Ak1EH2qWePZBsW6glCpK/RrVEx2RmtTCRfMVH8zZHo
-	Z5jPFSirsN8+jlox8Umm7Uf7FimSL6TiQ60m6uqjdQTfOPsCJ3ZlL+AmptcljUwvzGzzeoiKIDf
-	Vn5MRdrQXfCRV7EwEBTL+wNVd5vFdOK76uV3Pv8ewEmoOv+g8I1ZSUFNPgr6nPTuVUOhb8b9sSm
-	mF+n0z5zUadEVI2KZpf11nYL0lfuKdsdI/MfJW+zTO9MdUhaOTzNbwMzNWo7E4bBB7XI/YsB6QL
-	/Il8kYyNO0i1I1g==
-X-Google-Smtp-Source: AGHT+IFn9yg9lrRpDjq+3Zy6jqdiploB1jBXRtx63vokm2wRpQ/WFKyUoVGpZcz2Dx2IrZG36gGX/A==
-X-Received: by 2002:a05:6512:10d2:b0:553:3127:b00 with SMTP id 2adb3069b0e04-553e3beb559mr576309e87.32.1750406016571;
-        Fri, 20 Jun 2025 00:53:36 -0700 (PDT)
-Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.201.55])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41bbf5asm189618e87.91.2025.06.20.00.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jun 2025 00:53:36 -0700 (PDT)
-Date: Fri, 20 Jun 2025 10:53:34 +0300
-From: Sergey Bashirov <sergeybashirov@gmail.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Konstantin Evtushenko <koevtushenko@yandex.com>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] nfsd: Implement large extent array support in pNFS
-Message-ID: <ehmu66bp4rmhqx4nd7vrn6uimx5eyr55psppgevkbdu2xr7lop@yj6xrr6gyvwb>
-References: <20250614155950.116302-1-sergeybashirov@gmail.com>
- <d29f03f4-c06c-42ef-952d-6a7da196d03b@oracle.com>
+	s=arc-20240116; t=1750420537; c=relaxed/simple;
+	bh=leUZfC3phG/G71xqxE7hs61HDNGRm6jBy7y2+hiUxzA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=JU+b3W0ZKTV3WAsIoHtLjxR6horSbIx6EsOf3wpurLCX9rPmPgV4dssMjqozChpfZVvJHOHmrz+ezwOQftmh6+LmeF3zkF6DOMq0XDq1UjV51EjvbtIYuSkXG0eumF0Tkb6AR0oe+Vc1Z3ORzeQ1ReRKNmvjT5ZmbzQXIcYCpVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kPTvl70M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=tKxIOt0V; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Cl9mrrk6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=JFLqehut; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 65FFD1F38D;
+	Fri, 20 Jun 2025 11:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750420526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=kPTvl70MGqaW6Yi3jiuH/4heyMKV67vgaYQZmE1YMoivhf7IXZ2HZTRjlHGXMrvGByHhEn
+	C998DFe6N+kgSGHpH+ymJlcHonnGXJOoZKDFHCvqKCxjfLhGgCX+6lNyhC5XZMyNPUxAVH
+	zS2u4aTAXDOYpsYJVg/SinrqUg2S5xE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750420526;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=tKxIOt0Vg2hCqS741ET7fQhnvw9PZ/XCyskWVtDltNkj0OnRQosjQzh7mXzH6Adpo4Tok7
+	A1ahGkf5+WlASjDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750420525; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=Cl9mrrk68VbbkvsTLF4uxihOieWJfQ4eGVbT16tbdqQSKoNAp9m/rQrHpjQNv9FiEpuWfG
+	/5LVKv+GkTCXcdRFoiFKaLvUSR05BOHsPPWrJMdUovD1619yRkFinGCIiMl4CPLI7ywHkY
+	Df/H/ryaGZVsAnpU+2nP/wrqqwUzsYU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750420525;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q2u7GadND6JlOOwvzYu1NWbjBdk1zkrqp9DT8Mri/5Y=;
+	b=JFLqehutfZfY4J9hA3ujziMmXJO01FJcSrxAropdwdI7fY71xN11mVETenkZ8FnAFEOIoY
+	EpHjjAFC/7JmLBBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8EE813736;
+	Fri, 20 Jun 2025 11:55:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id eDI6JilMVWgUHwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 20 Jun 2025 11:55:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d29f03f4-c06c-42ef-952d-6a7da196d03b@oracle.com>
-User-Agent: NeoMutt/20231103
+From: "NeilBrown" <neilb@suse.de>
+To: chenxiaosong@chenxiaosong.com
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, huhai@kylinos.cn,
+ "ChenXiaoSong" <chenxiaosong@kylinos.cn>
+Subject: Re: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
+In-reply-to: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+References: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+Date: Fri, 20 Jun 2025 21:55:11 +1000
+Message-id: <175042051171.608730.8613669948428192921@noble.neil.brown.name>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[noble.neil.brown.name:mid,imap1.dmz-prg2.suse.org:helo,chenxiaosong.com:email,chenxiaosong.com:url]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Tue, Jun 17, 2025 at 04:35:03PM -0400, Chuck Lever wrote:
-> Hi Sergey -
->
-> Typically we separate the clean-ups from the substantive changes. So
-> removing the dprintk call sites would be done in a pre-requisite patch.
-> I'm asking you to do it because if I split this patch up, I'm likely to
-> get something wrong, and you have a convenient test case.
->
-> Also, reposting means your tested version of the series is what gets
-> archived on lore.
->
-> Would you mind splitting this one up and posting a v4 ?
+On Wed, 18 Jun 2025, chenxiaosong@chenxiaosong.com wrote:
+> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+>=20
+> Before commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client=
+"),
+> we had a null-ptr-deref in nfsd4_probe_callback() (Link[1]):
+>=20
+>  nfsd: last server has exited, flushing export cache
+>  NFSD: starting 90-second grace period (net f0000030)
+>  Unable to handle kernel NULL pointer dereference at virtual address 000000=
+0000000000
 
-I agree, this should also make the main patch a bit smaller and easier
-to review. I will split the patch.
+The only possible cause that I can find for this crash is that the nfsd
+thread must have still been running when nfsd_shutdown_net() and then
+nfsd_shutdown_generic() were called resulting in the workqueue being
+destroyed.
 
---
-Sergey Bashirov
+The threads will all have been signalled with SIGKILL, but there was no
+mechanism to wait for the threads to complete.
+
+This was changed in
+
+Commit: 3409e4f1e8f2 ("NFSD: Make it possible to use svc_set_num_threads_sync=
+")
+
+Sync then threads were stopped synchronously so they were certainly all
+stopped before the workqueue was removed.
+
+NeilBrown
+
+
+>  ...
+>  Call trace:
+>   __queue_work+0xb4/0x558
+>   queue_work_on+0x88/0x90
+>   nfsd4_probe_callback+0x4c/0x58 [nfsd]
+>  NFSD: starting 90-second grace period (net f0000030)
+>   nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
+>   nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
+>   nfsd4_create_session+0x5b8/0x718 [nfsd]
+>   nfsd4_proc_compound+0x4c0/0x710 [nfsd]
+>   nfsd_dispatch+0x104/0x248 [nfsd]
+>   svc_process_common+0x348/0x808 [sunrpc]
+>   svc_process+0xb0/0xc8 [sunrpc]
+>   nfsd+0xf0/0x160 [nfsd]
+>   kthread+0x134/0x138
+>   ret_from_fork+0x10/0x18
+>  Code: aa1c03e0 97ffffba aa0003e2 b5000780 (f9400262)
+>  SMP: stopping secondary CPUs
+>  Starting crashdump kernel...
+>  Bye!
+>=20
+> One of the cases is:
+>=20
+>     task A (cpu 1)    |   task B (cpu 2)     |   task C (cpu 3)
+>  ---------------------|----------------------|-----------------------------=
+----
+>  nfsd_startup_generic | nfsd_startup_generic |
+>    nfsd_users =3D=3D 0    |  nfsd_users =3D=3D 0     |
+>    nfsd_users++       |  nfsd_users++        |
+>    nfsd_users =3D=3D 1    |                      |
+>    ...                |                      |
+>    callback_wq =3D=3D xxx |                      |
+>  ---------------------|----------------------|-----------------------------=
+----
+>                       |                      | nfsd_shutdown_generic
+>                       |                      |   nfsd_users =3D=3D 1
+>                       |                      |   --nfsd_users
+>                       |                      |   nfsd_users =3D=3D 0
+>                       |                      |   ...
+>                       |                      |   callback_wq =3D=3D xxx
+>                       |                      |   destroy_workqueue(callback=
+_wq)
+>  ---------------------|----------------------|-----------------------------=
+----
+>                       |  nfsd_users =3D=3D 1     |
+>                       |  ...                 |
+>                       |  callback_wq =3D=3D yyy  |
+>=20
+> After commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"=
+),
+> this issue no longer occurs, but we should still convert the nfsd_users
+> to atomic_t to prevent other similar issues.
+>=20
+> Link[1]: https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_c=
+allback.html
+> Co-developed-by: huhai <huhai@kylinos.cn>
+> Signed-off-by: huhai <huhai@kylinos.cn>
+> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+> ---
+>  fs/nfsd/nfssvc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 9b3d6cff0e1e..08b1f9ebdc2a 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -270,13 +270,13 @@ static int nfsd_init_socks(struct net *net, const str=
+uct cred *cred)
+>  	return 0;
+>  }
+> =20
+> -static int nfsd_users =3D 0;
+> +static atomic_t nfsd_users =3D ATOMIC_INIT(0);
+> =20
+>  static int nfsd_startup_generic(void)
+>  {
+>  	int ret;
+> =20
+> -	if (nfsd_users++)
+> +	if (atomic_fetch_inc(&nfsd_users))
+>  		return 0;
+> =20
+>  	ret =3D nfsd_file_cache_init();
+> @@ -291,13 +291,13 @@ static int nfsd_startup_generic(void)
+>  out_file_cache:
+>  	nfsd_file_cache_shutdown();
+>  dec_users:
+> -	nfsd_users--;
+> +	atomic_dec(&nfsd_users);
+>  	return ret;
+>  }
+> =20
+>  static void nfsd_shutdown_generic(void)
+>  {
+> -	if (--nfsd_users)
+> +	if (atomic_dec_return(&nfsd_users))
+>  		return;
+> =20
+>  	nfs4_state_shutdown();
+> --=20
+> 2.34.1
+>=20
+>=20
+
 
