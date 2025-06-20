@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-12597-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12598-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 073ABAE1B63
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 15:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 02527AE1BCE
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 15:15:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 968E41671E9
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 13:01:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75FF24A81EA
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 13:13:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C53D184;
-	Fri, 20 Jun 2025 13:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B5962857DE;
+	Fri, 20 Jun 2025 13:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kah18TiI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XOgl4Rv0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98E630E84D
-	for <linux-nfs@vger.kernel.org>; Fri, 20 Jun 2025 13:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FAA258A
+	for <linux-nfs@vger.kernel.org>; Fri, 20 Jun 2025 13:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750424495; cv=none; b=K3YAOeQfOC/zGIh67nJl/Yxwm3eu7gLH34OvTbE+aIkO3s3hXeHqD9NvV8buB7qQvEsiRoSctC9E5heJAp16jR5SFZSfUB1XVt3mZvDjOJfyvAwRFXNb8QwkBoyqLoZCsL0ZDIuGaNpv+18w4aatRhmzkKof541BXIZinNoxoo8=
+	t=1750425231; cv=none; b=L8S7kS99P9Y5ykWBymZHtX5F9dzPDGM194R6iK+Rx4ngkwcFrFwi7dfcaZtIfVlQQhgHtA1VCt0ZUnGkvd9VO2l8LaNBJ06+NyVB3t4O7PUnWQhU/b4+FPeuuAF4iNUczzrQf5KNbS1xtVaTPkezY72OGBwBZ4/6cAJE5EpjYXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750424495; c=relaxed/simple;
-	bh=eVqBbIF3dQET76AVKE50plce4ukm0p3LV+SDjYOmqys=;
+	s=arc-20240116; t=1750425231; c=relaxed/simple;
+	bh=OM9G71pMJTxuHavcgVR0hmwfr2TB3r3BbJAEeLOm2F8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=miWE1hatoXl3711lrToCBkYjutOV+LVrqxwh6Ce5FBgxW4/g3BZ3VPU6+Lv+0Igk42dIGXJ5qKGRHE4MlexH8ZbNBcRr4abEAjKA1/mBXg03+N6lQ4YCv4ZPCDWhVqfDRhXRkx8vxAI5G/0qeBxHEYfeE7ivmNdOTxqiyocmL7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kah18TiI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C799EC4CEE3;
-	Fri, 20 Jun 2025 13:01:34 +0000 (UTC)
+	 Content-Type:MIME-Version; b=TcgqW+SESHDFLh+dUcnqmh9/4FOFYkk5O6ylhb9C1pDCGbIesk9RAnfnjKQrh0KnzyIEciwEV00b7m5twjIXv0VbB6Amh3b2+SG+NCS13OsiZjJ06nMPZGtj2hEy2B6ME8U8byaYiRyXV9a8vM81J2TfE2UpnjNBjjh8U0udsWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XOgl4Rv0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FB4C4CEEF;
+	Fri, 20 Jun 2025 13:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750424495;
-	bh=eVqBbIF3dQET76AVKE50plce4ukm0p3LV+SDjYOmqys=;
+	s=k20201202; t=1750425231;
+	bh=OM9G71pMJTxuHavcgVR0hmwfr2TB3r3BbJAEeLOm2F8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kah18TiIIZcVK+NCSo3YX/XanERV5/89P07dgDMwsAL9E+so4AOu+GuerNTbvNO4x
-	 RjotmBiZfCidjAmxuB9+MNK9o0zGsXBg8+woN3mV3pyWu8obB0DA33Da+5Jn5NJQp8
-	 8isjm+tgaD2nlMW6yTFoXTMjq+gWC+zA1wSbbuKCurNcT3cYMA7Vu4a7VvxzoD5idw
-	 5EZGwt/vIDbaMgrYNiZGnutDULumWjoMVJ0whbEM9DWjalmXAlPA1aP9Qsnp9zDi+L
-	 rvJmtxksBMun8CZkJN38zbfkRXAUTjLVvHdoQB2HpMkiSiG5WrgGQ54vkQUR6J7Zdt
-	 nIGzgAajOcY6Q==
-Message-ID: <67b8eb3390347fac8080c7c008e58c6896e6a1d4.camel@kernel.org>
-Subject: Re: [PATCH 2/3] nfsd: use kref and new mutex for global config
- management
+	b=XOgl4Rv0gHjMr/FCvFgrD+P0G7GngN1uiqDPLb974ao2rSHmMp6Nyr6q5NeCmjvxh
+	 cs8FHn9BtbMph10raLHjQUa3k3bWztc0YdLf4W+CYckTmp3xVE8z9dAnQMLfVUPML0
+	 ePqWkfRGRE+n2o948ts68FbaEAMtEoRKB4yE493gV1aCCUt3bBKOD+rnkoSfM4Jrl/
+	 iY5bDmErT5hdKrgwMbGCx7OrSWYzlULXGfP1e4xSkpPP4NS8aRo0UEgGKy6Dtxv0l/
+	 6hnhl+0sLue/YNGp1Y0kT5ZF2CgLLlMtBFuvH+inBAM0K0W4+TnDjSxqtJfWBqJxYQ
+	 KKKX7FGtaF8gQ==
+Message-ID: <5b68f9be179df2f69f8568dc0752b6ed71676f15.camel@kernel.org>
+Subject: Re: [PATCH 3/3] nfsd: split nfsd_mutex into one mutex per
+ net-namespace.
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Li Lingfeng	
  <lilingfeng3@huawei.com>
-Date: Fri, 20 Jun 2025 09:01:33 -0400
-In-Reply-To: <20250618213347.425503-3-neil@brown.name>
+Date: Fri, 20 Jun 2025 09:13:50 -0400
+In-Reply-To: <20250618213347.425503-4-neil@brown.name>
 References: <20250618213347.425503-1-neil@brown.name>
-	 <20250618213347.425503-3-neil@brown.name>
+	 <20250618213347.425503-4-neil@brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,283 +138,595 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2025-06-19 at 07:31 +1000, NeilBrown wrote:
-> nfsd_mutex is used for two quite different things:
-> 1/ it prevents races when start/stoping global resources:
->    the filecache and the v4 state table
-> 2/ it prevents races for per-netns config, typically
->    ensure config changes are synchronised w.r.t. server
->    startup/shutdown.
+> The remaining uses for nfsd_mutex are all to protect per-netns
+> resources.
 >=20
-> This patch splits out the first used.  A subsequent patch improves the
-> second.
+> This patch replaces the global mutex with one per netns.  The "svc_info"
+> struct now contains that mutex rather than a pointer to the mutex.
 >=20
-> "nfsd_users" is changed to a kref which is can be taken to delay
-
-Changelog nits:
-
-s/which is/which/
-
-> the shutdown of global services.  nfsd_startup_get(), it is succeeds,
-
-nit: "if it succeeds"
-
-> ensure the global services will remain until nfsd_startup_put().
-
-"ensures"
-
->=20
-> The new mutex, nfsd_startup_mutex, is only take for startup and
-
-"only taken"
-
-> shutdown.  It is not needed to protect the kref.
->=20
-> The locking needed by nfsd_file_cache_purge() is now provided internally
-> by that function so calls don't need to be concerned.
->=20
-> This replaces NFSD_FILE_CACHE_UP which is effective just a flag which
-
-"effectively"
-
-> says nfsd_users is non-zero.
+> Macros are provided to make it easy to take the mutex given a file or net=
+.
 >=20
 > Signed-off-by: NeilBrown <neil@brown.name>
 > ---
->  fs/nfsd/export.c    |  6 ------
->  fs/nfsd/filecache.c | 31 +++++++++++--------------------
->  fs/nfsd/nfsd.h      |  3 +++
->  fs/nfsd/nfssvc.c    | 41 +++++++++++++++++++++++++++--------------
->  4 files changed, 41 insertions(+), 40 deletions(-)
+>  .../admin-guide/nfs/nfsd-admin-interfaces.rst |   2 +-
+>  fs/nfsd/nfsctl.c                              | 113 +++++++++---------
+>  fs/nfsd/nfsd.h                                |   1 -
+>  fs/nfsd/nfssvc.c                              |  33 ++---
+>  include/linux/sunrpc/svc.h                    |   2 +-
+>  net/sunrpc/svc_xprt.c                         |   4 +-
+>  6 files changed, 72 insertions(+), 83 deletions(-)
 >=20
-> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> index cadfc2bae60e..1ea3d72ef5c9 100644
-> --- a/fs/nfsd/export.c
-> +++ b/fs/nfsd/export.c
-> @@ -243,13 +243,7 @@ static struct cache_head *expkey_alloc(void)
+> diff --git a/Documentation/admin-guide/nfs/nfsd-admin-interfaces.rst b/Do=
+cumentation/admin-guide/nfs/nfsd-admin-interfaces.rst
+> index c05926f79054..9548e4ab35b6 100644
+> --- a/Documentation/admin-guide/nfs/nfsd-admin-interfaces.rst
+> +++ b/Documentation/admin-guide/nfs/nfsd-admin-interfaces.rst
+> @@ -37,4 +37,4 @@ Implementation notes
 > =20
->  static void expkey_flush(void)
->  {
-> -	/*
-> -	 * Take the nfsd_mutex here to ensure that the file cache is not
-> -	 * destroyed while we're in the middle of flushing.
-> -	 */
-> -	mutex_lock(&nfsd_mutex);
->  	nfsd_file_cache_purge(current->nsproxy->net_ns);
-> -	mutex_unlock(&nfsd_mutex);
->  }
+>  Note that the rpc server requires the caller to serialize addition and
+>  removal of listening sockets, and startup and shutdown of the server.
+> -For nfsd this is done using nfsd_mutex.
+> +For nfsd this is done using nfsd_info.mutex in struct nfsd_net.
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 3710a1992d17..70eddf2640f0 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -95,6 +95,13 @@ static ssize_t (*const write_op[])(struct file *, char=
+ *, size_t) =3D {
+>  #endif
+>  };
 > =20
->  static const struct cache_detail svc_expkey_cache_template =3D {
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index e108b6c705b4..0a9116b7530c 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -50,8 +50,6 @@
-> =20
->  #define NFSD_LAUNDRETTE_DELAY		     (2 * HZ)
-> =20
-> -#define NFSD_FILE_CACHE_UP		     (0)
-> -
->  /* We only care about NFSD_MAY_READ/WRITE for this cache */
->  #define NFSD_FILE_MAY_MASK	(NFSD_MAY_READ|NFSD_MAY_WRITE|NFSD_MAY_LOCALI=
-O)
-> =20
-> @@ -70,7 +68,6 @@ struct nfsd_fcache_disposal {
->  static struct kmem_cache		*nfsd_file_slab;
->  static struct kmem_cache		*nfsd_file_mark_slab;
->  static struct list_lru			nfsd_file_lru;
-> -static unsigned long			nfsd_file_flags;
->  static struct fsnotify_group		*nfsd_file_fsnotify_group;
->  static struct delayed_work		nfsd_filecache_laundrette;
->  static struct rhltable			nfsd_file_rhltable
-> @@ -112,9 +109,12 @@ static const struct rhashtable_params nfsd_file_rhas=
-h_params =3D {
->  static void
->  nfsd_file_schedule_laundrette(void)
->  {
-> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags))
-> -		queue_delayed_work(system_unbound_wq, &nfsd_filecache_laundrette,
-> +	if (nfsd_startup_get()) {
-> +		queue_delayed_work(system_unbound_wq,
-> +				   &nfsd_filecache_laundrette,
->  				   NFSD_LAUNDRETTE_DELAY);
-> +		nfsd_startup_put();
-> +	}
->  }
-> =20
->  static void
-> @@ -795,10 +795,6 @@ nfsd_file_cache_init(void)
->  {
->  	int ret;
-> =20
-> -	lockdep_assert_held(&nfsd_mutex);
-> -	if (test_and_set_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1)
-> -		return 0;
-> -
->  	ret =3D rhltable_init(&nfsd_file_rhltable, &nfsd_file_rhash_params);
->  	if (ret)
->  		goto out;
-> @@ -853,8 +849,6 @@ nfsd_file_cache_init(void)
-> =20
->  	INIT_DELAYED_WORK(&nfsd_filecache_laundrette, nfsd_file_gc_worker);
->  out:
-> -	if (ret)
-> -		clear_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags);
->  	return ret;
->  out_notifier:
->  	lease_unregister_notifier(&nfsd_file_lease_notifier);
-> @@ -958,9 +952,10 @@ nfsd_file_cache_start_net(struct net *net)
->  void
->  nfsd_file_cache_purge(struct net *net)
->  {
-> -	lockdep_assert_held(&nfsd_mutex);
-> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1)
-> +	if (nfsd_startup_get()) {
->  		__nfsd_file_cache_purge(net);
-> +		nfsd_startup_put();
-> +	}
->  }
-> =20
->  void
-> @@ -975,10 +970,6 @@ nfsd_file_cache_shutdown(void)
->  {
->  	int i;
-> =20
-> -	lockdep_assert_held(&nfsd_mutex);
-> -	if (test_and_clear_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 0)
-> -		return;
-> -
->  	lease_unregister_notifier(&nfsd_file_lease_notifier);
->  	shrinker_free(nfsd_file_shrinker);
->  	/*
-> @@ -1347,8 +1338,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
-void *v)
->  	unsigned long lru =3D 0, total_age =3D 0;
-> =20
->  	/* Serialize with server shutdown */
-> -	mutex_lock(&nfsd_mutex);
-> -	if (test_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1) {
-> +	if (nfsd_startup_get()) {
->  		struct bucket_table *tbl;
->  		struct rhashtable *ht;
-> =20
-> @@ -1360,8 +1350,9 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
-void *v)
->  		tbl =3D rht_dereference_rcu(ht->tbl, ht);
->  		buckets =3D tbl->size;
->  		rcu_read_unlock();
+> +#define	with_nfsd_net_locked(__net)					\
+> +	for (struct nfsd_net *__nn =3D net_generic(__net, nfsd_net_id);	\
+> +	     __nn ? ({mutex_lock(&__nn->nfsd_info.mutex); 1; }) : 0;	\
+> +	     ({mutex_unlock(&__nn->nfsd_info.mutex); __nn =3D NULL;}))
+> +#define with_nfsd_file_locked(__file)					\
+> +	with_nfsd_net_locked(netns(__file))
 > +
-> +		nfsd_startup_put();
+
+This is certainly clever, but I think I'd rather have simple
+nfsd_net_mutex_lock/_unlock() functions than have to maintain this sort
+of macro.
+
+>  static ssize_t nfsctl_transaction_write(struct file *file, const char __=
+user *buf, size_t size, loff_t *pos)
+>  {
+>  	ino_t ino =3D  file_inode(file)->i_ino;
+> @@ -249,9 +256,8 @@ static ssize_t write_unlock_ip(struct file *file, cha=
+r *buf, size_t size)
+>  {
+>  	ssize_t rv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_unlock_ip(file, buf, size);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_unlock_ip(file, buf, size);
+>  	return rv;
+>  }
+> =20
+> @@ -315,9 +321,8 @@ static ssize_t write_unlock_fs(struct file *file, cha=
+r *buf, size_t size)
+>  {
+>  	ssize_t rv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_unlock_fs(file, buf, size);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_unlock_fs(file, buf, size);
+>  	return rv;
+>  }
+> =20
+> @@ -440,9 +445,8 @@ static ssize_t write_threads(struct file *file, char =
+*buf, size_t size)
+>  		if (newthreads < 0)
+>  			return -EINVAL;
+>  		trace_nfsd_ctl_threads(net, newthreads);
+> -		mutex_lock(&nfsd_mutex);
+> -		rv =3D nfsd_svc(1, &newthreads, net, file->f_cred, NULL);
+> -		mutex_unlock(&nfsd_mutex);
+> +		with_nfsd_net_locked(net)
+> +			rv =3D nfsd_svc(1, &newthreads, net, file->f_cred, NULL);
+>  		if (rv < 0)
+>  			return rv;
+>  	} else
+> @@ -473,7 +477,7 @@ static ssize_t write_threads(struct file *file, char =
+*buf, size_t size)
+>   *			return code is the size in bytes of the string
+>   *	On error:	return code is zero or a negative errno value
+>   */
+> -static ssize_t write_pool_threads(struct file *file, char *buf, size_t s=
+ize)
+> +static ssize_t __write_pool_threads(struct file *file, char *buf, size_t=
+ size)
+>  {
+>  	/* if size > 0, look for an array of number of threads per node
+>  	 * and apply them  then write out number of threads per node as reply
+> @@ -486,7 +490,6 @@ static ssize_t write_pool_threads(struct file *file, =
+char *buf, size_t size)
+>  	int *nthreads;
+>  	struct net *net =3D netns(file);
+> =20
+> -	mutex_lock(&nfsd_mutex);
+>  	npools =3D nfsd_nrpools(net);
+>  	if (npools =3D=3D 0) {
+>  		/*
+> @@ -494,7 +497,6 @@ static ssize_t write_pool_threads(struct file *file, =
+char *buf, size_t size)
+>  		 * writing to the threads file but NOT the pool_threads
+>  		 * file, sorry.  Report zero threads.
+>  		 */
+> -		mutex_unlock(&nfsd_mutex);
+>  		strcpy(buf, "0\n");
+>  		return strlen(buf);
 >  	}
+> @@ -544,10 +546,18 @@ static ssize_t write_pool_threads(struct file *file=
+, char *buf, size_t size)
+>  	rv =3D mesg - buf;
+>  out_free:
+>  	kfree(nthreads);
 > -	mutex_unlock(&nfsd_mutex);
+>  	return rv;
+>  }
 > =20
->  	for_each_possible_cpu(i) {
->  		hits +=3D per_cpu(nfsd_file_cache_hits, i);
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 1bfd0b4e9af7..8ad9fcc23789 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -80,6 +80,9 @@ extern const struct svc_version	nfsd_version2, nfsd_ver=
-sion3, nfsd_version4;
->  extern struct mutex		nfsd_mutex;
->  extern atomic_t			nfsd_th_cnt;		/* number of available threads */
-> =20
-> +bool nfsd_startup_get(void);
-> +void nfsd_startup_put(void);
+> +static ssize_t write_pool_threads(struct file *file, char *buf, size_t s=
+ize)
+> +{
+> +	ssize_t ret;
 > +
->  extern const struct seq_operations nfs_exports_op;
+> +	with_nfsd_file_locked(file)
+> +		ret =3D __write_pool_threads(file, buf, size);
+> +	return ret;
+> +}
+> +
+>  static ssize_t
+>  nfsd_print_version_support(struct nfsd_net *nn, char *buf, int remaining=
+,
+>  		const char *sep, unsigned vers, int minor)
+> @@ -709,9 +719,9 @@ static ssize_t write_versions(struct file *file, char=
+ *buf, size_t size)
+>  {
+>  	ssize_t rv;
 > =20
->  /*
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 82b0111ac469..b2080e5a71e6 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -270,38 +270,51 @@ static int nfsd_init_socks(struct net *net, const s=
-truct cred *cred)
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_versions(file, buf, size);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_versions(file, buf, size);
+> +
+>  	return rv;
+>  }
+> =20
+> @@ -868,9 +878,8 @@ static ssize_t write_ports(struct file *file, char *b=
+uf, size_t size)
+>  {
+>  	ssize_t rv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_ports(file, buf, size, netns(file));
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_ports(file, buf, size, netns(file));
+>  	return rv;
+>  }
+> =20
+> @@ -916,13 +925,13 @@ static ssize_t write_maxblksize(struct file *file, =
+char *buf, size_t size)
+>  		bsize =3D max_t(int, bsize, 1024);
+>  		bsize =3D min_t(int, bsize, NFSSVC_MAXBLKSIZE);
+>  		bsize &=3D ~(1024-1);
+> -		mutex_lock(&nfsd_mutex);
+> +		mutex_lock(&nn->nfsd_info.mutex);
+>  		if (nn->nfsd_serv) {
+> -			mutex_unlock(&nfsd_mutex);
+> +			mutex_unlock(&nn->nfsd_info.mutex);
+>  			return -EBUSY;
+>  		}
+>  		nfsd_max_blksize =3D bsize;
+> -		mutex_unlock(&nfsd_mutex);
+> +		mutex_unlock(&nn->nfsd_info.mutex);
+>  	}
+> =20
+>  	return scnprintf(buf, SIMPLE_TRANSACTION_LIMIT, "%d\n",
+> @@ -971,9 +980,8 @@ static ssize_t nfsd4_write_time(struct file *file, ch=
+ar *buf, size_t size,
+>  {
+>  	ssize_t rv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __nfsd4_write_time(file, buf, size, time, nn);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __nfsd4_write_time(file, buf, size, time, nn);
+>  	return rv;
+>  }
+> =20
+> @@ -1076,9 +1084,8 @@ static ssize_t write_recoverydir(struct file *file,=
+ char *buf, size_t size)
+>  	ssize_t rv;
+>  	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_recoverydir(file, buf, size, nn);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_recoverydir(file, buf, size, nn);
+>  	return rv;
+>  }
+>  #endif
+> @@ -1130,9 +1137,8 @@ static ssize_t write_v4_end_grace(struct file *file=
+, char *buf, size_t size)
+>  {
+>  	ssize_t rv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	rv =3D __write_v4_end_grace(file, buf, size);
+> -	mutex_unlock(&nfsd_mutex);
+> +	with_nfsd_file_locked(file)
+> +		rv =3D __write_v4_end_grace(file, buf, size);
+>  	return rv;
+>  }
+>  #endif
+> @@ -1552,9 +1558,8 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *s=
+kb,
+>  	int i, ret, rqstp_index =3D 0;
+>  	struct nfsd_net *nn;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -
+>  	nn =3D net_generic(sock_net(skb->sk), nfsd_net_id);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+>  	if (!nn->nfsd_serv) {
+>  		ret =3D -ENODEV;
+>  		goto out_unlock;
+> @@ -1636,7 +1641,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *s=
+kb,
+>  out:
+>  	rcu_read_unlock();
+>  out_unlock:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+> =20
+>  	return ret;
+>  }
+> @@ -1665,7 +1670,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>  			count++;
+>  	}
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+> =20
+>  	nrpools =3D max(count, nfsd_nrpools(net));
+>  	nthreads =3D kcalloc(nrpools, sizeof(int), GFP_KERNEL);
+> @@ -1720,7 +1725,7 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>  	if (ret > 0)
+>  		ret =3D 0;
+>  out_unlock:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  	kfree(nthreads);
+>  	return ret;
+>  }
+> @@ -1749,7 +1754,7 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>  		goto err_free_msg;
+>  	}
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+> =20
+>  	err =3D nla_put_u32(skb, NFSD_A_SERVER_GRACETIME,
+>  			  nn->nfsd4_grace) ||
+> @@ -1777,14 +1782,14 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb,=
+ struct genl_info *info)
+>  			goto err_unlock;
+>  	}
+> =20
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+> =20
+>  	genlmsg_end(skb, hdr);
+> =20
+>  	return genlmsg_reply(skb, info);
+> =20
+>  err_unlock:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  err_free_msg:
+>  	nlmsg_free(skb);
+> =20
+> @@ -1807,11 +1812,10 @@ int nfsd_nl_version_set_doit(struct sk_buff *skb,=
+ struct genl_info *info)
+>  	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_PROTO_VERSION))
+>  		return -EINVAL;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -
+>  	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+>  	if (nn->nfsd_serv) {
+> -		mutex_unlock(&nfsd_mutex);
+> +		mutex_unlock(&nn->nfsd_info.mutex);
+>  		return -EBUSY;
+>  	}
+> =20
+> @@ -1856,7 +1860,7 @@ int nfsd_nl_version_set_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>  		}
+>  	}
+> =20
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+> =20
 >  	return 0;
 >  }
-> =20
-> -static int nfsd_users =3D 0;
-> +static struct kref nfsd_users =3D KREF_INIT(0);
-> +static DEFINE_MUTEX(nfsd_startup_mutex);
-> =20
->  static int nfsd_startup_generic(void)
->  {
-> -	int ret;
-> +	int ret =3D 0;
-> =20
-> -	if (nfsd_users++)
-> +	if (kref_get_unless_zero(&nfsd_users))
->  		return 0;
-> +	mutex_lock(&nfsd_startup_mutex);
-> +	if (kref_get_unless_zero(&nfsd_users))
-> +		goto out_unlock;
-> =20
->  	ret =3D nfsd_file_cache_init();
->  	if (ret)
-> -		goto dec_users;
-> +		goto out_unlock;
-> =20
->  	ret =3D nfs4_state_start();
->  	if (ret)
->  		goto out_file_cache;
-> -	return 0;
-> +	kref_init(&nfsd_users);
-> +out_unlock:
-> +	mutex_unlock(&nfsd_startup_mutex);
-> +	return ret;
-> =20
->  out_file_cache:
->  	nfsd_file_cache_shutdown();
-> -dec_users:
-> -	nfsd_users--;
-> -	return ret;
-> +	goto out_unlock;
->  }
-> =20
-> -static void nfsd_shutdown_generic(void)
-> +static void nfsd_shutdown_cb(struct kref *kref)
->  {
-> -	if (--nfsd_users)
-> -		return;
-> -
->  	nfs4_state_shutdown();
->  	nfsd_file_cache_shutdown();
-> +	mutex_unlock(&nfsd_startup_mutex);
-> +}
-> +
-> +bool nfsd_startup_get(void)
-> +{
-> +	return kref_get_unless_zero(&nfsd_users);
-> +}
-> +
-> +void nfsd_startup_put(void)
-> +{
-> +	kref_put_mutex(&nfsd_users, nfsd_shutdown_cb, &nfsd_startup_mutex);
->  }
-> =20
->  static bool nfsd_needs_lockd(struct nfsd_net *nn)
-> @@ -416,7 +429,7 @@ static int nfsd_startup_net(struct net *net, const st=
-ruct cred *cred)
->  		nn->lockd_up =3D false;
+> @@ -1884,7 +1888,7 @@ int nfsd_nl_version_get_doit(struct sk_buff *skb, s=
+truct genl_info *info)
+>  		goto err_free_msg;
 >  	}
->  out_socks:
-> -	nfsd_shutdown_generic();
-> +	nfsd_startup_put();
->  	return ret;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+>  	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> =20
+>  	for (i =3D 2; i <=3D 4; i++) {
+> @@ -1928,13 +1932,13 @@ int nfsd_nl_version_get_doit(struct sk_buff *skb,=
+ struct genl_info *info)
+>  		}
+>  	}
+> =20
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  	genlmsg_end(skb, hdr);
+> =20
+>  	return genlmsg_reply(skb, info);
+> =20
+>  err_nfsd_unlock:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  err_free_msg:
+>  	nlmsg_free(skb);
+> =20
+> @@ -1959,15 +1963,16 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb=
+, struct genl_info *info)
+>  	bool delete =3D false;
+>  	int err, rem;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	nn =3D net_generic(net, nfsd_net_id);
+> +
+> +	mutex_lock(&nn->nfsd_info.mutex);
+> =20
+>  	err =3D nfsd_create_serv(net);
+>  	if (err) {
+> -		mutex_unlock(&nfsd_mutex);
+> +		mutex_unlock(&nn->nfsd_info.mutex);
+>  		return err;
+>  	}
+> =20
+> -	nn =3D net_generic(net, nfsd_net_id);
+>  	serv =3D nn->nfsd_serv;
+> =20
+>  	spin_lock_bh(&serv->sv_lock);
+> @@ -2083,7 +2088,7 @@ int nfsd_nl_listener_set_doit(struct sk_buff *skb, =
+struct genl_info *info)
+>  		nfsd_destroy_serv(net);
+> =20
+>  out_unlock_mtx:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+> =20
+>  	return err;
+>  }
+> @@ -2113,8 +2118,8 @@ int nfsd_nl_listener_get_doit(struct sk_buff *skb, =
+struct genl_info *info)
+>  		goto err_free_msg;
+>  	}
+> =20
+> -	mutex_lock(&nfsd_mutex);
+>  	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+> =20
+>  	/* no nfs server? Just send empty socket list */
+>  	if (!nn->nfsd_serv)
+> @@ -2144,14 +2149,14 @@ int nfsd_nl_listener_get_doit(struct sk_buff *skb=
+, struct genl_info *info)
+>  	}
+>  	spin_unlock_bh(&serv->sv_lock);
+>  out_unlock_mtx:
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  	genlmsg_end(skb, hdr);
+> =20
+>  	return genlmsg_reply(skb, info);
+> =20
+>  err_serv_unlock:
+>  	spin_unlock_bh(&serv->sv_lock);
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  err_free_msg:
+>  	nlmsg_free(skb);
+> =20
+> @@ -2253,7 +2258,7 @@ static __net_init int nfsd_net_init(struct net *net=
+)
+>  		nn->nfsd_versions[i] =3D nfsd_support_version(i);
+>  	for (i =3D 0; i < sizeof(nn->nfsd4_minorversions); i++)
+>  		nn->nfsd4_minorversions[i] =3D nfsd_support_version(4);
+> -	nn->nfsd_info.mutex =3D &nfsd_mutex;
+> +	mutex_init(&nn->nfsd_info.mutex);
+>  	nn->nfsd_serv =3D NULL;
+>  	nfsd4_init_leases_net(nn);
+>  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 8ad9fcc23789..3cbca4d34f48 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -77,7 +77,6 @@ struct nfsd_genl_rqstp {
+> =20
+>  extern struct svc_program	nfsd_programs[];
+>  extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_versi=
+on4;
+> -extern struct mutex		nfsd_mutex;
+>  extern atomic_t			nfsd_th_cnt;		/* number of available threads */
+> =20
+>  bool nfsd_startup_get(void);
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index b2080e5a71e6..9f70b1fbc55e 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -56,20 +56,6 @@ static __be32			nfsd_init_request(struct svc_rqst *,
+>  						const struct svc_program *,
+>  						struct svc_process_info *);
+> =20
+> -/*
+> - * nfsd_mutex protects nn->nfsd_serv -- both the pointer itself and some=
+ members
+> - * of the svc_serv struct such as ->sv_temp_socks and ->sv_permsocks.
+> - *
+> - * Finally, the nfsd_mutex also protects some of the global variables th=
+at are
+> - * accessed when nfsd starts and that are settable via the write_* routi=
+nes in
+> - * nfsctl.c. In particular:
+> - *
+> - *	user_recovery_dirname
+> - *	user_lease_time
+> - *	nfsd_versions
+> - */
+> -DEFINE_MUTEX(nfsd_mutex);
+> -
+>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>  static const struct svc_version *localio_versions[] =3D {
+>  	[1] =3D &localio_version1,
+> @@ -242,10 +228,10 @@ int nfsd_nrthreads(struct net *net)
+>  	int rv =3D 0;
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+>  	if (nn->nfsd_serv)
+>  		rv =3D nn->nfsd_serv->sv_nrthreads;
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
+>  	return rv;
 >  }
 > =20
-> @@ -443,7 +456,7 @@ static void nfsd_shutdown_net(struct net *net)
->  	percpu_ref_exit(&nn->nfsd_net_ref);
+> @@ -522,7 +508,6 @@ static struct notifier_block nfsd_inet6addr_notifier =
+=3D {
+>  };
+>  #endif
 > =20
->  	nn->nfsd_net_up =3D false;
-> -	nfsd_shutdown_generic();
-> +	nfsd_startup_put();
+> -/* Only used under nfsd_mutex, so this atomic may be overkill: */
+>  static atomic_t nfsd_notifier_refcount =3D ATOMIC_INIT(0);
+> =20
+>  /**
+> @@ -534,7 +519,7 @@ void nfsd_destroy_serv(struct net *net)
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>  	struct svc_serv *serv =3D nn->nfsd_serv;
+> =20
+> -	lockdep_assert_held(&nfsd_mutex);
+> +	lockdep_assert_held(&nn->nfsd_info.mutex);
+> =20
+>  	spin_lock(&nfsd_notifier_lock);
+>  	nn->nfsd_serv =3D NULL;
+> @@ -606,17 +591,17 @@ void nfsd_shutdown_threads(struct net *net)
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>  	struct svc_serv *serv;
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> +	mutex_lock(&nn->nfsd_info.mutex);
+>  	serv =3D nn->nfsd_serv;
+>  	if (serv =3D=3D NULL) {
+> -		mutex_unlock(&nfsd_mutex);
+> +		mutex_unlock(&nn->nfsd_info.mutex);
+>  		return;
+>  	}
+> =20
+>  	/* Kill outstanding nfsd threads */
+>  	svc_set_num_threads(serv, NULL, 0);
+>  	nfsd_destroy_serv(net);
+> -	mutex_unlock(&nfsd_mutex);
+> +	mutex_unlock(&nn->nfsd_info.mutex);
 >  }
 > =20
->  static DEFINE_SPINLOCK(nfsd_notifier_lock);
+>  struct svc_rqst *nfsd_current_rqst(void)
+> @@ -632,7 +617,7 @@ int nfsd_create_serv(struct net *net)
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>  	struct svc_serv *serv;
+> =20
+> -	WARN_ON(!mutex_is_locked(&nfsd_mutex));
+> +	WARN_ON(!mutex_is_locked(&nn->nfsd_info.mutex));
+>  	if (nn->nfsd_serv)
+>  		return 0;
+> =20
+> @@ -714,7 +699,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct n=
+et *net)
+>  	int err =3D 0;
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+> -	lockdep_assert_held(&nfsd_mutex);
+> +	lockdep_assert_held(&nn->nfsd_info.mutex);
+> =20
+>  	if (nn->nfsd_serv =3D=3D NULL || n <=3D 0)
+>  		return 0;
+> @@ -787,7 +772,7 @@ nfsd_svc(int n, int *nthreads, struct net *net, const=
+ struct cred *cred, const c
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>  	struct svc_serv *serv;
+> =20
+> -	lockdep_assert_held(&nfsd_mutex);
+> +	lockdep_assert_held(&nn->nfsd_info.mutex);
+> =20
+>  	dprintk("nfsd: creating service\n");
+> =20
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 48666b83fe68..a12fe99156ec 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -98,7 +98,7 @@ struct svc_serv {
+>  /* This is used by pool_stats to find and lock an svc */
+>  struct svc_info {
+>  	struct svc_serv		*serv;
+> -	struct mutex		*mutex;
+> +	struct mutex		mutex;
 
-I like this approach though. Taking a reference seems much less brittle
-than dealing with a global mutex. Other than the changelog nits:
+I know we haven't been good about it with this struct so far, but I
+like prefixes on names like this. Maybe we can call this "si_mutex" ?
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>  };
+> =20
+>  void svc_destroy(struct svc_serv **svcp);
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index 8b1837228799..b8352b7d6860 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -1399,7 +1399,7 @@ static void *svc_pool_stats_start(struct seq_file *=
+m, loff_t *pos)
+> =20
+>  	dprintk("svc_pool_stats_start, *pidx=3D%u\n", pidx);
+> =20
+> -	mutex_lock(si->mutex);
+> +	mutex_lock(&si->mutex);
+> =20
+>  	if (!pidx)
+>  		return SEQ_START_TOKEN;
+> @@ -1436,7 +1436,7 @@ static void svc_pool_stats_stop(struct seq_file *m,=
+ void *p)
+>  {
+>  	struct svc_info *si =3D m->private;
+> =20
+> -	mutex_unlock(si->mutex);
+> +	mutex_unlock(&si->mutex);
+>  }
+> =20
+>  static int svc_pool_stats_show(struct seq_file *m, void *p)
+
+All that said, I definitely support making this mutex per-net.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
