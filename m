@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-12590-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12591-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3181CAE1ACB
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 14:17:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39449AE1ACD
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 14:17:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 29B491BC7DE9
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 12:17:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C712C1BC7C26
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jun 2025 12:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4E628C855;
-	Fri, 20 Jun 2025 12:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23B2028D839;
+	Fri, 20 Jun 2025 12:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hn/dGWNV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJZ652e/"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4774728C5B0;
-	Fri, 20 Jun 2025 12:16:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF29F28CF6D;
+	Fri, 20 Jun 2025 12:16:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750421788; cv=none; b=kV7bVh7f+/M7d7jlsuT5SSlJQEF6T5fY0wLzasKRroAIV/Q55gZfuCWNR4ZLrbJKqDIjYZ3tXLpM2f4f/MCOcM6LUS5ZYZ+Bc3a715Yh2e/kg9HVmF3HA6ucvUO3Kg8QQmv1frb+WQVVbNcs3wUx7x7m7TpZHy2NwMCqf4SgyrE=
+	t=1750421789; cv=none; b=d3celHEaglLjqAQaKDPxKM5bT8huKZiVQNiCzNiHUgsm/zbJoCG0GsQ3O2tKYlJhuNJQ9wbnEtysisqKnnPq6a3PrrAF4g4CZI4PY1h+mRGigLimoV9q88oXQVXZqjHT8VopkU4CEmoK532/MbAQE3CZc0X4/Jzh7vv43BAtTc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750421788; c=relaxed/simple;
-	bh=0l4BD1yI58JbChFClcUlD9ZRDy3Sd0tEqpzraV6lGrM=;
+	s=arc-20240116; t=1750421789; c=relaxed/simple;
+	bh=cf+8nzovA1CjEL6DUkxai/zqOEpw1mZXQ4r1c3QpvAA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TdelfYqWj/WIfFaCD7NpPbthn7Pqgdsa0FWByxdmVHlT/ABYrnvg0ZSR/2uBTT/GgDxSgyJnn1Pxkvza+blwak5gv87QA72Ve77rVO/JfCB4OIdUDmDotJH36cslGsfn2fnK4Zik+SeYYmIi9QNp90kJYepfvQbdxRSYCeI4VXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hn/dGWNV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CEC6C4CEE3;
-	Fri, 20 Jun 2025 12:16:27 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=WdVUsz5b8rpZyJYmDOU8BMP+03FPOks1wUejPNXnIAG4CyvZGRPJQVm59iTr9m8wWnIAqt5RRP5+hybrbYTyT5CnDp/gYIMZK9Pk7gtqaSvIsK1QmZwx8MjeB4I/DbFNZOj9OyRdUybGJrAFqNDakAWcbEmDnYax7NQYNnhMppU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJZ652e/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A215C4CEFC;
+	Fri, 20 Jun 2025 12:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750421787;
-	bh=0l4BD1yI58JbChFClcUlD9ZRDy3Sd0tEqpzraV6lGrM=;
+	s=k20201202; t=1750421788;
+	bh=cf+8nzovA1CjEL6DUkxai/zqOEpw1mZXQ4r1c3QpvAA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hn/dGWNVV8myptoxZCC08dcKwD2/jlF+BOKGzNTSNjH1nTtlzS7EMbayYugBrCT+P
-	 LxKAHRKGrcQVyYokjOEw6nASpDJl1NVgYHKQHdnIOLgJRK2E6Oz9gX+ofGUgsznTCs
-	 yb89AgKLU6H9chovxOj+PL5S5ZT9aXvvpDBAEoNBj3vaaznAnn2BzveZT4tFHNxg32
-	 brtII/WJ32mLCIKAPozQW8C69vkD0t/sZsr0RCuFoVTx84qroRPRZOtz4veocIgdTm
-	 WumGbrTvv2jkWlKYoF6Oi8P4S9/AcqKuF79iro5Q8y/9NUKjEXWQiCrRmHvkqX+N3N
-	 MhuxuSbnYPTPg==
+	b=vJZ652e/ss4SDtoM7qFAyAcv40H5MlKPUk3gk+iRDf8L5MGwjsk2UrL8kxq0e+mnS
+	 CxdROLggxLhGzN3Ntzz/tCJFwvlxxXvzsqU50RlDhbNwUPDTGcnBhP6nNXbWssh1au
+	 Xq8yUZ4eHufQKjq4mvuSLOEgX8FLkFhSeqpBnCbGCamuvTFmrD2ise6kPRur0XlSXO
+	 z/Tlz+Tit0u0+GLbs+JYjaLmabWn9OUKpj/90wcQTVhnyam2fsSCjQWAuJf5oQ7nqO
+	 CUl95k0aseKeoT+Q4LIukeV9j9exa8h4M+qtIjiQRHn8j14Q2pvu8qOb/Vn7xnezyt
+	 +5DBlY/EIoaAg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 20 Jun 2025 08:16:04 -0400
-Subject: [PATCH 4/6] sunrpc: return better error in svcauth_gss_accept() on
- alloc failure
+Date: Fri, 20 Jun 2025 08:16:05 -0400
+Subject: [PATCH 5/6] sunrpc: rearrange struct svc_rqst for fewer cachelines
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250620-rpc-6-17-v1-4-a309177d713b@kernel.org>
+Message-Id: <20250620-rpc-6-17-v1-5-a309177d713b@kernel.org>
 References: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
 In-Reply-To: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
 To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -63,53 +62,49 @@ To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>,
 Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1209; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=0l4BD1yI58JbChFClcUlD9ZRDy3Sd0tEqpzraV6lGrM=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoVVEWAd1MllaNBLFKnFldt4g2w2AbxGkz+hpZe
- b148DBYG+yJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFVRFgAKCRAADmhBGVaC
- FSLpEACwAzl96h1wHe3xdohmuU08mz5yA8o+0gn5wbfHhMKaFjceLynvWr2jAkLhNNVVfTuzTHd
- GYCHltMCX7i6pBWWed5jRcrn4kDzfWRQ/ZpVn6xZTkCMMeW9lOSGlFH+vTBRZIeO/YLFjrhz+c/
- H+KKI7i2fDiyBxqgWpcbBOS/CP8RGCLwCTOFLQCzJG9d+PsxB89rDX3jhmYBdEwo8vP9pxxfHg1
- E+EKSbajAyH9B849KoGlJr5ALJ1NZEcbHfHREX4om5q0T/2k3cmvsNnGYqfhpnWnO8xBzTnWtal
- dG+MJIdQwNcbspRSOyAPk+IQlirOgSLEQZF2CKxB1RYQiKKkclXUA+ldoxHlLH25T70gMJ6fC8J
- yGGAoH8hfNPMPiKGiDZg+CGZZwRZFd2SLVJYrWMMuNgCUL91TrdcDWAF+tJmVdfY2sx/2LsxfZ+
- +iIslHcgWJReFsYJelxPs7qcU3mwRWmCHpjSpgUJK35Kfo+3JOgoO8B9SehWibCLw7LIQwijVYf
- 1BVXrjGxEgomUNFLTUmnAFO+Z5rt0HTY7qnP8Sst6aTPh+QzqNaWdr3hTuvkzwbrKyfYGPyyCNr
- ABftbpp9W3OaxaZRxq/T8N4mNmV0qUB2RU8Xk3GnTExHP4mO7wCtyt6frIW2mWBHbNFbAdlh7vo
- OkJBns9xhFCjCYA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=943; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=cf+8nzovA1CjEL6DUkxai/zqOEpw1mZXQ4r1c3QpvAA=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoVVEWnMmJexRGAg+wqJl1mPnsUqjPM8mZIbv2m
+ hyZQJKoTZGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFVRFgAKCRAADmhBGVaC
+ FUwsD/90dg48flxlQLUiI/W2g3M/butAWG6HH7O0P5ctSDkMw90+2D1rqj4KH7Zu9xWADr7fpB7
+ ZQ6n+rks6iNDU+ane0IDYs6CSNeQjDfsBaPa8qZ2N9m6hI2a5xXDt9pu8X6HLcX7SjJsYZgXasX
+ VwQI+s+wseA74+rcfb3a8alpGriDBjVKaniHswFz/ebyba6K7J+bnTDy/QayU4CLz1zL601vCMs
+ bxnv0E/rEIP9SNwdCd8cNPpf6nEpUu0XcD2sM8auQHYv42Stk7bsEbUSmHeeNlTKBvF6JagGpBu
+ 2hcMFtj5HSlSke42k6cLWXqzDl7PtIXOhz4ieX65SrLPOALf3KEA1AfnIBDPsgiPcr0SIJfFvxt
+ 11TOk1nAWG2uZZ3ssXGYhpYCN+TYSfg4ch8UgyIjCugISCc+yXIICdOPKxChzhdrP/QGPAv6nEH
+ O/hjx8MgITlVTEZTJhOGQAjJk3fa/UK8b7l2sGkZNhhsJeb6Y42e9vbLUfN/uABOUqkt6w3VtyD
+ HH+twD8dCd1DP5IGuIK5VNyV8B3M8M1EyfaWz9vuOE3JU+1im/Sx/7asznkwuh3WFv63OeSh/kg
+ 4abn8a1lSrJzM73zzCY12s62c15AuH65wLdI5VR8uYclq5wTofEh5boj0VNXKNv2LIaH8ctcFqb
+ e/TA0g/SMavVxrA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This ends up returning AUTH_BADCRED when memory allocation fails today.
-Fix it to return AUTH_FAILED, which better indicates a failure on the
-server.
+This shrinks the struct by 4 bytes, but also takes it from 19 to 18
+cachelines on x86_64.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/auth_gss/svcauth_gss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/sunrpc/svc.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 73a90ad873fb9da659ba76184b2e2a0e5324ce0d..e82212f6b5620b7d9981702aca5f1044f8a79804 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1628,7 +1628,7 @@ svcauth_gss_accept(struct svc_rqst *rqstp)
- 	int		ret;
- 	struct sunrpc_net *sn = net_generic(SVC_NET(rqstp), sunrpc_net_id);
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 48666b83fe681aa57075bef4a46e66bc0f0fe3b9..40cbe81360ed493bc16e64b55818b21372e305f9 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -245,10 +245,10 @@ struct svc_rqst {
+ 						 * initialisation success.
+ 						 */
  
--	rqstp->rq_auth_stat = rpc_autherr_badcred;
-+	rqstp->rq_auth_stat = rpc_autherr_failed;
- 	if (!svcdata)
- 		svcdata = kmalloc(sizeof(*svcdata), GFP_KERNEL);
- 	if (!svcdata)
-@@ -1638,6 +1638,7 @@ svcauth_gss_accept(struct svc_rqst *rqstp)
- 	svcdata->rsci = NULL;
- 	gc = &svcdata->clcred;
+-	unsigned long	bc_to_initval;
+-	unsigned int	bc_to_retries;
+-	void **			rq_lease_breaker; /* The v4 client breaking a lease */
++	unsigned long		bc_to_initval;
++	unsigned int		bc_to_retries;
+ 	unsigned int		rq_status_counter; /* RPC processing counter */
++	void			**rq_lease_breaker; /* The v4 client breaking a lease */
+ };
  
-+	rqstp->rq_auth_stat = rpc_autherr_badcred;
- 	if (!svcauth_gss_decode_credbody(&rqstp->rq_arg_stream, gc, &rpcstart))
- 		goto auth_err;
- 	if (gc->gc_v != RPC_GSS_VERSION)
+ /* bits for rq_flags */
 
 -- 
 2.49.0
