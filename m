@@ -1,57 +1,59 @@
-Return-Path: <linux-nfs+bounces-12614-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12615-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06F36AE2ADB
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Jun 2025 19:48:26 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A95D0AE2B42
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Jun 2025 20:47:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D3C03BAA96
-	for <lists+linux-nfs@lfdr.de>; Sat, 21 Jun 2025 17:48:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 766017A5349
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Jun 2025 18:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A1D712E1CD;
-	Sat, 21 Jun 2025 17:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A284189F20;
+	Sat, 21 Jun 2025 18:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tD53uUv0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaRvDKYs"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734C312CD88
-	for <linux-nfs@vger.kernel.org>; Sat, 21 Jun 2025 17:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F43318132A;
+	Sat, 21 Jun 2025 18:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750528102; cv=none; b=mjJS90HTNvp4UsfgJLffNJhcD62g/017FZNvr0IUyhjtwMT0Ve5tLIiiUhXljabgJL1cFg+fSsN560NgcNvMJf8txmpUnNzORakpTVhfHJ5Faxpt18HfLm+PZJs5NlD+Sv0Hdri6jv+2rZH9B9HrQLe69NwTA9aCGS+oCvVOyhc=
+	t=1750531620; cv=none; b=ISCoeOR/50989uEzRHKDc1IdBzRSx+8OlQqmvBYuh0OZ8xES67vcCdh1Ec71t0FFruy7mndfcf7p9dxtii4rF9JGd3ICUvqntpKEMgHXZqAJjECxZzdPKX8eZOItCidCGGpv2inUzeZ4R+U9QqI+SXBVZW4URp5oP19SxCH0DFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750528102; c=relaxed/simple;
-	bh=9YXEKxsB1TS+/736yO0kyL6vU3J+POy87MMrCFDABtY=;
+	s=arc-20240116; t=1750531620; c=relaxed/simple;
+	bh=DUg795UGrBsGPK6i2yD/yhU35EMkyaiSm2B/AW01wNM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FBS5pAP3+/cLuVBDmf5HOxUrxAS4GrnWd/lkFRQZl0jWbIWIX0ojxDOvSfdB9v86tB22JKutcKq0YLCAfNbes8mNpuGWP09Gxenp7m0Qfan5azH/ZkFdW0y3iqxEeyFB3WK2i4S9GPrPsjRgPrNjsCg+gQ/dP0WHDRkZ56aJdvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tD53uUv0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C30C4CEE7;
-	Sat, 21 Jun 2025 17:48:20 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iFUyZd0q3awKsrsCPGd8zxLyuoOF+B1K5HnpoaidVQ7NEuu0iFsF69V9c7Um/uYMGlnQhW3zqa4qZX3Za8KeGmglXC3SyPEHQipIazYoj4Q6QGGmAS4LsUG1fEmq1rLKSplhQoCZKPFtwj2JPPDRpS1krPFR0OaGdQ3MHz5io+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaRvDKYs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17672C4CEE7;
+	Sat, 21 Jun 2025 18:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750528100;
-	bh=9YXEKxsB1TS+/736yO0kyL6vU3J+POy87MMrCFDABtY=;
+	s=k20201202; t=1750531619;
+	bh=DUg795UGrBsGPK6i2yD/yhU35EMkyaiSm2B/AW01wNM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tD53uUv0p7OohVQgNp/kCpX0paQiFsbp0/DOP/x26XxPQjl1kHu2t/Aw222j9Ewys
-	 1BdzhYgz06a7hWDn3ozmJ5e0DSpSU4MSTraktxN76JniVsleSytpnFJ/Nn2FOrN5a7
-	 cAHu8qkMI0kAFU4563/qeA+odX8tre2X4KxZicHu2136FZV1Fy2EUD4Ibca/xWLE/Z
-	 jCTrWmFTNWkQ3F9couLnbW3DdzHevt+tUh55i94HjCLzIa/jC8hAK+1XSSGxtq1oLa
-	 BRp65xjiAcAXZbgNh1u67/Qmha3jJQcOJ2mEAzK51ChWu1NV3mkU886HgP73RpUu7i
-	 s8Lm+sM9kc0jA==
-Message-ID: <5b529e14604ec98146aab0dc47c54d07c1a34359.camel@kernel.org>
-Subject: Re: [PATCH 0/3 RFC] improve some nfsd_mutex locking
+	b=uaRvDKYsaZvE8uOSGm7C1XcUbiSukDdLKMRLaCtQTMX0j4cwdv9uVgT5Rb0DuQvyv
+	 EwxlLJaezIjMx3nDClnVjtfiuwiUsPEKVJZ3+IcuysqUOghJIDGWqjx5IZOKDS/jQI
+	 OnpepS/OZAtxYsVJQge3DaLgLlrbBs7yoLfrssIIyW1TuOMuqUya1+NPQA/3J7VvzI
+	 34qfUIJwqPmnyDOLZb39G7EuW4D+oUHwZpisb++ZbSLeFQnM+/lyaARXRQQCkr+/vR
+	 OcHX0a2VbfvJGKsAyy7Q1HSE++1gxqwn57uhpr0SuKj2k2B9ZEoLOpLRClSM8yD2P7
+	 tG31g7Skwikag==
+Message-ID: <369459745a8f8e43f80c47bae554829dad8f635c.camel@kernel.org>
+Subject: Re: [PATCH v4 1/2] nfsd: Drop dprintk in blocklayout xdr functions
 From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Li Lingfeng	
- <lilingfeng3@huawei.com>
-Date: Sat, 21 Jun 2025 13:48:19 -0400
-In-Reply-To: <b8f44a6a-6e35-4d59-bfbc-fac0454f7c22@oracle.com>
-References: <20250620233802.1453016-1-neil@brown.name>
-	 <b8f44a6a-6e35-4d59-bfbc-fac0454f7c22@oracle.com>
+To: Sergey Bashirov <sergeybashirov@gmail.com>, Chuck Lever
+	 <chuck.lever@oracle.com>, Christoph Hellwig <hch@infradead.org>, NeilBrown
+	 <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Konstantin
+ Evtushenko <koevtushenko@yandex.com>
+Date: Sat, 21 Jun 2025 14:46:58 -0400
+In-Reply-To: <20250621165409.147744-2-sergeybashirov@gmail.com>
+References: <20250621165409.147744-1-sergeybashirov@gmail.com>
+	 <20250621165409.147744-2-sergeybashirov@gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,34 +138,126 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2025-06-21 at 11:21 -0400, Chuck Lever wrote:
-> On 6/20/25 7:33 PM, NeilBrown wrote:
-> > The first patch hopefully fixes a bug with locking as reported by Li
-> > Lingfeng: some write_foo functions aren't locked properly.
-> >=20
-> > The other two improve the locking code, particulary so that we don't
-> > need a global mutex to change per-netns data.
-> >=20
-> > I've revised the locking to use guard(mutex) for (almost) all places
-> > that the per-netfs mutex is used.  I think this is an improvement but
-> > would like to know what others think.
-> >=20
-> > I haven't changed _get/_put to _pin/_unpin as Chuck wondered about.  I'=
-m
-> > not against that (though get/put are widely understood) but nor am I
-> > particularly for it yet.  Again, opinions are welcome.
+On Sat, 2025-06-21 at 19:52 +0300, Sergey Bashirov wrote:
+> Minor clean up. Instead of dprintk there are appropriate error codes.
 >=20
-> I think of get and put as operations you do on an object. Saying
+> Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+> ---
+>  fs/nfsd/blocklayoutxdr.c | 40 +++++++---------------------------------
+>  1 file changed, 7 insertions(+), 33 deletions(-)
 >=20
->   nfsd_startup_get();
->=20
-> seems a little strange to me. As I said before, it seems like you
-> are protecting a critical section, not a particular object.
->=20
+> diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+> index 669ff8e6e966..bcf21fde9120 100644
+> --- a/fs/nfsd/blocklayoutxdr.c
+> +++ b/fs/nfsd/blocklayoutxdr.c
+> @@ -139,28 +139,19 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,=
+ struct iomap **iomapp,
+>  	struct iomap *iomaps;
+>  	u32 nr_iomaps, i;
+> =20
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (len < sizeof(u32))
+>  		return nfserr_bad_xdr;
+> -	}
+>  	len -=3D sizeof(u32);
+> -	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array invalid: %u\n", __func__, len);
+> +	if (len % PNFS_BLOCK_EXTENT_SIZE)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	nr_iomaps =3D be32_to_cpup(p++);
+> -	if (nr_iomaps !=3D len / PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, nr_iomaps);
+> +	if (nr_iomaps !=3D len / PNFS_BLOCK_EXTENT_SIZE)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	iomaps =3D kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+> =20
+>  	for (i =3D 0; i < nr_iomaps; i++) {
+>  		struct pnfs_block_extent bex;
+> @@ -170,26 +161,18 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,=
+ struct iomap **iomapp,
+> =20
+>  		p =3D xdr_decode_hyper(p, &bex.foff);
+>  		if (bex.foff & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n",
+> -				__func__, bex.foff);
+>  			goto fail;
+>  		}
+>  		p =3D xdr_decode_hyper(p, &bex.len);
+>  		if (bex.len & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n",
+> -				__func__, bex.foff);
+>  			goto fail;
+>  		}
+>  		p =3D xdr_decode_hyper(p, &bex.soff);
+>  		if (bex.soff & (block_size - 1)) {
+> -			dprintk("%s: unaligned disk offset 0x%llx\n",
+> -				__func__, bex.soff);
+>  			goto fail;
+>  		}
+>  		bex.es =3D be32_to_cpup(p++);
+>  		if (bex.es !=3D PNFS_BLOCK_READWRITE_DATA) {
+> -			dprintk("%s: incorrect extent state %d\n",
+> -				__func__, bex.es);
+>  			goto fail;
+>  		}
+> =20
+> @@ -231,38 +214,29 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, =
+struct iomap **iomapp,
+>  	struct iomap *iomaps;
+>  	u32 nr_iomaps, expected, i;
+> =20
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (len < sizeof(u32))
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	nr_iomaps =3D be32_to_cpup(p++);
+>  	expected =3D sizeof(__be32) + nr_iomaps * PNFS_SCSI_RANGE_SIZE;
+> -	if (len !=3D expected) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, expected);
+> +	if (len !=3D expected)
+>  		return nfserr_bad_xdr;
+> -	}
+> =20
+>  	iomaps =3D kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+> =20
+>  	for (i =3D 0; i < nr_iomaps; i++) {
+>  		u64 val;
+> =20
+>  		p =3D xdr_decode_hyper(p, &val);
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n", __func__, val);
+>  			goto fail;
+>  		}
+>  		iomaps[i].offset =3D val;
+> =20
+>  		p =3D xdr_decode_hyper(p, &val);
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n", __func__, val);
+>  			goto fail;
+>  		}
+>  		iomaps[i].length =3D val;
 
-I think of it as taking a reference to the service being up and
-running.=C2=A0Maybe nfsd_service_get/put() ?
+Looks sane, and most of these dprintks aren't terribly helpful for day
+to day usage.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
