@@ -1,106 +1,117 @@
-Return-Path: <linux-nfs+bounces-12628-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12629-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C1C1AE391C
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 10:55:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAE76AE3941
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 11:02:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A75E174313
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 08:55:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9481B1895D11
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 09:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F87020298C;
-	Mon, 23 Jun 2025 08:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00E301F3FC6;
+	Mon, 23 Jun 2025 09:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGSXgiJp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CA422FE0A;
-	Mon, 23 Jun 2025 08:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD16F1DE4E6;
+	Mon, 23 Jun 2025 09:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750668861; cv=none; b=gAz4oJdLse4yiuXvwrC2IaOfWBQasmWSmxIhXjA2amaxm8PztF9xg/ulbs7PAExenli7MG0acYmpwOQCDAXhgCaeZ4LFQ2tfVnYr0QyFEGpB3YGVJ7s1lDsA7hQFUbWkx+t2c2Nt6SKb+O+3pKstS//xWwxkYWpneWdLoYQNWdE=
+	t=1750669295; cv=none; b=UjWsuqLxGHg8jsmFfOE/PX89AjZ+mtdn+Yv1Gan9+yEb/8BjTiTw6mOrSV913dSFivcO0ztIL+7X5hD51AaYawSEvB/Bw1DH52hf7JNoV+fQns+dbLrt09mHSzWi0eHbtnfrrXe/9bCIja872y828OVJG8ZCnOIJEsQXt9kKZlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750668861; c=relaxed/simple;
-	bh=dnRZoYhTiLx6mP17snlGpXsJ4rO4wTDqx7YoKhd07FA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DHT8jbwn5NT8y2iHeAqmrxyjYgk9hkF/1YdWryrSm3bIr6uH6IsT4MPX1K/uFYZh96X5n/onSUkBM2s/ByYfHmg0RZbQyLO3Ofp5TzIF847R2ByHPrKedjwdCh9niow1jf8+4gHUCZghyk2HJPuat3NDgNH1tiYE1RHj3v2beig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: esmtpsz20t1750668727t4d83c62a
-X-QQ-Originating-IP: gyIRPxu7pnQLRfC/m8i/nC3NTJCG8EuNVauDHQpuNl0=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 23 Jun 2025 16:52:05 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6986087831248753503
-Message-ID: <E5A6E17D75867EA8+e74cfa32-ffd5-48b5-b5a4-b89b85f66866@chenxiaosong.com>
-Date: Mon, 23 Jun 2025 16:52:05 +0800
+	s=arc-20240116; t=1750669295; c=relaxed/simple;
+	bh=DkIfK7g//DZEQuDBBY8aQNAlR8thGdiq6y5CQj5O6lo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X3VXMrAndHxYVuLv8GLw5J8qln14hXzr91DEX6yqnzx8I9TID5ZDJ4a83+m/mNYlHkI70PcI8zwnos+FIHJyoE92uZg2tUB+aqKEBJx8B8zrgK+u0DD3rD8uglc1ZI5dx4fPRSS7P1/UnQC1fZuxE6VceZDUMbHvjqPyiP4HUkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGSXgiJp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F397FC4CEEA;
+	Mon, 23 Jun 2025 09:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750669295;
+	bh=DkIfK7g//DZEQuDBBY8aQNAlR8thGdiq6y5CQj5O6lo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ZGSXgiJprAV5eY4fVjdW7nXYU94d2WpPMKHBcA/s5pOlVDi3Sh0wEMOuibtiDrahz
+	 nv1oxzyxltBwYaO1hu6L83PGuaZwKaEhB6KmfwpHYBhl903RXt9kE5AZv5ccgUp81O
+	 S1CSRQvxV9mJvHXOj+cLk+T4bj4yVEolJ+dOgv6+smCPaEYxfsbfvdAukWARbbWxBM
+	 lKCdIHcy+wZAgbLdmAJ9UqfBdMOyZ0BnuchiZzZzrwijP9J/IKCZq7VNXw0KOzRDhz
+	 ntBn5gyGKYssKtnlNmyxDIbMx1w/AIeqn5CzmeHb35iPpDAfzFLOGVqseyMwYfTuY5
+	 U/oUiUH1ByNog==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH 0/9] fhandle, pidfs: allow open_by_handle_at() purely based
+ on file handle
+Date: Mon, 23 Jun 2025 11:01:22 +0200
+Message-Id: <20250623-work-pidfs-fhandle-v1-0-75899d67555f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
-To: NeilBrown <neilb@suse.de>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, huhai@kylinos.cn,
- ChenXiaoSong <chenxiaosong@kylinos.cn>
-References: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
- <175042051171.608730.8613669948428192921@noble.neil.brown.name>
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <175042051171.608730.8613669948428192921@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: Nkqq4bFvvULWBJ+c/T9TltPLkYKl82R8WOPDta8KcHFNjrKLmLx+0EDf
-	aN2mxMzB7zv2jWAps1FXhuIAGMxiVvvwDNG3os03+EQW9+qgHeOn9981u/ZKRC96pmW2w7n
-	SOKhQWGTSYCJKDC4s2zD4gHO686e5qaSPRxw8/u6KgtRWbd4FHcqS04hESx+oBi9CsyMswt
-	ldXbs+p4Fn3QcpZBlV8qJLBzjcbX5oswb7Pz3TN1One61tH6Mu7VCu+5qYyYWOvyP4bAIQM
-	lyzXeh+R/bp3WC6uJJBRQvtt5wRrj3A1CoMsXcfRLxNyGc9GuTcRG6b7/XnCzo+0PH+JOxT
-	iF1vC1XkT2cFuubAQXrj+C/rb5BIXwKx9mJHMgI2a4NFpd7sI1d1mesCHxGJXNJ86riarul
-	ImLfchm1Zv0HCtOLevbxy3IEOIPi3Fy+1evht/5Ck1jej96mu1epB7WoUG8G0Bata34q5/J
-	OSlo/34NqtRftSIshMFfy3IH7F0nLYgB07342PNqFMTNwtpqymAnRencQKu7adE0q/mqvnk
-	5v4uPORREztebYgCtJ9qz/TfpPnxpwE6sZQadSKt+CMA+3qfzktNbSK9Ms4DiHkyrodJTyC
-	kIkug8qJVeD6d+LQVq//PUHcQissNpmgzumohhXBRPQWMxb1BmSGcFHuGnQJFuJMaDX9hf4
-	smaOllXVta3hf57h0x/NpNl11RLDB8d8fgmnBcoyUE2FWbPOcB7ju/ThHMr3bJ006qvQQOt
-	3Xu/TIz2ZcC2SkEAI+Ez87KjndzGYVQpBvDK+kKS/bx6ccjRkjge6lZccTdWekfZpwnO01Y
-	0TAqGUjlzeMRluv/fh6p/21T5b3RJn1I1FMO60FkxXPklVtX2TptS49kMsHqnX1Nh73ZnVc
-	1p7ucMxcAjLbUogFKVpSo5t+moVhxPswc/SLxMOeAo68E0nIkYxKihEBFZ8jbBEr2b7xzCb
-	yLe1zixJV9yWrw3ZV6qLN9C6CEuekdfBcVjYWfa+E9HCCXe0+X5kQBzlB/1hQTo8MVcX/IX
-	xKr9fKuw==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOIXWWgC/x2MQQqDMBAAvyJ77oqJmmK/UnqIyW5dWqIkYAvi3
+ 109DszMBoWyUIFHtUGmVYrMScHcKgiTT29CicpgG9s3zgz4m/MHF4lckFWIX8LRtcxtH7rBdqD
+ hkonlf02fL+XRF5WyT2E6V6umrjb3+rrAvh8lw5z3hQAAAA==
+X-Change-ID: 20250619-work-pidfs-fhandle-b63ff35c4924
+To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ Christian Brauner <brauner@kernel.org>, stable@kernel.org
+X-Mailer: b4 0.15-dev-262a7
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2070; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=DkIfK7g//DZEQuDBBY8aQNAlR8thGdiq6y5CQj5O6lo=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWREir/2/X4vO8Hi4WSJnbd0a7ytv2soupfvu21rNXdlS
+ it7vMCujlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIm8s2Nk6Hv5L+Dr71Ov3axe
+ i7gG/W3jT9qus70g5kFi4Xr9pStNJRj++6wvOqUq/y3Q+0TspFt25kb3+xy9fx7nFqgLmXPkZZI
+ dCwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-It seems this patch (or patchset) could resolve the issue.
+Various filesystems such as pidfs and drm support opening file handles
+without having to require a file descriptor to identify the filesystem.
+The filesystem are global single instances and can be trivially
+identified solely on the information encoded in the file handle.
 
-Thanks for your reply.
-ChenXiaoSong.
+This makes it possible to not have to keep or acquire a sentinal file
+descriptor just to pass it to open_by_handle_at() to identify the
+filesystem. That's especially useful when such sentinel file descriptor
+cannot or should not be acquired.
 
-在 2025/6/20 19:55, NeilBrown 写道:
-> The only possible cause that I can find for this crash is that the nfsd
-> thread must have still been running when nfsd_shutdown_net() and then
-> nfsd_shutdown_generic() were called resulting in the workqueue being
-> destroyed.
-> 
-> The threads will all have been signalled with SIGKILL, but there was no
-> mechanism to wait for the threads to complete.
-> 
-> This was changed in
-> 
-> Commit: 3409e4f1e8f2 ("NFSD: Make it possible to use svc_set_num_threads_sync")
-> 
-> Sync then threads were stopped synchronously so they were certainly all
-> stopped before the workqueue was removed.
-> 
-> NeilBrown
-> 
+For pidfs this means a file handle can function as full replacement for
+storing a pid in a file. Instead a file handle can be stored and
+reopened purely based on the file handle.
+
+Such autonomous file handles can be opened with or without specifying a
+sentinal file descriptor. Userspace can trivially test for support by
+trying to open the file handle with an invalid file descriptor.
+
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (9):
+      fhandle: raise FILEID_IS_DIR in handle_type
+      fhandle: hoist copy_from_user() above get_path_from_fd()
+      fhandle: rename to get_path_anchor()
+      pidfs: add pidfs_root_path() helper
+      fhandle: reflow get_path_anchor()
+      exportfs: add FILEID_PIDFS
+      fhandle: add EXPORT_OP_AUTONOMOUS_HANDLES marker
+      fhandle, pidfs: support open_by_handle_at() purely based on file handle
+      selftests/pidfd: decode pidfd file handles withou having to specify an fd
+
+ fs/fhandle.c                                       | 79 +++++++++++++---------
+ fs/internal.h                                      |  1 +
+ fs/pidfs.c                                         | 16 ++++-
+ include/linux/exportfs.h                           | 15 +++-
+ tools/testing/selftests/pidfd/Makefile             |  2 +-
+ .../selftests/pidfd/pidfd_file_handle_test.c       | 54 +++++++++++++++
+ 6 files changed, 133 insertions(+), 34 deletions(-)
+---
+base-commit: 1ff46043a6745d56b37acfc888d6e2b4f4d90663
+change-id: 20250619-work-pidfs-fhandle-b63ff35c4924
 
 
