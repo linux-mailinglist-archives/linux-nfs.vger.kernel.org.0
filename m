@@ -1,149 +1,194 @@
-Return-Path: <linux-nfs+bounces-12648-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12649-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16576AE4006
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 14:27:40 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00E90AE400A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 14:27:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFAE21646FC
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 12:22:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D13AA1888E84
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 12:23:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A687F1F542E;
-	Mon, 23 Jun 2025 12:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9QT6ulW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D3623C4F3;
+	Mon, 23 Jun 2025 12:22:50 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DA77081F;
-	Mon, 23 Jun 2025 12:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id E7AD21F09B3;
+	Mon, 23 Jun 2025 12:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681361; cv=none; b=Yb7LYjVyOKVO3Ni2iAREZSzc/bfSwzdNdBO35UL4gWavC3k2W8u3dcyupr97Q7Wdx+r4pajBP7s0tdfMEu26O9PzyZmhGDzSS6YgUBPHjyId5o2W/LiXsZvayTq1LnqmIvD8N7z0Nu7XwJadK2aaBjdyTFrw5zNmwuiX/KyR0D4=
+	t=1750681370; cv=none; b=DVcohrgbTtEx/uzbHQOU0NuioCzQNEEVmddxw0OjOtIBKMf4kSuc9TbBFNsUzFt0CgfWN1X53YWOE/M8Z+LY0mfuLyjFnvLNNmaQTXfsuE9qFkk23hPMGaCbB8TD1uY6TlZWr/dPT7PtdQDmxjxLABeVl301QgF9A9RzgvlT+90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681361; c=relaxed/simple;
-	bh=xiN3A1fOmRcD84YEq+Yp2ui/stDt/ZCWcSxqxG0B7jY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Id7Ix4/DFzEtabjDIAgWWUzXuuGA49UCCxhmaMEkDprFxW9Q/mH1r+MhziHDRAToD4ktsQV5Ma3Djm1fu+uBqhtxtiUjhnCPciNJne+OMRlrsY9YeMdV4x9nJRay0IDjblp7beBw/mJuCPtaHJ3ckuQJNgxNO7j6qU7XqgX7R8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9QT6ulW; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ade58ef47c0so842108766b.1;
-        Mon, 23 Jun 2025 05:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750681358; x=1751286158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M1+lKnMFhRJaFjskxua8Lv90AA+v7x7uHwsG8HPQ8Yo=;
-        b=E9QT6ulWHzkLUx4Uxy2bQfU/aBkhuhKvLJrBXIPqeGGSEz3OPCk+HmUYzIGTc6ZTgz
-         XQpM9QfxY+M3aC/LzweTsoVGEgDzUEq/Tq/xZyejugJlZ6WsXtWzYB1gK4p2Gm3Luvog
-         hJcu8uwCSroMiZ3xDemYkvsm9zn0AVHM4+Q2tmcPLIbmcM7D0H3L9/1Su9unmSP5w+7y
-         oji8yBkYTH0+nSZQSrRu5KZKh0W04NQnpe1YIizRQEYA3Dp/InjuqZhwPOHNFdneLgB5
-         kkB0CwOMYX5709A4gXdjkuLkRxnO8+cfpcgYmLT7THZOKP6/fN5fQSFsxEHXZZnqDTpQ
-         xG3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750681358; x=1751286158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M1+lKnMFhRJaFjskxua8Lv90AA+v7x7uHwsG8HPQ8Yo=;
-        b=XYeRXRSkhhdvLf6EK9U269EeujniRk4zmRkF1Do76gQaW1lUXOqXysyfdye8UBHxao
-         RgvioFirraU6yJYArkQ1QzT7o8zfLNjmXv3ywrtaIsPLkiFOtIUEj/kPm0tcHtXEc+gR
-         RLcllLLCWC9v+r7KFFbcBsxhpmS+Z4i3iWiAd2vHFalBQp1sqXp/oVLFQp+azpUIf0lG
-         r6BXBE6HL7VIKIikHVZS4VtMPInVZpyG3JC34bjwruQSl6YyzJv2Tfu4pd6XHmmsD9Ge
-         huzq7levM+kBVYaFaNvEHKPqW4cYsNZncZ+kzrI/xjc3UZeiKFaQe9r3g6hAq8es9YjU
-         Y2Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+CLXFarPBklR/e0CJ8UCcJs8E3kiYNwDf265wpFewDlkAtCJ6P18zhHjl9as2jf04Ry+f9uJRWT42@vger.kernel.org, AJvYcCWLfjSur6KXgFAaaV2DRxXhJRAK5YW6bpY+7nc3R8SMrQ+VAYZv9tQkCGSxDylX27UMCs4blyJ/GPXTRjwn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw6zvUkdD31F3FvjtBS0T3nFfVTPTi6yBlBnIFUDVcz2/yz6M+
-	a6qz3lY+/rakk2XcyjX/k/OenXPaolM7oCtVh/Z5WBV7usjzCcE/2gNk4wFu0H3EguY/xwCAYAX
-	PRkTsUfgE92OTue5gxRctCt7rJbd58RBGdZu9
-X-Gm-Gg: ASbGnctxBubOqParVp5T7ltwoHbGTezHM6hV6HF4ZFQSMrk2lyLT8nuv7phUSWMueh6
-	FZS5syHOeW2jKQ+JtEHeVJ8AkxG+CbALG5Zo3D7xdes1lBuPh9buh6FBwF8YtMvGhBxw24SiqwB
-	6modvddbAMlH/sOi8xZVfR4CC+xk7yyofTc4OP92G3Szw=
-X-Google-Smtp-Source: AGHT+IG6ZEnEM7ofgyyrBuAkrjc7aMd3Cw3C4ArEJNJKebaC8WVGIDpyJrxeGxGpMgl4GAMl8NgsY6lL22widj6JjlY=
-X-Received: by 2002:a17:907:948c:b0:ad5:2d5d:2069 with SMTP id
- a640c23a62f3a-ae05ae7169cmr1264809766b.13.1750681358005; Mon, 23 Jun 2025
- 05:22:38 -0700 (PDT)
+	s=arc-20240116; t=1750681370; c=relaxed/simple;
+	bh=KesN4i+iw9iOvPBik8PMpmEBSOySopVhrh240s9MJKE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tjnwn8++J8DpxwC9XgzR3o5JBJYkj9ONzGya4iZQMH1tlLXi8fSoS6CaDZq8RZJczMwqD6LzF1QxT796nRgiuOIfE/fqB4lT3quYUgMwGH1qprsfQGcrO1TVYwIAAZ+ohpMRvhWrOEIeiGLlY1uXDXXGZCTCrYqi7cG3QPaP6W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 4A98D603062FA;
+	Mon, 23 Jun 2025 20:22:37 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neil@brown.name,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: Su Hui <suhui@nfschina.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Date: Mon, 23 Jun 2025 20:22:27 +0800
+Message-Id: <20250623122226.3720564-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-work-pidfs-fhandle-v1-0-75899d67555f@kernel.org>
- <20250623-work-pidfs-fhandle-v1-6-75899d67555f@kernel.org>
- <y6yp3ldhmmtl6mzr2arwr5fggzrlffc2pzvqbr7jkabqm5zm3u@6pwl22ctaxkx> <20250623-herzrasen-geblickt-9e2befc82298@brauner>
-In-Reply-To: <20250623-herzrasen-geblickt-9e2befc82298@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 23 Jun 2025 14:22:26 +0200
-X-Gm-Features: AX0GCFvhOVwut-kJCQ84TEZfo8xeFcwODhMcozd3AY5F3sB5Grakuy4LNodEJes
-Message-ID: <CAOQ4uxid1=97dZSZPB_4W5pocoU4cU-7G6WJ_4KQSGobZ_72xA@mail.gmail.com>
-Subject: Re: [PATCH 6/9] exportfs: add FILEID_PIDFS
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 1:58=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Mon, Jun 23, 2025 at 01:55:38PM +0200, Jan Kara wrote:
-> > On Mon 23-06-25 11:01:28, Christian Brauner wrote:
-> > > Introduce new pidfs file handle values.
-> > >
-> > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > ---
-> > >  include/linux/exportfs.h | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> > >
-> > > diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> > > index 25c4a5afbd44..45b38a29643f 100644
-> > > --- a/include/linux/exportfs.h
-> > > +++ b/include/linux/exportfs.h
-> > > @@ -99,6 +99,11 @@ enum fid_type {
-> > >      */
-> > >     FILEID_FAT_WITH_PARENT =3D 0x72,
-> > >
-> > > +   /*
-> > > +    * 64 bit inode number.
-> > > +    */
-> > > +   FILEID_INO64 =3D 0x80,
-> > > +
-> > >     /*
-> > >      * 64 bit inode number, 32 bit generation number.
-> > >      */
-> > > @@ -131,6 +136,12 @@ enum fid_type {
-> > >      * Filesystems must not use 0xff file ID.
-> > >      */
-> > >     FILEID_INVALID =3D 0xff,
-> > > +
-> > > +   /* Internal kernel fid types */
-> > > +
-> > > +   /* pidfs fid types */
-> > > +   FILEID_PIDFS_FSTYPE =3D 0x100,
-> > > +   FILEID_PIDFS =3D FILEID_PIDFS_FSTYPE | FILEID_INO64,
-> >
-> > What is the point behind having FILEID_INO64 and FILEID_PIDFS separatel=
-y?
-> > Why not just allocate one value for FILEID_PIDFS and be done with it? D=
-o
-> > you expect some future extensions for pidfs?
->
-> I wouldn't rule it out, yes. This was also one of Amir's suggestions.
+Using guard() to replace *unlock* label. guard() makes lock/unlock code
+more clear. Change the order of the code to let all lock code in the
+same scope. No functional changes.
 
-The idea was to parcel the autonomous fid type to fstype (pidfs)
-which determines which is the fs to decode the autonomous fid
-and a per-fs sub-type like we have today.
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+ 1 file changed, 48 insertions(+), 51 deletions(-)
 
-Maybe it is a bit over design, but I don't think this is really limiting us
-going forward, because those constants are not part of the uapi.
+diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+index ba9d326b3de6..2d92adf3e6b0 100644
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+ 
+ 	if (type == RC_NOCACHE) {
+ 		nfsd_stats_rc_nocache_inc(nn);
+-		goto out;
++		return rtn;
+ 	}
+ 
+ 	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
+@@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+ 	 */
+ 	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
+ 	if (!rp)
+-		goto out;
++		return rtn;
+ 
+ 	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+-	spin_lock(&b->cache_lock);
+-	found = nfsd_cache_insert(b, rp, nn);
+-	if (found != rp)
+-		goto found_entry;
+-	*cacherep = rp;
+-	rp->c_state = RC_INPROG;
+-	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+-	spin_unlock(&b->cache_lock);
++	scoped_guard(spinlock, &b->cache_lock) {
++		found = nfsd_cache_insert(b, rp, nn);
++		if (found == rp) {
++			*cacherep = rp;
++			rp->c_state = RC_INPROG;
++			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
++			goto out;
++		}
++		/* We found a matching entry which is either in progress or done. */
++		nfsd_reply_cache_free_locked(NULL, rp, nn);
++		nfsd_stats_rc_hits_inc(nn);
++		rtn = RC_DROPIT;
++		rp = found;
++
++		/* Request being processed */
++		if (rp->c_state == RC_INPROG)
++			goto out_trace;
++
++		/* From the hall of fame of impractical attacks:
++		 * Is this a user who tries to snoop on the cache?
++		 */
++		rtn = RC_DOIT;
++		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
++			goto out_trace;
+ 
++		/* Compose RPC reply header */
++		switch (rp->c_type) {
++		case RC_NOCACHE:
++			break;
++		case RC_REPLSTAT:
++			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
++			rtn = RC_REPLY;
++			break;
++		case RC_REPLBUFF:
++			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
++				return rtn; /* should not happen */
++			rtn = RC_REPLY;
++			break;
++		default:
++			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
++		}
++
++out_trace:
++		trace_nfsd_drc_found(nn, rqstp, rtn);
++		return rtn;
++	}
++out:
+ 	nfsd_cacherep_dispose(&dispose);
+ 
+ 	nfsd_stats_rc_misses_inc(nn);
+ 	atomic_inc(&nn->num_drc_entries);
+ 	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+-	goto out;
+-
+-found_entry:
+-	/* We found a matching entry which is either in progress or done. */
+-	nfsd_reply_cache_free_locked(NULL, rp, nn);
+-	nfsd_stats_rc_hits_inc(nn);
+-	rtn = RC_DROPIT;
+-	rp = found;
+-
+-	/* Request being processed */
+-	if (rp->c_state == RC_INPROG)
+-		goto out_trace;
+-
+-	/* From the hall of fame of impractical attacks:
+-	 * Is this a user who tries to snoop on the cache? */
+-	rtn = RC_DOIT;
+-	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+-		goto out_trace;
+-
+-	/* Compose RPC reply header */
+-	switch (rp->c_type) {
+-	case RC_NOCACHE:
+-		break;
+-	case RC_REPLSTAT:
+-		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+-		rtn = RC_REPLY;
+-		break;
+-	case RC_REPLBUFF:
+-		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+-			goto out_unlock; /* should not happen */
+-		rtn = RC_REPLY;
+-		break;
+-	default:
+-		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+-	}
+-
+-out_trace:
+-	trace_nfsd_drc_found(nn, rqstp, rtn);
+-out_unlock:
+-	spin_unlock(&b->cache_lock);
+-out:
+ 	return rtn;
+ }
+ 
+-- 
+2.30.2
 
-Thanks,
-Amir.
 
