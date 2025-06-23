@@ -1,194 +1,120 @@
-Return-Path: <linux-nfs+bounces-12649-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12650-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00E90AE400A
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 14:27:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5822AE3FED
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 14:25:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D13AA1888E84
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 12:23:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58D3C7A2182
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 12:24:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D3623C4F3;
-	Mon, 23 Jun 2025 12:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DFF11957FF;
+	Mon, 23 Jun 2025 12:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTzACbp6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id E7AD21F09B3;
-	Mon, 23 Jun 2025 12:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EDF5579E;
+	Mon, 23 Jun 2025 12:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750681370; cv=none; b=DVcohrgbTtEx/uzbHQOU0NuioCzQNEEVmddxw0OjOtIBKMf4kSuc9TbBFNsUzFt0CgfWN1X53YWOE/M8Z+LY0mfuLyjFnvLNNmaQTXfsuE9qFkk23hPMGaCbB8TD1uY6TlZWr/dPT7PtdQDmxjxLABeVl301QgF9A9RzgvlT+90=
+	t=1750681550; cv=none; b=hPGQiCoRjYqzq1aO3oBaiAmIhMGE/DyN/p6Bs2doSk8VsXUDebkMvUEJa+fmcbDUF2bt6/pkP0LhHuRk5PyYooWhun1oNkZBD3SFgtjTj1gmdPMU72f2uwR9B8c7tUasPlVfUF1eZiPHCtfTJxwOAyoAwxuOBF22x+gak/6CxGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750681370; c=relaxed/simple;
-	bh=KesN4i+iw9iOvPBik8PMpmEBSOySopVhrh240s9MJKE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tjnwn8++J8DpxwC9XgzR3o5JBJYkj9ONzGya4iZQMH1tlLXi8fSoS6CaDZq8RZJczMwqD6LzF1QxT796nRgiuOIfE/fqB4lT3quYUgMwGH1qprsfQGcrO1TVYwIAAZ+ohpMRvhWrOEIeiGLlY1uXDXXGZCTCrYqi7cG3QPaP6W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 4A98D603062FA;
-	Mon, 23 Jun 2025 20:22:37 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neil@brown.name,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: Su Hui <suhui@nfschina.com>,
-	linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
-Date: Mon, 23 Jun 2025 20:22:27 +0800
-Message-Id: <20250623122226.3720564-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1750681550; c=relaxed/simple;
+	bh=NEpi/7jbMxlgA/Ip3kFmF6fyk2NnVHnyuKnlcrk3VP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lMMvKnKEcFrFr7/Af+VK+CVk3yuVmvDammno74XoL7VBkzubBBzadGCPdFAqvNOvvRNKe/nqb8u2xo7uj9SDso9ZZK00UtfLSxc0eFa2p95u5lZhYBldWJaGVr7s2cN04H4tp/09noY5zusJqNsfxeHjjuaTe73b8ZJwSZ0gS4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTzACbp6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB2C4CEEA;
+	Mon, 23 Jun 2025 12:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750681549;
+	bh=NEpi/7jbMxlgA/Ip3kFmF6fyk2NnVHnyuKnlcrk3VP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XTzACbp6s++Eu5qs6WDi+DYNT9yNIgHydyOWqF5GNCL5Z0w/BI/NXxP6fLJc39tmu
+	 oo51dVdttN4gXPMX1+CefwGLgqI9IPijqLYm7xJyPK1/Z4O7t4AJI9uz3r9Ns/7emL
+	 sm+yry36VOY/lIR5oK4ni42YSDlCjMgP2D4bs4Pa1kCdNi1mf1lGWmI+rTy0FeeOoB
+	 z2r79FZ7zhNyeT/vlOS6gNxNgYl6o4zBPKGc6TtB/RcS2Fq226nL/1By6cteZk7WYX
+	 xICDdSCoGRCcLzPibNp9wA6OtyBs8EPQuWlKfcc9OtnERxFCTC5PhotehWSvncJT3f
+	 BPrhAiB1ntgbw==
+Date: Mon, 23 Jun 2025 14:25:45 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Amir Goldstein <amir73il@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 8/9] fhandle, pidfs: support open_by_handle_at() purely
+ based on file handle
+Message-ID: <20250623-wegnehmen-fragen-9dfdfdf0b2af@brauner>
+References: <20250623-work-pidfs-fhandle-v1-0-75899d67555f@kernel.org>
+ <20250623-work-pidfs-fhandle-v1-8-75899d67555f@kernel.org>
+ <ipk5yr7xxdmesql6wqzlbs734jjvn3had5vzqrck6e2ke4zanu@6sotvp4bd5lu>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ipk5yr7xxdmesql6wqzlbs734jjvn3had5vzqrck6e2ke4zanu@6sotvp4bd5lu>
 
-Using guard() to replace *unlock* label. guard() makes lock/unlock code
-more clear. Change the order of the code to let all lock code in the
-same scope. No functional changes.
+On Mon, Jun 23, 2025 at 02:06:43PM +0200, Jan Kara wrote:
+> On Mon 23-06-25 11:01:30, Christian Brauner wrote:
+> > Various filesystems such as pidfs (and likely drm in the future) have a
+> > use-case to support opening files purely based on the handle without
+> > having to require a file descriptor to another object. That's especially
+> > the case for filesystems that don't do any lookup whatsoever and there's
+> > zero relationship between the objects. Such filesystems are also
+> > singletons that stay around for the lifetime of the system meaning that
+> > they can be uniquely identified and accessed purely based on the file
+> > handle type. Enable that so that userspace doesn't have to allocate an
+> > object needlessly especially if they can't do that for whatever reason.
+> > 
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> 
+> Hmm, maybe we should predefine some invalid fd value userspace should pass
+> when it wants to "autopick" fs root? Otherwise defining more special fd
+> values like AT_FDCWD would become difficult in the future. Or we could just
 
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
- fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
- 1 file changed, 48 insertions(+), 51 deletions(-)
+Fwiw, I already did that with:
 
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index ba9d326b3de6..2d92adf3e6b0 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
- 
- 	if (type == RC_NOCACHE) {
- 		nfsd_stats_rc_nocache_inc(nn);
--		goto out;
-+		return rtn;
- 	}
- 
- 	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
-@@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
- 	 */
- 	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
- 	if (!rp)
--		goto out;
-+		return rtn;
- 
- 	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
--	spin_lock(&b->cache_lock);
--	found = nfsd_cache_insert(b, rp, nn);
--	if (found != rp)
--		goto found_entry;
--	*cacherep = rp;
--	rp->c_state = RC_INPROG;
--	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
--	spin_unlock(&b->cache_lock);
-+	scoped_guard(spinlock, &b->cache_lock) {
-+		found = nfsd_cache_insert(b, rp, nn);
-+		if (found == rp) {
-+			*cacherep = rp;
-+			rp->c_state = RC_INPROG;
-+			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
-+			goto out;
-+		}
-+		/* We found a matching entry which is either in progress or done. */
-+		nfsd_reply_cache_free_locked(NULL, rp, nn);
-+		nfsd_stats_rc_hits_inc(nn);
-+		rtn = RC_DROPIT;
-+		rp = found;
-+
-+		/* Request being processed */
-+		if (rp->c_state == RC_INPROG)
-+			goto out_trace;
-+
-+		/* From the hall of fame of impractical attacks:
-+		 * Is this a user who tries to snoop on the cache?
-+		 */
-+		rtn = RC_DOIT;
-+		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
-+			goto out_trace;
- 
-+		/* Compose RPC reply header */
-+		switch (rp->c_type) {
-+		case RC_NOCACHE:
-+			break;
-+		case RC_REPLSTAT:
-+			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
-+			rtn = RC_REPLY;
-+			break;
-+		case RC_REPLBUFF:
-+			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
-+				return rtn; /* should not happen */
-+			rtn = RC_REPLY;
-+			break;
-+		default:
-+			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
-+		}
-+
-+out_trace:
-+		trace_nfsd_drc_found(nn, rqstp, rtn);
-+		return rtn;
-+	}
-+out:
- 	nfsd_cacherep_dispose(&dispose);
- 
- 	nfsd_stats_rc_misses_inc(nn);
- 	atomic_inc(&nn->num_drc_entries);
- 	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
--	goto out;
--
--found_entry:
--	/* We found a matching entry which is either in progress or done. */
--	nfsd_reply_cache_free_locked(NULL, rp, nn);
--	nfsd_stats_rc_hits_inc(nn);
--	rtn = RC_DROPIT;
--	rp = found;
--
--	/* Request being processed */
--	if (rp->c_state == RC_INPROG)
--		goto out_trace;
--
--	/* From the hall of fame of impractical attacks:
--	 * Is this a user who tries to snoop on the cache? */
--	rtn = RC_DOIT;
--	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
--		goto out_trace;
--
--	/* Compose RPC reply header */
--	switch (rp->c_type) {
--	case RC_NOCACHE:
--		break;
--	case RC_REPLSTAT:
--		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
--		rtn = RC_REPLY;
--		break;
--	case RC_REPLBUFF:
--		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
--			goto out_unlock; /* should not happen */
--		rtn = RC_REPLY;
--		break;
--	default:
--		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
--	}
--
--out_trace:
--	trace_nfsd_drc_found(nn, rqstp, rtn);
--out_unlock:
--	spin_unlock(&b->cache_lock);
--out:
- 	return rtn;
- }
- 
--- 
-2.30.2
+#define PIDFD_SELF_THREAD		-10000 /* Current thread. */
+#define PIDFD_SELF_THREAD_GROUP		-20000 /* Current thread group leader. */
 
+I think the correct thing to do would have been to say anything below
+
+#define AT_FDCWD		-100    /* Special value for dirfd used to
+
+is reserved for the kernel. But we can probably easily do this and say
+anything from -10000 to -40000 is reserved for the kernel.
+
+I would then change:
+
+#define PIDFD_SELF_THREAD		-10000 /* Current thread. */
+#define PIDFD_SELF_THREAD_GROUP		-10001 /* Current thread group leader. */
+
+since that's very very new and then move
+PIDFD_SELF_THREAD/PIDFD_SELF_THREAD_GROUP to include/uapi/linux/fcntl.h
+
+and add that comment about the reserved range in there.
+
+The thing is that we'd need to enforce this on the system call level.
+
+Thoughts?
+
+> define that FILEID_PIDFS file handles *always* ignore the fd value and
+> auto-pick the root.
+
+I see the issue I don't think it's a big deal but I'm open to adding:
+
+#define AT_EBADF -10009 /* -10000 - EBADF */
+
+and document that as a stand-in for a handle that can't be resolved.
+
+Thoughts?
 
