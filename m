@@ -1,216 +1,98 @@
-Return-Path: <linux-nfs+bounces-12671-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12672-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75C5CAE43E7
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 15:37:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 85E5EAE45A7
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 15:58:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CA963B8B80
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 13:30:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A307E3B8D2A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 13:49:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B266C2566FC;
-	Mon, 23 Jun 2025 13:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 415AF2517AF;
+	Mon, 23 Jun 2025 13:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VDgSRkZq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bb7ov7uR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VDgSRkZq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bb7ov7uR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gc/4jh09"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EF8253F03
-	for <linux-nfs@vger.kernel.org>; Mon, 23 Jun 2025 13:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1452E19CD17;
+	Mon, 23 Jun 2025 13:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750685389; cv=none; b=KOH/cDzvEGNwXKRUEqII4glGdpvHThmZaLzF26qHMU3tOmx+vs/Is7qZM3sftCiptdQ3AQTDpiOnFGKaZ1yQMb7Bu5+tOGmBd8zIkBCmMJnEOrD7Qf2MtBOZIBQJIwWRCvOlsH55CR7QSjmnBTvfSsMgRni+kYnWeuatXMFQnTs=
+	t=1750686582; cv=none; b=m5iO1EofaBPgEQZCCwMR1N+PlbE1Oz2NGGrNoEHD4O5wddOg9ER+8YzxDHzYBynpdsy4BOXggu/utfQDcZcee0al7T7Qf+fAI0Wo1PFVG+Mysm/ZI2n7qmeIKUBQ9c/hZ8MsS+ZGIHvuZA2cp2Gv0T2Di2zXfimvoQ6wlx6yG/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750685389; c=relaxed/simple;
-	bh=qgnLAA0t41WuDTV8cYxwIFOHukaDRA2lm/tz8ZIJcgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYZ9sWpsCEz59jVVP9/jLOGeUBQ6Mp9oeJ8PsMnzG6arqt2V4jW1eW3uNoLFHAF63boDXaWdmuLx+TEOA9kKPs+Xl6n0f/VhYV2suiOPThpSdOrYcCEHTkI+uGqUhtc2m/yD07BA32S6TLrlrG9DtIFDthT0Dq3HnJ+CxJ3k1wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VDgSRkZq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bb7ov7uR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VDgSRkZq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bb7ov7uR; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 11DA12116D;
-	Mon, 23 Jun 2025 13:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750685385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7qD5/GAgg35+Or8uEXb3xqQbRadqto1keS1Sf5ZnPM=;
-	b=VDgSRkZqX3Y4kyUbwlnYdR1yRwPovjKig+81kdSKhY5v3cJ/GUoyMyWIdELMwCFCbzTLZH
-	K14swf8I89IkS47M/6Q2/r2Fe7Hi5DDeIYSDLOvEBrayOFYb9LW6av+iOVZW5aTfzhB5G3
-	C3+6ajIu9etBrIH0aREy5i6AHHWt8lM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750685385;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7qD5/GAgg35+Or8uEXb3xqQbRadqto1keS1Sf5ZnPM=;
-	b=bb7ov7uRCXh9n4VAl7FNrU/Fm5mj6ac3ZkJR4A0U3FRrQhimQoJEmQFdai5rIWL+D7peV1
-	h2e1gD831mdIxMBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=VDgSRkZq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=bb7ov7uR
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750685385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7qD5/GAgg35+Or8uEXb3xqQbRadqto1keS1Sf5ZnPM=;
-	b=VDgSRkZqX3Y4kyUbwlnYdR1yRwPovjKig+81kdSKhY5v3cJ/GUoyMyWIdELMwCFCbzTLZH
-	K14swf8I89IkS47M/6Q2/r2Fe7Hi5DDeIYSDLOvEBrayOFYb9LW6av+iOVZW5aTfzhB5G3
-	C3+6ajIu9etBrIH0aREy5i6AHHWt8lM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750685385;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b7qD5/GAgg35+Or8uEXb3xqQbRadqto1keS1Sf5ZnPM=;
-	b=bb7ov7uRCXh9n4VAl7FNrU/Fm5mj6ac3ZkJR4A0U3FRrQhimQoJEmQFdai5rIWL+D7peV1
-	h2e1gD831mdIxMBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE48E13A27;
-	Mon, 23 Jun 2025 13:29:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jEMjOshWWWjAUwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 23 Jun 2025 13:29:44 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 353F5A09BE; Mon, 23 Jun 2025 15:29:38 +0200 (CEST)
-Date: Mon, 23 Jun 2025 15:29:38 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Amir Goldstein <amir73il@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 8/9] fhandle, pidfs: support open_by_handle_at() purely
- based on file handle
-Message-ID: <dy45cph3wjvxzonoakm57s55bzo6mp3jyfoio2w4jevpif4njt@llanzjjddqfk>
-References: <20250623-work-pidfs-fhandle-v1-0-75899d67555f@kernel.org>
- <20250623-work-pidfs-fhandle-v1-8-75899d67555f@kernel.org>
- <ipk5yr7xxdmesql6wqzlbs734jjvn3had5vzqrck6e2ke4zanu@6sotvp4bd5lu>
- <20250623-wegnehmen-fragen-9dfdfdf0b2af@brauner>
+	s=arc-20240116; t=1750686582; c=relaxed/simple;
+	bh=j3FUL7lAGubA/HiHlIi3dlPR2ex594MgXDFSkKeKxLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FSJwTa4jtRrgNMTcWD6lEDbf8Vnn/bCsu3jF6p9rkKX9e6qVHMVxec6++jq6IHJsFreVKOmkZnxaVaOPFWQ+ntDh9h1Ef+6uTIg8PHZ8lp5Zsmt0UAHajtQhnbwqVtCHTjOP6w5b6RjIWFYGnjR45p54c6BlIIRrQBwsTvfXtxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gc/4jh09; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE467C4CEEA;
+	Mon, 23 Jun 2025 13:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750686581;
+	bh=j3FUL7lAGubA/HiHlIi3dlPR2ex594MgXDFSkKeKxLw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Gc/4jh092TuZDjEOdjKCJzqNBzvJHxLt3fYKffhYkTjoHqn5kX6uyxq7WZcfOgZ1i
+	 uKc2BUstYEtbOzv+H72jSZnFNcmwlVR5WD+eiwGz2wEUz+ZJRxfsDtykCAUvjiwnkM
+	 MIy2TEODm/Q4XTSHTEG89WMLyRfLflk6wGHc/8zXRnTqBnACzX0uN4Tvn+K+NyZhcQ
+	 a8RdAce4pRVG5mrvql43yfohjKQ1wTG1sK/F3nlRblYTZj90AzQdhdh6MnbLotS8Mx
+	 qWxQvI6ojMFZaf119Da6krwmhgJ4ai3f0nBfd6k0zr6pR/7630ehKo8PCIGbZi8w1a
+	 BTSKo7ecxmjOg==
+From: Chuck Lever <cel@kernel.org>
+To: NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/6] sunrpc: patches and cleanups for v6.17
+Date: Mon, 23 Jun 2025 09:49:34 -0400
+Message-ID: <175068655499.1133652.7806743483169461253.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
+References: <20250620-rpc-6-17-v1-0-a309177d713b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623-wegnehmen-fragen-9dfdfdf0b2af@brauner>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 11DA12116D
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,kernel.org,oracle.com,gmail.com,ffwll.ch,vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -4.01
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon 23-06-25 14:25:45, Christian Brauner wrote:
-> On Mon, Jun 23, 2025 at 02:06:43PM +0200, Jan Kara wrote:
-> > On Mon 23-06-25 11:01:30, Christian Brauner wrote:
-> > > Various filesystems such as pidfs (and likely drm in the future) have a
-> > > use-case to support opening files purely based on the handle without
-> > > having to require a file descriptor to another object. That's especially
-> > > the case for filesystems that don't do any lookup whatsoever and there's
-> > > zero relationship between the objects. Such filesystems are also
-> > > singletons that stay around for the lifetime of the system meaning that
-> > > they can be uniquely identified and accessed purely based on the file
-> > > handle type. Enable that so that userspace doesn't have to allocate an
-> > > object needlessly especially if they can't do that for whatever reason.
-> > > 
-> > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > 
-> > Hmm, maybe we should predefine some invalid fd value userspace should pass
-> > when it wants to "autopick" fs root? Otherwise defining more special fd
-> > values like AT_FDCWD would become difficult in the future. Or we could just
-> 
-> Fwiw, I already did that with:
-> 
-> #define PIDFD_SELF_THREAD		-10000 /* Current thread. */
-> #define PIDFD_SELF_THREAD_GROUP		-20000 /* Current thread group leader. */
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Right.
+On Fri, 20 Jun 2025 08:16:00 -0400, Jeff Layton wrote:
+> The first 3 are directly related to the svc_process_common() patch I
+> sent yesterday. They're just further cleanups and fixes to that
+> codepath. The other two are random sunrpc patches I've been carrying for
+> a while.
+> 
+> 
 
-> I think the correct thing to do would have been to say anything below
-> 
-> #define AT_FDCWD		-100    /* Special value for dirfd used to
-> 
-> is reserved for the kernel. But we can probably easily do this and say
-> anything from -10000 to -40000 is reserved for the kernel.
-> 
-> I would then change:
-> 
-> #define PIDFD_SELF_THREAD		-10000 /* Current thread. */
-> #define PIDFD_SELF_THREAD_GROUP		-10001 /* Current thread group leader. */
-> 
-> since that's very very new and then move
-> PIDFD_SELF_THREAD/PIDFD_SELF_THREAD_GROUP to include/uapi/linux/fcntl.h
-> 
-> and add that comment about the reserved range in there.
+Applied to nfsd-testing, thanks!
 
-Given the experience with AT_ flags and various extension flags
-combinations getting used in various syscalls and finally leading to odd
-flag conflicts I agree this would be probably a good future proofing. I'll
-leave it upto your judgement whether renumbering PIDFD_SELF_THREAD_GROUP is
-safe to do or not. It is kind of optional in my opinion.
+[1/6] sunrpc: fix handling of unknown auth status codes
+      commit: 0df827f0bd0529b4abd4f6c593f0416c8777df11
+[2/6] sunrpc: remove SVC_SYSERR
+      commit: 59d160a8f609674a51e7d90afbed8cb88534b962
+[3/6] sunrpc: reset rq_accept_statp when starting a new RPC
+      commit: 1e52e9a78dba2abf7c01b68c534d9ca22e9a1de7
+[4/6] sunrpc: return better error in svcauth_gss_accept() on alloc failure
+      commit: fedc609d9422e2b35e1a5af40b6ae134d6e4cc97
+[5/6] sunrpc: rearrange struct svc_rqst for fewer cachelines
+      commit: 32eb3ea18747600ebb2133ec167f6c56e71977be
+[6/6] sunrpc: make svc_tcp_sendmsg() take a signed sentp pointer
+      commit: 71d5b98c95c393e53a9cddac4e1c0f7a10ee92b2
 
-> The thing is that we'd need to enforce this on the system call level.
+--
+Chuck Lever
 
-Not sure what do you mean by this...
-
-> > define that FILEID_PIDFS file handles *always* ignore the fd value and
-> > auto-pick the root.
-> 
-> I see the issue I don't think it's a big deal but I'm open to adding:
-> 
-> #define AT_EBADF -10009 /* -10000 - EBADF */
-> 
-> and document that as a stand-in for a handle that can't be resolved.
-
-Yeah, or the FD_INVALID name you've suggested later. That sounded even
-better to me.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
 
