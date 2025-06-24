@@ -1,187 +1,238 @@
-Return-Path: <linux-nfs+bounces-12677-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12678-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5F07AE4D73
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 21:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CFC1BAE587A
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 02:19:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66951189B4CC
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jun 2025 19:18:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 777151B64A5A
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 00:19:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D62B1C5D7A;
-	Mon, 23 Jun 2025 19:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YobQ0v/r"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E25DC1DA21;
+	Tue, 24 Jun 2025 00:19:27 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431678F4F;
-	Mon, 23 Jun 2025 19:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AACA2D;
+	Tue, 24 Jun 2025 00:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750706261; cv=none; b=dH18rPwV4wPCj18TngS7D6Ui0K8Ev/hy/Dcu5UpcHi+AX8Wj8fTJ35QJ+ZvepS4Bzw515BnaaiWjTjy5fR00/bQNpJLHInJW0U+LZXpphn58sjYouVb0BMNfSdCH1U8aHzIVzt5odqdD6PGVrWqfbeyN0d2x6KK77miGT4RC4uc=
+	t=1750724367; cv=none; b=YPA6eTdybKNtfd4w6UwUUuXMhJBMXWrSAXjtR2ad1QHKp4NnGNYGEneGLWS+GMesL1WhzBvH1Fqr1RvmY5z7wpW5r+lmge02fswYLbaYN+UCBi5aOW9UF8xjQy07pMu21ASYH6HsmUYwv8eDloppbTxaTTJqZxGXKRiq+XQ5FQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750706261; c=relaxed/simple;
-	bh=+Qly8++8NwkVFxi0EqVhD/4JcJSwOckHZ1V5SQOWRzc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Apq2FgMTnd2YB1LUf7U/SMEOykihQdhczP+Il7tAh1mbY8WAi4V0YqDFifpDYEI31Zgtdz5F+QbdIiLcgMvJlxflBX4pIm3pv4IKQgLRa14Ph/OE4Xq4dtm9Q2hDMkSB4xrM6OI5dz8GKQMSOfZlfwQPOQS9enfACR3WFUM5uMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YobQ0v/r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6AE7C4CEF0;
-	Mon, 23 Jun 2025 19:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750706260;
-	bh=+Qly8++8NwkVFxi0EqVhD/4JcJSwOckHZ1V5SQOWRzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YobQ0v/rxu+RveG+u6Y9Y+M/MRVN0bbgAuGVsFSeJ+7+Nnp0tE7wFrS5OF3fxjI6m
-	 HRTO3UaI+txGAABJa4TAzsnuixdF/xyXtC+pec1QPse1nRLe3As6QVbU7Qsg/SewD5
-	 7vBgtufZUUZxIFEtRoTics3030/3rRxcke2jyH5ftfi8ni4K8rhs3t5kTm3QXY8j3P
-	 E6I/Yi0bqRxaZZcHJXqipG16NPMh1U5sbYygJJ2ZtcKV1f7jKTSEBrmcyRSnykKFVC
-	 PZ7tnCVWJrTgCskT5dqxMnShe+3hU7LSAPwdAPM/i3vcEk1jGp6yo9YDas/pIkKZRZ
-	 8aQsPm7kZc3Sg==
-Date: Mon, 23 Jun 2025 21:17:36 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 6/9] exportfs: add FILEID_PIDFS
-Message-ID: <20250623-unklar-nachwachsen-09f3568700c8@brauner>
-References: <20250623-work-pidfs-fhandle-v1-0-75899d67555f@kernel.org>
- <20250623-work-pidfs-fhandle-v1-6-75899d67555f@kernel.org>
- <y6yp3ldhmmtl6mzr2arwr5fggzrlffc2pzvqbr7jkabqm5zm3u@6pwl22ctaxkx>
- <20250623-herzrasen-geblickt-9e2befc82298@brauner>
- <CAOQ4uxid1=97dZSZPB_4W5pocoU4cU-7G6WJ_4KQSGobZ_72xA@mail.gmail.com>
- <lo73q6ovi2m2skguq5ydedz2za4vud747ztwfxwzn33r3do7ia@p7y3sbyrznfi>
- <CAOQ4uxirz2sRrNNtO5Re=CdzwW+tLvoA0XHFW9V5HDPgh15g2A@mail.gmail.com>
- <idfofhnjxf35s4d6wifbdfh27a5blh5kzlpr5xkgkc3zkvz3nx@odyxd6o75a5a>
- <CAOQ4uxg9jWNxWg3ksoeEQ-KY0xKUwTPYokKN7d4whi_QDa=u_g@mail.gmail.com>
+	s=arc-20240116; t=1750724367; c=relaxed/simple;
+	bh=PavnqtiwB/fsXssZwmJ6jM960QXao6ToQorgMfbx6B8=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=RTLCx9tVGU/f2zW7gWAdgfcqJBnde5aN91HcW8Gu3AcDDt+kbxt2nrys04z5m+A1cfSOD8lASouH0LMoEF5Pmq9tH6NkoGJ+LwfJSm5RYTRIMVHLVgtZxf2AUmZOxVnrKlvczEAVPaxtRIIfGGn57oMpm9hFj1sktYeyspANsV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uTrNf-003YDs-0I;
+	Tue, 24 Jun 2025 00:19:19 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxg9jWNxWg3ksoeEQ-KY0xKUwTPYokKN7d4whi_QDa=u_g@mail.gmail.com>
+From: "NeilBrown" <neil@brown.name>
+To: "Su Hui" <suhui@nfschina.com>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, "Su Hui" <suhui@nfschina.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+In-reply-to: <20250623122226.3720564-1-suhui@nfschina.com>
+References: <20250623122226.3720564-1-suhui@nfschina.com>
+Date: Tue, 24 Jun 2025 10:19:16 +1000
+Message-id: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
 
-On Mon, Jun 23, 2025 at 04:05:18PM +0200, Amir Goldstein wrote:
-> On Mon, Jun 23, 2025 at 3:18 PM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Mon 23-06-25 15:05:45, Amir Goldstein wrote:
-> > > On Mon, Jun 23, 2025 at 2:41 PM Jan Kara <jack@suse.cz> wrote:
-> > > >
-> > > > On Mon 23-06-25 14:22:26, Amir Goldstein wrote:
-> > > > > On Mon, Jun 23, 2025 at 1:58 PM Christian Brauner <brauner@kernel.org> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 23, 2025 at 01:55:38PM +0200, Jan Kara wrote:
-> > > > > > > On Mon 23-06-25 11:01:28, Christian Brauner wrote:
-> > > > > > > > Introduce new pidfs file handle values.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > > > > > > ---
-> > > > > > > >  include/linux/exportfs.h | 11 +++++++++++
-> > > > > > > >  1 file changed, 11 insertions(+)
-> > > > > > > >
-> > > > > > > > diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> > > > > > > > index 25c4a5afbd44..45b38a29643f 100644
-> > > > > > > > --- a/include/linux/exportfs.h
-> > > > > > > > +++ b/include/linux/exportfs.h
-> > > > > > > > @@ -99,6 +99,11 @@ enum fid_type {
-> > > > > > > >      */
-> > > > > > > >     FILEID_FAT_WITH_PARENT = 0x72,
-> > > > > > > >
-> > > > > > > > +   /*
-> > > > > > > > +    * 64 bit inode number.
-> > > > > > > > +    */
-> > > > > > > > +   FILEID_INO64 = 0x80,
-> > > > > > > > +
-> > > > > > > >     /*
-> > > > > > > >      * 64 bit inode number, 32 bit generation number.
-> > > > > > > >      */
-> > > > > > > > @@ -131,6 +136,12 @@ enum fid_type {
-> > > > > > > >      * Filesystems must not use 0xff file ID.
-> > > > > > > >      */
-> > > > > > > >     FILEID_INVALID = 0xff,
-> > > > > > > > +
-> > > > > > > > +   /* Internal kernel fid types */
-> > > > > > > > +
-> > > > > > > > +   /* pidfs fid types */
-> > > > > > > > +   FILEID_PIDFS_FSTYPE = 0x100,
-> > > > > > > > +   FILEID_PIDFS = FILEID_PIDFS_FSTYPE | FILEID_INO64,
-> > > > > > >
-> > > > > > > What is the point behind having FILEID_INO64 and FILEID_PIDFS separately?
-> > > > > > > Why not just allocate one value for FILEID_PIDFS and be done with it? Do
-> > > > > > > you expect some future extensions for pidfs?
-> > > > > >
-> > > > > > I wouldn't rule it out, yes. This was also one of Amir's suggestions.
-> > > > >
-> > > > > The idea was to parcel the autonomous fid type to fstype (pidfs)
-> > > > > which determines which is the fs to decode the autonomous fid
-> > > > > and a per-fs sub-type like we have today.
-> > > > >
-> > > > > Maybe it is a bit over design, but I don't think this is really limiting us
-> > > > > going forward, because those constants are not part of the uapi.
-> > > >
-> > > > OK, I agree these file handles do not survive reboot anyway so we are free
-> > > > to redefine the encoding in the future. So it is not a big deal (but it
-> > > > also wouldn't be a big deal to start simple and add some subtyping in the
-> > > > future when there's actual usecase). But in the current patch set we have
-> > > > one flag FILEID_IS_AUTONOMOUS which does provide this subtyping and then
-> > > > this FILEID_PIDFS_FSTYPE which doesn't seem to be about subtyping but about
-> > > > pidfs expecting some future extensions and wanting to recognize all its
-> > > > file handle types more easily (without having to enumerate all types like
-> > > > other filesystems)? My concern is that fh_type space isn't that big and if
-> > > > every filesystem started to reserve flag-like bits in it, we'd soon run out
-> > > > of it. So I don't think this is a great precedens although in this
-> > > > particular case I agree it can be modified in the future if we decide so...
-> > > >
-> > >
-> > > Yes, I agree.
-> > > For the sake of argument let's assume we have two types to begin with
-> > > pidfs and drm and then would you want to define them as:
-> > >
-> > >    /* Internal kernel fid types */
-> > >    FILEID_PIDFS = 0x100,
-> > >    FILEID_DRM = 0x200,
-> > >
-> > > Or
-> > >
-> > >    FILEID_PIDFS = 0x100,
-> > >    FILEID_DRM = 0x101,
-> > >
-> > > I think the former is easy to start with and we have plenty of time to
-> > > make reparceling if we get to dousens and file id type...
-> >
-> > No strong preference if we then test for equality with FILEID_PIDFS and
-> > FILEID_DRM and not like fh_type & FILEID_PIDFS.
-> >
-> > > Regarding the lower bits, I think it would be wise to reserve
-> > >
-> > > FILEID_PIDFS_FSTYPE = 0x100,
-> > > FILEID_PIDFS_ROOT = FILEID_PIDFS_FSTYPE | FILEID_ROOT /* also 0x100 */
-> > >
-> > > This is why I suggested using non zero lower bits and then why
-> > > not use the actual format descriptor for the lower bits as it was intended.
-> >
-> > I'm getting lost in these names a bit :) It's hard to see a difference for
-> > me without a concrete examples of where one should be used compared to the
-> > other...
-> 
-> In any case, I don't feel strongly about it.
-> You can leave it as is or use
->     FILEID_PIDFS = 0x100,
-> or
->     FILEID_PIDFS = 0x180,
-> 
-> we can always change it later if we want to.
-> 
-> Thanks,
-> Amir.
+On Mon, 23 Jun 2025, Su Hui wrote:
+> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+> more clear. Change the order of the code to let all lock code in the
+> same scope. No functional changes.
 
-I'm completely lost.
+While I agree that this code could usefully be cleaned up and that you
+have made some improvements, I think the use of guard() is a nearly
+insignificant part of the change.  You could easily do exactly the same
+patch without using guard() but having and explicit spin_unlock() before
+the new return.  That doesn't mean you shouldn't use guard(), but it
+does mean that the comment explaining the change could be more usefully
+focused on the "Change the order ..." part, and maybe explain what that
+is important.
+
+I actually think there is room for other changes which would make the
+code even better:
+- Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+  take the lock when needed, then drop it, then call
+  nfsd_cacherep_dispose() - and return the count.
+- change nfsd_cache_insert to also skip updating the chain length stats
+  when it finds a match - in that case the "entries" isn't a chain
+  length. So just  lru_put_end(), return.  Have it return NULL if
+  no match was found
+- after the found_entry label don't use nfsd_reply_cache_free_locked(),
+  just free rp.  It has never been included in any rbtree or list, so it
+  doesn't need to be removed.
+- I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+  and call it under rcu_read_lock() - and use RCU to free the cached
+  items.=20
+- put the chunk of code after the found_entry label into a separate
+  function and instead just return RC_REPLY (and maybe rename that
+  RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+  that function that has the found_entry code.
+
+I think that would make the code a lot easier to follow.  Would you like
+to have a go at that - I suspect it would be several patches - or shall
+I do it?
+
+Thanks,
+NeilBrown
+
+
+
+>=20
+> Signed-off-by: Su Hui <suhui@nfschina.com>
+> ---
+>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+>  1 file changed, 48 insertions(+), 51 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> index ba9d326b3de6..2d92adf3e6b0 100644
+> --- a/fs/nfsd/nfscache.c
+> +++ b/fs/nfsd/nfscache.c
+> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned =
+int start,
+> =20
+>  	if (type =3D=3D RC_NOCACHE) {
+>  		nfsd_stats_rc_nocache_inc(nn);
+> -		goto out;
+> +		return rtn;
+>  	}
+> =20
+>  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
+> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigne=
+d int start,
+>  	 */
+>  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
+>  	if (!rp)
+> -		goto out;
+> +		return rtn;
+> =20
+>  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+> -	spin_lock(&b->cache_lock);
+> -	found =3D nfsd_cache_insert(b, rp, nn);
+> -	if (found !=3D rp)
+> -		goto found_entry;
+> -	*cacherep =3D rp;
+> -	rp->c_state =3D RC_INPROG;
+> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> -	spin_unlock(&b->cache_lock);
+> +	scoped_guard(spinlock, &b->cache_lock) {
+> +		found =3D nfsd_cache_insert(b, rp, nn);
+> +		if (found =3D=3D rp) {
+> +			*cacherep =3D rp;
+> +			rp->c_state =3D RC_INPROG;
+> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> +			goto out;
+> +		}
+> +		/* We found a matching entry which is either in progress or done. */
+> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+> +		nfsd_stats_rc_hits_inc(nn);
+> +		rtn =3D RC_DROPIT;
+> +		rp =3D found;
+> +
+> +		/* Request being processed */
+> +		if (rp->c_state =3D=3D RC_INPROG)
+> +			goto out_trace;
+> +
+> +		/* From the hall of fame of impractical attacks:
+> +		 * Is this a user who tries to snoop on the cache?
+> +		 */
+> +		rtn =3D RC_DOIT;
+> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> +			goto out_trace;
+> =20
+> +		/* Compose RPC reply header */
+> +		switch (rp->c_type) {
+> +		case RC_NOCACHE:
+> +			break;
+> +		case RC_REPLSTAT:
+> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> +			rtn =3D RC_REPLY;
+> +			break;
+> +		case RC_REPLBUFF:
+> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> +				return rtn; /* should not happen */
+> +			rtn =3D RC_REPLY;
+> +			break;
+> +		default:
+> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> +		}
+> +
+> +out_trace:
+> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+> +		return rtn;
+> +	}
+> +out:
+>  	nfsd_cacherep_dispose(&dispose);
+> =20
+>  	nfsd_stats_rc_misses_inc(nn);
+>  	atomic_inc(&nn->num_drc_entries);
+>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+> -	goto out;
+> -
+> -found_entry:
+> -	/* We found a matching entry which is either in progress or done. */
+> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+> -	nfsd_stats_rc_hits_inc(nn);
+> -	rtn =3D RC_DROPIT;
+> -	rp =3D found;
+> -
+> -	/* Request being processed */
+> -	if (rp->c_state =3D=3D RC_INPROG)
+> -		goto out_trace;
+> -
+> -	/* From the hall of fame of impractical attacks:
+> -	 * Is this a user who tries to snoop on the cache? */
+> -	rtn =3D RC_DOIT;
+> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> -		goto out_trace;
+> -
+> -	/* Compose RPC reply header */
+> -	switch (rp->c_type) {
+> -	case RC_NOCACHE:
+> -		break;
+> -	case RC_REPLSTAT:
+> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> -		rtn =3D RC_REPLY;
+> -		break;
+> -	case RC_REPLBUFF:
+> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> -			goto out_unlock; /* should not happen */
+> -		rtn =3D RC_REPLY;
+> -		break;
+> -	default:
+> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> -	}
+> -
+> -out_trace:
+> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+> -out_unlock:
+> -	spin_unlock(&b->cache_lock);
+> -out:
+>  	return rtn;
+>  }
+> =20
+> --=20
+> 2.30.2
+>=20
+>=20
+
 
