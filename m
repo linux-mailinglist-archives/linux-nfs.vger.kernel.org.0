@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-12679-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12680-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 001DDAE593D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 03:31:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABB46AE5960
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 03:45:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E32E33A1A9D
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 01:30:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EB2B1B65419
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 01:46:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48ACA199FAC;
-	Tue, 24 Jun 2025 01:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 300E55464E;
+	Tue, 24 Jun 2025 01:45:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 15443189F3B;
-	Tue, 24 Jun 2025 01:31:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 029F135946;
+	Tue, 24 Jun 2025 01:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750728677; cv=none; b=f3OuulVicS5wH2/twDhGZJxdBl2nVTDK+e9CXLFYKYlQc3yXC3UD16n78N2cSzi3rcw9Pd6yEZ8gphgpIj+/Awgii/nVD42yaBW/I1MA0QmOLhOc6T7Ri618pBvIeUmpZY2y1qXvmY7/4Fnmy82ptJTndFIhJjqktFn23xLovXo=
+	t=1750729551; cv=none; b=cUsHTSsc4iD4fbx8whdMBmltzE5zv+lkgC9hZqF5tbgoUnPxnyje69dOYItDiaRKq+HE29L+ssVQH7It9gWppvrPW1DPjMttBPP3yx745UzL0Ugvy1wuzCtWa8hUdlRqknTvpCbD9NBn66bX093OkxAKwha2lq7R/7E/Bt/zNdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750728677; c=relaxed/simple;
-	bh=izK6xWigpQbVX5kq0ouVraYM2E7Gku1yLtAuADFoTJY=;
+	s=arc-20240116; t=1750729551; c=relaxed/simple;
+	bh=0KsG6VEkfuLsV8DfBKaGxYfpc6BQCqoyEyq5ihFr1q0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=L+M0AkW/4qYkNK3VtxUjOOWEfjYFnsS+L9nWtcN1QhOZMFW3BfCmhz/T9+b3Kd9nGQHqvG7ZS12aar9iU3IEc26fQ9nEpagNz0BlGi4GJofky5ff55Y5IeeTx+RYZyt7P9zm6LJPbS4GfH84t4I46FStB5a57zocIf+x1xbfAPU=
+	 Content-Type; b=rBs9NCjojuzUYpgvL1djPv/iDFMVq5MxOy90Xp8jgjH0CySWGJqCloGFkeMeMkh2ojNmm31qdkrmtqGL2TYDu8CPnCHjsVlttbwFDVOoMJN2NQ0KoowVpkGGcBsPxmHtSJ65gmeIpZVtpXlLgkvjyNfNKtpZZgPhGhePNgo45KA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id A15D060105E92;
-	Tue, 24 Jun 2025 09:31:01 +0800 (CST)
-Message-ID: <2b28f725-03ae-4666-b13b-817cd74ad82e@nfschina.com>
-Date: Tue, 24 Jun 2025 09:31:00 +0800
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 3866B60105F15;
+	Tue, 24 Jun 2025 09:45:28 +0800 (CST)
+Message-ID: <7975be21-045e-4b2b-9c73-79aba5b683db@nfschina.com>
+Date: Tue, 24 Jun 2025 09:45:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -41,68 +41,24 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
 Content-Language: en-US
-To: NeilBrown <neil@brown.name>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Su Hui <suhui@nfschina.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+ okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Su Hui <suhui@nfschina.com>
 X-MD-Sfrom: suhui@nfschina.com
 X-MD-SrcIP: 180.167.10.98
 From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <175072435698.2280845.12079422273351211469@noble.neil.brown.name>
+In-Reply-To: <148c69b4-4cf7-4112-97e8-6a5c23505638@suswa.mountain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025/6/24 08:19, NeilBrown wrote:
-> On Mon, 23 Jun 2025, Su Hui wrote:
+On 2025/6/23 23:47, Dan Carpenter wrote:
+> On Mon, Jun 23, 2025 at 08:22:27PM +0800, Su Hui wrote:
 >> Using guard() to replace *unlock* label. guard() makes lock/unlock code
 >> more clear. Change the order of the code to let all lock code in the
 >> same scope. No functional changes.
-> While I agree that this code could usefully be cleaned up and that you
-> have made some improvements, I think the use of guard() is a nearly
-> insignificant part of the change.  You could easily do exactly the same
-> patch without using guard() but having and explicit spin_unlock() before
-> the new return.  That doesn't mean you shouldn't use guard(), but it
-> does mean that the comment explaining the change could be more usefully
-> focused on the "Change the order ..." part, and maybe explain what that
-> is important.
-Got it. I will focus on "Change the order ..." part in the next v2 patch.
-> I actually think there is room for other changes which would make the
-> code even better:
-> - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
->    take the lock when needed, then drop it, then call
->    nfsd_cacherep_dispose() - and return the count.
-> - change nfsd_cache_insert to also skip updating the chain length stats
->    when it finds a match - in that case the "entries" isn't a chain
->    length. So just  lru_put_end(), return.  Have it return NULL if
->    no match was found
-> - after the found_entry label don't use nfsd_reply_cache_free_locked(),
->    just free rp.  It has never been included in any rbtree or list, so it
->    doesn't need to be removed.
-> - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
->    and call it under rcu_read_lock() - and use RCU to free the cached
->    items.
-> - put the chunk of code after the found_entry label into a separate
->    function and instead just return RC_REPLY (and maybe rename that
->    RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
->    that function that has the found_entry code.
->
-> I think that would make the code a lot easier to follow.  Would you like
-> to have a go at that - I suspect it would be several patches - or shall
-> I do it?
->
-> Thanks,
-> NeilBrown
->
-Really thanks for your suggestions!
-Yes, I'd like to do it in the next v2 patchset as soon as possible.
-I'm always searching some things I can participate in about linux kernel
-community, so it's happy for me to do this thing.
-
-regards,
-Su Hui
-
->
+>>
 >> Signed-off-by: Su Hui <suhui@nfschina.com>
 >> ---
 >>   fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
@@ -144,97 +100,26 @@ Su Hui
 >> +			rp->c_state = RC_INPROG;
 >> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
 >> +			goto out;
->> +		}
->> +		/* We found a matching entry which is either in progress or done. */
->> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
->> +		nfsd_stats_rc_hits_inc(nn);
->> +		rtn = RC_DROPIT;
->> +		rp = found;
->> +
->> +		/* Request being processed */
->> +		if (rp->c_state == RC_INPROG)
->> +			goto out_trace;
->> +
->> +		/* From the hall of fame of impractical attacks:
->> +		 * Is this a user who tries to snoop on the cache?
->> +		 */
->> +		rtn = RC_DOIT;
->> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
->> +			goto out_trace;
->>   
->> +		/* Compose RPC reply header */
->> +		switch (rp->c_type) {
->> +		case RC_NOCACHE:
->> +			break;
->> +		case RC_REPLSTAT:
->> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
->> +			rtn = RC_REPLY;
->> +			break;
->> +		case RC_REPLBUFF:
->> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
->> +				return rtn; /* should not happen */
->> +			rtn = RC_REPLY;
->> +			break;
->> +		default:
->> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
->> +		}
->> +
->> +out_trace:
->> +		trace_nfsd_drc_found(nn, rqstp, rtn);
->> +		return rtn;
->> +	}
->> +out:
->>   	nfsd_cacherep_dispose(&dispose);
->>   
->>   	nfsd_stats_rc_misses_inc(nn);
->>   	atomic_inc(&nn->num_drc_entries);
->>   	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
->> -	goto out;
->> -
->> -found_entry:
->> -	/* We found a matching entry which is either in progress or done. */
->> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
->> -	nfsd_stats_rc_hits_inc(nn);
->> -	rtn = RC_DROPIT;
->> -	rp = found;
->> -
->> -	/* Request being processed */
->> -	if (rp->c_state == RC_INPROG)
->> -		goto out_trace;
->> -
->> -	/* From the hall of fame of impractical attacks:
->> -	 * Is this a user who tries to snoop on the cache? */
->> -	rtn = RC_DOIT;
->> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
->> -		goto out_trace;
->> -
->> -	/* Compose RPC reply header */
->> -	switch (rp->c_type) {
->> -	case RC_NOCACHE:
->> -		break;
->> -	case RC_REPLSTAT:
->> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
->> -		rtn = RC_REPLY;
->> -		break;
->> -	case RC_REPLBUFF:
->> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
->> -			goto out_unlock; /* should not happen */
->> -		rtn = RC_REPLY;
->> -		break;
->> -	default:
->> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
->> -	}
->> -
->> -out_trace:
->> -	trace_nfsd_drc_found(nn, rqstp, rtn);
->> -out_unlock:
->> -	spin_unlock(&b->cache_lock);
->> -out:
->>   	return rtn;
->>   }
->>   
->> -- 
->> 2.30.2
->>
->>
+> It took me a while to figure out why we've added a goto here.  In the
+> original code this "goto out;" was a "spin_unlock(&b->cache_lock);".
+> The spin_unlock() is more readable because you can immediately see that
+> it's trying to drop the lock where a "goto out;" is less obvious about
+> the intention.
+
+Does "break;" be better in this place?  Meaning Break this lock guard scope.
+
+But as NeillBrown suggestion[1], this patch will be replaced by several 
+patches.
+
+No matter what, this "goto out;" will be removed in the next v2 patchset.
+
+> I think this patch works fine, but I'm not sure it's an improvement.
+
+Got it, thanks for your suggestions!
+
+[1] 
+https://lore.kernel.org/all/175072435698.2280845.12079422273351211469@noble.neil.brown.name/
+
+regards,
+Su Hui
 
