@@ -1,154 +1,237 @@
-Return-Path: <linux-nfs+bounces-12719-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12720-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F500AE66F3
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 15:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47098AE6853
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 16:23:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36FB21922885
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 13:48:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4F6261C20C7F
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 14:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FAF52C3274;
-	Tue, 24 Jun 2025 13:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D3B28468E;
+	Tue, 24 Jun 2025 14:15:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZauqZgry"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Aw+YOyXD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AqcqrrGo";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qGbJ/diV";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qQVCPeFc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE402C326B;
-	Tue, 24 Jun 2025 13:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA562D1907
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Jun 2025 14:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772867; cv=none; b=e8QlP4U8IdRGTrmky85isKFtn9JqTMEqia9pS2xGYz1BNjXBGvhpEVZRoAZdIoizXYezaQkffgEvDirS1eVTpa7kUTEs8jywRVOZ4M4AQyoYJ4f8Vr9gs7bK134rVx5iO0srwKIsMkaxDhjT3e5oZSZFd1k7qwEuFZ6/61XHkL4=
+	t=1750774544; cv=none; b=m8/W1MdMpkovM8kOIXtL7FWxUxZD823EpFkzwLAFI3B+qY5Ml0CkR0I5jlH9D8t1Qd8GyT4p5VJB4A4bekv6AXdh8u+nd6vp6c6RMDyctRywqezhx/0Yu+tGslFdhjCdXNkHR3+KtQrOLoAFu9+OyfMt5fRhXoeXbyxjXxbghTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772867; c=relaxed/simple;
-	bh=FtwLIqO5woVkdBDQacpEPpHRl/PJ8wMIPZSvRk1rwOU=;
+	s=arc-20240116; t=1750774544; c=relaxed/simple;
+	bh=2Nu9HAWxpF/eyUgE9UWYYNCVDg9Ux1COtHr6h6IMrZo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CYpm5VLkSax0XPv73mO3ChmWFeOfjmofpHqyC7GUKUEapitZvEJJ/9x8rPBZ3RdSim4RCw0OBShP7hL2wIRByYqtWJ9G4JUf4f5c1exU/fBlOtZIH2bantP8V+pzK4EsmI37Cusqz8qjowD0SbIRwyL3X5BEi62Vd9oI2+7gfnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZauqZgry; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8443C4CEEE;
-	Tue, 24 Jun 2025 13:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750772866;
-	bh=FtwLIqO5woVkdBDQacpEPpHRl/PJ8wMIPZSvRk1rwOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZauqZgryz2N6y7vMj+PHLgP3hybIyizU3GhZ7kBikbkazwxPIHGkQWnoEvtjYGOyf
-	 YBqUvzX0n7YkELkR79eGrEYNfLphVrdEwq7/3yfhS1ADvjXSPXdbTW5XipGg0N2ZN/
-	 C65O27vpYzQ+BD0gEZF2o35sSEA4Gh6cnWIMgB72nwXkgLi+CI3peU0M16r8wlA1kb
-	 BIzOs+sVHOAf11H4nIziKGb5AtAu9nYHzfL8PTjGwOdP+2ZVidI6os7LLN+Pfs1qw3
-	 G27Ee5pW/SdBJp+QRNUSR2Kbjmr+ObhExCTlXKQYpCLMuB+cou5lyr2qXt4wdfUl7/
-	 otaHZiXU2H33A==
-Date: Tue, 24 Jun 2025 15:47:42 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=IsHCaHdz2RPA7dkE5w57MfRP6jUWks5O3lA4Lze+u/barXe0XRILi5kPT4pNkMOAKUN/i2LnsR3L0OYcWSVpqJoppLQS9hgSrHN/2UaRF/Iwc0vbPX6rb7eWRWD6uW1wfhJ9/Tjc9jJDPBUoDZqRbblcqeB2zq/+Zpz1AcB6New=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Aw+YOyXD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AqcqrrGo; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qGbJ/diV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qQVCPeFc; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 24D601F455;
+	Tue, 24 Jun 2025 14:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750774539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FyltukVHRK6asImG9DlCa6G1w7yiSL2OH6R7FM1c2V0=;
+	b=Aw+YOyXDO4/r1ttxQJos87UMEzK4pDEdYTVD5W1iHvC3FgM/0sArsdQaT/sDGZkPvuzd0r
+	RBU40jYjQf6T2WvxzKtOMnP3ai0H/5iwyC0mWdslvl1vY76LreLcHV7ZRY0nub4EezYuZ8
+	ZNxApMH/kuy9ON8ecMAQS6nl+JA6pBc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750774539;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FyltukVHRK6asImG9DlCa6G1w7yiSL2OH6R7FM1c2V0=;
+	b=AqcqrrGoxZBZOqodwOdDJvu+maiX4tlfZek+GP5pCCDEXbwWU1akrqnyXdn2x8HmQ9brTD
+	NyTnhYnvDegiavDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="qGbJ/diV";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=qQVCPeFc
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750774538; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FyltukVHRK6asImG9DlCa6G1w7yiSL2OH6R7FM1c2V0=;
+	b=qGbJ/diVcKOt8k7jB61CY5rvO8FG9bDsnRtowdy/PVNdJsvIzhqxkBzy0PGII0y+sjRP+E
+	WFvpNYHUHXHYUGQVwpLm5wOsX6EkjQM2QvpmqxQryUMXvzIbLa5iXkI39g1d9YMrFEA7tY
+	AJB3eWIP81u4PxfLxFBjeWTMKm5u5Hk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750774538;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FyltukVHRK6asImG9DlCa6G1w7yiSL2OH6R7FM1c2V0=;
+	b=qQVCPeFc/BHw9EPnR9Gv5DpGCainpbBes5WDY0NLELUPob7Wt9+s3bUZHeI4HLriihguvV
+	wSSKH9oFTUOodvBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 18A6213A24;
+	Tue, 24 Jun 2025 14:15:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gTv+BQqzWmjqeAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 24 Jun 2025 14:15:38 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 97779A0A03; Tue, 24 Jun 2025 16:15:37 +0200 (CEST)
+Date: Tue, 24 Jun 2025 16:15:37 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
 Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jan Kara <jack@suse.cz>, Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 06/11] uapi/fcntl: mark range as reserved
-Message-ID: <20250624-abwinken-gefragt-32ece86ae381@brauner>
+	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	stable@kernel.org
+Subject: Re: [PATCH v2 00/11] fhandle, pidfs: allow open_by_handle_at()
+ purely based on file handle
+Message-ID: <z4gavwmwinr6me7ufmwk7y6vi7jfwwbv5bksrk4v4saochb3va@zxchg3jqz2x4>
 References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
- <20250624-work-pidfs-fhandle-v2-6-d02a04858fe3@kernel.org>
- <CAOQ4uxjiys1gHWy5eOMzwRqWzNJ-Tb8t+g3F0FFkmhVM3=ju0w@mail.gmail.com>
+ <20250624-teestube-noten-cbe0aa9542e1@brauner>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxjiys1gHWy5eOMzwRqWzNJ-Tb8t+g3F0FFkmhVM3=ju0w@mail.gmail.com>
+In-Reply-To: <20250624-teestube-noten-cbe0aa9542e1@brauner>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,oracle.com,suse.cz,gmail.com,ffwll.ch,vger.kernel.org];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 24D601F455
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
 
-On Tue, Jun 24, 2025 at 12:57:06PM +0200, Amir Goldstein wrote:
-> On Tue, Jun 24, 2025 at 10:29 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > Mark the range from -10000 to -40000 as a range reserved for special
-> > in-kernel values. Move the PIDFD_SELF_*/PIDFD_THREAD_* sentinels over so
-> > all the special values are in one place.
-> >
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > ---
-> >  include/uapi/linux/fcntl.h            | 16 ++++++++++++++++
-> >  include/uapi/linux/pidfd.h            | 15 ---------------
-> >  tools/testing/selftests/pidfd/pidfd.h |  2 +-
-> >  3 files changed, 17 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> > index a15ac2fa4b20..ba4a698d2f33 100644
-> > --- a/include/uapi/linux/fcntl.h
-> > +++ b/include/uapi/linux/fcntl.h
-> > @@ -90,10 +90,26 @@
-> >  #define DN_ATTRIB      0x00000020      /* File changed attibutes */
-> >  #define DN_MULTISHOT   0x80000000      /* Don't remove notifier */
-> >
-> > +/* Reserved kernel ranges [-100], [-10000, -40000]. */
-> >  #define AT_FDCWD               -100    /* Special value for dirfd used to
-> >                                            indicate openat should use the
-> >                                            current working directory. */
-> >
-> > +/*
-> > + * The concept of process and threads in userland and the kernel is a confusing
-> > + * one - within the kernel every thread is a 'task' with its own individual PID,
-> > + * however from userland's point of view threads are grouped by a single PID,
-> > + * which is that of the 'thread group leader', typically the first thread
-> > + * spawned.
-> > + *
-> > + * To cut the Gideon knot, for internal kernel usage, we refer to
-> > + * PIDFD_SELF_THREAD to refer to the current thread (or task from a kernel
-> > + * perspective), and PIDFD_SELF_THREAD_GROUP to refer to the current thread
-> > + * group leader...
-> > + */
-> > +#define PIDFD_SELF_THREAD              -10000 /* Current thread. */
-> > +#define PIDFD_SELF_THREAD_GROUP                -10001 /* Current thread group leader. */
-> > +
-> >
-> >  /* Generic flags for the *at(2) family of syscalls. */
-> >
-> > diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
-> > index c27a4e238e4b..957db425d459 100644
-> > --- a/include/uapi/linux/pidfd.h
-> > +++ b/include/uapi/linux/pidfd.h
-> > @@ -42,21 +42,6 @@
-> >  #define PIDFD_COREDUMP_USER    (1U << 2) /* coredump was done as the user. */
-> >  #define PIDFD_COREDUMP_ROOT    (1U << 3) /* coredump was done as root. */
-> >
-> > -/*
-> > - * The concept of process and threads in userland and the kernel is a confusing
-> > - * one - within the kernel every thread is a 'task' with its own individual PID,
-> > - * however from userland's point of view threads are grouped by a single PID,
-> > - * which is that of the 'thread group leader', typically the first thread
-> > - * spawned.
-> > - *
-> > - * To cut the Gideon knot, for internal kernel usage, we refer to
-> > - * PIDFD_SELF_THREAD to refer to the current thread (or task from a kernel
-> > - * perspective), and PIDFD_SELF_THREAD_GROUP to refer to the current thread
-> > - * group leader...
-> > - */
-> > -#define PIDFD_SELF_THREAD              -10000 /* Current thread. */
-> > -#define PIDFD_SELF_THREAD_GROUP                -20000 /* Current thread group leader. */
-> > -
-> >  /*
-> >   * ...and for userland we make life simpler - PIDFD_SELF refers to the current
-> >   * thread, PIDFD_SELF_PROCESS refers to the process thread group leader.
-> > diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-> > index efd74063126e..5dfeb1bdf399 100644
-> > --- a/tools/testing/selftests/pidfd/pidfd.h
-> > +++ b/tools/testing/selftests/pidfd/pidfd.h
-> > @@ -56,7 +56,7 @@
-> >  #endif
-> >
-> >  #ifndef PIDFD_SELF_THREAD_GROUP
-> > -#define PIDFD_SELF_THREAD_GROUP                -20000 /* Current thread group leader. */
-> > +#define PIDFD_SELF_THREAD_GROUP                -10001 /* Current thread group leader. */
+On Tue 24-06-25 12:59:26, Christian Brauner wrote:
+> > For pidfs this means a file handle can function as full replacement for
+> > storing a pid in a file. Instead a file handle can be stored and
+> > reopened purely based on the file handle.
 > 
-> The commit message claims to move definions between header files,
-> but the value of PIDFD_SELF_THREAD_GROUP was changed.
+> One thing I want to comment on generally. I know we document that a file
+> handle is an opaque thing and userspace shouldn't rely on the layout or
+> format (Propably so that we're free to redefine it.).
 > 
-> What am I missing?
+> Realistically though that's just not what's happening. I've linked Amir
+> to that code already a few times but I'm doing it here for all of you
+> again:
+> 
+> [1]: https://github.com/systemd/systemd/blob/7e1647ae4e33dd8354bd311a7f7f5eb701be2391/src/basic/cgroup-util.c#L62-L77
+> 
+>      Specifically:
+>      
+>      /* The structure to pass to name_to_handle_at() on cgroupfs2 */
+>      typedef union {
+>              struct file_handle file_handle;
+>              uint8_t space[offsetof(struct file_handle, f_handle) + sizeof(uint64_t)];
+>      } cg_file_handle;
+>      
+>      #define CG_FILE_HANDLE_INIT                                     \
+>              (cg_file_handle) {                                      \
+>                      .file_handle.handle_bytes = sizeof(uint64_t),   \
+>                      .file_handle.handle_type = FILEID_KERNFS,       \
+>              }
+>      
+>      #define CG_FILE_HANDLE_CGROUPID(fh) (*CAST_ALIGN_PTR(uint64_t, (fh).file_handle.f_handle))
+>      
+>      cg_file_handle fh = CG_FILE_HANDLE_INIT;
+>      CG_FILE_HANDLE_CGROUPID(fh) = id;
+>      
+>      return RET_NERRNO(open_by_handle_at(cgroupfs_fd, &fh.file_handle, O_DIRECTORY|O_CLOEXEC));
+> 
+> Another example where the layout is assumed to be uapi/uabi is:
+> 
+> [2]: https://github.com/systemd/systemd/blob/7e1647ae4e33dd8354bd311a7f7f5eb701be2391/src/basic/pidfd-util.c#L232-L259
+> 
+>      int pidfd_get_inode_id_impl(int fd, uint64_t *ret) {
+>      <snip>
+>                      union {
+>                              struct file_handle file_handle;
+>                              uint8_t space[offsetof(struct file_handle, f_handle) + sizeof(uint64_t)];
+>                      } fh = {
+>                              .file_handle.handle_bytes = sizeof(uint64_t),
+>                              .file_handle.handle_type = FILEID_KERNFS,
+>                      };
+>                      int mnt_id;
+>      
+>                      r = RET_NERRNO(name_to_handle_at(fd, "", &fh.file_handle, &mnt_id, AT_EMPTY_PATH));
+>                      if (r >= 0) {
+>                              if (ret)
+>                                      *ret = *CAST_ALIGN_PTR(uint64_t, fh.file_handle.f_handle);
+>                              return 0;
+>                      }
 
-I've split that into two patches.
+Thanks for sharing. Sigh... Personal note for the future: If something
+should be opaque blob for userspace, don't forget to encrypt the data
+before handing it over to userspace. :-P
+
+> In (1) you can see that the layout is assumed to be uabi by
+> reconstructing the handle. In (2) you can see that the layout is assumed
+> to be uabi by extrating the inode number.
+> 
+> So both points mean that the "don't rely on it"-ship has already sailed.
+> If we get regressions reports for this (and we surely would) because we
+> changed it we're bound by the no-regression rule.
+
+Yep, FILEID_KERNFS is pretty much set in stone. OTOH I don't expect these
+kinds of hacks to be very widespread (I guess I'm naive ;) so if we really
+need to change it we could talk to systemd folks.
+
+> So, for pidfs I'm very tempted to explicitly give the guarantee that
+> systemd just assumes currently.
+> 
+> The reason is that it will allow userspace to just store the 64-bit
+> pidfs inode number in a file or wherever they want and then reconstruct
+> the file handle without ever having to involve name_to_handle_at(). That
+> means you can just read the pid file and see the inode number you're
+> dealing with and not some binary gunk.
+
+Well, you could just fprintf() the fhandle into the pid file if you don't
+like binary gunk. Those numbers would be telling about as much as the pidfs
+inode number tells you, don't they? I mean I'm still not at the point where
+I would *encourage* userspace to decode what's supposed to be opaque blob
+;). But maybe I'll get used to that idea...
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
