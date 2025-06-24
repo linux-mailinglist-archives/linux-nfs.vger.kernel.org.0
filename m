@@ -1,138 +1,177 @@
-Return-Path: <linux-nfs+bounces-12715-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12716-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8ACEAE6320
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 12:59:35 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5A8AE6611
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 15:20:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D22D16D5DB
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 10:59:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7FB41885BA3
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 13:15:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2775A22FDEA;
-	Tue, 24 Jun 2025 10:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 238AA279DD6;
+	Tue, 24 Jun 2025 13:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AHvAU3tK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqIdX5Zh"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BBC218ABA;
-	Tue, 24 Jun 2025 10:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60589291C2D;
+	Tue, 24 Jun 2025 13:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750762771; cv=none; b=byv50EAGgbAsYmnpG9Frsfw6mXIG9HEEu2dseerRBKGiJ+edKQo7ocsPxbV39yRGKJddFjnFhvOkcZ4eBUh4hun1ZXX44FHwwYyZjQ34UE8zqCkq6sJv9zp6uLz2HMGUuIEyLvnq2neE2Su9Xgdai3YpDexKAGAXZsGA2m6ljcQ=
+	t=1750770935; cv=none; b=BiOJQi3IxHotPx8ug3uHUsQzuuMKVw+fwO2ORA5w7Vv89XbgT4Jl2h5Svvf0rmcUPnSjB1KoDDim91xQ1xBqGrPE5vuXOiZoeS/PDPKaSSe4GXKG2rzI/iqLUHLuEG5/Ai5LZZfkx4cAwwDjk9TusGf6bGAkSOp1n2J+y9wpyWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750762771; c=relaxed/simple;
-	bh=IV3WwRjZHcE8gAqnRRFUKQT4hQrsnjRFFGHpcUVFJSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGwhYWvMsJNCSgpOUplu+AjxJ7o/c+CUugGWyR1eQnuLSurN3ZexTWAimt0bVCXzRJoklkybd/NydivaNWJHKVcbmGoW2l/nIGWbIojA1btPLgj1ocU62qtunUZ1DCXkEauX6cSBqP3u9QoXd+d9ApQ8Joa5gruE4AtBgsmCqfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AHvAU3tK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBE0C4CEE3;
-	Tue, 24 Jun 2025 10:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750762770;
-	bh=IV3WwRjZHcE8gAqnRRFUKQT4hQrsnjRFFGHpcUVFJSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AHvAU3tKJVhbtKuel50dUrV8Pgmki5qT0fqyex6PADV8M/y6Vxg6SD0uKESkvyky+
-	 qyj7KvsG1gU+i3Md1xGf/yHkxF/+NsRfZ3I5X5GbS5L6tI+yrpJfWDnqkKerDxBGZ0
-	 uvywzINuUbrcjDlcStfrLZ6oj0khgpT/Nbqy67dR/jdG0VkGDo7r5WJYgMGbA0JUjv
-	 W8ckqccHMyNxtsf0a0lqvohb+CK2OeqYXe5xu1Xch/IsiTVeguCdsxrNY67CD6SdSw
-	 Ml0pOHTVasB52jPhIYqeE/fOzGQZcYb2/k7/zpJbT7PhM9pcz6LjMuc7a/I8hs4aF9
-	 FcmXIBffQ7Zpw==
-Date: Tue, 24 Jun 2025 12:59:26 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	stable@kernel.org
-Subject: Re: [PATCH v2 00/11] fhandle, pidfs: allow open_by_handle_at()
- purely based on file handle
-Message-ID: <20250624-teestube-noten-cbe0aa9542e1@brauner>
-References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
+	s=arc-20240116; t=1750770935; c=relaxed/simple;
+	bh=QmXz1kqBxLQbuTnyTjfMNaNcwY0rqy4SETheMmIysbA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EQ8GG1QyGMri2nI8hiXoZOYd5c40UL/DP683Zdz28N/1ak+ItQrc9iCbcHluNcAOOx6GEa/SzMFnAVGRufThG0pXgqMEgfazxhndEu6taJFj5liw7jzAqG4gRI73X8bctEbhPpNciPs8cYQZB305FkWTLsilCEhyV9Wh53Nd6gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqIdX5Zh; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso8333093a12.2;
+        Tue, 24 Jun 2025 06:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750770932; x=1751375732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DH8dsCGASd7nILeTlz33BBP9ugs6mVhLgyAvx24g4Kk=;
+        b=HqIdX5ZhXDhz96uwqXX3jQZZb4wFTuCL3szoQpz9d1e3EpbN379p8w4d4Icu43VA4B
+         9YMMscFJmJOp/UfBYcpcPFaM4lFTzbGh+yvGzNY1BB0qM+wm4DvJsveaqNhghZsOkIdZ
+         xPC/6w787F1hpt0as+yyGsVFIMaNuu86Tl5Wye/nfZoV+LVaw2z+X9on9OijhwFVeE/y
+         23DgstQyK90dvGHObdrdpW5DjIX/qQm0WwfpkiaA9gFGrnao2BLMuXqg4uIlTXV/INv5
+         81G3cMcdnV1z5BvlGNVw/QA+pzSg8wr8XqaT1hUuQeZY7bu6VR6YWoEtV1WmSLTGC3/h
+         U3vA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750770932; x=1751375732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DH8dsCGASd7nILeTlz33BBP9ugs6mVhLgyAvx24g4Kk=;
+        b=gLDKLomCb0pnCR7yjsXHbsP6WlijK9L3YYBfdiiBzBJBb4G3t/gpLlb5NaFTsqj/lX
+         JUFQDp62maSK1KwdkNlzDYPckNXSHTMxGkNjAVYTx3mKs3WLqvhhHTBHIKx6yMUH9pEH
+         7Evz6Q6yBTBjcvn9auOYHWNl+B2/TBVEyVTPEoeXO3vr7m8tqMe9kg5eGQROi8BeOXXg
+         dfygCyRT/zODUFBpJgn0fauHZ5mmXLJdZxSaQCIZGNqPj9S5LEo+DbfJ3iPZnX04OdAq
+         NwtmpM/2VZ9cvPQK5Ib4ddNjsLaHUEj9rpXfdE4CGBTvW+6FNvYfJ03WwoCiNQk0Xx22
+         iDcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsR+eLvIv4AIq2Sp/tIUu1vtSBfs3PEiOwsA06b39L/kGset8c07pVL5PlY0Rvd/gTZ82eA539VEe0SmGL@vger.kernel.org, AJvYcCX8OvDQjjKKuOb2wIrcx/42m1xxao2V7SriGtuwm9srJ95TvHCAf6srYrqkK8hu7ZfW+3gVwZwxgIAf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYdFBY5zKoTwhqVP9dJ+L3RvMqCmPw2RJlcSn4Aiu9Hh/w/kBt
+	zMmihoSUmP3urzCFxkbEFnk+mbI1Pe6QV3mWWgOEAIWnjPR0omjNpIU76M9n6gcbBsIPxjTQmN+
+	6mXGDOwfKn8eaAnXjJlx8w7zOt5OMRLc=
+X-Gm-Gg: ASbGncuUhdwnzySxAzYs9JPpBlFBDX6eylEYGMGCVdosN+B1ydDj9LWBdQNObRR9FoJ
+	uJOGc0bkSeUG3p666LqpCEWYeJKdi6XKHn2SKGLTXoyKSzOOf8U9SchDTty3XWlmh8fgQ3ybc75
+	po9SPCThjVEdxUs4WyRMrAVM7O0+Mng7ULtnnsZUT0JqwXIoj5A5L7wQ==
+X-Google-Smtp-Source: AGHT+IFKPPBI3TYcN0DniJVYZicD38NtxcXJLBunx1Cw87035UlVl6xebP+8KIs+VkQ3uBhLCZK+2tExP6APjd18dFw=
+X-Received: by 2002:a17:907:1c95:b0:adb:449c:7621 with SMTP id
+ a640c23a62f3a-ae057c0f672mr1758789066b.29.1750770931203; Tue, 24 Jun 2025
+ 06:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
+References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org> <20250624-work-pidfs-fhandle-v2-8-d02a04858fe3@kernel.org>
+In-Reply-To: <20250624-work-pidfs-fhandle-v2-8-d02a04858fe3@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 24 Jun 2025 15:15:18 +0200
+X-Gm-Features: AX0GCFsXPotbTmSWH8R4qDqidmaN2UR6_YRB3GI9TVlyCLftmgi0Z7VIcCLqqR0
+Message-ID: <CAOQ4uxgA0FTB8jRC21uA6wC_5_VaFZB7O7CdF_EHA+HrBDS2DA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] exportfs: add FILEID_PIDFS
+To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> For pidfs this means a file handle can function as full replacement for
-> storing a pid in a file. Instead a file handle can be stored and
-> reopened purely based on the file handle.
+On Tue, Jun 24, 2025 at 10:29=E2=80=AFAM Christian Brauner <brauner@kernel.=
+org> wrote:
+>
+> Introduce new pidfs file handle values.
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> ---
+>  include/linux/exportfs.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 25c4a5afbd44..5bb757b51f5c 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -131,6 +131,11 @@ enum fid_type {
+>          * Filesystems must not use 0xff file ID.
+>          */
+>         FILEID_INVALID =3D 0xff,
+> +
+> +       /* Internal kernel fid types */
+> +
+> +       /* pidfs fid type */
+> +       FILEID_PIDFS =3D 0x100,
+>  };
+>
 
-One thing I want to comment on generally. I know we document that a file
-handle is an opaque thing and userspace shouldn't rely on the layout or
-format (Propably so that we're free to redefine it.).
+Jan,
 
-Realistically though that's just not what's happening. I've linked Amir
-to that code already a few times but I'm doing it here for all of you
-again:
+I just noticed that we have a fh_type <=3D 0xff assumption
+built into fanotify:
 
-[1]: https://github.com/systemd/systemd/blob/7e1647ae4e33dd8354bd311a7f7f5eb701be2391/src/basic/cgroup-util.c#L62-L77
+/* Fixed size struct for file handle */
+struct fanotify_fh {
+        u8 type;
+        u8 len;
 
-     Specifically:
-     
-     /* The structure to pass to name_to_handle_at() on cgroupfs2 */
-     typedef union {
-             struct file_handle file_handle;
-             uint8_t space[offsetof(struct file_handle, f_handle) + sizeof(uint64_t)];
-     } cg_file_handle;
-     
-     #define CG_FILE_HANDLE_INIT                                     \
-             (cg_file_handle) {                                      \
-                     .file_handle.handle_bytes = sizeof(uint64_t),   \
-                     .file_handle.handle_type = FILEID_KERNFS,       \
-             }
-     
-     #define CG_FILE_HANDLE_CGROUPID(fh) (*CAST_ALIGN_PTR(uint64_t, (fh).file_handle.f_handle))
-     
-     cg_file_handle fh = CG_FILE_HANDLE_INIT;
-     CG_FILE_HANDLE_CGROUPID(fh) = id;
-     
-     return RET_NERRNO(open_by_handle_at(cgroupfs_fd, &fh.file_handle, O_DIRECTORY|O_CLOEXEC));
+and we do not enforce it.
+there is only check of type range 1..0xffff
+in exportfs_encode_inode_fh()
 
-Another example where the layout is assumed to be uapi/uabi is:
+We should probably do either:
 
-[2]: https://github.com/systemd/systemd/blob/7e1647ae4e33dd8354bd311a7f7f5eb701be2391/src/basic/pidfd-util.c#L232-L259
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -454,7 +454,7 @@ static int fanotify_encode_fh(struct fanotify_fh
+*fh, struct inode *inode,
+        dwords =3D fh_len >> 2;
+        type =3D exportfs_encode_fid(inode, buf, &dwords);
+        err =3D -EINVAL;
+-       if (type <=3D 0 || type =3D=3D FILEID_INVALID || fh_len !=3D dwords=
+ << 2)
++       if (type <=3D 0 || type >=3D FILEID_INVALID || fh_len !=3D dwords <=
+< 2)
+                goto out_err;
 
-     int pidfd_get_inode_id_impl(int fd, uint64_t *ret) {
-     <snip>
-                     union {
-                             struct file_handle file_handle;
-                             uint8_t space[offsetof(struct file_handle, f_handle) + sizeof(uint64_t)];
-                     } fh = {
-                             .file_handle.handle_bytes = sizeof(uint64_t),
-                             .file_handle.handle_type = FILEID_KERNFS,
-                     };
-                     int mnt_id;
-     
-                     r = RET_NERRNO(name_to_handle_at(fd, "", &fh.file_handle, &mnt_id, AT_EMPTY_PATH));
-                     if (r >= 0) {
-                             if (ret)
-                                     *ret = *CAST_ALIGN_PTR(uint64_t, fh.file_handle.f_handle);
-                             return 0;
-                     }
-     
-In (1) you can see that the layout is assumed to be uabi by
-reconstructing the handle. In (2) you can see that the layout is assumed
-to be uabi by extrating the inode number.
+        fh->type =3D type;
 
-So both points mean that the "don't rely on it"-ship has already sailed.
-If we get regressions reports for this (and we surely would) because we
-changed it we're bound by the no-regression rule.
+OR
 
-So, for pidfs I'm very tempted to explicitly give the guarantee that
-systemd just assumes currently.
+--- a/fs/notify/fanotify/fanotify.h
++++ b/fs/notify/fanotify/fanotify.h
+@@ -29,11 +29,10 @@ enum {
 
-The reason is that it will allow userspace to just store the 64-bit
-pidfs inode number in a file or wherever they want and then reconstruct
-the file handle without ever having to involve name_to_handle_at(). That
-means you can just read the pid file and see the inode number you're
-dealing with and not some binary gunk.
+ /* Fixed size struct for file handle */
+ struct fanotify_fh {
+-       u8 type;
++       u16 type;
+        u8 len;
+ #define FANOTIFY_FH_FLAG_EXT_BUF 1
+        u8 flags;
+-       u8 pad;
+ } __aligned(4);
+
+
+Christian,
+
+Do you know if pidfs supports (or should support) fanotify with FAN_REPORT_=
+FID?
+If it does not need to be supported we can block it in fanotify_test_fid(),
+but if it does need fanotify support, we need to think about this.
+
+Especially, if we want fanotify to report autonomous file handles.
+In that case, the design that adds the flag in the open_by_handle_at()
+syscall won't do.
+
+Thanks,
+Amir.
 
