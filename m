@@ -1,259 +1,308 @@
-Return-Path: <linux-nfs+bounces-12733-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12734-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25EA0AE6F86
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 21:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F4A3AE7229
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 00:16:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEED11BC7477
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 19:25:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17AB01BC28CA
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 22:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1D02E9729;
-	Tue, 24 Jun 2025 19:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="St7VLBoH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 977F878F2B;
+	Tue, 24 Jun 2025 22:16:02 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B0A2E764E;
-	Tue, 24 Jun 2025 19:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215C5182BC;
+	Tue, 24 Jun 2025 22:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793032; cv=none; b=riNtH7ZsChrVU6c0CtxWMQgbbe00EaxV0RL7i1DUQFbzVOg0i3jN3CCr9if+gpAkMkfo0gUMux+LVtNeLtBhWGbgm/4sb6YayOEURHnDEkOMSfr5/rUIYpcA7Fs+g2bo9riHBmkS8rUmEs0t+04E04K6am05MpqF9oz49sC7RJw=
+	t=1750803362; cv=none; b=Xaf02rR+4AZcnHC32h0hqVgposCW7u29FhzanQtBFHRJNGz3nbp4nZ8YAAMu0KGlBOtKTtCOIUJFPhfdUn/q1LDIo/nwu9goct6C97y5iFdAjJJimlY6POtI8PcgiCFejs0ct844kHtnlSo61X+hBEGKHSQg8DOVA5aoN84IKPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793032; c=relaxed/simple;
-	bh=VYDlKgHstydtk1jLgYkgzj6mfimmcmQa/nkPLi7h9Og=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F9Da2b98AS1NWm96TjiAGNLFGFARB6yVKcWOlSNIcxO4ADVgblQZiYzhxOt/3vRF1D9XNojvLF3RMqy9ojvL5uKyDQpe5L7DQ0TWUEJIrmdnZ87OWCw9EC+5l0k18ELjo8SFo3RHCW6mt24JgFnXglMKqwUmEgpfvTGxlj6K1pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=St7VLBoH; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60768f080d8so10029697a12.1;
-        Tue, 24 Jun 2025 12:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750793028; x=1751397828; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qqFXQP7VVSbT0LVbNzCTmcmfY1yeHEXcsJdpZ2WfzqM=;
-        b=St7VLBoH2Um2o5h0mGptN+NvD1mjvlytkKYEmNEyIilSThO9ySOerrNIFt+pyCFL4h
-         YJC0Y0d6iqvUoqgNVtX8wladMWpv+flMZ9lvjGmDfpCOEEGPRbNn9HZpYHqTRkGtGVKo
-         /k1FrTRd8wHykaQ1QFRLza/PIuKEsJTuXcLeO7+DNI/DS3d/RLnR4Zi2yBYxzE8JsD9o
-         T+e/wYkOwxRMfYZGHVTsn3f6lOAf0f+PLEx90uN6aEy+JhEfNTUpVkX4iYy+mrbFcFzI
-         HOHbLVsLhMFICGiGRWuWV8pyOTy9EhhEsfFajnbTxnTCgm+wqWJHgLPVnemzMCMhd4qR
-         Epzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793028; x=1751397828;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qqFXQP7VVSbT0LVbNzCTmcmfY1yeHEXcsJdpZ2WfzqM=;
-        b=ONLLbUbmvQSGAY6944hVma+b/S/+lQf2tStUa4SBHMS7ZKDlPVjuKgHnZbY2L+Kqq0
-         PUpZ9XYvHbWQnB0ZVE4DhOlzRsGvWHFj1+xZpiqFk6k22gx1Uf0BhY7PuHM0z1WJpV8l
-         Ld6Uvyw/CqIaa+wYwFvK2LOs5f7ngjsa9tTk6vnK0mOsxcOEyuCr5W7GtyciDXtPYBty
-         JF3bppZl4rmWl7zDKTcVoWGhrFvmpXB54GpP6o+jpvkBvT5q4fD2NPsdv+0CMRpX7Mpz
-         L6+EqukqyGUf7lwPBmcmi1G7930LmgBHN7UJAQMgh+rjAPhrjo+0GL/NXkETvBCePyB3
-         9gOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmjMsBH+UZRbxcpMMjlXd5Q/OlZjEBKZ8P4nfBXXrvg8wW+ba3lCDlA2bPr79UpJDEcSEfzZORfZKtvpGi@vger.kernel.org, AJvYcCWjFCBjKF7SeX0fw0W90HFLo9xDGpA8J9PvBUcdKtcmm45oAOtc8J+wqWONHd8A60hGbUfrRoKWazN2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSqDhvFl7+4BYJb8a0PU4v4d53kAG4ej1LOr9JxIywJLOHJSuv
-	HMtNAOPDEYELaSH38pcgYn7bqeldK8KpPnXQyGxCtCGJc6MBA9TRltuIkP1Zhxl1X5b6NgvdiLH
-	W4JW8SwgM2LMyDXg46jLqcpiECcwBxifbjPuEpws=
-X-Gm-Gg: ASbGnct1wJuMUWPAud5JdlyBkS9fLW2O9xeE7jwHLOKCiiaS8MXEmSRcTQrMYIjdGVk
-	YaPCbKn3e2gH2q95N8H9C5ouRWaTZccW1c/nwtN4tBL++Sf6F8T0apSS+fwvnhTnP61EkSAD0Md
-	pdlaESbhTHFABEQK+UJYgDBvZMvE67vRroyoS12GaNOdI=
-X-Google-Smtp-Source: AGHT+IGJvEN6mYEZK8hC6zvzefdyLtrMi6EyHJ5bq+dcks+IYhKn0BAQjnn8A5X7lXRSj4tUA2HU6Rn6Jb0DNfCH2v0=
-X-Received: by 2002:a17:907:1c24:b0:ae0:a7f2:7be9 with SMTP id
- a640c23a62f3a-ae0be9fb7f3mr50303066b.41.1750793027647; Tue, 24 Jun 2025
- 12:23:47 -0700 (PDT)
+	s=arc-20240116; t=1750803362; c=relaxed/simple;
+	bh=razYr1e3o6cY9CMOfpwypwB3zJ252AOYeEy9dtVsivA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=afRgWzfnnhVU6h9cn/0E9ht+e4nAapGudeDqKDpow1p7exPw0xO+bBuLiwAZ8yEs0D8hsbqR15HMCVTYERTIq5WYr4O5bsWW3gJ5kxO6BdeHUJnQ9w0R6FxLkAR8wDoRJyds2Kj5+EtP/CLK3EA2SS6RktUrbcfEcUG0YPRxIe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uUBvk-0043lo-Ug;
+	Tue, 24 Jun 2025 22:15:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
- <20250624-work-pidfs-fhandle-v2-10-d02a04858fe3@kernel.org>
- <ng6fvyydyem4qh3rtkvaeyyxm3suixjoef5nepyhwgc4k26chp@n2tlycbek4vl>
- <CAOQ4uxgB+01GsNh2hAJOqZF4oUaXqqCeiFVEwmm+_h9WhG-KdA@mail.gmail.com>
- <CAOQ4uxjYGipMt4t+ZzYEQgn3EhWh327iEyoKyeoqKKGzwuHRsg@mail.gmail.com>
- <20250624-reinreden-museen-5b07804eaffe@brauner> <CAOQ4uxg_0+Z9vV1ArX2MbpDu=aGDXQSzQmMXR3mPPu5mFB8rTQ@mail.gmail.com>
- <20250624-dankt-ruhekissen-896ff2e32821@brauner>
-In-Reply-To: <20250624-dankt-ruhekissen-896ff2e32821@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 24 Jun 2025 21:23:36 +0200
-X-Gm-Features: AX0GCFv0qRkMajIIM09mCis1LbvS8YsZreGj9IDE5alLpQ8oAOOiEaQfl0RkId0
-Message-ID: <CAOQ4uxjeAw3npz0pV4OgoZbY4weAOtK41HnYr2AWk8TRsGfohw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] fhandle, pidfs: support open_by_handle_at()
- purely based on file handle
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neil@brown.name>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Su Hui" <suhui@nfschina.com>, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+In-reply-to: <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
+References: <>, <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
+Date: Wed, 25 Jun 2025 08:15:51 +1000
+Message-id: <175080335129.2280845.12285110458405652015@noble.neil.brown.name>
 
-On Tue, Jun 24, 2025 at 5:23=E2=80=AFPM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Tue, Jun 24, 2025 at 05:07:59PM +0200, Amir Goldstein wrote:
-> > On Tue, Jun 24, 2025 at 4:51=E2=80=AFPM Christian Brauner <brauner@kern=
-el.org> wrote:
-> > >
-> > > On Tue, Jun 24, 2025 at 04:28:50PM +0200, Amir Goldstein wrote:
-> > > > On Tue, Jun 24, 2025 at 12:53=E2=80=AFPM Amir Goldstein <amir73il@g=
-mail.com> wrote:
-> > > > >
-> > > > > On Tue, Jun 24, 2025 at 11:30=E2=80=AFAM Jan Kara <jack@suse.cz> =
-wrote:
-> > > > > >
-> > > > > > On Tue 24-06-25 10:29:13, Christian Brauner wrote:
-> > > > > > > Various filesystems such as pidfs (and likely drm in the futu=
-re) have a
-> > > > > > > use-case to support opening files purely based on the handle =
-without
-> > > > > > > having to require a file descriptor to another object. That's=
- especially
-> > > > > > > the case for filesystems that don't do any lookup whatsoever =
-and there's
-> > > > > > > zero relationship between the objects. Such filesystems are a=
-lso
-> > > > > > > singletons that stay around for the lifetime of the system me=
-aning that
-> > > > > > > they can be uniquely identified and accessed purely based on =
-the file
-> > > > > > > handle type. Enable that so that userspace doesn't have to al=
-locate an
-> > > > > > > object needlessly especially if they can't do that for whatev=
-er reason.
-> > > > > > >
-> > > > > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > > > > > ---
-> > > > > > >  fs/fhandle.c | 22 ++++++++++++++++++++--
-> > > > > > >  fs/pidfs.c   |  5 ++++-
-> > > > > > >  2 files changed, 24 insertions(+), 3 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> > > > > > > index ab4891925b52..54081e19f594 100644
-> > > > > > > --- a/fs/fhandle.c
-> > > > > > > +++ b/fs/fhandle.c
-> > > > > > > @@ -173,7 +173,7 @@ SYSCALL_DEFINE5(name_to_handle_at, int, d=
-fd, const char __user *, name,
-> > > > > > >       return err;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > -static int get_path_anchor(int fd, struct path *root)
-> > > > > > > +static int get_path_anchor(int fd, struct path *root, int ha=
-ndle_type)
-> > > > > > >  {
-> > > > > > >       if (fd >=3D 0) {
-> > > > > > >               CLASS(fd, f)(fd);
-> > > > > > > @@ -193,6 +193,24 @@ static int get_path_anchor(int fd, struc=
-t path *root)
-> > > > > > >               return 0;
-> > > > > > >       }
-> > > > > > >
-> > > > > > > +     /*
-> > > > > > > +      * Only autonomous handles can be decoded without a fil=
-e
-> > > > > > > +      * descriptor.
-> > > > > > > +      */
-> > > > > > > +     if (!(handle_type & FILEID_IS_AUTONOMOUS))
-> > > > > > > +             return -EOPNOTSUPP;
-> > > > > >
-> > > > > > This somewhat ties to my comment to patch 5 that if someone pas=
-sed invalid
-> > > > > > fd < 0 before, we'd be returning -EBADF and now we'd be returni=
-ng -EINVAL
-> > > > > > or -EOPNOTSUPP based on FILEID_IS_AUTONOMOUS setting. I don't c=
-are that
-> > > > > > much about it so feel free to ignore me but I think the followi=
-ng might be
-> > > > > > more sensible error codes:
-> > > > > >
-> > > > > >         if (!(handle_type & FILEID_IS_AUTONOMOUS)) {
-> > > > > >                 if (fd =3D=3D FD_INVALID)
-> > > > > >                         return -EOPNOTSUPP;
-> > > > > >                 return -EBADF;
-> > > > > >         }
-> > > > > >
-> > > > > >         if (fd !=3D FD_INVALID)
-> > > > > >                 return -EBADF; (or -EINVAL no strong preference=
- here)
-> > > > >
-> > > > > FWIW, I like -EBADF better.
-> > > > > it makes the error more descriptive and keeps the flow simple:
-> > > > >
-> > > > > +       /*
-> > > > > +        * Only autonomous handles can be decoded without a file
-> > > > > +        * descriptor and only when FD_INVALID is provided.
-> > > > > +        */
-> > > > > +       if (fd !=3D FD_INVALID)
-> > > > > +               return -EBADF;
-> > > > > +
-> > > > > +       if (!(handle_type & FILEID_IS_AUTONOMOUS))
-> > > > > +               return -EOPNOTSUPP;
-> > > > >
-> > > >
-> > > > Thinking about it some more, as I am trying to address your concern=
-s
-> > > > about crafting autonomous file handles by systemd, as you already
-> > > > decided to define a range for kernel reserved values for fd, why no=
-t,
-> > > > instead of requiring FD_INVALID for autonomous file handle, that we
-> > > > actually define a kernel fd value that translates to "the root of p=
-idfs":
-> > > >
-> > > > +       /*
-> > > > +        * Autonomous handles can be decoded with a special file
-> > > > +        * descriptor value that describes the filesystem.
-> > > > +        */
-> > > > +       switch (fd) {
-> > > > +       case FD_PIDFS_ROOT:
-> > > > +               pidfs_get_root(root);
-> > > > +               break;
-> > > > +       default:
-> > > > +               return -EBADF;
-> > > > +       }
-> > > > +
-> > > >
-> > > > Then you can toss all my old ideas, including FILEID_IS_AUTONOMOUS,
-> > > > and EXPORT_OP_AUTONOMOUS_HANDLES and you do not even need
-> > > > to define FILEID_PIDFS anymore, just keep exporting FILEID_KERNFS
-> > > > as before (you can also keep the existing systemd code) and when yo=
-u want
-> > > > to open file by handle you just go
-> > > > open_by_handle_at(FD_PIDFS, &handle, 0)
-> > > > and that's it.
-> > > >
-> > > > In the end, my one and only concern with autonomous file handles is=
- that
-> > > > there should be a user opt-in to request them.
-> > > >
-> > > > Sorry for taking the long road to get to this simpler design.
-> > > > WDYT?
-> > >
-> > > And simply place FD_PIDFS_ROOT into the -10000 range?
-> > > Sounds good to me.
-> >
-> > Yes.
-> >
-> > I mean I don't expect there will be a flood of those singleton
-> > filesystems, but generally speaking, a unique fd constant
-> > to describe the root of a singleton filesystem makes sense IMO.
->
-> Agreed. See the appended updated patches. I'm not resending completely.
-> I just dropped other patches.
+On Wed, 25 Jun 2025, Chuck Lever wrote:
+> On 6/23/25 8:19 PM, NeilBrown wrote:
+> > On Mon, 23 Jun 2025, Su Hui wrote:
+> >> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+> >> more clear. Change the order of the code to let all lock code in the
+> >> same scope. No functional changes.
+> >=20
+> > While I agree that this code could usefully be cleaned up and that you
+> > have made some improvements, I think the use of guard() is a nearly
+> > insignificant part of the change.  You could easily do exactly the same
+> > patch without using guard() but having and explicit spin_unlock() before
+> > the new return.  That doesn't mean you shouldn't use guard(), but it
+> > does mean that the comment explaining the change could be more usefully
+> > focused on the "Change the order ..." part, and maybe explain what that
+> > is important.
+> >=20
+> > I actually think there is room for other changes which would make the
+> > code even better:
+> > - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+> >   take the lock when needed, then drop it, then call
+> >   nfsd_cacherep_dispose() - and return the count.
+> > - change nfsd_cache_insert to also skip updating the chain length stats
+> >   when it finds a match - in that case the "entries" isn't a chain
+> >   length. So just  lru_put_end(), return.  Have it return NULL if
+> >   no match was found
+> > - after the found_entry label don't use nfsd_reply_cache_free_locked(),
+> >   just free rp.  It has never been included in any rbtree or list, so it
+> >   doesn't need to be removed.
+> > - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+> >   and call it under rcu_read_lock() - and use RCU to free the cached
+> >   items.=20
+> > - put the chunk of code after the found_entry label into a separate
+> >   function and instead just return RC_REPLY (and maybe rename that
+> >   RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+> >   that function that has the found_entry code.
+> >=20
+> > I think that would make the code a lot easier to follow.  Would you like
+> > to have a go at that - I suspect it would be several patches - or shall
+> > I do it?
+>=20
+> I'm going to counsel some caution.
+>=20
+> nfsd_cache_lookup() is a hot path. Source code readability, though
+> important, is not the priority in this area.
+>=20
+> I'm happy to consider changes to this function, but the bottom line is
+> patches need to be accompanied by data that show that proposed code
+> modifications do not negatively impact performance. (Plus the usual
+> test results that show no impact to correctness).
+>=20
+> That data might include:
+> - flame graphs that show a decrease in CPU utilization
+> - objdump output showing a smaller instruction cache footprint
+>   and/or short instruction path lengths
+> - perf results showing better memory bandwidth
+> - perf results showing better branch prediction
+> - lockstat results showing less contention and/or shorter hold
+>   time on locks held in this path
+>=20
+> Macro benchmark results are also welcome: equal or lower latency for
+> NFSv3 operations, and equal or higher I/O throughput.
+>=20
+> The benefit for the scoped_guard construct is that it might make it more
+> difficult to add code that returns from this function with a lock held.
+> However, so far that hasn't been an issue.
+>=20
+> Thus I'm not sure there's a lot of strong technical justification for
+> modification of this code path. But, you might know of one -- if so,
+> please make sure that appears in the patch descriptions.
+>=20
+> What is more interesting to me is trying out more sophisticated abstract
+> data types for the DRC hashtable. rhashtable is one alternative; so is
+> Maple tree, which is supposed to handle lookups with more memory
+> bandwidth efficiency than walking a linked list.
+>=20
 
-For those can also add:
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+While I generally like rhashtable there is an awkwardness.  It doesn't
+guarantee that an insert will always succeed.  If you get lots of new
+records that hash to the same value, it will start failing insert
+requests until is hash re-hashed the table with a new seed.  This is
+intended to defeat collision attacks.  That means we would need to drop
+requests sometimes.  Maybe that is OK.  The DRC could be the target of
+collision attacks so maybe we really do want to drop requests if
+rhashtable refuses to store them.
 
-But I see that FD_INVALID is still there.
-Are you planning to keep the FD_INVALID patch without any
-users for FD_INVALID?
+I think the other area that could use improvement is pruning old entries.
+I would not include RC_INPROG entries in the lru at all - they are
+always ignored, and will be added when they are switched to RCU_DONE.
+I'd generally like to prune less often in larger batches, but removing
+each of the batch from the rbtree could hold the lock for longer than we
+would like.  I wonder if we could have an 'old' and a 'new' rbtree and
+when the 'old' gets too old or the 'new' get too full, we extract 'old',
+move 'new' to 'old', and outside the spinlock we free all of the moved
+'old'.
 
-Thanks,
-Amir.
+But if we switched to rhashtable, we probably wouldn't need an lru -
+just walk the entire table occasionally - there would be little conflict
+with concurrent lookups.
+
+But as you say, measuring would be useful.  Hopefully the DRC lookup
+would be small contribution to the total request time, so we would need
+to measure just want happens in the code to compare different versions.
+
+NeilBrown
+
+
+> Anyway, have fun, get creative, and let's see what comes up.
+>=20
+>=20
+> >> Signed-off-by: Su Hui <suhui@nfschina.com>
+> >> ---
+> >>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+> >>  1 file changed, 48 insertions(+), 51 deletions(-)
+> >>
+> >> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> >> index ba9d326b3de6..2d92adf3e6b0 100644
+> >> --- a/fs/nfsd/nfscache.c
+> >> +++ b/fs/nfsd/nfscache.c
+> >> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsign=
+ed int start,
+> >> =20
+> >>  	if (type =3D=3D RC_NOCACHE) {
+> >>  		nfsd_stats_rc_nocache_inc(nn);
+> >> -		goto out;
+> >> +		return rtn;
+> >>  	}
+> >> =20
+> >>  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
+> >> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsi=
+gned int start,
+> >>  	 */
+> >>  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
+> >>  	if (!rp)
+> >> -		goto out;
+> >> +		return rtn;
+> >> =20
+> >>  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+> >> -	spin_lock(&b->cache_lock);
+> >> -	found =3D nfsd_cache_insert(b, rp, nn);
+> >> -	if (found !=3D rp)
+> >> -		goto found_entry;
+> >> -	*cacherep =3D rp;
+> >> -	rp->c_state =3D RC_INPROG;
+> >> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> >> -	spin_unlock(&b->cache_lock);
+> >> +	scoped_guard(spinlock, &b->cache_lock) {
+> >> +		found =3D nfsd_cache_insert(b, rp, nn);
+> >> +		if (found =3D=3D rp) {
+> >> +			*cacherep =3D rp;
+> >> +			rp->c_state =3D RC_INPROG;
+> >> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> >> +			goto out;
+> >> +		}
+> >> +		/* We found a matching entry which is either in progress or done. */
+> >> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+> >> +		nfsd_stats_rc_hits_inc(nn);
+> >> +		rtn =3D RC_DROPIT;
+> >> +		rp =3D found;
+> >> +
+> >> +		/* Request being processed */
+> >> +		if (rp->c_state =3D=3D RC_INPROG)
+> >> +			goto out_trace;
+> >> +
+> >> +		/* From the hall of fame of impractical attacks:
+> >> +		 * Is this a user who tries to snoop on the cache?
+> >> +		 */
+> >> +		rtn =3D RC_DOIT;
+> >> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> >> +			goto out_trace;
+> >> =20
+> >> +		/* Compose RPC reply header */
+> >> +		switch (rp->c_type) {
+> >> +		case RC_NOCACHE:
+> >> +			break;
+> >> +		case RC_REPLSTAT:
+> >> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> >> +			rtn =3D RC_REPLY;
+> >> +			break;
+> >> +		case RC_REPLBUFF:
+> >> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> >> +				return rtn; /* should not happen */
+> >> +			rtn =3D RC_REPLY;
+> >> +			break;
+> >> +		default:
+> >> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> >> +		}
+> >> +
+> >> +out_trace:
+> >> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+> >> +		return rtn;
+> >> +	}
+> >> +out:
+> >>  	nfsd_cacherep_dispose(&dispose);
+> >> =20
+> >>  	nfsd_stats_rc_misses_inc(nn);
+> >>  	atomic_inc(&nn->num_drc_entries);
+> >>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+> >> -	goto out;
+> >> -
+> >> -found_entry:
+> >> -	/* We found a matching entry which is either in progress or done. */
+> >> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+> >> -	nfsd_stats_rc_hits_inc(nn);
+> >> -	rtn =3D RC_DROPIT;
+> >> -	rp =3D found;
+> >> -
+> >> -	/* Request being processed */
+> >> -	if (rp->c_state =3D=3D RC_INPROG)
+> >> -		goto out_trace;
+> >> -
+> >> -	/* From the hall of fame of impractical attacks:
+> >> -	 * Is this a user who tries to snoop on the cache? */
+> >> -	rtn =3D RC_DOIT;
+> >> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> >> -		goto out_trace;
+> >> -
+> >> -	/* Compose RPC reply header */
+> >> -	switch (rp->c_type) {
+> >> -	case RC_NOCACHE:
+> >> -		break;
+> >> -	case RC_REPLSTAT:
+> >> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> >> -		rtn =3D RC_REPLY;
+> >> -		break;
+> >> -	case RC_REPLBUFF:
+> >> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> >> -			goto out_unlock; /* should not happen */
+> >> -		rtn =3D RC_REPLY;
+> >> -		break;
+> >> -	default:
+> >> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> >> -	}
+> >> -
+> >> -out_trace:
+> >> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+> >> -out_unlock:
+> >> -	spin_unlock(&b->cache_lock);
+> >> -out:
+> >>  	return rtn;
+> >>  }
+> >> =20
+> >> --=20
+> >> 2.30.2
+> >>
+> >>
+> >=20
+>=20
+>=20
+> --=20
+> Chuck Lever
+>=20
+
 
