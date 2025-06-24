@@ -1,102 +1,102 @@
-Return-Path: <linux-nfs+bounces-12702-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12703-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DACC0AE60A7
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 11:20:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B847DAE60D8
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 11:30:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EF8B1921953
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 09:20:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6ACBA192596A
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 09:31:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3214279DBE;
-	Tue, 24 Jun 2025 09:20:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153001E5B71;
+	Tue, 24 Jun 2025 09:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iBdUgQsq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cXyjYEPt";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iBdUgQsq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cXyjYEPt"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LIQr7DNm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Zmzr0S1n";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LIQr7DNm";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Zmzr0S1n"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF82182BC
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Jun 2025 09:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D44F17A31C
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Jun 2025 09:30:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756810; cv=none; b=XRwMETtEAsJxlUCEkz8lz8ntx5F4Rm+gDAhmesOgerCMpwZCxyNG+zYnzLzD/r3iFDfZ3GrHfT1H6v22yLasobONs2+WJM2rlSMa+nI+3jVTwdkhRGARG0OkNU1LjPFtaj62R/Wj6bMBC1RqRjHhJwzOgDW+oTy/EGProaNGMcA=
+	t=1750757446; cv=none; b=mbRw7T8c03Oz3ofGIoid/LV14rA8IJb2xCSHjZXQFH/bGzDNLYQToDZop7Hd4zYGKRbbPbfSdinXHtD+33X2VNfiP/FjjdVu1ypl3TaieGWSi7e5CicFoR0bQJbe3gi0CiEbIk/vqkAE83rMXQ6seZ/8GGBLH6ED5EOT0KPAb9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756810; c=relaxed/simple;
-	bh=rVDxbozIqTNFmHHNz1JJZ1hfA/ybvXnOS6w8xwJonic=;
+	s=arc-20240116; t=1750757446; c=relaxed/simple;
+	bh=yKPQo10SwWyvjSyY1RLHwL86l/7+hljCKRvHdogDfuo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OsDfaf2OcEAib8LN99Wr+lazPgDRMKeF+1GhkbqIyiMfpV+AitO06e99LW5HKf+9t71+ATvyuZqOg+iBvOZILlAtIuVy7Wl6YhKM8UuChC8erMaIddpmnRw2MJO9VImYdSNv523paYuDG1T9RChcxrj18zae8o2E3tAabwnuKzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iBdUgQsq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cXyjYEPt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iBdUgQsq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cXyjYEPt; arc=none smtp.client-ip=195.135.223.130
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXOTEdUlU1LMbBJH5CZuWtdQ5leX6A7bUV0PiyEDB5+7BlFQVyEUg2YC/6w6LcbODDOgPxyWlkwUWarTMzN0H8mwtm0MX1c70L0+M6sK+IArKGYuhHasxiWRAlgMtobVzV1rPo0xZMIUv6Quqnr2floSVH3mopg+zUIBas4qjw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LIQr7DNm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Zmzr0S1n; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LIQr7DNm; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Zmzr0S1n; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 43E2021186;
-	Tue, 24 Jun 2025 09:20:07 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9869E21188;
+	Tue, 24 Jun 2025 09:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750756807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750757442; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rSzTqK3FatUj/jihYv+xxXyP9yqFPgFLMMfIeoA7huE=;
-	b=iBdUgQsqGJ2Q+UkT1wNtnlxCxqNvmCETvFks2xNfMK44YPTB9fIOa5i9bd1WwT5iqTqPgW
-	klHpu8U+BF2FGgALRo53Po7e2vLIevGldwxuYTwAYsDNss9Y65fwnWglJDiiZUOs8LOw/9
-	mEPEquOfqiR2Md9YHscGmfYlPn+3sag=
+	bh=vsCXbi7GO2SyLNGIrJxZ9U8joz8RZ1gI2cJPHPiAGik=;
+	b=LIQr7DNmS4Jm6nobdp06ugmQ5nEjKE6OoaSM8c99lj6qKNLnyaqijiNcWsdMznIKWNOdB8
+	6i5S9XgnY0q4VuDhi242osnmiKIhSxlTDZybAirZXw8u7FUlI1pBtz+7YIsOLImbbHn2mO
+	hl9fL+cF094sb+Uu4gHOg6gFOq1kz60=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750756807;
+	s=susede2_ed25519; t=1750757442;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rSzTqK3FatUj/jihYv+xxXyP9yqFPgFLMMfIeoA7huE=;
-	b=cXyjYEPt8QzdPgo/B+Pg64I9MTiVHv8EbMNqItNRxiE9+H8k+oRlxhdJnvqp4tjs86S1EH
-	lVnwvsa+P+zK90Dg==
+	bh=vsCXbi7GO2SyLNGIrJxZ9U8joz8RZ1gI2cJPHPiAGik=;
+	b=Zmzr0S1n5TlBFxrZYl3IAVYXFUU38JO6BwmhIcWcQGccZ92pxSrA8ztHFH9Fqy1nkCBf/B
+	h9TGn0e0Qqd9zkDA==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=iBdUgQsq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=cXyjYEPt
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750756807; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1750757442; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rSzTqK3FatUj/jihYv+xxXyP9yqFPgFLMMfIeoA7huE=;
-	b=iBdUgQsqGJ2Q+UkT1wNtnlxCxqNvmCETvFks2xNfMK44YPTB9fIOa5i9bd1WwT5iqTqPgW
-	klHpu8U+BF2FGgALRo53Po7e2vLIevGldwxuYTwAYsDNss9Y65fwnWglJDiiZUOs8LOw/9
-	mEPEquOfqiR2Md9YHscGmfYlPn+3sag=
+	bh=vsCXbi7GO2SyLNGIrJxZ9U8joz8RZ1gI2cJPHPiAGik=;
+	b=LIQr7DNmS4Jm6nobdp06ugmQ5nEjKE6OoaSM8c99lj6qKNLnyaqijiNcWsdMznIKWNOdB8
+	6i5S9XgnY0q4VuDhi242osnmiKIhSxlTDZybAirZXw8u7FUlI1pBtz+7YIsOLImbbHn2mO
+	hl9fL+cF094sb+Uu4gHOg6gFOq1kz60=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750756807;
+	s=susede2_ed25519; t=1750757442;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rSzTqK3FatUj/jihYv+xxXyP9yqFPgFLMMfIeoA7huE=;
-	b=cXyjYEPt8QzdPgo/B+Pg64I9MTiVHv8EbMNqItNRxiE9+H8k+oRlxhdJnvqp4tjs86S1EH
-	lVnwvsa+P+zK90Dg==
+	bh=vsCXbi7GO2SyLNGIrJxZ9U8joz8RZ1gI2cJPHPiAGik=;
+	b=Zmzr0S1n5TlBFxrZYl3IAVYXFUU38JO6BwmhIcWcQGccZ92pxSrA8ztHFH9Fqy1nkCBf/B
+	h9TGn0e0Qqd9zkDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 375F013751;
-	Tue, 24 Jun 2025 09:20:07 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8941013751;
+	Tue, 24 Jun 2025 09:30:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id y9WfDcdtWmjcGgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 24 Jun 2025 09:20:07 +0000
+	id ZYk0IUJwWmjSHgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 24 Jun 2025 09:30:42 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E93BFA0A03; Tue, 24 Jun 2025 11:20:02 +0200 (CEST)
-Date: Tue, 24 Jun 2025 11:20:02 +0200
+	id 41395A0A03; Tue, 24 Jun 2025 11:30:42 +0200 (CEST)
+Date: Tue, 24 Jun 2025 11:30:42 +0200
 From: Jan Kara <jack@suse.cz>
 To: Christian Brauner <brauner@kernel.org>
 Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
 	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
 	Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 09/11] fhandle: add EXPORT_OP_AUTONOMOUS_HANDLES marker
-Message-ID: <2j6ytfedk2bgyuegajumnxtyuqalb7wd52h7jnxtozpvf5fpmz@z4ysz7mhcajq>
+Subject: Re: [PATCH v2 10/11] fhandle, pidfs: support open_by_handle_at()
+ purely based on file handle
+Message-ID: <ng6fvyydyem4qh3rtkvaeyyxm3suixjoef5nepyhwgc4k26chp@n2tlycbek4vl>
 References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
- <20250624-work-pidfs-fhandle-v2-9-d02a04858fe3@kernel.org>
+ <20250624-work-pidfs-fhandle-v2-10-d02a04858fe3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -105,110 +105,149 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624-work-pidfs-fhandle-v2-9-d02a04858fe3@kernel.org>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 43E2021186
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.01 / 50.00];
+In-Reply-To: <20250624-work-pidfs-fhandle-v2-10-d02a04858fe3@kernel.org>
+X-Spamd-Result: default: False [-3.80 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MISSING_XM_UA(0.00)[];
 	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
 	RCVD_COUNT_THREE(0.00)[3];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	FROM_HAS_DN(0.00)[];
 	FREEMAIL_CC(0.00)[kernel.org,oracle.com,suse.cz,gmail.com,ffwll.ch,vger.kernel.org];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
 	FROM_EQ_ENVFROM(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
 X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Tue 24-06-25 10:29:12, Christian Brauner wrote:
-> Allow a filesystem to indicate that it supports encoding autonomous file
-> handles that can be decoded without having to pass a filesystem for the
-> filesystem.
-
-Forgot to mention the above phrase "to pass a filesystem for the
-filesystem" doesn't make sense :) But my reviewed-by holds.
-
-								Honza
-
-> In other words, the file handle uniquely identifies the > filesystem.
+On Tue 24-06-25 10:29:13, Christian Brauner wrote:
+> Various filesystems such as pidfs (and likely drm in the future) have a
+> use-case to support opening files purely based on the handle without
+> having to require a file descriptor to another object. That's especially
+> the case for filesystems that don't do any lookup whatsoever and there's
+> zero relationship between the objects. Such filesystems are also
+> singletons that stay around for the lifetime of the system meaning that
+> they can be uniquely identified and accessed purely based on the file
+> handle type. Enable that so that userspace doesn't have to allocate an
+> object needlessly especially if they can't do that for whatever reason.
 > 
 > Signed-off-by: Christian Brauner <brauner@kernel.org>
 > ---
->  fs/fhandle.c             | 7 ++++++-
->  include/linux/exportfs.h | 4 +++-
->  2 files changed, 9 insertions(+), 2 deletions(-)
+>  fs/fhandle.c | 22 ++++++++++++++++++++--
+>  fs/pidfs.c   |  5 ++++-
+>  2 files changed, 24 insertions(+), 3 deletions(-)
 > 
 > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> index 22edced83e4c..ab4891925b52 100644
+> index ab4891925b52..54081e19f594 100644
 > --- a/fs/fhandle.c
 > +++ b/fs/fhandle.c
-> @@ -23,12 +23,13 @@ static long do_sys_name_to_handle(const struct path *path,
->  	struct file_handle f_handle;
->  	int handle_dwords, handle_bytes;
->  	struct file_handle *handle = NULL;
-> +	const struct export_operations *eops = path->dentry->d_sb->s_export_op;
+> @@ -173,7 +173,7 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
+>  	return err;
+>  }
 >  
->  	/*
->  	 * We need to make sure whether the file system support decoding of
->  	 * the file handle if decodeable file handle was requested.
->  	 */
-> -	if (!exportfs_can_encode_fh(path->dentry->d_sb->s_export_op, fh_flags))
-> +	if (!exportfs_can_encode_fh(eops, fh_flags))
->  		return -EOPNOTSUPP;
->  
->  	/*
-> @@ -90,6 +91,10 @@ static long do_sys_name_to_handle(const struct path *path,
->  			if (d_is_dir(path->dentry))
->  				handle->handle_type |= FILEID_IS_DIR;
->  		}
-> +
-> +		/* Filesystems supports autonomous file handles. */
-> +		if (eops->flags & EXPORT_OP_AUTONOMOUS_HANDLES)
-> +			handle->handle_type |= FILEID_IS_AUTONOMOUS;
->  		retval = 0;
+> -static int get_path_anchor(int fd, struct path *root)
+> +static int get_path_anchor(int fd, struct path *root, int handle_type)
+>  {
+>  	if (fd >= 0) {
+>  		CLASS(fd, f)(fd);
+> @@ -193,6 +193,24 @@ static int get_path_anchor(int fd, struct path *root)
+>  		return 0;
 >  	}
->  	/* copy the mount id */
-> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-> index 5bb757b51f5c..f7f9038b285e 100644
-> --- a/include/linux/exportfs.h
-> +++ b/include/linux/exportfs.h
-> @@ -188,7 +188,8 @@ struct handle_to_path_ctx {
->  /* Flags supported in encoded handle_type that is exported to user */
->  #define FILEID_IS_CONNECTABLE	0x10000
->  #define FILEID_IS_DIR		0x20000
-> -#define FILEID_VALID_USER_FLAGS	(FILEID_IS_CONNECTABLE | FILEID_IS_DIR)
-> +#define FILEID_IS_AUTONOMOUS	0x40000
-> +#define FILEID_VALID_USER_FLAGS	(FILEID_IS_CONNECTABLE | FILEID_IS_DIR | FILEID_IS_AUTONOMOUS)
 >  
->  /**
->   * struct export_operations - for nfsd to communicate with file systems
-> @@ -285,6 +286,7 @@ struct export_operations {
->  						*/
->  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close */
->  #define EXPORT_OP_NOLOCKS		(0x40) /* no file locking support */
-> +#define EXPORT_OP_AUTONOMOUS_HANDLES	(0x80) /* filesystem supports autonomous file handles */
->  	unsigned long	flags;
+> +	/*
+> +	 * Only autonomous handles can be decoded without a file
+> +	 * descriptor.
+> +	 */
+> +	if (!(handle_type & FILEID_IS_AUTONOMOUS))
+> +		return -EOPNOTSUPP;
+
+This somewhat ties to my comment to patch 5 that if someone passed invalid
+fd < 0 before, we'd be returning -EBADF and now we'd be returning -EINVAL
+or -EOPNOTSUPP based on FILEID_IS_AUTONOMOUS setting. I don't care that
+much about it so feel free to ignore me but I think the following might be
+more sensible error codes:
+
+	if (!(handle_type & FILEID_IS_AUTONOMOUS)) {
+		if (fd == FD_INVALID)
+			return -EOPNOTSUPP;
+		return -EBADF;
+	}
+
+	if (fd != FD_INVALID)
+		return -EBADF; (or -EINVAL no strong preference here)
+
+Since I don't care that much feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> +
+> +	if (fd != FD_INVALID)
+> +		return -EINVAL;
+> +
+> +	switch (handle_type & ~FILEID_USER_FLAGS_MASK) {
+> +	case FILEID_PIDFS:
+> +		pidfs_get_root(root);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -347,7 +365,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
+>  	    FILEID_USER_FLAGS(f_handle.handle_type) & ~FILEID_VALID_USER_FLAGS)
+>  		return -EINVAL;
+>  
+> -	retval = get_path_anchor(mountdirfd, &ctx.root);
+> +	retval = get_path_anchor(mountdirfd, &ctx.root, f_handle.handle_type);
+>  	if (retval)
+>  		return retval;
+>  
+> diff --git a/fs/pidfs.c b/fs/pidfs.c
+> index 69b0541042b5..2ab9b47fbfae 100644
+> --- a/fs/pidfs.c
+> +++ b/fs/pidfs.c
+> @@ -747,7 +747,7 @@ static int pidfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+>  
+>  	*max_len = 2;
+>  	*(u64 *)fh = pid->ino;
+> -	return FILEID_KERNFS;
+> +	return FILEID_PIDFS;
+>  }
+>  
+>  static int pidfs_ino_find(const void *key, const struct rb_node *node)
+> @@ -802,6 +802,8 @@ static struct dentry *pidfs_fh_to_dentry(struct super_block *sb,
+>  		return NULL;
+>  
+>  	switch (fh_type) {
+> +	case FILEID_PIDFS:
+> +		fallthrough;
+>  	case FILEID_KERNFS:
+>  		pid_ino = *(u64 *)fid;
+>  		break;
+> @@ -860,6 +862,7 @@ static const struct export_operations pidfs_export_operations = {
+>  	.fh_to_dentry	= pidfs_fh_to_dentry,
+>  	.open		= pidfs_export_open,
+>  	.permission	= pidfs_export_permission,
+> +	.flags		= EXPORT_OP_AUTONOMOUS_HANDLES,
 >  };
 >  
+>  static int pidfs_init_inode(struct inode *inode, void *data)
 > 
 > -- 
 > 2.47.2
