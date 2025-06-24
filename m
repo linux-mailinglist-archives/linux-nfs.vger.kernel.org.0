@@ -1,39 +1,39 @@
-Return-Path: <linux-nfs+bounces-12734-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12735-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F4A3AE7229
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 00:16:07 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 173F7AE724F
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 00:32:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17AB01BC28CA
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 22:16:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88B7C1BC592A
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 22:33:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 977F878F2B;
-	Tue, 24 Jun 2025 22:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48B6F86348;
+	Tue, 24 Jun 2025 22:32:42 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215C5182BC;
-	Tue, 24 Jun 2025 22:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC13074AE
+	for <linux-nfs@vger.kernel.org>; Tue, 24 Jun 2025 22:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750803362; cv=none; b=Xaf02rR+4AZcnHC32h0hqVgposCW7u29FhzanQtBFHRJNGz3nbp4nZ8YAAMu0KGlBOtKTtCOIUJFPhfdUn/q1LDIo/nwu9goct6C97y5iFdAjJJimlY6POtI8PcgiCFejs0ct844kHtnlSo61X+hBEGKHSQg8DOVA5aoN84IKPo=
+	t=1750804362; cv=none; b=IqEOoMNe0jKYrQsYq8Rfou5MXUyPCwHX/Zu7dIOMPwVKeJKp6ybAVTqxY337+8BjGNLJnbCjocXHgTUxkTsejjv7DdKDTEw1rLZzEWu/4hc0hTSM+d1tdNwlurWHOimswqzIDfBKipW3LGDxSXxOoeaqwwLsd/QplH0MEDrnx/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750803362; c=relaxed/simple;
-	bh=razYr1e3o6cY9CMOfpwypwB3zJ252AOYeEy9dtVsivA=;
+	s=arc-20240116; t=1750804362; c=relaxed/simple;
+	bh=6LvPt9NUXHiymOXfofKkFcVDZyJHmSJLr/os2dVrKCc=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=afRgWzfnnhVU6h9cn/0E9ht+e4nAapGudeDqKDpow1p7exPw0xO+bBuLiwAZ8yEs0D8hsbqR15HMCVTYERTIq5WYr4O5bsWW3gJ5kxO6BdeHUJnQ9w0R6FxLkAR8wDoRJyds2Kj5+EtP/CLK3EA2SS6RktUrbcfEcUG0YPRxIe4=
+	 References:Date:Message-id; b=dgCa92+e9om7BdlLffCv2CeWuif2dZ62QkUC1b9rJmYWQeH6zcseDcG03rhG2SltU7Q53BzVyPbzrFQ3MiN/3z1S1joa3mpqoPvsJA9kHjCd1msx3BzN8WbG3C4Byl8Ctn7BH92ffyEdNz9VuAIMmM1CuW6Unj1pJVx+pgXyazM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1uUBvk-0043lo-Ug;
-	Tue, 24 Jun 2025 22:15:52 +0000
+	id 1uUCBs-0044UL-Ge;
+	Tue, 24 Jun 2025 22:32:32 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -43,266 +43,387 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neil@brown.name>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Su Hui" <suhui@nfschina.com>, jlayton@kernel.org, okorniev@redhat.com,
- Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
-In-reply-to: <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
-References: <>, <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
-Date: Wed, 25 Jun 2025 08:15:51 +1000
-Message-id: <175080335129.2280845.12285110458405652015@noble.neil.brown.name>
+To: "Li Lingfeng" <lilingfeng3@huawei.com>
+Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "yangerkun" <yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>,
+ "Hou Tao" <houtao1@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>,
+ libaokun1@huawei.com
+Subject: Re: [PATCH 1/4] nfsd: provide proper locking for all write_ function
+In-reply-to: <87302f1a-8313-4dd7-919e-849291efece2@huawei.com>
+References: <>, <87302f1a-8313-4dd7-919e-849291efece2@huawei.com>
+Date: Wed, 25 Jun 2025 08:32:30 +1000
+Message-id: <175080435083.2280845.11970672042950538750@noble.neil.brown.name>
 
-On Wed, 25 Jun 2025, Chuck Lever wrote:
-> On 6/23/25 8:19 PM, NeilBrown wrote:
-> > On Mon, 23 Jun 2025, Su Hui wrote:
-> >> Using guard() to replace *unlock* label. guard() makes lock/unlock code
-> >> more clear. Change the order of the code to let all lock code in the
-> >> same scope. No functional changes.
-> >=20
-> > While I agree that this code could usefully be cleaned up and that you
-> > have made some improvements, I think the use of guard() is a nearly
-> > insignificant part of the change.  You could easily do exactly the same
-> > patch without using guard() but having and explicit spin_unlock() before
-> > the new return.  That doesn't mean you shouldn't use guard(), but it
-> > does mean that the comment explaining the change could be more usefully
-> > focused on the "Change the order ..." part, and maybe explain what that
-> > is important.
-> >=20
-> > I actually think there is room for other changes which would make the
-> > code even better:
-> > - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
-> >   take the lock when needed, then drop it, then call
-> >   nfsd_cacherep_dispose() - and return the count.
-> > - change nfsd_cache_insert to also skip updating the chain length stats
-> >   when it finds a match - in that case the "entries" isn't a chain
-> >   length. So just  lru_put_end(), return.  Have it return NULL if
-> >   no match was found
-> > - after the found_entry label don't use nfsd_reply_cache_free_locked(),
-> >   just free rp.  It has never been included in any rbtree or list, so it
-> >   doesn't need to be removed.
-> > - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
-> >   and call it under rcu_read_lock() - and use RCU to free the cached
-> >   items.=20
-> > - put the chunk of code after the found_entry label into a separate
-> >   function and instead just return RC_REPLY (and maybe rename that
-> >   RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
-> >   that function that has the found_entry code.
-> >=20
-> > I think that would make the code a lot easier to follow.  Would you like
-> > to have a go at that - I suspect it would be several patches - or shall
-> > I do it?
+On Tue, 24 Jun 2025, Li Lingfeng wrote:
+> Hi,
 >=20
-> I'm going to counsel some caution.
->=20
-> nfsd_cache_lookup() is a hot path. Source code readability, though
-> important, is not the priority in this area.
->=20
-> I'm happy to consider changes to this function, but the bottom line is
-> patches need to be accompanied by data that show that proposed code
-> modifications do not negatively impact performance. (Plus the usual
-> test results that show no impact to correctness).
->=20
-> That data might include:
-> - flame graphs that show a decrease in CPU utilization
-> - objdump output showing a smaller instruction cache footprint
->   and/or short instruction path lengths
-> - perf results showing better memory bandwidth
-> - perf results showing better branch prediction
-> - lockstat results showing less contention and/or shorter hold
->   time on locks held in this path
->=20
-> Macro benchmark results are also welcome: equal or lower latency for
-> NFSv3 operations, and equal or higher I/O throughput.
->=20
-> The benefit for the scoped_guard construct is that it might make it more
-> difficult to add code that returns from this function with a lock held.
-> However, so far that hasn't been an issue.
->=20
-> Thus I'm not sure there's a lot of strong technical justification for
-> modification of this code path. But, you might know of one -- if so,
-> please make sure that appears in the patch descriptions.
->=20
-> What is more interesting to me is trying out more sophisticated abstract
-> data types for the DRC hashtable. rhashtable is one alternative; so is
-> Maple tree, which is supposed to handle lookups with more memory
-> bandwidth efficiency than walking a linked list.
->=20
+> During my validation of this fix patch, I encountered a deadlock issue
+> that wasn't present during last Saturday's verification.
+> Process 2761 holds the nfsd_mutex while sending an upcall request,
+> triggering process 2776.
+> This process must complete writing to end_grace before responding to the
+> upcall, but it gets blocked while attempting to acquire the nfsd_mutex,
+> causing a deadlock.
 
-While I generally like rhashtable there is an awkwardness.  It doesn't
-guarantee that an insert will always succeed.  If you get lots of new
-records that hash to the same value, it will start failing insert
-requests until is hash re-hashed the table with a new seed.  This is
-intended to defeat collision attacks.  That means we would need to drop
-requests sometimes.  Maybe that is OK.  The DRC could be the target of
-collision attacks so maybe we really do want to drop requests if
-rhashtable refuses to store them.
+This is harder to resolve than I hoped.  I think the possibility of the
+same deadlock is already present.
 
-I think the other area that could use improvement is pruning old entries.
-I would not include RC_INPROG entries in the lru at all - they are
-always ignored, and will be added when they are switched to RCU_DONE.
-I'd generally like to prune less often in larger batches, but removing
-each of the batch from the rbtree could hold the lock for longer than we
-would like.  I wonder if we could have an 'old' and a 'new' rbtree and
-when the 'old' gets too old or the 'new' get too full, we extract 'old',
-move 'new' to 'old', and outside the spinlock we free all of the moved
-'old'.
+If nfs4_laundromat() calls nfsd4_end_grace() and gets to
+nfsd4_record_grace_done() just as user-space set the number of threads
+to zero so that nfsd is stopped, that code will take nfsd_mutex and call
+nfs4_state_shutdown_net(), which will call
+   cancel_delayed_work_sync(&nn->laundromat_work);
+which will wait for nfsd4_record_grace_done() while holding nfsd_mutex.
+If grace_done waits for an upcall and nfsdcltrack end up blocking on
+nfsd_mutex as I think your traces show, then we get the same deadlock.
 
-But if we switched to rhashtable, we probably wouldn't need an lru -
-just walk the entire table occasionally - there would be little conflict
-with concurrent lookups.
+I can think of two approaches to resolving this.
+1/ change the upcall wait to abort when nfsd enters shutdown.
+2/ cause the /proc/fs/nfsd/ files to fail without taking nfsd_mutex
+   if shutdown is happening.
 
-But as you say, measuring would be useful.  Hopefully the DRC lookup
-would be small contribution to the total request time, so we would need
-to measure just want happens in the code to compare different versions.
+It might be easiest to use a timeout in the upcall wait and abort one
+shutdown is noticed.  So there could be a delay (1 second?) but not a
+full deadlock.
+
+I'll explore some more.
 
 NeilBrown
 
 
-> Anyway, have fun, get creative, and let's see what comes up.
+
+> I revalidated the previous solution and found the same issue.
+> I'm unsure what changed between validations.
+> Additionally, why was the locking mechanism changed from guard(mutex) in
+> the previous version to explicit mutex_lock/mutex_unlock in this version?
+>=20
+> Thanks.
+>=20
+> Base:
+> commit 86731a2a651e58953fc949573895f2fa6d456841 (tag: v6.16-rc3,=20
+> origin/master, origin/HEAD)
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:=C2=A0 =C2=A0Sun Jun 22 13:30:08 2025 -0700
+>=20
+>  =C2=A0 =C2=A0 Linux 6.16-rc3
+>=20
+> Diff:
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index 82785db730d9..0c6f0fbecc02 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -1008,7 +1008,8 @@ __nfsd4_init_cld_pipe(struct net *net)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (nn->cld_net)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
+>=20
+> -=C2=A0 =C2=A0 =C2=A0 =C2=A0cn =3D kzalloc(sizeof(*cn), GFP_KERNEL);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0cn =3D NULL;//kzalloc(sizeof(*cn), GFP_KERNEL);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s force err inject\n", __func__);
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!cn) {
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D -ENOMEM;
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err;
+> @@ -1478,6 +1479,7 @@ nfs4_cld_state_init(struct net *net)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 nn->reclaim_str_hashtbl =3D kmalloc_array(CLIE=
+NT_HASH_SIZE,
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 sizeof(struct list_head),
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 GFP_KERNEL);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s get nn->reclaim_str_hashtbl %px\n", =
+__func__,=20
+> nn->reclaim_str_hashtbl);
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!nn->reclaim_str_hashtbl)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;
+>=20
+> @@ -1496,7 +1498,12 @@ nfs4_cld_state_shutdown(struct net *net)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct nfsd_net *nn =3D net_generic(net, nfsd_=
+net_id);
+>=20
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 nn->track_reclaim_completes =3D false;
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s free nn->reclaim_str_hashtbl %px\n",=
+ __func__,=20
+> nn->reclaim_str_hashtbl);
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 kfree(nn->reclaim_str_hashtbl);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s free nn->reclaim_str_hashtbl %px don=
+e\n", __func__,=20
+> nn->reclaim_str_hashtbl);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s sleep after free...\n", __func__);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0msleep(10 * 1000);
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s sleep done\n", __func__);
+>  =C2=A0}
+>=20
+>  =C2=A0static bool
 >=20
 >=20
-> >> Signed-off-by: Su Hui <suhui@nfschina.com>
-> >> ---
-> >>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
-> >>  1 file changed, 48 insertions(+), 51 deletions(-)
-> >>
-> >> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> >> index ba9d326b3de6..2d92adf3e6b0 100644
-> >> --- a/fs/nfsd/nfscache.c
-> >> +++ b/fs/nfsd/nfscache.c
-> >> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsign=
-ed int start,
-> >> =20
-> >>  	if (type =3D=3D RC_NOCACHE) {
-> >>  		nfsd_stats_rc_nocache_inc(nn);
-> >> -		goto out;
-> >> +		return rtn;
-> >>  	}
-> >> =20
-> >>  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
-> >> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsi=
-gned int start,
-> >>  	 */
-> >>  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
-> >>  	if (!rp)
-> >> -		goto out;
-> >> +		return rtn;
-> >> =20
-> >>  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
-> >> -	spin_lock(&b->cache_lock);
-> >> -	found =3D nfsd_cache_insert(b, rp, nn);
-> >> -	if (found !=3D rp)
-> >> -		goto found_entry;
-> >> -	*cacherep =3D rp;
-> >> -	rp->c_state =3D RC_INPROG;
-> >> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
-> >> -	spin_unlock(&b->cache_lock);
-> >> +	scoped_guard(spinlock, &b->cache_lock) {
-> >> +		found =3D nfsd_cache_insert(b, rp, nn);
-> >> +		if (found =3D=3D rp) {
-> >> +			*cacherep =3D rp;
-> >> +			rp->c_state =3D RC_INPROG;
-> >> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
-> >> +			goto out;
-> >> +		}
-> >> +		/* We found a matching entry which is either in progress or done. */
-> >> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
-> >> +		nfsd_stats_rc_hits_inc(nn);
-> >> +		rtn =3D RC_DROPIT;
-> >> +		rp =3D found;
-> >> +
-> >> +		/* Request being processed */
-> >> +		if (rp->c_state =3D=3D RC_INPROG)
-> >> +			goto out_trace;
-> >> +
-> >> +		/* From the hall of fame of impractical attacks:
-> >> +		 * Is this a user who tries to snoop on the cache?
-> >> +		 */
-> >> +		rtn =3D RC_DOIT;
-> >> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
-> >> +			goto out_trace;
-> >> =20
-> >> +		/* Compose RPC reply header */
-> >> +		switch (rp->c_type) {
-> >> +		case RC_NOCACHE:
-> >> +			break;
-> >> +		case RC_REPLSTAT:
-> >> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
-> >> +			rtn =3D RC_REPLY;
-> >> +			break;
-> >> +		case RC_REPLBUFF:
-> >> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
-> >> +				return rtn; /* should not happen */
-> >> +			rtn =3D RC_REPLY;
-> >> +			break;
-> >> +		default:
-> >> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
-> >> +		}
-> >> +
-> >> +out_trace:
-> >> +		trace_nfsd_drc_found(nn, rqstp, rtn);
-> >> +		return rtn;
-> >> +	}
-> >> +out:
-> >>  	nfsd_cacherep_dispose(&dispose);
-> >> =20
-> >>  	nfsd_stats_rc_misses_inc(nn);
-> >>  	atomic_inc(&nn->num_drc_entries);
-> >>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
-> >> -	goto out;
-> >> -
-> >> -found_entry:
-> >> -	/* We found a matching entry which is either in progress or done. */
-> >> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
-> >> -	nfsd_stats_rc_hits_inc(nn);
-> >> -	rtn =3D RC_DROPIT;
-> >> -	rp =3D found;
-> >> -
-> >> -	/* Request being processed */
-> >> -	if (rp->c_state =3D=3D RC_INPROG)
-> >> -		goto out_trace;
-> >> -
-> >> -	/* From the hall of fame of impractical attacks:
-> >> -	 * Is this a user who tries to snoop on the cache? */
-> >> -	rtn =3D RC_DOIT;
-> >> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
-> >> -		goto out_trace;
-> >> -
-> >> -	/* Compose RPC reply header */
-> >> -	switch (rp->c_type) {
-> >> -	case RC_NOCACHE:
-> >> -		break;
-> >> -	case RC_REPLSTAT:
-> >> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
-> >> -		rtn =3D RC_REPLY;
-> >> -		break;
-> >> -	case RC_REPLBUFF:
-> >> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
-> >> -			goto out_unlock; /* should not happen */
-> >> -		rtn =3D RC_REPLY;
-> >> -		break;
-> >> -	default:
-> >> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
-> >> -	}
-> >> -
-> >> -out_trace:
-> >> -	trace_nfsd_drc_found(nn, rqstp, rtn);
-> >> -out_unlock:
-> >> -	spin_unlock(&b->cache_lock);
-> >> -out:
-> >>  	return rtn;
-> >>  }
-> >> =20
-> >> --=20
-> >> 2.30.2
-> >>
-> >>
-> >=20
+> CLIENT A:
+> [root@nfs_test3 ~]# mount /dev/sdb /mnt/sdb
+> [root@nfs_test3 ~]# echo "/mnt *(rw,no_root_squash,fsid=3D0)" > /etc/exports
+> [root@nfs_test3 ~]# echo "/mnt/sdb *(rw,no_root_squash,fsid=3D1)" >>=20
+> /etc/exports
+> [root@nfs_test3 ~]# systemctl restart nfs-server
+> [=C2=A0 229.107168][ T2761] nfs4_cld_state_init get nn->reclaim_str_hashtbl=
+=20
+> ffff88810e20ba00
+> [=C2=A0 229.108175][ T2761] __nfsd4_init_cld_pipe force err inject
+> [=C2=A0 229.108819][ T2761] NFSD: unable to create nfsdcld upcall pipe (-12)
+> [=C2=A0 229.109568][ T2761] nfs4_cld_state_shutdown free=20
+> nn->reclaim_str_hashtbl ffff88810e20ba00
+> [=C2=A0 229.110601][ T2761] nfs4_cld_state_shutdown free=20
+> nn->reclaim_str_hashtbl ffff88810e20ba00 done
+> [=C2=A0 229.111599][ T2761] nfs4_cld_state_shutdown sleep after free...
+> [=C2=A0 239.282399][ T2761] nfs4_cld_state_shutdown sleep done
+> [=C2=A0 239.283083][ T2761] __nfsd4_init_cld_pipe force err inject
+> [=C2=A0 239.283734][ T2761] NFSD: unable to create nfsdcld upcall pipe (-12)
+> [=C2=A0 453.554502][=C2=A0 T101] INFO: task bash:2644 blocked for more than=
+ 147=20
+> seconds.
+> [=C2=A0 453.555494][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
+> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
+> [=C2=A0 453.556408][=C2=A0 T101] "echo 0 >=20
+> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [=C2=A0 453.558022][=C2=A0 T101] INFO: task bash:2644 is blocked on a mutex=
+ likely=20
+> owned by task rpc.nfsd:2761.
+> [=C2=A0 453.559949][=C2=A0 T101] INFO: task rpc.nfsd:2761 blocked for more =
+than=20
+> 147 seconds.
+> [=C2=A0 453.560868][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
+> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
+> [=C2=A0 453.561770][=C2=A0 T101] "echo 0 >=20
+> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [=C2=A0 453.563573][=C2=A0 T101] INFO: task nfsdcltrack:2776 blocked for mo=
+re than=20
+> 147 seconds.
+> [=C2=A0 453.564516][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
+> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
+> [=C2=A0 453.565431][=C2=A0 T101] "echo 0 >=20
+> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [=C2=A0 453.566945][=C2=A0 T101] INFO: task nfsdcltrack:2776 is blocked on =
+a mutex=20
+> likely owned by task rpc.nfsd:2761.
+> [=C2=A0 453.568860][=C2=A0 T101]
+> [=C2=A0 453.568860][=C2=A0 T101] Showing all locks held in the system:
+> [=C2=A0 453.569816][=C2=A0 T101] 1 lock held by khungtaskd/101:
+> [=C2=A0 453.570469][=C2=A0 T101]=C2=A0 #0: ffffffffa6f66120=20
+> (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30
+> [=C2=A0 453.571753][=C2=A0 T101] 2 locks held by kworker/u64:4/149:
+> [=C2=A0 453.572402][=C2=A0 T101]=C2=A0 #0: ffff8881001a5948=20
+> ((wq_completion)events_unbound){+.+.}-{0:0}, at:=20
+> process_one_work+0x72b/0x8a0
+> [=C2=A0 453.573758][=C2=A0 T101]=C2=A0 #1: ffffc90000bcfd60=20
+> ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at:=20
+> process_one_work+0x72b/0x8a0
+> [=C2=A0 453.575172][=C2=A0 T101] 2 locks held by bash/2644:
+> [=C2=A0 453.575742][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
+> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
+> [=C2=A0 453.576856][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
++.}-{4:4},=20
+> at: write_v4_end_grace+0x94/0x160
+> [=C2=A0 453.578005][=C2=A0 T101] 2 locks held by rpc.nfsd/2761:
+> [=C2=A0 453.578644][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
+> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
+> [=C2=A0 453.579750][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
++.}-{4:4},=20
+> at: write_threads+0x14e/0x210
+> [=C2=A0 453.580871][=C2=A0 T101] 2 locks held by nfsdcltrack/2776:
+> [=C2=A0 453.581511][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
+> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
+> [=C2=A0 453.582644][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
++.}-{4:4},=20
+> at: write_v4_end_grace+0x94/0x160
+> [=C2=A0 453.583793][=C2=A0 T101]
+> [=C2=A0 453.584085][=C2=A0 T101] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> [=C2=A0 453.584085][=C2=A0 T101]
+>=20
+> CLIENT B:
+> write /proc/fs/nfsd/v4_end_grace between "nfs4_cld_state_shutdown sleep=20
+> after free..." and "nfs4_cld_state_shutdown sleep done"
+> [root@nfs_test3 ~]# echo 1 > /proc/fs/nfsd/v4_end_grace
+>=20
+> Processes:
+> [root@nfs_test3 ~]# ps aux | grep D
+> USER=C2=A0 =C2=A0 =C2=A0 =C2=A0PID %CPU %MEM=C2=A0 =C2=A0 VSZ=C2=A0 =C2=A0R=
+SS TTY=C2=A0 =C2=A0 =C2=A0 STAT START=C2=A0 =C2=A0TIME COMMAND
+> root=C2=A0 =C2=A0 =C2=A0 =C2=A0378=C2=A0 0.1=C2=A0 0.0=C2=A0 97948=C2=A0 70=
+08 ?=C2=A0 =C2=A0 =C2=A0 =C2=A0 Ss=C2=A0 =C2=A010:04=C2=A0 =C2=A00:00=20
+> /usr/sbin/sshd -D
+> root=C2=A0 =C2=A0 =C2=A0 2644=C2=A0 1.3=C2=A0 0.0 127676=C2=A0 8656 pts/0=
+=C2=A0 =C2=A0 Ds+=C2=A0 10:06=C2=A0 =C2=A00:00 -bash
+> root=C2=A0 =C2=A0 =C2=A0 2745=C2=A0 0.5=C2=A0 0.0 270324=C2=A0 3356 ?=C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 Ssl=C2=A0 10:06=C2=A0 =C2=A00:00=20
+> /usr/sbin/gssproxy -D
+> root=C2=A0 =C2=A0 =C2=A0 2761=C2=A0 0.9=C2=A0 0.0=C2=A0 33740=C2=A0 2808 ?=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Ds=C2=A0 =C2=A010:06=C2=A0 =C2=A00:00=20
+> /usr/sbin/rpc.nfsd -V 2 8
+> root=C2=A0 =C2=A0 =C2=A0 2776=C2=A0 0.0=C2=A0 0.0=C2=A0 19272=C2=A0 3076 ?=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 D=C2=A0 =C2=A0 10:06=C2=A0 =C2=A00:00=20
+> /sbin/nfsdcltrack init
+> root=C2=A0 =C2=A0 =C2=A0 2885=C2=A0 0.0=C2=A0 0.0 119476=C2=A0 2320 pts/1=
+=C2=A0 =C2=A0 S+=C2=A0 =C2=A010:07=C2=A0 =C2=A00:00 grep=20
+> --color=3Dauto D
+> [root@nfs_test3 ~]# cat /proc/2644/stack
+> [<0>] write_v4_end_grace+0x94/0x160
+> [<0>] nfsctl_transaction_write+0x8b/0xf0
+> [<0>] vfs_write+0x160/0x7f0
+> [<0>] ksys_write+0xc9/0x160
+> [<0>] do_syscall_64+0x72/0x390
+> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [root@nfs_test3 ~]# cat /proc/2761/stack
+> [<0>] call_usermodehelper_exec+0x283/0x2d0
+> [<0>] nfsd4_umh_cltrack_upcall+0xfc/0x1a0
+> [<0>] nfsd4_umh_cltrack_init+0x60/0x80
+> [<0>] nfsd4_client_tracking_init+0x1a7/0x260
+> [<0>] nfs4_state_start_net+0x63/0x90
+> [<0>] nfsd_startup_net+0x261/0x320
+> [<0>] nfsd_svc+0x103/0x1a0
+> [<0>] write_threads+0x170/0x210
+> [<0>] nfsctl_transaction_write+0x8b/0xf0
+> [<0>] vfs_write+0x160/0x7f0
+> [<0>] ksys_write+0xc9/0x160
+> [<0>] do_syscall_64+0x72/0x390
+> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [root@nfs_test3 ~]# cat /proc/2776/stack
+> [<0>] write_v4_end_grace+0x94/0x160
+> [<0>] nfsctl_transaction_write+0x8b/0xf0
+> [<0>] vfs_write+0x160/0x7f0
+> [<0>] ksys_write+0xc9/0x160
+> [<0>] do_syscall_64+0x72/0x390
+> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [root@nfs_test3 ~]#
 >=20
 >=20
-> --=20
-> Chuck Lever
+> =E5=9C=A8 2025/6/23 10:47, NeilBrown =E5=86=99=E9=81=93:
+> > write_foo functions are called to handle IO to files in /proc/fs/nfsd/.
+> > They can be called at any time and so generally need locking to ensure
+> > they don't happen at an awkward time.
+> >
+> > Many already take nfsd_mutex and check if nfsd_serv has been set.  This
+> > ensures they only run when the server is fully configured.
+> >
+> > write_filehandle() does *not* need locking.  It interacts with the
+> > export table which is set up when the netns is set up, so it is always
+> > valid and it has its own locking.  write_filehandle() is needed before
+> > the nfs server is started so checking nfsd_serv would be wrong.
+> >
+> > The remaining files which do not have any locking are
+> > write_v4_end_grace(), write_unlock_ip(), and write_unlock_fs().
+> > None of these make sense when the nfs server is not running and there is
+> > evidence that write_v4_end_grace() can race with ->client_tracking_op
+> > setup/shutdown and cause problems.
+> >
+> > This patch adds locking to these three and ensures the "unlock"
+> > functions abort if ->nfsd_serv is not set.
+> >
+> > Reported-and-tested-by: Li Lingfeng <lilingfeng3@huawei.com>
+> > Signed-off-by: NeilBrown <neil@brown.name>
+> > ---
+> >   fs/nfsd/nfsctl.c | 40 +++++++++++++++++++++++++++++++++++++---
+> >   1 file changed, 37 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index 3f3e9f6c4250..6b0cad81b5fa 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -214,13 +214,18 @@ static inline struct net *netns(struct file *file)
+> >    *			returns one if one or more locks were not released
+> >    *	On error:	return code is negative errno value
+> >    */
+> > -static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size)
+> > +static ssize_t __write_unlock_ip(struct file *file, char *buf, size_t si=
+ze)
+> >   {
+> >   	struct sockaddr_storage address;
+> >   	struct sockaddr *sap =3D (struct sockaddr *)&address;
+> >   	size_t salen =3D sizeof(address);
+> >   	char *fo_path;
+> >   	struct net *net =3D netns(file);
+> > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > +
+> > +	if (!nn->nfsd_serv)
+> > +		/* There cannot be any files to unlock */
+> > +		return -EINVAL;
+> >  =20
+> >   	/* sanity check */
+> >   	if (size =3D=3D 0)
+> > @@ -240,6 +245,16 @@ static ssize_t write_unlock_ip(struct file *file, ch=
+ar *buf, size_t size)
+> >   	return nlmsvc_unlock_all_by_ip(sap);
+> >   }
+> >  =20
+> > +static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size)
+> > +{
+> > +	ssize_t ret;
+> > +
+> > +	mutex_lock(&nfsd_mutex);
+> > +	ret =3D __write_unlock_ip(file, buf, size);
+> > +	mutex_unlock(&nfsd_mutex);
+> > +	return ret;
+> > +}
+> > +
+> >   /*
+> >    * write_unlock_fs - Release all locks on a local file system
+> >    *
+> > @@ -254,11 +269,16 @@ static ssize_t write_unlock_ip(struct file *file, c=
+har *buf, size_t size)
+> >    *			returns one if one or more locks were not released
+> >    *	On error:	return code is negative errno value
+> >    */
+> > -static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
+> > +static ssize_t __write_unlock_fs(struct file *file, char *buf, size_t si=
+ze)
+> >   {
+> >   	struct path path;
+> >   	char *fo_path;
+> >   	int error;
+> > +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
+> > +
+> > +	if (!nn->nfsd_serv)
+> > +		/* There cannot be any files to unlock */
+> > +		return -EINVAL;
+> >  =20
+> >   	/* sanity check */
+> >   	if (size =3D=3D 0)
+> > @@ -291,6 +311,16 @@ static ssize_t write_unlock_fs(struct file *file, ch=
+ar *buf, size_t size)
+> >   	return error;
+> >   }
+> >  =20
+> > +static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
+> > +{
+> > +	ssize_t ret;
+> > +
+> > +	mutex_lock(&nfsd_mutex);
+> > +	ret =3D __write_unlock_fs(file, buf, size);
+> > +	mutex_unlock(&nfsd_mutex);
+> > +	return ret;
+> > +}
+> > +
+> >   /*
+> >    * write_filehandle - Get a variable-length NFS file handle by path
+> >    *
+> > @@ -1082,10 +1112,14 @@ static ssize_t write_v4_end_grace(struct file *fi=
+le, char *buf, size_t size)
+> >   		case 'Y':
+> >   		case 'y':
+> >   		case '1':
+> > -			if (!nn->nfsd_serv)
+> > +			mutex_lock(&nfsd_mutex);
+> > +			if (!nn->nfsd_serv) {
+> > +				mutex_unlock(&nfsd_mutex);
+> >   				return -EBUSY;
+> > +			}
+> >   			trace_nfsd_end_grace(netns(file));
+> >   			nfsd4_end_grace(nn);
+> > +			mutex_unlock(&nfsd_mutex);
+> >   			break;
+> >   		default:
+> >   			return -EINVAL;
 >=20
 
 
