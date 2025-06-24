@@ -1,416 +1,242 @@
-Return-Path: <linux-nfs+bounces-12682-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12683-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4833CAE5A79
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 05:27:22 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9297AE5C52
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 08:01:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 51E8A3BFFCA
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 03:26:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 16BC61BC098B
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Jun 2025 06:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B5B26136;
-	Tue, 24 Jun 2025 03:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E983231CB0;
+	Tue, 24 Jun 2025 05:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IttYJnOj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678DE202983
-	for <linux-nfs@vger.kernel.org>; Tue, 24 Jun 2025 03:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA7B157A6B;
+	Tue, 24 Jun 2025 05:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750735638; cv=none; b=FcSNlCy9yMu4cOc570rPG6ltvpilvOykvO6qpObLCOGvc9t+HHVnCnVmr8y3g8D/mQK0mvIHuGWGZ3f6rIItg7ttR6gM81C4+TqFrimXBCS43SjoVdcM7RxR57BxNI7dvDrG1/z8h2c1R0qAV7EavG7+aMVRq4JWw90aSyL1JSA=
+	t=1750744783; cv=none; b=hKazZgA3pa/I5ctLOktBIjj9jEyUT1EsaPXe8Djyc2EiQ9+ms+8WuoR2V8nY0yP1oWi4GEQ5ZH/+WDPFJetf9zwCSe21vLo+Q0KNBIolP2nDkwVFGaMlWD5L1/5N95NEL3BKeAQAvVFI2yJDeoPP97tALiCqbbRXqeSp2rZcNHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750735638; c=relaxed/simple;
-	bh=yag7TOKEZ1KaCgZmGiTtc/2zQgEWJOSuFv1bvpUfAVA=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=fmm1lTke3rzjIfbi5B2uRo7oMgyCHsBu4rksQaaBbXZIaXzemB6Rf8y6QnSQDCsCyfDs4I0EmBpQdgli+WMg51BjkcmgXnhaAOBoQM075ITGFXwiG4YqSa6CQ6q8BwIOfj02ppowbVZ3xhdGZTjh30YUL/mtYnM6OjRIaXX0mt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uTuJJ-003aYp-SO;
-	Tue, 24 Jun 2025 03:27:01 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750744783; c=relaxed/simple;
+	bh=p7JTv/Vl04sUhhRWS3lU9IHtibunvrxjNU3gZTKA1Uo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcjZZPSl+trnbK0G8Y5wKBC9zuioYReiMDSS14cejss3YuGZ7x0QijRyy7BwRxWr8tzwhF5IYE+wJYgjlBqeWpwFeQL7Si3GrmGvH8SpQUOhEmMlRmzs0kLmWUDz+QnoJGU3b0M1mTAd1V0DBFbNbiQYIBW6BwOCFMDtQHbeE54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IttYJnOj; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade48b24c97so863467866b.2;
+        Mon, 23 Jun 2025 22:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750744780; x=1751349580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m6010/ZxGOxc/GtHfiUtuCWiZZWt6dGaK+o3fK6MDmU=;
+        b=IttYJnOj0etVnHQH6B5Xxe+NuNF/t9QaiYGKfzf5/BkTxRdcteVXPk3rJ75oO1lKeh
+         aFekngkxUXXCBS7IIrRzcrNEz+eMo2JT9Q07lfphJ8B2IZm7dB1dp0uC6mb4qFNXiMjA
+         mcRtwcHvawX96/nVQu2yvkXKcIPpuySt8su1JvVHUgpWJdalJaqGW+NOEyRTJGmPl8Yl
+         8pMfKjMRqfwqKHRyzVVWfQAuWzwMkoY/2DYwKpLoMsyjxbtFB14Kzm4Sy3uT9KkNAUHd
+         qP6uPr+/h2vzP4njGdPU3pexh+utrC3STEhPYj2P3agA5qaXvOm3t8f2JnhXXgJVtRI6
+         5ejQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750744780; x=1751349580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m6010/ZxGOxc/GtHfiUtuCWiZZWt6dGaK+o3fK6MDmU=;
+        b=JFJYDwR1pIAlQ1o5HU8DgU1hwt4oRPwCf4P83vxNybIkSq679sFbEgGIuOUCSivaRd
+         H8vtQ95HdXxz+M04plYck3W2wfUGUHLMsB3FrP0cmRL2P8dyQVb4ExVbwgd/GzW3OEpB
+         CPUmccqw2D7dz02f3hkb7a0ferc7bHDUo46V0LHYXcusHNHOWTJeS4tY61ChLELz5S4o
+         5ussW0lEw8OawiO7zdO6/nzko4/TylQM1mOagB5c+lolnRUSO6FP/8aKBRZ3xmuicVoC
+         6hy0s3/kmO7LLxBAQ+/jsDpUHaknpBTfgJMaM/EQ1fUL00d79qyD1JhksG0QC6zCQdMF
+         x2wg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7/aGteJvn9URWRs14O9JVDQawZ+snmrNzWvN3xEvZflVtkMf+XIjOqNhx4hN0cM7F/m2HR6aTOlKF@vger.kernel.org, AJvYcCXSTMmIBHASQyzttNUpYouW89Ump6hovPrOeqpvhwvtt3xktYDv9EJ5fMncoHon44kREtIdhnYWAyVflE/4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS20uXVbKz+lHSzQetyoWjHswM8MDERctRO2M/ckMtAyrVlPUt
+	7BmH9Obbl3cJxZn5AKP2PIvXmMj/Cy/cP6UyWcWmXStlTkEs3cxWiy6rLti2HiwuamMsDPIVfYv
+	vlNf5hLIHsf59sk7643b6FWUIWh2uiFQ=
+X-Gm-Gg: ASbGnctwZ5YBEdOdZPUbU7hyaVi4icNvoA1oIa4SkrFmQimvOCl/EobBlq16bIgyuK6
+	Ignsa5I1Gf3hHc0WXToKSk5xja2RqTUksx1uQn1gvfIik8DrP7+PDHWtnDSdGfXMkr8zeB1wazA
+	rto6+cHoUK5TIhY1shtThx8FzxR2UpxZ1e4IfWYoBfNmQaROZsjwAxKSo=
+X-Google-Smtp-Source: AGHT+IE+xtk8mCeLX4OzNGlO9SwlPPmDyNCsobTZwfKxxEZdu+lYg/k7JddDFzyJ8a/vNVxMgcZ5qdSBpvnFKoOwczc=
+X-Received: by 2002:a17:907:7e92:b0:adb:229a:f8bd with SMTP id
+ a640c23a62f3a-ae057b6cc1dmr1547486566b.29.1750744779560; Mon, 23 Jun 2025
+ 22:59:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Li Lingfeng" <lilingfeng3@huawei.com>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- linux-nfs@vger.kernel.org, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "yangerkun" <yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>,
- "Hou Tao" <houtao1@huawei.com>, "yukuai (C)" <yukuai3@huawei.com>,
- libaokun1@huawei.com
-Subject: Re: [PATCH 1/4] nfsd: provide proper locking for all write_ function
-In-reply-to: <87302f1a-8313-4dd7-919e-849291efece2@huawei.com>
-References: <>, <87302f1a-8313-4dd7-919e-849291efece2@huawei.com>
-Date: Tue, 24 Jun 2025 13:27:00 +1000
-Message-id: <175073562007.2280845.7399854714861301361@noble.neil.brown.name>
+References: <CGME20250529113215epcas5p2edd67e7b129621f386be005fdba53378@epcas5p2.samsung.com>
+ <20250529111504.89912-1-kundan.kumar@samsung.com> <20250602141904.GA21996@lst.de>
+ <c029d791-20ca-4f2e-926d-91856ba9d515@samsung.com> <20250603132434.GA10865@lst.de>
+ <CACzX3AuBVsdEUy09W+L+xRAGLsUD0S9+J2AO8nSguA2nX5d8GQ@mail.gmail.com>
+ <CALYkqXqVRYqq+5_5W4Sdeh07M8DyEYLvrsm3yqhhCQTY0pvU1g@mail.gmail.com> <20250611155144.GD6138@frogsfrogsfrogs>
+In-Reply-To: <20250611155144.GD6138@frogsfrogsfrogs>
+From: Kundan Kumar <kundanthebest@gmail.com>
+Date: Tue, 24 Jun 2025 11:29:28 +0530
+X-Gm-Features: Ac12FXzjJtXhWP5qaSTxOaM8kfMlrnXKIbZrGlp-NuqDUifHrwujHPqe26XNyh8
+Message-ID: <CALYkqXpOBb1Ak2kEKWbO2Kc5NaGwb4XsX1q4eEaNWmO_4SQq9w@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Parallelizing filesystem writeback
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Anuj gupta <anuj1072538@gmail.com>, Christoph Hellwig <hch@lst.de>, 
+	"Anuj Gupta/Anuj Gupta" <anuj20.g@samsung.com>, Kundan Kumar <kundan.kumar@samsung.com>, jaegeuk@kernel.org, 
+	chao@kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	miklos@szeredi.hu, agruenba@redhat.com, trondmy@kernel.org, anna@kernel.org, 
+	akpm@linux-foundation.org, willy@infradead.org, mcgrof@kernel.org, 
+	clm@meta.com, david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk, 
+	ritesh.list@gmail.com, dave@stgolabs.net, p.raghav@samsung.com, 
+	da.gomez@samsung.com, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev, 
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025, Li Lingfeng wrote:
-> Hi,
->=20
-> During my validation of this fix patch, I encountered a deadlock issue
-> that wasn't present during last Saturday's verification.
-> Process 2761 holds the nfsd_mutex while sending an upcall request,
-> triggering process 2776.
-
-Thanks for testing!  Holding a mutex while sending an upcall is
-definitely bad.  We might have to drop and retake the mutex and add more
-checks after the retake.  I'll have a look.
-
-> This process must complete writing to end_grace before responding to the
-> upcall, but it gets blocked while attempting to acquire the nfsd_mutex,
-> causing a deadlock.
-> I revalidated the previous solution and found the same issue.
-> I'm unsure what changed between validations.
-> Additionally, why was the locking mechanism changed from guard(mutex) in
-> the previous version to explicit mutex_lock/mutex_unlock in this version?
-
-I thought the mutex_lock/unlock version would be easier to backport.  We
-haven't had guard() for all that long.  The behaviour should be the
-same.
-
-Thanks,
-NeilBrown
-
-
-
->=20
-> Thanks.
->=20
-> Base:
-> commit 86731a2a651e58953fc949573895f2fa6d456841 (tag: v6.16-rc3,=20
-> origin/master, origin/HEAD)
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:=C2=A0 =C2=A0Sun Jun 22 13:30:08 2025 -0700
->=20
->  =C2=A0 =C2=A0 Linux 6.16-rc3
->=20
-> Diff:
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index 82785db730d9..0c6f0fbecc02 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -1008,7 +1008,8 @@ __nfsd4_init_cld_pipe(struct net *net)
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (nn->cld_net)
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;
->=20
-> -=C2=A0 =C2=A0 =C2=A0 =C2=A0cn =3D kzalloc(sizeof(*cn), GFP_KERNEL);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0cn =3D NULL;//kzalloc(sizeof(*cn), GFP_KERNEL);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s force err inject\n", __func__);
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!cn) {
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D -ENOMEM;
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err;
-> @@ -1478,6 +1479,7 @@ nfs4_cld_state_init(struct net *net)
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 nn->reclaim_str_hashtbl =3D kmalloc_array(CLIE=
-NT_HASH_SIZE,
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 sizeof(struct list_head),
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 GFP_KERNEL);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s get nn->reclaim_str_hashtbl %px\n", =
-__func__,=20
-> nn->reclaim_str_hashtbl);
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!nn->reclaim_str_hashtbl)
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;
->=20
-> @@ -1496,7 +1498,12 @@ nfs4_cld_state_shutdown(struct net *net)
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct nfsd_net *nn =3D net_generic(net, nfsd_=
-net_id);
->=20
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 nn->track_reclaim_completes =3D false;
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s free nn->reclaim_str_hashtbl %px\n",=
- __func__,=20
-> nn->reclaim_str_hashtbl);
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 kfree(nn->reclaim_str_hashtbl);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s free nn->reclaim_str_hashtbl %px don=
-e\n", __func__,=20
-> nn->reclaim_str_hashtbl);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s sleep after free...\n", __func__);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0msleep(10 * 1000);
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0printk("%s sleep done\n", __func__);
->  =C2=A0}
->=20
->  =C2=A0static bool
->=20
->=20
-> CLIENT A:
-> [root@nfs_test3 ~]# mount /dev/sdb /mnt/sdb
-> [root@nfs_test3 ~]# echo "/mnt *(rw,no_root_squash,fsid=3D0)" > /etc/exports
-> [root@nfs_test3 ~]# echo "/mnt/sdb *(rw,no_root_squash,fsid=3D1)" >>=20
-> /etc/exports
-> [root@nfs_test3 ~]# systemctl restart nfs-server
-> [=C2=A0 229.107168][ T2761] nfs4_cld_state_init get nn->reclaim_str_hashtbl=
-=20
-> ffff88810e20ba00
-> [=C2=A0 229.108175][ T2761] __nfsd4_init_cld_pipe force err inject
-> [=C2=A0 229.108819][ T2761] NFSD: unable to create nfsdcld upcall pipe (-12)
-> [=C2=A0 229.109568][ T2761] nfs4_cld_state_shutdown free=20
-> nn->reclaim_str_hashtbl ffff88810e20ba00
-> [=C2=A0 229.110601][ T2761] nfs4_cld_state_shutdown free=20
-> nn->reclaim_str_hashtbl ffff88810e20ba00 done
-> [=C2=A0 229.111599][ T2761] nfs4_cld_state_shutdown sleep after free...
-> [=C2=A0 239.282399][ T2761] nfs4_cld_state_shutdown sleep done
-> [=C2=A0 239.283083][ T2761] __nfsd4_init_cld_pipe force err inject
-> [=C2=A0 239.283734][ T2761] NFSD: unable to create nfsdcld upcall pipe (-12)
-> [=C2=A0 453.554502][=C2=A0 T101] INFO: task bash:2644 blocked for more than=
- 147=20
-> seconds.
-> [=C2=A0 453.555494][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
-> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
-> [=C2=A0 453.556408][=C2=A0 T101] "echo 0 >=20
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [=C2=A0 453.558022][=C2=A0 T101] INFO: task bash:2644 is blocked on a mutex=
- likely=20
-> owned by task rpc.nfsd:2761.
-> [=C2=A0 453.559949][=C2=A0 T101] INFO: task rpc.nfsd:2761 blocked for more =
-than=20
-> 147 seconds.
-> [=C2=A0 453.560868][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
-> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
-> [=C2=A0 453.561770][=C2=A0 T101] "echo 0 >=20
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [=C2=A0 453.563573][=C2=A0 T101] INFO: task nfsdcltrack:2776 blocked for mo=
-re than=20
-> 147 seconds.
-> [=C2=A0 453.564516][=C2=A0 T101]=C2=A0 =C2=A0 =C2=A0 =C2=A0Not tainted=20
-> 6.16.0-rc3-00001-g4e8c356736df-dirty #84
-> [=C2=A0 453.565431][=C2=A0 T101] "echo 0 >=20
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [=C2=A0 453.566945][=C2=A0 T101] INFO: task nfsdcltrack:2776 is blocked on =
-a mutex=20
-> likely owned by task rpc.nfsd:2761.
-> [=C2=A0 453.568860][=C2=A0 T101]
-> [=C2=A0 453.568860][=C2=A0 T101] Showing all locks held in the system:
-> [=C2=A0 453.569816][=C2=A0 T101] 1 lock held by khungtaskd/101:
-> [=C2=A0 453.570469][=C2=A0 T101]=C2=A0 #0: ffffffffa6f66120=20
-> (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire.constprop.0+0x7/0x30
-> [=C2=A0 453.571753][=C2=A0 T101] 2 locks held by kworker/u64:4/149:
-> [=C2=A0 453.572402][=C2=A0 T101]=C2=A0 #0: ffff8881001a5948=20
-> ((wq_completion)events_unbound){+.+.}-{0:0}, at:=20
-> process_one_work+0x72b/0x8a0
-> [=C2=A0 453.573758][=C2=A0 T101]=C2=A0 #1: ffffc90000bcfd60=20
-> ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at:=20
-> process_one_work+0x72b/0x8a0
-> [=C2=A0 453.575172][=C2=A0 T101] 2 locks held by bash/2644:
-> [=C2=A0 453.575742][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
-> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
-> [=C2=A0 453.576856][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
-+.}-{4:4},=20
-> at: write_v4_end_grace+0x94/0x160
-> [=C2=A0 453.578005][=C2=A0 T101] 2 locks held by rpc.nfsd/2761:
-> [=C2=A0 453.578644][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
-> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
-> [=C2=A0 453.579750][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
-+.}-{4:4},=20
-> at: write_threads+0x14e/0x210
-> [=C2=A0 453.580871][=C2=A0 T101] 2 locks held by nfsdcltrack/2776:
-> [=C2=A0 453.581511][=C2=A0 T101]=C2=A0 #0: ffff88810e204400=20
-> (sb_writers#12){.+.+}-{0:0}, at: ksys_write+0xc9/0x160
-> [=C2=A0 453.582644][=C2=A0 T101]=C2=A0 #1: ffffffffa738e508 (nfsd_mutex){+.=
-+.}-{4:4},=20
-> at: write_v4_end_grace+0x94/0x160
-> [=C2=A0 453.583793][=C2=A0 T101]
-> [=C2=A0 453.584085][=C2=A0 T101] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> [=C2=A0 453.584085][=C2=A0 T101]
->=20
-> CLIENT B:
-> write /proc/fs/nfsd/v4_end_grace between "nfs4_cld_state_shutdown sleep=20
-> after free..." and "nfs4_cld_state_shutdown sleep done"
-> [root@nfs_test3 ~]# echo 1 > /proc/fs/nfsd/v4_end_grace
->=20
-> Processes:
-> [root@nfs_test3 ~]# ps aux | grep D
-> USER=C2=A0 =C2=A0 =C2=A0 =C2=A0PID %CPU %MEM=C2=A0 =C2=A0 VSZ=C2=A0 =C2=A0R=
-SS TTY=C2=A0 =C2=A0 =C2=A0 STAT START=C2=A0 =C2=A0TIME COMMAND
-> root=C2=A0 =C2=A0 =C2=A0 =C2=A0378=C2=A0 0.1=C2=A0 0.0=C2=A0 97948=C2=A0 70=
-08 ?=C2=A0 =C2=A0 =C2=A0 =C2=A0 Ss=C2=A0 =C2=A010:04=C2=A0 =C2=A00:00=20
-> /usr/sbin/sshd -D
-> root=C2=A0 =C2=A0 =C2=A0 2644=C2=A0 1.3=C2=A0 0.0 127676=C2=A0 8656 pts/0=
-=C2=A0 =C2=A0 Ds+=C2=A0 10:06=C2=A0 =C2=A00:00 -bash
-> root=C2=A0 =C2=A0 =C2=A0 2745=C2=A0 0.5=C2=A0 0.0 270324=C2=A0 3356 ?=C2=A0=
- =C2=A0 =C2=A0 =C2=A0 Ssl=C2=A0 10:06=C2=A0 =C2=A00:00=20
-> /usr/sbin/gssproxy -D
-> root=C2=A0 =C2=A0 =C2=A0 2761=C2=A0 0.9=C2=A0 0.0=C2=A0 33740=C2=A0 2808 ?=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 Ds=C2=A0 =C2=A010:06=C2=A0 =C2=A00:00=20
-> /usr/sbin/rpc.nfsd -V 2 8
-> root=C2=A0 =C2=A0 =C2=A0 2776=C2=A0 0.0=C2=A0 0.0=C2=A0 19272=C2=A0 3076 ?=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 D=C2=A0 =C2=A0 10:06=C2=A0 =C2=A00:00=20
-> /sbin/nfsdcltrack init
-> root=C2=A0 =C2=A0 =C2=A0 2885=C2=A0 0.0=C2=A0 0.0 119476=C2=A0 2320 pts/1=
-=C2=A0 =C2=A0 S+=C2=A0 =C2=A010:07=C2=A0 =C2=A00:00 grep=20
-> --color=3Dauto D
-> [root@nfs_test3 ~]# cat /proc/2644/stack
-> [<0>] write_v4_end_grace+0x94/0x160
-> [<0>] nfsctl_transaction_write+0x8b/0xf0
-> [<0>] vfs_write+0x160/0x7f0
-> [<0>] ksys_write+0xc9/0x160
-> [<0>] do_syscall_64+0x72/0x390
-> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [root@nfs_test3 ~]# cat /proc/2761/stack
-> [<0>] call_usermodehelper_exec+0x283/0x2d0
-> [<0>] nfsd4_umh_cltrack_upcall+0xfc/0x1a0
-> [<0>] nfsd4_umh_cltrack_init+0x60/0x80
-> [<0>] nfsd4_client_tracking_init+0x1a7/0x260
-> [<0>] nfs4_state_start_net+0x63/0x90
-> [<0>] nfsd_startup_net+0x261/0x320
-> [<0>] nfsd_svc+0x103/0x1a0
-> [<0>] write_threads+0x170/0x210
-> [<0>] nfsctl_transaction_write+0x8b/0xf0
-> [<0>] vfs_write+0x160/0x7f0
-> [<0>] ksys_write+0xc9/0x160
-> [<0>] do_syscall_64+0x72/0x390
-> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [root@nfs_test3 ~]# cat /proc/2776/stack
-> [<0>] write_v4_end_grace+0x94/0x160
-> [<0>] nfsctl_transaction_write+0x8b/0xf0
-> [<0>] vfs_write+0x160/0x7f0
-> [<0>] ksys_write+0xc9/0x160
-> [<0>] do_syscall_64+0x72/0x390
-> [<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [root@nfs_test3 ~]#
->=20
->=20
-> =E5=9C=A8 2025/6/23 10:47, NeilBrown =E5=86=99=E9=81=93:
-> > write_foo functions are called to handle IO to files in /proc/fs/nfsd/.
-> > They can be called at any time and so generally need locking to ensure
-> > they don't happen at an awkward time.
+On Wed, Jun 11, 2025 at 9:21=E2=80=AFPM Darrick J. Wong <djwong@kernel.org>=
+ wrote:
+>
+> On Wed, Jun 04, 2025 at 02:52:34PM +0530, Kundan Kumar wrote:
+> > > > > For xfs used this command:
+> > > > > xfs_io -c "stat" /mnt/testfile
+> > > > > And for ext4 used this:
+> > > > > filefrag /mnt/testfile
+> > > >
+> > > > filefrag merges contiguous extents, and only counts up for disconti=
+guous
+> > > > mappings, while fsxattr.nextents counts all extent even if they are
+> > > > contiguous.  So you probably want to use filefrag for both cases.
+> > >
+> > > Got it =E2=80=94 thanks for the clarification. We'll switch to using =
+filefrag
+> > > and will share updated extent count numbers accordingly.
 > >
-> > Many already take nfsd_mutex and check if nfsd_serv has been set.  This
-> > ensures they only run when the server is fully configured.
+> > Using filefrag, we recorded extent counts on xfs and ext4 at three
+> > stages:
+> > a. Just after a 1G random write,
+> > b. After a 30-second wait,
+> > c. After unmounting and remounting the filesystem,
 > >
-> > write_filehandle() does *not* need locking.  It interacts with the
-> > export table which is set up when the netns is set up, so it is always
-> > valid and it has its own locking.  write_filehandle() is needed before
-> > the nfs server is started so checking nfsd_serv would be wrong.
-> >
-> > The remaining files which do not have any locking are
-> > write_v4_end_grace(), write_unlock_ip(), and write_unlock_fs().
-> > None of these make sense when the nfs server is not running and there is
-> > evidence that write_v4_end_grace() can race with ->client_tracking_op
-> > setup/shutdown and cause problems.
-> >
-> > This patch adds locking to these three and ensures the "unlock"
-> > functions abort if ->nfsd_serv is not set.
-> >
-> > Reported-and-tested-by: Li Lingfeng <lilingfeng3@huawei.com>
-> > Signed-off-by: NeilBrown <neil@brown.name>
-> > ---
-> >   fs/nfsd/nfsctl.c | 40 +++++++++++++++++++++++++++++++++++++---
-> >   1 file changed, 37 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 3f3e9f6c4250..6b0cad81b5fa 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -214,13 +214,18 @@ static inline struct net *netns(struct file *file)
-> >    *			returns one if one or more locks were not released
-> >    *	On error:	return code is negative errno value
-> >    */
-> > -static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size)
-> > +static ssize_t __write_unlock_ip(struct file *file, char *buf, size_t si=
-ze)
-> >   {
-> >   	struct sockaddr_storage address;
-> >   	struct sockaddr *sap =3D (struct sockaddr *)&address;
-> >   	size_t salen =3D sizeof(address);
-> >   	char *fo_path;
-> >   	struct net *net =3D netns(file);
-> > +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > +
-> > +	if (!nn->nfsd_serv)
-> > +		/* There cannot be any files to unlock */
-> > +		return -EINVAL;
-> >  =20
-> >   	/* sanity check */
-> >   	if (size =3D=3D 0)
-> > @@ -240,6 +245,16 @@ static ssize_t write_unlock_ip(struct file *file, ch=
-ar *buf, size_t size)
-> >   	return nlmsvc_unlock_all_by_ip(sap);
-> >   }
-> >  =20
-> > +static ssize_t write_unlock_ip(struct file *file, char *buf, size_t size)
-> > +{
-> > +	ssize_t ret;
-> > +
-> > +	mutex_lock(&nfsd_mutex);
-> > +	ret =3D __write_unlock_ip(file, buf, size);
-> > +	mutex_unlock(&nfsd_mutex);
-> > +	return ret;
-> > +}
-> > +
-> >   /*
-> >    * write_unlock_fs - Release all locks on a local file system
-> >    *
-> > @@ -254,11 +269,16 @@ static ssize_t write_unlock_ip(struct file *file, c=
-har *buf, size_t size)
-> >    *			returns one if one or more locks were not released
-> >    *	On error:	return code is negative errno value
-> >    */
-> > -static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
-> > +static ssize_t __write_unlock_fs(struct file *file, char *buf, size_t si=
-ze)
-> >   {
-> >   	struct path path;
-> >   	char *fo_path;
-> >   	int error;
-> > +	struct nfsd_net *nn =3D net_generic(netns(file), nfsd_net_id);
-> > +
-> > +	if (!nn->nfsd_serv)
-> > +		/* There cannot be any files to unlock */
-> > +		return -EINVAL;
-> >  =20
-> >   	/* sanity check */
-> >   	if (size =3D=3D 0)
-> > @@ -291,6 +311,16 @@ static ssize_t write_unlock_fs(struct file *file, ch=
-ar *buf, size_t size)
-> >   	return error;
-> >   }
-> >  =20
-> > +static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
-> > +{
-> > +	ssize_t ret;
-> > +
-> > +	mutex_lock(&nfsd_mutex);
-> > +	ret =3D __write_unlock_fs(file, buf, size);
-> > +	mutex_unlock(&nfsd_mutex);
-> > +	return ret;
-> > +}
-> > +
-> >   /*
-> >    * write_filehandle - Get a variable-length NFS file handle by path
-> >    *
-> > @@ -1082,10 +1112,14 @@ static ssize_t write_v4_end_grace(struct file *fi=
-le, char *buf, size_t size)
-> >   		case 'Y':
-> >   		case 'y':
-> >   		case '1':
-> > -			if (!nn->nfsd_serv)
-> > +			mutex_lock(&nfsd_mutex);
-> > +			if (!nn->nfsd_serv) {
-> > +				mutex_unlock(&nfsd_mutex);
-> >   				return -EBUSY;
-> > +			}
-> >   			trace_nfsd_end_grace(netns(file));
-> >   			nfsd4_end_grace(nn);
-> > +			mutex_unlock(&nfsd_mutex);
-> >   			break;
-> >   		default:
-> >   			return -EINVAL;
->=20
+> > xfs
+> > Base
+> > a. 6251   b. 2526  c. 2526
+> > Parallel writeback
+> > a. 6183   b. 2326  c. 2326
+>
+> Interesting that the mapping record count goes down...
+>
+> I wonder, you said the xfs filesystem has 4 AGs and 12 cores, so I guess
+> wb_ctx_arr[] is 12?  I wonder, do you see a knee point in writeback
+> throughput when the # of wb contexts exceeds the AG count?
+>
+> Though I guess for the (hopefully common) case of pure overwrites, we
+> don't have to do any metadata updates so we wouldn't really hit a
+> scaling limit due to ag count or log contention or whatever.  Does that
+> square with what you see?
+>
 
+Hi Darrick,
+
+We analyzed AG count vs. number of writeback contexts to identify any
+knee point. Earlier, wb_ctx_arr[] was fixed at 12; now we varied nr_wb_ctx
+and measured the impact.
+
+We implemented a configurable number of writeback contexts to measure
+throughput more easily. This feature will be exposed in the next series.
+To configure, used: echo <nr_wb_ctx> > /sys/class/bdi/259:2/nwritebacks.
+
+In our test, writing 1G across 12 directories showed improved bandwidth up
+to the number of allocation groups (AGs), mostly a knee point, but gains
+tapered off beyond that. Also, we see a good increase in bandwidth of about
+16 times from base to nr_wb_ctx =3D 6.
+
+    Base (single threaded)                :  9799KiB/s
+    Parallel Writeback (nr_wb_ctx =3D 1)    :  9727KiB/s
+    Parallel Writeback (nr_wb_ctx =3D 2)    :  18.1MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 3)    :  46.4MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 4)    :  135MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 5)    :  160MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 6)    :  163MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 7)    :  162MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 8)    :  154MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 9)    :  152MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 10)   :  145MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 11)   :  145MiB/s
+    Parallel Writeback (nr_wb_ctx =3D 12)   :  138MiB/s
+
+
+System config
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Number of CPUs =3D 12
+System RAM =3D 9G
+For XFS number of AGs =3D 4
+Used NVMe SSD of 3.84 TB (Enterprise SSD PM1733a)
+
+Script
+=3D=3D=3D=3D=3D
+mkfs.xfs -f /dev/nvme0n1
+mount /dev/nvme0n1 /mnt
+echo <num_wb_ctx> > /sys/class/bdi/259:2/nwritebacks
+sync
+echo 3 > /proc/sys/vm/drop_caches
+
+for i in {1..12}; do
+  mkdir -p /mnt/dir$i
+done
+
+fio job_nvme.fio
+
+umount /mnt
+echo 3 > /proc/sys/vm/drop_caches
+sync
+
+fio job
+=3D=3D=3D=3D=3D
+[global]
+bs=3D4k
+iodepth=3D1
+rw=3Drandwrite
+ioengine=3Dio_uring
+nrfiles=3D12
+numjobs=3D1                # Each job writes to a different file
+size=3D1g
+direct=3D0                 # Buffered I/O to trigger writeback
+group_reporting=3D1
+create_on_open=3D1
+name=3Dtest
+
+[job1]
+directory=3D/mnt/dir1
+
+[job2]
+directory=3D/mnt/dir2
+...
+...
+[job12]
+directory=3D/mnt/dir1
+
+> > ext4
+> > Base
+> > a. 7080   b. 7080    c. 11
+> > Parallel writeback
+> > a. 5961   b. 5961    c. 11
+>
+> Hum, that's particularly ... interesting.  I wonder what the mapping
+> count behaviors are when you turn off delayed allocation?
+>
+> --D
+>
+
+I attempted to disable delayed allocation by setting allocsize=3D4096
+during mount (mount -o allocsize=3D4096 /dev/pmem0 /mnt), but still
+observed a reduction in file fragments after a delay. Is there something
+I'm overlooking?
+
+-Kundan
 
