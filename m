@@ -1,188 +1,316 @@
-Return-Path: <linux-nfs+bounces-12770-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12771-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03A12AE8B6E
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:23:37 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D99AEAE8BD3
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:55:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDF403B00DA
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 17:23:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 69E011BC5939
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 17:56:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE626286425;
-	Wed, 25 Jun 2025 17:23:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73272D5409;
+	Wed, 25 Jun 2025 17:55:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="rQXRw887"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIIY/e1v"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8502D3074AC;
-	Wed, 25 Jun 2025 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1332D541F
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 17:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750872210; cv=none; b=vGHxIaKiaCytOP+daMzBEdT25W/HzpFC3/8b1QlnSvFeltV6RuyfEOyvMMur7qxrc+o0Bvf9zX1A78QrXmy90BMVbChf7kGojSjIlGGbOvxJOQpDTrnbIGLHjliA5zjPkxOM/1GU6q3ITORW3Ra4ykSkbhwIOGrYRt0EY+J45kE=
+	t=1750874150; cv=none; b=YGjv8RE8NAh50cAJ6k52rBcZNXOUhLdHeZSHcv6JHL2EuNwAg1DzWeLHreB2WIHJOPXRB9ZsXCy4p3hZX2MloPVQoXQ5alETAFSPEmajGNBir72QPrk7kDl7ivPZroooeRZ8ZKKuuzycrxmVCgncDNErsW8g5yBTHWm06xMg4nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750872210; c=relaxed/simple;
-	bh=BEDzEKt9JSATmJp5cnYe1NQYMywsbvi4ikfwEf/X8gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U01+g88ava7Jw7cF4NHIMhmBQAD9sJoUk7JAayhPK7kzMhObMnXDbwt6cd0T4XShGsGg6v44ahzcMo1a/eLeUQYu5U3gIw8lw69zy9Pi/IBYbINdpYuGMfObOvJzMG5jtmmR+WJeMUPFhKPWfOEUfQkyp4o6GxTOBhrpVwm3GxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=rQXRw887; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=ZzWLo9F9RRZ6p3rOhQwF3R/YNmHPFvLGy60aTy/R4e0=; b=rQXRw887unOlqhD20dY3n74CFn
-	cPllOiKm2gLr0zvdv9nh/Ln03hde+M1gDZ7LRDhQl+k7SaHEv3dmgEHq6RJPztVtdsZ5XZaVIntMe
-	WBNa2LOeD5Mm+FI62EJ4LtcWsbQhELyGfgQ0H9xWkin1ZWicV5raotbicacJScBi43/Sw4qHtNojE
-	SpB6GXuCtPrg/2e7S87B2butjGKOtGokCSUmnUSoWAkORbXvw2tfRW2bYggNI0u65SEtNFeZIsYSf
-	sSSQWFPQdsswTfqsWCSYlP8qv2m8RA0TMfLCJVx5I6wsszGeEBuoyyqNqDGFwp2l7u25BZvj7HEGb
-	04ez/0bzmVIWvAa7zCyMthB/BSXjt9WNNYB5Pxla+ho6wID3+MU5wtHOl2TXyMGYwUV7iVLfVItJp
-	RHqrbhd4s94H52DhkHZFkXcAl3VQUxXBFhGR5oRXBsMwNyOPSjCCU5kLzWaWM7OMVJBn8KCwmKTg+
-	BpFYd9ErcxEKf/cC96aUT0Sa;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1uUTqB-00CSQA-1x;
-	Wed, 25 Jun 2025 17:23:19 +0000
-Message-ID: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
-Date: Wed, 25 Jun 2025 19:23:18 +0200
+	s=arc-20240116; t=1750874150; c=relaxed/simple;
+	bh=aCS4w1p/m9vmvmXRKmRbwkoccBqVIla1N5bIJ8vNO48=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=CuaLUUe6Ij4yhC91U8P9yILJIwwgckVe90j4nIub44hTLQfq76FkGTs/SdKxQ6xlEaJqw+vZz3LE3JVFSJqTpeXuY6QHyfeTl1Hi+aT7nAAS0kN8xHXF+auuXTzeR+EX3bURoYKxer5G3ZUSoUUh44W9+SrXsr1fhUF8R1La8sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gIIY/e1v; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750874147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RUOylqOVWor4uhe+5G+Td0bk7o0Xqga9derNiT+GMEo=;
+	b=gIIY/e1vFl5DuNvLcxx9Y6wAYv7rT6bLdk/cWofb4tqrIL43Y/2e78V04e52pP64l5ul21
+	gb/3ShNl2Pu7lq31lo9W24ZJmpvYNxs16Dvp9YJcciuBlbsJpgVN28yYauB+bf5TEd1LkX
+	y/no+I0BCnKRhlyJbZlyInxMuL1KgDE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-tarC-zOmOh6BfV6hTK0Rkw-1; Wed,
+ 25 Jun 2025 13:55:44 -0400
+X-MC-Unique: tarC-zOmOh6BfV6hTK0Rkw-1
+X-Mimecast-MFC-AGG-ID: tarC-zOmOh6BfV6hTK0Rkw_1750874141
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A637D180047F;
+	Wed, 25 Jun 2025 17:55:40 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4A8A19560A3;
+	Wed, 25 Jun 2025 17:55:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
+References: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org> <20250625164213.1408754-1-dhowells@redhat.com> <20250625164213.1408754-13-dhowells@redhat.com>
+To: Stefan Metzmacher <metze@samba.org>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+    netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v3 12/16] cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/16] cifs: Fix reading into an ITER_FOLIOQ from the
- smbdirect code
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>
-Cc: Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Matthew Wilcox <willy@infradead.org>
-References: <20250625164213.1408754-1-dhowells@redhat.com>
- <20250625164213.1408754-13-dhowells@redhat.com>
-Content-Language: en-US
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <20250625164213.1408754-13-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1422740.1750874135.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Jun 2025 18:55:35 +0100
+Message-ID: <1422741.1750874135@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Am 25.06.25 um 18:42 schrieb David Howells:
-> When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
-> type 4" error and fails the I/O.  This is due to the switch-statement there
-> not handling the ITER_FOLIOQ handed down from netfslib.
-> 
-> Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
-> smbd_recv() and just using copy_to_iter() instead of memcpy().  This
-> future-proofs the function too, in case more ITER_* types are added.
-> 
-> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-> Reported-by: Stefan Metzmacher <metze@samba.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Steve French <stfrench@microsoft.com>
-> cc: Tom Talpey <tom@talpey.com>
-> cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-> cc: Matthew Wilcox <willy@infradead.org>
-> cc: linux-cifs@vger.kernel.org
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->   fs/smb/client/smbdirect.c | 114 +++++++-------------------------------
->   1 file changed, 19 insertions(+), 95 deletions(-)
-> 
-> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
-> index a976bcf61226..5fa46b2e682c 100644
-> --- a/fs/smb/client/smbdirect.c
-> +++ b/fs/smb/client/smbdirect.c
-> @@ -1770,35 +1770,39 @@ struct smbd_connection *smbd_get_connection(
->   }
->   
->   /*
-> - * Receive data from receive reassembly queue
-> + * Receive data from the transport's receive reassembly queue
->    * All the incoming data packets are placed in reassembly queue
-> - * buf: the buffer to read data into
-> + * iter: the buffer to read data into
->    * size: the length of data to read
->    * return value: actual data read
-> - * Note: this implementation copies the data from reassebmly queue to receive
-> + *
-> + * Note: this implementation copies the data from reassembly queue to receive
->    * buffers used by upper layer. This is not the optimal code path. A better way
->    * to do it is to not have upper layer allocate its receive buffers but rather
->    * borrow the buffer from reassembly queue, and return it after data is
->    * consumed. But this will require more changes to upper layer code, and also
->    * need to consider packet boundaries while they still being reassembled.
->    */
-> -static int smbd_recv_buf(struct smbd_connection *info, char *buf,
-> -		unsigned int size)
-> +int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
->   {
->   	struct smbdirect_socket *sc = &info->socket;
->   	struct smbd_response *response;
->   	struct smbdirect_data_transfer *data_transfer;
-> +	size_t size = iov_iter_count(&msg->msg_iter);
->   	int to_copy, to_read, data_read, offset;
->   	u32 data_length, remaining_data_length, data_offset;
->   	int rc;
->   
-> +	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) == WRITE))
-> +		return -EINVAL; /* It's a bug in upper layer to get there */
-> +
->   again:
->   	/*
->   	 * No need to hold the reassembly queue lock all the time as we are
->   	 * the only one reading from the front of the queue. The transport
->   	 * may add more entries to the back of the queue at the same time
->   	 */
-> -	log_read(INFO, "size=%d info->reassembly_data_length=%d\n", size,
-> +	log_read(INFO, "size=%zd info->reassembly_data_length=%d\n", size,
->   		info->reassembly_data_length);
->   	if (info->reassembly_data_length >= size) {
->   		int queue_length;
-> @@ -1836,7 +1840,10 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
->   			if (response->first_segment && size == 4) {
->   				unsigned int rfc1002_len =
->   					data_length + remaining_data_length;
-> -				*((__be32 *)buf) = cpu_to_be32(rfc1002_len);
-> +				__be32 rfc1002_hdr = cpu_to_be32(rfc1002_len);
-> +				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
-> +						 &msg->msg_iter) != sizeof(rfc1002_hdr))
-> +					return -EFAULT;
->   				data_read = 4;
->   				response->first_segment = false;
->   				log_read(INFO, "returning rfc1002 length %d\n",
-> @@ -1845,10 +1852,9 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
->   			}
->   
->   			to_copy = min_t(int, data_length - offset, to_read);
-> -			memcpy(
-> -				buf + data_read,
-> -				(char *)data_transfer + data_offset + offset,
-> -				to_copy);
-> +			if (copy_to_iter((char *)data_transfer + data_offset + offset,
-> +					 to_copy, &msg->msg_iter) != to_copy)
-> +				return -EFAULT;
->   
->   			/* move on to the next buffer? */
->   			if (to_copy == data_length - offset) {
-> @@ -1893,6 +1899,8 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
->   			 data_read, info->reassembly_data_length,
->   			 info->first_entry_offset);
->   read_rfc1002_done:
-> +		/* SMBDirect will read it all or nothing */
-> +		msg->msg_iter.count = 0;
+Stefan Metzmacher <metze@samba.org> wrote:
 
-I think we should be remove this.
+> >   read_rfc1002_done:
+> > +		/* SMBDirect will read it all or nothing */
+> > +		msg->msg_iter.count =3D 0;
+>
+> I think we should be remove this.
+> =
 
-And I think this patch should come after the
-CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the problem.
+> And I think this patch should come after the
+> CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the prob=
+lem.
 
-metze
+Okay, done.  I've attached the revised version here.  I've also pushed it =
+to
+my git branch and switched patches 12 & 13 there.
+
+David
+---
+cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+
+When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
+type 4" error and fails the I/O.  This is due to the switch-statement ther=
+e
+not handling the ITER_FOLIOQ handed down from netfslib.
+
+Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
+smbd_recv() and just using copy_to_iter() instead of memcpy().  This
+future-proofs the function too, in case more ITER_* types are added.
+
+Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+Reported-by: Stefan Metzmacher <metze@samba.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steve French <stfrench@microsoft.com>
+cc: Tom Talpey <tom@talpey.com>
+cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/smb/client/smbdirect.c |  112 ++++++----------------------------------=
+------
+ 1 file changed, 17 insertions(+), 95 deletions(-)
+
+diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+index 0a9fd6c399f6..754e94a0e07f 100644
+--- a/fs/smb/client/smbdirect.c
++++ b/fs/smb/client/smbdirect.c
+@@ -1778,35 +1778,39 @@ struct smbd_connection *smbd_get_connection(
+ }
+ =
+
+ /*
+- * Receive data from receive reassembly queue
++ * Receive data from the transport's receive reassembly queue
+  * All the incoming data packets are placed in reassembly queue
+- * buf: the buffer to read data into
++ * iter: the buffer to read data into
+  * size: the length of data to read
+  * return value: actual data read
+- * Note: this implementation copies the data from reassebmly queue to rec=
+eive
++ *
++ * Note: this implementation copies the data from reassembly queue to rec=
+eive
+  * buffers used by upper layer. This is not the optimal code path. A bett=
+er way
+  * to do it is to not have upper layer allocate its receive buffers but r=
+ather
+  * borrow the buffer from reassembly queue, and return it after data is
+  * consumed. But this will require more changes to upper layer code, and =
+also
+  * need to consider packet boundaries while they still being reassembled.
+  */
+-static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+-		unsigned int size)
++int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+ {
+ 	struct smbdirect_socket *sc =3D &info->socket;
+ 	struct smbd_response *response;
+ 	struct smbdirect_data_transfer *data_transfer;
++	size_t size =3D iov_iter_count(&msg->msg_iter);
+ 	int to_copy, to_read, data_read, offset;
+ 	u32 data_length, remaining_data_length, data_offset;
+ 	int rc;
+ =
+
++	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) =3D=3D WRITE))
++		return -EINVAL; /* It's a bug in upper layer to get there */
++
+ again:
+ 	/*
+ 	 * No need to hold the reassembly queue lock all the time as we are
+ 	 * the only one reading from the front of the queue. The transport
+ 	 * may add more entries to the back of the queue at the same time
+ 	 */
+-	log_read(INFO, "size=3D%d info->reassembly_data_length=3D%d\n", size,
++	log_read(INFO, "size=3D%zd info->reassembly_data_length=3D%d\n", size,
+ 		info->reassembly_data_length);
+ 	if (info->reassembly_data_length >=3D size) {
+ 		int queue_length;
+@@ -1844,7 +1848,10 @@ static int smbd_recv_buf(struct smbd_connection *in=
+fo, char *buf,
+ 			if (response->first_segment && size =3D=3D 4) {
+ 				unsigned int rfc1002_len =3D
+ 					data_length + remaining_data_length;
+-				*((__be32 *)buf) =3D cpu_to_be32(rfc1002_len);
++				__be32 rfc1002_hdr =3D cpu_to_be32(rfc1002_len);
++				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
++						 &msg->msg_iter) !=3D sizeof(rfc1002_hdr))
++					return -EFAULT;
+ 				data_read =3D 4;
+ 				response->first_segment =3D false;
+ 				log_read(INFO, "returning rfc1002 length %d\n",
+@@ -1853,10 +1860,9 @@ static int smbd_recv_buf(struct smbd_connection *in=
+fo, char *buf,
+ 			}
+ =
+
+ 			to_copy =3D min_t(int, data_length - offset, to_read);
+-			memcpy(
+-				buf + data_read,
+-				(char *)data_transfer + data_offset + offset,
+-				to_copy);
++			if (copy_to_iter((char *)data_transfer + data_offset + offset,
++					 to_copy, &msg->msg_iter) !=3D to_copy)
++				return -EFAULT;
+ =
+
+ 			/* move on to the next buffer? */
+ 			if (to_copy =3D=3D data_length - offset) {
+@@ -1921,90 +1927,6 @@ static int smbd_recv_buf(struct smbd_connection *in=
+fo, char *buf,
+ 	goto again;
+ }
+ =
+
+-/*
+- * Receive a page from receive reassembly queue
+- * page: the page to read data into
+- * to_read: the length of data to read
+- * return value: actual data read
+- */
+-static int smbd_recv_page(struct smbd_connection *info,
+-		struct page *page, unsigned int page_offset,
+-		unsigned int to_read)
+-{
+-	struct smbdirect_socket *sc =3D &info->socket;
+-	int ret;
+-	char *to_address;
+-	void *page_address;
+-
+-	/* make sure we have the page ready for read */
+-	ret =3D wait_event_interruptible(
+-		info->wait_reassembly_queue,
+-		info->reassembly_data_length >=3D to_read ||
+-			sc->status !=3D SMBDIRECT_SOCKET_CONNECTED);
+-	if (ret)
+-		return ret;
+-
+-	/* now we can read from reassembly queue and not sleep */
+-	page_address =3D kmap_atomic(page);
+-	to_address =3D (char *) page_address + page_offset;
+-
+-	log_read(INFO, "reading from page=3D%p address=3D%p to_read=3D%d\n",
+-		page, to_address, to_read);
+-
+-	ret =3D smbd_recv_buf(info, to_address, to_read);
+-	kunmap_atomic(page_address);
+-
+-	return ret;
+-}
+-
+-/*
+- * Receive data from transport
+- * msg: a msghdr point to the buffer, can be ITER_KVEC or ITER_BVEC
+- * return: total bytes read, or 0. SMB Direct will not do partial read.
+- */
+-int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+-{
+-	char *buf;
+-	struct page *page;
+-	unsigned int to_read, page_offset;
+-	int rc;
+-
+-	if (iov_iter_rw(&msg->msg_iter) =3D=3D WRITE) {
+-		/* It's a bug in upper layer to get there */
+-		cifs_dbg(VFS, "Invalid msg iter dir %u\n",
+-			 iov_iter_rw(&msg->msg_iter));
+-		rc =3D -EINVAL;
+-		goto out;
+-	}
+-
+-	switch (iov_iter_type(&msg->msg_iter)) {
+-	case ITER_KVEC:
+-		buf =3D msg->msg_iter.kvec->iov_base;
+-		to_read =3D msg->msg_iter.kvec->iov_len;
+-		rc =3D smbd_recv_buf(info, buf, to_read);
+-		break;
+-
+-	case ITER_BVEC:
+-		page =3D msg->msg_iter.bvec->bv_page;
+-		page_offset =3D msg->msg_iter.bvec->bv_offset;
+-		to_read =3D msg->msg_iter.bvec->bv_len;
+-		rc =3D smbd_recv_page(info, page, page_offset, to_read);
+-		break;
+-
+-	default:
+-		/* It's a bug in upper layer to get there */
+-		cifs_dbg(VFS, "Invalid msg type %d\n",
+-			 iov_iter_type(&msg->msg_iter));
+-		rc =3D -EINVAL;
+-	}
+-
+-out:
+-	/* SMBDirect will read it all or nothing */
+-	if (rc > 0)
+-		msg->msg_iter.count =3D 0;
+-	return rc;
+-}
+-
+ /*
+  * Send data to transport
+  * Each rqst is transported as a SMBDirect payload
+
 
