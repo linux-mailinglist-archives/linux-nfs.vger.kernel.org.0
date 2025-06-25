@@ -1,715 +1,278 @@
-Return-Path: <linux-nfs+bounces-12785-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12786-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD9BCAE8C8D
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 20:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 845C1AE8C9F
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 20:37:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6EF0B7B083B
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:32:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 384E37B1942
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:36:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E45B2DCBEB;
-	Wed, 25 Jun 2025 18:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7D538634A;
+	Wed, 25 Jun 2025 18:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YO9UKXfD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m/w/Q5VW";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="izrT4MCc"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2058.outbound.protection.outlook.com [40.107.237.58])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA54F2D5415;
-	Wed, 25 Jun 2025 18:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8D62DA755
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 18:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750876316; cv=fail; b=f7Fg65cTupF1gLdL25dO7p186NQ0ZyuOR7LtMvxzd4V9ctCcBXA82QoyQ+1HMViZ3E2f1S0zFyRrASdByZSefNHN3urL/ZzRgkAhHzvpSbuGXaDqQMOlXkR8sGJ5R/Ju5rTePq4IlRbvQP4job6ArRbHbES5zzkgwU+4xpVkc+0=
+	t=1750876636; cv=fail; b=qecU/fva1bgiaBlVjM4EF+l6pwTyQxnWJ2Gfa8Fd02ebx3pPjup4cH/zpWldzRf3nZgqywfHUraFs9z+3JMPzwLt1MfDtOGTWWyY21w8LciId64kQjdHjkU6BJZnEWt1pMiOrN77Vn7Hfi2cPXpWuwld334KB5MvuwRmR51o0LM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750876316; c=relaxed/simple;
-	bh=zWBxuhM+fomNmG9DipKLdcONTNvR2asbPvz41Y3e1N0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VmUbqvn+waKtSTR8DDS9w9VFgVeEBiHkZxnj+b3C0TM9+qy37Ss6aXbuzn4Pi5rfwtNKUjeFRxC/G6HsANXL+pTgG0mjKWDuIilA3A63RKm7F3UjuvS8tCKG+cvgNb9TNsheQE5dAMAPts/VmIxYu3iIsUWMdBHmV2Lo7pZzXAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YO9UKXfD; arc=fail smtp.client-ip=40.107.237.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1750876636; c=relaxed/simple;
+	bh=mBwV2k+q1hPORHvgFegf/PJrwK8/SP5vT+6jTC8VqmE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BTj2nvQ3p4DuS7kcMDoY9HQa53e5ZBymqHau3NqlnDxz7cXpbgpyZncuV88Q+hyXuuLHDC9BsyKzM0WyLSgA/Q1lIZYq7AfnbG8f3iu3ORlS3KJ7rCsStdnD2PrL0b7BBoQlLNWpfjoMcfaBquTP2GaTbR8CdG2ed6NSeYnbmu8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m/w/Q5VW; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=izrT4MCc; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PFtdFw016387;
+	Wed, 25 Jun 2025 18:37:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=bLIwGG36ZppjMTo4f4BCI74Zjye7VSGGBi2KqqGYE/o=; b=
+	m/w/Q5VWz0VNpy0QqXFeRSTtby/2O/OQ44LriVCw8Y2k9VrpJpMvTlmQsHlW8gud
+	5ABHcYI4jPAHvOvcvy6UGPlAlmnjbc/AQ8WsODseuEUzimTsG1cHOStz+K1Gy5MV
+	PE1ZyHbD4M1vYtKzBGmDFHilVGMPFBu7LZdaPLD+VqW0+UAp3bvRQEtxBfj9YWxl
+	LCA14orYMnwtgJSZdY5XyqXPcHhSGgKeAwnTQbGSNOoumrJxhlLna0XHKqAEbdVO
+	40GHASvutAw/M2VSkpT82I7F2XPX6UcftHx8edqSnQNGBTGitjdOplBSDasxjpzQ
+	2RXcwK+eaXaq1hOsnFpKjA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egumq6ms-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Jun 2025 18:37:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55PHedsK001837;
+	Wed, 25 Jun 2025 18:36:59 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2069.outbound.protection.outlook.com [40.107.236.69])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 47ehr6ehtc-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Jun 2025 18:36:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RQRTXHNrLSq9JnjwpOhVu1VTwpID2tyb5815dqzU2hw6nJXGw+YrJKA1iLvdtkEHD5TI20mGUyMJ7XeJOhbiRNTigG/9AG5P2mNDRWJI5i9oNlzRgL8HK5CAIg9rIp4qpcRHmRXoVlUxM9T3zgtYOzZvoJ1UvJUClbUSGZ7Pmrd7LFkxkxx+qYTN5ZiDPsUs4TZDlSKcC0Rkv+q/ZmoxyxxH9cSpq2zu5/+WRzurKohK83U7G2eFxZhKkipUYeVlta9AAPo97VYH/fAqmHayCeTKtsKe2arhq3XsHP4nSj7ox+zDARI9E2oP0Whf4IHeanluFbFHssbtKhkYPnwuyA==
+ b=ATlDqIQnlUW1zeafa0PyrSN6OvDwK6EBvVZrJvaZgVUOh37M4iLpOVcaQjaor7gnxU/XmhGWbk4mWZIJaTU74XX7mpZI+5W9Tf63Kih2PWgeVCnSORXNvgc6+2P7vp3nkTCPUgtasqyl9QC+zijsR8EQx4ESHepO0r3VXvElBn/4nQHnJwxDoxiWbyVGyWbpJvZKbMNBi/8jvyvvv6yNqzkeu/j1Fjl7UvfqD9PVADaZC1Ith0fu//2SESmFBaXUL3FDi5yIl6YG81lvE2wLQ/6DhNmrqd0arAPBTtQzDyOZ4fwVs9Itsg8xwkP0He7dfTCC6Kb/rB5GqQ/IwBFLIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KAvm5AweKpCNVZyEJ3o5bzi6WDYuEYrBfIgM8T1HYUU=;
- b=aUSwIQWgc97KbQzMXHuGohhRPvazQSDLIT9Fh1jjDV+TVkkHmEDPvIhwKEh3dDmPJ3AT8u0pSQ0YqNcBGqoqlPnWqKvjYk7epy/UBZXD5yfkxDCnrcej+VE7AV2ImtLUvGJqfwaCyh5W+Ai5uk/AFrrkaCY+3dfCM7I/Jt57YUVkaFERJy6DRgObGI8zoxObr9akfEoEK/6iQMrxthXIPy5/GxV1R2jmFqlwQLNPWaazeWAAEgB6yFYPzRs7eKHjeAUCCMwzqb7svU50P5VLqIAm8F9nJAYWAIHtj2bzlpDZLKyFq4qBe2+qwc4jf1oeEzIR+3VHyhWAktlHu6b7yQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=bLIwGG36ZppjMTo4f4BCI74Zjye7VSGGBi2KqqGYE/o=;
+ b=lyUT9InTQfe1S48j/cfZyYtZrI1PwYyYi4X9Mqa4c4yKUmAsB/A5f4H5SZMkZPExqBoCwzSFs4f1yofocFj4/yly9O5EzmQ4fMmHEUHtYQe+njuLHCvIehUrU4+vZ08d2dVd/g8syHrH2CJa5ht5fnKNdSuZ1jeb78C88Z4gYPn5DOxAhjnfPpWd9pxVdCb2Tv9YxJ4rGzpNSfEKLlH7CyVpV5viITIxw1WBZ3OAY+TCG1N7rYriQYYZC2FwlUKUxlxMc1kWBkh73FV/da3CLavewCB7vjd7MmbcDvgP+zdLIBTKtJps1PHDME1Fx/bg6oPkUf0PUYlumKi+TK7OSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KAvm5AweKpCNVZyEJ3o5bzi6WDYuEYrBfIgM8T1HYUU=;
- b=YO9UKXfDkmze/jUjkOBO3S/MW+u+Aa/IEoUEWLO1UZc8qEczqbGt3peGi9RUjc0lWLQgE8QVshb4jkYhy69NXFfzv7M81/VvRnx96owTDJhnQzLuZPuleqdJX02w8sn40X/WuiWPONhb8dnyVflwn9MtOACIwGXg6NTUh4sKaamAokqSVuLywfcDY2rfd9OdA9DnovY6Ko/9r5d5Xt/Ta/YVQqrB0CoFgpPaMrlzjXtZlFnJdQ0YOyXyo/erVwKb8GKIpnWKKfLxxt2KxBmkSLPfIyUbNz1T/UqSij2qWNumfk2AMIKxKkdFO3dOU3Tua0RLSSiMX1uOWs1Kp+Z9uA==
-Received: from SJ0PR03CA0174.namprd03.prod.outlook.com (2603:10b6:a03:338::29)
- by CH2PR12MB4263.namprd12.prod.outlook.com (2603:10b6:610:a6::8) with
+ bh=bLIwGG36ZppjMTo4f4BCI74Zjye7VSGGBi2KqqGYE/o=;
+ b=izrT4MCcPeJhc+ivEfZ5mNl991DRmb5d7cEYoNF7kOFmMP4XhUYrstYDug9vDfsYNDVR+cyokVFxROpO6nbdZewd5TL8LQqxElPmJNMXer6H4cIvuU1jqHmqDFMS01gt5e7Idm3aEUnoOyhI/UPDTS62UK8eL3cp50Jd5VqwdwI=
+Received: from BY5PR10MB4290.namprd10.prod.outlook.com (2603:10b6:a03:203::15)
+ by SJ0PR10MB4526.namprd10.prod.outlook.com (2603:10b6:a03:2d6::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.23; Wed, 25 Jun
- 2025 18:31:47 +0000
-Received: from MWH0EPF000989E5.namprd02.prod.outlook.com
- (2603:10b6:a03:338:cafe::9) by SJ0PR03CA0174.outlook.office365.com
- (2603:10b6:a03:338::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.27 via Frontend Transport; Wed,
- 25 Jun 2025 18:31:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000989E5.mail.protection.outlook.com (10.167.241.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Wed, 25 Jun 2025 18:31:46 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 25 Jun
- 2025 11:31:26 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 25 Jun
- 2025 11:31:25 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Wed, 25
- Jun 2025 11:31:19 -0700
-From: Mark Bloch <mbloch@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>
-CC: <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
-	<tariqt@nvidia.com>, Donald Hunter <donald.hunter@gmail.com>, Jiri Pirko
-	<jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>, Leon Romanovsky
-	<leon@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
-	<jlayton@kernel.org>, NeilBrown <neil@brown.name>, Olga Kornievskaia
-	<okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Shuah Khan <shuah@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, Carolina Jubran <cjubran@nvidia.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>, Nimrod Oren <noren@nvidia.com>, Mark Bloch
-	<mbloch@nvidia.com>
-Subject: [PATCH net-next v11 8/8] selftests: drv-net: Add test for devlink-rate traffic class bandwidth distribution
-Date: Wed, 25 Jun 2025 21:30:18 +0300
-Message-ID: <20250625183018.87065-9-mbloch@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250625183018.87065-1-mbloch@nvidia.com>
-References: <20250625183018.87065-1-mbloch@nvidia.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 25 Jun
+ 2025 18:36:51 +0000
+Received: from BY5PR10MB4290.namprd10.prod.outlook.com
+ ([fe80::8c24:37e7:b737:8ba5]) by BY5PR10MB4290.namprd10.prod.outlook.com
+ ([fe80::8c24:37e7:b737:8ba5%3]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 18:36:51 +0000
+Message-ID: <af096255-8676-4290-a0a5-6edc95472daa@oracle.com>
+Date: Wed, 25 Jun 2025 14:36:48 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfs:check for user input filehandle size
+To: zhangjian <zhangjian496@huawei.com>, steved@redhat.com,
+        joannelkoong@gmail.com, chuck.lever@oracle.com, djwong@kernel.org,
+        jlayton@kernel.org, okorniev@redhat.com, kernel-team@meta.com
+Cc: linux-nfs@vger.kernel.org
+References: <20250626002026.110999-1-zhangjian496@huawei.com>
+Content-Language: en-US
+From: Anna Schumaker <anna.schumaker@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20250626002026.110999-1-zhangjian496@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH5PR05CA0007.namprd05.prod.outlook.com
+ (2603:10b6:610:1f0::12) To BY5PR10MB4290.namprd10.prod.outlook.com
+ (2603:10b6:a03:203::15)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Yes"
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E5:EE_|CH2PR12MB4263:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2e1bba0-76e0-464b-88fa-08ddb4168aaf
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4290:EE_|SJ0PR10MB4526:EE_
+X-MS-Office365-Filtering-Correlation-Id: b72e114d-a7bc-43b4-58d0-08ddb4174013
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|10070799003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PJ2ORS8Y8w10lFZNmE9l2MeXec41XBKSscVh9nRR9sCm8NhX+t42jK/Ocufi?=
- =?us-ascii?Q?UPB6E3fuj2aQZhy7pGq6cOuRO9ys/Im3YIGhHxj1EnriC3KTwtiJ2eVCx79u?=
- =?us-ascii?Q?e4Dt1v1QqFw/LNWYQew9Y7ze7Vlzv7pGpMBcwEGG4RSDFuBsW0vcCaqxg76S?=
- =?us-ascii?Q?Q94b+sYDmXzIVptatEoy49fV971Chii8bLRzofRNrUEmO+JmUVCQ6fR4v8zG?=
- =?us-ascii?Q?Eag+VJbAq6vaznBkLzh9uiESQDjGIQNO34QNNFQ5ZRZviG4LYds9MVom3E0E?=
- =?us-ascii?Q?dVc/BI+MXMPl0dQR4x4vrIR0hHLc7gJY777jsn06fiSbfHLpz5m5GB0gZb0V?=
- =?us-ascii?Q?P1z3ToAdue7wj2djBqbQxOQiHi0S4+2nYkVCIzCNq9md3tsA/A3KDyxxh6j0?=
- =?us-ascii?Q?O3BKZGmDawoqzzvVObsG16aniRyR9w6o7Bm0oxKnTq858wust6eKbCk+G6Qr?=
- =?us-ascii?Q?kYpLNx+xPjoaF3x1LBgazhivOASWQZ9CWaF2fB1I/PXj/Y2hRgo974HvxVgV?=
- =?us-ascii?Q?lHwdul6SO3ARvZPn2dgu/qMZIij+Ds0PhHcwI2ZyV7pBIuXadXyW9LuWI64v?=
- =?us-ascii?Q?WwtD3JsB9PJZBEApJpyCtNJjBl3RSS/CaDO3emMh0ELFF65m+ppxciRm2PUm?=
- =?us-ascii?Q?AfvY5fQ1pdGCDlRrGxYVxee0t66tE59kqdnrazXhIoNawI7tP4wwMMyBHHDd?=
- =?us-ascii?Q?bd/YL1bbV4bMb09gkTEBEKM6UnZgrPTFo4u+jM59+f5ZKQ7hDeDUX+2GTXq1?=
- =?us-ascii?Q?KjQNo+5RTxq1RZxwhRAd32co1JlDWR0WR9db2vifpQm4OUKYoVCe4xP16FcW?=
- =?us-ascii?Q?MbWIGPcCC457sAgxqKL5KS3eTiVHcG7BN2ruwRRh2/i0GevzyuPqlMdWN1Ni?=
- =?us-ascii?Q?/wFgvYkczH/dZQjn1hHa+R6f+YB80dh6R96QyAswHiZkTObhS9cbdac6vc5R?=
- =?us-ascii?Q?3dC9OlQarvXl5VkYRI75S937lwnutVzy9RFnZ/gvHfl9xgRAvd9TPlRap8IE?=
- =?us-ascii?Q?uGyN/o+NsLy1LxA51uyHQVbVseD40wrVfqrm2Ypgtlkkrx8VE9vrUlbJCARW?=
- =?us-ascii?Q?cgCvXg6n0Vxu3AmmVw/uWeWaIGaQJ0hUhEzXq77aL4dYtP1f98VPJ5KsMz6m?=
- =?us-ascii?Q?ynRQ+grw3ytA7VhmxIwLNE6vNxraor0Tqr1Tb5EmydKa8QhizBfpb721yolZ?=
- =?us-ascii?Q?QHt/q/gd5hBmw8Zbv5eJxytrBIjs3Cp2Ql1l4o9yqyLlLTEALkjfwG9eoS85?=
- =?us-ascii?Q?+eVzwPxcoVJ+hIOxiZFtZk5nryo5o+Q4zYqbOOgfgBammczvd77nShdRPgYa?=
- =?us-ascii?Q?WMUqOmV4+cuTLf3mLDyW04wkTcZOhrYeqaHh9jTeB9y9fb4k/Ae/M/u3SC39?=
- =?us-ascii?Q?IaIl6HdtEl6XeclkAKj9jeYHbZzD7Yvl2YnxBRsWQ2MY3vAmVlOrHbuzw+tQ?=
- =?us-ascii?Q?XuLMPi1yYbytjjtlciU66q9jqxUsAVDgIVlayeWsQ1NUQaCPZoNkFBpmiwv3?=
- =?us-ascii?Q?w5TBHouijcFaGBZyajhThWDM+17/Hawn/IF5k9RiRWjvNcucr82xz/HhGQ?=
- =?us-ascii?Q?=3D=3D?=
+ =?utf-8?B?Umtpd1JMM2R6TGN6byt2dnI1VVV3SnBQbEl6VnIvendUUFo0WnduY3p2eitn?=
+ =?utf-8?B?RlVUdVVPdWRVWlVLdXhWNnNYME5Mek5zQmU5YkpSMGZLZmgwYVJtWWNnbHpo?=
+ =?utf-8?B?OTJ5V1BJcE9VdFhUR2VMbWhnZ1JOWTF5WnlkUFZRNTJlbzRJRGoraW1Ja1Ro?=
+ =?utf-8?B?bG5aWUR2ZkFvOEV4VnZlV1VmdmdNZmpoZTdtNm1ROFFXY25RVHV0NHlxQ3A2?=
+ =?utf-8?B?L1p3cUExbGtPL0pVVzY1dVBKTlBWbURpUXc4SUUzSnlwd3E5aHluK0kwSUZP?=
+ =?utf-8?B?VzNwNU1LS3lUdU9uTFpUL0ZRdGc1ajBuaFhLT05mblpDajVhcDhEYUNBZ2kw?=
+ =?utf-8?B?NGVUUVRxOFl3ejBVanlueGVldmg1OHc3aHZBdWdVR0VoL3dHMjF1VThRd08r?=
+ =?utf-8?B?RWZCRVR4dDVrRjdydnJKUFFwdXE5K3JaSEl6RDVVTmgya2FFY0FZUDFNQlli?=
+ =?utf-8?B?MmNBSWRtdEU1b3M2SklodXVKdzFsL2JMeUFGTVpFWW1FcXhwMW0vS0JINDMw?=
+ =?utf-8?B?eXdNakJFandobmNEWHB3b1FBcG9ZaWRycUo5cVVvVmovVEFqdExmMExXbUo5?=
+ =?utf-8?B?UUk5Z2hGQktSaHR3UGxlUGM0eDZKSjNaMHYzcDNucFRldFNOWlJwWndvL0xK?=
+ =?utf-8?B?T3B1RHRvdy9LdGpnTnNMZFdKdE5EN2RrLzNMTWlHMWxXeWh5cCtzYnRRbVVV?=
+ =?utf-8?B?U3c4aHY0VDZBbTZlTVQrR1VaeldyekFjRkJybVlhaDZ1THR2MUFaaDdsSkxO?=
+ =?utf-8?B?emJoOVVzZXB3dzJjcnpmTjFyUGRrZy9NLy9tcTBwKzRIb2xUUmhSMllER3Fn?=
+ =?utf-8?B?UmlRQlRKYTN0dGxUWllEOEMxNzlUMXlRbkYrelNPOWREeDhYNUJqRGRvL1Vu?=
+ =?utf-8?B?Ukk3WGtzeGlOM0dSWWJjamh5bWhacUFqOW9RSmg1aGJSYlZKV1RSZTN5Y2xE?=
+ =?utf-8?B?eE1aNkxET1ZhNDVtZkVUMEVQWEl4TlJpbm5TMFYybU54U09WVDJVQWhhVWdW?=
+ =?utf-8?B?Sjg3b0tqY2FyOVFhR1dNNmVQcy9tdWpENzFqRVhQTUdPMzFSWnBpMUNONWxj?=
+ =?utf-8?B?ZXM0K3FydXZUTEdhNGNxTXNpTEdOOG1lUzRBZGJIY1VPMHBSR1VsdzJuKy9a?=
+ =?utf-8?B?dVRkSkxxTG1UMTdTalgrL0VnVnZ5ZkZTdTB3S2Nzbm5idDRvUFpqekZtaTBL?=
+ =?utf-8?B?bytFN3Zod3V1amdmL2pZYTJiMVdwNHJtYjJva3RkWThtWlhGUFBIaXFTL3pF?=
+ =?utf-8?B?bW5oMVJhN2tQTXVpaTh1R1Fla1JYWi8rYis4ZGcvWForL05aNXlieXBGK0NV?=
+ =?utf-8?B?Y1pLR3RZby94M09nQ3hKRU5keUhBRWdsOG5uaVdHQVppRHF6bGF6d0Vtei9a?=
+ =?utf-8?B?bW1SVFl0SnJnU0VpckJZN1JxWXovR2hMSHZHSDUyY2E3c21zV0FSODJZbXdy?=
+ =?utf-8?B?Y251eStjY1pwVXNucWhiTDhGaWZEdkRqZFFzY0pQVW1zOTMySnYxUU9yNTdM?=
+ =?utf-8?B?TkNScU1ld1NCb1NsdGxKbDVtZ1YxOGNEYitrTjBuZG5LZWVlV2tab3RoSkRa?=
+ =?utf-8?B?WWFJYkhwdjk2R3NCbS91TSt3bHQwUGVsQVlOdVZYSVpEV2I4a0F5eVgvUHdC?=
+ =?utf-8?B?U0U4RTBFUldWcnhTZ3JjUW9CZzRRZytZcUEvVTJUV3RsZG04VWcyaExSVVlq?=
+ =?utf-8?B?UEYyYWJsQWpWZGRZT0t4OU4vUHZ3ZTZXdk04L3ZXNFFFMlAyWmFjNVZCb1Bl?=
+ =?utf-8?B?VGxtdUYya0pGN1JwNDkxL2h6eXJkVklRcExvbnQycTg1aTE4QXJZUXkzcmxD?=
+ =?utf-8?B?SGxnUDFJL0RWdXZJekp5eXptZlhiQ1RaVUJtN1lGS0prRnFOR05Ec3lJZ1F5?=
+ =?utf-8?B?OXBlRGdjZ1hOUVpFYWtkY2NjSjEyd01zWmZFL0hobEQ0bDg1UElhSWptREVi?=
+ =?utf-8?Q?kODoFPrX8IE=3D?=
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 18:31:46.4443
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4290.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?clorVkFUaytFM0FDQmZFOGFyMk9vQkpBWG16RnBlakI2bkVNRUZGek8waGda?=
+ =?utf-8?B?QVVzYVBhVXdKT2hzQXJIQU5hQmFnZWtwbnFGRWJqYjEzTGkxVzc4aGdMeWhC?=
+ =?utf-8?B?NEl1SFJQTzNOY0NYV1F4bDhZTUtxRThuSE83LzM1aGVCMCtiUXVrMXh4am13?=
+ =?utf-8?B?VXowNk5VMDZobmxXVkFGa3NGeUJiWnFCNGFvNE1QNW80UHpTaWJ1VHNrNGpo?=
+ =?utf-8?B?c25EY0g2cXNVWS9yMGp5VlZMVEE3WENwQ3hBOCtrbHJqRVFPSnlZSlRDQ3V4?=
+ =?utf-8?B?TmRNeFp3bGdpMGlEU0FqcVU5Umg5NEZERHdDWEg4Wml5WUhCakJCV3JlbG1t?=
+ =?utf-8?B?S3RiYmhaSUVySWtoS2tha1Y5RG4ySVVPOFdNVjNUcmhnYlZIMkYwZzhHNzJZ?=
+ =?utf-8?B?K0QwQTRvTGVHQnV0L0lrdlZPTmtKci9mSStVUms3K2xabzQrQk5NSFNhUW1r?=
+ =?utf-8?B?ZGNqRFk1YTBWK284dGQ3SEFYaEJLODdoS2htWmdGVVlVdGFOZ3RqcisvREJQ?=
+ =?utf-8?B?RDRZYnJHMHRtQWtEOEw2OFVxRnByL2NnUWVLNEhVdW9XUVl2cHZ1NVlRSk1U?=
+ =?utf-8?B?cTRBQ2g1SEc0RlBCTFo5bnZoYnhJODVHR2dBK0lwbUNGajlrS3NmMGNhTnk0?=
+ =?utf-8?B?TmhTejQ0WGFnYnJnTjFmU0ZZL29LZ0FWNjY3VDJaS1hWQ1hlLzlNVFlEUnd2?=
+ =?utf-8?B?Q25tVmVQOEtXSVRWT2pTYUtTbmhZVjBpVDZhMU4vbU81a2JaMDhPVkVRMWFy?=
+ =?utf-8?B?T2hQZVBQUW1KSndKa0l0aW5FbHNVSStqaDhaZ2R5bGY4VXZvMjBicHhBcXNo?=
+ =?utf-8?B?Uk5ESHE0bkpHdWRlVlNBKzlzamRPY3JYZTFmdzQyN3l3bEVDalR2d2FPSGRI?=
+ =?utf-8?B?Mm9oQUd4Nzd1ZnlkemRyTzBjeSticUMwdXB1cDhGY1ZISTZoWTkvOGtva1ha?=
+ =?utf-8?B?UG5qM2RyK2JTVUc0R21KN0orZ09FT09uY2xpQ0YyVFJtd0h4d29SaUxIZW51?=
+ =?utf-8?B?Vmx1b0kxdFZpUEYyN0RCVmlxakwwVlhXTTZTZFU0eW5NVkg2eWNoTWF3ay82?=
+ =?utf-8?B?OTRFNklHdzZqUTg5T0Z4TXZ4amlpeFB6WkJuaVhScWd6b05Na2E1Wm85UmpO?=
+ =?utf-8?B?WU4xYllLY0NTWFNjN1JlL0RxdlNVcjNsckJsN2g5NkMzY3hTMFJEYlVmTnBU?=
+ =?utf-8?B?YUp4YXdsN2JWblhDRlcyRmNTV2RzNWZVR01JUVFoQkRMUFJkSkVtaS9GNUZQ?=
+ =?utf-8?B?YnFYRUZ1MEJFUStCQkswSWhKRG4xYXpyNnd1dnVTaHdXZ2ZNZnNMVDlLOWg2?=
+ =?utf-8?B?NnIzelVPMzZ2N2JiVTJ4V05MWCt6NWkxb2dmajUzbjVCZzlKbGtKeVpqUFJS?=
+ =?utf-8?B?dzc4dnNKSGJVa09iUGJ1TE1VWTJIYkdRbHZBNzUxbU5uMm9KS3pZc1V3My9T?=
+ =?utf-8?B?cnFwRm1tMWx4RmowZTF1dFRQYll4VGR3dGZjNkQrbTQ1dEI2UGxwQVdpNFRl?=
+ =?utf-8?B?ME1qeTZyYkFpeDFsQ2xUNzRxWUo3WmtEbmFueDZYdkQrMWRWbXNjVTRNMHp5?=
+ =?utf-8?B?bGd6cWowbHQvYmdsbHlNa2dzOTV4K09BdUxZNzFvQ1BseDgzcVI3SnFBckNY?=
+ =?utf-8?B?MWV0cXR5c3NiTTNWc3dCOFM4UC8rajJnQlBBOTNoUXRhM3M0bXV2MzdFbXZt?=
+ =?utf-8?B?NjNQeExVdUg3Ui84UGNOR3FKQzlwTkVHRXAyR1VqVUpkUyt6VEQzSERPaGJi?=
+ =?utf-8?B?akZ0OHVXMzNySVc0aUE1NldDODJLWFNFVVkrTkNKVm9wR0Vzek5zMHNxczF6?=
+ =?utf-8?B?cEpvSy82QWEyRW1JT1dmQlZSRGVRdnZBWlpDd3VvMUxzQ3VESU5sOVNGY0Ft?=
+ =?utf-8?B?NXhrenhOc3p2SUNGclhMTGtkdjZXbDVhL1FVTkdGa2lDSUpNR1hsME83YkMr?=
+ =?utf-8?B?cmRUMnU1czVrR1VSa0Yvd0VieFIxbWZEOUFaQmozUVUwM01HQ25jaXVvNFZl?=
+ =?utf-8?B?dWpGT3J2TU9QN2oyZ2VzbUl1clFBWE9EbVB2TnczdkhmY21jTXlvRTJLMExG?=
+ =?utf-8?B?MU9Kb3J1cXFzVnovSTJyM0owOVdiUTYvNzI4SzNSWGx2UFExTjRnRzByRVVj?=
+ =?utf-8?B?d2p1V3BvL1d0NHRPeHN0OTF4elF1R3JVU292UGVlZjc0eWVzbVdKMGxJNHM1?=
+ =?utf-8?B?V1VHeWpSc0FocFNlVUpycE94WU1yQkFXNEMyWHN0MUFzK1Zpam0wVkZ2TlJn?=
+ =?utf-8?B?cjJDY040UHgrNHh1ZWZzVzBOelpRPT0=?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	23xyue/vrspHaQ0JA4EFUqEgYtUpc51Zw+eYVo7af8rQm0pR/u6H5IYwDzdzoWM9KuMGsaKENY6FzVl69m7iul19VGnwGY6WvEhEYSiieLstuFgDhK0j6X+VEQN5w5OqnUPnvgAZaWZlVCZoc+ubrKO6LjDWSoVrMz2+cL3GYirGt8TASbyDUQZVHSFc8rByEygJyyqaYmsqb1ywzauiedQJ8VLeZGndMMEYG6TjJEEJJ9QX/TTZ5vMVMX6dES50X7m8PrIMHF1vn4sGGoJKvP4sedQ8Y5OGu15h+3ZmCoo5OAoPih/8w20dzg4RbYjm2WeFpnKvskigZC+/naPvJfJXyXuwXc2z8DGoov97siMglSohoDfEWhIlHDUJbmjHpZQsCePt4H95DDkb6/Ez4ZhDYyVmLeaKGK1yTeMd4FgUkrAuIdwi9HLWVbpCOy5x2Pei41Fa6KEDgE7Yo6sbGQ3c+FTkP1jUEeOiLTDpoV6xlxh/6vvEfLhMecTw0kYmYxQ6KtkTB7s69yICBlMgkKXRJKHY4PtzVgti+mQOpyFEbi0pSZJnwX4JQm/TNjzn6Q16atj2d4DnX7Otv6NhQaSWZsmDTSk4tCBpQiBeFgw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b72e114d-a7bc-43b4-58d0-08ddb4174013
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4290.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 18:36:51.1059
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2e1bba0-76e0-464b-88fa-08ddb4168aaf
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989E5.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4263
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zeMaTb0dfZLeeBMHwEZV9H576UDEOMqIkWf4QBQgIZkoltRxpCWODLn1F/7tZUQZ54eRoSoma+4EaG/aactKTJmXYkwSmuky9yymBvgR4AI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4526
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_06,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506250139
+X-Proofpoint-ORIG-GUID: tfy7oaW-ZEecQzvms4tEyOZr6s_1BeKY
+X-Proofpoint-GUID: tfy7oaW-ZEecQzvms4tEyOZr6s_1BeKY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDE0MCBTYWx0ZWRfX6USJyi7ifXou UiDlgE3vak1Skwh41YMNbgDABfsuDaSztxuZnN07Zmu+GaRMbySsrvBOyqxKJcnPYzZBLqE88p5 SPozuIRIqU/f57Ip4eJo9JcT4ooQYnIYV+u2SBt5/a4lUQ84hhrD52HtEml0NbSGqn8PajYMOrj
+ LcTEyPWJjqILFKKzZK/xJxC5l7+u62DRcG08a6Hv9h8kGhFR3CQ0KZA2bz2tXymnlVadw5MLO54 0XluGkNilAeqp3cymB5DAkY+LMktmkJfCC03+7oMN8WrhSm6wRome2zo0DzESOKEll2lUMfQ0Sf e3ZLXKYlwT5S3sHsvrKvqpevemRy5nX2Kwvc9MTo9qXMQg1DFIpLlzXzBJ5HL2VGtyMIX84NBjv
+ RaLq5jOtU8XkdURAhnzphZITFU5omKlqWON1ZdEzMTCpsrs/TSX10KnlbP8OgMevTjRCNcn3
+X-Authority-Analysis: v=2.4 cv=S5rZwJsP c=1 sm=1 tr=0 ts=685c41cc b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=rXwCkeNdJSY-7hNXGK4A:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:13215
 
-From: Carolina Jubran <cjubran@nvidia.com>
+Hi,
 
-This test suite validates the functionality of the devlink-rate API for
-traffic class (TC) bandwidth allocation. It ensures that bandwidth can
-be distributed between different traffic classes as configured, and
-verifies that explicit TC-to-queue mapping is required for the
-allocation to be effective.
+Thanks for the patch! A few comments below.
 
-The first test (test_no_tc_mapping_bandwidth) is marked as expected
-failure on mlx5, since the hardware automatically enforces traffic
-class separation by dynamically moving queues to the correct TC
-scheduler, even without explicit TC-to-queue mapping configuration.
+On 6/25/25 8:20 PM, zhangjian wrote:
+> Syzkaller found an slab-out-of-bounds in nfs_fh_to_dentry when the memory
+> of server_fh is not passed from user space. So I add a check for input size.
 
-Test output on mlx5:
- 1..2
- # Created VF interface: eth5
- # Created VLAN eth5.101 on eth5 with tc 3 and IP 198.51.100.2
- # Created VLAN eth5.102 on eth5 with tc 4 and IP 198.51.100.10
- # Set representor eth4 up and added to bridge
- # Bandwidth check results without TC mapping:
- # TC 3: 0.19 Gbits/sec
- # TC 4: 0.76 Gbits/sec
- # Total bandwidth: 0.95 Gbits/sec
- # TC 3 percentage: 20.0%
- # TC 4 percentage: 80.0%
- ok 1 devlink_rate_tc_bw.test_no_tc_mapping_bandwidth # XFAIL Bandwidth matched 80/20 split without TC mapping
- # Created VF interface: eth5
- # Created VLAN eth5.101 on eth5 with tc 3 and IP 198.51.100.2
- # Created VLAN eth5.102 on eth5 with tc 4 and IP 198.51.100.10
- # Set representor eth4 up and added to bridge
- # Bandwidth check results with TC mapping:
- # TC 3: 0.21 Gbits/sec
- # TC 4: 0.78 Gbits/sec
- # Total bandwidth: 0.98 Gbits/sec
- # TC 3 percentage: 21.1%
- # TC 4 percentage: 78.9%
- # Bandwidth is distributed as 80/20 with TC mapping
- ok 2 devlink_rate_tc_bw.test_tc_mapping_bandwidth
- # Totals: pass:1 fail:0 xfail:1 xpass:0 skip:0 error:0
+No signed-off-by?
 
-Signed-off-by: Carolina Jubran <cjubran@nvidia.com>
-Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-Reviewed-by: Nimrod Oren <noren@nvidia.com>
-Signed-off-by: Mark Bloch <mbloch@nvidia.com>
----
-Hi Jakub,
-you can find the iproute2 patch here:
-https://lore.kernel.org/netdev/20250625182545.86994-1-mbloch@nvidia.com/
+> ---
+>  fs/nfs/export.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+> index e9c233b6f..e0e77f8ca 100644
+> --- a/fs/nfs/export.c
+> +++ b/fs/nfs/export.c
+> @@ -65,8 +65,8 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *fid,
+>  		 int fh_len, int fh_type)
+>  {
+>  	struct nfs_fattr *fattr = NULL;
+> -	struct nfs_fh *server_fh = nfs_exp_embedfh(fid->raw);
 
- .../drivers/net/hw/devlink_rate_tc_bw.py      | 466 ++++++++++++++++++
- .../testing/selftests/net/lib/py/__init__.py  |   2 +-
- tools/testing/selftests/net/lib/py/ynl.py     |   5 +
- 3 files changed, 472 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/drivers/net/hw/devlink_rate_tc_bw.py
+I think we still need to call nfs_exp_embedfh() here, otherwise this pointer
+will be unset during your "check for user input size" check down below.
 
-diff --git a/tools/testing/selftests/drivers/net/hw/devlink_rate_tc_bw.py b/tools/testing/selftests/drivers/net/hw/devlink_rate_tc_bw.py
-new file mode 100755
-index 000000000000..820d8a03becc
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/hw/devlink_rate_tc_bw.py
-@@ -0,0 +1,466 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"""
-+Devlink Rate TC Bandwidth Test Suite
-+===================================
-+
-+This test suite verifies the functionality of devlink-rate traffic class (TC)
-+bandwidth distribution in a virtualized environment. The tests validate that
-+bandwidth can be properly allocated between different traffic classes and
-+that TC mapping works as expected.
-+
-+Test Environment:
-+----------------
-+- Creates 1 VF
-+- Establishes a bridge connecting the VF representor and the uplink representor
-+- Sets up 2 VLAN interfaces on the VF with different VLAN IDs (101, 102)
-+- Configures different traffic classes (TC3 and TC4) for each VLAN
-+
-+Test Cases:
-+----------
-+1. test_no_tc_mapping_bandwidth:
-+   - Verifies that without TC mapping, bandwidth is NOT distributed according to
-+     the configured 80/20 split between TC4 and TC3
-+   - This test should fail if bandwidth matches the 80/20 split without TC
-+     mapping
-+   - Expected: Bandwidth should NOT be distributed as 80/20
-+
-+2. test_tc_mapping_bandwidth:
-+   - Configures TC mapping using mqprio qdisc
-+   - Verifies that with TC mapping, bandwidth IS distributed according to the
-+     configured 80/20 split between TC3 and TC4
-+   - Expected: Bandwidth should be distributed as 80/20
-+
-+Bandwidth Distribution:
-+----------------------
-+- TC3 (VLAN 101): Configured for 80% of total bandwidth
-+- TC4 (VLAN 102): Configured for 20% of total bandwidth
-+- Total bandwidth: 1Gbps
-+- Tolerance: +-12%
-+
-+Hardware-Specific Behavior (mlx5):
-+--------------------------
-+mlx5 hardware enforces traffic class separation by ensuring that each transmit
-+queue (SQ) is associated with a single TC. If a packet is sent on a queue that
-+doesn't match the expected TC (based on DSCP or VLAN priority and hypervisor-set
-+mapping), the hardware moves the queue to the correct TC scheduler to preserve
-+traffic isolation.
-+
-+This behavior means that even without explicit TC-to-queue mapping, bandwidth
-+enforcement may still appear to work—because the hardware dynamically adjusts
-+the scheduling context. However, this can lead to performance issues in high
-+rates and HOL blocking if traffic from different TCs is mixed on the same queue.
-+"""
-+
-+import json
-+import os
-+import subprocess
-+import threading
-+import time
-+
-+from lib.py import ksft_pr, ksft_run, ksft_exit
-+from lib.py import KsftSkipEx, KsftFailEx, KsftXfailEx
-+from lib.py import NetDrvEpEnv, DevlinkFamily
-+from lib.py import NlError
-+from lib.py import cmd, defer, ethtool, ip
-+
-+
-+class BandwidthValidator:
-+    """
-+    Validates bandwidth totals and per-TC shares against expected values
-+    with a tolerance.
-+    """
-+
-+    def __init__(self):
-+        self.tolerance_percent = 12
-+        self.expected_total_gbps = 1.0
-+        self.total_min_expected = self.min_expected(self.expected_total_gbps)
-+        self.total_max_expected = self.max_expected(self.expected_total_gbps)
-+        self.tc_expected_percent = {
-+            3: 20.0,
-+            4: 80.0,
-+        }
-+
-+    def min_expected(self, value):
-+        """Calculates the minimum acceptable value based on tolerance."""
-+        return value - (value * self.tolerance_percent / 100)
-+
-+    def max_expected(self, value):
-+        """Calculates the maximum acceptable value based on tolerance."""
-+        return value + (value * self.tolerance_percent / 100)
-+
-+    def bound(self, expected, value):
-+        """Returns True if value is within expected tolerance."""
-+        return self.min_expected(expected) <= value <= self.max_expected(expected)
-+
-+    def tc_bandwidth_bound(self, value, tc_ix):
-+        """
-+        Returns True if the given bandwidth value is within tolerance
-+        for the TC's expected bandwidth.
-+        """
-+        expected = self.tc_expected_percent[tc_ix]
-+        return self.bound(expected, value)
-+
-+
-+def setup_vf(cfg, set_tc_mapping=True):
-+    """
-+    Sets up a VF on the given network interface.
-+
-+    Enables SR-IOV and switchdev mode, brings the VF interface up,
-+    and optionally configures TC mapping using mqprio.
-+    """
-+    try:
-+        cmd(f"devlink dev eswitch set pci/{cfg.pci} mode switchdev")
-+        defer(cmd, f"devlink dev eswitch set pci/{cfg.pci} mode legacy")
-+    except Exception as exc:
-+        raise KsftSkipEx(f"Failed to enable switchdev mode on {cfg.pci}") from exc
-+    try:
-+        cmd(f"echo 1 > /sys/class/net/{cfg.ifname}/device/sriov_numvfs")
-+        defer(cmd, f"echo 0 > /sys/class/net/{cfg.ifname}/device/sriov_numvfs")
-+    except Exception as exc:
-+        raise KsftSkipEx(f"Failed to enable SR-IOV on {cfg.ifname}") from exc
-+
-+    time.sleep(2)
-+    vf_ifc = (os.listdir(
-+        f"/sys/class/net/{cfg.ifname}/device/virtfn0/net") or [None])[0]
-+    if vf_ifc:
-+        ip(f"link set dev {vf_ifc} up")
-+    else:
-+        raise KsftSkipEx("VF interface not found")
-+    if set_tc_mapping:
-+        cmd(f"tc qdisc add dev {vf_ifc} root handle 5 mqprio mode dcb hw 1 num_tc 8")
-+
-+    return vf_ifc
-+
-+
-+def setup_vlans_on_vf(vf_ifc):
-+    """
-+    Sets up two VLAN interfaces on the given VF, each mapped to a different TC.
-+    """
-+    vlan_configs = [
-+        {"vlan_id": 101, "tc": 3, "ip": "198.51.100.2"},
-+        {"vlan_id": 102, "tc": 4, "ip": "198.51.100.10"},
-+    ]
-+
-+    for config in vlan_configs:
-+        vlan_dev = f"{vf_ifc}.{config['vlan_id']}"
-+        ip(f"link add link {vf_ifc} name {vlan_dev} type vlan id {config['vlan_id']}")
-+        ip(f"addr add {config['ip']}/29 dev {vlan_dev}")
-+        ip(f"link set dev {vlan_dev} up")
-+        ip(f"link set dev {vlan_dev} type vlan egress-qos-map 0:{config['tc']}")
-+        ksft_pr(f"Created VLAN {vlan_dev} on {vf_ifc} with tc {config['tc']} and IP {config['ip']}")
-+
-+
-+def get_vf_info(cfg):
-+    """
-+    Finds the VF representor interface and devlink port index
-+    for the given PCI device used in the test environment.
-+    """
-+    cfg.vf_representor = None
-+    cfg.vf_port_index = None
-+    out = subprocess.check_output(["devlink", "-j", "port", "show"], encoding="utf-8")
-+    ports = json.loads(out)["port"]
-+
-+    for port_name, props in ports.items():
-+        netdev = props.get("netdev")
-+
-+        if (port_name.startswith(f"pci/{cfg.pci}/") and
-+            props.get("vfnum") == 0):
-+            cfg.vf_representor = netdev
-+            cfg.vf_port_index = int(port_name.split("/")[-1])
-+            break
-+
-+
-+def setup_bridge(cfg):
-+    """
-+    Creates and configures a Linux bridge, with both the uplink
-+    and VF representor interfaces attached to it.
-+    """
-+    bridge_name = f"br_{os.getpid()}"
-+    ip(f"link add name {bridge_name} type bridge")
-+    defer(cmd, f"ip link del name {bridge_name} type bridge")
-+
-+    ip(f"link set dev {cfg.ifname} master {bridge_name}")
-+
-+    rep_name = cfg.vf_representor
-+    if rep_name:
-+        ip(f"link set dev {rep_name} master {bridge_name}")
-+        ip(f"link set dev {rep_name} up")
-+        ksft_pr(f"Set representor {rep_name} up and added to bridge")
-+    else:
-+        raise KsftSkipEx("Could not find representor for the VF")
-+
-+    ip(f"link set dev {bridge_name} up")
-+
-+
-+def setup_devlink_rate(cfg):
-+    """
-+    Configures devlink rate tx_max and traffic class bandwidth for the VF.
-+    """
-+    port_index = cfg.vf_port_index
-+    if port_index is None:
-+        raise KsftSkipEx("Could not find VF port index")
-+    try:
-+        cfg.devnl.rate_set({
-+            "bus-name": "pci",
-+            "dev-name": cfg.pci,
-+            "port-index": port_index,
-+            "rate-tx-max": 125000000,
-+            "rate-tc-bws": [
-+                {"rate-tc-index": 0, "rate-tc-bw": 0},
-+                {"rate-tc-index": 1, "rate-tc-bw": 0},
-+                {"rate-tc-index": 2, "rate-tc-bw": 0},
-+                {"rate-tc-index": 3, "rate-tc-bw": 20},
-+                {"rate-tc-index": 4, "rate-tc-bw": 80},
-+                {"rate-tc-index": 5, "rate-tc-bw": 0},
-+                {"rate-tc-index": 6, "rate-tc-bw": 0},
-+                {"rate-tc-index": 7, "rate-tc-bw": 0},
-+            ]
-+        })
-+    except NlError as exc:
-+        if exc.error == 95:  # EOPNOTSUPP
-+            raise KsftSkipEx("devlink rate configuration is not supported on the VF") from exc
-+        raise KsftFailEx(f"rate_set failed on VF port {port_index}") from exc
-+
-+
-+def setup_remote_server(cfg):
-+    """
-+    Sets up VLAN interfaces and starts iperf3 servers on the remote side.
-+    """
-+    remote_dev = cfg.remote_ifname
-+    vlan_ids = [101, 102]
-+    remote_ips = ["198.51.100.1", "198.51.100.9"]
-+
-+    for vlan_id, ip_addr in zip(vlan_ids, remote_ips):
-+        vlan_dev = f"{remote_dev}.{vlan_id}"
-+        cmd(f"ip link add link {remote_dev} name {vlan_dev} "
-+            f"type vlan id {vlan_id}", host=cfg.remote)
-+        cmd(f"ip addr add {ip_addr}/29 dev {vlan_dev}", host=cfg.remote)
-+        cmd(f"ip link set dev {vlan_dev} up", host=cfg.remote)
-+        cmd(f"iperf3 -s -1 -B {ip_addr}",background=True, host=cfg.remote)
-+        defer(cmd, f"ip link del {vlan_dev}", host=cfg.remote)
-+
-+
-+def setup_test_environment(cfg, set_tc_mapping=True):
-+    """
-+    Sets up the complete test environment including VF creation, VLANs,
-+    bridge configuration, devlink rate setup, and the remote server.
-+    """
-+    vf_ifc = setup_vf(cfg, set_tc_mapping)
-+    ksft_pr(f"Created VF interface: {vf_ifc}")
-+
-+    setup_vlans_on_vf(vf_ifc)
-+
-+    get_vf_info(cfg)
-+    setup_bridge(cfg)
-+
-+    setup_devlink_rate(cfg)
-+    setup_remote_server(cfg)
-+    time.sleep(2)
-+
-+
-+def run_iperf_client(server_ip, local_ip, barrier, min_expected_gbps=0.1):
-+    """
-+    Runs a single iperf3 client instance, binding to the given local IP.
-+    Waits on a barrier to synchronize with other threads.
-+    """
-+    try:
-+        barrier.wait(timeout=10)
-+    except Exception as exc:
-+        raise KsftFailEx("iperf3 barrier wait timed") from exc
-+
-+    iperf_cmd = ["iperf3", "-c", server_ip, "-B", local_ip, "-J"]
-+    result = subprocess.run(iperf_cmd, capture_output=True, text=True,
-+                            check=True)
-+
-+    try:
-+        output = json.loads(result.stdout)
-+        bits_per_second = output["end"]["sum_received"]["bits_per_second"]
-+        gbps = bits_per_second / 1e9
-+        if gbps < min_expected_gbps:
-+            ksft_pr(
-+                f"iperf3 bandwidth too low: {gbps:.2f} Gbps "
-+                f"(expected ≥ {min_expected_gbps} Gbps)"
-+            )
-+            return None
-+        return gbps
-+    except json.JSONDecodeError as exc:
-+        ksft_pr(f"Failed to parse iperf3 JSON output: {exc}")
-+        return None
-+
-+
-+def run_bandwidth_test():
-+    """
-+    Launches iperf3 client threads for each VLAN/TC pair and collects results.
-+    """
-+    def _run_iperf_client_thread(server_ip, local_ip, results, barrier, tc_ix):
-+        results[tc_ix] = run_iperf_client(server_ip, local_ip, barrier)
-+
-+    vf_vlan_data = [
-+        # (local_ip, remote_ip, TC)
-+        ("198.51.100.2",  "198.51.100.1", 3),
-+        ("198.51.100.10", "198.51.100.9", 4),
-+    ]
-+
-+    results = {}
-+    threads = []
-+    start_barrier = threading.Barrier(len(vf_vlan_data))
-+
-+    for local_ip, remote_ip, tc_ix in vf_vlan_data:
-+        thread = threading.Thread(
-+            target=_run_iperf_client_thread,
-+            args=(remote_ip, local_ip, results, start_barrier, tc_ix)
-+        )
-+        thread.start()
-+        threads.append(thread)
-+
-+    for thread in threads:
-+        thread.join()
-+
-+    for tc_ix, tc_bw in results.items():
-+        if tc_bw is None:
-+            raise KsftFailEx("iperf3 client failed; cannot evaluate bandwidth")
-+
-+    return results
-+
-+def calculate_bandwidth_percentages(results):
-+    """
-+    Calculates the percentage of total bandwidth received by TC3 and TC4.
-+    """
-+    if 3 not in results or 4 not in results:
-+        raise KsftFailEx(f"Missing expected TC results in {results}")
-+
-+    tc3_bw = results[3]
-+    tc4_bw = results[4]
-+    total_bw = tc3_bw + tc4_bw
-+    tc3_percentage = (tc3_bw / total_bw) * 100
-+    tc4_percentage = (tc4_bw / total_bw) * 100
-+
-+    return {
-+        'tc3_bw': tc3_bw,
-+        'tc4_bw': tc4_bw,
-+        'tc3_percentage': tc3_percentage,
-+        'tc4_percentage': tc4_percentage,
-+        'total_bw': total_bw
-+    }
-+
-+
-+def print_bandwidth_results(bw_data, test_name):
-+    """
-+    Prints bandwidth measurements and TC usage summary for a given test.
-+    """
-+    ksft_pr(f"Bandwidth check results {test_name}:")
-+    ksft_pr(f"TC 3: {bw_data['tc3_bw']:.2f} Gbits/sec")
-+    ksft_pr(f"TC 4: {bw_data['tc4_bw']:.2f} Gbits/sec")
-+    ksft_pr(f"Total bandwidth: {bw_data['total_bw']:.2f} Gbits/sec")
-+    ksft_pr(f"TC 3 percentage: {bw_data['tc3_percentage']:.1f}%")
-+    ksft_pr(f"TC 4 percentage: {bw_data['tc4_percentage']:.1f}%")
-+
-+
-+def verify_total_bandwidth(bw_data, validator):
-+    """
-+    Ensures the total measured bandwidth falls within the acceptable tolerance.
-+    """
-+    total = bw_data['total_bw']
-+
-+    if validator.bound(validator.expected_total_gbps, total):
-+        return
-+
-+    if total < validator.total_min_expected:
-+        raise KsftSkipEx(
-+            f"Total bandwidth {total:.2f} Gbps < minimum "
-+            f"{validator.total_min_expected:.2f} Gbps; "
-+            f"parent tx_max ({validator.expected_total_gbps:.1f} G) "
-+            f"not reached, cannot validate share"
-+        )
-+
-+    raise KsftFailEx(
-+        f"Total bandwidth {total:.2f} Gbps exceeds allowed ceiling "
-+        f"{validator.total_max_expected:.2f} Gbps "
-+        f"(VF tx_max set to {validator.expected_total_gbps:.1f} G)"
-+    )
-+
-+
-+def check_bandwidth_distribution(bw_data, validator):
-+    """
-+    Checks whether the measured TC3 and TC4 bandwidth percentages
-+    fall within their expected tolerance ranges.
-+
-+    Returns:
-+        bool: True if both TC3 and TC4 percentages are within bounds.
-+    """
-+    tc3_valid = validator.tc_bandwidth_bound(bw_data['tc3_percentage'], 3)
-+    tc4_valid = validator.tc_bandwidth_bound(bw_data['tc4_percentage'], 4)
-+
-+    return tc3_valid and tc4_valid
-+
-+
-+def run_bandwidth_distribution_test(cfg, set_tc_mapping):
-+    """
-+    Runs parallel iperf3 tests for both TCs and collects results.
-+    """
-+    setup_test_environment(cfg, set_tc_mapping)
-+    bandwidths = run_bandwidth_test()
-+    bw_data = calculate_bandwidth_percentages(bandwidths)
-+    test_name = "with TC mapping" if set_tc_mapping else "without TC mapping"
-+    print_bandwidth_results(bw_data, test_name)
-+
-+    verify_total_bandwidth(bw_data, cfg.bw_validator)
-+
-+    return check_bandwidth_distribution(bw_data, cfg.bw_validator)
-+
-+
-+def test_no_tc_mapping_bandwidth(cfg):
-+    """
-+    Verifies that bandwidth is not split 80/20 without traffic class mapping.
-+    """
-+    pass_bw_msg = "Bandwidth is NOT distributed as 80/20 without TC mapping"
-+    fail_bw_msg = "Bandwidth matched 80/20 split without TC mapping"
-+    is_mlx5 = "driver: mlx5" in ethtool(f"-i {cfg.ifname}").stdout
-+
-+    if run_bandwidth_distribution_test(cfg, set_tc_mapping=False):
-+        if is_mlx5:
-+            raise KsftXfailEx(fail_bw_msg)
-+        raise KsftFailEx(fail_bw_msg)
-+    if is_mlx5:
-+        raise KsftFailEx("mlx5 behavior changed:" + pass_bw_msg)
-+    ksft_pr(pass_bw_msg)
-+
-+
-+def test_tc_mapping_bandwidth(cfg):
-+    """
-+    Verifies that bandwidth is correctly split 80/20 between TC3 and TC4
-+    when traffic class mapping is set.
-+    """
-+    if run_bandwidth_distribution_test(cfg, set_tc_mapping=True):
-+        ksft_pr("Bandwidth is distributed as 80/20 with TC mapping")
-+    else:
-+        raise KsftFailEx("Bandwidth did not match 80/20 split with TC mapping")
-+
-+
-+def main() -> None:
-+    """
-+    Main entry point for running the test cases.
-+    """
-+    with NetDrvEpEnv(__file__, nsim_test=False) as cfg:
-+        cfg.devnl = DevlinkFamily()
-+
-+        cfg.pci = os.path.basename(
-+            os.path.realpath(f"/sys/class/net/{cfg.ifname}/device")
-+        )
-+        if not cfg.pci:
-+            raise KsftSkipEx("Could not get PCI address of the interface")
-+        cfg.require_cmd("iperf3")
-+        cfg.require_cmd("iperf3", remote=True)
-+
-+        cfg.bw_validator = BandwidthValidator()
-+
-+        cases = [test_no_tc_mapping_bandwidth, test_tc_mapping_bandwidth]
-+
-+        ksft_run(cases=cases, args=(cfg,))
-+    ksft_exit()
-+
-+
-+if __name__ == "__main__":
-+    main()
-diff --git a/tools/testing/selftests/net/lib/py/__init__.py b/tools/testing/selftests/net/lib/py/__init__.py
-index 8697bd27dc30..02be28dcc089 100644
---- a/tools/testing/selftests/net/lib/py/__init__.py
-+++ b/tools/testing/selftests/net/lib/py/__init__.py
-@@ -6,4 +6,4 @@ from .netns import NetNS, NetNSEnter
- from .nsim import *
- from .utils import *
- from .ynl import NlError, YnlFamily, EthtoolFamily, NetdevFamily, RtnlFamily, RtnlAddrFamily
--from .ynl import NetshaperFamily
-+from .ynl import NetshaperFamily, DevlinkFamily
-diff --git a/tools/testing/selftests/net/lib/py/ynl.py b/tools/testing/selftests/net/lib/py/ynl.py
-index 6329ae805abf..2b3a61ea3bfa 100644
---- a/tools/testing/selftests/net/lib/py/ynl.py
-+++ b/tools/testing/selftests/net/lib/py/ynl.py
-@@ -56,3 +56,8 @@ class NetshaperFamily(YnlFamily):
-     def __init__(self, recv_size=0):
-         super().__init__((SPEC_PATH / Path('net_shaper.yaml')).as_posix(),
-                          schema='', recv_size=recv_size)
-+
-+class DevlinkFamily(YnlFamily):
-+    def __init__(self, recv_size=0):
-+        super().__init__((SPEC_PATH / Path('devlink.yaml')).as_posix(),
-+                         schema='', recv_size=recv_size)
--- 
-2.34.1
+> -	size_t fh_size = offsetof(struct nfs_fh, data) + server_fh->size;
+> +	struct nfs_fh *server_fh;
+> +	size_t fh_size;
+>  	const struct nfs_rpc_ops *rpc_ops;
+>  	struct dentry *dentry;
+>  	struct inode *inode;
+
+We also have "int len = EMBED_FH_OFF + XDR_QUADLEN(fh_size);" being initialized
+here. You should probably also remove this initialization since you're doing it
+again down below.
+
+> @@ -74,6 +74,14 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *fid,
+>  	u32 *p = fid->raw;
+>  	int ret;
+>  
+> +	/* check for user input size */
+> +	if ((char*)server_fh <= (char*)p 
+                                        ^ Trailing whitespace> +	    || (int)((u32*)server_fh - (u32*)p + 1) < fh_len)
+> +		return ERR_PTR(-EINVAL);	
+                                        ^^^^^^^^ Trailing whitespace
+
+Thanks,
+Anna
+
+> +
+> +	fh_size = offsetof(struct nfs_fh, data) + server_fh->size;
+> +	len = EMBED_FH_OFF + XDR_QUADLEN(fh_size);
+> +
+>  	/* NULL translates to ESTALE */
+>  	if (fh_len < len || fh_type != len)
+>  		return NULL;
 
 
