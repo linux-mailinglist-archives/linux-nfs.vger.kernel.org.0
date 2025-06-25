@@ -1,96 +1,95 @@
-Return-Path: <linux-nfs+bounces-12740-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12743-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48179AE76EC
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 08:26:22 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18C87AE790E
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 09:52:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 241BA1BC09D8
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 06:26:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFDB65A4AF6
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 07:51:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6856D1EF0B9;
-	Wed, 25 Jun 2025 06:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086241F4611;
+	Wed, 25 Jun 2025 07:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S7ZCT2KO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJibZHwX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EA9189B8C;
-	Wed, 25 Jun 2025 06:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A0B22083;
+	Wed, 25 Jun 2025 07:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832777; cv=none; b=atgD0q6ID4H40qWungqX8QJL/AltxJY2d3BupH5Q5FWHBl6XOPfwXJeI22x2VebECJwIIAjznB2+7ZT0PU8+Alnyz0KqBAvAXGbjHAoKi7WtYuow2p7DQIB3Hp2oMCVCjuyPDPUlVXOw8JMMcC+xnj+N/qG7+3Htmvwwp8E2bSE=
+	t=1750837937; cv=none; b=atV+Zscos/BEMPdxdV1Ts2pRiU2BWh68E0wm9YqGlWxQSqhwV77HSrNGoz+gvXOmg3Lww2oPIrrawpNrQEoR2loylsA1wrpNstZjkYeRUcOnB7mfqMHe6QJzsWFVii6At9ZY9J7s+eyQkAWraYbdL+AKmeQv1uckP/SGGX0boSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832777; c=relaxed/simple;
-	bh=ZodBrEr46pf6hoElc4B7uA1dFN57Uv6t+cGsWYXR9X0=;
+	s=arc-20240116; t=1750837937; c=relaxed/simple;
+	bh=4REwJ0qTYWr/emujGc6w8gWG9fvUVadsnMPID2MW69k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kzjC+7i1aoUYsUtb2kdvkgBomZFBF5ItGVdDWdAAugru/B40r5kk+ZbVmrR8PV9G3Vx4HLyfcul7Y6HICenv7I8c6K6EwsB4x+bqfnzK2eklO1w+vugU2tJaFJo6aZ/vrXHxW1SReCTct6sgsLHPR2nPfI1LlujBt+oN/5Wwsgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S7ZCT2KO; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3XnnY6mYnsr+cZrq2WIhH2EnyI4e0J3kr1/WKamV2Oc=; b=S7ZCT2KOF1JLrcr+/vCrqCURxA
-	23StPBuy1slIcKX1GxPymKkGYWQQieRiGTVpNnYv2b7lbSJcg0/8K+TOD1iZlJZboa3GqrFKzIXYL
-	PTY6BJbsbdPDG1EVBiwEebUlzJgaOIo9uBZr3WrbUgPa1hsXsAl6+l5sy9RwN/YCwxGFxmNLqNryi
-	M7EZlS0z+vmELvnXbD+CV1jAohc9FrreexgIIhsuRHfiPHSBc2M/q7ZKYCAAFnRlMpSJ7K41HiJus
-	pYesNOLCI2AL5K3w6Gmgq8csF4gZJlSRYbaSqQqQyQcbK0yNmiG6UHXaYpNEtr3XO2VBYgTIIJWMF
-	/Cds1dXA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUJaI-00000007ea5-1tFo;
-	Wed, 25 Jun 2025 06:26:14 +0000
-Date: Tue, 24 Jun 2025 23:26:14 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, miklos@szeredi.hu,
-	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, bernd.schubert@fastmail.fm,
-	kernel-team@meta.com, linux-mm@kvack.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
-Message-ID: <aFuWhnjsKqo6ftit@infradead.org>
-References: <20250606233803.1421259-1-joannelkoong@gmail.com>
- <20250606233803.1421259-6-joannelkoong@gmail.com>
- <aEZoau3AuwoeqQgu@infradead.org>
- <20250609171444.GL6156@frogsfrogsfrogs>
- <aEetuahlyfHGTG7x@infradead.org>
- <aEkHarE9_LlxFTAi@casper.infradead.org>
- <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
- <aFWlW6SUI6t-i0dN@casper.infradead.org>
- <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oko/5lilUddGzzJqPMJKe6XoTuRQKXys9wWi1tEMM7jTbWhV8Z5w1uwnFuYpUrDvDYKTh4zcp3c2NVajHpdBGgjTQWjk7JD5oK7TPvZzksUvAYzTyi8KmRa9OgcZgSVXvLWXsZe2oZEg7qVpiIxQ1H86MgbVgdZfVlv3GF7swdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJibZHwX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 765C0C4CEF1;
+	Wed, 25 Jun 2025 07:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750837936;
+	bh=4REwJ0qTYWr/emujGc6w8gWG9fvUVadsnMPID2MW69k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gJibZHwXM0lqSv/BhZ1sVZNCUgNANwiY4kbtUtBGwuM/V8DzGIrd42YPklC1dX9G9
+	 1Q21dboRtPjtG1PhwefbRYn+fTn1itmD0AiaN6nkK+pdN+PD+HfltlrNC8dbWu6c20
+	 i4aW2LUo8VqsDm+0g59WkWxoMXy8WbEOQyu9mQ7wcchtJvwJI4ECSGuEaJ8fDiMwln
+	 HvbnDwL1Zh2F1n1yYRHXi+g9j2C9nV/hUVo8w2OT5qRAaYbz++90QSNO7gLJBKpyyI
+	 w/NY3WUqB/iD1osTpHVOa1AkstpzgXKIEW35jxQ+TUCSkHXR+H2d5Yn7VeYpv1bOWN
+	 1cRegohsr5peg==
+Date: Wed, 25 Jun 2025 09:52:11 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 10/11] fhandle, pidfs: support open_by_handle_at()
+ purely based on file handle
+Message-ID: <20250625-undifferenziert-mitnahm-fb5e9550acdd@brauner>
+References: <20250624-work-pidfs-fhandle-v2-0-d02a04858fe3@kernel.org>
+ <20250624-work-pidfs-fhandle-v2-10-d02a04858fe3@kernel.org>
+ <20250624230745.GO1880847@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250624230745.GO1880847@ZenIV>
 
-On Tue, Jun 24, 2025 at 10:26:01PM -0700, Joanne Koong wrote:
-> > The question is whether this is acceptable for all the filesystem
-> > which implement ->launder_folio today.  Because we could just move the
-> > folio_test_dirty() to after the folio_lock() and remove all the testing
-> > of folio dirtiness from individual filesystems.
+On Wed, Jun 25, 2025 at 12:07:45AM +0100, Al Viro wrote:
+> On Tue, Jun 24, 2025 at 10:29:13AM +0200, Christian Brauner wrote:
+> > Various filesystems such as pidfs (and likely drm in the future) have a
+> > use-case to support opening files purely based on the handle without
+> > having to require a file descriptor to another object. That's especially
+> > the case for filesystems that don't do any lookup whatsoever and there's
+> > zero relationship between the objects. Such filesystems are also
+> > singletons that stay around for the lifetime of the system meaning that
+> > they can be uniquely identified and accessed purely based on the file
+> > handle type. Enable that so that userspace doesn't have to allocate an
+> > object needlessly especially if they can't do that for whatever reason.
 > 
-> Or could the filesystems that implement ->launder_folio (from what I
-> see, there's only 4: fuse, nfs, btrfs, and orangefs) just move that
-> logic into their .release_folio implementation? I don't see why not.
-> In folio_unmap_invalidate(), we call:
+> Whoa...  Two notes:
+> 	1) you really want to make sure that no _directories_ on those
+> filesystems are decodable.
 
-Without even looking into the details from the iomap POV that basically
-doesn't matter.  You'd still need the write back a single locked folio
-interface, which adds API surface, and because it only writes a single
-folio at a time is rather inefficient.  Not a deal breaker because
-the current version look ok, but it would still be preferable to not
-have an extra magic interface for it.
+No directories exist on any of the obvious candidates (certainly not
+pidfs) and it's easy to add an assertion there. It's obvioulsy only
+going to work for specific filesystems.
 
+> 	2) do you want to get the damn things bound somewhere?
+
+For the obvious cases either bind-mounts aren't supported or having a
+bind-mount would not constitute a problem. For starter pidfds can be
+created purely based on pidfd_open() which means you can always open a
+pidfd for process even if the bind-mount in question would not be
+accessible to you.
+
+Are there other concerns about bind-mounts that I'm missing?
 
