@@ -1,141 +1,198 @@
-Return-Path: <linux-nfs+bounces-12768-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12769-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFB20AE8AB7
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:53:08 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17645AE8B69
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:20:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2BAD23AADFE
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 16:51:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E6FC1885E7C
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 17:20:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FD41D5AD4;
-	Wed, 25 Jun 2025 16:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DEFF26B0BC;
+	Wed, 25 Jun 2025 17:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDq3wA9Y"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="ijbyLmiD"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A072F285C9E;
-	Wed, 25 Jun 2025 16:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED42D3074AC
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 17:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869885; cv=none; b=eeQojDwyAgGyrNOABOgWnFYXWEV6RTkwUsJwrWt9qtCUgyLG+Ltfbw+1l2ALMc7ebNfQdhVrnQgggkgCRd8HPsm+tOxX7gMPbfe3Tki6ggbWupvqIvcFMKNsfSx8hGlC5KDKSRaIoMlgcv1oGHtVLRdjAuYan/DdIleZM3CsGkk=
+	t=1750872038; cv=none; b=W8WyGr5cVhl+1OoMMI4Kif2yTNnPCm4kRkUhuUNwjkvQY/DlgHpWbBQsVDuCQ21Qf1ye4xM5tGYArAIC5GUYlPEa7FXgJ1wlnUPt68pTDkamXdErzvOEo9BzEwhY+2oE29HYuG/PnnjFDzSukG7oC03mwdSuLhctvNBKiFbwqaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869885; c=relaxed/simple;
-	bh=Xr9CsPOp6WcYt9Kq4OQjxQmD7ucdPm6PZ/Br4gkyjdw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B3oDglcvCm0gvWIqe+KAYFD47BtrL9aq6T3x3jAElH0Z2CNFnvVq1UZnYocKmqCOGKPQU67qLD4E4ABA8WbqrWW2DNWmqPOJ1Wd3RINNq43f6shm6bD1OWpSGJc8dERjIpYWsQV/YlQKqh/Hm7PCALPmrmDW4KC0wER+Bwb0r/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDq3wA9Y; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a44b9b2af8so931631cf.3;
-        Wed, 25 Jun 2025 09:44:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750869882; x=1751474682; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ARfY5zPdbMWR4dmRIiBvFi5s9kvzkJcvkpzDRoJBEK0=;
-        b=kDq3wA9YQKIauXuSci6EGrPMlaXNLKmnMRxd1X7WcDPTz/+V5Mugd0astdO4UIrN+7
-         tu0dKhqqoNgVNJliVCMW8jAAC6JtzrUI0LwCrLgPws7V8o67QwmhkMUTNbLFUyNx+oWu
-         N8nLq/rVjYUT8oIZLumrmISjwH/AHaJgdx8TuUt+MTiuGSTFJzFuLvRo0jyobplkh9cD
-         MZq28SYUZImUdy8RxOHMiYaitJvOcv6Od9+NL45Ynx0RoYnly5TURnUKSKi0UxF4MCyA
-         xk51dYGYw02G3rcqlGggNos34mdfSf5MecWku9PNaiiPbS4oufplJ1Fttx7egwDSUSit
-         hWVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750869882; x=1751474682;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ARfY5zPdbMWR4dmRIiBvFi5s9kvzkJcvkpzDRoJBEK0=;
-        b=NmiDc/t2XzPqZOUGNtcb9WWZY4Ej2sd8OKDsPfmIvqPTfci4ByqvDimoAIF/Ht5zMc
-         VkSQKhZ8FD1dlULhD4Aec+84LPM5Oa+nZ9jYTT3PFO+VwhhyaZLVCbPF8l/mxK8QzuhY
-         PV3fmXAounp48eSoppBPbUrRIzeNjFVRZbPb494uM7uItfq4U/eM2ppyK81SaluHCDHD
-         zVkqCf37+cCHix+JpmFuEOvige3/wQQ8Qd6ZybSDoNHiP4ro4gEA44znhW5YFPuHLr8T
-         qazOTij+bltK+m3EMTBE3UMbcdlOxBCIWBdZuZWag5DsHPRYCHCnyIExM0jZgg6gdK+c
-         lz5w==
-X-Forwarded-Encrypted: i=1; AJvYcCW6lEWNw2ZBA17+ladNSlyk9E8ES48xp57L8dP5cBOdpJ5dermh85LWlCXW1PLf692gxcn6H4GO7TZu@vger.kernel.org, AJvYcCWljiwvJBOGbLJ7gPpLjF1Gm3jnXSblEyDPs7owMLnPCaXqwnuOwVDXo/cAfQO0Rfp7YPVEgpvOo80IPw==@vger.kernel.org, AJvYcCXqe7k99AekvRFzdfIn9CCFmK7uNCsWELWmGIkLKAdXudIimGZbheYc4te/fNad0LX1yxIXCV8UfoPT3ZkGIg==@vger.kernel.org, AJvYcCXtahdHXuq7sf0tZCkDPH7HakmITHpuqxUraVtCyLXLd7tHt5kqo+BKw3NAZZq3EAJ7taGN8Q/T+inZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhdE1dhWvcW3Sb9+ScRtKPGcFyUOzSvVfPIL+oV4sp1qGLP1dY
-	2BEULeAy24lclvGdT4mBWwRvRckk/tISkeRIThIyNRempzaw4Lkfas4H6ptKiDotG7/rKjO5NNo
-	Gn+9zWPfeMC5ulbVeeFHrJw/UVH6EnjQ7hxaHfms=
-X-Gm-Gg: ASbGncvdUUefheonC3O1+6gSkQQ0yLTrT1dmKohn+LDRdOMmln2806RJ+wJ4GwUlbgK
-	MdEbRehcVn8wKer3F00KJuT2YBv4JHdytnGMsQC1WUwIO5D8dxg2zJqmZiCO7wn4JyYUBopxXKV
-	9iBlY9262RXSPrtuODR0KtSsyo1phtKKOm/BR88S7Cbflm4kLHgo58CpWmpdgZDpCPAVsEYw==
-X-Google-Smtp-Source: AGHT+IEt1TZjaS3R5h67itrFgkyntPJUD/CIMKEaOvyxiUhcZBapd1BPlkAKLlT0ccLQcSXu/Z+jtrxAl9OMK4WdDic=
-X-Received: by 2002:ac8:57c1:0:b0:49a:8542:b496 with SMTP id
- d75a77b69052e-4a7c07d54bcmr54002001cf.25.1750869882315; Wed, 25 Jun 2025
- 09:44:42 -0700 (PDT)
+	s=arc-20240116; t=1750872038; c=relaxed/simple;
+	bh=46kRxz2kzmEgki7nVKFd/TWqzD1wdiWSatuDttfII1Y=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=ta20TzJBQF7ByovSb/zMG8IHs+4YraYISGqhXuBshTjo4Fh0uI5dMmuXn12/GCiiunvJSXlYef2z3xQlqqzQFU+HgtyOqlRif3HY2Ve5QhoLAu+8Cf1gNltDUnRoMQmlb6RqXkPS+rCSzduraFZZ9ailWvCuKwDatTHoldxeGbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=ijbyLmiD; arc=none smtp.client-ip=131.169.56.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+	by smtp-o-3.desy.de (Postfix) with ESMTP id DA15311F8E0
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 19:20:31 +0200 (CEST)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
+	by smtp-o-2.desy.de (Postfix) with ESMTP id 175DA13F648
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 19:20:24 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 175DA13F648
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+	t=1750872024; bh=Q0T6gH9XZMWG2w25RsZ/BQAcg9aUTDgcVzXy6s9P5N8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=ijbyLmiDO8eW/Xqrvn1hoWLT7YIjzO361UB4DNRE053PMDqWTWbokkfsD+oP8yuIS
+	 2kTAyM0Ejk+smTgqR25J25GGw1Y6LrNm6Und+QepPM2dqKdosjf5SVdNBMEXG1PmmW
+	 wORBBZMfnnNcOkMxLsJjs/7uYGri2yMLfs/w5hQs=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
+	by smtp-buf-2.desy.de (Postfix) with ESMTP id 0A0E0120043;
+	Wed, 25 Jun 2025 19:20:24 +0200 (CEST)
+Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [IPv6:2001:638:d:c303:acdc:1979:2:e7])
+	by smtp-m-1.desy.de (Postfix) with ESMTP id ED20F40044;
+	Wed, 25 Jun 2025 19:20:23 +0200 (CEST)
+Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
+	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id 9433C10A3CC;
+	Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+	by smtp-intra-3.desy.de (Postfix) with ESMTP id 4E48F1A0041;
+	Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
+Date: Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1248643633.14443075.1750872022054.JavaMail.zimbra@desy.de>
+In-Reply-To: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
+References: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
+Subject: Re: [PATCH] pynfs: Fix RuntimeError by increasing default
+ ca_maxrequests from 8 to 16
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606233803.1421259-1-joannelkoong@gmail.com>
- <20250606233803.1421259-6-joannelkoong@gmail.com> <aEZoau3AuwoeqQgu@infradead.org>
- <20250609171444.GL6156@frogsfrogsfrogs> <aEetuahlyfHGTG7x@infradead.org>
- <aEkHarE9_LlxFTAi@casper.infradead.org> <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
- <aFWlW6SUI6t-i0dN@casper.infradead.org> <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
- <aFuWhnjsKqo6ftit@infradead.org>
-In-Reply-To: <aFuWhnjsKqo6ftit@infradead.org>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 25 Jun 2025 09:44:31 -0700
-X-Gm-Features: AX0GCFsfnY2NRe1Yl1NZniTcFCNWF9j0FX7uW-sdQQQn_7h6m7fdnADoW5ryf3M
-Message-ID: <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
-Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	"Darrick J. Wong" <djwong@kernel.org>, miklos@szeredi.hu, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	bernd.schubert@fastmail.fm, kernel-team@meta.com, linux-mm@kvack.org, 
-	linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_14443076_547431676.1750872022193"
+X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
+Thread-Topic: pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
+Thread-Index: N1l2a3uT+tvpIdrT6aEdslFEzxLLVA==
 
-On Tue, Jun 24, 2025 at 11:26=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Tue, Jun 24, 2025 at 10:26:01PM -0700, Joanne Koong wrote:
-> > > The question is whether this is acceptable for all the filesystem
-> > > which implement ->launder_folio today.  Because we could just move th=
-e
-> > > folio_test_dirty() to after the folio_lock() and remove all the testi=
-ng
-> > > of folio dirtiness from individual filesystems.
-> >
-> > Or could the filesystems that implement ->launder_folio (from what I
-> > see, there's only 4: fuse, nfs, btrfs, and orangefs) just move that
-> > logic into their .release_folio implementation? I don't see why not.
-> > In folio_unmap_invalidate(), we call:
->
-> Without even looking into the details from the iomap POV that basically
-> doesn't matter.  You'd still need the write back a single locked folio
-> interface, which adds API surface, and because it only writes a single
-> folio at a time is rather inefficient.  Not a deal breaker because
-> the current version look ok, but it would still be preferable to not
-> have an extra magic interface for it.
->
+------=_Part_14443076_547431676.1750872022193
+Date: Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+Cc: Calum Mackay <calum.mackay@oracle.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1248643633.14443075.1750872022054.JavaMail.zimbra@desy.de>
+In-Reply-To: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
+References: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
+Subject: Re: [PATCH] pynfs: Fix RuntimeError by increasing default
+ ca_maxrequests from 8 to 16
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
+Thread-Topic: pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
+Thread-Index: N1l2a3uT+tvpIdrT6aEdslFEzxLLVA==
 
-Yes but as I understand it, the focus right now is on getting rid of
-->launder_folio as an API. The iomap pov imo is a separate issue with
-determining whether fuse in particular needs to write back the dirty
-page before releasing or should just fail.
 
-btrfs uses ->launder_folio() to free some previously allocated
-reservation (added in commit 872617a "btrfs: implement launder_folio
-for clearing dirty page reserve") so at the very least, that logic
-would need to be moved to .release_folio() (if that suffices? Adding
-the btrfs group to cc). It's still vague to me whether
-fuse/nfs/orangefs need to write back the dirty page, but it seems fine
-to me not to - as I understand it, the worst that can happen (and
-please correct me if I'm wrong here, Matthew) from just failing it
-with -EBUSY is that the folio lingers longer in the page cache until
-it eventually gets written back and cleared out, and that only happens
-if the file is mapped and written to in that window between
-filemap_write_and_wait_range() and unmap_mapping_folio(). afaics, if
-fuse/nfs/orangefs do need to write back the dirty folio instead of
-failing w/ -EBUSY, they could just do that logic in .release_folio.
+I had a different attempt to address that:
+
+https://lore.kernel.org/all/20250415114814.285400-1-tigran.mkrtchyan@desy.de/\
+
+Tigran.
+
+----- Original Message -----
+> From: "Chen Hanxiao" <chenhx.fnst@fujitsu.com>
+> To: "Calum Mackay" <calum.mackay@oracle.com>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Wednesday, 25 June, 2025 10:00:59
+> Subject: [PATCH] pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
+
+> Increased the default value of ca_maxrequests from 8 to 16 to address a
+> RuntimeError encountered in DELEG8.
+> 
+> This change resolves the issue where
+> DELEG8 st_delegation.testDelegRevocation
+> fails with a RuntimeError: "Out of slots".
+> 
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> ---
+> nfs4.1/nfs4client.py | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/nfs4.1/nfs4client.py b/nfs4.1/nfs4client.py
+> index f4fabcc..fa31b34 100644
+> --- a/nfs4.1/nfs4client.py
+> +++ b/nfs4.1/nfs4client.py
+> @@ -390,7 +390,7 @@ class ClientRecord(object):
+>                        fore_attrs=None, back_attrs=None, sec=None,
+>                        prog=None,
+>                        max_retries=1, delay_time=1):
+> -        chan_attrs = channel_attrs4(0,8192,8192,8192,128,8,[])
+> +        chan_attrs = channel_attrs4(0,8192,8192,8192,128,16,[])
+>         if fore_attrs is None:
+>             fore_attrs = chan_attrs
+>         if back_attrs is None:
+> --
+> 2.39.1
+
+------=_Part_14443076_547431676.1750872022193
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
+UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
+jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
+yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
+FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
+ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
+59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
+UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
+IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
+IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
+DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
+yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
+zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
+37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
+76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
+BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
+lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
+bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
+vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
+nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
+0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNTA2MjUxNzIwMjJaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIE6WER/+PhrKqhwQB9bAxFbeKFv+
+hLX6AhcB71LWhsmmMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICACfDO5Ehh64fgav8aWmVwhSuSq1y3aHjR0FB55T0
+uW/4T0Urb/dXd+Q5XwcwS3fZa6bBI2/MbXDI+LYnxjoOaEQAOiXz0QhgSbpmozFALxGUr7V8wcle
+YdQrdtJMU3NCdzZ9zQAt3D+6Jcervr5SD9P0meqBkkT62JolVSoK5AiAMNMs01mZxGUC5c7fQngH
+4uYWUB60KnjCSY9nhuTk4AExT/0CRkTqUAWE75C3sdqEJ9DGmyjMm4xMhHJeWKhk1szAKMcPC556
+KJV7R7ipBUkxgLhlOWayD3c7GBWLj+ZiieL7DPXO2EoPCOtjq4DPoxyQTVCEXVcX8UqCQ6rUsFOb
+3J96m6Oj8sW2Bw3IGp4w4cGbdZor6ZcDs+aekSC6pfNNkG5nmfSImzLsPsjVvFaryhursFEB+6Lk
+pkijDMvnOXRpCSh4LGR0SZ7S5GMRtJ/mIRATYOKq7qPU0ubgfEOosPOAki7wFX12fT46CNGvBWxL
++i5bipG/OiaUlbOcQuf0BfIKczFRzEHiliQjLDR6elQ9Tz/BLT5U4FiLNlR11k92rV70Pl7HAOXf
+YFhk/Cd6KhF/hRcIEpHLrXpI7dKSjyoySLjz37GMmkLLeRBP4nCB1LOKLQ9rThyYDqZhn3M3dPNT
+F/3uHBnl2i6MD8PQ9BBR7QD4iC7I6BH6BDoPAAAAAAAA
+------=_Part_14443076_547431676.1750872022193--
 
