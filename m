@@ -1,56 +1,55 @@
-Return-Path: <linux-nfs+bounces-12748-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12749-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30FFDAE84FE
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 15:41:15 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04281AE855A
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 15:59:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F15633B2976
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 13:40:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2402F17955A
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 13:58:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3654263F27;
-	Wed, 25 Jun 2025 13:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A404B17B425;
+	Wed, 25 Jun 2025 13:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENh6yA5p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKYmfZhL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB21263F22
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 13:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA7317BA5
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 13:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858857; cv=none; b=WCKEv4kspaaI2VAz6BXRgj5rPe167SFGOoHKRD5y/chmepW9sSls/T09nQ4LyQ7LtpTxBaMNWJpcO5dKkF9HrU5q2+jUnhUKhHV7BZ0xm6PFRpxu06E226mVd6al5M+dPf9pIqiGWAkp3CqOHkS6SUhm9BU7Sr+q3XrfqhKlsy0=
+	t=1750859933; cv=none; b=aGbQrWvtHgK6roiFEKQUZZSi6gRmz7+21CxkotCDfCaFbwlybaXh/RvLhoXoYEw6Lgdw+qyVnPOd0RKQM6uGxi0QERlXOdN7LasWENOyA7sX3m0dIR8sNTeM6qcdARAImbPZ7Ql78Dno5u2amgr1/lvEGtrZaO3bBsuMxxHT2YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858857; c=relaxed/simple;
-	bh=IOpRs886dEPdsatGuL6IXScog7juF8xs7O91+AbPsqk=;
+	s=arc-20240116; t=1750859933; c=relaxed/simple;
+	bh=/yzYkkNLsviaobxjWbtgsgDkNVibra0zcEelPH1mA70=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wy3k5JzDFBQxl3E3GzAaIf2+/4++kDdBEkjd5ZAzZzBQGYsdvoMwGNvJR8z1T2xtgNeQwPZTUdokwc58NLX3XP5GLfvEj6iCoxvhzeAJfeaq5gjV6eVeUQ8VqDYmwIIbLFfGhtdQKHOYZF9xR4YfKzXN5dBclwP4H5suLlDXxQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENh6yA5p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD6CC4CEEE;
-	Wed, 25 Jun 2025 13:40:56 +0000 (UTC)
+	 Content-Type:MIME-Version; b=iX9OkuNEPhlCKPkc9j8lVJHcPnAIvYqU32hHginXmcPBJ9i9ErMGX8mVgUL23iM/XfNwVtIV17Ol/s8QAkEGmBltAK/e9tqJSfGVRuXgbH+zmw7MXmSjP/o/Zhj0QUbcyO01fxp2dS4eOE2P7Yaf4TVJFNSgC12PBrMI43l40sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKYmfZhL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 995DCC4CEEA;
+	Wed, 25 Jun 2025 13:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750858857;
-	bh=IOpRs886dEPdsatGuL6IXScog7juF8xs7O91+AbPsqk=;
+	s=k20201202; t=1750859932;
+	bh=/yzYkkNLsviaobxjWbtgsgDkNVibra0zcEelPH1mA70=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ENh6yA5pbI3zqqfNCDz2r9Hr06A9PjjD4j8iZIo4ZK4P/vr4StF+pDPqDmXbPJ/jd
-	 rqNWYW0VLmFHv8eUSfauY9WHXKviO9DUqwpMB4QEWw/divQqa3RjHkaEnUFMBpUzQx
-	 WNEQlHAcwm3+dFHhbAJvOkfJZ9X0BI9bijk+HeaIy54p2D0gqwSTz+ibv7wgwTK72Q
-	 Xvku2ftVf2g0Ynzas8mSI6OA5cW4n9QLbYI3bL3xyRXdhadb44u8Qtia3CRbkA9fd6
-	 IaHDS2atDv+XUa67ONmJHAhitwyCACL2qsYzhc/kOi6Vt9NsZ7P7jTIVt8jy8oAfEN
-	 CVukFdxcRJfwQ==
-Message-ID: <85fe72f86c7ded423b320009acad4a2e7515127e.camel@kernel.org>
-Subject: Re: [PATCH] nfs:check for user input filehandle size
+	b=jKYmfZhLrC2/3H5F8rMz7Ec4gXIDi9oYFn/1ENvWcIRdyupVNoAcPkr1v1n1pgdji
+	 EAp8LZTeYhE2pw1npLFmsgUIVd6nCDfs6aAhJqRAjnA23fbZvsk/yV+e6JJtDpQHcH
+	 Cp72k09S60c1CQRiX8pLO4AlMUBFqsORmzlGT41yOwlcQ/W3pyqARxzKcjl4LQtNR3
+	 LnNQpjJ3eOwbCfqm4eMoWJGpRgceiVt6EuqW3pa0zGh9rb+pkEVrU36nnICVlfCQuO
+	 eo22NyJonXgBXEc99gTm7AW/HUPE05nqhpyv/Z3vbLwzIyEgXgrw6G0aoNCEtNI5Un
+	 KpmM9RJTre2dA==
+Message-ID: <782448d09ed170e097e112434848c771e08b017b.camel@kernel.org>
+Subject: Re: [PATCH] pynfs: Fix RuntimeError by increasing default
+ ca_maxrequests from 8 to 16
 From: Jeff Layton <jlayton@kernel.org>
-To: zhangjian <zhangjian496@huawei.com>, steved@redhat.com, 
-	joannelkoong@gmail.com, chuck.lever@oracle.com, djwong@kernel.org, 
-	okorniev@redhat.com, kernel-team@meta.com
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>, calum.mackay@oracle.com
 Cc: linux-nfs@vger.kernel.org
-Date: Wed, 25 Jun 2025 09:40:55 -0400
-In-Reply-To: <20250626002026.110999-1-zhangjian496@huawei.com>
-References: <20250626002026.110999-1-zhangjian496@huawei.com>
+Date: Wed, 25 Jun 2025 09:58:51 -0400
+In-Reply-To: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
+References: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,54 +134,36 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2025-06-26 at 08:20 +0800, zhangjian wrote:
-> Syzkaller found an slab-out-of-bounds in nfs_fh_to_dentry when the memory
-> of server_fh is not passed from user space. So I add a check for input si=
-ze.
-> ---
->  fs/nfs/export.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+On Wed, 2025-06-25 at 16:00 +0800, Chen Hanxiao wrote:
+> Increased the default value of ca_maxrequests from 8 to 16 to address a
+> RuntimeError encountered in DELEG8.
 >=20
-> diff --git a/fs/nfs/export.c b/fs/nfs/export.c
-> index e9c233b6f..e0e77f8ca 100644
-> --- a/fs/nfs/export.c
-> +++ b/fs/nfs/export.c
-> @@ -65,8 +65,8 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *fi=
-d,
->  		 int fh_len, int fh_type)
->  {
->  	struct nfs_fattr *fattr =3D NULL;
-> -	struct nfs_fh *server_fh =3D nfs_exp_embedfh(fid->raw);
-> -	size_t fh_size =3D offsetof(struct nfs_fh, data) + server_fh->size;
-> +	struct nfs_fh *server_fh;
-> +	size_t fh_size;
->  	const struct nfs_rpc_ops *rpc_ops;
->  	struct dentry *dentry;
->  	struct inode *inode;
-> @@ -74,6 +74,14 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *f=
-id,
->  	u32 *p =3D fid->raw;
->  	int ret;
-> =20
-> +	/* check for user input size */
-> +	if ((char*)server_fh <=3D (char*)p=20
-> +	    || (int)((u32*)server_fh - (u32*)p + 1) < fh_len)
+> This change resolves the issue where
+> DELEG8 st_delegation.testDelegRevocation
+> fails with a RuntimeError: "Out of slots".
+>=20
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> ---
+>  nfs4.1/nfs4client.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/nfs4.1/nfs4client.py b/nfs4.1/nfs4client.py
+> index f4fabcc..fa31b34 100644
+> --- a/nfs4.1/nfs4client.py
+> +++ b/nfs4.1/nfs4client.py
+> @@ -390,7 +390,7 @@ class ClientRecord(object):
+>                         fore_attrs=3DNone, back_attrs=3DNone, sec=3DNone,
+>                         prog=3DNone,
+>                         max_retries=3D1, delay_time=3D1):
+> -        chan_attrs =3D channel_attrs4(0,8192,8192,8192,128,8,[])
+> +        chan_attrs =3D channel_attrs4(0,8192,8192,8192,128,16,[])
+>          if fore_attrs is None:
+>              fore_attrs =3D chan_attrs
+>          if back_attrs is None:
 
-^^^
-nit: this would probably be more readable on a single line. I'm also
-not sure that the int cast is necessary. Maybe it is though.
+Increasing the size should be harmless, but it doesn't look like DELEG8
+does a lot of concurrent RPCs. How is this running out of slots?
 
-> +		return ERR_PTR(-EINVAL);=09
-> +
-> +	fh_size =3D offsetof(struct nfs_fh, data) + server_fh->size;
-> +	len =3D EMBED_FH_OFF + XDR_QUADLEN(fh_size);
-> +
->  	/* NULL translates to ESTALE */
->  	if (fh_len < len || fh_type !=3D len)
->  		return NULL;
-
-This seems like a reasonable thing to check for. If the fh is so short
-that we can't get to the EMBED_FH, then it's definitely invalid.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
