@@ -1,62 +1,62 @@
-Return-Path: <linux-nfs+bounces-12753-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12754-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2F5EAE8A6F
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:46:49 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D021AE8A48
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:45:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 116071BC4AE1
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 16:45:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C372A5A786E
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 16:44:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DF72DFA4A;
-	Wed, 25 Jun 2025 16:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13CD2E0B4E;
+	Wed, 25 Jun 2025 16:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADbsE3v2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y3HBge+Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F83F2DECC5
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 16:42:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D364D2DAFC7
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 16:42:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869765; cv=none; b=Y3mDvyt5xHslh44ZizgFpMfUHF6V1I+J+/VgqP5NcYwfuGzk+K8f+rZhvlM1Yrhb9I3qRlNVXoTYgDIExNCkkVj0yNsS56tQcweg2IV+T7O3vCKbiP5L8vdHl50/+30Xc0rTvJaL/9+dmkY5kyWVxzgo6KR/kGmlt66tgj8EPAY=
+	t=1750869766; cv=none; b=Lsx1RNRIM5NKifLDmZfKepHJAYjpeWBVgHtWc6SceQj3r5l7I3QGE6gEaeGB1CHtI/fc1P+2mWdkh33rcYb0FVGuxJfuINvohE+bo/gQvL4sFqGthKlfOapyQIRv9dCe+PZGRADg+m1JMAfYM3Jew4fPz0PPtt1dU+F6uWf7o3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869765; c=relaxed/simple;
-	bh=ThL+c4KRVYOJ4chfjquyjlUTkzyLflKNzPobS0UZxu4=;
+	s=arc-20240116; t=1750869766; c=relaxed/simple;
+	bh=HpvECxWq+voRGmSFNB6p+dkZRjN0lwqBCGONj4lfHTA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cfxo/Kls3szweXE3lUjnsUpXboNc1TFhMHAL71pkwIPcKOeSjcHBcWYRKQPsLrLmdO1KSfzYpFrrs+2QOehmh6VBXCf+4oQoXuQKTSX550Zsvl2E+nBNGoDlmuVLoJVs7EcXr+siff1Tgd83NvT30yL3qhb5GLXvEIlQFmGL/pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ADbsE3v2; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=Ft+p2iG9+FUpNzrX/rq9BDYjjhbfNmDBqNEjkLwO/IUg0htpzBfwl/0ruabTSHHm2FUJO5EfPUPj4snQ15bfsUlhEdtMo6dTac6IcVJTBB4NAjTJOshA4VBQnIboxJ+I5lyhCXVFYNZAvPQaGTo2DcNoYrAy0MUOPEQbQc3yYvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y3HBge+Q; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750869760;
+	s=mimecast20190719; t=1750869764;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=W8Ygr8J3FPj7uU3iVOA6bz3YJu/cWtKFNlp85sjx/fU=;
-	b=ADbsE3v2fb/nJEwSJ1LqT8RoMUhnkkS80CrCEY01onrWM223WkSg5BxsiACkj28mYYLScs
-	2I6nm7+8QlPTHKhwZ4aT+JGPLMJjYeCfylwF1KxmyfNUiIL7OXyBWGnHNnGTtWxKbB1d2s
-	44zdDh+cL/dKRVNFYqFR5aUfOKtKBAQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=tEcv5lb3KTTeQXiCv2Kg7zidLkcI1VoEfXAblq1PCdo=;
+	b=Y3HBge+QymFJGI8U26T/kSJ/KlmhJL9w9XcydMfeTxmphA+0TPke786t0MOUg7oj46Aqpm
+	dqG2ekPOagpPVFYEdjE84+zaIIFYNaDwSdiwBXXQl2CK5bNp9eWRDoS6N2Eh5eZ+VQWSVL
+	UoJiwvDZJyZswmVcdq1X5yRqK2cUxMw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-f57ctz1tN1u-NFqrHGR2vw-1; Wed,
- 25 Jun 2025 12:42:36 -0400
-X-MC-Unique: f57ctz1tN1u-NFqrHGR2vw-1
-X-Mimecast-MFC-AGG-ID: f57ctz1tN1u-NFqrHGR2vw_1750869754
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-265-IUCsWjHlMny0pq8eGPY1BA-1; Wed,
+ 25 Jun 2025 12:42:41 -0400
+X-MC-Unique: IUCsWjHlMny0pq8eGPY1BA-1
+X-Mimecast-MFC-AGG-ID: IUCsWjHlMny0pq8eGPY1BA_1750869759
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DFB3D180028C;
-	Wed, 25 Jun 2025 16:42:33 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BAE94180034E;
+	Wed, 25 Jun 2025 16:42:38 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.81])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48C9019560A3;
-	Wed, 25 Jun 2025 16:42:29 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6956918003FC;
+	Wed, 25 Jun 2025 16:42:35 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <sfrench@samba.org>
@@ -71,9 +71,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Paulo Alcantara <pc@manguebit.org>
-Subject: [PATCH v2 02/16] netfs: Put double put of request
-Date: Wed, 25 Jun 2025 17:41:57 +0100
-Message-ID: <20250625164213.1408754-3-dhowells@redhat.com>
+Subject: [PATCH v2 03/16] netfs: Provide helpers to perform NETFS_RREQ_IN_PROGRESS flag wangling
+Date: Wed, 25 Jun 2025 17:41:58 +0100
+Message-ID: <20250625164213.1408754-4-dhowells@redhat.com>
 In-Reply-To: <20250625164213.1408754-1-dhowells@redhat.com>
 References: <20250625164213.1408754-1-dhowells@redhat.com>
 Precedence: bulk
@@ -83,59 +83,142 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-If a netfs request finishes during the pause loop, it will have the ref
-that belongs to the IN_PROGRESS flag removed at that point - however, if it
-then goes to the final wait loop, that will *also* put the ref because it
-sees that the IN_PROGRESS flag is clear and incorrectly assumes that this
-happened when it called the collector.
+Provide helpers to clear and test the NETFS_RREQ_IN_PROGRESS and to insert
+the appropriate barrierage.
 
-In fact, since IN_PROGRESS is clear, we shouldn't call the collector again
-since it's done all the cleanup, such as calling ->ki_complete().
-
-Fix this by making netfs_collect_in_app() just return, indicating that
-we're done if IN_PROGRESS is removed.
-
-Fixes: 2b1424cd131c ("netfs: Fix wait/wake to be consistent about the waitqueue used")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Reviewed-by: Paulo Alcantara <pc@manguebit.org>
-cc: Steve French <sfrench@samba.org>
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
 ---
- fs/netfs/misc.c              | 5 +++++
- include/trace/events/netfs.h | 1 +
- 2 files changed, 6 insertions(+)
+ fs/netfs/internal.h      | 18 ++++++++++++++++++
+ fs/netfs/misc.c          | 10 +++++-----
+ fs/netfs/read_collect.c  |  4 ++--
+ fs/netfs/write_collect.c |  4 ++--
+ 4 files changed, 27 insertions(+), 9 deletions(-)
 
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index e2ee9183392b..d6656d2b54ab 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -274,6 +274,24 @@ static inline void netfs_wake_rreq_flag(struct netfs_io_request *rreq,
+ 	}
+ }
+ 
++/*
++ * Test the NETFS_RREQ_IN_PROGRESS flag, inserting an appropriate barrier.
++ */
++static inline bool netfs_check_rreq_in_progress(const struct netfs_io_request *rreq)
++{
++	/* Order read of flags before read of anything else, such as error. */
++	return test_bit_acquire(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
++}
++
++/*
++ * Test the NETFS_SREQ_IN_PROGRESS flag, inserting an appropriate barrier.
++ */
++static inline bool netfs_check_subreq_in_progress(const struct netfs_io_subrequest *subreq)
++{
++	/* Order read of flags before read of anything else, such as error. */
++	return test_bit_acquire(NETFS_SREQ_IN_PROGRESS, &subreq->flags);
++}
++
+ /*
+  * fscache-cache.c
+  */
 diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 0a54b1203486..8cf73b237269 100644
+index 8cf73b237269..7f31c3cbfe01 100644
 --- a/fs/netfs/misc.c
 +++ b/fs/netfs/misc.c
-@@ -383,6 +383,11 @@ static int netfs_collect_in_app(struct netfs_io_request *rreq,
- {
- 	bool need_collect = false, inactive = true, done = true;
+@@ -356,14 +356,14 @@ void netfs_wait_for_in_progress_stream(struct netfs_io_request *rreq,
+ 	DEFINE_WAIT(myself);
  
-+	if (!netfs_check_rreq_in_progress(rreq)) {
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_recollect);
-+		return 1; /* Done */
-+	}
-+
- 	for (int i = 0; i < NR_IO_STREAMS; i++) {
- 		struct netfs_io_subrequest *subreq;
- 		struct netfs_io_stream *stream = &rreq->io_streams[i];
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 333d2e38dd2c..ba35dc66e986 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -56,6 +56,7 @@
- 	EM(netfs_rreq_trace_dirty,		"DIRTY  ")	\
- 	EM(netfs_rreq_trace_done,		"DONE   ")	\
- 	EM(netfs_rreq_trace_free,		"FREE   ")	\
-+	EM(netfs_rreq_trace_recollect,		"RECLLCT")	\
- 	EM(netfs_rreq_trace_redirty,		"REDIRTY")	\
- 	EM(netfs_rreq_trace_resubmit,		"RESUBMT")	\
- 	EM(netfs_rreq_trace_set_abandon,	"S-ABNDN")	\
+ 	list_for_each_entry(subreq, &stream->subrequests, rreq_link) {
+-		if (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags))
++		if (!netfs_check_subreq_in_progress(subreq))
+ 			continue;
+ 
+ 		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_queue);
+ 		for (;;) {
+ 			prepare_to_wait(&rreq->waitq, &myself, TASK_UNINTERRUPTIBLE);
+ 
+-			if (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags))
++			if (!netfs_check_subreq_in_progress(subreq))
+ 				break;
+ 
+ 			trace_netfs_sreq(subreq, netfs_sreq_trace_wait_for);
+@@ -400,7 +400,7 @@ static int netfs_collect_in_app(struct netfs_io_request *rreq,
+ 						  struct netfs_io_subrequest,
+ 						  rreq_link);
+ 		if (subreq &&
+-		    (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags) ||
++		    (!netfs_check_subreq_in_progress(subreq) ||
+ 		     test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags))) {
+ 			need_collect = true;
+ 			break;
+@@ -451,7 +451,7 @@ static ssize_t netfs_wait_for_request(struct netfs_io_request *rreq,
+ 			}
+ 		}
+ 
+-		if (!test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags))
++		if (!netfs_check_rreq_in_progress(rreq))
+ 			break;
+ 
+ 		schedule();
+@@ -518,7 +518,7 @@ static void netfs_wait_for_pause(struct netfs_io_request *rreq,
+ 			}
+ 		}
+ 
+-		if (!test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags) ||
++		if (!netfs_check_rreq_in_progress(rreq) ||
+ 		    !test_bit(NETFS_RREQ_PAUSE, &rreq->flags))
+ 			break;
+ 
+diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
+index 96ee18af28ef..cceed9d629c6 100644
+--- a/fs/netfs/read_collect.c
++++ b/fs/netfs/read_collect.c
+@@ -218,7 +218,7 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
+ 			stream->collected_to = front->start;
+ 		}
+ 
+-		if (test_bit(NETFS_SREQ_IN_PROGRESS, &front->flags))
++		if (netfs_check_subreq_in_progress(front))
+ 			notes |= HIT_PENDING;
+ 		smp_rmb(); /* Read counters after IN_PROGRESS flag. */
+ 		transferred = READ_ONCE(front->transferred);
+@@ -445,7 +445,7 @@ void netfs_read_collection_worker(struct work_struct *work)
+ 	struct netfs_io_request *rreq = container_of(work, struct netfs_io_request, work);
+ 
+ 	netfs_see_request(rreq, netfs_rreq_trace_see_work);
+-	if (test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags)) {
++	if (netfs_check_rreq_in_progress(rreq)) {
+ 		if (netfs_read_collection(rreq))
+ 			/* Drop the ref from the IN_PROGRESS flag. */
+ 			netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
+diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
+index e2b102ffb768..2ac85a819b71 100644
+--- a/fs/netfs/write_collect.c
++++ b/fs/netfs/write_collect.c
+@@ -240,7 +240,7 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
+ 			}
+ 
+ 			/* Stall if the front is still undergoing I/O. */
+-			if (test_bit(NETFS_SREQ_IN_PROGRESS, &front->flags)) {
++			if (netfs_check_subreq_in_progress(front)) {
+ 				notes |= HIT_PENDING;
+ 				break;
+ 			}
+@@ -434,7 +434,7 @@ void netfs_write_collection_worker(struct work_struct *work)
+ 	struct netfs_io_request *rreq = container_of(work, struct netfs_io_request, work);
+ 
+ 	netfs_see_request(rreq, netfs_rreq_trace_see_work);
+-	if (test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags)) {
++	if (netfs_check_rreq_in_progress(rreq)) {
+ 		if (netfs_write_collection(rreq))
+ 			/* Drop the ref from the IN_PROGRESS flag. */
+ 			netfs_put_request(rreq, netfs_rreq_trace_put_work_ip);
 
 
