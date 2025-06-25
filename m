@@ -1,341 +1,217 @@
-Return-Path: <linux-nfs+bounces-12789-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12790-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAC99AE8D22
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 20:56:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF32AAE8E6E
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 21:19:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 522AD189E9DE
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 18:56:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1C1B162B74
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C2381CAA7B;
-	Wed, 25 Jun 2025 18:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71783275B04;
+	Wed, 25 Jun 2025 19:19:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="h24kTBtL"
+	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="gmnN5mTC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [131.169.56.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED52C285C9E
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 18:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B11158218
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 19:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877793; cv=none; b=qcTEjHPhCQW6vuCb6MWhxWKUZtohQjKS6+reRmdpEGmySliQbH81Olvc8jPa9IrtTAIHn5OUuu1/CD5ORD/wnqgFuGUw++fl54ViIVt2Den3UdeeAKXPjbOYiSUM7L/U9Aq6tyhJLPJtIWksbdW3iNp07WNKF7s7DdFcmsIbrhA=
+	t=1750879177; cv=none; b=bmPI8j3T1mGTjJRcT3aiziFsqlvEh9+TNH9L8EAJQEZDKqE0H2b+u8XqlPbu7bwANC+m9/aMt0fRADFqtlM8I3KX+pBg0Ut5KLIfQzbCekCWgMhHbIhHtDdEagCHpwdAKhm2T7YrAhQDNTtlCc+TzGh4QU2VtatEeF5cZpC4nPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877793; c=relaxed/simple;
-	bh=PopqO6xkAtVVzCGhj6F+epgDRrhGcridhsx1xnRqoIg=;
+	s=arc-20240116; t=1750879177; c=relaxed/simple;
+	bh=p8wqdiHEdinvW+R/oGDVcmnQBXCnzxVyDyEgavNj1B8=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=W/pe+khEM9S6JIzF1LGWV4kiIj2TGKXF88IUG2uRsYuy2yAUX61LoDaM1/mlCtDM3NvnnyWARUskz0ibSG6PIfoi/v2glA9A1x/WYA8VB75FxtQe9xuWdXCVv+NOOsXrYlvua1MMqy9SutR8qR9n42dksIlQBgjI7NTExhaaUvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=h24kTBtL; arc=none smtp.client-ip=131.169.56.155
+	 MIME-Version:Content-Type; b=qgMtZLck8l36SYe3SkwvuHcAnatgKTFprKg8Zj6rYQl/4YQ2ZulivlvclzryX2lViBfHGZATDTYrIAO8uJYvp6o1mzMjQy6zeDxyRWad8SHdBXrqXiqNiGq94hReNQ63USg/vJkVnurHxP3ED+77XkLQDIX0JzU/BIjhGhNbl7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=gmnN5mTC; arc=none smtp.client-ip=131.169.56.154
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id AA1B713F647
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 20:56:27 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de AA1B713F647
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
+	by smtp-o-1.desy.de (Postfix) with ESMTP id 8FB9611F746
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 21:19:32 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 8FB9611F746
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1750877787; bh=+SKVQMQpSAGXIXIPWmom+X6qNAiPEnMWzXmjjQ6HaRU=;
+	t=1750879172; bh=JoPit0RLRpLtH+U5fvw6n6NVHxB3EPwWZsyxhl4t6lA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=h24kTBtLtpWm9XYhM5GEZ7kN/rb3a+RPKGrG1Dcw0QobNf67W/oDjbB5FoALJEt1L
-	 LZBk6X9PYxu+ya/1zrASUjUuVDrm3uLWESXBF8GENpw9uL4lF4FI+enI3P81uiH2zL
-	 LpnHZ51e+XQUkEjJwubHNFsx2r7Q3ZYL3LwE9YCQ=
+	b=gmnN5mTCZ1CycJ9G2ZeFYlriFc6vcCn+sojv6bId1gfyOPMcEUAl2NODUPZnaNmfW
+	 3LY1QOM23BedxH7IsZx2Sxi1gBQyODNQ4vIEaDMpFrqlHgKbGKh3p7NhIgAaOZBj4n
+	 mYfUbFgSd7WWz6K/jk2KXxK0IgN8o/xjc8uNrI7Y=
 Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
-	by smtp-buf-2.desy.de (Postfix) with ESMTP id A0864120043;
-	Wed, 25 Jun 2025 20:56:27 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [194.95.239.47])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 9518840044;
-	Wed, 25 Jun 2025 20:56:27 +0200 (CEST)
-Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [131.169.56.82])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id D233310A3CD;
-	Wed, 25 Jun 2025 20:56:26 +0200 (CEST)
+	by smtp-buf-1.desy.de (Postfix) with ESMTP id 831ED20040;
+	Wed, 25 Jun 2025 21:19:32 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [194.95.233.47])
+	by smtp-m-1.desy.de (Postfix) with ESMTP id 7852C40044;
+	Wed, 25 Jun 2025 21:19:32 +0200 (CEST)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
+	by a1722.mx.srv.dfn.de (Postfix) with ESMTP id CFD8A320090;
+	Wed, 25 Jun 2025 21:19:31 +0200 (CEST)
 Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-	by smtp-intra-1.desy.de (Postfix) with ESMTP id A19DF80046;
-	Wed, 25 Jun 2025 20:56:26 +0200 (CEST)
-Date: Wed, 25 Jun 2025 20:56:26 +0200 (CEST)
+	by smtp-intra-2.desy.de (Postfix) with ESMTP id 8AC3920044;
+	Wed, 25 Jun 2025 21:19:31 +0200 (CEST)
+Date: Wed, 25 Jun 2025 21:19:31 +0200 (CEST)
 From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <166279785.14465613.1750877786582.JavaMail.zimbra@desy.de>
-In-Reply-To: <ee51ca06ad923654520041652c478ae3938fcbcb.1750806992.git.trond.myklebust@hammerspace.com>
-References: <ee51ca06ad923654520041652c478ae3938fcbcb.1750806992.git.trond.myklebust@hammerspace.com>
-Subject: Re: [PATCH] NFSv4/flexfiles: Fix handling of NFS level errors in
- I/O
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Message-ID: <1758012324.14467514.1750879171477.JavaMail.zimbra@desy.de>
+In-Reply-To: <20250609214303.816241-2-tigran.mkrtchyan@desy.de>
+References: <20250609214303.816241-1-tigran.mkrtchyan@desy.de> <20250609214303.816241-2-tigran.mkrtchyan@desy.de>
+Subject: Re: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal
+ connection error
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+	boundary="----=_Part_14467515_207929431.1750879171495"
+X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
+Thread-Topic: pNFS/flexfiles: mark device unavailable on fatal connection error
+Thread-Index: terUNc8zNdMcuQpztHdRByULGFvemg==
+
+------=_Part_14467515_207929431.1750879171495
+Date: Wed, 25 Jun 2025 21:19:31 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Message-ID: <1758012324.14467514.1750879171477.JavaMail.zimbra@desy.de>
+In-Reply-To: <20250609214303.816241-2-tigran.mkrtchyan@desy.de>
+References: <20250609214303.816241-1-tigran.mkrtchyan@desy.de> <20250609214303.816241-2-tigran.mkrtchyan@desy.de>
+Subject: Re: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal
+ connection error
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
-Thread-Topic: NFSv4/flexfiles: Fix handling of NFS level errors in I/O
-Thread-Index: 7y4N4rT94u8FvK6CScvYpbhOjYqT4A==
+Thread-Topic: pNFS/flexfiles: mark device unavailable on fatal connection error
+Thread-Index: terUNc8zNdMcuQpztHdRByULGFvemg==
 
 
-(second attempt after linux-nfs@vger.kernel.org has rejected the first one.)
+Hi Folks,
 
-Splitting RPC level error from NFS errors returned by DS looks reasonable to me.
+Do you have any opinion on this one? Would you like me to address it differently?
 
-So, if it helps:
-
-Reviewed-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-
-Tigran.
+Tigran. 
 
 ----- Original Message -----
-> From: "Trond Myklebust" <trondmy@kernel.org>
+> From: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
 > To: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Wednesday, 25 June, 2025 01:17:12
-> Subject: [PATCH] NFSv4/flexfiles: Fix handling of NFS level errors in I/O
+> Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>, "Tigran Mkrtchyan"
+> <tigran.mkrtchyan@desy.de>
+> Sent: Monday, 9 June, 2025 23:43:03
+> Subject: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal connection error
 
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Fixes: 260f32adb88 ("pNFS/flexfiles: Check the result of nfs4_pnfs_ds_connect")
 > 
-> Allow the flexfiles error handling to recognise NFS level errors (as
-> opposed to RPC level errors) and handle them separately. The main
-> motivator is the NFSERR_PERM errors that get returned if the NFS client
-> connects to the data server through a port number that is lower than
-> 1024. In that case, the client should disconnect and retry a READ on a
-> different data server, or it should retry a WRITE after reconnecting.
+> When an applications get killed (SIGTERM/SIGINT) while pNFS client performs a
+> connection
+> to DS, client ends in an infinite loop of connect-disconnect. This
+> source of the issue, it that flexfilelayoutdev#nfs4_ff_layout_prepare_ds gets an
+> error
+> on nfs4_pnfs_ds_connect with status ERESTARTSYS, which is set by
+> rpc_signal_task, but
+> the error is treated as transient, thus retried.
 > 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> The issue is reproducible with script as (there should be ~1000 files in
+> a directory, client should must not have any connections to DSes):
+> 
+> ```
+> echo 3 > /proc/sys/vm/drop_caches
+> 
+> for i in *
+> do
+>        head -1 $i &
+>        PP=$!
+>        sleep 10e-03
+>        kill -TERM $PP
+> done
+> ```
+> 
+> Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
 > ---
-> fs/nfs/flexfilelayout/flexfilelayout.c | 118 ++++++++++++++++++-------
-> 1 file changed, 84 insertions(+), 34 deletions(-)
+> fs/nfs/flexfilelayout/flexfilelayoutdev.c | 4 ++++
+> 1 file changed, 4 insertions(+)
 > 
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c
-> b/fs/nfs/flexfilelayout/flexfilelayout.c
-> index df4807460596..4bea008dbebd 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-> @@ -1105,6 +1105,7 @@ static void ff_layout_reset_read(struct nfs_pgio_header
-> *hdr)
-> }
-> 
-> static int ff_layout_async_handle_error_v4(struct rpc_task *task,
-> +					   u32 op_status,
-> 					   struct nfs4_state *state,
-> 					   struct nfs_client *clp,
-> 					   struct pnfs_layout_segment *lseg,
-> @@ -1115,34 +1116,42 @@ static int ff_layout_async_handle_error_v4(struct
-> rpc_task *task,
-> 	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx);
-> 	struct nfs4_slot_table *tbl = &clp->cl_session->fc_slot_table;
-> 
-> -	switch (task->tk_status) {
-> -	case -NFS4ERR_BADSESSION:
-> -	case -NFS4ERR_BADSLOT:
-> -	case -NFS4ERR_BAD_HIGH_SLOT:
-> -	case -NFS4ERR_DEADSESSION:
-> -	case -NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-> -	case -NFS4ERR_SEQ_FALSE_RETRY:
-> -	case -NFS4ERR_SEQ_MISORDERED:
-> +	switch (op_status) {
-> +	case NFS4_OK:
-> +	case NFS4ERR_NXIO:
-> +		break;
-> +	case NFSERR_PERM:
-> +		if (!task->tk_xprt)
-> +			break;
-> +		xprt_force_disconnect(task->tk_xprt);
-> +		goto out_retry;
-> +	case NFS4ERR_BADSESSION:
-> +	case NFS4ERR_BADSLOT:
-> +	case NFS4ERR_BAD_HIGH_SLOT:
-> +	case NFS4ERR_DEADSESSION:
-> +	case NFS4ERR_CONN_NOT_BOUND_TO_SESSION:
-> +	case NFS4ERR_SEQ_FALSE_RETRY:
-> +	case NFS4ERR_SEQ_MISORDERED:
-> 		dprintk("%s ERROR %d, Reset session. Exchangeid "
-> 			"flags 0x%x\n", __func__, task->tk_status,
-> 			clp->cl_exchange_flags);
-> 		nfs4_schedule_session_recovery(clp->cl_session, task->tk_status);
-> -		break;
-> -	case -NFS4ERR_DELAY:
-> +		goto out_retry;
-> +	case NFS4ERR_DELAY:
-> 		nfs_inc_stats(lseg->pls_layout->plh_inode, NFSIOS_DELAY);
-> 		fallthrough;
-> -	case -NFS4ERR_GRACE:
-> +	case NFS4ERR_GRACE:
-> 		rpc_delay(task, FF_LAYOUT_POLL_RETRY_MAX);
-> -		break;
-> -	case -NFS4ERR_RETRY_UNCACHED_REP:
-> -		break;
-> +		goto out_retry;
-> +	case NFS4ERR_RETRY_UNCACHED_REP:
-> +		goto out_retry;
-> 	/* Invalidate Layout errors */
-> -	case -NFS4ERR_PNFS_NO_LAYOUT:
-> -	case -ESTALE:           /* mapped NFS4ERR_STALE */
-> -	case -EBADHANDLE:       /* mapped NFS4ERR_BADHANDLE */
-> -	case -EISDIR:           /* mapped NFS4ERR_ISDIR */
-> -	case -NFS4ERR_FHEXPIRED:
-> -	case -NFS4ERR_WRONG_TYPE:
-> +	case NFS4ERR_PNFS_NO_LAYOUT:
-> +	case NFS4ERR_STALE:
-> +	case NFS4ERR_BADHANDLE:
-> +	case NFS4ERR_ISDIR:
-> +	case NFS4ERR_FHEXPIRED:
-> +	case NFS4ERR_WRONG_TYPE:
-> 		dprintk("%s Invalid layout error %d\n", __func__,
-> 			task->tk_status);
-> 		/*
-> @@ -1155,6 +1164,11 @@ static int ff_layout_async_handle_error_v4(struct
-> rpc_task *task,
-> 		pnfs_destroy_layout(NFS_I(inode));
-> 		rpc_wake_up(&tbl->slot_tbl_waitq);
-> 		goto reset;
-> +	default:
-> +		break;
-> +	}
+> diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> index 4a304cf17c4b..0008a8180c9b 100644
+> --- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> +++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+> @@ -410,6 +410,10 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
+> 			mirror->mirror_ds->ds_versions[0].wsize = max_payload;
+> 		goto out;
+> 	}
+> +	/* There is a fatal error to connect to DS. Mark it unavailable to avoid
+> infinite retry loop. */
+> +	if (nfs_error_is_fatal(status))
+> +		nfs4_mark_deviceid_unavailable(&mirror->mirror_ds->id_node);
 > +
-> +	switch (task->tk_status) {
-> 	/* RPC connection errors */
-> 	case -ENETDOWN:
-> 	case -ENETUNREACH:
-> @@ -1174,27 +1188,56 @@ static int ff_layout_async_handle_error_v4(struct
-> rpc_task *task,
-> 		nfs4_delete_deviceid(devid->ld, devid->nfs_client,
-> 				&devid->deviceid);
-> 		rpc_wake_up(&tbl->slot_tbl_waitq);
-> -		fallthrough;
-> +		break;
-> 	default:
-> -		if (ff_layout_avoid_mds_available_ds(lseg))
-> -			return -NFS4ERR_RESET_TO_PNFS;
-> -reset:
-> -		dprintk("%s Retry through MDS. Error %d\n", __func__,
-> -			task->tk_status);
-> -		return -NFS4ERR_RESET_TO_MDS;
-> +		break;
-> 	}
-> +
-> +	if (ff_layout_avoid_mds_available_ds(lseg))
-> +		return -NFS4ERR_RESET_TO_PNFS;
-> +reset:
-> +	dprintk("%s Retry through MDS. Error %d\n", __func__,
-> +		task->tk_status);
-> +	return -NFS4ERR_RESET_TO_MDS;
-> +
-> +out_retry:
-> 	task->tk_status = 0;
-> 	return -EAGAIN;
-> }
-> 
-> /* Retry all errors through either pNFS or MDS except for -EJUKEBOX */
-> static int ff_layout_async_handle_error_v3(struct rpc_task *task,
-> +					   u32 op_status,
-> 					   struct nfs_client *clp,
-> 					   struct pnfs_layout_segment *lseg,
-> 					   u32 idx)
-> {
-> 	struct nfs4_deviceid_node *devid = FF_LAYOUT_DEVID_NODE(lseg, idx);
-> 
-> +	switch (op_status) {
-> +	case NFS_OK:
-> +	case NFSERR_NXIO:
-> +		break;
-> +	case NFSERR_PERM:
-> +		if (!task->tk_xprt)
-> +			break;
-> +		xprt_force_disconnect(task->tk_xprt);
-> +		goto out_retry;
-> +	case NFSERR_ACCES:
-> +	case NFSERR_BADHANDLE:
-> +	case NFSERR_FBIG:
-> +	case NFSERR_IO:
-> +	case NFSERR_NOSPC:
-> +	case NFSERR_ROFS:
-> +	case NFSERR_STALE:
-> +		goto out_reset_to_pnfs;
-> +	case NFSERR_JUKEBOX:
-> +		nfs_inc_stats(lseg->pls_layout->plh_inode, NFSIOS_DELAY);
-> +		goto out_retry;
-> +	default:
-> +		break;
-> +	}
-> +
-> 	switch (task->tk_status) {
-> 	/* File access problems. Don't mark the device as unavailable */
-> 	case -EACCES:
-> @@ -1218,6 +1261,7 @@ static int ff_layout_async_handle_error_v3(struct rpc_task
-> *task,
-> 		nfs4_delete_deviceid(devid->ld, devid->nfs_client,
-> 				&devid->deviceid);
-> 	}
-> +out_reset_to_pnfs:
-> 	/* FIXME: Need to prevent infinite looping here. */
-> 	return -NFS4ERR_RESET_TO_PNFS;
-> out_retry:
-> @@ -1228,6 +1272,7 @@ static int ff_layout_async_handle_error_v3(struct rpc_task
-> *task,
-> }
-> 
-> static int ff_layout_async_handle_error(struct rpc_task *task,
-> +					u32 op_status,
-> 					struct nfs4_state *state,
-> 					struct nfs_client *clp,
-> 					struct pnfs_layout_segment *lseg,
-> @@ -1246,10 +1291,11 @@ static int ff_layout_async_handle_error(struct rpc_task
-> *task,
-> 
-> 	switch (vers) {
-> 	case 3:
-> -		return ff_layout_async_handle_error_v3(task, clp, lseg, idx);
-> -	case 4:
-> -		return ff_layout_async_handle_error_v4(task, state, clp,
-> +		return ff_layout_async_handle_error_v3(task, op_status, clp,
-> 						       lseg, idx);
-> +	case 4:
-> +		return ff_layout_async_handle_error_v4(task, op_status, state,
-> +						       clp, lseg, idx);
-> 	default:
-> 		/* should never happen */
-> 		WARN_ON_ONCE(1);
-> @@ -1302,6 +1348,7 @@ static void ff_layout_io_track_ds_error(struct
-> pnfs_layout_segment *lseg,
-> 	switch (status) {
-> 	case NFS4ERR_DELAY:
-> 	case NFS4ERR_GRACE:
-> +	case NFS4ERR_PERM:
-> 		break;
-> 	case NFS4ERR_NXIO:
-> 		ff_layout_mark_ds_unreachable(lseg, idx);
-> @@ -1334,7 +1381,8 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
-> 		trace_ff_layout_read_error(hdr, task->tk_status);
-> 	}
-> 
-> -	err = ff_layout_async_handle_error(task, hdr->args.context->state,
-> +	err = ff_layout_async_handle_error(task, hdr->res.op_status,
-> +					   hdr->args.context->state,
-> 					   hdr->ds_clp, hdr->lseg,
-> 					   hdr->pgio_mirror_idx);
-> 
-> @@ -1507,7 +1555,8 @@ static int ff_layout_write_done_cb(struct rpc_task *task,
-> 		trace_ff_layout_write_error(hdr, task->tk_status);
-> 	}
-> 
-> -	err = ff_layout_async_handle_error(task, hdr->args.context->state,
-> +	err = ff_layout_async_handle_error(task, hdr->res.op_status,
-> +					   hdr->args.context->state,
-> 					   hdr->ds_clp, hdr->lseg,
-> 					   hdr->pgio_mirror_idx);
-> 
-> @@ -1556,8 +1605,9 @@ static int ff_layout_commit_done_cb(struct rpc_task *task,
-> 		trace_ff_layout_commit_error(data, task->tk_status);
-> 	}
-> 
-> -	err = ff_layout_async_handle_error(task, NULL, data->ds_clp,
-> -					   data->lseg, data->ds_commit_index);
-> +	err = ff_layout_async_handle_error(task, data->res.op_status,
-> +					   NULL, data->ds_clp, data->lseg,
-> +					   data->ds_commit_index);
-> 
-> 	trace_nfs4_pnfs_commit_ds(data, err);
-> 	switch (err) {
+> noconnect:
+> 	ff_layout_track_ds_error(FF_LAYOUT_FROM_HDR(lseg->pls_layout),
+> 				 mirror, lseg->pls_range.offset,
 > --
 > 2.49.0
+
+------=_Part_14467515_207929431.1750879171495
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
+XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
+TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
+Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
+CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
+dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
+b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
+UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
+jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
+yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
+FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
+ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
+59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
+UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
+IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
+IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
+6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
+CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
+LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
+MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
+Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
+aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
+dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
+DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
+yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
+zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
+37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
+76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
+BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
+lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
+bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
+vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
+nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
+0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yNTA2MjUxOTE5MzFaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
+BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEII7f61a7pMHaPpGgVkk9C8P3b+yS
+vs2uAgurS4nnz+GEMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAJsIVdGVc5syitF+IEzVjvew2VpanBA6TwI1KtYD
+stFjw+teW4LiRu8Eqt/mzlXO/EQpsjz77gg6AUxSMgrAN207foqY4IXSjRxT0+HJObU3/MDdTER7
+qz4VtnuoLLcvRW+RtK+HrtthjGnmfkFLycS2qdWX+szpnM/rFKAh59A+kiHOcj5FncGb05mrSTrL
+o7fTAkxzxJLF+AQxOwnFL3dCue05vfAh5PooJR2S8asU3556OC5AnTnWKOIiAHDJ14mj8E6/WPuM
+KEXbcZo+FKcgJVmG/freg6AtHUGQPHKZB5oktCOPNVtZqnIzFrqJNzY7H9YJSh7zqoeaO/3aDeuz
+QSJmd4LeSfJajff0D81POnlYQSSRiD1xhxjv8MDNIPFT1o7opI6pU0SMycePONLVQgHdB43DUzwV
+a+/PTDZC3YfXIFP10vtoan223iT/8JICTQKRNDC7KwXFc5TW3cmEr/3FhzssC27vLww4s6IC7kpx
+i9E9SuxCDckgrQqXRSV5RLiO+++Kfe5vMAV3SmdOJaIYET06z3eKmnydGXk0LAmb3nMPCc0xOQfw
+HWfSu9c36Fg8QkaXzMMLSuNDUVAkAssJFlD16bAnkWLiNvTonSb3W7KOzeEa4gR+zO0TlucRs6wt
+H/W+P1+YpPdxHprHnzGm7Z9jy1ymC45fd9t/AAAAAAAA
+------=_Part_14467515_207929431.1750879171495--
 
