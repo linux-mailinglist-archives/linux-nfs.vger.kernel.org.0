@@ -1,111 +1,166 @@
-Return-Path: <linux-nfs+bounces-12746-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12747-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90201AE7ABE
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 10:48:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F99CAE81F9
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 13:52:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C200D189F7A0
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 08:48:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E480D1BC47A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 11:52:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84CE628E607;
-	Wed, 25 Jun 2025 08:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A6D425D1F1;
+	Wed, 25 Jun 2025 11:52:03 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D920288CBD;
-	Wed, 25 Jun 2025 08:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 18ACE25D1E3;
+	Wed, 25 Jun 2025 11:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841231; cv=none; b=ddlHHDnNBcDiMS7XLkjx275XREBZA7MozWnUfWw9NsmjNek7+i541UATGn+pCM95/mujHaPQeWQFKEy+uLBRPwLSLJaFPBXnoU/qHLe4x7557ytHLVSJiPbs80ul+CHsHpMgdWpWpAVSa0uOxQLJuAT+bw43JKCFCxXJDe+nVe4=
+	t=1750852323; cv=none; b=ADTArwB+YmUnCmXW/ken6+a6DO+WkYMJalHP2qJV3QhWcwDh3wyH2S0e9GhS9E/wnz/1uzQicrUtrTm84r1/0aWSi5YGYJJ9xHTgh1s1oIoL1K5gNklCEfm2zzIedoSJJWypWr7RKYngcISnxaWM75VUFDj7m88FwBuFLzkV4GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841231; c=relaxed/simple;
-	bh=xDezQu8rUpcvHFAGt+r8ic9Do8WqjCafJJfUU47daxg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KwhOwmzTUgkXJLbjZlfRJcBUeYutFyuFDyk9AbZNIoHWNe1GPC35b9kJc7acpbXmfEQ9WFaaT9OM7IfnLKWvZZZxnfsVAiNbiUZRRjxQDzg8OSosmvWBJODVrj9nj3f9spAa1OzwAjWMLsVlnddJaM6JzGg3d+ALgNYMzmq6FCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bRwPf47x6z1QBp1;
-	Wed, 25 Jun 2025 16:45:26 +0800 (CST)
-Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B6B01A016C;
-	Wed, 25 Jun 2025 16:47:04 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
- (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Jun
- 2025 16:47:03 +0800
-From: zhangjian <zhangjian496@huawei.com>
-To: <gregkh@linuxfoundation.org>, <darrick.wong@oracle.com>,
-	<dhowells@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-	<stable@vger.kernel.org>
-Subject: [PATCH] [5.10-LTS NFS] fix assert failure in __fscache_disable_cookie
-Date: Thu, 26 Jun 2025 10:00:35 +0800
-Message-ID: <20250626020035.1043638-1-zhangjian496@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1750852323; c=relaxed/simple;
+	bh=K4eNEdbMuwJkxmj8qBQgm+SCrYQ8WQ8B44GCUzPugwo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=FM+zutLxcV6tSx0nLjZ5mCQxq+PoEBGVl6RhzC2NlA79Z1xMgjQibxQ9tTZpvdnWZ/OkmFcoNV3lAFFMdUWX0xln5L3b5Sqej2fNu7FsJRy/JZwXfPIRkminPHzCbH83t5Vvnz5X9GbrsXXWt62xGonHPZ5jy6xrnVAdhOgPLDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id C52676032FDF0;
+	Wed, 25 Jun 2025 19:51:54 +0800 (CST)
+Message-ID: <f1d71897-10d5-4069-87ff-9cb41ad642ec@nfschina.com>
+Date: Wed, 25 Jun 2025 19:51:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemp200004.china.huawei.com (7.202.195.99)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Content-Language: en-US
+To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
+Cc: jlayton@kernel.org, okorniev@redhat.com, Dai.Ngo@oracle.com,
+ tom@talpey.com, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Su Hui <suhui@nfschina.com>
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <175080335129.2280845.12285110458405652015@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Multi write opens will go into __fscache_disable_cookie and cookie->n_active
-may be zero for a short window. Move this assertion under locking to avoid
-assert failure for ASSERTCMP(atomic_read(&cookie->n_active), >, 0).
+On 2025/6/25 06:15, NeilBrown wrote:
+> On Wed, 25 Jun 2025, Chuck Lever wrote:
+>> On 6/23/25 8:19 PM, NeilBrown wrote:
+>>> On Mon, 23 Jun 2025, Su Hui wrote:
+>>>> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+>>>> more clear. Change the order of the code to let all lock code in the
+>>>> same scope. No functional changes.
+>>> While I agree that this code could usefully be cleaned up and that you
+>>> have made some improvements, I think the use of guard() is a nearly
+>>> insignificant part of the change.  You could easily do exactly the same
+>>> patch without using guard() but having and explicit spin_unlock() before
+>>> the new return.  That doesn't mean you shouldn't use guard(), but it
+>>> does mean that the comment explaining the change could be more usefully
+>>> focused on the "Change the order ..." part, and maybe explain what that
+>>> is important.
+>>>
+>>> I actually think there is room for other changes which would make the
+>>> code even better:
+>>> - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+>>>    take the lock when needed, then drop it, then call
+>>>    nfsd_cacherep_dispose() - and return the count.
+>>> - change nfsd_cache_insert to also skip updating the chain length stats
+>>>    when it finds a match - in that case the "entries" isn't a chain
+>>>    length. So just  lru_put_end(), return.  Have it return NULL if
+>>>    no match was found
+>>> - after the found_entry label don't use nfsd_reply_cache_free_locked(),
+>>>    just free rp.  It has never been included in any rbtree or list, so it
+>>>    doesn't need to be removed.
+>>> - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+>>>    and call it under rcu_read_lock() - and use RCU to free the cached
+>>>    items.
+>>> - put the chunk of code after the found_entry label into a separate
+>>>    function and instead just return RC_REPLY (and maybe rename that
+>>>    RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+>>>    that function that has the found_entry code.
+>>>
+>>> I think that would make the code a lot easier to follow.  Would you like
+>>> to have a go at that - I suspect it would be several patches - or shall
+>>> I do it?
+>> I'm going to counsel some caution.
+>>
+>> nfsd_cache_lookup() is a hot path. Source code readability, though
+>> important, is not the priority in this area.
+>>
+>> I'm happy to consider changes to this function, but the bottom line is
+>> patches need to be accompanied by data that show that proposed code
+>> modifications do not negatively impact performance. (Plus the usual
+>> test results that show no impact to correctness).
+>>
+>> That data might include:
+>> - flame graphs that show a decrease in CPU utilization
+>> - objdump output showing a smaller instruction cache footprint
+>>    and/or short instruction path lengths
+>> - perf results showing better memory bandwidth
+>> - perf results showing better branch prediction
+>> - lockstat results showing less contention and/or shorter hold
+>>    time on locks held in this path
+>>
+>> Macro benchmark results are also welcome: equal or lower latency for
+>> NFSv3 operations, and equal or higher I/O throughput.
+>>
+>> The benefit for the scoped_guard construct is that it might make it more
+>> difficult to add code that returns from this function with a lock held.
+>> However, so far that hasn't been an issue.
+>>
+>> Thus I'm not sure there's a lot of strong technical justification for
+>> modification of this code path. But, you might know of one -- if so,
+>> please make sure that appears in the patch descriptions.
+>>
+>> What is more interesting to me is trying out more sophisticated abstract
+>> data types for the DRC hashtable. rhashtable is one alternative; so is
+>> Maple tree, which is supposed to handle lookups with more memory
+>> bandwidth efficiency than walking a linked list.
+>>
+> While I generally like rhashtable there is an awkwardness.  It doesn't
+> guarantee that an insert will always succeed.  If you get lots of new
+> records that hash to the same value, it will start failing insert
+> requests until is hash re-hashed the table with a new seed.  This is
+> intended to defeat collision attacks.  That means we would need to drop
+> requests sometimes.  Maybe that is OK.  The DRC could be the target of
+> collision attacks so maybe we really do want to drop requests if
+> rhashtable refuses to store them.
+>
+> I think the other area that could use improvement is pruning old entries.
+> I would not include RC_INPROG entries in the lru at all - they are
+> always ignored, and will be added when they are switched to RCU_DONE.
+> I'd generally like to prune less often in larger batches, but removing
+> each of the batch from the rbtree could hold the lock for longer than we
+> would like.  I wonder if we could have an 'old' and a 'new' rbtree and
+> when the 'old' gets too old or the 'new' get too full, we extract 'old',
+> move 'new' to 'old', and outside the spinlock we free all of the moved
+> 'old'.
+>
+> But if we switched to rhashtable, we probably wouldn't need an lru -
+> just walk the entire table occasionally - there would be little conflict
+> with concurrent lookups.
+>
+> But as you say, measuring would be useful.  Hopefully the DRC lookup
+> would be small contribution to the total request time, so we would need
+> to measure just want happens in the code to compare different versions.
+>
+> NeilBrown
+>
+>> Anyway, have fun, get creative, and let's see what comes up.
+>>
+Thanks for the above prompt. I think I need more time to complete this,
+both for code and related tests. I will do my best with curiosity and
+creativity :).
 
-stack is as following:
-
- fscache_disable_cookie include/linux/fscache.h:854 [inline]
- nfs_fscache_open_file+0x3ba/0x430 fs/nfs/fscache.c:319
- nfs4_file_open+0x4ff/0x780 fs/nfs/nfs4file.c:90
- do_dentry_open+0x6ea/0x1170 fs/open.c:826
- do_open.isra.0+0x9dc/0xf50 fs/namei.c:3316
- path_openat+0x336/0x810 fs/namei.c:3434
- do_filp_open+0x1b9/0x290 fs/namei.c:3461
- do_sys_openat2+0x5be/0x9b0 fs/open.c:1231
- do_sys_open+0xc8/0x150 fs/open.c:1248
- do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x67/0xd1
-
-Signed-off-by: zhangjian <zhangjian496@huawei.com>
----
- fs/fscache/cookie.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
-index 6104f627c..30f0e2b41 100644
---- a/fs/fscache/cookie.c
-+++ b/fs/fscache/cookie.c
-@@ -703,6 +703,9 @@ void __fscache_disable_cookie(struct fscache_cookie *cookie,
- 
- 	_enter("%p,%u", cookie, invalidate);
- 
-+	wait_on_bit_lock(&cookie->flags, FSCACHE_COOKIE_ENABLEMENT_LOCK,
-+			 TASK_UNINTERRUPTIBLE);
-+
- 	trace_fscache_disable(cookie);
- 
- 	ASSERTCMP(atomic_read(&cookie->n_active), >, 0);
-@@ -713,9 +716,6 @@ void __fscache_disable_cookie(struct fscache_cookie *cookie,
- 		BUG();
- 	}
- 
--	wait_on_bit_lock(&cookie->flags, FSCACHE_COOKIE_ENABLEMENT_LOCK,
--			 TASK_UNINTERRUPTIBLE);
--
- 	fscache_update_aux(cookie, aux_data);
- 
- 	if (!test_and_clear_bit(FSCACHE_COOKIE_ENABLED, &cookie->flags))
--- 
-2.33.0
-
+Regards,
+Su Hui
 
