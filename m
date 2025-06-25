@@ -1,198 +1,188 @@
-Return-Path: <linux-nfs+bounces-12769-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12770-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17645AE8B69
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:20:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 03A12AE8B6E
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 19:23:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E6FC1885E7C
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 17:20:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDF403B00DA
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 17:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DEFF26B0BC;
-	Wed, 25 Jun 2025 17:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE626286425;
+	Wed, 25 Jun 2025 17:23:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="ijbyLmiD"
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="rQXRw887"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED42D3074AC
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 17:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8502D3074AC;
+	Wed, 25 Jun 2025 17:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750872038; cv=none; b=W8WyGr5cVhl+1OoMMI4Kif2yTNnPCm4kRkUhuUNwjkvQY/DlgHpWbBQsVDuCQ21Qf1ye4xM5tGYArAIC5GUYlPEa7FXgJ1wlnUPt68pTDkamXdErzvOEo9BzEwhY+2oE29HYuG/PnnjFDzSukG7oC03mwdSuLhctvNBKiFbwqaY=
+	t=1750872210; cv=none; b=vGHxIaKiaCytOP+daMzBEdT25W/HzpFC3/8b1QlnSvFeltV6RuyfEOyvMMur7qxrc+o0Bvf9zX1A78QrXmy90BMVbChf7kGojSjIlGGbOvxJOQpDTrnbIGLHjliA5zjPkxOM/1GU6q3ITORW3Ra4ykSkbhwIOGrYRt0EY+J45kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750872038; c=relaxed/simple;
-	bh=46kRxz2kzmEgki7nVKFd/TWqzD1wdiWSatuDttfII1Y=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ta20TzJBQF7ByovSb/zMG8IHs+4YraYISGqhXuBshTjo4Fh0uI5dMmuXn12/GCiiunvJSXlYef2z3xQlqqzQFU+HgtyOqlRif3HY2Ve5QhoLAu+8Cf1gNltDUnRoMQmlb6RqXkPS+rCSzduraFZZ9ailWvCuKwDatTHoldxeGbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=ijbyLmiD; arc=none smtp.client-ip=131.169.56.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
-	by smtp-o-3.desy.de (Postfix) with ESMTP id DA15311F8E0
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 19:20:31 +0200 (CEST)
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 175DA13F648
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 19:20:24 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 175DA13F648
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1750872024; bh=Q0T6gH9XZMWG2w25RsZ/BQAcg9aUTDgcVzXy6s9P5N8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ijbyLmiDO8eW/Xqrvn1hoWLT7YIjzO361UB4DNRE053PMDqWTWbokkfsD+oP8yuIS
-	 2kTAyM0Ejk+smTgqR25J25GGw1Y6LrNm6Und+QepPM2dqKdosjf5SVdNBMEXG1PmmW
-	 wORBBZMfnnNcOkMxLsJjs/7uYGri2yMLfs/w5hQs=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-	by smtp-buf-2.desy.de (Postfix) with ESMTP id 0A0E0120043;
-	Wed, 25 Jun 2025 19:20:24 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [IPv6:2001:638:d:c303:acdc:1979:2:e7])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id ED20F40044;
-	Wed, 25 Jun 2025 19:20:23 +0200 (CEST)
-Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id 9433C10A3CC;
-	Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-	by smtp-intra-3.desy.de (Postfix) with ESMTP id 4E48F1A0041;
-	Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
-Date: Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <1248643633.14443075.1750872022054.JavaMail.zimbra@desy.de>
-In-Reply-To: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
-References: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
-Subject: Re: [PATCH] pynfs: Fix RuntimeError by increasing default
- ca_maxrequests from 8 to 16
+	s=arc-20240116; t=1750872210; c=relaxed/simple;
+	bh=BEDzEKt9JSATmJp5cnYe1NQYMywsbvi4ikfwEf/X8gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U01+g88ava7Jw7cF4NHIMhmBQAD9sJoUk7JAayhPK7kzMhObMnXDbwt6cd0T4XShGsGg6v44ahzcMo1a/eLeUQYu5U3gIw8lw69zy9Pi/IBYbINdpYuGMfObOvJzMG5jtmmR+WJeMUPFhKPWfOEUfQkyp4o6GxTOBhrpVwm3GxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=rQXRw887; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=ZzWLo9F9RRZ6p3rOhQwF3R/YNmHPFvLGy60aTy/R4e0=; b=rQXRw887unOlqhD20dY3n74CFn
+	cPllOiKm2gLr0zvdv9nh/Ln03hde+M1gDZ7LRDhQl+k7SaHEv3dmgEHq6RJPztVtdsZ5XZaVIntMe
+	WBNa2LOeD5Mm+FI62EJ4LtcWsbQhELyGfgQ0H9xWkin1ZWicV5raotbicacJScBi43/Sw4qHtNojE
+	SpB6GXuCtPrg/2e7S87B2butjGKOtGokCSUmnUSoWAkORbXvw2tfRW2bYggNI0u65SEtNFeZIsYSf
+	sSSQWFPQdsswTfqsWCSYlP8qv2m8RA0TMfLCJVx5I6wsszGeEBuoyyqNqDGFwp2l7u25BZvj7HEGb
+	04ez/0bzmVIWvAa7zCyMthB/BSXjt9WNNYB5Pxla+ho6wID3+MU5wtHOl2TXyMGYwUV7iVLfVItJp
+	RHqrbhd4s94H52DhkHZFkXcAl3VQUxXBFhGR5oRXBsMwNyOPSjCCU5kLzWaWM7OMVJBn8KCwmKTg+
+	BpFYd9ErcxEKf/cC96aUT0Sa;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1uUTqB-00CSQA-1x;
+	Wed, 25 Jun 2025 17:23:19 +0000
+Message-ID: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
+Date: Wed, 25 Jun 2025 19:23:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
-	boundary="----=_Part_14443076_547431676.1750872022193"
-X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
-Thread-Topic: pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
-Thread-Index: N1l2a3uT+tvpIdrT6aEdslFEzxLLVA==
-
-------=_Part_14443076_547431676.1750872022193
-Date: Wed, 25 Jun 2025 19:20:22 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Cc: Calum Mackay <calum.mackay@oracle.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <1248643633.14443075.1750872022054.JavaMail.zimbra@desy.de>
-In-Reply-To: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
-References: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
-Subject: Re: [PATCH] pynfs: Fix RuntimeError by increasing default
- ca_maxrequests from 8 to 16
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/16] cifs: Fix reading into an ITER_FOLIOQ from the
+ smbdirect code
+To: David Howells <dhowells@redhat.com>,
+ Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20250625164213.1408754-1-dhowells@redhat.com>
+ <20250625164213.1408754-13-dhowells@redhat.com>
+Content-Language: en-US
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <20250625164213.1408754-13-dhowells@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
-Thread-Topic: pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
-Thread-Index: N1l2a3uT+tvpIdrT6aEdslFEzxLLVA==
 
-
-I had a different attempt to address that:
-
-https://lore.kernel.org/all/20250415114814.285400-1-tigran.mkrtchyan@desy.de/\
-
-Tigran.
-
------ Original Message -----
-> From: "Chen Hanxiao" <chenhx.fnst@fujitsu.com>
-> To: "Calum Mackay" <calum.mackay@oracle.com>
-> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Wednesday, 25 June, 2025 10:00:59
-> Subject: [PATCH] pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
-
-> Increased the default value of ca_maxrequests from 8 to 16 to address a
-> RuntimeError encountered in DELEG8.
+Am 25.06.25 um 18:42 schrieb David Howells:
+> When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
+> type 4" error and fails the I/O.  This is due to the switch-statement there
+> not handling the ITER_FOLIOQ handed down from netfslib.
 > 
-> This change resolves the issue where
-> DELEG8 st_delegation.testDelegRevocation
-> fails with a RuntimeError: "Out of slots".
+> Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
+> smbd_recv() and just using copy_to_iter() instead of memcpy().  This
+> future-proofs the function too, in case more ITER_* types are added.
 > 
-> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+> Reported-by: Stefan Metzmacher <metze@samba.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steve French <stfrench@microsoft.com>
+> cc: Tom Talpey <tom@talpey.com>
+> cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
 > ---
-> nfs4.1/nfs4client.py | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+>   fs/smb/client/smbdirect.c | 114 +++++++-------------------------------
+>   1 file changed, 19 insertions(+), 95 deletions(-)
 > 
-> diff --git a/nfs4.1/nfs4client.py b/nfs4.1/nfs4client.py
-> index f4fabcc..fa31b34 100644
-> --- a/nfs4.1/nfs4client.py
-> +++ b/nfs4.1/nfs4client.py
-> @@ -390,7 +390,7 @@ class ClientRecord(object):
->                        fore_attrs=None, back_attrs=None, sec=None,
->                        prog=None,
->                        max_retries=1, delay_time=1):
-> -        chan_attrs = channel_attrs4(0,8192,8192,8192,128,8,[])
-> +        chan_attrs = channel_attrs4(0,8192,8192,8192,128,16,[])
->         if fore_attrs is None:
->             fore_attrs = chan_attrs
->         if back_attrs is None:
-> --
-> 2.39.1
+> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> index a976bcf61226..5fa46b2e682c 100644
+> --- a/fs/smb/client/smbdirect.c
+> +++ b/fs/smb/client/smbdirect.c
+> @@ -1770,35 +1770,39 @@ struct smbd_connection *smbd_get_connection(
+>   }
+>   
+>   /*
+> - * Receive data from receive reassembly queue
+> + * Receive data from the transport's receive reassembly queue
+>    * All the incoming data packets are placed in reassembly queue
+> - * buf: the buffer to read data into
+> + * iter: the buffer to read data into
+>    * size: the length of data to read
+>    * return value: actual data read
+> - * Note: this implementation copies the data from reassebmly queue to receive
+> + *
+> + * Note: this implementation copies the data from reassembly queue to receive
+>    * buffers used by upper layer. This is not the optimal code path. A better way
+>    * to do it is to not have upper layer allocate its receive buffers but rather
+>    * borrow the buffer from reassembly queue, and return it after data is
+>    * consumed. But this will require more changes to upper layer code, and also
+>    * need to consider packet boundaries while they still being reassembled.
+>    */
+> -static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+> -		unsigned int size)
+> +int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+>   {
+>   	struct smbdirect_socket *sc = &info->socket;
+>   	struct smbd_response *response;
+>   	struct smbdirect_data_transfer *data_transfer;
+> +	size_t size = iov_iter_count(&msg->msg_iter);
+>   	int to_copy, to_read, data_read, offset;
+>   	u32 data_length, remaining_data_length, data_offset;
+>   	int rc;
+>   
+> +	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) == WRITE))
+> +		return -EINVAL; /* It's a bug in upper layer to get there */
+> +
+>   again:
+>   	/*
+>   	 * No need to hold the reassembly queue lock all the time as we are
+>   	 * the only one reading from the front of the queue. The transport
+>   	 * may add more entries to the back of the queue at the same time
+>   	 */
+> -	log_read(INFO, "size=%d info->reassembly_data_length=%d\n", size,
+> +	log_read(INFO, "size=%zd info->reassembly_data_length=%d\n", size,
+>   		info->reassembly_data_length);
+>   	if (info->reassembly_data_length >= size) {
+>   		int queue_length;
+> @@ -1836,7 +1840,10 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			if (response->first_segment && size == 4) {
+>   				unsigned int rfc1002_len =
+>   					data_length + remaining_data_length;
+> -				*((__be32 *)buf) = cpu_to_be32(rfc1002_len);
+> +				__be32 rfc1002_hdr = cpu_to_be32(rfc1002_len);
+> +				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
+> +						 &msg->msg_iter) != sizeof(rfc1002_hdr))
+> +					return -EFAULT;
+>   				data_read = 4;
+>   				response->first_segment = false;
+>   				log_read(INFO, "returning rfc1002 length %d\n",
+> @@ -1845,10 +1852,9 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			}
+>   
+>   			to_copy = min_t(int, data_length - offset, to_read);
+> -			memcpy(
+> -				buf + data_read,
+> -				(char *)data_transfer + data_offset + offset,
+> -				to_copy);
+> +			if (copy_to_iter((char *)data_transfer + data_offset + offset,
+> +					 to_copy, &msg->msg_iter) != to_copy)
+> +				return -EFAULT;
+>   
+>   			/* move on to the next buffer? */
+>   			if (to_copy == data_length - offset) {
+> @@ -1893,6 +1899,8 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			 data_read, info->reassembly_data_length,
+>   			 info->first_entry_offset);
+>   read_rfc1002_done:
+> +		/* SMBDirect will read it all or nothing */
+> +		msg->msg_iter.count = 0;
 
-------=_Part_14443076_547431676.1750872022193
-Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+I think we should be remove this.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
-XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
-TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
-Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
-CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
-dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
-b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
-UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
-jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
-yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
-FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
-ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
-59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
-UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
-IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
-IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
-6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
-CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
-LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
-MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
-Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
-aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
-dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
-DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
-yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
-zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
-37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
-76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
-BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
-lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
-bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
-vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
-nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
-0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yNTA2MjUxNzIwMjJaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
-BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEIE6WER/+PhrKqhwQB9bAxFbeKFv+
-hLX6AhcB71LWhsmmMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
-MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICACfDO5Ehh64fgav8aWmVwhSuSq1y3aHjR0FB55T0
-uW/4T0Urb/dXd+Q5XwcwS3fZa6bBI2/MbXDI+LYnxjoOaEQAOiXz0QhgSbpmozFALxGUr7V8wcle
-YdQrdtJMU3NCdzZ9zQAt3D+6Jcervr5SD9P0meqBkkT62JolVSoK5AiAMNMs01mZxGUC5c7fQngH
-4uYWUB60KnjCSY9nhuTk4AExT/0CRkTqUAWE75C3sdqEJ9DGmyjMm4xMhHJeWKhk1szAKMcPC556
-KJV7R7ipBUkxgLhlOWayD3c7GBWLj+ZiieL7DPXO2EoPCOtjq4DPoxyQTVCEXVcX8UqCQ6rUsFOb
-3J96m6Oj8sW2Bw3IGp4w4cGbdZor6ZcDs+aekSC6pfNNkG5nmfSImzLsPsjVvFaryhursFEB+6Lk
-pkijDMvnOXRpCSh4LGR0SZ7S5GMRtJ/mIRATYOKq7qPU0ubgfEOosPOAki7wFX12fT46CNGvBWxL
-+i5bipG/OiaUlbOcQuf0BfIKczFRzEHiliQjLDR6elQ9Tz/BLT5U4FiLNlR11k92rV70Pl7HAOXf
-YFhk/Cd6KhF/hRcIEpHLrXpI7dKSjyoySLjz37GMmkLLeRBP4nCB1LOKLQ9rThyYDqZhn3M3dPNT
-F/3uHBnl2i6MD8PQ9BBR7QD4iC7I6BH6BDoPAAAAAAAA
-------=_Part_14443076_547431676.1750872022193--
+And I think this patch should come after the
+CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the problem.
+
+metze
 
