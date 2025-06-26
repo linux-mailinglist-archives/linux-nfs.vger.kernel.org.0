@@ -1,77 +1,52 @@
-Return-Path: <linux-nfs+bounces-12745-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12741-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B6C5AE7966
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 10:04:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E62CAE77C0
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 09:07:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F36E1624AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 08:04:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BA1E1BC3B9F
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Jun 2025 07:07:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84BA31E5B95;
-	Wed, 25 Jun 2025 08:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="fD4D+tQx"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933EF1F5849;
+	Wed, 25 Jun 2025 07:07:00 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E2C1C4A2D
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 08:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C851DF273
+	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 07:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838666; cv=none; b=riR+bwktWZPJ/vQxAcLZKkKRIC3Ip+TiVwqAunZiMeX/JPuDlI0nN1YCPN1tuT0N6p4tYMjvQgf+KGMwn4T0fK1JwcobvneliER7ig1G9bj3Tfsx76C8se6X5MIXVIjT2cSkszwwEk2QbpdqBsQHVZC2QNO+oWtLgHbOAW1koaw=
+	t=1750835220; cv=none; b=WsemDysGW+wgAEeJy9oMmGrQ7JuS/Xoa29HtVWmFGd9NEWKdUxcng/QqQpAJN5daZBBu//Dv80ACY5THPMQe0qRZKWE+qlZDzB3oTwwW0zMjrgY/OS4aPl1b1BNxeZ3JWKU1oKLqN40bh1OxwiMub3xM1d21xUGR/eHybb9ExYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838666; c=relaxed/simple;
-	bh=4RSlHf4vIOeNIBG5XB/aatEJBjRq8ejExCt0m/fcogk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AoZl7h/mN/NMwhl9AHn3eeR6z9yn6yD9d1bkOMC1AhVSB/3sbK0O5MPQkQTO9wKKJyLYS3WSzxmY4xbWYu3ZWhVQyMXLu4wJEcprQmZYSA+xaVkfLChOdm7GGlq391bDCTiXzf+F7Hb/4tM1SNnozHJShoZqIJSV/H24lzF5MIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=fD4D+tQx; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1750838664; x=1782374664;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4RSlHf4vIOeNIBG5XB/aatEJBjRq8ejExCt0m/fcogk=;
-  b=fD4D+tQxFgRWV3EG+l00tXuHOoYVXPGBLa5Si6+EM9I3hmnX0aJvpi4b
-   rK83uyu/2qLPkJleJW+KpbFdpHnKsXLx6tgVoubYxRns4AopFxfsHiL5q
-   rxWF3QXGYSQ+g34uQ5++Yy93exZIqk9FfUKj3E/c0XZURe+KVaQBl6O1G
-   mapo7hSVNDCftvdmjphjv4EzeiJFEMRv8lXmz7W25ynHz/2NC/aTbdQdg
-   FFCBenc+LnoKGy4akO+9KDNZzllTKeo48pZGapd9JiPQ1YDvE3ClCqsZU
-   VCtFuIPY/6ExT+7Eqy0AIY1tXOtIrePfoQzRxWuSfU2+sYQn1dkWEK3Ek
-   g==;
-X-CSE-ConnectionGUID: NSfC5dpmR+aoO0Q0zC9WZQ==
-X-CSE-MsgGUID: 2G0DbSlDSM6PmlGh3JpBUQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="182833329"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744038000"; 
-   d="scan'208";a="182833329"
-Received: from unknown (HELO az2uksmgr3.o.css.fujitsu.com) ([52.151.125.19])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 17:03:14 +0900
-Received: from az2uksmgm2.o.css.fujitsu.com (unknown [10.151.22.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgr3.o.css.fujitsu.com (Postfix) with ESMTPS id 68DE81002BA4
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 08:03:14 +0000 (UTC)
-Received: from yto-m2.gw.nic.fujitsu.com (yto-m2.gw.nic.fujitsu.com [10.128.47.163])
-	by az2uksmgm2.o.css.fujitsu.com (Postfix) with ESMTP id C49D318001FF
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 08:03:13 +0000 (UTC)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by yto-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 3E6FBD35E4
-	for <linux-nfs@vger.kernel.org>; Wed, 25 Jun 2025 17:03:12 +0900 (JST)
-Received: from G08XZGSD200059.g08.fujitsu.local (unknown [10.167.135.156])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 9AB3C1A0074;
-	Wed, 25 Jun 2025 16:03:11 +0800 (CST)
-From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To: calum.mackay@oracle.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH] pynfs: Fix RuntimeError by increasing default ca_maxrequests from 8 to 16
-Date: Wed, 25 Jun 2025 16:00:59 +0800
-Message-ID: <20250625080208.1424-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	s=arc-20240116; t=1750835220; c=relaxed/simple;
+	bh=JkKRrjXW4u7N1q5p1D7xgAU9C0VPGkq/XLcMk0Gwf+0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y6NxN/KUlLGpheXTo95rh5IZ8os+/R7sL3bf05q44VyXPJS5QPRpOUS3Gsx+3K+zGQsiY40VPqeEiCUn8md0TLDy+IrapIwjl0HIpb8rZ7ppAY17cZo/ITKs3Ad5wGg84Gha5Ms4chkNOcn+vcunxDOzOZGVsShJlX6DSDiWu+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bRtB51fy2z1QBn2;
+	Wed, 25 Jun 2025 15:05:17 +0800 (CST)
+Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0FBAE180043;
+	Wed, 25 Jun 2025 15:06:55 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
+ (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Jun
+ 2025 15:06:54 +0800
+From: zhangjian <zhangjian496@huawei.com>
+To: <steved@redhat.com>, <joannelkoong@gmail.com>, <chuck.lever@oracle.com>,
+	<djwong@kernel.org>, <jlayton@kernel.org>, <okorniev@redhat.com>,
+	<kernel-team@meta.com>
+CC: <linux-nfs@vger.kernel.org>
+Subject: [PATCH] nfs:check for user input filehandle size
+Date: Thu, 26 Jun 2025 08:20:26 +0800
+Message-ID: <20250626002026.110999-1-zhangjian496@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -79,33 +54,47 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemp200004.china.huawei.com (7.202.195.99)
 
-Increased the default value of ca_maxrequests from 8 to 16 to address a
-RuntimeError encountered in DELEG8.
-
-This change resolves the issue where
-DELEG8 st_delegation.testDelegRevocation
-fails with a RuntimeError: "Out of slots".
-
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+Syzkaller found an slab-out-of-bounds in nfs_fh_to_dentry when the memory
+of server_fh is not passed from user space. So I add a check for input size.
 ---
- nfs4.1/nfs4client.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/export.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/nfs4.1/nfs4client.py b/nfs4.1/nfs4client.py
-index f4fabcc..fa31b34 100644
---- a/nfs4.1/nfs4client.py
-+++ b/nfs4.1/nfs4client.py
-@@ -390,7 +390,7 @@ class ClientRecord(object):
-                        fore_attrs=None, back_attrs=None, sec=None,
-                        prog=None,
-                        max_retries=1, delay_time=1):
--        chan_attrs = channel_attrs4(0,8192,8192,8192,128,8,[])
-+        chan_attrs = channel_attrs4(0,8192,8192,8192,128,16,[])
-         if fore_attrs is None:
-             fore_attrs = chan_attrs
-         if back_attrs is None:
+diff --git a/fs/nfs/export.c b/fs/nfs/export.c
+index e9c233b6f..e0e77f8ca 100644
+--- a/fs/nfs/export.c
++++ b/fs/nfs/export.c
+@@ -65,8 +65,8 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *fid,
+ 		 int fh_len, int fh_type)
+ {
+ 	struct nfs_fattr *fattr = NULL;
+-	struct nfs_fh *server_fh = nfs_exp_embedfh(fid->raw);
+-	size_t fh_size = offsetof(struct nfs_fh, data) + server_fh->size;
++	struct nfs_fh *server_fh;
++	size_t fh_size;
+ 	const struct nfs_rpc_ops *rpc_ops;
+ 	struct dentry *dentry;
+ 	struct inode *inode;
+@@ -74,6 +74,14 @@ nfs_fh_to_dentry(struct super_block *sb, struct fid *fid,
+ 	u32 *p = fid->raw;
+ 	int ret;
+ 
++	/* check for user input size */
++	if ((char*)server_fh <= (char*)p 
++	    || (int)((u32*)server_fh - (u32*)p + 1) < fh_len)
++		return ERR_PTR(-EINVAL);	
++
++	fh_size = offsetof(struct nfs_fh, data) + server_fh->size;
++	len = EMBED_FH_OFF + XDR_QUADLEN(fh_size);
++
+ 	/* NULL translates to ESTALE */
+ 	if (fh_len < len || fh_type != len)
+ 		return NULL;
 -- 
-2.39.1
+2.33.0
 
 
