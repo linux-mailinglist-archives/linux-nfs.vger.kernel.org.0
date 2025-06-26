@@ -1,258 +1,214 @@
-Return-Path: <linux-nfs+bounces-12799-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12800-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D1BEAE99C1
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Jun 2025 11:17:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B37FAEAAC9
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jun 2025 01:43:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7AB0D3B5B95
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Jun 2025 09:17:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3E1916BCFC
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Jun 2025 23:43:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C6B315B971;
-	Thu, 26 Jun 2025 09:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 608DB12DDA1;
+	Thu, 26 Jun 2025 23:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="aWOfqFcI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eWQapn7V"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B3C3594E
-	for <linux-nfs@vger.kernel.org>; Thu, 26 Jun 2025 09:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD521B185
+	for <linux-nfs@vger.kernel.org>; Thu, 26 Jun 2025 23:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929443; cv=none; b=aI1dkz50Db3sQ+xPoCmdSNgSo/I5cdvPLWlDBdsgCxv01U36qJFXQwX7TYaOKoFDOOWnxnbL2LAqwY42XoJIHB/HUyPxkNT2JVfe7wbDGiv73fC8AnwaWL2LMWQFKK6sg2mHHCa/YpO7Fi+iv3Dc44Z65ECo2LeRXIAaDhPsMAI=
+	t=1750981384; cv=none; b=PaO4BCA1ir+F4SvGqYni/b0To9eTbtmNs5kY/UbFtkG1d0yR7Yol8bSwUPEA2QbTWlzsbfh3HNjgDVTkLhpFhlD3Hrqctd3ta27nN9XX5lhUhGenlL5+suOeVSpiNZCqD6jevfP2QbGjpXuQpOMGy17vG/GY6YwTYTSQY85LLPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929443; c=relaxed/simple;
-	bh=xINFRXFYidgR9Cc/u1RsqrYx4oxslKTf9aophd2LNEU=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=VHInmiVuh4v73V04tfQoHJlhmeqflGSe3fWbeGe366qmdyrQKq7fpDjENsIDAbV46ImTTuW9/Sq0c6cW5ZUuLuAhK7Td6K3Jcs44PJvkAYkNwCBzMfMripPssk2O2dZqCjVQknp17RIfE2FFDwXPPVOncO5KIRUbLQCJcKfoxjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=aWOfqFcI; arc=none smtp.client-ip=131.169.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-	by smtp-o-2.desy.de (Postfix) with ESMTP id 7170B13F648
-	for <linux-nfs@vger.kernel.org>; Thu, 26 Jun 2025 11:17:19 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 7170B13F648
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1750929439; bh=xINFRXFYidgR9Cc/u1RsqrYx4oxslKTf9aophd2LNEU=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=aWOfqFcIMr7TJDgsloGJKQWn+N5uewtlQZZRYMKavDNeZSQLRErf3LWzhqHZia3SO
-	 gL1RyC3w4iQxblb5+rgV0PcEXjjm23us3GA+8/aHf2RBhJvS3TyaX+TPAHu6G/nEas
-	 +DsZw0G5RYt3Ch/nK3CxuVE/T27/4l8W7rklaHzY=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-	by smtp-buf-1.desy.de (Postfix) with ESMTP id 67E6620040;
-	Thu, 26 Jun 2025 11:17:19 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [IPv6:2001:638:d:c303:acdc:1979:2:e7])
-	by smtp-m-1.desy.de (Postfix) with ESMTP id 5A67C40086;
-	Thu, 26 Jun 2025 11:17:19 +0200 (CEST)
-Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [IPv6:2001:638:700:1038::1:52])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id BC24310A3CC;
-	Thu, 26 Jun 2025 11:17:18 +0200 (CEST)
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-	by smtp-intra-1.desy.de (Postfix) with ESMTP id 94C0380046;
-	Thu, 26 Jun 2025 11:17:18 +0200 (CEST)
-Date: Thu, 26 Jun 2025 11:17:18 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, Anna Schumaker <anna@kernel.org>
-Message-ID: <1004506484.223854.1750929438192.JavaMail.zimbra@desy.de>
-In-Reply-To: <e2a8b1e647e9d5f74e0ab5dd0924495625a02d3f.camel@kernel.org>
-References: <20250609214303.816241-1-tigran.mkrtchyan@desy.de> <20250609214303.816241-2-tigran.mkrtchyan@desy.de> <1758012324.14467514.1750879171477.JavaMail.zimbra@desy.de> <e2a8b1e647e9d5f74e0ab5dd0924495625a02d3f.camel@kernel.org>
-Subject: Re: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal
- connection error
+	s=arc-20240116; t=1750981384; c=relaxed/simple;
+	bh=s+sHXnMIu9ogKtKBJRsBiK9Etovg11vexBmTduJQ9mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Coehyk1Lg26yFPeS+7MOHWZg8Me9VYlWvK/ZL+WD/XKt/DrNeksO4Q6/8F1zEB05Knc3RPimYHM5kaN8VGGY+7X/6XuSrb6T9yiu/kzSmuxz9f2679Vs7Fe4Y0EhIvgOriDntc3e7M2jUdxOB5V21lfYI5GTcYQ/vI67qm+SIxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eWQapn7V; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750981382; x=1782517382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=s+sHXnMIu9ogKtKBJRsBiK9Etovg11vexBmTduJQ9mg=;
+  b=eWQapn7VsJCbYlpHZrxoGiGajDd2IOVM7TCqVnlTNnHZ6ikormHaxA5e
+   J5N0jbUXG3CTL88J31yAsTZp/88C3VuIkiDJec3swzSAtgK3xv58Yxlnj
+   aLpTIYsWWJd6Wd68QJOUVMlsAD7ciKkp+ZkNpF1IayTWO7s0d6CC/MjKo
+   bBOOA7mSEbaKLeMh4eLA76YniiAHNx0DBpM+DVWE9SjDFD4IDF/27TXbv
+   V52uI9Br6frlsbLyZX5GD+pDGwNcrxvfriJmRZC1jP5gZekiK3HKXD6bp
+   WRqaHjhVScEEa/6G4tsovV9Zrh9uMolIKMJYChy+2ohzgCfOZNxl7R7gC
+   w==;
+X-CSE-ConnectionGUID: Oz56atXgTGu7xFtAajStGA==
+X-CSE-MsgGUID: uqhmakuZRZucRRVwc75xTA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="57077584"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="57077584"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 16:43:02 -0700
+X-CSE-ConnectionGUID: ylBp68rwRX6NV3ZHbObM+Q==
+X-CSE-MsgGUID: 5Bv4H2IUT8aJCbK+/gPg+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="183691181"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 26 Jun 2025 16:42:59 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUwF7-000Vdg-0Z;
+	Thu, 26 Jun 2025 23:42:57 +0000
+Date: Fri, 27 Jun 2025 07:42:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>, linux-nfs@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	root max-exfl020 <root@max-exfl020.desy.de>,
+	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: Re: [PATCH] pNFS/flexfiles: don't attempt pnfs on fatal DS errors
+Message-ID: <202506270701.wUk38xC4-lkp@intel.com>
+References: <20250626091202.130567-1-tigran.mkrtchyan@desy.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
-	boundary="----=_Part_223855_489562866.1750929438503"
-X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
-Thread-Topic: pNFS/flexfiles: mark device unavailable on fatal connection error
-Thread-Index: +5zsxsDm5DFRQbYuW3E8V/h/BaF7Yw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626091202.130567-1-tigran.mkrtchyan@desy.de>
 
-------=_Part_223855_489562866.1750929438503
-Date: Thu, 26 Jun 2025 11:17:18 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Trond Myklebust <trondmy@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, Anna Schumaker <anna@kernel.org>
-Message-ID: <1004506484.223854.1750929438192.JavaMail.zimbra@desy.de>
-In-Reply-To: <e2a8b1e647e9d5f74e0ab5dd0924495625a02d3f.camel@kernel.org>
-References: <20250609214303.816241-1-tigran.mkrtchyan@desy.de> <20250609214303.816241-2-tigran.mkrtchyan@desy.de> <1758012324.14467514.1750879171477.JavaMail.zimbra@desy.de> <e2a8b1e647e9d5f74e0ab5dd0924495625a02d3f.camel@kernel.org>
-Subject: Re: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal
- connection error
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 9.0.0_GA_4769 (ZimbraWebClient - FF140 (Linux)/9.0.0_GA_4769)
-Thread-Topic: pNFS/flexfiles: mark device unavailable on fatal connection error
-Thread-Index: +5zsxsDm5DFRQbYuW3E8V/h/BaF7Yw==
+Hi Tigran,
 
-I posted a different patch with the suggested approach.=20
+kernel test robot noticed the following build warnings:
 
-Tigran.
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v6.16-rc3 next-20250626]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
------ Original Message -----
-> From: "Trond Myklebust" <trondmy@kernel.org>
-> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>, "linux-nfs" <linux-nfs=
-@vger.kernel.org>
-> Cc: "Anna Schumaker" <anna@kernel.org>
-> Sent: Wednesday, 25 June, 2025 21:39:15
-> Subject: Re: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on fatal=
- connection error
+url:    https://github.com/intel-lab-lkp/linux/commits/Tigran-Mkrtchyan/pNFS-flexfiles-don-t-attempt-pnfs-on-fatal-DS-errors/20250626-171336
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+patch link:    https://lore.kernel.org/r/20250626091202.130567-1-tigran.mkrtchyan%40desy.de
+patch subject: [PATCH] pNFS/flexfiles: don't attempt pnfs on fatal DS errors
+config: i386-buildonly-randconfig-005-20250627 (https://download.01.org/0day-ci/archive/20250627/202506270701.wUk38xC4-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270701.wUk38xC4-lkp@intel.com/reproduce)
 
-> On Wed, 2025-06-25 at 21:19 +0200, Mkrtchyan, Tigran wrote:
->>=20
->> Hi Folks,
->>=20
->> Do you have any opinion on this one? Would you like me to address it
->> differently?
->>=20
->=20
-> I don't think we should mark the device as being unavailable just
-> because someone signalled the RPC task.
->=20
-> It would be better to have nfs4_ff_layout_prepare_ds() return any fatal
-> errors that it encounters using ERR_PTR(), so that the callers can
-> handle them. Then maybe return ERR_PTR(-EAGAIN) for the case where we
-> currently return NULL so that those callers don't have to use the hated
-> IS_ERR_OR_NULL() test.
->=20
->> Tigran.
->>=20
->> ----- Original Message -----
->> > From: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
->> > To: "linux-nfs" <linux-nfs@vger.kernel.org>
->> > Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker"
->> > <anna@kernel.org>, "Tigran Mkrtchyan"
->> > <tigran.mkrtchyan@desy.de>
->> > Sent: Monday, 9 June, 2025 23:43:03
->> > Subject: [PATCH 1/1] pNFS/flexfiles: mark device unavailable on
->> > fatal connection error
->>=20
->> > Fixes: 260f32adb88 ("pNFS/flexfiles: Check the result of
->> > nfs4_pnfs_ds_connect")
->> >=20
->> > When an applications get killed (SIGTERM/SIGINT) while pNFS client
->> > performs a
->> > connection
->> > to DS, client ends in an infinite loop of connect-disconnect. This
->> > source of the issue, it that
->> > flexfilelayoutdev#nfs4_ff_layout_prepare_ds gets an
->> > error
->> > on nfs4_pnfs_ds_connect with status ERESTARTSYS, which is set by
->> > rpc_signal_task, but
->> > the error is treated as transient, thus retried.
->> >=20
->> > The issue is reproducible with script as (there should be ~1000
->> > files in
->> > a directory, client should must not have any connections to DSes):
->> >=20
->> > ```
->> > echo 3 > /proc/sys/vm/drop_caches
->> >=20
->> > for i in *
->> > do
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 head -1 $i &
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PP=3D$!
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sleep 10e-03
->> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kill -TERM $PP
->> > done
->> > ```
->> >=20
->> > Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
->> > ---
->> > fs/nfs/flexfilelayout/flexfilelayoutdev.c | 4 ++++
->> > 1 file changed, 4 insertions(+)
->> >=20
->> > diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
->> > b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
->> > index 4a304cf17c4b..0008a8180c9b 100644
->> > --- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
->> > +++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
->> > @@ -410,6 +410,10 @@ nfs4_ff_layout_prepare_ds(struct
->> > pnfs_layout_segment *lseg,
->> > =09=09=09mirror->mirror_ds->ds_versions[0].wsize =3D
->> > max_payload;
->> > =09=09goto out;
->> > =09}
->> > +=09/* There is a fatal error to connect to DS. Mark it
->> > unavailable to avoid
->> > infinite retry loop. */
->> > +=09if (nfs_error_is_fatal(status))
->> > +=09=09nfs4_mark_deviceid_unavailable(&mirror->mirror_ds-
->> > >id_node);
->> > +
->> > noconnect:
->> > =09ff_layout_track_ds_error(FF_LAYOUT_FROM_HDR(lseg-
->> > >pls_layout),
->> > =09=09=09=09 mirror, lseg->pls_range.offset,
->> > --
->> > 2.49.0
->=20
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trondmy@kernel.org, trond.myklebust@hammerspace.com
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506270701.wUk38xC4-lkp@intel.com/
 
-------=_Part_223855_489562866.1750929438503
-Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+All warnings (new ones prefixed by >>):
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIH
-XzCCBUegAwIBAgIQGrSZ0tLzGu9JoeeaXGroSzANBgkqhkiG9w0BAQwFADBVMQswCQYDVQQGEwJO
-TDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRp
-Y2F0aW9uIFJTQSBDQSA0QjAeFw0yNDEyMDQwOTQzMjZaFw0yNjAxMDMwOTQzMjZaMIGpMRMwEQYK
-CZImiZPyLGQBGRMDb3JnMRYwFAYKCZImiZPyLGQBGRMGdGVyZW5hMRMwEQYKCZImiZPyLGQBGRMD
-dGNzMQswCQYDVQQGEwJERTEuMCwGA1UEChMlRGV1dHNjaGVzIEVsZWt0cm9uZW4tU3luY2hyb3Ry
-b24gREVTWTEoMCYGA1UEAwwfVGlncmFuIE1rcnRjaHlhbiB0aWdyYW5AZGVzeS5kZTCCAiIwDQYJ
-KoZIhvcNAQEBBQADggIPADCCAgoCggIBAKZ1aJleygPW8bRzYJ3VfXwfY2TxAF0QUuTk/6Bqu8Bi
-UQjIgmBQ1hCzz8DVdJ8saw7p5/c1JDmVHqm2DJPwXLROKACiDdSHPf+N8PFZvxHxOqFNPeO/oJhO
-jHXG1c/tL8ElfiUlMtEZYtoS60/VUz3A/4FIWP2A5s/UIOSZyCcKz3AUcAanHGEJVS8oWKQj7pNX
-yjojvX4aPHzsKP+c+c/5wq08/aziRXLCekhKk+VdS8lhlS/3AL1G0VSWKj5/pOpz4ozmv44GEw9z
-FAsPWuTcLXqCX993BOoWAyQDcygAsb0nQQMzx+4wlSGsI31/gKOE5ZOJ3SErWDswgzxWm8Xht/Kl
-ymDHPXi8P0ohQjJrQRpJXVwD/tXDwSSbWP9jnVbtqpvLLBkNrSy6elW19nkE1ObpSPcn+be5hs1P
-59Y+GPudytAQ3MOoFoNd7kxpVQoM6cdQjRHdyIDbavZrdxr33s7uqSbcI/PE8W5M0iPNnd4ip4kH
-UIOdpsjk7b7kEdO4Jf9dDrz/fduAEaW+AUTfb+G42LiftUBXkANa50nOseW3tocadYOTySufN9or
-IwvcQ/1uemVd83On7k8bWevfU159x28aidxv8liqJXrrT28tp/QxtGtDXjo9jdkWi/5d/9XfqQgN
-IT7KH42fc3ZlaL3pLuJwEQWVtFnWUTRJAgMBAAGjggHUMIIB0DAfBgNVHSMEGDAWgBQQMuoC4vzP
-6lYlVIfDmPXog9bFJDAOBgNVHQ8BAf8EBAMCBaAwCQYDVR0TBAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDAgYIKwYBBQUHAwQwRQYDVR0gBD4wPDAMBgoqhkiG90wFAgIFMA0GCyqGSIb3TAUCAwMDMA0G
-CyqGSIb3TAUCAwECMA4GDCsGAQQBgcRaAgMCAjBUBgNVHR8ETTBLMEmgR6BFhkNodHRwOi8vY3Js
-LmVudGVycHJpc2Uuc2VjdGlnby5jb20vR0VBTlRUQ1NBdXRoZW50aWNhdGlvblJTQUNBNEIuY3Js
-MIGRBggrBgEFBQcBAQSBhDCBgTBPBggrBgEFBQcwAoZDaHR0cDovL2NydC5lbnRlcnByaXNlLnNl
-Y3RpZ28uY29tL0dFQU5UVENTQXV0aGVudGljYXRpb25SU0FDQTRCLmNydDAuBggrBgEFBQcwAYYi
-aHR0cDovL29jc3AuZW50ZXJwcmlzZS5zZWN0aWdvLmNvbTAjBgNVHREEHDAagRh0aWdyYW4ubWty
-dGNoeWFuQGRlc3kuZGUwHQYDVR0OBBYEFMmhx6vILo+tVVV6rojJTwL+t2eGMA0GCSqGSIb3DQEB
-DAUAA4ICAQARKKJEO1G3lIe+AA+E3pl5mNYs/+XgswX1316JYDRzBnfVweMR6IaOT7yrP+Mwhx3v
-yiM8VeSVFtfyLlV6FaHAxNFo5Z19L++g/FWWAg0Wz13aFaEm0+KEp8RkB/Mh3EbSukZxUqmWCgrx
-zmx+I5zlX8pLxNgrxcc1WW5l7Y7y2sci++W6wE/L7rgMuznqiBLw/qwnkXAeQrw2PIllAGwRqrwa
-37kPa+naT1P0HskuBFHQSmMihB5HQl6+2Rs9M5RMW3/IlUQAqkhZQGBXmiWDivjPFKXJQnCmhQmh
-76sOcSOScfzYI5xOD+ZGdBRRufkUxaXJ2G//IgkK2R8mqrFEXxBFaBMc0uMBJHKNv+FO7H6VPOe9
-BD9FwfLiqWvGwKJrF11Bk/QSfWh+zCJ8JHPAi6irwQO4Xf+0xhPsxb+jBfKK3I84YMf6zsDkdDzH
-lkNPhDh4xhYhEAk+L228pjTEmnbb2QVv52grZ0dbITuN+Hz2ypvLfaS8p06lrht45COlkmuIUVqp
-bsc3kRt610qwXSjYcc8zeCQI0Rqnnq+0UN5T0KU7JSzUho6vaTSUG57uc7b3DkIW2Z9VpXX5xKb/
-vfl++jC5JzKrbCeS+QOStpXwwaH62IUHwdfWfkvpzb8EFALEmCvu8nlT9NaqYlB/xogMH6oHBm+Y
-nxmRQxWROAAAMYIDZTCCA2ECAQEwaTBVMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzErMCkGA1UEAxMiR0VBTlQgVENTIEF1dGhlbnRpY2F0aW9uIFJTQSBDQSA0QgIQGrSZ
-0tLzGu9JoeeaXGroSzANBglghkgBZQMEAgEFAKCBzjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yNTA2MjYwOTE3MThaMC0GCSqGSIb3DQEJNDEgMB4wDQYJYIZIAWUD
-BAIBBQChDQYJKoZIhvcNAQELBQAwLwYJKoZIhvcNAQkEMSIEINF2YwSgOn4I7N7W8TgUeGJJtBFO
-GEUmRF4+twXOAtzmMDQGCSqGSIb3DQEJDzEnMCUwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
-MAcGBSsOAwIHMA0GCSqGSIb3DQEBCwUABIICAG+AJ2x1UPLTFhhZzjWPr5pF4PrcEDypxc2iF2J2
-NSUz/fFDeeVnn4ZpG0FkWQYT1QO3rd8K6q+/d3KeCWm3b8TaL7linI6fsQHzS0X68xLJ6ZzN2hIN
-D5WFzWTKUVyXpFMA3BER32tOAyAogGk0EUi0qIA1tvp2G5Ewn7JB7ygVJlxXjSI0rZbYc7yTWhYS
-bpRz50h/C6VpNU7AVVTHf33zYmZCoWjoNh6cVflIMZ1seaPmRASmMsCIt/i0NKNzGG6twF+pbljw
-ZQct7ppWuSaIL+90+E47G9MjUTpPVLehomZFyClJInRTo+jbHrP8QW+B6lQ+JffEgLVLoH3YSSMw
-v3HjJlH6JZO1M8xW1lj1heJjdOeG/EuTuXhLG5vA9pKTELdc5jXW9jUo4aZOanH/kFrXgSgXDZdf
-cwK0B60XMYNe8T662nKzPVCnEgSDCo2JyG5piYNQSNQtvWjTFXtiswYcWySWo0sRSVoFTgUii2/0
-hnm7tSCueQfJu2WsERoale5vnjf56H65Yn4IApPhJ20Ze/ypCuwU8aIf0WjvbhR3JyDdeAPufPHN
-AqlzfMpq2m+NyTmTcAs+9OrLpdaf399qWjIVtSjynsOyqjvZ8YQgH/62yaz0Zr5GdGXfD2gs62gl
-SJzvTb7Bdl1oK8GuIluJBGroPTqLbTRWFhIPAAAAAAAA
-------=_Part_223855_489562866.1750929438503--
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:56:9: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+      56 |         int i, ret = -ENOMEM;
+         |                ^
+>> fs/nfs/flexfilelayout/flexfilelayoutdev.c:379:6: warning: variable 'status' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+     379 |         if (!ff_layout_init_mirror_ds(lseg->pls_layout, mirror))
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:421:15: note: uninitialized use occurs here
+     421 |         ds = ERR_PTR(status);
+         |                      ^~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:379:2: note: remove the 'if' if its condition is always false
+     379 |         if (!ff_layout_init_mirror_ds(lseg->pls_layout, mirror))
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     380 |                 goto noconnect;
+         |                 ~~~~~~~~~~~~~~
+   fs/nfs/flexfilelayout/flexfilelayoutdev.c:377:12: note: initialize the variable 'status' to silence this warning
+     377 |         int status;
+         |                   ^
+         |                    = 0
+   2 warnings generated.
+
+
+vim +379 fs/nfs/flexfilelayout/flexfilelayoutdev.c
+
+cefa587a40bb53 Trond Myklebust       2019-02-28  350  
+95e2b7e95d43c5 Jeff Layton           2016-05-17  351  /**
+95e2b7e95d43c5 Jeff Layton           2016-05-17  352   * nfs4_ff_layout_prepare_ds - prepare a DS connection for an RPC call
+95e2b7e95d43c5 Jeff Layton           2016-05-17  353   * @lseg: the layout segment we're operating on
+2444ff277a686d Trond Myklebust       2019-02-14  354   * @mirror: layout mirror describing the DS to use
+95e2b7e95d43c5 Jeff Layton           2016-05-17  355   * @fail_return: return layout on connect failure?
+95e2b7e95d43c5 Jeff Layton           2016-05-17  356   *
+95e2b7e95d43c5 Jeff Layton           2016-05-17  357   * Try to prepare a DS connection to accept an RPC call. This involves
+95e2b7e95d43c5 Jeff Layton           2016-05-17  358   * selecting a mirror to use and connecting the client to it if it's not
+95e2b7e95d43c5 Jeff Layton           2016-05-17  359   * already connected.
+95e2b7e95d43c5 Jeff Layton           2016-05-17  360   *
+95e2b7e95d43c5 Jeff Layton           2016-05-17  361   * Since we only need a single functioning mirror to satisfy a read, we don't
+95e2b7e95d43c5 Jeff Layton           2016-05-17  362   * want to return the layout if there is one. For writes though, any down
+95e2b7e95d43c5 Jeff Layton           2016-05-17  363   * mirror should result in a LAYOUTRETURN. @fail_return is how we distinguish
+95e2b7e95d43c5 Jeff Layton           2016-05-17  364   * between the two cases.
+95e2b7e95d43c5 Jeff Layton           2016-05-17  365   *
+95e2b7e95d43c5 Jeff Layton           2016-05-17  366   * Returns a pointer to a connected DS object on success or NULL on failure.
+95e2b7e95d43c5 Jeff Layton           2016-05-17  367   */
+d67ae825a59d63 Tom Haynes            2014-12-11  368  struct nfs4_pnfs_ds *
+2444ff277a686d Trond Myklebust       2019-02-14  369  nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
+2444ff277a686d Trond Myklebust       2019-02-14  370  			  struct nfs4_ff_layout_mirror *mirror,
+d67ae825a59d63 Tom Haynes            2014-12-11  371  			  bool fail_return)
+d67ae825a59d63 Tom Haynes            2014-12-11  372  {
+6468b866bac7de root max-exfl020      2025-06-26  373  	struct nfs4_pnfs_ds *ds = ERR_PTR(-EAGAIN);
+d67ae825a59d63 Tom Haynes            2014-12-11  374  	struct inode *ino = lseg->pls_layout->plh_inode;
+d67ae825a59d63 Tom Haynes            2014-12-11  375  	struct nfs_server *s = NFS_SERVER(ino);
+d67ae825a59d63 Tom Haynes            2014-12-11  376  	unsigned int max_payload;
+a33e4b036d4612 Weston Andros Adamson 2017-03-09  377  	int status;
+d67ae825a59d63 Tom Haynes            2014-12-11  378  
+cefa587a40bb53 Trond Myklebust       2019-02-28 @379  	if (!ff_layout_init_mirror_ds(lseg->pls_layout, mirror))
+0a156dd58274b0 Trond Myklebust       2019-02-27  380  		goto noconnect;
+d67ae825a59d63 Tom Haynes            2014-12-11  381  
+d67ae825a59d63 Tom Haynes            2014-12-11  382  	ds = mirror->mirror_ds->ds;
+a2915fa06227b0 Baptiste Lepers       2021-09-06  383  	if (READ_ONCE(ds->ds_clp))
+a2915fa06227b0 Baptiste Lepers       2021-09-06  384  		goto out;
+d67ae825a59d63 Tom Haynes            2014-12-11  385  	/* matching smp_wmb() in _nfs4_pnfs_v3/4_ds_connect */
+d67ae825a59d63 Tom Haynes            2014-12-11  386  	smp_rmb();
+d67ae825a59d63 Tom Haynes            2014-12-11  387  
+d67ae825a59d63 Tom Haynes            2014-12-11  388  	/* FIXME: For now we assume the server sent only one version of NFS
+d67ae825a59d63 Tom Haynes            2014-12-11  389  	 * to use for the DS.
+d67ae825a59d63 Tom Haynes            2014-12-11  390  	 */
+2444ff277a686d Trond Myklebust       2019-02-14  391  	status = nfs4_pnfs_ds_connect(s, ds, &mirror->mirror_ds->id_node,
+2444ff277a686d Trond Myklebust       2019-02-14  392  			     dataserver_timeo, dataserver_retrans,
+d67ae825a59d63 Tom Haynes            2014-12-11  393  			     mirror->mirror_ds->ds_versions[0].version,
+7d38de3ffa75f9 Anna Schumaker        2016-11-17  394  			     mirror->mirror_ds->ds_versions[0].minor_version);
+d67ae825a59d63 Tom Haynes            2014-12-11  395  
+d67ae825a59d63 Tom Haynes            2014-12-11  396  	/* connect success, check rsize/wsize limit */
+260f32adb88dad Trond Myklebust       2017-04-20  397  	if (!status) {
+d488b9d01fbc2f Trond Myklebust       2024-09-05  398  		/*
+d488b9d01fbc2f Trond Myklebust       2024-09-05  399  		 * ds_clp is put in destroy_ds().
+d488b9d01fbc2f Trond Myklebust       2024-09-05  400  		 * keep ds_clp even if DS is local, so that if local IO cannot
+d488b9d01fbc2f Trond Myklebust       2024-09-05  401  		 * proceed somehow, we can fall back to NFS whenever we want.
+d488b9d01fbc2f Trond Myklebust       2024-09-05  402  		 */
+1ff4716f420b5a Mike Snitzer          2025-05-13  403  		nfs_local_probe_async(ds->ds_clp);
+d67ae825a59d63 Tom Haynes            2014-12-11  404  		max_payload =
+d67ae825a59d63 Tom Haynes            2014-12-11  405  			nfs_block_size(rpc_max_payload(ds->ds_clp->cl_rpcclient),
+d67ae825a59d63 Tom Haynes            2014-12-11  406  				       NULL);
+d67ae825a59d63 Tom Haynes            2014-12-11  407  		if (mirror->mirror_ds->ds_versions[0].rsize > max_payload)
+d67ae825a59d63 Tom Haynes            2014-12-11  408  			mirror->mirror_ds->ds_versions[0].rsize = max_payload;
+d67ae825a59d63 Tom Haynes            2014-12-11  409  		if (mirror->mirror_ds->ds_versions[0].wsize > max_payload)
+d67ae825a59d63 Tom Haynes            2014-12-11  410  			mirror->mirror_ds->ds_versions[0].wsize = max_payload;
+3dc147359e3dcd Trond Myklebust       2016-08-29  411  		goto out;
+3dc147359e3dcd Trond Myklebust       2016-08-29  412  	}
+0a156dd58274b0 Trond Myklebust       2019-02-27  413  noconnect:
+d67ae825a59d63 Tom Haynes            2014-12-11  414  	ff_layout_track_ds_error(FF_LAYOUT_FROM_HDR(lseg->pls_layout),
+d67ae825a59d63 Tom Haynes            2014-12-11  415  				 mirror, lseg->pls_range.offset,
+d67ae825a59d63 Tom Haynes            2014-12-11  416  				 lseg->pls_range.length, NFS4ERR_NXIO,
+d67ae825a59d63 Tom Haynes            2014-12-11  417  				 OP_ILLEGAL, GFP_NOIO);
+f0922a6c0cdb92 Trond Myklebust       2019-02-10  418  	ff_layout_send_layouterror(lseg);
+094069f1d96f69 Jeff Layton           2016-05-17  419  	if (fail_return || !ff_layout_has_available_ds(lseg))
+d67ae825a59d63 Tom Haynes            2014-12-11  420  		pnfs_error_mark_layout_for_return(ino, lseg);
+6468b866bac7de root max-exfl020      2025-06-26  421  	ds = ERR_PTR(status);
+d67ae825a59d63 Tom Haynes            2014-12-11  422  out:
+d67ae825a59d63 Tom Haynes            2014-12-11  423  	return ds;
+d67ae825a59d63 Tom Haynes            2014-12-11  424  }
+d67ae825a59d63 Tom Haynes            2014-12-11  425  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
