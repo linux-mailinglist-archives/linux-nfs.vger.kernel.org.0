@@ -1,236 +1,121 @@
-Return-Path: <linux-nfs+bounces-12804-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12805-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5307AAEAFFC
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jun 2025 09:18:10 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90570AEB3C9
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jun 2025 12:07:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA572161E1D
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jun 2025 07:18:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADFF21C22BC1
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jun 2025 10:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF8A11AB52D;
-	Fri, 27 Jun 2025 07:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE42726AABA;
+	Fri, 27 Jun 2025 10:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b="YpkdL763"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mo5YQsrz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [131.169.56.154])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908C33F6
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Jun 2025 07:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.169.56.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB012980C9
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Jun 2025 10:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751008678; cv=none; b=t7RV/DmHJg10NiPT7F+3tf+cvt+U0UlYDZFK3YLoz4SDkciIu0nOD5XHPd7eh30i/ieUZ086O/CtPLjUNbXeMR2ja6ZQU4rgsME75oOMyqher3tzaJmIOE04WqbeJbpGOYdzx2PUUfqle5a+I7QwRB7o9+DuELW55mNxN/eamsY=
+	t=1751018825; cv=none; b=rxVuwATKK415Tef0WdjqfCVwFTVuCY97MJMXewTwZItUqlrnlQzxazHIgYvcGP5skQyyrlOFNK7zTTT4cyjAS9G+AMJmsEHVW6gnA4xbz4qDauXsxoXmMGheVturg17WCUM2t/Mi6QeantfG8aYlOv8DnMNgjA7svQuFsjntjds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751008678; c=relaxed/simple;
-	bh=CJYFslL0pUmI6QQ4JWTqlmbAOmVJX6DLW30CECgN+jM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fI5N+mLCj6IRkBzeqsCEDUcZ5wHHecRgb6+LQlQL2cozfX07Jq+kjQKIYj9mWKAUrhKezAXaa96r5T8hUZCZMwN2gw04ijLwBnpjsbBjBmvtoIa5O0AMkZtyAw2r4foiMMjnCdgg1m4qGQHFDOHWCnrd/4S6iL+lPK3+4JP0YQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de; spf=pass smtp.mailfrom=desy.de; dkim=pass (1024-bit key) header.d=desy.de header.i=@desy.de header.b=YpkdL763; arc=none smtp.client-ip=131.169.56.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=desy.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=desy.de
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [131.169.56.164])
-	by smtp-o-1.desy.de (Postfix) with ESMTP id 8A86311F746
-	for <linux-nfs@vger.kernel.org>; Fri, 27 Jun 2025 09:17:54 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 8A86311F746
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-	t=1751008674; bh=WuFKHFqD6KwRi7XehDGBuvNSt7UnDE4MkFFxTRFn5/U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YpkdL763BDjxN7P1W022FFWc8hTtEPBMl4xgjpAuQAgUfMQQcLxwT9bf3ecvUQm12
-	 yZWntZoP63c58k6geYrlPdbHX6hv7UG+p8TJJSbHqrRQnNyBpaPbUeeL91KSWJKVcB
-	 PhKNaHJgptDGklhF1PYeTgVJluGUcUT1VFMgQIs0=
-Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
-	by smtp-buf-1.desy.de (Postfix) with ESMTP id 7E89920040;
-	Fri, 27 Jun 2025 09:17:54 +0200 (CEST)
-Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [194.95.239.47])
-	by smtp-m-2.desy.de (Postfix) with ESMTP id 7197C16003F;
-	Fri, 27 Jun 2025 09:17:54 +0200 (CEST)
-Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
-	by c1722.mx.srv.dfn.de (Postfix) with ESMTP id 9F8C710A3CC;
-	Fri, 27 Jun 2025 09:17:53 +0200 (CEST)
-Received: from nairi.desy.de (zitpcx23514.desy.de [131.169.214.185])
-	by smtp-intra-2.desy.de (Postfix) with ESMTP id 6E49420044;
-	Fri, 27 Jun 2025 09:17:53 +0200 (CEST)
-From: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-To: linux-nfs@vger.kernel.org
-Cc: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Subject: [PATCH v3] pNFS/flexfiles: don't attempt pnfs on fatal DS errors
-Date: Fri, 27 Jun 2025 09:17:51 +0200
-Message-ID: <20250627071751.189663-1-tigran.mkrtchyan@desy.de>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1751018825; c=relaxed/simple;
+	bh=7NB2c9L0qvWhYiAM/vLj+1P69kIZnskwCCA5fTGA+dc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PisEezENk6eCZvdiqW20XZXdX4XbrhUp5zXFAShBpMq2MuzR6crIZ3RAnTHg7A6aGEaYXJTesh41/X8GZwhPwXwEHtWdYCwyotbNKpPDx7R+h+smPsdrF1/o8ZeDlN41PHGNCiHnuwwQ5H+n8RI+iGBWL0Uv4HZAH9OGKiNORII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mo5YQsrz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751018823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hG2iLGkL8iW1IqMwUvVwKy7lWf2SLkXd/36jQWt3jBU=;
+	b=Mo5YQsrzpplEgtMwJr8WPAFYNLYHJUaE7+jiSQH3eezyXN2R9BV/0+thNWhYGjnR3Pi4M3
+	U5RdCq5hNhGtU9lIZsazTICgpCJBGJWSaC+7FvTcDeSVP4UEDGYn/3GbxcVL0bzd+e8UBQ
+	UGWOzytzZxfRbNTlFg6I9fUkrJH6yaY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-fPejem5MM7qGG_0N3d5T5A-1; Fri,
+ 27 Jun 2025 06:07:01 -0400
+X-MC-Unique: fPejem5MM7qGG_0N3d5T5A-1
+X-Mimecast-MFC-AGG-ID: fPejem5MM7qGG_0N3d5T5A_1751018820
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 458B318001D1
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Jun 2025 10:07:00 +0000 (UTC)
+Received: from dobby.kenosha.org.com (unknown [10.22.64.61])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A53E2180045B
+	for <linux-nfs@vger.kernel.org>; Fri, 27 Jun 2025 10:06:59 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] Fix build with glibc-2.42
+Date: Fri, 27 Jun 2025 05:06:58 -0500
+Message-ID: <20250627100658.102342-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Fixes: 260f32adb88 ("pNFS/flexfiles: Check the result of nfs4_pnfs_ds_connect")
+From: Yaakov Selkowitz <yselkowi@redhat.com>
 
-When an applications get killed (SIGTERM/SIGINT) while pNFS client performs a connection
-to DS, client ends in an infinite loop of connect-disconnect. This
-source of the issue, it that flexfilelayoutdev#nfs4_ff_layout_prepare_ds gets an error
-on nfs4_pnfs_ds_connect with status ERESTARTSYS, which is set by rpc_signal_task, but
-the error is treated as transient, thus retried.
+exportfs.c: In function ‘release_lockfile’:
+exportfs.c:83:17: error: ignoring return value of ‘lockf’ declared with attribute ‘warn_unused_result’ [-Werror=unused-result]
+   83 |                 lockf(_lockfd, F_ULOCK, 0);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~
+exportfs.c: In function ‘grab_lockfile’:
+exportfs.c:77:17: error: ignoring return value of ‘lockf’ declared with attribute ‘warn_unused_result’ [-Werror=unused-result]
+   77 |                 lockf(_lockfd, F_LOCK, 0);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-The issue is reproducible with Ctrl+C the following script(there should be ~1000 files in
-a directory, client should must not have any connections to DSes):
+lockf is now marked with attribute warn_unused_result:
 
-```
-echo 3 > /proc/sys/vm/drop_caches
+https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=f3c82fc1b41261f582f5f9fa12f74af9bcbc88f9
 
-for i in *
-do
-   head -1 $i
-done
-```
-
-The change aims to propagate the nfs4_ff_layout_prepare_ds error state
-to the caller that can decide whatever this is a retryable error or not.
-
-Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c    | 26 ++++++++++++++---------
- fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 +++---
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ utils/exportfs/exportfs.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 708cbfbccea5..a67001b4dbdf 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -762,14 +762,14 @@ ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
+diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+index b03a047b..748c38e3 100644
+--- a/utils/exportfs/exportfs.c
++++ b/utils/exportfs/exportfs.c
+@@ -74,13 +74,19 @@ grab_lockfile(void)
  {
- 	struct nfs4_ff_layout_segment *fls = FF_LAYOUT_LSEG(lseg);
- 	struct nfs4_ff_layout_mirror *mirror;
--	struct nfs4_pnfs_ds *ds;
-+	struct nfs4_pnfs_ds *ds = ERR_PTR(-EAGAIN);
- 	u32 idx;
- 
- 	/* mirrors are initially sorted by efficiency */
- 	for (idx = start_idx; idx < fls->mirror_array_cnt; idx++) {
- 		mirror = FF_LAYOUT_COMP(lseg, idx);
- 		ds = nfs4_ff_layout_prepare_ds(lseg, mirror, false);
--		if (!ds)
-+		if (IS_ERR(ds))
- 			continue;
- 
- 		if (check_device &&
-@@ -777,10 +777,10 @@ ff_layout_choose_ds_for_read(struct pnfs_layout_segment *lseg,
- 			continue;
- 
- 		*best_idx = idx;
--		return ds;
-+		break;
+ 	_lockfd = open(lockfile, O_CREAT|O_RDWR, 0666);
+ 	if (_lockfd != -1)
+-		lockf(_lockfd, F_LOCK, 0);
++		if (lockf(_lockfd, F_LOCK, 0) != 0) {
++			xlog_warn("%s: lockf() failed: errno %d (%s)",
++			__func__, errno, strerror(errno));
++		}
+ }
+ static void
+ release_lockfile(void)
+ {
+ 	if (_lockfd != -1) {
+-		lockf(_lockfd, F_ULOCK, 0);
++		if (lockf(_lockfd, F_ULOCK, 0) != 0) {
++			xlog_warn("%s: lockf() failed: errno %d (%s)",
++			__func__, errno, strerror(errno));
++		}
+ 		close(_lockfd);
+ 		_lockfd = -1;
  	}
- 
--	return NULL;
-+	return ds;
- }
- 
- static struct nfs4_pnfs_ds *
-@@ -942,7 +942,7 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	for (i = 0; i < pgio->pg_mirror_count; i++) {
- 		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
- 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, mirror, true);
--		if (!ds) {
-+		if (IS_ERR(ds)) {
- 			if (!ff_layout_no_fallback_to_mds(pgio->pg_lseg))
- 				goto out_mds;
- 			pnfs_generic_pg_cleanup(pgio);
-@@ -1808,6 +1808,7 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 	u32 idx = hdr->pgio_mirror_idx;
- 	int vers;
- 	struct nfs_fh *fh;
-+	bool ds_fatal_error = false;
- 
- 	dprintk("--> %s ino %lu pgbase %u req %zu@%llu\n",
- 		__func__, hdr->inode->i_ino,
-@@ -1815,8 +1816,10 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 
- 	mirror = FF_LAYOUT_COMP(lseg, idx);
- 	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, false);
--	if (!ds)
-+	if (IS_ERR(ds)) {
-+		ds_fatal_error = nfs_error_is_fatal(PTR_ERR(ds));
- 		goto out_failed;
-+	}
- 
- 	ds_clnt = nfs4_ff_find_or_create_ds_client(mirror, ds->ds_clp,
- 						   hdr->inode);
-@@ -1864,7 +1867,7 @@ ff_layout_read_pagelist(struct nfs_pgio_header *hdr)
- 	return PNFS_ATTEMPTED;
- 
- out_failed:
--	if (ff_layout_avoid_mds_available_ds(lseg))
-+	if (ff_layout_avoid_mds_available_ds(lseg) && !ds_fatal_error)
- 		return PNFS_TRY_AGAIN;
- 	trace_pnfs_mds_fallback_read_pagelist(hdr->inode,
- 			hdr->args.offset, hdr->args.count,
-@@ -1886,11 +1889,14 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
- 	int vers;
- 	struct nfs_fh *fh;
- 	u32 idx = hdr->pgio_mirror_idx;
-+	bool ds_fatal_error = false;
- 
- 	mirror = FF_LAYOUT_COMP(lseg, idx);
- 	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, true);
--	if (!ds)
-+	if (IS_ERR(ds)) {
-+		ds_fatal_error = nfs_error_is_fatal(PTR_ERR(ds));
- 		goto out_failed;
-+	}
- 
- 	ds_clnt = nfs4_ff_find_or_create_ds_client(mirror, ds->ds_clp,
- 						   hdr->inode);
-@@ -1941,7 +1947,7 @@ ff_layout_write_pagelist(struct nfs_pgio_header *hdr, int sync)
- 	return PNFS_ATTEMPTED;
- 
- out_failed:
--	if (ff_layout_avoid_mds_available_ds(lseg))
-+	if (ff_layout_avoid_mds_available_ds(lseg) && !ds_fatal_error)
- 		return PNFS_TRY_AGAIN;
- 	trace_pnfs_mds_fallback_write_pagelist(hdr->inode,
- 			hdr->args.offset, hdr->args.count,
-@@ -1984,7 +1990,7 @@ static int ff_layout_initiate_commit(struct nfs_commit_data *data, int how)
- 	idx = calc_ds_index_from_commit(lseg, data->ds_commit_index);
- 	mirror = FF_LAYOUT_COMP(lseg, idx);
- 	ds = nfs4_ff_layout_prepare_ds(lseg, mirror, true);
--	if (!ds)
-+	if (IS_ERR(ds))
- 		goto out_err;
- 
- 	ds_clnt = nfs4_ff_find_or_create_ds_client(mirror, ds->ds_clp,
-diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-index 4a304cf17c4b..ef535baeefb6 100644
---- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-@@ -370,11 +370,11 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
- 			  struct nfs4_ff_layout_mirror *mirror,
- 			  bool fail_return)
- {
--	struct nfs4_pnfs_ds *ds = NULL;
-+	struct nfs4_pnfs_ds *ds;
- 	struct inode *ino = lseg->pls_layout->plh_inode;
- 	struct nfs_server *s = NFS_SERVER(ino);
- 	unsigned int max_payload;
--	int status;
-+	int status = -EAGAIN;
- 
- 	if (!ff_layout_init_mirror_ds(lseg->pls_layout, mirror))
- 		goto noconnect;
-@@ -418,7 +418,7 @@ nfs4_ff_layout_prepare_ds(struct pnfs_layout_segment *lseg,
- 	ff_layout_send_layouterror(lseg);
- 	if (fail_return || !ff_layout_has_available_ds(lseg))
- 		pnfs_error_mark_layout_for_return(ino, lseg);
--	ds = NULL;
-+	ds = ERR_PTR(status);
- out:
- 	return ds;
- }
 -- 
 2.50.0
 
