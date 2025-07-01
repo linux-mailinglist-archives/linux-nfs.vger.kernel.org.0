@@ -1,132 +1,113 @@
-Return-Path: <linux-nfs+bounces-12829-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12830-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90609AEEDE1
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 07:41:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BE7FAEEE8E
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 08:23:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96EEE188E6CF
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 05:41:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89B067A93D8
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 06:22:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D934720C009;
-	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA3C24503E;
+	Tue,  1 Jul 2025 06:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGs+whJA"
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="anH1Z8n7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5572191493;
-	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317E523BD1D
+	for <linux-nfs@vger.kernel.org>; Tue,  1 Jul 2025 06:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751348462; cv=none; b=taZwQwhY/B3BKjaFNTJKxn50cwygU/s9YUceiTY55P134AaHQ07AIWCYJ7zFCD4SlhBvFirTiyfsfTSSWcuNSshp4FyxPPDGZF3PWDzamIKAmJITL4s32thMdTbY7mOxgjaEuh8l+O1wPLwwVK7NT0GtDJ3z29kD1SpE/6cp0Xw=
+	t=1751351008; cv=none; b=AOYFTrJO/IQnI3cmGEc/qRnnK9j4Ob1yfMGDTCzsPXieOVy0CYSjr2Xa8EJYC+CXyZHHW/8L/yq3LUh39db8SkKKUBONRTYvEH+zmj98zDMJYmQytayB1LkdkCLjYN29sn6A6fPR3SCbp2fWYu5dxuYPeqFg+53ZK+9ZaFgm+XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751348462; c=relaxed/simple;
-	bh=UDsiqeD9Rx7beaI8/Y2+5mhKK/YEz8suJYDVh5wpleg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pQjNuhZ5+/AtRvXp9uVoovunUhtU5evzqw3KqcPa+bpv7LWNwIRFp/I2ORq6WdKZl+TYEtc3BSFl56IW4Hnkll23H3qcwRTkdySFy4OOMBTxhVA2MM6zDbNsYEEVEjvk0kllwDK9hiAKnbfu+dzXpq0o0IgJRZBYtQXV6tLnkDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGs+whJA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2F0C4CEEB;
-	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751348462;
-	bh=UDsiqeD9Rx7beaI8/Y2+5mhKK/YEz8suJYDVh5wpleg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BGs+whJAJv9u3TGXfbF3ek+G4CspgAar85NzNF2hzg13LSB7qr7Sx1ZRyGI8Bd+bV
-	 KpYbTkVKW0RgugdZR7ALw7ATVVx2kgHv7uyWTbF1LzGkrBW2dyDkiq1qp9YkVO6In3
-	 9riQBRXi88FCK/DsBxzbBIBWPs7HqzYXT+MldcJvby7tnR7wM2yxqBwtQ/03bKNCxN
-	 TTcwx4YO9j1MG7PW16XM96od+XZ/jCwSbIgy0LgkvZGm7X7Bmt3LZSINsls5+VWoz5
-	 NQgLfd2rurC+Uk1letQK5rZP6CAhBaSbBV3mFHkE5pOdU3NBj2x+GNYXKl6DVa1ueF
-	 adjgbStbzlLGQ==
-Date: Mon, 30 Jun 2025 22:41:01 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>, miklos@szeredi.hu,
-	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, bernd.schubert@fastmail.fm,
-	kernel-team@meta.com, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
-Message-ID: <20250701054101.GE10035@frogsfrogsfrogs>
-References: <20250606233803.1421259-6-joannelkoong@gmail.com>
- <aEZoau3AuwoeqQgu@infradead.org>
- <20250609171444.GL6156@frogsfrogsfrogs>
- <aEetuahlyfHGTG7x@infradead.org>
- <aEkHarE9_LlxFTAi@casper.infradead.org>
- <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
- <aFWlW6SUI6t-i0dN@casper.infradead.org>
- <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
- <aFuWhnjsKqo6ftit@infradead.org>
- <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
+	s=arc-20240116; t=1751351008; c=relaxed/simple;
+	bh=6yttm5Qep3NBN0kX2vSnM3H0+zpYWdBsyhzAI2zpwU8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N1Ia3OIMVswL3+t70QRuDwMrXj/TuWrDynRrVWC6iSpnQixSbEcl8Auf8nKsdKKavDd5SjZjHL1IW6rAdJ3LA1k+++8iS8d/NaFn78rzNBH2oLkqRpV8ptZnGRmsMz5hAHAy9gin+LHnPuZv6NYeN2hOQm99cCgYRAff2noOdtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=anH1Z8n7; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a58d95ea53so58175211cf.0
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Jun 2025 23:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1751351006; x=1751955806; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6yttm5Qep3NBN0kX2vSnM3H0+zpYWdBsyhzAI2zpwU8=;
+        b=anH1Z8n7gTpIxKbFXysvAkXY6GYcSGYyp2kwpBWDuRqq+tzHmXpkCIpltC3K528TKm
+         Vuc1gJkLA9+OpRWfvVJAglU3eAbF6O9fFqvO8Dx6qN8yERI+DTJuusNxo3UOTfHvdzlH
+         B4Vy9k463Wo10p6viP/ivkGKuM0IW4f3aRE9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751351006; x=1751955806;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6yttm5Qep3NBN0kX2vSnM3H0+zpYWdBsyhzAI2zpwU8=;
+        b=r/xJkMffrJ5GLFjbHarLSYiHthK5j+UWkq+dxIm60YMoodJ5MHUHYKK+thjJiL4dLM
+         tvMpwBuFJEs1ZEMZQ1hWQwKiyxwey8Za+vxZobVxNwbIdanOHLeCghF81BlB0UpvKHqU
+         77/gw0vuEG/dPfeC0cZyMG/rEyUxJBMOW4xIO4QQ9jPA7L1d9d0jsDO878Uh3w14gH1w
+         ImuW1vHXeKa4H1+BpDO3lUcMRVxyS4lYdSH9+mRPhLlt7wzrTO4K/d4ickyWXuwkmbMv
+         tIupM8ZV8Okn6gmYdVL4550XOdLVbMDMesEFkbt6Ar7NHDR/BvJPowswPiqqoWI3aTpm
+         ZNTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWLvp56RmL7pcK8LNrR0BW3P81ylCNus711ezAI3rO3d13uXEuYO70xAxOLEO0o57HY9MjQZaa19s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+DqtOz1hAzvf1hYc52v5jNYVadmn6pT9oZxqpBp5BeCSFi7H
+	2vtoJUlLCvoOR8MNd9BdVc/WmG4UG/X9+4VgPH4EYFaGGnu1V8+Q8vI+yapgU0kRuCVONtUa1jU
+	JyPNmFYrpNlNPNpoL8TeIi47G3GKmS1+nJE/9f/KgYQ==
+X-Gm-Gg: ASbGncs+BgsayLfl4nonmenVqYfIqvh7iszg4PWHiPl4BLttf5Ok7HchN2mqh6XrUpC
+	rU6FTiYRwXhwjxVrJBdM5JNOLdtg+N1JQ5m/u8+izWKuEDAXaCQ2MnaroMILRog8ohc88yLJcq1
+	jxFmQQmqpAXhpf9cGE8lCE5XZos2XKtXGOzcQH1WGZESKVKCw3l+GhmnSvq/j1KKxzVbLc2uUcl
+	cBW
+X-Google-Smtp-Source: AGHT+IF/4eCMJfHhQh+NomYc895/DRC2IEJWxiuPw7wJwiLPtRg1dt/Dr1B22JHPC3Z1DLGs7QY/n9Jj5bCLzyMZhhk=
+X-Received: by 2002:ac8:5806:0:b0:494:b247:4ddb with SMTP id
+ d75a77b69052e-4a82e9b8105mr37293761cf.4.1751351005922; Mon, 30 Jun 2025
+ 23:23:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20250606233803.1421259-1-joannelkoong@gmail.com>
+ <20250606233803.1421259-6-joannelkoong@gmail.com> <aEZoau3AuwoeqQgu@infradead.org>
+ <20250609171444.GL6156@frogsfrogsfrogs> <aEetuahlyfHGTG7x@infradead.org>
+ <aEkHarE9_LlxFTAi@casper.infradead.org> <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
+ <aFWlW6SUI6t-i0dN@casper.infradead.org> <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
+ <aFuWhnjsKqo6ftit@infradead.org> <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
 In-Reply-To: <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 1 Jul 2025 08:23:15 +0200
+X-Gm-Features: Ac12FXx4vgjv5ycm_1iHhIFxMh2pxXOzEd-Q9OTergY2osOj37o6vwohMHvjQOk
+Message-ID: <CAJfpegvOizDZb9Lw1f0BHbH05owLh7-KOqeB3H8bgZhwRpN=5Q@mail.gmail.com>
+Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Matthew Wilcox <willy@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	bernd.schubert@fastmail.fm, kernel-team@meta.com, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 25, 2025 at 09:44:31AM -0700, Joanne Koong wrote:
-> On Tue, Jun 24, 2025 at 11:26 PM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Tue, Jun 24, 2025 at 10:26:01PM -0700, Joanne Koong wrote:
-> > > > The question is whether this is acceptable for all the filesystem
-> > > > which implement ->launder_folio today.  Because we could just move the
-> > > > folio_test_dirty() to after the folio_lock() and remove all the testing
-> > > > of folio dirtiness from individual filesystems.
-> > >
-> > > Or could the filesystems that implement ->launder_folio (from what I
-> > > see, there's only 4: fuse, nfs, btrfs, and orangefs) just move that
-> > > logic into their .release_folio implementation? I don't see why not.
-> > > In folio_unmap_invalidate(), we call:
-> >
-> > Without even looking into the details from the iomap POV that basically
-> > doesn't matter.  You'd still need the write back a single locked folio
-> > interface, which adds API surface, and because it only writes a single
-> > folio at a time is rather inefficient.  Not a deal breaker because
-> > the current version look ok, but it would still be preferable to not
-> > have an extra magic interface for it.
-> >
-> 
+On Wed, 25 Jun 2025 at 18:44, Joanne Koong <joannelkoong@gmail.com> wrote:
+
 > Yes but as I understand it, the focus right now is on getting rid of
 > ->launder_folio as an API. The iomap pov imo is a separate issue with
 > determining whether fuse in particular needs to write back the dirty
 > page before releasing or should just fail.
 
-This might not help for Joanne's case, but so far the lack of a
-launder_folio in my fuse+iomap prototype hasn't hindered it at all.
-From what I can tell it's ok to bounce EBUSY back to dio callers...
+Fuse calls invalidate_inode_pages2() not just for direct I/O:
 
-> btrfs uses ->launder_folio() to free some previously allocated
-> reservation (added in commit 872617a "btrfs: implement launder_folio
-> for clearing dirty page reserve") so at the very least, that logic
-> would need to be moved to .release_folio() (if that suffices? Adding
-> the btrfs group to cc). It's still vague to me whether
-> fuse/nfs/orangefs need to write back the dirty page, but it seems fine
+ - open without FOPEN_KEEP_CACHE
+ - FUSE_NOTIFY_INVAL_INODE
+ - mtime/size change with FUSE_AUTO_INVAL_DATA turned
+on/FUSE_EXPLICIT_INVAL_DATA turned off
+ - truncate
 
-...but only because a retry will initiate another writeback so
-eventually we can make some forward progress.  But it helps a lot that
-fuse+iomap is handing the entire IO stack over to iomap.
+In most of these cases dirty pages d need to be written back.
 
-> to me not to - as I understand it, the worst that can happen (and
-> please correct me if I'm wrong here, Matthew) from just failing it
-> with -EBUSY is that the folio lingers longer in the page cache until
-> it eventually gets written back and cleared out, and that only happens
-> if the file is mapped and written to in that window between
-> filemap_write_and_wait_range() and unmap_mapping_folio(). afaics, if
-> fuse/nfs/orangefs do need to write back the dirty folio instead of
-> failing w/ -EBUSY, they could just do that logic in .release_folio.
-
-What do you do in ->release_folio if writeback fails?  Redirty it and
-return false?
-
---D
+Thanks,
+Miklos
 
