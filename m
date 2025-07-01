@@ -1,216 +1,132 @@
-Return-Path: <linux-nfs+bounces-12828-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12829-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ED73AEEC57
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 04:14:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90609AEEDE1
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 07:41:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3A2417C70F
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 02:14:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 96EEE188E6CF
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 05:41:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BE041A23BD;
-	Tue,  1 Jul 2025 02:14:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D934720C009;
+	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BGs+whJA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A5A86328
-	for <linux-nfs@vger.kernel.org>; Tue,  1 Jul 2025 02:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5572191493;
+	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751336053; cv=none; b=hdBg3G8dmfpDbnX6pfWNInOg8lXnBY3h8WB90INmwTP65HdKOEG9iWPkz3DoSPux9fm7pqRfqD8I1JxLpXnSQ+1RHeHNBjYXCccCWKDDDzqBicK4nOWZ0tCxoUAGNTiTHfZKkUJjC8i80wDjyOJFRtN22EbC6tfN+GH4GyhTPpg=
+	t=1751348462; cv=none; b=taZwQwhY/B3BKjaFNTJKxn50cwygU/s9YUceiTY55P134AaHQ07AIWCYJ7zFCD4SlhBvFirTiyfsfTSSWcuNSshp4FyxPPDGZF3PWDzamIKAmJITL4s32thMdTbY7mOxgjaEuh8l+O1wPLwwVK7NT0GtDJ3z29kD1SpE/6cp0Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751336053; c=relaxed/simple;
-	bh=rpXimO+xocvkx5wZbwqRQxJgdJUQaKomNNClnFasLZ4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:Date:Message-id; b=hCw7edBcYpXGFZa72NVKNz/6XyRv7qQK9VUyzuyJLXPFvkGD2cPdWRzO5dD+oU62VZol20YmIcc++lJRiTNNNmnXKnOYRiOTAomBxLeeULl+qy0XOATf9/KJdBUy1xMtxmdjS4Jlftyd2JRgVLMIhPNnW6BTmarbv+EsyHpHFuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uWQVX-00FHm2-DW;
-	Tue, 01 Jul 2025 02:14:03 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1751348462; c=relaxed/simple;
+	bh=UDsiqeD9Rx7beaI8/Y2+5mhKK/YEz8suJYDVh5wpleg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQjNuhZ5+/AtRvXp9uVoovunUhtU5evzqw3KqcPa+bpv7LWNwIRFp/I2ORq6WdKZl+TYEtc3BSFl56IW4Hnkll23H3qcwRTkdySFy4OOMBTxhVA2MM6zDbNsYEEVEjvk0kllwDK9hiAKnbfu+dzXpq0o0IgJRZBYtQXV6tLnkDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BGs+whJA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E2F0C4CEEB;
+	Tue,  1 Jul 2025 05:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751348462;
+	bh=UDsiqeD9Rx7beaI8/Y2+5mhKK/YEz8suJYDVh5wpleg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BGs+whJAJv9u3TGXfbF3ek+G4CspgAar85NzNF2hzg13LSB7qr7Sx1ZRyGI8Bd+bV
+	 KpYbTkVKW0RgugdZR7ALw7ATVVx2kgHv7uyWTbF1LzGkrBW2dyDkiq1qp9YkVO6In3
+	 9riQBRXi88FCK/DsBxzbBIBWPs7HqzYXT+MldcJvby7tnR7wM2yxqBwtQ/03bKNCxN
+	 TTcwx4YO9j1MG7PW16XM96od+XZ/jCwSbIgy0LgkvZGm7X7Bmt3LZSINsls5+VWoz5
+	 NQgLfd2rurC+Uk1letQK5rZP6CAhBaSbBV3mFHkE5pOdU3NBj2x+GNYXKl6DVa1ueF
+	 adjgbStbzlLGQ==
+Date: Mon, 30 Jun 2025 22:41:01 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, miklos@szeredi.hu,
+	brauner@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-xfs@vger.kernel.org, bernd.schubert@fastmail.fm,
+	kernel-team@meta.com, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v1 5/8] iomap: add iomap_writeback_dirty_folio()
+Message-ID: <20250701054101.GE10035@frogsfrogsfrogs>
+References: <20250606233803.1421259-6-joannelkoong@gmail.com>
+ <aEZoau3AuwoeqQgu@infradead.org>
+ <20250609171444.GL6156@frogsfrogsfrogs>
+ <aEetuahlyfHGTG7x@infradead.org>
+ <aEkHarE9_LlxFTAi@casper.infradead.org>
+ <ac1506958d4c260c8beb6b840809e1bc8167ba2a.camel@kernel.org>
+ <aFWlW6SUI6t-i0dN@casper.infradead.org>
+ <CAJnrk1b3HfGOAkxXrJuhm3sFfJDzzd=Z7vQbKk3HO_JkGAxVuQ@mail.gmail.com>
+ <aFuWhnjsKqo6ftit@infradead.org>
+ <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Li Lingfeng <lilingfeng3@huawei.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: [PATCH RFT] nfsd: provide locking for v4_end_grace
-Date: Tue, 01 Jul 2025 12:14:01 +1000
-Message-id: <175133604142.565058.11913456377522907637@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJnrk1Zud2V5fn5SB6Wqbk8zyOFrD_wQp7B5jDBnUXiGyiJPvQ@mail.gmail.com>
 
+On Wed, Jun 25, 2025 at 09:44:31AM -0700, Joanne Koong wrote:
+> On Tue, Jun 24, 2025 at 11:26 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Tue, Jun 24, 2025 at 10:26:01PM -0700, Joanne Koong wrote:
+> > > > The question is whether this is acceptable for all the filesystem
+> > > > which implement ->launder_folio today.  Because we could just move the
+> > > > folio_test_dirty() to after the folio_lock() and remove all the testing
+> > > > of folio dirtiness from individual filesystems.
+> > >
+> > > Or could the filesystems that implement ->launder_folio (from what I
+> > > see, there's only 4: fuse, nfs, btrfs, and orangefs) just move that
+> > > logic into their .release_folio implementation? I don't see why not.
+> > > In folio_unmap_invalidate(), we call:
+> >
+> > Without even looking into the details from the iomap POV that basically
+> > doesn't matter.  You'd still need the write back a single locked folio
+> > interface, which adds API surface, and because it only writes a single
+> > folio at a time is rather inefficient.  Not a deal breaker because
+> > the current version look ok, but it would still be preferable to not
+> > have an extra magic interface for it.
+> >
+> 
+> Yes but as I understand it, the focus right now is on getting rid of
+> ->launder_folio as an API. The iomap pov imo is a separate issue with
+> determining whether fuse in particular needs to write back the dirty
+> page before releasing or should just fail.
 
-Writing to v4_end_grace can race with server shutdown and result in
-memory being accessed after it was freed - reclaim_str_hashtbl in
-particular.
+This might not help for Joanne's case, but so far the lack of a
+launder_folio in my fuse+iomap prototype hasn't hindered it at all.
+From what I can tell it's ok to bounce EBUSY back to dio callers...
 
-We cannot hold nfsd_mutex across the nfsd4_end_grace() call as that is
-held while client_tracking_op->init() is called and that can wait for
-an upcall to nfsdcltrack which can write to v4_end_grace, resulting in a
-deadlock.
+> btrfs uses ->launder_folio() to free some previously allocated
+> reservation (added in commit 872617a "btrfs: implement launder_folio
+> for clearing dirty page reserve") so at the very least, that logic
+> would need to be moved to .release_folio() (if that suffices? Adding
+> the btrfs group to cc). It's still vague to me whether
+> fuse/nfs/orangefs need to write back the dirty page, but it seems fine
 
-nfsd4_end_grace() is also called by the landromat work queue and this
-doesn't require locking as server shutdown will stop the work and wait
-for it before freeing anything that nfsd4_end_grace() might access.
+...but only because a retry will initiate another writeback so
+eventually we can make some forward progress.  But it helps a lot that
+fuse+iomap is handing the entire IO stack over to iomap.
 
-However, we must be sure that writing to v4_end_grace doesn't restart
-the work item after shutdown has already waited for it.  For this we can
-use disable_delayed_work_sync() instead of cancel_delayed_work_sync().
+> to me not to - as I understand it, the worst that can happen (and
+> please correct me if I'm wrong here, Matthew) from just failing it
+> with -EBUSY is that the folio lingers longer in the page cache until
+> it eventually gets written back and cleared out, and that only happens
+> if the file is mapped and written to in that window between
+> filemap_write_and_wait_range() and unmap_mapping_folio(). afaics, if
+> fuse/nfs/orangefs do need to write back the dirty folio instead of
+> failing w/ -EBUSY, they could just do that logic in .release_folio.
 
-So this patch adds a nfsd_net field "grace_end_forced", sets that when
-v4_end_grace is written, and schedules the laundromat (providing it
-hasn't been disabled).  This field bypasses other checks for whether the
-grace period has finished.  The delayed work is disabled before
-nfsd4_client_tracking_exit() is call to shutdown client tracking.
+What do you do in ->release_folio if writeback fails?  Redirty it and
+return false?
 
-This resolves a race which can result in use-after-free.
-
-Note that disable_delayed_work_sync() was added in v6.10.  To backport
-to an earlier kernel without that interface the exclusion could be
-provided by some spinlock that was released in the shutdown path
-after ->nfsd_serv is set to NULL.  It would need to be taken before
-the test on nfsd_serv in write_v4_end_grace() and released after
-nfsd4_force_end_grace() is called.
-
-Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: NeilBrown <neil@brown.name>
----
- fs/nfsd/netns.h     |  1 +
- fs/nfsd/nfs4state.c | 19 ++++++++++++++++---
- fs/nfsd/nfsctl.c    |  7 ++++++-
- fs/nfsd/state.h     |  2 +-
- 4 files changed, 24 insertions(+), 5 deletions(-)
-
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 3e2d0fde80a7..d83c68872c4c 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -66,6 +66,7 @@ struct nfsd_net {
-=20
- 	struct lock_manager nfsd4_manager;
- 	bool grace_ended;
-+	bool grace_end_forced;
- 	time64_t boot_time;
-=20
- 	struct dentry *nfsd_client_dir;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d5694987f86f..b34f157334e6 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -84,7 +84,7 @@ static u64 current_sessionid =3D 1;
- /* forward declarations */
- static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *low=
-ner);
- static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
--void nfsd4_end_grace(struct nfsd_net *nn);
-+static void nfsd4_end_grace(struct nfsd_net *nn);
- static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cpntf_=
-state *cps);
- static void nfsd4_file_hash_remove(struct nfs4_file *fi);
- static void deleg_reaper(struct nfsd_net *nn);
-@@ -6458,7 +6458,7 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_compou=
-nd_state *cstate,
- 	return nfs_ok;
- }
-=20
--void
-+static void
- nfsd4_end_grace(struct nfsd_net *nn)
- {
- 	/* do nothing if grace period already ended */
-@@ -6491,6 +6491,16 @@ nfsd4_end_grace(struct nfsd_net *nn)
- 	 */
- }
-=20
-+void
-+nfsd4_force_end_grace(struct nfsd_net *nn)
-+{
-+	nn->grace_end_forced =3D true;
-+	/* This is a no-op after nfs4_state_shutdown_net() has called
-+	 * disable_delayed_work_sync()
-+	 */
-+	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-+}
-+
- /*
-  * If we've waited a lease period but there are still clients trying to
-  * reclaim, wait a little longer to give them a chance to finish.
-@@ -6500,6 +6510,8 @@ static bool clients_still_reclaiming(struct nfsd_net *n=
-n)
- 	time64_t double_grace_period_end =3D nn->boot_time +
- 					   2 * nn->nfsd4_lease;
-=20
-+	if (nn->grace_end_forced)
-+		return false;
- 	if (nn->track_reclaim_completes &&
- 			atomic_read(&nn->nr_reclaim_complete) =3D=3D
- 			nn->reclaim_str_hashtbl_size)
-@@ -8807,6 +8819,7 @@ static int nfs4_state_create_net(struct net *net)
- 	nn->unconf_name_tree =3D RB_ROOT;
- 	nn->boot_time =3D ktime_get_real_seconds();
- 	nn->grace_ended =3D false;
-+	nn->grace_end_forced =3D false;
- 	nn->nfsd4_manager.block_opens =3D true;
- 	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
- 	INIT_LIST_HEAD(&nn->client_lru);
-@@ -8935,7 +8948,7 @@ nfs4_state_shutdown_net(struct net *net)
-=20
- 	shrinker_free(nn->nfsd_client_shrinker);
- 	cancel_work_sync(&nn->nfsd_shrinker_work);
--	cancel_delayed_work_sync(&nn->laundromat_work);
-+	disable_delayed_work_sync(&nn->laundromat_work);
- 	locks_end_grace(&nn->nfsd4_manager);
-=20
- 	INIT_LIST_HEAD(&reaplist);
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 3f3e9f6c4250..a9e6c2a155da 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1082,10 +1082,15 @@ static ssize_t write_v4_end_grace(struct file *file, =
-char *buf, size_t size)
- 		case 'Y':
- 		case 'y':
- 		case '1':
-+			/* This test ensures we don't try to
-+			 * end grace before the server has been started,
-+			 * but doesn't guarantee we don't end grace
-+			 * while the server is being shut down.
-+			 */
- 			if (!nn->nfsd_serv)
- 				return -EBUSY;
- 			trace_nfsd_end_grace(netns(file));
--			nfsd4_end_grace(nn);
-+			nfsd4_force_end_grace(nn);
- 			break;
- 		default:
- 			return -EINVAL;
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 1995bca158b8..e2bea9908fa8 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -836,7 +836,7 @@ static inline void nfsd4_revoke_states(struct net *net, s=
-truct super_block *sb)
- #endif
-=20
- /* grace period management */
--void nfsd4_end_grace(struct nfsd_net *nn);
-+void nfsd4_force_end_grace(struct nfsd_net *nn);
-=20
- /* nfs4recover operations */
- extern int nfsd4_client_tracking_init(struct net *net);
---=20
-2.49.0
-
+--D
 
