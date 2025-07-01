@@ -1,514 +1,239 @@
-Return-Path: <linux-nfs+bounces-12848-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12849-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2AFBAF0051
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 18:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49941AF0149
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 19:09:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84443481319
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 16:42:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 83EC83B27A6
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Jul 2025 17:07:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46418286424;
-	Tue,  1 Jul 2025 16:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A7C27935A;
+	Tue,  1 Jul 2025 17:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W+RwXNWl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HqPURpe+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F284285C96
-	for <linux-nfs@vger.kernel.org>; Tue,  1 Jul 2025 16:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CC97260D;
+	Tue,  1 Jul 2025 17:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751388013; cv=none; b=W9Crjqa/Fz38ex5PDm/jQLtJ2lag4aGZXjlhU+456IVfyMZow6xrKWFHKSv7Jy5e6eJeBeR7llSvv2s2782psDzbfOuwZ3JN6iK+yqS+m/Ba78O+87667yFNCRGNpPyhLB82sq5htq8GZxuFetHf19IUllzY9V+sO7a8YrtwAj0=
+	t=1751389644; cv=none; b=neY9sqfN8zd+MrqO6ukU8dSXtXs2X9wc9Eg1KqVNfu9lwm4bg5YGZzhDIrvCKSmSrPuXdePgno31PQhtf9Jyi6zUyXMv1W4H9CY/kNO4iUcLhYkNBXH89gHUx7sjQwUjTehUqktOkcrx3R2HBmQHLHYJejoGV9G05H3PFVL+Ou8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751388013; c=relaxed/simple;
-	bh=HMkDDwcKDzUaY0hzCt1I1uRbrGEprVFlR/FsVtd4EM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RCi/gYRKmK/yGT8H5LxBTkGkD7psAF6rFB7ALNFAUa4XxyGBFFtxHXyf+AFWUPbFnSFaJS4XJu2z17cRMrQIQWhfdaUqV57egOs0z7OYu3P2vXIOY6uktTQJitb0xmEj2U5w4eksvfvRd4pALRNhhQcjH8aAyCf0R+EnOEcPzQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W+RwXNWl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751388009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wEfzXdjRTCmhqQNu20PlxGP+R5oHgXrmPOVNTE5mmHw=;
-	b=W+RwXNWlQl0CazK5KuN7VXsTlVKwP5XEq6G4jAoiqhO40S6fkQun6+SYyuGgoGPLodsrrH
-	EWijmbNSJE3tarqjih4bgF9Tkv8JdTWqCUWD+nsKfyx74tTXD0rc55yc5PMb08+gPgLVp1
-	JKuBm2eLFAGPulo3pgqx8x9POhiEfkw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-478-Y7ZLmERcMo-imchYh0jJDQ-1; Tue,
- 01 Jul 2025 12:40:06 -0400
-X-MC-Unique: Y7ZLmERcMo-imchYh0jJDQ-1
-X-Mimecast-MFC-AGG-ID: Y7ZLmERcMo-imchYh0jJDQ_1751388005
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6C7C18011DF;
-	Tue,  1 Jul 2025 16:40:04 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.81])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A18A1956087;
-	Tue,  1 Jul 2025 16:40:01 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <sfrench@samba.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	netfs@lists.linux.dev,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paulo Alcantara <pc@manguebit.org>
-Subject: [PATCH 13/13] netfs: Update tracepoints in a number of ways
-Date: Tue,  1 Jul 2025 17:38:48 +0100
-Message-ID: <20250701163852.2171681-14-dhowells@redhat.com>
-In-Reply-To: <20250701163852.2171681-1-dhowells@redhat.com>
-References: <20250701163852.2171681-1-dhowells@redhat.com>
+	s=arc-20240116; t=1751389644; c=relaxed/simple;
+	bh=rkq3DGRe/lPxR2ofGTATmveYcwg0fwOyu3wyKRPEeec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O/qlzSmpiCo/gyMimiBkxCXoS9cmsif+sI437kqLTtIWmjLemc9GwbAetxHmBLY1riL5Yd9tyTIpskS540uLj+H7I0PF6pfMAeFnDgH7In4pZo0A0uyeHOJzfA58gHceuaOV40bm2wLvwLbwukK5hldYb3bmEqqkWqaxm3kKB6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HqPURpe+; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fae04a3795so64026306d6.3;
+        Tue, 01 Jul 2025 10:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751389642; x=1751994442; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QTazUoyxInDAJ2NwZxhqJI5YRJsIYXcAsvJl7/gp0ws=;
+        b=HqPURpe+umDzQg2yXxIr1AfqeeaQGJ4IPdJ+UtqyaQrNYVsBtqZmMTk0vDEMUaz7ZJ
+         ll2+Q/QiO/d2jXbR3ZcYyqz3U4L77s8tnboVVYpOZTLlqAPm/xUUU0wF0pZMNuz5Bqb7
+         V1GcFRCVuK0jK6nSmmAzdecymBfusP/9cgQNJV7k4pc4udeQcJHnI5jgWHkXYYAeCK2V
+         O3+xDwCF61YSAmW3bXugRvfIeaFxjPFPLMbQgCL6/zwE9K6hnM3PXsxXsYALEWlCuOAX
+         p/D9/Av75V+QZLIbqXAgH+eQwNnn/9rp5eUa9GKRlMlQVI5jbiqMCcwdFj9BJFHxnoqr
+         0Pkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751389642; x=1751994442;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QTazUoyxInDAJ2NwZxhqJI5YRJsIYXcAsvJl7/gp0ws=;
+        b=n8/gPIUvIxoWrtYHNiEXB143LYQh+2fffnb9nbC9Ke6thOH1JEWt0xreO8cu3QahYG
+         UquBM/pdSul8k7vdwNllflpCvtLGi6v+aBJrk5HB6M6g0n89ffH7S8Jium2JfNcjkJPD
+         S2QnXvpiUBpq4zmeZzwpBd6lBJK1/EylKATEdn+PhBPAWMxpMvvaVJw+5PxDeZj4cQGD
+         UpjuhGCF1/+5AOJXStL+LzdM4Yv9SIot72zLCDidFgAinvR7sDcw5a2zVVOAlWI5JuGl
+         vE4ePU7LVEco8UiEG2ux3GD36+pFmQgobuU2T9XDIpavowp5R/jbVX5LqVO320R9hblX
+         dlrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUqdOUH+UYjznilwPYNgDjkhLOvwNyv6qemMX9eWXAj8VcxSkP2wY+TouIN/1HUJAH0W7PlSNg77hVh@vger.kernel.org, AJvYcCVPUj+EMkxFBjN6CrVSY7xUKkWeuXmgc067XXSgof6ByBicLoYfXuyRDNBwk3dDYljgndoBcGYCjxfxXg==@vger.kernel.org, AJvYcCVf07EqyqeuajYlGdwegFlln/IHy0mxi3X+mWyXrAwsP60uLmevWx9DVPe+TLt24EwM2+pYAuRwJJ4CqyQo5Q==@vger.kernel.org, AJvYcCWDh/+Wu36733jKqvXLfETvbSRxfDKdkvAzJrPxGikglxnnVlkMDGTxuHxPd5hzpZwH1rrxi2dE04CubV+A@vger.kernel.org, AJvYcCWERI629SjZyBvsGRuoxywCUOZQAylMsnSAiDGhr9vqgieu7kgPLd3qI0xoejyv/Ba1yQ8Vbi+o6sH5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSG2GhnkngYn/i7Glt2XLvUt/tXLJRQScTkPmBb/SLV8fTbwq/
+	UN15+SUiRnlzY3PZpUDsUrCRZYznFtZ21sL61s2QiPWknn0QdhRr0TKMc4gmIlVBP1AQHHUtfzT
+	e2oaXsr/HvwNPKR4Jf8hkukPA01Pk218=
+X-Gm-Gg: ASbGnctGHRAGTTi1F//qBOaymeiz66lrZwBJ0dMC4YvwIwdbcglIqni+P5tZr990GtO
+	uwMX0K7t3lvsX7lHWHXQBVgm37bFOJOXK5v/UmodJph5ZYFUHrliPhEVAh0uEjNM+siYAhJUMCM
+	8i0FZtmBoj5v8TCzwnMoVUmUFwr0uPiDlk0kBx4na9Mw==
+X-Google-Smtp-Source: AGHT+IHOCEIHYgm8k1vptLe8LL1tAI0jytjNx1TpB7ZG4wg2ZutjYESoQ25ENjDT+uRfDdRVBd1/zvyP4q+gP4bjeCU=
+X-Received: by 2002:a05:6214:4309:b0:6fa:d956:243b with SMTP id
+ 6a1803df08f44-70003c8e7ffmr346050926d6.37.1751389641585; Tue, 01 Jul 2025
+ 10:07:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250701163852.2171681-1-dhowells@redhat.com> <20250701163852.2171681-10-dhowells@redhat.com>
+In-Reply-To: <20250701163852.2171681-10-dhowells@redhat.com>
+From: Steve French <smfrench@gmail.com>
+Date: Tue, 1 Jul 2025 12:07:08 -0500
+X-Gm-Features: Ac12FXwp3sKlhUbj28TBsCjjpDbuA__SF55TZQEDUJu-EBlXwc0hooXFiXTAO58
+Message-ID: <CAH2r5msN59rNqDxJaBTPZQ_smsYOiMbyy4V+cMdWeuGbe9GR1Q@mail.gmail.com>
+Subject: Re: [PATCH 09/13] smb: client: fix warning when reconnecting channel
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev, 
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paulo Alcantara <pc@manguebit.org>, samba-technical <samba-technical@lists.samba.org>, 
+	Shyam Prasad <nspmangalore@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make a number of updates to the netfs tracepoints:
+I already have this patch in my for-next branch (which also includes
+the  Reviewed-by from Shyam)
 
- (1) Remove a duplicate trace from netfs_unbuffered_write_iter_locked().
+On Tue, Jul 1, 2025 at 11:44=E2=80=AFAM David Howells <dhowells@redhat.com>=
+ wrote:
+>
+> From: Paulo Alcantara <pc@manguebit.org>
+>
+> When reconnecting a channel in smb2_reconnect_server(), a dummy tcon
+> is passed down to smb2_reconnect() with ->query_interface
+> uninitialized, so we can't call queue_delayed_work() on it.
+>
+> Fix the following warning by ensuring that we're queueing the delayed
+> worker from correct tcon.
+>
+> WARNING: CPU: 4 PID: 1126 at kernel/workqueue.c:2498 __queue_delayed_work=
++0x1d2/0x200
+> Modules linked in: cifs cifs_arc4 nls_ucs2_utils cifs_md4 [last unloaded:=
+ cifs]
+> CPU: 4 UID: 0 PID: 1126 Comm: kworker/4:0 Not tainted 6.16.0-rc3 #5 PREEM=
+PT(voluntary)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-4.fc42 04=
+/01/2014
+> Workqueue: cifsiod smb2_reconnect_server [cifs]
+> RIP: 0010:__queue_delayed_work+0x1d2/0x200
+> Code: 41 5e 41 5f e9 7f ee ff ff 90 0f 0b 90 e9 5d ff ff ff bf 02 00
+> 00 00 e8 6c f3 07 00 89 c3 eb bd 90 0f 0b 90 e9 57 f> 0b 90 e9 65 fe
+> ff ff 90 0f 0b 90 e9 72 fe ff ff 90 0f 0b 90 e9
+> RSP: 0018:ffffc900014afad8 EFLAGS: 00010003
+> RAX: 0000000000000000 RBX: ffff888124d99988 RCX: ffffffff81399cc1
+> RDX: dffffc0000000000 RSI: ffff888114326e00 RDI: ffff888124d999f0
+> RBP: 000000000000ea60 R08: 0000000000000001 R09: ffffed10249b3331
+> R10: ffff888124d9998f R11: 0000000000000004 R12: 0000000000000040
+> R13: ffff888114326e00 R14: ffff888124d999d8 R15: ffff888114939020
+> FS:  0000000000000000(0000) GS:ffff88829f7fe000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ffe7a2b4038 CR3: 0000000120a6f000 CR4: 0000000000750ef0
+> PKRU: 55555554
+> Call Trace:
+>  <TASK>
+>  queue_delayed_work_on+0xb4/0xc0
+>  smb2_reconnect+0xb22/0xf50 [cifs]
+>  smb2_reconnect_server+0x413/0xd40 [cifs]
+>  ? __pfx_smb2_reconnect_server+0x10/0x10 [cifs]
+>  ? local_clock_noinstr+0xd/0xd0
+>  ? local_clock+0x15/0x30
+>  ? lock_release+0x29b/0x390
+>  process_one_work+0x4c5/0xa10
+>  ? __pfx_process_one_work+0x10/0x10
+>  ? __list_add_valid_or_report+0x37/0x120
+>  worker_thread+0x2f1/0x5a0
+>  ? __kthread_parkme+0xde/0x100
+>  ? __pfx_worker_thread+0x10/0x10
+>  kthread+0x1fe/0x380
+>  ? kthread+0x10f/0x380
+>  ? __pfx_kthread+0x10/0x10
+>  ? local_clock_noinstr+0xd/0xd0
+>  ? ret_from_fork+0x1b/0x1f0
+>  ? local_clock+0x15/0x30
+>  ? lock_release+0x29b/0x390
+>  ? rcu_is_watching+0x20/0x50
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork+0x15b/0x1f0
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+> irq event stamp: 1116206
+> hardirqs last  enabled at (1116205): [<ffffffff8143af42>] __up_console_se=
+m+0x52/0x60
+> hardirqs last disabled at (1116206): [<ffffffff81399f0e>] queue_delayed_w=
+ork_on+0x6e/0xc0
+> softirqs last  enabled at (1116138): [<ffffffffc04562fd>] __smb_send_rqst=
++0x42d/0x950 [cifs]
+> softirqs last disabled at (1116136): [<ffffffff823d35e1>] release_sock+0x=
+21/0xf0
+>
+> Cc: linux-cifs@vger.kernel.org
+> Reported-by: David Howells <dhowells@redhat.com>
+> Fixes: 42ca547b13a2 ("cifs: do not disable interface polling on failure")
+> Reviewed-by: David Howells <dhowells@redhat.com>
+> Tested-by: David Howells <dhowells@redhat.com>
+> Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Tested-by: Steve French <sfrench@samba.org>
+> ---
+>  fs/smb/client/cifsglob.h |  1 +
+>  fs/smb/client/smb2pdu.c  | 10 ++++------
+>  2 files changed, 5 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/smb/client/cifsglob.h b/fs/smb/client/cifsglob.h
+> index 318a8405d475..fdd95e5100cd 100644
+> --- a/fs/smb/client/cifsglob.h
+> +++ b/fs/smb/client/cifsglob.h
+> @@ -1303,6 +1303,7 @@ struct cifs_tcon {
+>         bool use_persistent:1; /* use persistent instead of durable handl=
+es */
+>         bool no_lease:1;    /* Do not request leases on files or director=
+ies */
+>         bool use_witness:1; /* use witness protocol */
+> +       bool dummy:1; /* dummy tcon used for reconnecting channels */
+>         __le32 capabilities;
+>         __u32 share_flags;
+>         __u32 maximal_access;
+> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+> index 084ee66e73fd..572cfc42dda8 100644
+> --- a/fs/smb/client/smb2pdu.c
+> +++ b/fs/smb/client/smb2pdu.c
+> @@ -424,9 +424,9 @@ smb2_reconnect(__le16 smb2_command, struct cifs_tcon =
+*tcon,
+>                 free_xid(xid);
+>                 ses->flags &=3D ~CIFS_SES_FLAGS_PENDING_QUERY_INTERFACES;
+>
+> -               /* regardless of rc value, setup polling */
+> -               queue_delayed_work(cifsiod_wq, &tcon->query_interfaces,
+> -                                  (SMB_INTERFACE_POLL_INTERVAL * HZ));
+> +               if (!tcon->ipc && !tcon->dummy)
+> +                       queue_delayed_work(cifsiod_wq, &tcon->query_inter=
+faces,
+> +                                          (SMB_INTERFACE_POLL_INTERVAL *=
+ HZ));
+>
+>                 mutex_unlock(&ses->session_mutex);
+>
+> @@ -4229,10 +4229,8 @@ void smb2_reconnect_server(struct work_struct *wor=
+k)
+>                 }
+>                 goto done;
+>         }
+> -
+>         tcon->status =3D TID_GOOD;
+> -       tcon->retry =3D false;
+> -       tcon->need_reconnect =3D false;
+> +       tcon->dummy =3D true;
+>
+>         /* now reconnect sessions for necessary channels */
+>         list_for_each_entry_safe(ses, ses2, &tmp_ses_list, rlist) {
+>
+>
 
- (2) Move the trace in netfs_wake_rreq_flag() to after the flag is cleared
-     so that the change appears in the trace.
 
- (3) Differentiate the use of netfs_rreq_trace_wait/woke_queue symbols.
+--=20
+Thanks,
 
- (4) Don't do so many trace emissions in the wait functions as some of them
-     are redundant.
-
- (5) In netfs_collect_read_results(), differentiate a subreq that's being
-     abandoned vs one that has been consumed in a regular way.
-
- (6) Add a tracepoint to indicate the call to ->ki_complete().
-
- (7) Don't double-increment the subreq_counter when retrying a write.
-
- (8) Move the netfs_sreq_trace_io_progress tracepoint within cifs code to
-     just MID_RESPONSE_RECEIVED and add different tracepoints for other MID
-     states and note check failure.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Co-developed-by: Paulo Alcantara <pc@manguebit.org>
-Signed-off-by: Paulo Alcantara <pc@manguebit.org>
-cc: Steve French <sfrench@samba.org>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
----
- fs/netfs/direct_write.c      |  1 -
- fs/netfs/internal.h          |  2 +-
- fs/netfs/misc.c              | 14 ++++++--------
- fs/netfs/read_collect.c      | 12 +++++++++---
- fs/netfs/write_collect.c     |  4 +++-
- fs/netfs/write_retry.c       |  1 -
- fs/smb/client/cifssmb.c      | 20 ++++++++++++++++++++
- fs/smb/client/smb2pdu.c      | 26 ++++++++++++++++++++++----
- include/trace/events/netfs.h | 26 ++++++++++++++++++--------
- 9 files changed, 79 insertions(+), 27 deletions(-)
-
-diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
-index dcf2b096cc4e..a16660ab7f83 100644
---- a/fs/netfs/direct_write.c
-+++ b/fs/netfs/direct_write.c
-@@ -91,7 +91,6 @@ ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov_iter *
- 	}
- 
- 	if (!async) {
--		trace_netfs_rreq(wreq, netfs_rreq_trace_wait_ip);
- 		ret = netfs_wait_for_write(wreq);
- 		if (ret > 0)
- 			iocb->ki_pos += ret;
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index f9bb9464a147..d4f16fefd965 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -273,9 +273,9 @@ static inline void netfs_wake_rreq_flag(struct netfs_io_request *rreq,
- 					enum netfs_rreq_trace trace)
- {
- 	if (test_bit(rreq_flag, &rreq->flags)) {
--		trace_netfs_rreq(rreq, trace);
- 		clear_bit_unlock(rreq_flag, &rreq->flags);
- 		smp_mb__after_atomic(); /* Set flag before task state */
-+		trace_netfs_rreq(rreq, trace);
- 		wake_up(&rreq->waitq);
- 	}
- }
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 127a269938bb..20748bcfbf59 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -359,7 +359,7 @@ void netfs_wait_for_in_progress_stream(struct netfs_io_request *rreq,
- 		if (!netfs_check_subreq_in_progress(subreq))
- 			continue;
- 
--		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_queue);
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_quiesce);
- 		for (;;) {
- 			prepare_to_wait(&rreq->waitq, &myself, TASK_UNINTERRUPTIBLE);
- 
-@@ -368,10 +368,10 @@ void netfs_wait_for_in_progress_stream(struct netfs_io_request *rreq,
- 
- 			trace_netfs_sreq(subreq, netfs_sreq_trace_wait_for);
- 			schedule();
--			trace_netfs_rreq(rreq, netfs_rreq_trace_woke_queue);
- 		}
- 	}
- 
-+	trace_netfs_rreq(rreq, netfs_rreq_trace_waited_quiesce);
- 	finish_wait(&rreq->waitq, &myself);
- }
- 
-@@ -437,7 +437,6 @@ static ssize_t netfs_wait_for_in_progress(struct netfs_io_request *rreq,
- 	ssize_t ret;
- 
- 	for (;;) {
--		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_queue);
- 		prepare_to_wait(&rreq->waitq, &myself, TASK_UNINTERRUPTIBLE);
- 
- 		if (!test_bit(NETFS_RREQ_OFFLOAD_COLLECTION, &rreq->flags)) {
-@@ -457,11 +456,12 @@ static ssize_t netfs_wait_for_in_progress(struct netfs_io_request *rreq,
- 		if (!netfs_check_rreq_in_progress(rreq))
- 			break;
- 
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_ip);
- 		schedule();
--		trace_netfs_rreq(rreq, netfs_rreq_trace_woke_queue);
- 	}
- 
- all_collected:
-+	trace_netfs_rreq(rreq, netfs_rreq_trace_waited_ip);
- 	finish_wait(&rreq->waitq, &myself);
- 
- 	ret = rreq->error;
-@@ -504,10 +504,8 @@ static void netfs_wait_for_pause(struct netfs_io_request *rreq,
- {
- 	DEFINE_WAIT(myself);
- 
--	trace_netfs_rreq(rreq, netfs_rreq_trace_wait_pause);
--
- 	for (;;) {
--		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_queue);
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_pause);
- 		prepare_to_wait(&rreq->waitq, &myself, TASK_UNINTERRUPTIBLE);
- 
- 		if (!test_bit(NETFS_RREQ_OFFLOAD_COLLECTION, &rreq->flags)) {
-@@ -530,10 +528,10 @@ static void netfs_wait_for_pause(struct netfs_io_request *rreq,
- 			break;
- 
- 		schedule();
--		trace_netfs_rreq(rreq, netfs_rreq_trace_woke_queue);
- 	}
- 
- all_collected:
-+	trace_netfs_rreq(rreq, netfs_rreq_trace_waited_pause);
- 	finish_wait(&rreq->waitq, &myself);
- }
- 
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index cceed9d629c6..3e804da1e1eb 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -293,7 +293,9 @@ static void netfs_collect_read_results(struct netfs_io_request *rreq)
- 		spin_lock(&rreq->lock);
- 
- 		remove = front;
--		trace_netfs_sreq(front, netfs_sreq_trace_discard);
-+		trace_netfs_sreq(front,
-+				 notes & ABANDON_SREQ ?
-+				 netfs_sreq_trace_abandoned : netfs_sreq_trace_consumed);
- 		list_del_init(&front->rreq_link);
- 		front = list_first_entry_or_null(&stream->subrequests,
- 						 struct netfs_io_subrequest, rreq_link);
-@@ -353,9 +355,11 @@ static void netfs_rreq_assess_dio(struct netfs_io_request *rreq)
- 
- 	if (rreq->iocb) {
- 		rreq->iocb->ki_pos += rreq->transferred;
--		if (rreq->iocb->ki_complete)
-+		if (rreq->iocb->ki_complete) {
-+			trace_netfs_rreq(rreq, netfs_rreq_trace_ki_complete);
- 			rreq->iocb->ki_complete(
- 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
-+		}
- 	}
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
-@@ -379,9 +383,11 @@ static void netfs_rreq_assess_single(struct netfs_io_request *rreq)
- 
- 	if (rreq->iocb) {
- 		rreq->iocb->ki_pos += rreq->transferred;
--		if (rreq->iocb->ki_complete)
-+		if (rreq->iocb->ki_complete) {
-+			trace_netfs_rreq(rreq, netfs_rreq_trace_ki_complete);
- 			rreq->iocb->ki_complete(
- 				rreq->iocb, rreq->error ? rreq->error : rreq->transferred);
-+		}
- 	}
- 	if (rreq->netfs_ops->done)
- 		rreq->netfs_ops->done(rreq);
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 33a93258f36e..0f3a36852a4d 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -421,9 +421,11 @@ bool netfs_write_collection(struct netfs_io_request *wreq)
- 	if (wreq->iocb) {
- 		size_t written = min(wreq->transferred, wreq->len);
- 		wreq->iocb->ki_pos += written;
--		if (wreq->iocb->ki_complete)
-+		if (wreq->iocb->ki_complete) {
-+			trace_netfs_rreq(wreq, netfs_rreq_trace_ki_complete);
- 			wreq->iocb->ki_complete(
- 				wreq->iocb, wreq->error ? wreq->error : written);
-+		}
- 		wreq->iocb = VFS_PTR_POISON;
- 	}
- 
-diff --git a/fs/netfs/write_retry.c b/fs/netfs/write_retry.c
-index 7158657061e9..fc9c3e0d34d8 100644
---- a/fs/netfs/write_retry.c
-+++ b/fs/netfs/write_retry.c
-@@ -146,7 +146,6 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
- 			subreq = netfs_alloc_subrequest(wreq);
- 			subreq->source		= to->source;
- 			subreq->start		= start;
--			subreq->debug_index	= atomic_inc_return(&wreq->subreq_counter);
- 			subreq->stream_nr	= to->stream_nr;
- 			subreq->retry_count	= 1;
- 
-diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
-index 0e509a0433fb..75142f49d65d 100644
---- a/fs/smb/client/cifssmb.c
-+++ b/fs/smb/client/cifssmb.c
-@@ -1334,7 +1334,11 @@ cifs_readv_callback(struct mid_q_entry *mid)
- 		cifs_stats_bytes_read(tcon, rdata->got_bytes);
- 		break;
- 	case MID_REQUEST_SUBMITTED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_req_submitted);
-+		goto do_retry;
- 	case MID_RETRY_NEEDED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_retry_needed);
-+do_retry:
- 		__set_bit(NETFS_SREQ_NEED_RETRY, &rdata->subreq.flags);
- 		rdata->result = -EAGAIN;
- 		if (server->sign && rdata->got_bytes)
-@@ -1344,8 +1348,14 @@ cifs_readv_callback(struct mid_q_entry *mid)
- 		task_io_account_read(rdata->got_bytes);
- 		cifs_stats_bytes_read(tcon, rdata->got_bytes);
- 		break;
-+	case MID_RESPONSE_MALFORMED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_malformed);
-+		rdata->result = -EIO;
-+		break;
- 	default:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_unknown);
- 		rdata->result = -EIO;
-+		break;
- 	}
- 
- 	if (rdata->result == -ENODATA) {
-@@ -1714,11 +1724,21 @@ cifs_writev_callback(struct mid_q_entry *mid)
- 		}
- 		break;
- 	case MID_REQUEST_SUBMITTED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_req_submitted);
-+		__set_bit(NETFS_SREQ_NEED_RETRY, &wdata->subreq.flags);
-+		result = -EAGAIN;
-+		break;
- 	case MID_RETRY_NEEDED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_retry_needed);
- 		__set_bit(NETFS_SREQ_NEED_RETRY, &wdata->subreq.flags);
- 		result = -EAGAIN;
- 		break;
-+	case MID_RESPONSE_MALFORMED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_malformed);
-+		result = -EIO;
-+		break;
- 	default:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_unknown);
- 		result = -EIO;
- 		break;
- 	}
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index 572cfc42dda8..2df93a75e3b8 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -4565,7 +4565,11 @@ smb2_readv_callback(struct mid_q_entry *mid)
- 		cifs_stats_bytes_read(tcon, rdata->got_bytes);
- 		break;
- 	case MID_REQUEST_SUBMITTED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_req_submitted);
-+		goto do_retry;
- 	case MID_RETRY_NEEDED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_retry_needed);
-+do_retry:
- 		__set_bit(NETFS_SREQ_NEED_RETRY, &rdata->subreq.flags);
- 		rdata->result = -EAGAIN;
- 		if (server->sign && rdata->got_bytes)
-@@ -4576,11 +4580,15 @@ smb2_readv_callback(struct mid_q_entry *mid)
- 		cifs_stats_bytes_read(tcon, rdata->got_bytes);
- 		break;
- 	case MID_RESPONSE_MALFORMED:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_malformed);
- 		credits.value = le16_to_cpu(shdr->CreditRequest);
- 		credits.instance = server->reconnect_instance;
--		fallthrough;
-+		rdata->result = -EIO;
-+		break;
- 	default:
-+		trace_netfs_sreq(&rdata->subreq, netfs_sreq_trace_io_unknown);
- 		rdata->result = -EIO;
-+		break;
- 	}
- #ifdef CONFIG_CIFS_SMB_DIRECT
- 	/*
-@@ -4833,11 +4841,14 @@ smb2_writev_callback(struct mid_q_entry *mid)
- 
- 	switch (mid->mid_state) {
- 	case MID_RESPONSE_RECEIVED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_progress);
- 		credits.value = le16_to_cpu(rsp->hdr.CreditRequest);
- 		credits.instance = server->reconnect_instance;
- 		result = smb2_check_receive(mid, server, 0);
--		if (result != 0)
-+		if (result != 0) {
-+			trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_bad);
- 			break;
-+		}
- 
- 		written = le32_to_cpu(rsp->DataLength);
- 		/*
-@@ -4859,15 +4870,23 @@ smb2_writev_callback(struct mid_q_entry *mid)
- 		}
- 		break;
- 	case MID_REQUEST_SUBMITTED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_req_submitted);
-+		__set_bit(NETFS_SREQ_NEED_RETRY, &wdata->subreq.flags);
-+		result = -EAGAIN;
-+		break;
- 	case MID_RETRY_NEEDED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_retry_needed);
- 		__set_bit(NETFS_SREQ_NEED_RETRY, &wdata->subreq.flags);
- 		result = -EAGAIN;
- 		break;
- 	case MID_RESPONSE_MALFORMED:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_malformed);
- 		credits.value = le16_to_cpu(rsp->hdr.CreditRequest);
- 		credits.instance = server->reconnect_instance;
--		fallthrough;
-+		result = -EIO;
-+		break;
- 	default:
-+		trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_unknown);
- 		result = -EIO;
- 		break;
- 	}
-@@ -4907,7 +4926,6 @@ smb2_writev_callback(struct mid_q_entry *mid)
- 			      server->credits, server->in_flight,
- 			      0, cifs_trace_rw_credits_write_response_clear);
- 	wdata->credits.value = 0;
--	trace_netfs_sreq(&wdata->subreq, netfs_sreq_trace_io_progress);
- 	cifs_write_subrequest_terminated(wdata, result ?: written);
- 	release_mid(mid);
- 	trace_smb3_rw_credits(rreq_debug_id, subreq_debug_index, 0,
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index c2d581429a7b..73e96ccbe830 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -50,12 +50,13 @@
- 
- #define netfs_rreq_traces					\
- 	EM(netfs_rreq_trace_assess,		"ASSESS ")	\
--	EM(netfs_rreq_trace_copy,		"COPY   ")	\
- 	EM(netfs_rreq_trace_collect,		"COLLECT")	\
- 	EM(netfs_rreq_trace_complete,		"COMPLET")	\
-+	EM(netfs_rreq_trace_copy,		"COPY   ")	\
- 	EM(netfs_rreq_trace_dirty,		"DIRTY  ")	\
- 	EM(netfs_rreq_trace_done,		"DONE   ")	\
- 	EM(netfs_rreq_trace_free,		"FREE   ")	\
-+	EM(netfs_rreq_trace_ki_complete,	"KI-CMPL")	\
- 	EM(netfs_rreq_trace_recollect,		"RECLLCT")	\
- 	EM(netfs_rreq_trace_redirty,		"REDIRTY")	\
- 	EM(netfs_rreq_trace_resubmit,		"RESUBMT")	\
-@@ -64,13 +65,15 @@
- 	EM(netfs_rreq_trace_unlock,		"UNLOCK ")	\
- 	EM(netfs_rreq_trace_unlock_pgpriv2,	"UNLCK-2")	\
- 	EM(netfs_rreq_trace_unmark,		"UNMARK ")	\
-+	EM(netfs_rreq_trace_unpause,		"UNPAUSE")	\
- 	EM(netfs_rreq_trace_wait_ip,		"WAIT-IP")	\
--	EM(netfs_rreq_trace_wait_pause,		"WT-PAUS")	\
--	EM(netfs_rreq_trace_wait_queue,		"WAIT-Q ")	\
-+	EM(netfs_rreq_trace_wait_pause,		"--PAUSED--")	\
-+	EM(netfs_rreq_trace_wait_quiesce,	"WAIT-QUIESCE")	\
-+	EM(netfs_rreq_trace_waited_ip,		"DONE-IP")	\
-+	EM(netfs_rreq_trace_waited_pause,	"--UNPAUSED--")	\
-+	EM(netfs_rreq_trace_waited_quiesce,	"DONE-QUIESCE")	\
- 	EM(netfs_rreq_trace_wake_ip,		"WAKE-IP")	\
- 	EM(netfs_rreq_trace_wake_queue,		"WAKE-Q ")	\
--	EM(netfs_rreq_trace_woke_queue,		"WOKE-Q ")	\
--	EM(netfs_rreq_trace_unpause,		"UNPAUSE")	\
- 	E_(netfs_rreq_trace_write_done,		"WR-DONE")
- 
- #define netfs_sreq_sources					\
-@@ -83,6 +86,7 @@
- 	E_(NETFS_WRITE_TO_CACHE,		"WRIT")
- 
- #define netfs_sreq_traces					\
-+	EM(netfs_sreq_trace_abandoned,		"ABNDN")	\
- 	EM(netfs_sreq_trace_add_donations,	"+DON ")	\
- 	EM(netfs_sreq_trace_added,		"ADD  ")	\
- 	EM(netfs_sreq_trace_cache_nowrite,	"CA-NW")	\
-@@ -90,6 +94,7 @@
- 	EM(netfs_sreq_trace_cache_write,	"CA-WR")	\
- 	EM(netfs_sreq_trace_cancel,		"CANCL")	\
- 	EM(netfs_sreq_trace_clear,		"CLEAR")	\
-+	EM(netfs_sreq_trace_consumed,		"CONSM")	\
- 	EM(netfs_sreq_trace_discard,		"DSCRD")	\
- 	EM(netfs_sreq_trace_donate_to_prev,	"DON-P")	\
- 	EM(netfs_sreq_trace_donate_to_next,	"DON-N")	\
-@@ -97,7 +102,12 @@
- 	EM(netfs_sreq_trace_fail,		"FAIL ")	\
- 	EM(netfs_sreq_trace_free,		"FREE ")	\
- 	EM(netfs_sreq_trace_hit_eof,		"EOF  ")	\
--	EM(netfs_sreq_trace_io_progress,	"IO   ")	\
-+	EM(netfs_sreq_trace_io_bad,		"I-BAD")	\
-+	EM(netfs_sreq_trace_io_malformed,	"I-MLF")	\
-+	EM(netfs_sreq_trace_io_unknown,		"I-UNK")	\
-+	EM(netfs_sreq_trace_io_progress,	"I-OK ")	\
-+	EM(netfs_sreq_trace_io_req_submitted,	"I-RSB")	\
-+	EM(netfs_sreq_trace_io_retry_needed,	"I-RTR")	\
- 	EM(netfs_sreq_trace_limited,		"LIMIT")	\
- 	EM(netfs_sreq_trace_need_clear,		"N-CLR")	\
- 	EM(netfs_sreq_trace_partial_read,	"PARTR")	\
-@@ -143,8 +153,8 @@
- 
- #define netfs_sreq_ref_traces					\
- 	EM(netfs_sreq_trace_get_copy_to_cache,	"GET COPY2C ")	\
--	EM(netfs_sreq_trace_get_resubmit,	"GET RESUBMIT")	\
--	EM(netfs_sreq_trace_get_submit,		"GET SUBMIT")	\
-+	EM(netfs_sreq_trace_get_resubmit,	"GET RESUBMT")	\
-+	EM(netfs_sreq_trace_get_submit,		"GET SUBMIT ")	\
- 	EM(netfs_sreq_trace_get_short_read,	"GET SHORTRD")	\
- 	EM(netfs_sreq_trace_new,		"NEW        ")	\
- 	EM(netfs_sreq_trace_put_abandon,	"PUT ABANDON")	\
-
+Steve
 
