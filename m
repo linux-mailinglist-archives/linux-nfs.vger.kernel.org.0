@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-12868-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12869-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B27E6AF664D
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jul 2025 01:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52B94AF664E
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jul 2025 01:33:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73FBC3B030A
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 23:33:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0116D3B6B08
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 23:33:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F1032248A4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA3CE248883;
 	Wed,  2 Jul 2025 23:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJ1l2XY2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTl50Il6"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0F62DE708
-	for <linux-nfs@vger.kernel.org>; Wed,  2 Jul 2025 23:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DAE2DE708
+	for <linux-nfs@vger.kernel.org>; Wed,  2 Jul 2025 23:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751499230; cv=none; b=J+//53O3LFTsbnFMzOdMAkQRz9waYmK/XqKDzVNr+BeF2YfDPT/mBZFWVFQbDjVB46Kahklbva+l+HTOAZ1GEJkzNIKQ6myQSmC17pYTJgr+a6cffsNYm0npu9nxP9HJMwGM0jBlDbbNUwprPArk5EsJ/lOGCIdYxmdNtX9v2I0=
+	t=1751499230; cv=none; b=b6CxsJu+jPOXAKkYPGEIJGB4nidAc6RGe6dJ6gzYr8XJD7Nop/nmDpmfKuk2exYq3NnOwnlj10N0H1XdcRBSA6StoHzYc8r844PMKRKUAS14kB6NSGAI3fINDzM1xZrRoRqvIcTvFqMBSkFkcrCGb/33931MIGCHOxLEBRq6yxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1751499230; c=relaxed/simple;
-	bh=cbhlsHwB43rV5qLT7qXZc2Nb8wC6T7on3BkvxzxmjmQ=;
+	bh=cviori8jwWZ6ibxw4p0o/S5kSHzIluCepsQNN5KpQ/g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hQTAMgO50wIwVfVX0MNolCJsTPcEYHx3c82rctxwIW2yOZpzn033GTg5rpjIGUAv0+/FL6OZlKXH3Iz5YV7opmkAAaPeNlGX9nVL6nLcjKdEWFb74t4IWwOhAiQqIVui8LmHnRQeV4z2ZcH9gxQFB7C9tpmx4NHMvF+55V7NRQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJ1l2XY2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C58D1C4CEEE;
-	Wed,  2 Jul 2025 23:33:48 +0000 (UTC)
+	 MIME-Version; b=INXeKz2EHNvUscOPRH/ShJKEXk1FTAL4k/1GC8QyFMR1DBiVJAJwc9IjD7MbwFy45+GS3JI9ve+TqzL7hahB3j87gPmtyIGTLM2q+kLjn1gT4ZUkEDq2I2Pl1HgKtbQfGGCGofcIU6dB7ONX+eSLIwvPhaCMnHL8j7SiebKS7KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTl50Il6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD256C4CEE7;
+	Wed,  2 Jul 2025 23:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751499229;
-	bh=cbhlsHwB43rV5qLT7qXZc2Nb8wC6T7on3BkvxzxmjmQ=;
+	s=k20201202; t=1751499230;
+	bh=cviori8jwWZ6ibxw4p0o/S5kSHzIluCepsQNN5KpQ/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GJ1l2XY2Mvg9MEo7LHvlgso1eYv6jY7kJK0WHJws9gDGX5f2sBmz+pO9Q8DaOICqv
-	 XDSV7ULO5NxLa3/DhrPY4C9J7niTNChzQhX8PQqb0co3vn2BADYl2ZDHMO6Hx88FnD
-	 wOWPe+qVikSAMfVa0dUAG2f0if3RHe6PCg2ZT+WsfDhDqtQ2XNaJY8HtwfPbhKmx7l
-	 lI5ULzOo8cP41AVigawo4cYd0Hcm+PQBy0PdMnWvBYjjZUrNQe9eEw7fvUT2nJXog3
-	 yih04pTqANNf+uLq/kbJPb/dAD9JwnJL6a5kP6stNWy2Wm6knRWX417iFg3N0asyk6
-	 TCRl+vREcg7Ow==
+	b=XTl50Il6mCm4kzLSoTMbhFVwRuALSQKFWMvnG67QgX5AuvU2JBTUNZ1CsiMhCjj+L
+	 VymzcjOz6Dn1yX4Xy/Ornx4gc6Ck/NLTKQmyH8YEg0LmyWiHkboVd++tJoNIp1uDhJ
+	 1SxHHmC7W7+zAejaw40bRpQPOk68hKJictdRzt2z6smOww3S3hUo5SfmTC4zvQcbrA
+	 X04gmRuWJJ3awlfxro0t26UueLIxGSFCKVZIUSMRvtH2YU1tbjxerZI+kGTWsC28ob
+	 W7aUNFWly28H8ZSpMnEWgj0MJRIt2+wgxSP09pEKrAuy4VG+9PnBuqmvPTbZQMj0hK
+	 2DmzzbsdmGYBg==
 From: Chuck Lever <cel@kernel.org>
 To: NeilBrown <neil@brown.name>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -49,9 +49,9 @@ To: NeilBrown <neil@brown.name>,
 	Tom Talpey <tom@talpey.com>
 Cc: <linux-nfs@vger.kernel.org>,
 	Chuck Lever <chuck.lever@oracle.com>
-Subject: [RFC PATCH 1/2] NFSD: Relocate the fh_want_write() and fh_drop_write() helpers
-Date: Wed,  2 Jul 2025 19:33:44 -0400
-Message-ID: <20250702233345.1128154-2-cel@kernel.org>
+Subject: [RFC PATCH 2/2] NFSD: Move the fh_getattr() helper
+Date: Wed,  2 Jul 2025 19:33:45 -0400
+Message-ID: <20250702233345.1128154-3-cel@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250702233345.1128154-1-cel@kernel.org>
 References: <20250702233345.1128154-1-cel@kernel.org>
@@ -65,101 +65,89 @@ Content-Transfer-Encoding: 8bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Clean up: These helpers are part of the NFSD file handle API.
-Relocate them to fs/nfsd/nfsfh.h.
+Clean up: The fh_getattr() function is part of NFSD's file handle
+API, so relocate it.
+
+I've made it an un-inlined function so that trace points and new
+functionality can easily be introduced. That increases the size of
+nfsd.ko by about a page on my x86_64 system (out of 26MB; compiled
+with -O2).
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfsfh.h | 37 +++++++++++++++++++++++++++++++++++++
- fs/nfsd/vfs.h   | 20 --------------------
- 2 files changed, 37 insertions(+), 20 deletions(-)
+ fs/nfsd/nfsfh.c | 23 +++++++++++++++++++++++
+ fs/nfsd/nfsfh.h |  1 +
+ fs/nfsd/vfs.h   | 13 -------------
+ 3 files changed, 24 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 1cf979722521..6f5255d1c190 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -14,6 +14,8 @@
- #include <linux/exportfs.h>
- #include <linux/nfs4.h>
- 
-+#include "export.h"
-+
- /*
-  * The file handle starts with a sequence of four-byte words.
-  * The first word contains a version number (1) and three descriptor bytes
-@@ -271,6 +273,41 @@ static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
- 	return true;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 4565112d0324..6f59f957407f 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -662,6 +662,29 @@ fh_update(struct svc_fh *fhp)
+ 	return nfserr_serverfault;
  }
  
 +/**
-+ * fh_want_write - Get write access to an export
-+ * @fhp: File handle of file to be written
++ * fh_getattr - Retrieve attributes on a local file
++ * @fhp: File handle of target file
++ * @stat: Caller-supplied kstat buffer to be filled in
 + *
-+ * Caller must invoke fh_drop_write() when its write operation
-+ * is complete.
-+ *
-+ * Returns 0 if the file handle's export can be written to. Otherwise
-+ * the export is not prepared for updates, and the returned negative
-+ * errno value reflects the reason for the failure.
++ * Returns nfs_ok on success, otherwise an NFS status code is
++ * returned.
 + */
-+static inline int fh_want_write(struct svc_fh *fhp)
++__be32 fh_getattr(const struct svc_fh *fhp, struct kstat *stat)
 +{
-+	int ret;
++	struct path p = {
++		.mnt		= fhp->fh_export->ex_path.mnt,
++		.dentry		= fhp->fh_dentry,
++	};
++	u32 request_mask = STATX_BASIC_STATS;
 +
-+	if (fhp->fh_want_write)
-+		return 0;
-+	ret = mnt_want_write(fhp->fh_export->ex_path.mnt);
-+	if (!ret)
-+		fhp->fh_want_write = true;
-+	return ret;
-+}
++	if (fhp->fh_maxsize == NFS4_FHSIZE)
++		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
 +
-+/**
-+ * fh_drop_write - Release write access on an export
-+ * @fhp: File handle of file on which fh_want_write() was previously called
-+ */
-+static inline void fh_drop_write(struct svc_fh *fhp)
-+{
-+	if (fhp->fh_want_write) {
-+		fhp->fh_want_write = false;
-+		mnt_drop_write(fhp->fh_export->ex_path.mnt);
-+	}
++	return nfserrno(vfs_getattr(&p, stat, request_mask,
++				    AT_STATX_SYNC_AS_STAT));
 +}
 +
  /**
-  * knfsd_fh_hash - calculate the crc32 hash for the filehandle
-  * @fh - pointer to filehandle
+  * fh_fill_pre_attrs - Fill in pre-op attributes
+  * @fhp: file handle to be updated
+diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+index 6f5255d1c190..5ef7191f8ad8 100644
+--- a/fs/nfsd/nfsfh.h
++++ b/fs/nfsd/nfsfh.h
+@@ -222,6 +222,7 @@ extern char * SVCFH_fmt(struct svc_fh *fhp);
+ __be32	fh_verify(struct svc_rqst *, struct svc_fh *, umode_t, int);
+ __be32	fh_verify_local(struct net *, struct svc_cred *, struct auth_domain *,
+ 			struct svc_fh *, umode_t, int);
++__be32	fh_getattr(const struct svc_fh *fhp, struct kstat *stat);
+ __be32	fh_compose(struct svc_fh *, struct svc_export *, struct dentry *, struct svc_fh *);
+ __be32	fh_update(struct svc_fh *);
+ void	fh_put(struct svc_fh *);
 diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index eff04959606f..4007dcbbbfef 100644
+index 4007dcbbbfef..0c0292611c6d 100644
 --- a/fs/nfsd/vfs.h
 +++ b/fs/nfsd/vfs.h
-@@ -160,26 +160,6 @@ __be32		nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
+@@ -160,17 +160,4 @@ __be32		nfsd_permission(struct svc_cred *cred, struct svc_export *exp,
  
  void		nfsd_filp_close(struct file *fp);
  
--static inline int fh_want_write(struct svc_fh *fh)
+-static inline __be32 fh_getattr(const struct svc_fh *fh, struct kstat *stat)
 -{
--	int ret;
+-	u32 request_mask = STATX_BASIC_STATS;
+-	struct path p = {.mnt = fh->fh_export->ex_path.mnt,
+-			 .dentry = fh->fh_dentry};
 -
--	if (fh->fh_want_write)
--		return 0;
--	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
--	if (!ret)
--		fh->fh_want_write = true;
--	return ret;
+-	if (fh->fh_maxsize == NFS4_FHSIZE)
+-		request_mask |= (STATX_BTIME | STATX_CHANGE_COOKIE);
+-
+-	return nfserrno(vfs_getattr(&p, stat, request_mask,
+-				    AT_STATX_SYNC_AS_STAT));
 -}
 -
--static inline void fh_drop_write(struct svc_fh *fh)
--{
--	if (fh->fh_want_write) {
--		fh->fh_want_write = false;
--		mnt_drop_write(fh->fh_export->ex_path.mnt);
--	}
--}
--
- static inline __be32 fh_getattr(const struct svc_fh *fh, struct kstat *stat)
- {
- 	u32 request_mask = STATX_BASIC_STATS;
+ #endif /* LINUX_NFSD_VFS_H */
 -- 
 2.50.0
 
