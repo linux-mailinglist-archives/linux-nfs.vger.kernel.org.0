@@ -1,278 +1,122 @@
-Return-Path: <linux-nfs+bounces-12854-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12855-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A43AAF1610
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 14:48:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DC1FDAF599A
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 15:40:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FA444A3C10
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 12:48:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA6D04A348F
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Jul 2025 13:36:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A680E271446;
-	Wed,  2 Jul 2025 12:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0762127D782;
+	Wed,  2 Jul 2025 13:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTtEH+AI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA15725BEF0
-	for <linux-nfs@vger.kernel.org>; Wed,  2 Jul 2025 12:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7EC279DDE;
+	Wed,  2 Jul 2025 13:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751460517; cv=none; b=BJxQD8LoIKmuYhRfx95uXn9c7/yMH0lVf/SH8lX4ibcfDhsrrLLFKD82ZfU1FVdXovnw+01jix4xiNQRqu+9jpQVtn2U/EGr2n1oXHoGGzIO8azYnzorwHGrpPWlNZ1ta8buHKsJU4z6IZ1jRZQDQfK2I3EYL8YN0rY5wEetApQ=
+	t=1751463199; cv=none; b=doo2gdLeC6+g1Rd+bYxk43x5XTafUqrzDph4o5GS/RSJFgD4YbP5gduzR8Zc9vU2HydsHengkoSzCZitSMZGJB85yN+qQIehqCJEpjnWe/MCQ4YPrwFEiTnfmNNIFdOCS8TygBeOk3DptBfAGBjyxjyt5BlEJ3E8QLFg5uK8grA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751460517; c=relaxed/simple;
-	bh=RZ+HOuuPNLiRXPbIyDv1HkRU7sH3chXL2LF56B0fVso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P0X3kRQr6hOgdM2X02FoGr0iNWDRtcC7vnqSKf758/AmRCJcEEXa9IgLJlibV7UqE4pTrIktpEE5A8UB0mIqvt/MeV/6FMyOkP8xC6vYSY78i/shCmbY3YQec0yAOl3uxUcC7m/eoajor/0t+pmTII4Al9lOH3x0CQoZ+tigPrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bXKTz2l2mz16THd;
-	Wed,  2 Jul 2025 20:49:27 +0800 (CST)
-Received: from kwepemg500017.china.huawei.com (unknown [7.202.181.81])
-	by mail.maildlp.com (Postfix) with ESMTPS id E350A1A0188;
-	Wed,  2 Jul 2025 20:48:30 +0800 (CST)
-Received: from [10.174.179.155] (10.174.179.155) by
- kwepemg500017.china.huawei.com (7.202.181.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 2 Jul 2025 20:48:30 +0800
-Message-ID: <df72ea71-019e-49a2-8e35-148f1aa67e54@huawei.com>
-Date: Wed, 2 Jul 2025 20:48:29 +0800
+	s=arc-20240116; t=1751463199; c=relaxed/simple;
+	bh=m73SrJe9xK4ND8q0YawG5Yh5XCh7jqbD7zPC22rjn1g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j8643mZ/QPICrA/gA5PGb7VIuvgK3ppgKZA6vAGvQQ6DM+rekr1vJ4FdeVBSHEnHI3EyMb04efaZLZT5Cfjka4tDEYojT0N95OFFgKUCkVH7VBlFHancwAu92tP/8uqdJuSTwvcT7+9PJhhQEb54T/n//NTW5RbC1Ex2MEsgjoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTtEH+AI; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so8607574e87.1;
+        Wed, 02 Jul 2025 06:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751463196; x=1752067996; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rMtgRnDiBAM4XVarNEG1UtN9Q6JeflagLHeOXHOrlZE=;
+        b=MTtEH+AIpOnyKncJM4mwdwhneood1XJ9o7VlJXXg3+NlsKn2Gkvm6lZiM9l2C0+FyR
+         wvA9JWwBnTf/pku7T4KJmq4JPi/SWH/KYlwLkh+nqZv5Tt9AnEPlb3Y0jWGR464l8gHF
+         I732qgXBEvp5eAPgmLsDVzHedO4gf6ByvImh0dbr738QzS15HbNoV8nqFwoM8+gow96A
+         Ba0Ke3ST6pT0oEMusQyrSQ0RvPsqkIXGAVS1YbBZhc8tHbFRnmI45xon4zjS6IPuiaPw
+         PZvbhqD6DWrF5JEm1ukl4ElYPBP2NGVsoV3pRjGlGGIiYsZy4LDw5DVjPjyWKzFAnkI4
+         GvJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751463196; x=1752067996;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rMtgRnDiBAM4XVarNEG1UtN9Q6JeflagLHeOXHOrlZE=;
+        b=tQOOxniFlDq8YkHtAniFNL0yGtutwVbbFbBPMdL7yGHchBY5cV7qHW89X4qoGiiLqC
+         vh3EtuYwgXslfaCi55qFIdzj9EsDxf9/7bpXc2LAgU0a3Gq3jY0zTbtrUVPEb2GuKlI5
+         m5TpprVEgci7jzNbo7Yd8ZaAufSgZydihBpB7Tyw53O1ZYCW8FlR10QlFjue7rPw8FhY
+         vvWS4qFPCmWYADcq8Gmh5tvFteuWthNTTzZOs+1R1r5FZP/pDXbEjGX38cJATfbOOHW7
+         7++SBVSdI+3Udpo7KfNH8Kr2rTJ2TEwiL1pjCG7kBS2tVWfN2lVzTcSe+7bR4HS9Ifbp
+         cK8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXvu2UCKCCeX9PRZPZaNzegidMt7jW/OVugrXaym3XfHcBl4fs+ZgCzegKfacta76uPT/JS86nc42TTNKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhdsomW7mTPCJ+/2tX8zEopQ0oe5QjzwU3KoV2Nbqf7NyNYPta
+	BaqSX9ogEWxcA2T52KojspKepZ+9ijVT1S1ixZ0XmcAmj5X+t5fAJxXA
+X-Gm-Gg: ASbGncsotR9mNttgJYdwABkH1a/yPLGmj5zIyfIM85FiMsrZp2ymDb0DPgkMOWdeSft
+	/ORUhnavatTkUQta1x/HTYelYMn8HZh/LAKgyormhTEdWJbetTLl2Y6VKOMFAr1ha29ioNJRMsq
+	VMbrrE9bfZAG258pevznykPjyAJ3FXUdTB/wpaDCmjmCyU4rUdJ9bHxTcVgeohhGozBeDCReoZS
+	Q4EHT5Elkw72ON0MsfdJompn5DGigTXAh+HHWNPlvrZ0A3uvSH36sm7FWWIDbk7W2/WlzgndTQO
+	HTsd+nMW9Q/qJ/2FPjaJGFPvTDh4YfMZ8YVacHciTSiBIbtlzYBbAYDG7Xnbfkn1uJj220E61RH
+	6lz5jUsC0NNHA1w==
+X-Google-Smtp-Source: AGHT+IH6PzjiqqGXg3RonE8QCL7askIRZwW0UMnw53TSZ2jCDf0Z/9L8ruPAnI1nkkIVpcqHhmg8oQ==
+X-Received: by 2002:ac2:4f13:0:b0:553:2159:8716 with SMTP id 2adb3069b0e04-55628f1c34bmr1082796e87.26.1751463195923;
+        Wed, 02 Jul 2025 06:33:15 -0700 (PDT)
+Received: from SC-WS-02452.corp.sbercloud.ru ([85.174.201.64])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5550b24e431sm2153712e87.72.2025.07.02.06.33.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jul 2025 06:33:15 -0700 (PDT)
+From: Sergey Bashirov <sergeybashirov@gmail.com>
+To: Christoph Hellwig <hch@infradead.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konstantin Evtushenko <koevtushenko@yandex.com>,
+	Sergey Bashirov <sergeybashirov@gmail.com>
+Subject: [PATCH] pNFS: Fix disk addr range check in block/scsi layout
+Date: Wed,  2 Jul 2025 16:32:21 +0300
+Message-ID: <20250702133226.212537-1-sergeybashirov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH RFT v2] nfsd: provide locking for v4_end_grace
-To: NeilBrown <neil@brown.name>
-CC: <linux-nfs@vger.kernel.org>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Chuck Lever
-	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, yangerkun
-	<yangerkun@huawei.com>, "zhangyi (F)" <yi.zhang@huawei.com>, Hou Tao
-	<houtao1@huawei.com>, "chengzhihao1@huawei.com" <chengzhihao1@huawei.com>,
-	"yukuai (C)" <yukuai3@huawei.com>
-References: <175136659151.565058.6474755472267609432@noble.neil.brown.name>
- <175144911127.565058.5990359597048022103@noble.neil.brown.name>
-From: Li Lingfeng <lilingfeng3@huawei.com>
-In-Reply-To: <175144911127.565058.5990359597048022103@noble.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemg500017.china.huawei.com (7.202.181.81)
 
-Hi Neil,
+At the end of the isect translation, disc_addr represents the physical
+disk offset. Thus, end calculated from disk_addr is also a physical disk
+offset. Therefore, range checking should be done using map->disk_offset,
+not map->start.
 
-Thank you for the patch. I have adapted and applied this patch, then
-reproduced the original issue and verified the fix on both the
-linux-5.10.y (base commit ecbc622e0f52) and our internal 5.10-based
-version. Based on my testing, the issue appears resolved in both
-environments, and I observed no new issues during the verification
-process.
-Appreciate your help with this!
+Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+---
+ fs/nfs/blocklayout/blocklayout.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Lingfeng.
+diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
+index 47189476b553..5d6edafbed20 100644
+--- a/fs/nfs/blocklayout/blocklayout.c
++++ b/fs/nfs/blocklayout/blocklayout.c
+@@ -149,8 +149,8 @@ do_add_page_to_bio(struct bio *bio, int npg, enum req_op op, sector_t isect,
+ 
+ 	/* limit length to what the device mapping allows */
+ 	end = disk_addr + *len;
+-	if (end >= map->start + map->len)
+-		*len = map->start + map->len - disk_addr;
++	if (end >= map->disk_offset + map->len)
++		*len = map->disk_offset + map->len - disk_addr;
+ 
+ retry:
+ 	if (!bio) {
+-- 
+2.43.0
 
-在 2025/7/2 17:38, NeilBrown 写道:
-> On Wed, 02 Jul 2025, Li Lingfeng wrote:
->> Hi Neil,
->>
->> Thank you for the patch. I tested it on mainline and can confirm it
->> resolves the issue I encountered without triggering any deadlocks.
->> The approach looks solid, and I'll have my colleagues review it as well.
-> That's really good news - thanks.  And thanks for getting multiple
-> reviews - there could easily be details that I have missed.
->
->> However, during validation on our internal 5.10-based kernel (which
->> backported disable_delayed_work/disable_delayed_work_sync), I observed an
->> unexpected behavior: the laundromat_work still executed after calling
->> disable_delayed_work and before enable_delayed_work could be invoked.
->> I'll investigate why this occurred.
->>
->> As you mentioned, disable_delayed_work_sync() was introduced in v6.10.
->> Do you have plans to provide a backport solution for earlier kernel?
-> The following is how I would do it prior to 6.10.  It might make sense
-> to submit this upstream with the 'stable' tag, and then add a patch
-> which reverts to the simpler version for upstream only.
->
-> Let me know if this works on 5.10.
->
-> Thanks,
-> NeilBrown
->
->
-> Subject: [PATCH] nfsd: provide locking for v4_end_grace
->
-> Writing to v4_end_grace can race with server shutdown and result in
-> memory being accessed after it was freed - reclaim_str_hashtbl in
-> particularly.
->
-> We cannot hold nfsd_mutex across the nfsd4_end_grace() call as that is
-> held while client_tracking_op->init() is called and that can wait for
-> an upcall to nfsdcltrack which can write to v4_end_grace, resulting in a
-> deadlock.
->
-> nfsd4_end_grace() is also called by the landromat work queue and this
-> doesn't require locking as server shutdown will stop the work and wait
-> for it before freeing anything that nfsd4_end_grace() might access.
->
-> However, we must be sure that writing to v4_end_grace doesn't restart
-> the work item after shutdown has already waited for it.  For this we
-> add a new flag protected with nn->client_lock.  It is set only while it
-> is safe to make client tracking calls, and v4_end_grace only schedules
-> work while the flag is set with the spinlock held.
->
-> So this patch adds a nfsd_net field "client_tracking_active" which is
-> set as described.  Another field "grace_end_forced", is set when
-> v4_end_grace is written.  After this is set, and providing
-> client_tracking_active is set, the laundromat is scheduled.
-> This "grace_end_forced" field bypasses other checks for whether the
-> grace period has finished.
->
-> This resolves a race which can result in use-after-free.
->
-> Reported-by: Li Lingfeng <lilingfeng3@huawei.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: NeilBrown <neil@brown.name>
-> ---
->   fs/nfsd/netns.h     |  2 ++
->   fs/nfsd/nfs4state.c | 29 +++++++++++++++++++++++++++--
->   fs/nfsd/nfsctl.c    |  6 +++---
->   fs/nfsd/state.h     |  2 +-
->   4 files changed, 33 insertions(+), 6 deletions(-)
->
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 3e2d0fde80a7..fe8338735e7c 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -66,6 +66,8 @@ struct nfsd_net {
->   
->   	struct lock_manager nfsd4_manager;
->   	bool grace_ended;
-> +	bool grace_end_forced;
-> +	bool client_tracking_active;
->   	time64_t boot_time;
->   
->   	struct dentry *nfsd_client_dir;
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index d5694987f86f..d17a40f95eb2 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -84,7 +84,7 @@ static u64 current_sessionid = 1;
->   /* forward declarations */
->   static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner);
->   static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
-> -void nfsd4_end_grace(struct nfsd_net *nn);
-> +static void nfsd4_end_grace(struct nfsd_net *nn);
->   static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cpntf_state *cps);
->   static void nfsd4_file_hash_remove(struct nfs4_file *fi);
->   static void deleg_reaper(struct nfsd_net *nn);
-> @@ -6458,7 +6458,7 @@ nfsd4_renew(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->   	return nfs_ok;
->   }
->   
-> -void
-> +static void
->   nfsd4_end_grace(struct nfsd_net *nn)
->   {
->   	/* do nothing if grace period already ended */
-> @@ -6491,6 +6491,20 @@ nfsd4_end_grace(struct nfsd_net *nn)
->   	 */
->   }
->   
-> +bool
-> +nfsd4_force_end_grace(struct nfsd_net *nn)
-> +{
-> +	if (!nn->client_tracking_ops)
-> +		return false;
-> +	spin_lock(&nn->client_lock);
-> +	if (nn->client_tracking_active) {
-> +		nn->grace_end_forced = true;
-> +		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> +	}
-> +	spin_unlock(&nn->client_lock);
-> +	return true;
-> +}
-> +
->   /*
->    * If we've waited a lease period but there are still clients trying to
->    * reclaim, wait a little longer to give them a chance to finish.
-> @@ -6500,6 +6514,8 @@ static bool clients_still_reclaiming(struct nfsd_net *nn)
->   	time64_t double_grace_period_end = nn->boot_time +
->   					   2 * nn->nfsd4_lease;
->   
-> +	if (nn->grace_end_forced)
-> +		return false;
->   	if (nn->track_reclaim_completes &&
->   			atomic_read(&nn->nr_reclaim_complete) ==
->   			nn->reclaim_str_hashtbl_size)
-> @@ -8807,6 +8823,8 @@ static int nfs4_state_create_net(struct net *net)
->   	nn->unconf_name_tree = RB_ROOT;
->   	nn->boot_time = ktime_get_real_seconds();
->   	nn->grace_ended = false;
-> +	nn->grace_end_forced = false;
-> +	nn->client_tracking_active = false;
->   	nn->nfsd4_manager.block_opens = true;
->   	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
->   	INIT_LIST_HEAD(&nn->client_lru);
-> @@ -8887,6 +8905,10 @@ nfs4_state_start_net(struct net *net)
->   		return ret;
->   	locks_start_grace(net, &nn->nfsd4_manager);
->   	nfsd4_client_tracking_init(net);
-> +	/* safe for laundromat to run now */
-> +	spin_lock(&nn->client_lock);
-> +	nn->client_tracking_active = true;
-> +	spin_unlock(&nn->client_lock);
->   	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
->   		goto skip_grace;
->   	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
-> @@ -8935,6 +8957,9 @@ nfs4_state_shutdown_net(struct net *net)
->   
->   	shrinker_free(nn->nfsd_client_shrinker);
->   	cancel_work_sync(&nn->nfsd_shrinker_work);
-> +	spin_lock(&nn->client_lock);
-> +	nn->client_tracking_active = false;
-> +	spin_unlock(&nn->client_lock);
->   	cancel_delayed_work_sync(&nn->laundromat_work);
->   	locks_end_grace(&nn->nfsd4_manager);
->   
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 3f3e9f6c4250..658f3f86a59f 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1082,10 +1082,10 @@ static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t size)
->   		case 'Y':
->   		case 'y':
->   		case '1':
-> -			if (!nn->nfsd_serv)
-> -				return -EBUSY;
->   			trace_nfsd_end_grace(netns(file));
-> -			nfsd4_end_grace(nn);
-> +			if (!nfsd4_force_end_grace(nn))
-> +				return -EBUSY;
-> +
->   			break;
->   		default:
->   			return -EINVAL;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 1995bca158b8..05eabc69de40 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -836,7 +836,7 @@ static inline void nfsd4_revoke_states(struct net *net, struct super_block *sb)
->   #endif
->   
->   /* grace period management */
-> -void nfsd4_end_grace(struct nfsd_net *nn);
-> +bool nfsd4_force_end_grace(struct nfsd_net *nn);
->   
->   /* nfs4recover operations */
->   extern int nfsd4_client_tracking_init(struct net *net);
->
-> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-Tested-by: Li Lingfeng <lilingfeng3@huawei.com>
 
