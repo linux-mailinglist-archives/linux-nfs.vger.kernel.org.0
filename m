@@ -1,39 +1,39 @@
-Return-Path: <linux-nfs+bounces-12884-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12885-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F4F3AF8454
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jul 2025 01:38:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A21AAF8472
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Jul 2025 01:44:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1B65581E7E
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jul 2025 23:38:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0839716F33F
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Jul 2025 23:44:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345892BEC20;
-	Thu,  3 Jul 2025 23:37:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC67F2D3A68;
+	Thu,  3 Jul 2025 23:44:25 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from neil.brown.name (neil.brown.name [103.29.64.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4704D2BEFEF;
-	Thu,  3 Jul 2025 23:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF1612CDAE;
+	Thu,  3 Jul 2025 23:44:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751585862; cv=none; b=klmhsA3YSyPeerjxcxENY2t22gCksPUeA9L7DYsp2cZe45TTOUGa1Q2aZv0SZAU/POdGO793S1f/7QLBCHuN7HHwUutVB30PdZYvKRI5W7zet/XiBzn/H5ashIGvETX9ByM+lEo2NNfgDue93lXdxoC37xnWqH7kh8agSKmJ88A=
+	t=1751586265; cv=none; b=BFInycYK1TRGXzAoU162KI29XqXy6Q0QCdj2f7ErGNvZf3z/96tV+n2HuT1wjGbCOzBgAyxOd9oRdBEpqRcdAgb69oC3Qi0usIiy21KnRX+NVPrvtCQPFiQGhpo91xdRZcCfspX5x5S0lhStgFufyOEXT0N+XWjwDa5GeiIbnsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751585862; c=relaxed/simple;
-	bh=gWl5+RALBSHUZ5H8Q0OFt0AOy4pyx/H64SvNR+JgFpI=;
+	s=arc-20240116; t=1751586265; c=relaxed/simple;
+	bh=C5n/3+Yc/0ULIWRm+2EP8wuC5UaJgRnVLl/seRFTxzA=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=u01W94bBSRgk+2xAkU9TdBYRyoik0wYZnY0zhJZY2tpPY91CIOiqm7x4BCPEqdXMoVm0BNUmpnLRpgy6sFWa+i0dTZfBBOouHS6P7fw9CQ/AWfNchu7YEbUV1v+Lb2NaG6coR8bw1nZ26ozuDbp/kV/h35r57lMkfvFTA2WbG0Y=
+	 References:Date:Message-id; b=QHjPuPtEiNmfBA/00gpeoinS4xT+2z802Lvkf4UmKaMt80wy4JAqPzPlxNy+li7MEmE/aDuglQZG12Tn61MAVNkDiF15IKyh4xTLqDQhBt6s475jMXqkNbw69Bbksa7cNiOtqX4A4xTtGFBBnF3EY1ODP4gPqzgtBsLJBCGAB9A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
 Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
 	by neil.brown.name with esmtp (Exim 4.95)
 	(envelope-from <mr@neil.brown.name>)
-	id 1uXTRN-0018qw-FQ;
-	Thu, 03 Jul 2025 23:34:11 +0000
+	id 1uXTbA-0019F8-0Y;
+	Thu, 03 Jul 2025 23:44:12 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -50,99 +50,102 @@ Cc: "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
  "Tom Talpey" <tom@talpey.com>, "Mike Snitzer" <snitzer@kernel.org>,
  linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
  "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH RFC 1/2] sunrpc: delay pc_release callback until after
- sending a reply
-In-reply-to: <20250703-nfsd-testing-v1-1-cece54f36556@kernel.org>
+Subject: Re: [PATCH RFC 2/2] nfsd: call generic_fadvise after v3 READ, stable
+ WRITE or COMMIT
+In-reply-to: <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
 References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>,
- <20250703-nfsd-testing-v1-1-cece54f36556@kernel.org>
-Date: Fri, 04 Jul 2025 09:33:33 +1000
-Message-id: <175158561386.565058.1936125782874530200@noble.neil.brown.name>
+ <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
+Date: Fri, 04 Jul 2025 09:44:10 +1000
+Message-id: <175158625070.565058.13878074995107810351@noble.neil.brown.name>
 
 On Fri, 04 Jul 2025, Jeff Layton wrote:
-> The server-side sunrpc code currently calls pc_release before sending
-> the reply. A later nfsd patch will change some pc_release callbacks to
-> do extra work to clean the pagecache. There is no need to delay sending
-> the reply for this, however.
+> Recent testing has shown that keeping pagecache pages around for too
+> long can be detrimental to performance with nfsd. Clients only rarely
+> revisit the same data, so the pages tend to just hang around.
 >=20
-> Change svc_process and svc_process_bc to call pc_release after sending
-> the reply instead of before.
+> This patch changes the pc_release callbacks for NFSv3 READ, WRITE and
+> COMMIT to call generic_fadvise(..., POSIX_FADV_DONTNEED) on the accessed
+> range.
 >=20
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > ---
->  net/sunrpc/svc.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+>  fs/nfsd/debugfs.c  |  2 ++
+>  fs/nfsd/nfs3proc.c | 59 +++++++++++++++++++++++++++++++++++++++++++++-----=
+----
+>  fs/nfsd/nfsd.h     |  1 +
+>  fs/nfsd/nfsproc.c  |  4 ++--
+>  fs/nfsd/vfs.c      | 21 ++++++++++++++-----
+>  fs/nfsd/vfs.h      |  5 +++--
+>  fs/nfsd/xdr3.h     |  3 +++
+>  7 files changed, 77 insertions(+), 18 deletions(-)
 >=20
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index b1fab3a6954437cf751e4725fa52cfc83eddf2ab..103bb6ba8e140fdccd6cab124e7=
-15caeb41bb445 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1426,8 +1426,6 @@ svc_process_common(struct svc_rqst *rqstp)
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 84b0c8b559dc90bd5c2d9d5e15c8e0682c0d610c..b007718dd959bc081166ec84e06=
+f577a8fc2b46b 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -44,4 +44,6 @@ void nfsd_debugfs_init(void)
 > =20
->  	/* Call the function that processes the request. */
->  	rc =3D process.dispatch(rqstp);
-> -	if (procp->pc_release)
-> -		procp->pc_release(rqstp);
->  	xdr_finish_decode(xdr);
+>  	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
+>  			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
+> +	debugfs_create_bool("enable-fadvise-dontneed", 0644,
+> +			    nfsd_top_dir, &nfsd_enable_fadvise_dontneed);
+>  }
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index b6d03e1ef5f7a5e8dd111b0d56c061f1e91abff7..11261cf67ea817ec566626f08b7=
+33e09c9e121de 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/ext2_fs.h>
+>  #include <linux/magic.h>
+>  #include <linux/namei.h>
+> +#include <linux/fadvise.h>
 > =20
->  	if (!rc)
-> @@ -1526,6 +1524,14 @@ static void svc_drop(struct svc_rqst *rqstp)
->  	trace_svc_drop(rqstp);
+>  #include "cache.h"
+>  #include "xdr3.h"
+> @@ -206,11 +207,25 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
+> =20
+>  	fh_copy(&resp->fh, &argp->fh);
+>  	resp->status =3D nfsd_read(rqstp, &resp->fh, argp->offset,
+> -				 &resp->count, &resp->eof);
+> +				 &resp->count, &resp->eof, &resp->nf);
+>  	resp->status =3D nfsd3_map_status(resp->status);
+>  	return rpc_success;
 >  }
 > =20
-> +static void svc_release_rqst(struct svc_rqst *rqstp)
+> +static void
+> +nfsd3_release_read(struct svc_rqst *rqstp)
 > +{
-> +	const struct svc_procedure *procp =3D rqstp->rq_procinfo;
+> +	struct nfsd3_readargs *argp =3D rqstp->rq_argp;
+> +	struct nfsd3_readres *resp =3D rqstp->rq_resp;
 > +
-> +	if (procp && procp->pc_release)
-> +		procp->pc_release(rqstp);
-> +}
-> +
->  /**
->   * svc_process - Execute one RPC transaction
->   * @rqstp: RPC transaction context
-> @@ -1533,7 +1539,7 @@ static void svc_drop(struct svc_rqst *rqstp)
->   */
->  void svc_process(struct svc_rqst *rqstp)
->  {
-> -	struct kvec		*resv =3D &rqstp->rq_res.head[0];
-> +	struct kvec			*resv =3D &rqstp->rq_res.head[0];
+> +	if (nfsd_enable_fadvise_dontneed && resp->status =3D=3D nfs_ok)
+> +		generic_fadvise(nfsd_file_file(resp->nf), argp->offset, resp->count,
+> +				POSIX_FADV_DONTNEED);
+> +	if (resp->nf)
+> +		nfsd_file_put(resp->nf);
+> +	fh_put(&resp->fh);
 
-Commas and Tabs - you can never really have enough of them, can you?
+This looks wrong - testing resp->nf after assuming it was non-NULL.
+I don't think it *is* wrong because ->state =3D=3D nfs_ok ensures
+->nf is valid. But still....
 
->  	__be32 *p;
-> =20
->  #if IS_ENABLED(CONFIG_FAIL_SUNRPC)
-> @@ -1565,9 +1571,12 @@ void svc_process(struct svc_rqst *rqstp)
->  	if (unlikely(*p !=3D rpc_call))
->  		goto out_baddir;
-> =20
-> -	if (!svc_process_common(rqstp))
-> +	if (!svc_process_common(rqstp)) {
-> +		svc_release_rqst(rqstp);
->  		goto out_drop;
-> +	}
->  	svc_send(rqstp);
-> +	svc_release_rqst(rqstp);
->  	return;
+How about:
 
-Should we, as a general rule, avoid calling any cleanup function more
-than once?  When tempted, we DEFINE_FREE() a cleanup function and
-declare the variable appropriately.
+    fh_put(resp->fh);
+    if (!resp->nf)
+         return;
+    if (nfsd_enable_fadvise_dontneed)
+	generic_fadvise(nfsd_file_file(resp->nf), argp->offset, resp->count,
+		POSIX_FADV_DONTNEED);
+    nfsd_file_put(resp->nf);
 
-Though in this case it might be easier to:
+??
+Note that we don't test ->status because that is identical to testing ->nf.
+Ditto for other release functions.
 
-  if (svc_process_common(rqstp))
-       svc_send(rqstp);
-  else
-       svc_drop(rqstp);
-  svc_rlease_rqst(rqstp);
-  return;
-
-svc_process_bc() is a little more awkward.
-
-But in general, delaying the release function until after the send seems
-sound, and this patches appears to do it corretly.
+Otherwise it makes sense for exploring how to optimise IO.
 
 Reviewed-by: NeilBrown <neil@brown.name>
 
