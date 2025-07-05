@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-12908-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12909-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 453BDAF9FD1
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 13:21:48 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86BA8AF9FD8
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 13:33:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEC303BDC84
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 11:21:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 177FE1C265BD
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 11:33:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68FB5231842;
-	Sat,  5 Jul 2025 11:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455522135AD;
+	Sat,  5 Jul 2025 11:33:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em88yG3Q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sq2XZydh"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE319DF8D;
-	Sat,  5 Jul 2025 11:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B416BE5E;
+	Sat,  5 Jul 2025 11:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751714504; cv=none; b=HBDxH99cLDzCZ8trYGAPcVHP1Y/EFadm1z/ZrJ/Xxy+R3spe6WK4163AM7qjRuZQzw2NgT8AOyEDC2ifZkJp2cQRoFn0J6TGTpK5fqAiZPprlz3RySNFrGx73phGqgnVrpz5Sb4VWWgOXAciBwp6rXrvxLoQxRqpsdN4lVw3ZCQ=
+	t=1751715181; cv=none; b=r6M1QfWxSAJCOwjwllBSB2Kv86bixTSeREfeW2Gq9Px7dOGCxvMLZPjRgRa+04aoXs1QCodTUJkfq/YTI/uafQ3Q7dA7xld7i+bUYVGzbKRuRwQte6TseTGOtEqHcx283+bb3D2/s38Xybi2vjkODVnelLt0n5HXWjhScfpR2wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751714504; c=relaxed/simple;
-	bh=R+wZifGKPfk5sCAFmw6R69O/0PTZ+aeX4vAXrUaUkkw=;
+	s=arc-20240116; t=1751715181; c=relaxed/simple;
+	bh=i9Wq09osK8xb4YnzqvQDfeGZEgMDZE720RClxr++qOg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ev85fduun41B5tq17SZJdXnHZRrws0vk7UGvUKJ/PKtETn0B+1mJxhCQiu92WPdGQ2obgv+yDD4fdIt5L0Q2oIdYW6I8ChweyUULunUBCEkBkkyREQoHxAWknWP4OZwoJw2P54qh0Alq8TVxHFGXVDx0Oniz9iO7Eni0+HKnemE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=em88yG3Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F56FC4CEE7;
-	Sat,  5 Jul 2025 11:21:43 +0000 (UTC)
+	 Content-Type:MIME-Version; b=npLz+O09FEuYctnFmeADZwJlwPOrPlItGqpud9JvaECij5XiOBBFDbW59XW2hIdpL4q8NnF4jbfn0J5buSmdYj6z1YkPUl8PenY+Pxdnqsn3Acno1kKp1VL8aWAOtSN+axHgthwtlbW/ALaaCNUW+JVSrtCrPAIrg39t6eLFxgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sq2XZydh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBF3C4CEE7;
+	Sat,  5 Jul 2025 11:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751714504;
-	bh=R+wZifGKPfk5sCAFmw6R69O/0PTZ+aeX4vAXrUaUkkw=;
+	s=k20201202; t=1751715180;
+	bh=i9Wq09osK8xb4YnzqvQDfeGZEgMDZE720RClxr++qOg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=em88yG3Qwmz+hGyAGSB+LvuK6xy8USIOuN8o1OfnmaJCEV7e+AegNZ4p8MU5rtuRX
-	 SK6+YstPZ/7TBOTB2tSKz5j/uLwLxhgBbbIGbj7WiU0yp7qmFPdQxjgwfSmkpUl7WP
-	 Pyk8YVBt/RK8DngNU20RyHTNRQCEDMkTrci3sF4RYyA+LSVDFGW3DYQjKOp43FJuyT
-	 Xrc16AmYYYzX056SR525VXcvamvnXexiSYZW5Lbv6q4MU9+bVzyl7u4KzWF5m7jXMn
-	 +fW16xXardxQZu5yZGPWe3JvJgp8B7dsiBHxUzG56uELJjnkBtG8c9RDJKW6cKa3U8
-	 pwpGiZHZ6XBfA==
-Message-ID: <f509f9ca3cf66c03f9c4175b24deb28976933dba.camel@kernel.org>
-Subject: Re: [PATCH RFC 2/2] nfsd: call generic_fadvise after v3 READ,
- stable WRITE or COMMIT
+	b=Sq2XZydh3dBN3IxLAMxmAjQmovFZJl6+TNVb02yAOFEK00PWk5TnDxV0m+2qfVtQb
+	 QmDG1jdPjROyIps8hQHKnNqTqfOGtlU/ocB2jfM4jHiADnjBZGOFbsY3f//FJJCMfj
+	 NtK/nHxQ1PMCf0j082e3+lxnqJJ8ChwpBiS5M4fmVVcr0PEHTSbXCYsXVZip8ChPy8
+	 yjodNm+AR1tg+61d3rjj/Mjqk5Ch42hs0PBj1MTTVDhWOb/Vwl88JMiC+LS9RY4vMd
+	 bVUKgHGDVnFWzg9JKKrWXoLJrvMGZ35FLtgMC1wqehWUs8J83bgxfKDZYgD+xuCtTu
+	 6tT9kZYYKpAug==
+Message-ID: <fbe5d61013efe48d0cd89c16a933a9c925a8ea86.camel@kernel.org>
+Subject: Re: [PATCH RFC 0/2] nfsd: issue POSIX_FADV_DONTNEED after
+ READ/WRITE/COMMIT
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neil@brown.name>
 Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
@@ -51,12 +51,10 @@ Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
  <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
  <tom@talpey.com>, Mike Snitzer <snitzer@kernel.org>,
  linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Sat, 05 Jul 2025 07:21:42 -0400
-In-Reply-To: <175161401003.565058.4274944923143864883@noble.neil.brown.name>
+Date: Sat, 05 Jul 2025 07:32:58 -0400
+In-Reply-To: <175158460396.565058.1455251307012063937@noble.neil.brown.name>
 References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
-	, <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
-	, <175158625070.565058.13878074995107810351@noble.neil.brown.name>
-	 <175161401003.565058.4274944923143864883@noble.neil.brown.name>
+	 <175158460396.565058.1455251307012063937@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -141,23 +139,46 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-07-04 at 17:26 +1000, NeilBrown wrote:
-> On Fri, 04 Jul 2025, NeilBrown wrote:
-> >=20
-> > Otherwise it makes sense for exploring how to optimise IO.
-> >=20
-> > Reviewed-by: NeilBrown <neil@brown.name>
+On Fri, 2025-07-04 at 09:16 +1000, NeilBrown wrote:
+> On Fri, 04 Jul 2025, Jeff Layton wrote:
+> > Chuck and I were discussing RWF_DONTCACHE and he suggested that this
+> > might be an alternate approach. My main gripe with DONTCACHE was that i=
+t
+> > kicks off writeback after every WRITE operation. With NFS, we generally
+> > get a COMMIT operation at some point. Allowing us to batch up writes
+> > until that point has traditionally been considered better for
+> > performance.
 >=20
-> Actually - I take that back.  generic_fadvise() is the wrong interface.
-> It is for filesystems to use if the don't have any special requirements,
-> and for vfs_fadvise() to use if the file system hasn't give a function
-> to use.
+> I wonder if that traditional consideration is justified, give your
+> subsequent results.  The addition of COMMIT in v3 allowed us to both:
+>  - delay kicking off writes
+>  - not wait for writes to complete
 >=20
-> nfsd should be calling vfs_fadvise().
+> I think the second was always primary.  Maybe we didn't consider the
+> value of the first enough.
+> Obviously the client caches writes and delays the start of writeback.
+> Adding another delay on the serve side does not seem to have a clear
+> justification.  Maybe we *should* kick-off writeback immediately.  There
+> would still be opportunity for subsequent WRITE requests to be merged
+> into the writeback queue.
+>=20
 
-Good catch. I'll fix that up in the next version.
+That is the fundamental question: should we delay writeback or not? It
+seems like delaying it is probably best, even in the modern era with
+SSDs, but we do need more numbers here (ideally across a range of
+workloads).
 
-Thanks,
+> Ideally DONTCACHE should only affect cache usage and the latency of
+> subsequence READs.  It shouldn't affect WRITE behaviour.
+>=20
+
+It definitely does affect it today. The ideal thing IMO would be to
+just add the dropbehind flag to the folios on writes but not call
+filemap_fdatawrite_range_kick() on every write operation.
+
+After a COMMIT the pages should be clean and the vfs_fadvise call
+should just drop them from the cache, so this approach shouldn't
+materially change how writeback behaves.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
