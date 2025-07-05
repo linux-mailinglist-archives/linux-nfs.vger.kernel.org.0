@@ -1,58 +1,62 @@
-Return-Path: <linux-nfs+bounces-12907-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12908-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEAB6AF9FCF
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 13:20:26 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 453BDAF9FD1
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 13:21:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48B0B561FF1
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 11:20:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BEC303BDC84
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Jul 2025 11:21:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0040200B99;
-	Sat,  5 Jul 2025 11:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68FB5231842;
+	Sat,  5 Jul 2025 11:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/X5ptyX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="em88yG3Q"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B41819DF8D
-	for <linux-nfs@vger.kernel.org>; Sat,  5 Jul 2025 11:20:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE319DF8D;
+	Sat,  5 Jul 2025 11:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751714423; cv=none; b=V2Xxw/bhCy/8mUKLxvWuqojlT+Cyij/rAPDiKGUKwad5/hluT94+C17I+QvjQOvnxAcQ4bbnCxlfVvOJuRwIg4c+I3Ap73zaohkGjtE39kfXilBIc81MfjFM8KsYsr0lhJuY4jpXExvX+J0OIQ/OKLUA8v5U+Pv9KoErQpyC6AA=
+	t=1751714504; cv=none; b=HBDxH99cLDzCZ8trYGAPcVHP1Y/EFadm1z/ZrJ/Xxy+R3spe6WK4163AM7qjRuZQzw2NgT8AOyEDC2ifZkJp2cQRoFn0J6TGTpK5fqAiZPprlz3RySNFrGx73phGqgnVrpz5Sb4VWWgOXAciBwp6rXrvxLoQxRqpsdN4lVw3ZCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751714423; c=relaxed/simple;
-	bh=u0o9qvSphqMgCEaqdDzvk2Zu2c+RLb2kZTBMJIMT3T4=;
+	s=arc-20240116; t=1751714504; c=relaxed/simple;
+	bh=R+wZifGKPfk5sCAFmw6R69O/0PTZ+aeX4vAXrUaUkkw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WP9L/qjIwBhK1kNICn+g7BuCu5ixwz5GHfHh2NS0RqVzqTqTM3oI0xYguXLmtudkqIxizM5+AEz5VJI8gpopVcb4UmWM622oJdGY5KxK6tbv6bfD7Aj7tHXULkkrLdh7HvilLwOI/yBV2h2wmow7Me4YzMjdEAmh6VckkNqXCpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/X5ptyX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E735C4CEE7;
-	Sat,  5 Jul 2025 11:20:22 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Ev85fduun41B5tq17SZJdXnHZRrws0vk7UGvUKJ/PKtETn0B+1mJxhCQiu92WPdGQ2obgv+yDD4fdIt5L0Q2oIdYW6I8ChweyUULunUBCEkBkkyREQoHxAWknWP4OZwoJw2P54qh0Alq8TVxHFGXVDx0Oniz9iO7Eni0+HKnemE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=em88yG3Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F56FC4CEE7;
+	Sat,  5 Jul 2025 11:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751714423;
-	bh=u0o9qvSphqMgCEaqdDzvk2Zu2c+RLb2kZTBMJIMT3T4=;
+	s=k20201202; t=1751714504;
+	bh=R+wZifGKPfk5sCAFmw6R69O/0PTZ+aeX4vAXrUaUkkw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=m/X5ptyXSqRuTpmRvnM2bjG/PqKdCx9piQcbQt7FivXSd4YV0AuBZu5gXGEylH+MG
-	 A+p8KPAuE2w/Adn+DCWL0/+NaQaOC5I0Gsi9XWpVw7V9XPKWgIxz2bJxyOHFcCRvFz
-	 RluSux2+nWkTtted4UBNRCUqIGqQhFQPKWLCKN9UtR/hAS66OsnIX5GwP7Qgh5t9aP
-	 cukMIVeBJexxizc6R8chseVhY3LKY3UnjmtbiR9N5TAWzyd0FDZSTpgPZBunEhM5SZ
-	 p2qaoVXQS3ND9uuXlsDJJFaqv78lZjA2UlpP24EL7/pGxZW1yJdvkj7ogBQLqoNnJK
-	 gHqrysVWUBWRw==
-Message-ID: <9c50866243ba4e9a86725d6c354726df2400d82a.camel@kernel.org>
-Subject: Re: [PATCH 2/2] nfsd: discard client_tracking_active and instead
- disable laundromat_work
+	b=em88yG3Qwmz+hGyAGSB+LvuK6xy8USIOuN8o1OfnmaJCEV7e+AegNZ4p8MU5rtuRX
+	 SK6+YstPZ/7TBOTB2tSKz5j/uLwLxhgBbbIGbj7WiU0yp7qmFPdQxjgwfSmkpUl7WP
+	 Pyk8YVBt/RK8DngNU20RyHTNRQCEDMkTrci3sF4RYyA+LSVDFGW3DYQjKOp43FJuyT
+	 Xrc16AmYYYzX056SR525VXcvamvnXexiSYZW5Lbv6q4MU9+bVzyl7u4KzWF5m7jXMn
+	 +fW16xXardxQZu5yZGPWe3JvJgp8B7dsiBHxUzG56uELJjnkBtG8c9RDJKW6cKa3U8
+	 pwpGiZHZ6XBfA==
+Message-ID: <f509f9ca3cf66c03f9c4175b24deb28976933dba.camel@kernel.org>
+Subject: Re: [PATCH RFC 2/2] nfsd: call generic_fadvise after v3 READ,
+ stable WRITE or COMMIT
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo	 <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Li Lingfeng	
- <lilingfeng3@huawei.com>
-Date: Sat, 05 Jul 2025 07:20:21 -0400
-In-Reply-To: <20250704072332.3278129-3-neil@brown.name>
-References: <20250704072332.3278129-1-neil@brown.name>
-	 <20250704072332.3278129-3-neil@brown.name>
+To: NeilBrown <neil@brown.name>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,  Tom Talpey
+ <tom@talpey.com>, Mike Snitzer <snitzer@kernel.org>,
+ linux-nfs@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Sat, 05 Jul 2025 07:21:42 -0400
+In-Reply-To: <175161401003.565058.4274944923143864883@noble.neil.brown.name>
+References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
+	, <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
+	, <175158625070.565058.13878074995107810351@noble.neil.brown.name>
+	 <175161401003.565058.4274944923143864883@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -137,97 +141,23 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2025-07-04 at 17:20 +1000, NeilBrown wrote:
-> We currently set client_tracking_active precisely when it is safe for
-> laundromat_work to be scheduled.  It is possible to enable/disable
-> laundromat_work, so we can do that instead of having a separate flag.
+On Fri, 2025-07-04 at 17:26 +1000, NeilBrown wrote:
+> On Fri, 04 Jul 2025, NeilBrown wrote:
+> >=20
+> > Otherwise it makes sense for exploring how to optimise IO.
+> >=20
+> > Reviewed-by: NeilBrown <neil@brown.name>
 >=20
-> Doing this avoids overloading ->state_lock with a use that is only
-> tangentially related to the other uses.
+> Actually - I take that back.  generic_fadvise() is the wrong interface.
+> It is for filesystems to use if the don't have any special requirements,
+> and for vfs_fadvise() to use if the file system hasn't give a function
+> to use.
 >=20
-> Signed-off-by: NeilBrown <neil@brown.name>
-> ---
->  fs/nfsd/netns.h     |  1 -
->  fs/nfsd/nfs4state.c | 24 ++++++++++--------------
->  2 files changed, 10 insertions(+), 15 deletions(-)
->=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index fe8338735e7c..d83c68872c4c 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -67,7 +67,6 @@ struct nfsd_net {
->  	struct lock_manager nfsd4_manager;
->  	bool grace_ended;
->  	bool grace_end_forced;
-> -	bool client_tracking_active;
->  	time64_t boot_time;
-> =20
->  	struct dentry *nfsd_client_dir;
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 124fe4f669aa..db292ac473c6 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6512,12 +6512,12 @@ nfsd4_force_end_grace(struct nfsd_net *nn)
->  {
->  	if (!nn->client_tracking_ops)
->  		return false;
-> -	spin_lock(&nn->client_lock);
-> -	if (nn->client_tracking_active) {
-> -		nn->grace_end_forced =3D true;
-> -		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-> -	}
-> -	spin_unlock(&nn->client_lock);
-> +	/* laundromat_work must be initialised now, though it might be disabled=
- */
-> +	nn->grace_end_forced =3D true;
-> +	/* This is a no-op after nfs4_state_shutdown_net() has called
-> +	 * disable_delayed_work_sync()
-> +	 */
-> +	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
->  	return true;
->  }
-> =20
-> @@ -8840,7 +8840,6 @@ static int nfs4_state_create_net(struct net *net)
->  	nn->boot_time =3D ktime_get_real_seconds();
->  	nn->grace_ended =3D false;
->  	nn->grace_end_forced =3D false;
-> -	nn->client_tracking_active =3D false;
->  	nn->nfsd4_manager.block_opens =3D true;
->  	INIT_LIST_HEAD(&nn->nfsd4_manager.list);
->  	INIT_LIST_HEAD(&nn->client_lru);
-> @@ -8855,6 +8854,8 @@ static int nfs4_state_create_net(struct net *net)
->  	INIT_LIST_HEAD(&nn->blocked_locks_lru);
-> =20
->  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
-> +	/* Make sure his cannot run until client tracking is initialised */
-> +	disable_delayed_work(&nn->laundromat_work);
->  	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
->  	get_net(net);
-> =20
-> @@ -8922,9 +8923,7 @@ nfs4_state_start_net(struct net *net)
->  	locks_start_grace(net, &nn->nfsd4_manager);
->  	nfsd4_client_tracking_init(net);
->  	/* safe for laundromat to run now */
-> -	spin_lock(&nn->client_lock);
-> -	nn->client_tracking_active =3D true;
-> -	spin_unlock(&nn->client_lock);
-> +	enable_delayed_work(&nn->laundromat_work);
->  	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size =3D=3D =
-0)
->  		goto skip_grace;
->  	printk(KERN_INFO "NFSD: starting %lld-second grace period (net %x)\n",
-> @@ -8973,10 +8972,7 @@ nfs4_state_shutdown_net(struct net *net)
-> =20
->  	shrinker_free(nn->nfsd_client_shrinker);
->  	cancel_work_sync(&nn->nfsd_shrinker_work);
-> -	spin_lock(&nn->client_lock);
-> -	nn->client_tracking_active =3D false;
-> -	spin_unlock(&nn->client_lock);
-> -	cancel_delayed_work_sync(&nn->laundromat_work);
-> +	disable_delayed_work_sync(&nn->laundromat_work);
->  	locks_end_grace(&nn->nfsd4_manager);
-> =20
->  	INIT_LIST_HEAD(&reaplist);
+> nfsd should be calling vfs_fadvise().
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Good catch. I'll fix that up in the next version.
+
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
 
