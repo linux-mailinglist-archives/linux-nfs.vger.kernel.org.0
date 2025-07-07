@@ -1,208 +1,112 @@
-Return-Path: <linux-nfs+bounces-12914-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12915-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2126AAFB7D8
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Jul 2025 17:47:27 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5D11AFBB16
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Jul 2025 20:46:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0545188464B
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Jul 2025 15:47:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 217674A895A
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Jul 2025 18:46:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84E1120A5F3;
-	Mon,  7 Jul 2025 15:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1FEB13D51E;
+	Mon,  7 Jul 2025 18:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AuKRCJ50";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bl9Jb3rM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AuKRCJ50";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bl9Jb3rM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QE8XI3RL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D51206F27
-	for <linux-nfs@vger.kernel.org>; Mon,  7 Jul 2025 15:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D0E20C000
+	for <linux-nfs@vger.kernel.org>; Mon,  7 Jul 2025 18:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751903236; cv=none; b=mIGgdARdle0xqPGjNmlwEkFP99wTSNpQBnb0bvogS3oMKMXvDyj3foObCR2XQ8tRMUcRpycU5oFVjTT9pFXBWuSMt2zeUR4KwDgVajohw7SnTTgT/CtS8WST5YzTe56/l9dM1FM35/alpDxl70xAGmt9R9L/eJ0738tXWg+TGao=
+	t=1751913973; cv=none; b=AHq3RqKqCbPh1ePQN9QkDUzU6wq/uTJ3VGfyBoSyMt9EvgNv87R3tG8LRmMN4DRDpdGudNlgzGl5jm9CKMG2+S16TNG0XQC+Np5Y7kl+ZL6ENfXSa56hEIuSUHDmt+b027PrgU+ZKz/B0frAdW6wJS4+MrzanSA2ShT6PIcRx8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751903236; c=relaxed/simple;
-	bh=F/DYWr+BhDkDQBDfkXhc90AXIML+8QihAvqfmHsLlh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GWwPWSBBEG1QLN7WaQ9szrQyAOKxVrjRQhgFf3YqqvB7/w94fE4WjbmAGvneyb94OmYH8K37DUA1MyqB75HXjXkIAm54spXCfAuiM33ZtG1mUJv2B08xvVFfVGjXHlxagt0v8VckC+j1EzGl08wEc7hSkNJ4JHGLAaX7k83siGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AuKRCJ50; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bl9Jb3rM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AuKRCJ50; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bl9Jb3rM; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1751913973; c=relaxed/simple;
+	bh=Krl0igoXVK9sFd8z/pt5c7gFLQbU2nEc7Zl5TKqXHhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JdRM/dhhX6uWyxdYGoQw8MT3yUIhUj5llJcyyVLTkU1bV19ZdEzi5ZIzA8tkNuqw73FyXy+nLVdfayUDZZSRtkZK5dsxpJ7e+L3OvakYOH7dHQWIAY4a7BRH5Rd0d7v180KVxX9t81WqH00tcSPKoCzX0qTrAyrm5cXj0SpGPTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QE8XI3RL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751913970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lOSiRv9nD8gpWlblF+1k4Q/paNpek49AMTpNjSrzzz8=;
+	b=QE8XI3RLl5XxSnZkwHAXSRC9b8epNKGJan5MXQt5yb5cqn0QcEhoR2m+lo0+4Z1PzW6IRI
+	xrHvFmY6MdgGoiY+fRFZ9tDGcUcWxhwnFl/1nxkwLk0x3O19UFBF3U4o5M3qOZ26WHMaG3
+	zdDIgdTZb+Do4f4NaV2s6PoQzq3+sdk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-MPFW4JLOMByVTYL3dKAn9Q-1; Mon,
+ 07 Jul 2025 14:46:07 -0400
+X-MC-Unique: MPFW4JLOMByVTYL3dKAn9Q-1
+X-Mimecast-MFC-AGG-ID: MPFW4JLOMByVTYL3dKAn9Q_1751913966
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B320C210ED;
-	Mon,  7 Jul 2025 15:47:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751903232; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gX29DBgo8xdocmIqtM7JRV4LqGxqs58F+qWxznSEpTI=;
-	b=AuKRCJ50I5YGo3CF6bKoWnI8xfVLLSEFDTOa2wcmGEz3gGkUAYCA6QKmVnMQJPMkmuqMYA
-	GkvbxkNeN3rTX5LKtZ3lOYE7qeCtb9GhoIlxqPReTJPZJNMDtvWeQhpD0QiTn10iQqBtXS
-	ZL/sRomz/ur+E7611UUOibV4KWMKdTw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751903232;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gX29DBgo8xdocmIqtM7JRV4LqGxqs58F+qWxznSEpTI=;
-	b=bl9Jb3rMuMHLDaHY4T56CexJ/SfS04eXPV7nQwoip8NbuRgVfOSomJ32DHtrI6VYOc+uyc
-	sRzwdXzdoOWT3yDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=AuKRCJ50;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=bl9Jb3rM
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1751903232; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gX29DBgo8xdocmIqtM7JRV4LqGxqs58F+qWxznSEpTI=;
-	b=AuKRCJ50I5YGo3CF6bKoWnI8xfVLLSEFDTOa2wcmGEz3gGkUAYCA6QKmVnMQJPMkmuqMYA
-	GkvbxkNeN3rTX5LKtZ3lOYE7qeCtb9GhoIlxqPReTJPZJNMDtvWeQhpD0QiTn10iQqBtXS
-	ZL/sRomz/ur+E7611UUOibV4KWMKdTw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1751903232;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gX29DBgo8xdocmIqtM7JRV4LqGxqs58F+qWxznSEpTI=;
-	b=bl9Jb3rMuMHLDaHY4T56CexJ/SfS04eXPV7nQwoip8NbuRgVfOSomJ32DHtrI6VYOc+uyc
-	sRzwdXzdoOWT3yDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 637A013A5E;
-	Mon,  7 Jul 2025 15:47:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qxg/GADsa2hzSQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 07 Jul 2025 15:47:12 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 91FEEA098E; Mon,  7 Jul 2025 17:47:11 +0200 (CEST)
-Date: Mon, 7 Jul 2025 17:47:11 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, 
-	Kundan Kumar <kundanthebest@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Kundan Kumar <kundan.kumar@samsung.com>, jaegeuk@kernel.org, chao@kernel.org, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, jack@suse.cz, miklos@szeredi.hu, agruenba@redhat.com, 
-	trondmy@kernel.org, anna@kernel.org, willy@infradead.org, mcgrof@kernel.org, 
-	clm@meta.com, david@fromorbit.com, amir73il@gmail.com, axboe@kernel.dk, 
-	ritesh.list@gmail.com, dave@stgolabs.net, p.raghav@samsung.com, da.gomez@samsung.com, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, gfs2@lists.linux.dev, 
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org, gost.dev@samsung.com
-Subject: Re: [PATCH 00/13] Parallelizing filesystem writeback
-Message-ID: <os6aqmbjphkeybbpceftdbfkmgquu6ywp34tx7uvmpqac4c42m@r76tgxypd5jg>
-References: <CGME20250529113215epcas5p2edd67e7b129621f386be005fdba53378@epcas5p2.samsung.com>
- <20250529111504.89912-1-kundan.kumar@samsung.com>
- <20250529203708.9afe27783b218ad2d2babb0c@linux-foundation.org>
- <CALYkqXqs+mw3sqJg5X2K4wn8uo8dnr4uU0jcnnSTbKK9F4AiBA@mail.gmail.com>
- <20250702184312.GC9991@frogsfrogsfrogs>
- <20250703130500.GA23864@lst.de>
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8263D1809C83;
+	Mon,  7 Jul 2025 18:46:06 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (unknown [10.22.74.5])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 13B0C195608F;
+	Mon,  7 Jul 2025 18:46:04 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	djeffery@redhat.com,
+	loberman@redhat.com
+Subject: [PATCH 0/2] Fix loopback mounted filesystems on NFS
+Date: Mon,  7 Jul 2025 14:46:02 -0400
+Message-ID: <cover.1751913604.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250703130500.GA23864@lst.de>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: B320C210ED
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLhzk8m8dynxu9bgo74bfqqdh9)];
-	MISSING_XM_UA(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linux-foundation.org,samsung.com,zeniv.linux.org.uk,suse.cz,szeredi.hu,redhat.com,infradead.org,meta.com,fromorbit.com,kernel.dk,stgolabs.net,lists.sourceforge.net,vger.kernel.org,lists.linux.dev,kvack.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email]
-X-Spam-Score: -2.51
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Thu 03-07-25 15:05:00, Christoph Hellwig wrote:
-> On Wed, Jul 02, 2025 at 11:43:12AM -0700, Darrick J. Wong wrote:
-> > > On a spinning disk, random IO bandwidth remains unchanged, while sequential
-> > > IO performance declines. However, setting nr_wb_ctx = 1 via configurable
-> > > writeback(planned in next version) eliminates the decline.
-> > > 
-> > > echo 1 > /sys/class/bdi/8:16/nwritebacks
-> > > 
-> > > We can fetch the device queue's rotational property and allocate BDI with
-> > > nr_wb_ctx = 1 for rotational disks. Hope this is a viable solution for
-> > > spinning disks?
-> > 
-> > Sounds good to me, spinning rust isn't known for iops.
-> > 
-> > Though: What about a raid0 of spinning rust?  Do you see the same
-> > declines for sequential IO?
-> 
-> Well, even for a raid0 multiple I/O streams will degrade performance
-> on a disk.  Of course many real life workloads will have multiple
-> I/O streams anyway.
-> 
-> I think the important part is to have:
-> 
->  a) sane defaults
->  b) an easy way for the file system and/or user to override the default
-> 
-> For a) a single thread for rotational is a good default.  For file system
-> that driver multiple spindles independently or do compression multiple
-> threads might still make sense.
-> 
-> For b) one big issue is that right now the whole writeback handling is
-> per-bdi and not per superblock.  So maybe the first step needs to be
-> to move the writeback to the superblock instead of bdi?  If someone
-> uses partitions and multiple file systems on spinning rusts these
-> days reducing the number of writeback threads isn't really going to
-> save their day either.
+We've been investigating new reports of filesystem corruption on
+loopback images on NFS clients.  It appears that during writeback the
+loopback driver encounters allocation failures in NFS and fails to write
+dirty pages to the backing file.
 
-We have had requests to move writeback infrastructure to be per sb in the
-past, mostly so that the filesystem has a better control of the writeback
-process (e.g. selection of inodes etc.). After some thought I tend to agree
-that today setups where we have multiple filesystems over the same bdi and
-end up doing writeback from several of them in parallel should be mostly
-limited to desktops / laptops / small servers. And there you usually have
-only one main data filesystem - e.g. /home/ - and you don't tend to write
-that much to your / filesystem. Although there could be exceptions like
-large occasional writes to /tmp, news server updates or similar. Anyway in
-these cases I'd expect IO scheduler (BFQ for rotational disks where this
-really matters) to still achieve a decent IO locality but it would be good
-to verify what the impact is.
+We believe the problem is due to the loopback driver performing writeback
+from a workqueue (so PF_WQ_WORKER is set), however ever since work to
+improve NFS' memory allocation strategies [1] its possible that NFS
+incorrectly assumes that if PF_WQ_WORKER is set then the writeback context
+is nfsiod.  To make things worse, NFS does not expect PF_WQ_WORKER to be set
+along with other PF_ flags such as PF_MEMALLOC_NOIO, but cannot really know
+(without checking them all) which other allocation flags are set should
+writeback be entered from a NFS-external workqueue worker.
 
-								Honza
+To fix this, I'd like to introduce a way to check which specific workqueue
+is being served by a worker (in patch 1), so that NFS can ensure that it
+sets certain allocation flags only for the nfsiod workqueue workers (in
+patch 2).
+
+[1]: https://lore.kernel.org/linux-nfs/20220322011618.1052288-1-trondmy@kernel.org/
+
+Benjamin Coddington (2):
+  workqueue: Add a helper to identify current workqueue
+  NFS: Improve nfsiod workqueue detection for allocation flags
+
+ fs/nfs/internal.h         | 12 +++++++++++-
+ include/linux/workqueue.h |  1 +
+ kernel/workqueue.c        | 18 ++++++++++++++++++
+ 3 files changed, 30 insertions(+), 1 deletion(-)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.47.0
+
 
