@@ -1,98 +1,166 @@
-Return-Path: <linux-nfs+bounces-12947-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12948-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EA19AFD5F1
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 20:05:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 12684AFD641
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 20:15:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 216063BB173
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 18:05:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24AFF543D50
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 18:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C210F21B9F1;
-	Tue,  8 Jul 2025 18:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B14121ADAE;
+	Tue,  8 Jul 2025 18:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MX8SgYnI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGT0nG3Q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D721B9C6
-	for <linux-nfs@vger.kernel.org>; Tue,  8 Jul 2025 18:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2049021ABCB;
+	Tue,  8 Jul 2025 18:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751997922; cv=none; b=DNTPBpcP9yqk7A/bB0ZhEASUTdYUKgKyGKYdcTw7NFbM2YVBNAjAH/caB8WPjLlS46oKNboZQp62s1ygBLDpeCkzKAddhuD5fffizEkROM1TBiwD6NZhcj7wc9ac4HeBagTeqFNDJKJ4mkRvQFEMBEWvjUIirfijPgDSVYqMbRA=
+	t=1751998514; cv=none; b=HTyPUJeSuKdM3CvNWq6d444wXYDSNVPcZtFPl1PubuV2o94T5wSntgFdRbnYK3MDHKO9O+LnTdQ1si/bJ6icwN9MboVrte5Um2tkBd4qkvI8fjI0f7R85OYfI8Ne6xiIbBj8N6CTlFPW7BuWXwxgGdyssDNte/4R+njukuLunx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751997922; c=relaxed/simple;
-	bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
-	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=nlNsXcy90q7vKVmj5tChDlS1WATNJzgPkmCuMggKnx5Oc/SfRIdbVXYVnYtrmdiupyTyI/1I3veCB5zPm8u7DCxh8wJ7TbuCWNbMWI0P7vS7nrVqqb2qB2TVxuZ7Mlhx05SeUg66O1WMyxbmEYzCwpPvqTm8bw8lh3k7nApkPHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MX8SgYnI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751997919;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
-	b=MX8SgYnI82KBirWX4YRNpxwrmC6yag+auR2QSsAyN82opmcUj0zydHpvb64wTif82BrnwK
-	l7TfIp4LMz1fmf0dzPD0Zpwv/y/qW8KQf65zikDNKupzKd4Rd171VSAAzEPDursP5v2oeD
-	09eRe2HseKteLvSC+7XRaxWVnB3E2d0=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-196-SEKHW0N7NsCRhKqfnqouyQ-1; Tue, 08 Jul 2025 14:05:18 -0400
-X-MC-Unique: SEKHW0N7NsCRhKqfnqouyQ-1
-X-Mimecast-MFC-AGG-ID: SEKHW0N7NsCRhKqfnqouyQ_1751997918
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2eae95dfae3so5367412fac.1
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Jul 2025 11:05:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751997916; x=1752602716;
-        h=mime-version:user-agent:content-transfer-encoding:date:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bIkL3j1SUti+mxRknWXsGzjEHfZ++LfAOrCAj6OvBfk=;
-        b=odpoq4uiDIKyL23HgRJukH7GkNYLHTADmcyDCAQM2leWv+/rxKvQEb9quf+8SY0NnS
-         WYQk5n+X3FdtOTikr4FiFDERUEZ3Z8EYy+9aMnkmzPcNx+sKu6ByJAlnEH4/H/VyB/zI
-         X+BVuk2rVLfId4joiuTfB/vcFkr2MFS4nSw9+N7+1ZtE/dz+0EApxFr3TqNX5EA2QCBv
-         75a9mYVqx869If9vp9tH+m56udiMojXV986Jn2odbiUmSuN5etJvnN38Lw3SgGkwFFkd
-         NBaka/m10XP8xOe0on0C9K9h1G1zk7L1ZyWLdZ1TpJwhZfkBTc3f3BKAXkY9HUZVojAx
-         Yx1g==
-X-Gm-Message-State: AOJu0Ywe1xJjaT45u/LnOdGYfFkogJzRstRVA+JuLQNn6P35BwxpI8ni
-	qCuMCHdrU/K1+gLfrZrWHaogO/BC/XKP0By0AhR72BUqw6i/jj1iu5KGRA2JHjIPOyv3RC7kDeW
-	BW8gumDknBn41ybo1O/cyIb39NirrNHaFrAYqa56XpzAOD+wDCFNC3nbKPCc0El93fTqRWw59il
-	cNSFBKjO5d8YKPNueJjVSsyuRtBlF1yAhjQeXA5FKXjA0JJw==
-X-Gm-Gg: ASbGncuQTlUgU7943w9N81xGPmI+NTUEtR3oCaJs1kVqTcttnsMci+vbkkqVyV2G0Z5
-	8GA3kf40duFdw6dp7n6frBmlqSZMKBeL+tiJHoPoXw/G2Qp8hkXuJ97qV9hlrpYIaD0ivkwPxKC
-	Qx5LJIp8KNYwRTlBfUvV54RdlEtsJZ1oe89mxsIsy9iCmhkrNbb7cZ9fmsgAWTOyF3Q2BQQxAdk
-	CBPcCMaTBEiHFVt4/hmo10HzWP5LpVNrpwfZNlq+3YFdENjiT6UaEfTAOT23iicnyCIQr8Fa211
-	AsdZC5c7McY0Jr7z/8cOt5fwqvgW0XL1GjuHDXfl/+pTWCo1xXNhNkqDk7x7uXtSQ4jxiqNc
-X-Received: by 2002:a05:6871:213:b0:2f7:647b:c6f4 with SMTP id 586e51a60fabf-2f791e8eb9amr13450174fac.22.1751997916628;
-        Tue, 08 Jul 2025 11:05:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGpH26ohBVzKIZv6P47gOh2CkvHSKlAKxJ0PfUJSuuwH5wQQvrWdeGR1PAnwSvtMv5TiKQU6A==
-X-Received: by 2002:a05:6871:213:b0:2f7:647b:c6f4 with SMTP id 586e51a60fabf-2f791e8eb9amr13450156fac.22.1751997916229;
-        Tue, 08 Jul 2025 11:05:16 -0700 (PDT)
-Received: from ?IPv6:2600:6c64:4e7f:603b:fc4d:8b7c:e90c:601a? ([2600:6c64:4e7f:603b:fc4d:8b7c:e90c:601a])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2f78ff050a4sm2940504fac.7.2025.07.08.11.05.15
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 11:05:15 -0700 (PDT)
-Message-ID: <745378273e83384a53c6f26d2c43f9c007078717.camel@redhat.com>
-Subject: subscribe
-From: Laurence Oberman <loberman@redhat.com>
-To: linux-nfs@vger.kernel.org
-Date: Tue, 08 Jul 2025 14:05:14 -0400
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1751998514; c=relaxed/simple;
+	bh=p2mo/KuMBdg894Nffz/9wmkmAd5guwKs4vdlsERSJOw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=e7fVBlGW6zYhZOM9oaQvMjCzc8aKCZHiYhxE4hj7TDs0lwY88LVtAA8fDRgUjpltIxw8ogZnnug5k4Z0djo/W7SsX/XDN+J5hEZfCKVPnHX7JHSjA7+nrlbfQZBNbEqOrY3p3yPjH7h/5JYzxko++woygqZpC2YK8wt73wRVJfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGT0nG3Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E231BC4CEED;
+	Tue,  8 Jul 2025 18:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751998513;
+	bh=p2mo/KuMBdg894Nffz/9wmkmAd5guwKs4vdlsERSJOw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=lGT0nG3Qgd5H4+Y6NBBCrWnGYbKREW+/X98zSeJRke135QKJohOIwl+6KOIblSfVH
+	 ylKUAZ2yxpDrDc8zBWUkdO35Xc6BLbo3oIue4iwHwq6rbtwiZ6r68wv6K1l3fQ1b1L
+	 XSPOvTmKXVgL0xDy0emY0VeFxPl1QvJwGnMJeDDcJt1JPLgaBNJ2lqkwcgSjUUckea
+	 GuSDTaPFagoeqjRp7JxyArOWu4eXpkqRrlEswW+UkjzK+47n8/jmUBEnXaeHBAKydp
+	 9U8ZWhzDCnWTC/IxSV9yfHDfxwsmBf3XXIyJLwOLd0tunS8MP7XdXk1DyjY0/Asmg/
+	 JeuzDXy91xueA==
+From: Jeff Layton <jlayton@kernel.org>
+Date: Tue, 08 Jul 2025 14:14:53 -0400
+Subject: [PATCH] sunrpc: delay pc_release callback until after the reply is
+ sent
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250708-rpc-6-17-v1-1-28c4d6079103@kernel.org>
+X-B4-Tracking: v=1; b=H4sIABxgbWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDcwML3aKCZF0zXUNz3bTUVHMzs0QTE6NUYyWg8oKi1LTMCrBR0bG1tQC
+ MuBoqWgAAAA==
+X-Change-ID: 20250708-rpc-6-17-fee766a442e3
+To: Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2531; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=p2mo/KuMBdg894Nffz/9wmkmAd5guwKs4vdlsERSJOw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBobWAmRI0e83EevzoLZJG973bu4jjrlh2owk6Ak
+ q/wZMME00aJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaG1gJgAKCRAADmhBGVaC
+ FVgCEACGT+8ICwz8Q0K8Oj+t3toLXX5gFhf4FtRdoJaIfGhR5SDMsN3HSzB4OXZWsePtEXtu6ui
+ UoB3xaDZgtRboAdYtqsshSz5mz2pPcvIfgsNF50rjfh+VpfDNAeFzHVmSdDy9k5R7zKAsGorlwH
+ nxSeVZH0ajQflcNVzh+ObPvjMoXqO01H1/Ae57ZOtF7SEpWkK7FceuZBGhWIhFZuV3V5FxV+mWZ
+ YQNLMeY8Jge5hVvZ1tLzhMdrrwAvofKhvM0rX/PQZtsLg5A+Dr/4Eo3eA0jkakVayVcyAnhFWMY
+ pmN7eKDt8BliRMFOynLHh+bKNz52lSNwp/35IfCgkj83IaOCZCXoAo0xkrrEDxbpEJnHq1y6jri
+ NfOOBHgrIaYO6hHWup/tUJlmiQoiDKxaVx9GWkXJnNgRU0CiIvbHxOkoW0rsXKt4B2dkA13kKlT
+ OHd2PmlhDclJAqNZYErjjO8OO4qpCiwOqN9tNOFnhi9/1egYPKmb1PPsCtN4OzOEbEzMFJ/qJ9/
+ NdhieuVL255vyJ6YFssdRSMi/HtpvuV5GdSbZrHn0AoZ28QYVIC80S8+SRHkFLP2y7648yl5vVs
+ Jxp5er+rHrScLEG5MTIb40au+hVq0xLzzVWHjtPmgSyDuoHKnGa8uNBaPZ0qPRnkBXTK2l+f+gu
+ QtSw2TJqKoVPXnw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-subscribe
+The server-side sunrpc code currently calls pc_release before sending
+the reply. Change svc_process and svc_process_bc to call pc_release
+after sending the reply instead.
+
+Reviewed-by: NeilBrown <neil@brown.name>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+I think this patch makes sense on its own, on the general principle of
+expediting the reply. In my own testing, it doesn't seem to make any
+difference in performance, probably owing to the fact that most
+pc_release operations are very lightweight.
+---
+ net/sunrpc/svc.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index b1fab3a6954437cf751e4725fa52cfc83eddf2ab..fc70e13b1cb99a4ac4cbaa919f5a91d285844b11 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1426,8 +1426,6 @@ svc_process_common(struct svc_rqst *rqstp)
+ 
+ 	/* Call the function that processes the request. */
+ 	rc = process.dispatch(rqstp);
+-	if (procp->pc_release)
+-		procp->pc_release(rqstp);
+ 	xdr_finish_decode(xdr);
+ 
+ 	if (!rc)
+@@ -1526,6 +1524,14 @@ static void svc_drop(struct svc_rqst *rqstp)
+ 	trace_svc_drop(rqstp);
+ }
+ 
++static void svc_release_rqst(struct svc_rqst *rqstp)
++{
++	const struct svc_procedure *procp = rqstp->rq_procinfo;
++
++	if (procp && procp->pc_release)
++		procp->pc_release(rqstp);
++}
++
+ /**
+  * svc_process - Execute one RPC transaction
+  * @rqstp: RPC transaction context
+@@ -1565,9 +1571,12 @@ void svc_process(struct svc_rqst *rqstp)
+ 	if (unlikely(*p != rpc_call))
+ 		goto out_baddir;
+ 
+-	if (!svc_process_common(rqstp))
++	if (!svc_process_common(rqstp)) {
++		svc_release_rqst(rqstp);
+ 		goto out_drop;
++	}
+ 	svc_send(rqstp);
++	svc_release_rqst(rqstp);
+ 	return;
+ 
+ out_baddir:
+@@ -1635,6 +1644,7 @@ void svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp)
+ 	if (!proc_error) {
+ 		/* Processing error: drop the request */
+ 		xprt_free_bc_request(req);
++		svc_release_rqst(rqstp);
+ 		return;
+ 	}
+ 	/* Finally, send the reply synchronously */
+@@ -1648,6 +1658,7 @@ void svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp)
+ 	timeout.to_maxval = timeout.to_initval;
+ 	memcpy(&req->rq_snd_buf, &rqstp->rq_res, sizeof(req->rq_snd_buf));
+ 	task = rpc_run_bc_task(req, &timeout);
++	svc_release_rqst(rqstp);
+ 
+ 	if (IS_ERR(task))
+ 		return;
+
+---
+base-commit: f4407c6fb86dc485e98052aebc0d39c8ced46e70
+change-id: 20250708-rpc-6-17-fee766a442e3
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
 
