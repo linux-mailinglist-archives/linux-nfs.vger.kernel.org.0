@@ -1,62 +1,61 @@
-Return-Path: <linux-nfs+bounces-12950-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12951-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AB50AFD955
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 23:12:39 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A74E1AFD9AC
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 23:22:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE1C8586B77
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 21:12:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D9BC7A8CC5
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Jul 2025 21:21:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0C324290E;
-	Tue,  8 Jul 2025 21:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06BFF241661;
+	Tue,  8 Jul 2025 21:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="laJ79rtp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jotjHuGy"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EE1201034;
-	Tue,  8 Jul 2025 21:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64E023D298
+	for <linux-nfs@vger.kernel.org>; Tue,  8 Jul 2025 21:22:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752009154; cv=none; b=ht92C6LlD9+W9GHhhE5iCjHL6oN5+1l6mRez8+GYjBdE1iCsHFKahrSgkZX9WdwjBgtVfy9zwpQOoLNuvt2YjoabxL3ixDBwEkhNo6v2SC7tf53nISSmNWNmrRIHBSLjVsJjemN6GNHQj9+gapsp6SzmTTC1rH/4ak7oAnCBQdc=
+	t=1752009742; cv=none; b=rX0PdB/G86w/R5vpMyiCTna3eZRFOrXeU7InL63XSyhTDOJ2uaVRJDVLhq2WWYG2mr05SPamP3nnQKyi7RsZ8K9ir/OghVQvmt2dyD4c0e0KDbPUG48GuR0HS9rPFpSw2Cqh1rxhUSxxNM2msNOS0gVX5i+8tpqCiUGLly0AWuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752009154; c=relaxed/simple;
-	bh=mtlXLWmdcdJyUDwsBYWd4NHw+eVJqG7ze3bQVwJbF4I=;
+	s=arc-20240116; t=1752009742; c=relaxed/simple;
+	bh=kGYg6/CHmlAUDooptJZnnwJ5gJH1vLEcK8lQFctgook=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ga9NfvsLpfFDTcOpLzlYm4zRoXdrh91EJqI81HtO0yt096DNU6VLmhrkEGS5XcbxTS7u8zeBxAOGvWVsM4ae5rY0/mEKqCW64ZRRYXO7wpFyM/Q8lRsh7nmQiYC8ttvRg3SIqd2xaY3yjJcpR2yBLF4uy7gEhpON2RrB3B0Oo3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=laJ79rtp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE084C4CEED;
-	Tue,  8 Jul 2025 21:12:33 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPGMArTZhfcDUW4ogPXc0/FJIUw/swxK2LKshYtWDEyK48dRYK5Nrnf3ggSVXb0kezLcZxDMbAsR4RR+4ug+d025IR0a1dAYb9tiebBko4kbduTYE0ZMwu4JjbJ/DLBaPjnxMwYkqe8FFXMzGvOaebXGpegqND9tEgWCcUvmBXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jotjHuGy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC3DC4CEF1;
+	Tue,  8 Jul 2025 21:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752009154;
-	bh=mtlXLWmdcdJyUDwsBYWd4NHw+eVJqG7ze3bQVwJbF4I=;
+	s=k20201202; t=1752009742;
+	bh=kGYg6/CHmlAUDooptJZnnwJ5gJH1vLEcK8lQFctgook=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=laJ79rtpVtVLyM1FKSPNW+8UTb14IdVEf3pfT/40cQj/yuaRyQE1ORrSvTzc+rt2b
-	 14eU2foI1SXzQPqf9Btm9RB6vrMgsmkATE4sYNlhf8Ueb98f4WJCnKOdEv0Rqz1XTp
-	 oQhBr2cF+agrg5W8p7s/mtqML7yEAqdmUgapUUSSP5Sre+JytTBg9XqKMQXtiArhUJ
-	 eVr2S0fkZuA4NkollCtJg2bkdbJdHQbCAPRZiTn+JK6JhO8XWm5xqeqjDUeju7v4oO
-	 KBUBlK9wY2qJew7lrTR3vsxA1bwlgHiwYZdrxHH7AlYPM0QS6FV3BMT/X/Txx+fiFE
-	 URIVDmkUIneeg==
-Date: Tue, 8 Jul 2025 17:12:32 -0400
+	b=jotjHuGyKarLSxp5a3+GZFciuYznK54C2HxTEZY6tuhehLujlhvFNj3T2d1gJhATt
+	 tNTz3R0qBie2HKHdlkTqs7OAJgVO83Ns17OB323ZYNaRPpT8bpnizXUJ2VHHRIW24E
+	 TZJZlalvkgzB1pUv2OK410oSn3KRZmBUNcDBJYYRmnH5q2sdpWZ1ySXAk5dAMoCbsh
+	 FKEi8gv9HpP7ujcrX6hTzd54kguug8xn4cML6KHQI6TLagB79ioNPH/6dRhcb8GAXy
+	 jdSa48tbAw+yjVJrfyvcEs+K5hgKQjpB3EHVof0IJCuCp44jdZYOoYYhGCnKN0mD3O
+	 qoVu4FC4ZPfUg==
+Date: Tue, 8 Jul 2025 17:22:21 -0400
 From: Mike Snitzer <snitzer@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, NeilBrown <neil@brown.name>,
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+	NeilBrown <neil@brown.name>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 2/2] nfsd: call generic_fadvise after v3 READ, stable
- WRITE or COMMIT
-Message-ID: <aG2JwM28-IOge4zF@kernel.org>
-References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
- <20250703-nfsd-testing-v1-2-cece54f36556@kernel.org>
- <520bd301-4526-4364-bbfa-5f591ab8f60a@oracle.com>
- <cda4542e4ae8b30a6f5628386388f813d3209558.camel@kernel.org>
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linus-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 8/8] NFSD: issue READs using O_DIRECT even if IO
+ is misaligned
+Message-ID: <aG2MDVyyCbjTpgOv@kernel.org>
+References: <20250708160619.64800-1-snitzer@kernel.org>
+ <20250708160619.64800-9-snitzer@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -65,122 +64,267 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cda4542e4ae8b30a6f5628386388f813d3209558.camel@kernel.org>
+In-Reply-To: <20250708160619.64800-9-snitzer@kernel.org>
 
-On Tue, Jul 08, 2025 at 10:34:15AM -0400, Jeff Layton wrote:
-> On Thu, 2025-07-03 at 16:07 -0400, Chuck Lever wrote:
-> > On 7/3/25 3:53 PM, Jeff Layton wrote:
-> > > Recent testing has shown that keeping pagecache pages around for too
-> > > long can be detrimental to performance with nfsd. Clients only rarely
-> > > revisit the same data, so the pages tend to just hang around.
-> > > 
-> > > This patch changes the pc_release callbacks for NFSv3 READ, WRITE and
-> > > COMMIT to call generic_fadvise(..., POSIX_FADV_DONTNEED) on the accessed
-> > > range.
-> > > 
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  fs/nfsd/debugfs.c  |  2 ++
-> > >  fs/nfsd/nfs3proc.c | 59 +++++++++++++++++++++++++++++++++++++++++++++---------
-> > >  fs/nfsd/nfsd.h     |  1 +
-> > >  fs/nfsd/nfsproc.c  |  4 ++--
-> > >  fs/nfsd/vfs.c      | 21 ++++++++++++++-----
-> > >  fs/nfsd/vfs.h      |  5 +++--
-> > >  fs/nfsd/xdr3.h     |  3 +++
-> > >  7 files changed, 77 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
-> > > index 84b0c8b559dc90bd5c2d9d5e15c8e0682c0d610c..b007718dd959bc081166ec84e06f577a8fc2b46b 100644
-> > > --- a/fs/nfsd/debugfs.c
-> > > +++ b/fs/nfsd/debugfs.c
-> > > @@ -44,4 +44,6 @@ void nfsd_debugfs_init(void)
-> > >  
-> > >  	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
-> > >  			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
-> > > +	debugfs_create_bool("enable-fadvise-dontneed", 0644,
-> > > +			    nfsd_top_dir, &nfsd_enable_fadvise_dontneed);
-> > 
-> > I prefer that this setting is folded into the new io_cache_read /
-> > io_cache_write tune-ables that Mike's patch adds, rather than adding
-> > a new boolean.
-> > 
-> > That might make a hybrid "DONTCACHE for READ and fadvise for WRITE"
-> > pretty easy.
-> > 
+On Tue, Jul 08, 2025 at 12:06:19PM -0400, Mike Snitzer wrote:
+> If NFSD_IO_DIRECT is used, expand any misaligned READ to the next
+> DIO-aligned block (on either end of the READ).
 > 
-> I ended up rebasing Mike's dontcache branch on top of v6.16-rc5 with
-> all of Chuck's trees in. I then added the attached patch and did some
-> testing with a couple of machines I checked out internally at Meta.
-> This is the throughput results with the fio-seq-RW test with the file
-> size set to 100G and the duration at 5 mins.
+> Must allocate and use a bounce-buffer page (called 'start_extra_page')
+> if/when expanding the misaligned READ requires reading extra partial
+> page at the start of the READ so that its DIO-aligned. Otherwise those
+> extra pages at the start will make their way back to the NFS client
+> and corruption will occur (as found, and then this fix of using an
+> extra page verified, with the 'dt' utility, using:
+>   dt of=/mnt/share1/dt_a.test passes=1 bs=47008 count=2 \
+>      iotype=sequential pattern=iot onerr=abort oncerr=abort
+> see: https://github.com/RobinTMiller/dt.git )
 > 
-> Note that:
+> Reserve an extra page in svc_serv_maxpages() because nfsd_iter_read()
+> might need two extra pages when a READ payload is not DIO-aligned --
+> but nfsd_iter_read() and nfsd_splice_actor() are mutually exclusive
+> (so reuse page reserved for nfsd_splice_actor).
 > 
-> read and writes buffered:
->    READ: bw=3024MiB/s (3171MB/s), 186MiB/s-191MiB/s (195MB/s-201MB/s), io=889GiB (954GB), run=300012-300966msec
->   WRITE: bw=2015MiB/s (2113MB/s), 124MiB/s-128MiB/s (131MB/s-134MB/s), io=592GiB (636GB), run=300012-300966msec
+> Also add nfsd_read_vector_dio trace event. This combination of
+> trace events is useful:
 > 
->    READ: bw=2902MiB/s (3043MB/s), 177MiB/s-183MiB/s (186MB/s-192MB/s), io=851GiB (913GB), run=300027-300118msec
->   WRITE: bw=1934MiB/s (2027MB/s), 119MiB/s-122MiB/s (124MB/s-128MB/s), io=567GiB (608GB), run=300027-300118msec
+>  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector/enable
+>  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_vector_dio/enable
+>  echo 1 > /sys/kernel/tracing/events/nfsd/nfsd_read_io_done/enable
+>  echo 1 > /sys/kernel/tracing/events/xfs/xfs_file_direct_read/enable
 > 
->    READ: bw=2897MiB/s (3037MB/s), 178MiB/s-183MiB/s (186MB/s-192MB/s), io=849GiB (911GB), run=300006-300078msec
->   WRITE: bw=1930MiB/s (2023MB/s), 119MiB/s-122MiB/s (125MB/s-128MB/s), io=565GiB (607GB), run=300006-300078msec
+> Which for this dd command:
 > 
-> reads and writes RWF_DONTCACHE:
->    READ: bw=3090MiB/s (3240MB/s), 190MiB/s-195MiB/s (199MB/s-205MB/s), io=906GiB (972GB), run=300015-300113msec
->   WRITE: bw=2060MiB/s (2160MB/s), 126MiB/s-130MiB/s (132MB/s-137MB/s), io=604GiB (648GB), run=300015-300113msec
+>  dd if=/mnt/share1/test of=/dev/null bs=47008 count=2 iflag=direct
 > 
->    READ: bw=3057MiB/s (3205MB/s), 188MiB/s-193MiB/s (198MB/s-203MB/s), io=897GiB (963GB), run=300329-300450msec
->   WRITE: bw=2037MiB/s (2136MB/s), 126MiB/s-129MiB/s (132MB/s-135MB/s), io=598GiB (642GB), run=300329-300450msec
+> Results in:
 > 
->    READ: bw=3166MiB/s (3320MB/s), 196MiB/s-200MiB/s (205MB/s-210MB/s), io=928GiB (996GB), run=300021-300090msec
->   WRITE: bw=2111MiB/s (2213MB/s), 131MiB/s-133MiB/s (137MB/s-140MB/s), io=619GiB (664GB), run=300021-300090msec
+>  nfsd-16580   [001] .....  5672.403130: nfsd_read_vector_dio: xid=0x5ccf019c fh_hash=0xe4dadb60 offset=0 len=47008 start=0+0 end=47104-96
+>  nfsd-16580   [001] .....  5672.403131: nfsd_read_vector: xid=0x5ccf019c fh_hash=0xe4dadb60 offset=0 len=47104
+>  nfsd-16580   [001] .....  5672.403134: xfs_file_direct_read: dev 253:0 ino 0x1c2388c1 disize 0x16f40 pos 0x0 bytecount 0xb800
+>  nfsd-16580   [001] .....  5672.404380: nfsd_read_io_done: xid=0x5ccf019c fh_hash=0xe4dadb60 offset=0 len=47008
 > 
-> reads and writes witg O_DIRECT:
->    READ: bw=3115MiB/s (3267MB/s), 192MiB/s-198MiB/s (201MB/s-208MB/s), io=913GiB (980GB), run=300025-300078msec
->   WRITE: bw=2077MiB/s (2178MB/s), 128MiB/s-131MiB/s (134MB/s-138MB/s), io=609GiB (653GB), run=300025-300078msec
+>  nfsd-16580   [001] .....  5672.404672: nfsd_read_vector_dio: xid=0x5dcf019c fh_hash=0xe4dadb60 offset=47008 len=47008 start=46592+416 end=94208-192
+>  nfsd-16580   [001] .....  5672.404672: nfsd_read_vector: xid=0x5dcf019c fh_hash=0xe4dadb60 offset=46592 len=47616
+>  nfsd-16580   [001] .....  5672.404673: xfs_file_direct_read: dev 253:0 ino 0x1c2388c1 disize 0x16f40 pos 0xb600 bytecount 0xba00
+>  nfsd-16580   [001] .....  5672.405771: nfsd_read_io_done: xid=0x5dcf019c fh_hash=0xe4dadb60 offset=47008 len=47008
 > 
->    READ: bw=3189MiB/s (3343MB/s), 197MiB/s-202MiB/s (207MB/s-211MB/s), io=934GiB (1003GB), run=300023-300096msec
->   WRITE: bw=2125MiB/s (2228MB/s), 132MiB/s-134MiB/s (138MB/s-140MB/s), io=623GiB (669GB), run=300023-300096msec
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: Mike Snitzer <snitzer@kernel.org>
+> ---
+>  fs/nfsd/trace.h            |  37 ++++++++++
+>  fs/nfsd/vfs.c              | 141 +++++++++++++++++++++++++++++++------
+>  include/linux/sunrpc/svc.h |   5 +-
+>  3 files changed, 161 insertions(+), 22 deletions(-)
 > 
->    READ: bw=3113MiB/s (3264MB/s), 191MiB/s-197MiB/s (200MB/s-207MB/s), io=912GiB (979GB), run=300020-300098msec
->   WRITE: bw=2075MiB/s (2175MB/s), 127MiB/s-131MiB/s (134MB/s-138MB/s), io=608GiB (653GB), run=300020-300098msec
-> 
-> RWF_DONTCACHE on reads and stable writes + fadvise DONTNEED after COMMIT:
->    READ: bw=2888MiB/s (3029MB/s), 178MiB/s-182MiB/s (187MB/s-191MB/s), io=846GiB (909GB), run=300012-300109msec
->   WRITE: bw=1924MiB/s (2017MB/s), 118MiB/s-121MiB/s (124MB/s-127MB/s), io=564GiB (605GB), run=300012-300109msec
-> 
->    READ: bw=2899MiB/s (3040MB/s), 180MiB/s-183MiB/s (188MB/s-192MB/s), io=852GiB (915GB), run=300022-300940msec
->   WRITE: bw=1931MiB/s (2025MB/s), 119MiB/s-122MiB/s (125MB/s-128MB/s), io=567GiB (609GB), run=300022-300940msec
-> 
->    READ: bw=2902MiB/s (3043MB/s), 179MiB/s-184MiB/s (188MB/s-193MB/s), io=853GiB (916GB), run=300913-301146msec
->   WRITE: bw=1933MiB/s (2027MB/s), 119MiB/s-122MiB/s (125MB/s-128MB/s), io=568GiB (610GB), run=300913-301146msec
-> 
-> 
-> The fadvise case is clearly slower than the others. Interestingly it
-> also slowed down read performance, which leads me to believe that maybe
-> the fadvise calls were interfering with concurrent reads. Given the
-> disappointing numbers, I'll probably drop the last patch.
-> 
-> There is probably a case to be made for patch #1, on the general
-> principle of expediting sending the reply as much as possible. Chuck,
-> let me know if you want me to submit that individually.
-> -- 
-> Jeff Layton <jlayton@kernel.org>
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index a664fdf1161e..55055482f8a8 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -473,6 +473,43 @@ DEFINE_NFSD_IO_EVENT(write_done);
+>  DEFINE_NFSD_IO_EVENT(commit_start);
+>  DEFINE_NFSD_IO_EVENT(commit_done);
+>  
+> +TRACE_EVENT(nfsd_read_vector_dio,
+> +	TP_PROTO(struct svc_rqst *rqstp,
+> +		 struct svc_fh	*fhp,
+> +		 u64		offset,
+> +		 u32		len,
+> +		 loff_t         start,
+> +		 loff_t         start_extra,
+> +		 loff_t         end,
+> +		 loff_t         end_extra),
+> +	TP_ARGS(rqstp, fhp, offset, len, start, start_extra, end, end_extra),
+> +	TP_STRUCT__entry(
+> +		__field(u32, xid)
+> +		__field(u32, fh_hash)
+> +		__field(u64, offset)
+> +		__field(u32, len)
+> +		__field(loff_t, start)
+> +		__field(loff_t, start_extra)
+> +		__field(loff_t, end)
+> +		__field(loff_t, end_extra)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->xid = be32_to_cpu(rqstp->rq_xid);
+> +		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
+> +		__entry->offset = offset;
+> +		__entry->len = len;
+> +		__entry->start = start;
+> +		__entry->start_extra = start_extra;
+> +		__entry->end = end;
+> +		__entry->end_extra = end_extra;
+> +	),
+> +	TP_printk("xid=0x%08x fh_hash=0x%08x offset=%llu len=%u start=%llu+%llu end=%llu-%llu",
+> +		  __entry->xid, __entry->fh_hash,
+> +		  __entry->offset, __entry->len,
+> +		  __entry->start, __entry->start_extra,
+> +		  __entry->end, __entry->end_extra)
+> +);
+> +
+>  DECLARE_EVENT_CLASS(nfsd_err_class,
+>  	TP_PROTO(struct svc_rqst *rqstp,
+>  		 struct svc_fh	*fhp,
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 05a7ba383334..2d21b8ec2d32 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/splice.h>
+>  #include <linux/falloc.h>
+>  #include <linux/fcntl.h>
+> +#include <linux/math.h>
+>  #include <linux/namei.h>
+>  #include <linux/delay.h>
+>  #include <linux/fsnotify.h>
+> @@ -1065,6 +1066,74 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+>  }
+>  
+> +static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +				  loff_t offset, __u32 len,
+> +				  const u32 dio_blocksize,
+> +				  loff_t *start, loff_t *end,
+> +				  loff_t *start_extra, loff_t *end_extra)
+> +{
+> +	loff_t orig_end = offset + len;
+> +
+> +	if (WARN_ONCE(dio_blocksize > PAGE_SIZE,
+> +		      "%s: underlying storage's dio_blocksize=%u > PAGE_SIZE=%lu\n",
+> +		      __func__, dio_blocksize, PAGE_SIZE))
+> +		return false;
+> +
+> +	*start = round_down(offset, dio_blocksize);
+> +	*end = round_up(orig_end, dio_blocksize);
+> +	*start_extra = offset - *start;
+> +	*end_extra = *end - orig_end;
+> +
+> +	/* Show original offset and count, and how it was expanded for DIO */
+> +	trace_nfsd_read_vector_dio(rqstp, fhp, offset, len,
+> +				   *start, *start_extra, *end, *end_extra);
+> +
+> +	return (*start_extra || *end_extra);
+> +}
 
-> From 14958516bf45f92a8609cb6ad504e92550b416d7 Mon Sep 17 00:00:00 2001
-> From: Jeff Layton <jlayton@kernel.org>
-> Date: Mon, 7 Jul 2025 11:00:34 -0400
-> Subject: [PATCH] nfsd: add a NFSD_IO_FADVISE setting to io_cache_write
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Turns out there is a bug in the above final return, incremental fix
+that will be in v3 (once others hopefully have a chance to review):
 
-Ah, you raced ahead and did what I suggested in my previous reply just
-now.  Too bad the performance is lacking... but I applaud you're
-trying out a new/interesting idea!
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 2d21b8ec2d32..6336a5806f4c 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1088,7 +1088,7 @@ static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	trace_nfsd_read_vector_dio(rqstp, fhp, offset, len,
+ 				   *start, *start_extra, *end, *end_extra);
+ 
+-	return (*start_extra || *end_extra);
++	return true;
+ }
+ 
+ static ssize_t nfsd_complete_misaligned_read_dio(struct svc_rqst *rqstp,
 
-BTW, measuring CPU and memory use is also important to capture to get
-full picture.
+> +static ssize_t nfsd_complete_misaligned_read_dio(struct svc_rqst *rqstp,
+> +						 loff_t start_extra, loff_t end_extra,
+> +						 ssize_t bytes_read,
+> +						 unsigned long bytes_expected,
+> +						 loff_t *offset,
+> +						 unsigned long *rq_bvec_numpages,
+> +						 struct page *start_extra_page)
+> +{
+> +	ssize_t host_err = bytes_read;
+> +	loff_t v;
+> +
+> +	/* Must remove first start_extra_page from rqstp->rq_bvec */
+> +	if (start_extra_page) {
+> +		__free_page(start_extra_page);
+> +		*rq_bvec_numpages -= 1;
+> +		v = *rq_bvec_numpages;
+> +		for (int i = 0; i < v; i++) {
+> +			struct bio_vec *bv = &rqstp->rq_bvec[i+1];
+> +			bvec_set_page(&rqstp->rq_bvec[i], bv->bv_page,
+> +				      bv->bv_offset, bv->bv_len);
+> +		}
+> +	}
+> +	/* Then eliminate the end_extra bytes from the last page */
+> +	v = *rq_bvec_numpages;
+> +	rqstp->rq_bvec[v].bv_len -= end_extra;
+> +
+> +	if (host_err < 0)
+> +		return host_err;
+> +
+> +	/* Must adjust returned read size to reflect original extent */
+> +	*offset += start_extra;
+> +	if (likely(host_err >= start_extra)) {
+> +		host_err -= start_extra;
+> +		if (host_err > bytes_expected)
+> +			host_err = bytes_expected;
+> +	} else {
+> +		/* Short read that didn't read any of requested data */
+> +		host_err = 0;
+> +	}
+> +
+> +	return host_err;
+> +}
+> +
+
+Also, I think its worth calling out this
+nfsd_complete_misaligned_read_dio function for its remapping/shifting
+of the READ payload reflected in rqstp->rq_bvec[].
+
+Could easily be that a cleaner way exists to do this and I'm just
+missing it.
+
+>  /**
+>   * nfsd_iter_read - Perform a VFS read using an iterator
+>   * @rqstp: RPC transaction context
+> @@ -1086,44 +1155,74 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		      unsigned int base, u32 *eof)
+>  {
+>  	struct file *file = nf->nf_file;
+> -	unsigned long v, total;
+> +	unsigned long v, total, in_count = *count;
+> +	loff_t start_extra = 0, end_extra = 0;
+> +	struct page *start_extra_page = NULL;
+>  	struct iov_iter iter;
+>  	struct kiocb kiocb;
+> -	ssize_t host_err;
+> +	ssize_t host_err = 0;
+>  	size_t len;
+>  
+>  	init_sync_kiocb(&kiocb, file);
+> +
+> +	/*
+> +	 * If NFSD_IO_DIRECT enabled, expand any misaligned READ to
+> +	 * the next DIO-aligned block (on either end of the READ).
+> +	 */
+> +	if ((nfsd_io_cache_read == NFSD_IO_DIRECT) &&
+> +	    nf->nf_dio_mem_align && (base & (nf->nf_dio_mem_align-1)) == 0) {
+> +		loff_t start, end;
+> +		if (nfsd_analyze_read_dio(rqstp, fhp, offset, in_count,
+> +					  nf->nf_dio_read_offset_align,
+> +					  &start, &end, &start_extra, &end_extra)) {
+> +			/* trace_nfsd_read_vector() will reflect larger DIO-aligned READ */
+> +			offset = start;
+> +			in_count = end - start;
+> +			kiocb.ki_flags = IOCB_DIRECT;
+> +		}
+> +	} else if (nfsd_io_cache_read == NFSD_IO_DONTCACHE)
+> +		kiocb.ki_flags = IOCB_DONTCACHE;
+> +
+>  	kiocb.ki_pos = offset;
+
+<snip>
+
+Just bringing the top fix home, nfsd_analyze_read_dio() was only
+returning true if an READ IO requiring expanding the a misaligned IO
+to be DIO-aligned (as reflected by start_extra or end_extra being
+non-zero).  But if the READ was already DIO_aligned it wouldn't set
+IOCB_DIRECT (because neither start_extra or end_extra set). 
+
+I had been hyper-focused on handling misaligned IO and missed that the
+basic case of IO already being DIO-aligned had regressed since my v1
+patchset.
 
 Mike
 
