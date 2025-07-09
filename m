@@ -1,121 +1,133 @@
-Return-Path: <linux-nfs+bounces-12956-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12957-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ECECAFEC7E
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jul 2025 16:48:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E30BAFF166
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jul 2025 21:04:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92F1D188546A
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jul 2025 14:48:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCD26189119A
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Jul 2025 19:05:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98CA2E54A1;
-	Wed,  9 Jul 2025 14:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD76D23D28E;
+	Wed,  9 Jul 2025 19:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQ1/rIfZ"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="gNSh2cAx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31331D63E4
-	for <linux-nfs@vger.kernel.org>; Wed,  9 Jul 2025 14:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8AD228C9D
+	for <linux-nfs@vger.kernel.org>; Wed,  9 Jul 2025 19:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752072491; cv=none; b=md20Oe0TF6SmELVuQkQnwuOjU4ieQbaqaZKF7k525n6NwoGt8qK1Q9wCnA5+D0RvRFQN1xGUmMNhpQG96VCfivrn2Fpf+UddlJ0goXY0kFWVBL3fLNk4hlgVi2wUidB/s4JdRBKasm9vXU/mW1HSpRqJ9Xsa1sdkJptIbiM4Y5A=
+	t=1752087888; cv=none; b=eIzTahU9SvpaNg+SK31Zaeu3Uv26+8Y/0qQQmaYFTCAzsrEHZyFfGQLIsNOAVA6lg8VXleNtV25AZTNIdI0TD+0+vBhYPX++708QrN4VwUzzLwm30csyFa9GzXLp0XVbzDon+vVMa6IoIiIbYgYMOjXXPJl4yZczwY3EDB1Pqfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752072491; c=relaxed/simple;
-	bh=znGjZeNfcISgnIuBolbUXegTdHpJutXtuA0AIamwvs4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lFqI4I7MDP9NAm9t5hAQ1Y+3Duf1d4YCZTYYUo+gMS7F7PbveoFjBwrgSIxpoeXUTJYlO/pIXolIzaUrpwdzV4K++NL2LiM1x6KJw2dv1aWNxhtMUfFeNud0wYLvKmrTTEGm+tyt5ioME+oobrhx4un5kfaZl+sKHpheDO32SzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQ1/rIfZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752072488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IvtHzdGRCCWhPpRsYp8sXiS0U91dJOKbbeEn3lL673g=;
-	b=ZQ1/rIfZU4vxY7w6iJWxOG/1ogGEVy8QaMHQ/Miy05VZFGOkaLMNiSozDT5YgEidDxDa4o
-	RxP6vFA/LukU0iY/Qa9ZM9+5ARH52R9NFWRemRRh+SR6Ykkt0rxe6tRkIw6RPPFdoV4eHV
-	RnxL0uOKQGRmdamRSpJ07M7m47osbck=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-199-fU_ryyU9OTmw7flf1icw9A-1; Wed,
- 09 Jul 2025 10:48:07 -0400
-X-MC-Unique: fU_ryyU9OTmw7flf1icw9A-1
-X-Mimecast-MFC-AGG-ID: fU_ryyU9OTmw7flf1icw9A_1752072486
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4B17D1944AAD;
-	Wed,  9 Jul 2025 14:48:06 +0000 (UTC)
-Received: from bcodding.csb.redhat.com (unknown [10.22.74.5])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 17FAC30001B1;
-	Wed,  9 Jul 2025 14:48:04 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Laurence Oberman <loberman@redhat.com>
-Subject: [PATCH v2] NFS: Fixup allocation flags for nfsiod's __GFP_NORETRY
-Date: Wed,  9 Jul 2025 10:48:04 -0400
-Message-ID: <9148ead966dbd7768d6dd832b61a8f1d93f43669.1752072235.git.bcodding@redhat.com>
+	s=arc-20240116; t=1752087888; c=relaxed/simple;
+	bh=oRGJxOoY6Sb9QvNhIjZ1ZJhSnfSKCQdsXzj4pLtR8xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IFpdQNqOOUX+LhbD/VhU4PwJgRK/t+yczcZNN+cBY2DuhXRO9bheYM7VOuTV6+BjPjEw1QOFgzl82HHvoF5qsjRapU6OsLlOtraMrvUbb75lcIz4wP1052v0IWan7hIfHEGuPHfTb9M8wIZuAUQGhj7GX7vS7LUi5PSorP639CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=gNSh2cAx; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60c9d8a169bso234638a12.1
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Jul 2025 12:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google; t=1752087885; x=1752692685; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3oMoCHTAV5NeIpZMq+DMEKC+TktfxuQeI3NG81ytBeE=;
+        b=gNSh2cAxDTBJoHztwizWyZZ3DiFKTi3wxKyznQsDnWmd1QbZGN06zsxFOINFhEp7IB
+         yfLbtqYSVkGMDhyxZGxjcQN0jFYGzFPHVc2AZqXty9tL0Ju71UroMih9Mr3iu6qqV7nj
+         lw3c1trpU/sgXaZdW46x5q3VycvC+Kx/pxnQQXN9w6q3xMS7sKadXvuhVHVnzfWr63rJ
+         u3NymWMMO1a7A8hAtX4WzUdkDKBocrk80U9+CLlbQYfVpTVOE9lLlTSmGtusmKB//WrA
+         AnSkmEGx+FU8/5DPnl1aVOIkMS+Pl+t1jRpA/y/1wOVURm5tvoZL7W7LiTNKp7/jsU5m
+         hanw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752087885; x=1752692685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3oMoCHTAV5NeIpZMq+DMEKC+TktfxuQeI3NG81ytBeE=;
+        b=nrbjJdCRG6BsOcsTNjgE+kS1EIxnXMlL9t5s4PJxnOyaZ+uIMmjwA+gRJGbUGppoOC
+         O+qX9cmgRcbCyKyInUbKRqaBicQbNtrtxWZ4qTEbopcxt6doCg9FX+DmPIqMqiaGuFkQ
+         HzacH8NKfePm0YAw0OIyC3QoxLfO3IK0eE8C889roW689knr7VngTGDkjosUoeJ/ospA
+         /jCgVRHJKV2mszD/2eEBLqArWxyNY36o95jiOy8Aow3x0QafRJ98S2DZcLCK1ANLy3Tw
+         xgqxCSZaJF4XouIjPgnobmIvtRihz4ZEcPxyoWTNuWSbkfT/F3nA84Xkibh8N9ZTEL/b
+         22kw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPGYjTuW1O5SBDSgLKb1U1dFdCVZAjwqsXGFJvub1Azd2asoURe790R0prgcePaA3JiGHaNFoqcTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW7Jty69/QUdxEgCE8lJd1Qrnp4u94CCCGLtnbg1dVy9SKDYqL
+	6W4ljSwV0HH9JgzhIJu0u+gsaNlZWpK3Agc3YAOo8fJvpK/TVqvWUSHsifkiJpUAdAuN60g/Yc2
+	XlSvjkKYrBkP9rEyiQdxer8LKctGgTknObEpNuFq4O4pArcofu33Q77g=
+X-Gm-Gg: ASbGnctX+hYQrQQ/35E9FBu5rfCPGpnq2NNFUP9wZomkQoihDyNfzHx4zu0vVt0EoMe
+	5/TOmejSuZt6I7STHLVYcceo4Zfh59KaV6fefqtMIYQ43mKPI+BZHUVVlWGassEW5okukHVbY7i
+	p1D82CblfVu+Vy8sKqQ01vhUZPwt/WEiieOeialwjz5slCrmTl/kNPQld8gzj/BPj1w5ncSNh2r
+	aks7K3gHg==
+X-Google-Smtp-Source: AGHT+IHHFatUYcYPUIaiNLDpnLA9ZJlzI11FgOes6AgoJS9tnoz2rAKkdasV4aiimfA44DVTmm7JJ+DkAfN2TlJGB04=
+X-Received: by 2002:a17:906:c116:b0:ade:450a:695a with SMTP id
+ a640c23a62f3a-ae6cfbea8f3mr343461166b.61.1752087884599; Wed, 09 Jul 2025
+ 12:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20250701163852.2171681-1-dhowells@redhat.com> <CAKPOu+8z_ijTLHdiCYGU_Uk7yYD=shxyGLwfe-L7AV3DhebS3w@mail.gmail.com>
+ <2724318.1752066097@warthog.procyon.org.uk>
+In-Reply-To: <2724318.1752066097@warthog.procyon.org.uk>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Wed, 9 Jul 2025 21:04:31 +0200
+X-Gm-Features: Ac12FXxBjj4Q8rQSAFMTvxq4Dux5Rk-Aycgaq2Qj_9vYK8pVlc0gHVgIsMegDWo
+Message-ID: <CAKPOu+_ZXJqftqFj6fZ=hErPMOuEEtjhnQ3pxMr9OAtu+sw=KQ@mail.gmail.com>
+Subject: Re: [PATCH 00/13] netfs, cifs: Fixes to retry-related code
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>, 
+	Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev, linux-afs@lists.infradead.org, 
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If the NFS client is doing writeback from a workqueue context, avoid using
-__GFP_NORETRY for allocations if the task has set PF_MEMALLOC_NOIO or
-PF_MEMALLOC_NOFS.  The combination of these flags makes memory allocation
-failures much more likely.
+On Wed, Jul 9, 2025 at 3:01=E2=80=AFPM David Howells <dhowells@redhat.com> =
+wrote:
+> If you keep an eye on /proc/fs/netfs/requests you should be able to see a=
+ny
+> tasks in there that get stuck.  If one gets stuck, then:
 
-We've seen those allocation failures show up when the loopback driver is
-doing writeback from a workqueue to a file on NFS, where memory allocation
-failure results in errors or corruption within the loopback device's
-filesystem.
+After one got stuck, this is what I see in /proc/fs/netfs/requests:
 
-Suggested-by: Trond Myklebust <trondmy@kernel.org>
-Fixes: 0bae835b63c5 ("NFS: Avoid writeback threads getting stuck in mempool_alloc()")
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Tested-by: Laurence Oberman <loberman@redhat.com>
----
+REQUEST  OR REF FL ERR  OPS COVERAGE
+=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D =3D=3D=3D =3D=3D =3D=3D=3D=3D =3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+00000065 2C   2 80002020    0   0 @0000 0/0
 
-	On V2: add missing 'Fixes' and Laurence's R-b T-b
+> Looking in /proc/fs/netfs/requests, you should be able to see the debug I=
+D of
+> the stuck request.  If you can try grepping the trace log for that:
+>
+> grep "R=3D<8-digit-hex-id>" /sys/kernel/debug/tracing/trace
 
- fs/nfs/internal.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+   kworker/u96:4-455     [008] ...1.   107.145222: netfs_sreq:
+R=3D00000065[1] WRIT PREP  f=3D00 s=3D0 0/0 s=3D0 e=3D0
+   kworker/u96:4-455     [008] ...1.   107.145292: netfs_sreq:
+R=3D00000065[1] WRIT SUBMT f=3D100 s=3D0 0/29e1 s=3D0 e=3D0
+   kworker/u96:4-455     [008] ...1.   107.145311: netfs_sreq:
+R=3D00000065[1] WRIT CA-PR f=3D100 s=3D0 0/3000 s=3D0 e=3D0
+   kworker/u96:4-455     [008] ...1.   107.145457: netfs_sreq:
+R=3D00000065[1] WRIT CA-WR f=3D100 s=3D0 0/3000 s=3D0 e=3D0
+     kworker/8:1-437     [008] ...1.   107.149530: netfs_sreq:
+R=3D00000065[1] WRIT TERM  f=3D100 s=3D0 3000/3000 s=3D2 e=3D0
+     kworker/8:1-437     [008] ...1.   107.149531: netfs_rreq:
+R=3D00000065 2C WAKE-Q  f=3D80002020
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 69c2c10ee658..7f3213607431 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -671,9 +671,12 @@ nfs_write_match_verf(const struct nfs_writeverf *verf,
- 
- static inline gfp_t nfs_io_gfp_mask(void)
- {
--	if (current->flags & PF_WQ_WORKER)
--		return GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN;
--	return GFP_KERNEL;
-+	gfp_t ret = current_gfp_context(GFP_KERNEL);
-+
-+	/* For workers __GFP_NORETRY only with __GFP_IO or __GFP_FS */
-+	if ((current->flags & PF_WQ_WORKER) && ret == GFP_KERNEL)
-+		return ret |= __GFP_NORETRY | __GFP_NOWARN;
-+	return ret;
- }
- 
- /*
--- 
-2.47.0
+I can reproduce this easily - it happens every time I log out of that
+machine when bash tries to write the bash_history file - the write()
+always gets stuck.
 
+(The above was 6.15.5 plus all patches in this PR.)
 
