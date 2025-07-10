@@ -1,56 +1,67 @@
-Return-Path: <linux-nfs+bounces-12969-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12970-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26133AFFAEF
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 09:33:04 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A123EAFFB33
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 09:44:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 099A14E7DC1
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 07:32:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C0AD1C81DBA
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 07:44:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D53288512;
-	Thu, 10 Jul 2025 07:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F7C28B400;
+	Thu, 10 Jul 2025 07:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfLnXFOy"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bCmiUOr+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDE1227EB9
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 07:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F1F28B3E8;
+	Thu, 10 Jul 2025 07:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752132776; cv=none; b=Y0aOKQhNPpRwmRST/RipNn4/UYxl5esKN/FCRFnBvULHFqyYN3Nleln790UcV3miiiwzw+2gDPmDWCEw6ZphxTdUHh07JA+6GCarPavSJsF4819Hn9ZPcXb8kPK0wRaXpASZZrcyiwMZtmtILHXYtNzoqDe1QYOxbIHnB3NNWNk=
+	t=1752133461; cv=none; b=KYOoWUYXcR8xalI28elXQM22H/wYHnbTPoODKyu1HY4hjmZcl56y2j68I+tsQjAMx4cTqPSYLEDLv0vJ5pKdeEItt7jpXB9ETuC9xMUVdCsfOi+9p4a/L8EztKukSCgH4SCXwMF43VmBcoDdJ+6rzYIcZR8BeMx6DCjATNTmwZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752132776; c=relaxed/simple;
-	bh=qGPmS772EKrRnmCDTYrkdurlEKkSAXM7x9BAs9fC7YM=;
+	s=arc-20240116; t=1752133461; c=relaxed/simple;
+	bh=3Vm0VZ3wEkG0QEaQt9fIUezZhLrgJE9wx8IMAceyI44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YGxic7Y78vHA2GACnDt+KIu6WHL8BeuzO0cDJr+6cfywxwNvAI/WlFIStQjIPB0fmPz/9korb38aZpDw+t8VzIf5YftnoiGZtrDY7UWravYNhuxnlSotCKu+hZPXQZbJJelwoM0hFn3pHic764ZPXe5DUm6hsR0y3vD/M/1D63o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfLnXFOy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0B2C4CEF4;
-	Thu, 10 Jul 2025 07:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752132776;
-	bh=qGPmS772EKrRnmCDTYrkdurlEKkSAXM7x9BAs9fC7YM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dfLnXFOy5oB6D+YRC5LXVp4DjavFQw04/UijHSA5R899PtGsuaLww87gLzM21oPEo
-	 kzhxAbecN0Gqu2pNu0Ah9/HDWGtRpQG9eBnfDJemHnZ5ZnlaCK3x7xFBeJ2USDt9TO
-	 C5SrVkTJ0VXMxdUCuUoIhqx5r2ymLhtWeBbFOVLkdSiNTjKrf4TVFnBIoFNivIv2CS
-	 DNdMzxseLl5ZoVM9e0TSqSZeelBj74dZQ9S2ARwkvAG6a2kxcDBbFvNERLqu98Lyd1
-	 1zq5/pVclBoUXIpDZicu0KWOuNUCeEsuv+sORIu8q4/Et2e8KQNHI0NMjyKIEW5gdL
-	 DbG3qdgKkhvuQ==
-Date: Thu, 10 Jul 2025 03:32:54 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
-	linux-nfs@vger.kernel.org, Mike Snitzer <snitzer@hammerspace.com>
-Subject: Re: [RFC PATCH 5/6] nfs/localio: refactor iocb initialization
-Message-ID: <aG9splp24KjMMZES@kernel.org>
-References: <20250708162047.65017-1-snitzer@kernel.org>
- <20250708162047.65017-6-snitzer@kernel.org>
- <aG9qd8hwXpUlaqTS@infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mTSG88687hbJdsDQZ+J9VgoJ+juNnlYpvXOzBgA1ddImnnFhuXBf6CNaQ7MOyMFuoEv1aPQUCZ+uehWPrtNvD0pM0kON7KH7YFuVvj7HAqf3JYywOSYm9//vntSCXMS3xgD3kx+fNc6B3tJ48Zzyu1xVTEI11Q/20AItjgJNVjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bCmiUOr+; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VYH1DxCcwh7lYgHK/JJ26eAVuS5Jac8v4dkVPNJ3/R4=; b=bCmiUOr+02evOGelfQHFyIrP/a
+	ZbDJNVNcahc3+lvk2qHy8JLr3wAfIjuL9Iddq4Z9b7oCYDnj4SCeQ9ot0ZKuSE8KUATkiAQVSDvdj
+	qrQMVnejZvHH4tIfXRNpQpAd2CcT6T5p7SWr3Ex/LH3p9xjp0oI9HMDzuiKq0jyJg2+M3oPqmgZ3J
+	BXqwFeWvK/TX8KBshVKFw/WEhVDZZg5zmh5i8nA9vkc1ikexLUUKoJKvlVhzQ2ePrqOSRYxXf1g4Y
+	AQTI8EFpu9IRiYGI/B5oSIInSeySQIA6Pj0OozJrMoZN9FkoE9pST8socIagcwoCqERRoaQ5UqaLt
+	+k1p4Mgg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uZlx3-0000000B3TH-24Be;
+	Thu, 10 Jul 2025 07:44:17 +0000
+Date: Thu, 10 Jul 2025 00:44:17 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 4/8] lib/iov_iter: remove piecewise bvec length
+ checking in iov_iter_aligned_bvec
+Message-ID: <aG9vUTfMkiT_-uMG@infradead.org>
+References: <20250708160619.64800-1-snitzer@kernel.org>
+ <20250708160619.64800-5-snitzer@kernel.org>
+ <aG9qtlHCmSztOsFo@infradead.org>
+ <aG9scyDn-rxDnwn3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -59,16 +70,16 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aG9qd8hwXpUlaqTS@infradead.org>
+In-Reply-To: <aG9scyDn-rxDnwn3@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Jul 10, 2025 at 12:23:35AM -0700, Christoph Hellwig wrote:
-> > +	// FIXME: would do well to allocate memory based on NUMA node.
-> > +	iocb->bvec = kmalloc_array(hdr->page_array.npages,
-> > +				   sizeof(struct bio_vec), flags);
-> 
-> I don't think that's a "FIXME".  Either do it or leave it, but given
-> that memory is allocated on the local node by default I can't see why
-> that would be useful here for a short lived allocation. 
+On Thu, Jul 10, 2025 at 03:32:03AM -0400, Mike Snitzer wrote:
+> The first time I posted this series I did a better job of sending this
+> patch to Andrew and Al iirc.  In any case, I can pull this fix out to
+> front of series.  But also iov_iter_aligned_iovec() appear to have the
+> same issue.
 
-Yeah, meant to remove that FIXME.. will do for v3.
+Maybe send a series just addressing the two for now to kick off the
+discussion.
+
 
