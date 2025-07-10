@@ -1,49 +1,49 @@
-Return-Path: <linux-nfs+bounces-12982-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12983-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEAF9B0049D
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 16:05:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25E66B004BC
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 16:09:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 944EF177FDD
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 14:00:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D85581892A30
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 14:07:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C78A26FA59;
-	Thu, 10 Jul 2025 13:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8C5E271A84;
+	Thu, 10 Jul 2025 14:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYjPBwYM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szIJjEgR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DAC27057C
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 13:59:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1275270EA9
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 14:07:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752155994; cv=none; b=Y7AgW75oxKrodSVPh4mPQb+Zn3GsKkVOl8vOfD6LYF95l7FXPwVR0xTnzNv5A4Rek6vl3xSpheKuJ0c2e/BbBM6c45omMJkuy5Z127fwjiS47F8VziKKnZ/PAGqQT9NBZTttmhB8c/hFaELbN/vMnTLOlgXlg4V0SdN+vkAPwh0=
+	t=1752156420; cv=none; b=O7vARrh0FCRFsTDfTpNU+lwBoil4OmJ8eWJRIOY4SuKeS3ocKNPDRHGKxua73OaBCBsXrtkb/ztBTGvGbiVGLZXy7vmF2HZXLOA3AWW/DpAydXudk/GYNpXDWeur7uLGGYBy3rlkNLHiqLepCUnJsnEOpU5fUKsdbL+jARC8SJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752155994; c=relaxed/simple;
-	bh=mQekn/Bl/7dgT8ApFq8N4CzIwoXFOboI2SAeP/q5CvY=;
+	s=arc-20240116; t=1752156420; c=relaxed/simple;
+	bh=ABfxzpvxT3fMn5d7wTwVUf6gA1c4LfSNhVMHRzk59U4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B7Z8lO3xJeuQxu2E7EG13GtJeqAmYD3dd6Uk/I7BFvAdXOPMf5hoEOvCuyAhzo5/7rKNaCnUOrsdhVgCucM9J2t+B1nxCHLgtdKwWjg7yb8xxZ9CiSrgihAgkFYrlXCnCz8HppUO2eV0bP+m2qHvc9uu8iepQjPY39eRTHwxaQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYjPBwYM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED8A3C4CEED;
-	Thu, 10 Jul 2025 13:59:52 +0000 (UTC)
+	 Content-Type:MIME-Version; b=IC/7/dH/lURTlKTIkHE8jfIjzng+rP9CghWWOsFNCdOhVQKZYLRMAerREzZfDoSyOsartG9v1CqEl4d62m1hiXy0goHZ1zmd5t3KfoSUYrUsXep+KN1zTdnfyQnLtRwaMsYr5YAsTntWZ87Wv1mc5jahTpY44Z4kXy4KPAkRhdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szIJjEgR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 408CCC4CEF7;
+	Thu, 10 Jul 2025 14:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752155993;
-	bh=mQekn/Bl/7dgT8ApFq8N4CzIwoXFOboI2SAeP/q5CvY=;
+	s=k20201202; t=1752156420;
+	bh=ABfxzpvxT3fMn5d7wTwVUf6gA1c4LfSNhVMHRzk59U4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MYjPBwYMlTo1QGRyrfc6nIFvlKe8D4RsFOcMZExdWTUhtJ6eQeG8vmI3OcXo+hQCE
-	 T92lZNxLm811VR4YKG5ZZ/yeNsFnF5M0fIf5NU7UlvAniR7EQYbb43a/BwMNlFHeWl
-	 QqUx7+bekHZsqIRdY5vMCHmHeqOsH3b6F04tJEidv1r+CbG3cShgfKF1AivzGtdMmd
-	 jfT7dh6pQmE+6LPcwzpvIFhUUYYt11lRnX6yKW8jaGKTHxQZmCpNW0ft/JR49bgSqW
-	 qrCP7QZLIIlAWdOTZTc6sx7T09xKV1cUANYNHIZ0mrawVrVvAbsGv4IOCVd79m+3eI
-	 Ec2ye/w6/bfAA==
-Message-ID: <1e0ad437d0966c1dad71d43cfebec8fa16736f19.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 1/8] NFSD: Relocate the fh_want_write() and
- fh_drop_write() helpers
+	b=szIJjEgRmjZXBA7w00LoaEMswgW9tV2ZWszKrNHExUNolE1/O9L7ce36i8AXAyWi3
+	 Kb5iI6hvAIoEkv7ShZpRX9kqwa3FIAtwL/iIDbYq4U3krJCVU0xxzwNsOcvGi1IuLd
+	 t9qnh6vJQmPWrIJk9RBPnHRPkteL3SZ5XREHPrbrLVj3uWn9NW/A2wQYNhr1F5V9EV
+	 X5HDWDA1DZuxmUeAID3QznnAsp+LRvAoPhHi0XVUDkTS5G69EQu1DEjlzxacD6o8H+
+	 3Op8A1+tfCmNw+xCSukqJWSrN192o2cJOJMrGT3b2ZfEwFXdMSp5FpxCaJgRbBKTV8
+	 oES435lRhZM8Q==
+Message-ID: <e5a0d1e435196c55acbdc491b43b6380cbef5599.camel@kernel.org>
+Subject: Re: [RFC PATCH v2 6/8] NFSD: add io_cache_read controls to debugfs
+ interface
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
   NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
@@ -51,10 +51,10 @@ To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
  <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linus-fsdevel@vger.kernel.org, 
 	linux-mm@kvack.org
-Date: Thu, 10 Jul 2025 09:59:51 -0400
-In-Reply-To: <20250708160619.64800-2-snitzer@kernel.org>
+Date: Thu, 10 Jul 2025 10:06:58 -0400
+In-Reply-To: <20250708160619.64800-7-snitzer@kernel.org>
 References: <20250708160619.64800-1-snitzer@kernel.org>
-	 <20250708160619.64800-2-snitzer@kernel.org>
+	 <20250708160619.64800-7-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,109 +140,175 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-07-08 at 12:06 -0400, Mike Snitzer wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+> Add 'io_cache_read' to NFSD's debugfs interface so that: Any data
+> read by NFSD will either be:
+> - cached using page cache (NFSD_IO_BUFFERED=3D0)
+> - cached but removed from the page cache upon completion
+>   (NFSD_IO_DONTCACHE=3D1).
+> - not cached (NFSD_IO_DIRECT=3D2)
 >=20
-> Clean up: These helpers are part of the NFSD file handle API.
-> Relocate them to fs/nfsd/nfsfh.h.
+> io_cache_read is 0 by default.  It may be set by writing to:
+>   /sys/kernel/debug/nfsd/io_cache_read
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> If NFSD_IO_DONTCACHE is specified using 1, FOP_DONTCACHE must be
+> advertised as supported by the underlying filesystem (e.g. XFS),
+> otherwise all IO flagged with RWF_DONTCACHE will fail with
+> -EOPNOTSUPP.
+>=20
+> If NFSD_IO_DIRECT is specified using 2, the IO must be aligned
+> relative to the underlying block device's logical_block_size. Also the
+> memory buffer used to store the read must be aligned relative to the
+> underlying block device's dma_alignment.
+>=20
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  fs/nfsd/nfsfh.h | 37 +++++++++++++++++++++++++++++++++++++
->  fs/nfsd/vfs.h   | 20 --------------------
->  2 files changed, 37 insertions(+), 20 deletions(-)
+>  fs/nfsd/debugfs.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/nfsd.h    |  8 +++++++
+>  fs/nfsd/vfs.c     | 15 ++++++++++++++
+>  3 files changed, 76 insertions(+)
 >=20
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 1cf979722521..6f5255d1c190 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -14,6 +14,8 @@
->  #include <linux/exportfs.h>
->  #include <linux/nfs4.h>
-> =20
-> +#include "export.h"
-> +
->  /*
->   * The file handle starts with a sequence of four-byte words.
->   * The first word contains a version number (1) and three descriptor byt=
-es
-> @@ -271,6 +273,41 @@ static inline bool fh_fsid_match(const struct knfsd_=
-fh *fh1,
->  	return true;
+> diff --git a/fs/nfsd/debugfs.c b/fs/nfsd/debugfs.c
+> index 84b0c8b559dc..709646af797a 100644
+> --- a/fs/nfsd/debugfs.c
+> +++ b/fs/nfsd/debugfs.c
+> @@ -27,11 +27,61 @@ static int nfsd_dsr_get(void *data, u64 *val)
+>  static int nfsd_dsr_set(void *data, u64 val)
+>  {
+>  	nfsd_disable_splice_read =3D (val > 0) ? true : false;
+> +	if (!nfsd_disable_splice_read) {
+> +		/*
+> +		 * Cannot use NFSD_IO_DONTCACHE or NFSD_IO_DIRECT
+> +		 * if splice_read is enabled.
+> +		 */
+> +		nfsd_io_cache_read =3D NFSD_IO_BUFFERED;
+> +	}
+>  	return 0;
 >  }
 > =20
-> +/**
-> + * fh_want_write - Get write access to an export
-> + * @fhp: File handle of file to be written
-> + *
-> + * Caller must invoke fh_drop_write() when its write operation
-> + * is complete.
-> + *
-> + * Returns 0 if the file handle's export can be written to. Otherwise
-> + * the export is not prepared for updates, and the returned negative
-> + * errno value reflects the reason for the failure.
-> + */
-> +static inline int fh_want_write(struct svc_fh *fhp)
-> +{
-> +	int ret;
-> +
-> +	if (fhp->fh_want_write)
-> +		return 0;
-> +	ret =3D mnt_want_write(fhp->fh_export->ex_path.mnt);
-> +	if (!ret)
-> +		fhp->fh_want_write =3D true;
-> +	return ret;
-> +}
-> +
-> +/**
-> + * fh_drop_write - Release write access on an export
-> + * @fhp: File handle of file on which fh_want_write() was previously cal=
-led
-> + */
-> +static inline void fh_drop_write(struct svc_fh *fhp)
-> +{
-> +	if (fhp->fh_want_write) {
-> +		fhp->fh_want_write =3D false;
-> +		mnt_drop_write(fhp->fh_export->ex_path.mnt);
-> +	}
-> +}
-> +
->  /**
->   * knfsd_fh_hash - calculate the crc32 hash for the filehandle
->   * @fh - pointer to filehandle
-> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-> index eff04959606f..4007dcbbbfef 100644
-> --- a/fs/nfsd/vfs.h
-> +++ b/fs/nfsd/vfs.h
-> @@ -160,26 +160,6 @@ __be32		nfsd_permission(struct svc_cred *cred, struc=
-t svc_export *exp,
+>  DEFINE_DEBUGFS_ATTRIBUTE(nfsd_dsr_fops, nfsd_dsr_get, nfsd_dsr_set, "%ll=
+u\n");
 > =20
->  void		nfsd_filp_close(struct file *fp);
-> =20
-> -static inline int fh_want_write(struct svc_fh *fh)
-> -{
-> -	int ret;
-> -
-> -	if (fh->fh_want_write)
-> -		return 0;
-> -	ret =3D mnt_want_write(fh->fh_export->ex_path.mnt);
-> -	if (!ret)
-> -		fh->fh_want_write =3D true;
-> -	return ret;
-> -}
-> -
-> -static inline void fh_drop_write(struct svc_fh *fh)
-> -{
-> -	if (fh->fh_want_write) {
-> -		fh->fh_want_write =3D false;
-> -		mnt_drop_write(fh->fh_export->ex_path.mnt);
-> -	}
-> -}
-> -
->  static inline __be32 fh_getattr(const struct svc_fh *fh, struct kstat *s=
-tat)
->  {
->  	u32 request_mask =3D STATX_BASIC_STATS;
+> +/*
+> + * /sys/kernel/debug/nfsd/io_cache_read
+> + *
+> + * Contents:
+> + *   %0: NFS READ will use buffered IO (default)
+> + *   %1: NFS READ will use dontcache (buffered IO w/ dropbehind)
+> + *   %2: NFS READ will use direct IO
+> + *
+> + * The default value of this setting is zero (buffered IO is
+> + * used). This setting takes immediate effect for all NFS
+> + * versions, all exports, and in all NFSD net namespaces.
+> + */
+> +
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Could we switch this to use a string instead? Maybe
+buffered/dontcache/direct ?
+
+> +static int nfsd_io_cache_read_get(void *data, u64 *val)
+> +{
+> +	*val =3D nfsd_io_cache_read;
+> +	return 0;
+> +}
+> +
+> +static int nfsd_io_cache_read_set(void *data, u64 val)
+> +{
+> +	switch (val) {
+> +	case NFSD_IO_DONTCACHE:
+> +	case NFSD_IO_DIRECT:
+> +		/*
+> +		 * Must disable splice_read when enabling
+> +		 * NFSD_IO_DONTCACHE or NFSD_IO_DIRECT.
+> +		 */
+> +		nfsd_disable_splice_read =3D true;
+> +		nfsd_io_cache_read =3D val;
+> +		break;
+> +	case NFSD_IO_BUFFERED:
+> +	default:
+> +		nfsd_io_cache_read =3D NFSD_IO_BUFFERED;
+> +		break;
+
+I think the default case should leave nfsd_io_cache_read alone and
+return an error. If we add new values later, and someone tries to use
+them on an old kernel, it's better to make that attempt error out.
+
+Ditto for the write side controls.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_DEBUGFS_ATTRIBUTE(nfsd_io_cache_read_fops, nfsd_io_cache_read_get=
+,
+> +			 nfsd_io_cache_read_set, "%llu\n");
+> +
+>  void nfsd_debugfs_exit(void)
+>  {
+>  	debugfs_remove_recursive(nfsd_top_dir);
+> @@ -44,4 +94,7 @@ void nfsd_debugfs_init(void)
+> =20
+>  	debugfs_create_file("disable-splice-read", S_IWUSR | S_IRUGO,
+>  			    nfsd_top_dir, NULL, &nfsd_dsr_fops);
+> +
+> +	debugfs_create_file("io_cache_read", S_IWUSR | S_IRUGO,
+> +			    nfsd_top_dir, NULL, &nfsd_io_cache_read_fops);
+>  }
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 1cd0bed57bc2..4740567f4e7e 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -153,6 +153,14 @@ static inline void nfsd_debugfs_exit(void) {}
+> =20
+>  extern bool nfsd_disable_splice_read __read_mostly;
+> =20
+> +enum {
+> +	NFSD_IO_BUFFERED =3D 0,
+> +	NFSD_IO_DONTCACHE,
+> +	NFSD_IO_DIRECT
+> +};
+> +
+> +extern u64 nfsd_io_cache_read __read_mostly;
+> +
+>  extern int nfsd_max_blksize;
+> =20
+>  static inline int nfsd_v4client(struct svc_rqst *rq)
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 845c212ad10b..632ce417f4ef 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -49,6 +49,7 @@
+>  #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
+> =20
+>  bool nfsd_disable_splice_read __read_mostly;
+> +u64 nfsd_io_cache_read __read_mostly;
+> =20
+>  /**
+>   * nfserrno - Map Linux errnos to NFS errnos
+> @@ -1107,6 +1108,20 @@ __be32 nfsd_iter_read(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+> =20
+>  	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
+>  	iov_iter_bvec(&iter, ITER_DEST, rqstp->rq_bvec, v, *count);
+> +
+> +	switch (nsfd_io_cache_read) {
+> +	case NFSD_IO_DIRECT:
+> +		if (iov_iter_is_aligned(&iter, nf->nf_dio_mem_align - 1,
+> +					nf->nf_dio_read_offset_align - 1))
+> +			kiocb.ki_flags =3D IOCB_DIRECT;
+> +		break;
+> +	case NFSD_IO_DONTCACHE:
+> +		kiocb.ki_flags =3D IOCB_DONTCACHE;
+> +		break;
+> +	case NFSD_IO_BUFFERED:
+> +		break;
+> +	}
+> +
+>  	host_err =3D vfs_iocb_iter_read(file, &kiocb, &iter);
+>  	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err)=
+;
+>  }
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
