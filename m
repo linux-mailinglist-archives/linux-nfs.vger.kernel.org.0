@@ -1,60 +1,59 @@
-Return-Path: <linux-nfs+bounces-12980-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12981-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2DE4B00468
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 15:57:12 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E3ADB0049E
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 16:05:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 520181BC3007
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 13:56:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B2971177BED
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 14:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3976275872;
-	Thu, 10 Jul 2025 13:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853ED1E0489;
+	Thu, 10 Jul 2025 13:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5w39cjx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MV8Sr+a1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2539273D96
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 13:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601011EA80
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 13:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752155576; cv=none; b=q/9j9gmMWj/8lWHjlZAF9+fD7cbQe1gy5R6RAt4kAq95ZMqPgI0tcvjCTaX3qgx8BOPYOtzuo02UXjf/XFmCrxC3fnjjAjMm/XijeQdlEK3CzGvJ2zdWdLrUTC3Vba3jBDz+m8D4hdXJCILZ7KzCKFo/0ni5XtHiPzgV7VzHnpY=
+	t=1752155960; cv=none; b=lM7SpMaCHoqz+NwrGQkvSBFMAATkTjPdiZur5O6mn6xmmDE61ewpf4g6w8nc2/sLbrFXHM8wsNlkiR8k2CPcogB/Cr54+uxYCEaUOYmC672u0B7C/2sMYIZk7AKrDQhvzWOiAFqIvpDi5gLuTAAp4vzn0ShqVvDX7Lb96Qn2qNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752155576; c=relaxed/simple;
-	bh=l97vSGUhaIvTpKN0sJykGom3s3WBV5JIH9Z1Dprfa3Q=;
+	s=arc-20240116; t=1752155960; c=relaxed/simple;
+	bh=Sv73T93uupJs0f4PoBOYM5EvEo5cP7R/bj7pcAy2I+o=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HeYnePe/XEWNhCsvWKxaMjDfffsOTlkhyDcWjyEbDtxkIwyxvkE/gtXWAxGbEG6SFe9e/K+aeLgb/RGHmzoZeXH9tgTA4oNQi91TBtpqU+XfJKKv7qE8HLGrcC7RjzcqMw98v0NoboM/Lx78qaj3Hap8dMr/bkRuo4sqYlGbmEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5w39cjx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB65C4CEF6;
-	Thu, 10 Jul 2025 13:52:54 +0000 (UTC)
+	 Content-Type:MIME-Version; b=T//slc7pyurUHxi3mGh9jF1emIvMw8WPxXrI99Du0uLe5xDni9JZqAHF28OlH/ayZkd8bgR9j3dO17bMPcJWKV2o1Gk9osDyJixGTYdGvB7WKLqWesnNt8pGsSwSqmwkbhW+qbtW4n0N6eASqpiFuTkgSQVBB71wM8kRKFW70I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MV8Sr+a1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08893C4CEE3;
+	Thu, 10 Jul 2025 13:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752155575;
-	bh=l97vSGUhaIvTpKN0sJykGom3s3WBV5JIH9Z1Dprfa3Q=;
+	s=k20201202; t=1752155959;
+	bh=Sv73T93uupJs0f4PoBOYM5EvEo5cP7R/bj7pcAy2I+o=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=O5w39cjxB04tmwqxwQEjx0WJsJQumXBElorkQArMbQAZCDl0UZqFD6Yv4LyEcamF7
-	 m/3A0NE5l2eHCJRdyaHayAe/cnyR11nszOCDGzvmHPeM5bZGRXTFeUyY3J/+s9XAMf
-	 5AgLwMW6kZv5GRLhLxuzrUb9VKhhUx5g8C1PU+H1Ytmi0g+QjvAmcRNgaDwVd7lDXf
-	 DtLl8ry+eO6B33tlDOMtxK0cHku4wAjoJHlCvscdcWjLSaYSLu0+aaBqNdzSfYwuwp
-	 F2FKYdSU69Cdtb4npsZGUNC0YagFeLJSluX4aJYjHxCeDvJdcwi9iCidCiSgh24yFO
-	 UCHI5Lzc479pg==
-Message-ID: <5819d6c5bb194613a14d2dcf05605e701683ba49.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 4/8] lib/iov_iter: remove piecewise bvec length
- checking in iov_iter_aligned_bvec
+	b=MV8Sr+a1r3vjL8XFhr9V55abj9WlPvTu6yMD/f3n5juKGoeHmRPTwdKW9tcrIuIlx
+	 T3lk4sIh70ly2ETukFMTVn54DOpmauxxAHEJ+DRKLIACSSAeTc1D+uNUtvawWLuIfv
+	 gWoO1+TZGFfp1axeKmixhbTWcBiRUzhSz9k+9BLr1SkK61mKy5WLAmdx/WA1ceULA0
+	 0GBpd8DBUjb/8nizugCsmQZn+VNjywWD6iVL0fEBi1DORheJIiAZUGYEuU9o6AinjM
+	 kNGbN/1881KSnssObgqDOY9EyRQCf6tv+lID4uJVdIrFKiCyE+blYGegG7wqJjYNEk
+	 +GigJFl+b0kFQ==
+Message-ID: <7bea47339a061a9c76612279f565cbd298292105.camel@kernel.org>
+Subject: Re: [RFC PATCH v2 2/8] NFSD: Move the fh_getattr() helper
 From: Jeff Layton <jlayton@kernel.org>
 To: Mike Snitzer <snitzer@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
   NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
  Ngo <Dai.Ngo@oracle.com>,  Tom Talpey <tom@talpey.com>, Trond Myklebust
  <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
 Cc: linux-nfs@vger.kernel.org, linus-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, kbusch@kernel.org, hch@infradead.org
-Date: Thu, 10 Jul 2025 09:52:53 -0400
-In-Reply-To: <20250708160619.64800-5-snitzer@kernel.org>
+	linux-mm@kvack.org
+Date: Thu, 10 Jul 2025 09:59:17 -0400
+In-Reply-To: <20250708160619.64800-3-snitzer@kernel.org>
 References: <20250708160619.64800-1-snitzer@kernel.org>
-	 <20250708160619.64800-5-snitzer@kernel.org>
+	 <20250708160619.64800-3-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -140,56 +139,104 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Tue, 2025-07-08 at 12:06 -0400, Mike Snitzer wrote:
-> iov_iter_aligned_bvec() is strictly checking alignment of each element
-> of the bvec to arrive at whether the bvec is aligned relative to
-> dma_alignment and on-disk alignment.  Checking each element
-> individually results in disallowing a bvec that in aggregate is
-> perfectly aligned relative to the provided @len_mask.
+> From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Relax the on-disk alignment checking such that it is done on the full
-> extent described by the bvec but still do piecewise checking of the
-> dma_alignment for each bvec's bv_offset.
+> Clean up: The fh_getattr() function is part of NFSD's file handle
+> API, so relocate it.
 >=20
-> This allows for NFS's WRITE payload to be issued using O_DIRECT as
-> long as the bvec created with xdr_buf_to_bvec() is composed of pages
-> that respect the underlying device's dma_alignment (@addr_mask) and
-> the overall contiguous on-disk extent is aligned relative to the
-> logical_block_size (@len_mask).
+> I've made it an un-inlined function so that trace points and new
+> functionality can easily be introduced. That increases the size of
+> nfsd.ko by about a page on my x86_64 system (out of 26MB; compiled
+> with -O2).
 >=20
+
+Weird. I would have expected making it uninlined would decrease the
+size of the binary not increase it. There are quite a few fh_getattr()
+calls.
+
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
 > ---
->  lib/iov_iter.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  fs/nfsd/nfsfh.c | 23 +++++++++++++++++++++++
+>  fs/nfsd/nfsfh.h |  1 +
+>  fs/nfsd/vfs.h   | 13 -------------
+>  3 files changed, 24 insertions(+), 13 deletions(-)
 >=20
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index bdb37d572e97..b2ae482b8a1d 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -819,13 +819,14 @@ static bool iov_iter_aligned_bvec(const struct iov_=
-iter *i, unsigned addr_mask,
->  	unsigned skip =3D i->iov_offset;
->  	size_t size =3D i->count;
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 16e6b4428d55..f4a3cc9e31e0 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -663,6 +663,29 @@ fh_update(struct svc_fh *fhp)
+>  	return nfserr_serverfault;
+>  }
 > =20
-> +	if (size & len_mask)
-> +		return false;
+> +/**
+> + * fh_getattr - Retrieve attributes on a local file
+> + * @fhp: File handle of target file
+> + * @stat: Caller-supplied kstat buffer to be filled in
+> + *
+> + * Returns nfs_ok on success, otherwise an NFS status code is
+> + * returned.
+> + */
+> +__be32 fh_getattr(const struct svc_fh *fhp, struct kstat *stat)
+> +{
+> +	struct path p =3D {
+> +		.mnt		=3D fhp->fh_export->ex_path.mnt,
+> +		.dentry		=3D fhp->fh_dentry,
+> +	};
+> +	u32 request_mask =3D STATX_BASIC_STATS;
 > +
->  	do {
->  		size_t len =3D bvec->bv_len;
+> +	if (fhp->fh_maxsize =3D=3D NFS4_FHSIZE)
+> +		request_mask |=3D (STATX_BTIME | STATX_CHANGE_COOKIE);
+> +
+> +	return nfserrno(vfs_getattr(&p, stat, request_mask,
+> +				    AT_STATX_SYNC_AS_STAT));
+> +}
+> +
+>  /**
+>   * fh_fill_pre_attrs - Fill in pre-op attributes
+>   * @fhp: file handle to be updated
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index 6f5255d1c190..5ef7191f8ad8 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -222,6 +222,7 @@ extern char * SVCFH_fmt(struct svc_fh *fhp);
+>  __be32	fh_verify(struct svc_rqst *, struct svc_fh *, umode_t, int);
+>  __be32	fh_verify_local(struct net *, struct svc_cred *, struct auth_doma=
+in *,
+>  			struct svc_fh *, umode_t, int);
+> +__be32	fh_getattr(const struct svc_fh *fhp, struct kstat *stat);
+>  __be32	fh_compose(struct svc_fh *, struct svc_export *, struct dentry *,=
+ struct svc_fh *);
+>  __be32	fh_update(struct svc_fh *);
+>  void	fh_put(struct svc_fh *);
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index 4007dcbbbfef..0c0292611c6d 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -160,17 +160,4 @@ __be32		nfsd_permission(struct svc_cred *cred, struc=
+t svc_export *exp,
 > =20
->  		if (len > size)
->  			len =3D size;
-> -		if (len & len_mask)
-> -			return false;
->  		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
->  			return false;
+>  void		nfsd_filp_close(struct file *fp);
 > =20
+> -static inline __be32 fh_getattr(const struct svc_fh *fh, struct kstat *s=
+tat)
+> -{
+> -	u32 request_mask =3D STATX_BASIC_STATS;
+> -	struct path p =3D {.mnt =3D fh->fh_export->ex_path.mnt,
+> -			 .dentry =3D fh->fh_dentry};
+> -
+> -	if (fh->fh_maxsize =3D=3D NFS4_FHSIZE)
+> -		request_mask |=3D (STATX_BTIME | STATX_CHANGE_COOKIE);
+> -
+> -	return nfserrno(vfs_getattr(&p, stat, request_mask,
+> -				    AT_STATX_SYNC_AS_STAT));
+> -}
+> -
+>  #endif /* LINUX_NFSD_VFS_H */
 
-cc'ing Keith too since he wrote this helper originally. Should this
-also get a:
+In any case, I don't see a real benefit in keeping this as a static
+inline.
 
-Fixes: cfa320f72882 ("iov: introduce iov_iter_aligned")
-
-?
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
