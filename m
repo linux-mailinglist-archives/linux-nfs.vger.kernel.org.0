@@ -1,64 +1,66 @@
-Return-Path: <linux-nfs+bounces-12973-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12974-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40CB4AFFB59
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 09:52:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE915AFFB86
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 10:01:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 723DF7BF65A
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 07:50:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D718189B2A0
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 08:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93CDF286D60;
-	Thu, 10 Jul 2025 07:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5499928B7E6;
+	Thu, 10 Jul 2025 08:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2hcSlqLx"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TXJ+rrsE"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470C42874FB
-	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 07:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871228B7CD;
+	Thu, 10 Jul 2025 08:00:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752133907; cv=none; b=GnU+QOqio88EkpYcRrsr+mQ5X4rwQQOJ0JkBN3rmUgAwWYGCrEZgshWwUEwArW1ntd5xZ50LuPBhEgo1nDFyY50pcJqdyevaWlWHMlZm20LztmlrHVtyQ40UHwbGxReLelncFM01R0rAAhPeHFoiHCK4FjQ1dRb48qR+1lKsu1Y=
+	t=1752134439; cv=none; b=ZoGV96xKSG4W84XgG6yiMjl+uIusXy8QC84k4TRxg4FcRfN1/U+So247g4P5RtGx0bnhC+esDDr18sIGXjqXqGsW8yPIWbQkz9kDM4zDxvtKD1hwQk7CMngD7MGnOdmmDzVvKUUWqYlaP0eqibSiW7J3Y/P3fwjfuAMjxFAEEVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752133907; c=relaxed/simple;
-	bh=9yY/WvH7dQGbSI2N/Q5lhlFuFD5ga8JfAb+4B3jKUX8=;
+	s=arc-20240116; t=1752134439; c=relaxed/simple;
+	bh=2dHUB3IC3sdS0hLmMicGLp/gfznTyK+DCrvYFfDZR08=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bs55KM1dIwp1cGAY7iGImC3T7sdvjCv9d32dWTPHNqPkHf1BQ80FCALwR4wYcP4TvIisWgCNpOfsVL4wRUPusYNBofxQMMv3YoQJVg/Jg+j9g3YwqBwKYvkaWjuaeHT9aG9vL7ecC3OG0D7W7FE5+wDPLajZjN5k4P+5C1kbpGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=2hcSlqLx; arc=none smtp.client-ip=198.137.202.133
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVoSbyuZmS9JrFvvCEeBnWZpvRYzzsp7nlcW0KJsza/wFgvpzEaArdFoaLiDGJW+UpCWkg2A8IMzQU1/AGH3hr9a8w5PS7gLWeN5TZ2/06e2A/YnvqfULF0FJ2yk6BVmQtcz3rZscWah2Ume7LwHwLBO7sly/Khn+bmwy7esEiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TXJ+rrsE; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nDZPu0ZiFruAreTK2Fx1Etdv0ZbXac8nfj9wZN830O4=; b=2hcSlqLxeGAWo4IyCR5jfJFHND
-	+Xim09ub+Q7T3x7B7Ap9fsNF6NVg8Nvbs7V/0gr7/3ngZVrpLXnrMdalEhKYIkBFscgFEXHvESU6M
-	jp0/vP8gOdIqLEDJMew8aZ9gfWWIzgyP5hq8JnasGI0PwVGwGFIX62FV4a5pMOfpZSXlpOSWhRekP
-	i5jqsmyaScKEttN9/0WeLIbzW2G2Ne643OLBdbbxSt2mIPBF2nvhVx2tGKnR48LCK45AM/7oi+ANw
-	7ho1J1Jeziac9JcnWezClL3uo3y2hvScggUVmbt7+JdovmwbgFxI4hUNti7ISeTJdCCCZ38zitQIR
-	AdKS5G3w==;
+	bh=RQSU1VKtvPuYnwuvJ92PV+7wJlwWZ71mCrKkW3LvhAU=; b=TXJ+rrsEYXGPJ9bSByOzmW07nc
+	cKcy37r3QJf7/aNPaxKi1nDAZRtj4BaYkug2lbprVqsedOxkKbozjXGsE/LAUciexvVE1g/4J3G1B
+	3lSfTQxyDQ9usUbC+yDPNmxmWeaI/xC0Z1ofhSVfwEQOu8rJgBQg9awYYNTE1t0YUwONsIGkanWyl
+	6paB6og5j/Zn0S/vTTjDJ0Q6leXdrbrxYqHxkM3WofLPKwYVar5AXQMyqtVG4U/WaWnukncPfyqfC
+	/OgrkTSaAGrfuTRD/hd4d13Hr1Ul68A4cwlXCw4Mmf20Q6DgzqUYuCKUs4HStirAzOaxMUMKcjMYT
+	mR80URUw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZm4E-0000000B4jk-3TOc;
-	Thu, 10 Jul 2025 07:51:42 +0000
-Date: Thu, 10 Jul 2025 00:51:42 -0700
+	id 1uZmCn-0000000B64a-2px3;
+	Thu, 10 Jul 2025 08:00:33 +0000
+Date: Thu, 10 Jul 2025 01:00:33 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
-	NeilBrown <neil@brown.name>,
+To: Jeff Layton <jlayton@kernel.org>
+Cc: NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Olga Kornievskaia <okorniev@redhat.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-	linus-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 8/8] NFSD: issue READs using O_DIRECT even if IO
- is misaligned
-Message-ID: <aG9xDqnVeRdn_WPJ@infradead.org>
-References: <20250708160619.64800-1-snitzer@kernel.org>
- <20250708160619.64800-9-snitzer@kernel.org>
+	Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, axboe@kernel.dk,
+	kundanthebest@gmail.com, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/2] nfsd: issue POSIX_FADV_DONTNEED after
+ READ/WRITE/COMMIT
+Message-ID: <aG9zIQTuMqmfauVE@infradead.org>
+References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
+ <175158460396.565058.1455251307012063937@noble.neil.brown.name>
+ <fbe5d61013efe48d0cd89c16a933a9c925a8ea86.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -67,42 +69,37 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250708160619.64800-9-snitzer@kernel.org>
+In-Reply-To: <fbe5d61013efe48d0cd89c16a933a9c925a8ea86.camel@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, Jul 08, 2025 at 12:06:19PM -0400, Mike Snitzer wrote:
-> +static bool nfsd_analyze_read_dio(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> +				  loff_t offset, __u32 len,
-> +				  const u32 dio_blocksize,
-> +				  loff_t *start, loff_t *end,
-> +				  loff_t *start_extra, loff_t *end_extra)
+On Sat, Jul 05, 2025 at 07:32:58AM -0400, Jeff Layton wrote:
+> That is the fundamental question: should we delay writeback or not? It
+> seems like delaying it is probably best, even in the modern era with
+> SSDs, but we do need more numbers here (ideally across a range of
+> workloads).
 
-With this amount of arguments, especially out arguments that return
-values the better choice is usually to have a struct.
+If you have asynchronous writeback there's probably no good reason to
+delay it per-se.  But it does make sense to wait long enough to have
+a large I/O size, especially with some form of parity raid you'll want
+to fill up the chunk, but also storage devices themselves will perform
+much better with a larger size.  e.g. for HDD you'll want to write 1MB
+batches, and similar write sizes also help with for SSDs.  While the
+write performance itself might not be much worse with smaller I/O
+especially for high quality ones, large I/O helps to reduce the
+internal fragmentation and thus later reduces garbage collection
+overhead and thus increases life time.
 
-If not using two-tab ndents at least make it a lot more readable..
+> > Ideally DONTCACHE should only affect cache usage and the latency of
+> > subsequence READs.  It shouldn't affect WRITE behaviour.
+> > 
+> 
+> It definitely does affect it today. The ideal thing IMO would be to
+> just add the dropbehind flag to the folios on writes but not call
+> filemap_fdatawrite_range_kick() on every write operation.
 
-> +{
-> +	ssize_t host_err = bytes_read;
-> +	loff_t v;
-> +
-> +	/* Must remove first start_extra_page from rqstp->rq_bvec */
-> +	if (start_extra_page) {
-> +		__free_page(start_extra_page);
-
-I can't really follow the logic here.  Why must it be removed (and
-freed)?  Can you write a more detailed comment here as the logic
-isn't very obvious.
-
-> +		*rq_bvec_numpages -= 1;
-> +		v = *rq_bvec_numpages;
-> +		for (int i = 0; i < v; i++) {
-> +			struct bio_vec *bv = &rqstp->rq_bvec[i+1];
-> +			bvec_set_page(&rqstp->rq_bvec[i], bv->bv_page,
-> +				      bv->bv_offset, bv->bv_len);
-> +		}
-
-This is basically shifting down the bvecs, right?  Why not simply
-use memmove?
+Yes, a mode that sets drop behind but leaves writeback to the
+writeback threads can be interesting.  Right now it will still be
+bottlenecked by the single writeback thread, but work on this is
+underway.
 
 
