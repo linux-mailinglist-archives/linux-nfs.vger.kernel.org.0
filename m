@@ -1,105 +1,96 @@
-Return-Path: <linux-nfs+bounces-12974-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-12975-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE915AFFB86
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 10:01:05 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDD39AFFF75
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 12:43:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D718189B2A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 08:01:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 490AE16BAB3
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Jul 2025 10:43:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5499928B7E6;
-	Thu, 10 Jul 2025 08:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 208402DCF5B;
+	Thu, 10 Jul 2025 10:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TXJ+rrsE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cYbTi+Lm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E871228B7CD;
-	Thu, 10 Jul 2025 08:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE022DC33D
+	for <linux-nfs@vger.kernel.org>; Thu, 10 Jul 2025 10:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752134439; cv=none; b=ZoGV96xKSG4W84XgG6yiMjl+uIusXy8QC84k4TRxg4FcRfN1/U+So247g4P5RtGx0bnhC+esDDr18sIGXjqXqGsW8yPIWbQkz9kDM4zDxvtKD1hwQk7CMngD7MGnOdmmDzVvKUUWqYlaP0eqibSiW7J3Y/P3fwjfuAMjxFAEEVo=
+	t=1752144170; cv=none; b=dReEX0j+g1XcGHs3Vo+8w6XK9R/6W1Yp0mFZZbxbdH1kb+n6MpB9HqP+/F94rehCJBDU0iZzSbaQQBdXmATGaw7uLaM33wXpB+tJwcHDv7BjCOI7pY8M1YnRcP2tnElpBAz+EQY8/ohenmfi3rzeGK2moZpGaOwNhK1h8nHs5cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752134439; c=relaxed/simple;
-	bh=2dHUB3IC3sdS0hLmMicGLp/gfznTyK+DCrvYFfDZR08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fVoSbyuZmS9JrFvvCEeBnWZpvRYzzsp7nlcW0KJsza/wFgvpzEaArdFoaLiDGJW+UpCWkg2A8IMzQU1/AGH3hr9a8w5PS7gLWeN5TZ2/06e2A/YnvqfULF0FJ2yk6BVmQtcz3rZscWah2Ume7LwHwLBO7sly/Khn+bmwy7esEiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TXJ+rrsE; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RQSU1VKtvPuYnwuvJ92PV+7wJlwWZ71mCrKkW3LvhAU=; b=TXJ+rrsEYXGPJ9bSByOzmW07nc
-	cKcy37r3QJf7/aNPaxKi1nDAZRtj4BaYkug2lbprVqsedOxkKbozjXGsE/LAUciexvVE1g/4J3G1B
-	3lSfTQxyDQ9usUbC+yDPNmxmWeaI/xC0Z1ofhSVfwEQOu8rJgBQg9awYYNTE1t0YUwONsIGkanWyl
-	6paB6og5j/Zn0S/vTTjDJ0Q6leXdrbrxYqHxkM3WofLPKwYVar5AXQMyqtVG4U/WaWnukncPfyqfC
-	/OgrkTSaAGrfuTRD/hd4d13Hr1Ul68A4cwlXCw4Mmf20Q6DgzqUYuCKUs4HStirAzOaxMUMKcjMYT
-	mR80URUw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uZmCn-0000000B64a-2px3;
-	Thu, 10 Jul 2025 08:00:33 +0000
-Date: Thu, 10 Jul 2025 01:00:33 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: NeilBrown <neil@brown.name>, Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-	Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, axboe@kernel.dk,
-	kundanthebest@gmail.com, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] nfsd: issue POSIX_FADV_DONTNEED after
- READ/WRITE/COMMIT
-Message-ID: <aG9zIQTuMqmfauVE@infradead.org>
-References: <20250703-nfsd-testing-v1-0-cece54f36556@kernel.org>
- <175158460396.565058.1455251307012063937@noble.neil.brown.name>
- <fbe5d61013efe48d0cd89c16a933a9c925a8ea86.camel@kernel.org>
+	s=arc-20240116; t=1752144170; c=relaxed/simple;
+	bh=Qi2xN9CPi8kxytydc+W5j/C1kv7krEztkFXcmE6uBqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IFUEjDoWghUNBnxM/oVLRhlfXIa1ENh79tGXitMi6ZzrKDwudryEIZlptDSHwQGbKMuB3+LBRAcAVU5X6bHOXtFF4064ru9zlczJGdp2x14KI4JnG1kZmqgRPdzhgac8aNVUbzInaRlWesS/Kz65/ZYuipn07sVpVVnhKHzjwZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cYbTi+Lm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752144167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sll3bpBa0MX5q7fvhJLieJE4y/lWcuh1mvZXcpgpszs=;
+	b=cYbTi+LmZl8ECzjaxO1A8IzYt5JD2erzhcYUaCFAzQ/LmUUwh+nWYPolOsc3mmkC4/NhWM
+	USiOtaIYJ4MaEThyCHJ8GP4asXU5KPdEb/ZcibtTwkPrR4tW9wxevsyCDrheCj5KNhLz68
+	r4qRiE3rsR+aXlD0ySaPrZLxbtKA+l8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-641-iswCAqURPFazXzORGj_Jrg-1; Thu,
+ 10 Jul 2025 06:42:44 -0400
+X-MC-Unique: iswCAqURPFazXzORGj_Jrg-1
+X-Mimecast-MFC-AGG-ID: iswCAqURPFazXzORGj_Jrg_1752144163
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 882271800290;
+	Thu, 10 Jul 2025 10:42:42 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.5])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 145C618002B6;
+	Thu, 10 Jul 2025 10:42:40 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Laurence Oberman <loberman@redhat.com>, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v3] NFS: Fixup allocation flags for nfsiod's __GFP_NORETRY
+Date: Thu, 10 Jul 2025 06:42:38 -0400
+Message-ID: <BAD83C9F-5F54-4E8C-AC57-A3DE51A9227D@redhat.com>
+In-Reply-To: <aG9qCtldrjhqW-s7@infradead.org>
+References: <f83ac1155a4bc670f2663959a7a068571e06afd9.1752111622.git.bcodding@redhat.com>
+ <aG9qCtldrjhqW-s7@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbe5d61013efe48d0cd89c16a933a9c925a8ea86.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Sat, Jul 05, 2025 at 07:32:58AM -0400, Jeff Layton wrote:
-> That is the fundamental question: should we delay writeback or not? It
-> seems like delaying it is probably best, even in the modern era with
-> SSDs, but we do need more numbers here (ideally across a range of
-> workloads).
+On 10 Jul 2025, at 3:21, Christoph Hellwig wrote:
 
-If you have asynchronous writeback there's probably no good reason to
-delay it per-se.  But it does make sense to wait long enough to have
-a large I/O size, especially with some form of parity raid you'll want
-to fill up the chunk, but also storage devices themselves will perform
-much better with a larger size.  e.g. for HDD you'll want to write 1MB
-batches, and similar write sizes also help with for SSDs.  While the
-write performance itself might not be much worse with smaller I/O
-especially for high quality ones, large I/O helps to reduce the
-internal fragmentation and thus later reduces garbage collection
-overhead and thus increases life time.
+> On Wed, Jul 09, 2025 at 09:47:43PM -0400, Benjamin Coddington wrote:
+>> If the NFS client is doing writeback from a workqueue context, avoid using
+>> __GFP_NORETRY for allocations if the task has set PF_MEMALLOC_NOIO or
+>> PF_MEMALLOC_NOFS.  The combination of these flags makes memory allocation
+>> failures much more likely.
+>
+> Can we take a step back and figre out why this blanket usage of
+> __GFP_NORETRY exists at all?
 
-> > Ideally DONTCACHE should only affect cache usage and the latency of
-> > subsequence READs.  It shouldn't affect WRITE behaviour.
-> > 
-> 
-> It definitely does affect it today. The ideal thing IMO would be to
-> just add the dropbehind flag to the folios on writes but not call
-> filemap_fdatawrite_range_kick() on every write operation.
+Added in 515dcdcd48736 there's a decent explanation which boils down to: its
+usually OK for nfsiod to have an allocation failure, we want it to fail
+quickly and not get hung up waiting for an allocation.
 
-Yes, a mode that sets drop behind but leaves writeback to the
-writeback threads can be interesting.  Right now it will still be
-bottlenecked by the single writeback thread, but work on this is
-underway.
+Ben
 
 
