@@ -1,57 +1,58 @@
-Return-Path: <linux-nfs+bounces-13039-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13040-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1536DB03E3F
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 14:08:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D393B03E88
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 14:24:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80BF23AEB73
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 12:06:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B3658189C3A9
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 12:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FF5248F64;
-	Mon, 14 Jul 2025 12:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C57F242D98;
+	Mon, 14 Jul 2025 12:23:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzfitB5J"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRAfduAl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD2A1EEF9;
-	Mon, 14 Jul 2025 12:03:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CBD4A1A
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 12:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752494602; cv=none; b=pKuOV01e9MwUgwKOebnGfY+QcS3v/iAs/4oj+/pZ53VCGcNPBfTeQZYwazUN5SYWNMW5dzvI8XQTSDJu00MBPewhM8YrS0KdDMKstmZ1TY4IuwMZGTS33pbVnvGubJscIypjle79//NDyZ3r/6IvL2trg6uR0GP+lSD5kqxPo44=
+	t=1752495839; cv=none; b=nNO8teys5/YD6+7IBlsv4Nq592p6P/D1HGtgD21mtBKvbtL/nr0OizEmuoWoURGHtD143u+GiGHnYscWyexXbd09YiVTfPd1w8pnljUAd4JNG27mV1KxJDQRSXRUnmFe75tXL9cI+mZnGjfRKhN3BtjBBaciFPDkyqICyW6W0e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752494602; c=relaxed/simple;
-	bh=9s0yNP+RL2Ndis5KUqBJId48sXbciwqOqNUYi+Z3JyA=;
+	s=arc-20240116; t=1752495839; c=relaxed/simple;
+	bh=CUwzs/Jvr9qkHYqO3/QsMJAD7sbhrHTTkualeZSQJ88=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DDE74PQMoXC0Ik9C5Cnwzs+vOgCZVqnF8+lqV9qQR1eB1kamH9gjdWwfXR4R4dZIASKt+mVbeqxiDXH6V9rPjFtU7gFEtF4zt0fE1Jve/PWGQFRS02Tpd5b53aV4v+7sX9PEGnDfDLegCyfux8lG7kcq2J5j9nmbpUOAH4t9bok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzfitB5J; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D2FC4CEF4;
-	Mon, 14 Jul 2025 12:03:21 +0000 (UTC)
+	 Content-Type:MIME-Version; b=nf1s+PJZiSKN/UidpSpjhgRg0S37DFMrqBGiBug77yD/mBbEHHMC4sswrY4qx2mTpbtVvTEQkXRP1abG7joOtTs3Lg53JeTkD3FXx8QQJwHg1Z1CNpenot7wXECMpsVUo/SXV/BkLLZsr4XgvGXERzJ+Cs7TFrDEQanBv4854jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRAfduAl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304AFC4CEED;
+	Mon, 14 Jul 2025 12:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752494602;
-	bh=9s0yNP+RL2Ndis5KUqBJId48sXbciwqOqNUYi+Z3JyA=;
+	s=k20201202; t=1752495838;
+	bh=CUwzs/Jvr9qkHYqO3/QsMJAD7sbhrHTTkualeZSQJ88=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WzfitB5J5/LL6Ku0cJVPzygaHAFGKd/NmoyzMdQAYaxu6Dw6B81FPhH1m3MWxH9yj
-	 EX04vdvOYYcF4u6Ter1eWm9zF+ep4bN3CI5L9uokf9LMh/A/mXkoKZdmdRuMyqbm/C
-	 Zv9ipM/r99tO+d+LgyF3i6f/S6bKfpDyWLU1kJ4KXJ4PEbjvXQFPd5ixXzSMWUHjEi
-	 VO9zqLIxh9BDcaIQvijnSzBJIa3+qJb2MG0R3TsU87S/WNnNZwqWQrKQyxK5giJ3aq
-	 99jOQyKlGwhCDYu2MLquIuECudnS95GC7w5RDWoCMhyBDFGOuLtsHRr3RM0OMGdu5w
-	 28TsOSbqJcuKA==
-Message-ID: <8353f6c4ef26a9459468e545cbd15d7e44a257ce.camel@kernel.org>
-Subject: Re: [PATCH] SUNRPC: Remove unused xdr functions
+	b=JRAfduAlytTL+0PlKY21itp7kQAJSSrqTNGx8HVKehSOtC2SnUj6EBZFT+uKmiSj1
+	 yWBHMYsZ4ZPUD2sCczCPfZGUknvMtZ2wCw1KVpKR/6dhQOn4ZCPxzFBoM6pZANy14w
+	 qKy++9xwGfIFIvPhyEidZf9xMI/ceA+J6Sj6mwCBLcrF9Xhfxl1LqH2pjrDxiZuX4B
+	 cpUwwxp9LcwCHT8zXFTyLSS1SlOkkRmrtypGOz9qxGtDVZuv6akvIbF4ob2+uSb2NL
+	 AEAot4jnKuuYv452WzbNu/6BLfYC8KdGbi91EO3sGI00aN3ZoycAKNLHr0wJ/cdFtu
+	 3bWisiIA1eV4Q==
+Message-ID: <035364beea042fb932f8333ed5825c2a62d22eb5.camel@kernel.org>
+Subject: Re: [for-6.16-final PATCH 8/9] nfs/localio: avoid bouncing LOCALIO
+ if nfs_client_is_local()
 From: Jeff Layton <jlayton@kernel.org>
-To: linux@treblig.org, chuck.lever@oracle.com, anna@kernel.org, 
-	trondmy@kernel.org
-Cc: neil@brown.name, okorniev@redhat.com, Dai.Ngo@oracle.com,
- tom@talpey.com, 	linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Mon, 14 Jul 2025 08:03:20 -0400
-In-Reply-To: <20250712233006.403226-1-linux@treblig.org>
-References: <20250712233006.403226-1-linux@treblig.org>
+To: Mike Snitzer <snitzer@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Trond Myklebust <trondmy@hammerspace.com>, Chuck Lever
+ <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>
+Cc: linux-nfs@vger.kernel.org
+Date: Mon, 14 Jul 2025 08:23:56 -0400
+In-Reply-To: <20250714031359.10192-9-snitzer@kernel.org>
+References: <20250714031359.10192-1-snitzer@kernel.org>
+	 <20250714031359.10192-9-snitzer@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -136,207 +137,63 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sun, 2025-07-13 at 00:30 +0100, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Sun, 2025-07-13 at 23:13 -0400, Mike Snitzer wrote:
+> From: Mike Snitzer <snitzer@hammerspace.com>
 >=20
-> Remove a bunch of unused xdr_*decode* functions:
->   The last use of xdr_decode_netobj() was removed in 2021 by:
-> commit 7cf96b6d0104 ("lockd: Update the NLMv4 SHARE arguments decoder to
-> use struct xdr_stream")
->   The last use of xdr_decode_string_inplace() was removed in 2021 by:
-> commit 3049e974a7c7 ("lockd: Update the NLMv4 FREE_ALL arguments decoder
-> to use struct xdr_stream")
->   The last use of xdr_stream_decode_opaque() was removed in 2024 by:
-> commit fed8a17c61ff ("xdrgen: typedefs should use the built-in string and
-> opaque functions")
+> Previously nfs_local_probe() was made to disable and then attempt to
+> re-enable LOCALIO (via LOCALIO protocol handshake) if/when it was
+> called and LOCALIO already enabled.
 >=20
->   The functions xdr_stream_decode_string() and
-> xdr_stream_decode_opaque_dup() were both added in 2018 by the
-> commit 0e779aa70308 ("SUNRPC: Add helpers for decoding opaque and string
-> types")
-> but never used.
+> Vague memory for _why_ this was the case is that this was useful
+> if/when a local NFS server were to be restarted with a local NFS
+> client connected to it.
 >=20
-> Remove them.
+> But as it happens this causes an absurd amount of LOCALIO flapping
+> which has a side-effect of too much IO being needlessly sent to NFSD
+> (using RPC over the loopback network interface).  This is the
+> definition of "serious performance loss" (that negates the point of
+> having LOCALIO).
 >=20
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> So remove this mis-optimization for re-enabling LOCALIO if/when an NFS
+> server is restarted (which is an extremely rare thing to do).  Will
+> revisit testing that scenario again but in the meantime this patch
+> restores the full benefit of LOCALIO.
+>=20
+> Fixes: 56bcd0f07fdb ("nfs: implement client support for NFS_LOCALIO_PROGR=
+AM")
+> Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
 > ---
->  include/linux/sunrpc/xdr.h |   9 ---
->  net/sunrpc/xdr.c           | 110 -------------------------------------
->  2 files changed, 119 deletions(-)
+>  fs/nfs/localio.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-> index a2ab813a9800..e370886632b0 100644
-> --- a/include/linux/sunrpc/xdr.h
-> +++ b/include/linux/sunrpc/xdr.h
-> @@ -128,10 +128,7 @@ xdr_buf_init(struct xdr_buf *buf, void *start, size_=
-t len)
->  __be32 *xdr_encode_opaque_fixed(__be32 *p, const void *ptr, unsigned int=
- len);
->  __be32 *xdr_encode_opaque(__be32 *p, const void *ptr, unsigned int len);
->  __be32 *xdr_encode_string(__be32 *p, const char *s);
-> -__be32 *xdr_decode_string_inplace(__be32 *p, char **sp, unsigned int *le=
-np,
-> -			unsigned int maxlen);
->  __be32 *xdr_encode_netobj(__be32 *p, const struct xdr_netobj *);
-> -__be32 *xdr_decode_netobj(__be32 *p, struct xdr_netobj *);
+> diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
+> index a4bacd9a5052..e3ae003118cb 100644
+> --- a/fs/nfs/localio.c
+> +++ b/fs/nfs/localio.c
+> @@ -180,10 +180,8 @@ static void nfs_local_probe(struct nfs_client *clp)
+>  		return;
+>  	}
 > =20
->  void	xdr_inline_pages(struct xdr_buf *, unsigned int,
->  			 struct page **, unsigned int, unsigned int);
-> @@ -341,12 +338,6 @@ xdr_stream_remaining(const struct xdr_stream *xdr)
->  	return xdr->nwords << 2;
->  }
-> =20
-> -ssize_t xdr_stream_decode_opaque(struct xdr_stream *xdr, void *ptr,
-> -		size_t size);
-> -ssize_t xdr_stream_decode_opaque_dup(struct xdr_stream *xdr, void **ptr,
-> -		size_t maxlen, gfp_t gfp_flags);
-> -ssize_t xdr_stream_decode_string(struct xdr_stream *xdr, char *str,
-> -		size_t size);
->  ssize_t xdr_stream_decode_string_dup(struct xdr_stream *xdr, char **str,
->  		size_t maxlen, gfp_t gfp_flags);
->  ssize_t xdr_stream_decode_opaque_auth(struct xdr_stream *xdr, u32 *flavo=
-r,
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 2ea00e354ba6..a0aae1144212 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -37,19 +37,6 @@ xdr_encode_netobj(__be32 *p, const struct xdr_netobj *=
-obj)
->  }
->  EXPORT_SYMBOL_GPL(xdr_encode_netobj);
-> =20
-> -__be32 *
-> -xdr_decode_netobj(__be32 *p, struct xdr_netobj *obj)
-> -{
-> -	unsigned int	len;
-> -
-> -	if ((len =3D be32_to_cpu(*p++)) > XDR_MAX_NETOBJ)
-> -		return NULL;
-> -	obj->len  =3D len;
-> -	obj->data =3D (u8 *) p;
-> -	return p + XDR_QUADLEN(len);
-> -}
-> -EXPORT_SYMBOL_GPL(xdr_decode_netobj);
-> -
->  /**
->   * xdr_encode_opaque_fixed - Encode fixed length opaque data
->   * @p: pointer to current position in XDR buffer.
-> @@ -102,21 +89,6 @@ xdr_encode_string(__be32 *p, const char *string)
->  }
->  EXPORT_SYMBOL_GPL(xdr_encode_string);
-> =20
-> -__be32 *
-> -xdr_decode_string_inplace(__be32 *p, char **sp,
-> -			  unsigned int *lenp, unsigned int maxlen)
-> -{
-> -	u32 len;
-> -
-> -	len =3D be32_to_cpu(*p++);
-> -	if (len > maxlen)
-> -		return NULL;
-> -	*lenp =3D len;
-> -	*sp =3D (char *) p;
-> -	return p + XDR_QUADLEN(len);
-> -}
-> -EXPORT_SYMBOL_GPL(xdr_decode_string_inplace);
-> -
->  /**
->   * xdr_terminate_string - '\0'-terminate a string residing in an xdr_buf
->   * @buf: XDR buffer where string resides
-> @@ -2247,88 +2219,6 @@ int xdr_process_buf(const struct xdr_buf *buf, uns=
-igned int offset,
->  }
->  EXPORT_SYMBOL_GPL(xdr_process_buf);
-> =20
-> -/**
-> - * xdr_stream_decode_opaque - Decode variable length opaque
-> - * @xdr: pointer to xdr_stream
-> - * @ptr: location to store opaque data
-> - * @size: size of storage buffer @ptr
-> - *
-> - * Return values:
-> - *   On success, returns size of object stored in *@ptr
-> - *   %-EBADMSG on XDR buffer overflow
-> - *   %-EMSGSIZE on overflow of storage buffer @ptr
-> - */
-> -ssize_t xdr_stream_decode_opaque(struct xdr_stream *xdr, void *ptr, size=
-_t size)
-> -{
-> -	ssize_t ret;
-> -	void *p;
-> -
-> -	ret =3D xdr_stream_decode_opaque_inline(xdr, &p, size);
-> -	if (ret <=3D 0)
-> -		return ret;
-> -	memcpy(ptr, p, ret);
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(xdr_stream_decode_opaque);
-> -
-> -/**
-> - * xdr_stream_decode_opaque_dup - Decode and duplicate variable length o=
-paque
-> - * @xdr: pointer to xdr_stream
-> - * @ptr: location to store pointer to opaque data
-> - * @maxlen: maximum acceptable object size
-> - * @gfp_flags: GFP mask to use
-> - *
-> - * Return values:
-> - *   On success, returns size of object stored in *@ptr
-> - *   %-EBADMSG on XDR buffer overflow
-> - *   %-EMSGSIZE if the size of the object would exceed @maxlen
-> - *   %-ENOMEM on memory allocation failure
-> - */
-> -ssize_t xdr_stream_decode_opaque_dup(struct xdr_stream *xdr, void **ptr,
-> -		size_t maxlen, gfp_t gfp_flags)
-> -{
-> -	ssize_t ret;
-> -	void *p;
-> -
-> -	ret =3D xdr_stream_decode_opaque_inline(xdr, &p, maxlen);
-> -	if (ret > 0) {
-> -		*ptr =3D kmemdup(p, ret, gfp_flags);
-> -		if (*ptr !=3D NULL)
-> -			return ret;
-> -		ret =3D -ENOMEM;
+> -	if (nfs_client_is_local(clp)) {
+> -		/* If already enabled, disable and re-enable */
+> -		nfs_localio_disable_client(clp);
 > -	}
-> -	*ptr =3D NULL;
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(xdr_stream_decode_opaque_dup);
-> -
-> -/**
-> - * xdr_stream_decode_string - Decode variable length string
-> - * @xdr: pointer to xdr_stream
-> - * @str: location to store string
-> - * @size: size of storage buffer @str
-> - *
-> - * Return values:
-> - *   On success, returns length of NUL-terminated string stored in *@str
-> - *   %-EBADMSG on XDR buffer overflow
-> - *   %-EMSGSIZE on overflow of storage buffer @str
-> - */
-> -ssize_t xdr_stream_decode_string(struct xdr_stream *xdr, char *str, size=
-_t size)
-> -{
-> -	ssize_t ret;
-> -	void *p;
-> -
-> -	ret =3D xdr_stream_decode_opaque_inline(xdr, &p, size);
-> -	if (ret > 0) {
-> -		memcpy(str, p, ret);
-> -		str[ret] =3D '\0';
-> -		return strlen(str);
-> -	}
-> -	*str =3D '\0';
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(xdr_stream_decode_string);
-> -
->  /**
->   * xdr_stream_decode_string_dup - Decode and duplicate variable length s=
-tring
->   * @xdr: pointer to xdr_stream
+> +	if (nfs_client_is_local(clp))
+> +		return;
+> =20
+>  	if (!nfs_uuid_begin(&clp->cl_uuid))
+>  		return;
+> @@ -241,7 +239,8 @@ __nfs_local_open_fh(struct nfs_client *clp, const str=
+uct cred *cred,
+>  		case -ENOMEM:
+>  		case -ENXIO:
+>  		case -ENOENT:
+> -			/* Revalidate localio, will disable if unsupported */
+> +			/* Revalidate localio */
+> +			nfs_localio_disable_client(clp);
+>  			nfs_local_probe(clp);
+>  		}
+>  	}
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
