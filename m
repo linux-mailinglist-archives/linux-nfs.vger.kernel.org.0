@@ -1,59 +1,55 @@
-Return-Path: <linux-nfs+bounces-13041-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13042-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5792B03EAB
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 14:28:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A50AB03F39
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:06:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9178716E26C
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 12:28:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A83E2189EB5E
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:06:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62EAB246335;
-	Mon, 14 Jul 2025 12:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A19D246BB7;
+	Mon, 14 Jul 2025 13:06:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="petbxnSr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRtDXD82"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD42244669
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 12:28:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6623497B
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:06:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752496104; cv=none; b=LYyyvQvU2Mofh24bKc4Qo0d4rquqVSPW+K7em7NnwJ9AH2DuQNrjQhnf2m9XWlu1n0Yn06D8HGdd1zJYqDAp70Y8JdiGxmPqSM+nyQqIxZAZANRR4vteKkGTHTgJF/ksFvkVWM8d0cIHP6YdumMxCCGOgLGOoP9+VJl6vr1/i24=
+	t=1752498369; cv=none; b=hRu+Vx8Z48NYPGRvgMaFSg3flNUB1PjPZHO6d/BvUqdx3QfAtJ8YG1QAYpXWU5Cw9qAjZyWP+9S7CzlH5N6h0vh7pLG9eNhn2I1lUdl4UN4S75dbWuqcVwPwwtYsZ4+Bx4/fB3iRy97a/YIPG0YBbELMXjPuHLeC+9RunLq7FSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752496104; c=relaxed/simple;
-	bh=3OeJ0BIAsKYuwmUzFvhW1JE8QWew2U10tlwHuWdDOAE=;
+	s=arc-20240116; t=1752498369; c=relaxed/simple;
+	bh=aYD1+osE+36Rrqa2XcT8JONvqQqzVEO1o3fcHq5Kly0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XAecqF6vYVeLEN94sCJ4Pq3t010F/EUKGn+nHeJWmQapzNEDiYUUynUL4Ck3IZOqqLauXkNVWUSlNDH2NUHEDqaaH9ovxni5KDMyMQhCMPX5euWfNX9hjgHaapHwfEsvIwZhGc3IovFYz/LzPTmvBTDQjJUxgnjjtrq5SFY7cVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=petbxnSr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4655CC4CEED;
-	Mon, 14 Jul 2025 12:28:23 +0000 (UTC)
+	 Content-Type:MIME-Version; b=dbPZZ0+NN9tUqApPGTvhlAwSx1WZUQfp5RbtH4FlH0dB1x7PUSCo6plFM1scva6DDpk61laP8KWPmhdAKC/XHggtz1Y2fqwW/3RrKp+cNKFe6k39S5ogr4IghBiqJhqKGy6Ar47unS0Owtc2SY2rBwZUNbDVhj2mcgvh8JXxFBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRtDXD82; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4752BC4CEED;
+	Mon, 14 Jul 2025 13:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752496103;
-	bh=3OeJ0BIAsKYuwmUzFvhW1JE8QWew2U10tlwHuWdDOAE=;
+	s=k20201202; t=1752498368;
+	bh=aYD1+osE+36Rrqa2XcT8JONvqQqzVEO1o3fcHq5Kly0=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=petbxnSrlqENJcfC8qe5J0i+/8xRBH+s7JZH19VqeINL3op+MYHZckSvjAS18tPuY
-	 F/LyGoG+0yhucJrOkHEk5liUfNXNus/j4PgCHPhFSOztQUzMKufHsblvWKpaO5/PMT
-	 sDVJarVx+W8X6awfGjgYPqjvg21N64trz7R02nJMJ6wLPQXU0MNFssKIqhOIXkODaa
-	 NCnfa527EqMe6MXwx3t+4Jwasxe4hqm+AkIklMXuDR2/IQSSG98ahwvc80+YTk2NCn
-	 l1OuG1VlAkyV4LorRri9cmagVW9842YwD2FsEkdRvFCA7j1QkpqE52zv4rCS83Ev1f
-	 lni3/AAIb9J7Q==
-Message-ID: <579139f6eaaf3f807991e041f509db14d2ffc721.camel@kernel.org>
-Subject: Re: [for-6.16-final PATCH 9/9] nfs/localio: add localio_async_probe
- modparm
+	b=HRtDXD82tC4/Q6ALsx+o6lzB53jYygRFGl5HaEh+oixq+ofHse1HgEMlWrcN4u2+P
+	 4YMfIxPTz9h9pcxSgzbNW/tpLNio7MljjhGdOxrUnzU0aCznDHmYM4jRelqeXgOOSv
+	 iIFPgq+bZ4ol8fhs0bBbethgdLie33BZps/vYoZoiDvxk7isu3TK/gyd+X9C8VRVFf
+	 +7dgTnVURY+EFQu0SO7zyzGO/VCR7N6Z3aQFGO8VrHUym2VbWE2eu8ezTiDbsYOjmB
+	 Xon3lN7aYf00xbPEhmfiQgaDOhHIlDfdqbOclnvir0L64H8FN/qqV9LbKOnL45mIvj
+	 mA4pOErRtCgwA==
+Message-ID: <32e83baf09b27ef9ea0def88f8031dfdc0cc5b78.camel@kernel.org>
+Subject: Re: [PATCH 1/4] NFS: cleanup nfs_inode_reclaim_delegation
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neil@brown.name>, Mike Snitzer <snitzer@kernel.org>
-Cc: Anna Schumaker <anna@kernel.org>, Trond Myklebust
- <trondmy@hammerspace.com>,  Chuck Lever <chuck.lever@oracle.com>,
- linux-nfs@vger.kernel.org
-Date: Mon, 14 Jul 2025 08:28:22 -0400
-In-Reply-To: <175246700631.2234665.18042187680516755344@noble.neil.brown.name>
-References: <20250714031359.10192-1-snitzer@kernel.org>
-	, <20250714031359.10192-10-snitzer@kernel.org>
-	 <175246700631.2234665.18042187680516755344@noble.neil.brown.name>
+To: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+Date: Mon, 14 Jul 2025 09:06:06 -0400
+In-Reply-To: <20250714111651.1565055-2-hch@lst.de>
+References: <20250714111651.1565055-1-hch@lst.de>
+	 <20250714111651.1565055-2-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -138,78 +134,78 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2025-07-14 at 14:23 +1000, NeilBrown wrote:
-> On Mon, 14 Jul 2025, Mike Snitzer wrote:
-> > From: Mike Snitzer <snitzer@hammerspace.com>
-> >=20
-> > This knob influences the LOCALIO handshake so that it happens
-> > synchronously upon NFS client creation.. which reduces the window of
-> > opportunity for a bunch of IO to flood page cache and send out over to
-> > NFSD before LOCALIO handshake negotiates that the client and server
-> > are local.  The knob is:
-> >   echo N > /sys/module/nfs/parameters/localio_async_probe
+On Mon, 2025-07-14 at 13:16 +0200, Christoph Hellwig wrote:
+> Reduce a level of indentation for most of the code in this function.
 >=20
-> I understand why you are adding this but ....  yuck.  Tuning knobs are
-> best avoided.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/nfs/delegation.c | 48 ++++++++++++++++++++++-----------------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
 >=20
-> Maybe we could still do the probe async, but in mount wait for 200ms,
-> or for the probe to get a reply.   That should make everyone happy.
->=20
-> NeilBrown
->=20
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> index 519bdc91112c..56bb2a7e1793 100644
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
+> @@ -237,34 +237,34 @@ void nfs_inode_reclaim_delegation(struct inode *ino=
+de, const struct cred *cred,
+> =20
+>  	rcu_read_lock();
+>  	delegation =3D rcu_dereference(NFS_I(inode)->delegation);
+> -	if (delegation !=3D NULL) {
+> -		spin_lock(&delegation->lock);
+> -		nfs4_stateid_copy(&delegation->stateid, stateid);
+> -		delegation->type =3D type;
+> -		delegation->pagemod_limit =3D pagemod_limit;
+> -		oldcred =3D delegation->cred;
+> -		delegation->cred =3D get_cred(cred);
+> -		switch (deleg_type) {
+> -		case NFS4_OPEN_DELEGATE_READ_ATTRS_DELEG:
+> -		case NFS4_OPEN_DELEGATE_WRITE_ATTRS_DELEG:
+> -			set_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
+> -			break;
+> -		default:
+> -			clear_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
+> -		}
+> -		clear_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags);
+> -		if (test_and_clear_bit(NFS_DELEGATION_REVOKED,
+> -				       &delegation->flags))
+> -			atomic_long_inc(&nfs_active_delegations);
+> -		spin_unlock(&delegation->lock);
+> -		rcu_read_unlock();
+> -		put_cred(oldcred);
+> -		trace_nfs4_reclaim_delegation(inode, type);
+> -	} else {
+> +	if (!delegation) {
+>  		rcu_read_unlock();
+>  		nfs_inode_set_delegation(inode, cred, type, stateid,
+>  					 pagemod_limit, deleg_type);
+> +		return;
+> +	}
+> +
+> +	spin_lock(&delegation->lock);
+> +	nfs4_stateid_copy(&delegation->stateid, stateid);
+> +	delegation->type =3D type;
+> +	delegation->pagemod_limit =3D pagemod_limit;
+> +	oldcred =3D delegation->cred;
+> +	delegation->cred =3D get_cred(cred);
+> +	switch (deleg_type) {
+> +	case NFS4_OPEN_DELEGATE_READ_ATTRS_DELEG:
+> +	case NFS4_OPEN_DELEGATE_WRITE_ATTRS_DELEG:
+> +		set_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
+> +		break;
+> +	default:
+> +		clear_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
+>  	}
+> +	clear_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags);
+> +	if (test_and_clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
+> +		atomic_long_inc(&nfs_active_delegations);
+> +	spin_unlock(&delegation->lock);
+> +	rcu_read_unlock();
+> +	put_cred(oldcred);
+> +	trace_nfs4_reclaim_delegation(inode, type);
+>  }
+> =20
+>  static int nfs_do_return_delegation(struct inode *inode,
 
-Agreed. I'd prefer to not need a tuning knob for this. Doing a short
-wait in the mount for localio negotiation would be a lot more
-reasonable.
-
-That said, why is the LOCALIO negotiation taking so long? Shouldn't
-that be basically instantaneous during the mount? Do we really have
-applications that are hammering reads and writes just after the mount
-returns but before the localio negotiation completes?
-
->=20
-> >=20
-> > Fixes: 1ff4716f420b ("NFS: always probe for LOCALIO support asynchronou=
-sly")
-> > Signed-off-by: Mike Snitzer <snitzer@hammerspace.com>
-> > ---
-> >  fs/nfs/localio.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/fs/nfs/localio.c b/fs/nfs/localio.c
-> > index e3ae003118cb..76ca9bd21d2e 100644
-> > --- a/fs/nfs/localio.c
-> > +++ b/fs/nfs/localio.c
-> > @@ -49,6 +49,11 @@ struct nfs_local_fsync_ctx {
-> >  static bool localio_enabled __read_mostly =3D true;
-> >  module_param(localio_enabled, bool, 0644);
-> > =20
-> > +static bool localio_async_probe __read_mostly =3D true;
-> > +module_param(localio_async_probe, bool, 0644);
-> > +MODULE_PARM_DESC(localio_async_probe,
-> > +		 "Probe for LOCALIO support asynchronously.");
-> > +
-> >  static bool localio_O_DIRECT_semantics __read_mostly =3D false;
-> >  module_param(localio_O_DIRECT_semantics, bool, 0644);
-> >  MODULE_PARM_DESC(localio_O_DIRECT_semantics,
-> > @@ -203,7 +208,10 @@ void nfs_local_probe_async_work(struct work_struct=
- *work)
-> > =20
-> >  void nfs_local_probe_async(struct nfs_client *clp)
-> >  {
-> > -	queue_work(nfsiod_workqueue, &clp->cl_local_probe_work);
-> > +	if (likely(localio_async_probe))
-> > +		queue_work(nfsiod_workqueue, &clp->cl_local_probe_work);
-> > +	else
-> > +		nfs_local_probe(clp);
-> >  }
-> >  EXPORT_SYMBOL_GPL(nfs_local_probe_async);
-> > =20
-> > --=20
-> > 2.44.0
-> >=20
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
