@@ -1,55 +1,55 @@
-Return-Path: <linux-nfs+bounces-13042-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-13043-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A50AB03F39
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:06:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51012B03F3C
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 15:06:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A83E2189EB5E
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:06:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9AEAD171430
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Jul 2025 13:06:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A19D246BB7;
-	Mon, 14 Jul 2025 13:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D1618C034;
+	Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRtDXD82"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNJqjzHq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6623497B
-	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:06:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44C8247295
+	for <linux-nfs@vger.kernel.org>; Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752498369; cv=none; b=hRu+Vx8Z48NYPGRvgMaFSg3flNUB1PjPZHO6d/BvUqdx3QfAtJ8YG1QAYpXWU5Cw9qAjZyWP+9S7CzlH5N6h0vh7pLG9eNhn2I1lUdl4UN4S75dbWuqcVwPwwtYsZ4+Bx4/fB3iRy97a/YIPG0YBbELMXjPuHLeC+9RunLq7FSg=
+	t=1752498403; cv=none; b=tUw4QIa2JUJ3gcmuvzUH/4gJFUBcjfxsM48cUCNGyI0FJB9cfg/b88AFvC+GXJTGvUoqLZue/Jd4/HOIK3/aech9jmoIi+PRgieUtHUerJs4HVuTa5kzJiVXhYEfkFI3wGrnpF85jW7Fg8gpWEdrkmSC/MZy+I+RGttWLrSVgk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752498369; c=relaxed/simple;
-	bh=aYD1+osE+36Rrqa2XcT8JONvqQqzVEO1o3fcHq5Kly0=;
+	s=arc-20240116; t=1752498403; c=relaxed/simple;
+	bh=s+hdEm2ALrAuUi6F4pHt0OBQE5Jo+tFaHYFgVK9jrAE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dbPZZ0+NN9tUqApPGTvhlAwSx1WZUQfp5RbtH4FlH0dB1x7PUSCo6plFM1scva6DDpk61laP8KWPmhdAKC/XHggtz1Y2fqwW/3RrKp+cNKFe6k39S5ogr4IghBiqJhqKGy6Ar47unS0Owtc2SY2rBwZUNbDVhj2mcgvh8JXxFBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HRtDXD82; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4752BC4CEED;
-	Mon, 14 Jul 2025 13:06:08 +0000 (UTC)
+	 Content-Type:MIME-Version; b=qStIGhkxqW8k/14l13hHKTHuD2GRwyTzcOMy5oza8XcSblz01nBBnHCfoI+OmWsoWawvj/AoCALYiUJhT4tKdNV1LYr0AUsZDuPyoArOjDcSeWnIgg1rI1DNwwnf+KHjXJx+3xHum1NE0xuFWd7NDjz644sCIZM5tj3hwFks/fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNJqjzHq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25630C4CEED;
+	Mon, 14 Jul 2025 13:06:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752498368;
-	bh=aYD1+osE+36Rrqa2XcT8JONvqQqzVEO1o3fcHq5Kly0=;
+	s=k20201202; t=1752498403;
+	bh=s+hdEm2ALrAuUi6F4pHt0OBQE5Jo+tFaHYFgVK9jrAE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HRtDXD82tC4/Q6ALsx+o6lzB53jYygRFGl5HaEh+oixq+ofHse1HgEMlWrcN4u2+P
-	 4YMfIxPTz9h9pcxSgzbNW/tpLNio7MljjhGdOxrUnzU0aCznDHmYM4jRelqeXgOOSv
-	 iIFPgq+bZ4ol8fhs0bBbethgdLie33BZps/vYoZoiDvxk7isu3TK/gyd+X9C8VRVFf
-	 +7dgTnVURY+EFQu0SO7zyzGO/VCR7N6Z3aQFGO8VrHUym2VbWE2eu8ezTiDbsYOjmB
-	 Xon3lN7aYf00xbPEhmfiQgaDOhHIlDfdqbOclnvir0L64H8FN/qqV9LbKOnL45mIvj
-	 mA4pOErRtCgwA==
-Message-ID: <32e83baf09b27ef9ea0def88f8031dfdc0cc5b78.camel@kernel.org>
-Subject: Re: [PATCH 1/4] NFS: cleanup nfs_inode_reclaim_delegation
+	b=hNJqjzHqybX3YASkncSiFA1KikTIXmDoHLPVlDbtR05mwi54dQ+zncuAotdzKvRZm
+	 HJhFfy4scc8wPSwVIf/+MMjGHpxLUYd1q7UIISN48yjjlccuetwEwyzMmNZrj7O31M
+	 kNtTWkMt8Q/qppXa5bsFwx7m8xR4GuII9FeNe9jRl+jV8O6/9h93uXl1OY3okujZFF
+	 M6qeuCE+5HAQqvW1E4PQ6/ZvgxK3JCsDAUVhgpgk7v+MMdYOw6ESSY6zWpOuTBhQ2p
+	 +kBKmIxCmgLPeHC1eeAsR6wNmCFgq1jZ8NrofZmn67bRUY96lCMSKPKcnNXTtrlLWu
+	 V3H4169RetOcA==
+Message-ID: <7af8b8239a10a0141be841cb00b8992834a55b43.camel@kernel.org>
+Subject: Re: [PATCH 2/4] NFS: move the delegation_watermark module parameter
 From: Jeff Layton <jlayton@kernel.org>
 To: Christoph Hellwig <hch@lst.de>, Trond Myklebust <trondmy@kernel.org>
 Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Date: Mon, 14 Jul 2025 09:06:06 -0400
-In-Reply-To: <20250714111651.1565055-2-hch@lst.de>
+Date: Mon, 14 Jul 2025 09:06:42 -0400
+In-Reply-To: <20250714111651.1565055-3-hch@lst.de>
 References: <20250714111651.1565055-1-hch@lst.de>
-	 <20250714111651.1565055-2-hch@lst.de>
+	 <20250714111651.1565055-3-hch@lst.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxw
  n8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1Wv
@@ -135,77 +135,39 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2025-07-14 at 13:16 +0200, Christoph Hellwig wrote:
-> Reduce a level of indentation for most of the code in this function.
+> Keep the module_param_named next to the variable declaration instead of
+> somewhere unrelated, following the best practice in the rest of the
+> kernel.
 >=20
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/nfs/delegation.c | 48 ++++++++++++++++++++++-----------------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
+>  fs/nfs/delegation.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 >=20
 > diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 519bdc91112c..56bb2a7e1793 100644
+> index 56bb2a7e1793..d036796dbe69 100644
 > --- a/fs/nfs/delegation.c
 > +++ b/fs/nfs/delegation.c
-> @@ -237,34 +237,34 @@ void nfs_inode_reclaim_delegation(struct inode *ino=
-de, const struct cred *cred,
+> @@ -29,6 +29,7 @@
 > =20
->  	rcu_read_lock();
->  	delegation =3D rcu_dereference(NFS_I(inode)->delegation);
-> -	if (delegation !=3D NULL) {
-> -		spin_lock(&delegation->lock);
-> -		nfs4_stateid_copy(&delegation->stateid, stateid);
-> -		delegation->type =3D type;
-> -		delegation->pagemod_limit =3D pagemod_limit;
-> -		oldcred =3D delegation->cred;
-> -		delegation->cred =3D get_cred(cred);
-> -		switch (deleg_type) {
-> -		case NFS4_OPEN_DELEGATE_READ_ATTRS_DELEG:
-> -		case NFS4_OPEN_DELEGATE_WRITE_ATTRS_DELEG:
-> -			set_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
-> -			break;
-> -		default:
-> -			clear_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
-> -		}
-> -		clear_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags);
-> -		if (test_and_clear_bit(NFS_DELEGATION_REVOKED,
-> -				       &delegation->flags))
-> -			atomic_long_inc(&nfs_active_delegations);
-> -		spin_unlock(&delegation->lock);
-> -		rcu_read_unlock();
-> -		put_cred(oldcred);
-> -		trace_nfs4_reclaim_delegation(inode, type);
-> -	} else {
-> +	if (!delegation) {
->  		rcu_read_unlock();
->  		nfs_inode_set_delegation(inode, cred, type, stateid,
->  					 pagemod_limit, deleg_type);
-> +		return;
-> +	}
-> +
-> +	spin_lock(&delegation->lock);
-> +	nfs4_stateid_copy(&delegation->stateid, stateid);
-> +	delegation->type =3D type;
-> +	delegation->pagemod_limit =3D pagemod_limit;
-> +	oldcred =3D delegation->cred;
-> +	delegation->cred =3D get_cred(cred);
-> +	switch (deleg_type) {
-> +	case NFS4_OPEN_DELEGATE_READ_ATTRS_DELEG:
-> +	case NFS4_OPEN_DELEGATE_WRITE_ATTRS_DELEG:
-> +		set_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
-> +		break;
-> +	default:
-> +		clear_bit(NFS_DELEGATION_DELEGTIME, &delegation->flags);
->  	}
-> +	clear_bit(NFS_DELEGATION_NEED_RECLAIM, &delegation->flags);
-> +	if (test_and_clear_bit(NFS_DELEGATION_REVOKED, &delegation->flags))
-> +		atomic_long_inc(&nfs_active_delegations);
-> +	spin_unlock(&delegation->lock);
-> +	rcu_read_unlock();
-> +	put_cred(oldcred);
-> +	trace_nfs4_reclaim_delegation(inode, type);
+>  static atomic_long_t nfs_active_delegations;
+>  static unsigned nfs_delegation_watermark =3D NFS_DEFAULT_DELEGATION_WATE=
+RMARK;
+> +module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
+ 0644);
+> =20
+>  static void __nfs_free_delegation(struct nfs_delegation *delegation)
+>  {
+> @@ -1575,5 +1576,3 @@ bool nfs4_delegation_flush_on_close(const struct in=
+ode *inode)
+>  	rcu_read_unlock();
+>  	return ret;
 >  }
-> =20
->  static int nfs_do_return_delegation(struct inode *inode,
+> -
+> -module_param_named(delegation_watermark, nfs_delegation_watermark, uint,=
+ 0644);
+
+Sure, but I'd just squash this into patch #3:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
